@@ -1,4 +1,4 @@
-image: garland/docker-s3cmd
+image: samepagelabs/s3cmd
 
 stages:
   - build
