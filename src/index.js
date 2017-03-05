@@ -1,10 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Catalog} from 'catalog';
+import theme from './theme';
+import './theme.css';
 
 ReactDOM.render(
   <Catalog
     title='R Styleguide'
+    theme={theme}
     useBrowserHistory={true}
     pages={[
       {
