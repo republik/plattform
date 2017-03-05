@@ -6,9 +6,9 @@ import './theme.css';
 
 ReactDOM.render(
   <Catalog
-    title='R Styleguide'
+    title='Styleguide'
     theme={theme}
-    useBrowserHistory={true}
+    useBrowserHistory={false}
     pages={[
       {
         path: '/',
