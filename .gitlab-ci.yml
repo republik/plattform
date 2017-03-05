@@ -1,4 +1,4 @@
-image: samepagelabs/s3cmd
+image: paulosuzart/docker-s3cmd
 
 stages:
   - build
