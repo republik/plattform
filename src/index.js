@@ -11,15 +11,15 @@ ReactDOM.render(
     useBrowserHistory={false}
     pages={[
       {
+        path: '/logo',
+        title: 'Logo',
+        src: require('../docs/logo.md')
+      },
+      {
         path: '/',
         title: 'Foo',
         imports: {Foo: require('./components/Foo/Foo')},
         src: require('./components/Foo/Foo.docs.md')
-      },
-      {
-        path: '/logo',
-        title: 'Logo',
-        src: require('../docs/logo.md')
       }
     ]}
   />,

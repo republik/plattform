@@ -1,0 +1,18 @@
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - make build
+
+deploy:
+  stage: build
+  script:
+    - make deploy
+  environment:
+    name: staging
+    url: https://styleguide.sos.exo.io/index.html
+  only:
+    - master
