@@ -1,3 +1,5 @@
+image: garland/docker-s3cmd
+
 stages:
   - build
   - deploy
