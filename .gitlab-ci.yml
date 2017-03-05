@@ -1,14 +1,7 @@
 image: node:7
 
 stages:
-  - build
   - deploy
-
-build:
-  stage: build
-  script:
-    - npm install
-    - make build
 
 deploy:
   stage: deploy

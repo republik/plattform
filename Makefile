@@ -5,7 +5,7 @@
 build:
 	npm run build
 
-deploy:
+deploy: build
 	s3cmd sync --verbose \
 		--acl-public \
 		-c ./.s3cfg \
