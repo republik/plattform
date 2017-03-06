@@ -8,7 +8,7 @@ ReactDOM.render(
   <Catalog
     title='Styleguide'
     theme={theme}
-    useBrowserHistory={false}
+    useBrowserHistory
     pages={[
       {
         path: '/logo',

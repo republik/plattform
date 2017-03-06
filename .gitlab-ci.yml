@@ -31,6 +31,6 @@ deploy:
     - make deploy
   environment:
     name: staging
-    url: https://styleguide.project-r.construction/index.html
+    url: https://styleguide.project-r.construction/
   only:
     - master
