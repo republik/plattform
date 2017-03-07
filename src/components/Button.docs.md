@@ -1,12 +1,12 @@
 ```react|span-2
 <Button>
-    Hello World
+  Hello World
 </Button>
 ```
 
 ```react|span-3
-<Button onClick={() => window.alert('Interactive!')}>
-    Click me
+<Button onClick={() => alert('Interactive!')}>
+  Click me
 </Button>
 ```
 
