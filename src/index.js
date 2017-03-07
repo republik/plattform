@@ -16,10 +16,17 @@ ReactDOM.render(
         src: require('../docs/logo.md')
       },
       {
-        path: '/',
-        title: 'Foo',
-        imports: {Foo: require('./components/Foo/Foo')},
-        src: require('./components/Foo/Foo.docs.md')
+        title: 'Components',
+        pages: [
+          {
+            path: '/components/button',
+            title: 'Button',
+            imports: {
+              Button: require('./components/Button')
+            },
+            src: require('./components/Button.docs.md')
+          }
+        ]
       }
     ]}
   />,
