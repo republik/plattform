@@ -5,7 +5,7 @@ export default {
   pageHeadingTextColor: '#000',
   pageHeadingHeight: 200,
   brandColor: '#000',
-  sidebarColor: '#f2f2f2',
+  sidebarColor: '#fff',
   sidebarColorActive: '#000',
   sidebarColorText: '#999',
   sidebarColorTextActive: '#000',
