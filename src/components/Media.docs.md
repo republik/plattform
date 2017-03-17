@@ -12,8 +12,15 @@
 
 ## Video Teaser
 
-```html
-<video width="100%" controls="" poster="https://placehold.it/800x450?text=Play" style="object-fit: cover;">
-    <source src="https://archive.org/download/WebmVp8Vorbis/webmvp8_512kb.mp4" type="video/mp4">
-</video>
+```image
+span: 2
+src: "/mockups/video-teaser-mobile.png"
+title: "Mobile"
+```
+
+
+```image
+span: 4
+src: "/mockups/video-teaser-desktop.png"
+title: "Desktop"
 ```
