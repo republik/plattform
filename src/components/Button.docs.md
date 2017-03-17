@@ -1,6 +1,6 @@
 ##  Primär
 
-```react|span-2
+```react|span-3
 <Button primary>
   Mitmachen
 </Button>
@@ -14,7 +14,7 @@
 
 ## Secondär
 
-```react|span-2
+```react|span-3
 <Button>
   Weiter
 </Button>
