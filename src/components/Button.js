@@ -3,10 +3,8 @@ import {css, merge, simulate} from 'glamor'
 
 const fieldStyle = css({
   verticalAlign: 'bottom',
-  color: '#444',
   padding: '10px 20px 10px 20px',
   textDecoration: 'none',
-  backgroundColor: 'white',
   fontSize: 14,
   height: 40,
   boxSizing: 'border-box',
