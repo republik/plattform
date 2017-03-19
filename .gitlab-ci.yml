@@ -27,7 +27,7 @@ before_script:
 deploy:
   stage: deploy
   script:
-    - npm install
+    - NODE_ENV=development npm install
     - make deploy
   environment:
     name: staging
