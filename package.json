@@ -1,6 +1,6 @@
 {
   "name": "@project-r/styleguide",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "peerDependencies": {
     "glamor": "^2.20.24",
     "react": "^15.4.2",
@@ -20,8 +20,7 @@
     "lib",
     "src"
   ],
-  "module": "lib/lib.js",
-  "jsnext:main": "lib/lib.js",
+  "main": "./lib/lib.js",
   "scripts": {
     "prebuild": "rimraf lib",
     "build:lib": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
