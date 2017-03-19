@@ -1,8 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Catalog} from 'catalog';
+import {simulations} from 'glamor';
 import theme from './theme';
 import './theme.css';
+
+simulations(true)
 
 ReactDOM.render(
   <Catalog
