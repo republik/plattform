@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Catalog} from 'catalog';
 import {simulations} from 'glamor';
-import theme from './theme';
-import './theme.css';
+import theme from './catalogTheme';
+import './catalogTheme.css';
 
 simulations(true)
 
