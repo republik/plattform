@@ -29,7 +29,7 @@ ReactDOM.render(
           {
             path: '/farben',
             title: 'Farben',
-            src: require('../docs/colors.md')
+            component: require('./colors.docs.js')
           },
           {
             path: '/grid',
