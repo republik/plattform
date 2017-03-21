@@ -1,19 +1,7 @@
 ## Felder
 
-```html
-<label>
-    Label:<br />
-    <input type="text" />
-</label>
-```
-
-### Zahlen
-
-```html
-<label>
-    Zahl:<br />
-    <input type="number" placeholder="0" />
-</label>
+```react
+<Field label='Label' />
 ```
 
 ### E-Mail

@@ -52,7 +52,10 @@ ReactDOM.render(
           {
             path: '/formulare',
             title: 'Formulare',
-            src: require('./components/Form.docs.md')
+            imports: {
+              Field: require('./components/Form/Field.js')
+            },
+            src: require('./components/Form/docs.md')
           },
           {
             path: '/media',
