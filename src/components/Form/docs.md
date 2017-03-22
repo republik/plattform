@@ -14,48 +14,48 @@
     error='Geben sie eine gültige E-Mail-Adresse an' />
 ```
 
-### E-Mail
-
-```html
-<label>
-    Deine E-Mail:<br />
-    <input type="email" placeholder="max.muster@example.com" />
-</label>
-```
-
 ## Zahlungsmethoden
 
 ```html
-<button>PostFinance</button> <button>Kreditkarten</button> <button>Einzahlungsschein</button>
+<label><input type="radio" name="paymentMethod"/> Banküberweisung </label>
+<label><input type="radio" name="paymentMethod"/> Mastercard </label>
+<label><input type="radio" name="paymentMethod"/> Visa </label>
+<label><input type="radio" name="paymentMethod"/> Postcard </label>
+<label><input type="radio" name="paymentMethod"/> Postfinance </label>
+<label><input type="radio" name="paymentMethod"/> Paypal </label>
+<label><input type="radio" name="paymentMethod"/> Twint </label>
 ```
 
 ## Komposition
 
-```html
+```react|noSource
 <form>
-    <h3>Deine Unterstützung</h3>
-    <p>
-        ...
-    </p>
+  <h3>Deine Unterstützung</h3>
+  <p>
+    ...
+  </p>
 
-    <h3>Deine Kontaktinformationen</h3>
-    <p>
-        <label>
-            Dein Name:<br />
-            <input type="text" placeholder="Max Muster" />
-        </label>
-    </p>
+  <h3 style={{marginBottom: 0}}>Deine Kontaktinformationen</h3>
+  <p style={{marginTop: 0}}>
+    <Field label='Dein Name' />
+    <br />
+    <Field label='Deine E-Mail' />
+  </p>
 
-    <p>
-        <label>
-            Deine E-Mail:<br />
-            <input type="email" placeholder="max.muster@example.com" />
-        </label>
-    </p>
+  <h3>Zahlungsart auswählen</h3>
+  <p>
+    <label><input type="radio" name="paymentMethod"/> Banküberweisung </label>
+    <label><input type="radio" name="paymentMethod"/> Mastercard </label>
+    <label><input type="radio" name="paymentMethod"/> Visa </label>
+    <label><input type="radio" name="paymentMethod"/> Postcard </label>
+    <label><input type="radio" name="paymentMethod"/> Postfinance </label>
+    <label><input type="radio" name="paymentMethod"/> Paypal </label>
+    <label><input type="radio" name="paymentMethod"/> Twint </label>
+  </p>
 
-    <h3>Zahlungsart auswählen</h3>
-    <p>
-        <button>PostFinance</button> <button>Kreditkarten</button> <button>Einzahlungsschein</button>
-    </p>
+  <span style={{float: 'right'}}>
+    <Button>Weiter</Button>
+  </span>
+  <br style={{clear: 'both'}} />
 </form>
 ```

@@ -53,6 +53,7 @@ ReactDOM.render(
             path: '/formulare',
             title: 'Formulare',
             imports: {
+              Button: require('./components/Button'),
               Field: require('./components/Form/Field.js')
             },
             src: require('./components/Form/docs.md')
