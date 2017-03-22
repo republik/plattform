@@ -8,6 +8,12 @@
 <Field label='Label' simulate='focus' />
 ```
 
+```react|span-3
+<Field
+    label='E-Mail-Adresse'
+    error='Geben sie eine gültige E-Mail-Adresse an' />
+```
+
 ### E-Mail
 
 ```html

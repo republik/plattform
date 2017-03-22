@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {css, merge, simulate} from 'glamor'
-import {border, borderFocus, textLabel} from '../../colors'
+import * as colors from '../../colors'
 
 const xPadding = 8
 const yPadding = 10
@@ -17,12 +17,24 @@ const fieldStyle = css({
   height: 40,
   boxSizing: 'border-box',
   backgroundColor: 'white',
-  border: `solid ${border} ${borderWidth}px`,
+  border: `solid ${colors.border} ${borderWidth}px`,
   color: '#000',
   ':focus': {
-    borderColor: borderFocus
+    borderColor: colors.borderFocus
   }
 })
+const fieldErrorStyle = css({
+  borderColor: colors.error,
+  ':focus': {
+    borderColor: colors.error
+  }
+})
+const errorMessageStyle = css({
+  display: 'inline-block',
+  color: colors.error,
+  margin: '5px 0'
+})
+
 const containerStyle = css({
   width: '100%',
   paddingTop: lineHeight,
@@ -36,7 +48,7 @@ const labelTextStyle = css({
   position: 'absolute',
   left: xPadding,
   top: yPadding + lineHeight + borderWidth,
-  color: textLabel,
+  color: colors.textLabel,
   transition: 'top 200ms, font-size 200ms'
 })
 const labelTextFocusedStyle = css({
@@ -53,7 +65,7 @@ class Field extends Component {
     }
   }
   render () {
-    const {onChange, type, simulate: sim, label} = this.props
+    const {onChange, type, simulate: sim, label, error} = this.props
     
     let simulations = {}
     let {focused} = this.state
@@ -64,9 +76,13 @@ class Field extends Component {
 
     const value = this.props.value || this.state.value
 
+    const hasError = !!error
     const labelStyle = (focused || value)
       ? merge(labelTextStyle, labelTextFocusedStyle)
       : labelTextStyle
+    const fStyle = hasError
+      ? merge(fieldStyle, fieldErrorStyle)
+      : fieldStyle
 
     return (
       <label {...containerStyle}>
@@ -78,9 +94,10 @@ class Field extends Component {
           value={value}
           onFocus={() => this.setState(() => ({focused: true}))}
           onBlur={() => this.setState(() => ({focused: false}))}
-          {...fieldStyle}
+          {...fStyle}
           {...simulations} />
         <span {...labelStyle}>{label}</span>
+        {hasError && <span {...errorMessageStyle}>{error}</span>}
       </label>
     )
   }
