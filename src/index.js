@@ -34,7 +34,8 @@ ReactDOM.render(
           {
             path: '/grid',
             title: 'Grid',
-            src: require('../docs/grid.md')
+            imports: require('./components/Grid'),
+            src: require('./components/Grid/docs.md')
           }
         ]
       },
