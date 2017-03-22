@@ -22,9 +22,10 @@ ReactDOM.render(
         title: 'Grundlagen',
         pages: [
           {
-            path: '/schriften',
-            title: 'Schriften',
-            src: require('../docs/fonts.md')
+            path: '/typographie',
+            title: 'Typographie',
+            imports: require('./components/Typography'),
+            src: require('./components/Typography/docs.md')
           },
           {
             path: '/farben',
