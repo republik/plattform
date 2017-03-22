@@ -1,7 +1,11 @@
 ## Felder
 
-```react
+```react|span-3
 <Field label='Label' />
+```
+
+```react|span-3
+<Field label='Label' simulate='focus' />
 ```
 
 ### E-Mail

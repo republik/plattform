@@ -53,9 +53,14 @@ class Field extends Component {
     }
   }
   render () {
-    const {focused} = this.state
     const {onChange, type, simulate: sim, label} = this.props
-    const simulations = sim ? simulate(sim) : {}
+    
+    let simulations = {}
+    let {focused} = this.state
+    if (sim) {
+      focused = sim.indexOf('focus') !== -1
+      simulations = simulate(sim)
+    }
 
     const value = this.props.value || this.state.value
 
