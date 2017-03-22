@@ -9,3 +9,8 @@ export const errorBg = '#ffcccc'
 
 export const background = '#fff'
 export const text = '#000'
+export const textLabel = '#ccc'
+
+export const border = '#ccc'
+export const borderFocus = '#000'
+

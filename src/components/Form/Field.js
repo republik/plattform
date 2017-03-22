@@ -1,10 +1,12 @@
 import React, {Component} from 'react'
 import {css, merge, simulate} from 'glamor'
+import {border, borderFocus, textLabel} from '../../colors'
 
 const xPadding = 8
 const yPadding = 10
 const borderWidth = 1
 const lineHeight = 20
+
 const fieldStyle = css({
   width: '100%',
   appearance: 'none',
@@ -15,11 +17,10 @@ const fieldStyle = css({
   height: 40,
   boxSizing: 'border-box',
   backgroundColor: 'white',
-  border: `solid gray ${borderWidth}px`,
+  border: `solid ${border} ${borderWidth}px`,
   color: '#000',
-  ':hover': {
-    borderColor: 'gray',
-    color: '#000'
+  ':focus': {
+    borderColor: borderFocus
   }
 })
 const containerStyle = css({
@@ -35,7 +36,7 @@ const labelTextStyle = css({
   position: 'absolute',
   left: xPadding,
   top: yPadding + lineHeight + borderWidth,
-  color: 'gray',
+  color: textLabel,
   transition: 'top 200ms, font-size 200ms'
 })
 const labelTextFocusedStyle = css({

@@ -12,7 +12,9 @@ export default () => (
     <ColorSpecimen span={1} name='Fehler' value={colors.error} />
     <ColorSpecimen span={1} name='Fehler BG' value={colors.errorBg} />
 
-    <ColorSpecimen span={4} name='Hintergrund' value={colors.background} />
     <ColorSpecimen span={2} name='Text' value={colors.text} />
+    <ColorSpecimen span={2} name='Label' value={colors.textLabel} />
+    <ColorSpecimen span={1} name='Border' value={colors.border} />
+    <ColorSpecimen span={1} name='Border Focus' value={colors.borderFocus} />
   </Page>
 )
