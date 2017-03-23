@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {css, merge, simulate} from 'glamor'
-import * as colors from '../../colors'
+import * as colors from '../../theme/colors'
 
 const xPadding = 8
 const yPadding = 10

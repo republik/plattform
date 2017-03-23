@@ -1,6 +1,6 @@
 import React from 'react'
 import {css, merge, simulate} from 'glamor'
-import * as colors from '../colors'
+import * as colors from '../theme/colors'
 
 const fieldStyle = css({
   verticalAlign: 'bottom',

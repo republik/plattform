@@ -1,4 +1,4 @@
-import * as colors from '../../colors'
+import * as colors from '../../theme/colors'
 
 export const link = {
   textDecoration: 'none',

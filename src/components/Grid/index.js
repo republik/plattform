@@ -1,8 +1,6 @@
 import React, {PropTypes} from 'react'
 import {css} from 'glamor'
-
-const onlyS = '@media only screen and (max-width: 640px)'
-const mUp = '@media only screen and (min-width: 641px)'
+import {onlyS, mUp} from '../../theme/mediaQueries'
 
 export const GUTTER = 20
 export const CONTENT_PADDING = 20
