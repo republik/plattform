@@ -22,6 +22,14 @@ ReactDOM.render(
         title: 'Grundlagen',
         pages: [
           {
+            path: '/logo',
+            title: 'Logo',
+            imports: {
+              Logo: require('./components/Logo')
+            },
+            src: require('./components/Logo/docs.md')
+          },
+          {
             path: '/typographie',
             title: 'Typographie',
             imports: require('./components/Typography'),
