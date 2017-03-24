@@ -69,9 +69,10 @@ class Field extends Component {
       focused: false,
       value: ''
     }
+    this.inputRef = ref => this.input = ref
   }
   render () {
-    const {onChange, type, simulate: sim, ref, label, error} = this.props
+    const {onChange, type, simulate: sim, label, error} = this.props
     
     let simulations = {}
     let {focused} = this.state
@@ -92,7 +93,7 @@ class Field extends Component {
 
     return (
       <label {...containerStyle}>
-        <input type={type} ref={ref}
+        <input type={type} ref={this.inputRef}
           onChange={onChange || ((event) => {
             const v = event.target.value
             this.setState(() => ({value: v}))
