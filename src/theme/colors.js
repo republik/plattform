@@ -1,4 +1,5 @@
 export const primary = '#3CAD00'
+export const primaryBg = '#EBF6E5'
 export const secondary = '#4B6359'
 export const disabled = '#B7C1BD'
 
