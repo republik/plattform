@@ -53,9 +53,6 @@
     <label><input type="radio" name="paymentMethod"/> Twint </label>
   </p>
 
-  <span style={{float: 'right'}}>
-    <Button>Weiter</Button>
-  </span>
-  <br style={{clear: 'both'}} />
+  <Button>Weiter</Button>
 </form>
 ```

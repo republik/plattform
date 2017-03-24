@@ -2,8 +2,8 @@ import React, {Component} from 'react'
 import {css, merge, simulate} from 'glamor'
 import * as colors from '../../theme/colors'
 
-const xPadding = 8
-const yPadding = 10
+const xPadding = 0
+const yPadding = 9
 const borderWidth = 1
 const lineHeight = 20
 
@@ -15,12 +15,14 @@ const fieldStyle = css({
   padding: `${yPadding}px ${xPadding}px`,
   textDecoration: 'none',
   height: 40,
+  fontSize: 22,
   boxSizing: 'border-box',
   backgroundColor: 'white',
-  border: `solid ${colors.border} ${borderWidth}px`,
-  color: '#000',
+  border: 'none',
+  borderBottom: `solid ${colors.disabled} ${borderWidth}px`,
+  color: colors.text,
   ':focus': {
-    borderColor: colors.borderFocus
+    borderColor: colors.primary
   }
 })
 const fieldErrorStyle = css({
@@ -32,7 +34,8 @@ const fieldErrorStyle = css({
 const errorMessageStyle = css({
   display: 'inline-block',
   color: colors.error,
-  margin: '5px 0'
+  margin: '5px 0',
+  fontSize: 14
 })
 
 const containerStyle = css({
@@ -41,19 +44,22 @@ const containerStyle = css({
   position: 'relative',
   display: 'inline-block',
   fontFamily: 'sans-serif',
-  fontSize: 14,
+  fontSize: 22,
   lineHeight: `${lineHeight}px`
 })
 const labelTextStyle = css({
   position: 'absolute',
   left: xPadding,
   top: yPadding + lineHeight + borderWidth,
-  color: colors.textLabel,
+  color: colors.disabled,
   transition: 'top 200ms, font-size 200ms'
 })
-const labelTextFocusedStyle = css({
+const labelTextTopStyle = css({
   top: 0,
-  fontSize: 10
+  fontSize: 14
+})
+const labelTextFocusedStyle = css({
+  color: colors.primary
 })
 
 class Field extends Component {
@@ -78,7 +84,7 @@ class Field extends Component {
 
     const hasError = !!error
     const labelStyle = (focused || value)
-      ? merge(labelTextStyle, labelTextFocusedStyle)
+      ? merge(labelTextStyle, labelTextTopStyle, focused && labelTextFocusedStyle)
       : labelTextStyle
     const fStyle = hasError
       ? merge(fieldStyle, fieldErrorStyle)

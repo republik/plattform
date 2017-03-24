@@ -8,7 +8,7 @@ export const link = {
     color: colors.primary
   },
   ':hover': {
-    color: colors.primaryHover
+    color: colors.secondary
   }
 }
 
