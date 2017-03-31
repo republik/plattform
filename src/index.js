@@ -68,7 +68,9 @@ ReactDOM.render(
             title: 'Formulare',
             imports: {
               Button: require('./components/Button'),
-              Field: require('./components/Form/Field.js')
+              Field: require('./components/Form/Field.js'),
+              MaskedInput: require('react-maskedinput'),
+              Autocomplete: require('react-autocomplete')
             },
             src: require('./components/Form/docs.md')
           },

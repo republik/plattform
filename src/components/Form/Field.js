@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, PropTypes} from 'react'
 import {css, merge, simulate} from 'glamor'
 import * as colors from '../../theme/colors'
 
@@ -74,14 +74,15 @@ class Field extends Component {
     const {
       onChange,
       name, type, simulate: sim,
-      label, error
+      label, error,
+      renderInput
     } = this.props
     
-    let simulations = {}
+    let simulationClassName
     let {isFocused} = this.state
     if (sim) {
       isFocused = sim.indexOf('focus') !== -1
-      simulations = simulate(sim)
+      simulationClassName = simulate(sim).toString()
     }
     const {isValidating, isDirty} = this.state
 
@@ -101,8 +102,11 @@ class Field extends Component {
 
     return (
       <label {...containerStyle}>
-        <input name={name} type={type} ref={this.inputRef}
-          onChange={(event) => {
+        {renderInput({
+          name,
+          type,
+          ref: this.inputRef,
+          onChange: (event) => {
             let v = event.target.value
             if (onChange) {
               onChange(event, v, isValidating)
@@ -110,10 +114,10 @@ class Field extends Component {
             } else {
               this.setState(() => ({isDirty: true, value: v}))
             }
-          }}
-          value={value}
-          onFocus={() => this.setState(() => ({isFocused: true}))}
-          onBlur={(event) => {
+          },
+          value,
+          onFocus: () => this.setState(() => ({isFocused: true})),
+          onBlur: (event) => {
             const v = event.target.value
             if (!isValidating && onChange && isDirty) {
               onChange(event, v, true)
@@ -122,13 +126,27 @@ class Field extends Component {
               isFocused: false,
               isValidating: state.isDirty
             }))
-          }}
-          {...fStyle}
-          {...simulations} />
+          },
+          className: [
+            fStyle.toString(),
+            simulationClassName
+          ].filter(Boolean).join(' ')
+        })}
         <span {...labelStyle}>{error || label}</span>
       </label>
     )
   }
+}
+
+Field.propTypes = {
+  error: PropTypes.string,
+  renderInput: PropTypes.func.isRequired
+}
+
+Field.defaultProps = {
+  renderInput: props => (
+    <input {...props} />
+  )
 }
 
 export default Field
