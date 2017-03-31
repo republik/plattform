@@ -14,6 +14,39 @@
     error='Geben sie eine gültige E-Mail-Adresse an' />
 ```
 
+### Change and Validation
+
+`onChange` gets called with the following arguments:
+
+- `event: SyntheticEvent`
+- `value: String`
+- `shouldValidate: Boolean`
+
+`shouldValidate` is a hint to run any necessary validations, if they fail an `error` should be set on the field.
+
+`shouldValidate` becomes `true` after on the first blur if the field has been changed. An additional `onChange` is triggered when is happens.
+
+```react
+state: {
+  value: ''
+}
+---
+<Field
+    label='Name'
+    value={state.value}
+    error={state.error}
+    onChange={(event, value, shouldValidate) => {
+      setState({
+        error: (
+          shouldValidate &&
+          !value.trim().length &&
+          'Geben sie Ihren Namen an'
+        ),
+        value: value
+      })
+    }} />
+```
+
 ## Zahlungsmethoden
 
 ```html

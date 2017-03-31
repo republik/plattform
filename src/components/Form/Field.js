@@ -31,12 +31,6 @@ const fieldErrorStyle = css({
     borderColor: colors.error
   }
 })
-const errorMessageStyle = css({
-  display: 'inline-block',
-  color: colors.error,
-  margin: '5px 0',
-  fontSize: 14
-})
 
 const containerStyle = css({
   width: '100%',
@@ -61,31 +55,45 @@ const labelTextTopStyle = css({
 const labelTextFocusedStyle = css({
   color: colors.primary
 })
+const labelTextErrorStyle = css({
+  color: colors.error
+})
 
 class Field extends Component {
   constructor (props, context) {
     super(props, context)
     this.state = {
-      focused: false,
+      isFocused: false,
+      isValidating: false,
+      isDirty: false,
       value: ''
     }
     this.inputRef = ref => this.input = ref
   }
   render () {
-    const {onChange, name, type, simulate: sim, label, error} = this.props
+    const {
+      onChange,
+      name, type, simulate: sim,
+      label, error
+    } = this.props
     
     let simulations = {}
-    let {focused} = this.state
+    let {isFocused} = this.state
     if (sim) {
-      focused = sim.indexOf('focus') !== -1
+      isFocused = sim.indexOf('focus') !== -1
       simulations = simulate(sim)
     }
+    const {isValidating, isDirty} = this.state
 
     const value = this.props.value || this.state.value
 
     const hasError = !!error
-    const labelStyle = (focused || value)
-      ? merge(labelTextStyle, labelTextTopStyle, focused && labelTextFocusedStyle)
+    const labelStyle = (isFocused || value || hasError)
+      ? merge(
+          labelTextStyle, labelTextTopStyle,
+          isFocused && labelTextFocusedStyle,
+          hasError && labelTextErrorStyle
+        )
       : labelTextStyle
     const fStyle = hasError
       ? merge(fieldStyle, fieldErrorStyle)
@@ -94,17 +102,30 @@ class Field extends Component {
     return (
       <label {...containerStyle}>
         <input name={name} type={type} ref={this.inputRef}
-          onChange={onChange || ((event) => {
-            const v = event.target.value
-            this.setState(() => ({value: v}))
-          })}
+          onChange={(event) => {
+            let v = event.target.value
+            if (onChange) {
+              onChange(event, v, isValidating)
+              this.setState(() => ({isDirty: true}))
+            } else {
+              this.setState(() => ({isDirty: true, value: v}))
+            }
+          }}
           value={value}
-          onFocus={() => this.setState(() => ({focused: true}))}
-          onBlur={() => this.setState(() => ({focused: false}))}
+          onFocus={() => this.setState(() => ({isFocused: true}))}
+          onBlur={(event) => {
+            const v = event.target.value
+            if (!isValidating && onChange && isDirty) {
+              onChange(event, v, true)
+            }
+            this.setState((state) => ({
+              isFocused: false,
+              isValidating: state.isDirty
+            }))
+          }}
           {...fStyle}
           {...simulations} />
-        <span {...labelStyle}>{label}</span>
-        {hasError && <span {...errorMessageStyle}>{error}</span>}
+        <span {...labelStyle}>{error || label}</span>
       </label>
     )
   }
