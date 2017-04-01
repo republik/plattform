@@ -2,7 +2,7 @@ import React from 'react'
 import * as styles from './styles'
 import {css} from 'glamor'
 
-const linkRule = css(styles.link)
+export const linkRule = css(styles.link)
 export const A = ({children, ...props}) => (
   <a {...props} {...linkRule}>{children}</a>
 )
