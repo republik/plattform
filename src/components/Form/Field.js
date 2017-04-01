@@ -6,6 +6,7 @@ const xPadding = 0
 const yPadding = 9
 const borderWidth = 1
 const lineHeight = 20
+export const fieldHeight = 40
 
 const fieldStyle = css({
   width: '100%',
@@ -14,12 +15,13 @@ const fieldStyle = css({
   verticalAlign: 'bottom',
   padding: `${yPadding}px ${xPadding}px`,
   textDecoration: 'none',
-  height: 40,
+  height: fieldHeight,
   fontSize: 22,
   boxSizing: 'border-box',
   backgroundColor: 'white',
   border: 'none',
   borderBottom: `solid ${colors.disabled} ${borderWidth}px`,
+  borderRadius: 0,
   color: colors.text,
   ':focus': {
     borderColor: colors.primary
@@ -44,12 +46,12 @@ const containerStyle = css({
 const labelTextStyle = css({
   position: 'absolute',
   left: xPadding,
-  top: yPadding + lineHeight + borderWidth,
+  bottom: yPadding + borderWidth,
   color: colors.disabled,
-  transition: 'top 200ms, font-size 200ms'
+  transition: 'bottom 200ms, font-size 200ms'
 })
 const labelTextTopStyle = css({
-  top: 0,
+  bottom: fieldHeight,
   fontSize: 14
 })
 const labelTextFocusedStyle = css({
