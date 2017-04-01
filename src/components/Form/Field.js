@@ -141,7 +141,7 @@ class Field extends Component {
 }
 
 Field.propTypes = {
-  error: PropTypes.string,
+  error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   renderInput: PropTypes.func.isRequired
 }
 

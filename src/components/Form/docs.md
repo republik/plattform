@@ -47,9 +47,49 @@ state: {
     }} />
 ```
 
+### Autocomplete
+
+You can provide a `items` array which will be suggested to the user. Powered by `react-autocomplete`.
+
+```react|span-3
+<AutocompleteField
+    label='Land'
+    items={[
+      'Schweiz',
+      'Deutschland',
+      'Österreich'
+    ]} />
+```
+
+```react|span-3
+state: {
+  value: ''
+}
+---
+<AutocompleteField
+    label='Monat'
+    items={[
+      '01', '02', '03', '04', '05', '06',
+      '07', '08', '09', '10', '11', '12'
+    ]}
+    value={state.value}
+    error={state.error}
+    onChange={(event, value, shouldValidate) => {
+      setState({
+        error: (
+          shouldValidate &&
+          !value.trim().length &&
+          'Monat fehlt'
+        ),
+        value: value
+      })
+    }} />
+```
+
+
 ### Integration with Third-Party
 
-Integration is possible with any input component which support `value`, `onChange`, `onFocus`, `onBlur` and `className`. To do so use a custom `renderInput`, see examples below.
+Integration is possible with any input component which support `value`, `onChange`, `onFocus`, `onBlur` and `className`. To do so use a custom `renderInput`, see example below.
 
 #### Example with `react-maskedinput`
 
@@ -67,52 +107,6 @@ state: {
 
 `npm i react-maskedinput --save`  
 `import MaskedInput from 'react-maskedinput'`
-
-#### Example with `react-autocomplete`
-
-```react
-state: {
-  value: '',
-  items: ['Schweiz', 'Deutschland', 'Österreich']
-}
----
-<Field
-    value={state.value}
-    onChange={(_, value) => setState({
-      value,
-      items: ['Schweiz', 'Deutschland', 'Österreich']
-        .filter(d => d.indexOf(value) === 0)
-    })}
-    label='Land'
-    renderInput={({value, onChange, ...props}) => (
-      <Autocomplete
-        value={value}
-        inputProps={props}
-        onChange={onChange}
-        onSelect={(value, item) => setState({value})}
-        items={state.items}
-        getItemValue={item => item}
-        wrapperStyle={{position: 'relative'}}
-        renderMenu={(items, value, style) => (
-          <div style={{position: 'absolute', backgroundColor: 'white', top: 40, left: 0, width: '100%'}}>
-            {items}
-          </div>
-        )}
-        renderItem={(item, isHighlighted) => (
-          <div
-            style={{
-              backgroundColor: isHighlighted ? '#EBF6E5' : '',
-              borderBottom: '1px solid #ccc',
-              padding: '10px 0'
-            }}
-            key={item}
-          >{item}</div>
-        )} />
-    )} />
-```
-
-`npm i react-autocomplete --save`  
-`import Autocomplete from 'react-autocomplete'`
 
 ## Zahlungsmethoden
 
