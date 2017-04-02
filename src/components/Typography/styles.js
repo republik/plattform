@@ -15,26 +15,24 @@ export const link = {
 export const h1 = {
   color: colors.text,
   fontFamily: 'sans-serif',
-  fontSize: 46,
-  lineHeight: '60px'
+  fontSize: 52,
+  lineHeight: '56px',
+  margin: '0 0 20px 0'
 }
 
 export const h2 = {
   color: colors.text,
   fontFamily: 'sans-serif',
-  fontSize: 30,
-  lineHeight: '39px'
+  fontSize: 24,
+  lineHeight: '26px',
+  margin: '0 0 20px 0'
 }
 
 export const lead = {
   color: colors.text,
   fontFamily: 'Rubis-Regular, serif',
-  fontSize: 26,
-  lineHeight: '40px',
-  [mUp]: {
-    fontSize: 35,
-    lineHeight: '43px',
-  }
+  fontSize: 25,
+  lineHeight: '33px'
 }
 
 export const p = {
@@ -42,17 +40,18 @@ export const p = {
   fontFamily: 'Rubis-Regular, serif',
   fontSize: 16,
   lineHeight: '25px',
+  margin: '0 0 20px 0',
   [mUp]: {
-    fontSize: 26,
-    lineHeight: '40px'
+    fontSize: 21,
+    lineHeight: '32px'
   }
 }
 
 export const quote = {
   color: colors.text,
-  fontSize: 26,
-  lineHeight: '40px',
-  fontFamily: 'Rubis-Regular'
+  fontSize: 21,
+  lineHeight: '32px',
+  fontFamily: 'Rubis-Regular, serif'
 }
 export const quoteText = {
 
