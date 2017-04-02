@@ -8,6 +8,13 @@ Container definieren die maximale Breite des Grids und kümmeren sich um das hor
 </Container>
 ```
 
+
+```react
+<NarrowContainer style={{backgroundColor: 'red'}}>
+  <div style={{backgroundColor: 'darkgreen', height: 20}} />
+</NarrowContainer>
+```
+
 ## Grid & Spans
 
 Je nach verfügbarer Fläche nutzen wir ein zwei oder 18 Spalten Grid.

@@ -6,8 +6,7 @@ export const GUTTER = 42
 export const CONTENT_PADDING = 20
 
 export const NARROW_CONTENT_MAX_WIDTH = 650
-export const MEDIUM_CONTENT_MAX_WIDTH = 1024
-export const CONTENT_MAX_WIDTH = 1440
+export const CONTENT_MAX_WIDTH = 1200
 
 const styles = {
   container: css({
@@ -23,14 +22,6 @@ const styles = {
     width: '100%',
     padding: `0 ${CONTENT_PADDING}px`,
     maxWidth: NARROW_CONTENT_MAX_WIDTH,
-    marginLeft: 'auto',
-    marginRight: 'auto'
-  }),
-  mediumContainer: css({
-    boxSizing: 'border-box',
-    width: '100%',
-    padding: `0 ${CONTENT_PADDING}px`,
-    maxWidth: MEDIUM_CONTENT_MAX_WIDTH,
     marginLeft: 'auto',
     marginRight: 'auto'
   }),
@@ -91,16 +82,6 @@ NarrowContainer.propTypes = {
   children: PropTypes.node
 }
 
-export const MediumContainer = ({children, ...props}) => (
-  <div {...props} {...styles.mediumContainer}>
-    {children}
-  </div>
-)
-
-MediumContainer.propTypes = {
-  children: PropTypes.node
-}
-
 export const Grid = ({children}) => (
   <div {...styles.grid}>
     {children}
@@ -134,5 +115,5 @@ Span.propTypes = {
 
 Span.defaultProps = {
   s: '2/2',
-  m: '6/6'
+  m: '18/18'
 }
