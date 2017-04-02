@@ -32,7 +32,8 @@ export const lead = {
   color: colors.text,
   fontFamily: 'Rubis-Regular, serif',
   fontSize: 25,
-  lineHeight: '33px'
+  lineHeight: '33px',
+  margin: '0 0 20px 0'
 }
 
 export const p = {
