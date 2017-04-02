@@ -5,5 +5,11 @@
 ## Kleine Version
 
 ```react
-<Logo width={140} />
+<Logo height={20} />
 ```
+
+```react
+<Logo width={137} />
+```
+
+You can also define the width instead of the height.
