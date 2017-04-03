@@ -14,7 +14,6 @@
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-2": "^6.22.0",
     "catalog": "^2.5.3",
-    "cross-env": "^3.2.4",
     "glamor": "^2.20.24",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
@@ -30,9 +29,10 @@
   "scripts": {
     "prepublishOnly": "npm run prebuild && npm run build:lib",
     "prebuild": "rimraf lib",
-    "build:lib": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
+    "build:lib": "babel src --out-dir lib",
     "build": "npm run build:lib && react-scripts build",
     "start": "react-scripts start",
+    "dev": "babel -w src --out-dir lib & react-scripts start",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }
