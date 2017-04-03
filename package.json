@@ -1,6 +1,6 @@
 {
   "name": "@project-r/styleguide",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "dependencies": {
     "react-autocomplete": "^1.4.1"
   },

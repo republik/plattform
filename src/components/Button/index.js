@@ -5,8 +5,8 @@ import * as colors from '../../theme/colors'
 const fieldStyle = css({
   outline: 'none',
   verticalAlign: 'bottom',
-  padding: '10px 30px 10px 30px',
-  minWidth: 200,
+  padding: '10px 20px 10px 20px',
+  minWidth: 160,
   textAlign: 'center',
   textDecoration: 'none',
   fontSize: 22,
@@ -57,9 +57,9 @@ const bigStyle = css({
   padding: '10px 30px 10px 30px'
 })
 
-const Button = ({onClick, type, children, primary, big, block, disabled, simulate: sim}) => {
+const Button = ({onClick, type, children, primary, big, block, style, disabled, simulate: sim}) => {
   const simulations = sim ? simulate(sim) : {}
-  const style = merge(
+  const styles = merge(
     fieldStyle,
     primary && primaryStyle,
     block && blockStyle,
@@ -67,8 +67,8 @@ const Button = ({onClick, type, children, primary, big, block, disabled, simulat
   )
 
   return (
-    <button onClick={onClick} type={type} disabled={disabled}
-      {...style}
+    <button onClick={onClick} type={type} style={style} disabled={disabled}
+      {...styles}
       {...simulations}>
       {children}
     </button>
