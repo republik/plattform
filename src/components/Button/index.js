@@ -47,17 +47,24 @@ const primaryStyle = css({
     color: '#fff'
   }
 })
-const bigStyle = css({
+const blockStyle = css({
   display: 'block',
-  width: '100%',
+  width: '100%'
+})
+const bigStyle = css({
   fontSize: 22,
   height: 80,
   padding: '10px 30px 10px 30px'
 })
 
-const Button = ({onClick, type, children, primary, big, disabled, simulate: sim}) => {
+const Button = ({onClick, type, children, primary, big, block, disabled, simulate: sim}) => {
   const simulations = sim ? simulate(sim) : {}
-  const style = merge(fieldStyle, primary && primaryStyle, big && bigStyle)
+  const style = merge(
+    fieldStyle,
+    primary && primaryStyle,
+    block && blockStyle,
+    big && bigStyle
+  )
 
   return (
     <button onClick={onClick} type={type} disabled={disabled}

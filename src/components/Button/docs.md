@@ -66,3 +66,17 @@ Grosse Buttons sind Block-Elemente und füllen den gegebenen Platz.
 </Button>
 ```
 
+## Block
+
+
+```react
+<Button block>
+  Volle Breite
+</Button>
+```
+
+```react
+<Button block big>
+  Päng, Päng!
+</Button>
+```
