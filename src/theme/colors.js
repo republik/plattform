@@ -6,5 +6,5 @@ export const disabled = '#B7C1BD'
 export const error = '#9F2500'
 
 export const background = '#fff'
-export const text = '#000'
+export const text = '#282828'
 export const textLabel = '#ccc'
