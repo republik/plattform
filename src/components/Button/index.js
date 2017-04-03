@@ -13,11 +13,12 @@ const fieldStyle = css({
   height: 60,
   boxSizing: 'border-box',
   backgroundColor: '#fff',
-  border: `1px solid ${colors.primary}`,
-  color: colors.primary,
+  border: `1px solid ${colors.secondary}`,
+  color: colors.secondary,
   cursor: 'pointer',
   ':hover': {
     backgroundColor: colors.primary,
+    borderColor: colors.primary,
     color: '#fff'
   },
   ':active': {
@@ -34,6 +35,7 @@ const fieldStyle = css({
 })
 const primaryStyle = css({
   backgroundColor: colors.primary,
+  borderColor: colors.primary,
   color: '#fff',
   ':hover': {
     backgroundColor: colors.secondary,
