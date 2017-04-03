@@ -34,6 +34,14 @@
 </Quote>
 ```
 
+## Labels
+
+```react
+<Label>
+  Zeit verbleibend
+</Label>
+```
+
 ## Links
 
 ```react

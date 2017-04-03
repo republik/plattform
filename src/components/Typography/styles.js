@@ -48,6 +48,13 @@ export const p = {
   }
 }
 
+export const label = {
+  fontSize: 14,
+  lineHeight: '19px',
+  fontFamily: 'sans-serif',
+  color: colors.secondary
+}
+
 export const quote = {
   color: colors.text,
   fontSize: 21,

@@ -27,6 +27,11 @@ export const P = ({children, ...props}) => (
   <p {...props} {...pRule}>{children}</p>
 )
 
+const labelRule = css(styles.label)
+export const Label = ({children, ...props}) => (
+  <span {...props} {...labelRule}>{children}</span>
+)
+
 const quoteRule = css(styles.quote)
 const quoteTextRule = css(styles.quoteText)
 
