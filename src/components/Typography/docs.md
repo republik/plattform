@@ -1,3 +1,26 @@
+## Webfonts
+
+We have four font cuts:
+
+- `serifRegular` Rubis Regular
+- `serifBold` Rubis Bold
+- `sansSerifRegular` GT America Standard Regular
+- `sansSerifMedium` GT America Standard Medium
+
+Full font family definitions are available as `fontFamilies` export from the styleguide.
+
+```react|no-source
+<pre style={{overflow: 'auto'}}>
+    <code>
+    {JSON.stringify(fontFamilies, null, 2)}
+    </code>
+</pre>
+```
+
+The webfonts are licensed for out usage. You are responsible to include the webfonts in your app and track them with our Piwik.
+
+You can optain the files, including a css file with `@font-face` definitions, from our internal filling system under `00 Vorlagen und Design Grundlagen/Webfonts`.
+
 ## Überschriften
 
 ```react

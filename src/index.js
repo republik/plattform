@@ -36,7 +36,10 @@ ReactDOM.render(
           {
             path: '/typographie',
             title: 'Typographie',
-            imports: require('./components/Typography'),
+            imports: {
+              ...require('./components/Typography'),
+              fontFamilies: require('./theme/fonts').fontFamilies
+            },
             src: require('./components/Typography/docs.md')
           },
           {
