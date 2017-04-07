@@ -17,7 +17,7 @@ Full font family definitions are available as `fontFamilies` export from the sty
 </pre>
 ```
 
-The webfonts are licensed for out usage. You are responsible to include the webfonts in your app and track them with our Piwik.
+The webfonts are licensed for our usage. You are responsible to include the webfonts in your app and track them with our Piwik.
 
 You can optain the files, including a css file with `@font-face` definitions, from our internal filling system under `00 Vorlagen und Design Grundlagen/Webfonts`.
 
