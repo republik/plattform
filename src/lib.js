@@ -4,7 +4,10 @@ import * as allMediaQueries from './theme/mediaQueries'
 export const colors = allColors
 export const mediaQueries = allMediaQueries
 
-export {fontFamilies} from './theme/fonts'
+export {
+  fontFamilies,
+  fontFaces
+} from './theme/fonts'
 
 export {default as Logo} from './components/Logo'
 export {default as Button} from './components/Button'

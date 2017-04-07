@@ -21,6 +21,14 @@ The webfonts are licensed for out usage. You are responsible to include the webf
 
 You can optain the files, including a css file with `@font-face` definitions, from our internal filling system under `00 Vorlagen und Design Grundlagen/Webfonts`.
 
+If you make the fonts available under `/static/fonts/` you can use a minified `fontFaces` definition string from the styleguide. E.g. include the following in your `pages/_document.js` in your Next.js app.
+
+```
+import {fontFaces} from '@project-r/styleguide'
+
+<style dangerouslySetInnerHTML={{ __html: fontFaces }} />
+```
+
 ## Überschriften
 
 ```react
