@@ -1,3 +1,5 @@
+import {fontFamilies} from './theme/fonts'
+
 export default {
   // Colors
   background: '#fff',
@@ -33,8 +35,8 @@ export default {
   checkerboardPatternDark: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAAAAACoWZBhAAAAFklEQVQI12NQBQF2EGAghQkmwXxSmADZJQiZ2ZZ46gAAAABJRU5ErkJggg==',
 
   // Fonts
-  fontFamily: "serif",
-  fontHeading: "serif",
+  fontFamily: fontFamilies.serifRegular,
+  fontHeading: fontFamilies.sansSerifMedium,
   fontMono: "'Source Code Pro', monospace",
 
   fontXs:  12,
