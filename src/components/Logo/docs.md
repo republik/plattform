@@ -13,3 +13,9 @@
 ```
 
 You can also define the width instead of the height.
+
+## Gross
+
+```react
+<Logo height={80} />
+```
