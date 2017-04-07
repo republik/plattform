@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react'
 import {css, merge, simulate} from 'glamor'
 import * as colors from '../../theme/colors'
+import {fontFamilies} from '../../theme/fonts'
 
 const xPadding = 0
 const yPadding = 9
@@ -39,7 +40,7 @@ const containerStyle = css({
   paddingTop: lineHeight,
   position: 'relative',
   display: 'inline-block',
-  fontFamily: 'sans-serif',
+  fontFamily: fontFamilies.sansSerifRegular,
   fontSize: 22,
   lineHeight: `${lineHeight}px`
 })

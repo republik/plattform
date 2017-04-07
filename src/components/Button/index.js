@@ -1,8 +1,9 @@
 import React from 'react'
 import {css, merge, simulate} from 'glamor'
 import * as colors from '../../theme/colors'
+import {fontFamilies} from '../../theme/fonts'
 
-const fieldStyle = css({
+const buttonStyle = css({
   outline: 'none',
   verticalAlign: 'bottom',
   padding: '10px 20px 10px 20px',
@@ -13,6 +14,7 @@ const fieldStyle = css({
   height: 60,
   boxSizing: 'border-box',
   backgroundColor: '#fff',
+  fontFamily: fontFamilies.sansSerifRegular,
   border: `1px solid ${colors.secondary}`,
   color: colors.secondary,
   cursor: 'pointer',
@@ -60,7 +62,7 @@ const bigStyle = css({
 const Button = ({onClick, type, children, primary, big, block, style, disabled, simulate: sim}) => {
   const simulations = sim ? simulate(sim) : {}
   const styles = merge(
-    fieldStyle,
+    buttonStyle,
     primary && primaryStyle,
     block && blockStyle,
     big && bigStyle

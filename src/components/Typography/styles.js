@@ -1,4 +1,5 @@
 import * as colors from '../../theme/colors'
+import {fontFamilies} from '../../theme/fonts'
 import {mUp} from '../../theme/mediaQueries'
 
 export const link = {
@@ -14,7 +15,7 @@ export const link = {
 
 export const h1 = {
   color: colors.text,
-  fontFamily: 'sans-serif',
+  fontFamily: fontFamilies.sansSerifMedium,
   fontSize: 52,
   lineHeight: '56px',
   margin: '0 0 20px 0'
@@ -22,7 +23,7 @@ export const h1 = {
 
 export const h2 = {
   color: colors.text,
-  fontFamily: 'sans-serif',
+  fontFamily: fontFamilies.sansSerifMedium,
   fontSize: 24,
   lineHeight: '26px',
   margin: '0 0 20px 0'
@@ -30,7 +31,7 @@ export const h2 = {
 
 export const lead = {
   color: colors.text,
-  fontFamily: 'Rubis-Regular, serif',
+  fontFamily: fontFamilies.serifRegular,
   fontSize: 25,
   lineHeight: '33px',
   margin: '0 0 20px 0'
@@ -38,7 +39,7 @@ export const lead = {
 
 export const p = {
   color: colors.text,
-  fontFamily: 'Rubis-Regular, serif',
+  fontFamily: fontFamilies.serifRegular,
   fontSize: 16,
   lineHeight: '25px',
   margin: '0 0 20px 0',
@@ -51,7 +52,7 @@ export const p = {
 export const label = {
   fontSize: 14,
   lineHeight: '19px',
-  fontFamily: 'sans-serif',
+  fontFamily: fontFamilies.sansSerifRegular,
   color: colors.secondary
 }
 
@@ -59,7 +60,7 @@ export const quote = {
   color: colors.text,
   fontSize: 21,
   lineHeight: '32px',
-  fontFamily: 'Rubis-Regular, serif'
+  fontFamily: fontFamilies.serifRegular
 }
 export const quoteText = {
 
