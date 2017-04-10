@@ -68,7 +68,6 @@ Grosse Buttons sind Block-Elemente und füllen den gegebenen Platz.
 
 ## Block
 
-
 ```react
 <Button block>
   Volle Breite
@@ -78,5 +77,32 @@ Grosse Buttons sind Block-Elemente und füllen den gegebenen Platz.
 ```react
 <Button block big>
   Päng, Päng!
+</Button>
+```
+
+## Schwarzweiss
+
+```react|span-3
+<Button black>
+  Schwarz
+</Button>
+```
+
+```react|span-3
+<Button black simulate='hover'>
+  Schwarz
+</Button>
+```
+
+
+```react|span-3,dark
+<Button white>
+  Weiss
+</Button>
+```
+
+```react|span-3,dark
+<Button white simulate='hover'>
+  Weiss
 </Button>
 ```
