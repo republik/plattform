@@ -61,6 +61,22 @@ const labelTextFocusedStyle = css({
 const labelTextErrorStyle = css({
   color: colors.error
 })
+const whiteStyle = css({
+  backgroundColor: 'transparent',
+  color: '#fff',
+  borderColor: '#fff',
+  ':focus': {
+    borderColor: '#fff'
+  }
+})
+const blackStyle = css({
+  backgroundColor: 'transparent',
+  color: '#000',
+  borderColor: '#000',
+  ':focus': {
+    borderColor: '#000'
+  }
+})
 
 class Field extends Component {
   constructor (props, context) {
@@ -91,17 +107,26 @@ class Field extends Component {
 
     const value = this.props.value || this.state.value
 
+    let colorStyle
+    if (this.props.black) {
+      colorStyle = blackStyle
+    }
+    if (this.props.white) {
+      colorStyle = whiteStyle
+    }
+
     const hasError = !!error
     const labelStyle = (isFocused || value || hasError)
       ? merge(
           labelTextStyle, labelTextTopStyle,
           isFocused && labelTextFocusedStyle,
-          hasError && labelTextErrorStyle
+          hasError && labelTextErrorStyle,
+          colorStyle
         )
-      : labelTextStyle
+      : merge(labelTextStyle, colorStyle)
     const fStyle = hasError
-      ? merge(fieldStyle, fieldErrorStyle)
-      : fieldStyle
+      ? merge(fieldStyle, fieldErrorStyle, colorStyle)
+      : merge(fieldStyle, colorStyle)
 
     return (
       <label {...containerStyle}>

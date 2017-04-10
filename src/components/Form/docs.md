@@ -14,6 +14,16 @@
     error='Geben sie eine gültige E-Mail-Adresse an' />
 ```
 
+### Schwarzweiss
+
+```react|span-3
+<Field black label='Label' />
+```
+
+```react|span-3,dark
+<Field white label='Label' />
+```
+
 ### Change and Validation
 
 `onChange` gets called with the following arguments:
