@@ -21,12 +21,17 @@ The webfonts are licensed for our usage. You are responsible to include the webf
 
 You can obtain the files, including a css file with `@font-face` definitions, from our internal filling system under `00 Vorlagen und Design Grundlagen/Webfonts`.
 
-If you make the fonts available under `/static/fonts/` you can use a minified `fontFaces` definition string from the styleguide. E.g. include the following in your `pages/_document.js` in your Next.js app.
+A helper to generate the `@font-face` css is available and takes an optional `baseUrl` (defaults to `/static/fonts`) argument. 
+
+### Next.js example
+
+1. Copy the font files to `/static/fonts`
+2. Include the following in your `pages/_document.js`:
 
 ```
 import {fontFaces} from '@project-r/styleguide'
 
-<style dangerouslySetInnerHTML={{ __html: fontFaces }} />
+<style dangerouslySetInnerHTML={{ __html: fontFaces() }} />
 ```
 
 ## Überschriften
