@@ -2,20 +2,24 @@
 <Logo />
 ```
 
-## Kleine Version
+Das Logo ist standardmässig responsive und füllt die volle Breite.
 
-```react
-<Logo height={20} />
+## Invertiert
+
+```react|dark
+<Logo fill='#fff' />
 ```
 
+## Explizite Grössen
+
+### Höhe
+
 ```react
-<Logo width={137} />
+<Logo height={40} />
 ```
 
-You can also define the width instead of the height.
-
-## Gross
+### Breite
 
 ```react
-<Logo height={80} />
+<Logo width={200} />
 ```
