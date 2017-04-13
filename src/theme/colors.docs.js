@@ -7,6 +7,9 @@ export default () => (
     <ColorSpecimen span={3} name='Primär Farbe' value={colors.primary} />
     <ColorSpecimen span={2} name='Secondär' value={colors.secondary} />
     <ColorSpecimen span={1} name='Deaktiviert' value={colors.disabled} />
+    <ColorSpecimen span={3} name='Primär Hintergrund' value={colors.primaryBg} />
+    <ColorSpecimen span={2} name='Secondär Hintergrund' value={colors.secondaryBg} />
+    <ColorSpecimen span={1} name='Separator' value={colors.divider} />
 
     <ColorSpecimen span={5} name='Text' value={colors.text} />
     <ColorSpecimen span={1} name='Fehler' value={colors.error} />
