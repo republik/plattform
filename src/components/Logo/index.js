@@ -24,4 +24,5 @@ Logo.defaultProps = {
   fill: '#000'
 }
 
+export {default as R} from './R'
 export default Logo
