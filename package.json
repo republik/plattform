@@ -14,6 +14,7 @@
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-2": "^6.22.0",
     "catalog": "^2.5.3",
+    "core-js": "^2.4.1",
     "glamor": "^2.20.24",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",

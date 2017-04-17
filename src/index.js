@@ -5,6 +5,9 @@ import {simulations} from 'glamor';
 import theme from './catalogTheme';
 import './catalogTheme.css';
 
+import 'core-js/fn/array/from'
+import 'core-js/fn/array/find'
+
 simulations(true)
 
 ReactDOM.render(
