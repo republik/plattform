@@ -73,7 +73,7 @@ ReactDOM.render(
             imports: {
               Button: require('./components/Button'),
               Field: require('./components/Form/Field.js'),
-              AutocompleteField: require('./components/Form/AutocompleteField.js'),
+              AutosuggestField: require('./components/Form/AutosuggestField.js'),
               MaskedInput: require('react-maskedinput')
             },
             src: require('./components/Form/docs.md')

@@ -62,7 +62,7 @@ state: {
 You can provide a `items` array which will be suggested to the user. Powered by `react-autocomplete`.
 
 ```react|span-3
-<AutocompleteField
+<AutosuggestField
     label='Land'
     items={[
       'Schweiz',
@@ -76,7 +76,7 @@ state: {
   value: ''
 }
 ---
-<AutocompleteField
+<AutosuggestField
     label='Monat'
     items={[
       '01', '02', '03', '04', '05', '06',

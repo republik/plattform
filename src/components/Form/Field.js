@@ -92,7 +92,8 @@ class Field extends Component {
   render () {
     const {
       onChange,
-      name, type, simulate: sim,
+      name, autocomplete,
+      type, simulate: sim,
       label, error,
       renderInput
     } = this.props
@@ -132,6 +133,7 @@ class Field extends Component {
       <label {...containerStyle}>
         {renderInput({
           name,
+          autocomplete,
           type,
           ref: this.inputRef,
           onChange: (event) => {

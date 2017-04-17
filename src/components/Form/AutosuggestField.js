@@ -22,7 +22,7 @@ const filterItems = (items, value) => {
     ))
 }
 
-class AutocompleteField extends Component {
+class AutosuggestField extends Component {
   constructor (props, context) {
     super(props, context)
     this.inputRef = ref => this.input = ref
@@ -73,9 +73,9 @@ class AutocompleteField extends Component {
   }
 }
 
-AutocompleteField.propTypes = {
+AutosuggestField.propTypes = {
   items: PropTypes.arrayOf(PropTypes.string).isRequired,
   label: PropTypes.string.isRequired
 }
 
-export default AutocompleteField
+export default AutosuggestField
