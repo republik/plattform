@@ -12,6 +12,5 @@ export {
 export {default as Logo, R as R} from './components/Logo'
 export {default as Button} from './components/Button'
 export {default as Field} from './components/Form/Field'
-export {default as AutosuggestField} from './components/Form/AutosuggestField'
 export * from './components/Grid'
 export * from './components/Typography'
