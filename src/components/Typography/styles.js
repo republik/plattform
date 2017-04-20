@@ -15,18 +15,32 @@ export const link = {
 
 export const h1 = {
   color: colors.text,
-  fontFamily: fontFamilies.sansSerifMedium,
+  fontFamily: fontFamilies.serifBold,
   fontSize: 52,
   lineHeight: '56px',
-  margin: '0 0 20px 0'
+  letterSpacing: -0.45,
+  margin: '30px 0 20px 0',
+  ':first-child': {
+    marginTop: 0
+  },
+  ':last-child': {
+    marginBottom: 0
+  }
 }
 
 export const h2 = {
   color: colors.text,
-  fontFamily: fontFamilies.sansSerifMedium,
+  fontFamily: fontFamilies.serifBold,
   fontSize: 24,
   lineHeight: '26px',
-  margin: '0 0 20px 0'
+  letterSpacing: -0.21,
+  margin: '30px 0 20px 0',
+  ':first-child': {
+    marginTop: 0
+  },
+  ':last-child': {
+    marginBottom: 0
+  }
 }
 
 export const lead = {
@@ -34,7 +48,7 @@ export const lead = {
   fontFamily: fontFamilies.serifRegular,
   fontSize: 25,
   lineHeight: '33px',
-  margin: '0 0 20px 0'
+  margin: '20px 0 20px 0'
 }
 
 export const p = {
@@ -42,10 +56,16 @@ export const p = {
   fontFamily: fontFamilies.serifRegular,
   fontSize: 16,
   lineHeight: '25px',
-  margin: '0 0 20px 0',
   [mUp]: {
     fontSize: 21,
     lineHeight: '32px'
+  },
+  margin: '20px 0 20px 0',
+  ':first-child': {
+    marginTop: 0
+  },
+  ':last-child': {
+    marginBottom: 0
   }
 }
 
@@ -65,3 +85,34 @@ export const quote = {
 export const quoteText = {
 
 }
+
+export const interactionH1 = {
+  color: colors.text,
+  fontFamily: fontFamilies.sansSerifMedium,
+  fontSize: 40,
+  lineHeight: '46px',
+  letterSpacing: -0.35,
+  margin: 0
+}
+
+export const interactionH2 = {
+  color: colors.text,
+  fontFamily: fontFamilies.sansSerifMedium,
+  fontSize: 22,
+  lineHeight: '28px',
+  letterSpacing: 'normal',
+  margin: 0
+}
+
+export const interactionP = {
+  color: colors.text,
+  fontFamily: fontFamilies.sansSerifRegular,
+  fontSize: 16,
+  lineHeight: '25px',
+  [mUp]: {
+    fontSize: 21,
+    lineHeight: '32px'
+  },
+  margin: 0
+}
+

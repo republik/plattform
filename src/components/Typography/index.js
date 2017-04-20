@@ -41,3 +41,20 @@ export const Quote = ({children, source, ...props}) => (
     {!!source && <cite>{source}</cite>}
   </blockquote>
 )
+
+const iH1Rule = css(styles.interactionH1)
+const iH2Rule = css(styles.interactionH2)
+const iPRule = css(styles.interactionP)
+
+export const Interaction = {
+  H1: ({children, ...props}) => (
+    <h1 {...props} {...iH1Rule}>{children}</h1>
+  ),
+  H2: ({children, ...props}) => (
+    <h2 {...props} {...iH2Rule}>{children}</h2>
+  ),
+  P: ({children, ...props}) => (
+    <p {...props} {...iPRule}>{children}</p>
+  )
+}
+
