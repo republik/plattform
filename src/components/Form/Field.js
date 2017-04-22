@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react'
 import {css, merge, simulate} from 'glamor'
 import * as colors from '../../theme/colors'
 import {fontFamilies} from '../../theme/fonts'
+import {mUp} from '../../theme/mediaQueries'
 
 const xPadding = 0
 const yPadding = 9
@@ -47,13 +48,18 @@ const containerStyle = css({
 const labelTextStyle = css({
   position: 'absolute',
   left: xPadding,
-  bottom: yPadding + borderWidth,
+  top: lineHeight + yPadding,
   color: colors.disabled,
-  transition: 'bottom 200ms, font-size 200ms'
+  transition: 'top 200ms, font-size 200ms'
 })
 const labelTextTopStyle = css({
-  bottom: fieldHeight,
-  fontSize: 14
+  top: 0,
+  fontSize: 12,
+  lineHeight: '13px',
+  [mUp]: {
+    fontSize: 14,
+    lineHeight: '15px',
+  }
 })
 const labelTextFocusedStyle = css({
   color: colors.primary
