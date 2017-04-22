@@ -16,6 +16,7 @@ export const link = {
 export const h1 = {
   color: colors.text,
   fontFamily: fontFamilies.serifBold,
+  fontWeight: 'normal',
   fontSize: 52,
   lineHeight: '56px',
   letterSpacing: -0.45,
@@ -31,6 +32,7 @@ export const h1 = {
 export const h2 = {
   color: colors.text,
   fontFamily: fontFamilies.serifBold,
+  fontWeight: 'normal',
   fontSize: 24,
   lineHeight: '26px',
   letterSpacing: -0.21,
@@ -89,6 +91,7 @@ export const quoteText = {
 export const interactionH1 = {
   color: colors.text,
   fontFamily: fontFamilies.sansSerifMedium,
+  fontWeight: 'normal',
   fontSize: 40,
   lineHeight: '46px',
   letterSpacing: -0.35,
@@ -98,6 +101,7 @@ export const interactionH1 = {
 export const interactionH2 = {
   color: colors.text,
   fontFamily: fontFamilies.sansSerifMedium,
+  fontWeight: 'normal',
   fontSize: 22,
   lineHeight: '28px',
   letterSpacing: 'normal',
