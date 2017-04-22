@@ -1,6 +1,6 @@
 {
   "name": "@project-r/styleguide",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "peerDependencies": {
     "glamor": "^2.20.24",
     "react": "^15.4.2"
