@@ -142,7 +142,6 @@ state: {
   <h3 style={{marginBottom: 0}}>Deine Kontaktinformationen</h3>
   <p style={{marginTop: 0}}>
     <Field label='Dein Name' />
-    <br />
     <Field label='Deine E-Mail' />
   </p>
 

@@ -43,7 +43,8 @@ const containerStyle = css({
   display: 'inline-block',
   fontFamily: fontFamilies.sansSerifRegular,
   fontSize: 22,
-  lineHeight: `${lineHeight}px`
+  lineHeight: `${lineHeight}px`,
+  marginBottom: 20
 })
 const labelTextStyle = css({
   position: 'absolute',
