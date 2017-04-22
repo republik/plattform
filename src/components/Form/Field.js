@@ -44,7 +44,7 @@ const containerStyle = css({
   fontFamily: fontFamilies.sansSerifRegular,
   fontSize: 22,
   lineHeight: `${lineHeight}px`,
-  marginBottom: 20
+  marginBottom: 15
 })
 const labelTextStyle = css({
   position: 'absolute',
@@ -54,10 +54,11 @@ const labelTextStyle = css({
   transition: 'top 200ms, font-size 200ms'
 })
 const labelTextTopStyle = css({
-  top: 0,
+  top: 3,
   fontSize: 12,
   lineHeight: '13px',
   [mUp]: {
+    top: 5,
     fontSize: 14,
     lineHeight: '15px',
   }
