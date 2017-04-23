@@ -118,42 +118,53 @@ state: {
 `npm i react-maskedinput --save`  
 `import MaskedInput from 'react-maskedinput'`
 
-## Zahlungsmethoden
+## Checkbox
 
-```html
-<label><input type="radio" name="paymentMethod"/> Banküberweisung </label>
-<label><input type="radio" name="paymentMethod"/> Mastercard </label>
-<label><input type="radio" name="paymentMethod"/> Visa </label>
-<label><input type="radio" name="paymentMethod"/> Postcard </label>
-<label><input type="radio" name="paymentMethod"/> Postfinance </label>
-<label><input type="radio" name="paymentMethod"/> Paypal </label>
-<label><input type="radio" name="paymentMethod"/> Twint </label>
+```react
+state: {checked: false}
+---
+<Checkbox
+  checked={state.checked}
+  onChange={(_, checked) => setState({checked})}>
+  Ich akzeptiere die
+  {' '}
+  <A target='_blank' href='https://www.republik.ch/legal/agb'>
+    Allgemeine Geschäftsbedingungen
+  </A>
+</Checkbox>
+```
+
+```react
+<Checkbox checked onChange={() => {}}>
+  Ich akzeptiere
+</Checkbox>
+```
+
+```react
+<Checkbox checked onChange={() => {}}>
+  Eine wunderbare Heiterkeit hat meine ganze Seele eingenommen, gleich den süßen Frühlingsmorgen, die ich mit ganzem Herzen genieße.
+</Checkbox>
 ```
 
 ## Komposition
 
 ```react|noSource
 <form>
-  <h3>Deine Unterstützung</h3>
+  <Interaction.H2>Deine Unterstützung</Interaction.H2>
   <p>
     ...
   </p>
 
-  <h3 style={{marginBottom: 0}}>Deine Kontaktinformationen</h3>
+  <Interaction.H2>Deine Kontaktinformationen</Interaction.H2>
   <p style={{marginTop: 0}}>
     <Field label='Dein Name' />
     <Field label='Deine E-Mail' />
   </p>
 
-  <h3>Zahlungsart auswählen</h3>
   <p>
-    <label><input type="radio" name="paymentMethod"/> Banküberweisung </label>
-    <label><input type="radio" name="paymentMethod"/> Mastercard </label>
-    <label><input type="radio" name="paymentMethod"/> Visa </label>
-    <label><input type="radio" name="paymentMethod"/> Postcard </label>
-    <label><input type="radio" name="paymentMethod"/> Postfinance </label>
-    <label><input type="radio" name="paymentMethod"/> Paypal </label>
-    <label><input type="radio" name="paymentMethod"/> Twint </label>
+    <Checkbox>
+      Ich akzeptiere
+    </Checkbox>
   </p>
 
   <Button>Weiter</Button>

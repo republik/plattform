@@ -74,7 +74,9 @@ ReactDOM.render(
             path: '/formulare',
             title: 'Formulare',
             imports: {
+              ...require('./components/Typography'),
               Button: require('./components/Button'),
+              Checkbox: require('./components/Form/Checkbox.js'),
               Field: require('./components/Form/Field.js'),
               AutosuggestField: require('./components/Form/AutosuggestField.js'),
               MaskedInput: require('react-maskedinput')

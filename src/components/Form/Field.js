@@ -18,6 +18,7 @@ const fieldStyle = css({
   padding: `${yPadding}px ${xPadding}px`,
   textDecoration: 'none',
   height: fieldHeight,
+  fontFamily: fontFamilies.sansSerifRegular,
   fontSize: 22,
   boxSizing: 'border-box',
   backgroundColor: 'white',
