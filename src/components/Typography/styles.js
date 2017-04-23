@@ -100,6 +100,16 @@ export const interactionH1 = {
 
 export const interactionH2 = {
   color: colors.text,
+  fontFamily: fontFamilies.sansSerifRegular,
+  fontWeight: 'normal',
+  fontSize: 30,
+  lineHeight: '35px',
+  letterSpacing: -0.26,
+  margin: 0
+}
+
+export const interactionH3 = {
+  color: colors.text,
   fontFamily: fontFamilies.sansSerifMedium,
   fontWeight: 'normal',
   fontSize: 22,

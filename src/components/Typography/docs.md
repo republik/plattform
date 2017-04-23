@@ -94,7 +94,11 @@ Benutzeroberflächen, strukturierte Informationen in GT America. Ohne Margins.
 ```
 
 ```react
-<Interaction.H2>The quick brown fox jumps over the lazy dog</Interaction.H2>
+<Interaction.H2>The quick brown fox jumps over...</Interaction.H2>
+```
+
+```react
+<Interaction.H3>The quick brown fox jumps over the lazy dog</Interaction.H3>
 ```
 
 ### Paragraphen

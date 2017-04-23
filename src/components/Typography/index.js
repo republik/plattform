@@ -44,6 +44,7 @@ export const Quote = ({children, source, ...props}) => (
 
 const iH1Rule = css(styles.interactionH1)
 const iH2Rule = css(styles.interactionH2)
+const iH3Rule = css(styles.interactionH3)
 const iPRule = css(styles.interactionP)
 
 export const Interaction = {
@@ -52,6 +53,9 @@ export const Interaction = {
   ),
   H2: ({children, ...props}) => (
     <h2 {...props} {...iH2Rule}>{children}</h2>
+  ),
+  H3: ({children, ...props}) => (
+    <h3 {...props} {...iH3Rule}>{children}</h3>
   ),
   P: ({children, ...props}) => (
     <p {...props} {...iPRule}>{children}</p>
