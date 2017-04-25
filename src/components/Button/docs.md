@@ -66,6 +66,16 @@ Grosse Buttons sind Block-Elemente und füllen den gegebenen Platz.
 </Button>
 ```
 
+### Spezialfälle
+
+Für Einpassungen, z.B. in einen Header, ist es zulässig eine explizite Höhe zu setzen.
+
+```react
+<Button style={{height: 50}}>
+  Päng
+</Button>
+```
+
 ## Block
 
 ```react
