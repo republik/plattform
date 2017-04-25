@@ -5,7 +5,7 @@ import {fontFamilies} from '../../theme/fonts'
 import {mUp} from '../../theme/mediaQueries'
 
 const xPadding = 0
-const yPadding = 9
+const yPadding = 9 // (40 - 22) / 2
 const borderWidth = 1
 const lineHeight = 20
 export const fieldHeight = 40
@@ -15,7 +15,8 @@ const fieldStyle = css({
   appearance: 'none',
   outline: 'none',
   verticalAlign: 'bottom',
-  padding: `${yPadding}px ${xPadding}px`,
+  // yPadding can interfere with font
+  padding: `0 ${xPadding}px`,
   textDecoration: 'none',
   height: fieldHeight,
   fontFamily: fontFamilies.sansSerifRegular,
