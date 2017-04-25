@@ -38,9 +38,14 @@ const fieldErrorStyle = css({
   }
 })
 const fieldIncStyle = css({
-  appearance: 'none',
   '::-ms-clear': {
     display: 'none'
+  },
+  '::-webkit-inner-spin-button': {
+    appearance: 'none'
+  },
+  '::-webkit-outer-spin-button': {
+    appearance: 'none'
   }
 })
 
