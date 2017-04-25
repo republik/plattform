@@ -37,6 +37,11 @@ const fieldErrorStyle = css({
     borderColor: colors.error
   }
 })
+const fieldIncStyle = css({
+  '::-ms-clear': {
+    display: 'none'
+  }
+})
 
 const containerStyle = css({
   width: '100%',
@@ -87,6 +92,31 @@ const blackStyle = css({
     borderColor: '#000'
   }
 })
+const arrowUpStyle = css({
+  position: 'absolute',
+  right: 0,
+  top: lineHeight + 3,
+  cursor: 'pointer'
+})
+const arrowDownStyle = css({
+  position: 'absolute',
+  right: 0,
+  top: lineHeight + fieldHeight / 2 - 3,
+  cursor: 'pointer'
+})
+
+const ArrowUp = ({size, fill, ...props}) => (
+  <svg {...props} fill={fill} {...arrowUpStyle} width={size} height={size} viewBox='0 0 24 24'>
+    <path d='M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z' />
+    <path d='M0 0h24v24H0z' fill='none' />
+  </svg>
+)
+const ArrowDown = ({size, fill, ...props}) => (
+  <svg {...props} fill={fill} {...arrowDownStyle} width={size} height={size} viewBox='0 0 24 24'>
+    <path d='M7.41 7.84L12 12.42l4.59-4.58L18 9.25l-6 6-6-6z' />
+    <path d='M0 0h24v24H0z' fill='none' />
+  </svg>
+)
 
 class Field extends Component {
   constructor (props, context) {
@@ -105,7 +135,9 @@ class Field extends Component {
       name, autoComplete,
       type, simulate: sim,
       label, error,
-      renderInput
+      renderInput,
+      onInc,
+      onDec
     } = this.props
     
     let simulationClassName
@@ -126,6 +158,8 @@ class Field extends Component {
       colorStyle = whiteStyle
     }
 
+    const hasIncrease = !!onInc
+    const hasDecrease = !!onDec
     const hasError = !!error
     const labelStyle = (isFocused || value || hasError)
       ? merge(
@@ -135,9 +169,10 @@ class Field extends Component {
           colorStyle
         )
       : merge(labelTextStyle, colorStyle)
+    const incStyle = hasIncrease ? fieldIncStyle : undefined
     const fStyle = hasError
-      ? merge(fieldStyle, fieldErrorStyle, colorStyle)
-      : merge(fieldStyle, colorStyle)
+      ? merge(fieldStyle, fieldErrorStyle, incStyle, colorStyle)
+      : merge(fieldStyle, incStyle, colorStyle)
 
     return (
       <label {...containerStyle}>
@@ -173,6 +208,32 @@ class Field extends Component {
           ].filter(Boolean).join(' ')
         })}
         <span {...labelStyle}>{error || label}</span>
+        {hasIncrease && (
+          <ArrowUp
+            fill={isFocused ? colors.primary : colors.disabled}
+            size={fieldHeight / 2}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              onInc()
+              if (this.input) {
+                this.input.focus()
+              }
+            }} />
+        )}
+        {hasDecrease && (
+          <ArrowDown
+            fill={isFocused ? colors.primary : colors.disabled}
+            size={fieldHeight / 2}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              onDec()
+              if (this.input) {
+                this.input.focus()
+              }
+            }} />
+        )}
       </label>
     )
   }

@@ -14,6 +14,21 @@
     error='Geben sie eine gültige E-Mail-Adresse an' />
 ```
 
+### Auf- und Abstockung
+
+```react
+state: {
+  value: 240
+}
+---
+<Field
+  label='Betrag'
+  value={state.value}
+  onChange={(_, value) => setState({value})}
+  onInc={() => setState({value: state.value + 10})}
+  onDec={() => setState({value: state.value - 10})} />
+```
+
 ### Schwarzweiss
 
 ```react|span-3
