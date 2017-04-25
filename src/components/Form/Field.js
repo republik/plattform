@@ -38,6 +38,7 @@ const fieldErrorStyle = css({
   }
 })
 const fieldIncStyle = css({
+  appearance: 'none',
   '::-ms-clear': {
     display: 'none'
   }
