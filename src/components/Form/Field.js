@@ -214,19 +214,6 @@ class Field extends Component {
           ].filter(Boolean).join(' ')
         })}
         <span {...labelStyle}>{error || label}</span>
-        {hasIncrease && (
-          <ArrowUp
-            fill={isFocused ? colors.primary : colors.disabled}
-            size={fieldHeight / 2}
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              onInc()
-              if (this.input) {
-                this.input.focus()
-              }
-            }} />
-        )}
         {hasDecrease && (
           <ArrowDown
             fill={isFocused ? colors.primary : colors.disabled}
@@ -235,6 +222,19 @@ class Field extends Component {
               e.preventDefault()
               e.stopPropagation()
               onDec()
+              if (this.input) {
+                this.input.focus()
+              }
+            }} />
+        )}
+        {hasIncrease && (
+          <ArrowUp
+            fill={isFocused ? colors.primary : colors.disabled}
+            size={fieldHeight / 2}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              onInc()
               if (this.input) {
                 this.input.focus()
               }
