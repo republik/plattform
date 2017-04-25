@@ -8,7 +8,8 @@ const styles = {
     fontSize: 16,
     lineHeight: '20px',
     color: colors.text,
-    fontFamily: fontFamilies.sansSerifRegular
+    fontFamily: fontFamilies.sansSerifRegular,
+    cursor: 'pointer'
   }),
   input: css({
     display: 'none'

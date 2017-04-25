@@ -146,6 +146,35 @@ state: {checked: false}
 </Checkbox>
 ```
 
+## Radio
+
+```react
+state: {value: 'yes'}
+---
+<P>
+  <Radio
+    value='yes'
+    checked={state.value === 'yes'}
+    onChange={(event) => setState({value: event.target.value})}>
+    Ja
+  </Radio>
+  <br />
+  <Radio
+    value='no'
+    checked={state.value === 'no'}
+    onChange={(event) => setState({value: event.target.value})}>
+    Nein
+  </Radio>
+  <br />
+  <Radio
+    value='maybe'
+    checked={state.value === 'maybe'}
+    onChange={(event) => setState({value: event.target.value})}>
+    Vielleicht
+  </Radio>
+</P>
+```
+
 ## Komposition
 
 ```react|noSource
