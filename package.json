@@ -1,9 +1,10 @@
 {
   "name": "@project-r/styleguide",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "peerDependencies": {
     "glamor": "^2.20.24",
-    "react": "^15.4.2"
+    "react": "^15.4.2",
+    "prop-types": "^15.5.7"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",
@@ -13,6 +14,7 @@
     "catalog": "^2.5.3",
     "core-js": "^2.4.1",
     "glamor": "^2.20.24",
+    "prop-types": "^15.5.7",
     "react": "^15.4.2",
     "react-autocomplete": "^1.4.1",
     "react-dom": "^15.4.2",
@@ -31,7 +33,7 @@
     "build:lib": "babel src --out-dir lib",
     "build": "npm run build:lib && react-scripts build",
     "start": "react-scripts start",
-    "dev": "babel -w src --out-dir lib & react-scripts start",
+    "dev": "babel -w src --out-dir lib & PORT=3003 react-scripts start",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   }

@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react'
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import Autocomplete from 'react-autocomplete'
 import * as colors from '../../theme/colors'
 import Field, {fieldHeight} from './Field'
