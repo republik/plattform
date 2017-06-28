@@ -1,36 +1,21 @@
-# R Styleguide
+# Republik Styleguide
 
-This styleguide is build with [Catalog](https://interactivethings.github.io/catalog/). You can write documention in Markdown and React.
+Das Erscheinungsbild der Republik ist nicht abgeschlossen sondern wird ständig erweitert und weiterentwickelt.
 
-## Develop
+Der Styleguide dokumentiert den aktuellen Stand und stellt diesen als React-Komponenten, publiziert als NPM-Paket, zur Verfügung.
 
-You will need [Node.js 6.9](https://nodejs.org/en/download/current/) or higher.
+## Benutzen
 
-To start the development server run:
-
-```
-npm install
-npm start
-```
-
-## Deploy
-
-Everything pushed on master is automatically deployed to:
-[styleguide.project-r.construction](https://styleguide.project-r.construction/)
-
-## Use it in your React app
-
-The peer dependencies are: `react` and `glamor`
+Voraussetzung zur Nutzung sind die Pakete: `react` und `glamor`.
 
 ```
 npm install @project-r/styleguide --save
 ```
 
-Then use it in your app:
+Beispiel [Button](/components/button):
 
 ```
 import {Button} from '@project-r/styleguide'
-
 
 const Crowdfunding = () => (
   <section>
@@ -40,9 +25,11 @@ const Crowdfunding = () => (
 )
 ```
 
-### Usage with Next.js
+Siehe Menüpunkt «Komponenten» für die volle Liste und Dokumentation.
 
-Make sure to include the CSS when server rendering with following `pages/_document.js`:
+### Mit Next.js
+
+`glamor` benötigt eine Intergation in den Server-Rendering-Prozess. Eine einfache Integration in `pages/_document.js`:
 
 ```
 import Document, {Head, Main, NextScript} from 'next/document'
@@ -72,3 +59,21 @@ export default class MyDocument extends Document {
   }
 }
 ```
+
+Siehe auch:
+- [next.js Beispiel](https://github.com/zeit/next.js/blob/master/examples/with-glamor/pages/_document.js)
+- [Webfonts Integration](/typographie)
+
+## Weiterentwickeln
+
+Der Styleguide ist gebaut mit [Catalog](https://interactivethings.github.io/catalog/). Die Dokumentation wird mit Markdown und React geschrieben.
+
+Zur Entwicklung wird [Node.js 6.9](https://nodejs.org/en/download/current/) oder neuer benötigt.
+
+Lokalen Entwicklungsserver starten:
+
+```
+npm install
+npm run dev
+```
+
