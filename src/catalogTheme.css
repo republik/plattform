@@ -3,11 +3,21 @@ svg g[fill="#FFFFFF"] {
   fill: #000;
 }
 
-#root .cg-Page > hr {
-    margin: 10px 0;
-    border-bottom: 1px solid #000;
+#root .cg-Page > hr {   
+  margin: 10px 0;  
+  border-bottom: 1px solid #000;
+  border-color: rgba(0,0,0,0);
+  height: 1em;
+} 
+
+#root .cg-Specimen-Html, #root section {     
+  border: none !important; 
 }
 
-#root .cg-Specimen-Html, #root section {
-    border: none !important;
+.cg-Specimen-Html {
+  border: none !important; 
 }
+
+#root .cg-Page > blockquote {
+  border-left: none !important;
+} 
