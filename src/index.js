@@ -21,9 +21,9 @@ ReactDOM.render(
     ]}
     pages={[
       {
-        path: '/logo',
-        title: 'Logo',
-        src: require('../docs/logo.md')
+        path: '/',
+        title: 'Übersicht',
+        src: require('../README.md')
       },
       {
         title: 'Grundlagen',
