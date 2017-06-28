@@ -83,41 +83,6 @@ ReactDOM.render(
               MaskedInput: require('react-maskedinput')
             },
             src: require('./components/Form/docs.md')
-          },
-          {
-            path: '/media',
-            title: 'Bilder und Videos',
-            src: require('./components/Media.docs.md')
-          },
-          {
-            path: '/navigation',
-            title: 'Navigation',
-            src: require('./components/Navigation.docs.md')
-          },
-          {
-            path: '/share',
-            title: 'Share',
-            src: require('./components/Share.docs.md')
-          },
-          {
-            path: '/crowdfunding',
-            title: 'Crowdfunding',
-            src: require('./components/Crowdfunding.docs.md')
-          },
-          {
-            path: '/community',
-            title: 'Community',
-            src: require('./components/Community.docs.md')
-          },
-          {
-            path: '/kalender',
-            title: 'Kalender',
-            src: require('./components/Calendar.docs.md')
-          },
-          {
-            path: '/manifest',
-            title: 'Manifest',
-            src: require('./components/Manifest.docs.md')
           }
         ]
       }
