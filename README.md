@@ -1,12 +1,10 @@
-# Republik Styleguide
-
-Das Erscheinungsbild der Republik ist nicht abgeschlossen sondern wird ständig erweitert und weiterentwickelt.
+Das Erscheinungsbild ist nicht abgeschlossen sondern wird ständig erweitert und weiterentwickelt.
 
 Der Styleguide dokumentiert den aktuellen Stand und stellt diesen als React-Komponenten, publiziert als NPM-Paket, zur Verfügung.
 
 ## Benutzen
 
-Voraussetzung zur Nutzung sind die Pakete: `react` und `glamor`.
+Voraussetzung zur Nutzung sind die Pakete: `react`, `prop-types` und `glamor`.
 
 ```
 npm install @project-r/styleguide --save
@@ -14,7 +12,7 @@ npm install @project-r/styleguide --save
 
 Beispiel [Button](/components/button):
 
-```
+```code|lang-js
 import {Button} from '@project-r/styleguide'
 
 const Crowdfunding = () => (
@@ -31,7 +29,7 @@ Siehe Menüpunkt «Komponenten» für die volle Liste und Dokumentation.
 
 `glamor` benötigt eine Intergation in den Server-Rendering-Prozess. Eine einfache Integration in `pages/_document.js`:
 
-```
+```code|lang-js
 import Document, {Head, Main, NextScript} from 'next/document'
 import {renderStatic} from 'glamor/server'
 
