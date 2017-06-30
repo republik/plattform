@@ -27,6 +27,8 @@
     "src"
   ],
   "main": "./lib/lib.js",
+  "author": "Thomas Preusse <t@preus.se> (https://t.preus.se/)",
+  "license": "BSD-3-Clause",
   "scripts": {
     "prepublishOnly": "npm run prebuild && npm run build:lib",
     "prebuild": "rimraf lib",

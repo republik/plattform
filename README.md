@@ -2,6 +2,12 @@ Das Erscheinungsbild ist nicht abgeschlossen sondern wird ständig erweitert und
 
 Der Styleguide dokumentiert den aktuellen Stand und stellt diesen als React-Komponenten, publiziert als NPM-Paket, zur Verfügung.
 
+## Lizenz
+
+Das Logo und die Schriften sind Eigentum ihrer Besitzer – Project R (Logo), GrilliType (GT America) und Nootype (Rubis) – und dürfen nicht ohne Genehmigung benutzt werden.
+
+Der Quellcode ist «BSD 3-clause» lizenziert.
+
 ## Benutzen
 
 Voraussetzung zur Nutzung sind die Pakete: `react`, `prop-types` und `glamor`.
