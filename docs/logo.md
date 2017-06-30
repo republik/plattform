@@ -1,3 +1,0 @@
-Logo
-
-- The End
