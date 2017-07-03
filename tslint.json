@@ -8,6 +8,7 @@
     "prefer-const": true,
     "no-unused-variable": true,
     "no-shadowed-variable": true,
-    "ordered-imports": false
+    "ordered-imports": false,
+    "object-literal-sort-keys": false
   }
 }
