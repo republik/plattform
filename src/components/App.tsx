@@ -1,43 +1,18 @@
 import * as React from 'react'
+import { css, StyleAttribute } from 'glamor'
+import Head from 'next/head'
 
 export default ({ children }: any) =>
   <main>
+    <Head>
+      <title>Project R - Admin Interface</title>
+      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      <style>{`
+        html, body {
+          padding: 0;
+          margin: 0;
+        }
+      `}</style>
+    </Head>
     {children}
-    <style>{`
-      * {
-        font-family: Menlo, Monaco, "Lucida Console", "Liberation Mono",
-          "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New",
-          monospace, serif;
-      }
-      body {
-        margin: 0;
-        padding: 25px 50px;
-      }
-      a {
-        color: #22bad9;
-      }
-      p {
-        font-size: 14px;
-        line-height: 24px;
-      }
-      article {
-        margin: 0 auto;
-        max-width: 650px;
-      }
-      button {
-        align-items: center;
-        background-color: #22bad9;
-        border: 0;
-        color: white;
-        display: flex;
-        padding: 5px 7px;
-      }
-      button:active {
-        background-color: #1b9db7;
-        transition: background-color .3s;
-      }
-      button:focus {
-        outline: none;
-      }
-    `}</style>
   </main>

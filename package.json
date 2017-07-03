@@ -6,13 +6,14 @@
     "prebuild": "tsc && cp -R static dist/",
     "build": "next build dist",
     "predev": "tsc && cp -R static dist/",
-    "dev": "concurrently \"tsc --watch\" \"next dist\"",
+    "dev": "concurrently \"tsc --watch\" \"node scripts/server.js\"",
     "start": "next start dist",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "prettier": "prettier --single-quote --no-semi --write \"src/**/*.{ts,tsx}\""
   },
   "dependencies": {
     "@project-r/styleguide": "^0.4.9",
+    "express": "^4.15.3",
     "glamor": "^2.20.25",
     "next": "beta",
     "prop-types": "^15.5.10",

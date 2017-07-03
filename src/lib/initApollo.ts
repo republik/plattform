@@ -13,7 +13,7 @@ const create = (initialState?: any): ApolloClient =>
     initialState,
     ssrMode: !process.browser,
     networkInterface: createNetworkInterface({
-      uri: 'https://api.graph.cool/simple/v1/cixmkt2ul01q00122mksg82pn',
+      uri: 'http://localhost:3001/graphql',
       opts: {
         credentials: 'same-origin'
       }
