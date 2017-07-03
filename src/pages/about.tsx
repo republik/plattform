@@ -1,7 +1,8 @@
+import * as React from 'react'
 import App from '../components/App'
 import Header from '../components/Header'
 
-export default props =>
+export default (props: any) =>
   <App>
     <Header pathname={props.url.pathname} />
     <article>
