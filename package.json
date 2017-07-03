@@ -1,0 +1,43 @@
+{
+  "name": "next-typescript",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "ts-node node_modules/tape/bin/tape src/**/*.test.{ts,tsx} | faucet",
+    "prebuild": "tsc && cp -R static dist/",
+    "build": "next build dist",
+    "predev": "tsc && cp -R static dist/",
+    "dev": "concurrently \"tsc --watch\" \"next dist\"",
+    "start": "next start dist",
+    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "prettier": "prettier --single-quote --no-semi --write \"src/**/*.{ts,tsx}\""
+  },
+  "dependencies": {
+    "@project-r/styleguide": "^0.4.9",
+    "glamor": "^2.20.25",
+    "next": "beta",
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-apollo": "^1.4.2",
+    "react-dom": "^15.6.1",
+    "react-virtualized": "^9.8.0"
+  },
+  "devDependencies": {
+    "@types/enzyme": "^2.8.1",
+    "@types/node": "^8.0.4",
+    "@types/prop-types": "^15.5.1",
+    "@types/react": "^15.0.33",
+    "@types/react-virtualized": "^9.7.2",
+    "@types/tape": "^4.2.30",
+    "concurrently": "^3.5.0",
+    "enzyme": "^2.9.1",
+    "faucet": "0.0.1",
+    "glob": "^7.1.2",
+    "prettier": "^1.5.0",
+    "react-test-renderer": "^15.6.1",
+    "tape": "^4.7.0",
+    "ts-node": "^3.1.0",
+    "tslint": "^5.4.3",
+    "tslint-config-prettier": "^1.1.0",
+    "typescript": "^2.4.1"
+  }
+}
