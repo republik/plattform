@@ -1,7 +1,9 @@
-export default ({ children }) =>
+import * as React from 'react'
+
+export default ({ children }: any) =>
   <main>
     {children}
-    <style jsx global>{`
+    <style>{`
       * {
         font-family: Menlo, Monaco, "Lucida Console", "Liberation Mono",
           "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New",

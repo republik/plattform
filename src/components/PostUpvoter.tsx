@@ -1,11 +1,18 @@
-import React from 'react'
-import { gql, graphql } from 'react-apollo'
+import * as React from 'react'
+import { gql, graphql, OptionProps, QueryProps } from 'react-apollo'
 
-function PostUpvoter({ upvote, votes, id }) {
+interface OwnProps {
+  [prop: string]: any
+  upvote?: any
+  votes: number
+  id: string
+}
+
+const PostUpvoter = ({ upvote, votes, id }: OwnProps) => {
   return (
     <button onClick={() => upvote(id, votes + 1)}>
       {votes}
-      <style jsx>{`
+      <style>{`
         button {
           background-color: transparent;
           border: 1px solid #e4e4e4;
@@ -40,9 +47,12 @@ const upvotePost = gql`
 `
 
 export default graphql(upvotePost, {
-  props: ({ ownProps, mutate }) => ({
-    upvote: (id, votes) =>
-      mutate({
+  props: ({ ownProps, mutate }: OptionProps<OwnProps, {}>) => ({
+    upvote: (id: string, votes: number) => {
+      if (!mutate) {
+        throw new Error('mutate not defined')
+      }
+      return mutate({
         variables: { id, votes },
         optimisticResponse: {
           __typename: 'Mutation',
@@ -53,5 +63,6 @@ export default graphql(upvotePost, {
           }
         }
       })
+    }
   })
 })(PostUpvoter)

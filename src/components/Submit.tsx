@@ -1,11 +1,26 @@
-import { gql, graphql } from 'react-apollo'
+import * as React from 'react'
+import { FormEvent } from 'react'
+import { gql, graphql, OptionProps } from 'react-apollo'
+import { AllPostsResult, CreatePostResult } from '../types/posts'
 
-function Submit({ createPost }) {
-  function handleSubmit(e) {
+interface DOMForm extends HTMLFormElement {
+  elements: HTMLFormControlsCollection & {
+    [key: string]: HTMLInputElement
+  }
+}
+
+interface OwnProps {
+  [prop: string]: any
+  createPost?: (title: string, url: string) => Promise<any>
+}
+
+const Submit = ({ createPost }: OwnProps) => {
+  const handleSubmit = (e: FormEvent<DOMForm>) => {
     e.preventDefault()
+    const form = e.target as DOMForm
 
-    let title = e.target.elements.title.value
-    let url = e.target.elements.url.value
+    const title = form.elements.title.value
+    let url = form.elements.url.value
 
     if (title === '' || url === '') {
       window.alert('Both fields are required.')
@@ -17,11 +32,14 @@ function Submit({ createPost }) {
       url = `http://${url}`
     }
 
+    if (!createPost) {
+      throw new Error('createPost is undefined')
+    }
     createPost(title, url)
 
     // reset form
-    e.target.elements.title.value = ''
-    e.target.elements.url.value = ''
+    form.elements.title.value = ''
+    form.elements.url.value = ''
   }
 
   return (
@@ -30,7 +48,7 @@ function Submit({ createPost }) {
       <input placeholder="title" name="title" />
       <input placeholder="url" name="url" />
       <button type="submit">Submit</button>
-      <style jsx>{`
+      <style>{`
         form {
           border-bottom: 1px solid #ececec;
           padding-bottom: 20px;
@@ -61,19 +79,28 @@ const createPost = gql`
 `
 
 export default graphql(createPost, {
-  props: ({ mutate }) => ({
-    createPost: (title, url) =>
-      mutate({
+  props: ({ mutate }: OptionProps<OwnProps, CreatePostResult>) => ({
+    createPost: (title: string, url: string) => {
+      if (!mutate) {
+        throw new Error('mutate not defined')
+      }
+      return mutate({
         variables: { title, url },
         updateQueries: {
-          allPosts: (previousResult, { mutationResult }) => {
-            const newPost = mutationResult.data.createPost
-            return Object.assign({}, previousResult, {
-              // Append the new post
-              allPosts: [newPost, ...previousResult.allPosts]
-            })
+          allPosts: (
+            previousResult: AllPostsResult,
+            { mutationResult: { data } }: any
+          ) => {
+            const newPost = (data as CreatePostResult).createPost
+            return {
+              ...previousResult,
+              ...{
+                allPosts: [newPost, ...previousResult.allPosts]
+              }
+            }
           }
         }
       })
+    }
   })
 })(Submit)

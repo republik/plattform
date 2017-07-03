@@ -1,26 +1,36 @@
+import * as React from 'react'
 import Link from 'next/link'
 
-export default ({ pathname }) =>
-  <header>
-    <Link prefetch href="/">
-      <a className={pathname === '/' && 'is-active'}>Home</a>
-    </Link>
+export default ({ pathname }: any) => {
+  const indexClassName: string | undefined =
+    pathname === '/' ? 'is-active' : undefined
 
-    <Link prefetch href="/about">
-      <a className={pathname === '/about' && 'is-active'}>About</a>
-    </Link>
+  const aboutClassName: string | undefined =
+    pathname === '/about' ? 'is-active' : undefined
 
-    <style jsx>{`
-      header {
-        margin-bottom: 25px;
-      }
-      a {
-        font-size: 14px;
-        margin-right: 15px;
-        text-decoration: none;
-      }
-      .is-active {
-        text-decoration: underline;
-      }
-    `}</style>
-  </header>
+  return (
+    <header>
+      <Link prefetch href="/">
+        <a className={indexClassName}>Home</a>
+      </Link>
+
+      <Link prefetch href="/about">
+        <a className={aboutClassName}>About</a>
+      </Link>
+
+      <style>{`
+        header {
+          margin-bottom: 25px;
+        }
+        a {
+          font-size: 14px;
+          margin-right: 15px;
+          text-decoration: none;
+        }
+        .is-active {
+          text-decoration: underline;
+        }
+      `}</style>
+    </header>
+  )
+}

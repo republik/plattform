@@ -1,18 +1,29 @@
-import { gql, graphql } from 'react-apollo'
+import * as React from 'react'
+import { gql, graphql, OptionProps, QueryProps } from 'react-apollo'
 import PostUpvoter from './PostUpvoter'
+import { Post, AllPostsResult } from '../types/posts'
+
+interface OwnProps {
+  [prop: string]: any
+  loadMorePosts?: any
+}
+
+interface Props extends OwnProps {
+  data: QueryProps & AllPostsResult
+}
 
 const POSTS_PER_PAGE = 10
 
-function PostList({
+const PostList = ({
   data: { allPosts, loading, _allPostsMeta },
   loadMorePosts
-}) {
+}: Props) => {
   if (allPosts && allPosts.length) {
     const areMorePosts = allPosts.length < _allPostsMeta.count
     return (
       <section>
         <ul>
-          {allPosts.map((post, index) =>
+          {allPosts.map((post: Post, index: any) =>
             <li key={post.id}>
               <div>
                 <span>
@@ -31,7 +42,7 @@ function PostList({
               {' '}{loading ? 'Loading...' : 'Show More'}{' '}
             </button>
           : ''}
-        <style jsx>{`
+        <style>{`
           section {
             padding-bottom: 20px;
           }
@@ -90,8 +101,6 @@ const allPosts = gql`
   }
 `
 
-// The `graphql` wrapper executes a GraphQL query and makes the results
-// available on the `data` prop of the wrapped component (PostList)
 export default graphql(allPosts, {
   options: {
     variables: {
@@ -99,21 +108,29 @@ export default graphql(allPosts, {
       first: POSTS_PER_PAGE
     }
   },
-  props: ({ data }) => ({
+  props: ({ data }: OptionProps<OwnProps, AllPostsResult>) => ({
     data,
     loadMorePosts: () => {
+      if (!data) {
+        throw new Error('data object undefined')
+      }
       return data.fetchMore({
         variables: {
           skip: data.allPosts.length
         },
-        updateQuery: (previousResult, { fetchMoreResult }) => {
+        updateQuery: (previousResult: AllPostsResult, { fetchMoreResult }) => {
           if (!fetchMoreResult) {
             return previousResult
           }
-          return Object.assign({}, previousResult, {
-            // Append the new posts results to the old one
-            allPosts: [...previousResult.allPosts, ...fetchMoreResult.allPosts]
-          })
+          return {
+            ...previousResult,
+            ...{
+              allPosts: [
+                ...previousResult.allPosts,
+                ...(fetchMoreResult as AllPostsResult).allPosts
+              ]
+            }
+          }
         }
       })
     }
