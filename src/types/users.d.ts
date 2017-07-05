@@ -11,10 +11,19 @@ export interface User {
 export interface UsersResult {
   users: {
     items: User[]
-    meta: { count: number }
+    count: number
   }
 }
 
-export interface UserParams {
+export interface UserResult {
+  user: User
+}
+
+export interface UserTableParams {
   orderBy?: string
+  search?: string
+}
+
+export interface UserParams {
+  userId: string
 }

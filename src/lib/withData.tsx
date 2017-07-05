@@ -1,5 +1,8 @@
 import * as React from 'react'
-import { ApolloProvider, getDataFromTree } from 'react-apollo'
+import {
+  ApolloProvider,
+  getDataFromTree
+} from 'react-apollo'
 import Head from 'next/head'
 import initApollo from './initApollo'
 
@@ -17,7 +20,9 @@ export default (ComposedComponent: any) => {
       // Evaluate the composed component's getInitialProps()
       let composedInitialProps = {}
       if (ComposedComponent.getInitialProps) {
-        composedInitialProps = await ComposedComponent.getInitialProps(ctx)
+        composedInitialProps = await ComposedComponent.getInitialProps(
+          ctx
+        )
       }
 
       // Run all graphql queries in the component tree
@@ -25,12 +30,18 @@ export default (ComposedComponent: any) => {
       if (!process.browser) {
         const apollo = initApollo()
         // Provide the `url` prop data in case a graphql query uses it
-        const url = { query: ctx.query, pathname: ctx.pathname }
+        const url = {
+          query: ctx.query,
+          pathname: ctx.pathname
+        }
 
         // Run all graphql queries
         const app = (
           <ApolloProvider client={apollo}>
-            <ComposedComponent url={url} {...composedInitialProps} />
+            <ComposedComponent
+              url={url}
+              {...composedInitialProps}
+            />
           </ApolloProvider>
         )
         await getDataFromTree(app)

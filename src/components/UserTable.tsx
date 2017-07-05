@@ -1,5 +1,10 @@
 import * as React from 'react'
-import { gql, graphql, OptionProps, QueryProps } from 'react-apollo'
+import {
+  gql,
+  graphql,
+  OptionProps,
+  QueryProps
+} from 'react-apollo'
 import { css, StyleAttribute } from 'glamor'
 import {
   WindowScroller,
@@ -8,14 +13,25 @@ import {
   Table,
   Column
 } from 'react-virtualized'
+import { Label, colors } from '@project-r/styleguide'
+import routes from '../routes'
+import {
+  User,
+  UsersResult,
+  UserTableParams
+} from '../types/users'
+import SortIndicator from './SortIndicator'
 
-import { User, UsersResult, UserParams } from '../types/users'
+const { Link } = routes
 
 interface OwnProps {
   [prop: string]: any
   loadMoreUsers?: any
-  params: UserParams
-  onChange: (params: UserParams, previousParams: UserParams) => void
+  params: UserTableParams
+  onChange: (
+    params: UserTableParams,
+    previousParams: UserTableParams
+  ) => void
 }
 
 interface Props extends OwnProps {
@@ -38,14 +54,24 @@ const gridStyles: StyleAttribute = css({
   outline: 'none'
 })
 
+const headerStyles: StyleAttribute = css({
+  ':focus': {
+    outline: 'none'
+  },
+  borderBottom: `1px solid ${colors.secondary}`
+})
+
 const rowStyles: StyleAttribute = css({
   alignItems: 'center',
   display: 'flex',
   flexDirection: 'row'
 })
 
-const rowGetter = (list: User[]) => ({ index }: { index: number }): User =>
-  list[index]
+const rowGetter = (list: User[]) => ({
+  index
+}: {
+  index: number
+}): User => list[index]
 
 const isRowLoaded = (list: User[]) => ({
   index
@@ -53,6 +79,41 @@ const isRowLoaded = (list: User[]) => ({
   index: number
 }): boolean => {
   return !!list[index]
+}
+
+const columnHeaderRenderer = ({
+  columnData,
+  dataKey,
+  disableSort,
+  label,
+  sortBy,
+  sortDirection
+}: any) => {
+  const showSortIndicator = sortBy === dataKey
+  const children = [
+    <Label key="label" title={label}>
+      {label}
+    </Label>
+  ]
+
+  if (showSortIndicator) {
+    children.push(
+      <SortIndicator
+        key="SortIndicator"
+        sortDirection={sortDirection}
+      />
+    )
+  }
+
+  return children
+}
+
+const linkCellRenderer = ({ cellData: user }: any) => {
+  return (
+    <Link route="user" params={{ userId: user.id }}>
+      <a>Details</a>
+    </Link>
+  )
 }
 
 const deserializeOrderBy = (str?: string): SortOptions => {
@@ -66,10 +127,16 @@ const deserializeOrderBy = (str?: string): SortOptions => {
   }
 }
 
-const serializeOrderBy = ({ sortBy, sortDirection }: SortOptions): string =>
-  `${sortBy}:${sortDirection && sortDirection.toLowerCase()}`
+const serializeOrderBy = ({
+  sortBy,
+  sortDirection
+}: SortOptions): string =>
+  `${sortBy}:${sortDirection &&
+    sortDirection.toLowerCase()}`
 
-const createSortHandler = (props: OwnProps) => (sortOptions: SortOptions) =>
+const createSortHandler = (props: OwnProps) => (
+  sortOptions: SortOptions
+) =>
   props.onChange(
     {
       ...props.params,
@@ -78,89 +145,135 @@ const createSortHandler = (props: OwnProps) => (sortOptions: SortOptions) =>
     props.params
   )
 
-const UserList = ({
-  data: { users: { items, meta }, loading },
-  params: { orderBy },
-  loadMoreUsers
-}: Props) => {
-  if (items && items.length) {
-    const { sortBy, sortDirection } = deserializeOrderBy(orderBy)
-    return (
-      <div className={`${scrollContainerStyles}`}>
-        <WindowScroller>
-          {({ height, isScrolling, onChildScroll, scrollTop }: any) =>
-            <InfiniteLoader
-              isRowLoaded={isRowLoaded(items)}
-              loadMoreRows={loadMoreUsers}
-              rowCount={meta.count}
-            >
-              {({ onRowsRendered, registerChild }) =>
-                <AutoSizer disableHeight>
-                  {({ width }) => {
-                    return (
-                      <Table
-                        rowGetter={rowGetter(items)}
-                        width={width}
-                        height={height}
-                        isScrolling={isScrolling}
-                        onScroll={onChildScroll}
-                        scrollTop={scrollTop}
-                        headerHeight={20}
-                        onRowsRendered={onRowsRendered}
-                        ref={registerChild}
-                        rowHeight={30}
-                        rowCount={items.length}
-                        rowClassName={`${rowStyles}`}
-                        gridClassName={`${gridStyles}`}
-                        sortBy={sortBy}
-                        sortDirection={sortDirection}
-                      >
-                        <Column
-                          label="E-Mail"
-                          cellDataGetter={({ rowData }) => rowData.email}
-                          dataKey="email"
-                          width={400}
-                        />
-                        <Column
-                          label="First name"
-                          cellDataGetter={({ rowData }) => rowData.firstName}
-                          dataKey="firstName"
-                          width={150}
-                        />
-                        <Column
-                          label="Last name"
-                          cellDataGetter={({ rowData }) => rowData.lastName}
-                          dataKey="lastName"
-                          width={150}
-                        />
-                        <Column
-                          label="Created"
-                          cellDataGetter={({ rowData }) => {
-                            const date: Date = new Date(rowData.createdAt)
-                            return `${date.getDate()}.${date.getMonth() +
-                              1}.${date.getFullYear()}`
-                          }}
-                          dataKey="createdAt"
-                          width={200}
-                        />
-                      </Table>
-                    )
-                  }}
-                </AutoSizer>}
-            </InfiniteLoader>}
-        </WindowScroller>
-      </div>
-    )
+const UserList = (props: Props) => {
+  if (!props.data.users) {
+    return <div>Loading</div>
   }
-  return <div>Loading</div>
+  const {
+    data: { users: { items, count }, loading },
+    params: { orderBy },
+    loadMoreUsers
+  } = props
+
+  const { sortBy, sortDirection } = deserializeOrderBy(
+    orderBy
+  )
+  return (
+    <div className={`${scrollContainerStyles}`}>
+      <WindowScroller>
+        {({
+          height,
+          isScrolling,
+          onChildScroll,
+          scrollTop
+        }: any) =>
+          <InfiniteLoader
+            isRowLoaded={isRowLoaded(items)}
+            loadMoreRows={loadMoreUsers}
+            rowCount={count}
+          >
+            {({ onRowsRendered, registerChild }) =>
+              <AutoSizer disableHeight>
+                {({ width }) => {
+                  return (
+                    <Table
+                      rowGetter={rowGetter(items)}
+                      width={width}
+                      height={height}
+                      isScrolling={isScrolling}
+                      onScroll={onChildScroll}
+                      scrollTop={scrollTop}
+                      headerHeight={20}
+                      onRowsRendered={onRowsRendered}
+                      ref={registerChild}
+                      rowHeight={30}
+                      rowCount={items.length}
+                      rowClassName={`${rowStyles}`}
+                      gridClassName={`${gridStyles}`}
+                      headerClassName={`${headerStyles}`}
+                      sortBy={sortBy}
+                      sortDirection={sortDirection}
+                      sort={createSortHandler(props)}
+                    >
+                      <Column
+                        label="E-Mail"
+                        cellDataGetter={({ rowData }) =>
+                          rowData.email}
+                        dataKey="email"
+                        width={400}
+                        headerRenderer={
+                          columnHeaderRenderer
+                        }
+                      />
+                      <Column
+                        label="First name"
+                        cellDataGetter={({ rowData }) =>
+                          rowData.firstName}
+                        dataKey="firstName"
+                        width={150}
+                        headerRenderer={
+                          columnHeaderRenderer
+                        }
+                      />
+                      <Column
+                        label="Last name"
+                        cellDataGetter={({ rowData }) =>
+                          rowData.lastName}
+                        dataKey="lastName"
+                        width={150}
+                        headerRenderer={
+                          columnHeaderRenderer
+                        }
+                      />
+                      <Column
+                        label="Created"
+                        cellDataGetter={({ rowData }) => {
+                          const date: Date = new Date(
+                            rowData.createdAt
+                          )
+                          return `${date.getDate()}.${date.getMonth() +
+                            1}.${date.getFullYear()}`
+                        }}
+                        dataKey="createdAt"
+                        width={200}
+                        headerRenderer={
+                          columnHeaderRenderer
+                        }
+                      />
+
+                      <Column
+                        label="Detail"
+                        cellDataGetter={({ rowData }) =>
+                          rowData}
+                        cellRenderer={linkCellRenderer}
+                        dataKey="createdAt"
+                        width={100}
+                        headerRenderer={
+                          columnHeaderRenderer
+                        }
+                      />
+                    </Table>
+                  )
+                }}
+              </AutoSizer>}
+          </InfiniteLoader>}
+      </WindowScroller>
+    </div>
+  )
 }
 
 const users = gql`
-  query users($limit: Int!, $offset: Int, $orderBy: String) {
-    users(limit: $limit, offset: $offset, orderBy: $orderBy) {
-      meta {
-        count
-      }
+  query users(
+    $limit: Int!
+    $offset: Int
+    $orderBy: String
+  ) {
+    users(
+      limit: $limit
+      offset: $offset
+      orderBy: $orderBy
+    ) {
+      count
       items {
         id
         name
@@ -184,7 +297,9 @@ export default graphql(users, {
       }
     }
   },
-  props: ({ data }: OptionProps<OwnProps, UsersResult>) => ({
+  props: ({
+    data
+  }: OptionProps<OwnProps, UsersResult>) => ({
     data,
     loadMoreUsers: () => {
       if (!data) {
@@ -194,7 +309,10 @@ export default graphql(users, {
         variables: {
           offset: data.users.items.length
         },
-        updateQuery: (previousResult: UsersResult, { fetchMoreResult }) => {
+        updateQuery: (
+          previousResult: UsersResult,
+          { fetchMoreResult }
+        ) => {
           if (!fetchMoreResult) {
             return previousResult
           }
@@ -204,7 +322,8 @@ export default graphql(users, {
               users: {
                 items: [
                   ...previousResult.users.items,
-                  ...(fetchMoreResult as UsersResult).users.items
+                  ...(fetchMoreResult as UsersResult).users
+                    .items
                 ]
               }
             }

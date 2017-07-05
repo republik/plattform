@@ -1,0 +1,30 @@
+@font-face {
+    font-family: 'Rubis-Regular';
+    src:  url('fonts/rubis-regular.eot');
+    src:  url('fonts/rubis-regular.eot?#iefix') format('embedded-opentype'),
+          url('fonts/rubis-regular.woff2') format('woff2'),
+          url('fonts/rubis-regular.woff') format('woff'),
+          url('fonts/rubis-regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Rubis-Bold';
+    src:  url('fonts/rubis-bold.eot');
+    src:  url('fonts/rubis-bold.eot?#iefix') format('embedded-opentype'),
+          url('fonts/rubis-bold.woff2') format('woff2'),
+          url('fonts/rubis-bold.woff') format('woff'),
+          url('fonts/rubis-bold.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'GT-America-Standard-Regular';
+    src:  url('fonts/gt-america-standard-regular.eot');
+    src:  url('fonts/gt-america-standard-regular.eot?#iefix') format('embedded-opentype'),
+          url('fonts/gt-america-standard-regular.woff') format('woff'),
+          url('fonts/gt-america-standard-regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'GT-America-Standard-Medium';
+    src:  url('fonts/gt-america-standard-medium.eot');
+    src:  url('fonts/gt-america-standard-medium.eot?#iefix') format('embedded-opentype'),
+          url('fonts/gt-america-standard-medium.woff') format('woff'),
+          url('fonts/gt-america-standard-medium.ttf') format('truetype');
+}
