@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { default as Router } from 'next/router'
+import { default as Routes } from '../routes'
 import { css, StyleAttribute } from 'glamor'
 import { UserTableParams } from '../types/users'
 import withData from '../lib/withData'
@@ -10,11 +10,9 @@ import Container from '../components/Container'
 import Header from '../components/Header'
 import Body from '../components/Body'
 
-const changeHandler = (params: UserTableParams) =>
-  Router.push({
-    pathname: '/',
-    query: params
-  })
+const changeHandler = (params: UserTableParams) => {
+  Routes.Router.pushRoute('users', params)
+}
 
 export default withData((props: any) => {
   return (

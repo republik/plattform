@@ -1,4 +1,5 @@
-import React from 'react'
+import * as React from 'react'
+import { StatelessComponent } from 'react'
 import { compose } from 'redux'
 
 import withMe from '../../lib/withMe'
@@ -7,7 +8,15 @@ import withT from '../../lib/withT'
 import SignIn from './SignIn'
 import SignOut from './SignOut'
 
-const Me = ({ me, t, email }) =>
+interface AnyObject {
+  [key: string]: any
+}
+
+const Me: StatelessComponent<AnyObject> = ({
+  me,
+  t,
+  email
+}) =>
   <div>
     {me
       ? <div>

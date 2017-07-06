@@ -3,6 +3,10 @@ import {
   createNetworkInterface
 } from 'react-apollo'
 import * as fetch from 'isomorphic-fetch'
+import {
+  API_BASE_URL,
+  API_AUTHORIZATION_HEADER
+} from '../constants'
 
 let apolloClient: ApolloClient
 
@@ -11,21 +15,31 @@ if (!process.browser) {
   global.fetch = fetch
 }
 
-const create = (initialState?: any): ApolloClient =>
+const create = (
+  initialState?: any,
+  headers: any = {}
+): ApolloClient =>
   new ApolloClient({
     initialState,
     ssrMode: !process.browser,
     networkInterface: createNetworkInterface({
-      uri: 'http://localhost:3001/graphql',
+      uri: `${API_BASE_URL}/graphql`,
       opts: {
-        credentials: 'same-origin'
+        credentials: 'include',
+        headers: {
+          Authorization: API_AUTHORIZATION_HEADER,
+          cookie: headers.cookie
+        }
       }
     })
   })
 
-const initApollo = (initialState?: any): ApolloClient => {
+const initApollo = (
+  initialState?: any,
+  headers: any = {}
+): ApolloClient => {
   if (!process.browser) {
-    return create(initialState)
+    return create(initialState, headers)
   }
 
   if (!apolloClient) {

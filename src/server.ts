@@ -8,20 +8,8 @@ const handle = routes.getRequestHandler(app)
 
 app.prepare().then(() => {
   const server = express()
-
-  // server.get('/users/:userId', (req, res) => {
-  //   return app.render(
-  //     req,
-  //     res,
-  //     '/user',
-  //     Object.assign({}, req.query, {
-  //       userId: req.params.userId
-  //     })
-  //   )
-  // })
-
   server.get('*', (req, res) => {
     handle(req, res)
   })
-  server.listen(3000)
+  server.listen(3003)
 })

@@ -15,6 +15,8 @@ export default (ComposedComponent: any) => {
     public static displayName = `WithData(${ComposedComponent.displayName})`
 
     public static async getInitialProps(ctx: any) {
+      const headers = ctx.req ? ctx.req.headers : {}
+
       let serverState = {}
 
       // Evaluate the composed component's getInitialProps()
@@ -24,11 +26,10 @@ export default (ComposedComponent: any) => {
           ctx
         )
       }
-
       // Run all graphql queries in the component tree
       // and extract the resulting data
       if (!process.browser) {
-        const apollo = initApollo()
+        const apollo = initApollo({}, headers)
         // Provide the `url` prop data in case a graphql query uses it
         const url = {
           query: ctx.query,

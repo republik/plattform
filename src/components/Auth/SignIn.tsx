@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
-import { Component } from 'react'
+import { Component, ComponentClass } from 'react'
 import { gql, graphql } from 'react-apollo'
 import { css } from 'glamor'
 import { compose } from 'redux'
@@ -195,4 +195,9 @@ export const withSignIn = graphql(signInMutation, {
   })
 })
 
-export default compose(withSignIn, withT)(SignIn)
+const WrappedSignIn: ComponentClass<AnyObject> = compose(
+  withSignIn,
+  withT
+)(SignIn)
+
+export default WrappedSignIn
