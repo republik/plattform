@@ -5,6 +5,8 @@ import {
   OptionProps,
   QueryProps
 } from 'react-apollo'
+import { H1, Field } from '@project-r/styleguide'
+import { Row, Column } from './Grid'
 import { User, UserParams } from '../types/users'
 
 interface OwnProps {
@@ -21,10 +23,24 @@ const User = (props: Props) => {
     return <div>Loading ...</div>
   }
   return (
-    <div>
-      Hello
-      {props.data.user.email}
-    </div>
+    <Column>
+      <H1>
+        {props.data.user.name}
+      </H1>
+      <Field
+        value={props.data.user.firstName}
+        label="First name"
+      />
+      <Field value={props.data.user.email} label="E-mail" />
+      <Field
+        value={props.data.user.lastName}
+        label="Last name"
+      />
+      <Field
+        value={props.data.user.birthDate}
+        label="Birth date"
+      />
+    </Column>
   )
 }
 
