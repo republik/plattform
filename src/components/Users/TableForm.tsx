@@ -9,7 +9,9 @@ export interface FormProps {
 
 const searchHandler = (
   handler: (value: string) => void
-) => (event: any, value: string) => handler(value)
+) => (event: any, value: string) => {
+  handler(value)
+}
 
 export default ({
   search,
@@ -17,9 +19,8 @@ export default ({
   ...props
 }: FormProps) =>
   <div>
-    <Label>Search</Label>
     <Field
-      label="Enter email, name ..."
+      label="Search"
       value={search}
       onChange={searchHandler(onSearch)}
     />

@@ -41,10 +41,15 @@ const createChangeHandler = (
   params: any,
   handler: (v: any) => void
 ) => (fieldName: string) => (value: string) => {
-  handler({
-    ...params,
-    [fieldName]: value
-  })
+  if (value && value !== '') {
+    handler({
+      ...params,
+      ...{ [fieldName]: value }
+    })
+  } else {
+    delete params[fieldName]
+    handler(params)
+  }
 }
 
 const Users = (props: Props) => {

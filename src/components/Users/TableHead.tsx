@@ -23,6 +23,10 @@ const rowStyles = {
   borderBottom: `1px solid ${colors.divider}`
 }
 
+const interactiveStyles = {
+  cursor: 'pointer'
+}
+
 const deserializeParams = (str?: string): SortOptions => {
   if (!str) {
     return {}
@@ -83,7 +87,8 @@ export default ({ sort, onSort, ...props }: HeadProps) => {
       <Table>
         <Row style={rowStyles}>
           <Cell
-            flex="0 0 40%"
+            flex="0 0 30%"
+            style={interactiveStyles}
             onClick={sortHandler('email')}
           >
             <Label>
@@ -91,7 +96,8 @@ export default ({ sort, onSort, ...props }: HeadProps) => {
             </Label>
           </Cell>
           <Cell
-            flex="0 0 25%"
+            flex="0 0 20%"
+            style={interactiveStyles}
             onClick={sortHandler('firstName')}
           >
             <Label>
@@ -99,7 +105,8 @@ export default ({ sort, onSort, ...props }: HeadProps) => {
             </Label>
           </Cell>
           <Cell
-            flex="0 0 25%"
+            flex="0 0 20%"
+            style={interactiveStyles}
             onClick={sortHandler('lastName')}
           >
             <Label>
@@ -108,11 +115,15 @@ export default ({ sort, onSort, ...props }: HeadProps) => {
           </Cell>
           <Cell
             flex="0 0 10%"
+            style={interactiveStyles}
             onClick={sortHandler('createdAt')}
           >
             <Label>
               Created{indicator('createdAt')}
             </Label>
+          </Cell>
+          <Cell flex="0 0 10%">
+            <Label>Details</Label>
           </Cell>
         </Row>
       </Table>
