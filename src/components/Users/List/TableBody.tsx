@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { Table, Row, Cell } from '../Layout/Table'
+import { Table, Row, Cell } from '../../Layout/Table'
 import { A, colors } from '@project-r/styleguide'
-import routes from '../../routes'
+import routes from '../../../routes'
 const { Link } = routes
 
 const rowStyles = (index: number) => ({

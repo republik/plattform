@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { compose } from 'redux'
 import { Field, Label, colors } from '@project-r/styleguide'
-import Input from '../Form/Input'
-import { Container, Tile } from '../Layout/Grid'
+import Input from '../../Form/Input'
+import { Container, Tile } from '../../Layout/Grid'
 import * as debounce from 'debounce'
 
 export interface FormProps {
