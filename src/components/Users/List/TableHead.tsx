@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { Table, Row, Cell } from '../Layout/Table'
+import { Table, Row, Cell } from '../../Layout/Table'
 import * as Sticky from 'react-sticky-el'
 import { Label, colors } from '@project-r/styleguide'
-import SortIndicator from '../SortIndicator'
+import SortIndicator from '../../SortIndicator'
 
 export type SortDirection = 'asc' | 'desc'
 
@@ -87,7 +87,7 @@ export default ({ sort, onSort, ...props }: HeadProps) => {
       <Table>
         <Row style={rowStyles}>
           <Cell
-            flex="0 0 30%"
+            flex="0 0 40%"
             style={interactiveStyles}
             onClick={sortHandler('email')}
           >

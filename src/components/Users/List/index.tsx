@@ -7,16 +7,23 @@ import {
 } from 'react-apollo'
 import * as InfiniteScroller from 'react-infinite-scroller'
 import { css, StyleAttribute } from 'glamor'
-
-import {
-  User,
-  UsersResult,
-  UserTableParams
-} from '../../types/users'
+import { User } from '../../../types/admin'
 
 import TableForm from './TableForm'
 import TableHead from './TableHead'
 import TableBody from './TableBody'
+
+export interface UsersResult {
+  users: {
+    items: User[]
+    count: number
+  }
+}
+
+export interface UserTableParams {
+  orderBy?: string
+  search?: string
+}
 
 interface OwnProps {
   [prop: string]: any

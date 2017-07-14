@@ -24,7 +24,7 @@ export default ({ items, ...props }: any) =>
   <Table {...props}>
     {items.map((user: any, index: number) =>
       <Row key={`user-${index}`} style={rowStyles(index)}>
-        <Cell flex="0 0 30%">
+        <Cell flex="0 0 40%">
           {user.email}
         </Cell>
         <Cell flex="0 0 20%">

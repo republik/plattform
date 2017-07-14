@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { css, merge, StyleAttribute } from 'glamor'
+import { css, StyleAttribute } from 'glamor'
+import mergeClassNames from '../../lib/mergeClassNames'
 
 interface BasicProps extends React.Attributes {
   [key: string]: any
@@ -37,17 +38,6 @@ const tileStyles = ({
   css({
     flex
   })
-
-const mergeClassNames = (
-  classA: string | StyleAttribute,
-  classB?: string | StyleAttribute
-) =>
-  typeof classB === 'undefined'
-    ? classA
-    : typeof classA !== 'string' &&
-      typeof classB !== 'string'
-      ? merge(classA, classB)
-      : `${classA} ${classB}`
 
 const getRef = (
   Component: any,
@@ -139,3 +129,6 @@ export const createContainer = (
 
 export const Container = createContainer()('div')
 export const Tile = createTile()('div')
+export const ContainerTile = createContainer()(
+  createTile()('div')
+)

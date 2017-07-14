@@ -34,7 +34,8 @@ const HeaderSection = compose(
 
 const logoStyles = {
   width: '45px',
-  marginLeft: '5px'
+  marginLeft: '5px',
+  display: 'inline-block'
 }
 
 const navLinkStyles = {

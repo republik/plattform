@@ -13,9 +13,10 @@
   },
   "dependencies": {
     "@project-r/styleguide": "^0.4.9",
+    "debounce": "^1.0.2",
     "email-validator": "^1.0.7",
     "express": "^4.15.3",
-    "glamor": "^3.0.0-3",
+    "glamor": "^2.20.24",
     "next": "beta",
     "next-routes": "^1.0.40",
     "prop-types": "^15.5.10",
@@ -23,6 +24,7 @@
     "react-apollo": "^1.4.3",
     "react-dom": "^15.6.1",
     "react-infinite-scroller": "^1.0.14",
+    "react-maskedinput": "^4.0.0",
     "react-sticky-el": "^1.0.10"
   },
   "devDependencies": {
