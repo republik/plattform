@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { compose } from 'redux'
 import {
   gql,
   graphql,
@@ -13,6 +14,8 @@ import {
   ContainerTile
 } from '../../Layout/Grid'
 import { User, Pledge } from '../../../types/admin'
+import UserForm from './UserForm'
+import EmailForm from './EmailForm'
 import PledgeOverview from './PledgeOverview'
 
 export interface UserResult {
@@ -51,96 +54,14 @@ const User = (props: Props) => {
           {props.data.user.name}
         </Interaction.H3>
       </div>
-      <div>
-        <Input
-          name="email"
-          label="Email"
-          type="email"
-          value={props.data.user.email}
-        />
-      </div>
-      <div>
-        <Interaction.H3>General</Interaction.H3>
-        <Input
-          name="firstName"
-          type="text"
-          label="First name"
-          value={props.data.user.firstName}
-        />
-        <Input
-          name="lastName"
-          type="text"
-          label="Last name"
-          value={props.data.user.lastName}
-        />
-        <Input
-          name="birthDate"
-          type="date"
-          label="Birth date"
-          value={props.data.user.birthDate}
-        />
-        <Interaction.H3>Address</Interaction.H3>
-        <Input
-          name="name"
-          type="text"
-          label="Name"
-          value={
-            props.data.user.address
-              ? props.data.user.address.name
-              : ''
-          }
-        />
-        <Input
-          name="line1"
-          type="text"
-          label="Line 1"
-          value={
-            props.data.user.address
-              ? props.data.user.address.line1
-              : ''
-          }
-        />
-        <Input
-          name="line2"
-          type="text"
-          label="Line 2"
-          value={
-            props.data.user.address
-              ? props.data.user.address.line2
-              : ''
-          }
-        />
-        <Input
-          name="postalCode"
-          label="Postal code"
-          type="text"
-          value={
-            props.data.user.address
-              ? props.data.user.address.postalCode
-              : ''
-          }
-        />
-        <Input
-          name="city"
-          label="City"
-          type="text"
-          value={
-            props.data.user.address
-              ? props.data.user.address.city
-              : ''
-          }
-        />
-        <Input
-          name="country"
-          label="Country"
-          type="text"
-          value={
-            props.data.user.address
-              ? props.data.user.address.country
-              : ''
-          }
-        />
-      </div>
+      <UserForm
+        user={props.data.user}
+        onSubmit={props.updateUser}
+      />
+      <EmailForm
+        user={props.data.user}
+        onSubmit={props.updateEmail}
+      />
       <div>
         <Interaction.H3>Pledges</Interaction.H3>
         <div>
@@ -157,7 +78,37 @@ const User = (props: Props) => {
   )
 }
 
-const user = gql`
+const userMutation = gql`
+  mutation updateUser(
+    $id: ID!
+    $birthday: Date
+    $firstName: String!
+    $lastName: String!
+    $phoneNumber: String
+    $address: AddressInput!
+  ) {
+    updateUser(
+      userId: $id
+      birthday: $birthday
+      firstName: $firstName
+      lastName: $lastName
+      phoneNumber: $phoneNumber
+      address: $address
+    ) {
+      id
+    }
+  }
+`
+
+const emailMutation = gql`
+  mutation updateEmail($id: ID!, $email: String!) {
+    updateEmail(userId: $id, email: $email) {
+      id
+    }
+  }
+`
+
+const userQuery = gql`
   query user($id: String) {
     user(id: $id) {
       id
@@ -208,12 +159,54 @@ const user = gql`
   }
 `
 
-export default graphql(user, {
-  options: ({ params: { userId } }: OwnProps) => {
-    return {
-      variables: {
-        id: userId
+const WrappedUser = compose(
+  graphql(emailMutation, {
+    props: ({ mutate }) => ({
+      updateEmail: ({ id, email }: User) => {
+        if (mutate) {
+          return mutate({
+            variables: { id, email },
+            refetchQueries: [
+              {
+                query: userQuery,
+                variables: {
+                  id
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
+  }),
+  graphql(userMutation, {
+    props: ({ mutate }) => ({
+      updateUser: (variables: User) => {
+        if (mutate) {
+          return mutate({
+            variables,
+            refetchQueries: [
+              {
+                query: userQuery,
+                variables: {
+                  id: variables.id
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
+  }),
+  graphql(userQuery, {
+    options: ({ params: { userId } }: OwnProps) => {
+      return {
+        variables: {
+          id: userId
+        }
       }
     }
-  }
-})(User)
+  })
+)(User)
+
+export default WrappedUser as React.ComponentClass<OwnProps>
