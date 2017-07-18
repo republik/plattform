@@ -53,6 +53,7 @@ export type PledgeStatus =
 
 export type PaymentStatus =
   | 'WAITING'
+  | 'WAITING_FOR_REFUND'
   | 'PAID'
   | 'REFUNDED'
   | 'CANCELLED'

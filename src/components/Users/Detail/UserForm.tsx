@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { Label, Field, Button } from '@project-r/styleguide'
 import { User, Address } from '../../../types/admin'
-import AddressForm from './AddressForm'
-import ParticularsForm from './ParticularsForm'
+import AddressFieldSet from './AddressFieldSet'
+import ParticularsFieldSet from './ParticularsFieldSet'
 import { FieldSetState } from '../../Form/FieldSet'
 
 export interface UserFormProps {
@@ -157,11 +157,11 @@ export default class UserForm extends React.Component<
 
     return (
       <form onSubmit={this.submitHandler}>
-        <ParticularsForm
+        <ParticularsFieldSet
           onChange={this.userChangeHandler}
           {...this.state.user}
         />
-        <AddressForm
+        <AddressFieldSet
           onChange={this.addressChangeHandler}
           {...this.state.address}
         />

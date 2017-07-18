@@ -69,6 +69,10 @@ const User = (props: Props) => {
             (pledge: Pledge, index: number) =>
               <PledgeOverview
                 pledge={pledge}
+                onResolvePledge={
+                  props.resolvePledgeToPayment
+                }
+                onCancelPledge={props.cancelPledge}
                 key={`pledge-${pledge.id}`}
               />
           )}
@@ -77,6 +81,28 @@ const User = (props: Props) => {
     </div>
   )
 }
+
+const resolvePledgeToPaymentMutation = gql`
+  mutation resolvePledgeToPayment(
+    $pledgeId: ID!
+    $reason: String!
+  ) {
+    resolvePledgeToPayment(
+      pledgeId: $pledgeId
+      reason: $reason
+    ) {
+      id
+    }
+  }
+`
+
+const cancelPledgeMutation = gql`
+  mutation cancelPledge($pledgeId: ID!) {
+    cancelPledge(pledgeId: $pledgeId) {
+      id
+    }
+  }
+`
 
 const userMutation = gql`
   mutation updateUser(
@@ -131,6 +157,7 @@ const userQuery = gql`
       }
       pledges {
         id
+        total
         package {
           name
           options {
@@ -190,6 +217,51 @@ const WrappedUser = compose(
                 query: userQuery,
                 variables: {
                   id: variables.id
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
+  }),
+  graphql(resolvePledgeToPaymentMutation, {
+    props: ({
+      mutate,
+      ownProps: { params: { userId } }
+    }: any) => ({
+      resolvePledgeToPayment: (variables: any) => {
+        if (mutate) {
+          return mutate({
+            variables,
+            refetchQueries: [
+              {
+                query: userQuery,
+                variables: {
+                  id: userId
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
+  }),
+  graphql(cancelPledgeMutation, {
+    props: ({
+      mutate,
+      ownProps: { params: { userId } }
+    }: any) => ({
+      cancelPledge: (variables: any) => {
+        console.log(variables)
+        if (mutate) {
+          return mutate({
+            variables,
+            refetchQueries: [
+              {
+                query: userQuery,
+                variables: {
+                  id: userId
                 }
               }
             ]
