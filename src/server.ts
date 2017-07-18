@@ -11,5 +11,5 @@ app.prepare().then(() => {
   server.get('*', (req, res) => {
     handle(req, res)
   })
-  server.listen(3003)
+  server.listen(process.env.PORT || 3003)
 })
