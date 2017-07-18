@@ -73,6 +73,7 @@ const User = (props: Props) => {
                   props.resolvePledgeToPayment
                 }
                 onCancelPledge={props.cancelPledge}
+                onUpdatePaymentStatus={props.updatePayment}
                 key={`pledge-${pledge.id}`}
               />
           )}
@@ -99,6 +100,22 @@ const resolvePledgeToPaymentMutation = gql`
 const cancelPledgeMutation = gql`
   mutation cancelPledge($pledgeId: ID!) {
     cancelPledge(pledgeId: $pledgeId) {
+      id
+    }
+  }
+`
+
+const updatePaymentMutation = gql`
+  mutation updatePayment(
+    $paymentId: ID!
+    $status: PaymentStatus!
+    $reason: String
+  ) {
+    updatePayment(
+      paymentId: $paymentId
+      status: $status
+      reason: $reason
+    ) {
       id
     }
   }
@@ -247,13 +264,34 @@ const WrappedUser = compose(
       }
     })
   }),
+  graphql(updatePaymentMutation, {
+    props: ({
+      mutate,
+      ownProps: { params: { userId } }
+    }: any) => ({
+      updatePayment: (variables: any) => {
+        if (mutate) {
+          return mutate({
+            variables,
+            refetchQueries: [
+              {
+                query: userQuery,
+                variables: {
+                  id: userId
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
+  }),
   graphql(cancelPledgeMutation, {
     props: ({
       mutate,
       ownProps: { params: { userId } }
     }: any) => ({
       cancelPledge: (variables: any) => {
-        console.log(variables)
         if (mutate) {
           return mutate({
             variables,

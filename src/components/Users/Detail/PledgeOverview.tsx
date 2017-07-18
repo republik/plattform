@@ -43,11 +43,11 @@ const updatePaymentStatusHandler = (
   if (handler && pledge.payments.length > 0) {
     const payment = pledge.payments[0]
     if (payment.status === 'WAITING_FOR_REFUND') {
-      handler({ pledgeId: pledge.id, status: 'REFUNDED' })
+      handler({ paymentId: payment.id, status: 'REFUNDED' })
     } else if (payment.status === 'WAITING') {
       const reason = prompt('Reason')
       handler({
-        pledgeId: pledge.id,
+        paymentId: payment.id,
         status: 'PAID',
         reason
       })
