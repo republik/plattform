@@ -26,7 +26,12 @@ export const Body = compose(
 export const Header = HeaderComponent
 
 export const Content = compose(
-  createTile({}, { style: { overflowY: 'scroll' } })
+  createTile(
+    {},
+    {
+      style: { overflowY: 'scroll', padding: 20 }
+    }
+  )
 )('div')
 
 export const Footer = compose(
