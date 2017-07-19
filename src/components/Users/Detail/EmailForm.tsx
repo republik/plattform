@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Label, Field, Button } from '@project-r/styleguide'
+import { Label, Field, Button, Interaction } from '@project-r/styleguide'
 import { validate as isEmail } from 'email-validator'
 import { User } from '../../../types/admin'
 
@@ -14,9 +14,7 @@ export interface EmailFormState {
   error?: string | boolean
 }
 
-const getInitialState = (
-  props: EmailFormProps
-): EmailFormState => ({
+const getInitialState = (props: EmailFormProps): EmailFormState => ({
   user: props.user,
   isDirty: false
 })
@@ -38,15 +36,13 @@ export default class EmailForm extends React.Component<
         ...{ email: value }
       },
       error:
-        (value.trim().length <= 0 &&
-          `That's not an email address at all.`) ||
-        (!isEmail(value) &&
-          `That's not a valid email address.`)
+        (value.trim().length <= 0 && `That's not an email address at all.`) ||
+        (!isEmail(value) && `That's not a valid email address.`)
     }))
 
-  public submitHandler = (
-    onSubmit: (user: User) => void
-  ) => (event: any): void => {
+  public submitHandler = (onSubmit: (user: User) => void) => (
+    event: any
+  ): void => {
     event.preventDefault()
     const { user } = this.state
     if (
@@ -59,26 +55,23 @@ export default class EmailForm extends React.Component<
     }
   }
 
-  public componentWillReceiveProps(
-    nextProps: EmailFormProps
-  ) {
+  public componentWillReceiveProps(nextProps: EmailFormProps) {
     this.setState(() => getInitialState(nextProps))
   }
 
   public render() {
     const { onSubmit } = this.props
 
-    const user = this.state.isDirty
-      ? this.state.user
-      : this.props.user
+    const user = this.state.isDirty ? this.state.user : this.props.user
     const { email } = user
 
     return (
       <form onSubmit={this.submitHandler(onSubmit)}>
+        <Interaction.H3>E-Mail-Adresse</Interaction.H3>
         <Field
           error={this.state.error}
           value={email}
-          label="Email"
+          label="E-Mail"
           onChange={this.emailChangeHandler}
         />
         <Button
@@ -86,7 +79,7 @@ export default class EmailForm extends React.Component<
           type="submit"
           disabled={!this.state.isDirty || this.state.error}
         >
-          Save
+          ändern
         </Button>
       </form>
     )

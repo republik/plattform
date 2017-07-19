@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Label, Field, Button } from '@project-r/styleguide'
+import { Label, Field, Button, Interaction } from '@project-r/styleguide'
 import { User, Address } from '../../../types/admin'
 import AddressFieldSet from './AddressFieldSet'
 import ParticularsFieldSet from './ParticularsFieldSet'
@@ -79,9 +79,7 @@ const mergeStates = (
   }
 })
 
-const getInitialState = (
-  props: UserFormProps
-): UserFormState => ({
+const getInitialState = (props: UserFormProps): UserFormState => ({
   user: {
     values: props.user || {},
     dirty: {},
@@ -103,9 +101,7 @@ export default class UserForm extends React.Component<
     this.state = getInitialState(props)
   }
 
-  public userChangeHandler = (
-    userFieldState: FieldSetState
-  ): void => {
+  public userChangeHandler = (userFieldState: FieldSetState): void => {
     this.setState(() => ({
       ...this.state,
       ...{
@@ -114,16 +110,11 @@ export default class UserForm extends React.Component<
     }))
   }
 
-  public addressChangeHandler = (
-    addressFieldState: FieldSetState
-  ): void => {
+  public addressChangeHandler = (addressFieldState: FieldSetState): void => {
     this.setState(() => ({
       ...this.state,
       ...{
-        address: mergeStates(
-          this.state.address,
-          addressFieldState
-        )
+        address: mergeStates(this.state.address, addressFieldState)
       }
     }))
   }
@@ -140,37 +131,29 @@ export default class UserForm extends React.Component<
     }
   }
 
-  public componentWillReceiveProps(
-    nextProps: UserFormProps
-  ): void {
+  public componentWillReceiveProps(nextProps: UserFormProps): void {
     this.setState(() => getInitialState(nextProps))
   }
 
   public render() {
-    const dirty =
-      isDirty(this.state.user) ||
-      isDirty(this.state.address)
+    const dirty = isDirty(this.state.user) || isDirty(this.state.address)
 
-    const error =
-      hasErrors(this.state.user) ||
-      hasErrors(this.state.address)
+    const error = hasErrors(this.state.user) || hasErrors(this.state.address)
 
     return (
       <form onSubmit={this.submitHandler}>
+        <Interaction.H3>Personalien</Interaction.H3>
         <ParticularsFieldSet
           onChange={this.userChangeHandler}
           {...this.state.user}
         />
+        <Interaction.H3>Adresse</Interaction.H3>
         <AddressFieldSet
           onChange={this.addressChangeHandler}
           {...this.state.address}
         />
-        <Button
-          primary
-          type="submit"
-          disabled={!dirty || error}
-        >
-          Save
+        <Button primary type="submit" disabled={!dirty || error}>
+          ändern
         </Button>
       </form>
     )

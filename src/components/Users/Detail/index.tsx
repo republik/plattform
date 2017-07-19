@@ -1,13 +1,9 @@
 import * as React from 'react'
 import { compose } from 'redux'
-import {
-  gql,
-  graphql,
-  OptionProps,
-  QueryProps
-} from 'react-apollo'
-import { Interaction, Label } from '@project-r/styleguide'
+import { gql, graphql, OptionProps, QueryProps } from 'react-apollo'
+import { Interaction, Label, colors } from '@project-r/styleguide'
 import { User, Pledge } from '../../../types/admin'
+import { css } from 'glamor'
 import UserForm from './UserForm'
 import EmailForm from './EmailForm'
 import PledgeOverview from './PledgeOverview'
@@ -29,43 +25,89 @@ interface Props extends OwnProps {
   data: QueryProps & { user: User }
 }
 
+const GUTTER = 60
+const styles = {
+  formContainer: css({
+    float: 'left',
+    boxSizing: 'border-box',
+    width: `calc(100% - ${180 + GUTTER}px)`
+  }),
+  clear: css({
+    clear: 'both'
+  }),
+  grid: css({
+    boxSizing: 'border-box',
+    clear: 'both',
+    width: `calc(100% + ${GUTTER}px)`,
+    margin: `0 -${GUTTER / 2}px`,
+    ':after': {
+      content: '""',
+      display: 'table',
+      clear: 'both'
+    }
+  }),
+  span: css({
+    boxSizing: 'border-box',
+    float: 'left',
+    paddingLeft: `${GUTTER / 2}px`,
+    paddingRight: `${GUTTER / 2}px`,
+    minHeight: 1,
+    width: '50%'
+  }),
+  pledges: css({
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexFlow: 'row wrap'
+  }),
+  pledge: css({
+    width: `calc(50% - ${GUTTER}px)`,
+    padding: 10,
+    backgroundColor: colors.secondaryBg,
+    marginBottom: GUTTER
+  })
+}
+
 const User = (props: Props) => {
   if (props.data.loading) {
     return <div>Loading ...</div>
   }
   return (
     <div>
-      <div>
+      {!!props.data.user.testimonial &&
         <img
-          style={{ maxWidth: '180px' }}
-          src={
-            props.data.user.testimonial
-              ? props.data.user.testimonial.image
-              : ''
-          }
-        />
-        <Interaction.H3>
-          {props.data.user.name}
-        </Interaction.H3>
+          style={{ maxWidth: '180px', float: 'right' }}
+          src={props.data.user.testimonial.image}
+        />}
+      <Interaction.H1>
+        {props.data.user.name}
+      </Interaction.H1>
+      <Label>
+        {props.data.user.email}
+      </Label>
+      <div {...styles.formContainer}>
+        <div {...styles.grid}>
+          <div {...styles.span}>
+            <UserForm user={props.data.user} onSubmit={props.updateUser} />
+          </div>
+          <div {...styles.span}>
+            <EmailForm user={props.data.user} onSubmit={props.updateEmail} />
+          </div>
+        </div>
       </div>
-      <UserForm
-        user={props.data.user}
-        onSubmit={props.updateUser}
-      />
-      <EmailForm
-        user={props.data.user}
-        onSubmit={props.updateEmail}
-      />
-      <div>
-        {props.data.user.pledges.map(
-          (pledge: Pledge, index: number) =>
+      <br {...styles.clear} />
+      <br />
+      <br />
+      <Interaction.H2>Pledges</Interaction.H2>
+      <div {...styles.pledges}>
+        {props.data.user.pledges.map((pledge: Pledge, index: number) =>
+          <div {...styles.pledge} key={`pledge-${pledge.id}`}>
             <PledgeOverview
               pledge={pledge}
               onResolvePledge={props.resolvePledgeToPayment}
               onCancelPledge={props.cancelPledge}
               onUpdatePaymentStatus={props.updatePayment}
-              key={`pledge-${pledge.id}`}
             />
+          </div>
         )}
       </div>
     </div>
@@ -73,14 +115,8 @@ const User = (props: Props) => {
 }
 
 const resolvePledgeToPaymentMutation = gql`
-  mutation resolvePledgeToPayment(
-    $pledgeId: ID!
-    $reason: String!
-  ) {
-    resolvePledgeToPayment(
-      pledgeId: $pledgeId
-      reason: $reason
-    ) {
+  mutation resolvePledgeToPayment($pledgeId: ID!, $reason: String!) {
+    resolvePledgeToPayment(pledgeId: $pledgeId, reason: $reason) {
       id
     }
   }
@@ -100,11 +136,7 @@ const updatePaymentMutation = gql`
     $status: PaymentStatus!
     $reason: String
   ) {
-    updatePayment(
-      paymentId: $paymentId
-      status: $status
-      reason: $reason
-    ) {
+    updatePayment(paymentId: $paymentId, status: $status, reason: $reason) {
       id
     }
   }
@@ -249,10 +281,7 @@ const WrappedUser = compose(
     })
   }),
   graphql(resolvePledgeToPaymentMutation, {
-    props: ({
-      mutate,
-      ownProps: { params: { userId } }
-    }: any) => ({
+    props: ({ mutate, ownProps: { params: { userId } } }: any) => ({
       resolvePledgeToPayment: (variables: any) => {
         if (mutate) {
           return mutate({
@@ -271,10 +300,7 @@ const WrappedUser = compose(
     })
   }),
   graphql(updatePaymentMutation, {
-    props: ({
-      mutate,
-      ownProps: { params: { userId } }
-    }: any) => ({
+    props: ({ mutate, ownProps: { params: { userId } } }: any) => ({
       updatePayment: (variables: any) => {
         if (mutate) {
           return mutate({
@@ -293,10 +319,7 @@ const WrappedUser = compose(
     })
   }),
   graphql(cancelPledgeMutation, {
-    props: ({
-      mutate,
-      ownProps: { params: { userId } }
-    }: any) => ({
+    props: ({ mutate, ownProps: { params: { userId } } }: any) => ({
       cancelPledge: (variables: any) => {
         if (mutate) {
           return mutate({
