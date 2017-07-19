@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { compose } from 'redux'
 import { gql, graphql, OptionProps, QueryProps } from 'react-apollo'
-import { Interaction, Label, colors } from '@project-r/styleguide'
+import { Interaction, P, Label, colors } from '@project-r/styleguide'
 import { User, Pledge } from '../../../types/admin'
 import { css } from 'glamor'
 import UserForm from './UserForm'
@@ -27,14 +27,6 @@ interface Props extends OwnProps {
 
 const GUTTER = 60
 const styles = {
-  formContainer: css({
-    float: 'left',
-    boxSizing: 'border-box',
-    width: `calc(100% - ${180 + GUTTER}px)`
-  }),
-  clear: css({
-    clear: 'both'
-  }),
   grid: css({
     boxSizing: 'border-box',
     clear: 'both',
@@ -73,28 +65,38 @@ const User = (props: Props) => {
   }
   return (
     <div>
-      {!!props.data.user.testimonial &&
-        <img
-          style={{ maxWidth: '180px', float: 'right' }}
-          src={props.data.user.testimonial.image}
-        />}
       <Interaction.H1>
         {props.data.user.name}
       </Interaction.H1>
       <Label>
         {props.data.user.email}
       </Label>
-      <div {...styles.formContainer}>
-        <div {...styles.grid}>
-          <div {...styles.span}>
-            <UserForm user={props.data.user} onSubmit={props.updateUser} />
-          </div>
-          <div {...styles.span}>
-            <EmailForm user={props.data.user} onSubmit={props.updateEmail} />
-          </div>
+      <div {...styles.grid}>
+        <div {...styles.span}>
+          <UserForm user={props.data.user} onSubmit={props.updateUser} />
+        </div>
+        <div {...styles.span}>
+          <EmailForm user={props.data.user} onSubmit={props.updateEmail} />
+          <br />
+          <br />
+          {!!props.data.user.testimonial &&
+            <div>
+              <Interaction.H3>Statement</Interaction.H3>
+              <br />
+              <img
+                style={{ width: '100%', maxWidth: '200px' }}
+                src={props.data.user.testimonial.image}
+              />
+              <br />
+              <Label>
+                {props.data.user.testimonial.role}
+              </Label>
+              <P>
+                «{props.data.user.testimonial.quote}»
+              </P>
+            </div>}
         </div>
       </div>
-      <br {...styles.clear} />
       <br />
       <br />
       <Interaction.H2>Pledges</Interaction.H2>
@@ -191,6 +193,8 @@ const userQuery = gql`
       createdAt
       updatedAt
       testimonial {
+        role
+        quote
         image
       }
       roles
