@@ -89,12 +89,13 @@ export default ({ sort, onSort, ...props }: HeadProps) => {
           <Cell
             flex="0 0 10%"
             style={interactiveStyles}
-            onClick={sortHandler('method')}
+            onClick={sortHandler('hrid')}
           >
             <Label>
-              Method{indicator('method')}
+              HR-ID{indicator('hrid')}
             </Label>
           </Cell>
+
           <Cell
             flex="0 0 10%"
             style={interactiveStyles}
@@ -104,8 +105,9 @@ export default ({ sort, onSort, ...props }: HeadProps) => {
               Total{indicator('total')}
             </Label>
           </Cell>
+
           <Cell
-            flex="0 0 10%"
+            flex="0 0 15%"
             style={interactiveStyles}
             onClick={sortHandler('status')}
           >
@@ -113,15 +115,27 @@ export default ({ sort, onSort, ...props }: HeadProps) => {
               Status{indicator('status')}
             </Label>
           </Cell>
+
           <Cell
             flex="0 0 10%"
             style={interactiveStyles}
-            onClick={sortHandler('hrid')}
+            onClick={sortHandler('dueDate')}
           >
             <Label>
-              HR-ID{indicator('hrid')}
+              Due date{indicator('dueDate')}
             </Label>
           </Cell>
+
+          <Cell
+            flex="0 0 15%"
+            style={interactiveStyles}
+            onClick={sortHandler('method')}
+          >
+            <Label>
+              Method{indicator('method')}
+            </Label>
+          </Cell>
+
           <Cell
             flex="0 0 10%"
             style={interactiveStyles}

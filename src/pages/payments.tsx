@@ -26,9 +26,6 @@ export default withData((props: any) => {
             onChange={changeHandler}
           />
         </Content>
-        <Footer>
-          <h3>Column</h3>
-        </Footer>
       </Body>
     </App>
   )

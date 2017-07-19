@@ -96,18 +96,6 @@ const Payments = (props: Props) => {
   )
 }
 
-/*
-id: string
-method: PaymentMethod
-paperInvoice: boolean
-total: number
-status: PaymentStatus
-hrid: string
-dueDate?: string
-createdAt: string
-updatedAt: string
- */
-
 const paymentsQuery = gql`
   query payments(
     $limit: Int!
@@ -125,6 +113,7 @@ const paymentsQuery = gql`
       items {
         id
         method
+        dueDate
         paperInvoice
         total
         status
@@ -169,7 +158,7 @@ export default graphql(paymentsQuery, {
           return {
             ...previousResult,
             ...{
-              users: {
+              payments: {
                 items: [
                   ...previousResult.payments.items,
                   ...(fetchMoreResult as PaymentsResult)
