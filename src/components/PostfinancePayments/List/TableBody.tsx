@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { Table, Row, Cell } from '../../Layout/Table'
 import { A, colors } from '@project-r/styleguide'
+import { Table, Row, Cell } from '../../Layout/Table'
+import MessageForm from './MessageForm'
 import routes from '../../../routes'
 const { Link } = routes
 
@@ -62,7 +63,12 @@ export default ({ items, ...props }: any) =>
           {postfinancePayment.gutschrift}
         </Cell>
         <Cell flex="0 0 10%">
-          {postfinancePayment.mitteilung}
+          {!postfinancePayment.matched
+            ? <MessageForm
+                message={postfinancePayment.mitteilung}
+                onSubmit={c => console.log(c)}
+              />
+            : postfinancePayment.mitteilung}
         </Cell>
         <Cell flex="0 0 10%">
           {postfinancePayment.matched ? 'Yes' : 'No'}

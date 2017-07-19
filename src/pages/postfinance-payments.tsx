@@ -12,7 +12,7 @@ import PostfinancePayments from '../components/PostfinancePayments/List'
 import { default as Routes } from '../routes'
 
 const changeHandler = (params: any) => {
-  Routes.Router.pushRoute('payments', params)
+  Routes.Router.pushRoute('postfinance-payments', params)
 }
 
 export default withData((props: any) => {
