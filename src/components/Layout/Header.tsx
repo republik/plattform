@@ -59,8 +59,8 @@ export default ({ children, style, ...props }: any) =>
         <Link route="users">
           <A style={navLinkStyles}>Users</A>
         </Link>
-        <Link route="layout">
-          <A style={navLinkStyles}>Layout</A>
+        <Link route="payments">
+          <A style={navLinkStyles}>Payments</A>
         </Link>
       </nav>
     </HeaderSection>
