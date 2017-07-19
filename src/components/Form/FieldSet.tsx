@@ -4,7 +4,8 @@ import AutosizeInput from 'react-textarea-autosize'
 
 import { Field } from '@project-r/styleguide'
 
-import MaskedInput from 'react-maskedinput'
+const reqMaskedInput = require('react-maskedinput')
+const MaskedInput = reqMaskedInput.default || reqMaskedInput
 
 export interface FieldConfig {
   label: string
