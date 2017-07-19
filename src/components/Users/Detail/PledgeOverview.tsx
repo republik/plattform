@@ -1,10 +1,12 @@
 import * as React from 'react'
-import { Interaction, Label, Button, A, colors } from '@project-r/styleguide'
+import { Interaction, Label, Button, A, P, colors } from '@project-r/styleguide'
 import { Pledge, PledgePayment, PaymentStatus } from '../../../types/admin'
 import withT from '../../../lib/withT'
-import { swissTime } from '../../../lib/utils/formats'
+import { swissTime, chfFormat } from '../../../lib/utils/formats'
+import List, { Item } from '../../List'
 
 const dateTimeFormat = swissTime.format('%e. %B %Y %H.%M Uhr')
+const dateFormat = swissTime.format('%e. %B %Y')
 
 const cancelPledgeHandler = (handler: any, pledge: Pledge) => () => {
   if (handler) {
@@ -68,102 +70,102 @@ const PledgeOverview = ({
   onResolvePledge: any
   onCancelPledge: any
 }) => {
+  const options = pledge.options.filter(
+    option => option.amount && option.minAmount !== option.maxAmount
+  )
+
   return (
     <div>
       <Interaction.H3>
-        {dateTimeFormat(new Date(pledge.createdAt))}
+        {pledge.package.name} – {dateTimeFormat(new Date(pledge.createdAt))}
+        <br />
+        <Label>
+          Updated: {dateTimeFormat(new Date(pledge.updatedAt))}
+          {/* – ID: {pledge.id} */}
+        </Label>
       </Interaction.H3>
-      <ul>
-        <li>
-          id: {pledge.id}
-        </li>
-        <li>
-          total: {pledge.total}
-        </li>
-        <li>
-          donation: {pledge.donation}
-        </li>
-        <li>
-          reason: {pledge.reason}
-        </li>
-        <li>
-          createdAt: {pledge.createdAt}
-        </li>
-        <li>
-          updatedAt: {pledge.createdAt}
-        </li>
-        <li>
-          package:
-          <ul>
-            <li>
-              name: {pledge.package.name}
-            </li>
-          </ul>
-        </li>
-        <li>
-          package options:
-          {pledge.package.options.map(packageOption =>
-            <ul key={`packageOption-${packageOption.id}`}>
-              <li>
-                reward: {packageOption.reward ? packageOption.reward.name : ''}
-              </li>
-              <li>
-                price: {packageOption.price}
-              </li>
-            </ul>
+      <Interaction.P>
+        <Label>Total</Label>
+        <br />
+        {chfFormat(pledge.total / 100)}
+      </Interaction.P>
+      <Interaction.P>
+        <Label>Donation</Label>
+        <br />
+        {chfFormat(pledge.donation / 100)}
+      </Interaction.P>
+      {!!pledge.reason &&
+        <P>
+          <Label>Reason</Label>
+          <br />
+          {pledge.reason}
+        </P>}
+      <List>
+        {!!options.length &&
+          options.map((option, i) =>
+            <Item key={`option-${i}`}>
+              <Label>Option</Label>
+              <br />
+              {option.amount} x {option.reward ? option.reward.name : ''} a{' '}
+              {chfFormat(option.price / 100)}
+            </Item>
           )}
-        </li>
-        <li>
-          payments:
-          {pledge.payments.map(payment =>
-            <ul key={`payment-${payment.id}`}>
-              <li>
-                status: {payment.status}
-              </li>
-              <li>
-                method: {payment.method}
-              </li>
-              <li>
-                due date: {payment.dueDate}
-              </li>
-              <li>
-                paper invoice: {payment.paperInvoice}
-              </li>
-              <li>
-                createdAt: {payment.createdAt}
-              </li>
-              <li>
-                updatedAt: {payment.createdAt}
-              </li>
-            </ul>
-          )}
-        </li>
-        <li>
-          memberships:
-          {pledge.memberships.map(membership =>
-            <ul key={`membership-${membership.id}`}>
-              <li>
-                sequence number: {membership.sequenceNumber}
-              </li>
-              <li>
-                voucher code: {membership.voucherCode}
-              </li>
-              <li>
-                reduced price: {membership.reducedPrice}
-              </li>
-              <li>
-                claimer name: {membership.claimerName}
-              </li>
-              <li>
-                created at: {membership.createdAt}
-              </li>
-              <li>
-                updated at: {membership.updatedAt}
-              </li>
-            </ul>
-          )}
-        </li>
-      </ul>
+        {pledge.payments.map((payment, i) =>
+          <Item key={`payment-${i}`}>
+            <Label>Payment</Label>
+            <br />
+            {payment.method} {payment.status}
+            <br />
+            {!!payment.dueDate &&
+              <Interaction.P>
+                <Label>Due Date</Label>
+                <br />
+                {dateFormat(new Date(payment.dueDate))}
+              </Interaction.P>}
+            {payment.method === 'PAYMENTSLIP' &&
+              <Interaction.P>
+                <Label>Paper Invoice</Label>
+                <br />
+                {payment.paperInvoice ? 'YES' : 'NO'}
+              </Interaction.P>}
+            <Label>
+              Created: {dateTimeFormat(new Date(payment.createdAt))}
+              {' – '}
+              Updated: {dateTimeFormat(new Date(payment.updatedAt))}
+            </Label>
+          </Item>
+        )}
+        {pledge.memberships.map((membership, i) =>
+          <Item key={`membership-${i}`}>
+            <Label>Membership</Label>
+            <br />
+            #{membership.sequenceNumber}
+            <br />
+            {!!membership.voucherCode &&
+              <Interaction.P>
+                <Label>Voucher Code</Label>
+                <br />
+                {membership.voucherCode}
+              </Interaction.P>}
+            {!!membership.claimerName &&
+              <Interaction.P>
+                <Label>Claimer Name</Label>
+                <br />
+                {membership.claimerName}
+              </Interaction.P>}
+            <Interaction.P>
+              <Label>Reduced Price</Label>
+              <br />
+              {membership.reducedPrice ? 'YES' : 'NO'}
+            </Interaction.P>
+            <Label>
+              Created: {dateTimeFormat(new Date(membership.createdAt))}
+              {' – '}
+              Updated: {dateTimeFormat(new Date(membership.updatedAt))}
+            </Label>
+          </Item>
+        )}
+      </List>
       <Button onClick={cancelPledgeHandler(onCancelPledge, pledge)}>
         {' '}Cancel pledge
       </Button>{' '}

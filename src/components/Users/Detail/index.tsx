@@ -64,7 +64,7 @@ const User = (props: Props) => {
     return <div>Loading ...</div>
   }
   return (
-    <div>
+    <div style={{ overflow: 'hidden' }}>
       <Interaction.H1>
         {props.data.user.name}
       </Interaction.H1>
@@ -217,18 +217,18 @@ const userQuery = gql`
         }
         package {
           name
-          options {
-            id
-            reward {
-              ... on Goodie {
-                name
-              }
-              ... on MembershipType {
-                name
-              }
+        }
+        options {
+          id
+          reward {
+            ... on Goodie {
+              name
             }
-            price
+            ... on MembershipType {
+              name
+            }
           }
+          price
         }
         payments {
           id
