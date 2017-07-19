@@ -7,12 +7,6 @@ import {
   QueryProps
 } from 'react-apollo'
 import { Interaction, Label } from '@project-r/styleguide'
-import Input from '../../Form/Input'
-import {
-  Container,
-  Tile,
-  ContainerTile
-} from '../../Layout/Grid'
 import { User, Pledge } from '../../../types/admin'
 import UserForm from './UserForm'
 import EmailForm from './EmailForm'
@@ -63,21 +57,16 @@ const User = (props: Props) => {
         onSubmit={props.updateEmail}
       />
       <div>
-        <Interaction.H3>Pledges</Interaction.H3>
-        <div>
-          {props.data.user.pledges.map(
-            (pledge: Pledge, index: number) =>
-              <PledgeOverview
-                pledge={pledge}
-                onResolvePledge={
-                  props.resolvePledgeToPayment
-                }
-                onCancelPledge={props.cancelPledge}
-                onUpdatePaymentStatus={props.updatePayment}
-                key={`pledge-${pledge.id}`}
-              />
-          )}
-        </div>
+        {props.data.user.pledges.map(
+          (pledge: Pledge, index: number) =>
+            <PledgeOverview
+              pledge={pledge}
+              onResolvePledge={props.resolvePledgeToPayment}
+              onCancelPledge={props.cancelPledge}
+              onUpdatePaymentStatus={props.updatePayment}
+              key={`pledge-${pledge.id}`}
+            />
+        )}
       </div>
     </div>
   )
@@ -172,9 +161,24 @@ const userQuery = gql`
       testimonial {
         image
       }
+      roles
       pledges {
         id
         total
+        status
+        createdAt
+        updatedAt
+        reason
+        donation
+        memberships {
+          id
+          voucherCode
+          reducedPrice
+          claimerName
+          sequenceNumber
+          createdAt
+          updatedAt
+        }
         package {
           name
           options {
@@ -197,6 +201,8 @@ const userQuery = gql`
           total
           dueDate
           hrid
+          createdAt
+          updatedAt
         }
       }
     }

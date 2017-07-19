@@ -33,6 +33,7 @@ export interface User {
   testimonial?: Testimonial
   pledges: Pledge[]
   memberships: Membership[]
+  roles: string[]
 }
 
 export interface Goodie {

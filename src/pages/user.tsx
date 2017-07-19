@@ -18,9 +18,6 @@ export default withData((props: any) => {
         <Content id="content">
           <User params={props.url.query} />
         </Content>
-        <Footer>
-          <h3>Column</h3>
-        </Footer>
       </Body>
     </App>
   )

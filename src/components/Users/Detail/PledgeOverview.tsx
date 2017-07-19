@@ -11,8 +11,6 @@ import {
   PledgePayment,
   PaymentStatus
 } from '../../../types/admin'
-import { Container, Tile } from '../../Layout/Grid'
-import { Table, Row, Cell } from '../../Layout/Table'
 import withT from '../../../lib/withT'
 
 const cancelPledgeHandler = (
@@ -56,7 +54,7 @@ const updatePaymentStatusHandler = (
 }
 
 const PaymentStatusButton = ({ pledge, ...props }: any) => {
-  if (pledge.payments.length < 0) {
+  if (pledge.payments.length <= 0) {
     return null
   } else {
     const status = pledge.payments[0].status
@@ -94,69 +92,125 @@ const PledgeOverview = ({
 }) => {
   return (
     <div>
-      <p>
-        {pledge.package.name}:
-        {pledge.total}
-      </p>
-      <Container direction="row" justifyContent="stretch">
-        <Tile flex="0 0 50%">
-          <Label>Package options</Label>
-          <Table>
-            {pledge.package.options.map(packageOption =>
-              <Row
-                key={`packageOption-${packageOption.id}`}
-              >
-                <Cell>
-                  {packageOption.reward
-                    ? packageOption.reward.name
-                    : ''}
-                </Cell>
-                <Cell flex="0 0 100px">
-                  {packageOption.price}
-                </Cell>
-              </Row>
-            )}
-          </Table>
-          <Button
-            onClick={cancelPledgeHandler(
-              onCancelPledge,
-              pledge
-            )}
-          >
-            {' '}Cancel pledge
-          </Button>
-          <Button
-            onClick={resolvePledgeToPaymentHandler(
-              onResolvePledge,
-              pledge
-            )}
-          >
-            {' '}Resolve Pledge
-          </Button>
-          <PaymentStatusButton
-            pledge={pledge}
-            onClick={updatePaymentStatusHandler(
-              onUpdatePaymentStatus,
-              pledge
-            )}
-          />
-        </Tile>
-        <Tile>
-          <Label>Payments</Label>
-          <Table>
-            {pledge.payments.map(payment =>
-              <ul key={payment.id}>
-                <li>
-                  {payment.status}
-                </li>
-                <li>
-                  {payment.total}
-                </li>
-              </ul>
-            )}
-          </Table>
-        </Tile>
-      </Container>
+      <Interaction.H3>Pledge</Interaction.H3>
+      <ul>
+        <li>
+          id: {pledge.id}
+        </li>
+        <li>
+          total: {pledge.total}
+        </li>
+        <li>
+          donation: {pledge.donation}
+        </li>
+        <li>
+          reason: {pledge.reason}
+        </li>
+        <li>
+          createdAt: {pledge.createdAt}
+        </li>
+        <li>
+          updatedAt: {pledge.createdAt}
+        </li>
+        <li>
+          package:
+          <ul>
+            <li>
+              name: {pledge.package.name}
+            </li>
+          </ul>
+        </li>
+        <li>
+          package options:
+          {pledge.package.options.map(packageOption =>
+            <ul key={`packageOption-${packageOption.id}`}>
+              <li>
+                reward:{' '}
+                {packageOption.reward
+                  ? packageOption.reward.name
+                  : ''}
+              </li>
+              <li>
+                price: {packageOption.price}
+              </li>
+            </ul>
+          )}
+        </li>
+        <li>
+          payments:
+          {pledge.payments.map(payment =>
+            <ul key={`payment-${payment.id}`}>
+              <li>
+                status: {payment.status}
+              </li>
+              <li>
+                method: {payment.method}
+              </li>
+              <li>
+                due date: {payment.dueDate}
+              </li>
+              <li>
+                paper invoice: {payment.paperInvoice}
+              </li>
+              <li>
+                createdAt: {payment.createdAt}
+              </li>
+              <li>
+                updatedAt: {payment.createdAt}
+              </li>
+            </ul>
+          )}
+        </li>
+        <li>
+          memberships:
+          {pledge.memberships.map(membership =>
+            <ul key={`membership-${membership.id}`}>
+              <li>
+                sequence number: {membership.sequenceNumber}
+              </li>
+              <li>
+                voucher code: {membership.voucherCode}
+              </li>
+              <li>
+                reduced price: {membership.reducedPrice}
+              </li>
+              <li>
+                claimer name: {membership.claimerName}
+              </li>
+              <li>
+                created at: {membership.createdAt}
+              </li>
+              <li>
+                updated at: {membership.updatedAt}
+              </li>
+            </ul>
+          )}
+        </li>
+      </ul>
+
+      <Button
+        onClick={cancelPledgeHandler(
+          onCancelPledge,
+          pledge
+        )}
+      >
+        {' '}Cancel pledge
+      </Button>
+      <Button
+        onClick={resolvePledgeToPaymentHandler(
+          onResolvePledge,
+          pledge
+        )}
+      >
+        {' '}Resolve Pledge
+      </Button>
+      <PaymentStatusButton
+        pledge={pledge}
+        onClick={updatePaymentStatusHandler(
+          onUpdatePaymentStatus,
+          pledge
+        )}
+      />
     </div>
   )
 }
