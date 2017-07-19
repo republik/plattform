@@ -4,6 +4,7 @@ const routes = createRoutes()
 routes
   .add('users')
   .add('payments')
+  .add('postfinance-payments')
   .add('user', '/users/:userId', 'user')
 
 export default routes

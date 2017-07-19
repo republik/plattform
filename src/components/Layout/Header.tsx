@@ -62,6 +62,9 @@ export default ({ children, style, ...props }: any) =>
         <Link route="payments">
           <A style={navLinkStyles}>Payments</A>
         </Link>
+        <Link route="postfinance-payments">
+          <A style={navLinkStyles}>Postfinance Payments</A>
+        </Link>
       </nav>
     </HeaderSection>
     <HeaderSection flex="0 0 200px">
