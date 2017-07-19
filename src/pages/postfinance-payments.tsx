@@ -8,11 +8,11 @@ import {
   Header,
   Footer
 } from '../components/Layout'
-import Payments from '../components/Payments/List'
+import PostfinancePayments from '../components/PostfinancePayments/List'
 import { default as Routes } from '../routes'
 
 const changeHandler = (params: any) => {
-  Routes.Router.pushRoute('payments', params)
+  Routes.Router.pushRoute('postfinance-payments', params)
 }
 
 export default withData((props: any) => {
@@ -21,7 +21,7 @@ export default withData((props: any) => {
       <Body>
         <Header />
         <Content id="content">
-          <Payments
+          <PostfinancePayments
             params={props.url.query}
             onChange={changeHandler}
           />

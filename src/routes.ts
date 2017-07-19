@@ -1,6 +1,10 @@
 import * as createRoutes from 'next-routes'
 
 const routes = createRoutes()
-routes.add('users').add('user', '/users/:userId', 'user').add('payments')
+routes
+  .add('users')
+  .add('payments')
+  .add('postfinance-payments')
+  .add('user', '/users/:userId', 'user')
 
 export default routes

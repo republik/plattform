@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { Table, Row, Cell } from '../../Layout/Table'
 import { A, colors } from '@project-r/styleguide'
+import { Table, Row, Cell } from '../../Layout/Table'
+import MessageForm from './MessageForm'
 import routes from '../../../routes'
 const { Link } = routes
 
@@ -29,7 +30,8 @@ const getDueDate = (status: string, dueDate?: string) => {
 }
 
 const rowStyles = (index: number) => ({
-  maxHeight: '40px',
+  maxHeight: '230px',
+  padding: '10px 0',
   backgroundColor:
     index % 2 > 0 ? colors.secondaryBg : 'none'
 })
@@ -40,36 +42,39 @@ const interactiveStyles = {
 
 export default ({ items, ...props }: any) =>
   <Table {...props}>
-    {items.map((payment: any, index: number) =>
+    {items.map((postfinancePayment: any, index: number) =>
       <Row
-        key={`payment-${index}`}
+        key={`postfinancePayment-${index}`}
         style={rowStyles(index)}
       >
         <Cell flex="0 0 10%">
-          {payment.hrid}
+          {postfinancePayment.buchungsdatum}
         </Cell>
         <Cell flex="0 0 10%">
-          {payment.total}
+          {postfinancePayment.valuta}
         </Cell>
-        <Cell flex="0 0 15%">
-          {payment.status}
-        </Cell>
-        <Cell flex="0 0 10%">
-          {getDueDate(payment.status, payment.dueDate)}
-        </Cell>
-        <Cell flex="0 0 15%">
-          {payment.method}
+        <Cell
+          flex="0 0 30%"
+          style={{ paddingRight: '10px' }}
+        >
+          {postfinancePayment.avisierungstext}
         </Cell>
         <Cell flex="0 0 10%">
-          {displayDate(payment.createdAt)}
+          {postfinancePayment.gutschrift}
         </Cell>
         <Cell flex="0 0 10%">
-          <Link
-            route="payment"
-            params={{ paymentId: payment.id }}
-          >
-            <A style={interactiveStyles}>Details</A>
-          </Link>
+          {!postfinancePayment.matched
+            ? <MessageForm
+                message={postfinancePayment.mitteilung}
+                onSubmit={c => console.log(c)}
+              />
+            : postfinancePayment.mitteilung}
+        </Cell>
+        <Cell flex="0 0 10%">
+          {postfinancePayment.matched ? 'Yes' : 'No'}
+        </Cell>
+        <Cell flex="0 0 10%">
+          {displayDate(postfinancePayment.createdAt)}
         </Cell>
       </Row>
     )}

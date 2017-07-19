@@ -136,3 +136,15 @@ export interface Membership {
   createdAt: string
   updatedAt: string
 }
+
+export interface PostfinancePayment {
+  id: string
+  buchungsdatum: string
+  valuta: string
+  avisierungstext: string
+  gutschrift: number
+  mitteilung?: string
+  matched: boolean
+  createdAt: string
+  updatedAt: string
+}

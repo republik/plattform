@@ -89,50 +89,51 @@ export default ({ sort, onSort, ...props }: HeadProps) => {
           <Cell
             flex="0 0 10%"
             style={interactiveStyles}
-            onClick={sortHandler('hrid')}
+            onClick={sortHandler('buchungsdatum')}
           >
             <Label>
-              HR-ID{indicator('hrid')}
+              Buchungsdatum{indicator('buchungsdatum')}
             </Label>
           </Cell>
 
           <Cell
             flex="0 0 10%"
             style={interactiveStyles}
-            onClick={sortHandler('total')}
+            onClick={sortHandler('valuta')}
           >
             <Label>
-              Total{indicator('total')}
+              Valuta{indicator('valuta')}
             </Label>
           </Cell>
 
           <Cell
-            flex="0 0 15%"
-            style={interactiveStyles}
-            onClick={sortHandler('status')}
+            flex="0 0 30%"
+            style={{ paddingRight: '10px' }}
           >
-            <Label>
-              Status{indicator('status')}
-            </Label>
+            <Label>Avisierungstext</Label>
           </Cell>
 
           <Cell
             flex="0 0 10%"
             style={interactiveStyles}
-            onClick={sortHandler('dueDate')}
+            onClick={sortHandler('gutschrift')}
           >
             <Label>
-              Due date{indicator('dueDate')}
+              Gutschrift{indicator('gutschrift')}
             </Label>
           </Cell>
 
+          <Cell flex="0 0 10%">
+            <Label>Mitteilung</Label>
+          </Cell>
+
           <Cell
-            flex="0 0 15%"
+            flex="0 0 10%"
             style={interactiveStyles}
-            onClick={sortHandler('method')}
+            onClick={sortHandler('matched')}
           >
             <Label>
-              Method{indicator('method')}
+              Matched{indicator('matched')}
             </Label>
           </Cell>
 
@@ -144,9 +145,6 @@ export default ({ sort, onSort, ...props }: HeadProps) => {
             <Label>
               Created{indicator('createdAt')}
             </Label>
-          </Cell>
-          <Cell flex="0 0 10%">
-            <Label>Details</Label>
           </Cell>
         </Row>
       </Table>

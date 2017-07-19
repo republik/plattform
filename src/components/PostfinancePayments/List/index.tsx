@@ -7,20 +7,20 @@ import {
 } from 'react-apollo'
 import * as InfiniteScroller from 'react-infinite-scroller'
 import { css, StyleAttribute } from 'glamor'
-import { PledgePayment } from '../../../types/admin'
+import { PostfinancePayment } from '../../../types/admin'
 
 import TableForm from './TableForm'
 import TableHead from './TableHead'
 import TableBody from './TableBody'
 
-export interface PaymentsResult {
-  payments: {
-    items: PledgePayment[]
+export interface PostfinancePaymentsResult {
+  postfinancePayments: {
+    items: PostfinancePayment[]
     count: number
   }
 }
 
-export interface PaymentTableParams {
+export interface PostfinancePaymentTableParams {
   orderBy?: string
   search?: string
 }
@@ -33,7 +33,7 @@ interface OwnProps {
 }
 
 interface Props extends OwnProps {
-  data: QueryProps & PaymentsResult
+  data: QueryProps & PostfinancePaymentsResult
 }
 
 type SortDirection = 'ASC' | 'DESC'
@@ -60,11 +60,14 @@ const createChangeHandler = (
 }
 
 const Payments = (props: Props) => {
-  if (!props.data.payments) {
+  if (!props.data.postfinancePayments) {
     return <div>Loading</div>
   }
   const {
-    data: { payments: { items, count }, loading },
+    data: {
+      postfinancePayments: { items, count },
+      loading
+    },
     params,
     loadMorePayments,
     onChange
@@ -96,14 +99,14 @@ const Payments = (props: Props) => {
   )
 }
 
-const paymentsQuery = gql`
-  query payments(
+const postfinancePaymentsQuery = gql`
+  query postfinancePayments(
     $limit: Int!
     $offset: Int
     $orderBy: String
     $search: String
   ) {
-    payments(
+    postfinancePayments(
       limit: $limit
       offset: $offset
       orderBy: $orderBy
@@ -112,12 +115,12 @@ const paymentsQuery = gql`
       count
       items {
         id
-        method
-        dueDate
-        paperInvoice
-        total
-        status
-        hrid
+        buchungsdatum
+        valuta
+        avisierungstext
+        gutschrift
+        mitteilung
+        matched
         createdAt
         updatedAt
       }
@@ -125,7 +128,7 @@ const paymentsQuery = gql`
   }
 `
 
-export default graphql(paymentsQuery, {
+export default graphql(postfinancePaymentsQuery, {
   options: ({ params: { orderBy, search } }: OwnProps) => {
     return {
       variables: {
@@ -138,7 +141,7 @@ export default graphql(paymentsQuery, {
   },
   props: ({
     data
-  }: OptionProps<OwnProps, PaymentsResult>) => ({
+  }: OptionProps<OwnProps, PostfinancePaymentsResult>) => ({
     data,
     loadMorePayments: () => {
       if (!data) {
@@ -146,10 +149,10 @@ export default graphql(paymentsQuery, {
       }
       return data.fetchMore({
         variables: {
-          offset: data.payments.items.length
+          offset: data.postfinancePayments.items.length
         },
         updateQuery: (
-          previousResult: PaymentsResult,
+          previousResult: PostfinancePaymentsResult,
           { fetchMoreResult }
         ) => {
           if (!fetchMoreResult) {
@@ -158,11 +161,12 @@ export default graphql(paymentsQuery, {
           return {
             ...previousResult,
             ...{
-              payments: {
+              postfinancePayments: {
                 items: [
-                  ...previousResult.payments.items,
-                  ...(fetchMoreResult as PaymentsResult)
-                    .payments.items
+                  ...previousResult.postfinancePayments
+                    .items,
+                  ...(fetchMoreResult as PostfinancePaymentsResult)
+                    .postfinancePayments.items
                 ]
               }
             }
