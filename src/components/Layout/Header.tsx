@@ -3,7 +3,7 @@ import { css, StyleAttribute } from 'glamor'
 import { compose } from 'redux'
 import { createContainer, createTile } from './Grid'
 import Me from '../Auth/Me'
-import { R, H2, A, colors } from '@project-r/styleguide'
+import { R, Interaction, A, colors } from '@project-r/styleguide'
 import routes from '../../routes'
 const { Link } = routes
 
@@ -33,7 +33,7 @@ const HeaderSection = compose(
 )('div')
 
 const logoStyles = {
-  width: '45px',
+  width: '50px',
   marginLeft: '5px',
   display: 'inline-block'
 }
@@ -46,15 +46,13 @@ const navLinkStyles = {
 
 export default ({ children, style, ...props }: any) =>
   <Header {...props}>
-    <HeaderSection flex="0 0 55px">
+    <HeaderSection flex="0 0 70px">
       <span style={logoStyles}>
         <R />
       </span>
     </HeaderSection>
-    <HeaderSection flex="0 0 90px">
-      <H2>Admin</H2>
-    </HeaderSection>
     <HeaderSection flex="1 1 auto">
+      <Interaction.H2>Admin</Interaction.H2>
       <nav>
         <Link route="users">
           <A style={navLinkStyles}>Users</A>
