@@ -141,27 +141,33 @@ export class Form extends React.Component<Props, State> {
           type="checkbox"
           checked={enabled}
           label="Filter"
+          disabled={!enabled}
           onChange={this.enabledChangeHandler}
         />
-        <select
-          value={field}
-          onChange={this.fieldChangeHandler}
-        >
-          {fields.map(fieldName =>
-            <option key={fieldName} value={fieldName}>
-              {fieldName}
-            </option>
-          )}
-        </select>
+        {fields.length > 1
+          ? <select
+              value={field}
+              disabled={!enabled}
+              onChange={this.fieldChangeHandler}
+            >
+              {fields.map(fieldName =>
+                <option key={fieldName} value={fieldName}>
+                  {fieldName}
+                </option>
+              )}
+            </select>
+          : null}
         <Input
           label="From"
           type="date"
+          disabled={!enabled}
           onChange={this.dateChangeHandler('from')}
           value={from}
         />
         <Input
           label="Until"
           type="date"
+          disabled={!enabled}
           onChange={this.dateChangeHandler('to')}
           value={to}
         />

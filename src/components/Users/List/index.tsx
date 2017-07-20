@@ -12,6 +12,7 @@ import { User } from '../../../types/admin'
 import TableForm from './TableForm'
 import TableHead from './TableHead'
 import TableBody from './TableBody'
+import * as DateRange from '../../Form/DateRange'
 
 import {
   SortOptions,
@@ -86,6 +87,11 @@ const Users = (props: Props) => {
         <TableForm
           search={params.search}
           onSearch={changeHandler('search')}
+          dateRange={params.dateRange}
+          onDateRange={changeHandler(
+            'dateRange',
+            DateRange.serialize
+          )}
         />
         <TableHead
           sort={deserializeOrderBy(params.orderBy)}
@@ -106,11 +112,13 @@ const usersQuery = gql`
     $offset: Int
     $orderBy: OrderBy
     $search: String
+    $dateRange: DateRangeFilter
   ) {
     users(
       limit: $limit
       offset: $offset
       orderBy: $orderBy
+      dateRangeFilter: $dateRange
       search: $search
     ) {
       count
@@ -128,12 +136,15 @@ const usersQuery = gql`
 `
 
 export default graphql(usersQuery, {
-  options: ({ params: { orderBy, search } }: OwnProps) => {
+  options: ({
+    params: { orderBy, dateRange, search }
+  }: OwnProps) => {
     return {
       variables: {
         limit: USERS_LIMIT,
         offset: 0,
         orderBy: deserializeOrderBy(orderBy),
+        dateRange: DateRange.parse(dateRange),
         search
       }
     }
