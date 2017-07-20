@@ -23,6 +23,10 @@ const goToUsers = ({ me }: any) => {
   }
 }
 
+interface AnyObject {
+  [key: string]: any
+}
+
 class Index extends Component<AnyObject, AnyObject> {
   componentDidUpdate() {
     goToUsers(this.props)
