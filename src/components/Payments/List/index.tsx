@@ -12,6 +12,7 @@ import { PledgePayment } from '../../../types/admin'
 import TableForm from './TableForm'
 import TableHead from './TableHead'
 import TableBody from './TableBody'
+import CsvDownloader from './CsvDownloader'
 
 import * as DateRange from '../../Form/DateRange'
 
@@ -84,31 +85,34 @@ const Payments = (props: Props) => {
   )
 
   return (
-    <InfiniteScroller
-      loadMore={loadMorePayments}
-      hasMore={count > items.length}
-      useWindow={false}
-    >
-      <div>
-        <TableForm
-          search={params.search}
-          dateRange={DateRange.parse(params.dateRange)}
-          onDateRange={changeHandler(
-            'dateRange',
-            DateRange.serialize
-          )}
-          onSearch={changeHandler('search')}
-        />
-        <TableHead
-          sort={deserializeOrderBy(params.orderBy)}
-          onSort={changeHandler(
-            'orderBy',
-            serializeOrderBy
-          )}
-        />
-        <TableBody items={items} />
-      </div>
-    </InfiniteScroller>
+    <div>
+      <CsvDownloader />
+      <InfiniteScroller
+        loadMore={loadMorePayments}
+        hasMore={count > items.length}
+        useWindow={false}
+      >
+        <div>
+          <TableForm
+            search={params.search}
+            dateRange={DateRange.parse(params.dateRange)}
+            onDateRange={changeHandler(
+              'dateRange',
+              DateRange.serialize
+            )}
+            onSearch={changeHandler('search')}
+          />
+          <TableHead
+            sort={deserializeOrderBy(params.orderBy)}
+            onSort={changeHandler(
+              'orderBy',
+              serializeOrderBy
+            )}
+          />
+          <TableBody items={items} />
+        </div>
+      </InfiniteScroller>
+    </div>
   )
 }
 
