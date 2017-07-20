@@ -13,6 +13,8 @@ import TableForm from './TableForm'
 import TableHead from './TableHead'
 import TableBody from './TableBody'
 
+import * as DateRange from '../../Form/DateRange'
+
 import {
   SortOptions,
   SortDirection,
@@ -29,6 +31,7 @@ export interface PaymentsResult {
 
 export interface PaymentTableParams {
   orderBy?: string
+  dateRange?: string
   search?: string
 }
 
@@ -89,6 +92,11 @@ const Payments = (props: Props) => {
       <div>
         <TableForm
           search={params.search}
+          dateRange={DateRange.parse(params.dateRange)}
+          onDateRange={changeHandler(
+            'dateRange',
+            DateRange.serialize
+          )}
           onSearch={changeHandler('search')}
         />
         <TableHead
@@ -110,11 +118,13 @@ const paymentsQuery = gql`
     $offset: Int
     $orderBy: OrderBy
     $search: String
+    $dateRange: DateRangeFilter
   ) {
     payments(
       limit: $limit
       offset: $offset
       orderBy: $orderBy
+      dateRangeFilter: $dateRange
       search: $search
     ) {
       count
@@ -134,12 +144,15 @@ const paymentsQuery = gql`
 `
 
 export default graphql(paymentsQuery, {
-  options: ({ params: { orderBy, search } }: OwnProps) => {
+  options: ({
+    params: { orderBy, search, dateRange }
+  }: OwnProps) => {
     return {
       variables: {
         limit: PAYMENTS_LIMIT,
         offset: 0,
         orderBy: deserializeOrderBy(orderBy),
+        dateRange: DateRange.parse(dateRange),
         search
       }
     }

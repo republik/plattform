@@ -2,13 +2,23 @@ import * as React from 'react'
 import { compose } from 'redux'
 import { Field, Label, colors } from '@project-r/styleguide'
 import Input from '../../Form/Input'
+import * as DateRange from '../../Form/DateRange'
 import { Container, Tile } from '../../Layout/Grid'
 import * as debounce from 'debounce'
+
+import {
+  SortOptions,
+  SortDirection,
+  serializeOrderBy,
+  deserializeOrderBy
+} from '../../../lib/utils/queryParams'
 
 export interface FormProps {
   [key: string]: any
   onSearch: (value: string) => void
   search?: string
+  onDateRange: (value?: DateRange.Options) => void
+  dateRange?: DateRange.Options
 }
 
 const searchHandler = (
@@ -24,6 +34,8 @@ const formSectionStyles = {
 export default ({
   search,
   onSearch,
+  dateRange,
+  onDateRange,
   ...props
 }: FormProps) =>
   <div
@@ -38,7 +50,10 @@ export default ({
       />
     </div>
     <div style={formSectionStyles}>
-      <Input label="From" type="date" />
-      <Input label="Until" type="date" />
+      <DateRange.Form
+        fields={['dueDate', 'createdAt']}
+        dateRange={dateRange}
+        onChange={onDateRange}
+      />
     </div>
   </div>

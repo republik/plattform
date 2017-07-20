@@ -11,7 +11,7 @@ export const deserializeOrderBy = (
   if (!str) {
     return
   }
-  const [field, direction] = str.split(':')
+  const [field, direction] = str.split('-')
   return {
     field: field.toString(),
     direction: direction as SortDirection
@@ -21,4 +21,4 @@ export const deserializeOrderBy = (
 export const serializeOrderBy = ({
   field,
   direction
-}: SortOptions): string => `${field}:${direction}`
+}: SortOptions): string => `${field}-${direction}`
