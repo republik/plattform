@@ -61,19 +61,22 @@ declare module 'next/router' {
 declare module 'next-routes'
 
 declare module 'next/document' {
-  import * as React from 'react';
+  import * as React from 'react'
 
   interface DocumentProps {
-    __NEXT_DATA__?: any;
-    dev?: boolean;
-    chunks?: string[];
-    head?: Array<React.ReactElement<any>>;
-    styles?: Array<React.ReactElement<any>>;
-    [key: string]: any;
+    __NEXT_DATA__?: any
+    dev?: boolean
+    chunks?: string[]
+    head?: Array<React.ReactElement<any>>
+    styles?: Array<React.ReactElement<any>>
+    [key: string]: any
   }
 
   class Head extends React.Component<any, {}> {}
   class Main extends React.Component<{}, {}> {}
   class NextScript extends React.Component<{}, {}> {}
-  export default class extends React.Component<DocumentProps, {}> {}
+  export default class extends React.Component<
+    DocumentProps,
+    {}
+  > {}
 }
