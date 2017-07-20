@@ -141,7 +141,6 @@ export class Form extends React.Component<Props, State> {
           type="checkbox"
           checked={enabled}
           label="Filter"
-          disabled={!enabled}
           onChange={this.enabledChangeHandler}
         />
         {fields.length > 1

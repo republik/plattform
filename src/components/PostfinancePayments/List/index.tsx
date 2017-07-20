@@ -112,15 +112,10 @@ const postfinancePaymentsQuery = gql`
   query postfinancePayments(
     $limit: Int!
     $offset: Int
-    $orderBy: String
+    $orderBy: OrderBy
     $search: String
   ) {
-    postfinancePayments(
-      limit: $limit
-      offset: $offset
-      orderBy: $orderBy
-      search: $search
-    ) {
+    postfinancePayments(limit: $limit, offset: $offset) {
       count
       items {
         id
