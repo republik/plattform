@@ -8,3 +8,4 @@ routes
   .add('user', '/users/:userId', 'user')
 
 export default routes
+export const Router = routes.Router
