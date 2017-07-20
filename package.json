@@ -22,6 +22,7 @@
     "dotenv": "^4.0.0",
     "email-validator": "^1.0.7",
     "express": "^4.15.3",
+    "express-basic-auth": "^1.1.1",
     "glamor": "^2.20.24",
     "next": "beta",
     "next-routes": "^1.0.40",

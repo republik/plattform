@@ -2,6 +2,7 @@ import * as express from 'express'
 import * as next from 'next'
 import routes from './routes'
 import * as dotenv from 'dotenv'
+import * as basicAuth from 'express-basic-auth'
 
 const DEV = process.env.NODE_ENV
   ? process.env.NODE_ENV !== 'production'
@@ -29,6 +30,20 @@ app.prepare().then(() => {
       return cb()
     })
   }
+
+  if (process.env.BASIC_AUTH_PASS) {
+    const opts: basicAuth.IUsersOptions = {
+      users: {
+        [process.env.BASIC_AUTH_USER as string]: process.env
+          .BASIC_AUTH_PASS as string
+      },
+      challenge: true,
+      realm: process.env.BASIC_AUTH_REALM
+    }
+
+    server.use(basicAuth(opts))
+  }
+
   server.get('*', (req, res) => {
     handle(req, res)
   })
