@@ -11,7 +11,7 @@
     "heroku-postbuild": "npm run build",
     "predev": "tsc && cp -R static dist/ && cp src/lib/translations.json dist/lib/",
     "dev": "concurrently \"tsc --watch\" \"node dist/server.js\"",
-    "start": "next start dist",
+    "start": "node dist/server.",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "prettier": "prettier --single-quote --print-width 60 --no-semi --write \"src/**/*.{ts,tsx}\""
   },
