@@ -7,6 +7,27 @@ declare module 'next/head' {
   }
 }
 
+declare module 'next/document' {
+  import * as React from 'react'
+
+  interface DocumentProps {
+    __NEXT_DATA__?: any
+    dev?: boolean
+    chunks?: string[]
+    head?: Array<React.ReactElement<any>>
+    styles?: Array<React.ReactElement<any>>
+    [key: string]: any
+  }
+
+  class Head extends React.Component<any, {}> {}
+  class Main extends React.Component<{}, {}> {}
+  class NextScript extends React.Component<{}, {}> {}
+  export default class extends React.Component<
+    DocumentProps,
+    {}
+  > {}
+}
+
 declare module 'next/link' {
   import { Component } from 'react'
   import { Url } from 'url'
