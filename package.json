@@ -1,5 +1,5 @@
 {
-  "name": "next-typescript",
+  "name": "crowdfunding-admin",
   "version": "1.0.0",
   "engines": {
     "node": "8.2.0"
@@ -10,7 +10,7 @@
     "build": "next build dist",
     "predev": "tsc && cp -R static dist/ && cp src/lib/translations.json dist/lib/",
     "dev": "concurrently \"tsc --watch\" \"node dist/server.js\"",
-    "start": "next start dist",
+    "start": "npm run build && next start dist",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "prettier": "prettier --single-quote --print-width 60 --no-semi --write \"src/**/*.{ts,tsx}\""
   },
