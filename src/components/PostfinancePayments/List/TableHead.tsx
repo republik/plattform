@@ -3,18 +3,15 @@ import { Table, Row, Cell } from '../../Layout/Table'
 import * as Sticky from 'react-sticky-el'
 import { Label, colors } from '@project-r/styleguide'
 import SortIndicator from '../../SortIndicator'
-
-export type SortDirection = 'asc' | 'desc'
-
-export interface SortOptions {
-  sortBy?: string
-  sortDirection?: SortDirection
-}
+import {
+  SortOptions,
+  SortDirection
+} from '../../../lib/utils/queryParams'
 
 export interface HeadProps {
   [key: string]: any
-  onSort: (value: string) => void
-  sort?: string
+  onSort: (value: SortOptions) => void
+  sort?: SortOptions
 }
 
 const rowStyles = {
@@ -27,60 +24,36 @@ const interactiveStyles = {
   cursor: 'pointer'
 }
 
-const deserializeParams = (str?: string): SortOptions => {
-  if (!str) {
-    return {}
-  }
-  const [field, direction] = str.split(':')
-  return {
-    sortBy: field.toString(),
-    sortDirection: direction as SortDirection
-  }
-}
-
-const serializeParams = ({
-  sortBy,
-  sortDirection
-}: SortOptions): string => `${sortBy}:${sortDirection}`
-
 const createSortHandler = (
   sort: SortOptions,
-  handler: (value: string) => void
+  handler: (value: SortOptions) => void
 ) => (fieldName: string) => () => {
-  if (sort.sortBy !== fieldName) {
-    return handler(
-      serializeParams({
-        sortBy: fieldName,
-        sortDirection: 'asc'
-      })
-    )
+  if (sort.field !== fieldName) {
+    return handler({
+      field: fieldName,
+      direction: 'ASC'
+    })
   } else {
-    return handler(
-      serializeParams({
-        sortBy: sort.sortBy,
-        sortDirection:
-          sort.sortDirection === 'asc' ? 'desc' : 'asc'
-      })
-    )
+    return handler({
+      field: sort.field,
+      direction: sort.direction === 'ASC' ? 'DESC' : 'ASC'
+    })
   }
 }
 
 const createIndicator = (sort: SortOptions) => (
   fieldName: string
 ) => {
-  if (sort.sortBy === fieldName) {
-    return (
-      <SortIndicator sortDirection={sort.sortDirection} />
-    )
+  if (sort.field === fieldName) {
+    return <SortIndicator sortDirection={sort.direction} />
   } else {
     return null
   }
 }
 
 export default ({ sort, onSort, ...props }: HeadProps) => {
-  const sortOpts = deserializeParams(sort) || {}
-  const sortHandler = createSortHandler(sortOpts, onSort)
-  const indicator = createIndicator(sortOpts)
+  const sortHandler = createSortHandler(sort || {}, onSort)
+  const indicator = createIndicator(sort || {})
 
   return (
     <Sticky scrollElement="#content" {...props}>

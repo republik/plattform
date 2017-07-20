@@ -13,6 +13,13 @@ import TableForm from './TableForm'
 import TableHead from './TableHead'
 import TableBody from './TableBody'
 
+import {
+  SortOptions,
+  SortDirection,
+  serializeOrderBy,
+  deserializeOrderBy
+} from '../../../lib/utils/queryParams'
+
 export interface PostfinancePaymentsResult {
   postfinancePayments: {
     items: PostfinancePayment[]
@@ -36,22 +43,21 @@ interface Props extends OwnProps {
   data: QueryProps & PostfinancePaymentsResult
 }
 
-type SortDirection = 'ASC' | 'DESC'
-interface SortOptions {
-  sortBy?: string
-  sortDirection?: SortDirection
-}
-
 const PAYMENTS_LIMIT = 200
+
+const identity = (v: any) => v
 
 const createChangeHandler = (
   params: any,
   handler: (v: any) => void
-) => (fieldName: string) => (value: string) => {
+) => (fieldName: string, serializer?: any) => (
+  value: any
+) => {
+  const s = serializer || identity
   if (value && value !== '') {
     handler({
       ...params,
-      ...{ [fieldName]: value }
+      ...{ [fieldName]: s(value) }
     })
   } else {
     delete params[fieldName]
@@ -90,8 +96,11 @@ const Payments = (props: Props) => {
           onSearch={changeHandler('search')}
         />
         <TableHead
-          sort={params.orderBy}
-          onSort={changeHandler('orderBy')}
+          sort={deserializeOrderBy(params.orderBy)}
+          onSort={changeHandler(
+            'orderBy',
+            serializeOrderBy
+          )}
         />
         <TableBody items={items} />
       </div>
@@ -134,7 +143,7 @@ export default graphql(postfinancePaymentsQuery, {
       variables: {
         limit: PAYMENTS_LIMIT,
         offset: 0,
-        orderBy,
+        orderBy: deserializeOrderBy(orderBy),
         search
       }
     }
