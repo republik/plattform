@@ -29,6 +29,7 @@ interface InputProps {
   name?: string
   value?: any
   onChange?: any
+  checked?: boolean
 }
 
 export default ({
@@ -37,6 +38,7 @@ export default ({
   name,
   onChange,
   label,
+  checked,
   ...props
 }: InputProps) =>
   <div {...props}>
@@ -51,5 +53,6 @@ export default ({
       type={type}
       value={value}
       onChange={onChange}
+      checked={checked}
     />
   </div>

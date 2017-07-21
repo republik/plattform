@@ -1,22 +1,20 @@
 import * as React from 'react'
 import Input from './Input'
 
-export type Field = [string, string[]]
-
 export interface Props {
-  fields: Field[]
-  stringArray?: Options
+  fields: string[]
+  bool?: Options
   onChange?: (value?: Options) => void
 }
 
 export interface State {
-  stringArray: Options
+  bool: Options
   enabled: boolean
 }
 
 export interface Options {
   field: string
-  values: string[]
+  value: boolean
 }
 
 export const parse = (
@@ -26,27 +24,26 @@ export const parse = (
     return
   }
 
-  const [field, stringArray] = str.split('_')
-  const values = stringArray.split(',')
-  return { field: field.toString(), values }
+  const [field, v] = str.split('_')
+  return { field: field.toString(), value: v === 'true' }
 }
 
 export const serialize = ({
   field,
-  values
-}: Options): string => `${field}_${values.join(',')}`
+  value
+}: Options): string => `${field}_${value.toString()}`
 
 const getInitialState = ({
-  stringArray,
+  bool,
   ...props
 }: Props): State =>
-  stringArray
-    ? { stringArray, enabled: true }
+  bool
+    ? { bool, enabled: true }
     : {
         enabled: false,
-        stringArray: {
-          field: props.fields[0][0],
-          values: []
+        bool: {
+          field: props.fields[0],
+          value: false
         }
       }
 
@@ -61,8 +58,8 @@ export class Form extends React.Component<Props, State> {
     this.setState(
       () => ({
         ...this.state,
-        stringArray: {
-          values: [],
+        bool: {
+          ...this.state.bool,
           field
         }
       }),
@@ -82,20 +79,14 @@ export class Form extends React.Component<Props, State> {
     )
   }
 
-  public choiceChangeHandler = (event: any) => {
-    const value = event.target.value
-    const checked = event.target.checked
-    const oldValues = this.state.stringArray.values
-    const values = checked
-      ? [value, ...oldValues]
-      : oldValues.filter(v => v !== value)
-
+  public changeHandler = (event: any) => {
+    const value = event.target.checked
     this.setState(
       () => ({
         ...this.state,
-        stringArray: {
-          ...this.state.stringArray,
-          values
+        bool: {
+          ...this.state.bool,
+          value
         }
       }),
       this.emitChange
@@ -104,15 +95,12 @@ export class Form extends React.Component<Props, State> {
 
   public emitChange = () => {
     if (this.props.onChange) {
-      const {
-        enabled,
-        stringArray: { field, values }
-      } = this.state
+      const { enabled, bool: { field, value } } = this.state
       this.props.onChange(
-        enabled && values.length > 0
+        enabled
           ? {
               field,
-              values
+              value
             }
           : undefined
       )
@@ -125,13 +113,7 @@ export class Form extends React.Component<Props, State> {
 
   public render() {
     const { fields } = this.props
-    const {
-      enabled,
-      stringArray: { field, values }
-    } = this.state
-    const selectedField = fields.find(
-      (v: Field) => v && v[0] === field
-    )
+    const { enabled, bool: { field, value } } = this.state
 
     return (
       <div>
@@ -147,28 +129,20 @@ export class Form extends React.Component<Props, State> {
               disabled={!enabled}
               onChange={this.fieldChangeHandler}
             >
-              {fields.map(fieldTuple =>
-                <option
-                  key={fieldTuple[0]}
-                  value={fieldTuple[0]}
-                >
-                  {fieldTuple[0]}
+              {fields.map(fieldName =>
+                <option key={fieldName} value={fieldName}>
+                  {fieldName}
                 </option>
               )}
             </select>
           : null}
-        {selectedField
-          ? selectedField[1].map(choice =>
-              <Input
-                type="checkbox"
-                key={choice}
-                label={choice}
-                value={choice}
-                checked={values.indexOf(choice) >= 0}
-                onChange={this.choiceChangeHandler}
-              />
-            )
-          : null}
+        <Input
+          label={field}
+          type="checkbox"
+          disabled={!enabled}
+          onChange={this.changeHandler}
+          checked={value}
+        />
       </div>
     )
   }

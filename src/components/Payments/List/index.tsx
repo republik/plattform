@@ -14,6 +14,7 @@ import TableHead from './TableHead'
 import TableBody from './TableBody'
 
 import * as DateRange from '../../Form/DateRange'
+import * as StringArray from '../../Form/StringArray'
 
 import {
   SortOptions,
@@ -32,6 +33,7 @@ export interface PaymentsResult {
 export interface PaymentTableParams {
   orderBy?: string
   dateRange?: string
+  stringArray?: string
   search?: string
 }
 
@@ -84,33 +86,38 @@ const Payments = (props: Props) => {
   )
 
   return (
-    <div>
-      <InfiniteScroller
-        loadMore={loadMorePayments}
-        hasMore={count > items.length}
-        useWindow={false}
-      >
-        <div>
-          <TableForm
-            search={params.search}
-            dateRange={DateRange.parse(params.dateRange)}
-            onDateRange={changeHandler(
-              'dateRange',
-              DateRange.serialize
-            )}
-            onSearch={changeHandler('search')}
-          />
-          <TableHead
-            sort={deserializeOrderBy(params.orderBy)}
-            onSort={changeHandler(
-              'orderBy',
-              serializeOrderBy
-            )}
-          />
-          <TableBody items={items} />
-        </div>
-      </InfiniteScroller>
-    </div>
+    <InfiniteScroller
+      loadMore={loadMorePayments}
+      hasMore={count > items.length}
+      useWindow={false}
+    >
+      <div>
+        <TableForm
+          search={params.search}
+          onSearch={changeHandler('search')}
+          dateRange={DateRange.parse(params.dateRange)}
+          onDateRange={changeHandler(
+            'dateRange',
+            DateRange.serialize
+          )}
+          stringArray={StringArray.parse(
+            params.stringArray
+          )}
+          onStringArray={changeHandler(
+            'stringArray',
+            StringArray.serialize
+          )}
+        />
+        <TableHead
+          sort={deserializeOrderBy(params.orderBy)}
+          onSort={changeHandler(
+            'orderBy',
+            serializeOrderBy
+          )}
+        />
+        <TableBody items={items} />
+      </div>
+    </InfiniteScroller>
   )
 }
 
@@ -121,12 +128,14 @@ const paymentsQuery = gql`
     $orderBy: OrderBy
     $search: String
     $dateRange: DateRangeFilter
+    $stringArray: StringArrayFilter
   ) {
     payments(
       limit: $limit
       offset: $offset
       orderBy: $orderBy
       dateRangeFilter: $dateRange
+      stringArrayFilter: $stringArray
       search: $search
     ) {
       count
@@ -147,7 +156,7 @@ const paymentsQuery = gql`
 
 export default graphql(paymentsQuery, {
   options: ({
-    params: { orderBy, search, dateRange }
+    params: { orderBy, search, dateRange, stringArray }
   }: OwnProps) => {
     return {
       variables: {
@@ -155,6 +164,7 @@ export default graphql(paymentsQuery, {
         offset: 0,
         orderBy: deserializeOrderBy(orderBy),
         dateRange: DateRange.parse(dateRange),
+        stringArray: StringArray.parse(stringArray),
         search
       }
     }

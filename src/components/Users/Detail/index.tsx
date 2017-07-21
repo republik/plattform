@@ -237,6 +237,7 @@ const userQuery = gql`
           total
           dueDate
           hrid
+          pspId
           createdAt
           updatedAt
         }
