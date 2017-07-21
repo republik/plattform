@@ -37,6 +37,12 @@ interface Props extends OwnProps {
   data: QueryProps & { user: User }
 }
 
+interface State {
+  errors: {
+    [key: string]: string
+  }
+}
+
 const GUTTER = 60
 const styles = {
   grid: css({
@@ -71,75 +77,117 @@ const styles = {
   })
 }
 
-const User = (props: Props) => {
-  if (props.data.error) {
-    return <ErrorMessage error={props.data.error} />
-  } else if (props.data.loading) {
-    return <div>Loading ...</div>
+class Detail extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props)
+    this.state = { errors: {} }
   }
-  return (
-    <div style={{ overflow: 'hidden' }}>
-      <Interaction.H1>
-        {props.data.user.name}
-      </Interaction.H1>
-      <Label>
-        {props.data.user.email}
-      </Label>
-      <div {...styles.grid}>
-        <div {...styles.span}>
-          <UserForm
-            user={props.data.user}
-            onSubmit={props.updateUser}
-          />
+
+  public updateUser = (user: User) => {
+    this.props.updateUser(user).catch((e: any) => {
+      this.setState(() => ({
+        errors: {
+          ...this.state.errors,
+          user: e
+        }
+      }))
+    })
+  }
+
+  public updateEmail = (user: User) => {
+    this.props.updateEmail(user).catch((e: any) => {
+      this.setState(() => ({
+        errors: {
+          ...this.state.errors,
+          email: e
+        }
+      }))
+    })
+  }
+
+  public willReceiveProps() {
+    this.state = { errors: {} }
+  }
+
+  public render() {
+    const props = this.props
+    if (props.data.error) {
+      return <ErrorMessage error={props.data.error} />
+    } else if (props.data.loading) {
+      return <div>Loading ...</div>
+    } else if (props.data.loading) {
+      return <div>Loading ...</div>
+    }
+    return (
+      <div style={{ overflow: 'hidden' }}>
+        <Interaction.H1>
+          {props.data.user.name}
+        </Interaction.H1>
+        <Label>
+          {props.data.user.email}
+        </Label>
+        <div {...styles.grid}>
+          <div {...styles.span}>
+            <UserForm
+              user={props.data.user}
+              onSubmit={this.updateUser}
+            />
+          </div>
+          <div {...styles.span}>
+            <EmailForm
+              error={this.state.errors.email}
+              user={props.data.user}
+              onSubmit={this.updateEmail}
+            />
+            <br />
+            <br />
+            {!!props.data.user.testimonial &&
+              <div>
+                <Interaction.H3>Statement</Interaction.H3>
+                <br />
+                <img
+                  style={{
+                    width: '100%',
+                    maxWidth: '200px'
+                  }}
+                  src={props.data.user.testimonial.image}
+                />
+                <br />
+                <Label>
+                  {props.data.user.testimonial.role}
+                </Label>
+                <P>
+                  «{props.data.user.testimonial.quote}»
+                </P>
+              </div>}
+          </div>
         </div>
-        <div {...styles.span}>
-          <EmailForm
-            user={props.data.user}
-            onSubmit={props.updateEmail}
-          />
-          <br />
-          <br />
-          {!!props.data.user.testimonial &&
-            <div>
-              <Interaction.H3>Statement</Interaction.H3>
-              <br />
-              <img
-                style={{ width: '100%', maxWidth: '200px' }}
-                src={props.data.user.testimonial.image}
-              />
-              <br />
-              <Label>
-                {props.data.user.testimonial.role}
-              </Label>
-              <P>
-                «{props.data.user.testimonial.quote}»
-              </P>
-            </div>}
+        <br />
+        <br />
+        <Interaction.H2>Pledges</Interaction.H2>
+        <div {...styles.pledges}>
+          {props.data.user.pledges.map(
+            (pledge: Pledge, index: number) =>
+              <div
+                {...styles.pledge}
+                key={`pledge-${pledge.id}`}
+              >
+                <PledgeOverview
+                  pledge={pledge}
+                  onResolvePledge={
+                    props.resolvePledgeToPayment
+                  }
+                  onCancelPledge={props.cancelPledge}
+                  onUpdatePaymentStatus={
+                    props.updatePayment
+                  }
+                />
+              </div>
+          )}
         </div>
       </div>
-      <br />
-      <br />
-      <Interaction.H2>Pledges</Interaction.H2>
-      <div {...styles.pledges}>
-        {props.data.user.pledges.map(
-          (pledge: Pledge, index: number) =>
-            <div
-              {...styles.pledge}
-              key={`pledge-${pledge.id}`}
-            >
-              <PledgeOverview
-                pledge={pledge}
-                onResolvePledge={
-                  props.resolvePledgeToPayment
-                }
-                onCancelPledge={props.cancelPledge}
-                onUpdatePaymentStatus={props.updatePayment}
-              />
-            </div>
-        )}
-      </div>
-    </div>
-  )
+    )
+  }
 }
 
 const resolvePledgeToPaymentMutation = gql`
@@ -396,6 +444,6 @@ const WrappedUser = compose(
       }
     }
   })
-)(User)
+)(Detail)
 
 export default WrappedUser as React.ComponentClass<OwnProps>
