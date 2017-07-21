@@ -9,6 +9,7 @@ import {
   Footer
 } from '../components/Layout'
 import PostfinancePayments from '../components/PostfinancePayments/List'
+import Upload from '../components/PostfinancePayments/List/Upload'
 import { default as Routes } from '../routes'
 
 const changeHandler = (params: any) => {
@@ -26,6 +27,9 @@ export default withData((props: any) => {
             onChange={changeHandler}
           />
         </Content>
+        <Footer>
+          <Upload />
+        </Footer>
       </Body>
     </App>
   )
