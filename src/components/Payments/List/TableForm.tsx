@@ -3,6 +3,7 @@ import { compose } from 'redux'
 import { Field, Label, colors } from '@project-r/styleguide'
 import Input from '../../Form/Input'
 import * as DateRange from '../../Form/DateRange'
+import * as StringArray from '../../Form/StringArray'
 import { Container, Tile } from '../../Layout/Grid'
 import * as debounce from 'debounce'
 
@@ -19,6 +20,8 @@ export interface FormProps {
   search?: string
   onDateRange: (value?: DateRange.Options) => void
   dateRange?: DateRange.Options
+  onStringArray?: (value?: StringArray.Options) => void
+  stringArray?: StringArray.Options
 }
 
 const searchHandler = (
@@ -36,6 +39,8 @@ export default ({
   onSearch,
   dateRange,
   onDateRange,
+  stringArray,
+  onStringArray,
   ...props
 }: FormProps) =>
   <div
@@ -54,6 +59,33 @@ export default ({
         fields={['dueDate', 'createdAt']}
         dateRange={dateRange}
         onChange={onDateRange}
+      />
+    </div>
+    <div style={formSectionStyles}>
+      <StringArray.Form
+        fields={[
+          [
+            'status',
+            [
+              'WAITING',
+              'PAID',
+              'WAITING_FOR_REFUND',
+              'REFUNDED',
+              'CANCELLED'
+            ]
+          ],
+          [
+            'method',
+            [
+              'STRIPE',
+              'POSTFINANCE',
+              'PAYPAL',
+              'PAYMENTSLIP'
+            ]
+          ]
+        ]}
+        stringArray={stringArray}
+        onChange={onStringArray}
       />
     </div>
   </div>
