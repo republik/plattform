@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { Table, Row, Cell } from '../../Layout/Table'
 import { A, colors } from '@project-r/styleguide'
+import { chfFormat } from '../../../lib/utils/formats'
+
 import routes from '../../../routes'
 const { Link } = routes
 
@@ -49,7 +51,7 @@ export default ({ items, ...props }: any) =>
           {payment.hrid}
         </Cell>
         <Cell flex="0 0 10%">
-          {payment.total}
+          {chfFormat(payment.total / 100)}
         </Cell>
         <Cell flex="0 0 15%">
           {payment.status}

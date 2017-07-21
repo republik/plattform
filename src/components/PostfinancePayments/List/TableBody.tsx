@@ -2,6 +2,7 @@ import * as React from 'react'
 import { A, colors } from '@project-r/styleguide'
 import { Table, Row, Cell } from '../../Layout/Table'
 import MessageForm from './MessageForm'
+import { chfFormat } from '../../../lib/utils/formats'
 import routes from '../../../routes'
 const { Link } = routes
 
@@ -40,7 +41,7 @@ const interactiveStyles = {
   cursor: 'pointer'
 }
 
-export default ({ items, ...props }: any) =>
+export default ({ items, onMessage, ...props }: any) =>
   <Table {...props}>
     {items.map((postfinancePayment: any, index: number) =>
       <Row
@@ -60,13 +61,13 @@ export default ({ items, ...props }: any) =>
           {postfinancePayment.avisierungstext}
         </Cell>
         <Cell flex="0 0 10%">
-          {postfinancePayment.gutschrift}
+          {chfFormat(postfinancePayment.gutschrift / 100)}
         </Cell>
         <Cell flex="0 0 10%">
           {!postfinancePayment.matched
             ? <MessageForm
                 message={postfinancePayment.mitteilung}
-                onSubmit={c => console.log(c)}
+                onSubmit={onMessage}
               />
             : postfinancePayment.mitteilung}
         </Cell>
