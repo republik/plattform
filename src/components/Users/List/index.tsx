@@ -5,6 +5,8 @@ import {
   OptionProps,
   QueryProps
 } from 'react-apollo'
+import { colors } from '@project-r/styleguide'
+
 import * as InfiniteScroller from 'react-infinite-scroller'
 import { css, StyleAttribute } from 'glamor'
 import { User } from '../../../types/admin'
@@ -62,7 +64,13 @@ const createChangeHandler = (
 }
 
 const Users = (props: Props) => {
-  if (!props.data.users) {
+  if (props.data.error) {
+    return (
+      <div style={{ color: colors.error }}>
+        {props.data.error.message}
+      </div>
+    )
+  } else if (!props.data.users) {
     return <div>Loading</div>
   }
   const {

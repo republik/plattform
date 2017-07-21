@@ -5,11 +5,13 @@ import {
   OptionProps,
   QueryProps
 } from 'react-apollo'
+import { colors } from '@project-r/styleguide'
 import * as InfiniteScroller from 'react-infinite-scroller'
 import { css, StyleAttribute } from 'glamor'
 import { PostfinancePayment } from '../../../types/admin'
 import * as DateRange from '../../Form/DateRange'
 import * as Bool from '../../Form/Boolean'
+import ErrorMessage from '../../ErrorMessage'
 
 import TableForm from './TableForm'
 import TableHead from './TableHead'
@@ -69,7 +71,13 @@ const createChangeHandler = (
 }
 
 const Payments = (props: Props) => {
-  if (!props.data.postfinancePayments) {
+  if (props.data.error) {
+    return (
+      <ErrorMessage>
+        {props.data.error.message}
+      </ErrorMessage>
+    )
+  } else if (!props.data.postfinancePayments) {
     return <div>Loading</div>
   }
   const {

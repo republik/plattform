@@ -1,7 +1,19 @@
 import * as React from 'react'
 import { compose } from 'redux'
-import { gql, graphql, OptionProps, QueryProps } from 'react-apollo'
-import { Interaction, P, Label, colors } from '@project-r/styleguide'
+import {
+  gql,
+  graphql,
+  OptionProps,
+  QueryProps
+} from 'react-apollo'
+import {
+  Interaction,
+  P,
+  Label,
+  colors
+} from '@project-r/styleguide'
+import ErrorMessage from '../../ErrorMessage'
+
 import { User, Pledge } from '../../../types/admin'
 import { css } from 'glamor'
 import UserForm from './UserForm'
@@ -60,7 +72,13 @@ const styles = {
 }
 
 const User = (props: Props) => {
-  if (props.data.loading) {
+  if (props.data.error) {
+    return (
+      <ErrorMessage>
+        {props.data.error.message}
+      </ErrorMessage>
+    )
+  } else if (props.data.loading) {
     return <div>Loading ...</div>
   }
   return (
@@ -73,10 +91,16 @@ const User = (props: Props) => {
       </Label>
       <div {...styles.grid}>
         <div {...styles.span}>
-          <UserForm user={props.data.user} onSubmit={props.updateUser} />
+          <UserForm
+            user={props.data.user}
+            onSubmit={props.updateUser}
+          />
         </div>
         <div {...styles.span}>
-          <EmailForm user={props.data.user} onSubmit={props.updateEmail} />
+          <EmailForm
+            user={props.data.user}
+            onSubmit={props.updateEmail}
+          />
           <br />
           <br />
           {!!props.data.user.testimonial &&
@@ -101,15 +125,21 @@ const User = (props: Props) => {
       <br />
       <Interaction.H2>Pledges</Interaction.H2>
       <div {...styles.pledges}>
-        {props.data.user.pledges.map((pledge: Pledge, index: number) =>
-          <div {...styles.pledge} key={`pledge-${pledge.id}`}>
-            <PledgeOverview
-              pledge={pledge}
-              onResolvePledge={props.resolvePledgeToPayment}
-              onCancelPledge={props.cancelPledge}
-              onUpdatePaymentStatus={props.updatePayment}
-            />
-          </div>
+        {props.data.user.pledges.map(
+          (pledge: Pledge, index: number) =>
+            <div
+              {...styles.pledge}
+              key={`pledge-${pledge.id}`}
+            >
+              <PledgeOverview
+                pledge={pledge}
+                onResolvePledge={
+                  props.resolvePledgeToPayment
+                }
+                onCancelPledge={props.cancelPledge}
+                onUpdatePaymentStatus={props.updatePayment}
+              />
+            </div>
         )}
       </div>
     </div>
@@ -117,8 +147,14 @@ const User = (props: Props) => {
 }
 
 const resolvePledgeToPaymentMutation = gql`
-  mutation resolvePledgeToPayment($pledgeId: ID!, $reason: String!) {
-    resolvePledgeToPayment(pledgeId: $pledgeId, reason: $reason) {
+  mutation resolvePledgeToPayment(
+    $pledgeId: ID!
+    $reason: String!
+  ) {
+    resolvePledgeToPayment(
+      pledgeId: $pledgeId
+      reason: $reason
+    ) {
       id
     }
   }
@@ -138,7 +174,11 @@ const updatePaymentMutation = gql`
     $status: PaymentStatus!
     $reason: String
   ) {
-    updatePayment(paymentId: $paymentId, status: $status, reason: $reason) {
+    updatePayment(
+      paymentId: $paymentId
+      status: $status
+      reason: $reason
+    ) {
       id
     }
   }
@@ -286,7 +326,10 @@ const WrappedUser = compose(
     })
   }),
   graphql(resolvePledgeToPaymentMutation, {
-    props: ({ mutate, ownProps: { params: { userId } } }: any) => ({
+    props: ({
+      mutate,
+      ownProps: { params: { userId } }
+    }: any) => ({
       resolvePledgeToPayment: (variables: any) => {
         if (mutate) {
           return mutate({
@@ -305,7 +348,10 @@ const WrappedUser = compose(
     })
   }),
   graphql(updatePaymentMutation, {
-    props: ({ mutate, ownProps: { params: { userId } } }: any) => ({
+    props: ({
+      mutate,
+      ownProps: { params: { userId } }
+    }: any) => ({
       updatePayment: (variables: any) => {
         if (mutate) {
           return mutate({
@@ -324,7 +370,10 @@ const WrappedUser = compose(
     })
   }),
   graphql(cancelPledgeMutation, {
-    props: ({ mutate, ownProps: { params: { userId } } }: any) => ({
+    props: ({
+      mutate,
+      ownProps: { params: { userId } }
+    }: any) => ({
       cancelPledge: (variables: any) => {
         if (mutate) {
           return mutate({

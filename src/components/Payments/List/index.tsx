@@ -5,6 +5,7 @@ import {
   OptionProps,
   QueryProps
 } from 'react-apollo'
+import ErrorMessage from '../../ErrorMessage'
 import * as InfiniteScroller from 'react-infinite-scroller'
 import { css, StyleAttribute } from 'glamor'
 import { PledgePayment } from '../../../types/admin'
@@ -70,7 +71,13 @@ const createChangeHandler = (
 }
 
 const Payments = (props: Props) => {
-  if (!props.data.payments) {
+  if (props.data.error) {
+    return (
+      <ErrorMessage>
+        {props.data.error.message}
+      </ErrorMessage>
+    )
+  } else if (!props.data.payments) {
     return <div>Loading</div>
   }
   const {

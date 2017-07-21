@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { ApolloClient, gql, withApollo } from 'react-apollo'
 import { css, StyleAttribute } from 'glamor'
+import ErrorMessage from '../../ErrorMessage'
 
 const PaymentsCSVDownloader = (props: any) => {
   if (!process.browser || !props.data.paymentsCSV) {
@@ -32,7 +33,8 @@ class CSVDownloader extends React.Component<
     super(props)
     this.state = {
       csv: null,
-      loading: false
+      loading: false,
+      error: null
     }
   }
 
@@ -51,9 +53,21 @@ class CSVDownloader extends React.Component<
           csv: data.paymentsCSV
         }))
       })
+      .catch((error: any) => {
+        this.setState(() => ({
+          error
+        }))
+      })
   }
 
   public render() {
+    if (this.state.error) {
+      return (
+        <ErrorMessage>
+          {this.state.error.message}
+        </ErrorMessage>
+      )
+    }
     if (!this.state.csv) {
       if (this.state.loading) {
         return <p>Loading ...</p>
