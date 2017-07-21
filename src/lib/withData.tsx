@@ -47,7 +47,10 @@ export default (ComposedComponent: any) => {
         )
         try {
           await getDataFromTree(app)
-        } catch (e) {}
+        } catch (e) {
+          ctx.res.writeHead(302, { Location: '/' })
+          ctx.res.end()
+        }
         // getDataFromTree does not call componentWillUnmount
         // head side effect therefore need to be cleared manually
         Head.rewind()
