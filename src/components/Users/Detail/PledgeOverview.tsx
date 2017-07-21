@@ -114,7 +114,13 @@ const PledgeOverview = ({
           <Item key={`payment-${i}`}>
             <Label>Payment</Label>
             <br />
-            {payment.method} {payment.status}
+            {payment.method === 'STRIPE' &&
+              <a href={`https://dashboard.stripe.com/payments/${payment.pspId}`} target='_blank'>STRIPE</a>
+            }
+            {payment.method !== 'STRIPE' &&
+              payment.method
+            }
+            {' - '} {payment.status}
             <br />
             {!!payment.dueDate &&
               <Interaction.P>
