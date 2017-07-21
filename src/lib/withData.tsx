@@ -5,6 +5,7 @@ import {
 } from 'react-apollo'
 import Head from 'next/head'
 import initApollo from './initApollo'
+import { errorToString } from '../lib/utils/errors'
 
 interface Props {
   serverState?: any
@@ -48,8 +49,20 @@ export default (ComposedComponent: any) => {
         try {
           await getDataFromTree(app)
         } catch (e) {
-          ctx.res.writeHead(302, { Location: '/' })
-          ctx.res.end()
+          const stringError = errorToString(e)
+          if (
+            stringError ===
+            'Sie müssen sich zuerst einloggen.'
+          ) {
+            ctx.res.writeHead(302, {
+              Location: '/?error=401'
+            })
+            return ctx.res.end()
+          } else {
+            return {
+              error: e.message
+            }
+          }
         }
         // getDataFromTree does not call componentWillUnmount
         // head side effect therefore need to be cleared manually
