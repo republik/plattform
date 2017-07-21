@@ -111,6 +111,7 @@ export interface PledgePayment {
   total: number
   status: PaymentStatus
   hrid: string
+  pspId?: any
   dueDate?: string
   createdAt: string
   updatedAt: string
