@@ -72,11 +72,7 @@ const createChangeHandler = (
 
 const Payments = (props: Props) => {
   if (props.data.error) {
-    return (
-      <ErrorMessage>
-        {props.data.error.message}
-      </ErrorMessage>
-    )
+    return <ErrorMessage error={props.data.error} />
   } else if (!props.data.payments) {
     return <div>Loading</div>
   }

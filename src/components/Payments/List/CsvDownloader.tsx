@@ -62,11 +62,7 @@ class CSVDownloader extends React.Component<
 
   public render() {
     if (this.state.error) {
-      return (
-        <ErrorMessage>
-          {this.state.error.message}
-        </ErrorMessage>
-      )
+      return <ErrorMessage error={this.state.error} />
     }
     if (!this.state.csv) {
       if (this.state.loading) {

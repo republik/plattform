@@ -73,11 +73,7 @@ const styles = {
 
 const User = (props: Props) => {
   if (props.data.error) {
-    return (
-      <ErrorMessage>
-        {props.data.error.message}
-      </ErrorMessage>
-    )
+    return <ErrorMessage error={props.data.error} />
   } else if (props.data.loading) {
     return <div>Loading ...</div>
   }

@@ -28,19 +28,21 @@ interface AnyObject {
 }
 
 class Index extends Component<AnyObject, AnyObject> {
-  componentDidUpdate() {
+  public componentDidUpdate() {
     goToUsers(this.props)
   }
-  componentDidMount() {
+  public componentDidMount() {
     goToUsers(this.props)
   }
-  render() {
+  public render() {
     return (
       <App>
         <Body>
           <Content>
             <div {...styles.center}>
-              <div style={{ maxWidth: 300, marginBottom: 60 }}>
+              <div
+                style={{ maxWidth: 300, marginBottom: 60 }}
+              >
                 <Logo />
                 <Interaction.H2>Admin</Interaction.H2>
               </div>

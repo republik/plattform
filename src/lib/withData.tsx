@@ -45,7 +45,9 @@ export default (ComposedComponent: any) => {
             />
           </ApolloProvider>
         )
-        await getDataFromTree(app)
+        try {
+          await getDataFromTree(app)
+        } catch (e) {}
         // getDataFromTree does not call componentWillUnmount
         // head side effect therefore need to be cleared manually
         Head.rewind()
