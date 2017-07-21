@@ -9,7 +9,7 @@ import {
   Footer
 } from '../components/Layout'
 import Payments from '../components/Payments/List'
-import CSVDownloader from '../components/Payments/List/CSVDownloader'
+import CSVDownloader from '../components/Payments/List/CsvDownloader'
 import { default as Routes } from '../routes'
 
 const changeHandler = (params: any) => {
