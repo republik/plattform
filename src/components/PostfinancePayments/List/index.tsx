@@ -96,7 +96,7 @@ const Payments = (props: Props) => {
         <TableForm
           search={params.search}
           onSearch={changeHandler('search')}
-          dateRange={DateRange.parse(params.search)}
+          dateRange={DateRange.parse(params.dateRange)}
           onDateRange={changeHandler(
             'dateRange',
             DateRange.serialize
