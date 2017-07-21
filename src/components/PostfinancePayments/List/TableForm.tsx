@@ -5,6 +5,7 @@ import { Field, Label, colors } from '@project-r/styleguide'
 import Input from '../../Form/Input'
 import { Container, Tile } from '../../Layout/Grid'
 import * as DateRange from '../../Form/DateRange'
+import * as Boolean from '../../Form/Boolean'
 
 export interface FormProps {
   [key: string]: any
@@ -12,6 +13,8 @@ export interface FormProps {
   search?: string
   dateRange?: DateRange.Options
   onDateRange?: (value?: DateRange.Options) => void
+  bool?: Boolean.Options
+  onBool?: (value?: Boolean.Options) => void
 }
 
 const searchHandler = (
@@ -29,6 +32,8 @@ export default ({
   onSearch,
   dateRange,
   onDateRange,
+  bool,
+  onBool,
   ...props
 }: FormProps) =>
   <div
@@ -47,6 +52,13 @@ export default ({
         fields={['buchungsdatum', 'valuta', 'createdAt']}
         dateRange={dateRange}
         onChange={onDateRange}
+      />
+    </div>
+    <div style={formSectionStyles}>
+      <Boolean.Form
+        fields={['matched']}
+        bool={bool}
+        onChange={onBool}
       />
     </div>
   </div>

@@ -9,6 +9,7 @@ import * as InfiniteScroller from 'react-infinite-scroller'
 import { css, StyleAttribute } from 'glamor'
 import { PostfinancePayment } from '../../../types/admin'
 import * as DateRange from '../../Form/DateRange'
+import * as Bool from '../../Form/Boolean'
 
 import TableForm from './TableForm'
 import TableHead from './TableHead'
@@ -101,6 +102,8 @@ const Payments = (props: Props) => {
             'dateRange',
             DateRange.serialize
           )}
+          bool={Bool.parse(params.bool)}
+          onBool={changeHandler('bool', Bool.serialize)}
         />
         <TableHead
           sort={deserializeOrderBy(params.orderBy)}
@@ -122,6 +125,7 @@ const postfinancePaymentsQuery = gql`
     $orderBy: OrderBy
     $dateRange: DateRangeFilter
     $search: String
+    $bool: BooleanFilter
   ) {
     postfinancePayments(
       limit: $limit
@@ -129,6 +133,7 @@ const postfinancePaymentsQuery = gql`
       orderBy: $orderBy
       dateRangeFilter: $dateRange
       search: $search
+      booleanFilter: $bool
     ) {
       count
       items {
@@ -148,7 +153,7 @@ const postfinancePaymentsQuery = gql`
 
 export default graphql(postfinancePaymentsQuery, {
   options: ({
-    params: { orderBy, search, dateRange }
+    params: { orderBy, search, dateRange, bool }
   }: OwnProps) => {
     return {
       variables: {
@@ -156,6 +161,7 @@ export default graphql(postfinancePaymentsQuery, {
         offset: 0,
         orderBy: deserializeOrderBy(orderBy),
         dateRange: DateRange.parse(dateRange),
+        bool: Bool.parse(bool),
         search
       }
     }
