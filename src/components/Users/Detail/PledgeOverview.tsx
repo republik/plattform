@@ -77,7 +77,7 @@ const PledgeOverview = ({
   return (
     <div>
       <Interaction.H3>
-        {pledge.package.name} – {dateTimeFormat(new Date(pledge.createdAt))}
+        {pledge.package.name} – {dateTimeFormat(new Date(pledge.createdAt))} - {pledge.status}
         <br />
         <Label>
           Updated: {dateTimeFormat(new Date(pledge.updatedAt))}
