@@ -26,7 +26,7 @@ export const parse = (
     return
   }
 
-  const [field, stringArray] = str.split('_')
+  const [field, stringArray] = str.split(';)')
   const values = stringArray.split(',')
   return { field: field.toString(), values }
 }
@@ -34,7 +34,7 @@ export const parse = (
 export const serialize = ({
   field,
   values
-}: Options): string => `${field}_${values.join(',')}`
+}: Options): string => `${field};)${values.join(',')}`
 
 const getInitialState = ({
   stringArray,
@@ -86,10 +86,10 @@ export class Form extends React.Component<Props, State> {
     const value = event.target.value
     const checked = event.target.checked
     const oldValues = this.state.stringArray.values
+    const cleanValues = oldValues.filter(v => v !== value)
     const values = checked
-      ? [value, ...oldValues]
-      : oldValues.filter(v => v !== value)
-
+      ? [value, ...cleanValues]
+      : cleanValues
     this.setState(
       () => ({
         ...this.state,
