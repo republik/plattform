@@ -105,13 +105,15 @@ const PledgeOverview = ({
   t,
   onUpdatePaymentStatus,
   onResolvePledge,
-  onCancelPledge
+  onCancelPledge,
+  onRemindPayment
 }: {
   pledge: Pledge
   t: any
   onUpdatePaymentStatus: any
   onResolvePledge: any
   onCancelPledge: any
+  onRemindPayment: any
 }) => {
   const options = pledge.options.filter(
     option =>
@@ -195,6 +197,23 @@ const PledgeOverview = ({
                 <br />
                 {payment.paperInvoice ? 'YES' : 'NO'}
               </Interaction.P>}
+            {new Date(payment.dueDate as string) <
+              new Date() &&
+              payment.remindersSentAt &&
+              payment.remindersSentAt.length > 0 &&
+              <Interaction.P>
+                <Label>Sent reminders</Label>
+                <br />
+                {payment.remindersSentAt.map((date: any) =>
+                  <Label
+                    key={`reminder-${date}`}
+                    style={{ display: 'block' }}
+                  >
+                    {' - '}
+                    {dateTimeFormat(new Date(date))}
+                  </Label>
+                )}
+              </Interaction.P>}
             <Label>
               Created:{' '}
               {dateTimeFormat(new Date(payment.createdAt))}
@@ -241,6 +260,15 @@ const PledgeOverview = ({
           </Item>
         )}
       </List>
+      {pledge.payments &&
+        pledge.payments.length > 0 &&
+        pledge.payments[0].status === 'WAITING' &&
+        <Button
+          onClick={() =>
+            onRemindPayment(pledge.payments[0].id)}
+        >
+          Send Reminder Mail
+        </Button>}
       {pledge.status !== 'CANCELLED' &&
         <Button
           onClick={cancelPledgeHandler(

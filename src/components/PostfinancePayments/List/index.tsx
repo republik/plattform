@@ -144,10 +144,7 @@ class PostfinancePayments extends React.Component<
     }
 
     const {
-      data: {
-        postfinancePayments: { items, count },
-        loading
-      },
+      data: { postfinancePayments, loading },
       params,
       loadMorePayments,
       uploadCSV,
@@ -161,6 +158,10 @@ class PostfinancePayments extends React.Component<
       onChange
     )
 
+    if (!props.data.postfinancePayments) {
+      return <div>Loading</div>
+    }
+    const { items, count } = postfinancePayments
     return (
       <InfiniteScroller
         loadMore={loadMorePayments}
@@ -193,12 +194,10 @@ class PostfinancePayments extends React.Component<
               serializeOrderBy
             )}
           />
-          {props.data.postfinancePayments
-            ? <TableBody
-                items={props.data.postfinancePayments.items}
-                onMessage={updatePostfinancePayment}
-              />
-            : <div>Loading</div>}
+          <TableBody
+            items={props.data.postfinancePayments.items}
+            onMessage={updatePostfinancePayment}
+          />
         </div>
       </InfiniteScroller>
     )
