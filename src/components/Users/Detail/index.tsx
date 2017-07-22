@@ -171,8 +171,9 @@ class Detail extends React.Component<Props, State> {
         <br />
         <Interaction.H2>Pledges</Interaction.H2>
         <div {...styles.pledges}>
-          {props.data.user.pledges.map(
-            (pledge: Pledge, index: number) =>
+          {props.data.user.pledges
+            .filter(p => p.status !== 'DRAFT')
+            .map((pledge: Pledge, index: number) =>
               <div
                 {...styles.pledge}
                 key={`pledge-${pledge.id}`}
@@ -188,7 +189,7 @@ class Detail extends React.Component<Props, State> {
                   }
                 />
               </div>
-          )}
+            )}
         </div>
         <Interaction.H2>Memberships</Interaction.H2>
         <div {...styles.pledges}>

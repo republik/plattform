@@ -79,7 +79,7 @@ export default ({ sort, onSort, ...props }: HeadProps) => {
           </Cell>
 
           <Cell
-            flex="0 0 15%"
+            flex="0 0 20%"
             style={interactiveStyles}
             onClick={sortHandler('status')}
           >
@@ -99,7 +99,7 @@ export default ({ sort, onSort, ...props }: HeadProps) => {
           </Cell>
 
           <Cell
-            flex="0 0 15%"
+            flex="0 0 20%"
             style={interactiveStyles}
             onClick={sortHandler('method')}
           >
@@ -117,7 +117,7 @@ export default ({ sort, onSort, ...props }: HeadProps) => {
               Created{indicator('createdAt')}
             </Label>
           </Cell>
-          <Cell flex="0 0 10%">
+          <Cell flex="0 0 5%">
             <Label>Options</Label>
           </Cell>
         </Row>

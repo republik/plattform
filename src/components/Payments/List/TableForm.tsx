@@ -69,8 +69,8 @@ export default ({
             'status',
             [
               'WAITING',
-              'PAID',
               'WAITING_FOR_REFUND',
+              'PAID',
               'REFUNDED',
               'CANCELLED'
             ]
@@ -79,7 +79,7 @@ export default ({
             'method',
             [
               'STRIPE',
-              'POSTFINANCE',
+              'POSTFINANCECARD',
               'PAYPAL',
               'PAYMENTSLIP'
             ]

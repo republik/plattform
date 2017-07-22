@@ -64,30 +64,31 @@ export default ({ items, ...props }: any) =>
         <Cell flex="0 0 10%">
           {chfFormat(payment.total / 100)}
         </Cell>
-        <Cell flex="0 0 15%">
+        <Cell flex="0 0 20%">
           {payment.status}
         </Cell>
         <Cell flex="0 0 10%">
           {getDueDate(payment.status, payment.dueDate)}
         </Cell>
-        <Cell flex="0 0 15%">
+        <Cell flex="0 0 20%">
           {payment.method}
         </Cell>
         <Cell flex="0 0 10%">
           {displayDate(payment.createdAt)}
         </Cell>
-        <Cell flex="0 0 10%">
-          <Link
-            route="user"
-            params={{ userId: payment.user.id }}
-          >
-            <a
-              className={`${link}`}
-              style={interactiveStyles}
+        <Cell flex="0 0 5%">
+          {payment.user &&
+            <Link
+              route="user"
+              params={{ userId: payment.user.id }}
             >
-              Zum User
-            </a>
-          </Link>
+              <a
+                className={`${link}`}
+                style={interactiveStyles}
+              >
+                Zum User
+              </a>
+            </Link>}
         </Cell>
       </Row>
     )}
