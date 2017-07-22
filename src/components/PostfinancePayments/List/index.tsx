@@ -142,9 +142,7 @@ class PostfinancePayments extends React.Component<
         )
       }
     }
-    if (!props.data.postfinancePayments) {
-      return <div>Loading</div>
-    }
+
     const {
       data: {
         postfinancePayments: { items, count },
