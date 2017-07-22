@@ -10,7 +10,7 @@ const styles = {
   container: {
     checkbox: css({
       display: 'flex',
-      'justify-content': 'space-between',
+      justifyContent: 'space-between',
       'max-width': '25%'
     })
   },
