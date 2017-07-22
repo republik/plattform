@@ -6,6 +6,7 @@ import Input from '../../Form/Input'
 import { Container, Tile } from '../../Layout/Grid'
 import * as DateRange from '../../Form/DateRange'
 import * as Boolean from '../../Form/Boolean'
+import UploadForm from './UploadForm'
 
 export interface FormProps {
   [key: string]: any
@@ -15,6 +16,8 @@ export interface FormProps {
   onDateRange?: (value?: DateRange.Options) => void
   bool?: Boolean.Options
   onBool?: (value?: Boolean.Options) => void
+  onUpload?: (value: { csv: any }) => void
+  onRematch?: (value: any) => void
 }
 
 const searchHandler = (
@@ -34,6 +37,8 @@ export default ({
   onDateRange,
   bool,
   onBool,
+  onUpload,
+  onRematch,
   ...props
 }: FormProps) =>
   <div
@@ -60,5 +65,9 @@ export default ({
         bool={bool}
         onChange={onBool}
       />
+    </div>
+    <div style={formSectionStyles}>
+      <UploadForm onUpload={onUpload} />
+      <button onClick={onRematch}>Rematch payments</button>
     </div>
   </div>

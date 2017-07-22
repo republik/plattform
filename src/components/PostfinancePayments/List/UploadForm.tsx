@@ -3,6 +3,16 @@ import * as React from 'react'
 import ErrorMessage from '../../ErrorMessage'
 import { compose } from 'redux'
 
+export interface Props {
+  onUpload?: ({ csv }: any) => void
+}
+
+export interface State {
+  feedback?: any
+  error?: any
+  csv?: string
+}
+
 const readFile = (file: any) => {
   return new Promise((resolve, reject) => {
     const fileReader = new FileReader()
@@ -27,27 +37,31 @@ const readFile = (file: any) => {
   })
 }
 
-class Upload extends React.Component<any, any> {
+const getInitialState = (props: Props): State => ({
+  error: false
+})
+
+export default class UploadForm extends React.Component<
+  Props,
+  State
+> {
   public fileInput: any = null
 
   constructor(props: any) {
     super(props)
-    this.state = {
-      clientError: false,
-      serverError: false,
-      csv: null
-    }
+    this.state = getInitialState(props)
   }
 
   public fileHandler = (e: any) => {
     this.setState(() => ({
-      clientError: false,
-      serverError: false
+      ...this.state,
+      error: false
     }))
     const file = e.target.files[0]
     if (file.type.indexOf('csv') < 0) {
       this.setState(() => ({
-        clientError: new Error('Das ist kein CSV.')
+        ...this.state,
+        error: new Error('Das ist kein CSV.')
       }))
     } else {
       readFile(file)
@@ -58,7 +72,8 @@ class Upload extends React.Component<any, any> {
         })
         .catch((err: any) => {
           this.setState(() => ({
-            clientError: err
+            ...this.state,
+            error: err
           }))
         })
     }
@@ -66,32 +81,18 @@ class Upload extends React.Component<any, any> {
 
   public submitHandler = (e: any) => {
     e.preventDefault()
-    this.props
-      .uploadCSV({ csv: this.state.csv })
-      .catch((err: any) => {
-        this.setState(() => ({
-          serverError: err
-        }))
-      })
+    if (this.props.onUpload) {
+      this.props.onUpload({ csv: this.state.csv })
+    }
   }
 
   public render() {
-    const error = () => {
-      if (this.state.clientError) {
-        return (
-          <ErrorMessage error={this.state.clientError} />
-        )
-      } else if (this.state.serverError) {
-        return (
-          <ErrorMessage error={this.state.serverError} />
-        )
-      }
-    }
+    const { error, feedback } = this.state
 
     return (
       <div>
         <form onSubmit={this.submitHandler}>
-          {error()}
+          {error && <ErrorMessage error={error} />}
           <input
             type="file"
             accept="application/csv"
@@ -102,50 +103,12 @@ class Upload extends React.Component<any, any> {
           />
           <button
             type="submit"
-            disabled={this.state.clientError}
+            disabled={this.state.error || this.state.error}
           >
             Upload
           </button>
         </form>
-        <button onClick={this.props.rematchPayments}>
-          Rematch Payments
-        </button>
       </div>
     )
   }
 }
-
-const uploadMutation = gql`
-  mutation importPostfinanceCSV($csv: String!) {
-    importPostfinanceCSV(csv: $csv)
-  }
-`
-
-const rematchMutation = gql`
-  mutation rematchPayments {
-    rematchPayments
-  }
-`
-
-export default compose(
-  graphql(uploadMutation, {
-    props: ({ mutate }) => ({
-      uploadCSV: ({ csv }: any) => {
-        if (mutate) {
-          return mutate({
-            variables: { csv }
-          })
-        }
-      }
-    })
-  }),
-  graphql(rematchMutation, {
-    props: ({ mutate }) => ({
-      rematchPayments: () => {
-        if (mutate) {
-          return mutate({})
-        }
-      }
-    })
-  })
-)(Upload)

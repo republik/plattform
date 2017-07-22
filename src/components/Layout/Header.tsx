@@ -3,9 +3,25 @@ import { css, StyleAttribute } from 'glamor'
 import { compose } from 'redux'
 import { createContainer, createTile } from './Grid'
 import Me from '../Auth/Me'
-import { R, Interaction, A, colors } from '@project-r/styleguide'
+import {
+  R,
+  Interaction,
+  A,
+  colors
+} from '@project-r/styleguide'
 import routes from '../../routes'
 const { Link } = routes
+
+const link = css({
+  textDecoration: 'none',
+  color: colors.primary,
+  ':visited': {
+    color: colors.primary
+  },
+  ':hover': {
+    color: colors.secondary
+  }
+})
 
 const Header = compose(
   createTile(
@@ -55,13 +71,19 @@ export default ({ children, style, ...props }: any) =>
       <Interaction.H2>Admin</Interaction.H2>
       <nav>
         <Link route="users">
-          <A style={navLinkStyles}>Users</A>
+          <a className={`${link}`} style={navLinkStyles}>
+            Users
+          </a>
         </Link>
         <Link route="payments">
-          <A style={navLinkStyles}>Payments</A>
+          <a className={`${link}`} style={navLinkStyles}>
+            Payments
+          </a>
         </Link>
         <Link route="postfinance-payments">
-          <A style={navLinkStyles}>Postfinance Payments</A>
+          <a className={`${link}`} style={navLinkStyles}>
+            Postfinance Payments
+          </a>
         </Link>
       </nav>
     </HeaderSection>

@@ -9,7 +9,6 @@ import {
   Footer
 } from '../components/Layout'
 import Payments from '../components/Payments/List'
-import CSVDownloader from '../components/Payments/List/CsvDownloader'
 import { default as Routes } from '../routes'
 
 const changeHandler = (params: any) => {
@@ -27,9 +26,6 @@ export default withData((props: any) => {
             onChange={changeHandler}
           />
         </Content>
-        <Footer>
-          <CSVDownloader />
-        </Footer>
       </Body>
     </App>
   )

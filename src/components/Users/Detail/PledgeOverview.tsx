@@ -250,14 +250,15 @@ const PledgeOverview = ({
         >
           {' '}Cancel pledge
         </Button>}
-      <Button
-        onClick={resolvePledgeToPaymentHandler(
-          onResolvePledge,
-          pledge
-        )}
-      >
-        {' '}Resolve Pledge
-      </Button>{' '}
+      {pledge.status === 'PAID_INVESTIGATE' &&
+        <Button
+          onClick={resolvePledgeToPaymentHandler(
+            onResolvePledge,
+            pledge
+          )}
+        >
+          {' '}Resolve Pledge
+        </Button>}
       <PaymentStatusButton
         pledge={pledge}
         onClick={updatePaymentStatusHandler(
