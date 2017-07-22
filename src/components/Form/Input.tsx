@@ -10,7 +10,7 @@ const styles = {
   container: {
     checkbox: css({
       display: 'flex',
-      'justify-content': 'space-between'
+      'justify-content': 'space-between',
       'max-width': '25%'
     })
   },
@@ -27,9 +27,9 @@ const styles = {
     },
     '[type="date"]': {
       height: '22px'
-    }
+    },
     '[type="checkbox"]': {
-      width: '22px',
+      width: '22px'
     }
   })
 }
@@ -55,7 +55,11 @@ export default ({
 }: InputProps) =>
   <div
     {...props}
-    className={ type === 'checkbox' ? `${styles.container.checkbox}` : ''}
+    className={
+      type === 'checkbox'
+        ? `${styles.container.checkbox}`
+        : ''
+    }
   >
     <Label>
       {label}
