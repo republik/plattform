@@ -150,6 +150,9 @@ const paymentsQuery = gql`
         total
         status
         hrid
+        user {
+          id
+        }
         createdAt
         updatedAt
       }

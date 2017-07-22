@@ -67,10 +67,10 @@ export default ({ items, ...props }: any) =>
         </Cell>
         <Cell flex="0 0 10%">
           <Link
-            route="payment"
-            params={{ paymentId: payment.id }}
+            route="user"
+            params={{ userId: payment.user.id }}
           >
-            <A style={interactiveStyles}>Details</A>
+            <A style={interactiveStyles}>Zum User</A>
           </Link>
         </Cell>
       </Row>

@@ -112,6 +112,7 @@ export interface PledgePayment {
   status: PaymentStatus
   hrid: string
   pspId?: any
+  user: User
   dueDate?: string
   createdAt: string
   updatedAt: string

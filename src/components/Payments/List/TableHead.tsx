@@ -118,7 +118,7 @@ export default ({ sort, onSort, ...props }: HeadProps) => {
             </Label>
           </Cell>
           <Cell flex="0 0 10%">
-            <Label>Details</Label>
+            <Label>Options</Label>
           </Cell>
         </Row>
       </Table>
