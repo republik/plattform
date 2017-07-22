@@ -6,6 +6,7 @@ import * as DateRange from '../../Form/DateRange'
 import * as StringArray from '../../Form/StringArray'
 import { Container, Tile } from '../../Layout/Grid'
 import * as debounce from 'debounce'
+import CSVDownloader from './CsvDownloader'
 
 import {
   SortOptions,
@@ -87,5 +88,8 @@ export default ({
         stringArray={stringArray}
         onChange={onStringArray}
       />
+    </div>
+    <div style={formSectionStyles}>
+      <CSVDownloader />
     </div>
   </div>

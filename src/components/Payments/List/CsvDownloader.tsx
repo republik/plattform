@@ -2,6 +2,7 @@ import * as React from 'react'
 import { ApolloClient, gql, withApollo } from 'react-apollo'
 import { css, StyleAttribute } from 'glamor'
 import ErrorMessage from '../../ErrorMessage'
+import { A, colors } from '@project-r/styleguide'
 
 const PaymentsCSVDownloader = (props: any) => {
   if (!process.browser || !props.data.paymentsCSV) {
@@ -18,6 +19,17 @@ const PaymentsCSVDownloader = (props: any) => {
     </a>
   )
 }
+
+const link = css({
+  textDecoration: 'none',
+  color: colors.primary,
+  ':visited': {
+    color: colors.primary
+  },
+  ':hover': {
+    color: colors.secondary
+  }
+})
 
 const query = gql`
   query {
@@ -68,7 +80,15 @@ class CSVDownloader extends React.Component<
       if (this.state.loading) {
         return <p>Loading ...</p>
       } else {
-        return <a onClick={this.query}>Get CSV</a>
+        return (
+          <a
+            style={{ cursor: 'pointer' }}
+            className={`${link}`}
+            onClick={this.query}
+          >
+            Get CSV
+          </a>
+        )
       }
     } else {
       const blob = new Blob([this.state.csv], {
@@ -77,7 +97,11 @@ class CSVDownloader extends React.Component<
       const url = URL.createObjectURL(blob)
 
       return (
-        <a download="export.csv" href={url}>
+        <a
+          className={`${link}`}
+          download="export.csv"
+          href={url}
+        >
           Download CSV
         </a>
       )
