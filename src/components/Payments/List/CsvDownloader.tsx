@@ -57,7 +57,8 @@ class CSVDownloader extends React.Component<
 
     this.props.client
       .query({
-        query
+        query,
+        fetchPolicy: 'network-only'
       })
       .then(({ data }: any) => {
         this.setState(() => ({
@@ -70,6 +71,14 @@ class CSVDownloader extends React.Component<
           error
         }))
       })
+  }
+
+  public reset = () => {
+    setTimeout( () => {
+      this.setState(() => ({
+        csv: null
+      }))
+    }, 1000)
   }
 
   public render() {
@@ -101,6 +110,7 @@ class CSVDownloader extends React.Component<
           className={`${link}`}
           download="export.csv"
           href={url}
+          onClick={this.reset}
         >
           Download CSV
         </a>
