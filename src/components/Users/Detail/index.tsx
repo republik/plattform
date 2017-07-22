@@ -14,11 +14,16 @@ import {
 } from '@project-r/styleguide'
 import ErrorMessage from '../../ErrorMessage'
 
-import { User, Pledge } from '../../../types/admin'
+import {
+  User,
+  Pledge,
+  Membership
+} from '../../../types/admin'
 import { css } from 'glamor'
 import UserForm from './UserForm'
 import EmailForm from './EmailForm'
 import PledgeOverview from './PledgeOverview'
+import MembershipOverview from './MembershipOverview'
 
 export interface UserResult {
   user: User
@@ -185,6 +190,20 @@ class Detail extends React.Component<Props, State> {
               </div>
           )}
         </div>
+        <Interaction.H2>Memberships</Interaction.H2>
+        <div {...styles.pledges}>
+          {props.data.user.memberships.map(
+            (membership: Membership, index: number) =>
+              <div
+                {...styles.pledge}
+                key={`pledge-${membership.id}`}
+              >
+                <MembershipOverview
+                  membership={membership}
+                />
+              </div>
+          )}
+        </div>
       </div>
     )
   }
@@ -282,6 +301,15 @@ const userQuery = gql`
         image
       }
       roles
+      memberships {
+        id
+        type {
+          name
+        }
+        sequenceNumber
+        createdAt
+        updatedAt
+      }
       pledges {
         id
         total
