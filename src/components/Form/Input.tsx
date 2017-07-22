@@ -11,7 +11,7 @@ const styles = {
     checkbox: css({
       display: 'flex',
       justifyContent: 'space-between',
-      'max-width': '25%'
+      maxWidth: '25%'
     })
   },
   input: css({
