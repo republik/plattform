@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Table, Row, Cell } from '../../Layout/Table'
 import { A, colors } from '@project-r/styleguide'
+import { css } from 'glamor'
 import routes from '../../../routes'
 const { Link } = routes
 
@@ -20,6 +21,17 @@ const interactiveStyles = {
   cursor: 'pointer'
 }
 
+const link = css({
+  textDecoration: 'none',
+  color: colors.primary,
+  ':visited': {
+    color: colors.primary
+  },
+  ':hover': {
+    color: colors.secondary
+  }
+})
+
 export default ({ items, ...props }: any) =>
   <Table {...props}>
     {items.map((user: any, index: number) =>
@@ -38,7 +50,12 @@ export default ({ items, ...props }: any) =>
         </Cell>
         <Cell flex="0 0 10%">
           <Link route="user" params={{ userId: user.id }}>
-            <A style={interactiveStyles}>Details</A>
+            <a
+              className={`${link}`}
+              style={interactiveStyles}
+            >
+              Details
+            </a>
           </Link>
         </Cell>
       </Row>

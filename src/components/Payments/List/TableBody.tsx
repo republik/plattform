@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Table, Row, Cell } from '../../Layout/Table'
 import { A, colors } from '@project-r/styleguide'
 import { chfFormat } from '../../../lib/utils/formats'
-
+import { css } from 'glamor'
 import routes from '../../../routes'
 const { Link } = routes
 
@@ -40,6 +40,17 @@ const interactiveStyles = {
   cursor: 'pointer'
 }
 
+const link = css({
+  textDecoration: 'none',
+  color: colors.primary,
+  ':visited': {
+    color: colors.primary
+  },
+  ':hover': {
+    color: colors.secondary
+  }
+})
+
 export default ({ items, ...props }: any) =>
   <Table {...props}>
     {items.map((payment: any, index: number) =>
@@ -70,7 +81,12 @@ export default ({ items, ...props }: any) =>
             route="user"
             params={{ userId: payment.user.id }}
           >
-            <A style={interactiveStyles}>Zum User</A>
+            <a
+              className={`${link}`}
+              style={interactiveStyles}
+            >
+              Zum User
+            </a>
           </Link>
         </Cell>
       </Row>
