@@ -5,6 +5,7 @@ import {
   OptionProps,
   QueryProps
 } from 'react-apollo'
+import { compose } from 'redux'
 import { colors } from '@project-r/styleguide'
 import * as InfiniteScroller from 'react-infinite-scroller'
 import { css, StyleAttribute } from 'glamor'
@@ -83,6 +84,7 @@ const Payments = (props: Props) => {
     },
     params,
     loadMorePayments,
+    updatePostfinancePayment,
     onChange
   } = props
 
@@ -116,7 +118,10 @@ const Payments = (props: Props) => {
             serializeOrderBy
           )}
         />
-        <TableBody items={items} />
+        <TableBody
+          items={items}
+          onMessage={updatePostfinancePayment}
+        />
       </div>
     </InfiniteScroller>
   )
@@ -155,55 +160,103 @@ const postfinancePaymentsQuery = gql`
   }
 `
 
-export default graphql(postfinancePaymentsQuery, {
-  options: ({
-    params: { orderBy, search, dateRange, bool }
-  }: OwnProps) => {
-    return {
-      variables: {
-        limit: PAYMENTS_LIMIT,
-        offset: 0,
-        orderBy: deserializeOrderBy(orderBy),
-        dateRange: DateRange.parse(dateRange),
-        bool: Bool.parse(bool),
-        search
-      }
+const updatePostfinancePaymentMutation = gql`
+  mutation updatePostfinancePayment(
+    $id: ID!
+    $message: String!
+  ) {
+    updatePostfinancePayment(
+      pfpId: $id
+      mitteilung: $message
+    ) {
+      id
     }
-  },
-  props: ({
-    data
-  }: OptionProps<OwnProps, PostfinancePaymentsResult>) => ({
-    data,
-    loadMorePayments: () => {
-      if (!data) {
-        throw new Error('data object undefined')
-      }
-      return data.fetchMore({
+  }
+`
+
+export default compose(
+  graphql(postfinancePaymentsQuery, {
+    options: ({
+      params: { orderBy, search, dateRange, bool }
+    }: OwnProps) => {
+      return {
         variables: {
-          offset: data.postfinancePayments.items.length
-        },
-        updateQuery: (
-          previousResult: PostfinancePaymentsResult,
-          { fetchMoreResult }
-        ) => {
-          if (!fetchMoreResult) {
-            return previousResult
-          }
-          return {
-            ...previousResult,
-            ...{
-              postfinancePayments: {
-                items: [
-                  ...previousResult.postfinancePayments
-                    .items,
-                  ...(fetchMoreResult as PostfinancePaymentsResult)
-                    .postfinancePayments.items
-                ]
+          limit: PAYMENTS_LIMIT,
+          offset: 0,
+          orderBy: deserializeOrderBy(orderBy),
+          dateRange: DateRange.parse(dateRange),
+          bool: Bool.parse(bool),
+          search
+        }
+      }
+    },
+    props: ({
+      data
+    }: OptionProps<
+      OwnProps,
+      PostfinancePaymentsResult
+    >) => ({
+      data,
+      loadMorePayments: () => {
+        if (!data) {
+          throw new Error('data object undefined')
+        }
+        return data.fetchMore({
+          variables: {
+            offset: data.postfinancePayments.items.length
+          },
+          updateQuery: (
+            previousResult: PostfinancePaymentsResult,
+            { fetchMoreResult }
+          ) => {
+            if (!fetchMoreResult) {
+              return previousResult
+            }
+            return {
+              ...previousResult,
+              ...{
+                postfinancePayments: {
+                  items: [
+                    ...previousResult.postfinancePayments
+                      .items,
+                    ...(fetchMoreResult as PostfinancePaymentsResult)
+                      .postfinancePayments.items
+                  ]
+                }
               }
             }
           }
+        })
+      }
+    })
+  }),
+  graphql(updatePostfinancePaymentMutation, {
+    props: ({
+      mutate,
+      ownProps: {
+        params: { orderBy, search, dateRange, bool }
+      }
+    }: any) => ({
+      updatePostfinancePayment: ({ id, message }: any) => {
+        if (mutate) {
+          return mutate({
+            variables: { id, message },
+            refetchQueries: [
+              {
+                query: postfinancePaymentsQuery,
+                variables: {
+                  limit: PAYMENTS_LIMIT,
+                  offset: 0,
+                  orderBy: deserializeOrderBy(orderBy),
+                  dateRange: DateRange.parse(dateRange),
+                  bool: Bool.parse(bool),
+                  search
+                }
+              }
+            ]
+          })
         }
-      })
-    }
+      }
+    })
   })
-})(Payments)
+)(Payments)

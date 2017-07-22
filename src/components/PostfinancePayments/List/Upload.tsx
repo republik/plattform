@@ -1,6 +1,7 @@
 import { graphql, gql } from 'react-apollo'
 import * as React from 'react'
 import ErrorMessage from '../../ErrorMessage'
+import { compose } from 'redux'
 
 const readFile = (file: any) => {
   return new Promise((resolve, reject) => {
@@ -88,41 +89,63 @@ class Upload extends React.Component<any, any> {
     }
 
     return (
-      <form onSubmit={this.submitHandler}>
-        {error()}
-        <input
-          type="file"
-          accept="application/csv"
-          ref={ref => {
-            this.fileInput = ref
-          }}
-          onChange={event => this.fileHandler(event)}
-        />
-        <button
-          type="submit"
-          disabled={this.state.clientError}
-        >
-          Upload
+      <div>
+        <form onSubmit={this.submitHandler}>
+          {error()}
+          <input
+            type="file"
+            accept="application/csv"
+            ref={ref => {
+              this.fileInput = ref
+            }}
+            onChange={event => this.fileHandler(event)}
+          />
+          <button
+            type="submit"
+            disabled={this.state.clientError}
+          >
+            Upload
+          </button>
+        </form>
+        <button onClick={this.props.rematchPayments}>
+          Rematch Payments
         </button>
-      </form>
+      </div>
     )
   }
 }
 
-const mutation = gql`
+const uploadMutation = gql`
   mutation importPostfinanceCSV($csv: String!) {
     importPostfinanceCSV(csv: $csv)
   }
 `
 
-export default graphql(mutation, {
-  props: ({ mutate }) => ({
-    uploadCSV: ({ csv }: any) => {
-      if (mutate) {
-        return mutate({
-          variables: { csv }
-        })
+const rematchMutation = gql`
+  mutation rematchPayments {
+    rematchPayments
+  }
+`
+
+export default compose(
+  graphql(uploadMutation, {
+    props: ({ mutate }) => ({
+      uploadCSV: ({ csv }: any) => {
+        if (mutate) {
+          return mutate({
+            variables: { csv }
+          })
+        }
       }
-    }
+    })
+  }),
+  graphql(rematchMutation, {
+    props: ({ mutate }) => ({
+      rematchPayments: () => {
+        if (mutate) {
+          return mutate({})
+        }
+      }
+    })
   })
-})(Upload)
+)(Upload)

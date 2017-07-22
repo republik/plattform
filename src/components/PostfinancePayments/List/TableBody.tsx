@@ -67,7 +67,11 @@ export default ({ items, onMessage, ...props }: any) =>
           {!postfinancePayment.matched
             ? <MessageForm
                 message={postfinancePayment.mitteilung}
-                onSubmit={onMessage}
+                onSubmit={(message: string) =>
+                  onMessage({
+                    id: postfinancePayment.id,
+                    message
+                  })}
               />
             : postfinancePayment.mitteilung}
         </Cell>

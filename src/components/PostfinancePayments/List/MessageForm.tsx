@@ -53,9 +53,7 @@ export default class EmailForm extends React.Component<
   public render() {
     const { onSubmit } = this.props
 
-    const message = this.state.isDirty
-      ? this.state.message
-      : this.props.message
+    const message = this.state.message
 
     return (
       <form onSubmit={this.submitHandler(onSubmit)}>
