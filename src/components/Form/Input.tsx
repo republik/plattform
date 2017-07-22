@@ -6,21 +6,33 @@ import {
   fontFamilies
 } from '@project-r/styleguide'
 
-const inputStyles = css({
-  borderWidth: '0 0 1px 0',
-  borderColor: colors.divider,
-  fontSize: '1em',
-  width: '99%',
-  height: '20px',
-  fontFamily: fontFamilies.sansSerifRegular,
-  ':focus': {
-    borderColor: colors.primary,
-    outline: 'none'
+const styles = {
+  container: {
+    checkbox: css({
+      display: 'flex',
+      'justify-content': 'space-between'
+      'max-width': '25%'
+    })
   },
-  '[type="date"]': {
-    height: '22px'
-  }
-})
+  input: css({
+    borderWidth: '0 0 1px 0',
+    borderColor: colors.divider,
+    fontSize: '1em',
+    width: '99%',
+    height: '20px',
+    fontFamily: fontFamilies.sansSerifRegular,
+    ':focus': {
+      borderColor: colors.primary,
+      outline: 'none'
+    },
+    '[type="date"]': {
+      height: '22px'
+    }
+    '[type="checkbox"]': {
+      width: '22px',
+    }
+  })
+}
 
 interface InputProps {
   [key: string]: any
@@ -41,15 +53,16 @@ export default ({
   checked,
   ...props
 }: InputProps) =>
-  <div {...props}>
-    <div>
-      <Label>
-        {label}
-      </Label>
-    </div>
+  <div
+    {...props}
+    className={ type === 'checkbox' ? `${styles.container.checkbox}` : ''}
+  >
+    <Label>
+      {label}
+    </Label>
     <input
       name={name}
-      className={`${inputStyles}`}
+      className={`${styles.input}`}
       type={type}
       value={value}
       onChange={onChange}
