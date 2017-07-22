@@ -195,7 +195,7 @@ class PostfinancePayments extends React.Component<
           />
           {props.data.postfinancePayments
             ? <TableBody
-                items={items}
+                items={props.data.postfinancePayments.items}
                 onMessage={updatePostfinancePayment}
               />
             : <div>Loading</div>}
