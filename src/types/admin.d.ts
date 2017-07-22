@@ -110,6 +110,7 @@ export interface PledgePayment {
   paperInvoice: boolean
   total: number
   status: PaymentStatus
+  remindersSentAt: string[]
   hrid: string
   pspId?: any
   user: User

@@ -110,6 +110,19 @@ class Detail extends React.Component<Props, State> {
     })
   }
 
+  public sendPaymentReminders = (paymentId: string) => {
+    this.props
+      .sendPaymentReminders({ paymentIds: [paymentId] })
+      .catch((e: any) => {
+        this.setState(() => ({
+          errors: {
+            ...this.state.errors,
+            email: e
+          }
+        }))
+      })
+  }
+
   public willReceiveProps() {
     this.state = { errors: {} }
   }
@@ -187,6 +200,9 @@ class Detail extends React.Component<Props, State> {
                   onUpdatePaymentStatus={
                     props.updatePayment
                   }
+                  onRemindPayment={
+                    this.sendPaymentReminders
+                  }
                 />
               </div>
             )}
@@ -209,6 +225,12 @@ class Detail extends React.Component<Props, State> {
     )
   }
 }
+
+const sendPaymentRemindersMutation = gql`
+  mutation sendPaymentReminders($paymentIds: [ID!]!) {
+    sendPaymentReminders(paymentIds: $paymentIds)
+  }
+`
 
 const resolvePledgeToPaymentMutation = gql`
   mutation resolvePledgeToPayment(
@@ -351,6 +373,7 @@ const userQuery = gql`
           dueDate
           hrid
           pspId
+          remindersSentAt
           createdAt
           updatedAt
         }
@@ -390,6 +413,28 @@ const WrappedUser = compose(
                 query: userQuery,
                 variables: {
                   id: variables.id
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
+  }),
+  graphql(sendPaymentRemindersMutation, {
+    props: ({
+      mutate,
+      ownProps: { params: { userId } }
+    }: any) => ({
+      sendPaymentReminders: ({ paymentIds }: any) => {
+        if (mutate) {
+          return mutate({
+            variables: { paymentIds },
+            refetchQueries: [
+              {
+                query: userQuery,
+                variables: {
+                  id: userId
                 }
               }
             ]
