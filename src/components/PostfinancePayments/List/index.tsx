@@ -49,6 +49,11 @@ interface Props extends OwnProps {
   data: QueryProps & PostfinancePaymentsResult
 }
 
+interface State {
+  error?: any
+  feedback?: any
+}
+
 const PAYMENTS_LIMIT = 200
 
 const identity = (v: any) => v
@@ -71,60 +76,135 @@ const createChangeHandler = (
   }
 }
 
-const Payments = (props: Props) => {
-  if (props.data.error) {
-    return <ErrorMessage error={props.data.error} />
-  } else if (!props.data.postfinancePayments) {
-    return <div>Loading</div>
+const getInitialState = (props: Props): State => ({
+  error: false,
+  feedback: false
+})
+
+class PostfinancePayments extends React.Component<
+  Props,
+  any
+> {
+  constructor(props: Props) {
+    super(props)
+    this.state = getInitialState(props)
   }
-  const {
-    data: {
-      postfinancePayments: { items, count },
-      loading
-    },
-    params,
-    loadMorePayments,
-    updatePostfinancePayment,
-    onChange
-  } = props
 
-  const changeHandler = createChangeHandler(
-    params,
-    onChange
-  )
+  public uploadHandler = ({ csv }: any) => {
+    this.props
+      .uploadCSV({ csv })
+      .then((v: any) =>
+        this.setState(() => ({
+          ...this.state,
+          feedback: v.data.importPostfinanceCSV
+        }))
+      )
+      .catch((e: any) =>
+        this.setState(() => ({
+          ...this.state,
+          error: e
+        }))
+      )
+  }
 
-  return (
-    <InfiniteScroller
-      loadMore={loadMorePayments}
-      hasMore={count > items.length}
-      useWindow={false}
-    >
-      <div>
-        <TableForm
-          search={params.search}
-          onSearch={changeHandler('search')}
-          dateRange={DateRange.parse(params.dateRange)}
-          onDateRange={changeHandler(
-            'dateRange',
-            DateRange.serialize
-          )}
-          bool={Bool.parse(params.bool)}
-          onBool={changeHandler('bool', Bool.serialize)}
-        />
-        <TableHead
-          sort={deserializeOrderBy(params.orderBy)}
-          onSort={changeHandler(
-            'orderBy',
-            serializeOrderBy
-          )}
-        />
-        <TableBody
-          items={items}
-          onMessage={updatePostfinancePayment}
-        />
-      </div>
-    </InfiniteScroller>
-  )
+  public rematchHandler = () => {
+    this.props
+      .rematchPayments()
+      .then((v: any) =>
+        this.setState(() => ({
+          ...this.state,
+          feedback: v.data.rematchPayments
+        }))
+      )
+      .catch((e: any) =>
+        this.setState(() => ({
+          ...this.state,
+          error: e
+        }))
+      )
+  }
+
+  public componentWillReceiveProps(nextProps: Props) {
+    this.state = getInitialState(nextProps)
+  }
+
+  public render() {
+    const props = this.props
+    const renderErrors = () => {
+      if (props.data.error || this.state.error) {
+        return (
+          <div>
+            {props.data.error &&
+              <ErrorMessage error={props.data.error} />}
+            {this.state.error &&
+              <ErrorMessage error={this.state.error} />}
+          </div>
+        )
+      }
+    }
+    if (!props.data.postfinancePayments) {
+      return <div>Loading</div>
+    }
+    const {
+      data: {
+        postfinancePayments: { items, count },
+        loading
+      },
+      params,
+      loadMorePayments,
+      uploadCSV,
+      rematchPayments,
+      updatePostfinancePayment,
+      onChange
+    } = props
+
+    const changeHandler = createChangeHandler(
+      params,
+      onChange
+    )
+
+    return (
+      <InfiniteScroller
+        loadMore={loadMorePayments}
+        hasMore={count > items.length}
+        useWindow={false}
+      >
+        <div>
+          {renderErrors()}
+          {this.state.feedback &&
+            <div>
+              {this.state.feedback}
+            </div>}
+          <TableForm
+            search={params.search}
+            onSearch={changeHandler('search')}
+            dateRange={DateRange.parse(params.dateRange)}
+            onDateRange={changeHandler(
+              'dateRange',
+              DateRange.serialize
+            )}
+            bool={Bool.parse(params.bool)}
+            onBool={changeHandler('bool', Bool.serialize)}
+            onUpload={this.uploadHandler}
+            onRematch={this.rematchHandler}
+          />
+          <TableHead
+            sort={deserializeOrderBy(params.orderBy)}
+            onSort={changeHandler(
+              'orderBy',
+              serializeOrderBy
+            )}
+          />
+          {props.data.postfinancePayments
+            ? <TableBody
+                items={items}
+                onMessage={updatePostfinancePayment}
+              />
+            : <div>Loading</div>}
+        </div>
+      </InfiniteScroller>
+    )
+  }
 }
 
 const postfinancePaymentsQuery = gql`
@@ -171,6 +251,18 @@ const updatePostfinancePaymentMutation = gql`
     ) {
       id
     }
+  }
+`
+
+const uploadMutation = gql`
+  mutation importPostfinanceCSV($csv: String!) {
+    importPostfinanceCSV(csv: $csv)
+  }
+`
+
+const rematchMutation = gql`
+  mutation rematchPayments {
+    rematchPayments
   }
 `
 
@@ -258,5 +350,44 @@ export default compose(
         }
       }
     })
+  }),
+  graphql(uploadMutation, {
+    props: ({ mutate }) => ({
+      uploadCSV: ({ csv }: any) => {
+        if (mutate) {
+          return mutate({
+            variables: { csv }
+          })
+        }
+      }
+    })
+  }),
+  graphql(rematchMutation, {
+    props: ({
+      mutate,
+      ownProps: {
+        params: { orderBy, search, dateRange, bool }
+      }
+    }) => ({
+      rematchPayments: () => {
+        if (mutate) {
+          return mutate({
+            refetchQueries: [
+              {
+                query: postfinancePaymentsQuery,
+                variables: {
+                  limit: PAYMENTS_LIMIT,
+                  offset: 0,
+                  orderBy: deserializeOrderBy(orderBy),
+                  dateRange: DateRange.parse(dateRange),
+                  bool: Bool.parse(bool),
+                  search
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
   })
-)(Payments)
+)(PostfinancePayments)
