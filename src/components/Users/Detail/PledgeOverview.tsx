@@ -197,7 +197,9 @@ const PledgeOverview = ({
                 <br />
                 {payment.paperInvoice ? 'YES' : 'NO'}
               </Interaction.P>}
-            {payment.remindersSentAt &&
+            {new Date(payment.dueDate as string) <
+              new Date() &&
+              payment.remindersSentAt &&
               payment.remindersSentAt.length > 0 &&
               <Interaction.P>
                 <Label>Sent reminders</Label>
