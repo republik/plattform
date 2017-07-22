@@ -13,11 +13,23 @@ import {
   PaymentStatus
 } from '../../../types/admin'
 import withT from '../../../lib/withT'
+import { css } from 'glamor'
 import {
   swissTime,
   chfFormat
 } from '../../../lib/utils/formats'
 import List, { Item } from '../../List'
+
+const link = css({
+  textDecoration: 'none',
+  color: colors.primary,
+  ':visited': {
+    color: colors.primary
+  },
+  ':hover': {
+    color: colors.secondary
+  }
+})
 
 const dateTimeFormat = swissTime.format(
   '%e. %B %Y %H.%M Uhr'
@@ -152,6 +164,7 @@ const PledgeOverview = ({
             <br />
             {payment.method === 'STRIPE' &&
               <a
+                className={`${link}`}
                 href={`https://dashboard.stripe.com/payments/${payment.pspId}`}
                 target="_blank"
               >
@@ -160,6 +173,16 @@ const PledgeOverview = ({
             {payment.method !== 'STRIPE' && payment.method}
             {' - '} {payment.status}
             <br />
+            <Interaction.P>
+              <Label>Total</Label>
+              <br />
+              {chfFormat(payment.total / 100)}
+            </Interaction.P>
+            <Interaction.P>
+              <Label>HR-ID</Label>
+              <br />
+              {payment.hrid}
+            </Interaction.P>
             {!!payment.dueDate &&
               <Interaction.P>
                 <Label>Due Date</Label>
@@ -218,14 +241,15 @@ const PledgeOverview = ({
           </Item>
         )}
       </List>
-      <Button
-        onClick={cancelPledgeHandler(
-          onCancelPledge,
-          pledge
-        )}
-      >
-        {' '}Cancel pledge
-      </Button>{' '}
+      {pledge.status !== 'CANCELLED' &&
+        <Button
+          onClick={cancelPledgeHandler(
+            onCancelPledge,
+            pledge
+          )}
+        >
+          {' '}Cancel pledge
+        </Button>}
       <Button
         onClick={resolvePledgeToPaymentHandler(
           onResolvePledge,

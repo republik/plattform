@@ -30,7 +30,7 @@ const MembershipOverview = ({
   return (
     <div>
       <Interaction.H3>
-        {membership.type.name} –{' '}
+        {membership.type.name.split('_').join(' ')} –{' '}
         {dateTimeFormat(new Date(membership.createdAt))}
         <br />
         <Label>
