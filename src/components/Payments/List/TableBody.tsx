@@ -77,17 +77,18 @@ export default ({ items, ...props }: any) =>
           {displayDate(payment.createdAt)}
         </Cell>
         <Cell flex="0 0 5%">
-          <Link
-            route="user"
-            params={{ userId: payment.user.id }}
-          >
-            <a
-              className={`${link}`}
-              style={interactiveStyles}
+          {payment.user &&
+            <Link
+              route="user"
+              params={{ userId: payment.user.id }}
             >
-              Zum User
-            </a>
-          </Link>
+              <a
+                className={`${link}`}
+                style={interactiveStyles}
+              >
+                Zum User
+              </a>
+            </Link>}
         </Cell>
       </Row>
     )}
