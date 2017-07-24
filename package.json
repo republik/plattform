@@ -1,0 +1,47 @@
+{
+  "name": "haku-backend",
+  "version": "0.0.1",
+  "engines": {
+    "node": "8.2.1"
+  },
+  "private": true,
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "connect-pg-simple": "^3.1.2",
+    "cookie-parser": "^1.4.3",
+    "d3-time-format": "^2.0.5",
+    "db-migrate-pg": "^0.2.4",
+    "dotenv": "^4.0.0",
+    "email-validator": "^1.0.7",
+    "express": "^4.15.3",
+    "express-session": "^1.15.4",
+    "graphql": "^0.10.5",
+    "graphql-server-express": "^1.0.2",
+    "graphql-tag": "^2.4.2",
+    "graphql-tools": "^1.1.0",
+    "isomorphic-unfetch": "^2.0.0",
+    "passport": "^0.3.2",
+    "pogi": "^2.3.1"
+  },
+  "scripts": {
+    "dev": "NODE_ENV=development nodemon -w graphql -w src -w lib -w index.js index.js",
+    "start": "node index.js",
+    "precommit": "lint-staged",
+    "standardize": "standard --fix",
+    "migrate:up": "db-migrate up",
+    "migrate:down": "db-migrate down",
+    "db:reset": "db-migrate reset && db-migrate up"
+  },
+  "lint-staged": {
+    "*.js": [
+      "standard --fix",
+      "git add"
+    ]
+  },
+  "devDependencies": {
+    "husky": "^0.14.3",
+    "lint-staged": "^4.0.2",
+    "nodemon": "^1.11.0",
+    "standard": "^10.0.2"
+  }
+}
