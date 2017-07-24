@@ -2,7 +2,7 @@
   "name": "haku-frontend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server/index.js",
   "scripts": {
     "dev": "nodemon --watch server --watch app server/index.js",
     "test": "babel-tape-runner \"?(app|pages)/**/*.test.js\""
