@@ -1,0 +1,13 @@
+{
+  "presets": [
+    ["next/babel"],
+    [
+      "env",
+      {
+        "targets": {
+          "node": true
+        }
+      }
+    ]
+  ]
+}

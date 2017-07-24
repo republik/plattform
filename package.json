@@ -1,0 +1,38 @@
+{
+  "name": "haku-frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --watch server --watch app server/index.js",
+    "test": "babel-tape-runner \"?(app|pages)/**/*.test.js\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/haku-frontend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/orbiting/haku-frontend/issues"
+  },
+  "homepage": "https://github.com/orbiting/haku-frontend#readme",
+  "devDependencies": {
+    "babel-preset-env": "^1.6.0",
+    "babel-register": "^6.24.1",
+    "nodemon": "^1.11.0",
+    "standard": "^10.0.2",
+    "tape": "^4.7.0"
+  },
+  "dependencies": {
+    "babel-tape-runner": "^2.0.1",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.3",
+    "express-basic-auth": "^1.1.1",
+    "glamor": "^2.20.35",
+    "next": "^3.0.1-beta.18",
+    "next-routes": "^1.0.40",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
+  }
+}
