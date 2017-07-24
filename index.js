@@ -10,6 +10,7 @@ process.env.PORT = process.env.PORT || 3004
 
 const auth = require('./src/auth')
 const graphql = require('./graphql')
+const githubAuth = require('./src/githubAuth')
 
 PgDb.connect().then((pgdb) => {
   const server = express()
@@ -23,6 +24,7 @@ PgDb.connect().then((pgdb) => {
     pgdb: pgdb
   })
 
+  githubAuth(server, pgdb)
   graphql(server, pgdb)
 
   // start the server

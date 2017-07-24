@@ -21,7 +21,8 @@
     "graphql-tools": "^1.1.0",
     "isomorphic-unfetch": "^2.0.0",
     "passport": "^0.3.2",
-    "pogi": "^2.3.1"
+    "pogi": "^2.3.1",
+    "query-string": "^5.0.0"
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon -w graphql -w src -w lib -w index.js index.js",

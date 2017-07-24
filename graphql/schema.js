@@ -24,6 +24,8 @@ type User {
   firstName: String
   lastName: String
   email: String!
+  githubAccessToken: String
+  githubScope: String
 }
 
 `
