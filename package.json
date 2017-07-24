@@ -29,7 +29,6 @@
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-react": "^7.1.0",
     "eslint-plugin-standard": "^3.0.1",
-    "install": "^0.10.1",
     "nodemon": "^1.11.0",
     "tape": "^4.7.0"
   },
@@ -41,7 +40,7 @@
     "express": "^4.15.3",
     "express-basic-auth": "^1.1.1",
     "glamor": "^2.20.35",
-    "next": "^3.0.1-beta.18",
+    "next": "^3.0.1-beta.17",
     "next-routes": "^1.0.40",
     "react": "^15.6.1",
     "react-dom": "^15.6.1"
