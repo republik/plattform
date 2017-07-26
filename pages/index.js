@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { Editor, Raw, resetKeyGenerator } from 'slate'
+import { Raw, resetKeyGenerator } from 'slate'
 
 import App from '../app/App'
-import Schema from '../app/editor/schema'
+import Editor from '../app/editor/components/Editor'
 
 const getInitialState = () => {
   resetKeyGenerator()
@@ -50,21 +50,16 @@ export default class Index extends Component {
     this.state = getInitialState()
   }
 
-  onChange(selection, state) {
-    console.log(state.startOffset)
-    this.setState(() => ({
-      state
-    }))
+  commitHandler(state) {
+    console.log(state.toJS())
   }
 
   render() {
     return (
       <App>
         <Editor
-          schema={Schema}
-          onKeyDown={this.onKeyDown}
           state={this.state.state}
-          onSelectionChange={this.onChange.bind(this)}
+          onCommit={this.commitHandler.bind(this)}
         />
       </App>
     )
