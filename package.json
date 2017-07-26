@@ -42,7 +42,10 @@
     "glamor": "^2.20.35",
     "next": "^3.0.1-beta.17",
     "next-routes": "^1.0.40",
+    "prop-types": "^15.5.10",
     "react": "^15.6.1",
-    "react-dom": "^15.6.1"
+    "react-dom": "^15.6.1",
+    "react-portal": "^3.1.0",
+    "slate": "^0.21.0"
   }
 }

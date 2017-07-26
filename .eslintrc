@@ -1,6 +1,7 @@
 {
   "extends": ["standard", "standard-jsx"],
   "rules": {
-    jsx-quotes: ["error", "prefer-double"]
+    "jsx-quotes": ["error", "prefer-double"],
+    "space-before-function-paren": ["error", "never"]
   }
 }
