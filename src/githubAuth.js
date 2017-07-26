@@ -24,7 +24,17 @@ module.exports = (server, pgdb) => {
     const parameters = {
       client_id: GITHUB_CLIENT_ID,
       state: state,
-      scope: 'repo',
+      scope: [
+        'user',
+        'public_repo',
+        'repo',
+        'repo_deployment',
+        'repo:status',
+        'read:repo_hook',
+        'read:org',
+        'read:public_key',
+        'read:gpg_key'
+      ].join(', '),
       redirect_uri: `${PUBLIC_URL}/auth/github/callback`
     }
 
