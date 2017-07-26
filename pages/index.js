@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { Raw, resetKeyGenerator } from 'slate'
 
-import App from '../app/App'
-import Editor from '../app/editor/components/Editor'
+import App from '../lib/App'
+import Editor from '../lib/editor/components/Editor'
 
 const getInitialState = () => {
   resetKeyGenerator()
