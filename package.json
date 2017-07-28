@@ -44,9 +44,11 @@
     "next-routes": "^1.0.40",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
+    "react-apollo": "^1.4.8",
     "react-dom": "^15.6.1",
     "react-icons": "^2.2.5",
     "react-portal": "^3.1.0",
+    "redux": "^3.7.2",
     "slate": "^0.21.0"
   }
 }
