@@ -10,6 +10,7 @@
     "body-parser": "^1.17.2",
     "connect-pg-simple": "^3.1.2",
     "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
     "d3-time-format": "^2.0.5",
     "db-migrate-pg": "^0.2.4",
     "dotenv": "^4.0.0",

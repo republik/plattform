@@ -1,5 +1,6 @@
 const PgDb = require('./lib/pgdb')
 const express = require('express')
+const cors = require('cors')
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 if (DEV) {
@@ -7,6 +8,8 @@ if (DEV) {
 }
 
 process.env.PORT = process.env.PORT || 3004
+
+const {CORS_WHITELIST_URL} = process.env
 
 const auth = require('./src/auth')
 const graphql = require('./graphql')
@@ -23,6 +26,15 @@ PgDb.connect().then((pgdb) => {
     dev: DEV,
     pgdb: pgdb
   })
+
+  if (CORS_WHITELIST_URL) {
+    const corsOptions = {
+      origin: CORS_WHITELIST_URL.split(','),
+      credentials: true,
+      optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+    }
+    server.use('*', cors(corsOptions))
+  }
 
   githubAuth(server, pgdb)
   graphql(server, pgdb)
