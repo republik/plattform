@@ -11,6 +11,7 @@ type RootQuerys {
 type RootMutations {
   signIn(email: String!): SignInResponse!
   signOut: Boolean!
+  commit(organization: String!, repo: String!, branch: String!, path: String!, message: String!, content: String!): Commit!
 }
 
 
@@ -26,6 +27,10 @@ type User {
   email: String!
   githubAccessToken: String
   githubScope: String
+}
+
+type Commit {
+  sha: String!
 }
 
 `

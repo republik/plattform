@@ -17,6 +17,7 @@
     "email-validator": "^1.0.7",
     "express": "^4.15.3",
     "express-session": "^1.15.4",
+    "github-api": "^3.0.0",
     "graphql": "^0.10.5",
     "graphql-server-express": "^1.0.2",
     "graphql-tag": "^2.4.2",
