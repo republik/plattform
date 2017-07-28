@@ -11,6 +11,9 @@ const executableSchema = makeExecutableSchema({
   resolvers: Resolvers
 })
 
+const logProxyQueries = process.env.LOG_PROXY
+const util = require('util')
+
 module.exports = (server, pgdb) => {
   server.use('/graphql',
     bodyParser.json({limit: '8mb'}),
@@ -31,6 +34,11 @@ module.exports = (server, pgdb) => {
   }))
 
   server.post('/github/graphql', bodyParser.json(), (req, res) => {
+    if (logProxyQueries) {
+      console.log('\nrequest: ---------------')
+      console.log(util.inspect(req.body, {depth: null}))
+    }
+
     const githubFetch = createApolloFetch({
       uri: 'https://api.github.com/graphql'
     }).use(({ request, options }, next) => {
@@ -41,11 +49,21 @@ module.exports = (server, pgdb) => {
 
       next()
     })
-    githubFetch(req.body).then(result => res.json(result)).catch(error =>
-      res.status(503).json({
+    githubFetch(req.body).then(result => {
+      if (logProxyQueries) {
+        console.log('\nresponse: --------------')
+        console.log(util.inspect(result, {depth: null}))
+      }
+      return res.json(result)
+    }).catch(error => {
+      if (logProxyQueries) {
+        console.log('\nerror: -----------------')
+        console.log(util.inspect(error, {depth: null}))
+      }
+      return res.status(503).json({
         errors: [error.toString()]
       })
-    )
+    })
   })
   server.use(
     '/github/graphiql',
