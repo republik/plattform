@@ -55,6 +55,9 @@ Checkout the API: `http://localhost:3004/graphiql`
 
 - [sign in to github](http://localhost:3004/auth/github/signin?callbackPath=graphiql)
 
+GitHub:
+- [repos](http://localhost:3004/github/graphiql?query=query%20repositories(%24organization%3A%20String!)%20%7B%0A%20%20viewer%20%7B%0A%20%20%20%20organization(login%3A%20%24organization)%20%7B%0A%20%20%20%20%20%20repositories(first%3A%20100)%20%7B%0A%20%20%20%20%20%20%20%20nodes%20%7B%0A%20%20%20%20%20%20%20%20%20%20name%0A%20%20%20%20%20%20%20%20%7D%0A%20%20%20%20%20%20%7D%0A%20%20%20%20%7D%0A%20%20%7D%0A%7D%0A&operationName=repositories&variables=%7B%22organization%22%3A%20%22orbiting%22%7D)
+
 
 ## Auth
 This prototype features a passwordless signin system. It's a **stripped down** version from [crowdfunding-backend](https://github.com/orbiting/crowdfunding-backend) and not suitable for production use (no real random words, no geo location, etc.). Signin emails are sent via [Mandrill](https://mandrillapp.com) see [lib/sendMail.js](lib/sendMail.js). Set the ENV var `SEND_MAILS=false` to see emails on the console, if you don't have a mandrill key at hand.
