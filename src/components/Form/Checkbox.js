@@ -1,6 +1,6 @@
 import React from 'react'
 import {css} from 'glamor'
-import * as colors from '../../theme/colors'
+import colors from '../../theme/colors'
 import {fontFamilies} from '../../theme/fonts'
 
 const styles = {

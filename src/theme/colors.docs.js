@@ -1,6 +1,6 @@
 import React from 'react'
 import {Page, ColorSpecimen} from 'catalog'
-import * as colors from './colors'
+import colors from './colors'
 
 export default () => (
   <Page>

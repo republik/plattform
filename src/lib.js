@@ -1,7 +1,6 @@
-import * as allColors from './theme/colors'
 import * as allMediaQueries from './theme/mediaQueries'
 
-export const colors = allColors
+export {default as colors} from './theme/colors'
 export const mediaQueries = allMediaQueries
 
 export {

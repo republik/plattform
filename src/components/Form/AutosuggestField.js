@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import Autocomplete from 'react-autocomplete'
-import * as colors from '../../theme/colors'
+import colors from '../../theme/colors'
 import Field, {fieldHeight} from './Field'
 
 const sortItems = (a, b, value) => {

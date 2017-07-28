@@ -1,4 +1,4 @@
-import * as colors from '../../theme/colors'
+import colors from '../../theme/colors'
 import {fontFamilies} from '../../theme/fonts'
 import {mUp} from '../../theme/mediaQueries'
 
