@@ -7,7 +7,7 @@ import Branches from '../lib/github/components/Branch/List'
 import Tree from '../lib/github/components/Tree/List'
 import Editor from '../lib/github/components/Editor'
 
-export default withData(({ url: { query: { organization, repo, branch, path, edit } } }) =>
+export default withData(({ url: { query: { organization, repo, branch, path, edit, create } } }) =>
   <App>
     {!repo && !branch &&
       <div>
@@ -21,16 +21,16 @@ export default withData(({ url: { query: { organization, repo, branch, path, edi
         <Branches organization={organization} repo={repo} />
       </div>
     }
-    {branch && (!edit || edit !== 'true') &&
+    {branch && (!edit || edit !== 'true') && (!create || create !== 'true') &&
       <div>
         <h2>{organization}/{repo}/{branch}/{path}</h2>
         <Tree organization={organization} repo={repo} branch={branch} path={path} />
       </div>
     }
-    {edit === 'true' &&
+    {(edit === 'true' || create === 'true') &&
       <div>
         <h2>{organization}/{repo}/{branch}/{path}/edit</h2>
-        <Editor organization={organization} repo={repo} branch={branch} path={path} />
+        <Editor organization={organization} repo={repo} branch={branch} path={path} create={create} />
       </div>
     }
   </App>
