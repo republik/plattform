@@ -3,7 +3,7 @@ import { Raw, resetKeyGenerator } from 'slate'
 
 import App from '../lib/App'
 import Editor from '../lib/editor/components/Editor'
-import lorem from '../lib/editor/templates/lorem'
+import lorem from '../lib/editor/templates/lorem.json'
 
 const getInitialState = () => {
   resetKeyGenerator()
