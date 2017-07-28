@@ -1,0 +1,25 @@
+{
+  "nodes": [
+    {
+      "kind": "block",
+      "type": "h1",
+      "nodes": [
+        {
+          "kind": "text",
+          "text": "Title"
+        }
+      ]
+    },
+    {
+      "kind": "block",
+      "type": "p",
+      "nodes": [
+        {
+          "kind": "text",
+          "text": "Enter your text here..."
+        }
+      ]
+    }
+  ]
+}
+
