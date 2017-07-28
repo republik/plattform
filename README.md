@@ -18,6 +18,9 @@ PUBLIC_URL=http://localhost:3004
 
 SESSION_SECRET=replaceMe
 
+# your URL of haku-frontend
+CORS_WHITELIST_URL=http://localhost:3005
+
 DATABASE_URL=postgres://postgres@localhost:5432/haku
 
 SEND_MAILS=true  # or false if you don't have mandrill
