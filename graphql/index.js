@@ -11,45 +11,54 @@ const executableSchema = makeExecutableSchema({
   resolvers: Resolvers
 })
 
-const logProxyQueries = process.env.LOG_PROXY
+const logProxyQueries = false
 const util = require('util')
 
 module.exports = (server, pgdb) => {
+  const graphqlMiddleware = graphqlExpress((req) => {
+    return {
+      debug: false,
+      formatError: (error) => {
+        console.error('error in graphql', error)
+        return error
+      },
+      schema: executableSchema,
+      context: {
+        pgdb,
+        user: req.user,
+        req
+      }
+    }
+  })
+
   server.use('/graphql',
     bodyParser.json({limit: '8mb'}),
-    graphqlExpress((req) => {
-      return {
-        debug: true,
-        schema: executableSchema,
-        context: {
-          pgdb,
-          user: req.user,
-          req
-        }
-      }
-    })
+    graphqlMiddleware
   )
   server.use('/graphiql', graphiqlExpress({
     endpointURL: '/graphql'
   }))
 
-  server.post('/github/graphql', bodyParser.json(), (req, res) => {
+  server.post('/github/graphql', bodyParser.json(), (req, res, next) => {
     if (logProxyQueries) {
       console.log('\nrequest: ---------------')
       console.log(util.inspect(req.body, {depth: null}))
     }
+    if (req.body.operationName === 'commit') {
+      return next()
+    }
 
     const githubFetch = createApolloFetch({
       uri: 'https://api.github.com/graphql'
-    }).use(({ request, options }, next) => {
+    }).use(({ request, options }, ghNext) => {
       if (!options.headers) {
         options.headers = {}
       }
       options.headers['Authorization'] = `Bearer ${req.user.githubAccessToken}`
-
-      next()
+      ghNext()
     })
-    githubFetch(req.body).then(result => {
+
+    return githubFetch(req.body).then(result => {
       if (logProxyQueries) {
         console.log('\nresponse: --------------')
         console.log(util.inspect(result, {depth: null}))
@@ -64,7 +73,8 @@ module.exports = (server, pgdb) => {
         errors: [error.toString()]
       })
     })
-  })
+  }, graphqlMiddleware)
+
   server.use(
     '/github/graphiql',
     graphiqlExpress({
