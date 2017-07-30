@@ -2,7 +2,7 @@
   "name": "@project-r/styleguide",
   "version": "0.4.9",
   "peerDependencies": {
-    "glamor": "^2.20.24",
+    "glamor": "^2.20.37",
     "react": "^15.4.2",
     "prop-types": "^15.5.7"
   },
@@ -11,9 +11,9 @@
     "babel-preset-es2015": "^6.24.0",
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-2": "^6.22.0",
-    "catalog": "^2.5.3",
+    "catalog": "^3.0.0-rc.3",
     "core-js": "^2.4.1",
-    "glamor": "^2.20.24",
+    "glamor": "^2.20.37",
     "prop-types": "^15.5.7",
     "react": "^15.4.2",
     "react-autocomplete": "^1.4.1",
