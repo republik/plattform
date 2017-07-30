@@ -11,8 +11,9 @@ module.exports = async (_, args, {pgdb, req}) => {
   const {
     organization,
     repo,
-    branch,
+    branch: _branch,
     path,
+    commitOid,
     content,
     message
   } = args
@@ -20,8 +21,28 @@ module.exports = async (_, args, {pgdb, req}) => {
   const gh = new GitHub({
     token: req.user.githubAccessToken
   })
-  const ghRepo = gh
+
+  const ghRepo = await gh
     .getRepo(organization, repo)
+
+  let ghBranch
+  try {
+    ghBranch = (await ghRepo
+      .getBranch(_branch)).data
+  } catch (e) {}
+
+  let branch
+  if (ghBranch && ghBranch.commit.sha === commitOid) {
+    branch = _branch
+  } else { // auto-branching
+    console.log('auto-branching!')
+    branch = Math.random().toString(36).substring(7)
+    await ghRepo.createRef({
+      ref: 'refs/heads/' + branch,
+      sha: commitOid
+    })
+    // console.log(refResult.data)
+  }
 
   const result = await ghRepo
     .writeFile(
