@@ -11,7 +11,7 @@ const executableSchema = makeExecutableSchema({
   resolvers: Resolvers
 })
 
-const logProxyQueries = false
+const logProxyQueries = process.env.LOG_PROXY
 const util = require('util')
 
 module.exports = (server, pgdb) => {
