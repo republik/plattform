@@ -12,25 +12,37 @@ export default withData(({ url: { query: { organization, repo, branch, path, edi
     {!repo && !branch &&
       <div>
         <h2>{organization}/</h2>
-        <Repositories organization={organization} />
+        <Repositories
+          organization={organization} />
       </div>
     }
     {repo && !branch &&
       <div>
         <h2>{organization}/{repo}</h2>
-        <Branches organization={organization} repo={repo} />
+        <Branches
+          organization={organization}
+          repo={repo} />
       </div>
     }
     {branch && (!edit || edit !== 'true') && (!create || create !== 'true') &&
       <div>
         <h2>{organization}/{repo}/{branch}/{path}</h2>
-        <Tree organization={organization} repo={repo} branch={branch} path={path} />
+        <Tree
+          organization={organization}
+          repo={repo}
+          branch={branch}
+          path={path} />
       </div>
     }
     {(edit === 'true' || create === 'true') &&
       <div>
         <h2>{organization}/{repo}/{branch}/{path}/edit</h2>
-        <Editor organization={organization} repo={repo} branch={branch} path={path} create={create} />
+        <Editor
+          organization={organization}
+          repo={repo}
+          branch={branch}
+          path={path}
+          create={create} />
       </div>
     }
   </App>
