@@ -24,16 +24,16 @@ Das Logo ist standardmässig responsive und füllt die volle Breite.
 <Logo width={200} />
 ```
 
-## R
+## BrandMark
 
 The responsive brand mark.
 
 ```react
 <div style={{maxWidth: 200, margin: '0 auto'}}>
-  <R />
+  <BrandMark />
 </div>
 ```
 
 ```react
-<R />
+<BrandMark />
 ```

@@ -39,7 +39,7 @@ ReactDOM.render(
             title: 'Logo',
             imports: {
               Logo: require('./components/Logo'),
-              R: require('./components/Logo').R
+              BrandMark: require('./components/Logo/BrandMark')
             },
             src: require('./components/Logo/docs.md')
           },
