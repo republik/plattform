@@ -8,7 +8,13 @@ import './catalogTheme.css';
 import 'core-js/fn/array/from'
 import 'core-js/fn/array/find'
 
+import {fontFaces} from './theme/fonts';
+
 simulations(true)
+
+const styleTag = document.createElement('style')
+styleTag.innerHTML = fontFaces()
+document.body.appendChild(styleTag)
 
 ReactDOM.render(
   <Catalog

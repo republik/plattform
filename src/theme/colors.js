@@ -1,4 +1,4 @@
-import ENV from './env'
+import {getJson} from './env'
 
 const colors = {
   primary: '#00508C',
@@ -9,7 +9,7 @@ const colors = {
   text: '#191919',
   error: '#9E0041',
   divider: '#DBDCDD',
-  ...((ENV.COLORS && JSON.parse(ENV.COLORS)) || {})
+  ...getJson('COLORS')
 }
 
 export default colors

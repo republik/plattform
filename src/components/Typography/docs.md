@@ -2,10 +2,10 @@
 
 We have four font cuts:
 
-- `serifRegular` Rubis Regular
-- `serifBold` Rubis Bold
-- `sansSerifRegular` GT America Standard Regular
-- `sansSerifMedium` GT America Standard Medium
+- `serifRegular`
+- `serifBold`
+- `sansSerifRegular`
+- `sansSerifMedium`
 
 Full font family definitions are available as `fontFamilies` export from the styleguide.
 
@@ -21,7 +21,7 @@ The webfonts are licensed for our usage. You are responsible to include the webf
 
 You can obtain the files, including a css file with `@font-face` definitions, from our internal filling system under `00 Vorlagen und Design Grundlagen/Webfonts`.
 
-A helper to generate the `@font-face` css is available and takes an optional `baseUrl` (defaults to `/static/fonts`) argument. 
+A helper function to generate the `@font-face` css is available as `fontFaces`. 
 
 ### Next.js example
 

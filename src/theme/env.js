@@ -18,3 +18,5 @@ Object.keys(ENV).forEach(key => {
 })
 
 export default SG_ENV
+
+export const getJson = key => ((SG_ENV[key] && JSON.parse(SG_ENV[key])) || {})
