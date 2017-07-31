@@ -18,7 +18,7 @@ document.body.appendChild(styleTag)
 
 ReactDOM.render(
   <Catalog
-    title='Styleguide'
+    title='Style Guide'
     theme={theme}
     useBrowserHistory
     responsiveSizes={[
@@ -28,11 +28,11 @@ ReactDOM.render(
     pages={[
       {
         path: '/',
-        title: 'Übersicht',
+        title: 'Overview',
         src: require('../README.md')
       },
       {
-        title: 'Grundlagen',
+        title: 'Base',
         pages: [
           {
             path: '/logo',
@@ -44,8 +44,8 @@ ReactDOM.render(
             src: require('./components/Logo/docs.md')
           },
           {
-            path: '/typographie',
-            title: 'Typographie',
+            path: '/typography',
+            title: 'Typography',
             imports: {
               ...require('./components/Typography'),
               fontFamilies: require('./theme/fonts').fontFamilies
@@ -53,8 +53,8 @@ ReactDOM.render(
             src: require('./components/Typography/docs.md')
           },
           {
-            path: '/farben',
-            title: 'Farben',
+            path: '/colors',
+            title: 'Colors',
             component: require('./theme/colors.docs.js')
           },
           {
@@ -66,7 +66,7 @@ ReactDOM.render(
         ]
       },
       {
-        title: 'Komponenten',
+        title: 'Components',
         pages: [
           {
             path: '/components/button',
@@ -77,8 +77,8 @@ ReactDOM.render(
             src: require('./components/Button/docs.md')
           },
           {
-            path: '/formulare',
-            title: 'Formulare',
+            path: '/forms',
+            title: 'Forms',
             imports: {
               ...require('./components/Typography'),
               Button: require('./components/Button'),

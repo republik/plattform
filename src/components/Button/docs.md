@@ -1,4 +1,4 @@
-##  Primär
+##  Primary
 
 ```react|span-3
 <Button primary>
@@ -24,7 +24,7 @@
 </Button>
 ```
 
-## Secondär
+## Secondary
 
 ```react|span-3
 <Button>
@@ -50,9 +50,7 @@
 </Button>
 ```
 
-## Gross
-
-Grosse Buttons sind Block-Elemente und füllen den gegebenen Platz.
+## Big
 
 ```react|span-3
 <Button big primary>
@@ -66,9 +64,9 @@ Grosse Buttons sind Block-Elemente und füllen den gegebenen Platz.
 </Button>
 ```
 
-### Spezialfälle
+### Special Cases
 
-Für Einpassungen, z.B. in einen Header, ist es zulässig eine explizite Höhe zu setzen.
+To fit, e.g. in a header, it's permissible to set an explicit height.
 
 ```react
 <Button style={{height: 50}}>
@@ -90,7 +88,7 @@ Für Einpassungen, z.B. in einen Header, ist es zulässig eine explizite Höhe z
 </Button>
 ```
 
-## Schwarzweiss
+## Black and White
 
 ```react|span-3
 <Button black>

@@ -1,6 +1,6 @@
 ## Containers
 
-Container definieren die maximale Breite des Grids und kümmeren sich um das horizontale Padding zum Rand.
+Containers define the max width and ensure a horizontal padding.
 
 ```react
 <Container style={{backgroundColor: 'red'}}>
@@ -15,4 +15,4 @@ Container definieren die maximale Breite des Grids und kümmeren sich um das hor
 </NarrowContainer>
 ```
 
-Auf ein mehrspaltiges Grid haben wir vorerst verzichtet.
+We've skipped a multi column grid for now.

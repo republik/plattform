@@ -1,22 +1,22 @@
-Das Erscheinungsbild ist nicht abgeschlossen sondern wird ständig erweitert und weiterentwickelt.
+This is a living style guide. Subject to constant change.
 
-Der Styleguide dokumentiert den aktuellen Stand und stellt diesen als React-Komponenten, publiziert als NPM-Paket, zur Verfügung.
+It documents the current state and provides implemented React components, published as a npm package.
 
-## Lizenz
+## License
 
-Das Logo und die Schriften sind Eigentum ihrer Besitzer – Project R (Logo), GrilliType (GT America) und Nootype (Rubis) – und dürfen nicht ohne Genehmigung benutzt werden.
+The logo and fonts are the property of their owners (logo—Project R, GT America—GrilliType and Rubis—Nootype), and may not be reproduced without permission.
 
-Der Quellcode ist «BSD 3-clause» lizenziert.
+The source code is «BSD 3-clause» licensed.
 
-## Benutzen
+## Use it in your React app
 
-Voraussetzung zur Nutzung sind die Pakete: `react`, `prop-types` und `glamor`.
+The peer dependencies are: `react`, `prop-types` and `glamor`.
 
 ```
 npm install @project-r/styleguide --save
 ```
 
-Beispiel [Button](/components/button):
+Example [button](/components/button):
 
 ```code|lang-js
 import {Button} from '@project-r/styleguide'
@@ -29,11 +29,11 @@ const Crowdfunding = () => (
 )
 ```
 
-Siehe Menüpunkt «Komponenten» für die volle Liste und Dokumentation.
+See components in the menu for a full list and documentation.
 
-### Mit Next.js
+### Usage with Next.js
 
-`glamor` benötigt eine Intergation in den Server-Rendering-Prozess. Eine einfache Integration in `pages/_document.js`:
+`glamor` needs to be integrated into server rendering. For a simple integration use the following `pages/_document.js`:
 
 ```code|lang-js
 import Document, {Head, Main, NextScript} from 'next/document'
@@ -64,17 +64,35 @@ export default class MyDocument extends Document {
 }
 ```
 
-Siehe auch:
-- [next.js Beispiel](https://github.com/zeit/next.js/blob/master/examples/with-glamor/pages/_document.js)
+See also:
+- [next.js Example](https://github.com/zeit/next.js/blob/master/examples/with-glamor/pages/_document.js)
 - [Webfonts Integration](/typographie)
 
-## Weiterentwickeln
+### Theming
 
-Der Styleguide ist gebaut mit [Catalog](https://interactivethings.github.io/catalog/). Die Dokumentation wird mit Markdown und React geschrieben.
+We want to keep the style guide code simple and will keep the theming options to a minimum. Fork if you want to customize more.
 
-Zur Entwicklung wird [Node.js 6.9](https://nodejs.org/en/download/current/) oder neuer benötigt.
+Following environment variables are available for theming:
 
-Lokalen Entwicklungsserver starten:
+```
+SG_COLORS={"primary":"Maroon"}
+SG_FONT_FAMILIES={"serifRegular":"'Droid Serif', serif"}
+SG_FONT_FACES=@import url('https://fonts.googleapis.com/css?family=Droid+Serif')
+SG_LOGO_PATH=M0 0 L4 0 L4 1.5 L3 0.5 L2 4 L1 0.5 L0 1.5 Z
+SG_LOGO_VIEWBOX=0 0 4 1.5
+SG_BRAND_MARK_PATH=M0 4 L1 0 L4 4 Z
+SG_BRAND_MARK_VIEWBOX=0 0 4 4
+```
+
+They may be prefixed with `REACT_APP_` for [CRA compatibility](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md#adding-custom-environment-variables). And will be retrieved from `window.ENV`, `window.__NEXT_DATA__.env` or  `process.env`.
+
+## Develop
+
+This style guide is build with [Catalog](https://interactivethings.github.io/catalog/). You can write documentation in Markdown and React.
+
+You will need [Node.js 6.9](https://nodejs.org/en/download/current/) or higher.
+
+To start the development server run:
 
 ```
 npm install

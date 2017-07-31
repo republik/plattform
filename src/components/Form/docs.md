@@ -1,4 +1,4 @@
-## Felder
+## Fields
 
 ```react|span-3
 <Field label='Label' />
@@ -14,7 +14,7 @@
     error='Geben sie eine gültige E-Mail-Adresse an' />
 ```
 
-### Auf- und Abstockung
+### Increase and Decrease
 
 ```react
 state: {
@@ -29,7 +29,7 @@ state: {
   onDec={() => setState({value: state.value - 10})} />
 ```
 
-### Schwarzweiss
+### Black and White
 
 ```react|span-3
 <Field black label='Label' />
@@ -190,7 +190,7 @@ state: {value: 'yes'}
 </P>
 ```
 
-## Komposition
+## Composition
 
 ```react|noSource
 <form>

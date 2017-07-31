@@ -7,7 +7,11 @@ We have four font cuts:
 - `sansSerifRegular`
 - `sansSerifMedium`
 
-Full font family definitions are available as `fontFamilies` export from the styleguide.
+Full font family definitions are available as `fontFamilies` export from the style guide.
+
+```code|lang-js
+import {fontFamilies} from '@project-r/styleguide'
+```
 
 ```react|no-source
 <pre style={{overflow: 'auto'}}>
@@ -16,10 +20,6 @@ Full font family definitions are available as `fontFamilies` export from the sty
     </code>
 </pre>
 ```
-
-The webfonts are licensed for our usage. You are responsible to include the webfonts in your app and track them with our Piwik.
-
-You can obtain the files, including a css file with `@font-face` definitions, from our internal filling system under `00 Vorlagen und Design Grundlagen/Webfonts`.
 
 A helper function to generate the `@font-face` css is available as `fontFaces`. 
 
@@ -34,11 +34,11 @@ import {fontFaces} from '@project-r/styleguide'
 <style dangerouslySetInnerHTML={{ __html: fontFaces() }} />
 ```
 
-## Redaktioneller Inhalt
+## Editorial Content
 
-Lang, redaktionelle Texte sind in Rubis. Mit Margins, ausser `:first-child` 0 Oben, `:last-child` 0 Unten.
+Long, editorial texts use the serif cuts. With margins, except `:first-child` 0 top, `:last-child` 0 bottom.
 
-### Überschriften
+### Headlines
 
 ```react
 <H1>The quick brown...</H1>
@@ -56,7 +56,7 @@ Lang, redaktionelle Texte sind in Rubis. Mit Margins, ausser `:first-child` 0 Ob
 </Lead>
 ```
 
-### Paragraphen
+### Paragraphs
 
 ```react|responsive
 <div>
@@ -66,7 +66,7 @@ Lang, redaktionelle Texte sind in Rubis. Mit Margins, ausser `:first-child` 0 Ob
 </div>
 ```
 
-### Zitate
+### Quotes
 
 ```react
 <Quote source='Thomas Jefferson'>
@@ -85,9 +85,9 @@ Lang, redaktionelle Texte sind in Rubis. Mit Margins, ausser `:first-child` 0 Ob
 
 ## Interaction Text
 
-Benutzeroberflächen, strukturierte Informationen in GT America. Ohne Margins.
+UI elements and structured information uses the sans serif cuts. Without margins.
 
-### Überschriften
+### Headlines
 
 ```react
 <Interaction.H1>The quick brown...</Interaction.H1>
@@ -101,7 +101,7 @@ Benutzeroberflächen, strukturierte Informationen in GT America. Ohne Margins.
 <Interaction.H3>The quick brown fox jumps over the lazy dog</Interaction.H3>
 ```
 
-### Paragraphen
+### Paragraphs
 
 ```react|responsive
 <div>
