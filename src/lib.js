@@ -9,7 +9,7 @@ export {
 } from './theme/fonts'
 
 export {default as Logo} from './components/Logo'
-export {default as BrandMark, default as R} from './components/Logo/BrandMark'
+export {default as BrandMark} from './components/Logo/BrandMark'
 export {default as Button} from './components/Button'
 export {default as Field} from './components/Form/Field'
 export {default as Radio} from './components/Form/Radio'
