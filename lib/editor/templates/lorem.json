@@ -22,6 +22,38 @@
     },
     {
       "kind": "block",
+      "type": "imageWithCaption",
+      "nodes": [
+        {
+          "kind": "block",
+          "type": "image",
+          "isVoid": true,
+          "data": { "src": "/static/example.jpg" }
+        },
+        {
+          "kind": "block",
+          "type": "imageCaption",
+          "nodes": [
+            {
+              "kind": "text",
+              "text": "Claude Monet, Impression, soleil levant"
+            }
+          ]
+        },
+        {
+          "kind": "block",
+          "type": "imageSource",
+          "nodes": [
+            {
+              "kind": "text",
+              "text": "Wikipedia"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "block",
       "type": "p",
       "nodes": [
         {
