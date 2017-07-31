@@ -99,3 +99,51 @@ npm install
 npm run dev
 ```
 
+### Semantic Release
+
+The `master` branch gets auto-released via Travis. The next version is automatically determined according to the past [commit messages](https://github.com/semantic-release/semantic-release#default-commit-message-format).
+
+#### Commit Message Format
+
+```
+<type>(<scope>): <subject>
+<BLANK LINE>
+<body>
+<BLANK LINE>
+<footer>
+```
+
+**Types**
+
+Always changelog relevant: `feat`, `fix`, `perf`
+Others: `docs`, `chore`, `style`, `refactor`, `test`
+
+Scope is optional.
+
+> The body should include the motivation for the change and contrast this with previous behavior.
+
+> The footer should contain any information about Breaking Changes and is also the place to reference GitHub issues that this commit Closes.
+
+##### Quick Examples
+
+**Patch Release**
+
+```
+fix(field): focus issue in IE
+
+Closes #28
+```
+
+**Feature Release**
+
+```
+feat(field): add auto focus option
+```
+
+**Breaking Release**
+
+```
+refactor(field): remove label support
+
+BREAKING CHANGE: We no longer support field labels only placeholders!
+```
