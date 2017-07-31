@@ -1,6 +1,6 @@
 This is a living style guide. Subject to constant change.
 
-It documents the current state and provides implemented React components, published as a npm package.
+It documents the current state and provides implemented React components, published as an npm package.
 
 ## License
 
@@ -99,6 +99,9 @@ npm install
 npm run dev
 ```
 
+Further reading:
+- [Adding a New Component)](/dev/process)
+
 ### Semantic Release
 
 The `master` branch gets auto-released via Travis. The next version is automatically determined according to the past [commit messages](https://github.com/semantic-release/semantic-release#default-commit-message-format).
@@ -112,6 +115,8 @@ The `master` branch gets auto-released via Travis. The next version is automatic
 <BLANK LINE>
 <footer>
 ```
+
+You can use [`commitizen`](https://github.com/commitizen/cz-cli) via `git cz` to generate a message via interactive prompt.
 
 **Types**
 

@@ -91,7 +91,17 @@ ReactDOM.render(
             src: require('./components/Form/docs.md')
           }
         ]
-      }
+      },
+      {
+        title: 'Development',
+        pages: [
+          {
+            path: '/dev/process',
+            title: 'Process',
+            src: require('./development/process.docs.md')
+          }
+        ]
+      },
     ]}
   />,
   document.getElementById('root')

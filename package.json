@@ -13,6 +13,7 @@
     "babel-preset-stage-2": "^6.22.0",
     "catalog": "^3.0.0-rc.3",
     "core-js": "^2.4.1",
+    "cz-conventional-changelog": "^2.0.0",
     "glamor": "^2.20.37",
     "husky": "^0.14.3",
     "prop-types": "^15.5.7",
@@ -47,5 +48,10 @@
     "eject": "react-scripts eject",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "commitmsg": "validate-commit-msg"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
