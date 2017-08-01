@@ -3,6 +3,6 @@ const routes = nextRoutes()
 
 routes
   .add('index', '/')
-  .add('github', '/github/:organization/:repo?/:path*')
+  .add('github', '/github/:login?/:repository?/:view?/:path*')
 
 module.exports = routes

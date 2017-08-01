@@ -9,45 +9,62 @@ import Tree from '../lib/github/components/Tree/List'
 import Commits from '../lib/github/components/Commit/List'
 import Editor from '../lib/github/components/Editor'
 
-export default withData(({ url: { query: { organization, repo, path, edit, create } } }) => {
-  const _path = path && decodeURIComponent(path)
-  const pathIsTree = _path && _path.indexOf(':') > -1
+const logins = [
+  'orbiting',
+  'clarajeanne',
+  'tpreusse',
+  'uxengine',
+  'lukasbuenger',
+  'patte'
+]
+
+export default withData(({ url: { query } }) => {
+  const { login, repository, view, path} = query
   return (
     <App>
-      {!repo &&
+      {!login &&
         <div>
-          <h2>{organization}/</h2>
+          <h2>Welcome</h2>
+          <small>Please choose a github login:</small>
+          <ul>
+            {logins.map(login => (
+              <li key={login}>
+                <Link route="github" params={{ login }}>
+                  <a>{login}</a>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      }
+      {login && !repository &&
+        <div>
+          <h2>{login}/</h2>
           <small>Repositories:</small>
-          <Repositories
-            organization={organization} />
+          <Repositories {...query} />
         </div>
       }
-      {repo && !_path &&
+      {repository && !path &&
         <div>
-          <h2>{organization}/{repo}</h2>
+          <h2>{login}/{repository}</h2>
           <small>Branches:</small>
-          <Branches
-            organization={organization}
-            repo={repo} />
+          <Branches {...query} />
         </div>
       }
-      {_path && pathIsTree && !edit && !create &&
+      {path && view === 'tree' &&
         <div>
-          <h2>{organization}/{repo}/{_path}</h2>
+          <h2>{login}/{repository}/{view}/{path}</h2>
           <small>Tree:</small>
-          <Tree
-            organization={organization}
-            repo={repo}
-            path={_path} />
-
+          <Tree {...query} />
           <div>
             <br />
             <Link
               route="github"
               params={{
-                organization,
-                repo,
-                path: _path.split(':')[0]
+                login,
+                repository,
+                view: 'commits',
+                path: path.split('/')[0]
               }}
             >
               <a>
@@ -57,24 +74,17 @@ export default withData(({ url: { query: { organization, repo, path, edit, creat
           </div>
         </div>
       }
-      {_path && !pathIsTree && !edit && !create &&
+      {path && view === 'commits' &&
         <div>
-          <h2>{organization}/{repo}/{_path}</h2>
+          <h2>{login}/{repository}/{view}/{path}</h2>
           <small>Commits:</small>
-          <Commits
-            organization={organization}
-            repo={repo}
-            path={_path} />
+          <Commits {...query} />
         </div>
       }
-      {(!!edit || !!create) &&
+      {path && (view === 'edit' || view === 'new') &&
         <div>
-          <h2>{organization}/{repo}/{_path}/edit</h2>
-          <Editor
-            organization={organization}
-            repo={repo}
-            path={_path}
-            create={create} />
+          <h2>{login}/{repository}/{view}/{path}</h2>
+          <Editor {...query} />
         </div>
       }
     </App>
