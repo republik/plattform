@@ -43,6 +43,7 @@
     ]
   },
   "devDependencies": {
+    "db-migrate": "^0.10.0-beta.21",
     "husky": "^0.14.3",
     "lint-staged": "^4.0.2",
     "nodemon": "^1.11.0",
