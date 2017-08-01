@@ -11,7 +11,7 @@ type RootQuerys {
 type RootMutations {
   signIn(email: String!): SignInResponse!
   signOut: Boolean!
-  commit(organization: String!, repo: String!, branch: String!, path: String!, commitOid: String!, message: String!, content: String!): Commit!
+  commit(login: String!, repository: String!, branch: String!, path: String!, commitOid: String!, message: String!, content: String!): Commit!
 }
 
 

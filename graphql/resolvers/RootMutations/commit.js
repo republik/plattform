@@ -9,8 +9,8 @@ module.exports = async (_, args, {pgdb, req}) => {
   }
 
   const {
-    organization,
-    repo,
+    login,
+    repository,
     branch: _branch,
     path,
     commitOid,
@@ -23,7 +23,7 @@ module.exports = async (_, args, {pgdb, req}) => {
   })
 
   const ghRepo = await gh
-    .getRepo(organization, repo)
+    .getRepo(login, repository)
 
   let ghBranch
   try {
