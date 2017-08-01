@@ -214,3 +214,98 @@ state: {value: 'yes'}
   <Button>Weiter</Button>
 </form>
 ```
+
+## Field Sets
+
+A component for fast form building and state handling.
+
+```react
+state: {values: {}, errors: {}, dirty: {}}
+---
+<FieldSet
+  values={state.values}
+  errors={state.errors}
+  dirty={state.dirty}
+  onChange={fields => {
+    setState(FieldSet.utils.mergeFields(fields))
+  }}
+  fields={[
+    {
+      label: 'Vorname',
+      name: 'firstName',
+      validator: (value) => (
+        value.trim().length <= 0 && 'Vorname fehlt'
+      )
+    },
+    {
+      label: 'Nachname',
+      name: 'lastName',
+      validator: (value) => (
+        value.trim().length <= 0 && 'Nachname fehlt'
+      )
+    }
+  ]} />
+```
+
+### Custom Fields
+
+It can easily be extended, e.g. to support custom inputs like masks and autosizing:
+
+```react
+state: {values: {}, errors: {}, dirty: {}}
+---
+<FieldSet
+  additionalFieldProps={field => {
+    const fieldProps = {}
+    if (field.autoSize) {
+      fieldProps.renderInput = (props) => (
+        <AutosizeInput
+          {...props}
+          {...css({
+            minHeight: 40,
+            paddingTop: '7px !important',
+            paddingBottom: '6px !important'
+          })} />
+      )
+    }
+    if (field.mask) {
+      fieldProps.renderInput = (props) => (
+        <MaskedInput
+          {...props}
+          {...css({
+            '::placeholder': {
+              color: 'transparent'
+            },
+            ':focus': {
+              '::placeholder': {
+                color: '#ccc'
+              }
+            }
+          })}
+          placeholderChar={field.maskChar || ' '}
+          mask={field.mask} />
+      )
+    }
+    return fieldProps
+  }}
+  fields={[
+    {
+      label: 'Geburtsdatum',
+      name: 'birthday',
+      mask: '11.11.1111',
+      maskChar: '_',
+      validator: value => value.trim().length <= 0 && 'Geburtsdatum fehlt'
+    },
+    {
+      label: 'Gruss',
+      name: 'greetings',
+      autoSize: true
+    }
+  ]}
+  values={state.values}
+  errors={state.errors}
+  dirty={state.dirty}
+  onChange={fields => {
+    setState(FieldSet.utils.mergeFields(fields))
+  }} />
+```

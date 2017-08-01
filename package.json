@@ -22,6 +22,7 @@
     "react-dom": "^15.4.2",
     "react-maskedinput": "^3.3.4",
     "react-scripts": "0.9.3",
+    "react-textarea-autosize": "^5.1.0",
     "rimraf": "^2.6.1",
     "semantic-release": "^6.3.6",
     "validate-commit-msg": "^2.14.0"

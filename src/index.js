@@ -1,9 +1,9 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import {Catalog} from 'catalog';
-import {simulations} from 'glamor';
-import theme from './catalogTheme';
-import './catalogTheme.css';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import {Catalog} from 'catalog'
+import {simulations, css} from 'glamor'
+import theme from './catalogTheme'
+import './catalogTheme.css'
 
 import 'core-js/fn/array/from'
 import 'core-js/fn/array/find'
@@ -80,13 +80,16 @@ ReactDOM.render(
             path: '/forms',
             title: 'Forms',
             imports: {
+              css,
               ...require('./components/Typography'),
               Button: require('./components/Button'),
               Checkbox: require('./components/Form/Checkbox.js'),
               Radio: require('./components/Form/Radio.js'),
               Field: require('./components/Form/Field.js'),
+              FieldSet: require('./components/Form/FieldSet.js'),
               AutosuggestField: require('./components/Form/AutosuggestField.js'),
-              MaskedInput: require('react-maskedinput')
+              MaskedInput: require('react-maskedinput'),
+              AutosizeInput: require('react-textarea-autosize')
             },
             src: require('./components/Form/docs.md')
           }
