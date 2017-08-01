@@ -1,7 +1,9 @@
-HAKU
-----
+haku-backend
+------------
 
-Haku is a cms prototype.
+Haku is a cms prototype: edit files on github with [slate](https://github.com/ianstormtaylor/slate).
+
+Works best with: [haku-frontend](https://github.com/orbiting/haku-frontend)
 
 The trello board tracking it's tasks: https://trello.com/b/kbO2DOci/haku
 
@@ -38,7 +40,7 @@ Install dependencies.
 npm install
 ```
 
-Setup the DB.
+Create and init the DB.
 ```
 createdb -U postgres haku
 npm run db:reset
