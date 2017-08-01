@@ -5,7 +5,8 @@
   "main": "server/index.js",
   "scripts": {
     "dev": "nodemon --watch server --watch app server/index.js",
-    "test": "babel-tape-runner \"?(app|pages)/**/*.test.js\""
+    "test": "babel-tape-runner \"?(app|pages)/**/*.test.js\"",
+    "standardize": "standard --fix"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,12 @@
     "url": "https://github.com/orbiting/haku-frontend/issues"
   },
   "homepage": "https://github.com/orbiting/haku-frontend#readme",
+  "lint-staged": {
+    "*.js": [
+      "standard --fix",
+      "git add"
+    ]
+  },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
     "babel-plugin-transform-react-jsx": "^6.24.1",
@@ -40,13 +47,18 @@
     "express": "^4.15.3",
     "express-basic-auth": "^1.1.1",
     "glamor": "^2.20.35",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.0.2",
     "next": "^3.0.1-beta.17",
     "next-routes": "^1.0.40",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
+    "react-apollo": "^1.4.8",
     "react-dom": "^15.6.1",
     "react-icons": "^2.2.5",
     "react-portal": "^3.1.0",
-    "slate": "^0.21.0"
+    "redux": "^3.7.2",
+    "slate": "^0.21.0",
+    "standard": "^10.0.2"
   }
 }
