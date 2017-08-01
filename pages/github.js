@@ -1,4 +1,3 @@
-import React, { Component } from 'react'
 import withData from '../lib/apollo/withData'
 import { Link } from '../server/routes'
 
@@ -18,8 +17,8 @@ const logins = [
   'patte'
 ]
 
-export default withData(({ url: { query } }) => {
-  const { login, repository, view, path} = query
+export default withData(({ url: {query} }) => {
+  const {login, repository, view, path} = query
   return (
     <App>
       {!login &&
@@ -29,7 +28,7 @@ export default withData(({ url: { query } }) => {
           <ul>
             {logins.map(login => (
               <li key={login}>
-                <Link route="github" params={{ login }}>
+                <Link route='github' params={{ login }}>
                   <a>{login}</a>
                 </Link>
               </li>
@@ -59,7 +58,7 @@ export default withData(({ url: { query } }) => {
           <div>
             <br />
             <Link
-              route="github"
+              route='github'
               params={{
                 login,
                 repository,
