@@ -29,7 +29,7 @@ ReactDOM.render(
       {
         path: '/',
         title: 'Overview',
-        src: require('../README.md')
+        src: require('./README.md')
       },
       {
         title: 'Base',
