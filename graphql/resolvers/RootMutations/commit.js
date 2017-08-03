@@ -57,5 +57,8 @@ module.exports = async (_, args, {pgdb, req}) => {
     // TODO proper error handling
 
   // https://developer.github.com/v3/repos/contents/#update-a-file
-  return result.data.commit
+  return {
+    sha: result.data.commit.sha,
+    ref: 'refs/heads/' + branch
+  }
 }

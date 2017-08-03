@@ -31,6 +31,7 @@ type User {
 
 type Commit {
   sha: String!
+  ref: String!
 }
 
 `
