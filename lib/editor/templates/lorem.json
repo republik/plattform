@@ -2,7 +2,7 @@
   "nodes": [
     {
       "kind": "block",
-      "type": "h1",
+      "type": "H1",
       "nodes": [
         {
           "kind": "text",
@@ -12,7 +12,7 @@
     },
     {
       "kind": "block",
-      "type": "lead",
+      "type": "Lead",
       "nodes": [
         {
           "kind": "text",
@@ -22,17 +22,17 @@
     },
     {
       "kind": "block",
-      "type": "imageWithCaption",
+      "type": "ImageWithCaption",
       "nodes": [
         {
           "kind": "block",
-          "type": "image",
+          "type": "Image",
           "isVoid": true,
           "data": { "src": "/static/example.jpg" }
         },
         {
           "kind": "block",
-          "type": "imageCaption",
+          "type": "ImageCaption",
           "nodes": [
             {
               "kind": "text",
@@ -42,7 +42,7 @@
         },
         {
           "kind": "block",
-          "type": "imageSource",
+          "type": "ImageSource",
           "nodes": [
             {
               "kind": "text",
@@ -54,7 +54,7 @@
     },
     {
       "kind": "block",
-      "type": "p",
+      "type": "P",
       "nodes": [
         {
           "kind": "text",
@@ -64,17 +64,7 @@
     },
     {
       "kind": "block",
-      "type": "blockquote",
-      "nodes": [
-        {
-          "kind": "text",
-          "text": "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."
-        }
-      ]
-    },
-    {
-      "kind": "block",
-      "type": "p",
+      "type": "P",
       "nodes": [
         {
           "kind": "text",
@@ -84,7 +74,7 @@
     },
     {
       "kind": "block",
-      "type": "p",
+      "type": "P",
       "nodes": [
         {
           "kind": "text",

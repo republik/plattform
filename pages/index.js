@@ -1,36 +1,35 @@
 import React, { Component } from 'react'
 import { Raw, resetKeyGenerator } from 'slate'
-
 import App from '../lib/App'
-import Editor from '../lib/editor/components/Editor'
 import lorem from '../lib/editor/templates/lorem.json'
+import StyleguideTheme from '../lib/editor/themes/styleguide'
+import createEditor from '../lib/editor'
+
+const { Editor } = createEditor(StyleguideTheme)
 
 const getInitialState = () => {
   resetKeyGenerator()
   return {
-    state: Raw.deserialize(
-      lorem,
-      { terse: true }
-    )
+    state: Raw.deserialize(lorem, { terse: true })
   }
 }
 
 export default class Index extends Component {
-  constructor(...args) {
+  constructor (...args) {
     super(...args)
     this.state = getInitialState()
   }
 
-  commitHandler(state) {
+  commitHandler (state) {
     console.log(state.toJS())
   }
 
-  render() {
+  render () {
     return (
       <App>
         <Editor
           state={this.state.state}
-          onCommit={this.commitHandler.bind(this)}
+          onChange={this.commitHandler.bind(this)}
         />
       </App>
     )
