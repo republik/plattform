@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { Raw, resetKeyGenerator } from 'slate'
 import App from '../lib/App'
+import lorem from '../lib/editor/templates/lorem.json'
+import StyleguideTheme from '../lib/editor/themes/styleguide'
 import createEditor from '../lib/editor'
-import StyleguideTheme from '../lib/themes/styleguide'
-
-import lorem from '../lib/templates/lorem.json'
 
 const { Editor } = createEditor(StyleguideTheme)
 
