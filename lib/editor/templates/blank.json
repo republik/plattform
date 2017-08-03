@@ -2,7 +2,7 @@
   "nodes": [
     {
       "kind": "block",
-      "type": "h1",
+      "type": "H1",
       "nodes": [
         {
           "kind": "text",
@@ -12,7 +12,7 @@
     },
     {
       "kind": "block",
-      "type": "p",
+      "type": "P",
       "nodes": [
         {
           "kind": "text",
@@ -22,4 +22,3 @@
     }
   ]
 }
-
