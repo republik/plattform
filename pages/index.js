@@ -2,10 +2,7 @@ import React, { Component } from 'react'
 import { Raw, resetKeyGenerator } from 'slate'
 import App from '../lib/App'
 import lorem from '../lib/editor/templates/lorem.json'
-import StyleguideTheme from '../lib/editor/themes/styleguide'
-import createEditor from '../lib/editor'
-
-const { Editor } = createEditor(StyleguideTheme)
+import Editor from '../lib/editor/components/Editor'
 
 const getInitialState = () => {
   resetKeyGenerator()
@@ -21,7 +18,8 @@ export default class Index extends Component {
   }
 
   commitHandler (state) {
-    console.log(state.toJS())
+    console.log(Raw.serialize(state))
+    this.setState({state})
   }
 
   render () {
