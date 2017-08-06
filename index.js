@@ -7,6 +7,8 @@ if (DEV) {
   require('dotenv').config()
 }
 
+const { createServer } = require('http')
+
 process.env.PORT = process.env.PORT || 3004
 
 const {CORS_WHITELIST_URL} = process.env
@@ -17,6 +19,7 @@ const githubAuth = require('./src/githubAuth')
 
 PgDb.connect().then((pgdb) => {
   const server = express()
+  const httpServer = createServer(server)
 
   // Once DB is available, setup sessions and routes for authentication
   auth.configure({
@@ -37,10 +40,10 @@ PgDb.connect().then((pgdb) => {
   }
 
   githubAuth(server, pgdb)
-  graphql(server, pgdb)
+  graphql(server, pgdb, httpServer)
 
   // start the server
-  server.listen(process.env.PORT, () => {
+  httpServer.listen(process.env.PORT, () => {
     console.info('server is running on http://localhost:' + process.env.PORT)
   })
 })

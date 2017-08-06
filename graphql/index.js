@@ -2,6 +2,9 @@ const bodyParser = require('body-parser')
 const {graphqlExpress, graphiqlExpress} = require('graphql-server-express')
 const {makeExecutableSchema} = require('graphql-tools')
 const { createApolloFetch } = require('apollo-fetch')
+const { SubscriptionServer } = require('subscriptions-transport-ws')
+const { execute, subscribe } = require('graphql')
+const { pubsub } = require('./RedisPubSub')
 
 const Schema = require('./schema')
 const Resolvers = require('./resolvers/index')
@@ -11,10 +14,26 @@ const executableSchema = makeExecutableSchema({
   resolvers: Resolvers
 })
 
-const logProxyQueries = process.env.LOG_PROXY
+const {
+  LOG_PROXY,
+  PUBLIC_WS_URL_BASE,
+  PUBLIC_WS_URL_PATH
+} = process.env
 const util = require('util')
 
-module.exports = (server, pgdb) => {
+module.exports = (server, pgdb, httpServer) => {
+  SubscriptionServer.create(
+    {
+      schema: executableSchema,
+      execute,
+      subscribe
+    },
+    {
+      server: httpServer,
+      path: PUBLIC_WS_URL_PATH
+    }
+  )
+
   const graphqlMiddleware = graphqlExpress((req) => {
     return {
       debug: false,
@@ -26,7 +45,8 @@ module.exports = (server, pgdb) => {
       context: {
         pgdb,
         user: req.user,
-        req
+        req,
+        pubsub
       }
     }
   })
@@ -36,11 +56,12 @@ module.exports = (server, pgdb) => {
     graphqlMiddleware
   )
   server.use('/graphiql', graphiqlExpress({
-    endpointURL: '/graphql'
+    endpointURL: '/graphql',
+    subscriptionsEndpoint: PUBLIC_WS_URL_BASE + PUBLIC_WS_URL_PATH
   }))
 
   server.post('/github/graphql', bodyParser.json(), (req, res, next) => {
-    if (logProxyQueries) {
+    if (LOG_PROXY) {
       console.log('\nrequest: ---------------')
       console.log(util.inspect(req.body, {depth: null}))
     }
@@ -59,13 +80,13 @@ module.exports = (server, pgdb) => {
     })
 
     return githubFetch(req.body).then(result => {
-      if (logProxyQueries) {
+      if (LOG_PROXY) {
         console.log('\nresponse: --------------')
         console.log(util.inspect(result, {depth: null}))
       }
       return res.json(result)
     }).catch(error => {
-      if (logProxyQueries) {
+      if (LOG_PROXY) {
         console.log('\nerror: -----------------')
         console.log(util.inspect(error, {depth: null}))
       }

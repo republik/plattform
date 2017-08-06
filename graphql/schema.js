@@ -2,6 +2,7 @@ const typeDefinitions = `
 schema {
   query: RootQuerys
   mutation: RootMutations
+  subscription: RootSubscription
 }
 
 type RootQuerys {
@@ -14,6 +15,13 @@ type RootMutations {
   commit(login: String!, repository: String!, branch: String!, path: String!, commitOid: String!, message: String!, content: String!): Commit!
 }
 
+type RootSubscription {
+  blobActivity(path: String): Activity!
+}
+
+type Activity {
+  message: String!
+}
 
 type SignInResponse {
   phrase: String!
