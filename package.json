@@ -7,6 +7,7 @@
   "private": true,
   "dependencies": {
     "apollo-fetch": "^0.3.0",
+    "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
     "connect-pg-simple": "^3.1.2",
     "cookie-parser": "^1.4.3",
@@ -28,6 +29,7 @@
     "passport": "^0.3.2",
     "pogi": "^2.3.1",
     "query-string": "^5.0.0",
+    "redis": "^2.7.1",
     "subscriptions-transport-ws": "^0.8.2"
   },
   "scripts": {
