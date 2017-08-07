@@ -11,7 +11,7 @@ The trello board tracking it's tasks: https://trello.com/b/kbO2DOci/haku
 ## Usage
 
 ### Quick start
-You need to have node (8+) installed and postgres running somewhere.
+You need to have node (8+) installed, postgres and redis running somewhere.
 
 Boostrap your .env file.
 ```
@@ -24,6 +24,9 @@ SESSION_SECRET=replaceMe
 CORS_WHITELIST_URL=http://localhost:3005
 
 DATABASE_URL=postgres://postgres@localhost:5432/haku
+
+# leave blank for default: 127.0.0.1:6379
+REDIS_URL=
 
 SEND_MAILS=true  # or false if you don't have mandrill
 MANDRILL_API_KEY=replaceMe
