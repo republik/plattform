@@ -5,8 +5,9 @@
   "main": "server/index.js",
   "scripts": {
     "dev": "nodemon --watch server --watch app server/index.js",
-    "build": "next build",
     "start": "node server/index.js",
+    "build": "next build",
+    "heroku-postbuild": "npm run build",
     "test": "babel-tape-runner \"?(app|pages)/**/*.test.js\"",
     "standardize": "standard --fix",
     "precommit": "lint-staged"
