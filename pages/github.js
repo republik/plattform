@@ -8,6 +8,7 @@ import Tree from '../lib/github/components/Tree/List'
 import Commits from '../lib/github/components/Commit/List'
 import Editor from '../lib/github/components/Editor'
 import FileCommits from '../lib/github/components/FileCommits/'
+import UncommittedChanges from '../lib/github/components/UncommittedChanges/'
 import Checklist from '../lib/components/Checklist'
 import ProcessToolbar from '../lib/components/ProcessToolbar'
 
@@ -102,7 +103,8 @@ export default withData(({ url: { query } }) => {
             <Checklist />
             <h4>History</h4>
             <FileCommits {...query} />
-            <h4>TODO: Others working</h4>
+            <h4>Who's working on this?</h4>
+            <UncommittedChanges {...query} />
           </ProcessToolbar>
         </div>}
     </App>
