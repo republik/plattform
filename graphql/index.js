@@ -70,7 +70,7 @@ module.exports = (server, pgdb, httpServer) => {
 
     // intercept queries to handle locally
     const {operationName} = req.body
-    const interceptOperations = ['commit', 'uncommitedChanges']
+    const interceptOperations = ['commit', 'uncommittedChanges']
     if (interceptOperations.indexOf(operationName) > -1) {
       return next()
     }

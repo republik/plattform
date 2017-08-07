@@ -1,5 +1,5 @@
 module.exports = {
-  uncommitedChanges: async ({owner: login, name: repository}, {path}, {redis, pgdb}) => {
+  uncommittedChanges: async ({owner: login, name: repository}, {path}, {redis, pgdb}) => {
     const key = `${login}/${repository}/${path}`
     const userIds = await redis.zrangeAsync(key, 0, -1)
     if (!userIds.length) {

@@ -8,7 +8,7 @@ module.exports = async (_, {login, repository, path, action}, {user, redis, pubs
     result = await redis.zremAsync(key, user.id)
   }
   if (result) {
-    await pubsub.publish('uncommitedChanges', { uncommitedChanges: { login, repository, path, user, action } })
+    await pubsub.publish('uncommittedChanges', { uncommittedChanges: { login, repository, path, user, action } })
   }
   return result
 }

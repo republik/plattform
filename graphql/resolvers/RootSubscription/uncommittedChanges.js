@@ -7,8 +7,8 @@ const {pubsub, filtered} = require('../../../lib/RedisPubSub')
 // why is variables undefined?
 module.exports = {
   subscribe: (_, args) => filtered(
-    pubsub.asyncIterator('uncommitedChanges'),
-    ({uncommitedChanges: {login, repository, path}}, variables) => (
+    pubsub.asyncIterator('uncommittedChanges'),
+    ({uncommittedChanges: {login, repository, path}}, variables) => (
       login === args.login && repository === args.repository && path === args.path
     )
   )()
