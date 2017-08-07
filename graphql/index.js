@@ -5,7 +5,7 @@ const { createApolloFetch } = require('apollo-fetch')
 const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { execute, subscribe } = require('graphql')
 const { pubsub } = require('../lib/RedisPubSub')
-const redis = require('../lib/Redis')
+const redis = require('../lib/redis')
 
 const Schema = require('./schema')
 const Resolvers = require('./resolvers/index')
