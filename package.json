@@ -46,6 +46,7 @@
   "dependencies": {
     "@project-r/styleguide": "^0.4.9",
     "babel-tape-runner": "^2.0.1",
+    "d3-array": "^1.2.0",
     "d3-format": "^1.2.0",
     "d3-time-format": "^2.0.5",
     "dotenv": "^4.0.0",
