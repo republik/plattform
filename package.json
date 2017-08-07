@@ -65,6 +65,7 @@
     "react-icons": "^2.2.5",
     "react-portal": "^3.1.0",
     "redux": "^3.7.2",
-    "slate": "^0.21.0"
+    "slate": "^0.21.0",
+    "subscriptions-transport-ws": "^0.8.2"
   }
 }
