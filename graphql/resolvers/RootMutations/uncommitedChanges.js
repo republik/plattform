@@ -1,5 +1,5 @@
-module.exports = async (_, {owner, name, path, action}, {user, redis, pubsub}) => {
-  const key = `${owner}/${name}/${path}`
+module.exports = async (_, {login, repository, path, action}, {user, redis, pubsub}) => {
+  const key = `${login}/${repository}/${path}`
   const now = new Date().getTime()
   let result
   if (action === 'create') {
@@ -8,7 +8,7 @@ module.exports = async (_, {owner, name, path, action}, {user, redis, pubsub}) =
     result = await redis.zremAsync(key, user.id)
   }
   if (result) {
-    await pubsub.publish('uncommitedChanges', { uncommitedChanges: { owner, name, path, user, action } })
+    await pubsub.publish('uncommitedChanges', { uncommitedChanges: { login, repository, path, user, action } })
   }
   return result
 }

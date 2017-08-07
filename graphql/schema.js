@@ -16,11 +16,11 @@ type RootMutations {
 
   commit(login: String!, repository: String!, branch: String!, path: String!, commitOid: String!, message: String!, content: String!): Commit!
 
-  uncommitedChanges(owner: String!, name: String!, path: String! action: Action): Boolean!
+  uncommitedChanges(login: String!, repository: String!, path: String! action: Action): Boolean!
 }
 
 type RootSubscription {
-  uncommitedChanges(owner: String! name: String!, path: String!): UncommitedChangeUpdate!
+  uncommitedChanges(login: String! repository: String!, path: String!): UncommitedChangeUpdate!
 }
 
 type SignInResponse {
@@ -53,8 +53,8 @@ enum Action {
 }
 
 type UncommitedChangeUpdate {
-  owner: String!
-  name: String!
+  login: String!
+  repository: String!
   path: String!
   user: User!
   action: Action!

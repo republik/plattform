@@ -8,8 +8,8 @@ const {pubsub, filtered} = require('../../../lib/RedisPubSub')
 module.exports = {
   subscribe: (_, args) => filtered(
     pubsub.asyncIterator('uncommitedChanges'),
-    ({uncommitedChanges: {owner, name, path}}, variables) => (
-      owner === args.owner && name === args.name && path === args.path
+    ({uncommitedChanges: {login, repository, path}}, variables) => (
+      login === args.login && repository === args.repository && path === args.path
     )
   )()
 }
