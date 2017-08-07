@@ -67,7 +67,11 @@ module.exports = (server, pgdb, httpServer) => {
       console.log('\nrequest: ---------------')
       console.log(util.inspect(req.body, {depth: null}))
     }
-    if (req.body.operationName === 'commit') {
+
+    // intercept queries to handle locally
+    const {operationName} = req.body
+    const interceptOperations = ['commit', 'uncommitedChanges']
+    if (interceptOperations.indexOf(operationName) > -1) {
       return next()
     }
 
