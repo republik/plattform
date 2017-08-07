@@ -33,6 +33,7 @@
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.6.0",
     "babel-register": "^6.24.1",
+    "babel-tape-runner": "^2.0.1",
     "eslint-config-standard": "^10.2.1",
     "eslint-config-standard-jsx": "^4.0.2",
     "eslint-plugin-import": "^2.7.0",
@@ -48,7 +49,6 @@
   },
   "dependencies": {
     "@project-r/styleguide": "^0.4.9",
-    "babel-tape-runner": "^2.0.1",
     "d3-array": "^1.2.0",
     "d3-format": "^1.2.0",
     "d3-time-format": "^2.0.5",
