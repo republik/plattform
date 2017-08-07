@@ -16,10 +16,15 @@ type RootMutations {
 
   commit(login: String!, repository: String!, branch: String!, path: String!, commitOid: String!, message: String!, content: String!): Commit!
 
+  # Inform about my uncommited changes on the path.
+  # Use path without branch prefix.
   uncommittedChanges(login: String!, repository: String!, path: String! action: Action): Boolean!
 }
 
 type RootSubscription {
+  # Provides updates to the list of users
+  # with uncommited changes on the path.
+  # Use path without branch prefix.
   uncommittedChanges(login: String! repository: String!, path: String!): UncommittedChangeUpdate!
 }
 
@@ -44,6 +49,8 @@ type Commit {
 
 
 type Repository {
+  # List users with uncommited changes on the path.
+  # Use path without branch prefix.
   uncommittedChanges(path: String!): [User!]!
 }
 
