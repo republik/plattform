@@ -17,8 +17,7 @@ export default class Index extends Component {
     this.state = getInitialState()
   }
 
-  commitHandler (state) {
-    console.log(Raw.serialize(state))
+  commitHandler (state, ...args) {
     this.setState({state})
   }
 
