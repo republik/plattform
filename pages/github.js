@@ -8,6 +8,7 @@ import Tree from '../lib/github/components/Tree/List'
 import Commits from '../lib/github/components/Commit/List'
 import Editor from '../lib/github/components/Editor'
 import FileCommits from '../lib/github/components/FileCommits/'
+import Checklist from '../lib/components/Checklist'
 import ProcessToolbar from '../lib/components/ProcessToolbar'
 
 const logins = [
@@ -97,7 +98,8 @@ export default withData(({ url: { query } }) => {
           </h2>
           <Editor {...query} />
           <ProcessToolbar>
-            <h4>TODO: Checklist</h4>
+            <h4>Checklist</h4>
+            <Checklist />
             <h4>History</h4>
             <FileCommits {...query} />
             <h4>TODO: Others working</h4>
