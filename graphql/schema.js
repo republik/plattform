@@ -17,10 +17,11 @@ type RootMutations {
   commit(login: String!, repository: String!, branch: String!, path: String!, commitOid: String!, message: String!, content: String!): Commit!
 
   # creates a merge commits with the provided parents, message and content.
-  # The content is first submitted as a blob and a new tree is created
+  # The content is submitted as a blob and a new tree is created
   # setting the blob at path. The tree is based on the tree of the first
   # parent's commit.
-  # The HEAD of the provided branch is updated to point to the merge-commit.
+  # If one of the parents is the HEAD of the provided branch, the branch is
+  # fast-forwarded to the new merge-commit. Otherwise a new branch is created.
   merge(login: String!, repository: String!, branch: String!, path: String!, content: String!, parents: [String!]!, message: String!): Commit!
 
   # Inform about my uncommited changes on the path.

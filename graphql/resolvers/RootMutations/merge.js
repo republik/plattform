@@ -59,17 +59,27 @@ module.exports = async (_, args, {pgdb, req}) => {
     message
   )
 
-  await ghRepo
-    .updateHead(
-      'heads/' + branch,
-      commit.sha,
-      false
-    )
+  const headCommit = await ghRepo
+    .getBranch(branch)
 
-  // TODO: handle non-fast-forward HEAD updates
+  let _branch = branch
+  if (parents.indexOf(headCommit.data.commit.sha) > -1) { // fast-forward
+    await ghRepo
+      .updateHead(
+        'heads/' + _branch,
+        commit.sha,
+        false
+      )
+  } else { // auto-branching
+    _branch = Math.random().toString(36).substring(7)
+    await ghRepo.createRef({
+      ref: 'refs/heads/' + _branch,
+      sha: commit.sha
+    })
+  }
 
   return {
     sha: commit.sha,
-    ref: 'refs/heads/' + branch
+    ref: 'refs/heads/' + _branch
   }
 }
