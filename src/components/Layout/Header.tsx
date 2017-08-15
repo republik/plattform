@@ -4,7 +4,7 @@ import { compose } from 'redux'
 import { createContainer, createTile } from './Grid'
 import Me from '../Auth/Me'
 import {
-  R,
+  Logo,
   Interaction,
   A,
   colors
@@ -64,7 +64,7 @@ export default ({ children, style, ...props }: any) =>
   <Header {...props}>
     <HeaderSection flex="0 0 70px">
       <span style={logoStyles}>
-        <R />
+        <Logo />
       </span>
     </HeaderSection>
     <HeaderSection flex="1 1 auto">
