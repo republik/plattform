@@ -85,6 +85,11 @@ export default ({ children, style, ...props }: any) =>
             Postfinance Payments
           </a>
         </Link>
+        <Link route="merge-users">
+          <a className={`${link}`} style={navLinkStyles}>
+            Users zusammenführen
+          </a>
+        </Link>
       </nav>
     </HeaderSection>
     <HeaderSection flex="0 0 200px">
