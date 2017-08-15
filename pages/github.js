@@ -11,6 +11,7 @@ import FileCommits from '../lib/github/components/FileCommits/'
 import UncommittedChanges from '../lib/github/components/UncommittedChanges/'
 import Checklist from '../lib/components/Checklist'
 import ProcessToolbar from '../lib/components/ProcessToolbar'
+import { Label } from '@project-r/styleguide'
 
 const logins = [
   'orbiting',
@@ -99,11 +100,11 @@ export default withData(({ url: { query } }) => {
           </h2>
           <Editor {...query} />
           <ProcessToolbar>
-            <h4>Checklist</h4>
+            <Label>Checklist</Label>
             <Checklist />
-            <h4>History</h4>
+            <Label>History</Label>
             <FileCommits {...query} />
-            <h4>Who's working on this?</h4>
+            <Label>Who's working on this?</Label>
             <UncommittedChanges {...query} />
           </ProcessToolbar>
         </div>}
