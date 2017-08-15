@@ -133,9 +133,7 @@ class Detail extends React.Component<Props, State> {
       return <ErrorMessage error={props.data.error} />
     } else if (props.data.loading) {
       return <div>Loading ...</div>
-    } else if (props.data.loading) {
-      return <div>Loading ...</div>
-    }
+    } 
     return (
       <div style={{ overflow: 'hidden' }}>
         <Interaction.H1>
