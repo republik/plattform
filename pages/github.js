@@ -7,11 +7,6 @@ import Branches from '../lib/github/components/Branch/List'
 import Tree from '../lib/github/components/Tree/List'
 import Commits from '../lib/github/components/Commit/List'
 import Editor from '../lib/github/components/Editor'
-import FileCommits from '../lib/github/components/FileCommits/'
-import UncommittedChanges from '../lib/github/components/UncommittedChanges/'
-import Checklist from '../lib/components/Checklist'
-import ProcessToolbar from '../lib/components/ProcessToolbar'
-import { Label } from '@project-r/styleguide'
 
 const logins = [
   'orbiting',
@@ -99,14 +94,6 @@ export default withData(({ url: { query } }) => {
             {login}/{repository}/{view}/{path}
           </h2>
           <Editor {...query} />
-          <ProcessToolbar>
-            <Label>Checklist</Label>
-            <Checklist />
-            <Label>History</Label>
-            <FileCommits {...query} />
-            <Label>Who's working on this?</Label>
-            <UncommittedChanges {...query} />
-          </ProcessToolbar>
         </div>}
     </App>
   )
