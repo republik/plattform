@@ -1,9 +1,11 @@
-import App from '../../lib/App'
+import withData from '../../lib/apollo/withData'
+import EditorFrame from '../../lib/components/EditorFrame'
 
-export default () => {
+export default withData(({ url: { query } }) => {
+  const { repository, commit } = query
   return (
-    <App>
+    <EditorFrame view={'edit'} repository={repository} commit={commit}>
       <h1>Edit</h1>
-    </App>
+    </EditorFrame>
   )
-}
+})
