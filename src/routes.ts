@@ -5,7 +5,7 @@ routes
   .add('users')
   .add('payments')
   .add('postfinance-payments')
-  .add('merge-users/:userId?')
+  .add('merge-users')
   .add('user', '/users/:userId', 'user')
 
 export default routes
