@@ -142,6 +142,7 @@ export interface Membership {
 
 export interface PostfinancePayment {
   id: string
+  hidden: boolean
   buchungsdatum: string
   valuta: string
   avisierungstext: string

@@ -1,10 +1,23 @@
 import * as React from 'react'
+import { css } from 'glamor'
 import { A, colors } from '@project-r/styleguide'
 import { Table, Row, Cell } from '../../Layout/Table'
 import MessageForm from './MessageForm'
 import { chfFormat } from '../../../lib/utils/formats'
 import routes from '../../../routes'
 const { Link } = routes
+
+const link = css({
+  textDecoration: 'none',
+  color: colors.primary,
+  ':visited': {
+    color: colors.primary
+  },
+  ':hover': {
+    color: colors.secondary
+  }
+})
+
 
 const displayDate = (rawDate: string): string => {
   const date: Date = new Date(rawDate)
@@ -41,7 +54,7 @@ const interactiveStyles = {
   cursor: 'pointer'
 }
 
-export default ({ items, onMessage, ...props }: any) =>
+export default ({ items, onMessage, onHide, ...props }: any) =>
   <Table {...props}>
     {items.map((postfinancePayment: any, index: number) =>
       <Row
@@ -81,6 +94,15 @@ export default ({ items, onMessage, ...props }: any) =>
         <Cell flex="0 0 10%">
           {displayDate(postfinancePayment.createdAt)}
         </Cell>
+        {!postfinancePayment.matched && <Cell flex="0 0 5%">
+          <a
+            className={`${link}`}
+            style={interactiveStyles}
+            onClick={e => onHide({ id: postfinancePayment.id })}
+          >
+            Verstecken
+          </a>
+        </Cell>}
       </Row>
     )}
   </Table>

@@ -32,13 +32,8 @@ export interface UserParams {
   userId?: string
 }
 
-interface OwnProps {
+interface Props {
   [prop: string]: any
-  params: UserParams
-}
-
-interface Props extends OwnProps {
-  data: QueryProps & { user: User }
 }
 
 interface State {
