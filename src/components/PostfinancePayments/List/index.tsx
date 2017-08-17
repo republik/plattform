@@ -151,6 +151,7 @@ class PostfinancePayments extends React.Component<
       rematchPayments,
       updatePostfinancePayment,
       hidePostfinancePayment,
+      manuallyMatchPostfinancePayment,
       onChange
     } = props
 
@@ -199,6 +200,7 @@ class PostfinancePayments extends React.Component<
             items={props.data.postfinancePayments.items}
             onMessage={updatePostfinancePayment}
             onHide={hidePostfinancePayment}
+            onMatch={manuallyMatchPostfinancePayment}
           />
         </div>
       </InfiniteScroller>
@@ -250,6 +252,7 @@ const updatePostfinancePaymentMutation = gql`
       mitteilung: $message
     ) {
       id
+      hidden
     }
   }
 `
@@ -270,6 +273,16 @@ const hidePostfinancePaymentMutation = gql`
   mutation hidePostfinancePayment($id: ID!) {
     hidePostfinancePayment(id: $id) {
       id
+      hidden
+    }
+  }
+`
+
+const manuallyMatchPostfinancePaymentMutation = gql`
+  mutation manuallyMatchPostfinancePayment($id: ID!) {
+    manuallyMatchPostfinancePayment(id: $id) {
+      id
+      hidden
     }
   }
 `
@@ -296,17 +309,6 @@ export default compose(
       OwnProps,
       PostfinancePaymentsResult
     >) => {
-      if (data && data.postfinancePayments) {
-        data = {
-          ...data,
-          postfinancePayments: {
-            ...data.postfinancePayments,
-            items: data.postfinancePayments.items.filter(
-              v => v.hidden !== true
-            )
-          }
-        }
-      }
       return {
         data,
         loadMorePayments: () => {
@@ -328,11 +330,13 @@ export default compose(
                 ...previousResult,
                 ...{
                   postfinancePayments: {
+                    ...previousResult.postfinancePayments,
+                    ...fetchMoreResult,
                     items: [
-                      ...previousResult.postfinancePayments
-                        .items,
+                      ...previousResult.postfinancePayments.items,
                       ...(fetchMoreResult as PostfinancePaymentsResult)
                         .postfinancePayments.items
+
                     ]
                   }
                 }
@@ -391,6 +395,35 @@ export default compose(
       }
     }: any) => ({
       hidePostfinancePayment: ({ id }: any) => {
+        if (mutate) {
+          return mutate({
+            variables: { id },
+            refetchQueries: [
+              {
+                query: postfinancePaymentsQuery,
+                variables: {
+                  limit: PAYMENTS_LIMIT,
+                  offset: 0,
+                  orderBy: deserializeOrderBy(orderBy),
+                  dateRange: DateRange.parse(dateRange),
+                  bool: Bool.parse(bool),
+                  search
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
+  }),
+  graphql(manuallyMatchPostfinancePaymentMutation, {
+    props: ({
+      mutate,
+      ownProps: {
+        params: { orderBy, search, dateRange, bool }
+      }
+    }: any) => ({
+      manuallyMatchPostfinancePayment: ({ id }: any) => {
         if (mutate) {
           return mutate({
             variables: { id },

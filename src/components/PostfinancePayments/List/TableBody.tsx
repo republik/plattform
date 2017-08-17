@@ -54,9 +54,13 @@ const interactiveStyles = {
   cursor: 'pointer'
 }
 
-export default ({ items, onMessage, onHide, ...props }: any) =>
+export default ({ items, onMessage, onHide, onMatch, ...props }: any) =>
   <Table {...props}>
-    {items.map((postfinancePayment: any, index: number) =>
+    {items
+      .filter((v: any) => {
+        return v.hidden !== true
+      })
+      .map((postfinancePayment: any, index: number) =>
       <Row
         key={`postfinancePayment-${index}`}
         style={rowStyles(index)}
@@ -101,6 +105,13 @@ export default ({ items, onMessage, onHide, ...props }: any) =>
             onClick={e => onHide({ id: postfinancePayment.id })}
           >
             Verstecken
+          </a>
+          <a
+            className={`${link}`}
+            style={interactiveStyles}
+            onClick={e => onMatch({ id: postfinancePayment.id })}
+          >
+            Matchen
           </a>
         </Cell>}
       </Row>
