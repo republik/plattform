@@ -150,6 +150,8 @@ class PostfinancePayments extends React.Component<
       uploadCSV,
       rematchPayments,
       updatePostfinancePayment,
+      hidePostfinancePayment,
+      manuallyMatchPostfinancePayment,
       onChange
     } = props
 
@@ -197,6 +199,8 @@ class PostfinancePayments extends React.Component<
           <TableBody
             items={props.data.postfinancePayments.items}
             onMessage={updatePostfinancePayment}
+            onHide={hidePostfinancePayment}
+            onMatch={manuallyMatchPostfinancePayment}
           />
         </div>
       </InfiniteScroller>
@@ -224,6 +228,7 @@ const postfinancePaymentsQuery = gql`
       count
       items {
         id
+        hidden
         buchungsdatum
         valuta
         avisierungstext
@@ -247,6 +252,7 @@ const updatePostfinancePaymentMutation = gql`
       mitteilung: $message
     ) {
       id
+      hidden
     }
   }
 `
@@ -260,6 +266,24 @@ const uploadMutation = gql`
 const rematchMutation = gql`
   mutation rematchPayments {
     rematchPayments
+  }
+`
+
+const hidePostfinancePaymentMutation = gql`
+  mutation hidePostfinancePayment($id: ID!) {
+    hidePostfinancePayment(id: $id) {
+      id
+      hidden
+    }
+  }
+`
+
+const manuallyMatchPostfinancePaymentMutation = gql`
+  mutation manuallyMatchPostfinancePayment($id: ID!) {
+    manuallyMatchPostfinancePayment(id: $id) {
+      id
+      hidden
+    }
   }
 `
 
@@ -284,40 +308,44 @@ export default compose(
     }: OptionProps<
       OwnProps,
       PostfinancePaymentsResult
-    >) => ({
-      data,
-      loadMorePayments: () => {
-        if (!data) {
-          throw new Error('data object undefined')
-        }
-        return data.fetchMore({
-          variables: {
-            offset: data.postfinancePayments.items.length
-          },
-          updateQuery: (
-            previousResult: PostfinancePaymentsResult,
-            { fetchMoreResult }
-          ) => {
-            if (!fetchMoreResult) {
-              return previousResult
-            }
-            return {
-              ...previousResult,
-              ...{
-                postfinancePayments: {
-                  items: [
-                    ...previousResult.postfinancePayments
-                      .items,
-                    ...(fetchMoreResult as PostfinancePaymentsResult)
-                      .postfinancePayments.items
-                  ]
+    >) => {
+      return {
+        data,
+        loadMorePayments: () => {
+          if (!data) {
+            throw new Error('data object undefined')
+          }
+          return data.fetchMore({
+            variables: {
+              offset: data.postfinancePayments.items.length
+            },
+            updateQuery: (
+              previousResult: PostfinancePaymentsResult,
+              { fetchMoreResult }
+            ) => {
+              if (!fetchMoreResult) {
+                return previousResult
+              }
+              return {
+                ...previousResult,
+                ...{
+                  postfinancePayments: {
+                    ...previousResult.postfinancePayments,
+                    ...fetchMoreResult,
+                    items: [
+                      ...previousResult.postfinancePayments.items,
+                      ...(fetchMoreResult as PostfinancePaymentsResult)
+                        .postfinancePayments.items
+
+                    ]
+                  }
                 }
               }
             }
-          }
-        })
+          })
+        }
       }
-    })
+    }
   }),
   graphql(updatePostfinancePaymentMutation, {
     props: ({
@@ -359,13 +387,71 @@ export default compose(
       }
     })
   }),
+  graphql(hidePostfinancePaymentMutation, {
+    props: ({
+      mutate,
+      ownProps: {
+        params: { orderBy, search, dateRange, bool }
+      }
+    }: any) => ({
+      hidePostfinancePayment: ({ id }: any) => {
+        if (mutate) {
+          return mutate({
+            variables: { id },
+            refetchQueries: [
+              {
+                query: postfinancePaymentsQuery,
+                variables: {
+                  limit: PAYMENTS_LIMIT,
+                  offset: 0,
+                  orderBy: deserializeOrderBy(orderBy),
+                  dateRange: DateRange.parse(dateRange),
+                  bool: Bool.parse(bool),
+                  search
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
+  }),
+  graphql(manuallyMatchPostfinancePaymentMutation, {
+    props: ({
+      mutate,
+      ownProps: {
+        params: { orderBy, search, dateRange, bool }
+      }
+    }: any) => ({
+      manuallyMatchPostfinancePayment: ({ id }: any) => {
+        if (mutate) {
+          return mutate({
+            variables: { id },
+            refetchQueries: [
+              {
+                query: postfinancePaymentsQuery,
+                variables: {
+                  limit: PAYMENTS_LIMIT,
+                  offset: 0,
+                  orderBy: deserializeOrderBy(orderBy),
+                  dateRange: DateRange.parse(dateRange),
+                  bool: Bool.parse(bool),
+                  search
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
+  }),
   graphql(rematchMutation, {
     props: ({
       mutate,
       ownProps: {
         params: { orderBy, search, dateRange, bool }
       }
-    }) => ({
+    }: any) => ({
       rematchPayments: () => {
         if (mutate) {
           return mutate({

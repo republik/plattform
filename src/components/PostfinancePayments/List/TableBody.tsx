@@ -1,10 +1,23 @@
 import * as React from 'react'
+import { css } from 'glamor'
 import { A, colors } from '@project-r/styleguide'
 import { Table, Row, Cell } from '../../Layout/Table'
 import MessageForm from './MessageForm'
 import { chfFormat } from '../../../lib/utils/formats'
 import routes from '../../../routes'
 const { Link } = routes
+
+const link = css({
+  textDecoration: 'none',
+  color: colors.primary,
+  ':visited': {
+    color: colors.primary
+  },
+  ':hover': {
+    color: colors.secondary
+  }
+})
+
 
 const displayDate = (rawDate: string): string => {
   const date: Date = new Date(rawDate)
@@ -41,9 +54,13 @@ const interactiveStyles = {
   cursor: 'pointer'
 }
 
-export default ({ items, onMessage, ...props }: any) =>
+export default ({ items, onMessage, onHide, onMatch, ...props }: any) =>
   <Table {...props}>
-    {items.map((postfinancePayment: any, index: number) =>
+    {items
+      .filter((v: any) => {
+        return v.hidden !== true
+      })
+      .map((postfinancePayment: any, index: number) =>
       <Row
         key={`postfinancePayment-${index}`}
         style={rowStyles(index)}
@@ -81,6 +98,22 @@ export default ({ items, onMessage, ...props }: any) =>
         <Cell flex="0 0 10%">
           {displayDate(postfinancePayment.createdAt)}
         </Cell>
+        {!postfinancePayment.matched && <Cell flex="0 0 5%">
+          <a
+            className={`${link}`}
+            style={interactiveStyles}
+            onClick={e => onHide({ id: postfinancePayment.id })}
+          >
+            Verstecken
+          </a>
+          <a
+            className={`${link}`}
+            style={interactiveStyles}
+            onClick={e => onMatch({ id: postfinancePayment.id })}
+          >
+            Matchen
+          </a>
+        </Cell>}
       </Row>
     )}
   </Table>

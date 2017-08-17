@@ -4,7 +4,7 @@ import { compose } from 'redux'
 import { createContainer, createTile } from './Grid'
 import Me from '../Auth/Me'
 import {
-  R,
+  BrandMark,
   Interaction,
   A,
   colors
@@ -64,7 +64,7 @@ export default ({ children, style, ...props }: any) =>
   <Header {...props}>
     <HeaderSection flex="0 0 70px">
       <span style={logoStyles}>
-        <R />
+        <BrandMark />
       </span>
     </HeaderSection>
     <HeaderSection flex="1 1 auto">
@@ -83,6 +83,11 @@ export default ({ children, style, ...props }: any) =>
         <Link route="postfinance-payments">
           <a className={`${link}`} style={navLinkStyles}>
             Postfinance Payments
+          </a>
+        </Link>
+        <Link route="merge-users">
+          <a className={`${link}`} style={navLinkStyles}>
+            Users zusammenführen
           </a>
         </Link>
       </nav>
