@@ -40,7 +40,7 @@ const Checked = ({ disabled }) =>
   <svg width="18" height="18" viewBox="0 0 18 18">
     <path
       d="M0 0h18v18H0V0zm7 14L2 9.192l1.4-1.346L7 11.308 14.6 4 16 5.346 7 14z"
-      fill={disabled ? colors.divider : colors.primary}
+      fill={disabled ? colors.disabled : colors.primary}
       fillRule="evenodd"
     />
   </svg>
