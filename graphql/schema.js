@@ -1,4 +1,7 @@
 const typeDefinitions = `
+scalar Date
+scalar DateTime
+
 schema {
   query: RootQuerys
   mutation: RootMutations
@@ -7,31 +10,17 @@ schema {
 
 type RootQuerys {
   me: User
-  articles: [Article]!
-  article(id: ID!): Article!
+  repos: [Repo]!
+  repo(id: ID!): Repo!
+  # published documents
+  documents: [Document]!
 }
 
-type Publication {
-  commit: Commit!
-  publishedAt: DateTime!
-  scheduledPublishAt: DateTime!
-}
-
-# is a article.xxx in a repo
-type Article {
-  id: ID!                       # orbiting/haku-content-test
+type Repo {
+  id: ID!
   commits: [Commit!]!
   milestones: [Milestone!]!
   uncommittedChanges: [User!]!
-  document: Document!
-}
-
-type Document {
-  commit: Commit!
-  content: String!     # AST of /article.xxx
-  title: String!       # convenience from content
-#  readingMinutes: Int!
-#  fbTitle: String
 }
 
 type Milestone {
@@ -48,7 +37,34 @@ type Commit {
   author: Autor!
   date: DateTime!
   document: Document!
+# files: [File]!
 }
+
+interface FileInterface {
+  encoding: String!
+  content: String!
+  meta: Meta!
+}
+
+type Document implements FileInterface {
+  encoding: String!
+  # AST of /article.xxx
+  content: String!
+  meta: Meta!
+  commit: Commit!
+}
+
+type Meta {
+  title: String!
+#  readingMinutes: Int!
+#  fbTitle: String
+}
+
+#type File implements FileInterface {
+#  encoding: String!
+#  content: String!
+#  meta: Meta!
+#}
 
 type Autor {
   name: String!
@@ -56,59 +72,9 @@ type Autor {
   user: User
 }
 
-type RootMutations {
-  signIn(email: String!): SignInResponse!
-  signOut: Boolean!
-
-  commit(
-    articleId: ID!
-    parentId: ID!
-    message: String!
-    content: String!   # AST
-    # files: [FileInput!]! # FileInput: path, content, encoding
-  ): Commit!
-
-  milestone(
-    articleId: ID!
-    name: String!
-    commitId: ID!
-    message: String!
-    action: Action!
-  ): Milestone!
-
-  # creates a merge commits with the provided parents, message and content.
-  # The content is submitted as a blob and a new tree is created
-  # setting the blob at path. The tree is based on the tree of the first
-  # parent's commit.
-  # If one of the parents is the HEAD of the provided branch, the branch is
-  # fast-forwarded to the new merge-commit. Otherwise a new branch is created.
-  merge(
-    articleId: ID!
-    parentIds: [ID!]!
-    content: String!
-    message: String!
-  ): Commit!
-
-  # Inform about my uncommited changes on the path.
-  # Use path without branch prefix.
-  uncommittedChanges(
-    articleId: ID!
-    action: Action!
-  ): Boolean!
-}
-
-type RootSubscription {
-  # Provides updates to the list of users
-  # with uncommited changes on the path.
-  # Use path without branch prefix.
-  uncommittedChanges(
-    articleId: ID!
-  ): UncommittedChangeUpdate!
-}
-
-
-type SignInResponse {
-  phrase: String!
+type UncommittedChangeUpdate {
+  repoId: ID!
+  action: Action!
 }
 
 type User {
@@ -120,14 +86,74 @@ type User {
   githubScope: String
 }
 
+type SignInResponse {
+  phrase: String!
+}
+
 enum Action {
   create
   delete
 }
 
-type UncommittedChangeUpdate {
-  articleId: ID!
-  action: Action!
+
+type RootMutations {
+  signIn(email: String!): SignInResponse!
+  signOut: Boolean!
+
+  commit(
+    repoId: ID!
+    parentId: ID!
+    message: String!
+    document: DocumentInput!
+    # files: [FileInput!]!     # FileInput
+  ): Commit!
+
+  placeMilestone(
+    repoId: ID!
+    commitId: ID!
+    name: String!
+    message: String!
+  ): Milestone!
+
+  unplaceMilestone(
+    repoId: ID!
+    name: String!
+  ): Milestone!
+
+  # creates a merge commits with the provided parents, message and content.
+  # The content is submitted as a blob and a new tree is created
+  # setting the blob at path. The tree is based on the tree of the first
+  # parent's commit.
+  # If one of the parents is the HEAD of the provided branch, the branch is
+  # fast-forwarded to the new merge-commit. Otherwise a new branch is created.
+  merge(
+    repoId: ID!
+    parentIds: [ID!]!
+    message: String!
+    document: DocumentInput!
+    # files: [FileInput!]!     # FileInput
+  ): Commit!
+
+  # Inform about my uncommited changes in the repo
+  uncommittedChanges(
+    repoId: ID!
+    action: Action!
+  ): Boolean!
+}
+
+# implements FileInterface
+input DocumentInput {
+  encoding: String!
+  # AST of /article.xxx
+  content: String!
+}
+
+type RootSubscription {
+  # Provides updates to the list of users
+  # with uncommited changes in the repo
+  uncommittedChanges(
+    repoId: ID!
+  ): UncommittedChangeUpdate!
 }
 `
 module.exports = [typeDefinitions]
