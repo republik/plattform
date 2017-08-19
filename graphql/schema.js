@@ -8,9 +8,10 @@ schema {
   subscription: RootSubscription
 }
 
+
 type RootQuerys {
   me: User
-  repos: [Repo]!
+  repos(first: Int!): [Repo]!
   repo(id: ID!): Repo!
   # published documents
   documents: [Document]!
@@ -39,6 +40,7 @@ type Commit {
   document: Document!
 # files: [File]!
 }
+
 
 interface FileInterface {
   encoding: String!
