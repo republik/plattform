@@ -68,7 +68,8 @@ module.exports = {
                 : [],
               message,
               author,
-              date: new Date(author.date)
+              date: new Date(author.date),
+              repo
             }))
           )
       })
