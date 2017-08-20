@@ -19,7 +19,7 @@ type RootQuerys {
 
 type Repo {
   id: ID!
-  commits: [Commit!]!
+  commits(page: Int): [Commit!]!
   milestones: [Milestone!]!
   uncommittedChanges: [User!]!
 }

@@ -3,7 +3,7 @@ const GitHub = require('github-api')
 const { descending } = require('d3-array')
 
 module.exports = {
-  commits: async (repo, args, {user}) => {
+  commits: async (repo, { page }, { user }) => {
     const refsQuery = `
       query repository(
         $login: String!,
@@ -55,7 +55,7 @@ module.exports = {
           .getRepo(login, repoName)
           .listCommits({
             sha: oid,
-            per_page: 100
+            page: page || 1
           })
           .then(response => response ? response.data : response)
           .then(commits => commits
