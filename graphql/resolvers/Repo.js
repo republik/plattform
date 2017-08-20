@@ -1,6 +1,7 @@
 const { createGithubFetchForUser } = require('../../lib/github')
 const GitHub = require('github-api')
 const { descending } = require('d3-array')
+const uniqBy = require('lodash/uniqBy')
 
 module.exports = {
   commits: async (repo, { page }, { user }) => {
@@ -72,7 +73,7 @@ module.exports = {
       })
     )
       .then(commits => [].concat.apply([], commits))
-      .then(commits => [...new Set(commits)])
+      .then(commits => uniqBy(commits, 'id'))
       .then(commits => commits.sort( (a, b) => descending(a.date, b.date) ))
   },
   uncommittedChanges: async ({owner: login, name: repository}, {path}, {redis, pgdb}) => {
