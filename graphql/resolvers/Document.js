@@ -1,5 +1,7 @@
 const Immutable = require('immutable')
-const TreeUtils = require('immutable-treeutils')
+// https://github.com/lukasbuenger/immutable-treeutils/issues/8
+// const TreeUtils = require('immutable-treeutils')
+const TreeUtils = require('../../lib/TreeUtils')
 
 module.exports = {
   meta: async (doc, args) => {
