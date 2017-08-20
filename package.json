@@ -12,6 +12,7 @@
     "connect-pg-simple": "^3.1.2",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
+    "d3-array": "^1.2.0",
     "d3-time-format": "^2.0.5",
     "db-migrate": "^0.10.0-beta.21",
     "db-migrate-pg": "^0.2.4",

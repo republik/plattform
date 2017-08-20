@@ -1,5 +1,6 @@
 const { createGithubFetchForUser } = require('../../lib/github')
 const GitHub = require('github-api')
+const { descending } = require('d3-array')
 
 module.exports = {
   commits: async (repo, args, {user}) => {
@@ -72,6 +73,7 @@ module.exports = {
     )
       .then(commits => [].concat.apply([], commits))
       .then(commits => [...new Set(commits)])
+      .then(commits => commits.sort( (a, b) => descending(a.date, b.date) ))
   },
   uncommittedChanges: async ({owner: login, name: repository}, {path}, {redis, pgdb}) => {
     const key = `${login}/${repository}/${path}`
