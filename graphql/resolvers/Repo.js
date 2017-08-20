@@ -56,6 +56,7 @@ module.exports = {
           .getRepo(login, repoName)
           .listCommits({
             sha: oid,
+            per_page: 30,
             page: page || 1
           })
           .then(response => response ? response.data : response)
