@@ -70,7 +70,7 @@ module.exports = {
           )
       })
     )
-      .then(commits => [].concat.apply([], ...commits))
+      .then(commits => [].concat.apply([], commits))
       .then(commits => [...new Set(commits)])
   },
   uncommittedChanges: async ({owner: login, name: repository}, {path}, {redis, pgdb}) => {
