@@ -75,7 +75,7 @@ module.exports = {
     )
       .then(commits => [].concat.apply([], commits))
       .then(commits => uniqBy(commits, 'id'))
-      .then(commits => commits.sort( (a, b) => descending(a.date, b.date) ))
+      .then(commits => commits.sort((a, b) => descending(a.date, b.date)))
   },
   uncommittedChanges: async ({owner: login, name: repository}, {path}, {redis, pgdb}) => {
     const key = `${login}/${repository}/${path}`
