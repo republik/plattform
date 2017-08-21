@@ -10,7 +10,8 @@
     "heroku-postbuild": "npm run build",
     "test": "babel-tape-runner \"?(lib|pages)/**/*.test.js\"",
     "standardize": "standard --fix",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "translations": "gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json"
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,7 @@
     "babel-preset-env": "^1.6.0",
     "babel-tape-runner": "^2.0.1",
     "eslint-plugin-import": "^2.7.0",
+    "gsheets": "^2.0.0",
     "husky": "^0.14.3",
     "lint-staged": "^4.0.3",
     "nodemon": "^1.11.0",
@@ -45,6 +47,7 @@
     "d3-format": "^1.2.0",
     "d3-time-format": "^2.0.5",
     "dotenv": "^4.0.0",
+    "email-validator": "^1.1.1",
     "express": "^4.15.4",
     "express-basic-auth": "^1.1.1",
     "glamor": "^2.20.39",
