@@ -1,6 +1,6 @@
 import { colors } from '@project-r/styleguide'
 
-const button = {
+const formatButton = {
   cursor: 'pointer',
   color: colors.secondary,
   transition: 'color 0.1s, opacity 0.1s',
@@ -17,15 +17,15 @@ const button = {
 }
 
 export default {
-  button,
+  formatButton,
   markButton: {
     textAlign: 'center',
     display: 'inline-block',
     width: '30px',
-    ...button
+    ...formatButton
   },
   blockButton: {
     display: 'block',
-    ...button
+    ...formatButton
   }
 }
