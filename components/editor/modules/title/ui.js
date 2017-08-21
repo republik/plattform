@@ -4,7 +4,9 @@ import { createBlockButton } from '../utils'
 import { TITLE } from './'
 import styles from '../styles'
 
-export const TitleButton = createBlockButton(TITLE)(
+export const TitleButton = createBlockButton({
+  type: TITLE
+})(
   ({ active, disabled, ...props }) =>
     <span
       {...{...css(styles.blockButton), ...props}}
@@ -14,7 +16,3 @@ export const TitleButton = createBlockButton(TITLE)(
       Title
     </span>
 )
-
-export default {
-  TitleButton
-}

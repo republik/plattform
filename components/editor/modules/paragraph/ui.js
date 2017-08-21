@@ -4,7 +4,9 @@ import { createBlockButton } from '../utils'
 import { PARAGRAPH } from './'
 import styles from '../styles'
 
-export const ParagraphButton = createBlockButton(PARAGRAPH)(
+export const ParagraphButton = createBlockButton({
+  type: PARAGRAPH
+})(
   ({ active, disabled, ...props }) =>
     <span
       {...{...css(styles.blockButton), ...props}}
@@ -14,7 +16,3 @@ export const ParagraphButton = createBlockButton(PARAGRAPH)(
       Paragraph
     </span>
 )
-
-export default {
-  ParagraphButton
-}

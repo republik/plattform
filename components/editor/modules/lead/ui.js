@@ -4,7 +4,9 @@ import { createBlockButton } from '../utils'
 import { LEAD } from './'
 import styles from '../styles'
 
-export const LeadButton = createBlockButton(LEAD)(
+export const LeadButton = createBlockButton({
+  type: LEAD
+})(
   ({ active, disabled, ...props }) =>
     <span
       {...{...css(styles.blockButton), ...props}}

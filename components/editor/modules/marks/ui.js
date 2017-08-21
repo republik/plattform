@@ -9,7 +9,9 @@ import styles from '../styles'
 import { createMarkButton } from '../utils'
 import { BOLD, ITALIC, UNDERLINE, STRIKETHROUGH } from './'
 
-export const BoldButton = createMarkButton(BOLD)(
+export const BoldButton = createMarkButton({
+  type: BOLD
+})(
   ({ active, disabled, ...props }) =>
     <span
       {...{...css(styles.markButton), ...props}}
@@ -20,7 +22,9 @@ export const BoldButton = createMarkButton(BOLD)(
     </span>
 )
 
-export const ItalicButton = createMarkButton(ITALIC)(
+export const ItalicButton = createMarkButton({
+  type: ITALIC
+})(
   ({ active, disabled, ...props }) =>
     <span
       {...{...css(styles.markButton), ...props}}
@@ -31,7 +35,9 @@ export const ItalicButton = createMarkButton(ITALIC)(
     </span>
 )
 
-export const UnderlineButton = createMarkButton(UNDERLINE)(
+export const UnderlineButton = createMarkButton({
+  type: UNDERLINE
+})(
   ({ active, disabled, ...props }) =>
     <span
       {...{...css(styles.markButton), ...props}}
@@ -42,7 +48,9 @@ export const UnderlineButton = createMarkButton(UNDERLINE)(
     </span>
 )
 
-export const StrikethroughButton = createMarkButton(STRIKETHROUGH)(
+export const StrikethroughButton = createMarkButton({
+  type: STRIKETHROUGH
+})(
   ({ active, disabled, ...props }) =>
     <span
       {...{...css(styles.markButton), ...props}}
