@@ -1,5 +1,5 @@
 {
-  "updated": "2017-08-21T14:53:45.618Z",
+  "updated": "2017-08-21T15:58:37.053Z",
   "title": "live",
   "data": [
     {
@@ -41,6 +41,14 @@
     {
       "key": "me/signedinAs",
       "value": "Sie sind angemeldet als: {nameOrEmail}"
+    },
+    {
+      "key": "withAuthorization/title",
+      "value": "Geschützter Bereich"
+    },
+    {
+      "key": "withAuthorization/authorizedRoles",
+      "value": "Zugelassene Rollen: {roles}"
     }
   ]
 }

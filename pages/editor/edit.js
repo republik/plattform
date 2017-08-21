@@ -5,6 +5,7 @@ import App from '../../lib/App'
 import lorem from '../../lib/editor/templates/lorem.json'
 import Editor from '../../lib/editor/components/Editor'
 import EditorFrame from '../../lib/components/EditorFrame'
+import withAuthorization from '../../components/Auth/withAuthorization'
 
 const getInitialState = () => {
   resetKeyGenerator()
@@ -38,4 +39,4 @@ class EditorPage extends Component {
   }
 }
 
-export default withData(EditorPage)
+export default withData(withAuthorization(['editor'])(EditorPage))
