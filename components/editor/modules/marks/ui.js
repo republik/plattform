@@ -5,9 +5,9 @@ import UnderlineIcon from 'react-icons/lib/fa/underline'
 import StrikethroughIcon from 'react-icons/lib/fa/strikethrough'
 import { css } from 'glamor'
 
-import styles from '../styles'
-import { createMarkButton } from '../utils'
-import { BOLD, ITALIC, UNDERLINE, STRIKETHROUGH } from './'
+import styles from '../../styles'
+import { createMarkButton } from '../../utils'
+import { BOLD, ITALIC, UNDERLINE, STRIKETHROUGH } from './constants'
 
 export const BoldButton = createMarkButton({
   type: BOLD

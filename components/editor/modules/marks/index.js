@@ -6,44 +6,40 @@ import {
   UnderlineButton,
   StrikethroughButton
 } from './ui'
+import { BOLD, ITALIC, UNDERLINE, STRIKETHROUGH } from './constants'
 
-export const BOLD = 'bold'
-
-export const bold = {
+const bold = {
   match: matchMark(BOLD),
   render: ({ children }) => <strong>{ children }</strong>
 }
 
-export const ITALIC = 'italic'
-
-export const italic = {
+const italic = {
   match: matchMark(ITALIC),
   render: ({ children }) => <em>{ children }</em>
 }
 
-export const UNDERLINE = 'underline'
-
-export const underline = {
+const underline = {
   match: matchMark(UNDERLINE),
   render: ({ children }) => <u>{ children }</u>
 }
 
-export const STRIKETHROUGH = 'strikethrough'
-
-export const strikethrough = {
+const strikethrough = {
   match: matchMark(STRIKETHROUGH),
   render: ({ children }) => <del>{ children }</del>
 }
 
-export default {
+export {
+  BOLD,
+  ITALIC,
+  UNDERLINE,
+  STRIKETHROUGH,
   BoldButton,
   ItalicButton,
   UnderlineButton,
-  StrikethroughButton,
-  bold,
-  italic,
-  underline,
-  strikethrough,
+  StrikethroughButton
+}
+
+export default {
   plugins: [
     pluginFromRules([
       bold,

@@ -1,17 +1,19 @@
 import { LeadButton } from './ui'
 import { matchBlock, pluginFromRules } from '../../utils'
-import { H1 } from '@project-r/styleguide'
-
-export const LEAD = 'lead'
+import { Lead } from '@project-r/styleguide'
+import { LEAD } from './constants'
 
 export const lead = {
   match: matchBlock(LEAD),
-  render: ({ children }) => <H1>{ children }</H1>
+  render: ({ children }) => <Lead>{ children }</Lead>
+}
+
+export {
+  LEAD,
+  LeadButton
 }
 
 export default {
-  LeadButton,
-  lead,
   plugins: [
     pluginFromRules([
       lead

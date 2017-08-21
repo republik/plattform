@@ -1,8 +1,8 @@
 import React from 'react'
 import { css } from 'glamor'
-import { createBlockButton } from '../utils'
-import { TITLE } from './'
-import styles from '../styles'
+import { createBlockButton } from '../../utils'
+import { TITLE } from './constants'
+import styles from '../../styles'
 
 export const TitleButton = createBlockButton({
   type: TITLE

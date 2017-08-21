@@ -1,8 +1,8 @@
 import React from 'react'
 import { css } from 'glamor'
-import { createBlockButton } from '../utils'
-import { LEAD } from './'
-import styles from '../styles'
+import { createBlockButton } from '../../utils'
+import { LEAD } from './constants'
+import styles from '../../styles'
 
 export const LeadButton = createBlockButton({
   type: LEAD

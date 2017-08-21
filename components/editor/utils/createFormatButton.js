@@ -15,6 +15,7 @@ export default ({
 }) =>
   Component => {
     const FormatButton = props => {
+      const { state, onChange, ...propsToPass } = props
       const disabled = isDisabled(props)
       const active = isActive(props)
       const onMouseDown = !disabled
@@ -22,7 +23,7 @@ export default ({
       : preventDefault
       return (
         <Component
-          {...props}
+          {...propsToPass}
           active={active}
           disabled={disabled}
           onMouseDown={onMouseDown}

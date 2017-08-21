@@ -27,5 +27,21 @@ export default {
   blockButton: {
     display: 'block',
     ...formatButton
+  },
+  container: {
+    width: '100vw',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'stretch'
+  },
+  sidebar: {
+    flex: '0 0 180px',
+    padding: '15px 0 0 7px',
+    borderRight: `1px solid ${colors.divider}`
+  },
+  document: {
+    height: '100vh',
+    overflowY: 'scroll',
+    flex: '1 0 auto'
   }
 }
