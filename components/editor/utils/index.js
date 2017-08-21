@@ -1,6 +1,8 @@
 import createFormatButton from './createFormatButton'
 import createBlockButton from './createBlockButton'
 import createMarkButton from './createMarkButton'
+import createInlineButton from './createInlineButton'
+import createPropertyForm from './createPropertyForm'
 
 export const match = kind => type => node =>
   node.kind === kind && node.type === type
@@ -24,7 +26,9 @@ export const pluginFromRules = rules =>
 export {
   createFormatButton,
   createBlockButton,
-  createMarkButton
+  createMarkButton,
+  createInlineButton,
+  createPropertyForm
 }
 
 export default {

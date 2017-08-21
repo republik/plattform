@@ -32,8 +32,8 @@ class Editor extends Component {
     super(props)
     this.state = getInitialState(props)
     this.changeHandler = this.changeHandler.bind(this)
-    this.claimLockHander = this.changeHandler.bind(this)
-    this.releaseLockHander = this.releaseLockHander.bind(this)
+    this.claimLockHandler = this.claimLockHandler.bind(this)
+    this.releaseLockHandler = this.releaseLockHandler.bind(this)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -60,7 +60,7 @@ class Editor extends Component {
     }
   }
 
-  claimLockHander (stateToLock) {
+  claimLockHandler (stateToLock) {
     this.setState(
       () => ({
         lockedState: stateToLock
@@ -68,7 +68,7 @@ class Editor extends Component {
     )
   }
 
-  releaseLockHander (stateToRelease, shouldNormalize, schema) {
+  releaseLockHandler (stateToRelease, shouldNormalize, schema) {
     this.setState(
       () => ({
         lockedState: null

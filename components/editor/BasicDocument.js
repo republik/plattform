@@ -14,25 +14,35 @@ import lead, {
 import paragraph, {
   ParagraphButton
 } from './modules/paragraph'
+import link, {
+  LinkButton,
+  LinkForm
+} from './modules/link'
 
 const plugins = [
   ...marks.plugins,
   ...title.plugins,
   ...lead.plugins,
-  ...paragraph.plugins
+  ...paragraph.plugins,
+  ...link.plugins
 ]
 
 const textFormatButtons = [
   BoldButton,
   ItalicButton,
   UnderlineButton,
-  StrikethroughButton
+  StrikethroughButton,
+  LinkButton
 ]
 
 const blockFormatButtons = [
   TitleButton,
   LeadButton,
   ParagraphButton
+]
+
+const propertyForms = [
+  LinkForm
 ]
 
 export default ({
@@ -69,6 +79,19 @@ export default ({
               state={state}
               onChange={onChange}
             />
+          ))
+        }
+      </Interaction.P>
+      <Interaction.P>
+        <Label>Properties</Label>
+        <br />
+        {
+          propertyForms.map((Form, i) => (
+            <Form
+              key={`form-${i}`}
+              state={state}
+              onChange={onChange}
+              />
           ))
         }
       </Interaction.P>

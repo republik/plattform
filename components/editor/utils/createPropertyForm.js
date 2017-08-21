@@ -3,8 +3,7 @@ import PropTypes from 'prop-types'
 
 const propTypes = {
   state: PropTypes.object.isRequired,
-  onClaimLock: PropTypes.func,
-  onReleaseLock: PropTypes.func
+  onChange: PropTypes.func
 }
 
 export default ({
