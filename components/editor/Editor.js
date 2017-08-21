@@ -55,7 +55,7 @@ class Editor extends Component {
     if (!lockedState && state !== nextState) {
       onChange && onChange(nextState)
       if (state.document !== nextState.document) {
-        onDocumentChange && onDocumentChange(nextState)
+        onDocumentChange && onDocumentChange(nextState.document, nextState)
       }
     }
   }
