@@ -6,6 +6,8 @@ export const match = kind => type => node =>
 
 export const matchBlock = match('block')
 
+export const matchMark = match('mark')
+
 export const matchDocument = node =>
   node.kind === 'document'
 
