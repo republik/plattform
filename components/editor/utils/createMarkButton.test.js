@@ -54,7 +54,7 @@ const rawDoc = {
 
 const initialState = Raw.deserialize(rawDoc, { terse: true })
 const Button = () => <span />
-const MarkButton = createMarkButton('bold')(Button)
+const MarkButton = createMarkButton({ type: 'bold' })(Button)
 
 test('utils.createMarkButton: blurred', assert => {
   assert.plan(1)

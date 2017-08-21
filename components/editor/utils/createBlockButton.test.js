@@ -54,13 +54,11 @@ const rawDoc = {
 
 const initialState = Raw.deserialize(rawDoc, { terse: true })
 const Button = () => <span />
-const BlockButton = createBlockButton('lead')(Button)
+const BlockButton = createBlockButton({ type: 'lead' })(Button)
 
 test('utils.createBlockButton: blurred', assert => {
   assert.plan(1)
   const state = initialState
-
-  const BlockButton = createBlockButton('lead')(Button)
 
   const wrapper = shallow(
     <BlockButton

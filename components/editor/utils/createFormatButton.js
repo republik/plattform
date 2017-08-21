@@ -8,30 +8,28 @@ const propTypes = {
   onChange: PropTypes.func
 }
 
-export default (
-  Component,
-  {
-    isDisabled,
-    isActive,
-    reducer
-  }
-) => {
-  const FormatButton = props => {
-    const disabled = isDisabled(props)
-    const active = isActive(props)
-    const onMouseDown = !disabled
+export default ({
+  isDisabled,
+  isActive,
+  reducer
+}) =>
+  Component => {
+    const FormatButton = props => {
+      const disabled = isDisabled(props)
+      const active = isActive(props)
+      const onMouseDown = !disabled
       ? reducer(props)
       : preventDefault
-    return (
-      <Component
-        {...props}
-        active={active}
-        disabled={disabled}
-        onMouseDown={onMouseDown}
+      return (
+        <Component
+          {...props}
+          active={active}
+          disabled={disabled}
+          onMouseDown={onMouseDown}
       />
-    )
-  }
-  FormatButton.propTypes = propTypes
+      )
+    }
+    FormatButton.propTypes = propTypes
 
-  return FormatButton
-}
+    return FormatButton
+  }

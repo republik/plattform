@@ -13,15 +13,12 @@ test('utils.createFormatButton', assert => {
 
   const onChange = spy()
 
-  const FormatButton = createFormatButton(
-    Button,
-    {
-      isDisabled: ({ state }) => state.disabled,
-      isActive: ({ state }) => state.active,
-      reducer: props => event =>
-        props.onChange(props, event)
-    }
-  )
+  const FormatButton = createFormatButton({
+    isDisabled: ({ state }) => state.disabled,
+    isActive: ({ state }) => state.active,
+    reducer: props => event =>
+      props.onChange(props, event)
+  })(Button)
 
   const wrapper = shallow(
     <FormatButton
