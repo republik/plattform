@@ -25,6 +25,11 @@ const Document = ({ children }) => (
 )
 
 class Editor extends Component {
+  constructor (props) {
+    super(props)
+    this.changeHandler = this.changeHandler.bind(this)
+  }
+
   changeHandler (nextState) {
     const { state, onChange, onDocumentChange } = this.props
 
