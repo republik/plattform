@@ -16,7 +16,3 @@ export const LeadButton = createBlockButton({
       Lead
     </span>
 )
-
-export default {
-  LeadButton
-}

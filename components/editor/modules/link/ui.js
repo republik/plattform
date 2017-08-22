@@ -69,7 +69,3 @@ export const LinkForm = createPropertyForm({
     return !state.inlines.some(matchInline(LINK))
   }
 })(Form)
-
-export default {
-  LinkButton
-}
