@@ -1,5 +1,5 @@
 import { LinkButton, LinkForm } from './ui'
-import { matchInline, pluginFromRules } from '../../utils'
+import { matchInline } from '../../utils'
 import { A } from '@project-r/styleguide'
 import { LINK } from './constants'
 
@@ -20,8 +20,12 @@ export {
 
 export default {
   plugins: [
-    pluginFromRules([
-      link
-    ])
+    {
+      schema: {
+        rules: [
+          link
+        ]
+      }
+    }
   ]
 }

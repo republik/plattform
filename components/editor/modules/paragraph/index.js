@@ -1,5 +1,5 @@
 import { ParagraphButton } from './ui'
-import { matchBlock, pluginFromRules } from '../../utils'
+import { matchBlock } from '../../utils'
 import { P } from '@project-r/styleguide'
 import { PARAGRAPH } from './constants'
 
@@ -15,8 +15,12 @@ export {
 
 export default {
   plugins: [
-    pluginFromRules([
-      paragraph
-    ])
+    {
+      schema: {
+        rules: [
+          paragraph
+        ]
+      }
+    }
   ]
 }

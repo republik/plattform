@@ -1,5 +1,5 @@
 import { LeadButton } from './ui'
-import { matchBlock, pluginFromRules } from '../../utils'
+import { matchBlock } from '../../utils'
 import { Lead } from '@project-r/styleguide'
 import { LEAD } from './constants'
 
@@ -15,8 +15,12 @@ export {
 
 export default {
   plugins: [
-    pluginFromRules([
-      lead
-    ])
+    {
+      schema: {
+        rules: [
+          lead
+        ]
+      }
+    }
   ]
 }

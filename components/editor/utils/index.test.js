@@ -1,5 +1,5 @@
 import test from 'tape'
-import { match, matchDocument, pluginFromRules } from './'
+import { match, matchDocument } from './'
 
 test('utils.match', assert => {
   assert.plan(3)
@@ -36,19 +36,5 @@ test('utils.matchDocument', assert => {
     matchDocument({ kind: 'foo' }),
     false,
     'returns false if kind is not `document`'
-  )
-})
-
-test('utils.pluginFromRules', assert => {
-  assert.plan(1)
-
-  assert.deepEqual(
-    pluginFromRules(['a', 'b', 'c']),
-    {
-      schema: {
-        rules: ['a', 'b', 'c']
-      }
-    },
-    'returns a slate-compatibe schema structure with all arguments as rules'
   )
 })

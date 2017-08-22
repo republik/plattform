@@ -1,5 +1,5 @@
 import React from 'react'
-import { matchMark, pluginFromRules } from '../../utils'
+import { matchMark } from '../../utils'
 import {
   BoldButton,
   ItalicButton,
@@ -41,11 +41,15 @@ export {
 
 export default {
   plugins: [
-    pluginFromRules([
-      bold,
-      italic,
-      underline,
-      strikethrough
-    ])
+    {
+      schema: {
+        rules: [
+          bold,
+          italic,
+          underline,
+          strikethrough
+        ]
+      }
+    }
   ]
 }

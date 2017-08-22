@@ -1,5 +1,5 @@
 import { TitleButton } from './ui'
-import { matchBlock, pluginFromRules } from '../../utils'
+import { matchBlock } from '../../utils'
 import { H1 } from '@project-r/styleguide'
 import { TITLE } from './constants'
 
@@ -15,8 +15,12 @@ export {
 
 export default {
   plugins: [
-    pluginFromRules([
-      title
-    ])
+    {
+      schema: {
+        rules: [
+          title
+        ]
+      }
+    }
   ]
 }

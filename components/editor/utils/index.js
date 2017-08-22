@@ -16,27 +16,10 @@ export const matchInline = match('inline')
 export const matchDocument = node =>
   node.kind === 'document'
 
-export const pluginFromRules = rules =>
-  ({
-    schema: {
-      rules
-    }
-  })
-
 export {
   createFormatButton,
   createBlockButton,
   createMarkButton,
   createInlineButton,
   createPropertyForm
-}
-
-export default {
-  match,
-  matchBlock,
-  matchDocument,
-  pluginFromRules,
-  createFormatButton,
-  createBlockButton,
-  createMarkButton
 }
