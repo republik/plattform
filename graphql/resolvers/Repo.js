@@ -78,6 +78,51 @@ module.exports = {
       .then(commits => uniqBy(commits, 'id'))
       .then(commits => commits.sort((a, b) => descending(a.date, b.date)))
   },
+  milestones: async (repo, args, { user }) => {
+    const refsQuery = `
+      query repository(
+        $login: String!,
+        $repoName: String!,
+        $first: Int
+      ) {
+        repository(owner: $login, name: $repoName) {
+          refs(refPrefix: "refs/tags/", first: $first) {
+            nodes {
+              name
+              target {
+                ... on Tag {
+                  oid
+                }
+              }
+            }
+          }
+        }
+      }
+    `
+    const [login, repoName] = repo.id.split('/')
+    const variables = {
+      login,
+      repoName,
+      first: 100
+    }
+    const {
+      errors,
+      data: {
+        repository: {
+          refs: {
+            nodes: refs
+          }
+        }
+      }
+    } = await createGithubFetchForUser(user)({ query: refsQuery, variables })
+    if (errors) {
+      throw new Error(JSON.stringify(errors))
+    }
+
+    // TODO: check if commits are requested and get them in bulk
+
+    return refs
+  },
   uncommittedChanges: async ({owner: login, name: repository}, {path}, {redis, pgdb}) => {
     const key = `${login}/${repository}/${path}`
     const userIds = await redis.zrangeAsync(key, 0, -1)
