@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Raw, resetKeyGenerator } from 'slate'
 import App from '../lib/App'
 import lorem from '../lib/editor/templates/lorem.json'
-import Editor from '../lib/editor/components/Editor'
+import Editor from '../components/editor/Editor'
 
 const getInitialState = () => {
   resetKeyGenerator()
