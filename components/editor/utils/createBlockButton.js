@@ -14,7 +14,7 @@ const reducer = blockType =>
     event => {
       const { onChange, state } = props
       event.preventDefault()
-      return onChange && onChange(
+      return onChange(
         state
           .transform()
           .setBlock(blockType)

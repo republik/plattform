@@ -20,14 +20,14 @@ const reducer = inlineType =>
       const active = isActive(inlineType)(props)
 
       if (active) {
-        return onChange && onChange(
+        return onChange(
           state
             .transform()
             .unwrapInline(inlineType)
             .apply()
         )
       } else if (state.isExpanded) {
-        return onChange && onChange(state
+        return onChange(state
           .transform()
           .wrapInline({
             type: inlineType

@@ -8,6 +8,10 @@ const propTypes = {
   onChange: PropTypes.func
 }
 
+const defaultProps = {
+  onChange: () => true
+}
+
 export default ({
   isDisabled,
   isActive,
@@ -31,6 +35,7 @@ export default ({
       )
     }
     FormatButton.propTypes = propTypes
+    FormatButton.defaultProps = defaultProps
 
     return FormatButton
   }

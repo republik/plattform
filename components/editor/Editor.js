@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Editor as SlateEditor } from 'slate'
 import { css } from 'glamor'
 import BasicDocument from './BasicDocument'
@@ -28,9 +29,9 @@ class Editor extends Component {
     const { state, onChange, onDocumentChange } = this.props
 
     if (state !== nextState) {
-      onChange && onChange(nextState)
+      onChange(nextState)
       if (state.document !== nextState.document) {
-        onDocumentChange && onDocumentChange(nextState.document, nextState)
+        onDocumentChange(nextState.document, nextState)
       }
     }
   }
@@ -50,6 +51,17 @@ class Editor extends Component {
       <UI {...props} />
     )
   }
+}
+
+Editor.propTypes = {
+  state: PropTypes.object.isRequired,
+  onChange: PropTypes.func,
+  onDocumentChange: PropTypes.func
+}
+
+Editor.defaultProps = {
+  onChange: () => true,
+  onDocumentChange: () => true
 }
 
 export default Editor
