@@ -50,6 +50,7 @@ export const image = {
 }
 
 export {
+  IMAGE,
   ImageForm,
   ImageButton
 }
