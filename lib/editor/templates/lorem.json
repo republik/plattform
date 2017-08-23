@@ -2,7 +2,7 @@
   "nodes": [
     {
       "kind": "block",
-      "type": "H1",
+      "type": "title",
       "nodes": [
         {
           "kind": "text",
@@ -12,7 +12,7 @@
     },
     {
       "kind": "block",
-      "type": "Lead",
+      "type": "lead",
       "nodes": [
         {
           "kind": "text",
@@ -22,39 +22,13 @@
     },
     {
       "kind": "block",
-      "type": "ImageWithCaption",
-      "nodes": [
-        {
-          "kind": "block",
-          "type": "Image",
-          "isVoid": true,
-          "data": { "src": "/static/example.jpg" }
-        },
-        {
-          "kind": "block",
-          "type": "ImageCaption",
-          "nodes": [
-            {
-              "kind": "text",
-              "text": "Claude Monet, Impression, soleil levant"
-            }
-          ]
-        },
-        {
-          "kind": "block",
-          "type": "ImageSource",
-          "nodes": [
-            {
-              "kind": "text",
-              "text": "Wikipedia"
-            }
-          ]
-        }
-      ]
+      "type": "image",
+      "isVoid": true,
+      "data": { "src": "/static/example.jpg" }
     },
     {
       "kind": "block",
-      "type": "P",
+      "type": "paragraph",
       "nodes": [
         {
           "kind": "text",
@@ -64,7 +38,7 @@
     },
     {
       "kind": "block",
-      "type": "P",
+      "type": "paragraph",
       "nodes": [
         {
           "kind": "text",
@@ -74,7 +48,7 @@
     },
     {
       "kind": "block",
-      "type": "P",
+      "type": "paragraph",
       "nodes": [
         {
           "kind": "text",
