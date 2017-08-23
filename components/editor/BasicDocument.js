@@ -19,7 +19,8 @@ import link, {
   LinkForm
 } from './modules/link'
 import image, {
-  ImageForm
+  ImageForm,
+  ImageButton
 } from './modules/image'
 
 const plugins = [
@@ -43,6 +44,10 @@ const blockFormatButtons = [
   TitleButton,
   LeadButton,
   ParagraphButton
+]
+
+const insertButtons = [
+  ImageButton
 ]
 
 const propertyForms = [
@@ -81,6 +86,18 @@ export default ({
           blockFormatButtons.map((Button, i) => (
             <Button
               key={`block-fmt-${i}`}
+              state={state}
+              onChange={onChange}
+            />
+          ))
+        }
+      </Interaction.P>
+      <Interaction.P>
+        <Label>Insert</Label>
+        {
+          insertButtons.map((Button, i) => (
+            <Button
+              key={`insert-${i}`}
               state={state}
               onChange={onChange}
             />

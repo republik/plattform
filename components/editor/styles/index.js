@@ -16,8 +16,22 @@ const formatButton = {
   }
 }
 
+const actionButton = {
+  cursor: 'pointer',
+  color: colors.secondary,
+  transition: 'color 0.1s, opacity 0.1s',
+  '&[data-disabled="true"]': {
+    opacity: 0.3,
+    color: colors.secondary
+  },
+  '&[data-disabled="false"]:hover': {
+    color: colors.text
+  }
+}
+
 export default {
   formatButton,
+  actionButton,
   markButton: {
     textAlign: 'center',
     display: 'inline-block',
@@ -27,6 +41,10 @@ export default {
   blockButton: {
     display: 'block',
     ...formatButton
+  },
+  insertButton: {
+    display: 'block',
+    ...actionButton
   },
   container: {
     width: '100vw',

@@ -1,11 +1,14 @@
 /* global FileReader */
-
+import { Block } from 'slate'
 import { colors, Label } from '@project-r/styleguide'
+import { css } from 'glamor'
 import Caret from 'react-icons/lib/fa/caret-right'
 import {
   matchBlock,
-  createPropertyForm
+  createPropertyForm,
+  createActionButton
 } from '../../utils'
+import styles from '../../styles'
 import { IMAGE } from './constants'
 
 const Thumbnail = ({ src }) =>
@@ -106,3 +109,32 @@ export const ImageForm = createPropertyForm({
     return !state.blocks.some(matchBlock(IMAGE))
   }
 })(Form)
+
+export const ImageButton = createActionButton({
+  isDisabled: ({ state }) => {
+    return state.isBlurred
+  },
+  reducer: ({ state, onChange }) => event => {
+    event.preventDefault()
+    return onChange(
+      state
+        .transform()
+        .insertBlock(
+          Block.create({
+            type: IMAGE,
+            isVoid: true
+          })
+        )
+        .apply()
+    )
+  }
+})(
+  ({ disabled, ...props }) =>
+    <span
+      {...{...css(styles.insertButton), ...props}}
+      data-disabled={disabled}
+      >
+      Image
+    </span>
+
+)

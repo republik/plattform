@@ -2,7 +2,7 @@ import { colors } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { matchBlock } from '../../utils'
 import styles from '../../styles'
-import { ImageForm } from './ui'
+import { ImageForm, ImageButton } from './ui'
 import { IMAGE } from './constants'
 
 export const ImagePlaceholder = ({ active }) =>
@@ -50,7 +50,8 @@ export const image = {
 }
 
 export {
-  ImageForm
+  ImageForm,
+  ImageButton
 }
 
 export default {
