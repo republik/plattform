@@ -18,13 +18,17 @@ import link, {
   LinkButton,
   LinkForm
 } from './modules/link'
+import image, {
+  ImageForm
+} from './modules/image'
 
 const plugins = [
   ...marks.plugins,
   ...title.plugins,
   ...lead.plugins,
   ...paragraph.plugins,
-  ...link.plugins
+  ...link.plugins,
+  ...image.plugins
 ]
 
 const textFormatButtons = [
@@ -42,7 +46,8 @@ const blockFormatButtons = [
 ]
 
 const propertyForms = [
-  LinkForm
+  LinkForm,
+  ImageForm
 ]
 
 export default ({

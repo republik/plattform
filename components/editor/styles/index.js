@@ -43,5 +43,12 @@ export default {
     height: '100vh',
     overflowY: 'scroll',
     flex: '1 0 auto'
+  },
+  image: {
+    outline: `4px solid transparent`,
+    transition: 'outline-color 0.2s',
+    '&[data-active="true"]': {
+      outlineColor: colors.primary
+    }
   }
 }
