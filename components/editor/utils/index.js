@@ -2,6 +2,7 @@ import createFormatButton from './createFormatButton'
 import createBlockButton from './createBlockButton'
 import createMarkButton from './createMarkButton'
 import createInlineButton from './createInlineButton'
+import createActionButton from './createActionButton'
 import createPropertyForm from './createPropertyForm'
 
 export const match = kind => type => node =>
@@ -21,5 +22,6 @@ export {
   createBlockButton,
   createMarkButton,
   createInlineButton,
+  createActionButton,
   createPropertyForm
 }
