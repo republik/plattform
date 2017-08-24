@@ -28,7 +28,7 @@ export const isNone = isNil
 export const isEmpty = node =>
    node.nodes.size < 1 && node
 
-const ifExistsAndMatches = (match, result) => result && match(result) && result
+const ifExistsAndMatches = (match, result) => match(result) && (result || true)
 
 const ifNotEmpty = result => !result.isEmpty() && result
 
@@ -98,18 +98,33 @@ export const append = reducer =>
 export const update = reducer =>
   (transform, node, result) =>
     asList(result)
-      .reduce(
-        (t, invalidChild) =>
-          t.setNodeByKey(
-            invalidChild.key,
-            reducer(node, invalidChild)
-          ),
-        transform
-      )
+    .reduce(
+      (t, invalidChild) =>
+        t.setNodeByKey(
+          invalidChild.key,
+          reducer(node, invalidChild)
+        ),
+      transform
+    )
+
+export const unwrap = reducer =>
+  (transform, node, result) =>
+    asList(result)
+    .reduce(
+      (t, invalidChild) =>
+        t.setNodeByKey(
+          invalidChild.key,
+          reducer(node, invalidChild)
+        )
+        .unwrapNodeByKey(
+          invalidChild.key
+        ),
+      transform
+    )
 
 export const remove = (transform, node, result) =>
   asList(result)
-    .reduce(
+  .reduce(
       (t, invalidChild) =>
         t.removeNodeByKey(
           invalidChild.key

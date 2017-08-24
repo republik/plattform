@@ -5,6 +5,7 @@ import test from 'tape'
 import {
   rule,
   not,
+  isNone,
   isEmpty,
   firstChild,
   lastChild,
@@ -16,7 +17,8 @@ import {
   insertAt,
   prepend,
   append,
-  update
+  update,
+  unwrap
 } from './rules'
 
 const node = Document.create({
@@ -59,6 +61,15 @@ test('rules.rule', assert => {
   )
 })
 
+test('rules.isNone', assert => {
+  assert.plan(1)
+
+  assert.equal(
+    isNone(node.nodes.get(4)),
+    true
+  )
+})
+
 test('rules.isEmpty', assert => {
   assert.plan(2)
 
@@ -86,7 +97,7 @@ test('rules.isEmpty', assert => {
 test('rules.childAt', assert => {
   assert.plan(5)
 
-  const isBar = spy(n => n.type === 'bar')
+  const isBar = spy(n => n && n.type === 'bar')
 
   assert.equal(
     childAt(0, isBar)(node),
@@ -122,8 +133,8 @@ test('rules.childAt', assert => {
 test('rules.firstChild', assert => {
   assert.plan(3)
 
-  const isBar = n => n.type === 'bar'
-  const isBaz = n => n.type === 'baz'
+  const isBar = n => n && n.type === 'bar'
+  const isBaz = n => n && n.type === 'baz'
 
   assert.equal(
     firstChild(isBar)(node),
@@ -147,8 +158,8 @@ test('rules.firstChild', assert => {
 test('rules.lastChild', assert => {
   assert.plan(3)
 
-  const isBaz = n => n.type === 'baz'
-  const isBar = n => n.type === 'Bar'
+  const isBaz = n => n && n.type === 'baz'
+  const isBar = n => n && n.type === 'Bar'
 
   assert.equal(
     lastChild(isBaz)(node),
@@ -195,13 +206,13 @@ test('rules.filter', assert => {
   assert.plan(2)
 
   assert.equal(
-    filter(n => n.type === 'baz')(node).size,
+    filter(n => n && n.type === 'baz')(node).size,
     2,
     'returns all children that match the filter'
   )
 
   assert.equal(
-    filter(n => n.type === 'foo')(node),
+    filter(n => n && n.type === 'foo')(node),
     false,
     'returns falsy if no matching children were found'
   )
@@ -229,7 +240,7 @@ test('rules.asList', assert => {
 test('rules.remove', assert => {
   assert.plan(4)
 
-  const nodeToRemove = firstChild(n => n.type === 'bar')(state.document)
+  const nodeToRemove = firstChild(n => n && n.type === 'bar')(state.document)
 
   assert.equal(
     remove(state.transform(), state.document, nodeToRemove)
@@ -373,7 +384,7 @@ test('rules.update', assert => {
 test('rules.not', assert => {
   assert.plan(1)
 
-  const isBaz = n => n.type === 'baz'
+  const isBaz = n => n && n.type === 'baz'
 
   assert.equal(
     firstChild(
@@ -384,4 +395,25 @@ test('rules.not', assert => {
   )
 
   assert.end()
+})
+
+test('rules.unwrap', assert => {
+  assert.plan(1)
+
+  const wrappedState = state
+    .transform()
+    .wrapBlockByKey(state.document.nodes.get(0).key, 'typeA')
+    .apply()
+
+  const unwrappedState = unwrap(() => 'unwrapped')(
+    wrappedState.transform(),
+    wrappedState.document.nodes.get(0),
+    wrappedState.document.nodes.get(0).nodes.get(0)
+  ).apply()
+
+  assert.equal(
+    unwrappedState.document.nodes.get(0).type,
+    'unwrapped',
+    'unwraps all results'
+  )
 })
