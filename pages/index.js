@@ -2,11 +2,9 @@ import React, { Component } from 'react'
 import { Raw, resetKeyGenerator } from 'slate'
 import App from '../lib/App'
 import lorem from '../lib/editor/templates/lorem.json'
-import Editor, {getPlugins} from '../components/editor/Editor'
-import MarkdownSerializer from '../lib/serializer'
-import getRules from '../components/editor/utils/getRules'
+import Editor, {serializer} from '../components/editor/NewsletterEditor'
 
-const getInitialState = (serializer) => {
+const getInitialState = () => {
   resetKeyGenerator()
   return {
     state: Raw.deserialize(lorem, { terse: true })
@@ -17,15 +15,11 @@ const getInitialState = (serializer) => {
 export default class Index extends Component {
   constructor (...args) {
     super(...args)
-    const documentType = null
-    this.serializer = new MarkdownSerializer({
-      rules: getRules(getPlugins(documentType))
-    })
-    this.state = getInitialState(this.serializer)
+    this.state = getInitialState()
 
     this.onDocumentChange = (document, state) => {
       try {
-        console.log(this.serializer.serialize(state))
+        console.log(serializer.serialize(state))
       } catch (e) {}
     }
   }
