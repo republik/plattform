@@ -12,13 +12,12 @@ export const rule = curry(
 /*
   Matchers
  */
+export {
+   both,
+   either
+ }
 
 export const not = complement
-
-export {
-  both,
-  either
-}
 
 export const isNone = isNil
 

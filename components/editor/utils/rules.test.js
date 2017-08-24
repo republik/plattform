@@ -4,6 +4,7 @@ import spy from 'spy'
 import test from 'tape'
 import {
   rule,
+  not,
   isEmpty,
   firstChild,
   lastChild,
@@ -367,4 +368,20 @@ test('rules.update', assert => {
     true,
     'updates a list of nodes'
   )
+})
+
+test('rules.not', assert => {
+  assert.plan(1)
+
+  const isBaz = n => n.type === 'baz'
+
+  assert.equal(
+    firstChild(
+      not(isBaz)
+    )(node),
+    node.nodes.get(0),
+    'inverts the result of a matcher'
+  )
+
+  assert.end()
 })
