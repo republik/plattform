@@ -2,13 +2,19 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Editor as SlateEditor } from 'slate'
 import { css } from 'glamor'
-import BasicDocument from './BasicDocument'
+import BasicDocument, {plugins} from './BasicDocument'
 import styles from './styles'
 
 const getUI = state => {
   switch (state.getIn(['document', 'data', 'documentType'])) {
     default:
       return BasicDocument
+  }
+}
+const getPlugins = state => {
+  switch (state.getIn(['document', 'data', 'documentType'])) {
+    default:
+      return plugins
   }
 }
 
@@ -32,11 +38,12 @@ class Editor extends Component {
 
   changeHandler (nextState) {
     const { state, onChange, onDocumentChange } = this.props
+    const plugins = getPlugins(state)
 
     if (state !== nextState) {
       onChange(nextState)
       if (state.document !== nextState.document) {
-        onDocumentChange(nextState.document, nextState)
+        onDocumentChange(nextState.document, nextState, plugins)
       }
     }
   }

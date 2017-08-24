@@ -23,7 +23,7 @@ import image, {
   ImageButton
 } from './modules/image'
 
-const plugins = [
+export const plugins = [
   ...marks.plugins,
   ...title.plugins,
   ...lead.plugins,
