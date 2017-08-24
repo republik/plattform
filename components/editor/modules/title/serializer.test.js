@@ -1,12 +1,10 @@
 import test from 'tape'
 import title, {TITLE} from './'
+import getRules from '../../utils/getRules'
 import MarkdownSerializer from '../../../../lib/serializer'
 
 const serializer = new MarkdownSerializer({
-  rules: title.plugins.reduce(
-    (all, plugin) => all.concat((plugin.schema || {}).rules),
-    []
-  )
+  rules: getRules(title.plugins)
 })
 
 test('title serialization', assert => {
