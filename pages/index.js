@@ -2,28 +2,30 @@ import React, { Component } from 'react'
 import { Raw, resetKeyGenerator } from 'slate'
 import App from '../lib/App'
 import lorem from '../lib/editor/templates/lorem.json'
-import Editor from '../components/editor/Editor'
+import Editor, {getPlugins} from '../components/editor/Editor'
 import MarkdownSerializer from '../lib/serializer'
 import getRules from '../components/editor/utils/getRules'
 
-const getInitialState = () => {
+const getInitialState = (serializer) => {
   resetKeyGenerator()
   return {
     state: Raw.deserialize(lorem, { terse: true })
+    // state: serializer.deserialize('# Lorem ipsum')
   }
 }
 
 export default class Index extends Component {
   constructor (...args) {
     super(...args)
-    this.state = getInitialState()
+    const documentType = null
+    this.serializer = new MarkdownSerializer({
+      rules: getRules(getPlugins(documentType))
+    })
+    this.state = getInitialState(this.serializer)
 
-    this.onDocumentChange = (document, state, plugins) => {
-      const serializer = new MarkdownSerializer({
-        rules: getRules(plugins)
-      })
+    this.onDocumentChange = (document, state) => {
       try {
-        console.log(serializer.serialize(state))
+        console.log(this.serializer.serialize(state))
       } catch (e) {}
     }
   }

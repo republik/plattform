@@ -5,14 +5,14 @@ import { css } from 'glamor'
 import BasicDocument, {plugins} from './BasicDocument'
 import styles from './styles'
 
-const getUI = state => {
-  switch (state.getIn(['document', 'data', 'documentType'])) {
+const getUI = documentType => {
+  switch (documentType) {
     default:
       return BasicDocument
   }
 }
-const getPlugins = state => {
-  switch (state.getIn(['document', 'data', 'documentType'])) {
+export const getPlugins = documentType => {
+  switch (documentType) {
     default:
       return plugins
   }
@@ -38,19 +38,18 @@ class Editor extends Component {
 
   changeHandler (nextState) {
     const { state, onChange, onDocumentChange } = this.props
-    const plugins = getPlugins(state)
 
     if (state !== nextState) {
       onChange(nextState)
       if (state.document !== nextState.document) {
-        onDocumentChange(nextState.document, nextState, plugins)
+        onDocumentChange(nextState.document, nextState)
       }
     }
   }
 
   render () {
     const { state } = this.props
-    const UI = getUI(state)
+    const UI = getUI(state.getIn(['document', 'data', 'documentType']))
     const props = {
       onChange: this.changeHandler,
       Editor: SlateEditor,
