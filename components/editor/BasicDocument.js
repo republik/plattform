@@ -23,13 +23,16 @@ import image, {
   ImageButton
 } from './modules/image'
 
+import cover from './modules/cover'
+
 const plugins = [
   ...marks.plugins,
   ...title.plugins,
   ...lead.plugins,
   ...paragraph.plugins,
   ...link.plugins,
-  ...image.plugins
+  ...image.plugins,
+  ...cover.plugins
 ]
 
 const textFormatButtons = [
