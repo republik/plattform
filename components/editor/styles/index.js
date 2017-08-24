@@ -68,5 +68,9 @@ export default {
     '&[data-active="true"]': {
       outlineColor: colors.primary
     }
+  },
+  mq: {
+    medium: '@media (min-width: 600px)',
+    large: '@media (min-width: 900px)'
   }
 }
