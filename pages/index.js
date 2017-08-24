@@ -20,7 +20,9 @@ export default class Index extends Component {
     this.onDocumentChange = (document, state) => {
       try {
         console.log(serializer.serialize(state))
-      } catch (e) {}
+      } catch (e) {
+        console.error(e)
+      }
     }
   }
 
