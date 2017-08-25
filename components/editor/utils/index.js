@@ -6,7 +6,7 @@ import createActionButton from './createActionButton'
 import createPropertyForm from './createPropertyForm'
 
 export const match = kind => type => node =>
-  node.kind === kind && node.type === type
+  node && node.kind === kind && node.type === type
 
 export const matchBlock = match('block')
 
