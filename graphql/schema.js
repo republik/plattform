@@ -28,14 +28,14 @@ type Milestone {
   name: String!
   message: String
   commit: Commit!
-  author: Autor!
+  author: Author!
 }
 
 type Commit {
   id: ID!
   parentIds: [ID!]!
   message: String
-  author: Autor!
+  author: Author!
   date: DateTime!
   document: Document!
 # files: [File]!
@@ -68,7 +68,7 @@ type Meta {
 #  meta: Meta!
 #}
 
-type Autor {
+type Author {
   name: String!
   email: String!
   user: User
