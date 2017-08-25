@@ -1,4 +1,5 @@
 /* global FileReader */
+import React from 'react'
 import { Block } from 'slate'
 import { colors, Label } from '@project-r/styleguide'
 import { css } from 'glamor'
