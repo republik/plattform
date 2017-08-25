@@ -57,6 +57,7 @@
     "express-basic-auth": "^1.1.1",
     "glamor": "^2.20.39",
     "is-url": "^1.2.2",
+    "lodash": "^4.17.4",
     "next": "^3.0.1-beta.17",
     "next-routes": "^1.0.40",
     "prop-types": "^15.5.10",
@@ -65,7 +66,10 @@
     "react-dom": "^15.6.1",
     "react-icons": "^2.2.5",
     "redux": "^3.7.2",
+    "remark-parse": "^4.0.0",
+    "remark-stringify": "^4.0.0",
     "slate": "^0.21.1",
-    "subscriptions-transport-ws": "^0.8.2"
+    "subscriptions-transport-ws": "^0.8.2",
+    "unified": "^6.1.5"
   }
 }

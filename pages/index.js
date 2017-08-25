@@ -2,12 +2,13 @@ import React, { Component } from 'react'
 import { Raw, resetKeyGenerator } from 'slate'
 import App from '../lib/App'
 import lorem from '../lib/editor/templates/lorem.json'
-import Editor from '../components/editor/Editor'
+import Editor, {serializer} from '../components/editor/NewsletterEditor'
 
 const getInitialState = () => {
   resetKeyGenerator()
   return {
     state: Raw.deserialize(lorem, { terse: true })
+    // state: serializer.deserialize('# Lorem ipsum')
   }
 }
 
@@ -15,10 +16,14 @@ export default class Index extends Component {
   constructor (...args) {
     super(...args)
     this.state = getInitialState()
-  }
 
-  commitHandler (state, ...args) {
-    this.setState({state})
+    this.onDocumentChange = (document, state) => {
+      try {
+        console.log(serializer.serialize(state))
+      } catch (e) {
+        console.error(e)
+      }
+    }
   }
 
   render () {
@@ -26,7 +31,8 @@ export default class Index extends Component {
       <App>
         <Editor
           state={this.state.state}
-          onChange={this.commitHandler.bind(this)}
+          onChange={state => this.setState({state})}
+          onDocumentChange={this.onDocumentChange}
         />
       </App>
     )
