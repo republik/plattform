@@ -1,3 +1,4 @@
+import React from 'react'
 import { Block } from 'slate'
 import { matchBlock, matchDocument } from '../../utils'
 import { IMAGE } from '../image'
@@ -38,7 +39,18 @@ export const isCover = matchBlock(COVER)
 
 export const cover = {
   match: isCover,
-  render: Cover
+  render: Cover,
+  matchMdast: (node) => node.type === 'zone' && node.identifier === COVER,
+  fromMdast: (node, index, parent, visitChildren) => ({
+    kind: 'block',
+    type: COVER,
+    nodes: visitChildren(node)
+  }),
+  toMdast: (object, index, parent, visitChildren) => ({
+    type: 'zone',
+    identifier: COVER,
+    children: visitChildren(object)
+  })
 }
 
 export {
