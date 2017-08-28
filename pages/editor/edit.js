@@ -10,9 +10,9 @@ import { css } from 'glamor'
 import { Raw, resetKeyGenerator } from 'slate'
 import { Button, Label } from '@project-r/styleguide'
 
-import App from '../../lib/App'
-import blank from '../../lib/editor/templates/blank.json'
-import Editor from '../../lib/editor/components/Editor'
+import Frame from '../../components/Frame'
+import Editor from '../../components/editor/NewsletterEditor'
+
 import EditFrame from '../../components/EditFrame'
 import EditSidebar from '../../components/EditSidebar'
 import Checklist from '../../components/EditSidebar/Checklist'
@@ -196,7 +196,18 @@ class EditorPage extends Component {
     let committedEditorState
     let commit
     if (view === 'new') {
-      committedEditorState = Raw.deserialize(blank, { terse: true })
+      committedEditorState = Raw.deserialize({
+        nodes: [{
+          kind: 'block',
+          type: 'paragraph',
+          nodes: [
+            {
+              kind: 'text',
+              text: 'Enter your text here...'
+            }
+          ]
+        }]
+      }, { terse: true })
     } else {
       commit = repo.commits.filter(commit => {
         return commit.id === commitId
@@ -385,7 +396,6 @@ class EditorPage extends Component {
   }
 
   render () {
-    console.log(this.props)
     const { repository, commit } = this.props.url.query
     const {
       editorState,
@@ -399,7 +409,7 @@ class EditorPage extends Component {
     }
     if (editorState) {
       return (
-        <App>
+        <Frame raw>
           <EditFrame view={'edit'} repository={repository} commit={commit}>
             {localStorageNotSupported &&
               <div {...css(styles.danger)}>
@@ -449,7 +459,7 @@ class EditorPage extends Component {
               </EditSidebar>
             </div>
           </EditFrame>
-        </App>
+        </Frame>
       )
     } else {
       return (
