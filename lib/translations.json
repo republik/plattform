@@ -1,5 +1,5 @@
 {
-  "updated": "2017-08-21T15:58:37.053Z",
+  "updated": "2017-08-28T14:42:17.410Z",
   "title": "live",
   "data": [
     {
@@ -49,6 +49,26 @@
     {
       "key": "withAuthorization/authorizedRoles",
       "value": "Zugelassene Rollen: {roles}"
+    },
+    {
+      "key": "repoList/title",
+      "value": "Artikel"
+    },
+    {
+      "key": "repoList/add/title",
+      "value": "Neuer Artikel"
+    },
+    {
+      "key": "repoList/add/titleField/label",
+      "value": "Titel"
+    },
+    {
+      "key": "repoList/add/titleField/error",
+      "value": "Titel fehlt"
+    },
+    {
+      "key": "repoList/add/submit",
+      "value": "erstellen"
     }
   ]
 }
