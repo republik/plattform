@@ -1,5 +1,5 @@
 {
-  "updated": "2017-08-21T15:58:37.053Z",
+  "updated": "2017-08-28T14:30:35.755Z",
   "title": "live",
   "data": [
     {
@@ -49,6 +49,10 @@
     {
       "key": "withAuthorization/authorizedRoles",
       "value": "Zugelassene Rollen: {roles}"
+    },
+    {
+      "key": "repoList/title",
+      "value": "Artikel"
     }
   ]
 }
