@@ -1,6 +1,8 @@
 const express = require('express')
 const basicAuth = require('express-basic-auth')
 const dotenv = require('dotenv')
+const next = require('next')
+const routes = require('../lib/routes')
 
 const DEV = process.env.NODE_ENV
   ? process.env.NODE_ENV !== 'production'
@@ -10,9 +12,6 @@ if (DEV || process.env.DOTENV) {
 }
 const PORT = process.env.PORT || 3003
 
-// server.js
-const next = require('next')
-const routes = require('./routes')
 const app = next({
   dev: DEV
 })
