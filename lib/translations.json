@@ -1,5 +1,5 @@
 {
-  "updated": "2017-08-28T14:30:35.755Z",
+  "updated": "2017-08-28T14:42:17.410Z",
   "title": "live",
   "data": [
     {
@@ -53,6 +53,22 @@
     {
       "key": "repoList/title",
       "value": "Artikel"
+    },
+    {
+      "key": "repoList/add/title",
+      "value": "Neuer Artikel"
+    },
+    {
+      "key": "repoList/add/titleField/label",
+      "value": "Titel"
+    },
+    {
+      "key": "repoList/add/titleField/error",
+      "value": "Titel fehlt"
+    },
+    {
+      "key": "repoList/add/submit",
+      "value": "erstellen"
     }
   ]
 }
