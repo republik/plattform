@@ -8,9 +8,11 @@
     "start": "node server/index.js",
     "build": "next build",
     "heroku-postbuild": "npm run build",
-    "test": "babel-tape-runner \"?(lib|pages)/**/*.test.js\"",
+    "tape": "babel-tape-runner",
+    "test": "babel-tape-runner \"?(lib|pages|components)/**/*.test.js\" | faucet",
     "standardize": "standard --fix",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "translations": "gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json"
   },
   "repository": {
     "type": "git",
@@ -32,10 +34,15 @@
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.6.0",
     "babel-tape-runner": "^2.0.1",
+    "enzyme": "^2.9.1",
     "eslint-plugin-import": "^2.7.0",
+    "faucet": "0.0.1",
+    "gsheets": "^2.0.0",
     "husky": "^0.14.3",
-    "lint-staged": "^4.0.3",
+    "lint-staged": "^4.0.4",
     "nodemon": "^1.11.0",
+    "react-test-renderer": "^15.6.1",
+    "spy": "^1.0.0",
     "standard": "^10.0.3",
     "tape": "^4.8.0"
   },
@@ -45,19 +52,24 @@
     "d3-format": "^1.2.0",
     "d3-time-format": "^2.0.5",
     "dotenv": "^4.0.0",
+    "email-validator": "^1.1.1",
     "express": "^4.15.4",
     "express-basic-auth": "^1.1.1",
     "glamor": "^2.20.39",
     "is-url": "^1.2.2",
-    "next": "^3.0.1-beta.17",
+    "next": "^3.0.6",
     "next-routes": "^1.0.40",
     "prop-types": "^15.5.10",
+    "ramda": "^0.24.1",
     "react": "^15.6.1",
-    "react-apollo": "^1.4.11",
+    "react-apollo": "^1.4.15",
     "react-dom": "^15.6.1",
     "react-icons": "^2.2.5",
     "redux": "^3.7.2",
+    "remark-parse": "^4.0.0",
+    "remark-stringify": "^4.0.0",
     "slate": "^0.21.1",
-    "subscriptions-transport-ws": "^0.8.2"
+    "subscriptions-transport-ws": "^0.8.2",
+    "unified": "^6.1.5"
   }
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link } from '../../server/routes'
+import { Link } from '../../lib/routes'
 import { css, merge } from 'glamor'
 import { colors } from '@project-r/styleguide'
 

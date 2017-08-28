@@ -1,5 +1,5 @@
 import withData from '../lib/apollo/withData'
-import { Link } from '../server/routes'
+import { Link } from '../lib/routes'
 
 import App from '../lib/App'
 import Repositories from '../lib/github/components/Repository/List'

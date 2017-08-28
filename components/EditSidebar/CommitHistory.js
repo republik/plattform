@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from '../../server/routes'
+import { Link } from '../../lib/routes'
 import { css } from 'glamor'
 import { swissTime } from '../../lib/utils/format'
 

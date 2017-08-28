@@ -3,7 +3,7 @@
 
 import React, { Component } from 'react'
 import { compose } from 'redux'
-import { Router } from '../../server/routes'
+import { Router } from '../../lib/routes'
 import withData from '../../lib/apollo/withData'
 import { gql, graphql } from 'react-apollo'
 import { css } from 'glamor'
@@ -17,6 +17,7 @@ import EditFrame from '../../components/EditFrame'
 import EditSidebar from '../../components/EditSidebar'
 import Checklist from '../../components/EditSidebar/Checklist'
 import CommitHistory from '../../components/EditSidebar/CommitHistory'
+import withAuthorization from '../../components/Auth/withAuthorization'
 
 import initLocalStore from '../../lib/utils/localStorage'
 
@@ -462,6 +463,7 @@ class EditorPage extends Component {
 
 export default compose(
   withData,
+  withAuthorization(['editor']),
   graphql(query, {
     options: ({ url }) => ({
       variables: {
