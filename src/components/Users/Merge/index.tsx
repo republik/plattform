@@ -37,9 +37,7 @@ interface Props {
 }
 
 interface State {
-  errors: {
-    [key: string]: string
-  },
+  errors?: any,
   sourceEmail?: string
   targetEmail?: string
   sourceUser?: User
@@ -101,7 +99,7 @@ export default class MergeUsers extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
-    this.state = { errors: {} }
+    this.state = { errors: null }
   }
 
   public handleUserResponse = (userType: string) => (response: any) => {
@@ -120,10 +118,15 @@ export default class MergeUsers extends React.Component<Props, State> {
     if (isEmail(value)) {
       const { client } = this.context
       if (client) {
-        client.query({
+        client
+        .query({
           query: findUserQuery,
           variables: { email: value }
-        }).then(this.handleUserResponse(userType))
+        })
+        .then(this.handleUserResponse(userType))
+        .catch((error: any) => this.setState({
+          errors: error
+        }))
       }
     }
 
@@ -143,10 +146,15 @@ export default class MergeUsers extends React.Component<Props, State> {
     if (sourceUser && targetUser) {
       if (confirm(`Willst du wirklich den Account ${sourceUser.email}
          mit dem Account ${targetUser.email} zusammenführen?`)) {
-        client.mutate({
+        client
+        .mutate({
           mutation: mergeUsersMutation,
           variables: { sourceId: sourceUser.id, targetId: targetUser.id }
-        }).then(this.handleMergeResponse)
+        })
+        .then(this.handleMergeResponse)
+        .catch((error: any) => this.setState({
+          errors: error
+        }))
       }
     }
   }
@@ -157,14 +165,18 @@ export default class MergeUsers extends React.Component<Props, State> {
 
   public render() {
     const {
+      errors,
       sourceUser,
       targetUser,
       sourceEmail,
       targetEmail,
       mergedUser
     } = this.state
+
+
     return <div>
       <Interaction.H3>Users zusammenführen</Interaction.H3>
+      { errors && <ErrorMessage error={errors} />}
       <div style={{
         display: 'flex', justifyContent: 'space-between', height: '120px'
       }}>
