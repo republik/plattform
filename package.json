@@ -65,6 +65,7 @@
     "react-apollo": "^1.4.15",
     "react-dom": "^15.6.1",
     "react-icons": "^2.2.5",
+    "react-portal": "^3.1.0",
     "redux": "^3.7.2",
     "remark-parse": "^4.0.0",
     "remark-stringify": "^4.0.0",
