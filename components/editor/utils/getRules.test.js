@@ -1,5 +1,5 @@
 import test from 'tape'
-import getRules from './getRules'
+import getRules, {getSerializationRules} from './getRules'
 
 test('utils.getRules', assert => {
   assert.plan(1)
@@ -20,4 +20,29 @@ test('utils.getRules', assert => {
       }
     }
   ]), ['A', 'B'], 'extract rules from multiple plugins and skip plugins without schema or rules')
+})
+
+test('utils.getSerializationRules', assert => {
+  assert.plan(2)
+  assert.deepEqual(getSerializationRules([
+    {
+      schema: {
+        rules: [
+          'A'
+        ]
+      }
+    }
+  ]), [], 'skip rules without mdast helpers')
+
+  assert.deepEqual(getSerializationRules([
+    {
+      schema: {
+        rules: [
+          'A',
+          {fromMdast: true},
+          {toMdast: true}
+        ]
+      }
+    }
+  ]), [{fromMdast: true}, {toMdast: true}], 'only rules with mdast helpers')
 })

@@ -6,7 +6,7 @@ import { css } from 'glamor'
 import { NarrowContainer } from '@project-r/styleguide'
 
 import MarkdownSerializer from '../../lib/serializer'
-import getRules from './utils/getRules'
+import {getSerializationRules} from './utils/getRules'
 
 import styles from './styles'
 import Sidebar from './Sidebar'
@@ -53,7 +53,7 @@ const plugins = [
 ]
 
 export const serializer = new MarkdownSerializer({
-  rules: getRules(plugins)
+  rules: getSerializationRules(plugins)
 })
 
 const textFormatButtons = [
