@@ -40,7 +40,6 @@ module.exports = {
     }
 
     return {
-      encoding: 'UTF-8',
       content: repository.blob.text,
       commit
     }

@@ -43,13 +43,11 @@ type Commit {
 
 
 interface FileInterface {
-  encoding: String!
   content: String!
   meta: Meta!
 }
 
 type Document implements FileInterface {
-  encoding: String!
   # AST of /article.xxx
   content: String!
   meta: Meta!
@@ -145,7 +143,6 @@ type RootMutations {
 
 # implements FileInterface
 input DocumentInput {
-  encoding: String!
   # AST of /article.xxx
   content: String!
 }
