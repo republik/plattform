@@ -118,10 +118,7 @@ export default class Tree extends Component {
         commit.nodeRef = ref
       }
       commit.data = {
-        children: []
-      }
-      if (parentNodes.get(commit.id)) {
-        commit.data.children.push(...parentNodes.get(commit.id))
+        slotIndex: null
       }
     })
 
