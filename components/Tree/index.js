@@ -252,9 +252,17 @@ export default class Tree extends Component {
                 ref={commit.setListItemRef}
                 {...styles.listItem}
               >
-                <b>
-                  {commit.message}
-                </b>
+                <Link
+                  route='editor/edit'
+                  params={{
+                    repository: repository,
+                    commit: commit.id
+                  }}
+                >
+                  <a>
+                    {commit.message}
+                  </a>
+                </Link>
                 <br />
                 {commit.author.name}
                 <br />
