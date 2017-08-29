@@ -2,11 +2,14 @@ import React, { Component } from 'react'
 import { Link } from '../../lib/routes'
 import { css } from 'glamor'
 import { ascending, descending, max } from 'd3-array'
+import { schemeCategory10 } from 'd3-scale'
+import { color as d3Color } from 'd3-color'
 import { swissTime } from '../../lib/utils/format'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
 const SLOT_WIDTH = 20
+const MIN_PADDING = 10
 const NODE_SIZE = 10
 const LIST_WIDTH = 250
 
@@ -38,12 +41,13 @@ const styles = {
   }),
   listItem: css({
     fontSize: '12px',
-    marginBottom: '10px'
+    marginBottom: '5px',
+    padding: '5px'
   }),
   svg: css({
     position: 'absolute',
     top: 0,
-    left: 0,
+    left: `${MIN_PADDING}px`,
     zIndex: -1
   })
 }
@@ -170,9 +174,23 @@ export default class Tree extends Component {
     this.listRef.style.marginLeft = `${svgWidth + NODE_SIZE}px`
     this.containerRef.style.width = `${svgWidth + LIST_WIDTH}px`
 
-    this.state.commits.forEach(({ data, nodeRef }) => {
-      nodeRef.style.left = `${data.slotIndex * SLOT_WIDTH}px`
-      nodeRef.style.top = `${data.measurements.top}px`
+    let colors = [...schemeCategory10]
+    let authorColor = {}
+    this.state.commits.forEach(({ data, author, nodeRef, listItemRef }) => {
+      if (!authorColor[author.email]) {
+        let color = colors.shift()
+        let lightColor = d3Color(color)
+        lightColor.opacity = 0.2
+        authorColor[author.email] = {
+          dark: color,
+          light: lightColor.toString()
+        }
+      }
+      nodeRef.style.left = `${data.slotIndex * SLOT_WIDTH + MIN_PADDING}px`
+      nodeRef.style.top = `${data.measurements.top +
+        Math.floor(data.measurements.height / 2)}px`
+      nodeRef.style.backgroundColor = authorColor[author.email].dark
+      listItemRef.style.backgroundColor = authorColor[author.email].light
     })
 
     const adjustment = NODE_SIZE / 2
@@ -185,9 +203,15 @@ export default class Tree extends Component {
       })[0]
 
       const sx = source.data.slotIndex * SLOT_WIDTH + adjustment
-      const sy = source.data.measurements.top + adjustment
+      const sy =
+        source.data.measurements.top +
+        Math.floor(source.data.measurements.height / 2) +
+        adjustment
       const dx = destination.data.slotIndex * SLOT_WIDTH + adjustment
-      const dy = destination.data.measurements.top + adjustment
+      const dy =
+        destination.data.measurements.top +
+        Math.floor(destination.data.measurements.height / 2) +
+        adjustment
       const startPoint = `${sx} ${sy}`
       const endPoint = `${dx} ${dy}`
 
