@@ -86,9 +86,9 @@ export default class Tree extends Component {
       })
 
     let parentNodes = new Map()
+    let links = []
     let commit
     let children
-    let links = []
 
     for (let i = 0; i < commits.length; i++) {
       commit = commits[i]
@@ -98,10 +98,10 @@ export default class Tree extends Component {
         if (parentNodes.has(commit.parentIds[j])) {
           children = [...parentNodes.get(commit.parentIds[j])]
         }
-        if (!children.indexOf(commits[i].id) === -1) {
+        if (!children.indexOf(commit.id) === -1) {
           continue
         }
-        children.push(commits[i].id)
+        children.push(commit.id)
         parentNodes.set(commit.parentIds[j], children)
         links.push({
           sourceId: commit.parentIds[j],
