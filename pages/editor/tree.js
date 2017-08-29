@@ -3,8 +3,8 @@ import { compose } from 'redux'
 import withData from '../../lib/apollo/withData'
 import { gql, graphql } from 'react-apollo'
 
-import App from '../../lib/App'
 import Tree from '../../components/Tree'
+import Frame from '../../components/Frame'
 import EditFrame from '../../components/EditFrame'
 
 const query = gql`
@@ -43,7 +43,7 @@ class EditorPage extends Component {
     const { repository, commit } = this.props.url.query
 
     return (
-      <App>
+      <Frame raw>
         <EditFrame view={'tree'} repository={repository} commit={commit}>
           <Tree
             commits={this.state.commits}
@@ -51,7 +51,7 @@ class EditorPage extends Component {
             commit={commit}
           />
         </EditFrame>
-      </App>
+      </Frame>
     )
   }
 }

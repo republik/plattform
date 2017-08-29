@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link } from '../../server/routes'
+import { Link } from '../../lib/routes'
 import { css } from 'glamor'
 import { ascending, descending } from 'd3-array'
 import { swissTime } from '../../lib/utils/format'
@@ -131,7 +131,7 @@ export default class Tree extends Component {
       }
     })
 
-    assignSlots(commits, getPaths(commits, parentNodes))
+    assignSlots(commits, parentNodes)
 
     return {
       commits: commits,
@@ -288,6 +288,7 @@ export default class Tree extends Component {
 }
 
 const getPaths = (commits, parentNodes) => {
+  // Walks and collects all possible upward paths on the tree.
   let paths = []
   let pathsToWalk = [[commits[0].id]]
 
@@ -319,7 +320,8 @@ const getOrderedPaths = paths => {
   })
 }
 
-const assignSlots = (commits, paths) => {
+const assignSlots = (commits, parentNodes) => {
+  let paths = getPaths(commits, parentNodes)
   let orderedPaths = getOrderedPaths(paths)
   commits.sort(function (a, b) {
     return descending(new Date(a.date), new Date(b.date))
