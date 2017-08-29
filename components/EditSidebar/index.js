@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { colors } from '@project-r/styleguide'
+import CloseIcon from 'react-icons/lib/md/close'
 
 const panelWidthPx = 180
 const transitionDurationMs = 300
@@ -43,17 +44,6 @@ const styles = {
   })
 }
 
-const CloseIcon = ({ size, fill, style }) =>
-  <svg style={style} fill={fill} height={size} viewBox='0 0 24 24' width={size}>
-    <path d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z' />
-    <path d='M0 0h24v24H0z' fill='none' />
-  </svg>
-
-CloseIcon.defaultProps = {
-  fill: '#000',
-  size: 24
-}
-
 class PseudoModal extends React.Component {
   render () {
     return (
@@ -63,7 +53,7 @@ class PseudoModal extends React.Component {
           {...styles.closeButton}
           title='Close'
         >
-          <CloseIcon />
+          <CloseIcon color='#000' size={24} />
         </a>
         {this.props.children}
       </div>

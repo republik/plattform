@@ -1,34 +1,19 @@
-import React, { Component } from 'react'
-import { Raw, resetKeyGenerator } from 'slate'
-import App from '../lib/App'
-import lorem from '../lib/editor/templates/lorem.json'
-import Editor from '../lib/editor/components/Editor'
+import React from 'react'
+import {compose} from 'redux'
 
-const getInitialState = () => {
-  resetKeyGenerator()
-  return {
-    state: Raw.deserialize(lorem, { terse: true })
-  }
-}
+import withData from '../lib/apollo/withData'
+import withAuthorization from '../components/Auth/withAuthorization'
 
-export default class Index extends Component {
-  constructor (...args) {
-    super(...args)
-    this.state = getInitialState()
-  }
+import Frame from '../components/Frame'
+import RepoList from '../components/RepoList'
 
-  commitHandler (state, ...args) {
-    this.setState({state})
-  }
+const Index = () => (
+  <Frame>
+    <RepoList />
+  </Frame>
+)
 
-  render () {
-    return (
-      <App>
-        <Editor
-          state={this.state.state}
-          onChange={this.commitHandler.bind(this)}
-        />
-      </App>
-    )
-  }
-}
+export default compose(
+  withData,
+  withAuthorization(['editor'])
+)(Index)
