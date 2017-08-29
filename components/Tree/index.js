@@ -179,12 +179,11 @@ export default class Tree extends Component {
     this.state.commits.forEach(({ data, author, nodeRef, listItemRef }) => {
       if (!authorColor[author.email]) {
         let color = colors.shift()
-        let backgroundColor = d3Color(color)
-        backgroundColor.opacity = 0.2
-        backgroundColor = backgroundColor.toString()
+        let lightColor = d3Color(color)
+        lightColor.opacity = 0.2
         authorColor[author.email] = {
           dark: color,
-          light: backgroundColor
+          light: lightColor.toString()
         }
       }
       nodeRef.style.left = `${data.slotIndex * SLOT_WIDTH + MIN_PADDING}px`
