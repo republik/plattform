@@ -29,6 +29,11 @@ const actionButton = {
   }
 }
 
+export const mq = {
+  medium: '@media (min-width: 600px)',
+  large: '@media (min-width: 900px)'
+}
+
 export default {
   formatButton,
   actionButton,
@@ -68,9 +73,5 @@ export default {
     '&[data-active="true"]': {
       outlineColor: colors.primary
     }
-  },
-  mq: {
-    medium: '@media (min-width: 600px)',
-    large: '@media (min-width: 900px)'
   }
 }

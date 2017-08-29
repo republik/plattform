@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 class Placeholder extends Component {
   isVisible (node, state) {
-    return !node.text && !state.selection.hasEdgeIn(node) && !state.isBlurred
+    return !node.text && !state.selection.hasEdgeIn(node)
   }
 
   clickHandler (e) {
@@ -11,7 +11,12 @@ class Placeholder extends Component {
     const { state, node, editor } = this.props
     editor.onChange(
       state.transform()
-        .select({ anchorKey: node.nodes.first().key, focusKey: node.nodes.first().key, anchorOffset: 0, focusOffset: 0 })
+        .select({
+          anchorKey: node.nodes.first().key,
+          focusKey: node.nodes.first().key,
+          anchorOffset: 0,
+          focusOffset: 0
+        })
         .focus()
         .apply())
   }
@@ -22,7 +27,7 @@ class Placeholder extends Component {
   }
 
   render () {
-    const { children, state, editor, node, ...props } = this.props
+    const { children, state, editor, node, attributes, parent, ...props } = this.props
 
     if (!this.isVisible(node, state)) {
       return null
@@ -35,9 +40,7 @@ class Placeholder extends Component {
         onMouseDown={onMouseDown}
         contentEditable={false}
         {...props}
-      >
-        {children}
-      </span>
+      >{children}</span>
     )
   }
 }

@@ -18,9 +18,9 @@ import marks, {
   StrikethroughButton
 } from './modules/marks'
 
-import title, {
+import headlines, {
   TitleButton
-} from './modules/title'
+} from './modules/headlines'
 
 import lead, {
   LeadButton
@@ -44,7 +44,7 @@ import cover from './modules/cover'
 
 const plugins = [
   ...marks.plugins,
-  ...title.plugins,
+  ...headlines.plugins,
   ...lead.plugins,
   ...paragraph.plugins,
   ...link.plugins,

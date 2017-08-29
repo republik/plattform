@@ -1,11 +1,20 @@
 import React from 'react'
+import { css } from 'glamor'
 import { ParagraphButton } from './ui'
 import { matchBlock } from '../../utils'
-import { P } from '@project-r/styleguide'
 import { PARAGRAPH } from './constants'
 
+export const styles = {
+  paragraph: {
+    margin: '0 auto 0.8em auto',
+    maxWidth: 640
+  }
+}
+
+export const isParagraph = matchBlock(PARAGRAPH)
+
 export const paragraph = {
-  match: matchBlock(PARAGRAPH),
+  match: isParagraph,
   matchMdast: (node) => node.type === 'paragraph',
   fromMdast: (node, index, parent, visitChildren) => ({
     kind: 'block',
@@ -16,7 +25,7 @@ export const paragraph = {
     type: 'paragraph',
     children: visitChildren(object)
   }),
-  render: ({ children }) => <P>{ children }</P>
+  render: ({ children }) => <p {...css(styles.paragraph)}>{ children }</p>
 }
 
 export {

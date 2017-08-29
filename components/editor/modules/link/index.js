@@ -1,8 +1,30 @@
 import React from 'react'
 import { LinkButton, LinkForm } from './ui'
 import { matchInline } from '../../utils'
-import { A } from '@project-r/styleguide'
 import { LINK } from './constants'
+import { css } from 'glamor'
+
+export const styles = {
+  link: {
+    color: '#222',
+    textDecoration: 'underline',
+    ':visited': {
+      color: '#222',
+      textDecoration: 'underline'
+    },
+    ':hover': {
+      color: '#444'
+    }
+  }
+}
+
+css.global('a, a:visited', {
+  color: '#222',
+  textDecoration: 'underline'
+})
+css.global('a:hover', {
+  color: '#444'
+})
 
 export const link = {
   match: matchInline(LINK),
@@ -23,9 +45,10 @@ export const link = {
     children: visitChildren(object)
   }),
   render: ({ children, node }) => (
-    <A
+    <a
       href={node.getIn(['data', 'href'])}
-    >{ children }</A>
+      {...css(styles.link)}
+    >{ children }</a>
   )
 }
 
