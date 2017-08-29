@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from '../../lib/routes'
 import { css } from 'glamor'
-import { ascending, descending } from 'd3-array'
+import { ascending, descending, max } from 'd3-array'
 import { swissTime } from '../../lib/utils/format'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
@@ -87,28 +87,6 @@ export default class Tree extends Component {
 
     let parentNodes = new Map()
     let links = []
-    let commit
-    let children
-
-    for (let i = 0; i < commits.length; i++) {
-      commit = commits[i]
-      if (!commit.parentIds) continue
-      for (let j = 0; j < commit.parentIds.length; j++) {
-        children = []
-        if (parentNodes.has(commit.parentIds[j])) {
-          children = [...parentNodes.get(commit.parentIds[j])]
-        }
-        if (!children.indexOf(commit.id) === -1) {
-          continue
-        }
-        children.push(commit.id)
-        parentNodes.set(commit.parentIds[j], children)
-        links.push({
-          sourceId: commit.parentIds[j],
-          destinationId: commit.id
-        })
-      }
-    }
 
     commits.forEach(commit => {
       commit.setListItemRef = ref => {
@@ -120,6 +98,22 @@ export default class Tree extends Component {
       commit.data = {
         slotIndex: null
       }
+      if (!commit.parentIds) return
+      commit.parentIds.forEach(parentId => {
+        let children = []
+        if (parentNodes.has(parentId)) {
+          children = [...parentNodes.get(parentId)]
+        }
+        if (!children.indexOf(commit.id) === -1) {
+          return
+        }
+        children.push(commit.id)
+        parentNodes.set(parentId, children)
+        links.push({
+          sourceId: parentId,
+          destinationId: commit.id
+        })
+      })
     })
 
     links.forEach(link => {
@@ -168,14 +162,9 @@ export default class Tree extends Component {
   }
 
   layout () {
-    let numSlots = Math.max.apply(
-      Math,
-      this.state.commits.map(function (o) {
-        return o.data.slotIndex + 1
-      })
-    )
-
+    const numSlots = max(this.state.commits, o => o.data.slotIndex + 1)
     const svgWidth = numSlots * SLOT_WIDTH
+
     this.svgRef.style.height = `${this.state.height}px`
     this.svgRef.style.width = `${svgWidth}px`
     this.listRef.style.marginLeft = `${svgWidth + NODE_SIZE}px`
@@ -306,9 +295,9 @@ const getPaths = (commits, parentNodes) => {
       nextId = null
       if (children && !!children.length) {
         nextId = children.pop()
-        for (let i = 0; i < children.length; i++) {
-          pathsToWalk.push([...path, children[i]])
-        }
+        children.forEach(child => {
+          pathsToWalk.push([...path, child])
+        })
       }
     } while (nextId)
     paths.push(path)
@@ -332,14 +321,12 @@ const assignSlots = (commits, parentNodes) => {
     return descending(new Date(a.date), new Date(b.date))
   })
 
-  for (let i = 0; i < commits.length; i++) {
-    let commit = commits[i]
-    let found = false
-    for (let j = 0; j < orderedPaths.length; j++) {
-      if (!found && orderedPaths[j].indexOf(commit.id) > -1) {
-        commit.data.slotIndex = orderedPaths.length - 1 - j
-        break
+  commits.forEach(commit => {
+    orderedPaths.some((orderedPath, i) => {
+      if (orderedPath.indexOf(commit.id) > -1) {
+        commit.data.slotIndex = orderedPaths.length - 1 - i
+        return true
       }
-    }
-  }
+    })
+  })
 }
