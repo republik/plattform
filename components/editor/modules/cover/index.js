@@ -4,7 +4,7 @@ import { matchBlock, matchDocument } from '../../utils'
 import { IMAGE } from '../image'
 import { PARAGRAPH } from '../paragraph'
 import { LEAD } from '../lead'
-import { TITLE } from '../title'
+import { TITLE } from '../headlines'
 import { COVER } from './constants'
 import {
   rule,
