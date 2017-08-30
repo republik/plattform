@@ -48,7 +48,7 @@ interface FileInterface {
 }
 
 type Document implements FileInterface {
-  # AST of /article.xxx
+  # AST of /article.md
   content: String!
   meta: Meta!
   commit: Commit!
@@ -143,7 +143,7 @@ type RootMutations {
 
 # implements FileInterface
 input DocumentInput {
-  # AST of /article.xxx
+  # AST of /article.md
   content: String!
 }
 
