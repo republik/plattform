@@ -205,7 +205,7 @@ export default class Tree extends Component {
 
     const numSlots = max(this.state.commits, o => o.data.slotIndex + 1)
     const slotWidth = Math.max(
-      0,
+      NODE_SIZE / 2 + 2,
       Math.min(
         80,
         Math.floor((width - Math.max(width / 2, LIST_MIN_WIDTH)) / numSlots)
