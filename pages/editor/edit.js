@@ -11,7 +11,7 @@ import { Raw, resetKeyGenerator } from 'slate'
 import { Button, Label } from '@project-r/styleguide'
 
 import Frame from '../../components/Frame'
-import Editor from '../../components/editor/NewsletterEditor'
+import Editor, { serializer } from '../../components/editor/NewsletterEditor'
 
 import EditFrame from '../../components/EditFrame'
 import EditSidebar from '../../components/EditSidebar'
@@ -195,16 +195,7 @@ class EditorPage extends Component {
     let commit
     if (view === 'new') {
       committedEditorState = Raw.deserialize({
-        nodes: [{
-          kind: 'block',
-          type: 'paragraph',
-          nodes: [
-            {
-              kind: 'text',
-              text: 'Enter your text here...'
-            }
-          ]
-        }]
+        nodes: []
       }, { terse: true })
     } else {
       commit = repo.commits.filter(commit => {
@@ -212,7 +203,9 @@ class EditorPage extends Component {
       })[0]
 
       const json = JSON.parse(commit.document.content)
-      committedEditorState = Raw.deserialize(json, { terse: true })
+      committedEditorState = serializer.deserialize(json, {
+        mdast: true
+      })
 
       this.setState({
         commit: commit
