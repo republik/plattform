@@ -334,9 +334,9 @@ class EditorPage extends Component {
       message: message,
       document: {
         content: JSON.stringify(
-          Raw.serialize(editorState, { terse: true }),
-          null,
-          2
+          serializer.toMdast(editorState, {
+            mdast: true
+          })
         )
       }
     })
