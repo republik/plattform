@@ -18,7 +18,7 @@ module.exports = async (_, args, {pgdb, req, user}) => {
     parentId,
     message,
     document: {
-      content: mdast
+      content: mdastString
     }
   } = args
 
@@ -52,6 +52,7 @@ module.exports = async (_, args, {pgdb, req, user}) => {
       }
     }
   }
+  const mdast = JSON.parse(mdastString)
   visit(mdast, 'image', extractImages)
 
   // serialize
