@@ -1,14 +1,27 @@
-module.exports = async (_, {login, repository, path, action}, {user, redis, pubsub}) => {
-  const key = `${login}/${repository}/${path}`
+module.exports = async (
+  _,
+  { repoId, action },
+  { user, redis, pubsub }
+) => {
   const now = new Date().getTime()
+
   let result
   if (action === 'create') {
-    result = await redis.zaddAsync(key, now, user.id)
+    result = await redis.zaddAsync(repoId, now, user.id)
   } else if (action === 'delete') {
-    result = await redis.zremAsync(key, user.id)
+    result = await redis.zremAsync(repoId, user.id)
   }
   if (result) {
-    await pubsub.publish('uncommittedChanges', { uncommittedChanges: { login, repository, path, user, action } })
+    await pubsub.publish(
+      'uncommittedChanges',
+      {
+        uncommittedChanges: {
+          repoId,
+          user,
+          action
+        }
+      }
+    )
   }
   return result
 }
