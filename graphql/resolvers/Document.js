@@ -1,10 +1,17 @@
-const Immutable = require('immutable')
+// const Immutable = require('immutable')
 // https://github.com/lukasbuenger/immutable-treeutils/issues/8
 // const TreeUtils = require('immutable-treeutils')
-const TreeUtils = require('../../lib/TreeUtils')
+// const TreeUtils = require('../../lib/TreeUtils')
 
 module.exports = {
   meta: async (doc, args) => {
+    return {
+      title: 'awesome title'
+    }
+
+    // TODO migrate to mdast
+    /*
+
     const treeUtils = new TreeUtils(
       Immutable.Seq.of(),
       'id',
@@ -29,5 +36,6 @@ module.exports = {
     return {
       title
     }
+    */
   }
 }
