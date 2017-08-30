@@ -4,6 +4,7 @@ import { css } from 'glamor'
 import { ascending, descending, max } from 'd3-array'
 import { schemeCategory10 } from 'd3-scale'
 import { color as d3Color } from 'd3-color'
+import CheckIcon from 'react-icons/lib/md/check'
 import { swissTime } from '../../lib/utils/format'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
@@ -12,10 +13,12 @@ const SLOT_WIDTH = 20
 const MIN_PADDING = 10
 const NODE_SIZE = 10
 const LIST_WIDTH = 250
+const CHECKICON_SIZE = 24
 
 const styles = {
   container: css({
     margin: '0 auto',
+    maxWidth: '800px',
     position: 'relative'
   }),
   commitNode: css({
@@ -42,13 +45,30 @@ const styles = {
   listItem: css({
     fontSize: '12px',
     marginBottom: '5px',
-    padding: '5px'
+    padding: '5px',
+    position: 'relative'
   }),
   svg: css({
     position: 'absolute',
     top: 0,
     left: `${MIN_PADDING}px`,
     zIndex: -1
+  }),
+  milestoneBar: css({
+    backgroundColor: '#ddd',
+    height: '100%',
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    zIndex: '-2'
+  }),
+  milestoneCheck: css({
+    backgroundColor: '#ddd',
+    marginTop: `-${CHECKICON_SIZE / 2}px`,
+    position: 'absolute',
+    right: `-${CHECKICON_SIZE + 10}px`,
+    top: '50%',
+    width: `${CHECKICON_SIZE}px`
   })
 }
 
@@ -82,7 +102,8 @@ export default class Tree extends Component {
           date: commit.date,
           author: commit.author,
           message: commit.message,
-          parentIds: commit.parentIds
+          parentIds: commit.parentIds,
+          milestones: commit.milestones
         }
       })
       .sort(function (a, b) {
@@ -98,6 +119,12 @@ export default class Tree extends Component {
       }
       commit.setNodeRef = ref => {
         commit.nodeRef = ref
+      }
+      commit.setMilestoneBarRef = ref => {
+        commit.milestoneBarRef = ref
+      }
+      commit.setMilestoneCheckRef = ref => {
+        commit.milestoneCheckRef = ref
       }
       commit.data = {
         slotIndex: null
@@ -172,26 +199,52 @@ export default class Tree extends Component {
     this.svgRef.style.height = `${this.state.height}px`
     this.svgRef.style.width = `${svgWidth}px`
     this.listRef.style.marginLeft = `${svgWidth + NODE_SIZE}px`
-    this.containerRef.style.width = `${svgWidth + LIST_WIDTH}px`
 
     let colors = [...schemeCategory10]
     let authorColor = {}
-    this.state.commits.forEach(({ data, author, nodeRef, listItemRef }) => {
-      if (!authorColor[author.email]) {
-        let color = colors.shift()
-        let lightColor = d3Color(color)
-        lightColor.opacity = 0.2
-        authorColor[author.email] = {
-          dark: color,
-          light: lightColor.toString()
+    this.state.commits.forEach(
+      ({
+        data,
+        author,
+        nodeRef,
+        listItemRef,
+        milestoneBarRef,
+        milestoneCheckRef,
+        milestones
+      }) => {
+        if (!authorColor[author.email]) {
+          let color = colors.shift()
+          let lightColor = d3Color(color)
+          lightColor.opacity = 0.2
+          authorColor[author.email] = {
+            dark: color,
+            light: lightColor.toString()
+          }
+        }
+        nodeRef.style.left = `${data.slotIndex * SLOT_WIDTH + MIN_PADDING}px`
+        nodeRef.style.top = `${data.measurements.top +
+          Math.floor(data.measurements.height / 2)}px`
+        nodeRef.style.backgroundColor = authorColor[author.email].dark
+        if (!milestoneBarRef) {
+          listItemRef.style.backgroundColor = authorColor[author.email].light
+        }
+        if (milestoneBarRef) {
+          milestoneBarRef.style.width = `${svgWidth + LIST_WIDTH}px`
+        }
+        if (milestoneCheckRef) {
+          // TODO: Implement a more usable UI than this simple title tooltip.
+          let title = ''
+          milestones.forEach((milestone, i) => {
+            title +=
+              milestone.author.name +
+              ': ' +
+              milestone.message +
+              (i === milestones.length - 1 ? '' : '\n')
+          })
+          milestoneCheckRef.title = title
         }
       }
-      nodeRef.style.left = `${data.slotIndex * SLOT_WIDTH + MIN_PADDING}px`
-      nodeRef.style.top = `${data.measurements.top +
-        Math.floor(data.measurements.height / 2)}px`
-      nodeRef.style.backgroundColor = authorColor[author.email].dark
-      listItemRef.style.backgroundColor = authorColor[author.email].light
-    })
+    )
 
     const adjustment = NODE_SIZE / 2
     this.state.links.forEach(({ sourceId, destinationId, ref }) => {
@@ -277,6 +330,19 @@ export default class Tree extends Component {
                 {commit.author.name}
                 <br />
                 {timeFormat(new Date(commit.date))}
+                {!!commit.milestones &&
+                  <span>
+                    <span
+                      {...styles.milestoneBar}
+                      ref={commit.setMilestoneBarRef}
+                    />
+                    <span
+                      {...styles.milestoneCheck}
+                      ref={commit.setMilestoneCheckRef}
+                    >
+                      <CheckIcon color='#333' size={CHECKICON_SIZE} />
+                    </span>
+                  </span>}
               </li>
             )}
           </ul>}
