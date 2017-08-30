@@ -22,7 +22,7 @@ module.exports = {
     const variables = {
       login,
       repoName,
-      blobExpression: `${commit.id}:article.json`
+      blobExpression: `${commit.id}:article.md`
     }
 
     const {
