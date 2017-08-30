@@ -1,4 +1,7 @@
 import React from 'react'
+import { css } from 'glamor'
+import Placeholder from '../../Placeholder'
+
 import { matchBlock } from '../../utils'
 import {
   TitleButton,
@@ -34,7 +37,13 @@ export const title = {
     depth: 1,
     children: visitChildren(object)
   }),
-  render: ({ children }) => <h1>{ children }</h1>
+  render: ({ children, ...props }) =>
+    <h1 {...css(styles.title)}>
+      <Placeholder {...props} style={{ color: '#ccc' }}>
+        {'Titel'}
+      </Placeholder>
+      { children }
+    </h1>
 }
 
 export const mediumHeadline = {

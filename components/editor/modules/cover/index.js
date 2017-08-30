@@ -1,4 +1,5 @@
 import React from 'react'
+import { css } from 'glamor'
 import { Block } from 'slate'
 import { matchBlock, matchDocument } from '../../utils'
 import { IMAGE } from '../image'
@@ -19,14 +20,58 @@ import {
   update,
   unwrap
 } from '../../utils/rules'
+import { mq } from '../../styles'
+
+export const styles = {
+  cover: {
+    width: '100%',
+    position: 'relative',
+    [mq.medium]: {
+      minHeight: 500,
+      height: ['700px', '80vh']
+    },
+    maxHeight: 700,
+    overflow: 'hidden',
+    marginBottom: '20px'
+  },
+  coverLead: {
+    position: 'relative',
+    [mq.medium]: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: '40%',
+      color: '#fff',
+      backgroundImage: 'linear-gradient(-180deg, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.3) 20%, rgba(0,0,0,0.80) 100%)'
+    }
+  },
+  coverLeadContainer: {
+    [mq.medium]: {
+      position: 'absolute',
+      zIndex: 1000,
+      bottom: '15%',
+      left: 0,
+      right: 0
+    }
+  },
+  coverLeadCenter: {
+    padding: '20px 20px 0',
+    [mq.medium]: {
+      textAlign: 'center',
+      maxWidth: 640,
+      margin: '0 auto'
+    }
+  }
+}
 
 const Cover = ({ children }) => {
   const [ image, title, lead ] = children
-  return <div>
+  return <div {...css(styles.cover)}>
     {image}
-    <div>
-      <div>
-        <div>
+    <div {...css(styles.coverLead)}>
+      <div {...css(styles.coverLeadContainer)}>
+        <div {...css(styles.coverLeadCenter)}>
           {title}
           {lead}
         </div>

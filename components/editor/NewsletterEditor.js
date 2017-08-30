@@ -3,8 +3,6 @@ import PropTypes from 'prop-types'
 import { Editor as SlateEditor } from 'slate'
 import { css } from 'glamor'
 
-import { NarrowContainer } from '@project-r/styleguide'
-
 import MarkdownSerializer from '../../lib/serializer'
 import {getSerializationRules} from './utils/getRules'
 
@@ -41,6 +39,15 @@ import image, {
 } from './modules/image'
 
 import cover from './modules/cover'
+
+const newsletterStyles = {
+  fontFamily: 'serif',
+  fontSize: 18,
+  color: '#444',
+  WebkitFontSmoothing: 'antialiased',
+  maxWidth: 'calc(100vw - 190px)'
+
+}
 
 const plugins = [
   ...marks.plugins,
@@ -114,12 +121,12 @@ class Editor extends Component {
           state={state}
           onChange={this.onChange} />
         <Document>
-          <NarrowContainer>
+          <div {...css(newsletterStyles)}>
             <SlateEditor
               state={state}
               onChange={this.onChange}
               plugins={plugins} />
-          </NarrowContainer>
+          </div>
         </Document>
       </Container>
     )

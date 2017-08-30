@@ -4,7 +4,7 @@ import { LeadButton } from './ui'
 import Placeholder from '../../Placeholder'
 import { matchBlock } from '../../utils'
 import { LEAD } from './constants'
-import { mq } from '../../styles'
+// import { mq } from '../../styles'
 
 export const styles = {
   lead: {
@@ -18,9 +18,6 @@ export const styles = {
     ':after': {
       display: 'inline',
       content: '»'
-    },
-    [mq.medium]: {
-      color: '#ccc'
     }
   }
 }
@@ -46,6 +43,7 @@ export const lead = {
     <p {...css(styles.lead)}>
       <Placeholder
         {...props}
+        style={{ color: '#ccc' }}
       >
         {'Hier könnte ihr Lead stehen.'}
       </Placeholder>
