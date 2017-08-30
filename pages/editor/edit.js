@@ -34,7 +34,6 @@ const query = gql`
           email
         }
         document {
-          encoding
           content
           commit {
             id
@@ -69,7 +68,6 @@ const commitMutation = gql`
       }
       date
       document {
-        encoding
         content
         commit {
           id
@@ -346,8 +344,7 @@ class EditorPage extends Component {
           Raw.serialize(editorState, { terse: true }),
           null,
           2
-        ),
-        encoding: 'UTF-8'
+        )
       }
     })
       .then(result => {
