@@ -9,16 +9,16 @@ import { swissTime } from '../../lib/utils/format'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
-const SLOT_WIDTH = 20
+const CONTAINER_MAX_WIDTH = 800
 const MIN_PADDING = 10
 const NODE_SIZE = 10
-const LIST_WIDTH = 250
+const LIST_MIN_WIDTH = 250
 const CHECKICON_SIZE = 24
 
 const styles = {
   container: css({
-    margin: '0 auto',
-    maxWidth: '800px',
+    maxWidth: `${CONTAINER_MAX_WIDTH}px`,
+    overflow: 'hidden',
     position: 'relative'
   }),
   commitNode: css({
@@ -38,8 +38,8 @@ const styles = {
   list: css({
     listStyle: 'none',
     margin: 0,
-    padding: 0,
-    width: `${LIST_WIDTH}px`,
+    padding: `0 ${CHECKICON_SIZE + 10}px 0 0`,
+    minWidth: `${LIST_MIN_WIDTH}px`,
     zIndex: 1
   }),
   listItem: css({
@@ -51,7 +51,6 @@ const styles = {
   svg: css({
     position: 'absolute',
     top: 0,
-    left: `${MIN_PADDING}px`,
     zIndex: -1
   }),
   milestoneBar: css({
@@ -80,6 +79,7 @@ export default class Tree extends Component {
       links: null,
       parentNodes: null
     }
+    this.measure = this.measure.bind(this)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -92,6 +92,11 @@ export default class Tree extends Component {
     } else {
       this.layout()
     }
+  }
+
+  componentDidMount () {
+    window.addEventListener('resize', this.measure)
+    this.measure()
   }
 
   transformData (props) {
@@ -165,8 +170,7 @@ export default class Tree extends Component {
   measure () {
     const { commits } = this.state
 
-    if (!commits) return
-
+    if (!commits || !this.containerRef) return
     const containerRect = this.containerRef.getBoundingClientRect()
 
     commits.forEach(({ data, listItemRef }) => {
@@ -184,21 +188,40 @@ export default class Tree extends Component {
 
     const width = containerRect.width
     const height = containerRect.height
+    const windowWidth = window.innerWidth
     if (width !== this.state.width) {
       this.setState({ width: width })
     }
     if (height !== this.state.height) {
       this.setState({ height: height })
     }
+    if (windowWidth !== this.state.windowWidth) {
+      this.setState({ windowWidth: windowWidth })
+    }
   }
 
   layout () {
+    const { windowWidth, width } = this.state
+
     const numSlots = max(this.state.commits, o => o.data.slotIndex + 1)
-    const svgWidth = numSlots * SLOT_WIDTH
+    const slotWidth = Math.max(
+      0,
+      Math.min(
+        80,
+        Math.floor((width - Math.max(width / 2, LIST_MIN_WIDTH)) / numSlots)
+      )
+    )
+    const svgWidth = numSlots * slotWidth
 
     this.svgRef.style.height = `${this.state.height}px`
-    this.svgRef.style.width = `${svgWidth}px`
+    this.svgRef.style.width = `${svgWidth}px` - slotWidth / 2
+    this.svgRef.style.left = slotWidth / 2
     this.listRef.style.marginLeft = `${svgWidth + NODE_SIZE}px`
+
+    this.containerRef.style.margin =
+      windowWidth < CONTAINER_MAX_WIDTH + 2 * MIN_PADDING
+        ? `0 ${MIN_PADDING}px`
+        : '0 auto 0'
 
     let colors = [...schemeCategory10]
     let authorColor = {}
@@ -221,7 +244,7 @@ export default class Tree extends Component {
             light: lightColor.toString()
           }
         }
-        nodeRef.style.left = `${data.slotIndex * SLOT_WIDTH + MIN_PADDING}px`
+        nodeRef.style.left = `${data.slotIndex * slotWidth + slotWidth / 2}px`
         nodeRef.style.top = `${data.measurements.top +
           Math.floor(data.measurements.height / 2)}px`
         nodeRef.style.backgroundColor = authorColor[author.email].dark
@@ -229,7 +252,7 @@ export default class Tree extends Component {
           listItemRef.style.backgroundColor = authorColor[author.email].light
         }
         if (milestoneBarRef) {
-          milestoneBarRef.style.width = `${svgWidth + LIST_WIDTH}px`
+          milestoneBarRef.style.width = `${Math.max(width, LIST_MIN_WIDTH)}px`
         }
         if (milestoneCheckRef) {
           // TODO: Implement a more usable UI than this simple title tooltip.
@@ -255,12 +278,12 @@ export default class Tree extends Component {
         return o.id === destinationId
       })[0]
 
-      const sx = source.data.slotIndex * SLOT_WIDTH + adjustment
+      const sx = source.data.slotIndex * slotWidth + adjustment
       const sy =
         source.data.measurements.top +
         Math.floor(source.data.measurements.height / 2) +
         adjustment
-      const dx = destination.data.slotIndex * SLOT_WIDTH + adjustment
+      const dx = destination.data.slotIndex * slotWidth + adjustment
       const dy =
         destination.data.measurements.top +
         Math.floor(destination.data.measurements.height / 2) +
