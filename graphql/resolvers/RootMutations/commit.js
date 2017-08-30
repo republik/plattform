@@ -2,8 +2,8 @@ const GitHub = require('github-api')
 const github = require('../../../lib/github')
 const { hashObject } = require('../../../lib/git')
 const visit = require('unist-util-visit')
-const loremMdast = require('../../../lib/lorem.mdast.json')
 const dataUriToBuffer = require('data-uri-to-buffer')
+const MDAST = require('../../../lib/mdast/mdast')
 
 module.exports = async (_, args, {pgdb, req, user}) => {
   if (!req.user) {
@@ -18,7 +18,7 @@ module.exports = async (_, args, {pgdb, req, user}) => {
     parentId,
     message,
     document: {
-      content: _content
+      content: mdast
     }
   } = args
 
@@ -29,8 +29,6 @@ module.exports = async (_, args, {pgdb, req, user}) => {
   const [login, repoName] = repoId.split('/')
   const repo = await _github.getRepo(login, repoName)
 
-  const content = loremMdast // example
-
   // extract images
   const images = []
   const extractImages = (node) => {
@@ -39,22 +37,30 @@ module.exports = async (_, args, {pgdb, req, user}) => {
       try {
         blob = dataUriToBuffer(node.url)
       } catch (e) {
-        console.log(node.url)
-        throw e
+        console.log('ignoring image node with url:' + node.url)
       }
-      const suffix = blob.type.split('/')[1]
-      const hash = hashObject(blob)
-      const image = {
-        path: `images/${hash}.${suffix}`,
-        hash,
-        blob
+      if (blob) {
+        const suffix = blob.type.split('/')[1]
+        const hash = hashObject(blob)
+        const image = {
+          path: `images/${hash}.${suffix}`,
+          hash,
+          blob
+        }
+        images.push(image)
+        node.url = image.path
       }
-      images.push(image)
-      node.url = image.path
     }
   }
-  visit(content, 'image', extractImages)
-  console.log(content)
+  visit(mdast, 'image', extractImages)
+
+  // serialize
+  const markdown = MDAST.stringify(mdast)
+
+  // markdown -> blob
+  const markdownBlob = await repo
+    .createBlob(markdown)
+    .then(result => result.data)
 
   // images -> blobs
   await Promise.all(images.map(({ blob }) => {
@@ -62,11 +68,6 @@ module.exports = async (_, args, {pgdb, req, user}) => {
       .createBlob(blob)
       .then(result => result.data)
   }))
-
-  // content -> blob
-  const contentBlob = await repo
-    .createBlob(JSON.stringify(content))
-    .then(result => result.data)
 
   const tree = await repo
     .createTree(
@@ -79,14 +80,13 @@ module.exports = async (_, args, {pgdb, req, user}) => {
       })),
       {
         path: 'article.md',
-        sha: contentBlob.sha,
+        sha: markdownBlob.sha,
         mode: '100644',
         type: 'blob'
       }
     ]
     )
     .then(result => result.data)
-  console.log(tree)
 
   const commit = await github.commit(
     req.user.githubAccessToken,
@@ -98,13 +98,11 @@ module.exports = async (_, args, {pgdb, req, user}) => {
 
   // load heads
   const heads = await github.heads(req.user, repoId)
-  console.log(heads)
 
   // check if parent is (still) a head
   const headParent = heads.find(ref =>
     ref.target.oid === parentId
   )
-  console.log(headParent)
 
   let branch
   if (headParent) { // fast-forward
@@ -125,7 +123,6 @@ module.exports = async (_, args, {pgdb, req, user}) => {
 
   // https://developer.github.com/v3/repos/contents/#update-a-file
   return {
-    id: 'asdf'// result.data.commit.sha,
-    // ref: 'refs/heads/' + branch
+    id: commit.sha
   }
 }
