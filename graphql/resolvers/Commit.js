@@ -1,4 +1,5 @@
 const { createGithubFetchForUser } = require('../../lib/github')
+const MDAST = require('../../lib/mdast/mdast')
 
 module.exports = {
   document: async (commit, args, { user }) => {
@@ -39,8 +40,10 @@ module.exports = {
       throw new Error('no document found for: ' + variables.blobExpression)
     }
 
+    const mdast = JSON.stringify(MDAST.parse(repository.blob.text))
+
     return {
-      content: repository.blob.text,
+      content: mdast,
       commit
     }
   }
