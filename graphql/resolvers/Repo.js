@@ -1,5 +1,5 @@
-const { createGithubFetchForUser } = require('../../lib/github')
 const GitHub = require('github-api')
+const github = require('../../lib/github')
 const { descending } = require('d3-array')
 const uniqBy = require('lodash/uniqBy')
 
@@ -41,18 +41,18 @@ module.exports = {
           }
         }
       }
-    } = await createGithubFetchForUser(user)({ query: refsQuery, variables })
+    } = await github.createGithubFetchForUser(user)({ query: refsQuery, variables })
     if (errors) {
       throw new Error(JSON.stringify(errors))
     }
 
-    const github = new GitHub({
+    const _github = new GitHub({
       token: user.githubAccessToken
     })
 
     return Promise.all(
       refs.map(({ target: { oid } }) => {
-        return github
+        return _github
           .getRepo(login, repoName)
           .listCommits({
             sha: oid,
@@ -78,51 +78,6 @@ module.exports = {
       .then(commits => uniqBy(commits, 'id'))
       .then(commits => commits.sort((a, b) => descending(a.date, b.date)))
   },
-  milestones: async (repo, args, { user }) => {
-    const refsQuery = `
-      query repository(
-        $login: String!,
-        $repoName: String!,
-        $first: Int
-      ) {
-        repository(owner: $login, name: $repoName) {
-          refs(refPrefix: "refs/tags/", first: $first) {
-            nodes {
-              name
-              target {
-                ... on Tag {
-                  oid
-                }
-              }
-            }
-          }
-        }
-      }
-    `
-    const [login, repoName] = repo.id.split('/')
-    const variables = {
-      login,
-      repoName,
-      first: 100
-    }
-    const {
-      errors,
-      data: {
-        repository: {
-          refs: {
-            nodes: refs
-          }
-        }
-      }
-    } = await createGithubFetchForUser(user)({ query: refsQuery, variables })
-    if (errors) {
-      throw new Error(JSON.stringify(errors))
-    }
-
-    // TODO: check if commits are requested and get them in bulk
-
-    return refs
-  },
   uncommittedChanges: async (
     { id: repoId },
     args,
@@ -132,5 +87,12 @@ module.exports = {
     return userIds.length
       ? pgdb.public.users.find({ id: userIds })
       : []
+  },
+  milestones: (
+    { id: repoId },
+    args,
+    { user, pgdb }
+  ) => {
+    return github.tags(user, repoId)
   }
 }
