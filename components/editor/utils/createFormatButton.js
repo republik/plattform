@@ -16,9 +16,9 @@ const defaultProps = {
 }
 
 export default ({
-  isDisabled,
-  isActive,
-  isVisible,
+  isDisabled = () => false,
+  isActive = () => false,
+  isVisible = () => true,
   reducer
 }) =>
   Component => {

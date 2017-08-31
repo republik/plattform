@@ -25,7 +25,6 @@ const reducer = blockType =>
 const defaultOptions = blockType => ({
   isDisabled: isDisabled(blockType),
   isActive: isActive(blockType),
-  isVisible: () => true,
   reducer: reducer(blockType)
 })
 

@@ -38,7 +38,6 @@ const reducer = inlineType =>
     }
 
 const defaultOptions = inlineType => ({
-  isVisible: () => true,
   isDisabled: isDisabled(inlineType),
   isActive: isActive(inlineType),
   reducer: reducer(inlineType)

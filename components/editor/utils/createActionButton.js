@@ -6,6 +6,7 @@ const preventDefault = event => event.preventDefault()
 const propTypes = {
   state: PropTypes.object.isRequired,
   onChange: PropTypes.func,
+  isDisabled: PropTypes.func,
   isVisible: PropTypes.func
 }
 
@@ -14,12 +15,13 @@ const defaultProps = {
 }
 
 export default ({
-  isDisabled,
-  isVisible,
+  isDisabled = () => false,
+  isVisible = () => true,
   reducer
 }) =>
   Component => {
     const ActionButton = props => {
+      console.log(isVisible)
       const {
         state,
         onChange,
