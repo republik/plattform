@@ -102,6 +102,7 @@ export const serializer = new MarkdownSerializer({
     documentRule
   ].concat(getSerializationRules([
     ...cover.plugins,
+    ...headlines.plugins,
     ...image.plugins,
     ...paragraph.plugins
   ]))

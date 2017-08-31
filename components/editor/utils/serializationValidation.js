@@ -31,7 +31,7 @@ const addValidation = (rule, serializer) => {
     const rawNode = nodeToRawNode(node)
     const mdast = serializer.toMdast(rawNode, context)
 
-    return context.dirty
+    return context.dirty || context.missing
       ? mdast
       : null
   }
