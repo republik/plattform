@@ -6,10 +6,11 @@
 module.exports = {
   meta: async (doc, args) => {
     return {
-      title: 'awesome title'
+      title: 'TODO: title extraction for mdast'
     }
 
     // TODO migrate to mdast
+    // wait until decision about how meta data is embedded in document
     /*
 
     const treeUtils = new TreeUtils(
