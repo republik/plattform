@@ -1,3 +1,4 @@
+import React from 'react'
 import { Label } from '@project-r/styleguide'
 import { ImagePropertyForm } from '../image/ui'
 import { COVER } from './constants'
