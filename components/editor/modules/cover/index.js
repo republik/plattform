@@ -2,6 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 import { Block } from 'slate'
 import { matchBlock, matchDocument } from '../../utils'
+import addValidation from '../../utils/serializationValidation'
 import { PARAGRAPH } from '../paragraph'
 import { serializer as leadSerializer, LEAD } from '../lead'
 import { titleSerializer, TITLE } from '../headlines'
@@ -10,17 +11,13 @@ import { CoverForm } from './ui'
 import {
   rule,
   not,
-  either,
-  isNone,
   firstChild,
-  childAt,
   childrenAfter,
   prepend,
-  insertAt,
-  update,
   unwrap
 } from '../../utils/rules'
 import { mq } from '../../styles'
+import MarkdownSerializer from '../../../../lib/serializer'
 
 export const styles = {
   cover: {
@@ -95,6 +92,21 @@ const Cover = ({ node, children }) => {
 
 export const isCover = matchBlock(COVER)
 
+const findOrCreateBlock = (nodes, type) => {
+  const node = nodes.find(matchBlock(type))
+  return node || {
+    kind: 'block',
+    type
+  }
+}
+const findOrCreateNode = (nodes, type, match = node => node.type === type, props = {}) => {
+  const node = nodes.find(match)
+  return node || {
+    type,
+    ...props
+  }
+}
+
 export const cover = {
   match: isCover,
   render: Cover,
@@ -107,12 +119,16 @@ export const cover = {
         .concat(child.children),
       []
     )
-    const image = deepNodes
-      .find(node => node.type === 'image') || {}
-    const title = node.children
-      .find(node => node.type === 'heading' && node.depth === 1)
-    const lead = node.children
-      .find(node => node.type === 'blockquote')
+    const image = findOrCreateNode(deepNodes, 'image')
+    const title = findOrCreateNode(
+      node.children,
+      'heading',
+      node => node.type === 'heading' && node.depth === 1,
+      {
+        depth: 1
+      }
+    )
+    const lead = findOrCreateNode(node.children, 'blockquote')
 
     return {
       kind: 'block',
@@ -122,25 +138,47 @@ export const cover = {
         alt: image.alt
       },
       nodes: [
-        title && titleSerializer.fromMdast(title),
-        lead && leadSerializer.fromMdast(lead)
-      ].filter(Boolean)
+        titleSerializer.fromMdast(title),
+        leadSerializer.fromMdast(lead)
+      ]
     }
   },
-  toMdast: (object, index, parent, visitChildren) => ({
-    type: 'zone',
-    identifier: COVER,
-    children: [
-      {
-        type: 'image',
-        alt: object.data.alt,
-        url: object.data.src
-      },
-      titleSerializer.toMdast(object.nodes[0]),
-      leadSerializer.toMdast(object.nodes[1])
-    ]
-  })
+  toMdast: (object, index, parent, visitChildren, context) => {
+    [isTitle, isLead].some((check, index) => {
+      const node = object.nodes[index]
+      if (!node || !check(node)) {
+        context.dirty = true
+        return true
+      }
+    })
+
+    return {
+      type: 'zone',
+      identifier: COVER,
+      children: [
+        {
+          type: 'image',
+          alt: object.data.alt,
+          url: object.data.src
+        },
+        titleSerializer.toMdast(
+          findOrCreateBlock(object.nodes, TITLE), context
+        ),
+        leadSerializer.toMdast(
+          findOrCreateBlock(object.nodes, LEAD), context
+        )
+      ]
+    }
+  }
 }
+
+export const serializer = new MarkdownSerializer({
+  rules: [
+    cover
+  ]
+})
+
+addValidation(cover, serializer)
 
 export {
   CoverForm,
@@ -157,6 +195,12 @@ export default {
     {
       schema: {
         rules: [
+          // Restrictions
+          onCover(
+            childrenAfter(1),
+            unwrap(() => PARAGRAPH)
+          ),
+
           // Element
           cover,
 
@@ -171,30 +215,6 @@ export default {
                 Block.create({ type: LEAD })
               ]
             }))
-          ),
-          // Restrictions
-          onCover(
-            either(
-              firstChild(isNone),
-              firstChild(isLead)
-            ),
-            prepend(() => Block.create({ type: TITLE }))
-          ),
-          onCover(
-            firstChild(not(isTitle)),
-            update(() => TITLE)
-          ),
-          onCover(
-            childAt(1, isNone),
-            insertAt(1, () => Block.create({ type: LEAD }))
-          ),
-          onCover(
-            childAt(1, not(isLead)),
-            update(() => LEAD)
-          ),
-          onCover(
-            childrenAfter(1),
-            unwrap(() => PARAGRAPH)
           )
         ]
       }
