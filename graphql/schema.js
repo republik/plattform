@@ -115,10 +115,10 @@ type RootMutations {
     message: String!
   ): Milestone!
 
-  unplaceMilestone(
+  removeMilestone(
     repoId: ID!
     name: String!
-  ): Milestone!
+  ): Boolean!
 
   # Inform about my uncommited changes in the repo
   uncommittedChanges(
