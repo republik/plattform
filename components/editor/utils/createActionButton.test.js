@@ -5,7 +5,7 @@ import { shallow } from 'enzyme'
 import createActionButton from './createActionButton'
 
 test('utils.createActionButton', assert => {
-  assert.plan(4)
+  assert.plan(7)
 
   const Button = () => (
     <span />
@@ -15,13 +15,14 @@ test('utils.createActionButton', assert => {
 
   const ActionButton = createActionButton({
     isDisabled: ({ state }) => state.disabled,
+    isVisible: ({ state }) => state.visible,
     reducer: props => event =>
       props.onChange(props, event)
   })(Button)
 
   const wrapper = shallow(
     <ActionButton
-      state={{ disabled: false }}
+      state={{ disabled: false, visible: false }}
       onChange={onChange}
     />
   )
@@ -30,6 +31,12 @@ test('utils.createActionButton', assert => {
     wrapper.find('[disabled=false]').exists(),
     true,
     'passes `disabled` property according to response from `options.isDisabled`'
+  )
+
+  assert.equal(
+    wrapper.find('[visible=false]').exists(),
+    true,
+    'passes `visible` property according to response from `options.isVisible`'
   )
 
   wrapper.find('Button').simulate('mousedown', { foo: 'bar' })
@@ -43,7 +50,7 @@ test('utils.createActionButton', assert => {
   assert.equal(
     onChange.calledWith(
       {
-        state: { disabled: false },
+        state: { disabled: false, visible: false },
         onChange
       },
       { foo: 'bar' }
@@ -60,5 +67,34 @@ test('utils.createActionButton', assert => {
     preventDefault.callCount,
     1,
     'calls preventDefault() on the mousedown event if `options.isDisabled` returns true '
+  )
+
+  const isVisible = (props, visible) => {
+    return !visible
+  }
+
+  const isDisabled = (props, disabled) => {
+    return !disabled
+  }
+
+  const wrapperWithProps = shallow(
+    <ActionButton
+      state={{ disabled: false, visible: true }}
+      isVisible={isVisible}
+      isDisabled={isDisabled}
+      onChange={onChange}
+    />
+  )
+
+  assert.equal(
+    wrapperWithProps.find('[disabled=true]').exists(),
+    true,
+    '`props.isDisabled` overrides `options.isDisabled`'
+  )
+
+  assert.equal(
+    wrapperWithProps.find('[visible=false]').exists(),
+    true,
+    '`props.isVisible` overrides `options.isVisible`'
   )
 })

@@ -57,6 +57,7 @@ const reducer = markType =>
     }
 
 const defaultOptions = markType => ({
+  isVisible: () => true,
   isDisabled: isDisabled(markType),
   isActive: isActive(markType),
   reducer: reducer(markType)

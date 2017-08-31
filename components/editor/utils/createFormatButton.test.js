@@ -5,7 +5,7 @@ import { shallow } from 'enzyme'
 import createFormatButton from './createFormatButton'
 
 test('utils.createFormatButton', assert => {
-  assert.plan(5)
+  assert.plan(9)
 
   const Button = () => (
     <span />
@@ -16,13 +16,14 @@ test('utils.createFormatButton', assert => {
   const FormatButton = createFormatButton({
     isDisabled: ({ state }) => state.disabled,
     isActive: ({ state }) => state.active,
+    isVisible: ({ state }) => state.visible,
     reducer: props => event =>
       props.onChange(props, event)
   })(Button)
 
   const wrapper = shallow(
     <FormatButton
-      state={{ active: true, disabled: false }}
+      state={{ active: true, disabled: false, visible: true }}
       onChange={onChange}
     />
   )
@@ -39,6 +40,12 @@ test('utils.createFormatButton', assert => {
     'passes `disabled` property according to response from `options.isDisabled`'
   )
 
+  assert.equal(
+    wrapper.find('[visible=true]').exists(),
+    true,
+    'passes `visible` property according to response from `options.isVisible`'
+  )
+
   wrapper.find('Button').simulate('mousedown', { foo: 'bar' })
 
   assert.equal(
@@ -50,7 +57,7 @@ test('utils.createFormatButton', assert => {
   assert.equal(
     onChange.calledWith(
       {
-        state: { active: true, disabled: false },
+        state: { active: true, disabled: false, visible: true },
         onChange
       },
       { foo: 'bar' }
@@ -67,5 +74,45 @@ test('utils.createFormatButton', assert => {
     preventDefault.callCount,
     1,
     'calls preventDefault() on the mousedown event if `options.isDisabled` returns true '
+  )
+
+  const isVisible = (props, visible) => {
+    return !visible
+  }
+
+  const isDisabled = (props, disabled) => {
+    return !disabled
+  }
+
+  const isActive = (props, active) => {
+    return !active
+  }
+
+  const wrapperWithProps = shallow(
+    <FormatButton
+      state={{ active: true, disabled: false, visible: true }}
+      isVisible={isVisible}
+      isDisabled={isDisabled}
+      isActive={isActive}
+      onChange={onChange}
+    />
+  )
+
+  assert.equal(
+    wrapperWithProps.find('[active=false]').exists(),
+    true,
+    '`props.isActive` overrides `options.isActive`'
+  )
+
+  assert.equal(
+    wrapperWithProps.find('[disabled=true]').exists(),
+    true,
+    '`props.isDisabled` overrides `options.isDisabled`'
+  )
+
+  assert.equal(
+    wrapperWithProps.find('[visible=false]').exists(),
+    true,
+    '`props.isVisible` overrides `options.isVisible`'
   )
 })

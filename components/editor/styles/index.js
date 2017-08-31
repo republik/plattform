@@ -1,9 +1,16 @@
 import { colors } from '@project-r/styleguide'
 
-const formatButton = {
+const button = {
   cursor: 'pointer',
   color: colors.secondary,
   transition: 'color 0.1s, opacity 0.1s',
+  '&[data-visible="false"]': {
+    display: 'none'
+  }
+}
+
+const formatButton = {
+  ...button,
   '&[data-active="true"]': {
     color: colors.primary
   },
@@ -17,9 +24,7 @@ const formatButton = {
 }
 
 const actionButton = {
-  cursor: 'pointer',
-  color: colors.secondary,
-  transition: 'color 0.1s, opacity 0.1s',
+  ...button,
   '&[data-disabled="true"]': {
     opacity: 0.3,
     color: colors.secondary
@@ -35,6 +40,7 @@ export const mq = {
 }
 
 export default {
+  button,
   formatButton,
   actionButton,
   markButton: {
