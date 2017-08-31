@@ -30,7 +30,7 @@ export const lead = {
   fromMdast: (node, index, parent, visitChildren) => ({
     kind: 'block',
     type: LEAD,
-    nodes: node.children.length
+    nodes: node.children && node.children.length
       ? paragraphSerializer.fromMdast(node.children[0]).nodes
       : []
   }),

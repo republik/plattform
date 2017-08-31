@@ -1,8 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
-import { Block } from 'slate'
-import { matchBlock, matchDocument } from '../../utils'
-import addValidation from '../../utils/serializationValidation'
+import { matchBlock } from '../../utils'
+import addValidation, { findOrCreate } from '../../utils/serializationValidation'
 import { PARAGRAPH } from '../paragraph'
 import { serializer as leadSerializer, LEAD } from '../lead'
 import { titleSerializer, TITLE } from '../headlines'
@@ -10,10 +9,7 @@ import { COVER } from './constants'
 import { CoverForm } from './ui'
 import {
   rule,
-  not,
-  firstChild,
   childrenAfter,
-  prepend,
   unwrap
 } from '../../utils/rules'
 import { mq } from '../../styles'
@@ -92,21 +88,6 @@ const Cover = ({ node, children }) => {
 
 export const isCover = matchBlock(COVER)
 
-const findOrCreateBlock = (nodes, type) => {
-  const node = nodes.find(matchBlock(type))
-  return node || {
-    kind: 'block',
-    type
-  }
-}
-const findOrCreateNode = (nodes, type, match = node => node.type === type, props = {}) => {
-  const node = nodes.find(match)
-  return node || {
-    type,
-    ...props
-  }
-}
-
 export const cover = {
   match: isCover,
   render: Cover,
@@ -119,16 +100,17 @@ export const cover = {
         .concat(child.children),
       []
     )
-    const image = findOrCreateNode(deepNodes, 'image')
-    const title = findOrCreateNode(
+    const image = findOrCreate(deepNodes, {type: 'image'})
+    const title = findOrCreate(
       node.children,
-      'heading',
-      node => node.type === 'heading' && node.depth === 1,
-      {
-        depth: 1
-      }
+      {type: 'heading', depth: 1},
+      {children: []}
     )
-    const lead = findOrCreateNode(node.children, 'blockquote')
+    const lead = findOrCreate(
+      node.children,
+      {type: 'blockquote'},
+      {children: []}
+    )
 
     return {
       kind: 'block',
@@ -162,10 +144,16 @@ export const cover = {
           url: object.data.src
         },
         titleSerializer.toMdast(
-          findOrCreateBlock(object.nodes, TITLE), context
+          findOrCreate(object.nodes, {
+            kind: 'block',
+            type: TITLE
+          }), context
         ),
         leadSerializer.toMdast(
-          findOrCreateBlock(object.nodes, LEAD), context
+          findOrCreate(object.nodes, {
+            kind: 'block',
+            type: LEAD
+          }), context
         )
       ]
     }
@@ -202,20 +190,7 @@ export default {
           ),
 
           // Element
-          cover,
-
-          // Document restrictions
-          rule(
-            matchDocument,
-            firstChild(not(isCover)),
-            prepend(() => Block.create({
-              type: COVER,
-              nodes: [
-                Block.create({ type: TITLE }),
-                Block.create({ type: LEAD })
-              ]
-            }))
-          )
+          cover
         ]
       }
     }
