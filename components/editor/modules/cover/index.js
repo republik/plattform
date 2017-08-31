@@ -2,10 +2,10 @@ import React from 'react'
 import { css } from 'glamor'
 import { Block } from 'slate'
 import { matchBlock, matchDocument } from '../../utils'
-import { IMAGE } from '../image'
+import { serializer as imageSerializer, IMAGE } from '../image'
 import { PARAGRAPH } from '../paragraph'
-import { LEAD } from '../lead'
-import { TITLE } from '../headlines'
+import { serializer as leadSerializer, LEAD } from '../lead'
+import { titleSerializer, TITLE } from '../headlines'
 import { COVER } from './constants'
 import {
   rule,
@@ -86,15 +86,39 @@ export const cover = {
   match: isCover,
   render: Cover,
   matchMdast: (node) => node.type === 'zone' && node.identifier === COVER,
-  fromMdast: (node, index, parent, visitChildren) => ({
-    kind: 'block',
-    type: COVER,
-    nodes: visitChildren(node)
-  }),
+  fromMdast: (node, index, parent, visitChildren) => {
+    // fault tolerant because markdown could have been edited outside
+    const deepNodes = node.children.reduce(
+      (children, child) => children
+        .concat(child)
+        .concat(child.children),
+      []
+    )
+    const image = deepNodes
+      .find(node => node.type === 'image')
+    const title = node.children
+      .find(node => node.type === 'heading' && node.depth === 1)
+    const lead = node.children
+      .find(node => node.type === 'blockquote')
+
+    return {
+      kind: 'block',
+      type: COVER,
+      nodes: [
+        image && imageSerializer.fromMdast(image),
+        title && titleSerializer.fromMdast(title),
+        lead && leadSerializer.fromMdast(lead)
+      ].filter(Boolean)
+    }
+  },
   toMdast: (object, index, parent, visitChildren) => ({
     type: 'zone',
     identifier: COVER,
-    children: visitChildren(object)
+    children: [
+      imageSerializer.toMdast(object.nodes[0]),
+      titleSerializer.toMdast(object.nodes[1]),
+      leadSerializer.toMdast(object.nodes[2])
+    ]
   })
 }
 

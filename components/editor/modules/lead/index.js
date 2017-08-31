@@ -5,6 +5,8 @@ import Placeholder from '../../Placeholder'
 import { matchBlock } from '../../utils'
 import { LEAD } from './constants'
 // import { mq } from '../../styles'
+import MarkdownSerializer from '../../../../lib/serializer'
+import {serializer as paragraphSerializer, PARAGRAPH} from '../paragraph'
 
 export const styles = {
   lead: {
@@ -28,15 +30,18 @@ export const lead = {
   fromMdast: (node, index, parent, visitChildren) => ({
     kind: 'block',
     type: LEAD,
-    nodes: visitChildren(node.children[0])
+    nodes: node.children.length
+      ? paragraphSerializer.fromMdast(node.children[0]).nodes
+      : []
   }),
   toMdast: (object, index, parent, visitChildren) => ({
     type: 'blockquote',
     children: [
-      {
-        type: 'paragraph',
-        children: visitChildren(object)
-      }
+      paragraphSerializer.toMdast({
+        kind: 'block',
+        type: PARAGRAPH,
+        nodes: object.nodes
+      })
     ]
   }),
   render: ({ children, ...props }) =>
@@ -50,6 +55,12 @@ export const lead = {
       {children}
     </p>
 }
+
+export const serializer = new MarkdownSerializer({
+  rules: [
+    lead
+  ]
+})
 
 export {
   LEAD,

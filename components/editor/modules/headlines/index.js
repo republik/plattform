@@ -1,6 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 import Placeholder from '../../Placeholder'
+import MarkdownSerializer from '../../../../lib/serializer'
 
 import { matchBlock } from '../../utils'
 import {
@@ -46,6 +47,12 @@ export const title = {
     </h1>
 }
 
+export const titleSerializer = new MarkdownSerializer({
+  rules: [
+    title
+  ]
+})
+
 export const mediumHeadline = {
   match: matchBlock(MEDIUM_HEADLINE),
   matchMdast: (node) => node.type === 'heading' && node.depth === 2,
@@ -77,6 +84,14 @@ export const smallHeadline = {
   }),
   render: ({ children }) => <h1>{ children }</h1>
 }
+
+export const serializer = new MarkdownSerializer({
+  rules: [
+    title,
+    mediumHeadline,
+    smallHeadline
+  ]
+})
 
 export {
   TITLE,
