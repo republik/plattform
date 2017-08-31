@@ -1,5 +1,8 @@
 const { createGithubFetchForUser } = require('../../lib/github')
 const MDAST = require('../../lib/mdast/mdast')
+const visit = require('unist-util-visit')
+
+const { PUBLIC_ASSETS_URL } = process.env
 
 module.exports = {
   document: async (commit, args, { user }) => {
@@ -40,10 +43,18 @@ module.exports = {
       throw new Error('no document found for: ' + variables.blobExpression)
     }
 
-    const mdast = JSON.stringify(MDAST.parse(repository.blob.text))
+    const mdast = MDAST.parse(repository.blob.text)
+
+    // prefix image urls
+    const prefixImages = (node) => {
+      if (node.url && node.url.indexOf('images/') === 0) {
+        node.url = `${PUBLIC_ASSETS_URL}${node.url}`
+      }
+    }
+    visit(mdast, 'image', prefixImages)
 
     return {
-      content: mdast,
+      content: JSON.stringify(mdast),
       commit
     }
   }
