@@ -30,6 +30,7 @@ module.exports = async (
   return {
     name: tag.tag,
     message: tag.message,
+    repoId, // for Milestone.commit resolver
     commit: {
       id: tag.object.sha
     },
