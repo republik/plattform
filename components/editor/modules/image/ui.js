@@ -12,7 +12,7 @@ import {
 import styles from '../../styles'
 import { IMAGE } from './constants'
 
-const Thumbnail = ({ src }) =>
+export const Thumbnail = ({ src }) =>
   <span style={{
     display: 'inline-block',
     width: '35px',
@@ -23,7 +23,7 @@ const Thumbnail = ({ src }) =>
   }}
   />
 
-const fileChangeHandler = (block, state, onChange) => e => {
+const fileChangeHandler = (node, state, onChange) => e => {
   const files = e.target.files
 
   if (files.length < 1) {
@@ -42,36 +42,56 @@ const fileChangeHandler = (block, state, onChange) => e => {
     () => onChange(
         state
           .transform()
-          .setNodeByKey(
-            block.key,
-          {
-            data: {
-              alt: block.data.get('alt'),
-              src: reader.result
-            }
-          }
-          )
+          .setNodeByKey(node.key, {
+            data: node.data.set('src', reader.result)
+          })
           .apply()
     )
   )
   reader.readAsDataURL(file)
 }
 
-const altChangeHandler = (block, state, onChange) => event => {
+const altChangeHandler = (node, state, onChange) => event => {
   onChange(
     state
       .transform()
-      .setNodeByKey(block.key, {
-        data: {
-          src: block.data.get('src'),
-          alt: event.target.value
-        }
+      .setNodeByKey(node.key, {
+        data: node.data.set('alt', event.target.value)
       })
       .apply()
   )
 }
 
-const Form = ({ disabled, state, onChange }) => {
+export const ImagePropertyForm = ({ state, node, onChange }) =>
+  <span style={{ display: 'block' }}>
+    <label htmlFor={`image-props-src-${node.key}`}>
+      <Thumbnail src={node.data.get('src')} />
+      <input
+        id={`image-props-src-${node.key}`}
+        type='file'
+        style={{display: 'none'}}
+        onChange={fileChangeHandler(node, state, onChange)}
+      />
+    </label>
+    <label htmlFor={`image-props-alt-${node.key}`}>
+      Alt
+      <input
+        id={`image-props-alt-${node.key}`}
+        style={{outline: 'none', border: 'none', borderBottom: '1px solid #ccc'}}
+        type='text'
+        value={node.data.get('alt') || ''}
+        onChange={
+          altChangeHandler(node, state, onChange)
+        }
+      />
+    </label>
+  </span>
+
+export const ImageForm = createPropertyForm({
+  isDisabled: ({ state }) => {
+    return !state.blocks.some(matchBlock(IMAGE))
+  }
+})(({ disabled, state, onChange }) => {
   if (disabled) {
     return null
   }
@@ -81,35 +101,16 @@ const Form = ({ disabled, state, onChange }) => {
       state.blocks
         .filter(matchBlock(IMAGE))
         .map((block, i) => (
-          <span key={`image-${i}`} style={{ display: 'block' }}>
-            <label htmlFor={`image-input-${block.key}`}>
-              <Thumbnail src={block.data.get('src')} />
-              <input
-                id={`image-input-${block.key}`}
-                type='file'
-                style={{display: 'none'}}
-                onChange={fileChangeHandler(block, state, onChange)}
-            />
-            </label>
-            <input
-              style={{outline: 'none', border: 'none', borderBottom: '1px solid #ccc'}}
-              type='text'
-              value={block.data.get('alt') || ''}
-              onChange={
-                altChangeHandler(block, state, onChange)
-              }
-              />
-          </span>
+          <ImagePropertyForm
+            key={`image-${i}`}
+            state={state}
+            node={block}
+            onChange={onChange}
+          />
         ))
     }
   </span>
-}
-
-export const ImageForm = createPropertyForm({
-  isDisabled: ({ state }) => {
-    return !state.blocks.some(matchBlock(IMAGE))
-  }
-})(Form)
+})
 
 export const ImageButton = createActionButton({
   isDisabled: ({ state }) => {
@@ -130,10 +131,11 @@ export const ImageButton = createActionButton({
     )
   }
 })(
-  ({ disabled, ...props }) =>
+  ({ disabled, visible, ...props }) =>
     <span
       {...{...css(styles.insertButton), ...props}}
       data-disabled={disabled}
+      data-visible={visible}
       >
       Image
     </span>

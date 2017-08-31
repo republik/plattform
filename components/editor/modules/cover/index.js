@@ -2,11 +2,11 @@ import React from 'react'
 import { css } from 'glamor'
 import { Block } from 'slate'
 import { matchBlock, matchDocument } from '../../utils'
-import { serializer as imageSerializer, IMAGE } from '../image'
 import { PARAGRAPH } from '../paragraph'
 import { serializer as leadSerializer, LEAD } from '../lead'
 import { titleSerializer, TITLE } from '../headlines'
 import { COVER } from './constants'
+import { CoverForm } from './ui'
 import {
   rule,
   not,
@@ -26,13 +26,19 @@ export const styles = {
   cover: {
     width: '100%',
     position: 'relative',
-    [mq.medium]: {
+    [mq.large]: {
       minHeight: 500,
-      height: ['700px', '80vh']
-    },
-    maxHeight: 700,
-    overflow: 'hidden',
-    marginBottom: '20px'
+      height: ['700px', '80vh'],
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }
+  },
+  coverImage: {
+    display: 'block',
+    width: '100%',
+    [mq.large]: {
+      display: 'none'
+    }
   },
   coverLead: {
     position: 'relative',
@@ -65,15 +71,22 @@ export const styles = {
   }
 }
 
-const Cover = ({ children }) => {
-  const [ image, title, lead ] = children
-  return <div {...css(styles.cover)}>
-    {image}
+const Cover = ({ node, children }) => {
+  const src = node.data.get('src')
+  const alt = node.data.get('alt')
+  return <div
+    {...css(styles.cover)}
+    {...css({ [mq.large]: { backgroundImage: `url('${src}')` } })}
+    >
+    <img
+      src={src}
+      alt={alt}
+      {...css(styles.coverImage)}
+    />
     <div {...css(styles.coverLead)}>
       <div {...css(styles.coverLeadContainer)}>
         <div {...css(styles.coverLeadCenter)}>
-          {title}
-          {lead}
+          {children}
         </div>
       </div>
     </div>
@@ -95,7 +108,7 @@ export const cover = {
       []
     )
     const image = deepNodes
-      .find(node => node.type === 'image')
+      .find(node => node.type === 'image') || {}
     const title = node.children
       .find(node => node.type === 'heading' && node.depth === 1)
     const lead = node.children
@@ -104,8 +117,11 @@ export const cover = {
     return {
       kind: 'block',
       type: COVER,
+      data: {
+        src: image.url,
+        alt: image.alt
+      },
       nodes: [
-        image && imageSerializer.fromMdast(image),
         title && titleSerializer.fromMdast(title),
         lead && leadSerializer.fromMdast(lead)
       ].filter(Boolean)
@@ -115,18 +131,22 @@ export const cover = {
     type: 'zone',
     identifier: COVER,
     children: [
-      imageSerializer.toMdast(object.nodes[0]),
-      titleSerializer.toMdast(object.nodes[1]),
-      leadSerializer.toMdast(object.nodes[2])
+      {
+        type: 'image',
+        alt: object.data.alt,
+        url: object.data.src
+      },
+      titleSerializer.toMdast(object.nodes[0]),
+      leadSerializer.toMdast(object.nodes[1])
     ]
   })
 }
 
 export {
+  CoverForm,
   COVER
 }
 
-const isImage = matchBlock(IMAGE)
 const isTitle = matchBlock(TITLE)
 const isLead = matchBlock(LEAD)
 
@@ -147,7 +167,6 @@ export default {
             prepend(() => Block.create({
               type: COVER,
               nodes: [
-                Block.create({ type: IMAGE, isVoid: true }),
                 Block.create({ type: TITLE }),
                 Block.create({ type: LEAD })
               ]
@@ -155,30 +174,26 @@ export default {
           ),
           // Restrictions
           onCover(
-            firstChild(not(isImage)),
-            prepend(() => Block.create({ type: IMAGE, isVoid: true }))
-          ),
-          onCover(
             either(
-              childAt(1, isNone),
-              childAt(1, isLead)
+              firstChild(isNone),
+              firstChild(isLead)
             ),
-            insertAt(1, () => Block.create({ type: TITLE }))
+            prepend(() => Block.create({ type: TITLE }))
           ),
           onCover(
-            childAt(1, not(isTitle)),
+            firstChild(not(isTitle)),
             update(() => TITLE)
           ),
           onCover(
-            childAt(2, isNone),
-            insertAt(2, () => Block.create({ type: LEAD }))
+            childAt(1, isNone),
+            insertAt(1, () => Block.create({ type: LEAD }))
           ),
           onCover(
-            childAt(2, not(isLead)),
+            childAt(1, not(isLead)),
             update(() => LEAD)
           ),
           onCover(
-            childrenAfter(2),
+            childrenAfter(1),
             unwrap(() => PARAGRAPH)
           )
         ]

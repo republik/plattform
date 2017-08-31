@@ -17,11 +17,12 @@ import styles from '../../styles'
 export const LinkButton = createInlineButton({
   type: LINK
 })(
-  ({ active, disabled, ...props }) =>
+  ({ active, disabled, visible, ...props }) =>
     <span
       {...{...css(styles.markButton), ...props}}
       data-active={active}
       data-disabled={disabled}
+      data-visible={visible}
       >
       <LinkIcon />
     </span>
@@ -32,7 +33,7 @@ const changeHandler = (inline, state, onChange) => event => {
     state
       .transform()
       .setNodeByKey(inline.key, {
-        data: { href: event.target.value }
+        data: inline.data.set('href', event.target.value)
       })
       .apply()
   )

@@ -12,11 +12,12 @@ import { BOLD, ITALIC, UNDERLINE, STRIKETHROUGH } from './constants'
 export const BoldButton = createMarkButton({
   type: BOLD
 })(
-  ({ active, disabled, ...props }) =>
+  ({ active, disabled, visible, ...props }) =>
     <span
       {...{...css(styles.markButton), ...props}}
       data-active={active}
       data-disabled={disabled}
+      data-visible={visible}
       >
       <BoldIcon />
     </span>
@@ -25,11 +26,12 @@ export const BoldButton = createMarkButton({
 export const ItalicButton = createMarkButton({
   type: ITALIC
 })(
-  ({ active, disabled, ...props }) =>
+  ({ active, disabled, visible, ...props }) =>
     <span
       {...{...css(styles.markButton), ...props}}
       data-active={active}
       data-disabled={disabled}
+      data-visible={visible}
       >
       <ItalicIcon />
     </span>
@@ -38,11 +40,12 @@ export const ItalicButton = createMarkButton({
 export const UnderlineButton = createMarkButton({
   type: UNDERLINE
 })(
-  ({ active, disabled, ...props }) =>
+  ({ active, disabled, visible, ...props }) =>
     <span
       {...{...css(styles.markButton), ...props}}
       data-active={active}
       data-disabled={disabled}
+      data-visible={visible}
       >
       <UnderlineIcon />
     </span>
@@ -51,11 +54,12 @@ export const UnderlineButton = createMarkButton({
 export const StrikethroughButton = createMarkButton({
   type: STRIKETHROUGH
 })(
-  ({ active, disabled, ...props }) =>
+  ({ active, disabled, visible, ...props }) =>
     <span
       {...{...css(styles.markButton), ...props}}
       data-active={active}
       data-disabled={disabled}
+      data-visible={visible}
       >
       <StrikethroughIcon />
     </span>

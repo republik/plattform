@@ -5,7 +5,9 @@ const preventDefault = event => event.preventDefault()
 
 const propTypes = {
   state: PropTypes.object.isRequired,
-  onChange: PropTypes.func
+  onChange: PropTypes.func,
+  isDisabled: PropTypes.func,
+  isVisible: PropTypes.func
 }
 
 const defaultProps = {
@@ -13,13 +15,25 @@ const defaultProps = {
 }
 
 export default ({
-  isDisabled,
+  isDisabled = () => false,
+  isVisible = () => true,
   reducer
 }) =>
   Component => {
     const ActionButton = props => {
-      const { state, onChange, ...propsToPass } = props
-      const disabled = isDisabled(props)
+      const {
+        state,
+        onChange,
+        isDisabled: propsIsDisabled,
+        isVisible: propsIsVisible,
+        ...propsToPass
+      } = props
+      const visible = propsIsVisible
+        ? propsIsVisible(props, isVisible(props))
+        : isVisible(props)
+      const disabled = propsIsDisabled
+        ? propsIsDisabled(props, isDisabled(props))
+        : isDisabled(props)
       const onMouseDown = !disabled
       ? reducer(props)
       : preventDefault
@@ -27,6 +41,7 @@ export default ({
         <Component
           {...propsToPass}
           disabled={disabled}
+          visible={visible}
           onMouseDown={onMouseDown}
       />
       )
