@@ -16,6 +16,7 @@ const {CORS_WHITELIST_URL} = process.env
 const auth = require('./src/auth')
 const graphql = require('./graphql')
 const githubAuth = require('./src/githubAuth')
+const assets = require('./src/assets')
 
 PgDb.connect().then((pgdb) => {
   const server = express()
@@ -41,6 +42,7 @@ PgDb.connect().then((pgdb) => {
 
   githubAuth(server, pgdb)
   graphql(server, pgdb, httpServer)
+  assets(server)
 
   // start the server
   httpServer.listen(process.env.PORT, () => {
