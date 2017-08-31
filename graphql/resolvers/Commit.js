@@ -48,7 +48,7 @@ module.exports = {
     // prefix image urls
     const prefixImages = (node) => {
       if (node.url && node.url.indexOf('images/') === 0) {
-        node.url = `${PUBLIC_ASSETS_URL}${node.url}`
+        node.url = `${PUBLIC_ASSETS_URL}/${commit.repo.id}/${commit.id}/${node.url}`
       }
     }
     visit(mdast, 'image', prefixImages)
