@@ -24,7 +24,7 @@ module.exports = async (
     req.user.githubAccessToken,
     repoId,
     `refs/tags/${name}`,
-    tag.object.sha
+    tag.sha
   )
 
   return {
