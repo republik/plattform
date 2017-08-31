@@ -38,7 +38,9 @@ import image, {
   ImageButton
 } from './modules/image'
 
-import cover from './modules/cover'
+import cover, {
+  CoverForm
+} from './modules/cover'
 
 const newsletterStyles = {
   fontFamily: 'serif',
@@ -83,7 +85,8 @@ const insertButtons = [
 
 const propertyForms = [
   LinkForm,
-  ImageForm
+  ImageForm,
+  CoverForm
 ]
 
 const Container = ({ children }) => (

@@ -21,7 +21,6 @@ export default ({
 }) =>
   Component => {
     const ActionButton = props => {
-      console.log(isVisible)
       const {
         state,
         onChange,
