@@ -35,15 +35,21 @@ const milestoneNames = [
 class Checklist extends Component {
   constructor (props) {
     super(props)
-    this.state = {}
+    this.state = {
+      mutating: {}
+    }
   }
 
   render () {
     const {
       loading, error,
       milestones, t,
-      placeMilestone, removeMilestone
+      placeMilestone, removeMilestone,
+      disabled
     } = this.props
+    const {
+      mutating
+    } = this.state
     return (
       <Loader loading={loading} error={error} render={() => {
         const allMilestones = milestones
@@ -66,16 +72,30 @@ class Checklist extends Component {
               <p key={name}>
                 <Checkbox
                   checked={!!author}
-                  disabled={this.props.disabled}
+                  disabled={disabled || mutating[name]}
                   onChange={(_, checked) => {
+                    this.setState(state => ({
+                      mutating: {
+                        ...state.mutating,
+                        [name]: true
+                      }
+                    }))
+                    const finish = () => {
+                      this.setState(state => ({
+                        mutating: {
+                          ...state.mutating,
+                          [name]: false
+                        }
+                      }))
+                    }
                     checked
                       ? placeMilestone({
                         name,
                         message: 'Check'
-                      })
+                      }).then(finish)
                       : removeMilestone({
                         name
-                      })
+                      }).then(finish)
                   }}
                 >
                   {t(`checklist/labels/${name}`, undefined, name)}
@@ -138,6 +158,17 @@ mutation placeMilestone(
 ) {
   placeMilestone(repoId: $repoId, commitId: $commitId, name: $name, message: $message) {
     name
+    message
+    commit {
+      id
+      date
+      author {
+        name
+      }
+    }
+    author {
+      name
+    }
   }
 }
 `
@@ -169,12 +200,21 @@ export default compose(
             name,
             message
           },
-          refetchQueries: [{
-            query,
-            variables: {
+          update: (proxy, { data: { placeMilestone } }) => {
+            const variables = {
               repoId
             }
-          }]
+            const data = proxy.readQuery({
+              query,
+              variables
+            })
+            data.repo.milestones.push(placeMilestone)
+            proxy.writeQuery({
+              query: query,
+              variables,
+              data
+            })
+          }
         })
     })
   }),
@@ -185,6 +225,24 @@ export default compose(
           variables: {
             repoId: repoId,
             name
+          },
+          update: (proxy, { data: { removeMilestone } }) => {
+            const variables = {
+              repoId
+            }
+            const data = proxy.readQuery({
+              query,
+              variables
+            })
+            if (removeMilestone) {
+              data.repo.milestones = data.repo.milestones
+                .filter(milestone => milestone.name !== name)
+            }
+            proxy.writeQuery({
+              query: query,
+              variables,
+              data
+            })
           },
           refetchQueries: [{
             query,
