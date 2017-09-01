@@ -15,6 +15,7 @@ import Editor, { serializer } from '../../components/editor/NewsletterEditor'
 
 import EditFrame from '../../components/EditFrame'
 import EditSidebar from '../../components/EditSidebar'
+import Loader from '../../components/Loader'
 import Checklist from '../../components/EditSidebar/Checklist'
 import CommitHistory from '../../components/EditSidebar/CommitHistory'
 import withAuthorization from '../../components/Auth/withAuthorization'
@@ -129,7 +130,6 @@ class EditorPage extends Component {
   constructor (...args) {
     super(...args)
 
-    this.loadState = this.loadState.bind(this)
     this.changeHandler = this.changeHandler.bind(this)
     this.checklistHandler = this.checklistHandler.bind(this)
     this.commitHandler = this.commitHandler.bind(this)
@@ -145,6 +145,11 @@ class EditorPage extends Component {
       repo: null,
       uncommittedChanges: null
     }
+  }
+
+  componentWillMount () {
+    resetKeyGenerator()
+    this.loadState(this.props)
   }
 
   componentWillReceiveProps (nextProps) {
@@ -164,10 +169,7 @@ class EditorPage extends Component {
       uncommittedChangesMutation
     } = props
 
-    if (error) {
-      console.log('graphql error:', error)
-    }
-    if (loading) {
+    if (loading || error) {
       return
     }
     if (!repo) {
@@ -201,6 +203,10 @@ class EditorPage extends Component {
       commit = repo.commits.filter(commit => {
         return commit.id === commitId
       })[0]
+      if (!commit) {
+        this.setState({error: `missing commit ${commitId}`})
+        return
+      }
 
       const json = JSON.parse(commit.document.content)
       committedEditorState = serializer.deserialize(json, {
@@ -326,8 +332,6 @@ class EditorPage extends Component {
       committing: true
     })
 
-    // TODO: This currently throws an error on the backend:
-    // TypeError: Converting circular structure to JSON.
     commitMutation({
       repoId: repo.id,
       parentId: commit.id,
@@ -387,19 +391,18 @@ class EditorPage extends Component {
 
   render () {
     const { repository, commit } = this.props.url.query
+    const { loading, error } = this.props.data
     const {
       editorState,
       committing,
       uncommittedChanges,
-      localStorageNotSupported
+      localStorageNotSupported,
+      error: stateError
     } = this.state
 
-    if (committing) {
-      return <div>Commiting...</div>
-    }
-    if (editorState) {
-      return (
-        <Frame raw>
+    return (
+      <Frame raw>
+        <Loader loading={committing || loading} error={error || stateError} render={() => (
           <EditFrame view={'edit'} repository={repository} commit={commit}>
             {localStorageNotSupported &&
               <div {...css(styles.danger)}>
@@ -407,7 +410,7 @@ class EditorPage extends Component {
               </div>}
             <div>
               <Editor
-                state={this.state.editorState}
+                state={editorState}
                 onChange={this.changeHandler}
                 onDocumentChange={this.documentChangeHandler}
               />
@@ -449,15 +452,9 @@ class EditorPage extends Component {
               </EditSidebar>
             </div>
           </EditFrame>
-        </Frame>
-      )
-    } else {
-      return (
-        <div>
-          <i>empty</i>
-        </div>
-      )
-    }
+        )} />
+      </Frame>
+    )
   }
 }
 
