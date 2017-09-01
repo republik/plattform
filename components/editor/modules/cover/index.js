@@ -3,8 +3,8 @@ import { css } from 'glamor'
 import { Block } from 'slate'
 import { matchBlock, matchDocument } from '../../utils'
 import { PARAGRAPH } from '../paragraph'
-import { LEAD } from '../lead'
-import { TITLE } from '../headlines'
+import { serializer as leadSerializer, LEAD } from '../lead'
+import { titleSerializer, TITLE } from '../headlines'
 import { COVER } from './constants'
 import { CoverForm } from './ui'
 import {
@@ -99,15 +99,46 @@ export const cover = {
   match: isCover,
   render: Cover,
   matchMdast: (node) => node.type === 'zone' && node.identifier === COVER,
-  fromMdast: (node, index, parent, visitChildren) => ({
-    kind: 'block',
-    type: COVER,
-    nodes: visitChildren(node)
-  }),
+  fromMdast: (node, index, parent, visitChildren) => {
+    // fault tolerant because markdown could have been edited outside
+    const deepNodes = node.children.reduce(
+      (children, child) => children
+        .concat(child)
+        .concat(child.children),
+      []
+    )
+    const image = deepNodes
+      .find(node => node.type === 'image') || {}
+    const title = node.children
+      .find(node => node.type === 'heading' && node.depth === 1)
+    const lead = node.children
+      .find(node => node.type === 'blockquote')
+
+    return {
+      kind: 'block',
+      type: COVER,
+      data: {
+        src: image.url,
+        alt: image.alt
+      },
+      nodes: [
+        title && titleSerializer.fromMdast(title),
+        lead && leadSerializer.fromMdast(lead)
+      ].filter(Boolean)
+    }
+  },
   toMdast: (object, index, parent, visitChildren) => ({
     type: 'zone',
     identifier: COVER,
-    children: visitChildren(object)
+    children: [
+      {
+        type: 'image',
+        alt: object.data.alt,
+        url: object.data.src
+      },
+      titleSerializer.toMdast(object.nodes[0]),
+      leadSerializer.toMdast(object.nodes[1])
+    ]
   })
 }
 

@@ -1,25 +1,21 @@
 import test from 'tape'
-import headlines, {
+import {
+  serializer,
+  titleSerializer,
   TITLE,
   MEDIUM_HEADLINE,
   SMALL_HEADLINE
 } from './'
-import getRules from '../../utils/getRules'
-import MarkdownSerializer from '../../../../lib/serializer'
-
-const serializer = new MarkdownSerializer({
-  rules: getRules(headlines.plugins)
-})
 
 test('title serialization', assert => {
-  const state = serializer.deserialize('# Test')
+  const state = titleSerializer.deserialize('# Test')
   const node = state.document.nodes.first()
 
   assert.equal(node.kind, 'block')
   assert.equal(node.type, TITLE)
   assert.equal(node.text, 'Test')
 
-  assert.equal(serializer.serialize(state).trimRight(), '# Test')
+  assert.equal(titleSerializer.serialize(state).trimRight(), '# Test')
   assert.end()
 })
 

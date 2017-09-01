@@ -12,7 +12,11 @@ const serializer = new MarkdownSerializer({
 test('cover serialization', assert => {
   const md = `<section><h6>${COVER}</h6>
 
+![Alt](img.jpg)
 
+# Title
+
+> Lead
 
 <hr /></section>`
   const state = serializer.deserialize(md)

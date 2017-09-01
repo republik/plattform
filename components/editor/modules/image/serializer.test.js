@@ -1,14 +1,23 @@
 import test from 'tape'
 import img, {IMAGE} from './'
-import paragraph, {PARAGRAPH} from '../paragraph'
+import {PARAGRAPH} from '../paragraph'
 import getRules from '../../utils/getRules'
 import MarkdownSerializer from '../../../../lib/serializer'
 
 const serializer = new MarkdownSerializer({
-  rules: getRules([
-    ...img.plugins,
-    ...paragraph.plugins
-  ])
+  rules: getRules(img.plugins).concat({
+    match: (object) => object.kind === 'block' && object.type === PARAGRAPH,
+    matchMdast: (node) => node.type === 'paragraph',
+    fromMdast: (node, index, parent, visitChildren) => ({
+      kind: 'block',
+      type: PARAGRAPH,
+      nodes: visitChildren(node)
+    }),
+    toMdast: (object, index, parent, visitChildren) => ({
+      type: 'paragraph',
+      children: visitChildren(object)
+    })
+  })
 })
 
 test('image serialization', assert => {
