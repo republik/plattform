@@ -6,6 +6,8 @@ import styles from '../../styles'
 import { ImageForm, ImageButton } from './ui'
 import { IMAGE } from './constants'
 
+import MarkdownSerializer from '../../../../lib/serializer'
+
 export const ImagePlaceholder = ({ active }) =>
   <div
     style={{ position: 'relative', width: '100%' }}
@@ -41,14 +43,13 @@ export const image = {
       alt: node.alt,
       src: node.url
     },
-    nodes: visitChildren(node)
+    nodes: []
   }),
   toMdast: (object, index, parent, visitChildren) => ({
     type: 'image',
     title: object.data.title,
     alt: object.data.alt,
-    url: object.data.src,
-    children: visitChildren(object)
+    url: object.data.src
   }),
   render: props => {
     const { node, state } = props
@@ -67,6 +68,12 @@ export const image = {
     }
   }
 }
+
+export const serializer = new MarkdownSerializer({
+  rules: [
+    image
+  ]
+})
 
 export {
   IMAGE,

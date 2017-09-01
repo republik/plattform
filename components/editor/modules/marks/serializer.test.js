@@ -1,15 +1,6 @@
 import test from 'tape'
-import marks, {BOLD, ITALIC} from './'
-import paragraph, {PARAGRAPH} from '../paragraph'
-import getRules from '../../utils/getRules'
-import MarkdownSerializer from '../../../../lib/serializer'
-
-const serializer = new MarkdownSerializer({
-  rules: getRules([
-    ...marks.plugins,
-    ...paragraph.plugins
-  ])
-})
+import {BOLD, ITALIC} from './'
+import {serializer, PARAGRAPH} from '../paragraph'
 
 test('marks serialization', assert => {
   const state = serializer.deserialize('**bold** _italic_ ~~strikethrough~~')
