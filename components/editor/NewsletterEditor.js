@@ -4,8 +4,8 @@ import { Editor as SlateEditor } from 'slate'
 import { css } from 'glamor'
 
 import MarkdownSerializer from '../../lib/serializer'
-import {getSerializationRules} from './utils/getRules'
-
+import { getSerializationRules } from './utils/getRules'
+import addValidation, { findOrCreate } from './utils/serializationValidation'
 import styles from './styles'
 import Sidebar from './Sidebar'
 
@@ -39,7 +39,7 @@ import image, {
 } from './modules/image'
 
 import cover, {
-  CoverForm
+  CoverForm, serializer as coverSerializer, COVER
 } from './modules/cover'
 
 const newsletterStyles = {
@@ -51,7 +51,75 @@ const newsletterStyles = {
 
 }
 
+const documentRule = {
+  match: object => object.kind === 'document',
+  matchMdast: node => node.type === 'root',
+  fromMdast: (node, index, parent, visitChildren) => {
+    const cover = findOrCreate(node.children, {
+      type: 'zone', identifier: COVER
+    }, {
+      children: []
+    })
+
+    return {
+      document: {
+        data: {},
+        kind: 'document',
+        nodes: [
+          coverSerializer.fromMdast(cover)
+        ].concat(
+          visitChildren({
+            children: node.children
+              .filter(n => n !== cover)
+          })
+        )
+      },
+      kind: 'state'
+    }
+  },
+  toMdast: (object, index, parent, visitChildren, context) => {
+    const firstNode = object.nodes[0]
+    if (!firstNode || firstNode.type !== COVER || firstNode.kind === 'block') {
+      context.dirty = true
+    }
+    const cover = findOrCreate(object.nodes, { kind: 'block', type: COVER })
+    return {
+      type: 'root',
+      children: [
+        coverSerializer.toMdast(cover, context)
+      ].concat(
+        visitChildren({
+          nodes: object.nodes
+            .filter(n => n !== cover)
+        })
+      )
+    }
+  }
+}
+
+export const serializer = new MarkdownSerializer({
+  rules: [
+    documentRule
+  ].concat(getSerializationRules([
+    ...cover.plugins,
+    ...headlines.plugins,
+    ...image.plugins,
+    ...paragraph.plugins
+  ]))
+})
+
+addValidation(documentRule, serializer)
+
+const documentPlugin = {
+  schema: {
+    rules: [
+      documentRule
+    ]
+  }
+}
+
 const plugins = [
+  documentPlugin,
   ...marks.plugins,
   ...headlines.plugins,
   ...lead.plugins,
@@ -60,10 +128,6 @@ const plugins = [
   ...image.plugins,
   ...cover.plugins
 ]
-
-export const serializer = new MarkdownSerializer({
-  rules: getSerializationRules(plugins)
-})
 
 const textFormatButtons = [
   BoldButton,
