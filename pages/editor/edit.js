@@ -87,26 +87,6 @@ const uncommittedChangesMutation = gql`
     uncommittedChanges(repoId: $repoId, action: $action)
   }
 `
-const defaultChecklistState = {
-  approvals: {
-    cvd1: {
-      label: 'CvD initial',
-      checked: false
-    },
-    ad: {
-      label: 'Art Director',
-      checked: false
-    },
-    korrektur: {
-      label: 'Korrektur',
-      checked: false
-    },
-    cvd2: {
-      label: 'CvD final',
-      checked: false
-    }
-  }
-}
 
 const styles = {
   uncommittedChanges: {
@@ -131,13 +111,11 @@ class EditorPage extends Component {
     super(...args)
 
     this.changeHandler = this.changeHandler.bind(this)
-    this.checklistHandler = this.checklistHandler.bind(this)
     this.commitHandler = this.commitHandler.bind(this)
     this.documentChangeHandler = this.documentChangeHandler.bind(this)
     this.revertHandler = this.revertHandler.bind(this)
 
     this.state = {
-      checklistState: defaultChecklistState,
       commit: null,
       committing: false,
       editorState: null,
@@ -381,14 +359,6 @@ class EditorPage extends Component {
       })
   }
 
-  checklistHandler (keyName, checklistState) {
-    let checklistItem = checklistState.approvals[keyName]
-    // TODO: Fill this mock data from an actual backend response.
-    checklistItem.approvedBy = checklistItem.checked ? 'John Doe' : null
-    checklistItem.approvedDatetime = checklistItem.checked ? Date.now() : null
-    this.setState({ checklistState: checklistState })
-  }
-
   render () {
     const { repository, commit } = this.props.url.query
     const { loading, error } = this.props.data
@@ -439,8 +409,8 @@ class EditorPage extends Component {
                 <Label>Checklist</Label>
                 <Checklist
                   disabled={!!uncommittedChanges}
-                  onChange={this.checklistHandler}
-                  state={this.state.checklistState}
+                  repoId={`orbiting/${repository}`}
+                  commitId={commit}
                 />
                 <Label>History</Label>
                 <CommitHistory

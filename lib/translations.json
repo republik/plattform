@@ -1,5 +1,5 @@
 {
-  "updated": "2017-08-28T14:42:17.410Z",
+  "updated": "2017-09-01T14:00:53.019Z",
   "title": "live",
   "data": [
     {
@@ -69,6 +69,22 @@
     {
       "key": "repoList/add/submit",
       "value": "erstellen"
+    },
+    {
+      "key": "checklist/labels/cvd1",
+      "value": "CvD initial"
+    },
+    {
+      "key": "checklist/labels/cvd2",
+      "value": "CvD final"
+    },
+    {
+      "key": "checklist/labels/ad",
+      "value": "Art Director"
+    },
+    {
+      "key": "checklist/labels/korrektur",
+      "value": "Korrektur"
     }
   ]
 }
