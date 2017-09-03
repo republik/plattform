@@ -74,6 +74,13 @@ class RepoList extends Component {
             </List.Item>
           ))}
           <List.Item>
+            <Link route='editor/tree' params={{repository: 'newsletter-test'}}>
+              <a {...linkRule}>
+                newsletter-test
+              </a>
+            </Link>
+          </List.Item>
+          <List.Item>
             <Link route='lorem'>
               <a {...linkRule}>
                 Statisches Beispiel: Lorem
