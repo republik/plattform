@@ -48,9 +48,7 @@ const Sidebar = ({
         ))
       }
     </Interaction.P>
-    <Interaction.P>
-      <Label>Properties</Label>
-      <br />
+    <div>
       {
         propertyForms.map((Form, i) => (
           <Form
@@ -60,7 +58,7 @@ const Sidebar = ({
             />
         ))
       }
-    </Interaction.P>
+    </div>
   </div>
 )
 

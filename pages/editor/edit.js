@@ -370,6 +370,7 @@ class EditorPage extends Component {
       localStorageNotSupported,
       error: stateError
     } = this.state
+    const sidebarWidth = 200
 
     return (
       <Frame url={url} raw nav={<RepoNav route='editor/edit' url={url} />}>
@@ -380,12 +381,14 @@ class EditorPage extends Component {
                 LocalStorage not available, your changes can't be saved locally!
               </div>}
             <div>
-              <Editor
-                state={editorState}
-                onChange={this.changeHandler}
-                onDocumentChange={this.documentChangeHandler}
-              />
-              <EditSidebar>
+              <div style={{paddingRight: sidebarWidth}}>
+                <Editor
+                  state={editorState}
+                  onChange={this.changeHandler}
+                  onDocumentChange={this.documentChangeHandler}
+                />
+              </div>
+              <EditSidebar width={sidebarWidth}>
                 <div {...css(styles.uncommittedChanges)}>
                   {uncommittedChanges &&
                     <Label>You have uncommitted changes</Label>}
