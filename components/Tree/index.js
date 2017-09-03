@@ -19,7 +19,8 @@ const styles = {
   container: css({
     maxWidth: `${CONTAINER_MAX_WIDTH}px`,
     overflow: 'hidden',
-    position: 'relative'
+    position: 'relative',
+    paddingTop: 20
   }),
   commitNode: css({
     backgroundColor: '#000',

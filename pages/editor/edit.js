@@ -11,9 +11,9 @@ import { Raw, resetKeyGenerator } from 'slate'
 import { Button, Label } from '@project-r/styleguide'
 
 import Frame from '../../components/Frame'
+import RepoNav from '../../components/Repo/Nav'
 import Editor, { serializer } from '../../components/editor/NewsletterEditor'
 
-import EditFrame from '../../components/EditFrame'
 import EditSidebar from '../../components/EditSidebar'
 import Loader from '../../components/Loader'
 import Checklist from '../../components/EditSidebar/Checklist'
@@ -360,7 +360,8 @@ class EditorPage extends Component {
   }
 
   render () {
-    const { repository, commit } = this.props.url.query
+    const { url } = this.props
+    const { repository, commit } = url.query
     const { loading, error } = this.props.data
     const {
       editorState,
@@ -371,9 +372,9 @@ class EditorPage extends Component {
     } = this.state
 
     return (
-      <Frame raw>
+      <Frame url={url} raw nav={<RepoNav route='editor/edit' url={url} />}>
         <Loader loading={committing || loading} error={error || stateError} render={() => (
-          <EditFrame view={'edit'} repository={repository} commit={commit}>
+          <div>
             {localStorageNotSupported &&
               <div {...css(styles.danger)}>
                 LocalStorage not available, your changes can't be saved locally!
@@ -421,7 +422,7 @@ class EditorPage extends Component {
                 <p>TODO when API is ready</p>
               </EditSidebar>
             </div>
-          </EditFrame>
+          </div>
         )} />
       </Frame>
     )
