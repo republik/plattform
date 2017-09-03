@@ -175,9 +175,7 @@ class EditorPage extends Component {
     let committedEditorState
     let commit
     if (view === 'new') {
-      committedEditorState = Raw.deserialize({
-        nodes: []
-      }, { terse: true })
+      committedEditorState = serializer.deserialize('')
     } else {
       commit = repo.commits.filter(commit => {
         return commit.id === commitId
