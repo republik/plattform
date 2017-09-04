@@ -1,0 +1,14 @@
+{
+  "updated": "2017-09-04T14:15:42.980Z",
+  "title": "live",
+  "data": [
+    {
+      "key": "api/signIn",
+      "value": "Sie müssen sich zuerst einloggen."
+    },
+    {
+      "key": "api/unauthorized",
+      "value": "Nicht genehmigt. Sie müssen die Rolle «{role}» besitzen um die gwünschte Aktion auszuführen."
+    }
+  ]
+}
