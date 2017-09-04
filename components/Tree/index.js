@@ -12,6 +12,7 @@ const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 const CONTAINER_MAX_WIDTH = 800
 const MIN_PADDING = 10
 const NODE_SIZE = 10
+const NODE_SIZE_HOVER = 14
 const LIST_MIN_WIDTH = 250
 const CHECKICON_SIZE = 24
 
@@ -24,10 +25,18 @@ const styles = {
   commitNode: css({
     backgroundColor: '#000',
     borderRadius: `${NODE_SIZE}px`,
+    cursor: 'pointer',
     display: 'block',
     height: `${NODE_SIZE}px`,
     position: 'absolute',
-    width: `${NODE_SIZE}px`
+    width: `${NODE_SIZE}px`,
+    ':hover': {
+      margin: `-${(NODE_SIZE_HOVER - NODE_SIZE) / 2}px 0 0 -${(NODE_SIZE_HOVER -
+        NODE_SIZE) /
+        2}px`,
+      height: `${NODE_SIZE_HOVER}px`,
+      width: `${NODE_SIZE_HOVER}px`
+    }
   }),
   nodeLink: {
     display: 'inline-block',
