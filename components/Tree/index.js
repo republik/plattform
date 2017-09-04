@@ -118,7 +118,6 @@ class Tree extends Component {
   }
 
   transformData (props) {
-    console.log(props.milestones)
     let commits = props.commits
       .map(commit => {
         return {
