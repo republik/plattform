@@ -70,6 +70,11 @@ module.exports = async (_, args, {pgdb, req, user}) => {
       .then(result => result.data)
   }))
 
+  // load base_tree
+  const parentCommit = await repo
+    .getCommit(parentId)
+    .then(result => result.data)
+
   const tree = await repo
     .createTree(
     [
@@ -85,7 +90,8 @@ module.exports = async (_, args, {pgdb, req, user}) => {
         mode: '100644',
         type: 'blob'
       }
-    ]
+    ],
+      parentCommit.tree.sha
     )
     .then(result => result.data)
 
