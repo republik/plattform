@@ -128,8 +128,16 @@ module.exports = async (_, args, {pgdb, req, user}) => {
     })
   }
 
-  // https://developer.github.com/v3/repos/contents/#update-a-file
   return {
-    id: commit.sha
+    id: commit.sha,
+    parentIds: commit.parents
+      ? commit.parents.map(parent => parent.sha)
+      : [],
+    message: commit.message,
+    author: commit.author,
+    date: new Date(commit.author.date),
+    repo: { // commit resolver
+      id: repoId
+    }
   }
 }
