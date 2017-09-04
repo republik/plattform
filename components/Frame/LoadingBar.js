@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import Router from 'next/router'
-// import track from '../../lib/piwik'
+import track from '../../lib/piwik'
 
 import { css } from 'glamor'
 import { colors } from '@project-r/styleguide'
+import { ZINDEX_LOADINGBAR } from './constants'
 
 const styles = {
   loadingBar: css({
     position: 'fixed',
-    zIndex: 30,
+    zIndex: ZINDEX_LOADINGBAR,
     top: 0,
     left: 0,
     height: 2,
@@ -36,8 +37,8 @@ class LoadingBar extends Component {
       this.setState({ loading: false })
 
       // update url manually, seems necessary after client navigation
-      // track(['setCustomUrl', window.location.href])
-      // track(['trackPageView'])
+      track(['setCustomUrl', window.location.href])
+      track(['trackPageView'])
     }
     Router.onRouteChangeError = () => {
       clearTimeout(this.timeout)

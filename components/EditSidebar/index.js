@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { css } from 'glamor'
 import { colors } from '@project-r/styleguide'
-import { HEADER_HEIGHT } from '../Frame/constants'
+import { HEADER_HEIGHT, ZINDEX_SIDEBAR } from '../Frame/constants'
 
 const styles = {
   container: css({
@@ -14,7 +14,7 @@ const styles = {
     borderLeft: `1px solid ${colors.divider}`,
     opacity: 1,
     padding: 10,
-    zIndex: 1
+    zIndex: ZINDEX_SIDEBAR
   })
 }
 

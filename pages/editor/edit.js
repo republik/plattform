@@ -315,7 +315,7 @@ class EditorPage extends Component {
       message: message,
       document: {
         content: JSON.stringify(
-          serializer.toMdast(editorState, {
+          serializer.serialize(editorState, {
             mdast: true
           })
         )
