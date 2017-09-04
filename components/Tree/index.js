@@ -346,7 +346,9 @@ class Tree extends Component {
                           size={CHECKICON_SIZE}
                           style={styles.checkIcon}
                           />
-                        <span {...styles.milestoneLabel}>{t(`checklist/labels/${milestone.name}`, undefined, milestone.name)}{' '}</span>
+                        <span {...styles.milestoneLabel}>
+                          {t(`checklist/labels/${milestone.name}`, undefined, milestone.name)}{' '}
+                        </span>
                         {milestone.author.name}: {milestone.message}
                       </span>
                       )}
