@@ -11,7 +11,7 @@ The trello board tracking it's tasks: https://trello.com/b/kbO2DOci/haku
 ## Usage
 
 ### Quick start
-You need to have node (8+) installed, postgres and redis running somewhere.
+You need to have node (8.3.0+) installed, postgres and redis running somewhere.
 
 Boostrap your .env file.
 ```
