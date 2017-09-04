@@ -7,7 +7,6 @@ import Tree from '../../components/Tree'
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
 
-// TODO: Add milestones once API supports them.
 const query = gql`
   query repo($repoId: ID!) {
     repo(id: $repoId) {
