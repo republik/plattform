@@ -8,12 +8,12 @@ import withData from '../../lib/apollo/withData'
 import { gql, graphql } from 'react-apollo'
 import { css } from 'glamor'
 import { Raw, resetKeyGenerator } from 'slate'
-import { Button, Label } from '@project-r/styleguide'
+import { A, Button, Label } from '@project-r/styleguide'
 
 import Frame from '../../components/Frame'
+import RepoNav from '../../components/Repo/Nav'
 import Editor, { serializer } from '../../components/editor/NewsletterEditor'
 
-import EditFrame from '../../components/EditFrame'
 import EditSidebar from '../../components/EditSidebar'
 import Loader from '../../components/Loader'
 import Checklist from '../../components/EditSidebar/Checklist'
@@ -136,6 +136,7 @@ class EditorPage extends Component {
   }
 
   revertHandler (e) {
+    e.preventDefault()
     this.store.clear()
     this.loadState(this.props)
   }
@@ -174,9 +175,7 @@ class EditorPage extends Component {
     let committedEditorState
     let commit
     if (view === 'new') {
-      committedEditorState = Raw.deserialize({
-        nodes: []
-      }, { terse: true })
+      committedEditorState = serializer.deserialize('')
     } else {
       commit = repo.commits.filter(commit => {
         return commit.id === commitId
@@ -360,7 +359,8 @@ class EditorPage extends Component {
   }
 
   render () {
-    const { repository, commit } = this.props.url.query
+    const { url } = this.props
+    const { repository, commit } = url.query
     const { loading, error } = this.props.data
     const {
       editorState,
@@ -369,59 +369,66 @@ class EditorPage extends Component {
       localStorageNotSupported,
       error: stateError
     } = this.state
+    const sidebarWidth = 200
 
     return (
-      <Frame raw>
+      <Frame url={url} raw nav={<RepoNav route='editor/edit' url={url} />}>
         <Loader loading={committing || loading} error={error || stateError} render={() => (
-          <EditFrame view={'edit'} repository={repository} commit={commit}>
-            {localStorageNotSupported &&
-              <div {...css(styles.danger)}>
-                LocalStorage not available, your changes can't be saved locally!
-              </div>}
-            <div>
+          <div>
+            <div style={{paddingRight: sidebarWidth}}>
               <Editor
                 state={editorState}
                 onChange={this.changeHandler}
                 onDocumentChange={this.documentChangeHandler}
               />
-              <EditSidebar>
-                <div {...css(styles.uncommittedChanges)}>
+            </div>
+            <EditSidebar width={sidebarWidth}>
+              {localStorageNotSupported &&
+                <div {...css(styles.danger)}>
+                  LocalStorage not available, your changes can't be saved locally!
+                </div>}
+              <div {...css(styles.uncommittedChanges)}>
+                <div style={{marginBottom: 10}}>
                   {uncommittedChanges &&
                     <Label>You have uncommitted changes</Label>}
                   {!uncommittedChanges &&
                     <Label>All your changes are committed</Label>}
-                  <Button
-                    disabled={!uncommittedChanges}
-                    onClick={this.revertHandler}
-                    style={styles.button}
-                  >
-                    Revert
-                  </Button>
-                  <Button
-                    primary
-                    disabled={!uncommittedChanges}
-                    onClick={this.commitHandler}
-                    style={styles.button}
-                  >
-                    Commit
-                  </Button>
                 </div>
-                <Label>Checklist</Label>
-                <Checklist
-                  disabled={!!uncommittedChanges}
-                  repoId={`orbiting/${repository}`}
-                  commitId={commit}
-                />
-                <Label>History</Label>
-                <CommitHistory
-                  commits={this.state.repo.commits}
-                  repository={repository}
-                />
-                <Label>Who's working on this?</Label>
-                <p>TODO when API is ready</p>
-              </EditSidebar>
-            </div>
-          </EditFrame>
+
+                <Button
+                  primary
+                  block
+                  disabled={!uncommittedChanges}
+                  onClick={this.commitHandler}
+                  style={styles.button}
+                >
+                  Commit
+                </Button>
+
+                {!!uncommittedChanges && (
+                  <div style={{textAlign: 'center', marginTop: 10}}>
+                    <A href='#' onClick={this.revertHandler}>
+                      Revert
+                    </A>
+                  </div>
+                )}
+
+              </div>
+              <Label>Checklist</Label>
+              <Checklist
+                disabled={!!uncommittedChanges}
+                repoId={`orbiting/${repository}`}
+                commitId={commit}
+              />
+              <Label>History</Label>
+              <CommitHistory
+                commits={this.state.repo.commits}
+                repository={repository}
+              />
+              <Label>Who's working on this?</Label>
+              <p>TODO when API is ready</p>
+            </EditSidebar>
+          </div>
         )} />
       </Frame>
     )

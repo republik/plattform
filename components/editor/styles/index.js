@@ -1,4 +1,5 @@
 import { colors } from '@project-r/styleguide'
+import { HEADER_HEIGHT } from '../../Frame/constants'
 
 const button = {
   cursor: 'pointer',
@@ -58,20 +59,24 @@ export default {
     ...actionButton
   },
   container: {
-    width: '100vw',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'stretch'
+    width: '100%',
+    height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+    paddingLeft: 150,
+    position: 'relative'
   },
   sidebar: {
-    flex: '0 0 180px',
-    padding: '15px 0 0 7px',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    width: 150,
+    padding: '0 0 0 7px',
     borderRight: `1px solid ${colors.divider}`
   },
   document: {
-    height: '100vh',
-    overflowY: 'scroll',
-    flex: '1 0 auto'
+    overflow: 'scroll',
+    width: '100%',
+    height: `calc(100vh - ${HEADER_HEIGHT}px)`
   },
   image: {
     outline: `4px solid transparent`,

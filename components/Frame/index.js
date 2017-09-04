@@ -1,22 +1,35 @@
 import React from 'react'
 import Head from 'next/head'
-import { NarrowContainer } from '@project-r/styleguide'
+import { NarrowContainer, fontFamilies } from '@project-r/styleguide'
+import Header from './Header'
+import { HEADER_HEIGHT } from './constants'
+import { css } from 'glamor'
 
 import 'glamor/reset'
 
-export default ({ children, raw }) =>
+css.global('html', { boxSizing: 'border-box' })
+css.global('*, *:before, *:after', { boxSizing: 'inherit' })
+
+css.global('body', {
+  fontFamily: fontFamilies.sansSerifRegular
+})
+
+export default ({ children, url, raw, nav }) =>
   <main>
     <Head>
-      <title>Project R — Mauka</title>
+      <title>Project R – Mauka</title>
     </Head>
-    {raw
-      ? children
-      : (
-        <NarrowContainer>
-          <div style={{padding: '20px 0'}}>
-            {children}
-          </div>
-        </NarrowContainer>
-      )
-    }
+    <Header url={url}>{nav}</Header>
+    <div style={{paddingTop: HEADER_HEIGHT}}>
+      {raw
+        ? children
+        : (
+          <NarrowContainer>
+            <div style={{paddingTop: 40, paddingBottom: 20}}>
+              {children}
+            </div>
+          </NarrowContainer>
+        )
+      }
+    </div>
   </main>

@@ -11,7 +11,6 @@ import Sidebar from './Sidebar'
 
 import marks, {
   BoldButton,
-  ItalicButton,
   UnderlineButton,
   StrikethroughButton
 } from './modules/marks'
@@ -131,7 +130,6 @@ const plugins = [
 
 const textFormatButtons = [
   BoldButton,
-  ItalicButton,
   UnderlineButton,
   StrikethroughButton,
   LinkButton

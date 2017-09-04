@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { resetKeyGenerator } from 'slate'
-import App from '../lib/App'
+import Frame from '../components/Frame'
 import Editor, {serializer} from '../components/editor/NewsletterEditor'
+import withData from '../lib/apollo/withData'
 
 const getInitialState = () => {
   resetKeyGenerator()
@@ -15,7 +16,7 @@ Nullam et metus mauris. Quisque scelerisque massa commodo, dapibus tortor in, co
   }
 }
 
-export default class Index extends Component {
+class Index extends Component {
   constructor (...args) {
     super(...args)
     this.state = getInitialState()
@@ -30,14 +31,17 @@ export default class Index extends Component {
   }
 
   render () {
+    const { url } = this.props
     return (
-      <App>
+      <Frame url={url} raw>
         <Editor
           state={this.state.state}
           onChange={state => this.setState({state})}
           onDocumentChange={this.onDocumentChange}
         />
-      </App>
+      </Frame>
     )
   }
 }
+
+export default withData(Index)

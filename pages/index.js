@@ -7,8 +7,8 @@ import withAuthorization from '../components/Auth/withAuthorization'
 import Frame from '../components/Frame'
 import RepoList from '../components/RepoList'
 
-const Index = () => (
-  <Frame>
+const Index = ({ url }) => (
+  <Frame url={url}>
     <RepoList />
   </Frame>
 )

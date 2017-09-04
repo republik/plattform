@@ -5,7 +5,7 @@ import { gql, graphql } from 'react-apollo'
 
 import Tree from '../../components/Tree'
 import Frame from '../../components/Frame'
-import EditFrame from '../../components/EditFrame'
+import RepoNav from '../../components/Repo/Nav'
 
 // TODO: Add milestones once API supports them.
 const query = gql`
@@ -41,17 +41,16 @@ class EditorPage extends Component {
   }
 
   render () {
-    const { repository, commit } = this.props.url.query
+    const { url } = this.props
+    const { repository, commit } = url.query
 
     return (
-      <Frame raw>
-        <EditFrame view={'tree'} repository={repository} commit={commit}>
-          <Tree
-            commits={this.state.commits}
-            repository={repository}
-            commit={commit}
-          />
-        </EditFrame>
+      <Frame url={url} raw nav={<RepoNav route='editor/tree' url={url} />}>
+        <Tree
+          commits={this.state.commits}
+          repository={repository}
+          commit={commit}
+        />
       </Frame>
     )
   }

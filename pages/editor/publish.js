@@ -1,20 +1,12 @@
 import withData from '../../lib/apollo/withData'
 
 import Frame from '../../components/Frame'
-import EditFrame from '../../components/EditFrame'
+import RepoNav from '../../components/Repo/Nav'
 
-export default withData(({ url: { query } }) => {
-  const { repository, commit } = query
+export default withData(({ url }) => {
   return (
-    <Frame>
-      <EditFrame
-        view={'publish'}
-        repository={repository}
-        commit={commit}
-        spaceLeft
-      >
-        <h1>Publish</h1>
-      </EditFrame>
+    <Frame url={url} nav={<RepoNav route='editor/publish' url={url} />}>
+      <h1>Veröffentlichung</h1>
     </Frame>
   )
 })

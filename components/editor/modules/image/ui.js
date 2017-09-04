@@ -77,7 +77,7 @@ export const ImagePropertyForm = ({ state, node, onChange }) =>
       Alt
       <input
         id={`image-props-alt-${node.key}`}
-        style={{outline: 'none', border: 'none', borderBottom: '1px solid #ccc'}}
+        style={{outline: 'none', border: 'none', borderBottom: '1px solid #ccc', width: '100%'}}
         type='text'
         value={node.data.get('alt') || ''}
         onChange={

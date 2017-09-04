@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-01T14:00:53.019Z",
+  "updated": "2017-09-03T11:52:31.151Z",
   "title": "live",
   "data": [
     {
@@ -72,11 +72,11 @@
     },
     {
       "key": "checklist/labels/cvd1",
-      "value": "CvD initial"
+      "value": "CvD Initial"
     },
     {
       "key": "checklist/labels/cvd2",
-      "value": "CvD final"
+      "value": "CvD Final"
     },
     {
       "key": "checklist/labels/ad",
@@ -85,6 +85,22 @@
     {
       "key": "checklist/labels/korrektur",
       "value": "Korrektur"
+    },
+    {
+      "key": "repo/nav/edit",
+      "value": "Text"
+    },
+    {
+      "key": "repo/nav/meta",
+      "value": "Metadaten"
+    },
+    {
+      "key": "repo/nav/tree",
+      "value": "Versionen"
+    },
+    {
+      "key": "repo/nav/publish",
+      "value": "Publizierung"
     }
   ]
 }
