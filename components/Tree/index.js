@@ -5,16 +5,17 @@ import { ascending, descending, max } from 'd3-array'
 import { schemeCategory10 } from 'd3-scale'
 import { color as d3Color } from 'd3-color'
 import CheckIcon from 'react-icons/lib/md/check'
+import withT from '../../lib/withT'
 import { swissTime } from '../../lib/utils/format'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
 const CONTAINER_MAX_WIDTH = 800
 const MIN_PADDING = 10
-const NODE_SIZE = 10
-const NODE_SIZE_HOVER = 14
+const NODE_SIZE = 12
+const NODE_SIZE_HOVER = 16
 const LIST_MIN_WIDTH = 250
-const CHECKICON_SIZE = 14
+const CHECKICON_SIZE = 16
 
 const styles = {
   container: css({
@@ -53,7 +54,7 @@ const styles = {
     zIndex: 1
   }),
   listItem: css({
-    fontSize: '12px',
+    fontSize: '13px',
     marginBottom: '5px',
     padding: '5px',
     position: 'relative'
@@ -65,7 +66,7 @@ const styles = {
   }),
   checkIcon: {
     backgroundColor: '#fff',
-    margin: '0 5px 1px 0'
+    margin: `0 5px 1px -${CHECKICON_SIZE + 6}px`
   },
   milestoneBar: css({
     backgroundColor: '#ddd',
@@ -77,14 +78,18 @@ const styles = {
   }),
   milestoneInfo: css({
     display: 'block',
-    marginTop: '3px'
+    marginBottom: '5px'
+  }),
+  milestoneLabel: css({
+    fontWeight: 'bold'
   }),
   milestone: css({
-    display: 'block'
+    display: 'block',
+    paddingLeft: `${CHECKICON_SIZE + 6}px`
   })
 }
 
-export default class Tree extends Component {
+class Tree extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -113,6 +118,7 @@ export default class Tree extends Component {
   }
 
   transformData (props) {
+    console.log(props.milestones)
     let commits = props.commits
       .map(commit => {
         return {
@@ -121,7 +127,9 @@ export default class Tree extends Component {
           author: commit.author,
           message: commit.message,
           parentIds: commit.parentIds,
-          milestones: commit.milestones
+          milestones: props.milestones.filter(o => {
+            return o.commit.id === commit.id
+          })
         }
       })
       .sort(function (a, b) {
@@ -292,7 +300,7 @@ export default class Tree extends Component {
   }
 
   render () {
-    const { repository } = this.props
+    const { repository, t } = this.props
     const { width, commits, links } = this.state
 
     return (
@@ -328,6 +336,26 @@ export default class Tree extends Component {
                 ref={commit.setListItemRef}
                 {...styles.listItem}
               >
+                {!!commit.milestones && commit.milestones.length > 0 &&
+                <span>
+                  <span {...styles.milestoneInfo}>
+                    {commit.milestones.map((milestone, i) =>
+                      <span {...styles.milestone} key={i}>
+                        <CheckIcon
+                          color='#000'
+                          size={CHECKICON_SIZE}
+                          style={styles.checkIcon}
+                          />
+                        <span {...styles.milestoneLabel}>{t(`checklist/labels/${milestone.name}`, undefined, milestone.name)}{' '}</span>
+                        {milestone.author.name}: {milestone.message}
+                      </span>
+                      )}
+                  </span>
+                  <span
+                    {...styles.milestoneBar}
+                    ref={commit.setMilestoneBarRef}
+                    />
+                </span>}
                 <Link
                   route='editor/edit'
                   params={{
@@ -343,25 +371,6 @@ export default class Tree extends Component {
                 {commit.author.name}
                 <br />
                 {timeFormat(new Date(commit.date))}
-                {!!commit.milestones &&
-                  <span>
-                    <span {...styles.milestoneInfo}>
-                      {commit.milestones.map((milestone, i) =>
-                        <span {...styles.milestone} key={i}>
-                          <CheckIcon
-                            color='#000'
-                            size={CHECKICON_SIZE}
-                            style={styles.checkIcon}
-                          />
-                          {milestone.author.name}: {milestone.message}
-                        </span>
-                      )}
-                    </span>
-                    <span
-                      {...styles.milestoneBar}
-                      ref={commit.setMilestoneBarRef}
-                    />
-                  </span>}
               </li>
             )}
           </ul>}
@@ -389,6 +398,8 @@ export default class Tree extends Component {
     )
   }
 }
+
+export default withT(Tree)
 
 const getPaths = (commits, parentNodes) => {
   // Walks and collects all possible upward paths on the tree.

@@ -22,6 +22,17 @@ const query = gql`
           name
         }
       }
+      milestones {
+        name
+        message
+        commit {
+          id
+        }
+        author {
+          email
+          name
+        }
+      }
     }
   }
 `
@@ -36,7 +47,8 @@ class EditorPage extends Component {
 
   componentWillReceiveProps (nextProps) {
     this.setState({
-      commits: nextProps.data.repo.commits
+      commits: nextProps.data.repo.commits,
+      milestones: nextProps.data.repo.milestones
     })
   }
 
@@ -48,6 +60,7 @@ class EditorPage extends Component {
       <Frame url={url} raw nav={<RepoNav route='editor/tree' url={url} />}>
         <Tree
           commits={this.state.commits}
+          milestones={this.state.milestones}
           repository={repository}
           commit={commit}
         />
