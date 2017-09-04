@@ -14,7 +14,7 @@ const MIN_PADDING = 10
 const NODE_SIZE = 10
 const NODE_SIZE_HOVER = 14
 const LIST_MIN_WIDTH = 250
-const CHECKICON_SIZE = 24
+const CHECKICON_SIZE = 14
 
 const styles = {
   container: css({
@@ -48,7 +48,7 @@ const styles = {
   list: css({
     listStyle: 'none',
     margin: 0,
-    padding: `0 ${CHECKICON_SIZE + 10}px 0 0`,
+    padding: 0,
     minWidth: `${LIST_MIN_WIDTH}px`,
     zIndex: 1
   }),
@@ -63,6 +63,10 @@ const styles = {
     top: 0,
     zIndex: -1
   }),
+  checkIcon: {
+    backgroundColor: '#fff',
+    margin: '0 5px 1px 0'
+  },
   milestoneBar: css({
     backgroundColor: '#ddd',
     height: '100%',
@@ -71,13 +75,12 @@ const styles = {
     top: 0,
     zIndex: '-2'
   }),
-  milestoneCheck: css({
-    backgroundColor: '#ddd',
-    marginTop: `-${CHECKICON_SIZE / 2}px`,
-    position: 'absolute',
-    right: `-${CHECKICON_SIZE + 10}px`,
-    top: '50%',
-    width: `${CHECKICON_SIZE}px`
+  milestoneInfo: css({
+    display: 'block',
+    marginTop: '3px'
+  }),
+  milestone: css({
+    display: 'block'
   })
 }
 
@@ -137,9 +140,6 @@ export default class Tree extends Component {
       }
       commit.setMilestoneBarRef = ref => {
         commit.milestoneBarRef = ref
-      }
-      commit.setMilestoneCheckRef = ref => {
-        commit.milestoneCheckRef = ref
       }
       commit.data = {
         slotIndex: null
@@ -236,15 +236,7 @@ export default class Tree extends Component {
     let colors = [...schemeCategory10]
     let authorColor = {}
     this.state.commits.forEach(
-      ({
-        data,
-        author,
-        nodeRef,
-        listItemRef,
-        milestoneBarRef,
-        milestoneCheckRef,
-        milestones
-      }) => {
+      ({ data, author, nodeRef, listItemRef, milestoneBarRef, milestones }) => {
         if (!authorColor[author.email]) {
           let color = colors.shift()
           let lightColor = d3Color(color)
@@ -263,18 +255,6 @@ export default class Tree extends Component {
         }
         if (milestoneBarRef) {
           milestoneBarRef.style.width = `${Math.max(width, LIST_MIN_WIDTH)}px`
-        }
-        if (milestoneCheckRef) {
-          // TODO: Implement a more usable UI than this simple title tooltip.
-          let title = ''
-          milestones.forEach((milestone, i) => {
-            title +=
-              milestone.author.name +
-              ': ' +
-              milestone.message +
-              (i === milestones.length - 1 ? '' : '\n')
-          })
-          milestoneCheckRef.title = title
         }
       }
     )
@@ -365,16 +345,22 @@ export default class Tree extends Component {
                 {timeFormat(new Date(commit.date))}
                 {!!commit.milestones &&
                   <span>
+                    <span {...styles.milestoneInfo}>
+                      {commit.milestones.map((milestone, i) =>
+                        <span {...styles.milestone} key={i}>
+                          <CheckIcon
+                            color='#000'
+                            size={CHECKICON_SIZE}
+                            style={styles.checkIcon}
+                          />
+                          {milestone.author.name}: {milestone.message}
+                        </span>
+                      )}
+                    </span>
                     <span
                       {...styles.milestoneBar}
                       ref={commit.setMilestoneBarRef}
                     />
-                    <span
-                      {...styles.milestoneCheck}
-                      ref={commit.setMilestoneCheckRef}
-                    >
-                      <CheckIcon color='#333' size={CHECKICON_SIZE} />
-                    </span>
                   </span>}
               </li>
             )}
