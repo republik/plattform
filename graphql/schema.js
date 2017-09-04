@@ -84,6 +84,7 @@ type User {
   lastName: String
   email: String!
   githubScope: String
+  roles: [String]!
 }
 
 type SignInResponse {

@@ -9,6 +9,7 @@ create table "users" (
   "lastName"            text,
   "githubAccessToken"   text,
   "githubScope"         text,
+  "roles"               jsonb,
   "createdAt"           timestamptz default now(),
   "updatedAt"           timestamptz default now()
 );

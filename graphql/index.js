@@ -6,6 +6,7 @@ const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { execute, subscribe } = require('graphql')
 const { pubsub } = require('../lib/RedisPubSub')
 const redis = require('../lib/redis')
+const { createRoleMiddleware } = require('../lib/Roles')
 
 const Schema = require('./schema')
 const Resolvers = require('./resolvers/index')
@@ -55,6 +56,7 @@ module.exports = (server, pgdb, httpServer) => {
 
   server.use('/graphql',
     bodyParser.json({limit: '8mb'}),
+    createRoleMiddleware('editor', ['me', 'signIn', 'signOut', '__schema']),
     graphqlMiddleware
   )
   server.use('/graphiql', graphiqlExpress({
