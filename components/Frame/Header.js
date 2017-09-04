@@ -12,7 +12,7 @@ import {
 } from '@project-r/styleguide'
 
 import LoadingBar from './LoadingBar'
-import { HEADER_HEIGHT } from './constants'
+import { HEADER_HEIGHT, ZINDEX_HEADER } from './constants'
 
 const cleanName = string => (
   string.split('@')[0]
@@ -24,7 +24,7 @@ const cleanName = string => (
 
 const styles = {
   bar: css({
-    zIndex: 20, // goes over footer
+    zIndex: ZINDEX_HEADER,
     position: 'fixed',
     '@media print': {
       position: 'absolute'
