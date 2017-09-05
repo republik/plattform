@@ -7,7 +7,11 @@ import withData from '../lib/apollo/withData'
 const getInitialState = () => {
   resetKeyGenerator()
   return {
-    state: serializer.deserialize(`
+    state: serializer.deserialize(`---
+a: test
+b: lala
+---
+
 Lorem sipsum dolor sit amet, consectetur adipiscing elit. Proin vestibulum dui eget tellus fermentum, eu lobortis libero lacinia. Maecenas commodo lacus dignissim, aliquet risus non, scelerisque dui. Aliquam at massa rutrum ante laoreet pharetra non a nulla. Praesent imperdiet egestas dapibus. Nunc quis lorem vehicula, pharetra nibh quis, dignissim felis. Fusce in justo pharetra, lacinia lorem in, dignissim sem. Phasellus lacinia turpis massa. Etiam eu condimentum diam.
 
 ![](/static/example.jpg)

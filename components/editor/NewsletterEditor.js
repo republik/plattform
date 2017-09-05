@@ -62,7 +62,7 @@ const documentRule = {
 
     return {
       document: {
-        data: {},
+        data: node.meta,
         kind: 'document',
         nodes: [
           coverSerializer.fromMdast(cover)
@@ -84,6 +84,7 @@ const documentRule = {
     const cover = findOrCreate(object.nodes, { kind: 'block', type: COVER })
     return {
       type: 'root',
+      meta: object.data,
       children: [
         coverSerializer.toMdast(cover, context)
       ].concat(
