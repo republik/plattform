@@ -108,13 +108,13 @@ class Tree extends Component {
     if (!this.state.width) {
       this.measure()
     } else {
+      this.measure()
       this.layout()
     }
   }
 
   componentDidMount () {
     window.addEventListener('resize', this.measure)
-    this.measure()
   }
 
   transformData (props) {
