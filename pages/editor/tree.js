@@ -51,7 +51,7 @@ class EditorPage extends Component {
             milestones={repo.milestones}
             repository={repository}
             commit={commit}
-        />
+          />
         )} />
       </Frame>
     )
