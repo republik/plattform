@@ -6,6 +6,8 @@ const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { execute, subscribe } = require('graphql')
 const { pubsub } = require('../lib/RedisPubSub')
 const redis = require('../lib/redis')
+const cookie = require('cookie')
+const cookieParser = require('cookie-parser')
 
 const Schema = require('./schema')
 const Resolvers = require('./resolvers/index')
@@ -27,7 +29,20 @@ module.exports = (server, pgdb, httpServer) => {
     {
       schema: executableSchema,
       execute,
-      subscribe
+      subscribe,
+      onConnect: async (connectionParams, websocket) => {
+        const cookies = cookie.parse(websocket.upgradeReq.headers.cookie)
+        const sid = cookieParser.signedCookie(
+          cookies['connect.sid'],
+          process.env.SESSION_SECRET
+        )
+        const session = await pgdb.public.sessions.findOne({ sid })
+        if (session) {
+          const user = await pgdb.public.users.findOne({id: session.sess.passport.user})
+          return { user }
+        }
+        return {}
+      }
     },
     {
       server: httpServer,
