@@ -74,6 +74,7 @@ type Author {
 
 type UncommittedChangeUpdate {
   repoId: ID!
+  user: User!
   action: Action!
 }
 
