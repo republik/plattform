@@ -4,11 +4,11 @@ const { hashObject } = require('../../../lib/git')
 const visit = require('unist-util-visit')
 const dataUriToBuffer = require('data-uri-to-buffer')
 const MDAST = require('../../../lib/mdast/mdast')
+const { ensureUserHasRole } = require('../../../lib/Roles')
 
 module.exports = async (_, args, {pgdb, req, user}) => {
-  if (!req.user) {
-    throw new Error('you need to signIn first')
-  }
+  ensureUserHasRole(user, 'editor')
+
   if (!req.user.githubAccessToken) {
     throw new Error('you need to sign in to github first')
   }

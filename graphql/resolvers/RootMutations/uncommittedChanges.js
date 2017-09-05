@@ -1,8 +1,12 @@
+const { ensureUserHasRole } = require('../../../lib/Roles')
+
 module.exports = async (
   _,
   { repoId, action },
   { user, redis, pubsub }
 ) => {
+  ensureUserHasRole(user, 'editor')
+
   const now = new Date().getTime()
 
   let result

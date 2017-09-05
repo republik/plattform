@@ -1,13 +1,13 @@
 const github = require('../../../lib/github')
+const { ensureUserHasRole } = require('../../../lib/Roles')
 
 module.exports = async (
   _,
   { repoId, commitId, name, message },
   { pgdb, req }
 ) => {
-  if (!req.user) {
-    throw new Error('you need to signIn first')
-  }
+  ensureUserHasRole(req.user, 'editor')
+
   if (!req.user.githubAccessToken) {
     throw new Error('you need to sign in to github first')
   }

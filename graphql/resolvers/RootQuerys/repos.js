@@ -1,7 +1,10 @@
 const { createGithubFetchForUser } = require('../../../lib/github')
 const { GITHUB_LOGIN } = process.env
+const { ensureUserHasRole } = require('../../../lib/Roles')
 
 module.exports = async (_, args, {user}) => {
+  ensureUserHasRole(user, 'editor')
+
   const {first} = args
 
   const query = `
