@@ -160,10 +160,10 @@ class EditorPage extends Component {
     if (!this.state.subscribed &&
       nextProps.data.repo &&
       nextProps.data.repo.uncommittedChanges &&
-      nextProps.subscribeToNewChanges) {
+      nextProps.subscribeToMore) {
         // TODO: This call used to happen in componentWillMount(), but in the
-        // Loader context props.data.subscribe(ToMore) isn't available at that time.
-        // This is a workaround to subscribe once things are ready, but open to
+        // Loader context props.data.subscribeToMore isn't available at that time.
+        // This is a workaround to subscribe once when things are ready, but open to
         // better suggestions.
       nextProps.subscribeToNewChanges()
       this.setState({subscribed: true})

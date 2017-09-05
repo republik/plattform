@@ -30,9 +30,7 @@ const UncommittedChanges = ({ uncommittedChanges }) => {
         <ul {...styles.list}>
           {uncommittedChanges.map(change =>
             <li key={change.id} {...styles.change}>
-              <span {...styles.date}>
-                {change.email}
-              </span>
+              {change.email}
             </li>
           )}
         </ul>
