@@ -56,7 +56,17 @@ const uncommittedChangesSubscription = gql`
 
 class UncommittedChanges extends Component {
   componentDidMount () {
-    this.unsubscribe = this.props.subscribeToNewChanges()
+    this.subscribe()
+  }
+
+  componentDidUpdate () {
+    this.subscribe()
+  }
+
+  subscribe () {
+    if (!this.unsubscribe && this.props.data.repo) {
+      this.unsubscribe = this.props.subscribeToNewChanges()
+    }
   }
 
   componentWillUnmount () {
@@ -102,42 +112,31 @@ export default graphql(query, {
           },
           updateQuery: (prev, { subscriptionData }) => {
             if (!subscriptionData.data) {
+              console.warn('empty subscription data')
               return prev
             }
-            let action = subscriptionData.data.uncommittedChanges.action
+            let uncommittedChanges = prev.repo.uncommittedChanges
+            const action = subscriptionData.data.uncommittedChanges.action
             if (action === 'create') {
-              const newChange = {
-                id: subscriptionData.data.uncommittedChanges.user.id,
-                email: subscriptionData.data.uncommittedChanges.user.email,
-                __typename: 'User'
+              const newUser = subscriptionData.data.uncommittedChanges.user
+              if (!uncommittedChanges.find(user => user.id === newUser.id)) {
+                uncommittedChanges = uncommittedChanges.concat(
+                  newUser
+                )
               }
-              let changes = [...prev.repo.uncommittedChanges]
-              if (!changes.some(change => {
-                return change.id === newChange.id
-              })) {
-                changes.push(newChange)
-              }
-              return Object.assign({}, prev, {
-                repo: {
-                  id: prev.repo.id,
-                  uncommittedChanges: changes,
-                  __typename: 'Repo'
-                }
-              })
             } else if (action === 'delete') {
-              return Object.assign({}, prev, {
-                repo: {
-                  id: prev.repo.id,
-                  uncommittedChanges: [
-                    ...prev.repo.uncommittedChanges.filter(
-                      change =>
-                        change.id !==
-                        subscriptionData.data.uncommittedChanges.user.id
-                    )
-                  ],
-                  __typename: 'Repo'
-                }
-              })
+              uncommittedChanges = uncommittedChanges.filter(
+                change =>
+                  change.id !==
+                  subscriptionData.data.uncommittedChanges.user.id
+              )
+            }
+            return {
+              ...prev,
+              repo: {
+                ...prev.repo,
+                uncommittedChanges
+              }
             }
           }
         })
