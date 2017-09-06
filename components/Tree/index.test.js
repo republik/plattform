@@ -1,7 +1,7 @@
 import React from 'react'
 import test from 'tape'
 import { shallow } from 'enzyme'
-import Tree from '../Tree'
+import Tree from './'
 
 const mockCommits = [
   {
