@@ -18,6 +18,7 @@ import EditSidebar from '../../components/EditSidebar'
 import Loader from '../../components/Loader'
 import Checklist from '../../components/EditSidebar/Checklist'
 import CommitHistory from '../../components/EditSidebar/CommitHistory'
+import UncommittedChanges from '../../components/EditSidebar/UncommittedChanges'
 import withAuthorization from '../../components/Auth/withAuthorization'
 
 import initLocalStore from '../../lib/utils/localStorage'
@@ -44,6 +45,10 @@ const query = gql`
             title
           }
         }
+      }
+      uncommittedChanges {
+        id
+        email
       }
     }
   }
@@ -426,7 +431,7 @@ class EditorPage extends Component {
                 repository={repository}
               />
               <Label>Who's working on this?</Label>
-              <p>TODO when API is ready</p>
+              <UncommittedChanges repoId={`orbiting/${repository}`} />
             </EditSidebar>
           </div>
         )} />
