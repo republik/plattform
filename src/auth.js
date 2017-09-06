@@ -90,10 +90,10 @@ exports.configure = ({
       })
       await Sessions.updateOne({sid: session.sid}, {sess})
 
-      return res.status(200).end('you are signed in!')
+      return res.status(200).end('you are signed in now!')
     } catch (e) {
       console.error('auth: exception', e)
-      return res.status(200).end('error')
+      return res.status(500).end('error')
     }
   })
 

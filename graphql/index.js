@@ -8,6 +8,7 @@ const { pubsub } = require('../lib/RedisPubSub')
 const redis = require('../lib/redis')
 const cookie = require('cookie')
 const cookieParser = require('cookie-parser')
+const t = require('../lib/t')
 
 const Schema = require('./schema')
 const Resolvers = require('./resolvers/index')
@@ -62,6 +63,7 @@ module.exports = (server, pgdb, httpServer) => {
         pgdb,
         user: req.user,
         req,
+        t,
         pubsub,
         redis
       }
