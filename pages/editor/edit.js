@@ -126,8 +126,7 @@ class EditorPage extends Component {
       editorState: null,
       localStorageNotSupported: false,
       repo: null,
-      uncommittedChanges: null,
-      subscribed: false
+      uncommittedChanges: null
     }
   }
 
@@ -139,18 +138,6 @@ class EditorPage extends Component {
   componentWillReceiveProps (nextProps) {
     resetKeyGenerator()
     this.loadState(nextProps)
-
-    if (!this.state.subscribed &&
-      nextProps.data.repo &&
-      nextProps.data.repo.uncommittedChanges &&
-      nextProps.subscribeToNewChanges) {
-      // TODO: This call used to happen in componentWillMount(), but in the
-      // Loader context props.data.subscribeToMore isn't available at that time.
-      // This is a workaround to subscribe once when things are ready, but open to
-      // better suggestions.
-      nextProps.subscribeToNewChanges()
-      this.setState({subscribed: true})
-    }
   }
 
   revertHandler (e) {
