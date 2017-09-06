@@ -57,11 +57,13 @@ module.exports = async (_, args, {pgdb, req, user}) => {
   visit(mdast, 'image', node => {
     node.url = extractImage(node.url)
   })
-  Object.keys(mdast.meta).forEach(key => {
-    if (key.match(/image/i)) {
-      mdast.meta[key] = extractImage(mdast.meta[key])
-    }
-  })
+  if (mdast.meta) {
+    Object.keys(mdast.meta).forEach(key => {
+      if (key.match(/image/i)) {
+        mdast.meta[key] = extractImage(mdast.meta[key])
+      }
+    })
+  }
 
   // serialize
   const markdown = MDAST.stringify(mdast)
