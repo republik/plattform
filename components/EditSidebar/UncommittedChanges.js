@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { gql, graphql } from 'react-apollo'
 import { css } from 'glamor'
 import { colors } from '@project-r/styleguide'
+import Loader from '../../components/Loader'
 
 const styles = {
   list: css({
@@ -23,22 +25,123 @@ const styles = {
   })
 }
 
-const UncommittedChanges = ({ uncommittedChanges }) => {
-  if (uncommittedChanges.length) {
+const query = gql`
+  query repo($repoId: ID!) {
+    repo(id: $repoId) {
+      id
+      uncommittedChanges {
+        id
+        email
+      }
+    }
+  }
+`
+
+const uncommittedChangesSubscription = gql`
+  subscription onUncommitedChange(
+    $repoId: ID!
+  ) {
+    uncommittedChanges(
+      repoId: $repoId
+    ) {
+      repoId
+      action
+      user {
+        id
+        email
+      }
+    }
+  }
+`
+
+class UncommittedChanges extends Component {
+  componentDidMount () {
+    this.unsubscribe = this.props.subscribeToNewChanges()
+  }
+
+  componentWillUnmount () {
+    this.unsubscribe && this.unsubscribe()
+  }
+
+  render () {
+    const { loading, error, uncommittedChanges } = this.props
+
     return (
-      <div>
-        <ul {...styles.list}>
-          {uncommittedChanges.map(change =>
-            <li key={change.id} {...styles.change}>
-              {change.email}
-            </li>
-          )}
-        </ul>
-      </div>
+      <Loader loading={loading} error={error} render={() => (
+        <div>
+          {!!uncommittedChanges.length &&
+          <ul {...styles.list}>
+            {uncommittedChanges.map(change =>
+              <li key={change.id} {...styles.change}>
+                {change.email}
+              </li>
+            )}
+          </ul>}
+          {!uncommittedChanges.length &&
+          <div {...styles.empty}>No one!</div>}
+        </div>
+      )} />
     )
-  } else {
-    return <div {...styles.empty}>No one!</div>
   }
 }
 
-export default UncommittedChanges
+export default graphql(query, {
+  options: ({ repoId }) => ({
+    variables: {
+      repoId: repoId
+    }
+  }),
+  props: props => {
+    return {
+      ...props,
+      subscribeToNewChanges: params => {
+        return props.data.subscribeToMore({
+          document: uncommittedChangesSubscription,
+          variables: {
+            repoId: props.data.repo.id
+          },
+          updateQuery: (prev, { subscriptionData }) => {
+            if (!subscriptionData.data) {
+              return prev
+            }
+            let action = subscriptionData.data.uncommittedChanges.action
+            if (action === 'create') {
+              const newChange = {
+                id: subscriptionData.data.uncommittedChanges.user.id,
+                email: subscriptionData.data.uncommittedChanges.user.email,
+                __typename: 'User'
+              }
+              let changes = [...prev.repo.uncommittedChanges]
+              if (!changes.some(change => {
+                return change.id === newChange.id
+              })) {
+                changes.push(newChange)
+              }
+              return Object.assign({}, prev, {
+                repo: {
+                  id: prev.repo.id,
+                  uncommittedChanges: changes,
+                  __typename: 'Repo'
+                }
+              })
+            } else if (action === 'delete') {
+              return Object.assign({}, prev, {
+                repo: {
+                  id: prev.repo.id,
+                  uncommittedChanges: [
+                    ...prev.repo.uncommittedChanges.filter(
+                      change =>
+                        change.id !==
+                        subscriptionData.data.uncommittedChanges.user.id
+                    )
+                  ],
+                  __typename: 'Repo'
+                }
+              })
+            }
+          }
+        })
+      }
+    }
+  }
+})(UncommittedChanges)

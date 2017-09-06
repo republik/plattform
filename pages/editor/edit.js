@@ -93,23 +93,6 @@ const uncommittedChangesMutation = gql`
   }
 `
 
-const uncommittedChangesSubscription = gql`
-  subscription onUncommitedChange(
-    $repoId: ID!
-  ) {
-    uncommittedChanges(
-      repoId: $repoId
-    ) {
-      repoId
-      action
-      user {
-        id
-        email
-      }
-    }
-  }
-`
-
 const styles = {
   uncommittedChanges: {
     fontSize: '13px',
@@ -463,6 +446,7 @@ class EditorPage extends Component {
               <Label>Who's working on this?</Label>
               <UncommittedChanges
                 uncommittedChanges={this.state.repo.uncommittedChanges}
+                repoId={`orbiting/${repository}`}
               />
             </EditSidebar>
           </div>
@@ -480,62 +464,7 @@ export default compose(
       variables: {
         repoId: 'orbiting/' + url.query.repository
       }
-    }),
-    props: props => {
-      return {
-        ...props,
-        subscribeToNewChanges: params => {
-          return props.data.subscribeToMore({
-            document: uncommittedChangesSubscription,
-            variables: {
-              repoId: props.data.repo.id
-            },
-            updateQuery: (prev, { subscriptionData }) => {
-              if (!subscriptionData.data) {
-                return prev
-              }
-              let action = subscriptionData.data.uncommittedChanges.action
-              if (action === 'create') {
-                const newChange = {
-                  id: subscriptionData.data.uncommittedChanges.user.id,
-                  email: subscriptionData.data.uncommittedChanges.user.email,
-                  __typename: 'User'
-                }
-                let changes = [...prev.repo.uncommittedChanges]
-                if (!changes.some(change => {
-                  return change.id === newChange.id
-                })) {
-                  changes.push(newChange)
-                }
-                return Object.assign({}, prev, {
-                  repo: {
-                    id: prev.repo.id,
-                    commits: prev.repo.commits,
-                    uncommittedChanges: changes,
-                    __typename: 'Repo'
-                  }
-                })
-              } else if (action === 'delete') {
-                return Object.assign({}, prev, {
-                  repo: {
-                    id: prev.repo.id,
-                    commits: prev.repo.commits,
-                    uncommittedChanges: [
-                      ...prev.repo.uncommittedChanges.filter(
-                        change =>
-                          change.id !==
-                          subscriptionData.data.uncommittedChanges.user.id
-                      )
-                    ],
-                    __typename: 'Repo'
-                  }
-                })
-              }
-            }
-          })
-        }
-      }
-    }
+    })
   }),
   graphql(commitMutation, {
     props: ({ mutate, ownProps: { url } }) => ({
