@@ -431,10 +431,7 @@ class EditorPage extends Component {
                 repository={repository}
               />
               <Label>Who's working on this?</Label>
-              <UncommittedChanges
-                uncommittedChanges={this.state.repo.uncommittedChanges}
-                repoId={`orbiting/${repository}`}
-              />
+              <UncommittedChanges repoId={`orbiting/${repository}`} />
             </EditSidebar>
           </div>
         )} />

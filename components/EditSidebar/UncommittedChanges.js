@@ -64,20 +64,20 @@ class UncommittedChanges extends Component {
   }
 
   render () {
-    const { loading, error, uncommittedChanges } = this.props
+    const { loading, error, data } = this.props
 
     return (
       <Loader loading={loading} error={error} render={() => (
         <div>
-          {!!uncommittedChanges.length &&
+          {!!data.repo.uncommittedChanges.length &&
           <ul {...styles.list}>
-            {uncommittedChanges.map(change =>
+            {data.repo.uncommittedChanges.map(change =>
               <li key={change.id} {...styles.change}>
                 {change.email}
               </li>
             )}
           </ul>}
-          {!uncommittedChanges.length &&
+          {!data.repo.uncommittedChanges.length &&
           <div {...styles.empty}>No one!</div>}
         </div>
       )} />
