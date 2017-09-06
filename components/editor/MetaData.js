@@ -6,6 +6,7 @@ import { Interaction, Field, colors } from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 
 import withT from '../../lib/withT'
+import ImageInput from './ImageInput'
 
 const styles = {
   container: css({
@@ -27,7 +28,8 @@ const styles = {
 const Form = ({state, onChange, t}) => {
   const defaultValues = Map({
     title: '',
-    description: ''
+    description: '',
+    image: ''
   })
   const node = state.document
   const data = defaultValues.merge(
@@ -39,6 +41,27 @@ const Form = ({state, onChange, t}) => {
       <div {...styles.center}>
         <Interaction.H2>{t('metaData/title')}</Interaction.H2>
         {data.map((value, key) => {
+          const label = t(`metaData/field/${key}`, undefined, key)
+          const onInputChange = (_, value) => {
+            const newData = node.data.remove('auto')
+
+            onChange(
+              state
+                .transform()
+                .setNodeByKey(node.key, {
+                  data: value
+                    ? newData.set(key, value)
+                    : newData.remove(key)
+                })
+                .apply()
+            )
+          }
+          if (key.match(/image/i)) {
+            return <ImageInput key={key}
+              label={label}
+              src={value}
+              onChange={onInputChange} />
+          }
           let renderInput
           if (key.match(/description/i)) {
             renderInput = ({ref, ...inputProps}) => (
@@ -50,23 +73,12 @@ const Form = ({state, onChange, t}) => {
           return (
             <Field
               key={key}
-              label={t(`metaData/field/${key}`, undefined, key)}
+              label={label}
               name={key}
               value={value}
               renderInput={renderInput}
               black
-              onChange={(_, value, shouldValidate) => {
-                onChange(
-                  state
-                    .transform()
-                    .setNodeByKey(node.key, {
-                      data: value
-                        ? node.data.set(key, value)
-                        : node.data.remove(key)
-                    })
-                    .apply()
-                )
-              }} />
+              onChange={onInputChange} />
           )
         }).toArray()}
       </div>

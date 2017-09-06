@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-06T14:59:02.044Z",
+  "updated": "2017-09-06T15:59:57.466Z",
   "title": "live",
   "data": [
     {
@@ -113,6 +113,10 @@
     {
       "key": "metaData/field/description",
       "value": "Deskription"
+    },
+    {
+      "key": "metaData/field/image",
+      "value": "Bild"
     }
   ]
 }
