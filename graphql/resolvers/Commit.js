@@ -46,14 +46,21 @@ module.exports = {
     const mdast = MDAST.parse(repository.blob.text)
 
     // prefix image urls
-    const prefixImages = (node) => {
-      if (node.url && node.url.indexOf('images/') === 0) {
-        node.url = `${PUBLIC_ASSETS_URL}/${commit.repo.id}/${commit.id}/${node.url}`
+    const prefixUrl = url => url && url.indexOf('images/') === 0
+      ? `${PUBLIC_ASSETS_URL}/${commit.repo.id}/${commit.id}/${url}`
+      : url
+
+    visit(mdast, 'image', node => {
+      node.url = prefixUrl(node.url)
+    })
+    Object.keys(mdast.meta).forEach(key => {
+      if (key.match(/image/i)) {
+        mdast.meta[key] = prefixUrl(mdast.meta[key])
       }
-    }
-    visit(mdast, 'image', prefixImages)
+    })
 
     return {
+      mdast,
       content: JSON.stringify(mdast),
       commit
     }

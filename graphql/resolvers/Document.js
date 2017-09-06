@@ -5,9 +5,7 @@
 
 module.exports = {
   meta: async (doc, args) => {
-    return {
-      title: 'TODO: title extraction for mdast'
-    }
+    return doc.mdast.meta
 
     // TODO migrate to mdast
     // wait until decision about how meta data is embedded in document

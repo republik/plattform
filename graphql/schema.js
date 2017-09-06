@@ -55,7 +55,9 @@ type Document implements FileInterface {
 }
 
 type Meta {
-  title: String!
+  title: String
+  description: String
+  image: String
 #  readingMinutes: Int!
 #  fbTitle: String
 }
