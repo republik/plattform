@@ -44,7 +44,15 @@ const ImageInput = ({onChange, src, label, maxWidth = 200}) => (
     </Label>
     {src
       ? <img src={src} style={{maxWidth}} alt='' />
-      : <span {...styles.placeholder} style={{width: maxWidth, height: maxWidth / 1.9}} />
+      : (
+        <span {...styles.placeholder}
+          style={{
+            width: maxWidth,
+            height: typeof maxWidth === 'number'
+              ? maxWidth / 1.9
+              : 100
+          }} />
+      )
     }
     <input
       type='file'

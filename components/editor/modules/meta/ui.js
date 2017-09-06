@@ -5,10 +5,30 @@ import { Map, Set } from 'immutable'
 import { Interaction, Field, colors } from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 
-import withT from '../../lib/withT'
+import withT from '../../../../lib/withT'
 import ImageInput from './ImageInput'
+import FBPreview from './FBPreview'
+import TwitterPreview from './TwitterPreview'
 
+const GUTTER = 20
 const styles = {
+  grid: css({
+    clear: 'both',
+    width: `calc(100% + ${GUTTER}px)`,
+    margin: `0 -${GUTTER / 2}px`,
+    ':after': {
+      content: '""',
+      display: 'table',
+      clear: 'both'
+    }
+  }),
+  span: css({
+    float: 'left',
+    paddingLeft: `${GUTTER / 2}px`,
+    paddingRight: `${GUTTER / 2}px`,
+    minHeight: 1,
+    width: '50%'
+  }),
   container: css({
     marginTop: 100,
     backgroundColor: colors.secondaryBg,
@@ -22,78 +42,29 @@ const styles = {
     minHeight: 40,
     paddingTop: '7px !important',
     paddingBottom: '6px !important'
-  }),
-  fbContainer: css({
-    backgroundColor: '#fff',
-    color: '#000',
-    width: 476
-  }),
-  fbImage: css({
-    width: 476,
-    height: 249,
-    backgroundSize: 'cover'
-  }),
-  fbText: css({
-    padding: '10px 12px',
-    maxHeight: 120,
-    overflow: 'hidden'
-  }),
-  fbTitle: css({
-    fontFamily: 'Georgia, serif',
-    fontSize: 18,
-    fontWeight: 500,
-    lineHeight: '22px',
-    maxHeight: 110,
-    overflow: 'hidden',
-    marginBottom: 5,
-    wordWrap: 'break-word'
-  }),
-  fbDescription: css({
-    fontFamily: 'sans-serif',
-    fontSize: 12,
-    lineHeight: '16px',
-    maxHeight: 80,
-    overflow: 'hidden'
-  }),
-  fbDomain: css({
-    fontFamily: 'sans-serif',
-    fontSize: 11,
-    lineHeight: '11px',
-    textTransform: 'uppercase',
-    color: '#90949c',
-    paddingTop: 9
   })
 }
 
-const FBPreview = ({data}) => (
-  <div {...styles.fbContainer}>
-    <div {...styles.fbImage} style={{
-      backgroundImage: `url(${data.get('facebookImage') || data.get('image')})`
-    }} />
-    <div {...styles.fbText}>
-      <div {...styles.fbTitle}>
-        {data.get('facebookTitle') || data.get('title')}
-      </div>
-      <div {...styles.fbDescription}>
-        {data.get('facebookDescription') || data.get('description')}
-      </div>
-      <div {...styles.fbDomain}>
-        republik.ch
-      </div>
-    </div>
-  </div>
-)
-
-const Form = ({onInputChange, data, t}) => (
-  <div>
+const Form = ({
+  t,
+  onInputChange,
+  data,
+  getWidth = key => key.match(/title/i) ? '100%' : ''
+}) => (
+  <div {...styles.grid}>
     {data.map((value, key) => {
       const label = t(`metaData/field/${key}`, undefined, key)
 
       if (key.match(/image/i)) {
-        return <ImageInput key={key}
-          label={label}
-          src={value}
-          onChange={onInputChange(key)} />
+        return (
+          <div key={key} {...styles.span}>
+            <ImageInput
+              maxWidth='100%'
+              label={label}
+              src={value}
+              onChange={onInputChange(key)} />
+          </div>
+        )
       }
       let renderInput
       if (key.match(/description/i)) {
@@ -104,14 +75,18 @@ const Form = ({onInputChange, data, t}) => (
         )
       }
       return (
-        <Field
+        <div
           key={key}
-          label={label}
-          name={key}
-          value={value}
-          renderInput={renderInput}
-          black
-          onChange={onInputChange(key)} />
+          {...styles.span}
+          style={{width: getWidth(key)}}>
+          <Field
+            label={label}
+            name={key}
+            value={value}
+            renderInput={renderInput}
+            black
+            onChange={onInputChange(key)} />
+        </div>
       )
     }).toArray()}
   </div>
@@ -124,8 +99,8 @@ const MetaData = ({state, onChange, t}) => {
     'slug',
     'emailSubject',
     'title',
-    'description',
-    'image'
+    'image',
+    'description'
   ])
   const gernericDefaultValues = Map(genericKeys.map(key => [key, '']))
   const genericData = gernericDefaultValues.merge(
@@ -134,12 +109,21 @@ const MetaData = ({state, onChange, t}) => {
 
   const fbKeys = Set([
     'facebookTitle',
-    'facebookDescription',
-    'facebookImage'
+    'facebookImage',
+    'facebookDescription'
   ])
   const fbDefaultValues = Map(fbKeys.map(key => [key, '']))
   const fbData = fbDefaultValues.merge(
     node.data.filter((_, key) => fbKeys.has(key))
+  )
+
+  const twitterKeys = Set([
+    'twitterTitle',
+    'twitterDescription'
+  ])
+  const twitterDefaultValues = Map(twitterKeys.map(key => [key, '']))
+  const twitterData = twitterDefaultValues.merge(
+    node.data.filter((_, key) => twitterKeys.has(key))
   )
 
   const onInputChange = key => (_, value) => {
@@ -170,7 +154,15 @@ const MetaData = ({state, onChange, t}) => {
           Facebook Vorschau
         </Interaction.H3>
         <FBPreview data={node.data} />
+        <br />
         <Form data={fbData} onInputChange={onInputChange} t={t} />
+        <br /><br />
+        <Interaction.H3>
+          Twitter Vorschau
+        </Interaction.H3>
+        <TwitterPreview data={node.data} />
+        <br />
+        <Form data={twitterData} onInputChange={onInputChange} t={t} getWidth={() => '100%'} />
       </div>
     </div>
   )

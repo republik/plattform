@@ -8,7 +8,7 @@ import { getSerializationRules } from './utils/getRules'
 import addValidation, { findOrCreate } from './utils/serializationValidation'
 import styles from './styles'
 import Sidebar from './Sidebar'
-import MetaData from './MetaData'
+import MetaData from './modules/meta/ui'
 
 import marks, {
   BoldButton,
