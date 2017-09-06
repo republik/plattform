@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-04T14:15:42.980Z",
+  "updated": "2017-09-06T17:43:27.278Z",
   "title": "live",
   "data": [
     {
@@ -9,6 +9,14 @@
     {
       "key": "api/unauthorized",
       "value": "Nicht genehmigt. Sie müssen die Rolle «{role}» besitzen um die gwünschte Aktion auszuführen."
+    },
+    {
+      "key": "api/email/invalid",
+      "value": "E-Mail ungültig"
+    },
+    {
+      "key": "api/auth/errorSavingSession",
+      "value": "Ups, da ist was schiefgelaufen. Sorry!"
     }
   ]
 }
