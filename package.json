@@ -31,6 +31,7 @@
     "immutable": "^3.8.1",
     "immutable-treeutils": "^0.1.10",
     "isomorphic-unfetch": "^2.0.0",
+    "leaked-handles": "^5.2.0",
     "lodash": "^4.17.4",
     "passport": "^0.4.0",
     "pogi": "^2.3.1",
@@ -43,14 +44,16 @@
     "unist-util-visit": "^1.1.3"
   },
   "scripts": {
-    "dev": "NODE_ENV=development nodemon -w graphql -w src -w lib -w index.js index.js",
+    "dev": "NODE_ENV=development nodemon -w graphql -w src -w lib -w server.js -w index.js index.js",
     "start": "node index.js",
     "precommit": "lint-staged",
     "standardize": "standard --fix",
     "migrate:up": "db-migrate up",
     "migrate:down": "db-migrate down",
     "db:reset": "db-migrate reset && db-migrate up",
-    "translations": "gsheets --key=1_1g3sW8u1aD9xGRfS479s0Pjwx0LxYRUEhETGkKlwLE --title=live --pretty --out lib/translations.json"
+    "translations": "gsheets --key=1_1g3sW8u1aD9xGRfS479s0Pjwx0LxYRUEhETGkKlwLE --title=live --pretty --out lib/translations.json",
+    "test": "tape \"?(__tests__|lib|graphql)/**/*.test.js\" | faucet",
+    "test:local": "export DATABASE_URL=postgres://localhost:5432/haku-test && echo $DATABASE_URL && dropdb --if-exists haku-test && createdb haku-test && db-migrate reset && db-migrate up && NODE_ENV=test-local tape \"?(__tests__|lib|graphql)/**/*.test.js\" "
   },
   "lint-staged": {
     "*.js": [
@@ -59,10 +62,12 @@
     ]
   },
   "devDependencies": {
+    "faucet": "0.0.1",
     "gsheets": "^2.0.0",
     "husky": "^0.14.3",
     "lint-staged": "^4.1.2",
     "nodemon": "^1.12.0",
-    "standard": "^10.0.3"
+    "standard": "^10.0.3",
+    "tape": "^4.8.0"
   }
 }
