@@ -57,6 +57,8 @@ module.exports.run = () => {
     httpServer.listen(PORT, () => {
       console.info('server is running on http://localhost:' + PORT)
     })
+
+    return { pgdb }
   })
 }
 
