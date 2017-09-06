@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-06T15:59:57.466Z",
+  "updated": "2017-09-06T22:13:40.023Z",
   "title": "live",
   "data": [
     {
@@ -117,6 +117,38 @@
     {
       "key": "metaData/field/image",
       "value": "Bild"
+    },
+    {
+      "key": "metaData/field/slug",
+      "value": "Web Slug"
+    },
+    {
+      "key": "metaData/field/emailSubject",
+      "value": "E-Mail-Betreff"
+    },
+    {
+      "key": "metaData/field/facebookTitle",
+      "value": "Facebook Titel"
+    },
+    {
+      "key": "metaData/field/facebookDescription",
+      "value": "Facebook Deskription"
+    },
+    {
+      "key": "metaData/field/facebookImage",
+      "value": "Facebook Bild"
+    },
+    {
+      "key": "uncommittedChanges/title",
+      "value": "Aktiv"
+    },
+    {
+      "key": "uncommittedChanges/me",
+      "value": "Ich"
+    },
+    {
+      "key": "uncommittedChanges/empty",
+      "value": "Niemand"
     }
   ]
 }
