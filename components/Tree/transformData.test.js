@@ -1,7 +1,5 @@
-import React from 'react'
 import test from 'tape'
-import { shallow } from 'enzyme'
-import Tree from './'
+import { transformData } from './transformData'
 
 const mockCommits = [
   {
@@ -107,13 +105,6 @@ const mockCommits = [
 ]
 
 test('components.Tree.transformData', assert => {
-  const wrapper = shallow(
-    <Tree
-      commits={mockCommits}
-      milestones={[]}
-    />
-  )
-
   const assertCommit = (commit, id, slotIndex) => {
     assert.equal(commit.id, id, 'commit id')
     assert.equal(commit.data.slotIndex, slotIndex, 'commit slotIndex')
@@ -124,8 +115,10 @@ test('components.Tree.transformData', assert => {
     assert.equal(link.destinationId, destinationId, 'link destinationId')
   }
 
-  const TreeInstance = wrapper.dive(Tree).instance()
-  const {commits, links} = TreeInstance.transformData(TreeInstance.props)
+  const {commits, links} = transformData({
+    commits: mockCommits,
+    milestones: []
+  })
 
   // Verify the commits' order and assigned slotIndeces.
   assertCommit(commits[0], 'id10', 2)
