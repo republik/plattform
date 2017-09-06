@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-03T11:52:31.151Z",
+  "updated": "2017-09-06T14:59:02.044Z",
   "title": "live",
   "data": [
     {
@@ -101,6 +101,18 @@
     {
       "key": "repo/nav/publish",
       "value": "Publizierung"
+    },
+    {
+      "key": "metaData/title",
+      "value": "Metadaten"
+    },
+    {
+      "key": "metaData/field/title",
+      "value": "Titel"
+    },
+    {
+      "key": "metaData/field/description",
+      "value": "Deskription"
     }
   ]
 }

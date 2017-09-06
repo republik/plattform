@@ -8,6 +8,7 @@ import { getSerializationRules } from './utils/getRules'
 import addValidation, { findOrCreate } from './utils/serializationValidation'
 import styles from './styles'
 import Sidebar from './Sidebar'
+import MetaData from './MetaData'
 
 import marks, {
   BoldButton,
@@ -192,6 +193,9 @@ class Editor extends Component {
               state={state}
               onChange={this.onChange}
               plugins={plugins} />
+            <MetaData
+              state={state}
+              onChange={this.onChange} />
           </div>
         </Document>
       </Container>
