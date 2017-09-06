@@ -31,13 +31,13 @@ module.exports = async (_, args, {pgdb, req, user}) => {
 
   // extract images
   const images = []
-  const extractImages = (node) => {
-    if (node.url) {
+  const extractImage = url => {
+    if (url) {
       let blob
       try {
-        blob = dataUriToBuffer(node.url)
+        blob = dataUriToBuffer(url)
       } catch (e) {
-        console.log('ignoring image node with url:' + node.url)
+        console.log('ignoring image node with url:' + url)
       }
       if (blob) {
         const suffix = blob.type.split('/')[1]
@@ -48,12 +48,22 @@ module.exports = async (_, args, {pgdb, req, user}) => {
           blob
         }
         images.push(image)
-        node.url = image.path
+        return image.path
       }
     }
+    return url
   }
   const mdast = JSON.parse(mdastString)
-  visit(mdast, 'image', extractImages)
+  visit(mdast, 'image', node => {
+    node.url = extractImage(node.url)
+  })
+  if (mdast.meta) {
+    Object.keys(mdast.meta).forEach(key => {
+      if (key.match(/image/i)) {
+        mdast.meta[key] = extractImage(mdast.meta[key])
+      }
+    })
+  }
 
   // serialize
   const markdown = MDAST.stringify(mdast)
