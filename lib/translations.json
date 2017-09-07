@@ -111,58 +111,6 @@
       "value": "Publizierung"
     },
     {
-      "key": "metaData/title",
-      "value": "Metadaten"
-    },
-    {
-      "key": "metaData/preview",
-      "value": "Vorschau"
-    },
-    {
-      "key": "metaData/field/title",
-      "value": "Titel"
-    },
-    {
-      "key": "metaData/field/description",
-      "value": "Deskription"
-    },
-    {
-      "key": "metaData/field/image",
-      "value": "Bild"
-    },
-    {
-      "key": "metaData/field/slug",
-      "value": "Web Slug"
-    },
-    {
-      "key": "metaData/field/emailSubject",
-      "value": "E-Mail-Betreff"
-    },
-    {
-      "key": "metaData/field/facebookTitle",
-      "value": "Facebook Titel"
-    },
-    {
-      "key": "metaData/field/facebookDescription",
-      "value": "Facebook Deskription"
-    },
-    {
-      "key": "metaData/field/facebookImage",
-      "value": "Facebook Bild"
-    },
-    {
-      "key": "metaData/field/twitterTitle",
-      "value": "Twitter Titel"
-    },
-    {
-      "key": "metaData/field/twitterDescription",
-      "value": "Twitter Deskription"
-    },
-    {
-      "key": "metaData/field/twitterImage",
-      "value": "Twitter Bild"
-    },
-    {
       "key": "uncommittedChanges/title",
       "value": "Aktiv"
     },
