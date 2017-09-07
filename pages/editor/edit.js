@@ -186,8 +186,9 @@ class EditorPage extends Component {
 
     let commitId = url.query.commit || 'new'
 
-    if (!this.store || this.store.storeKey !== commitId) {
-      this.store = initLocalStore([repo.id, commitId].join('/'))
+    const storeKey = [repo.id, commitId].join('/')
+    if (!this.store || this.store.key !== storeKey) {
+      this.store = initLocalStore(storeKey)
       this.checkLocalStorageSupport()
     }
 
