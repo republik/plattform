@@ -183,10 +183,17 @@ class EditorPage extends Component {
     if (loading || error) {
       return
     }
+    if (!url.query.commit && repo && repo.commits.length) {
+      Router.replaceRoute('editor/edit', {
+        repository: url.query.repository,
+        commit: repo.commits[0].id
+      })
+      return
+    }
+    const repoId = url.query.repository
+    const commitId = url.query.commit || 'new'
 
-    let commitId = url.query.commit || 'new'
-
-    const storeKey = [repo.id, commitId].join('/')
+    const storeKey = [repoId, commitId].join('/')
     if (!this.store || this.store.key !== storeKey) {
       this.store = initLocalStore(storeKey)
       this.checkLocalStorageSupport()
@@ -232,13 +239,13 @@ class EditorPage extends Component {
     }
 
     if (localEditorState) {
-      this.beginChanges(repo.id)
+      this.beginChanges(repoId)
       this.setState({
         editorState: localEditorState,
         committedRawString
       })
     } else {
-      this.concludeChanges(repo.id)
+      this.concludeChanges(repoId)
       this.setState({
         editorState: committedEditorState,
         committedRawString
@@ -332,9 +339,11 @@ class EditorPage extends Component {
     } = this.state
     const sidebarWidth = 200
 
+    const showLoading = committing || loading || !editorState
+
     return (
       <Frame url={url} raw nav={<RepoNav route='editor/edit' url={url} />}>
-        <Loader loading={committing || loading} error={error || stateError} render={() => (
+        <Loader loading={showLoading} error={error || stateError} render={() => (
           <div>
             <div style={{paddingRight: sidebarWidth}}>
               <Editor
