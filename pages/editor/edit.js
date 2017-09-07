@@ -192,7 +192,7 @@ class EditorPage extends Component {
         return
       }
 
-      const json = JSON.parse(commit.document.content)
+      const json = commit.document.content
       committedEditorState = serializer.deserialize(json, {
         mdast: true
       })
@@ -321,11 +321,9 @@ class EditorPage extends Component {
       parentId: commit.id,
       message: message,
       document: {
-        content: JSON.stringify(
-          serializer.serialize(editorState, {
-            mdast: true
-          })
-        )
+        content: serializer.serialize(editorState, {
+          mdast: true
+        })
       }
     })
       .then(result => {
