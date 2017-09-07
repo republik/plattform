@@ -10,11 +10,6 @@ const menu = [
     route: 'editor/edit'
   },
   {
-    key: 'meta',
-    label: 'Meta',
-    route: 'editor/meta'
-  },
-  {
     key: 'tree',
     label: 'Tree',
     route: 'editor/tree'
