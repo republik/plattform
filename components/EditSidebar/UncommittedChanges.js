@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { gql, graphql } from 'react-apollo'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 import { colors } from '@project-r/styleguide'
 import { compose } from 'redux'
 import Loader from '../../components/Loader'
@@ -8,22 +8,37 @@ import withT from '../../lib/withT'
 
 const styles = {
   container: css({
+    display: 'flex',
+    flexFlow: 'row wrap',
     fontSize: '11px',
     padding: '5px 0'
   }),
-  list: css({
-    listStyleType: 'none',
-    margin: 0,
-    maxHeight: '300px',
-    overflow: 'scroll',
-    padding: 0
-  }),
-  change: css({
-    borderBottom: `1px solid ${colors.divider}`,
-    padding: '5px 0',
-    position: 'relative'
-  })
+  initials: {
+    backgroundColor: '#ccc',
+    color: '#000',
+    cursor: 'default',
+    fontSize: 16,
+    height: 40,
+    lineHeight: '40px',
+    margin: '0 4px 4px 0',
+    textAlign: 'center',
+    textTransform: 'uppercase',
+    width: 40
+  },
+  initialsPlaceholder: {
+    backgroundColor: '#fff',
+    border: `1px solid ${colors.divider}`
+  }
 }
+
+// TODO: Factor out here and elsewhere into /utils.
+const cleanName = string => (
+  string.split('@')[0]
+    .replace(/\s*\.\s*/, ' ')
+    .split(' ')
+    .map(part => part[0].toUpperCase() + part.slice(1))
+    .join(' ')
+)
 
 const query = gql`
   query repo($repoId: ID!) {
@@ -49,6 +64,7 @@ const uncommittedChangesSubscription = gql`
       user {
         id
         email
+        name
       }
     }
   }
@@ -80,15 +96,17 @@ class UncommittedChanges extends Component {
       <Loader loading={loading} error={error} render={() => (
         <div {...styles.container}>
           {!!data.repo.uncommittedChanges.length &&
-          <ul {...styles.list}>
-            {data.repo.uncommittedChanges.map(change =>
-              <li key={change.id} {...styles.change}>
-                {change.email}
-              </li>
+            data.repo.uncommittedChanges.map(change =>
+              <span key={change.id} {...css(styles.initials)} title={change.email}>
+                {cleanName(change.email)
+                  .split(' ')
+                  .map(p => p[0])
+                  .join('')}
+              </span>
             )}
-          </ul>}
           {!data.repo.uncommittedChanges.length &&
-          <div>{t('uncommittedChanges/empty')}</div>}
+            <span {...merge(styles.initials, styles.initialsPlaceholder)}
+              title={t('uncommittedChanges/empty')} />}
         </div>
       )} />
     )
