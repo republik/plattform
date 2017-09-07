@@ -1,25 +1,25 @@
 import React from 'react'
 import { Link } from '../../lib/routes'
+import { colors, linkRule } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { swissTime } from '../../lib/utils/format'
-
-import { colors } from '@project-r/styleguide'
+import withT from '../../lib/withT'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
 const styles = {
+  container: css({
+    fontSize: '13px',
+    marginBottom: '20px'
+  }),
   commits: css({
-    borderBottom: `1px dotted ${colors.divider}`,
-    borderTop: `1px dotted ${colors.divider}`,
+    borderTop: `1px solid ${colors.divider}`,
     listStyleType: 'none',
-    margin: '5px 0 20px',
-    maxHeight: '300px',
-    overflow: 'scroll',
+    margin: '5px 0',
     padding: 0
   }),
   commit: css({
     borderBottom: `1px solid ${colors.divider}`,
-    fontSize: '13px',
     padding: '5px 0',
     position: 'relative'
   }),
@@ -29,12 +29,13 @@ const styles = {
   })
 }
 
-const CommitHistory = ({ commits, repository }) => {
+const CommitHistory = ({ commits, repository, maxItems, t }) => {
+  let numItems = maxItems || 3
   if (commits.length) {
     return (
-      <div>
+      <div {...styles.container}>
         <ul {...styles.commits}>
-          {commits.map(commit =>
+          {commits.slice(0, numItems).map(commit =>
             <li key={commit.id} {...styles.commit}>
               <Link
                 route='editor/edit'
@@ -46,7 +47,7 @@ const CommitHistory = ({ commits, repository }) => {
                   }
                 )}
               >
-                <a>
+                <a {...linkRule}>
                   {commit.message}
                 </a>
               </Link>
@@ -59,6 +60,12 @@ const CommitHistory = ({ commits, repository }) => {
             </li>
           )}
         </ul>
+        <Link
+          route='editor/tree'
+          params={{repository: repository}}
+        >
+          <a {...linkRule}>{t('commitHistory/more')}</a>
+        </Link>
       </div>
     )
   } else {
@@ -70,4 +77,4 @@ const CommitHistory = ({ commits, repository }) => {
   }
 }
 
-export default CommitHistory
+export default withT(CommitHistory)

@@ -2,9 +2,15 @@ import React, { Component } from 'react'
 import { gql, graphql } from 'react-apollo'
 import { css } from 'glamor'
 import { colors } from '@project-r/styleguide'
+import { compose } from 'redux'
 import Loader from '../../components/Loader'
+import withT from '../../lib/withT'
 
 const styles = {
+  container: css({
+    fontSize: '11px',
+    padding: '5px 0'
+  }),
   list: css({
     listStyleType: 'none',
     margin: 0,
@@ -14,14 +20,8 @@ const styles = {
   }),
   change: css({
     borderBottom: `1px solid ${colors.divider}`,
-    fontSize: '11px',
     padding: '5px 0',
     position: 'relative'
-  }),
-  empty: css({
-    fontSize: '13px',
-    padding: '10px',
-    textAlign: 'center'
   })
 }
 
@@ -74,11 +74,11 @@ class UncommittedChanges extends Component {
   }
 
   render () {
-    const { loading, error, data } = this.props
+    const { loading, error, data, t } = this.props
 
     return (
       <Loader loading={loading} error={error} render={() => (
-        <div>
+        <div {...styles.container}>
           {!!data.repo.uncommittedChanges.length &&
           <ul {...styles.list}>
             {data.repo.uncommittedChanges.map(change =>
@@ -88,59 +88,62 @@ class UncommittedChanges extends Component {
             )}
           </ul>}
           {!data.repo.uncommittedChanges.length &&
-          <div {...styles.empty}>No one!</div>}
+          <div>{t('uncommittedChanges/empty')}</div>}
         </div>
       )} />
     )
   }
 }
 
-export default graphql(query, {
-  options: ({ repoId }) => ({
-    variables: {
-      repoId: repoId
-    }
-  }),
-  props: props => {
-    return {
-      ...props,
-      subscribeToNewChanges: params => {
-        return props.data.subscribeToMore({
-          document: uncommittedChangesSubscription,
-          variables: {
-            repoId: props.data.repo.id
-          },
-          updateQuery: (prev, { subscriptionData }) => {
-            if (!subscriptionData.data) {
-              console.warn('empty subscription data')
-              return prev
-            }
-            let uncommittedChanges = prev.repo.uncommittedChanges
-            const action = subscriptionData.data.uncommittedChanges.action
-            if (action === 'create') {
-              const newUser = subscriptionData.data.uncommittedChanges.user
-              if (!uncommittedChanges.find(user => user.id === newUser.id)) {
-                uncommittedChanges = uncommittedChanges.concat(
-                  newUser
+export default compose(
+  withT,
+  graphql(query, {
+    options: ({ repoId }) => ({
+      variables: {
+        repoId: repoId
+      }
+    }),
+    props: props => {
+      return {
+        ...props,
+        subscribeToNewChanges: params => {
+          return props.data.subscribeToMore({
+            document: uncommittedChangesSubscription,
+            variables: {
+              repoId: props.data.repo.id
+            },
+            updateQuery: (prev, { subscriptionData }) => {
+              if (!subscriptionData.data) {
+                console.warn('empty subscription data')
+                return prev
+              }
+              let uncommittedChanges = prev.repo.uncommittedChanges
+              const action = subscriptionData.data.uncommittedChanges.action
+              if (action === 'create') {
+                const newUser = subscriptionData.data.uncommittedChanges.user
+                if (!uncommittedChanges.find(user => user.id === newUser.id)) {
+                  uncommittedChanges = uncommittedChanges.concat(
+                    newUser
+                  )
+                }
+              } else if (action === 'delete') {
+                uncommittedChanges = uncommittedChanges.filter(
+                  change =>
+                    change.id !==
+                    subscriptionData.data.uncommittedChanges.user.id
                 )
               }
-            } else if (action === 'delete') {
-              uncommittedChanges = uncommittedChanges.filter(
-                change =>
-                  change.id !==
-                  subscriptionData.data.uncommittedChanges.user.id
-              )
-            }
-            return {
-              ...prev,
-              repo: {
-                ...prev.repo,
-                uncommittedChanges
+              return {
+                ...prev,
+                repo: {
+                  ...prev.repo,
+                  uncommittedChanges
+                }
               }
             }
-          }
-        })
+          })
+        }
       }
     }
-  }
-})(UncommittedChanges)
+  })
+)(UncommittedChanges)

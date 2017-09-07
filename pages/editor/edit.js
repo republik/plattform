@@ -20,6 +20,7 @@ import Checklist from '../../components/EditSidebar/Checklist'
 import CommitHistory from '../../components/EditSidebar/CommitHistory'
 import UncommittedChanges from '../../components/EditSidebar/UncommittedChanges'
 import withAuthorization from '../../components/Auth/withAuthorization'
+import withT from '../../lib/withT'
 
 import initLocalStore from '../../lib/utils/localStorage'
 
@@ -364,7 +365,7 @@ class EditorPage extends Component {
   }
 
   render () {
-    const { url } = this.props
+    const { url, t } = this.props
     const { repository, commit } = url.query
     const { loading, error } = this.props.data
     const {
@@ -419,18 +420,18 @@ class EditorPage extends Component {
                 )}
 
               </div>
-              <Label>Checklist</Label>
+              <Label>{t('checklist/title')}</Label>
               <Checklist
                 disabled={!!uncommittedChanges}
                 repoId={`orbiting/${repository}`}
                 commitId={commit}
               />
-              <Label>History</Label>
+              <Label>{t('commitHistory/title')}</Label>
               <CommitHistory
                 commits={this.state.repo.commits}
                 repository={repository}
               />
-              <Label>Who's working on this?</Label>
+              <Label>{t('uncommittedChanges/title')}</Label>
               <UncommittedChanges repoId={`orbiting/${repository}`} />
             </EditSidebar>
           </div>
@@ -442,6 +443,7 @@ class EditorPage extends Component {
 
 export default compose(
   withData,
+  withT,
   withAuthorization(['editor']),
   graphql(query, {
     options: ({ url }) => ({
