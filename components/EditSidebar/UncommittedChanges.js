@@ -3,6 +3,7 @@ import { gql, graphql } from 'react-apollo'
 import { css, merge } from 'glamor'
 import { colors } from '@project-r/styleguide'
 import { compose } from 'redux'
+import { cleanName, initials } from '../../lib/utils/clean'
 import Loader from '../../components/Loader'
 import withT from '../../lib/withT'
 
@@ -30,15 +31,6 @@ const styles = {
     border: `1px solid ${colors.divider}`
   }
 }
-
-// TODO: Factor out here and elsewhere into /utils.
-const cleanName = string => (
-  string.split('@')[0]
-    .replace(/\s*\.\s*/, ' ')
-    .split(' ')
-    .map(part => part[0].toUpperCase() + part.slice(1))
-    .join(' ')
-)
 
 const query = gql`
   query repo($repoId: ID!) {
@@ -98,10 +90,7 @@ class UncommittedChanges extends Component {
           {!!data.repo.uncommittedChanges.length &&
             data.repo.uncommittedChanges.map(change =>
               <span key={change.id} {...css(styles.initials)} title={change.email}>
-                {cleanName(change.email)
-                  .split(' ')
-                  .map(p => p[0])
-                  .join('')}
+                {initials(cleanName(change.email))}
               </span>
             )}
           {!data.repo.uncommittedChanges.length &&
