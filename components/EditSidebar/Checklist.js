@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { Checkbox, colors, linkRule } from '@project-r/styleguide'
+import { cleanName } from '../../lib/utils/clean'
 import { swissTime } from '../../lib/utils/format'
 import { gql, graphql } from 'react-apollo'
 import { compose } from 'redux'
@@ -11,14 +12,6 @@ import withT from '../../lib/withT'
 import { ascending } from 'd3-array'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
-
-const cleanName = string => (
-  string.split('@')[0]
-    .replace(/\s*\.\s*/, ' ')
-    .split(' ')
-    .map(part => part[0].toUpperCase() + part.slice(1))
-    .join(' ')
-)
 
 const styles = {
   approvedBy: css({

@@ -3,6 +3,7 @@ import { css } from 'glamor'
 import Router from 'next/router'
 import { compose } from 'redux'
 
+import { cleanName, initials } from '../../lib/utils/clean'
 import withMe from '../../lib/withMe'
 
 import {
@@ -13,14 +14,6 @@ import {
 
 import LoadingBar from './LoadingBar'
 import { HEADER_HEIGHT, ZINDEX_HEADER } from './constants'
-
-const cleanName = string => (
-  string.split('@')[0]
-    .replace(/\s*\.\s*/, ' ')
-    .split(' ')
-    .map(part => part[0].toUpperCase() + part.slice(1))
-    .join(' ')
-)
 
 const styles = {
   bar: css({
@@ -145,10 +138,7 @@ class Header extends Component {
                 ? <img src={me.portrait.url} {...styles.portrait} />
                 : (
                   <span {...styles.initials}>
-                    {cleanName(me.name.trim() || me.email)
-                      .split(' ')
-                      .map(p => p[0])
-                      .join('')}
+                    {initials(cleanName(me.name.trim() || me.email))}
                   </span>
                   )
               }
