@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-07T07:49:06.067Z",
+  "updated": "2017-09-07T08:31:08.888Z",
   "title": "live",
   "data": [
     {
@@ -107,6 +107,10 @@
       "value": "Metadaten"
     },
     {
+      "key": "metaData/preview",
+      "value": "Vorschau"
+    },
+    {
       "key": "metaData/field/title",
       "value": "Titel"
     },
@@ -153,10 +157,6 @@
     {
       "key": "uncommittedChanges/title",
       "value": "Aktiv"
-    },
-    {
-      "key": "uncommittedChanges/me",
-      "value": "Ich"
     },
     {
       "key": "uncommittedChanges/empty",

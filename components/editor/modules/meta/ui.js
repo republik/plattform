@@ -2,7 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 import { Map, Set } from 'immutable'
 
-import { Interaction, Field, colors } from '@project-r/styleguide'
+import { Interaction, Field, Label, colors } from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 
 import withT from '../../../../lib/withT'
@@ -150,20 +150,14 @@ const MetaData = ({state, onChange, t}) => {
         </Interaction.H2>
         <br />
         <Form data={genericData} onInputChange={onInputChange} t={t} />
-        <br /><br />
-        <Interaction.H3>
-          Facebook Vorschau
-        </Interaction.H3>
-        <FBPreview data={node.data} />
-        <br />
+        <br /><br /><br />
         <Form data={fbData} onInputChange={onInputChange} t={t} />
-        <br /><br />
-        <Interaction.H3>
-          Twitter Vorschau
-        </Interaction.H3>
-        <TwitterPreview data={node.data} />
-        <br />
+        <Label>{t('metaData/preview')}</Label><br />
+        <FBPreview data={node.data} />
+        <br /><br /><br />
         <Form data={twitterData} onInputChange={onInputChange} t={t} />
+        <Label>{t('metaData/preview')}</Label><br />
+        <TwitterPreview data={node.data} />
       </div>
     </div>
   )
