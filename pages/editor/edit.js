@@ -158,14 +158,6 @@ class EditorPage extends Component {
     if (loading || error) {
       return
     }
-    if (!repo) {
-      console.log('Could not load repo')
-      return
-    }
-
-    this.setState({
-      repo: repo
-    })
 
     let commitId = url.query.commit
     let view = !commitId ? 'new' : 'edit'
@@ -359,7 +351,7 @@ class EditorPage extends Component {
   render () {
     const { url, t } = this.props
     const { repository, commit } = url.query
-    const { loading, error } = this.props.data
+    const { loading, error, repo } = this.props.data
     const {
       editorState,
       committing,
@@ -420,7 +412,7 @@ class EditorPage extends Component {
               />
               <Label>{t('commitHistory/title')}</Label>
               <CommitHistory
-                commits={this.state.repo.commits}
+                commits={repo.commits}
                 repository={repository}
               />
               <Label>{t('uncommittedChanges/title')}</Label>
