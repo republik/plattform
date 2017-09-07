@@ -45,11 +45,13 @@ const styles = {
   })
 }
 
+const defaultGetWidth = key => key.match(/title/i) ? '100%' : ''
+
 const Form = ({
   t,
   onInputChange,
   data,
-  getWidth = key => key.match(/title/i) ? '100%' : ''
+  getWidth = defaultGetWidth
 }) => (
   <div {...styles.grid}>
     {data.map((value, key) => {
@@ -102,8 +104,8 @@ const MetaData = ({state, onChange, t}) => {
     'image',
     'description'
   ])
-  const gernericDefaultValues = Map(genericKeys.map(key => [key, '']))
-  const genericData = gernericDefaultValues.merge(
+  const genericDefaultValues = Map(genericKeys.map(key => [key, '']))
+  const genericData = genericDefaultValues.merge(
     node.data.filter((_, key) => genericKeys.has(key))
   )
 
