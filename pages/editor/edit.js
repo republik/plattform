@@ -117,6 +117,32 @@ class EditorPage extends Component {
     }
   }
 
+  beginChanges (repoId) {
+    this.setState({
+      uncommittedChanges: true
+    })
+    this.props.uncommittedChangesMutation({
+      repoId: repoId,
+      action: 'create'
+    }).catch(error => {
+      console.log('uncommittedChangesMutation error')
+      console.log(error)
+    })
+  }
+
+  concludeChanges (repoId) {
+    this.setState({
+      uncommittedChanges: false
+    })
+    this.props.uncommittedChangesMutation({
+      repoId: repoId,
+      action: 'delete'
+    }).catch(error => {
+      console.log('uncommittedChangesMutation error')
+      console.log(error)
+    })
+  }
+
   componentWillMount () {
     resetKeyGenerator()
     this.loadState(this.props)
@@ -151,8 +177,7 @@ class EditorPage extends Component {
   loadState (props) {
     const {
       data: { loading, error, repo },
-      url,
-      uncommittedChangesMutation
+      url
     } = props
 
     if (loading || error) {
@@ -201,28 +226,14 @@ class EditorPage extends Component {
     }
 
     if (localEditorState) {
-      uncommittedChangesMutation({
-        repoId: repo.id,
-        action: 'create'
-      }).catch(error => {
-        console.log('uncommittedChangesMutation error')
-        console.log(error)
-      })
+      this.beginChanges(repo.id)
       this.setState({
-        uncommittedChanges: true,
         editorState: localEditorState,
         committedEditorState
       })
     } else {
-      uncommittedChangesMutation({
-        repoId: repo.id,
-        action: 'delete'
-      }).catch(error => {
-        console.log('uncommittedChangesMutation error')
-        console.log(error)
-      })
+      this.concludeChanges(repo.id)
       this.setState({
-        uncommittedChanges: false,
         editorState: committedEditorState,
         committedEditorState
       })
@@ -234,7 +245,7 @@ class EditorPage extends Component {
   }
 
   documentChangeHandler (_, newEditorState) {
-    const { data: { repo }, uncommittedChangesMutation } = this.props
+    const { data: { repo } } = this.props
     const { committedEditorState, uncommittedChanges } = this.state
 
     if (
@@ -245,30 +256,12 @@ class EditorPage extends Component {
       }))
 
       if (!uncommittedChanges) {
-        this.setState({
-          uncommittedChanges: true
-        })
-        uncommittedChangesMutation({
-          repoId: repo.id,
-          action: 'create'
-        }).catch(error => {
-          console.log('uncommittedChangesMutation error')
-          console.log(error)
-        })
+        this.beginChanges(repo.id)
       }
     } else {
       if (uncommittedChanges) {
         this.store.clear()
-        this.setState({
-          uncommittedChanges: false
-        })
-        uncommittedChangesMutation({
-          repoId: repo.id,
-          action: 'delete'
-        }).catch(error => {
-          console.log('uncommittedChangesMutation error')
-          console.log(error)
-        })
+        this.concludeChanges(repo.id)
       }
     }
   }
@@ -277,8 +270,7 @@ class EditorPage extends Component {
     const {
       data: { repo },
       url,
-      commitMutation,
-      uncommittedChangesMutation
+      commitMutation
     } = this.props
     const { editorState } = this.state
 
@@ -302,13 +294,7 @@ class EditorPage extends Component {
     })
       .then(({data}) => {
         this.store.clear()
-        uncommittedChangesMutation({
-          repoId: repo.id,
-          action: 'delete'
-        }).catch(error => {
-          console.log('uncommittedChangesMutation error')
-          console.log(error)
-        })
+        this.concludeChanges(repo.id)
 
         this.setState({
           committing: false,
