@@ -390,14 +390,16 @@ class EditorPage extends Component {
             <EditSidebar width={sidebarWidth}>
               {localStorageNotSupported &&
                 <div {...css(styles.danger)}>
-                  LocalStorage not available, your changes can't be saved locally!
+                  {t('commit/warn/noStorage')}
                 </div>}
               <div {...css(styles.uncommittedChanges)}>
                 <div style={{marginBottom: 10}}>
-                  {uncommittedChanges &&
-                    <Label>You have uncommitted changes</Label>}
-                  {!uncommittedChanges &&
-                    <Label>All your changes are committed</Label>}
+                  <Label style={{fontSize: 12}}>
+                    {uncommittedChanges
+                      ? <span>{t('commit/status/uncommitted')}</span>
+                      : <span>{t('commit/status/committed')}</span>
+                    }
+                  </Label>
                 </div>
 
                 <Button
@@ -407,13 +409,13 @@ class EditorPage extends Component {
                   onClick={this.commitHandler}
                   style={styles.button}
                 >
-                  Commit
+                  {t('commit/button')}
                 </Button>
 
                 {!!uncommittedChanges && (
                   <div style={{textAlign: 'center', marginTop: 10}}>
                     <A href='#' onClick={this.revertHandler}>
-                      Revert
+                      {t('commit/revert')}
                     </A>
                   </div>
                 )}

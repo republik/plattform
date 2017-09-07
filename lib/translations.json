@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-07T12:36:35.815Z",
+  "updated": "2017-09-07T14:47:00.232Z",
   "title": "live",
   "data": [
     {
@@ -177,6 +177,26 @@
     {
       "key": "commitHistory/more",
       "value": "Mehr …"
+    },
+    {
+      "key": "commit/button",
+      "value": "Commit"
+    },
+    {
+      "key": "commit/revert",
+      "value": "Verwerfen"
+    },
+    {
+      "key": "commit/status/committed",
+      "value": "Alle deine Änderungen sind committed"
+    },
+    {
+      "key": "commit/status/uncommitted",
+      "value": "Änderungen sind nicht committed"
+    },
+    {
+      "key": "commit/warn/noStorage",
+      "value": "Änderungen können nicht lokal gespeichert werden!"
     }
   ]
 }
