@@ -255,19 +255,12 @@ class EditorPage extends Component {
     const { data: { repo }, uncommittedChangesMutation } = this.props
     const { committedEditorState, uncommittedChanges } = this.state
 
-    const serializedNewEditorState = Raw.serialize(newEditorState, {
-      terse: true
-    })
-    const serializedCommittedEditorState = Raw.serialize(committedEditorState, {
-      terse: true
-    })
     if (
-      JSON.stringify(serializedNewEditorState) !==
-      JSON.stringify(serializedCommittedEditorState)
+      !newEditorState.document.equals(committedEditorState.document)
     ) {
-      this.store.set('editorState', serializedNewEditorState)
-      // Do we actually need the commit here?
-      // this.store.set('commit', commit) //repository.commit)
+      this.store.set('editorState', Raw.serialize(newEditorState, {
+        terse: true
+      }))
 
       if (!uncommittedChanges) {
         this.setState({

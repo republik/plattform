@@ -199,7 +199,7 @@ class Editor extends Component {
 
       if (state !== nextState) {
         onChange(nextState)
-        if (state.document !== nextState.document) {
+        if (!nextState.document.equals(state.document)) {
           onDocumentChange(nextState.document, nextState)
         }
       }
