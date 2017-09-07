@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-07T09:00:46.625Z",
+  "updated": "2017-09-07T12:36:35.815Z",
   "title": "live",
   "data": [
     {
@@ -73,6 +73,10 @@
     {
       "key": "checklist/title",
       "value": "Checklist"
+    },
+    {
+      "key": "checklist/approvedFor",
+      "value": "{name} für"
     },
     {
       "key": "checklist/labels/cvd1",
