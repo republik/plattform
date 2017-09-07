@@ -212,6 +212,11 @@ class EditorPage extends Component {
         commit: commit
       })
     }
+    const committedRawString = JSON.stringify(
+      Raw.serialize(committedEditorState, {
+        terse: true
+      })
+    )
 
     let localState = this.store.get('editorState')
     let localEditorState
@@ -229,13 +234,13 @@ class EditorPage extends Component {
       this.beginChanges(repo.id)
       this.setState({
         editorState: localEditorState,
-        committedEditorState
+        committedRawString
       })
     } else {
       this.concludeChanges(repo.id)
       this.setState({
         editorState: committedEditorState,
-        committedEditorState
+        committedRawString
       })
     }
   }
@@ -246,14 +251,16 @@ class EditorPage extends Component {
 
   documentChangeHandler (_, newEditorState) {
     const { data: { repo } } = this.props
-    const { committedEditorState, uncommittedChanges } = this.state
+    const { committedRawString, uncommittedChanges } = this.state
+
+    const newRaw = Raw.serialize(newEditorState, {
+      terse: true
+    })
 
     if (
-      !newEditorState.document.equals(committedEditorState.document)
+      JSON.stringify(newRaw) !== committedRawString
     ) {
-      this.store.set('editorState', Raw.serialize(newEditorState, {
-        terse: true
-      }))
+      this.store.set('editorState', newRaw)
 
       if (!uncommittedChanges) {
         this.beginChanges(repo.id)
