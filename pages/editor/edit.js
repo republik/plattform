@@ -110,7 +110,6 @@ class EditorPage extends Component {
     this.revertHandler = this.revertHandler.bind(this)
 
     this.state = {
-      commit: null,
       committing: false,
       editorState: null,
       repo: null,
@@ -168,13 +167,12 @@ class EditorPage extends Component {
     }
 
     let committedEditorState
-    let commit
     if (commitId === 'new') {
       committedEditorState = serializer.deserialize('')
     } else {
-      commit = repo.commits.filter(commit => {
+      const commit = repo.commits.find(commit => {
         return commit.id === commitId
-      })[0]
+      })
       if (!commit) {
         this.setState({error: `missing commit ${commitId}`})
         return
@@ -190,11 +188,11 @@ class EditorPage extends Component {
       })
     }
 
-    let localState = this.store.getAll()
+    let localState = this.store.get('editorState')
     let localEditorState
-    if (localState && localState.editorState /* && localState.commit */) {
+    if (localState) {
       try {
-        localEditorState = Raw.deserialize(localState.editorState, {
+        localEditorState = Raw.deserialize(localState, {
           terse: true
         })
       } catch (e) {
@@ -212,8 +210,6 @@ class EditorPage extends Component {
       })
       this.setState({
         uncommittedChanges: true,
-        // Do we actually need the commit here?
-        // commit: localState.commit,
         editorState: localEditorState,
         committedEditorState
       })
@@ -227,8 +223,6 @@ class EditorPage extends Component {
       })
       this.setState({
         uncommittedChanges: false,
-        // Do we actually need the commit here?
-        // commit: commit, // repository.commit,
         editorState: committedEditorState,
         committedEditorState
       })
@@ -286,7 +280,7 @@ class EditorPage extends Component {
       commitMutation,
       uncommittedChangesMutation
     } = this.props
-    const { editorState, commit } = this.state
+    const { editorState } = this.state
 
     const message = window.prompt('Commit message:')
     if (!message) {
@@ -298,7 +292,7 @@ class EditorPage extends Component {
 
     commitMutation({
       repoId: repo.id,
-      parentId: commit.id,
+      parentId: url.query.commit,
       message: message,
       document: {
         content: serializer.serialize(editorState, {
