@@ -114,7 +114,37 @@ addValidation(documentRule, serializer)
 const documentPlugin = {
   schema: {
     rules: [
-      documentRule
+      documentRule,
+      {
+        match: node => node.kind === 'document',
+        validate: node => {
+          const data = node.data
+          const autoMeta = !data || !data.size || data.get('auto')
+          if (!autoMeta) {
+            return null
+          }
+          const cover = node.nodes
+            .find(n => n.type === COVER && n.kind === 'block')
+          if (!cover) {
+            return null
+          }
+
+          const newData = data
+            .set('auto', true)
+            .set('title', cover.nodes.first().text)
+            .set('description', cover.nodes.get(1).text)
+            .set('image', cover.data.get('src'))
+
+          return data.equals(newData)
+            ? null
+            : newData
+        },
+        normalize: (transform, object, newData) => {
+          return transform.setNodeByKey(object.key, {
+            data: newData
+          })
+        }
+      }
     ]
   }
 }
