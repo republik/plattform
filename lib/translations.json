@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-06T22:50:32.897Z",
+  "updated": "2017-09-07T07:49:06.067Z",
   "title": "live",
   "data": [
     {
@@ -145,6 +145,10 @@
     {
       "key": "metaData/field/twitterDescription",
       "value": "Twitter Deskription"
+    },
+    {
+      "key": "metaData/field/twitterImage",
+      "value": "Twitter Bild"
     },
     {
       "key": "uncommittedChanges/title",

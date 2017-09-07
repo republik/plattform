@@ -119,6 +119,7 @@ const MetaData = ({state, onChange, t}) => {
 
   const twitterKeys = Set([
     'twitterTitle',
+    'twitterImage',
     'twitterDescription'
   ])
   const twitterDefaultValues = Map(twitterKeys.map(key => [key, '']))
@@ -162,7 +163,7 @@ const MetaData = ({state, onChange, t}) => {
         </Interaction.H3>
         <TwitterPreview data={node.data} />
         <br />
-        <Form data={twitterData} onInputChange={onInputChange} t={t} getWidth={() => '100%'} />
+        <Form data={twitterData} onInputChange={onInputChange} t={t} />
       </div>
     </div>
   )

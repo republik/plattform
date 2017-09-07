@@ -43,7 +43,7 @@ const styles = {
     lineHeight: '1.3em',
     marginTop: '.32333em',
     textTransform: 'lowercase',
-    color: '##8899A6',
+    color: '#8899A6',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap'
