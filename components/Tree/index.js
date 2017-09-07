@@ -102,6 +102,10 @@ class Tree extends Component {
     this.measure = this.measure.bind(this)
   }
 
+  componentWillMount () {
+    this.setState(() => transformData(this.props))
+  }
+
   componentWillReceiveProps (nextProps) {
     this.setState(() => transformData(nextProps))
   }
@@ -117,6 +121,7 @@ class Tree extends Component {
 
   componentDidMount () {
     window.addEventListener('resize', this.measure)
+    this.measure()
   }
 
   measure () {
