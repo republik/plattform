@@ -100,10 +100,6 @@ const styles = {
   }
 }
 
-const getLocalStorageKey = (repoId, commitId, view) => {
-  return `${repoId}/${view}/${commitId}`
-}
-
 class EditorPage extends Component {
   constructor (...args) {
     super(...args)
@@ -117,7 +113,6 @@ class EditorPage extends Component {
       commit: null,
       committing: false,
       editorState: null,
-      localStorageNotSupported: false,
       repo: null,
       uncommittedChanges: null
     }
@@ -131,6 +126,21 @@ class EditorPage extends Component {
   componentWillReceiveProps (nextProps) {
     resetKeyGenerator()
     this.loadState(nextProps)
+  }
+
+  checkLocalStorageSupport () {
+    if (
+      process.browser &&
+      this.store &&
+      !this.store.supported
+    ) {
+      this.setState({
+        localStorageUnavailable: true
+      })
+    }
+  }
+  componentDidMount () {
+    this.checkLocalStorageSupport()
   }
 
   revertHandler (e) {
@@ -150,21 +160,16 @@ class EditorPage extends Component {
       return
     }
 
-    let commitId = url.query.commit
-    let view = !commitId ? 'new' : 'edit'
+    let commitId = url.query.commit || 'new'
 
-    if (!this.store) {
-      this.store = initLocalStore(getLocalStorageKey(repo.id, commitId, view))
-      if (!this.store.supported) {
-        this.setState({
-          localStorageNotSupported: true
-        })
-      }
+    if (!this.store || this.store.storeKey !== commitId) {
+      this.store = initLocalStore([repo.id, commitId].join('/'))
+      this.checkLocalStorageSupport()
     }
 
     let committedEditorState
     let commit
-    if (view === 'new') {
+    if (commitId === 'new') {
       committedEditorState = serializer.deserialize('')
     } else {
       commit = repo.commits.filter(commit => {
@@ -334,7 +339,7 @@ class EditorPage extends Component {
       editorState,
       committing,
       uncommittedChanges,
-      localStorageNotSupported,
+      localStorageUnavailable,
       error: stateError
     } = this.state
     const sidebarWidth = 200
@@ -351,7 +356,7 @@ class EditorPage extends Component {
               />
             </div>
             <EditSidebar width={sidebarWidth}>
-              {localStorageNotSupported &&
+              {localStorageUnavailable &&
                 <div {...css(styles.danger)}>
                   LocalStorage not available, your changes can't be saved locally!
                 </div>}
