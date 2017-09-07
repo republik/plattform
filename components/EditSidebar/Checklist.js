@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { Checkbox } from '@project-r/styleguide'
+import { Checkbox, colors, linkRule } from '@project-r/styleguide'
 import { swissTime } from '../../lib/utils/format'
 import { gql, graphql } from 'react-apollo'
 import { compose } from 'redux'
+import { Link } from '../../lib/routes'
 import Loader from '../Loader'
 import withT from '../../lib/withT'
 import { ascending } from 'd3-array'
@@ -25,6 +26,13 @@ const styles = {
     display: 'block',
     fontSize: '11px',
     lineHeight: '1.3em'
+  }),
+  commit: css({
+    borderTop: `1px solid ${colors.divider}`,
+    display: 'block',
+    fontSize: '11px',
+    marginTop: '3px',
+    paddingTop: '3px'
   })
 }
 
@@ -42,7 +50,7 @@ class Checklist extends Component {
 
   render () {
     const {
-      loading, error,
+      loading, error, repository,
       milestones, t,
       placeMilestone, removeMilestone,
       disabled
@@ -100,19 +108,31 @@ class Checklist extends Component {
                 >
                   {t(`checklist/labels/${name}`, undefined, name)}
                   {!!author && <span {...styles.approvedBy}>
-                    {cleanName(author.name)}
-                  </span>}
-                  {!!commit && <span {...styles.approvedBy}>
-                    {timeFormat(
-                      new Date(commit.date)
-                    )}
-                    {' '}
-                    {(
-                      author.name !== commit.author.name &&
-                      cleanName(commit.author.name)
-                    )}
+                    {cleanName(author.name)} {t('checklist/approvedFor')}
                   </span>}
                 </Checkbox>
+                {!!commit && <span {...styles.commit}>
+                  <Link
+                    route='editor/edit'
+                    params={{
+                      repository: repository,
+                      commit: commit.id
+                    }}
+                  >
+                    <a {...linkRule}>
+                      {commit.message}
+                    </a>
+                  </Link>
+                  <br />
+                  {(
+                    author.name !== commit.author.name &&
+                    cleanName(commit.author.name)
+                  )}
+                  <br />
+                  {timeFormat(
+                    new Date(commit.date)
+                  )}
+                </span>}
               </p>
             )}
           </div>
@@ -140,6 +160,7 @@ query repo($repoId: ID!) {
         author {
           name
         }
+        message
       }
       author {
         name

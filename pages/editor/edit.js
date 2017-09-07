@@ -423,6 +423,7 @@ class EditorPage extends Component {
               <Checklist
                 disabled={!!uncommittedChanges}
                 repoId={`orbiting/${repository}`}
+                repository={repository}
                 commitId={commit}
               />
               <Label>{t('commitHistory/title')}</Label>
