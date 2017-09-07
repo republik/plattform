@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-07T08:31:08.888Z",
+  "updated": "2017-09-07T09:00:46.625Z",
   "title": "live",
   "data": [
     {
@@ -69,6 +69,10 @@
     {
       "key": "repoList/add/submit",
       "value": "erstellen"
+    },
+    {
+      "key": "checklist/title",
+      "value": "Checklist"
     },
     {
       "key": "checklist/labels/cvd1",
@@ -161,6 +165,14 @@
     {
       "key": "uncommittedChanges/empty",
       "value": "Niemand"
+    },
+    {
+      "key": "commitHistory/title",
+      "value": "Versionen"
+    },
+    {
+      "key": "commitHistory/more",
+      "value": "Mehr …"
     }
   ]
 }
