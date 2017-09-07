@@ -1,6 +1,3 @@
-// TODO: Make commit mutation work.
-// TODO: Implement subscription to uncommitted changes when new API is ready.
-
 import React, { Component } from 'react'
 import { compose } from 'redux'
 import { Router } from '../../lib/routes'
@@ -24,29 +21,37 @@ import withT from '../../lib/withT'
 
 import initLocalStore from '../../lib/utils/localStorage'
 
+const fragments = {
+  commit: gql`
+    fragment EditPageCommit on Commit {
+      id
+      message
+      parentIds
+      date
+      author {
+        email
+        name
+      }
+      document {
+        content
+        commit {
+          id
+          message
+        }
+        meta {
+          title
+        }
+      }
+    }
+  `
+}
+
 const query = gql`
   query repo($repoId: ID!) {
     repo(id: $repoId) {
       id
       commits(page: 1) {
-        id
-        message
-        parentIds
-        date
-        author {
-          email
-          name
-        }
-        document {
-          content
-          commit {
-            id
-            message
-          }
-          meta {
-            title
-          }
-        }
+        ...EditPageCommit
       }
       uncommittedChanges {
         id
@@ -54,6 +59,7 @@ const query = gql`
       }
     }
   }
+  ${fragments.commit}
 `
 const commitMutation = gql`
   mutation commit(
@@ -68,25 +74,10 @@ const commitMutation = gql`
       message: $message
       document: $document
     ) {
-      id
-      parentIds
-      message
-      author {
-        email
-      }
-      date
-      document {
-        content
-        commit {
-          id
-          message
-        }
-        meta {
-          title
-        }
-      }
+      ...EditPageCommit
     }
   }
+  ${fragments.commit}
 `
 
 const uncommittedChangesMutation = gql`
@@ -287,7 +278,6 @@ class EditorPage extends Component {
     const {
       data: { repo },
       url,
-      view,
       commitMutation,
       uncommittedChangesMutation
     } = this.props
@@ -311,7 +301,7 @@ class EditorPage extends Component {
         })
       }
     })
-      .then(result => {
+      .then(({data}) => {
         this.store.clear()
         uncommittedChangesMutation({
           repoId: repo.id,
@@ -321,26 +311,14 @@ class EditorPage extends Component {
           console.log(error)
         })
 
-        // TODO: Determine whether autobranching occured and handle branching.
-        let isNewBranch = false
-
-        if (isNewBranch || view === 'new') {
-          setTimeout(() => {
-            Router.pushRoute('stories/edit', {
-              repository: url.query.repository,
-              commit: 'newCommitIDhere' // TODO: Fill in from response.
-            })
-            this.setState({
-              committing: false,
-              uncommittedChanges: false
-            })
-          }, 2000)
-        } else {
-          this.setState({
-            committing: false,
-            uncommittedChanges: false
-          })
-        }
+        this.setState({
+          committing: false,
+          uncommittedChanges: false
+        })
+        Router.replaceRoute('editor/edit', {
+          repository: url.query.repository,
+          commit: data.commit.id
+        })
       })
       .catch(e => {
         console.log('commit catched')
@@ -416,7 +394,7 @@ class EditorPage extends Component {
                 repository={repository}
               />
               <Label>{t('uncommittedChanges/title')}</Label>
-              <UncommittedChanges repoId={`orbiting/${repository}`} />
+              <UncommittedChanges repoId={repo.id} />
             </EditSidebar>
           </div>
         )} />
@@ -441,14 +419,24 @@ export default compose(
       commitMutation: variables =>
         mutate({
           variables,
-          refetchQueries: [
-            {
-              query,
-              variables: {
-                repoId: 'orbiting/' + url.query.repository
-              }
+          update: (proxy, { data: { commit } }) => {
+            const variables = {
+              repoId: 'orbiting/' + url.query.repository
             }
-          ]
+            const data = proxy.readQuery({
+              query,
+              variables
+            })
+            data.repo.commits = [
+              commit,
+              ...data.repo.commits
+            ]
+            proxy.writeQuery({
+              query: query,
+              variables,
+              data
+            })
+          }
         })
     })
   }),
