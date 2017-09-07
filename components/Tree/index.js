@@ -8,6 +8,7 @@ import CheckIcon from 'react-icons/lib/md/check'
 import { transformData } from './transformData'
 import withT from '../../lib/withT'
 import { swissTime } from '../../lib/utils/format'
+import { linkRule } from '@project-r/styleguide'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
@@ -298,7 +299,7 @@ class Tree extends Component {
                     commit: commit.id
                   }}
                 >
-                  <a>
+                  <a {...linkRule}>
                     {commit.message}
                   </a>
                 </Link>

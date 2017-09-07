@@ -35,6 +35,7 @@ const query = gql`
         date
         author {
           email
+          name
         }
         document {
           content

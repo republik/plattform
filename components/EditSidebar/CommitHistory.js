@@ -52,7 +52,7 @@ const CommitHistory = ({ commits, repository, maxItems, t }) => {
                 </a>
               </Link>
               <span {...styles.date}>
-                {commit.author.email}
+                {commit.author.name}
               </span>
               <span {...styles.date}>
                 {timeFormat(new Date(commit.date))}
