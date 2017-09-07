@@ -108,7 +108,7 @@ class Checklist extends Component {
                 >
                   {t(`checklist/labels/${name}`, undefined, name)}
                   {!!author && <span {...styles.approvedBy}>
-                    {cleanName(author.name)} {t('checklist/approvedFor')}
+                    {t('checklist/approvedFor', {name: cleanName(author.name)})}
                   </span>}
                 </Checkbox>
                 {!!commit && <span {...styles.commit}>
