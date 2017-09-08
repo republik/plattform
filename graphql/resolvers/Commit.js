@@ -1,4 +1,4 @@
-const { createGithubFetchForUser } = require('../../lib/github')
+const { githubApolloFetch } = require('../../lib/github')
 const MDAST = require('../../lib/mdast/mdast')
 const visit = require('unist-util-visit')
 
@@ -6,41 +6,37 @@ const { PUBLIC_ASSETS_URL } = process.env
 
 module.exports = {
   document: async (commit, args, { user }) => {
-    const query = `
-      query document(
-        $login: String!,
-        $repoName: String!,
-        $blobExpression: String!
-      ) {
-        repository(owner: $login, name: $repoName) {
-          blob: object(expression: $blobExpression) {
-            ... on Blob {
-              text
-            }
-          }
-        }
-      }
-    `
-
     const [login, repoName] = commit.repo.id.split('/')
-    const variables = {
-      login,
-      repoName,
-      blobExpression: `${commit.id}:article.md`
-    }
 
     const {
-      errors,
       data: {
         repository
       }
-    } = await createGithubFetchForUser(user)({ query, variables })
-    if (errors) {
-      throw new Error(JSON.stringify(errors))
-    }
+    } = await githubApolloFetch({
+      query: `
+        query document(
+          $login: String!,
+          $repoName: String!,
+          $blobExpression: String!
+        ) {
+          repository(owner: $login, name: $repoName) {
+            blob: object(expression: $blobExpression) {
+              ... on Blob {
+                text
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        login,
+        repoName,
+        blobExpression: `${commit.id}:article.md`
+      }
+    })
 
     if (!repository.blob) {
-      throw new Error('no document found for: ' + variables.blobExpression)
+      throw new Error('no document found')
     }
 
     const mdast = MDAST.parse(repository.blob.text)
@@ -61,7 +57,7 @@ module.exports = {
 
     return {
       mdast,
-      content: JSON.stringify(mdast),
+      content: mdast,
       commit
     }
   }

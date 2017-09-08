@@ -1,74 +1,31 @@
-const GitHub = require('github-api')
-const github = require('../../lib/github')
 const { descending } = require('d3-array')
 const uniqBy = require('lodash/uniqBy')
+const {
+  githubRest,
+  commitNormalizer,
+  getHeads,
+  getTags
+} = require('../../lib/github')
 
 module.exports = {
   commits: async (repo, { page }, { user }) => {
-    const refsQuery = `
-      query repository(
-        $login: String!,
-        $repoName: String!,
-        $first: Int
-      ) {
-        repository(owner: $login, name: $repoName) {
-          refs(refPrefix: "refs/heads/", first: $first) {
-            nodes {
-              name
-              target {
-                ... on Commit {
-                  oid
-                }
-              }
-            }
-          }
-        }
-      }
-    `
+    const refs = await getHeads(repo.id)
+
     const [login, repoName] = repo.id.split('/')
-    const variables = {
-      login,
-      repoName,
-      first: 100
-    }
-
-    const {
-      errors,
-      data: {
-        repository: {
-          refs: {
-            nodes: refs
-          }
-        }
-      }
-    } = await github.createGithubFetchForUser(user)({ query: refsQuery, variables })
-    if (errors) {
-      throw new Error(JSON.stringify(errors))
-    }
-
-    const _github = new GitHub({
-      token: user.githubAccessToken
-    })
-
     return Promise.all(
       refs.map(({ target: { oid } }) => {
-        return _github
-          .getRepo(login, repoName)
-          .listCommits({
+        return githubRest
+          .repos.getCommits({
+            owner: login,
+            repo: repoName,
             sha: oid,
             per_page: 30,
             page: page || 1
           })
           .then(response => response ? response.data : response)
           .then(commits => commits
-            .map(({ sha, parents, commit: { message, author } }) => ({
-              id: sha,
-              parentIds: parents
-                ? parents.map(parent => parent.sha)
-                : [],
-              message,
-              author,
-              date: new Date(author.date),
+            .map(commit => commitNormalizer({
+              ...commit,
               repo
             }))
           )
@@ -89,10 +46,6 @@ module.exports = {
       : []
   },
   milestones: (
-    { id: repoId },
-    args,
-    { user, pgdb }
-  ) => {
-    return github.tags(user, repoId)
-  }
+    { id: repoId }
+  ) => getTags(repoId)
 }

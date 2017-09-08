@@ -1,6 +1,7 @@
 const typeDefinitions = `
 scalar Date
 scalar DateTime
+scalar JSON
 
 schema {
   query: RootQuerys
@@ -38,18 +39,19 @@ type Commit {
   author: Author!
   date: DateTime!
   document: Document!
+  repo: Repo!
 # files: [File]!
 }
 
 
 interface FileInterface {
-  content: String!
+  content: JSON!
   meta: Meta!
 }
 
 type Document implements FileInterface {
   # AST of /article.md
-  content: String!
+  content: JSON!
   meta: Meta!
   commit: Commit!
 }
@@ -64,7 +66,7 @@ type Meta {
 
 #type File implements FileInterface {
 #  encoding: String!
-#  content: String!
+#  content: JSON!
 #  meta: Meta!
 #}
 
@@ -106,7 +108,7 @@ type RootMutations {
 
   commit(
     repoId: ID!
-    parentId: ID!
+    parentId: ID
     message: String!
     document: DocumentInput!
     # files: [FileInput!]!     # FileInput
@@ -134,7 +136,7 @@ type RootMutations {
 # implements FileInterface
 input DocumentInput {
   # AST of /article.md
-  content: String!
+  content: JSON!
 }
 
 type RootSubscription {

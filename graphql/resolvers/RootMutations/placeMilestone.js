@@ -1,42 +1,48 @@
-const github = require('../../../lib/github')
+const { githubRest } = require('../../../lib/github')
 const { ensureUserHasRole } = require('../../../lib/Roles')
 
 module.exports = async (
   _,
   { repoId, commitId, name, message },
-  { pgdb, req }
+  { user }
 ) => {
-  ensureUserHasRole(req.user, 'editor')
+  ensureUserHasRole(user, 'editor')
 
-  if (!req.user.githubAccessToken) {
-    throw new Error('you need to sign in to github first')
-  }
-
-  const tag = await github.tag(
-    req.user,
-    repoId,
-    name,
+  const [login, repoName] = repoId.split('/')
+  const tag = await githubRest.gitdata.createTag({
+    owner: login,
+    repo: repoName,
+    tag: name,
     message,
-    commitId
-  )
+    object: commitId,
+    type: 'commit',
+    tagger: {
+      name: user.email, // TODO
+      email: user.email,
+      date: new Date()
+    }
+  })
+    .then(result => result.data)
 
-  await github.createRef(
-    req.user.githubAccessToken,
-    repoId,
-    `refs/tags/${name}`,
-    tag.sha
-  )
+  await githubRest.gitdata.createReference({
+    owner: login,
+    repo: repoName,
+    ref: `refs/tags/${name}`,
+    sha: tag.sha
+  })
 
   return {
     name: tag.tag,
     message: tag.message,
-    repoId, // for Milestone.commit resolver
     commit: {
       id: tag.object.sha
     },
     author: {
       name: tag.tagger.name,
       email: tag.tagger.email
+    },
+    repo: {
+      id: repoId
     }
   }
 }

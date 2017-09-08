@@ -1,66 +1,77 @@
-const GitHub = require('github-api')
-const github = require('../../../lib/github')
 const { hashObject } = require('../../../lib/git')
 const visit = require('unist-util-visit')
 const dataUriToBuffer = require('data-uri-to-buffer')
 const MDAST = require('../../../lib/mdast/mdast')
 const { ensureUserHasRole } = require('../../../lib/Roles')
+const superb = require('superb')
+const superheroes = require('superheroes')
+const {
+  githubRest,
+  commitNormalizer,
+  getRepo,
+  getHeads
+} = require('../../../lib/github')
+
+const extractImage = (url, images) => {
+  if (url) {
+    let blob
+    try {
+      blob = dataUriToBuffer(url)
+    } catch (e) {
+      console.log('ignoring image node with url:' + url)
+    }
+    if (blob) {
+      const suffix = blob.type.split('/')[1]
+      const hash = hashObject(blob)
+      const image = {
+        path: `images/${hash}.${suffix}`,
+        hash,
+        blob
+      }
+      images.push(image)
+      return image.path
+    }
+  }
+  return url
+}
 
 module.exports = async (_, args, {pgdb, req, user}) => {
   ensureUserHasRole(user, 'editor')
-
-  if (!req.user.githubAccessToken) {
-    throw new Error('you need to sign in to github first')
-  }
 
   const {
     repoId,
     parentId,
     message,
     document: {
-      content: mdastString
+      content: mdast
     }
   } = args
 
-  // connect
-  const _github = new GitHub({
-    token: req.user.githubAccessToken
-  })
   const [login, repoName] = repoId.split('/')
-  const repo = await _github.getRepo(login, repoName)
+
+  // get / create repo
+  let repo = await getRepo(repoId)
+    .catch(response => null)
+
+  if (!repo) {
+    console.log('creating new repo')
+    repo = await githubRest.repos.createForOrg({
+      org: login,
+      name: repoName,
+      private: true,
+      auto_init: true
+    })
+  }
 
   // extract images
   const images = []
-  const extractImage = url => {
-    if (url) {
-      let blob
-      try {
-        blob = dataUriToBuffer(url)
-      } catch (e) {
-        console.log('ignoring image node with url:' + url)
-      }
-      if (blob) {
-        const suffix = blob.type.split('/')[1]
-        const hash = hashObject(blob)
-        const image = {
-          path: `images/${hash}.${suffix}`,
-          hash,
-          blob
-        }
-        images.push(image)
-        return image.path
-      }
-    }
-    return url
-  }
-  const mdast = JSON.parse(mdastString)
   visit(mdast, 'image', node => {
-    node.url = extractImage(node.url)
+    node.url = extractImage(node.url, images)
   })
   if (mdast.meta) {
     Object.keys(mdast.meta).forEach(key => {
       if (key.match(/image/i)) {
-        mdast.meta[key] = extractImage(mdast.meta[key])
+        mdast.meta[key] = extractImage(mdast.meta[key], images)
       }
     })
   }
@@ -69,24 +80,41 @@ module.exports = async (_, args, {pgdb, req, user}) => {
   const markdown = MDAST.stringify(mdast)
 
   // markdown -> blob
-  const markdownBlob = await repo
-    .createBlob(markdown)
+  const markdownBlob = await githubRest.gitdata.createBlob({
+    owner: login,
+    repo: repoName,
+    content: markdown,
+    encoding: 'utf-8'
+  })
     .then(result => result.data)
 
   // images -> blobs
   await Promise.all(images.map(({ blob }) => {
-    return repo
-      .createBlob(blob)
+    return githubRest.gitdata.createBlob({
+      owner: login,
+      repo: repoName,
+      content: blob.toString('base64'),
+      encoding: 'base64'
+    })
       .then(result => result.data)
   }))
 
-  // load base_tree
-  const parentCommit = await repo
-    .getCommit(parentId)
-    .then(result => result.data)
+  let parentCommit
+  if (parentId) { // otherwise initial commit
+    // load base_tree
+    parentCommit = await githubRest.gitdata.getCommit({
+      owner: login,
+      repo: repoName,
+      sha: parentId
+    })
+      .then(result => result.data)
+  }
 
-  const tree = await repo
-    .createTree(
+  const tree = await githubRest.gitdata.createTree({
+    owner: login,
+    repo: repoName,
+    ...(parentCommit ? { base_tree: parentCommit.tree.sha } : {}),
+    tree:
     [
       ...images.map(({ path, hash }) => ({
         path,
@@ -100,54 +128,61 @@ module.exports = async (_, args, {pgdb, req, user}) => {
         mode: '100644',
         type: 'blob'
       }
-    ],
-      parentCommit.tree.sha
-    )
+    ]
+  })
     .then(result => result.data)
 
-  const commit = await github.commit(
-    req.user.githubAccessToken,
-    repoId,
-    [parentId],
-    tree.sha,
-    message
-  )
+  const commit = await githubRest.gitdata.createCommit({
+    owner: login,
+    repo: repoName,
+    message,
+    tree: tree.sha,
+    parents: parentId ? [parentId] : []
+    // author
+    // commiter
+  })
+    .then(result => result.data)
 
   // load heads
-  const heads = await github.heads(req.user, repoId)
+  const heads = await getHeads(repoId)
 
   // check if parent is (still) a head
-  const headParent = heads.find(ref =>
-    ref.target.oid === parentId
-  )
+  // pick master for new repos initated by github
+  const headParent = parentId
+    ? heads.find(ref =>
+        ref.target.oid === parentId
+      )
+    : { name: 'master' }
 
   let branch
   if (headParent) { // fast-forward
-    await repo.updateHead(
-      'heads/' + headParent.name,
-      commit.sha,
-      false
-    )
     branch = headParent.name
+    await githubRest.gitdata.updateReference({
+      owner: login,
+      repo: repoName,
+      ref: 'heads/' + headParent.name,
+      sha: commit.sha,
+      force: !parentId
+    })
   } else {
-    // TODO simpler branch name
-    branch = Math.random().toString(36).substring(7)
-    await repo.createRef({
+    branch = `${superb()}-${superheroes.random()}`
+      .replace(/\s/g, '-')
+    await githubRest.gitdata.createReference({
+      owner: login,
+      repo: repoName,
       ref: `refs/heads/${branch}`,
       sha: commit.sha
     })
   }
 
-  return {
-    id: commit.sha,
-    parentIds: commit.parents
-      ? commit.parents.map(parent => parent.sha)
-      : [],
-    message: commit.message,
-    author: commit.author,
-    date: new Date(commit.author.date),
-    repo: { // commit resolver
+  return commitNormalizer({
+    // normalize createCommit format to getCommit (duh gh!)
+    sha: commit.sha,
+    commit,
+    parents: commit.parents,
+    //
+    repo: {
       id: repoId
     }
-  }
+  })
 }

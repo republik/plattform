@@ -1,20 +1,17 @@
-const github = require('../../../lib/github')
+const { githubRest } = require('../../../lib/github')
 const { ensureUserHasRole } = require('../../../lib/Roles')
 
 module.exports = async (
   _,
   { repoId, name },
-  { pgdb, req }
+  { user }
 ) => {
-  ensureUserHasRole(req.user, 'editor')
+  ensureUserHasRole(user, 'editor')
 
-  if (!req.user.githubAccessToken) {
-    throw new Error('you need to sign in to github first')
-  }
-
-  return github.removeRef(
-    req.user.githubAccessToken,
-    repoId,
-    `tags/${name}`
-  )
+  const [login, repoName] = repoId.split('/')
+  return githubRest.gitdata.deleteReference({
+    owner: login,
+    repo: repoName,
+    ref: `tags/${name}`
+  })
 }
