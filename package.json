@@ -62,7 +62,7 @@
     "migrate:down": "db-migrate down",
     "db:reset": "db-migrate reset && db-migrate up",
     "translations": "gsheets --key=1_1g3sW8u1aD9xGRfS479s0Pjwx0LxYRUEhETGkKlwLE --title=live --pretty --out lib/translations.json",
-    "test": "tape \"?(__tests__|lib|graphql)/**/*.test.js\" | faucet",
+    "test": "tape \"?(__tests__|lib|graphql)/**/*.test.js\"",
     "test:local": "export DATABASE_URL=postgres://localhost:5432/haku-test && echo $DATABASE_URL && dropdb --if-exists haku-test && createdb haku-test && db-migrate reset && db-migrate up && NODE_ENV=test-local tape \"?(__tests__|lib|graphql)/**/*.test.js\" "
   },
   "lint-staged": {
