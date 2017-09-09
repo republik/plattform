@@ -17,10 +17,11 @@ before_script:
 script:
   - npm run test
 env:
-  - PORT=6000
-  - PUBLIC_URL=http://localhost:6000
-  - SESSION_SECRET=asdfasdf
-  - AUTO_LOGIN=true
-  - GITHUB_LOGIN=orbiting
-  - PUBLIC_ASSETS_URL=http://localhost:6000/assets
-  - DATABASE_URL=postgres://postgres@localhost:5432/travis_ci_test
+  global:
+    - PORT=6000
+    - PUBLIC_URL=http://localhost:6000
+    - SESSION_SECRET=asdfasdf
+    - AUTO_LOGIN=true
+    - GITHUB_LOGIN=orbiting
+    - PUBLIC_ASSETS_URL=http://localhost:6000/assets
+    - DATABASE_URL=postgres://postgres@localhost:5432/travis_ci_test
