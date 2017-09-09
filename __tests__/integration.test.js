@@ -82,7 +82,7 @@ test('signin', async (t) => {
       }
     `
   })
-  await sleep(3000)
+  await sleep(5000)
   t.ok(result.data.signIn.phrase)
   t.ok(result.data.signIn.phrase.length)
   t.end()
