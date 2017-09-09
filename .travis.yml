@@ -6,11 +6,13 @@ notifications:
   email: false
 node_js:
   - '8'
-script:
-  - npm run test
+addons:
+  postgresql: "9.6"
 services:
   - postgresql
   - redis-server
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
   - npm run db:reset
+script:
+  - npm run test
