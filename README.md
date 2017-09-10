@@ -1,4 +1,4 @@
-haku-backend
+haku-backend [![Build Status](https://travis-ci.org/orbiting/haku-backend.svg?branch=master)](https://travis-ci.org/orbiting/haku-backend) [![Coverage Status](https://coveralls.io/repos/github/orbiting/haku-backend/badge.svg?branch=APIrefactor)](https://coveralls.io/github/orbiting/haku-backend?branch=APIrefactor)
 ------------
 
 Haku is a cms prototype: edit files on github with [slate](https://github.com/ianstormtaylor/slate).
