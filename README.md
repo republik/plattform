@@ -35,6 +35,12 @@ DEFAULT_MAIL_FROM_ADDRESS='haku@project-r.construction'
 
 # Follow Auth - Github below to get this
 GITHUB_ACCESS_TOKEN=
+
+# The github user/organization under which all repos are held
+GITHUB_LOGIN=orbiting
+
+# URL which proxies assets from github
+PUBLIC_ASSETS_URL=http://localhost:3004/assets
 ```
 
 Install dependencies.
