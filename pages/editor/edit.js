@@ -53,10 +53,6 @@ const query = gql`
       commits(page: 1) {
         ...EditPageCommit
       }
-      uncommittedChanges {
-        id
-        email
-      }
     }
   }
   ${fragments.commit}
