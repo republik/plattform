@@ -9,6 +9,7 @@ if (process.env.NODE_ENV === 'test-local') {
 }
 
 const {
+  PORT,
   GITHUB_LOGIN
 } = process.env
 
@@ -20,7 +21,7 @@ const supervillains = require('supervillains')
 const loremMdast = require('./lorem.mdast.json')
 const loremWithImageMdast = require('./loremWithImage.mdast.json')
 
-const GRAPHQL_URI = `http://localhost:${process.env.PORT}/graphql`
+const GRAPHQL_URI = `http://localhost:${PORT}/graphql`
 const createApolloFetch = require('./createApolloFetchWithCookie')
 const apolloFetch = createApolloFetch(GRAPHQL_URI)
 const MDAST = require('../lib/mdast/mdast')
