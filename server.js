@@ -19,7 +19,6 @@ const {
 
 const auth = require('./src/auth')
 const graphql = require('./graphql')
-const githubAuth = require('./src/githubAuth')
 const assets = require('./src/assets')
 
 let pgdb
@@ -49,7 +48,6 @@ module.exports.run = () => {
       server.use('*', cors(corsOptions))
     }
 
-    githubAuth(server, pgdb)
     graphql(server, pgdb, httpServer)
     assets(server)
 

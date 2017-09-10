@@ -33,9 +33,8 @@ MANDRILL_API_KEY=replaceMe
 DEFAULT_MAIL_FROM_NAME='haku'
 DEFAULT_MAIL_FROM_ADDRESS='haku@project-r.construction'
 
-# Follow Auth - Github below to get these
-GITHUB_CLIENT_ID=
-GITHUB_CLIENT_SECRET=
+# Follow Auth - Github below to get this
+GITHUB_ACCESS_TOKEN=
 ```
 
 Install dependencies.
@@ -58,20 +57,17 @@ Checkout the API: `http://localhost:3004/graphiql`
 - [signin](http://localhost:3004/graphiql?query=mutation%20%7BsignIn(email%3A%20%22patrick.recher%40project-r.construction%22)%20%7B%0A%20%20phrase%0A%7D%7D)
 - [me](http://localhost:3004/graphiql?query=query%20%7Bme%20%7B%0A%20%20id%0A%20%20email%0A%7D%7D)
 
-- [sign in to github](http://localhost:3004/auth/github/signin?callbackPath=graphiql)
 
 ## Auth
 This prototype features a passwordless signin system. It's a **stripped down** version from [crowdfunding-backend](https://github.com/orbiting/crowdfunding-backend) and not suitable for production use (no real random words, no geo location, etc.). Signin emails are sent via [Mandrill](https://mandrillapp.com) see [lib/sendMail.js](lib/sendMail.js). Set the ENV var `SEND_MAILS=false` to see emails on the console, if you don't have a mandrill key at hand.
 
 ### Github
 To interact with repositories this API talks to Github.
-Go to [Github Applications](https://github.com/settings/applications/new), register a new one and copy `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` to your .env.
+After trialing *Sign in with GitHub* for all cms-users and authenticating calls to github with the individual user's token, we decided not to go this way and instead opted for a simpler solution (for now): give birth to a github "bot" user, create a [Personal Access Token](https://github.com/settings/tokens) for this user and authenticate all calls with its token. This solution allows for simpler user onboarding and scaling up on our side and makes the application code simpler.
 
-In order to gain full access (internal and github) users must (see query list above):
-- first signIn via graphQL mutation
-- open [/auth/github/signin?callbackPath=graphiql](http://localhost:3004/auth/github/signin?callbackPath=graphiql)
-- authorize haku on their github page, afterwards they get redirected back, and the github token is stored in the DB, the server is ready to make requests on the user's behalf.
-
+Setup:
+- Create a github user
+- Get a [Personal Access Token](https://github.com/settings/tokens) for this user and provide it as ENV variable.
 
 ## Licensing
 The source code and it's documentation is licensed under [GNU AGPLv3](LICENSE)+.

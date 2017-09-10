@@ -124,7 +124,6 @@ type User {
   firstName: String
   lastName: String
   email: String!
-  githubScope: String
   roles: [String]!
 }
 
