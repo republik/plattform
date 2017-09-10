@@ -63,7 +63,7 @@
     "db:reset": "db-migrate reset && db-migrate up",
     "translations": "gsheets --key=1_1g3sW8u1aD9xGRfS479s0Pjwx0LxYRUEhETGkKlwLE --title=live --pretty --out lib/translations.json",
     "test": "tape \"?(__tests__|lib|graphql)/**/*.test.js\"",
-    "test:local": "export DATABASE_URL=postgres://localhost:5432/haku-test && echo $DATABASE_URL && dropdb --if-exists haku-test && createdb haku-test && db-migrate reset && db-migrate up && NODE_ENV=test-local tape \"?(__tests__|lib|graphql)/**/*.test.js\" "
+    "test:local": "export DATABASE_URL=postgres://localhost:5432/haku-test && echo $DATABASE_URL && dropdb --if-exists haku-test && createdb haku-test && db-migrate reset && db-migrate up && NODE_ENV=test-local istanbul cover tape \"?(__tests__|lib|graphql)/**/*.test.js\" "
   },
   "lint-staged": {
     "*.js": [
@@ -76,6 +76,7 @@
     "faucet": "0.0.1",
     "gsheets": "^2.0.0",
     "husky": "^0.14.3",
+    "istanbul": "^0.4.5",
     "lint-staged": "^4.1.2",
     "nodemon": "^1.12.0",
     "standard": "^10.0.3",
