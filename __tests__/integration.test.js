@@ -4,7 +4,7 @@
 const test = require('tape-async')
 
 // fake env vars
-if (process.env.NODE_ENV === 'test-local') {
+if (process.env.NODE_ENV === 'testing-local') {
   require('dotenv').config({ path: '.test.env' })
 }
 

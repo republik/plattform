@@ -15,7 +15,7 @@ before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
   - npm run db:reset
 script:
-  - npm run test
+  - npm run test:travis
 env:
   global:
     - NODE_ENV=testing
