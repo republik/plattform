@@ -9,13 +9,51 @@ schema {
   subscription: RootSubscription
 }
 
-
 type RootQuerys {
   me: User
   repos(first: Int!): [Repo]!
   repo(id: ID!): Repo!
   # published documents
   documents: [Document]!
+}
+
+type RootMutations {
+  signIn(email: String!): SignInResponse!
+  signOut: Boolean!
+
+  commit(
+    repoId: ID!
+    parentId: ID
+    message: String!
+    document: DocumentInput!
+    # files: [FileInput!]!     # FileInput
+  ): Commit!
+
+  placeMilestone(
+    repoId: ID!
+    commitId: ID!
+    name: String!
+    message: String!
+  ): Milestone!
+
+  removeMilestone(
+    repoId: ID!
+    name: String!
+  ): Boolean!
+
+  # Inform about my uncommited changes in the repo
+  uncommittedChanges(
+    repoId: ID!
+    action: Action!
+  ): Boolean!
+}
+
+type RootSubscription {
+  # Provides updates to the list of users
+  # with uncommited changes in the repo
+  uncommittedChanges(
+    repoId: ID!
+  ): UncommittedChangeUpdate!
 }
 
 type Repo {
@@ -42,7 +80,6 @@ type Commit {
   repo: Repo!
 # files: [File]!
 }
-
 
 interface FileInterface {
   content: JSON!
@@ -101,50 +138,10 @@ enum Action {
   delete
 }
 
-
-type RootMutations {
-  signIn(email: String!): SignInResponse!
-  signOut: Boolean!
-
-  commit(
-    repoId: ID!
-    parentId: ID
-    message: String!
-    document: DocumentInput!
-    # files: [FileInput!]!     # FileInput
-  ): Commit!
-
-  placeMilestone(
-    repoId: ID!
-    commitId: ID!
-    name: String!
-    message: String!
-  ): Milestone!
-
-  removeMilestone(
-    repoId: ID!
-    name: String!
-  ): Boolean!
-
-  # Inform about my uncommited changes in the repo
-  uncommittedChanges(
-    repoId: ID!
-    action: Action!
-  ): Boolean!
-}
-
 # implements FileInterface
 input DocumentInput {
   # AST of /article.md
   content: JSON!
-}
-
-type RootSubscription {
-  # Provides updates to the list of users
-  # with uncommited changes in the repo
-  uncommittedChanges(
-    repoId: ID!
-  ): UncommittedChangeUpdate!
 }
 `
 module.exports = [typeDefinitions]
