@@ -114,6 +114,25 @@ test('add test user to role «editor»', async (t) => {
   t.end()
 })
 
+test('me', async (t) => {
+  const result = await apolloFetch({
+    query: `
+      {
+        me {
+          email
+          roles
+        }
+      }
+    `
+  })
+  t.ok(result.data)
+  t.ok(result.data.me)
+  const { data: { me: { email, roles } } } = result
+  t.equals(email, testEmail)
+  t.deepLooseEqual(roles, ['editor'])
+  t.end()
+})
+
 test('repos (signed in)', async (t) => {
   const result = await apolloFetch({
     query: `
