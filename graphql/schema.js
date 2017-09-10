@@ -1,5 +1,4 @@
 const typeDefinitions = `
-scalar Date
 scalar DateTime
 scalar JSON
 
