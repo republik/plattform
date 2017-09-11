@@ -43,7 +43,7 @@ class Checklist extends Component {
 
   render () {
     const {
-      loading, error, repository,
+      loading, error, repoId,
       milestones, t,
       placeMilestone, removeMilestone,
       disabled
@@ -106,10 +106,10 @@ class Checklist extends Component {
                 </Checkbox>
                 {!!commit && <span {...styles.commit}>
                   <Link
-                    route='editor/edit'
+                    route='repo/edit'
                     params={{
-                      repository: repository,
-                      commit: commit.id
+                      repoId: repoId.split('/'),
+                      commitId: commit.id
                     }}
                   >
                     <a {...linkRule}>

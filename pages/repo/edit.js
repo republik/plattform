@@ -179,15 +179,17 @@ class EditorPage extends Component {
     if (loading || error) {
       return
     }
-    if (!url.query.commit && repo && repo.commits.length) {
-      Router.replaceRoute('editor/edit', {
-        repository: url.query.repository,
-        commit: repo.commits[0].id
-      })
+    if (!url.query.commitId && repo && repo.commits.length) {
+      if (process.browser) {
+        Router.replaceRoute('repo/edit', {
+          repoId: url.query.repoId.split('/'),
+          commitId: repo.commits[0].id
+        })
+      }
       return
     }
-    const repoId = url.query.repository
-    const commitId = url.query.commit || 'new'
+    const repoId = url.query.repoId
+    const commitId = url.query.commitId || 'new'
 
     const storeKey = [repoId, commitId].join('/')
     if (!this.store || this.store.key !== storeKey) {
@@ -295,7 +297,7 @@ class EditorPage extends Component {
 
     commitMutation({
       repoId: repo.id,
-      parentId: url.query.commit,
+      parentId: url.query.commitId,
       message: message,
       document: {
         content: serializer.serialize(editorState, {
@@ -311,9 +313,9 @@ class EditorPage extends Component {
           committing: false,
           uncommittedChanges: false
         })
-        Router.replaceRoute('editor/edit', {
-          repository: url.query.repository,
-          commit: data.commit.id
+        Router.replaceRoute('repo/edit', {
+          repoId: url.query.repoId.split('/'),
+          commitId: data.commit.id
         })
       })
       .catch(e => {
@@ -324,7 +326,7 @@ class EditorPage extends Component {
 
   render () {
     const { url, t } = this.props
-    const { repository, commit } = url.query
+    const { repoId, commitId } = url.query
     const { loading, error, repo } = this.props.data
     const {
       editorState,
@@ -338,7 +340,7 @@ class EditorPage extends Component {
     const showLoading = committing || loading || !editorState
 
     return (
-      <Frame url={url} raw nav={<RepoNav route='editor/edit' url={url} />}>
+      <Frame url={url} raw nav={<RepoNav route='repo/edit' url={url} />}>
         <Loader loading={showLoading} error={error || stateError} render={() => (
           <div>
             <div style={{paddingRight: sidebarWidth}}>
@@ -385,17 +387,16 @@ class EditorPage extends Component {
               <Label>{t('checklist/title')}</Label>
               <Checklist
                 disabled={!!uncommittedChanges}
-                repoId={`orbiting/${repository}`}
-                repository={repository}
-                commitId={commit}
+                repoId={repoId}
+                commitId={commitId}
               />
               <Label>{t('commitHistory/title')}</Label>
               <CommitHistory
                 commits={repo.commits}
-                repository={repository}
+                repoId={repoId}
               />
               <Label>{t('uncommittedChanges/title')}</Label>
-              <UncommittedChanges repoId={repo.id} />
+              <UncommittedChanges repoId={repoId} />
             </EditSidebar>
           </div>
         )} />
@@ -411,7 +412,7 @@ export default compose(
   graphql(query, {
     options: ({ url }) => ({
       variables: {
-        repoId: 'orbiting/' + url.query.repository
+        repoId: url.query.repoId
       }
     })
   }),
@@ -422,7 +423,7 @@ export default compose(
           variables,
           update: (proxy, { data: { commit } }) => {
             const variables = {
-              repoId: 'orbiting/' + url.query.repository
+              repoId: url.query.repoId
             }
             const data = proxy.readQuery({
               query,

@@ -29,8 +29,9 @@ const styles = {
   })
 }
 
-const CommitHistory = ({ commits, repository, maxItems, t }) => {
-  let numItems = maxItems || 3
+const CommitHistory = ({ commits, repoId, maxItems, t }) => {
+  const numItems = maxItems || 3
+  const repoPath = repoId.split('/')
   if (commits.length) {
     return (
       <div {...styles.container}>
@@ -38,14 +39,11 @@ const CommitHistory = ({ commits, repository, maxItems, t }) => {
           {commits.slice(0, numItems).map(commit =>
             <li key={commit.id} {...styles.commit}>
               <Link
-                route='editor/edit'
-                params={Object.assign(
-                  {},
-                  {
-                    repository: repository,
-                    commit: commit.id
-                  }
-                )}
+                route='repo/edit'
+                params={{
+                  repoId: repoPath,
+                  commitId: commit.id
+                }}
               >
                 <a {...linkRule}>
                   {commit.message}
@@ -61,8 +59,8 @@ const CommitHistory = ({ commits, repository, maxItems, t }) => {
           )}
         </ul>
         <Link
-          route='editor/tree'
-          params={{repository: repository}}
+          route='repo/tree'
+          params={{repoId: repoPath}}
         >
           <a {...linkRule}>{t('commitHistory/more')}</a>
         </Link>

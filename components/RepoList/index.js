@@ -66,7 +66,7 @@ class RepoList extends Component {
         <List>
           {[].map(repo => (
             <List.Item>
-              <Link route='editor/tree' params={{repository: repo.id}}>
+              <Link route='repo/tree' params={{repoId: repo.id.split('/')}}>
                 <a {...linkRule}>
                   {repo.id}
                 </a>
@@ -74,7 +74,7 @@ class RepoList extends Component {
             </List.Item>
           ))}
           <List.Item>
-            <Link route='editor/tree' params={{repository: 'newsletter-test'}}>
+            <Link route='repo/tree' params={{repoId: ['orbiting', 'newsletter-test']}}>
               <a {...linkRule}>
                 newsletter-test
               </a>

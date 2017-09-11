@@ -239,7 +239,7 @@ class Tree extends Component {
   }
 
   render () {
-    const { repository, t } = this.props
+    const { repoId, t } = this.props
     const { width, commits, links } = this.state
 
     return (
@@ -298,10 +298,10 @@ class Tree extends Component {
                     />
                 </span>}
                 <Link
-                  route='editor/edit'
+                  route='repo/edit'
                   params={{
-                    repository: repository,
-                    commit: commit.id
+                    repoId: repoId,
+                    commitId: commit.id
                   }}
                 >
                   <a {...linkRule}>
@@ -325,10 +325,10 @@ class Tree extends Component {
               {...styles.commitNode}
             >
               <Link
-                route='editor/edit'
+                route='repo/edit'
                 params={{
-                  repository: repository,
-                  commit: commit.id
+                  repoId: repoId,
+                  commitId: commit.id
                 }}
               >
                 <a {...css(styles.nodeLink)} />

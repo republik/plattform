@@ -41,16 +41,15 @@ class EditorPage extends Component {
   render () {
     const { url } = this.props
     const { loading, error, repo } = this.props.data
-    const { repository, commit } = url.query
+    const { repoId } = url.query
 
     return (
-      <Frame url={url} raw nav={<RepoNav route='editor/tree' url={url} />}>
+      <Frame url={url} raw nav={<RepoNav route='repo/tree' url={url} />}>
         <Loader loading={loading} error={error} render={() => (
           <Tree
             commits={repo.commits}
             milestones={repo.milestones}
-            repository={repository}
-            commit={commit}
+            repoId={repoId}
           />
         )} />
       </Frame>
@@ -63,7 +62,7 @@ export default compose(
   graphql(query, {
     options: ({ url }) => ({
       variables: {
-        repoId: 'orbiting/' + url.query.repository
+        repoId: url.query.repoId
       }
     })
   })
