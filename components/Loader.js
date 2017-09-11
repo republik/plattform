@@ -3,10 +3,10 @@ import {css} from 'glamor'
 
 import {HEADER_HEIGHT} from './Frame/constants'
 import Spinner from './Spinner'
-import {errorToString} from '../lib/utils/errors'
+import ErrorMessage from './ErrorMessage'
 
 import {
-  Interaction
+  Interaction, NarrowContainer
 } from '@project-r/styleguide'
 
 const {P} = Interaction
@@ -59,7 +59,9 @@ class Loader extends Component {
     } else if (error) {
       return (
         <Spacer width={width} height={height}>
-          {errorToString(error)}
+          <NarrowContainer>
+            <ErrorMessage error={error} />
+          </NarrowContainer>
         </Spacer>
       )
     }

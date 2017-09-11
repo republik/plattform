@@ -4,7 +4,8 @@ import { css } from 'glamor'
 import { gql, graphql } from 'react-apollo'
 
 import withT from '../../lib/withT'
-import { Link } from '../../lib/routes'
+import { Router, Link } from '../../lib/routes'
+import slugify from '../../lib/utils/slug'
 
 import {
   Interaction,
@@ -43,10 +44,28 @@ const styles = {
 class RepoList extends Component {
   constructor (props) {
     super(props)
-    this.state = {}
+    this.state = {
+      title: ''
+    }
   }
   onSubmit (event) {
     event.preventDefault()
+
+    const { title, error } = this.state
+    if (error || !title) {
+      this.handleTitle(title, true)
+      return
+    }
+    const slug = [
+      'newsletter',
+      slugify(title)
+    ].join('-')
+
+    Router.replaceRoute('repo/edit', {
+      repoId: ['orbiting', slug],
+      commitId: 'new',
+      title
+    })
   }
   handleTitle (value, shouldValidate) {
     const { t } = this.props
@@ -55,7 +74,7 @@ class RepoList extends Component {
       title: value,
       dirty: shouldValidate,
       error: (
-        value.trim().length <= 0 && t('repoList/add/titleField/error')
+        value.trim().length <= 0 && t('repo/list/add/titleField/error')
       )
     })
   }
@@ -65,13 +84,13 @@ class RepoList extends Component {
     return (
       <Loader loading={data.loading} error={data.error} render={() => (
         <div>
-          <Interaction.H1>{t('repoList/title')}</Interaction.H1>
+          <Interaction.H1>{t('repo/list/title')}</Interaction.H1>
           <List>
             {data.repos
               // ToDo: mv filter to backend
               .filter(repo => repo.id.match(/^orbiting\/(test|newsletter)/))
               .map(repo => (
-                <List.Item>
+                <List.Item key={repo.id}>
                   <Link route='repo/tree' params={{repoId: repo.id.split('/')}}>
                     <a {...linkRule}>
                       {repo.id}
@@ -91,11 +110,11 @@ class RepoList extends Component {
 
           <br /><br />
 
-          <Interaction.H2>{t('repoList/add/title')}</Interaction.H2>
+          <Interaction.H2>{t('repo/list/add/title')}</Interaction.H2>
           <form {...styles.form} onSubmit={e => this.onSubmit(e)}>
             <div {...styles.input}>
               <Field
-                label={t('repoList/add/titleField/label')}
+                label={t('repo/list/add/titleField/label')}
                 value={title}
                 onChange={(_, value, shouldValidate) => {
                   this.handleTitle(value, shouldValidate)
@@ -105,7 +124,7 @@ class RepoList extends Component {
             </div>
             <div {...styles.button}>
               <Button block>
-                {t('repoList/add/submit')}
+                {t('repo/list/add/submit')}
               </Button>
             </div>
           </form>

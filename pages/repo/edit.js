@@ -9,7 +9,7 @@ import { A, Button, Label } from '@project-r/styleguide'
 
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
-import Editor, { serializer } from '../../components/editor/NewsletterEditor'
+import Editor, { serializer, newDocument } from '../../components/editor/NewsletterEditor'
 
 import EditSidebar from '../../components/EditSidebar'
 import Loader from '../../components/Loader'
@@ -60,7 +60,7 @@ const query = gql`
 const commitMutation = gql`
   mutation commit(
     $repoId: ID!
-    $parentId: ID!
+    $parentId: ID
     $message: String!
     $document: DocumentInput!
   ) {
@@ -172,7 +172,8 @@ class EditorPage extends Component {
 
   loadState (props) {
     const {
-      data: { loading, error, repo },
+      t,
+      data: { loading, error, repo } = {},
       url
     } = props
 
@@ -199,13 +200,13 @@ class EditorPage extends Component {
 
     let committedEditorState
     if (commitId === 'new') {
-      committedEditorState = serializer.deserialize('')
+      committedEditorState = newDocument(url.query)
     } else {
       const commit = repo.commits.find(commit => {
         return commit.id === commitId
       })
       if (!commit) {
-        this.setState({error: `missing commit ${commitId}`})
+        this.setState({error: t('edit/missingCommit', {commitId})})
         return
       }
 
@@ -256,7 +257,7 @@ class EditorPage extends Component {
   }
 
   documentChangeHandler (_, newEditorState) {
-    const { data: { repo } } = this.props
+    const { url: { query: { repoId } } } = this.props
     const { committedRawString, uncommittedChanges } = this.state
 
     const newRaw = Raw.serialize(newEditorState, {
@@ -269,20 +270,19 @@ class EditorPage extends Component {
       this.store.set('editorState', newRaw)
 
       if (!uncommittedChanges) {
-        this.beginChanges(repo.id)
+        this.beginChanges(repoId)
       }
     } else {
       if (uncommittedChanges) {
         this.store.clear()
-        this.concludeChanges(repo.id)
+        this.concludeChanges(repoId)
       }
     }
   }
 
   commitHandler () {
     const {
-      data: { repo },
-      url,
+      url: { query: { repoId, commitId } },
       commitMutation
     } = this.props
     const { editorState } = this.state
@@ -296,8 +296,10 @@ class EditorPage extends Component {
     })
 
     commitMutation({
-      repoId: repo.id,
-      parentId: url.query.commitId,
+      repoId,
+      parentId: commitId === 'new'
+        ? null
+        : commitId,
       message: message,
       document: {
         content: serializer.serialize(editorState, {
@@ -307,14 +309,14 @@ class EditorPage extends Component {
     })
       .then(({data}) => {
         this.store.clear()
-        this.concludeChanges(repo.id)
+        this.concludeChanges(repoId)
 
         this.setState({
           committing: false,
           uncommittedChanges: false
         })
         Router.replaceRoute('repo/edit', {
-          repoId: url.query.repoId.split('/'),
+          repoId: repoId.split('/'),
           commitId: data.commit.id
         })
       })
@@ -325,23 +327,24 @@ class EditorPage extends Component {
   }
 
   render () {
-    const { url, t } = this.props
+    const { url, t, data = {} } = this.props
     const { repoId, commitId } = url.query
-    const { loading, error, repo } = this.props.data
+    const { loading, repo } = data
     const {
       editorState,
       committing,
       uncommittedChanges,
-      localStorageUnavailable,
-      error: stateError
+      localStorageUnavailable
     } = this.state
     const sidebarWidth = 200
 
-    const showLoading = committing || loading || !editorState
+    const isNew = commitId === 'new'
+    const error = data.error || this.state.error
+    const showLoading = committing || loading || (!editorState && !error)
 
     return (
       <Frame url={url} raw nav={<RepoNav route='repo/edit' url={url} />}>
-        <Loader loading={showLoading} error={error || stateError} render={() => (
+        <Loader loading={showLoading} error={error} render={() => (
           <div>
             <div style={{paddingRight: sidebarWidth}}>
               <Editor
@@ -360,7 +363,7 @@ class EditorPage extends Component {
                   <Label style={{fontSize: 12}}>
                     {uncommittedChanges
                       ? <span>{t('commit/status/uncommitted')}</span>
-                      : <span>{t('commit/status/committed')}</span>
+                      : <span>{!isNew && t('commit/status/committed')}</span>
                     }
                   </Label>
                 </div>
@@ -382,21 +385,25 @@ class EditorPage extends Component {
                     </A>
                   </div>
                 )}
-
               </div>
-              <Label>{t('checklist/title')}</Label>
-              <Checklist
-                disabled={!!uncommittedChanges}
-                repoId={repoId}
-                commitId={commitId}
-              />
-              <Label>{t('commitHistory/title')}</Label>
-              <CommitHistory
-                commits={repo.commits}
-                repoId={repoId}
-              />
-              <Label>{t('uncommittedChanges/title')}</Label>
-              <UncommittedChanges repoId={repoId} />
+
+              {!!repo && (
+                <div>
+                  <Label>{t('checklist/title')}</Label>
+                  <Checklist
+                    disabled={!!uncommittedChanges}
+                    repoId={repoId}
+                    commitId={commitId}
+                  />
+                  <Label>{t('commitHistory/title')}</Label>
+                  <CommitHistory
+                    commits={repo.commits}
+                    repoId={repoId}
+                  />
+                  <Label>{t('uncommittedChanges/title')}</Label>
+                  <UncommittedChanges repoId={repoId} />
+                </div>
+              )}
             </EditSidebar>
           </div>
         )} />
@@ -410,6 +417,7 @@ export default compose(
   withT,
   withAuthorization(['editor']),
   graphql(query, {
+    skip: ({ url }) => url.query.commitId === 'new',
     options: ({ url }) => ({
       variables: {
         repoId: url.query.repoId

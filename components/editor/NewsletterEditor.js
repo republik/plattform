@@ -109,6 +109,12 @@ export const serializer = new MarkdownSerializer({
   ]))
 })
 
+export const newDocument = ({title}) => {
+  return serializer.deserialize(
+    `<section><h6>${COVER}</h6>\n\n# ${title}\n\n<hr/></section>\n\nLadies and Gentlemen,`
+  )
+}
+
 addValidation(documentRule, serializer)
 
 const documentPlugin = {
