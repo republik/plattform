@@ -209,6 +209,7 @@ test('commit (create repo)', async (t) => {
   initialCommitId = commit.id
 
   await sleep(1500)
+
   const articleMd = await githubRest.repos.getContent({
     owner: GITHUB_LOGIN,
     repo: repoName,
@@ -223,6 +224,7 @@ test('commit (create repo)', async (t) => {
   // TODO discuss why this isnt equivalent
   // const loremMdastStringifyParse = MDAST.parse(MDAST.stringify(loremMdast))
   // t.deepLooseEqual(result.data.commit.document.content, loremMdastStringifyParse)
+  // console.log(diff(commit.document.content, loremMdastStringifyParse))
 
   t.end()
 })
