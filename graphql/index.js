@@ -4,7 +4,6 @@ const {makeExecutableSchema} = require('graphql-tools')
 const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { execute, subscribe } = require('graphql')
 const { pubsub } = require('../lib/RedisPubSub')
-const redis = require('../lib/redis')
 const cookie = require('cookie')
 const cookieParser = require('cookie-parser')
 const t = require('../lib/t')
@@ -62,7 +61,7 @@ module.exports = (server, pgdb, httpServer) => {
         req,
         t,
         pubsub,
-        redis
+        redis: require('../lib/redis')
       }
     }
   })
