@@ -33,7 +33,7 @@ const styles = {
 }
 
 const query = gql`
-  query repo($repoId: ID!) {
+  query repoUncommitted($repoId: ID!) {
     repo(id: $repoId) {
       id
       uncommittedChanges {
@@ -82,20 +82,22 @@ class UncommittedChanges extends Component {
   }
 
   render () {
-    const { loading, error, data, t } = this.props
+    const { data: {loading, error, repo}, t } = this.props
 
     return (
       <Loader loading={loading} error={error} render={() => (
         <div {...styles.container}>
-          {!!data.repo.uncommittedChanges.length &&
-            data.repo.uncommittedChanges.map(change =>
+          {repo.uncommittedChanges.length
+            ? repo.uncommittedChanges.map(change =>
               <span key={change.id} {...css(styles.initials)} title={change.email}>
                 {initials(cleanName(change.email))}
               </span>
-            )}
-          {!data.repo.uncommittedChanges.length &&
-            <span {...merge(styles.initials, styles.initialsPlaceholder)}
-              title={t('uncommittedChanges/empty')} />}
+            )
+            : (
+              <span {...merge(styles.initials, styles.initialsPlaceholder)}
+                title={t('uncommittedChanges/empty')} />
+              )
+          }
         </div>
       )} />
     )
@@ -105,11 +107,6 @@ class UncommittedChanges extends Component {
 export default compose(
   withT,
   graphql(query, {
-    options: ({ repoId }) => ({
-      variables: {
-        repoId: repoId
-      }
-    }),
     props: props => {
       return {
         ...props,

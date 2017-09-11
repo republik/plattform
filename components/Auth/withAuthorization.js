@@ -24,10 +24,10 @@ const styles = {
 export default (authorizedRoles) => (Component) => withT(withMe((props) => {
   const {me, t} = props
   if (
-    me // &&
-    // me.roles && me.roles.some(role => (
-    //  authorizedRoles.indexOf(role) !== -1
-    // ))
+    me &&
+    me.roles && me.roles.some(role => (
+     authorizedRoles.indexOf(role) !== -1
+    ))
   ) {
     return <Component {...props} />
   }

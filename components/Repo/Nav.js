@@ -7,26 +7,25 @@ const menu = [
   {
     key: 'edit',
     label: 'Edit',
-    route: 'editor/edit'
+    route: 'repo/edit'
   },
   {
     key: 'tree',
     label: 'Tree',
-    route: 'editor/tree'
+    route: 'repo/tree'
   },
   {
     key: 'publish',
     label: 'Publish',
-    route: 'editor/publish'
+    route: 'repo/publish'
   }
 ]
 
 const Nav = ({url, route, t}) => {
-  const { repository } = url.query
+  const { repoId } = url.query
 
-  // ToDo: missing latest commit id (at least for edit and meta)
   const params = {
-    repository
+    repoId: repoId.split('/')
   }
 
   return (

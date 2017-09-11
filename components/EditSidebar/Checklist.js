@@ -43,7 +43,7 @@ class Checklist extends Component {
 
   render () {
     const {
-      loading, error, repository,
+      loading, error, repoId,
       milestones, t,
       placeMilestone, removeMilestone,
       disabled
@@ -92,7 +92,7 @@ class Checklist extends Component {
                     checked
                       ? placeMilestone({
                         name,
-                        message: 'Check'
+                        message: ' ' // ToDo: consider prompting for message
                       }).then(finish)
                       : removeMilestone({
                         name
@@ -106,10 +106,10 @@ class Checklist extends Component {
                 </Checkbox>
                 {!!commit && <span {...styles.commit}>
                   <Link
-                    route='editor/edit'
+                    route='repo/edit'
                     params={{
-                      repository: repository,
-                      commit: commit.id
+                      repoId: repoId.split('/'),
+                      commitId: commit.id
                     }}
                   >
                     <a {...linkRule}>
@@ -141,7 +141,7 @@ Checklist.propTypes = {
 }
 
 const query = gql`
-query repo($repoId: ID!) {
+query repoMilestones($repoId: ID!) {
   repo(id: $repoId) {
     id
     milestones {

@@ -4,7 +4,7 @@
   "description": "",
   "main": "server/index.js",
   "scripts": {
-    "dev": "nodemon --watch server --watch app server/index.js",
+    "dev": "nodemon --watch server --watch app --watch lib/routes.js server/index.js",
     "start": "node server/index.js",
     "build": "next build",
     "heroku-postbuild": "npm run build",

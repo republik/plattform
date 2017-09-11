@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-07T14:47:00.232Z",
+  "updated": "2017-09-11T15:28:49.836Z",
   "title": "live",
   "data": [
     {
@@ -51,23 +51,23 @@
       "value": "Zugelassene Rollen: {roles}"
     },
     {
-      "key": "repoList/title",
+      "key": "repo/list/title",
       "value": "Artikel"
     },
     {
-      "key": "repoList/add/title",
+      "key": "repo/list/add/title",
       "value": "Neuer Artikel"
     },
     {
-      "key": "repoList/add/titleField/label",
+      "key": "repo/list/add/titleField/label",
       "value": "Titel"
     },
     {
-      "key": "repoList/add/titleField/error",
+      "key": "repo/list/add/titleField/error",
       "value": "Titel fehlt"
     },
     {
-      "key": "repoList/add/submit",
+      "key": "repo/list/add/submit",
       "value": "erstellen"
     },
     {
@@ -176,7 +176,11 @@
     },
     {
       "key": "commitHistory/more",
-      "value": "Mehr …"
+      "value": "Mehr…"
+    },
+    {
+      "key": "commitHistory/none",
+      "value": "Keine Commits"
     },
     {
       "key": "commit/button",
@@ -185,6 +189,14 @@
     {
       "key": "commit/revert",
       "value": "Verwerfen"
+    },
+    {
+      "key": "commit/promtMessage",
+      "value": "Commit-Message:"
+    },
+    {
+      "key": "commit/status/new",
+      "value": "Commite um das neue Dokument zu erstellen"
     },
     {
       "key": "commit/status/committed",
@@ -197,6 +209,22 @@
     {
       "key": "commit/warn/noStorage",
       "value": "Änderungen können nicht lokal gespeichert werden!"
+    },
+    {
+      "key": "commit/warn/localParseError",
+      "value": "Lokale Änderungen könnten nicht wiederhergestellt werden."
+    },
+    {
+      "key": "commit/warn/uncommittedChangesError",
+      "value": "Deine Aktivität konnte nicht gemolden werden."
+    },
+    {
+      "key": "commit/warn/failed",
+      "value": "Commit fehlgeschlagen:\n{error}"
+    },
+    {
+      "key": "commit/warn/missing",
+      "value": "Commit {commitId} nicht gefunden."
     }
   ]
 }

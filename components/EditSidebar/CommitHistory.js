@@ -1,11 +1,12 @@
 import React from 'react'
 import { Link } from '../../lib/routes'
-import { colors, linkRule } from '@project-r/styleguide'
+import { colors, linkRule, Interaction } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { swissTime } from '../../lib/utils/format'
 import withT from '../../lib/withT'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
+const { P } = Interaction
 
 const styles = {
   container: css({
@@ -29,8 +30,9 @@ const styles = {
   })
 }
 
-const CommitHistory = ({ commits, repository, maxItems, t }) => {
-  let numItems = maxItems || 3
+const CommitHistory = ({ commits, repoId, maxItems, t }) => {
+  const numItems = maxItems || 3
+  const repoPath = repoId.split('/')
   if (commits.length) {
     return (
       <div {...styles.container}>
@@ -38,14 +40,11 @@ const CommitHistory = ({ commits, repository, maxItems, t }) => {
           {commits.slice(0, numItems).map(commit =>
             <li key={commit.id} {...styles.commit}>
               <Link
-                route='editor/edit'
-                params={Object.assign(
-                  {},
-                  {
-                    repository: repository,
-                    commit: commit.id
-                  }
-                )}
+                route='repo/edit'
+                params={{
+                  repoId: repoPath,
+                  commitId: commit.id
+                }}
               >
                 <a {...linkRule}>
                   {commit.message}
@@ -61,8 +60,8 @@ const CommitHistory = ({ commits, repository, maxItems, t }) => {
           )}
         </ul>
         <Link
-          route='editor/tree'
-          params={{repository: repository}}
+          route='repo/tree'
+          params={{repoId: repoPath}}
         >
           <a {...linkRule}>{t('commitHistory/more')}</a>
         </Link>
@@ -70,9 +69,7 @@ const CommitHistory = ({ commits, repository, maxItems, t }) => {
     )
   } else {
     return (
-      <div>
-        <i>No commits</i>
-      </div>
+      <P>{t('commitHistory/none')}</P>
     )
   }
 }
