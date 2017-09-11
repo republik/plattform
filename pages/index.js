@@ -5,7 +5,7 @@ import withData from '../lib/apollo/withData'
 import withAuthorization from '../components/Auth/withAuthorization'
 
 import Frame from '../components/Frame'
-import RepoList from '../components/RepoList'
+import RepoList from '../components/Repo/List'
 
 const Index = ({ url }) => (
   <Frame url={url}>
