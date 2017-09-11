@@ -570,16 +570,14 @@ test('check num refs', async (t) => {
 
 test('cleanup', async (t) => {
   const [owner, repo] = testRepoId.split('/')
-  return githubRest.repos.delete({
+  await githubRest.repos.delete({
     owner,
     repo
   })
+  t.end()
 })
 
 test('teardown', (t) => {
   Server.close()
   t.end()
-  // before https://github.com/apollographql/subscriptions-transport-ws/pull/257
-  // is fixed, no clean exit is possible
-  process.exit(0)
 })

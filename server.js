@@ -62,11 +62,11 @@ module.exports.run = () => {
 }
 
 module.exports.close = () => {
-  httpServer.close()
-  pgdb.close()
-  require('./lib/redis').quit()
   const { pubsub } = require('./lib/RedisPubSub')
   pubsub.getSubscriber().quit()
   pubsub.getPublisher().quit()
   subscriptionServer.close()
+  httpServer.close()
+  pgdb.close()
+  require('./lib/redis').quit()
 }
