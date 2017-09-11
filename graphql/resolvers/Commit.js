@@ -1,8 +1,7 @@
 const { githubApolloFetch } = require('../../lib/github')
 const MDAST = require('../../lib/mdast/mdast')
+const { createPrefixUrl } = require('../../lib/assets')
 const visit = require('unist-util-visit')
-
-const { PUBLIC_ASSETS_URL } = process.env
 
 module.exports = {
   document: async (commit, args, { user }) => {
@@ -42,10 +41,7 @@ module.exports = {
     const mdast = MDAST.parse(repository.blob.text)
 
     // prefix image urls
-    const prefixUrl = url => url && url.indexOf('images/') === 0
-      ? `${PUBLIC_ASSETS_URL}/${commit.repo.id}/${commit.id}/${url}`
-      : url
-
+    const prefixUrl = createPrefixUrl(commit.repo.id)
     visit(mdast, 'image', node => {
       node.url = prefixUrl(node.url)
     })

@@ -11,7 +11,7 @@ const blobRegex = /.*\/(.*?)\./g
 // https://developer.github.com/v3/repos/contents/#get-contents
 // https://developer.github.com/v3/git/blobs/#get-a-blob
 module.exports = (server) => {
-  server.get('/assets/:login/:repoName/:ref/:path(*)', async (req, res) => {
+  server.get('/assets/:login/:repoName/:path(*)', async (req, res) => {
     const {
       login,
       repoName,

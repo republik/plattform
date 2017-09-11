@@ -2,6 +2,7 @@ const { hashObject } = require('../../../lib/git')
 const visit = require('unist-util-visit')
 const dataUriToBuffer = require('data-uri-to-buffer')
 const MDAST = require('../../../lib/mdast/mdast')
+const { unprefixUrl } = require('../../../lib/assets')
 const { ensureUserHasRole } = require('../../../lib/Roles')
 const superb = require('superb')
 const superheroes = require('superheroes')
@@ -17,9 +18,7 @@ const extractImage = (url, images) => {
     let blob
     try {
       blob = dataUriToBuffer(url)
-    } catch (e) {
-      console.log('ignoring image node with url:' + url)
-    }
+    } catch (e) { /* console.log('ignoring image node with url:' + url) */ }
     if (blob) {
       const suffix = blob.type.split('/')[1]
       const hash = hashObject(blob)
@@ -60,6 +59,18 @@ module.exports = async (_, args, {pgdb, req, user}) => {
       name: repoName,
       private: true,
       auto_init: true
+    })
+  }
+
+  // reverse asset url prefixing
+  visit(mdast, 'image', node => {
+    node.url = unprefixUrl(node.url)
+  })
+  if (mdast.meta) {
+    Object.keys(mdast.meta).forEach(key => {
+      if (key.match(/image/i)) {
+        mdast.meta[key] = unprefixUrl(mdast.meta[key])
+      }
     })
   }
 
