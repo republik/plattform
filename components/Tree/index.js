@@ -300,7 +300,7 @@ class Tree extends Component {
                 <Link
                   route='repo/edit'
                   params={{
-                    repoId: repoId,
+                    repoId: repoId.split('/'),
                     commitId: commit.id
                   }}
                 >
@@ -327,7 +327,7 @@ class Tree extends Component {
               <Link
                 route='repo/edit'
                 params={{
-                  repoId: repoId,
+                  repoId: repoId.split('/'),
                   commitId: commit.id
                 }}
               >

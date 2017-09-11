@@ -13,16 +13,22 @@ const nodeToRawNode = (node) => {
   return Raw.serialize(state).document.nodes[0]
 }
 
-const rawNodeToNode = (rawNode) => {
-  return Raw.deserialize({
+export const rawNodeToNode = (rawNode) => {
+  const isDocument = rawNode.kind === 'document'
+  const node = Raw.deserialize({
     kind: 'state',
-    document: rawNode.kind === 'document'
+    document: isDocument
       ? rawNode
       : {
         kind: 'document',
         nodes: [rawNode]
       }
-  }).document.nodes.first()
+  }).document
+
+  if (isDocument) {
+    return node
+  }
+  return node.nodes.first()
 }
 
 const addValidation = (rule, serializer) => {

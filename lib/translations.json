@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-11T14:06:11.459Z",
+  "updated": "2017-09-11T14:10:08.995Z",
   "title": "live",
   "data": [
     {
@@ -69,18 +69,6 @@
     {
       "key": "repo/list/add/submit",
       "value": "erstellen"
-    },
-    {
-      "key": "edit/missingCommit",
-      "value": "Commit {commitId} nicht gefunden."
-    },
-    {
-      "key": "edit/warning/uncommittedChangesError",
-      "value": "Deine Aktivität konnte nicht gemolden werden."
-    },
-    {
-      "key": "edit/warning/commitFailed",
-      "value": "Commit fehlgeschlagen:\n{error}"
     },
     {
       "key": "checklist/title",
@@ -217,6 +205,22 @@
     {
       "key": "commit/warn/noStorage",
       "value": "Änderungen können nicht lokal gespeichert werden!"
+    },
+    {
+      "key": "commit/warn/localParseError",
+      "value": "Lokale Änderungen könnten nicht wiederhergestellt werden."
+    },
+    {
+      "key": "commit/warn/uncommittedChangesError",
+      "value": "Deine Aktivität konnte nicht gemolden werden."
+    },
+    {
+      "key": "commit/warn/failed",
+      "value": "Commit fehlgeschlagen:\n{error}"
+    },
+    {
+      "key": "commit/warn/missing",
+      "value": "Commit {commitId} nicht gefunden."
     }
   ]
 }

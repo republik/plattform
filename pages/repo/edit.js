@@ -215,7 +215,6 @@ class EditorPage extends Component {
 
     const isNew = commitId === 'new'
     let committedEditorState
-    let committedRawString = ''
     if (isNew) {
       committedEditorState = newDocument(url.query)
     } else {
@@ -233,12 +232,12 @@ class EditorPage extends Component {
       committedEditorState = serializer.deserialize(json, {
         mdast: true
       })
-      committedRawString = JSON.stringify(
-        Raw.serialize(committedEditorState, {
-          terse: true
-        })
-      )
     }
+    const committedRawString = JSON.stringify(
+      Raw.serialize(committedEditorState, {
+        terse: true
+      })
+    )
 
     let localState = this.store.get('editorState')
     let localEditorState
@@ -260,11 +259,7 @@ class EditorPage extends Component {
         committedRawString
       })
     } else {
-      if (isNew) {
-        this.beginChanges(repoId)
-      } else {
-        this.concludeChanges(repoId)
-      }
+      this.concludeChanges(repoId)
       this.setState({
         editorState: committedEditorState,
         committedRawString
@@ -400,14 +395,14 @@ class EditorPage extends Component {
                 <Button
                   primary
                   block
-                  disabled={!uncommittedChanges}
+                  disabled={!uncommittedChanges && !isNew}
                   onClick={this.commitHandler}
                   style={styles.button}
                 >
                   {t('commit/button')}
                 </Button>
 
-                {!!uncommittedChanges && (
+                {!!uncommittedChanges && !isNew && (
                   <div style={{textAlign: 'center', marginTop: 10}}>
                     <A href='#' onClick={this.revertHandler}>
                       {t('commit/revert')}

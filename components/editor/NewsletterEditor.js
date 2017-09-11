@@ -5,7 +5,7 @@ import { css } from 'glamor'
 
 import MarkdownSerializer from '../../lib/serializer'
 import { getSerializationRules } from './utils/getRules'
-import addValidation, { findOrCreate } from './utils/serializationValidation'
+import addValidation, { findOrCreate, rawNodeToNode } from './utils/serializationValidation'
 import styles from './styles'
 import Sidebar from './Sidebar'
 import MetaData from './modules/meta/ui'
@@ -51,6 +51,37 @@ const newsletterStyles = {
 
 }
 
+const metaRule = {
+  match: node => node.kind === 'document',
+  validate: node => {
+    const data = node.data
+    const autoMeta = !data || !data.size || data.get('auto')
+    if (!autoMeta) {
+      return null
+    }
+    const cover = node.nodes
+      .find(n => n.type === COVER && n.kind === 'block')
+    if (!cover) {
+      return null
+    }
+
+    const newData = data
+      .set('auto', true)
+      .set('title', cover.nodes.first().text)
+      .set('description', cover.nodes.get(1).text)
+      .set('image', cover.data.get('src'))
+
+    return data.equals(newData)
+      ? null
+      : newData
+  },
+  normalize: (transform, object, newData) => {
+    return transform.setNodeByKey(object.key, {
+      data: newData
+    })
+  }
+}
+
 const documentRule = {
   match: object => object.kind === 'document',
   matchMdast: node => node.type === 'root',
@@ -60,20 +91,28 @@ const documentRule = {
     }, {
       children: []
     })
+    const documentNode = {
+      data: node.meta,
+      kind: 'document',
+      nodes: [
+        coverSerializer.fromMdast(cover)
+      ].concat(
+        visitChildren({
+          children: node.children
+            .filter(n => n !== cover)
+        })
+      )
+    }
+
+    const autoMeta = metaRule.validate(
+      rawNodeToNode(documentNode)
+    )
+    if (autoMeta) {
+      documentNode.data = autoMeta.toJS()
+    }
 
     return {
-      document: {
-        data: node.meta,
-        kind: 'document',
-        nodes: [
-          coverSerializer.fromMdast(cover)
-        ].concat(
-          visitChildren({
-            children: node.children
-              .filter(n => n !== cover)
-          })
-        )
-      },
+      document: documentNode,
       kind: 'state'
     }
   },
@@ -82,6 +121,7 @@ const documentRule = {
     if (!firstNode || firstNode.type !== COVER || firstNode.kind === 'block') {
       context.dirty = true
     }
+
     const cover = findOrCreate(object.nodes, { kind: 'block', type: COVER })
     return {
       type: 'root',
@@ -121,36 +161,7 @@ const documentPlugin = {
   schema: {
     rules: [
       documentRule,
-      {
-        match: node => node.kind === 'document',
-        validate: node => {
-          const data = node.data
-          const autoMeta = !data || !data.size || data.get('auto')
-          if (!autoMeta) {
-            return null
-          }
-          const cover = node.nodes
-            .find(n => n.type === COVER && n.kind === 'block')
-          if (!cover) {
-            return null
-          }
-
-          const newData = data
-            .set('auto', true)
-            .set('title', cover.nodes.first().text)
-            .set('description', cover.nodes.get(1).text)
-            .set('image', cover.data.get('src'))
-
-          return data.equals(newData)
-            ? null
-            : newData
-        },
-        normalize: (transform, object, newData) => {
-          return transform.setNodeByKey(object.key, {
-            data: newData
-          })
-        }
-      }
+      metaRule
     ]
   }
 }
