@@ -10,16 +10,22 @@ if (process.env.NODE_ENV === 'testing-local') {
 
 const {
   PORT,
-  GITHUB_LOGIN
+  GITHUB_LOGIN,
+  PUBLIC_ASSETS_URL
 } = process.env
 
 const Server = require('../server')
 const Roles = require('../lib/Roles')
 const tr = require('../lib/t')
 const sleep = require('await-sleep')
+const util = require('util')
 const supervillains = require('supervillains')
+const visit = require('unist-util-visit')
 const loremMdast = require('./lorem.mdast.json')
 const loremWithImageMdast = require('./loremWithImage.mdast.json')
+const dataUriToBuffer = require('data-uri-to-buffer')
+const diff = require('deep-diff').diff
+const fetch = require('isomorphic-unfetch')
 
 const GRAPHQL_URI = `http://localhost:${PORT}/graphql`
 const createApolloFetch = require('./createApolloFetchWithCookie')
@@ -30,9 +36,10 @@ const {
   getHeads
 } = require('../lib/github')
 
+// shared
 let pgdb
 const testEmail = 'tester@test.project-r.construction'
-let testRepos = []
+let testRepoId
 let initialCommitId
 
 test('setup', async (t) => {
@@ -155,7 +162,7 @@ test('commit (create repo)', async (t) => {
     message: '(testing) inital commit',
     content: loremMdast
   }
-  testRepos.push(variables.repoId)
+  testRepoId = variables.repoId
   const result = await apolloFetch({
     query: `
       mutation commit(
@@ -222,7 +229,7 @@ test('commit (create repo)', async (t) => {
 
 test('repo commits length and content', async (t) => {
   const variables = {
-    repoId: testRepos[0],
+    repoId: testRepoId,
     page: 0
   }
   const result = await apolloFetch({
@@ -262,7 +269,7 @@ test('repo commits length and content', async (t) => {
 
 test('commit with image (on same branch)', async (t) => {
   const variables = {
-    repoId: testRepos[0],
+    repoId: testRepoId,
     message: '(testing) update content with image',
     content: loremWithImageMdast,
     parentId: initialCommitId
@@ -305,7 +312,7 @@ test('commit with image (on same branch)', async (t) => {
     variables
   })
   t.ok(result.data)
-  console.log(result.data.commit.document.content)
+  // console.log(util.inspect(result.data.commit.document.content, {depth: null}))
 
   t.equals(result.data.commit.repo.id, variables.repoId)
   const { commit } = result.data
@@ -316,37 +323,213 @@ test('commit with image (on same branch)', async (t) => {
   t.ok(commit.author.email)
   t.ok(commit.date)
 
-  // TODO check extractImage
-  /*
-  await sleep(1500)
+  await sleep(1000)
 
-  const articleMd = await githubRest.repos.getContent({
-    owner: GITHUB_LOGIN,
-    repo: repoName,
-    path: 'article.md'
-  })
-    .then( ({ data: { content, encoding } }) =>
-      Buffer.from(content, encoding).toString('utf-8')
-    )
-    .catch( response => null )
-  const markdown = MDAST.stringify(loremMdast)
-  t.equals(articleMd, markdown)
-  */
+  // const markdown = MDAST.stringify(loremMdast)
+  // t.equals(articleMd, markdown)
+
   // TODO discuss why this isnt equivalent
   // const loremMdastStringifyParse = MDAST.parse(MDAST.stringify(loremMdast))
   // t.deepLooseEqual(result.data.commit.document.content, loremMdastStringifyParse)
   t.end()
 })
 
+test('check image dataURI is replaced with relative url', async (t) => {
+  // get article.md from repo
+  const [owner, repo] = testRepoId.split('/')
+  const articleMd = await githubRest.repos.getContent({
+    owner,
+    repo,
+    path: 'article.md'
+  })
+    .then(({ data: { content, encoding } }) =>
+      Buffer.from(content, encoding).toString('utf-8')
+    )
+    .catch(response => null)
+  t.ok(articleMd)
+  t.ok(articleMd.indexOf('images/c0313cccd1aacffecf8a4fef6a44aef9676b5b61.jpeg') > -1)
+  t.end()
+})
+
+test('check image URLs and asset server', async (t) => {
+  const result = await apolloFetch({
+    query: `
+      query repo(
+        $repoId: ID!
+        $page: Int
+      ){
+        repo(id: $repoId) {
+          commits(page: $page) {
+            document {
+              content
+            }
+          }
+        }
+      }
+    `,
+    variables: {
+      repoId: testRepoId,
+      page: 0
+    }
+  })
+  t.ok(result.data.repo.commits)
+  const articleMdast = result.data.repo.commits[0].document.content
+
+  // extract imageUrls
+  let imageUrls = []
+  visit(articleMdast, 'image', node => {
+    imageUrls.push(node.url)
+  })
+  t.equals(imageUrls.length, 1)
+
+  // check for PUBLIC_ASSETS_URL
+  for (let imageUrl of imageUrls) {
+    t.equals(imageUrl.indexOf(PUBLIC_ASSETS_URL), 0)
+  }
+
+  // download images via asset server
+  const imageBuffersFromServer = await Promise.all(
+    imageUrls.map(imageUrl =>
+        fetch(imageUrl)
+          .then(response => response.buffer())
+    )
+  )
+  t.equals(imageBuffersFromServer.length, imageUrls.length)
+
+  // get imageDataUrls from loremWithImageMdast
+  let imageBuffersFromLorem = []
+  visit(loremWithImageMdast, 'image', node => {
+    imageBuffersFromLorem.push(dataUriToBuffer(node.url))
+  })
+  t.equals(imageBuffersFromLorem.length, imageBuffersFromServer.length)
+
+  for (let i = 0; i < imageBuffersFromServer.length; i++) {
+    const buffer0 = imageBuffersFromLorem[i]
+    const buffer1 = imageBuffersFromServer[i]
+    t.notEquals(buffer0, null)
+    t.notEquals(buffer1, null)
+    t.notEquals(buffer0, undefined)
+    t.notEquals(buffer1, undefined)
+    t.equals(buffer0.compare(buffer1), 0)
+  }
+  t.end()
+})
+
+test('check recommit content', async (t) => {
+  const result0 = await apolloFetch({
+    query: `
+      query repo(
+        $repoId: ID!
+        $page: Int
+      ){
+        repo(id: $repoId) {
+          commits(page: $page) {
+            id
+            document {
+              content
+            }
+          }
+        }
+      }
+    `,
+    variables: {
+      repoId: testRepoId,
+      page: 0
+    }
+  })
+  t.ok(result0.data.repo.commits)
+  const originalCommit = result0.data.repo.commits[0]
+  const originalContent = originalCommit.document.content
+  t.ok(originalContent)
+
+  const result1 = await apolloFetch({
+    query: `
+      mutation commit(
+        $repoId: ID!
+        $message: String!
+        $content: JSON!
+        $parentId: ID
+      ){
+        commit(
+          repoId: $repoId
+          message: $message
+          document: {
+            content: $content
+          }
+          parentId: $parentId
+        ) {
+          parentIds
+          message
+          author {
+            name
+            email
+            user {
+              email
+            }
+          }
+          date
+          document {
+            content
+          }
+          repo {
+            id
+          }
+        }
+      }
+    `,
+    variables: {
+      repoId: testRepoId,
+      message: '(testing) commit with identical content',
+      content: originalContent,
+      parentId: originalCommit.id
+    }
+  })
+  t.ok(result1.data)
+
+  const result2 = await apolloFetch({
+    query: `
+      query repo(
+        $repoId: ID!
+        $page: Int
+      ){
+        repo(id: $repoId) {
+          commits(page: $page) {
+            id
+            document {
+              content
+            }
+          }
+        }
+      }
+    `,
+    variables: {
+      repoId: testRepoId,
+      page: 0
+    }
+  })
+  t.ok(result2.data.repo.commits)
+  const newCommit = result2.data.repo.commits[0]
+  const newContent = newCommit.document.content
+
+  t.notEquals(originalCommit.id, newCommit.id)
+  t.deepLooseEqual(originalContent, newContent)
+  const contentDiff = diff(originalContent, newContent)
+  if (contentDiff) {
+    console.log('The last test failed due to the following diff')
+    console.log(util.inspect(diff, {depth: null}))
+  }
+  t.end()
+})
+
 test('check num refs', async (t) => {
-  const heads = await getHeads(testRepos[0])
+  const heads = await getHeads(testRepoId)
   t.equals(heads.length, 1)
   t.end()
 })
 
 test('check autobranching commit', async (t) => {
   const variables = {
-    repoId: testRepos[0],
+    repoId: testRepoId,
     message: '(testing) update content for autobranching',
     content: loremWithImageMdast,
     parentId: initialCommitId
@@ -378,19 +561,17 @@ test('check autobranching commit', async (t) => {
 })
 
 test('check num refs', async (t) => {
-  const heads = await getHeads(testRepos[0])
+  const heads = await getHeads(testRepoId)
   t.equals(heads.length, 2)
   t.end()
 })
 
 test('cleanup', async (t) => {
-  await Promise.all(testRepos.map(repoId => {
-    const [owner, repo] = repoId.split('/')
-    return githubRest.repos.delete({
-      owner,
-      repo
-    })
-  }))
+  const [owner, repo] = testRepoId.split('/')
+  return githubRest.repos.delete({
+    owner,
+    repo
+  })
 })
 
 test('teardown', (t) => {
