@@ -19,6 +19,7 @@ import UncommittedChanges from '../../components/EditSidebar/UncommittedChanges'
 import withAuthorization from '../../components/Auth/withAuthorization'
 import withT from '../../lib/withT'
 
+import { errorToString } from '../../lib/utils/errors'
 import initLocalStore from '../../lib/utils/localStorage'
 
 const fragments = {
@@ -88,7 +89,8 @@ const styles = {
     margin: '0 0 20px'
   },
   danger: {
-    color: 'red'
+    color: 'red',
+    marginBottom: 10
   },
   button: {
     height: 40,
@@ -109,11 +111,24 @@ class EditorPage extends Component {
       committing: false,
       editorState: null,
       repo: null,
-      uncommittedChanges: null
+      uncommittedChanges: null,
+      warnings: []
     }
   }
 
+  warn (message) {
+    this.setState(state => ({
+      warnings: [
+        message,
+        ...state.warnings
+      ].filter( // de-dup
+        (message, i, all) => all.indexOf(message) === i
+      )
+    }))
+  }
+
   beginChanges (repoId) {
+    const { t } = this.props
     this.setState({
       uncommittedChanges: true
     })
@@ -121,12 +136,13 @@ class EditorPage extends Component {
       repoId: repoId,
       action: 'create'
     }).catch(error => {
-      console.log('uncommittedChangesMutation error')
-      console.log(error)
+      console.error(error)
+      this.warn(t('commit/warn/uncommittedChangesError'))
     })
   }
 
   concludeChanges (repoId) {
+    const { t } = this.props
     this.setState({
       uncommittedChanges: false
     })
@@ -134,8 +150,8 @@ class EditorPage extends Component {
       repoId: repoId,
       action: 'delete'
     }).catch(error => {
-      console.log('uncommittedChangesMutation error')
-      console.log(error)
+      console.error(error)
+      this.warn(t('commit/warn/uncommittedChangesError'))
     })
   }
 
@@ -150,14 +166,13 @@ class EditorPage extends Component {
   }
 
   checkLocalStorageSupport () {
+    const { t } = this.props
     if (
       process.browser &&
       this.store &&
       !this.store.supported
     ) {
-      this.setState({
-        localStorageUnavailable: true
-      })
+      this.warn(t('commit/warn/noStorage'))
     }
   }
   componentDidMount () {
@@ -190,7 +205,7 @@ class EditorPage extends Component {
       return
     }
     const repoId = url.query.repoId
-    const commitId = url.query.commitId || 'new'
+    const commitId = url.query.commitId
 
     const storeKey = [repoId, commitId].join('/')
     if (!this.store || this.store.key !== storeKey) {
@@ -198,15 +213,19 @@ class EditorPage extends Component {
       this.checkLocalStorageSupport()
     }
 
+    const isNew = commitId === 'new'
     let committedEditorState
-    if (commitId === 'new') {
+    let committedRawString = ''
+    if (isNew) {
       committedEditorState = newDocument(url.query)
     } else {
       const commit = repo.commits.find(commit => {
         return commit.id === commitId
       })
       if (!commit) {
-        this.setState({error: t('edit/missingCommit', {commitId})})
+        this.setState({
+          error: t('commit/warn/missing', {commitId})
+        })
         return
       }
 
@@ -214,16 +233,12 @@ class EditorPage extends Component {
       committedEditorState = serializer.deserialize(json, {
         mdast: true
       })
-
-      this.setState({
-        commit: commit
-      })
+      committedRawString = JSON.stringify(
+        Raw.serialize(committedEditorState, {
+          terse: true
+        })
+      )
     }
-    const committedRawString = JSON.stringify(
-      Raw.serialize(committedEditorState, {
-        terse: true
-      })
-    )
 
     let localState = this.store.get('editorState')
     let localEditorState
@@ -233,7 +248,8 @@ class EditorPage extends Component {
           terse: true
         })
       } catch (e) {
-        console.log('parsing error', e)
+        console.error(e)
+        this.warn(t('commit/warn/localParseError'))
       }
     }
 
@@ -244,7 +260,11 @@ class EditorPage extends Component {
         committedRawString
       })
     } else {
-      this.concludeChanges(repoId)
+      if (isNew) {
+        this.beginChanges(repoId)
+      } else {
+        this.concludeChanges(repoId)
+      }
       this.setState({
         editorState: committedEditorState,
         committedRawString
@@ -283,11 +303,12 @@ class EditorPage extends Component {
   commitHandler () {
     const {
       url: { query: { repoId, commitId } },
-      commitMutation
+      commitMutation,
+      t
     } = this.props
     const { editorState } = this.state
 
-    const message = window.prompt('Commit message:')
+    const message = window.prompt(t('commit/promtMessage'))
     if (!message) {
       return
     }
@@ -321,8 +342,10 @@ class EditorPage extends Component {
         })
       })
       .catch(e => {
-        console.log('commit catched')
-        console.log(e)
+        console.error(e)
+        this.warn(t('commit/warn/failed', {
+          error: errorToString(e)
+        }))
       })
   }
 
@@ -334,7 +357,7 @@ class EditorPage extends Component {
       editorState,
       committing,
       uncommittedChanges,
-      localStorageUnavailable
+      warnings
     } = this.state
     const sidebarWidth = 200
 
@@ -354,17 +377,23 @@ class EditorPage extends Component {
               />
             </div>
             <EditSidebar width={sidebarWidth}>
-              {localStorageUnavailable &&
-                <div {...css(styles.danger)}>
-                  {t('commit/warn/noStorage')}
-                </div>}
+              {warnings.map((message, i) => (
+                <div key={i} {...css(styles.danger)}>
+                  {message}
+                </div>
+              ))}
+
               <div {...css(styles.uncommittedChanges)}>
                 <div style={{marginBottom: 10}}>
                   <Label style={{fontSize: 12}}>
-                    {uncommittedChanges
-                      ? <span>{t('commit/status/uncommitted')}</span>
-                      : <span>{!isNew && t('commit/status/committed')}</span>
-                    }
+                    <span>
+                      {isNew
+                        ? t('commit/status/new')
+                        : t(uncommittedChanges
+                              ? 'commit/status/uncommitted'
+                              : 'commit/status/committed')
+                      }
+                    </span>
                   </Label>
                 </div>
 
@@ -400,10 +429,10 @@ class EditorPage extends Component {
                     commits={repo.commits}
                     repoId={repoId}
                   />
-                  <Label>{t('uncommittedChanges/title')}</Label>
-                  <UncommittedChanges repoId={repoId} />
                 </div>
               )}
+              <Label>{t('uncommittedChanges/title')}</Label>
+              <UncommittedChanges repoId={repoId} />
             </EditSidebar>
           </div>
         )} />
