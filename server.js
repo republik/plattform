@@ -24,6 +24,7 @@ const assets = require('./src/assets')
 let pgdb
 let server
 let httpServer
+let subscriptionServer
 module.exports.run = () => {
   return PgDb.connect().then((_pgdb) => {
     pgdb = _pgdb
@@ -48,7 +49,7 @@ module.exports.run = () => {
       server.use('*', cors(corsOptions))
     }
 
-    graphql(server, pgdb, httpServer)
+    subscriptionServer = graphql(server, pgdb, httpServer)
     assets(server)
 
     // start the server
@@ -67,4 +68,5 @@ module.exports.close = () => {
   const { pubsub } = require('./lib/RedisPubSub')
   pubsub.getSubscriber().quit()
   pubsub.getPublisher().quit()
+  subscriptionServer.close()
 }

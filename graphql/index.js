@@ -23,7 +23,7 @@ const {
 } = process.env
 
 module.exports = (server, pgdb, httpServer) => {
-  SubscriptionServer.create(
+  const subscriptionServer = SubscriptionServer.create(
     {
       schema: executableSchema,
       execute,
@@ -75,4 +75,6 @@ module.exports = (server, pgdb, httpServer) => {
     endpointURL: '/graphql',
     subscriptionsEndpoint: PUBLIC_WS_URL_BASE + PUBLIC_WS_URL_PATH
   }))
+
+  return subscriptionServer
 }
