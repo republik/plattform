@@ -1,11 +1,12 @@
 import React from 'react'
 import { Link } from '../../lib/routes'
-import { colors, linkRule } from '@project-r/styleguide'
+import { colors, linkRule, Interaction } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { swissTime } from '../../lib/utils/format'
 import withT from '../../lib/withT'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
+const { P } = Interaction
 
 const styles = {
   container: css({
@@ -68,9 +69,7 @@ const CommitHistory = ({ commits, repoId, maxItems, t }) => {
     )
   } else {
     return (
-      <div>
-        <i>No commits</i>
-      </div>
+      <P>{t('commitHistory/none')}</P>
     )
   }
 }

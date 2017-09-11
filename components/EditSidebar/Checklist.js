@@ -92,7 +92,7 @@ class Checklist extends Component {
                     checked
                       ? placeMilestone({
                         name,
-                        message: 'Check'
+                        message: ' ' // ToDo: consider prompting for message
                       }).then(finish)
                       : removeMilestone({
                         name
@@ -141,7 +141,7 @@ Checklist.propTypes = {
 }
 
 const query = gql`
-query repo($repoId: ID!) {
+query repoMilestones($repoId: ID!) {
   repo(id: $repoId) {
     id
     milestones {

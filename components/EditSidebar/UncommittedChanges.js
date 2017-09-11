@@ -33,7 +33,7 @@ const styles = {
 }
 
 const query = gql`
-  query repo($repoId: ID!) {
+  query repoUncommitted($repoId: ID!) {
     repo(id: $repoId) {
       id
       uncommittedChanges {

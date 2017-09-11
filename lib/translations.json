@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-11T14:10:08.995Z",
+  "updated": "2017-09-11T15:28:49.836Z",
   "title": "live",
   "data": [
     {
@@ -176,7 +176,11 @@
     },
     {
       "key": "commitHistory/more",
-      "value": "Mehr …"
+      "value": "Mehr…"
+    },
+    {
+      "key": "commitHistory/none",
+      "value": "Keine Commits"
     },
     {
       "key": "commit/button",

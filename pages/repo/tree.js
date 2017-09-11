@@ -9,7 +9,7 @@ import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
 
 const query = gql`
-  query repo($repoId: ID!) {
+  query repoWithHistory($repoId: ID!) {
     repo(id: $repoId) {
       id
       commits(page: 1) {
