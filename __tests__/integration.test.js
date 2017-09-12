@@ -571,6 +571,122 @@ test('check num refs', async (t) => {
   t.end()
 })
 
+test('placeMilestone', async (t) => {
+  const variables = {
+    repoId: testRepoId,
+    commitId: initialCommitId,
+    name: '(test) proofread',
+    message: 'Anything that prevents you from being friendly, a good neighbour, is a terror tactic.'
+  }
+  const normalizedName = '(test)-proofread'
+
+  const result0 = await apolloFetch({
+    query: `
+      mutation placeMilestone(
+        $repoId: ID!
+        $commitId: ID!
+        $name: String!
+        $message: String!
+      ){
+        placeMilestone(
+          repoId: $repoId
+          commitId: $commitId
+          name: $name
+          message: $message
+        ) {
+          name
+          message
+          commit {
+            id
+          }
+        }
+      }
+    `,
+    variables
+  })
+  t.ok(result0.data)
+  const { placeMilestone: { name, message, commit } } = result0.data
+  t.equals(name, normalizedName)
+  t.equals(message, variables.message)
+  t.equals(commit.id, variables.commitId)
+
+  const result1 = await apolloFetch({
+    query: `
+      query repo(
+        $repoId: ID!
+      ){
+        repo(id: $repoId) {
+          milestones {
+            name
+            message
+            commit {
+              id
+            }
+          }
+        }
+      }
+    `,
+    variables: {
+      repoId: testRepoId
+    }
+  })
+  t.ok(result1.data.repo.milestones)
+  t.equals(result1.data.repo.milestones.length, 1)
+  const milestone = result1.data.repo.milestones[0]
+  t.equals(milestone.name, normalizedName)
+  t.equals(milestone.message, variables.message)
+  t.equals(milestone.commit.id, variables.commitId)
+  t.end()
+})
+
+test('removeMilestone', async (t) => {
+  const variables = {
+    repoId: testRepoId,
+    name: '(test)-proofread'
+  }
+
+  const result0 = await apolloFetch({
+    query: `
+      mutation removeMilestone(
+        $repoId: ID!
+        $name: String!
+      ){
+        removeMilestone(
+          repoId: $repoId
+          name: $name
+        )
+      }
+    `,
+    variables
+  })
+  t.ok(result0.data)
+  t.equals(result0.data.removeMilestone, true)
+
+  const result1 = await apolloFetch({
+    query: `
+      query repo(
+        $repoId: ID!
+      ){
+        repo(id: $repoId) {
+          milestones {
+            name
+            message
+            commit {
+              id
+            }
+          }
+        }
+      }
+    `,
+    variables: {
+      repoId: testRepoId
+    }
+  })
+  t.ok(result1.data.repo.milestones)
+  t.equals(result1.data.repo.milestones.length, 0)
+  t.end()
+})
+
 test('null parentId on existing repo must be denied', async (t) => {
   const result = await apolloFetch({
     query: `
