@@ -3,10 +3,12 @@ const { ensureUserHasRole } = require('../../../lib/Roles')
 
 module.exports = async (
   _,
-  { repoId, commitId, name, message },
+  { repoId, commitId, name: _name, message },
   { user }
 ) => {
   ensureUserHasRole(user, 'editor')
+
+  const name = _name.replace(/\s/g, '-')
 
   const [login, repoName] = repoId.split('/')
   const tag = await githubRest.gitdata.createTag({
