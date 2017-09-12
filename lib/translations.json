@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-12T10:05:27.875Z",
+  "updated": "2017-09-12T10:47:03.516Z",
   "title": "live",
   "data": [
     {
@@ -16,6 +16,10 @@
     },
     {
       "key": "api/auth/errorSavingSession",
+      "value": "Ups, da ist was schiefgelaufen. Sorry!"
+    },
+    {
+      "key": "api/auth/errorDestroyingSession",
       "value": "Ups, da ist was schiefgelaufen. Sorry!"
     },
     {

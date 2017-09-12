@@ -63,7 +63,7 @@ test('setup', async (t) => {
   t.end()
 })
 
-test('unauthorized', async (t) => {
+test('unauthorized repos query', async (t) => {
   const result = await apolloFetch({
     query: `
       {
@@ -82,7 +82,7 @@ test('unauthorized', async (t) => {
   t.end()
 })
 
-test('signin', async (t) => {
+test('signIn', async (t) => {
   const result = await apolloFetch({
     query: `
       mutation {
@@ -637,6 +637,49 @@ test('parentId on non existing repo must be denied', async (t) => {
   t.equals(result.data, null)
   t.equals(result.errors.length, 1)
   t.equals(result.errors[0].message, tr('api/commit/parentId/notAllowed', { repoId }))
+  t.end()
+})
+
+test('signOut', async (t) => {
+  const result = await apolloFetch({
+    query: `
+      mutation {
+        signOut
+      }
+    `
+  })
+  t.ok(result.data.signOut)
+  t.end()
+})
+
+test('signOut again', async (t) => {
+  const result = await apolloFetch({
+    query: `
+      mutation {
+        signOut
+      }
+    `
+  })
+  t.ok(result.data.signOut)
+  t.end()
+})
+
+test('unauthorized repos query', async (t) => {
+  const result = await apolloFetch({
+    query: `
+      {
+        repos(first: 20) {
+          id
+          commits(page: 0) {
+            id
+          }
+        }
+      }
+    `
+  })
+  t.equals(result.data, null)
+  t.equals(result.errors.length, 1)
+  t.equals(result.errors[0].message, tr('api/signIn'))
   t.end()
 })
 
