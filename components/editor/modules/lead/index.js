@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 import { LeadButton } from './ui'
-import Placeholder from '../../Placeholder'
+import { Placeholder } from 'slate'
 import { matchBlock } from '../../utils'
 import { LEAD } from './constants'
 // import { mq } from '../../styles'
@@ -12,15 +12,7 @@ export const styles = {
   lead: {
     fontWeight: 'bold',
     margin: 0,
-    position: 'relative',
-    ':before': {
-      display: 'inline',
-      content: '«'
-    },
-    ':after': {
-      display: 'inline',
-      content: '»'
-    }
+    position: 'relative'
   }
 }
 
@@ -47,10 +39,11 @@ export const lead = {
   render: ({ children, ...props }) =>
     <p {...css(styles.lead)}>
       <Placeholder
-        {...props}
-        style={{ color: '#ccc' }}
+        state={props.state}
+        node={props.node}
+        firstOnly={false}
       >
-        {'Hier könnte ihr Lead stehen.'}
+        Lead
       </Placeholder>
       {children}
     </p>

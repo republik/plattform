@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import Placeholder from '../../Placeholder'
+import { Placeholder } from 'slate'
 import MarkdownSerializer from '../../../../lib/serializer'
 
 import { matchBlock } from '../../utils'
@@ -17,6 +17,7 @@ import {
 
 export const styles = {
   title: {
+    position: 'relative',
     fontSize: 36,
     fontFamily: 'sans-serif',
     fontWeight: 'bold',
@@ -40,8 +41,11 @@ export const title = {
   }),
   render: ({ children, ...props }) =>
     <h1 {...css(styles.title)}>
-      <Placeholder {...props} style={{ color: '#ccc' }}>
-        {'Titel'}
+      <Placeholder
+        state={props.state}
+        node={props.node}
+        firstOnly={false}>
+        Titel
       </Placeholder>
       { children }
     </h1>
