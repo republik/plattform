@@ -402,7 +402,7 @@ class EditorPage extends Component {
                   {t('commit/button')}
                 </Button>
 
-                {!!uncommittedChanges && !isNew && (
+                {!!uncommittedChanges && (
                   <div style={{textAlign: 'center', marginTop: 10}}>
                     <A href='#' onClick={this.revertHandler}>
                       {t('commit/revert')}
