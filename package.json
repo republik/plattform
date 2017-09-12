@@ -75,7 +75,7 @@
     "remark-frontmatter": "^1.1.0",
     "remark-parse": "^4.0.0",
     "remark-stringify": "^4.0.0",
-    "slate": "^0.21.1",
+    "slate": "0.21.6",
     "subscriptions-transport-ws": "^0.8.2",
     "unified": "^6.1.5"
   }
