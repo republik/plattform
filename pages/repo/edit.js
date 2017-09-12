@@ -155,11 +155,6 @@ class EditorPage extends Component {
     })
   }
 
-  componentWillMount () {
-    resetKeyGenerator()
-    this.loadState(this.props)
-  }
-
   componentWillReceiveProps (nextProps) {
     resetKeyGenerator()
     this.loadState(nextProps)
@@ -176,7 +171,8 @@ class EditorPage extends Component {
     }
   }
   componentDidMount () {
-    this.checkLocalStorageSupport()
+    resetKeyGenerator()
+    this.loadState(this.props)
   }
 
   revertHandler (e) {
@@ -192,26 +188,27 @@ class EditorPage extends Component {
       url
     } = props
 
+    if (!process.browser) {
+      // running without local storage doesn't make sense
+      // - we always want to render the correct version
+      // - flash of an outdated version could confuse an user
+      // - if js loading fails or is disabled no editing should happen
+      //   - server rendered native content editable edits are not recoverable
+      console.warn(`loadState should only in the browser`)
+      return
+    }
     if (loading || error) {
       return
     }
     if (!url.query.commitId && repo && repo.commits.length) {
-      if (process.browser) {
-        Router.replaceRoute('repo/edit', {
-          repoId: url.query.repoId.split('/'),
-          commitId: repo.commits[0].id
-        })
-      }
+      Router.replaceRoute('repo/edit', {
+        repoId: url.query.repoId.split('/'),
+        commitId: repo.commits[0].id
+      })
       return
     }
     const repoId = url.query.repoId
     const commitId = url.query.commitId
-
-    const storeKey = [repoId, commitId].join('/')
-    if (!this.store || this.store.key !== storeKey) {
-      this.store = initLocalStore(storeKey)
-      this.checkLocalStorageSupport()
-    }
 
     const isNew = commitId === 'new'
     let committedEditorState
@@ -238,6 +235,12 @@ class EditorPage extends Component {
         terse: true
       })
     )
+
+    const storeKey = [repoId, commitId].join('/')
+    if (!this.store || this.store.key !== storeKey) {
+      this.store = initLocalStore(storeKey)
+      this.checkLocalStorageSupport()
+    }
 
     let localState = this.store.get('editorState')
     let localEditorState
