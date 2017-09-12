@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-06T17:43:27.278Z",
+  "updated": "2017-09-12T10:05:27.875Z",
   "title": "live",
   "data": [
     {
@@ -17,6 +17,14 @@
     {
       "key": "api/auth/errorSavingSession",
       "value": "Ups, da ist was schiefgelaufen. Sorry!"
+    },
+    {
+      "key": "api/commit/parentId/required",
+      "value": "Please provide a parentId to commit to the existing repo \"{repoId}\"."
+    },
+    {
+      "key": "api/commit/parentId/notAllowed",
+      "value": "You must not provide a parentId to init the not existing repo \"{repoId}\"."
     }
   ]
 }

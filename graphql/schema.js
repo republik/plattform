@@ -22,6 +22,8 @@ type RootMutations {
 
   commit(
     repoId: ID!
+    # specifies the parent commit. May only be
+    # null if repoId doesn't exist yet
     parentId: ID
     message: String!
     document: DocumentInput!

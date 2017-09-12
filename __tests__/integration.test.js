@@ -36,6 +36,8 @@ const {
   getHeads
 } = require('../lib/github')
 
+const getNewRepoId = () => `test-${supervillains.random()}`.replace(/\s/g, '-')
+
 // shared
 let pgdb
 const testEmail = 'tester@test.project-r.construction'
@@ -90,7 +92,7 @@ test('signin', async (t) => {
       }
     `
   })
-  await sleep(5000)
+  await sleep(4000)
   t.ok(result.data.signIn.phrase)
   t.ok(result.data.signIn.phrase.length)
   t.end()
@@ -156,7 +158,7 @@ test('repos (signed in)', async (t) => {
 })
 
 test('commit (create repo)', async (t) => {
-  const repoName = `test-${supervillains.random()}`.replace(/\s/g, '-')
+  const repoName = getNewRepoId()
   const variables = {
     repoId: `${GITHUB_LOGIN}/${repoName}`,
     message: '(testing) inital commit',
@@ -292,6 +294,7 @@ test('commit with image (on same branch)', async (t) => {
           }
           parentId: $parentId
         ) {
+          id
           parentIds
           message
           author {
@@ -565,6 +568,75 @@ test('check autobranching commit', async (t) => {
 test('check num refs', async (t) => {
   const heads = await getHeads(testRepoId)
   t.equals(heads.length, 2)
+  t.end()
+})
+
+test('null parentId on existing repo must be denied', async (t) => {
+  const result = await apolloFetch({
+    query: `
+      mutation commit(
+        $repoId: ID!
+        $message: String!
+        $content: JSON!
+        $parentId: ID
+      ){
+        commit(
+          repoId: $repoId
+          message: $message
+          document: {
+            content: $content
+          }
+          parentId: $parentId
+        ) {
+          id
+        }
+      }
+    `,
+    variables: {
+      repoId: testRepoId,
+      message: '(testing) parentId null',
+      content: loremMdast,
+      parentId: null
+    }
+  })
+  t.equals(result.data, null)
+  t.equals(result.errors.length, 1)
+  t.equals(result.errors[0].message, tr('api/commit/parentId/required', { repoId: testRepoId }))
+  t.end()
+})
+
+test('parentId on non existing repo must be denied', async (t) => {
+  const repoId = getNewRepoId()
+  const result = await apolloFetch({
+    query: `
+      mutation commit(
+        $repoId: ID!
+        $message: String!
+        $content: JSON!
+        $parentId: ID!
+      ){
+        commit(
+          repoId: $repoId
+          message: $message
+          document: {
+            content: $content
+          }
+          parentId: $parentId
+        ) {
+          id
+        }
+      }
+    `,
+    variables: {
+      repoId,
+      message: '(testing) parentId not null for new repoId',
+      content: loremMdast,
+      parentId: '7366d36cb967d7a3ac324c789a8b718e61d01b31'
+    }
+  })
+  t.equals(result.data, null)
+  t.equals(result.errors.length, 1)
+  t.equals(result.errors[0].message, tr('api/commit/parentId/notAllowed', { repoId }))
   t.end()
 })
 

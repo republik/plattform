@@ -34,7 +34,7 @@ const extractImage = (url, images) => {
   return url
 }
 
-module.exports = async (_, args, {pgdb, req, user}) => {
+module.exports = async (_, args, { pgdb, req, user, t }) => {
   ensureUserHasRole(user, 'editor')
 
   const {
@@ -52,8 +52,14 @@ module.exports = async (_, args, {pgdb, req, user}) => {
   let repo = await getRepo(repoId)
     .catch(response => null)
 
-  if (!repo) {
-    console.log('creating new repo')
+  if (repo) {
+    if (!parentId) {
+      throw new Error(t('api/commit/parentId/required', { repoId }))
+    }
+  } else {
+    if (parentId) {
+      throw new Error(t('api/commit/parentId/notAllowed', { repoId }))
+    }
     repo = await githubRest.repos.createForOrg({
       org: login,
       name: repoName,
