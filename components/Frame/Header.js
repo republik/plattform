@@ -57,7 +57,7 @@ const styles = {
     fontSize: 22
   }),
   portrait: css({
-    height: HEADER_HEIGHT,
+    height: HEADER_HEIGHT - 1,
     marginLeft: 5,
     verticalAlign: 'top'
   }),
@@ -69,8 +69,8 @@ const styles = {
     backgroundColor: '#ccc',
     color: '#000',
     textTransform: 'uppercase',
-    width: HEADER_HEIGHT,
-    height: HEADER_HEIGHT,
+    width: HEADER_HEIGHT - 1,
+    height: HEADER_HEIGHT - 1,
     paddingTop: 28,
     fontSize: 20
   })
