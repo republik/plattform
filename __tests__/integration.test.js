@@ -210,7 +210,7 @@ test('commit (create repo)', async (t) => {
   t.ok(commit.date)
   initialCommitId = commit.id
 
-  await sleep(1500)
+  await sleep(1000)
 
   const articleMd = await githubRest.repos.getContent({
     owner: GITHUB_LOGIN,
