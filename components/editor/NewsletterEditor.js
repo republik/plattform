@@ -51,30 +51,32 @@ const newsletterStyles = {
 
 }
 
+const autoMeta = documentNode => {
+  const data = documentNode.data
+  const autoMeta = !data || !data.size || data.get('auto')
+  if (!autoMeta) {
+    return null
+  }
+  const cover = documentNode.nodes
+    .find(n => n.type === COVER && n.kind === 'block')
+  if (!cover) {
+    return null
+  }
+
+  const newData = data
+    .set('auto', true)
+    .set('title', cover.nodes.first().text)
+    .set('description', cover.nodes.get(1).text)
+    .set('image', cover.data.get('src'))
+
+  return data.equals(newData)
+    ? null
+    : newData
+}
+
 const metaRule = {
   match: node => node.kind === 'document',
-  validate: node => {
-    const data = node.data
-    const autoMeta = !data || !data.size || data.get('auto')
-    if (!autoMeta) {
-      return null
-    }
-    const cover = node.nodes
-      .find(n => n.type === COVER && n.kind === 'block')
-    if (!cover) {
-      return null
-    }
-
-    const newData = data
-      .set('auto', true)
-      .set('title', cover.nodes.first().text)
-      .set('description', cover.nodes.get(1).text)
-      .set('image', cover.data.get('src'))
-
-    return data.equals(newData)
-      ? null
-      : newData
-  },
+  validate: autoMeta,
   normalize: (transform, object, newData) => {
     return transform.setNodeByKey(object.key, {
       data: newData
@@ -104,11 +106,11 @@ const documentRule = {
       )
     }
 
-    const autoMeta = metaRule.validate(
+    const newData = autoMeta(
       rawNodeToNode(documentNode)
     )
-    if (autoMeta) {
-      documentNode.data = autoMeta.toJS()
+    if (newData) {
+      documentNode.data = newData.toJS()
     }
 
     return {
@@ -164,6 +166,19 @@ const documentPlugin = {
       metaRule
     ]
   }
+  // onBeforeChange: (state, editor) => {
+  //   const newData = autoMeta(state.document)
+
+  //   if (!newData) {
+  //     return state
+  //   }
+
+  //   return state.transform()
+  //     .setNodeByKey(state.document.key, {
+  //       data: newData
+  //     })
+  //     .apply()
+  // }
 }
 
 const plugins = [
