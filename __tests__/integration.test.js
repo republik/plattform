@@ -3,10 +3,7 @@
 
 const test = require('tape-async')
 
-// fake env vars
-if (process.env.NODE_ENV === 'testing-local') {
-  require('dotenv').config({ path: '.test.env' })
-}
+require('dotenv').config({ path: '.test.env' })
 
 const {
   PORT,
@@ -42,7 +39,8 @@ const {
   getHeads
 } = require('../lib/github')
 
-const getNewRepoId = () => `test-${supervillains.random()}`.replace(/\s/g, '-')
+const getNewRepoId = () =>
+  `test-${supervillains.random()}`.replace(/\s/g, '-')
 
 // shared
 let pgdb
@@ -231,6 +229,7 @@ test('repos (signed in)', async (t) => {
     `
   })
   t.ok(result.data)
+  t.false(result.errors)
   t.ok(result.data.repos)
   t.end()
 })
