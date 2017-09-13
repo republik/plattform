@@ -4,7 +4,6 @@ import { Editor as SlateEditor } from 'slate'
 import { css } from 'glamor'
 
 import MarkdownSerializer from '../../lib/serializer'
-import { getSerializationRules } from './utils/getRules'
 import addValidation, { findOrCreate, rawNodeToNode } from './utils/serializationValidation'
 import styles from './styles'
 import Sidebar from './Sidebar'
@@ -39,13 +38,16 @@ import cover, {
   CoverForm, serializer as coverSerializer, COVER
 } from './modules/cover'
 
+import center, {
+  serializer as centerSerializer, TYPE as CENTER
+} from './modules/center'
+
 const newsletterStyles = {
   fontFamily: 'serif',
   fontSize: 18,
   color: '#444',
   WebkitFontSmoothing: 'antialiased',
   maxWidth: 'calc(100vw - 190px)'
-
 }
 
 const autoMeta = documentNode => {
@@ -90,17 +92,27 @@ const documentRule = {
     }, {
       children: []
     })
+
+    const center = findOrCreate(node.children, {
+      type: 'zone', identifier: CENTER
+    }, {
+      children: []
+    })
+
+    const centerIndex = node.children.indexOf(center)
+    node.children.forEach((child, index) => {
+      if (child !== cover && child !== center) {
+        center.children[index > centerIndex ? 'push' : 'unshift'](child)
+      }
+    })
+
     const documentNode = {
       data: node.meta,
       kind: 'document',
       nodes: [
-        coverSerializer.fromMdast(cover)
-      ].concat(
-        visitChildren({
-          children: node.children
-            .filter(n => n !== cover)
-        })
-      )
+        coverSerializer.fromMdast(cover),
+        centerSerializer.fromMdast(center)
+      ]
     }
 
     const newData = autoMeta(
@@ -120,19 +132,29 @@ const documentRule = {
     if (!firstNode || firstNode.type !== COVER || firstNode.kind !== 'block') {
       context.dirty = true
     }
+    const secondNode = object.nodes[1]
+    if (!secondNode || secondNode.type !== CENTER || secondNode.kind !== 'block') {
+      context.dirty = true
+    }
+    if (object.nodes.length !== 2) {
+      context.dirty = true
+    }
 
     const cover = findOrCreate(object.nodes, { kind: 'block', type: COVER })
+    const center = findOrCreate(object.nodes, { kind: 'block', type: CENTER })
+    const centerIndex = object.nodes.indexOf(center)
+    object.nodes.forEach((node, index) => {
+      if (node !== cover && node !== center) {
+        center.nodes[index > centerIndex ? 'push' : 'unshift'](node)
+      }
+    })
     return {
       type: 'root',
       meta: object.data,
       children: [
-        coverSerializer.toMdast(cover, context)
-      ].concat(
-        visitChildren({
-          nodes: object.nodes
-            .filter(n => n !== cover)
-        })
-      )
+        coverSerializer.toMdast(cover),
+        centerSerializer.toMdast(center)
+      ]
     }
   }
 }
@@ -140,11 +162,7 @@ const documentRule = {
 export const serializer = new MarkdownSerializer({
   rules: [
     documentRule
-  ].concat(getSerializationRules([
-    ...headlines.plugins,
-    ...image.plugins,
-    ...paragraph.plugins
-  ]))
+  ]
 })
 
 export const newDocument = ({title}) => {
@@ -185,7 +203,8 @@ const plugins = [
   ...paragraph.plugins,
   ...link.plugins,
   ...image.plugins,
-  ...cover.plugins
+  ...cover.plugins,
+  ...center.plugins
 ]
 
 const textFormatButtons = [
