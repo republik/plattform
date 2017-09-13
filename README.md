@@ -48,6 +48,8 @@ Install dependencies.
 npm install
 ```
 
+Create a seeds file by copying `seeds/seeds.example.json` to `seeds/seeds.json` and adapting it to your needs. The seeds are read by the npm scripts `db:seed` or `db:reset`.
+
 Create and init the DB.
 ```
 createdb -U postgres haku
