@@ -137,7 +137,7 @@ export const ImageButton = createActionButton({
       data-disabled={disabled}
       data-visible={visible}
       >
-      Image
+      Bild
     </span>
 
 )

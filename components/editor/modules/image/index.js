@@ -2,16 +2,27 @@ import React from 'react'
 import { colors } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { matchBlock } from '../../utils'
-import styles from '../../styles'
 import { ImageForm, ImageButton } from './ui'
 import { IMAGE } from './constants'
 
 import MarkdownSerializer from '../../../../lib/serializer'
 
+const styles = {
+  image: css({
+    position: 'relative',
+    width: '100%',
+    outline: `4px solid transparent`,
+    transition: 'outline-color 0.2s',
+    '&[data-active="true"]': {
+      outlineColor: colors.primary
+    }
+  })
+}
+
 export const ImagePlaceholder = ({ active }) =>
   <div
     style={{ position: 'relative', width: '100%' }}
-    {...css(styles.image)}
+    {...styles.image}
     data-active={active}
   >
     <div
@@ -29,7 +40,7 @@ export const Image = ({ src, alt, active }) =>
     src={src}
     alt={alt}
     data-active={active}
-    {...css(styles.image)}
+    {...styles.image}
   />
 
 export const image = {

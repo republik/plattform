@@ -77,12 +77,5 @@ export default {
     overflow: 'scroll',
     width: '100%',
     height: `calc(100vh - ${HEADER_HEIGHT}px)`
-  },
-  image: {
-    outline: `4px solid transparent`,
-    transition: 'outline-color 0.2s',
-    '&[data-active="true"]': {
-      outlineColor: colors.primary
-    }
   }
 }

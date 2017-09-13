@@ -12,17 +12,14 @@ import MetaData from './modules/meta/ui'
 
 import marks, {
   BoldButton,
-  UnderlineButton,
-  StrikethroughButton
+  ItalicButton
 } from './modules/marks'
 
 import headlines, {
-  TitleButton
+  MediumHeadlineButton, SmallHeadlineButton
 } from './modules/headlines'
 
-import lead, {
-  LeadButton
-} from './modules/lead'
+import lead from './modules/lead'
 
 import paragraph, {
   ParagraphButton
@@ -194,14 +191,13 @@ const plugins = [
 
 const textFormatButtons = [
   BoldButton,
-  UnderlineButton,
-  StrikethroughButton,
+  ItalicButton,
   LinkButton
 ]
 
 const blockFormatButtons = [
-  TitleButton,
-  LeadButton,
+  MediumHeadlineButton,
+  SmallHeadlineButton,
   ParagraphButton
 ]
 
