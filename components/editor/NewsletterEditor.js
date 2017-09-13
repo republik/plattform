@@ -117,7 +117,7 @@ const documentRule = {
   },
   toMdast: (object, index, parent, visitChildren, context) => {
     const firstNode = object.nodes[0]
-    if (!firstNode || firstNode.type !== COVER || firstNode.kind === 'block') {
+    if (!firstNode || firstNode.type !== COVER || firstNode.kind !== 'block') {
       context.dirty = true
     }
 
@@ -141,7 +141,6 @@ export const serializer = new MarkdownSerializer({
   rules: [
     documentRule
   ].concat(getSerializationRules([
-    ...cover.plugins,
     ...headlines.plugins,
     ...image.plugins,
     ...paragraph.plugins

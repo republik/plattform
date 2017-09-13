@@ -1,16 +1,21 @@
 import { Raw, State, Document, Block } from 'slate'
 
 const nodeToRawNode = (node) => {
-  const state = State.create({
-    document: node.kind === 'document'
+  const isDocument = node.kind === 'document'
+  const rawNode = Raw.serialize(State.create({
+    document: isDocument
       ? node
       : Document.create({
         nodes: Block.createList([
           node
         ])
       })
-  })
-  return Raw.serialize(state).document.nodes[0]
+  })).document
+
+  if (isDocument) {
+    return rawNode
+  }
+  return rawNode.nodes[0]
 }
 
 export const rawNodeToNode = (rawNode) => {
@@ -42,9 +47,33 @@ const addValidation = (rule, serializer) => {
       : null
   }
   rule.normalize = (transform, object, mdast) => {
+    const rawNode = serializer.fromMdast(mdast)
     const node = rawNodeToNode(
-      serializer.fromMdast(mdast)
+      rawNode.kind === 'state'
+        ? rawNode.document
+        : rawNode
     )
+
+    if (node.kind === 'document') {
+      const parent = transform.state.document
+
+      let t = transform.setNodeByKey(object.key, {
+        data: node.data
+      })
+      parent.nodes.forEach(n => {
+        t = t.removeNodeByKey(
+          n.key
+        )
+      })
+      node.nodes.forEach((n, i) => {
+        t = t.insertNodeByKey(
+          parent.key,
+          i,
+          n
+        )
+      })
+      return t
+    }
 
     const parent = transform.state.document.getParent(object.key)
     const index = parent.nodes.findIndex(n => n === object)
