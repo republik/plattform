@@ -13,7 +13,7 @@ services:
   - redis-server
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
-  - npm run db:reset
+  - npm run db:reset:noseeds
 script:
   - npm run test:travis
 env:

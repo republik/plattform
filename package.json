@@ -62,7 +62,8 @@
     "migrate:up": "db-migrate up",
     "migrate:down": "db-migrate down",
     "db:seed": "cat seeds/seeds.json | node seeds/seed.js --truncate",
-    "db:reset": "db-migrate reset && db-migrate up && npm run db:seed ",
+    "db:reset:noseeds": "db-migrate reset && db-migrate up",
+    "db:reset": "npm run db:reset:noseeds && npm run db:seed",
     "translations": "gsheets --key=1_1g3sW8u1aD9xGRfS479s0Pjwx0LxYRUEhETGkKlwLE --title=live --pretty --out lib/translations.json",
     "test:travis": "istanbul cover tape \"?(__tests__|lib|graphql)/**/*.test.js\" --report lcovonly && cat ./coverage/lcov.info | coveralls",
     "test": "export DATABASE_URL=postgres://localhost:5432/haku-test && echo $DATABASE_URL && dropdb --if-exists haku-test && createdb haku-test && db-migrate reset && db-migrate up && NODE_ENV=testing istanbul cover tape \"?(__tests__|lib|graphql)/**/*.test.js\""
