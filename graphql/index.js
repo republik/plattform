@@ -18,7 +18,8 @@ const executableSchema = makeExecutableSchema({
 
 const {
   PUBLIC_WS_URL_BASE,
-  PUBLIC_WS_URL_PATH
+  PUBLIC_WS_URL_PATH,
+  NODE_ENV
 } = process.env
 
 module.exports = (server, pgdb, httpServer) => {
@@ -28,7 +29,13 @@ module.exports = (server, pgdb, httpServer) => {
       execute,
       subscribe,
       onConnect: async (connectionParams, websocket) => {
-        const cookies = cookie.parse(websocket.upgradeReq.headers.cookie)
+        const cookiesRaw = (NODE_ENV === 'testing')
+          ? connectionParams.cookies
+          : websocket.upgradeReq.headers.cookie
+        if (!cookiesRaw) {
+          return { }
+        }
+        const cookies = cookie.parse(cookiesRaw)
         const sid = cookieParser.signedCookie(
           cookies['connect.sid'],
           process.env.SESSION_SECRET
@@ -38,7 +45,7 @@ module.exports = (server, pgdb, httpServer) => {
           const user = await pgdb.public.users.findOne({id: session.sess.passport.user})
           return { user }
         }
-        return {}
+        return { }
       }
     },
     {

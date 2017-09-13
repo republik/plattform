@@ -11,7 +11,9 @@ if (process.env.NODE_ENV === 'testing-local') {
 const {
   PORT,
   GITHUB_LOGIN,
-  PUBLIC_ASSETS_URL
+  PUBLIC_ASSETS_URL,
+  PUBLIC_WS_URL_BASE,
+  PUBLIC_WS_URL_PATH
 } = process.env
 
 const Server = require('../server')
@@ -28,7 +30,11 @@ const diff = require('deep-diff').diff
 const fetch = require('isomorphic-unfetch')
 
 const GRAPHQL_URI = `http://localhost:${PORT}/graphql`
-const createApolloFetch = require('./createApolloFetchWithCookie')
+const WS_URL = PUBLIC_WS_URL_BASE + PUBLIC_WS_URL_PATH
+const {
+  createApolloFetch,
+  createSubscriptionClient
+} = require('./clientsWithCookie')
 const apolloFetch = createApolloFetch(GRAPHQL_URI)
 const MDAST = require('../lib/mdast/mdast')
 const {
@@ -82,6 +88,42 @@ test('unauthorized repos query', async (t) => {
   t.end()
 })
 
+test('unauthorized subscription', (t) => {
+  const client = createSubscriptionClient(WS_URL, {
+    connectionCallback: (error) => {
+      t.false(error)
+    }
+  })
+  client.subscribe(
+    {
+      query: `
+        subscription uncommittedChanges(
+          $repoId: ID!
+        ){
+          uncommittedChanges(repoId: $repoId) {
+            action
+            user {
+              id
+            }
+          }
+        }
+      `,
+      variables: {
+        repoId: 'irrelevant'
+      }
+    },
+    (errors, result) => {
+      t.ok(errors)
+      t.equals(errors.length, 1)
+      const error = errors[0]
+      t.equals(error.message, tr('api/signIn'))
+      t.equals(result, null)
+      client.client.close()
+      t.end()
+    }
+  )
+})
+
 test('signIn', async (t) => {
   const result = await apolloFetch({
     query: `
@@ -112,6 +154,42 @@ test('repos (signed in, without role)', async (t) => {
   t.equals(result.errors.length, 1)
   t.equals(result.errors[0].message, tr('api/unauthorized', { role: 'editor' }))
   t.end()
+})
+
+test('subscription (signed in, without role)', (t) => {
+  const client = createSubscriptionClient(WS_URL, {
+    connectionCallback: (error) => {
+      t.false(error)
+    }
+  })
+  client.subscribe(
+    {
+      query: `
+        subscription uncommittedChanges(
+          $repoId: ID!
+        ){
+          uncommittedChanges(repoId: $repoId) {
+            action
+            user {
+              id
+            }
+          }
+        }
+      `,
+      variables: {
+        repoId: 'irrelevant'
+      }
+    },
+    (errors, result) => {
+      t.ok(errors)
+      t.equals(errors.length, 1)
+      const error = errors[0]
+      t.equals(error.message, tr('api/unauthorized', { role: 'editor' }))
+      t.equals(result, null)
+      client.client.close()
+      t.end()
+    }
+  )
 })
 
 test('add test user to role «editor»', async (t) => {
@@ -229,6 +307,68 @@ test('commit (create repo)', async (t) => {
   // console.log(diff(commit.document.content, loremMdastStringifyParse))
 
   t.end()
+})
+
+test('uncommitedChanges (with subscription)', (t) => {
+  const client = createSubscriptionClient(WS_URL)
+  setTimeout(() => {
+    client.subscribe(
+      {
+        query: `
+          subscription uncommittedChanges(
+            $repoId: ID!
+          ){
+            uncommittedChanges(repoId: $repoId) {
+              action
+              user {
+                email
+              }
+            }
+          }
+        `,
+        variables: {
+          repoId: testRepoId
+        }
+      },
+      (errors, result) => {
+        t.equals(errors, null)
+        t.ok(result)
+        const {
+          uncommittedChanges: {
+            action,
+            user: {
+              email
+            }
+          }
+        } = result
+        client.client.close()
+        t.equals(action, 'create')
+        t.equals(email, testEmail)
+        client.client.close()
+        t.end()
+      }
+    )
+  }, 50)
+
+  setTimeout(() => {
+    apolloFetch({
+      query: `
+        mutation uncommitedChanges(
+          $repoId: ID!
+          $action: Action!
+        ){
+          uncommittedChanges(
+            repoId: $repoId
+            action: $action
+          )
+        }
+      `,
+      variables: {
+        repoId: testRepoId,
+        action: 'create'
+      }
+    })
+  }, 100)
 })
 
 test('repo commits length and content', async (t) => {
