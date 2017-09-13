@@ -1,0 +1,12 @@
+{
+  "users":
+    [
+      {
+        "email": "alice.smith@project-r.construction",
+        "verified": true,
+        "firstName": "Alice",
+        "lastName": "Smith",
+        "roles": [ "editor" ]
+      }
+    ]
+}

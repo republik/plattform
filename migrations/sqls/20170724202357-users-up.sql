@@ -7,8 +7,7 @@ create table "users" (
   "verified"            boolean not null default false,
   "firstName"           text,
   "lastName"            text,
-  "githubAccessToken"   text,
-  "githubScope"         text,
+  "roles"               jsonb,
   "createdAt"           timestamptz default now(),
   "updatedAt"           timestamptz default now()
 );

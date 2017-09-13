@@ -1,4 +1,7 @@
 const typeDefinitions = `
+scalar DateTime
+scalar JSON
+
 schema {
   query: RootQuerys
   mutation: RootMutations
@@ -7,7 +10,10 @@ schema {
 
 type RootQuerys {
   me: User
-  repository(owner: String!, name: String): Repository
+  repos(first: Int!): [Repo]!
+  repo(id: ID!): Repo!
+  # published documents
+  documents: [Document]!
 }
 
 type RootMutations {
@@ -15,54 +21,104 @@ type RootMutations {
   signOut: Boolean!
 
   commit(
-    login: String!,
-    repository: String!,
-    branch: String!,
-    path: String!,
-    commitOid: String!,
-    message: String!,
-    content: String!
-  ): Commit!
-
-  # creates a merge commits with the provided parents, message and content.
-  # The content is submitted as a blob and a new tree is created
-  # setting the blob at path. The tree is based on the tree of the first
-  # parent's commit.
-  # If one of the parents is the HEAD of the provided branch, the branch is
-  # fast-forwarded to the new merge-commit. Otherwise a new branch is created.
-  merge(
-    login: String!,
-    repository: String!,
-    branch: String!,
-    path: String!,
-    content: String!,
-    parents: [String!]!,
+    repoId: ID!
+    # specifies the parent commit. May only be
+    # null if repoId doesn't exist yet
+    parentId: ID
     message: String!
+    document: DocumentInput!
+    # files: [FileInput!]!     # FileInput
   ): Commit!
 
-  # Inform about my uncommited changes on the path.
-  # Use path without branch prefix.
+  placeMilestone(
+    repoId: ID!
+    commitId: ID!
+    name: String!
+    message: String!
+  ): Milestone!
+
+  removeMilestone(
+    repoId: ID!
+    name: String!
+  ): Boolean!
+
+  # Inform about my uncommited changes in the repo
   uncommittedChanges(
-    login: String!,
-    repository: String!,
-    path: String!,
-    action: Action
+    repoId: ID!
+    action: Action!
   ): Boolean!
 }
 
 type RootSubscription {
   # Provides updates to the list of users
-  # with uncommited changes on the path.
-  # Use path without branch prefix.
+  # with uncommited changes in the repo
   uncommittedChanges(
-    login: String!,
-    repository: String!,
-    path: String!
+    repoId: ID!
   ): UncommittedChangeUpdate!
 }
 
-type SignInResponse {
-  phrase: String!
+type Repo {
+  id: ID!
+  commits(page: Int): [Commit!]!
+  milestones: [Milestone!]!
+  uncommittedChanges: [User!]!
+}
+
+type Milestone {
+  name: String!
+  message: String
+  commit: Commit!
+  author: Author!
+  date: DateTime!
+}
+
+type Commit {
+  id: ID!
+  parentIds: [ID!]!
+  message: String
+  author: Author!
+  date: DateTime!
+  document: Document!
+  repo: Repo!
+# files: [File]!
+}
+
+interface FileInterface {
+  content: JSON!
+  meta: Meta!
+}
+
+type Document implements FileInterface {
+  # AST of /article.md
+  content: JSON!
+  meta: Meta!
+  commit: Commit!
+}
+
+type Meta {
+  title: String
+  description: String
+  image: String
+#  readingMinutes: Int!
+#  fbTitle: String
+}
+
+#type File implements FileInterface {
+#  encoding: String!
+#  content: JSON!
+#  meta: Meta!
+#}
+
+type Author {
+  name: String!
+  email: String!
+  user: User
+}
+
+type UncommittedChangeUpdate {
+  repoId: ID!
+  user: User!
+  action: Action!
 }
 
 type User {
@@ -71,19 +127,11 @@ type User {
   firstName: String
   lastName: String
   email: String!
-  githubScope: String
+  roles: [String]!
 }
 
-type Commit {
-  sha: String!
-  ref: String!
-}
-
-
-type Repository {
-  # List users with uncommited changes on the path.
-  # Use path without branch prefix.
-  uncommittedChanges(path: String!): [User!]!
+type SignInResponse {
+  phrase: String!
 }
 
 enum Action {
@@ -91,12 +139,10 @@ enum Action {
   delete
 }
 
-type UncommittedChangeUpdate {
-  login: String!
-  repository: String!
-  path: String!
-  user: User!
-  action: Action!
+# implements FileInterface
+input DocumentInput {
+  # AST of /article.md
+  content: JSON!
 }
 `
 module.exports = [typeDefinitions]

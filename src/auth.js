@@ -1,6 +1,7 @@
 const session = require('express-session')
 const PgSession = require('connect-pg-simple')(session)
 const passport = require('passport')
+const createUser = require('../lib/factories/createUser')
 
 exports.configure = ({
   server = null, // Express Server
@@ -90,10 +91,10 @@ exports.configure = ({
       })
       await Sessions.updateOne({sid: session.sid}, {sess})
 
-      return res.status(200).end('you are signed in!')
+      return res.status(200).end('you are signed in now!')
     } catch (e) {
       console.error('auth: exception', e)
-      return res.status(200).end('error')
+      return res.status(500).end('error')
     }
   })
 
@@ -103,7 +104,9 @@ exports.configure = ({
   })
 
   passport.deserializeUser(async function (id, next) {
-    const user = await Users.findOne({id})
+    const user = createUser(
+      await Users.findOne({id})
+    )
     if (!user) {
       return next('user not found!')
     }
