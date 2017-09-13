@@ -18,11 +18,7 @@ module.exports = async (
     message,
     object: commitId,
     type: 'commit',
-    tagger: {
-      name: user.email, // TODO
-      email: user.email,
-      date: new Date()
-    }
+    tagger: user.gitAuthor()
   })
     .then(result => result.data)
 
@@ -34,14 +30,14 @@ module.exports = async (
   })
 
   return {
+    ...tag,
     name: tag.tag,
-    message: tag.message,
+    date: tag.tagger.date,
+    author: {
+      ...tag.tagger
+    },
     commit: {
       id: tag.object.sha
-    },
-    author: {
-      name: tag.tagger.name,
-      email: tag.tagger.email
     },
     repo: {
       id: repoId

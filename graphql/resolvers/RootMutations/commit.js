@@ -154,9 +154,8 @@ module.exports = async (_, args, { pgdb, req, user, t }) => {
     repo: repoName,
     message,
     tree: tree.sha,
-    parents: parentId ? [parentId] : []
-    // author
-    // commiter
+    parents: parentId ? [parentId] : [],
+    author: user.gitAuthor()
   })
     .then(result => result.data)
 

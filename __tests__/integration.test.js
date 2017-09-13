@@ -44,7 +44,12 @@ const getNewRepoId = () =>
 
 // shared
 let pgdb
-const testEmail = 'tester@test.project-r.construction'
+const testUser = {
+  firstName: 'Alice',
+  lastName: 'Smith',
+  name: 'Alice Smith',
+  email: 'alice.smith@test.project-r.construction'
+}
 let testRepoId
 let initialCommitId
 
@@ -64,6 +69,13 @@ test('setup', async (t) => {
     `
   })
   t.ok(result.data.__schema)
+  const { firstName, lastName, email } = testUser
+  const user = await pgdb.public.users.insert({
+    firstName,
+    lastName,
+    email
+  })
+  t.ok(user)
   t.end()
 })
 
@@ -126,7 +138,7 @@ test('signIn', async (t) => {
   const result = await apolloFetch({
     query: `
       mutation {
-        signIn(email: "${testEmail}") {
+        signIn(email: "${testUser.email}") {
           phrase
         }
       }
@@ -134,7 +146,7 @@ test('signIn', async (t) => {
   })
   await sleep(4000)
   t.ok(result.data.signIn.phrase)
-  t.ok(result.data.signIn.phrase.length)
+  t.ok(result.data.signIn.phrase.length > 0)
   t.end()
 })
 
@@ -191,7 +203,7 @@ test('subscription (signed in, without role)', (t) => {
 })
 
 test('add test user to role «editor»', async (t) => {
-  const user = await pgdb.public.users.findOne({ email: testEmail })
+  const user = await pgdb.public.users.findOne({ email: testUser.email })
   t.ok(user)
   const roledUser = await Roles.addUserToRole(user.id, 'editor', pgdb)
   t.ok(roledUser)
@@ -204,6 +216,9 @@ test('me', async (t) => {
     query: `
       {
         me {
+          firstName
+          lastName
+          name
           email
           roles
         }
@@ -212,8 +227,11 @@ test('me', async (t) => {
   })
   t.ok(result.data)
   t.ok(result.data.me)
-  const { data: { me: { email, roles } } } = result
-  t.equals(email, testEmail)
+  const { data: { me: { firstName, lastName, name, email, roles } } } = result
+  t.equals(firstName, testUser.firstName)
+  t.equals(lastName, testUser.lastName)
+  t.equals(name, testUser.name)
+  t.equals(email, testUser.email)
   t.deepLooseEqual(roles, ['editor'])
   t.end()
 })
@@ -262,6 +280,9 @@ test('commit (create repo)', async (t) => {
           author {
             name
             email
+            user {
+              email
+            }
           }
           date
           document {
@@ -282,8 +303,10 @@ test('commit (create repo)', async (t) => {
   t.deepLooseEqual(commit.parentIds, [])
   t.equals(commit.message, variables.message)
   t.ok(commit.date)
-  t.ok(commit.author.name)
-  t.ok(commit.author.email)
+  const { author } = commit
+  t.equals(author.name, testUser.name)
+  t.equals(author.email, testUser.email)
+  t.equals(author.user.email, testUser.email)
   t.ok(commit.date)
   initialCommitId = commit.id
 
@@ -342,7 +365,7 @@ test('uncommitedChanges (with subscription)', (t) => {
         } = result
         client.client.close()
         t.equals(action, 'create')
-        t.equals(email, testEmail)
+        t.equals(email, testUser.email)
         client.client.close()
         t.end()
       }
@@ -462,9 +485,10 @@ test('commit with image (on same branch)', async (t) => {
   const { commit } = result.data
   t.deepLooseEqual(commit.parentIds, [variables.parentId])
   t.equals(commit.message, variables.message)
-  t.ok(commit.date)
-  t.ok(commit.author.name)
-  t.ok(commit.author.email)
+  const { author } = commit
+  t.equals(author.name, testUser.name)
+  t.equals(author.email, testUser.email)
+  t.equals(author.user.email, testUser.email)
   t.ok(commit.date)
 
   await sleep(1000)
@@ -602,22 +626,7 @@ test('check recommit content', async (t) => {
           }
           parentId: $parentId
         ) {
-          parentIds
-          message
-          author {
-            name
-            email
-            user {
-              email
-            }
-          }
-          date
-          document {
-            content
-          }
-          repo {
-            id
-          }
+          id
         }
       }
     `,
@@ -738,16 +747,36 @@ test('placeMilestone', async (t) => {
           commit {
             id
           }
+          date
+          author {
+            name
+            email
+            user {
+              email
+            }
+          }
         }
       }
     `,
     variables
   })
   t.ok(result0.data)
-  const { placeMilestone: { name, message, commit } } = result0.data
+  const {
+    placeMilestone: {
+      name,
+      message,
+      commit,
+      date,
+      author
+    }
+  } = result0.data
   t.equals(name, normalizedName)
   t.equals(message, variables.message)
   t.equals(commit.id, variables.commitId)
+  t.ok(date)
+  t.equals(author.name, testUser.name)
+  t.equals(author.email, testUser.email)
+  t.equals(author.user.email, testUser.email)
 
   const result1 = await apolloFetch({
     query: `
@@ -760,6 +789,14 @@ test('placeMilestone', async (t) => {
             message
             commit {
               id
+            }
+            date
+            author {
+              name
+              email
+              user {
+                email
+              }
             }
           }
         }
@@ -775,6 +812,11 @@ test('placeMilestone', async (t) => {
   t.equals(milestone.name, normalizedName)
   t.equals(milestone.message, variables.message)
   t.equals(milestone.commit.id, variables.commitId)
+  t.ok(milestone.date)
+  const { author: author0 } = milestone
+  t.equals(author0.name, testUser.name)
+  t.equals(author0.email, testUser.email)
+  t.equals(author0.user.email, testUser.email)
   t.end()
 })
 

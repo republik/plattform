@@ -69,6 +69,7 @@ type Milestone {
   message: String
   commit: Commit!
   author: Author!
+  date: DateTime!
 }
 
 type Commit {
