@@ -52,7 +52,7 @@
     "unist-util-visit": "^1.1.3"
   },
   "scripts": {
-    "dev": "NODE_ENV=development nodemon -w graphql -w src -w lib -w server.js -w index.js index.js",
+    "dev": "NODE_ENV=development nodemon -w graphql -w src -w lib -w .env -w server.js -w index.js index.js",
     "start": "node index.js",
     "precommit": "lint-staged",
     "standardize": "standard --fix",
