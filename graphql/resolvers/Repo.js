@@ -8,7 +8,7 @@ const {
 } = require('../../lib/github')
 
 module.exports = {
-  commits: async (repo, { page }, { user }) => {
+  commits: async (repo, { page }) => {
     const refs = await getHeads(repo.id)
 
     const [login, repoName] = repo.id.split('/')
@@ -34,6 +34,40 @@ module.exports = {
       .then(commits => [].concat.apply([], commits))
       .then(commits => uniqBy(commits, 'id'))
       .then(commits => commits.sort((a, b) => descending(a.date, b.date)))
+  },
+  latestCommit: async (repo) => {
+    const [login, repoName] = repo.id.split('/')
+    return getHeads(repo.id)
+      .then(refs => refs
+        .map(ref => ref.target)
+        .sort((a, b) => descending(a.author.date, b.author.date))
+        .shift()
+      )
+      .then(({ oid: sha }) =>
+        githubRest.repos.getCommit({
+          owner: login,
+          repo: repoName,
+          sha
+        })
+      )
+      .then(response => response ? response.data : response)
+      .then(commit => commitNormalizer({
+        ...commit,
+        repo
+      }))
+  },
+  commit: async (repo, { id: sha }) => {
+    const [login, repoName] = repo.id.split('/')
+    return githubRest.repos.getCommit({
+      owner: login,
+      repo: repoName,
+      sha
+    })
+    .then(response => response ? response.data : response)
+    .then(commit => commitNormalizer({
+      ...commit,
+      repo
+    }))
   },
   uncommittedChanges: async (
     { id: repoId },

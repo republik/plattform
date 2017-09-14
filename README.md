@@ -41,6 +41,9 @@ GITHUB_LOGIN=orbiting
 
 # URL which proxies assets from github
 PUBLIC_ASSETS_URL=http://localhost:3004/assets
+
+# optional: filter for the repos query (repo name must contain term)
+REPOS_NAME_FILTER=article-
 ```
 
 Install dependencies.

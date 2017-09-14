@@ -60,6 +60,8 @@ type RootSubscription {
 type Repo {
   id: ID!
   commits(page: Int): [Commit!]!
+  latestCommit: Commit!
+  commit(id: ID!): Commit!
   milestones: [Milestone!]!
   uncommittedChanges: [User!]!
 }

@@ -1,6 +1,9 @@
 const { githubApolloFetch } = require('../../../lib/github')
 const { ensureUserHasRole } = require('../../../lib/Roles')
-const { GITHUB_LOGIN } = process.env
+const {
+  GITHUB_LOGIN,
+  REPOS_NAME_FILTER
+} = process.env
 
 module.exports = async (_, args, { user }) => {
   ensureUserHasRole(user, 'editor')
@@ -9,34 +12,39 @@ module.exports = async (_, args, { user }) => {
 
   const {
     data: {
-      repositoryOwner: {
-        repositories: {
-          nodes: repositories
-        }
+      search: {
+        nodes: repositories
       }
     }
   } = await githubApolloFetch({
     query: `
       query repositories(
-        $login: String!,
         $first: Int!
+        $query: String!
       ) {
-        repositoryOwner(login: $login) {
-          repositories(first: $first) {
-            nodes {
+        search(
+          first: $first
+          query: $query
+          type: REPOSITORY
+        ) {
+          nodes {
+            ... on Repository {
               name
+              owner {
+                login
+              }
             }
           }
         }
       }
     `,
     variables: {
-      login: GITHUB_LOGIN,
+      query: `org:${GITHUB_LOGIN} ${REPOS_NAME_FILTER ? REPOS_NAME_FILTER + ' in:name' : ''}`,
       first
     }
   })
 
   return repositories.map(repo => ({
-    id: `${GITHUB_LOGIN}/${repo.name}`
+    id: `${repo.owner.login}/${repo.name}`
   }))
 }
