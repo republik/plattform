@@ -35,6 +35,27 @@ module.exports = {
       .then(commits => uniqBy(commits, 'id'))
       .then(commits => commits.sort((a, b) => descending(a.date, b.date)))
   },
+  latestCommit: async (repo, _, { user }) => {
+    const [login, repoName] = repo.id.split('/')
+    return getHeads(repo.id)
+      .then(refs => refs
+        .map(ref => ref.target)
+        .sort((a, b) => descending(a.author.date, b.author.date))
+        .shift()
+      )
+      .then(({ oid: sha }) =>
+        githubRest.repos.getCommit({
+          owner: login,
+          repo: repoName,
+          sha
+        })
+      )
+      .then(response => response ? response.data : response)
+      .then(commit => commitNormalizer({
+        ...commit,
+        repo
+      }))
+  },
   uncommittedChanges: async (
     { id: repoId },
     args,

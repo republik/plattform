@@ -393,7 +393,7 @@ test('uncommitedChanges (with subscription)', (t) => {
   }, 100)
 })
 
-test('repo commits length and content', async (t) => {
+test('repo latestCommit, commits-length and -content', async (t) => {
   const variables = {
     repoId: testRepoId,
     page: 0
@@ -406,9 +406,13 @@ test('repo commits length and content', async (t) => {
       ){
         repo(id: $repoId) {
           commits(page: $page) {
+            id
             document {
               content
             }
+          }
+          latestCommit {
+            id
           }
           milestones {
             name
@@ -424,6 +428,8 @@ test('repo commits length and content', async (t) => {
   const { repo } = result.data
   t.ok(repo.commits)
   t.equals(repo.commits.length, 1)
+  t.equals(repo.commits[0].id, repo.latestCommit.id)
+  t.equals(repo.latestCommit.id, initialCommitId)
   // TODO discuss why this isnt equivalent
   // const commit = repo.commits[0]
   // const loremMdastStringifyParse = MDAST.parse(MDAST.stringify(loremMdast))
@@ -583,7 +589,7 @@ test('check image URLs and asset server', async (t) => {
   t.end()
 })
 
-test('check recommit content', async (t) => {
+test('check recommit content and latestCommit', async (t) => {
   const result0 = await apolloFetch({
     query: `
       query repo(
@@ -652,6 +658,9 @@ test('check recommit content', async (t) => {
               content
             }
           }
+          latestCommit {
+            id
+          }
         }
       }
     `,
@@ -671,6 +680,9 @@ test('check recommit content', async (t) => {
     console.log('The last test failed due to the following diff')
     console.log(util.inspect(diff, {depth: null}))
   }
+  const { data: { repo: { latestCommit } } } = result2
+  t.equals(newCommit.id, latestCommit.id)
+  t.equals(result1.data.commit.id, latestCommit.id)
   t.end()
 })
 
