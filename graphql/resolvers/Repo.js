@@ -56,6 +56,19 @@ module.exports = {
         repo
       }))
   },
+  commit: async (repo, { id: sha }, { user }) => {
+    const [login, repoName] = repo.id.split('/')
+    return githubRest.repos.getCommit({
+      owner: login,
+      repo: repoName,
+      sha
+    })
+    .then(response => response ? response.data : response)
+    .then(commit => commitNormalizer({
+      ...commit,
+      repo
+    }))
+  },
   uncommittedChanges: async (
     { id: repoId },
     args,

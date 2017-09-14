@@ -439,6 +439,56 @@ test('repo latestCommit, commits-length and -content', async (t) => {
   t.end()
 })
 
+test('repo specific commit', async (t) => {
+  const result = await apolloFetch({
+    query: `
+      query repo(
+        $repoId: ID!
+        $commitId: ID!
+      ){
+        repo(id: $repoId) {
+          commit(id: $commitId) {
+            id
+          }
+        }
+      }
+    `,
+    variables: {
+      repoId: testRepoId,
+      commitId: initialCommitId
+    }
+  })
+  t.ok(result.data)
+  t.ok(result.data.repo)
+  t.equals(result.data.repo.commit.id, initialCommitId)
+})
+
+test('repo specific commit', async (t) => {
+  // invalid
+  const result = await apolloFetch({
+    query: `
+      query repo(
+        $repoId: ID!
+        $commitId: ID!
+      ){
+        repo(id: $repoId) {
+          commit(id: $commitId) {
+            id
+          }
+        }
+      }
+    `,
+    variables: {
+      repoId: testRepoId,
+      commitId: '7366d36cb967d7a3ac324c789a8b718e61d01b31'
+    }
+  })
+  t.equals(result.data, null)
+  t.ok(result.errors)
+  t.ok(result.errors[0].message.indexOf('Not Found') > -1)
+  t.end()
+})
+
 test('commit with image (on same branch)', async (t) => {
   const variables = {
     repoId: testRepoId,
