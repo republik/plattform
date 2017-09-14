@@ -8,7 +8,7 @@ const {
 } = require('../../lib/github')
 
 module.exports = {
-  commits: async (repo, { page }, { user }) => {
+  commits: async (repo, { page }) => {
     const refs = await getHeads(repo.id)
 
     const [login, repoName] = repo.id.split('/')
@@ -35,7 +35,7 @@ module.exports = {
       .then(commits => uniqBy(commits, 'id'))
       .then(commits => commits.sort((a, b) => descending(a.date, b.date)))
   },
-  latestCommit: async (repo, _, { user }) => {
+  latestCommit: async (repo) => {
     const [login, repoName] = repo.id.split('/')
     return getHeads(repo.id)
       .then(refs => refs
@@ -56,7 +56,7 @@ module.exports = {
         repo
       }))
   },
-  commit: async (repo, { id: sha }, { user }) => {
+  commit: async (repo, { id: sha }) => {
     const [login, repoName] = repo.id.split('/')
     return githubRest.repos.getCommit({
       owner: login,
