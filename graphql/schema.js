@@ -12,7 +12,7 @@ type RootQuerys {
   me: User
   repos(first: Int!): [Repo]!
   repo(id: ID!): Repo!
-  # published documents
+  # (pre)published documents
   documents: [Document]!
 }
 
@@ -42,6 +42,29 @@ type RootMutations {
     name: String!
   ): Boolean!
 
+  publish(
+    repoId: ID!
+    commitId: ID!
+    prepublication: Boolean!
+
+    # on all channels
+    scheduledAt: DateTime
+    # this API never triggers sending
+    # not immediately, not scheduled
+    updateMailchimp: Boolean!
+  ): Milestone!
+
+  #sendTestEmail(
+  #  repoId: ID!
+  #  addresses: [String!]!
+  #)
+
+  # flag on repo
+  # where to save?
+  unpublish(
+    repoId: ID!
+  ): Boolean!
+
   # Inform about my uncommited changes in the repo
   uncommittedChanges(
     repoId: ID!
@@ -62,8 +85,14 @@ type Repo {
   commits(page: Int): [Commit!]!
   latestCommit: Commit!
   commit(id: ID!): Commit!
-  milestones: [Milestone!]!
   uncommittedChanges: [User!]!
+  milestones: [Milestone!]!
+
+  # nothing or latest prepublication and/or latest publication
+  # nothing if repo is unpublished
+  publications: [Milestone]
+
+  mailchimpUrl: String!
 }
 
 type Milestone {
@@ -72,6 +101,18 @@ type Milestone {
   commit: Commit!
   author: Author!
   date: DateTime!
+  immutable: Boolean!
+}
+
+type Publication {
+  version: Int!
+  message: String
+  commit: Commit!
+  author: Author!
+  createdAt: DateTime!
+  scheduledAt: DateTime!
+  sendMail: Boolean!
+  published: Boolean!
 }
 
 type Commit {
