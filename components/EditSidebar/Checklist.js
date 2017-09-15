@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { Checkbox, colors, linkRule } from '@project-r/styleguide'
-import { cleanName } from '../../lib/utils/clean'
+import { getName } from '../../lib/utils/name'
 import { swissTime } from '../../lib/utils/format'
 import { gql, graphql } from 'react-apollo'
 import { compose } from 'redux'
@@ -101,7 +101,7 @@ class Checklist extends Component {
                 >
                   {t(`checklist/labels/${name}`, undefined, name)}
                   {!!author && <span {...styles.approvedBy}>
-                    {t('checklist/approvedFor', {name: cleanName(author.name)})}
+                    {t('checklist/approvedFor', {name: getName(author)})}
                   </span>}
                 </Checkbox>
                 {!!commit && <span {...styles.commit}>
@@ -118,8 +118,8 @@ class Checklist extends Component {
                   </Link>
                   <br />
                   {(
-                    author.name !== commit.author.name &&
-                    cleanName(commit.author.name)
+                    getName(author) !== getName(commit.author) &&
+                    getName(commit.author)
                   )}
                   <br />
                   {timeFormat(

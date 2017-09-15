@@ -12,7 +12,7 @@ const Me = ({me, t, email}) => (
     {me ? (
       <div>
         {t('me/signedinAs', {
-          nameOrEmail: me.name.trim() || me.email
+          nameOrEmail: (me.name && me.name.trim()) || me.email
         })}
         <br />
         <SignOut />
