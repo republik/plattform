@@ -6,6 +6,7 @@ const { unprefixUrl } = require('../../../lib/assets')
 const { ensureUserHasRole } = require('../../../lib/Roles')
 const superb = require('superb')
 const superheroes = require('superheroes')
+const sleep = require('await-sleep')
 const {
   githubRest,
   commitNormalizer,
@@ -66,6 +67,9 @@ module.exports = async (_, args, { pgdb, req, user, t }) => {
       private: true,
       auto_init: true
     })
+    // auto_init seems to be async and takes some time
+    // we sporadically saw: Git Repository is empty. on commit
+    await sleep(800)
   }
 
   // reverse asset url prefixing
