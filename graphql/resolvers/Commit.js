@@ -54,6 +54,7 @@ module.exports = {
     return {
       mdast,
       content: mdast,
+      meta: mdast.meta,
       commit
     }
   }
