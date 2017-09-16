@@ -52,7 +52,7 @@ type RootMutations {
     # this API never triggers sending
     # not immediately, not scheduled
     updateMailchimp: Boolean!
-  ): Milestone!
+  ): Publication!
 
   #sendTestEmail(
   #  repoId: ID!
@@ -90,9 +90,17 @@ type Repo {
 
   # nothing or latest prepublication and/or latest publication
   # nothing if repo is unpublished
-  publications: [Milestone]
+  publications: [Publication]!
 
   mailchimpUrl: String!
+}
+
+type Publication {
+  name: String!
+  prepublication: Boolean!
+  scheduledAt: DateTime
+  updateMailchimp: Boolean!
+  date: DateTime!
 }
 
 type Milestone {
@@ -101,19 +109,8 @@ type Milestone {
   commit: Commit!
   author: Author!
   date: DateTime!
-  immutable: Boolean!
 }
 
-type Publication {
-  version: Int!
-  message: String
-  commit: Commit!
-  author: Author!
-  createdAt: DateTime!
-  scheduledAt: DateTime!
-  sendMail: Boolean!
-  published: Boolean!
-}
 
 type Commit {
   id: ID!

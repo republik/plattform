@@ -4,7 +4,7 @@ const {
   githubRest,
   commitNormalizer,
   getHeads,
-  getTags
+  getAnnotatedTags
 } = require('../../lib/github')
 
 module.exports = {
@@ -81,5 +81,5 @@ module.exports = {
   },
   milestones: (
     { id: repoId }
-  ) => getTags(repoId)
+  ) => getAnnotatedTags(repoId)
 }
