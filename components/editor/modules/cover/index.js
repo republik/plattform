@@ -3,16 +3,10 @@ import { css } from 'glamor'
 import { matchBlock } from '../../utils'
 import addValidation, { findOrCreate } from '../../utils/serializationValidation'
 import { gray2x1 } from '../../utils/placeholder'
-import { PARAGRAPH } from '../paragraph'
 import { serializer as leadSerializer, LEAD } from '../lead'
 import { titleSerializer, TITLE } from '../headlines'
 import { COVER } from './constants'
 import { CoverForm } from './ui'
-import {
-  rule,
-  childrenAfter,
-  unwrap
-} from '../../utils/rules'
 import { mq } from '../../styles'
 import MarkdownSerializer from '../../../../lib/serializer'
 
@@ -70,7 +64,7 @@ const Cover = ({ node, children }) => {
   const alt = node.data.get('alt')
   return <div
     {...css(styles.cover)}
-    {...css({ [mq.large]: { backgroundImage: src && `url('${src}')` } })}
+    {...css({ [mq.large]: { backgroundImage: `url('${src}')` } })}
     >
     <img
       src={src}
@@ -134,6 +128,9 @@ export const cover = {
         return true
       }
     })
+    if (object.nodes.length > 2) {
+      context.dirty = true
+    }
 
     return {
       type: 'zone',
@@ -148,13 +145,13 @@ export const cover = {
           findOrCreate(object.nodes, {
             kind: 'block',
             type: TITLE
-          }), context
+          }, {nodes: []}), context
         ),
         leadSerializer.toMdast(
           findOrCreate(object.nodes, {
             kind: 'block',
             type: LEAD
-          }), context
+          }, {nodes: []}), context
         )
       ]
     }
@@ -177,19 +174,11 @@ export {
 const isTitle = matchBlock(TITLE)
 const isLead = matchBlock(LEAD)
 
-const onCover = rule(isCover)
-
 export default {
   plugins: [
     {
       schema: {
         rules: [
-          // Restrictions
-          onCover(
-            childrenAfter(1),
-            unwrap(() => PARAGRAPH)
-          ),
-
           // Element
           cover
         ]
