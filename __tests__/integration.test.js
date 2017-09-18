@@ -52,6 +52,7 @@ const testUser = {
 }
 let testRepoId
 let initialCommitId
+let lastCommitId
 
 test('setup', async (t) => {
   const server = await Server.run()
@@ -733,6 +734,7 @@ test('check recommit content and latestCommit', async (t) => {
   const { data: { repo: { latestCommit } } } = result2
   t.equals(newCommit.id, latestCommit.id)
   t.equals(result1.data.commit.id, latestCommit.id)
+  lastCommitId = newCommit.id
   t.end()
 })
 
@@ -772,10 +774,6 @@ test('check autobranching commit', async (t) => {
     variables
   })
   t.ok(result.data)
-  t.end()
-})
-
-test('check num refs', async (t) => {
   const heads = await getHeads(testRepoId)
   t.equals(heads.length, 2)
   t.end()
@@ -927,6 +925,188 @@ test('removeMilestone', async (t) => {
   })
   t.ok(result1.data.repo.milestones)
   t.equals(result1.data.repo.milestones.length, 0)
+  t.end()
+})
+
+test('publish', async (t) => {
+  const mutationQuery = `
+    mutation publish(
+      $repoId: ID!
+      $commitId: ID!
+      $prepublication: Boolean!
+      $updateMailchimp: Boolean!
+      $scheduledAt: DateTime
+    ) {
+      publish(
+        repoId: $repoId
+        commitId: $commitId
+        prepublication: $prepublication
+        updateMailchimp: $updateMailchimp
+        scheduledAt: $scheduledAt
+      ) {
+        name
+        prepublication
+        updateMailchimp
+        scheduledAt
+        date
+        author {
+          name
+          email
+          user {
+            email
+          }
+        }
+        commit {
+          id
+          document {
+            content
+          }
+        }
+      }
+    }
+  `
+  const latestPublicationsQuery = `
+      query latestPublications(
+        $repoId: ID!
+      ){
+        repo(id: $repoId) {
+          latestPublications {
+            name
+            prepublication
+            scheduledAt
+            updateMailchimp
+            date
+            author {
+              name
+              email
+              user {
+                email
+              }
+            }
+            commit {
+              id
+              document {
+                content
+              }
+            }
+          }
+        }
+      }
+  `
+
+  const testPublication = (publication, vars, _name) => {
+    const {
+      name,
+      prepublication,
+      updateMailchimp,
+      scheduledAt,
+      date,
+      author,
+      commit
+    } = publication
+    t.equals(name, _name)
+    t.equals(prepublication, vars.prepublication)
+    t.equals(updateMailchimp, vars.updateMailchimp)
+    if (vars.scheduledAt) {
+      t.equals(scheduledAt, vars.scheduledAt)
+    } else {
+      t.equals(scheduledAt, null)
+    }
+    t.ok(date)
+    t.equals(author.name, testUser.name)
+    t.equals(author.email, testUser.email)
+    t.equals(author.user.email, testUser.email)
+    t.equals(commit.id, vars.commitId)
+    t.ok(commit.document.content)
+  }
+
+  const variables0 = {
+    repoId: testRepoId,
+    commitId: initialCommitId,
+    prepublication: false,
+    updateMailchimp: true
+  }
+
+  const mutation0 = await apolloFetch({
+    query: mutationQuery,
+    variables: variables0
+  })
+  t.ok(mutation0.data)
+  testPublication(mutation0.data.publish, variables0, 'v1')
+
+  const query0 = await apolloFetch({
+    query: latestPublicationsQuery,
+    variables: {
+      repoId: testRepoId
+    }
+  })
+  t.ok(query0.data.repo.latestPublications)
+  {
+    const latestPublications = query0.data.repo.latestPublications
+    t.equals(latestPublications.length, 1)
+    testPublication(latestPublications[0], variables0, 'v1')
+  }
+
+  /// ////
+
+  const variables1 = {
+    repoId: testRepoId,
+    commitId: initialCommitId,
+    prepublication: true,
+    updateMailchimp: false
+  }
+
+  const mutation1 = await apolloFetch({
+    query: mutationQuery,
+    variables: variables1
+  })
+  t.ok(mutation1.data)
+  testPublication(mutation1.data.publish, variables1, 'v2-prepublication')
+
+  const query1 = await apolloFetch({
+    query: latestPublicationsQuery,
+    variables: {
+      repoId: testRepoId
+    }
+  })
+  t.ok(query1.data.repo.latestPublications)
+  {
+    const latestPublications = query1.data.repo.latestPublications
+    t.equals(latestPublications.length, 2)
+    testPublication(latestPublications[0], variables0, 'v1') // publication should come first
+    testPublication(latestPublications[1], variables1, 'v2-prepublication') // prepublication should be after publication
+  }
+
+  /// ////
+
+  const variables2 = {
+    repoId: testRepoId,
+    commitId: lastCommitId,
+    prepublication: false,
+    updateMailchimp: false
+  }
+
+  const mutation2 = await apolloFetch({
+    query: mutationQuery,
+    variables: variables2
+  })
+  t.ok(mutation2.data)
+  testPublication(mutation2.data.publish, variables2, 'v3')
+
+  const query2 = await apolloFetch({
+    query: latestPublicationsQuery,
+    variables: {
+      repoId: testRepoId
+    }
+  })
+  t.ok(query2.data.repo.latestPublications)
+  {
+    const latestPublications = query2.data.repo.latestPublications
+    t.equals(latestPublications.length, 2)
+    testPublication(latestPublications[0], variables2, 'v3') // publication should come first
+    testPublication(latestPublications[1], variables1, 'v2-prepublication') // prepublication should be after publication
+  }
+
   t.end()
 })
 

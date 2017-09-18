@@ -37,7 +37,10 @@ module.exports = async (
       ...tag.tagger
     },
     commit: {
-      id: tag.object.sha
+      id: tag.object.sha,
+      repo: {
+        id: repoId
+      }
     },
     repo: {
       id: repoId

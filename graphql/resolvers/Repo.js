@@ -1,10 +1,13 @@
 const { descending } = require('d3-array')
 const uniqBy = require('lodash/uniqBy')
+const some = require('lodash/some')
+const yaml = require('js-yaml')
 const {
   githubRest,
   commitNormalizer,
   getHeads,
-  getAnnotatedTags
+  getAnnotatedTags,
+  publicationVersionRegex
 } = require('../../lib/github')
 
 module.exports = {
@@ -81,5 +84,61 @@ module.exports = {
   },
   milestones: (
     { id: repoId }
-  ) => getAnnotatedTags(repoId)
+  ) => getAnnotatedTags(repoId),
+  latestPublications: async (
+    { id: repoId }
+  ) => {
+    const sortedPublications = await getAnnotatedTags(repoId)
+      .then(tags => tags
+        .filter(tag => publicationVersionRegex.test(tag.name))
+        .map(tag => {
+          const matches = publicationVersionRegex.exec(tag.name)
+          return {
+            version: parseInt(matches[1]),
+            isPrepublication: !!matches[2],
+            tag
+          }
+        })
+        .sort((a, b) => descending(a.version, b.version))
+      )
+
+    let latestPublication
+    let latestPrepublication
+    some(sortedPublications, (publication) => {
+      if (!latestPublication && !publication.isPrepublication) {
+        latestPublication = publication.tag
+      }
+      if (!latestPrepublication && publication.isPrepublication) {
+        latestPrepublication = publication.tag
+      }
+      return !!latestPublication && !!latestPrepublication
+    })
+
+    const publicationMetaDecorator = (publication) => {
+      let parsedMessage = {}
+      try {
+        const body = publication.message.match(/---\n([\s\S]*?)\n---/)[1] || ''
+        parsedMessage = yaml.safeLoad(body)
+      } catch (e) { }
+      // default values
+      const {
+        scheduledAt = undefined,
+        updateMailchimp = false
+      } = parsedMessage
+      return {
+        ...publication,
+        meta: {
+          scheduledAt,
+          updateMailchimp
+        }
+      }
+    }
+
+    return [
+      latestPublication,
+      latestPrepublication
+    ]
+      .filter(Boolean)
+      .map(publication => publicationMetaDecorator(publication))
+  }
 }

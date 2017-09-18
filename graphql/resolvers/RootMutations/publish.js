@@ -1,59 +1,84 @@
 const { ensureUserHasRole } = require('../../../lib/Roles')
 const { descending } = require('d3-array')
 const yaml = require('js-yaml')
+const omitBy = require('lodash/omitBy')
+const isNil = require('lodash/isNil')
 const {
   githubRest,
-  getAllReleases,
-  publicationNormalizer
+  getAnnotatedTags,
+  publicationVersionRegex
 } = require('../../../lib/github')
+
+const placeMilestone = require('./placeMilestone')
 
 // TODO updateMailchimp
 module.exports = async (
   _,
   { repoId, commitId, prepublication, scheduledAt, updateMailchimp = false },
-  { user, redis }
+  { user, t }
 ) => {
   ensureUserHasRole(user, 'editor')
 
-  const versionRegex = /^v(\d+).*/
-
-  const latestReleaseNumber = await getAllReleases(repoId)
-    .then(releases => releases
-      .filter(release => versionRegex.test(release.name))
-      .map(release => parseInt(versionRegex.exec(release.name)[1]))
+  const latestPublicationVersion = await getAnnotatedTags(repoId)
+    .then(tags => tags
+      .filter(tag => publicationVersionRegex.test(tag.name))
+      .map(tag => parseInt(publicationVersionRegex.exec(tag.name)[1]))
       .sort((a, b) => descending(a, b))
       .shift()
     )
 
-  const versionNumber = latestReleaseNumber
-    ? latestReleaseNumber + 1
+  const versionNumber = latestPublicationVersion
+    ? latestPublicationVersion + 1
     : 1
 
   const versionName = prepublication
     ? `v${versionNumber}-prepublication`
     : `v${versionNumber}`
 
+  const message =
+`---
+${yaml.safeDump(
+  omitBy({
+    scheduledAt,
+    updateMailchimp
+  }, isNil)
+)}
+---
+
+${t('api/github/yaml/warning')}
+`
+
+  const milestone = await placeMilestone(
+    null,
+    {
+      repoId,
+      commitId,
+      name: versionName,
+      message
+    },
+    {
+      user
+    }
+  )
+
   const [login, repoName] = repoId.split('/')
-  const release = await githubRest.repos.createRelease({
+
+  // only for indication on github
+  await githubRest.repos.createRelease({
     owner: login,
     repo: repoName,
-    target_commitish: commitId,
-    tag_name: versionName,
+    tag_name: milestone.name,
     name: versionName,
-    body: yaml.safeDump(
-      scheduledAt
-        ? { scheduledAt, updateMailchimp }
-        : { updateMailchimp }
-    ),
     draft: false,
-    prerelease: prepublication // only for indication on github
+    prerelease: prepublication
   })
     .then(response => response.data)
 
-  return publicationNormalizer({
-    ...release,
-    repo: {
-      id: repoId
+  return {
+    ...milestone,
+    meta: {
+      scheduledAt,
+      updateMailchimp
     }
-  })
+  }
 }

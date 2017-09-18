@@ -90,25 +90,37 @@ type Repo {
 
   # nothing or latest prepublication and/or latest publication
   # nothing if repo is unpublished
-  publications: [Publication]!
+  latestPublications: [Publication]!
 
-  mailchimpUrl: String!
+  mailchimpUrl: String
+  unpublished: Boolean!
 }
 
-type Publication {
+interface MilestoneInterface {
   name: String!
+  commit: Commit!
+  author: Author!
+  date: DateTime!
+}
+
+type Publication implements MilestoneInterface {
+  name: String!
+  commit: Commit!
+  author: Author!
+  date: DateTime!
+
   prepublication: Boolean!
   scheduledAt: DateTime
   updateMailchimp: Boolean!
-  date: DateTime!
 }
 
 type Milestone {
   name: String!
-  message: String
   commit: Commit!
   author: Author!
   date: DateTime!
+
+  message: String
 }
 
 
