@@ -12,11 +12,11 @@ import {
 import MetaForm from '../../utils/MetaForm'
 
 import styles from '../../styles'
-import { FIGURE } from './constants'
+import { FIGURE, FIGURE_IMAGE } from './constants'
 
 export const FigureForm = createPropertyForm({
   isDisabled: ({ state }) => {
-    return !state.blocks.some(matchBlock(FIGURE))
+    return !state.blocks.some(matchBlock(FIGURE_IMAGE))
   }
 })(({ disabled, state, onChange }) => {
   if (disabled) {
@@ -26,7 +26,7 @@ export const FigureForm = createPropertyForm({
     <Label>Images</Label>
     {
       state.blocks
-        .filter(matchBlock(FIGURE))
+        .filter(matchBlock(FIGURE_IMAGE))
         .map((block, i) => {
           const onInputChange = key => (_, value) => {
             onChange(
@@ -67,8 +67,7 @@ export const FigureButton = createActionButton({
         .transform()
         .insertBlock(
           Block.create({
-            type: FIGURE,
-            isVoid: true
+            type: FIGURE
           })
         )
         .apply()

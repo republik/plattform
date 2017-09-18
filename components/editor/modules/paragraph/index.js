@@ -9,13 +9,13 @@ import { getSerializationRules } from '../../utils/getRules'
 import marks from '../marks'
 import link from '../link'
 
-export const styles = {
+const styles = {
   paragraph: {
     margin: '0 0 0.8em'
   }
 }
 
-export const isParagraph = matchBlock(PARAGRAPH)
+const isParagraph = matchBlock(PARAGRAPH)
 
 const inlineSerializer = new MarkdownSerializer({
   rules: getSerializationRules([
@@ -24,7 +24,7 @@ const inlineSerializer = new MarkdownSerializer({
   ])
 })
 
-export const paragraph = {
+const paragraph = {
   match: isParagraph,
   matchMdast: (node) => node.type === 'paragraph',
   fromMdast: (node, index, parent, visitChildren) => ({

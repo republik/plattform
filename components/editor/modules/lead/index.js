@@ -8,7 +8,7 @@ import { LEAD } from './constants'
 import MarkdownSerializer from '../../../../lib/serializer'
 import {serializer as paragraphSerializer, PARAGRAPH} from '../paragraph'
 
-export const styles = {
+const styles = {
   lead: {
     fontWeight: 'bold',
     margin: 0,
@@ -16,7 +16,7 @@ export const styles = {
   }
 }
 
-export const lead = {
+const lead = {
   match: matchBlock(LEAD),
   matchMdast: (node) => node.type === 'blockquote',
   fromMdast: (node, index, parent, visitChildren) => ({

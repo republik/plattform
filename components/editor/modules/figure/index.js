@@ -3,8 +3,11 @@ import { colors } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { matchBlock } from '../../utils'
 import { FigureForm, FigureButton } from './ui'
-import { FIGURE } from './constants'
-import { findOrCreate } from '../../utils/serializationValidation'
+import { FIGURE, FIGURE_IMAGE, FIGURE_CAPTION } from './constants'
+import addValidation, { findOrCreate } from '../../utils/serializationValidation'
+import { gray2x1 } from '../../utils/placeholder'
+import { serializer as paragraphSerializer, PARAGRAPH } from '../paragraph'
+import { Placeholder } from 'slate'
 
 import MarkdownSerializer from '../../../../lib/serializer'
 
@@ -20,22 +23,7 @@ const styles = {
   })
 }
 
-export const ImagePlaceholder = ({ active }) =>
-  <div
-    style={{ position: 'relative', width: '100%' }}
-    {...styles.image}
-    data-active={active}
-  >
-    <div
-      style={{
-        width: '100%',
-        paddingBottom: '57%',
-        backgroundColor: colors.divider
-      }}
-    />
-  </div>
-
-export const Image = ({ src, alt, active }) =>
+const Image = ({ src, alt, active }) =>
   <img
     style={{ width: '100%' }}
     src={src}
@@ -44,7 +32,81 @@ export const Image = ({ src, alt, active }) =>
     {...styles.image}
   />
 
-export const figure = {
+const figureCaption = {
+  match: matchBlock(FIGURE_CAPTION),
+  matchMdast: (node) => node.type === 'paragraph',
+  fromMdast: (node, index, parent, visitChildren) => ({
+    kind: 'block',
+    type: FIGURE_CAPTION,
+    nodes: paragraphSerializer.fromMdast(node).nodes
+  }),
+  toMdast: (object, index, parent, visitChildren) => ({
+    type: 'paragraph',
+    children: paragraphSerializer.toMdast({
+      kind: 'block',
+      type: PARAGRAPH,
+      nodes: object.nodes
+    }).children
+  }),
+  render: (props) => {
+    return (
+      <figcaption style={{fontSize: 12, fontFamily: 'sans-serif', margin: 0, textAlign: 'left', position: 'relative'}}>
+        <Placeholder
+          state={props.state}
+          node={props.node}
+          firstOnly={false}
+        >
+          Legende
+        </Placeholder>
+        {props.children}
+      </figcaption>
+    )
+  }
+}
+const figureImage = {
+  match: matchBlock(FIGURE_IMAGE),
+  matchMdast: (node) => node.type === 'image',
+  fromMdast: (node, index, parent, visitChildren) => ({
+    kind: 'block',
+    type: FIGURE_IMAGE,
+    data: {
+      alt: node.alt,
+      src: node.url
+    },
+    isVoid: true,
+    nodes: []
+  }),
+  toMdast: (object, index, parent, visitChildren) => ({
+    type: 'image',
+    alt: object.data.alt,
+    url: object.data.src
+  }),
+  render: ({ node, state }) => {
+    const src = node.data.get('src') || gray2x1
+    const alt = node.data.get('alt')
+    const active = state.blocks.some(block => block.key === node.key)
+    return (
+      <Image
+        src={src}
+        alt={alt}
+        active={active} />
+    )
+  }
+}
+
+const imageSerializer = new MarkdownSerializer({
+  rules: [
+    figureImage
+  ]
+})
+
+const captionSerializer = new MarkdownSerializer({
+  rules: [
+    figureCaption
+  ]
+})
+
+const figure = {
   match: matchBlock(FIGURE),
   matchMdast: (node) => node.type === 'zone' && node.identifier === FIGURE,
   fromMdast: (node, index, parent, visitChildren) => {
@@ -55,44 +117,54 @@ export const figure = {
       []
     )
     const image = findOrCreate(deepNodes, {type: 'image'})
+    const imageParent = node.children.find(n => n.children && n.children.indexOf(image) !== -1)
+
+    const caption = findOrCreate(
+      node.children.filter(n => n !== imageParent),
+      {type: 'paragraph'},
+      {children: []}
+    )
 
     return {
       kind: 'block',
       type: FIGURE,
-      data: {
-        alt: image.alt,
-        src: image.url
-      },
-      isVoid: true,
-      nodes: []
+      nodes: [
+        imageSerializer.fromMdast(image),
+        captionSerializer.fromMdast(caption)
+      ]
     }
   },
-  toMdast: (object, index, parent, visitChildren) => ({
-    type: 'zone',
-    identifier: FIGURE,
-    children: [
-      {
-        type: 'image',
-        alt: object.data.alt,
-        url: object.data.src
-      }
-    ]
-  }),
-  render: props => {
-    const { node, state } = props
-    const src = node.data.get('src')
-    const alt = node.data.get('alt')
-    const active = state.blocks.some(block => block.key === node.key)
-
-    if (!src) {
-      return <ImagePlaceholder active={active} />
-    } else {
-      return <Image
-        src={src}
-        alt={alt}
-        active={active}
-      />
+  toMdast: (object, index, parent, visitChildren, context) => {
+    if (object.nodes.length !== 2) {
+      context.dirty = true
+    } else if (object.nodes[0].type !== FIGURE_IMAGE || object.nodes[1].type !== FIGURE_CAPTION) {
+      context.dirty = true
     }
+
+    const image = findOrCreate(object.nodes, {
+      kind: 'block',
+      type: FIGURE_IMAGE
+    }, {isVoid: true, data: {}})
+    const caption = findOrCreate(object.nodes, {
+      kind: 'block',
+      type: FIGURE_CAPTION
+    }, {nodes: []})
+
+    return {
+      type: 'zone',
+      identifier: FIGURE,
+      children: [
+        imageSerializer.toMdast(image),
+        captionSerializer.toMdast(caption)
+      ]
+    }
+  },
+  render: ({ children }) => {
+    return (
+      <figure style={{margin: '0 0 10px'}}>
+        {children}
+      </figure>
+    )
   }
 }
 
@@ -101,6 +173,8 @@ export const serializer = new MarkdownSerializer({
     figure
   ]
 })
+
+addValidation(figure, serializer)
 
 export {
   FIGURE,
@@ -113,7 +187,9 @@ export default {
     {
       schema: {
         rules: [
-          figure
+          figure,
+          figureImage,
+          figureCaption
         ]
       }
     }
