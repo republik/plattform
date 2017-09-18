@@ -61,7 +61,7 @@ export default {
   container: {
     width: '100%',
     height: `calc(100vh - ${HEADER_HEIGHT}px)`,
-    paddingLeft: 150,
+    paddingLeft: 160,
     position: 'relative'
   },
   sidebar: {
@@ -69,7 +69,7 @@ export default {
     top: 0,
     left: 0,
     bottom: 0,
-    width: 150,
+    width: 160,
     padding: '0 7px',
     borderRight: `1px solid ${colors.divider}`
   },
