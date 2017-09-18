@@ -2,6 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 import { matchBlock } from '../../utils'
 import addValidation, { findOrCreate } from '../../utils/serializationValidation'
+import { gray2x1 } from '../../utils/placeholder'
 import { PARAGRAPH } from '../paragraph'
 import { serializer as leadSerializer, LEAD } from '../lead'
 import { titleSerializer, TITLE } from '../headlines'
@@ -65,11 +66,11 @@ export const styles = {
 }
 
 const Cover = ({ node, children }) => {
-  const src = node.data.get('src')
+  const src = node.data.get('src') || gray2x1
   const alt = node.data.get('alt')
   return <div
     {...css(styles.cover)}
-    {...css({ [mq.large]: { backgroundImage: `url('${src}')` } })}
+    {...css({ [mq.large]: { backgroundImage: src && `url('${src}')` } })}
     >
     <img
       src={src}

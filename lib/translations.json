@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-11T15:28:49.836Z",
+  "updated": "2017-09-18T11:42:36.274Z",
   "title": "live",
   "data": [
     {
@@ -133,6 +133,14 @@
     {
       "key": "metaData/field/slug",
       "value": "Web Slug"
+    },
+    {
+      "key": "metaData/field/src",
+      "value": "Bild"
+    },
+    {
+      "key": "metaData/field/alt",
+      "value": "Alt-Text"
     },
     {
       "key": "metaData/field/emailSubject",

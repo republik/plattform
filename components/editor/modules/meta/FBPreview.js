@@ -1,5 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
+import { gray2x1 } from '../../utils/placeholder'
 
 const styles = {
   fbContainer: css({
@@ -47,7 +48,7 @@ const styles = {
 const FBPreview = ({data}) => (
   <div {...styles.fbContainer}>
     <div {...styles.fbImage} style={{
-      backgroundImage: `url(${data.get('facebookImage') || data.get('image')})`
+      backgroundImage: `url(${data.get('facebookImage') || data.get('image') || gray2x1})`
     }} />
     <div {...styles.fbText}>
       <div {...styles.fbTitle}>

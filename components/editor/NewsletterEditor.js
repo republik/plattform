@@ -29,10 +29,10 @@ import link, {
   LinkForm
 } from './modules/link'
 
-import image, {
-  ImageForm,
-  ImageButton
-} from './modules/image'
+import figure, {
+  FigureForm,
+  FigureButton
+} from './modules/figure'
 
 import cover, {
   CoverForm, serializer as coverSerializer, COVER
@@ -93,18 +93,34 @@ const documentRule = {
       children: []
     })
 
-    const center = findOrCreate(node.children, {
+    let center = findOrCreate(node.children, {
       type: 'zone', identifier: CENTER
     }, {
       children: []
     })
 
     const centerIndex = node.children.indexOf(center)
+    const before = []
+    const after = []
     node.children.forEach((child, index) => {
       if (child !== cover && child !== center) {
-        center.children[index > centerIndex ? 'push' : 'unshift'](child)
+        if (index > centerIndex) {
+          after.push(child)
+        } else {
+          before.push(child)
+        }
       }
     })
+    if (before.length || after.length) {
+      center = {
+        ...center,
+        children: [
+          ...before,
+          ...center.children,
+          ...after
+        ]
+      }
+    }
 
     const documentNode = {
       data: node.meta,
@@ -165,11 +181,19 @@ export const serializer = new MarkdownSerializer({
   ]
 })
 
-export const newDocument = ({title}) => {
-  return serializer.deserialize(
-    `<section><h6>${COVER}</h6>\n\n# ${title}\n\n<hr/></section>\n\nLadies and Gentlemen,`
-  )
-}
+export const newDocument = ({title}) => serializer.deserialize(
+`<section><h6>${COVER}</h6>
+
+# ${title}
+
+<hr/></section>
+
+<section><h6>${CENTER}</h6>
+
+Ladies and Gentlemen,
+
+<hr/></section>
+`)
 
 addValidation(documentRule, serializer)
 
@@ -202,7 +226,7 @@ const plugins = [
   ...lead.plugins,
   ...paragraph.plugins,
   ...link.plugins,
-  ...image.plugins,
+  ...figure.plugins,
   ...cover.plugins,
   ...center.plugins
 ]
@@ -220,12 +244,12 @@ const blockFormatButtons = [
 ]
 
 const insertButtons = [
-  ImageButton
+  FigureButton
 ]
 
 const propertyForms = [
   LinkForm,
-  ImageForm,
+  FigureForm,
   CoverForm
 ]
 

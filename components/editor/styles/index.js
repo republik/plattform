@@ -70,7 +70,7 @@ export default {
     left: 0,
     bottom: 0,
     width: 150,
-    padding: '0 0 0 7px',
+    padding: '0 7px',
     borderRight: `1px solid ${colors.divider}`
   },
   document: {

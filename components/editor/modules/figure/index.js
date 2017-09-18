@@ -2,8 +2,9 @@ import React from 'react'
 import { colors } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { matchBlock } from '../../utils'
-import { ImageForm, ImageButton } from './ui'
-import { IMAGE } from './constants'
+import { FigureForm, FigureButton } from './ui'
+import { FIGURE } from './constants'
+import { findOrCreate } from '../../utils/serializationValidation'
 
 import MarkdownSerializer from '../../../../lib/serializer'
 
@@ -43,24 +44,39 @@ export const Image = ({ src, alt, active }) =>
     {...styles.image}
   />
 
-export const image = {
-  match: matchBlock(IMAGE),
-  matchMdast: (node) => node.type === 'image',
-  fromMdast: (node, index, parent, visitChildren) => ({
-    kind: 'block',
-    type: IMAGE,
-    data: {
-      title: node.title,
-      alt: node.alt,
-      src: node.url
-    },
-    nodes: []
-  }),
+export const figure = {
+  match: matchBlock(FIGURE),
+  matchMdast: (node) => node.type === 'zone' && node.identifier === FIGURE,
+  fromMdast: (node, index, parent, visitChildren) => {
+    const deepNodes = node.children.reduce(
+      (children, child) => children
+        .concat(child)
+        .concat(child.children),
+      []
+    )
+    const image = findOrCreate(deepNodes, {type: 'image'})
+
+    return {
+      kind: 'block',
+      type: FIGURE,
+      data: {
+        alt: image.alt,
+        src: image.url
+      },
+      isVoid: true,
+      nodes: []
+    }
+  },
   toMdast: (object, index, parent, visitChildren) => ({
-    type: 'image',
-    title: object.data.title,
-    alt: object.data.alt,
-    url: object.data.src
+    type: 'zone',
+    identifier: FIGURE,
+    children: [
+      {
+        type: 'image',
+        alt: object.data.alt,
+        url: object.data.src
+      }
+    ]
   }),
   render: props => {
     const { node, state } = props
@@ -82,14 +98,14 @@ export const image = {
 
 export const serializer = new MarkdownSerializer({
   rules: [
-    image
+    figure
   ]
 })
 
 export {
-  IMAGE,
-  ImageForm,
-  ImageButton
+  FIGURE,
+  FigureForm,
+  FigureButton
 }
 
 export default {
@@ -97,7 +113,7 @@ export default {
     {
       schema: {
         rules: [
-          image
+          figure
         ]
       }
     }

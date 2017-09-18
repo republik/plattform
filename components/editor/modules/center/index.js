@@ -7,7 +7,7 @@ import { getSerializationRules } from '../../utils/getRules'
 
 import paragraph from '../paragraph'
 import headlines from '../headlines'
-import image from '../image'
+import figure from '../figure'
 
 const PADDING = 20
 const containerStyle = css({
@@ -50,7 +50,7 @@ const center = {
 export const serializer = new MarkdownSerializer({
   rules: getSerializationRules([
     ...paragraph.plugins,
-    ...image.plugins,
+    ...figure.plugins,
     ...headlines.plugins
   ]).concat(center)
 })

@@ -1,5 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
+import { gray2x1 } from '../../utils/placeholder'
 
 const styles = {
   twitterContainer: css({
@@ -53,7 +54,7 @@ const styles = {
 const TwitterPreview = ({data}) => (
   <div {...styles.twitterContainer}>
     <div {...styles.twitterImage} style={{
-      backgroundImage: `url(${data.get('twitterImage') || data.get('image')})`
+      backgroundImage: `url(${data.get('twitterImage') || data.get('image') || gray2x1})`
     }} />
     <div {...styles.twitterText}>
       <div {...styles.twitterTitle}>

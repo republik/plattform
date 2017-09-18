@@ -1,5 +1,5 @@
 import test from 'tape'
-import img, {IMAGE} from './'
+import img, { FIGURE } from './'
 import {PARAGRAPH} from '../paragraph'
 import getRules from '../../utils/getRules'
 import MarkdownSerializer from '../../../../lib/serializer'
@@ -27,7 +27,7 @@ test('image serialization', assert => {
   assert.equal(node.kind, 'block')
   assert.equal(node.type, PARAGRAPH)
 
-  const img = node.nodes.find(node => node.type === IMAGE)
+  const img = node.nodes.find(node => node.type === FIGURE)
   assert.ok(img)
 
   assert.equal(img.getIn(['data', 'src']), 'example.com/img.jpg')
