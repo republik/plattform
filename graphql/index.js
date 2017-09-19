@@ -74,7 +74,7 @@ module.exports = (server, pgdb, httpServer) => {
   })
 
   server.use('/graphql',
-    bodyParser.json({limit: '8mb'}),
+    bodyParser.json({limit: '64mb'}),
     graphqlMiddleware
   )
   server.use('/graphiql', graphiqlExpress({

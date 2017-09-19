@@ -16,6 +16,9 @@ before_script:
   - npm run db:reset:noseeds
 script:
   - npm run test:travis
+branches:
+  only:
+  - master
 env:
   global:
     - NODE_ENV=testing
