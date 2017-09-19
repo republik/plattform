@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 
-import { Field } from '@project-r/styleguide'
+import { Field, Checkbox } from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 
 import withT from '../../../lib/withT'
@@ -47,37 +47,40 @@ const Form = ({
     {data.map((value, key) => {
       const label = t(`metaData/field/${key}`, undefined, key)
 
+      let input
       if (key.match(/image|src/i)) {
-        return (
-          <div key={key} {...styles.span} style={{width: getWidth(key)}}>
-            <ImageInput
-              maxWidth='100%'
-              label={label}
-              src={value}
-              onChange={onInputChange(key)} />
-          </div>
-        )
-      }
-      let renderInput
-      if (key.match(/description/i)) {
-        renderInput = ({ref, ...inputProps}) => (
-          <AutosizeInput {...styles.autoSize}
-            {...inputProps}
-            inputRef={ref} />
-        )
+        input = <ImageInput
+          maxWidth='100%'
+          label={label}
+          src={value}
+          onChange={onInputChange(key)} />
+      } else if (typeof value === 'boolean') {
+        input = <Checkbox checked={value} onChange={onInputChange(key)} black={black}>
+          {label}
+        </Checkbox>
+      } else {
+        let renderInput
+        if (key.match(/description/i)) {
+          renderInput = ({ref, ...inputProps}) => (
+            <AutosizeInput {...styles.autoSize}
+              {...inputProps}
+              inputRef={ref} />
+          )
+        }
+        input = <Field
+          label={label}
+          name={key}
+          value={value}
+          renderInput={renderInput}
+          black={black}
+          onChange={onInputChange(key)} />
       }
       return (
         <div
           key={key}
           {...styles.span}
           style={{width: getWidth(key)}}>
-          <Field
-            label={label}
-            name={key}
-            value={value}
-            renderInput={renderInput}
-            black={black}
-            onChange={onInputChange(key)} />
+          {input}
         </div>
       )
     }).toArray()}

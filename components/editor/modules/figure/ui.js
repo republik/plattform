@@ -1,55 +1,81 @@
 import React from 'react'
 import { Block } from 'slate'
-import { Label } from '@project-r/styleguide'
 import { css } from 'glamor'
 import { Map } from 'immutable'
 
 import {
-  matchBlock,
   createPropertyForm,
   createActionButton
 } from '../../utils'
 import MetaForm from '../../utils/MetaForm'
 
 import styles from '../../styles'
-import { FIGURE, FIGURE_IMAGE } from './constants'
+import { FIGURE, FIGURE_IMAGE, FIGURE_CAPTION } from './constants'
+
+const isFigureBlock = block => block.type === FIGURE_IMAGE || block.type === FIGURE_CAPTION
 
 export const FigureForm = createPropertyForm({
   isDisabled: ({ state }) => {
-    return !state.blocks.some(matchBlock(FIGURE_IMAGE))
+    return (
+      !state.blocks.some(isFigureBlock)
+    )
   }
 })(({ disabled, state, onChange }) => {
   if (disabled) {
     return null
   }
   return <div>
-    <Label>Images</Label>
     {
       state.blocks
-        .filter(matchBlock(FIGURE_IMAGE))
+        .filter(isFigureBlock)
+        .map(block => block.type === 'FIGURE'
+          ? block
+          : state.document.getParent(block.key)
+        )
         .map((block, i) => {
-          const onInputChange = key => (_, value) => {
+          const imageBlock = block.nodes.find(n => n.type === FIGURE_IMAGE)
+          const onImage = key => (_, value) => {
             onChange(
               state
                 .transform()
-                .setNodeByKey(block.key, {
+                .setNodeByKey(imageBlock.key, {
                   data: value
-                    ? block.data.set(key, value)
-                    : block.data.remove(key)
+                    ? imageBlock.data.set(key, value)
+                    : imageBlock.data.remove(key)
+                })
+                .apply()
+            )
+          }
+          const captionBlock = block.nodes.find(n => n.type === FIGURE_CAPTION)
+          const onCaption = key => (_, value) => {
+            onChange(
+              state
+                .transform()
+                .setNodeByKey(captionBlock.key, {
+                  data: value
+                    ? captionBlock.data.set(key, value)
+                    : captionBlock.data.remove(key)
                 })
                 .apply()
             )
           }
 
           return (
-            <MetaForm
-              key={`figure-${i}`}
-              data={Map({
-                src: '',
-                alt: ''
-              }).merge(block.data)}
-              onInputChange={onInputChange}
-            />
+            <div key={`figure-${i}`}>
+              <MetaForm
+                data={Map({
+                  src: '',
+                  alt: ''
+                }).merge(imageBlock.data)}
+                onInputChange={onImage}
+              />
+              <MetaForm
+                data={Map({
+                  captionRight: false
+                }).merge(captionBlock.data)}
+                onInputChange={onCaption}
+              />
+            </div>
           )
         })
     }

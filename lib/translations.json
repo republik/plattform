@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-18T12:55:39.319Z",
+  "updated": "2017-09-19T12:18:50.315Z",
   "title": "live",
   "data": [
     {
@@ -141,6 +141,10 @@
     {
       "key": "metaData/field/alt",
       "value": "Bildbeschrieb"
+    },
+    {
+      "key": "metaData/field/captionRight",
+      "value": "Bildlegende rechts"
     },
     {
       "key": "metaData/field/emailSubject",

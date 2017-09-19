@@ -50,7 +50,15 @@ const figureCaption = {
   }),
   render: (props) => {
     return (
-      <figcaption style={{fontSize: 12, fontFamily: 'sans-serif', margin: 0, textAlign: 'left', position: 'relative'}}>
+      <figcaption style={{
+        textAlign: props.node.data.get('captionRight')
+          ? 'right'
+          : 'left',
+        fontSize: 12,
+        fontFamily: 'sans-serif',
+        margin: 0,
+        position: 'relative'
+      }}>
         <Placeholder
           state={props.state}
           node={props.node}
@@ -148,11 +156,12 @@ const figure = {
     const caption = findOrCreate(object.nodes, {
       kind: 'block',
       type: FIGURE_CAPTION
-    }, {nodes: []})
+    }, {nodes: [], data: {}})
 
     return {
       type: 'zone',
       identifier: FIGURE,
+      data: caption.data,
       children: [
         imageSerializer.toMdast(image),
         captionSerializer.toMdast(caption)
