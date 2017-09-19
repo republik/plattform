@@ -158,7 +158,7 @@ const figure = {
         {children: []}
       ),
       data: {
-        captionRight: node.data.captionRight || false
+        captionRight: node.data.captionRight
       }
     }
 

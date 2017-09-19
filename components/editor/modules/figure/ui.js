@@ -62,8 +62,8 @@ export const FigureForm = createPropertyForm({
               />
               <MetaForm
                 data={Map({
-                  captionRight: false
-                }).merge(captionBlock.data)}
+                  captionRight: captionBlock.data.get('captionRight') || false
+                })}
                 onInputChange={onInputChange(captionBlock)}
               />
               <p style={{margin: '10px 0'}}>

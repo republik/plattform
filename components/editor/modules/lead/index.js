@@ -1,6 +1,5 @@
 import React from 'react'
 import { css } from 'glamor'
-import { LeadButton } from './ui'
 import { Placeholder } from 'slate'
 import { matchBlock } from '../../utils'
 import { LEAD } from './constants'
@@ -56,8 +55,7 @@ export const serializer = new MarkdownSerializer({
 })
 
 export {
-  LEAD,
-  LeadButton
+  LEAD
 }
 
 export default {

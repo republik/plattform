@@ -1,15 +1,16 @@
 import React from 'react'
 import { css } from 'glamor'
-import { colors, Label } from '@project-r/styleguide'
+import { Label } from '@project-r/styleguide'
 import LinkIcon from 'react-icons/lib/fa/chain'
-import Caret from 'react-icons/lib/fa/caret-right'
-import HashTag from 'react-icons/lib/fa/hashtag'
+import { Map } from 'immutable'
 
 import {
   createInlineButton,
   matchInline,
   createPropertyForm
 } from '../../utils'
+
+import MetaForm from '../../utils/MetaForm'
 
 import { LINK } from './constants'
 import styles from '../../styles'
@@ -28,41 +29,41 @@ export const LinkButton = createInlineButton({
     </span>
 )
 
-const changeHandler = (inline, state, onChange) => event => {
-  onChange(
-    state
-      .transform()
-      .setNodeByKey(inline.key, {
-        data: inline.data.set('href', event.target.value)
-      })
-      .apply()
-  )
-}
-
 const Form = ({ disabled, state, onChange }) => {
   if (disabled) {
     return null
   }
-  return <span>
-    <Label><Caret />Links</Label>
+  return <div>
+    <Label>Links</Label>
     {
       state.inlines
         .filter(matchInline(LINK))
-        .map((inline, i) => (
-          <span key={`link-${i}`} style={{ display: 'block' }}>
-            <HashTag size={16} color={colors.disabled} />
-            <input
-              style={{outline: 'none', border: 'none', borderBottom: '1px solid #ccc'}}
-              type='text'
-              value={inline.data.get('href') || ''}
-              onChange={
-                changeHandler(inline, state, onChange)
-              }
-              />
-          </span>
-        ))
+        .map((node, i) => {
+          const onInputChange = key => (_, value) => {
+            onChange(
+              state
+                .transform()
+                .setNodeByKey(node.key, {
+                  data: value
+                    ? node.data.set(key, value)
+                    : node.data.remove(key)
+                })
+                .apply()
+            )
+          }
+          return (
+            <MetaForm
+              key={`link-${i}`}
+              data={Map({
+                href: '',
+                title: ''
+              }).merge(node.data)}
+              onInputChange={onInputChange}
+            />
+          )
+        })
     }
-  </span>
+  </div>
 }
 
 export const LinkForm = createPropertyForm({
