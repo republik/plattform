@@ -54,39 +54,25 @@ const addValidation = (rule, serializer) => {
         : rawNode
     )
 
-    if (node.kind === 'document') {
-      const parent = transform.state.document
-
-      let t = transform.setNodeByKey(object.key, {
-        data: node.data
-      })
-      parent.nodes.forEach(n => {
-        t = t.removeNodeByKey(
-          n.key
-        )
-      })
-      node.nodes.forEach((n, i) => {
-        t = t.insertNodeByKey(
-          parent.key,
-          i,
-          n
-        )
-      })
-      return t
-    }
-
-    const parent = transform.state.document.getParent(object.key)
-    const index = parent.nodes.findIndex(n => n === object)
-
-    return transform
-      .insertNodeByKey(
-        parent.key,
-        index,
-        node
+    const target = node.kind === 'document'
+      ? transform.state.document
+      : object
+    let t = transform.setNodeByKey(target.key, {
+      data: node.data
+    })
+    target.nodes.forEach(n => {
+      t = t.removeNodeByKey(
+        n.key
       )
-      .removeNodeByKey(
-        object.key
+    })
+    node.nodes.forEach((n, i) => {
+      t = t.insertNodeByKey(
+        target.key,
+        i,
+        n
       )
+    })
+    return t
   }
 }
 
