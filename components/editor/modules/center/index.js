@@ -25,7 +25,7 @@ const containerStyle = css({
 const Center = ({children}) => (
   <div {...containerStyle}>
     {children}
-    <br style={{clear: 'both'}} />
+    <div style={{clear: 'both'}} />
   </div>
 )
 
