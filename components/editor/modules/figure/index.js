@@ -61,6 +61,7 @@ const figureCaption = {
   fromMdast: (node, index, parent, visitChildren) => ({
     kind: 'block',
     type: FIGURE_CAPTION,
+    data: node.data,
     nodes: paragraphSerializer.fromMdast(node).nodes
   }),
   toMdast: (object, index, parent, visitChildren) => ({
@@ -150,15 +151,23 @@ const figure = {
     const image = findOrCreate(deepNodes, {type: 'image'})
     const imageParent = node.children.find(n => n.children && n.children.indexOf(image) !== -1)
 
-    const caption = findOrCreate(
-      node.children.filter(n => n !== imageParent),
-      {type: 'paragraph'},
-      {children: []}
-    )
+    const caption = {
+      ...findOrCreate(
+        node.children.filter(n => n !== imageParent),
+        {type: 'paragraph'},
+        {children: []}
+      ),
+      data: {
+        captionRight: node.data.captionRight || false
+      }
+    }
 
     return {
       kind: 'block',
       type: FIGURE,
+      data: {
+        float: node.data.float
+      },
       nodes: [
         imageSerializer.fromMdast(image),
         captionSerializer.fromMdast(caption)
@@ -184,7 +193,10 @@ const figure = {
     return {
       type: 'zone',
       identifier: FIGURE,
-      data: caption.data,
+      data: {
+        ...object.data,
+        ...caption.data
+      },
       children: [
         imageSerializer.toMdast(image),
         captionSerializer.toMdast(caption)

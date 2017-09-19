@@ -34,6 +34,7 @@ export const FigureForm = createPropertyForm({
           ? block
           : state.document.getParent(block.key)
         )
+        .filter((block, index, all) => all.indexOf(block) === index)
         .map((block, i) => {
           const imageBlock = block.nodes.find(n => n.type === FIGURE_IMAGE)
           const captionBlock = block.nodes.find(n => n.type === FIGURE_CAPTION)
