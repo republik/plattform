@@ -1,10 +1,11 @@
-const { githubApolloFetch } = require('../../lib/github')
+const { createGithubClients } = require('../../lib/github')
 const MDAST = require('../../lib/mdast/mdast')
 const { createPrefixUrl } = require('../../lib/assets')
 const visit = require('unist-util-visit')
 
 module.exports = {
   document: async (commit, args, { user }) => {
+    const { githubApolloFetch } = await createGithubClients()
     const [login, repoName] = commit.repo.id.split('/')
 
     const {

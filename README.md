@@ -33,17 +33,20 @@ MANDRILL_API_KEY=replaceMe
 DEFAULT_MAIL_FROM_NAME='haku'
 DEFAULT_MAIL_FROM_ADDRESS='haku@project-r.construction'
 
-# Follow Auth - Github below to get this
-GITHUB_ACCESS_TOKEN=
 
 # The github user/organization under which all repos are held
 GITHUB_LOGIN=orbiting
 
-# URL which proxies assets from github
-PUBLIC_ASSETS_URL=http://localhost:3004/assets
+# Follow the "Auth - Github" section below to get these
+GITHUB_APP_ID=
+GITHUB_INSTALLATION_ID=
+GITHUB_APP_KEY=
 
 # optional: filter for the repos query (repo name must contain term)
 REPOS_NAME_FILTER=article-
+
+# URL which proxies assets from github
+PUBLIC_ASSETS_URL=http://localhost:3004/assets
 ```
 
 Install dependencies.
@@ -73,12 +76,20 @@ Checkout the API: `http://localhost:3004/graphiql`
 This prototype features a passwordless signin system. It's a **stripped down** version from [crowdfunding-backend](https://github.com/orbiting/crowdfunding-backend) and not suitable for production use (no real random words, no geo location, etc.). Signin emails are sent via [Mandrill](https://mandrillapp.com) see [lib/sendMail.js](lib/sendMail.js). Set the ENV var `SEND_MAILS=false` to see emails on the console, if you don't have a mandrill key at hand.
 
 ### Github
-To interact with repositories this API talks to Github.
-After trialing *Sign in with GitHub* for all cms-users and authenticating calls to github with the individual user's token, we decided not to go this way and instead opted for a simpler solution (for now): give birth to a github "bot" user, create a [Personal Access Token](https://github.com/settings/tokens) for this user and authenticate all calls with its token. This solution allows for simpler user onboarding and scaling up on our side and makes the application code simpler.
+This server acts and authenticates as a [GitHub-App](https://developer.github.com/apps/building-integrations/setting-up-a-new-integration/about-integrations/#github-apps). Despite the claim of GitHub, GitHub-Apps are also compatible to the GraphQL v4 API.
 
-Setup:
-- Create a github user
-- Get a [Personal Access Token](https://github.com/settings/tokens) for this user and provide it as ENV variable.
+You need to setup a new GitHub-App and install it to at least one organization / account. Follow the steps below or [Read more](https://developer.github.com/apps/building-integrations/setting-up-and-registering-github-apps/).
+
+Setup (for dev environment):
+- [Create a GitHub-App](https://developer.github.com/apps/building-integrations/setting-up-and-registering-github-apps/registering-github-apps/).
+  - As the "Homepage URL" set `http://localhost:3004`.
+  - On the permissions page set "Read & write" for the following sections and leave the rest on "No access".
+    - Repository administration
+    - Commit statuses
+    - Repository contents
+- [Download the private key](https://developer.github.com/apps/building-integrations/setting-up-and-registering-github-apps/registering-github-apps/#generating-a-private-key). This key needs to be supplied as `GITHUB_APP_KEY` ENV var. Open the file in your favorite editor, replace newlines with literal `\n` and copy the content to your .env.
+- On the page of your new GitHub-App you also find the **ID**. This values needs to be provided as `GITHUB_APP_ID` env var.
+- [Install the GitHub-App](https://help.github.com/articles/installing-an-app-in-your-organization/) in your organization. On the page of the installation (settings -> Installed GitHub Apps -> App) copy the last part of the URL (e.g `41809`), it needs to be provided as `GITHUB_INSTALLATION_ID` env var.
 
 ## Licensing
 The source code and it's documentation is licensed under [GNU AGPLv3](LICENSE)+.

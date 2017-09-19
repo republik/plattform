@@ -35,7 +35,7 @@ const {
 const apolloFetch = createApolloFetch(GRAPHQL_URI)
 const MDAST = require('../lib/mdast/mdast')
 const {
-  githubRest,
+  createGithubClients,
   getHeads
 } = require('../lib/github')
 
@@ -44,6 +44,7 @@ const getNewRepoId = () =>
 
 // shared
 let pgdb
+let githubRest
 const testUser = {
   firstName: 'Alice',
   lastName: 'Smith',
@@ -57,6 +58,9 @@ let lastCommitId
 test('setup', async (t) => {
   const server = await Server.run()
   pgdb = server.pgdb
+
+  const clients = await createGithubClients()
+  githubRest = clients.githubRest
 
   const result = await apolloFetch({
     query: `

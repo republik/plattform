@@ -33,6 +33,7 @@
     "graphql-type-json": "^0.1.4",
     "isomorphic-unfetch": "^2.0.0",
     "js-yaml": "^3.10.0",
+    "jsonwebtoken": "^8.0.1",
     "kraut": "^0.1.1",
     "leaked-handles": "^5.2.0",
     "lodash": "^4.17.4",
