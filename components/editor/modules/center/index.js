@@ -9,6 +9,7 @@ import addValidation from '../../utils/serializationValidation'
 import paragraph, { PARAGRAPH } from '../paragraph'
 import headlines from '../headlines'
 import figure from '../figure'
+import blockquote from '../blockquote'
 
 const PADDING = 20
 const containerStyle = css({
@@ -34,7 +35,8 @@ const childSerializer = new MarkdownSerializer({
   rules: getSerializationRules([
     ...paragraph.plugins,
     ...figure.plugins,
-    ...headlines.plugins
+    ...headlines.plugins,
+    ...blockquote.plugins
   ])
 })
 

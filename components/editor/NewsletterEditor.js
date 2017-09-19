@@ -24,6 +24,10 @@ import paragraph, {
   ParagraphButton
 } from './modules/paragraph'
 
+import blockquote, {
+  BlockquoteButton
+} from './modules/blockquote'
+
 import link, {
   LinkButton,
   LinkForm
@@ -232,7 +236,8 @@ const plugins = [
   ...link.plugins,
   ...figure.plugins,
   ...cover.plugins,
-  ...center.plugins
+  ...center.plugins,
+  ...blockquote.plugins
 ]
 
 const textFormatButtons = [
@@ -244,7 +249,8 @@ const textFormatButtons = [
 const blockFormatButtons = [
   MediumHeadlineButton,
   SmallHeadlineButton,
-  ParagraphButton
+  ParagraphButton,
+  BlockquoteButton
 ]
 
 const insertButtons = [
