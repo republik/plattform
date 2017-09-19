@@ -1,6 +1,7 @@
 const {
   createGithubClients,
-  commitNormalizer
+  commitNormalizer,
+  publicationVersionRegex
 } = require('../../lib/github')
 
 module.exports = {
@@ -18,5 +19,7 @@ module.exports = {
         ...commit,
         repo: milestone.repo
       }))
-  }
+  },
+  immutable: async (milestone, args, { user }) =>
+    publicationVersionRegex.test(milestone.name)
 }

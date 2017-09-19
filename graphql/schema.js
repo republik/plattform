@@ -121,6 +121,7 @@ type Milestone {
   date: DateTime!
 
   message: String
+  immutable: Boolean!
 }
 
 

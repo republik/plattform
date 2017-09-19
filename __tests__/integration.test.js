@@ -819,6 +819,7 @@ test('placeMilestone', async (t) => {
               email
             }
           }
+          immutable
         }
       }
     `,
@@ -831,7 +832,8 @@ test('placeMilestone', async (t) => {
       message,
       commit,
       date,
-      author
+      author,
+      immutable
     }
   } = result0.data
   t.equals(name, normalizedName)
@@ -841,6 +843,7 @@ test('placeMilestone', async (t) => {
   t.equals(author.name, testUser.name)
   t.equals(author.email, testUser.email)
   t.equals(author.user.email, testUser.email)
+  t.equals(immutable, false)
 
   const result1 = await apolloFetch({
     query: `
@@ -862,6 +865,7 @@ test('placeMilestone', async (t) => {
                 email
               }
             }
+            immutable
           }
         }
       }
@@ -881,6 +885,7 @@ test('placeMilestone', async (t) => {
   t.equals(author0.name, testUser.name)
   t.equals(author0.email, testUser.email)
   t.equals(author0.user.email, testUser.email)
+  t.equals(milestone.immutable, false)
   t.end()
 })
 
@@ -1109,6 +1114,34 @@ test('publish', async (t) => {
     t.equals(latestPublications.length, 2)
     testPublication(latestPublications[0], variables2, 'v3') // publication should come first
     testPublication(latestPublications[1], variables1, 'v2-prepublication') // prepublication should be after publication
+  }
+
+  /// ////
+
+  const query3 = await apolloFetch({
+    query: `
+      query repo(
+        $repoId: ID!
+      ){
+        repo(id: $repoId) {
+          milestones {
+            name
+            immutable
+          }
+        }
+      }
+    `,
+    variables: {
+      repoId: testRepoId
+    }
+  })
+  t.ok(query3.data.repo.milestones)
+  {
+    const milestones = query3.data.repo.milestones
+    t.equals(milestones.length, 3)
+    for (let milestone of milestones) {
+      t.equals(milestone.immutable, true)
+    }
   }
 
   t.end()
