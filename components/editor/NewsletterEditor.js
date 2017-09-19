@@ -157,7 +157,11 @@ const documentRule = {
     }
 
     const cover = findOrCreate(object.nodes, { kind: 'block', type: COVER })
-    const center = findOrCreate(object.nodes, { kind: 'block', type: CENTER })
+    const center = findOrCreate(
+      object.nodes,
+      { kind: 'block', type: CENTER },
+      { nodes: [] }
+    )
     const centerIndex = object.nodes.indexOf(center)
     object.nodes.forEach((node, index) => {
       if (node !== cover && node !== center) {
@@ -195,7 +199,7 @@ Ladies and Gentlemen,
 <hr/></section>
 `)
 
-addValidation(documentRule, serializer)
+addValidation(documentRule, serializer, 'document')
 
 const documentPlugin = {
   schema: {

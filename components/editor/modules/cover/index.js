@@ -164,7 +164,7 @@ export const serializer = new MarkdownSerializer({
   ]
 })
 
-addValidation(cover, serializer)
+addValidation(cover, serializer, 'cover')
 
 export {
   CoverForm,

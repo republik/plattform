@@ -174,7 +174,7 @@ export const serializer = new MarkdownSerializer({
   ]
 })
 
-addValidation(figure, serializer)
+addValidation(figure, serializer, 'figure')
 
 export {
   FIGURE,

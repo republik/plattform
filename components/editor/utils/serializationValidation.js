@@ -36,7 +36,7 @@ export const rawNodeToNode = (rawNode) => {
   return node.nodes.first()
 }
 
-const addValidation = (rule, serializer) => {
+const addValidation = (rule, serializer, name) => {
   rule.validate = node => {
     const context = {}
     const rawNode = nodeToRawNode(node)
