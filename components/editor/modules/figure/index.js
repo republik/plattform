@@ -1,6 +1,6 @@
 import React from 'react'
 import { colors } from '@project-r/styleguide'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 import { matchBlock } from '../../utils'
 import { FigureForm, FigureButton } from './ui'
 import { FIGURE, FIGURE_IMAGE, FIGURE_CAPTION } from './constants'
@@ -11,6 +11,7 @@ import { Placeholder } from 'slate'
 
 import MarkdownSerializer from '../../../../lib/serializer'
 
+const mqMedium = '@media (min-width: 600px)'
 const styles = {
   image: css({
     position: 'relative',
@@ -19,6 +20,28 @@ const styles = {
     transition: 'outline-color 0.2s',
     '&[data-active="true"]': {
       outlineColor: colors.primary
+    }
+  }),
+  figure: css({
+    marginTop: 0,
+    marginLeft: 0,
+    marginRight: 0,
+    marginBottom: 10
+  }),
+  floatLeft: css({
+    [mqMedium]: {
+      float: 'left',
+      width: '50%',
+      marginTop: 3,
+      marginRight: 20
+    }
+  }),
+  floatRight: css({
+    [mqMedium]: {
+      float: 'right',
+      width: '50%',
+      marginTop: 3,
+      marginLeft: 20
     }
   })
 }
@@ -168,9 +191,13 @@ const figure = {
       ]
     }
   },
-  render: ({ children }) => {
+  render: ({ children, node }) => {
     return (
-      <figure style={{margin: '0 0 10px'}}>
+      <figure {...merge(
+        styles.figure,
+        node.data.get('float') === 'left' && styles.floatLeft,
+        node.data.get('float') === 'right' && styles.floatRight
+      )}>
         {children}
       </figure>
     )

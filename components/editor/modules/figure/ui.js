@@ -3,6 +3,8 @@ import { Block } from 'slate'
 import { css } from 'glamor'
 import { Map } from 'immutable'
 
+import { Radio, Label } from '@project-r/styleguide'
+
 import {
   createPropertyForm,
   createActionButton
@@ -34,27 +36,15 @@ export const FigureForm = createPropertyForm({
         )
         .map((block, i) => {
           const imageBlock = block.nodes.find(n => n.type === FIGURE_IMAGE)
-          const onImage = key => (_, value) => {
-            onChange(
-              state
-                .transform()
-                .setNodeByKey(imageBlock.key, {
-                  data: value
-                    ? imageBlock.data.set(key, value)
-                    : imageBlock.data.remove(key)
-                })
-                .apply()
-            )
-          }
           const captionBlock = block.nodes.find(n => n.type === FIGURE_CAPTION)
-          const onCaption = key => (_, value) => {
+          const onInputChange = subject => key => (_, value) => {
             onChange(
               state
                 .transform()
-                .setNodeByKey(captionBlock.key, {
+                .setNodeByKey(subject.key, {
                   data: value
-                    ? captionBlock.data.set(key, value)
-                    : captionBlock.data.remove(key)
+                    ? subject.data.set(key, value)
+                    : subject.data.remove(key)
                 })
                 .apply()
             )
@@ -67,14 +57,53 @@ export const FigureForm = createPropertyForm({
                   src: '',
                   alt: ''
                 }).merge(imageBlock.data)}
-                onInputChange={onImage}
+                onInputChange={onInputChange(imageBlock)}
               />
               <MetaForm
                 data={Map({
                   captionRight: false
                 }).merge(captionBlock.data)}
-                onInputChange={onCaption}
+                onInputChange={onInputChange(captionBlock)}
               />
+              <p style={{margin: '10px 0'}}>
+                <Label>Ausrichtung</Label><br />
+                <Radio
+                  value='left'
+                  checked={!block.data.get('float')}
+                  onChange={event => {
+                    event.preventDefault()
+                    onInputChange(block)('float')(
+                      event,
+                      undefined
+                    )
+                  }}>
+                  Gross
+                </Radio><br />
+                <Radio
+                  value='left'
+                  checked={block.data.get('float') === 'left'}
+                  onChange={event => {
+                    event.preventDefault()
+                    onInputChange(block)('float')(
+                      event,
+                      'left'
+                    )
+                  }}>
+                  Links
+                </Radio><br />
+                <Radio
+                  value='right'
+                  checked={block.data.get('float') === 'right'}
+                  onChange={event => {
+                    event.preventDefault()
+                    onInputChange(block)('float')(
+                      event,
+                      'right'
+                    )
+                  }}>
+                  Rechts
+                </Radio>
+              </p>
             </div>
           )
         })
