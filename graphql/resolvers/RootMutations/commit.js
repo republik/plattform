@@ -8,7 +8,7 @@ const superb = require('superb')
 const superheroes = require('superheroes')
 const sleep = require('await-sleep')
 const {
-  githubRest,
+  createGithubClients,
   commitNormalizer,
   getRepo,
   getHeads
@@ -37,6 +37,7 @@ const extractImage = (url, images) => {
 
 module.exports = async (_, args, { pgdb, req, user, t }) => {
   ensureUserHasRole(user, 'editor')
+  const { githubRest } = await createGithubClients()
 
   const {
     repoId,
@@ -69,7 +70,7 @@ module.exports = async (_, args, { pgdb, req, user, t }) => {
     })
     // auto_init seems to be async and takes some time
     // we sporadically saw: Git Repository is empty. on commit
-    await sleep(800)
+    await sleep(1000)
   }
 
   // reverse asset url prefixing

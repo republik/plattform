@@ -4,7 +4,7 @@ const yaml = require('js-yaml')
 const omitBy = require('lodash/omitBy')
 const isNil = require('lodash/isNil')
 const {
-  githubRest,
+  createGithubClients,
   getAnnotatedTags,
   publicationVersionRegex
 } = require('../../../lib/github')
@@ -18,6 +18,7 @@ module.exports = async (
   { user, t }
 ) => {
   ensureUserHasRole(user, 'editor')
+  const { githubRest } = await createGithubClients()
 
   const latestPublicationVersion = await getAnnotatedTags(repoId)
     .then(tags => tags

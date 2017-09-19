@@ -3,7 +3,7 @@ const uniqBy = require('lodash/uniqBy')
 const some = require('lodash/some')
 const yaml = require('js-yaml')
 const {
-  githubRest,
+  createGithubClients,
   commitNormalizer,
   getHeads,
   getAnnotatedTags,
@@ -12,6 +12,7 @@ const {
 
 module.exports = {
   commits: async (repo, { page }) => {
+    const { githubRest } = await createGithubClients()
     const refs = await getHeads(repo.id)
 
     const [login, repoName] = repo.id.split('/')
@@ -39,6 +40,7 @@ module.exports = {
       .then(commits => commits.sort((a, b) => descending(a.date, b.date)))
   },
   latestCommit: async (repo) => {
+    const { githubRest } = await createGithubClients()
     const [login, repoName] = repo.id.split('/')
     return getHeads(repo.id)
       .then(refs => refs
@@ -60,6 +62,7 @@ module.exports = {
       }))
   },
   commit: async (repo, { id: sha }) => {
+    const { githubRest } = await createGithubClients()
     const [login, repoName] = repo.id.split('/')
     return githubRest.repos.getCommit({
       owner: login,

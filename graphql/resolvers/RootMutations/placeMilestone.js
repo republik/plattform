@@ -1,5 +1,5 @@
-const { githubRest } = require('../../../lib/github')
 const { ensureUserHasRole } = require('../../../lib/Roles')
+const { createGithubClients } = require('../../../lib/github')
 
 module.exports = async (
   _,
@@ -7,6 +7,7 @@ module.exports = async (
   { user }
 ) => {
   ensureUserHasRole(user, 'editor')
+  const { githubRest } = await createGithubClients()
 
   const name = _name.replace(/\s/g, '-')
 

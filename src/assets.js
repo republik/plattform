@@ -1,4 +1,4 @@
-const { githubRest } = require('../lib/github')
+const { createGithubClients } = require('../lib/github')
 
 const blobRegex = /.*\/(.*?)\./g
 
@@ -12,6 +12,8 @@ const blobRegex = /.*\/(.*?)\./g
 // https://developer.github.com/v3/git/blobs/#get-a-blob
 module.exports = (server) => {
   server.get('/assets/:login/:repoName/:path(*)', async (req, res) => {
+    const { githubRest } = await createGithubClients()
+
     const {
       login,
       repoName,

@@ -1,11 +1,12 @@
 const {
-  githubRest,
+  createGithubClients,
   commitNormalizer
 } = require('../../lib/github')
 
 module.exports = {
   commit: async (milestone, args, { user }) => {
     const [login, repoName] = milestone.repo.id.split('/')
+    const { githubRest } = await createGithubClients()
 
     return githubRest.repos.getCommit({
       owner: login,
