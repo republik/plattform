@@ -48,7 +48,7 @@ const Sidebar = ({
         ))
       }
     </Interaction.P>
-    <div>
+    <div style={{marginTop: 20}}>
       {
         propertyForms.map((Form, i) => (
           <Form

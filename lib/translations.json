@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-11T15:28:49.836Z",
+  "updated": "2017-09-19T16:45:12.438Z",
   "title": "live",
   "data": [
     {
@@ -135,6 +135,18 @@
       "value": "Web Slug"
     },
     {
+      "key": "metaData/field/src",
+      "value": "Bild"
+    },
+    {
+      "key": "metaData/field/alt",
+      "value": "Bildbeschrieb"
+    },
+    {
+      "key": "metaData/field/captionRight",
+      "value": "Bildlegende rechts"
+    },
+    {
       "key": "metaData/field/emailSubject",
       "value": "E-Mail-Betreff"
     },
@@ -161,6 +173,10 @@
     {
       "key": "metaData/field/twitterImage",
       "value": "Twitter Bild"
+    },
+    {
+      "key": "metaData/field/href",
+      "value": "URL"
     },
     {
       "key": "uncommittedChanges/title",

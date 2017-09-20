@@ -1,1 +1,1 @@
-export const COVER = 'cover'
+export const COVER = 'COVER'

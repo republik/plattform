@@ -3,7 +3,7 @@ import { gql, graphql } from 'react-apollo'
 import { css, merge } from 'glamor'
 import { colors } from '@project-r/styleguide'
 import { compose } from 'redux'
-import { cleanName, initials } from '../../lib/utils/clean'
+import { getInitials } from '../../lib/utils/name'
 import Loader from '../../components/Loader'
 import withT from '../../lib/withT'
 
@@ -88,9 +88,9 @@ class UncommittedChanges extends Component {
       <Loader loading={loading} error={error} render={() => (
         <div {...styles.container}>
           {repo.uncommittedChanges.length
-            ? repo.uncommittedChanges.map(change =>
-              <span key={change.id} {...css(styles.initials)} title={change.email}>
-                {initials(cleanName(change.email))}
+            ? repo.uncommittedChanges.map(user =>
+              <span key={user.id} {...css(styles.initials)} title={user.email}>
+                {getInitials(user)}
               </span>
             )
             : (

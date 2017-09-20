@@ -1,30 +1,21 @@
 import React from 'react'
 import { css } from 'glamor'
-import { LeadButton } from './ui'
-import Placeholder from '../../Placeholder'
+import { Placeholder } from 'slate'
 import { matchBlock } from '../../utils'
 import { LEAD } from './constants'
 // import { mq } from '../../styles'
 import MarkdownSerializer from '../../../../lib/serializer'
 import {serializer as paragraphSerializer, PARAGRAPH} from '../paragraph'
 
-export const styles = {
+const styles = {
   lead: {
     fontWeight: 'bold',
     margin: 0,
-    position: 'relative',
-    ':before': {
-      display: 'inline',
-      content: '«'
-    },
-    ':after': {
-      display: 'inline',
-      content: '»'
-    }
+    position: 'relative'
   }
 }
 
-export const lead = {
+const lead = {
   match: matchBlock(LEAD),
   matchMdast: (node) => node.type === 'blockquote',
   fromMdast: (node, index, parent, visitChildren) => ({
@@ -47,10 +38,11 @@ export const lead = {
   render: ({ children, ...props }) =>
     <p {...css(styles.lead)}>
       <Placeholder
-        {...props}
-        style={{ color: '#ccc' }}
+        state={props.state}
+        node={props.node}
+        firstOnly={false}
       >
-        {'Hier könnte ihr Lead stehen.'}
+        Lead
       </Placeholder>
       {children}
     </p>
@@ -63,8 +55,7 @@ export const serializer = new MarkdownSerializer({
 })
 
 export {
-  LEAD,
-  LeadButton
+  LEAD
 }
 
 export default {

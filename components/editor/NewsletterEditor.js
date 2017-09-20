@@ -4,7 +4,6 @@ import { Editor as SlateEditor } from 'slate'
 import { css } from 'glamor'
 
 import MarkdownSerializer from '../../lib/serializer'
-import { getSerializationRules } from './utils/getRules'
 import addValidation, { findOrCreate, rawNodeToNode } from './utils/serializationValidation'
 import styles from './styles'
 import Sidebar from './Sidebar'
@@ -12,35 +11,45 @@ import MetaData from './modules/meta/ui'
 
 import marks, {
   BoldButton,
-  UnderlineButton,
-  StrikethroughButton
+  ItalicButton
 } from './modules/marks'
 
 import headlines, {
-  TitleButton
+  MediumHeadlineButton, SmallHeadlineButton
 } from './modules/headlines'
 
-import lead, {
-  LeadButton
-} from './modules/lead'
+import lead from './modules/lead'
 
 import paragraph, {
   ParagraphButton
 } from './modules/paragraph'
+
+import blockquote, {
+  BlockquoteButton
+} from './modules/blockquote'
 
 import link, {
   LinkButton,
   LinkForm
 } from './modules/link'
 
-import image, {
-  ImageForm,
-  ImageButton
-} from './modules/image'
+import list, {
+  ULButton,
+  OLButton
+} from './modules/list'
+
+import figure, {
+  FigureForm,
+  FigureButton
+} from './modules/figure'
 
 import cover, {
   CoverForm, serializer as coverSerializer, COVER
 } from './modules/cover'
+
+import center, {
+  serializer as centerSerializer, TYPE as CENTER
+} from './modules/center'
 
 const newsletterStyles = {
   fontFamily: 'serif',
@@ -48,33 +57,34 @@ const newsletterStyles = {
   color: '#444',
   WebkitFontSmoothing: 'antialiased',
   maxWidth: 'calc(100vw - 190px)'
+}
 
+const autoMeta = documentNode => {
+  const data = documentNode.data
+  const autoMeta = !data || !data.size || data.get('auto')
+  if (!autoMeta) {
+    return null
+  }
+  const cover = documentNode.nodes
+    .find(n => n.type === COVER && n.kind === 'block')
+  if (!cover) {
+    return null
+  }
+
+  const newData = data
+    .set('auto', true)
+    .set('title', cover.nodes.first().text)
+    .set('description', cover.nodes.get(1).text)
+    .set('image', cover.data.get('src'))
+
+  return data.equals(newData)
+    ? null
+    : newData
 }
 
 const metaRule = {
   match: node => node.kind === 'document',
-  validate: node => {
-    const data = node.data
-    const autoMeta = !data || !data.size || data.get('auto')
-    if (!autoMeta) {
-      return null
-    }
-    const cover = node.nodes
-      .find(n => n.type === COVER && n.kind === 'block')
-    if (!cover) {
-      return null
-    }
-
-    const newData = data
-      .set('auto', true)
-      .set('title', cover.nodes.first().text)
-      .set('description', cover.nodes.get(1).text)
-      .set('image', cover.data.get('src'))
-
-    return data.equals(newData)
-      ? null
-      : newData
-  },
+  validate: autoMeta,
   normalize: (transform, object, newData) => {
     return transform.setNodeByKey(object.key, {
       data: newData
@@ -91,24 +101,50 @@ const documentRule = {
     }, {
       children: []
     })
+
+    let center = findOrCreate(node.children, {
+      type: 'zone', identifier: CENTER
+    }, {
+      children: []
+    })
+
+    const centerIndex = node.children.indexOf(center)
+    const before = []
+    const after = []
+    node.children.forEach((child, index) => {
+      if (child !== cover && child !== center) {
+        if (index > centerIndex) {
+          after.push(child)
+        } else {
+          before.push(child)
+        }
+      }
+    })
+    if (before.length || after.length) {
+      center = {
+        ...center,
+        children: [
+          ...before,
+          ...center.children,
+          ...after
+        ]
+      }
+    }
+
     const documentNode = {
       data: node.meta,
       kind: 'document',
       nodes: [
-        coverSerializer.fromMdast(cover)
-      ].concat(
-        visitChildren({
-          children: node.children
-            .filter(n => n !== cover)
-        })
-      )
+        coverSerializer.fromMdast(cover),
+        centerSerializer.fromMdast(center)
+      ]
     }
 
-    const autoMeta = metaRule.validate(
+    const newData = autoMeta(
       rawNodeToNode(documentNode)
     )
-    if (autoMeta) {
-      documentNode.data = autoMeta.toJS()
+    if (newData) {
+      documentNode.data = newData.toJS()
     }
 
     return {
@@ -118,22 +154,36 @@ const documentRule = {
   },
   toMdast: (object, index, parent, visitChildren, context) => {
     const firstNode = object.nodes[0]
-    if (!firstNode || firstNode.type !== COVER || firstNode.kind === 'block') {
+    if (!firstNode || firstNode.type !== COVER || firstNode.kind !== 'block') {
+      context.dirty = true
+    }
+    const secondNode = object.nodes[1]
+    if (!secondNode || secondNode.type !== CENTER || secondNode.kind !== 'block') {
+      context.dirty = true
+    }
+    if (object.nodes.length !== 2) {
       context.dirty = true
     }
 
     const cover = findOrCreate(object.nodes, { kind: 'block', type: COVER })
+    const center = findOrCreate(
+      object.nodes,
+      { kind: 'block', type: CENTER },
+      { nodes: [] }
+    )
+    const centerIndex = object.nodes.indexOf(center)
+    object.nodes.forEach((node, index) => {
+      if (node !== cover && node !== center) {
+        center.nodes[index > centerIndex ? 'push' : 'unshift'](node)
+      }
+    })
     return {
       type: 'root',
       meta: object.data,
       children: [
-        coverSerializer.toMdast(cover, context)
-      ].concat(
-        visitChildren({
-          nodes: object.nodes
-            .filter(n => n !== cover)
-        })
-      )
+        coverSerializer.toMdast(cover),
+        centerSerializer.toMdast(center)
+      ]
     }
   }
 }
@@ -141,21 +191,24 @@ const documentRule = {
 export const serializer = new MarkdownSerializer({
   rules: [
     documentRule
-  ].concat(getSerializationRules([
-    ...cover.plugins,
-    ...headlines.plugins,
-    ...image.plugins,
-    ...paragraph.plugins
-  ]))
+  ]
 })
 
-export const newDocument = ({title}) => {
-  return serializer.deserialize(
-    `<section><h6>${COVER}</h6>\n\n# ${title}\n\n<hr/></section>\n\nLadies and Gentlemen,`
-  )
-}
+export const newDocument = ({title}) => serializer.deserialize(
+`<section><h6>${COVER}</h6>
 
-addValidation(documentRule, serializer)
+# ${title}
+
+<hr/></section>
+
+<section><h6>${CENTER}</h6>
+
+Ladies and Gentlemen,
+
+<hr/></section>
+`)
+
+addValidation(documentRule, serializer, 'document')
 
 const documentPlugin = {
   schema: {
@@ -164,6 +217,19 @@ const documentPlugin = {
       metaRule
     ]
   }
+  // onBeforeChange: (state, editor) => {
+  //   const newData = autoMeta(state.document)
+
+  //   if (!newData) {
+  //     return state
+  //   }
+
+  //   return state.transform()
+  //     .setNodeByKey(state.document.key, {
+  //       data: newData
+  //     })
+  //     .apply()
+  // }
 }
 
 const plugins = [
@@ -173,30 +239,35 @@ const plugins = [
   ...lead.plugins,
   ...paragraph.plugins,
   ...link.plugins,
-  ...image.plugins,
-  ...cover.plugins
+  ...figure.plugins,
+  ...cover.plugins,
+  ...center.plugins,
+  ...blockquote.plugins,
+  ...list.plugins
 ]
 
 const textFormatButtons = [
   BoldButton,
-  UnderlineButton,
-  StrikethroughButton,
+  ItalicButton,
   LinkButton
 ]
 
 const blockFormatButtons = [
-  TitleButton,
-  LeadButton,
-  ParagraphButton
+  MediumHeadlineButton,
+  SmallHeadlineButton,
+  ParagraphButton,
+  BlockquoteButton,
+  ULButton,
+  OLButton
 ]
 
 const insertButtons = [
-  ImageButton
+  FigureButton
 ]
 
 const propertyForms = [
   LinkForm,
-  ImageForm,
+  FigureForm,
   CoverForm
 ]
 

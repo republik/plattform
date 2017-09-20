@@ -35,10 +35,6 @@ const fragments = {
       }
       document {
         content
-        commit {
-          id
-          message
-        }
         meta {
           title
         }
@@ -331,8 +327,7 @@ class EditorPage extends Component {
         this.concludeChanges(repoId)
 
         this.setState({
-          committing: false,
-          uncommittedChanges: false
+          committing: false
         })
         Router.replaceRoute('repo/edit', {
           repoId: repoId.split('/'),
@@ -341,6 +336,9 @@ class EditorPage extends Component {
       })
       .catch(e => {
         console.error(e)
+        this.setState({
+          committing: false
+        })
         this.warn(t('commit/warn/failed', {
           error: errorToString(e)
         }))

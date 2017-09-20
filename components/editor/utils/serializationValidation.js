@@ -1,16 +1,21 @@
 import { Raw, State, Document, Block } from 'slate'
 
 const nodeToRawNode = (node) => {
-  const state = State.create({
-    document: node.kind === 'document'
+  const isDocument = node.kind === 'document'
+  const rawNode = Raw.serialize(State.create({
+    document: isDocument
       ? node
       : Document.create({
         nodes: Block.createList([
           node
         ])
       })
-  })
-  return Raw.serialize(state).document.nodes[0]
+  })).document
+
+  if (isDocument) {
+    return rawNode
+  }
+  return rawNode.nodes[0]
 }
 
 export const rawNodeToNode = (rawNode) => {
@@ -31,7 +36,7 @@ export const rawNodeToNode = (rawNode) => {
   return node.nodes.first()
 }
 
-const addValidation = (rule, serializer) => {
+const addValidation = (rule, serializer, name) => {
   rule.validate = node => {
     const context = {}
     const rawNode = nodeToRawNode(node)
@@ -42,22 +47,32 @@ const addValidation = (rule, serializer) => {
       : null
   }
   rule.normalize = (transform, object, mdast) => {
+    const rawNode = serializer.fromMdast(mdast)
     const node = rawNodeToNode(
-      serializer.fromMdast(mdast)
+      rawNode.kind === 'state'
+        ? rawNode.document
+        : rawNode
     )
 
-    const parent = transform.state.document.getParent(object.key)
-    const index = parent.nodes.findIndex(n => n === object)
-
-    return transform
-      .insertNodeByKey(
-        parent.key,
-        index,
-        node
+    const target = node.kind === 'document'
+      ? transform.state.document
+      : object
+    let t = transform.setNodeByKey(target.key, {
+      data: node.data
+    })
+    target.nodes.forEach(n => {
+      t = t.removeNodeByKey(
+        n.key
       )
-      .removeNodeByKey(
-        object.key
+    })
+    node.nodes.forEach((n, i) => {
+      t = t.insertNodeByKey(
+        target.key,
+        i,
+        n
       )
+    })
+    return t
   }
 }
 

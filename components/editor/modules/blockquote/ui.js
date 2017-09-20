@@ -1,11 +1,11 @@
 import React from 'react'
 import { css } from 'glamor'
 import { createBlockButton } from '../../utils'
-import { LEAD } from './constants'
+import { BLOCKQUOTE } from './constants'
 import styles from '../../styles'
 
-export const LeadButton = createBlockButton({
-  type: LEAD
+export const BlockquoteButton = createBlockButton({
+  type: BLOCKQUOTE
 })(
   ({ active, disabled, visible, ...props }) =>
     <span
@@ -14,6 +14,6 @@ export const LeadButton = createBlockButton({
       data-disabled={disabled}
       data-visible={visible}
       >
-      Lead
+      Zitat
     </span>
 )

@@ -47,6 +47,7 @@ export const link = {
   render: ({ children, node }) => (
     <a
       href={node.getIn(['data', 'href'])}
+      title={node.getIn(['data', 'title'])}
       {...css(styles.link)}
     >{ children }</a>
   )

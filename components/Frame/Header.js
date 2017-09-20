@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import Router from 'next/router'
 import { compose } from 'redux'
 
-import { cleanName, initials } from '../../lib/utils/clean'
+import { getInitials } from '../../lib/utils/name'
 import withMe from '../../lib/withMe'
 
 import {
@@ -138,7 +138,7 @@ class Header extends Component {
                 ? <img src={me.portrait.url} {...styles.portrait} />
                 : (
                   <span {...styles.initials}>
-                    {initials(cleanName(me.name.trim() || me.email))}
+                    {getInitials(me)}
                   </span>
                   )
               }

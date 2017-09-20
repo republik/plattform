@@ -1,14 +1,14 @@
 import React from 'react'
 import { css } from 'glamor'
-import Placeholder from '../../Placeholder'
+import { Placeholder } from 'slate'
 import MarkdownSerializer from '../../../../lib/serializer'
 
 import { matchBlock } from '../../utils'
 import {
-  TitleButton,
   MediumHeadlineButton,
   SmallHeadlineButton
 } from './ui'
+
 import {
   TITLE,
   MEDIUM_HEADLINE,
@@ -17,6 +17,7 @@ import {
 
 export const styles = {
   title: {
+    position: 'relative',
     fontSize: 36,
     fontFamily: 'sans-serif',
     fontWeight: 'bold',
@@ -40,8 +41,11 @@ export const title = {
   }),
   render: ({ children, ...props }) =>
     <h1 {...css(styles.title)}>
-      <Placeholder {...props} style={{ color: '#ccc' }}>
-        {'Titel'}
+      <Placeholder
+        state={props.state}
+        node={props.node}
+        firstOnly={false}>
+        Titel
       </Placeholder>
       { children }
     </h1>
@@ -66,7 +70,7 @@ export const mediumHeadline = {
     depth: 2,
     children: visitChildren(object)
   }),
-  render: ({ children }) => <h1>{ children }</h1>
+  render: ({ children }) => <h2>{ children }</h2>
 }
 
 export const smallHeadline = {
@@ -82,7 +86,7 @@ export const smallHeadline = {
     depth: 3,
     children: visitChildren(object)
   }),
-  render: ({ children }) => <h1>{ children }</h1>
+  render: ({ children }) => <h3>{ children }</h3>
 }
 
 export const serializer = new MarkdownSerializer({
@@ -95,7 +99,6 @@ export const serializer = new MarkdownSerializer({
 
 export {
   TITLE,
-  TitleButton,
   MEDIUM_HEADLINE,
   MediumHeadlineButton,
   SMALL_HEADLINE,

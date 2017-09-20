@@ -1,15 +1,12 @@
 import React from 'react'
 import { css } from 'glamor'
 import { Label } from '@project-r/styleguide'
+import { gray2x1 } from './placeholder'
 
 const styles = {
   label: css({
     display: 'block',
     marginBottom: 5
-  }),
-  placeholder: css({
-    display: 'inline-block',
-    backgroundColor: '#ccc'
   }),
   input: css({
     display: 'none'
@@ -42,20 +39,16 @@ const ImageInput = ({onChange, src, label, maxWidth = 200}) => (
     <Label {...styles.label}>
       {label}
     </Label>
-    {src
-      ? <img src={src} style={{maxWidth}} alt='' />
-      : (
-        <span {...styles.placeholder}
-          style={{
-            width: maxWidth,
-            height: typeof maxWidth === 'number'
-              ? maxWidth / 1.9
-              : 100
-          }} />
-      )
-    }
+    <img
+      src={src || gray2x1}
+      style={{
+        maxWidth,
+        width: src ? undefined : '100%'
+      }}
+      alt='' />
     <input
       type='file'
+      accept='image/*'
       {...styles.input}
       onChange={readImage(onChange)}
     />

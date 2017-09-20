@@ -1,22 +1,15 @@
 import React from 'react'
+import { Map } from 'immutable'
+
 import { Label } from '@project-r/styleguide'
-import { ImagePropertyForm } from '../image/ui'
+
+import MetaForm from '../../utils/MetaForm'
+
 import { COVER } from './constants'
 import {
   createPropertyForm,
   matchBlock
 } from '../../utils'
-
-export const CoverPropertyForm = ({ state, node, onChange }) => {
-  return <span>
-    <Label>Cover</Label>
-    <ImagePropertyForm
-      state={state}
-      node={node}
-      onChange={onChange}
-    />
-  </span>
-}
 
 export const CoverForm = createPropertyForm({
   isDisabled: ({ state }) => {
@@ -33,9 +26,28 @@ export const CoverForm = createPropertyForm({
       block => state.document.getParent(block.key)
     )
     .find(matchBlock(COVER))
-  return <CoverPropertyForm
-    state={state}
-    node={node}
-    onChange={onChange}
+
+  const onInputChange = key => (_, value) => {
+    onChange(
+      state
+        .transform()
+        .setNodeByKey(node.key, {
+          data: value
+            ? node.data.set(key, value)
+            : node.data.remove(key)
+        })
+        .apply()
+    )
+  }
+
+  return <div>
+    <Label>Cover</Label>
+    <MetaForm
+      data={Map({
+        src: '',
+        alt: ''
+      }).merge(node.data)}
+      onInputChange={onInputChange}
     />
+  </div>
 })
