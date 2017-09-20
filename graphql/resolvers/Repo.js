@@ -1,7 +1,7 @@
 const { descending } = require('d3-array')
 const uniqBy = require('lodash/uniqBy')
 const some = require('lodash/some')
-const yaml = require('js-yaml')
+const yaml = require('../../lib/yaml')
 const {
   createGithubClients,
   commitNormalizer,
@@ -118,16 +118,10 @@ module.exports = {
     })
 
     const publicationMetaDecorator = (publication) => {
-      let parsedMessage = {}
-      try {
-        const body = publication.message.match(/---\n([\s\S]*?)\n---/)[1] || ''
-        parsedMessage = yaml.safeLoad(body)
-      } catch (e) { }
-      // default values
       const {
         scheduledAt = undefined,
         updateMailchimp = false
-      } = parsedMessage
+      } = yaml.parse(publication.message)
       return {
         ...publication,
         meta: {

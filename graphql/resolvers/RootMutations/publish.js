@@ -1,8 +1,6 @@
 const { ensureUserHasRole } = require('../../../lib/Roles')
 const { descending } = require('d3-array')
-const yaml = require('js-yaml')
-const omitBy = require('lodash/omitBy')
-const isNil = require('lodash/isNil')
+const yaml = require('../../../lib/yaml')
 const {
   createGithubClients,
   getAnnotatedTags,
@@ -36,18 +34,13 @@ module.exports = async (
     ? `v${versionNumber}-prepublication`
     : `v${versionNumber}`
 
-  const message =
-`---
-${yaml.safeDump(
-  omitBy({
-    scheduledAt,
-    updateMailchimp
-  }, isNil)
-)}
----
-
-${t('api/github/yaml/warning')}
-`
+  const message = yaml.stringify(
+    {
+      scheduledAt,
+      updateMailchimp
+    },
+    t('api/github/yaml/warning')
+  )
 
   const milestone = await placeMilestone(
     null,
