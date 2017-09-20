@@ -34,7 +34,8 @@ import link, {
 } from './modules/link'
 
 import list, {
-  ULButton
+  ULButton,
+  OLButton
 } from './modules/list'
 
 import figure, {
@@ -256,7 +257,8 @@ const blockFormatButtons = [
   SmallHeadlineButton,
   ParagraphButton,
   BlockquoteButton,
-  ULButton
+  ULButton,
+  OLButton
 ]
 
 const insertButtons = [

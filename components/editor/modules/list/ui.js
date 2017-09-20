@@ -1,23 +1,42 @@
 import React from 'react'
 import { Block } from 'slate'
 import { css } from 'glamor'
-import { createBlockButton } from '../../utils'
-import { UL, LI } from './constants'
+import { matchBlock, createBlockButton } from '../../utils'
+import { LIST, LI } from './constants'
 import { PARAGRAPH } from '../paragraph'
 import styles from '../../styles'
 
-export const ULButton = createBlockButton({
-  type: UL,
+const makeButton = ({ordered, label}) => createBlockButton({
+  type: LIST,
   reducer: props =>
     event => {
       const { onChange, state } = props
       event.preventDefault()
+
+      const inList = state.document.getClosest(state.startBlock.key, matchBlock(LIST))
+
+      if (inList) {
+        return onChange(
+          state
+            .transform()
+            .setNodeByKey(inList.key, {
+              data: inList.data.merge({
+                ordered
+              })
+            })
+            .apply()
+        )
+      }
+
       return onChange(
         state
           .transform()
           .insertBlock(
             Block.create({
-              type: UL,
+              type: LIST,
+              data: {
+                ordered
+              },
               nodes: [
                 Block.create({
                   type: LI,
@@ -30,7 +49,6 @@ export const ULButton = createBlockButton({
               ]
             })
           )
-          .setBlock(UL)
           .apply()
       )
     }
@@ -42,6 +60,16 @@ export const ULButton = createBlockButton({
       data-disabled={disabled}
       data-visible={visible}
       >
-      UL
+      {label}
     </span>
 )
+
+export const ULButton = makeButton({
+  ordered: false,
+  label: 'UL'
+})
+
+export const OLButton = makeButton({
+  ordered: true,
+  label: 'OL'
+})

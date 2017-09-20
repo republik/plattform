@@ -1,2 +1,2 @@
-export const UL = 'LIST-UNORDERED'
+export const LIST = 'LIST'
 export const LI = 'LIST-ITEM'

@@ -1,7 +1,7 @@
 import React from 'react'
 import { matchBlock } from '../../utils'
-import { UL, LI } from './constants'
-import { ULButton } from './ui'
+import { LIST, LI } from './constants'
+import { ULButton, OLButton } from './ui'
 import { serializer as paragraphSerializer, PARAGRAPH } from '../paragraph'
 import MarkdownSerializer from '../../../../lib/serializer'
 import addValidation from '../../utils/serializationValidation'
@@ -29,35 +29,41 @@ const itemSerializer = new MarkdownSerializer({
   ]
 })
 
-const ul = {
-  match: matchBlock(UL),
-  matchMdast: (node) => node.type === 'list' && !node.ordered,
+const list = {
+  match: matchBlock(LIST),
+  matchMdast: (node) => node.type === 'list',
   fromMdast: (node, index, parent, visitChildren) => ({
     kind: 'block',
-    type: UL,
+    type: LIST,
+    data: {
+      ordered: node.ordered,
+      start: node.start
+    },
     nodes: itemSerializer.fromMdast(node.children)
   }),
   toMdast: (object, index, parent, visitChildren, context) => ({
     type: 'list',
-    ordered: false,
+    ordered: object.data.ordered,
+    start: object.data.start || 1,
     children: itemSerializer.toMdast(object.nodes, context)
   }),
-  render: ({ children, node }) => (
-    <ul>{ children }</ul>
-  )
+  render: ({ children, node }) => node.data.get('ordered')
+    ? <ol start={node.data.get('start')}>{ children }</ol>
+    : <ul>{ children }</ul>
 }
 
 export const serializer = new MarkdownSerializer({
   rules: [
-    ul
+    list
   ]
 })
 
-addValidation(ul, serializer, 'ul')
+addValidation(list, serializer, 'list')
 
 export {
-  UL,
-  ULButton
+  LIST,
+  ULButton,
+  OLButton
 }
 
 export default {
@@ -67,7 +73,7 @@ export default {
         const isBackspace = data.key === 'backspace'
         if (data.key !== 'enter' && !isBackspace) return
 
-        const inList = state.document.getClosest(state.startBlock.key, matchBlock(UL))
+        const inList = state.document.getClosest(state.startBlock.key, matchBlock(LIST))
         if (!inList) return
 
         event.preventDefault()
@@ -96,7 +102,7 @@ export default {
       schema: {
         rules: [
           {
-            match: matchBlock(UL),
+            match: matchBlock(LIST),
             validate: node => {
               const notItems = node.nodes
                 .filter(n => n.type !== LI)
@@ -139,7 +145,7 @@ export default {
               return transform
             }
           },
-          ul,
+          list,
           listItem
         ]
       }
