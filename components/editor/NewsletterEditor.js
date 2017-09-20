@@ -33,6 +33,10 @@ import link, {
   LinkForm
 } from './modules/link'
 
+import list, {
+  ULButton
+} from './modules/list'
+
 import figure, {
   FigureForm,
   FigureButton
@@ -237,7 +241,8 @@ const plugins = [
   ...figure.plugins,
   ...cover.plugins,
   ...center.plugins,
-  ...blockquote.plugins
+  ...blockquote.plugins,
+  ...list.plugins
 ]
 
 const textFormatButtons = [
@@ -250,7 +255,8 @@ const blockFormatButtons = [
   MediumHeadlineButton,
   SmallHeadlineButton,
   ParagraphButton,
-  BlockquoteButton
+  BlockquoteButton,
+  ULButton
 ]
 
 const insertButtons = [
