@@ -28,11 +28,13 @@ const fetch = require('isomorphic-unfetch')
 
 const GRAPHQL_URI = `http://localhost:${PORT}/graphql`
 const WS_URL = PUBLIC_WS_URL_BASE + PUBLIC_WS_URL_PATH
+const { createApolloFetch } = require('apollo-fetch')
 const {
-  createApolloFetch,
+  createApolloFetch: createApolloFetchWithCookie,
   createSubscriptionClient
 } = require('./clientsWithCookie')
-const apolloFetch = createApolloFetch(GRAPHQL_URI)
+const apolloFetch = createApolloFetchWithCookie(GRAPHQL_URI)
+const apolloFetchUnauthorized = createApolloFetch({ uri: GRAPHQL_URI })
 const MDAST = require('../lib/mdast/mdast')
 const {
   createGithubClients,
@@ -1003,6 +1005,26 @@ test('publish', async (t) => {
       }
   `
 
+  const documentsQuery = `
+    {
+      documents {
+        meta {
+          title
+          description
+        }
+        content
+      }
+    }
+  `
+
+  const unpublishMutation = `
+    mutation unpublish(
+      $repoId: ID!
+    ) {
+      unpublish(repoId: $repoId)
+    }
+  `
+
   const testPublication = (publication, vars, _name) => {
     const {
       name,
@@ -1032,7 +1054,7 @@ test('publish', async (t) => {
   const variables0 = {
     repoId: testRepoId,
     commitId: initialCommitId,
-    prepublication: false,
+    prepublication: true,
     updateMailchimp: true
   }
 
@@ -1041,7 +1063,7 @@ test('publish', async (t) => {
     variables: variables0
   })
   t.ok(mutation0.data)
-  testPublication(mutation0.data.publish, variables0, 'v1')
+  testPublication(mutation0.data.publish, variables0, 'v1-prepublication')
 
   const query0 = await apolloFetch({
     query: latestPublicationsQuery,
@@ -1053,15 +1075,39 @@ test('publish', async (t) => {
   {
     const latestPublications = query0.data.repo.latestPublications
     t.equals(latestPublications.length, 1)
-    testPublication(latestPublications[0], variables0, 'v1')
+    testPublication(latestPublications[0], variables0, 'v1-prepublication')
   }
+
+  // check documents
+  const queryDocuments0 = await apolloFetch({
+    query: documentsQuery,
+    variables: { repoId: testRepoId }
+  })
+  t.ok(queryDocuments0.data.documents)
+  {
+    const documents = queryDocuments0.data.documents
+    t.equals(documents.length, 1)
+    t.deepLooseEqual(documents[0].meta, loremMdast.meta)
+    t.ok(documents[0].content)
+  }
+
+  const queryDocumentsUnauthorized0 = await apolloFetchUnauthorized({
+    query: documentsQuery,
+    variables: { repoId: testRepoId }
+  })
+  t.ok(queryDocumentsUnauthorized0.data.documents)
+  {
+    const documents = queryDocumentsUnauthorized0.data.documents
+    t.equals(documents.length, 0)
+  }
+  //
 
   /// ////
 
   const variables1 = {
     repoId: testRepoId,
     commitId: initialCommitId,
-    prepublication: true,
+    prepublication: false,
     updateMailchimp: false
   }
 
@@ -1070,7 +1116,7 @@ test('publish', async (t) => {
     variables: variables1
   })
   t.ok(mutation1.data)
-  testPublication(mutation1.data.publish, variables1, 'v2-prepublication')
+  testPublication(mutation1.data.publish, variables1, 'v2')
 
   const query1 = await apolloFetch({
     query: latestPublicationsQuery,
@@ -1082,15 +1128,67 @@ test('publish', async (t) => {
   {
     const latestPublications = query1.data.repo.latestPublications
     t.equals(latestPublications.length, 2)
-    testPublication(latestPublications[0], variables0, 'v1') // publication should come first
-    testPublication(latestPublications[1], variables1, 'v2-prepublication') // prepublication should be after publication
+    // publication should come first
+    testPublication(latestPublications[0], variables1, 'v2')
+    // prepublication should come after publication
+    testPublication(latestPublications[1], variables0, 'v1-prepublication')
   }
+
+  // check documents
+  const queryDocuments1 = await apolloFetch({
+    query: documentsQuery,
+    variables: { repoId: testRepoId }
+  })
+  t.ok(queryDocuments1.data.documents)
+  {
+    const documents = queryDocuments1.data.documents
+    t.equals(documents.length, 1)
+    t.deepLooseEqual(documents[0].meta, loremMdast.meta)
+    t.ok(documents[0].content)
+  }
+
+  const queryDocumentsUnauthorized1 = await apolloFetchUnauthorized({
+    query: documentsQuery,
+    variables: { repoId: testRepoId }
+  })
+  t.ok(queryDocumentsUnauthorized1.data.documents)
+  {
+    const documents = queryDocumentsUnauthorized1.data.documents
+    t.equals(documents.length, 1)
+    t.deepLooseEqual(documents[0].meta, loremMdast.meta)
+    t.ok(documents[0].content)
+  }
+
+  const mutationUnpublish0 = await apolloFetch({
+    query: unpublishMutation,
+    variables: { repoId: testRepoId }
+  })
+  t.ok(mutationUnpublish0.data)
+
+  const queryDocuments2 = await apolloFetch({
+    query: documentsQuery,
+    variables: { repoId: testRepoId }
+  })
+  {
+    const documents = queryDocuments2.data.documents
+    t.equals(documents.length, 0)
+  }
+
+  const queryDocumentsUnauthorized2 = await apolloFetchUnauthorized({
+    query: documentsQuery,
+    variables: { repoId: testRepoId }
+  })
+  {
+    const documents = queryDocumentsUnauthorized2.data.documents
+    t.equals(documents.length, 0)
+  }
+  //
 
   /// ////
 
   const variables2 = {
     repoId: testRepoId,
-    commitId: lastCommitId,
+    commitId: initialCommitId,
     prepublication: false,
     updateMailchimp: false
   }
@@ -1112,13 +1210,104 @@ test('publish', async (t) => {
   {
     const latestPublications = query2.data.repo.latestPublications
     t.equals(latestPublications.length, 2)
-    testPublication(latestPublications[0], variables2, 'v3') // publication should come first
-    testPublication(latestPublications[1], variables1, 'v2-prepublication') // prepublication should be after publication
+    // publication should come first
+    testPublication(latestPublications[0], variables2, 'v3')
+    // prepublication should be after publication
+    testPublication(latestPublications[1], variables0, 'v1-prepublication')
   }
+
+  // check documents
+  const queryDocuments3 = await apolloFetch({
+    query: documentsQuery,
+    variables: { repoId: testRepoId }
+  })
+  t.ok(queryDocuments3.data.documents)
+  {
+    const documents = queryDocuments3.data.documents
+    t.equals(documents.length, 1)
+    t.deepLooseEqual(documents[0].meta, loremMdast.meta)
+    t.ok(documents[0].content)
+  }
+
+  const queryDocumentsUnauthorized3 = await apolloFetchUnauthorized({
+    query: documentsQuery,
+    variables: { repoId: testRepoId }
+  })
+  t.ok(queryDocumentsUnauthorized3.data.documents)
+  {
+    const documents = queryDocumentsUnauthorized3.data.documents
+    t.equals(documents.length, 1)
+    t.deepLooseEqual(documents[0].meta, loremMdast.meta)
+    t.ok(documents[0].content)
+  }
+  //
 
   /// ////
 
+  const variables3 = {
+    repoId: testRepoId,
+    commitId: lastCommitId,
+    prepublication: true,
+    updateMailchimp: false
+  }
+
+  const mutation3 = await apolloFetch({
+    query: mutationQuery,
+    variables: variables3
+  })
+  t.ok(mutation3.data)
+  testPublication(mutation3.data.publish, variables3, 'v4-prepublication')
+
   const query3 = await apolloFetch({
+    query: latestPublicationsQuery,
+    variables: {
+      repoId: testRepoId
+    }
+  })
+  t.ok(query3.data.repo.latestPublications)
+  {
+    const latestPublications = query3.data.repo.latestPublications
+    t.equals(latestPublications.length, 2)
+    // publication should come first
+    testPublication(latestPublications[0], variables2, 'v3')
+    // prepublication should be after publication
+    testPublication(latestPublications[1], variables3, 'v4-prepublication')
+  }
+
+  // check documents
+  const queryDocuments4 = await apolloFetch({
+    query: documentsQuery,
+    variables: { repoId: testRepoId }
+  })
+  t.ok(queryDocuments4.data.documents)
+  {
+    const documents = queryDocuments4.data.documents
+    t.equals(documents.length, 1)
+    // TODO what about other metas than title and description
+    // t.deepLooseEqual(documents[0].meta, loremWithImageMdast.meta)
+    t.deepLooseEqual(documents[0].meta, {
+      title: loremWithImageMdast.meta.title,
+      description: loremWithImageMdast.meta.description
+    })
+    t.ok(documents[0].content)
+  }
+
+  const queryDocumentsUnauthorized4 = await apolloFetchUnauthorized({
+    query: documentsQuery,
+    variables: { repoId: testRepoId }
+  })
+  t.ok(queryDocumentsUnauthorized4.data.documents)
+  {
+    const documents = queryDocumentsUnauthorized4.data.documents
+    t.equals(documents.length, 1)
+    t.deepLooseEqual(documents[0].meta, loremMdast.meta)
+    t.ok(documents[0].content)
+  }
+  //
+
+  /// ////
+
+  const query4 = await apolloFetch({
     query: `
       query repo(
         $repoId: ID!
@@ -1135,14 +1324,16 @@ test('publish', async (t) => {
       repoId: testRepoId
     }
   })
-  t.ok(query3.data.repo.milestones)
+  t.ok(query4.data.repo.milestones)
   {
-    const milestones = query3.data.repo.milestones
-    t.equals(milestones.length, 3)
+    const milestones = query4.data.repo.milestones
+    t.equals(milestones.length, 4)
     for (let milestone of milestones) {
       t.equals(milestone.immutable, true)
     }
   }
+
+  /// ////
 
   t.end()
 })

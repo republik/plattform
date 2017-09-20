@@ -59,8 +59,6 @@ type RootMutations {
   #  addresses: [String!]!
   #)
 
-  # flag on repo
-  # where to save?
   unpublish(
     repoId: ID!
   ): Boolean!
@@ -145,7 +143,6 @@ type Document implements FileInterface {
   # AST of /article.md
   content: JSON!
   meta: Meta!
-  commit: Commit!
 }
 
 type Meta {
