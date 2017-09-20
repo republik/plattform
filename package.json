@@ -1,6 +1,9 @@
 {
   "name": "haku-frontend",
   "version": "1.0.0",
+  "engines": {
+    "node": "8.4.0"
+  },
   "description": "",
   "main": "server/index.js",
   "scripts": {
