@@ -35,10 +35,6 @@ const fragments = {
       }
       document {
         content
-        commit {
-          id
-          message
-        }
         meta {
           title
         }
