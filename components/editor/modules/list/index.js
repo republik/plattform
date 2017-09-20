@@ -73,7 +73,13 @@ export default {
         event.preventDefault()
 
         const inItem = state.document.getClosest(state.startBlock.key, matchBlock(LI))
-        const isEmpty = !inItem.text.trim()
+        const isEmpty = !inItem || !inItem.text
+
+        if (isEmpty && (!isBackspace || inList.nodes.size === 1)) {
+          return state.transform()
+            .unwrapBlock()
+            .apply()
+        }
 
         if (isBackspace) {
           const t = state.transform().deleteBackward()
@@ -81,12 +87,6 @@ export default {
             t.removeNodeByKey(inItem.key)
           }
           return t.apply()
-        }
-
-        if (isEmpty) {
-          return state.transform()
-            .unwrapBlock()
-            .apply()
         }
 
         return state.transform()
