@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-19T16:45:12.438Z",
+  "updated": "2017-09-21T13:12:14.974Z",
   "title": "live",
   "data": [
     {
@@ -96,7 +96,7 @@
     },
     {
       "key": "repo/nav/edit",
-      "value": "Text"
+      "value": "Inhalt"
     },
     {
       "key": "repo/nav/meta",
