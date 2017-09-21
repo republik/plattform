@@ -9,7 +9,7 @@ import TagIcon from 'react-icons/lib/md/grade'
 import { transformData } from './transformData'
 import withT from '../../lib/withT'
 import { swissTime } from '../../lib/utils/format'
-import { linkRule } from '@project-r/styleguide'
+import { linkRule, Interaction, Label } from '@project-r/styleguide'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
@@ -276,6 +276,26 @@ class Tree extends Component {
                 ref={commit.setListItemRef}
                 {...styles.listItem}
               >
+                <Interaction.P>
+                  <Link
+                    route='repo/edit'
+                    params={{
+                      repoId: repoId.split('/'),
+                      commitId: commit.id
+                    }}
+                  >
+                    <a {...linkRule}>
+                      {commit.message}
+                    </a>
+                  </Link>
+                </Interaction.P>
+                <Label>
+                  {commit.author.name}
+                  <br />
+                  {timeFormat(new Date(commit.date))}
+                </Label>
+                <br />
+                <br />
                 {!!commit.milestones && commit.milestones.length > 0 &&
                 <span>
                   <span {...styles.milestoneInfo}>
@@ -302,21 +322,21 @@ class Tree extends Component {
                     ref={commit.setMilestoneBarRef}
                     />
                 </span>}
-                <Link
-                  route='repo/edit'
-                  params={{
-                    repoId: repoId.split('/'),
-                    commitId: commit.id
-                  }}
-                >
-                  <a {...linkRule}>
-                    {commit.message}
-                  </a>
-                </Link>
-                <br />
-                {commit.author.name}
-                <br />
-                {timeFormat(new Date(commit.date))}
+                <Interaction.P>
+                  <Label>
+                    <Link
+                      route='repo/publish'
+                      params={{
+                        repoId: repoId.split('/'),
+                        commitId: commit.id
+                      }}
+                    >
+                      <a {...linkRule}>
+                        {t('tree/commit/publish')}
+                      </a>
+                    </Link>
+                  </Label>
+                </Interaction.P>
               </li>
             )}
           </ul>}

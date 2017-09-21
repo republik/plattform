@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-21T13:12:14.974Z",
+  "updated": "2017-09-21T15:30:30.272Z",
   "title": "live",
   "data": [
     {
@@ -93,6 +93,10 @@
     {
       "key": "checklist/labels/korrektur",
       "value": "Korrektur"
+    },
+    {
+      "key": "tree/commit/publish",
+      "value": "Vorschau und Veröffentlichung"
     },
     {
       "key": "repo/nav/edit",
@@ -241,6 +245,38 @@
     {
       "key": "commit/warn/missing",
       "value": "Commit {commitId} nicht gefunden."
+    },
+    {
+      "key": "publish/title",
+      "value": "Vorschau und Veröffentlichung"
+    },
+    {
+      "key": "publish/commit/selected",
+      "value": "Ausgewählte Version"
+    },
+    {
+      "key": "publish/commit/change",
+      "value": "Version ändern"
+    },
+    {
+      "key": "publish/trigger",
+      "value": "publizieren"
+    },
+    {
+      "key": "publish/label/prepublication",
+      "value": "Interne Publikation (Vorschau für Editoren)"
+    },
+    {
+      "key": "publish/label/updateMailchimp",
+      "value": "Mailchimp aktualisieren"
+    },
+    {
+      "key": "publish/label/scheduled",
+      "value": "Publikation terminieren"
+    },
+    {
+      "key": "publish/label/scheduledAt",
+      "value": "Publikationstermin"
     }
   ]
 }

@@ -8,7 +8,7 @@ import Tree from '../../components/Tree'
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
 
-const query = gql`
+export const query = gql`
   query repoWithHistory($repoId: ID!) {
     repo(id: $repoId) {
       id
