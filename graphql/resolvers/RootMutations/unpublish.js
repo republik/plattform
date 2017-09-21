@@ -1,7 +1,6 @@
 const { ensureUserHasRole } = require('../../../lib/Roles')
 const {
-  getTopics,
-  setTopics
+  deleteRef
 } = require('../../../lib/github')
 
 module.exports = async (
@@ -11,17 +10,37 @@ module.exports = async (
 ) => {
   ensureUserHasRole(user, 'editor')
 
+  const keys = [
+    `${repoId}/publication`,
+    `${repoId}/prepublication`,
+    `${repoId}/scheduledPublication`,
+    `${repoId}/scheduledPrepublication`
+  ]
+  const listKeys = [
+    'publishedRepoIds',
+    'prepublishedRepoIds',
+    'scheduledPublicationRepoIds',
+    'scheduledPrepublicationRepoIds'
+  ]
+  const refs = [
+    'publication',
+    'prepublication',
+    'scheduled-publication',
+    'scheduled-prepublication'
+  ]
+
   await Promise.all([
-    redis.delAsync(`${repoId}/publication`),
-    redis.zremAsync('publishedRepoIds', repoId),
-    redis.delAsync(`${repoId}/prepublication`),
-    redis.zremAsync('prepublishedRepoIds', repoId),
+    ...keys.map(key => redis.delAsync(key)),
+    ...listKeys.map(key => redis.zremAsync(key, repoId)),
+    ...refs.map(ref => deleteRef(repoId, `tags/${ref}`))
+    /*
     getTopics(repoId)
       .then(topics => topics
         .filter(topic => topic !== 'published')
         .concat('unpublished')
       )
       .then(topics => setTopics(repoId, topics))
+    */
   ])
 
   return true

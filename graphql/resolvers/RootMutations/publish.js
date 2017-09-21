@@ -5,22 +5,41 @@ const {
   createGithubClients,
   publicationVersionRegex,
   getAnnotatedTags,
-  setTopics,
-  getTopics
+  upsertRef
 } = require('../../../lib/github')
 
 const placeMilestone = require('./placeMilestone')
 const { document: getDocument } = require('../Commit')
 
 // TODO updateMailchimp
-// TODO scheduledAt
 module.exports = async (
   _,
-  { repoId, commitId, prepublication, scheduledAt, updateMailchimp = false },
+  {
+    repoId,
+    commitId,
+    prepublication,
+    scheduledAt: _scheduledAt,
+    updateMailchimp = false
+  },
   { user, t, redis }
 ) => {
   ensureUserHasRole(user, 'editor')
   const { githubRest } = await createGithubClients()
+  const now = new Date()
+
+  let scheduledAt
+  if (_scheduledAt) {
+    const maxDate = new Date()
+    maxDate.setDate(maxDate.getDate() + 20)
+    if (_scheduledAt > maxDate) {
+      throw new Error(t('api/publish/scheduledAt/tooFarInTheFuture', {
+        days: 20
+      }))
+    }
+    if (_scheduledAt > now) { // otherwise it's not scheduled but instant
+      scheduledAt = _scheduledAt
+    }
+  }
 
   const latestPublicationVersion = await getAnnotatedTags(repoId)
     .then(tags => tags
@@ -59,6 +78,68 @@ module.exports = async (
     }
   )
 
+  // move ref
+  let ref = prepublication
+    ? 'prepublication'
+    : 'publication'
+  if (scheduledAt) {
+    ref = `scheduled-${ref}`
+  }
+  await upsertRef(
+    repoId,
+    `tags/${ref}`,
+    milestone.sha
+  )
+  // remove old scheduled ref
+  if (!scheduledAt) {
+    await upsertRef(
+      repoId,
+      `tags/scheduled-${ref}`,
+      milestone.sha
+    )
+  }
+
+  // get doc
+  const doc = await getDocument(
+    { id: commitId, repo: { id: repoId } },
+    null,
+    { user }
+  )
+    .then(doc => JSON.stringify(doc))
+
+  // cache in redis
+  const scheduledKey = prepublication
+    ? `${repoId}/scheduledPrepublication`
+    : `${repoId}/scheduledPublication`
+  const scheduledListKey = prepublication
+    ? `scheduledPrepublicationRepoIds`
+    : `scheduledPublicationRepoIds`
+
+  if (!scheduledAt) {
+    let keys = [ `${repoId}/prepublication` ]
+    let listKeys = [ 'prepublishedRepoIds' ]
+
+    if (!prepublication) {
+      keys.push(`${repoId}/publication`)
+      listKeys.push('publishedRepoIds')
+    }
+
+    const nowTimestamp = now.getTime()
+    await Promise.all([
+      ...keys.map(key => redis.setAsync(key, doc)),
+      ...listKeys.map(key => redis.zaddAsync(key, nowTimestamp, repoId)),
+      // overwrite previous scheduling
+      redis.delAsync(scheduledKey, doc),
+      redis.zremAsync(scheduledListKey, repoId)
+    ])
+  } else {
+    await Promise.all([
+      redis.setAsync(scheduledKey, doc),
+      redis.zaddAsync(scheduledListKey, scheduledAt.getTime(), repoId)
+    ])
+  }
+  // TODO refresh scheduling
+
   // release for nice view on github
   // this is optional, the release is not read back again
   const [login, repoName] = repoId.split('/')
@@ -72,42 +153,9 @@ module.exports = async (
   })
     .then(response => response.data)
 
-  // publish to redis
-  const doc = await getDocument(
-    { id: commitId, repo: { id: repoId } },
-    null,
-    { user }
-  )
-    .then(doc => JSON.stringify(doc))
-
-  const now = new Date().getTime()
-  let operations = [
-    redis.setAsync(
-      `${repoId}/prepublication`,
-      doc
-    ),
-    redis.zaddAsync(
-      'prepublishedRepoIds',
-      now,
-      repoId
-    )
-  ]
-  if (!prepublication) {
-    operations = operations.concat([
-      redis.setAsync(
-        `${repoId}/publication`,
-        doc
-      ),
-      redis.zaddAsync(
-        'publishedRepoIds',
-        now,
-        repoId
-      )
-    ])
-  }
-  await Promise.all(operations)
-
+  /*
   // toggle published / unpublished
+  // this is optional, the topics are not read back again
   if (!prepublication) {
     await getTopics(repoId)
       .then(topics => topics
@@ -116,7 +164,7 @@ module.exports = async (
       )
       .then(topics => setTopics(repoId, topics))
   }
-
+  */
   return {
     ...milestone,
     meta: {

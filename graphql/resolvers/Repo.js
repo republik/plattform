@@ -1,13 +1,13 @@
 const { descending } = require('d3-array')
 const uniqBy = require('lodash/uniqBy')
-const some = require('lodash/some')
+const uniqWith = require('lodash/uniqWith')
 const yaml = require('../../lib/yaml')
 const {
   createGithubClients,
   commitNormalizer,
   getHeads,
   getAnnotatedTags,
-  publicationVersionRegex
+  getAnnotatedTag
 } = require('../../lib/github')
 
 module.exports = {
@@ -91,32 +91,6 @@ module.exports = {
   latestPublications: async (
     { id: repoId }
   ) => {
-    const sortedPublications = await getAnnotatedTags(repoId)
-      .then(tags => tags
-        .filter(tag => publicationVersionRegex.test(tag.name))
-        .map(tag => {
-          const matches = publicationVersionRegex.exec(tag.name)
-          return {
-            version: parseInt(matches[1]),
-            isPrepublication: !!matches[2],
-            tag
-          }
-        })
-        .sort((a, b) => descending(a.version, b.version))
-      )
-
-    let latestPublication
-    let latestPrepublication
-    some(sortedPublications, (publication) => {
-      if (!latestPublication && !publication.isPrepublication) {
-        latestPublication = publication.tag
-      }
-      if (!latestPrepublication && publication.isPrepublication) {
-        latestPrepublication = publication.tag
-      }
-      return !!latestPublication && !!latestPrepublication
-    })
-
     const publicationMetaDecorator = (publication) => {
       const {
         scheduledAt = undefined,
@@ -131,11 +105,24 @@ module.exports = {
       }
     }
 
-    return [
-      latestPublication,
-      latestPrepublication
+    const refs = [
+      'publication',
+      'prepublication',
+      'scheduled-publication',
+      'scheduled-prepublication'
     ]
-      .filter(Boolean)
-      .map(publication => publicationMetaDecorator(publication))
+
+    return Promise.all(
+      refs.map(ref => getAnnotatedTag(repoId, ref))
+    )
+      .then(tags =>
+        tags.filter(Boolean)
+      )
+      .then(tags =>
+        uniqWith(tags, (a, b) => a.name === b.name)
+      )
+      .then(tags => tags
+        .map(publication => publicationMetaDecorator(publication))
+      )
   }
 }
