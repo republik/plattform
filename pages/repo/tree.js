@@ -25,6 +25,7 @@ const query = gql`
       milestones {
         name
         message
+        immutable
         commit {
           id
         }

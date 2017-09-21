@@ -5,6 +5,7 @@ import { max } from 'd3-array'
 import { schemeCategory10 } from 'd3-scale'
 import { color as d3Color } from 'd3-color'
 import CheckIcon from 'react-icons/lib/md/check'
+import TagIcon from 'react-icons/lib/md/grade'
 import { transformData } from './transformData'
 import withT from '../../lib/withT'
 import { swissTime } from '../../lib/utils/format'
@@ -17,7 +18,7 @@ const MIN_PADDING = 10
 const NODE_SIZE = 12
 const NODE_SIZE_HOVER = 16
 const LIST_MIN_WIDTH = 250
-const CHECKICON_SIZE = 16
+const MILESTONEICON_SIZE = 16
 
 const styles = {
   container: css({
@@ -68,7 +69,7 @@ const styles = {
   }),
   checkIcon: {
     backgroundColor: '#fff',
-    margin: `0 5px 1px -${CHECKICON_SIZE + 6}px`
+    margin: `0 5px 1px -${MILESTONEICON_SIZE + 6}px`
   },
   milestoneBar: css({
     backgroundColor: '#ddd',
@@ -87,7 +88,7 @@ const styles = {
   }),
   milestone: css({
     display: 'block',
-    paddingLeft: `${CHECKICON_SIZE + 6}px`
+    paddingLeft: `${MILESTONEICON_SIZE + 6}px`
   })
 }
 
@@ -280,11 +281,15 @@ class Tree extends Component {
                   <span {...styles.milestoneInfo}>
                     {commit.milestones.map((milestone, i) =>
                       <span {...styles.milestone} key={i}>
-                        <CheckIcon
-                          color='#000'
-                          size={CHECKICON_SIZE}
-                          style={styles.checkIcon}
-                          />
+                        {milestone.immutable
+                          ? <TagIcon
+                            color='#000'
+                            size={MILESTONEICON_SIZE}
+                            style={styles.checkIcon} />
+                          : <CheckIcon
+                            color='#000'
+                            size={MILESTONEICON_SIZE}
+                            style={styles.checkIcon} />}
                         <span {...styles.milestoneLabel}>
                           {t(`checklist/labels/${milestone.name}`, undefined, milestone.name)}{' '}
                         </span>
