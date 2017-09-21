@@ -288,7 +288,7 @@ class Tree extends Component {
                         <span {...styles.milestoneLabel}>
                           {t(`checklist/labels/${milestone.name}`, undefined, milestone.name)}{' '}
                         </span>
-                        {milestone.author.name}: {milestone.message}
+                        {milestone.author.name}
                       </span>
                       )}
                   </span>
