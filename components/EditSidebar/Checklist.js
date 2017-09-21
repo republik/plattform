@@ -54,6 +54,7 @@ class Checklist extends Component {
     return (
       <Loader loading={loading} error={error} render={() => {
         const allMilestones = milestones
+          .filter(m => !m.immutable)
           .concat(
             milestoneNames
               .filter(name =>
@@ -147,6 +148,7 @@ query repoMilestones($repoId: ID!) {
     milestones {
       name
       message
+      immutable
       commit {
         id
         date
