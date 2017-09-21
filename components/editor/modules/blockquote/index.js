@@ -40,6 +40,34 @@ export {
 export default {
   plugins: [
     {
+      onKeyDown (event, data, state) {
+        const isBackspace = data.key === 'backspace'
+        if (data.key !== 'enter' && !isBackspace) return
+
+        const inBlockquote = state.document.getClosest(
+          state.startBlock.key,
+          matchBlock(BLOCKQUOTE)
+        )
+        if (!inBlockquote) return
+
+        event.preventDefault()
+
+        const isEmpty = !state.startBlock.text
+
+        if (isEmpty && (!isBackspace || inBlockquote.nodes.size === 1)) {
+          return state.transform()
+            .unwrapBlock()
+            .apply()
+        }
+
+        if (isBackspace) {
+          return state.transform().deleteBackward().apply()
+        }
+
+        return state.transform()
+          .splitBlock(2)
+          .apply()
+      },
       schema: {
         rules: [
           {
