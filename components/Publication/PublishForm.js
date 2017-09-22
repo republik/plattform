@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { gql, graphql } from 'react-apollo'
 import { compose } from 'redux'
+import { css } from 'glamor'
 
 import { InlineSpinner } from '../Spinner'
 import Loader from '../Loader'
-import { css } from 'glamor'
+import ErrorMessage from '../ErrorMessage'
 
 import withT from '../../lib/withT'
 import { Link, Router } from '../../lib/routes'
-import { errorToString } from '../../lib/utils/errors'
 import { swissTime } from '../../lib/utils/format'
 import {
   Interaction,
@@ -16,8 +16,7 @@ import {
   linkRule,
   Button,
   Field,
-  Checkbox,
-  colors
+  Checkbox
 } from '@project-r/styleguide'
 
 import MaskedInput from 'react-maskedinput'
@@ -199,9 +198,7 @@ class PublishForm extends Component {
             ) : (
               <div>
                 {!!this.state.error && (
-                  <div style={{color: colors.error, marginBottom: 40}}>
-                    {this.state.error}
-                  </div>
+                  <ErrorMessage error={this.state.error} />
                 )}
                 <Button block primary onClick={() => {
                   if (scheduled && scheduledAtError) {
@@ -221,7 +218,7 @@ class PublishForm extends Component {
                   }).catch((error) => {
                     this.setState(() => ({
                       publishing: false,
-                      error: errorToString(error)
+                      error: error
                     }))
                   })
                 }}>
