@@ -1,4 +1,7 @@
+const MilestoneInterface = require('./MilestoneInterface')
+
 module.exports = {
+  ...MilestoneInterface,
   prepublication: ({ name }) =>
     name.indexOf('prepublication') > -1,
 
