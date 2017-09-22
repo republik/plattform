@@ -22,6 +22,7 @@ import {
 import MaskedInput from 'react-maskedinput'
 
 import { query as treeQuery } from '../../pages/repo/tree'
+import { query as publicationQuery } from './Current'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
@@ -236,24 +237,25 @@ class PublishForm extends Component {
 export default compose(
   withT,
   graphql(mutation, {
-    props: ({mutate}) => ({
+    props: ({mutate, ownProps}) => ({
       publish: variables => mutate({
         variables,
-        refetchQueries: [{
-          query: treeQuery,
-          variables: {
-            repoId: variables.repoId
+        refetchQueries: [
+          {
+            query: publicationQuery,
+            variables: {
+              repoId: ownProps.repoId
+            }
+          },
+          {
+            query: treeQuery,
+            variables: {
+              repoId: ownProps.repoId
+            }
           }
-        }]
+        ]
       })
     })
   }),
-  graphql(query, {
-    options: ({ url }) => ({
-      variables: {
-        repoId: url.query.repoId,
-        commitId: url.query.commitId
-      }
-    })
-  })
+  graphql(query)
 )(PublishForm)

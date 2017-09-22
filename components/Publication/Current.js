@@ -17,7 +17,7 @@ import { query as treeQuery } from '../../pages/repo/tree'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
-const query = gql`
+export const query = gql`
   query repoWithPublications($repoId: ID!) {
     repo(id: $repoId) {
       id

@@ -9,13 +9,13 @@ import PublishForm from '../../components/Publication/PublishForm'
 import withT from '../../lib/withT'
 
 const Page = ({ url, data, t }) => {
-  const { repoId } = url.query
+  const { repoId, commitId } = url.query
 
   return (
     <Frame url={url} nav={<RepoNav route='repo/publish' url={url} />}>
       <h1>{t('publish/title')}</h1>
 
-      <PublishForm repoId={repoId} t={t} />
+      <PublishForm repoId={repoId} commitId={commitId} t={t} />
 
       { /* <pre style={{overflow: 'hidden'}}>
         <code>
