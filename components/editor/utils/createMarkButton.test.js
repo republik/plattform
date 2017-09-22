@@ -286,16 +286,15 @@ test('utils.createMarkButton: action on selection containing mixed ranges with m
       focusOffset: 6
     })
     .toggleMark('bold')
-    .moveStart(2)
-    .moveEnd(2)
+    .moveOffsetsTo(4, 10)
     .focus()
     .apply()
 
   const onChange = nextState => {
     assert.equal(
       nextState.marks.size,
-      0,
-      'removes the given mark from all text nodes in the selection'
+      1,
+      'extends the given mark to all text nodes in the selection'
     )
   }
 
