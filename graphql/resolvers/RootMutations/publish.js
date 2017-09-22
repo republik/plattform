@@ -5,7 +5,8 @@ const {
   createGithubClients,
   publicationVersionRegex,
   getAnnotatedTags,
-  upsertRef
+  upsertRef,
+  deleteRef
 } = require('../../../lib/github')
 
 const placeMilestone = require('./placeMilestone')
@@ -48,11 +49,9 @@ module.exports = async (
       .sort((a, b) => descending(a, b))
       .shift()
     )
-
   const versionNumber = latestPublicationVersion
     ? latestPublicationVersion + 1
     : 1
-
   const versionName = prepublication
     ? `v${versionNumber}-prepublication`
     : `v${versionNumber}`
@@ -90,9 +89,9 @@ module.exports = async (
     `tags/${ref}`,
     milestone.sha
   )
-  // remove old scheduled ref
+  // overwrite previous scheduling
   if (!scheduledAt) {
-    await upsertRef(
+    await deleteRef(
       repoId,
       `tags/scheduled-${ref}`,
       milestone.sha
@@ -124,10 +123,9 @@ module.exports = async (
       listKeys.push('publishedRepoIds')
     }
 
-    const nowTimestamp = now.getTime()
     await Promise.all([
       ...keys.map(key => redis.setAsync(key, doc)),
-      ...listKeys.map(key => redis.zaddAsync(key, nowTimestamp, repoId)),
+      ...listKeys.map(key => redis.zaddAsync(key, now.getTime(), repoId)),
       // overwrite previous scheduling
       redis.delAsync(scheduledKey, doc),
       redis.zremAsync(scheduledListKey, repoId)
