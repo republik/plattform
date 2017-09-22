@@ -127,7 +127,7 @@ class Header extends Component {
             <br />
             {children}
           </div>
-          <div {...styles.right}>
+          {!!me && <div {...styles.right}>
             <a
               href='/'
               onClick={e => {
@@ -143,7 +143,7 @@ class Header extends Component {
                   )
               }
             </a>
-          </div>
+          </div>}
         </div>
         <LoadingBar />
       </div>

@@ -7,8 +7,10 @@ import Loader from '../../components/Loader'
 import Tree from '../../components/Tree'
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
+import CurrentPublications from '../../components/Publication/Current'
+import { NarrowContainer } from '@project-r/styleguide'
 
-const query = gql`
+export const query = gql`
   query repoWithHistory($repoId: ID!) {
     repo(id: $repoId) {
       id
@@ -47,11 +49,17 @@ class EditorPage extends Component {
     return (
       <Frame url={url} raw nav={<RepoNav route='repo/tree' url={url} />}>
         <Loader loading={loading} error={error} render={() => (
-          <Tree
-            commits={repo.commits}
-            milestones={repo.milestones}
-            repoId={repoId}
-          />
+          <div>
+            <br />
+            <NarrowContainer>
+              <CurrentPublications repoId={repoId} />
+            </NarrowContainer>
+            <Tree
+              commits={repo.commits}
+              milestones={repo.milestones}
+              repoId={repoId}
+            />
+          </div>
         )} />
       </Frame>
     )

@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-19T16:45:12.438Z",
+  "updated": "2017-09-22T10:26:13.283Z",
   "title": "live",
   "data": [
     {
@@ -95,8 +95,12 @@
       "value": "Korrektur"
     },
     {
+      "key": "tree/commit/publish",
+      "value": "Vorschau und Veröffentlichung"
+    },
+    {
       "key": "repo/nav/edit",
-      "value": "Text"
+      "value": "Inhalt"
     },
     {
       "key": "repo/nav/meta",
@@ -241,6 +245,62 @@
     {
       "key": "commit/warn/missing",
       "value": "Commit {commitId} nicht gefunden."
+    },
+    {
+      "key": "publish/title",
+      "value": "Vorschau und Veröffentlichung"
+    },
+    {
+      "key": "publish/commit/selected",
+      "value": "Ausgewählte Version"
+    },
+    {
+      "key": "publish/commit/change",
+      "value": "Version ändern"
+    },
+    {
+      "key": "publish/trigger",
+      "value": "publizieren"
+    },
+    {
+      "key": "publish/label/prepublication",
+      "value": "Interne Publikation (Vorschau für Editoren)"
+    },
+    {
+      "key": "publish/label/updateMailchimp",
+      "value": "Mailchimp aktualisieren"
+    },
+    {
+      "key": "publish/label/scheduled",
+      "value": "Publikation terminieren"
+    },
+    {
+      "key": "publish/label/scheduledAt",
+      "value": "Publikationstermin"
+    },
+    {
+      "key": "publication/current/title/1",
+      "value": "Publizierte Version"
+    },
+    {
+      "key": "publication/current/title/other",
+      "value": "Publizierte Versionen"
+    },
+    {
+      "key": "publication/current/prepublication",
+      "value": "Intern"
+    },
+    {
+      "key": "publication/current/scheduledAt",
+      "value": "terminiert auf {dateTime}"
+    },
+    {
+      "key": "publication/current/unpublish/action",
+      "value": "Veröffentlichung aufheben"
+    },
+    {
+      "key": "publication/current/unpublish/confirmAll",
+      "value": "Wollen sie wirklich alle veröffentlichten Versionen zurückziehen?"
     }
   ]
 }
