@@ -33,14 +33,6 @@ module.exports = async (
     ...keys.map(key => redis.delAsync(key)),
     ...listKeys.map(key => redis.zremAsync(key, repoId)),
     ...refs.map(ref => deleteRef(repoId, `tags/${ref}`))
-    /*
-    getTopics(repoId)
-      .then(topics => topics
-        .filter(topic => topic !== 'published')
-        .concat('unpublished')
-      )
-      .then(topics => setTopics(repoId, topics))
-    */
   ])
 
   return true

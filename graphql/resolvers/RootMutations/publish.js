@@ -153,18 +153,6 @@ module.exports = async (
   })
     .then(response => response.data)
 
-  /*
-  // toggle published / unpublished
-  // this is optional, the topics are not read back again
-  if (!prepublication) {
-    await getTopics(repoId)
-      .then(topics => topics
-        .filter(topic => topic !== 'unpublished')
-        .concat('published')
-      )
-      .then(topics => setTopics(repoId, topics))
-  }
-  */
   return {
     ...milestone,
     meta: {
