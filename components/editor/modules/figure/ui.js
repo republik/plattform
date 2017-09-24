@@ -1,5 +1,4 @@
 import React from 'react'
-import { Block } from 'slate'
 import { css } from 'glamor'
 import { Map } from 'immutable'
 
@@ -12,7 +11,8 @@ import {
 import MetaForm from '../../utils/MetaForm'
 
 import styles from '../../styles'
-import { FIGURE, FIGURE_IMAGE, FIGURE_CAPTION } from './constants'
+import { FIGURE_IMAGE, FIGURE_CAPTION } from './constants'
+import { newBlock } from './'
 
 const isFigureBlock = block => block.type === FIGURE_IMAGE || block.type === FIGURE_CAPTION
 
@@ -41,13 +41,12 @@ export const FigureForm = createPropertyForm({
           const onInputChange = subject => key => (_, value) => {
             onChange(
               state
-                .transform()
+                .change()
                 .setNodeByKey(subject.key, {
                   data: value
                     ? subject.data.set(key, value)
                     : subject.data.remove(key)
                 })
-                .apply()
             )
           }
 
@@ -120,13 +119,10 @@ export const FigureButton = createActionButton({
     event.preventDefault()
     return onChange(
       state
-        .transform()
+        .change()
         .insertBlock(
-          Block.create({
-            type: FIGURE
-          })
+          newBlock()
         )
-        .apply()
     )
   }
 })(

@@ -40,18 +40,17 @@ const reducer = markType =>
         const length = end - start
         return onChange(
           state
-          .transform()
+          .change()
           .removeMarkByKey(
             key,
             start,
             length,
             Mark.create({ type: markType })
           )
-          .apply()
         )
       } else {
         return onChange(
-          state.transform().toggleMark(markType).apply()
+          state.change().toggleMark(markType)
         )
       }
     }

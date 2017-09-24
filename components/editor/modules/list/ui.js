@@ -1,10 +1,9 @@
 import React from 'react'
-import { Block } from 'slate'
 import { css } from 'glamor'
 import { matchBlock, createBlockButton } from '../../utils'
-import { LIST, LI } from './constants'
-import { PARAGRAPH } from '../paragraph'
+import { LIST } from './constants'
 import styles from '../../styles'
+import { newBlock } from './'
 
 const makeButton = ({ordered, label}) => createBlockButton({
   type: LIST,
@@ -18,38 +17,21 @@ const makeButton = ({ordered, label}) => createBlockButton({
       if (inList) {
         return onChange(
           state
-            .transform()
+            .change()
             .setNodeByKey(inList.key, {
               data: inList.data.merge({
                 ordered
               })
             })
-            .apply()
         )
       }
 
       return onChange(
         state
-          .transform()
+          .change()
           .insertBlock(
-            Block.create({
-              type: LIST,
-              data: {
-                ordered
-              },
-              nodes: [
-                Block.create({
-                  type: LI,
-                  nodes: [
-                    Block.create({
-                      type: PARAGRAPH
-                    })
-                  ]
-                })
-              ]
-            })
+            newBlock({ordered})
           )
-          .apply()
       )
     }
 })(

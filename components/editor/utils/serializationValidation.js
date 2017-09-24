@@ -46,7 +46,7 @@ const addValidation = (rule, serializer, name) => {
       ? mdast
       : null
   }
-  rule.normalize = (transform, object, mdast) => {
+  rule.normalize = (change, object, mdast) => {
     const rawNode = serializer.fromMdast(mdast)
     const node = rawNodeToNode(
       rawNode.kind === 'state'
@@ -55,9 +55,9 @@ const addValidation = (rule, serializer, name) => {
     )
 
     const target = node.kind === 'document'
-      ? transform.state.document
+      ? change.state.document
       : object
-    let t = transform.setNodeByKey(target.key, {
+    let t = change.setNodeByKey(target.key, {
       data: node.data
     })
     target.nodes.forEach(n => {

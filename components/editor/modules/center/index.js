@@ -83,12 +83,12 @@ export default {
                 ? notBlocks
                 : null
             },
-            normalize: (transform, object, notBlocks) => {
+            normalize: (change, object, notBlocks) => {
               notBlocks.forEach((child) => {
-                transform.wrapBlockByKey(child.key, PARAGRAPH)
+                change.wrapBlockByKey(child.key, PARAGRAPH)
               })
 
-              return transform
+              return change
             }
           },
           center

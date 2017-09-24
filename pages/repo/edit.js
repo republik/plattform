@@ -266,11 +266,11 @@ class EditorPage extends Component {
     }
   }
 
-  changeHandler (newEditorState) {
-    this.setState({ editorState: newEditorState })
+  changeHandler ({state}) {
+    this.setState({ editorState: state })
   }
 
-  documentChangeHandler (_, newEditorState) {
+  documentChangeHandler (_, {state: newEditorState}) {
     const { url: { query: { repoId } } } = this.props
     const { committedRawString, uncommittedChanges } = this.state
 

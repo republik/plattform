@@ -82,16 +82,6 @@ const autoMeta = documentNode => {
     : newData
 }
 
-const metaRule = {
-  match: node => node.kind === 'document',
-  validate: autoMeta,
-  normalize: (transform, object, newData) => {
-    return transform.setNodeByKey(object.key, {
-      data: newData
-    })
-  }
-}
-
 const documentRule = {
   match: object => object.kind === 'document',
   matchMdast: node => node.type === 'root',
@@ -213,23 +203,19 @@ addValidation(documentRule, serializer, 'document')
 const documentPlugin = {
   schema: {
     rules: [
-      documentRule,
-      metaRule
+      documentRule
     ]
+  },
+  onBeforeChange: (change) => {
+    const newData = autoMeta(change.state.document)
+
+    if (newData) {
+      change.setNodeByKey(change.state.document.key, {
+        data: newData
+      })
+      return change
+    }
   }
-  // onBeforeChange: (state, editor) => {
-  //   const newData = autoMeta(state.document)
-
-  //   if (!newData) {
-  //     return state
-  //   }
-
-  //   return state.transform()
-  //     .setNodeByKey(state.document.key, {
-  //       data: newData
-  //     })
-  //     .apply()
-  // }
 }
 
 const plugins = [
@@ -282,13 +268,13 @@ const Document = ({ children }) => (
 class Editor extends Component {
   constructor (props) {
     super(props)
-    this.onChange = (nextState) => {
+    this.onChange = (change) => {
       const { state, onChange, onDocumentChange } = this.props
 
-      if (state !== nextState) {
-        onChange(nextState)
-        if (!nextState.document.equals(state.document)) {
-          onDocumentChange(nextState.document, nextState)
+      if (change.state !== state) {
+        onChange(change)
+        if (!change.state.document.equals(state.document)) {
+          onDocumentChange(change.state.document, change)
         }
       }
     }

@@ -7,7 +7,7 @@ import { FIGURE, FIGURE_IMAGE, FIGURE_CAPTION } from './constants'
 import addValidation, { findOrCreate } from '../../utils/serializationValidation'
 import { gray2x1 } from '../../utils/placeholder'
 import { serializer as paragraphSerializer, PARAGRAPH } from '../paragraph'
-import { Placeholder } from 'slate'
+import { Placeholder, Block } from 'slate'
 
 import MarkdownSerializer from '../../../../lib/serializer'
 
@@ -221,6 +221,13 @@ export const serializer = new MarkdownSerializer({
     figure
   ]
 })
+
+export const newBlock = () => Block.fromJSON(
+  figure.fromMdast({
+    children: [],
+    data: {}
+  })
+)
 
 addValidation(figure, serializer, 'figure')
 

@@ -3,7 +3,7 @@ import test from 'tape'
 import spy from 'spy'
 import { shallow } from 'enzyme'
 import createInlineButton from './createInlineButton'
-import { Raw } from 'slate'
+import { State } from 'slate'
 
 const rawDoc = {
   'nodes': [
@@ -52,7 +52,9 @@ const rawDoc = {
   ]
 }
 
-const initialState = Raw.deserialize(rawDoc, { terse: true })
+const initialState = State.fromJSON({
+  document: rawDoc
+})
 const Button = () => <span />
 const InlineButton = createInlineButton({ type: 'link' })(Button)
 
@@ -77,7 +79,7 @@ test('utils.createInlineButton: focused cursor on text without inlines', assert 
   assert.plan(1)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(0).nodes.first().key,
       anchorOffset: 2,
@@ -85,7 +87,7 @@ test('utils.createInlineButton: focused cursor on text without inlines', assert 
       focusOffset: 2
     })
     .focus()
-    .apply()
+    .state
 
   const wrapper = shallow(
     <InlineButton
@@ -104,7 +106,7 @@ test('utils.createInlineButton: focused cursor on text with the given inline', a
   assert.plan(1)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
@@ -115,7 +117,7 @@ test('utils.createInlineButton: focused cursor on text with the given inline', a
       type: 'link'
     })
     .focus()
-    .apply()
+    .state
 
   const wrapper = shallow(
     <InlineButton
@@ -134,7 +136,7 @@ test('utils.createInlineButton: selection containing text without any inlines', 
   assert.plan(1)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
@@ -142,7 +144,7 @@ test('utils.createInlineButton: selection containing text without any inlines', 
       focusOffset: 6
     })
     .focus()
-    .apply()
+    .state
 
   const wrapper = shallow(
     <InlineButton
@@ -161,7 +163,7 @@ test('utils.createInlineButton: selection containing text with the given inline'
   assert.plan(1)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
@@ -172,7 +174,7 @@ test('utils.createInlineButton: selection containing text with the given inline'
     .moveStart(2)
     .moveEnd(2)
     .focus()
-    .apply()
+    .state
 
   const wrapper = shallow(
     <InlineButton
@@ -191,7 +193,7 @@ test('utils.createInlineButton: action on selection containing text without any 
   assert.plan(1)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
@@ -199,9 +201,9 @@ test('utils.createInlineButton: action on selection containing text without any 
       focusOffset: 6
     })
     .focus()
-    .apply()
+    .state
 
-  const onChange = nextState => {
+  const onChange = ({state: nextState}) => {
     assert.equal(
       nextState.inlines.size > 0,
       true,
@@ -227,7 +229,7 @@ test('utils.createInlineButton: action on cursor over a text wrapped in a given 
   assert.plan(1)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
@@ -238,11 +240,11 @@ test('utils.createInlineButton: action on cursor over a text wrapped in a given 
     .moveStart(2)
     .moveEnd(-2)
     .focus()
-    .apply()
+    .state
 
-  const onChange = nextState => {
+  const onChange = change => {
     assert.equal(
-      nextState.inlines.size,
+      change.state.inlines.size,
       0,
       'unwraps all contents of the selected inline'
     )
@@ -266,7 +268,7 @@ test('utils.createInlineButton: action on selection containing text inside and o
   assert.plan(2)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
@@ -277,14 +279,13 @@ test('utils.createInlineButton: action on selection containing text inside and o
     .moveStart(2)
     .moveEnd(2)
     .focus()
-    .apply()
+    .state
 
-  const onChange = nextState => {
+  const onChange = change => {
     assert.equal(
-      nextState
-        .transform()
+      change
         .moveStart(-2)
-        .apply()
+        .state
         .inlines.size,
       0,
       'unwraps all contents of the given inline'

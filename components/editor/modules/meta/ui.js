@@ -60,16 +60,14 @@ const MetaData = ({state, onChange, t}) => {
 
   const onInputChange = key => (_, value) => {
     const newData = node.data.remove('auto')
-
     onChange(
       state
-        .transform()
+        .change()
         .setNodeByKey(node.key, {
           data: value
             ? newData.set(key, value)
             : newData.remove(key)
         })
-        .apply()
     )
   }
 
