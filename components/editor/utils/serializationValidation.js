@@ -1,45 +1,19 @@
-import { Raw, State, Document, Block } from 'slate'
-
-const nodeToRawNode = (node) => {
-  const isDocument = node.kind === 'document'
-  const rawNode = Raw.serialize(State.create({
-    document: isDocument
-      ? node
-      : Document.create({
-        nodes: Block.createList([
-          node
-        ])
-      })
-  })).document
-
-  if (isDocument) {
-    return rawNode
-  }
-  return rawNode.nodes[0]
-}
+import { Document } from 'slate'
 
 export const rawNodeToNode = (rawNode) => {
   const isDocument = rawNode.kind === 'document'
-  const node = Raw.deserialize({
-    kind: 'state',
-    document: isDocument
-      ? rawNode
-      : {
-        kind: 'document',
-        nodes: [rawNode]
-      }
-  }).document
-
   if (isDocument) {
-    return node
+    return Document.fromJSON(rawNode)
   }
-  return node.nodes.first()
+  return Document.fromJSON({
+    nodes: [rawNode]
+  }).nodes.first()
 }
 
 const addValidation = (rule, serializer, name) => {
   rule.validate = node => {
     const context = {}
-    const rawNode = nodeToRawNode(node)
+    const rawNode = node.toJSON()
     const mdast = serializer.toMdast(rawNode, context)
 
     return context.dirty || context.missing
