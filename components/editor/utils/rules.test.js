@@ -276,7 +276,10 @@ test('rules.remove', assert => {
 test('rules.insertAt', assert => {
   assert.plan(4)
 
-  const blockToInsert = Block.create({ type: 'foobar' })
+  const blockToInsert = Block.create({
+    type: 'foobar',
+    nodes: [Text.create('')]
+  })
   const insertAtSecond = insertAt(1, () => blockToInsert)
 
   assert.equal(
@@ -320,7 +323,10 @@ test('rules.insertAt', assert => {
 test('rules.prepend', assert => {
   assert.plan(1)
 
-  const blockToInsert = Block.create({ type: 'foobar' })
+  const blockToInsert = Block.create({
+    type: 'foobar',
+    nodes: [Text.create('')]
+  })
   const reducer = () => blockToInsert
 
   assert.equal(

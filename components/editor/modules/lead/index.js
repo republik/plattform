@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import { Placeholder } from 'slate'
+import { Placeholder } from 'slate-react'
 import { matchBlock } from '../../utils'
 import { LEAD } from './constants'
 // import { mq } from '../../styles'

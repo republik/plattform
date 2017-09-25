@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Editor as SlateEditor } from 'slate'
+import { Editor as SlateEditor } from 'slate-react'
 import { css } from 'glamor'
 
 import MarkdownSerializer from '../../lib/serializer'

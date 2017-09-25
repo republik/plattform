@@ -7,7 +7,8 @@ import { FIGURE, FIGURE_IMAGE, FIGURE_CAPTION } from './constants'
 import addValidation, { findOrCreate } from '../../utils/serializationValidation'
 import { gray2x1 } from '../../utils/placeholder'
 import { serializer as paragraphSerializer, PARAGRAPH } from '../paragraph'
-import { Placeholder, Block } from 'slate'
+import { Block } from 'slate'
+import { Placeholder } from 'slate-react'
 
 import MarkdownSerializer from '../../../../lib/serializer'
 
