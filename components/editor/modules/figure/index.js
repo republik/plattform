@@ -241,6 +241,49 @@ export {
 export default {
   plugins: [
     {
+      onKeyDown (event, data, change) {
+        const isBackspace = data.key === 'backspace'
+        if (data.key !== 'enter' && !isBackspace) return
+
+        const { state } = change
+        const inFigure = state.document.getClosest(
+          state.focusBlock.key,
+          matchBlock(FIGURE)
+        )
+
+        if (!inFigure) return
+
+        event.preventDefault()
+
+        if (isBackspace && state.focusBlock.type === FIGURE_IMAGE) {
+          const isEmpty = !inFigure.text.trim()
+          if (isEmpty) {
+            return change
+              .removeNodeByKey(inFigure.key)
+          } else {
+            return change.setNodeByKey(
+              state.focusBlock.key,
+              {
+                data: {}
+              }
+            )
+          }
+        }
+        if (!isBackspace && state.endBlock.type === FIGURE_CAPTION) {
+          const parent = state.document.getParent(inFigure.key)
+          const node = Block.create(PARAGRAPH)
+
+          return change
+            .insertNodeByKey(
+              parent.key,
+              parent.nodes.indexOf(inFigure) + 1,
+              node
+            )
+            .collapseToEndOf(
+              change.state.document.getNode(node.key)
+            )
+        }
+      },
       schema: {
         rules: [
           figure,
