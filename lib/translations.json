@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-22T10:26:13.283Z",
+  "updated": "2017-09-25T14:07:36.395Z",
   "title": "live",
   "data": [
     {
@@ -69,6 +69,10 @@
     {
       "key": "repo/list/add/submit",
       "value": "erstellen"
+    },
+    {
+      "key": "baseCommit/title",
+      "value": "Ausgangsversion"
     },
     {
       "key": "checklist/title",
@@ -220,11 +224,11 @@
     },
     {
       "key": "commit/status/committed",
-      "value": "Alle deine Änderungen sind committed"
+      "value": "Keine Änderungen"
     },
     {
       "key": "commit/status/uncommitted",
-      "value": "Änderungen sind nicht committed"
+      "value": "Änderungen committen?"
     },
     {
       "key": "commit/warn/noStorage",
