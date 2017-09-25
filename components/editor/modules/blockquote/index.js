@@ -58,16 +58,14 @@ export default {
         if (isEmpty && (!isBackspace || inBlockquote.nodes.size === 1)) {
           return change
             .unwrapBlock()
-            .apply()
         }
 
         if (isBackspace) {
-          return change.deleteBackward().apply()
+          return change.deleteBackward()
         }
 
         return change
           .splitBlock(2)
-          .apply()
       },
       schema: {
         rules: [
