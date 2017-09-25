@@ -5,8 +5,8 @@ import createFormatButton from './createFormatButton'
 const isDisabled = markType =>
   ({ state }) =>
     state.isBlurred || (
-        !isActive(markType)({ state }) &&
-        state.isEmpty
+      state.isEmpty &&
+      !isActive(markType)({ state })
     )
 
 const isActive = markType =>

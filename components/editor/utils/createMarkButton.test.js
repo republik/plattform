@@ -163,6 +163,33 @@ test('utils.createMarkButton: selection containing text without any marks', asse
   )
 })
 
+test('utils.createMarkButton: selection containing text with offset 0', assert => {
+  const state = initialState
+    .change()
+    .select({
+      anchorKey: initialState.document.nodes.get(1).nodes.first().key,
+      anchorOffset: 0,
+      focusKey: initialState.document.nodes.get(1).nodes.first().key,
+      focusOffset: 6
+    })
+    .focus()
+    .state
+
+  const wrapper = shallow(
+    <MarkButton
+      state={state}
+    />
+  )
+
+  assert.equal(
+    wrapper.find('Button').prop('disabled'),
+    false,
+    'renders as enabled'
+  )
+
+  assert.end()
+})
+
 test('utils.createMarkButton: selection containing text with the given mark', assert => {
   assert.plan(1)
 
