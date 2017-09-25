@@ -74,15 +74,15 @@ export default {
           {
             match: matchBlock(BLOCKQUOTE),
             validate: node => {
-              const notPargraphs = node.nodes
+              const notParagraphs = node.nodes
                 .filter(n => n.type !== PARAGRAPH)
 
-              return notPargraphs.size
-                ? notPargraphs
+              return notParagraphs.size
+                ? notParagraphs
                 : null
             },
-            normalize: (change, object, notPargraphs) => {
-              notPargraphs.forEach(child => {
+            normalize: (change, object, notParagraphs) => {
+              notParagraphs.forEach(child => {
                 if (child.kind === 'block') {
                   change.unwrapNodeByKey(child.key)
                 } else {
