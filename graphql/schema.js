@@ -147,10 +147,16 @@ type Document implements FileInterface {
 
 type Meta {
   title: String
-  description: String
+  slug: String
   image: String
-#  readingMinutes: Int!
-#  fbTitle: String
+  emailSubject: String
+  description: String
+  facebookTitle: String
+  facebookImage: String
+  facebookDescription: String
+  twitterTitle: String
+  twitterImage: String
+  twitterDescription: String
 }
 
 #type File implements FileInterface {
