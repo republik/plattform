@@ -172,8 +172,8 @@ class Tree extends Component {
     const svgWidth = numSlots * slotWidth
 
     this.svgRef.style.height = `${this.state.height}px`
-    this.svgRef.style.width = `${svgWidth}px` - slotWidth / 2
-    this.svgRef.style.left = slotWidth / 2
+    this.svgRef.style.width = `${svgWidth}px`
+    this.svgRef.style.left = `${slotWidth / 2}px`
     this.listRef.style.marginLeft = `${svgWidth + NODE_SIZE}px`
 
     this.containerRef.style.margin =
