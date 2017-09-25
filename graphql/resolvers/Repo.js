@@ -1,6 +1,5 @@
 const { descending } = require('d3-array')
 const uniqBy = require('lodash/uniqBy')
-const uniqWith = require('lodash/uniqWith')
 const yaml = require('../../lib/yaml')
 const {
   createGithubClients,
@@ -105,23 +104,28 @@ module.exports = {
       }
     }
 
-    const refs = [
+    const liveRefs = [
       'publication',
-      'prepublication',
+      'prepublication'
+    ]
+    const refs = [
+      ...liveRefs,
       'scheduled-publication',
       'scheduled-prepublication'
     ]
 
     return Promise.all(
-      refs.map(ref => getAnnotatedTag(repoId, ref))
+      refs.map(ref => getAnnotatedTag(repoId, ref)
+        .then( tag => ({ tag, ref }) )
+      )
     )
-      .then(tags =>
-        tags.filter(Boolean)
-      )
-      .then(tags =>
-        uniqWith(tags, (a, b) => a.name === b.name)
-      )
-      .then(tags => tags
+      .then(objs => objs
+        .filter(obj => !!obj.tag)
+        .map(obj => ({
+            ...obj.tag,
+            live: liveRefs.indexOf(obj.ref) > -1
+          })
+        )
         .map(publication => publicationMetaDecorator(publication))
       )
   }

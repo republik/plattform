@@ -106,6 +106,7 @@ type Publication implements MilestoneInterface {
   commit: Commit!
   author: Author!
   date: DateTime!
+  live: Boolean!
 
   prepublication: Boolean!
   scheduledAt: DateTime
