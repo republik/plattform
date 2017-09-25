@@ -112,7 +112,7 @@ type Publication implements MilestoneInterface {
   updateMailchimp: Boolean!
 }
 
-type Milestone {
+type Milestone implements MilestoneInterface {
   name: String!
   commit: Commit!
   author: Author!
