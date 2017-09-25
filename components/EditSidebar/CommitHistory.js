@@ -30,7 +30,7 @@ const styles = {
   })
 }
 
-const CommitHistory = ({ commits, repoId, maxItems, t }) => {
+const CommitHistory = ({ commits, repoId, commitId, maxItems, t }) => {
   const numItems = maxItems || 3
   const repoPath = repoId.split('/')
   if (commits.length) {
@@ -39,17 +39,19 @@ const CommitHistory = ({ commits, repoId, maxItems, t }) => {
         <ul {...styles.commits}>
           {commits.slice(0, numItems).map(commit =>
             <li key={commit.id} {...styles.commit}>
-              <Link
-                route='repo/edit'
-                params={{
-                  repoId: repoPath,
-                  commitId: commit.id
-                }}
-              >
-                <a {...linkRule}>
-                  {commit.message}
-                </a>
-              </Link>
+              {commit.id !== commitId
+                ? <Link
+                  route='repo/edit'
+                  params={{
+                    repoId: repoPath,
+                    commitId: commit.id
+                  }}
+                >
+                  <a {...linkRule}>
+                    {commit.message}
+                  </a>
+                </Link>
+              : <span>{commit.message}</span>}
               <span {...styles.date}>
                 {commit.author.name}
               </span>

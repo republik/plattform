@@ -428,6 +428,7 @@ class EditorPage extends Component {
                   <CommitHistory
                     commits={repo.commits}
                     repoId={repoId}
+                    commitId={commitId}
                   />
                 </div>
               )}
