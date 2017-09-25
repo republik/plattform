@@ -1,6 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 import { matchBlock, createBlockButton } from '../../utils'
+import injectBlock from '../../utils/injectBlock'
 import { LIST } from './constants'
 import styles from '../../styles'
 import { newBlock } from './'
@@ -29,7 +30,8 @@ const makeButton = ({ordered, label}) => createBlockButton({
       return onChange(
         state
           .change()
-          .insertBlock(
+          .call(
+            injectBlock,
             newBlock({ordered})
           )
       )

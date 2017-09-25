@@ -8,6 +8,7 @@ import {
   createPropertyForm,
   createActionButton
 } from '../../utils'
+import injectBlock from '../../utils/injectBlock'
 import MetaForm from '../../utils/MetaForm'
 
 import styles from '../../styles'
@@ -117,10 +118,12 @@ export const FigureButton = createActionButton({
   },
   reducer: ({ state, onChange }) => event => {
     event.preventDefault()
+
     return onChange(
       state
         .change()
-        .insertBlock(
+        .call(
+          injectBlock,
           newBlock()
         )
     )
