@@ -5,6 +5,7 @@ import { ULButton, OLButton } from './ui'
 import { serializer as paragraphSerializer, PARAGRAPH } from '../paragraph'
 import MarkdownSerializer from '../../../../lib/serializer'
 import addValidation from '../../utils/serializationValidation'
+import { Block } from 'slate'
 
 const listItem = {
   match: matchBlock(LI),
@@ -58,6 +59,24 @@ export const serializer = new MarkdownSerializer({
   ]
 })
 
+export const newBlock = ({ordered = false}) => Block.fromJSON(
+  list.fromMdast({
+    ordered,
+    children: [
+      {
+        type: 'listItem',
+        children: [
+          {
+            type: 'paragraph',
+            children: []
+          }
+        ]
+      }
+    ],
+    data: {}
+  })
+)
+
 addValidation(list, serializer, 'list')
 
 export {
@@ -69,10 +88,11 @@ export {
 export default {
   plugins: [
     {
-      onKeyDown (event, data, state) {
+      onKeyDown (event, data, change) {
         const isBackspace = data.key === 'backspace'
         if (data.key !== 'enter' && !isBackspace) return
 
+        const { state } = change
         const inList = state.document.getClosest(state.startBlock.key, matchBlock(LIST))
         if (!inList) return
 
@@ -82,22 +102,18 @@ export default {
         const isEmpty = !inItem || !inItem.text
 
         if (isEmpty && (!isBackspace || inList.nodes.size === 1)) {
-          return state.transform()
-            .unwrapBlock()
-            .apply()
+          return change.unwrapBlock()
         }
 
         if (isBackspace) {
-          const t = state.transform().deleteBackward()
+          const t = change.deleteBackward()
           if (isEmpty) {
             t.removeNodeByKey(inItem.key)
           }
-          return t.apply()
+          return t
         }
 
-        return state.transform()
-          .splitBlock(2)
-          .apply()
+        return change.splitBlock(2)
       },
       schema: {
         rules: [
@@ -111,16 +127,16 @@ export default {
                 ? notItems
                 : null
             },
-            normalize: (transform, object, notItems) => {
+            normalize: (change, object, notItems) => {
               notItems.forEach(child => {
                 if (child.kind === 'block') {
-                  transform.unwrapNodeByKey(child.key)
+                  change.unwrapNodeByKey(child.key)
                 } else {
-                  transform.wrapBlockByKey(child.key, LI)
+                  change.wrapBlockByKey(child.key, LI)
                 }
               })
 
-              return transform
+              return change
             }
           },
           {
@@ -133,16 +149,16 @@ export default {
                 ? notParagraphs
                 : null
             },
-            normalize: (transform, object, notParagraphs) => {
+            normalize: (change, object, notParagraphs) => {
               notParagraphs.forEach(child => {
                 if (child.kind === 'block') {
-                  transform.unwrapNodeByKey(child.key)
+                  change.unwrapNodeByKey(child.key)
                 } else {
-                  transform.wrapBlockByKey(child.key, PARAGRAPH)
+                  change.wrapBlockByKey(child.key, PARAGRAPH)
                 }
               })
 
-              return transform
+              return change
             }
           },
           list,

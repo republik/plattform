@@ -42,13 +42,12 @@ const Form = ({ disabled, state, onChange }) => {
           const onInputChange = key => (_, value) => {
             onChange(
               state
-                .transform()
+                .change()
                 .setNodeByKey(node.key, {
                   data: value
                     ? node.data.set(key, value)
                     : node.data.remove(key)
                 })
-                .apply()
             )
           }
           return (

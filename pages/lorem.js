@@ -25,9 +25,9 @@ class Index extends Component {
     super(...args)
     this.state = getInitialState()
 
-    this.onDocumentChange = (document, state) => {
+    this.onDocumentChange = (document, change) => {
       try {
-        // console.log(serializer.serialize(state))
+        // console.log(serializer.serialize(change.state))
       } catch (e) {
         // console.error(e)
       }
@@ -40,7 +40,9 @@ class Index extends Component {
       <Frame url={url} raw>
         <Editor
           state={this.state.state}
-          onChange={state => this.setState({state})}
+          onChange={({state}) => {
+            this.setState({state})
+          }}
           onDocumentChange={this.onDocumentChange}
         />
       </Frame>

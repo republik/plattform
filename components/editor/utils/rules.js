@@ -74,7 +74,7 @@ export const asList = value =>
 
 export const insertAt = curry(
   (index, reducer) =>
-    (transform, node, invalidNode) =>
+    (change, node, invalidNode) =>
       asList(
         reducer(node, invalidNode)
       )
@@ -85,18 +85,18 @@ export const insertAt = curry(
             index,
             nodeToInsert
           ),
-        transform
+        change
       )
 )
 
 export const prepend = insertAt(0)
 
 export const append = reducer =>
-  (transform, node, invalidNode) =>
-    insertAt(node.nodes.size, reducer)(transform, node, invalidNode)
+  (change, node, invalidNode) =>
+    insertAt(node.nodes.size, reducer)(change, node, invalidNode)
 
 export const update = reducer =>
-  (transform, node, result) =>
+  (change, node, result) =>
     asList(result)
     .reduce(
       (t, invalidChild) =>
@@ -104,11 +104,11 @@ export const update = reducer =>
           invalidChild.key,
           reducer(node, invalidChild)
         ),
-      transform
+      change
     )
 
 export const unwrap = reducer =>
-  (transform, node, result) =>
+  (change, node, result) =>
     asList(result)
     .reduce(
       (t, invalidChild) =>
@@ -119,15 +119,15 @@ export const unwrap = reducer =>
         .unwrapNodeByKey(
           invalidChild.key
         ),
-      transform
+      change
     )
 
-export const remove = (transform, node, result) =>
+export const remove = (change, node, result) =>
   asList(result)
   .reduce(
       (t, invalidChild) =>
         t.removeNodeByKey(
           invalidChild.key
         ),
-      transform
+      change
     )

@@ -4,7 +4,7 @@ import { Router } from '../../lib/routes'
 import withData from '../../lib/apollo/withData'
 import { gql, graphql } from 'react-apollo'
 import { css } from 'glamor'
-import { Raw, resetKeyGenerator } from 'slate'
+import { State, resetKeyGenerator } from 'slate'
 import { A, Button, Label } from '@project-r/styleguide'
 
 import Frame from '../../components/Frame'
@@ -226,10 +226,8 @@ class EditorPage extends Component {
         mdast: true
       })
     }
-    const committedRawString = JSON.stringify(
-      Raw.serialize(committedEditorState, {
-        terse: true
-      })
+    const committedRawDocString = JSON.stringify(
+      committedEditorState.document.toJSON()
     )
 
     const storeKey = [repoId, commitId].join('/')
@@ -242,9 +240,7 @@ class EditorPage extends Component {
     let localEditorState
     if (localState) {
       try {
-        localEditorState = Raw.deserialize(localState, {
-          terse: true
-        })
+        localEditorState = State.fromJSON(localState)
       } catch (e) {
         console.error(e)
         this.warn(t('commit/warn/localParseError'))
@@ -255,33 +251,29 @@ class EditorPage extends Component {
       this.beginChanges(repoId)
       this.setState({
         editorState: localEditorState,
-        committedRawString
+        committedRawDocString
       })
     } else {
       this.concludeChanges(repoId)
       this.setState({
         editorState: committedEditorState,
-        committedRawString
+        committedRawDocString
       })
     }
   }
 
-  changeHandler (newEditorState) {
-    this.setState({ editorState: newEditorState })
+  changeHandler ({state}) {
+    this.setState({ editorState: state })
   }
 
-  documentChangeHandler (_, newEditorState) {
+  documentChangeHandler (_, {state: newEditorState}) {
     const { url: { query: { repoId } } } = this.props
-    const { committedRawString, uncommittedChanges } = this.state
-
-    const newRaw = Raw.serialize(newEditorState, {
-      terse: true
-    })
+    const { committedRawDocString, uncommittedChanges } = this.state
 
     if (
-      JSON.stringify(newRaw) !== committedRawString
+      JSON.stringify(newEditorState.document.toJSON()) !== committedRawDocString
     ) {
-      this.store.set('editorState', newRaw)
+      this.store.set('editorState', newEditorState.toJSON())
 
       if (!uncommittedChanges) {
         this.beginChanges(repoId)

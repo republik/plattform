@@ -40,10 +40,11 @@ export {
 export default {
   plugins: [
     {
-      onKeyDown (event, data, state) {
+      onKeyDown (event, data, change) {
         const isBackspace = data.key === 'backspace'
         if (data.key !== 'enter' && !isBackspace) return
 
+        const { state } = change
         const inBlockquote = state.document.getClosest(
           state.startBlock.key,
           matchBlock(BLOCKQUOTE)
@@ -55,41 +56,39 @@ export default {
         const isEmpty = !state.startBlock.text
 
         if (isEmpty && (!isBackspace || inBlockquote.nodes.size === 1)) {
-          return state.transform()
+          return change
             .unwrapBlock()
-            .apply()
         }
 
         if (isBackspace) {
-          return state.transform().deleteBackward().apply()
+          return change.deleteBackward()
         }
 
-        return state.transform()
+        return change
           .splitBlock(2)
-          .apply()
       },
       schema: {
         rules: [
           {
             match: matchBlock(BLOCKQUOTE),
             validate: node => {
-              const notPargraphs = node.nodes
+              const notParagraphs = node.nodes
                 .filter(n => n.type !== PARAGRAPH)
 
-              return notPargraphs.size
-                ? notPargraphs
+              return notParagraphs.size
+                ? notParagraphs
                 : null
             },
-            normalize: (transform, object, notPargraphs) => {
-              notPargraphs.forEach(child => {
+            normalize: (change, object, notParagraphs) => {
+              notParagraphs.forEach(child => {
                 if (child.kind === 'block') {
-                  transform.unwrapNodeByKey(child.key)
+                  change.unwrapNodeByKey(child.key)
                 } else {
-                  transform.wrapBlockByKey(child.key, PARAGRAPH)
+                  change.wrapBlockByKey(child.key, PARAGRAPH)
                 }
               })
 
-              return transform
+              return change
             }
           },
           blockquote

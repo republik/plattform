@@ -3,7 +3,7 @@ import test from 'tape'
 import spy from 'spy'
 import { shallow } from 'enzyme'
 import createBlockButton from './createBlockButton'
-import { Raw } from 'slate'
+import { State } from 'slate'
 
 const rawDoc = {
   'nodes': [
@@ -52,7 +52,9 @@ const rawDoc = {
   ]
 }
 
-const initialState = Raw.deserialize(rawDoc, { terse: true })
+const initialState = State.fromJSON({
+  document: rawDoc
+})
 const Button = () => <span />
 const BlockButton = createBlockButton({ type: 'lead' })(Button)
 
@@ -77,7 +79,7 @@ test('utils.createBlockButton: focused cursor', assert => {
   assert.plan(1)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(0).nodes.first().key,
       anchorOffset: 2,
@@ -85,7 +87,7 @@ test('utils.createBlockButton: focused cursor', assert => {
       focusOffset: 2
     })
     .focus()
-    .apply()
+    .state
 
   const wrapper = shallow(
     <BlockButton
@@ -104,7 +106,7 @@ test('utils.createBlockButton: focused cursor on `blockType`', assert => {
   assert.plan(1)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
@@ -112,7 +114,7 @@ test('utils.createBlockButton: focused cursor on `blockType`', assert => {
       focusOffset: 2
     })
     .focus()
-    .apply()
+    .state
 
   const wrapper = shallow(
     <BlockButton
@@ -131,7 +133,7 @@ test('utils.createBlockButton: focused selection of mixed block types', assert =
   assert.plan(1)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(0).nodes.first().key,
       anchorOffset: 5,
@@ -139,7 +141,7 @@ test('utils.createBlockButton: focused selection of mixed block types', assert =
       focusOffset: 2
     })
     .focus()
-    .apply()
+    .state
 
   const wrapper = shallow(
     <BlockButton
@@ -158,7 +160,7 @@ test('utils.createBlockButton: action on focused cursor', assert => {
   assert.plan(1)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(0).nodes.first().key,
       anchorOffset: 2,
@@ -166,9 +168,9 @@ test('utils.createBlockButton: action on focused cursor', assert => {
       focusOffset: 2
     })
     .focus()
-    .apply()
+    .state
 
-  const onChange = state =>
+  const onChange = ({state}) =>
       assert.equal(
         state.document.nodes.get(0).type,
         'lead',
@@ -193,7 +195,7 @@ test('utils.createBlockButton: action on mixed selection', assert => {
   assert.plan(1)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(0).nodes.first().key,
       anchorOffset: 2,
@@ -201,9 +203,9 @@ test('utils.createBlockButton: action on mixed selection', assert => {
       focusOffset: 5
     })
     .focus()
-    .apply()
+    .state
 
-  const onChange = state =>
+  const onChange = ({state}) =>
       assert.equal(
         state.document.nodes.get(0).type,
         'lead',

@@ -3,7 +3,7 @@ import test from 'tape'
 import spy from 'spy'
 import { shallow } from 'enzyme'
 import createMarkButton from './createMarkButton'
-import { Raw } from 'slate'
+import { State } from 'slate'
 
 const rawDoc = {
   'nodes': [
@@ -52,7 +52,9 @@ const rawDoc = {
   ]
 }
 
-const initialState = Raw.deserialize(rawDoc, { terse: true })
+const initialState = State.fromJSON({
+  document: rawDoc
+})
 const Button = () => <span />
 const MarkButton = createMarkButton({ type: 'bold' })(Button)
 
@@ -77,7 +79,7 @@ test('utils.createMarkButton: focused cursor on text without marks', assert => {
   assert.plan(1)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(0).nodes.first().key,
       anchorOffset: 2,
@@ -85,7 +87,7 @@ test('utils.createMarkButton: focused cursor on text without marks', assert => {
       focusOffset: 2
     })
     .focus()
-    .apply()
+    .state
 
   const wrapper = shallow(
     <MarkButton
@@ -104,7 +106,7 @@ test('utils.createMarkButton: focused cursor on text with the given mark', asser
   assert.plan(1)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
@@ -119,7 +121,7 @@ test('utils.createMarkButton: focused cursor on text with the given mark', asser
       focusOffset: 4
     })
     .focus()
-    .apply()
+    .state
 
   const wrapper = shallow(
     <MarkButton
@@ -138,7 +140,7 @@ test('utils.createMarkButton: selection containing text without any marks', asse
   assert.plan(1)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
@@ -146,7 +148,7 @@ test('utils.createMarkButton: selection containing text without any marks', asse
       focusOffset: 6
     })
     .focus()
-    .apply()
+    .state
 
   const wrapper = shallow(
     <MarkButton
@@ -161,11 +163,38 @@ test('utils.createMarkButton: selection containing text without any marks', asse
   )
 })
 
+test('utils.createMarkButton: selection containing text with offset 0', assert => {
+  const state = initialState
+    .change()
+    .select({
+      anchorKey: initialState.document.nodes.get(1).nodes.first().key,
+      anchorOffset: 0,
+      focusKey: initialState.document.nodes.get(1).nodes.first().key,
+      focusOffset: 6
+    })
+    .focus()
+    .state
+
+  const wrapper = shallow(
+    <MarkButton
+      state={state}
+    />
+  )
+
+  assert.equal(
+    wrapper.find('Button').prop('disabled'),
+    false,
+    'renders as enabled'
+  )
+
+  assert.end()
+})
+
 test('utils.createMarkButton: selection containing text with the given mark', assert => {
   assert.plan(1)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
@@ -180,7 +209,7 @@ test('utils.createMarkButton: selection containing text with the given mark', as
       focusOffset: 8
     })
     .focus()
-    .apply()
+    .state
 
   const wrapper = shallow(
     <MarkButton
@@ -199,7 +228,7 @@ test('utils.createMarkButton: action on selection containing text without any ma
   assert.plan(1)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
@@ -207,11 +236,11 @@ test('utils.createMarkButton: action on selection containing text without any ma
       focusOffset: 6
     })
     .focus()
-    .apply()
+    .state
 
-  const onChange = nextState => {
+  const onChange = change => {
     assert.equal(
-      nextState.marks.size > 0,
+      change.state.marks.size > 0,
       true,
       'adds marks to all text nodes in the selection'
     )
@@ -235,7 +264,7 @@ test('utils.createMarkButton: action on cursor over a text with marks', assert =
   assert.plan(1)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
@@ -250,11 +279,11 @@ test('utils.createMarkButton: action on cursor over a text with marks', assert =
       focusOffset: 4
     })
     .focus()
-    .apply()
+    .state
 
-  const onChange = nextState => {
+  const onChange = change => {
     assert.equal(
-      nextState.marks.size,
+      change.state.marks.size,
       0,
       'removes all marks on direct siblings of the text node under the cursor'
     )
@@ -278,7 +307,7 @@ test('utils.createMarkButton: action on selection containing mixed ranges with m
   assert.plan(2)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
@@ -286,16 +315,15 @@ test('utils.createMarkButton: action on selection containing mixed ranges with m
       focusOffset: 6
     })
     .toggleMark('bold')
-    .moveStart(2)
-    .moveEnd(2)
+    .moveOffsetsTo(4, 10)
     .focus()
-    .apply()
+    .state
 
-  const onChange = nextState => {
+  const onChange = change => {
     assert.equal(
-      nextState.marks.size,
-      0,
-      'removes the given mark from all text nodes in the selection'
+      change.state.marks.size,
+      1,
+      'extends the given mark to all text nodes in the selection'
     )
   }
 
@@ -323,7 +351,7 @@ test('utils.createMarkButton: action on selection containing only ranges with th
   assert.plan(2)
 
   const state = initialState
-    .transform()
+    .change()
     .select({
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
       anchorOffset: 2,
@@ -334,11 +362,11 @@ test('utils.createMarkButton: action on selection containing only ranges with th
     .moveStart(1)
     .moveEnd(-1)
     .focus()
-    .apply()
+    .state
 
-  const onChange = nextState => {
+  const onChange = change => {
     assert.equal(
-      nextState.marks.size,
+      change.state.marks.size,
       0,
       'removes the mark only from ranges in the selection'
     )

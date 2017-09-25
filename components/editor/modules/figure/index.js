@@ -7,7 +7,8 @@ import { FIGURE, FIGURE_IMAGE, FIGURE_CAPTION } from './constants'
 import addValidation, { findOrCreate } from '../../utils/serializationValidation'
 import { gray2x1 } from '../../utils/placeholder'
 import { serializer as paragraphSerializer, PARAGRAPH } from '../paragraph'
-import { Placeholder } from 'slate'
+import { Block } from 'slate'
+import { Placeholder } from 'slate-react'
 
 import MarkdownSerializer from '../../../../lib/serializer'
 
@@ -222,6 +223,13 @@ export const serializer = new MarkdownSerializer({
   ]
 })
 
+export const newBlock = () => Block.fromJSON(
+  figure.fromMdast({
+    children: [],
+    data: {}
+  })
+)
+
 addValidation(figure, serializer, 'figure')
 
 export {
@@ -233,6 +241,49 @@ export {
 export default {
   plugins: [
     {
+      onKeyDown (event, data, change) {
+        const isBackspace = data.key === 'backspace'
+        if (data.key !== 'enter' && !isBackspace) return
+
+        const { state } = change
+        const inFigure = state.document.getClosest(
+          state.focusBlock.key,
+          matchBlock(FIGURE)
+        )
+
+        if (!inFigure) return
+
+        event.preventDefault()
+
+        if (isBackspace && state.focusBlock.type === FIGURE_IMAGE) {
+          const isEmpty = !inFigure.text.trim()
+          if (isEmpty) {
+            return change
+              .removeNodeByKey(inFigure.key)
+          } else {
+            return change.setNodeByKey(
+              state.focusBlock.key,
+              {
+                data: {}
+              }
+            )
+          }
+        }
+        if (!isBackspace && state.endBlock.type === FIGURE_CAPTION) {
+          const parent = state.document.getParent(inFigure.key)
+          const node = Block.create(PARAGRAPH)
+
+          return change
+            .insertNodeByKey(
+              parent.key,
+              parent.nodes.indexOf(inFigure) + 1,
+              node
+            )
+            .collapseToEndOf(
+              change.state.document.getNode(node.key)
+            )
+        }
+      },
       schema: {
         rules: [
           figure,

@@ -16,9 +16,8 @@ const reducer = blockType =>
       event.preventDefault()
       return onChange(
         state
-          .transform()
+          .change()
           .setBlock(blockType)
-          .apply()
       )
     }
 

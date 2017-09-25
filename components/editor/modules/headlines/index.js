@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import { Placeholder } from 'slate'
+import { Placeholder } from 'slate-react'
 import MarkdownSerializer from '../../../../lib/serializer'
 
 import { matchBlock } from '../../utils'
