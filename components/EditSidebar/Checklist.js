@@ -117,11 +117,11 @@ class Checklist extends Component {
                       {commit.message}
                     </a>
                   </Link>
-                  <br />
-                  {(
-                    getName(author) !== getName(commit.author) &&
-                    getName(commit.author)
-                  )}
+
+                  {getName(author) !== getName(commit.author) &&
+                    <span>
+                      <br />{getName(commit.author)}
+                    </span>}
                   <br />
                   {timeFormat(
                     new Date(commit.date)
