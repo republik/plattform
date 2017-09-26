@@ -16,7 +16,7 @@ const styles = {
   })
 }
 
-const query = gql`
+const getCommitInfo = gql`
   query test($repoId: ID!, $commitId: ID!) {
     repo(id: $repoId) {
       id
@@ -61,7 +61,7 @@ class BaseCommit extends Component {
 
 export default compose(
   withT,
-  graphql(query, {
+  graphql(getCommitInfo, {
     options: props => ({
       variables: {
         repoId: props.repoId,
