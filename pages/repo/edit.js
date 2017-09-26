@@ -371,10 +371,8 @@ class EditorPage extends Component {
                   {message}
                 </div>
               ))}
-              <BaseCommit
-                repoId={repoId}
-                commitId={commitId}
-              />
+              {!!repo &&
+                <BaseCommit repoId={repoId} commitId={commitId} />}
               <div {...css(styles.uncommittedChanges)}>
                 <div style={{marginBottom: 10}}>
                   <Label style={{fontSize: 12}}>
