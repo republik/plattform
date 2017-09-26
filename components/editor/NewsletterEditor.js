@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { Document as SlateDocument } from 'slate'
 import { Editor as SlateEditor } from 'slate-react'
 import { css } from 'glamor'
 
 import MarkdownSerializer from '../../lib/serializer'
-import addValidation, { findOrCreate, rawNodeToNode } from './utils/serializationValidation'
+import addValidation, { findOrCreate } from './utils/serializationValidation'
 import styles from './styles'
 import Sidebar from './Sidebar'
 import MetaData from './modules/meta/ui'
@@ -131,7 +132,7 @@ const documentRule = {
     }
 
     const newData = autoMeta(
-      rawNodeToNode(documentNode)
+      SlateDocument.fromJSON(documentNode)
     )
     if (newData) {
       documentNode.data = newData.toJS()
