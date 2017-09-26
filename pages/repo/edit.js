@@ -13,6 +13,7 @@ import Editor, { serializer, newDocument } from '../../components/editor/Newslet
 
 import EditSidebar from '../../components/EditSidebar'
 import Loader from '../../components/Loader'
+import BaseCommit from '../../components/EditSidebar/BaseCommit'
 import Checklist from '../../components/EditSidebar/Checklist'
 import CommitHistory from '../../components/EditSidebar/CommitHistory'
 import UncommittedChanges from '../../components/EditSidebar/UncommittedChanges'
@@ -370,7 +371,10 @@ class EditorPage extends Component {
                   {message}
                 </div>
               ))}
-
+              <BaseCommit
+                repoId={repoId}
+                commitId={commitId}
+              />
               <div {...css(styles.uncommittedChanges)}>
                 <div style={{marginBottom: 10}}>
                   <Label style={{fontSize: 12}}>
@@ -416,6 +420,7 @@ class EditorPage extends Component {
                   <CommitHistory
                     commits={repo.commits}
                     repoId={repoId}
+                    commitId={commitId}
                   />
                 </div>
               )}
