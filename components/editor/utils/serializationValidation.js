@@ -1,6 +1,6 @@
 import { Document } from 'slate'
 
-export const rawNodeToNode = (rawNode) => {
+const rawNodeToNode = (rawNode) => {
   const isDocument = rawNode.kind === 'document'
   if (isDocument) {
     return Document.fromJSON(rawNode)
