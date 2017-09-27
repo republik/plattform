@@ -14,6 +14,8 @@ type RootQuerys {
   repo(id: ID!): Repo!
   # (pre)published documents
   documents: [Document]!
+  # (pre)published document
+  document(slug: String!): Document
 }
 
 type RootMutations {
@@ -106,11 +108,12 @@ type Publication implements MilestoneInterface {
   commit: Commit!
   author: Author!
   date: DateTime!
-  live: Boolean!
 
+  live: Boolean!
   prepublication: Boolean!
   scheduledAt: DateTime
   updateMailchimp: Boolean!
+  sha: String!
 }
 
 type Milestone implements MilestoneInterface {
