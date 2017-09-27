@@ -1,20 +1,19 @@
 const { userHasRole } = require('../../../lib/Roles')
 
 module.exports = async (_, args, { user, redis }) => {
-  const userHasRoleEditor = userHasRole(user, 'editor')
+  const ref = userHasRole(user, 'editor')
+    ? 'prepublication'
+    : 'publication'
 
-  const listKey = userHasRoleEditor
-    ? 'prepublishedRepoIds'
-    : 'publishedRepoIds'
-
-  const repoIds = await redis.zrangeAsync(listKey, 0, -1)
+  const repoIds = await redis.smembersAsync('repos:ids')
 
   return Promise.all(
     repoIds.map(repoId => {
-      return redis.getAsync(`${repoId}/${userHasRoleEditor ? 'prepublication' : 'publication'}`)
+      return redis.getAsync(`repos:${repoId}/${ref}`)
     })
   )
-    .then(docs =>
-      docs.map(doc => JSON.parse(doc))
+    .then(publications => publications
+      .filter(Boolean)
+      .map(publication => JSON.parse(publication).doc)
     )
 }

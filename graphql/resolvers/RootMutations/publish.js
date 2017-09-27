@@ -8,6 +8,11 @@ const {
   upsertRef,
   deleteRef
 } = require('../../../lib/github')
+const {
+  redlock,
+  lockKey,
+  refresh: refreshScheduling
+} = require('../../../lib/publicationScheduler')
 
 const placeMilestone = require('./placeMilestone')
 const { document: getDocument } = require('../Commit')
@@ -84,59 +89,77 @@ module.exports = async (
   if (scheduledAt) {
     ref = `scheduled-${ref}`
   }
-  await upsertRef(
-    repoId,
-    `tags/${ref}`,
-    milestone.sha
-  )
-  // overwrite previous scheduling
-  if (!scheduledAt) {
-    await deleteRef(
+  let gitOps = [
+    upsertRef(
       repoId,
-      `tags/scheduled-${ref}`,
+      `tags/${ref}`,
       milestone.sha
     )
+  ]
+  if (!scheduledAt) {
+    if (ref === 'publication') {
+      // prepublication moves along with publication
+      gitOps = gitOps.concat(
+        upsertRef(
+          repoId,
+          `tags/prepublication`,
+          milestone.sha
+        )
+      )
+    }
+    // overwrite previous scheduling
+    gitOps = gitOps.concat(
+      deleteRef(
+        repoId,
+        `tags/scheduled-${ref}`,
+        true
+      )
+    )
   }
+  await Promise.all(gitOps)
 
-  // get doc
+  // cache in redis
   const doc = await getDocument(
     { id: commitId, repo: { id: repoId } },
     null,
     { user }
   )
-    .then(doc => JSON.stringify(doc))
-
-  // cache in redis
-  const scheduledKey = prepublication
-    ? `${repoId}/scheduledPrepublication`
-    : `${repoId}/scheduledPublication`
-  const scheduledListKey = prepublication
-    ? `scheduledPrepublicationRepoIds`
-    : `scheduledPublicationRepoIds`
-
-  if (!scheduledAt) {
-    let keys = [ `${repoId}/prepublication` ]
-    let listKeys = [ 'prepublishedRepoIds' ]
-
-    if (!prepublication) {
-      keys.push(`${repoId}/publication`)
-      listKeys.push('publishedRepoIds')
-    }
-
-    await Promise.all([
-      ...keys.map(key => redis.setAsync(key, doc)),
-      ...listKeys.map(key => redis.zaddAsync(key, now.getTime(), repoId)),
-      // overwrite previous scheduling
-      redis.delAsync(scheduledKey, doc),
-      redis.zremAsync(scheduledListKey, repoId)
-    ])
+  const payload = JSON.stringify({
+    doc,
+    sha: milestone.sha
+  })
+  const key = `repos:${repoId}/${ref}`
+  let redisOps = [
+    redis.setAsync(key, payload),
+    redis.saddAsync('repos:ids', repoId)
+  ]
+  if (scheduledAt) {
+    redisOps.push(redis.zaddAsync(`repos:scheduledIds`, scheduledAt.getTime(), key))
   } else {
-    await Promise.all([
-      redis.setAsync(scheduledKey, doc),
-      redis.zaddAsync(scheduledListKey, scheduledAt.getTime(), repoId)
-    ])
+    if (ref === 'publication') {
+      redisOps = redisOps.concat([
+        // prepublication moves along with publication
+        redis.setAsync(`repos:${repoId}/prepublication`, payload),
+        // remove previous scheduling
+        redis.delAsync(`repos:${repoId}/scheduled-publication`),
+        redis.zremAsync(`repos:scheduledIds`, `repos:${repoId}/scheduled-publication`)
+      ])
+    } else {
+      redisOps = redisOps.concat([
+        // remove previous scheduling
+        redis.delAsync(`repos:${repoId}/scheduled-prepublication`),
+        redis.zremAsync(`repos:scheduledIds`, `repos:${repoId}/scheduled-prepublication`)
+      ])
+    }
   }
-  // TODO refresh scheduling
+
+  const lock = await redlock().lock(lockKey, 200)
+  await Promise.all(redisOps)
+  await refreshScheduling(lock)
+  await lock.unlock()
+    .catch((err) => {
+      console.error(err)
+    })
 
   // release for nice view on github
   // this is optional, the release is not read back again
@@ -153,6 +176,7 @@ module.exports = async (
 
   return {
     ...milestone,
+    live: !scheduledAt,
     meta: {
       scheduledAt,
       updateMailchimp

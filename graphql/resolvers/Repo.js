@@ -116,17 +116,21 @@ module.exports = {
 
     return Promise.all(
       refs.map(ref => getAnnotatedTag(repoId, ref)
-        .then( tag => ({ tag, ref }) )
+        .then(tag => ({ tag, ref }))
       )
     )
       .then(objs => objs
         .filter(obj => !!obj.tag)
         .map(obj => ({
-            ...obj.tag,
-            live: liveRefs.indexOf(obj.ref) > -1
-          })
+          ...obj.tag,
+          sha: obj.tag.oid,
+          live: liveRefs.indexOf(obj.ref) > -1
+        })
         )
-        .map(publication => publicationMetaDecorator(publication))
+      )
+      .then(tags => uniqBy(tags, 'name'))
+      .then(tags => tags
+        .map(tag => publicationMetaDecorator(tag))
       )
   }
 }
