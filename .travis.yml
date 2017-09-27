@@ -28,6 +28,6 @@ env:
     - PUBLIC_WS_URL_PATH=/graphql
     - SESSION_SECRET=asdfasdf
     - AUTO_LOGIN=true
-    - GITHUB_LOGIN=orbiting
+    - GITHUB_LOGIN=orbiting-test
     - PUBLIC_ASSETS_URL=http://localhost:6000/assets
     - DATABASE_URL=postgres://postgres@localhost:5432/travis_ci_test
