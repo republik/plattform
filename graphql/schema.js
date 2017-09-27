@@ -56,11 +56,6 @@ type RootMutations {
     updateMailchimp: Boolean!
   ): Publication!
 
-  #sendTestEmail(
-  #  repoId: ID!
-  #  addresses: [String!]!
-  #)
-
   unpublish(
     repoId: ID!
   ): Boolean!
