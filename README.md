@@ -1,12 +1,14 @@
-# Mauka aka Haku Frontend
+# Publikator Frontend
 
-Haku is a CMS prototype: an Editor implemented with [Slate](https://github.com/ianstormtaylor/slate) and saving content on GitHub via an API.
+A CMS prototype: an Editor implemented with [Slate](https://github.com/ianstormtaylor/slate) and saving content on GitHub via an API.
+
+Development code names: Mauka, Haku
 
 ## Usage
 
 ### Quick start
 
-This frontend needs an API, provided by [haku-backend](https://github.com/orbiting/haku-backend), running on the same TLD (for cookie sharing).
+This frontend needs an API, provided by [publikator-backend](https://github.com/orbiting/publikator-backend), running on the same TLD (for cookie sharing).
 
 Install and run:
 ```
@@ -34,6 +36,10 @@ PIWIK_URL_BASE=https://piwik.example.com
 PIWIK_SITE_ID=1
 ```
 
-## Licensing
+### Theming
 
-TODO
+Your logo, fonts and colors? See [orbiting/styleguide](https://github.com/orbiting/styleguide#theming)
+
+## License
+
+The source code is «BSD 3-clause» licensed.
