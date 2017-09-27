@@ -1,12 +1,9 @@
-haku-backend [![Build Status](https://travis-ci.org/orbiting/haku-backend.svg?branch=master)](https://travis-ci.org/orbiting/haku-backend) [![Coverage Status](https://coveralls.io/repos/github/orbiting/haku-backend/badge.svg?branch=APIrefactor)](https://coveralls.io/github/orbiting/haku-backend?branch=APIrefactor)
-------------
+Publikator Backend [![Build Status](https://travis-ci.org/orbiting/publikator-backend.svg?branch=master)](https://travis-ci.org/orbiting/publikator-backend) [![Coverage Status](https://coveralls.io/repos/github/orbiting/publikator-backend/badge.svg?branch=master)](https://coveralls.io/github/orbiting/publikator-backend?branch=master)
+------------------
 
-Haku is a cms prototype: edit files on github with [slate](https://github.com/ianstormtaylor/slate).
+Publikator is a cms prototype: edit files on github with [slate](https://github.com/ianstormtaylor/slate).
 
-Works best with: [haku-frontend](https://github.com/orbiting/haku-frontend)
-
-The trello board tracking it's tasks: https://trello.com/b/kbO2DOci/haku
-
+Works best with: [publikator-frontend](https://github.com/orbiting/publikator-frontend)
 
 ## Usage
 
@@ -20,18 +17,18 @@ PUBLIC_URL=http://localhost:3004
 
 SESSION_SECRET=replaceMe
 
-# your URL of haku-frontend
+# your URL of publikator-frontend
 CORS_WHITELIST_URL=http://localhost:3005
 
-DATABASE_URL=postgres://postgres@localhost:5432/haku
+DATABASE_URL=postgres://postgres@localhost:5432/publikator
 
 # leave blank for default: 127.0.0.1:6379
 REDIS_URL=
 
 SEND_MAILS=true  # or false if you don't have mandrill
 MANDRILL_API_KEY=replaceMe
-DEFAULT_MAIL_FROM_NAME='haku'
-DEFAULT_MAIL_FROM_ADDRESS='haku@project-r.construction'
+DEFAULT_MAIL_FROM_NAME='publikator'
+DEFAULT_MAIL_FROM_ADDRESS='publikator@project-r.construction'
 
 
 # The github user/organization under which all repos are held
@@ -58,7 +55,7 @@ Create a seeds file by copying `seeds/seeds.example.json` to `seeds/seeds.json` 
 
 Create and init the DB.
 ```
-createdb -U postgres haku
+createdb -U postgres publikator
 npm run db:reset
 ```
 
