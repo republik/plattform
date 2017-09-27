@@ -355,7 +355,7 @@ class EditorPage extends Component {
     const showLoading = committing || loading || (!editorState && !error)
 
     return (
-      <Frame url={url} raw nav={<RepoNav route='repo/edit' url={url} />}>
+      <Frame url={url} raw nav={<RepoNav route='repo/edit' url={url} isNew={isNew} />}>
         <Loader loading={showLoading} error={error} render={() => (
           <div>
             <div style={{paddingRight: sidebarWidth}}>
