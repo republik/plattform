@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-25T14:07:36.395Z",
+  "updated": "2017-09-27T14:22:31.520Z",
   "title": "live",
   "data": [
     {
@@ -129,6 +129,10 @@
     {
       "key": "metaData/field/title",
       "value": "Titel"
+    },
+    {
+      "key": "metaData/field/publishDate",
+      "value": "Publikationsdatum"
     },
     {
       "key": "metaData/field/description",

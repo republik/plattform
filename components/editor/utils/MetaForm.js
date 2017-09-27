@@ -3,6 +3,7 @@ import { css } from 'glamor'
 
 import { Field, Checkbox } from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
+import MaskedInput from 'react-maskedinput'
 
 import withT from '../../../lib/withT'
 
@@ -33,6 +34,16 @@ const styles = {
     minHeight: 40,
     paddingTop: '7px !important',
     paddingBottom: '6px !important'
+  }),
+  mask: css({
+    '::placeholder': {
+      color: 'transparent'
+    },
+    ':focus': {
+      '::placeholder': {
+        color: '#ccc'
+      }
+    }
   })
 }
 
@@ -65,6 +76,14 @@ const Form = ({
             <AutosizeInput {...styles.autoSize}
               {...inputProps}
               inputRef={ref} />
+          )
+        } else if (key.match(/date/i)) {
+          renderInput = ({ref, ...inputProps}) => (
+            <MaskedInput
+              {...inputProps}
+              {...styles.mask}
+              placeholderChar={'_'}
+              mask={'11.11.1111 11:11'} />
           )
         }
         input = <Field

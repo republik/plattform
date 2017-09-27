@@ -27,6 +27,7 @@ const MetaData = ({state, onChange, t}) => {
   const node = state.document
 
   const genericKeys = Set([
+    'publishDate',
     'slug',
     'emailSubject',
     'title',
