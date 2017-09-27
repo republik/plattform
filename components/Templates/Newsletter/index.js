@@ -23,7 +23,7 @@ const matchImageParagraph = node => (
 )
 
 const paragraph = {
-  matchMdast: matchType('paragraph'),
+  matchMdast: matchParagraph,
   component: Paragraph,
   rules: [
     {
@@ -105,7 +105,7 @@ const schema = {
               })
             },
             {
-              matchMdast: matchType('paragraph'),
+              matchMdast: matchParagraph,
               component: Caption,
               getData: (node, parent) => (parent && parent.data) || {},
               rules: paragraph.rules
