@@ -24,6 +24,7 @@ export const query = gql`
       latestPublications {
         name
         prepublication
+        live
         scheduledAt
         updateMailchimp
         date
@@ -74,7 +75,7 @@ class CurrentPublications extends Component {
                   {' '}
                   <Highlight>{publication.name}</Highlight>
                   {' '}
-                  {publication.scheduledAt && t('publication/current/scheduledAt', {
+                  {!publication.live && publication.scheduledAt && t('publication/current/scheduledAt', {
                     dateTime: timeFormat(new Date(publication.scheduledAt))
                   })}
                   <br />
