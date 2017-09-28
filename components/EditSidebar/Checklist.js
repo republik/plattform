@@ -141,11 +141,9 @@ Checklist.propTypes = {
   commitId: PropTypes.string.isRequired
 }
 
-const query = gql`
-query repoMilestones($repoId: ID!) {
-  repo(id: $repoId) {
-    id
-    milestones {
+const fragments = {
+  milestone: gql`
+    fragment ChecklistMilestone on Milestone {
       name
       message
       immutable
@@ -161,8 +159,19 @@ query repoMilestones($repoId: ID!) {
         name
       }
     }
+  `
+}
+
+const query = gql`
+query repoMilestones($repoId: ID!) {
+  repo(id: $repoId) {
+    id
+    milestones {
+      ...ChecklistMilestone
+    }
   }
 }
+${fragments.milestone}
 `
 
 const placeMilestone = gql`
@@ -173,20 +182,10 @@ mutation placeMilestone(
   $message: String!
 ) {
   placeMilestone(repoId: $repoId, commitId: $commitId, name: $name, message: $message) {
-    name
-    message
-    commit {
-      id
-      date
-      author {
-        name
-      }
-    }
-    author {
-      name
-    }
+    ...ChecklistMilestone
   }
 }
+${fragments.milestone}
 `
 const removeMilestone = gql`
 mutation removeMilestone(
