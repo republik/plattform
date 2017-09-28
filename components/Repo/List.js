@@ -17,6 +17,8 @@ import {
 import Loader from '../Loader'
 import List from '../List'
 
+import { GITHUB_ORG } from '../../lib/settings'
+
 const styles = {
   form: css({
     display: 'flex',
@@ -62,7 +64,7 @@ class RepoList extends Component {
     ].join('-')
 
     Router.replaceRoute('repo/edit', {
-      repoId: ['orbiting', slug],
+      repoId: [GITHUB_ORG, slug],
       commitId: 'new',
       title
     })
@@ -87,8 +89,6 @@ class RepoList extends Component {
           <Interaction.H1>{t('repo/list/title')}</Interaction.H1>
           <List>
             {data.repos
-              // ToDo: mv filter to backend
-              .filter(repo => repo.id.match(/^orbiting\/(test|newsletter)/))
               .map(repo => (
                 <List.Item key={repo.id}>
                   <Link route='repo/tree' params={{repoId: repo.id.split('/')}}>
