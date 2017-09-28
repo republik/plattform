@@ -17,6 +17,9 @@ const {
 const placeMilestone = require('./placeMilestone')
 const { document: getDocument } = require('../Commit')
 
+const { renderEmail } = require('../../../lib/Templates/email')
+const newsletterEmail = require('../../../lib/Templates/NewsletterEmail').default
+
 // TODO updateMailchimp
 module.exports = async (
   _,
@@ -173,6 +176,12 @@ module.exports = async (
     prerelease: prepublication
   })
     .then(response => response.data)
+
+  if (updateMailchimp) {
+    console.log('---')
+    console.log(renderEmail(doc.content, newsletterEmail))
+    console.log('---')
+  }
 
   return {
     ...milestone,
