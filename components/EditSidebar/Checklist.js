@@ -30,7 +30,12 @@ const styles = {
 }
 
 const milestoneNames = [
-  'cvd1', 'ad', 'korrektur', 'cvd2'
+  'journalist',
+  'textEditor',
+  'managingEditor',
+  'imageEditor',
+  'proofReader',
+  'chiefEditor'
 ]
 
 class Checklist extends Component {

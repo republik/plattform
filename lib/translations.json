@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-28T09:37:23.344Z",
+  "updated": "2017-09-28T12:12:29.983Z",
   "title": "live",
   "data": [
     {
@@ -87,20 +87,28 @@
       "value": "{name} für"
     },
     {
-      "key": "checklist/labels/cvd1",
-      "value": "CvD Initial"
+      "key": "checklist/labels/journalist",
+      "value": "Text fertig"
     },
     {
-      "key": "checklist/labels/cvd2",
-      "value": "CvD Final"
+      "key": "checklist/labels/textEditor",
+      "value": "Textchef"
     },
     {
-      "key": "checklist/labels/ad",
-      "value": "Art Director"
+      "key": "checklist/labels/managingEditor",
+      "value": "CvD"
     },
     {
-      "key": "checklist/labels/korrektur",
+      "key": "checklist/labels/imageEditor",
+      "value": "Bildredaktion"
+    },
+    {
+      "key": "checklist/labels/proofReader",
       "value": "Korrektur"
+    },
+    {
+      "key": "checklist/labels/chiefEditor",
+      "value": "CR"
     },
     {
       "key": "tree/commit/publish",
