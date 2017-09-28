@@ -156,6 +156,7 @@ type Meta {
   twitterTitle: String
   twitterImage: String
   twitterDescription: String
+  publishDate: String
 }
 
 #type File implements FileInterface {
