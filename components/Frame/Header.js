@@ -118,7 +118,7 @@ class Header extends Component {
             >
               <BrandMark />
             </a>
-            <Interaction.H2 style={{display: 'inline-block'}}>Editor</Interaction.H2>
+            <Interaction.H2 style={{display: 'inline-block'}}>Publikator</Interaction.H2>
             {!!repository &&
               <span {...styles.repoName}>
                 {repository}
