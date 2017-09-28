@@ -15,7 +15,8 @@ const {
 } = require('../../../lib/publicationScheduler')
 const {
   createCampaign,
-  updateCampaignContent
+  updateCampaignContent,
+  getCampaign
 } = require('../../../lib/mailchimp')
 
 const placeMilestone = require('./placeMilestone')
@@ -188,16 +189,29 @@ module.exports = async (
     }
     const campaignKey = `repos:${repoId}/mailchimp/campaignId`
     let campaignId = await redis.getAsync(campaignKey)
+    if (campaignId) {
+      const { status } = await getCampaign({ id: campaignId })
+      if (status === 404) {
+        campaignId = null
+      }
+    }
     if (!campaignId) {
-      const response = await createCampaign({ title, subject: emailSubject })
-      campaignId = response.id
+      const createResponse = await createCampaign({ title, subject: emailSubject })
+      const { id, status } = createResponse
+      if (status !== 'save') {
+        throw new Error('Mailchimp: could not create campaign', createResponse)
+      }
+      campaignId = id
       await redis.setAsync(campaignKey, campaignId)
     }
     const html = renderEmail(content, newsletterEmail)
-    await updateCampaignContent({
+    const updateResponse = await updateCampaignContent({
       campaignId,
       html
     })
+    if (updateResponse.status) {
+      throw new Error('Mailchimp: could not update campaign', updateResponse)
+    }
   }
 
   return {
