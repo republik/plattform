@@ -13,6 +13,10 @@ const {
   lockKey,
   refresh: refreshScheduling
 } = require('../../../lib/publicationScheduler')
+const {
+  createCampaign,
+  updateCampaignContent
+} = require('../../../lib/mailchimp')
 
 const placeMilestone = require('./placeMilestone')
 const { document: getDocument } = require('../Commit')
@@ -20,7 +24,6 @@ const { document: getDocument } = require('../Commit')
 const { renderEmail } = require('../../../lib/Templates/email')
 const newsletterEmail = require('../../../lib/Templates/NewsletterEmail').default
 
-// TODO updateMailchimp
 module.exports = async (
   _,
   {
@@ -178,9 +181,23 @@ module.exports = async (
     .then(response => response.data)
 
   if (updateMailchimp) {
-    console.log('---')
-    console.log(renderEmail(doc.content, newsletterEmail))
-    console.log('---')
+    const { content, meta: { title, emailSubject, slug } } = doc
+    // TODO proper error handling
+    if (!title || !emailSubject || !slug) {
+      throw new Error('updateMailchimp missing one or more params', { title, emailSubject, slug })
+    }
+    const campaignKey = `repos:${repoId}/mailchimp/campaignId`
+    let campaignId = await redis.getAsync(campaignKey)
+    if (!campaignId) {
+      const response = await createCampaign({ title, subject: emailSubject })
+      campaignId = response.id
+      await redis.setAsync(campaignKey, campaignId)
+    }
+    const html = renderEmail(content, newsletterEmail)
+    await updateCampaignContent({
+      campaignId,
+      html
+    })
   }
 
   return {
