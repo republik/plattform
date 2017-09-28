@@ -50,10 +50,10 @@ const makeButton = ({ordered, label}) => createBlockButton({
 
 export const ULButton = makeButton({
   ordered: false,
-  label: 'UL'
+  label: 'Liste'
 })
 
 export const OLButton = makeButton({
   ordered: true,
-  label: 'OL'
+  label: 'Aufzählung'
 })

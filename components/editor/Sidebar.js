@@ -13,7 +13,7 @@ const Sidebar = ({
 }) => (
   <div {...css(styles.sidebar)}>
     <Interaction.P>
-      <Label>Format Text</Label>
+      <Label>Text</Label>
       <br />
       {textFormatButtons.map((Button, i) => (
         <Button
@@ -25,7 +25,7 @@ const Sidebar = ({
       }
     </Interaction.P>
     <Interaction.P>
-      <Label>Format Block</Label>
+      <Label>Block</Label>
       {
         blockFormatButtons.map((Button, i) => (
           <Button
@@ -37,7 +37,7 @@ const Sidebar = ({
       }
     </Interaction.P>
     <Interaction.P>
-      <Label>Insert</Label>
+      <Label>Einfügen</Label>
       {
         insertButtons.map((Button, i) => (
           <Button

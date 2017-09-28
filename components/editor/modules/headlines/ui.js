@@ -17,7 +17,7 @@ export const MediumHeadlineButton = createBlockButton({
       data-disabled={disabled}
       data-visible={visible}
       >
-      H2
+      Zwischentitel 1
     </span>
 )
 
@@ -31,6 +31,6 @@ export const SmallHeadlineButton = createBlockButton({
       data-disabled={disabled}
       data-visible={visible}
       >
-      H3
+      Zwischentitel 2
     </span>
 )
