@@ -6,6 +6,15 @@ import { serializer as paragraphSerializer, PARAGRAPH } from '../paragraph'
 import MarkdownSerializer from '../../../../lib/serializer'
 import addValidation from '../../utils/serializationValidation'
 import { Block } from 'slate'
+import { css } from 'glamor'
+
+const styles = {
+  li: css({
+    '& p:last-child': {
+      marginBottom: 0
+    }
+  })
+}
 
 const listItem = {
   match: matchBlock(LI),
@@ -20,7 +29,7 @@ const listItem = {
     children: paragraphSerializer.toMdast(object.nodes)
   }),
   render: ({ children, node }) => (
-    <li>{ children }</li>
+    <li {...styles.li}>{ children }</li>
   )
 }
 

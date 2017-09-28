@@ -2,6 +2,12 @@ import React from 'react'
 import { css } from 'glamor'
 
 const styles = {
+  base: {
+    fontFamily: 'sans-serif',
+    fontWeight: 'bold',
+    lineHeight: '1.2em',
+    margin: '0 0 0.2em'
+  },
   h2: {
     fontSize: 28
   },
@@ -11,13 +17,13 @@ const styles = {
 }
 
 export const H2 = ({children}) => (
-  <h2 {...css(styles.h2)}>
+  <h2 {...css(styles.base)} {...css(styles.h2)}>
     {children}
   </h2>
 )
 
 export const H3 = ({children}) => (
-  <h3 {...css(styles.h3)}>
+  <h3 {...css(styles.base)} {...css(styles.h3)}>
     {children}
   </h3>
 )

@@ -16,13 +16,21 @@ import {
 } from './constants'
 
 export const styles = {
-  title: {
+  h1: {
     position: 'relative',
-    fontSize: 36,
+    fontSize: 36
+  },
+  base: {
     fontFamily: 'sans-serif',
     fontWeight: 'bold',
     lineHeight: '1.2em',
     margin: '0 0 0.2em'
+  },
+  h2: {
+    fontSize: 28
+  },
+  h3: {
+    fontSize: 18
   }
 }
 
@@ -40,7 +48,7 @@ export const title = {
     children: visitChildren(object)
   }),
   render: ({ children, ...props }) =>
-    <h1 {...css(styles.title)}>
+    <h1 {...css(styles.base)} {...css(styles.h1)}>
       <Placeholder
         state={props.state}
         node={props.node}
@@ -70,7 +78,7 @@ export const mediumHeadline = {
     depth: 2,
     children: visitChildren(object)
   }),
-  render: ({ children }) => <h2>{ children }</h2>
+  render: ({ children }) => <h2 {...css(styles.base)} {...css(styles.h2)}>{ children }</h2>
 }
 
 export const smallHeadline = {
@@ -86,7 +94,7 @@ export const smallHeadline = {
     depth: 3,
     children: visitChildren(object)
   }),
-  render: ({ children }) => <h3>{ children }</h3>
+  render: ({ children }) => <h3 {...css(styles.base)} {...css(styles.h3)}>{ children }</h3>
 }
 
 export const serializer = new MarkdownSerializer({
