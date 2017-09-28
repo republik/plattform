@@ -99,13 +99,6 @@ class RepoList extends Component {
                 </List.Item>
               ))
             }
-            <List.Item>
-              <Link route='lorem'>
-                <a {...linkRule}>
-                  Statisches Beispiel: Lorem
-                </a>
-              </Link>
-            </List.Item>
           </List>
 
           <br /><br />
