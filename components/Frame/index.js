@@ -4,6 +4,7 @@ import { NarrowContainer, fontFamilies } from '@project-r/styleguide'
 import Header from './Header'
 import { HEADER_HEIGHT } from './constants'
 import { css } from 'glamor'
+import withT from '../../lib/withT'
 
 import 'glamor/reset'
 
@@ -14,10 +15,10 @@ css.global('body', {
   fontFamily: fontFamilies.sansSerifRegular
 })
 
-export default ({ children, url, raw, nav }) =>
+const Index = ({ t, children, url, raw, nav }) =>
   <main>
     <Head>
-      <title>Project R – Mauka</title>
+      <title>Project R – {t('app/name')}</title>
     </Head>
     <Header url={url}>{nav}</Header>
     <div style={{paddingTop: HEADER_HEIGHT}}>
@@ -33,3 +34,5 @@ export default ({ children, url, raw, nav }) =>
       }
     </div>
   </main>
+
+export default withT(Index)

@@ -1,7 +1,11 @@
 {
-  "updated": "2017-09-27T14:22:31.520Z",
+  "updated": "2017-09-28T09:37:23.344Z",
   "title": "live",
   "data": [
+    {
+      "key": "app/name",
+      "value": "Publikator"
+    },
     {
       "key": "signIn/button",
       "value": "anmelden"

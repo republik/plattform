@@ -5,6 +5,7 @@ import { compose } from 'redux'
 
 import { getInitials } from '../../lib/utils/name'
 import withMe from '../../lib/withMe'
+import withT from '../../lib/withT'
 
 import {
   BrandMark,
@@ -84,7 +85,7 @@ class Header extends Component {
     }
   }
   render () {
-    const { url, me, children } = this.props
+    const { url, me, t, children } = this.props
 
     const { repository } = url.query
 
@@ -118,7 +119,7 @@ class Header extends Component {
             >
               <BrandMark />
             </a>
-            <Interaction.H2 style={{display: 'inline-block'}}>Publikator</Interaction.H2>
+            <Interaction.H2 style={{display: 'inline-block'}}>{t('app/name')}</Interaction.H2>
             {!!repository &&
               <span {...styles.repoName}>
                 {repository}
@@ -152,5 +153,6 @@ class Header extends Component {
 }
 
 export default compose(
-  withMe
+  withMe,
+  withT
 )(Header)
