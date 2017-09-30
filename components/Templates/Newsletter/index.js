@@ -57,7 +57,8 @@ const schema = {
       rules: [
         {
           matchMdast: matchImageParagraph,
-          component: () => null
+          component: () => null,
+          isVoid: true
         },
         {
           matchMdast: matchHeading(1),
@@ -95,7 +96,8 @@ const schema = {
               getData: node => ({
                 src: node.children[0].url,
                 alt: node.children[0].alt
-              })
+              }),
+              isVoid: true
             },
             {
               matchMdast: matchParagraph,

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const MissingMarkdownNodeType = ({node, children}) => (
+export const MissingMarkdownNodeType = ({node, children}) => (
   <span style={{background: '#FF5555', color: '#FFFFFF', display: 'inline-block', margin: 4}}>
     Missing Markdown node type "{node.type}"
     {node.identifier ? `with identifier "${node.identifier}"` : ''}
@@ -32,13 +32,20 @@ export const renderMdast = (mdast, schema = {}) => {
       ? rule.getData(node, parent)
       : {}
 
+    let children = null
+    if (rule.rules) {
+      children = renderMdast(
+        node.children, {
+          rules: rule.rules
+        }
+      )
+    } else if (!rule.isVoid) {
+      children = visitChildren(node)
+    }
+
     return (
       <Component key={index} data={data}>
-        {rule.rules
-          ? renderMdast(node.children, {
-            rules: rule.rules
-          })
-          : visitChildren(node)}
+        {children}
       </Component>
     )
   }
