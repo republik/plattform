@@ -1,0 +1,64 @@
+{
+  "name": "discussion-backend",
+  "version": "0.0.1",
+  "engines": {
+    "node": "8.6.0"
+  },
+  "private": true,
+  "dependencies": {
+    "body-parser": "^1.18.0",
+    "connect-pg-simple": "^4.2.1",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
+    "d3-time-format": "^2.0.5",
+    "db-migrate": "^0.10.0-beta.23",
+    "db-migrate-pg": "^0.2.5",
+    "dotenv": "^4.0.0",
+    "email-validator": "^1.1.1",
+    "express": "^4.15.4",
+    "express-session": "^1.15.5",
+    "geoip-database": "^1.0.7",
+    "graphql": "^0.10.5",
+    "graphql-server-express": "^1.1.2",
+    "graphql-tools": "^1.2.2",
+    "graphql-type-json": "^0.1.4",
+    "isomorphic-unfetch": "^2.0.0",
+    "kraut": "^0.1.1",
+    "lodash": "^4.17.4",
+    "maxmind": "^2.2.0",
+    "passport": "^0.4.0",
+    "pogi": "^2.3.1",
+    "query-string": "^5.0.0",
+    "superb": "^1.3.0",
+    "superheroes": "^1.0.0",
+    "supervillains": "^1.0.0",
+    "unified": "^6.1.5",
+    "unist-util-visit": "^1.1.3"
+  },
+  "scripts": {
+    "dev": "NODE_ENV=development nodemon -w graphql -w src -w lib -w .env -w server.js -w index.js index.js",
+    "start": "node index.js",
+    "precommit": "lint-staged",
+    "standardize": "standard --fix",
+    "migrate:up": "db-migrate up",
+    "migrate:down": "db-migrate down",
+    "db:seed": "cat seeds/seeds.json | node seeds/seed.js --truncate",
+    "db:reset:noseeds": "db-migrate reset && db-migrate up",
+    "db:reset": "npm run db:reset:noseeds && npm run db:seed",
+    "translations": "gsheets --key=1NE1igcbxtTrVd5P72Ubqmgv4yKYh0LRGa0EuYSEQKxE --title=live --pretty --out lib/translations.json"
+  },
+  "lint-staged": {
+    "*.js": [
+      "standard --fix",
+      "git add"
+    ]
+  },
+  "devDependencies": {
+    "gsheets": "^2.0.0",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.1.3",
+    "nodemon": "^1.12.0",
+    "standard": "^10.0.3",
+    "tape-async": "^2.3.0"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "updated": "2017-10-01T12:51:20.460Z",
+  "title": "live",
+  "data": [
+    {
+      "key": "api/signIn",
+      "value": "Sie müssen sich zuerst einloggen."
+    },
+    {
+      "key": "api/unauthorized",
+      "value": "Nicht genehmigt. Sie müssen die Rolle «{role}» besitzen um die gwünschte Aktion auszuführen."
+    },
+    {
+      "key": "api/email/invalid",
+      "value": "E-Mail ungültig"
+    },
+    {
+      "key": "api/auth/errorSavingSession",
+      "value": "Ups, da ist was schiefgelaufen. Sorry!"
+    },
+    {
+      "key": "api/auth/errorDestroyingSession",
+      "value": "Ups, da ist was schiefgelaufen. Sorry!"
+    }
+  ]
+}
