@@ -64,6 +64,7 @@ enum NamePreference {
 
 type DiscussionRules {
   maxLength: Int
+  interval: Int
   anonymity: Permission!
   profilePicture: Permission!
   allowedNames: [NamePreference!]!
