@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { gql, graphql } from 'react-apollo'
 import { css } from 'glamor'
 import { Label } from '@project-r/styleguide'
+import { descending } from 'd3-array'
 import { compose } from 'redux'
 import { swissTime } from '../../lib/utils/format'
 import Loader from '../../components/Loader'
@@ -28,6 +29,10 @@ const getCommitInfo = gql`
           name
         }
       }
+      commits {
+        id
+        date
+      }
     }
   }
 `
@@ -36,6 +41,16 @@ class BaseCommit extends Component {
   render () {
     const { data: {loading, error, repo}, t } = this.props
     const commit = repo && repo.commit
+    let commitsBehind = null
+    if (repo) {
+      let commits = [...repo.commits]
+      commitsBehind = commits
+        .sort(function (a, b) {
+          return descending(new Date(a.date), new Date(b.date))
+        })
+        .map(c => c.id)
+        .indexOf(this.props.commitId)
+    }
 
     return (
       <Loader loading={loading} error={error} render={() => (
@@ -52,6 +67,10 @@ class BaseCommit extends Component {
               <div>
                 {timeFormat(new Date(repo.commit.date))}
               </div>
+              {commitsBehind !== null &&
+                <div>
+                  {t.pluralize('baseCommit/commitsBehind', {count: commitsBehind})}
+                </div>}
             </div>}
         </div>
       )} />

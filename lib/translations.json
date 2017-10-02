@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-28T12:12:29.983Z",
+  "updated": "2017-10-02T15:27:09.860Z",
   "title": "live",
   "data": [
     {
@@ -77,6 +77,18 @@
     {
       "key": "baseCommit/title",
       "value": "Ausgangsversion"
+    },
+    {
+      "key": "baseCommit/commitsBehind/0",
+      "value": "Neuester Commit"
+    },
+    {
+      "key": "baseCommit/commitsBehind/1",
+      "value": "{count} neuerer commit"
+    },
+    {
+      "key": "baseCommit/commitsBehind/other",
+      "value": "{count} neuere commits"
     },
     {
       "key": "checklist/title",
