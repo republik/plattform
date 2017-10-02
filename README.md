@@ -1,9 +1,10 @@
-Discussion Backend (alpha)
+Republik Backend (alpha)
 ----------------------------
 
-NodeJS server that provides a GraphQL API for commenting in discussions. This is a standalone repo for easy development.
+This is the grassroots repo for the new republik backend. It serves as battleground for new features and refugees camp for features from the crowdfunding. Up until now, it provides the following:
 
-_alpha_: this API mostly serves mock data until now.
+ - commenting in discussions. mocked API. work in progress
+ - community page. due for refactoring from crowdfunding-backend
 
 ## Usage
 
