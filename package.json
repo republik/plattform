@@ -1,5 +1,5 @@
 {
-  "name": "discussion-backend",
+  "name": "republik-backend",
   "version": "0.0.1",
   "engines": {
     "node": "8.6.0"
