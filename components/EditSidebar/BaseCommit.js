@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { gql, graphql } from 'react-apollo'
 import { css } from 'glamor'
-import { Label } from '@project-r/styleguide'
+import { linkRule } from '@project-r/styleguide'
 import { descending } from 'd3-array'
 import { compose } from 'redux'
+import { Link } from '../../lib/routes'
 import { swissTime } from '../../lib/utils/format'
 import Loader from '../../components/Loader'
 import withT from '../../lib/withT'
@@ -39,41 +40,49 @@ const getCommitInfo = gql`
 
 class BaseCommit extends Component {
   render () {
-    const { data: {loading, error, repo}, t } = this.props
+    const { data: { loading, error, repo }, t } = this.props
     const commit = repo && repo.commit
-    let commitsBehind = null
-    if (repo) {
-      let commits = [...repo.commits]
-      commitsBehind = commits
-        .sort(function (a, b) {
-          return descending(new Date(a.date), new Date(b.date))
-        })
-        .map(c => c.id)
-        .indexOf(this.props.commitId)
-    }
 
     return (
-      <Loader loading={loading} error={error} render={() => (
-        <div {...styles.container}>
-          {commit &&
-            <div>
-              <Label>{t('baseCommit/title')}</Label>
-              <div{...styles.title}>
-                {commit.message}
-              </div>
-              <div>
-                {commit.author.name}
-              </div>
-              <div>
-                {timeFormat(new Date(repo.commit.date))}
-              </div>
-              {commitsBehind !== null &&
+      <Loader
+        loading={loading}
+        error={error}
+        render={() => {
+          const commitsBehind = [...repo.commits]
+            .sort(function (a, b) {
+              return descending(new Date(a.date), new Date(b.date))
+            })
+            .map(c => c.id)
+            .indexOf(this.props.commitId)
+          return (
+            <div {...styles.container}>
+              {commit && (
                 <div>
-                  {t.pluralize('baseCommit/commitsBehind', {count: commitsBehind})}
-                </div>}
-            </div>}
-        </div>
-      )} />
+                  <Link
+                    route='repo/tree'
+                    params={{ repoId: repo.id.split('/') }}
+                  >
+                    <a {...linkRule}>
+                      {t('baseCommit/title')}{' '}
+                      {commitsBehind !== null && (
+                        <span>
+                          {t.pluralize('baseCommit/commitsBehind', {
+                            count: commitsBehind
+                          })}
+                        </span>
+                      )}
+                      :
+                    </a>
+                  </Link>
+                  <div {...styles.title}>{commit.message}</div>
+                  <div>{commit.author.name}</div>
+                  <div>{timeFormat(new Date(repo.commit.date))}</div>
+                </div>
+              )}
+            </div>
+          )
+        }}
+      />
     )
   }
 }
