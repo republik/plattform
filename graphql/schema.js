@@ -12,8 +12,10 @@ type RootQuerys {
   me: User
   repos(first: Int!): [Repo]!
   repo(id: ID!): Repo!
-  # published documents
+  # (pre)published documents
   documents: [Document]!
+  # (pre)published document
+  document(slug: String!): Document
 }
 
 type RootMutations {
@@ -42,6 +44,22 @@ type RootMutations {
     name: String!
   ): Boolean!
 
+  publish(
+    repoId: ID!
+    commitId: ID!
+    prepublication: Boolean!
+
+    # on all channels
+    scheduledAt: DateTime
+    # this API never triggers sending
+    # not immediately, not scheduled
+    updateMailchimp: Boolean!
+  ): Publication!
+
+  unpublish(
+    repoId: ID!
+  ): Boolean!
+
   # Inform about my uncommited changes in the repo
   uncommittedChanges(
     repoId: ID!
@@ -62,17 +80,47 @@ type Repo {
   commits(page: Int): [Commit!]!
   latestCommit: Commit!
   commit(id: ID!): Commit!
-  milestones: [Milestone!]!
   uncommittedChanges: [User!]!
+  milestones: [Milestone!]!
+
+  # nothing or latest prepublication and/or latest publication
+  # nothing if repo is unpublished
+  latestPublications: [Publication]!
+
+  mailchimpUrl: String
+  unpublished: Boolean!
 }
 
-type Milestone {
+interface MilestoneInterface {
   name: String!
-  message: String
   commit: Commit!
   author: Author!
   date: DateTime!
 }
+
+type Publication implements MilestoneInterface {
+  name: String!
+  commit: Commit!
+  author: Author!
+  date: DateTime!
+
+  live: Boolean!
+  prepublication: Boolean!
+  scheduledAt: DateTime
+  updateMailchimp: Boolean!
+  sha: String!
+}
+
+type Milestone implements MilestoneInterface {
+  name: String!
+  commit: Commit!
+  author: Author!
+  date: DateTime!
+
+  message: String
+  immutable: Boolean!
+}
+
 
 type Commit {
   id: ID!
@@ -94,15 +142,21 @@ type Document implements FileInterface {
   # AST of /article.md
   content: JSON!
   meta: Meta!
-  commit: Commit!
 }
 
 type Meta {
   title: String
-  description: String
+  slug: String
   image: String
-#  readingMinutes: Int!
-#  fbTitle: String
+  emailSubject: String
+  description: String
+  facebookTitle: String
+  facebookImage: String
+  facebookDescription: String
+  twitterTitle: String
+  twitterImage: String
+  twitterDescription: String
+  publishDate: String
 }
 
 #type File implements FileInterface {

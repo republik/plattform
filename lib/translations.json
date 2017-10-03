@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-12T10:47:03.516Z",
+  "updated": "2017-09-18T10:04:42.657Z",
   "title": "live",
   "data": [
     {
@@ -29,6 +29,10 @@
     {
       "key": "api/commit/parentId/notAllowed",
       "value": "You must not provide a parentId to init the not existing repo \"{repoId}\"."
+    },
+    {
+      "key": "api/github/yaml/warning",
+      "value": "✋ The message contains yaml values used by Project R's CMS. Changing the values here is not supported (yet) and might result in unexpected consequences."
     }
   ]
 }

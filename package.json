@@ -1,17 +1,19 @@
 {
-  "name": "haku-backend",
+  "name": "publikator-backend",
   "version": "0.0.1",
   "engines": {
-    "node": "8.4.0"
+    "node": "8.6.0"
   },
   "private": true,
   "dependencies": {
     "apollo-fetch": "^0.6.0",
+    "await-sleep": "0.0.1",
     "bluebird": "^3.5.0",
     "body-parser": "^1.18.0",
     "connect-pg-simple": "^4.2.1",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
+    "cron": "^1.3.0",
     "d3-array": "^1.2.0",
     "d3-time-format": "^2.0.5",
     "data-uri-to-buffer": "^2.0.0",
@@ -22,6 +24,7 @@
     "email-validator": "^1.1.1",
     "express": "^4.15.4",
     "express-session": "^1.15.5",
+    "file-type": "^6.2.0",
     "geoip-database": "^1.0.7",
     "github": "^11.0.0",
     "graphql": "^0.10.5",
@@ -33,6 +36,7 @@
     "graphql-type-json": "^0.1.4",
     "isomorphic-unfetch": "^2.0.0",
     "js-yaml": "^3.10.0",
+    "jsonwebtoken": "^8.0.1",
     "kraut": "^0.1.1",
     "leaked-handles": "^5.2.0",
     "lodash": "^4.17.4",
@@ -40,10 +44,15 @@
     "passport": "^0.4.0",
     "pogi": "^2.3.1",
     "query-string": "^5.0.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
     "redis": "^2.8.0",
+    "redlock": "^3.0.0",
     "remark-frontmatter": "^1.1.0",
     "remark-parse": "^4.0.0",
     "remark-stringify": "^4.0.0",
+    "rw": "^1.3.3",
+    "sharp": "^0.18.4",
     "subscriptions-transport-ws": "^0.8.3",
     "superb": "^1.3.0",
     "superheroes": "^1.0.0",
@@ -63,7 +72,8 @@
     "db:reset": "npm run db:reset:noseeds && npm run db:seed",
     "translations": "gsheets --key=1_1g3sW8u1aD9xGRfS479s0Pjwx0LxYRUEhETGkKlwLE --title=live --pretty --out lib/translations.json",
     "test:travis": "istanbul cover tape \"?(__tests__|lib|graphql)/**/*.test.js\" --report lcovonly && cat ./coverage/lcov.info | coveralls",
-    "test": "export DATABASE_URL=postgres://localhost:5432/haku-test && echo $DATABASE_URL && dropdb --if-exists haku-test && createdb haku-test && db-migrate reset && db-migrate up && NODE_ENV=testing istanbul cover tape \"?(__tests__|lib|graphql)/**/*.test.js\""
+    "test": "export DATABASE_URL=postgres://localhost:5432/publikator-test && echo $DATABASE_URL && dropdb --if-exists publikator-test && createdb publikator-test && db-migrate reset && db-migrate up && NODE_ENV=testing istanbul cover tape \"?(__tests__|lib|graphql)/**/*.test.js\"",
+    "import:templates": "babel --out-dir=lib/Templates/ ../publikator-frontend/components/Templates/ && rm -r lib/Templates/Newsletter"
   },
   "lint-staged": {
     "*.js": [
@@ -72,7 +82,9 @@
     ]
   },
   "devDependencies": {
-    "await-sleep": "0.0.1",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
     "coveralls": "^2.13.1",
     "gsheets": "^2.0.0",
     "husky": "^0.14.3",

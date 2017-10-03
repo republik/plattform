@@ -2,7 +2,16 @@
   "type": "root",
   "meta": {
     "title": "Hoi Elefant",
-    "description": "Dr Elefant isst Gras. Viel."
+    "slug": "elefant",
+    "image": "test.jpg",
+    "emailSubject": "elefant heute",
+    "description": "Dr Elefant isst Gras. Viel.",
+    "facebookTitle": "elefant on FB",
+    "facebookImage": "fb.jpg",
+    "facebookDescription": "Der Elefant isst Gras. Auf FB.",
+    "twitterTitle": "elefant on TW",
+    "twitterImage": "tw.jpg",
+    "twitterDescription": "Der Elefant isst Gras. Auf TW."
   },
   "children": [
     {

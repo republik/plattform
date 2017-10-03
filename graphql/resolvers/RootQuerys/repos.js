@@ -1,5 +1,6 @@
-const { githubApolloFetch } = require('../../../lib/github')
 const { ensureUserHasRole } = require('../../../lib/Roles')
+const { createGithubClients } = require('../../../lib/github')
+
 const {
   GITHUB_LOGIN,
   REPOS_NAME_FILTER
@@ -7,6 +8,7 @@ const {
 
 module.exports = async (_, args, { user }) => {
   ensureUserHasRole(user, 'editor')
+  const { githubApolloFetch } = await createGithubClients()
 
   const { first } = args
 

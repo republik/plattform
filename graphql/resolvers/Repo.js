@@ -1,14 +1,17 @@
 const { descending } = require('d3-array')
 const uniqBy = require('lodash/uniqBy')
+const yaml = require('../../lib/yaml')
 const {
-  githubRest,
+  createGithubClients,
   commitNormalizer,
   getHeads,
-  getTags
+  getAnnotatedTags,
+  getAnnotatedTag
 } = require('../../lib/github')
 
 module.exports = {
   commits: async (repo, { page }) => {
+    const { githubRest } = await createGithubClients()
     const refs = await getHeads(repo.id)
 
     const [login, repoName] = repo.id.split('/')
@@ -36,6 +39,7 @@ module.exports = {
       .then(commits => commits.sort((a, b) => descending(a.date, b.date)))
   },
   latestCommit: async (repo) => {
+    const { githubRest } = await createGithubClients()
     const [login, repoName] = repo.id.split('/')
     return getHeads(repo.id)
       .then(refs => refs
@@ -57,6 +61,7 @@ module.exports = {
       }))
   },
   commit: async (repo, { id: sha }) => {
+    const { githubRest } = await createGithubClients()
     const [login, repoName] = repo.id.split('/')
     return githubRest.repos.getCommit({
       owner: login,
@@ -81,5 +86,51 @@ module.exports = {
   },
   milestones: (
     { id: repoId }
-  ) => getTags(repoId)
+  ) => getAnnotatedTags(repoId),
+  latestPublications: async (
+    { id: repoId }
+  ) => {
+    const publicationMetaDecorator = (publication) => {
+      const {
+        scheduledAt = undefined,
+        updateMailchimp = false
+      } = yaml.parse(publication.message)
+      return {
+        ...publication,
+        meta: {
+          scheduledAt,
+          updateMailchimp
+        }
+      }
+    }
+
+    const liveRefs = [
+      'publication',
+      'prepublication'
+    ]
+    const refs = [
+      ...liveRefs,
+      'scheduled-publication',
+      'scheduled-prepublication'
+    ]
+
+    return Promise.all(
+      refs.map(ref => getAnnotatedTag(repoId, ref)
+        .then(tag => ({ tag, ref }))
+      )
+    )
+      .then(objs => objs
+        .filter(obj => !!obj.tag)
+        .map(obj => ({
+          ...obj.tag,
+          sha: obj.tag.oid,
+          live: liveRefs.indexOf(obj.ref) > -1
+        })
+        )
+      )
+      .then(tags => uniqBy(tags, 'name'))
+      .then(tags => tags
+        .map(tag => publicationMetaDecorator(tag))
+      )
+  }
 }

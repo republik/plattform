@@ -25,17 +25,21 @@ const loremWithImageMdast = require('./loremWithImage.mdast.json')
 const dataUriToBuffer = require('data-uri-to-buffer')
 const diff = require('deep-diff').diff
 const fetch = require('isomorphic-unfetch')
+const omit = require('lodash/omit')
+const redis = require('../lib/redis')
 
 const GRAPHQL_URI = `http://localhost:${PORT}/graphql`
 const WS_URL = PUBLIC_WS_URL_BASE + PUBLIC_WS_URL_PATH
+const { createApolloFetch } = require('apollo-fetch')
 const {
-  createApolloFetch,
+  createApolloFetch: createApolloFetchWithCookie,
   createSubscriptionClient
 } = require('./clientsWithCookie')
-const apolloFetch = createApolloFetch(GRAPHQL_URI)
+const apolloFetch = createApolloFetchWithCookie(GRAPHQL_URI)
+const apolloFetchUnauthorized = createApolloFetch({ uri: GRAPHQL_URI })
 const MDAST = require('../lib/mdast/mdast')
 const {
-  githubRest,
+  createGithubClients,
   getHeads
 } = require('../lib/github')
 
@@ -44,6 +48,7 @@ const getNewRepoId = () =>
 
 // shared
 let pgdb
+let githubRest
 const testUser = {
   firstName: 'Alice',
   lastName: 'Smith',
@@ -52,10 +57,16 @@ const testUser = {
 }
 let testRepoId
 let initialCommitId
+let lastCommitId
 
 test('setup', async (t) => {
+  await redis.flushdbAsync()
+  await sleep(1000)
   const server = await Server.run()
   pgdb = server.pgdb
+
+  const clients = await createGithubClients()
+  githubRest = clients.githubRest
 
   const result = await apolloFetch({
     query: `
@@ -733,6 +744,7 @@ test('check recommit content and latestCommit', async (t) => {
   const { data: { repo: { latestCommit } } } = result2
   t.equals(newCommit.id, latestCommit.id)
   t.equals(result1.data.commit.id, latestCommit.id)
+  lastCommitId = newCommit.id
   t.end()
 })
 
@@ -772,10 +784,6 @@ test('check autobranching commit', async (t) => {
     variables
   })
   t.ok(result.data)
-  t.end()
-})
-
-test('check num refs', async (t) => {
   const heads = await getHeads(testRepoId)
   t.equals(heads.length, 2)
   t.end()
@@ -817,6 +825,7 @@ test('placeMilestone', async (t) => {
               email
             }
           }
+          immutable
         }
       }
     `,
@@ -829,7 +838,8 @@ test('placeMilestone', async (t) => {
       message,
       commit,
       date,
-      author
+      author,
+      immutable
     }
   } = result0.data
   t.equals(name, normalizedName)
@@ -839,6 +849,7 @@ test('placeMilestone', async (t) => {
   t.equals(author.name, testUser.name)
   t.equals(author.email, testUser.email)
   t.equals(author.user.email, testUser.email)
+  t.equals(immutable, false)
 
   const result1 = await apolloFetch({
     query: `
@@ -860,6 +871,7 @@ test('placeMilestone', async (t) => {
                 email
               }
             }
+            immutable
           }
         }
       }
@@ -879,6 +891,7 @@ test('placeMilestone', async (t) => {
   t.equals(author0.name, testUser.name)
   t.equals(author0.email, testUser.email)
   t.equals(author0.user.email, testUser.email)
+  t.equals(milestone.immutable, false)
   t.end()
 })
 
@@ -927,6 +940,817 @@ test('removeMilestone', async (t) => {
   })
   t.ok(result1.data.repo.milestones)
   t.equals(result1.data.repo.milestones.length, 0)
+  t.end()
+})
+
+test('publish', async (t) => {
+  // omited: image, facebookImage, twitterImage
+  const documentMetaOmit = ['image', 'facebookImage', 'twitterImage']
+  const documentMetaQuery = `
+    meta {
+      title
+      slug
+      emailSubject
+      description
+      facebookTitle
+      facebookDescription
+      twitterTitle
+      twitterDescription
+    }
+  `
+
+  const publishMutation = `
+    mutation publish(
+      $repoId: ID!
+      $commitId: ID!
+      $prepublication: Boolean!
+      $updateMailchimp: Boolean!
+      $scheduledAt: DateTime
+    ) {
+      publish(
+        repoId: $repoId
+        commitId: $commitId
+        prepublication: $prepublication
+        updateMailchimp: $updateMailchimp
+        scheduledAt: $scheduledAt
+      ) {
+        name
+        live
+        sha
+        prepublication
+        updateMailchimp
+        scheduledAt
+        date
+        author {
+          name
+          email
+          user {
+            email
+          }
+        }
+        commit {
+          id
+          document {
+            content
+            ${documentMetaQuery}
+          }
+        }
+      }
+    }
+  `
+  const latestPublicationsQuery = `
+      query latestPublications(
+        $repoId: ID!
+      ){
+        repo(id: $repoId) {
+          latestPublications {
+            name
+            live
+            sha
+            prepublication
+            scheduledAt
+            updateMailchimp
+            date
+            author {
+              name
+              email
+              user {
+                email
+              }
+            }
+            commit {
+              id
+              document {
+                content
+                ${documentMetaQuery}
+              }
+            }
+          }
+        }
+      }
+  `
+
+  const documentsQuery = `
+    {
+      documents {
+        content
+        ${documentMetaQuery}
+      }
+    }
+  `
+
+  const unpublishMutation = `
+    mutation unpublish(
+      $repoId: ID!
+    ) {
+      unpublish(repoId: $repoId)
+    }
+  `
+
+  const testPublication = (publication, vars) => {
+    const {
+      name,
+      live,
+      prepublication,
+      updateMailchimp,
+      scheduledAt,
+      date,
+      author,
+      commit
+    } = publication
+    t.equals(name, vars.name)
+    t.equals(live, vars.live)
+    t.equals(prepublication, vars.prepublication)
+    t.equals(updateMailchimp, vars.updateMailchimp)
+    if (vars.scheduledAt) {
+      t.equals(scheduledAt, vars.scheduledAt.toISOString())
+    } else {
+      t.equals(scheduledAt, null)
+    }
+    t.equals(commit.id, vars.commitId)
+    t.ok(commit.document.content, 'testPublication commit.document.content')
+    t.ok(date)
+    t.equals(author.name, testUser.name)
+    t.equals(author.email, testUser.email)
+    t.equals(author.user.email, testUser.email)
+  }
+
+  const checkDocuments = (documents, _documents) => {
+    t.equals(documents.length, _documents.length)
+    // console.log('documents', documents)
+    // console.log('_documents', _documents)
+    for (let _doc of _documents) {
+      const doc = documents.find(d => d.meta.title === _doc.meta.title)
+      t.ok(doc, 'expected document present')
+      t.deepLooseEqual(doc.meta, omit(_doc.meta, documentMetaOmit))
+      t.ok(doc.content)
+    }
+  }
+
+  const test = async ({
+    variables,
+    publications,
+    documents: _documents,
+    unauthorizedDocuments: _unauthorizedDocuments,
+    refs: _refs
+  }) => {
+    const name = publications.length
+      ? publications[0].name
+      : ''
+    console.log(`--------------------- test ${name} ---------------------`)
+
+    let activeMilestone
+    if (variables) {
+      const mutation = await apolloFetch({
+        query: publishMutation,
+        variables
+      })
+      t.ok(mutation.data)
+      testPublication(mutation.data.publish, publications[0])
+      activeMilestone = mutation.data.publish
+    }
+
+    const fetchLatestPublications = await apolloFetch({
+      query: latestPublicationsQuery,
+      variables: {
+        repoId: testRepoId
+      }
+    })
+    t.ok(fetchLatestPublications.data.repo.latestPublications)
+    const latestPublications = fetchLatestPublications.data.repo.latestPublications
+    // console.log('publications:', publications)
+    // console.log('latestPublications:', latestPublications)
+    t.equals(latestPublications.length, publications.length)
+
+    // console.log('latestPublications', latestPublications)
+    for (let publication of publications) {
+      const latestPublication = latestPublications.find(pub => pub.name === publication.name)
+      t.ok(latestPublication, `expected latestPublication (${publication.name}) present`)
+      testPublication(latestPublication, publication)
+    }
+
+    if (_documents) {
+      const fetchDocuments = await apolloFetch({
+        query: documentsQuery
+      })
+      t.ok(fetchDocuments.data.documents)
+      // console.log('authenticated')
+      checkDocuments(fetchDocuments.data.documents, _documents)
+    }
+
+    if (_unauthorizedDocuments) {
+      const fetchDocumentsUnauth = await apolloFetchUnauthorized({
+        query: documentsQuery
+      })
+      t.ok(fetchDocumentsUnauth.data.documents)
+      // console.log('not authenticated')
+      checkDocuments(fetchDocumentsUnauth.data.documents, _unauthorizedDocuments)
+    }
+
+    const liveRefs = [
+      'publication',
+      'prepublication'
+    ]
+    const allRefs = [
+      ...liveRefs,
+      'scheduled-publication',
+      'scheduled-prepublication'
+    ]
+
+    const [owner, repo] = testRepoId.split('/')
+    const activeRefs = await Promise.all([
+      ...allRefs.map(ref =>
+        githubRest.gitdata.getReference({
+          owner,
+          repo,
+          ref: `tags/${ref}`
+        })
+          .then(response => response.data)
+          .catch(e => {})
+      )
+    ])
+      .then(refs => refs
+        .filter(Boolean)
+      )
+
+    // console.log('activeRefs', activeRefs)
+    t.equals(activeRefs.length, _refs.length)
+    for (let _ref of _refs) {
+      const activeRef = activeRefs.find(r => r.ref === `refs/tags/${_ref.name}`)
+      t.ok(activeRef, 'expected ref present')
+      if (_ref.sha) {
+        t.equals(activeRef.object.sha, _ref.sha)
+      } else {
+        t.equals(activeRef.object.sha, activeMilestone.sha)
+      }
+    }
+
+    return activeMilestone
+  }
+
+  const v1 = await test({
+    variables: {
+      repoId: testRepoId,
+      commitId: initialCommitId,
+      prepublication: false,
+      updateMailchimp: false
+    },
+    publications: [
+      {
+        name: 'v1',
+        live: true,
+        commitId: initialCommitId,
+        prepublication: false,
+        updateMailchimp: false
+      }
+    ],
+    documents: [
+      {
+        meta: loremMdast.meta
+      }
+    ],
+    unauthorizedDocuments: [
+      {
+        meta: loremMdast.meta
+      }
+    ],
+    refs: [
+      { name: 'publication', sha: null },
+      { name: 'prepublication', sha: null }
+    ]
+  })
+
+  await test({
+    variables: {
+      repoId: testRepoId,
+      commitId: lastCommitId,
+      prepublication: true,
+      updateMailchimp: false
+    },
+    publications: [
+      {
+        name: 'v2-prepublication',
+        live: true,
+        commitId: lastCommitId,
+        prepublication: true,
+        updateMailchimp: false
+      },
+      {
+        name: 'v1',
+        live: true,
+        commitId: v1.commit.id,
+        prepublication: false,
+        updateMailchimp: false
+      }
+    ],
+    documents: [
+      {
+        meta: loremWithImageMdast.meta
+      }
+    ],
+    unauthorizedDocuments: [
+      {
+        meta: loremMdast.meta
+      }
+    ],
+    refs: [
+      { name: 'publication', sha: v1.sha },
+      { name: 'prepublication', sha: null }
+    ]
+  })
+
+  const v3 = await test({
+    variables: {
+      repoId: testRepoId,
+      commitId: initialCommitId,
+      prepublication: false,
+      updateMailchimp: false
+    },
+    publications: [
+      {
+        name: 'v3',
+        live: true,
+        commitId: initialCommitId,
+        prepublication: false,
+        updateMailchimp: false
+      }
+    ],
+    documents: [
+      {
+        meta: loremMdast.meta
+      }
+    ],
+    unauthorizedDocuments: [
+      {
+        meta: loremMdast.meta
+      }
+    ],
+    refs: [
+      { name: 'publication', sha: null },
+      { name: 'prepublication', sha: null }
+    ]
+  })
+
+  let v4ScheduledAt = new Date()
+  v4ScheduledAt.setSeconds(v4ScheduledAt.getSeconds() + 30)
+  await test({
+    variables: {
+      repoId: testRepoId,
+      commitId: lastCommitId,
+      prepublication: false,
+      updateMailchimp: false,
+      scheduledAt: v4ScheduledAt
+    },
+    publications: [
+      {
+        name: 'v4',
+        live: false,
+        commitId: lastCommitId,
+        prepublication: false,
+        updateMailchimp: false,
+        scheduledAt: v4ScheduledAt
+      },
+      {
+        name: 'v3',
+        live: true,
+        commitId: v3.commit.id,
+        prepublication: false,
+        updateMailchimp: false
+      }
+    ],
+    documents: [
+      {
+        meta: loremMdast.meta
+      }
+    ],
+    unauthorizedDocuments: [
+      {
+        meta: loremMdast.meta
+      }
+    ],
+    refs: [
+      { name: 'publication', sha: v3.sha },
+      { name: 'prepublication', sha: v3.sha },
+      { name: 'scheduled-publication', sha: null }
+    ]
+  })
+
+  let v5ScheduledAt = new Date()
+  v5ScheduledAt.setSeconds(v5ScheduledAt.getSeconds() + 20)
+  const v5 = await test({
+    variables: {
+      repoId: testRepoId,
+      commitId: initialCommitId,
+      prepublication: false,
+      updateMailchimp: false,
+      scheduledAt: v5ScheduledAt
+    },
+    publications: [
+      {
+        name: 'v5',
+        live: false,
+        commitId: initialCommitId,
+        prepublication: false,
+        updateMailchimp: false,
+        scheduledAt: v5ScheduledAt
+      },
+      {
+        name: 'v3',
+        live: true,
+        commitId: v3.commit.id,
+        prepublication: false,
+        updateMailchimp: false
+      }
+    ],
+    documents: [
+      {
+        meta: loremMdast.meta
+      }
+    ],
+    unauthorizedDocuments: [
+      {
+        meta: loremMdast.meta
+      }
+    ],
+    refs: [
+      { name: 'publication', sha: v3.sha },
+      { name: 'prepublication', sha: v3.sha },
+      { name: 'scheduled-publication', sha: null }
+    ]
+  })
+  await sleep(30 * 1000)
+  await test({
+    variables: null,
+    publications: [
+      {
+        name: 'v5',
+        live: true,
+        commitId: v5.commit.id,
+        prepublication: false,
+        updateMailchimp: false,
+        scheduledAt: v5ScheduledAt
+      }
+    ],
+    documents: [
+      {
+        meta: loremMdast.meta
+      }
+    ],
+    unauthorizedDocuments: [
+      {
+        meta: loremMdast.meta
+      }
+    ],
+    refs: [
+      { name: 'publication', sha: v5.sha },
+      { name: 'prepublication', sha: v5.sha }
+    ]
+  })
+
+  const v6 = await test({
+    variables: {
+      repoId: testRepoId,
+      commitId: lastCommitId,
+      prepublication: false,
+      updateMailchimp: false
+    },
+    publications: [
+      {
+        name: 'v6',
+        live: true,
+        commitId: lastCommitId,
+        prepublication: false,
+        updateMailchimp: false
+      }
+    ],
+    documents: [
+      {
+        meta: loremWithImageMdast.meta
+      }
+    ],
+    unauthorizedDocuments: [
+      {
+        meta: loremWithImageMdast.meta
+      }
+    ],
+    refs: [
+      { name: 'publication', sha: null },
+      { name: 'prepublication', sha: null }
+    ]
+  })
+
+  let v7ScheduledAt = new Date()
+  v7ScheduledAt.setSeconds(v7ScheduledAt.getSeconds() + 30)
+  const v7 = await test({
+    variables: {
+      repoId: testRepoId,
+      commitId: initialCommitId,
+      prepublication: false,
+      updateMailchimp: false,
+      scheduledAt: v7ScheduledAt
+    },
+    publications: [
+      {
+        name: 'v7',
+        live: false,
+        commitId: initialCommitId,
+        prepublication: false,
+        updateMailchimp: false,
+        scheduledAt: v7ScheduledAt
+      },
+      {
+        name: 'v6',
+        live: true,
+        commitId: v6.commit.id,
+        prepublication: false,
+        updateMailchimp: false
+      }
+    ],
+    documents: [
+      {
+        meta: loremWithImageMdast.meta
+      }
+    ],
+    unauthorizedDocuments: [
+      {
+        meta: loremWithImageMdast.meta
+      }
+    ],
+    refs: [
+      { name: 'publication', sha: v6.sha },
+      { name: 'prepublication', sha: v6.sha },
+      { name: 'scheduled-publication', sha: null }
+    ]
+  })
+
+  await test({
+    variables: {
+      repoId: testRepoId,
+      commitId: lastCommitId,
+      prepublication: true,
+      updateMailchimp: false
+    },
+    publications: [
+      {
+        name: 'v8-prepublication',
+        live: true,
+        commitId: lastCommitId,
+        prepublication: true,
+        updateMailchimp: false
+      },
+      {
+        name: 'v7',
+        live: false,
+        commitId: v7.commit.id,
+        prepublication: false,
+        updateMailchimp: false,
+        scheduledAt: v7ScheduledAt
+      },
+      {
+        name: 'v6',
+        live: true,
+        commitId: v6.commit.id,
+        prepublication: false,
+        updateMailchimp: false
+      }
+    ],
+    documents: [
+      {
+        meta: loremWithImageMdast.meta
+      }
+    ],
+    unauthorizedDocuments: [
+      {
+        meta: loremWithImageMdast.meta
+      }
+    ],
+    refs: [
+      { name: 'publication', sha: v6.sha },
+      { name: 'prepublication', sha: null },
+      { name: 'scheduled-publication', sha: v7.sha }
+    ]
+  })
+  await sleep(31 * 1000)
+  await test({
+    variables: null,
+    publications: [
+      {
+        name: 'v7',
+        live: true,
+        commitId: v7.commit.id,
+        prepublication: false,
+        updateMailchimp: false,
+        scheduledAt: v7ScheduledAt
+      }
+    ],
+    documents: [
+      {
+        meta: loremMdast.meta
+      }
+    ],
+    unauthorizedDocuments: [
+      {
+        meta: loremMdast.meta
+      }
+    ],
+    refs: [
+      { name: 'publication', sha: v7.sha },
+      { name: 'prepublication', sha: v7.sha }
+    ]
+  })
+
+  let v9ScheduledAt = new Date()
+  v9ScheduledAt.setSeconds(v9ScheduledAt.getSeconds() + 20)
+  await test({
+    variables: {
+      repoId: testRepoId,
+      commitId: lastCommitId,
+      prepublication: false,
+      updateMailchimp: false,
+      scheduledAt: v9ScheduledAt
+    },
+    publications: [
+      {
+        name: 'v9',
+        live: false,
+        commitId: lastCommitId,
+        prepublication: false,
+        updateMailchimp: false,
+        scheduledAt: v9ScheduledAt
+      },
+      {
+        name: 'v7',
+        live: true,
+        commitId: v7.commit.id,
+        prepublication: false,
+        updateMailchimp: false,
+        scheduledAt: v7ScheduledAt
+      }
+    ],
+    documents: [
+      {
+        meta: loremMdast.meta
+      }
+    ],
+    unauthorizedDocuments: [
+      {
+        meta: loremMdast.meta
+      }
+    ],
+    refs: [
+      { name: 'publication', sha: v7.sha },
+      { name: 'prepublication', sha: v7.sha },
+      { name: 'scheduled-publication', sha: null }
+    ]
+  })
+
+  await apolloFetch({
+    query: unpublishMutation,
+    variables: {
+      repoId: testRepoId
+    }
+  })
+
+  await sleep(25 * 1000)
+
+  await test({
+    variables: null,
+    publications: [
+    ],
+    documents: [
+    ],
+    unauthorizedDocuments: [
+    ],
+    refs: [
+    ]
+  })
+
+  const v10 = await test({
+    variables: {
+      repoId: testRepoId,
+      commitId: initialCommitId,
+      prepublication: true,
+      updateMailchimp: false
+    },
+    publications: [
+      {
+        name: 'v10-prepublication',
+        live: true,
+        commitId: initialCommitId,
+        prepublication: true,
+        updateMailchimp: false
+      }
+    ],
+    documents: [
+      {
+        meta: loremMdast.meta
+      }
+    ],
+    unauthorizedDocuments: [],
+    refs: [
+      { name: 'prepublication', sha: null }
+    ]
+  })
+
+  let v11ScheduledAt = new Date()
+  v11ScheduledAt.setSeconds(v11ScheduledAt.getSeconds() + 20)
+  await test({
+    variables: {
+      repoId: testRepoId,
+      commitId: lastCommitId,
+      prepublication: false,
+      updateMailchimp: false,
+      scheduledAt: v11ScheduledAt
+    },
+    publications: [
+      {
+        name: 'v11',
+        live: false,
+        commitId: lastCommitId,
+        prepublication: false,
+        updateMailchimp: false,
+        scheduledAt: v11ScheduledAt
+      },
+      {
+        name: 'v10-prepublication',
+        live: true,
+        commitId: v10.commit.id,
+        prepublication: true,
+        updateMailchimp: false
+      }
+    ],
+    documents: [
+      {
+        meta: loremMdast.meta
+      }
+    ],
+    unauthorizedDocuments: [],
+    refs: [
+      { name: 'prepublication', sha: v10.sha },
+      { name: 'scheduled-publication', sha: null }
+    ]
+  })
+
+  const v12 = await test({
+    variables: {
+      repoId: testRepoId,
+      commitId: lastCommitId,
+      prepublication: false,
+      updateMailchimp: false
+    },
+    publications: [
+      {
+        name: 'v12',
+        live: true,
+        commitId: lastCommitId,
+        prepublication: false,
+        updateMailchimp: false
+      }
+    ],
+    documents: [
+      {
+        meta: loremWithImageMdast.meta
+      }
+    ],
+    unauthorizedDocuments: [
+      {
+        meta: loremWithImageMdast.meta
+      }
+    ],
+    refs: [
+      { name: 'publication', sha: null },
+      { name: 'prepublication', sha: null }
+    ]
+  })
+
+  await sleep(25 * 1000)
+  await test({
+    variables: null,
+    publications: [
+      {
+        name: 'v12',
+        live: true,
+        commitId: v12.commit.id,
+        prepublication: false,
+        updateMailchimp: false
+      }
+    ],
+    documents: [
+      {
+        meta: loremWithImageMdast.meta
+      }
+    ],
+    unauthorizedDocuments: [
+      {
+        meta: loremWithImageMdast.meta
+      }
+    ],
+    refs: [
+      { name: 'publication', sha: v12.sha },
+      { name: 'prepublication', sha: v12.sha }
+    ]
+  })
+
   t.end()
 })
 

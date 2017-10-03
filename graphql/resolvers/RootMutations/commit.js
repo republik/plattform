@@ -7,29 +7,33 @@ const { ensureUserHasRole } = require('../../../lib/Roles')
 const superb = require('superb')
 const superheroes = require('superheroes')
 const sleep = require('await-sleep')
+const sharp = require('sharp')
 const {
-  githubRest,
+  createGithubClients,
   commitNormalizer,
   getRepo,
   getHeads
 } = require('../../../lib/github')
 
-const extractImage = (url, images) => {
+const extractImage = async (url, images) => {
   if (url) {
     let blob
     try {
       blob = dataUriToBuffer(url)
     } catch (e) { /* console.log('ignoring image node with url:' + url) */ }
     if (blob) {
+      const meta = await sharp(blob).metadata()
       const suffix = blob.type.split('/')[1]
       const hash = hashObject(blob)
+      const path = `images/${hash}.${suffix}`
+      const url = `${path}?size=${meta.width}x${meta.height}`
       const image = {
-        path: `images/${hash}.${suffix}`,
+        path,
         hash,
         blob
       }
       images.push(image)
-      return image.path
+      return url
     }
   }
   return url
@@ -37,6 +41,7 @@ const extractImage = (url, images) => {
 
 module.exports = async (_, args, { pgdb, req, user, t }) => {
   ensureUserHasRole(user, 'editor')
+  const { githubRest } = await createGithubClients()
 
   const {
     repoId,
@@ -69,7 +74,7 @@ module.exports = async (_, args, { pgdb, req, user, t }) => {
     })
     // auto_init seems to be async and takes some time
     // we sporadically saw: Git Repository is empty. on commit
-    await sleep(800)
+    await sleep(1000)
   }
 
   // reverse asset url prefixing
@@ -86,16 +91,20 @@ module.exports = async (_, args, { pgdb, req, user, t }) => {
 
   // extract images
   const images = []
-  visit(mdast, 'image', node => {
-    node.url = extractImage(node.url, images)
+  const promises = []
+  visit(mdast, 'image', async (node) => {
+    promises.push((async () => {
+      node.url = await extractImage(node.url, images)
+    })())
   })
   if (mdast.meta) {
-    Object.keys(mdast.meta).forEach(key => {
+    promises.push(...Object.keys(mdast.meta).map(async (key) => {
       if (key.match(/image/i)) {
-        mdast.meta[key] = extractImage(mdast.meta[key], images)
+        mdast.meta[key] = await extractImage(mdast.meta[key], images)
       }
-    })
+    }))
   }
+  await Promise.all(promises)
 
   // serialize
   const markdown = MDAST.stringify(mdast)
