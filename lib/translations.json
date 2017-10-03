@@ -1,5 +1,5 @@
 {
-  "updated": "2017-10-03T12:26:24.664Z",
+  "updated": "2017-10-03T13:54:55.620Z",
   "title": "live",
   "data": [
     {
@@ -172,7 +172,7 @@
     },
     {
       "key": "metaData/field/slug",
-      "value": "Web Slug"
+      "value": "Web-Slug"
     },
     {
       "key": "metaData/field/src",
@@ -313,6 +313,22 @@
     {
       "key": "publish/label/scheduledAt",
       "value": "Publikationstermin"
+    },
+    {
+      "key": "publish/validation/hasErrors",
+      "value": "Diese Version ist nicht veröffentlichbar:"
+    },
+    {
+      "key": "publish/validation/slug/empty",
+      "value": "Web-Slug fehlt"
+    },
+    {
+      "key": "publish/validation/publishDate/empty",
+      "value": "Publikationsdatum fehlt"
+    },
+    {
+      "key": "publish/validation/emailSubject/empty",
+      "value": "E-Mail-Betreff fehlt"
     },
     {
       "key": "publication/current/title/1",
