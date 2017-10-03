@@ -4,7 +4,7 @@ const { createPrefixUrl } = require('../../lib/assets')
 const visit = require('unist-util-visit')
 
 module.exports = {
-  document: async ({ id: commitId, repo: { id: repoId } }, args, { user }) => {
+  document: async ({ id: commitId, repo: { id: repoId } }, { oneway }, { user }) => {
     const { githubApolloFetch } = await createGithubClients()
     const [login, repoName] = repoId.split('/')
 
@@ -42,7 +42,7 @@ module.exports = {
     const mdast = MDAST.parse(repository.blob.text)
 
     // prefix image urls
-    const prefixUrl = createPrefixUrl(repoId)
+    const prefixUrl = createPrefixUrl(repoId, oneway)
     visit(mdast, 'image', node => {
       node.url = prefixUrl(node.url)
     })

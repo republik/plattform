@@ -128,7 +128,7 @@ module.exports = async (
   // cache in redis
   const doc = await getDocument(
     { id: commitId, repo: { id: repoId } },
-    null,
+    { oneway: true },
     { user }
   )
   const payload = JSON.stringify({
