@@ -1,5 +1,5 @@
 {
-  "updated": "2017-10-02T16:34:26.736Z",
+  "updated": "2017-10-03T09:28:49.162Z",
   "title": "live",
   "data": [
     {
@@ -85,10 +85,6 @@
     {
       "key": "baseCommit/commitsBehind/0",
       "value": "der neuesten Version"
-    },
-    {
-      "key": "baseCommit/commitsBehind/1",
-      "value": "der vorletzten Version"
     },
     {
       "key": "baseCommit/commitsBehind/other",
