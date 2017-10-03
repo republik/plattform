@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { gql, graphql } from 'react-apollo'
 import { css } from 'glamor'
-import { linkRule } from '@project-r/styleguide'
+import { Label, linkRule } from '@project-r/styleguide'
 import { descending } from 'd3-array'
 import { compose } from 'redux'
 import { Link } from '../../lib/routes'
@@ -15,6 +15,9 @@ const styles = {
   container: css({
     fontSize: '11px',
     padding: '0 0 5px 0'
+  }),
+  commitsBehind: css({
+    display: 'block'
   })
 }
 
@@ -58,22 +61,23 @@ class BaseCommit extends Component {
             <div {...styles.container}>
               {commit && (
                 <div>
-                  <Link
-                    route='repo/tree'
-                    params={{ repoId: repo.id.split('/') }}
-                  >
-                    <a {...linkRule}>
-                      {t('baseCommit/title')}{' '}
-                      {commitsBehind !== null && (
-                        <span>
-                          {t.pluralize('baseCommit/commitsBehind', {
-                            count: commitsBehind
-                          })}
-                        </span>
-                      )}
-                      :
-                    </a>
-                  </Link>
+                  <Label {...styles.commitsBehind}>
+                    <Link
+                      route='repo/tree'
+                      params={{ repoId: repo.id.split('/') }}
+                    >
+                      <a {...linkRule}>
+                        {commitsBehind !== null && (
+                          <span>
+                            {t.pluralize('baseCommit/commitsBehind', {
+                              count: commitsBehind
+                            })}
+                          </span>
+                        )}
+                      </a>
+                    </Link>
+                  </Label>
+                  <Label>{t('baseCommit/title')}</Label>
                   <div {...styles.title}>{commit.message}</div>
                   <div>{commit.author.name}</div>
                   <div>{timeFormat(new Date(repo.commit.date))}</div>
