@@ -19,7 +19,7 @@ const styles = {
 }
 
 const getCommitInfo = gql`
-  query test($repoId: ID!, $commitId: ID!) {
+  query getCommitInfo($repoId: ID!, $commitId: ID!) {
     repo(id: $repoId) {
       id
       commit(id: $commitId) {
