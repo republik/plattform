@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-28T12:12:29.983Z",
+  "updated": "2017-10-03T12:26:24.664Z",
   "title": "live",
   "data": [
     {
@@ -76,7 +76,23 @@
     },
     {
       "key": "baseCommit/title",
-      "value": "Ausgangsversion"
+      "value": "Ausgangsversion:"
+    },
+    {
+      "key": "baseCommit/commitsBehind/-1",
+      "value": "Es gibt neuere Versionen"
+    },
+    {
+      "key": "baseCommit/commitsBehind/0",
+      "value": "Neueste Version"
+    },
+    {
+      "key": "baseCommit/commitsBehind/1",
+      "value": "Es gibt {count} neuere Version"
+    },
+    {
+      "key": "baseCommit/commitsBehind/other",
+      "value": "Es gibt {count} neuere Versionen"
     },
     {
       "key": "checklist/title",

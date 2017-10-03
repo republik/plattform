@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { gql, graphql } from 'react-apollo'
 import { css } from 'glamor'
-import { Label } from '@project-r/styleguide'
+import { Label, linkRule } from '@project-r/styleguide'
+import { descending } from 'd3-array'
 import { compose } from 'redux'
+import { Link } from '../../lib/routes'
 import { swissTime } from '../../lib/utils/format'
 import Loader from '../../components/Loader'
 import withT from '../../lib/withT'
@@ -13,11 +15,14 @@ const styles = {
   container: css({
     fontSize: '11px',
     padding: '0 0 5px 0'
+  }),
+  commitsBehind: css({
+    display: 'block'
   })
 }
 
 const getCommitInfo = gql`
-  query test($repoId: ID!, $commitId: ID!) {
+  query getCommitInfo($repoId: ID!, $commitId: ID!) {
     repo(id: $repoId) {
       id
       commit(id: $commitId) {
@@ -28,33 +33,60 @@ const getCommitInfo = gql`
           name
         }
       }
+      commits {
+        id
+        date
+      }
     }
   }
 `
 
 class BaseCommit extends Component {
   render () {
-    const { data: {loading, error, repo}, t } = this.props
+    const { data: { loading, error, repo }, t } = this.props
     const commit = repo && repo.commit
 
     return (
-      <Loader loading={loading} error={error} render={() => (
-        <div {...styles.container}>
-          {commit &&
-            <div>
-              <Label>{t('baseCommit/title')}</Label>
-              <div{...styles.title}>
-                {commit.message}
-              </div>
-              <div>
-                {commit.author.name}
-              </div>
-              <div>
-                {timeFormat(new Date(repo.commit.date))}
-              </div>
-            </div>}
-        </div>
-      )} />
+      <Loader
+        loading={loading}
+        error={error}
+        render={() => {
+          const commitsBehind = [...repo.commits]
+            .sort(function (a, b) {
+              return descending(new Date(a.date), new Date(b.date))
+            })
+            .map(c => c.id)
+            .indexOf(this.props.commitId)
+          return (
+            <div {...styles.container}>
+              {commit && (
+                <div>
+                  <Label {...styles.commitsBehind}>
+                    <Link
+                      route='repo/tree'
+                      params={{ repoId: repo.id.split('/') }}
+                    >
+                      <a {...linkRule}>
+                        {commitsBehind !== null && (
+                          <span>
+                            {t.pluralize('baseCommit/commitsBehind', {
+                              count: commitsBehind
+                            })}
+                          </span>
+                        )}
+                      </a>
+                    </Link>
+                  </Label>
+                  <Label>{t('baseCommit/title')}</Label>
+                  <div {...styles.title}>{commit.message}</div>
+                  <div>{commit.author.name}</div>
+                  <div>{timeFormat(new Date(repo.commit.date))}</div>
+                </div>
+              )}
+            </div>
+          )
+        }}
+      />
     )
   }
 }

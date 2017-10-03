@@ -44,17 +44,29 @@ const fragments = {
   `
 }
 
-const query = gql`
-  query repo($repoId: ID!) {
+const getCommitById = gql`
+  query getCommitById($repoId: ID!, $commitId: ID!) {
     repo(id: $repoId) {
       id
-      commits(page: 1) {
+      commit(id: $commitId) {
         ...EditPageCommit
       }
     }
   }
   ${fragments.commit}
 `
+
+const getLatestCommit = gql`
+  query getLatestCommit($repoId: ID!) {
+    repo(id: $repoId) {
+      id
+      latestCommit {
+        id
+      }
+    }
+  }
+`
+
 const commitMutation = gql`
   mutation commit(
     $repoId: ID!
@@ -197,10 +209,10 @@ class EditorPage extends Component {
     if (loading || error) {
       return
     }
-    if (!url.query.commitId && repo && repo.commits.length) {
+    if (!url.query.commitId && repo && repo.latestCommit) {
       Router.replaceRoute('repo/edit', {
         repoId: url.query.repoId.split('/'),
-        commitId: repo.commits[0].id
+        commitId: repo.latestCommit.id
       })
       return
     }
@@ -212,9 +224,7 @@ class EditorPage extends Component {
     if (isNew) {
       committedEditorState = newDocument(url.query)
     } else {
-      const commit = repo.commits.find(commit => {
-        return commit.id === commitId
-      })
+      const commit = repo.commit
       if (!commit) {
         this.setState({
           error: t('commit/warn/missing', {commitId})
@@ -416,7 +426,6 @@ class EditorPage extends Component {
                   />
                   <Label>{t('commitHistory/title')}</Label>
                   <CommitHistory
-                    commits={repo.commits}
                     repoId={repoId}
                     commitId={commitId}
                   />
@@ -436,8 +445,17 @@ export default compose(
   withData,
   withT,
   withAuthorization(['editor']),
-  graphql(query, {
-    skip: ({ url }) => url.query.commitId === 'new',
+  graphql(getCommitById, {
+    skip: ({ url }) => url.query.commitId === 'new' || !url.query.commitId,
+    options: ({ url }) => ({
+      variables: {
+        repoId: url.query.repoId,
+        commitId: url.query.commitId
+      }
+    })
+  }),
+  graphql(getLatestCommit, {
+    skip: ({ url }) => url.query.commitId === 'new' || !!url.query.commitId,
     options: ({ url }) => ({
       variables: {
         repoId: url.query.repoId
@@ -450,20 +468,26 @@ export default compose(
         mutate({
           variables,
           update: (proxy, { data: { commit } }) => {
-            const variables = {
-              repoId: url.query.repoId
-            }
-            const data = proxy.readQuery({
-              query,
-              variables
+            const oldData = proxy.readQuery({
+              query: getCommitById,
+              variables: {
+                repoId: url.query.repoId,
+                commitId: url.query.commitId
+              }
             })
-            data.repo.commits = [
-              commit,
-              ...data.repo.commits
-            ]
+            const data = {
+              ...oldData,
+              repo: {
+                ...oldData.repo,
+                commit
+              }
+            }
             proxy.writeQuery({
-              query: query,
-              variables,
+              query: getCommitById,
+              variables: {
+                repoId: url.query.repoId,
+                commitId: commit.id
+              },
               data
             })
           }
