@@ -24,6 +24,7 @@
     "email-validator": "^1.1.1",
     "express": "^4.15.4",
     "express-session": "^1.15.5",
+    "file-type": "^6.2.0",
     "geoip-database": "^1.0.7",
     "github": "^11.0.0",
     "graphql": "^0.10.5",
