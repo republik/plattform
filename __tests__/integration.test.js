@@ -569,7 +569,7 @@ test('commit with image (on same branch)', async (t) => {
   t.end()
 })
 
-test('check image dataURI is replaced with relative url', async (t) => {
+test('check image dataURI is replaced with relative url (incl. image size)', async (t) => {
   // get article.md from repo
   const [owner, repo] = testRepoId.split('/')
   const articleMd = await githubRest.repos.getContent({
@@ -582,7 +582,7 @@ test('check image dataURI is replaced with relative url', async (t) => {
     )
     .catch(response => null)
   t.ok(articleMd)
-  t.ok(articleMd.indexOf('images/c0313cccd1aacffecf8a4fef6a44aef9676b5b61.jpeg') > -1)
+  t.ok(articleMd.indexOf('images/51f77e4beffccd7ef932da07b9333122f1ea20f9.png?size=50x28') > -1)
   t.end()
 })
 
