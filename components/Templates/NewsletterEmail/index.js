@@ -1,6 +1,6 @@
 import Container from './Container'
 import Cover, {Title, Lead} from './Cover'
-import Paragraph, {Strong, Em, Link} from './Paragraph'
+import Paragraph, {Strong, Em, Link, Br} from './Paragraph'
 import Center from './Center'
 import { H2, H3 } from './Headlines'
 import Figure, { Image, Caption } from './Figure'
@@ -19,6 +19,11 @@ const paragraph = {
   matchMdast: matchParagraph,
   component: Paragraph,
   rules: [
+    {
+      matchMdast: matchType('break'),
+      component: Br,
+      isVoid: true
+    },
     {
       matchMdast: matchType('strong'),
       component: Strong

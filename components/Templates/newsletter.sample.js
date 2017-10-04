@@ -240,6 +240,131 @@ export default {
         }]
       }
       ]
+    },
+    {
+      'type': 'paragraph',
+      'children': [
+        {
+          'type': 'text',
+          'value': 'Dies ist ein neuer Paragraph.'
+        },
+        {
+          'type': 'break'
+        },
+        {
+          'type': 'text',
+          'value': 'Und dies eine neue Zeile.'
+        }
+      ]
+    },
+    {
+      'type': 'blockquote',
+      'children': [
+        {
+          'type': 'paragraph',
+          'children': [
+            {
+              'type': 'emphasis',
+              'children': [
+                {
+                  'type': 'text',
+                  'value': 'A'
+                }
+              ]
+            },
+            {
+              'type': 'text',
+              'value': ': Hallo B'
+            },
+            {
+              'type': 'break'
+            },
+            {
+              'type': 'emphasis',
+              'children': [
+                {
+                  'type': 'text',
+                  'value': 'B'
+                }
+              ]
+            },
+            {
+              'type': 'text',
+              'value': ': Alo A, auf Zeile -1'
+            },
+            {
+              'type': 'break'
+            },
+            {
+              'type': 'emphasis',
+              'children': [
+                {
+                  'type': 'text',
+                  'value': 'A'
+                }
+              ]
+            },
+            {
+              'type': 'text',
+              'value': ': Zeilenumbrüche sind toll!'
+            }
+          ]
+        }
+      ]
+    },
+    {
+      'type': 'list',
+      'ordered': false,
+      'start': null,
+      'loose': false,
+      'children': [
+        {
+          'type': 'listItem',
+          'loose': false,
+          'checked': null,
+          'children': [
+            {
+              'type': 'paragraph',
+              'children': [
+                {
+                  'type': 'text',
+                  'value': 'Auch'
+                },
+                {
+                  'type': 'break'
+                },
+                {
+                  'type': 'text',
+                  'value': 'in'
+                },
+                {
+                  'type': 'break'
+                },
+                {
+                  'type': 'text',
+                  'value': 'Listen'
+                }
+              ]
+            }
+          ]
+        },
+        {
+          'type': 'listItem',
+          'loose': false,
+          'checked': null,
+          'children': [
+            {
+              'type': 'paragraph',
+              'children': [
+                {
+                  'type': 'text',
+                  'value': 'Aha'
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
     ]
   }

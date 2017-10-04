@@ -21,7 +21,13 @@ const inlineSerializer = new MarkdownSerializer({
   rules: getSerializationRules([
     ...marks.plugins,
     ...link.plugins
-  ])
+  ]).concat({
+    matchMdast: (node) => node.type === 'break',
+    fromMdast: (node, index, parent, visitChildren) => ({
+      kind: 'text',
+      ranges: [{text: '\n'}]
+    })
+  })
 })
 
 const paragraph = {
@@ -53,6 +59,19 @@ export {
 export default {
   plugins: [
     {
+      onKeyDown (e, data, change) {
+        const { state } = change
+        if (data.key !== 'enter') return
+        if (e.shiftKey === false) return
+
+        const { startBlock } = state
+        const { type } = startBlock
+        if (type !== PARAGRAPH) {
+          return
+        }
+
+        return change.insertText('\n')
+      },
       schema: {
         rules: [
           paragraph
