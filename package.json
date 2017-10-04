@@ -73,7 +73,7 @@
     "translations": "gsheets --key=1_1g3sW8u1aD9xGRfS479s0Pjwx0LxYRUEhETGkKlwLE --title=live --pretty --out lib/translations.json",
     "test:travis": "istanbul cover tape \"?(__tests__|lib|graphql)/**/*.test.js\" --report lcovonly && cat ./coverage/lcov.info | coveralls",
     "test": "export DATABASE_URL=postgres://localhost:5432/publikator-test && echo $DATABASE_URL && dropdb --if-exists publikator-test && createdb publikator-test && db-migrate reset && db-migrate up && NODE_ENV=testing istanbul cover tape \"?(__tests__|lib|graphql)/**/*.test.js\"",
-    "import:templates": "babel --out-dir=lib/Templates/ ../publikator-frontend/components/Templates/ && rm -r lib/Templates/Newsletter"
+    "import:templates": "babel --out-dir=lib/Templates/ ../publikator-frontend/components/Templates/ && rm -r lib/Templates/Newsletter && rm lib/Templates/newsletter.*"
   },
   "lint-staged": {
     "*.js": [
