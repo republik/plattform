@@ -16,7 +16,8 @@ import {
   linkRule,
   Button,
   Field,
-  Checkbox
+  Checkbox,
+  colors
 } from '@project-r/styleguide'
 
 import MaskedInput from 'react-maskedinput'
@@ -41,9 +42,9 @@ const query = gql`
         document {
           content
           meta {
-            title
-            description
-            image
+            slug
+            emailSubject
+            publishDate
           }
         }
       }
@@ -118,7 +119,14 @@ class PublishForm extends Component {
 
     return (
       <Loader loading={loading} error={error} render={() => {
-        const { commit } = repo
+        const { commit, commit: { document: { meta } } } = repo
+
+        const errors = [
+          !meta.slug && t('publish/validation/slug/empty'),
+          !meta.publishDate && t('publish/validation/publishDate/empty'),
+          (updateMailchimp && !meta.emailSubject) && t('publish/validation/emailSubject/empty')
+        ].filter(Boolean)
+        const hasErrors = errors.length > 0
 
         return (
           <div>
@@ -146,6 +154,20 @@ class PublishForm extends Component {
             </Interaction.P>
 
             <br /><br />
+
+            {hasErrors && (
+              <Interaction.P style={{color: colors.error}}>
+                {t('publish/validation/hasErrors')}
+                <ul>
+                  {errors.map((error, i) => (
+                    <li key={i}>
+                      {error}
+                    </li>
+                  ))}
+                </ul>
+                <br /><br />
+              </Interaction.P>
+            )}
 
             <Checkbox checked={prepublication} onChange={(_, value) => {
               this.setState({
@@ -201,7 +223,7 @@ class PublishForm extends Component {
                 {!!this.state.error && (
                   <ErrorMessage error={this.state.error} />
                 )}
-                <Button block primary onClick={() => {
+                <Button block primary disabled={hasErrors} onClick={() => {
                   if (scheduled && scheduledAtError) {
                     return
                   }
