@@ -16,17 +16,6 @@ const Page = ({ url, data, t }) => {
       <h1>{t('publish/title')}</h1>
 
       <PublishForm repoId={repoId} commitId={commitId} t={t} />
-
-      { /* <pre style={{overflow: 'hidden'}}>
-        <code>
-          {JSON.stringify(commit.document.meta, null, 2)}
-        </code>
-      </pre>
-      <pre style={{overflow: 'hidden'}}>
-        <code>
-          {JSON.stringify(commit.document.content, null, 2)}
-        </code>
-      </pre> */ }
     </Frame>
   )
 }
