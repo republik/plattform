@@ -9,6 +9,7 @@ import { COVER } from './constants'
 import { CoverForm } from './ui'
 import { mq } from '../../styles'
 import MarkdownSerializer from '../../../../lib/serializer'
+import { imageResizeUrl } from '../../../Templates/utils'
 
 export const styles = {
   cover: {
@@ -62,12 +63,15 @@ export const styles = {
 const Cover = ({ node, children }) => {
   const src = node.data.get('src') || gray2x1
   const alt = node.data.get('alt')
+
+  const src2000 = imageResizeUrl(src, '2000x1125')
+
   return <div
     {...css(styles.cover)}
-    {...css({ [mq.large]: { backgroundImage: `url('${src}')` } })}
+    {...css({ [mq.large]: { backgroundImage: `url('${src2000}')` } })}
     >
     <img
-      src={src}
+      src={src2000}
       alt={alt}
       {...css(styles.coverImage)}
     />

@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { imageResizeUrl } from '../utils'
+
 export const Image = ({ data }) =>
   <img key='image'
     style={{
@@ -10,7 +12,7 @@ export const Image = ({ data }) =>
       maxWidth: '100% !important'
     }}
     width='640'
-    src={data.src}
+    src={imageResizeUrl(data.src, '600x')}
     alt={data.alt}
   />
 

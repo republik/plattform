@@ -2,6 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 
 import { mq } from './styles'
+import { imageResizeUrl } from '../utils'
 
 const styles = {
   cover: {
@@ -78,12 +79,14 @@ export const Title = ({children}) => (
 )
 
 export default ({ data: { src, alt }, children }) => {
+  const src2000 = imageResizeUrl(src, '2000x')
+
   return <div
     {...css(styles.cover)}
-    {...css({ [mq.large]: { backgroundImage: `url('${src}')` } })}
+    {...css({ [mq.large]: { backgroundImage: `url('${src2000}')` } })}
     >
     <img
-      src={src}
+      src={src2000}
       alt={alt}
       {...css(styles.coverImage)}
     />

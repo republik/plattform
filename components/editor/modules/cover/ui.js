@@ -48,5 +48,6 @@ export const CoverForm = createPropertyForm({
       }).merge(node.data)}
       onInputChange={onInputChange}
     />
+    <Label>Anzeigegrössen: 2000x1125 und 1280x675 (zentrierter Schnitt)</Label>
   </div>
 })

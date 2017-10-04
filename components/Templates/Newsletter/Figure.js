@@ -2,6 +2,7 @@ import React from 'react'
 import { css, merge } from 'glamor'
 
 import { mq } from './styles'
+import { imageResizeUrl } from '../utils'
 
 const styles = {
   image: css({
@@ -34,7 +35,7 @@ const styles = {
 
 export const Image = ({ data }) =>
   <img {...styles.image}
-    src={data.src}
+    src={imageResizeUrl(data.src, '1200x')}
     alt={data.alt}
   />
 

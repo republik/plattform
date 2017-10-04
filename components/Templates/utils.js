@@ -1,3 +1,5 @@
+import { parse, format } from 'url'
+
 export const matchType = type => node => node.type === type
 export const matchHeading = depth => node => (
   node.type === 'heading' && node.depth === depth
@@ -12,3 +14,24 @@ export const matchImageParagraph = node => (
   node.children.length === 1 &&
   matchImage(node.children[0])
 )
+
+export const imageSizeInfo = url => {
+  const urlObject = parse(url, true)
+  const { size } = urlObject.query
+  if (!size) {
+    return null
+  }
+  const [width, height] = size.split('x')
+  return {
+    width,
+    height
+  }
+}
+
+export const imageResizeUrl = (url, size) => {
+  const urlObject = parse(url, true)
+  urlObject.query.resize = size
+  // ensure format calculates from query object
+  urlObject.search = undefined
+  return format(urlObject)
+}

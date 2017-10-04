@@ -60,6 +60,7 @@ export const FigureForm = createPropertyForm({
                 }).merge(imageBlock.data)}
                 onInputChange={onInputChange(imageBlock)}
               />
+              <Label>Anzeigegrössen: 1200x und 600x (proportionaler Schnitt)</Label><br /><br />
               <MetaForm
                 data={Map({
                   captionRight: captionBlock.data.get('captionRight') || false

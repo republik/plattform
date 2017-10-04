@@ -9,6 +9,7 @@ import { gray2x1 } from '../../utils/placeholder'
 import { serializer as paragraphSerializer, PARAGRAPH } from '../paragraph'
 import { Block } from 'slate'
 import { Placeholder } from 'slate-react'
+import { imageResizeUrl } from '../../../Templates/utils'
 
 import MarkdownSerializer from '../../../../lib/serializer'
 
@@ -50,7 +51,7 @@ const styles = {
 const Image = ({ src, alt, active }) =>
   <img
     style={{ width: '100%' }}
-    src={src}
+    src={imageResizeUrl(src, '1200x')}
     alt={alt}
     data-active={active}
     {...styles.image}
@@ -118,6 +119,7 @@ const figureImage = {
     const src = node.data.get('src') || gray2x1
     const alt = node.data.get('alt')
     const active = state.blocks.some(block => block.key === node.key)
+
     return (
       <Image
         src={src}
