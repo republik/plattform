@@ -115,34 +115,36 @@ test('unauthorized subscription', (t) => {
       t.false(error)
     }
   })
-  client.subscribe(
-    {
-      query: `
-        subscription uncommittedChanges(
-          $repoId: ID!
-        ){
-          uncommittedChanges(repoId: $repoId) {
-            action
-            user {
-              id
-            }
+  client.request({
+    query: `
+      subscription uncommittedChanges(
+        $repoId: ID!
+      ){
+        uncommittedChanges(repoId: $repoId) {
+          action
+          user {
+            id
           }
         }
-      `,
-      variables: {
-        repoId: 'irrelevant'
       }
-    },
-    (errors, result) => {
+    `,
+    variables: {
+      repoId: 'irrelevant'
+    }
+  }).subscribe({
+    next: (result) => {
+      const { errors } = result
       t.ok(errors)
       t.equals(errors.length, 1)
       const error = errors[0]
       t.equals(error.message, tr('api/signIn'))
-      t.equals(result, null)
-      client.client.close()
+      client.close()
       t.end()
+    },
+    error: (errors) => {
+      t.equals(errors, null)
     }
-  )
+  })
 })
 
 test('signIn', async (t) => {
@@ -183,34 +185,36 @@ test('subscription (signed in, without role)', (t) => {
       t.false(error)
     }
   })
-  client.subscribe(
-    {
-      query: `
-        subscription uncommittedChanges(
-          $repoId: ID!
-        ){
-          uncommittedChanges(repoId: $repoId) {
-            action
-            user {
-              id
-            }
+  client.request({
+    query: `
+      subscription uncommittedChanges(
+        $repoId: ID!
+      ){
+        uncommittedChanges(repoId: $repoId) {
+          action
+          user {
+            id
           }
         }
-      `,
-      variables: {
-        repoId: 'irrelevant'
       }
-    },
-    (errors, result) => {
+    `,
+    variables: {
+      repoId: 'irrelevant'
+    }
+  }).subscribe({
+    next: (result) => {
+      const { errors } = result
       t.ok(errors)
       t.equals(errors.length, 1)
       const error = errors[0]
       t.equals(error.message, tr('api/unauthorized', { role: 'editor' }))
-      t.equals(result, null)
-      client.client.close()
+      client.close()
       t.end()
+    },
+    error: (errors) => {
+      t.equals(errors, null)
     }
-  )
+  })
 })
 
 test('add test user to role «editor»', async (t) => {
@@ -345,26 +349,24 @@ test('commit (create repo)', async (t) => {
 test('uncommitedChanges (with subscription)', (t) => {
   const client = createSubscriptionClient(WS_URL)
   setTimeout(() => {
-    client.subscribe(
-      {
-        query: `
-          subscription uncommittedChanges(
-            $repoId: ID!
-          ){
-            uncommittedChanges(repoId: $repoId) {
-              action
-              user {
-                email
-              }
+    client.request({
+      query: `
+        subscription uncommittedChanges(
+          $repoId: ID!
+        ){
+          uncommittedChanges(repoId: $repoId) {
+            action
+            user {
+              email
             }
           }
-        `,
-        variables: {
-          repoId: testRepoId
         }
-      },
-      (errors, result) => {
-        t.equals(errors, null)
+      `,
+      variables: {
+        repoId: testRepoId
+      }
+    }).subscribe({
+      next: (result) => {
         t.ok(result)
         const {
           uncommittedChanges: {
@@ -373,14 +375,16 @@ test('uncommitedChanges (with subscription)', (t) => {
               email
             }
           }
-        } = result
-        client.client.close()
+        } = result.data
         t.equals(action, 'create')
         t.equals(email, testUser.email)
-        client.client.close()
+        client.close()
         t.end()
+      },
+      error: (errors) => {
+        t.equals(errors, null)
       }
-    )
+    })
   }, 50)
 
   setTimeout(() => {
