@@ -61,7 +61,7 @@ module.exports.run = () => {
   })
     .then(async (obj) => {
       const scheduler = require('./lib/publicationScheduler')
-      await scheduler.refresh()
+      await scheduler.init()
         .catch(error => { console.log(error); return error })
       return obj
     })
