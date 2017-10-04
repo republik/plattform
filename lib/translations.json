@@ -1,5 +1,5 @@
 {
-  "updated": "2017-10-03T13:54:55.620Z",
+  "updated": "2017-10-04T09:46:02.969Z",
   "title": "live",
   "data": [
     {
@@ -316,7 +316,7 @@
     },
     {
       "key": "publish/validation/hasErrors",
-      "value": "Diese Version ist nicht veröffentlichbar:"
+      "value": "Diese Version kann nicht veröffentlicht werden:"
     },
     {
       "key": "publish/validation/slug/empty",
