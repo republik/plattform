@@ -72,6 +72,7 @@ module.exports.close = () => {
   pubsub.getSubscriber().quit()
   pubsub.getPublisher().quit()
   subscriptionServer.close()
+  require('./lib/publicationScheduler').quit()
   httpServer.close()
   pgdb.close()
   require('./lib/redis').quit()
