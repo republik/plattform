@@ -13,19 +13,22 @@ const assembleTree = (comment, comments) => {
 }
 
 const measureTree = comment => {
-  if (comment.comments.nodes.length > 0) {
-    const numChildren = comment.comments.nodes.reduce(
-      (acc, value) => {
-        return acc + measureTree(value)
-      },
-      0
-    )
-    comment.comments.totalCount = numChildren
-    return numChildren + 1
-  } else {
-    comment.comments.totalCount = 0
-    return 1
+  const { comments } = comment
+  const numChildren = comment.comments.nodes.reduce(
+    (acc, value) => {
+      return acc + measureTree(value)
+    },
+    0
+  )
+  comment.comments = {
+    ...comments,
+    totalCount: numChildren,
+    pageInfo: {
+      hasNextPage: false,
+      endCursor: null
+    }
   }
+  return numChildren + 1
 }
 
 module.exports = {
