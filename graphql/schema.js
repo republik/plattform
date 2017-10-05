@@ -150,6 +150,8 @@ type Comment {
   userCanEdit: Boolean
   createdAt: DateTime!
   updatedAt: DateTime!
+
+  depth: Int!
 }
 
 type SignInResponse {
