@@ -31,8 +31,27 @@ const measureTree = comment => {
   return numChildren + 1
 }
 
+const cutTreeX = (comment, maxDepth) => {
+  const { comments } = comment
+  if (comment.depth === maxDepth) {
+    comment.comments = {
+      ...comments,
+      nodes: [],
+      pageInfo: {
+        ...comments.pageInfo,
+        hasNextPage: comments.totalCount > 0
+      }
+    }
+  } else {
+    comments.nodes.forEach(c => cutTreeX(c, maxDepth))
+  }
+  return comment
+}
+
 module.exports = {
   comments: async (discussion, args, { pgdb }) => {
+    const { maxDepth } = args
+
     const comments = await pgdb.public.comments.find({
       discussionId: discussion.id
     })
@@ -40,6 +59,9 @@ module.exports = {
     const rootComment = {}
     assembleTree(rootComment, comments)
     measureTree(rootComment)
+    if (maxDepth != null) {
+      cutTreeX(rootComment, maxDepth)
+    }
 
     return rootComment.comments
   }

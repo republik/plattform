@@ -117,6 +117,7 @@ type Discussion {
     # include this comment and context around it
     focusId: ID
     orderBy: DiscussionOrder
+    maxDepth: Int
   ): CommentConnection!
   rules: DiscussionRules!
   userPreference: DiscussionPreferences!
