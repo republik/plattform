@@ -91,17 +91,18 @@ enum DiscussionOrder {
 }
 
 type PageInfo {
+  # it's possible that endCursor is undefined and
+  # hasNextPage true when api holds back nodes for
+  # ranking reasons
   endCursor: String
+  # on same level, use after with endCursor
+  # and optionally parent id
   hasNextPage: Boolean
 }
-type CommentEdge {
-  cursor: String!
-  node: Comment!
-}
 type CommentConnection {
+  # recursive down the tree
   totalCount: Int!
   pageInfo: PageInfo
-  edges: [CommentEdge]!
   nodes: [Comment]!
 }
 

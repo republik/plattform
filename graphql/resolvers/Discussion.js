@@ -1,3 +1,32 @@
+const _ = {
+  remove: require('lodash/remove')
+}
+
+const assembleTree = (comment, comments) => {
+  const parentId = comment.id || null
+  comment.comments = {
+    nodes:
+      _.remove(comments, c => c.parentId === parentId)
+      .map(c => assembleTree(c, comments))
+  }
+  return comment
+}
+
+const measureTree = comment => {
+  if (comment.comments.nodes.length > 0) {
+    const numChildren = comment.comments.nodes.reduce(
+      (acc, value) => {
+        return acc + measureTree(value)
+      },
+      0
+    )
+    comment.comments.totalCount = numChildren
+    return numChildren + 1
+  } else {
+    comment.comments.totalCount = 0
+    return 1
+  }
+}
 
 module.exports = {
   comments: async (discussion, args, { pgdb }) => {
@@ -5,49 +34,9 @@ module.exports = {
       discussionId: discussion.id
     })
 
-    const rootComments = comments.filter(c => c.parentId === null)
-
-    const assembleTree = comment => {
-      /*
-      comment.comments = {
-        nodes: comments
-          .filter(c => c.parentId === comment.id)
-          .forEach(c => assembleTree(c))
-      }
-      */
-      comment.comments = {
-        nodes: []
-      }
-      comment.comments.nodes = comments.filter(c => c.parentId === comment.id)
-      comment.comments.nodes.forEach(c => assembleTree(c))
-    }
-    rootComments.forEach(c => assembleTree(c))
-
-    const measureTree = comment => {
-      if (comment.comments.nodes.length > 0) {
-        const numChildren = comment.comments.nodes.reduce(
-          (acc, value) => {
-            return acc + measureTree(value)
-          },
-          0
-        )
-        comment.comments.totalCount = numChildren
-        return numChildren+1
-      } else {
-        comment.comments.totalCount = 0
-        return 1
-      }
-    }
-    const rootComment = {
-      comments: {
-        totalCount: 0,
-        nodes: rootComments
-      }
-    }
+    const rootComment = {}
+    assembleTree(rootComment, comments)
     measureTree(rootComment)
-
-
-    //console.log(util.inspect(rootComment, {depth: null}))
 
     return rootComment.comments
   }
