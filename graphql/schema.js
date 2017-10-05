@@ -43,7 +43,8 @@ type Credential {
 
 type User {
   id: ID!
-  name: String
+  name: String!
+  initials: String!
   email: String
   credentials: [Credential!]!
   roles: [String]!
