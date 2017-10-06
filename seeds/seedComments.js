@@ -73,7 +73,7 @@ PgDb.connect().then(async (pgdb) => {
         hottnes: comment.score, // fixme
         depth: comment.depth,
         content: comment.body,
-        createdAt: new Date(comment.created)
+        createdAt: new Date(comment.created * 1000)
       })
 
       if (comment.replies.length > 0) {

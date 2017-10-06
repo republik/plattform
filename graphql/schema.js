@@ -90,6 +90,11 @@ enum DiscussionOrder {
   HOT
 }
 
+enum OrderDirection {
+  ASC
+  DESC
+}
+
 type PageInfo {
   # it's possible that endCursor is undefined and
   # hasNextPage true when api holds back nodes for
@@ -111,12 +116,11 @@ type Discussion {
   comments(
     parentId: ID
     after: String
-    before: String
     first: Int
-    last: Int
     # include this comment and context around it
     focusId: ID
     orderBy: DiscussionOrder
+    orderDirection: OrderDirection
     maxDepth: Int
   ): CommentConnection!
   rules: DiscussionRules!
@@ -154,6 +158,7 @@ type Comment {
   updatedAt: DateTime!
 
   depth: Int!
+  hottnes: Int!
 }
 
 type SignInResponse {

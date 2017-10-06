@@ -1,3 +1,7 @@
+const {
+  ascending,
+  descending
+} = require('d3-array')
 const _ = {
   remove: require('lodash/remove')
 }
@@ -31,6 +35,18 @@ const measureTree = comment => {
   return numChildren + 1
 }
 
+const sortTree = (comment, compare) => {
+  const { comments } = comment
+  comment.comments = {
+    ...comments,
+    nodes: comments.nodes.sort((a, b) => compare(a, b))
+  }
+  if (comments.nodes.length > 0) {
+    comments.nodes.forEach(c => sortTree(c, compare))
+  }
+  return comment
+}
+
 const cutTreeX = (comment, depth, maxDepth) => {
   const { comments } = comment
   if (depth === maxDepth) {
@@ -52,7 +68,9 @@ module.exports = {
   comments: async (discussion, args, { pgdb }) => {
     const {
       maxDepth,
-      parentId
+      parentId,
+      orderBy,
+      orderDirection = 'ASC'
     } = args
 
     const comments = await pgdb.public.comments.find({
@@ -62,8 +80,25 @@ module.exports = {
     const rootComment = parentId
       ? { id: parentId }
       : {}
+
     assembleTree(rootComment, comments)
     measureTree(rootComment)
+
+    if (orderBy) {
+      let ascDesc = orderDirection === 'ASC'
+        ? ascending
+        : descending
+      let compare
+      if (orderBy === 'DATE') {
+        compare = (a, b) => ascDesc(a.createdAt, b.createdAt)
+      } else if (orderBy === 'VOTES') {
+        compare = (a, b) => ascDesc(a.upVotes - a.downVotes, b.upVotes - b.downVotes)
+      } else if (orderBy === 'HOT') {
+        compare = (a, b) => ascDesc(a.hottnes, b.hottnes)
+      }
+      sortTree(rootComment, compare)
+    }
+
     if (maxDepth != null) {
       cutTreeX(rootComment, -1, maxDepth)
     }
