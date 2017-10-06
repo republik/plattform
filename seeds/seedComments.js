@@ -36,6 +36,7 @@ const fakeUUID = (plainId) => {
 
 const _comments = require('./comments.json')
 const PgDb = require('../lib/pgdb')
+const getHottnes = require('../lib/hottnes')
 
 PgDb.connect().then(async (pgdb) => {
   let user = await pgdb.public.users.findFirst({})
@@ -70,7 +71,7 @@ PgDb.connect().then(async (pgdb) => {
         userId: user.id,
         upVotes: comment.ups,
         downVotes: comment.downs,
-        hottnes: comment.score, // fixme
+        hottnes: getHottnes(comment.ups, comment.downs, comment.created * 1000),
         depth: comment.depth,
         content: comment.body,
         createdAt: new Date(comment.created * 1000)

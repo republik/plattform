@@ -158,7 +158,7 @@ type Comment {
   updatedAt: DateTime!
 
   depth: Int!
-  hottnes: Int!
+  hottnes: Float!
 }
 
 type SignInResponse {
