@@ -31,9 +31,9 @@ const measureTree = comment => {
   return numChildren + 1
 }
 
-const cutTreeX = (comment, maxDepth) => {
+const cutTreeX = (comment, depth, maxDepth) => {
   const { comments } = comment
-  if (comment.depth === maxDepth) {
+  if (depth === maxDepth) {
     comment.comments = {
       ...comments,
       nodes: [],
@@ -43,24 +43,29 @@ const cutTreeX = (comment, maxDepth) => {
       }
     }
   } else {
-    comments.nodes.forEach(c => cutTreeX(c, maxDepth))
+    comments.nodes.forEach(c => cutTreeX(c, depth + 1, maxDepth))
   }
   return comment
 }
 
 module.exports = {
   comments: async (discussion, args, { pgdb }) => {
-    const { maxDepth } = args
+    const {
+      maxDepth,
+      parentId
+    } = args
 
     const comments = await pgdb.public.comments.find({
       discussionId: discussion.id
     })
 
-    const rootComment = {}
+    const rootComment = parentId
+      ? { id: parentId }
+      : {}
     assembleTree(rootComment, comments)
     measureTree(rootComment)
     if (maxDepth != null) {
-      cutTreeX(rootComment, maxDepth)
+      cutTreeX(rootComment, -1, maxDepth)
     }
 
     return rootComment.comments
