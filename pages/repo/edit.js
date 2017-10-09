@@ -165,8 +165,13 @@ class EditorPage extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    resetKeyGenerator()
-    this.loadState(nextProps)
+    const { props } = this
+    if (
+      (props.data.repo && props.data.repo.commit) !==
+      (nextProps.data.repo && nextProps.data.repo.commit)
+    ) {
+      this.loadState(nextProps)
+    }
   }
 
   checkLocalStorageSupport () {
@@ -203,7 +208,7 @@ class EditorPage extends Component {
       // - flash of an outdated version could confuse an user
       // - if js loading fails or is disabled no editing should happen
       //   - server rendered native content editable edits are not recoverable
-      console.warn(`loadState should only in the browser`)
+      console.warn(`loadState should only run in the browser`)
       return
     }
     if (loading || error) {
