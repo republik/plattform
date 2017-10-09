@@ -165,10 +165,11 @@ class EditorPage extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    const { props } = this
+    const { repo = {} } = this.props
+    const { repo: nextRepo = {} } = nextProps
     if (
-      (props.data.repo && props.data.repo.commit) !==
-      (nextProps.data.repo && nextProps.data.repo.commit)
+      repo !== nextRepo ||
+      repo.commit !== nextRepo.commit
     ) {
       this.loadState(nextProps)
     }
