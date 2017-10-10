@@ -1,6 +1,9 @@
 {
   "name": "@project-r/styleguide",
   "version": "0.0.0-development",
+  "engines": {
+    "node": "8.4.0"
+  },
   "peerDependencies": {
     "glamor": "^2.20.37",
     "react": "^15.4.2",

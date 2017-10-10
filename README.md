@@ -100,7 +100,7 @@ npm run dev
 ```
 
 Further reading:
-- [Adding a New Component)](/dev/process)
+- [Adding a New Component](/dev/process)
 
 ### Semantic Release
 
