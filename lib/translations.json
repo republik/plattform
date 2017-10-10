@@ -1,5 +1,5 @@
 {
-  "updated": "2017-10-04T09:46:02.969Z",
+  "updated": "2017-10-10T20:37:53.718Z",
   "title": "live",
   "data": [
     {
@@ -284,7 +284,19 @@
     },
     {
       "key": "publish/title",
-      "value": "Vorschau und Veröffentlichung"
+      "value": "Veröffentlichung"
+    },
+    {
+      "key": "publish/preview/title",
+      "value": "Vorschau"
+    },
+    {
+      "key": "publish/preview/mobile",
+      "value": "Mobile"
+    },
+    {
+      "key": "publish/preview/desktop",
+      "value": "Desktop"
     },
     {
       "key": "publish/commit/selected",
