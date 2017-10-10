@@ -119,7 +119,7 @@ class PublishForm extends Component {
       size: PREVIEW_SIZES[0]
     }
   }
-  componentDidMount () {
+  transferCSS () {
     this.setState({
       css: styleSheet.rules().map(r => r.cssText).join('')
     })
@@ -301,6 +301,7 @@ class PublishForm extends Component {
             <Frame
               frameBorder='0'
               allowTransparency='true'
+              contentDidMount={() => this.transferCSS()}
               head={[
                 <style key='glamor'>{css}</style>
               ]}
