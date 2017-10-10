@@ -6,6 +6,7 @@ import { H2, H3 } from './Headlines'
 import Figure, { Image, Caption } from './Figure'
 import Blockquote from './Blockquote'
 import List, { ListItem } from './List'
+import RBlueprint from './RBlueprint'
 
 import {
   matchType,
@@ -133,6 +134,11 @@ const schema = {
               rules: [paragraph]
             }
           ]
+        },
+        {
+          matchMdast: matchZone('SPECIAL_R_BLUEPRINT'),
+          component: RBlueprint,
+          isVoid: true
         }
       ]
     }
