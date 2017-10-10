@@ -188,6 +188,7 @@ class PublishForm extends Component {
           const scale = width
             ? Math.min(1, width / (size.width + PADDING_X * 2))
             : 1
+          const roundedScale = Math.round(scale * 10) / 10
 
           return (
             <div>
@@ -324,7 +325,7 @@ class PublishForm extends Component {
                     if (previewSize === size) {
                       return [
                         label,
-                        scale !== 1 && ` (${Math.round(scale * 10) / 10}x)`
+                        roundedScale !== 1 && ` (${roundedScale}x)`
                       ].filter(Boolean).join(' ')
                     }
                     return (
