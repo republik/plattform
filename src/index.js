@@ -69,6 +69,15 @@ ReactDOM.render(
         title: 'Components',
         pages: [
           {
+            path: '/components/spinner',
+            title: 'Spinner',
+            imports: {
+              Spinner: require('./components/Spinner'),
+              InlineSpinner: require('./components/Spinner').InlineSpinner
+            },
+            src: require('./components/Spinner/docs.md')
+          },
+          {
             path: '/components/button',
             title: 'Button',
             imports: {
