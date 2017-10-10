@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import { gql, graphql } from 'react-apollo'
 import { compose } from 'redux'
-import { css } from 'glamor'
+import { css, styleSheet } from 'glamor'
 
 import { InlineSpinner } from '../Spinner'
 import Loader from '../Loader'
 import ErrorMessage from '../ErrorMessage'
 
+import { intersperse } from '../../lib/utils/helpers'
 import withT from '../../lib/withT'
 import { Link, Router } from '../../lib/routes'
 import { swissTime } from '../../lib/utils/format'
@@ -17,13 +18,18 @@ import {
   Button,
   Field,
   Checkbox,
+  A,
   colors
 } from '@project-r/styleguide'
 
 import MaskedInput from 'react-maskedinput'
+import Frame from 'react-frame-component'
 
 import { query as treeQuery } from '../../pages/repo/tree'
 import { query as publicationQuery } from './Current'
+
+import { renderMdast } from '../Templates'
+import newsletterTemplate from '../Templates/Newsletter'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
@@ -88,6 +94,11 @@ mutation publish(
 }
 `
 
+const PREVIEW_SIZES = [
+  {label: 'Mobile', width: 320, height: 480},
+  {label: 'Desktop', width: '100%', height: 600}
+]
+
 class PublishForm extends Component {
   constructor (...args) {
     super(...args)
@@ -103,8 +114,15 @@ class PublishForm extends Component {
       prepublication: true,
       scheduled: false,
       scheduledAt: scheduledAtFormater(nextMorning),
-      updateMailchimp: false
+      updateMailchimp: false,
+      css: '',
+      size: PREVIEW_SIZES[0]
     }
+  }
+  componentDidMount () {
+    this.setState({
+      css: styleSheet.rules().map(r => r.cssText).join('')
+    })
   }
   render () {
     const { t, data, repoId } = this.props
@@ -127,6 +145,11 @@ class PublishForm extends Component {
           (updateMailchimp && !meta.emailSubject) && t('publish/validation/emailSubject/empty')
         ].filter(Boolean)
         const hasErrors = errors.length > 0
+
+        const {
+          size,
+          css
+        } = this.state
 
         return (
           <div>
@@ -249,6 +272,46 @@ class PublishForm extends Component {
                 </Button>
               </div>
             )}
+            <br /><br />
+            <Interaction.H2>Vorschau</Interaction.H2>
+
+            <Interaction.P>
+              {intersperse(
+                PREVIEW_SIZES.map(previewSize => {
+                  if (previewSize === size) {
+                    return previewSize.label
+                  }
+                  return (
+                    <A
+                      key={previewSize.label}
+                      href='#'
+                      onClick={e => {
+                        e.preventDefault()
+                        this.setState({size: previewSize})
+                      }}
+                    >
+                      {previewSize.label}
+                    </A>
+                  )
+                }),
+                () => ' '
+              )}
+            </Interaction.P>
+
+            <Frame
+              frameBorder='0'
+              allowTransparency='true'
+              head={[
+                <style key='glamor'>{css}</style>
+              ]}
+              style={{
+                border: '1px solid black',
+                width: size.width,
+                height: size.height
+              }}
+            >
+              {renderMdast(commit.document.content, newsletterTemplate)}
+            </Frame>
           </div>
         )
       }} />
