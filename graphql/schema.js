@@ -121,7 +121,6 @@ type Discussion {
     focusId: ID
     orderBy: DiscussionOrder
     orderDirection: OrderDirection
-    maxDepth: Int
   ): CommentConnection!
   rules: DiscussionRules!
   userPreference: DiscussionPreferences!

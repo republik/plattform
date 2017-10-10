@@ -1,3 +1,4 @@
+const graphqlFields = require('graphql-fields')
 const {
   ascending,
   descending
@@ -47,7 +48,7 @@ const sortTree = (comment, compare) => {
   return comment
 }
 
-const cutTreeX = (comment, depth, maxDepth) => {
+const cutTreeX = (comment, maxDepth, depth = -1) => {
   const { comments } = comment
   if (depth === maxDepth) {
     comment.comments = {
@@ -59,19 +60,27 @@ const cutTreeX = (comment, depth, maxDepth) => {
       }
     }
   } else {
-    comments.nodes.forEach(c => cutTreeX(c, depth + 1, maxDepth))
+    comments.nodes.forEach(c => cutTreeX(c, maxDepth, depth + 1))
   }
   return comment
 }
 
+const meassureDepth = (fields, depth = 0) => {
+  if (fields.nodes && fields.nodes.comments) {
+    return meassureDepth(fields.nodes.comments, depth + 1)
+  } else {
+    return depth
+  }
+}
+
 module.exports = {
-  comments: async (discussion, args, { pgdb }) => {
+  comments: async (discussion, args, { pgdb }, info) => {
     const {
-      maxDepth,
       parentId,
       orderBy,
-      orderDirection = 'ASC'
+      orderDirection = 'DESC'
     } = args
+    const maxDepth = meassureDepth(graphqlFields(info))
 
     const comments = await pgdb.public.comments.find({
       discussionId: discussion.id

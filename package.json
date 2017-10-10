@@ -20,6 +20,7 @@
     "express-session": "^1.15.5",
     "geoip-database": "^1.0.7",
     "graphql": "^0.10.5",
+    "graphql-fields": "^1.0.2",
     "graphql-server-express": "^1.1.2",
     "graphql-tools": "^1.2.2",
     "graphql-type-json": "^0.1.4",
