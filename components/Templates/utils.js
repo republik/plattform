@@ -29,6 +29,10 @@ export const imageSizeInfo = url => {
 }
 
 export const imageResizeUrl = (url, size) => {
+  if (!url) {
+    return url
+  }
+
   const urlObject = parse(url, true)
   if (urlObject.protocol === 'data:') {
     return url

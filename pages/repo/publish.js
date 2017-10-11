@@ -14,7 +14,6 @@ const Page = ({ url, data, t }) => {
   return (
     <Frame url={url} nav={<RepoNav route='repo/publish' url={url} />}>
       <h1>{t('publish/title')}</h1>
-
       <PublishForm repoId={repoId} commitId={commitId} t={t} />
     </Frame>
   )

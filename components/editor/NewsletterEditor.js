@@ -52,6 +52,10 @@ import center, {
   serializer as centerSerializer, TYPE as CENTER
 } from './modules/center'
 
+import special, {
+  SpecialButton, SpecialForm
+} from './modules/special'
+
 const newsletterStyles = {
   fontFamily: 'serif',
   fontSize: 18,
@@ -230,7 +234,8 @@ const plugins = [
   ...cover.plugins,
   ...center.plugins,
   ...blockquote.plugins,
-  ...list.plugins
+  ...list.plugins,
+  ...special.plugins
 ]
 
 const textFormatButtons = [
@@ -249,13 +254,15 @@ const blockFormatButtons = [
 ]
 
 const insertButtons = [
-  FigureButton
+  FigureButton,
+  SpecialButton
 ]
 
 const propertyForms = [
   LinkForm,
   FigureForm,
-  CoverForm
+  CoverForm,
+  SpecialForm
 ]
 
 const Container = ({ children }) => (

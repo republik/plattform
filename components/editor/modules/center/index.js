@@ -11,6 +11,7 @@ import headlines from '../headlines'
 import figure from '../figure'
 import blockquote from '../blockquote'
 import list from '../list'
+import special from '../special'
 
 const PADDING = 20
 const containerStyle = css({
@@ -38,7 +39,8 @@ const childSerializer = new MarkdownSerializer({
     ...figure.plugins,
     ...headlines.plugins,
     ...blockquote.plugins,
-    ...list.plugins
+    ...list.plugins,
+    ...special.plugins
   ])
 })
 
