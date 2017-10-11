@@ -7,6 +7,7 @@ const colors = {
   secondaryBg: '#D8EEFF',
   disabled: '#B8BDC1',
   text: '#191919',
+  lightText: '#979797',
   error: '#9E0041',
   divider: '#DBDCDD',
   ...getJson('COLORS')

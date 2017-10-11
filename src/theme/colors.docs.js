@@ -14,7 +14,9 @@ export default () => (
     <ColorSpecimen span={2} name='secondaryBg' value={colors.secondaryBg} />
     <ColorSpecimen span={1} name='divider' value={colors.divider} />
 
-    <ColorSpecimen span={5} name='text' value={colors.text} />
+    <ColorSpecimen span={4} name='text' value={colors.text} />
+    <ColorSpecimen span={2} name='lightText' value={colors.lightText} />
+
     <ColorSpecimen span={1} name='error' value={colors.error} />
   </Page>
 )
