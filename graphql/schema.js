@@ -96,12 +96,21 @@ enum OrderDirection {
 }
 
 type PageInfo {
-  # it's possible that endCursor is undefined and
-  # hasNextPage true when api holds back nodes for
-  # ranking reasons
+  # If endCursor is null and hasNextPage is true
+  # this node would have child nodes.
+  # Get them with this nodes id as parentId.
+  #
+  # If endCursor is not null and hasNextPage is true
+  # there exist more child nodes than currently delivered.
+  # Get them with endCursor as after.
   endCursor: String
-  # on same level, use after with endCursor
-  # and optionally parent id
+  # If endCursor is null and hasNextPage is true
+  # this node would have child nodes.
+  # Get them with this nodes id as parentId.
+  #
+  # If endCursor is not null and hasNextPage is true
+  # there exist more nodes than currently delivered.
+  # Get them with endCursor as after.
   hasNextPage: Boolean
 }
 type CommentConnection {
@@ -114,10 +123,20 @@ type CommentConnection {
 type Discussion {
   id: ID!
   comments(
+    # get children of this parent
     parentId: ID
+    # Get next page after cursor.
+    # If after is specified parentId, focusId,
+    # orderBy and orderDirection are ignored
     after: String
+    # Limit result to num of first elements in respect
+    # to orderBy and orderDirection. Please note that the
+    # number of returned elements might exceed first if the
+    # first elements are deep inside the tree, all coresponding
+    # parents are returned as well.
     first: Int
     # include this comment and context around it
+    # don't use in combination with parentId or after
     focusId: ID
     orderBy: DiscussionOrder
     orderDirection: OrderDirection
@@ -157,6 +176,7 @@ type Comment {
   updatedAt: DateTime!
 
   depth: Int!
+  _depth: Int!
   hottnes: Float!
 }
 
