@@ -2,6 +2,8 @@ import React from 'react'
 import * as styles from './styles'
 import {css} from 'glamor'
 
+export const fontStyles = styles
+
 export const linkRule = css(styles.link)
 export const A = ({children, ...props}) => (
   <a {...props} {...linkRule}>{children}</a>

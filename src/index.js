@@ -4,6 +4,7 @@ import {Catalog} from 'catalog'
 import {simulations, css} from 'glamor'
 import theme from './catalogTheme'
 import './catalogTheme.css'
+import {fontStyles} from './components/Typography'
 
 import 'core-js/fn/array/from'
 import 'core-js/fn/array/find'
@@ -48,6 +49,8 @@ ReactDOM.render(
             title: 'Typography',
             imports: {
               ...require('./components/Typography'),
+              css,
+              styles: JSON.parse(JSON.stringify(fontStyles)),
               fontFamilies: require('./theme/fonts').fontFamilies
             },
             src: require('./components/Typography/docs.md')

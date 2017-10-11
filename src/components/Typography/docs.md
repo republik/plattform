@@ -21,17 +21,70 @@ import {fontFamilies} from '@project-r/styleguide'
 </pre>
 ```
 
-A helper function to generate the `@font-face` css is available as `fontFaces`. 
+A helper function to generate the `@font-face` css is available as `fontFaces`.
 
 ### Next.js example
 
 1. Copy the font files to `/static/fonts`
 2. Include the following in your `pages/_document.js`:
 
-```
+```code|lang-js
 import {fontFaces} from '@project-r/styleguide'
 
 <style dangerouslySetInnerHTML={{ __html: fontFaces() }} />
+```
+
+## Font styles
+
+A font style combines a font cut with a font size, line height, letter spacing, text transform etc. The styles are made available as plain JavaScript objects which can be mixed into glamor css objects, or used directly in inline styles.
+
+Font styles don't include colors, margins, nor do they make use of media queries.
+
+```code|lang-js
+import {colors: {text}, fontStyles: {serifRegular21}} from '@project-r/styleguide'
+
+<div {...css({...serifRegular21, color: text})}>…</div>
+```
+
+#### `serifBold{52,24}`
+```react|noSource,plain
+<div {...css(styles.serifBold52)}>The quick brown fox jumps over</div>
+```
+```react|noSource,plain
+<div {...css(styles.serifBold24)}>The quick brown fox jumps over the lazy dog</div>
+```
+
+#### `serifRegular{25,21,16}`
+```react|noSource,plain
+<div {...css(styles.serifRegular25)}>The quick brown fox jumps over the lazy dog</div>
+```
+```react|noSource,plain
+<div {...css(styles.serifRegular21)}>The quick brown fox jumps over the lazy dog</div>
+```
+```react|noSource,plain
+<div {...css(styles.serifRegular16)}>The quick brown fox jumps over the lazy dog</div>
+```
+
+#### `sansSerifMedium{40,22}`
+```react|noSource,plain
+<div {...css(styles.sansSerifMedium40)}>The quick brown fox jumps over</div>
+```
+```react|noSource,plain
+<div {...css(styles.sansSerifMedium22)}>The quick brown fox jumps over the lazy dog</div>
+```
+
+#### `sansSerifRegular{30,21,16,14}`
+```react|noSource,plain
+<div {...css(styles.sansSerifRegular30)}>The quick brown fox jumps over the lazy dog</div>
+```
+```react|noSource,plain
+<div {...css(styles.sansSerifRegular21)}>The quick brown fox jumps over the lazy dog</div>
+```
+```react|noSource,plain
+<div {...css(styles.sansSerifRegular16)}>The quick brown fox jumps over the lazy dog</div>
+```
+```react|noSource,plain
+<div {...css(styles.sansSerifRegular14)}>The quick brown fox jumps over the lazy dog</div>
 ```
 
 ## Editorial Content

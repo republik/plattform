@@ -16,6 +16,7 @@ export {Spinner, InlineSpinner} from './components/Spinner'
 
 export {Container, NarrowContainer} from './components/Grid'
 export {
+  fontStyles,
   linkRule, A,
   H1, H2,
   Lead,
