@@ -104,7 +104,15 @@ ReactDOM.render(
               AutosizeInput: require('react-textarea-autosize')
             },
             src: require('./components/Form/docs.md')
-          }
+          },
+          {
+            path: '/components/comment',
+            title: 'Comment',
+            imports: {
+              CommentHeader: require('./components/Comment/CommentHeader')
+            },
+            src: require('./components/Comment/docs.md')
+          },
         ]
       },
       {

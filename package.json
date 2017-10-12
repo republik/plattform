@@ -57,5 +57,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "dependencies": {
+    "react-icons": "^2.2.7"
   }
 }
