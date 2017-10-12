@@ -2,7 +2,7 @@
 
 A `<Comment />` is a combination of `<CommentHeader />` and the comment content. The actions are not part of this component.
 
-```react|noSource
+```react|noSource,span-4
 <Comment
   timeago='2h'
   displayAuthor={{
@@ -11,7 +11,19 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
     credential: {description: 'Bundesrat', verified: true}
   }}
   score={8}
-  content='Ihr könnt ruhig über den Film Shades of Grey herziehen. Aber Mr. Grey ist verdammt heiss.'
+  content="This has to be the first time that an author who has written a Fantasy novel (The Buried Giant), is awarded with the Nobel Prize. He has also writted Sci-fi (Never Let Me Go), but Doris Lessing was first there (Shikasta). Wow, I did not expect this one. Don't get me wrong, I *love* his books, but he's way more mainstream than I expected."
+/>
+```
+```react|noSource,span-2
+<Comment
+  timeago='2h'
+  displayAuthor={{
+    profilePicture: '/static/profilePicture.png',
+    name: 'Paul Ullrich',
+    credential: {description: 'Bundesrat', verified: true}
+  }}
+  score={8}
+  content="I don't know. You could just as easily call The Jungle Book fantasy. I also feel like One Hundred Years of Solitude is closer to fantasy than The Buried Giant."
 />
 ```
 
