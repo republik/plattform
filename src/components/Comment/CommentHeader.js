@@ -3,7 +3,7 @@ import {css} from 'glamor'
 import {MdCheck} from 'react-icons/lib/md'
 import colors from '../../theme/colors'
 import {fontFamilies} from '../../theme/fonts'
-import {sansSerifMedium16} from '../Typography/styles'
+import {sansSerifMedium16, sansSerifRegular14} from '../Typography/styles'
 
 const commentHeaderStyles = {
   root: css({
@@ -27,14 +27,11 @@ const commentHeaderStyles = {
     color: colors.text
   }),
   timeago: css({
-    fontFamily: fontFamilies.sansSerifRegular,
-    fontSize: '12px',
+    ...sansSerifRegular14,
     color: '#979797' // TODO: colors.lightText
   }),
   description: css({
-    fontFamily: fontFamilies.sansSerifRegular,
-    fontSize: '12px',
-    lineHeight: '15px',
+    ...sansSerifRegular14,
     color: '#979797' // TODO: colors.lightText
   }),
   verifiedDescription: css({
