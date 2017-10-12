@@ -20,7 +20,7 @@
     "geoip-database": "^1.0.7",
     "graphql": "^0.10.5",
     "graphql-server-express": "^1.1.2",
-    "graphql-tools": "^1.2.2",
+    "graphql-tools": "^1.2.3",
     "graphql-type-json": "^0.1.4",
     "isomorphic-unfetch": "^2.0.0",
     "kraut": "^0.1.1",

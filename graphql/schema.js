@@ -9,6 +9,7 @@ schema {
 
 type RootQuerys {
   me: User
+  profile(id: ID!): User
   discussions: [Discussion!]!
 }
 
@@ -47,7 +48,46 @@ type User {
   initials: String!
   email: String
   credentials: [Credential!]!
-  roles: [String]!
+  testimonial: Testimonial
+  facebookId: String
+  twitterHandle: String
+  publicEmail: String
+  publicUrl: String
+  badges: [Badge]
+  latestComments: [Comment]
+}
+
+enum Badge {
+  CROWDFUNDER
+  PATRON
+  STAFF
+  FREELANCER
+}
+
+type Testimonial {
+  id: ID!
+  name: String!
+  role: String
+  quote: String
+  video: Video
+  # 384x384 JPEG HTTPS URL
+  image(size: ImageSize): String!
+  smImage: String
+  published: Boolean
+  adminUnpublished: Boolean
+  sequenceNumber: Int
+}
+
+enum ImageSize {
+  SHARE
+}
+
+type Video {
+  hls: String!
+  mp4: String!
+  youtube: String
+  subtitles: String
+  poster: String
 }
 
 enum Permission {
