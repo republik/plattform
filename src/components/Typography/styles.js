@@ -38,12 +38,25 @@ export const serifBold52 = {
   lineHeight: '56px',
   letterSpacing: -0.45
 }
+export const serifBold36 = {
+  fontFamily: fontFamilies.serifBold,
+  fontWeight: 'normal',
+  fontSize: 36,
+  lineHeight: '38px',
+  letterSpacing: -0.3
+}
 export const serifBold24 = {
   fontFamily: fontFamilies.serifBold,
   fontWeight: 'normal',
   fontSize: 24,
   lineHeight: '26px',
   letterSpacing: -0.21
+}
+export const serifBold17 = {
+  fontFamily: fontFamilies.serifBold,
+  fontWeight: 'normal',
+  fontSize: 17,
+  lineHeight: '25px'
 }
 
 // sansSerifRegular

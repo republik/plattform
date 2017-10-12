@@ -46,12 +46,18 @@ import {colors: {text}, fontStyles: {serifRegular21}} from '@project-r/styleguid
 <div {...css({...serifRegular21, color: text})}>…</div>
 ```
 
-#### `serifBold{52,24}`
+#### `serifBold{52,36,24,17}`
 ```react|noSource,plain
 <div {...css(styles.serifBold52)}>The quick brown fox jumps over</div>
 ```
 ```react|noSource,plain
+<div {...css(styles.serifBold36)}>The quick brown fox jumps over the lazy dog</div>
+```
+```react|noSource,plain
 <div {...css(styles.serifBold24)}>The quick brown fox jumps over the lazy dog</div>
+```
+```react|noSource,plain
+<div {...css(styles.serifBold17)}>The quick brown fox jumps over the lazy dog</div>
 ```
 
 #### `serifRegular{25,21,16}`
