@@ -13,6 +13,7 @@ export {default as FieldSet} from './components/Form/FieldSet'
 export {default as Radio} from './components/Form/Radio'
 export {default as Checkbox} from './components/Form/Checkbox'
 export {Spinner, InlineSpinner} from './components/Spinner'
+export * from './components/Comment'
 
 export {Container, NarrowContainer} from './components/Grid'
 export {
