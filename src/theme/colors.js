@@ -10,6 +10,9 @@ const colors = {
   lightText: '#979797',
   error: '#9E0041',
   divider: '#DBDCDD',
+  ocker: '#B98C6C',
+  green: '#00DC00',
+  whiteSmoke: '#F8F8F8',
   ...getJson('COLORS')
 }
 
