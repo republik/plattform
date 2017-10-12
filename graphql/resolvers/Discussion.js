@@ -21,14 +21,7 @@ const assembleTree = (_comment, _comments, afterId, compare) => {
       let afterPassed = false
       comment.comments.nodes = comment.comments.nodes
         .sort(compare)
-        .filter(c => {
-          if (afterPassed) {
-            return true
-          } else if (c.id === afterId) {
-            afterPassed = true
-          }
-          return false
-        })
+        .filter(c => afterPassed || (afterPassed = (c.id === afterId)) && false)
     }
     comment.comments.nodes = comment.comments.nodes
       .map(c => {
@@ -41,28 +34,6 @@ const assembleTree = (_comment, _comments, afterId, compare) => {
   _assembleTree(_comment, _comments)
   return coveredComments
 }
-
-/* assembleTree without after
-const assembleTree = (_comment, _comments) => {
-  let coveredComments = []
-  const _assembleTree = (comment, comments, depth = -1) => {
-    const parentId = comment.id || null
-    comment._depth = depth
-    comment.comments = {
-      nodes:
-        _.remove(comments, c => c.parentId === parentId)
-        .map(c => {
-          coveredComments.push(c)
-          return c
-        })
-        .map(c => _assembleTree(c, comments, depth+1))
-    }
-    return comment
-  }
-  _assembleTree(_comment, _comments)
-  return coveredComments
-}
-*/
 
 const measureTree = comment => {
   const { comments } = comment
@@ -83,7 +54,6 @@ const measureTree = comment => {
   return numChildren + 1
 }
 
-// should this be a deep sort?
 const sortTree = (comment, compare) => {
   const { comments } = comment
   comment.comments = {
@@ -159,7 +129,7 @@ module.exports = {
       ? {
         ...args,
         ...JSON.parse(Buffer.from(after, 'base64').toString())
-      }
+        }
       : args
     const {
       orderBy = 'HOT',
