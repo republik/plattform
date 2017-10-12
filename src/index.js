@@ -109,6 +109,7 @@ ReactDOM.render(
             path: '/components/comment',
             title: 'Comment',
             imports: {
+              Comment: require('./components/Comment/Comment'),
               CommentHeader: require('./components/Comment/CommentHeader'),
               CommentActions: require('./components/Comment/CommentActions')
             },
