@@ -40,3 +40,15 @@
   credential={{description: 'Bundesrat', verified: false}}
 />
 ```
+
+### `<CommentActions />`
+
+```react|noSource
+<CommentActions
+  score={8}
+
+  onAnswer={() => {}}
+  onUpvote={() => {}}
+  onDownvote={() => {}}
+/>
+```
