@@ -1,15 +1,13 @@
 import React from 'react'
 import {css} from 'glamor'
-import {fontFamilies} from '../..//theme/fonts'
-
+import {fontFamilies} from '../../theme/fonts'
+import {serifRegular14} from '../Typography/styles'
 import CommentHeader from './CommentHeader'
 import CommentActions from './CommentActions'
 
 const commentStyles = {
   body: css({
-    fontFamily: fontFamilies.serifRegular,
-    fontSize: '14px',
-    lineHeight: '19px',
+    ...serifRegular14,
     margin: '10px 0'
   })
 }

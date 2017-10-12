@@ -60,7 +60,7 @@ import {colors: {text}, fontStyles: {serifRegular21}} from '@project-r/styleguid
 <div {...css(styles.serifBold16)}>The quick brown fox jumps over the lazy dog</div>
 ```
 
-#### `serifRegular{25,21,16}`
+#### `serifRegular{25,21,16,14}`
 ```react|noSource,plain
 <div {...css(styles.serifRegular25)}>The quick brown fox jumps over the lazy dog</div>
 ```
@@ -69,6 +69,9 @@ import {colors: {text}, fontStyles: {serifRegular21}} from '@project-r/styleguid
 ```
 ```react|noSource,plain
 <div {...css(styles.serifRegular16)}>The quick brown fox jumps over the lazy dog</div>
+```
+```react|noSource,plain
+<div {...css(styles.serifRegular14)}>The quick brown fox jumps over the lazy dog</div>
 ```
 
 #### `sansSerifMedium{40,22,16}`

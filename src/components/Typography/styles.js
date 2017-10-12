@@ -29,6 +29,11 @@ export const serifRegular16 = {
   fontSize: 16,
   lineHeight: '25px'
 }
+export const serifRegular14 = {
+  fontFamily: fontFamilies.serifRegular,
+  fontSize: 14,
+  lineHeight: '19px'
+}
 
 // serifBold
 export const serifBold52 = {
