@@ -10,6 +10,7 @@ schema {
 type RootQuerys {
   me: User
   discussions: [Discussion!]!
+  discussion(id: ID!): Discussion
 }
 
 type RootMutations {
