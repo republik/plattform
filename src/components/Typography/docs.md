@@ -65,12 +65,15 @@ import {colors: {text}, fontStyles: {serifRegular21}} from '@project-r/styleguid
 <div {...css(styles.serifRegular16)}>The quick brown fox jumps over the lazy dog</div>
 ```
 
-#### `sansSerifMedium{40,22}`
+#### `sansSerifMedium{40,22,16}`
 ```react|noSource,plain
 <div {...css(styles.sansSerifMedium40)}>The quick brown fox jumps over</div>
 ```
 ```react|noSource,plain
 <div {...css(styles.sansSerifMedium22)}>The quick brown fox jumps over the lazy dog</div>
+```
+```react|noSource,plain
+<div {...css(styles.sansSerifMedium16)}>The quick brown fox jumps over the lazy dog</div>
 ```
 
 #### `sansSerifRegular{30,21,16,14}`
