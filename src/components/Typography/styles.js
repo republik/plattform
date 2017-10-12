@@ -78,6 +78,11 @@ export const sansSerifMedium40 = {
   lineHeight: '46px',
   letterSpacing: -0.35,
 }
+export const sansSerifMedium16 = {
+  fontFamily: fontFamilies.sansSerifMedium,
+  fontSize: 16,
+  lineHeight: '25px',
+}
 export const sansSerifMedium22 = {
   fontFamily: fontFamilies.sansSerifMedium,
   fontWeight: 'normal',
