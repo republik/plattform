@@ -3,6 +3,7 @@ import {css} from 'glamor'
 import {MdCheck} from 'react-icons/lib/md'
 import colors from '../../theme/colors'
 import {fontFamilies} from '../../theme/fonts'
+import {sansSerifMedium16} from '../Typography/styles'
 
 const commentHeaderStyles = {
   root: css({
@@ -22,9 +23,7 @@ const commentHeaderStyles = {
     justifyContent: 'center'
   }),
   name: css({
-    fontFamily: fontFamilies.sansSerifMedium,
-    fontSize: '15px',
-    lineHeight: '20px',
+    ...sansSerifMedium16,
     color: colors.text
   }),
   timeago: css({
