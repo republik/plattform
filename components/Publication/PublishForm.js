@@ -218,17 +218,21 @@ class PublishForm extends Component {
               <br /><br />
 
               {hasErrors && (
-                <Interaction.P style={{color: colors.error}}>
-                  {t('publish/validation/hasErrors')}
-                  <ul>
+                <span>
+                  <Interaction.P style={{color: colors.error}}>
+                    {t('publish/validation/hasErrors')}
+                  </Interaction.P>
+                  <ul style={{color: colors.error}}>
                     {errors.map((error, i) => (
                       <li key={i}>
-                        {error}
+                        <Interaction.P style={{color: colors.error}}>
+                          {error}
+                        </Interaction.P>
                       </li>
                     ))}
                   </ul>
                   <br /><br />
-                </Interaction.P>
+                </span>
               )}
 
               <Checkbox checked={prepublication} onChange={(_, value) => {
