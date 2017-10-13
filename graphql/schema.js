@@ -17,6 +17,13 @@ type RootMutations {
   signIn(email: String!): SignInResponse!
   signOut: Boolean!
 
+  createDiscussion(
+    # max length of a comments content
+    maxLength: Int
+    # min milliseconds between comments of one user
+    minInterval: Int
+    anonymity: Permission!
+  ): ID!
   submitComment(
     discussionId: ID!
     content: String!
