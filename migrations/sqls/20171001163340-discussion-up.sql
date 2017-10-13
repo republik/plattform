@@ -42,12 +42,14 @@ create table "credentials" (
   "description"         text not null,
   "verified"            boolean not null default false,
   "createdAt"           timestamptz default now(),
-  "updatedAt"           timestamptz default now()
+  "updatedAt"           timestamptz default now(),
+  UNIQUE("userId", "description")
 );
 
 create table "discussionPreferences" (
   "userId"              uuid not null references "users",
   "discussionId"        uuid not null references "discussions",
   "anonymous"           boolean not null default false,
+  "credentialId"        uuid references "credentials",
   PRIMARY KEY ("userId", "discussionId")
 );

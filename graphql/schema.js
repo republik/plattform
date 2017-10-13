@@ -26,6 +26,7 @@ type RootMutations {
   ): ID!
   submitComment(
     discussionId: ID!
+    parentId: ID
     content: String!
     discussionPreferences: DiscussionPreferencesInput
   ): Comment!
@@ -139,7 +140,7 @@ type Discussion {
     orderDirection: OrderDirection
   ): CommentConnection!
   rules: DiscussionRules!
-  userPreference: DiscussionPreferences!
+  userPreference: DiscussionPreferences
 }
 
 type DisplayUser {
