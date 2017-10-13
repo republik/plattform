@@ -6,7 +6,7 @@
   },
   "peerDependencies": {
     "glamor": "^2.20.37",
-    "react": "^15.4.2",
+    "react": "^16.0.0",
     "prop-types": "^15.5.7"
   },
   "devDependencies": {
@@ -20,10 +20,10 @@
     "glamor": "^2.20.37",
     "husky": "^0.14.3",
     "prop-types": "^15.5.7",
-    "react": "^15.4.2",
+    "react": "^16.0.0",
     "react-autocomplete": "^1.4.1",
-    "react-dom": "^15.4.2",
-    "react-maskedinput": "^3.3.4",
+    "react-dom": "^16.0.0",
+    "react-maskedinput": "^4.0.0",
     "react-scripts": "1.0.10",
     "react-textarea-autosize": "^5.1.0",
     "rimraf": "^2.6.1",
