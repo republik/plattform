@@ -1,8 +1,7 @@
 import React from 'react'
 import {css} from 'glamor'
-import {MdShare, MdKeyboardArrowDown, MdKeyboardArrowUp} from 'react-icons/lib/md'
+import {MdShare, MdKeyboardArrowDown, MdKeyboardArrowUp, MdMoreHoriz} from 'react-icons/lib/md'
 import {Label} from '../Typography'
-import MdMoreHoriz from '../Icons/MdMoreHoriz'
 
 const commentActionsConfig = {
   height: 26
