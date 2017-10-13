@@ -11,7 +11,7 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
     credential: {description: 'Bundesrat', verified: true}
   }}
   score={8}
-  content="This has to be the first time that an author who has written a Fantasy novel (The Buried Giant), is awarded with the Nobel Prize. He has also writted Sci-fi (Never Let Me Go), but Doris Lessing was first there (Shikasta). Wow, I did not expect this one. Don't get me wrong, I *love* his books, but he's way more mainstream than I expected."
+  content="Aber wer hat irgend ein Recht, einen Menschen zu tadeln, der die Entscheidung trifft, eine Freude zu genießen, die keine unangenehmen Folgen hat, oder einen, der Schmerz vermeidet, welcher keine daraus resultierende Freude nach sich zieht? Auch gibt es niemanden, der den Schmerz an sich liebt, sucht oder wünscht, nur, weil er Schmerz ist, es sei denn, es kommt zu zufälligen Umständen, in denen Mühen und Schmerz ihm große Freude bereiten können. "
 />
 ```
 ```react|noSource,span-2
@@ -23,7 +23,7 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
     credential: {description: 'Bundesrat', verified: true}
   }}
   score={8}
-  content="I don't know. You could just as easily call The Jungle Book fantasy. I also feel like One Hundred Years of Solitude is closer to fantasy than The Buried Giant."
+  content="Er versuchte, sich in der Dunkelheit seinen Weg zu ertasten und erstarrte: Anscheinend gab es keinen anderen Ausweg aus diesem kleinen Hof als den Durchgang, durch den er gekommen war."
 />
 ```
 
