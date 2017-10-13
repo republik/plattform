@@ -78,7 +78,6 @@ const actionButtonStyles = {
     lineHeight: `${commentActionsConfig.height}px`,
     cursor: 'pointer',
     margin: '0 4px',
-
     '& svg': {
       margin: '0 auto'
     }
