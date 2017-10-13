@@ -39,7 +39,7 @@ create index "comments_votes_idx" ON "comments" using GIN ("votes");
 create table "credentials" (
   "id"                  uuid primary key not null default uuid_generate_v4(),
   "userId"              uuid not null references "users",
-  "name"                text not null,
+  "description"         text not null,
   "verified"            boolean not null default false,
   "createdAt"           timestamptz default now(),
   "updatedAt"           timestamptz default now()
