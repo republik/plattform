@@ -122,93 +122,91 @@ const meassureDepth = (fields, depth = 0) => {
   }
 }
 
-module.exports = {
-  comments: async (discussion, args, { pgdb }, info) => {
-    const maxDepth = meassureDepth(graphqlFields(info))
+module.exports = async (discussion, args, { pgdb }, info) => {
+  const maxDepth = meassureDepth(graphqlFields(info))
 
-    const { after } = args
-    const options = after
-      ? {
-        ...args,
-        ...JSON.parse(Buffer.from(after, 'base64').toString())
-      }
-      : args
-    const {
-      orderBy = 'HOT',
-      orderDirection = 'DESC',
-      first = 200,
-      afterId,
-      focusId,
-      parentId
-    } = options
-
-    // get comments
-    const comments = await pgdb.public.comments.find({
-      discussionId: discussion.id
-    })
-
-    const rootComment = parentId
-      ? { id: parentId }
-      : {}
-
-    // prepare sort
-    let ascDesc = orderDirection === 'ASC'
-      ? ascending
-      : descending
-    let compare
-    if (orderBy === 'DATE') {
-      compare = (a, b) => ascDesc(a.createdAt, b.createdAt)
-    } else if (orderBy === 'VOTES') {
-      compare = (a, b) => ascDesc(a.upVotes - a.downVotes, b.upVotes - b.downVotes)
-    } else if (orderBy === 'HOT') {
-      compare = (a, b) => ascDesc(a.hottnes, b.hottnes)
+  const { after } = args
+  const options = after
+    ? {
+      ...args,
+      ...JSON.parse(Buffer.from(after, 'base64').toString())
     }
+    : args
+  const {
+    orderBy = 'HOT',
+    orderDirection = 'DESC',
+    first = 200,
+    afterId,
+    focusId,
+    parentId
+  } = options
 
-    const coveredComments = assembleTree(rootComment, comments, afterId, compare)
-    measureTree(rootComment)
-    sortTree(rootComment, compare)
+  // get comments
+  const comments = await pgdb.public.comments.find({
+    discussionId: discussion.id
+  })
 
-    if (first || focusId) {
-      let filterCommentIds
+  const rootComment = parentId
+    ? { id: parentId }
+    : {}
 
-      if (focusId) {
-        const focusComment = coveredComments
-          .find(c => c.id === focusId)
-
-        const focusLevelComments = coveredComments
-          .filter(c => c.parentId === focusComment.parentId && c._depth === focusComment._depth)
-          .sort(compare)
-
-        const focusIndex = focusLevelComments
-          .findIndex(c => c.id === focusId)
-
-        filterCommentIds = [
-          ...focusLevelComments
-            .slice(focusIndex - 1, focusIndex + 2),
-          ...coveredComments
-            .filter(c => c.parentId === focusId)
-            .slice(0, 1)
-        ]
-          .sort(compare)
-          .map(c => c.id)
-      } else if (first) {
-        filterCommentIds = coveredComments
-          .filter(c => !maxDepth || c._depth < maxDepth)
-          .sort(compare)
-          .slice(0, first)
-          .map(c => c.id)
-      }
-
-      filterTree(rootComment, filterCommentIds, {
-        orderBy,
-        orderDirection
-      })
-    }
-
-    if (maxDepth != null) {
-      cutTreeX(rootComment, maxDepth)
-    }
-
-    return rootComment.comments
+  // prepare sort
+  let ascDesc = orderDirection === 'ASC'
+    ? ascending
+    : descending
+  let compare
+  if (orderBy === 'DATE') {
+    compare = (a, b) => ascDesc(a.createdAt, b.createdAt)
+  } else if (orderBy === 'VOTES') {
+    compare = (a, b) => ascDesc(a.upVotes - a.downVotes, b.upVotes - b.downVotes)
+  } else if (orderBy === 'HOT') {
+    compare = (a, b) => ascDesc(a.hottnes, b.hottnes)
   }
+
+  const coveredComments = assembleTree(rootComment, comments, afterId, compare)
+  measureTree(rootComment)
+  sortTree(rootComment, compare)
+
+  if (first || focusId) {
+    let filterCommentIds
+
+    if (focusId) {
+      const focusComment = coveredComments
+        .find(c => c.id === focusId)
+
+      const focusLevelComments = coveredComments
+        .filter(c => c.parentId === focusComment.parentId && c._depth === focusComment._depth)
+        .sort(compare)
+
+      const focusIndex = focusLevelComments
+        .findIndex(c => c.id === focusId)
+
+      filterCommentIds = [
+        ...focusLevelComments
+          .slice(focusIndex - 1, focusIndex + 2),
+        ...coveredComments
+          .filter(c => c.parentId === focusId)
+          .slice(0, 1)
+      ]
+        .sort(compare)
+        .map(c => c.id)
+    } else if (first) {
+      filterCommentIds = coveredComments
+        .filter(c => !maxDepth || c._depth < maxDepth)
+        .sort(compare)
+        .slice(0, first)
+        .map(c => c.id)
+    }
+
+    filterTree(rootComment, filterCommentIds, {
+      orderBy,
+      orderDirection
+    })
+  }
+
+  if (maxDepth != null) {
+    cutTreeX(rootComment, maxDepth)
+  }
+
+  return rootComment.comments
 }
