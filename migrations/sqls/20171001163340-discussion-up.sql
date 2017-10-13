@@ -1,31 +1,18 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "citext";
+CREATE EXTENSION IF NOT EXISTS "pg_trgm";
 
---create type "permission" as ENUM (
---  'ALLOWED',
---  'ENFORCED',
---  'FORBIDDEN'
---);
---
---create type "nameFormat" as ENUM (
---  'FULL',
---  'FIRST',
---  'LAST',
---  'F_LAST',
---  'INITIALS'
---);
---
---create table "discussionRules" (
---  "id"                  uuid primary key not null default uuid_generate_v4(),
---  "maxLength"           integer,
---  "interval"            integer,
---  "anonymity"           "permission",
---  "profilePicture"      "permission",
---  "allowedNames"        "nameFormat"
---);
+create type "permission" as ENUM (
+  'ALLOWED',
+  'ENFORCED',
+  'FORBIDDEN'
+);
 
 create table "discussions" (
   "id"                  uuid primary key not null default uuid_generate_v4(),
+  "maxLength"           integer,
+  "interval"            integer,
+  "anonymity"           "permission" not null default 'ALLOWED',
   "createdAt"           timestamptz default now(),
   "updatedAt"           timestamptz default now()
 );
@@ -44,6 +31,23 @@ create table "comments" (
   "published"           boolean not null default true,
   "adminUnpublished"    boolean not null default false,
   "createdAt"           timestamptz default now(),
-  "updatedAt"           timestamptz default now(),
-  "deletedAt"           timestamptz default now()
+  "updatedAt"           timestamptz default now()
+);
+create index "comments_content_idx" on "comments" using GIN ("content" gin_trgm_ops);
+create index "comments_votes_idx" ON "comments" using GIN ("votes");
+
+create table "credentials" (
+  "id"                  uuid primary key not null default uuid_generate_v4(),
+  "userId"              uuid not null references "users",
+  "name"                text not null,
+  "verified"            boolean not null default false,
+  "createdAt"           timestamptz default now(),
+  "updatedAt"           timestamptz default now()
+);
+
+create table "discussionPreferences" (
+  "userId"              uuid not null references "users",
+  "discussionId"        uuid not null references "discussions",
+  "anonymous"           boolean not null default false,
+  PRIMARY KEY ("userId", "discussionId")
 );
