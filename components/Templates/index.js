@@ -30,7 +30,7 @@ export const renderMdast = (mdast, schema = {}) => {
 
     const data = rule.getData
       ? rule.getData(node, parent)
-      : {}
+      : (node.data || {})
 
     let children = null
     if (rule.rules) {
