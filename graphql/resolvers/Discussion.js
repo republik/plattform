@@ -8,7 +8,7 @@ const _ = {
 }
 
 // afterId and compare are optional
-const assembleTree = (_comment, _comments, afterId, focusId, compare) => {
+const assembleTree = (_comment, _comments, afterId, compare) => {
   let coveredComments = []
   const _assembleTree = (comment, comments, depth = -1) => {
     const parentId = comment.id || null
@@ -17,20 +17,13 @@ const assembleTree = (_comment, _comments, afterId, focusId, compare) => {
       nodes:
         _.remove(comments, c => c.parentId === parentId)
     }
-    if (depth === -1 && (afterId || focusId)) {
+    if (depth === -1 && afterId) {
       comment.comments.nodes = comment.comments.nodes
         .sort(compare)
-      if (afterId) {
-        const afterIndex = comment.comments.nodes
-          .findIndex(c => c.id === afterId)
-        comment.comments.nodes = comment.comments.nodes
-          .slice(afterIndex + 1)
-      }/* else if (focusId) {
-        const focusIndex = comment.comments.nodes
-          .findIndex( c => c.id === focusId )
-        comment.comments.nodes = comment.comments.nodes
-          .slice(focusIndex-1, focusIndex+1)
-      } */
+      const afterIndex = comment.comments.nodes
+        .findIndex(c => c.id === afterId)
+      comment.comments.nodes = comment.comments.nodes
+        .slice(afterIndex + 1)
     }
     comment.comments.nodes = comment.comments.nodes
       .map(c => {
@@ -148,26 +141,11 @@ module.exports = {
       focusId,
       parentId
     } = options
-    /*
-    let {
-      parentId
-    } = options
-    */
 
     // get comments
     const comments = await pgdb.public.comments.find({
       discussionId: discussion.id
     })
-
-    // to get focused comment on top level, make it parentId
-    /*
-    if (focusId) {
-      const focus = comments.find( c => c.id === focusId )
-      parentId = focus
-        ? focus.parentId
-        : parentId
-    }
-    */
 
     const rootComment = parentId
       ? { id: parentId }
@@ -186,7 +164,7 @@ module.exports = {
       compare = (a, b) => ascDesc(a.hottnes, b.hottnes)
     }
 
-    const coveredComments = assembleTree(rootComment, comments, afterId, focusId, compare)
+    const coveredComments = assembleTree(rootComment, comments, afterId, compare)
     measureTree(rootComment)
     sortTree(rootComment, compare)
 
