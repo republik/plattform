@@ -37,11 +37,11 @@ const commentActionsStyles = {
   })
 }
 
-export const CommentActions = ({score, onAnswer, onUpvote, onDownvote}) => (
+export const CommentActions = ({t, score, onAnswer, onUpvote, onDownvote}) => (
   <div {...commentActionsStyles.root}>
     <button {...commentActionsStyles.replyButton} onClick={onAnswer}>
       <Label>
-        Antworten
+        {t('components/Comment/CommentActions/answer')}
       </Label>
     </button>
 
