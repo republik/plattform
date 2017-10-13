@@ -57,32 +57,18 @@ enum Permission {
   FORBIDDEN
 }
 
-enum NamePreference {
-  FULL
-  FIRST
-  LAST
-  F_LAST
-  INITIALS
-}
-
 type DiscussionRules {
   maxLength: Int
   interval: Int
   anonymity: Permission!
-  profilePicture: Permission!
-  allowedNames: [NamePreference!]!
 }
 
 type DiscussionPreferences {
   anonymity: Boolean!
-  profilePicture: Boolean!
-  name: NamePreference!
   credential: Credential
 }
 input DiscussionPreferencesInput {
   anonymity: Boolean!
-  profilePicture: Boolean!
-  name: NamePreference!
   credential: String
 }
 
