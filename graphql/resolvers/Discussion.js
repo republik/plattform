@@ -8,7 +8,7 @@ const _ = {
 }
 
 // afterId and compare are optional
-const assembleTree = (_comment, _comments, afterId, compare) => {
+const assembleTree = (_comment, _comments, afterId, focusId, compare) => {
   let coveredComments = []
   const _assembleTree = (comment, comments, depth = -1) => {
     const parentId = comment.id || null
@@ -17,11 +17,20 @@ const assembleTree = (_comment, _comments, afterId, compare) => {
       nodes:
         _.remove(comments, c => c.parentId === parentId)
     }
-    if (afterId && depth === -1) {
-      let afterPassed = false
+    if (depth === -1 && (afterId || focusId)) {
       comment.comments.nodes = comment.comments.nodes
         .sort(compare)
-        .filter(c => afterPassed || (afterPassed = (c.id === afterId)) && false)
+      if (afterId) {
+        const afterIndex = comment.comments.nodes
+          .findIndex(c => c.id === afterId)
+        comment.comments.nodes = comment.comments.nodes
+          .slice(afterIndex + 1)
+      }/* else if (focusId) {
+        const focusIndex = comment.comments.nodes
+          .findIndex( c => c.id === focusId )
+        comment.comments.nodes = comment.comments.nodes
+          .slice(focusIndex-1, focusIndex+1)
+      } */
     }
     comment.comments.nodes = comment.comments.nodes
       .map(c => {
@@ -129,20 +138,36 @@ module.exports = {
       ? {
         ...args,
         ...JSON.parse(Buffer.from(after, 'base64').toString())
-        }
+      }
       : args
     const {
       orderBy = 'HOT',
       orderDirection = 'DESC',
       first = 200,
-      parentId,
-      afterId
+      afterId,
+      focusId,
+      parentId
     } = options
+    /*
+    let {
+      parentId
+    } = options
+    */
 
     // get comments
     const comments = await pgdb.public.comments.find({
       discussionId: discussion.id
     })
+
+    // to get focused comment on top level, make it parentId
+    /*
+    if (focusId) {
+      const focus = comments.find( c => c.id === focusId )
+      parentId = focus
+        ? focus.parentId
+        : parentId
+    }
+    */
 
     const rootComment = parentId
       ? { id: parentId }
@@ -161,22 +186,45 @@ module.exports = {
       compare = (a, b) => ascDesc(a.hottnes, b.hottnes)
     }
 
-    const coveredComments = assembleTree(rootComment, comments, afterId, compare)
+    const coveredComments = assembleTree(rootComment, comments, afterId, focusId, compare)
     measureTree(rootComment)
-
     sortTree(rootComment, compare)
 
-    if (first < 500) {
-      const firstCommentsIds = coveredComments
-        .filter(c => !maxDepth || c._depth < maxDepth)
-        .sort(compare)
-        .slice(0, first)
-        .map(c => c.id)
-      const cursorEnv = {
+    if (first || focusId) {
+      let filterCommentIds
+
+      if (focusId) {
+        const focusComment = coveredComments
+          .find(c => c.id === focusId)
+
+        const focusLevelComments = coveredComments
+          .filter(c => c.parentId === focusComment.parentId && c._depth === focusComment._depth)
+          .sort(compare)
+
+        const focusIndex = focusLevelComments
+          .findIndex(c => c.id === focusId)
+
+        filterCommentIds = [
+          ...focusLevelComments
+            .slice(focusIndex - 1, focusIndex + 2),
+          ...coveredComments
+            .filter(c => c.parentId === focusId)
+            .slice(0, 1)
+        ]
+          .sort(compare)
+          .map(c => c.id)
+      } else if (first) {
+        filterCommentIds = coveredComments
+          .filter(c => !maxDepth || c._depth < maxDepth)
+          .sort(compare)
+          .slice(0, first)
+          .map(c => c.id)
+      }
+
+      filterTree(rootComment, filterCommentIds, {
         orderBy,
         orderDirection
-      }
-      filterTree(rootComment, firstCommentsIds, cursorEnv)
+      })
     }
 
     if (maxDepth != null) {
