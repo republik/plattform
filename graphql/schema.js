@@ -58,8 +58,10 @@ enum Permission {
 }
 
 type DiscussionRules {
+  # max length of a comments content
   maxLength: Int
-  interval: Int
+  # min milliseconds between comments of one user
+  minInterval: Int
   anonymity: Permission!
 }
 
