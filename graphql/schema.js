@@ -47,6 +47,7 @@ type User {
   initials: String!
   email: String
   credentials: [Credential!]!
+  roles: [String]!
 }
 
 enum Permission {
