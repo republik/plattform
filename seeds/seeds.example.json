@@ -6,7 +6,14 @@
         "verified": true,
         "firstName": "Alice",
         "lastName": "Smith",
-        "roles": [ ]
+        "roles": [ "member" ]
+      },
+      {
+        "email": "bob.jones@project-r.construction",
+        "verified": true,
+        "firstName": "Bob",
+        "lastName": "Jones",
+        "roles": [  ]
       }
     ]
 }
