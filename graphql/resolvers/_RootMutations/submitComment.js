@@ -34,7 +34,11 @@ module.exports = async (_, args, {pgdb, user, t}) => {
       if (lastCommentByUser && lastCommentByUser.createdAt.getTime() > now - discussion.minInterval) {
         const waitForMinutes = (lastCommentByUser.createdAt.getTime() + discussion.minInterval - now) / 1000 / 60
         let waitFor
-        if (waitForMinutes <= 60) { waitFor = Math.ceil(waitForMinutes) + 'm' } else { waitFor = Math.ceil(waitForMinutes / 60) + 'h' }
+        if (waitForMinutes <= 60) {
+          waitFor = Math.ceil(waitForMinutes) + 'm'
+        } else {
+          waitFor = Math.ceil(waitForMinutes / 60) + 'h'
+        }
         throw new Error(t('api/comment/tooEarly', { waitFor }))
       }
     }
