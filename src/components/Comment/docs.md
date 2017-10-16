@@ -7,8 +7,8 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
   timeago='2h'
   displayAuthor={{
     profilePicture: '/static/profilePicture.png',
-    name: 'Paul Ullrich',
-    credential: {description: 'Bundesrat', verified: true}
+    name: 'Christof Moser',
+    credential: {description: 'Journalist', verified: true}
   }}
   score={8}
   content="Aber wer hat irgend ein Recht, einen Menschen zu tadeln, der die Entscheidung trifft, eine Freude zu genießen, die keine unangenehmen Folgen hat, oder einen, der Schmerz vermeidet, welcher keine daraus resultierende Freude nach sich zieht? Auch gibt es niemanden, der den Schmerz an sich liebt, sucht oder wünscht, nur, weil er Schmerz ist, es sei denn, es kommt zu zufälligen Umständen, in denen Mühen und Schmerz ihm große Freude bereiten können. "
@@ -19,8 +19,8 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
   timeago='2h'
   displayAuthor={{
     profilePicture: '/static/profilePicture.png',
-    name: 'Paul Ullrich',
-    credential: {description: 'Bundesrat', verified: true}
+    name: 'Christof Moser',
+    credential: {description: 'Bundesrat', verified: false}
   }}
   score={8}
   content="Er versuchte, sich in der Dunkelheit seinen Weg zu ertasten und erstarrte: Anscheinend gab es keinen anderen Ausweg aus diesem kleinen Hof als den Durchgang, durch den er gekommen war."
@@ -40,7 +40,7 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
 <CommentHeader
   timeago='2h'
   name='Anonym'
-  credential={{description: 'Bundesrat', verified: true}}
+  credential={{description: 'Journalist', verified: true}}
 />
 ```
 
@@ -48,7 +48,7 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
 <CommentHeader
   timeago='2h'
   profilePicture='/static/profilePicture.png'
-  name='Jean Jacques Rousseau'
+  name='Christof Moser'
 />
 ```
 
@@ -56,8 +56,8 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
 <CommentHeader
   timeago='2h'
   profilePicture='/static/profilePicture.png'
-  name='Paul Ullrich'
-  credential={{description: 'Bundesrat', verified: true}}
+  name='Christof Moser'
+  credential={{description: 'Journalist', verified: true}}
 />
 ```
 
@@ -65,7 +65,7 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
 <CommentHeader
   timeago='2h'
   profilePicture='/static/profilePicture.png'
-  name='Paul Ullrich'
+  name='Christof Moser'
   credential={{description: 'Bundesrat', verified: false}}
 />
 ```
