@@ -4,8 +4,11 @@ const {
   descending
 } = require('d3-array')
 const _ = {
-  remove: require('lodash/remove')
+  remove: require('lodash/remove'),
+  uniq: require('lodash/uniq')
 }
+const Roles = require('../../../lib/Roles')
+const createUser = require('../../../lib/factories/createUser')
 
 // afterId and compare are optional
 const assembleTree = (_comment, _comments, afterId, compare) => {
@@ -114,21 +117,80 @@ const cutTreeX = (comment, maxDepth, depth = -1) => {
   return comment
 }
 
-const decorateTree = (comment, t) => {
-  const { comments } = comment
-  comment.comments = {
-    ...comments,
-    nodes: comments.nodes.map(c => {
-      if (c.published === false || c.adminUnpublished) {
-        c.content = t('api/comment/removedPlaceholder')
-      }
-      return c
-    })
+const decorateTree = async (comment, coveredComments, user, pgdb, t) => {
+  // preload data
+  const userIds = _.uniq(
+    coveredComments.map(c => c.userId)
+  )
+  const users = await pgdb.public.users.find({ id: userIds })
+    .then(users => users.map(u => createUser(u)))
+  const discussionPreferences = await pgdb.public.discussionPreferences.find({
+    userId: userIds,
+    discussionId: coveredComments[0].discussionId
+  })
+  const credentialIds = discussionPreferences.map(dp => dp.credentialId)
+  const credentials = await pgdb.public.credentials.find({ id: credentialIds })
+
+  const showRealUser = Roles.userHasRole(user, 'admin') || Roles.userHasRole(user, 'editor')
+
+  const _decorateTree = (comment) => {
+    const { comments } = comment
+    comment.comments = {
+      ...comments,
+      nodes: comments.nodes.map(c => {
+        if (!c.published || c.adminUnpublished) {
+          c.content = t('api/comment/removedPlaceholder')
+        }
+        const commentUser = users.find(u => u.id === c.userId)
+        if (showRealUser) {
+          c.author = commentUser
+        }
+
+        let displayAuthor = {}
+        const userPreference = discussionPreferences.find(dp => dp.userId === commentUser.id)
+        if (userPreference.anonymous) {
+          displayAuthor = {
+            name: t('api/comment/anonymous/displayName')
+          }
+        } else {
+          displayAuthor = {
+            name: commentUser.name(),
+            profilePicture: null // TODO
+          }
+        }
+
+        const credential = userPreference && userPreference.credentialId
+          ? credentials.find(c => c.id === userPreference.credentialId)
+          : null
+        if (credential) {
+          displayAuthor = {
+            ...displayAuthor,
+            credential
+          }
+        }
+        c.displayAuthor = displayAuthor
+
+        const userVote = c.votes.find(v => v.userId === user.id)
+        let vote
+        if (userVote) {
+          if (userVote.vote === -1) {
+            vote = 'DOWN'
+          } else if (userVote.vote === 1) {
+            vote = 'UP'
+          }
+        }
+        c.userVote = vote
+        c.userCanEdit = c.userId === user.id
+        return c
+      })
+    }
+    if (comments.nodes.length > 0) {
+      comments.nodes.forEach(c => _decorateTree(c))
+    }
+    return comment
   }
-  if (comments.nodes.length > 0) {
-    comments.nodes.forEach(c => decorateTree(c, t))
-  }
-  return comment
+
+  return _decorateTree(comment)
 }
 
 const meassureDepth = (fields, depth = 0) => {
@@ -139,7 +201,7 @@ const meassureDepth = (fields, depth = 0) => {
   }
 }
 
-module.exports = async (discussion, args, { pgdb, t }, info) => {
+module.exports = async (discussion, args, { pgdb, user, t }, info) => {
   const maxDepth = meassureDepth(graphqlFields(info))
 
   const { after } = args
@@ -225,7 +287,7 @@ module.exports = async (discussion, args, { pgdb, t }, info) => {
     cutTreeX(rootComment, maxDepth)
   }
 
-  decorateTree(rootComment, t)
+  await decorateTree(rootComment, coveredComments, user, pgdb, t)
 
   return rootComment.comments
 }
