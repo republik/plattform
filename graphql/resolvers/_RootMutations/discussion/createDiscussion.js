@@ -1,4 +1,4 @@
-const Roles = require('../../../lib/Roles')
+const Roles = require('../../../../lib/Roles')
 
 module.exports = async (_, args, {pgdb, user, t}) => {
   Roles.ensureUserHasRole(user, 'editor')
