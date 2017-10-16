@@ -52,10 +52,10 @@ export const serifBold24 = {
   lineHeight: '26px',
   letterSpacing: -0.21
 }
-export const serifBold17 = {
+export const serifBold16 = {
   fontFamily: fontFamilies.serifBold,
   fontWeight: 'normal',
-  fontSize: 17,
+  fontSize: 16,
   lineHeight: '25px'
 }
 
