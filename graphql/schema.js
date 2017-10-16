@@ -48,6 +48,7 @@ type User {
   initials: String!
   email: String
   credentials: [Credential!]!
+  roles: [String]!
   testimonial: Testimonial
   facebookId: String
   twitterHandle: String
