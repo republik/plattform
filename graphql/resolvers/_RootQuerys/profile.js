@@ -3,11 +3,8 @@ const graphqlTools = require('graphql-tools')
 module.exports = async (_, args, { user }) => {
   // TODO: Replace mocks with actual data.
   return {
+    ...user,
     id: args.id,
-    publicEmail: 'foo@republik.ch',
-    publicUrl: 'http://www.republik.ch',
-    twitterHandle: 'foo',
-    facebookId: 'foo',
     testimonial: {
       name: 'Daniel Pfänder',
       quote: 'Journalismus heißt, etwas zu drucken, von dem jemand will, dass es nicht gedruckt wird. Alles andere ist Public Relations.',

@@ -1,4 +1,5 @@
 const typeDefinitions = `
+scalar Date
 scalar DateTime
 scalar JSON
 
@@ -17,6 +18,17 @@ type RootQuerys {
 type RootMutations {
   signIn(email: String!): SignInResponse!
   signOut: Boolean!
+  updateMe(
+    firstName: String,
+    lastName: String,
+    birthday: Date,
+    phoneNumber: String,
+    address: AddressInput,
+    facebookId: String,
+    twitterHandle: String,
+    publicUrl: String,
+    isEmailPublic: Boolean,
+  ): User!
 
   createDiscussion(
     # max length of a comments content
@@ -56,15 +68,36 @@ type User {
   name: String!
   initials: String!
   email: String
+  address: Address
+  birthday: Date
+  phoneNumber: String
   credentials: [Credential!]!
   roles: [String]!
   testimonial: Testimonial
   facebookId: String
   twitterHandle: String
-  publicEmail: String
   publicUrl: String
+  isEmailPublic: Boolean
   badges: [Badge]
   latestComments: [Comment]
+}
+
+type Address {
+  name: String
+  line1: String!
+  line2: String
+  postalCode: String!
+  city: String!
+  country: String!
+}
+
+input AddressInput {
+  name: String!
+  line1: String!
+  line2: String
+  postalCode: String!
+  city: String!
+  country: String!
 }
 
 enum Badge {
