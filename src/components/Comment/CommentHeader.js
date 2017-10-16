@@ -2,10 +2,9 @@ import React from 'react'
 import {css} from 'glamor'
 import {MdCheck} from 'react-icons/lib/md'
 import colors from '../../theme/colors'
-import {fontFamilies} from '../../theme/fonts'
 import {sansSerifMedium16, sansSerifRegular14} from '../Typography/styles'
 
-const commentHeaderStyles = {
+const styles = {
   root: css({
     display: 'flex',
     alignItems: 'center'
@@ -28,11 +27,11 @@ const commentHeaderStyles = {
   }),
   timeago: css({
     ...sansSerifRegular14,
-    color: '#979797' // TODO: colors.lightText
+    color: colors.lightText
   }),
   description: css({
     ...sansSerifRegular14,
-    color: '#979797' // TODO: colors.lightText
+    color: colors.lightText
   }),
   verifiedDescription: css({
     color: colors.text
@@ -44,20 +43,21 @@ const commentHeaderStyles = {
   })
 }
 
-export const CommentHeader = ({profilePicture, name, timeago, credential}) => (
-  <div {...commentHeaderStyles.root}>
+export const CommentHeader = ({t, profilePicture, name, timeago, credential}) => (
+  <div {...styles.root}>
     {profilePicture && <img
-      {...commentHeaderStyles.profilePicture}
+      {...styles.profilePicture}
       src={profilePicture}
+      alt=''
     />}
-    <div {...commentHeaderStyles.meta}>
-      <div {...commentHeaderStyles.name}>
+    <div {...styles.meta}>
+      <div {...styles.name}>
         {name}
-        {timeago && <span {...commentHeaderStyles.timeago}>・{timeago}</span>}
+        {timeago && <span {...styles.timeago}>・{timeago}</span>}
       </div>
-      {credential && <div {...commentHeaderStyles.description} {...(credential.verified ? commentHeaderStyles.verifiedDescription : {})}>
+      {credential && <div {...styles.description} {...(credential.verified ? styles.verifiedDescription : {})}>
         {credential.description}
-        {credential.verified && <MdCheck {...commentHeaderStyles.verifiedCheck} />}
+        {credential.verified && <MdCheck {...styles.verifiedCheck} />}
       </div>}
     </div>
   </div>
