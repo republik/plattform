@@ -1,0 +1,41 @@
+### `<CommentComposer />`
+
+```react|noSource,span-4
+<CommentComposer
+  t={t}
+  displayAuthor={{
+    name: 'Adrienne Fichter',
+    profilePicture: '/static/profilePicture.png',
+    credential: {description: 'Redaktorin', verified: false}
+  }}
+  onCancel={() => {}}
+  submitComment={t => {alert(t)}}
+/>
+```
+
+```react|noSource,span-2
+<CommentComposer
+  t={t}
+  displayAuthor={{
+    name: 'Johann N. Schneider-Ammann',
+    profilePicture: '/static/profilePicture.png',
+    credential: {description: 'Bundesrat', verified: true}
+  }}
+  onCancel={() => {}}
+  submitComment={t => {alert(t)}}
+/>
+```
+
+### `<CommentComposerHeader />`
+
+Almost like `<CommentHeader />` but with a button on the right.
+
+```react|noSource
+<CommentComposerHeader
+  {...{
+    name: 'Ueli Maurer',
+    profilePicture: '/static/profilePicture.png',
+    credential: {description: 'Bundesrat', verified: false}
+  }}
+/>
+```

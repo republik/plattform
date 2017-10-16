@@ -1,13 +1,15 @@
 import React from 'react'
 import {css} from 'glamor'
-import {MdCheck} from 'react-icons/lib/md'
+import {MdCheck, MdEdit} from 'react-icons/lib/md'
 import colors from '../../theme/colors'
 import {sansSerifMedium16, sansSerifRegular14} from '../Typography/styles'
 
 const styles = {
   root: css({
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    background: colors.whiteSmoke,
+    padding: '12px'
   }),
   profilePicture: css({
     display: 'block',
@@ -16,10 +18,12 @@ const styles = {
     marginRight: 10
   }),
   meta: css({
+    flex: 1,
     alignSelf: 'stretch',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    minWidth: 0,
   }),
   name: css({
     ...sansSerifMedium16,
@@ -28,16 +32,12 @@ const styles = {
     overflow: 'hidden',
     textOverflow: 'ellipsis'
   }),
-  timeago: css({
+  description: css({
     ...sansSerifRegular14,
     color: colors.lightText,
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis'
-  }),
-  description: css({
-    ...sansSerifRegular14,
-    color: colors.lightText
   }),
   verifiedDescription: css({
     color: colors.text
@@ -46,10 +46,24 @@ const styles = {
     display: 'inline-block',
     marginLeft: 4,
     marginTop: -2
+  }),
+  actionButton: css({
+    '-webkit-appearance': 'none',
+    background: 'transparent',
+    border: 'none',
+    flexShrink: 0,
+    alignSelf: 'stretch',
+    display: 'flex',
+    flexDirection: 'center',
+    justifyContent: 'center',
+    margin: '-12px -12px -12px 0',
+    padding: '12px 20px',
+    fontSize: '24px',
+    cursor: 'pointer',
   })
 }
 
-export const CommentHeader = ({t, profilePicture, name, timeago, credential}) => (
+const CommentComposerHeader = ({profilePicture, name, credential, onClick}) => (
   <div {...styles.root}>
     {profilePicture && <img
       {...styles.profilePicture}
@@ -59,14 +73,16 @@ export const CommentHeader = ({t, profilePicture, name, timeago, credential}) =>
     <div {...styles.meta}>
       <div {...styles.name}>
         {name}
-        {timeago && <span {...styles.timeago}>・{timeago}</span>}
       </div>
       {credential && <div {...styles.description} {...(credential.verified ? styles.verifiedDescription : {})}>
         {credential.description}
         {credential.verified && <MdCheck {...styles.verifiedCheck} />}
       </div>}
     </div>
+    <button {...styles.actionButton} onClick={onClick}>
+      <MdEdit />
+    </button>
   </div>
 )
 
-export default CommentHeader
+export default CommentComposerHeader

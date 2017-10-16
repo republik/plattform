@@ -115,6 +115,16 @@ ReactDOM.render(
             },
             src: require('./components/Comment/docs.md')
           },
+          {
+            path: '/components/comment-composer',
+            title: 'CommentComposer',
+            imports: {
+              t: require('./components/CommentComposer/docs.t'),
+              CommentComposer: require('./components/CommentComposer/CommentComposer'),
+              CommentComposerHeader: require('./components/CommentComposer/CommentComposerHeader'),
+            },
+            src: require('./components/CommentComposer/docs.md')
+          },
         ]
       },
       {
