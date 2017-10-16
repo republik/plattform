@@ -40,7 +40,7 @@ type RootMutations {
   downvoteComment(id: ID!): Comment!
 
   setDiscussionPreferences(
-    discussionId: ID!
+    id: ID!
     discussionPreferences: DiscussionPreferencesInput!
   ): DiscussionPreferences!
 }

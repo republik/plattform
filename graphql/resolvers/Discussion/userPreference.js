@@ -14,7 +14,7 @@ module.exports = async (discussion, _, { pgdb, user }) => {
     })
     : null
   return {
-    anonymity: dp.anonymous, // this is bogous!
+    anonymity: dp.anonymous || false, // this is bogous!
     credential
   }
 }

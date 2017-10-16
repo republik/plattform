@@ -1,5 +1,6 @@
 const Roles = require('../../../../lib/Roles')
 const hottnes = require('../../../../lib/hottnes')
+const setDiscussionPreferences = require('./lib/setDiscussionPreferences')
 
 module.exports = async (_, args, {pgdb, user, t}) => {
   Roles.ensureUserHasRole(user, 'member')
@@ -49,51 +50,13 @@ module.exports = async (_, args, {pgdb, user, t}) => {
     }
 
     if (discussionPreferences) {
-      const {
-        anonymity,
-        credential: credentialDescription
-      } = discussionPreferences
-
-      if (anonymity && discussion.anonymity === 'FORBIDDEN') {
-        throw new Error(t('api/discussion/anonymity/forbidden'))
-      } else if (anonymity === false && discussion.anonymity === 'ENFORCED') {
-        throw new Error(t('api/discussion/anonymity/enforced'))
-      }
-
-      let credentialId
-      if (credentialDescription) {
-        const existingCredential = await transaction.public.credentials.findOne({
-          userId,
-          description: credentialDescription
-        })
-        if (existingCredential) {
-          credentialId = existingCredential.id
-        } else {
-          const newCredential = await transaction.public.credentials.insertAndGet({
-            userId,
-            description: credentialDescription
-          })
-          credentialId = newCredential.id
-        }
-      }
-
-      const findQuery = {
+      await setDiscussionPreferences({
+        discussionPreferences,
         userId,
-        discussionId
-      }
-      const updateQuery = {
-        anonymous: anonymity,
-        credentialId
-      }
-      const options = {
-        skipUndefined: true
-      }
-      const dpExists = await transaction.public.discussionPreferences.findFirst(findQuery)
-      if (dpExists) {
-        await transaction.public.discussionPreferences.updateOne(findQuery, updateQuery, options)
-      } else {
-        await transaction.public.discussionPreferences.insert(updateQuery, options)
-      }
+        discussion,
+        transaction,
+        t
+      })
     }
 
     const comment = await transaction.public.comments.insertAndGet({
