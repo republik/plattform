@@ -114,6 +114,23 @@ const cutTreeX = (comment, maxDepth, depth = -1) => {
   return comment
 }
 
+const decorateTree = (comment, t) => {
+  const { comments } = comment
+  comment.comments = {
+    ...comments,
+    nodes: comments.nodes.map(c => {
+      if (c.published === false || c.adminUnpublished) {
+        c.content = t('api/comment/removedPlaceholder')
+      }
+      return c
+    })
+  }
+  if (comments.nodes.length > 0) {
+    comments.nodes.forEach(c => decorateTree(c, t))
+  }
+  return comment
+}
+
 const meassureDepth = (fields, depth = 0) => {
   if (fields.nodes && fields.nodes.comments) {
     return meassureDepth(fields.nodes.comments, depth + 1)
@@ -122,7 +139,7 @@ const meassureDepth = (fields, depth = 0) => {
   }
 }
 
-module.exports = async (discussion, args, { pgdb }, info) => {
+module.exports = async (discussion, args, { pgdb, t }, info) => {
   const maxDepth = meassureDepth(graphqlFields(info))
 
   const { after } = args
@@ -207,6 +224,8 @@ module.exports = async (discussion, args, { pgdb }, info) => {
   if (maxDepth != null) {
     cutTreeX(rootComment, maxDepth)
   }
+
+  decorateTree(rootComment, t)
 
   return rootComment.comments
 }

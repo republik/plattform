@@ -1,5 +1,5 @@
 {
-  "updated": "2017-10-13T21:30:16.604Z",
+  "updated": "2017-10-16T15:15:46.657Z",
   "title": "live",
   "data": [
     {
@@ -41,6 +41,22 @@
     {
       "key": "api/discussion/anonymity/enforced",
       "value": "In dieser Diskussion sind nur anonyme Kommentare zugelassen."
+    },
+    {
+      "key": "api/comment/404",
+      "value": "Der Kommentar konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/comment/notYours",
+      "value": "Sie können nur Ihre eigenen Kommentare bearbeiten."
+    },
+    {
+      "key": "api/unexpected",
+      "value": "Ups, da ist was schiefgelaufen. Sorry!"
+    },
+    {
+      "key": "api/comment/removedPlaceholder",
+      "value": "[deleted]"
     }
   ]
 }
