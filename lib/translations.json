@@ -1,5 +1,5 @@
 {
-  "updated": "2017-10-01T12:51:20.460Z",
+  "updated": "2017-10-13T21:30:16.604Z",
   "title": "live",
   "data": [
     {
@@ -21,6 +21,26 @@
     {
       "key": "api/auth/errorDestroyingSession",
       "value": "Ups, da ist was schiefgelaufen. Sorry!"
+    },
+    {
+      "key": "api/discussion/404",
+      "value": "Die Diskussion konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/comment/tooEarly",
+      "value": "Sie sind zu früh. Bitte warten Sie, {waitFor} bevor Sie wieder kommentieren."
+    },
+    {
+      "key": "api/comment/tooLong",
+      "value": "Ihr Kommentar darf höchstens {maxLength} Zeichen lang sein."
+    },
+    {
+      "key": "api/discussion/anonymity/forbidded",
+      "value": "Anonyme Kommentare sind in dieser Diskussion nicht zugelassen."
+    },
+    {
+      "key": "api/discussion/anonymity/enforced",
+      "value": "In dieser Diskussion sind nur anonyme Kommentare zugelassen."
     }
   ]
 }

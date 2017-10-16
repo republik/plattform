@@ -11,14 +11,23 @@ type RootQuerys {
   me: User
   profile(id: ID!): User
   discussions: [Discussion!]!
+  discussion(id: ID!): Discussion
 }
 
 type RootMutations {
   signIn(email: String!): SignInResponse!
   signOut: Boolean!
 
+  createDiscussion(
+    # max length of a comments content
+    maxLength: Int
+    # min milliseconds between comments of one user
+    minInterval: Int
+    anonymity: Permission!
+  ): ID!
   submitComment(
     discussionId: ID!
+    parentId: ID
     content: String!
     discussionPreferences: DiscussionPreferencesInput
   ): Comment!
@@ -97,32 +106,20 @@ enum Permission {
   FORBIDDEN
 }
 
-enum NamePreference {
-  FULL
-  FIRST
-  LAST
-  F_LAST
-  INITIALS
-}
-
 type DiscussionRules {
+  # max length of a comments content
   maxLength: Int
-  interval: Int
+  # min milliseconds between comments of one user
+  minInterval: Int
   anonymity: Permission!
-  profilePicture: Permission!
-  allowedNames: [NamePreference!]!
 }
 
 type DiscussionPreferences {
   anonymity: Boolean!
-  profilePicture: Boolean!
-  name: NamePreference!
   credential: Credential
 }
 input DiscussionPreferencesInput {
   anonymity: Boolean!
-  profilePicture: Boolean!
-  name: NamePreference!
   credential: String
 }
 
@@ -132,35 +129,59 @@ enum DiscussionOrder {
   HOT
 }
 
+enum OrderDirection {
+  ASC
+  DESC
+}
+
 type PageInfo {
+  # If endCursor is null and hasNextPage is true
+  # this node would have child nodes.
+  # Get them with this nodes id as parentId.
+  #
+  # If endCursor is not null and hasNextPage is true
+  # there exist more child nodes than currently delivered.
+  # Get them with endCursor as after.
   endCursor: String
+  # If endCursor is null and hasNextPage is true
+  # this node would have child nodes.
+  # Get them with this nodes id as parentId.
+  #
+  # If endCursor is not null and hasNextPage is true
+  # there exist more nodes than currently delivered.
+  # Get them with endCursor as after.
   hasNextPage: Boolean
 }
-type CommentEdge {
-  cursor: String!
-  node: Comment!
-}
 type CommentConnection {
+  # recursive down the tree
   totalCount: Int!
   pageInfo: PageInfo
-  edges: [CommentEdge]!
   nodes: [Comment]!
 }
 
 type Discussion {
   id: ID!
   comments(
+    # get children of this parent
     parentId: ID
+    # Get next page after cursor.
+    # If after is specified parentId, focusId,
+    # orderBy and orderDirection are ignored
     after: String
-    before: String
+    # Limit result to num of first elements in respect
+    # to orderBy and orderDirection. Please note that the
+    # number of returned elements might exceed first if the
+    # first elements are deep inside the tree, all coresponding
+    # parents are returned as well.
     first: Int
-    last: Int
     # include this comment and context around it
+    # don't use in combination with parentId or after
     focusId: ID
     orderBy: DiscussionOrder
+    orderDirection: OrderDirection
   ): CommentConnection!
   rules: DiscussionRules!
-  userPreference: DiscussionPreferences!
+  userPreference: DiscussionPreferences
 }
 
 type DisplayUser {
@@ -192,6 +213,10 @@ type Comment {
   userCanEdit: Boolean
   createdAt: DateTime!
   updatedAt: DateTime!
+
+  depth: Int!
+  _depth: Int!
+  hottnes: Float!
 }
 
 type SignInResponse {
