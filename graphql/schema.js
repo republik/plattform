@@ -17,8 +17,16 @@ type RootMutations {
   signIn(email: String!): SignInResponse!
   signOut: Boolean!
 
+  createDiscussion(
+    # max length of a comments content
+    maxLength: Int
+    # min milliseconds between comments of one user
+    minInterval: Int
+    anonymity: Permission!
+  ): ID!
   submitComment(
     discussionId: ID!
+    parentId: ID
     content: String!
     discussionPreferences: DiscussionPreferencesInput
   ): Comment!
@@ -48,6 +56,7 @@ type User {
   initials: String!
   email: String
   credentials: [Credential!]!
+  roles: [String]!
 }
 
 enum Permission {
@@ -56,32 +65,20 @@ enum Permission {
   FORBIDDEN
 }
 
-enum NamePreference {
-  FULL
-  FIRST
-  LAST
-  F_LAST
-  INITIALS
-}
-
 type DiscussionRules {
+  # max length of a comments content
   maxLength: Int
-  interval: Int
+  # min milliseconds between comments of one user
+  minInterval: Int
   anonymity: Permission!
-  profilePicture: Permission!
-  allowedNames: [NamePreference!]!
 }
 
 type DiscussionPreferences {
   anonymity: Boolean!
-  profilePicture: Boolean!
-  name: NamePreference!
   credential: Credential
 }
 input DiscussionPreferencesInput {
   anonymity: Boolean!
-  profilePicture: Boolean!
-  name: NamePreference!
   credential: String
 }
 
@@ -143,7 +140,7 @@ type Discussion {
     orderDirection: OrderDirection
   ): CommentConnection!
   rules: DiscussionRules!
-  userPreference: DiscussionPreferences!
+  userPreference: DiscussionPreferences
 }
 
 type DisplayUser {
