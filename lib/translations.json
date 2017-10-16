@@ -1,5 +1,5 @@
 {
-  "updated": "2017-10-16T15:15:46.657Z",
+  "updated": "2017-10-16T16:07:34.646Z",
   "title": "live",
   "data": [
     {
@@ -35,7 +35,7 @@
       "value": "Ihr Kommentar darf höchstens {maxLength} Zeichen lang sein."
     },
     {
-      "key": "api/discussion/anonymity/forbidded",
+      "key": "api/discussion/anonymity/forbidden",
       "value": "Anonyme Kommentare sind in dieser Diskussion nicht zugelassen."
     },
     {
