@@ -14,13 +14,9 @@ module.exports = async (_, args, { pgdb, user }) => {
   ) {
     const email = profileUser.isEmailPublic ? profileUser.email : null
 
-    // This object must only expose *public* properties of a user!
     return {
+      ...profileUser,
       email,
-      credentials: profileUser.credentials,
-      facebookId: profileUser.facebookId,
-      twitterHandle: profileUser.twitterHandle,
-      publicUrl: profileUser.publicUrl,
       // TODO: Replace mocks below with actual data.
       testimonial: {
         id: '58ef3a0d-82c1-4ead-add5-ec08f6f0d75f',
