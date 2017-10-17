@@ -225,6 +225,13 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
     discussionId: discussion.id
   })
 
+  if (!comments.length) {
+    return {
+      totalCount: 0,
+      nodes: []
+    }
+  }
+
   const rootComment = parentId
     ? { id: parentId }
     : {}
