@@ -10,6 +10,7 @@ create type "permission" as ENUM (
 
 create table "discussions" (
   "id"                  uuid primary key not null default uuid_generate_v4(),
+  "title"               text,
   "maxLength"           integer,
   "minInterval"         integer,
   "anonymity"           "permission" not null default 'ALLOWED',

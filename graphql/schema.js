@@ -19,6 +19,7 @@ type RootMutations {
   signOut: Boolean!
 
   createDiscussion(
+    title: String
     # max length of a comments content
     maxLength: Int
     # min milliseconds between comments of one user
@@ -161,6 +162,7 @@ type CommentConnection {
 
 type Discussion {
   id: ID!
+  title: String
   comments(
     # get children of this parent
     parentId: ID
