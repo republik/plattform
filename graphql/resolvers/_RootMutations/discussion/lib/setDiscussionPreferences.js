@@ -38,6 +38,8 @@ module.exports = async ({
     discussionId: discussion.id
   }
   const updateQuery = {
+    userId,
+    discussionId: discussion.id,
     anonymous: anonymity,
     credentialId
   }
