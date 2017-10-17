@@ -28,6 +28,7 @@ create table "users" (
   "twitterHandle"  text,
   "publicUrl"      text,
   "isEmailPublic"  boolean not null default false,
+  "private"        boolean not null default false,
   "createdAt"      timestamptz default now(),
   "updatedAt"      timestamptz default now()
 );

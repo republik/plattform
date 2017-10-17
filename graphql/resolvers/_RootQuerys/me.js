@@ -30,6 +30,7 @@ module.exports = async (_, args, { user }) => {
   return {
     ...user,
     name,
-    initials: () => getInitials(name)
+    initials: () => getInitials(name),
+    publicUser: user
   }
 }

@@ -10,7 +10,7 @@ schema {
 
 type RootQuerys {
   me: User
-  profile(id: ID!): User
+  profile(id: ID!): PublicUser
   discussions: [Discussion!]!
   discussion(id: ID!): Discussion
 }
@@ -63,6 +63,17 @@ type Credential {
   verified: Boolean!
 }
 
+type PublicUser {
+  id: ID!
+  credentials: [Credential!]!
+  testimonial: Testimonial
+  facebookId: String
+  twitterHandle: String
+  publicUrl: String
+  isEmailPublic: Boolean
+  badges: [Badge]
+  latestComments: [Comment]
+}
 type User {
   id: ID!
   name: String!
@@ -71,15 +82,8 @@ type User {
   address: Address
   birthday: Date
   phoneNumber: String
-  credentials: [Credential!]!
   roles: [String]!
-  testimonial: Testimonial
-  facebookId: String
-  twitterHandle: String
-  publicUrl: String
-  isEmailPublic: Boolean
-  badges: [Badge]
-  latestComments: [Comment]
+  publicUser: PublicUser
 }
 
 type Address {
