@@ -1,6 +1,7 @@
 const Roles = require('../../../../lib/Roles')
 const hottnes = require('../../../../lib/hottnes')
 const setDiscussionPreferences = require('./lib/setDiscussionPreferences')
+const userWaitUntil = require('../../Discussion/userWaitUntil')
 
 module.exports = async (_, args, {pgdb, user, t}) => {
   Roles.ensureUserHasRole(user, 'member')
@@ -24,23 +25,11 @@ module.exports = async (_, args, {pgdb, user, t}) => {
 
     // ensure user is within minInterval
     if (discussion.minInterval) {
-      const now = new Date().getTime()
-      const lastCommentByUser = await transaction.public.comments.findFirst({
-        userId,
-        discussionId,
-        published: true
-      }, {
-        orderBy: ['createdAt desc']
-      })
-      if (lastCommentByUser && lastCommentByUser.createdAt.getTime() > now - discussion.minInterval) {
-        const waitForMinutes = (lastCommentByUser.createdAt.getTime() + discussion.minInterval - now) / 1000 / 60
-        let waitFor
-        if (waitForMinutes <= 60) {
-          waitFor = Math.ceil(waitForMinutes) + 'm'
-        } else {
-          waitFor = Math.ceil(waitForMinutes / 60) + 'h'
-        }
-        throw new Error(t('api/comment/tooEarly', { waitFor }))
+      const waitUntil = await userWaitUntil(discussion, null, { pgdb, user })
+      if (waitUntil) {
+        throw new Error(t('api/comment/tooEarly', {
+          waitFor: `${(waitUntil.getTime() - new Date().getTime()) / 1000}s`
+        }))
       }
     }
 
