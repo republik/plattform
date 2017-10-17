@@ -2,7 +2,7 @@ const graphqlTools = require('graphql-tools')
 const Roles = require('../../../lib/Roles')
 
 module.exports = async (_, args, { user }) => {
-  if (!user.private || Roles.userHasRole(user, 'supporter') || Roles.userHasRole(user, 'admin')) {
+  if (!user.isPrivate || Roles.userHasRole(user, 'supporter') || Roles.userHasRole(user, 'admin')) {
     const email = user.isEmailPublic
       ? user.email
       : null

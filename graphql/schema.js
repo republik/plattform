@@ -28,6 +28,7 @@ type RootMutations {
     twitterHandle: String,
     publicUrl: String,
     isEmailPublic: Boolean,
+    isPrivate: Boolean
   ): User!
 
   createDiscussion(
@@ -65,6 +66,8 @@ type Credential {
 
 type PublicUser {
   id: ID!
+  name: String!
+  email: String
   credentials: [Credential!]!
   testimonial: Testimonial
   facebookId: String

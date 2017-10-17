@@ -11,7 +11,8 @@ module.exports = async (_, args, { pgdb, req, t }) => {
     facebookId,
     twitterHandle,
     publicUrl,
-    isEmailPublic
+    isEmailPublic,
+    isPrivate
   } = args
   const transaction = await pgdb.transactionBegin()
   try {
@@ -23,7 +24,8 @@ module.exports = async (_, args, { pgdb, req, t }) => {
       facebookId ||
       twitterHandle ||
       publicUrl ||
-      isEmailPublic
+      isEmailPublic ||
+      isPrivate
     ) {
       await transaction.public.users.update(
         { id: req.user.id },
@@ -35,7 +37,8 @@ module.exports = async (_, args, { pgdb, req, t }) => {
           facebookId,
           twitterHandle,
           publicUrl,
-          isEmailPublic
+          isEmailPublic,
+          isPrivate
         },
         { skipUndefined: true }
       )
