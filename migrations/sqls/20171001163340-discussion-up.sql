@@ -31,6 +31,7 @@ create table "comments" (
   "depth"               integer not null default 0,
   "published"           boolean not null default true,
   "adminUnpublished"    boolean not null default false,
+  "reportedBy"          jsonb,
   "createdAt"           timestamptz default now(),
   "updatedAt"           timestamptz default now()
 );

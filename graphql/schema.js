@@ -39,6 +39,7 @@ type RootMutations {
   unpublishComment(id: ID!): Boolean
   upvoteComment(id: ID!): Comment!
   downvoteComment(id: ID!): Comment!
+  reportComment(id: ID!): Boolean!
 
   setDiscussionPreferences(
     id: ID!
