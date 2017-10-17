@@ -10,7 +10,7 @@ schema {
 
 type RootQuerys {
   me: User
-  profile(id: ID!): PublicUser
+  publicUser(id: ID!): PublicUser
   discussions: [Discussion!]!
   discussion(id: ID!): Discussion
 }
