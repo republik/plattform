@@ -8,8 +8,7 @@ module.exports = async (_, args, { pgdb }, info) => {
   const discussion = await pgdb.public.discussions.findOne({ id })
   const selectionArgs = getSelectionArgsForField(info, 'comments')
   if (Object.keys(selectionArgs).length > 0) {
-    discussion._id = discussion.id
-    discussion.id = getUUIDForSelectionArgs(selectionArgs, discussion.id)
+    discussion._id = getUUIDForSelectionArgs(selectionArgs, discussion.id)
   }
   return discussion
 }

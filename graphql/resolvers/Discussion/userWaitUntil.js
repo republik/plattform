@@ -1,4 +1,4 @@
-module.exports = async ({ minInterval, _id: id }, _, { pgdb, user }) => {
+module.exports = async ({ minInterval, id }, _, { pgdb, user }) => {
   if (!minInterval) {
     return null
   }

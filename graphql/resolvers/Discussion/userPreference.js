@@ -1,4 +1,4 @@
-module.exports = async ({ _id: id }, _, { pgdb, user }) => {
+module.exports = async ({ id }, _, { pgdb, user }) => {
   const userId = user.id
   const dp = await pgdb.public.discussionPreferences.findOne({
     discussionId: id,

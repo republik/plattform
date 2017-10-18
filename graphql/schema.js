@@ -163,6 +163,10 @@ type CommentConnection {
 
 type Discussion {
   id: ID!
+  # _id is a hash of id and the arguments of comments() selection
+  # in UUID format.
+  # _id is stable: for the same discussion and the same selection
+  # args, the same _id is returned.
   _id: ID!
   title: String
   comments(
