@@ -28,6 +28,12 @@ const {
 } = process.env
 
 module.exports = (server, pgdb, httpServer) => {
+  const context = {
+    pgdb,
+    t,
+    pubsub
+  }
+
   const subscriptionServer = SubscriptionServer.create(
     {
       schema: executableSchema,
@@ -38,7 +44,7 @@ module.exports = (server, pgdb, httpServer) => {
           ? connectionParams.cookies
           : websocket.upgradeReq.headers.cookie
         if (!cookiesRaw) {
-          return { }
+          return context
         }
         const cookies = cookie.parse(cookiesRaw)
         const sid = cookieParser.signedCookie(
@@ -48,9 +54,12 @@ module.exports = (server, pgdb, httpServer) => {
         const session = await pgdb.public.sessions.findOne({ sid })
         if (session) {
           const user = await pgdb.public.users.findOne({id: session.sess.passport.user})
-          return { user }
+          return {
+            ...context,
+            user
+          }
         }
-        return { }
+        return context
       }
     },
     {
@@ -68,11 +77,9 @@ module.exports = (server, pgdb, httpServer) => {
       },
       schema: executableSchema,
       context: {
-        pgdb,
-        user: req.user,
+        ...context,
         req,
-        t,
-        pubsub
+        user: req.user
       }
     }
   })
