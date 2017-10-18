@@ -221,7 +221,7 @@ type Comment {
   downVotes: Int!
   # score based on votes
   score: Int!
-  # admin/mod only if anonymous
+  # admin/mod only
   author: User
   displayAuthor: DisplayUser!
   userVote: CommentVote
