@@ -37,7 +37,8 @@ type RootMutations {
     id: ID!
     content: String!
   ): Comment!
-  unpublishComment(id: ID!): Boolean
+  # can be called by the creator or an admin
+  unpublishComment(id: ID!): Comment!
   upvoteComment(id: ID!): Comment!
   downvoteComment(id: ID!): Comment!
   reportComment(id: ID!): Boolean!
@@ -49,6 +50,8 @@ type RootMutations {
 }
 
 type RootSubscriptions {
+  # all in one subscription:
+  # create, update, unpublish, vote
   comments(discussionId: ID!): Comment!
 }
 

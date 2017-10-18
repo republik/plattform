@@ -1,6 +1,6 @@
 const Roles = require('../../../../lib/Roles')
 
-module.exports = async (_, args, {pgdb, user, req, t}) => {
+module.exports = async (_, args, { pgdb, user, req, t, pubsub }) => {
   Roles.ensureUserHasRole(user, 'member')
 
   const { id } = args
@@ -12,21 +12,27 @@ module.exports = async (_, args, {pgdb, user, req, t}) => {
     if (!comment) {
       throw new Error(t('api/comment/404'))
     }
-    if (comment.userId !== user.id) {
+    if (comment.userId !== user.id && !Roles.ensureUserHasRole(user, 'admin')) {
       throw new Error(t('api/comment/notYours'))
     }
 
-    await transaction.public.comments.update({
+    const update = comment.userId === user.id
+      ? { published: false }
+      : { adminUnpublished: true }
+
+    const updatedComment = await transaction.public.comments.updateAndGetOne({
       id: comment.id
-    }, {
-      published: false
-    })
+    },
+      update
+    )
 
     await transaction.transactionCommit()
+
+    await pubsub.publish('comments', { comments: updatedComment })
+
+    return updatedComment
   } catch (e) {
     await transaction.transactionRollback()
     throw e
   }
-
-  return true
 }

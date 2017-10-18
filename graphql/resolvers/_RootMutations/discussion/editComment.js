@@ -1,6 +1,6 @@
 const Roles = require('../../../../lib/Roles')
 
-module.exports = async (_, args, {pgdb, user, req, t, pubsub}) => {
+module.exports = async (_, args, { pgdb, user, req, t, pubsub }) => {
   Roles.ensureUserHasRole(user, 'member')
 
   const {

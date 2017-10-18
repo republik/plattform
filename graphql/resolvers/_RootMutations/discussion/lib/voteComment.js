@@ -1,13 +1,12 @@
 const hottnes = require('../../../../../lib/hottnes')
 
-module.exports = async (commentId, vote, pgdb, user, t) => {
+module.exports = async (commentId, vote, pgdb, user, t, pubsub) => {
   if (vote !== 1 && vote !== -1) {
     console.error('vote out of range', { commentId, vote })
     throw new Error(t('api/unexpected'))
   }
   const transaction = await pgdb.transactionBegin()
   try {
-    // ensure comment exists
     const comment = (await transaction.query(`
       SELECT *
       FROM comments
@@ -56,6 +55,10 @@ module.exports = async (commentId, vote, pgdb, user, t) => {
     }
 
     await transaction.transactionCommit()
+
+    if (newComment) {
+      await pubsub.publish('comments', { comments: newComment })
+    }
 
     return newComment || comment
   } catch (e) {
