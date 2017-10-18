@@ -117,7 +117,7 @@ const cutTreeX = (comment, maxDepth, depth = -1) => {
   return comment
 }
 
-const decorateTree = async (comment, coveredComments, user, pgdb, t) => {
+const decorateTree = async (comment, coveredComments, discussion, user, pgdb, t) => {
   // preload data
   const userIds = _.uniq(
     coveredComments.map(c => c.userId)
@@ -148,7 +148,18 @@ const decorateTree = async (comment, coveredComments, user, pgdb, t) => {
 
         let displayAuthor = {}
         const userPreference = discussionPreferences.find(dp => dp.userId === commentUser.id)
-        if (userPreference.anonymous) {
+        let anonymous
+        if (discussion.anonymity === 'ENFORCED') {
+          anonymous = true
+        } else { // FORBIDDEN or ALLOWED
+          if (userPreference && userPreference.anonymous != null) {
+            anonymous = userPreference.anonymous
+          } else {
+            anonymous = false
+          }
+        }
+
+        if (anonymous) {
           displayAuthor = {
             name: t('api/comment/anonymous/displayName')
           }
@@ -294,7 +305,7 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
     cutTreeX(rootComment, maxDepth)
   }
 
-  await decorateTree(rootComment, coveredComments, user, pgdb, t)
+  await decorateTree(rootComment, coveredComments, discussion, user, pgdb, t)
 
   return rootComment.comments
 }
