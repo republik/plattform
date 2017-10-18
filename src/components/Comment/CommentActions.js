@@ -87,8 +87,8 @@ export const CommentActions = ({t, score, onAnswer, onUpvote, onDownvote}) => (
 //
 // The outer dimensions of the action button element is always the same:
 // square and as tall as the 'CommentAction' component.
-const ActionButton = ({iconSize, children}) => (
-  <button {...styles.actionButton} style={{fontSize: `${iconSize}px`}}>
+const ActionButton = ({iconSize, onClick, children}) => (
+  <button {...styles.actionButton} style={{fontSize: `${iconSize}px`}} onClick={onClick} >
     {children}
   </button>
 )
