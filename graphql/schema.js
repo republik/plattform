@@ -77,9 +77,12 @@ type PublicUser {
   badges: [Badge]
   latestComments: [Comment]
 }
+
 type User {
   id: ID!
   name: String!
+  firstName: String!
+  lastName: String!
   initials: String!
   email: String
   address: Address
@@ -87,6 +90,7 @@ type User {
   phoneNumber: String
   roles: [String]!
   publicUser: PublicUser
+  isPrivate: Boolean
 }
 
 type Address {
