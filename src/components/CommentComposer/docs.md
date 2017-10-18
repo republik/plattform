@@ -5,7 +5,7 @@
   t={t}
   displayAuthor={{
     name: 'Adrienne Fichter',
-    profilePicture: '/static/profilePicture.png',
+    profilePicture: '/static/profilePicture1.png',
     credential: {description: 'Redaktorin', verified: false}
   }}
   onCancel={() => {}}
@@ -18,7 +18,7 @@
   t={t}
   displayAuthor={{
     name: 'Johann N. Schneider-Ammann',
-    profilePicture: '/static/profilePicture.png',
+    profilePicture: '/static/profilePicture1.png',
     credential: {description: 'Bundesrat', verified: true}
   }}
   onCancel={() => {}}
@@ -34,7 +34,7 @@ Almost like `<CommentHeader />` but with a button on the right.
 <CommentComposerHeader
   {...{
     name: 'Ueli Maurer',
-    profilePicture: '/static/profilePicture.png',
+    profilePicture: '/static/profilePicture1.png',
     credential: {description: 'Bundesrat', verified: false}
   }}
 />

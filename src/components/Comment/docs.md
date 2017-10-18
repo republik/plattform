@@ -6,7 +6,7 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
 <Comment
   timeago='2h'
   displayAuthor={{
-    profilePicture: '/static/profilePicture.png',
+    profilePicture: '/static/profilePicture1.png',
     name: 'Christof Moser',
     credential: {description: 'Journalist', verified: true}
   }}
@@ -18,7 +18,7 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
 <Comment
   timeago='2h'
   displayAuthor={{
-    profilePicture: '/static/profilePicture.png',
+    profilePicture: '/static/profilePicture1.png',
     name: 'Christof Moser',
     credential: {description: 'Bundesrat', verified: false}
   }}
@@ -47,7 +47,7 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
 ```react|noSource,span-2
 <CommentHeader
   timeago='2h'
-  profilePicture='/static/profilePicture.png'
+  profilePicture='/static/profilePicture1.png'
   name='Christof Moser'
 />
 ```
@@ -55,7 +55,7 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
 ```react|noSource,span-2
 <CommentHeader
   timeago='2h'
-  profilePicture='/static/profilePicture.png'
+  profilePicture='/static/profilePicture1.png'
   name='Christof Moser'
   credential={{description: 'Journalist', verified: true}}
 />
@@ -64,7 +64,7 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
 ```react|noSource,span-2
 <CommentHeader
   timeago='2h'
-  profilePicture='/static/profilePicture.png'
+  profilePicture='/static/profilePicture1.png'
   name='Christof Moser'
   credential={{description: 'Bundesrat', verified: false}}
 />
