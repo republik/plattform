@@ -141,6 +141,12 @@ ReactDOM.render(
             },
             src: require('./components/CommentComposer/docs.md')
           },
+          {
+            path: '/components/comment-tree',
+            title: 'CommentTree',
+            imports: {...require('./components/CommentTree/docs.imports')},
+            src: require('./components/CommentTree/docs.md')
+          },
         ]
       },
       {
