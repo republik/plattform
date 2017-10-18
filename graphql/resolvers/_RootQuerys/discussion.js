@@ -1,4 +1,15 @@
-module.exports = async (_, args, { pgdb }) => {
+const {
+  getSelectionArgsForField,
+  getUUIDForSelectionArgs
+} = require('../../../lib/graphql')
+
+module.exports = async (_, args, { pgdb }, info) => {
   const { id } = args
-  return pgdb.public.discussions.findOne({ id })
+  const discussion = await pgdb.public.discussions.findOne({ id })
+  const selectionArgs = getSelectionArgsForField(info, 'comments')
+  if (Object.keys(selectionArgs).length > 0) {
+    discussion._id = discussion.id
+    discussion.id = getUUIDForSelectionArgs(selectionArgs, discussion.id)
+  }
+  return discussion
 }

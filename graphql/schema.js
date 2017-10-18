@@ -163,6 +163,7 @@ type CommentConnection {
 
 type Discussion {
   id: ID!
+  _id: ID!
   title: String
   comments(
     # get children of this parent

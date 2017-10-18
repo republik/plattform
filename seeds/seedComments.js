@@ -25,18 +25,11 @@ Promise.resolve().then( async () => {
   fs.writeFileSync(__dirname+'/comments.json', JSON.stringify(comments, null, 2))
 })
 */
-const crypto = require('crypto')
-const fakeUUID = (plainId) => {
-  const hash = crypto
-    .createHash('sha1')
-    .update(plainId)
-    .digest('hex')
-  return hash.replace(/(.{8})(.{4})(.{4})(.{4})(.{12}).*/, '$1-$2-$3-$4-$5')
-}
 
 const _comments = require('./comments.json')
 const PgDb = require('../lib/pgdb')
 const getHottnes = require('../lib/hottnes')
+const fakeUUID = require('../lib/hottnes')
 
 PgDb.connect().then(async (pgdb) => {
   let user = await pgdb.public.users.findFirst({})

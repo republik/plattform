@@ -126,7 +126,7 @@ const decorateTree = async (comment, coveredComments, discussion, user, pgdb, t)
     .then(users => users.map(u => createUser(u)))
   const discussionPreferences = await pgdb.public.discussionPreferences.find({
     userId: userIds,
-    discussionId: coveredComments[0].discussionId
+    discussionId: discussion._id
   })
   const credentialIds = discussionPreferences.map(dp => dp.credentialId)
   const credentials = await pgdb.public.credentials.find({ id: credentialIds })
@@ -233,7 +233,7 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
 
   // get comments
   const comments = await pgdb.public.comments.find({
-    discussionId: discussion.id
+    discussionId: discussion._id
   })
 
   if (!comments.length) {
