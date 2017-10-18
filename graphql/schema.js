@@ -5,6 +5,7 @@ scalar JSON
 schema {
   query: RootQuerys
   mutation: RootMutations
+  subscription: RootSubscriptions
 }
 
 type RootQuerys {
@@ -47,6 +48,9 @@ type RootMutations {
   ): DiscussionPreferences!
 }
 
+type RootSubscriptions {
+  comments(discussionId: ID!): Comment!
+}
 
 type Credential {
   description: String!

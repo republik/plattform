@@ -3,7 +3,7 @@ const hottnes = require('../../../../lib/hottnes')
 const setDiscussionPreferences = require('./lib/setDiscussionPreferences')
 const userWaitUntil = require('../../Discussion/userWaitUntil')
 
-module.exports = async (_, args, {pgdb, user, t}) => {
+module.exports = async (_, args, { pgdb, user, t, pubsub }) => {
   Roles.ensureUserHasRole(user, 'member')
 
   const userId = user.id
@@ -59,6 +59,8 @@ module.exports = async (_, args, {pgdb, user, t}) => {
     })
 
     await transaction.transactionCommit()
+
+    await pubsub.publish('comments', { comments: comment })
 
     return comment
   } catch (e) {

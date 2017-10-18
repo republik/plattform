@@ -1,7 +1,9 @@
 const bodyParser = require('body-parser')
-const {graphqlExpress, graphiqlExpress} = require('graphql-server-express')
+const { graphqlExpress, graphiqlExpress } = require('graphql-server-express')
 const { makeExecutableSchema, addMockFunctionsToSchema } = require('graphql-tools')
 const { execute, subscribe } = require('graphql')
+const { SubscriptionServer } = require('subscriptions-transport-ws')
+const { pubsub } = require('../lib/RedisPubSub')
 const cookie = require('cookie')
 const cookieParser = require('cookie-parser')
 const t = require('../lib/t')
@@ -20,10 +22,43 @@ addMockFunctionsToSchema({
 })
 
 const {
+  PUBLIC_WS_URL_BASE,
+  PUBLIC_WS_URL_PATH,
   NODE_ENV
 } = process.env
 
 module.exports = (server, pgdb, httpServer) => {
+  const subscriptionServer = SubscriptionServer.create(
+    {
+      schema: executableSchema,
+      execute,
+      subscribe,
+      onConnect: async (connectionParams, websocket) => {
+        const cookiesRaw = (NODE_ENV === 'testing')
+          ? connectionParams.cookies
+          : websocket.upgradeReq.headers.cookie
+        if (!cookiesRaw) {
+          return { }
+        }
+        const cookies = cookie.parse(cookiesRaw)
+        const sid = cookieParser.signedCookie(
+          cookies['connect.sid'],
+          process.env.SESSION_SECRET
+        )
+        const session = await pgdb.public.sessions.findOne({ sid })
+        if (session) {
+          const user = await pgdb.public.users.findOne({id: session.sess.passport.user})
+          return { user }
+        }
+        return { }
+      }
+    },
+    {
+      server: httpServer,
+      path: PUBLIC_WS_URL_PATH
+    }
+  )
+
   const graphqlMiddleware = graphqlExpress((req) => {
     return {
       debug: false,
@@ -37,6 +72,7 @@ module.exports = (server, pgdb, httpServer) => {
         user: req.user,
         req,
         t,
+        pubsub
       }
     }
   })
@@ -46,6 +82,9 @@ module.exports = (server, pgdb, httpServer) => {
     graphqlMiddleware
   )
   server.use('/graphiql', graphiqlExpress({
-    endpointURL: '/graphql'
+    endpointURL: '/graphql',
+    subscriptionsEndpoint: PUBLIC_WS_URL_BASE + PUBLIC_WS_URL_PATH
   }))
+
+  return subscriptionServer
 }

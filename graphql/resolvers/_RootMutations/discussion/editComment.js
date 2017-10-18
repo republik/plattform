@@ -1,6 +1,6 @@
 const Roles = require('../../../../lib/Roles')
 
-module.exports = async (_, args, {pgdb, user, req, t}) => {
+module.exports = async (_, args, {pgdb, user, req, t, pubsub}) => {
   Roles.ensureUserHasRole(user, 'member')
 
   const {
@@ -36,6 +36,8 @@ module.exports = async (_, args, {pgdb, user, req, t}) => {
     })
 
     await transaction.transactionCommit()
+
+    await pubsub.publish('comments', { comments: newComment })
 
     return newComment
   } catch (e) {
