@@ -7,8 +7,12 @@ const _ = {
   remove: require('lodash/remove'),
   uniq: require('lodash/uniq')
 }
-const Roles = require('../../../lib/Roles')
 const createUser = require('../../../lib/factories/createUser')
+const {
+  content: getContent,
+  author: getAuthor,
+  displayAuthor: getDisplayAuthor
+} = require('../Comment')
 
 // afterId and compare are optional
 const assembleTree = (_comment, _comments, afterId, compare) => {
@@ -131,68 +135,31 @@ const decorateTree = async (comment, coveredComments, discussion, user, pgdb, t)
   const credentialIds = discussionPreferences.map(dp => dp.credentialId)
   const credentials = await pgdb.public.credentials.find({ id: credentialIds })
 
-  const showRealUser = Roles.userHasRole(user, 'admin') || Roles.userHasRole(user, 'editor')
-
   const _decorateTree = (comment) => {
     const { comments } = comment
     comment.comments = {
       ...comments,
       nodes: comments.nodes.map(c => {
-        if (!c.published || c.adminUnpublished) {
-          c.content = t('api/comment/removedPlaceholder')
-        }
-        const commentUser = users.find(u => u.id === c.userId)
-        if (showRealUser) {
-          c.author = commentUser
-        }
-
-        let displayAuthor = {}
-        const userPreference = discussionPreferences.find(dp => dp.userId === commentUser.id)
-        let anonymous
-        if (discussion.anonymity === 'ENFORCED') {
-          anonymous = true
-        } else { // FORBIDDEN or ALLOWED
-          if (userPreference && userPreference.anonymous != null) {
-            anonymous = userPreference.anonymous
-          } else {
-            anonymous = false
-          }
-        }
-
-        if (anonymous) {
-          displayAuthor = {
-            name: t('api/comment/anonymous/displayName')
-          }
-        } else {
-          displayAuthor = {
-            name: commentUser.name(),
-            profilePicture: null // TODO
-          }
-        }
-
-        const credential = userPreference && userPreference.credentialId
-          ? credentials.find(c => c.id === userPreference.credentialId)
+        const commenter = users.find(u => u.id === c.userId)
+        const commenterPreferences = discussionPreferences.find(dp => dp.userId === commenter.id)
+        const credential = commenterPreferences && commenterPreferences.credentialId
+          ? credentials.find(c => c.id === commenterPreferences.credentialId)
           : null
-        if (credential) {
-          displayAuthor = {
-            ...displayAuthor,
-            credential
-          }
-        }
-        c.displayAuthor = displayAuthor
 
-        const userVote = c.votes.find(v => v.userId === user.id)
-        let vote
-        if (userVote) {
-          if (userVote.vote === -1) {
-            vote = 'DOWN'
-          } else if (userVote.vote === 1) {
-            vote = 'UP'
-          }
+        return {
+          ...c,
+          content: getContent(c, null, { t }),
+          author: getAuthor(c, null, { pgdb, user, commenter }),
+          displayAuthor: getDisplayAuthor(c, null, {
+            pgdb,
+            user,
+            t,
+            discussion,
+            commenter,
+            commenterPreferences,
+            credential
+          })
         }
-        c.userVote = vote
-        c.userCanEdit = c.userId === user.id
-        return c
       })
     }
     if (comments.nodes.length > 0) {
