@@ -1,6 +1,6 @@
 const bodyParser = require('body-parser')
-const { graphqlExpress, graphiqlExpress } = require('graphql-server-express')
-const { makeExecutableSchema, addMockFunctionsToSchema } = require('graphql-tools')
+const {graphqlExpress, graphiqlExpress} = require('graphql-server-express')
+const { makeExecutableSchema } = require('graphql-tools')
 const { execute, subscribe } = require('graphql')
 const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { pubsub } = require('../lib/RedisPubSub')
@@ -14,11 +14,6 @@ const Resolvers = require('./resolvers/index')
 const executableSchema = makeExecutableSchema({
   typeDefs: Schema,
   resolvers: Resolvers
-})
-
-addMockFunctionsToSchema({
-  schema: executableSchema,
-  preserveResolvers: true
 })
 
 const {
@@ -79,7 +74,8 @@ module.exports = (server, pgdb, httpServer) => {
       context: {
         ...context,
         req,
-        user: req.user
+        user: req.user,
+        t
       }
     }
   })

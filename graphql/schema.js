@@ -1,4 +1,5 @@
 const typeDefinitions = `
+scalar Date
 scalar DateTime
 scalar JSON
 
@@ -10,7 +11,7 @@ schema {
 
 type RootQuerys {
   me: User
-  profile(id: ID!): User
+  publicUser(id: ID!): PublicUser
   discussions: [Discussion!]!
   discussion(id: ID!): Discussion
 }
@@ -18,6 +19,18 @@ type RootQuerys {
 type RootMutations {
   signIn(email: String!): SignInResponse!
   signOut: Boolean!
+  updateMe(
+    firstName: String,
+    lastName: String,
+    birthday: Date,
+    phoneNumber: String,
+    address: AddressInput,
+    facebookId: String,
+    twitterHandle: String,
+    publicUrl: String,
+    isEmailPublic: Boolean,
+    isPrivate: Boolean
+  ): User!
 
   createDiscussion(
     title: String
@@ -60,20 +73,51 @@ type Credential {
   verified: Boolean!
 }
 
-type User {
+type PublicUser {
   id: ID!
   name: String!
-  initials: String!
   email: String
   credentials: [Credential!]!
-  roles: [String]!
   testimonial: Testimonial
   facebookId: String
   twitterHandle: String
-  publicEmail: String
   publicUrl: String
+  isEmailPublic: Boolean
   badges: [Badge]
   latestComments: [Comment]
+}
+
+type User {
+  id: ID!
+  name: String!
+  firstName: String!
+  lastName: String!
+  initials: String!
+  email: String
+  address: Address
+  birthday: Date
+  phoneNumber: String
+  roles: [String]!
+  publicUser: PublicUser
+  isPrivate: Boolean
+}
+
+type Address {
+  name: String
+  line1: String!
+  line2: String
+  postalCode: String!
+  city: String!
+  country: String!
+}
+
+input AddressInput {
+  name: String!
+  line1: String!
+  line2: String
+  postalCode: String!
+  city: String!
+  country: String!
 }
 
 enum Badge {
