@@ -39,3 +39,21 @@ Almost like `<CommentHeader />` but with a button on the right.
   }}
 />
 ```
+
+### `<CommentComposerPlaceholder />`
+
+Same height as `<CommentComposerHeader />` so that it can be used in its place and we can have a nice transition between the placeholder and the whole `<CommentComposer />` component.
+
+```react|noSource,span-3
+<CommentComposerPlaceholder
+  t={t}
+  profilePicture='/static/profilePicture1.png'
+  onClick={() => {}}
+/>
+```
+```react|noSource,span-3
+<CommentComposerPlaceholder
+  t={t}
+  onClick={() => {}}
+/>
+```

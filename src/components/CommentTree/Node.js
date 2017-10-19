@@ -75,8 +75,8 @@ class Node extends PureComponent {
             t={t}
             score={score}
             onAnswer={this.openComposer}
-            upvoteComment={upvoteComment}
-            downvoteComment={downvoteComment}
+            onUpvote={upvoteComment}
+            onDownvote={downvoteComment}
           />
 
           {showComposer &&
@@ -113,8 +113,8 @@ class Node extends PureComponent {
             t={t}
             score={score}
             onAnswer={this.openComposer}
-            upvoteComment={upvoteComment}
-            downvoteComment={downvoteComment}
+            onUpvote={upvoteComment}
+            onDownvote={downvoteComment}
           />
 
           {showComposer &&

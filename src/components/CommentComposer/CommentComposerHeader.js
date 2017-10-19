@@ -35,6 +35,7 @@ const styles = {
   description: css({
     ...sansSerifRegular14,
     color: colors.lightText,
+    lineHeight: 1,
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis'
