@@ -28,10 +28,7 @@ module.exports = async (_, args, { user, pgdb }) => {
   return {
     ...user,
     name,
-    address: await pgdb.public.addresses.findOne({ id: user.addressId }),
     initials: () => getInitials(name),
     publicUser: {...user, name}
-    // TODO: Implement memberships
-    // TODO: Implement pledges
   }
 }
