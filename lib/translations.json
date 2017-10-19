@@ -1,5 +1,5 @@
 {
-  "updated": "2017-10-13T21:30:16.604Z",
+  "updated": "2017-10-16T16:59:49.624Z",
   "title": "live",
   "data": [
     {
@@ -35,12 +35,32 @@
       "value": "Ihr Kommentar darf höchstens {maxLength} Zeichen lang sein."
     },
     {
-      "key": "api/discussion/anonymity/forbidded",
+      "key": "api/discussion/anonymity/forbidden",
       "value": "Anonyme Kommentare sind in dieser Diskussion nicht zugelassen."
     },
     {
       "key": "api/discussion/anonymity/enforced",
       "value": "In dieser Diskussion sind nur anonyme Kommentare zugelassen."
+    },
+    {
+      "key": "api/comment/404",
+      "value": "Der Kommentar konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/comment/notYours",
+      "value": "Sie können nur Ihre eigenen Kommentare bearbeiten."
+    },
+    {
+      "key": "api/unexpected",
+      "value": "Ups, da ist was schiefgelaufen. Sorry!"
+    },
+    {
+      "key": "api/comment/removedPlaceholder",
+      "value": "[deleted]"
+    },
+    {
+      "key": "api/comment/anonymous/displayName",
+      "value": "Anonymous"
     }
   ]
 }

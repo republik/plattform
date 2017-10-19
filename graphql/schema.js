@@ -6,6 +6,7 @@ scalar JSON
 schema {
   query: RootQuerys
   mutation: RootMutations
+  subscription: RootSubscriptions
 }
 
 type RootQuerys {
@@ -32,6 +33,7 @@ type RootMutations {
   ): User!
 
   createDiscussion(
+    title: String
     # max length of a comments content
     maxLength: Int
     # min milliseconds between comments of one user
@@ -48,16 +50,23 @@ type RootMutations {
     id: ID!
     content: String!
   ): Comment!
-  unpublishComment(id: ID!): Boolean
+  # can be called by the creator or an admin
+  unpublishComment(id: ID!): Comment!
   upvoteComment(id: ID!): Comment!
   downvoteComment(id: ID!): Comment!
+  reportComment(id: ID!): Boolean!
 
   setDiscussionPreferences(
-    discussionId: ID!
+    id: ID!
     discussionPreferences: DiscussionPreferencesInput!
   ): DiscussionPreferences!
 }
 
+type RootSubscriptions {
+  # all in one subscription:
+  # create, update, unpublish, vote
+  comments(discussionId: ID!): Comment!
+}
 
 type Credential {
   description: String!
@@ -205,6 +214,12 @@ type CommentConnection {
 
 type Discussion {
   id: ID!
+  # _id is a hash of id and the arguments of comments() selection
+  # in UUID format.
+  # _id is stable: for the same discussion and the same selection
+  # args, the same _id is returned.
+  _id: ID!
+  title: String
   comments(
     # get children of this parent
     parentId: ID
@@ -226,6 +241,9 @@ type Discussion {
   ): CommentConnection!
   rules: DiscussionRules!
   userPreference: DiscussionPreferences
+  # date the user is allowed to submit new comments
+  # if null the user can submit immediately
+  userWaitUntil: DateTime
 }
 
 type DisplayUser {
@@ -250,7 +268,7 @@ type Comment {
   downVotes: Int!
   # score based on votes
   score: Int!
-  # admin/mod only if anonymous
+  # admin/mod only
   author: User
   displayAuthor: DisplayUser!
   userVote: CommentVote

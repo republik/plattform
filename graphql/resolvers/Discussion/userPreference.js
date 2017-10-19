@@ -1,7 +1,7 @@
-module.exports = async (discussion, _, { pgdb, user }) => {
+module.exports = async ({ id }, _, { pgdb, user }) => {
   const userId = user.id
   const dp = await pgdb.public.discussionPreferences.findOne({
-    discussionId: discussion.id,
+    discussionId: id,
     userId
   })
   if (!dp) {
@@ -14,7 +14,7 @@ module.exports = async (discussion, _, { pgdb, user }) => {
     })
     : null
   return {
-    anonymity: dp.anonymous, // this is bogous!
+    anonymity: dp.anonymous || false, // this is bogous!
     credential
   }
 }

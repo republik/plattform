@@ -4,8 +4,15 @@ const {
   descending
 } = require('d3-array')
 const _ = {
-  remove: require('lodash/remove')
+  remove: require('lodash/remove'),
+  uniq: require('lodash/uniq')
 }
+const createUser = require('../../../lib/factories/createUser')
+const {
+  content: getContent,
+  author: getAuthor,
+  displayAuthor: getDisplayAuthor
+} = require('../Comment')
 
 // afterId and compare are optional
 const assembleTree = (_comment, _comments, afterId, compare) => {
@@ -114,6 +121,56 @@ const cutTreeX = (comment, maxDepth, depth = -1) => {
   return comment
 }
 
+const decorateTree = async (comment, coveredComments, discussion, user, pgdb, t) => {
+  // preload data
+  const userIds = _.uniq(
+    coveredComments.map(c => c.userId)
+  )
+  const users = await pgdb.public.users.find({ id: userIds })
+    .then(users => users.map(u => createUser(u)))
+  const discussionPreferences = await pgdb.public.discussionPreferences.find({
+    userId: userIds,
+    discussionId: discussion.id
+  })
+  const credentialIds = discussionPreferences.map(dp => dp.credentialId)
+  const credentials = await pgdb.public.credentials.find({ id: credentialIds })
+
+  const _decorateTree = (comment) => {
+    const { comments } = comment
+    comment.comments = {
+      ...comments,
+      nodes: comments.nodes.map(c => {
+        const commenter = users.find(u => u.id === c.userId)
+        const commenterPreferences = discussionPreferences.find(dp => dp.userId === commenter.id)
+        const credential = commenterPreferences && commenterPreferences.credentialId
+          ? credentials.find(c => c.id === commenterPreferences.credentialId)
+          : null
+
+        return {
+          ...c,
+          content: getContent(c, null, { t }),
+          author: getAuthor(c, null, { pgdb, user, commenter }),
+          displayAuthor: getDisplayAuthor(c, null, {
+            pgdb,
+            user,
+            t,
+            discussion,
+            commenter,
+            commenterPreferences,
+            credential
+          })
+        }
+      })
+    }
+    if (comments.nodes.length > 0) {
+      comments.nodes.forEach(c => _decorateTree(c))
+    }
+    return comment
+  }
+
+  return _decorateTree(comment)
+}
+
 const meassureDepth = (fields, depth = 0) => {
   if (fields.nodes && fields.nodes.comments) {
     return meassureDepth(fields.nodes.comments, depth + 1)
@@ -122,7 +179,7 @@ const meassureDepth = (fields, depth = 0) => {
   }
 }
 
-module.exports = async (discussion, args, { pgdb }, info) => {
+module.exports = async (discussion, args, { pgdb, user, t }, info) => {
   const maxDepth = meassureDepth(graphqlFields(info))
 
   const { after } = args
@@ -145,6 +202,13 @@ module.exports = async (discussion, args, { pgdb }, info) => {
   const comments = await pgdb.public.comments.find({
     discussionId: discussion.id
   })
+
+  if (!comments.length) {
+    return {
+      totalCount: 0,
+      nodes: []
+    }
+  }
 
   const rootComment = parentId
     ? { id: parentId }
@@ -207,6 +271,8 @@ module.exports = async (discussion, args, { pgdb }, info) => {
   if (maxDepth != null) {
     cutTreeX(rootComment, maxDepth)
   }
+
+  await decorateTree(rootComment, coveredComments, discussion, user, pgdb, t)
 
   return rootComment.comments
 }

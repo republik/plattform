@@ -1,7 +1,9 @@
 const Roles = require('../../../../lib/Roles')
 const hottnes = require('../../../../lib/hottnes')
+const setDiscussionPreferences = require('./lib/setDiscussionPreferences')
+const userWaitUntil = require('../../Discussion/userWaitUntil')
 
-module.exports = async (_, args, {pgdb, user, t}) => {
+module.exports = async (_, args, { pgdb, user, t, pubsub }) => {
   Roles.ensureUserHasRole(user, 'member')
 
   const userId = user.id
@@ -23,23 +25,11 @@ module.exports = async (_, args, {pgdb, user, t}) => {
 
     // ensure user is within minInterval
     if (discussion.minInterval) {
-      const now = new Date().getTime()
-      const lastCommentByUser = await transaction.public.comments.findFirst({
-        userId,
-        discussionId,
-        published: true
-      }, {
-        orderBy: ['createdAt desc']
-      })
-      if (lastCommentByUser && lastCommentByUser.createdAt.getTime() > now - discussion.minInterval) {
-        const waitForMinutes = (lastCommentByUser.createdAt.getTime() + discussion.minInterval - now) / 1000 / 60
-        let waitFor
-        if (waitForMinutes <= 60) {
-          waitFor = Math.ceil(waitForMinutes) + 'm'
-        } else {
-          waitFor = Math.ceil(waitForMinutes / 60) + 'h'
-        }
-        throw new Error(t('api/comment/tooEarly', { waitFor }))
+      const waitUntil = await userWaitUntil(discussion, null, { pgdb, user })
+      if (waitUntil) {
+        throw new Error(t('api/comment/tooEarly', {
+          waitFor: `${(waitUntil.getTime() - new Date().getTime()) / 1000}s`
+        }))
       }
     }
 
@@ -49,51 +39,13 @@ module.exports = async (_, args, {pgdb, user, t}) => {
     }
 
     if (discussionPreferences) {
-      const {
-        anonymity,
-        credential: credentialDescription
-      } = discussionPreferences
-
-      if (anonymity && discussion.anonymity === 'FORBIDDEN') {
-        throw new Error(t('api/discussion/anonymity/forbidden'))
-      } else if (anonymity === false && discussion.anonymity === 'ENFORCED') {
-        throw new Error(t('api/discussion/anonymity/enforced'))
-      }
-
-      let credentialId
-      if (credentialDescription) {
-        const existingCredential = await transaction.public.credentials.findOne({
-          userId,
-          description: credentialDescription
-        })
-        if (existingCredential) {
-          credentialId = existingCredential.id
-        } else {
-          const newCredential = await transaction.public.credentials.insertAndGet({
-            userId,
-            description: credentialDescription
-          })
-          credentialId = newCredential.id
-        }
-      }
-
-      const findQuery = {
+      await setDiscussionPreferences({
+        discussionPreferences,
         userId,
-        discussionId
-      }
-      const updateQuery = {
-        anonymous: anonymity,
-        credentialId
-      }
-      const options = {
-        skipUndefined: true
-      }
-      const dpExists = await transaction.public.discussionPreferences.findFirst(findQuery)
-      if (dpExists) {
-        await transaction.public.discussionPreferences.updateOne(findQuery, updateQuery, options)
-      } else {
-        await transaction.public.discussionPreferences.insert(updateQuery, options)
-      }
+        discussion,
+        transaction,
+        t
+      })
     }
 
     const comment = await transaction.public.comments.insertAndGet({
@@ -107,6 +59,8 @@ module.exports = async (_, args, {pgdb, user, t}) => {
     })
 
     await transaction.transactionCommit()
+
+    await pubsub.publish('comments', { comments: comment })
 
     return comment
   } catch (e) {

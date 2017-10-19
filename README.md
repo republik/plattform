@@ -9,12 +9,16 @@ This is the grassroots repo for the new republik backend. It serves as battlegro
 ## Usage
 
 ### Quick start
-You need to have node (8.3.0+) installed and postgres running somewhere.
+You need to have node (8.3.0+) installed, postgres and redis running somewhere.
 
 Boostrap your .env file.
 ```
 PORT=3020
 PUBLIC_URL=http://localhost:3020
+
+# websocket URL and path
+PUBLIC_WS_URL_BASE=ws://localhost:3020
+PUBLIC_WS_URL_PATH=/graphql
 
 SESSION_SECRET=replaceMe
 
@@ -27,6 +31,9 @@ SEND_MAILS=true  # or false if you don't have mandrill at hand
 MANDRILL_API_KEY=replaceMe
 DEFAULT_MAIL_FROM_NAME='discussion'
 DEFAULT_MAIL_FROM_ADDRESS='discussion@project-r.construction'
+
+# leave blank for default: 127.0.0.1:6379
+REDIS_URL=
 ```
 
 Install dependencies.
