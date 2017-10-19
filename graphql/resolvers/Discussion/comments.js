@@ -133,7 +133,9 @@ const decorateTree = async (comment, coveredComments, discussion, user, pgdb, t)
     discussionId: discussion.id
   })
   const credentialIds = discussionPreferences.map(dp => dp.credentialId)
-  const credentials = await pgdb.public.credentials.find({ id: credentialIds })
+  const credentials = credentialIds.length
+    ? await pgdb.public.credentials.find({ id: credentialIds })
+    : []
 
   const _decorateTree = (comment) => {
     const { comments } = comment
