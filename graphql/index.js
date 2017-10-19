@@ -1,6 +1,6 @@
 const bodyParser = require('body-parser')
 const {graphqlExpress, graphiqlExpress} = require('graphql-server-express')
-const { makeExecutableSchema, addMockFunctionsToSchema } = require('graphql-tools')
+const { makeExecutableSchema } = require('graphql-tools')
 const { execute, subscribe } = require('graphql')
 const cookie = require('cookie')
 const cookieParser = require('cookie-parser')
@@ -12,11 +12,6 @@ const Resolvers = require('./resolvers/index')
 const executableSchema = makeExecutableSchema({
   typeDefs: Schema,
   resolvers: Resolvers
-})
-
-addMockFunctionsToSchema({
-  schema: executableSchema,
-  preserveResolvers: true
 })
 
 const {
@@ -36,7 +31,7 @@ module.exports = (server, pgdb, httpServer) => {
         pgdb,
         user: req.user,
         req,
-        t,
+        t
       }
     }
   })
