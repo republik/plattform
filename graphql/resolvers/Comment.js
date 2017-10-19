@@ -86,7 +86,7 @@ module.exports = {
         credential
       }
       : {
-        name: commenter.name(),
+        name: commenter.name,
         profilePicture: null, // TODO
         credential
       }
