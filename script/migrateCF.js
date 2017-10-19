@@ -76,6 +76,26 @@ Promise.resolve().then(async () => {
       "updatedAt"
     FROM cf.comments;
   `)
+
+  await pgdb.query(`
+    UPDATE
+      users
+    SET
+      roles = COALESCE(roles, '[]'::jsonb)::jsonb || :role::jsonb
+    WHERE
+      (roles IS NULL OR NOT roles @> :role) AND
+      id IN (
+        SELECT
+          u.id
+        FROM
+          users u
+        JOIN
+          memberships m
+          ON m."userId" = u.id
+      )
+  `, {
+    role: JSON.stringify(['member'])
+  })
 })
 .then(() => {
   process.exit(0)
