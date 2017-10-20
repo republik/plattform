@@ -177,6 +177,9 @@ const meassureDepth = (fields, depth = 0) => {
   if (fields.nodes && fields.nodes.comments) {
     return meassureDepth(fields.nodes.comments, depth + 1)
   } else {
+    if (fields.nodes) {
+      return depth + 1
+    }
     return depth
   }
 }
