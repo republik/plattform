@@ -30,6 +30,7 @@ Promise.resolve().then(async () => {
   if (username) {
     await exec(`dropdb republik`)
       .then(r => console.log(r.stdout, r.stderr))
+      .catch(e => {})
     await exec(`createdb republik`)
       .then(r => console.log(r.stdout, r.stderr))
 
