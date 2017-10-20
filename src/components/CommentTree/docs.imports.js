@@ -19,12 +19,23 @@ export const t = (k, o) => {
   }
 }
 
+const lookupComment = commentId => commentId
+  .split('.')
+  .reduce((o, k) => o[`comment${k}`] || o.replies.comments[+k - 1], allComments)
+
 export const Node = props => (
   <SomeNode
     Node={Node}
     t={t}
+    displayAuthor={{
+      profilePicture: '/static/profilePicture1.png',
+      name: 'Paul Ullrich',
+      credential: {
+        description: 'Bundesrat',
+        verified: false
+      }
+    }}
+    comment={lookupComment(props.commentId)}
     {...props}
   />
 )
-
-export const comments = {...allComments}

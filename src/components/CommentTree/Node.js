@@ -142,10 +142,10 @@ class Node extends PureComponent {
 
               return [
                 <div key='otherChildren' {...styles.childrenContainer}>
-                  {otherChildren.map((c, i) => <Node key={i} top comment={c} />)}
+                  {otherChildren.map((c, i) => <Node key={i} top commentId={c.id} />)}
                   {tail}
                 </div>,
-                <Node key='firstChild' comment={firstChild} />
+                <Node key='firstChild' commentId={firstChild.id} />
               ]
             }
           })()}
