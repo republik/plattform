@@ -72,7 +72,18 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
 
 ### `<CommentActions />`
 
-```react|noSource
+```react|noSource,span-3
+<CommentActions
+  t={() => 'Antworten'}
+
+  score={8}
+
+  onAnswer={() => {}}
+  onUpvote={undefined}
+  onDownvote={() => {}}
+/>
+```
+```react|noSource,span-3
 <CommentActions
   t={() => 'Antworten'}
 

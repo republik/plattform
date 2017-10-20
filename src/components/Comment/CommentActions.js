@@ -1,6 +1,7 @@
 import React from 'react'
 import {css} from 'glamor'
 import {MdShare, MdKeyboardArrowDown, MdKeyboardArrowUp, MdMoreHoriz} from 'react-icons/lib/md'
+import colors from '../../theme/colors'
 import {Label} from '../Typography'
 
 const config = {
@@ -49,6 +50,11 @@ const styles = {
     margin: '0 4px',
     '& svg': {
       margin: '0 auto'
+    },
+
+    '&[disabled]': {
+      cursor: 'inherit',
+      color: colors.disabled
     }
   })
 }
@@ -88,7 +94,7 @@ export const CommentActions = ({t, score, onAnswer, onUpvote, onDownvote}) => (
 // The outer dimensions of the action button element is always the same:
 // square and as tall as the 'CommentAction' component.
 const ActionButton = ({iconSize, onClick, children}) => (
-  <button {...styles.actionButton} style={{fontSize: `${iconSize}px`}} onClick={onClick} >
+  <button {...styles.actionButton} style={{fontSize: `${iconSize}px`}} disabled={!onClick} onClick={onClick}>
     {children}
   </button>
 )

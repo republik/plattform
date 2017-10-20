@@ -17,8 +17,11 @@ type NodeProps = {
   // The comment to display, including replies if there are any.
   comment: Comment
 
-  upvoteComment(): void
-  downvoteComment(): void
+  // If the voting callbacks are not provided, then the respective
+  // buttons are greyed out.
+  upvoteComment: undefined | () => void
+  downvoteComment: undefined | () => void
+
   submitComment(content: string): void
 }
 
