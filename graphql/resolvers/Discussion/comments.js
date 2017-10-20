@@ -94,7 +94,7 @@ const filterTree = (comment, ids, cursorEnv) => {
       nodes,
       pageInfo: {
         ...comments.pageInfo,
-        hasNextPage: !!endCursor || comments.totalCount > 0,
+        hasNextPage: !!endCursor,
         endCursor
       }
     }
@@ -106,7 +106,7 @@ const filterTree = (comment, ids, cursorEnv) => {
 
 const cutTreeX = (comment, maxDepth, depth = -1) => {
   const { comments } = comment
-  if (depth === maxDepth) {
+  if (depth >= maxDepth - 1) {
     comment.comments = {
       ...comments,
       nodes: [],
