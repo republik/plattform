@@ -68,12 +68,12 @@ export const CommentActions = ({t, score, onAnswer, onUpvote, onDownvote}) => (
     </button>
 
     <div {...styles.actions}>
-      <ActionButton iconSize={18}>
+      {false && <ActionButton iconSize={18}>
         <MdShare />
-      </ActionButton>
-      <ActionButton iconSize={18}>
+      </ActionButton>}
+      {false && <ActionButton iconSize={18}>
         <MdMoreHoriz />
-      </ActionButton>
+      </ActionButton>}
       <div {...styles.votes}>
         <ActionButton iconSize={config.height} onClick={onUpvote}>
           <MdKeyboardArrowUp />
