@@ -9,7 +9,7 @@ const styles = {
     alignItems: 'center',
     background: colors.whiteSmoke,
     padding: '12px',
-    height: '40px',
+    height: '64px',
     cursor: 'pointer'
   }),
   profilePicture: css({

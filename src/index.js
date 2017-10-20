@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import {Catalog} from 'catalog'
 import {simulations, css} from 'glamor'
 import theme from './catalogTheme'
+import './global.css'
 import './catalogTheme.css'
 import {fontStyles} from './components/Typography'
 
