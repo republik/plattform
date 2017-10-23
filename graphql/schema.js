@@ -32,6 +32,13 @@ type RootMutations {
     isPrivate: Boolean
   ): User!
 
+  submitTestimonial(
+    role: String,
+    quote: String!,
+    image: String
+  ): Testimonial!
+  unpublishTestimonial: Boolean
+
   createDiscussion(
     title: String
     # max length of a comments content
