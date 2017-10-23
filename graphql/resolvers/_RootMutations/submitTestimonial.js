@@ -108,7 +108,6 @@ module.exports = async (_, args, {pgdb, req, t}) => {
         published: true,
         sequenceNumber: testimonial.sequenceNumber || seqNumber
       }, {skipUndefined: true})
-      console.log(testimonial)
     } else {
       testimonial = await pgdb.public.testimonials.insertAndGet({
         id,
