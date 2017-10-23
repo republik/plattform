@@ -50,9 +50,12 @@ class Node extends PureComponent {
     this.openComposer = () => {
       this.setState({showComposer: true})
     }
-
     this.dismissComposer = () => {
       this.setState({showComposer: false})
+    }
+    this.submitComment = (content) => {
+      this.props.submitComment(content)
+      this.dismissComposer()
     }
   }
 
@@ -84,7 +87,7 @@ class Node extends PureComponent {
               t={t}
               displayAuthor={displayAuthor}
               onCancel={this.dismissComposer}
-              submitComment={submitComment}
+              submitComment={this.submitComment}
             />
           }
         </div>
@@ -122,7 +125,7 @@ class Node extends PureComponent {
               t={t}
               displayAuthor={displayAuthor}
               onCancel={this.dismissComposer}
-              submitComment={submitComment}
+              submitComment={this.submitComment}
             />
           }
 
