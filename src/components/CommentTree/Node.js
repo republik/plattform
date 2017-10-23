@@ -53,15 +53,21 @@ class Node extends PureComponent {
     this.dismissComposer = () => {
       this.setState({showComposer: false})
     }
+
+    this.upvoteComment = () => {
+      this.props.upvoteComment(this.props.comment.id)
+    }
+    this.downvoteComment = () => {
+      this.props.downvoteComment(this.props.comment.id)
+    }
     this.submitComment = (content) => {
-      this.props.submitComment(content)
+      this.props.submitComment(this.props.comment.id, content)
       this.dismissComposer()
     }
   }
 
   render () {
     const {Node, t, top, displayAuthor, comment} = this.props
-    const {upvoteComment, downvoteComment, submitComment} = this.props
     const {showComposer} = this.state
     const {score, replies} = comment
 
@@ -78,8 +84,8 @@ class Node extends PureComponent {
             t={t}
             score={score}
             onAnswer={this.openComposer}
-            onUpvote={upvoteComment}
-            onDownvote={downvoteComment}
+            onUpvote={this.upvoteComment}
+            onDownvote={this.downvoteComment}
           />
 
           {showComposer &&
@@ -116,8 +122,8 @@ class Node extends PureComponent {
             t={t}
             score={score}
             onAnswer={this.openComposer}
-            onUpvote={upvoteComment}
-            onDownvote={downvoteComment}
+            onUpvote={this.upvoteComment}
+            onDownvote={this.downvoteComment}
           />
 
           {showComposer &&
