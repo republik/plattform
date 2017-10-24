@@ -97,9 +97,9 @@ export {
 export default {
   plugins: [
     {
-      onKeyDown (event, data, change) {
-        const isBackspace = data.key === 'backspace'
-        if (data.key !== 'enter' && !isBackspace) return
+      onKeyDown (event, change) {
+        const isBackspace = event.key === 'Backspace'
+        if (event.key !== 'Enter' && !isBackspace) return
 
         const { state } = change
         const inList = state.document.getClosest(state.startBlock.key, matchBlock(LIST))

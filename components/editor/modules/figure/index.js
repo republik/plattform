@@ -8,7 +8,7 @@ import addValidation, { findOrCreate } from '../../utils/serializationValidation
 import { gray2x1 } from '../../utils/placeholder'
 import { serializer as paragraphSerializer, PARAGRAPH } from '../paragraph'
 import { Block } from 'slate'
-import { Placeholder } from 'slate-react'
+import Placeholder from '../../Placeholder'
 import { imageResizeUrl } from '../../../Templates/utils'
 
 import MarkdownSerializer from '../../../../lib/serializer'
@@ -74,6 +74,11 @@ const figureCaption = {
       nodes: object.nodes
     }).children
   }),
+  placeholder: ({node}) => {
+    if (node.text.length) return null
+
+    return <Placeholder>Legende</Placeholder>
+  },
   render: (props) => {
     return (
       <figcaption style={{
@@ -85,13 +90,6 @@ const figureCaption = {
         margin: 0,
         position: 'relative'
       }}>
-        <Placeholder
-          state={props.state}
-          node={props.node}
-          firstOnly={false}
-        >
-          Legende
-        </Placeholder>
         {props.children}
       </figcaption>
     )
@@ -243,9 +241,9 @@ export {
 export default {
   plugins: [
     {
-      onKeyDown (event, data, change) {
-        const isBackspace = data.key === 'backspace'
-        if (data.key !== 'enter' && !isBackspace) return
+      onKeyDown (event, change) {
+        const isBackspace = event.key === 'Backspace'
+        if (event.key !== 'Enter' && !isBackspace) return
 
         const { state } = change
         const inFigure = state.document.getClosest(

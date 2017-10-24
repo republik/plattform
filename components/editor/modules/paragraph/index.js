@@ -25,7 +25,7 @@ const inlineSerializer = new MarkdownSerializer({
     matchMdast: (node) => node.type === 'break',
     fromMdast: (node, index, parent, visitChildren) => ({
       kind: 'text',
-      ranges: [{text: '\n'}]
+      leaves: [{text: '\n'}]
     })
   })
 })
@@ -59,9 +59,9 @@ export {
 export default {
   plugins: [
     {
-      onKeyDown (e, data, change) {
+      onKeyDown (e, change) {
         const { state } = change
-        if (data.key !== 'enter') return
+        if (e.key !== 'Enter') return
         if (e.shiftKey === false) return
 
         const { startBlock } = state
