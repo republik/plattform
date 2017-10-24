@@ -1,4 +1,4 @@
-// TODO: This is a plan copy from crowdfunding, we still need to review
+// TODO: This is a plain copy from crowdfunding, we still need to review
 // the schema for improvements.
 
 module.exports = async (_, args, {pgdb}) => {
