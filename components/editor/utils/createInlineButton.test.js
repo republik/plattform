@@ -13,7 +13,7 @@ const rawDoc = {
       nodes: [
         {
           kind: 'text',
-          ranges: [
+          leaves: [
             {
               text: 'Hello MarkButton!'
             }
@@ -27,7 +27,7 @@ const rawDoc = {
       nodes: [
         {
           kind: 'text',
-          ranges: [
+          leaves: [
             {
               text: 'We are blocks at your service.'
             }
@@ -41,7 +41,7 @@ const rawDoc = {
       nodes: [
         {
           kind: 'text',
-          ranges: [
+          leaves: [
             {
               text: 'Tamper with us'
             }

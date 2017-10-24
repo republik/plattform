@@ -97,7 +97,7 @@ export {
 export default {
   plugins: [
     {
-      onKeyDown (event, data, change) {
+      onKeyDown (event, change) {
         const isBackspace = event.key === 'Backspace'
         if (event.key !== 'Enter' && !isBackspace) return
 
