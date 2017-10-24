@@ -34,6 +34,22 @@ DEFAULT_MAIL_FROM_ADDRESS='discussion@project-r.construction'
 
 # leave blank for default: 127.0.0.1:6379
 REDIS_URL=
+
+# credentials to upload assets to the exoscale object store
+EXO_KEY=
+EXO_SECRET=
+S3BUCKET=republik-staging
+# where will the assets be available publicly
+ASSETS_BASE_URL=https://assets.staging.republik.ch
+
+# keyCDN access to clear cache on file uploads
+# must correspond with the object store config
+KEYCDN_API_KEY=
+KEYCDN_ZONE_ID=
+KEYCDN_ZONE_URL=
+
+# phantomjscloud.com to render social media share images
+PHANTOMJSCLOUD_API_KEY=
 ```
 
 Install dependencies.
