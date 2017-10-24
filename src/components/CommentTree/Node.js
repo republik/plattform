@@ -1,5 +1,6 @@
 import React, {PureComponent} from 'react'
 import {css} from 'glamor'
+import PropTypes from 'prop-types'
 
 import {Comment, CommentActions} from '../Comment'
 import CommentComposer from '../CommentComposer/CommentComposer'
@@ -190,6 +191,17 @@ class Node extends PureComponent {
       )
     }
   }
+}
+
+Node.propTypes = {
+  t: PropTypes.func.isRequired,
+  displayAuthor: PropTypes.object.isRequired,
+  comment: PropTypes.object.isRequired,
+  timeago: PropTypes.func.isRequired,
+  upvoteComment: PropTypes.func.isRequired,
+  downvoteComment: PropTypes.func.isRequired,
+  submitComment: PropTypes.func.isRequired,
+  fetchMore: PropTypes.func.isRequired,
 }
 
 export default Node

@@ -34,5 +34,9 @@ export const Node = ({comment}) => (
     }}
     comment={comment}
     timeago={() => '2h'}
+    upvoteComment={() => {}}
+    downvoteComment={() => {}}
+    submitComment={() => {}}
+    fetchMore={() => {}}
   />
 )
