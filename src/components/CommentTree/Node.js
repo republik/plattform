@@ -75,7 +75,7 @@ class Node extends PureComponent {
   }
 
   render () {
-    const {t, top, displayAuthor, comment} = this.props
+    const {t, top, displayAuthor, comment, timeago} = this.props
     const {showComposer} = this.state
 
     const {score, comments, userVote} = comment
@@ -88,7 +88,7 @@ class Node extends PureComponent {
       return (
         <div {...styles.root}>
           <Comment
-            timeago='2h'
+            timeago={timeago(comment.createdAt)}
             {...comment}
           />
 
@@ -130,7 +130,7 @@ class Node extends PureComponent {
       return (
         <div {...styles.root} {...(top ? styles.rootBorder : {})}>
           <Comment
-            timeago='2h'
+            timeago={timeago(comment.createdAt)}
             {...comment}
           />
 

@@ -33,5 +33,6 @@ export const Node = ({comment}) => (
       }
     }}
     comment={comment}
+    timeago={() => '2h'}
   />
 )

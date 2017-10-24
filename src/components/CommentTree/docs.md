@@ -12,6 +12,7 @@ type NodeProps = {
   // The comment to display, including replies if there are any.
   comment: Comment
 
+  timeago(dt: DateTime): string
   upvoteComment(id: string): void
   downvoteComment(id: string): void
   submitComment(id: string, content: string): void
@@ -19,7 +20,7 @@ type NodeProps = {
 }
 
 type Comment = {
-  timeago: string
+  createdAt: DateTime
   displayAuthor: DisplayUser
   content: string
   score: number
