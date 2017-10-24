@@ -111,85 +111,85 @@ class Node extends PureComponent {
           }
         </div>
       )
-    } else {
-      const {totalCount, pageInfo, nodes} = comments
-
-      const tail = (() => {
-        if (pageInfo && pageInfo.hasNextPage) {
-          return (
-            <LoadMore
-              t={t}
-              count={totalCount - (nodes ? nodes.length : 0)}
-              onClick={this.fetchMore}
-            />
-          )
-        } else {
-          return null
-        }
-      })()
-
-      return (
-        <div {...styles.root} {...(top ? styles.rootBorder : {})}>
-          <Comment
-            timeago={timeago(comment.createdAt)}
-            {...comment}
-          />
-
-          <CommentActions
-            t={t}
-            score={score}
-            onAnswer={this.openComposer}
-            onUpvote={onUpvote}
-            onDownvote={onDownvote}
-          />
-
-          {showComposer &&
-            <Composer
-              t={t}
-              displayAuthor={displayAuthor}
-              onCancel={this.dismissComposer}
-              submitComment={this.submitComment}
-            />
-          }
-
-          {(() => {
-            if (nodes.length === 0) {
-              if (tail) {
-                return (
-                  <div {...styles.childrenContainer}>
-                    {tail}
-                  </div>
-                )
-              } else {
-                return null
-              }
-            } else {
-              const [firstChild, ...otherChildren] = nodes
-
-              return [
-                <div key='otherChildren' {...styles.childrenContainer}>
-                  {otherChildren.map((c, i) => (
-                    <Node
-                      {...this.props}
-                      key={i}
-                      top={true}
-                      comment={c}
-                    />
-                  ))}
-                  {tail}
-                </div>,
-                <Node
-                  {...this.props}
-                  top={false}
-                  key='firstChild'
-                  comment={firstChild}
-                />
-              ]
-            }
-          })()}
-        </div>
-      )
     }
+
+    const {totalCount, pageInfo, nodes} = comments
+
+    const tail = (() => {
+      if (pageInfo && pageInfo.hasNextPage) {
+        return (
+          <LoadMore
+            t={t}
+            count={totalCount - (nodes ? nodes.length : 0)}
+            onClick={this.fetchMore}
+          />
+        )
+      } else {
+        return null
+      }
+    })()
+
+    return (
+      <div {...styles.root} {...(top ? styles.rootBorder : {})}>
+        <Comment
+          timeago={timeago(comment.createdAt)}
+          {...comment}
+        />
+
+        <CommentActions
+          t={t}
+          score={score}
+          onAnswer={this.openComposer}
+          onUpvote={onUpvote}
+          onDownvote={onDownvote}
+        />
+
+        {showComposer &&
+          <Composer
+            t={t}
+            displayAuthor={displayAuthor}
+            onCancel={this.dismissComposer}
+            submitComment={this.submitComment}
+          />
+        }
+
+        {(() => {
+          if (nodes.length === 0) {
+            if (tail) {
+              return (
+                <div {...styles.childrenContainer}>
+                  {tail}
+                </div>
+              )
+            } else {
+              return null
+            }
+          } else {
+            const [firstChild, ...otherChildren] = nodes
+
+            return [
+              <div key='otherChildren' {...styles.childrenContainer}>
+                {otherChildren.map((c, i) => (
+                  <Node
+                    {...this.props}
+                    key={i}
+                    top={true}
+                    comment={c}
+                  />
+                ))}
+                {tail}
+              </div>,
+              <Node
+                {...this.props}
+                top={false}
+                key='firstChild'
+                comment={firstChild}
+              />
+            ]
+          }
+        })()}
+      </div>
+    )
   }
 }
 
