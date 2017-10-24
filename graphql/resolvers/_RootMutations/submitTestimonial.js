@@ -1,10 +1,13 @@
+// SM image and sendMail are copied over from crowdfunding,
+// but currently disabled.
+
 const uuid = require('uuid/v4')
 const ensureSignedIn = require('../../../lib/ensureSignedIn')
 const keyCDN = require('../../../lib/keyCDN')
 const convertImage = require('../../../lib/convertImage')
 const uploadExoscale = require('../../../lib/uploadExoscale')
-const renderUrl = require('../../../lib/renderUrl')
-const sendMailTemplate = require('../../../lib/sendMailTemplate')
+// const renderUrl = require('../../../lib/renderUrl')
+// const sendMailTemplate = require('../../../lib/sendMailTemplate')
 
 const FOLDER = 'testimonials'
 const {IMAGE_SIZE_SMALL, IMAGE_SIZE_SHARE} = convertImage
@@ -22,7 +25,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
   }
 
   const { role, quote, image } = args
-  const { ASSETS_BASE_URL, FRONTEND_BASE_URL, S3BUCKET } = process.env
+  const { ASSETS_BASE_URL, S3BUCKET } = process.env
 
   // check max lengths
   if (quote.trim().length > MAX_QUOTE_LENGTH) {
@@ -32,11 +35,11 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     throw new Error(t('testimonial/role/tooLong'))
   }
 
-  let sendConfirmEmail = false
+  // let sendConfirmEmail = false
   let testimonial
 
   testimonial = await pgdb.public.testimonials.findOne({userId: req.user.id})
-  if (!testimonial || !testimonial.published) { sendConfirmEmail = true }
+  // if (!testimonial || !testimonial.published) { sendConfirmEmail = true }
 
   if (!testimonial && !image) {
     console.error('a new testimonials requires an image', args)
@@ -122,7 +125,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
   }
 
   // generate sm picture (PNG!)
-  try {
+  /* try {
     const smImagePath = `/${FOLDER}/sm/${testimonial.id}_sm.png`
     await renderUrl(`${FRONTEND_BASE_URL}/community?share=${testimonial.id}`, 1200, 628)
       .then(async (data) => {
@@ -140,9 +143,9 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       })
   } catch (e) {
     console.error('sm image render failed', args, e)
-  }
+  } */
 
-  if (sendConfirmEmail) {
+  /* if (sendConfirmEmail) {
     await sendMailTemplate({
       to: req.user.email,
       fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
@@ -154,7 +157,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
         }
       ]
     })
-  }
+  } */
 
   // augement with name
   testimonial.name = `${req.user.firstName} ${req.user.lastName}`

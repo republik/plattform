@@ -81,6 +81,7 @@ type Credential {
 }
 
 type PublicUser {
+  # TODO: Review existing user objects.
   id: ID!
   name: String!
   email: String
@@ -135,6 +136,8 @@ enum Badge {
 }
 
 type Testimonial {
+  # This is a plain copy of the crowdfunding testimonial schema.
+  # TODO: Review for improvements, e.g. merging with profilePicture.
   id: ID!
   name: String!
   role: String
