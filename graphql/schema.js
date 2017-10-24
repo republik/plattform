@@ -14,6 +14,14 @@ type RootQuerys {
   publicUser(id: ID!): PublicUser
   discussions: [Discussion!]!
   discussion(id: ID!): Discussion
+  testimonials(
+    offset: Int,
+    limit: Int,
+    seed: Float,
+    search: String,
+    firstId: ID,
+    videosOnly: Boolean
+  ): [Testimonial!]!
 }
 
 type RootMutations {
