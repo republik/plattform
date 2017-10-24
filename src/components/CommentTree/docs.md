@@ -1,10 +1,10 @@
-### `<LoadMore />`
+### `<CommentTreeLoadMore />`
 
 ```react|noSource
 <LoadMore t={t} count={128} onClick={() => {}} />
 ```
 
-### `<Node />`
+### `<CommentTreeNode />`
 
 #### Example 1
 

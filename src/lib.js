@@ -18,6 +18,7 @@ export {default as Loader} from './components/Loader'
 export {Spinner, InlineSpinner} from './components/Spinner'
 export * from './components/Comment'
 export * from './components/CommentComposer'
+export * from './components/CommentTree'
 
 export {Container, NarrowContainer} from './components/Grid'
 export {
