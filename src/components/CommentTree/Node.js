@@ -64,14 +64,26 @@ class Node extends PureComponent {
       this.props.submitComment(this.props.comment.id, content)
       this.dismissComposer()
     }
+    this.fetchMore = () => {
+      const {comment: {id, comments}, fetchMore} = this.props
+      if (comments && comments.pageInfo) {
+        fetchMore(id, comments.pageInfo.endCursor)
+      } else {
+        fetchMore(id, undefined)
+      }
+    }
   }
 
   render () {
-    const {Node, t, top, displayAuthor, comment} = this.props
+    const {t, top, displayAuthor, comment} = this.props
     const {showComposer} = this.state
-    const {score, replies} = comment
 
-    if (replies === undefined) {
+    const {score, comments, userVote} = comment
+
+    const onUpvote = userVote === 'UP' ? undefined : this.upvoteComment
+    const onDownvote = userVote === 'DOWN' ? undefined : this.downvoteComment
+
+    if (comments === undefined) {
       // This comment doesn't have any replies.
       return (
         <div {...styles.root}>
@@ -84,8 +96,8 @@ class Node extends PureComponent {
             t={t}
             score={score}
             onAnswer={this.openComposer}
-            onUpvote={this.upvoteComment}
-            onDownvote={this.downvoteComment}
+            onUpvote={onUpvote}
+            onDownvote={onDownvote}
           />
 
           {showComposer &&
@@ -99,12 +111,16 @@ class Node extends PureComponent {
         </div>
       )
     } else {
-      const {comments, more} = replies
+      const {totalCount, pageInfo, nodes} = comments
 
       const tail = (() => {
-        if (more) {
+        if (pageInfo && pageInfo.hasNextPage) {
           return (
-            <LoadMore t={t} count={more.count} onClick={more.load} />
+            <LoadMore
+              t={t}
+              count={totalCount - (nodes ? nodes.length : 0)}
+              onClick={this.fetchMore}
+            />
           )
         } else {
           return null
@@ -122,8 +138,8 @@ class Node extends PureComponent {
             t={t}
             score={score}
             onAnswer={this.openComposer}
-            onUpvote={this.upvoteComment}
-            onDownvote={this.downvoteComment}
+            onUpvote={onUpvote}
+            onDownvote={onDownvote}
           />
 
           {showComposer &&
@@ -136,7 +152,7 @@ class Node extends PureComponent {
           }
 
           {(() => {
-            if (comments.length === 0) {
+            if (nodes.length === 0) {
               if (tail) {
                 return (
                   <div {...styles.childrenContainer}>
@@ -147,14 +163,26 @@ class Node extends PureComponent {
                 return null
               }
             } else {
-              const [firstChild, ...otherChildren] = comments
+              const [firstChild, ...otherChildren] = nodes
 
               return [
                 <div key='otherChildren' {...styles.childrenContainer}>
-                  {otherChildren.map((c, i) => <Node key={i} top commentId={c.id} />)}
+                  {otherChildren.map((c, i) => (
+                    <Node
+                      {...this.props}
+                      key={i}
+                      top={true}
+                      comment={c}
+                    />
+                  ))}
                   {tail}
                 </div>,
-                <Node key='firstChild' commentId={firstChild.id} />
+                <Node
+                  {...this.props}
+                  top={false}
+                  key='firstChild'
+                  comment={firstChild}
+                />
               ]
             }
           })()}

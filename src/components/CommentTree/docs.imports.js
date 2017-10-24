@@ -3,6 +3,7 @@ import SomeNode from './Node'
 import * as allComments from './comments'
 
 export {default as LoadMore} from './LoadMore'
+export const comments = {...allComments}
 
 export const t = (k, o) => {
   switch (k) {
@@ -19,13 +20,9 @@ export const t = (k, o) => {
   }
 }
 
-const lookupComment = commentId => commentId
-  .split('.')
-  .reduce((o, k) => o[`comment${k}`] || o.replies.comments[+k - 1], allComments)
-
-export const Node = props => (
+export const Node = ({comment}) => (
   <SomeNode
-    Node={Node}
+    top
     t={t}
     displayAuthor={{
       profilePicture: '/static/profilePicture1.png',
@@ -35,7 +32,6 @@ export const Node = props => (
         verified: false
       }
     }}
-    comment={lookupComment(props.commentId)}
-    {...props}
+    comment={comment}
   />
 )

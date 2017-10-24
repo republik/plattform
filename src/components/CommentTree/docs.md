@@ -2,11 +2,6 @@ These are the relevant types which are used by the `<Node />` component:
 
 ```code|lang-js
 type NodeProps = {
-  // Component which renders a reply. This is needed so that
-  // user of this component can connect each reply with graphql
-  // or other react contexts to provide the required props.
-  Node: React.Component
-
   // The translation function.
   t(…): string
 
@@ -17,12 +12,10 @@ type NodeProps = {
   // The comment to display, including replies if there are any.
   comment: Comment
 
-  // If the voting callbacks are not provided, then the respective
-  // buttons are greyed out.
-  upvoteComment: undefined | () => void
-  downvoteComment: undefined | () => void
-
-  submitComment(content: string): void
+  upvoteComment(id: string): void
+  downvoteComment(id: string): void
+  submitComment(id: string, content: string): void
+  fetchMore(parentId: string, endCursor: string): void
 }
 
 type Comment = {
@@ -30,17 +23,17 @@ type Comment = {
   displayAuthor: DisplayUser
   content: string
   score: number
-  replies: undefined | Replies
+  userVote: undefined | 'UP' | 'DOWN'
+  comments: undefined | CommentConnection
 }
 
-type Replies = {
-  // The replies are passed as IDs. Its job of the child Node
-  // component to fetch the full data.
-  comments: {id: ID}[]
-
-  // If there are more replies, this sais how many more, and the
-  // `load` function can be invoked to fetch them.
-  more: undefined | {count: number, load(): void}
+type CommentConnection = {
+  totalCount: number
+  pageInfo: {
+    hasNextPage: boolean
+    endCursor: undefined | string
+  }
+  nodes: Comment[]
 }
 ```
 
@@ -55,53 +48,53 @@ type Replies = {
 #### Example 1
 
 ```react|noSource
-<Node top commentId='1' />
+<Node comment={comments.comment1} />
 ```
 
 #### Example 2
 
 ```react|noSource
-<Node top commentId='2' />
+<Node comment={comments.comment2} />
 ```
 
 #### Example 3
 
 ```react|noSource
-<Node top commentId='3'  />
+<Node comment={comments.comment3}  />
 ```
 
 #### Example 4
 
 ```react|noSource
-<Node top commentId='4'  />
+<Node comment={comments.comment4}  />
 ```
 
 #### Example 5
 
 ```react|noSource
-<Node top commentId='5'  />
+<Node comment={comments.comment5}  />
 ```
 
 #### Example 6
 
 ```react|noSource
-<Node top commentId='6' />
+<Node comment={comments.comment6} />
 ```
 
 #### Example 7
 
 ```react|noSource
-<Node top commentId='7' />
+<Node comment={comments.comment7} />
 ```
 
 #### Example 8
 
 ```react|noSource
-<Node top commentId='8' />
+<Node comment={comments.comment8} />
 ```
 
 #### Example 9
 
 ```react|noSource
-<Node top commentId='9' />
+<Node comment={comments.comment9} />
 ```

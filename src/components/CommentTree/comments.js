@@ -1,6 +1,6 @@
 const profilePicture = '/static/profilePicture1.png'
 
-export const mkComment = (n, children, more) => ({
+export const mkComment = (n, children) => ({
   id: n,
   displayAuthor: {
     profilePicture,
@@ -8,16 +8,17 @@ export const mkComment = (n, children, more) => ({
     credential: {description: 'Bundesrat', verified: true}
   },
   score: 8,
+  userVote: 'DOWN',
   content: 'Ihr könnt ruhig über den Film Shades of Grey herziehen. Aber Mr. Grey ist verdammt heiss.',
-  replies: children.length === 0 && more === undefined
+  comments: children.length === 0
     ? undefined
-    : {comments: children, more}
+    : {totalCount: children.length, nodes: children}
 })
 
 export const comment1 = mkComment('1', [])
 
 export const comment2 = mkComment('2', [
-  mkComment('2.1', [], {count: 1, load() {}})
+  mkComment('2.1', [])
 ])
 
 export const comment3 = mkComment('3', [
