@@ -86,6 +86,17 @@ ReactDOM.render(
             src: require('./components/Spinner/docs.md')
           },
           {
+            path: '/components/loader',
+            title: 'Loader',
+            imports: {
+              ...require('./components/Typography'),
+              Loader: require('./components/Loader'),
+              Spinner: require('./components/Spinner'),
+              NarrowContainer: require('./components/Grid').NarrowContainer
+            },
+            src: require('./components/Loader/docs.md')
+          },
+          {
             path: '/components/button',
             title: 'Button',
             imports: {
