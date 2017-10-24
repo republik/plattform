@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
-import { Placeholder } from 'slate-react'
 import MarkdownSerializer from '../../../../lib/serializer'
+import Placeholder from '../../Placeholder'
 
 import { matchBlock } from '../../utils'
 import {
@@ -47,14 +47,13 @@ export const title = {
     depth: 1,
     children: visitChildren(object)
   }),
+  placeholder: ({node}) => {
+    if (node.text.length) return null
+
+    return <Placeholder>Titel</Placeholder>
+  },
   render: ({ children, ...props }) =>
     <h1 {...css(styles.base)} {...css(styles.h1)}>
-      <Placeholder
-        state={props.state}
-        node={props.node}
-        firstOnly={false}>
-        Titel
-      </Placeholder>
       { children }
     </h1>
 }

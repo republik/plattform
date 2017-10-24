@@ -1,9 +1,9 @@
 import React from 'react'
 import { css } from 'glamor'
-import { Placeholder } from 'slate-react'
+import Placeholder from '../../Placeholder'
 import { matchBlock } from '../../utils'
 import { LEAD } from './constants'
-// import { mq } from '../../styles'
+
 import MarkdownSerializer from '../../../../lib/serializer'
 import {serializer as paragraphSerializer, PARAGRAPH} from '../paragraph'
 
@@ -35,15 +35,13 @@ const lead = {
       })
     ]
   }),
+  placeholder: ({node}) => {
+    if (node.text.length) return null
+
+    return <Placeholder>Lead</Placeholder>
+  },
   render: ({ children, ...props }) =>
     <p {...css(styles.lead)}>
-      <Placeholder
-        state={props.state}
-        node={props.node}
-        firstOnly={false}
-      >
-        Lead
-      </Placeholder>
       {children}
     </p>
 }
