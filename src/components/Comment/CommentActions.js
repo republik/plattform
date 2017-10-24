@@ -1,6 +1,6 @@
 import React from 'react'
 import {css} from 'glamor'
-import {MdShare, MdKeyboardArrowDown, MdKeyboardArrowUp, MdMoreHoriz} from 'react-icons/lib/md'
+import {MdKeyboardArrowDown, MdKeyboardArrowUp} from 'react-icons/lib/md'
 import colors from '../../theme/colors'
 import {Label} from '../Typography'
 
@@ -68,12 +68,6 @@ export const CommentActions = ({t, score, onAnswer, onUpvote, onDownvote}) => (
     </button>
 
     <div {...styles.actions}>
-      {false && <ActionButton iconSize={18}>
-        <MdShare />
-      </ActionButton>}
-      {false && <ActionButton iconSize={18}>
-        <MdMoreHoriz />
-      </ActionButton>}
       <div {...styles.votes}>
         <ActionButton iconSize={config.height} onClick={onUpvote}>
           <MdKeyboardArrowUp />
