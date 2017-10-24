@@ -8,7 +8,7 @@ import CommentComposerHeader from './CommentComposerHeader'
 
 const styles = {
   form: css({
-    background: colors.whiteSmoke,
+    background: colors.secondaryBg,
     borderTop: '1px solid white'
   }),
   textArea: css({
@@ -53,7 +53,7 @@ const styles = {
     cursor: 'pointer',
 
     ...sansSerifRegular16,
-    color: colors.ocker,
+    color: colors.primary,
 
     alignSelf: 'stretch',
     display: 'flex',

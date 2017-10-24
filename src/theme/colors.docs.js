@@ -14,12 +14,10 @@ export default () => (
     <ColorSpecimen span={2} name='secondaryBg' value={colors.secondaryBg} />
     <ColorSpecimen span={1} name='divider' value={colors.divider} />
 
-    <ColorSpecimen span={3} name='text' value={colors.text} />
+    <ColorSpecimen span={4} name='text' value={colors.text} />
     <ColorSpecimen span={2} name='lightText' value={colors.lightText} />
-    <ColorSpecimen span={1} name='whiteSmoke' value={colors.whiteSmoke} />
 
     <ColorSpecimen span={1} name='error' value={colors.error} />
-    <ColorSpecimen span={1} name='ocker' value={colors.ocker} />
-    <ColorSpecimen span={1} name='green' value={colors.green} />
+    <ColorSpecimen span={1} name='online' value={colors.online} />
   </Page>
 )

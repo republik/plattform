@@ -14,7 +14,7 @@ const styles = {
     cursor: 'pointer',
 
     ...sansSerifRegular14,
-    color: colors.ocker
+    color: colors.primary
   })
 }
 

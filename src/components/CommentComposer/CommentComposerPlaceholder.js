@@ -7,7 +7,7 @@ const styles = {
   root: css({
     display: 'flex',
     alignItems: 'center',
-    background: colors.whiteSmoke,
+    background: colors.secondaryBg,
     padding: '12px',
     height: '64px',
     cursor: 'pointer'
