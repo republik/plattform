@@ -4,12 +4,12 @@ export const mkComment = (n, children) => ({
   id: n,
   displayAuthor: {
     profilePicture,
-    name: `${n} – Paul Ullrich`,
-    credential: {description: 'Bundesrat', verified: true}
+    name: `${n} – Christof Moser`,
+    credential: {description: 'Journalist', verified: true}
   },
   score: 8,
   userVote: 'DOWN',
-  content: 'Ihr könnt ruhig über den Film Shades of Grey herziehen. Aber Mr. Grey ist verdammt heiss.',
+  content: 'Journalismus strebt nach Klarheit, er ist der Feind der uralten Angst vor dem Neuen.',
   comments: children.length === 0
     ? undefined
     : {totalCount: children.length, nodes: children}
