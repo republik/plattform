@@ -75,7 +75,7 @@ For example if you load an whole page you could use an min height definition lik
 <Loader loading style={{minHeight: 'calc(100vh - 80px)'}} />
 ```
 
-Once loading has concluded or an error occurs `Loader` does not longer render an intermediate `div` and `style` has no effect.
+Once loading has concluded or an error occurs `Loader` does no longer render an intermediate `div` and `style` has no effect.
 
 ### Error Container
 
