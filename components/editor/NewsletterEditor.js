@@ -76,10 +76,13 @@ const autoMeta = documentNode => {
     return null
   }
 
+  const title = cover.nodes.first()
+  const lead = cover.nodes.get(1)
+
   const newData = data
     .set('auto', true)
-    .set('title', cover.nodes.first().text)
-    .set('description', cover.nodes.get(1).text)
+    .set('title', title ? title.text : '')
+    .set('description', lead ? lead.text : '')
     .set('image', cover.data.get('src'))
 
   return data.equals(newData)

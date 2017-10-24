@@ -165,8 +165,8 @@ class EditorPage extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    const { repo = {} } = this.props.data
-    const { repo: nextRepo = {} } = nextProps.data
+    const { repo = {} } = this.props.data || {}
+    const { repo: nextRepo = {} } = nextProps.data || {}
 
     if (
       repo !== nextRepo ||
