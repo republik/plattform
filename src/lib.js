@@ -5,6 +5,8 @@ export const mediaQueries = allMediaQueries
 
 export {fontFamilies, fontFaces} from './theme/fonts'
 
+export {createFormatter, createPlaceholderFormatter} from './lib/translate'
+
 export {default as Logo} from './components/Logo'
 export {default as BrandMark} from './components/Logo/BrandMark'
 export {default as Button} from './components/Button'

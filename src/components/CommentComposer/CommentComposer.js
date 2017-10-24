@@ -93,7 +93,7 @@ class CommentComposer extends PureComponent {
           <textarea
             {...styles.textArea}
             {...(text === '' ? styles.textAreaEmpty : {})}
-            placeholder={t('components/CommentComposer/CommentComposer/placeholder')}
+            placeholder={t('styleguide/CommentComposer/placeholder')}
             value={text}
             rows='5'
             onChange={this.onChange}
@@ -104,7 +104,7 @@ class CommentComposer extends PureComponent {
               <MdClose />
             </button>
             <button {...styles.commitButton} onClick={this.onSubmit}>
-              {t('components/CommentComposer/CommentComposer/answer')}
+              {t('styleguide/CommentComposer/answer')}
             </button>
           </div>
         </div>

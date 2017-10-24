@@ -57,7 +57,7 @@ export const CommentActions = ({t, score, onAnswer, onUpvote, onDownvote}) => (
   <div {...styles.root}>
     <button {...styles.replyButton} onClick={onAnswer}>
       <Label>
-        {t('components/Comment/CommentActions/answer')}
+        {t('styleguide/CommentActions/answer')}
       </Label>
     </button>
 

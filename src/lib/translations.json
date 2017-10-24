@@ -1,0 +1,18 @@
+{
+  "updated": "2017-10-24T09:19:22.757Z",
+  "title": "live",
+  "data": [
+    {
+      "key": "styleguide/CommentComposer/placeholder",
+      "value": "Einen Kommentar verfassen…"
+    },
+    {
+      "key": "styleguide/CommentComposer/answer",
+      "value": "Antworten"
+    },
+    {
+      "key": "styleguide/CommentActions/answer",
+      "value": "Antworten"
+    }
+  ]
+}
