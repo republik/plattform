@@ -38,7 +38,7 @@ const CommentComposerPlaceholder = ({t, profilePicture, onClick}) => (
       alt=''
     />}
     <div {...styles.meta}>
-      {t('components/CommentComposer/CommentComposerPlaceholder/teaser')}
+      {t('styleguide/CommentComposer/placeholder')}
     </div>
   </div>
 )

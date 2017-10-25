@@ -146,7 +146,7 @@ ReactDOM.render(
           {
             path: '/components/comment-tree',
             title: 'CommentTree',
-            imports: {...require('./components/CommentTree/docs.imports')},
+            imports: {t, ...require('./components/CommentTree/docs.imports')},
             src: require('./components/CommentTree/docs.md')
           },
         ]

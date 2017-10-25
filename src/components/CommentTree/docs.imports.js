@@ -5,32 +5,14 @@ import * as allComments from './comments'
 export {default as LoadMore} from './LoadMore'
 export const comments = {...allComments}
 
-export const t = (k, o) => {
-  switch (k) {
-    case 'components/Comment/CommentActions/answer':
-      return 'Antworten'
-    case 'components/CommentComposer/CommentComposer/placeholder':
-      return 'Einen Kommentar verfassen…'
-    case 'components/CommentComposer/CommentComposer/answer':
-      return 'Antworten'
-    case 'components/CommentTree/LoadMore/label':
-      return `${o.count} weitere Kommentare`
-    default:
-      return ''
-  }
-}
-
-export const Node = ({comment}) => (
+export const Node = ({t, comment}) => (
   <SomeNode
     top
     t={t}
     displayAuthor={{
       profilePicture: '/static/profilePicture1.png',
-      name: 'Paul Ullrich',
-      credential: {
-        description: 'Bundesrat',
-        verified: false
-      }
+      name: `Christof Moser`,
+      credential: {description: 'Journalist', verified: true}
     }}
     comment={comment}
     timeago={() => '2h'}

@@ -9,53 +9,53 @@
 #### Example 1
 
 ```react|noSource
-<Node comment={comments.comment1} />
+<Node t={t} comment={comments.comment1} />
 ```
 
 #### Example 2
 
 ```react|noSource
-<Node comment={comments.comment2} />
+<Node t={t} comment={comments.comment2} />
 ```
 
 #### Example 3
 
 ```react|noSource
-<Node comment={comments.comment3}  />
+<Node t={t} comment={comments.comment3}  />
 ```
 
 #### Example 4
 
 ```react|noSource
-<Node comment={comments.comment4}  />
+<Node t={t} comment={comments.comment4}  />
 ```
 
 #### Example 5
 
 ```react|noSource
-<Node comment={comments.comment5}  />
+<Node t={t} comment={comments.comment5}  />
 ```
 
 #### Example 6
 
 ```react|noSource
-<Node comment={comments.comment6} />
+<Node t={t} comment={comments.comment6} />
 ```
 
 #### Example 7
 
 ```react|noSource
-<Node comment={comments.comment7} />
+<Node t={t} comment={comments.comment7} />
 ```
 
 #### Example 8
 
 ```react|noSource
-<Node comment={comments.comment8} />
+<Node t={t} comment={comments.comment8} />
 ```
 
 #### Example 9
 
 ```react|noSource
-<Node comment={comments.comment9} />
+<Node t={t} comment={comments.comment9} />
 ```

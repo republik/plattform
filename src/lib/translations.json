@@ -1,5 +1,5 @@
 {
-  "updated": "2017-10-24T09:19:22.757Z",
+  "updated": "2017-10-25T08:58:17.700Z",
   "title": "live",
   "data": [
     {
@@ -13,6 +13,14 @@
     {
       "key": "styleguide/CommentActions/answer",
       "value": "Antworten"
+    },
+    {
+      "key": "styleguide/CommentTreeLoadMore/label/1",
+      "value": "Eine weiterer Kommentar"
+    },
+    {
+      "key": "styleguide/CommentTreeLoadMore/label/other",
+      "value": "{count} weitere Kommentare"
     }
   ]
 }

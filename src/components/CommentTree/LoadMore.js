@@ -20,7 +20,7 @@ const styles = {
 
 const LoadMore = ({t, count, onClick}) => (
   <button {...styles.root} onClick={onClick}>
-    {t('components/CommentTree/LoadMore/label', {count})}
+    {t.pluralize('styleguide/CommentTreeLoadMore/label', {count})}
   </button>
 )
 
