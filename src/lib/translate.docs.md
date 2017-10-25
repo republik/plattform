@@ -25,7 +25,13 @@ t.pluralize.elements(baseKey, replacements, [missingValue]): ReactNode[]
 
 **`t.first.elements`** combines `t.elements` and `t.first` functionality.
 
-**`t.pluralize`** is a convenience helper for pluralization. It requires an replacements object with an count. Under the hood it translates to ``first([`${baseKey}/${replacements.count}`, `${baseKey}/other`]`` and enforces this key convention for consistency.
+**`t.pluralize`** is a convenience helper for pluralization. It requires an replacements object with an count. Under the hood it translates to `t.first` and enforces following key convention for consistency:
+```
+t.first([
+  `${baseKey}/${replacements.count}`,
+  `${baseKey}/other`
+])
+```
 
 **`t.pluralize.elements`** combines `t.elements` and `t.pluralize` functionality.
 

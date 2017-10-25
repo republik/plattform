@@ -21,3 +21,7 @@ svg g[fill="#FFFFFF"] {
 #root .cg-Page > blockquote {
   border-left: none !important;
 } 
+
+#root .cg-Page code {
+  background-color: #fff;
+}
