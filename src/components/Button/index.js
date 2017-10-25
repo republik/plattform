@@ -16,6 +16,7 @@ const buttonStyle = css({
   backgroundColor: '#fff',
   fontFamily: fontFamilies.sansSerifRegular,
   border: `1px solid ${colors.secondary}`,
+  borderRadius: 0,
   color: colors.secondary,
   cursor: 'pointer',
   ':hover': {
