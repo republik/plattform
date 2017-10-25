@@ -147,6 +147,7 @@ type Testimonial {
   # This is a plain copy of the crowdfunding testimonial schema.
   # TODO: Review for improvements, e.g. merging with profilePicture.
   id: ID!
+  userId: ID!
   name: String!
   role: String
   quote: String
