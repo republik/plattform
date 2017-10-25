@@ -18,8 +18,8 @@ const blockquote = {
     type: 'blockquote',
     children: paragraphSerializer.toMdast(object.nodes, context)
   }),
-  render: ({ children }) =>
-    <blockquote>
+  render: ({ children, attributes }) =>
+    <blockquote {...attributes}>
       {children}
     </blockquote>
 }

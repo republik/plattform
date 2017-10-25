@@ -48,13 +48,14 @@ const styles = {
   })
 }
 
-const Image = ({ src, alt, active }) =>
+const Image = ({ src, alt, active, attributes = {} }) =>
   <img
     style={{ width: '100%' }}
     src={imageResizeUrl(src, '1200x')}
     alt={alt}
     data-active={active}
     {...styles.image}
+    {...attributes}
   />
 
 const figureCaption = {
@@ -79,18 +80,18 @@ const figureCaption = {
 
     return <Placeholder>Legende</Placeholder>
   },
-  render: (props) => {
+  render: ({node, children, attributes}) => {
     return (
       <figcaption style={{
-        textAlign: props.node.data.get('captionRight')
+        textAlign: node.data.get('captionRight')
           ? 'right'
           : 'left',
         fontSize: 12,
         fontFamily: 'sans-serif',
         margin: 0,
         position: 'relative'
-      }}>
-        {props.children}
+      }} {...attributes}>
+        {children}
       </figcaption>
     )
   }
@@ -113,13 +114,14 @@ const figureImage = {
     alt: object.data.alt,
     url: object.data.src
   }),
-  render: ({ node, state }) => {
+  render: ({ node, state, attributes }) => {
     const src = node.data.get('src') || gray2x1
     const alt = node.data.get('alt')
     const active = state.blocks.some(block => block.key === node.key)
 
     return (
       <Image
+        attributes={attributes}
         src={src}
         alt={alt}
         active={active} />
@@ -204,13 +206,13 @@ const figure = {
       ]
     }
   },
-  render: ({ children, node }) => {
+  render: ({ children, node, attributes }) => {
     return (
       <figure {...merge(
         styles.figure,
         node.data.get('float') === 'left' && styles.floatLeft,
         node.data.get('float') === 'right' && styles.floatRight
-      )}>
+      )} {...attributes}>
         {children}
       </figure>
     )

@@ -42,7 +42,7 @@ const paragraph = {
     type: 'paragraph',
     children: inlineSerializer.toMdast(object.nodes)
   }),
-  render: ({ children }) => <p {...css(styles.paragraph)}>{ children }</p>
+  render: ({ children, attributes }) => <p {...css(styles.paragraph)} {...attributes}>{ children }</p>
 }
 
 export const serializer = new MarkdownSerializer({

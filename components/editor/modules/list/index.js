@@ -28,8 +28,8 @@ const listItem = {
     type: 'listItem',
     children: paragraphSerializer.toMdast(object.nodes)
   }),
-  render: ({ children, node }) => (
-    <li {...styles.li}>{ children }</li>
+  render: ({ children, node, attributes }) => (
+    <li {...styles.li} {...attributes}>{ children }</li>
   )
 }
 
@@ -57,9 +57,9 @@ const list = {
     start: object.data.start || 1,
     children: itemSerializer.toMdast(object.nodes, context)
   }),
-  render: ({ children, node }) => node.data.get('ordered')
-    ? <ol start={node.data.get('start')}>{ children }</ol>
-    : <ul>{ children }</ul>
+  render: ({ children, node, attributes }) => node.data.get('ordered')
+    ? <ol start={node.data.get('start')} {...attributes}>{ children }</ol>
+    : <ul {...attributes}>{ children }</ul>
 }
 
 export const serializer = new MarkdownSerializer({

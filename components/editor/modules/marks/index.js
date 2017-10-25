@@ -20,7 +20,7 @@ const bold = {
     type: 'strong',
     children: visitChildren(mark)
   }),
-  render: ({ children }) => <strong>{ children }</strong>
+  render: ({ children, attributes }) => <strong {...attributes}>{ children }</strong>
 }
 
 const italic = {
@@ -35,12 +35,12 @@ const italic = {
     type: 'emphasis',
     children: visitChildren(mark)
   }),
-  render: ({ children }) => <em>{ children }</em>
+  render: ({ children, attributes }) => <em {...attributes}>{ children }</em>
 }
 
 const underline = {
   match: matchMark(UNDERLINE),
-  render: ({ children }) => <u>{ children }</u>
+  render: ({ children, attributes }) => <u {...attributes}>{ children }</u>
 }
 
 const strikethrough = {
@@ -55,7 +55,7 @@ const strikethrough = {
     type: 'delete',
     children: visitChildren(mark)
   }),
-  render: ({ children }) => <del>{ children }</del>
+  render: ({ children, attributes }) => <del {...attributes}>{ children }</del>
 }
 
 export {

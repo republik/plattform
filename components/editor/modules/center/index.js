@@ -24,8 +24,8 @@ const containerStyle = css({
   }
 })
 
-const Center = ({children}) => (
-  <div {...containerStyle}>
+const Center = ({children, attributes}) => (
+  <div {...containerStyle} {...attributes}>
     {children}
     <div style={{clear: 'both'}} />
   </div>
@@ -57,10 +57,7 @@ const center = {
     identifier: TYPE,
     children: childSerializer.toMdast(object.nodes, context)
   }),
-  render: ({ children, ...props }) =>
-    <Center>
-      {children}
-    </Center>
+  render: Center
 }
 
 export const serializer = new MarkdownSerializer({

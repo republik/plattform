@@ -60,7 +60,7 @@ export const styles = {
   }
 }
 
-const Cover = ({ node, children }) => {
+const Cover = ({ node, children, attributes }) => {
   const src = node.data.get('src') || gray2x1
   const alt = node.data.get('alt')
 
@@ -69,6 +69,7 @@ const Cover = ({ node, children }) => {
   return <div
     {...css(styles.cover)}
     {...css({ [mq.large]: { backgroundImage: `url('${src2000}')` } })}
+    {...attributes}
     >
     <img
       src={src2000}

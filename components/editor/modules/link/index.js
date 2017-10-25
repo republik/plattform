@@ -44,11 +44,12 @@ export const link = {
     url: object.data.href,
     children: visitChildren(object)
   }),
-  render: ({ children, node }) => (
+  render: ({ children, node, attributes }) => (
     <a
       href={node.getIn(['data', 'href'])}
       title={node.getIn(['data', 'title'])}
       {...css(styles.link)}
+      {...attributes}
     >{ children }</a>
   )
 }

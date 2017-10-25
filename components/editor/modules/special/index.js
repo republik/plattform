@@ -27,7 +27,7 @@ const zone = {
       children: []
     }
   },
-  render: ({ node, state }) => {
+  render: ({ node, state, attributes }) => {
     const active = state.blocks.some(block => block.key === node.key)
     return (
       <div style={{
@@ -40,7 +40,7 @@ const zone = {
         outline: '4px solid transparent',
         outlineColor: active ? colors.primary : 'transparent',
         marginBottom: 10
-      }}>
+      }} {...attributes}>
         {node.data.get('identifier') || 'Special'}
       </div>
     )

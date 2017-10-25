@@ -40,8 +40,8 @@ const lead = {
 
     return <Placeholder>Lead</Placeholder>
   },
-  render: ({ children, ...props }) =>
-    <p {...css(styles.lead)}>
+  render: ({ children, attributes }) =>
+    <p {...css(styles.lead)} {...attributes}>
       {children}
     </p>
 }

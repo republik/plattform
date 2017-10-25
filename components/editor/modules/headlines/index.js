@@ -52,8 +52,8 @@ export const title = {
 
     return <Placeholder>Titel</Placeholder>
   },
-  render: ({ children, ...props }) =>
-    <h1 {...css(styles.base)} {...css(styles.h1)}>
+  render: ({ children, attributes }) =>
+    <h1 {...css(styles.base)} {...css(styles.h1)} {...attributes}>
       { children }
     </h1>
 }
@@ -77,7 +77,7 @@ export const mediumHeadline = {
     depth: 2,
     children: visitChildren(object)
   }),
-  render: ({ children }) => <h2 {...css(styles.base)} {...css(styles.h2)}>{ children }</h2>
+  render: ({ children, attributes }) => <h2 {...css(styles.base)} {...css(styles.h2)} {...attributes}>{ children }</h2>
 }
 
 export const smallHeadline = {
@@ -93,7 +93,7 @@ export const smallHeadline = {
     depth: 3,
     children: visitChildren(object)
   }),
-  render: ({ children }) => <h3 {...css(styles.base)} {...css(styles.h3)}>{ children }</h3>
+  render: ({ children, attributes }) => <h3 {...css(styles.base)} {...css(styles.h3)} {...attributes}>{ children }</h3>
 }
 
 export const serializer = new MarkdownSerializer({
