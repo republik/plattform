@@ -32,6 +32,7 @@ const Center = ({children, attributes}) => (
 )
 
 export const TYPE = 'CENTER'
+export const CENTER = TYPE
 
 const childSerializer = new MarkdownSerializer({
   rules: getSerializationRules([

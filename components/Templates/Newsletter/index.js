@@ -49,6 +49,7 @@ const schema = {
     {
       matchMdast: matchType('root'),
       component: Container,
+      editorModule: 'document',
       rules: [
         {
           matchMdast: matchZone('COVER'),
