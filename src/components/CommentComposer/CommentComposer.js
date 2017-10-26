@@ -1,5 +1,6 @@
 import React, {PureComponent} from 'react'
 import {css} from 'glamor'
+import Textarea from 'react-textarea-autosize';
 import colors from '../../theme/colors'
 import {serifRegular16, sansSerifRegular16} from '../Typography/styles'
 import {MdClose} from 'react-icons/lib/md'
@@ -16,7 +17,7 @@ const styles = {
     width: '100%',
     minWidth: '100%',
     maxWidth: '100%',
-    minHeight: '100px',
+    minHeight: '60px',
     background: 'transparent',
     border: 'none',
     outline: 'none',
@@ -76,6 +77,17 @@ class CommentComposer extends PureComponent {
     this.onSubmit = () => {
       this.props.submitComment(this.state.text)
     }
+
+    this.textarea = null
+    this.textareaRef = (ref) => {
+      this.textarea = ref
+    }
+  }
+
+  componentDidMount () {
+    if (this.textarea) {
+      this.textarea.focus()
+    }
   }
 
   render () {
@@ -90,12 +102,13 @@ class CommentComposer extends PureComponent {
         />
 
         <div {...styles.form}>
-          <textarea
+          <Textarea
+            inputRef={this.textareaRef}
             {...styles.textArea}
             {...(text === '' ? styles.textAreaEmpty : {})}
             placeholder={t('styleguide/CommentComposer/placeholder')}
             value={text}
-            rows='5'
+            rows='1'
             onChange={this.onChange}
           />
 
