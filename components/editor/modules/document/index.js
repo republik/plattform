@@ -154,6 +154,8 @@ Ladies and Gentlemen,
 
   addValidation(documentRule, serializer, 'document')
 
+  const Container = rule.component
+
   return {
     TYPE,
     helpers: {
@@ -163,6 +165,7 @@ Ladies and Gentlemen,
     changes: {},
     plugins: [
       {
+        render: ({children}) => <Container>{children}</Container>,
         schema: {
           rules: [
             documentRule

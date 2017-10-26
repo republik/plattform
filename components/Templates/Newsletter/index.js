@@ -54,6 +54,7 @@ const schema = {
         {
           matchMdast: matchZone('COVER'),
           component: Cover,
+          editorModule: 'cover',
           getData: node => {
             const img = node.children[0].children[0]
             return {

@@ -49,48 +49,65 @@ import createDocumentModule from './modules/document'
 import createCoverModule, { CoverForm } from './modules/cover'
 import createCenterModule from './modules/center'
 
-const newsletterStyles = {
-  fontFamily: 'serif',
-  fontSize: 18,
-  color: '#444',
-  WebkitFontSmoothing: 'antialiased',
+import schema from '../Templates/Newsletter'
+
+const moduleCreators = {
+  document: createDocumentModule,
+  cover: createCoverModule,
+  center: createCenterModule
+}
+const initModule = rule => {
+  const { editorModule } = rule
+  if (editorModule) {
+    const create = moduleCreators[editorModule]
+    if (!create) {
+      throw new Error(`Missing editorModule ${editorModule}`)
+    }
+    const TYPE = editorModule.toUpperCase()
+    const subModules = (rule.rules || []).map(initModule).filter(Boolean)
+    const module = create({
+      rule,
+      TYPE,
+      subModules: subModules
+    })
+
+    module.TYPE = TYPE
+    module.subModules = subModules
+
+    return module
+  }
+}
+
+const rootRule = schema.rules[0]
+const rootModule = initModule(rootRule)
+
+const containerStyles = {
   maxWidth: 'calc(100vw - 190px)'
 }
 
-const coverModule = createCoverModule({
-  TYPE: 'COVER',
-  subModules: []
-})
-const centerModule = createCenterModule({
-  TYPE: 'CENTER',
-  subModules: []
-})
+export const serializer = rootModule.helpers.serializer
+export const newDocument = rootModule.helpers.newDocument
 
-const documentModule = createDocumentModule({
-  TYPE: 'document',
-  subModules: [
-    coverModule,
-    centerModule
-  ]
-})
+const getPlugins = module => module.plugins
+  .concat(
+    (module.subModules || []).reduce(
+      (plugins, subModule) => plugins.concat(getPlugins(subModule)),
+      []
+    )
+  )
 
-export const serializer = documentModule.helpers.serializer
-export const newDocument = documentModule.helpers.newDocument
-
-const plugins = [
-  ...documentModule.plugins,
-  ...centerModule.plugins,
-  ...coverModule.plugins,
-  ...marks.plugins,
-  ...headlines.plugins,
-  ...lead.plugins,
-  ...paragraph.plugins,
-  ...link.plugins,
-  ...figure.plugins,
-  ...blockquote.plugins,
-  ...list.plugins,
-  ...special.plugins
-]
+const plugins = getPlugins(rootModule)
+  .concat([
+    ...marks.plugins,
+    ...headlines.plugins,
+    ...lead.plugins,
+    ...paragraph.plugins,
+    ...link.plugins,
+    ...figure.plugins,
+    ...blockquote.plugins,
+    ...list.plugins,
+    ...special.plugins
+  ])
 
 const textFormatButtons = [
   BoldButton,
@@ -154,7 +171,7 @@ class Editor extends Component {
           state={state}
           onChange={this.onChange} />
         <Document>
-          <div {...css(newsletterStyles)}>
+          <div {...css(containerStyles)}>
             <SlateEditor
               state={state}
               onChange={this.onChange}
