@@ -2,7 +2,7 @@
  * This script adds/removes a badge to/from a user.
  *
  * Usage:
- * node script/userBadge.js PATRON d.pfaender@gmail.com [remove]
+ * node script/userBadge.js PATRON sample@email.com [remove]
  */
 
 const PgDb = require('../lib/pgdb')
