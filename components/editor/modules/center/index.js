@@ -31,69 +31,73 @@ const Center = ({children, attributes}) => (
   </div>
 )
 
-export const TYPE = 'CENTER'
-export const CENTER = TYPE
+export default ({rule, subModules, TYPE}) => {
+  const childSerializer = new MarkdownSerializer({
+    rules: getSerializationRules([
+      ...paragraph.plugins,
+      ...figure.plugins,
+      ...headlines.plugins,
+      ...blockquote.plugins,
+      ...list.plugins,
+      ...special.plugins
+    ])
+  })
 
-const childSerializer = new MarkdownSerializer({
-  rules: getSerializationRules([
-    ...paragraph.plugins,
-    ...figure.plugins,
-    ...headlines.plugins,
-    ...blockquote.plugins,
-    ...list.plugins,
-    ...special.plugins
-  ])
-})
+  const center = {
+    match: matchBlock(TYPE),
+    matchMdast: (node) => node.type === 'zone' && node.identifier === TYPE,
+    fromMdast: (node, index, parent, visitChildren) => ({
+      kind: 'block',
+      type: TYPE,
+      nodes: childSerializer.fromMdast(node.children)
+    }),
+    toMdast: (object, index, parent, visitChildren, context) => ({
+      type: 'zone',
+      identifier: TYPE,
+      children: childSerializer.toMdast(object.nodes, context)
+    }),
+    render: Center
+  }
 
-const center = {
-  match: matchBlock(TYPE),
-  matchMdast: (node) => node.type === 'zone' && node.identifier === TYPE,
-  fromMdast: (node, index, parent, visitChildren) => ({
-    kind: 'block',
-    type: TYPE,
-    nodes: childSerializer.fromMdast(node.children)
-  }),
-  toMdast: (object, index, parent, visitChildren, context) => ({
-    type: 'zone',
-    identifier: TYPE,
-    children: childSerializer.toMdast(object.nodes, context)
-  }),
-  render: Center
-}
+  const serializer = new MarkdownSerializer({
+    rules: [
+      center
+    ]
+  })
 
-export const serializer = new MarkdownSerializer({
-  rules: [
-    center
-  ]
-})
+  addValidation(center, serializer, 'center')
 
-addValidation(center, serializer, 'center')
+  return {
+    TYPE,
+    helpers: {
+      serializer
+    },
+    changes: {},
+    plugins: [
+      {
+        schema: {
+          rules: [
+            {
+              match: matchBlock(TYPE),
+              validate: node => {
+                const notBlocks = node.nodes.filter(n => n.kind !== 'block')
 
-export default {
-  plugins: [
-    {
-      schema: {
-        rules: [
-          {
-            match: matchBlock(TYPE),
-            validate: node => {
-              const notBlocks = node.nodes.filter(n => n.kind !== 'block')
+                return notBlocks.size
+                  ? notBlocks
+                  : null
+              },
+              normalize: (change, object, notBlocks) => {
+                notBlocks.forEach((child) => {
+                  change.wrapBlockByKey(child.key, PARAGRAPH)
+                })
 
-              return notBlocks.size
-                ? notBlocks
-                : null
+                return change
+              }
             },
-            normalize: (change, object, notBlocks) => {
-              notBlocks.forEach((child) => {
-                change.wrapBlockByKey(child.key, PARAGRAPH)
-              })
-
-              return change
-            }
-          },
-          center
-        ]
+            center
+          ]
+        }
       }
-    }
-  ]
+    ]
+  }
 }

@@ -83,6 +83,7 @@ const schema = {
         {
           matchMdast: matchZone('CENTER'),
           component: Center,
+          editorModule: 'center',
           rules: [
             paragraph,
             {

@@ -5,13 +5,12 @@ import addValidation, { findOrCreate } from '../../utils/serializationValidation
 import { gray2x1 } from '../../utils/placeholder'
 import { serializer as leadSerializer, LEAD } from '../lead'
 import { titleSerializer, TITLE } from '../headlines'
-import { COVER } from './constants'
 import { CoverForm } from './ui'
 import { mq } from '../../styles'
 import MarkdownSerializer from '../../../../lib/serializer'
 import { imageResizeUrl } from '../../../Templates/utils'
 
-export const styles = {
+const styles = {
   cover: {
     width: '100%',
     position: 'relative',
@@ -86,108 +85,113 @@ const Cover = ({ node, children, attributes }) => {
   </div>
 }
 
-export const isCover = matchBlock(COVER)
-
-export const cover = {
-  match: isCover,
-  render: Cover,
-  matchMdast: (node) => node.type === 'zone' && node.identifier === COVER,
-  fromMdast: (node, index, parent, visitChildren) => {
-    // fault tolerant because markdown could have been edited outside
-    const deepNodes = node.children.reduce(
-      (children, child) => children
-        .concat(child)
-        .concat(child.children),
-      []
-    )
-    const image = findOrCreate(deepNodes, {type: 'image'})
-    const title = findOrCreate(
-      node.children,
-      {type: 'heading', depth: 1},
-      {children: []}
-    )
-    const lead = findOrCreate(
-      node.children,
-      {type: 'blockquote'},
-      {children: []}
-    )
-
-    return {
-      kind: 'block',
-      type: COVER,
-      data: {
-        src: image.url,
-        alt: image.alt
-      },
-      nodes: [
-        titleSerializer.fromMdast(title),
-        leadSerializer.fromMdast(lead)
-      ]
-    }
-  },
-  toMdast: (object, index, parent, visitChildren, context) => {
-    [isTitle, isLead].some((check, index) => {
-      const node = object.nodes[index]
-      if (!node || !check(node)) {
-        context.dirty = true
-        return true
-      }
-    })
-    if (object.nodes.length > 2) {
-      context.dirty = true
-    }
-
-    return {
-      type: 'zone',
-      identifier: COVER,
-      children: [
-        {
-          type: 'image',
-          alt: object.data.alt,
-          url: object.data.src
-        },
-        titleSerializer.toMdast(
-          findOrCreate(object.nodes, {
-            kind: 'block',
-            type: TITLE
-          }, {nodes: []}), context
-        ),
-        leadSerializer.toMdast(
-          findOrCreate(object.nodes, {
-            kind: 'block',
-            type: LEAD
-          }, {nodes: []}), context
-        )
-      ]
-    }
-  }
-}
-
-export const serializer = new MarkdownSerializer({
-  rules: [
-    cover
-  ]
-})
-
-addValidation(cover, serializer, 'cover')
-
 export {
-  CoverForm,
-  COVER
+  CoverForm
 }
 
 const isTitle = matchBlock(TITLE)
 const isLead = matchBlock(LEAD)
 
-export default {
-  plugins: [
-    {
-      schema: {
-        rules: [
-          // Element
-          cover
+export default ({rule, subModules, TYPE}) => {
+  const isCover = matchBlock(TYPE)
+
+  const cover = {
+    match: isCover,
+    render: Cover,
+    matchMdast: (node) => node.type === 'zone' && node.identifier === TYPE,
+    fromMdast: (node, index, parent, visitChildren) => {
+      // fault tolerant because markdown could have been edited outside
+      const deepNodes = node.children.reduce(
+        (children, child) => children
+          .concat(child)
+          .concat(child.children),
+        []
+      )
+      const image = findOrCreate(deepNodes, {type: 'image'})
+      const title = findOrCreate(
+        node.children,
+        {type: 'heading', depth: 1},
+        {children: []}
+      )
+      const lead = findOrCreate(
+        node.children,
+        {type: 'blockquote'},
+        {children: []}
+      )
+
+      return {
+        kind: 'block',
+        type: TYPE,
+        data: {
+          src: image.url,
+          alt: image.alt
+        },
+        nodes: [
+          titleSerializer.fromMdast(title),
+          leadSerializer.fromMdast(lead)
+        ]
+      }
+    },
+    toMdast: (object, index, parent, visitChildren, context) => {
+      [isTitle, isLead].some((check, index) => {
+        const node = object.nodes[index]
+        if (!node || !check(node)) {
+          context.dirty = true
+          return true
+        }
+      })
+      if (object.nodes.length > 2) {
+        context.dirty = true
+      }
+
+      return {
+        type: 'zone',
+        identifier: TYPE,
+        children: [
+          {
+            type: 'image',
+            alt: object.data.alt,
+            url: object.data.src
+          },
+          titleSerializer.toMdast(
+            findOrCreate(object.nodes, {
+              kind: 'block',
+              type: TITLE
+            }, {nodes: []}), context
+          ),
+          leadSerializer.toMdast(
+            findOrCreate(object.nodes, {
+              kind: 'block',
+              type: LEAD
+            }, {nodes: []}), context
+          )
         ]
       }
     }
-  ]
+  }
+
+  const serializer = new MarkdownSerializer({
+    rules: [
+      cover
+    ]
+  })
+
+  addValidation(cover, serializer, 'cover')
+
+  return {
+    TYPE,
+    helpers: {
+      serializer
+    },
+    changes: {},
+    plugins: [
+      {
+        schema: {
+          rules: [
+            cover
+          ]
+        }
+      }
+    ]
+  }
 }

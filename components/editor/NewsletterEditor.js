@@ -7,8 +7,6 @@ import styles from './styles'
 import Sidebar from './Sidebar'
 import MetaData from './modules/meta/ui'
 
-import createDocumentModule from './modules/document'
-
 import marks, {
   BoldButton,
   ItalicButton
@@ -43,17 +41,13 @@ import figure, {
   FigureButton
 } from './modules/figure'
 
-import cover, {
-  CoverForm, serializer as coverSerializer, COVER
-} from './modules/cover'
-
-import center, {
-  serializer as centerSerializer, TYPE as CENTER
-} from './modules/center'
-
 import special, {
   SpecialButton, SpecialForm
 } from './modules/special'
+
+import createDocumentModule from './modules/document'
+import createCoverModule, { CoverForm } from './modules/cover'
+import createCenterModule from './modules/center'
 
 const newsletterStyles = {
   fontFamily: 'serif',
@@ -63,21 +57,20 @@ const newsletterStyles = {
   maxWidth: 'calc(100vw - 190px)'
 }
 
+const coverModule = createCoverModule({
+  TYPE: 'COVER',
+  subModules: []
+})
+const centerModule = createCenterModule({
+  TYPE: 'CENTER',
+  subModules: []
+})
+
 const documentModule = createDocumentModule({
   TYPE: 'document',
   subModules: [
-    {
-      TYPE: COVER,
-      helpers: {
-        serializer: coverSerializer
-      }
-    },
-    {
-      TYPE: CENTER,
-      helpers: {
-        serializer: centerSerializer
-      }
-    }
+    coverModule,
+    centerModule
   ]
 })
 
@@ -86,14 +79,14 @@ export const newDocument = documentModule.helpers.newDocument
 
 const plugins = [
   ...documentModule.plugins,
+  ...centerModule.plugins,
+  ...coverModule.plugins,
   ...marks.plugins,
   ...headlines.plugins,
   ...lead.plugins,
   ...paragraph.plugins,
   ...link.plugins,
   ...figure.plugins,
-  ...cover.plugins,
-  ...center.plugins,
   ...blockquote.plugins,
   ...list.plugins,
   ...special.plugins
