@@ -1,6 +1,3 @@
-import React from 'react'
-import { css } from 'glamor'
-
 import { matchBlock } from '../../utils'
 import MarkdownSerializer from '../../../../lib/serializer'
 import { getSerializationRules } from '../../utils/getRules'
@@ -12,24 +9,6 @@ import figure from '../figure'
 import blockquote from '../blockquote'
 import list from '../list'
 import special from '../special'
-
-const PADDING = 20
-const containerStyle = css({
-  margin: '0 auto',
-  padding: PADDING,
-  paddingTop: PADDING / 2,
-  maxWidth: 640,
-  '@media (min-width: 600px)': {
-    paddingTop: PADDING
-  }
-})
-
-const Center = ({children, attributes}) => (
-  <div {...containerStyle} {...attributes}>
-    {children}
-    <div style={{clear: 'both'}} />
-  </div>
-)
 
 export default ({rule, subModules, TYPE}) => {
   const childSerializer = new MarkdownSerializer({
@@ -56,7 +35,7 @@ export default ({rule, subModules, TYPE}) => {
       identifier: TYPE,
       children: childSerializer.toMdast(object.nodes, context)
     }),
-    render: Center
+    render: rule.component
   }
 
   const serializer = new MarkdownSerializer({
