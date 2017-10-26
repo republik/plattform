@@ -26,7 +26,6 @@ PgDb.connect()
     if (!user) {
       throw new Error(`user with email ${email} not found!`)
     }
-
     console.log(`Supported badges:\n${Badges.SUPPORTED_BADGES.join('\n')}`)
 
     let newUser
@@ -41,7 +40,6 @@ PgDb.connect()
       newUser = await Badges.addToUser(user.id, badge, pgdb)
     }
     console.log(newUser)
-
     console.log('job done!')
   })
   .then(() => {
