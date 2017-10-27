@@ -54,6 +54,7 @@ const schema = {
         {
           matchMdast: matchZone('COVER'),
           component: Cover,
+          identifier: 'COVER',
           editorModule: 'cover',
           getData: node => {
             const img = node.children[0].children[0]
@@ -70,7 +71,13 @@ const schema = {
             },
             {
               matchMdast: matchHeading(1),
-              component: Title
+              component: Title,
+              identifier: 'H1',
+              editorModule: 'headline',
+              options: {
+                depth: 1,
+                placeholder: 'Title'
+              }
             },
             {
               matchMdast: matchType('blockquote'),
@@ -84,6 +91,7 @@ const schema = {
         {
           matchMdast: matchZone('CENTER'),
           component: Center,
+          identifier: 'CENTER',
           editorModule: 'center',
           rules: [
             paragraph,

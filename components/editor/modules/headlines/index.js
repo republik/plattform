@@ -1,7 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
 import MarkdownSerializer from '../../../../lib/serializer'
-import Placeholder from '../../Placeholder'
 
 import { matchBlock } from '../../utils'
 import {
@@ -10,7 +9,6 @@ import {
 } from './ui'
 
 import {
-  TITLE,
   MEDIUM_HEADLINE,
   SMALL_HEADLINE
 } from './constants'
@@ -33,36 +31,6 @@ export const styles = {
     fontSize: 18
   }
 }
-
-export const title = {
-  match: matchBlock(TITLE),
-  matchMdast: (node) => node.type === 'heading' && node.depth === 1,
-  fromMdast: (node, index, parent, visitChildren) => ({
-    kind: 'block',
-    type: TITLE,
-    nodes: visitChildren(node)
-  }),
-  toMdast: (object, index, parent, visitChildren) => ({
-    type: 'heading',
-    depth: 1,
-    children: visitChildren(object)
-  }),
-  placeholder: ({node}) => {
-    if (node.text.length) return null
-
-    return <Placeholder>Titel</Placeholder>
-  },
-  render: ({ children, attributes }) =>
-    <h1 {...css(styles.base)} {...css(styles.h1)} {...attributes}>
-      { children }
-    </h1>
-}
-
-export const titleSerializer = new MarkdownSerializer({
-  rules: [
-    title
-  ]
-})
 
 export const mediumHeadline = {
   match: matchBlock(MEDIUM_HEADLINE),
@@ -98,14 +66,12 @@ export const smallHeadline = {
 
 export const serializer = new MarkdownSerializer({
   rules: [
-    title,
     mediumHeadline,
     smallHeadline
   ]
 })
 
 export {
-  TITLE,
   MEDIUM_HEADLINE,
   MediumHeadlineButton,
   SMALL_HEADLINE,
@@ -117,7 +83,6 @@ export default {
     {
       schema: {
         rules: [
-          title,
           mediumHeadline,
           smallHeadline
         ]

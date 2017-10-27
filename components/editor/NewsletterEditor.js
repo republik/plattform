@@ -48,22 +48,24 @@ import special, {
 import createDocumentModule from './modules/document'
 import createCoverModule from './modules/cover'
 import createCenterModule from './modules/center'
+import createHeadlineModule from './modules/headline'
 
 import schema from '../Templates/Newsletter'
 
 const moduleCreators = {
   document: createDocumentModule,
   cover: createCoverModule,
-  center: createCenterModule
+  center: createCenterModule,
+  headline: createHeadlineModule
 }
 const initModule = rule => {
-  const { editorModule } = rule
+  const { editorModule, identifier } = rule
   if (editorModule) {
     const create = moduleCreators[editorModule]
     if (!create) {
       throw new Error(`Missing editorModule ${editorModule}`)
     }
-    const TYPE = editorModule.toUpperCase()
+    const TYPE = identifier || editorModule.toUpperCase()
     const subModules = (rule.rules || []).map(initModule).filter(Boolean)
     const module = create({
       rule,
@@ -73,6 +75,7 @@ const initModule = rule => {
 
     module.TYPE = TYPE
     module.subModules = subModules
+    module.identifier = identifier
 
     return module
   }
@@ -88,8 +91,8 @@ const containerStyles = {
 export const serializer = rootModule.helpers.serializer
 export const newDocument = rootModule.helpers.newDocument
 
-const getFromModules = (module, accessor) =>
-  (accessor(module) || [])
+const getFromModules = (module, accessor) => []
+  .concat(accessor(module))
   .concat(
     (module.subModules || []).reduce(
       (collector, subModule) => collector.concat(
@@ -98,6 +101,7 @@ const getFromModules = (module, accessor) =>
       []
     )
   )
+  .filter(Boolean)
 
 const plugins = getFromModules(rootModule, m => m.plugins)
   .concat([

@@ -3,15 +3,20 @@ import { matchBlock } from '../../utils'
 import addValidation, { findOrCreate } from '../../utils/serializationValidation'
 import { gray2x1 } from '../../utils/placeholder'
 import { serializer as leadSerializer, LEAD } from '../lead'
-import { titleSerializer, TITLE } from '../headlines'
 import { createCoverForm } from './ui'
 import MarkdownSerializer from '../../../../lib/serializer'
 
-const isTitle = matchBlock(TITLE)
 const isLead = matchBlock(LEAD)
 
 export default ({rule, subModules, TYPE}) => {
+  const titleModule = subModules.find(m => m.identifier === 'H1')
+  if (!titleModule) {
+    throw new Error('Missing H1 submodule')
+  }
+  const titleSerializer = titleModule.helpers.serializer
+
   const isCover = matchBlock(TYPE)
+  const isTitle = matchBlock(titleModule.TYPE)
 
   const Cover = rule.component
 
@@ -83,7 +88,7 @@ export default ({rule, subModules, TYPE}) => {
           titleSerializer.toMdast(
             findOrCreate(object.nodes, {
               kind: 'block',
-              type: TITLE
+              type: titleModule.TYPE
             }, {nodes: []}), context
           ),
           leadSerializer.toMdast(
@@ -103,7 +108,7 @@ export default ({rule, subModules, TYPE}) => {
     ]
   })
 
-  addValidation(cover, serializer, 'cover')
+  addValidation(cover, serializer, TYPE)
 
   return {
     TYPE,

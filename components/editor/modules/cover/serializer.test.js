@@ -1,11 +1,26 @@
 import test from 'tape'
 import createCoverModule from './'
+import createHeadlineModule from '../headline'
 
 const TYPE = 'COVER'
-const coverModule = createCoverModule({
-  rule: {},
-  TYPE,
+
+const titleModule = createHeadlineModule({
+  TYPE: 'H1',
+  rule: {
+    options: {
+      depth: 1
+    }
+  },
   subModules: []
+})
+titleModule.identifier = 'H1'
+
+const coverModule = createCoverModule({
+  TYPE,
+  rule: {},
+  subModules: [
+    titleModule
+  ]
 })
 
 const serializer = coverModule.helpers.serializer
