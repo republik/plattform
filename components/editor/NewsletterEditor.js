@@ -64,10 +64,6 @@ const initModule = rule => {
 const rootRule = schema.rules[0]
 const rootModule = initModule(rootRule)
 
-const containerStyles = {
-  maxWidth: 'calc(100vw - 190px)'
-}
-
 export const serializer = rootModule.helpers.serializer
 export const newDocument = rootModule.helpers.newDocument
 
@@ -145,15 +141,13 @@ class Editor extends Component {
           state={state}
           onChange={this.onChange} />
         <Document>
-          <div {...css(containerStyles)}>
-            <SlateEditor
-              state={state}
-              onChange={this.onChange}
-              plugins={plugins} />
-            <MetaData
-              state={state}
-              onChange={this.onChange} />
-          </div>
+          <SlateEditor
+            state={state}
+            onChange={this.onChange}
+            plugins={plugins} />
+          <MetaData
+            state={state}
+            onChange={this.onChange} />
         </Document>
       </Container>
     )

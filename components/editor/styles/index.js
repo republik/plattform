@@ -60,22 +60,20 @@ export default {
   },
   container: {
     width: '100%',
-    height: `calc(100vh - ${HEADER_HEIGHT}px)`,
     paddingLeft: 170,
     position: 'relative'
   },
   sidebar: {
-    position: 'absolute',
-    top: 0,
+    position: 'fixed',
+    top: HEADER_HEIGHT,
     left: 0,
     bottom: 0,
     width: 170,
-    padding: '0 7px',
+    overflow: 'auto',
+    padding: '0 7px 10px',
     borderRight: `1px solid ${colors.divider}`
   },
   document: {
-    overflow: 'scroll',
-    width: '100%',
-    height: `calc(100vh - ${HEADER_HEIGHT}px)`
+    width: '100%'
   }
 }
