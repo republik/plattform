@@ -1,8 +1,6 @@
 import React from 'react'
-import { css } from 'glamor'
-import { matchBlock, createBlockButton } from '../../utils'
+import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 import injectBlock from '../../utils/injectBlock'
-import styles from '../../styles'
 import { newBlock } from './'
 
 export const createListButton = ({TYPE, ordered, label}) => createBlockButton({
@@ -38,7 +36,8 @@ export const createListButton = ({TYPE, ordered, label}) => createBlockButton({
 })(
   ({ active, disabled, visible, ...props }) =>
     <span
-      {...{...css(styles.blockButton), ...props}}
+      {...buttonStyles.block}
+      {...props}
       data-active={active}
       data-disabled={disabled}
       data-visible={visible}

@@ -1,11 +1,9 @@
 import React from 'react'
-import { css } from 'glamor'
 
 import MarkdownSerializer from '../../../../lib/serializer'
 import Placeholder from '../../Placeholder'
 import addValidation from '../../utils/serializationValidation'
-import { matchBlock, createBlockButton } from '../../utils'
-import styles from '../../styles'
+import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 
 export default ({rule, subModules, TYPE}) => {
   const {
@@ -56,7 +54,8 @@ export default ({rule, subModules, TYPE}) => {
         })(
           ({ active, disabled, visible, ...props }) =>
             <span
-              {...{...css(styles.blockButton), ...props}}
+              {...buttonStyles.block}
+              {...props}
               data-active={active}
               data-disabled={disabled}
               data-visible={visible}

@@ -1,10 +1,8 @@
 import React from 'react'
-import { css } from 'glamor'
 
-import { matchBlock, createBlockButton } from '../../utils'
+import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 import MarkdownSerializer from '../../../../lib/serializer'
 import addValidation from '../../utils/serializationValidation'
-import styles from '../../styles'
 
 export default ({rule, subModules, TYPE}) => {
   const paragraphModule = subModules.find(m => m.identifier === 'PARAGRAPH')
@@ -50,7 +48,8 @@ export default ({rule, subModules, TYPE}) => {
         })(
           ({ active, disabled, visible, ...props }) =>
             <span
-              {...{...css(styles.blockButton), ...props}}
+              {...buttonStyles.block}
+              {...props}
               data-active={active}
               data-disabled={disabled}
               data-visible={visible}

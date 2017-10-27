@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { Editor as SlateEditor } from 'slate-react'
 import { css } from 'glamor'
 
-import styles from './styles'
 import Sidebar from './Sidebar'
 import MetaData from './modules/meta/ui'
 
@@ -106,12 +105,23 @@ const propertyForms = getFromModules(
   m => m.ui && m.ui.forms
 )
 
+const styles = {
+  container: css({
+    width: '100%',
+    paddingLeft: 170,
+    position: 'relative'
+  }),
+  document: {
+    width: '100%'
+  }
+}
+
 const Container = ({ children }) => (
-  <div {...css(styles.container)}>{ children }</div>
+  <div {...styles.container}>{ children }</div>
 )
 
 const Document = ({ children }) => (
-  <div {...css(styles.document)}>{ children }</div>
+  <div {...styles.document}>{ children }</div>
 )
 
 class Editor extends Component {

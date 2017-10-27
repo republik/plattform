@@ -1,5 +1,4 @@
 import React from 'react'
-import { css } from 'glamor'
 
 import { Label } from '@project-r/styleguide'
 import { Map } from 'immutable'
@@ -7,9 +6,9 @@ import { Map } from 'immutable'
 import {
   matchBlock,
   createPropertyForm,
-  createActionButton
+  createActionButton,
+  buttonStyles
 } from '../../utils'
-import styles from '../../styles'
 import injectBlock from '../../utils/injectBlock'
 import MetaForm from '../../utils/MetaForm'
 
@@ -33,7 +32,7 @@ export default ({TYPE, newBlock}) => {
   })(
     ({ disabled, visible, ...props }) =>
       <span
-        {...css(styles.insertButton)}
+        {...buttonStyles.insert}
         {...props}
         data-disabled={disabled}
         data-visible={visible}

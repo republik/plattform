@@ -1,17 +1,15 @@
 import React from 'react'
-import { css } from 'glamor'
 import { Map } from 'immutable'
 
 import { Radio, Label } from '@project-r/styleguide'
 
 import {
   createPropertyForm,
-  createActionButton
+  createActionButton,
+  buttonStyles
 } from '../../utils'
 import injectBlock from '../../utils/injectBlock'
 import MetaForm from '../../utils/MetaForm'
-
-import styles from '../../styles'
 
 export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock}) => {
   const isFigureBlock = block => block.type === FIGURE_IMAGE || block.type === FIGURE_CAPTION
@@ -131,7 +129,8 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock}) => {
   })(
     ({ disabled, visible, ...props }) =>
       <span
-        {...{...css(styles.insertButton), ...props}}
+        {...buttonStyles.insert}
+        {...props}
         data-disabled={disabled}
         data-visible={visible}
         >

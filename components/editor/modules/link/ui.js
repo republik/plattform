@@ -1,5 +1,4 @@
 import React from 'react'
-import { css } from 'glamor'
 import { Label } from '@project-r/styleguide'
 import LinkIcon from 'react-icons/lib/fa/chain'
 import { Map } from 'immutable'
@@ -7,12 +6,11 @@ import { Map } from 'immutable'
 import {
   createInlineButton,
   matchInline,
-  createPropertyForm
+  createPropertyForm,
+  buttonStyles
 } from '../../utils'
 
 import MetaForm from '../../utils/MetaForm'
-
-import styles from '../../styles'
 
 export default ({TYPE}) => {
   const LinkButton = createInlineButton({
@@ -20,7 +18,8 @@ export default ({TYPE}) => {
   })(
     ({ active, disabled, visible, ...props }) =>
       <span
-        {...{...css(styles.markButton), ...props}}
+        {...buttonStyles.mark}
+        {...props}
         data-active={active}
         data-disabled={disabled}
         data-visible={visible}

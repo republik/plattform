@@ -1,9 +1,7 @@
 import React from 'react'
-import { css } from 'glamor'
 
 import MarkdownSerializer from '../../../../lib/serializer'
-import { matchBlock, createBlockButton } from '../../utils'
-import styles from '../../styles'
+import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 import Placeholder from '../../Placeholder'
 
 import { getSerializationRules } from '../../utils/getRules'
@@ -74,7 +72,8 @@ export default ({rule, subModules, TYPE}) => {
         })(
           ({ active, disabled, visible, ...props }) =>
             <span
-              {...{...css(styles.blockButton), ...props}}
+              {...buttonStyles.block}
+              {...props}
               data-active={active}
               data-disabled={disabled}
               data-visible={visible}

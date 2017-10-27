@@ -1,8 +1,6 @@
 import React from 'react'
-import { css } from 'glamor'
 
-import { matchMark, createMarkButton } from '../../utils'
-import styles from '../../styles'
+import { matchMark, createMarkButton, buttonStyles } from '../../utils'
 
 import BoldIcon from 'react-icons/lib/fa/bold'
 import ItalicIcon from 'react-icons/lib/fa/italic'
@@ -53,7 +51,8 @@ export default ({rule, subModules, TYPE}) => {
         })(
           ({ active, disabled, visible, ...props }) =>
             <span
-              {...{...css(styles.markButton), ...props}}
+              {...buttonStyles.mark}
+              {...props}
               data-active={active}
               data-disabled={disabled}
               data-visible={visible}
