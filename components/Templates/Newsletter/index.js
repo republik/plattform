@@ -19,6 +19,11 @@ import {
 const paragraph = {
   matchMdast: matchParagraph,
   component: Paragraph,
+  identifier: 'PARAGRAPH',
+  editorModule: 'paragraph',
+  options: {
+    formatButtonText: 'Paragraph'
+  },
   rules: [
     {
       matchMdast: matchType('break'),
@@ -27,14 +32,25 @@ const paragraph = {
     },
     {
       matchMdast: matchType('strong'),
-      component: Strong
+      component: Strong,
+      editorModule: 'mark',
+      identifier: 'BOLD',
+      options: {
+        type: 'strong'
+      }
     },
     {
       matchMdast: matchType('emphasis'),
-      component: Em
+      component: Em,
+      editorModule: 'mark',
+      identifier: 'ITALIC',
+      options: {
+        type: 'emphasis'
+      }
     },
     {
       matchMdast: matchType('link'),
+      editorModule: 'link',
       getData: node => ({
         title: node.title,
         href: node.url
@@ -72,7 +88,7 @@ const schema = {
             {
               matchMdast: matchHeading(1),
               component: Title,
-              identifier: 'H1',
+              identifier: 'TITLE',
               editorModule: 'headline',
               options: {
                 depth: 1,
@@ -80,11 +96,14 @@ const schema = {
               }
             },
             {
-              matchMdast: matchType('blockquote'),
+              matchMdast: matchParagraph,
               component: Lead,
-              rules: [
-                paragraph
-              ]
+              identifier: 'LEAD',
+              editorModule: 'paragraph',
+              options: {
+                placeholder: 'Lead'
+              },
+              rules: paragraph.rules
             }
           ]
         },
@@ -97,11 +116,23 @@ const schema = {
             paragraph,
             {
               matchMdast: matchHeading(2),
-              component: H2
+              component: H2,
+              identifier: 'H2',
+              editorModule: 'headline',
+              options: {
+                depth: 2,
+                formatButtonText: 'Zwischentitel 1'
+              }
             },
             {
               matchMdast: matchHeading(3),
-              component: H3
+              component: H3,
+              identifier: 'H3',
+              editorModule: 'headline',
+              options: {
+                depth: 3,
+                formatButtonText: 'Zwischentitel 2'
+              }
             },
             {
               matchMdast: matchZone('FIGURE'),
@@ -127,6 +158,7 @@ const schema = {
             {
               matchMdast: matchType('blockquote'),
               component: Blockquote,
+              editorModule: 'blockquote',
               rules: [
                 paragraph
               ]

@@ -3,23 +3,27 @@ import MarkdownSerializer from '../../../../lib/serializer'
 import { getSerializationRules } from '../../utils/getRules'
 import addValidation from '../../utils/serializationValidation'
 
-import paragraph, { PARAGRAPH } from '../paragraph'
-import headlines from '../headlines'
 import figure from '../figure'
-import blockquote from '../blockquote'
 import list from '../list'
 import special from '../special'
 
 export default ({rule, subModules, TYPE}) => {
+  const paragraphModule = subModules.find(m => m.identifier === 'PARAGRAPH')
+  if (!paragraphModule) {
+    throw new Error('Missing PARAGRAPH submodule')
+  }
+
   const childSerializer = new MarkdownSerializer({
-    rules: getSerializationRules([
-      ...paragraph.plugins,
-      ...figure.plugins,
-      ...headlines.plugins,
-      ...blockquote.plugins,
-      ...list.plugins,
-      ...special.plugins
-    ])
+    rules: getSerializationRules(
+      subModules.reduce(
+        (a, m) => a.concat(m.plugins),
+        []
+      ).concat([
+        ...figure.plugins,
+        ...list.plugins,
+        ...special.plugins
+      ])
+    )
   })
 
   const center = {
@@ -67,7 +71,7 @@ export default ({rule, subModules, TYPE}) => {
               },
               normalize: (change, object, notBlocks) => {
                 notBlocks.forEach((child) => {
-                  change.wrapBlockByKey(child.key, PARAGRAPH)
+                  change.wrapBlockByKey(child.key, paragraphModule.TYPE)
                 })
 
                 return change

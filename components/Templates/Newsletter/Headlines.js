@@ -16,14 +16,14 @@ const styles = {
   }
 }
 
-export const H2 = ({children}) => (
-  <h2 {...css(styles.base)} {...css(styles.h2)}>
+export const H2 = ({children, attributes = {}}) => (
+  <h2 {...css(styles.base)} {...css(styles.h2)} {...attributes}>
     {children}
   </h2>
 )
 
-export const H3 = ({children}) => (
-  <h3 {...css(styles.base)} {...css(styles.h3)}>
+export const H3 = ({children, attributes = {}}) => (
+  <h3 {...css(styles.base)} {...css(styles.h3)} {...attributes}>
     {children}
   </h3>
 )

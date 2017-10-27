@@ -7,29 +7,7 @@ import styles from './styles'
 import Sidebar from './Sidebar'
 import MetaData from './modules/meta/ui'
 
-import marks, {
-  BoldButton,
-  ItalicButton
-} from './modules/marks'
-
-import headlines, {
-  MediumHeadlineButton, SmallHeadlineButton
-} from './modules/headlines'
-
-import lead from './modules/lead'
-
-import paragraph, {
-  ParagraphButton
-} from './modules/paragraph'
-
-import blockquote, {
-  BlockquoteButton
-} from './modules/blockquote'
-
-import link, {
-  LinkButton,
-  LinkForm
-} from './modules/link'
+import paragraph from './modules/paragraph'
 
 import list, {
   ULButton,
@@ -49,6 +27,10 @@ import createDocumentModule from './modules/document'
 import createCoverModule from './modules/cover'
 import createCenterModule from './modules/center'
 import createHeadlineModule from './modules/headline'
+import createParagraphModule from './modules/paragraph/v2'
+import createBlockquoteModule from './modules/blockquote'
+import createLinkModule from './modules/link'
+import createMarkModule from './modules/mark'
 
 import schema from '../Templates/Newsletter'
 
@@ -56,7 +38,11 @@ const moduleCreators = {
   document: createDocumentModule,
   cover: createCoverModule,
   center: createCenterModule,
-  headline: createHeadlineModule
+  headline: createHeadlineModule,
+  paragraph: createParagraphModule,
+  blockquote: createBlockquoteModule,
+  link: createLinkModule,
+  mark: createMarkModule
 }
 const initModule = rule => {
   const { editorModule, identifier } = rule
@@ -91,54 +77,46 @@ const containerStyles = {
 export const serializer = rootModule.helpers.serializer
 export const newDocument = rootModule.helpers.newDocument
 
-const getFromModules = (module, accessor) => []
-  .concat(accessor(module))
-  .concat(
-    (module.subModules || []).reduce(
-      (collector, subModule) => collector.concat(
-        getFromModules(subModule, accessor)
-      ),
-      []
-    )
+const getAllModules = module => [module].concat(
+  (module.subModules || []).reduce(
+    (collector, subModule) => collector.concat(
+      getAllModules(subModule)
+    ),
+    []
   )
-  .filter(Boolean)
+)
 
-const plugins = getFromModules(rootModule, m => m.plugins)
+const allModules = getAllModules(rootModule)
+const uniqModules = allModules.filter((m, i, a) => a.findIndex(mm => mm.TYPE === m.TYPE) === i)
+
+const getFromModules = (modules, accessor) => modules.reduce(
+  (collector, m) => collector.concat(accessor(m)),
+  []
+).filter(Boolean)
+
+const plugins = getFromModules(uniqModules, m => m.plugins)
   .concat([
-    ...marks.plugins,
-    ...headlines.plugins,
-    ...lead.plugins,
     ...paragraph.plugins,
-    ...link.plugins,
     ...figure.plugins,
-    ...blockquote.plugins,
     ...list.plugins,
     ...special.plugins
   ])
 
 const textFormatButtons = getFromModules(
-  rootModule,
+  uniqModules,
   m => m.ui && m.ui.textFormatButtons
-).concat([
-  BoldButton,
-  ItalicButton,
-  LinkButton
-])
+)
 
 const blockFormatButtons = getFromModules(
-  rootModule,
+  uniqModules,
   m => m.ui && m.ui.blockFormatButtons
 ).concat([
-  MediumHeadlineButton,
-  SmallHeadlineButton,
-  ParagraphButton,
-  BlockquoteButton,
   ULButton,
   OLButton
 ])
 
 const insertButtons = getFromModules(
-  rootModule,
+  uniqModules,
   m => m.ui && m.ui.insertButtons
 ).concat([
   FigureButton,
@@ -146,10 +124,9 @@ const insertButtons = getFromModules(
 ])
 
 const propertyForms = getFromModules(
-  rootModule,
+  uniqModules,
   m => m.ui && m.ui.forms
 ).concat([
-  LinkForm,
   FigureForm,
   SpecialForm
 ])

@@ -70,7 +70,7 @@ const schema = {
               component: Title
             },
             {
-              matchMdast: matchType('blockquote'),
+              matchMdast: matchType('paragraph'),
               component: Lead,
               rules: [
                 paragraph

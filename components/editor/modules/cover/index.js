@@ -2,21 +2,25 @@ import React from 'react'
 import { matchBlock } from '../../utils'
 import addValidation, { findOrCreate } from '../../utils/serializationValidation'
 import { gray2x1 } from '../../utils/placeholder'
-import { serializer as leadSerializer, LEAD } from '../lead'
 import { createCoverForm } from './ui'
 import MarkdownSerializer from '../../../../lib/serializer'
 
-const isLead = matchBlock(LEAD)
-
 export default ({rule, subModules, TYPE}) => {
-  const titleModule = subModules.find(m => m.identifier === 'H1')
+  const titleModule = subModules.find(m => m.identifier === 'TITLE')
   if (!titleModule) {
-    throw new Error('Missing H1 submodule')
+    throw new Error('Missing TITLE submodule')
   }
   const titleSerializer = titleModule.helpers.serializer
 
+  const leadModule = subModules.find(m => m.identifier === 'LEAD')
+  if (!leadModule) {
+    throw new Error('Missing LEAD submodule')
+  }
+  const leadSerializer = leadModule.helpers.serializer
+
   const isCover = matchBlock(TYPE)
   const isTitle = matchBlock(titleModule.TYPE)
+  const isLead = matchBlock(leadModule.TYPE)
 
   const Cover = rule.component
 
@@ -40,15 +44,26 @@ export default ({rule, subModules, TYPE}) => {
         []
       )
       const image = findOrCreate(deepNodes, {type: 'image'})
+      const imageParagraph = node.children.find(
+        child => child.children && child.children.indexOf(image) !== -1
+      )
       const title = findOrCreate(
         node.children,
         {type: 'heading', depth: 1},
         {children: []}
       )
-      const lead = findOrCreate(
-        node.children,
-        {type: 'blockquote'},
-        {children: []}
+
+      const lead = (
+        node.children.find(child => child.type === 'paragraph' && child !== imageParagraph) ||
+        findOrCreate(
+          node.children,
+          {type: 'blockquote'},
+          {children: []}
+        ).children[0] ||
+        ({
+          type: 'paragraph',
+          children: []
+        })
       )
 
       return {
@@ -94,7 +109,7 @@ export default ({rule, subModules, TYPE}) => {
           leadSerializer.toMdast(
             findOrCreate(object.nodes, {
               kind: 'block',
-              type: LEAD
+              type: leadModule.TYPE
             }, {nodes: []}), context
           )
         ]

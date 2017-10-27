@@ -7,7 +7,6 @@ import MarkdownSerializer from '../../../../lib/serializer'
 import { getSerializationRules } from '../../utils/getRules'
 
 import marks from '../marks'
-import link from '../link'
 
 const styles = {
   paragraph: {
@@ -19,8 +18,7 @@ const isParagraph = matchBlock(PARAGRAPH)
 
 const inlineSerializer = new MarkdownSerializer({
   rules: getSerializationRules([
-    ...marks.plugins,
-    ...link.plugins
+    ...marks.plugins
   ]).concat({
     matchMdast: (node) => node.type === 'break',
     fromMdast: (node, index, parent, visitChildren) => ({

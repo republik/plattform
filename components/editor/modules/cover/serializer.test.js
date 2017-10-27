@@ -1,11 +1,12 @@
 import test from 'tape'
 import createCoverModule from './'
 import createHeadlineModule from '../headline'
+import createParagraphModule from '../paragraph/v2'
 
 const TYPE = 'COVER'
 
 const titleModule = createHeadlineModule({
-  TYPE: 'H1',
+  TYPE: 'TITLE',
   rule: {
     options: {
       depth: 1
@@ -13,13 +14,21 @@ const titleModule = createHeadlineModule({
   },
   subModules: []
 })
-titleModule.identifier = 'H1'
+titleModule.identifier = 'TITLE'
+
+const paragraphModule = createParagraphModule({
+  TYPE: 'LEAD',
+  rule: {},
+  subModules: []
+})
+paragraphModule.identifier = 'LEAD'
 
 const coverModule = createCoverModule({
   TYPE,
   rule: {},
   subModules: [
-    titleModule
+    titleModule,
+    paragraphModule
   ]
 })
 
@@ -32,7 +41,7 @@ test('cover serialization', assert => {
 
 # Title
 
-> Lead
+Lead
 
 <hr /></section>`
   const state = serializer.deserialize(md)
