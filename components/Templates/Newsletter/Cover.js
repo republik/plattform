@@ -78,12 +78,13 @@ export const Title = ({children}) => (
   </h1>
 )
 
-export default ({ data: { src, alt }, children }) => {
+export default ({ data: { src, alt }, children, attributes = {} }) => {
   const src2000 = imageResizeUrl(src, '2000x')
 
   return <div
     {...css(styles.cover)}
     {...css({ [mq.large]: { backgroundImage: `url('${src2000}')` } })}
+    {...attributes}
     >
     <img
       src={src2000}

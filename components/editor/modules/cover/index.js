@@ -1,89 +1,11 @@
 import React from 'react'
-import { css } from 'glamor'
 import { matchBlock } from '../../utils'
 import addValidation, { findOrCreate } from '../../utils/serializationValidation'
 import { gray2x1 } from '../../utils/placeholder'
 import { serializer as leadSerializer, LEAD } from '../lead'
 import { titleSerializer, TITLE } from '../headlines'
 import { CoverForm } from './ui'
-import { mq } from '../../styles'
 import MarkdownSerializer from '../../../../lib/serializer'
-import { imageResizeUrl } from '../../../Templates/utils'
-
-const styles = {
-  cover: {
-    width: '100%',
-    position: 'relative',
-    [mq.large]: {
-      minHeight: 500,
-      height: ['700px', '80vh'],
-      backgroundSize: 'cover',
-      backgroundPosition: 'center'
-    }
-  },
-  coverImage: {
-    display: 'block',
-    width: '100%',
-    [mq.large]: {
-      display: 'none'
-    }
-  },
-  coverLead: {
-    position: 'relative',
-    [mq.medium]: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      height: '40%',
-      color: '#fff',
-      backgroundImage: 'linear-gradient(-180deg, rgba(0,0,0,0.00) 0%, rgba(0,0,0,0.3) 20%, rgba(0,0,0,0.80) 100%)'
-    }
-  },
-  coverLeadContainer: {
-    [mq.medium]: {
-      position: 'absolute',
-      zIndex: 1000,
-      bottom: '15%',
-      left: 0,
-      right: 0
-    }
-  },
-  coverLeadCenter: {
-    padding: '20px 20px 0',
-    [mq.medium]: {
-      textAlign: 'center',
-      maxWidth: 640,
-      margin: '0 auto'
-    }
-  }
-}
-
-const Cover = ({ node, children, attributes }) => {
-  const src = node.data.get('src') || gray2x1
-  const alt = node.data.get('alt')
-
-  const src2000 = imageResizeUrl(src, '2000x1125')
-
-  return <div
-    {...css(styles.cover)}
-    {...css({ [mq.large]: { backgroundImage: `url('${src2000}')` } })}
-    {...attributes}
-    >
-    <img
-      src={src2000}
-      alt={alt}
-      {...css(styles.coverImage)}
-    />
-    <div {...css(styles.coverLead)}>
-      <div {...css(styles.coverLeadContainer)}>
-        <div {...css(styles.coverLeadCenter)}>
-          {children}
-        </div>
-      </div>
-    </div>
-  </div>
-}
 
 export {
   CoverForm
@@ -95,9 +17,18 @@ const isLead = matchBlock(LEAD)
 export default ({rule, subModules, TYPE}) => {
   const isCover = matchBlock(TYPE)
 
+  const Cover = rule.component
+
   const cover = {
     match: isCover,
-    render: Cover,
+    render: ({ children, node, attributes }) => (
+      <Cover data={{
+        src: node.data.get('src') || gray2x1,
+        alt: node.data.get('alt')
+      }} attributes={attributes}>
+        {children}
+      </Cover>
+    ),
     matchMdast: (node) => node.type === 'zone' && node.identifier === TYPE,
     fromMdast: (node, index, parent, visitChildren) => {
       // fault tolerant because markdown could have been edited outside

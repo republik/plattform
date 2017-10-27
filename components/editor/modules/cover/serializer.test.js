@@ -3,6 +3,7 @@ import createCoverModule from './'
 
 const TYPE = 'COVER'
 const coverModule = createCoverModule({
+  rule: {},
   TYPE,
   subModules: []
 })
