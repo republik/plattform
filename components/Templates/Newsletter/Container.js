@@ -12,8 +12,8 @@ const styles = {
   }
 }
 
-export default ({children}) => (
-  <div {...css(styles.container)}>
+export default ({children, attributes = {}}) => (
+  <div {...css(styles.container)} {...attributes}>
     {children}
   </div>
 )

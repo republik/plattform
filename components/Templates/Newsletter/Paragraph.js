@@ -19,8 +19,10 @@ const styles = {
 }
 
 export const Br = () => <br />
-export const Strong = ({ children, attributes = {} }) => <strong {...attributes}>{ children }</strong>
-export const Em = ({ children, attributes = {} }) => <em {...attributes}>{ children }</em>
+export const Strong = ({ children, attributes = {} }) =>
+  <strong {...attributes}>{ children }</strong>
+export const Em = ({ children, attributes = {} }) =>
+  <em {...attributes}>{ children }</em>
 export const Link = ({ children, data, attributes = {} }) => (
   <a {...css(styles.link)}
     href={data.href}

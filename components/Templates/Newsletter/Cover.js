@@ -66,14 +66,14 @@ const styles = {
   }
 }
 
-export const Lead = ({children}) => (
-  <div {...css(styles.lead)}>
+export const Lead = ({children, attributes = {}}) => (
+  <div {...css(styles.lead)} {...attributes}>
     {children}
   </div>
 )
 
-export const Title = ({children}) => (
-  <h1 {...css(styles.title)}>
+export const Title = ({children, attributes = {}}) => (
+  <h1 {...css(styles.title)} {...attributes}>
     {children}
   </h1>
 )
