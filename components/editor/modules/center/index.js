@@ -3,8 +3,6 @@ import MarkdownSerializer from '../../../../lib/serializer'
 import { getSerializationRules } from '../../utils/getRules'
 import addValidation from '../../utils/serializationValidation'
 
-import special from '../special'
-
 export default ({rule, subModules, TYPE}) => {
   const paragraphModule = subModules.find(m => m.identifier === 'PARAGRAPH')
   if (!paragraphModule) {
@@ -16,9 +14,7 @@ export default ({rule, subModules, TYPE}) => {
       subModules.reduce(
         (a, m) => a.concat(m.plugins),
         []
-      ).concat([
-        ...special.plugins
-      ])
+      )
     )
   })
 

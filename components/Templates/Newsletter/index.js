@@ -192,7 +192,8 @@ const schema = {
             {
               matchMdast: matchZone('SPECIAL_R_BLUEPRINT'),
               component: RBlueprint,
-              isVoid: true
+              isVoid: true,
+              editorModule: 'special'
             }
           ]
         }

@@ -7,10 +7,6 @@ import styles from './styles'
 import Sidebar from './Sidebar'
 import MetaData from './modules/meta/ui'
 
-import special, {
-  SpecialButton, SpecialForm
-} from './modules/special'
-
 import createDocumentModule from './modules/document'
 import createCoverModule from './modules/cover'
 import createCenterModule from './modules/center'
@@ -23,6 +19,7 @@ import createListModule from './modules/list'
 import createListItemModule from './modules/list/item'
 import createFigureModule from './modules/figure'
 import createFigureImageModule from './modules/figure/image'
+import createSpecialModule from './modules/special'
 
 import schema from '../Templates/Newsletter'
 
@@ -32,13 +29,14 @@ const moduleCreators = {
   center: createCenterModule,
   headline: createHeadlineModule,
   paragraph: createParagraphModule,
+  link: createLinkModule,
+  mark: createMarkModule,
   blockquote: createBlockquoteModule,
   list: createListModule,
   listItem: createListItemModule,
   figure: createFigureModule,
   figureImage: createFigureImageModule,
-  link: createLinkModule,
-  mark: createMarkModule
+  special: createSpecialModule
 }
 const initModule = rule => {
   const { editorModule, identifier } = rule
@@ -91,9 +89,6 @@ const getFromModules = (modules, accessor) => modules.reduce(
 ).filter(Boolean)
 
 const plugins = getFromModules(uniqModules, m => m.plugins)
-  .concat([
-    ...special.plugins
-  ])
 
 const textFormatButtons = getFromModules(
   uniqModules,
@@ -108,16 +103,12 @@ const blockFormatButtons = getFromModules(
 const insertButtons = getFromModules(
   uniqModules,
   m => m.ui && m.ui.insertButtons
-).concat([
-  SpecialButton
-])
+)
 
 const propertyForms = getFromModules(
   uniqModules,
   m => m.ui && m.ui.forms
-).concat([
-  SpecialForm
-])
+)
 
 const Container = ({ children }) => (
   <div {...css(styles.container)}>{ children }</div>
