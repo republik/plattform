@@ -1,18 +1,20 @@
 import test from 'tape'
-import paragraph, {PARAGRAPH} from './'
-import getRules from '../../utils/getRules'
-import MarkdownSerializer from '../../../../lib/serializer'
+import createParagraphModule from './'
 
-const serializer = new MarkdownSerializer({
-  rules: getRules(paragraph.plugins)
+const paragraphModule = createParagraphModule({
+  TYPE: 'P',
+  rule: {},
+  subModules: []
 })
+
+const serializer = paragraphModule.helpers.serializer
 
 test('paragraph serialization', assert => {
   const state = serializer.deserialize('Test')
   const node = state.document.nodes.first()
 
   assert.equal(node.kind, 'block')
-  assert.equal(node.type, PARAGRAPH)
+  assert.equal(node.type, 'P')
   assert.equal(node.text, 'Test')
 
   assert.equal(serializer.serialize(state).trimRight(), 'Test')

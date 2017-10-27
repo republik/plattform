@@ -137,6 +137,10 @@ const schema = {
             {
               matchMdast: matchZone('FIGURE'),
               component: Figure,
+              editorModule: 'figure',
+              options: {
+                afterType: 'PARAGRAPH'
+              },
               rules: [
                 {
                   matchMdast: matchImageParagraph,
@@ -145,12 +149,16 @@ const schema = {
                     src: node.children[0].url,
                     alt: node.children[0].alt
                   }),
+                  identifier: 'FIGURE_IMAGE',
+                  editorModule: 'figureImage',
                   isVoid: true
                 },
                 {
                   matchMdast: matchParagraph,
                   component: Caption,
                   getData: (node, parent) => (parent && parent.data) || {},
+                  identifier: 'FIGURE_CAPTION',
+                  editorModule: 'paragraph',
                   rules: paragraph.rules
                 }
               ]
@@ -166,6 +174,7 @@ const schema = {
             {
               matchMdast: matchType('list'),
               component: List,
+              editorModule: 'list',
               getData: node => ({
                 ordered: node.ordered,
                 start: node.start
@@ -174,6 +183,8 @@ const schema = {
                 {
                   matchMdast: matchType('listItem'),
                   component: ListItem,
+                  identifier: 'LIST_ITEM',
+                  editorModule: 'listItem',
                   rules: [paragraph]
                 }
               ]

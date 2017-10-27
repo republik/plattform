@@ -3,8 +3,6 @@ import MarkdownSerializer from '../../../../lib/serializer'
 import { getSerializationRules } from '../../utils/getRules'
 import addValidation from '../../utils/serializationValidation'
 
-import figure from '../figure'
-import list from '../list'
 import special from '../special'
 
 export default ({rule, subModules, TYPE}) => {
@@ -19,8 +17,6 @@ export default ({rule, subModules, TYPE}) => {
         (a, m) => a.concat(m.plugins),
         []
       ).concat([
-        ...figure.plugins,
-        ...list.plugins,
         ...special.plugins
       ])
     )

@@ -1,7 +1,7 @@
 import test from 'tape'
 import createCoverModule from './'
 import createHeadlineModule from '../headline'
-import createParagraphModule from '../paragraph/v2'
+import createParagraphModule from '../paragraph'
 
 const TYPE = 'COVER'
 

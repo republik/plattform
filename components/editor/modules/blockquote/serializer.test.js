@@ -1,7 +1,7 @@
 import test from 'tape'
 
 import createBlockquoteModule from './'
-import createParagraphModule from '../paragraph/v2'
+import createParagraphModule from '../paragraph'
 
 const paragraphModule = createParagraphModule({
   TYPE: 'PARAGRAPH',

@@ -1,7 +1,7 @@
 import test from 'tape'
 
 import createLinkModule from './'
-import createParagraphModule from '../paragraph/v2'
+import createParagraphModule from '../paragraph'
 
 const linkModule = createLinkModule({
   TYPE: 'LINK',

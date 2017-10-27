@@ -7,18 +7,6 @@ import styles from './styles'
 import Sidebar from './Sidebar'
 import MetaData from './modules/meta/ui'
 
-import paragraph from './modules/paragraph'
-
-import list, {
-  ULButton,
-  OLButton
-} from './modules/list'
-
-import figure, {
-  FigureForm,
-  FigureButton
-} from './modules/figure'
-
 import special, {
   SpecialButton, SpecialForm
 } from './modules/special'
@@ -27,10 +15,14 @@ import createDocumentModule from './modules/document'
 import createCoverModule from './modules/cover'
 import createCenterModule from './modules/center'
 import createHeadlineModule from './modules/headline'
-import createParagraphModule from './modules/paragraph/v2'
+import createParagraphModule from './modules/paragraph'
 import createBlockquoteModule from './modules/blockquote'
 import createLinkModule from './modules/link'
 import createMarkModule from './modules/mark'
+import createListModule from './modules/list'
+import createListItemModule from './modules/list/item'
+import createFigureModule from './modules/figure'
+import createFigureImageModule from './modules/figure/image'
 
 import schema from '../Templates/Newsletter'
 
@@ -41,6 +33,10 @@ const moduleCreators = {
   headline: createHeadlineModule,
   paragraph: createParagraphModule,
   blockquote: createBlockquoteModule,
+  list: createListModule,
+  listItem: createListItemModule,
+  figure: createFigureModule,
+  figureImage: createFigureImageModule,
   link: createLinkModule,
   mark: createMarkModule
 }
@@ -96,9 +92,6 @@ const getFromModules = (modules, accessor) => modules.reduce(
 
 const plugins = getFromModules(uniqModules, m => m.plugins)
   .concat([
-    ...paragraph.plugins,
-    ...figure.plugins,
-    ...list.plugins,
     ...special.plugins
   ])
 
@@ -110,16 +103,12 @@ const textFormatButtons = getFromModules(
 const blockFormatButtons = getFromModules(
   uniqModules,
   m => m.ui && m.ui.blockFormatButtons
-).concat([
-  ULButton,
-  OLButton
-])
+)
 
 const insertButtons = getFromModules(
   uniqModules,
   m => m.ui && m.ui.insertButtons
 ).concat([
-  FigureButton,
   SpecialButton
 ])
 
@@ -127,7 +116,6 @@ const propertyForms = getFromModules(
   uniqModules,
   m => m.ui && m.ui.forms
 ).concat([
-  FigureForm,
   SpecialForm
 ])
 
