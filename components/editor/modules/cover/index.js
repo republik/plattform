@@ -4,12 +4,8 @@ import addValidation, { findOrCreate } from '../../utils/serializationValidation
 import { gray2x1 } from '../../utils/placeholder'
 import { serializer as leadSerializer, LEAD } from '../lead'
 import { titleSerializer, TITLE } from '../headlines'
-import { CoverForm } from './ui'
+import { createCoverForm } from './ui'
 import MarkdownSerializer from '../../../../lib/serializer'
-
-export {
-  CoverForm
-}
 
 const isTitle = matchBlock(TITLE)
 const isLead = matchBlock(LEAD)
@@ -115,6 +111,11 @@ export default ({rule, subModules, TYPE}) => {
       serializer
     },
     changes: {},
+    ui: {
+      forms: [
+        createCoverForm(TYPE)
+      ]
+    },
     plugins: [
       {
         schema: {

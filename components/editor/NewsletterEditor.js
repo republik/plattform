@@ -46,7 +46,7 @@ import special, {
 } from './modules/special'
 
 import createDocumentModule from './modules/document'
-import createCoverModule, { CoverForm } from './modules/cover'
+import createCoverModule from './modules/cover'
 import createCenterModule from './modules/center'
 
 import schema from '../Templates/Newsletter'
@@ -88,15 +88,18 @@ const containerStyles = {
 export const serializer = rootModule.helpers.serializer
 export const newDocument = rootModule.helpers.newDocument
 
-const getPlugins = module => module.plugins
+const getFromModules = (module, accessor) =>
+  (accessor(module) || [])
   .concat(
     (module.subModules || []).reduce(
-      (plugins, subModule) => plugins.concat(getPlugins(subModule)),
+      (collector, subModule) => collector.concat(
+        getFromModules(subModule, accessor)
+      ),
       []
     )
   )
 
-const plugins = getPlugins(rootModule)
+const plugins = getFromModules(rootModule, m => m.plugins)
   .concat([
     ...marks.plugins,
     ...headlines.plugins,
@@ -109,32 +112,43 @@ const plugins = getPlugins(rootModule)
     ...special.plugins
   ])
 
-const textFormatButtons = [
+const textFormatButtons = getFromModules(
+  rootModule,
+  m => m.ui && m.ui.textFormatButtons
+).concat([
   BoldButton,
   ItalicButton,
   LinkButton
-]
+])
 
-const blockFormatButtons = [
+const blockFormatButtons = getFromModules(
+  rootModule,
+  m => m.ui && m.ui.blockFormatButtons
+).concat([
   MediumHeadlineButton,
   SmallHeadlineButton,
   ParagraphButton,
   BlockquoteButton,
   ULButton,
   OLButton
-]
+])
 
-const insertButtons = [
+const insertButtons = getFromModules(
+  rootModule,
+  m => m.ui && m.ui.insertButtons
+).concat([
   FigureButton,
   SpecialButton
-]
+])
 
-const propertyForms = [
+const propertyForms = getFromModules(
+  rootModule,
+  m => m.ui && m.ui.forms
+).concat([
   LinkForm,
   FigureForm,
-  CoverForm,
   SpecialForm
-]
+])
 
 const Container = ({ children }) => (
   <div {...css(styles.container)}>{ children }</div>
