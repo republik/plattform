@@ -169,14 +169,20 @@ Ladies and Gentlemen,
       serializer,
       newDocument
     },
+    components: {
+      Container
+    },
     changes: {},
     plugins: [
       {
-        render: ({children}) => <Container>{children}</Container>,
         schema: {
-          rules: [
-            documentRule
-          ]
+          document: {
+            nodes: [
+              {
+                types: [coverModule.TYPE, centerModule.TYPE]
+              }
+            ]
+          }
         },
         onBeforeChange: (change) => {
           const newData = autoMeta(change.state.document)

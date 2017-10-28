@@ -64,6 +64,8 @@ const initModule = rule => {
 
 const rootRule = schema.rules[0]
 const rootModule = initModule(rootRule)
+// tmp, see: https://github.com/ianstormtaylor/slate/issues/1323
+const RootContainer = rootModule.components.Container
 
 export const serializer = rootModule.helpers.serializer
 export const newDocument = rootModule.helpers.newDocument
@@ -153,10 +155,12 @@ class Editor extends Component {
           state={state}
           onChange={this.onChange} />
         <Document>
-          <SlateEditor
-            state={state}
-            onChange={this.onChange}
-            plugins={plugins} />
+          <RootContainer>
+            <SlateEditor
+              state={state}
+              onChange={this.onChange}
+              plugins={plugins} />
+          </RootContainer>
           <MetaData
             state={state}
             onChange={this.onChange} />

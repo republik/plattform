@@ -26,14 +26,6 @@ export default ({rule, subModules, TYPE}) => {
 
   const cover = {
     match: isCover,
-    render: ({ children, node, attributes }) => (
-      <Cover data={{
-        src: node.data.get('src') || gray2x1,
-        alt: node.data.get('alt')
-      }} attributes={attributes}>
-        {children}
-      </Cover>
-    ),
     matchMdast: (node) => node.type === 'zone' && node.identifier === TYPE,
     fromMdast: (node, index, parent, visitChildren) => {
       // fault tolerant because markdown could have been edited outside
@@ -138,10 +130,28 @@ export default ({rule, subModules, TYPE}) => {
     },
     plugins: [
       {
+        renderNode ({node, children, attributes}) {
+          if (!cover.match(node)) return
+          return (
+            <Cover data={{
+              src: node.data.get('src') || gray2x1,
+              alt: node.data.get('alt')
+            }} attributes={attributes}>
+              {children}
+            </Cover>
+          )
+        },
         schema: {
-          rules: [
-            cover
-          ]
+          blocks: {
+            [TYPE]: {
+              nodes: [
+                {
+                  types: [titleModule.TYPE, leadModule.TYPE],
+                  kinds: ['block']
+                }
+              ]
+            }
+          }
         }
       }
     ]

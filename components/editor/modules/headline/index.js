@@ -29,8 +29,7 @@ export default ({rule, subModules, TYPE}) => {
       if (node.text.length) return null
 
       return <Placeholder>{placeholder}</Placeholder>
-    }),
-    render: rule.component
+    })
   }
 
   const serializer = new MarkdownSerializer({
@@ -67,10 +66,22 @@ export default ({rule, subModules, TYPE}) => {
     },
     plugins: [
       {
+        renderNode ({node, children, attributes}) {
+          if (!title.match(node)) return
+          return (
+            <rule.component attributes={attributes}>
+              {children}
+            </rule.component>
+          )
+        },
         schema: {
-          rules: [
-            title
-          ]
+          blocks: {
+            [TYPE]: {
+              nodes: [
+                { kinds: ['text'] }
+              ]
+            }
+          }
         }
       }
     ]

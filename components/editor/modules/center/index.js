@@ -1,6 +1,5 @@
 import { matchBlock } from '../../utils'
 import MarkdownSerializer from '../../../../lib/serializer'
-import { getSerializationRules } from '../../utils/getRules'
 import addValidation from '../../utils/serializationValidation'
 
 export default ({rule, subModules, TYPE}) => {
@@ -10,12 +9,13 @@ export default ({rule, subModules, TYPE}) => {
   }
 
   const childSerializer = new MarkdownSerializer({
-    rules: getSerializationRules(
-      subModules.reduce(
-        (a, m) => a.concat(m.plugins),
-        []
-      )
-    )
+    rules: subModules.reduce(
+      (a, m) => a.concat(
+        m.helpers && m.helpers.serializer &&
+        m.helpers.serializer.rules
+      ),
+      []
+    ).filter(Boolean)
   })
 
   const center = {
@@ -50,27 +50,45 @@ export default ({rule, subModules, TYPE}) => {
     changes: {},
     plugins: [
       {
+        renderNode ({node, children, attributes}) {
+          if (!center.match(node)) return
+
+          return (
+            <rule.component attributes={attributes}>
+              {children}
+            </rule.component>
+          )
+        },
         schema: {
-          rules: [
-            {
-              match: matchBlock(TYPE),
-              validate: node => {
-                const notBlocks = node.nodes.filter(n => n.kind !== 'block')
+          blocks: {
+            [TYPE]: {
+              nodes: [
+                {
+                  kinds: 'block',
+                  types: subModules.map(m => m.TYPE)
+                }
+              ]
+            }
+          }
+          // rules: [
+          //   {
+          //     match: matchBlock(TYPE),
+          //     validate: node => {
+          //       const notBlocks = node.nodes.filter(n => n.kind !== 'block')
 
-                return notBlocks.size
-                  ? notBlocks
-                  : null
-              },
-              normalize: (change, object, notBlocks) => {
-                notBlocks.forEach((child) => {
-                  change.wrapBlockByKey(child.key, paragraphModule.TYPE)
-                })
+          //       return notBlocks.size
+          //         ? notBlocks
+          //         : null
+          //     },
+          //     normalize: (change, object, notBlocks) => {
+          //       notBlocks.forEach((child) => {
+          //         change.wrapBlockByKey(child.key, paragraphModule.TYPE)
+          //       })
 
-                return change
-              }
-            },
-            center
-          ]
+          //       return change
+          //     }
+          //   }
+          // ]
         }
       }
     ]
