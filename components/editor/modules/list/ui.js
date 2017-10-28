@@ -1,9 +1,8 @@
 import React from 'react'
 import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 import injectBlock from '../../utils/injectBlock'
-import { newBlock } from './'
 
-export const createListButton = ({TYPE, ordered, label}) => createBlockButton({
+export const createListButton = ({TYPE, ordered, label, newBlock}) => createBlockButton({
   type: TYPE,
   reducer: props =>
     event => {

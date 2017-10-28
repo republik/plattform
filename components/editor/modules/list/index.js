@@ -78,12 +78,14 @@ export default ({rule, subModules, TYPE}) => {
         createListButton({
           TYPE,
           ordered: false,
-          label: 'Liste'
+          label: 'Liste',
+          newBlock
         }),
         createListButton({
           TYPE,
           ordered: true,
-          label: 'Aufzählung'
+          label: 'Aufzählung',
+          newBlock
         })
       ]
     },
