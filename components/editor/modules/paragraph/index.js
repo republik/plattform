@@ -10,7 +10,7 @@ export default ({rule, subModules, TYPE}) => {
   const {
     formatButtonText,
     placeholder
-  } = rule.options || {}
+  } = rule.editorOptions || {}
 
   const inlineSerializer = new MarkdownSerializer({
     rules: getSerializationRules(

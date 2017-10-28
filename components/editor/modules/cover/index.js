@@ -6,15 +6,15 @@ import { createCoverForm } from './ui'
 import MarkdownSerializer from '../../../../lib/serializer'
 
 export default ({rule, subModules, TYPE}) => {
-  const titleModule = subModules.find(m => m.identifier === 'TITLE')
+  const titleModule = subModules.find(m => m.name === 'headline')
   if (!titleModule) {
-    throw new Error('Missing TITLE submodule')
+    throw new Error('Missing headline submodule')
   }
   const titleSerializer = titleModule.helpers.serializer
 
-  const leadModule = subModules.find(m => m.identifier === 'LEAD')
+  const leadModule = subModules.find(m => m.name === 'paragraph')
   if (!leadModule) {
-    throw new Error('Missing LEAD submodule')
+    throw new Error('Missing paragraph submodule')
   }
   const leadSerializer = leadModule.helpers.serializer
 

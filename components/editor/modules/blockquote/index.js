@@ -5,9 +5,9 @@ import MarkdownSerializer from '../../../../lib/serializer'
 import addValidation from '../../utils/serializationValidation'
 
 export default ({rule, subModules, TYPE}) => {
-  const paragraphModule = subModules.find(m => m.identifier === 'PARAGRAPH')
+  const paragraphModule = subModules.find(m => m.name === 'paragraph')
   if (!paragraphModule) {
-    throw new Error('Missing PARAGRAPH submodule')
+    throw new Error('Missing paragraph submodule')
   }
   const paragraphSerializer = paragraphModule.helpers.serializer
   const PARAGRAPH = paragraphModule.TYPE

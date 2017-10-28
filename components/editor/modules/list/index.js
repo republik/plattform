@@ -6,9 +6,9 @@ import addValidation from '../../utils/serializationValidation'
 import { Block } from 'slate'
 
 export default ({rule, subModules, TYPE}) => {
-  const itemModule = subModules.find(m => m.identifier === 'LIST_ITEM')
+  const itemModule = subModules.find(m => m.name === 'listItem')
   if (!itemModule) {
-    throw new Error('Missing LIST_ITEM submodule')
+    throw new Error('Missing listItem submodule')
   }
   const itemSerializer = itemModule.helpers.serializer
 

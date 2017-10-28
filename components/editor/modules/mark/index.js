@@ -15,7 +15,7 @@ const icons = {
 export default ({rule, subModules, TYPE}) => {
   const {
     type: mdastType
-  } = rule.options
+  } = rule.editorOptions
   if (!mdastType) {
     throw new Error(`Missing Mdast Type ${mdastType}`)
   }

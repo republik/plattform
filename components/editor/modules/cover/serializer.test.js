@@ -8,20 +8,20 @@ const TYPE = 'COVER'
 const titleModule = createHeadlineModule({
   TYPE: 'TITLE',
   rule: {
-    options: {
+    editorOptions: {
       depth: 1
     }
   },
   subModules: []
 })
-titleModule.identifier = 'TITLE'
+titleModule.name = 'headline'
 
 const paragraphModule = createParagraphModule({
   TYPE: 'LEAD',
   rule: {},
   subModules: []
 })
-paragraphModule.identifier = 'LEAD'
+paragraphModule.name = 'paragraph'
 
 const coverModule = createCoverModule({
   TYPE,

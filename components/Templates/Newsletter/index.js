@@ -19,9 +19,8 @@ import {
 const paragraph = {
   matchMdast: matchParagraph,
   component: Paragraph,
-  identifier: 'PARAGRAPH',
   editorModule: 'paragraph',
-  options: {
+  editorOptions: {
     formatButtonText: 'Paragraph'
   },
   rules: [
@@ -34,8 +33,7 @@ const paragraph = {
       matchMdast: matchType('strong'),
       component: Strong,
       editorModule: 'mark',
-      identifier: 'BOLD',
-      options: {
+      editorOptions: {
         type: 'strong'
       }
     },
@@ -43,19 +41,18 @@ const paragraph = {
       matchMdast: matchType('emphasis'),
       component: Em,
       editorModule: 'mark',
-      identifier: 'ITALIC',
-      options: {
+      editorOptions: {
         type: 'emphasis'
       }
     },
     {
       matchMdast: matchType('link'),
-      editorModule: 'link',
       getData: node => ({
         title: node.title,
         href: node.url
       }),
-      component: Link
+      component: Link,
+      editorModule: 'link'
     }
   ]
 }
@@ -70,8 +67,6 @@ const schema = {
         {
           matchMdast: matchZone('COVER'),
           component: Cover,
-          identifier: 'COVER',
-          editorModule: 'cover',
           getData: node => {
             const img = node.children[0].children[0]
             return {
@@ -79,6 +74,7 @@ const schema = {
               src: img.url
             }
           },
+          editorModule: 'cover',
           rules: [
             {
               matchMdast: matchImageParagraph,
@@ -88,9 +84,9 @@ const schema = {
             {
               matchMdast: matchHeading(1),
               component: Title,
-              identifier: 'TITLE',
               editorModule: 'headline',
-              options: {
+              editorOptions: {
+                type: 'title',
                 depth: 1,
                 placeholder: 'Title'
               }
@@ -98,9 +94,9 @@ const schema = {
             {
               matchMdast: matchParagraph,
               component: Lead,
-              identifier: 'LEAD',
               editorModule: 'paragraph',
-              options: {
+              editorOptions: {
+                type: 'lead',
                 placeholder: 'Lead'
               },
               rules: paragraph.rules
@@ -110,16 +106,15 @@ const schema = {
         {
           matchMdast: matchZone('CENTER'),
           component: Center,
-          identifier: 'CENTER',
           editorModule: 'center',
           rules: [
             paragraph,
             {
               matchMdast: matchHeading(2),
               component: H2,
-              identifier: 'H2',
               editorModule: 'headline',
-              options: {
+              editorOptions: {
+                type: 'h2',
                 depth: 2,
                 formatButtonText: 'Zwischentitel 1'
               }
@@ -127,9 +122,9 @@ const schema = {
             {
               matchMdast: matchHeading(3),
               component: H3,
-              identifier: 'H3',
               editorModule: 'headline',
-              options: {
+              editorOptions: {
+                type: 'h3',
                 depth: 3,
                 formatButtonText: 'Zwischentitel 2'
               }
@@ -138,7 +133,7 @@ const schema = {
               matchMdast: matchZone('FIGURE'),
               component: Figure,
               editorModule: 'figure',
-              options: {
+              editorOptions: {
                 afterType: 'PARAGRAPH'
               },
               rules: [
@@ -149,7 +144,6 @@ const schema = {
                     src: node.children[0].url,
                     alt: node.children[0].alt
                   }),
-                  identifier: 'FIGURE_IMAGE',
                   editorModule: 'figureImage',
                   isVoid: true
                 },
@@ -157,8 +151,10 @@ const schema = {
                   matchMdast: matchParagraph,
                   component: Caption,
                   getData: (node, parent) => (parent && parent.data) || {},
-                  identifier: 'FIGURE_CAPTION',
                   editorModule: 'paragraph',
+                  editorOptions: {
+                    type: 'figureCaption'
+                  },
                   rules: paragraph.rules
                 }
               ]
@@ -174,16 +170,15 @@ const schema = {
             {
               matchMdast: matchType('list'),
               component: List,
-              editorModule: 'list',
               getData: node => ({
                 ordered: node.ordered,
                 start: node.start
               }),
+              editorModule: 'list',
               rules: [
                 {
                   matchMdast: matchType('listItem'),
                   component: ListItem,
-                  identifier: 'LIST_ITEM',
                   editorModule: 'listItem',
                   rules: [paragraph]
                 }

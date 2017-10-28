@@ -38,23 +38,25 @@ const moduleCreators = {
   special: createSpecialModule
 }
 const initModule = rule => {
-  const { editorModule, identifier } = rule
+  const { editorModule, editorOptions = {} } = rule
   if (editorModule) {
     const create = moduleCreators[editorModule]
     if (!create) {
       throw new Error(`Missing editorModule ${editorModule}`)
     }
-    const TYPE = identifier || editorModule.toUpperCase()
-    const subModules = (rule.rules || []).map(initModule).filter(Boolean)
+    const TYPE = (editorOptions.type || editorModule).toUpperCase()
+    const subModules = (rule.rules || [])
+      .map(initModule)
+      .filter(Boolean)
     const module = create({
-      rule,
       TYPE,
+      rule,
       subModules: subModules
     })
 
     module.TYPE = TYPE
+    module.name = editorModule
     module.subModules = subModules
-    module.identifier = identifier
 
     return module
   }

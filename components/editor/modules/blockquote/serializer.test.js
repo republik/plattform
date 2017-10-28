@@ -8,7 +8,7 @@ const paragraphModule = createParagraphModule({
   rule: {},
   subModules: []
 })
-paragraphModule.identifier = 'PARAGRAPH'
+paragraphModule.name = 'paragraph'
 
 const blockquoteModule = createBlockquoteModule({
   TYPE: 'BLOCKQUOTE',
@@ -17,7 +17,7 @@ const blockquoteModule = createBlockquoteModule({
     paragraphModule
   ]
 })
-blockquoteModule.identifier = 'BLOCKQUOTE'
+blockquoteModule.name = 'blockquote'
 
 const serializer = blockquoteModule.helpers.serializer
 

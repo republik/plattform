@@ -10,7 +10,7 @@ export default ({rule, subModules, TYPE}) => {
     depth,
     placeholder,
     formatButtonText
-  } = rule.options
+  } = rule.editorOptions || {}
 
   const title = {
     match: matchBlock(TYPE),

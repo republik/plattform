@@ -4,13 +4,13 @@ import MarkdownSerializer from '../../../../lib/serializer'
 import addValidation, { findOrCreate } from '../../utils/serializationValidation'
 
 export default ({rule, subModules, TYPE}) => {
-  const coverModule = subModules.find(m => m.identifier === 'COVER')
+  const coverModule = subModules.find(m => m.name === 'cover')
   if (!coverModule) {
-    throw new Error('Missing COVER submodule')
+    throw new Error('Missing cover submodule')
   }
-  const centerModule = subModules.find(m => m.identifier === 'CENTER')
+  const centerModule = subModules.find(m => m.name === 'center')
   if (!centerModule) {
-    throw new Error('Missing CENTER submodule')
+    throw new Error('Missing center submodule')
   }
 
   const coverSerializer = coverModule.helpers.serializer

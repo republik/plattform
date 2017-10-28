@@ -5,7 +5,7 @@ test('h1 serialization', assert => {
   const module = createHeadlineModule({
     TYPE: 'H1',
     rule: {
-      options: {
+      editorOptions: {
         depth: 1
       }
     },
@@ -29,7 +29,7 @@ test('h2 serialization', assert => {
   const module = createHeadlineModule({
     TYPE: 'H2',
     rule: {
-      options: {
+      editorOptions: {
         depth: 2
       }
     },
@@ -53,7 +53,7 @@ test('h3 serialization', assert => {
   const module = createHeadlineModule({
     TYPE: 'H3',
     rule: {
-      options: {
+      editorOptions: {
         depth: 3
       }
     },

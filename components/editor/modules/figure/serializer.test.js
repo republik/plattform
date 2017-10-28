@@ -8,20 +8,20 @@ const TYPE = 'FIGURE'
 const imageModule = createImageModule({
   TYPE: 'FIGURE_IMAGE',
   rule: {
-    options: {
+    editorOptions: {
       depth: 1
     }
   },
   subModules: []
 })
-imageModule.identifier = 'FIGURE_IMAGE'
+imageModule.name = 'figureImage'
 
 const paragraphModule = createParagraphModule({
   TYPE: 'FIGURE_CAPTION',
   rule: {},
   subModules: []
 })
-paragraphModule.identifier = 'FIGURE_CAPTION'
+paragraphModule.name = 'paragraph'
 
 const figureModule = createFigureModule({
   TYPE,

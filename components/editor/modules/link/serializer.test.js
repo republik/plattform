@@ -8,7 +8,7 @@ const linkModule = createLinkModule({
   rule: {},
   subModules: []
 })
-linkModule.identifier = 'LINK'
+linkModule.name = 'link'
 
 const paragraphModule = createParagraphModule({
   TYPE: 'PARAGRAPH',
@@ -17,7 +17,7 @@ const paragraphModule = createParagraphModule({
     linkModule
   ]
 })
-paragraphModule.identifier = 'PARAGRAPH'
+paragraphModule.name = 'paragraph'
 
 const serializer = paragraphModule.helpers.serializer
 

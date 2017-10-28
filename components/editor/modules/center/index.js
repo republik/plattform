@@ -4,9 +4,9 @@ import { getSerializationRules } from '../../utils/getRules'
 import addValidation from '../../utils/serializationValidation'
 
 export default ({rule, subModules, TYPE}) => {
-  const paragraphModule = subModules.find(m => m.identifier === 'PARAGRAPH')
+  const paragraphModule = subModules.find(m => m.name === 'paragraph')
   if (!paragraphModule) {
-    throw new Error('Missing PARAGRAPH submodule')
+    throw new Error('Missing paragraph submodule')
   }
 
   const childSerializer = new MarkdownSerializer({

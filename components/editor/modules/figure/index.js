@@ -8,16 +8,16 @@ import addValidation, { findOrCreate } from '../../utils/serializationValidation
 import MarkdownSerializer from '../../../../lib/serializer'
 
 export default ({rule, subModules, TYPE}) => {
-  const imageModule = subModules.find(m => m.identifier === 'FIGURE_IMAGE')
+  const imageModule = subModules.find(m => m.name === 'figureImage')
   if (!imageModule) {
-    throw new Error('Missing FIGURE_IMAGE submodule')
+    throw new Error('Missing figureImage submodule')
   }
   const imageSerializer = imageModule.helpers.serializer
   const FIGURE_IMAGE = imageModule.TYPE
 
-  const captionModule = subModules.find(m => m.identifier === 'FIGURE_CAPTION')
+  const captionModule = subModules.find(m => m.name === 'paragraph')
   if (!captionModule) {
-    throw new Error('Missing FIGURE_CAPTION submodule')
+    throw new Error('Missing paragraph submodule')
   }
   const captionSerializer = captionModule.helpers.serializer
   const FIGURE_CAPTION = captionModule.TYPE
@@ -115,7 +115,7 @@ export default ({rule, subModules, TYPE}) => {
 
   const {
     afterType
-  } = rule.options || {}
+  } = rule.editorOptions || {}
 
   return {
     TYPE,
