@@ -24,11 +24,6 @@ export default ({rule, subModules, TYPE}) => {
       type: 'heading',
       depth,
       children: visitChildren(object)
-    }),
-    placeholder: placeholder && (({node}) => {
-      if (node.text.length) return null
-
-      return <Placeholder>{placeholder}</Placeholder>
     })
   }
 
@@ -66,6 +61,12 @@ export default ({rule, subModules, TYPE}) => {
     },
     plugins: [
       {
+        renderPlaceholder: placeholder && (({node}) => {
+          if (!title.match(node)) return
+          if (node.text.length) return null
+
+          return <Placeholder>{placeholder}</Placeholder>
+        }),
         renderNode ({node, children, attributes}) {
           if (!title.match(node)) return
           return (
