@@ -67,7 +67,21 @@ export default ({rule, subModules, TYPE}) => {
                   kinds: 'block',
                   types: subModules.map(m => m.TYPE)
                 }
-              ]
+              ],
+              normalize: (change, reason, {node, index, child}) => {
+                if (reason === 'child_type_invalid') {
+                  change.setNodeByKey(
+                    child.key,
+                    {type: paragraphModule.TYPE}
+                  )
+                }
+                if (reason === 'child_kind_invalid') {
+                  change.wrapBlockByKey(
+                    child.key,
+                    {type: paragraphModule.TYPE}
+                  )
+                }
+              }
             }
           }
           // rules: [
