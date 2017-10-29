@@ -84,25 +84,6 @@ export default ({rule, subModules, TYPE}) => {
               }
             }
           }
-          // rules: [
-          //   {
-          //     match: matchBlock(TYPE),
-          //     validate: node => {
-          //       const notBlocks = node.nodes.filter(n => n.kind !== 'block')
-
-          //       return notBlocks.size
-          //         ? notBlocks
-          //         : null
-          //     },
-          //     normalize: (change, object, notBlocks) => {
-          //       notBlocks.forEach((child) => {
-          //         change.wrapBlockByKey(child.key, paragraphModule.TYPE)
-          //       })
-
-          //       return change
-          //     }
-          //   }
-          // ]
         }
       }
     ]
