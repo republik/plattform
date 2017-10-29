@@ -146,10 +146,45 @@ export default ({rule, subModules, TYPE}) => {
             [TYPE]: {
               nodes: [
                 {
-                  types: [titleModule.TYPE, leadModule.TYPE],
-                  kinds: ['block']
+                  types: [titleModule.TYPE],
+                  min: 1,
+                  max: 1
+                },
+                {
+                  types: [leadModule.TYPE],
+                  min: 1,
+                  max: 1
                 }
-              ]
+              ],
+              normalize: (change, reason, {node, index, child}) => {
+                if (reason === 'child_required') {
+                  change.insertNodeByKey(
+                    node.key,
+                    index,
+                    {
+                      kind: 'block',
+                      type: index === 0
+                        ? titleModule.TYPE
+                        : leadModule.TYPE
+                    }
+                  )
+                }
+                if (reason === 'child_type_invalid') {
+                  change.setNodeByKey(
+                    child.key,
+                    {
+                      type: index === 0
+                        ? titleModule.TYPE
+                        : leadModule.TYPE
+                    }
+                  )
+                }
+                if (reason === 'child_unknown') {
+                  if (index > 1) {
+                    change.mergeNodeByKey(child.key)
+                  }
+                }
+              }
             }
           }
         }

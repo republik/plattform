@@ -1,7 +1,7 @@
 import { Document as SlateDocument } from 'slate'
 
 import MarkdownSerializer from '../../../../lib/serializer'
-import addValidation, { findOrCreate } from '../../utils/serializationValidation'
+import { findOrCreate } from '../../utils/serializationValidation'
 
 export default ({rule, subModules, TYPE}) => {
   const coverModule = subModules.find(m => m.name === 'cover')
@@ -159,8 +159,6 @@ Ladies and Gentlemen,
 `
   )
 
-  addValidation(documentRule, serializer, 'document')
-
   const Container = rule.component
 
   return {
@@ -179,7 +177,16 @@ Ladies and Gentlemen,
           document: {
             nodes: [
               {
-                types: [coverModule.TYPE, centerModule.TYPE]
+                types: [coverModule.TYPE],
+                kinds: ['block'],
+                min: 1,
+                max: 1
+              },
+              {
+                types: [centerModule.TYPE],
+                kinds: ['block'],
+                min: 1,
+                max: 1
               }
             ]
           }
