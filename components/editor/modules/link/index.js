@@ -1,5 +1,6 @@
 import React from 'react'
 import { matchInline } from '../../utils'
+import MarkdownSerializer from '../../../../lib/serializer'
 
 import createUi from './ui'
 
@@ -8,7 +9,7 @@ export default ({rule, subModules, TYPE}) => {
 
   const link = {
     match: matchInline(TYPE),
-    matchMdast: (node) => node.type === 'link',
+    matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, visitChildren) => ({
       kind: 'inline',
       type: TYPE,
@@ -23,25 +24,31 @@ export default ({rule, subModules, TYPE}) => {
       title: object.data.title,
       url: object.data.href,
       children: visitChildren(object)
-    }),
-    render: ({ children, node, attributes }) => (
-      <Link data={node.data.toJS()} attributes={attributes}>
-        {children}
-      </Link>
-    )
+    })
   }
+
+  const serializer = new MarkdownSerializer({
+    rules: [
+      link
+    ]
+  })
 
   return {
     TYPE,
-    helpers: {},
+    helpers: {
+      serializer
+    },
     changes: {},
     ui: createUi({TYPE}),
     plugins: [
       {
-        schema: {
-          rules: [
-            link
-          ]
+        renderNode ({node, children, attributes}) {
+          if (!link.match(node)) return
+          return (
+            <Link data={node.data.toJS()} attributes={attributes}>
+              {children}
+            </Link>
+          )
         }
       }
     ]

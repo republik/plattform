@@ -45,15 +45,15 @@ const paragraph = {
         type: 'emphasis'
       }
     },
-    // {
-    //   matchMdast: matchType('link'),
-    //   getData: node => ({
-    //     title: node.title,
-    //     href: node.url
-    //   }),
-    //   component: Link,
-    //   editorModule: 'link'
-    // }
+    {
+      matchMdast: matchType('link'),
+      getData: node => ({
+        title: node.title,
+        href: node.url
+      }),
+      component: Link,
+      editorModule: 'link'
+    }
   ]
 }
 

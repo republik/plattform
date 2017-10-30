@@ -106,7 +106,7 @@ export default ({rule, subModules, TYPE}) => {
           blocks: {
             [TYPE]: {
               nodes: [
-                { kinds: ['text'] }
+                { kinds: ['text', 'inline'] }
               ]
             }
           }
