@@ -37,6 +37,7 @@ const styles = {
   }),
   description: css({
     ...sansSerifRegular14,
+    lineHeight: 1,
     color: colors.lightText
   }),
   verifiedDescription: css({

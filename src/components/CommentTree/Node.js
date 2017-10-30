@@ -4,41 +4,11 @@ import PropTypes from 'prop-types'
 
 import {Comment, CommentActions} from '../Comment'
 import CommentComposer from '../CommentComposer/CommentComposer'
+import Row from './Row'
 import LoadMore from './LoadMore'
+import {DepthBars} from './DepthBar'
 
-const styles = {
-  root: css({
-    margin: '40px 0',
-
-    '&:first-child': {
-      marginTop: '0'
-    },
-    '&:last-child': {
-      marginBottom: '0'
-    }
-  }),
-  rootBorder: css({
-    paddingLeft: '14px',
-    borderLeft: '1px solid #DBDBDB'
-  }),
-  commentComposerContainer: css({
-    marginTop: '20px'
-  }),
-  childrenContainer: css({
-    margin: '40px 0 40px 15px'
-  }),
-}
-
-const Composer = ({t, displayAuthor, onCancel, submitComment}) => (
-  <div {...styles.commentComposerContainer}>
-    <CommentComposer
-      t={t}
-      displayAuthor={displayAuthor}
-      onCancel={onCancel}
-      submitComment={submitComment}
-    />
-  </div>
-)
+const range = (n) => Array.from(new Array(n))
 
 class Node extends PureComponent {
   constructor (props) {
@@ -65,131 +35,167 @@ class Node extends PureComponent {
       this.props.submitComment(this.props.comment.id, content)
       this.dismissComposer()
     }
-    this.fetchMore = () => {
-      const {comment: {id, comments}, fetchMore} = this.props
-      if (comments && comments.pageInfo) {
-        fetchMore(id, comments.pageInfo.endCursor)
-      } else {
-        fetchMore(id, undefined)
-      }
-    }
   }
 
   render () {
-    const {t, top, displayAuthor, comment, timeago} = this.props
+    const {
+      visualDepth: visualDepth0 = 1,
+      head: head0,
+      tail: tail0,
+      logicalDepth = 0,
+      otherChild: otherChild0 = false,
+      t,
+      top,
+      displayAuthor,
+      comment,
+      timeago,
+      More
+    } = this.props
     const {showComposer} = this.state
 
-    const {score, comments, userVote} = comment
+    const {createdAt, score, comments, userVote} = comment
+    const hasChildren = comments && comments.totalCount > 0
 
-    const onUpvote = userVote === 'UP' ? undefined : this.upvoteComment
-    const onDownvote = userVote === 'DOWN' ? undefined : this.downvoteComment
+    // Adjust the visual depth and other options based on the shape of the comment
+    // (and its children).
+    const {visualDepth, head, tail, otherChild} = (() => {
+      if (top) {
+        if (hasChildren) {
+          // Top node with children. Is head but not tail so that the
+          // bar continues.
+          return {
+            visualDepth: 1,
+            head: true,
+            tail: false,
+            otherChild: false
+          }
+        }
+
+        // Top node with no children. No vertical bars.
+        return {
+          visualDepth: 0,
+          head: true,
+          tail: true,
+          otherChild: false
+        }
+      }
+
+      if (otherChild0) {
+        if (hasChildren) {
+          // An 'otherChild' with children itself. Clear the 'otherChild'
+          // flag and increase the visual depth, so that we can draw
+          // a continuous bar across all children.
+          return {
+            visualDepth: visualDepth0 + 1,
+            head: true,
+            tail: false,
+            otherChild: false
+          }
+        }
+
+        // An 'otherChild' with no children. Keep the vertical bar continuous.
+        return {
+          visualDepth: visualDepth0,
+          head: false,
+          tail: false,
+          otherChild: true
+        }
+      }
+
+      if (hasChildren) {
+        return {
+          visualDepth: visualDepth0,
+          head: head0,
+          tail: false,
+          otherChild: false
+        }
+      }
+
+      return {
+        visualDepth: visualDepth0,
+        head: head0,
+        tail: tail0,
+        otherChild: otherChild0
+      }
+    })()
+
+    const This = (
+      <Row
+        key='this'
+        t={t}
+        visualDepth={visualDepth}
+        head={head}
+        tail={tail}
+        otherChild={otherChild}
+        comment={comment}
+        displayAuthor={displayAuthor}
+        showComposer={showComposer}
+        onAnswer={this.openComposer}
+        onUpvote={userVote === 'UP' ? undefined : this.upvoteComment}
+        onDownvote={userVote === 'DOWN' ? undefined : this.downvoteComment}
+        dismissComposer={this.dismissComposer}
+        submitComment={this.submitComment}
+        timeago={timeago}
+      />
+    )
 
     if (comments === undefined) {
-      // This comment doesn't have any replies.
-      return (
-        <div {...styles.root}>
-          <Comment
-            timeago={timeago(comment.createdAt)}
-            {...comment}
-          />
-
-          <CommentActions
-            t={t}
-            score={score}
-            onAnswer={this.openComposer}
-            onUpvote={onUpvote}
-            onDownvote={onDownvote}
-          />
-
-          {showComposer &&
-            <Composer
-              t={t}
-              displayAuthor={displayAuthor}
-              onCancel={this.dismissComposer}
-              submitComment={this.submitComment}
-            />
-          }
-        </div>
-      )
+      return This
     }
 
     const {totalCount, pageInfo, nodes} = comments
 
-    const tail = (() => {
-      if (pageInfo && pageInfo.hasNextPage) {
-        return (
-          <LoadMore
-            t={t}
-            count={totalCount - (nodes ? nodes.length : 0)}
-            onClick={this.fetchMore}
-          />
-        )
-      } else {
-        return null
-      }
-    })()
+    return [
+      This,
+      ...(() => {
+        if (nodes && nodes.length > 0) {
+          const [firstChild, ...otherChildren] = nodes
 
-    return (
-      <div {...styles.root} {...(top ? styles.rootBorder : {})}>
-        <Comment
-          timeago={timeago(comment.createdAt)}
-          {...comment}
-        />
-
-        <CommentActions
-          t={t}
-          score={score}
-          onAnswer={this.openComposer}
-          onUpvote={onUpvote}
-          onDownvote={onDownvote}
-        />
-
-        {showComposer &&
-          <Composer
-            t={t}
-            displayAuthor={displayAuthor}
-            onCancel={this.dismissComposer}
-            submitComment={this.submitComment}
-          />
-        }
-
-        {(() => {
-          if (nodes.length === 0) {
-            if (tail) {
-              return (
-                <div {...styles.childrenContainer}>
-                  {tail}
-                </div>
-              )
-            } else {
-              return null
-            }
-          } else {
-            const [firstChild, ...otherChildren] = nodes
-
-            return [
-              <div key='otherChildren' {...styles.childrenContainer}>
-                {otherChildren.map((c, i) => (
-                  <Node
-                    {...this.props}
-                    key={i}
-                    top={true}
-                    comment={c}
-                  />
-                ))}
-                {tail}
-              </div>,
+          return [
+            ...otherChildren.map((c, i) => (
               <Node
                 {...this.props}
+                key={i}
                 top={false}
-                key='firstChild'
-                comment={firstChild}
+                logicalDepth={logicalDepth + 1}
+                visualDepth={visualDepth}
+                head={true}
+                tail={true}
+                otherChild
+                key={i}
+                comment={c}
               />
-            ]
-          }
-        })()}
-      </div>
-    )
+            )),
+            <More
+              key='more'
+              visualDepth={visualDepth + 2}
+              logicalDepth={logicalDepth + 1}
+              comment={comment}
+            />,
+            <Node
+              {...this.props}
+              top={false}
+              logicalDepth={logicalDepth + 1}
+              visualDepth={visualDepth}
+              head={false}
+              tail={true}
+              otherChild={false}
+              key='firstChild'
+              comment={firstChild}
+            />
+          ]
+        }
+
+        return [
+          <More
+            key='more'
+            visualDepth={visualDepth + 1}
+            logicalDepth={logicalDepth + 1}
+            comment={comment}
+          />
+        ]
+      })()
+    ]
   }
 }
 
@@ -201,7 +207,7 @@ Node.propTypes = {
   upvoteComment: PropTypes.func.isRequired,
   downvoteComment: PropTypes.func.isRequired,
   submitComment: PropTypes.func.isRequired,
-  fetchMore: PropTypes.func.isRequired,
+  More: PropTypes.func.isRequired,
 }
 
 export default Node

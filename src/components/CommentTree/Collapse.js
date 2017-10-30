@@ -30,12 +30,12 @@ const styles = {
   })
 }
 
-const LoadMore = ({t, visualDepth, count, onClick}) => (
-  <div {...styles.root} style={{marginLeft: (visualDepth - 1) * 15}}>
+const Collapse = ({t, onClick}) => (
+  <div {...styles.root}>
     <button {...styles.button} onClick={onClick}>
-      {t.pluralize('styleguide/CommentTreeLoadMore/label', {count})}
+      {t('styleguide/CommentTreeCollapse/label')}
     </button>
   </div>
 )
 
-export default LoadMore
+export default Collapse
