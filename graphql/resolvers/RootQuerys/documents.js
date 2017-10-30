@@ -1,4 +1,5 @@
 const { userHasRole } = require('../../../lib/Roles')
+const { descending } = require('d3-array')
 
 module.exports = async (_, args, { user, redis }) => {
   const ref = userHasRole(user, 'editor')
@@ -15,5 +16,6 @@ module.exports = async (_, args, { user, redis }) => {
     .then(publications => publications
       .filter(Boolean)
       .map(publication => JSON.parse(publication).doc)
+      .sort((a, b) => descending(new Date(a.meta.publishDate), new Date(b.meta.publishDate)))
     )
 }
