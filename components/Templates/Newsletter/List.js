@@ -9,10 +9,10 @@ const styles = {
   })
 }
 
-export const ListItem = ({ children }) => (
-  <li {...styles.li}>{ children }</li>
+export const ListItem = ({ children, attributes = {} }) => (
+  <li {...styles.li} {...attributes}>{ children }</li>
 )
 
-export default ({ children, data }) => data.ordered
-  ? <ol start={data.start}>{ children }</ol>
+export default ({ children, data, attributes = {} }) => data.ordered
+  ? <ol start={data.start} {...attributes}>{ children }</ol>
   : <ul>{ children }</ul>

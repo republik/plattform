@@ -5,16 +5,15 @@ import { Label } from '@project-r/styleguide'
 
 import MetaForm from '../../utils/MetaForm'
 
-import { COVER } from './constants'
 import {
   createPropertyForm,
   matchBlock
 } from '../../utils'
 
-export const CoverForm = createPropertyForm({
+export const createCoverForm = TYPE => createPropertyForm({
   isDisabled: ({ state }) => {
     return !state.blocks.some(block => {
-      return matchBlock(COVER)(state.document.getParent(block.key))
+      return matchBlock(TYPE)(state.document.getParent(block.key))
     })
   }
 })(({ disabled, state, onChange }) => {
@@ -25,7 +24,7 @@ export const CoverForm = createPropertyForm({
     .map(
       block => state.document.getParent(block.key)
     )
-    .find(matchBlock(COVER))
+    .find(matchBlock(TYPE))
 
   const onInputChange = key => (_, value) => {
     onChange(

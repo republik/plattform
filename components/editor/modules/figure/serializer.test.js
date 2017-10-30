@@ -1,12 +1,41 @@
 import test from 'tape'
-import { serializer } from './'
-import { FIGURE, FIGURE_IMAGE, FIGURE_CAPTION } from './constants'
+import createFigureModule from './'
+import createImageModule from './image'
+import createParagraphModule from '../paragraph'
 
-// import getRules from '../../utils/getRules'
-// import MarkdownSerializer from '../../../../lib/serializer'
+const TYPE = 'FIGURE'
+
+const imageModule = createImageModule({
+  TYPE: 'FIGURE_IMAGE',
+  rule: {
+    editorOptions: {
+      depth: 1
+    }
+  },
+  subModules: []
+})
+imageModule.name = 'figureImage'
+
+const paragraphModule = createParagraphModule({
+  TYPE: 'FIGURE_CAPTION',
+  rule: {},
+  subModules: []
+})
+paragraphModule.name = 'paragraph'
+
+const figureModule = createFigureModule({
+  TYPE,
+  rule: {},
+  subModules: [
+    imageModule,
+    paragraphModule
+  ]
+})
+
+const serializer = figureModule.helpers.serializer
 
 test('figure serialization', assert => {
-  const md = `<section><h6>${FIGURE}</h6>
+  const md = `<section><h6>${TYPE}</h6>
 
 ![Alt](example.com/img.jpg)
 
@@ -18,14 +47,14 @@ Caption
 
   const image = node.nodes.first()
   assert.equal(image.kind, 'block')
-  assert.equal(image.type, FIGURE_IMAGE)
+  assert.equal(image.type, 'FIGURE_IMAGE')
 
   assert.equal(image.getIn(['data', 'src']), 'example.com/img.jpg')
   assert.equal(image.getIn(['data', 'alt']), 'Alt')
 
   const caption = node.nodes.get(1)
   assert.equal(caption.kind, 'block')
-  assert.equal(caption.type, FIGURE_CAPTION)
+  assert.equal(caption.type, 'FIGURE_CAPTION')
   assert.equal(caption.text, 'Caption')
 
   assert.equal(serializer.serialize(state).trimRight(), md)

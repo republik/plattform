@@ -1,8 +1,21 @@
 import React from 'react'
 import { css } from 'glamor'
 
-import { Interaction, Label } from '@project-r/styleguide'
-import styles from './styles'
+import { Interaction, Label, colors } from '@project-r/styleguide'
+import { HEADER_HEIGHT } from '../Frame/constants'
+
+const styles = {
+  sidebar: css({
+    position: 'fixed',
+    top: HEADER_HEIGHT,
+    left: 0,
+    bottom: 0,
+    width: 170,
+    overflow: 'auto',
+    padding: '0 7px 10px',
+    borderRight: `1px solid ${colors.divider}`
+  })
+}
 
 const Sidebar = ({
   textFormatButtons,

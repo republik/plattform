@@ -22,13 +22,10 @@ export default {
       }]
     },
     {
-      'type': 'blockquote',
+      'type': 'paragraph',
       'children': [{
-        'type': 'paragraph',
-        'children': [{
-          'type': 'text',
-          'value': '«One needs a good lead.»'
-        }]
+        'type': 'text',
+        'value': '«One needs a good lead.»'
       }]
     }
     ]

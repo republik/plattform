@@ -1,19 +1,15 @@
 import React from 'react'
-import { css } from 'glamor'
-import { matchBlock, createBlockButton } from '../../utils'
+import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 import injectBlock from '../../utils/injectBlock'
-import { LIST } from './constants'
-import styles from '../../styles'
-import { newBlock } from './'
 
-const makeButton = ({ordered, label}) => createBlockButton({
-  type: LIST,
+export const createListButton = ({TYPE, ordered, label, newBlock}) => createBlockButton({
+  type: TYPE,
   reducer: props =>
     event => {
       const { onChange, state } = props
       event.preventDefault()
 
-      const inList = state.document.getClosest(state.startBlock.key, matchBlock(LIST))
+      const inList = state.document.getClosest(state.startBlock.key, matchBlock(TYPE))
 
       if (inList) {
         return onChange(
@@ -39,7 +35,8 @@ const makeButton = ({ordered, label}) => createBlockButton({
 })(
   ({ active, disabled, visible, ...props }) =>
     <span
-      {...{...css(styles.blockButton), ...props}}
+      {...buttonStyles.block}
+      {...props}
       data-active={active}
       data-disabled={disabled}
       data-visible={visible}
@@ -47,13 +44,3 @@ const makeButton = ({ordered, label}) => createBlockButton({
       {label}
     </span>
 )
-
-export const ULButton = makeButton({
-  ordered: false,
-  label: 'Liste'
-})
-
-export const OLButton = makeButton({
-  ordered: true,
-  label: 'Aufzählung'
-})

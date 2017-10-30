@@ -1,98 +1,78 @@
-import React from 'react'
-import { css } from 'glamor'
-
 import { matchBlock } from '../../utils'
 import MarkdownSerializer from '../../../../lib/serializer'
 import { getSerializationRules } from '../../utils/getRules'
 import addValidation from '../../utils/serializationValidation'
 
-import paragraph, { PARAGRAPH } from '../paragraph'
-import headlines from '../headlines'
-import figure from '../figure'
-import blockquote from '../blockquote'
-import list from '../list'
-import special from '../special'
-
-const PADDING = 20
-const containerStyle = css({
-  margin: '0 auto',
-  padding: PADDING,
-  paddingTop: PADDING / 2,
-  maxWidth: 640,
-  '@media (min-width: 600px)': {
-    paddingTop: PADDING
+export default ({rule, subModules, TYPE}) => {
+  const paragraphModule = subModules.find(m => m.name === 'paragraph')
+  if (!paragraphModule) {
+    throw new Error('Missing paragraph submodule')
   }
-})
 
-const Center = ({children, attributes}) => (
-  <div {...containerStyle} {...attributes}>
-    {children}
-    <div style={{clear: 'both'}} />
-  </div>
-)
+  const childSerializer = new MarkdownSerializer({
+    rules: getSerializationRules(
+      subModules.reduce(
+        (a, m) => a.concat(m.plugins),
+        []
+      )
+    )
+  })
 
-export const TYPE = 'CENTER'
+  const center = {
+    match: matchBlock(TYPE),
+    matchMdast: (node) => node.type === 'zone' && node.identifier === TYPE,
+    fromMdast: (node, index, parent, visitChildren) => ({
+      kind: 'block',
+      type: TYPE,
+      nodes: childSerializer.fromMdast(node.children)
+    }),
+    toMdast: (object, index, parent, visitChildren, context) => ({
+      type: 'zone',
+      identifier: TYPE,
+      children: childSerializer.toMdast(object.nodes, context)
+    }),
+    render: rule.component
+  }
 
-const childSerializer = new MarkdownSerializer({
-  rules: getSerializationRules([
-    ...paragraph.plugins,
-    ...figure.plugins,
-    ...headlines.plugins,
-    ...blockquote.plugins,
-    ...list.plugins,
-    ...special.plugins
-  ])
-})
+  const serializer = new MarkdownSerializer({
+    rules: [
+      center
+    ]
+  })
 
-const center = {
-  match: matchBlock(TYPE),
-  matchMdast: (node) => node.type === 'zone' && node.identifier === TYPE,
-  fromMdast: (node, index, parent, visitChildren) => ({
-    kind: 'block',
-    type: TYPE,
-    nodes: childSerializer.fromMdast(node.children)
-  }),
-  toMdast: (object, index, parent, visitChildren, context) => ({
-    type: 'zone',
-    identifier: TYPE,
-    children: childSerializer.toMdast(object.nodes, context)
-  }),
-  render: Center
-}
+  addValidation(center, serializer, 'center')
 
-export const serializer = new MarkdownSerializer({
-  rules: [
-    center
-  ]
-})
+  return {
+    TYPE,
+    helpers: {
+      serializer
+    },
+    changes: {},
+    plugins: [
+      {
+        schema: {
+          rules: [
+            {
+              match: matchBlock(TYPE),
+              validate: node => {
+                const notBlocks = node.nodes.filter(n => n.kind !== 'block')
 
-addValidation(center, serializer, 'center')
+                return notBlocks.size
+                  ? notBlocks
+                  : null
+              },
+              normalize: (change, object, notBlocks) => {
+                notBlocks.forEach((child) => {
+                  change.wrapBlockByKey(child.key, paragraphModule.TYPE)
+                })
 
-export default {
-  plugins: [
-    {
-      schema: {
-        rules: [
-          {
-            match: matchBlock(TYPE),
-            validate: node => {
-              const notBlocks = node.nodes.filter(n => n.kind !== 'block')
-
-              return notBlocks.size
-                ? notBlocks
-                : null
+                return change
+              }
             },
-            normalize: (change, object, notBlocks) => {
-              notBlocks.forEach((child) => {
-                change.wrapBlockByKey(child.key, PARAGRAPH)
-              })
-
-              return change
-            }
-          },
-          center
-        ]
+            center
+          ]
+        }
       }
-    }
-  ]
+    ]
+  }
 }

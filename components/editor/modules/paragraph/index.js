@@ -1,82 +1,109 @@
 import React from 'react'
-import { css } from 'glamor'
-import { ParagraphButton } from './ui'
-import { matchBlock } from '../../utils'
-import { PARAGRAPH } from './constants'
+
 import MarkdownSerializer from '../../../../lib/serializer'
+import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
+import Placeholder from '../../Placeholder'
+
 import { getSerializationRules } from '../../utils/getRules'
 
-import marks from '../marks'
-import link from '../link'
+export default ({rule, subModules, TYPE}) => {
+  const {
+    formatButtonText,
+    placeholder
+  } = rule.editorOptions || {}
 
-const styles = {
-  paragraph: {
-    margin: '0 0 0.8em'
-  }
-}
-
-const isParagraph = matchBlock(PARAGRAPH)
-
-const inlineSerializer = new MarkdownSerializer({
-  rules: getSerializationRules([
-    ...marks.plugins,
-    ...link.plugins
-  ]).concat({
-    matchMdast: (node) => node.type === 'break',
-    fromMdast: (node, index, parent, visitChildren) => ({
-      kind: 'text',
-      leaves: [{text: '\n'}]
+  const inlineSerializer = new MarkdownSerializer({
+    rules: getSerializationRules(
+      subModules.reduce(
+        (a, m) => a.concat(m.plugins),
+        []
+      )
+    ).concat({
+      matchMdast: (node) => node.type === 'break',
+      fromMdast: (node, index, parent, visitChildren) => ({
+        kind: 'text',
+        leaves: [{text: '\n'}]
+      })
     })
   })
-})
 
-const paragraph = {
-  match: isParagraph,
-  matchMdast: (node) => node.type === 'paragraph',
-  fromMdast: (node, index, parent, visitChildren) => ({
-    kind: 'block',
-    type: PARAGRAPH,
-    nodes: inlineSerializer.fromMdast(node.children)
-  }),
-  toMdast: (object, index, parent, visitChildren) => ({
-    type: 'paragraph',
-    children: inlineSerializer.toMdast(object.nodes)
-  }),
-  render: ({ children, attributes }) => <p {...css(styles.paragraph)} {...attributes}>{ children }</p>
-}
+  const Paragraph = rule.component
 
-export const serializer = new MarkdownSerializer({
-  rules: [
-    paragraph
-  ]
-})
+  const paragraph = {
+    match: matchBlock(TYPE),
+    matchMdast: (node) => node.type === 'paragraph',
+    fromMdast: (node, index, parent, visitChildren) => ({
+      kind: 'block',
+      type: TYPE,
+      nodes: inlineSerializer.fromMdast(node.children)
+    }),
+    toMdast: (object, index, parent, visitChildren) => ({
+      type: 'paragraph',
+      children: inlineSerializer.toMdast(object.nodes)
+    }),
+    render: ({children, attributes, node}) => (
+      <Paragraph attributes={attributes} data={node.data.toJS()}>
+        {children}
+      </Paragraph>
+    ),
+    placeholder: placeholder && (({node}) => {
+      if (node.text.length) return null
 
-export {
-  PARAGRAPH,
-  ParagraphButton
-}
+      return <Placeholder>{placeholder}</Placeholder>
+    })
+  }
 
-export default {
-  plugins: [
-    {
-      onKeyDown (e, change) {
-        const { state } = change
-        if (e.key !== 'Enter') return
-        if (e.shiftKey === false) return
+  const serializer = new MarkdownSerializer({
+    rules: [
+      paragraph
+    ]
+  })
 
-        const { startBlock } = state
-        const { type } = startBlock
-        if (type !== PARAGRAPH) {
-          return
+  return {
+    TYPE,
+    helpers: {
+      serializer
+    },
+    changes: {},
+    ui: {
+      blockFormatButtons: [
+        formatButtonText && createBlockButton({
+          type: TYPE
+        })(
+          ({ active, disabled, visible, ...props }) =>
+            <span
+              {...buttonStyles.block}
+              {...props}
+              data-active={active}
+              data-disabled={disabled}
+              data-visible={visible}
+              >
+              {formatButtonText}
+            </span>
+        )
+      ]
+    },
+    plugins: [
+      {
+        onKeyDown (e, change) {
+          const { state } = change
+          if (e.key !== 'Enter') return
+          if (e.shiftKey === false) return
+
+          const { startBlock } = state
+          const { type } = startBlock
+          if (type !== TYPE) {
+            return
+          }
+
+          return change.insertText('\n')
+        },
+        schema: {
+          rules: [
+            paragraph
+          ]
         }
-
-        return change.insertText('\n')
-      },
-      schema: {
-        rules: [
-          paragraph
-        ]
       }
-    }
-  ]
+    ]
+  }
 }

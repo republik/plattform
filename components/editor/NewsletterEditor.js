@@ -1,279 +1,129 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Document as SlateDocument } from 'slate'
 import { Editor as SlateEditor } from 'slate-react'
 import { css } from 'glamor'
 
-import MarkdownSerializer from '../../lib/serializer'
-import addValidation, { findOrCreate } from './utils/serializationValidation'
-import styles from './styles'
 import Sidebar from './Sidebar'
 import MetaData from './modules/meta/ui'
 
-import marks, {
-  BoldButton,
-  ItalicButton
-} from './modules/marks'
+import createDocumentModule from './modules/document'
+import createCoverModule from './modules/cover'
+import createCenterModule from './modules/center'
+import createHeadlineModule from './modules/headline'
+import createParagraphModule from './modules/paragraph'
+import createBlockquoteModule from './modules/blockquote'
+import createLinkModule from './modules/link'
+import createMarkModule from './modules/mark'
+import createListModule from './modules/list'
+import createListItemModule from './modules/list/item'
+import createFigureModule from './modules/figure'
+import createFigureImageModule from './modules/figure/image'
+import createSpecialModule from './modules/special'
 
-import headlines, {
-  MediumHeadlineButton, SmallHeadlineButton
-} from './modules/headlines'
+import schema from '../Templates/Newsletter'
 
-import lead from './modules/lead'
-
-import paragraph, {
-  ParagraphButton
-} from './modules/paragraph'
-
-import blockquote, {
-  BlockquoteButton
-} from './modules/blockquote'
-
-import link, {
-  LinkButton,
-  LinkForm
-} from './modules/link'
-
-import list, {
-  ULButton,
-  OLButton
-} from './modules/list'
-
-import figure, {
-  FigureForm,
-  FigureButton
-} from './modules/figure'
-
-import cover, {
-  CoverForm, serializer as coverSerializer, COVER
-} from './modules/cover'
-
-import center, {
-  serializer as centerSerializer, TYPE as CENTER
-} from './modules/center'
-
-import special, {
-  SpecialButton, SpecialForm
-} from './modules/special'
-
-const newsletterStyles = {
-  fontFamily: 'serif',
-  fontSize: 18,
-  color: '#444',
-  WebkitFontSmoothing: 'antialiased',
-  maxWidth: 'calc(100vw - 190px)'
+const moduleCreators = {
+  document: createDocumentModule,
+  cover: createCoverModule,
+  center: createCenterModule,
+  headline: createHeadlineModule,
+  paragraph: createParagraphModule,
+  link: createLinkModule,
+  mark: createMarkModule,
+  blockquote: createBlockquoteModule,
+  list: createListModule,
+  listItem: createListItemModule,
+  figure: createFigureModule,
+  figureImage: createFigureImageModule,
+  special: createSpecialModule
 }
-
-const autoMeta = documentNode => {
-  const data = documentNode.data
-  const autoMeta = !data || !data.size || data.get('auto')
-  if (!autoMeta) {
-    return null
-  }
-  const cover = documentNode.nodes
-    .find(n => n.type === COVER && n.kind === 'block')
-  if (!cover) {
-    return null
-  }
-
-  const title = cover.nodes.first()
-  const lead = cover.nodes.get(1)
-
-  const newData = data
-    .set('auto', true)
-    .set('title', title ? title.text : '')
-    .set('description', lead ? lead.text : '')
-    .set('image', cover.data.get('src'))
-
-  return data.equals(newData)
-    ? null
-    : newData
-}
-
-const documentRule = {
-  match: object => object.kind === 'document',
-  matchMdast: node => node.type === 'root',
-  fromMdast: (node, index, parent, visitChildren) => {
-    const cover = findOrCreate(node.children, {
-      type: 'zone', identifier: COVER
-    }, {
-      children: []
+const initModule = rule => {
+  const { editorModule, editorOptions = {} } = rule
+  if (editorModule) {
+    const create = moduleCreators[editorModule]
+    if (!create) {
+      throw new Error(`Missing editorModule ${editorModule}`)
+    }
+    const TYPE = (editorOptions.type || editorModule).toUpperCase()
+    const subModules = (rule.rules || [])
+      .map(initModule)
+      .filter(Boolean)
+    const module = create({
+      TYPE,
+      rule,
+      subModules: subModules
     })
 
-    let center = findOrCreate(node.children, {
-      type: 'zone', identifier: CENTER
-    }, {
-      children: []
-    })
+    module.TYPE = TYPE
+    module.name = editorModule
+    module.subModules = subModules
 
-    const centerIndex = node.children.indexOf(center)
-    const before = []
-    const after = []
-    node.children.forEach((child, index) => {
-      if (child !== cover && child !== center) {
-        if (index > centerIndex) {
-          after.push(child)
-        } else {
-          before.push(child)
-        }
-      }
-    })
-    if (before.length || after.length) {
-      center = {
-        ...center,
-        children: [
-          ...before,
-          ...center.children,
-          ...after
-        ]
-      }
-    }
-
-    const documentNode = {
-      data: node.meta,
-      kind: 'document',
-      nodes: [
-        coverSerializer.fromMdast(cover),
-        centerSerializer.fromMdast(center)
-      ]
-    }
-
-    const newData = autoMeta(
-      SlateDocument.fromJSON(documentNode)
-    )
-    if (newData) {
-      documentNode.data = newData.toJS()
-    }
-
-    return {
-      document: documentNode,
-      kind: 'state'
-    }
-  },
-  toMdast: (object, index, parent, visitChildren, context) => {
-    const firstNode = object.nodes[0]
-    if (!firstNode || firstNode.type !== COVER || firstNode.kind !== 'block') {
-      context.dirty = true
-    }
-    const secondNode = object.nodes[1]
-    if (!secondNode || secondNode.type !== CENTER || secondNode.kind !== 'block') {
-      context.dirty = true
-    }
-    if (object.nodes.length !== 2) {
-      context.dirty = true
-    }
-
-    const cover = findOrCreate(object.nodes, { kind: 'block', type: COVER })
-    const center = findOrCreate(
-      object.nodes,
-      { kind: 'block', type: CENTER },
-      { nodes: [] }
-    )
-    const centerIndex = object.nodes.indexOf(center)
-    object.nodes.forEach((node, index) => {
-      if (node !== cover && node !== center) {
-        center.nodes[index > centerIndex ? 'push' : 'unshift'](node)
-      }
-    })
-    return {
-      type: 'root',
-      meta: object.data,
-      children: [
-        coverSerializer.toMdast(cover),
-        centerSerializer.toMdast(center)
-      ]
-    }
+    return module
   }
 }
 
-export const serializer = new MarkdownSerializer({
-  rules: [
-    documentRule
-  ]
-})
+const rootRule = schema.rules[0]
+const rootModule = initModule(rootRule)
 
-export const newDocument = ({title}) => serializer.deserialize(
-`<section><h6>${COVER}</h6>
+export const serializer = rootModule.helpers.serializer
+export const newDocument = rootModule.helpers.newDocument
 
-# ${title}
+const getAllModules = module => [module].concat(
+  (module.subModules || []).reduce(
+    (collector, subModule) => collector.concat(
+      getAllModules(subModule)
+    ),
+    []
+  )
+)
 
-<hr/></section>
+const allModules = getAllModules(rootModule)
+const uniqModules = allModules.filter((m, i, a) => a.findIndex(mm => mm.TYPE === m.TYPE) === i)
 
-<section><h6>${CENTER}</h6>
+const getFromModules = (modules, accessor) => modules.reduce(
+  (collector, m) => collector.concat(accessor(m)),
+  []
+).filter(Boolean)
 
-Ladies and Gentlemen,
+const plugins = getFromModules(uniqModules, m => m.plugins)
 
-<hr/></section>
-`)
+const textFormatButtons = getFromModules(
+  uniqModules,
+  m => m.ui && m.ui.textFormatButtons
+)
 
-addValidation(documentRule, serializer, 'document')
+const blockFormatButtons = getFromModules(
+  uniqModules,
+  m => m.ui && m.ui.blockFormatButtons
+)
 
-const documentPlugin = {
-  schema: {
-    rules: [
-      documentRule
-    ]
-  },
-  onBeforeChange: (change) => {
-    const newData = autoMeta(change.state.document)
+const insertButtons = getFromModules(
+  uniqModules,
+  m => m.ui && m.ui.insertButtons
+)
 
-    if (newData) {
-      change.setNodeByKey(change.state.document.key, {
-        data: newData
-      })
-      return change
-    }
+const propertyForms = getFromModules(
+  uniqModules,
+  m => m.ui && m.ui.forms
+)
+
+const styles = {
+  container: css({
+    width: '100%',
+    paddingLeft: 170,
+    position: 'relative'
+  }),
+  document: {
+    width: '100%'
   }
 }
-
-const plugins = [
-  documentPlugin,
-  ...marks.plugins,
-  ...headlines.plugins,
-  ...lead.plugins,
-  ...paragraph.plugins,
-  ...link.plugins,
-  ...figure.plugins,
-  ...cover.plugins,
-  ...center.plugins,
-  ...blockquote.plugins,
-  ...list.plugins,
-  ...special.plugins
-]
-
-const textFormatButtons = [
-  BoldButton,
-  ItalicButton,
-  LinkButton
-]
-
-const blockFormatButtons = [
-  MediumHeadlineButton,
-  SmallHeadlineButton,
-  ParagraphButton,
-  BlockquoteButton,
-  ULButton,
-  OLButton
-]
-
-const insertButtons = [
-  FigureButton,
-  SpecialButton
-]
-
-const propertyForms = [
-  LinkForm,
-  FigureForm,
-  CoverForm,
-  SpecialForm
-]
 
 const Container = ({ children }) => (
-  <div {...css(styles.container)}>{ children }</div>
+  <div {...styles.container}>{ children }</div>
 )
 
 const Document = ({ children }) => (
-  <div {...css(styles.document)}>{ children }</div>
+  <div {...styles.document}>{ children }</div>
 )
 
 class Editor extends Component {
@@ -303,15 +153,13 @@ class Editor extends Component {
           state={state}
           onChange={this.onChange} />
         <Document>
-          <div {...css(newsletterStyles)}>
-            <SlateEditor
-              state={state}
-              onChange={this.onChange}
-              plugins={plugins} />
-            <MetaData
-              state={state}
-              onChange={this.onChange} />
-          </div>
+          <SlateEditor
+            state={state}
+            onChange={this.onChange}
+            plugins={plugins} />
+          <MetaData
+            state={state}
+            onChange={this.onChange} />
         </Document>
       </Container>
     )

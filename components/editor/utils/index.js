@@ -5,6 +5,8 @@ import createInlineButton from './createInlineButton'
 import createActionButton from './createActionButton'
 import createPropertyForm from './createPropertyForm'
 
+export {default as buttonStyles} from './buttonStyles'
+
 export const match = kind => type => node =>
   node && node.kind === kind && node.type === type
 

@@ -12,8 +12,8 @@ const containerStyle = css({
   }
 })
 
-export default ({children}) => (
-  <div {...containerStyle}>
+export default ({children, attributes = {}}) => (
+  <div {...containerStyle} {...attributes}>
     {children}
     <div style={{clear: 'both'}} />
   </div>

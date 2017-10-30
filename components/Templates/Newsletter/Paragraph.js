@@ -19,16 +19,19 @@ const styles = {
 }
 
 export const Br = () => <br />
-export const Strong = ({ children }) => <strong>{ children }</strong>
-export const Em = ({ children }) => <em>{ children }</em>
-export const Link = ({ children, data }) => (
+export const Strong = ({ children, attributes = {} }) =>
+  <strong {...attributes}>{ children }</strong>
+export const Em = ({ children, attributes = {} }) =>
+  <em {...attributes}>{ children }</em>
+export const Link = ({ children, data, attributes = {} }) => (
   <a {...css(styles.link)}
     href={data.href}
-    title={data.title}>
+    title={data.title}
+    {...attributes}>
     { children }
   </a>
 )
 
-export default ({children}) => (
-  <p {...css(styles.paragraph)}>{ children }</p>
+export default ({children, attributes = {}}) => (
+  <p {...css(styles.paragraph)} {...attributes}>{ children }</p>
 )

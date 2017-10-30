@@ -6,7 +6,6 @@ import { imageResizeUrl } from '../utils'
 
 const styles = {
   image: css({
-    position: 'relative',
     width: '100%'
   }),
   figure: css({
@@ -33,13 +32,14 @@ const styles = {
   })
 }
 
-export const Image = ({ data }) =>
+export const Image = ({ data, attributes = {} }) =>
   <img {...styles.image}
     src={imageResizeUrl(data.src, '1200x')}
     alt={data.alt}
+    {...attributes}
   />
 
-export const Caption = ({ children, data }) => (
+export const Caption = ({ children, data, attributes = {} }) => (
   <figcaption style={{
     textAlign: data.captionRight
       ? 'right'
@@ -48,17 +48,17 @@ export const Caption = ({ children, data }) => (
     fontFamily: 'sans-serif',
     margin: 0,
     position: 'relative'
-  }}>
+  }} {...attributes}>
     {children}
   </figcaption>
 )
 
-export default ({ children, data }) => (
+export default ({ children, data, attributes = {} }) => (
   <figure {...merge(
     styles.figure,
     data.float === 'left' && styles.floatLeft,
     data.float === 'right' && styles.floatRight
-  )}>
+  )} {...attributes}>
     {children}
   </figure>
 )
