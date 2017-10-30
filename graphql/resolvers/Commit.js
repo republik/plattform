@@ -2,6 +2,7 @@ const { createGithubClients } = require('../../lib/github')
 const MDAST = require('../../lib/mdast/mdast')
 const { createPrefixUrl } = require('../../lib/assets')
 const visit = require('unist-util-visit')
+const { timeParse } = require('d3-time-format')
 
 module.exports = {
   document: async ({ id: commitId, repo: { id: repoId } }, { oneway }, { user }) => {
@@ -52,9 +53,18 @@ module.exports = {
       }
     })
 
+    // TODO remove when editor sends a real date for meta.publishDate
+    const parsePublishDate = timeParse('%d.%m.%Y %H:%M')
+    const publishDate = mdast.meta.publishDate
+      ? parsePublishDate(mdast.meta.publishDate)
+      : null
+
     return {
       content: mdast,
-      meta: mdast.meta
+      meta: {
+        ...mdast.meta,
+        publishDate
+      }
     }
   }
 }
