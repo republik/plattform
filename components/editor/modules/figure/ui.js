@@ -15,22 +15,22 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock}) => {
   const isFigureBlock = block => block.type === FIGURE_IMAGE || block.type === FIGURE_CAPTION
 
   const FigureForm = createPropertyForm({
-    isDisabled: ({ state }) => {
+    isDisabled: ({ value }) => {
       return (
-        !state.blocks.some(isFigureBlock)
+        !value.blocks.some(isFigureBlock)
       )
     }
-  })(({ disabled, state, onChange }) => {
+  })(({ disabled, value, onChange }) => {
     if (disabled) {
       return null
     }
     return <div>
       {
-        state.blocks
+        value.blocks
           .filter(isFigureBlock)
           .map(block => block.type === 'FIGURE'
             ? block
-            : state.document.getParent(block.key)
+            : value.document.getParent(block.key)
           )
           .filter((block, index, all) => all.indexOf(block) === index)
           .map((block, i) => {
@@ -38,7 +38,7 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock}) => {
             const captionBlock = block.nodes.find(n => n.type === FIGURE_CAPTION)
             const onInputChange = subject => key => (_, value) => {
               onChange(
-                state
+                value
                   .change()
                   .setNodeByKey(subject.key, {
                     data: value
@@ -111,14 +111,14 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock}) => {
   })
 
   const FigureButton = createActionButton({
-    isDisabled: ({ state }) => {
-      return state.isBlurred
+    isDisabled: ({ value }) => {
+      return value.isBlurred
     },
-    reducer: ({ state, onChange }) => event => {
+    reducer: ({ value, onChange }) => event => {
       event.preventDefault()
 
       return onChange(
-        state
+        value
           .change()
           .call(
             injectBlock,

@@ -14,14 +14,14 @@ import MetaForm from '../../utils/MetaForm'
 
 export default ({TYPE, newBlock}) => {
   const SpecialButton = createActionButton({
-    isDisabled: ({ state }) => {
-      return state.isBlurred
+    isDisabled: ({ value }) => {
+      return value.isBlurred
     },
-    reducer: ({ state, onChange }) => event => {
+    reducer: ({ value, onChange }) => event => {
       event.preventDefault()
 
       return onChange(
-        state
+        value
           .change()
           .call(
             injectBlock,
@@ -41,19 +41,19 @@ export default ({TYPE, newBlock}) => {
       </span>
   )
 
-  const Form = ({ disabled, state, onChange }) => {
+  const Form = ({ disabled, value, onChange }) => {
     if (disabled) {
       return null
     }
     return <div>
       <Label>Special</Label>
       {
-        state.blocks
+        value.blocks
           .filter(matchBlock(TYPE))
           .map((node, i) => {
             const onInputChange = key => (_, value) => {
               onChange(
-                state
+                value
                   .change()
                   .setNodeByKey(node.key, {
                     data: value
@@ -77,8 +77,8 @@ export default ({TYPE, newBlock}) => {
   }
 
   const SpecialForm = createPropertyForm({
-    isDisabled: ({ state }) => {
-      return !state.blocks.some(matchBlock(TYPE))
+    isDisabled: ({ value }) => {
+      return !value.blocks.some(matchBlock(TYPE))
     }
   })(Form)
 

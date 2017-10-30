@@ -65,16 +65,16 @@ export default ({rule, subModules, TYPE}) => {
           const isBackspace = event.key === 'Backspace'
           if (event.key !== 'Enter' && !isBackspace) return
 
-          const { state } = change
-          const inBlockquote = state.document.getClosest(
-            state.startBlock.key,
+          const { value } = change
+          const inBlockquote = value.document.getClosest(
+            value.startBlock.key,
             matchBlock(TYPE)
           )
           if (!inBlockquote) return
 
           event.preventDefault()
 
-          const isEmpty = !state.startBlock.text
+          const isEmpty = !value.startBlock.text
 
           if (isEmpty && (!isBackspace || inBlockquote.nodes.size === 1)) {
             return change

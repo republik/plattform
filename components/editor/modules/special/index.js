@@ -29,8 +29,8 @@ export default ({rule, subModules, TYPE}) => {
         children: []
       }
     },
-    render: ({ node, state, attributes }) => {
-      const active = state.blocks.some(block => block.key === node.key)
+    render: ({ node, value, attributes }) => {
+      const active = value.blocks.some(block => block.key === node.key)
       return (
         <div style={{
           width: '100%',

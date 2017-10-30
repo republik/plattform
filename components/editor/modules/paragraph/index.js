@@ -75,11 +75,11 @@ export default ({rule, subModules, TYPE}) => {
     plugins: [
       {
         onKeyDown (e, change) {
-          const { state } = change
+          const { value } = change
           if (e.key !== 'Enter') return
           if (e.shiftKey === false) return
 
-          const { startBlock } = state
+          const { startBlock } = value
           const { type } = startBlock
           if (type !== TYPE) {
             return

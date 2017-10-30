@@ -3,26 +3,26 @@ import { matchMark } from './'
 import createFormatButton from './createFormatButton'
 
 const isDisabled = markType =>
-  ({ state }) =>
-    state.isBlurred || (
-      state.isEmpty &&
-      !isActive(markType)({ state })
+  ({ value }) =>
+    value.isBlurred || (
+      value.isEmpty &&
+      !isActive(markType)({ value })
     )
 
 const isActive = markType =>
-  ({ state }) =>
-    state.marks.some(matchMark(markType))
+  ({ value }) =>
+    value.marks.some(matchMark(markType))
 
 const reducer = markType =>
   props =>
     event => {
-      const { onChange, state } = props
+      const { onChange, value } = props
       event.preventDefault()
 
-      if (state.isEmpty) {
-        const key = state.startKey
-        const offset = state.startOffset
-        const characters = state.texts.first().characters
+      if (value.isEmpty) {
+        const key = value.startKey
+        const offset = value.startOffset
+        const characters = value.texts.first().characters
         let i = offset
         let has = true
         while (has) {
@@ -39,7 +39,7 @@ const reducer = markType =>
         const end = i
         const length = end - start
         return onChange(
-          state
+          value
           .change()
           .removeMarkByKey(
             key,
@@ -50,7 +50,7 @@ const reducer = markType =>
         )
       } else {
         return onChange(
-          state.change().toggleMark(markType)
+          value.change().toggleMark(markType)
         )
       }
     }

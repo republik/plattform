@@ -44,12 +44,12 @@ test('cover serialization', assert => {
 Lead
 
 <hr /></section>`
-  const state = serializer.deserialize(md)
-  const node = state.document.nodes.first()
+  const value = serializer.deserialize(md)
+  const node = value.document.nodes.first()
 
   assert.equal(node.kind, 'block')
   assert.equal(node.type, TYPE)
 
-  assert.equal(serializer.serialize(state).trimRight(), md)
+  assert.equal(serializer.serialize(value).trimRight(), md)
   assert.end()
 })

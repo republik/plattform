@@ -99,7 +99,7 @@ export default ({rule, subModules, TYPE}) => {
 
       return {
         document: documentNode,
-        kind: 'state'
+        kind: 'value'
       }
     },
     toMdast: (object, index, parent, visitChildren, context) => {
@@ -180,10 +180,10 @@ Ladies and Gentlemen,
           }
         },
         onBeforeChange: (change) => {
-          const newData = autoMeta(change.state.document)
+          const newData = autoMeta(change.value.document)
 
           if (newData) {
-            change.setNodeByKey(change.state.document.key, {
+            change.setNodeByKey(change.value.document.key, {
               data: newData
             })
             return change

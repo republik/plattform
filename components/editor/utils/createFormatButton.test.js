@@ -14,16 +14,16 @@ test('utils.createFormatButton', assert => {
   const onChange = spy()
 
   const FormatButton = createFormatButton({
-    isDisabled: ({ state }) => state.disabled,
-    isActive: ({ state }) => state.active,
-    isVisible: ({ state }) => state.visible,
+    isDisabled: ({ value }) => value.disabled,
+    isActive: ({ value }) => value.active,
+    isVisible: ({ value }) => value.visible,
     reducer: props => event =>
       props.onChange(props, event)
   })(Button)
 
   const wrapper = shallow(
     <FormatButton
-      state={{ active: true, disabled: false, visible: true }}
+      value={{ active: true, disabled: false, visible: true }}
       onChange={onChange}
     />
   )
@@ -57,7 +57,7 @@ test('utils.createFormatButton', assert => {
   assert.equal(
     onChange.calledWith(
       {
-        state: { active: true, disabled: false, visible: true },
+        value: { active: true, disabled: false, visible: true },
         onChange
       },
       { foo: 'bar' }
@@ -66,7 +66,7 @@ test('utils.createFormatButton', assert => {
     'calls `options.reducer` with props and the mousedown event'
   )
 
-  const disabledWrapper = shallow(<FormatButton state={{ active: true, disabled: true }} />)
+  const disabledWrapper = shallow(<FormatButton value={{ active: true, disabled: true }} />)
   const preventDefault = spy()
   disabledWrapper.find('Button').simulate('mousedown', { preventDefault })
 
@@ -90,7 +90,7 @@ test('utils.createFormatButton', assert => {
 
   const wrapperWithProps = shallow(
     <FormatButton
-      state={{ active: true, disabled: false, visible: true }}
+      value={{ active: true, disabled: false, visible: true }}
       isVisible={isVisible}
       isDisabled={isDisabled}
       isActive={isActive}

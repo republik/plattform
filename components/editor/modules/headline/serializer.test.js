@@ -14,14 +14,14 @@ test('h1 serialization', assert => {
 
   const serializer = module.helpers.serializer
 
-  const state = serializer.deserialize('# Test')
-  const node = state.document.nodes.first()
+  const value = serializer.deserialize('# Test')
+  const node = value.document.nodes.first()
 
   assert.equal(node.kind, 'block')
   assert.equal(node.type, 'H1')
   assert.equal(node.text, 'Test')
 
-  assert.equal(serializer.serialize(state).trimRight(), '# Test')
+  assert.equal(serializer.serialize(value).trimRight(), '# Test')
   assert.end()
 })
 
@@ -38,14 +38,14 @@ test('h2 serialization', assert => {
 
   const serializer = module.helpers.serializer
 
-  const state = serializer.deserialize('## Test')
-  const node = state.document.nodes.first()
+  const value = serializer.deserialize('## Test')
+  const node = value.document.nodes.first()
 
   assert.equal(node.kind, 'block')
   assert.equal(node.type, 'H2')
   assert.equal(node.text, 'Test')
 
-  assert.equal(serializer.serialize(state).trimRight(), '## Test')
+  assert.equal(serializer.serialize(value).trimRight(), '## Test')
   assert.end()
 })
 
@@ -62,13 +62,13 @@ test('h3 serialization', assert => {
 
   const serializer = module.helpers.serializer
 
-  const state = serializer.deserialize('### Test')
-  const node = state.document.nodes.first()
+  const value = serializer.deserialize('### Test')
+  const node = value.document.nodes.first()
 
   assert.equal(node.kind, 'block')
   assert.equal(node.type, 'H3')
   assert.equal(node.text, 'Test')
 
-  assert.equal(serializer.serialize(state).trimRight(), '### Test')
+  assert.equal(serializer.serialize(value).trimRight(), '### Test')
   assert.end()
 })

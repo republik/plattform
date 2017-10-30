@@ -28,19 +28,19 @@ export default ({TYPE}) => {
       </span>
   )
 
-  const Form = ({ disabled, state, onChange }) => {
+  const Form = ({ disabled, value, onChange }) => {
     if (disabled) {
       return null
     }
     return <div>
       <Label>Links</Label>
       {
-        state.inlines
+        value.inlines
           .filter(matchInline(TYPE))
           .map((node, i) => {
             const onInputChange = key => (_, value) => {
               onChange(
-                state
+                value
                   .change()
                   .setNodeByKey(node.key, {
                     data: value
@@ -65,8 +65,8 @@ export default ({TYPE}) => {
   }
 
   const LinkForm = createPropertyForm({
-    isDisabled: ({ state }) => {
-      return !state.inlines.some(matchInline(TYPE))
+    isDisabled: ({ value }) => {
+      return !value.inlines.some(matchInline(TYPE))
     }
   })(Form)
 

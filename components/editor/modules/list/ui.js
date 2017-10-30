@@ -6,14 +6,14 @@ export const createListButton = ({TYPE, ordered, label, newBlock}) => createBloc
   type: TYPE,
   reducer: props =>
     event => {
-      const { onChange, state } = props
+      const { onChange, value } = props
       event.preventDefault()
 
-      const inList = state.document.getClosest(state.startBlock.key, matchBlock(TYPE))
+      const inList = value.document.getClosest(value.startBlock.key, matchBlock(TYPE))
 
       if (inList) {
         return onChange(
-          state
+          value
             .change()
             .setNodeByKey(inList.key, {
               data: inList.data.merge({
@@ -24,7 +24,7 @@ export const createListButton = ({TYPE, ordered, label, newBlock}) => createBloc
       }
 
       return onChange(
-        state
+        value
           .change()
           .call(
             injectBlock,

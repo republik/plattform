@@ -22,7 +22,7 @@ const Sidebar = ({
   blockFormatButtons,
   insertButtons,
   propertyForms,
-  state, onChange
+  value, onChange
 }) => (
   <div {...css(styles.sidebar)}>
     <Interaction.P>
@@ -31,7 +31,7 @@ const Sidebar = ({
       {textFormatButtons.map((Button, i) => (
         <Button
           key={`text-fmt-${i}`}
-          state={state}
+          value={value}
           onChange={onChange}
           />
         ))
@@ -43,7 +43,7 @@ const Sidebar = ({
         blockFormatButtons.map((Button, i) => (
           <Button
             key={`block-fmt-${i}`}
-            state={state}
+            value={value}
             onChange={onChange}
           />
         ))
@@ -55,7 +55,7 @@ const Sidebar = ({
         insertButtons.map((Button, i) => (
           <Button
             key={`insert-${i}`}
-            state={state}
+            value={value}
             onChange={onChange}
           />
         ))
@@ -66,7 +66,7 @@ const Sidebar = ({
         propertyForms.map((Form, i) => (
           <Form
             key={`form-${i}`}
-            state={state}
+            value={value}
             onChange={onChange}
             />
         ))

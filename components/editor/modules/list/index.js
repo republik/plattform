@@ -95,13 +95,13 @@ export default ({rule, subModules, TYPE}) => {
           const isBackspace = event.key === 'Backspace'
           if (event.key !== 'Enter' && !isBackspace) return
 
-          const { state } = change
-          const inList = state.document.getClosest(state.startBlock.key, matchBlock(TYPE))
+          const { value } = change
+          const inList = value.document.getClosest(value.startBlock.key, matchBlock(TYPE))
           if (!inList) return
 
           event.preventDefault()
 
-          const inItem = state.document.getClosest(state.startBlock.key, matchBlock(LI))
+          const inItem = value.document.getClosest(value.startBlock.key, matchBlock(LI))
           const isEmpty = !inItem || !inItem.text
 
           if (isEmpty && (!isBackspace || inList.nodes.size === 1)) {

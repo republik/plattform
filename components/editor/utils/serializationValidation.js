@@ -23,13 +23,13 @@ const addValidation = (rule, serializer, name) => {
   rule.normalize = (change, object, mdast) => {
     const rawNode = serializer.fromMdast(mdast)
     const node = rawNodeToNode(
-      rawNode.kind === 'state'
+      rawNode.kind === 'value'
         ? rawNode.document
         : rawNode
     )
 
     const target = node.kind === 'document'
-      ? change.state.document
+      ? change.value.document
       : object
     let t = change.setNodeByKey(target.key, {
       data: node.data

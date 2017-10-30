@@ -22,8 +22,8 @@ paragraphModule.name = 'paragraph'
 const serializer = paragraphModule.helpers.serializer
 
 test('link serialization', assert => {
-  const state = serializer.deserialize('[Test](example.com)')
-  const node = state.document.nodes.first()
+  const value = serializer.deserialize('[Test](example.com)')
+  const node = value.document.nodes.first()
 
   assert.equal(node.kind, 'block')
   assert.equal(node.type, 'PARAGRAPH')
@@ -34,6 +34,6 @@ test('link serialization', assert => {
 
   assert.equal(link.getIn(['data', 'href']), 'example.com')
 
-  assert.equal(serializer.serialize(state).trimRight(), '[Test](example.com)')
+  assert.equal(serializer.serialize(value).trimRight(), '[Test](example.com)')
   assert.end()
 })

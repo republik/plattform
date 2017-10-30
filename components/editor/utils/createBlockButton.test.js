@@ -3,7 +3,7 @@ import test from 'tape'
 import spy from 'spy'
 import { shallow } from 'enzyme'
 import createBlockButton from './createBlockButton'
-import { State } from 'slate'
+import { Value } from 'slate'
 
 const rawDoc = {
   'nodes': [
@@ -52,7 +52,7 @@ const rawDoc = {
   ]
 }
 
-const initialState = State.fromJSON({
+const initialState = Value.fromJSON({
   document: rawDoc
 })
 const Button = () => <span />
@@ -60,11 +60,11 @@ const BlockButton = createBlockButton({ type: 'lead' })(Button)
 
 test('utils.createBlockButton: blurred', assert => {
   assert.plan(1)
-  const state = initialState
+  const value = initialState
 
   const wrapper = shallow(
     <BlockButton
-      state={state}
+      value={value}
     />
   )
 
@@ -78,7 +78,7 @@ test('utils.createBlockButton: blurred', assert => {
 test('utils.createBlockButton: focused cursor', assert => {
   assert.plan(1)
 
-  const state = initialState
+  const value = initialState
     .change()
     .select({
       anchorKey: initialState.document.nodes.get(0).nodes.first().key,
@@ -87,11 +87,11 @@ test('utils.createBlockButton: focused cursor', assert => {
       focusOffset: 2
     })
     .focus()
-    .state
+    .value
 
   const wrapper = shallow(
     <BlockButton
-      state={state}
+      value={value}
     />
   )
 
@@ -105,7 +105,7 @@ test('utils.createBlockButton: focused cursor', assert => {
 test('utils.createBlockButton: focused cursor on `blockType`', assert => {
   assert.plan(1)
 
-  const state = initialState
+  const value = initialState
     .change()
     .select({
       anchorKey: initialState.document.nodes.get(1).nodes.first().key,
@@ -114,11 +114,11 @@ test('utils.createBlockButton: focused cursor on `blockType`', assert => {
       focusOffset: 2
     })
     .focus()
-    .state
+    .value
 
   const wrapper = shallow(
     <BlockButton
-      state={state}
+      value={value}
     />
   )
 
@@ -132,7 +132,7 @@ test('utils.createBlockButton: focused cursor on `blockType`', assert => {
 test('utils.createBlockButton: focused selection of mixed block types', assert => {
   assert.plan(1)
 
-  const state = initialState
+  const value = initialState
     .change()
     .select({
       anchorKey: initialState.document.nodes.get(0).nodes.first().key,
@@ -141,11 +141,11 @@ test('utils.createBlockButton: focused selection of mixed block types', assert =
       focusOffset: 2
     })
     .focus()
-    .state
+    .value
 
   const wrapper = shallow(
     <BlockButton
-      state={state}
+      value={value}
     />
   )
 
@@ -159,7 +159,7 @@ test('utils.createBlockButton: focused selection of mixed block types', assert =
 test('utils.createBlockButton: action on focused cursor', assert => {
   assert.plan(1)
 
-  const state = initialState
+  const value = initialState
     .change()
     .select({
       anchorKey: initialState.document.nodes.get(0).nodes.first().key,
@@ -168,11 +168,11 @@ test('utils.createBlockButton: action on focused cursor', assert => {
       focusOffset: 2
     })
     .focus()
-    .state
+    .value
 
-  const onChange = ({state}) =>
+  const onChange = ({value}) =>
       assert.equal(
-        state.document.nodes.get(0).type,
+        value.document.nodes.get(0).type,
         'lead',
         'sets the block at the cursor to `blockType`'
       )
@@ -183,7 +183,7 @@ test('utils.createBlockButton: action on focused cursor', assert => {
 
   const wrapper = shallow(
     <BlockButton
-      state={state}
+      value={value}
       onChange={onChange}
     />
   )
@@ -194,7 +194,7 @@ test('utils.createBlockButton: action on focused cursor', assert => {
 test('utils.createBlockButton: action on mixed selection', assert => {
   assert.plan(1)
 
-  const state = initialState
+  const value = initialState
     .change()
     .select({
       anchorKey: initialState.document.nodes.get(0).nodes.first().key,
@@ -203,11 +203,11 @@ test('utils.createBlockButton: action on mixed selection', assert => {
       focusOffset: 5
     })
     .focus()
-    .state
+    .value
 
-  const onChange = ({state}) =>
+  const onChange = ({value}) =>
       assert.equal(
-        state.document.nodes.get(0).type,
+        value.document.nodes.get(0).type,
         'lead',
         'sets all blocks in the selection that were not of type `blockType` to it'
       )
@@ -218,7 +218,7 @@ test('utils.createBlockButton: action on mixed selection', assert => {
 
   const wrapper = shallow(
     <BlockButton
-      state={state}
+      value={value}
       onChange={onChange}
     />
   )

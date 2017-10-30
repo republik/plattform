@@ -4,7 +4,7 @@ import { Router } from '../../lib/routes'
 import withData from '../../lib/apollo/withData'
 import { gql, graphql } from 'react-apollo'
 import { css } from 'glamor'
-import { State, resetKeyGenerator } from 'slate'
+import { Value, resetKeyGenerator } from 'slate'
 import { A, Button, Label } from '@project-r/styleguide'
 
 import Frame from '../../components/Frame'
@@ -258,7 +258,7 @@ class EditorPage extends Component {
     let localEditorState
     if (localState) {
       try {
-        localEditorState = State.fromJSON(localState)
+        localEditorState = Value.fromJSON(localState)
       } catch (e) {
         console.error(e)
         this.warn(t('commit/warn/localParseError'))
@@ -280,11 +280,11 @@ class EditorPage extends Component {
     }
   }
 
-  changeHandler ({state}) {
-    this.setState({ editorState: state })
+  changeHandler ({value}) {
+    this.setState({ editorState: value })
   }
 
-  documentChangeHandler (_, {state: newEditorState}) {
+  documentChangeHandler (_, {value: newEditorState}) {
     const { url: { query: { repoId } } } = this.props
     const { committedRawDocString, uncommittedChanges } = this.state
 
@@ -377,7 +377,7 @@ class EditorPage extends Component {
           <div>
             <div style={{paddingRight: sidebarWidth}}>
               <Editor
-                state={editorState}
+                value={editorState}
                 onChange={this.changeHandler}
                 onDocumentChange={this.documentChangeHandler}
               />

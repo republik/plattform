@@ -23,8 +23,8 @@ const styles = {
 
 const getWidth = key => key.match(/title/i) ? '100%' : ''
 
-const MetaData = ({state, onChange, t}) => {
-  const node = state.document
+const MetaData = ({value, onChange, t}) => {
+  const node = value.document
 
   const genericKeys = Set([
     'publishDate',
@@ -62,7 +62,7 @@ const MetaData = ({state, onChange, t}) => {
   const onInputChange = key => (_, value) => {
     const newData = node.data.remove('auto')
     onChange(
-      state
+      value
         .change()
         .setNodeByKey(node.key, {
           data: value

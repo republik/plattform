@@ -131,9 +131,9 @@ export default ({rule, subModules, TYPE}) => {
           const isBackspace = event.key === 'Backspace'
           if (event.key !== 'Enter' && !isBackspace) return
 
-          const { state } = change
-          const inFigure = state.document.getClosest(
-            state.focusBlock.key,
+          const { value } = change
+          const inFigure = value.document.getClosest(
+            value.focusBlock.key,
             matchBlock(TYPE)
           )
 
@@ -141,22 +141,22 @@ export default ({rule, subModules, TYPE}) => {
 
           event.preventDefault()
 
-          if (isBackspace && state.focusBlock.type === FIGURE_IMAGE) {
+          if (isBackspace && value.focusBlock.type === FIGURE_IMAGE) {
             const isEmpty = !inFigure.text.trim()
             if (isEmpty) {
               return change
                 .removeNodeByKey(inFigure.key)
             } else {
               return change.setNodeByKey(
-                state.focusBlock.key,
+                value.focusBlock.key,
                 {
                   data: {}
                 }
               )
             }
           }
-          if (!isBackspace && state.endBlock.type === FIGURE_CAPTION) {
-            const parent = state.document.getParent(inFigure.key)
+          if (!isBackspace && value.endBlock.type === FIGURE_CAPTION) {
+            const parent = value.document.getParent(inFigure.key)
             const node = Block.create(afterType)
 
             return change
@@ -166,7 +166,7 @@ export default ({rule, subModules, TYPE}) => {
                 node
               )
               .collapseToEndOf(
-                change.state.document.getNode(node.key)
+                change.value.document.getNode(node.key)
               )
           }
         },

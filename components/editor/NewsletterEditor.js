@@ -132,18 +132,18 @@ class Editor extends Component {
   constructor (props) {
     super(props)
     this.onChange = (change) => {
-      const { state, onChange, onDocumentChange } = this.props
+      const { value, onChange, onDocumentChange } = this.props
 
-      if (change.state !== state) {
+      if (change.value !== value) {
         onChange(change)
-        if (!change.state.document.equals(state.document)) {
-          onDocumentChange(change.state.document, change)
+        if (!change.value.document.equals(value.document)) {
+          onDocumentChange(change.value.document, change)
         }
       }
     }
   }
   render () {
-    const { state } = this.props
+    const { value } = this.props
 
     return (
       <Container>
@@ -152,17 +152,17 @@ class Editor extends Component {
           blockFormatButtons={blockFormatButtons}
           insertButtons={insertButtons}
           propertyForms={propertyForms}
-          state={state}
+          value={value}
           onChange={this.onChange} />
         <Document>
           <RootContainer>
             <SlateEditor
-              state={state}
+              value={value}
               onChange={this.onChange}
               plugins={plugins} />
           </RootContainer>
           <MetaData
-            state={state}
+            value={value}
             onChange={this.onChange} />
         </Document>
       </Container>
@@ -171,7 +171,7 @@ class Editor extends Component {
 }
 
 Editor.propTypes = {
-  state: PropTypes.object.isRequired,
+  value: PropTypes.object.isRequired,
   onChange: PropTypes.func,
   onDocumentChange: PropTypes.func
 }
