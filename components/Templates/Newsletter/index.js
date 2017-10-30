@@ -128,7 +128,7 @@ const schema = {
                 depth: 3,
                 formatButtonText: 'Zwischentitel 2'
               }
-            }
+            },
             // {
             //   matchMdast: matchZone('FIGURE'),
             //   component: Figure,
@@ -159,14 +159,14 @@ const schema = {
             //     }
             //   ]
             // },
-            // {
-            //   matchMdast: matchType('blockquote'),
-            //   component: Blockquote,
-            //   editorModule: 'blockquote',
-            //   rules: [
-            //     paragraph
-            //   ]
-            // },
+            {
+              matchMdast: matchType('blockquote'),
+              component: Blockquote,
+              editorModule: 'blockquote',
+              rules: [
+                paragraph
+              ]
+            },
             // {
             //   matchMdast: matchType('list'),
             //   component: List,
