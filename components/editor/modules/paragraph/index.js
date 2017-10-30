@@ -107,7 +107,14 @@ export default ({rule, subModules, TYPE}) => {
             [TYPE]: {
               nodes: [
                 { kinds: ['text', 'inline'] }
-              ]
+              ],
+              normalize: (change, reason, {node, index, child}) => {
+                if (reason === 'child_kind_invalid') {
+                  change.unwrapBlockByKey(
+                    child.key
+                  )
+                }
+              }
             }
           }
         }
