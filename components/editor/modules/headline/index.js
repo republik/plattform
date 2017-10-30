@@ -2,7 +2,6 @@ import React from 'react'
 
 import MarkdownSerializer from '../../../../lib/serializer'
 import Placeholder from '../../Placeholder'
-import addValidation from '../../utils/serializationValidation'
 import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 
 export default ({rule, subModules, TYPE}) => {
@@ -32,8 +31,6 @@ export default ({rule, subModules, TYPE}) => {
       title
     ]
   })
-
-  addValidation(title, serializer, TYPE)
 
   return {
     TYPE,
