@@ -5,6 +5,7 @@ import { matchMark, createMarkButton, buttonStyles } from '../../utils'
 import BoldIcon from 'react-icons/lib/fa/bold'
 import ItalicIcon from 'react-icons/lib/fa/italic'
 import StrikethroughIcon from 'react-icons/lib/fa/strikethrough'
+import MarkdownSerializer from '../../../../lib/serializer'
 
 const icons = {
   strong: BoldIcon,
@@ -25,9 +26,9 @@ export default ({rule, subModules, TYPE}) => {
     throw new Error(`Unsupported Mdast Type ${mdastType}`)
   }
 
-  const mark = {
+  const markRule = {
     match: matchMark(TYPE),
-    matchMdast: (node) => node.type === mdastType,
+    matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, visitChildren) => ({
       kind: 'mark',
       type: TYPE,
@@ -36,13 +37,22 @@ export default ({rule, subModules, TYPE}) => {
     toMdast: (mark, index, parent, visitChildren) => ({
       type: mdastType,
       children: visitChildren(mark)
-    }),
-    render: rule.component
+    })
   }
+
+  const serializer = new MarkdownSerializer({
+    rules: [
+      markRule
+    ]
+  })
+
+  const Mark = rule.component
 
   return {
     TYPE,
-    helpers: {},
+    helpers: {
+      serializer
+    },
     changes: {},
     ui: {
       textFormatButtons: [
@@ -64,10 +74,14 @@ export default ({rule, subModules, TYPE}) => {
     },
     plugins: [
       {
-        schema: {
-          rules: [
-            mark
-          ]
+        renderMark ({mark, children, attributes}) {
+          if (!markRule.match(mark)) return
+
+          return (
+            <Mark attributes={attributes}>
+              {children}
+            </Mark>
+          )
         }
       }
     ]

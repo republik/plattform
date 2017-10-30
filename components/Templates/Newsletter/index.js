@@ -24,27 +24,27 @@ const paragraph = {
     formatButtonText: 'Paragraph'
   },
   rules: [
-    // {
-    //   matchMdast: matchType('break'),
-    //   component: Br,
-    //   isVoid: true
-    // },
-    // {
-    //   matchMdast: matchType('strong'),
-    //   component: Strong,
-    //   editorModule: 'mark',
-    //   editorOptions: {
-    //     type: 'strong'
-    //   }
-    // },
-    // {
-    //   matchMdast: matchType('emphasis'),
-    //   component: Em,
-    //   editorModule: 'mark',
-    //   editorOptions: {
-    //     type: 'emphasis'
-    //   }
-    // },
+    {
+      matchMdast: matchType('break'),
+      component: Br,
+      isVoid: true
+    },
+    {
+      matchMdast: matchType('strong'),
+      component: Strong,
+      editorModule: 'mark',
+      editorOptions: {
+        type: 'strong'
+      }
+    },
+    {
+      matchMdast: matchType('emphasis'),
+      component: Em,
+      editorModule: 'mark',
+      editorOptions: {
+        type: 'emphasis'
+      }
+    },
     // {
     //   matchMdast: matchType('link'),
     //   getData: node => ({
