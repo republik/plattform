@@ -1,6 +1,5 @@
 import { matchBlock } from '../../utils'
 import MarkdownSerializer from '../../../../lib/serializer'
-import addValidation from '../../utils/serializationValidation'
 
 export default ({rule, subModules, TYPE}) => {
   const paragraphModule = subModules.find(m => m.name === 'paragraph')
@@ -20,7 +19,7 @@ export default ({rule, subModules, TYPE}) => {
 
   const center = {
     match: matchBlock(TYPE),
-    matchMdast: (node) => node.type === 'zone' && node.identifier === TYPE,
+    matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, visitChildren) => ({
       kind: 'block',
       type: TYPE,
@@ -30,8 +29,7 @@ export default ({rule, subModules, TYPE}) => {
       type: 'zone',
       identifier: TYPE,
       children: childSerializer.toMdast(object.nodes, context)
-    }),
-    render: rule.component
+    })
   }
 
   const serializer = new MarkdownSerializer({
@@ -40,7 +38,7 @@ export default ({rule, subModules, TYPE}) => {
     ]
   })
 
-  addValidation(center, serializer, 'center')
+  const Center = rule.component
 
   return {
     TYPE,
@@ -54,9 +52,9 @@ export default ({rule, subModules, TYPE}) => {
           if (!center.match(node)) return
 
           return (
-            <rule.component attributes={attributes}>
+            <Center attributes={attributes}>
               {children}
-            </rule.component>
+            </Center>
           )
         },
         schema: {

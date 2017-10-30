@@ -44,7 +44,7 @@ export default ({rule, subModules, TYPE}) => {
 
   const documentRule = {
     match: object => object.kind === 'document',
-    matchMdast: node => node.type === 'root',
+    matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, visitChildren) => {
       const cover = findOrCreate(node.children, {
         type: 'zone', identifier: coverModule.TYPE
@@ -103,18 +103,6 @@ export default ({rule, subModules, TYPE}) => {
       }
     },
     toMdast: (object, index, parent, visitChildren, context) => {
-      const firstNode = object.nodes[0]
-      if (!firstNode || firstNode.type !== coverModule.TYPE || firstNode.kind !== 'block') {
-        context.dirty = true
-      }
-      const secondNode = object.nodes[1]
-      if (!secondNode || secondNode.type !== centerModule.TYPE || secondNode.kind !== 'block') {
-        context.dirty = true
-      }
-      if (object.nodes.length !== 2) {
-        context.dirty = true
-      }
-
       const cover = findOrCreate(object.nodes, { kind: 'block', type: coverModule.TYPE })
       const center = findOrCreate(
         object.nodes,
