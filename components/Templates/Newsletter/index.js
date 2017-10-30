@@ -184,12 +184,12 @@ const schema = {
             //     }
             //   ]
             // },
-            // {
-            //   matchMdast: matchZone('SPECIAL_R_BLUEPRINT'),
-            //   component: RBlueprint,
-            //   isVoid: true,
-            //   editorModule: 'special'
-            // }
+            {
+              matchMdast: matchZone('SPECIAL_R_BLUEPRINT'),
+              component: RBlueprint,
+              isVoid: true,
+              editorModule: 'special'
+            }
           ]
         }
       ]
