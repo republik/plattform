@@ -26,7 +26,7 @@ export default ({rule, subModules, TYPE}) => {
 
   const cover = {
     match: isCover,
-    matchMdast: (node) => node.type === 'zone' && node.identifier === TYPE,
+    matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, visitChildren) => {
       // fault tolerant because markdown could have been edited outside
       const deepNodes = node.children.reduce(

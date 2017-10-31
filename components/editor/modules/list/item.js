@@ -20,9 +20,10 @@ export default ({rule, subModules, TYPE}) => {
     toMdast: (object, index, parent, visitChildren) => ({
       type: 'listItem',
       children: paragraphSerializer.toMdast(object.nodes)
-    }),
-    render: rule.component
+    })
   }
+
+  const ListItem = rule.component
 
   const serializer = new MarkdownSerializer({
     rules: [
@@ -38,10 +39,17 @@ export default ({rule, subModules, TYPE}) => {
     changes: {},
     plugins: [
       {
+        renderNode: ({node, attributes, children}) => {
+          if (node.type !== TYPE) return
+          return (
+            <ListItem {...attributes}>
+              {children}
+            </ListItem>
+          )
+        },
         schema: {
-          rules: [
-            {
-              match: matchBlock(TYPE),
+          blocks: {
+            [TYPE]: {
               validate: node => {
                 const notParagraphs = node.nodes
                   .filter(n => n.type !== PARAGRAPH)
@@ -61,9 +69,8 @@ export default ({rule, subModules, TYPE}) => {
 
                 return change
               }
-            },
-            listItem
-          ]
+            }
+          }
         }
       }
     ]
