@@ -23,6 +23,21 @@ module.exports = {
     return null
   },
 
+  parent: async ({ parentId }, args, { pgdb }, info) => {
+    if (!parentId) {
+      return null
+    }
+    const selections = info.fieldNodes[0].selectionSet.selections
+    if (selections.length === 1 && selections[0].name.value === 'id') {
+      return {
+        id: parentId
+      }
+    }
+    return pgdb.public.comments.findOne({
+      id: parentId
+    })
+  },
+
   author: async ({ author, userId }, args, { pgdb, user, commenter }) => {
     if (!(Roles.userHasRole(user, 'admin') || Roles.userHasRole(user, 'editor'))) {
       return null
