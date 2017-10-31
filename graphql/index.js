@@ -69,7 +69,8 @@ module.exports = (server, pgdb, httpServer) => {
         t,
         pubsub,
         redis: require('../lib/redis')
-      }
+      },
+      tracing: true // apollo-engine
     }
   })
 

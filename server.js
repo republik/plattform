@@ -2,6 +2,7 @@ const PgDb = require('./lib/pgdb')
 const express = require('express')
 const cors = require('cors')
 const { createServer } = require('http')
+const { Engine } = require('apollo-engine')
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 if (DEV) {
@@ -14,7 +15,8 @@ const {
   PORT,
   CORS_WHITELIST_URL,
   SESSION_SECRET,
-  COOKIE_DOMAIN
+  COOKIE_DOMAIN,
+  ENGINE_API_KEY
 } = process.env
 
 const auth = require('./src/auth')
@@ -25,11 +27,33 @@ let pgdb
 let server
 let httpServer
 let subscriptionServer
+
 module.exports.run = () => {
+  // init apollo engine
+  const engine = ENGINE_API_KEY
+    ? new Engine({
+      engineConfig: {
+        apiKey: ENGINE_API_KEY,
+        logging: {
+          level: 'INFO'   // Engine Proxy logging level. DEBUG, INFO, WARN or ERROR
+        }
+      },
+      graphqlPort: PORT
+    })
+    : null
+  if (engine) {
+    engine.start()
+  }
+
   return PgDb.connect().then((_pgdb) => {
     pgdb = _pgdb
     server = express()
     httpServer = createServer(server)
+
+    // apollo engine middleware
+    if (engine) {
+      server.use(engine.expressMiddleware())
+    }
 
     // Once DB is available, setup sessions and routes for authentication
     auth.configure({

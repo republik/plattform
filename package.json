@@ -6,6 +6,7 @@
   },
   "private": true,
   "dependencies": {
+    "apollo-engine": "^0.5.2",
     "apollo-fetch": "^0.6.0",
     "await-sleep": "0.0.1",
     "bluebird": "^3.5.0",
