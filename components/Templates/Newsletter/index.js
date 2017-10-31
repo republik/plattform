@@ -115,8 +115,8 @@ const schema = {
               editorOptions: {
                 type: 'lead',
                 placeholder: 'Lead'
-              }
-              // rules: paragraph.rules
+              },
+              rules: paragraph.rules
             }
           ]
         },
@@ -178,7 +178,8 @@ const schema = {
                   getData: (node, parent) => (parent && parent.data) || {},
                   editorModule: 'paragraph',
                   editorOptions: {
-                    type: 'figureCaption'
+                    type: 'figureCaption',
+                    placeholder: 'Legende'
                   },
                   rules: paragraph.rules
                 }
