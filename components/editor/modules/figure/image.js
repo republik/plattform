@@ -73,6 +73,13 @@ export default ({rule, subModules, TYPE}) => {
               }} />
             </span>
           )
+        },
+        schema: {
+          blocks: {
+            [TYPE]: {
+              isVoid: true
+            }
+          }
         }
       }
     ]
