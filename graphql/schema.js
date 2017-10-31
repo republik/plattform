@@ -56,6 +56,8 @@ type RootMutations {
     anonymity: Permission!
   ): ID!
   submitComment(
+    # client side generated id
+    id: ID
     discussionId: ID!
     parentId: ID
     content: String!

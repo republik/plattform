@@ -8,6 +8,7 @@ module.exports = async (_, args, { pgdb, user, t, pubsub }) => {
 
   const userId = user.id
   const {
+    id,
     discussionId,
     parentId,
     content,
@@ -21,6 +22,13 @@ module.exports = async (_, args, { pgdb, user, t, pubsub }) => {
     })
     if (!discussion) {
       throw new Error(t('api/discussion/404'))
+    }
+
+    // check if client-side generated ID already exists
+    if (await transaction.public.comments.findFirst({
+      id
+    })) {
+      throw new Error(t('api/comment/id/duplicate'))
     }
 
     // ensure user is within minInterval
@@ -49,6 +57,7 @@ module.exports = async (_, args, { pgdb, user, t, pubsub }) => {
     }
 
     const comment = await transaction.public.comments.insertAndGet({
+      id,
       discussionId: discussion.id,
       parentId,
       userId,

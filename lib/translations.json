@@ -1,5 +1,5 @@
 {
-  "updated": "2017-10-16T16:59:49.624Z",
+  "updated": "2017-10-31T15:49:33.812Z",
   "title": "live",
   "data": [
     {
@@ -61,6 +61,10 @@
     {
       "key": "api/comment/anonymous/displayName",
       "value": "Anonymous"
+    },
+    {
+      "key": "api/comment/id/duplicate",
+      "value": "Diese ID existiert bereits."
     }
   ]
 }
