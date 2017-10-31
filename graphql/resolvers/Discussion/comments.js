@@ -211,6 +211,7 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
   const comments = await pgdb.public.comments.find({
     discussionId: discussion.id
   })
+  const discussionTotalCount = comments.length
 
   if (!comments.length) {
     return {
@@ -283,5 +284,8 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
 
   await decorateTree(rootComment, coveredComments, discussion, user, pgdb, t)
 
-  return rootComment.comments
+  return {
+    ...rootComment.comments,
+    totalCount: discussionTotalCount
+  }
 }
