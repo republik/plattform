@@ -4,6 +4,7 @@ const {makeExecutableSchema} = require('graphql-tools')
 const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { execute, subscribe } = require('graphql')
 const { pubsub } = require('../lib/RedisPubSub')
+const OpticsAgent = require('optics-agent')
 const cookie = require('cookie')
 const cookieParser = require('cookie-parser')
 const t = require('../lib/t')
@@ -19,10 +20,16 @@ const executableSchema = makeExecutableSchema({
 const {
   PUBLIC_WS_URL_BASE,
   PUBLIC_WS_URL_PATH,
-  NODE_ENV
+  NODE_ENV,
+  OPTICS_API_KEY
 } = process.env
 
 module.exports = (server, pgdb, httpServer) => {
+  if (OPTICS_API_KEY) {
+    OpticsAgent.instrumentSchema(executableSchema)
+    server.use(OpticsAgent.middleware())
+  }
+
   const subscriptionServer = SubscriptionServer.create(
     {
       schema: executableSchema,
@@ -68,7 +75,8 @@ module.exports = (server, pgdb, httpServer) => {
         req,
         t,
         pubsub,
-        redis: require('../lib/redis')
+        redis: require('../lib/redis'),
+        opticsContext: OPTICS_API_KEY ? OpticsAgent.context(req) : null
       }
     }
   })

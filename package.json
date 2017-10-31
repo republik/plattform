@@ -41,6 +41,7 @@
     "leaked-handles": "^5.2.0",
     "lodash": "^4.17.4",
     "maxmind": "^2.2.0",
+    "optics-agent": "^1.1.7",
     "passport": "^0.4.0",
     "pogi": "^2.3.2",
     "query-string": "^5.0.0",
