@@ -126,12 +126,16 @@ const decorateTree = async (comment, coveredComments, discussion, user, pgdb, t)
   const userIds = _.uniq(
     coveredComments.map(c => c.userId)
   )
-  const users = await pgdb.public.users.find({ id: userIds })
-    .then(users => users.map(u => createUser(u)))
-  const discussionPreferences = await pgdb.public.discussionPreferences.find({
-    userId: userIds,
-    discussionId: discussion.id
-  })
+  const users = userIds.length
+    ? await pgdb.public.users.find({ id: userIds })
+        .then(users => users.map(u => createUser(u)))
+    : []
+  const discussionPreferences = userIds.length
+    ? await pgdb.public.discussionPreferences.find({
+      userId: userIds,
+      discussionId: discussion.id
+    })
+    : []
   const credentialIds = discussionPreferences.map(dp => dp.credentialId)
   const credentials = credentialIds.length
     ? await pgdb.public.credentials.find({ id: credentialIds })
