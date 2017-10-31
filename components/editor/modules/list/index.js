@@ -109,7 +109,7 @@ export default ({rule, subModules, TYPE}) => {
           const isEmpty = !inItem || !inItem.text
 
           if (isEmpty && (!isBackspace || inList.nodes.size === 1)) {
-            return change.unwrapBlock()
+            return change.setNodeByKey(inList.key, { type: 'paragraph' })
           }
 
           if (isBackspace) {
@@ -125,24 +125,17 @@ export default ({rule, subModules, TYPE}) => {
         schema: {
           blocks: {
             [TYPE]: {
-              validate: node => {
-                const notItems = node.nodes
-                  .filter(n => n.type !== LI)
-
-                return notItems.size
-                  ? notItems
-                  : null
-              },
-              normalize: (change, object, notItems) => {
-                notItems.forEach(child => {
+              nodes: [
+                { types: [LI] }
+              ],
+              normalize: (change, reason, { child }) => {
+                if (reason === 'child_type_invalid') {
                   if (child.kind === 'block') {
-                    change.unwrapNodeByKey(child.key)
+                    change.setNodeByKey(child.key, LI)
                   } else {
                     change.wrapBlockByKey(child.key, LI)
                   }
-                })
-
-                return change
+                }
               }
             }
           }

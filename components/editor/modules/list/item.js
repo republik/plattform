@@ -50,24 +50,17 @@ export default ({rule, subModules, TYPE}) => {
         schema: {
           blocks: {
             [TYPE]: {
-              validate: node => {
-                const notParagraphs = node.nodes
-                  .filter(n => n.type !== PARAGRAPH)
-
-                return notParagraphs.size
-                  ? notParagraphs
-                  : null
-              },
-              normalize: (change, object, notParagraphs) => {
-                notParagraphs.forEach(child => {
-                  if (child.kind === 'block') {
-                    change.unwrapNodeByKey(child.key)
-                  } else {
-                    change.wrapBlockByKey(child.key, PARAGRAPH)
+              nodes: [{ types: [PARAGRAPH] }],
+              normalize: (change, reason, { node, child }) => {
+                if (reason === 'child_type_invalid') {
+                  if (reason === 'child_type_invalid') {
+                    if (child.kind === 'block') {
+                      change.setNodeByKey(child.key, PARAGRAPH)
+                    } else {
+                      change.wrapBlockByKey(child.key, PARAGRAPH)
+                    }
                   }
-                })
-
-                return change
+                }
               }
             }
           }
