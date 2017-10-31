@@ -2,7 +2,6 @@ import React from 'react'
 
 import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 import MarkdownSerializer from '../../../../lib/serializer'
-import addValidation from '../../utils/serializationValidation'
 
 export default ({rule, subModules, TYPE}) => {
   const paragraphModule = subModules.find(m => m.name === 'paragraph')
@@ -10,11 +9,10 @@ export default ({rule, subModules, TYPE}) => {
     throw new Error('Missing paragraph submodule')
   }
   const paragraphSerializer = paragraphModule.helpers.serializer
-  const PARAGRAPH = paragraphModule.TYPE
 
   const blockquote = {
     match: matchBlock(TYPE),
-    matchMdast: (node) => node.type === 'blockquote',
+    matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, visitChildren) => ({
       kind: 'block',
       type: TYPE,
@@ -23,8 +21,7 @@ export default ({rule, subModules, TYPE}) => {
     toMdast: (object, index, parent, visitChildren, context) => ({
       type: 'blockquote',
       children: paragraphSerializer.toMdast(object.nodes, context)
-    }),
-    render: rule.component
+    })
   }
 
   const serializer = new MarkdownSerializer({
@@ -33,7 +30,7 @@ export default ({rule, subModules, TYPE}) => {
     ]
   })
 
-  addValidation(blockquote, serializer, TYPE)
+  const Blockquote = rule.component
 
   return {
     TYPE,
@@ -61,6 +58,15 @@ export default ({rule, subModules, TYPE}) => {
     },
     plugins: [
       {
+        renderNode ({node, children, attributes}) {
+          if (!blockquote.match(node)) return
+
+          return (
+            <Blockquote attributes={attributes}>
+              {children}
+            </Blockquote>
+          )
+        },
         onKeyDown (event, change) {
           const isBackspace = event.key === 'Backspace'
           if (event.key !== 'Enter' && !isBackspace) return
@@ -89,31 +95,31 @@ export default ({rule, subModules, TYPE}) => {
             .splitBlock(2)
         },
         schema: {
-          rules: [
-            {
-              match: matchBlock(TYPE),
-              validate: node => {
-                const notParagraphs = node.nodes
-                  .filter(n => n.type !== PARAGRAPH)
-
-                return notParagraphs.size
-                  ? notParagraphs
-                  : null
-              },
-              normalize: (change, object, notParagraphs) => {
-                notParagraphs.forEach(child => {
-                  if (child.kind === 'block') {
-                    change.unwrapNodeByKey(child.key)
-                  } else {
-                    change.wrapBlockByKey(child.key, PARAGRAPH)
-                  }
-                })
-
-                return change
+          blocks: {
+            [TYPE]: {
+              nodes: [
+                {
+                  kinds: ['block'],
+                  types: [paragraphModule.TYPE],
+                  min: 1
+                }
+              ],
+              normalize: (change, reason, {node, index, child}) => {
+                if (reason === 'child_type_invalid') {
+                  change.setNodeByKey(
+                    child.key,
+                    {type: paragraphModule.TYPE}
+                  )
+                }
+                if (reason === 'child_kind_invalid') {
+                  change.wrapBlockByKey(
+                    child.key,
+                    {type: paragraphModule.TYPE}
+                  )
+                }
               }
-            },
-            blockquote
-          ]
+            }
+          }
         }
       }
     ]

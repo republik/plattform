@@ -12,7 +12,9 @@ paragraphModule.name = 'paragraph'
 
 const blockquoteModule = createBlockquoteModule({
   TYPE: 'BLOCKQUOTE',
-  rule: {},
+  rule: {
+    matchMdast: (node) => node.type === 'blockquote'
+  },
   subModules: [
     paragraphModule
   ]

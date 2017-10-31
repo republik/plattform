@@ -24,36 +24,36 @@ const paragraph = {
     formatButtonText: 'Paragraph'
   },
   rules: [
-    // {
-    //   matchMdast: matchType('break'),
-    //   component: Br,
-    //   isVoid: true
-    // },
-    // {
-    //   matchMdast: matchType('strong'),
-    //   component: Strong,
-    //   editorModule: 'mark',
-    //   editorOptions: {
-    //     type: 'strong'
-    //   }
-    // },
-    // {
-    //   matchMdast: matchType('emphasis'),
-    //   component: Em,
-    //   editorModule: 'mark',
-    //   editorOptions: {
-    //     type: 'emphasis'
-    //   }
-    // },
-    // {
-    //   matchMdast: matchType('link'),
-    //   getData: node => ({
-    //     title: node.title,
-    //     href: node.url
-    //   }),
-    //   component: Link,
-    //   editorModule: 'link'
-    // }
+    {
+      matchMdast: matchType('break'),
+      component: Br,
+      isVoid: true
+    },
+    {
+      matchMdast: matchType('strong'),
+      component: Strong,
+      editorModule: 'mark',
+      editorOptions: {
+        type: 'strong'
+      }
+    },
+    {
+      matchMdast: matchType('emphasis'),
+      component: Em,
+      editorModule: 'mark',
+      editorOptions: {
+        type: 'emphasis'
+      }
+    },
+    {
+      matchMdast: matchType('link'),
+      getData: node => ({
+        title: node.title,
+        href: node.url
+      }),
+      component: Link,
+      editorModule: 'link'
+    }
   ]
 }
 
@@ -128,7 +128,7 @@ const schema = {
                 depth: 3,
                 formatButtonText: 'Zwischentitel 2'
               }
-            }
+            },
             // {
             //   matchMdast: matchZone('FIGURE'),
             //   component: Figure,
@@ -159,14 +159,14 @@ const schema = {
             //     }
             //   ]
             // },
-            // {
-            //   matchMdast: matchType('blockquote'),
-            //   component: Blockquote,
-            //   editorModule: 'blockquote',
-            //   rules: [
-            //     paragraph
-            //   ]
-            // },
+            {
+              matchMdast: matchType('blockquote'),
+              component: Blockquote,
+              editorModule: 'blockquote',
+              rules: [
+                paragraph
+              ]
+            },
             // {
             //   matchMdast: matchType('list'),
             //   component: List,
@@ -184,12 +184,12 @@ const schema = {
             //     }
             //   ]
             // },
-            // {
-            //   matchMdast: matchZone('SPECIAL_R_BLUEPRINT'),
-            //   component: RBlueprint,
-            //   isVoid: true,
-            //   editorModule: 'special'
-            // }
+            {
+              matchMdast: matchZone('SPECIAL_R_BLUEPRINT'),
+              component: RBlueprint,
+              isVoid: true,
+              editorModule: 'special'
+            }
           ]
         }
       ]

@@ -62,7 +62,7 @@ export default ({rule, subModules, TYPE}) => {
             [TYPE]: {
               nodes: [
                 {
-                  kinds: 'block',
+                  kinds: ['block'],
                   types: subModules.map(m => m.TYPE)
                 }
               ],
