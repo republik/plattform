@@ -35,36 +35,36 @@ const paragraph = {
     formatButtonText: 'Paragraph'
   },
   rules: [
-    // {
-    //   matchMdast: matchType('break'),
-    //   component: Br,
-    //   isVoid: true
-    // },
-    // {
-    //   matchMdast: matchType('strong'),
-    //   component: Strong,
-    //   editorModule: 'mark',
-    //   editorOptions: {
-    //     type: 'strong'
-    //   }
-    // },
-    // {
-    //   matchMdast: matchType('emphasis'),
-    //   component: Em,
-    //   editorModule: 'mark',
-    //   editorOptions: {
-    //     type: 'emphasis'
-    //   }
-    // },
-    // {
-    //   matchMdast: matchType('link'),
-    //   getData: node => ({
-    //     title: node.title,
-    //     href: node.url
-    //   }),
-    //   component: Link,
-    //   editorModule: 'link'
-    // }
+    {
+      matchMdast: matchType('break'),
+      component: Br,
+      isVoid: true
+    },
+    {
+      matchMdast: matchType('strong'),
+      component: Strong,
+      editorModule: 'mark',
+      editorOptions: {
+        type: 'strong'
+      }
+    },
+    {
+      matchMdast: matchType('emphasis'),
+      component: Em,
+      editorModule: 'mark',
+      editorOptions: {
+        type: 'emphasis'
+      }
+    },
+    {
+      matchMdast: matchType('link'),
+      getData: node => ({
+        title: node.title,
+        href: node.url
+      }),
+      component: Link,
+      editorModule: 'link'
+    }
   ]
 }
 
@@ -154,83 +154,67 @@ const schema = {
                   'Zwischentitel 2'
               }
             },
-            {
-              matchMdast: matchZone(
-                'FIGURE'
-              ),
-              component: Figure,
-              editorModule: 'figure',
-              editorOptions: {
-                afterType: 'PARAGRAPH'
-              },
-              rules: [
-                {
-                  matchMdast: matchImageParagraph,
-                  component: Image,
-                  getData: node => ({
-                    src:
-                      node.children[0]
-                        .url,
-                    alt:
-                      node.children[0]
-                        .alt
-                  }),
-                  editorModule:
-                    'figureImage',
-                  isVoid: true
-                },
-                {
-                  matchMdast: matchParagraph,
-                  component: Caption,
-                  getData: (
-                    node,
-                    parent
-                  ) =>
-                    (parent &&
-                      parent.data) ||
-                    {},
-                  editorModule:
-                    'paragraph',
-                  editorOptions: {
-                    type:
-                      'figureCaption',
-                    placeholder: 'Bildlegende'
-                  },
-                  rules: paragraph.rules
-                }
-              ]
-            },
             // {
-            //   matchMdast: matchType('blockquote'),
-            //   component: Blockquote,
-            //   editorModule: 'blockquote',
+            //   matchMdast: matchZone('FIGURE'),
+            //   component: Figure,
+            //   editorModule: 'figure',
+            //   editorOptions: {
+            //     afterType: 'PARAGRAPH'
+            //   },
             //   rules: [
-            //     paragraph
+            //     {
+            //       matchMdast: matchImageParagraph,
+            //       component: Image,
+            //       getData: node => ({
+            //         src: node.children[0].url,
+            //         alt: node.children[0].alt
+            //       }),
+            //       editorModule: 'figureImage',
+            //       isVoid: true
+            //     },
+            //     {
+            //       matchMdast: matchParagraph,
+            //       component: Caption,
+            //       getData: (node, parent) => (parent && parent.data) || {},
+            //       editorModule: 'paragraph',
+            //       editorOptions: {
+            //         type: 'figureCaption'
+            //       },
+            //       rules: paragraph.rules
+            //     }
             //   ]
             // },
             {
-              matchMdast: matchType('list'),
-              component: List,
-              getData: node => ({
-                ordered: node.ordered,
-                start: node.start
-              }),
-              editorModule: 'list',
+              matchMdast: matchType('blockquote'),
+              component: Blockquote,
+              editorModule: 'blockquote',
               rules: [
-                {
-                  matchMdast: matchType('listItem'),
-                  component: ListItem,
-                  editorModule: 'listItem',
-                  rules: [paragraph]
-                }
+                paragraph
               ]
-            }
+            },
             // {
-            //   matchMdast: matchZone('SPECIAL_R_BLUEPRINT'),
-            //   component: RBlueprint,
-            //   isVoid: true,
-            //   editorModule: 'special'
-            // }
+            //   matchMdast: matchType('list'),
+            //   component: List,
+            //   getData: node => ({
+            //     ordered: node.ordered,
+            //     start: node.start
+            //   }),
+            //   editorModule: 'list',
+            //   rules: [
+            //     {
+            //       matchMdast: matchType('listItem'),
+            //       component: ListItem,
+            //       editorModule: 'listItem',
+            //       rules: [paragraph]
+            //     }
+            //   ]
+            // },
+            {
+              matchMdast: matchZone('SPECIAL_R_BLUEPRINT'),
+              component: RBlueprint,
+              isVoid: true,
+              editorModule: 'special'
+            }
           ]
         }
       ]

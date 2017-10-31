@@ -1,6 +1,6 @@
 import React from 'react'
 import { matchBlock } from '../../utils'
-import addValidation, { findOrCreate } from '../../utils/serializationValidation'
+import { findOrCreate } from '../../utils/serializationValidation'
 import { gray2x1 } from '../../utils/placeholder'
 import { createCoverForm } from './ui'
 import MarkdownSerializer from '../../../../lib/serializer'
@@ -19,8 +19,6 @@ export default ({rule, subModules, TYPE}) => {
   const leadSerializer = leadModule.helpers.serializer
 
   const isCover = matchBlock(TYPE)
-  const isTitle = matchBlock(titleModule.TYPE)
-  const isLead = matchBlock(leadModule.TYPE)
 
   const Cover = rule.component
 
@@ -72,17 +70,6 @@ export default ({rule, subModules, TYPE}) => {
       }
     },
     toMdast: (object, index, parent, visitChildren, context) => {
-      [isTitle, isLead].some((check, index) => {
-        const node = object.nodes[index]
-        if (!node || !check(node)) {
-          context.dirty = true
-          return true
-        }
-      })
-      if (object.nodes.length > 2) {
-        context.dirty = true
-      }
-
       return {
         type: 'zone',
         identifier: TYPE,
@@ -114,8 +101,6 @@ export default ({rule, subModules, TYPE}) => {
       cover
     ]
   })
-
-  addValidation(cover, serializer, TYPE)
 
   return {
     TYPE,

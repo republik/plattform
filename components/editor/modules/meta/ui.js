@@ -59,14 +59,14 @@ const MetaData = ({value, onChange, t}) => {
     node.data.filter((_, key) => twitterKeys.has(key))
   )
 
-  const onInputChange = key => (_, value) => {
+  const onInputChange = key => (_, inputValue) => {
     const newData = node.data.remove('auto')
     onChange(
       value
         .change()
         .setNodeByKey(node.key, {
-          data: value
-            ? newData.set(key, value)
+          data: inputValue
+            ? newData.set(key, inputValue)
             : newData.remove(key)
         })
     )
