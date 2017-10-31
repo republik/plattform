@@ -1,6 +1,6 @@
 A discussion is logically a tree structure, but is displayed more like a list. This is so that we can display a sequence of direct replies without increasing indentation.
 
-Each comment is shown as a full-width div, with an appropriate number of vertical bars on its left to indicate its depth (`visualDepth`). Additional amount of left padding an be added with the `otherChild` flag. Below are three examples with varying visual depths, the last one has the `otherChild` flag set to true.
+Each comment is shown as a full-width div, with an appropriate number of vertical bars on its left to indicate its depth (`visualDepth`). Additional amount of left padding an be added with the `otherChild` flag.
 
 ```react|noSource,span-3,plain
 <Row t={t} comment={comments.comment1} visualDepth={2} />
