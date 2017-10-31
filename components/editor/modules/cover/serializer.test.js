@@ -25,7 +25,9 @@ paragraphModule.name = 'paragraph'
 
 const coverModule = createCoverModule({
   TYPE,
-  rule: {},
+  rule: {
+    matchMdast: node => node.type === 'zone' && node.identifier === TYPE
+  },
   subModules: [
     titleModule,
     paragraphModule

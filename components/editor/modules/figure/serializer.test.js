@@ -25,7 +25,9 @@ paragraphModule.name = 'paragraph'
 
 const figureModule = createFigureModule({
   TYPE,
-  rule: {},
+  rule: {
+    matchMdast: node => node.type === 'zone' && node.identifier === TYPE
+  },
   subModules: [
     imageModule,
     paragraphModule
