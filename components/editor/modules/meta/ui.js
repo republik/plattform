@@ -23,8 +23,8 @@ const styles = {
 
 const getWidth = key => key.match(/title/i) ? '100%' : ''
 
-const MetaData = ({state, onChange, t}) => {
-  const node = state.document
+const MetaData = ({value, onChange, t}) => {
+  const node = value.document
 
   const genericKeys = Set([
     'publishDate',
@@ -59,14 +59,14 @@ const MetaData = ({state, onChange, t}) => {
     node.data.filter((_, key) => twitterKeys.has(key))
   )
 
-  const onInputChange = key => (_, value) => {
+  const onInputChange = key => (_, inputValue) => {
     const newData = node.data.remove('auto')
     onChange(
-      state
+      value
         .change()
         .setNodeByKey(node.key, {
-          data: value
-            ? newData.set(key, value)
+          data: inputValue
+            ? newData.set(key, inputValue)
             : newData.remove(key)
         })
     )

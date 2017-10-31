@@ -4,8 +4,6 @@ import MarkdownSerializer from '../../../../lib/serializer'
 import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 import Placeholder from '../../Placeholder'
 
-import { getSerializationRules } from '../../utils/getRules'
-
 export default ({rule, subModules, TYPE}) => {
   const {
     formatButtonText,
@@ -13,12 +11,13 @@ export default ({rule, subModules, TYPE}) => {
   } = rule.editorOptions || {}
 
   const inlineSerializer = new MarkdownSerializer({
-    rules: getSerializationRules(
-      subModules.reduce(
-        (a, m) => a.concat(m.plugins),
-        []
-      )
-    ).concat({
+    rules: subModules.reduce(
+      (a, m) => a.concat(
+        m.helpers && m.helpers.serializer &&
+        m.helpers.serializer.rules
+      ),
+      []
+    ).filter(Boolean).concat({
       matchMdast: (node) => node.type === 'break',
       fromMdast: (node, index, parent, visitChildren) => ({
         kind: 'text',
@@ -40,16 +39,6 @@ export default ({rule, subModules, TYPE}) => {
     toMdast: (object, index, parent, visitChildren) => ({
       type: 'paragraph',
       children: inlineSerializer.toMdast(object.nodes)
-    }),
-    render: ({children, attributes, node}) => (
-      <Paragraph attributes={attributes} data={node.data.toJS()}>
-        {children}
-      </Paragraph>
-    ),
-    placeholder: placeholder && (({node}) => {
-      if (node.text.length) return null
-
-      return <Placeholder>{placeholder}</Placeholder>
     })
   }
 
@@ -86,11 +75,11 @@ export default ({rule, subModules, TYPE}) => {
     plugins: [
       {
         onKeyDown (e, change) {
-          const { state } = change
+          const { value } = change
           if (e.key !== 'Enter') return
           if (e.shiftKey === false) return
 
-          const { startBlock } = state
+          const { startBlock } = value
           const { type } = startBlock
           if (type !== TYPE) {
             return
@@ -98,10 +87,36 @@ export default ({rule, subModules, TYPE}) => {
 
           return change.insertText('\n')
         },
+        renderPlaceholder: placeholder && (({node}) => {
+          if (!paragraph.match(node)) return
+          if (node.text.length) return null
+
+          return <Placeholder>{placeholder}</Placeholder>
+        }),
+        renderNode ({node, children, attributes}) {
+          if (!paragraph.match(node)) return
+
+          return (
+            <Paragraph attributes={attributes} data={node.data.toJS()}>
+              {children}
+            </Paragraph>
+          )
+        },
         schema: {
-          rules: [
-            paragraph
-          ]
+          blocks: {
+            [TYPE]: {
+              nodes: [
+                { kinds: ['text', 'inline'] }
+              ],
+              normalize: (change, reason, {node, index, child}) => {
+                if (reason === 'child_kind_invalid') {
+                  change.unwrapBlockByKey(
+                    child.key
+                  )
+                }
+              }
+            }
+          }
         }
       }
     ]

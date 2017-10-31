@@ -2,7 +2,6 @@ import React from 'react'
 
 import MarkdownSerializer from '../../../../lib/serializer'
 import Placeholder from '../../Placeholder'
-import addValidation from '../../utils/serializationValidation'
 import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 
 export default ({rule, subModules, TYPE}) => {
@@ -24,13 +23,7 @@ export default ({rule, subModules, TYPE}) => {
       type: 'heading',
       depth,
       children: visitChildren(object)
-    }),
-    placeholder: placeholder && (({node}) => {
-      if (node.text.length) return null
-
-      return <Placeholder>{placeholder}</Placeholder>
-    }),
-    render: rule.component
+    })
   }
 
   const serializer = new MarkdownSerializer({
@@ -38,8 +31,6 @@ export default ({rule, subModules, TYPE}) => {
       title
     ]
   })
-
-  addValidation(title, serializer, TYPE)
 
   return {
     TYPE,
@@ -67,10 +58,28 @@ export default ({rule, subModules, TYPE}) => {
     },
     plugins: [
       {
+        renderPlaceholder: placeholder && (({node}) => {
+          if (!title.match(node)) return
+          if (node.text.length) return null
+
+          return <Placeholder>{placeholder}</Placeholder>
+        }),
+        renderNode ({node, children, attributes}) {
+          if (!title.match(node)) return
+          return (
+            <rule.component attributes={attributes}>
+              {children}
+            </rule.component>
+          )
+        },
         schema: {
-          rules: [
-            title
-          ]
+          blocks: {
+            [TYPE]: {
+              nodes: [
+                { kinds: ['text'] }
+              ]
+            }
+          }
         }
       }
     ]

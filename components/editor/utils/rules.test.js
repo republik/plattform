@@ -1,5 +1,5 @@
 import { Record, List } from 'immutable'
-import { Block, Text, State, Document } from 'slate'
+import { Block, Text, Value, Document } from 'slate'
 import spy from 'spy'
 import test from 'tape'
 import {
@@ -41,7 +41,7 @@ const node = Document.create({
   ]
 })
 
-const state = State.create({
+const value = Value.create({
   document: node
 })
 
@@ -240,35 +240,35 @@ test('rules.asList', assert => {
 test('rules.remove', assert => {
   assert.plan(4)
 
-  const nodeToRemove = firstChild(n => n && n.type === 'bar')(state.document)
+  const nodeToRemove = firstChild(n => n && n.type === 'bar')(value.document)
 
   assert.equal(
-    remove(state.change(), state.document, nodeToRemove)
-      .state.document.nodes.size,
+    remove(value.change(), value.document, nodeToRemove)
+      .value.document.nodes.size,
     2,
     'removes a given node from the document'
   )
 
   assert.equal(
-    remove(state.change(), state.document, nodeToRemove)
-      .state.document.nodes.get(0),
-    state.document.nodes.get(1),
+    remove(value.change(), value.document, nodeToRemove)
+      .value.document.nodes.get(0),
+    value.document.nodes.get(1),
     'removes the correct node'
   )
 
-  const nodesToRemove = childrenAfter(0)(state.document)
+  const nodesToRemove = childrenAfter(0)(value.document)
 
   assert.equal(
-    remove(state.change(), state.document, nodesToRemove)
-      .state.document.nodes.size,
+    remove(value.change(), value.document, nodesToRemove)
+      .value.document.nodes.size,
     1,
     'removes a list of nodes from the document'
   )
 
   assert.equal(
-    remove(state.change(), state.document, nodesToRemove)
-      .state.document.nodes.get(0),
-    state.document.nodes.get(0),
+    remove(value.change(), value.document, nodesToRemove)
+      .value.document.nodes.get(0),
+    value.document.nodes.get(0),
     'removes the right nodes from the document'
   )
 })
@@ -283,16 +283,16 @@ test('rules.insertAt', assert => {
   const insertAtSecond = insertAt(1, () => blockToInsert)
 
   assert.equal(
-    insertAtSecond(state.change(), state.document)
-      .state.document.nodes.get(1),
+    insertAtSecond(value.change(), value.document)
+      .value.document.nodes.get(1),
     blockToInsert,
     'inserts a new node at index'
   )
 
   assert.equal(
-    insertAtSecond(state.change(), state.document)
-      .state.document.nodes.get(2),
-    state.document.nodes.get(1),
+    insertAtSecond(value.change(), value.document)
+      .value.document.nodes.get(2),
+    value.document.nodes.get(1),
     'shifts the indexes of all next siblings by 1'
   )
 
@@ -303,13 +303,13 @@ test('rules.insertAt', assert => {
   const insertAfterSecond = insertAt(1, () => blocksToInsert)
 
   assert.equal(
-    insertAfterSecond(state.change(), state.document)
-      .state.document.nodes.size,
+    insertAfterSecond(value.change(), value.document)
+      .value.document.nodes.size,
     5,
     'reducers can return a list of nodes to insert'
   )
 
-  const updatedState = insertAfterSecond(state.change(), state.document).state
+  const updatedState = insertAfterSecond(value.change(), value.document).value
   const nodeA = updatedState.document.nodes.get(1)
   const nodeB = updatedState.document.nodes.get(2)
 
@@ -330,10 +330,10 @@ test('rules.prepend', assert => {
   const reducer = () => blockToInsert
 
   assert.equal(
-    prepend(reducer)(state.change(), state.document)
-      .state.document.nodes.get(0),
-    insertAt(0, reducer)(state.change(), state.document)
-      .state.document.nodes.get(0),
+    prepend(reducer)(value.change(), value.document)
+      .value.document.nodes.get(0),
+    insertAt(0, reducer)(value.change(), value.document)
+      .value.document.nodes.get(0),
     'is an alias that equals to insertAt(0)'
   )
 })
@@ -345,10 +345,10 @@ test('rules.append', assert => {
   const reducer = () => blockToInsert
 
   assert.equal(
-    append(reducer)(state.change(), state.document)
-      .state.document.nodes.get(0),
-    insertAt(3, reducer)(state.change(), state.document)
-      .state.document.nodes.get(0),
+    append(reducer)(value.change(), value.document)
+      .value.document.nodes.get(0),
+    insertAt(3, reducer)(value.change(), value.document)
+      .value.document.nodes.get(0),
     'decorates insertAt with `node.nodes.size`'
   )
 })
@@ -356,29 +356,29 @@ test('rules.append', assert => {
 test('rules.update', assert => {
   assert.plan(3)
 
-  const nodeToUpdate = state.document.nodes.get(0)
+  const nodeToUpdate = value.document.nodes.get(0)
 
   assert.equal(
-    update(() => 'sometype')(state.change(), state.document, nodeToUpdate)
-      .state.document.nodes.get(0).type,
+    update(() => 'sometype')(value.change(), value.document, nodeToUpdate)
+      .value.document.nodes.get(0).type,
     'sometype',
     'updates a given node'
   )
 
   assert.equal(
     update(() => ({ data: { foo: 'bar' } }))(
-      state.change(),
-      state.document,
+      value.change(),
+      value.document,
       nodeToUpdate
-    ).state.document.nodes.get(0).data.get('foo'),
+    ).value.document.nodes.get(0).data.get('foo'),
     'bar',
     'reducers can return anything compatible to slates\'s `Change.setNodeByKey`'
   )
 
-  const nodesToUpdate = childrenAfter(0)(state.document)
+  const nodesToUpdate = childrenAfter(0)(value.document)
   const reducer = () => ({ data: { foo: 'bar' } })
-  const updatedState = update(reducer)(state.change(), state.document, nodesToUpdate)
-    .state
+  const updatedState = update(reducer)(value.change(), value.document, nodesToUpdate)
+    .value
 
   const nodeA = updatedState.document.nodes.get(1)
   const nodeB = updatedState.document.nodes.get(2)
@@ -409,16 +409,16 @@ test('rules.not', assert => {
 test('rules.unwrap', assert => {
   assert.plan(1)
 
-  const wrappedState = state
+  const wrappedState = value
     .change()
-    .wrapBlockByKey(state.document.nodes.get(0).key, 'typeA')
-    .state
+    .wrapBlockByKey(value.document.nodes.get(0).key, 'typeA')
+    .value
 
   const unwrappedState = unwrap(() => 'unwrapped')(
     wrappedState.change(),
     wrappedState.document.nodes.get(0),
     wrappedState.document.nodes.get(0).nodes.get(0)
-  ).state
+  ).value
 
   assert.equal(
     unwrappedState.document.nodes.get(0).type,

@@ -1,6 +1,6 @@
 import React from 'react'
 import { matchBlock } from '../../utils'
-import addValidation, { findOrCreate } from '../../utils/serializationValidation'
+import { findOrCreate } from '../../utils/serializationValidation'
 import { gray2x1 } from '../../utils/placeholder'
 import { createCoverForm } from './ui'
 import MarkdownSerializer from '../../../../lib/serializer'
@@ -19,22 +19,12 @@ export default ({rule, subModules, TYPE}) => {
   const leadSerializer = leadModule.helpers.serializer
 
   const isCover = matchBlock(TYPE)
-  const isTitle = matchBlock(titleModule.TYPE)
-  const isLead = matchBlock(leadModule.TYPE)
 
   const Cover = rule.component
 
   const cover = {
     match: isCover,
-    render: ({ children, node, attributes }) => (
-      <Cover data={{
-        src: node.data.get('src') || gray2x1,
-        alt: node.data.get('alt')
-      }} attributes={attributes}>
-        {children}
-      </Cover>
-    ),
-    matchMdast: (node) => node.type === 'zone' && node.identifier === TYPE,
+    matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, visitChildren) => {
       // fault tolerant because markdown could have been edited outside
       const deepNodes = node.children.reduce(
@@ -80,17 +70,6 @@ export default ({rule, subModules, TYPE}) => {
       }
     },
     toMdast: (object, index, parent, visitChildren, context) => {
-      [isTitle, isLead].some((check, index) => {
-        const node = object.nodes[index]
-        if (!node || !check(node)) {
-          context.dirty = true
-          return true
-        }
-      })
-      if (object.nodes.length > 2) {
-        context.dirty = true
-      }
-
       return {
         type: 'zone',
         identifier: TYPE,
@@ -123,8 +102,6 @@ export default ({rule, subModules, TYPE}) => {
     ]
   })
 
-  addValidation(cover, serializer, TYPE)
-
   return {
     TYPE,
     helpers: {
@@ -138,10 +115,63 @@ export default ({rule, subModules, TYPE}) => {
     },
     plugins: [
       {
+        renderNode ({node, children, attributes}) {
+          if (!cover.match(node)) return
+          return (
+            <Cover data={{
+              src: node.data.get('src') || gray2x1,
+              alt: node.data.get('alt')
+            }} attributes={attributes}>
+              {children}
+            </Cover>
+          )
+        },
         schema: {
-          rules: [
-            cover
-          ]
+          blocks: {
+            [TYPE]: {
+              nodes: [
+                {
+                  types: [titleModule.TYPE],
+                  min: 1,
+                  max: 1
+                },
+                {
+                  types: [leadModule.TYPE],
+                  min: 1,
+                  max: 1
+                }
+              ],
+              normalize: (change, reason, {node, index, child}) => {
+                if (reason === 'child_required') {
+                  change.insertNodeByKey(
+                    node.key,
+                    index,
+                    {
+                      kind: 'block',
+                      type: index === 0
+                        ? titleModule.TYPE
+                        : leadModule.TYPE
+                    }
+                  )
+                }
+                if (reason === 'child_type_invalid') {
+                  change.setNodeByKey(
+                    child.key,
+                    {
+                      type: index === 0
+                        ? titleModule.TYPE
+                        : leadModule.TYPE
+                    }
+                  )
+                }
+                if (reason === 'child_unknown') {
+                  if (index > 1) {
+                    change.mergeNodeByKey(child.key)
+                  }
+                }
+              }
+            }
+          }
         }
       }
     ]

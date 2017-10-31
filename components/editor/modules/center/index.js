@@ -1,7 +1,5 @@
 import { matchBlock } from '../../utils'
 import MarkdownSerializer from '../../../../lib/serializer'
-import { getSerializationRules } from '../../utils/getRules'
-import addValidation from '../../utils/serializationValidation'
 
 export default ({rule, subModules, TYPE}) => {
   const paragraphModule = subModules.find(m => m.name === 'paragraph')
@@ -10,17 +8,18 @@ export default ({rule, subModules, TYPE}) => {
   }
 
   const childSerializer = new MarkdownSerializer({
-    rules: getSerializationRules(
-      subModules.reduce(
-        (a, m) => a.concat(m.plugins),
-        []
-      )
-    )
+    rules: subModules.reduce(
+      (a, m) => a.concat(
+        m.helpers && m.helpers.serializer &&
+        m.helpers.serializer.rules
+      ),
+      []
+    ).filter(Boolean)
   })
 
   const center = {
     match: matchBlock(TYPE),
-    matchMdast: (node) => node.type === 'zone' && node.identifier === TYPE,
+    matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, visitChildren) => ({
       kind: 'block',
       type: TYPE,
@@ -30,8 +29,7 @@ export default ({rule, subModules, TYPE}) => {
       type: 'zone',
       identifier: TYPE,
       children: childSerializer.toMdast(object.nodes, context)
-    }),
-    render: rule.component
+    })
   }
 
   const serializer = new MarkdownSerializer({
@@ -40,7 +38,7 @@ export default ({rule, subModules, TYPE}) => {
     ]
   })
 
-  addValidation(center, serializer, 'center')
+  const Center = rule.component
 
   return {
     TYPE,
@@ -50,27 +48,40 @@ export default ({rule, subModules, TYPE}) => {
     changes: {},
     plugins: [
       {
+        renderNode ({node, children, attributes}) {
+          if (!center.match(node)) return
+
+          return (
+            <Center attributes={attributes}>
+              {children}
+            </Center>
+          )
+        },
         schema: {
-          rules: [
-            {
-              match: matchBlock(TYPE),
-              validate: node => {
-                const notBlocks = node.nodes.filter(n => n.kind !== 'block')
-
-                return notBlocks.size
-                  ? notBlocks
-                  : null
-              },
-              normalize: (change, object, notBlocks) => {
-                notBlocks.forEach((child) => {
-                  change.wrapBlockByKey(child.key, paragraphModule.TYPE)
-                })
-
-                return change
+          blocks: {
+            [TYPE]: {
+              nodes: [
+                {
+                  kinds: ['block'],
+                  types: subModules.map(m => m.TYPE)
+                }
+              ],
+              normalize: (change, reason, {node, index, child}) => {
+                if (reason === 'child_type_invalid') {
+                  change.setNodeByKey(
+                    child.key,
+                    {type: paragraphModule.TYPE}
+                  )
+                }
+                if (reason === 'child_kind_invalid') {
+                  change.wrapBlockByKey(
+                    child.key,
+                    {type: paragraphModule.TYPE}
+                  )
+                }
               }
-            },
-            center
-          ]
+            }
+          }
         }
       }
     ]

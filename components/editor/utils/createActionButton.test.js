@@ -14,15 +14,15 @@ test('utils.createActionButton', assert => {
   const onChange = spy()
 
   const ActionButton = createActionButton({
-    isDisabled: ({ state }) => state.disabled,
-    isVisible: ({ state }) => state.visible,
+    isDisabled: ({ value }) => value.disabled,
+    isVisible: ({ value }) => value.visible,
     reducer: props => event =>
       props.onChange(props, event)
   })(Button)
 
   const wrapper = shallow(
     <ActionButton
-      state={{ disabled: false, visible: false }}
+      value={{ disabled: false, visible: false }}
       onChange={onChange}
     />
   )
@@ -50,7 +50,7 @@ test('utils.createActionButton', assert => {
   assert.equal(
     onChange.calledWith(
       {
-        state: { disabled: false, visible: false },
+        value: { disabled: false, visible: false },
         onChange
       },
       { foo: 'bar' }
@@ -59,7 +59,7 @@ test('utils.createActionButton', assert => {
     'calls `options.reducer` with props and the mousedown event'
   )
 
-  const disabledWrapper = shallow(<ActionButton state={{ disabled: true }} />)
+  const disabledWrapper = shallow(<ActionButton value={{ disabled: true }} />)
   const preventDefault = spy()
   disabledWrapper.find('Button').simulate('mousedown', { preventDefault })
 
@@ -79,7 +79,7 @@ test('utils.createActionButton', assert => {
 
   const wrapperWithProps = shallow(
     <ActionButton
-      state={{ disabled: false, visible: true }}
+      value={{ disabled: false, visible: true }}
       isVisible={isVisible}
       isDisabled={isDisabled}
       onChange={onChange}

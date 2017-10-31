@@ -11,24 +11,24 @@ import {
 } from '../../utils'
 
 export const createCoverForm = TYPE => createPropertyForm({
-  isDisabled: ({ state }) => {
-    return !state.blocks.some(block => {
-      return matchBlock(TYPE)(state.document.getParent(block.key))
+  isDisabled: ({ value }) => {
+    return !value.blocks.some(block => {
+      return matchBlock(TYPE)(value.document.getParent(block.key))
     })
   }
-})(({ disabled, state, onChange }) => {
+})(({ disabled, value, onChange }) => {
   if (disabled) {
     return null
   }
-  const node = state.blocks
+  const node = value.blocks
     .map(
-      block => state.document.getParent(block.key)
+      block => value.document.getParent(block.key)
     )
     .find(matchBlock(TYPE))
 
   const onInputChange = key => (_, value) => {
     onChange(
-      state
+      value
         .change()
         .setNodeByKey(node.key, {
           data: value

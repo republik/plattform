@@ -25,7 +25,9 @@ paragraphModule.name = 'paragraph'
 
 const figureModule = createFigureModule({
   TYPE,
-  rule: {},
+  rule: {
+    matchMdast: node => node.type === 'zone' && node.identifier === TYPE
+  },
   subModules: [
     imageModule,
     paragraphModule
@@ -42,8 +44,8 @@ test('figure serialization', assert => {
 Caption
 
 <hr /></section>`
-  const state = serializer.deserialize(md)
-  const node = state.document.nodes.first()
+  const value = serializer.deserialize(md)
+  const node = value.document.nodes.first()
 
   const image = node.nodes.first()
   assert.equal(image.kind, 'block')
@@ -57,6 +59,6 @@ Caption
   assert.equal(caption.type, 'FIGURE_CAPTION')
   assert.equal(caption.text, 'Caption')
 
-  assert.equal(serializer.serialize(state).trimRight(), md)
+  assert.equal(serializer.serialize(value).trimRight(), md)
   assert.end()
 })

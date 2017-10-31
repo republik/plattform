@@ -11,12 +11,12 @@ test('utils.createPropertyForm', assert => {
   )
 
   const PropertyForm = createPropertyForm({
-    isDisabled: ({ state }) => state.disabled
+    isDisabled: ({ value }) => value.disabled
   })(Form)
 
   const wrapper = shallow(
     <PropertyForm
-      state={{ disabled: true }}
+      value={{ disabled: true }}
     />
   )
 

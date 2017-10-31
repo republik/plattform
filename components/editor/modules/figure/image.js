@@ -25,36 +25,23 @@ export default ({rule, subModules, TYPE}) => {
   const figureImage = {
     match: matchBlock(TYPE),
     matchMdast: (node) => node.type === 'image',
-    fromMdast: (node, index, parent, visitChildren) => ({
-      kind: 'block',
-      type: TYPE,
-      data: {
-        alt: node.alt,
-        src: node.url
-      },
-      isVoid: true,
-      nodes: []
-    }),
+    fromMdast: (node, index, parent, visitChildren) => {
+      return ({
+        kind: 'block',
+        type: TYPE,
+        data: {
+          alt: node.alt,
+          src: node.url
+        },
+        isVoid: true,
+        nodes: []
+      })
+    },
     toMdast: (object, index, parent, visitChildren) => ({
       type: 'image',
       alt: object.data.alt,
       url: object.data.src
-    }),
-    render: ({ node, state, attributes }) => {
-      const active = state.blocks.some(block => block.key === node.key)
-
-      return (
-        <span
-          {...styles.border}
-          {...attributes}
-          data-active={active}>
-          <Image data={{
-            src: node.data.get('src') || gray2x1,
-            alt: node.data.get('alt')
-          }} />
-        </span>
-      )
-    }
+    })
   }
 
   const serializer = new MarkdownSerializer({
@@ -71,10 +58,28 @@ export default ({rule, subModules, TYPE}) => {
     changes: {},
     plugins: [
       {
+        renderNode (props) {
+          const { node, editor, attributes } = props
+          if (node.type !== TYPE) return
+          const active = editor.value.blocks.some(block => block.key === node.key)
+          return (
+            <span
+              {...styles.border}
+              {...attributes}
+              data-active={active}>
+              <Image data={{
+                src: node.data.get('src') || gray2x1,
+                alt: node.data.get('alt')
+              }} />
+            </span>
+          )
+        },
         schema: {
-          rules: [
-            figureImage
-          ]
+          blocks: {
+            [TYPE]: {
+              isVoid: true
+            }
+          }
         }
       }
     ]

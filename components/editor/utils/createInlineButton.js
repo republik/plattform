@@ -2,31 +2,31 @@ import { matchInline } from './'
 import createFormatButton from './createFormatButton'
 
 const isDisabled = inlineType =>
-  ({ state }) =>
-    state.isBlurred || (
-      !isActive(inlineType)({ state }) &&
-      state.isEmpty
+  ({ value }) =>
+    value.isBlurred || (
+      !isActive(inlineType)({ value }) &&
+      value.isEmpty
     )
 
 const isActive = inlineType =>
-  ({ state }) =>
-    state.inlines.some(matchInline(inlineType))
+  ({ value }) =>
+    value.inlines.some(matchInline(inlineType))
 
 const reducer = inlineType =>
   props =>
     event => {
       event.preventDefault()
-      const { onChange, state } = props
+      const { onChange, value } = props
       const active = isActive(inlineType)(props)
 
       if (active) {
         return onChange(
-          state
+          value
             .change()
             .unwrapInline(inlineType)
         )
-      } else if (state.isExpanded) {
-        return onChange(state
+      } else if (value.isExpanded) {
+        return onChange(value
           .change()
           .wrapInline({
             type: inlineType

@@ -2,20 +2,20 @@ import { matchBlock } from './'
 import createFormatButton from './createFormatButton'
 
 const isDisabled = blockType =>
-  ({ state }) =>
-    state.isBlurred || state.blocks.every(matchBlock(blockType))
+  ({ value }) =>
+    value.isBlurred || value.blocks.every(matchBlock(blockType))
 
 const isActive = blockType =>
-  ({ state }) =>
-    state.blocks.some(matchBlock(blockType))
+  ({ value }) =>
+    value.blocks.some(matchBlock(blockType))
 
 const reducer = blockType =>
   props =>
     event => {
-      const { onChange, state } = props
+      const { onChange, value } = props
       event.preventDefault()
       return onChange(
-        state
+        value
           .change()
           .setBlock(blockType)
       )

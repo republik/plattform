@@ -1,9 +1,9 @@
 export default (change, block) => {
-  const { state: {startBlock, endBlock} } = change
+  const { value: {startBlock, endBlock} } = change
   if (startBlock === endBlock && !startBlock.text) {
     change.replaceNodeByKey(startBlock.key, block)
 
-    const node = change.state.document.getNode(block.key)
+    const node = change.value.document.getNode(block.key)
     if (node) change.collapseToEndOf(node)
 
     return change

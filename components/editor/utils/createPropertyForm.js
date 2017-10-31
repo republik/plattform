@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const propTypes = {
-  state: PropTypes.object.isRequired,
+  value: PropTypes.object.isRequired,
   onChange: PropTypes.func
 }
 

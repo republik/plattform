@@ -1,9 +1,20 @@
 import Container from './Container'
-import Cover, {Title, Lead} from './Cover'
-import Paragraph, {Strong, Em, Link, Br} from './Paragraph'
+import Cover, {
+  Title,
+  Lead
+} from './Cover'
+import Paragraph, {
+  Strong,
+  Em,
+  Link,
+  Br
+} from './Paragraph'
 import Center from './Center'
 import { H2, H3 } from './Headlines'
-import Figure, { Image, Caption } from './Figure'
+import Figure, {
+  Image,
+  Caption
+} from './Figure'
 import Blockquote from './Blockquote'
 import List, { ListItem } from './List'
 import RBlueprint from './RBlueprint'
@@ -65,10 +76,14 @@ const schema = {
       editorModule: 'document',
       rules: [
         {
-          matchMdast: matchZone('COVER'),
+          matchMdast: matchZone(
+            'COVER'
+          ),
           component: Cover,
           getData: node => {
-            const img = node.children[0].children[0]
+            const img =
+              node.children[0]
+                .children[0]
             return {
               alt: img.alt,
               src: img.url
@@ -82,7 +97,9 @@ const schema = {
               isVoid: true
             },
             {
-              matchMdast: matchHeading(1),
+              matchMdast: matchHeading(
+                1
+              ),
               component: Title,
               editorModule: 'headline',
               editorOptions: {
@@ -104,29 +121,37 @@ const schema = {
           ]
         },
         {
-          matchMdast: matchZone('CENTER'),
+          matchMdast: matchZone(
+            'CENTER'
+          ),
           component: Center,
           editorModule: 'center',
           rules: [
             paragraph,
             {
-              matchMdast: matchHeading(2),
+              matchMdast: matchHeading(
+                2
+              ),
               component: H2,
               editorModule: 'headline',
               editorOptions: {
                 type: 'h2',
                 depth: 2,
-                formatButtonText: 'Zwischentitel 1'
+                formatButtonText:
+                  'Zwischentitel 1'
               }
             },
             {
-              matchMdast: matchHeading(3),
+              matchMdast: matchHeading(
+                3
+              ),
               component: H3,
               editorModule: 'headline',
               editorOptions: {
                 type: 'h3',
                 depth: 3,
-                formatButtonText: 'Zwischentitel 2'
+                formatButtonText:
+                  'Zwischentitel 2'
               }
             },
             {
@@ -153,7 +178,8 @@ const schema = {
                   getData: (node, parent) => (parent && parent.data) || {},
                   editorModule: 'paragraph',
                   editorOptions: {
-                    type: 'figureCaption'
+                    type: 'figureCaption',
+                    placeholder: 'Legende'
                   },
                   rules: paragraph.rules
                 }

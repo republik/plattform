@@ -1,7 +1,7 @@
 import { Document as SlateDocument } from 'slate'
 
 import MarkdownSerializer from '../../../../lib/serializer'
-import addValidation, { findOrCreate } from '../../utils/serializationValidation'
+import { findOrCreate } from '../../utils/serializationValidation'
 
 export default ({rule, subModules, TYPE}) => {
   const coverModule = subModules.find(m => m.name === 'cover')
@@ -44,7 +44,7 @@ export default ({rule, subModules, TYPE}) => {
 
   const documentRule = {
     match: object => object.kind === 'document',
-    matchMdast: node => node.type === 'root',
+    matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, visitChildren) => {
       const cover = findOrCreate(node.children, {
         type: 'zone', identifier: coverModule.TYPE
@@ -99,22 +99,10 @@ export default ({rule, subModules, TYPE}) => {
 
       return {
         document: documentNode,
-        kind: 'state'
+        kind: 'value'
       }
     },
     toMdast: (object, index, parent, visitChildren, context) => {
-      const firstNode = object.nodes[0]
-      if (!firstNode || firstNode.type !== coverModule.TYPE || firstNode.kind !== 'block') {
-        context.dirty = true
-      }
-      const secondNode = object.nodes[1]
-      if (!secondNode || secondNode.type !== centerModule.TYPE || secondNode.kind !== 'block') {
-        context.dirty = true
-      }
-      if (object.nodes.length !== 2) {
-        context.dirty = true
-      }
-
       const cover = findOrCreate(object.nodes, { kind: 'block', type: coverModule.TYPE })
       const center = findOrCreate(
         object.nodes,
@@ -159,8 +147,6 @@ Ladies and Gentlemen,
 `
   )
 
-  addValidation(documentRule, serializer, 'document')
-
   const Container = rule.component
 
   return {
@@ -169,20 +155,35 @@ Ladies and Gentlemen,
       serializer,
       newDocument
     },
+    components: {
+      Container
+    },
     changes: {},
     plugins: [
       {
-        render: ({children}) => <Container>{children}</Container>,
         schema: {
-          rules: [
-            documentRule
-          ]
+          document: {
+            nodes: [
+              {
+                types: [coverModule.TYPE],
+                kinds: ['block'],
+                min: 1,
+                max: 1
+              },
+              {
+                types: [centerModule.TYPE],
+                kinds: ['block'],
+                min: 1,
+                max: 1
+              }
+            ]
+          }
         },
         onBeforeChange: (change) => {
-          const newData = autoMeta(change.state.document)
+          const newData = autoMeta(change.value.document)
 
           if (newData) {
-            change.setNodeByKey(change.state.document.key, {
+            change.setNodeByKey(change.value.document.key, {
               data: newData
             })
             return change

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 const preventDefault = event => event.preventDefault()
 
 const propTypes = {
-  state: PropTypes.object.isRequired,
+  value: PropTypes.object.isRequired,
   onChange: PropTypes.func,
   isDisabled: PropTypes.func,
   isActive: PropTypes.func,
@@ -24,7 +24,7 @@ export default ({
   Component => {
     const FormatButton = props => {
       const {
-        state,
+        value,
         onChange,
         isDisabled: propsIsDisabled,
         isActive: propsIsActive,
