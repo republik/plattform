@@ -47,7 +47,7 @@ export default ({rule, subModules, TYPE}) => {
         })
       )
 
-      const result = {
+      return {
         kind: 'block',
         type: TYPE,
         data: {
@@ -58,10 +58,6 @@ export default ({rule, subModules, TYPE}) => {
           captionSerializer.fromMdast(caption)
         ]
       }
-
-      console.log('FOOO', result)
-
-      return result
     },
     toMdast: (object, index, parent, visitChildren, context) => {
       if (object.nodes.length !== 2) {
