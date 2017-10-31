@@ -29,7 +29,7 @@ Promise.resolve().then( async () => {
 const _comments = require('./comments.json')
 const PgDb = require('../lib/pgdb')
 const getHottnes = require('../lib/hottnes')
-const fakeUUID = require('../lib/hottnes')
+const fakeUUID = require('../lib/fakeUUID')
 
 PgDb.connect().then(async (pgdb) => {
   let user = await pgdb.public.users.findFirst({})
@@ -42,10 +42,16 @@ PgDb.connect().then(async (pgdb) => {
     })
   }
 
-  await Promise.all([
-    pgdb.public.comments.delete({}),
-    pgdb.public.discussions.delete({})
-  ])
+  // await Promise.all([
+  //  pgdb.public.comments.delete({}),
+  //  pgdb.public.discussions.delete({})
+  // ])
+  if (await pgdb.public.discussions.findFirst({
+    id: fakeUUID('asdf')
+  })) {
+    console.log('asdf discussion exists already')
+    process.exit(1)
+  }
 
   const discussion = await pgdb.public.discussions.insertAndGet({
     id: fakeUUID('asdf')
