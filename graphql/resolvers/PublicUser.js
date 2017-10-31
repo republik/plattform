@@ -30,6 +30,8 @@ module.exports = {
       JOIN discussions d ON d.id = c."discussionId"
       WHERE
         c."userId" = :userId
+      ORDER BY
+        c."createdAt" DESC
       LIMIT :limit;
     `,
       { userId, limit }
