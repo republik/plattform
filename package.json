@@ -2,7 +2,7 @@
   "name": "republik-backend",
   "version": "0.0.1",
   "engines": {
-    "node": "8.6.0"
+    "node": "8.8.1"
   },
   "private": true,
   "dependencies": {
