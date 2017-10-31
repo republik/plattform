@@ -26,7 +26,6 @@ export default ({rule, subModules, TYPE}) => {
     match: matchBlock(TYPE),
     matchMdast: (node) => node.type === 'image',
     fromMdast: (node, index, parent, visitChildren) => {
-      console.log(node)
       return ({
         kind: 'block',
         type: TYPE,
