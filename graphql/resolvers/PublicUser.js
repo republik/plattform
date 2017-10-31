@@ -26,8 +26,8 @@ module.exports = {
         c."updatedAt",
         d.id AS "discussionId",
         d.title AS "discussionTitle"
-      FROM discussions d
-      JOIN comments c ON c."discussionId" = d.id
+      FROM comments c
+      JOIN discussions d ON d.id = c."discussionId"
       WHERE
         c."userId" = :userId
       LIMIT :limit;
