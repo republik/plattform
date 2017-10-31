@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {PureComponent} from 'react'
 import {css} from 'glamor'
 
 import {Comment, CommentActions} from '../Comment'
@@ -10,7 +10,8 @@ const styles = {
     display: 'flex'
   }),
   commentComposerContainer: css({
-    marginTop: '20px'
+    marginTop: '20px',
+    transition: 'opacity .2s'
   }),
 }
 
@@ -49,15 +50,30 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
   )
 }
 
-const Composer = ({t, displayAuthor, onCancel, submitComment}) => (
-  <div {...styles.commentComposerContainer}>
-    <CommentComposer
-      t={t}
-      displayAuthor={displayAuthor}
-      onCancel={onCancel}
-      submitComment={submitComment}
-    />
-  </div>
-)
+class Composer extends PureComponent {
+  constructor (props) {
+    super(props)
+    this.state = {isVisible: false}
+  }
+  componentDidMount () {
+    this.setState({isVisible: true})
+  }
+
+  render () {
+    const {t, displayAuthor, onCancel, submitComment} = this.props
+    const {isVisible} = this.state
+
+    return (
+      <div {...styles.commentComposerContainer} style={{opacity: isVisible ? 1 : 0}}>
+        <CommentComposer
+          t={t}
+          displayAuthor={displayAuthor}
+          onCancel={onCancel}
+          submitComment={submitComment}
+        />
+      </div>
+    )
+  }
+}
 
 export default Row

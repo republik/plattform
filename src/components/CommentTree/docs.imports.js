@@ -40,7 +40,7 @@ export const Node = ({t, comment}) => (
     More={({visualDepth, comment: {comments}}) => {
       if (comments && comments.pageInfo && comments.pageInfo.hasNextPage) {
         return (
-          <LoadMore t={t} depth={visualDepth} count={comments.totalCount - (comments.nodes || []).length} />
+          <LoadMore t={t} visualDepth={visualDepth} count={comments.totalCount - (comments.nodes || []).length} />
         )
       } else {
         return null
