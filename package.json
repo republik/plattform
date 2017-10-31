@@ -6,6 +6,7 @@
   },
   "private": true,
   "dependencies": {
+    "apollo-engine": "^0.5.2",
     "aws-sign": "^0.1.2",
     "body-parser": "^1.18.0",
     "connect-pg-simple": "^4.2.1",

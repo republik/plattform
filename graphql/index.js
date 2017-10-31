@@ -76,7 +76,8 @@ module.exports = (server, pgdb, httpServer) => {
         req,
         user: req.user,
         t
-      }
+      },
+      tracing: true // apollo-engine
     }
   })
 
