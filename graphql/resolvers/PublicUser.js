@@ -24,7 +24,6 @@ module.exports = {
         c.published,
         c."createdAt",
         c."updatedAt",
-        d.id AS "discussionId",
         d.title AS "discussionTitle"
       FROM comments c
       JOIN discussions d ON d.id = c."discussionId"
