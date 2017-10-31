@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {css} from 'glamor'
 
 const styles = {
@@ -20,5 +21,28 @@ const styles = {
 
 const range = (n) => Array.from(new Array(n))
 
-export const DepthBar = ({head, tail}) => <div {...styles.depthBar} {...(head ? styles.head : {})} {...(tail ? styles.tail : {})} />
-export const DepthBars = ({count, head, tail}) => range(count).map((_, index) => <DepthBar key={index} head={index === count - 1 && head} tail={index === count - 1 && tail} />)
+export const DepthBar = ({head, tail}) =>
+  <div
+    {...styles.depthBar}
+    {...(head ? styles.head : {})} {...(tail ? styles.tail : {})}
+  />
+
+DepthBar.propTypes = {
+  head: PropTypes.bool.isRequired,
+  tail: PropTypes.bool.isRequired
+}
+
+export const DepthBars = ({count, head, tail}) =>
+  range(count).map((_, index) => (
+    <DepthBar
+      key={index}
+      head={index === count - 1 && head}
+      tail={index === count - 1 && tail}
+    />
+  ))
+
+DepthBars.propTypes = {
+  count: PropTypes.number.isRequired,
+  head: PropTypes.bool.isRequired,
+  tail: PropTypes.bool.isRequired
+}

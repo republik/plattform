@@ -1,14 +1,6 @@
 import React, {PureComponent} from 'react'
-import {css} from 'glamor'
 import PropTypes from 'prop-types'
-
-import {Comment, CommentActions} from '../Comment'
-import CommentComposer from '../CommentComposer/CommentComposer'
 import Row from './Row'
-import LoadMore from './LoadMore'
-import {DepthBars} from './DepthBar'
-
-const range = (n) => Array.from(new Array(n))
 
 class Node extends PureComponent {
   constructor (props) {
@@ -53,7 +45,7 @@ class Node extends PureComponent {
     } = this.props
     const {showComposer} = this.state
 
-    const {createdAt, score, comments, userVote} = comment
+    const {comments, userVote} = comment
     const hasChildren = comments && comments.totalCount > 0
 
     // Adjust the visual depth and other options based on the shape of the comment
@@ -143,7 +135,7 @@ class Node extends PureComponent {
       return This
     }
 
-    const {totalCount, pageInfo, nodes} = comments
+    const {nodes} = comments
 
     return [
       This,
@@ -162,7 +154,6 @@ class Node extends PureComponent {
                 head={true}
                 tail={true}
                 otherChild
-                key={i}
                 comment={c}
               />
             )),

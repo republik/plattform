@@ -1,4 +1,5 @@
 import React, {PureComponent} from 'react'
+import PropTypes from 'prop-types'
 import {css} from 'glamor'
 
 import {Comment, CommentActions} from '../Comment'
@@ -14,8 +15,6 @@ const styles = {
     transition: 'opacity .2s'
   }),
 }
-
-const range = (n) => Array.from(new Array(n))
 
 const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, onAnswer, onUpvote, onDownvote, dismissComposer, submitComment, timeago}) => {
   const {createdAt, score} = comment
@@ -50,6 +49,23 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
   )
 }
 
+Row.propTypes = {
+  t: PropTypes.func.isRequired,
+  visualDepth: PropTypes.number.isRequired,
+  head: PropTypes.bool.isRequired,
+  tail: PropTypes.bool.isRequired,
+  otherChild: PropTypes.bool,
+  comment: PropTypes.object.isRequired,
+  displayAuthor: PropTypes.object.isRequired,
+  showComposer: PropTypes.bool.isRequired,
+  onAnswer: PropTypes.func.isRequired,
+  onUpvote: PropTypes.func,
+  onDownvote: PropTypes.func,
+  dismissComposer: PropTypes.func.isRequired,
+  submitComment: PropTypes.func.isRequired,
+  timeago: PropTypes.func.isRequired,
+}
+
 class Composer extends PureComponent {
   constructor (props) {
     super(props)
@@ -74,6 +90,13 @@ class Composer extends PureComponent {
       </div>
     )
   }
+}
+
+Composer.propTypes = {
+  t: PropTypes.func.isRequired,
+  displayAuthor: PropTypes.object.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  submitComment: PropTypes.func.isRequired,
 }
 
 export default Row

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {css} from 'glamor'
 
 import colors from '../../theme/colors'
@@ -37,5 +38,10 @@ const Collapse = ({t, onClick}) => (
     </button>
   </div>
 )
+
+Collapse.propTypes = {
+  t: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired
+}
 
 export default Collapse

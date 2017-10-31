@@ -13,11 +13,19 @@ export const comments = {...allComments}
 
 export const Row = (props) => (
   <SomeRow
+    head={false}
+    tail={false}
     displayAuthor={{
       profilePicture: '/static/profilePicture1.png',
       name: `Christof Moser`,
       credential: {description: 'Journalist', verified: true}
     }}
+    showComposer={false}
+    onAnswer={() => {}}
+    onUpvote={() => {}}
+    onDownvote={() => {}}
+    dismissComposer={() => {}}
+    submitComment={() => {}}
     timeago={() => '2h'}
     {...props}
   />
@@ -40,7 +48,12 @@ export const Node = ({t, comment}) => (
     More={({visualDepth, comment: {comments}}) => {
       if (comments && comments.pageInfo && comments.pageInfo.hasNextPage) {
         return (
-          <LoadMore t={t} visualDepth={visualDepth} count={comments.totalCount - (comments.nodes || []).length} />
+          <LoadMore
+            t={t}
+            visualDepth={visualDepth}
+            count={comments.totalCount - (comments.nodes || []).length}
+            onClick={() => {}}
+          />
         )
       } else {
         return null

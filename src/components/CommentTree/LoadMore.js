@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {css} from 'glamor'
 
 import colors from '../../theme/colors'
@@ -37,5 +38,12 @@ const LoadMore = ({t, visualDepth, count, onClick}) => (
     </button>
   </div>
 )
+
+LoadMore.propTypes = {
+  t: PropTypes.func.isRequired,
+  visualDepth: PropTypes.number.isRequired,
+  count: PropTypes.number.isRequired,
+  onClick: PropTypes.func.isRequired
+}
 
 export default LoadMore
