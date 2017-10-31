@@ -33,11 +33,7 @@ export default ({rule, subModules, TYPE}) => {
       ordered: object.data.ordered,
       start: object.data.start || 1,
       children: itemSerializer.toMdast(object.nodes, context)
-    }),
-    render: ({ children, node, attributes }) =>
-      <List attributes={attributes} data={node.data.toJS()}>
-        { children }
-      </List>
+    })
   }
 
   const serializer = new MarkdownSerializer({
@@ -91,6 +87,14 @@ export default ({rule, subModules, TYPE}) => {
     },
     plugins: [
       {
+        renderNode: ({ children, node, attributes }) => {
+          if (node.type !== TYPE) return
+          return (
+            <List attributes={attributes} data={node.data.toJS()}>
+              { children }
+            </List>
+          )
+        },
         onKeyDown (event, change) {
           const isBackspace = event.key === 'Backspace'
           if (event.key !== 'Enter' && !isBackspace) return
@@ -105,7 +109,7 @@ export default ({rule, subModules, TYPE}) => {
           const isEmpty = !inItem || !inItem.text
 
           if (isEmpty && (!isBackspace || inList.nodes.size === 1)) {
-            return change.unwrapBlock()
+            return change.setNodeByKey(inList.key, { type: 'paragraph' })
           }
 
           if (isBackspace) {
@@ -119,31 +123,22 @@ export default ({rule, subModules, TYPE}) => {
           return change.splitBlock(2)
         },
         schema: {
-          rules: [
-            {
-              match: matchBlock(TYPE),
-              validate: node => {
-                const notItems = node.nodes
-                  .filter(n => n.type !== LI)
-
-                return notItems.size
-                  ? notItems
-                  : null
-              },
-              normalize: (change, object, notItems) => {
-                notItems.forEach(child => {
+          blocks: {
+            [TYPE]: {
+              nodes: [
+                { types: [LI] }
+              ],
+              normalize: (change, reason, { child }) => {
+                if (reason === 'child_type_invalid') {
                   if (child.kind === 'block') {
-                    change.unwrapNodeByKey(child.key)
+                    change.setNodeByKey(child.key, LI)
                   } else {
                     change.wrapBlockByKey(child.key, LI)
                   }
-                })
-
-                return change
+                }
               }
-            },
-            list
-          ]
+            }
+          }
         }
       }
     ]

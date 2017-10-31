@@ -20,9 +20,10 @@ export default ({rule, subModules, TYPE}) => {
     toMdast: (object, index, parent, visitChildren) => ({
       type: 'listItem',
       children: paragraphSerializer.toMdast(object.nodes)
-    }),
-    render: rule.component
+    })
   }
+
+  const ListItem = rule.component
 
   const serializer = new MarkdownSerializer({
     rules: [
@@ -38,32 +39,31 @@ export default ({rule, subModules, TYPE}) => {
     changes: {},
     plugins: [
       {
+        renderNode: ({node, attributes, children}) => {
+          if (node.type !== TYPE) return
+          return (
+            <ListItem {...attributes}>
+              {children}
+            </ListItem>
+          )
+        },
         schema: {
-          rules: [
-            {
-              match: matchBlock(TYPE),
-              validate: node => {
-                const notParagraphs = node.nodes
-                  .filter(n => n.type !== PARAGRAPH)
-
-                return notParagraphs.size
-                  ? notParagraphs
-                  : null
-              },
-              normalize: (change, object, notParagraphs) => {
-                notParagraphs.forEach(child => {
-                  if (child.kind === 'block') {
-                    change.unwrapNodeByKey(child.key)
-                  } else {
-                    change.wrapBlockByKey(child.key, PARAGRAPH)
+          blocks: {
+            [TYPE]: {
+              nodes: [{ types: [PARAGRAPH] }],
+              normalize: (change, reason, { node, child }) => {
+                if (reason === 'child_type_invalid') {
+                  if (reason === 'child_type_invalid') {
+                    if (child.kind === 'block') {
+                      change.setNodeByKey(child.key, PARAGRAPH)
+                    } else {
+                      change.wrapBlockByKey(child.key, PARAGRAPH)
+                    }
                   }
-                })
-
-                return change
+                }
               }
-            },
-            listItem
-          ]
+            }
+          }
         }
       }
     ]

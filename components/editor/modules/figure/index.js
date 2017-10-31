@@ -8,25 +8,27 @@ import addValidation, { findOrCreate } from '../../utils/serializationValidation
 import MarkdownSerializer from '../../../../lib/serializer'
 
 export default ({rule, subModules, TYPE}) => {
+  // Define submodule and serializers
   const imageModule = subModules.find(m => m.name === 'figureImage')
   if (!imageModule) {
     throw new Error('Missing figureImage submodule')
   }
   const imageSerializer = imageModule.helpers.serializer
-  const FIGURE_IMAGE = imageModule.TYPE
 
   const captionModule = subModules.find(m => m.name === 'paragraph')
   if (!captionModule) {
     throw new Error('Missing paragraph submodule')
   }
   const captionSerializer = captionModule.helpers.serializer
+
+  const FIGURE_IMAGE = imageModule.TYPE
   const FIGURE_CAPTION = captionModule.TYPE
 
   const Figure = rule.component
 
   const figure = {
     match: matchBlock(TYPE),
-    matchMdast: (node) => node.type === 'zone' && node.identifier === TYPE,
+    matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, visitChildren) => {
       const deepNodes = node.children.reduce(
         (children, child) => children
@@ -35,18 +37,15 @@ export default ({rule, subModules, TYPE}) => {
         []
       )
       const image = findOrCreate(deepNodes, {type: 'image'})
-      const imageParent = node.children.find(n => n.children && n.children.indexOf(image) !== -1)
+      const imageParagraph = node.children.find(n => n.children && n.children.indexOf(image) !== -1)
 
-      const caption = {
-        ...findOrCreate(
-          node.children.filter(n => n !== imageParent),
-          {type: 'paragraph'},
-          {children: []}
-        ),
-        data: {
-          captionRight: node.data.captionRight
-        }
-      }
+      const caption = (
+        node.children.find(child => child.type === 'paragraph' && child !== imageParagraph) ||
+        ({
+          type: 'paragraph',
+          children: []
+        })
+      )
 
       return {
         kind: 'block',
@@ -88,13 +87,6 @@ export default ({rule, subModules, TYPE}) => {
           captionSerializer.toMdast(caption)
         ]
       }
-    },
-    render: ({ children, node, attributes }) => {
-      return (
-        <Figure data={node.data.toJS()} attributes={attributes}>
-          {children}
-        </Figure>
-      )
     }
   }
 
@@ -127,6 +119,15 @@ export default ({rule, subModules, TYPE}) => {
     ui: createUi({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock}),
     plugins: [
       {
+        renderNode ({ children, node, attributes }) {
+          if (node.type !== TYPE) return
+          return (
+            <Figure data={node.data.toJS()} attributes={attributes}>
+              {children}
+            </Figure>
+          )
+        },
+
         onKeyDown (event, change) {
           const isBackspace = event.key === 'Backspace'
           if (event.key !== 'Enter' && !isBackspace) return
@@ -171,9 +172,52 @@ export default ({rule, subModules, TYPE}) => {
           }
         },
         schema: {
-          rules: [
-            figure
-          ]
+          blocks: {
+            [TYPE]: {
+              nodes: [
+                {
+                  types: [imageModule.TYPE],
+                  min: 1,
+                  max: 1
+                },
+                {
+                  types: [captionModule.TYPE],
+                  min: 1,
+                  max: 1
+                }
+              ]
+            },
+            normalize (change, reason, {node, index, child}) {
+              if (reason === 'child_required') {
+                change.insertNodeByKey(
+                  node.key,
+                  index,
+                  {
+                    kind: 'block',
+                    type: index === 0
+                      ? imageModule.TYPE
+                      : captionModule.TYPE,
+                    isVoid: index === 0
+                  }
+                )
+              }
+              if (reason === 'child_type_invalid') {
+                change.setNodeByKey(
+                  child.key,
+                  {
+                    type: index === 0
+                      ? imageModule.TYPE
+                      : captionModule.TYPE
+                  }
+                )
+              }
+              if (reason === 'child_unknown') {
+                if (index > 1) {
+                  change.mergeNodeByKey(child.key)
+                }
+              }
+            }
+          }
         }
       }
     ]

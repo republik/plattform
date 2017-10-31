@@ -1,9 +1,20 @@
 import Container from './Container'
-import Cover, {Title, Lead} from './Cover'
-import Paragraph, {Strong, Em, Link, Br} from './Paragraph'
+import Cover, {
+  Title,
+  Lead
+} from './Cover'
+import Paragraph, {
+  Strong,
+  Em,
+  Link,
+  Br
+} from './Paragraph'
 import Center from './Center'
 import { H2, H3 } from './Headlines'
-import Figure, { Image, Caption } from './Figure'
+import Figure, {
+  Image,
+  Caption
+} from './Figure'
 import Blockquote from './Blockquote'
 import List, { ListItem } from './List'
 import RBlueprint from './RBlueprint'
@@ -65,10 +76,14 @@ const schema = {
       editorModule: 'document',
       rules: [
         {
-          matchMdast: matchZone('COVER'),
+          matchMdast: matchZone(
+            'COVER'
+          ),
           component: Cover,
           getData: node => {
-            const img = node.children[0].children[0]
+            const img =
+              node.children[0]
+                .children[0]
             return {
               alt: img.alt,
               src: img.url
@@ -82,7 +97,9 @@ const schema = {
               isVoid: true
             },
             {
-              matchMdast: matchHeading(1),
+              matchMdast: matchHeading(
+                1
+              ),
               component: Title,
               editorModule: 'headline',
               editorOptions: {
@@ -104,61 +121,69 @@ const schema = {
           ]
         },
         {
-          matchMdast: matchZone('CENTER'),
+          matchMdast: matchZone(
+            'CENTER'
+          ),
           component: Center,
           editorModule: 'center',
           rules: [
             paragraph,
             {
-              matchMdast: matchHeading(2),
+              matchMdast: matchHeading(
+                2
+              ),
               component: H2,
               editorModule: 'headline',
               editorOptions: {
                 type: 'h2',
                 depth: 2,
-                formatButtonText: 'Zwischentitel 1'
+                formatButtonText:
+                  'Zwischentitel 1'
               }
             },
             {
-              matchMdast: matchHeading(3),
+              matchMdast: matchHeading(
+                3
+              ),
               component: H3,
               editorModule: 'headline',
               editorOptions: {
                 type: 'h3',
                 depth: 3,
-                formatButtonText: 'Zwischentitel 2'
+                formatButtonText:
+                  'Zwischentitel 2'
               }
             },
-            // {
-            //   matchMdast: matchZone('FIGURE'),
-            //   component: Figure,
-            //   editorModule: 'figure',
-            //   editorOptions: {
-            //     afterType: 'PARAGRAPH'
-            //   },
-            //   rules: [
-            //     {
-            //       matchMdast: matchImageParagraph,
-            //       component: Image,
-            //       getData: node => ({
-            //         src: node.children[0].url,
-            //         alt: node.children[0].alt
-            //       }),
-            //       editorModule: 'figureImage',
-            //       isVoid: true
-            //     },
-            //     {
-            //       matchMdast: matchParagraph,
-            //       component: Caption,
-            //       getData: (node, parent) => (parent && parent.data) || {},
-            //       editorModule: 'paragraph',
-            //       editorOptions: {
-            //         type: 'figureCaption'
-            //       },
-            //       rules: paragraph.rules
-            //     }
-            //   ]
-            // },
+            {
+              matchMdast: matchZone('FIGURE'),
+              component: Figure,
+              editorModule: 'figure',
+              editorOptions: {
+                afterType: 'PARAGRAPH'
+              },
+              rules: [
+                {
+                  matchMdast: matchImageParagraph,
+                  component: Image,
+                  getData: node => ({
+                    src: node.children[0].url,
+                    alt: node.children[0].alt
+                  }),
+                  editorModule: 'figureImage',
+                  isVoid: true
+                },
+                {
+                  matchMdast: matchParagraph,
+                  component: Caption,
+                  getData: (node, parent) => (parent && parent.data) || {},
+                  editorModule: 'paragraph',
+                  editorOptions: {
+                    type: 'figureCaption'
+                  },
+                  rules: paragraph.rules
+                }
+              ]
+            },
             {
               matchMdast: matchType('blockquote'),
               component: Blockquote,
@@ -167,23 +192,23 @@ const schema = {
                 paragraph
               ]
             },
-            // {
-            //   matchMdast: matchType('list'),
-            //   component: List,
-            //   getData: node => ({
-            //     ordered: node.ordered,
-            //     start: node.start
-            //   }),
-            //   editorModule: 'list',
-            //   rules: [
-            //     {
-            //       matchMdast: matchType('listItem'),
-            //       component: ListItem,
-            //       editorModule: 'listItem',
-            //       rules: [paragraph]
-            //     }
-            //   ]
-            // },
+            {
+              matchMdast: matchType('list'),
+              component: List,
+              getData: node => ({
+                ordered: node.ordered,
+                start: node.start
+              }),
+              editorModule: 'list',
+              rules: [
+                {
+                  matchMdast: matchType('listItem'),
+                  component: ListItem,
+                  editorModule: 'listItem',
+                  rules: [paragraph]
+                }
+              ]
+            },
             {
               matchMdast: matchZone('SPECIAL_R_BLUEPRINT'),
               component: RBlueprint,

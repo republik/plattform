@@ -53,12 +53,14 @@ export const Caption = ({ children, data, attributes = {} }) => (
   </figcaption>
 )
 
-export default ({ children, data, attributes = {} }) => (
-  <figure {...merge(
+export default ({ children, data, attributes = {} }) => {
+  return (
+    <figure {...merge(
     styles.figure,
     data.float === 'left' && styles.floatLeft,
     data.float === 'right' && styles.floatRight
   )} {...attributes}>
-    {children}
-  </figure>
-)
+      {children}
+    </figure>
+  )
+}

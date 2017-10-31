@@ -36,13 +36,13 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock}) => {
           .map((block, i) => {
             const imageBlock = block.nodes.find(n => n.type === FIGURE_IMAGE)
             const captionBlock = block.nodes.find(n => n.type === FIGURE_CAPTION)
-            const onInputChange = subject => key => (_, value) => {
+            const onInputChange = subject => key => (_, val) => {
               onChange(
                 value
                   .change()
                   .setNodeByKey(subject.key, {
                     data: value
-                      ? subject.data.set(key, value)
+                      ? subject.data.set(key, val)
                       : subject.data.remove(key)
                   })
               )
