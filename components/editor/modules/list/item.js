@@ -53,12 +53,10 @@ export default ({rule, subModules, TYPE}) => {
               nodes: [{ types: [PARAGRAPH] }],
               normalize: (change, reason, { node, child }) => {
                 if (reason === 'child_type_invalid') {
-                  if (reason === 'child_type_invalid') {
-                    if (child.kind === 'block') {
-                      change.setNodeByKey(child.key, PARAGRAPH)
-                    } else {
-                      change.wrapBlockByKey(child.key, PARAGRAPH)
-                    }
+                  if (child.kind === 'block') {
+                    change.setNodeByKey(child.key, PARAGRAPH)
+                  } else {
+                    change.wrapBlockByKey(child.key, PARAGRAPH)
                   }
                 }
               }

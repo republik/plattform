@@ -109,7 +109,9 @@ export default ({rule, subModules, TYPE}) => {
           const isEmpty = !inItem || !inItem.text
 
           if (isEmpty && (!isBackspace || inList.nodes.size === 1)) {
-            return change.setNodeByKey(inList.key, { type: 'paragraph' })
+            return change
+              .unwrapBlock(TYPE)
+              .unwrapBlock(LI)
           }
 
           if (isBackspace) {

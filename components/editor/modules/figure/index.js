@@ -207,7 +207,8 @@ export default ({rule, subModules, TYPE}) => {
                   {
                     type: index === 0
                       ? imageModule.TYPE
-                      : captionModule.TYPE
+                      : captionModule.TYPE,
+                    isVoid: index === 0
                   }
                 )
               }
