@@ -46,7 +46,8 @@ module.exports = (server, pgdb, httpServer) => {
           return { user }
         }
         return { }
-      }
+      },
+      keepAlive: 40000
     },
     {
       server: httpServer,
