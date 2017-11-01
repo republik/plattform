@@ -6,10 +6,29 @@ import newsletterSchema from './Newsletter'
 import newsletterEmailSchema from './NewsletterEmail'
 
 import mdast from './newsletter.sample'
+import mdastLegacy from './newsletter.sample.legacy'
 
 test('render for web', assert => {
   const wrapper = shallow(
     renderMdast(mdast, newsletterSchema)
+  )
+
+  wrapper.find(MissingMarkdownNodeType)
+    .nodes
+    .forEach(node => console.log('missing', node))
+
+  assert.equal(
+    wrapper.find(MissingMarkdownNodeType).length,
+    0,
+    'no missing nodes'
+  )
+
+  assert.end()
+})
+
+test('render legacy cover for web', assert => {
+  const wrapper = shallow(
+    renderMdast(mdastLegacy, newsletterSchema)
   )
 
   wrapper.find(MissingMarkdownNodeType)

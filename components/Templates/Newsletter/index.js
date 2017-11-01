@@ -117,6 +117,14 @@ const schema = {
                 placeholder: 'Lead'
               },
               rules: paragraph.rules
+            },
+            // support legacy blockquote lead for rendering
+            {
+              matchMdast: matchType('blockquote'),
+              component: Lead,
+              rules: [
+                paragraph
+              ]
             }
           ]
         },
