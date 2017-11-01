@@ -225,7 +225,7 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
     : {}
 
   // prepare sort
-  let ascDesc = orderDirection === 'ASC'
+  const ascDesc = orderDirection === 'ASC'
     ? ascending
     : descending
   let compare
