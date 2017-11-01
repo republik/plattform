@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import { compose } from 'redux'
 import { Router } from '../../lib/routes'
-import withData from '../../lib/apollo/withData'
 import { gql, graphql } from 'react-apollo'
 import { css } from 'glamor'
 import { Value, resetKeyGenerator } from 'slate'
 import { A, Button, Label } from '@project-r/styleguide'
+
+import withData from '../../lib/apollo/withData'
+import withAuthorization from '../../components/Auth/withAuthorization'
 
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
@@ -17,7 +19,6 @@ import BaseCommit from '../../components/EditSidebar/BaseCommit'
 import Checklist from '../../components/EditSidebar/Checklist'
 import CommitHistory from '../../components/EditSidebar/CommitHistory'
 import UncommittedChanges from '../../components/EditSidebar/UncommittedChanges'
-import withAuthorization from '../../components/Auth/withAuthorization'
 import withT from '../../lib/withT'
 
 import { errorToString } from '../../lib/utils/errors'

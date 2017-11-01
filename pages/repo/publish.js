@@ -1,6 +1,8 @@
 import React from 'react'
 import { compose } from 'redux'
+
 import withData from '../../lib/apollo/withData'
+import withAuthorization from '../../components/Auth/withAuthorization'
 
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
@@ -21,5 +23,6 @@ const Page = ({ url, data, t }) => {
 
 export default compose(
   withData,
+  withAuthorization(['editor']),
   withT
 )(Page)

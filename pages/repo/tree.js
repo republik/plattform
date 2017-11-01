@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { compose } from 'redux'
-import withData from '../../lib/apollo/withData'
 import { gql, graphql } from 'react-apollo'
+
+import withData from '../../lib/apollo/withData'
+import withAuthorization from '../../components/Auth/withAuthorization'
 
 import Loader from '../../components/Loader'
 import Tree from '../../components/Tree'
@@ -68,6 +70,7 @@ class EditorPage extends Component {
 
 export default compose(
   withData,
+  withAuthorization(['editor']),
   graphql(query, {
     options: ({ url }) => ({
       variables: {
