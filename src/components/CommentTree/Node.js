@@ -7,14 +7,21 @@ class Node extends PureComponent {
     super(props)
 
     this.state = {
-      showComposer: false
+      composerState: 'idle', // idle | focused | submitting | error
+      composerError: undefined // or string
     }
 
     this.openComposer = () => {
-      this.setState({showComposer: true})
+      this.setState({
+        composerState: 'focused',
+        composerError: undefined
+      })
     }
     this.dismissComposer = () => {
-      this.setState({showComposer: false})
+      this.setState({
+        composerState: 'idle',
+        composerError: undefined
+      })
     }
 
     this.upvoteComment = () => {
@@ -24,8 +31,21 @@ class Node extends PureComponent {
       this.props.downvoteComment(this.props.comment.id)
     }
     this.submitComment = (content) => {
-      this.props.submitComment(this.props.comment.id, content)
-      this.dismissComposer()
+      this.setState({composerState: 'submitting'})
+      this.props.submitComment(this.props.comment.id, content).then(
+        () => {
+          this.setState({
+            composerState: 'idle',
+            composerError: undefined
+          })
+        },
+        (e) => {
+          this.setState({
+            composerState: 'error',
+            composerError: e
+          })
+        }
+      )
     }
   }
 
@@ -43,7 +63,7 @@ class Node extends PureComponent {
       timeago,
       More
     } = this.props
-    const {showComposer} = this.state
+    const {composerState, composerError} = this.state
 
     const {comments, userVote} = comment
     const hasChildren = comments && comments.totalCount > 0
@@ -121,7 +141,8 @@ class Node extends PureComponent {
         otherChild={otherChild}
         comment={comment}
         displayAuthor={displayAuthor}
-        showComposer={showComposer}
+        showComposer={composerState !== 'idle'}
+        composerError={composerError}
         onAnswer={this.openComposer}
         onUpvote={userVote === 'UP' ? undefined : this.upvoteComment}
         onDownvote={userVote === 'DOWN' ? undefined : this.downvoteComment}

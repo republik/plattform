@@ -8,6 +8,7 @@
     profilePicture: '/static/profilePicture1.png',
     credential: {description: 'Redaktorin', verified: false}
   }}
+  onEditPreferences={() => {}}
   onCancel={() => {}}
   submitComment={t => {alert(t)}}
 />
@@ -21,6 +22,7 @@
     profilePicture: '/static/profilePicture1.png',
     credential: {description: 'Bundesrat', verified: true}
   }}
+  onEditPreferences={() => {}}
   onCancel={() => {}}
   submitComment={t => {alert(t)}}
 />
@@ -77,6 +79,7 @@ The error message that is shown below the `<CommentComposer />` if creating the 
     credential: {description: 'Redaktorin', verified: false}
   }}
   error='Sie sind zu früh. Bitte warten Sie, 161.446s bevor Sie wieder kommentieren.'
+  onEditPreferences={() => {}}
   onCancel={() => {}}
   submitComment={t => {alert(t)}}
 />
