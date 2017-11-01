@@ -25,9 +25,7 @@ module.exports = async (_, args, { pgdb, user, t, pubsub }) => {
     }
 
     // check if client-side generated ID already exists
-    if (await transaction.public.comments.findFirst({
-      id
-    })) {
+    if (id && !!await transaction.public.comments.findFirst({ id })) {
       throw new Error(t('api/comment/id/duplicate'))
     }
 
@@ -57,7 +55,7 @@ module.exports = async (_, args, { pgdb, user, t, pubsub }) => {
     }
 
     const comment = await transaction.public.comments.insertAndGet({
-      id,
+      ...id ? { id } : { },
       discussionId: discussion.id,
       parentId,
       userId,
