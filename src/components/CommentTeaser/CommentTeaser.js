@@ -19,7 +19,7 @@ const styles = {
     margin: '10px 0'
   },
   clamp: {
-    // TODO: Replace with a crows-browser JS solution for line-clamping.
+    // TODO: Replace with a cross-browser JS solution for line-clamping.
     overflow: 'hidden',
     display: '-webkit-box',
     WebkitBoxOrient: 'vertical'
