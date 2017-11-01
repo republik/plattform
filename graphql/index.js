@@ -55,7 +55,8 @@ module.exports = (server, pgdb, httpServer) => {
           }
         }
         return context
-      }
+      },
+      keepAlive: 40000
     },
     {
       server: httpServer,
