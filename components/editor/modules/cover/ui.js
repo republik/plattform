@@ -26,13 +26,13 @@ export const createCoverForm = TYPE => createPropertyForm({
     )
     .find(matchBlock(TYPE))
 
-  const onInputChange = key => (_, value) => {
+  const onInputChange = key => (_, inputValue) => {
     onChange(
       value
         .change()
         .setNodeByKey(node.key, {
-          data: value
-            ? node.data.set(key, value)
+          data: inputValue
+            ? node.data.set(key, inputValue)
             : node.data.remove(key)
         })
     )
