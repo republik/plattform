@@ -155,12 +155,10 @@ Ladies and Gentlemen,
       serializer,
       newDocument
     },
-    components: {
-      Container
-    },
     changes: {},
     plugins: [
       {
+        renderEditor: ({children}) => <Container>{children}</Container>,
         schema: {
           document: {
             nodes: [
