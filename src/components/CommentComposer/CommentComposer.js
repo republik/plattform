@@ -1,4 +1,5 @@
 import React, {PureComponent} from 'react'
+import PropTypes from 'prop-types'
 import {css} from 'glamor'
 import Textarea from 'react-textarea-autosize';
 import colors from '../../theme/colors'
@@ -124,6 +125,14 @@ class CommentComposer extends PureComponent {
       </div>
     )
   }
+}
+
+CommentComposer.propTypes = {
+  t: PropTypes.func.isRequired,
+  displayAuthor: PropTypes.object.isRequired,
+  onEditPreferences: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+  submitComment: PropTypes.func.isRequired
 }
 
 export default CommentComposer
