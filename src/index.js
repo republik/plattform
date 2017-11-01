@@ -145,6 +145,18 @@ ReactDOM.render(
             src: require('./components/CommentComposer/docs.md')
           },
           {
+            path: '/components/comment-teaser',
+            title: 'CommentTeaser',
+            imports: {
+              t,
+              CommentTeaser: require('./components/CommentTeaser/CommentTeaser'),
+              CommentTeaserHeader: require('./components/CommentTeaser/CommentTeaserHeader'),
+              CommentTeaserFooter: require('./components/CommentTeaser/CommentTeaserFooter'),
+              CommentHeader: require('./components/Comment/CommentHeader')
+            },
+            src: require('./components/CommentTeaser/docs.md')
+          },
+          {
             path: '/components/comment-tree',
             title: 'CommentTree',
             imports: {t, ...require('./components/CommentTree/docs.imports')},
