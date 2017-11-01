@@ -177,7 +177,7 @@ Ladies and Gentlemen,
             ]
           }
         },
-        onBeforeChange: (change) => {
+        onChange: (change) => {
           const newData = autoMeta(change.value.document)
 
           if (newData) {
