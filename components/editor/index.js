@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { Editor as SlateEditor } from 'slate-react'
 import { css } from 'glamor'
 
+import Loader from '../Loader'
+
 import Sidebar from './Sidebar'
 import MetaData from './modules/meta/ui'
 
@@ -19,8 +21,6 @@ import createListItemModule from './modules/list/item'
 import createFigureModule from './modules/figure'
 import createFigureImageModule from './modules/figure/image'
 import createSpecialModule from './modules/special'
-
-import schema from '../Templates/Newsletter'
 
 const moduleCreators = {
   document: createDocumentModule,
@@ -61,13 +61,6 @@ const initModule = rule => {
     return module
   }
 }
-
-const rootRule = schema.rules[0]
-const rootModule = initModule(rootRule)
-
-export const serializer = rootModule.helpers.serializer
-export const newDocument = rootModule.helpers.newDocument
-
 const getAllModules = module => [module].concat(
   (module.subModules || []).reduce(
     (collector, subModule) => collector.concat(
@@ -76,36 +69,10 @@ const getAllModules = module => [module].concat(
     []
   )
 )
-
-const allModules = getAllModules(rootModule)
-const uniqModules = allModules.filter((m, i, a) => a.findIndex(mm => mm.TYPE === m.TYPE) === i)
-
 const getFromModules = (modules, accessor) => modules.reduce(
   (collector, m) => collector.concat(accessor(m)),
   []
 ).filter(Boolean)
-
-const plugins = getFromModules(uniqModules, m => m.plugins)
-
-const textFormatButtons = getFromModules(
-  uniqModules,
-  m => m.ui && m.ui.textFormatButtons
-)
-
-const blockFormatButtons = getFromModules(
-  uniqModules,
-  m => m.ui && m.ui.blockFormatButtons
-)
-
-const insertButtons = getFromModules(
-  uniqModules,
-  m => m.ui && m.ui.insertButtons
-)
-
-const propertyForms = getFromModules(
-  uniqModules,
-  m => m.ui && m.ui.forms
-)
 
 const styles = {
   container: css({
@@ -139,35 +106,77 @@ class Editor extends Component {
         }
       }
     }
+
+    const schema = props.schema
+    if (!schema) {
+      throw new Error('missing schema prop')
+    }
+    const rootRule = schema.rules[0]
+    const rootModule = initModule(rootRule)
+
+    this.serializer = rootModule.helpers.serializer
+    this.newDocument = rootModule.helpers.newDocument
+
+    const allModules = getAllModules(rootModule)
+    const uniqModules = allModules.filter((m, i, a) => a.findIndex(mm => mm.TYPE === m.TYPE) === i)
+
+    this.plugins = getFromModules(uniqModules, m => m.plugins)
+
+    this.textFormatButtons = getFromModules(
+      uniqModules,
+      m => m.ui && m.ui.textFormatButtons
+    )
+
+    this.blockFormatButtons = getFromModules(
+      uniqModules,
+      m => m.ui && m.ui.blockFormatButtons
+    )
+
+    this.insertButtons = getFromModules(
+      uniqModules,
+      m => m.ui && m.ui.insertButtons
+    )
+
+    this.propertyForms = getFromModules(
+      uniqModules,
+      m => m.ui && m.ui.forms
+    )
+  }
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.schema !== this.props.schema) {
+      throw new Error('changing schema is not supported')
+    }
   }
   render () {
     const { value } = this.props
 
     return (
-      <Container>
-        <Sidebar
-          textFormatButtons={textFormatButtons}
-          blockFormatButtons={blockFormatButtons}
-          insertButtons={insertButtons}
-          propertyForms={propertyForms}
-          value={value}
-          onChange={this.onChange} />
-        <Document>
-          <SlateEditor
-            value={value}
-            onChange={this.onChange}
-            plugins={plugins} />
-          <MetaData
+      <Loader loading={!value} render={() => (
+        <Container>
+          <Sidebar
+            textFormatButtons={this.textFormatButtons}
+            blockFormatButtons={this.blockFormatButtons}
+            insertButtons={this.insertButtons}
+            propertyForms={this.propertyForms}
             value={value}
             onChange={this.onChange} />
-        </Document>
-      </Container>
+          <Document>
+            <SlateEditor
+              value={value}
+              onChange={this.onChange}
+              plugins={this.plugins} />
+            <MetaData
+              value={value}
+              onChange={this.onChange} />
+          </Document>
+        </Container>
+      )} />
     )
   }
 }
 
 Editor.propTypes = {
-  value: PropTypes.object.isRequired,
+  value: PropTypes.object,
   onChange: PropTypes.func,
   onDocumentChange: PropTypes.func
 }

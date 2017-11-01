@@ -11,7 +11,7 @@ import withAuthorization from '../../components/Auth/withAuthorization'
 
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
-import Editor, { serializer, newDocument } from '../../components/editor/NewsletterEditor'
+import Editor from '../../components/editor'
 
 import EditSidebar from '../../components/EditSidebar'
 import Loader from '../../components/Loader'
@@ -23,6 +23,12 @@ import withT from '../../lib/withT'
 
 import { errorToString } from '../../lib/utils/errors'
 import initLocalStore from '../../lib/utils/localStorage'
+
+import newsletterSchema from '../../components/Templates/Newsletter'
+
+const schemas = {
+  newsletter: newsletterSchema
+}
 
 const fragments = {
   commit: gql`
@@ -116,6 +122,10 @@ class EditorPage extends Component {
     this.commitHandler = this.commitHandler.bind(this)
     this.documentChangeHandler = this.documentChangeHandler.bind(this)
     this.revertHandler = this.revertHandler.bind(this)
+
+    this.editorRef = ref => {
+      this.editor = ref
+    }
 
     this.state = {
       committing: false,
@@ -217,20 +227,42 @@ class EditorPage extends Component {
     if (loading || error) {
       return
     }
-    if (!url.query.commitId && repo && repo.latestCommit) {
+    const repoId = url.query.repoId
+    const commitId = url.query.commitId
+    if (!commitId && repo && repo.latestCommit) {
       Router.replaceRoute('repo/edit', {
-        repoId: url.query.repoId.split('/'),
+        repoId: repoId.split('/'),
         commitId: repo.latestCommit.id
       })
       return
     }
-    const repoId = url.query.repoId
-    const commitId = url.query.commitId
+
+    const { schema } = this.state
+    if (!schema) {
+      const commit = repo && repo.commit
+      let template =
+        (commit && commit.document.meta.template) ||
+        url.query.template
+
+      if (!schemas[template]) {
+        template = Object.keys(schemas)[0]
+      }
+
+      this.setState({
+        schema: schemas[template]
+      }, () => {
+        this.loadState(this.props)
+      })
+      return
+    }
+    if (!this.editor) {
+      return
+    }
 
     const isNew = commitId === 'new'
     let committedEditorState
     if (isNew) {
-      committedEditorState = newDocument(url.query)
+      committedEditorState = this.editor.newDocument(url.query)
     } else {
       const commit = repo.commit
       if (!commit) {
@@ -241,7 +273,7 @@ class EditorPage extends Component {
       }
 
       const json = commit.document.content
-      committedEditorState = serializer.deserialize(json, {
+      committedEditorState = this.editor.serializer.deserialize(json, {
         mdast: true
       })
     }
@@ -266,19 +298,17 @@ class EditorPage extends Component {
       }
     }
 
+    const nextState = {
+      committedRawDocString
+    }
     if (localEditorState) {
       this.beginChanges(repoId)
-      this.setState({
-        editorState: localEditorState,
-        committedRawDocString
-      })
+      nextState.editorState = localEditorState
     } else {
       this.concludeChanges(repoId)
-      this.setState({
-        editorState: committedEditorState,
-        committedRawDocString
-      })
+      nextState.editorState = committedEditorState
     }
+    this.setState(nextState)
   }
 
   changeHandler ({value}) {
@@ -328,7 +358,7 @@ class EditorPage extends Component {
         : commitId,
       message: message,
       document: {
-        content: serializer.serialize(editorState, {
+        content: this.editor.serializer.serialize(editorState, {
           mdast: true
         })
       }
@@ -361,6 +391,7 @@ class EditorPage extends Component {
     const { repoId, commitId } = url.query
     const { loading, repo } = data
     const {
+      schema,
       editorState,
       committing,
       uncommittedChanges,
@@ -370,7 +401,7 @@ class EditorPage extends Component {
 
     const isNew = commitId === 'new'
     const error = data.error || this.state.error
-    const showLoading = committing || loading || (!editorState && !error)
+    const showLoading = committing || loading || (!schema && !error)
 
     return (
       <Frame url={url} raw nav={<RepoNav route='repo/edit' url={url} isNew={isNew} />}>
@@ -378,6 +409,8 @@ class EditorPage extends Component {
           <div>
             <div style={{paddingRight: sidebarWidth}}>
               <Editor
+                ref={this.editorRef}
+                schema={schema}
                 value={editorState}
                 onChange={this.changeHandler}
                 onDocumentChange={this.documentChangeHandler}

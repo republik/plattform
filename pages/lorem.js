@@ -1,17 +1,15 @@
 import React, { Component } from 'react'
 import { resetKeyGenerator } from 'slate'
 import Frame from '../components/Frame'
-import Editor, {serializer} from '../components/editor/NewsletterEditor'
+import Editor from '../components/editor'
 import withData from '../lib/apollo/withData'
 
-const getInitialState = () => {
+import newsletterSchema from '../components/Templates/Newsletter'
+
+const getInitialState = (editor) => {
   resetKeyGenerator()
   return {
-    state: serializer.deserialize(`---
-a: test
-b: lala
----
-
+    value: editor.serializer.deserialize(`
 Lorem sipsum dolor sit amet, consectetur adipiscing elit. Proin vestibulum dui eget tellus fermentum, eu lobortis libero lacinia. Maecenas commodo lacus dignissim, aliquet risus non, scelerisque dui. Aliquam at massa rutrum ante laoreet pharetra non a nulla. Praesent imperdiet egestas dapibus. Nunc quis lorem vehicula, pharetra nibh quis, dignissim felis. Fusce in justo pharetra, lacinia lorem in, dignissim sem. Phasellus lacinia turpis massa. Etiam eu condimentum diam.
 
 ![](/static/example.jpg)
@@ -23,8 +21,8 @@ Nullam et metus mauris. Quisque scelerisque massa commodo, dapibus tortor in, co
 class Index extends Component {
   constructor (...args) {
     super(...args)
-    this.state = getInitialState()
 
+    this.state = {}
     this.onDocumentChange = (document, change) => {
       try {
         // console.log(serializer.serialize(change.state))
@@ -32,16 +30,23 @@ class Index extends Component {
         // console.error(e)
       }
     }
+    this.editorRef = ref => {
+      this.editor = ref
+    }
   }
-
+  componentDidMount () {
+    this.setState(getInitialState(this.editor))
+  }
   render () {
     const { url } = this.props
     return (
       <Frame url={url} raw>
         <Editor
-          state={this.state.state}
-          onChange={({state}) => {
-            this.setState({state})
+          ref={this.editorRef}
+          schema={newsletterSchema}
+          value={this.state.value}
+          onChange={({value}) => {
+            this.setState({value})
           }}
           onDocumentChange={this.onDocumentChange}
         />
