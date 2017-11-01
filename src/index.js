@@ -147,13 +147,7 @@ ReactDOM.render(
           {
             path: '/components/comment-teaser',
             title: 'CommentTeaser',
-            imports: {
-              t,
-              CommentTeaser: require('./components/CommentTeaser/CommentTeaser'),
-              CommentTeaserHeader: require('./components/CommentTeaser/CommentTeaserHeader'),
-              CommentTeaserFooter: require('./components/CommentTeaser/CommentTeaserFooter'),
-              CommentHeader: require('./components/Comment/CommentHeader')
-            },
+            imports: {t, ...require('./components/CommentTeaser/docs.imports')},
             src: require('./components/CommentTeaser/docs.md')
           },
           {

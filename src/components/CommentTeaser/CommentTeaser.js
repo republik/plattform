@@ -1,5 +1,5 @@
 import React from 'react'
-import { css, merge } from 'glamor'
+import { merge } from 'glamor'
 import colors from '../../theme/colors'
 import { serifRegular14 } from '../Typography/styles'
 import CommentHeader from '../Comment/CommentHeader'
@@ -16,6 +16,7 @@ const styles = {
   },
   body: {
     ...serifRegular14,
+    color: colors.text,
     margin: '10px 0'
   },
   clamp: {
@@ -41,18 +42,16 @@ export const CommentTeaser = ({
   lineClamp,
   isBox
 }) => (
-  <div {...css(merge(styles.root, isBox ? styles.box : {}))}>
+  <div {...merge(styles.root, isBox ? styles.box : {})}>
     {displayAuthor ? (
       <CommentHeader {...displayAuthor} />
     ) : (
       <CommentTeaserHeader title={title} subtitle={subtitle} />
     )}
     <div
-      {...css(
-        merge(
-          styles.body,
-          lineClamp ? merge(styles.clamp, { WebkitLineClamp: lineClamp }) : {}
-        )
+      {...merge(
+        styles.body,
+        lineClamp ? merge(styles.clamp, { WebkitLineClamp: lineClamp }) : {}
       )}
     >
       {content}

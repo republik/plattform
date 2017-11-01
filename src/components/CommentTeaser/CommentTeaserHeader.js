@@ -17,8 +17,8 @@ const styles = {
   }),
   subtitle: css({
     ...sansSerifRegular14,
-    lineHeight: 1.1,
     color: colors.lightText,
+    lineHeight: 1.1,
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis'
