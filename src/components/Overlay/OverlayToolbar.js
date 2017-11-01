@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {css} from 'glamor'
 import {MdClose} from 'react-icons/lib/md'
 
@@ -46,15 +47,25 @@ export const OverlayToolbar = ({children}) => (
     {children}
   </div>
 )
+OverlayToolbar.propTypes = {
+  children: PropTypes.node.isRequired
+}
 
 export const OverlayToolbarClose = ({onClick}) => (
   <button {...styles.close} onClick={onClick}>
     <MdClose />
   </button>
 )
+OverlayToolbarClose.propTypes = {
+  onClick: PropTypes.func.isRequired
+}
 
 export const OverlayToolbarConfirm = ({label, onClick}) => (
   <button {...styles.confirm} onClick={onClick}>
     {label}
   </button>
 )
+OverlayToolbarConfirm.propTypes = {
+  label: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired
+}

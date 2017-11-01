@@ -10,8 +10,8 @@ span: 2
 ---
 <OverlayExample>
   <OverlayToolbar>
-    <OverlayToolbarClose />
-    <OverlayToolbarConfirm label='Speichern' />
+    <OverlayToolbarClose onClick={() => {}} />
+    <OverlayToolbarConfirm label='Speichern' onClick={() => {}} />
   </OverlayToolbar>
 </OverlayExample>
 ```
@@ -24,8 +24,8 @@ span: 4
 ---
 <OverlayExample>
   <OverlayToolbar>
-    <OverlayToolbarClose />
-    <OverlayToolbarConfirm label='Speichern' />
+    <OverlayToolbarClose onClick={() => {}} />
+    <OverlayToolbarConfirm label='Speichern' onClick={() => {}} />
   </OverlayToolbar>
 </OverlayExample>
 ```
@@ -36,17 +36,17 @@ The `<OverlayToolbar />` serves as a container for `<OverlayToolbarClose />` and
 
 ```react|noSource,plain,span-2
 <OverlayToolbar>
-  <OverlayToolbarClose />
-  <OverlayToolbarConfirm label='Speichern' />
+  <OverlayToolbarClose onClick={() => {}} />
+  <OverlayToolbarConfirm label='Speichern' onClick={() => {}} />
 </OverlayToolbar>
 ```
 ```react|noSource,plain,span-2
 <OverlayToolbar>
-  <OverlayToolbarClose />
+  <OverlayToolbarClose onClick={() => {}} />
 </OverlayToolbar>
 ```
 ```react|noSource,plain,span-2
 <OverlayToolbar>
-  <OverlayToolbarConfirm label='Speichern' />
+  <OverlayToolbarConfirm label='Speichern' onClick={() => {}} />
 </OverlayToolbar>
 ```

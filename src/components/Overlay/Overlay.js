@@ -1,4 +1,5 @@
 import React, {PureComponent} from 'react'
+import PropTypes from 'prop-types'
 import {css} from 'glamor'
 
 const styles = {
@@ -39,6 +40,10 @@ class Overlay extends PureComponent {
       </div>
     )
   }
+}
+
+Overlay.propTypes = {
+  children: PropTypes.node.isRequired
 }
 
 export default Overlay
