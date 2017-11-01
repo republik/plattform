@@ -7,6 +7,7 @@ import {serifRegular16, sansSerifRegular16} from '../Typography/styles'
 import {MdClose} from 'react-icons/lib/md'
 
 import CommentComposerHeader from './CommentComposerHeader'
+import CommentComposerError from './CommentComposerError'
 
 const styles = {
   form: css({
@@ -28,6 +29,9 @@ const styles = {
   }),
   textAreaEmpty: css({
     color: colors.lightText,
+    '::-webkit-input-placeholder': {
+      color: colors.lightText
+    }
   }),
   actions: css({
     display: 'flex',
@@ -92,7 +96,7 @@ class CommentComposer extends PureComponent {
   }
 
   render () {
-    const {t, displayAuthor, onEditPreferences, onCancel} = this.props
+    const {t, displayAuthor, error, onEditPreferences, onCancel} = this.props
     const {text} = this.state
 
     return (
@@ -122,6 +126,7 @@ class CommentComposer extends PureComponent {
             </button>
           </div>
         </div>
+        {error && <CommentComposerError>{error}</CommentComposerError>}
       </div>
     )
   }
@@ -130,6 +135,7 @@ class CommentComposer extends PureComponent {
 CommentComposer.propTypes = {
   t: PropTypes.func.isRequired,
   displayAuthor: PropTypes.object.isRequired,
+  error: PropTypes.string,
   onEditPreferences: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   submitComment: PropTypes.func.isRequired

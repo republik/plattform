@@ -140,6 +140,7 @@ ReactDOM.render(
               CommentComposer: require('./components/CommentComposer/CommentComposer'),
               CommentComposerHeader: require('./components/CommentComposer/CommentComposerHeader'),
               CommentComposerPlaceholder: require('./components/CommentComposer/CommentComposerPlaceholder'),
+              CommentComposerError: require('./components/CommentComposer/CommentComposerError'),
             },
             src: require('./components/CommentComposer/docs.md')
           },
