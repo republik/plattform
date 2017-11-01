@@ -72,9 +72,7 @@ const schema = {
             {
               matchMdast: matchType('paragraph'),
               component: Lead,
-              rules: [
-                paragraph
-              ]
+              rules: paragraph.rules
             }
           ]
         },
