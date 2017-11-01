@@ -156,6 +156,12 @@ ReactDOM.render(
             imports: {t, ...require('./components/CommentTree/docs.imports')},
             src: require('./components/CommentTree/docs.md')
           },
+          {
+            path: '/components/overlay',
+            title: 'Overlay',
+            imports: {t, ...require('./components/Overlay/docs.imports')},
+            src: require('./components/Overlay/docs.md')
+          },
         ]
       },
       {

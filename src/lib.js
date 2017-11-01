@@ -20,6 +20,7 @@ export * from './components/Comment'
 export * from './components/CommentComposer'
 export * from './components/CommentTeaser'
 export * from './components/CommentTree'
+export * from './components/Overlay'
 
 export {Container, NarrowContainer} from './components/Grid'
 export {
