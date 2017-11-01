@@ -284,8 +284,11 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
 
   await decorateTree(rootComment, coveredComments, discussion, user, pgdb, t)
 
-  return {
-    ...rootComment.comments,
-    totalCount: discussionTotalCount
+  // if parentId is given, we return the totalCount of the subtree
+  // otherwise it's the totalCount of the hole discussion
+  if (!parentId) {
+    rootComment.comments.totalCount = discussionTotalCount
   }
+
+  return rootComment.comments
 }
