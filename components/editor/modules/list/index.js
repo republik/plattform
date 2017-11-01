@@ -2,7 +2,6 @@ import React from 'react'
 import { matchBlock } from '../../utils'
 import { createListButton } from './ui'
 import MarkdownSerializer from '../../../../lib/serializer'
-import addValidation from '../../utils/serializationValidation'
 import { Block } from 'slate'
 
 export default ({rule, subModules, TYPE}) => {
@@ -59,8 +58,6 @@ export default ({rule, subModules, TYPE}) => {
       data: {}
     })
   )
-
-  addValidation(list, serializer, TYPE)
 
   return {
     TYPE,

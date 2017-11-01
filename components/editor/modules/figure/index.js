@@ -3,7 +3,7 @@ import { Block } from 'slate'
 
 import { matchBlock } from '../../utils'
 import createUi from './ui'
-import addValidation, { findOrCreate } from '../../utils/serializationValidation'
+import { findOrCreate } from '../../utils/serialization'
 
 import MarkdownSerializer from '../../../../lib/serializer'
 
@@ -102,8 +102,6 @@ export default ({rule, subModules, TYPE}) => {
       data: {}
     })
   )
-
-  addValidation(figure, serializer, TYPE)
 
   const {
     afterType

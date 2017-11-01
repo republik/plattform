@@ -1,7 +1,7 @@
 import { Document as SlateDocument } from 'slate'
 
 import MarkdownSerializer from '../../../../lib/serializer'
-import { findOrCreate } from '../../utils/serializationValidation'
+import { findOrCreate } from '../../utils/serialization'
 
 export default ({rule, subModules, TYPE}) => {
   const coverModule = subModules.find(m => m.name === 'cover')

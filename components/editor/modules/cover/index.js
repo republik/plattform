@@ -1,6 +1,6 @@
 import React from 'react'
 import { matchBlock } from '../../utils'
-import { findOrCreate } from '../../utils/serializationValidation'
+import { findOrCreate } from '../../utils/serialization'
 import { gray2x1 } from '../../utils/placeholder'
 import { createCoverForm } from './ui'
 import MarkdownSerializer from '../../../../lib/serializer'
