@@ -16,12 +16,35 @@ export {default as FieldSet} from './components/Form/FieldSet'
 export {default as Radio} from './components/Form/Radio'
 export {default as Checkbox} from './components/Form/Checkbox'
 export {default as Loader} from './components/Loader'
-export {Spinner, InlineSpinner} from './components/Spinner'
-export * from './components/Comment'
-export * from './components/CommentComposer'
-export * from './components/CommentTeaser'
-export * from './components/CommentTree'
-export * from './components/Overlay'
+export {
+  Spinner,
+  InlineSpinner
+} from './components/Spinner'
+export {
+  Comment,
+  CommentHeader,
+  CommentActions
+} from './components/Comment'
+export {
+  CommentComposer,
+  CommentComposerHeader,
+  CommentComposerPlaceholder,
+  CommentComposerError
+} from './components/CommentComposer'
+export {
+  CommentTeaser
+} from './components/CommentTeaser'
+export {
+  CommentTreeNode,
+  CommentTreeLoadMore,
+  CommentTreeCollapse
+} from './components/CommentTree'
+export {
+  Overlay,
+  OverlayToolbar,
+  OverlayToolbarClose,
+  OverlayToolbarConfirm
+} from './components/Overlay'
 
 export {Container, NarrowContainer} from './components/Grid'
 export {
