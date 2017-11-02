@@ -3,9 +3,7 @@ import React from 'react'
 import MetaData from './ui'
 
 export default ({rule, TYPE}) => {
-  const {
-    additionalFields
-  } = rule.editorOptions || {}
+  const options = rule.editorOptions || {}
 
   return {
     TYPE,
@@ -17,7 +15,8 @@ export default ({rule, TYPE}) => {
           return (
             <div>
               {children}
-              <MetaData value={value} editor={editor} additionalFields={additionalFields} />
+              <MetaData value={value} editor={editor}
+                {...options} />
             </div>
           )
         }

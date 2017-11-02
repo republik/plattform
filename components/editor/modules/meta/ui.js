@@ -23,7 +23,7 @@ const styles = {
 
 const getWidth = key => key.match(/title/i) ? '100%' : ''
 
-const MetaData = ({value, editor, additionalFields = [], t}) => {
+const MetaData = ({value, editor, additionalFields = [], teaser: Teaser, t}) => {
   const node = value.document
 
   const genericKeys = Set([
@@ -79,6 +79,8 @@ const MetaData = ({value, editor, additionalFields = [], t}) => {
         </Interaction.H2>
         <br />
         <MetaForm data={genericData} onInputChange={onInputChange} black getWidth={getWidth} />
+        <Label>{t('metaData/preview')}</Label><br />
+        <Teaser {...node.data.toJS()} />
         <br /><br /><br />
         <MetaForm data={fbData} onInputChange={onInputChange} black getWidth={getWidth} />
         <Label>{t('metaData/preview')}</Label><br />

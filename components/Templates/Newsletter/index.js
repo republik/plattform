@@ -18,6 +18,7 @@ import Figure, {
 import Blockquote from './Blockquote'
 import List, { ListItem } from './List'
 import RBlueprint from './RBlueprint'
+import Teaser from './Teaser'
 
 import {
   matchType,
@@ -80,7 +81,8 @@ const schema = {
           matchMdast: () => false,
           editorModule: 'meta',
           editorOptions: {
-            additionalFields: ['emailSubject']
+            additionalFields: ['emailSubject'],
+            teaser: Teaser
           }
         },
         {
