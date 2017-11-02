@@ -1,4 +1,5 @@
 import { Document as SlateDocument } from 'slate'
+import { timeHour } from 'd3-time'
 
 import MarkdownSerializer from '../../../../lib/serializer'
 import { findOrCreate } from '../../utils/serialization'
@@ -13,7 +14,7 @@ export default ({rule, subModules, TYPE}) => {
 
   const autoMeta = documentNode => {
     const data = documentNode.data
-    const autoMeta = !data || !data.size || data.get('auto')
+    const autoMeta = !data || !data.delete('template').size || data.get('auto')
     if (!autoMeta) {
       return null
     }
@@ -22,11 +23,12 @@ export default ({rule, subModules, TYPE}) => {
     if (!center) {
       return null
     }
-    const title = center.first()
+    const title = center.nodes.first()
 
     const newData = data
       .set('auto', true)
       .set('title', title ? title.text : '')
+      .set('publishDate', timeHour.ceil(new Date()).toISOString())
 
     return data.equals(newData)
       ? null

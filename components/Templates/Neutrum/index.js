@@ -83,6 +83,10 @@ const schema = {
       editorModule: 'documentPlain',
       rules: [
         {
+          matchMdast: () => false,
+          editorModule: 'meta'
+        },
+        {
           matchMdast: matchZone(
             'CENTER'
           ),

@@ -79,8 +79,10 @@ const MetaData = ({value, editor, additionalFields = [], teaser: Teaser, t}) => 
         </Interaction.H2>
         <br />
         <MetaForm data={genericData} onInputChange={onInputChange} black getWidth={getWidth} />
-        <Label>{t('metaData/preview')}</Label><br />
-        <Teaser {...node.data.toJS()} />
+        {!!Teaser && (<div>
+          <Label>{t('metaData/preview')}</Label><br />
+          <Teaser {...node.data.toJS()} />
+        </div>)}
         <br /><br /><br />
         <MetaForm data={fbData} onInputChange={onInputChange} black getWidth={getWidth} />
         <Label>{t('metaData/preview')}</Label><br />
