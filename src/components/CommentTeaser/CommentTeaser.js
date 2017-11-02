@@ -33,6 +33,7 @@ const styles = {
 
 export const CommentTeaser = ({
   t,
+  id,
   title,
   subtitle,
   displayAuthor,
@@ -42,7 +43,7 @@ export const CommentTeaser = ({
   lineClamp,
   isBox
 }) => (
-  <div {...merge(styles.root, isBox ? styles.box : {})}>
+  <div id={id} {...merge(styles.root, isBox ? styles.box : {})}>
     {displayAuthor ? (
       <CommentHeader {...displayAuthor} />
     ) : (
