@@ -21,6 +21,7 @@ export const Row = (props) => (
       credential: {description: 'Journalist', verified: true}
     }}
     showComposer={false}
+    onEditPreferences={() => {}}
     onAnswer={() => {}}
     onUpvote={() => {}}
     onDownvote={() => {}}
@@ -42,6 +43,7 @@ export const Node = ({t, comment}) => (
     }}
     comment={comment}
     timeago={() => '2h'}
+    onEditPreferences={() => {}}
     upvoteComment={() => {}}
     downvoteComment={() => {}}
     submitComment={() => {}}

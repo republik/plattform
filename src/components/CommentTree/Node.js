@@ -61,6 +61,7 @@ class Node extends PureComponent {
       displayAuthor,
       comment,
       timeago,
+      onEditPreferences,
       More
     } = this.props
     const {composerState, composerError} = this.state
@@ -143,6 +144,7 @@ class Node extends PureComponent {
         displayAuthor={displayAuthor}
         showComposer={composerState !== 'idle'}
         composerError={composerError}
+        onEditPreferences={onEditPreferences}
         onAnswer={this.openComposer}
         onUpvote={userVote === 'UP' ? undefined : this.upvoteComment}
         onDownvote={userVote === 'DOWN' ? undefined : this.downvoteComment}
@@ -216,6 +218,7 @@ Node.propTypes = {
   displayAuthor: PropTypes.object.isRequired,
   comment: PropTypes.object.isRequired,
   timeago: PropTypes.func.isRequired,
+  onEditPreferences: PropTypes.func.isRequired,
   upvoteComment: PropTypes.func.isRequired,
   downvoteComment: PropTypes.func.isRequired,
   submitComment: PropTypes.func.isRequired,

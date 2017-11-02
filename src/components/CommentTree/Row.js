@@ -16,7 +16,7 @@ const styles = {
   }),
 }
 
-const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onAnswer, onUpvote, onDownvote, dismissComposer, submitComment, timeago}) => {
+const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onEditPreferences, onAnswer, onUpvote, onDownvote, dismissComposer, submitComment, timeago}) => {
   const {createdAt, score} = comment
 
   return (
@@ -41,6 +41,7 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
             t={t}
             displayAuthor={displayAuthor}
             error={composerError}
+            onEditPreferences={onEditPreferences}
             onCancel={dismissComposer}
             submitComment={submitComment}
           />
@@ -60,6 +61,7 @@ Row.propTypes = {
   displayAuthor: PropTypes.object.isRequired,
   showComposer: PropTypes.bool.isRequired,
   composerError: PropTypes.string,
+  onEditPreferences: PropTypes.func.isRequired,
   onAnswer: PropTypes.func.isRequired,
   onUpvote: PropTypes.func,
   onDownvote: PropTypes.func,
@@ -78,7 +80,7 @@ class Composer extends PureComponent {
   }
 
   render () {
-    const {t, displayAuthor, error, onCancel, submitComment} = this.props
+    const {t, displayAuthor, error, onEditPreferences, onCancel, submitComment} = this.props
     const {isVisible} = this.state
 
     return (
@@ -87,6 +89,7 @@ class Composer extends PureComponent {
           t={t}
           displayAuthor={displayAuthor}
           error={error}
+          onEditPreferences={onEditPreferences}
           onCancel={onCancel}
           submitComment={submitComment}
         />
