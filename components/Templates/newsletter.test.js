@@ -1,7 +1,7 @@
 import test from 'tape'
 import { shallow } from 'enzyme'
 
-import { renderMdast, MissingMarkdownNodeType } from './'
+import { renderMdast, MissingMarkdownNodeType } from './render'
 import newsletterSchema from './Newsletter'
 import newsletterEmailSchema from './NewsletterEmail'
 
