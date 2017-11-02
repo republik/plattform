@@ -69,6 +69,7 @@ const paragraph = {
 }
 
 const schema = {
+  emailTemplate: 'newsletter-email',
   rules: [
     {
       matchMdast: matchType('root'),

@@ -1,67 +1,19 @@
-import React from 'react'
+import newsletterSchema from './Newsletter'
+import neutrumSchema from './Neutrum'
 
-export const MissingMarkdownNodeType = ({node, children}) => (
-  <span style={{background: '#FF5555', color: '#FFFFFF', display: 'inline-block', margin: 4}}>
-    Missing Markdown node type "{node.type}"
-    {node.identifier ? `with identifier "${node.identifier}"` : ''}
-    {' '}
-    {children}
-  </span>
-)
-
-export const renderMdast = (mdast, schema = {}) => {
-  const rules = schema.rules
-
-  const visit = (node, index, parent) => {
-    if (node.type === 'text') {
-      return node.value
-    }
-
-    const rule = rules.find(r => r.matchMdast(node))
-    if (!rule || !rule.component) {
-      return (
-        <MissingMarkdownNodeType key={index} node={node}>
-          {visitChildren(node)}
-        </MissingMarkdownNodeType>
-      )
-    }
-
-    const Component = rule.component
-
-    const data = rule.getData
-      ? rule.getData(node, parent)
-      : (node.data || {})
-
-    let children = null
-    if (rule.rules) {
-      children = renderMdast(
-        node.children, {
-          rules: rule.rules
-        }
-      )
-    } else if (!rule.isVoid) {
-      children = visitChildren(node)
-    }
-
-    return (
-      <Component key={index} data={data}>
-        {children}
-      </Component>
-    )
-  }
-
-  const visitArray = (array, parent) => {
-    return array.map((item, index) => visit(item, index, parent))
-  }
-
-  const visitChildren = (node) => {
-    if (!node.children || node.children.length === 0) {
-      return null
-    }
-    return visitArray(node.children, node)
-  }
-
-  return Array.isArray(mdast)
-    ? visitArray(mdast, null)
-    : visit(mdast, 0, null)
+const schemas = {
+  newsletter: newsletterSchema,
+  neutrum: neutrumSchema
 }
+
+export const getSchema = template => {
+  const key = template || Object.keys(schemas)[0]
+  const schema = schemas[key]
+
+  if (!schema) {
+    throw new Error(`Unkown Schema ${key}`)
+  }
+  return schema
+}
+
+export default schemas
