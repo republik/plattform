@@ -12,7 +12,7 @@ module.exports = {
   },
   async latestComments (user, args, { pgdb }) {
     const userId = user.id
-    const { limit } = args
+    const limit = args.limit || 10
 
     const comments = await pgdb.query(
       `

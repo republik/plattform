@@ -102,7 +102,7 @@ type PublicUser {
   publicUrl: String
   isEmailPublic: Boolean
   badges: [Badge]
-  latestComments(limit: Int!): [Comment]
+  latestComments(limit: Int): [Comment]
 }
 
 type User {
