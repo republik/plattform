@@ -88,7 +88,12 @@ const deepSortTree = (comment, ascDesc, sortKey) => {
           ascDesc(a.topValue || a[sortKey], b.topValue || b[sortKey])
       )
     }
-    comment.topValue = Math.max(comment[sortKey], comment.comments.nodes[0][sortKey])
+    if (comment[sortKey]) { // root is a fake comment
+      comment.topValue = [
+        comment[sortKey],
+        comment.comments.nodes[0][sortKey]
+      ].sort((a, b) => ascDesc(a, b))[0]
+    }
   }
   return comment
 }
