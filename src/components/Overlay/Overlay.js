@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react'
 import PropTypes from 'prop-types'
 import {css} from 'glamor'
-import {overlay} from '../../theme/zIndex'
+import zIndex from '../../theme/zIndex'
 
 const styles = {
   root: css({
@@ -10,7 +10,7 @@ const styles = {
     left: 0,
     width: '100vw',
     height: '100vh',
-    zIndex: overlay,
+    zIndex: zIndex.overlay,
     background: 'white',
     transition: 'opacity .12s ease-in-out'
   })

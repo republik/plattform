@@ -1,6 +1,6 @@
 import * as allMediaQueries from './theme/mediaQueries'
-export * as zIndex from './theme/zIndex'
 
+export {default as zIndex} from './theme/zIndex'
 export {default as colors} from './theme/colors'
 export const mediaQueries = allMediaQueries
 

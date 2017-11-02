@@ -1,1 +1,3 @@
-export const overlay = 50
+export default {
+  overlay: 50
+}
