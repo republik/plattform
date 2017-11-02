@@ -88,7 +88,7 @@ const deepSortTree = (comment, ascDesc, sortKey) => {
           ascDesc(a.topValue || a[sortKey], b.topValue || b[sortKey])
       )
     }
-    comment.topValue = comment.comments.nodes[0][sortKey]
+    comment.topValue = Math.max(comment[sortKey], comment.comments.nodes[0][sortKey])
   }
   return comment
 }
