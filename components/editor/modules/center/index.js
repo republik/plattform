@@ -38,12 +38,15 @@ export default ({rule, subModules, TYPE}) => {
     ]
   })
 
+  const newDocument = ({title}) => serializer.deserialize(`# ${title}\n\n`)
+
   const Center = rule.component
 
   return {
     TYPE,
     helpers: {
-      serializer
+      serializer,
+      newDocument
     },
     changes: {},
     plugins: [

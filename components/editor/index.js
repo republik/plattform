@@ -9,6 +9,7 @@ import Sidebar from './Sidebar'
 import MetaData from './modules/meta/ui'
 
 import createDocumentModule from './modules/document'
+import createDocumentPlainModule from './modules/document/plain'
 import createCoverModule from './modules/cover'
 import createCenterModule from './modules/center'
 import createHeadlineModule from './modules/headline'
@@ -24,6 +25,7 @@ import createSpecialModule from './modules/special'
 
 const moduleCreators = {
   document: createDocumentModule,
+  documentPlain: createDocumentPlainModule,
   cover: createCoverModule,
   center: createCenterModule,
   headline: createHeadlineModule,

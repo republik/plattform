@@ -25,9 +25,11 @@ import { errorToString } from '../../lib/utils/errors'
 import initLocalStore from '../../lib/utils/localStorage'
 
 import newsletterSchema from '../../components/Templates/Newsletter'
+import neutrumSchema from '../../components/Templates/Neutrum'
 
 const schemas = {
-  newsletter: newsletterSchema
+  newsletter: newsletterSchema,
+  neutrum: neutrumSchema
 }
 
 const fragments = {
@@ -45,6 +47,7 @@ const fragments = {
         content
         meta {
           title
+          template
         }
       }
     }
