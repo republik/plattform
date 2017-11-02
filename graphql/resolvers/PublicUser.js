@@ -12,7 +12,7 @@ module.exports = {
   },
   async latestComments (user, args, { pgdb }) {
     const userId = user.id
-    const limit = 10
+    const { limit } = args
 
     const comments = await pgdb.query(
       `
@@ -38,30 +38,12 @@ module.exports = {
     )
 
     if (comments.length) {
-      // Respect anonymous settings, if any.
-      const discussionPreferences = await pgdb.query(
-        `
-        SELECT
-          "userId",
-          "discussionId",
-          anonymous
-        FROM "discussionPreferences"
-        WHERE
-          "userId" = :userId;
-      `,
-        { userId }
-      )
       return comments.map(comment => {
-        const userPref = discussionPreferences.find(
-          pref => pref.discussionId === comment.discussionId
-        )
-        if (!userPref || !userPref.anonymous) {
-          return {
-            ...comment,
-            discussion: {
-              id: comment.discussionId,
-              title: comment.discussionTitle
-            }
+        return {
+          ...comment,
+          discussion: {
+            id: comment.discussionId,
+            title: comment.discussionTitle
           }
         }
       })
