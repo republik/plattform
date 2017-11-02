@@ -76,6 +76,13 @@ const schema = {
       editorModule: 'document',
       rules: [
         {
+          matchMdast: () => false,
+          editorModule: 'meta',
+          editorOptions: {
+            additionalFields: ['emailSubject']
+          }
+        },
+        {
           matchMdast: matchZone(
             'COVER'
           ),
