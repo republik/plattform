@@ -26,6 +26,10 @@ const styles = {
     flexFlow: 'row wrap',
     margin: '0 auto'
   }),
+  select: css({
+    width: '100%',
+    margin: '10px 0 0'
+  }),
   input: css({
     width: '100%',
     [mediaQueries.mUp]: {
@@ -47,13 +51,14 @@ class RepoList extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      title: ''
+      title: '',
+      template: ''
     }
   }
   onSubmit (event) {
     event.preventDefault()
 
-    const { title, error } = this.state
+    const { title, template, error } = this.state
     if (error || !title) {
       this.handleTitle(title, true)
       return
@@ -66,7 +71,8 @@ class RepoList extends Component {
     Router.replaceRoute('repo/edit', {
       repoId: [GITHUB_ORG, slug],
       commitId: 'new',
-      title
+      title,
+      template
     })
   }
   handleTitle (value, shouldValidate) {
@@ -82,7 +88,7 @@ class RepoList extends Component {
   }
   render () {
     const { t, data } = this.props
-    const { title, dirty, error } = this.state
+    const { title, template, dirty, error } = this.state
     return (
       <Loader loading={data.loading} error={data.error} render={() => (
         <div>
@@ -105,6 +111,14 @@ class RepoList extends Component {
 
           <Interaction.H2>{t('repo/list/add/title')}</Interaction.H2>
           <form {...styles.form} onSubmit={e => this.onSubmit(e)}>
+            <div {...styles.select}>
+              <select value={template} onChange={e => {
+                this.setState({template: e.target.value})
+              }}>
+                <option value='newsletter'>Newsletter</option>
+                <option value='neutrum'>Neutrum</option>
+              </select>
+            </div>
             <div {...styles.input}>
               <Field
                 label={t('repo/list/add/titleField/label')}
