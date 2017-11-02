@@ -71,6 +71,11 @@ ReactDOM.render(
             title: 'Grid',
             imports: require('./components/Grid'),
             src: require('./components/Grid/docs.md')
+          },
+          {
+            path: '/z-index',
+            title: 'z-index',
+            src: require('./theme/zIndex.docs.md')
           }
         ]
       },

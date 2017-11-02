@@ -1,6 +1,7 @@
 import React, {PureComponent} from 'react'
 import PropTypes from 'prop-types'
 import {css} from 'glamor'
+import {overlay} from '../../theme/zIndex'
 
 const styles = {
   root: css({
@@ -9,7 +10,7 @@ const styles = {
     left: 0,
     width: '100vw',
     height: '100vh',
-    zIndex: 10,
+    zIndex: overlay,
     background: 'white',
     transition: 'opacity .12s ease-in-out'
   })
@@ -26,9 +27,14 @@ class Overlay extends PureComponent {
     this.fadeInTimeout = setTimeout(() => {
       this.setState({isVisible: true})
     })
+
+    // Add overflow:hidden to the body element to remove any scroll bars. The overlay uses
+    // width:100vw and that is the width of the whole viewport /including/ the scroll bar.
+    document.body.style.overflow = 'hidden'
   }
   componentWillUnmount () {
     clearTimeout(this.fadeInTimeout)
+    document.body.style.overflow = ''
   }
   render () {
     const {children, ...props} = this.props
