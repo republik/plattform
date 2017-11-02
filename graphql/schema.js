@@ -56,6 +56,8 @@ type RootMutations {
     anonymity: Permission!
   ): ID!
   submitComment(
+    # client side generated id
+    id: ID
     discussionId: ID!
     parentId: ID
     content: String!
@@ -100,7 +102,7 @@ type PublicUser {
   publicUrl: String
   isEmailPublic: Boolean
   badges: [Badge]
-  latestComments: [Comment]
+  latestComments(limit: Int): [Comment]
 }
 
 type User {

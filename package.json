@@ -2,10 +2,11 @@
   "name": "republik-backend",
   "version": "0.0.1",
   "engines": {
-    "node": "8.6.0"
+    "node": "8.9.0"
   },
   "private": true,
   "dependencies": {
+    "apollo-engine": "^0.5.2",
     "aws-sign": "^0.1.2",
     "body-parser": "^1.18.0",
     "connect-pg-simple": "^4.2.1",

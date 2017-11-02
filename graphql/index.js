@@ -19,7 +19,8 @@ const executableSchema = makeExecutableSchema({
 const {
   PUBLIC_WS_URL_BASE,
   PUBLIC_WS_URL_PATH,
-  NODE_ENV
+  NODE_ENV,
+  ENGINE_API_KEY
 } = process.env
 
 module.exports = (server, pgdb, httpServer) => {
@@ -55,7 +56,8 @@ module.exports = (server, pgdb, httpServer) => {
           }
         }
         return context
-      }
+      },
+      keepAlive: 40000
     },
     {
       server: httpServer,
@@ -76,7 +78,8 @@ module.exports = (server, pgdb, httpServer) => {
         req,
         user: req.user,
         t
-      }
+      },
+      tracing: !!ENGINE_API_KEY
     }
   })
 

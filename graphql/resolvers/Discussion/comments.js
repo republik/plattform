@@ -21,8 +21,7 @@ const assembleTree = (_comment, _comments, afterId, compare) => {
     const parentId = comment.id || null
     comment._depth = depth
     comment.comments = {
-      nodes:
-        _.remove(comments, c => c.parentId === parentId)
+      nodes: _.remove(comments, c => c.parentId === parentId)
     }
     if (depth === -1 && afterId) {
       comment.comments.nodes = comment.comments.nodes
@@ -34,6 +33,7 @@ const assembleTree = (_comment, _comments, afterId, compare) => {
     }
     comment.comments.nodes = comment.comments.nodes
       .map(c => {
+        c.score = c.upVotes - c.downVotes // precompute
         coveredComments.push(c)
         return c
       })
@@ -63,6 +63,7 @@ const measureTree = comment => {
   return numChildren + 1
 }
 
+/*
 const sortTree = (comment, compare) => {
   const { comments } = comment
   comment.comments = {
@@ -71,6 +72,23 @@ const sortTree = (comment, compare) => {
   }
   if (comments.nodes.length > 0) {
     comments.nodes.forEach(c => sortTree(c, compare))
+  }
+  return comment
+}
+*/
+
+const deepSortTree = (comment, ascDesc, sortKey) => {
+  const { comments } = comment
+  if (comments.nodes.length > 0) {
+    comments.nodes.forEach(c => deepSortTree(c, ascDesc, sortKey))
+    comment.comments = {
+      ...comments,
+      nodes: comments.nodes.sort(
+        (a, b) =>
+          ascDesc(a.topValue || a[sortKey], b.topValue || b[sortKey])
+      )
+    }
+    comment.topValue = Math.max(comment[sortKey], comment.comments.nodes[0][sortKey])
   }
   return comment
 }
@@ -126,12 +144,16 @@ const decorateTree = async (comment, coveredComments, discussion, user, pgdb, t)
   const userIds = _.uniq(
     coveredComments.map(c => c.userId)
   )
-  const users = await pgdb.public.users.find({ id: userIds })
-    .then(users => users.map(u => createUser(u)))
-  const discussionPreferences = await pgdb.public.discussionPreferences.find({
-    userId: userIds,
-    discussionId: discussion.id
-  })
+  const users = userIds.length
+    ? await pgdb.public.users.find({ id: userIds })
+        .then(users => users.map(u => createUser(u)))
+    : []
+  const discussionPreferences = userIds.length
+    ? await pgdb.public.discussionPreferences.find({
+      userId: userIds,
+      discussionId: discussion.id
+    })
+    : []
   const credentialIds = discussionPreferences.map(dp => dp.credentialId)
   const credentials = credentialIds.length
     ? await pgdb.public.credentials.find({ id: credentialIds })
@@ -207,6 +229,7 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
   const comments = await pgdb.public.comments.find({
     discussionId: discussion.id
   })
+  const discussionTotalCount = comments.length
 
   if (!comments.length) {
     return {
@@ -220,21 +243,36 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
     : {}
 
   // prepare sort
-  let ascDesc = orderDirection === 'ASC'
+  const ascDesc = orderDirection === 'ASC'
     ? ascending
     : descending
+  const sortKeyMap = {
+    'DATE': 'createdAt',
+    'VOTES': 'score',
+    'HOT': 'hottnes'
+  }
+  const sortKey = sortKeyMap[orderBy]
+  const compare = (a, b) => ascDesc(a[sortKey], b[sortKey])
+  /*
+  let sortKey
   let compare
   if (orderBy === 'DATE') {
     compare = (a, b) => ascDesc(a.createdAt, b.createdAt)
+    sortKey = 'createdAt'
   } else if (orderBy === 'VOTES') {
-    compare = (a, b) => ascDesc(a.upVotes - a.downVotes, b.upVotes - b.downVotes)
+    //compare = (a, b) => ascDesc(a.upVotes - a.downVotes, b.upVotes - b.downVotes)
+    compare = (a, b) => ascDesc(a.score, b.score)
+    sortKey = 'score'
   } else if (orderBy === 'HOT') {
     compare = (a, b) => ascDesc(a.hottnes, b.hottnes)
+    sortKey = 'hottnes'
   }
+  */
 
   const coveredComments = assembleTree(rootComment, comments, afterId, compare)
   measureTree(rootComment)
-  sortTree(rootComment, compare)
+  // sortTree(rootComment, compare)
+  deepSortTree(rootComment, ascDesc, sortKey)
 
   if (first || focusId) {
     let filterCommentIds
@@ -278,6 +316,12 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
   }
 
   await decorateTree(rootComment, coveredComments, discussion, user, pgdb, t)
+
+  // if parentId is given, we return the totalCount of the subtree
+  // otherwise it's the totalCount of the hole discussion
+  if (!parentId) {
+    rootComment.comments.totalCount = discussionTotalCount
+  }
 
   return rootComment.comments
 }
