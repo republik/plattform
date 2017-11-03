@@ -8,7 +8,8 @@
     "glamor": "^2.20.37",
     "react": "^16.0.0",
     "prop-types": "^15.5.7",
-    "react-textarea-autosize": "^5.1.0"
+    "react-textarea-autosize": "^5.1.0",
+    "downshift": "^1.16.1"
   },
   "devDependencies": {
     "babel-cli": "^6.24.0",
@@ -18,6 +19,7 @@
     "catalog": "^3.1.2",
     "core-js": "^2.4.1",
     "cz-conventional-changelog": "^2.0.0",
+    "downshift": "^1.16.1",
     "glamor": "^2.20.37",
     "gsheets": "^2.0.0",
     "husky": "^0.14.3",

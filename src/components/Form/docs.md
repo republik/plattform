@@ -130,7 +130,7 @@ state: {
     renderInput={props => <MaskedInput {...props} placeholderChar=" " mask="1111 1111 1111 1111" />} />
 ```
 
-`npm i react-maskedinput --save`  
+`npm i react-maskedinput --save`
 `import MaskedInput from 'react-maskedinput'`
 
 ## Checkbox
@@ -320,4 +320,161 @@ state: {values: {}, errors: {}, dirty: {}}
   onChange={fields => {
     setState(FieldSet.utils.mergeFields(fields))
   }} />
+```
+
+## Dropdown
+
+The dropdown element uses the `downshift` library to manage its behaviour, the UI is custom-made. The `<NativeDropdown />` component looks exactly the same, but uses the native `<select/>` and `<option/>` elements internally. It is API-compatible with `<Dropdown />`.
+
+The options are given as a list of objects, each option must have the following keys:
+
+ - **id**: an ID (string) unique across all options.
+ - **text**: what is shown in the UI.
+
+The `onChange` callback is invoked with the whole option object.
+
+```react|span-3
+<Dropdown
+  label='Bezeichnung'
+  items={dropdownItems}
+  defaultSelectedItem={dropdownItems[1]}
+  onChange={(item) => {
+    alert(`Selected '${item.text}'`)
+  }}
+/>
+```
+```react|span-3
+<NativeDropdown
+  label='Bezeichnung'
+  items={dropdownItems}
+  defaultSelectedItem={dropdownItems[1]}
+  onChange={(item) => {
+    alert(`Selected '${item.text}'`)
+  }}
+/>
+```
+
+```hint
+The `<Dropdown />` element uses negative margin left/right. This is needed so that the left edge of the text aligns with the other form elements. See the example below.
+```
+
+```react|noSource
+<div>
+  <Field label='Label' />
+  <Dropdown
+    label='Bezeichnung'
+    items={dropdownItems}
+  />
+</div>
+```
+
+### Dropdown Internal Components
+
+#### `<Items />`
+
+Renders a list of items, where one may be selected and one may be highlighted. This component is pure, controlled entirely from the outside. The selected / highlighted item is tracked by the `Downshift` component.
+
+```react|span-2,plain,noSource
+<DropdownInternal.Items
+  items={dropdownItems}
+  selectedItem={null}
+  highlightedIndex={null}
+  getItemProps={() => ({})}
+/>
+```
+```react|span-2,plain,noSource
+<DropdownInternal.Items
+  items={dropdownItems}
+  selectedItem={dropdownItems[0]}
+  highlightedIndex={null}
+  getItemProps={() => ({})}
+/>
+```
+```react|span-2,plain,noSource
+<DropdownInternal.Items
+  items={dropdownItems}
+  selectedItem={dropdownItems[0]}
+  highlightedIndex={2}
+  getItemProps={() => ({})}
+/>
+```
+
+#### `<ItemsContainer />`
+
+Wrapper around `<Items />` which implements the expand/collapse animation. The state is controlled by the `isOpen` prop. Note: this element uses negative margin left/right.
+
+```react
+span: 2
+plain: true
+noSource: true
+state: {isOpen: false}
+---
+<div>
+  <Button primary block onClick={() => {setState({isOpen: !state.isOpen})} }>
+    toggle
+  </Button>
+  <div style={{minHeight: dropdownItems.length * 60 + 24, padding: 12}}>
+    <DropdownInternal.ItemsContainer isOpen={state.isOpen}>
+      <DropdownInternal.Items
+        items={dropdownItems}
+        selectedItem={dropdownItems[0]}
+        highlightedIndex={1}
+        getItemProps={() => ({})}
+      />
+    </DropdownInternal.ItemsContainer>
+  </div>
+</div>
+```
+
+#### `<Inner />`
+
+Wrapper around the whole dropdown which add a drop shadow when the dropdown is open. It is `position:absolute` so that the items won't affect the layout of the page around the dropdown. So make sure to place this inside an element with relative position and fixed height.
+
+On the left is an example with a static element inside it. On the right one which uses `<ItemsContainer />`.
+
+```react
+span: 3
+plain: true
+noSource: true
+state: {isOpen: false}
+---
+<div style={{height: 276, padding: '60px 72px'}}>
+  <div style={{position: 'relative'}}>
+    <DropdownInternal.Inner isOpen={state.isOpen}>
+      <div style={{padding: '48px 60px'}}>
+        <Button primary block onClick={() => {setState({isOpen: !state.isOpen})} }>
+          toggle
+        </Button>
+      </div>
+    </DropdownInternal.Inner>
+  </div>
+</div>
+```
+
+```react
+span: 3
+plain: true
+noSource: true
+state: {isOpen: false}
+---
+<div style={{height: 276, padding: '60px 48px'}}>
+  <div style={{position: 'relative'}}>
+    <DropdownInternal.Inner isOpen={state.isOpen}>
+      <div style={{padding: '48px 60px'}}>
+        <Button primary block onClick={() => {setState({isOpen: !state.isOpen})} }>
+          toggle
+        </Button>
+
+        <DropdownInternal.ItemsContainer isOpen={state.isOpen}>
+          <DropdownInternal.Items
+            items={dropdownItems}
+            selectedItem={dropdownItems[0]}
+            highlightedIndex={1}
+            getItemProps={() => ({})}
+          />
+        </DropdownInternal.ItemsContainer>
+      </div>
+    </DropdownInternal.Inner>
+  </div>
+</div>
 ```

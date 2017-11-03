@@ -12,6 +12,8 @@ const style = css({
 
 ```table
 rows:
+  - Name: dropdown
+    Value: 5
   - Name: overlay
     Value: 50
 ```
