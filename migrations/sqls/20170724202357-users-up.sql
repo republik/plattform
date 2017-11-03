@@ -30,7 +30,8 @@ create table "users" (
   "isEmailPublic"  boolean not null default false,
   "isPrivate"      boolean not null default false,
   "createdAt"      timestamptz default now(),
-  "updatedAt"      timestamptz default now()
+  "updatedAt"      timestamptz default now(),
+  "badges"         jsonb,
 );
 
 create index "users_firstName_idx" on "users" using GIN ("firstName" gin_trgm_ops);

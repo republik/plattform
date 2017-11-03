@@ -17,8 +17,7 @@ module.exports = async (_, args, { pgdb, user }) => {
 
     return {
       ...profileUser,
-      email,
-      badges: [] // TODO
+      email
     }
   }
 }
