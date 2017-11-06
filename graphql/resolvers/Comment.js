@@ -94,6 +94,10 @@ module.exports = {
       }
     }
 
+    // TODO: Don't load from testimonial image once we have a profileImage on the user.
+    const testimonial = !anonymous && await pgdb.public.testimonials.findOne({userId: commenter.id})
+    const profilePicture = testimonial && testimonial.image
+
     return anonymous
       ? {
         name: t('api/comment/anonymous/displayName'),
@@ -102,7 +106,7 @@ module.exports = {
       }
       : {
         name: commenter.name,
-        profilePicture: null, // TODO
+        profilePicture: profilePicture,
         credential
       }
   }
