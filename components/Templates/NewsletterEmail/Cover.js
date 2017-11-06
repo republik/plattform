@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { imageResizeUrl } from '../utils'
+import { imageResizeUrl } from 'mdast-react-render/lib/utils'
 
 export const Lead = () => null
 

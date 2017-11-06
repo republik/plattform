@@ -1,7 +1,7 @@
 import { Document as SlateDocument } from 'slate'
 import { timeHour } from 'd3-time'
 
-import MarkdownSerializer from '../../../../lib/serializer'
+import MarkdownSerializer from 'slate-mdast-serializer'
 import { findOrCreate } from '../../utils/serialization'
 
 export default ({rule, subModules, TYPE}) => {

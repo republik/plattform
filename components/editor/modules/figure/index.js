@@ -5,7 +5,7 @@ import { matchBlock } from '../../utils'
 import createUi from './ui'
 import { findOrCreate } from '../../utils/serialization'
 
-import MarkdownSerializer from '../../../../lib/serializer'
+import MarkdownSerializer from 'slate-mdast-serializer'
 
 export default ({rule, subModules, TYPE}) => {
   // Define submodule and serializers

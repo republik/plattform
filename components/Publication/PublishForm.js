@@ -28,7 +28,7 @@ import Frame from 'react-frame-component'
 import { query as treeQuery } from '../../pages/repo/tree'
 import { query as publicationQuery } from './Current'
 
-import { renderMdast } from '../Templates/render'
+import { renderMdast } from 'mdast-react-render'
 
 import { getSchema } from '../../components/Templates'
 

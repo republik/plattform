@@ -1,6 +1,6 @@
 import React from 'react'
 
-import MarkdownSerializer from '../../../../lib/serializer'
+import MarkdownSerializer from 'slate-mdast-serializer'
 import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 import Placeholder from '../../Placeholder'
 
