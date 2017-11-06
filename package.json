@@ -6,6 +6,7 @@
   },
   "private": true,
   "dependencies": {
+    "@project-r/template-newsletter": "^1.0.0",
     "apollo-engine": "^0.5.2",
     "apollo-fetch": "^0.6.0",
     "await-sleep": "0.0.1",
@@ -42,11 +43,12 @@
     "leaked-handles": "^5.2.0",
     "lodash": "^4.17.4",
     "maxmind": "^2.2.0",
+    "mdast-react-render": "^0.1.1",
     "passport": "^0.4.0",
     "pogi": "^2.3.2",
     "query-string": "^5.0.0",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "redis": "^2.8.0",
     "redlock": "^3.1.0",
     "rw": "^1.3.3",
@@ -72,7 +74,6 @@
     "translations": "gsheets --key=1_1g3sW8u1aD9xGRfS479s0Pjwx0LxYRUEhETGkKlwLE --title=live --pretty --out lib/translations.json",
     "test:travis": "istanbul cover tape \"?(__tests__|lib|graphql)/**/*.test.js\" --report lcovonly && cat ./coverage/lcov.info | coveralls",
     "test": "export DATABASE_URL=postgres://localhost:5432/publikator-test && echo $DATABASE_URL && dropdb --if-exists publikator-test && createdb publikator-test && db-migrate reset && db-migrate up && NODE_ENV=testing istanbul cover tape \"?(__tests__|lib|graphql)/**/*.test.js\"",
-    "import:templates": "cp -r ../publikator-frontend/components/Templates lib/ && babel --out-dir=lib/Templates/ lib/Templates/  && rm -r lib/Templates/Newsletter && rm lib/Templates/newsletter.*",
     "pull:redis": "node script/pullRedis.js"
   },
   "lint-staged": {
@@ -82,9 +83,6 @@
     ]
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.0",
-    "babel-preset-react": "^6.24.1",
     "coveralls": "^3.0.0",
     "gsheets": "^2.0.0",
     "husky": "^0.14.3",

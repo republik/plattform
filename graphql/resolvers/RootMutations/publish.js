@@ -22,8 +22,8 @@ const {
 const placeMilestone = require('./placeMilestone')
 const { document: getDocument } = require('../Commit')
 
-const { renderEmail } = require('../../../lib/Templates/email')
-const newsletterEmail = require('../../../lib/Templates/NewsletterEmail').default
+const newsletterEmailSchema = require('@project-r/template-newsletter/lib/email')
+const { renderEmail } = require('mdast-react-render/lib/email')
 
 module.exports = async (
   _,
@@ -204,7 +204,7 @@ module.exports = async (
       campaignId = id
       await redis.setAsync(campaignKey, campaignId)
     }
-    const html = renderEmail(content, newsletterEmail)
+    const html = renderEmail(content, newsletterEmailSchema)
     const updateResponse = await updateCampaignContent({
       campaignId,
       html
