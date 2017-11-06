@@ -11,10 +11,10 @@ module.exports = {
     comment.upVotes - comment.downVotes,
 
   userCanEdit: ({ userId }, args, { user }) =>
-    userId === user.id,
+    user && userId === user.id,
 
   userVote: ({ votes }, args, { user }) => {
-    const userVote = votes.find(v => v.userId === user.id)
+    const userVote = user && votes.find(v => v.userId === user.id)
     if (userVote) {
       return userVote.vote === -1
         ? 'DOWN'
@@ -52,7 +52,6 @@ module.exports = {
     args,
     {
       pgdb,
-      user,
       t,
       discussion: _discussion,
       commenter: _commenter,
