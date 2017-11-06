@@ -1,0 +1,38 @@
+{
+  "name": "styleguide",
+  "scripts": {
+  },
+  "env": {
+    "REACT_APP_SG_BRAND_MARK_PATH": {
+      "required": true
+    },
+    "REACT_APP_SG_BRAND_MARK_VIEWBOX": {
+      "required": true
+    },
+    "REACT_APP_SG_COLORS": {
+      "required": true
+    },
+    "REACT_APP_SG_FONT_FACES": {
+      "required": true
+    },
+    "REACT_APP_SG_FONT_FAMILIES": {
+      "required": true
+    },
+    "REACT_APP_SG_LOGO_PATH": {
+      "required": true
+    },
+    "REACT_APP_SG_LOGO_VIEWBOX": {
+      "required": true
+    }
+  },
+  "formation": {
+  },
+  "addons": [
+
+  ],
+  "buildpacks": [
+    {
+      "url": "https://github.com/mars/create-react-app-buildpack"
+    }
+  ]
+}
