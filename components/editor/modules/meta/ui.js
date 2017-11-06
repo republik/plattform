@@ -23,13 +23,13 @@ const styles = {
 
 const getWidth = key => key.match(/title/i) ? '100%' : ''
 
-const MetaData = ({value, onChange, t}) => {
+const MetaData = ({value, editor, additionalFields = [], teaser: Teaser, t}) => {
   const node = value.document
 
   const genericKeys = Set([
     'publishDate',
     'slug',
-    'emailSubject',
+    ...additionalFields,
     'title',
     'image',
     'description'
@@ -61,15 +61,14 @@ const MetaData = ({value, onChange, t}) => {
 
   const onInputChange = key => (_, inputValue) => {
     const newData = node.data.remove('auto')
-    onChange(
-      value
-        .change()
+    editor.change(change => {
+      change
         .setNodeByKey(node.key, {
           data: inputValue
             ? newData.set(key, inputValue)
             : newData.remove(key)
         })
-    )
+    })
   }
 
   return (
@@ -80,6 +79,10 @@ const MetaData = ({value, onChange, t}) => {
         </Interaction.H2>
         <br />
         <MetaForm data={genericData} onInputChange={onInputChange} black getWidth={getWidth} />
+        {!!Teaser && (<div>
+          <Label>{t('metaData/preview')}</Label><br />
+          <Teaser {...node.data.toJS()} />
+        </div>)}
         <br /><br /><br />
         <MetaForm data={fbData} onInputChange={onInputChange} black getWidth={getWidth} />
         <Label>{t('metaData/preview')}</Label><br />

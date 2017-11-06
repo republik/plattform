@@ -6,7 +6,6 @@ import { css } from 'glamor'
 import Loader from '../Loader'
 
 import Sidebar from './Sidebar'
-import MetaData from './modules/meta/ui'
 
 import createDocumentModule from './modules/document'
 import createDocumentPlainModule from './modules/document/plain'
@@ -22,6 +21,7 @@ import createListItemModule from './modules/list/item'
 import createFigureModule from './modules/figure'
 import createFigureImageModule from './modules/figure/image'
 import createSpecialModule from './modules/special'
+import createMetaModule from './modules/meta'
 
 const moduleCreators = {
   document: createDocumentModule,
@@ -37,7 +37,8 @@ const moduleCreators = {
   listItem: createListItemModule,
   figure: createFigureModule,
   figureImage: createFigureImageModule,
-  special: createSpecialModule
+  special: createSpecialModule,
+  meta: createMetaModule
 }
 const initModule = rule => {
   const { editorModule, editorOptions = {} } = rule
@@ -167,9 +168,6 @@ class Editor extends Component {
               value={value}
               onChange={this.onChange}
               plugins={this.plugins} />
-            <MetaData
-              value={value}
-              onChange={this.onChange} />
           </Document>
         </Container>
       )} />

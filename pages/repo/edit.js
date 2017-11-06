@@ -24,13 +24,7 @@ import withT from '../../lib/withT'
 import { errorToString } from '../../lib/utils/errors'
 import initLocalStore from '../../lib/utils/localStorage'
 
-import newsletterSchema from '../../components/Templates/Newsletter'
-import neutrumSchema from '../../components/Templates/Neutrum'
-
-const schemas = {
-  newsletter: newsletterSchema,
-  neutrum: neutrumSchema
-}
+import { getSchema } from '../../components/Templates'
 
 const fragments = {
   commit: gql`
@@ -243,16 +237,13 @@ class EditorPage extends Component {
     const { schema } = this.state
     if (!schema) {
       const commit = repo && repo.commit
-      let template =
+
+      const template = (
         (commit && commit.document.meta.template) ||
         url.query.template
-
-      if (!schemas[template]) {
-        template = Object.keys(schemas)[0]
-      }
-
+      )
       this.setState({
-        schema: schemas[template]
+        schema: getSchema(template)
       }, () => {
         this.loadState(this.props)
       })

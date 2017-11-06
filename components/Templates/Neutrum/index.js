@@ -83,6 +83,10 @@ const schema = {
       editorModule: 'documentPlain',
       rules: [
         {
+          matchMdast: () => false,
+          editorModule: 'meta'
+        },
+        {
           matchMdast: matchZone(
             'CENTER'
           ),
@@ -93,9 +97,10 @@ const schema = {
             paragraph,
             {
               matchMdast: matchHeading(
-                2
+                1
               ),
-              component: H1,
+              component: ({ children, attributes = {} }) =>
+                <H1 {...attributes}>{children}</H1>,
               editorModule: 'headline',
               editorOptions: {
                 type: 'h1',
@@ -106,9 +111,10 @@ const schema = {
             },
             {
               matchMdast: matchHeading(
-                3
+                2
               ),
-              component: H2,
+              component: ({ children, attributes = {} }) =>
+                <H2 {...attributes}>{children}</H2>,
               editorModule: 'headline',
               editorOptions: {
                 type: 'h2',

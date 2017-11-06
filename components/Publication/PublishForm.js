@@ -28,8 +28,9 @@ import Frame from 'react-frame-component'
 import { query as treeQuery } from '../../pages/repo/tree'
 import { query as publicationQuery } from './Current'
 
-import { renderMdast } from '../Templates'
-import newsletterTemplate from '../Templates/Newsletter'
+import { renderMdast } from '../Templates/render'
+
+import { getSchema } from '../../components/Templates'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
@@ -51,6 +52,7 @@ const query = gql`
             slug
             emailSubject
             publishDate
+            template
           }
         }
       }
@@ -172,6 +174,8 @@ class PublishForm extends Component {
         <Loader loading={loading} error={error} render={() => {
           const { commit, commit: { document: { meta } } } = repo
 
+          const schema = getSchema(meta.template)
+
           const errors = [
             !meta.slug && t('publish/validation/slug/empty'),
             !meta.publishDate && t('publish/validation/publishDate/empty'),
@@ -244,15 +248,17 @@ class PublishForm extends Component {
               </Checkbox>
               <br />
               <br />
-              <Checkbox checked={updateMailchimp} onChange={(_, value) => {
-                this.setState({
-                  updateMailchimp: value
-                })
-              }}>
-                {t('publish/label/updateMailchimp')}
-              </Checkbox>
-              <br />
-              <br />
+              {schema.emailTemplate && (<div>
+                <Checkbox checked={updateMailchimp} onChange={(_, value) => {
+                  this.setState({
+                    updateMailchimp: value
+                  })
+                }}>
+                  {t('publish/label/updateMailchimp')}
+                </Checkbox>
+                <br />
+                <br />
+              </div>)}
               <Checkbox checked={scheduled} onChange={(_, value) => {
                 this.setState({
                   scheduled: value
@@ -373,7 +379,7 @@ class PublishForm extends Component {
                     height: size.height
                   }}
                 >
-                  {renderMdast(commit.document.content, newsletterTemplate)}
+                  {renderMdast(commit.document.content, schema)}
                 </Frame>
               </div>
             </div>

@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 
-import { renderMdast } from './'
+import { renderMdast } from './render'
 
 // monkey patch react 15
 // can be removed with react 16

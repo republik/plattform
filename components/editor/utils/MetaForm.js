@@ -1,13 +1,22 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { css } from 'glamor'
 
 import { Field, Checkbox } from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 import MaskedInput from 'react-maskedinput'
 
+import { timeParse, timeFormat } from 'd3-time-format'
+
 import withT from '../../../lib/withT'
 
 import ImageInput from './ImageInput'
+
+const dateFormat = '%d.%m.%Y %H:%M'
+const dateMask = dateFormat
+  .replace('%Y', '1111')
+  .replace(/%(d|m|H|M)/g, '11')
+const parseDate = timeParse(dateFormat)
+const formatDate = timeFormat(dateFormat)
 
 const defaultGetWidth = () => '100%'
 
@@ -47,63 +56,117 @@ const styles = {
   })
 }
 
-const Form = ({
-  t,
-  onInputChange,
-  data,
-  getWidth = defaultGetWidth,
-  black
-}) => (
-  <div {...styles.grid}>
-    {data.map((value, key) => {
-      const label = t(`metaData/field/${key}`, undefined, key)
+class Form extends Component {
+  constructor (props) {
+    super(props)
 
-      let input
-      if (key.match(/image|src/i)) {
-        input = <ImageInput
-          maxWidth='100%'
-          label={label}
-          src={value}
-          onChange={onInputChange(key)} />
-      } else if (typeof value === 'boolean') {
-        input = <Checkbox checked={value} onChange={onInputChange(key)} black={black}>
-          {label}
-        </Checkbox>
-      } else {
-        let renderInput
-        if (key.match(/description/i)) {
-          renderInput = ({ref, ...inputProps}) => (
-            <AutosizeInput {...styles.autoSize}
-              {...inputProps}
-              inputRef={ref} />
-          )
-        } else if (key.match(/date/i)) {
-          renderInput = ({ref, ...inputProps}) => (
-            <MaskedInput
-              {...inputProps}
-              {...styles.mask}
-              placeholderChar={'_'}
-              mask={'11.11.1111 11:11'} />
-          )
+    this.state = {}
+  }
+  componentWillReceiveProps (nextProps) {
+    const {data} = this.props
+    const {data: nextData} = nextProps
+    if (!nextData.equals(data)) {
+      const { state } = this
+      const nextState = {}
+      nextData.map((value, key) => {
+        const stateValue = state[key]
+        if (stateValue && stateValue.value !== value) {
+          nextState[key] = undefined
         }
-        input = <Field
-          label={label}
-          name={key}
-          value={value}
-          renderInput={renderInput}
-          black={black}
-          onChange={onInputChange(key)} />
-      }
-      return (
-        <div
-          key={key}
-          {...styles.span}
-          style={{width: getWidth(key)}}>
-          {input}
-        </div>
-      )
-    }).toArray()}
-  </div>
-)
+      })
+      this.setState(nextState)
+    }
+  }
+  render () {
+    const {
+      t,
+      onInputChange,
+      data,
+      getWidth = defaultGetWidth,
+      black
+    } = this.props
+
+    return (
+      <div {...styles.grid}>
+        {data.map((value, key) => {
+          const label = t(`metaData/field/${key}`, undefined, key)
+
+          let input
+          let formattedValue = value
+          let onChange
+          if (key.match(/image|src/i)) {
+            input = <ImageInput
+              maxWidth='100%'
+              label={label}
+              src={value}
+              onChange={onInputChange(key)} />
+          } else if (typeof value === 'boolean') {
+            input = <Checkbox checked={value} onChange={onInputChange(key)} black={black}>
+              {label}
+            </Checkbox>
+          } else {
+            let renderInput
+            if (key.match(/description/i)) {
+              renderInput = ({ref, ...inputProps}) => (
+                <AutosizeInput {...styles.autoSize}
+                  {...inputProps}
+                  inputRef={ref} />
+              )
+            } else if (key.match(/date/i)) {
+              renderInput = ({ref, ...inputProps}) => (
+                <MaskedInput
+                  {...inputProps}
+                  {...styles.mask}
+                  placeholderChar={'_'}
+                  mask={dateMask} />
+              )
+              const dateValue = value instanceof Date
+                ? value
+                : (
+                  parseDate(value) ||
+                  (value && new Date(value)) ||
+                  new Date()
+                )
+              formattedValue = this.state[key] !== undefined
+                ? this.state[key].formatted
+                : formatDate(dateValue)
+
+              onChange = (_, inputValue) => {
+                const parsedValue = parseDate(inputValue) || ''
+                this.setState({
+                  [key]: {
+                    formatted: inputValue,
+                    value: parsedValue !== value
+                      ? parsedValue
+                      : value
+                  }
+                }, () => {
+                  if (parsedValue !== value) {
+                    onInputChange(key)(_, parsedValue)
+                  }
+                })
+              }
+            }
+            input = <Field
+              label={label}
+              name={key}
+              value={formattedValue}
+              renderInput={renderInput}
+              black={black}
+              onChange={onChange || onInputChange(key)} />
+          }
+          return (
+            <div
+              key={key}
+              {...styles.span}
+              style={{width: getWidth(key)}}>
+              {input}
+            </div>
+          )
+        }).toArray()}
+      </div>
+    )
+  }
+}
 
 export default withT(Form)

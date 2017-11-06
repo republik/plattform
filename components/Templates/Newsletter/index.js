@@ -18,6 +18,7 @@ import Figure, {
 import Blockquote from './Blockquote'
 import List, { ListItem } from './List'
 import RBlueprint from './RBlueprint'
+import Teaser from './Teaser'
 
 import {
   matchType,
@@ -69,12 +70,21 @@ const paragraph = {
 }
 
 const schema = {
+  emailTemplate: 'newsletter-email',
   rules: [
     {
       matchMdast: matchType('root'),
       component: Container,
       editorModule: 'document',
       rules: [
+        {
+          matchMdast: () => false,
+          editorModule: 'meta',
+          editorOptions: {
+            additionalFields: ['emailSubject'],
+            teaser: Teaser
+          }
+        },
         {
           matchMdast: matchZone(
             'COVER'
