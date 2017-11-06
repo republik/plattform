@@ -4,7 +4,7 @@ import { colors } from '@project-r/styleguide'
 
 import { matchBlock } from '../../utils'
 import { gray2x1 } from '../../utils/placeholder'
-import MarkdownSerializer from '../../../../lib/serializer'
+import MarkdownSerializer from 'slate-mdast-serializer'
 
 const styles = {
   border: css({

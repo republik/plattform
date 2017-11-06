@@ -5,7 +5,7 @@ import { matchMark, createMarkButton, buttonStyles } from '../../utils'
 import BoldIcon from 'react-icons/lib/fa/bold'
 import ItalicIcon from 'react-icons/lib/fa/italic'
 import StrikethroughIcon from 'react-icons/lib/fa/strikethrough'
-import MarkdownSerializer from '../../../../lib/serializer'
+import MarkdownSerializer from 'slate-mdast-serializer'
 
 const icons = {
   strong: BoldIcon,
