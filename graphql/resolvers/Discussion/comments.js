@@ -14,32 +14,24 @@ const {
   displayAuthor: getDisplayAuthor
 } = require('../Comment')
 
-// afterId and compare are optional
-const assembleTree = (_comment, _comments, afterId, compare) => {
+const assembleTree = (_comment, _comments) => {
   let coveredComments = []
+
   const _assembleTree = (comment, comments, depth = -1) => {
     const parentId = comment.id || null
     comment._depth = depth
     comment.comments = {
       nodes: _.remove(comments, c => c.parentId === parentId)
     }
-    if (depth === -1 && afterId) {
-      comment.comments.nodes = comment.comments.nodes
-        .sort(compare)
-      const afterIndex = comment.comments.nodes
-        .findIndex(c => c.id === afterId)
-      comment.comments.nodes = comment.comments.nodes
-        .slice(afterIndex + 1)
-    }
     comment.comments.nodes = comment.comments.nodes
       .map(c => {
-        c.score = c.upVotes - c.downVotes // precompute
         coveredComments.push(c)
         return c
       })
       .map(c => _assembleTree(c, comments, depth + 1))
     return comment
   }
+
   _assembleTree(_comment, _comments)
   return coveredComments
 }
@@ -63,20 +55,10 @@ const measureTree = comment => {
   return numChildren + 1
 }
 
-/*
-const sortTree = (comment, compare) => {
-  const { comments } = comment
-  comment.comments = {
-    ...comments,
-    nodes: comments.nodes.sort((a, b) => compare(a, b))
-  }
-  if (comments.nodes.length > 0) {
-    comments.nodes.forEach(c => sortTree(c, compare))
-  }
-  return comment
-}
-*/
-
+// recursively sort tree
+// each node with children gets a topValue based on
+// node[sortKey] || topChild[topValue] || topChild[sortKey]
+// thus topValue bubbles up the tree, ensuring consistent sorting.
 const deepSortTree = (comment, ascDesc, sortKey) => {
   const { comments } = comment
   if (comments.nodes.length > 0) {
@@ -89,9 +71,10 @@ const deepSortTree = (comment, ascDesc, sortKey) => {
       )
     }
     if (comment[sortKey]) { // root is a fake comment
+      const firstChild = comment.comments.nodes[0]
       comment.topValue = [
         comment[sortKey],
-        comment.comments.nodes[0][sortKey]
+        firstChild.topValue || firstChild[sortKey]
       ].sort((a, b) => ascDesc(a, b))[0]
     }
   }
@@ -105,19 +88,23 @@ const filterTree = (comment, ids, cursorEnv) => {
   const { comments, id } = comment
   if (comments.nodes.length > 0) {
     const nodes = comments.nodes.filter(n => filterTree(n, ids, cursorEnv) > 0)
+    const exceptIds = [
+      ...cursorEnv.exceptIds,
+      ...nodes.map(n => n.id)
+    ]
     const endCursor = comments.nodes.length === nodes.length || nodes.length === 0
       ? null
       : Buffer.from(JSON.stringify({
         ...cursorEnv,
         parentId: id,
-        afterId: nodes[nodes.length - 1].id
+        exceptIds
       })).toString('base64')
     comment.comments = {
       ...comments,
       nodes,
       pageInfo: {
         ...comments.pageInfo,
-        hasNextPage: !!endCursor,
+        hasNextPage: !!endCursor || (nodes.length === 0 && comments.nodes.length !== 0),
         endCursor
       }
     }
@@ -144,7 +131,7 @@ const cutTreeX = (comment, maxDepth, depth = -1) => {
   return comment
 }
 
-const decorateTree = async (comment, coveredComments, discussion, user, pgdb, t) => {
+const decorateTree = async (_comment, coveredComments, discussion, user, pgdb, t) => {
   // preload data
   const userIds = _.uniq(
     coveredComments.map(c => c.userId)
@@ -197,7 +184,7 @@ const decorateTree = async (comment, coveredComments, discussion, user, pgdb, t)
     return comment
   }
 
-  return _decorateTree(comment)
+  return _decorateTree(_comment)
 }
 
 const meassureDepth = (fields, depth = 0) => {
@@ -209,6 +196,18 @@ const meassureDepth = (fields, depth = 0) => {
     }
     return depth
   }
+}
+
+const getCommentsArray = (_comment) => {
+  let comments = []
+  const _getCommentsArray = comment => {
+    if (comment.comments.nodes.length > 0) {
+      comments.push(...comment.comments.nodes)
+      comment.comments.nodes.forEach(c => _getCommentsArray(c))
+    }
+  }
+  _getCommentsArray(_comment)
+  return comments
 }
 
 module.exports = async (discussion, args, { pgdb, user, t }, info) => {
@@ -225,7 +224,7 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
     orderBy = 'HOT',
     orderDirection = 'DESC',
     first = 200,
-    afterId,
+    exceptIds = [],
     focusId,
     parentId
   } = options
@@ -234,6 +233,12 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
   const comments = await pgdb.public.comments.find({
     discussionId: discussion.id
   })
+    .then(comments => comments
+      .map(c => ({
+        ...c,
+        score: c.upVotes - c.downVotes // precompute
+      }))
+    )
   const discussionTotalCount = comments.length
 
   if (!comments.length) {
@@ -243,7 +248,7 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
     }
   }
 
-  const rootComment = parentId
+  const tree = parentId
     ? { id: parentId }
     : {}
 
@@ -257,27 +262,22 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
     'HOT': 'hottnes'
   }
   const sortKey = sortKeyMap[orderBy]
-  const compare = (a, b) => ascDesc(a[sortKey], b[sortKey])
-  /*
-  let sortKey
-  let compare
-  if (orderBy === 'DATE') {
-    compare = (a, b) => ascDesc(a.createdAt, b.createdAt)
-    sortKey = 'createdAt'
-  } else if (orderBy === 'VOTES') {
-    //compare = (a, b) => ascDesc(a.upVotes - a.downVotes, b.upVotes - b.downVotes)
-    compare = (a, b) => ascDesc(a.score, b.score)
-    sortKey = 'score'
-  } else if (orderBy === 'HOT') {
-    compare = (a, b) => ascDesc(a.hottnes, b.hottnes)
-    sortKey = 'hottnes'
-  }
-  */
+  const compare =
+    (a, b) => ascDesc(a[sortKey], b[sortKey]) || ascending(a.index, b.index) // index for stable sort
 
-  const coveredComments = assembleTree(rootComment, comments, afterId, compare)
-  measureTree(rootComment)
-  // sortTree(rootComment, compare)
-  deepSortTree(rootComment, ascDesc, sortKey)
+  assembleTree(tree, comments)
+  measureTree(tree)
+  deepSortTree(tree, ascDesc, sortKey)
+
+  if (exceptIds) { // exceptIds are always on first level
+    tree.comments.nodes = tree.comments.nodes.filter(c => exceptIds.indexOf(c.id) === -1)
+  }
+
+  let coveredComments = getCommentsArray(tree)
+    .map((c, index) => ({ // remember index for stable sort
+      ...c,
+      index
+    }))
 
   if (first || focusId) {
     let filterCommentIds
@@ -304,29 +304,31 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
         .map(c => c.id)
     } else if (first) {
       filterCommentIds = coveredComments
-        .filter(c => !maxDepth || c._depth < maxDepth)
         .sort(compare)
         .slice(0, first)
         .map(c => c.id)
     }
 
-    filterTree(rootComment, filterCommentIds, {
-      orderBy,
-      orderDirection
-    })
+    if (filterCommentIds) {
+      filterTree(tree, filterCommentIds, {
+        orderBy,
+        orderDirection,
+        exceptIds
+      })
+    }
   }
 
   if (maxDepth != null) {
-    cutTreeX(rootComment, maxDepth)
+    cutTreeX(tree, maxDepth)
   }
 
-  await decorateTree(rootComment, coveredComments, discussion, user, pgdb, t)
+  await decorateTree(tree, coveredComments, discussion, user, pgdb, t)
 
   // if parentId is given, we return the totalCount of the subtree
   // otherwise it's the totalCount of the hole discussion
   if (!parentId) {
-    rootComment.comments.totalCount = discussionTotalCount
+    tree.comments.totalCount = discussionTotalCount
   }
 
-  return rootComment.comments
+  return tree.comments
 }
