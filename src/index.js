@@ -167,6 +167,15 @@ ReactDOM.render(
             imports: {t, ...require('./components/Overlay/docs.imports')},
             src: require('./components/Overlay/docs.md')
           },
+          {
+            path: '/components/raw-html',
+            title: 'RawHtml',
+            imports: {
+              ...require('./components/Typography'),
+              RawHtml: require('./components/RawHtml')
+            },
+            src: require('./components/RawHtml/docs.md')
+          },
         ]
       },
       {

@@ -16,6 +16,7 @@ export {default as FieldSet} from './components/Form/FieldSet'
 export {default as Radio} from './components/Form/Radio'
 export {default as Checkbox} from './components/Form/Checkbox'
 export {default as Loader} from './components/Loader'
+export {default as RawHtml} from './components/RawHtml'
 export {
   Spinner,
   InlineSpinner
