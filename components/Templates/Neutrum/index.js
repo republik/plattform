@@ -3,7 +3,7 @@ import {
   matchZone,
   matchHeading,
   matchParagraph
-} from '../utils'
+} from 'mdast-react-render/lib/utils'
 
 import {
   H1, H2,
