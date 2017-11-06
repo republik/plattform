@@ -15,6 +15,7 @@ const maxSize = 6000
 module.exports = (server) => {
   server.get('/assets/:login/:repoName/:path(*)', async (req, res) => {
     const { githubRest } = await createGithubClients()
+
     const { resize } = req.query
     let width, height
     if (resize) {
@@ -49,6 +50,15 @@ module.exports = (server) => {
       sha: blobSha
     })
       .then(result => result.data)
+      .catch(error => {
+        if (error.code === 404) {
+          res.status(404).end()
+        } else {
+          console.error(error)
+          res.status(500).end()
+        }
+      })
+    if (!result) return
 
     const buffer = Buffer.from(result.content, 'base64')
     const type = fileType(buffer)
