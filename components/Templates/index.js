@@ -1,4 +1,4 @@
-import newsletterSchema from './Newsletter'
+import newsletterSchema from '@project-r/template-newsletter'
 import neutrumSchema from './Neutrum'
 
 const schemas = {

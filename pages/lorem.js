@@ -4,7 +4,7 @@ import Frame from '../components/Frame'
 import Editor from '../components/editor'
 import withData from '../lib/apollo/withData'
 
-import newsletterSchema from '../components/Templates/Newsletter'
+import newsletterSchema from '@project-r/template-newsletter'
 
 const getInitialState = (editor) => {
   resetKeyGenerator()
