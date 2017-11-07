@@ -7,7 +7,7 @@ module.exports = {
     return filtered(
       pubsub.asyncIterator('repoUpdate'),
       ({ repoUpdate: { id } }, variables) => (
-        id === args.repoId
+        !args.repoId || id === args.repoId
       )
     )()
   }

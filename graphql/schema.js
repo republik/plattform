@@ -76,7 +76,7 @@ type RootSubscription {
   # triggered on repo update
   # (commit, place-/removeMilestone, un-publish)
   repoUpdate(
-    repoId: ID!
+    repoId: ID
   ): Repo!
 }
 
