@@ -150,7 +150,8 @@ export default compose(
     options: ({ url }) => ({
       variables: {
         repoId: url.query.repoId
-      }
+      },
+      fetchPolicy: 'cache-and-network'
     })
   })
 )(EditorPage)
