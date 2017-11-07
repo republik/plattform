@@ -5,10 +5,9 @@ import {compose} from 'redux'
 import withT from '../../lib/withT'
 import {errorToString} from '../../lib/utils/errors'
 import {meQuery} from '../../lib/withMe'
-import {InlineSpinner} from '../Spinner'
 
 import {
-  A
+  A, InlineSpinner
 } from '@project-r/styleguide'
 
 class SignOut extends Component {
