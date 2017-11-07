@@ -96,6 +96,17 @@ const schema = {
           rules: [
             paragraph,
             {
+              matchMdast: matchZone(
+                'CENTER'
+              ),
+              component: ({ data }) => (
+                <pre>{JSON.stringify(data, null, 3)}</pre>
+              ),
+              editorOptions: {
+                lookupType: 'paragraph'
+              }
+            },
+            {
               matchMdast: matchHeading(
                 1
               ),

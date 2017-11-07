@@ -20,6 +20,7 @@ import createListModule from './modules/list'
 import createListItemModule from './modules/list/item'
 import createFigureModule from './modules/figure'
 import createFigureImageModule from './modules/figure/image'
+import createEmbedModule from './modules/embed'
 import createSpecialModule from './modules/special'
 import createMetaModule from './modules/meta'
 
@@ -37,6 +38,7 @@ const moduleCreators = {
   listItem: createListItemModule,
   figure: createFigureModule,
   figureImage: createFigureImageModule,
+  embed: createEmbedModule,
   special: createSpecialModule,
   meta: createMetaModule
 }
