@@ -203,6 +203,7 @@ class Tree extends Component {
         }
         if (milestoneBarRef) {
           milestoneBarRef.style.width = `${Math.max(width, LIST_MIN_WIDTH)}px`
+          listItemRef.style.backgroundColor = ''
         }
       }
     )
