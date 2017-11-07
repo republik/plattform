@@ -18,8 +18,8 @@ const styles = {
     top: 0,
     left: 0,
     right: 0,
-    margin: '0 -12px 0 -12px',
-    padding: '0 12px 0 12px',
+    margin: '0 -12px',
+    padding: '0 12px',
     background: 'white',
     transition: 'box-shadow .12s'
   }),
