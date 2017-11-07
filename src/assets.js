@@ -49,7 +49,6 @@ module.exports = (server) => {
       repo: repoName,
       sha: blobSha
     })
-      .then(result => result.data)
       .catch(error => {
         if (error.code === 404) {
           res.status(404).end()
@@ -60,7 +59,9 @@ module.exports = (server) => {
       })
     if (!result) return
 
-    const buffer = Buffer.from(result.content, 'base64')
+    const { data: { content } } = result
+
+    const buffer = Buffer.from(content, 'base64')
     const type = fileType(buffer)
     const isJPEG = type && type.ext === 'jpg'
 
