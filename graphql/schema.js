@@ -73,6 +73,11 @@ type RootSubscription {
   uncommittedChanges(
     repoId: ID!
   ): UncommittedChangeUpdate!
+  # triggered on repo update
+  # (commit, place-/removeMilestone, un-publish)
+  repoUpdate(
+    repoId: ID!
+  ): Repo!
 }
 
 type Repo {

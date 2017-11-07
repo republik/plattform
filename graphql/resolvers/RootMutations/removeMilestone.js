@@ -4,7 +4,7 @@ const { createGithubClients } = require('../../../lib/github')
 module.exports = async (
   _,
   { repoId, name },
-  { user }
+  { user, pubsub }
 ) => {
   ensureUserHasRole(user, 'editor')
   const { githubRest } = await createGithubClients()
@@ -14,6 +14,12 @@ module.exports = async (
     owner: login,
     repo: repoName,
     ref: `tags/${name}`
+  })
+
+  await pubsub.publish('repoUpdate', {
+    repoUpdate: {
+      id: repoId
+    }
   })
 
   return result

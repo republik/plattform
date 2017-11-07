@@ -12,7 +12,7 @@ const {
 module.exports = async (
   _,
   { repoId },
-  { user, t, redis }
+  { user, t, redis, pubsub }
 ) => {
   ensureUserHasRole(user, 'editor')
 
@@ -41,6 +41,12 @@ module.exports = async (
     .catch((err) => {
       console.error(err)
     })
+
+  await pubsub.publish('repoUpdate', {
+    repoUpdate: {
+      id: repoId
+    }
+  })
 
   return true
 }

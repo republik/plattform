@@ -39,7 +39,7 @@ const extractImage = async (url, images) => {
   return url
 }
 
-module.exports = async (_, args, { pgdb, req, user, t }) => {
+module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
   ensureUserHasRole(user, 'editor')
   const { githubRest } = await createGithubClients()
 
@@ -203,6 +203,12 @@ module.exports = async (_, args, { pgdb, req, user, t }) => {
       sha: commit.sha
     })
   }
+
+  await pubsub.publish('repoUpdate', {
+    repoUpdate: {
+      id: repoId
+    }
+  })
 
   return commitNormalizer({
     // normalize createCommit format to getCommit (duh gh!)

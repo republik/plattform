@@ -34,7 +34,7 @@ module.exports = async (
     scheduledAt: _scheduledAt,
     updateMailchimp = false
   },
-  { user, t, redis }
+  { user, t, redis, pubsub }
 ) => {
   ensureUserHasRole(user, 'editor')
   const { githubRest } = await createGithubClients()
@@ -85,7 +85,8 @@ module.exports = async (
       message
     },
     {
-      user
+      user,
+      pubsub
     }
   )
 
@@ -213,6 +214,12 @@ module.exports = async (
       throw new Error('Mailchimp: could not update campaign', updateResponse)
     }
   }
+
+  await pubsub.publish('repoUpdate', {
+    repoUpdate: {
+      id: repoId
+    }
+  })
 
   return {
     ...milestone,
