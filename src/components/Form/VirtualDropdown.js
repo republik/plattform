@@ -84,11 +84,12 @@ export class VirtualDropdown extends PureComponent {
   }
 
   render () {
-    const {label, items, onChange, defaultSelectedItem} = this.props
+    const {label, items, onChange, value} = this.props
     const {focus} = this.state
+    const selectedItem = items.find(item => item.value === value)
 
     return (
-      <Downshift onChange={onChange} itemToString={itemToString} defaultSelectedItem={defaultSelectedItem}>
+      <Downshift onChange={onChange} itemToString={itemToString} selectedItem={selectedItem}>
         {renderDropdown({
           label,
           items,

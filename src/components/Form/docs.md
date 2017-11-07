@@ -328,28 +328,36 @@ The dropdown element uses the `downshift` library to manage its behaviour, the U
 
 The options are given as a list of objects, each option must have the following keys:
 
- - **id**: an ID (string) unique across all options.
+ - **value**: an ID (string) unique across all options.
  - **text**: what is shown in the UI.
 
 The `onChange` callback is invoked with the whole option object.
 
-```react|span-3
+```react
+span: 3
+state: { value: '2' }
+---
 <VirtualDropdown
   label='Bezeichnung'
   items={dropdownItems}
-  defaultSelectedItem={dropdownItems[1]}
+  value={state.value}
   onChange={(item) => {
-    alert(`Selected '${item.text}'`)
+    setState({value: item.value})
+    console.log(`Selected '${item.text}'`)
   }}
 />
 ```
-```react|span-3
+```react
+span: 3
+state: { value: '2' }
+---
 <NativeDropdown
   label='Bezeichnung'
   items={dropdownItems}
-  defaultSelectedItem={dropdownItems[1]}
+  value={state.value}
   onChange={(item) => {
-    alert(`Selected '${item.text}'`)
+    setState({value: item.value})
+    console.log(`Selected '${item.text}'`)
   }}
 />
 ```

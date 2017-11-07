@@ -15,27 +15,17 @@ export class NativeDropdown extends PureComponent {
     this.onBlur = () => {
       this.setState({focus: false})
     }
-
-    this.onChange = (ev) => {
-      const {items, onChange} = this.props
-      const value = ev.target.value
-      const item = items.find(item => item.id === value)
-      if (onChange && item) {
-        onChange(item)
-      }
-    }
   }
 
   render () {
-    const {label, items, defaultSelectedItem} = this.props
+    const {label, items, value, onChange} = this.props
     const {focus} = this.state
-    const value = defaultSelectedItem ? defaultSelectedItem.id : null
 
     return (
       <Label top={true} focus={focus} text={label}>
-        <LSelect value={value} onChange={this.onChange} onFocus={this.onFocus} onBlur={this.onBlur}>
+        <LSelect value={value} onChange={onChange} onFocus={this.onFocus} onBlur={this.onBlur}>
           {items.map((item, index) => (
-            <option key={index} value={item.id}>
+            <option key={index} value={item.value}>
               {item.text}
             </option>
           ))}

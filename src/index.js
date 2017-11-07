@@ -127,9 +127,9 @@ ReactDOM.render(
               VirtualDropdown: require('./components/Form/VirtualDropdown.js'),
               NativeDropdown: require('./components/Form/NativeDropdown.js'),
               dropdownItems: [
-                { id: '1', text: 'Redaktorin' },
-                { id: '2', text: 'Fussballerin' },
-                { id: '3', text: 'Pizzaliebhaberin' }
+                { value: '1', text: 'Redaktorin' },
+                { value: '2', text: 'Fussballerin' },
+                { value: '3', text: 'Pizzaliebhaberin' }
               ],
               VirtualDropdownInternal: {
                 Items: require('./components/Form/VirtualDropdown.js').Items,
