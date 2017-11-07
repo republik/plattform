@@ -1,35 +1,13 @@
-import React, {PureComponent} from 'react'
+import React from 'react'
 import NativeDropdown from './NativeDropdown'
 import VirtualDropdown from './VirtualDropdown'
 
-const useVirtual = (() => {
-  let ret = undefined
-  return () => {
-    if (typeof navigator !== 'undefined' && ret === undefined) {
-      ret = !(/iPad|iPhone|iPod|android/i.test(navigator.userAgent))
-    }
-    return ret
-  }
-})()
+const useNative = typeof navigator === 'undefined'
+  || /iPad|iPhone|iPod|android/i.test(navigator.userAgent)
 
-class Dropdown extends PureComponent {
-  constructor (props) {
-    super(props)
-    this.state = {useVirtual: false}
-  }
-  componentDidMount () {
-    if (useVirtual()) {
-      this.setState({useVirtual: true})
-    }
-  }
-  render () {
-    if (this.state.useVirtual) {
-      return <VirtualDropdown {...this.props} />
-    } else {
-      return <NativeDropdown {...this.props} />
-    }
-  }
-}
+const Dropdown = props => useNative
+  ? <NativeDropdown {...props} />
+  : <VirtualDropdown {...props} />
 
 Dropdown.Native = NativeDropdown
 Dropdown.Virtual = VirtualDropdown
