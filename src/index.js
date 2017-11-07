@@ -124,17 +124,17 @@ ReactDOM.render(
               AutosuggestField: require('./components/Form/AutosuggestField.js'),
               MaskedInput: require('react-maskedinput'),
               AutosizeInput: require('react-textarea-autosize'),
-              Dropdown: require('./components/Form/Dropdown.js'),
+              VirtualDropdown: require('./components/Form/VirtualDropdown.js'),
               NativeDropdown: require('./components/Form/NativeDropdown.js'),
               dropdownItems: [
                 { id: '1', text: 'Redaktorin' },
                 { id: '2', text: 'Fussballerin' },
                 { id: '3', text: 'Pizzaliebhaberin' }
               ],
-              DropdownInternal: {
-                Items: require('./components/Form/Dropdown.js').Items,
-                ItemsContainer: require('./components/Form/Dropdown.js').ItemsContainer,
-                Inner: require('./components/Form/Dropdown.js').Inner,
+              VirtualDropdownInternal: {
+                Items: require('./components/Form/VirtualDropdown.js').Items,
+                ItemsContainer: require('./components/Form/VirtualDropdown.js').ItemsContainer,
+                Inner: require('./components/Form/VirtualDropdown.js').Inner,
               }
             },
             src: require('./components/Form/docs.md')

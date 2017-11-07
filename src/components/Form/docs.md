@@ -324,7 +324,7 @@ state: {values: {}, errors: {}, dirty: {}}
 
 ## Dropdown
 
-The dropdown element uses the `downshift` library to manage its behaviour, the UI is custom-made. The `<NativeDropdown />` component looks exactly the same, but uses the native `<select/>` and `<option/>` elements internally. It is API-compatible with `<Dropdown />`.
+The dropdown element uses the `downshift` library to manage its behaviour, the UI is custom-made. The `<NativeDropdown />` component looks exactly the same, but uses the native `<select/>` and `<option/>` elements internally. It is API-compatible with `<VirtualDropdown />`.
 
 The options are given as a list of objects, each option must have the following keys:
 
@@ -334,7 +334,7 @@ The options are given as a list of objects, each option must have the following 
 The `onChange` callback is invoked with the whole option object.
 
 ```react|span-3
-<Dropdown
+<VirtualDropdown
   label='Bezeichnung'
   items={dropdownItems}
   defaultSelectedItem={dropdownItems[1]}
@@ -355,27 +355,27 @@ The `onChange` callback is invoked with the whole option object.
 ```
 
 ```hint
-The `<Dropdown />` element uses negative margin left/right. This is needed so that the left edge of the text aligns with the other form elements. See the example below.
+The `<VirtualDropdown />` element uses negative margin left/right. This is needed so that the left edge of the text aligns with the other form elements. See the example below.
 ```
 
 ```react|noSource
 <div>
   <Field label='Label' />
-  <Dropdown
+  <VirtualDropdown
     label='Bezeichnung'
     items={dropdownItems}
   />
 </div>
 ```
 
-### Dropdown Internal Components
+### VirtualDropdown Internal Components
 
 #### `<Items />`
 
 Renders a list of items, where one may be selected and one may be highlighted. This component is pure, controlled entirely from the outside. The selected / highlighted item is tracked by the `Downshift` component.
 
 ```react|span-2,plain,noSource
-<DropdownInternal.Items
+<VirtualDropdownInternal.Items
   items={dropdownItems}
   selectedItem={null}
   highlightedIndex={null}
@@ -383,7 +383,7 @@ Renders a list of items, where one may be selected and one may be highlighted. T
 />
 ```
 ```react|span-2,plain,noSource
-<DropdownInternal.Items
+<VirtualDropdownInternal.Items
   items={dropdownItems}
   selectedItem={dropdownItems[0]}
   highlightedIndex={null}
@@ -391,7 +391,7 @@ Renders a list of items, where one may be selected and one may be highlighted. T
 />
 ```
 ```react|span-2,plain,noSource
-<DropdownInternal.Items
+<VirtualDropdownInternal.Items
   items={dropdownItems}
   selectedItem={dropdownItems[0]}
   highlightedIndex={2}
@@ -414,14 +414,14 @@ state: {isOpen: false}
     toggle
   </Button>
   <div style={{minHeight: dropdownItems.length * 60 + 24, padding: 12}}>
-    <DropdownInternal.ItemsContainer isOpen={state.isOpen}>
-      <DropdownInternal.Items
+    <VirtualDropdownInternal.ItemsContainer isOpen={state.isOpen}>
+      <VirtualDropdownInternal.Items
         items={dropdownItems}
         selectedItem={dropdownItems[0]}
         highlightedIndex={1}
         getItemProps={() => ({})}
       />
-    </DropdownInternal.ItemsContainer>
+    </VirtualDropdownInternal.ItemsContainer>
   </div>
 </div>
 ```
@@ -440,13 +440,13 @@ state: {isOpen: false}
 ---
 <div style={{height: 276, padding: '60px 72px'}}>
   <div style={{position: 'relative'}}>
-    <DropdownInternal.Inner isOpen={state.isOpen}>
+    <VirtualDropdownInternal.Inner isOpen={state.isOpen}>
       <div style={{padding: '48px 60px'}}>
         <Button primary block onClick={() => {setState({isOpen: !state.isOpen})} }>
           toggle
         </Button>
       </div>
-    </DropdownInternal.Inner>
+    </VirtualDropdownInternal.Inner>
   </div>
 </div>
 ```
@@ -459,22 +459,22 @@ state: {isOpen: false}
 ---
 <div style={{height: 276, padding: '60px 48px'}}>
   <div style={{position: 'relative'}}>
-    <DropdownInternal.Inner isOpen={state.isOpen}>
+    <VirtualDropdownInternal.Inner isOpen={state.isOpen}>
       <div style={{padding: '48px 60px'}}>
         <Button primary block onClick={() => {setState({isOpen: !state.isOpen})} }>
           toggle
         </Button>
 
-        <DropdownInternal.ItemsContainer isOpen={state.isOpen}>
-          <DropdownInternal.Items
+        <VirtualDropdownInternal.ItemsContainer isOpen={state.isOpen}>
+          <VirtualDropdownInternal.Items
             items={dropdownItems}
             selectedItem={dropdownItems[0]}
             highlightedIndex={1}
             getItemProps={() => ({})}
           />
-        </DropdownInternal.ItemsContainer>
+        </VirtualDropdownInternal.ItemsContainer>
       </div>
-    </DropdownInternal.Inner>
+    </VirtualDropdownInternal.Inner>
   </div>
 </div>
 ```

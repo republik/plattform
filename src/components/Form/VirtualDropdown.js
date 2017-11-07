@@ -67,7 +67,7 @@ const styles = {
 
 const itemToString = item => item ? item.text : null
 
-export class Dropdown extends PureComponent {
+export class VirtualDropdown extends PureComponent {
   constructor (props) {
     super(props)
 
@@ -101,7 +101,7 @@ export class Dropdown extends PureComponent {
   }
 }
 
-export default Dropdown
+export default VirtualDropdown
 
 const renderDropdown = ({label, focus, items, onFocus, onBlur}) => ({getButtonProps, getItemProps, isOpen, inputValue, selectedItem, highlightedIndex}) => (
   <div {...styles.root}>
