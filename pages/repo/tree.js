@@ -58,12 +58,8 @@ export const repoQuery = gql`
 `
 
 const repoSubscription = gql`
-  subscription repoUpdate(
-    $repoId: ID!
-  ) {
-    repoUpdate(
-      repoId: $repoId
-    ) {
+  subscription repoUpdate($repoId: ID!) {
+    repoUpdate(repoId: $repoId) {
       id
       latestCommit {
         ...TreeCommit
@@ -129,23 +125,19 @@ class EditorPage extends Component {
 
     return (
       <Frame url={url} raw nav={<RepoNav route='repo/tree' url={url} />}>
-        <Loader
-          loading={loading}
-          error={error}
-          render={() => (
-            <div>
-              <br />
-              <NarrowContainer>
-                <CurrentPublications repoId={repoId} />
-              </NarrowContainer>
-              <Tree
-                commits={repo.commits}
-                milestones={repo.milestones}
-                repoId={repoId}
-              />
-            </div>
-          )}
-        />
+        <Loader loading={loading} error={error} render={() => (
+          <div>
+            <br />
+            <NarrowContainer>
+              <CurrentPublications repoId={repoId} />
+            </NarrowContainer>
+            <Tree
+              commits={repo.commits}
+              milestones={repo.milestones}
+              repoId={repoId}
+            />
+          </div>
+        )} />
       </Frame>
     )
   }
