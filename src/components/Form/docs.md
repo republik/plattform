@@ -347,7 +347,7 @@ state: { value: '2' }
 />
 ```
 
-And the two versions, left the virtual and right the native:
+To explicitly use one or the other, use `<Dropdown.Virtual />` or `<Dropdown.Native />`. Below are the two versions, left the virtual and right the native.
 
 ```react
 noSource: true
