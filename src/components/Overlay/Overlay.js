@@ -110,7 +110,7 @@ export class OverlayRenderer extends PureComponent {
   }
 }
 
-Overlay.propTypes = {
+OverlayRenderer.propTypes = {
   children: PropTypes.node.isRequired,
   isVisible: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
