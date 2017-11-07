@@ -4,3 +4,4 @@ export {
   OverlayToolbarClose,
   OverlayToolbarConfirm
 } from './OverlayToolbar'
+export {default as OverlayBody} from './OverlayBody'

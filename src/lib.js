@@ -44,7 +44,8 @@ export {
   Overlay,
   OverlayToolbar,
   OverlayToolbarClose,
-  OverlayToolbarConfirm
+  OverlayToolbarConfirm,
+  OverlayBody
 } from './components/Overlay'
 
 export {Container, NarrowContainer} from './components/Grid'
