@@ -3,8 +3,6 @@ import { gql, graphql } from 'react-apollo'
 import { compose } from 'redux'
 import { css, styleSheet } from 'glamor'
 
-import { InlineSpinner } from '../Spinner'
-import Loader from '../Loader'
 import ErrorMessage from '../ErrorMessage'
 
 import { intersperse } from '../../lib/utils/helpers'
@@ -12,6 +10,8 @@ import withT from '../../lib/withT'
 import { Link, Router } from '../../lib/routes'
 import { swissTime } from '../../lib/utils/format'
 import {
+  Loader,
+  InlineSpinner,
   Interaction,
   Label,
   linkRule,

@@ -7,10 +7,9 @@ import { getName } from '../../lib/utils/name'
 import Loader from '../Loader'
 import List, { Item, Highlight } from '../List'
 import {
-  Interaction, Label, A
+  InlineSpinner, Interaction, Label, A
 } from '@project-r/styleguide'
 import { swissTime } from '../../lib/utils/format'
-import { InlineSpinner } from '../Spinner'
 import ErrorMessage from '../ErrorMessage'
 
 import { query as treeQuery } from '../../pages/repo/tree'
