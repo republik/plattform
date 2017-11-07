@@ -56,7 +56,7 @@ module.exports = {
     // TODO remove when editor sends a real date for meta.publishDate
     const parsePublishDate = timeParse('%d.%m.%Y %H:%M')
     const publishDate = mdast.meta.publishDate
-      ? parsePublishDate(mdast.meta.publishDate)
+      ? parsePublishDate(mdast.meta.publishDate) || mdast.meta.publishDate
       : null
 
     return {
