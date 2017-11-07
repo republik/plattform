@@ -324,16 +324,33 @@ state: {values: {}, errors: {}, dirty: {}}
 
 ## Dropdown
 
-The dropdown element uses the `downshift` library to manage its behaviour, the UI is custom-made. The `<NativeDropdown />` component looks exactly the same, but uses the native `<select/>` and `<option/>` elements internally. It is API-compatible with `<VirtualDropdown />`.
+There are two versions of the dropdown component: a native dropdown which uses `<select/>` and `<option/>`, and a virtual dropdown which uses the `downshift` library to manage its behavior and renders the UI using custom components. Both components are API-compatible. But you probably want to use a the third dropdown component, which decides automatically whether to use the virtual or native version. It makes this decision based on the user-agent string, not on the viewport size.
 
 The options are given as a list of objects, each option must have the following keys:
 
  - **value**: an ID (string) unique across all options.
  - **text**: what is shown in the UI.
 
-The `onChange` callback is invoked with the whole option object.
+Here is the high-level `<Dropdown />` component:
 
 ```react
+state: { value: '2' }
+---
+<Dropdown
+  label='Bezeichnung'
+  items={dropdownItems}
+  value={state.value}
+  onChange={(item) => {
+    setState({value: item.value})
+    console.log(`Selected '${item.text}'`)
+  }}
+/>
+```
+
+And the two versions, left the virtual and right the native:
+
+```react
+noSource: true
 span: 3
 state: { value: '2' }
 ---
@@ -348,6 +365,7 @@ state: { value: '2' }
 />
 ```
 ```react
+noSource: true
 span: 3
 state: { value: '2' }
 ---
@@ -363,13 +381,17 @@ state: { value: '2' }
 ```
 
 ```hint
-The `<VirtualDropdown />` element uses negative margin left/right. This is needed so that the left edge of the text aligns with the other form elements. See the example below.
+The virtual dropdown element uses negative margin left/right. This is needed so that the left edge of the text aligns with the other form elements. The example below shows an input field, a virtual dropdown and a native dropdown next to each other.
 ```
 
 ```react|noSource
 <div>
   <Field label='Label' />
   <VirtualDropdown
+    label='Bezeichnung'
+    items={dropdownItems}
+  />
+  <NativeDropdown
     label='Bezeichnung'
     items={dropdownItems}
   />

@@ -124,6 +124,7 @@ ReactDOM.render(
               AutosuggestField: require('./components/Form/AutosuggestField.js'),
               MaskedInput: require('react-maskedinput'),
               AutosizeInput: require('react-textarea-autosize'),
+              Dropdown: require('./components/Form/Dropdown.js'),
               VirtualDropdown: require('./components/Form/VirtualDropdown.js'),
               NativeDropdown: require('./components/Form/NativeDropdown.js'),
               dropdownItems: [
