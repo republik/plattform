@@ -13,7 +13,7 @@ import {
   matchHeading,
   matchParagraph,
   matchImageParagraph
-} from '../utils'
+} from 'mdast-react-render/lib/utils'
 
 const paragraph = {
   matchMdast: matchParagraph,

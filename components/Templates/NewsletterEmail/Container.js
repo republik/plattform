@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Mso } from '../email'
+import { Mso } from 'mdast-react-render/lib/email'
 
 export default ({children}) => (
   <html>

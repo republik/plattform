@@ -1,6 +1,6 @@
 import React from 'react'
 import { matchInline } from '../../utils'
-import MarkdownSerializer from '../../../../lib/serializer'
+import MarkdownSerializer from 'slate-mdast-serializer'
 
 import createUi from './ui'
 

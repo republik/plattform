@@ -1,7 +1,7 @@
 import test from 'tape'
 import { shallow } from 'enzyme'
 
-import { renderMdast, MissingMarkdownNodeType } from './render'
+import { renderMdast } from 'mdast-react-render'
 import newsletterSchema from './Newsletter'
 import newsletterEmailSchema from './NewsletterEmail'
 
@@ -9,54 +9,24 @@ import mdast from './newsletter.sample'
 import mdastLegacy from './newsletter.sample.legacy'
 
 test('render for web', assert => {
-  const wrapper = shallow(
-    renderMdast(mdast, newsletterSchema)
-  )
-
-  wrapper.find(MissingMarkdownNodeType)
-    .nodes
-    .forEach(node => console.log('missing', node))
-
-  assert.equal(
-    wrapper.find(MissingMarkdownNodeType).length,
-    0,
-    'no missing nodes'
+  shallow(
+    renderMdast(mdast, newsletterSchema, false)
   )
 
   assert.end()
 })
 
 test('render legacy cover for web', assert => {
-  const wrapper = shallow(
-    renderMdast(mdastLegacy, newsletterSchema)
-  )
-
-  wrapper.find(MissingMarkdownNodeType)
-    .nodes
-    .forEach(node => console.log('missing', node))
-
-  assert.equal(
-    wrapper.find(MissingMarkdownNodeType).length,
-    0,
-    'no missing nodes'
+  shallow(
+    renderMdast(mdastLegacy, newsletterSchema, false)
   )
 
   assert.end()
 })
 
 test('render for email', assert => {
-  const wrapper = shallow(
-    renderMdast(mdast, newsletterEmailSchema)
-  )
-
-  wrapper.find(MissingMarkdownNodeType)
-    .nodes
-    .forEach(node => console.log('missing', node))
-
-  assert.equal(
-    wrapper.find(MissingMarkdownNodeType).length,
-    0,
-    'no missing nodes'
+  shallow(
+    renderMdast(mdast, newsletterEmailSchema, false)
   )
 
   assert.end()
