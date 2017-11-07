@@ -42,6 +42,7 @@
     "superb": "^2.0.0",
     "superheroes": "^1.0.0",
     "supervillains": "^1.0.0",
+    "tslib": "^1.8.0",
     "unified": "^6.1.5",
     "unist-util-visit": "^1.1.3"
   },
