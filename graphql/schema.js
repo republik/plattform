@@ -95,7 +95,7 @@ type PublicUser {
   id: ID!
   name: String!
   email: String
-  credentials: [Credential!]!
+  credentials: [Credential]!
   testimonial: Testimonial
   facebookId: String
   twitterHandle: String

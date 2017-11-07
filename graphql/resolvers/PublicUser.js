@@ -48,5 +48,10 @@ module.exports = {
         }
       })
     }
+  },
+  async credentials (user, args, { pgdb }) {
+    return pgdb.public.credentials.find({
+      userId: user.id
+    })
   }
 }
