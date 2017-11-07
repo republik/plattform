@@ -7,6 +7,7 @@
   "private": true,
   "dependencies": {
     "apollo-engine": "^0.5.2",
+    "apollo-server-express": "^1.2.0",
     "aws-sign": "^0.1.2",
     "body-parser": "^1.18.0",
     "connect-pg-simple": "^4.2.1",
@@ -24,7 +25,6 @@
     "graphql": "^0.10.5",
     "graphql-fields": "^1.0.2",
     "graphql-redis-subscriptions": "^1.3.1",
-    "graphql-server-express": "^1.1.2",
     "graphql-subscriptions": "^0.5.4",
     "graphql-tools": "^1.2.3",
     "graphql-type-json": "^0.1.4",

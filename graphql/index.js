@@ -1,5 +1,5 @@
 const bodyParser = require('body-parser')
-const {graphqlExpress, graphiqlExpress} = require('graphql-server-express')
+const { graphqlExpress, graphiqlExpress } = require('apollo-server-express')
 const { makeExecutableSchema } = require('graphql-tools')
 const { execute, subscribe } = require('graphql')
 const { SubscriptionServer } = require('subscriptions-transport-ws')
