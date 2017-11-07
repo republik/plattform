@@ -5,8 +5,8 @@ import colors from '../../theme/colors'
 import {sansSerifRegular21} from '../Typography/styles'
 
 const borderWidth = 1
-const labelHeight = 20 // The height of the area at the top for the label.
-const fieldHeight = 40
+export const labelHeight = 20 // The height of the area at the top for the label.
+export const fieldHeight = 40
 
 const styles = {
   label: css({
