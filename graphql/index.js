@@ -1,6 +1,6 @@
 const bodyParser = require('body-parser')
-const {graphqlExpress, graphiqlExpress} = require('graphql-server-express')
-const {makeExecutableSchema} = require('graphql-tools')
+const { graphqlExpress, graphiqlExpress } = require('apollo-server-express')
+const { makeExecutableSchema } = require('graphql-tools')
 const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { execute, subscribe } = require('graphql')
 const { pubsub } = require('../lib/RedisPubSub')
