@@ -29,39 +29,31 @@ span: 4
 </OverlayRenderer>
 ```
 
-The overlay opens with a short fade-in animation upon being mounted. Click on the button to open the overlay, click anywhere on the background scroll block element, the close icon or the *save* button to close it again.
-
-Note that due to limitations of the catalog the sidebar is always above the overlay.
+The overlay opens with a short fade-in animation upon being mounted. Following is an example how to open the overlay in response to a button press.
 
 ```react
-noSource: true
-plain: true
+state: {isOpen: false}
 ---
-<OverlayExample>
-  {({onClose}) => (
-    <Overlay onClose={onClose}>
+<div style={{padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+  <Button primary onClick={() => {setState({isOpen: true})}}>
+    Open Overlay
+  </Button>
+
+  {state.isOpen && (
+    <Overlay onClose={() => {setState({isOpen: false})}}>
       <OverlayToolbar>
-        <OverlayToolbarClose onClick={onClose} />
-        <OverlayToolbarConfirm label='Speichern' onClick={onClose} />
+        <OverlayToolbarClose onClick={() => {setState({isOpen: false})}} />
       </OverlayToolbar>
 
       <OverlayBody>
-        <div style={{marginBottom: 12}}>
-          <Checkbox checked onChange={() => {}}>
-            Anonym kommentieren
-          </Checkbox>
-        </div>
-
-        <Field label='Name' value='Christof Moser' />
-
-        <Interaction.P style={{height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+        <Interaction.P style={{height: '100vh'}}>
           This is a placeholder to make the overlay content taller than the viewport
           so that we can test the overflow behavior.
         </Interaction.P>
       </OverlayBody>
     </Overlay>
   )}
-</OverlayExample>
+</div>
 ```
 
 ## `<OverlayToolbar />` et al.
