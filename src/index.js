@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {Catalog} from 'catalog'
-import {simulations, css} from 'glamor'
+import {simulations, speedy, css} from 'glamor'
 import theme from './catalogTheme'
 import './global.css'
 import './catalogTheme.css'
@@ -14,6 +14,10 @@ import {fontFaces} from './theme/fonts';
 import {createFormatter} from './lib/translate'
 
 simulations(true)
+// prevent speed in catalog
+// - iframe rendering (e.g. responsive preview)
+//   does not support insertRule
+speedy(false)
 
 const styleTag = document.createElement('style')
 styleTag.innerHTML = fontFaces()
