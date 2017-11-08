@@ -5,7 +5,7 @@ import {simulations, speedy, css} from 'glamor'
 import theme from './catalogTheme'
 import './global.css'
 import './catalogTheme.css'
-import {fontStyles} from './components/Typography'
+import * as fontStyles from './components/Typography/styles'
 
 import 'core-js/fn/array/from'
 import 'core-js/fn/array/find'
