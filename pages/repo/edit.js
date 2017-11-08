@@ -2,9 +2,7 @@ import React, { Component } from 'react'
 import { compose } from 'redux'
 import { Router } from '../../lib/routes'
 import { gql, graphql } from 'react-apollo'
-import { css } from 'glamor'
 import { Value, resetKeyGenerator } from 'slate'
-import { A, Button, Label } from '@project-r/styleguide'
 
 import withData from '../../lib/apollo/withData'
 import withAuthorization from '../../components/Auth/withAuthorization'
@@ -15,10 +13,6 @@ import Editor from '../../components/editor'
 
 import EditSidebar from '../../components/EditSidebar'
 import Loader from '../../components/Loader'
-import BaseCommit from '../../components/EditSidebar/BaseCommit'
-import Checklist from '../../components/EditSidebar/Checklist'
-import CommitHistory from '../../components/EditSidebar/CommitHistory'
-import UncommittedChanges from '../../components/EditSidebar/UncommittedChanges'
 import withT from '../../lib/withT'
 
 import { errorToString } from '../../lib/utils/errors'
@@ -95,21 +89,6 @@ const uncommittedChangesMutation = gql`
     uncommittedChanges(repoId: $repoId, action: $action)
   }
 `
-
-const styles = {
-  uncommittedChanges: {
-    fontSize: '13px',
-    margin: '0 0 20px'
-  },
-  danger: {
-    color: 'red',
-    marginBottom: 10
-  },
-  button: {
-    height: 40,
-    fontSize: '16px'
-  }
-}
 
 class EditorPage extends Component {
   constructor (...args) {
@@ -381,7 +360,7 @@ class EditorPage extends Component {
   }
 
   render () {
-    const { url, t, data = {} } = this.props
+    const { url, data = {} } = this.props
     const { repoId, commitId } = url.query
     const { loading, repo } = data
     const {
@@ -410,65 +389,16 @@ class EditorPage extends Component {
                 onDocumentChange={this.documentChangeHandler}
               />
             </div>
-            <EditSidebar width={sidebarWidth}>
-              {warnings.map((message, i) => (
-                <div key={i} {...css(styles.danger)}>
-                  {message}
-                </div>
-              ))}
-              {!!repo &&
-                <BaseCommit repoId={repoId} commitId={commitId} />}
-              <div {...css(styles.uncommittedChanges)}>
-                <div style={{marginBottom: 10}}>
-                  <Label style={{fontSize: 12}}>
-                    <span>
-                      {isNew
-                        ? t('commit/status/new')
-                        : t(uncommittedChanges
-                              ? 'commit/status/uncommitted'
-                              : 'commit/status/committed')
-                      }
-                    </span>
-                  </Label>
-                </div>
-
-                <Button
-                  primary
-                  block
-                  disabled={!uncommittedChanges && !isNew}
-                  onClick={this.commitHandler}
-                  style={styles.button}
-                >
-                  {t('commit/button')}
-                </Button>
-
-                {!!uncommittedChanges && (
-                  <div style={{textAlign: 'center', marginTop: 10}}>
-                    <A href='#' onClick={this.revertHandler}>
-                      {t('commit/revert')}
-                    </A>
-                  </div>
-                )}
-              </div>
-
-              {!!repo && (
-                <div>
-                  <Label>{t('checklist/title')}</Label>
-                  <Checklist
-                    disabled={!!uncommittedChanges}
-                    repoId={repoId}
-                    commitId={commitId}
-                  />
-                  <Label>{t('commitHistory/title')}</Label>
-                  <CommitHistory
-                    repoId={repoId}
-                    commitId={commitId}
-                  />
-                </div>
-              )}
-              <Label>{t('uncommittedChanges/title')}</Label>
-              <UncommittedChanges repoId={repoId} />
-            </EditSidebar>
+            <EditSidebar
+              repoId={repoId}
+              commit={repo.commit || repo.latestCommit}
+              isNew={isNew}
+              uncommittedChanges={uncommittedChanges}
+              warnings={warnings}
+              commitHandler={this.commitHandler}
+              revertHandler={this.revertHandler}
+              width={sidebarWidth}
+            />
           </div>
         )} />
       </Frame>
