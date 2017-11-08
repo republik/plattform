@@ -50,20 +50,26 @@ class Overlay extends PureComponent {
       this.setState({isVisible: true})
     })
 
+    // The code below is used to block scrolling of the page behind the overlay.
+    // The trick is to add overflow:hidden and position:relative to the body
+    // element. The later scrolls the page to the top, to counter that we shift
+    // the whole page up by the appropriate offset and restore the scroll offset
+    // when the overlay is dismissed.
     this.pageYOffset = window.pageYOffset
     document.documentElement.style.top = `-${this.pageYOffset}px`
     document.documentElement.style.position = 'relative'
-
-    // Add overflow:hidden to the body element to remove any scroll bars. The overlay uses
-    // width:100vw and that is the width of the whole viewport /including/ the scroll bar.
     document.body.style.overflow = 'hidden'
     document.body.style.position = 'fixed'
   }
+
   componentWillUnmount () {
     clearTimeout(this.fadeInTimeout)
+
+    // Remove scroll block and scroll page back to its original Y-offset.
+    document.documentElement.style.top = ''
+    document.documentElement.style.position = ''
     document.body.style.overflow = ''
     document.body.style.position = ''
-    document.documentElement.style.top = '0'
     window.scrollTo(0, this.pageYOffset)
   }
 
