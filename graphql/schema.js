@@ -76,7 +76,7 @@ type RootMutations {
   setDiscussionPreferences(
     id: ID!
     discussionPreferences: DiscussionPreferencesInput!
-  ): DiscussionPreferences!
+  ): Discussion!
 }
 
 type RootSubscriptions {
