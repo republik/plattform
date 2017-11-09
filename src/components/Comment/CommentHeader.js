@@ -55,13 +55,15 @@ const styles = {
   })
 }
 
+const defaultProfilePicture = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAAAAACoWZBhAAAAF0lEQVQI12P4BAI/QICBFCaYBPNJYQIAkUZftTbC4sIAAAAASUVORK5CYII='
+
 export const CommentHeader = ({t, profilePicture, name, timeago, credential}) => (
   <div {...styles.root}>
-    {profilePicture && <img
+    <img
       {...styles.profilePicture}
-      src={profilePicture}
+      src={profilePicture || defaultProfilePicture}
       alt=''
-    />}
+    />
     <div {...styles.meta}>
       <div {...styles.name}>
         {name}
