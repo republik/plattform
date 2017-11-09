@@ -11,13 +11,14 @@ const styles = {
   }),
   title: css({
     ...sansSerifMedium16,
+    lineHeight: '20px',
     color: colors.text,
     ...ellipsize
   }),
   subtitle: css({
     ...sansSerifRegular14,
     color: colors.lightText,
-    lineHeight: 1.1,
+    lineHeight: '20px',
     ...ellipsize
   })
 }
