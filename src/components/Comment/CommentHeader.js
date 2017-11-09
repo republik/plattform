@@ -3,6 +3,7 @@ import {css} from 'glamor'
 import {MdCheck} from 'react-icons/lib/md'
 import colors from '../../theme/colors'
 import {sansSerifMedium16, sansSerifRegular14} from '../Typography/styles'
+import {ellipsize} from '../../lib/styleMixins'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -16,6 +17,8 @@ const styles = {
   profilePicture: css({
     display: 'block',
     width: `${profilePictureSize + 2 * profilePictureBorderSize}px`,
+    flexBasis: `${profilePictureSize + 2 * profilePictureBorderSize}px`,
+    flexShrink: 0,
     height: `${profilePictureSize + 2 * profilePictureBorderSize}px`,
     margin: `${-profilePictureBorderSize}px ${-profilePictureBorderSize + profilePictureMargin}px ${-profilePictureBorderSize}px ${-profilePictureBorderSize}px`,
     border: `${profilePictureBorderSize}px solid white`
@@ -24,31 +27,40 @@ const styles = {
     alignSelf: 'stretch',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    width: `calc(100% - ${profilePictureSize + profilePictureMargin}px)`
   }),
   name: css({
     ...sansSerifMedium16,
+    lineHeight: '20px',
     color: colors.text,
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis'
+    display: 'flex',
+    alignItems: 'center'
+  }),
+  nameText: css({
+    ...ellipsize
   }),
   timeago: css({
     ...sansSerifRegular14,
+    lineHeight: '20px',
     color: colors.lightText,
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis'
+    flexShrink: 0
   }),
   description: css({
     ...sansSerifRegular14,
-    lineHeight: 1,
-    color: colors.lightText
+    lineHeight: '20px',
+    color: colors.lightText,
+    display: 'flex',
+    alignItems: 'center'
+  }),
+  descriptionText: css({
+    ...ellipsize,
   }),
   verifiedDescription: css({
     color: colors.text
   }),
   verifiedCheck: css({
+    flexShrink: 0,
     display: 'inline-block',
     marginLeft: 4,
     marginTop: -2
@@ -66,11 +78,11 @@ export const CommentHeader = ({t, profilePicture, name, timeago, credential}) =>
     />
     <div {...styles.meta}>
       <div {...styles.name}>
-        {name}
+        <div {...styles.nameText}>{name}</div>
         {timeago && <span {...styles.timeago}>・{timeago}</span>}
       </div>
       {credential && <div {...styles.description} {...(credential.verified ? styles.verifiedDescription : {})}>
-        {credential.description}
+        <div {...styles.descriptionText} >{credential.description}</div>
         {credential.verified && <MdCheck {...styles.verifiedCheck} />}
       </div>}
     </div>

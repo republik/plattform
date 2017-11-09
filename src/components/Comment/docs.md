@@ -72,6 +72,14 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
 />
 ```
 
+```react|noSource,span-2
+<CommentHeader
+  timeago='2h'
+  name='Agent Seymour Rutherford Simmons'
+  credential={{description: 'Member of Sector 7 Advanced Research Division', verified: true}}
+/>
+```
+
 ### `<CommentActions />`
 
 ```react|noSource,span-2
