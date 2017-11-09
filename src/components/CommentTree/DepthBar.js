@@ -35,8 +35,8 @@ export const DepthBar = ({head, tail}) =>
   />
 
 DepthBar.propTypes = {
-  head: PropTypes.bool.isRequired,
-  tail: PropTypes.bool.isRequired
+  head: PropTypes.bool,
+  tail: PropTypes.bool
 }
 
 export const DepthBars = ({count, head, tail}) =>
@@ -50,6 +50,6 @@ export const DepthBars = ({count, head, tail}) =>
 
 DepthBars.propTypes = {
   count: PropTypes.number.isRequired,
-  head: PropTypes.bool.isRequired,
-  tail: PropTypes.bool.isRequired
+  head: PropTypes.bool,
+  tail: PropTypes.bool
 }
