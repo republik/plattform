@@ -17,7 +17,7 @@ const styles = {
   profilePicture: css({
     display: 'block',
     width: `${profilePictureSize + 2 * profilePictureBorderSize}px`,
-    flexBasis: `${profilePictureSize + 2 * profilePictureBorderSize}px`,
+    flexGrow: 0,
     flexShrink: 0,
     height: `${profilePictureSize + 2 * profilePictureBorderSize}px`,
     margin: `${-profilePictureBorderSize}px ${-profilePictureBorderSize + profilePictureMargin}px ${-profilePictureBorderSize}px ${-profilePictureBorderSize}px`,
