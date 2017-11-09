@@ -57,11 +57,8 @@ const styles = {
     border: 'none',
     flexShrink: 0,
     alignSelf: 'stretch',
-    display: 'flex',
-    flexDirection: 'center',
-    justifyContent: 'center',
     margin: '-12px -12px -12px 0',
-    padding: '12px 20px',
+    padding: '15px 20px',
     fontSize: '24px',
     cursor: 'pointer',
   })
