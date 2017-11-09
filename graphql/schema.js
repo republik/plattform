@@ -262,6 +262,7 @@ type Discussion {
   ): CommentConnection!
   rules: DiscussionRules!
   userPreference: DiscussionPreferences
+  displayAuthor: DisplayUser
   # date the user is allowed to submit new comments
   # if null the user can submit immediately
   userWaitUntil: DateTime
