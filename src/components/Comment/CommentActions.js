@@ -11,7 +11,6 @@ const config = {
 const styles = {
   root: css({
     display: 'flex',
-    justifyContent: 'space-between',
     alignItems: 'center',
     '& svg': {
       display: 'block'
@@ -28,7 +27,8 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     fontSize: '18px',
-    lineHeight: '1'
+    lineHeight: '1',
+    marginLeft: 'auto',
   }),
   votes: css({
     display: 'flex',
@@ -61,11 +61,11 @@ const styles = {
 
 export const CommentActions = ({t, score, onAnswer, onUpvote, onDownvote}) => (
   <div {...styles.root}>
-    <button {...styles.replyButton} onClick={onAnswer}>
+    {onAnswer && <button {...styles.replyButton} onClick={onAnswer}>
       <Label>
         {t('styleguide/CommentActions/answer')}
       </Label>
-    </button>
+    </button>}
 
     <div {...styles.actions}>
       <div {...styles.votes}>

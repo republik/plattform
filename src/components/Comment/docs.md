@@ -74,7 +74,18 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
 
 ### `<CommentActions />`
 
-```react|noSource,span-3
+```react|noSource,span-2
+<CommentActions
+  t={() => 'Antworten'}
+
+  score={8}
+
+  onAnswer={undefined}
+  onUpvote={undefined}
+  onDownvote={undefined}
+/>
+```
+```react|noSource,span-2
 <CommentActions
   t={() => 'Antworten'}
 
@@ -85,7 +96,7 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
   onDownvote={() => {}}
 />
 ```
-```react|noSource,span-3
+```react|noSource,span-2
 <CommentActions
   t={() => 'Antworten'}
 
