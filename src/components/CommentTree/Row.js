@@ -38,7 +38,7 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
             onDownvote={onDownvote}
           />
 
-          {showComposer &&
+          {(displayAuthor && showComposer) &&
             <Composer
               t={t}
               displayAuthor={displayAuthor}
@@ -61,11 +61,11 @@ Row.propTypes = {
   tail: PropTypes.bool.isRequired,
   otherChild: PropTypes.bool,
   comment: PropTypes.object.isRequired,
-  displayAuthor: PropTypes.object.isRequired,
+  displayAuthor: PropTypes.object,
   showComposer: PropTypes.bool.isRequired,
   composerError: PropTypes.string,
   onEditPreferences: PropTypes.func.isRequired,
-  onAnswer: PropTypes.func.isRequired,
+  onAnswer: PropTypes.func,
   onUpvote: PropTypes.func,
   onDownvote: PropTypes.func,
   dismissComposer: PropTypes.func.isRequired,

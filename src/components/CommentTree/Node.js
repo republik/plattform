@@ -145,9 +145,9 @@ class Node extends PureComponent {
         showComposer={composerState !== 'idle'}
         composerError={composerError}
         onEditPreferences={onEditPreferences}
-        onAnswer={this.openComposer}
-        onUpvote={userVote === 'UP' ? undefined : this.upvoteComment}
-        onDownvote={userVote === 'DOWN' ? undefined : this.downvoteComment}
+        onAnswer={displayAuthor ? this.openComposer : undefined}
+        onUpvote={(!displayAuthor || userVote === 'UP') ? undefined : this.upvoteComment}
+        onDownvote={(!displayAuthor || userVote === 'DOWN') ? undefined : this.downvoteComment}
         dismissComposer={this.dismissComposer}
         submitComment={this.submitComment}
         timeago={timeago}
@@ -216,7 +216,7 @@ class Node extends PureComponent {
 
 Node.propTypes = {
   t: PropTypes.func.isRequired,
-  displayAuthor: PropTypes.object.isRequired,
+  displayAuthor: PropTypes.object,
   comment: PropTypes.object.isRequired,
   timeago: PropTypes.func.isRequired,
   onEditPreferences: PropTypes.func.isRequired,
