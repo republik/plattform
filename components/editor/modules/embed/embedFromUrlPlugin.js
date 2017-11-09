@@ -9,7 +9,8 @@ const matchUrl = url => {
     return {
       embedType: 'youtube',
       embedData: {
-        id: YOUTUBE_REGEX.exec(url)[1]
+        id: YOUTUBE_REGEX.exec(url)[1],
+        originalUrl: url
       }
     }
   }
@@ -17,7 +18,8 @@ const matchUrl = url => {
     return {
       embedType: 'vimeo',
       embedData: {
-        id: VIMEO_REGEX.exec(url)[5]
+        id: VIMEO_REGEX.exec(url)[5],
+        originalUrl: url
       }
     }
   }
@@ -26,38 +28,45 @@ const matchUrl = url => {
     return {
       embedType: 'twitter',
       embedData: {
-        id: TWITTER_REGEX.exec(url)[3]
+        id: TWITTER_REGEX.exec(url)[3],
+        originalUrl: url
       }
     }
   }
 }
 
 export default ({match, TYPE}) => ({
-  onKeyDown (e, change) {
-    if (e.key !== 'Enter') return
-    if (e.shiftKey !== false) return
+  onKeyDown (event, change) {
+    if (event.key !== 'Enter') return
+    if (event.shiftKey !== false) return
 
     const { value } = change
     if (!value.isCollapsed) return
 
     const block = value.blocks.first()
 
-    if (!match(block)) return
+    if (!block || !match(block)) return
 
     const text = block.text
 
     if (!text) return
 
+    event.preventDefault()
+
     const data = matchUrl(text.trim())
 
     if (data) {
-      return change.setNodeByKey(
-        block.key,
-        {
+      return change
+        .setNodeByKey(block.key, {
           type: TYPE,
           data
-        }
-      )
+        })
+        .select({
+          anchorKey: block.key,
+          focusKey: block.key,
+          anchorOffset: 1,
+          focusOffset: 1
+        })
     }
   }
 })

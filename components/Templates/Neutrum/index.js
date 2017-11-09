@@ -94,18 +94,23 @@ const schema = {
             <NarrowContainer {...attributes}>{children}</NarrowContainer>,
           editorModule: 'center',
           rules: [
-            paragraph,
             {
               matchMdast: matchZone(
-                'CENTER'
+                'EMBED'
               ),
               component: ({ data }) => (
-                <pre>{JSON.stringify(data, null, 3)}</pre>
+                <pre
+                  style={{lineHeight: '1em'}}
+                >
+                  {JSON.stringify(data, null, 3)}
+                </pre>
               ),
+              editorModule: 'embed',
               editorOptions: {
                 lookupType: 'paragraph'
               }
             },
+            paragraph,
             {
               matchMdast: matchHeading(
                 1

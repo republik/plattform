@@ -25,6 +25,7 @@ import createSpecialModule from './modules/special'
 import createMetaModule from './modules/meta'
 
 const moduleCreators = {
+  embed: createEmbedModule,
   document: createDocumentModule,
   documentPlain: createDocumentPlainModule,
   cover: createCoverModule,
@@ -38,7 +39,6 @@ const moduleCreators = {
   listItem: createListItemModule,
   figure: createFigureModule,
   figureImage: createFigureImageModule,
-  embed: createEmbedModule,
   special: createSpecialModule,
   meta: createMetaModule
 }

@@ -2,8 +2,24 @@ import React from 'react'
 import { matchBlock } from '../../utils'
 import { findOrCreate } from '../../utils/serialization'
 import MarkdownSerializer from 'slate-mdast-serializer'
+import { colors } from '@project-r/styleguide'
+import { css } from 'glamor'
 
 import embedFromUrlPlugin from './embedFromUrlPlugin'
+
+const styles = {
+  border: css({
+    display: 'inline-block',
+    outline: `4px solid transparent`,
+    width: '100%',
+    lineHeight: 0,
+    transition: 'outline-color 0.2s',
+    '&[data-active="true"]': {
+      outlineColor: colors.primary
+    },
+    pointerEvents: 'none'
+  })
+}
 
 const fromMdast = ({ TYPE }) =>
   (node, index, parent, visitChildren) => {
@@ -68,11 +84,19 @@ const getSerializer = options =>
 
 const embedPlugin = options =>
   ({
-    renderNode ({node, children, attributes}) {
+    renderNode ({node, children, editor}) {
       const Embed = options.rule.component
       if (!matchBlock(options.TYPE)(node)) return
+
+      const active = editor.value.blocks.some(block => block.key === node.key)
       return (
-        <Embed data={node.data.toJS()} />
+        <span
+          {...styles.border}
+          data-active={active}
+          contentEditable={false}
+        >
+          <Embed data={node.data.toJS()} />
+        </span>
       )
     },
     schema: {
@@ -95,7 +119,7 @@ export default options => {
     plugins: [
       embedPlugin(options),
       embedFromUrlPlugin({
-        match: matchBlock(rule.editorOptions.lookupType),
+        match: matchBlock(rule.editorOptions.lookupType.toUpperCase()),
         TYPE
       })
     ]
