@@ -23,7 +23,7 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
   return (
     <div {...styles.root}>
       <DepthBars count={visualDepth - (otherChild ? 1 : 0)} head={head} tail={tail} />
-      <div style={{flexGrow: 1, margin: otherChild ? '20px 0' : '20px 0 20px -50px'}}>
+      <div style={{flexGrow: 1, margin: otherChild ? '20px 0' : `20px 0 20px -${profilePictureSize + profilePictureMargin}px`}}>
         <Comment
           timeago={timeago(createdAt)}
           {...comment}
