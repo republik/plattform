@@ -25,7 +25,7 @@ The right-most vertical bar can be placed directly through the center of the pro
 
 ### `<CommentTreeLoadMore />`
 
-To indicate that there are more comments which can be loaded at a particular depth, use `<CommentTreeLoadMore />`. The component uses the same `visualDepth` concept as  `<Row />`. The left edge of the horizontal bar is always aligned with the left edge of the comment text. But it can also extend a bit to the left to be connected with the last vertical bar of the preceding `<Row />`.
+To indicate that there are more comments which can be loaded at a particular depth, use `<CommentTreeLoadMore />`. The component uses the same `visualDepth` concept as  `<Row />`. The left edge of the horizontal bar is aligned with the left edge of the profile picture. But it can also be indented a bit so that it connects with the last vertical bar of the preceding `<Row />` (make sure to set `otherChild=false` on the preceding `<Row />` so that the last vertical bar is drawn).
 
 ```react|noSource,span-3,plain
 <div>
@@ -62,7 +62,7 @@ To indicate that there are more comments which can be loaded at a particular dep
 
 ### `<CommentTreeCollapse />`
 
-If the comments after a certain point can be collapsed, use `<CommentTreeCollapse />`. This element is always shown full-width, there is no way to indent it. Don't forget to set `tail=false` on the `<Row />` immediately preceding these elements.
+If the comments after a certain point can be collapsed, use `<CommentTreeCollapse />`. This element is always shown full-width, there is no way to indent it.
 
 
 ```react|noSource,plain
