@@ -4,6 +4,7 @@ import {css} from 'glamor'
 
 import colors from '../../theme/colors'
 import {sansSerifRegular14} from '../Typography/styles'
+import {profilePictureSize, profilePictureMargin} from '../Comment/CommentHeader'
 
 const styles = {
   root: css({
@@ -16,12 +17,12 @@ const styles = {
     position: 'absolute',
     top: 0,
     right: 0,
-    transform: 'translateY(-60%)',
+    transform: 'translate(100%, -60%)',
     display: 'block',
     '-webkit-appearance': 'none',
     background: 'white',
     border: 'none',
-    padding: '4px 0 4px 8px',
+    padding: '4px 0 4px 10px',
     cursor: 'pointer',
     whiteSpace: 'nowrap',
 
@@ -31,8 +32,11 @@ const styles = {
   })
 }
 
-const Collapse = ({t, onClick}) => (
-  <div {...styles.root}>
+const width = (visualDepth) =>
+  visualDepth * (profilePictureSize + profilePictureMargin) - profilePictureMargin
+
+const Collapse = ({t, visualDepth, onClick}) => (
+  <div {...styles.root} style={{width: width(visualDepth)}}>
     <button {...styles.button} onClick={onClick}>
       {t('styleguide/CommentTreeCollapse/label')}
     </button>
@@ -41,6 +45,7 @@ const Collapse = ({t, onClick}) => (
 
 Collapse.propTypes = {
   t: PropTypes.func.isRequired,
+  visualDepth: PropTypes.number.isRequired,
   onClick: PropTypes.func.isRequired
 }
 

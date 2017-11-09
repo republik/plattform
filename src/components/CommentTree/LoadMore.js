@@ -4,7 +4,7 @@ import {css} from 'glamor'
 
 import colors from '../../theme/colors'
 import {sansSerifRegular14} from '../Typography/styles'
-import {profilePictureSize, profilePictureMargin} from '../Comment/CommentHeader'
+import {profilePictureSize} from '../Comment/CommentHeader'
 import {DepthBars} from './DepthBar'
 
 const styles = {
@@ -40,7 +40,6 @@ const styles = {
 }
 
 const marginLeft = (connected) =>
-  // (profilePictureSize + profilePictureMargin) +
   (connected ? (profilePictureSize / 2) : 0)
 
 const LoadMore = ({t, visualDepth, connected, count, onClick}) => (

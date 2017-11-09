@@ -68,7 +68,7 @@ If the comments after a certain point can be collapsed, use `<CommentTreeCollaps
 ```react|noSource,plain
 <div>
   <Row t={t} comment={comments.comment1} visualDepth={3} head />
-  <Collapse t={t} onClick={() => {}} />
+  <Collapse t={t} visualDepth={3} onClick={() => {}} />
 </div>
 ```
 
