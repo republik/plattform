@@ -4,13 +4,21 @@ import {css} from 'glamor'
 
 import colors from '../../theme/colors'
 import {sansSerifRegular14} from '../Typography/styles'
+import {profilePictureSize, profilePictureMargin} from '../Comment/CommentHeader'
+import {DepthBars} from './DepthBar'
 
 const styles = {
   root: css({
+    display: 'flex',
+    alignItems: 'flex-start',
+    height: 30,
+  }),
+  line: css({
+    flex: 1,
     position: 'relative',
     height: 0,
     borderTop: `2px solid ${colors.primary}`,
-    marginTop: '-2px'
+    marginTop: '-2px',
   }),
   button: css({
     position: 'absolute',
@@ -31,11 +39,18 @@ const styles = {
   })
 }
 
-const LoadMore = ({t, visualDepth, count, onClick}) => (
-  <div {...styles.root} style={{marginLeft: (visualDepth - 1) * 15}}>
-    <button {...styles.button} onClick={onClick}>
-      {t.pluralize('styleguide/CommentTreeLoadMore/label', {count})}
-    </button>
+const marginLeft = (connected) =>
+  // (profilePictureSize + profilePictureMargin) +
+  (connected ? (profilePictureSize / 2) : 0)
+
+const LoadMore = ({t, visualDepth, connected, count, onClick}) => (
+  <div {...styles.root}>
+    <DepthBars count={visualDepth - 1} />
+    <div {...styles.line} style={{marginLeft: marginLeft(connected)}}>
+      <button {...styles.button} onClick={onClick}>
+        {t.pluralize('styleguide/CommentTreeLoadMore/label', {count})}
+      </button>
+    </div>
   </div>
 )
 

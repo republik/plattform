@@ -29,6 +29,8 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
 
 ### `<CommentHeader />`
 
+The profile picture in the `<CommentHeader />` has a white border so that we can place a vertical line underneath when this component is used in a `CommentTree`.
+
 ```react|noSource,span-2
 <CommentHeader
   timeago='2h'

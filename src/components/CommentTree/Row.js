@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import {css} from 'glamor'
 
 import {Comment, CommentActions} from '../Comment'
+import {profilePictureSize, profilePictureMargin} from '../Comment/CommentHeader'
 import CommentComposer from '../CommentComposer/CommentComposer'
 import {DepthBars} from './DepthBar'
 
@@ -21,31 +22,33 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
 
   return (
     <div {...styles.root}>
-      <DepthBars count={visualDepth} head={head} tail={tail} />
-      <div style={{flexGrow: 1, padding: otherChild ? '20px 0 20px 15px' : '20px 0'}}>
+      <DepthBars count={visualDepth - (otherChild ? 1 : 0)} head={head} tail={tail} />
+      <div style={{flexGrow: 1, margin: otherChild ? '20px 0' : '20px 0 20px -50px'}}>
         <Comment
           timeago={timeago(createdAt)}
           {...comment}
         />
 
-        <CommentActions
-          t={t}
-          score={score}
-          onAnswer={onAnswer}
-          onUpvote={onUpvote}
-          onDownvote={onDownvote}
-        />
-
-        {showComposer &&
-          <Composer
+        <div style={{marginLeft: profilePictureSize + profilePictureMargin}}>
+          <CommentActions
             t={t}
-            displayAuthor={displayAuthor}
-            error={composerError}
-            onEditPreferences={onEditPreferences}
-            onCancel={dismissComposer}
-            submitComment={submitComment}
+            score={score}
+            onAnswer={onAnswer}
+            onUpvote={onUpvote}
+            onDownvote={onDownvote}
           />
-        }
+
+          {showComposer &&
+            <Composer
+              t={t}
+              displayAuthor={displayAuthor}
+              error={composerError}
+              onEditPreferences={onEditPreferences}
+              onCancel={dismissComposer}
+              submitComment={submitComment}
+            />
+          }
+        </div>
       </div>
     </div>
   )

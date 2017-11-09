@@ -4,6 +4,10 @@ import {MdCheck} from 'react-icons/lib/md'
 import colors from '../../theme/colors'
 import {sansSerifMedium16, sansSerifRegular14} from '../Typography/styles'
 
+export const profilePictureSize = 40
+export const profilePictureMargin = 10
+const profilePictureBorderSize = 5
+
 const styles = {
   root: css({
     display: 'flex',
@@ -11,9 +15,10 @@ const styles = {
   }),
   profilePicture: css({
     display: 'block',
-    width: '40px',
-    height: '40px',
-    marginRight: 10
+    width: `${profilePictureSize + 2 * profilePictureBorderSize}px`,
+    height: `${profilePictureSize + 2 * profilePictureBorderSize}px`,
+    margin: `${-profilePictureBorderSize}px ${-profilePictureBorderSize + profilePictureMargin}px ${-profilePictureBorderSize}px ${-profilePictureBorderSize}px`,
+    border: `${profilePictureBorderSize}px solid white`
   }),
   meta: css({
     alignSelf: 'stretch',

@@ -1,12 +1,12 @@
 import React from 'react'
 import {css} from 'glamor'
 import {serifRegular14} from '../Typography/styles'
-import CommentHeader from './CommentHeader'
+import CommentHeader, {profilePictureSize, profilePictureMargin} from './CommentHeader'
 
 const styles = {
   body: css({
     ...serifRegular14,
-    margin: '10px 0'
+    margin: `12px 0 12px ${profilePictureSize + profilePictureMargin}px`
   })
 }
 

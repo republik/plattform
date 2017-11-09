@@ -2,20 +2,27 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {css} from 'glamor'
 
+import colors from '../../theme/colors'
+import {profilePictureSize, profilePictureMargin} from '../Comment/CommentHeader'
+
+const borderWidth = 2
+
 const styles = {
   depthBar: css({
-    width: 15,
-    flexBasis: '15px',
+    width: 0,
+    flexBasis: 0,
     flexShrink: 0,
     flexGrow: 0,
     alignSelf: 'stretch',
-    borderLeft: '1px solid #DBDBDB'
+    borderLeft: `${borderWidth}px solid ${colors.primary}`,
+    marginLeft: (profilePictureSize / 2 - borderWidth / 2),
+    marginRight: (profilePictureSize / 2 - borderWidth / 2 + profilePictureMargin),
   }),
   head: css({
-    marginTop: 20
+    marginTop: 20 + profilePictureSize,
   }),
   tail: css({
-    marginBottom: 20
+    height: 20,
   })
 }
 

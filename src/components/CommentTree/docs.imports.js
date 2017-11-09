@@ -47,12 +47,13 @@ export const Node = ({t, comment}) => (
     upvoteComment={() => {}}
     downvoteComment={() => {}}
     submitComment={() => {}}
-    More={({visualDepth, comment: {comments}}) => {
+    More={({visualDepth, connected, comment: {comments}}) => {
       if (comments && comments.pageInfo && comments.pageInfo.hasNextPage) {
         return (
           <LoadMore
             t={t}
             visualDepth={visualDepth}
+            connected={connected}
             count={comments.totalCount - (comments.nodes || []).length}
             onClick={() => {}}
           />

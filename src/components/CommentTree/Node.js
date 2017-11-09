@@ -86,10 +86,10 @@ class Node extends PureComponent {
 
         // Top node with no children. No vertical bars.
         return {
-          visualDepth: 0,
+          visualDepth: 1,
           head: true,
           tail: true,
-          otherChild: false
+          otherChild: true
         }
       }
 
@@ -108,7 +108,7 @@ class Node extends PureComponent {
 
         // An 'otherChild' with no children. Keep the vertical bar continuous.
         return {
-          visualDepth: visualDepth0,
+          visualDepth: visualDepth0 + 1,
           head: false,
           tail: false,
           otherChild: true
@@ -182,7 +182,7 @@ class Node extends PureComponent {
             )),
             <More
               key='more'
-              visualDepth={visualDepth + 2}
+              visualDepth={visualDepth + 1}
               logicalDepth={logicalDepth + 1}
               comment={comment}
             />,
@@ -203,7 +203,8 @@ class Node extends PureComponent {
         return [
           <More
             key='more'
-            visualDepth={visualDepth + 1}
+            visualDepth={visualDepth}
+            connected
             logicalDepth={logicalDepth + 1}
             comment={comment}
           />
