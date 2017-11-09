@@ -28,19 +28,25 @@ const styles = {
   }),
   name: css({
     ...sansSerifMedium16,
+    lineHeight: '20px',
     color: colors.text,
     ...ellipsize
   }),
   description: css({
     ...sansSerifRegular14,
+    lineHeight: '20px',
     color: colors.lightText,
-    lineHeight: 1,
+    display: 'flex',
+    alignItems: 'center'
+  }),
+  descriptionText: css({
     ...ellipsize,
   }),
   verifiedDescription: css({
     color: colors.text
   }),
   verifiedCheck: css({
+    flexShrink: 0,
     display: 'inline-block',
     marginLeft: 4,
     marginTop: -2
@@ -73,7 +79,7 @@ const CommentComposerHeader = ({profilePicture, name, credential, onClick}) => (
         {name}
       </div>
       {credential && <div {...styles.description} {...(credential.verified ? styles.verifiedDescription : {})}>
-        {credential.description}
+        <div {...styles.descriptionText}>{credential.description}</div>
         {credential.verified && <MdCheck {...styles.verifiedCheck} />}
       </div>}
     </div>
