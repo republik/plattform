@@ -1,5 +1,14 @@
 const Roles = require('../../lib/Roles')
 const createUser = require('../../lib/factories/createUser')
+const crypto = require('crypto')
+const fakeUUID = require('../../lib/fakeUUID')
+
+const {
+  USER_ID_SALT
+} = process.env
+if (!USER_ID_SALT) {
+  throw new Error('missing required USER_ID_SALT')
+}
 
 module.exports = {
   content: ({ content, published, adminUnpublished }, args, { t }) =>
@@ -97,13 +106,22 @@ module.exports = {
     const testimonial = !anonymous && await pgdb.public.testimonials.findOne({userId: commenter.id})
     const profilePicture = testimonial && testimonial.image
 
+    // TODO maybe use a HMAC
+    const hash = crypto
+      .createHash('sha256')
+      .update(`${discussion.id}${commenter.id}${USER_ID_SALT}`)
+      .digest('hex')
+    const id = fakeUUID(hash)
+
     return anonymous
       ? {
+        id,
         name: t('api/comment/anonymous/displayName'),
         profilePicture: null,
         credential
       }
       : {
+        id,
         name: commenter.name,
         profilePicture: profilePicture,
         credential
