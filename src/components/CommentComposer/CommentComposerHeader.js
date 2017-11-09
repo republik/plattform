@@ -3,6 +3,7 @@ import {css} from 'glamor'
 import {MdCheck, MdEdit} from 'react-icons/lib/md'
 import colors from '../../theme/colors'
 import {sansSerifMedium16, sansSerifRegular14} from '../Typography/styles'
+import {ellipsize} from '../../lib/styleMixins'
 
 const styles = {
   root: css({
@@ -28,17 +29,13 @@ const styles = {
   name: css({
     ...sansSerifMedium16,
     color: colors.text,
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis'
+    ...ellipsize
   }),
   description: css({
     ...sansSerifRegular14,
     color: colors.lightText,
     lineHeight: 1,
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis'
+    ...ellipsize,
   }),
   verifiedDescription: css({
     color: colors.text

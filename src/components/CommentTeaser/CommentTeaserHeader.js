@@ -2,6 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
+import { ellipsize } from '../../lib/styleMixins'
 
 const styles = {
   root: css({
@@ -11,17 +12,13 @@ const styles = {
   title: css({
     ...sansSerifMedium16,
     color: colors.text,
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis'
+    ...ellipsize
   }),
   subtitle: css({
     ...sansSerifRegular14,
     color: colors.lightText,
     lineHeight: 1.1,
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis'
+    ...ellipsize
   })
 }
 
