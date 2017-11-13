@@ -57,11 +57,16 @@ export const Figure = ({ children, attributes, role, ...props }) => {
 Figure.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
-  role: PropTypes.string
+  role: PropTypes.string,
+  type: PropTypes.string
+}
+
+Figure.defaultProps = {
+  type: 'Figure'
 }
 
 export const FigureGroup = ({ children, attributes, ...props }) => {
-  const numSiblings = children.filter(c => c.type.name === 'Figure').length
+  const numSiblings = children.filter(c => c.props.type === 'Figure').length
   return (
     <Figure
       {...attributes}
