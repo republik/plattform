@@ -35,7 +35,6 @@ module.exports = async (_, args, { user }) => {
 
   if (VIMEO_REGEX.test(url)) {
     const vimeoId = VIMEO_REGEX.exec(url)[4]
-    console.log(VIMEO_REGEX.exec(url))
     const vimeoData = await getVimeoVideoById(vimeoId)
 
     return {
