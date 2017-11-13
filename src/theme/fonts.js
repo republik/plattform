@@ -1,6 +1,7 @@
 import SG, {getJson} from './env'
 
 export const fontFamilies = {
+  serifTitle: 'Georgia-Bold, serif',
   serifRegular: 'Georgia, serif',
   serifBold: 'Georgia-Bold, serif',
   sansSerifRegular: 'Helvetica-Neue-Regular, Helvetica Neue, Helvetica, sans-serif',

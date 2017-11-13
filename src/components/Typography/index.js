@@ -64,3 +64,108 @@ export const Interaction = {
   )
 }
 
+
+const eSubheadRule = css(styles.editorialSubhead)
+const eLeadRule = css(styles.editorialLead)
+const eCreditRule = css(styles.editorialCredit)
+const ePRule = css(styles.editorialP)
+const eQuestionRule = css(styles.editorialQuestion)
+const eQuoteTextRule = css(styles.editorialQuoteText)
+const eCiteRule = css(styles.editorialCite)
+const eBoxTitleRule = css(styles.editorialBoxTitle)
+const eBoxTextRule = css(styles.editorialBoxText)
+const eAuthorLinkRule = css(styles.editorialAuthorLink)
+const eMark = css(styles.editorialMark)
+const eCaption = css(styles.editorialCaption)
+const eByline = css(styles.editorialByline)
+
+const getEditorialHeadlineRule = (type) => {
+  switch(type) {
+    case 'meta': return css(styles.editorialHeadlineMeta)
+    default: return css(styles.editorialHeadline)
+  }
+}
+
+// attributes are piped through for publikator editor support.
+export const Editorial = {
+  Headline: ({ children, attributes, type, ...props }) => (
+    <h1 {...attributes} {...props} {...getEditorialHeadlineRule(type)}>
+      {children}
+    </h1>
+  ),
+  Subhead: ({ children, attributes, ...props }) => (
+    <h2 {...attributes} {...props} {...eSubheadRule}>
+      {children}
+    </h2>
+  ),
+  Lead: ({ children, attributes, ...props }) => (
+    <p {...attributes} {...props} {...eLeadRule}>
+      {children}
+    </p>
+  ),
+  Credit: ({ children, attributes, ...props }) => (
+    <p {...attributes} {...props} {...eCreditRule}>
+      {children}
+    </p>
+  ),
+  P: ({ children, attributes, ...props }) => (
+    <p {...attributes} {...props} {...ePRule}>
+      {children}
+    </p>
+  ),
+  Answer: ({ children, attributes, ...props }) => (
+    <p {...attributes} {...props} {...ePRule}>
+      {children}
+    </p>
+  ),
+  AnswerBy: ({ children, attributes, ...props }) => (
+    <b {...attributes} {...props}>
+      {children}:
+    </b>
+  ),
+  Question: ({ children, attributes, ...props }) => (
+    <p {...attributes} {...props} {...eQuestionRule}>
+      {children}
+    </p>
+  ),
+  QuoteText: ({ children, attributes, ...props }) => (
+    <div {...attributes} {...eQuoteTextRule}>
+      {children}
+    </div>
+  ),
+  Cite: ({ children, attributes, ...props }) => (
+    <cite {...attributes} {...eCiteRule}>
+      {children}
+    </cite>
+  ),
+  BoxTitle: ({ children, attributes, ...props }) => (
+    <p {...attributes} {...props} {...eBoxTitleRule}>
+      {children}
+    </p>
+  ),
+  BoxText: ({ children, attributes, ...props }) => (
+    <p {...attributes} {...props} {...eBoxTextRule}>
+      {children}
+    </p>
+  ),
+  AuthorLink: ({ children, attributes, ...props }) => (
+    <a {...attributes} {...props} {...eAuthorLinkRule}>
+      {children}
+    </a>
+  ),
+  Mark: ({ children, attributes, ...props }) => (
+    <p {...attributes} {...props} {...eMark}>
+      {children}
+    </p>
+  ),
+  Caption: ({ children, attributes, ...props }) => (
+    <figcaption {...attributes} {...props} {...eCaption}>
+      {children}
+    </figcaption>
+  ),
+  Byline: ({ children, attributes, ...props }) => (
+    <span {...attributes} {...props} {...eByline}>
+      {children}
+    </span>
+  )
+}

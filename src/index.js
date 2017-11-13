@@ -196,6 +196,53 @@ ReactDOM.render(
         ]
       },
       {
+        title: 'Templates',
+        pages: [
+          {
+            path: '/titleblock',
+            title: 'TitleBlock',
+            imports: {
+              css,
+              ...require('./components/Typography'),
+              TitleBlock: require('./components/TitleBlock')
+            },
+            src: require('./components/TitleBlock/docs.md')
+          },
+          {
+            path: '/pullquote',
+            title: 'PullQuote',
+            imports: {
+              css,
+              ...require('./components/Typography'),
+              PullQuote: require('./components/PullQuote')
+            },
+            src: require('./components/PullQuote/docs.md')
+          },
+          {
+            path: '/infobox',
+            title: 'InfoBox',
+            imports: {
+              css,
+              ...require('./components/Typography'),
+              InfoBox: require('./components/InfoBox')
+            },
+            src: require('./components/InfoBox/docs.md')
+          },
+          {
+            path: '/figure',
+            title: 'Figure',
+            imports: {
+              css,
+              ...require('./components/Typography'),
+              Figure: require('./components/Figure').Figure,
+              FigureGroup: require('./components/Figure').FigureGroup,
+              Image: require('./components/Figure/Image')
+            },
+            src: require('./components/Figure/docs.md')
+          },
+        ]
+      },
+      {
         title: 'Development',
         pages: [
           {
