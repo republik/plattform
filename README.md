@@ -39,6 +39,23 @@ GITHUB_APP_ID=
 GITHUB_INSTALLATION_ID=
 GITHUB_APP_KEY=
 
+
+# Auth keys for the embedding endpoint.
+
+# Twitter App Stuff
+
+TWITTER_APP_KEY='T8Dr1U9T0nzgpUJXeTnDZKOS9'
+TWITTER_APP_SECRET='dcR8nPleW6EdnETyuiGwuCF1SjF1zw0ut3lJixBcx3jh3W8NjJ'
+
+# Vimeo App Stuff
+
+VIMEO_APP_KEY='4ad78746244447702eecd6a71b82ad80494899fd'
+VIMEO_APP_SECRET='YbEFbtOemCgI0G6d5u7pNhZs4qetxa0mbk1DtSa4f0/yUf+YthRRRD66JeZ8L1Y5StxGklJ6FQPvV0ybCCA7euHuD13xNupSRqqEsVEa+QcUDE6zl+E+CwPh1NRdxUaE'
+
+# Youtube App Stuff
+
+YOUTUBE_APP_KEY='AIzaSyC4oBJ0nY44xXTP6rZXiCbB7Q0M37nUVQE'
+
 # optional: filter for the repos query (repo name must contain term)
 REPOS_NAME_FILTER=article-
 
