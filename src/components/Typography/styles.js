@@ -17,11 +17,13 @@ export const link = {
 export const serifTitle58 = {
   fontFamily: fontFamilies.serifTitle,
   fontSize: 58,
+  fontWeight: 'normal',
   lineHeight: '60px'
 }
 export const serifTitle30 = {
   fontFamily: fontFamilies.serifTitle,
   fontSize: 30,
+  fontWeight: 'normal',
   lineHeight: '34px'
 }
 
