@@ -18,9 +18,8 @@ const TitleBlock = ({
   textAlign = 'inherit',
   ...props
 }) => {
-  const containerStyle = { ...styles.container, textAlign: textAlign }
   return (
-    <section {...attributes} {...css(containerStyle)}>
+    <section {...attributes} {...styles.container} style={{textAlign}}>
       {children}
     </section>
   )
