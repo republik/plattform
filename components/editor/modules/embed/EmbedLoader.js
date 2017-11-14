@@ -76,11 +76,13 @@ export default (query, Component) => (
           return (
             <div
               {...styles.border}
+              {...props.attributes}
               data-active={active}
               contentEditable={false}
               >
               <Component
                 {...props}
+                data={node.data.toJS()}
                 />
             </div>
           )

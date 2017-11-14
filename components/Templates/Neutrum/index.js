@@ -102,7 +102,7 @@ const schema = {
                 <pre
                   style={{lineHeight: '1em'}}
                 >
-                  {JSON.stringify(props.node.data.toJS(), null, 3)}
+                  {JSON.stringify(props.data, null, 3)}
                 </pre>
               ),
               editorModule: 'embedTwitter',
@@ -118,7 +118,7 @@ const schema = {
                 <pre
                   style={{lineHeight: '1em'}}
                 >
-                  {JSON.stringify(props.node.data.toJS(), null, 3)}
+                  {JSON.stringify(props.data, null, 3)}
                 </pre>
               ),
               editorModule: 'embedVideo',
