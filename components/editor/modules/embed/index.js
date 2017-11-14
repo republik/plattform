@@ -135,7 +135,6 @@ const toMdast = ({ TYPE }) => (
         children: [
           {
             type: 'link',
-            title: url,
             url,
             children: [
               {

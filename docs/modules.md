@@ -5,13 +5,10 @@
 Markdown representation
 
 ```
-<section><h6>[string, dynamic type]</h6>
-\`\`\`
-{
-  "url": string
-}
-\`\`\`
-  [Original Link](Original Link)
+<section><h6>EMBED</h6>
+
+  <Embed Url>
+
 <hr /></section>
 ```
 
