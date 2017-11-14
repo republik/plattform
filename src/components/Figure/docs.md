@@ -15,7 +15,9 @@ A `<Figure />` typically contains an `<Image>` and an optional `<Editorial.Capti
 
 ### `<FigureGroup />`
 
-A `<FigureGroup />` contains multiple `<Figure />` elements. Note that currently up to four side-by-side `<Figure />` elements are supported. There's no auto-cropping magic in place, so side-by-side image files should already be cropped to the same aspect ratio.
+A `<FigureGroup />` contains multiple `<Figure />` elements.
+
+By default, the `<Figure />` elements are arranged side-by-side in one row. To enforce columns use e.g. `<FigureGroup data={{columns: 2}} />`. Note that currently up to four side-by-side `<Figure />` elements are supported. There's no auto-cropping magic in place, so image files should already be cropped to the same aspect ratio.
 
 A `<FigureGroup />` containing two side-by-side `<Figure>` elements, each with their own caption:
 
@@ -54,6 +56,7 @@ A `<FigureGroup />` containing two side-by-side `<Figure>` elements, with one sh
 </FigureGroup>
 ```
 
+A `<FigureGroup />` containing three side-by-side `<Figure>` elements:
 ```react
 <FigureGroup>
   <Figure>
@@ -80,6 +83,7 @@ A `<FigureGroup />` containing two side-by-side `<Figure>` elements, with one sh
 </FigureGroup>
 ```
 
+A `<FigureGroup />` containing four side-by-side `<Figure>` elements:
 ```react
 <FigureGroup>
   <Figure>
@@ -106,5 +110,38 @@ A `<FigureGroup />` containing two side-by-side `<Figure>` elements, with one sh
       <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
     </Editorial.Caption>
   </Figure>
+</FigureGroup>
+```
+
+A `<FigureGroup />` containing four `<Figure>` elements in 2 columns:
+```react
+<FigureGroup data={{columns: 2}}>
+  <Figure>
+    <Image src='/static/landscape.jpg' alt='' />
+    <Editorial.Caption>
+      <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
+    </Editorial.Caption>
+  </Figure>
+  <Figure>
+    <Image src='/static/landscape.jpg' alt='' />
+    <Editorial.Caption>
+      <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
+    </Editorial.Caption>
+  </Figure>
+  <Figure>
+    <Image src='/static/landscape.jpg' alt='' />
+    <Editorial.Caption>
+      <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
+    </Editorial.Caption>
+  </Figure>
+  <Figure>
+    <Image src='/static/landscape.jpg' alt='' />
+    <Editorial.Caption>
+      <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
+    </Editorial.Caption>
+  </Figure>
+  <Editorial.Caption>
+    This is a caption stretching beautifully across the group of all images as you can see above.
+  </Editorial.Caption>
 </FigureGroup>
 ```
