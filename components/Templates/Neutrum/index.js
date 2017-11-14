@@ -94,6 +94,38 @@ const schema = {
             <NarrowContainer {...attributes}>{children}</NarrowContainer>,
           editorModule: 'center',
           rules: [
+            {
+              matchMdast: matchZone(
+                'EMBEDTWITTER'
+              ),
+              component: props => (
+                <pre
+                  style={{lineHeight: '1em'}}
+                >
+                  {JSON.stringify(props.data, null, 3)}
+                </pre>
+              ),
+              editorModule: 'embedTwitter',
+              editorOptions: {
+                lookupType: 'paragraph'
+              }
+            },
+            {
+              matchMdast: matchZone(
+                'EMBEDVIDEO'
+              ),
+              component: props => (
+                <pre
+                  style={{lineHeight: '1em'}}
+                >
+                  {JSON.stringify(props.data, null, 3)}
+                </pre>
+              ),
+              editorModule: 'embedVideo',
+              editorOptions: {
+                lookupType: 'paragraph'
+              }
+            },
             paragraph,
             {
               matchMdast: matchHeading(
