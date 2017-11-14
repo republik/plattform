@@ -219,21 +219,6 @@ Long, editorial texts use the serif cuts. With margins, except `:first-child` 0 
 </article>
 ```
 
-### QuoteText and Cite
-
-These are used by the [PullQuote](/pullquote) component.
-
-```react
-<blockquote>
-  <Editorial.QuoteText>
-    Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
-  </Editorial.QuoteText>
-  <Editorial.Cite>
-  Thomas Jefferson
-  </Editorial.Cite>
-</blockquote>
-```
-
 ### BoxTitle and BoxText
 
 These are used by the [InfoBox](/infobox) component.

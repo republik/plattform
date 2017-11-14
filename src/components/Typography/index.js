@@ -70,8 +70,6 @@ const eLeadRule = css(styles.editorialLead)
 const eCreditRule = css(styles.editorialCredit)
 const ePRule = css(styles.editorialP)
 const eQuestionRule = css(styles.editorialQuestion)
-const eQuoteTextRule = css(styles.editorialQuoteText)
-const eCiteRule = css(styles.editorialCite)
 const eBoxTitleRule = css(styles.editorialBoxTitle)
 const eBoxTextRule = css(styles.editorialBoxText)
 const eAuthorLinkRule = css(styles.editorialAuthorLink)
@@ -127,16 +125,6 @@ export const Editorial = {
     <p {...attributes} {...props} {...eQuestionRule}>
       {children}
     </p>
-  ),
-  QuoteText: ({ children, attributes, ...props }) => (
-    <div {...attributes} {...eQuoteTextRule}>
-      {children}
-    </div>
-  ),
-  Cite: ({ children, attributes, ...props }) => (
-    <cite {...attributes} {...eCiteRule}>
-      {children}
-    </cite>
   ),
   BoxTitle: ({ children, attributes, ...props }) => (
     <p {...attributes} {...props} {...eBoxTitleRule}>

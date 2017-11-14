@@ -279,25 +279,6 @@ export const editorialP = {
   }
 }
 
-export const editorialQuoteText = {
-  ...serifBold24,
-  [mUp]: {
-    ...serifBold28,
-  },
-  color: colors.text,
-}
-
-export const editorialCite = {
-  display: 'inline-block',
-  ...sansSerifRegular14,
-  marginTop: '18px',
-  [mUp]: {
-    ...sansSerifRegular15,
-    marginTop: '21px'
-  },
-  fontStyle: 'normal'
-}
-
 export const editorialBoxTitle = {
   marginTop: 0,
   borderTop: `1px solid ${colors.text}`,

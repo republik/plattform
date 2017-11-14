@@ -214,7 +214,12 @@ ReactDOM.render(
             imports: {
               css,
               ...require('./components/Typography'),
-              PullQuote: require('./components/PullQuote')
+              PullQuote: require('./components/PullQuote/PullQuote'),
+              PullQuoteBody: require('./components/PullQuote/Body'),
+              PullQuoteFigure: require('./components/PullQuote/Figure'),
+              PullQuoteSource: require('./components/PullQuote/Source'),
+              PullQuoteText: require('./components/PullQuote/Text'),
+              Image: require('./components/Figure/Image'),
             },
             src: require('./components/PullQuote/docs.md')
           },

@@ -1,38 +1,55 @@
-A `<PullQuote />` is a key phrase, quotation, or excerpt that has been pulled from an article and used as a graphic element.
+A `<PullQuote />` is a key phrase, quotation, or excerpt that has been pulled from an article and used as a graphic element. It typically contains a `<PullQuoteText />` and an optional `<PullQuoteSource />`.
 
 Supported props:
-- `source`: The source or author of the quote.
-- `isQuoted`: Suppress quotation marks by `isQuoted={false}`.
-- `imageSrc`: An image.
 - `textAlign`: The text alignment, `inherit` (default), `left`, `center` or `right`.
-- `maxWidth`: The maximum width of the container.
-
+- `size`: `narrow`
 
 ```react
-<PullQuote source='Thomas Jefferson'>
-Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
+<PullQuote>
+  <PullQuoteText>
+    Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
+  </PullQuoteText>
+  <PullQuoteSource>Thomas Jefferson</PullQuoteSource>
 </PullQuote>
 ```
 
+You can suppress quotation marks using `<PullQuoteText isQuoted={false} />`.
+
 ```react
-<PullQuote isQuoted={false}>
-Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
+<PullQuote>
+  <PullQuoteText isQuoted={false}>
+    Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
+  </PullQuoteText>
+  <PullQuoteSource>Thomas Jefferson</PullQuoteSource>
 </PullQuote>
 ```
 
 ```react
 <PullQuote
- source='Thomas Jefferson'
  textAlign='center'
- maxWidth='495px'>
-Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
+ size='narrow'>
+  <PullQuoteText>
+    Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
+  </PullQuoteText>
+  <PullQuoteSource>Thomas Jefferson</PullQuoteSource>
 </PullQuote>
 ```
 
+Use `<PullQuoteFigure />` to include an `<Image />`. In this case, text and source must be wrapped inside `<PullQuoteBody />` which is optional otherwise.
+
 ```react
-<PullQuote
- source='Thomas Jefferson'
- imageSrc='/static/profilePicture1.png'>
-Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
+<PullQuote>
+  <PullQuoteFigure>
+    <Image src='/static/profilePicture1.png' alt='' />
+    <Editorial.Caption>
+      <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
+    </Editorial.Caption>
+  </PullQuoteFigure>
+  <PullQuoteBody>
+    <PullQuoteText>
+      Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
+    </PullQuoteText>
+    <PullQuoteSource>Thomas Jefferson</PullQuoteSource>
+  </PullQuoteBody>
 </PullQuote>
 ```
