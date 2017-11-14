@@ -229,7 +229,11 @@ ReactDOM.render(
             imports: {
               css,
               ...require('./components/Typography'),
-              InfoBox: require('./components/InfoBox')
+              InfoBox: require('./components/InfoBox/InfoBox'),
+              InfoBoxFigure: require('./components/InfoBox/Figure'),
+              InfoBoxText: require('./components/InfoBox/Text'),
+              InfoBoxTitle: require('./components/InfoBox/Title'),
+              Image: require('./components/Figure/Image'),
             },
             src: require('./components/InfoBox/docs.md')
           },

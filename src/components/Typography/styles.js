@@ -279,24 +279,6 @@ export const editorialP = {
   }
 }
 
-export const editorialBoxTitle = {
-  marginTop: 0,
-  borderTop: `1px solid ${colors.text}`,
-  ...sansSerifMedium15p5,
-  [mUp]: {
-    ...sansSerifMedium18p5
-  },
-  color: colors.text
-}
-
-export const editorialBoxText = {
-  ...sansSerifRegular15,
-  [mUp]: {
-    ...sansSerifRegular18
-  },
-  color: colors.text
-}
-
 export const editorialAuthorLink = {
   textDecoration: 'underline',
   color: colors.text,

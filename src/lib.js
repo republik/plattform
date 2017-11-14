@@ -19,7 +19,12 @@ export {default as Loader} from './components/Loader'
 export {default as RawHtml} from './components/RawHtml'
 export {default as Dropdown} from './components/Form/Dropdown'
 export {default as TitleBlock} from './components/TitleBlock'
-export {default as InfoBox} from './components/InfoBox'
+export {
+  InfoBox,
+  InfoBoxFigure,
+  InfoBoxText,
+  InfoBoxTitle
+} from './components/InfoBox'
 export {
   PullQuote,
   PullQuoteBody,

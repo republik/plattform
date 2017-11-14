@@ -70,8 +70,6 @@ const eLeadRule = css(styles.editorialLead)
 const eCreditRule = css(styles.editorialCredit)
 const ePRule = css(styles.editorialP)
 const eQuestionRule = css(styles.editorialQuestion)
-const eBoxTitleRule = css(styles.editorialBoxTitle)
-const eBoxTextRule = css(styles.editorialBoxText)
 const eAuthorLinkRule = css(styles.editorialAuthorLink)
 const eMark = css(styles.editorialMark)
 const eCaption = css(styles.editorialCaption)
@@ -123,16 +121,6 @@ export const Editorial = {
   ),
   Question: ({ children, attributes, ...props }) => (
     <p {...attributes} {...props} {...eQuestionRule}>
-      {children}
-    </p>
-  ),
-  BoxTitle: ({ children, attributes, ...props }) => (
-    <p {...attributes} {...props} {...eBoxTitleRule}>
-      {children}
-    </p>
-  ),
-  BoxText: ({ children, attributes, ...props }) => (
-    <p {...attributes} {...props} {...eBoxTextRule}>
       {children}
     </p>
   ),
