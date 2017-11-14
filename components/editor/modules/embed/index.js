@@ -2,10 +2,76 @@ import React from 'react'
 import { matchBlock } from '../../utils'
 import { findOrCreate } from '../../utils/serialization'
 import MarkdownSerializer from 'slate-mdast-serializer'
+import Loader from '../../../Loader'
 import { colors } from '@project-r/styleguide'
 import { css } from 'glamor'
+import { gql, graphql } from 'react-apollo'
 
 import embedFromUrlPlugin from './embedFromUrlPlugin'
+
+const getEmbed = gql`
+query getEmbed($url: String!) {
+  embed(url: $url) {
+    __typename
+    ... on EmbedInterface {
+      id
+    }
+    ... on Twitter {
+      text
+      userId
+      userName
+      userScreenName
+    }
+    ... on Youtube {
+      userId
+      userName
+      thumbnail
+    }
+    ... on Vimeo {
+      userId
+      userName
+      thumbnail
+    }
+  }
+}
+`
+
+const EmbedLoader =
+  Component =>
+  ({
+    loading,
+    error,
+    embed,
+    data,
+    ...props
+  }) => (
+    <Loader loading={loading} error={error} render={() => {
+      const { node, editor } = props
+      const active = editor.value.blocks.some(
+        block => block.key === node.key
+      )
+      return (
+        <div
+          {...styles.border}
+          data-active={active}
+          contentEditable={false}
+        >
+          <Component
+            embed={data.embed}
+            {...props}
+          />
+        </div>
+      )
+    }} />
+  )
+
+const connect = graphql(getEmbed, {
+  options: props => ({
+    variables: {
+      url: props.url
+    }
+  })
+})
 
 const styles = {
   border: css({
@@ -98,29 +164,21 @@ const getSerializer = options =>
   })
 
 const embedPlugin = options => ({
-  renderNode ({
-    node,
-    children,
-    editor
-  }) {
+  renderNode (props) {
     const Embed = options.rule.component
+    const {
+      node
+    } = props
+
     if (!matchBlock(options.TYPE)(node)) {
       return
     }
 
-    const active = editor.value.blocks.some(
-      block => block.key === node.key
-    )
+    const url = node.data.get('url')
+    const Comp = connect(EmbedLoader(Embed))
+
     return (
-      <span
-        {...styles.border}
-        data-active={active}
-        contentEditable={false}
-      >
-        <Embed
-          data={node.data.toJS()}
-        />
-      </span>
+      <Comp url={url} {...props} />
     )
   },
   schema: {

@@ -98,11 +98,11 @@ const schema = {
               matchMdast: matchZone(
                 'EMBED'
               ),
-              component: ({ data }) => (
+              component: props => (
                 <pre
                   style={{lineHeight: '1em'}}
                 >
-                  {JSON.stringify(data, null, 3)}
+                  {JSON.stringify(props.embed, null, 3)}
                 </pre>
               ),
               editorModule: 'embed',
