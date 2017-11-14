@@ -61,13 +61,15 @@ Figure.defaultProps = {
 }
 
 export const FigureGroup = ({ children, attributes, data }) => {
-  const columns = children.filter(c => c.props.typeName === 'Figure').length
+  const columns =
+    (data && data.columns) ||
+    children.filter(c => c.props.typeName === 'Figure').length
   return (
     <figure
       role={'group'}
       {...attributes}
       {...styles.figureGroup}
-      data-columns={(data && data.columns) || columns}
+      data-columns={columns}
     >
       {children}
     </figure>

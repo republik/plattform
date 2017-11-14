@@ -113,7 +113,7 @@ A `<FigureGroup />` containing four side-by-side `<Figure>` elements:
 </FigureGroup>
 ```
 
-A `<FigureGroup />` containing four `<Figure>` elements in 2 columns:
+A `<FigureGroup />` containing four `<Figure>` elements in two columns:
 ```react
 <FigureGroup data={{columns: 2}}>
   <Figure>
