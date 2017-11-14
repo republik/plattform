@@ -124,6 +124,9 @@ const schema = {
               }
             }
           ]
+        },
+        {
+          editorModule: 'specialchars'
         }
       ]
     }

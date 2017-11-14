@@ -22,6 +22,7 @@ import createFigureModule from './modules/figure'
 import createFigureImageModule from './modules/figure/image'
 import createSpecialModule from './modules/special'
 import createMetaModule from './modules/meta'
+import createSpecialCharsModule from './modules/specialchars'
 
 const moduleCreators = {
   document: createDocumentModule,
@@ -38,7 +39,8 @@ const moduleCreators = {
   figure: createFigureModule,
   figureImage: createFigureImageModule,
   special: createSpecialModule,
-  meta: createMetaModule
+  meta: createMetaModule,
+  specialchars: createSpecialCharsModule
 }
 const initModule = rule => {
   const { editorModule, editorOptions = {} } = rule
