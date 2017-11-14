@@ -1,33 +1,25 @@
 import React from 'react'
+import MarkdownSerializer from 'slate-mdast-serializer'
+import { gql, withApollo } from 'react-apollo'
+
 import { matchBlock } from '../../utils'
 import { findOrCreate } from '../../utils/serialization'
-import MarkdownSerializer from 'slate-mdast-serializer'
-import Loader from '../../../Loader'
-import { colors } from '@project-r/styleguide'
-import { css } from 'glamor'
-import { gql, graphql } from 'react-apollo'
 
 import embedFromUrlPlugin from './embedFromUrlPlugin'
+import EmbedLoader from './EmbedLoader'
 
-const getEmbed = gql`
-query getEmbed($url: String!) {
+const videoQuery = gql`
+query getVideoEmbed($url: String!) {
   embed(url: $url) {
     __typename
-    ... on EmbedInterface {
-      id
-    }
-    ... on Twitter {
-      text
-      userId
-      userName
-      userScreenName
-    }
     ... on Youtube {
+      id
       userId
       userName
       thumbnail
     }
     ... on Vimeo {
+      id
       userId
       userName
       thumbnail
@@ -36,56 +28,20 @@ query getEmbed($url: String!) {
 }
 `
 
-const EmbedLoader =
-  Component =>
-  ({
-    loading,
-    error,
-    embed,
-    data,
-    ...props
-  }) => (
-    <Loader loading={loading} error={error} render={() => {
-      const { node, editor } = props
-      const active = editor.value.blocks.some(
-        block => block.key === node.key
-      )
-      return (
-        <div
-          {...styles.border}
-          data-active={active}
-          contentEditable={false}
-        >
-          <Component
-            data={data.embed}
-            {...props}
-          />
-        </div>
-      )
-    }} />
-  )
-
-const connect = graphql(getEmbed, {
-  options: props => ({
-    variables: {
-      url: props.url
+const twitterQuery = gql`
+query getTwitterEmbed($url: String!) {
+  embed(url: $url) {
+    __typename
+    ... on Twitter {
+      id
+      text
+      userId
+      userName
+      userScreenName
     }
-  })
-})
-
-const styles = {
-  border: css({
-    display: 'inline-block',
-    outline: `4px solid transparent`,
-    width: '100%',
-    lineHeight: 0,
-    transition: 'outline-color 0.2s',
-    '&[data-active="true"]': {
-      outlineColor: colors.primary
-    },
-    pointerEvents: 'none'
-  })
+  }
 }
+`
 
 const fromMdast = ({ TYPE }) => (
   node,
@@ -103,7 +59,6 @@ const fromMdast = ({ TYPE }) => (
   const link = findOrCreate(deepNodes, {
     type: 'link'
   })
-
   return {
     kind: 'block',
     type: TYPE,
@@ -162,45 +117,46 @@ const getSerializer = options =>
     ]
   })
 
-const embedPlugin = options => ({
-  renderNode (props) {
-    const Embed = options.rule.component
-    const {
-      node
-    } = props
+const embedPlugin = ({ query, ...options }) => {
+  const Embed = options.rule.component
+  const Component = withApollo(EmbedLoader(query, Embed))
 
-    if (!matchBlock(options.TYPE)(node)) {
-      return
-    }
+  return {
+    renderNode (props) {
+      const {
+        node
+      } = props
 
-    const url = node.data.get('url')
-    const Comp = connect(EmbedLoader(Embed))
+      if (!matchBlock(options.TYPE)(node)) {
+        return
+      }
 
-    return (
-      <Comp url={url} {...props} />
-    )
-  },
-  schema: {
-    blocks: {
-      [options.TYPE]: {
-        isVoid: true
+      return (
+        <Component {...props} />
+      )
+    },
+    schema: {
+      blocks: {
+        [options.TYPE]: {
+          isVoid: true
+        }
       }
     }
   }
-})
+}
 
-export default options => {
+const moduleFactory = ({ query, matchUrl }) => options => {
   const { rule, TYPE } = options
-
   return {
     helpers: {
       serializer: getSerializer(options)
     },
     changes: {},
     plugins: [
-      embedPlugin(options),
+      embedPlugin({ query, ...options }),
       embedFromUrlPlugin({
-        match: matchBlock(
+        matchUrl,
+        matchSource: matchBlock(
           rule.editorOptions.lookupType.toUpperCase()
         ),
         TYPE
@@ -208,3 +164,19 @@ export default options => {
     ]
   }
 }
+
+const YOUTUBE_REGEX = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|&v(?:i)?=))([^#&?]*).*/
+
+const VIMEO_REGEX = /(http|https)?:\/\/(www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^/]*)\/videos\/|)(\d+)(?:|\/\?)/
+
+const TWITTER_REGEX = /^https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(es)?\/(\d+)$/
+
+export const createEmbedVideoModule = moduleFactory({
+  matchUrl: v => YOUTUBE_REGEX.test(v) || VIMEO_REGEX.test(v),
+  query: videoQuery
+})
+
+export const createEmbedTwitterModule = moduleFactory({
+  matchUrl: v => TWITTER_REGEX.test(v),
+  query: twitterQuery
+})

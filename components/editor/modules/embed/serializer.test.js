@@ -3,22 +3,8 @@ import {
   matchZone
 } from 'mdast-react-render/lib/utils'
 
-import createEmbedModule from './'
+import { createEmbedVideoModule, createEmbedTwitterModule } from './'
 import createParagraphModule from '../paragraph'
-
-const TYPE = 'EMBED'
-
-const embedModule = createEmbedModule({
-  TYPE,
-  rule: {
-    matchMdast: matchZone(TYPE),
-    editorOptions: {
-      lookupType: 'paragraph'
-    }
-  },
-  subModules: []
-})
-embedModule.name = 'embed'
 
 const paragraphModule = createParagraphModule({
   TYPE: 'PARAGRAPH',
@@ -27,22 +13,103 @@ const paragraphModule = createParagraphModule({
 })
 paragraphModule.name = 'paragraph'
 
-const serializer = embedModule.helpers.serializer
+const embedVideoModule = createEmbedVideoModule({
+  TYPE: 'EMBEDVIDEO',
+  rule: {
+    matchMdast: matchZone('EMBEDVIDEO'),
+    editorOptions: {
+      lookupType: 'paragraph'
+    }
+  },
+  subModules: []
+})
+embedVideoModule.name = 'embedVideo'
 
-test('embed serialization', assert => {
-  const md = `<section><h6>EMBED</h6>
+const embedTwitterModule = createEmbedTwitterModule({
+  TYPE: 'EMBEDTWITTER',
+  rule: {
+    matchMdast: matchZone('EMBEDTWITTER'),
+    editorOptions: {
+      lookupType: 'paragraph'
+    }
+  },
+  subModules: []
+})
+embedVideoModule.name = 'embedTwitter'
 
-<https://www.youtube.com/watch?v=8bl19RoR7lc>
+const embedVideoSerializer = embedVideoModule.helpers.serializer
+const embedTwitterSerializer = embedTwitterModule.helpers.serializer
+
+test('embedVideo serialization', assert => {
+  const md = `<section><h6>EMBEDVIDEO</h6>
+
+\`\`\`
+{
+  "__typename": "Vimeo",
+  "id": "242527960",
+  "userId": "/users/4801470",
+  "userName": "Roman De Giuli",
+  "thumbnail": "https://i.vimeocdn.com/video/666449997_960x556.jpg?r=pad"
+}
+\`\`\`
+
+<https://vimeo.com/channels/staffpicks/242527960>
 
 <hr /></section>`
-  const value = serializer.deserialize(md)
+
+  const value = embedVideoSerializer.deserialize(md)
   const embed = value.document.nodes.first()
 
   assert.equal(embed.kind, 'block')
-  assert.equal(embed.type, 'EMBED')
+  assert.equal(embed.type, 'EMBEDVIDEO')
 
-  assert.equal(embed.getIn(['data', 'url']), 'https://www.youtube.com/watch?v=8bl19RoR7lc')
-  //
-  assert.equal(serializer.serialize(value).trimRight(), md)
+  assert.deepEqual(embed.data.toJS(), {
+    __typename: 'Vimeo',
+    id: '242527960',
+    userId: '/users/4801470',
+    userName: 'Roman De Giuli',
+    thumbnail: 'https://i.vimeocdn.com/video/666449997_960x556.jpg?r=pad',
+    url: 'https://vimeo.com/channels/staffpicks/242527960'
+  })
+
+  assert.equal(embedVideoSerializer.serialize(value).trimRight(), md)
+  assert.end()
+})
+
+test('embedTwitter serialization', assert => {
+  const md = `<section><h6>EMBEDTWITTER</h6>
+
+\`\`\`
+{
+  "__typename": "Twitter",
+  "id": "930363029669203969",
+  "text": "Good luck against Argentina later, @alexiwobi https://t.co/mm9us0b7JC",
+  "userId": "34613288",
+  "userName": "Arsenal FC",
+  "userScreenName": "Arsenal"
+}
+\`\`\`
+
+<https://twitter.com/Arsenal/status/930363029669203969>
+
+<hr /></section>`
+
+  const value = embedTwitterSerializer.deserialize(md)
+  const embed = value.document.nodes.first()
+
+  assert.equal(embed.kind, 'block')
+  assert.equal(embed.type, 'EMBEDTWITTER')
+
+  assert.deepEqual(embed.data.toJS(), {
+    __typename: 'Twitter',
+    id: '930363029669203969',
+    text: 'Good luck against Argentina later, @alexiwobi https://t.co/mm9us0b7JC',
+    userId: '34613288',
+    userName: 'Arsenal FC',
+    userScreenName: 'Arsenal',
+    url: 'https://twitter.com/Arsenal/status/930363029669203969'
+  })
+
+  assert.equal(embedTwitterSerializer.serialize(value).trimRight(), md)
   assert.end()
 })

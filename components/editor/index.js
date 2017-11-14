@@ -20,12 +20,16 @@ import createListModule from './modules/list'
 import createListItemModule from './modules/list/item'
 import createFigureModule from './modules/figure'
 import createFigureImageModule from './modules/figure/image'
-import createEmbedModule from './modules/embed'
+import {
+  createEmbedVideoModule,
+  createEmbedTwitterModule
+} from './modules/embed'
 import createSpecialModule from './modules/special'
 import createMetaModule from './modules/meta'
 
 const moduleCreators = {
-  embed: createEmbedModule,
+  embedVideo: createEmbedVideoModule,
+  embedTwitter: createEmbedTwitterModule,
   document: createDocumentModule,
   documentPlain: createDocumentPlainModule,
   cover: createCoverModule,

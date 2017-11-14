@@ -96,16 +96,32 @@ const schema = {
           rules: [
             {
               matchMdast: matchZone(
-                'EMBED'
+                'EMBEDTWITTER'
               ),
               component: props => (
                 <pre
                   style={{lineHeight: '1em'}}
                 >
-                  {JSON.stringify(props.data, null, 3)}
+                  {JSON.stringify(props.node.data.toJS(), null, 3)}
                 </pre>
               ),
-              editorModule: 'embed',
+              editorModule: 'embedTwitter',
+              editorOptions: {
+                lookupType: 'paragraph'
+              }
+            },
+            {
+              matchMdast: matchZone(
+                'EMBEDVIDEO'
+              ),
+              component: props => (
+                <pre
+                  style={{lineHeight: '1em'}}
+                >
+                  {JSON.stringify(props.node.data.toJS(), null, 3)}
+                </pre>
+              ),
+              editorModule: 'embedVideo',
               editorOptions: {
                 lookupType: 'paragraph'
               }
