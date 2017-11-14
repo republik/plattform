@@ -21,92 +21,116 @@ const styles = {
   })
 }
 
-const fromMdast = ({ TYPE }) =>
-  (node, index, parent, visitChildren) => {
-    const deepNodes = node.children.reduce(
-      (children, child) => children
+const fromMdast = ({ TYPE }) => (
+  node,
+  index,
+  parent,
+  visitChildren
+) => {
+  const deepNodes = node.children.reduce(
+    (children, child) =>
+      children
         .concat(child)
         .concat(child.children),
-      []
-    )
-    const link = findOrCreate(deepNodes, {type: 'link'})
+    []
+  )
+  const link = findOrCreate(deepNodes, {
+    type: 'link'
+  })
 
-    return {
-      kind: 'block',
-      type: TYPE,
-      isVoid: true,
-      data: {
-        ...node.data,
-        originalUrl: link.url
+  return {
+    kind: 'block',
+    type: TYPE,
+    isVoid: true,
+    data: {
+      ...node.data,
+      url: link.url
+    }
+  }
+}
+
+const toMdast = ({ TYPE }) => (
+  node,
+  index,
+  parent,
+  visitChildren
+) => {
+  const {
+    url,
+    ...data
+  } = node.data
+  return {
+    type: 'zone',
+    identifier: TYPE,
+    data,
+    children: [
+      {
+        type: 'paragraph',
+        children: [
+          {
+            type: 'link',
+            title: url,
+            url,
+            children: [
+              {
+                type: 'text',
+                value: url
+              }
+            ]
+          }
+        ]
       }
-    }
+    ]
   }
-
-const toMdast = ({ TYPE }) =>
-  (node, index, parent, visitChildren) => {
-    const {originalUrl, ...data} = node.data
-    return {
-      type: 'zone',
-      identifier: TYPE,
-      data,
-      children: [
-        {
-          type: 'paragraph',
-          children: [
-            {
-              type: 'link',
-              title: originalUrl,
-              url: originalUrl,
-              children: [
-                {
-                  type: 'text',
-                  value: originalUrl
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  }
+}
 
 const getSerializer = options =>
   new MarkdownSerializer({
     rules: [
       {
         match: matchBlock(options.TYPE),
-        matchMdast: options.rule.matchMdast,
+        matchMdast:
+          options.rule.matchMdast,
         fromMdast: fromMdast(options),
         toMdast: toMdast(options)
       }
     ]
   })
 
-const embedPlugin = options =>
-  ({
-    renderNode ({node, children, editor}) {
-      const Embed = options.rule.component
-      if (!matchBlock(options.TYPE)(node)) return
+const embedPlugin = options => ({
+  renderNode ({
+    node,
+    children,
+    editor
+  }) {
+    const Embed = options.rule.component
+    if (!matchBlock(options.TYPE)(node)) {
+      return
+    }
 
-      const active = editor.value.blocks.some(block => block.key === node.key)
-      return (
-        <span
-          {...styles.border}
-          data-active={active}
-          contentEditable={false}
-        >
-          <Embed data={node.data.toJS()} />
-        </span>
-      )
-    },
-    schema: {
-      blocks: {
-        [options.TYPE]: {
-          isVoid: true
-        }
+    const active = editor.value.blocks.some(
+      block => block.key === node.key
+    )
+    return (
+      <span
+        {...styles.border}
+        data-active={active}
+        contentEditable={false}
+      >
+        <Embed
+          data={node.data.toJS()}
+        />
+      </span>
+    )
+  },
+  schema: {
+    blocks: {
+      [options.TYPE]: {
+        isVoid: true
       }
     }
-  })
+  }
+})
 
 export default options => {
   const { rule, TYPE } = options
@@ -119,7 +143,9 @@ export default options => {
     plugins: [
       embedPlugin(options),
       embedFromUrlPlugin({
-        match: matchBlock(rule.editorOptions.lookupType.toUpperCase()),
+        match: matchBlock(
+          rule.editorOptions.lookupType.toUpperCase()
+        ),
         TYPE
       })
     ]

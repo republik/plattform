@@ -4,36 +4,8 @@ const VIMEO_REGEX = /(http|https)?:\/\/(www\.)?vimeo.com\/(?:channels\/(?:\w+\/)
 
 const TWITTER_REGEX = /^https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(es)?\/(\d+)$/
 
-const matchUrl = url => {
-  if (YOUTUBE_REGEX.test(url)) {
-    return {
-      embedType: 'youtube',
-      embedData: {
-        id: YOUTUBE_REGEX.exec(url)[1],
-        originalUrl: url
-      }
-    }
-  }
-  if (VIMEO_REGEX.test(url)) {
-    return {
-      embedType: 'vimeo',
-      embedData: {
-        id: VIMEO_REGEX.exec(url)[5],
-        originalUrl: url
-      }
-    }
-  }
-
-  if (TWITTER_REGEX.test(url)) {
-    return {
-      embedType: 'twitter',
-      embedData: {
-        id: TWITTER_REGEX.exec(url)[3],
-        originalUrl: url
-      }
-    }
-  }
-}
+const isEmbedUrl = url =>
+  TWITTER_REGEX.test(url) || VIMEO_REGEX.test(url) || YOUTUBE_REGEX.test(url)
 
 export default ({match, TYPE}) => ({
   onKeyDown (event, change) {
@@ -53,13 +25,15 @@ export default ({match, TYPE}) => ({
 
     event.preventDefault()
 
-    const data = matchUrl(text.trim())
+    const url = text.trim()
 
-    if (data) {
+    if (isEmbedUrl(url)) {
       return change
         .setNodeByKey(block.key, {
           type: TYPE,
-          data
+          data: {
+            url
+          }
         })
         .select({
           anchorKey: block.key,

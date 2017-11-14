@@ -8,8 +8,7 @@ Markdown representation
 <section><h6>[string, dynamic type]</h6>
 \`\`\`
 {
-  "embedType": enum "youtube" | "vimeo" | "twitter"
-  "embedData": object
+  "url": string
 }
 \`\`\`
   [Original Link](Original Link)
@@ -23,9 +22,7 @@ Slate structure:
   kind: 'block',
   type: string, dynamic type
   data: {
-    embedType: enum "youtube" | "vimeo" | "twitter"
-    embedData: object
-    originalUrl: string
+    url
   },
   isVoid: true
 }
