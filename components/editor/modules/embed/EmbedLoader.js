@@ -81,7 +81,6 @@ export default (query, Component) => (
               contentEditable={false}
               >
               <Component
-                {...props}
                 data={node.data.toJS()}
                 />
             </div>
