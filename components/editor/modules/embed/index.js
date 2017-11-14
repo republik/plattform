@@ -57,7 +57,7 @@ const EmbedLoader =
           contentEditable={false}
         >
           <Component
-            embed={data.embed}
+            data={data.embed}
             {...props}
           />
         </div>
