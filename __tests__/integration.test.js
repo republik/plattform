@@ -1,5 +1,11 @@
 // uncomment to see open handles after tests run
-// require('leaked-handles')
+/*
+require('leaked-handles').set({
+  fullStack: true, // use full stack traces
+  timeout: 10000, // run every 30 seconds instead of 5.
+  debugSockets: true // pretty print tcp thrown exceptions.
+})
+*/
 
 const test = require('tape-async')
 

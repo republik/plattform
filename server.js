@@ -100,4 +100,12 @@ module.exports.close = () => {
   httpServer.close()
   pgdb.close()
   require('./lib/redis').quit()
+  pgdb = null
+  server = null
+  httpServer = null
+  subscriptionServer = null
+  // TODO server leaks timers, force teardown for now
+  setTimeout(() => {
+    process.exit(0)
+  }, 30000)
 }
