@@ -1,6 +1,6 @@
 import React from 'react'
 import {css} from 'glamor'
-import {MdCheck} from 'react-icons/lib/md'
+import MdCheck from 'react-icons/lib/md/check'
 import colors from '../../theme/colors'
 import {sansSerifMedium16, sansSerifRegular14} from '../Typography/styles'
 import {ellipsize} from '../../lib/styleMixins'

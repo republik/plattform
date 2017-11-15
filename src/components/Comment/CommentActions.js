@@ -1,6 +1,7 @@
 import React from 'react'
 import {css} from 'glamor'
-import {MdKeyboardArrowDown, MdKeyboardArrowUp} from 'react-icons/lib/md'
+import MdKeyboardArrowDown from 'react-icons/lib/md/keyboard-arrow-down'
+import MdKeyboardArrowUp from 'react-icons/lib/md/keyboard-arrow-up'
 import colors from '../../theme/colors'
 import {Label} from '../Typography'
 

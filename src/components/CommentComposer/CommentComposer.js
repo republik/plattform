@@ -4,7 +4,7 @@ import {css} from 'glamor'
 import Textarea from 'react-textarea-autosize';
 import colors from '../../theme/colors'
 import {serifRegular16, sansSerifRegular16} from '../Typography/styles'
-import {MdClose} from 'react-icons/lib/md'
+import MdClose from 'react-icons/lib/md/close'
 
 import CommentComposerHeader from './CommentComposerHeader'
 import CommentComposerError from './CommentComposerError'

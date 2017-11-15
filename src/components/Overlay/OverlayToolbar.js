@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {css} from 'glamor'
-import {MdClose} from 'react-icons/lib/md'
+import MdClose from 'react-icons/lib/md/close'
 
 import colors from '../../theme/colors'
 import {mUp} from '../../theme/mediaQueries'
