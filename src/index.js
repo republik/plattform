@@ -219,6 +219,8 @@ ReactDOM.render(
               PullQuoteFigure: require('./components/PullQuote/Figure'),
               PullQuoteSource: require('./components/PullQuote/Source'),
               PullQuoteText: require('./components/PullQuote/Text'),
+              Byline: require('./components/Figure/Byline'),
+              Caption: require('./components/Figure/Caption'),
               Image: require('./components/Figure/Image'),
             },
             src: require('./components/PullQuote/docs.md')
@@ -233,6 +235,8 @@ ReactDOM.render(
               InfoBoxFigure: require('./components/InfoBox/Figure'),
               InfoBoxText: require('./components/InfoBox/Text'),
               InfoBoxTitle: require('./components/InfoBox/Title'),
+              Byline: require('./components/Figure/Byline'),
+              Caption: require('./components/Figure/Caption'),
               Image: require('./components/Figure/Image'),
             },
             src: require('./components/InfoBox/docs.md')
@@ -245,7 +249,9 @@ ReactDOM.render(
               ...require('./components/Typography'),
               Figure: require('./components/Figure').Figure,
               FigureGroup: require('./components/Figure').FigureGroup,
-              Image: require('./components/Figure/Image')
+              Byline: require('./components/Figure/Byline'),
+              Caption: require('./components/Figure/Caption'),
+              Image: require('./components/Figure/Image'),
             },
             src: require('./components/Figure/docs.md')
           },

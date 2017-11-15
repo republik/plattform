@@ -1,15 +1,15 @@
 ### `<Figure />`
 
-A `<Figure />` typically contains an `<Image>` and an optional `<Editorial.Caption>`. The `<Image>` component makes sure that the image doesn't exceed the container width when using a large image.
+A `<Figure />` typically contains an `<Image>` and an optional `<Caption>`. The `<Image>` component makes sure that the image doesn't exceed the container width when using a large image.
 
 
 ```react
 <Figure>
   <Image src='/static/landscape.jpg' alt='' />
-  <Editorial.Caption>
+  <Caption>
     Lorem ipsum dolor sit amet consetetur.{' '}
-    <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
-  </Editorial.Caption>
+    <Byline>Photo: Laurent Burst</Byline>
+  </Caption>
 </Figure>
 ```
 
@@ -25,17 +25,17 @@ A `<FigureGroup />` containing two side-by-side `<Figure>` elements, each with t
 <FigureGroup>
   <Figure>
     <Image src='/static/landscape.jpg' alt='' />
-    <Editorial.Caption>
+    <Caption>
       A caption for the left photo.{' '}
-      <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
-    </Editorial.Caption>
+      <Byline>Photo: Laurent Burst</Byline>
+    </Caption>
   </Figure>
   <Figure>
     <Image src='/static/landscape.jpg' alt='' />
-    <Editorial.Caption>
+    <Caption>
       A caption for the right photo.{' '}
-      <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
-    </Editorial.Caption>
+      <Byline>Photo: Laurent Burst</Byline>
+    </Caption>
   </Figure>
 </FigureGroup>
 ```
@@ -49,10 +49,10 @@ A `<FigureGroup />` containing two side-by-side `<Figure>` elements, with one sh
   <Figure>
     <Image src='/static/landscape.jpg' alt='' />
   </Figure>
-  <Editorial.Caption>
+  <Caption>
     This is an image caption stretching beautifully over both images as you can see above.{' '}
-    <Editorial.Byline>Photos: Laurent Burst</Editorial.Byline>
-  </Editorial.Caption>
+    <Byline>Photos: Laurent Burst</Byline>
+  </Caption>
 </FigureGroup>
 ```
 
@@ -61,24 +61,24 @@ A `<FigureGroup />` containing three side-by-side `<Figure>` elements:
 <FigureGroup>
   <Figure>
     <Image src='/static/landscape.jpg' alt='' />
-    <Editorial.Caption>
+    <Caption>
       Left photo.{' '}
-      <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
-    </Editorial.Caption>
+      <Byline>Photo: Laurent Burst</Byline>
+    </Caption>
   </Figure>
   <Figure>
     <Image src='/static/landscape.jpg' alt='' />
-    <Editorial.Caption>
+    <Caption>
       Center photo.{' '}
-      <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
-    </Editorial.Caption>
+      <Byline>Photo: Laurent Burst</Byline>
+    </Caption>
   </Figure>
   <Figure>
     <Image src='/static/landscape.jpg' alt='' />
-    <Editorial.Caption>
+    <Caption>
       Right photo.{' '}
-      <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
-    </Editorial.Caption>
+      <Byline>Photo: Laurent Burst</Byline>
+    </Caption>
   </Figure>
 </FigureGroup>
 ```
@@ -88,27 +88,27 @@ A `<FigureGroup />` containing four side-by-side `<Figure>` elements:
 <FigureGroup>
   <Figure>
     <Image src='/static/landscape.jpg' alt='' />
-    <Editorial.Caption>
-      <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
-    </Editorial.Caption>
+    <Caption>
+      <Byline>Photo: Laurent Burst</Byline>
+    </Caption>
   </Figure>
   <Figure>
     <Image src='/static/landscape.jpg' alt='' />
-    <Editorial.Caption>
-      <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
-    </Editorial.Caption>
+    <Caption>
+      <Byline>Photo: Laurent Burst</Byline>
+    </Caption>
   </Figure>
   <Figure>
     <Image src='/static/landscape.jpg' alt='' />
-    <Editorial.Caption>
-      <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
-    </Editorial.Caption>
+    <Caption>
+      <Byline>Photo: Laurent Burst</Byline>
+    </Caption>
   </Figure>
   <Figure>
     <Image src='/static/landscape.jpg' alt='' />
-    <Editorial.Caption>
-      <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
-    </Editorial.Caption>
+    <Caption>
+      <Byline>Photo: Laurent Burst</Byline>
+    </Caption>
   </Figure>
 </FigureGroup>
 ```
@@ -118,30 +118,30 @@ A `<FigureGroup />` containing four `<Figure>` elements in two columns:
 <FigureGroup data={{columns: 2}}>
   <Figure>
     <Image src='/static/landscape.jpg' alt='' />
-    <Editorial.Caption>
-      <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
-    </Editorial.Caption>
+    <Caption>
+      <Byline>Photo: Laurent Burst</Byline>
+    </Caption>
   </Figure>
   <Figure>
     <Image src='/static/landscape.jpg' alt='' />
-    <Editorial.Caption>
-      <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
-    </Editorial.Caption>
+    <Caption>
+      <Byline>Photo: Laurent Burst</Byline>
+    </Caption>
   </Figure>
   <Figure>
     <Image src='/static/landscape.jpg' alt='' />
-    <Editorial.Caption>
-      <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
-    </Editorial.Caption>
+    <Caption>
+      <Byline>Photo: Laurent Burst</Byline>
+    </Caption>
   </Figure>
   <Figure>
     <Image src='/static/landscape.jpg' alt='' />
-    <Editorial.Caption>
-      <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
-    </Editorial.Caption>
+    <Caption>
+      <Byline>Photo: Laurent Burst</Byline>
+    </Caption>
   </Figure>
-  <Editorial.Caption>
+  <Caption>
     This is a caption stretching beautifully across the group of all images as you can see above.
-  </Editorial.Caption>
+  </Caption>
 </FigureGroup>
 ```

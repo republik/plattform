@@ -35,6 +35,8 @@ export {
 export {
   Figure,
   FigureGroup,
+  Byline,
+  Caption,
   Image
 } from './components/Figure'
 export {

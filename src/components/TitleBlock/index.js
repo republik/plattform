@@ -4,12 +4,12 @@ import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 
 const styles = {
-  container: {
+  container: css({
     margin: '0 0 40px 0',
     [mUp]: {
       margin: '0 0 70px 0'
     }
-  }
+  })
 }
 
 const TitleBlock = ({

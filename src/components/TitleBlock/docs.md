@@ -6,7 +6,7 @@ Supported props:
 
 ```react
 <TitleBlock>
-  <Editorial.Mark>Neutrum</Editorial.Mark>
+  <Editorial.Format>Neutrum</Editorial.Format>
   <Editorial.Headline>The quick brown fox jumps over the lazy dog</Editorial.Headline>
   <Editorial.Lead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.
@@ -19,7 +19,7 @@ Supported props:
 
 ```react
 <TitleBlock textAlign={'center'}>
-  <Editorial.Mark>Neutrum</Editorial.Mark>
+  <Editorial.Format>Neutrum</Editorial.Format>
   <Editorial.Headline>The quick brown fox jumps over the lazy dog</Editorial.Headline>
   <Editorial.Lead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.
@@ -32,8 +32,8 @@ Supported props:
 
 ```react
 <TitleBlock textAlign={'center'}>
-  <Editorial.Mark>Neutrum</Editorial.Mark>
-  <Editorial.Headline type={'meta'}>The quick brown fox jumps over the lazy dog</Editorial.Headline>
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <Interaction.Headline>The quick brown fox jumps over the lazy dog</Interaction.Headline>
   <Editorial.Lead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.
   </Editorial.Lead>

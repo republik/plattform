@@ -84,14 +84,8 @@ export const serifBold24 = {
   fontFamily: fontFamilies.serifBold,
   fontWeight: 'normal',
   fontSize: 24,
-  lineHeight: '28px',
+  lineHeight: '30px',
   letterSpacing: -0.21
-}
-export const serifBold23 = {
-  fontFamily: fontFamilies.serifBold,
-  fontWeight: 'normal',
-  fontSize: 23,
-  lineHeight: '30px'
 }
 export const serifBold19 = {
   fontFamily: fontFamilies.serifBold,
@@ -183,20 +177,15 @@ export const sansSerifMedium20 = {
   lineHeight: '24px',
   letterSpacing: 'normal'
 }
-export const sansSerifMedium18p5 = {
+export const sansSerifMedium19 = {
   fontFamily: fontFamilies.sansSerifMedium,
-  fontSize: 18.5,
+  fontSize: 19,
   lineHeight: '30px',
 }
 export const sansSerifMedium16 = {
   fontFamily: fontFamilies.sansSerifMedium,
   fontSize: 16,
   lineHeight: '25px',
-}
-export const sansSerifMedium15p5 = {
-  fontFamily: fontFamilies.sansSerifMedium,
-  fontSize: 15.5,
-  lineHeight: '24px',
 }
 
 export const editorialHeadline = {
@@ -215,19 +204,11 @@ export const editorialHeadline = {
   }
 }
 
-export const editorialHeadlineMeta = {
-  ...editorialHeadline,
-  ...sansSerifMedium30,
-  [mUp]: {
-    ...sansSerifMedium58
-  }
-}
-
 export const editorialSubhead = {
   ...serifBold19,
   margin: '36px 0 -14px 0',
   [mUp]: {
-    ...serifBold23,
+    ...serifBold24,
     margin: '46px 0 -18px 0',
   },
   color: colors.text
@@ -287,7 +268,7 @@ export const editorialAuthorLink = {
   }
 }
 
-export const editorialMark = {
+export const editorialFormat = {
   ...sansSerifMedium16,
   margin: '0 0 18px 0',
   [mUp]: {
@@ -295,21 +276,6 @@ export const editorialMark = {
     margin: '0 0 28px 0',
   },
   textDecoration: 'underline'
-}
-
-export const editorialCaption = {
-  ...sansSerifRegular14,
-  [mUp]: {
-    ...sansSerifRegular15,
-    lineHeight: '18px'
-  }
-}
-
-export const editorialByline = {
-  ...sansSerifRegular11,
-  [mUp]: {
-    ...sansSerifRegular12
-  }
 }
 
 
@@ -369,6 +335,14 @@ export const quote = {
 }
 export const quoteText = {
 
+}
+
+export const interactionHeadline = {
+  ...editorialHeadline,
+  ...sansSerifMedium30,
+  [mUp]: {
+    ...sansSerifMedium58
+  }
 }
 
 export const interactionH1 = {

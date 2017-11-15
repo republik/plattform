@@ -54,7 +54,7 @@ import {colors: {text}, fontStyles: {serifRegular21}} from '@project-r/styleguid
 <div {...css(styles.serifTitle30)}>The quick brown fox jumps over the lazy dog</div>
 ```
 
-#### `serifBold{52,36,28,24,23,19,16}`
+#### `serifBold{52,36,28,24,19,16}`
 ```react|noSource,plain
 <div {...css(styles.serifBold52)}>The quick brown fox jumps over</div>
 ```
@@ -66,9 +66,6 @@ import {colors: {text}, fontStyles: {serifRegular21}} from '@project-r/styleguid
 ```
 ```react|noSource,plain
 <div {...css(styles.serifBold24)}>The quick brown fox jumps over the lazy dog</div>
-```
-```react|noSource,plain
-<div {...css(styles.serifBold23)}>The quick brown fox jumps over the lazy dog</div>
 ```
 ```react|noSource,plain
 <div {...css(styles.serifBold19)}>The quick brown fox jumps over the lazy dog</div>
@@ -97,7 +94,7 @@ import {colors: {text}, fontStyles: {serifRegular21}} from '@project-r/styleguid
 <div {...css(styles.serifRegular14)}>The quick brown fox jumps over the lazy dog</div>
 ```
 
-#### `sansSerifMedium{58,40,22,20,18p5,16,15p5}`
+#### `sansSerifMedium{58,40,22,20,19,16}`
 ```react|noSource,plain
 <div {...css(styles.sansSerifMedium58)}>The quick brown fox jumps over</div>
 ```
@@ -111,13 +108,10 @@ import {colors: {text}, fontStyles: {serifRegular21}} from '@project-r/styleguid
 <div {...css(styles.sansSerifMedium20)}>The quick brown fox jumps over the lazy dog</div>
 ```
 ```react|noSource,plain
-<div {...css(styles.sansSerifMedium18p5)}>The quick brown fox jumps over the lazy dog</div>
+<div {...css(styles.sansSerifMedium19)}>The quick brown fox jumps over the lazy dog</div>
 ```
 ```react|noSource,plain
 <div {...css(styles.sansSerifMedium16)}>The quick brown fox jumps over the lazy dog</div>
-```
-```react|noSource,plain
-<div {...css(styles.sansSerifMedium15p5)}>The quick brown fox jumps over the lazy dog</div>
 ```
 
 #### `sansSerifRegular{30,21,18,16,15,14,12,11}`
@@ -150,21 +144,17 @@ import {colors: {text}, fontStyles: {serifRegular21}} from '@project-r/styleguid
 
 Long, editorial texts use the serif cuts. With margins, except `:first-child` 0 top, `:last-child` 0 bottom.
 
-### Mark
+### Format
 
 ```react
-<Editorial.Mark>Neutrum</Editorial.Mark>
+<Editorial.Format>Neutrum</Editorial.Format>
   
 ```
 
 ### Headlines
 
 ```react
-<Editorial.Headline>The quick brown fox</Editorial.Headline>
-```
-
-```react
-<Editorial.Headline type={'meta'}>The quick brown fox</Editorial.Headline>
+<Editorial.Headline>The quick brown...</Editorial.Headline>
 ```
 
 ### Lead
@@ -217,20 +207,6 @@ Long, editorial texts use the serif cuts. With margins, except `:first-child` 0 
     The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me?" he thought. It wasn't a dream.
   </Editorial.Answer>
 </article>
-```
-
-### Caption and Byline
-
-These are used by the [Figure](/figure) component.
-
-```react
-<figure>
-  <img src='/static/profilePicture1.png' alt='' />
-  <Editorial.Caption>
-    Lorem ipsum dolor sit amet consetetur.{' '}
-    <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
-  </Editorial.Caption>
-</figure>
 ```
 
 ## Editorial Content (Crowdfunding)
@@ -287,6 +263,10 @@ Long, editorial texts use the serif cuts. With margins, except `:first-child` 0 
 UI elements and structured information uses the sans serif cuts. Without margins.
 
 ### Headlines
+
+```react
+<Interaction.Headline>The quick brown...</Interaction.Headline>
+```
 
 ```react
 <Interaction.H1>The quick brown...</Interaction.H1>

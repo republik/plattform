@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { sansSerifMedium15p5, sansSerifMedium18p5 } from '../Typography/styles'
+import { sansSerifMedium16, sansSerifMedium19 } from '../Typography/styles'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
@@ -10,9 +10,9 @@ const styles = {
   text: css({
     marginTop: 0,
     borderTop: `1px solid ${colors.text}`,
-    ...sansSerifMedium15p5,
+    ...sansSerifMedium16,
     [mUp]: {
-      ...sansSerifMedium18p5
+      ...sansSerifMedium19
     },
     color: colors.text,
     ':not([data-image-float])[data-image-size="S"] > &': {

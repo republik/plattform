@@ -3,6 +3,7 @@ import * as styles from './styles'
 import {css} from 'glamor'
 
 export const fontStyles = styles
+export { default as Editorial } from './Editorial'
 
 export const linkRule = css(styles.link)
 export const A = ({children, ...props}) => (
@@ -44,12 +45,16 @@ export const Quote = ({children, source, ...props}) => (
   </blockquote>
 )
 
+const iHeadlineRule = css(styles.interactionHeadline)
 const iH1Rule = css(styles.interactionH1)
 const iH2Rule = css(styles.interactionH2)
 const iH3Rule = css(styles.interactionH3)
 const iPRule = css(styles.interactionP)
 
 export const Interaction = {
+  Headline: ({children, ...props}) => (
+    <h1 {...props} {...iHeadlineRule}>{children}</h1>
+  ),
   H1: ({children, ...props}) => (
     <h1 {...props} {...iH1Rule}>{children}</h1>
   ),
@@ -61,87 +66,5 @@ export const Interaction = {
   ),
   P: ({children, ...props}) => (
     <p {...props} {...iPRule}>{children}</p>
-  )
-}
-
-
-const eSubheadRule = css(styles.editorialSubhead)
-const eLeadRule = css(styles.editorialLead)
-const eCreditRule = css(styles.editorialCredit)
-const ePRule = css(styles.editorialP)
-const eQuestionRule = css(styles.editorialQuestion)
-const eAuthorLinkRule = css(styles.editorialAuthorLink)
-const eMark = css(styles.editorialMark)
-const eCaption = css(styles.editorialCaption)
-const eByline = css(styles.editorialByline)
-
-const getEditorialHeadlineRule = (type) => {
-  switch(type) {
-    case 'meta': return css(styles.editorialHeadlineMeta)
-    default: return css(styles.editorialHeadline)
-  }
-}
-
-// attributes are piped through for publikator editor support.
-export const Editorial = {
-  Headline: ({ children, attributes, type, ...props }) => (
-    <h1 {...attributes} {...props} {...getEditorialHeadlineRule(type)}>
-      {children}
-    </h1>
-  ),
-  Subhead: ({ children, attributes, ...props }) => (
-    <h2 {...attributes} {...props} {...eSubheadRule}>
-      {children}
-    </h2>
-  ),
-  Lead: ({ children, attributes, ...props }) => (
-    <p {...attributes} {...props} {...eLeadRule}>
-      {children}
-    </p>
-  ),
-  Credit: ({ children, attributes, ...props }) => (
-    <p {...attributes} {...props} {...eCreditRule}>
-      {children}
-    </p>
-  ),
-  P: ({ children, attributes, ...props }) => (
-    <p {...attributes} {...props} {...ePRule}>
-      {children}
-    </p>
-  ),
-  Answer: ({ children, attributes, ...props }) => (
-    <p {...attributes} {...props} {...ePRule}>
-      {children}
-    </p>
-  ),
-  AnswerBy: ({ children, attributes, ...props }) => (
-    <b {...attributes} {...props}>
-      {children}:
-    </b>
-  ),
-  Question: ({ children, attributes, ...props }) => (
-    <p {...attributes} {...props} {...eQuestionRule}>
-      {children}
-    </p>
-  ),
-  AuthorLink: ({ children, attributes, ...props }) => (
-    <a {...attributes} {...props} {...eAuthorLinkRule}>
-      {children}
-    </a>
-  ),
-  Mark: ({ children, attributes, ...props }) => (
-    <p {...attributes} {...props} {...eMark}>
-      {children}
-    </p>
-  ),
-  Caption: ({ children, attributes, ...props }) => (
-    <figcaption {...attributes} {...props} {...eCaption}>
-      {children}
-    </figcaption>
-  ),
-  Byline: ({ children, attributes, ...props }) => (
-    <span {...attributes} {...props} {...eByline}>
-      {children}
-    </span>
   )
 }

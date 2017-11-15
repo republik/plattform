@@ -41,9 +41,9 @@ Use `<PullQuoteFigure />` to include an `<Image />`. In this case, text and sour
 <PullQuote>
   <PullQuoteFigure>
     <Image src='/static/profilePicture1.png' alt='' />
-    <Editorial.Caption>
-      <Editorial.Byline>Photo: Laurent Burst</Editorial.Byline>
-    </Editorial.Caption>
+    <Caption>
+      <Byline>Photo: Laurent Burst</Byline>
+    </Caption>
   </PullQuoteFigure>
   <PullQuoteBody>
     <PullQuoteText>
