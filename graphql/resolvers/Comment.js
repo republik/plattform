@@ -4,10 +4,10 @@ const crypto = require('crypto')
 const fakeUUID = require('../../lib/fakeUUID')
 
 const {
-  USER_ID_SALT
+  DISPLAY_AUTHOR_SECRET
 } = process.env
-if (!USER_ID_SALT) {
-  throw new Error('missing required USER_ID_SALT')
+if (!DISPLAY_AUTHOR_SECRET) {
+  throw new Error('missing required DISPLAY_AUTHOR_SECRET')
 }
 
 module.exports = {
@@ -109,7 +109,7 @@ module.exports = {
     // TODO maybe use a HMAC
     const hash = crypto
       .createHash('sha256')
-      .update(`${discussion.id}${commenter.id}${USER_ID_SALT}`)
+      .update(`${discussion.id}${commenter.id}${DISPLAY_AUTHOR_SECRET}`)
       .digest('hex')
     const id = fakeUUID(hash)
 
