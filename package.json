@@ -17,6 +17,7 @@
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-2": "^6.22.0",
     "catalog": "^3.1.2",
+    "commitizen": "^2.9.6",
     "core-js": "^2.4.1",
     "cz-conventional-changelog": "^2.0.0",
     "downshift": "^1.16.1",
@@ -46,6 +47,7 @@
     "url": "https://github.com/orbiting/styleguide.git"
   },
   "scripts": {
+    "commit": "git-cz",
     "prepublishOnly": "npm run prebuild && npm run build:lib",
     "prebuild": "rimraf lib",
     "build:lib": "babel src --out-dir lib",

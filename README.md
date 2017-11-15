@@ -116,7 +116,7 @@ The `master` branch gets auto-released via Travis. The next version is automatic
 <footer>
 ```
 
-You can use [`commitizen`](https://github.com/commitizen/cz-cli) via `git cz` to generate a message via interactive prompt.
+You can use `npm run commit` to generate a message via an interactive prompt.
 
 **Types**
 
