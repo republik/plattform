@@ -391,7 +391,7 @@ class EditorPage extends Component {
             </div>
             <EditSidebar
               repoId={repoId}
-              commit={repo.commit || repo.latestCommit}
+              commit={repo && (repo.commit || repo.latestCommit)}
               isNew={isNew}
               uncommittedChanges={uncommittedChanges}
               warnings={warnings}

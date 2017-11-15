@@ -82,7 +82,7 @@ class EditSidebar extends Component {
   }
 
   subscribe () {
-    if (!this.unsubscribe && this.props.data.repo) {
+    if (!this.props.isNew && !this.unsubscribe && this.props.data.repo) {
       this.unsubscribe = this.props.data.subscribeToMore({
         document: repoSubscription,
         variables: {
@@ -122,9 +122,10 @@ class EditSidebar extends Component {
       commitHandler,
       revertHandler,
       warnings,
-      width = 200
+      width = 200,
+      data = {}
     } = this.props
-    const { loading, error, repo } = this.props.data
+    const { loading, error, repo } = data
 
     return (
       <Loader
@@ -193,8 +194,10 @@ class EditSidebar extends Component {
                 />
               </div>
             )}
-            <Label>{t('uncommittedChanges/title')}</Label>
-            <UncommittedChanges repoId={repo.id} />
+            {!!repo && ([
+              <Label key='label'>{t('uncommittedChanges/title')}</Label>,
+              <UncommittedChanges key='uncommittedChanges' repoId={repo.id} />
+            ])}
           </div>
         )}
       />
@@ -205,6 +208,7 @@ class EditSidebar extends Component {
 export default compose(
   withT,
   graphql(getCommits, {
+    skip: props => props.isNew,
     options: props => ({
       variables: {
         repoId: props.repoId
