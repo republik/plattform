@@ -213,7 +213,7 @@ interface EmbedInterface {
   url: String!
 }
 
-type Twitter implements EmbedInterface {
+type TwitterEmbed implements EmbedInterface {
   id: ID!
   url: String!
 
@@ -224,7 +224,7 @@ type Twitter implements EmbedInterface {
   userScreenName: String!
 }
 
-type Youtube implements EmbedInterface {
+type YoutubeEmbed implements EmbedInterface {
   id: ID!
   url: String!
 
@@ -234,7 +234,7 @@ type Youtube implements EmbedInterface {
   thumbnail: String!
 }
 
-type Vimeo implements EmbedInterface {
+type VimeoEmbed implements EmbedInterface {
   id: ID!
   url: String!
 
@@ -244,6 +244,6 @@ type Vimeo implements EmbedInterface {
   thumbnail: String!
 }
 
-union Embed = Twitter | Youtube | Vimeo
+union Embed = TwitterEmbed | YoutubeEmbed | VimeoEmbed
 `
 module.exports = [typeDefinitions]

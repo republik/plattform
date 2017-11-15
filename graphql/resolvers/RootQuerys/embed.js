@@ -3,9 +3,14 @@ const { getTweetById } = require('../../../lib/twitter')
 const { getYoutubeVideoById } = require('../../../lib/youtube')
 const { getVimeoVideoById } = require('../../../lib/vimeo')
 
-const TWITTER_REGEX = /^https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(es)?\/(\d+)$/
-const YOUTUBE_REGEX = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|&v(?:i)?=))([^#&?]*).*/
-const VIMEO_REGEX = /(http|https)?:\/\/(www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^/]*)\/videos\/|)(\d+)(?:|\/\?)/
+// One capturing group at match[1] that catches the status
+const TWITTER_REGEX = /^https?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)$/
+
+// One capturing group at match[1] that catches the video id
+const YOUTUBE_REGEX = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|&v(?:i)?=))([^#&?]*).*$/
+
+// One capturing group at match[1] that catches the video id
+const VIMEO_REGEX = /^(?:http|https)?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^/]*)\/videos\/|)(\d+)(?:|\/\?)$/
 
 module.exports = async (_, args, { user }) => {
   ensureUserHasRole(user, 'editor')
@@ -13,11 +18,11 @@ module.exports = async (_, args, { user }) => {
   const { url } = args
 
   if (TWITTER_REGEX.test(url)) {
-    const tweetId = TWITTER_REGEX.exec(url)[3]
+    const tweetId = TWITTER_REGEX.exec(url)[1]
     const tweetData = await getTweetById(tweetId)
 
     return {
-      embedType: 'Twitter',
+      embedType: 'TwitterEmbed',
       url,
       ...tweetData
     }
@@ -27,18 +32,18 @@ module.exports = async (_, args, { user }) => {
     const youtubeData = await getYoutubeVideoById(youtubeId)
 
     return {
-      embedType: 'Youtube',
+      embedType: 'YoutubeEmbed',
       url,
       ...youtubeData
     }
   }
 
   if (VIMEO_REGEX.test(url)) {
-    const vimeoId = VIMEO_REGEX.exec(url)[4]
+    const vimeoId = VIMEO_REGEX.exec(url)[1]
     const vimeoData = await getVimeoVideoById(vimeoId)
 
     return {
-      embedType: 'Vimeo',
+      embedType: 'VimeoEmbed',
       url,
       id: vimeoId,
       ...vimeoData

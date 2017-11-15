@@ -105,5 +105,41 @@ Setup (for dev environment):
 - On the page of your new GitHub-App you also find the **ID**. This values needs to be provided as `GITHUB_APP_ID` env var.
 - [Install the GitHub-App](https://help.github.com/articles/installing-an-app-in-your-organization/) in your organization. On the page of the installation (settings -> Installed GitHub Apps -> App) copy the last part of the URL (e.g `41809`), it needs to be provided as `GITHUB_INSTALLATION_ID` env var.
 
+## Embeds
+
+The `embed` root query depends on 3rd party API calls and in order for them to work, you have to create apps on the respective platforms and put your credentials into your `.env` file.
+
+#### Youtube
+
+Create a new app: https://console.developers.google.com
+In the dashboard, select "Library" on the right, then search for and add the **YouTube Data API v3** to your services.
+
+Now select "Credentials" on the right and add the key to your `.env`:
+
+```
+YOUTUBE_APP_KEY=[your-key]
+```
+
+#### Vimeo
+
+Create a new app here: https://developer.vimeo.com/.
+Now select your new app and in the menu above the icon, click on authentication. Now you add to your `.env`:
+
+```
+VIMEO_APP_KEY=[The hash from field "Client Identifier"]
+VIMEO_APP_SECRET=[The hash from field "Client Secret"]
+```
+
+#### Twitter
+
+Create a new app here: https://apps.twitter.com/ and select it.
+Go to section "Keys and Access Tokens" and add to your `.env`:
+
+```
+TWITTER_APP_KEY=[The hash from field "Consumer Key (API Key)"]
+TWITTER_APP_SECRET=[The hash from field "Consumer Secret (API Secret)"]
+```
+
+
 ## Licensing
 The source code and it's documentation is licensed under [GNU AGPLv3](LICENSE)+.
