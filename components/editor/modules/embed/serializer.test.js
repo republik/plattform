@@ -45,7 +45,7 @@ test('embedVideo serialization', assert => {
 
 \`\`\`
 {
-  "__typename": "Vimeo",
+  "__typename": "VimeoEmbed",
   "id": "242527960",
   "userId": "/users/4801470",
   "userName": "Roman De Giuli",
@@ -64,7 +64,7 @@ test('embedVideo serialization', assert => {
   assert.equal(embed.type, 'EMBEDVIDEO')
 
   assert.deepEqual(embed.data.toJS(), {
-    __typename: 'Vimeo',
+    __typename: 'VimeoEmbed',
     id: '242527960',
     userId: '/users/4801470',
     userName: 'Roman De Giuli',
@@ -81,7 +81,7 @@ test('embedTwitter serialization', assert => {
 
 \`\`\`
 {
-  "__typename": "Twitter",
+  "__typename": "TwitterEmbed",
   "id": "930363029669203969",
   "text": "Good luck against Argentina later, @alexiwobi https://t.co/mm9us0b7JC",
   "userId": "34613288",
@@ -101,7 +101,7 @@ test('embedTwitter serialization', assert => {
   assert.equal(embed.type, 'EMBEDTWITTER')
 
   assert.deepEqual(embed.data.toJS(), {
-    __typename: 'Twitter',
+    __typename: 'TwitterEmbed',
     id: '930363029669203969',
     text: 'Good luck against Argentina later, @alexiwobi https://t.co/mm9us0b7JC',
     userId: '34613288',

@@ -12,13 +12,13 @@ const videoQuery = gql`
 query getVideoEmbed($url: String!) {
   embed(url: $url) {
     __typename
-    ... on Youtube {
+    ... on YoutubeEmbed {
       id
       userId
       userName
       thumbnail
     }
-    ... on Vimeo {
+    ... on VimeoEmbed {
       id
       userId
       userName
@@ -32,7 +32,7 @@ const twitterQuery = gql`
 query getTwitterEmbed($url: String!) {
   embed(url: $url) {
     __typename
-    ... on Twitter {
+    ... on TwitterEmbed {
       id
       text
       userId
@@ -165,11 +165,14 @@ const moduleFactory = ({ query, matchUrl }) => options => {
   }
 }
 
-const YOUTUBE_REGEX = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|&v(?:i)?=))([^#&?]*).*/
+// One capturing group at match[1] that catches the status
+const TWITTER_REGEX = /^https?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)$/
 
-const VIMEO_REGEX = /(http|https)?:\/\/(www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^/]*)\/videos\/|)(\d+)(?:|\/\?)/
+// One capturing group at match[1] that catches the video id
+const YOUTUBE_REGEX = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|&v(?:i)?=))([^#&?]*).*$/
 
-const TWITTER_REGEX = /^https?:\/\/twitter\.com\/(?:#!\/)?(\w+)\/status(es)?\/(\d+)$/
+// One capturing group at match[1] that catches the video id
+const VIMEO_REGEX = /^(?:http|https)?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^/]*)\/videos\/|)(\d+)(?:|\/\?)$/
 
 export const createEmbedVideoModule = moduleFactory({
   matchUrl: v => YOUTUBE_REGEX.test(v) || VIMEO_REGEX.test(v),
