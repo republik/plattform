@@ -1,5 +1,13 @@
 const Roles = require('../../lib/Roles')
 const createUser = require('../../lib/factories/createUser')
+const crypto = require('crypto')
+
+const {
+  DISPLAY_AUTHOR_SECRET
+} = process.env
+if (!DISPLAY_AUTHOR_SECRET) {
+  throw new Error('missing required DISPLAY_AUTHOR_SECRET')
+}
 
 module.exports = {
   content: ({ content, published, adminUnpublished }, args, { t }) =>
@@ -97,13 +105,20 @@ module.exports = {
     const testimonial = !anonymous && await pgdb.public.testimonials.findOne({userId: commenter.id})
     const profilePicture = testimonial && testimonial.image
 
+    const id = crypto
+      .createHmac('sha256', DISPLAY_AUTHOR_SECRET)
+      .update(`${discussion.id}${commenter.id}`)
+      .digest('hex')
+
     return anonymous
       ? {
+        id,
         name: t('api/comment/anonymous/displayName'),
         profilePicture: null,
         credential
       }
       : {
+        id,
         name: commenter.name,
         profilePicture: profilePicture,
         credential

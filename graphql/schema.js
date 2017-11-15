@@ -76,7 +76,7 @@ type RootMutations {
   setDiscussionPreferences(
     id: ID!
     discussionPreferences: DiscussionPreferencesInput!
-  ): DiscussionPreferences!
+  ): Discussion!
 }
 
 type RootSubscriptions {
@@ -269,6 +269,7 @@ type Discussion {
 }
 
 type DisplayUser {
+  id: ID!
   name: String!
   credential: Credential
   profilePicture: String

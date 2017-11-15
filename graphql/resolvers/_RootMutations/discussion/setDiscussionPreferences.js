@@ -1,6 +1,6 @@
 const Roles = require('../../../../lib/Roles')
 const setDiscussionPreferences = require('./lib/setDiscussionPreferences')
-const userPreference = require('../../Discussion/userPreference')
+const getDiscussion = require('../../_RootQuerys/discussion')
 
 module.exports = async (_, args, { pgdb, user, t }) => {
   Roles.ensureUserHasRole(user, 'member')
@@ -29,7 +29,7 @@ module.exports = async (_, args, { pgdb, user, t }) => {
 
     await transaction.transactionCommit()
 
-    return userPreference(discussion, null, { pgdb, user })
+    return getDiscussion(null, { id: discussion.id }, { pgdb }, null)
   } catch (e) {
     await transaction.transactionRollback()
     throw e
