@@ -1,7 +1,6 @@
 const Roles = require('../../lib/Roles')
 const createUser = require('../../lib/factories/createUser')
 const crypto = require('crypto')
-const fakeUUID = require('../../lib/fakeUUID')
 
 const {
   DISPLAY_AUTHOR_SECRET
@@ -106,12 +105,10 @@ module.exports = {
     const testimonial = !anonymous && await pgdb.public.testimonials.findOne({userId: commenter.id})
     const profilePicture = testimonial && testimonial.image
 
-    // TODO maybe use a HMAC
-    const hash = crypto
-      .createHash('sha256')
-      .update(`${discussion.id}${commenter.id}${DISPLAY_AUTHOR_SECRET}`)
+    const id = crypto
+      .createHmac('sha256', DISPLAY_AUTHOR_SECRET)
+      .update(`${discussion.id}${commenter.id}`)
       .digest('hex')
-    const id = fakeUUID(hash)
 
     return anonymous
       ? {
