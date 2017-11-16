@@ -199,6 +199,15 @@ ReactDOM.render(
         title: 'Templates',
         pages: [
           {
+            path: '/center',
+            title: 'Center',
+            imports: {
+              Center: require('./components/Center'),
+              Breakout: require('./components/Center').Breakout,
+            },
+            src: require('./components/Center/docs.md')
+          },
+          {
             path: '/titleblock',
             title: 'TitleBlock',
             imports: {
@@ -222,6 +231,7 @@ ReactDOM.render(
               Byline: require('./components/Figure/Byline'),
               Caption: require('./components/Figure/Caption'),
               Image: require('./components/Figure/Image'),
+              Center: require('./components/Center'),
             },
             src: require('./components/PullQuote/docs.md')
           },
@@ -238,6 +248,7 @@ ReactDOM.render(
               Byline: require('./components/Figure/Byline'),
               Caption: require('./components/Figure/Caption'),
               Image: require('./components/Figure/Image'),
+              Center: require('./components/Center'),
             },
             src: require('./components/InfoBox/docs.md')
           },

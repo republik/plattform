@@ -2,8 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
+import { BREAKOUT_SIZE, Breakout } from '../Center'
 
 const styles = {
+  container: css({
+    margin: '0 auto'
+  }),
   flex: css({
     [mUp]: {
       display: 'flex'
@@ -11,34 +15,43 @@ const styles = {
   })
 }
 
-const SIZE = {
-  narrow: 495
+const getBreakoutSize = (size, hasFigure) => {
+  if (size === 'float') {
+    return hasFigure ? BREAKOUT_SIZE.float : BREAKOUT_SIZE.floatTiny
+  }
+  if (size === 'breakout') {
+    return BREAKOUT_SIZE.breakoutLeft
+  }
+  return size
 }
 
-const PullQuote = ({ children, attributes, textAlign = 'inherit', size }) => {
-  const margin = textAlign === 'center' ? '0 auto' : ''
-  const maxWidth = (size && `${SIZE[size]}px`) || ''
-
+const PullQuote = ({ children, attributes, size }) => {
   const hasFigure = [...children].some(
     c => c.props.typeName === 'PullQuoteFigure'
   )
+  const textAlign = !hasFigure && size === 'narrow' ? 'center' : 'inherit'
 
   return (
-    <blockquote
-      {...attributes}
-      {...(hasFigure ? styles.flex : {})}
-      style={{ textAlign, maxWidth, margin }}
-    >
-      {children}
-    </blockquote>
+    <Breakout attributes={attributes} size={getBreakoutSize(size, hasFigure)}>
+      <blockquote
+        {...styles.container}
+        {...(hasFigure ? styles.flex : {})}
+        style={{ textAlign }}
+      >
+        {children}
+      </blockquote>
+    </Breakout>
   )
 }
 
 PullQuote.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
-  textAlign: PropTypes.oneOf(['inherit', 'left', 'center', 'right']),
-  size: PropTypes.oneOf(['narrow'])
+  size: PropTypes.oneOf(['regular', 'narrow', 'float', 'breakout']).isRequired
+}
+
+PullQuote.defaultProps = {
+  size: 'regular'
 }
 
 export default PullQuote

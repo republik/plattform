@@ -1,0 +1,130 @@
+import React from 'react'
+import { css } from 'glamor'
+import PropTypes from 'prop-types'
+import { PullQuote } from '../../components/PullQuote'
+
+export const BREAKOUT_SIZE = {
+  regular: 'regular',
+  narrow: 'narrow',
+  tiny: 'tiny',
+  breakout: 'breakout',
+  breakoutLeft: 'breakoutLeft',
+  float: 'float',
+  floatSmall: 'floatSmall',
+  floatTiny: 'floatTiny'
+}
+
+const MAX_WIDTH = 665
+const PADDING = 20
+const DEFAULT_MARGIN = 15
+const BREAKOUT = 155 + DEFAULT_MARGIN
+const FLOAT_MARGIN = 100
+const NARROW_WIDTH = 495
+const SMALL_WIDTH = 410
+const TINY_WIDTH = 325
+
+const floatStyle = {
+  float: 'left',
+  minWidth: BREAKOUT,
+  maxWidth: NARROW_WIDTH,
+  marginTop: FLOAT_MARGIN / 2,
+  marginRight: FLOAT_MARGIN,
+  marginBottom: FLOAT_MARGIN / 2,
+  marginLeft: -BREAKOUT,
+  width: '100%'
+}
+
+const styles = {
+  center: css({
+    maxWidth: MAX_WIDTH,
+    margin: '0 auto',
+    padding: PADDING
+  }),
+  narrow: css({
+    [`@media only screen and (min-width: ${MAX_WIDTH +
+      BREAKOUT * 2 +
+      PADDING * 2}px)`]: {
+      margin: '0 auto',
+      maxWidth: NARROW_WIDTH
+    }
+  }),
+  tiny: css({
+    [`@media only screen and (min-width: ${MAX_WIDTH +
+      BREAKOUT * 2 +
+      PADDING * 2}px)`]: {
+      margin: '0 auto',
+      maxWidth: TINY_WIDTH
+    }
+  }),
+  breakout: css({
+    [`@media only screen and (min-width: ${MAX_WIDTH +
+      BREAKOUT * 2 +
+      PADDING * 2}px)`]: {
+      marginLeft: -BREAKOUT,
+      marginRight: -BREAKOUT
+    }
+  }),
+  breakoutLeft: css({
+    [`@media only screen and (min-width: ${MAX_WIDTH +
+      BREAKOUT * 2 +
+      PADDING * 2}px)`]: {
+      marginLeft: -BREAKOUT
+    }
+  }),
+  float: css({
+    [`@media only screen and (min-width: ${MAX_WIDTH +
+      BREAKOUT * 2 +
+      PADDING * 2}px)`]: {
+      ...floatStyle
+    }
+  }),
+  floatSmall: css({
+    [`@media only screen and (min-width: ${MAX_WIDTH +
+      BREAKOUT * 2 +
+      PADDING * 2}px)`]: {
+      ...floatStyle,
+      maxWidth: SMALL_WIDTH
+    }
+  }),
+  floatTiny: css({
+    [`@media only screen and (min-width: ${MAX_WIDTH +
+      BREAKOUT * 2 +
+      PADDING * 2}px)`]: {
+      ...floatStyle,
+      maxWidth: TINY_WIDTH
+    }
+  })
+}
+
+const Center = ({ children, attributes = {}, ...props }) => (
+  <div {...styles.center} {...attributes} {...props}>
+    {children}
+  </div>
+)
+
+export const Breakout = ({ size, children, attributes = {}, ...props }) => (
+  <div {...styles[size]} {...attributes} {...props}>
+    {children}
+  </div>
+)
+
+Breakout.propTypes = {
+  size: PropTypes.oneOf([
+    BREAKOUT_SIZE.regular,
+    BREAKOUT_SIZE.narrow,
+    BREAKOUT_SIZE.tiny,
+    BREAKOUT_SIZE.breakout,
+    BREAKOUT_SIZE.breakoutLeft,
+    BREAKOUT_SIZE.float,
+    BREAKOUT_SIZE.floatSmall,
+    BREAKOUT_SIZE.floatTiny
+  ]).isRequired,
+  children: PropTypes.node.isRequired,
+  attributes: PropTypes.object
+}
+
+Breakout.defaultProps = {
+  size: 'regular'
+}
+
+export default Center

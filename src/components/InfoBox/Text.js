@@ -13,6 +13,11 @@ const styles = {
       ...sansSerifRegular18
     },
     color: colors.text,
+    ':not([data-image-float])[data-image-size="XS"] > &': {
+      [mUp]: {
+        marginLeft: `${IMAGE_SIZE['XS'] + 20}px`
+      }
+    },
     ':not([data-image-float])[data-image-size="S"] > &': {
       [mUp]: {
         marginLeft: `${IMAGE_SIZE['S'] + 20}px`

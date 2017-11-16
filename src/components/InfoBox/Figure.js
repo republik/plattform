@@ -22,6 +22,11 @@ const imageContainerStyles = {
 }
 
 const sizeStyles = {
+  '[data-image-size="XS"] > &': {
+    [mUp]: {
+      width: `${IMAGE_SIZE['XS']}px`
+    }
+  },
   '[data-image-size="S"] > &': {
     [mUp]: {
       width: `${IMAGE_SIZE['S']}px`

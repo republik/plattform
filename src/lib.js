@@ -19,6 +19,7 @@ export {default as Loader} from './components/Loader'
 export {default as RawHtml} from './components/RawHtml'
 export {default as Dropdown} from './components/Form/Dropdown'
 export {default as TitleBlock} from './components/TitleBlock'
+export { Center, Breakout } from './components/Center'
 export {
   InfoBox,
   InfoBoxFigure,
