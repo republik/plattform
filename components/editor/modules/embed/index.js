@@ -9,8 +9,8 @@ import embedFromUrlPlugin from './embedFromUrlPlugin'
 import EmbedLoader from './EmbedLoader'
 
 const videoQuery = gql`
-query getVideoEmbed($url: String!) {
-  embed(url: $url) {
+query getVideoEmbed($id: ID!, $embedType: EmbedType!) {
+  embed(id: $id, embedType: $embedType) {
     __typename
     ... on YoutubeEmbed {
       id
@@ -29,8 +29,8 @@ query getVideoEmbed($url: String!) {
 `
 
 const twitterQuery = gql`
-query getTwitterEmbed($url: String!) {
-  embed(url: $url) {
+query getTwitterEmbed($id: ID!, $embedType: EmbedType!) {
+  embed(id: $id, embedType: $embedType) {
     __typename
     ... on TwitterEmbed {
       id
@@ -145,7 +145,7 @@ const embedPlugin = ({ query, ...options }) => {
   }
 }
 
-const moduleFactory = ({ query, matchUrl }) => options => {
+const moduleFactory = ({ query, matchUrl, getQueryParams }) => options => {
   const { rule, TYPE } = options
   return {
     helpers: {
@@ -156,6 +156,7 @@ const moduleFactory = ({ query, matchUrl }) => options => {
       embedPlugin({ query, ...options }),
       embedFromUrlPlugin({
         matchUrl,
+        getQueryParams,
         matchSource: matchBlock(
           rule.editorOptions.lookupType.toUpperCase()
         ),
@@ -165,7 +166,7 @@ const moduleFactory = ({ query, matchUrl }) => options => {
   }
 }
 
-// One capturing group at match[1] that catches the status
+// One capturing group at match[1] that catches the status id
 const TWITTER_REGEX = /^https?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)$/
 
 // One capturing group at match[1] that catches the video id
@@ -174,12 +175,46 @@ const YOUTUBE_REGEX = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watc
 // One capturing group at match[1] that catches the video id
 const VIMEO_REGEX = /^(?:http|https)?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^/]*)\/videos\/|)(\d+)(?:|\/\?)$/
 
+const matchVideoUrl = url =>
+  YOUTUBE_REGEX.test(url) || VIMEO_REGEX.test(url)
+
+const getVideoQueryParams = url => {
+  if (YOUTUBE_REGEX.test(url)) {
+    return {
+      embedType: 'YoutubeEmbed',
+      id: YOUTUBE_REGEX.exec(url)[1]
+    }
+  }
+  if (VIMEO_REGEX.test(url)) {
+    return {
+      embedType: 'VimeoEmbed',
+      id: VIMEO_REGEX.exec(url)[1]
+    }
+  }
+  throw new Error(`No valid video embed URL: ${url}`)
+}
+
+const matchTwitterUrl = url =>
+  TWITTER_REGEX.test(url)
+
+const getTwitterQueryParams = url => {
+  if (TWITTER_REGEX.test(url)) {
+    return {
+      embedType: 'TwitterEmbed',
+      id: TWITTER_REGEX.exec(url)[1]
+    }
+  }
+  throw new Error(`No valid twitter embed URL: ${url}`)
+}
+
 export const createEmbedVideoModule = moduleFactory({
-  matchUrl: v => YOUTUBE_REGEX.test(v) || VIMEO_REGEX.test(v),
+  matchUrl: matchVideoUrl,
+  getQueryParams: getVideoQueryParams,
   query: videoQuery
 })
 
 export const createEmbedTwitterModule = moduleFactory({
-  matchUrl: v => TWITTER_REGEX.test(v),
+  matchUrl: matchTwitterUrl,
+  getQueryParams: getTwitterQueryParams,
   query: twitterQuery
 })

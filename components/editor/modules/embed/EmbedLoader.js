@@ -31,27 +31,25 @@ export default (query, Component) => (
 
       if (node.data.has('id')) {
         return
-      } else if (!node.data.has('url')) {
-        return console.warn('No embed URL found.')
+      } else if (!node.data.has('queryParams')) {
+        return console.warn('No embed params found.')
       }
 
       this.setState(state => ({
         loading: true,
         ...state
       }), () => {
-        const url = node.data.get('url')
-
+        const { id, embedType } = node.data.get('queryParams')
         client
           .query({
             query,
-            variables: { url }
+            variables: { id, embedType }
           })
           .then(
             ({ data }) => {
               this.setState({ error: null, loading: false })
               editor.change(t =>
                 t.setNodeByKey(node.key, { data: {
-                  url,
                   ...data.embed
                 } })
               )
