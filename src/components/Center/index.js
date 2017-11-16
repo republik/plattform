@@ -34,6 +34,10 @@ const floatStyle = {
   width: '100%'
 }
 
+const breakoutUp = `@media only screen and (min-width: ${MAX_WIDTH +
+  BREAKOUT * 2 +
+  PADDING * 2}px)`
+
 const styles = {
   center: css({
     maxWidth: MAX_WIDTH,
@@ -41,55 +45,41 @@ const styles = {
     padding: PADDING
   }),
   narrow: css({
-    [`@media only screen and (min-width: ${MAX_WIDTH +
-      BREAKOUT * 2 +
-      PADDING * 2}px)`]: {
+    [breakoutUp]: {
       margin: '0 auto',
       maxWidth: NARROW_WIDTH
     }
   }),
   tiny: css({
-    [`@media only screen and (min-width: ${MAX_WIDTH +
-      BREAKOUT * 2 +
-      PADDING * 2}px)`]: {
+    [breakoutUp]: {
       margin: '0 auto',
       maxWidth: TINY_WIDTH
     }
   }),
   breakout: css({
-    [`@media only screen and (min-width: ${MAX_WIDTH +
-      BREAKOUT * 2 +
-      PADDING * 2}px)`]: {
+    [breakoutUp]: {
       marginLeft: -BREAKOUT,
       marginRight: -BREAKOUT
     }
   }),
   breakoutLeft: css({
-    [`@media only screen and (min-width: ${MAX_WIDTH +
-      BREAKOUT * 2 +
-      PADDING * 2}px)`]: {
+    [breakoutUp]: {
       marginLeft: -BREAKOUT
     }
   }),
   float: css({
-    [`@media only screen and (min-width: ${MAX_WIDTH +
-      BREAKOUT * 2 +
-      PADDING * 2}px)`]: {
+    [breakoutUp]: {
       ...floatStyle
     }
   }),
   floatSmall: css({
-    [`@media only screen and (min-width: ${MAX_WIDTH +
-      BREAKOUT * 2 +
-      PADDING * 2}px)`]: {
+    [breakoutUp]: {
       ...floatStyle,
       maxWidth: SMALL_WIDTH
     }
   }),
   floatTiny: css({
-    [`@media only screen and (min-width: ${MAX_WIDTH +
-      BREAKOUT * 2 +
-      PADDING * 2}px)`]: {
+    [breakoutUp]: {
       ...floatStyle,
       maxWidth: TINY_WIDTH
     }
