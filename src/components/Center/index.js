@@ -3,17 +3,6 @@ import { css } from 'glamor'
 import PropTypes from 'prop-types'
 import { PullQuote } from '../../components/PullQuote'
 
-export const BREAKOUT_SIZE = {
-  regular: 'regular',
-  narrow: 'narrow',
-  tiny: 'tiny',
-  breakout: 'breakout',
-  breakoutLeft: 'breakoutLeft',
-  float: 'float',
-  floatSmall: 'floatSmall',
-  floatTiny: 'floatTiny'
-}
-
 const MAX_WIDTH = 665
 const PADDING = 20
 const DEFAULT_MARGIN = 15
@@ -100,14 +89,14 @@ export const Breakout = ({ size, children, attributes = {}, ...props }) => (
 
 Breakout.propTypes = {
   size: PropTypes.oneOf([
-    BREAKOUT_SIZE.regular,
-    BREAKOUT_SIZE.narrow,
-    BREAKOUT_SIZE.tiny,
-    BREAKOUT_SIZE.breakout,
-    BREAKOUT_SIZE.breakoutLeft,
-    BREAKOUT_SIZE.float,
-    BREAKOUT_SIZE.floatSmall,
-    BREAKOUT_SIZE.floatTiny
+    'regular',
+    'narrow',
+    'tiny',
+    'breakout',
+    'breakoutLeft',
+    'float',
+    'floatSmall',
+    'floatTiny'
   ]).isRequired,
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object

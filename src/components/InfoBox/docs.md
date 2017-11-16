@@ -79,7 +79,7 @@ Supported props:
 
 ### Sizes in context
 
-```react
+```react|responsive
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <InfoBox size={'breakout'} imageSize={'S'}>
@@ -98,7 +98,7 @@ Supported props:
 </Center>
 ```
 
-```react
+```react|responsive
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <InfoBox size={'breakout'} imageSize={'M'}>
@@ -117,7 +117,7 @@ Supported props:
 </Center>
 ```
 
-```react
+```react|responsive
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <InfoBox size={'breakout'} imageSize={'L'}>
@@ -136,7 +136,7 @@ Supported props:
 </Center>
 ```
 
-```react
+```react|responsive
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <InfoBox size={'float'}>
@@ -149,7 +149,7 @@ Supported props:
 </Center>
 ```
 
-```react
+```react|responsive
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <InfoBox size={'float'}>

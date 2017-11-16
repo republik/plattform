@@ -48,7 +48,7 @@ Use `<PullQuoteFigure />` to include an `<Image />`. In this case, text and sour
 
 ### Sizes in context
 
-```react
+```react|responsive
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <PullQuote size={'narrow'}>
@@ -63,7 +63,7 @@ Use `<PullQuoteFigure />` to include an `<Image />`. In this case, text and sour
 </Center>
 ```
 
-```react
+```react|responsive
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <PullQuote size={'narrow'}>
@@ -84,7 +84,7 @@ Use `<PullQuoteFigure />` to include an `<Image />`. In this case, text and sour
 </Center>
 ```
 
-```react
+```react|responsive
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <PullQuote size={'breakout'}>
@@ -99,7 +99,7 @@ Use `<PullQuoteFigure />` to include an `<Image />`. In this case, text and sour
 </Center>
 ```
 
-```react
+```react|responsive
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <PullQuote size={'breakout'}>
@@ -120,7 +120,7 @@ Use `<PullQuoteFigure />` to include an `<Image />`. In this case, text and sour
 </Center>
 ```
 
-```react
+```react|responsive
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <PullQuote size={'float'}>
@@ -135,7 +135,7 @@ Use `<PullQuoteFigure />` to include an `<Image />`. In this case, text and sour
 </Center>
 ```
 
-```react
+```react|responsive
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <PullQuote size={'float'}>

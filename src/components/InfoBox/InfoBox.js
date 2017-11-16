@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
-import { BREAKOUT_SIZE, Breakout } from '../Center'
+import { Breakout } from '../Center'
 
 const styles = {
   container: css({
@@ -19,10 +19,10 @@ export const IMAGE_SIZE = {
 
 const getBreakoutSize = (size, hasFigure) => {
   if (size === 'float') {
-    return hasFigure ? BREAKOUT_SIZE.floatSmall : BREAKOUT_SIZE.floatTiny
+    return hasFigure ? 'floatSmall' : 'floatTiny'
   }
   if (size === 'breakout') {
-    return BREAKOUT_SIZE.breakoutLeft
+    return 'breakoutLeft'
   }
   return size
 }
