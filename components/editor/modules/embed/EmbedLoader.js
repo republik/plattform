@@ -40,7 +40,6 @@ export default (query, Component) => (
         ...state
       }), () => {
         const { id, embedType } = node.data.get('queryParams')
-        console.log(id)
         client
           .query({
             query,
