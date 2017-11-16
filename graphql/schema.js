@@ -16,7 +16,7 @@ type RootQuerys {
   documents: [Document]!
   # (pre)published document
   document(slug: String!): Document
-  embed(url: String!): Embed!
+  embed(id: ID!, embedType: EmbedType!): Embed!
 }
 
 type RootMutations {
@@ -208,15 +208,18 @@ input DocumentInput {
   content: JSON!
 }
 
+enum EmbedType {
+  YoutubeEmbed
+  VimeoEmbed
+  TwitterEmbed
+}
+
 interface EmbedInterface {
   id: ID!
-  url: String!
 }
 
 type TwitterEmbed implements EmbedInterface {
   id: ID!
-  url: String!
-
   text: String!
   createdAt: String!
   userId: String!
@@ -226,8 +229,6 @@ type TwitterEmbed implements EmbedInterface {
 
 type YoutubeEmbed implements EmbedInterface {
   id: ID!
-  url: String!
-
   createdAt: String!
   userId: String!
   userName: String!
@@ -236,8 +237,6 @@ type YoutubeEmbed implements EmbedInterface {
 
 type VimeoEmbed implements EmbedInterface {
   id: ID!
-  url: String!
-
   createdAt: String!
   userId: String!
   userName: String!

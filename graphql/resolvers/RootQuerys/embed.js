@@ -3,52 +3,46 @@ const { getTweetById } = require('../../../lib/twitter')
 const { getYoutubeVideoById } = require('../../../lib/youtube')
 const { getVimeoVideoById } = require('../../../lib/vimeo')
 
-// One capturing group at match[1] that catches the status
-const TWITTER_REGEX = /^https?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)$/
-
-// One capturing group at match[1] that catches the video id
-const YOUTUBE_REGEX = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|&v(?:i)?=))([^#&?]*).*$/
-
-// One capturing group at match[1] that catches the video id
-const VIMEO_REGEX = /^(?:http|https)?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^/]*)\/videos\/|)(\d+)(?:|\/\?)$/
+// // One capturing group at match[1] that catches the status
+// const TWITTER_REGEX = /^https?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)$/
+//
+// // One capturing group at match[1] that catches the video id
+// const YOUTUBE_REGEX = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|&v(?:i)?=))([^#&?]*).*$/
+//
+// // One capturing group at match[1] that catches the video id
+// const VIMEO_REGEX = /^(?:http|https)?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^/]*)\/videos\/|)(\d+)(?:|\/\?)$/
 
 module.exports = async (_, args, { user }) => {
   ensureUserHasRole(user, 'editor')
 
-  const { url } = args
+  const { id, embedType } = args
 
-  if (TWITTER_REGEX.test(url)) {
-    const tweetId = TWITTER_REGEX.exec(url)[1]
-    const tweetData = await getTweetById(tweetId)
+  if (embedType === 'TwitterEmbed') {
+    const tweetData = await getTweetById(id)
 
     return {
-      embedType: 'TwitterEmbed',
-      url,
+      embedType,
       ...tweetData
     }
   }
-  if (YOUTUBE_REGEX.test(url)) {
-    const youtubeId = YOUTUBE_REGEX.exec(url)[1]
-    const youtubeData = await getYoutubeVideoById(youtubeId)
+  if (embedType === 'YoutubeEmbed') {
+    const youtubeData = await getYoutubeVideoById(id)
 
     return {
-      embedType: 'YoutubeEmbed',
-      url,
+      embedType,
       ...youtubeData
     }
   }
 
-  if (VIMEO_REGEX.test(url)) {
-    const vimeoId = VIMEO_REGEX.exec(url)[1]
-    const vimeoData = await getVimeoVideoById(vimeoId)
+  if (embedType === 'VimeoEmbed') {
+    const vimeoData = await getVimeoVideoById(id)
 
     return {
-      embedType: 'VimeoEmbed',
-      url,
-      id: vimeoId,
+      embedType,
+      id,
       ...vimeoData
     }
   }
 
-  throw new Error(`Cannot match URL ${url}`)
+  throw new Error(`Cannot match ID ${id} of embed type ${embedType}`)
 }
