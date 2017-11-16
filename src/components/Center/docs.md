@@ -1,7 +1,14 @@
 `<Center />` defines a max-width and ensures a horizontal padding.
 
-`<Breakout />` allows to adjust size (and positioning) of content:
-- `size`: `regular` (default), `narrow`, `tiny`, `breakout`, `breakoutLeft`, `float` and `floatTiny`.
+`<Breakout />` allows to adjust `size` (and positioning) of its content:
+- `regular` (default)
+- `narrow`
+- `tiny`
+- `breakout`
+- `breakoutLeft`
+- `float`
+- `floatSmall`
+- `floatTiny`
 
 ```react
 <Center style={{backgroundColor: 'red'}}>
