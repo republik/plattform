@@ -1,4 +1,4 @@
-export default ({ matchSource, matchUrl, TYPE }) => ({
+export default ({ matchSource, matchUrl, getQueryParams, TYPE }) => ({
   onKeyDown (event, change) {
     if (event.key !== 'Enter') return
     if (event.shiftKey !== false) return
@@ -22,7 +22,7 @@ export default ({ matchSource, matchUrl, TYPE }) => ({
         kind: 'block',
         type: TYPE,
         data: {
-          url
+          queryParams: getQueryParams(url)
         },
         isVoid: true
       }
