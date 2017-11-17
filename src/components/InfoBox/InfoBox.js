@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { mUp } from '../../theme/mediaQueries'
 import { Breakout } from '../Center'
 
 const styles = {

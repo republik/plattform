@@ -1,7 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
-import { PullQuote } from '../../components/PullQuote'
 
 const MAX_WIDTH = 665
 const PADDING = 20
