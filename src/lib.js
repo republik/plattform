@@ -41,6 +41,13 @@ export {
   Image
 } from './components/Figure'
 export {
+  Teaser,
+  TeaserFormat,
+  TeaserHeadline,
+  TeaserLead,
+  TeaserCredit
+} from './components/Teaser'
+export {
   Spinner,
   InlineSpinner
 } from './components/Spinner'
