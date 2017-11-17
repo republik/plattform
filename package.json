@@ -26,6 +26,8 @@
     "glamor": "^2.20.37",
     "gsheets": "^2.0.0",
     "husky": "^0.14.3",
+    "immutable": "^3.8.2",
+    "mdast-react-render": "^1.0.0",
     "prop-types": "^15.5.7",
     "react": "^16.0.0",
     "react-autocomplete": "^1.4.1",
@@ -35,6 +37,8 @@
     "react-textarea-autosize": "^5.1.0",
     "rimraf": "^2.6.1",
     "semantic-release": "^6.3.6",
+    "slate": "^0.31.2",
+    "slate-mdast-serializer": "^0.1.2",
     "validate-commit-msg": "^2.14.0"
   },
   "files": [

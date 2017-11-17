@@ -21,7 +21,7 @@ Supported props:
 <InfoBox>
   <InfoBoxTitle>This is a box title</InfoBoxTitle>
   <InfoBoxFigure>
-    <Image src='/static/landscape.jpg' alt='' />
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
       <Byline>Photo: Laurent Burst</Byline>
     </Caption>
@@ -36,7 +36,7 @@ Supported props:
 <InfoBox imageFloat>
   <InfoBoxTitle>This is a box title</InfoBoxTitle>
   <InfoBoxFigure>
-    <Image src='/static/landscape.jpg' alt='' />
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
       <Byline>Photo: Laurent Burst</Byline>
     </Caption>
@@ -51,7 +51,7 @@ Supported props:
 <InfoBox imageSize={'M'}>
   <InfoBoxTitle>This is a box title</InfoBoxTitle>
   <InfoBoxFigure>
-    <Image src='/static/landscape.jpg' alt='' />
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
       <Byline>Photo: Laurent Burst</Byline>
     </Caption>
@@ -66,7 +66,7 @@ Supported props:
 <InfoBox imageSize={'L'}>
   <InfoBoxTitle>This is a box title</InfoBoxTitle>
   <InfoBoxFigure>
-    <Image src='/static/landscape.jpg' alt='' />
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
       <Byline>Photo: Laurent Burst</Byline>
     </Caption>
@@ -85,7 +85,7 @@ Supported props:
   <InfoBox size={'breakout'} imageSize={'S'}>
     <InfoBoxTitle>This is a breakout info box</InfoBoxTitle>
     <InfoBoxFigure>
-      <Image src='/static/landscape.jpg' alt='' />
+      <Image data={{src: '/static/landscape.jpg', alt: ''}} />
       <Caption>
         <Byline>Photo: Laurent Burst</Byline>
       </Caption>
@@ -104,7 +104,7 @@ Supported props:
   <InfoBox size={'breakout'} imageSize={'M'}>
     <InfoBoxTitle>This is a breakout info box</InfoBoxTitle>
     <InfoBoxFigure>
-      <Image src='/static/landscape.jpg' alt='' />
+      <Image data={{src: '/static/landscape.jpg', alt: ''}} />
       <Caption>
         <Byline>Photo: Laurent Burst</Byline>
       </Caption>
@@ -123,7 +123,7 @@ Supported props:
   <InfoBox size={'breakout'} imageSize={'L'}>
     <InfoBoxTitle>This is a breakout info box</InfoBoxTitle>
     <InfoBoxFigure>
-      <Image src='/static/landscape.jpg' alt='' />
+      <Image data={{src: '/static/landscape.jpg', alt: ''}} />
       <Caption>
         <Byline>Photo: Laurent Burst</Byline>
       </Caption>
@@ -155,7 +155,7 @@ Supported props:
   <InfoBox size={'float'}>
     <InfoBoxTitle>This is a float info box</InfoBoxTitle>
     <InfoBoxFigure>
-      <Image src='/static/landscape.jpg' alt='' />
+      <Image data={{src: '/static/landscape.jpg', alt: ''}} />
       <Caption>
         <Byline>Photo: Laurent Burst</Byline>
       </Caption>

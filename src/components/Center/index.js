@@ -2,10 +2,10 @@ import React from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 
-const MAX_WIDTH = 665
-const PADDING = 20
+export const MAX_WIDTH = 665
+export const PADDING = 20
 const DEFAULT_MARGIN = 15
-const BREAKOUT = 155 + DEFAULT_MARGIN
+export const BREAKOUT = 155 + DEFAULT_MARGIN
 const FLOAT_MARGIN = 100
 const NARROW_WIDTH = 495
 const SMALL_WIDTH = 410

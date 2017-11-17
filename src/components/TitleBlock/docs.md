@@ -1,7 +1,7 @@
 A `<TitleBlock />` is a container for an article's title elements like headline, lead and credits.
 
 Supported props:
-- `textAlign`: The text alignment, `inherit` (default), `left`, `center` or `right`.
+- `center`: bool, large centered title block
 
 
 ```react
@@ -18,7 +18,7 @@ Supported props:
 ```
 
 ```react
-<TitleBlock textAlign={'center'}>
+<TitleBlock center>
   <Editorial.Format>Neutrum</Editorial.Format>
   <Editorial.Headline>The quick brown fox jumps over the lazy dog</Editorial.Headline>
   <Editorial.Lead>
@@ -31,7 +31,7 @@ Supported props:
 ```
 
 ```react
-<TitleBlock textAlign={'center'}>
+<TitleBlock center>
   <Editorial.Format>Neutrum</Editorial.Format>
   <Interaction.Headline>The quick brown fox jumps over the lazy dog</Interaction.Headline>
   <Editorial.Lead>

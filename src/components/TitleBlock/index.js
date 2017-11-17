@@ -1,13 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { MAX_WIDTH, PADDING, BREAKOUT } from '../Center'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 
 const styles = {
   container: css({
-    margin: '0 0 40px 0',
+    maxWidth: MAX_WIDTH,
+    margin: '0 auto 40px auto',
+    paddingLeft: PADDING,
+    paddingRight: PADDING,
     [mUp]: {
-      margin: '0 0 70px 0'
+      margin: '0 auto 70px auto'
     }
   })
 }
@@ -15,11 +19,13 @@ const styles = {
 const TitleBlock = ({
   children,
   attributes,
-  textAlign = 'inherit',
-  ...props
+  center
 }) => {
   return (
-    <section {...attributes} {...styles.container} style={{textAlign}}>
+    <section {...attributes} {...styles.container} style={{
+      textAlign: center ? 'center' : undefined,
+      maxWidth: center ? MAX_WIDTH + BREAKOUT + PADDING : undefined
+    }}>
       {children}
     </section>
   )
@@ -28,7 +34,7 @@ const TitleBlock = ({
 TitleBlock.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
-  textAlign: PropTypes.oneOf(['inherit', 'left', 'center', 'right'])
+  center: PropTypes.bool
 }
 
 export default TitleBlock

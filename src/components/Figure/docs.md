@@ -5,7 +5,7 @@ A `<Figure />` typically contains an `<Image>` and an optional `<Caption>`. The 
 
 ```react
 <Figure>
-  <Image src='/static/landscape.jpg' alt='' />
+  <Image data={{src: '/static/landscape.jpg', alt: ''}} />
   <Caption>
     Lorem ipsum dolor sit amet consetetur.{' '}
     <Byline>Photo: Laurent Burst</Byline>
@@ -24,14 +24,14 @@ A `<FigureGroup />` containing two side-by-side `<Figure>` elements, each with t
 ```react
 <FigureGroup>
   <Figure>
-    <Image src='/static/landscape.jpg' alt='' />
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
       A caption for the left photo.{' '}
       <Byline>Photo: Laurent Burst</Byline>
     </Caption>
   </Figure>
   <Figure>
-    <Image src='/static/landscape.jpg' alt='' />
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
       A caption for the right photo.{' '}
       <Byline>Photo: Laurent Burst</Byline>
@@ -44,10 +44,10 @@ A `<FigureGroup />` containing two side-by-side `<Figure>` elements, with one sh
 ```react
 <FigureGroup>
   <Figure>
-    <Image src='/static/landscape.jpg' alt='' />
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
   </Figure>
   <Figure>
-    <Image src='/static/landscape.jpg' alt='' />
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
   </Figure>
   <Caption>
     This is an image caption stretching beautifully over both images as you can see above.{' '}
@@ -60,21 +60,21 @@ A `<FigureGroup />` containing three side-by-side `<Figure>` elements:
 ```react
 <FigureGroup>
   <Figure>
-    <Image src='/static/landscape.jpg' alt='' />
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
       Left photo.{' '}
       <Byline>Photo: Laurent Burst</Byline>
     </Caption>
   </Figure>
   <Figure>
-    <Image src='/static/landscape.jpg' alt='' />
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
       Center photo.{' '}
       <Byline>Photo: Laurent Burst</Byline>
     </Caption>
   </Figure>
   <Figure>
-    <Image src='/static/landscape.jpg' alt='' />
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
       Right photo.{' '}
       <Byline>Photo: Laurent Burst</Byline>
@@ -87,25 +87,25 @@ A `<FigureGroup />` containing four side-by-side `<Figure>` elements:
 ```react
 <FigureGroup>
   <Figure>
-    <Image src='/static/landscape.jpg' alt='' />
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
       <Byline>Photo: Laurent Burst</Byline>
     </Caption>
   </Figure>
   <Figure>
-    <Image src='/static/landscape.jpg' alt='' />
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
       <Byline>Photo: Laurent Burst</Byline>
     </Caption>
   </Figure>
   <Figure>
-    <Image src='/static/landscape.jpg' alt='' />
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
       <Byline>Photo: Laurent Burst</Byline>
     </Caption>
   </Figure>
   <Figure>
-    <Image src='/static/landscape.jpg' alt='' />
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
       <Byline>Photo: Laurent Burst</Byline>
     </Caption>
@@ -117,25 +117,25 @@ A `<FigureGroup />` containing four `<Figure>` elements in two columns:
 ```react
 <FigureGroup data={{columns: 2}}>
   <Figure>
-    <Image src='/static/landscape.jpg' alt='' />
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
       <Byline>Photo: Laurent Burst</Byline>
     </Caption>
   </Figure>
   <Figure>
-    <Image src='/static/landscape.jpg' alt='' />
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
       <Byline>Photo: Laurent Burst</Byline>
     </Caption>
   </Figure>
   <Figure>
-    <Image src='/static/landscape.jpg' alt='' />
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
       <Byline>Photo: Laurent Burst</Byline>
     </Caption>
   </Figure>
   <Figure>
-    <Image src='/static/landscape.jpg' alt='' />
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
       <Byline>Photo: Laurent Burst</Byline>
     </Caption>

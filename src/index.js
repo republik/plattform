@@ -13,11 +13,15 @@ import 'core-js/fn/array/find'
 import {fontFaces} from './theme/fonts'
 import {createFormatter} from './lib/translate'
 
+import Serializer from 'slate-mdast-serializer'
+
 simulations(true)
 // prevent speed in catalog
 // - iframe rendering (e.g. responsive preview)
 //   does not support insertRule
 speedy(false)
+
+require('glamor/reset')
 
 const styleTag = document.createElement('style')
 styleTag.innerHTML = fontFaces()
@@ -199,6 +203,16 @@ ReactDOM.render(
       {
         title: 'Templates',
         pages: [
+          {
+            path: '/templates/editorial',
+            title: 'Editorial',
+            imports: {
+              schema: require('./templates/Editorial'),
+              renderMdast: require('mdast-react-render').renderMdast,
+              serializer: new Serializer()
+            },
+            src: require('./templates/Editorial/docs.md')
+          },
           {
             path: '/center',
             title: 'Center',
