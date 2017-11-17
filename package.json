@@ -1,0 +1,42 @@
+{
+  "license": "AGPLv3+",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backend-modules.git"
+  },
+  "devDependencies": {
+    "commitizen": "^2.9.5",
+    "cz-lerna-changelog": "1.2.1",
+    "eslint": "^3.14.1",
+    "husky": "^0.13.1",
+    "lerna": "^2.5.1",
+    "lerna-semantic-release": "^9.1.0",
+    "validate-commit-msg": "^2.11.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-lerna-changelog"
+    },
+    "validate-commit-msg": {
+      "helpMessage": "Commit message violates the rules defined for this project. Please, execute `npm run commit` to generate a correct commit message with `commitizen`"
+    }
+  },
+  "name": "@project-r/backend-modules",
+  "bugs": {
+    "url": "https://github.com/orbiting/backend-modules/issues"
+  },
+  "homepage": "https://github.com/orbiting/backend-modules#readme",
+  "version": "0.0.0-development",
+  "private": true,
+  "description": "Backend modules developed at Project R",
+  "main": "index.js",
+  "dependencies": {},
+  "scripts": {
+    "commit": "git-cz",
+    "semantic-release": "lerna-semantic-release pre && lerna-semantic-release post && lerna-semantic-release perform",
+    "postinstall": "lerna bootstrap",
+    "commitmsg": "validate-commit-msg",
+    "test": "lerna run test"
+  },
+  "author": "Patrick Recher <patrick.recher@republik.ch>"
+}
