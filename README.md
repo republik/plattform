@@ -39,6 +39,23 @@ GITHUB_APP_ID=
 GITHUB_INSTALLATION_ID=
 GITHUB_APP_KEY=
 
+
+# Auth keys for the embedding endpoint.
+
+# Twitter App Stuff
+
+TWITTER_APP_KEY=
+TWITTER_APP_SECRET=
+
+# Vimeo App Stuff
+
+VIMEO_APP_KEY=
+VIMEO_APP_SECRET=
+
+# Youtube App Stuff
+
+YOUTUBE_APP_KEY=
+
 # optional: filter for the repos query (repo name must contain term)
 REPOS_NAME_FILTER=article-
 
@@ -87,6 +104,42 @@ Setup (for dev environment):
 - [Download the private key](https://developer.github.com/apps/building-integrations/setting-up-and-registering-github-apps/registering-github-apps/#generating-a-private-key). This key needs to be supplied as `GITHUB_APP_KEY` ENV var. Open the file in your favorite editor, replace newlines with `@` (literally), replace whitespaces (such as in "-END RSA PRIVATE KEY-") with `\ ` (escaped whitespace) and copy the content to your .env. This is needed due to the [limitations with encryption keys by travis](https://docs.travis-ci.com/user/encryption-keys#Note-on-escaping-certain-symbols).
 - On the page of your new GitHub-App you also find the **ID**. This values needs to be provided as `GITHUB_APP_ID` env var.
 - [Install the GitHub-App](https://help.github.com/articles/installing-an-app-in-your-organization/) in your organization. On the page of the installation (settings -> Installed GitHub Apps -> App) copy the last part of the URL (e.g `41809`), it needs to be provided as `GITHUB_INSTALLATION_ID` env var.
+
+## Embeds
+
+The `embed` root query depends on 3rd party API calls and in order for them to work, you have to create apps on the respective platforms and put your credentials into your `.env` file.
+
+#### Youtube
+
+Create a new app: https://console.developers.google.com
+In the dashboard, select "Library" on the right, then search for and add the **YouTube Data API v3** to your services.
+
+Now select "Credentials" on the right and add the key to your `.env`:
+
+```
+YOUTUBE_APP_KEY=[your-key]
+```
+
+#### Vimeo
+
+Create a new app here: https://developer.vimeo.com/.
+Now select your new app and in the menu above the icon, click on authentication. Now you add to your `.env`:
+
+```
+VIMEO_APP_KEY=[The hash from field "Client Identifier"]
+VIMEO_APP_SECRET=[The hash from field "Client Secret"]
+```
+
+#### Twitter
+
+Create a new app here: https://apps.twitter.com/ and select it.
+Go to section "Keys and Access Tokens" and add to your `.env`:
+
+```
+TWITTER_APP_KEY=[The hash from field "Consumer Key (API Key)"]
+TWITTER_APP_SECRET=[The hash from field "Consumer Secret (API Secret)"]
+```
+
 
 ## Licensing
 The source code and it's documentation is licensed under [GNU AGPLv3](LICENSE)+.

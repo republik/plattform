@@ -153,6 +153,74 @@ test('unauthorized subscription', (t) => {
   })
 })
 
+/**
+  Embed API tests w/ unauthorized user
+*/
+
+test('fetch youtube data with unathorized user', async (t) => {
+  const result = await apolloFetch({
+    query: `
+      {
+        embed(id: "2-------ds8", embedType: YoutubeEmbed) {
+          __typename
+          ... on YoutubeEmbed {
+            id
+            userName
+          }
+        }
+      }
+    `
+  })
+  t.equal(
+    result.errors[0].message,
+    tr('api/signIn')
+  )
+  t.end()
+})
+
+test('fetch vimeo data with unathorized user', async (t) => {
+  const result = await apolloFetch({
+    query: `
+      {
+        embed(id: "200000017", embedType: VimeoEmbed) {
+          __typename
+          ... on VimeoEmbed {
+            id
+            userName
+          }
+        }
+      }
+    `
+  })
+  t.equal(
+    result.errors[0].message,
+    tr('api/signIn')
+  )
+  t.end()
+})
+
+test('fetch twitter data with unathorized user', async (t) => {
+  const result = await apolloFetch({
+    query: `
+      {
+        embed(id: "900000000009366656", embedType: TwitterEmbed) {
+          __typename
+          ... on TwitterEmbed {
+            id
+            text
+            userName
+          }
+        }
+      }
+    `
+  })
+  t.equal(
+    result.errors[0].message,
+    tr('api/signIn')
+  )
+  t.end()
+})
+
 test('signIn', async (t) => {
   const result = await apolloFetch({
     query: `
@@ -1830,6 +1898,141 @@ test('parentId on non existing repo must be denied', async (t) => {
   t.equals(result.data, null)
   t.equals(result.errors.length, 1)
   t.equals(result.errors[0].message, tr('api/commit/parentId/notAllowed', { repoId }))
+  t.end()
+})
+
+/**
+  Embed API tests
+*/
+test('fetch youtube data', async (t) => {
+  const result = await apolloFetch({
+    query: `
+      {
+        embed(id: "2lXD0vv-ds8", embedType: YoutubeEmbed) {
+          __typename
+          ... on YoutubeEmbed {
+            id
+            userName
+          }
+        }
+      }
+    `
+  })
+  t.deepEqual(result.data.embed, {
+    __typename: 'YoutubeEmbed',
+    id: '2lXD0vv-ds8',
+    userName: 'FlyingLotusVEVO'
+  })
+  t.end()
+})
+
+test('fetch youtube data with invalid id', async (t) => {
+  const result = await apolloFetch({
+    query: `
+      {
+        embed(id: "2-------ds8", embedType: YoutubeEmbed) {
+          __typename
+          ... on YoutubeEmbed {
+            id
+            userName
+          }
+        }
+      }
+    `
+  })
+  t.equal(
+    result.errors[0].message,
+    'Youtube API Error: No video found with ID 2-------ds8.'
+  )
+  t.end()
+})
+
+test('fetch vimeo data', async (t) => {
+  const result = await apolloFetch({
+    query: `
+      {
+        embed(id: "229537127", embedType: VimeoEmbed) {
+          __typename
+          ... on VimeoEmbed {
+            id
+            userName
+          }
+        }
+      }
+    `
+  })
+  t.deepEqual(result.data.embed, {
+    __typename: 'VimeoEmbed',
+    id: '229537127',
+    userName: 'FutureDeluxe'
+  })
+  t.end()
+})
+
+test('fetch vimeo data with invalid id', async (t) => {
+  const result = await apolloFetch({
+    query: `
+      {
+        embed(id: "200000017", embedType: VimeoEmbed) {
+          __typename
+          ... on VimeoEmbed {
+            id
+            userName
+          }
+        }
+      }
+    `
+  })
+  t.equal(
+    result.errors[0].message,
+    'Vimeo API Error: The requested video could not be found.'
+  )
+  t.end()
+})
+
+test('fetch twitter data', async (t) => {
+  const result = await apolloFetch({
+    query: `
+      {
+        embed(id: "931088218279366656", embedType: TwitterEmbed) {
+          __typename
+          ... on TwitterEmbed {
+            id
+            text
+            userName
+          }
+        }
+      }
+    `
+  })
+  t.deepEqual(result.data.embed, {
+    __typename: 'TwitterEmbed',
+    id: '931088218279366656',
+    text: 'What’s the manager’s message to the fans ahead of #AFCvTHFC?\n\n“Just to support the team and stand with us for the 9… https://t.co/iwipqW8UlF',
+    userName: 'Arsenal FC'
+  })
+  t.end()
+})
+
+test('fetch twitter data with invalid id', async (t) => {
+  const result = await apolloFetch({
+    query: `
+      {
+        embed(id: "900000000009366656", embedType: TwitterEmbed) {
+          __typename
+          ... on TwitterEmbed {
+            id
+            text
+            userName
+          }
+        }
+      }
+    `
+  })
+  t.equal(
+    result.errors[0].message,
+    'Twitter API Errors: 144: No status found with that ID.'
+  )
   t.end()
 })
 
