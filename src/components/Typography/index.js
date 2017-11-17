@@ -1,9 +1,15 @@
 import React from 'react'
 import * as styles from './styles'
+import * as _Editorial from './Editorial'
+import * as _Interaction from './Interaction'
 import {css} from 'glamor'
 
+// Namespaced exports.
+export const Editorial = {..._Editorial}
+export const Interaction = {..._Interaction}
+
+// Direct exports.
 export const fontStyles = styles
-export { default as Editorial } from './Editorial'
 
 export const linkRule = css(styles.link)
 export const A = ({children, ...props}) => (
@@ -44,27 +50,3 @@ export const Quote = ({children, source, ...props}) => (
     {!!source && <cite>{source}</cite>}
   </blockquote>
 )
-
-const iHeadlineRule = css(styles.interactionHeadline)
-const iH1Rule = css(styles.interactionH1)
-const iH2Rule = css(styles.interactionH2)
-const iH3Rule = css(styles.interactionH3)
-const iPRule = css(styles.interactionP)
-
-export const Interaction = {
-  Headline: ({children, ...props}) => (
-    <h1 {...props} {...iHeadlineRule}>{children}</h1>
-  ),
-  H1: ({children, ...props}) => (
-    <h1 {...props} {...iH1Rule}>{children}</h1>
-  ),
-  H2: ({children, ...props}) => (
-    <h2 {...props} {...iH2Rule}>{children}</h2>
-  ),
-  H3: ({children, ...props}) => (
-    <h3 {...props} {...iH3Rule}>{children}</h3>
-  ),
-  P: ({children, ...props}) => (
-    <p {...props} {...iPRule}>{children}</p>
-  )
-}

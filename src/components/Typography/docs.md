@@ -46,12 +46,18 @@ import {colors: {text}, fontStyles: {serifRegular21}} from '@project-r/styleguid
 <div {...css({...serifRegular21, color: text})}>…</div>
 ```
 
-#### `serifTitle{58,30}`
+#### `serifTitle{58,30,22,20}`
 ```react|noSource,plain
 <div {...css(styles.serifTitle58)}>The quick brown fox jumps over</div>
 ```
 ```react|noSource,plain
 <div {...css(styles.serifTitle30)}>The quick brown fox jumps over the lazy dog</div>
+```
+```react|noSource,plain
+<div {...css(styles.serifTitle22)}>The quick brown fox jumps over the lazy dog</div>
+```
+```react|noSource,plain
+<div {...css(styles.serifTitle20)}>The quick brown fox jumps over the lazy dog</div>
 ```
 
 #### `serifBold{52,36,28,24,19,16}`
@@ -74,7 +80,7 @@ import {colors: {text}, fontStyles: {serifRegular21}} from '@project-r/styleguid
 <div {...css(styles.serifBold16)}>The quick brown fox jumps over the lazy dog</div>
 ```
 
-#### `serifRegular{25,23,21,19,16,14}`
+#### `serifRegular{25,23,21,19,18,16,14}`
 ```react|noSource,plain
 <div {...css(styles.serifRegular25)}>The quick brown fox jumps over the lazy dog</div>
 ```
@@ -86,6 +92,9 @@ import {colors: {text}, fontStyles: {serifRegular21}} from '@project-r/styleguid
 ```
 ```react|noSource,plain
 <div {...css(styles.serifRegular19)}>The quick brown fox jumps over the lazy dog</div>
+```
+```react|noSource,plain
+<div {...css(styles.serifRegular18)}>The quick brown fox jumps over the lazy dog</div>
 ```
 ```react|noSource,plain
 <div {...css(styles.serifRegular16)}>The quick brown fox jumps over the lazy dog</div>

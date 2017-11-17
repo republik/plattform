@@ -26,6 +26,18 @@ export const serifTitle30 = {
   fontWeight: 'normal',
   lineHeight: '34px'
 }
+export const serifTitle22 = {
+  fontFamily: fontFamilies.serifTitle,
+  fontSize: 22,
+  fontWeight: 'normal',
+  lineHeight: '24px'
+}
+export const serifTitle20 = {
+  fontFamily: fontFamilies.serifTitle,
+  fontSize: 20,
+  fontWeight: 'normal',
+  lineHeight: '22px'
+}
 
 // serifRegular
 export const serifRegular25 = {
@@ -46,6 +58,11 @@ export const serifRegular21 = {
 export const serifRegular19 = {
   fontFamily: fontFamilies.serifRegular,
   fontSize: 19,
+  lineHeight: '24px'
+}
+export const serifRegular18 = {
+  fontFamily: fontFamilies.serifRegular,
+  fontSize: 18,
   lineHeight: '24px'
 }
 export const serifRegular16 = {
@@ -187,95 +204,10 @@ export const sansSerifMedium16 = {
   fontSize: 16,
   lineHeight: '25px',
 }
-
-export const editorialHeadline = {
-  ...serifTitle30,
-  margin: '0 0 12px 0',
-  [mUp]: {
-    ...serifTitle58,
-    margin: '0 0 12px 0',
-  },
-  color: colors.text,
-  ':first-child': {
-    marginTop: 0
-  },
-  ':last-child': {
-    marginBottom: 0
-  }
-}
-
-export const editorialSubhead = {
-  ...serifBold19,
-  margin: '36px 0 -14px 0',
-  [mUp]: {
-    ...serifBold24,
-    margin: '46px 0 -18px 0',
-  },
-  color: colors.text
-}
-
-export const editorialQuestion = {
-  ...serifBold16,
-  margin: '36px 0 -14px 0',
-  [mUp]: {
-    ...serifBold19,
-    lineHeight: '30px',
-    margin: '46px 0 -18px 0',
-  },
-  color: colors.text
-}
-
-export const editorialLead = {
-  ...serifRegular19,
-  margin: '0 0 10px 0',
-  [mUp]: {
-    ...serifRegular23,
-    margin: '0 0 20px 0'
-  },
-  color: colors.text,
-}
-
-export const editorialCredit = {
-  ...sansSerifRegular14,
-  [mUp]: {
-    ...sansSerifRegular15
-  },
-  color: colors.text
-}
-
-export const editorialP = {
-  color: colors.text,
-  margin: '22px 0 22px 0',
-  ...serifRegular16,
-  [mUp]: {
-    ...serifRegular19,
-    margin: '30px 0 30px 0',
-    lineHeight: '30px'
-  },
-  ':first-child': {
-    marginTop: 0
-  },
-  ':last-child': {
-    marginBottom: 0
-  }
-}
-
-export const editorialAuthorLink = {
-  textDecoration: 'underline',
-  color: colors.text,
-  ':hover': {
-    color: colors.lightText
-  }
-}
-
-export const editorialFormat = {
-  ...sansSerifMedium16,
-  margin: '0 0 18px 0',
-  [mUp]: {
-    ...sansSerifMedium20,
-    margin: '0 0 28px 0',
-  },
-  textDecoration: 'underline'
+export const sansSerifMedium14 = {
+  fontFamily: fontFamilies.sansSerifMedium,
+  fontSize: 14,
+  lineHeight: '17px',
 }
 
 
@@ -338,10 +270,17 @@ export const quoteText = {
 }
 
 export const interactionHeadline = {
-  ...editorialHeadline,
+  margin: '0 0 12px 0',
   ...sansSerifMedium30,
   [mUp]: {
     ...sansSerifMedium58
+  },
+  color: colors.text,
+  ':first-child': {
+    marginTop: 0
+  },
+  ':last-child': {
+    marginBottom: 0
   }
 }
 

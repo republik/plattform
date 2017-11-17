@@ -267,6 +267,21 @@ ReactDOM.render(
             },
             src: require('./components/Figure/docs.md')
           },
+           {
+            path: '/teaser',
+            title: 'Teaser',
+            imports: {
+              css,
+              ...require('./components/Typography'),
+              Teaser: require('./components/Teaser/Teaser'),
+              TeaserFormat: require('./components/Teaser/Format'),
+              TeaserHeadline: require('./components/Teaser/Headline'),
+              TeaserLead: require('./components/Teaser/Lead'),
+              TeaserCredit: require('./components/Teaser/Credit'),
+              Center: require('./components/Center'),
+            },
+            src: require('./components/Teaser/docs.md')
+          },
         ]
       },
       {

@@ -11,6 +11,9 @@ const colors = {
   error: '#9E0041',
   divider: '#DBDCDD',
   online: '#00DC00',
+  editorial: '#00B4FF',
+  meta: '#64966E',
+  social: '#E9A733',
   ...getJson('COLORS')
 }
 

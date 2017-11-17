@@ -19,5 +19,9 @@ export default () => (
 
     <ColorSpecimen span={1} name='error' value={colors.error} />
     <ColorSpecimen span={1} name='online' value={colors.online} />
+
+    <ColorSpecimen span={1} name='editorial' value={colors.editorial} />
+    <ColorSpecimen span={1} name='meta' value={colors.meta} />
+    <ColorSpecimen span={1} name='social' value={colors.social} />
   </Page>
 )
