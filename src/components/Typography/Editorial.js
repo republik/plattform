@@ -172,5 +172,3 @@ export const Format = ({ children, attributes, ...props }) => (
     {children}
   </p>
 )
-
-//export default Editorial

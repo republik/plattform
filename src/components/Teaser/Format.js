@@ -8,30 +8,27 @@ import { mUp } from '../../theme/mediaQueries'
 const styles = {
   main: css({
     ...sansSerifMedium14,
-    margin: '0 0 10px 0',
+    margin: '0 0 6px 0',
     [mUp]: {
       ...sansSerifMedium16,
-      margin: '0 0 12px 0'
+      margin: '-5px 0 8px 0'
     },
-    textDecoration: 'underline',
-    '[data-type="editorial"] > &': {
-      color: colors.editorial
-    },
-    '[data-type="meta"] > &': {
-      color: colors.meta
-    },
-    '[data-type~="social"] > &': {
-      color: colors.social
-    }
+    textDecoration: 'underline'
   })
 }
 
-export const Format = ({ children }) => {
-  return <p {...styles.main}>{children}</p>
+export const Format = ({ children, type }) => {
+  const color = (type && colors[type]) || {}
+  return (
+    <p {...styles.main} style={{ color }}>
+      {children}
+    </p>
+  )
 }
 
 Format.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
+  type: PropTypes.oneOf([null, 'editorial', 'meta', 'social'])
 }
 
 export default Format

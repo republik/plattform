@@ -13,14 +13,15 @@ import {
 const styles = {
   main: css({
     ...serifTitle20,
-    '[data-type~="meta"] > &': {
+    '[data-interaction=true] > &': {
       ...sansSerifMedium20
     },
     margin: '0 0 6px 0',
     [mUp]: {
       ...serifTitle22,
-      '[data-type~="meta"] > &': {
-        ...sansSerifMedium22
+      '[data-interaction=true] > &': {
+        ...sansSerifMedium22,
+        lineHeight: '24px'
       },
       margin: '0 0 8px 0'
     },

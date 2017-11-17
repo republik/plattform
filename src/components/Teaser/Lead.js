@@ -6,7 +6,7 @@ import { mUp } from '../../theme/mediaQueries'
 import { serifRegular16, serifRegular18 } from '../Typography/styles'
 
 const styles = {
-main: css({
+  main: css({
     ...serifRegular16,
     margin: '0 0 5px 0',
     [mUp]: {
