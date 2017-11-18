@@ -80,11 +80,6 @@ ReactDOM.render(
             title: 'Grid',
             imports: require('./components/Grid'),
             src: require('./components/Grid/docs.md')
-          },
-          {
-            path: '/z-index',
-            title: 'z-index',
-            src: require('./theme/zIndex.docs.md')
           }
         ]
       },
@@ -150,40 +145,6 @@ ReactDOM.render(
             src: require('./components/Form/docs.md')
           },
           {
-            path: '/components/comment',
-            title: 'Comment',
-            imports: {
-              Comment: require('./components/Comment/Comment'),
-              CommentHeader: require('./components/Comment/CommentHeader'),
-              CommentActions: require('./components/Comment/CommentActions')
-            },
-            src: require('./components/Comment/docs.md')
-          },
-          {
-            path: '/components/comment-composer',
-            title: 'CommentComposer',
-            imports: {
-              t,
-              CommentComposer: require('./components/CommentComposer/CommentComposer'),
-              CommentComposerHeader: require('./components/CommentComposer/CommentComposerHeader'),
-              CommentComposerPlaceholder: require('./components/CommentComposer/CommentComposerPlaceholder'),
-              CommentComposerError: require('./components/CommentComposer/CommentComposerError')
-            },
-            src: require('./components/CommentComposer/docs.md')
-          },
-          {
-            path: '/components/comment-teaser',
-            title: 'CommentTeaser',
-            imports: {t, ...require('./components/CommentTeaser/docs.imports')},
-            src: require('./components/CommentTeaser/docs.md')
-          },
-          {
-            path: '/components/comment-tree',
-            title: 'CommentTree',
-            imports: {t, ...require('./components/CommentTree/docs.imports')},
-            src: require('./components/CommentTree/docs.md')
-          },
-          {
             path: '/components/overlay',
             title: 'Overlay',
             imports: {t, ...require('./components/Overlay/docs.imports')},
@@ -197,22 +158,51 @@ ReactDOM.render(
               RawHtml: require('./components/RawHtml')
             },
             src: require('./components/RawHtml/docs.md')
+          },
+        ]
+      },
+      {
+        title: 'Comments',
+        pages: [
+          {
+            path: '/components/comment',
+            title: 'Comment',
+            imports: {
+              Comment: require('./components/Comment/Comment'),
+              CommentHeader: require('./components/Comment/CommentHeader'),
+              CommentActions: require('./components/Comment/CommentActions')
+            },
+            src: require('./components/Comment/docs.md')
+          },
+          {
+            path: '/components/composer',
+            title: 'Composer',
+            imports: {
+              t,
+              CommentComposer: require('./components/CommentComposer/CommentComposer'),
+              CommentComposerHeader: require('./components/CommentComposer/CommentComposerHeader'),
+              CommentComposerPlaceholder: require('./components/CommentComposer/CommentComposerPlaceholder'),
+              CommentComposerError: require('./components/CommentComposer/CommentComposerError')
+            },
+            src: require('./components/CommentComposer/docs.md')
+          },
+          {
+            path: '/components/teaser',
+            title: 'Teaser',
+            imports: {t, ...require('./components/CommentTeaser/docs.imports')},
+            src: require('./components/CommentTeaser/docs.md')
+          },
+          {
+            path: '/components/tree',
+            title: 'Tree',
+            imports: {t, ...require('./components/CommentTree/docs.imports')},
+            src: require('./components/CommentTree/docs.md')
           }
         ]
       },
       {
-        title: 'Templates',
+        title: 'Article Elements',
         pages: [
-          {
-            path: '/templates/editorial',
-            title: 'Editorial',
-            imports: {
-              schema: require('./templates/Editorial'),
-              renderMdast: require('mdast-react-render').renderMdast,
-              serializer: new Serializer()
-            },
-            src: require('./templates/Editorial/docs.md')
-          },
           {
             path: '/center',
             title: 'Center',
@@ -231,6 +221,17 @@ ReactDOM.render(
               TitleBlock: require('./components/TitleBlock')
             },
             src: require('./components/TitleBlock/docs.md')
+          },
+          {
+            path: '/teaser',
+            title: 'Teaser',
+            imports: {
+              css,
+              ...require('./components/Typography'),
+              ...require('./components/Teaser'),
+              Center: require('./components/Center')
+            },
+            src: require('./components/Teaser/docs.md')
           },
           {
             path: '/pullquote',
@@ -291,17 +292,21 @@ ReactDOM.render(
               Image: require('./components/Figure/Image')
             },
             src: require('./components/Figure/docs.md')
-          },
+          }
+        ]
+      },
+      {
+        title: 'Templates',
+        pages: [
           {
-            path: '/teaser',
-            title: 'Teaser',
+            path: '/templates/editorial',
+            title: 'Editorial',
             imports: {
-              css,
-              ...require('./components/Typography'),
-              ...require('./components/Teaser'),
-              Center: require('./components/Center')
+              schema: require('./templates/Editorial'),
+              renderMdast: require('mdast-react-render').renderMdast,
+              serializer: new Serializer()
             },
-            src: require('./components/Teaser/docs.md')
+            src: require('./templates/Editorial/docs.md')
           }
         ]
       },
@@ -332,6 +337,11 @@ ReactDOM.render(
                 {key: 'styleguide/Hello/label/name', value: 'Name'}
               ])
             }
+          },
+          {
+            path: '/z-index',
+            title: 'z-index',
+            src: require('./theme/zIndex.docs.md')
           }
         ]
       }
