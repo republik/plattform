@@ -97,7 +97,6 @@ Breakout.propTypes = {
     'floatSmall',
     'floatTiny'
   ]).isRequired,
-  children: PropTypes.node.isRequired,
   attributes: PropTypes.object
 }
 

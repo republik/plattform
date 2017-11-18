@@ -19,7 +19,7 @@ const styles = {
     right: 0,
     transform: 'translate(100%, -60%)',
     display: 'block',
-    '-webkit-appearance': 'none',
+    WebkitAppearance: 'none',
     background: 'white',
     border: 'none',
     padding: '4px 0 4px 10px',

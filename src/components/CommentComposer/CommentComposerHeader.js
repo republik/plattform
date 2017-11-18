@@ -53,7 +53,7 @@ const styles = {
     marginTop: -2
   }),
   actionButton: css({
-    '-webkit-appearance': 'none',
+    WebkitAppearance: 'none',
     background: 'transparent',
     border: 'none',
     flexShrink: 0,

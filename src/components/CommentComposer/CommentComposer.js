@@ -40,7 +40,7 @@ const styles = {
     height: '40px'
   }),
   cancelButton: css({
-    '-webkit-appearance': 'none',
+    WebkitAppearance: 'none',
     background: 'transparent',
     border: 'none',
     padding: '0 6px',
@@ -52,7 +52,7 @@ const styles = {
     fontSize: '20px'
   }),
   commitButton: css({
-    '-webkit-appearance': 'none',
+    WebkitAppearance: 'none',
     background: 'transparent',
     border: 'none',
     padding: '0 12px 0 6px',

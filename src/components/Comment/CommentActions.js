@@ -18,7 +18,7 @@ const styles = {
     }
   }),
   replyButton: css({
-    '-webkit-appearance': 'none',
+    WebkitAppearance: 'none',
     background: 'transparent',
     border: 'none',
     padding: '0',
@@ -38,7 +38,7 @@ const styles = {
     marginLeft: 10
   }),
   actionButton: css({
-    '-webkit-appearance': 'none',
+    WebkitAppearance: 'none',
     background: 'transparent',
     border: 'none',
     padding: '0',

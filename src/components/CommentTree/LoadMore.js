@@ -26,7 +26,7 @@ const styles = {
     right: 0,
     transform: 'translateY(-60%)',
     display: 'block',
-    '-webkit-appearance': 'none',
+    WebkitAppearance: 'none',
     background: 'white',
     border: 'none',
     padding: '4px 0 4px 8px',
