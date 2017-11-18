@@ -1,5 +1,8 @@
+import * as Headline from './Headline'
+
 export { default as Teaser } from './Teaser'
-export { default as TeaserFormat } from './Format'
-export { default as TeaserHeadline } from './Headline'
+export const TeaserHeadline = {
+  ...Headline
+}
 export { default as TeaserLead } from './Lead'
 export { default as TeaserCredit } from './Credit'

@@ -42,7 +42,6 @@ export {
 } from './components/Figure'
 export {
   Teaser,
-  TeaserFormat,
   TeaserHeadline,
   TeaserLead,
   TeaserCredit

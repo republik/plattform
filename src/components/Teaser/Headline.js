@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
@@ -11,36 +10,31 @@ import {
 } from '../Typography/styles'
 
 const styles = {
-  main: css({
+  base: css({
+    color: colors.text,
+    margin: 0,
+    marginBottom: 6,
+    [mUp]: {
+      marginBottom: 8,
+    }
+  }),
+  editorial: css({
     ...serifTitle20,
-    '[data-interaction=true] > &': {
-      ...sansSerifMedium20
-    },
-    margin: '0 0 6px 0',
     [mUp]: {
       ...serifTitle22,
-      '[data-interaction=true] > &': {
-        ...sansSerifMedium22,
-        lineHeight: '24px'
-      },
-      margin: '0 0 8px 0'
-    },
-    color: colors.text,
-    ':first-child': {
-      marginTop: 0
-    },
-    ':last-child': {
-      marginBottom: 0
+    }
+  }),
+  interaction: css({
+    ...sansSerifMedium20,
+    [mUp]: {
+      ...sansSerifMedium22,
+      lineHeight: '24px'
     }
   })
 }
 
-const Headline = ({ children }) => {
-  return <h1 {...styles.main}>{children}</h1>
-}
+export const Editorial = ({ children }) => 
+  <h1 {...styles.base} {...styles.editorial}>{children}</h1>
 
-Headline.propTypes = {
-  children: PropTypes.node.isRequired
-}
-
-export default Headline
+export const Interaction = ({ children }) => 
+  <h1 {...styles.base} {...styles.interaction}>{children}</h1>

@@ -18,13 +18,9 @@ const styles = {
 }
 
 const Teaser = ({ children, type, format, interaction }) => {
-  const dataInteraction =
-    interaction !== undefined
-      ? { 'data-interaction': interaction }
-      : type === 'meta' || type === 'social' ? { 'data-interaction': true } : {}
   const borderColor = (format && type && colors[type]) || {}
   return (
-    <div {...styles.main} style={{ borderColor }} {...dataInteraction}>
+    <div {...styles.main} style={{ borderColor }}>
       {format && <Format type={type}>{format}</Format>}
       {children}
     </div>
@@ -33,13 +29,9 @@ const Teaser = ({ children, type, format, interaction }) => {
 
 Teaser.propTypes = {
   children: PropTypes.node.isRequired,
-  type: PropTypes.oneOf([null, 'editorial', 'meta', 'social']),
+  type: PropTypes.oneOf(['editorial', 'meta', 'social']),
   format: PropTypes.string,
   interaction: PropTypes.bool
-}
-
-Teaser.defaultProps = {
-  type: null
 }
 
 export default Teaser
