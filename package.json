@@ -1,8 +1,8 @@
 {
-  "name": "haku-frontend",
+  "name": "publikator-frontend",
   "version": "1.0.0",
   "engines": {
-    "node": "8.9.0"
+    "node": "8.9.1"
   },
   "description": "",
   "main": "server/index.js",
@@ -11,8 +11,8 @@
     "start": "node server/index.js",
     "build": "next build",
     "heroku-postbuild": "npm run build",
-    "tape": "babel-tape-runner",
-    "test": "babel-tape-runner \"?(lib|pages|components)/**/*.test.js\" | faucet",
+    "tape": "cross-env NODE_ENV=test babel-tape-runner",
+    "test": "cross-env NODE_ENV=test babel-tape-runner \"?(lib|pages|components)/**/*.test.js\" | faucet",
     "standardize": "standard --fix",
     "precommit": "lint-staged",
     "translations": "gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json"
@@ -22,7 +22,7 @@
     "url": "git+https://github.com/orbiting/haku-frontend.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/orbiting/haku-frontend/issues"
   },
@@ -37,20 +37,22 @@
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.6.0",
     "babel-tape-runner": "^2.0.1",
-    "enzyme": "^2.9.1",
+    "cross-env": "^5.1.1",
+    "enzyme": "^3.2.0",
+    "enzyme-adapter-react-16": "^1.1.0",
     "eslint-plugin-import": "^2.7.0",
     "faucet": "0.0.1",
     "gsheets": "^2.0.0",
     "husky": "^0.14.3",
     "lint-staged": "^4.0.4",
     "nodemon": "^1.11.0",
-    "react-test-renderer": "^15.6.1",
+    "react-test-renderer": "^16.1.1",
     "spy": "^1.0.0",
     "standard": "^10.0.3",
     "tape": "^4.8.0"
   },
   "dependencies": {
-    "@project-r/styleguide": "^3.3.0",
+    "@project-r/styleguide": "^5.3.0",
     "@project-r/template-newsletter": "^1.0.0",
     "d3-array": "^1.2.0",
     "d3-color": "^1.0.3",
@@ -59,6 +61,7 @@
     "d3-time": "^1.0.7",
     "d3-time-format": "^2.1.0",
     "dotenv": "^4.0.0",
+    "downshift": "^1.18.0",
     "email-validator": "^1.1.1",
     "express": "^4.15.4",
     "express-basic-auth": "^1.1.1",
@@ -67,13 +70,13 @@
     "is-url": "^1.2.2",
     "js-yaml": "^3.9.1",
     "mdast-react-render": "^0.1.1",
-    "next": "^3.0.6",
+    "next": "^4.1.4",
     "next-routes": "^1.0.40",
     "prop-types": "^15.5.10",
     "ramda": "^0.24.1",
-    "react": "^15.6.1",
+    "react": "^16.1.1",
     "react-apollo": "^1.4.15",
-    "react-dom": "^15.6.1",
+    "react-dom": "^16.1.1",
     "react-frame-component": "^1.1.1",
     "react-icons": "^2.2.5",
     "react-maskedinput": "^4.0.0",

@@ -1,13 +1,33 @@
 {
-  "presets": [
-    "next/babel",
-    [
-      "env",
-      {
-        "targets": {
-          "node": true
-        }
-      }
-    ]
-  ],
+  "env": {
+    "development": {
+      "presets": [
+        "next/babel"
+      ]
+    },
+    "production": {
+      "presets": [
+        "next/babel"
+      ]
+    },
+    "test": {
+      "presets": [
+        [
+          "next/babel",
+          {
+            "preset-env": {
+              "modules": "commonjs",
+              "targets": {
+                "node": true
+              }
+            },
+            "transform-runtime": {
+              "useBuiltIns": true,
+              "polyfill": false
+            }
+          }
+        ]
+      ]
+    }
+  }
 }

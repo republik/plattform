@@ -1,7 +1,7 @@
 import React from 'react'
 import test from 'tape'
 import spy from 'spy'
-import { shallow } from 'enzyme'
+import { shallow } from './enzyme'
 import createBlockButton from './createBlockButton'
 import { Value } from 'slate'
 

@@ -41,6 +41,16 @@ PIWIK_SITE_ID=1
 
 Your logo, fonts and colors? See [orbiting/styleguide](https://github.com/orbiting/styleguide#theming)
 
+### Templates
+
+You can limit the available templates:
+
+```
+TEMPLATES=newsletter,neutrum
+```
+
+Default is all.
+
 ## License
 
 The source code is «BSD 3-clause» licensed.
