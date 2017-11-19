@@ -1,8 +1,8 @@
 {
-  "name": "haku-frontend",
+  "name": "publikator-frontend",
   "version": "1.0.0",
   "engines": {
-    "node": "8.9.0"
+    "node": "8.9.1"
   },
   "description": "",
   "main": "server/index.js",
@@ -22,7 +22,7 @@
     "url": "git+https://github.com/orbiting/haku-frontend.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/orbiting/haku-frontend/issues"
   },
