@@ -6,7 +6,7 @@ import { mUp } from '../../theme/mediaQueries'
 
 const styles = {
   cite: css({
-    display: 'inline-block',
+    display: 'block',
     ...sansSerifRegular14,
     marginTop: '18px',
     [mUp]: {
@@ -18,7 +18,7 @@ const styles = {
 }
 
 export const Source = ({ children, attributes }) => {
-  return <cite {...styles.cite}>{children}</cite>
+  return <cite {...styles.cite} {...attributes}>{children}</cite>
 }
 
 Source.propTypes = {

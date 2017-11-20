@@ -12,13 +12,21 @@ const styles = {
       ...serifBold28
     },
     color: colors.text
+  }),
+  quoted: css({
+    ':before': {
+      content: '«'
+    },
+    ':after': {
+      content: '»'
+    }
   })
 }
 
 export const Text = ({ children, attributes, isQuoted = true }) => {
   return (
-    <div {...attributes} {...styles.text}>
-      {isQuoted ? <span>«{children}»</span> : <span>{children}</span>}
+    <div {...attributes} {...styles.text} {...((isQuoted && styles.quoted) || {})}>
+      <span>{children}</span>
     </div>
   )
 }

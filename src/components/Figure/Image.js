@@ -4,7 +4,7 @@ import { css } from 'glamor'
 
 const styles = {
   image: css({
-    maxWidth: '100%'
+    width: '100%'
   })
 }
 

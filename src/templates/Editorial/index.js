@@ -73,6 +73,7 @@ const figure = {
   component: Figure,
   editorModule: 'figure',
   editorOptions: {
+    documentChild: true,
     afterType: 'PARAGRAPH'
   },
   rules: [
@@ -94,6 +95,7 @@ const figure = {
       props: (node, parent) => ({
         data: (parent && parent.data) || {}
       }),
+      // ToDo: replace with module that enforces a byline at the end
       editorModule: 'paragraph',
       editorOptions: {
         type: 'figureCaption',
@@ -103,7 +105,7 @@ const figure = {
         {
           matchMdast: matchType('emphasis'),
           component: FigureByline,
-          editorModule: 'inline',
+          // ToDo: inline module with placeholder
           editorOptions: {
             placeholder: 'Credit'
           }
@@ -120,7 +122,7 @@ const schema = {
     {
       matchMdast: matchType('root'),
       component: ({children}) => <div>{children}</div>,
-      editorModule: 'documentFlexible',
+      editorModule: 'documentPlain',
       rules: [
         {
           matchMdast: () => false,
@@ -129,14 +131,29 @@ const schema = {
         {
           matchMdast: matchZone('TITLE'),
           component: TitleBlock,
+          editorModule: 'block',
+          editorOptions: {
+            type: 'title'
+          },
           rules: [
             {
               matchMdast: matchHeading(1),
-              component: Editorial.Headline
+              component: Editorial.Headline,
+              editorModule: 'headline',
+              editorOptions: {
+                type: 'h1',
+                placeholder: 'Titel',
+                depth: 1
+              }
             },
             {
               matchMdast: (node, index) => matchParagraph(node) && index === 1,
               component: Editorial.Lead,
+              editorModule: 'paragraph',
+              editorOptions: {
+                type: 'lead',
+                placeholder: 'Lead'
+              },
               rules: [
                 br,
                 link
@@ -145,6 +162,11 @@ const schema = {
             {
               matchMdast: matchParagraph,
               component: Editorial.Credit,
+              editorModule: 'paragraph',
+              editorOptions: {
+                type: 'credit',
+                placeholder: 'Autoren, Datum'
+              },
               rules: [
                 br,
                 link
@@ -160,21 +182,43 @@ const schema = {
           rules: [
             {
               matchMdast: matchHeading(2),
-              component: Editorial.Subhead
+              component: Editorial.Subhead,
+              editorModule: 'headline',
+              editorOptions: {
+                type: 'h2',
+                depth: 2,
+                formatButtonText: 'Zwischentitel'
+              }
             },
             paragraph,
             figure,
             {
               matchMdast: matchZone('INFOBOX'),
               component: InfoBox,
+              editorModule: 'block',
+              editorOptions: {
+                type: 'infobox',
+                insertButtonText: 'Infobox'
+              },
               rules: [
                 {
                   matchMdast: matchHeading(3),
-                  component: InfoBoxTitle
+                  component: InfoBoxTitle,
+                  editorModule: 'headline',
+                  editorOptions: {
+                    type: 'infoh',
+                    depth: 3,
+                    placeholder: 'Title'
+                  }
                 },
                 {
                   matchMdast: matchParagraph,
                   component: InfoBoxText,
+                  editorModule: 'paragraph',
+                  editorOptions: {
+                    type: 'infop',
+                    placeholder: 'Text'
+                  },
                   rules: paragraph.rules
                 }
               ]
@@ -182,6 +226,11 @@ const schema = {
             {
               matchMdast: matchZone('QUOTE'),
               component: PullQuote,
+              editorModule: 'block',
+              editorOptions: {
+                type: 'quote',
+                insertButtonText: 'Quote'
+              },
               rules: [
                 {
                   matchMdast: (node, index, parent) => (
@@ -189,6 +238,11 @@ const schema = {
                     (index === 0 || !matchLast(node, index, parent))
                   ),
                   component: PullQuoteText,
+                  editorModule: 'paragraph',
+                  editorOptions: {
+                    type: 'quotep',
+                    placeholder: 'Zitat'
+                  },
                   rules: [
                     br,
                     link
@@ -197,6 +251,11 @@ const schema = {
                 {
                   matchMdast: (node, index, parent) => matchParagraph(node) && matchLast(node, index, parent),
                   component: PullQuoteSource,
+                  editorModule: 'paragraph',
+                  editorOptions: {
+                    type: 'quotecite',
+                    placeholder: 'Quellenangabe / Autor'
+                  },
                   rules: [
                     br,
                     link
