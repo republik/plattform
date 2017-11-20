@@ -1,4 +1,4 @@
-const { ensureUserHasRole } = require('../../../lib/Roles')
+const { Roles: { ensureUserHasRole } } = require('backend-modules-auth')
 const { getTweetById } = require('../../../lib/twitter')
 const { getYoutubeVideoById } = require('../../../lib/youtube')
 const { getVimeoVideoById } = require('../../../lib/vimeo')

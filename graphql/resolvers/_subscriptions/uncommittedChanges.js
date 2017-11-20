@@ -1,5 +1,5 @@
 const {pubsub, filtered} = require('../../../lib/RedisPubSub')
-const { ensureUserHasRole } = require('../../../lib/Roles')
+const { Roles: { ensureUserHasRole } } = require('backend-modules-auth')
 
 // filtering with asyncIterator -> filtered by redis
 // filtering with payload, variables -> filtered by node

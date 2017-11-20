@@ -1,4 +1,4 @@
-const { ensureUserHasRole } = require('../../../lib/Roles')
+const { Roles: { ensureUserHasRole } } = require('backend-modules-auth')
 const { createGithubClients } = require('../../../lib/github')
 
 const {

@@ -1,4 +1,4 @@
-const { ensureUserHasRole } = require('../../../lib/Roles')
+const { Roles: { ensureUserHasRole } } = require('backend-modules-auth')
 const { descending } = require('d3-array')
 const yaml = require('../../../lib/yaml')
 const {

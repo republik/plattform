@@ -3,13 +3,14 @@ const express = require('express')
 const cors = require('cors')
 const { createServer } = require('http')
 const { Engine } = require('apollo-engine')
+const checkEnv = require('check-env')
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
-if (DEV) {
-  require('dotenv').config()
-}
 
-process.env.PORT = process.env.PORT || 3004
+checkEnv([
+  'DATABASE_URL',
+  'SESSION_SECRET'
+])
 
 const {
   PORT,
@@ -19,16 +20,17 @@ const {
   ENGINE_API_KEY
 } = process.env
 
-const auth = require('./src/auth')
-const graphql = require('./graphql')
-const assets = require('./src/assets')
+// middlewares
+const { express: { auth } } = require('backend-modules-auth')
+const graphql = require('./express/graphql')
 
 let pgdb
 let server
 let httpServer
 let subscriptionServer
 
-module.exports.run = () => {
+module.exports.run = (executableSchema, middlewares, t) => {
+  console.log('server run')
   // init apollo engine
   const engine = ENGINE_API_KEY
     ? new Engine({
@@ -73,8 +75,11 @@ module.exports.run = () => {
       server.use('*', cors(corsOptions))
     }
 
-    subscriptionServer = graphql(server, pgdb, httpServer)
-    assets(server)
+    subscriptionServer = graphql(server, pgdb, httpServer, executableSchema, t)
+
+    for (let middleware of middlewares) {
+      middleware(server)
+    }
 
     // start the server
     httpServer.listen(PORT, () => {
@@ -83,12 +88,6 @@ module.exports.run = () => {
 
     return { pgdb }
   })
-    .then(async (obj) => {
-      const scheduler = require('./lib/publicationScheduler')
-      await scheduler.init()
-        .catch(error => { console.log(error); return error })
-      return obj
-    })
 }
 
 module.exports.close = () => {

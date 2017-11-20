@@ -20,7 +20,7 @@ const {
 } = process.env
 
 const Server = require('../server')
-const Roles = require('../lib/Roles')
+const { Roles } = require('backend-modules-auth')
 const tr = require('../lib/t')
 const sleep = require('await-sleep')
 const util = require('util')
@@ -86,6 +86,7 @@ test('setup', async (t) => {
     `
   })
   t.ok(result.data.__schema)
+
   const { firstName, lastName, email } = testUser
   const user = await pgdb.public.users.insert({
     firstName,

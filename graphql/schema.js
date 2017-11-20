@@ -1,15 +1,11 @@
-const typeDefinitions = `
-scalar DateTime
-scalar JSON
-
+module.exports = `
 schema {
-  query: RootQuerys
-  mutation: RootMutations
-  subscription: RootSubscription
+  query: queries
+  mutation: mutations
+  subscription: subscriptions
 }
 
-type RootQuerys {
-  me: User
+type queries {
   repos(first: Int!): [Repo]!
   repo(id: ID!): Repo!
   # (pre)published documents
@@ -19,10 +15,7 @@ type RootQuerys {
   embed(id: ID!, embedType: EmbedType!): Embed!
 }
 
-type RootMutations {
-  signIn(email: String!): SignInResponse!
-  signOut: Boolean!
-
+type mutations {
   commit(
     repoId: ID!
     # specifies the parent commit. May only be
@@ -68,7 +61,7 @@ type RootMutations {
   ): Boolean!
 }
 
-type RootSubscription {
+type subscriptions {
   # Provides updates to the list of users
   # with uncommited changes in the repo
   uncommittedChanges(
@@ -80,169 +73,4 @@ type RootSubscription {
     repoId: ID
   ): Repo!
 }
-
-type Repo {
-  id: ID!
-  commits(page: Int): [Commit!]!
-  latestCommit: Commit!
-  commit(id: ID!): Commit!
-  uncommittedChanges: [User!]!
-  milestones: [Milestone!]!
-
-  # nothing or latest prepublication and/or latest publication
-  # nothing if repo is unpublished
-  latestPublications: [Publication]!
-
-  mailchimpUrl: String
-  unpublished: Boolean!
-}
-
-interface MilestoneInterface {
-  name: String!
-  commit: Commit!
-  author: Author!
-  date: DateTime!
-}
-
-type Publication implements MilestoneInterface {
-  name: String!
-  commit: Commit!
-  author: Author!
-  date: DateTime!
-
-  live: Boolean!
-  prepublication: Boolean!
-  scheduledAt: DateTime
-  updateMailchimp: Boolean!
-  sha: String!
-}
-
-type Milestone implements MilestoneInterface {
-  name: String!
-  commit: Commit!
-  author: Author!
-  date: DateTime!
-
-  message: String
-  immutable: Boolean!
-}
-
-
-type Commit {
-  id: ID!
-  parentIds: [ID!]!
-  message: String
-  author: Author!
-  date: DateTime!
-  document: Document!
-  repo: Repo!
-# files: [File]!
-}
-
-interface FileInterface {
-  content: JSON!
-  meta: Meta!
-}
-
-type Document implements FileInterface {
-  # AST of /article.md
-  content: JSON!
-  meta: Meta!
-}
-
-type Meta {
-  title: String
-  slug: String
-  image: String
-  emailSubject: String
-  description: String
-  facebookTitle: String
-  facebookImage: String
-  facebookDescription: String
-  twitterTitle: String
-  twitterImage: String
-  twitterDescription: String
-  publishDate: DateTime
-  template: String
-}
-
-#type File implements FileInterface {
-#  encoding: String!
-#  content: JSON!
-#  meta: Meta!
-#}
-
-type Author {
-  name: String!
-  email: String!
-  user: User
-}
-
-type UncommittedChangeUpdate {
-  repoId: ID!
-  user: User!
-  action: Action!
-}
-
-type User {
-  id: ID!
-  name: String
-  firstName: String
-  lastName: String
-  email: String!
-  roles: [String]!
-}
-
-type SignInResponse {
-  phrase: String!
-}
-
-enum Action {
-  create
-  delete
-}
-
-# implements FileInterface
-input DocumentInput {
-  # AST of /article.md
-  content: JSON!
-}
-
-enum EmbedType {
-  YoutubeEmbed
-  VimeoEmbed
-  TwitterEmbed
-}
-
-interface EmbedInterface {
-  id: ID!
-}
-
-type TwitterEmbed implements EmbedInterface {
-  id: ID!
-  text: String!
-  createdAt: String!
-  userId: String!
-  userName: String!
-  userScreenName: String!
-}
-
-type YoutubeEmbed implements EmbedInterface {
-  id: ID!
-  createdAt: String!
-  userId: String!
-  userName: String!
-  thumbnail: String!
-}
-
-type VimeoEmbed implements EmbedInterface {
-  id: ID!
-  createdAt: String!
-  userId: String!
-  userName: String!
-  thumbnail: String!
-}
-
-union Embed = TwitterEmbed | YoutubeEmbed | VimeoEmbed
 `
-module.exports = [typeDefinitions]
