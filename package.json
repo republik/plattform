@@ -87,7 +87,7 @@
     "remark-parse": "^4.0.0",
     "remark-stringify": "^4.0.0",
     "slate": "^0.30.6",
-    "slate-mdast-serializer": "^0.1.1",
+    "slate-mdast-serializer": "^0.2.0",
     "slate-react": "^0.10.10",
     "subscriptions-transport-ws": "^0.8.2",
     "unified": "^6.1.5"

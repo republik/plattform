@@ -67,7 +67,7 @@ export default ({rule, subModules, TYPE}) => {
         renderNode ({node, children, attributes}) {
           if (!title.match(node)) return
           return (
-            <rule.component attributes={attributes}>
+            <rule.component attributes={{...attributes, style: {position: 'relative'}}}>
               {children}
             </rule.component>
           )

@@ -87,6 +87,28 @@ const schema = {
           editorModule: 'meta'
         },
         {
+          matchMdast: matchZone('TITLE'),
+          component: ({ children, attributes = {} }) =>
+            <NarrowContainer {...attributes}>{children}</NarrowContainer>,
+          editorModule: 'block',
+          editorOptions: {
+            type: 'title'
+          },
+          rules: [
+            {
+              matchMdast: matchHeading(1),
+              component: ({ children, attributes = {} }) =>
+                <H1 {...attributes}>{children}</H1>,
+              editorModule: 'headline',
+              editorOptions: {
+                type: 'h1',
+                placeholder: 'Titel',
+                depth: 1
+              }
+            }
+          ]
+        },
+        {
           matchMdast: matchZone(
             'CENTER'
           ),
@@ -129,20 +151,6 @@ const schema = {
             paragraph,
             {
               matchMdast: matchHeading(
-                1
-              ),
-              component: ({ children, attributes = {} }) =>
-                <H1 {...attributes}>{children}</H1>,
-              editorModule: 'headline',
-              editorOptions: {
-                type: 'h1',
-                depth: 1,
-                formatButtonText:
-                  'Zwischentitel 1'
-              }
-            },
-            {
-              matchMdast: matchHeading(
                 2
               ),
               component: ({ children, attributes = {} }) =>
@@ -152,7 +160,7 @@ const schema = {
                 type: 'h2',
                 depth: 2,
                 formatButtonText:
-                  'Zwischentitel 2'
+                  'Zwischentitel'
               }
             }
           ]

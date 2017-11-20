@@ -104,6 +104,7 @@ export default ({rule, subModules, TYPE}) => {
   )
 
   const {
+    documentChild,
     afterType
   } = rule.editorOptions || {}
 
@@ -183,36 +184,43 @@ export default ({rule, subModules, TYPE}) => {
                   min: 1,
                   max: 1
                 }
-              ]
-            },
-            normalize (change, reason, {node, index, child}) {
-              if (reason === 'child_required') {
-                change.insertNodeByKey(
-                  node.key,
-                  index,
-                  {
-                    kind: 'block',
-                    type: index === 0
-                      ? imageModule.TYPE
-                      : captionModule.TYPE,
-                    isVoid: index === 0
+              ],
+              parent: documentChild && {kinds: ['document']},
+              normalize (change, reason, {node, index, parent, child}) {
+                if (reason === 'parent_kind_invalid') {
+                  change.unwrapBlockByKey(
+                    node.key,
+                    parent.type
+                  )
+                }
+                if (reason === 'child_required') {
+                  change.insertNodeByKey(
+                    node.key,
+                    index,
+                    {
+                      kind: 'block',
+                      type: index === 0
+                        ? imageModule.TYPE
+                        : captionModule.TYPE,
+                      isVoid: index === 0
+                    }
+                  )
+                }
+                if (reason === 'child_type_invalid') {
+                  change.setNodeByKey(
+                    child.key,
+                    {
+                      type: index === 0
+                        ? imageModule.TYPE
+                        : captionModule.TYPE,
+                      isVoid: index === 0
+                    }
+                  )
+                }
+                if (reason === 'child_unknown') {
+                  if (index > 1) {
+                    change.mergeNodeByKey(child.key)
                   }
-                )
-              }
-              if (reason === 'child_type_invalid') {
-                change.setNodeByKey(
-                  child.key,
-                  {
-                    type: index === 0
-                      ? imageModule.TYPE
-                      : captionModule.TYPE,
-                    isVoid: index === 0
-                  }
-                )
-              }
-              if (reason === 'child_unknown') {
-                if (index > 1) {
-                  change.mergeNodeByKey(child.key)
                 }
               }
             }

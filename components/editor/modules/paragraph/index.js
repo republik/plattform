@@ -30,7 +30,7 @@ export default ({rule, subModules, TYPE}) => {
 
   const paragraph = {
     match: matchBlock(TYPE),
-    matchMdast: (node) => node.type === 'paragraph',
+    matchMdast: rule.matchMdast || ((node) => node.type === 'paragraph'),
     fromMdast: (node, index, parent, visitChildren) => ({
       kind: 'block',
       type: TYPE,
@@ -97,7 +97,9 @@ export default ({rule, subModules, TYPE}) => {
           if (!paragraph.match(node)) return
 
           return (
-            <Paragraph attributes={attributes} data={node.data.toJS()}>
+            <Paragraph
+              attributes={{...attributes, style: {position: 'relative'}}}
+              data={node.data.toJS()}>
               {children}
             </Paragraph>
           )
@@ -106,7 +108,9 @@ export default ({rule, subModules, TYPE}) => {
           blocks: {
             [TYPE]: {
               nodes: [
-                { kinds: ['text', 'inline'] }
+                {
+                  kinds: ['text', 'inline']
+                }
               ],
               normalize: (change, reason, {node, index, child}) => {
                 if (reason === 'child_kind_invalid') {
