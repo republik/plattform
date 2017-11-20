@@ -1,4 +1,4 @@
-const {pubsub, filtered} = require('../../../lib/RedisPubSub')
+const { lib: { RedisPubSub: { pubsub, filtered } } } = require('backend-modules-base')
 const { Roles: { ensureUserHasRole } } = require('backend-modules-auth')
 
 // filtering with asyncIterator -> filtered by redis

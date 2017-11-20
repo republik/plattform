@@ -20,8 +20,8 @@ const executableSchema = mergeSchemas({
   ]
 })
 
-// const { server } = require('backend-modules-base')
-const server = require('./server')
+const { server } = require('backend-modules-base')
+// const server = require('./server')
 server.run(executableSchema, [assets], t)
   .then(async (obj) => {
     const scheduler = require('./lib/publicationScheduler')
