@@ -30,7 +30,6 @@ let httpServer
 let subscriptionServer
 
 module.exports.run = (executableSchema, middlewares, t) => {
-  console.log('server run')
   // init apollo engine
   const engine = ENGINE_API_KEY
     ? new Engine({

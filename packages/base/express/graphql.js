@@ -19,7 +19,6 @@ const {
 } = process.env
 
 module.exports = (server, pgdb, httpServer, executableSchema, t) => {
-  console.log(executableSchema)
   const subscriptionServer = SubscriptionServer.create(
     {
       schema: executableSchema,

@@ -1,5 +1,7 @@
 {
-  "license": "AGPLv3+",
+  "name": "@project-r/backend-modules",
+  "description": "Backend modules developed at Project R",
+  "license": "AGPL-3.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/orbiting/backend-modules.git"
@@ -9,6 +11,8 @@
     "cz-lerna-changelog": "1.2.1",
     "eslint": "^3.14.1",
     "husky": "^0.13.1",
+    "lint-staged": "^4.3.0",
+    "standard": "^10.0.3",
     "lerna": "^2.5.1",
     "lerna-semantic-release": "^9.1.0",
     "validate-commit-msg": "^2.11.1"
@@ -21,14 +25,12 @@
       "helpMessage": "Commit message violates the rules defined for this project. Please, execute `npm run commit` to generate a correct commit message with `commitizen`"
     }
   },
-  "name": "@project-r/backend-modules",
   "bugs": {
     "url": "https://github.com/orbiting/backend-modules/issues"
   },
   "homepage": "https://github.com/orbiting/backend-modules#readme",
   "version": "0.0.0-development",
   "private": true,
-  "description": "Backend modules developed at Project R",
   "main": "index.js",
   "dependencies": {},
   "scripts": {
