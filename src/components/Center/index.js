@@ -74,7 +74,7 @@ const styles = {
   })
 }
 
-const Center = ({ children, attributes = {}, ...props }) => (
+export const Center = ({ children, attributes = {}, ...props }) => (
   <div {...styles.center} {...attributes} {...props}>
     {children}
   </div>
@@ -103,5 +103,3 @@ Breakout.propTypes = {
 Breakout.defaultProps = {
   size: 'regular'
 }
-
-export default Center
