@@ -1,0 +1,28 @@
+{
+  "name": "backend-modules-documents",
+  "version": "0.0.0-development",
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backend-modules.git"
+  },
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
+  "license": "AGPLv3+",
+  "bugs": {
+    "url": "https://github.com/orbiting/backend-modules/issues"
+  },
+  "homepage": "https://github.com/orbiting/backend-modules#readme",
+  "devDependencies": {
+    "apollo-modules-node": "file:../../../apollo-modules-node",
+    "backend-modules-auth": "file:../auth",
+    "check-env": "^1.3.0",
+    "d3-array": "^1.2.1",
+    "isomorphic-unfetch": "^2.0.0"
+  },
+  "peerDependencies": {
+    "isomorphic-unfetch": "^2.0.0",
+    "backend-modules-auth": "^0.0.0",
+    "check-env": "^1.3.0"
+  }
+}
