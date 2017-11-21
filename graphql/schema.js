@@ -8,10 +8,6 @@ schema {
 type queries {
   repos(first: Int!): [Repo]!
   repo(id: ID!): Repo!
-  # (pre)published documents
-  documents: [Document]!
-  # (pre)published document
-  document(slug: String!): Document
   embed(id: ID!, embedType: EmbedType!): Embed!
 }
 

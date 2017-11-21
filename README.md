@@ -5,6 +5,8 @@ Publikator is a cms prototype: edit files on github with [slate](https://github.
 
 Works best with: [publikator-frontend](https://github.com/orbiting/publikator-frontend)
 
+Depends on modules from: [backend-modules](https://github.com/orbiting/backend-modules)
+
 ## Usage
 
 ### Quick start
@@ -65,25 +67,28 @@ PUBLIC_ASSETS_URL=http://localhost:3004/assets
 
 Install dependencies.
 ```
-npm install
+yarn install
 ```
 
-Create a seeds file by copying `seeds/seeds.example.json` to `seeds/seeds.json` and adapting it to your needs. The seeds are read by the npm scripts `db:seed` or `db:reset`.
+Create a seeds file by copying `seeds/seeds.example.json` to `seeds/seeds.json` and adapting it to your needs. The seeds are read by the scripts `db:seed` or `db:reset`.
 
 Create and init the DB.
 ```
 createdb -U postgres publikator
-npm run db:reset
+yarn run db:reset
 ```
 
 Run it.
 ```
-npm run dev
+yarn run dev
 ```
 
 Checkout the API: `http://localhost:3004/graphiql`
 - [signin](http://localhost:3004/graphiql?query=mutation%20%7BsignIn(email%3A%20%22patrick.recher%40project-r.construction%22)%20%7B%0A%20%20phrase%0A%7D%7D)
 - [me](http://localhost:3004/graphiql?query=query%20%7Bme%20%7B%0A%20%20id%0A%20%20email%0A%7D%7D)
+
+### backend-modules
+To develop backend-modules first run `yarn run link` inside the backend-modules repo then execute `yarn run link:backend-modules` here. The backend-modules are now symlinked inside node_modules and development should work seamlessly.
 
 
 ## Auth

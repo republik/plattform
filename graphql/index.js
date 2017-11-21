@@ -1,4 +1,5 @@
 const { loadModule, addTypes } = require('apollo-modules-node')
-const { graphql: documents } = require('backend-modules-documents')
-const { graphql: auth } = require('backend-modules-auth')
-module.exports = addTypes(loadModule(__dirname), [auth, documents])
+const { graphql: documents } = require('@orbiting/backend-modules-documents')
+const { graphql: auth } = require('@orbiting/backend-modules-auth')
+const { graphql: scalars } = require('@orbiting/backend-modules-scalars')
+module.exports = addTypes(loadModule(__dirname), [auth, documents, scalars])

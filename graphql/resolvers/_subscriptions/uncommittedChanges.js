@@ -1,5 +1,5 @@
-const { lib: { RedisPubSub: { pubsub, filtered } } } = require('backend-modules-base')
-const { Roles: { ensureUserHasRole } } = require('backend-modules-auth')
+const { lib: { RedisPubSub: { pubsub, filtered } } } = require('@orbiting/backend-modules-base')
+const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
 
 // filtering with asyncIterator -> filtered by redis
 // filtering with payload, variables -> filtered by node
