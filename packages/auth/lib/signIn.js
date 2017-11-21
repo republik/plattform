@@ -1,4 +1,4 @@
-const { sendMail } = require('backend-modules-mail')
+const { sendMail } = require('@orbiting/backend-modules-mail')
 const uuid = require('uuid/v4')
 const querystring = require('querystring')
 const isEmail = require('email-validator').validate

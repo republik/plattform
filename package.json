@@ -1,11 +1,14 @@
 {
-  "name": "@project-r/backend-modules",
+  "name": "@orbiting/backend-modules",
   "description": "Backend modules developed at Project R",
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/orbiting/backend-modules.git"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
     "commitizen": "^2.9.5",
     "cz-lerna-changelog": "1.2.1",
@@ -36,9 +39,9 @@
   "scripts": {
     "commit": "git-cz",
     "semantic-release": "lerna-semantic-release pre && lerna-semantic-release post && lerna-semantic-release perform",
-    "postinstall": "lerna bootstrap",
     "commitmsg": "validate-commit-msg",
-    "test": "lerna run test"
+    "test": "lerna run test",
+    "link": "lerna run link"
   },
   "author": "Patrick Recher <patrick.recher@republik.ch>"
 }

@@ -21,7 +21,7 @@ const {
 } = process.env
 
 // middlewares
-const { express: { auth } } = require('backend-modules-auth')
+const { express: { auth } } = require('@orbiting/backend-modules-auth')
 const graphql = require('./express/graphql')
 
 let pgdb
@@ -94,7 +94,6 @@ module.exports.close = () => {
   pubsub.getSubscriber().quit()
   pubsub.getPublisher().quit()
   subscriptionServer.close()
-  require('./lib/publicationScheduler').quit()
   httpServer.close()
   pgdb.close()
   require('./lib/redis').quit()
@@ -103,6 +102,7 @@ module.exports.close = () => {
   httpServer = null
   subscriptionServer = null
   // TODO server leaks timers, force teardown for now
+  console.info('exiting server in 30s')
   setTimeout(() => {
     process.exit(0)
   }, 30000)

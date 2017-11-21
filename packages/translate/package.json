@@ -1,5 +1,5 @@
 {
-  "name": "backend-modules-translate",
+  "name": "@orbiting/backend-modules-translate",
   "version": "0.0.0-development",
   "description": "basic message formatting",
   "main": "index.js",
@@ -12,5 +12,8 @@
   "bugs": {
     "url": "https://github.com/orbiting/backend-modules/issues"
   },
-  "homepage": "https://github.com/orbiting/backend-modules#readme"
+  "homepage": "https://github.com/orbiting/backend-modules#readme",
+  "scripts": {
+    "link": "yarn link"
+  }
 }

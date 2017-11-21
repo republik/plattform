@@ -1,7 +1,7 @@
 {
-  "name": "@orbiting/backend-modules-mail",
+  "name": "@orbiting/backend-modules-scalars",
   "version": "0.0.0-development",
-  "description": "simple mails with mandrill",
+  "description": "sca",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -17,13 +17,14 @@
     "link": "yarn link"
   },
   "devDependencies": {
-    "isomorphic-unfetch": "^2.0.0"
+    "graphql": "^0.11.7"
   },
   "dependencies": {
-    "check-env": "^1.3.0",
-    "export-files": "^2.1.1"
+    "graphql-type-json": "^0.1.4",
+    "apollo-modules-node": "0.0.0-development",
+    "@orbiting/backend-modules-formats": "0.0.0-development"
   },
   "peerDependencies": {
-    "isomorphic-unfetch": "^2.0.0"
+    "graphql": "^0.11.7"
   }
 }
