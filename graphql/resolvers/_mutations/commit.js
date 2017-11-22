@@ -3,7 +3,7 @@ const visit = require('unist-util-visit')
 const dataUriToBuffer = require('data-uri-to-buffer')
 const MDAST = require('../../../lib/mdast/mdast')
 const { unprefixUrl } = require('../../../lib/assets')
-const { ensureUserHasRole } = require('../../../lib/Roles')
+const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
 const superb = require('superb')
 const superheroes = require('superheroes')
 const sleep = require('await-sleep')
@@ -72,9 +72,20 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
       private: true,
       auto_init: true
     })
-    // auto_init seems to be async and takes some time
-    // we sporadically saw: Git Repository is empty. on commit
-    await sleep(1000)
+
+    let ready = false
+    let count = 20
+    while (ready === false) {
+      const heads = await getHeads(repoId)
+      if (heads.length > 0 && heads[0] && heads[0].target && heads[0].target.oid.length > 0) {
+        ready = true
+      } else {
+        if (count-- < 0) {
+          throw new Error('commit could not create a repo in time. please try again.')
+        }
+        await sleep(300)
+      }
+    }
   }
 
   // reverse asset url prefixing

@@ -1,4 +1,4 @@
-const { ensureUserHasRole } = require('../../../lib/Roles')
+const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (
   _,

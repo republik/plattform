@@ -5,6 +5,8 @@ Publikator is a cms prototype: edit files on github with [slate](https://github.
 
 Works best with: [publikator-frontend](https://github.com/orbiting/publikator-frontend)
 
+Depends on modules from: [backend-modules](https://github.com/orbiting/backend-modules)
+
 ## Usage
 
 ### Quick start
@@ -30,6 +32,7 @@ MANDRILL_API_KEY=replaceMe
 DEFAULT_MAIL_FROM_NAME='publikator'
 DEFAULT_MAIL_FROM_ADDRESS='publikator@project-r.construction'
 
+AUTH_MAIL_FROM_ADDRESS=
 
 # The github user/organization under which all repos are held
 GITHUB_LOGIN=orbiting
@@ -65,25 +68,28 @@ PUBLIC_ASSETS_URL=http://localhost:3004/assets
 
 Install dependencies.
 ```
-npm install
+yarn install
 ```
 
-Create a seeds file by copying `seeds/seeds.example.json` to `seeds/seeds.json` and adapting it to your needs. The seeds are read by the npm scripts `db:seed` or `db:reset`.
+Create a seeds file by copying `seeds/seeds.example.json` to `seeds/seeds.json` and adapting it to your needs. The seeds are read by the scripts `db:seed` or `db:reset`.
 
 Create and init the DB.
 ```
 createdb -U postgres publikator
-npm run db:reset
+yarn run db:reset
 ```
 
 Run it.
 ```
-npm run dev
+yarn run dev
 ```
 
 Checkout the API: `http://localhost:3004/graphiql`
 - [signin](http://localhost:3004/graphiql?query=mutation%20%7BsignIn(email%3A%20%22patrick.recher%40project-r.construction%22)%20%7B%0A%20%20phrase%0A%7D%7D)
 - [me](http://localhost:3004/graphiql?query=query%20%7Bme%20%7B%0A%20%20id%0A%20%20email%0A%7D%7D)
+
+### backend-modules
+To develop backend-modules first run `yarn run link` inside the backend-modules repo then execute `yarn run link:backend-modules` here. The backend-modules are now symlinked inside node_modules and development should work seamlessly.
 
 
 ## Auth
@@ -139,6 +145,52 @@ Go to section "Keys and Access Tokens" and add to your `.env`:
 TWITTER_APP_KEY=[The hash from field "Consumer Key (API Key)"]
 TWITTER_APP_SECRET=[The hash from field "Consumer Secret (API Secret)"]
 ```
+
+## HowTo's
+
+### Union Types
+
+With `graphql-tools` you cannot use actual union types. Instead define arbitrary types with interfaces.
+
+Instead of
+```
+type A {
+
+}
+
+type B {
+
+}
+
+union C = A | B
+
+type Query {
+  getC(): C!
+}
+```
+
+you do
+
+```
+interface C {
+
+}
+
+type A implements C {
+
+}
+
+type B implements C {
+
+}
+
+type Query {
+  getC(): C!
+}
+```
+
+Queries work exactly the same as they would with actual union types.
+[Source](https://www.apollographql.com/docs/graphql-tools/resolvers.html#Unions-and-interfaces)
 
 
 ## Licensing
