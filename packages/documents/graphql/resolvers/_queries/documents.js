@@ -1,4 +1,4 @@
-const { Roles: { userHasRole } } = require('backend-modules-auth')
+const { Roles: { userHasRole } } = require('@orbiting/backend-modules-auth')
 const { descending } = require('d3-array')
 
 module.exports = async (_, args, { user, redis }) => {
