@@ -9,6 +9,9 @@
   },
   "author": "Patrick Recher <patrick.recher@republik.ch>",
   "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "bugs": {
     "url": "https://github.com/orbiting/backend-modules/issues"
   },

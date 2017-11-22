@@ -9,6 +9,9 @@
   },
   "author": "Patrick Recher <patrick.recher@republik.ch>",
   "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "link": "yarn link"
   },
