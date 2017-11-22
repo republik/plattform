@@ -925,7 +925,11 @@ d3-dsv@^1.0.3:
     iconv-lite "0.4"
     rw "1"
 
-d3-time-format@^2.1.0:
+d3-format@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/d3-format/-/d3-format-1.2.1.tgz#4e19ecdb081a341dafaf5f555ee956bcfdbf167f"
+
+d3-time-format@^2.1.0, d3-time-format@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/d3-time-format/-/d3-time-format-2.1.1.tgz#85b7cdfbc9ffca187f14d3c456ffda268081bb31"
   dependencies:
@@ -2004,7 +2008,6 @@ graphql-subscriptions@^0.5.5:
 
 "graphql-tools@https://github.com/orbiting/graphql-tools.git":
   version "2.7.2"
-  uid de7361283d8125f30f426c0afda1c7510724106c
   resolved "https://github.com/orbiting/graphql-tools.git#de7361283d8125f30f426c0afda1c7510724106c"
   dependencies:
     apollo-utilities "^1.0.1"
