@@ -15,3 +15,8 @@ note: due to this [issue](https://github.com/lerna/lerna/issues/1125), we had to
 ```
 
 To develop backend-modules in combination with a consuming project, first run `yarn run link` inside here then execute `yarn run link:backend-modules` in the consuming repo.
+
+### publish
+```
+yarn run commit
+```
