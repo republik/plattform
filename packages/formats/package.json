@@ -1,6 +1,6 @@
 {
   "name": "@orbiting/backend-modules-formats",
-  "version": "0.0.0-development",
+  "version": "0.0.0",
   "description": "basic time formatting",
   "main": "index.js",
   "repository": {
