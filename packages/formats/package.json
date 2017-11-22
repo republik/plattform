@@ -20,7 +20,7 @@
     "link": "yarn link"
   },
   "dependencies": {
-    "apollo-modules-node": "0.0.0-development",
+    "apollo-modules-node": "^0.0.0",
     "d3-time-format": "^2.1.0"
   }
 }
