@@ -84,11 +84,11 @@ enum EmbedType {
   TwitterEmbed
 }
 
-interface EmbedInterface {
+interface Embed {
   id: ID!
 }
 
-type TwitterEmbed implements EmbedInterface {
+type TwitterEmbed implements Embed {
   id: ID!
   text: String!
   createdAt: String!
@@ -97,7 +97,7 @@ type TwitterEmbed implements EmbedInterface {
   userScreenName: String!
 }
 
-type YoutubeEmbed implements EmbedInterface {
+type YoutubeEmbed implements Embed {
   id: ID!
   createdAt: String!
   userId: String!
@@ -105,13 +105,11 @@ type YoutubeEmbed implements EmbedInterface {
   thumbnail: String!
 }
 
-type VimeoEmbed implements EmbedInterface {
+type VimeoEmbed implements Embed {
   id: ID!
   createdAt: String!
   userId: String!
   userName: String!
   thumbnail: String!
 }
-
-union Embed = TwitterEmbed | YoutubeEmbed | VimeoEmbed
 `

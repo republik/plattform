@@ -32,6 +32,7 @@ MANDRILL_API_KEY=replaceMe
 DEFAULT_MAIL_FROM_NAME='publikator'
 DEFAULT_MAIL_FROM_ADDRESS='publikator@project-r.construction'
 
+AUTH_MAIL_FROM_ADDRESS=
 
 # The github user/organization under which all repos are held
 GITHUB_LOGIN=orbiting
@@ -144,6 +145,52 @@ Go to section "Keys and Access Tokens" and add to your `.env`:
 TWITTER_APP_KEY=[The hash from field "Consumer Key (API Key)"]
 TWITTER_APP_SECRET=[The hash from field "Consumer Secret (API Secret)"]
 ```
+
+## HowTo's
+
+### Union Types
+
+With `graphql-tools` you cannot use actual union types. Instead define arbitrary types with interfaces.
+
+Instead of
+```
+type A {
+
+}
+
+type B {
+
+}
+
+union C = A | B
+
+type Query {
+  getC(): C!
+}
+```
+
+you do
+
+```
+interface C {
+
+}
+
+type A implements C {
+
+}
+
+type B implements C {
+
+}
+
+type Query {
+  getC(): C!
+}
+```
+
+Queries work exactly the same as they would with actual union types.
+[Source](https://www.apollographql.com/docs/graphql-tools/resolvers.html#Unions-and-interfaces)
 
 
 ## Licensing
