@@ -1,6 +1,6 @@
 {
   "name": "@orbiting/backend-modules-translate",
-  "version": "0.0.0-development",
+  "version": "0.0.0",
   "description": "basic message formatting",
   "main": "index.js",
   "repository": {
