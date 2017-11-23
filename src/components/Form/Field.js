@@ -144,15 +144,20 @@ class Field extends Component {
       label, error,
       renderInput,
       onInc,
-      onDec
+      onDec,
+      isFocused: isFocusedFromProps
     } = this.props
-    
+
     let simulationClassName
     let {isFocused} = this.state
     if (sim) {
       isFocused = sim.indexOf('focus') !== -1
       simulationClassName = simulate(sim).toString()
     }
+    if (isFocusedFromProps !== undefined) {
+      isFocused = isFocusedFromProps
+    }
+
     const {isValidating, isDirty} = this.state
 
     const value = this.props.value || this.state.value
@@ -248,7 +253,8 @@ class Field extends Component {
 
 Field.propTypes = {
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  renderInput: PropTypes.func.isRequired
+  renderInput: PropTypes.func.isRequired,
+  isFocused: PropTypes.Boolean
 }
 
 Field.defaultProps = {

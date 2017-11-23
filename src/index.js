@@ -10,7 +10,7 @@ import * as fontStyles from './components/Typography/styles'
 import 'core-js/fn/array/from'
 import 'core-js/fn/array/find'
 
-import {fontFaces} from './theme/fonts';
+import {fontFaces} from './theme/fonts'
 import {createFormatter} from './lib/translate'
 
 simulations(true)
@@ -126,7 +126,7 @@ ReactDOM.render(
               Radio: require('./components/Form/Radio.js'),
               Field: require('./components/Form/Field.js'),
               FieldSet: require('./components/Form/FieldSet.js'),
-              AutosuggestField: require('./components/Form/AutosuggestField.js'),
+              Autocomplete: require('./components/Form/Autocomplete.js'),
               MaskedInput: require('react-maskedinput'),
               AutosizeInput: require('react-textarea-autosize'),
               Dropdown: require('./components/Form/Dropdown.js'),
@@ -140,7 +140,7 @@ ReactDOM.render(
               VirtualDropdownInternal: {
                 Items: require('./components/Form/VirtualDropdown.js').Items,
                 ItemsContainer: require('./components/Form/VirtualDropdown.js').ItemsContainer,
-                Inner: require('./components/Form/VirtualDropdown.js').Inner,
+                Inner: require('./components/Form/VirtualDropdown.js').Inner
               }
             },
             src: require('./components/Form/docs.md')
@@ -163,7 +163,7 @@ ReactDOM.render(
               CommentComposer: require('./components/CommentComposer/CommentComposer'),
               CommentComposerHeader: require('./components/CommentComposer/CommentComposerHeader'),
               CommentComposerPlaceholder: require('./components/CommentComposer/CommentComposerPlaceholder'),
-              CommentComposerError: require('./components/CommentComposer/CommentComposerError'),
+              CommentComposerError: require('./components/CommentComposer/CommentComposerError')
             },
             src: require('./components/CommentComposer/docs.md')
           },
@@ -193,7 +193,7 @@ ReactDOM.render(
               RawHtml: require('./components/RawHtml')
             },
             src: require('./components/RawHtml/docs.md')
-          },
+          }
         ]
       },
       {
@@ -232,7 +232,7 @@ ReactDOM.render(
               Byline: require('./components/Figure/Byline'),
               Caption: require('./components/Figure/Caption'),
               Image: require('./components/Figure/Image'),
-              Center: require('./components/Center'),
+              Center: require('./components/Center')
             },
             src: require('./components/PullQuote/docs.md')
           },
@@ -249,7 +249,7 @@ ReactDOM.render(
               Byline: require('./components/Figure/Byline'),
               Caption: require('./components/Figure/Caption'),
               Image: require('./components/Figure/Image'),
-              Center: require('./components/Center'),
+              Center: require('./components/Center')
             },
             src: require('./components/InfoBox/docs.md')
           },
@@ -263,11 +263,11 @@ ReactDOM.render(
               FigureGroup: require('./components/Figure').FigureGroup,
               Byline: require('./components/Figure/Byline'),
               Caption: require('./components/Figure/Caption'),
-              Image: require('./components/Figure/Image'),
+              Image: require('./components/Figure/Image')
             },
             src: require('./components/Figure/docs.md')
           },
-           {
+          {
             path: '/teaser',
             title: 'Teaser',
             imports: {
@@ -277,7 +277,7 @@ ReactDOM.render(
               Center: require('./components/Center')
             },
             src: require('./components/Teaser/docs.md')
-          },
+          }
         ]
       },
       {
@@ -304,13 +304,13 @@ ReactDOM.render(
                 {key: 'styleguide/Hello/message/2', value: 'Schön Sie wieder zu sehen!'},
                 {key: 'styleguide/Hello/message/other', value: 'Willkommen zum {count}. Mal {name}!'},
                 {key: 'styleguide/Hello/label/visits', value: 'Anzahl Besuche'},
-                {key: 'styleguide/Hello/label/name', value: 'Name'},
+                {key: 'styleguide/Hello/label/name', value: 'Name'}
               ])
             }
           }
         ]
-      },
+      }
     ]}
   />,
   document.getElementById('root')
-);
+)

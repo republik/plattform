@@ -4,14 +4,23 @@
 <Field label='Label' />
 ```
 
-```react|span-3
-<Field label='Label' simulate='focus' />
-```
 
 ```react|span-3
 <Field
     label='E-Mail-Adresse'
     error='Geben sie eine gültige E-Mail-Adresse an' />
+```
+
+Override the inner focus state by explicitly passing `isFocused`.
+
+Pass css pseudo states as `simulate` property to test or display behavior. Please note that the pseudo state simulator is a developer documentation helper and not meant to be used in production.
+
+```react|span-3
+<Field label='Label' isFocused={true} />
+```
+
+```react|span-3
+<Field label='Label' simulate='focus' />
 ```
 
 ### Increase and Decrease
@@ -71,46 +80,6 @@ state: {
       })
     }} />
 ```
-
-### Autocomplete
-
-You can provide a `items` array which will be suggested to the user. Powered by `react-autocomplete`.
-
-```react|span-3
-<AutosuggestField
-    label='Land'
-    items={[
-      'Schweiz',
-      'Deutschland',
-      'Österreich'
-    ]} />
-```
-
-```react|span-3
-state: {
-  value: ''
-}
----
-<AutosuggestField
-    label='Monat'
-    items={[
-      '01', '02', '03', '04', '05', '06',
-      '07', '08', '09', '10', '11', '12'
-    ]}
-    value={state.value}
-    error={state.error}
-    onChange={(event, value, shouldValidate) => {
-      setState({
-        error: (
-          shouldValidate &&
-          !value.trim().length &&
-          'Monat fehlt'
-        ),
-        value: value
-      })
-    }} />
-```
-
 
 ### Integration with Third-Party
 
@@ -507,4 +476,58 @@ state: {isOpen: false}
     </VirtualDropdownInternal.Inner>
   </div>
 </div>
+```
+
+### Autocomplete
+
+Provide a list of items and filter its contents with a text input. Uses [VirtualDropdown Internal Components](#virtualdropdown-internal-components) and therefore [`downshift`](https://github.com/paypal/downshift).
+
+Properties:
+  * **`items`** - Array of objects of shape `{ value: '1', text: 'Eins'}`
+  * **`value`** - Object of shape `{ value: '1', text: 'Eins'}` or `null`. Not necessarily part of `items`.
+  * **`filter`** - String that will be shown in the filter text input, or `null`.
+  * **`onChange`** - Function with signature `nextValue => Void`.
+  * **`onFilterChange`** - Function with signature `nextFilter => Void`.
+
+`<Autocomplete />` does not incorporate any filter logic itself. Also, it can't be used as uncontrolled component. Both the `value` and the `filter` prop have to be passed in order for the component to behave correctly.
+
+```react
+state: {
+  value: null,
+  filter: '',
+  items: [
+    {text: 'Januar', value: '01'},
+    {text: 'Februar', value: '02'},
+    {text: 'März', value: '03'},
+    {text: 'April', value: '04'},
+    {text: 'Mai', value: '05'},
+    {text: 'Juni', value: '06'},
+    {text: 'Juli', value: '07'},
+    {text: 'August', value: '08'},
+    {text: 'September', value: '09'},
+    {text: 'Oktober', value: '10'},
+    {text: 'November', value: '10'},
+    {text: 'Dezember', value: '10'}
+  ]
+}
+---
+<Autocomplete
+    label='Monat'
+    value={state.value}
+    filter={state.filter}
+    items={
+      state.items.filter(
+        ({text}) =>
+          !state.filter || text.toLowerCase().includes(state.filter.toLowerCase())
+      )
+    }
+    onChange={
+      value => {
+        setState({...state, value})
+      }
+    }
+    onFilterChange={
+      filter => setState({...state, filter})
+    }
+/>
 ```

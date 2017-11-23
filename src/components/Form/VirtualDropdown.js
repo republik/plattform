@@ -7,7 +7,7 @@ import colors from '../../theme/colors'
 import {sansSerifRegular21} from '../Typography/styles'
 import {labelHeight, fieldHeight, Label, LButton} from './Label'
 
-const styles = {
+export const styles = {
   root: css({
     position: 'relative',
     height: labelHeight + fieldHeight,
@@ -39,10 +39,10 @@ const styles = {
     lineHeight: 1,
     padding: '17px 12px',
     cursor: 'pointer',
-    transition: 'background .12s',
+    transition: 'background .12s'
   }),
   selectedItem: css({
-    color: colors.primary,
+    color: colors.primary
   }),
   highlightedItem: css({
     background: colors.secondaryBg
@@ -51,7 +51,7 @@ const styles = {
   itemSeparator: css({
     margin: '-1px 12px 0',
     borderTop: `1px solid ${colors.divider}`,
-    transition: 'border-color .12s',
+    transition: 'border-color .12s'
   }),
   hiddenItemSeparator: css({
     borderColor: 'transparent'
@@ -65,7 +65,7 @@ const styles = {
   })
 }
 
-const itemToString = item => item ? item.text : null
+export const itemToString = item => item ? item.text : null
 
 export class VirtualDropdown extends PureComponent {
   constructor (props) {
@@ -139,11 +139,19 @@ export class ItemsContainer extends PureComponent {
     this.refFn = (ref) => { this.ref = ref }
   }
 
-  componentDidMount () {
+  updateHeight () {
     if (this.ref) {
       const {height} = this.ref.getBoundingClientRect()
       this.setState({height, opacity: 1})
     }
+  }
+
+  componentDidUpdate () {
+    this.updateHeight()
+  }
+
+  componentDidMount () {
+    this.updateHeight()
   }
 
   render () {
@@ -159,18 +167,25 @@ export class ItemsContainer extends PureComponent {
   }
 }
 
+const isSameItem = (itemA, itemB) =>
+  itemA === itemB ||
+  (
+    itemA &&
+    itemB &&
+    Object.keys(itemA).every(key => itemA[key] === itemB[key])
+  )
+
 export const Items = ({items, selectedItem, highlightedIndex, getItemProps}) => items.map((item, index) => {
   const i = (
     <Item
       key={`item-${index}`}
-      selected={item === selectedItem}
+      selected={isSameItem(item, selectedItem)}
       highlighted={index === highlightedIndex}
-      {...getItemProps({item})}
+      {...getItemProps({item, index})}
     >
       {item.text}
     </Item>
   )
-
   if (index === 0) {
     return i
   }
@@ -188,6 +203,7 @@ const Item = ({selected, highlighted, ...props}) =>
   <div
     {...merge(styles.item, selected && styles.selectedItem, highlighted && styles.highlightedItem)}
     {...props}
+    onMouseDown={e => {e.preventDefault()}}
   />
 
 const ItemSeparator = ({hidden}) =>

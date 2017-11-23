@@ -18,6 +18,7 @@ export {default as Checkbox} from './components/Form/Checkbox'
 export {default as Loader} from './components/Loader'
 export {default as RawHtml} from './components/RawHtml'
 export {default as Dropdown} from './components/Form/Dropdown'
+export {default as Autocomplete} from './components/Form/Autocomplete'
 export {default as TitleBlock} from './components/TitleBlock'
 export {default as Center, Breakout} from './components/Center'
 export {
