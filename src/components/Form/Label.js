@@ -43,6 +43,7 @@ const styles = {
     display: 'block',
     appearance: 'none',
     outline: 'none',
+    borderRadius: 0,
     backgroundColor: 'white',
     border: 'none',
     padding: '0',
