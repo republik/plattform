@@ -27,7 +27,7 @@
     "apollo-engine": "^0.5.2",
     "apollo-modules-node": "^0.0.0",
     "apollo-server-express": "^1.2.0",
-    "@orbiting/backend-modules-auth": "^0.0.1",
+    "@orbiting/backend-modules-auth": "^0.2.0",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
     "check-env": "^1.3.0",
