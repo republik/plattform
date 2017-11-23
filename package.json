@@ -14,7 +14,7 @@
     "@orbiting/backend-modules-mail": "^0.0.0",
     "@orbiting/backend-modules-scalars": "^0.0.2",
     "@orbiting/backend-modules-translate": "^0.0.0",
-    "@orbiting/backend-modules-script": "^0.0.0",
+    "@orbiting/backend-modules-script": "^1.0.0",
     "@project-r/template-newsletter": "^1.3.0",
     "apollo-fetch": "^0.6.0",
     "apollo-modules-node": "^0.0.0",
