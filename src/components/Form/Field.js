@@ -254,7 +254,7 @@ class Field extends Component {
 Field.propTypes = {
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   renderInput: PropTypes.func.isRequired,
-  isFocused: PropTypes.Boolean
+  isFocused: PropTypes.bool
 }
 
 Field.defaultProps = {
