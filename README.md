@@ -27,7 +27,7 @@ DATABASE_URL=postgres://postgres@localhost:5432/publikator
 # leave blank for default: 127.0.0.1:6379
 REDIS_URL=
 
-SEND_MAILS=true  # or false if you don't have mandrill
+SEND_MAILS=true  # or false if you don't have mandrill, prints mails to console
 MANDRILL_API_KEY=replaceMe
 DEFAULT_MAIL_FROM_NAME='publikator'
 DEFAULT_MAIL_FROM_ADDRESS='publikator@project-r.construction'
@@ -71,7 +71,8 @@ Install dependencies.
 yarn install
 ```
 
-Create a seeds file by copying `seeds/seeds.example.json` to `seeds/seeds.json` and adapting it to your needs. The seeds are read by the scripts `db:seed` or `db:reset`.
+Create a seeds file by copying [seeds.example.json](https://github.com/orbiting/backend-modules/blob/master/packages/auth/seeds/seeds.example.json)
+to `seeds/seeds.json` and adapting it to your needs. The seeds are read by the scripts `db:seed` or `db:reset`.
 
 Create and init the DB.
 ```
