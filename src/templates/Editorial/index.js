@@ -4,17 +4,23 @@ import Center from '../../components/Center'
 import TitleBlock from '../../components/TitleBlock'
 import * as Editorial from '../../components/Typography/Editorial'
 
-import { Figure } from '../../components/Figure'
+import { Figure, FigureGroup } from '../../components/Figure'
 import FigureImage from '../../components/Figure/Image'
 import FigureCaption from '../../components/Figure/Caption'
 import FigureByline from '../../components/Figure/Byline'
 
-import { PullQuote, PullQuoteText, PullQuoteSource } from '../../components/PullQuote'
-
 import {
-  InfoBox, InfoBoxTitle, InfoBoxText/*, InfoBoxFigure */
+  PullQuote,
+  PullQuoteText,
+  PullQuoteSource,
+  PullQuoteFigure
+} from '../../components/PullQuote'
+import {
+  InfoBox,
+  InfoBoxTitle,
+  InfoBoxText,
+  InfoBoxFigure
 } from '../../components/InfoBox'
-
 
 import {
   matchType,
@@ -68,9 +74,35 @@ const paragraph = {
   ]
 }
 
+const figureCaption = {
+  matchMdast: matchParagraph,
+  component: FigureCaption,
+  // ToDo: replace with module that enforces a byline at the end
+  editorModule: 'paragraph',
+  editorOptions: {
+    type: 'figureCaption',
+    placeholder: 'Legende'
+  },
+  rules: [
+    {
+      matchMdast: matchType('emphasis'),
+      component: FigureByline,
+      // ToDo: inline module with placeholder
+      editorOptions: {
+        placeholder: 'Credit'
+      }
+    },
+    link,
+    br
+  ]
+}
+
 const figure = {
   matchMdast: matchZone('FIGURE'),
   component: Figure,
+  props: node => ({
+    size: node.data.size // values: undefined, 'breakout'
+  }),
   editorModule: 'figure',
   editorOptions: {
     documentChild: true,
@@ -89,31 +121,7 @@ const figure = {
       editorModule: 'figureImage',
       isVoid: true
     },
-    {
-      matchMdast: matchParagraph,
-      component: FigureCaption,
-      props: (node, parent) => ({
-        data: (parent && parent.data) || {}
-      }),
-      // ToDo: replace with module that enforces a byline at the end
-      editorModule: 'paragraph',
-      editorOptions: {
-        type: 'figureCaption',
-        placeholder: 'Legende'
-      },
-      rules: [
-        {
-          matchMdast: matchType('emphasis'),
-          component: FigureByline,
-          // ToDo: inline module with placeholder
-          editorOptions: {
-            placeholder: 'Credit'
-          }
-        },
-        link,
-        br
-      ]
-    }
+    figureCaption
   ]
 }
 
@@ -131,6 +139,9 @@ const schema = {
         {
           matchMdast: matchZone('TITLE'),
           component: TitleBlock,
+          props: node => ({
+            center: node.data.center // undefined, false, true
+          }),
           editorModule: 'block',
           editorOptions: {
             type: 'title'
@@ -193,8 +204,25 @@ const schema = {
             paragraph,
             figure,
             {
+              matchMdast: matchZone('FIGUREGROUP'),
+              component: FigureGroup,
+              props: node => ({
+                size: 'breakout',
+                columns: node.data.columns // values: 2, 3, 4
+              }),
+              rules: [
+                figure,
+                figureCaption
+              ]
+            },
+            {
               matchMdast: matchZone('INFOBOX'),
               component: InfoBox,
+              props: node => ({
+                size: node.data.size, // values: undefined || 'regular', 'float', 'breakout'
+                imageSize: node.data.imageSize, // values: 'XS', undefined || 'S', 'M', 'L'
+                imageFloat: node.data.imageFloat // values: undefined, false, true
+              }),
               editorModule: 'block',
               editorOptions: {
                 type: 'infobox',
@@ -212,6 +240,51 @@ const schema = {
                   }
                 },
                 {
+                  matchMdast: matchZone('FIGURE'),
+                  component: InfoBoxFigure,
+                  editorModule: 'figure',
+                  editorOptions: {
+                    type: 'INFOBOXFIGURE',
+                    documentChild: true,
+                    afterType: 'INFOP'
+                  },
+                  rules: [
+                    {
+                      matchMdast: matchImageParagraph,
+                      component: FigureImage,
+                      props: node => ({
+                        data: {
+                          src: node.children[0].url,
+                          alt: node.children[0].alt
+                        }
+                      }),
+                      editorModule: 'figureImage',
+                      isVoid: true
+                    },
+                    {
+                      matchMdast: matchParagraph,
+                      component: FigureByline,
+                      editorModule: 'paragraph',
+                      editorOptions: {
+                        type: 'figureCaption',
+                        placeholder: 'Credit'
+                      },
+                      rules: [
+                        {
+                          matchMdast: matchType('emphasis'),
+                          component: FigureByline,
+                          // ToDo: inline module with placeholder
+                          editorOptions: {
+                            placeholder: 'Credit'
+                          }
+                        },
+                        link,
+                        br
+                      ]
+                    }
+                  ]
+                },
+                {
                   matchMdast: matchParagraph,
                   component: InfoBoxText,
                   editorModule: 'paragraph',
@@ -226,12 +299,60 @@ const schema = {
             {
               matchMdast: matchZone('QUOTE'),
               component: PullQuote,
+              props: node => ({
+                size: node.data.size // values: undefined || 'regular', 'narrow', 'float', 'breakout'
+              }),
               editorModule: 'block',
               editorOptions: {
                 type: 'quote',
                 insertButtonText: 'Quote'
               },
               rules: [
+                {
+                  matchMdast: matchZone('FIGURE'),
+                  component: PullQuoteFigure,
+                  editorModule: 'figure',
+                  editorOptions: {
+                    type: 'QUOTEFIGURE',
+                    documentChild: true,
+                    afterType: 'PARAGRAPH'
+                  },
+                  rules: [
+                    {
+                      matchMdast: matchImageParagraph,
+                      component: FigureImage,
+                      props: node => ({
+                        data: {
+                          src: node.children[0].url,
+                          alt: node.children[0].alt
+                        }
+                      }),
+                      editorModule: 'figureImage',
+                      isVoid: true
+                    },
+                    {
+                      matchMdast: matchParagraph,
+                      component: FigureByline,
+                      editorModule: 'paragraph',
+                      editorOptions: {
+                        type: 'figureCaption',
+                        placeholder: 'Credit'
+                      },
+                      rules: [
+                        {
+                          matchMdast: matchType('emphasis'),
+                          component: FigureByline,
+                          // ToDo: inline module with placeholder
+                          editorOptions: {
+                            placeholder: 'Credit'
+                          }
+                        },
+                        link,
+                        br
+                      ]
+                    }
+                  ]
+                },
                 {
                   matchMdast: (node, index, parent) => (
                     matchParagraph(node) &&

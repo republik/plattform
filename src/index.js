@@ -37,8 +37,8 @@ ReactDOM.render(
     theme={theme}
     useBrowserHistory
     responsiveSizes={[
-      {name: 'Desktop large', width: 1045, height: 480},
-      {name: 'Desktop small', width: 800, height: 480},
+      {name: 'Desktop large', width: 1045, height: 800},
+      {name: 'Desktop small', width: 800, height: 600},
       {name: 'Mobile', width: 320, height: 480}
     ]}
     pages={[
@@ -300,6 +300,7 @@ ReactDOM.render(
             title: 'Editorial',
             imports: {
               schema: require('./templates/Editorial'),
+              ...require('./templates/docs'),
               renderMdast: require('mdast-react-render').renderMdast,
               serializer: new Serializer()
             },
