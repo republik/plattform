@@ -4106,7 +4106,7 @@ pluralize@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-1.2.1.tgz#d1a21483fd22bb41e58a12fa3421823140897c45"
 
-pogi@^2.4.0:
+pogi@^2.4.0, pogi@^2.5.1:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/pogi/-/pogi-2.5.1.tgz#33ed29f43514ac076c9547faa85054b8bd9a013c"
   dependencies:

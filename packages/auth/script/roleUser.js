@@ -5,7 +5,7 @@
 // auth  node script/roleUser.js supporter patrick.recher@project-r.construction [remove]
 //
 
-const PgDb = require('../lib/pgdb')
+const { PgDb } = require('pogi')
 const Roles = require('../lib/Roles')
 
 require('dotenv').config()

@@ -20,10 +20,10 @@
   },
   "homepage": "https://github.com/orbiting/backend-modules#readme",
   "devDependencies": {
+    "db-migrate": "^0.10.0",
     "dotenv": "^4.0.0",
     "gsheets": "^2.0.0",
-    "isomorphic-unfetch": "^2.0.0",
-    "db-migrate": "^0.10.0"
+    "isomorphic-unfetch": "^2.0.0"
   },
   "dependencies": {
     "@orbiting/backend-modules-mail": "^0.0.0",
@@ -38,6 +38,7 @@
     "kraut": "^0.1.1",
     "maxmind": "^2.3.0",
     "passport": "^0.4.0",
+    "pogi": "^2.5.1",
     "uuid": "^3.1.0"
   },
   "peerDependencies": {
