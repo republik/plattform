@@ -174,7 +174,15 @@ class Tree extends Component {
     this.svgRef.style.height = `${this.state.height}px`
     this.svgRef.style.width = `${svgWidth}px`
     this.svgRef.style.left = `${slotWidth / 2}px`
+
+    const listMarginLeft = this.listRef.style.marginLeft
     this.listRef.style.marginLeft = `${svgWidth + NODE_SIZE}px`
+
+    // We may have just initially changed the margin of the list which might affect
+    // text wrapping and height, so let's measure once again.
+    if (!listMarginLeft) {
+      this.measure()
+    }
 
     this.containerRef.style.margin =
       windowWidth < CONTAINER_MAX_WIDTH + 2 * MIN_PADDING
