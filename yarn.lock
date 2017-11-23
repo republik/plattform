@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@orbiting/backend-modules-auth@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-0.0.1.tgz#c5f0420d089665aa74b147f7bc440dd716209a8d"
+"@orbiting/backend-modules-auth@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-0.2.0.tgz#b25467ad4f5c1f5fc26785f5a490f091af01501f"
   dependencies:
     "@orbiting/backend-modules-mail" "^0.0.0"
     "@orbiting/backend-modules-translate" "^0.0.0"
@@ -18,13 +18,14 @@
     kraut "^0.1.1"
     maxmind "^2.3.0"
     passport "^0.4.0"
+    pogi "^2.5.1"
     uuid "^3.1.0"
 
-"@orbiting/backend-modules-base@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.0.2.tgz#be9bb65fed11c520ad62cd4fa249b2818737fcfa"
+"@orbiting/backend-modules-base@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.0.3.tgz#75921dc7fe3159a6f228fdfc9c048cbb95578471"
   dependencies:
-    "@orbiting/backend-modules-auth" "^0.0.1"
+    "@orbiting/backend-modules-auth" "^0.2.0"
     apollo-engine "^0.5.2"
     apollo-modules-node "^0.0.0"
     apollo-server-express "^1.2.0"
@@ -45,11 +46,11 @@
     subscriptions-transport-ws "^0.9.1"
     tslib "^1.8.0"
 
-"@orbiting/backend-modules-documents@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-0.0.2.tgz#38927a9c4fa47b1c563aac42b936f6586bcc0974"
+"@orbiting/backend-modules-documents@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-0.0.3.tgz#36377dc35a3d2a912f26369f1ed1b9f972b0501c"
   dependencies:
-    "@orbiting/backend-modules-auth" "^0.0.1"
+    "@orbiting/backend-modules-auth" "^0.2.0"
     apollo-modules-node "^0.0.0"
     check-env "^1.3.0"
     d3-array "^1.2.1"
@@ -75,6 +76,12 @@
     "@orbiting/backend-modules-formats" "^0.0.1"
     apollo-modules-node "^0.0.0"
     graphql-type-json "^0.1.4"
+
+"@orbiting/backend-modules-scripts@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-scripts/-/backend-modules-scripts-1.0.0.tgz#4d70e455301bdee0ce8a26079615a27ecf06f13e"
+  dependencies:
+    child-process-promise "^2.2.1"
 
 "@orbiting/backend-modules-translate@^0.0.0":
   version "0.0.0"
@@ -3791,7 +3798,7 @@ pluralize@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/pluralize/-/pluralize-1.2.1.tgz#d1a21483fd22bb41e58a12fa3421823140897c45"
 
-pogi@^2.4.0:
+pogi@^2.4.0, pogi@^2.5.1:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/pogi/-/pogi-2.5.1.tgz#33ed29f43514ac076c9547faa85054b8bd9a013c"
   dependencies:
