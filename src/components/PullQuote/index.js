@@ -1,5 +1,4 @@
 export { default as PullQuote } from './PullQuote'
-export { default as PullQuoteBody } from './Body'
 export { default as PullQuoteFigure } from './Figure'
 export { default as PullQuoteSource } from './Source'
 export { default as PullQuoteText } from './Text'

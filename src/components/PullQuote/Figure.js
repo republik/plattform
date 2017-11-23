@@ -24,12 +24,7 @@ const PullQuoteFigure = ({ children, attributes }) => {
 
 PullQuoteFigure.propTypes = {
   children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  typeName: PropTypes.string
-}
-
-PullQuoteFigure.defaultProps = {
-  typeName: 'PullQuoteFigure'
+  attributes: PropTypes.object
 }
 
 export default PullQuoteFigure
