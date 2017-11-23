@@ -13,14 +13,14 @@ services:
   - redis-server
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
-  - npm run db:reset:noseeds
+  - yarn run db:reset:noseeds
 before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.3.2
   - export PATH=$HOME/.yarn/bin:$PATH
 cache:
   yarn: true
 script:
-  - npm run test:travis
+  - yarn run test:travis
 branches:
   only:
   - master
