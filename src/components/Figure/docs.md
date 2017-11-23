@@ -2,7 +2,6 @@
 
 A `<Figure />` typically contains an `<Image>` and an optional `<Caption>`. The `<Image>` component makes sure that the image doesn't exceed the container width when using a large image.
 
-
 ```react
 <Figure>
   <Image data={{src: '/static/landscape.jpg', alt: ''}} />
@@ -13,11 +12,25 @@ A `<Figure />` typically contains an `<Image>` and an optional `<Caption>`. The 
 </Figure>
 ```
 
+#### `size`
+
+Supports `breakout` sizes:
+
+```react|responsive
+<Center style={{backgroundColor: 'red'}}>
+  <Figure size='breakout'>
+    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
+    <Caption>
+      Lorem ipsum dolor sit amet consetetur.{' '}
+      <Byline>Photo: Laurent Burst</Byline>
+    </Caption>
+  </Figure>
+</Center>
+```
+
 ### `<FigureGroup />`
 
-A `<FigureGroup />` contains multiple `<Figure />` elements.
-
-By default, the `<Figure />` elements are arranged side-by-side in one row. To enforce columns use e.g. `<FigureGroup data={{columns: 2}} />`. Note that currently up to four side-by-side `<Figure />` elements are supported. There's no auto-cropping magic in place, so image files should already be cropped to the same aspect ratio.
+A `<FigureGroup />` arranges multiple `<Figure />` elements in columns. Use the `columns` prop to specify `2` to `4` columns, defaults to `2`. There's no auto-cropping magic in place, so image files should already be cropped to the same aspect ratio.
 
 A `<FigureGroup />` containing two side-by-side `<Figure>` elements, each with their own caption:
 
@@ -41,6 +54,7 @@ A `<FigureGroup />` containing two side-by-side `<Figure>` elements, each with t
 ```
 
 A `<FigureGroup />` containing two side-by-side `<Figure>` elements, with one shared caption:
+
 ```react
 <FigureGroup>
   <Figure>
@@ -58,7 +72,7 @@ A `<FigureGroup />` containing two side-by-side `<Figure>` elements, with one sh
 
 A `<FigureGroup />` containing three side-by-side `<Figure>` elements:
 ```react
-<FigureGroup>
+<FigureGroup columns={3}>
   <Figure>
     <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
@@ -85,7 +99,7 @@ A `<FigureGroup />` containing three side-by-side `<Figure>` elements:
 
 A `<FigureGroup />` containing four side-by-side `<Figure>` elements:
 ```react
-<FigureGroup>
+<FigureGroup columns={4}>
   <Figure>
     <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
@@ -115,7 +129,7 @@ A `<FigureGroup />` containing four side-by-side `<Figure>` elements:
 
 A `<FigureGroup />` containing four `<Figure>` elements in two columns:
 ```react
-<FigureGroup data={{columns: 2}}>
+<FigureGroup>
   <Figure>
     <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
@@ -145,3 +159,26 @@ A `<FigureGroup />` containing four `<Figure>` elements in two columns:
   </Caption>
 </FigureGroup>
 ```
+
+
+#### `size`
+
+Supports `breakout` sizes:
+
+```react|responsive
+<Center style={{backgroundColor: 'red'}}>
+  <FigureGroup size='breakout'>
+    <Figure>
+      <Image data={{src: '/static/landscape.jpg', alt: ''}} />
+    </Figure>
+    <Figure>
+      <Image data={{src: '/static/landscape.jpg', alt: ''}} />
+    </Figure>
+    <Caption>
+      This is an image caption stretching beautifully over both images as you can see above.{' '}
+      <Byline>Photos: Laurent Burst</Byline>
+    </Caption>
+  </FigureGroup>
+</Center>
+```
+

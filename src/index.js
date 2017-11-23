@@ -285,7 +285,8 @@ ReactDOM.render(
               FigureGroup: require('./components/Figure').FigureGroup,
               Byline: require('./components/Figure/Byline'),
               Caption: require('./components/Figure/Caption'),
-              Image: require('./components/Figure/Image')
+              Image: require('./components/Figure/Image'),
+              Center: require('./components/Center')
             },
             src: require('./components/Figure/docs.md')
           }
