@@ -12,20 +12,12 @@ const styles = {
       ...serifBold28
     },
     color: colors.text
-  }),
-  quoted: css({
-    ':before': {
-      content: '«'
-    },
-    ':after': {
-      content: '»'
-    }
   })
 }
 
-export const Text = ({ children, attributes, isQuoted = true }) => {
+export const Text = ({ children, attributes }) => {
   return (
-    <div {...attributes} {...styles.text} {...((isQuoted && styles.quoted) || {})}>
+    <div {...attributes} {...styles.text}>
       {children}
     </div>
   )
@@ -33,8 +25,7 @@ export const Text = ({ children, attributes, isQuoted = true }) => {
 
 Text.propTypes = {
   children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  isQuoted: PropTypes.bool
+  attributes: PropTypes.object
 }
 
 export default Text

@@ -9,18 +9,7 @@ Supported sizes:
 ```react
 <PullQuote>
   <PullQuoteText>
-    Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
-  </PullQuoteText>
-  <PullQuoteSource>Thomas Jefferson</PullQuoteSource>
-</PullQuote>
-```
-
-You can suppress quotation marks using `<PullQuoteText isQuoted={false} />`.
-
-```react
-<PullQuote>
-  <PullQuoteText isQuoted={false}>
-    Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
+    «Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.»
   </PullQuoteText>
   <PullQuoteSource>Thomas Jefferson</PullQuoteSource>
 </PullQuote>
@@ -37,7 +26,7 @@ Add an `hasFigure` flag and use `<Figure />` to include an `<Image />`.
     </Caption>
   </Figure>
   <PullQuoteText>
-    Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
+    «Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.»
   </PullQuoteText>
   <PullQuoteSource>Thomas Jefferson</PullQuoteSource>
 </PullQuote>
@@ -51,7 +40,7 @@ Add an `hasFigure` flag and use `<Figure />` to include an `<Image />`.
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <PullQuote size={'narrow'}>
     <PullQuoteText>
-      Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
+      «Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.»
     </PullQuoteText>
     <PullQuoteSource>Thomas Jefferson</PullQuoteSource>
   </PullQuote>
@@ -70,7 +59,7 @@ Add an `hasFigure` flag and use `<Figure />` to include an `<Image />`.
       </Caption>
     </Figure>
     <PullQuoteText>
-      Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
+      «Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.»
     </PullQuoteText>
     <PullQuoteSource>Thomas Jefferson</PullQuoteSource>
   </PullQuote>
@@ -83,7 +72,7 @@ Add an `hasFigure` flag and use `<Figure />` to include an `<Image />`.
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <PullQuote size={'breakout'}>
     <PullQuoteText>
-      Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
+      «Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.»
     </PullQuoteText>
     <PullQuoteSource>Thomas Jefferson</PullQuoteSource>
   </PullQuote>
@@ -102,7 +91,7 @@ Add an `hasFigure` flag and use `<Figure />` to include an `<Image />`.
       </Caption>
     </Figure>
     <PullQuoteText>
-      Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
+      «Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.»
     </PullQuoteText>
     <PullQuoteSource>Thomas Jefferson</PullQuoteSource>
   </PullQuote>
@@ -115,7 +104,7 @@ Add an `hasFigure` flag and use `<Figure />` to include an `<Image />`.
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <PullQuote size={'float'}>
     <PullQuoteText>
-      Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
+      «Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.»
     </PullQuoteText>
     <PullQuoteSource>Thomas Jefferson</PullQuoteSource>
   </PullQuote>
@@ -134,7 +123,7 @@ Add an `hasFigure` flag and use `<Figure />` to include an `<Image />`.
       </Caption>
     </Figure>
     <PullQuoteText>
-      Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
+      «Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.»
     </PullQuoteText>
     <PullQuoteSource>Thomas Jefferson</PullQuoteSource>
   </PullQuote>
