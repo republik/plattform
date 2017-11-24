@@ -375,7 +375,7 @@ Es gibt keine deutsche Mannschaft spielt offensiv und die Name offensiv wie Baye
 `}</Markdown>
 ```
 
-#### `imageSize`
+#### `figureSize`
 
 Values: `XS`, `S` (default), `M`, `L`
 
@@ -386,7 +386,7 @@ Values: `XS`, `S` (default), `M`, `L`
 <section><h6>INFOBOX</h6>
 
 \`\`\`
-{"imageSize": "M"}
+{"figureSize": "M"}
 \`\`\`
 
 ### Trapattoni '98
@@ -407,7 +407,7 @@ Es gibt keine deutsche Mannschaft spielt offensiv und die Name offensiv wie Baye
 `}</Markdown>
 ```
 
-#### `imageFloat`
+#### `figureFloat`
 
 Values: `falsy` (default), `true`
 
@@ -418,7 +418,7 @@ Values: `falsy` (default), `true`
 <section><h6>INFOBOX</h6>
 
 \`\`\`
-{"imageFloat": true}
+{"figureFloat": true}
 \`\`\`
 
 ### Trapattoni '98
