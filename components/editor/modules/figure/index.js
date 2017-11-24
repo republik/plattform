@@ -176,11 +176,13 @@ export default ({rule, subModules, TYPE}) => {
               nodes: [
                 {
                   types: [imageModule.TYPE],
+                  kinds: ['block'],
                   min: 1,
                   max: 1
                 },
                 {
                   types: [captionModule.TYPE],
+                  kinds: ['block'],
                   min: 1,
                   max: 1
                 }
@@ -206,16 +208,45 @@ export default ({rule, subModules, TYPE}) => {
                     }
                   )
                 }
+                if (reason === 'child_kind_invalid') {
+                  if (index === 0) {
+                    change.insertNodeByKey(
+                      node.key,
+                      0,
+                      {
+                        kind: 'block',
+                        type: imageModule.TYPE,
+                        isVoid: true
+                      }
+                    )
+                  } else {
+                    change.wrapBlockByKey(
+                      child.key,
+                      {
+                        type: captionModule.TYPE
+                      }
+                    )
+                  }
+                }
                 if (reason === 'child_type_invalid') {
-                  change.setNodeByKey(
-                    child.key,
-                    {
-                      type: index === 0
-                        ? imageModule.TYPE
-                        : captionModule.TYPE,
-                      isVoid: index === 0
-                    }
-                  )
+                  if (index === 0) {
+                    change.insertNodeByKey(
+                      node.key,
+                      0,
+                      {
+                        kind: 'block',
+                        type: imageModule.TYPE,
+                        isVoid: true
+                      }
+                    )
+                  } else {
+                    change.setNodeByKey(
+                      child.key,
+                      {
+                        type: captionModule.TYPE
+                      }
+                    )
+                  }
                 }
                 if (reason === 'child_unknown') {
                   if (index > 1) {

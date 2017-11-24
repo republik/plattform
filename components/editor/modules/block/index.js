@@ -120,6 +120,7 @@ export default ({rule, subModules, TYPE}) => {
             [TYPE]: {
               nodes: subModules.map(module => ({
                 types: [module.TYPE],
+                kinds: ['block'],
                 min: 1,
                 max: 1
               })),
@@ -130,6 +131,14 @@ export default ({rule, subModules, TYPE}) => {
                     index,
                     {
                       kind: 'block',
+                      type: subModules[index].TYPE
+                    }
+                  )
+                }
+                if (reason === 'child_kind_invalid') {
+                  change.wrapBlockByKey(
+                    child.key,
+                    {
                       type: subModules[index].TYPE
                     }
                   )
