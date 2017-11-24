@@ -12,8 +12,7 @@ import FigureByline from '../../components/Figure/Byline'
 import {
   PullQuote,
   PullQuoteText,
-  PullQuoteSource,
-  PullQuoteFigure
+  PullQuoteSource
 } from '../../components/PullQuote'
 import {
   InfoBox,
@@ -309,7 +308,7 @@ const schema = {
               rules: [
                 {
                   matchMdast: matchZone('FIGURE'),
-                  component: PullQuoteFigure,
+                  component: Figure,
                   editorModule: 'figure',
                   editorOptions: {
                     type: 'QUOTEFIGURE',

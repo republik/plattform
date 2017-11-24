@@ -26,16 +26,16 @@ You can suppress quotation marks using `<PullQuoteText isQuoted={false} />`.
 </PullQuote>
 ```
 
-Use `<PullQuoteFigure />` to include an `<Image />`.
+Add an `hasFigure` flag and use `<Figure />` to include an `<Image />`.
 
 ```react
-<PullQuote>
-  <PullQuoteFigure>
+<PullQuote hasFigure>
+  <Figure>
     <Image data={{src: '/static/landscape.jpg', alt: ''}} />
     <Caption>
       <Byline>Photo: Laurent Burst</Byline>
     </Caption>
-  </PullQuoteFigure>
+  </Figure>
   <PullQuoteText>
     Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
   </PullQuoteText>
@@ -62,13 +62,13 @@ Use `<PullQuoteFigure />` to include an `<Image />`.
 ```react|responsive
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
-  <PullQuote size={'narrow'}>
-    <PullQuoteFigure>
+  <PullQuote hasFigure size={'narrow'}>
+    <Figure>
       <Image data={{src: '/static/landscape.jpg', alt: ''}} />
       <Caption>
         <Byline>Photo: Laurent Burst</Byline>
       </Caption>
-    </PullQuoteFigure>
+    </Figure>
     <PullQuoteText>
       Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
     </PullQuoteText>
@@ -94,13 +94,13 @@ Use `<PullQuoteFigure />` to include an `<Image />`.
 ```react|responsive
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
-  <PullQuote size={'breakout'}>
-    <PullQuoteFigure>
+  <PullQuote hasFigure size={'breakout'}>
+    <Figure>
       <Image data={{src: '/static/landscape.jpg', alt: ''}} />
       <Caption>
         <Byline>Photo: Laurent Burst</Byline>
       </Caption>
-    </PullQuoteFigure>
+    </Figure>
     <PullQuoteText>
       Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
     </PullQuoteText>
@@ -126,13 +126,13 @@ Use `<PullQuoteFigure />` to include an `<Image />`.
 ```react|responsive
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
-  <PullQuote size={'float'}>
-    <PullQuoteFigure>
+  <PullQuote hasFigure size={'float'}>
+    <Figure>
       <Image data={{src: '/static/landscape.jpg', alt: ''}} />
       <Caption>
         <Byline>Photo: Laurent Burst</Byline>
       </Caption>
-    </PullQuoteFigure>
+    </Figure>
     <PullQuoteText>
       Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
     </PullQuoteText>

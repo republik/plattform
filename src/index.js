@@ -243,6 +243,7 @@ ReactDOM.render(
               Byline: require('./components/Figure/Byline'),
               Caption: require('./components/Figure/Caption'),
               Image: require('./components/Figure/Image'),
+              Figure: require('./components/Figure').Figure,
               Center: require('./components/Center')
             },
             src: require('./components/PullQuote/docs.md')

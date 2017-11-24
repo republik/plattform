@@ -3,16 +3,25 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { Breakout } from '../Center'
-import Body from './Body'
-import Figure from './Figure'
 
 const styles = {
   container: css({
     margin: '0 auto'
   }),
-  flex: css({
+  figure: css({
     [mUp]: {
-      display: 'flex'
+      paddingLeft: 170,
+      '& figure': {
+        marginLeft: -170,
+        marginRight: 15,
+        float: 'left',
+        width: '155px'
+      }
+    }
+  }),
+  clear: css({
+    [mUp]: {
+      clear: 'both'
     }
   })
 }
@@ -27,22 +36,18 @@ const getBreakoutSize = (size, hasFigure) => {
   return size
 }
 
-const PullQuote = ({ children, attributes, size }) => {
-  const childrenArray = React.Children.toArray(children)
-  const figure = childrenArray.find(c => c.type === Figure)
-  const textAlign = !figure && size === 'narrow' ? 'center' : 'inherit'
+const PullQuote = ({ children, attributes, hasFigure, size }) => {
+  const textAlign = !hasFigure && size === 'narrow' ? 'center' : 'inherit'
 
   return (
-    <Breakout attributes={attributes} size={getBreakoutSize(size, figure)}>
+    <Breakout attributes={attributes} size={getBreakoutSize(size, hasFigure)}>
       <blockquote
         {...styles.container}
-        {...(figure ? styles.flex : {})}
+        {...(hasFigure ? styles.figure : {})}
         style={{ textAlign }}
       >
-        {figure}
-        <Body>
-          {childrenArray.filter(c => c !== figure)}
-        </Body>
+        {children}
+        <div {...styles.clear} />
       </blockquote>
     </Breakout>
   )
