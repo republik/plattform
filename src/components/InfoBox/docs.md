@@ -5,8 +5,8 @@ Supported props:
   - `regular` (default): Use full container width.
   - `breakout`: Break out to the left and use full container width.
   - `float`: Break out to the left and let other elements flow around.
-- `imageFloat`: Enforce floating image on desktop. On mobile the image floats, while on desktop the image is rendered in a 2-column layout.
-- `imageSize`: The image size, `S` (default), `M` or `L`. Ignored when `size` is `float`.
+- `figureSize`: The image size, `XS`, `S`, `M` or `L`. Should always be `XS` when `size` is `float`.
+- `figureFloat`: Enforce floating image on desktop.
 
 ```react
 <InfoBox>
@@ -18,7 +18,7 @@ Supported props:
 ```
 
 ```react
-<InfoBox imageSize='S'>
+<InfoBox figureSize='S'>
   <InfoBoxTitle>This is a box title</InfoBoxTitle>
   <Figure>
     <Image data={{src: '/static/landscape.jpg', alt: ''}} />
@@ -33,7 +33,7 @@ Supported props:
 ```
 
 ```react
-<InfoBox imageSize='S' imageFloat>
+<InfoBox figureSize='S' figureFloat>
   <InfoBoxTitle>This is a box title</InfoBoxTitle>
   <Figure>
     <Image data={{src: '/static/landscape.jpg', alt: ''}} />
@@ -48,7 +48,7 @@ Supported props:
 ```
 
 ```react
-<InfoBox imageSize={'M'}>
+<InfoBox figureSize='M'>
   <InfoBoxTitle>This is a box title</InfoBoxTitle>
   <Figure>
     <Image data={{src: '/static/landscape.jpg', alt: ''}} />
@@ -63,7 +63,7 @@ Supported props:
 ```
 
 ```react
-<InfoBox imageSize={'L'}>
+<InfoBox figureSize='L'>
   <InfoBoxTitle>This is a box title</InfoBoxTitle>
   <Figure>
     <Image data={{src: '/static/landscape.jpg', alt: ''}} />
@@ -82,7 +82,7 @@ Supported props:
 ```react|responsive
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
-  <InfoBox size={'breakout'} imageSize={'S'}>
+  <InfoBox size='breakout' figureSize='S'>
     <InfoBoxTitle>This is a breakout info box</InfoBoxTitle>
     <Figure>
       <Image data={{src: '/static/landscape.jpg', alt: ''}} />
@@ -101,7 +101,7 @@ Supported props:
 ```react|responsive
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
-  <InfoBox size={'breakout'} imageSize={'M'}>
+  <InfoBox size='breakout' figureSize='M'>
     <InfoBoxTitle>This is a breakout info box</InfoBoxTitle>
     <Figure>
       <Image data={{src: '/static/landscape.jpg', alt: ''}} />
@@ -120,7 +120,7 @@ Supported props:
 ```react|responsive
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
-  <InfoBox size={'breakout'} imageSize={'L'}>
+  <InfoBox size='breakout' figureSize='L'>
     <InfoBoxTitle>This is a breakout info box</InfoBoxTitle>
     <Figure>
       <Image data={{src: '/static/landscape.jpg', alt: ''}} />
@@ -139,7 +139,7 @@ Supported props:
 ```react|responsive
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
-  <InfoBox size={'float'}>
+  <InfoBox size='float'>
     <InfoBoxTitle>This is a float info box</InfoBoxTitle>
     <InfoBoxText>
       One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.
@@ -152,7 +152,7 @@ Supported props:
 ```react|responsive
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
-  <InfoBox size={'float'} imageSize='XS'>
+  <InfoBox size='float' figureSize='XS'>
     <InfoBoxTitle>This is a float info box</InfoBoxTitle>
     <Figure>
       <Image data={{src: '/static/landscape.jpg', alt: ''}} />

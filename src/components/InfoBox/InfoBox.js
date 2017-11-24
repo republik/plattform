@@ -66,25 +66,25 @@ const getBreakoutSize = (size, hasFigure) => {
   return size
 }
 
-const InfoBox = ({ children, attributes, size, imageSize, imageFloat }) => {
+const InfoBox = ({ children, attributes, size, figureSize, figureFloat }) => {
   let styles = {}
-  if (imageSize) {
-    const allowedImageSize = size === 'float' ? 'XS' : imageSize
-    const float = imageFloat || size === 'float'
+  if (figureSize) {
+    const allowedFigureSize = size === 'float' ? 'XS' : figureSize
+    const float = figureFloat || size === 'float'
     styles = {
       ...(float ? figureChildStyles.float : figureChildStyles.absolute),
-      ...figureChildStyles[allowedImageSize]
+      ...figureChildStyles[allowedFigureSize]
     }
     if (!float) {
       styles = {
         ...styles,
-        ...textChildStyles[allowedImageSize]
+        ...textChildStyles[allowedFigureSize]
       }
     }
   }
 
   return (
-    <Breakout attributes={attributes} size={getBreakoutSize(size, imageSize)}>
+    <Breakout attributes={attributes} size={getBreakoutSize(size, figureSize)}>
       <section {...styles}>
         {children}
       </section>
@@ -96,13 +96,13 @@ InfoBox.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
   size: PropTypes.oneOf(['regular', 'float', 'breakout']).isRequired,
-  imageSize: PropTypes.oneOf(Object.keys(IMAGE_SIZE)),
-  imageFloat: PropTypes.bool.isRequired
+  figureSize: PropTypes.oneOf(Object.keys(IMAGE_SIZE)),
+  figureFloat: PropTypes.bool.isRequired
 }
 
 InfoBox.defaultProps = {
   size: 'regular',
-  imageFloat: false
+  figureFloat: false
 }
 
 export default InfoBox
