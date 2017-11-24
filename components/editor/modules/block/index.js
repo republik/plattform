@@ -7,7 +7,8 @@ import injectBlock from '../../utils/injectBlock'
 
 export default ({rule, subModules, TYPE}) => {
   const {
-    insertButtonText
+    insertButtonText,
+    defaultProps
   } = rule.editorOptions || {}
 
   const childSerializer = new MarkdownSerializer({
@@ -92,7 +93,7 @@ export default ({rule, subModules, TYPE}) => {
         renderNode ({node, children, attributes}) {
           if (!serializerRule.match(node)) return
           return (
-            <Container data={node.data.toJS()} attributes={attributes}>
+            <Container {...defaultProps} {...node.data.toJS()} attributes={attributes}>
               {children}
             </Container>
           )
