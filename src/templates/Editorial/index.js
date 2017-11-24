@@ -80,7 +80,7 @@ const figureCaption = {
   // ToDo: replace with module that enforces a byline at the end
   editorModule: 'paragraph',
   editorOptions: {
-    type: 'figureCaption',
+    type: 'FIGURECAPTION',
     placeholder: 'Legende'
   },
   rules: [
@@ -144,7 +144,7 @@ const schema = {
           }),
           editorModule: 'block',
           editorOptions: {
-            type: 'title'
+            type: 'TITLE'
           },
           rules: [
             {
@@ -152,7 +152,7 @@ const schema = {
               component: Editorial.Headline,
               editorModule: 'headline',
               editorOptions: {
-                type: 'h1',
+                type: 'H1',
                 placeholder: 'Titel',
                 depth: 1
               }
@@ -162,7 +162,7 @@ const schema = {
               component: Editorial.Lead,
               editorModule: 'paragraph',
               editorOptions: {
-                type: 'lead',
+                type: 'LEAD',
                 placeholder: 'Lead'
               },
               rules: [
@@ -175,7 +175,7 @@ const schema = {
               component: Editorial.Credit,
               editorModule: 'paragraph',
               editorOptions: {
-                type: 'credit',
+                type: 'CREDIT',
                 placeholder: 'Autoren, Datum'
               },
               rules: [
@@ -196,7 +196,7 @@ const schema = {
               component: Editorial.Subhead,
               editorModule: 'headline',
               editorOptions: {
-                type: 'h2',
+                type: 'H2',
                 depth: 2,
                 formatButtonText: 'Zwischentitel'
               }
@@ -225,7 +225,7 @@ const schema = {
               }),
               editorModule: 'block',
               editorOptions: {
-                type: 'infobox',
+                type: 'INFOBOX',
                 insertButtonText: 'Infobox'
               },
               rules: [
@@ -234,7 +234,7 @@ const schema = {
                   component: InfoBoxTitle,
                   editorModule: 'headline',
                   editorOptions: {
-                    type: 'infoh',
+                    type: 'INFOH',
                     depth: 3,
                     placeholder: 'Title'
                   }
@@ -245,7 +245,6 @@ const schema = {
                   editorModule: 'figure',
                   editorOptions: {
                     type: 'INFOBOXFIGURE',
-                    documentChild: true,
                     afterType: 'INFOP'
                   },
                   rules: [
@@ -266,7 +265,7 @@ const schema = {
                       component: FigureByline,
                       editorModule: 'paragraph',
                       editorOptions: {
-                        type: 'figureCaption',
+                        type: 'FIGURECAPTION',
                         placeholder: 'Credit'
                       },
                       rules: [
@@ -289,7 +288,7 @@ const schema = {
                   component: InfoBoxText,
                   editorModule: 'paragraph',
                   editorOptions: {
-                    type: 'infop',
+                    type: 'INFOP',
                     placeholder: 'Text'
                   },
                   rules: paragraph.rules
@@ -304,7 +303,7 @@ const schema = {
               }),
               editorModule: 'block',
               editorOptions: {
-                type: 'quote',
+                type: 'QUOTE',
                 insertButtonText: 'Quote'
               },
               rules: [
@@ -314,8 +313,7 @@ const schema = {
                   editorModule: 'figure',
                   editorOptions: {
                     type: 'QUOTEFIGURE',
-                    documentChild: true,
-                    afterType: 'PARAGRAPH'
+                    afterType: 'QUOTEP'
                   },
                   rules: [
                     {
@@ -335,7 +333,7 @@ const schema = {
                       component: FigureByline,
                       editorModule: 'paragraph',
                       editorOptions: {
-                        type: 'figureCaption',
+                        type: 'FIGURECAPTION',
                         placeholder: 'Credit'
                       },
                       rules: [
@@ -361,7 +359,7 @@ const schema = {
                   component: PullQuoteText,
                   editorModule: 'paragraph',
                   editorOptions: {
-                    type: 'quotep',
+                    type: 'QUOTEP',
                     placeholder: 'Zitat'
                   },
                   rules: [
@@ -374,7 +372,7 @@ const schema = {
                   component: PullQuoteSource,
                   editorModule: 'paragraph',
                   editorOptions: {
-                    type: 'quotecite',
+                    type: 'QUOTECITE',
                     placeholder: 'Quellenangabe / Autor'
                   },
                   rules: [
