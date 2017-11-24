@@ -26,7 +26,7 @@ const styles = {
 export const Text = ({ children, attributes, isQuoted = true }) => {
   return (
     <div {...attributes} {...styles.text} {...((isQuoted && styles.quoted) || {})}>
-      <span>{children}</span>
+      {children}
     </div>
   )
 }
