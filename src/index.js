@@ -254,13 +254,11 @@ ReactDOM.render(
             imports: {
               css,
               ...require('./components/Typography'),
-              InfoBox: require('./components/InfoBox/InfoBox'),
-              InfoBoxFigure: require('./components/InfoBox/Figure'),
-              InfoBoxText: require('./components/InfoBox/Text'),
-              InfoBoxTitle: require('./components/InfoBox/Title'),
+              ...require('./components/InfoBox'),
               Byline: require('./components/Figure/Byline'),
               Caption: require('./components/Figure/Caption'),
               Image: require('./components/Figure/Image'),
+              Figure: require('./components/Figure').Figure,
               Center: require('./components/Center')
             },
             src: require('./components/InfoBox/docs.md')

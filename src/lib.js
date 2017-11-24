@@ -23,14 +23,12 @@ export {default as TitleBlock} from './components/TitleBlock'
 export {default as Center, Breakout} from './components/Center'
 export {
   InfoBox,
-  InfoBoxFigure,
   InfoBoxText,
   InfoBoxTitle
 } from './components/InfoBox'
 export {
   PullQuote,
   PullQuoteBody,
-  PullQuoteFigure,
   PullQuoteSource,
   PullQuoteText
 } from './components/PullQuote'

@@ -17,8 +17,7 @@ import {
 import {
   InfoBox,
   InfoBoxTitle,
-  InfoBoxText,
-  InfoBoxFigure
+  InfoBoxText
 } from '../../components/InfoBox'
 
 import {
@@ -240,7 +239,7 @@ const schema = {
                 },
                 {
                   matchMdast: matchZone('FIGURE'),
-                  component: InfoBoxFigure,
+                  component: Figure,
                   editorModule: 'figure',
                   editorOptions: {
                     type: 'INFOBOXFIGURE',
