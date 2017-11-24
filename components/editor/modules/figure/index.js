@@ -104,7 +104,6 @@ export default ({rule, subModules, TYPE}) => {
   )
 
   const {
-    documentChild,
     afterType
   } = rule.editorOptions || {}
 
@@ -187,7 +186,6 @@ export default ({rule, subModules, TYPE}) => {
                   max: 1
                 }
               ],
-              parent: documentChild && {kinds: ['document']},
               normalize (change, reason, {node, index, parent, child}) {
                 if (reason === 'parent_kind_invalid') {
                   change.unwrapBlockByKey(
