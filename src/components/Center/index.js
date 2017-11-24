@@ -31,7 +31,10 @@ const styles = {
     maxWidth: MAX_WIDTH,
     margin: '0 auto',
     padding: PADDING
-  }),
+  })
+}
+
+export const breakoutStyles = {
   narrow: css({
     [breakoutUp]: {
       margin: '0 auto',
