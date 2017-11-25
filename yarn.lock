@@ -192,6 +192,13 @@ apollo-engine@^0.5.2:
     apollo-engine-binary-linux "^0.2017.11-40-g9585bfc6"
     apollo-engine-binary-windows "^0.2017.11-40-g9585bfc6"
 
+apollo-modules-node@^0.0.0:
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/apollo-modules-node/-/apollo-modules-node-0.0.0.tgz#cdea7dc35987721a19ded343c4cdf06ac96ce6c2"
+  dependencies:
+    lodash.merge "^4.6.0"
+    lodash.pickby "^4.6.0"
+
 apollo-server-core@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-1.2.0.tgz#e851c47444991b6f89f88529237076b83e01e8ee"
