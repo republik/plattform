@@ -1,6 +1,6 @@
 {
   "name": "@orbiting/backend-modules-base",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "express and apollo-server setup incl. our auth system",
   "main": "index.js",
   "repository": {
