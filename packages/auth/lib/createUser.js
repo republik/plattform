@@ -1,21 +1,30 @@
-const name = (user) => {
-  return [
-    user.firstName,
-    user.lastName
-  ].filter(Boolean).join(' ')
-}
+const getName = (user) =>
+  [user.firstName, user.lastName]
+    .filter(Boolean)
+    .join(' ')
+    .trim()
 
-module.exports = user => ({
-  ...user,
-  roles: user.roles || [ ],
-  name () {
-    return name(user)
-  },
-  gitAuthor (date = new Date()) {
-    return {
-      name: name(user),
-      email: user.email,
-      date
+const cleanName = string =>
+  string
+    .trim()
+    .split('@')[0]
+    .replace(/\s*\.\s*/, ' ')
+    .split(' ')
+    .map(part => part[0].toUpperCase() + part.slice(1))
+    .join(' ')
+
+module.exports = user => {
+  const name = getName(user)
+  return {
+    ...user,
+    name: name || cleanName(user.email),
+    roles: user.roles || [ ],
+    gitAuthor (date = new Date()) {
+      return {
+        name,
+        email: user.email,
+        date
+      }
     }
   }
-})
+}
