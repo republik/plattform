@@ -254,6 +254,17 @@ ReactDOM.render(
             src: require('./components/InfoBox/docs.md')
           },
           {
+            path: '/tweet',
+            title: 'Tweet',
+            imports: {
+              css,
+              ...require('./components/Typography'),
+              Tweet: require('./components/Social/Tweet'),
+              Center: require('./components/Center'),
+            },
+            src: require('./components/Social/docs.md')
+          },
+          {
             path: '/figure',
             title: 'Figure',
             imports: {

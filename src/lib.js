@@ -42,6 +42,9 @@ export {
   Image
 } from './components/Figure'
 export {
+  Tweet
+} from './components/Social'
+export {
   Teaser,
   TeaserHeadline,
   TeaserLead,
