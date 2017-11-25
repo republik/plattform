@@ -88,6 +88,53 @@ const _addTypes = (master, donor) => {
   }
 }
 
+
+const _mergeSchema = (module1, module2) => {
+  const parsedModule1Schema = parse(new Source(module1.schema.join('\n')))
+  const parsedModule2Schema = parse(new Source(module2.schema.join('\n')))
+  const mergedSchema = {
+    kind: 'Document',
+    definitions: [
+      ...parsedModule1Schema.definitions.filter( def => def.kind === 'SchemaDefinition' ),
+      ...parsedModule1Schema.definitions
+        .filter( def => def.kind === 'ObjectTypeDefinition' )
+        .map( def => {
+          const objectTypeDefsModule2 = parsedModule2Schema.definitions
+            .find( def2 =>
+              def2.kind === 'ObjectTypeDefinition' &&
+              def2.name.value === def.name.value
+            )
+          return {
+            ...def,
+            fields: [
+              ...def.fields,
+              ...objectTypeDefsModule2 ? objectTypeDefsModule2.fields : []
+            ]
+          }
+        })
+    ]
+  }
+
+  return print(mergedSchema)
+}
+
+const _merge = (module1, module2) => {
+  const newModule = _addTypes(module1, module2)
+  const newSchema = _mergeSchema(module1, module2)
+
+  return {
+    ...newModule,
+    schema: [newSchema],
+    typeDefs: [newSchema, ...newModule.schemaTypes],
+    resolvers: {
+      ...newModule.resolvers,
+      queries: _.merge(module1.resolvers.queries, module2.resolvers.queries),
+      mutations: _.merge(module1.resolvers.mutations, module2.resolvers.mutations),
+      subscriptions: _.merge(module1.resolvers.subscriptions, module2.resolvers.subscriptions)
+    }
+  }
+}
+
 const addTypes = (master, donors) => {
   let newMaster = master
   for(let donor of donors) {
@@ -96,8 +143,16 @@ const addTypes = (master, donors) => {
   return newMaster
 }
 
+const merge = (module1, modules) => {
+  let newModule = module1
+  for(let module of modules) {
+    newModule = _merge(newModule, module)
+  }
+  return newModule
+}
 
 module.exports = {
   loadModule,
-  addTypes
+  addTypes,
+  merge
 }
