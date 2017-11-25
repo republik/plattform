@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "graphql-type-json": "^0.1.4",
-    "apollo-modules-node": "^0.0.0",
+    "apollo-modules-node": "^0.1.0",
     "@orbiting/backend-modules-formats": "^0.0.1"
   },
   "peerDependencies": {
