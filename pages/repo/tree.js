@@ -41,7 +41,7 @@ const fragments = {
   `
 }
 
-export const repoQuery = gql`
+export const query = gql`
   query repoWithHistory($repoId: ID!) {
     repo(id: $repoId) {
       id
@@ -146,7 +146,7 @@ class EditorPage extends Component {
 export default compose(
   withData,
   withAuthorization(['editor']),
-  graphql(repoQuery, {
+  graphql(query, {
     options: ({ url }) => ({
       variables: {
         repoId: url.query.repoId

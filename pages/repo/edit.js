@@ -39,18 +39,24 @@ const fragments = {
         }
       }
     }
+  `,
+  repo: gql`
+    fragment EditPageRepo on Repo {
+      id
+    }
   `
 }
 
 const getCommitById = gql`
   query getCommitById($repoId: ID!, $commitId: ID!) {
     repo(id: $repoId) {
-      id
+      ...EditPageRepo
       commit(id: $commitId) {
         ...EditPageCommit
       }
     }
   }
+  ${fragments.repo}
   ${fragments.commit}
 `
 
@@ -79,9 +85,13 @@ const commitMutation = gql`
       document: $document
     ) {
       ...EditPageCommit
+      repo {
+        ...EditPageRepo
+      }
     }
   }
   ${fragments.commit}
+  ${fragments.repo}
 `
 
 const uncommittedChangesMutation = gql`
@@ -432,25 +442,36 @@ export default compose(
       commitMutation: variables =>
         mutate({
           variables,
-          update: (proxy, { data: { commit } }) => {
-            const oldData = proxy.readQuery({
-              query: getCommitById,
-              variables: {
-                repoId: url.query.repoId,
-                commitId: url.query.commitId
+          update: (store, { data: { commit } }) => {
+            const { repoId, parentId } = variables
+            let data
+            if (parentId) {
+              const oldData = store.readQuery({
+                query: getCommitById,
+                variables: {
+                  repoId,
+                  commitId: parentId
+                }
+              })
+              data = {
+                ...oldData,
+                repo: {
+                  ...oldData.repo,
+                  commit
+                }
               }
-            })
-            const data = {
-              ...oldData,
-              repo: {
-                ...oldData.repo,
-                commit
+            } else {
+              data = {
+                repo: {
+                  ...commit.repo,
+                  commit
+                }
               }
             }
-            proxy.writeQuery({
+            store.writeQuery({
               query: getCommitById,
               variables: {
-                repoId: url.query.repoId,
+                repoId,
                 commitId: commit.id
               },
               data
