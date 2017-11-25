@@ -1,6 +1,6 @@
 const Roles = require('../../../../lib/Roles')
 const setDiscussionPreferences = require('./lib/setDiscussionPreferences')
-const getDiscussion = require('../../_RootQuerys/discussion')
+const getDiscussion = require('../../_queries/discussion')
 
 module.exports = async (_, args, { pgdb, user, t }) => {
   Roles.ensureUserHasRole(user, 'member')

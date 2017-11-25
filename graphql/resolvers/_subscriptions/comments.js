@@ -1,4 +1,4 @@
-const { pubsub, filtered } = require('../../../lib/RedisPubSub')
+const { lib: { RedisPubSub: { pubsub, filtered } } } = require('@orbiting/backend-modules-base')
 
 // filtering with asyncIterator -> filtered by redis
 // filtering with payload, variables -> filtered by node
