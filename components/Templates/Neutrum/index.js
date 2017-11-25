@@ -58,9 +58,11 @@ const paragraph = {
     },
     {
       matchMdast: matchType('link'),
-      getData: node => ({
-        title: node.title,
-        href: node.url
+      props: node => ({
+        data: {
+          title: node.title,
+          href: node.url
+        }
       }),
       component: ({ children, data, attributes = {} }) =>
         <A
