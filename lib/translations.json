@@ -1,5 +1,5 @@
 {
-  "updated": "2017-11-19T13:13:31.158Z",
+  "updated": "2017-11-25T00:18:17.823Z",
   "title": "live",
   "data": [
     {
@@ -81,6 +81,10 @@
     {
       "key": "repo/list/add/template/neutrum",
       "value": "Neutrum"
+    },
+    {
+      "key": "repo/list/add/template/editorial",
+      "value": "Editorial"
     },
     {
       "key": "baseCommit/title",
