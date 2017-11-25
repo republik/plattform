@@ -6,15 +6,29 @@ const _ = {
 }
 const { parse, print, Source } = require('graphql')
 
-const requireDirectory = (root, except) => {
+const isDirectory = (...paths) => {
+  return fs.lstatSync(path.join(...paths)).isDirectory()
+}
+
+const requireDirectory = (root, except, flatify, ignoreDirectories) => {
   return fs.existsSync(root) && fs.readdirSync(root)
     .filter( file =>
       !(file.indexOf('.') === 0) && //exclude hidden
       (!except || except.indexOf(file) === -1)
     )
-    .map( file => ({
-      [file.split('.')[0]]: require(path.join(root, file))
-    }))
+    .map( file => {
+      if(isDirectory(root, file)) {
+        if (!ignoreDirectories) {
+          if (flatify) {
+            return { ...requireDirectory(path.join(root, file), [], flatify, true) }
+          } else {
+            return { [file]: requireDirectory(path.join(root, file)) }
+          }
+        }
+      } else {
+        return { [file.split('.')[0]]: require(path.join(root, file)) }
+      }
+    })
     .reduce( (result, file) => {
       return {
         ...file,
@@ -34,9 +48,9 @@ const loadModule = (root) => {
     typeDefs: [...schema, ...schemaTypes],
     typeResolvers,
     resolvers: _.pickBy({
-      queries: requireDirectory(path.join(root, 'resolvers/', '_queries/')),
-      mutations: requireDirectory(path.join(root, 'resolvers/', '_mutations/')),
-      subscriptions: requireDirectory(path.join(root, 'resolvers/', '_subscriptions/')),
+      queries: requireDirectory(path.join(root, 'resolvers/', '_queries/'), [], true),
+      mutations: requireDirectory(path.join(root, 'resolvers/', '_mutations/'), [], true),
+      subscriptions: requireDirectory(path.join(root, 'resolvers/', '_subscriptions/'), [], true),
       ...typeResolvers
     }, Boolean)
   }
