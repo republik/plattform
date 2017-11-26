@@ -22,7 +22,6 @@
  */
 
 const exec = require('child-process-promise').exec
-const PgDb = require('../lib/pgdb')
 
 const username = process.argv[2]
 
@@ -43,6 +42,7 @@ Promise.resolve().then(async () => {
   } else {
     require('dotenv').config()
   }
+  const { lib: { pgdb: PgDb } } = require('@orbiting/backend-modules-base')
   const pgdb = await PgDb.connect()
 
   await pgdb.run(`
