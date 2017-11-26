@@ -21,6 +21,25 @@
     pogi "^2.5.1"
     uuid "^3.1.0"
 
+"@orbiting/backend-modules-auth@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-0.5.0.tgz#e9dcca09247ac6d948c25403d127990fa5640d6c"
+  dependencies:
+    "@orbiting/backend-modules-mail" "^0.0.0"
+    "@orbiting/backend-modules-translate" "^0.0.0"
+    apollo-modules-node "^0.1.0"
+    check-env "^1.3.0"
+    connect-pg-simple "^3.1.2"
+    email-validator "^1.1.1"
+    export-files "^2.1.0"
+    express-session "^1.15.6"
+    geoip-database "^1.0.9"
+    kraut "^0.1.1"
+    maxmind "^2.3.0"
+    passport "^0.4.0"
+    pogi "^2.5.1"
+    uuid "^3.1.0"
+
 "@orbiting/backend-modules-base@^0.0.6":
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.0.6.tgz#c4963805d63047219fda9fd0ed39efc0ed89dfbc"
@@ -65,6 +84,14 @@
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-mail/-/backend-modules-mail-0.0.0.tgz#625d341efd5b729e6010e3fe0b30827fb1897c86"
   dependencies:
+    check-env "^1.3.0"
+    export-files "^2.1.1"
+
+"@orbiting/backend-modules-mail@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-mail/-/backend-modules-mail-0.1.0.tgz#45d138b8a643a71ab5c469f160e29e13a79e326d"
+  dependencies:
+    await-sleep "^0.0.1"
     check-env "^1.3.0"
     export-files "^2.1.1"
 
@@ -337,6 +364,10 @@ async@~1.0.0:
 asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
+
+await-sleep@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/await-sleep/-/await-sleep-0.0.1.tgz#044532e49f1f4219d2030d79f517d64569a27d50"
 
 aws-sign2@~0.6.0:
   version "0.6.0"
