@@ -2028,9 +2028,9 @@ graphql-subscriptions@^0.5.5:
     deprecated-decorator "^0.1.6"
     uuid "^3.1.0"
 
-"graphql-tools@https://github.com/orbiting/graphql-tools.git":
-  version "2.7.2"
-  resolved "https://github.com/orbiting/graphql-tools.git#de7361283d8125f30f426c0afda1c7510724106c"
+"graphql-tools@https://github.com/orbiting/graphql-tools.git#upstream":
+  version "2.8.0"
+  resolved "https://github.com/orbiting/graphql-tools.git#8ebbd6e3607be8b91b49ee67c24b9dc8cda91c09"
   dependencies:
     apollo-utilities "^1.0.1"
     deprecated-decorator "^0.1.6"
