@@ -7,7 +7,7 @@ const keyCDN = require('../../../lib/keyCDN')
 const convertImage = require('../../../lib/convertImage')
 const uploadExoscale = require('../../../lib/uploadExoscale')
 // const renderUrl = require('../../../lib/renderUrl')
-// const sendMailTemplate = require('../../../lib/sendMailTemplate')
+// const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
 const FOLDER = 'testimonials'
 const {IMAGE_SIZE_SMALL, IMAGE_SIZE_SHARE} = convertImage
