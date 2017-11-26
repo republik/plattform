@@ -1,7 +1,7 @@
 const session = require('express-session')
 const PgSession = require('connect-pg-simple')(session)
 const passport = require('passport')
-const createUser = require('../lib/createUser')
+const transformUser = require('../lib/transformUser')
 
 exports.configure = ({
   server = null, // Express Server
@@ -104,7 +104,7 @@ exports.configure = ({
   })
 
   passport.deserializeUser(async function (id, next) {
-    const user = createUser(
+    const user = transformUser(
       await Users.findOne({id})
     )
     if (!user) {
