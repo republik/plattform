@@ -54,18 +54,18 @@ PHANTOMJSCLOUD_API_KEY=
 
 Install dependencies.
 ```
-npm install
+yarn install
 ```
 
 Create and init the DB.
 ```
 createdb -U postgres discussion
-npm run db:reset:noseeds
+yarn run db:reset:noseeds
 ```
 
 Run it.
 ```
-npm run dev
+yarn run dev
 ```
 
 Checkout the API: `http://localhost:3020/graphiql`
