@@ -1,7 +1,7 @@
-const ensureSignedIn = require('../../../lib/ensureSignedIn')
+const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, args, {pgdb, req, t}) => {
-  ensureSignedIn(req, t)
+  ensureSignedIn(req)
 
   const testimonial = await pgdb.public.testimonials.findOne({userId: req.user.id})
   if (!testimonial) {

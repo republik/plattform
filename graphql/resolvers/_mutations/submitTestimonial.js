@@ -2,7 +2,7 @@
 // but currently disabled.
 
 const uuid = require('uuid/v4')
-const ensureSignedIn = require('../../../lib/ensureSignedIn')
+const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const keyCDN = require('../../../lib/keyCDN')
 const convertImage = require('../../../lib/convertImage')
 const uploadExoscale = require('../../../lib/uploadExoscale')
@@ -15,7 +15,7 @@ const MAX_QUOTE_LENGTH = 140
 const MAX_ROLE_LENGTH = 60
 
 module.exports = async (_, args, {pgdb, req, t}) => {
-  ensureSignedIn(req, t)
+  ensureSignedIn(req)
 
   // check if user is eligitable: has pledged and/or was vouchered a membership
   const hasPledges = !!(await pgdb.public.pledges.findFirst({userId: req.user.id}))
