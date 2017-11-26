@@ -2,13 +2,13 @@
 # yarn lockfile v1
 
 
-"@orbiting/backend-modules-auth@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-0.2.0.tgz#b25467ad4f5c1f5fc26785f5a490f091af01501f"
+"@orbiting/backend-modules-auth@^0.4.1":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-0.4.2.tgz#204fa73b2ae25cd9e3b841df2e65294406b063c5"
   dependencies:
     "@orbiting/backend-modules-mail" "^0.0.0"
     "@orbiting/backend-modules-translate" "^0.0.0"
-    apollo-modules-node "^0.0.0"
+    apollo-modules-node "^0.1.0"
     check-env "^1.3.0"
     connect-pg-simple "^3.1.2"
     email-validator "^1.1.1"

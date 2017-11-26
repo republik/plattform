@@ -1,6 +1,6 @@
 {
   "name": "@orbiting/backend-modules-mail",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "simple mails with mandrill",
   "main": "index.js",
   "repository": {
