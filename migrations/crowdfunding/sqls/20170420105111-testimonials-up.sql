@@ -17,4 +17,3 @@ create table "testimonials" (
   unique("userId")
 );
 CREATE index "testimonials_role_idx" on "testimonials" using GIN ("role" gin_trgm_ops);
-

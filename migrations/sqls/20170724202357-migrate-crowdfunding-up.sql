@@ -2,6 +2,21 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "citext";
 CREATE EXTENSION IF NOT EXISTS "pg_trgm";
 
+ALTER TABLE users
+  ADD COLUMN "facebookId"     text,
+  ADD COLUMN "twitterHandle"  text,
+  ADD COLUMN "publicUrl"      text,
+  ADD COLUMN "isEmailPublic"  boolean not null default false,
+  ADD COLUMN "isPrivate"      boolean not null default false,
+  ADD COLUMN "badges"         jsonb
+;
+
+CREATE SCHEMA IF NOT EXISTS cf;
+
+ALTER TABLE IF EXISTS comments SET SCHEMA cf;
+ALTER TABLE IF EXISTS feeds SET SCHEMA cf;
+
+-- discussion
 create type "permission" as ENUM (
   'ALLOWED',
   'ENFORCED',
@@ -55,3 +70,59 @@ create table "discussionPreferences" (
   "credentialId"        uuid references "credentials",
   PRIMARY KEY ("userId", "discussionId")
 );
+-- /discussion
+
+
+-- copy existing feeds to new discussions API
+INSERT INTO
+  discussions(id, "maxLength", "minInterval")
+SELECT
+  id, "commentMaxLength", "commentInterval"
+FROM cf.feeds;
+
+INSERT INTO comments(
+  "id",
+  "discussionId",
+  "userId",
+  "content",
+  "upVotes",
+  "downVotes",
+  "votes",
+  "hottnes",
+  "published",
+  "adminUnpublished",
+  "createdAt",
+  "updatedAt"
+) SELECT
+  "id",
+  "feedId",
+  "userId",
+  "content",
+  "upVotes",
+  "downVotes",
+  "votes",
+  "hottnes",
+  "published",
+  "adminUnpublished",
+  "createdAt",
+  "updatedAt"
+FROM cf.comments;
+
+
+-- add role member to all users with a membership
+UPDATE
+  users
+SET
+  roles = COALESCE(roles, '[]'::jsonb)::jsonb || '["member"]'::jsonb
+WHERE
+  (roles IS NULL OR NOT roles @> '["member"]') AND
+  id IN (
+    SELECT
+      u.id
+    FROM
+      users u
+    JOIN
+      memberships m
+      ON m."userId" = u.id
+  )
+;

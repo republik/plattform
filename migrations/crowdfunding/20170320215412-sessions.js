@@ -8,12 +8,12 @@ var Promise
   * We receive the dbmigrate dependency from dbmigrate initially.
   * This enables us to not have to rely on NODE_PATH.
   */
-exports.setup = function (options, seedLink) {
+exports.setup = function (options) {
   Promise = options.Promise
 }
 
 exports.up = function (db) {
-  var filePath = path.join(__dirname, 'sqls', '20171020121451-testimonials-up.sql')
+  var filePath = path.join(__dirname, 'sqls', '20170320215412-sessions-up.sql')
   return new Promise(function (resolve, reject) {
     fs.readFile(filePath, {encoding: 'utf-8'}, function (err, data) {
       if (err) return reject(err)
@@ -28,7 +28,7 @@ exports.up = function (db) {
 }
 
 exports.down = function (db) {
-  var filePath = path.join(__dirname, 'sqls', '20171020121451-testimonials-down.sql')
+  var filePath = path.join(__dirname, 'sqls', '20170320215412-sessions-down.sql')
   return new Promise(function (resolve, reject) {
     fs.readFile(filePath, {encoding: 'utf-8'}, function (err, data) {
       if (err) return reject(err)

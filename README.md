@@ -25,7 +25,8 @@ SESSION_SECRET=replaceMe
 # your frontend
 CORS_WHITELIST_URL=http://localhost:3005
 
-DATABASE_URL=postgres://postgres@localhost:5432/discussion
+# don't use the crowdfunding-backend DB directly! (read below)
+DATABASE_URL=postgres://postgres@localhost:5432/republik
 
 SEND_MAILS=true  # or false if you don't have mandrill at hand
 MANDRILL_API_KEY=replaceMe
@@ -57,10 +58,16 @@ Install dependencies.
 yarn install
 ```
 
-Create and init the DB.
+If you are migrating from [crowdfunding-backend](https://github.com/orbiting/crowdfunding-backend):
 ```
-createdb -U postgres discussion
-yarn run db:reset:noseeds
+node script/copy_CF_DB.js [YOUR_PG_USERNAME]
+yarn run db:migrate:up
+```
+
+If you want to begin with a fresh DB:
+```
+createdb -U postgres republik
+yarn run db:migrate:up
 ```
 
 Run it.
