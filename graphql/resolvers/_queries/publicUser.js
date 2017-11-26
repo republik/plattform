@@ -1,10 +1,10 @@
 const Roles = require('../../../lib/Roles')
-const createUser = require('../../../lib/factories/createUser')
+const { transformUser } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, args, { pgdb, user }) => {
   const { id } = args
   const profileUser = await pgdb.public.users.findOne({ id })
-    .then(user => createUser(user))
+    .then(user => transformUser(user))
   if (!profileUser) {
     return null
   }
