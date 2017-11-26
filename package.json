@@ -62,6 +62,8 @@
     "start": "node index.js",
     "precommit": "lint-staged",
     "standardize": "standard --fix",
+    "db:migrate:up": "node script/db-migrate-all.js up",
+    "db:migrate:down": "node script/db-migrate-all.js down",
     "db:seed": "cat seeds/seeds.json | node node_modules/@orbiting/backend-modules-auth/seeds/seed.js --truncate",
     "db:reset:noseeds": "node script/db-migrate-all.js reset && node script/db-migrate-all.js up",
     "db:reset": "yarn run db:reset:noseeds && yarn run db:seed",
