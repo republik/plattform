@@ -1,4 +1,4 @@
-const Roles = require('../../../../lib/Roles')
+const { Roles } = require('@orbiting/backend-modules-auth')
 const setDiscussionPreferences = require('./lib/setDiscussionPreferences')
 const getDiscussion = require('../../_queries/discussion')
 

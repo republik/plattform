@@ -1,4 +1,4 @@
-const Roles = require('../../../../lib/Roles')
+const { Roles } = require('@orbiting/backend-modules-auth')
 const voteComment = require('./lib/voteComment')
 
 module.exports = async (_, args, { pgdb, user, t, pubsub }) => {

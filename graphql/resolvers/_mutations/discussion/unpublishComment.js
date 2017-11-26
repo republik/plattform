@@ -1,4 +1,4 @@
-const Roles = require('../../../../lib/Roles')
+const { Roles } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, args, { pgdb, user, req, t, pubsub }) => {
   Roles.ensureUserHasRole(user, 'member')

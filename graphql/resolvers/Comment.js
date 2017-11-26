@@ -1,4 +1,4 @@
-const Roles = require('../../lib/Roles')
+const { Roles } = require('@orbiting/backend-modules-auth')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const crypto = require('crypto')
 
