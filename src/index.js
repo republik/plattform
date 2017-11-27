@@ -308,6 +308,54 @@ ReactDOM.render(
         ]
       },
       {
+        title: 'Front',
+        pages: [
+          {
+            path: '/imageblock',
+            title: 'ImageBlock',
+            imports: {
+              css,
+              ...require('./components/Typography'),
+              ...require('./components/Front'),
+              Image: require('./components/Figure/Image'),
+            },
+            src: require('./components/Front/ImageBlock.md')
+          },
+          {
+            path: '/typoblock',
+            title: 'TypoBlock',
+            imports: {
+              css,
+              ...require('./components/Typography'),
+              ...require('./components/Front')
+            },
+            src: require('./components/Front/TypoBlock.md')
+          },
+          {
+            path: '/split',
+            title: 'Split',
+            imports: {
+              css,
+              ...require('./components/Typography'),
+              ...require('./components/Front'),
+              Image: require('./components/Figure/Image'),
+            },
+            src: require('./components/Front/Split.md')
+          },
+          {
+            path: '/tile',
+            title: 'Tile',
+            imports: {
+              css,
+              ...require('./components/Typography'),
+              ...require('./components/Front'),
+              Image: require('./components/Figure/Image'),
+            },
+            src: require('./components/Front/Tile.md')
+          },
+        ]
+      },
+      {
         title: 'Development',
         pages: [
           {

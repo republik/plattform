@@ -49,6 +49,20 @@ export {
   TeaserCredit
 } from './components/Teaser'
 export {
+  ImageBlock,
+  ImageBlockHeadline,
+  TypoBlock,
+  TypoBlockHeadline,
+  Split,
+  SplitHeadline,
+  Tile,
+  TileHeadline,
+  TileRow,
+  FrontLead,
+  FrontCredit,
+  FrontAuthorLink
+} from './components/Front'
+export {
   Spinner,
   InlineSpinner
 } from './components/Spinner'
