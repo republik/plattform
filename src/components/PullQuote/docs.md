@@ -15,15 +15,15 @@ Supported sizes:
 </PullQuote>
 ```
 
-Add an `hasFigure` flag and use `<Figure />` to include an `<Image />`.
+Add an `hasFigure` flag and use `<Figure />` to include an `<FigureImage />`.
 
 ```react
 <PullQuote hasFigure>
   <Figure>
-    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
-    <Caption>
-      <Byline>Photo: Laurent Burst</Byline>
-    </Caption>
+    <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+    <FigureCaption>
+      <FigureByline>Photo: Laurent Burst</FigureByline>
+    </FigureCaption>
   </Figure>
   <PullQuoteText>
     «Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.»
@@ -53,10 +53,10 @@ Add an `hasFigure` flag and use `<Figure />` to include an `<Image />`.
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <PullQuote hasFigure size={'narrow'}>
     <Figure>
-      <Image data={{src: '/static/landscape.jpg', alt: ''}} />
-      <Caption>
-        <Byline>Photo: Laurent Burst</Byline>
-      </Caption>
+      <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+      <FigureCaption>
+        <FigureByline>Photo: Laurent Burst</FigureByline>
+      </FigureCaption>
     </Figure>
     <PullQuoteText>
       «Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.»
@@ -85,10 +85,10 @@ Add an `hasFigure` flag and use `<Figure />` to include an `<Image />`.
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <PullQuote hasFigure size={'breakout'}>
     <Figure>
-      <Image data={{src: '/static/landscape.jpg', alt: ''}} />
-      <Caption>
-        <Byline>Photo: Laurent Burst</Byline>
-      </Caption>
+      <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+      <FigureCaption>
+        <FigureByline>Photo: Laurent Burst</FigureByline>
+      </FigureCaption>
     </Figure>
     <PullQuoteText>
       «Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.»
@@ -117,10 +117,10 @@ Add an `hasFigure` flag and use `<Figure />` to include an `<Image />`.
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <PullQuote hasFigure size={'float'}>
     <Figure>
-      <Image data={{src: '/static/landscape.jpg', alt: ''}} />
-      <Caption>
-        <Byline>Photo: Laurent Burst</Byline>
-      </Caption>
+      <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+      <FigureCaption>
+        <FigureByline>Photo: Laurent Burst</FigureByline>
+      </FigureCaption>
     </Figure>
     <PullQuoteText>
       «Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.»

@@ -230,10 +230,7 @@ ReactDOM.render(
               css,
               ...require('./components/Typography'),
               ...require('./components/PullQuote'),
-              Byline: require('./components/Figure/Byline'),
-              Caption: require('./components/Figure/Caption'),
-              Image: require('./components/Figure/Image'),
-              Figure: require('./components/Figure').Figure,
+              ...require('./components/Figure'),
               Center: require('./components/Center')
             },
             src: require('./components/PullQuote/docs.md')
@@ -245,10 +242,7 @@ ReactDOM.render(
               css,
               ...require('./components/Typography'),
               ...require('./components/InfoBox'),
-              Byline: require('./components/Figure/Byline'),
-              Caption: require('./components/Figure/Caption'),
-              Image: require('./components/Figure/Image'),
-              Figure: require('./components/Figure').Figure,
+              ...require('./components/Figure'),
               Center: require('./components/Center')
             },
             src: require('./components/InfoBox/docs.md')
@@ -270,11 +264,7 @@ ReactDOM.render(
             imports: {
               css,
               ...require('./components/Typography'),
-              Figure: require('./components/Figure').Figure,
-              FigureGroup: require('./components/Figure').FigureGroup,
-              Byline: require('./components/Figure/Byline'),
-              Caption: require('./components/Figure/Caption'),
-              Image: require('./components/Figure/Image'),
+              ...require('./components/Figure'),
               Center: require('./components/Center')
             },
             src: require('./components/Figure/docs.md')

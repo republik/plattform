@@ -4,8 +4,7 @@ import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { sansSerifRegular15, sansSerifRegular18 } from '../Typography/styles'
-import { Figure } from '../Figure'
-import Image from '../Figure/Image'
+import { Figure, FigureImage } from '../Figure'
 import { Header } from './Header'
 
 const styles = {
@@ -55,7 +54,7 @@ const Tweet = ({
       <p {...styles.text}>{children}</p>
       {image && (
         <Figure>
-          <Image data={{src: image, alt: ''}} />
+          <FigureImage data={{src: image, alt: ''}} />
         </Figure>
       )}
     </div>

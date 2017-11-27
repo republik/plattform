@@ -1,14 +1,14 @@
 ### `<Figure />`
 
-A `<Figure />` typically contains an `<Image>` and an optional `<Caption>`. The `<Image>` component makes sure that the image doesn't exceed the container width when using a large image.
+A `<Figure />` typically contains an `<FigureImage>` and an optional `<FigureCaption>`. The `<FigureImage>` component makes sure that the image doesn't exceed the container width when using a large image.
 
 ```react
 <Figure>
-  <Image data={{src: '/static/landscape.jpg', alt: ''}} />
-  <Caption>
+  <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+  <FigureCaption>
     Lorem ipsum dolor sit amet consetetur.{' '}
-    <Byline>Photo: Laurent Burst</Byline>
-  </Caption>
+    <FigureByline>Photo: Laurent Burst</FigureByline>
+  </FigureCaption>
 </Figure>
 ```
 
@@ -19,11 +19,11 @@ Supports `breakout` sizes:
 ```react|responsive
 <Center style={{backgroundColor: 'red'}}>
   <Figure size='breakout'>
-    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
-    <Caption>
+    <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+    <FigureCaption>
       Lorem ipsum dolor sit amet consetetur.{' '}
-      <Byline>Photo: Laurent Burst</Byline>
-    </Caption>
+      <FigureByline>Photo: Laurent Burst</FigureByline>
+    </FigureCaption>
   </Figure>
 </Center>
 ```
@@ -37,18 +37,18 @@ A `<FigureGroup />` containing two side-by-side `<Figure>` elements, each with t
 ```react
 <FigureGroup>
   <Figure>
-    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
-    <Caption>
+    <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+    <FigureCaption>
       A caption for the left photo.{' '}
-      <Byline>Photo: Laurent Burst</Byline>
-    </Caption>
+      <FigureByline>Photo: Laurent Burst</FigureByline>
+    </FigureCaption>
   </Figure>
   <Figure>
-    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
-    <Caption>
+    <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+    <FigureCaption>
       A caption for the right photo.{' '}
-      <Byline>Photo: Laurent Burst</Byline>
-    </Caption>
+      <FigureByline>Photo: Laurent Burst</FigureByline>
+    </FigureCaption>
   </Figure>
 </FigureGroup>
 ```
@@ -58,15 +58,15 @@ A `<FigureGroup />` containing two side-by-side `<Figure>` elements, with one sh
 ```react
 <FigureGroup>
   <Figure>
-    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
+    <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
   </Figure>
   <Figure>
-    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
+    <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
   </Figure>
-  <Caption>
+  <FigureCaption>
     This is an image caption stretching beautifully over both images as you can see above.{' '}
-    <Byline>Photos: Laurent Burst</Byline>
-  </Caption>
+    <FigureByline>Photos: Laurent Burst</FigureByline>
+  </FigureCaption>
 </FigureGroup>
 ```
 
@@ -74,25 +74,25 @@ A `<FigureGroup />` containing three side-by-side `<Figure>` elements:
 ```react
 <FigureGroup columns={3}>
   <Figure>
-    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
-    <Caption>
+    <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+    <FigureCaption>
       Left photo.{' '}
-      <Byline>Photo: Laurent Burst</Byline>
-    </Caption>
+      <FigureByline>Photo: Laurent Burst</FigureByline>
+    </FigureCaption>
   </Figure>
   <Figure>
-    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
-    <Caption>
+    <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+    <FigureCaption>
       Center photo.{' '}
-      <Byline>Photo: Laurent Burst</Byline>
-    </Caption>
+      <FigureByline>Photo: Laurent Burst</FigureByline>
+    </FigureCaption>
   </Figure>
   <Figure>
-    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
-    <Caption>
+    <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+    <FigureCaption>
       Right photo.{' '}
-      <Byline>Photo: Laurent Burst</Byline>
-    </Caption>
+      <FigureByline>Photo: Laurent Burst</FigureByline>
+    </FigureCaption>
   </Figure>
 </FigureGroup>
 ```
@@ -101,28 +101,28 @@ A `<FigureGroup />` containing four side-by-side `<Figure>` elements:
 ```react
 <FigureGroup columns={4}>
   <Figure>
-    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
-    <Caption>
-      <Byline>Photo: Laurent Burst</Byline>
-    </Caption>
+    <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+    <FigureCaption>
+      <FigureByline>Photo: Laurent Burst</FigureByline>
+    </FigureCaption>
   </Figure>
   <Figure>
-    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
-    <Caption>
-      <Byline>Photo: Laurent Burst</Byline>
-    </Caption>
+    <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+    <FigureCaption>
+      <FigureByline>Photo: Laurent Burst</FigureByline>
+    </FigureCaption>
   </Figure>
   <Figure>
-    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
-    <Caption>
-      <Byline>Photo: Laurent Burst</Byline>
-    </Caption>
+    <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+    <FigureCaption>
+      <FigureByline>Photo: Laurent Burst</FigureByline>
+    </FigureCaption>
   </Figure>
   <Figure>
-    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
-    <Caption>
-      <Byline>Photo: Laurent Burst</Byline>
-    </Caption>
+    <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+    <FigureCaption>
+      <FigureByline>Photo: Laurent Burst</FigureByline>
+    </FigureCaption>
   </Figure>
 </FigureGroup>
 ```
@@ -131,32 +131,32 @@ A `<FigureGroup />` containing four `<Figure>` elements in two columns:
 ```react
 <FigureGroup>
   <Figure>
-    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
-    <Caption>
-      <Byline>Photo: Laurent Burst</Byline>
-    </Caption>
+    <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+    <FigureCaption>
+      <FigureByline>Photo: Laurent Burst</FigureByline>
+    </FigureCaption>
   </Figure>
   <Figure>
-    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
-    <Caption>
-      <Byline>Photo: Laurent Burst</Byline>
-    </Caption>
+    <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+    <FigureCaption>
+      <FigureByline>Photo: Laurent Burst</FigureByline>
+    </FigureCaption>
   </Figure>
   <Figure>
-    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
-    <Caption>
-      <Byline>Photo: Laurent Burst</Byline>
-    </Caption>
+    <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+    <FigureCaption>
+      <FigureByline>Photo: Laurent Burst</FigureByline>
+    </FigureCaption>
   </Figure>
   <Figure>
-    <Image data={{src: '/static/landscape.jpg', alt: ''}} />
-    <Caption>
-      <Byline>Photo: Laurent Burst</Byline>
-    </Caption>
+    <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+    <FigureCaption>
+      <FigureByline>Photo: Laurent Burst</FigureByline>
+    </FigureCaption>
   </Figure>
-  <Caption>
+  <FigureCaption>
     This is a caption stretching beautifully across the group of all images as you can see above.
-  </Caption>
+  </FigureCaption>
 </FigureGroup>
 ```
 
@@ -169,15 +169,15 @@ Supports `breakout` sizes:
 <Center style={{backgroundColor: 'red'}}>
   <FigureGroup size='breakout'>
     <Figure>
-      <Image data={{src: '/static/landscape.jpg', alt: ''}} />
+      <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
     </Figure>
     <Figure>
-      <Image data={{src: '/static/landscape.jpg', alt: ''}} />
+      <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
     </Figure>
-    <Caption>
+    <FigureCaption>
       This is an image caption stretching beautifully over both images as you can see above.{' '}
-      <Byline>Photos: Laurent Burst</Byline>
-    </Caption>
+      <FigureByline>Photos: Laurent Burst</FigureByline>
+    </FigureCaption>
   </FigureGroup>
 </Center>
 ```

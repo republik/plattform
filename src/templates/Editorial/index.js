@@ -4,11 +4,13 @@ import Center from '../../components/Center'
 import TitleBlock from '../../components/TitleBlock'
 import * as Editorial from '../../components/Typography/Editorial'
 
-import { Figure, FigureGroup } from '../../components/Figure'
-import FigureImage from '../../components/Figure/Image'
-import FigureCaption from '../../components/Figure/Caption'
-import FigureByline from '../../components/Figure/Byline'
-
+import {
+  Figure,
+  FigureImage,
+  FigureCaption,
+  FigureByline,
+  FigureGroup
+} from '../../components/Figure'
 import {
   PullQuote,
   PullQuoteText,

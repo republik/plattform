@@ -4,6 +4,10 @@ import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { breakoutStyles } from '../Center'
 
+export { default as FigureImage } from './Image'
+export { default as FigureCaption } from './Caption'
+export { default as FigureByline } from './Byline'
+
 const styles = {
   figure: css({
     margin: 0,

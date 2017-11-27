@@ -35,9 +35,9 @@ export {
 export {
   Figure,
   FigureGroup,
-  Byline,
-  Caption,
-  Image
+  FigureByline,
+  FigureCaption,
+  FigureImage
 } from './components/Figure'
 export {
   Tweet
