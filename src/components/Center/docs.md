@@ -1,7 +1,7 @@
 `<Center />` defines a max-width and ensures a horizontal padding.
 
 `<Breakout />` allows to adjust `size` (and positioning) of its content:
-- `regular` (default)
+- `undefined` (default, do nothing)
 - `narrow`
 - `tiny`
 - `breakout`
@@ -14,7 +14,7 @@
 <div>
   <Center style={{backgroundColor: 'red', 'marginBottom': '20px'}}>
     <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.</p>
-    <Breakout size='regular' style={{backgroundColor: 'darkgreen', height: 20}} />
+    <Breakout style={{backgroundColor: 'darkgreen', height: 20}} />
   </Center>
   <Center style={{backgroundColor: 'red', 'marginBottom': '20px'}}>
     <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.</p>

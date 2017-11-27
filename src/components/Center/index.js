@@ -90,21 +90,8 @@ export const Breakout = ({ size, children, attributes = {}, ...props }) => (
 )
 
 Breakout.propTypes = {
-  size: PropTypes.oneOf([
-    'regular',
-    'narrow',
-    'tiny',
-    'breakout',
-    'breakoutLeft',
-    'float',
-    'floatSmall',
-    'floatTiny'
-  ]).isRequired,
+  size: PropTypes.oneOf(Object.keys(breakoutStyles)),
   attributes: PropTypes.object
-}
-
-Breakout.defaultProps = {
-  size: 'regular'
 }
 
 export default Center

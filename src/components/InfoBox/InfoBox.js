@@ -95,13 +95,12 @@ const InfoBox = ({ children, attributes, size, figureSize, figureFloat }) => {
 InfoBox.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
-  size: PropTypes.oneOf(['regular', 'float', 'breakout']).isRequired,
+  size: PropTypes.oneOf(['float', 'breakout']),
   figureSize: PropTypes.oneOf(Object.keys(IMAGE_SIZE)),
   figureFloat: PropTypes.bool.isRequired
 }
 
 InfoBox.defaultProps = {
-  size: 'regular',
   figureFloat: false
 }
 

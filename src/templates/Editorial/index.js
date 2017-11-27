@@ -213,7 +213,7 @@ const schema = {
               matchMdast: matchZone('INFOBOX'),
               component: InfoBox,
               props: node => ({
-                size: node.data.size, // values: undefined || 'regular', 'float', 'breakout'
+                size: node.data.size, // values: undefined, 'float', 'breakout'
                 figureSize: node.children.find(matchZone('FIGURE'))
                   ? node.data.figureSize || 'S' // values: 'XS', 'S', 'M', 'L'
                   : undefined,
@@ -253,7 +253,7 @@ const schema = {
               matchMdast: matchZone('QUOTE'),
               component: PullQuote,
               props: node => ({
-                size: node.data.size, // values: undefined || 'regular', 'narrow', 'float', 'breakout'
+                size: node.data.size, // values: undefined, 'narrow', 'float', 'breakout'
                 hasFigure: !!node.children.find(matchZone('FIGURE'))
               }),
               editorModule: 'block',

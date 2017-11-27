@@ -56,11 +56,7 @@ const PullQuote = ({ children, attributes, hasFigure, size }) => {
 PullQuote.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
-  size: PropTypes.oneOf(['regular', 'narrow', 'float', 'breakout']).isRequired
-}
-
-PullQuote.defaultProps = {
-  size: 'regular'
+  size: PropTypes.oneOf(['narrow', 'float', 'breakout'])
 }
 
 export default PullQuote
