@@ -26,18 +26,18 @@ export default ({rule, subModules, TYPE}) => {
   const serializerRule = {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast,
-    fromMdast: (node, index, parent, visitChildren) => {
+    fromMdast: (node, index, parent, rest) => {
       return {
         kind: 'block',
         type: TYPE,
-        nodes: childSerializer.fromMdast(node.children)
+        nodes: childSerializer.fromMdast(node.children, 0, node, rest)
       }
     },
-    toMdast: (object, index, parent, visitChildren, context) => {
+    toMdast: (object, index, parent, rest) => {
       return {
         type: 'zone',
         identifier: TYPE,
-        children: childSerializer.toMdast(object.nodes, context)
+        children: childSerializer.toMdast(object.nodes, 0, object, rest)
       }
     }
   }

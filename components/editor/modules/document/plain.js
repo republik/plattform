@@ -50,7 +50,7 @@ export default ({rule, subModules, TYPE}) => {
   const documentRule = {
     match: object => object.kind === 'document',
     matchMdast: rule.matchMdast,
-    fromMdast: (node, index, parent, visitChildren) => {
+    fromMdast: (node, index, parent, rest) => {
       node.children.forEach((child, index) => {
         // ToDo: match against rule.rules.matchMdast and wrap in center if no match
       })
@@ -58,7 +58,7 @@ export default ({rule, subModules, TYPE}) => {
       const documentNode = {
         data: node.meta,
         kind: 'document',
-        nodes: childSerializer.fromMdast(node.children)
+        nodes: childSerializer.fromMdast(node.children, 0, node, rest)
       }
 
       const newData = autoMeta(
@@ -73,11 +73,11 @@ export default ({rule, subModules, TYPE}) => {
         kind: 'value'
       }
     },
-    toMdast: (object, index, parent, visitChildren, context) => {
+    toMdast: (object, index, parent, rest) => {
       return {
         type: 'root',
         meta: object.data,
-        children: childSerializer.toMdast(object.nodes, context)
+        children: childSerializer.toMdast(object.nodes, 0, object, rest)
       }
     }
   }

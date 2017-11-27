@@ -25,7 +25,7 @@ export default ({rule, subModules, TYPE}) => {
   const cover = {
     match: isCover,
     matchMdast: rule.matchMdast,
-    fromMdast: (node, index, parent, visitChildren) => {
+    fromMdast: (node, index, parent, rest) => {
       // fault tolerant because markdown could have been edited outside
       const deepNodes = node.children.reduce(
         (children, child) => children
@@ -64,12 +64,12 @@ export default ({rule, subModules, TYPE}) => {
           alt: image.alt
         },
         nodes: [
-          titleSerializer.fromMdast(title),
-          leadSerializer.fromMdast(lead)
+          titleSerializer.fromMdast(title, 0, node, rest),
+          leadSerializer.fromMdast(lead, 1, node, rest)
         ]
       }
     },
-    toMdast: (object, index, parent, visitChildren, context) => {
+    toMdast: (object, index, ...args) => {
       return {
         type: 'zone',
         identifier: TYPE,
@@ -83,13 +83,17 @@ export default ({rule, subModules, TYPE}) => {
             findOrCreate(object.nodes, {
               kind: 'block',
               type: titleModule.TYPE
-            }, {nodes: []}), context
+            }, {nodes: []}),
+            1,
+            ...args
           ),
           leadSerializer.toMdast(
             findOrCreate(object.nodes, {
               kind: 'block',
               type: leadModule.TYPE
-            }, {nodes: []}), context
+            }, {nodes: []}),
+            2,
+            ...args
           )
         ]
       }

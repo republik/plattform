@@ -14,12 +14,12 @@ export default ({rule, subModules, TYPE}) => {
   const title = {
     match: matchBlock(TYPE),
     matchMdast: (node) => node.type === 'heading' && node.depth === depth,
-    fromMdast: (node, index, parent, visitChildren) => ({
+    fromMdast: (node, index, parent, {visitChildren}) => ({
       kind: 'block',
       type: TYPE,
       nodes: visitChildren(node)
     }),
-    toMdast: (object, index, parent, visitChildren) => ({
+    toMdast: (object, index, parent, {visitChildren}) => ({
       type: 'heading',
       depth,
       children: visitChildren(object)

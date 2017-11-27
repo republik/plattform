@@ -47,7 +47,7 @@ export default ({rule, subModules, TYPE}) => {
   const documentRule = {
     match: object => object.kind === 'document',
     matchMdast: rule.matchMdast,
-    fromMdast: (node, index, parent, visitChildren) => {
+    fromMdast: (node, index, parent, rest) => {
       const cover = findOrCreate(node.children, {
         type: 'zone', identifier: coverModule.TYPE
       }, {
@@ -87,8 +87,8 @@ export default ({rule, subModules, TYPE}) => {
         data: node.meta,
         kind: 'document',
         nodes: [
-          coverSerializer.fromMdast(cover),
-          centerSerializer.fromMdast(center)
+          coverSerializer.fromMdast(cover, 0, node, rest),
+          centerSerializer.fromMdast(center, 1, node, rest)
         ]
       }
 
@@ -104,7 +104,7 @@ export default ({rule, subModules, TYPE}) => {
         kind: 'value'
       }
     },
-    toMdast: (object, index, parent, visitChildren, context) => {
+    toMdast: (object, index, parent, rest) => {
       const cover = findOrCreate(object.nodes, { kind: 'block', type: coverModule.TYPE })
       const center = findOrCreate(
         object.nodes,
@@ -121,8 +121,8 @@ export default ({rule, subModules, TYPE}) => {
         type: 'root',
         meta: object.data,
         children: [
-          coverSerializer.toMdast(cover),
-          centerSerializer.toMdast(center)
+          coverSerializer.toMdast(cover, 0, object, rest),
+          centerSerializer.toMdast(center, 1, object, rest)
         ]
       }
     }

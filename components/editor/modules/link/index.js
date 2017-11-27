@@ -10,7 +10,7 @@ export default ({rule, subModules, TYPE}) => {
   const link = {
     match: matchInline(TYPE),
     matchMdast: rule.matchMdast,
-    fromMdast: (node, index, parent, visitChildren) => ({
+    fromMdast: (node, index, parent, {visitChildren}) => ({
       kind: 'inline',
       type: TYPE,
       data: {
@@ -19,7 +19,7 @@ export default ({rule, subModules, TYPE}) => {
       },
       nodes: visitChildren(node)
     }),
-    toMdast: (object, index, parent, visitChildren) => ({
+    toMdast: (object, index, parent, {visitChildren}) => ({
       type: 'link',
       title: object.data.title,
       url: object.data.href,

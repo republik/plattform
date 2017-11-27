@@ -29,7 +29,7 @@ export default ({rule, subModules, TYPE}) => {
   const figure = {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast,
-    fromMdast: (node, index, parent, visitChildren) => {
+    fromMdast: (node, index, parent, rest) => {
       const deepNodes = node.children.reduce(
         (children, child) => children
           .concat(child)
@@ -54,18 +54,12 @@ export default ({rule, subModules, TYPE}) => {
           float: node.data.float
         },
         nodes: [
-          imageSerializer.fromMdast(image),
-          captionSerializer.fromMdast(caption)
+          imageSerializer.fromMdast(image, 0, node, rest),
+          captionSerializer.fromMdast(caption, 1, node, rest)
         ]
       }
     },
-    toMdast: (object, index, parent, visitChildren, context) => {
-      if (object.nodes.length !== 2) {
-        context.dirty = true
-      } else if (object.nodes[0].type !== FIGURE_IMAGE || object.nodes[1].type !== FIGURE_CAPTION) {
-        context.dirty = true
-      }
-
+    toMdast: (object, index, parent, rest) => {
       const image = findOrCreate(object.nodes, {
         kind: 'block',
         type: FIGURE_IMAGE
@@ -83,8 +77,8 @@ export default ({rule, subModules, TYPE}) => {
           ...caption.data
         },
         children: [
-          imageSerializer.toMdast(image),
-          captionSerializer.toMdast(caption)
+          imageSerializer.toMdast(image, 0, object, rest),
+          captionSerializer.toMdast(caption, 1, object, rest)
         ]
       }
     }

@@ -25,7 +25,7 @@ export default ({rule, subModules, TYPE}) => {
   const figureImage = {
     match: matchBlock(TYPE),
     matchMdast: (node) => node.type === 'image',
-    fromMdast: (node, index, parent, visitChildren) => {
+    fromMdast: (node) => {
       return ({
         kind: 'block',
         type: TYPE,
@@ -37,7 +37,7 @@ export default ({rule, subModules, TYPE}) => {
         nodes: []
       })
     },
-    toMdast: (object, index, parent, visitChildren) => ({
+    toMdast: (object) => ({
       type: 'image',
       alt: object.data.alt,
       url: object.data.src
