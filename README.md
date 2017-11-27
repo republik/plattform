@@ -90,7 +90,7 @@ Checkout the API: `http://localhost:3004/graphiql`
 - [me](http://localhost:3004/graphiql?query=query%20%7Bme%20%7B%0A%20%20id%0A%20%20email%0A%7D%7D)
 
 ### backend-modules
-To develop backend-modules first run `yarn run link` inside the backend-modules repo then execute `yarn run link:backend-modules` here. The backend-modules are now symlinked inside node_modules and development should work seamlessly.
+To develop [backend-modules](https://github.com/orbiting/backend-modules) first run `yarn run link` inside a local copy of the backend-modules repo then execute `yarn run link:backend-modules` here. The backend-modules are now symlinked inside node_modules and development should work seamlessly.
 
 
 ## Auth
