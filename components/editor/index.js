@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Editor as SlateEditor } from 'slate-react'
 import { css } from 'glamor'
+import { DragDropContextProvider } from 'react-dnd'
+
+import slateReactDnDAdapter from './utils/slateReactDnDAdapter'
 
 import Loader from '../Loader'
 
@@ -28,6 +31,11 @@ import createSpecialModule from './modules/special'
 import createMetaModule from './modules/meta'
 import createSpecialCharsModule from './modules/specialchars'
 import createBlockModule from './modules/block'
+
+const {
+  ReactDnDPlugin,
+  SlateHTML5Backend
+} = slateReactDnDAdapter()
 
 const moduleCreators = {
   embedVideo: createEmbedVideoModule,
@@ -133,7 +141,10 @@ class Editor extends Component {
     const allModules = getAllModules(rootModule)
     const uniqModules = allModules.filter((m, i, a) => a.findIndex(mm => mm.TYPE === m.TYPE) === i)
 
-    this.plugins = getFromModules(uniqModules, m => m.plugins)
+    this.plugins = [
+      ...getFromModules(uniqModules, m => m.plugins),
+      ReactDnDPlugin
+    ]
 
     this.textFormatButtons = getFromModules(
       uniqModules,
@@ -165,21 +176,23 @@ class Editor extends Component {
 
     return (
       <Loader loading={!value} render={() => (
-        <Container>
-          <Sidebar
-            textFormatButtons={this.textFormatButtons}
-            blockFormatButtons={this.blockFormatButtons}
-            insertButtons={this.insertButtons}
-            propertyForms={this.propertyForms}
-            value={value}
-            onChange={this.onChange} />
-          <Document>
-            <SlateEditor
+        <DragDropContextProvider backend={SlateHTML5Backend}>
+          <Container>
+            <Sidebar
+              textFormatButtons={this.textFormatButtons}
+              blockFormatButtons={this.blockFormatButtons}
+              insertButtons={this.insertButtons}
+              propertyForms={this.propertyForms}
               value={value}
-              onChange={this.onChange}
-              plugins={this.plugins} />
-          </Document>
-        </Container>
+              onChange={this.onChange} />
+            <Document>
+              <SlateEditor
+                value={value}
+                onChange={this.onChange}
+                plugins={this.plugins} />
+            </Document>
+          </Container>
+        </DragDropContextProvider>
       )} />
     )
   }
