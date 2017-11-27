@@ -1,0 +1,118 @@
+{
+  "updated": "2017-11-27T15:11:40.239Z",
+  "title": "live",
+  "data": [
+    {
+      "key": "api/unexpected",
+      "value": "Ups, da ist was schiefgelaufen. Sorry!"
+    },
+    {
+      "key": "api/unauthorized",
+      "value": "Nicht genehmigt. Sie müssen die Rolle «{role}» besitzen um die gwünschte Aktion auszuführen."
+    },
+    {
+      "key": "api/crowdfunding/tooLate",
+      "value": "Es tut uns sehr leid, das Crowdfunding ist bereits beendet."
+    },
+    {
+      "key": "api/membership/claim/alreadyHave",
+      "value": "Sie können keinen Gutscheincode einlösen, weil Sie schon eine Mitgliedschaft haben."
+    },
+    {
+      "key": "api/membership/claim/invalidToken",
+      "value": "Gutscheincode ungültig"
+    },
+    {
+      "key": "api/membership/reduced/alreadyHas",
+      "value": "Sie können leider keine reduzierte Mitgliedschaft kaufen, da sie bereits eine Mitgliedschaft gekauft haben."
+    },
+    {
+      "key": "api/pledge/alreadyPaid",
+      "value": "Sie haben bereits bezahlt."
+    },
+    {
+      "key": "api/pledge/reason",
+      "value": "Für eine reduzierte Mitgliedschaft wird eine Begründung benötigt."
+    },
+    {
+      "key": "api/pay/stripe/invalid_number",
+      "value": "The card number is not a valid credit card number."
+    },
+    {
+      "key": "api/pay/stripe/invalid_expiry_month",
+      "value": "The card’s expiration month is invalid."
+    },
+    {
+      "key": "api/pay/stripe/invalid_expiry_year",
+      "value": "The card’s expiration year is invalid."
+    },
+    {
+      "key": "api/pay/stripe/invalid_cvc",
+      "value": "Die Sicherheitsnummer der Karte ist ungültig."
+    },
+    {
+      "key": "api/pay/stripe/invalid_swipe_data",
+      "value": "The card’s swipe data is invalid."
+    },
+    {
+      "key": "api/pay/stripe/incorrect_number",
+      "value": "Die Kartennummer ist ungültig."
+    },
+    {
+      "key": "api/pay/stripe/expired_card",
+      "value": "Die Karte ist abgelaufen."
+    },
+    {
+      "key": "api/pay/stripe/incorrect_cvc",
+      "value": "Die Security Nummer ist falsch."
+    },
+    {
+      "key": "api/pay/stripe/incorrect_zip",
+      "value": "Die Postkeitzahl der Karte konnte nicht geprüft werden."
+    },
+    {
+      "key": "api/pay/stripe/card_declined",
+      "value": "Ihre Karte wurde abgelehnt."
+    },
+    {
+      "key": "api/pay/stripe/missing",
+      "value": "There is no card on a customer that is being charged."
+    },
+    {
+      "key": "api/pay/stripe/processing_error",
+      "value": "Während der Bearbeitung der Karte ist ein Fehler aufgetreten."
+    },
+    {
+      "key": "api/paypal/deny",
+      "value": "Zahlung fehlgeschlagen. Wählen Sie ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen."
+    },
+    {
+      "key": "api/paypal/contactUs",
+      "value": "Während des Zahlungsverfahrens mit PayPal ist ein Problem aufgetreten, das zu einem nicht vorhersehbaren Resultat geführt hat. Bitte nehmen Sie Kontakt mit uns auf unter zahlungen@republik.ch. Sie sollten es nicht erneut versuchen da die Buchung möglicherweise bereits akzeptiert wurde."
+    },
+    {
+      "key": "api/paypal/delayed",
+      "value": "Ihre PayPal Zahlung ist noch nicht bei uns eingetroffen. Falls Sie innerhalb von einigen Stunden nichts von uns hören, kontaktieren Sie uns bitte unter zahlungen@republik.ch. Sie sollten es nicht erneut versuchen da die Buchung höchstwahrscheinlich bereits akzeptiert wurde und noch verarbeitet wird."
+    },
+    {
+      "key": "api/pay/pspPayload/parseFailed",
+      "value": "Die Bezahldaten konnten nicht überprüft werden. Bitte kontaktieren Sie uns unter kontakt@repulik.ch und geben Sie folgende Nummer an: ID: {id}"
+    },
+    {
+      "key": "api/pay/paymentIdUsedAlready",
+      "value": "Das wurde bereits bezahlt. Bitte kontaktieren Sie uns unter kontakt@repulik.ch und geben Sie folgende Nummer an: ID: {id}"
+    },
+    {
+      "key": "api/pledge/mail/subject",
+      "value": "Vielen Dank!"
+    },
+    {
+      "key": "api/payment/received/mail/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/users/404",
+      "value": "Der User konnte nicht gefunden werden."
+    }
+  ]
+}
