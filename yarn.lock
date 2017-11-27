@@ -21,6 +21,13 @@
     pogi "^2.5.1"
     uuid "^3.1.0"
 
+"@orbiting/backend-modules-mail@^0.0.0":
+  version "0.0.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-mail/-/backend-modules-mail-0.0.0.tgz#625d341efd5b729e6010e3fe0b30827fb1897c86"
+  dependencies:
+    check-env "^1.3.0"
+    export-files "^2.1.1"
+
 "@semantic-release/commit-analyzer@^2.0.0", "@semantic-release/commit-analyzer@~2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@semantic-release/commit-analyzer/-/commit-analyzer-2.0.0.tgz#924d1e2c30167c6a472bed9f66ee8f8e077489b2"
