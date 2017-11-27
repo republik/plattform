@@ -1,4 +1,5 @@
 const graphqlFields = require('graphql-fields')
+const { transformUser } = require('@orbiting/backend-modules-auth')
 const {
   ascending,
   descending
@@ -7,7 +8,6 @@ const _ = {
   remove: require('lodash/remove'),
   uniq: require('lodash/uniq')
 }
-const createUser = require('../../../lib/factories/createUser')
 const {
   content: getContent,
   author: getAuthor,
@@ -138,7 +138,7 @@ const decorateTree = async (_comment, coveredComments, discussion, user, pgdb, t
   )
   const users = userIds.length
     ? await pgdb.public.users.find({ id: userIds })
-        .then(users => users.map(u => createUser(u)))
+        .then(users => users.map(u => transformUser(u)))
     : []
   const discussionPreferences = userIds.length
     ? await pgdb.public.discussionPreferences.find({

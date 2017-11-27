@@ -4,11 +4,10 @@
  * Usage:
  * node script/userBadge.js PATRON sample@email.com [remove]
  */
-
-const PgDb = require('../lib/pgdb')
-const Badges = require('../lib/Badges')
-
 require('dotenv').config()
+
+const { lib: { pgdb: PgDb } } = require('@orbiting/backend-modules-base')
+const Badges = require('../lib/Badges')
 
 PgDb.connect()
   .then(async pgdb => {

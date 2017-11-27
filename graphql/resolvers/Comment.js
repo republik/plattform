@@ -1,5 +1,5 @@
-const Roles = require('../../lib/Roles')
-const createUser = require('../../lib/factories/createUser')
+const { Roles } = require('@orbiting/backend-modules-auth')
+const { transformUser } = require('@orbiting/backend-modules-auth')
 const crypto = require('crypto')
 
 const {
@@ -50,7 +50,7 @@ module.exports = {
     if (!(Roles.userHasRole(user, 'admin') || Roles.userHasRole(user, 'editor'))) {
       return null
     }
-    return author || commenter || createUser(
+    return author || commenter || transformUser(
       await pgdb.public.users.findOne({ id: userId })
     )
   },
@@ -72,7 +72,7 @@ module.exports = {
     }
 
     const commenter = _commenter ||
-      createUser(
+      transformUser(
         await pgdb.public.users.findOne({
           id: comment.userId
         })
