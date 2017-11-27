@@ -163,8 +163,8 @@ const link = css({
     color: colors.lightText
   }
 })
-export const A = ({ children, href, target, title, attributes }) => (
-  <a {...attributes} href={href} target={target} title={title} {...link}>
+export const A = ({ children, ...props, attributes }) => (
+  <a {...attributes} {...props} {...link}>
     {children}
   </a>
 )
