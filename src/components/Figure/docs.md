@@ -1,6 +1,6 @@
 ### `<Figure />`
 
-A `<Figure />` typically contains an `<FigureImage>` and an optional `<FigureCaption>`. The `<FigureImage>` component makes sure that the image doesn't exceed the container width when using a large image.
+A `<Figure />` contains an `<FigureImage>` and an optional `<FigureCaption>`.
 
 ```react
 <Figure>
@@ -14,7 +14,7 @@ A `<Figure />` typically contains an `<FigureImage>` and an optional `<FigureCap
 
 #### `size`
 
-Supports `breakout` sizes:
+Optinal value: `breakout`
 
 ```react|responsive
 <Center style={{backgroundColor: 'red'}}>
@@ -27,6 +27,15 @@ Supports `breakout` sizes:
   </Figure>
 </Center>
 ```
+
+#### `<FigureImage />`
+
+The `<FigureImage>` component scales the image to 100% of the available space.
+
+Properties
+- `data` - Object with following keys:
+  - `src` - String, the image url, mandatory
+  - `alt` - String, the alternative text
 
 ### `<FigureGroup />`
 

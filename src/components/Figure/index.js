@@ -54,6 +54,7 @@ export const Figure = ({ children, attributes, size }) => (
 
 Figure.propTypes = {
   children: PropTypes.node.isRequired,
+  size: PropTypes.oneOf(Object.keys(breakoutStyles)),
   attributes: PropTypes.object
 }
 

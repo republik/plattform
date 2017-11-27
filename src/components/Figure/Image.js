@@ -14,7 +14,7 @@ const Image = ({ data: { src, alt }, attributes = {} }) => {
 
 Image.propTypes = {
   data: PropTypes.shape({
-    src: PropTypes.string,
+    src: PropTypes.string.isRequired,
     alt: PropTypes.string
   }).isRequired
 }
