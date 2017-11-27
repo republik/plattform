@@ -75,7 +75,7 @@ const _addTypes = (master, donor) => {
   const deduplicatedDonorSchemaTypes = print({
     ...parsedDonorSchemaTypes,
     definitions: parsedDonorSchemaTypes.definitions.filter(
-      def => masterScalarTypeDefs.indexOf(def.name.value) === -1
+      def => !def.name || masterScalarTypeDefs.indexOf(def.name.value) === -1
     )
   })
 
