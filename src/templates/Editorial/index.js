@@ -30,18 +30,13 @@ import {
 
 const matchLast = (node, index, parent) => index === parent.children.length - 1
 
-const Strong = ({ children, attributes = {} }) =>
-  <strong {...attributes}>{ children }</strong>
-
 const link = {
   matchMdast: matchType('link'),
   props: node => ({
-    data: {
-      title: node.title,
-      href: node.url
-    }
+    title: node.title,
+    href: node.url
   }),
-  component: Editorial.AuthorLink,
+  component: Editorial.A,
   editorModule: 'link'
 }
 
@@ -62,7 +57,7 @@ const paragraph = {
     br,
     {
       matchMdast: matchType('strong'),
-      component: Strong,
+      component: Editorial.Emphasis,
       editorModule: 'mark',
       editorOptions: {
         type: 'strong'

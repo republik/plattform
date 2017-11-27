@@ -178,7 +178,7 @@ Long, editorial texts use the serif cuts. With margins, except `:first-child` 0 
 
 ```react
 <Editorial.Credit>
-  An article by <Editorial.AuthorLink href='#'>Christof Moser</Editorial.AuthorLink>, 31 December 2017
+  An article by <Editorial.A href='#'>Christof Moser</Editorial.A>, 31 December 2017
 </Editorial.Credit>
 ```
 
@@ -207,7 +207,7 @@ Long, editorial texts use the serif cuts. With margins, except `:first-child` 0 
     What happened to Mr. Samsa?
   </Editorial.Question>
   <Editorial.Answer>
-    <Editorial.AnswerBy>Franz Kafka</Editorial.AnswerBy> One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.
+    <Editorial.Emphasis>Franz Kafka:</Editorial.Emphasis> One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.
   </Editorial.Answer>
   <Editorial.Question>
     What happened next?
@@ -218,53 +218,24 @@ Long, editorial texts use the serif cuts. With margins, except `:first-child` 0 
 </article>
 ```
 
-## Editorial Content (Crowdfunding)
 
-Long, editorial texts use the serif cuts. With margins, except `:first-child` 0 top, `:last-child` 0 bottom.
-
-### Headlines
+### Link
 
 ```react
-<H1>The quick brown...</H1>
+<Editorial.P>
+  <Editorial.A href='https://www.republik.ch/~christof_moser'>Christof Moser</Editorial.A>
+</Editorial.P>
 ```
+
+
+### Emphasis
 
 ```react
-<H2>The quick brown fox jumps over the lazy dog</H2>
-```
-
-### Leads
-
-```react
-<Lead>
-  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.
-</Lead>
-```
-
-### Paragraphs
-
-```react|responsive
-<div>
-  <P>
-    One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me?" he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer. Gregor then turned to look out the window at the dull weather.
-  </P>
-</div>
-```
-
-### Quotes
-
-```react
-<Quote source='Thomas Jefferson'>
-  Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
-</Quote>
-```
-
-### Links
-
-```react
-<P>
-  Code, den wir schon veröffentlicht haben, findest du hier:
-  {' '}<A href='https://github.com/orbiting'>github.com/orbiting</A>
-</P>
+<Editorial.P>
+  Ladies and Gentlemen,
+  {' '}
+  <Editorial.Emphasis>es ist Zeit.</Editorial.Emphasis>
+</Editorial.P>
 ```
 
 ## Interaction Text
@@ -314,5 +285,57 @@ UI elements and structured information uses the sans serif cuts. Without margins
   Code, den wir schon veröffentlicht haben, findest du hier:
   {' '}<A href='https://github.com/orbiting'>github.com/orbiting</A>
 </Interaction.P>
+```
+
+
+## Legacy Editorial Content Styles
+
+Used for the [crowdfunding](https://github.com/orbiting/crowdfunding-frontend). Might be deprecated and removed soon.
+
+Long, editorial texts use the serif cuts. With margins, except `:first-child` 0 top, `:last-child` 0 bottom.
+
+### Headlines
+
+```react
+<H1>The quick brown...</H1>
+```
+
+```react
+<H2>The quick brown fox jumps over the lazy dog</H2>
+```
+
+### Leads
+
+```react
+<Lead>
+  Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.
+</Lead>
+```
+
+### Paragraphs
+
+```react|responsive
+<div>
+  <P>
+    One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections. The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked. "What's happened to me?" he thought. It wasn't a dream. His room, a proper human room although a little too small, lay peacefully between its four familiar walls. A collection of textile samples lay spread out on the table - Samsa was a travelling salesman - and above it there hung a picture that he had recently cut out of an illustrated magazine and housed in a nice, gilded frame. It showed a lady fitted out with a fur hat and fur boa who sat upright, raising a heavy fur muff that covered the whole of her lower arm towards the viewer. Gregor then turned to look out the window at the dull weather.
+  </P>
+</div>
+```
+
+### Quotes
+
+```react
+<Quote source='Thomas Jefferson'>
+  Ich bin sicher, eine kleine Rebellion hie und da ist eine gute Sache; sie ist in der Politik so notwendig, um die Dinge zu klären, wie ein Sturm für das Wetter.
+</Quote>
+```
+
+### Links
+
+```react
+<P>
+  Code, den wir schon veröffentlicht haben, findest du hier:
+  {' '}<A href='https://github.com/orbiting'>github.com/orbiting</A>
+</P>
 ```
 

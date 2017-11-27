@@ -12,7 +12,7 @@ Supported props:
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.
   </Editorial.Lead>
   <Editorial.Credit>
-    An article by <Editorial.AuthorLink href='#'>Christof Moser</Editorial.AuthorLink>, 31 December 2017
+    An article by <Editorial.A href='#'>Christof Moser</Editorial.A>, 31 December 2017
   </Editorial.Credit>
 </TitleBlock>
 ```
@@ -25,7 +25,7 @@ Supported props:
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.
   </Editorial.Lead>
   <Editorial.Credit>
-    An article by <Editorial.AuthorLink href='#'>Christof Moser</Editorial.AuthorLink>, 31 December 2017
+    An article by <Editorial.A href='#'>Christof Moser</Editorial.A>, 31 December 2017
   </Editorial.Credit>
 </TitleBlock>
 ```
@@ -38,7 +38,7 @@ Supported props:
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.
   </Editorial.Lead>
   <Editorial.Credit>
-    An article by <Editorial.AuthorLink href='#'>Christof Moser</Editorial.AuthorLink>, 31 December 2017
+    An article by <Editorial.A href='#'>Christof Moser</Editorial.A>, 31 December 2017
   </Editorial.Credit>
 </TitleBlock>
 ```

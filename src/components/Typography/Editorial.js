@@ -3,8 +3,9 @@ import * as styles from './styles'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
+import { fontFamilies } from '../../theme/fonts'
 
-const editorialHeadline = css({
+const headline = css({
   ...styles.serifTitle30,
   margin: '0 0 12px 0',
   [mUp]: {
@@ -23,7 +24,13 @@ const editorialHeadline = css({
   }
 })
 
-const editorialSubhead = css({
+export const Headline = ({ children, attributes }) => (
+  <h1 {...attributes} {...headline}>
+    {children}
+  </h1>
+)
+
+const subhead = css({
   ...styles.serifBold19,
   margin: '36px 0 -14px 0',
   [mUp]: {
@@ -33,18 +40,13 @@ const editorialSubhead = css({
   color: colors.text
 })
 
-const editorialQuestion = css({
-  ...styles.serifBold16,
-  margin: '36px 0 -14px 0',
-  [mUp]: {
-    ...styles.serifBold19,
-    lineHeight: '30px',
-    margin: '46px 0 -18px 0'
-  },
-  color: colors.text
-})
+export const Subhead = ({ children, attributes }) => (
+  <h2 {...attributes} {...subhead}>
+    {children}
+  </h2>
+)
 
-const editorialLead = css({
+const lead = css({
   ...styles.serifRegular19,
   margin: '0 0 10px 0',
   [mUp]: {
@@ -54,7 +56,13 @@ const editorialLead = css({
   color: colors.text
 })
 
-const editorialCredit = css({
+export const Lead = ({ children, attributes }) => (
+  <p {...attributes} {...lead}>
+    {children}
+  </p>
+)
+
+const credit = css({
   margin: 0,
   ...styles.sansSerifRegular14,
   [mUp]: {
@@ -63,7 +71,42 @@ const editorialCredit = css({
   color: colors.text
 })
 
-const editorialP = css({
+export const Credit = ({ children, attributes }) => (
+  <p {...attributes} {...credit}>
+    {children}
+  </p>
+)
+
+const typeRules = {
+  '[data-type="editorial"] > &': {
+    color: colors.editorial
+  },
+  '[data-type="meta"] > &': {
+    color: colors.meta
+  },
+  '[data-type="social"] > &': {
+    color: colors.social
+  }
+}
+
+const format = css({
+  ...typeRules,
+  ...styles.sansSerifMedium16,
+  margin: '0 0 18px 0',
+  [mUp]: {
+    ...styles.sansSerifMedium20,
+    margin: '0 0 28px 0'
+  },
+  textDecoration: 'underline'
+})
+
+export const Format = ({ children, attributes }) => (
+  <p {...attributes} {...format}>
+    {children}
+  </p>
+)
+
+const paragraph = css({
   color: colors.text,
   margin: '22px 0 22px 0',
   ...styles.serifRegular16,
@@ -79,96 +122,49 @@ const editorialP = css({
     marginBottom: 0
   }
 })
+export const P = ({ children, attributes }) => (
+  <p {...attributes} {...paragraph}>
+    {children}
+  </p>
+)
 
-const editorialAuthorLink = css({
+const question = css({
+  ...styles.serifBold16,
+  margin: '36px 0 -14px 0',
+  [mUp]: {
+    ...styles.serifBold19,
+    lineHeight: '30px',
+    margin: '46px 0 -18px 0'
+  },
+  color: colors.text
+})
+export const Question = ({ children, attributes }) => (
+  <p {...attributes} {...question}>
+    {children}
+  </p>
+)
+
+export const Answer = P
+
+const emphasis = css({
+  fontWeight: 'normal',
+  fontFamily: fontFamilies.serifBold
+})
+export const Emphasis = ({ children, attributes }) => (
+  <strong {...attributes} {...emphasis}>
+    {children}
+  </strong>
+)
+
+const link = css({
   textDecoration: 'underline',
   color: colors.text,
   ':hover': {
     color: colors.lightText
   }
 })
-
-const typeRules = {
-  '[data-type="editorial"] > &': {
-    color: colors.editorial
-  },
-  '[data-type="meta"] > &': {
-    color: colors.meta
-  },
-  '[data-type="social"] > &': {
-    color: colors.social
-  }
-}
-
-const editorialFormat = css({
-  ...typeRules,
-  ...styles.sansSerifMedium16,
-  margin: '0 0 18px 0',
-  [mUp]: {
-    ...styles.sansSerifMedium20,
-    margin: '0 0 28px 0'
-  },
-  textDecoration: 'underline'
-})
-
-// attributes are piped through for publikator editor support.
-
-export const Headline = ({ children, attributes, ...props }) => (
-  <h1 {...attributes} {...props} {...editorialHeadline}>
-    {children}
-  </h1>
-)
-
-export const Subhead = ({ children, attributes, ...props }) => (
-  <h2 {...attributes} {...props} {...editorialSubhead}>
-    {children}
-  </h2>
-)
-
-export const Lead = ({ children, attributes, ...props }) => (
-  <p {...attributes} {...props} {...editorialLead}>
-    {children}
-  </p>
-)
-
-export const Credit = ({ children, attributes, ...props }) => (
-  <p {...attributes} {...props} {...editorialCredit}>
-    {children}
-  </p>
-)
-
-export const P = ({ children, attributes, ...props }) => (
-  <p {...attributes} {...props} {...editorialP}>
-    {children}
-  </p>
-)
-
-export const Answer = ({ children, attributes, ...props }) => (
-  <p {...attributes} {...props} {...editorialP}>
-    {children}
-  </p>
-)
-
-export const AnswerBy = ({ children, attributes, ...props }) => (
-  <b {...attributes} {...props}>
-    {children}:
-  </b>
-)
-
-export const Question = ({ children, attributes, ...props }) => (
-  <p {...attributes} {...props} {...editorialQuestion}>
-    {children}
-  </p>
-)
-
-export const AuthorLink = ({ children, attributes, ...props }) => (
-  <a {...attributes} {...props} {...editorialAuthorLink}>
+export const A = ({ children, href, target, title, attributes }) => (
+  <a {...attributes} href={href} target={target} title={title} {...link}>
     {children}
   </a>
-)
-
-export const Format = ({ children, attributes, ...props }) => (
-  <p {...attributes} {...props} {...editorialFormat}>
-    {children}
-  </p>
 )

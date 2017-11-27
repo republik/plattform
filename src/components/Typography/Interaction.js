@@ -3,6 +3,7 @@ import * as styles from './styles'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
+import { fontFamilies } from '../../theme/fonts'
 
 
 const interactionHeadline = css({
@@ -66,4 +67,12 @@ export const H3 = ({children, ...props}) => (
 
 export const P = ({children, ...props}) => (
   <p {...props} {...interactionP}>{children}</p>
+)
+
+const emphasis = css({
+  fontWeight: 'normal',
+  fontFamily: fontFamilies.sansSerifMedium
+})
+export const Emphasis = ({children, attributes, ...props}) => (
+  <strong {...props} {...attributes} {...emphasis}>{children}</strong>
 )

@@ -15,9 +15,9 @@ const AuthorLink = ({ children, color }) => {
     }
   })
   return (
-    <Editorial.AuthorLink {...style}>
+    <Editorial.A {...style}>
       {children}
-    </Editorial.AuthorLink>
+    </Editorial.A>
   )
 }
 
