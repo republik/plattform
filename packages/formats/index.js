@@ -16,5 +16,15 @@ const timeParse = swissTime.parse
 const utcTimeFormat = swissTime.utcFormat
 const utcTimeParse = swissTime.utcParse
 
-module.exports = {swissTime, timeFormat, timeParse, utcTimeFormat, utcTimeParse}
+const formatPrice = (price) => {
+  return (price / 100.0).toFixed(2)
+}
 
+module.exports = {
+  swissTime,
+  timeFormat,
+  timeParse,
+  utcTimeFormat,
+  utcTimeParse
+  formatPrice
+}
