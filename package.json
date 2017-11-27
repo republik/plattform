@@ -15,9 +15,9 @@
     "@orbiting/backend-modules-scalars": "^0.0.3",
     "@orbiting/backend-modules-scripts": "^1.0.0",
     "@orbiting/backend-modules-translate": "^0.0.0",
+    "apollo-modules-node": "^0.1.0",
     "aws-sign": "^0.1.2",
     "d3-array": "^1.2.1",
-    "d3-time-format": "^2.1.0",
     "db-migrate": "^0.10.0-beta.24",
     "db-migrate-pg": "^0.2.5",
     "dotenv": "^4.0.0",
@@ -28,7 +28,8 @@
     "isomorphic-unfetch": "^2.0.0",
     "json-stable-stringify": "^1.0.1",
     "lodash": "^4.17.4",
-    "sharp": "^0.18.4"
+    "sharp": "^0.18.4",
+    "uuid": "^3.1.0"
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon -w graphql -w src -w lib -w .env -w package.json -w server.js -w index.js index.js",
