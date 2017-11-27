@@ -1,10 +1,11 @@
 # *function* slateReactDnDAdapter
 
+This is a small hack to allow interoperability between Slate and [react-dnd](http://react-dnd.github.io/react-dnd/), a library that lets you write well-defined Drag'n'Drop behavior.
+
 ###### Location
 
 `components/editor/utils/slateReactDnDAdapter.js`
 
-This is a small hack to allow interoperability between Slate and [react-dnd](http://react-dnd.github.io/react-dnd/), a library that lets you write well-defined Drag'n'Drop behavior.
 
 ###### Signature
 
