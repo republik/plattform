@@ -21,6 +21,13 @@
     pogi "^2.5.1"
     uuid "^3.1.0"
 
+"@orbiting/backend-modules-formats@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-formats/-/backend-modules-formats-0.0.1.tgz#24c1399d35073ec6d4be250c4c11db74bb3644d6"
+  dependencies:
+    apollo-modules-node "^0.0.0"
+    d3-time-format "^2.1.0"
+
 "@orbiting/backend-modules-mail@^0.0.0":
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-mail/-/backend-modules-mail-0.0.0.tgz#625d341efd5b729e6010e3fe0b30827fb1897c86"
