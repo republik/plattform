@@ -1,4 +1,4 @@
-A `<Tile />` is a tilelike front teaser that features text on top of an image, both centered.
+A `<Tile />` is a tilelike front teaser that features an image on top of text, both centered.
 
 Supported props:
 - `image`: The URL of image.
