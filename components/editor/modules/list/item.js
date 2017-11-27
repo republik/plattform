@@ -12,14 +12,14 @@ export default ({rule, subModules, TYPE}) => {
   const listItem = {
     match: matchBlock(TYPE),
     matchMdast: (node) => node.type === 'listItem',
-    fromMdast: (node, index, parent, visitChildren) => ({
+    fromMdast: (node, index, parent, rest) => ({
       kind: 'block',
       type: TYPE,
-      nodes: paragraphSerializer.fromMdast(node.children)
+      nodes: paragraphSerializer.fromMdast(node.children, 0, node, rest)
     }),
-    toMdast: (object, index, parent, visitChildren) => ({
+    toMdast: (object, index, parent, rest) => ({
       type: 'listItem',
-      children: paragraphSerializer.toMdast(object.nodes)
+      children: paragraphSerializer.toMdast(object.nodes, 0, object, rest)
     })
   }
 

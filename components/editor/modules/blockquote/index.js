@@ -13,14 +13,14 @@ export default ({rule, subModules, TYPE}) => {
   const blockquote = {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast,
-    fromMdast: (node, index, parent, visitChildren) => ({
+    fromMdast: (node, index, parent, rest) => ({
       kind: 'block',
       type: TYPE,
-      nodes: paragraphSerializer.fromMdast(node.children)
+      nodes: paragraphSerializer.fromMdast(node.children, 0, node, rest)
     }),
-    toMdast: (object, index, parent, visitChildren, context) => ({
+    toMdast: (object, index, parent, rest) => ({
       type: 'blockquote',
-      children: paragraphSerializer.toMdast(object.nodes, context)
+      children: paragraphSerializer.toMdast(object.nodes, 0, object, rest)
     })
   }
 

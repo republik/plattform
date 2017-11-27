@@ -10,7 +10,7 @@ export default ({rule, subModules, TYPE}) => {
   const zone = {
     match: matchBlock(TYPE),
     matchMdast: (node) => node.type === 'zone',
-    fromMdast: (node, index, parent, visitChildren) => {
+    fromMdast: (node) => {
       return {
         kind: 'block',
         type: TYPE,
@@ -21,7 +21,7 @@ export default ({rule, subModules, TYPE}) => {
         isVoid: true
       }
     },
-    toMdast: (object, index, parent, visitChildren, context) => {
+    toMdast: (object) => {
       const {identifier, ...data} = object.data
       return {
         type: 'zone',

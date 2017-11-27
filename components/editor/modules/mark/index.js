@@ -29,12 +29,12 @@ export default ({rule, subModules, TYPE}) => {
   const markRule = {
     match: matchMark(TYPE),
     matchMdast: rule.matchMdast,
-    fromMdast: (node, index, parent, visitChildren) => ({
+    fromMdast: (node, index, parent, {visitChildren}) => ({
       kind: 'mark',
       type: TYPE,
       nodes: visitChildren(node)
     }),
-    toMdast: (mark, index, parent, visitChildren) => ({
+    toMdast: (mark, index, parent, {visitChildren}) => ({
       type: mdastType,
       children: visitChildren(mark)
     })

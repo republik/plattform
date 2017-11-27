@@ -27,6 +27,7 @@ import {
 import createSpecialModule from './modules/special'
 import createMetaModule from './modules/meta'
 import createSpecialCharsModule from './modules/specialchars'
+import createBlockModule from './modules/block'
 
 const moduleCreators = {
   embedVideo: createEmbedVideoModule,
@@ -46,7 +47,8 @@ const moduleCreators = {
   figureImage: createFigureImageModule,
   special: createSpecialModule,
   meta: createMetaModule,
-  specialchars: createSpecialCharsModule
+  specialchars: createSpecialCharsModule,
+  block: createBlockModule
 }
 const initModule = rule => {
   const { editorModule, editorOptions = {} } = rule

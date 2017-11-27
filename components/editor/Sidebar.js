@@ -2,11 +2,13 @@ import React from 'react'
 import { css } from 'glamor'
 
 import { Interaction, Label, colors } from '@project-r/styleguide'
-import { HEADER_HEIGHT } from '../Frame/constants'
+import { HEADER_HEIGHT, ZINDEX_SIDEBAR } from '../Frame/constants'
 
 const styles = {
   sidebar: css({
     position: 'fixed',
+    zIndex: ZINDEX_SIDEBAR,
+    backgroundColor: '#fff',
     top: HEADER_HEIGHT,
     left: 0,
     bottom: 0,

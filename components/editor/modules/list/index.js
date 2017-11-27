@@ -18,20 +18,20 @@ export default ({rule, subModules, TYPE}) => {
   const list = {
     match: matchBlock(TYPE),
     matchMdast: (node) => node.type === 'list',
-    fromMdast: (node, index, parent, visitChildren) => ({
+    fromMdast: (node, index, parent, rest) => ({
       kind: 'block',
       type: TYPE,
       data: {
         ordered: node.ordered,
         start: node.start
       },
-      nodes: itemSerializer.fromMdast(node.children)
+      nodes: itemSerializer.fromMdast(node.children, 0, node, rest)
     }),
-    toMdast: (object, index, parent, visitChildren, context) => ({
+    toMdast: (object, index, parent, rest) => ({
       type: 'list',
       ordered: object.data.ordered,
       start: object.data.start || 1,
-      children: itemSerializer.toMdast(object.nodes, context)
+      children: itemSerializer.toMdast(object.nodes, 0, object, rest)
     })
   }
 

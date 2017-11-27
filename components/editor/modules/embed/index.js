@@ -44,10 +44,7 @@ query getTwitterEmbed($id: ID!, $embedType: EmbedType!) {
 `
 
 const fromMdast = ({ TYPE }) => (
-  node,
-  index,
-  parent,
-  visitChildren
+  node
 ) => {
   const deepNodes = node.children.reduce(
     (children, child) =>
@@ -71,10 +68,7 @@ const fromMdast = ({ TYPE }) => (
 }
 
 const toMdast = ({ TYPE }) => (
-  node,
-  index,
-  parent,
-  visitChildren
+  node
 ) => {
   const {
     url,

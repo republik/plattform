@@ -2,15 +2,27 @@ import { Document as SlateDocument } from 'slate'
 import { timeHour } from 'd3-time'
 
 import MarkdownSerializer from 'slate-mdast-serializer'
-import { findOrCreate } from '../../utils/serialization'
 
 export default ({rule, subModules, TYPE}) => {
   const centerModule = subModules.find(m => m.name === 'center')
   if (!centerModule) {
     throw new Error('Missing center submodule')
   }
+  const titleModule = subModules.find(m => m.TYPE === 'TITLE')
+  if (!titleModule) {
+    throw new Error('Missing TITLE submodule')
+  }
+  const figureModule = subModules.find(m => m.name === 'figure')
 
-  const centerSerializer = centerModule.helpers.serializer
+  const childSerializer = new MarkdownSerializer({
+    rules: subModules.reduce(
+      (a, m) => a.concat(
+        m.helpers && m.helpers.serializer &&
+        m.helpers.serializer.rules
+      ),
+      []
+    ).filter(Boolean)
+  })
 
   const autoMeta = documentNode => {
     const data = documentNode.data
@@ -38,42 +50,15 @@ export default ({rule, subModules, TYPE}) => {
   const documentRule = {
     match: object => object.kind === 'document',
     matchMdast: rule.matchMdast,
-    fromMdast: (node, index, parent, visitChildren) => {
-      let center = findOrCreate(node.children, {
-        type: 'zone', identifier: centerModule.TYPE
-      }, {
-        children: []
-      })
-
-      const centerIndex = node.children.indexOf(center)
-      const before = []
-      const after = []
+    fromMdast: (node, index, parent, rest) => {
       node.children.forEach((child, index) => {
-        if (child !== center) {
-          if (index > centerIndex) {
-            after.push(child)
-          } else {
-            before.push(child)
-          }
-        }
+        // ToDo: match against rule.rules.matchMdast and wrap in center if no match
       })
-      if (before.length || after.length) {
-        center = {
-          ...center,
-          children: [
-            ...before,
-            ...center.children,
-            ...after
-          ]
-        }
-      }
 
       const documentNode = {
         data: node.meta,
         kind: 'document',
-        nodes: [
-          centerSerializer.fromMdast(center)
-        ]
+        nodes: childSerializer.fromMdast(node.children, 0, node, rest)
       }
 
       const newData = autoMeta(
@@ -88,19 +73,11 @@ export default ({rule, subModules, TYPE}) => {
         kind: 'value'
       }
     },
-    toMdast: (object, index, parent, visitChildren, context) => {
-      const center = findOrCreate(
-        object.nodes,
-        { kind: 'block', type: centerModule.TYPE },
-        { nodes: [] }
-      )
-
+    toMdast: (object, index, parent, rest) => {
       return {
         type: 'root',
         meta: object.data,
-        children: [
-          centerSerializer.toMdast(center)
-        ]
+        children: childSerializer.toMdast(object.nodes, 0, object, rest)
       }
     }
   }
@@ -116,9 +93,17 @@ export default ({rule, subModules, TYPE}) => {
 template: ${template}
 ---
 
-<section><h6>${centerModule.TYPE}</h6>
+<section><h6>${titleModule.TYPE}</h6>
 
 # ${title}
+
+Lead
+
+Von [Franz Kafka](<>) (Text) und [Everett Collection]() (Bilder), 13. Juli 2017
+
+<hr/></section>
+
+<section><h6>${centerModule.TYPE}</h6>
 
 Hurray!
 
@@ -138,16 +123,84 @@ Hurray!
     plugins: [
       {
         renderEditor: ({children}) => <Container>{children}</Container>,
+        validateNode: (node) => {
+          if (node.kind !== 'document') return
+
+          const adjacentCenter = node.nodes.find((n, i) => (
+            i && n.type === centerModule.TYPE && node.nodes.get(i - 1).type === centerModule.TYPE
+          ))
+          if (!adjacentCenter) return
+
+          return change => {
+            change.mergeNodeByKey(adjacentCenter.key)
+          }
+        },
         schema: {
           document: {
             nodes: [
+              figureModule && {
+                types: [figureModule.TYPE], min: 0, max: 1
+              },
               {
-                types: [centerModule.TYPE],
-                kinds: ['block'],
-                min: 1,
-                max: 1
+                types: [titleModule.TYPE], min: 1, max: 1
+              },
+              {
+                types: subModules
+                  .filter(module => module !== titleModule)
+                  .map(module => module.TYPE),
+                min: 1
               }
-            ]
+            ].filter(Boolean),
+            first: {
+              types: [titleModule.TYPE, figureModule.TYPE]
+            },
+            last: {
+              types: [centerModule.TYPE]
+            },
+            normalize: (change, reason, {node, index, child}) => {
+              if (reason === 'child_required') {
+                change.insertNodeByKey(
+                  node.key,
+                  index,
+                  {
+                    kind: 'block',
+                    type: node.nodes.find(n => n.type === titleModule.TYPE)
+                      ? centerModule.TYPE
+                      : titleModule.TYPE
+                  }
+                )
+              }
+              if (reason === 'child_type_invalid') {
+                change.setNodeByKey(
+                  child.key,
+                  {
+                    type: index === 0
+                      ? titleModule.TYPE
+                      : centerModule.TYPE
+                  }
+                )
+              }
+              if (reason === 'first_child_kind_invalid' || reason === 'first_child_type_invalid') {
+                change.insertNodeByKey(
+                  node.key,
+                  0,
+                  {
+                    kind: 'block',
+                    type: titleModule.TYPE
+                  }
+                )
+              }
+              if (reason === 'last_child_type_invalid') {
+                change.insertNodeByKey(
+                  node.key,
+                  node.nodes.size,
+                  {
+                    kind: 'block',
+                    type: centerModule.TYPE
+                  }
+                )
+              }
+            }
           }
         },
         onChange: (change) => {

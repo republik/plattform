@@ -19,7 +19,7 @@ export default ({rule, subModules, TYPE}) => {
       []
     ).filter(Boolean).concat({
       matchMdast: (node) => node.type === 'break',
-      fromMdast: (node, index, parent, visitChildren) => ({
+      fromMdast: () => ({
         kind: 'text',
         leaves: [{text: '\n'}]
       })
@@ -30,15 +30,15 @@ export default ({rule, subModules, TYPE}) => {
 
   const paragraph = {
     match: matchBlock(TYPE),
-    matchMdast: (node) => node.type === 'paragraph',
-    fromMdast: (node, index, parent, visitChildren) => ({
+    matchMdast: rule.matchMdast || ((node) => node.type === 'paragraph'),
+    fromMdast: (node, index, parent, rest) => ({
       kind: 'block',
       type: TYPE,
-      nodes: inlineSerializer.fromMdast(node.children)
+      nodes: inlineSerializer.fromMdast(node.children, 0, node, rest)
     }),
-    toMdast: (object, index, parent, visitChildren) => ({
+    toMdast: (object, index, parent, rest) => ({
       type: 'paragraph',
-      children: inlineSerializer.toMdast(object.nodes)
+      children: inlineSerializer.toMdast(object.nodes, 0, object, rest)
     })
   }
 
@@ -97,7 +97,9 @@ export default ({rule, subModules, TYPE}) => {
           if (!paragraph.match(node)) return
 
           return (
-            <Paragraph attributes={attributes} data={node.data.toJS()}>
+            <Paragraph
+              attributes={{...attributes, style: {position: 'relative'}}}
+              data={node.data.toJS()}>
               {children}
             </Paragraph>
           )
@@ -106,7 +108,9 @@ export default ({rule, subModules, TYPE}) => {
           blocks: {
             [TYPE]: {
               nodes: [
-                { kinds: ['text', 'inline'] }
+                {
+                  kinds: ['text', 'inline']
+                }
               ],
               normalize: (change, reason, {node, index, child}) => {
                 if (reason === 'child_kind_invalid') {
