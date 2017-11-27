@@ -5,7 +5,7 @@ The overlay blocks scrolling of the underlying page through `overflow:hidden` an
 ```react
 noSource: true
 plain: true
-responsive: Klein
+responsive: Mobile
 span: 2
 ---
 <OverlayRenderer isVisible onClose={() => {}}>
@@ -18,7 +18,7 @@ span: 2
 ```react
 noSource: true
 plain: true
-responsive: Gross
+responsive: Desktop small
 span: 4
 ---
 <OverlayRenderer isVisible onClose={() => {}}>
@@ -88,7 +88,7 @@ The `<OverlayToolbar />` serves as a container for `<OverlayToolbarClose />` and
 Wrap the content in a `<OverlayBody />`. It adds appropriate amount of padding and leaves enough space at the top for the `<OverlayToolbar />`.
 
 ```react
-responsive: Gross
+responsive: Desktop small
 ---
 <OverlayRenderer isVisible onClose={() => {}}>
   <OverlayToolbar>
