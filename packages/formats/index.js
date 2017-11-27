@@ -25,6 +25,6 @@ module.exports = {
   timeFormat,
   timeParse,
   utcTimeFormat,
-  utcTimeParse
+  utcTimeParse,
   formatPrice
 }
