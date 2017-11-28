@@ -84,7 +84,7 @@ const Center = ({ children, attributes = {}, ...props }) => (
 )
 
 export const Breakout = ({ size, children, attributes = {}, ...props }) => (
-  <div {...styles[size]} {...attributes} {...props}>
+  <div {...attributes} {...props} {...breakoutStyles[size]}>
     {children}
   </div>
 )
