@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
-import { breakoutStyles } from '../Center'
+import { breakoutStyles, MAX_WIDTH, PADDING } from '../Center'
 
 export { default as FigureImage } from './Image'
 export { default as FigureCaption } from './Caption'
@@ -46,15 +46,26 @@ const styles = {
   })
 }
 
+const figureBreakout = {
+  ...breakoutStyles,
+  center: css({
+    maxWidth: MAX_WIDTH,
+    padding: PADDING,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginBottom: 0
+  })
+}
+
 export const Figure = ({ children, attributes, size }) => (
-  <figure {...attributes} {...merge(styles.figure, breakoutStyles[size])}>
+  <figure {...attributes} {...merge(styles.figure, figureBreakout[size])}>
     {children}
   </figure>
 )
 
 Figure.propTypes = {
   children: PropTypes.node.isRequired,
-  size: PropTypes.oneOf(Object.keys(breakoutStyles))
+  size: PropTypes.oneOf(Object.keys(figureBreakout)),
   attributes: PropTypes.object
 }
 

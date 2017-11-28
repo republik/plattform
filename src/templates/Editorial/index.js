@@ -111,15 +111,23 @@ const figure = {
         unwrap: true
       },
       {
+        label: 'Zentriert',
+        props: {size: 'center'},
+        parent: {kinds: ['document']},
+        unwrap: true
+      },
+      {
         label: 'Gross',
         props: {size: 'breakout'},
         parent: {kinds: ['document', 'block'], types: ['CENTER']},
+        cover: false,
         wrap: 'CENTER'
       },
       {
         label: 'Normal',
         props: {size: undefined},
         parent: {kinds: ['document', 'block'], types: ['CENTER']},
+        cover: false,
         wrap: 'CENTER'
       }
     ]
@@ -168,9 +176,9 @@ const createSchema = ({
           props: node => ({
             center: node.data.center // undefined, false, true
           }),
-          editorModule: 'block',
+          editorModule: 'title',
           editorOptions: {
-            type: 'TITLE'
+            coverType: 'FIGURE'
           },
           rules: [
             {

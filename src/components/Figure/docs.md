@@ -4,7 +4,7 @@ A `<Figure />` contains an `<FigureImage>` and an optional `<FigureCaption>`.
 
 Properties
 
-- `size` string, optional, `breakout`
+- `size` string, optional, `breakout`, `center` (for cover images)
 
 ```react
 <Figure>
