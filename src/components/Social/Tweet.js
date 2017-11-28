@@ -54,7 +54,7 @@ const Tweet = ({
       <p {...styles.text}>{children}</p>
       {image && (
         <Figure>
-          <FigureImage data={{src: image, alt: ''}} />
+          <FigureImage src={image} alt='' />
         </Figure>
       )}
     </div>

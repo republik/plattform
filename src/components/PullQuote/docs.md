@@ -20,7 +20,7 @@ Add an `hasFigure` flag and use `<Figure />` to include an `<FigureImage />`.
 ```react
 <PullQuote hasFigure>
   <Figure>
-    <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+    <FigureImage src='/static/landscape.jpg' alt='' />
     <FigureCaption>
       <FigureByline>Photo: Laurent Burst</FigureByline>
     </FigureCaption>
@@ -53,7 +53,7 @@ Add an `hasFigure` flag and use `<Figure />` to include an `<FigureImage />`.
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <PullQuote hasFigure size={'narrow'}>
     <Figure>
-      <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+      <FigureImage src='/static/landscape.jpg' alt='' />
       <FigureCaption>
         <FigureByline>Photo: Laurent Burst</FigureByline>
       </FigureCaption>
@@ -85,7 +85,7 @@ Add an `hasFigure` flag and use `<Figure />` to include an `<FigureImage />`.
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <PullQuote hasFigure size={'breakout'}>
     <Figure>
-      <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+      <FigureImage src='/static/landscape.jpg' alt='' />
       <FigureCaption>
         <FigureByline>Photo: Laurent Burst</FigureByline>
       </FigureCaption>
@@ -117,7 +117,7 @@ Add an `hasFigure` flag and use `<Figure />` to include an `<FigureImage />`.
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <PullQuote hasFigure size={'float'}>
     <Figure>
-      <FigureImage data={{src: '/static/landscape.jpg', alt: ''}} />
+      <FigureImage src='/static/landscape.jpg' alt='' />
       <FigureCaption>
         <FigureByline>Photo: Laurent Burst</FigureByline>
       </FigureCaption>

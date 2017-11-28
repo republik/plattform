@@ -8,15 +8,13 @@ const styles = {
   })
 }
 
-const Image = ({ data: { src, alt }, attributes = {} }) => {
+const Image = ({ src, alt, attributes = {} }) => {
   return <img {...attributes} {...styles.image} src={src} alt={alt} />
 }
 
 Image.propTypes = {
-  data: PropTypes.shape({
-    src: PropTypes.string.isRequired,
-    alt: PropTypes.string
-  }).isRequired
+  src: PropTypes.string.isRequired,
+  alt: PropTypes.string
 }
 
 export default Image
