@@ -1,6 +1,6 @@
 # editorOptions
 
-`afterType`, type string, block to create when pressing enter in the caption
+`afterType`, slate type string, block to create when pressing enter in the caption
 
 `sizes`, array of objects with following keys
 - `label`, string, radio label
@@ -9,7 +9,7 @@
   - `kinds`, array of slate kinds
   - `types`, array of slate types
 - `unwrap`, bool, unwrap figure until is a child of document when selected
-- `wrap`, slate type, ensure figure is wrapped in block with this type when selected
+- `wrap`, slate type string, ensure figure is wrapped in block with this type when selected
 
 ## Example: Float Sizes
 

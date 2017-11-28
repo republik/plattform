@@ -65,8 +65,8 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions}) =
                   onInputChange={onInputChange(imageBlock)}
                 />
                 {pixelNote && [
-                  <Label>{pixelNote}</Label>,
-                  <br />
+                  <Label key='pixelNote'>{pixelNote}</Label>,
+                  <br key='pixelNoteBr' />
                 ]}
                 <br />
                 {captionRight && <MetaForm

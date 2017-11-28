@@ -26,6 +26,11 @@ export default ({rule, subModules, TYPE}) => {
 
   const Figure = rule.component
 
+  const {
+    afterType,
+    identifier = 'FIGURE'
+  } = rule.editorOptions || {}
+
   const figure = {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast,
@@ -72,7 +77,7 @@ export default ({rule, subModules, TYPE}) => {
 
       return {
         type: 'zone',
-        identifier: TYPE,
+        identifier,
         data: {
           ...object.data,
           ...caption.data
@@ -97,10 +102,6 @@ export default ({rule, subModules, TYPE}) => {
       data: {}
     })
   )
-
-  const {
-    afterType
-  } = rule.editorOptions || {}
 
   return {
     TYPE,
