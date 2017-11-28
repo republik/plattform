@@ -11,7 +11,7 @@
 //
 
 require('dotenv').config()
-const PgDb = require('../lib/pgdb')
+const { lib: { pgdb: PgDb } } = require('@orbiting/backend-modules-base')
 const rw = require('rw')
 
 PgDb.connect().then(async (pgdb) => {
