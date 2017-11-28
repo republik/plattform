@@ -24,8 +24,8 @@ const headline = css({
   }
 })
 
-export const Headline = ({ children, attributes }) => (
-  <h1 {...attributes} {...headline}>
+export const Headline = ({ children, attributes, ...props }) => (
+  <h1 {...attributes} {...props} {...headline}>
     {children}
   </h1>
 )
@@ -40,8 +40,8 @@ const subhead = css({
   color: colors.text
 })
 
-export const Subhead = ({ children, attributes }) => (
-  <h2 {...attributes} {...subhead}>
+export const Subhead = ({ children, attributes, ...props }) => (
+  <h2 {...attributes} {...props} {...subhead}>
     {children}
   </h2>
 )
@@ -56,8 +56,8 @@ const lead = css({
   color: colors.text
 })
 
-export const Lead = ({ children, attributes }) => (
-  <p {...attributes} {...lead}>
+export const Lead = ({ children, attributes, ...props }) => (
+  <p {...attributes} {...props} {...lead}>
     {children}
   </p>
 )
@@ -71,8 +71,8 @@ const credit = css({
   color: colors.text
 })
 
-export const Credit = ({ children, attributes }) => (
-  <p {...attributes} {...credit}>
+export const Credit = ({ children, attributes, ...props }) => (
+  <p {...attributes} {...props} {...credit}>
     {children}
   </p>
 )
@@ -100,8 +100,8 @@ const format = css({
   textDecoration: 'underline'
 })
 
-export const Format = ({ children, attributes }) => (
-  <p {...attributes} {...format}>
+export const Format = ({ children, attributes, ...props }) => (
+  <p {...attributes} {...props} {...format}>
     {children}
   </p>
 )
@@ -122,8 +122,8 @@ const paragraph = css({
     marginBottom: 0
   }
 })
-export const P = ({ children, attributes }) => (
-  <p {...attributes} {...paragraph}>
+export const P = ({ children, attributes, ...props }) => (
+  <p {...attributes} {...props} {...paragraph}>
     {children}
   </p>
 )
@@ -138,8 +138,8 @@ const question = css({
   },
   color: colors.text
 })
-export const Question = ({ children, attributes }) => (
-  <p {...attributes} {...question}>
+export const Question = ({ children, attributes, ...props }) => (
+  <p {...attributes} {...props} {...question}>
     {children}
   </p>
 )
@@ -150,8 +150,8 @@ const emphasis = css({
   fontWeight: 'normal',
   fontFamily: fontFamilies.serifBold
 })
-export const Emphasis = ({ children, attributes }) => (
-  <strong {...attributes} {...emphasis}>
+export const Emphasis = ({ children, attributes, ...props }) => (
+  <strong {...attributes} {...props} {...emphasis}>
     {children}
   </strong>
 )
@@ -163,7 +163,7 @@ const link = css({
     color: colors.lightText
   }
 })
-export const A = ({ children, ...props, attributes }) => (
+export const A = ({ children, attributes, ...props }) => (
   <a {...attributes} {...props} {...link}>
     {children}
   </a>
