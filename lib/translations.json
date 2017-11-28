@@ -1,5 +1,5 @@
 {
-  "updated": "2017-11-28T10:04:15.253Z",
+  "updated": "2017-11-28T18:43:29.483Z",
   "title": "live",
   "data": [
     {
@@ -233,6 +233,10 @@
     {
       "key": "metaData/field/href",
       "value": "URL"
+    },
+    {
+      "key": "metaData/field/center",
+      "value": "Zentriert"
     },
     {
       "key": "uncommittedChanges/title",

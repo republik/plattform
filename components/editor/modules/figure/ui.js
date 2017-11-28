@@ -34,7 +34,7 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions}) =
       {
         value.blocks
           .filter(isFigureBlock)
-          .map(block => block.type === 'FIGURE'
+          .map(block => block.type === TYPE
             ? block
             : value.document.getParent(block.key)
           )
@@ -54,6 +54,27 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions}) =
                   })
               )
             }
+
+            const applicableSizes = sizes.filter(size => {
+              if (size.parent) {
+                if (size.parent.kinds && !size.parent.kinds.find(kind => kind === parent.kind)) {
+                  return false
+                }
+                if (
+                  parent.type &&
+                  size.parent.types &&
+                  !size.parent.types.find(type => type === parent.type)
+                ) {
+                  return false
+                }
+              }
+              if (size.cover === false) {
+                if (parent.kind === 'document' && parent.nodes.first() === block) {
+                  return false
+                }
+              }
+              return true
+            })
 
             return (
               <div key={`figure-${i}`}>
@@ -75,22 +96,9 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions}) =
                   })}
                   onInputChange={onInputChange(captionBlock)}
                 />}
-                <p style={{margin: '10px 0'}}>
+                {!!applicableSizes.length && <p style={{margin: '10px 0'}}>
                   <Label>Ausrichtung</Label><br />
-                  {sizes.map((size, i) => {
-                    if (size.parent) {
-                      if (size.parent.kinds && !size.parent.kinds.find(kind => kind === parent.kind)) {
-                        return null
-                      }
-                      if (
-                        parent.type &&
-                        size.parent.types &&
-                        !size.parent.types.find(type => type === parent.type)
-                      ) {
-                        return null
-                      }
-                    }
-
+                  {applicableSizes.map((size, i) => {
                     let checked = Object.keys(size.props).every(key => (
                       block.data.get(key) === size.props[key]
                     ))
@@ -132,7 +140,7 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions}) =
                       <br key={`br${i}`} />
                     ]
                   })}
-                </p>
+                </p>}
               </div>
             )
           })
