@@ -97,7 +97,8 @@ const format = css({
     ...styles.sansSerifMedium20,
     margin: '0 0 28px 0'
   },
-  textDecoration: 'underline'
+  textDecoration: 'underline',
+  textDecorationSkip: 'ink'
 })
 
 export const Format = ({ children, attributes, ...props }) => (
@@ -158,6 +159,7 @@ export const Emphasis = ({ children, attributes, ...props }) => (
 
 const link = css({
   textDecoration: 'underline',
+  textDecorationSkip: 'ink',
   color: colors.text,
   ':hover': {
     color: colors.lightText

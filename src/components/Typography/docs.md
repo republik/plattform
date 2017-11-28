@@ -157,7 +157,12 @@ Long, editorial texts use the serif cuts. With margins, except `:first-child` 0 
 
 ```react
 <Editorial.Format>Neutrum</Editorial.Format>
-  
+```
+
+We use `text-decoration-skip: ink` to avoid `g`-conflicts.
+
+```react
+<Editorial.Format>Garage</Editorial.Format>
 ```
 
 ### Headlines
@@ -221,9 +226,11 @@ Long, editorial texts use the serif cuts. With margins, except `:first-child` 0 
 
 ### Link
 
+We use `text-decoration-skip: ink` to avoid `g`-conflicts.
+
 ```react
 <Editorial.P>
-  <Editorial.A href='https://www.republik.ch/~christof_moser'>Christof Moser</Editorial.A>
+  <Editorial.A href='https://www.republik.ch/~ganster'>Ein Gangster</Editorial.A>
 </Editorial.P>
 ```
 

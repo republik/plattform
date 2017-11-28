@@ -13,7 +13,8 @@ const styles = {
       ...sansSerifMedium16,
       margin: '-5px 0 8px 0'
     },
-    textDecoration: 'underline'
+    textDecoration: 'underline',
+    textDecorationSkip: 'ink'
   })
 }
 
