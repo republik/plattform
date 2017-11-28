@@ -28,6 +28,7 @@ const figureChildStyles = Object.keys(IMAGE_SIZE).reduce((styles, key) => {
   absolute: css({
     [mUp]: {
       position: 'relative',
+      minHeight: IMAGE_SIZE.S,
       '& figure': {
         position: 'absolute',
         left: 0,
