@@ -12,7 +12,9 @@ export default ({rule, subModules, TYPE}) => {
   if (!titleModule) {
     throw new Error('Missing TITLE submodule')
   }
+
   const figureModule = subModules.find(m => m.name === 'figure')
+  console.log(figureModule)
 
   const childSerializer = new MarkdownSerializer({
     rules: subModules.reduce(
@@ -152,7 +154,7 @@ Hurray!
               }
             ].filter(Boolean),
             first: {
-              types: [titleModule.TYPE, figureModule.TYPE]
+              types: [titleModule.TYPE, figureModule && figureModule.TYPE]
             },
             last: {
               types: [centerModule.TYPE]

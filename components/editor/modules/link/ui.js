@@ -1,7 +1,11 @@
-import React from 'react'
-import { Label } from '@project-r/styleguide'
+import { compose } from 'redux'
+import React, { Component} from 'react'
+import { gql, withApollo } from 'react-apollo'
+import { Label, Field, Autocomplete } from '@project-r/styleguide'
 import LinkIcon from 'react-icons/lib/fa/chain'
-import { Map } from 'immutable'
+import SidebarForm from '../../SidebarForm'
+import createOnFieldChange from '../../utils/createOnFieldChange'
+import withT from '../../../../lib/withT'
 
 import {
   createInlineButton,
@@ -10,7 +14,87 @@ import {
   buttonStyles
 } from '../../utils'
 
-import MetaForm from '../../utils/MetaForm'
+export const usersQuery = gql`
+query users($search: String!) {
+  users(search: $search, role: "editor") {
+    name
+    id
+  }
+}
+`
+export class SearchUserForm extends Component {
+  constructor (...args) {
+    super(...args)
+    this.state = {
+      items: [],
+      filter: '',
+      value: null
+    }
+    this.filterChangeHandler = this.filterChangeHandler.bind(this)
+    this.changeHandler = this.changeHandler.bind(this)
+  }
+
+  filterChangeHandler (value) {
+    this.setState(
+      state => ({
+        ...this.state,
+        filter: value
+      }),
+      () => this.loadUsers()
+    )
+  }
+
+  loadUsers () {
+    this.props.client
+      .query({
+        query: usersQuery,
+        variables: { search: this.state.filter }
+      })
+      .then(
+        ({ data }) => {
+          console.log(data)
+          this.setState(state => ({
+            ...this.state,
+            items: data.users.map(v => ({
+              value: v.id,
+              text: v.name
+            }))
+          }))
+        }
+      )
+      .catch(
+        error => {
+          throw error
+        }
+      )
+  }
+
+  changeHandler (value) {
+    this.setState(
+      state => ({
+        ...this.state,
+        value: null
+      }),
+      () => this.props.onChange(value)
+    )
+  }
+
+  render () {
+    const { items, filter, value } = this.state
+    return (
+      <Autocomplete
+        label={this.props.t('metaData/field/authors', undefined, 'Autor suchen')}
+        items={items}
+        filter={filter}
+        value={value}
+        onChange={this.changeHandler}
+        onFilterChange={this.filterChangeHandler}
+        />
+    )
+  }
+}
+
+const ConnectedSearchUserForm = withT(withApollo(SearchUserForm))
 
 export default ({TYPE}) => {
   const LinkButton = createInlineButton({
@@ -28,47 +112,46 @@ export default ({TYPE}) => {
       </span>
   )
 
-  const Form = ({ disabled, value, onChange }) => {
+  const Form = ({ disabled, value, onChange, t }) => {
     if (disabled) {
       return null
     }
+    const handlerFactory = createOnFieldChange(onChange, value)
     return <div>
       <Label>Links</Label>
       {
         value.inlines
           .filter(matchInline(TYPE))
           .map((node, i) => {
-            const onInputChange = key => (_, inputValue) => {
-              onChange(
-                value
-                  .change()
-                  .setNodeByKey(node.key, {
-                    data: inputValue
-                      ? node.data.set(key, inputValue)
-                      : node.data.remove(key)
-                  })
-              )
-            }
+            const onInputChange = handlerFactory(node)
             return (
-              <MetaForm
-                key={`link-${i}`}
-                data={Map({
-                  href: '',
-                  title: ''
-                }).merge(node.data)}
-                onInputChange={onInputChange}
-              />
+              <SidebarForm>
+                <Field
+                  label={t(`metaData/field/href`, undefined, 'href')}
+                  value={node.data.get('href')}
+                  onChange={onInputChange('href')}
+                />
+                <Field
+                  label={t(`metaData/field/title`, undefined, 'title')}
+                  value={node.data.get('title')}
+                  onChange={onInputChange('title')}
+                />
+                <ConnectedSearchUserForm onChange={v => console.log(v)} />
+              </SidebarForm>
             )
           })
       }
     </div>
   }
 
-  const LinkForm = createPropertyForm({
-    isDisabled: ({ value }) => {
-      return !value.inlines.some(matchInline(TYPE))
-    }
-  })(Form)
+  const LinkForm = compose(
+    createPropertyForm({
+      isDisabled: ({ value }) => {
+        return !value.inlines.some(matchInline(TYPE))
+      }
+    }),
+    withT
+  )(Form)
 
   return {
     forms: [LinkForm],
