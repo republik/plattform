@@ -8,7 +8,7 @@ export const Markdown = ({children, schema}) => {
   return (
     <div>
       {renderMdast(serializer.parse(children), schema)}
-      <pre style={{backgroundColor: '#fff', padding: 20, margin: '0 -20px -20px -20px', overflow: 'auto'}}>
+      <pre style={{backgroundColor: '#fff', padding: 20, margin: '20px -20px -20px -20px', overflow: 'auto'}}>
         <code style={{fontFamily: '"Roboto Mono", monospace'}}>
           {children.trim()}
         </code>

@@ -1,5 +1,6 @@
 import React from 'react'
 
+import Container from './Container'
 import Center from '../../components/Center'
 import TitleBlock from '../../components/TitleBlock'
 import * as Editorial from '../../components/Typography/Editorial'
@@ -125,7 +126,7 @@ export const createSchema = ({
   rules: [
     {
       matchMdast: matchType('root'),
-      component: ({children}) => <div>{children}</div>,
+      component: Container,
       editorModule: 'documentPlain',
       rules: [
         {

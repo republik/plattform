@@ -8,9 +8,11 @@ const styles = {
   container: css({
     maxWidth: MAX_WIDTH,
     margin: '0 auto 40px auto',
+    paddingTop: 30,
     paddingLeft: PADDING,
     paddingRight: PADDING,
     [mUp]: {
+      paddingTop: 40,
       margin: '0 auto 70px auto'
     }
   })
