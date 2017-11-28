@@ -1,8 +1,9 @@
 import {
-  matchType,
-  matchZone,
-  matchHeading,
-  matchParagraph,
-  matchImageParagraph
-} from 'mdast-react-render/lib/utils'
+  createSchema
+} from '../Editorial'
 
+import { Headline } from '../../components/Typography/Interaction'
+
+export default createSchema({
+  TitelBlockHeadline: Headline
+})

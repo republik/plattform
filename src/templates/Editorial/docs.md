@@ -1,4 +1,4 @@
-# Alle Elemente in der Standard Version
+# Example with All Elemente
 
 ```react|noSource
 <Markdown schema={schema}>{`

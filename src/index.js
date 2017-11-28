@@ -284,6 +284,17 @@ ReactDOM.render(
               serializer: new Serializer()
             },
             src: require('./templates/Editorial/docs.md')
+          },
+          {
+            path: '/templates/meta',
+            title: 'Meta',
+            imports: {
+              schema: require('./templates/Meta'),
+              ...require('./templates/docs'),
+              renderMdast: require('mdast-react-render').renderMdast,
+              serializer: new Serializer()
+            },
+            src: require('./templates/Meta/docs.md')
           }
         ]
       },

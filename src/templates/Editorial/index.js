@@ -119,7 +119,9 @@ const figure = {
   ]
 }
 
-const schema = {
+export const createSchema = ({
+  TitelBlockHeadline = Editorial.Headline
+} = {}) => ({
   rules: [
     {
       matchMdast: matchType('root'),
@@ -143,7 +145,7 @@ const schema = {
           rules: [
             {
               matchMdast: matchHeading(1),
-              component: Editorial.Headline,
+              component: TitelBlockHeadline,
               editorModule: 'headline',
               editorOptions: {
                 type: 'H1',
@@ -297,9 +299,12 @@ const schema = {
             }
           ]
         },
+        {
+          editorModule: 'specialchars'
+        }
       ]
     }
   ]
-}
+})
 
-export default schema
+export default createSchema()
