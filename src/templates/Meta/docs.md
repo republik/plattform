@@ -1,5 +1,15 @@
 The meta template is mostly equivalent to the editorial template. The main difference is the sans-serif title block headline.
 
+```
+import createMetaSchema from '@project-r/styleguide/lib/templates/Meta'
+
+const schema = createMetaSchema({
+  titleBlockAppend: <div>Share Actions</div>
+})
+```
+
+`createMetaSchema` forwards to `createEditorialSchema`. See [editorial documentation for arguments](/templates/editorial).
+
 # Example
 
 ```react|noSource

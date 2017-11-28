@@ -1,9 +1,8 @@
-import {
-  createSchema
-} from '../Editorial'
+import createEditorialSchema from '../Editorial'
 
 import { Headline } from '../../components/Typography/Interaction'
 
-export default createSchema({
-  TitelBlockHeadline: Headline
+export default (options = {}) => createEditorialSchema({
+  TitelBlockHeadline: Headline,
+  ...options
 })

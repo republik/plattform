@@ -1,4 +1,18 @@
-# Example with All Elemente
+```
+import createEditorialSchema from '@project-r/styleguide/lib/templates/Editorial'
+
+const schema = createEditorialSchema({
+  titleBlockAppend: <div>Share Actions</div>
+})
+```
+
+`createEditorialSchema` take an optional options object with follow keys:
+
+- `TitelBlockHeadline`, the title react component
+- `documentEditorOptions`, forward options to the document editor module
+- `titleBlockAppend`, append React elements—e.g. share icons—to the title block
+
+# Example
 
 ```react|noSource
 <Markdown schema={schema}>{`

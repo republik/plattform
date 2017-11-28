@@ -278,7 +278,7 @@ ReactDOM.render(
             path: '/templates/editorial',
             title: 'Editorial',
             imports: {
-              schema: require('./templates/Editorial'),
+              schema: require('./templates/Editorial').default(),
               ...require('./templates/docs'),
               renderMdast: require('mdast-react-render').renderMdast,
               serializer: new Serializer()
@@ -289,7 +289,7 @@ ReactDOM.render(
             path: '/templates/meta',
             title: 'Meta',
             imports: {
-              schema: require('./templates/Meta'),
+              schema: require('./templates/Meta').default(),
               ...require('./templates/docs'),
               renderMdast: require('mdast-react-render').renderMdast,
               serializer: new Serializer()

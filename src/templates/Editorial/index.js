@@ -120,14 +120,17 @@ const figure = {
   ]
 }
 
-export const createSchema = ({
-  TitelBlockHeadline = Editorial.Headline
+const createSchema = ({
+  TitelBlockHeadline = Editorial.Headline,
+  documentEditorOptions = {},
+  titleBlockAppend = null
 } = {}) => ({
   rules: [
     {
       matchMdast: matchType('root'),
       component: Container,
       editorModule: 'documentPlain',
+      editorOptions: documentEditorOptions,
       rules: [
         {
           matchMdast: () => false,
@@ -135,7 +138,12 @@ export const createSchema = ({
         },
         {
           matchMdast: matchZone('TITLE'),
-          component: TitleBlock,
+          component: ({children, ...props}) => (
+            <TitleBlock {...props}>
+              {children}
+              {titleBlockAppend}
+            </TitleBlock>
+          ),
           props: node => ({
             center: node.data.center // undefined, false, true
           }),
@@ -308,4 +316,4 @@ export const createSchema = ({
   ]
 })
 
-export default createSchema()
+export default createSchema
