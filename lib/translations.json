@@ -1,5 +1,5 @@
 {
-  "updated": "2017-11-25T00:18:17.823Z",
+  "updated": "2017-11-28T10:04:15.253Z",
   "title": "live",
   "data": [
     {
@@ -85,6 +85,10 @@
     {
       "key": "repo/list/add/template/editorial",
       "value": "Editorial"
+    },
+    {
+      "key": "repo/list/add/template/meta",
+      "value": "Meta"
     },
     {
       "key": "baseCommit/title",
