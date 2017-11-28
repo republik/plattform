@@ -3,9 +3,12 @@ import PropTypes from 'prop-types'
 import { sansSerifRegular14, sansSerifRegular15 } from '../Typography/styles'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
+import { PADDING } from '../Center'
 
 const styles = {
   caption: css({
+    margin: '0 auto',
+    maxWidth: `calc(100vw - ${PADDING * 2}px)`,
     ...sansSerifRegular14,
     [mUp]: {
       ...sansSerifRegular15,
