@@ -87,7 +87,7 @@ const styles = {
   })
 }
 
-export const TileRow = ({ children, attributes, columns }) => {
+export const TeaserFrontTileRow = ({ children, attributes, columns }) => {
   return (
     <div
       role="group"
@@ -100,13 +100,13 @@ export const TileRow = ({ children, attributes, columns }) => {
   )
 }
 
-TileRow.propTypes = {
+TeaserFrontTileRow.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
   columns: PropTypes.oneOf([1, 2]).isRequired
 }
 
-TileRow.defaultProps = {
+TeaserFrontTileRow.defaultProps = {
   columns: 1
 }
 

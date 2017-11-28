@@ -43,25 +43,25 @@ export {
   Tweet
 } from './components/Social'
 export {
-  Teaser,
-  TeaserHeadline,
-  TeaserLead,
-  TeaserCredit
-} from './components/Teaser'
+  TeaserFeed,
+  TeaserFeedHeadline,
+  TeaserFeedLead,
+  TeaserFeedCredit
+} from './components/TeaserFeed'
 export {
-  ImageBlock,
-  ImageBlockHeadline,
-  TypoBlock,
-  TypoBlockHeadline,
-  Split,
-  SplitHeadline,
-  Tile,
-  TileHeadline,
-  TileRow,
-  FrontLead,
-  FrontCredit,
-  FrontAuthorLink
-} from './components/Front'
+  TeaserFrontImage,
+  TeaserFrontImageHeadline,
+  TeaserFrontTypo,
+  TeaserFrontTypoHeadline,
+  TeaserFrontSplit,
+  TeaserFrontSplitHeadline,
+  TeaserFrontTile,
+  TeaserFrontTileHeadline,
+  TeaserFrontTileRow,
+  TeaserFrontLead,
+  TeaserFrontCredit,
+  TeaserFrontAuthorLink
+} from './components/TeaserFront'
 export {
   Spinner,
   InlineSpinner

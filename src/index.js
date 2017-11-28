@@ -175,7 +175,7 @@ ReactDOM.render(
             src: require('./components/Comment/docs.md')
           },
           {
-            path: '/components/composer',
+            path: '/components/commentcomposer',
             title: 'Composer',
             imports: {
               t,
@@ -187,13 +187,13 @@ ReactDOM.render(
             src: require('./components/CommentComposer/docs.md')
           },
           {
-            path: '/components/teaser',
+            path: '/components/commentteaser',
             title: 'Teaser',
             imports: {t, ...require('./components/CommentTeaser/docs.imports')},
             src: require('./components/CommentTeaser/docs.md')
           },
           {
-            path: '/components/tree',
+            path: '/components/commenttree',
             title: 'Tree',
             imports: {t, ...require('./components/CommentTree/docs.imports')},
             src: require('./components/CommentTree/docs.md')
@@ -221,17 +221,6 @@ ReactDOM.render(
               TitleBlock: require('./components/TitleBlock')
             },
             src: require('./components/TitleBlock/docs.md')
-          },
-          {
-            path: '/teaser',
-            title: 'Teaser',
-            imports: {
-              css,
-              ...require('./components/Typography'),
-              ...require('./components/Teaser'),
-              Center: require('./components/Center')
-            },
-            src: require('./components/Teaser/docs.md')
           },
           {
             path: '/pullquote',
@@ -308,50 +297,61 @@ ReactDOM.render(
         ]
       },
       {
-        title: 'Front',
+        title: 'Teaser',
         pages: [
           {
-            path: '/imageblock',
-            title: 'ImageBlock',
+            path: '/teaserfeed',
+            title: 'TeaserFeed',
             imports: {
               css,
               ...require('./components/Typography'),
-              ...require('./components/Front'),
+              ...require('./components/TeaserFeed'),
+              Center: require('./components/Center')
+            },
+            src: require('./components/TeaserFeed/docs.md')
+          },
+          {
+            path: '/imageblock',
+            title: 'TeaserFrontImage',
+            imports: {
+              css,
+              ...require('./components/Typography'),
+              ...require('./components/TeaserFront'),
               Image: require('./components/Figure/Image'),
             },
-            src: require('./components/Front/ImageBlock.md')
+            src: require('./components/TeaserFront/Image.md')
           },
           {
             path: '/typoblock',
-            title: 'TypoBlock',
+            title: 'TeaserFrontTypo',
             imports: {
               css,
               ...require('./components/Typography'),
-              ...require('./components/Front')
+              ...require('./components/TeaserFront')
             },
-            src: require('./components/Front/TypoBlock.md')
+            src: require('./components/TeaserFront/Typo.md')
           },
           {
             path: '/split',
-            title: 'Split',
+            title: 'TeaserFrontSplit',
             imports: {
               css,
               ...require('./components/Typography'),
-              ...require('./components/Front'),
+              ...require('./components/TeaserFront'),
               Image: require('./components/Figure/Image'),
             },
-            src: require('./components/Front/Split.md')
+            src: require('./components/TeaserFront/Split.md')
           },
           {
             path: '/tile',
-            title: 'Tile',
+            title: 'TeaserFrontTile',
             imports: {
               css,
               ...require('./components/Typography'),
-              ...require('./components/Front'),
+              ...require('./components/TeaserFront'),
               Image: require('./components/Figure/Image'),
             },
-            src: require('./components/Front/Tile.md')
+            src: require('./components/TeaserFront/Tile.md')
           },
         ]
       },
