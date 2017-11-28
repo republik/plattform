@@ -1,5 +1,7 @@
 /**
  * This script activates memberships.
+ * This script assumes that all entries in the memberships table
+ * are yearly memberships.
  *
  * Usage:
  * node script/activeMemberships.js
@@ -7,7 +9,9 @@
 require('dotenv').config()
 
 const { lib: { pgdb: PgDb } } = require('@orbiting/backend-modules-base')
+const moment = require('moment')
 
+console.log('running activateMemberships.js...')
 PgDb.connect().then(async pgdb => {
   const transaction = await pgdb.transactionBegin()
   try {
@@ -32,8 +36,8 @@ PgDb.connect().then(async pgdb => {
 
     let max = 0
     let numRedeemed = 0
-    const beginDate = new Date('2018-01-15T07:00:00.000+01:00')
-    const endDate = new Date('2019-01-16T00:00:00.000+01:00')
+    const beginDate = new Date('2018-01-14T01:00:00.000+01:00')
+    const endDate = moment(beginDate).add(1, 'year')
     for (let user of usersWithMemberships) {
       if (user.email === 'jefferson@project-r.construction') {
         continue
