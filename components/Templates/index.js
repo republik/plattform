@@ -1,13 +1,14 @@
 import newsletterSchema from '@project-r/template-newsletter'
 import neutrumSchema from './Neutrum'
-import editorialSchema from '@project-r/styleguide/lib/templates/Editorial'
-import metaSchema from '@project-r/styleguide/lib/templates/Meta'
+
+import createEditorialSchema from '@project-r/styleguide/lib/templates/Editorial'
+import createMetaSchema from '@project-r/styleguide/lib/templates/Meta'
 
 const schemas = {
   newsletter: newsletterSchema,
   neutrum: neutrumSchema,
-  editorial: editorialSchema,
-  meta: metaSchema
+  editorial: createEditorialSchema(),
+  meta: createMetaSchema()
 }
 
 export const getSchema = template => {
