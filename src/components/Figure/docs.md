@@ -2,6 +2,10 @@
 
 A `<Figure />` contains an `<FigureImage>` and an optional `<FigureCaption>`.
 
+Properties
+
+- `size` string, optional, `breakout`
+
 ```react
 <Figure>
   <FigureImage src='/static/landscape.jpg' alt='' />
@@ -12,9 +16,7 @@ A `<Figure />` contains an `<FigureImage>` and an optional `<FigureCaption>`.
 </Figure>
 ```
 
-#### `size`
-
-Optinal value: `breakout`
+#### Breakout example
 
 ```react|responsive
 <Center style={{backgroundColor: 'red'}}>
@@ -33,8 +35,9 @@ Optinal value: `breakout`
 The `<FigureImage>` component scales the image to 100% of the available space.
 
 Properties
-- `src` - String, the image url, mandatory
-- `alt` - String, the alternative text
+
+- `src` string, the image url, mandatory
+- `alt` string, the alternative text
 
 ### `<FigureGroup />`
 

@@ -101,7 +101,28 @@ const figure = {
   }),
   editorModule: 'figure',
   editorOptions: {
-    afterType: 'PARAGRAPH'
+    afterType: 'PARAGRAPH',
+    pixelNote: 'Anzeigegrössen: min. 1200x, für E2E min. 2000x (proportionaler Schnitt)',
+    sizes: [
+      {
+        label: 'Edge to Edge',
+        props: {size: undefined},
+        parent: {kinds: ['document', 'block'], types: ['CENTER']},
+        unwrap: true
+      },
+      {
+        label: 'Gross',
+        props: {size: 'breakout'},
+        parent: {kinds: ['document', 'block'], types: ['CENTER']},
+        wrap: 'CENTER'
+      },
+      {
+        label: 'Normal',
+        props: {size: undefined},
+        parent: {kinds: ['document', 'block'], types: ['CENTER']},
+        wrap: 'CENTER'
+      }
+    ]
   },
   rules: [
     {
