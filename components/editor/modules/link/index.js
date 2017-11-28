@@ -45,7 +45,7 @@ export default ({rule, subModules, TYPE}) => {
         renderNode ({node, children, attributes}) {
           if (!link.match(node)) return
           return (
-            <Link data={node.data.toJS()} attributes={attributes}>
+            <Link {...node.data.toJS()} attributes={attributes}>
               {children}
             </Link>
           )
