@@ -5,6 +5,7 @@
     "node": "8.4.0"
   },
   "peerDependencies": {
+    "d3-color": "^1.0.3",
     "d3-time-format": "^2.1.1",
     "glamor": "^2.20.37",
     "mdast-react-render": ">=1",
@@ -22,6 +23,7 @@
     "commitizen": "^2.9.6",
     "core-js": "^2.4.1",
     "cz-conventional-changelog": "^2.0.0",
+    "d3-color": "^1.0.3",
     "d3-time-format": "^2.1.1",
     "downshift": "^1.16.1",
     "glamor": "^2.20.37",

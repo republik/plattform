@@ -9,6 +9,7 @@ import * as fontStyles from './components/Typography/styles'
 
 import 'core-js/fn/array/from'
 import 'core-js/fn/array/find'
+import 'core-js/es6'
 
 import {fontFaces} from './theme/fonts'
 import {createFormatter} from './lib/translate'
@@ -311,7 +312,7 @@ ReactDOM.render(
             src: require('./components/TeaserFeed/docs.md')
           },
           {
-            path: '/imageblock',
+            path: '/teaserfrontimage',
             title: 'FrontImage',
             imports: {
               css,
@@ -322,7 +323,7 @@ ReactDOM.render(
             src: require('./components/TeaserFront/Image.md')
           },
           {
-            path: '/typoblock',
+            path: '/teaserfronttypo',
             title: 'FrontTypo',
             imports: {
               css,
@@ -332,7 +333,7 @@ ReactDOM.render(
             src: require('./components/TeaserFront/Typo.md')
           },
           {
-            path: '/split',
+            path: '/teaserfrontsplit',
             title: 'FrontSplit',
             imports: {
               css,
@@ -343,7 +344,7 @@ ReactDOM.render(
             src: require('./components/TeaserFront/Split.md')
           },
           {
-            path: '/tile',
+            path: '/teaserfronttile',
             title: 'FrontTile',
             imports: {
               css,

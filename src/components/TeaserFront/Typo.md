@@ -9,7 +9,7 @@ A `<TeaserFrontTypoHeadline />` should be used. The default font size can be bum
 - `large`: Whether the font size shoud be increased to large.
 
 ```react
-<TeaserFrontTypo bgColor='#fc9'>
+<TeaserFrontTypo bgColor='#fff'>
   <TeaserFrontTypoHeadline.Editorial>The quick brown fox</TeaserFrontTypoHeadline.Editorial>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
@@ -21,7 +21,7 @@ A `<TeaserFrontTypoHeadline />` should be used. The default font size can be bum
 ```
 
 ```react
-<TeaserFrontTypo bgColor='#fc9'>
+<TeaserFrontTypo bgColor='#fff'>
   <TeaserFrontTypoHeadline.Editorial medium>The quick fox</TeaserFrontTypoHeadline.Editorial>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
@@ -33,7 +33,7 @@ A `<TeaserFrontTypoHeadline />` should be used. The default font size can be bum
 ```
 
 ```react
-<TeaserFrontTypo bgColor='#fc9'>
+<TeaserFrontTypo bgColor='#fff'>
   <TeaserFrontTypoHeadline.Editorial large>The Fox</TeaserFrontTypoHeadline.Editorial>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
@@ -45,7 +45,7 @@ A `<TeaserFrontTypoHeadline />` should be used. The default font size can be bum
 ```
 
 ```react
-<TeaserFrontTypo color='#fc9' bgColor='#000' >
+<TeaserFrontTypo color='#fff' bgColor='#000' >
   <TeaserFrontTypoHeadline.Interaction>The quick brown fox</TeaserFrontTypoHeadline.Interaction>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
@@ -57,7 +57,7 @@ A `<TeaserFrontTypoHeadline />` should be used. The default font size can be bum
 ```
 
 ```react
-<TeaserFrontTypo color='#fc9' bgColor='#000' >
+<TeaserFrontTypo color='#fff' bgColor='#000' >
   <TeaserFrontTypoHeadline.Interaction medium>The quick fox</TeaserFrontTypoHeadline.Interaction>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
@@ -69,7 +69,7 @@ A `<TeaserFrontTypoHeadline />` should be used. The default font size can be bum
 ```
 
 ```react
-<TeaserFrontTypo color='#fc9' bgColor='#000' >
+<TeaserFrontTypo color='#fff' bgColor='#000' >
   <TeaserFrontTypoHeadline.Interaction large>The Fox</TeaserFrontTypoHeadline.Interaction>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.

@@ -26,7 +26,7 @@ Supported props:
     </TeaserFrontCredit>
   </TeaserFrontTile>
   <TeaserFrontTile image='/static/rothaus_landscape.jpg'
-    color='#000' bgColor='#adf'>
+    color='#000' bgColor='#fff'>
     <TeaserFrontTileHeadline.Editorial>The quick brown fox</TeaserFrontTileHeadline.Editorial>
     <TeaserFrontLead>
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
@@ -47,7 +47,7 @@ Supported props:
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
     </TeaserFrontLead>
     <TeaserFrontCredit>
-      An article by <TeaserFrontAuthorLink href='#'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
+      An article by <TeaserFrontAuthorLink href='#' color='#fba'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>
@@ -62,7 +62,7 @@ Supported props:
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
     </TeaserFrontLead>
     <TeaserFrontCredit>
-      An article by <TeaserFrontAuthorLink href='#'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
+      An article by <TeaserFrontAuthorLink href='#' color='#fba'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>

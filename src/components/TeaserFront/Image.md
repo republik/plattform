@@ -7,7 +7,7 @@ Supported props:
 - `bgColor`: The background color to use in stacked mode.
 - `center`: Whether the text should be center aligned.
 
-An `<TeaserFrontImageHeadline />` should be used.
+A `<TeaserFrontImageHeadline />` should be used.
 
 ```react
 <TeaserFrontImage
@@ -19,7 +19,7 @@ An `<TeaserFrontImageHeadline />` should be used.
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontAuthorLink href='#'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
+    An article by <TeaserFrontAuthorLink href='#' color='#adf'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
@@ -34,7 +34,7 @@ An `<TeaserFrontImageHeadline />` should be used.
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontAuthorLink href='#'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
+    An article by <TeaserFrontAuthorLink href='#' color='#adf'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
@@ -49,7 +49,7 @@ An `<TeaserFrontImageHeadline />` should be used.
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontAuthorLink href='#'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
+    An article by <TeaserFrontAuthorLink href='#' color='#adf'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
@@ -64,7 +64,7 @@ An `<TeaserFrontImageHeadline />` should be used.
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontAuthorLink href='#'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
+    An article by <TeaserFrontAuthorLink href='#' color='#adf'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
@@ -80,7 +80,7 @@ An `<TeaserFrontImageHeadline />` should be used.
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontAuthorLink href='#'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
+    An article by <TeaserFrontAuthorLink href='#' color='#adf'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
@@ -95,7 +95,7 @@ An `<TeaserFrontImageHeadline />` should be used.
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontAuthorLink href='#'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
+    An article by <TeaserFrontAuthorLink href='#' color='#adf'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
