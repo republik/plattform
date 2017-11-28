@@ -19,7 +19,7 @@ export default ({rule, subModules, TYPE}) => {
         document: {
           data: node.meta,
           kind: 'document',
-          nodes: childSerializer.fromMdast(node.children, 0, node, rest)
+          nodes: childSerializer.fromMdast(node.children)
         },
         kind: 'value'
       }
@@ -28,7 +28,7 @@ export default ({rule, subModules, TYPE}) => {
       return {
         type: 'root',
         meta: object.data,
-        children: childSerializer.toMdast(object.nodes, 0, object, rest)
+        children: childSerializer.toMdast(object.nodes)
       }
     }
   }

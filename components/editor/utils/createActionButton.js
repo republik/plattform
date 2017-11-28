@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 const preventDefault = event => event.preventDefault()
 
 const propTypes = {
-  value: PropTypes.object.isRequired,
   onChange: PropTypes.func,
   isDisabled: PropTypes.func,
   isVisible: PropTypes.func
@@ -22,7 +21,6 @@ export default ({
   Component => {
     const ActionButton = props => {
       const {
-        value,
         onChange,
         isDisabled: propsIsDisabled,
         isVisible: propsIsVisible,

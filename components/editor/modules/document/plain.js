@@ -152,7 +152,7 @@ Hurray!
               }
             ].filter(Boolean),
             first: {
-              types: [titleModule.TYPE, figureModule.TYPE]
+              types: [titleModule.TYPE, figureModule && figureModule.TYPE]
             },
             last: {
               types: [centerModule.TYPE]

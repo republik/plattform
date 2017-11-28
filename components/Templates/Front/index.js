@@ -19,14 +19,15 @@ const schema = {
         {
           matchMdast: matchZone('TEASER'),
           component: ({ children, attributes = {} }) =>
-            <p {...attributes}>{children}</p>,
+            <div {...attributes}>{children}</div>,
           editorModule: 'teaser',
           rules: [
             {
               matchMdast: matchParagraph,
               component: ({ children, attributes = {} }) =>
                 <p {...attributes}>{children}</p>,
-              editorModule: 'paragraph'
+              editorModule: 'paragraph',
+              rules: []
             }
           ]
         }

@@ -1,26 +1,26 @@
 import React from 'react'
 import MarkdownSerializer from 'slate-mdast-serializer'
+import { Block, Text } from 'slate'
 import { matchBlock } from '../../utils'
 import {
-  createDropTarget,
-  createMoveDragSource,
   getIndex,
   getParentKey,
   insert,
   move
 } from './dnd'
+import { TeaserButton, TeaserInlineUI } from './ui'
 
-const connectDnD = Component => createDropTarget(createMoveDragSource(
-  props => {
-    const { connectDragSource, connectDropTarget } = props
-    return connectDropTarget(
-      <div>
-        {connectDragSource(<span>Dragme</span>)}
-        <Component />
-      </div>
-    )
-  }
-))
+const getNewItem = () => Block.create({
+  type: 'TEASER',
+  nodes: [
+    Block.create({
+      type: 'paragraph',
+      nodes: [
+        Text.create('New teaser')
+      ]
+    })
+  ]
+})
 
 const fromMdast = ({
   TYPE,
@@ -43,10 +43,11 @@ const fromMdast = ({
       []
     ).filter(Boolean)
   })
+
   return {
     kind: 'block',
     type: TYPE,
-    children: node.children.map(childSerializer.fromMdast)
+    nodes: childSerializer.fromMdast(node.children)
   }
 }
 
@@ -80,7 +81,7 @@ const toMdast = ({
   return {
     type: 'zone',
     identifier: 'TEASER',
-    children: node.nodes.map(childSerializer.toMdast)
+    children: childSerializer.toMdast(node.nodes)
   }
 }
 
@@ -101,23 +102,22 @@ const teaserPlugin = ({ TYPE, rule }) => {
   const Teaser = rule.component
   return {
     renderNode ({ editor, node, attributes, children }) {
-      if (!matchBlock(TYPE)) {
+      if (!matchBlock(TYPE)(node)) {
         return
       }
 
-      const ConnectedDnD = connectDnD(() => (
-        <Teaser data={node.data.getJS()} attributes={attributes}>
-          {children}
-        </Teaser>
-      ))
-
       return (
-        <ConnectedDnD
+        <TeaserInlineUI
+          nodeKey={node.key}
           getIndex={getIndex(editor)}
           getParentKey={getParentKey(editor)}
           move={move(editor)}
           insert={insert(editor)}
-          />
+        >
+          <Teaser data={node.data.toJS()} attributes={attributes}>
+            {children}
+          </Teaser>
+        </TeaserInlineUI>
       )
     }
   }
@@ -129,5 +129,8 @@ export default options => ({
   },
   plugins: [
     teaserPlugin(options)
-  ]
+  ],
+  ui: {
+    insertButtons: [() => <TeaserButton getNewItem={getNewItem} />]
+  }
 })
