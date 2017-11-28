@@ -301,7 +301,7 @@ ReactDOM.render(
         pages: [
           {
             path: '/teaserfeed',
-            title: 'TeaserFeed',
+            title: 'Feed',
             imports: {
               css,
               ...require('./components/Typography'),
@@ -312,7 +312,7 @@ ReactDOM.render(
           },
           {
             path: '/imageblock',
-            title: 'TeaserFrontImage',
+            title: 'FrontImage',
             imports: {
               css,
               ...require('./components/Typography'),
@@ -323,7 +323,7 @@ ReactDOM.render(
           },
           {
             path: '/typoblock',
-            title: 'TeaserFrontTypo',
+            title: 'FrontTypo',
             imports: {
               css,
               ...require('./components/Typography'),
@@ -333,7 +333,7 @@ ReactDOM.render(
           },
           {
             path: '/split',
-            title: 'TeaserFrontSplit',
+            title: 'FrontSplit',
             imports: {
               css,
               ...require('./components/Typography'),
@@ -344,7 +344,7 @@ ReactDOM.render(
           },
           {
             path: '/tile',
-            title: 'TeaserFrontTile',
+            title: 'FrontTile',
             imports: {
               css,
               ...require('./components/Typography'),
