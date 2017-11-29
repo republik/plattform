@@ -2,13 +2,13 @@
 # yarn lockfile v1
 
 
-"@orbiting/backend-modules-auth@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-0.2.0.tgz#b25467ad4f5c1f5fc26785f5a490f091af01501f"
+"@orbiting/backend-modules-auth@^0.4.1":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-0.4.2.tgz#204fa73b2ae25cd9e3b841df2e65294406b063c5"
   dependencies:
     "@orbiting/backend-modules-mail" "^0.0.0"
     "@orbiting/backend-modules-translate" "^0.0.0"
-    apollo-modules-node "^0.0.0"
+    apollo-modules-node "^0.1.0"
     check-env "^1.3.0"
     connect-pg-simple "^3.1.2"
     email-validator "^1.1.1"
@@ -21,13 +21,32 @@
     pogi "^2.5.1"
     uuid "^3.1.0"
 
-"@orbiting/backend-modules-base@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.0.3.tgz#75921dc7fe3159a6f228fdfc9c048cbb95578471"
+"@orbiting/backend-modules-auth@^0.5.3":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-0.5.3.tgz#1fbeba40b7f51174ab415c8eccea70df692d289e"
   dependencies:
-    "@orbiting/backend-modules-auth" "^0.2.0"
+    "@orbiting/backend-modules-mail" "^0.1.0"
+    "@orbiting/backend-modules-translate" "^0.0.0"
+    apollo-modules-node "^0.1.1"
+    check-env "^1.3.0"
+    connect-pg-simple "^3.1.2"
+    email-validator "^1.1.1"
+    export-files "^2.1.0"
+    express-session "^1.15.6"
+    geoip-database "^1.0.9"
+    kraut "^0.1.1"
+    maxmind "^2.3.0"
+    passport "^0.4.0"
+    pogi "^2.5.1"
+    uuid "^3.1.0"
+
+"@orbiting/backend-modules-base@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.0.6.tgz#c4963805d63047219fda9fd0ed39efc0ed89dfbc"
+  dependencies:
+    "@orbiting/backend-modules-auth" "^0.4.1"
     apollo-engine "^0.5.2"
-    apollo-modules-node "^0.0.0"
+    apollo-modules-node "^0.1.0"
     apollo-server-express "^1.2.0"
     bluebird "^3.5.1"
     body-parser "^1.18.2"
@@ -40,18 +59,17 @@
     express "^4.16.2"
     graphql-redis-subscriptions "^1.3.1"
     graphql-subscriptions "^0.5.5"
-    graphql-tools "github:orbiting/graphql-tools"
     pogi "^2.4.0"
     redis "^2.8.0"
     subscriptions-transport-ws "^0.9.1"
     tslib "^1.8.0"
 
-"@orbiting/backend-modules-documents@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-0.0.3.tgz#36377dc35a3d2a912f26369f1ed1b9f972b0501c"
+"@orbiting/backend-modules-documents@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-0.0.4.tgz#36bbb23fb45d75e2a9342b7e064d2ce563e49425"
   dependencies:
-    "@orbiting/backend-modules-auth" "^0.2.0"
-    apollo-modules-node "^0.0.0"
+    "@orbiting/backend-modules-auth" "^0.4.1"
+    apollo-modules-node "^0.1.0"
     check-env "^1.3.0"
     d3-array "^1.2.1"
 
@@ -69,12 +87,20 @@
     check-env "^1.3.0"
     export-files "^2.1.1"
 
-"@orbiting/backend-modules-scalars@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-scalars/-/backend-modules-scalars-0.0.2.tgz#7269ac1818fb92c085a3c4178fe79b1a6da6744f"
+"@orbiting/backend-modules-mail@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-mail/-/backend-modules-mail-0.1.0.tgz#45d138b8a643a71ab5c469f160e29e13a79e326d"
+  dependencies:
+    await-sleep "^0.0.1"
+    check-env "^1.3.0"
+    export-files "^2.1.1"
+
+"@orbiting/backend-modules-scalars@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-scalars/-/backend-modules-scalars-0.0.3.tgz#6fc306bedd379d30e69f37fd9c3966845ac65d72"
   dependencies:
     "@orbiting/backend-modules-formats" "^0.0.1"
-    apollo-modules-node "^0.0.0"
+    apollo-modules-node "^0.1.0"
     graphql-type-json "^0.1.4"
 
 "@orbiting/backend-modules-scripts@^1.0.0":
@@ -243,6 +269,13 @@ apollo-modules-node@^0.0.0:
     lodash.merge "^4.6.0"
     lodash.pickby "^4.6.0"
 
+apollo-modules-node@^0.1.0, apollo-modules-node@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/apollo-modules-node/-/apollo-modules-node-0.1.1.tgz#95f036e8d7fc85b3be2da72ed2d032dd31dcd2df"
+  dependencies:
+    lodash.merge "^4.6.0"
+    lodash.pickby "^4.6.0"
+
 apollo-server-core@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-1.2.0.tgz#e851c47444991b6f89f88529237076b83e01e8ee"
@@ -384,7 +417,7 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
-await-sleep@0.0.1:
+await-sleep@0.0.1, await-sleep@^0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/await-sleep/-/await-sleep-0.0.1.tgz#044532e49f1f4219d2030d79f517d64569a27d50"
 
@@ -2019,14 +2052,6 @@ graphql-subscriptions@^0.5.5:
   dependencies:
     es6-promise "^4.1.1"
     iterall "^1.1.3"
-
-"graphql-tools@github:orbiting/graphql-tools":
-  version "2.7.2"
-  resolved "https://codeload.github.com/orbiting/graphql-tools/tar.gz/de7361283d8125f30f426c0afda1c7510724106c"
-  dependencies:
-    apollo-utilities "^1.0.1"
-    deprecated-decorator "^0.1.6"
-    uuid "^3.1.0"
 
 "graphql-tools@https://github.com/orbiting/graphql-tools.git#upstream":
   version "2.8.0"
