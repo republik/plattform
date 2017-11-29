@@ -33,6 +33,7 @@ import createSpecialCharsModule from './modules/specialchars'
 import createBlockModule from './modules/block'
 import createTitleModule from './modules/title'
 import createInfoBoxModule from './modules/infobox'
+import createQuoteModule from './modules/quote'
 
 const {
   ReactDnDPlugin,
@@ -60,7 +61,8 @@ const moduleCreators = {
   specialchars: createSpecialCharsModule,
   block: createBlockModule,
   title: createTitleModule,
-  infobox: createInfoBoxModule
+  infobox: createInfoBoxModule,
+  quote: createQuoteModule
 }
 const initModule = rule => {
   const { editorModule, editorOptions = {} } = rule
