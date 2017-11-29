@@ -26,6 +26,11 @@ export default ({rule, subModules, TYPE}) => {
 
   const Figure = rule.component
 
+  const {
+    afterType,
+    identifier = 'FIGURE'
+  } = rule.editorOptions || {}
+
   const figure = {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast,
@@ -51,7 +56,8 @@ export default ({rule, subModules, TYPE}) => {
         kind: 'block',
         type: TYPE,
         data: {
-          float: node.data.float
+          float: node.data.float,
+          size: node.data.size
         },
         nodes: [
           imageSerializer.fromMdast(image, 0, node, rest),
@@ -71,7 +77,7 @@ export default ({rule, subModules, TYPE}) => {
 
       return {
         type: 'zone',
-        identifier: TYPE,
+        identifier,
         data: {
           ...object.data,
           ...caption.data
@@ -97,10 +103,6 @@ export default ({rule, subModules, TYPE}) => {
     })
   )
 
-  const {
-    afterType
-  } = rule.editorOptions || {}
-
   return {
     TYPE,
     helpers: {
@@ -108,13 +110,13 @@ export default ({rule, subModules, TYPE}) => {
       serializer
     },
     changes: {},
-    ui: createUi({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock}),
+    ui: createUi({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions: rule.editorOptions}),
     plugins: [
       {
         renderNode ({ children, node, attributes }) {
           if (node.type !== TYPE) return
           return (
-            <Figure data={node.data.toJS()} attributes={attributes}>
+            <Figure {...node.data.toJS()} attributes={attributes}>
               {children}
             </Figure>
           )
@@ -181,12 +183,6 @@ export default ({rule, subModules, TYPE}) => {
                 }
               ],
               normalize (change, reason, {node, index, parent, child}) {
-                if (reason === 'parent_kind_invalid') {
-                  change.unwrapBlockByKey(
-                    node.key,
-                    parent.type
-                  )
-                }
                 if (reason === 'child_required') {
                   change.insertNodeByKey(
                     node.key,

@@ -92,10 +92,7 @@ const schema = {
           matchMdast: matchZone('TITLE'),
           component: ({ children, attributes = {} }) =>
             <NarrowContainer {...attributes}>{children}</NarrowContainer>,
-          editorModule: 'block',
-          editorOptions: {
-            type: 'title'
-          },
+          editorModule: 'title',
           rules: [
             {
               matchMdast: matchHeading(1),
