@@ -259,11 +259,9 @@ const createSchema = ({
                   : undefined,
                 figureFloat: node.data.figureFloat // values: undefined, false, true
               }),
-              editorModule: 'block',
+              editorModule: 'infobox',
               editorOptions: {
-                type: 'INFOBOX',
-                insertButtonText: 'Infobox',
-                defaultProps: {figureSize: 'S'}
+                insertButtonText: 'Infobox'
               },
               rules: [
                 {
@@ -283,7 +281,7 @@ const createSchema = ({
                   editorModule: 'paragraph',
                   editorOptions: {
                     type: 'INFOP',
-                    placeholder: 'Text'
+                    placeholder: 'Infotext'
                   },
                   rules: paragraph.rules
                 }
@@ -296,11 +294,9 @@ const createSchema = ({
                 size: node.data.size, // values: undefined, 'narrow', 'float', 'breakout'
                 hasFigure: !!node.children.find(matchZone('FIGURE'))
               }),
-              editorModule: 'block',
+              editorModule: 'quote',
               editorOptions: {
-                type: 'QUOTE',
-                insertButtonText: 'Quote',
-                defaultProps: {hasFigure: true}
+                insertButtonText: 'Zitat'
               },
               rules: [
                 figure,
