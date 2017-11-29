@@ -60,8 +60,6 @@ const sansSerifSizes = {
   small: css({
     fontSize: '26px',
     lineHeight: '28px',
-    marginLeft: 0,
-    marginRight: 0,
     [mUp]: {
       fontSize: '32px',
       lineHeight: '38px'
