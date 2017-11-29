@@ -11,9 +11,10 @@ export default () => {
   const SlateHTML5Backend = (...args) => {
     const backend = new HTML5Backend(...args)
     dropHandler = (event, change, editor) => {
-      const state = backend.monitor.store.getState()
-      if (state.dragOperation.targetIds.length > 0) {
-        backend.handleTopDrop(event)
+      const before = backend.monitor.store.getState()
+      backend.handleTopDrop(event)
+      const after = backend.monitor.store.getState()
+      if (before.dragOperation.targetIds.length !== after.dragOperation.targetIds.length) {
         return true
       }
     }

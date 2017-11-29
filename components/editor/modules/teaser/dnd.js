@@ -4,27 +4,6 @@ const TEASER = 'DND_TEASER'
 const INSERT = 'insert'
 const MOVE = 'move'
 
-const endDrag = (props, monitor) => {
-  if (!monitor.didDrop()) {
-    return
-  }
-  const draggedItem = monitor.getItem()
-  const {
-    nodeKey: targetKey,
-    getParentKey,
-    getIndex,
-    move,
-    insert
-  } = monitor.getDropResult()
-  const newParentKey = getParentKey(targetKey)
-  const newIndex = getIndex(targetKey)
-  if (draggedItem.operation === MOVE) {
-    move(draggedItem.nodeKey, newParentKey, newIndex)
-  } else {
-    insert(newParentKey, newIndex, draggedItem.newItem)
-  }
-}
-
 const moveTeaserSource = {
   beginDrag (props) {
     return {
@@ -33,8 +12,7 @@ const moveTeaserSource = {
       parentKey: props.getParentKey(props.nodeKey),
       operation: MOVE
     }
-  },
-  endDrag
+  }
 }
 
 const insertTeaserSource = {
@@ -43,8 +21,7 @@ const insertTeaserSource = {
       newItem: props.getNewItem(props),
       operation: INSERT
     }
-  },
-  endDrag
+  }
 }
 
 const teaserTarget = {
@@ -52,8 +29,22 @@ const teaserTarget = {
     return props.nodeKey !== monitor.getItem().nodeKey
   },
 
-  drop (props) {
-    return props
+  drop (props, monitor) {
+    const draggedItem = monitor.getItem()
+    const {
+      nodeKey: targetKey,
+      getParentKey,
+      getIndex,
+      move,
+      insert
+    } = props
+    const newParentKey = getParentKey(targetKey)
+    const newIndex = getIndex(targetKey)
+    if (draggedItem.operation === MOVE) {
+      move(draggedItem.nodeKey, newParentKey, newIndex)
+    } else {
+      insert(newParentKey, newIndex, draggedItem.newItem)
+    }
   }
 }
 

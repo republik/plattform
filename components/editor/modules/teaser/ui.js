@@ -1,6 +1,7 @@
 import { colors } from '@project-r/styleguide'
 import React from 'react'
-
+import ArrowsIcon from 'react-icons/lib/fa/arrows'
+import { css } from 'glamor'
 import {
   createActionButton,
   buttonStyles
@@ -13,14 +14,23 @@ import {
 } from './dnd'
 
 const styles = {
-  hint: {
-    position: 'absolute',
+  line: css({
+    // position: 'absolute',
     margin: 0,
-    // top: 0,
-    // left: 0,
-    // right: 0,
+    padding: 0,
+    top: 0,
+    left: 0,
+    right: 0,
     borderTop: `1px dashed ${colors.primary}`
-  }
+  }),
+  dragButton: css(
+    {
+      position: 'absolute',
+      top: 0,
+      left: 0
+    },
+    buttonStyles.mark
+  )
 }
 
 export const TeaserButton = createActionButton({
@@ -48,18 +58,18 @@ export const TeaserButton = createActionButton({
 )
 
 export const TeaserInlineUI = createDropTarget(createMoveDragSource(
-  ({ connectDragSource, connectDropTarget, isOver, children }) => {
+  ({ connectDragSource, connectDropTarget, isDragging, isOver, children }) => {
     const dragSource = connectDragSource(
-      <span contentEditable={false}>Dragme</span>)
+      <span contentEditable={false} {...styles.dragButton}><ArrowsIcon /></span>)
     const dropTarget = connectDropTarget(
-      <div> {
+      <div style={{ margin: 0 }}> {
         children
       } </div>
     )
 
     return (
-      <div style={{position: 'relative'}}>
-        { isOver && <hr style={styles.hr} />}
+      <div style={{position: 'relative', margin: 0}}>
+        { <hr {...styles.line} />}
         {dragSource}
         {dropTarget}
       </div>

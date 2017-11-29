@@ -46,19 +46,49 @@ template: ${template}
 
 <section><h6>TEASER</h6>
 
-Teaser 1
+![desert](/static/desert.jpg)
+
+###### Teaser 1
+
+# The sand is near
+
+#### Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+
+An article by [Christof Moser](), 31 December 2017
 
 <hr/></section>
 
 <section><h6>TEASER</h6>
 
-Teaser 2
+###### Teaser 2
+
+# The sand is near
+
+#### Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+
+An article by [Christof Moser](), 31 December 2017
 
 <hr/></section>
 
 <section><h6>TEASER</h6>
 
-Teaser 3
+![desert](/static/desert.jpg)
+
+# The sand is near aka Teaser 3
+
+#### Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+
+An article by [Christof Moser](), 31 December 2017
+
+<hr/></section>
+
+<section><h6>TEASER</h6>
+
+###### Teaser 4
+
+# The sand is near
+
+An article by [Christof Moser](), 31 December 2017
 
 <hr/></section>
 `
