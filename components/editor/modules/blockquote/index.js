@@ -16,10 +16,12 @@ export default ({rule, subModules, TYPE}) => {
     fromMdast: (node, index, parent, rest) => ({
       kind: 'block',
       type: TYPE,
+      data: node.data,
       nodes: paragraphSerializer.fromMdast(node.children, 0, node, rest)
     }),
     toMdast: (object, index, parent, rest) => ({
       type: 'blockquote',
+      data: object.data,
       children: paragraphSerializer.toMdast(object.nodes, 0, object, rest)
     })
   }

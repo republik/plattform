@@ -44,6 +44,7 @@ export default ({rule, subModules, TYPE}) => {
       return {
         kind: 'block',
         type: TYPE,
+        data: node.data,
         nodes: childSerializer.fromMdast(node.children, 0, node, rest)
       }
     },
@@ -51,6 +52,7 @@ export default ({rule, subModules, TYPE}) => {
       return {
         type: 'zone',
         identifier: TYPE,
+        data: object.data,
         children: childSerializer.toMdast(object.nodes, 0, object, rest)
       }
     }

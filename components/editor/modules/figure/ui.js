@@ -17,7 +17,8 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions}) =
   const {
     sizes = [],
     captionRight = false,
-    pixelNote = false
+    pixelNote = false,
+    insertButtonText
   } = editorOptions || {}
 
   const FigureForm = createPropertyForm({
@@ -38,6 +39,7 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions}) =
             ? block
             : value.document.getParent(block.key)
           )
+          .filter(block => block.type === TYPE)
           .filter((block, index, all) => all.indexOf(block) === index)
           .map((block, i) => {
             const parent = value.document.getParent(block.key)
@@ -65,11 +67,6 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions}) =
                   size.parent.types &&
                   !size.parent.types.find(type => type === parent.type)
                 ) {
-                  return false
-                }
-              }
-              if (size.cover === false) {
-                if (parent.kind === 'document' && parent.nodes.first() === block) {
                   return false
                 }
               }
@@ -172,13 +169,13 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions}) =
         data-disabled={disabled}
         data-visible={visible}
         >
-        Bild
+        {insertButtonText}
       </span>
 
   )
 
   return {
     forms: [FigureForm],
-    insertButtons: [FigureButton]
+    insertButtons: [insertButtonText && FigureButton].filter(Boolean)
   }
 }

@@ -10,7 +10,6 @@
   - `types`, array of slate types
 - `unwrap`, bool, unwrap figure until is a child of document when selected
 - `wrap`, slate type string, ensure figure is wrapped in block with this type 
-- `cover`, bool, default true, applicable if it's the first children of the document
 
 ## Example: Float Sizes
 

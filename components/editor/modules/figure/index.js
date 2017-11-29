@@ -116,7 +116,7 @@ export default ({rule, subModules, TYPE}) => {
         renderNode ({ children, node, attributes }) {
           if (node.type !== TYPE) return
           return (
-            <Figure {...node.data.toJS()} data={node.data.toJS()} attributes={attributes}>
+            <Figure {...node.data.toJS()} attributes={attributes}>
               {children}
             </Figure>
           )
