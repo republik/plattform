@@ -181,7 +181,7 @@ const cover = {
 }
 
 const createSchema = ({
-  TitelBlockHeadline = Editorial.Headline,
+  TitleBlockHeadline = Editorial.Headline,
   documentEditorOptions = {},
   titleBlockAppend = null
 } = {}) => ({
@@ -215,7 +215,7 @@ const createSchema = ({
           rules: [
             {
               matchMdast: matchHeading(1),
-              component: TitelBlockHeadline,
+              component: TitleBlockHeadline,
               editorModule: 'headline',
               editorOptions: {
                 type: 'H1',

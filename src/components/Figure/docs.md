@@ -1,6 +1,6 @@
 ### `<Figure />`
 
-A `<Figure />` contains an `<FigureImage>` and an optional `<FigureCaption>`.
+A `<Figure />` contains a `<FigureImage>` and an optional `<FigureCaption>`.
 
 Properties
 

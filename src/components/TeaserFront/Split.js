@@ -84,7 +84,7 @@ const Split = ({
           portrait ? styles.imageContainerPortrait : {}
         )}
       >
-        <Image data={{ src: image, alt: '' }} {...styles.image} />
+        <Image src={image} alt='' />
       </div>
       <div
         {...css(

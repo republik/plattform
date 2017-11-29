@@ -37,7 +37,7 @@ const ImageBlock = ({
   const background = bgColor || ''
   return (
     <div {...attributes} {...styles.container} style={{ background }}>
-      <Image data={{ src: image, alt: '' }} />
+      <Image src={image} alt='' />
       <div {...styles.textContainer}>
         <Text position={textPosition} color={color} center={center}>
           {children}
