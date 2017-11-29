@@ -39,6 +39,28 @@ Supported props:
 ```
 
 ```react
+<TeaserFrontTileRow columns={2}>
+  <TeaserFrontTile image='/static/rothaus_landscape.jpg'
+    color='#fff' bgColor='#000'>
+    <TeaserFrontTileHeadline.Editorial>The quick brown fox</TeaserFrontTileHeadline.Editorial>
+    <TeaserFrontLead>
+      Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
+    </TeaserFrontLead>
+    <TeaserFrontCredit>
+      An article by <TeaserFrontAuthorLink href='#'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+  <TeaserFrontTile color='#000' bgColor='#fff'>
+    <Editorial.Format>Umfrage</Editorial.Format>
+    <TeaserFrontTileHeadline.Interaction>Mehr Geld für ausländische Autorinnen oder einen Bundeshaus&shy;korrespondent?</TeaserFrontTileHeadline.Interaction>
+    <TeaserFrontCredit>
+      <TeaserFrontAuthorLink href='#'>Constantin Seibt</TeaserFrontAuthorLink> fragt nach<br />31. December 2017
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+</TeaserFrontTileRow>
+```
+
+```react
 <TeaserFrontTileRow>
   <TeaserFrontTile image='/static/rothaus_portrait.jpg'
     color='#fff' bgColor='#000'>
@@ -63,6 +85,18 @@ Supported props:
     </TeaserFrontLead>
     <TeaserFrontCredit>
       An article by <TeaserFrontAuthorLink href='#' color='#fba'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+</TeaserFrontTileRow>
+```
+
+```react
+<TeaserFrontTileRow>
+  <TeaserFrontTile color='#000' bgColor='#fff'>
+    <Editorial.Format>Umfrage</Editorial.Format>
+    <TeaserFrontTileHeadline.Interaction>Mehr Geld für ausländische Autorinnen oder einen Bundeshaus&shy;korrespondent?</TeaserFrontTileHeadline.Interaction>
+    <TeaserFrontCredit>
+      <TeaserFrontAuthorLink href='#'>Constantin Seibt</TeaserFrontAuthorLink> fragt nach<br />31. December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>

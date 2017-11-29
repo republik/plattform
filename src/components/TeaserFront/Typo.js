@@ -4,6 +4,8 @@ import { css } from 'glamor'
 import { mUp, tUp } from './mediaQueries'
 import Text from './Text'
 
+export const MAX_WIDTH_PERCENT = 70
+
 const styles = {
   root: css({
     margin: 0
@@ -12,7 +14,7 @@ const styles = {
     margin: '0 auto',
     padding: '15px',
     [mUp]: {
-      maxWidth: '70%',
+      maxWidth: `${MAX_WIDTH_PERCENT}%`,
       padding: '30px 0'
     },
     [tUp]: {
