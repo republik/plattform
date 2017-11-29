@@ -5,12 +5,17 @@
 // auth  node script/roleUser.js supporter patrick.recher@project-r.construction [remove]
 //
 
+// use pogi directly to not create a circular dependency to backend-modules-base
 const { PgDb } = require('pogi')
 const Roles = require('../lib/Roles')
 
 require('dotenv').config()
 
-PgDb.connect().then(async (pgdb) => {
+const {
+  DATABASE_URL
+} = process.env
+
+PgDb.connect({connectionString: DATABASE_URL}).then(async (pgdb) => {
   const role = process.argv[2]
   const email = process.argv[3]
 

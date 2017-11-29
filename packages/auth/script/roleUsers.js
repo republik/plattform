@@ -9,12 +9,17 @@
 //
 //
 
+// use pogi directly to not create a circular dependency to backend-modules-base
 const { PgDb } = require('pogi')
 const Roles = require('../lib/Roles')
 
 require('dotenv').config()
 
-PgDb.connect({connectionString: process.env.DATABASE_URL}).then(async (pgdb) => {
+const {
+  DATABASE_URL
+} = process.env
+
+PgDb.connect({connectionString: DATABASE_URL}).then(async (pgdb) => {
   const role = process.argv[2]
   const emailsPath = process.argv[3]
 
