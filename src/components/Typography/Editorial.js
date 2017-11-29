@@ -4,6 +4,7 @@ import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { fontFamilies } from '../../theme/fonts'
+import { underline } from '../../lib/styleMixins'
 
 const headline = css({
   ...styles.serifTitle30,
@@ -97,8 +98,7 @@ const format = css({
     ...styles.sansSerifMedium20,
     margin: '0 0 28px 0'
   },
-  textDecoration: 'underline',
-  textDecorationSkip: 'ink'
+  ...underline
 })
 
 export const Format = ({ children, attributes, ...props }) => (
@@ -158,8 +158,7 @@ export const Emphasis = ({ children, attributes, ...props }) => (
 )
 
 const link = css({
-  textDecoration: 'underline',
-  textDecorationSkip: 'ink',
+  ...underline,
   color: colors.text,
   ':hover': {
     color: colors.lightText

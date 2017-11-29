@@ -3,3 +3,8 @@ export const ellipsize = {
   overflow: 'hidden',
   textOverflow: 'ellipsis'
 }
+
+export const underline = {
+  textDecoration: 'underline',
+  textDecorationSkip: 'ink'
+}
