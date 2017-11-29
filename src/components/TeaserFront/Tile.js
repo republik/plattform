@@ -110,7 +110,7 @@ TeaserFrontTileRow.defaultProps = {
   columns: 1
 }
 
-const Tile = ({ children, attributes, image, color, bgColor }) => {
+const Tile = ({ children, attributes, image, alt, color, bgColor }) => {
   const background = bgColor || ''
   return (
     <div
@@ -121,7 +121,7 @@ const Tile = ({ children, attributes, image, color, bgColor }) => {
     >
       {image && (
         <div {...styles.imageContainer}>
-          <img src={image} alt="" {...styles.image} />
+          <img src={image} alt={alt} {...styles.image} />
         </div>
       )}
       <div {...styles.textContainer}>
@@ -137,8 +137,13 @@ Tile.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
   image: PropTypes.string,
+  alt: PropTypes.string,
   color: PropTypes.string,
   bgColor: PropTypes.string
+}
+
+Tile.defaultProps = {
+  alt: ''
 }
 
 export default Tile

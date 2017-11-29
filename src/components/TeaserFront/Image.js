@@ -29,6 +29,7 @@ const ImageBlock = ({
   children,
   attributes,
   image,
+  alt,
   color,
   bgColor,
   textPosition,
@@ -37,7 +38,7 @@ const ImageBlock = ({
   const background = bgColor || ''
   return (
     <div {...attributes} {...styles.container} style={{ background }}>
-      <Image src={image} alt='' />
+      <Image src={image} alt={alt} />
       <div {...styles.textContainer}>
         <Text position={textPosition} color={color} center={center}>
           {children}
@@ -51,6 +52,7 @@ ImageBlock.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
   image: PropTypes.string.isRequired,
+  alt: PropTypes.string,
   color: PropTypes.string,
   bgColor: PropTypes.string,
   center: PropTypes.bool,
@@ -63,7 +65,8 @@ ImageBlock.propTypes = {
 }
 
 ImageBlock.defaultProps = {
-  textPosition: 'topleft'
+  textPosition: 'topleft',
+  alt: ''
 }
 
 export default ImageBlock

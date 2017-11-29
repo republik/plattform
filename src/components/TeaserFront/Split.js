@@ -64,6 +64,7 @@ const Split = ({
   children,
   attributes,
   image,
+  alt,
   color,
   bgColor,
   center,
@@ -84,7 +85,7 @@ const Split = ({
           portrait ? styles.imageContainerPortrait : {}
         )}
       >
-        <Image src={image} alt='' />
+        <Image src={image} alt={alt} />
       </div>
       <div
         {...css(
@@ -106,10 +107,15 @@ Split.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
   image: PropTypes.string.isRequired,
+  alt: PropTypes.string,
   color: PropTypes.string,
   bgColor: PropTypes.string,
   center: PropTypes.bool,
   reverse: PropTypes.bool
+}
+
+Split.defaultProps = {
+  alt: ''
 }
 
 export default Split
