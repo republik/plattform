@@ -97,12 +97,13 @@ const figure = {
   matchMdast: matchZone('FIGURE'),
   component: Figure,
   props: node => ({
-    size: node.data.size // values: undefined, 'breakout'
+    size: node.data.size
   }),
   editorModule: 'figure',
   editorOptions: {
     afterType: 'PARAGRAPH',
-    pixelNote: 'Anzeigegrössen: min. 1200x, für E2E min. 2000x (proportionaler Schnitt)',
+    pixelNote: 'Auflösung: min. 1200x, für E2E min. 2000x (proportionaler Schnitt)',
+    insertButtonText: 'Bild',
     sizes: [
       {
         label: 'Edge to Edge',
@@ -111,23 +112,15 @@ const figure = {
         unwrap: true
       },
       {
-        label: 'Zentriert',
-        props: {size: 'center'},
-        parent: {kinds: ['document']},
-        unwrap: true
-      },
-      {
         label: 'Gross',
         props: {size: 'breakout'},
         parent: {kinds: ['document', 'block'], types: ['CENTER']},
-        cover: false,
         wrap: 'CENTER'
       },
       {
         label: 'Normal',
         props: {size: undefined},
         parent: {kinds: ['document', 'block'], types: ['CENTER']},
-        cover: false,
         wrap: 'CENTER'
       }
     ]
@@ -137,10 +130,48 @@ const figure = {
       matchMdast: matchImageParagraph,
       component: FigureImage,
       props: node => ({
-        data: {
-          src: node.children[0].url,
-          alt: node.children[0].alt
-        }
+        src: node.children[0].url,
+        alt: node.children[0].alt
+      }),
+      editorModule: 'figureImage',
+      isVoid: true
+    },
+    figureCaption
+  ]
+}
+
+const cover = {
+  matchMdast: (node, index) => (
+    matchZone('FIGURE')(node) &&
+    index === 0
+  ),
+  component: Figure,
+  props: node => ({
+    size: node.data.size
+  }),
+  editorModule: 'figure',
+  editorOptions: {
+    type: 'COVERFIGURE',
+    afterType: 'PARAGRAPH',
+    pixelNote: 'Auflösung: min. 2000x (proportionaler Schnitt)',
+    sizes: [
+      {
+        label: 'Edge to Edge',
+        props: {size: undefined}
+      },
+      {
+        label: 'Zentriert',
+        props: {size: 'center'}
+      }
+    ]
+  },
+  rules: [
+    {
+      matchMdast: matchImageParagraph,
+      component: FigureImage,
+      props: node => ({
+        src: node.children[0].url,
+        alt: node.children[0].alt
       }),
       editorModule: 'figureImage',
       isVoid: true
@@ -165,6 +196,7 @@ const createSchema = ({
           matchMdast: () => false,
           editorModule: 'meta'
         },
+        cover,
         {
           matchMdast: matchZone('TITLE'),
           component: ({children, ...props}) => (
@@ -174,11 +206,11 @@ const createSchema = ({
             </TitleBlock>
           ),
           props: node => ({
-            center: node.data.center // undefined, false, true
+            center: node.data.center
           }),
           editorModule: 'title',
           editorOptions: {
-            coverType: 'FIGURE'
+            coverType: cover.editorOptions.type
           },
           rules: [
             {
@@ -242,7 +274,7 @@ const createSchema = ({
               component: FigureGroup,
               props: node => ({
                 size: 'breakout',
-                columns: node.data.columns // values: 2, 3, 4
+                columns: node.data.columns
               }),
               rules: [
                 figure,
@@ -253,11 +285,11 @@ const createSchema = ({
               matchMdast: matchZone('INFOBOX'),
               component: InfoBox,
               props: node => ({
-                size: node.data.size, // values: undefined, 'float', 'breakout'
+                size: node.data.size,
                 figureSize: node.children.find(matchZone('FIGURE'))
-                  ? node.data.figureSize || 'S' // values: 'XS', 'S', 'M', 'L'
+                  ? node.data.figureSize || 'S'
                   : undefined,
-                figureFloat: node.data.figureFloat // values: undefined, false, true
+                figureFloat: node.data.figureFloat
               }),
               editorModule: 'infobox',
               editorOptions: {
@@ -291,7 +323,7 @@ const createSchema = ({
               matchMdast: matchZone('QUOTE'),
               component: PullQuote,
               props: node => ({
-                size: node.data.size, // values: undefined, 'narrow', 'float', 'breakout'
+                size: node.data.size,
                 hasFigure: !!node.children.find(matchZone('FIGURE'))
               }),
               editorModule: 'quote',
