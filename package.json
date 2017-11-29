@@ -8,7 +8,7 @@
   "private": true,
   "license": "AGPL-3.0",
   "dependencies": {
-    "@orbiting/backend-modules-auth": "^0.5.0",
+    "@orbiting/backend-modules-auth": "^0.5.3",
     "@orbiting/backend-modules-base": "^0.0.6",
     "@orbiting/backend-modules-documents": "^0.0.4",
     "@orbiting/backend-modules-mail": "^0.1.0",
@@ -50,7 +50,9 @@
     "link:backend-modules": "yarn link apollo-modules-node && yarn link @orbiting/backend-modules-auth && yarn link @orbiting/backend-modules-base && yarn link @orbiting/backend-modules-documents && yarn link @orbiting/backend-modules-mail && yarn link @orbiting/backend-modules-translate && yarn link @orbiting/backend-modules-scalars && yarn link @orbiting/backend-modules-scripts",
     "unlink:backend-modules": "yarn unlink apollo-modules-node && yarn unlink @orbiting/backend-modules-auth && yarn unlink @orbiting/backend-modules-base && yarn unlink @orbiting/backend-modules-documents && yarn unlink @orbiting/backend-modules-mail && yarn unlink @orbiting/backend-modules-translate && yarn unlink @orbiting/backend-modules-scalars && yarn unlink @orbiting/backend-modules-scripts",
     "launch": "yarn run db:migrate:up && node script/launch/activateMemberships.js && node script/launch/add_launch_data.js",
-    "launch:local": "sh script/launch/launch_local.sh"
+    "launch:local": "sh script/launch/launch_local.sh",
+    "roleUser": "node node_modules/@orbiting/backend-modules-auth/script/roleUser",
+    "roleUsers": "node node_modules/@orbiting/backend-modules-auth/script/roleUsers"
   },
   "lint-staged": {
     "*.js": [
