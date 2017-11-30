@@ -1,10 +1,10 @@
 import React from 'react'
 import * as styles from './styles'
 import { css } from 'glamor'
-import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { fontFamilies } from '../../theme/fonts'
 import { underline } from '../../lib/styleMixins'
+import colors, { colorForKind } from '../../theme/colors'
 
 const headline = css({
   ...styles.serifTitle30,
@@ -78,20 +78,7 @@ export const Credit = ({ children, attributes, ...props }) => (
   </p>
 )
 
-const typeRules = {
-  '[data-type="editorial"] > &': {
-    color: colors.editorial
-  },
-  '[data-type="meta"] > &': {
-    color: colors.meta
-  },
-  '[data-type="social"] > &': {
-    color: colors.social
-  }
-}
-
 const format = css({
-  ...typeRules,
   ...styles.sansSerifMedium16,
   margin: '0 0 18px 0',
   [mUp]: {
@@ -101,8 +88,8 @@ const format = css({
   ...underline
 })
 
-export const Format = ({ children, attributes, ...props }) => (
-  <p {...attributes} {...props} {...format}>
+export const Format = ({ children, kind, attributes, ...props }) => (
+  <p {...attributes} {...props} {...format} style={{color: colorForKind(kind)}}>
     {children}
   </p>
 )

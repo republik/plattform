@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { MAX_WIDTH, PADDING, BREAKOUT } from '../Center'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
+import { Editorial } from '../Typography'
 
 const styles = {
   container: css({
@@ -21,13 +22,16 @@ const styles = {
 const TitleBlock = ({
   children,
   attributes,
-  center
+  center,
+  kind,
+  format
 }) => {
   return (
     <section {...attributes} {...styles.container} style={{
       textAlign: center ? 'center' : undefined,
       maxWidth: center ? MAX_WIDTH + BREAKOUT + PADDING : undefined
     }}>
+      {format && <Editorial.Format kind={kind} contentEditable={false}>{format}</Editorial.Format>}
       {children}
     </section>
   )

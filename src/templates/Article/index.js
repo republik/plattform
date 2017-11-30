@@ -231,12 +231,12 @@ const createSchema = ({
         cover,
         {
           matchMdast: matchZone('TITLE'),
-          component: ({children, ...props}) => (
-            <TitleBlock {...props}>
+          component: withMeta(({children, meta, ...props}) => (
+            <TitleBlock {...props} kind={meta.kind} format={meta.format}>
               {children}
               {titleBlockAppend}
             </TitleBlock>
-          ),
+          )),
           props: (node, index, parent) => ({
             center: node.data.center
           }),
