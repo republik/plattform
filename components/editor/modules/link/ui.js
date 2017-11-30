@@ -1,3 +1,4 @@
+import { Text } from 'slate'
 import { compose } from 'redux'
 import React, { Component} from 'react'
 import { gql, withApollo } from 'react-apollo'
@@ -17,7 +18,8 @@ import {
 export const usersQuery = gql`
 query users($search: String!) {
   users(search: $search, role: "editor") {
-    name
+    firstName
+    lastName
     id
   }
 }
@@ -33,15 +35,24 @@ export class SearchUserForm extends Component {
     this.filterChangeHandler = this.filterChangeHandler.bind(this)
     this.changeHandler = this.changeHandler.bind(this)
   }
+  componentDidMount () {
+    this._isMounted = true
+  }
+
+  componentWillUnmount () {
+    this._isMounted = false
+  }
 
   filterChangeHandler (value) {
-    this.setState(
-      state => ({
-        ...this.state,
-        filter: value
-      }),
-      () => this.loadUsers()
-    )
+    if (this._isMounted) {
+      this.setState(
+        state => ({
+          ...this.state,
+          filter: value
+        }),
+        () => this.loadUsers()
+      )
+    }
   }
 
   loadUsers () {
@@ -52,14 +63,15 @@ export class SearchUserForm extends Component {
       })
       .then(
         ({ data }) => {
-          console.log(data)
-          this.setState(state => ({
-            ...this.state,
-            items: data.users.map(v => ({
-              value: v.id,
-              text: v.name
+          if (this._isMounted) {
+            this.setState(state => ({
+              ...this.state,
+              items: data.users.slice(0, 5).map(v => ({
+                value: v.id,
+                text: `${v.firstName} ${v.lastName}`
+              }))
             }))
-          }))
+          }
         }
       )
       .catch(
@@ -70,13 +82,15 @@ export class SearchUserForm extends Component {
   }
 
   changeHandler (value) {
-    this.setState(
-      state => ({
-        ...this.state,
-        value: null
-      }),
-      () => this.props.onChange(value)
-    )
+    if (this._isMounted) {
+      this.setState(
+        state => ({
+          ...this.state,
+          value: null
+        }),
+        () => this.props.onChange(value)
+      )
+    }
   }
 
   render () {
@@ -117,6 +131,24 @@ export default ({TYPE}) => {
       return null
     }
     const handlerFactory = createOnFieldChange(onChange, value)
+    const authorChange = (onChange, value, node) => author => {
+      onChange(
+        value.change().replaceNodeByKey(
+          node.key,
+          {
+            type: TYPE,
+            kind: 'inline',
+            data: node.data.merge({
+              title: author.text,
+              href: `/~${author.value}`
+            }),
+            nodes: [
+              Text.create(author.text)
+            ]
+          }
+        )
+      )
+    }
     return <div>
       <Label>Links</Label>
       {
@@ -125,7 +157,7 @@ export default ({TYPE}) => {
           .map((node, i) => {
             const onInputChange = handlerFactory(node)
             return (
-              <SidebarForm>
+              <SidebarForm key={`link-form-${i}`}>
                 <Field
                   label={t(`metaData/field/href`, undefined, 'href')}
                   value={node.data.get('href')}
@@ -136,7 +168,7 @@ export default ({TYPE}) => {
                   value={node.data.get('title')}
                   onChange={onInputChange('title')}
                 />
-                <ConnectedSearchUserForm onChange={v => console.log(v)} />
+                <ConnectedSearchUserForm onChange={authorChange(onChange, value, node)} />
               </SidebarForm>
             )
           })
