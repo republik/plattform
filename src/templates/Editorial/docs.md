@@ -470,7 +470,7 @@ Zweitens: ich habe erklärt mit diese zwei Spieler: nach Dortmund brauchen viell
   "userScreenName": "RepublikMagazin",
   "__typename": "TwitterEmbed",
   "userId": "786282996223598592",
-  "text": "90 Minuten. Und nur noch 300 Unterstützerinnen und Unterstützer fehlen!",
+  "html": "90 Minuten. Und nur noch 300 Unterstützerinnen und Unterstützer fehlen!",
   "userProfileImageUrl": "https://pbs.twimg.com/profile_images/851190311267307521/W2kHAHvv_normal.jpg",
   "userName": "Republik",
   "id": "869954605337243648",

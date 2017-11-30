@@ -369,9 +369,8 @@ const createSchema = ({
             {
               matchMdast: matchZone('EMBEDTWITTER'),
               component: ({data, url}) => (
-                <Tweet {...data} date={new Date(data.createdAt)}>
-                  {data.text}
-                </Tweet>),
+                <Tweet {...data} date={new Date(data.createdAt)} />
+              ),
               props: node => ({
                 data: {
                   ...node.data,

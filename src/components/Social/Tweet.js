@@ -35,9 +35,8 @@ const styles = {
 }
 
 const Tweet = ({
-  children,
   attributes,
-  platform,
+  html,
   url,
   userName,
   userScreenName,
@@ -54,8 +53,8 @@ const Tweet = ({
         handle={userScreenName}
         date={date}
       />
-      {children && <p {...styles.text} dangerouslySetInnerHTML={
-        {__html: children.toString()}
+      {html && <p {...styles.text} dangerouslySetInnerHTML={
+        {__html: html}
       }/>}
       {image && (
         <Figure>
@@ -67,8 +66,8 @@ const Tweet = ({
 }
 
 Tweet.propTypes = {
-  children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
+  html: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
   userProfileImageUrl: PropTypes.string.isRequired,
   userName: PropTypes.string.isRequired,
