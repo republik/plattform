@@ -20,11 +20,12 @@ export const styles = {
     right: 0,
     margin: '0 -12px',
     padding: '0 12px',
-    background: 'white',
-    transition: 'box-shadow .12s'
+    background: 'transparent',
+    transition: 'box-shadow .12s, background .12s'
   }),
   innerFocus: css({
     zIndex: zIndex.dropdown,
+    background: 'white',
     boxShadow: '0 2px 8px rgba(0,0,0,.2)'
   }),
   items: css({
