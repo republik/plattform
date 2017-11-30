@@ -86,6 +86,17 @@ type Membership {
   claimerName: String
   sequenceNumber: Int
   active: Boolean!
+  renew: Boolean!
+  periods: [MembershipPeriod]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type MembershipPeriod {
+  id: ID!
+  membership: Membership!
+  beginDate: DateTime!
+  endDate: DateTime!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
