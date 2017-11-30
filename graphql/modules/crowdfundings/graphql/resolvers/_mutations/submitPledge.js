@@ -2,12 +2,14 @@ const logger = console
 const postfinanceSHA = require('../../../lib/payments/postfinance/sha')
 const uuid = require('uuid/v4')
 const { minTotal, regularTotal, getPledgeOptionsTree } = require('../../../lib/Pledge')
+const debug = require('debug')('crowdfundings:pledge')
 
 module.exports = async (_, args, {pgdb, req, t}) => {
   const transaction = await pgdb.transactionBegin()
   try {
     const { pledge } = args
     const pledgeOptions = pledge.options
+    debug('submitPledge %O', pledge)
 
     // load original of chosen packageOptions
     const pledgeOptionsTemplateIds = pledgeOptions.map((plo) => plo.templateId)

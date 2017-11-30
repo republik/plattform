@@ -1,5 +1,7 @@
 alter table "memberships"
-  drop column "beginDate";
+  drop column "beginDate",
+  add column "active" boolean not null default false,
+  add column "renew" boolean not null default false;
 
 create type "intervalType" as ENUM ('year', 'month', 'week', 'day');
 
@@ -32,7 +34,27 @@ create table "membershipPeriodPayments" (
 create index "membershipPeriodPayments_pledgeId_idx" on "membershipPeriodPayments" ("membershipPeriodId");
 create index "membershipPeriodPayments_createdAt_idx" on "membershipPeriodPayments" ("createdAt");
 
+
+-- only generate voucherCode if voucherable is true
 alter table "memberships"
-  add column "active" boolean not null default false;
+  add column "voucherable" boolean not null default true;
+drop trigger if exists trigger_voucher_code ON memberships;
+drop function if exists voucher_code_trigger_function();
+
+CREATE FUNCTION voucher_code_trigger_function()
+RETURNS trigger AS $$
+BEGIN
+  IF NEW."voucherable" IS true THEN
+    NEW."voucherCode" := make_hrid('memberships', 'voucherCode', 6);
+  END IF;
+  RETURN NEW;
+END
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER trigger_voucher_code
+BEFORE INSERT ON memberships
+FOR EACH ROW
+EXECUTE PROCEDURE voucher_code_trigger_function();
+
 
 -- ready to run activateMemberships and launch now

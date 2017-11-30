@@ -65,6 +65,7 @@ PgDb.connect().then(async pgdb => {
         id: electedMembership.id
       }, {
         active: true,
+        renew: true,
         voucherCode: null
       })
 
