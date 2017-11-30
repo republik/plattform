@@ -479,7 +479,7 @@ Zweitens: ich habe erklärt mit diese zwei Spieler: nach Dortmund brauchen viell
 }
 \`\`\`
 
-[](https://twitter.com/RepublikMagazin/status/869954605337243648)
+<https://twitter.com/RepublikMagazin/status/869954605337243648>
 
 <hr /></section>
 
