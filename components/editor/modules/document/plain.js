@@ -12,6 +12,7 @@ export default ({rule, subModules, TYPE}) => {
   if (!titleModule) {
     throw new Error('Missing title submodule')
   }
+
   const figureModule = subModules.find(m => m.name === 'figure')
 
   const childSerializer = new MarkdownSerializer({
