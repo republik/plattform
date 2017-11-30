@@ -138,7 +138,11 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     if (userHasActiveMembership) {
       const pledgeOptionsTree = await getPledgeOptionsTree(pledge.options, transaction)
       for (let plo of pledgeOptionsTree) {
-        if (plo.packageOption.reward.membershipType.name === 'MONTHLY_ABO') {
+        if (
+          plo.packageOption.reward &&
+          plo.packageOption.reward.membershipType &&
+          plo.packageOption.reward.membershipType.name === 'MONTHLY_ABO'
+        ) {
           throw new Error(t('api/membership/monthly/hasActive'))
         }
       }
