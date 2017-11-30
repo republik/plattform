@@ -2,25 +2,6 @@
 # yarn lockfile v1
 
 
-"@orbiting/backend-modules-auth@^0.5.1":
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-0.5.4.tgz#3e780de3f1607ca95a2235e2692a3dd0d1f5c04d"
-  dependencies:
-    "@orbiting/backend-modules-mail" "^0.1.0"
-    "@orbiting/backend-modules-translate" "^0.0.0"
-    apollo-modules-node "^0.1.1"
-    check-env "^1.3.0"
-    connect-pg-simple "^3.1.2"
-    email-validator "^1.1.1"
-    export-files "^2.1.0"
-    express-session "^1.15.6"
-    geoip-database "^1.0.9"
-    kraut "^0.1.1"
-    maxmind "^2.3.0"
-    passport "^0.4.0"
-    pogi "^2.5.1"
-    uuid "^3.1.0"
-
 "@semantic-release/commit-analyzer@^2.0.0", "@semantic-release/commit-analyzer@~2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@semantic-release/commit-analyzer/-/commit-analyzer-2.0.0.tgz#924d1e2c30167c6a472bed9f66ee8f8e077489b2"
