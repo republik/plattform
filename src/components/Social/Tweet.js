@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
-import { sansSerifRegular15, sansSerifRegular18 } from '../Typography/styles'
+import { link, sansSerifRegular15, sansSerifRegular18 } from '../Typography/styles'
 import { Figure, FigureImage } from '../Figure'
 import { Header } from './Header'
 
@@ -27,7 +27,10 @@ const styles = {
     [mUp]: {
       ...sansSerifRegular18
     },
-    color: colors.text
+    color: colors.text,
+    '& a': {
+      ...link
+    }
   })
 }
 
@@ -51,7 +54,9 @@ const Tweet = ({
         handle={userScreenName}
         date={date}
       />
-      <p {...styles.text}>{children}</p>
+      {children && <p {...styles.text} dangerouslySetInnerHTML={
+        {__html: children.toString()}
+      }/>}
       {image && (
         <Figure>
           <FigureImage src={image} alt='' />
