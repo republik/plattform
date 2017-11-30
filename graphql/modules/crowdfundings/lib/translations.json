@@ -1,5 +1,5 @@
 {
-  "updated": "2017-11-27T15:11:40.239Z",
+  "updated": "2017-11-30T15:47:35.184Z",
   "title": "live",
   "data": [
     {
@@ -25,6 +25,10 @@
     {
       "key": "api/membership/reduced/alreadyHas",
       "value": "Sie können leider keine reduzierte Mitgliedschaft kaufen, da sie bereits eine Mitgliedschaft gekauft haben."
+    },
+    {
+      "key": "api/membership/monthly/hasActive",
+      "value": "Sie können leider keine monats-Mitgliedschaft kaufen, da sie bereits eine aktive Mitgliedschaft besitzen."
     },
     {
       "key": "api/pledge/alreadyPaid",
