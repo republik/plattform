@@ -1,7 +1,7 @@
 import { Text } from 'slate'
 import { compose } from 'redux'
 import React, { Component} from 'react'
-import { gql, withApollo } from 'react-apollo'
+import { gql, graphql } from 'react-apollo'
 import { Label, Field, Autocomplete } from '@project-r/styleguide'
 import LinkIcon from 'react-icons/lib/fa/chain'
 import SidebarForm from '../../SidebarForm'
@@ -15,7 +15,7 @@ import {
   buttonStyles
 } from '../../utils'
 
-export const usersQuery = gql`
+const usersQuery = gql`
 query users($search: String!) {
   users(search: $search, role: "editor") {
     firstName
@@ -24,7 +24,18 @@ query users($search: String!) {
   }
 }
 `
-export class SearchUserForm extends Component {
+const ConnectedAutoComplete = graphql(usersQuery, {
+  skip: props => !props.filter,
+  options: ({ filter }) => ({ variables: { search: filter } }),
+  props: ({ data: { users = [] } }) => ({
+    items: users.slice(0, 5).map(v => ({
+      value: v.id,
+      text: `${v.firstName} ${v.lastName}`
+    }))
+  })
+})(Autocomplete)
+
+const SearchUserForm = withT(class extends Component {
   constructor (...args) {
     super(...args)
     this.state = {
@@ -44,71 +55,38 @@ export class SearchUserForm extends Component {
   }
 
   filterChangeHandler (value) {
-    if (this._isMounted) {
-      this.setState(
+    this.setState(
         state => ({
           ...this.state,
           filter: value
-        }),
-        () => this.loadUsers()
-      )
-    }
-  }
-
-  loadUsers () {
-    this.props.client
-      .query({
-        query: usersQuery,
-        variables: { search: this.state.filter }
-      })
-      .then(
-        ({ data }) => {
-          if (this._isMounted) {
-            this.setState(state => ({
-              ...this.state,
-              items: data.users.slice(0, 5).map(v => ({
-                value: v.id,
-                text: `${v.firstName} ${v.lastName}`
-              }))
-            }))
-          }
-        }
-      )
-      .catch(
-        error => {
-          throw error
-        }
+        })
       )
   }
 
   changeHandler (value) {
-    if (this._isMounted) {
-      this.setState(
+    this.setState(
         state => ({
           ...this.state,
           value: null
         }),
         () => this.props.onChange(value)
       )
-    }
   }
 
   render () {
-    const { items, filter, value } = this.state
+    const { filter, value } = this.state
     return (
-      <Autocomplete
+      <ConnectedAutoComplete
         label={this.props.t('metaData/field/authors', undefined, 'Autor suchen')}
-        items={items}
         filter={filter}
         value={value}
+        items={[]}
         onChange={this.changeHandler}
         onFilterChange={this.filterChangeHandler}
         />
     )
   }
-}
-
-const ConnectedSearchUserForm = withT(withApollo(SearchUserForm))
+})
 
 export default ({TYPE}) => {
   const LinkButton = createInlineButton({
@@ -168,7 +146,7 @@ export default ({TYPE}) => {
                   value={node.data.get('title')}
                   onChange={onInputChange('title')}
                 />
-                <ConnectedSearchUserForm onChange={authorChange(onChange, value, node)} />
+                <SearchUserForm onChange={authorChange(onChange, value, node)} />
               </SidebarForm>
             )
           })
