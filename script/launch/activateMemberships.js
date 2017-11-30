@@ -82,7 +82,7 @@ PgDb.connect().then(async pgdb => {
 
     console.log('usersWithMemberships:', usersWithMemberships.length)
     console.log('max memberships:', max)
-    console.log('memberships !active:', await pgdb.public.memberships.count({active: false}), '\n')
+    console.log('memberships !active:', await transaction.public.memberships.count({active: false}), '\n')
 
     // commit transaction
     await transaction.transactionCommit()
