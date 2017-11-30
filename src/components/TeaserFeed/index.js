@@ -33,19 +33,12 @@ const link = {
   component: Editorial.A
 }
 const creditSchema = {
-  rules: [{
-    matchMdast: matchParagraph,
-    component: Credit,
-    rules: [
-      br,
-      link
-    ]
-  }]
+  rules: [link, br]
 }
 
 const DefaultLink = ({ children, slug }) => children
 
-export const TeaserFeed = ({ kind, format, slug, title, description, creditMdast, Link = DefaultLink }) => {
+export const TeaserFeed = ({ kind, format, slug, title, description, credits, Link = DefaultLink }) => {
   const Headline = kind && kind.indexOf('meta') !== -1
     ? Headlines.Interaction
     : Headlines.Editorial
@@ -62,7 +55,7 @@ export const TeaserFeed = ({ kind, format, slug, title, description, creditMdast
           <a {...styles.link}>{description}</a>
         </Link>
       </Lead>
-      {!!creditMdast && renderMdast(creditMdast, creditSchema)}
+      {!!credits && <Credit>{renderMdast(credits, creditSchema)}</Credit>}
     </Container>
   )
 }
