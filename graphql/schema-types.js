@@ -92,8 +92,8 @@ type TwitterEmbed implements Embed {
   id: ID!
   text: String!
   html: String!
-  createdAt: String!
-  retrievedAt: String!
+  createdAt: DateTime!
+  retrievedAt: DateTime!
   userId: String!
   userName: String!
   userScreenName: String!
