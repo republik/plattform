@@ -18,7 +18,7 @@ const colors = {
 }
 
 export const colorForKind = kind => {
-  if (kind.match(/social/i)) {
+  if (kind && kind.match(/social/i)) {
     return colors.social
   }
   return colors[kind]
