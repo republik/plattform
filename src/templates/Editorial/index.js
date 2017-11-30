@@ -379,7 +379,7 @@ const createSchema = ({
               }),
               editorModule: 'embedTwitter',
               editorOptions: {
-                lookupType: 'paragraph'
+                lookupType: 'PARAGRAPH'
               },
               isVoid: true
             },
