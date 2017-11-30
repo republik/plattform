@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { gql, graphql } from 'react-apollo'
 import { compose } from 'redux'
-import { css, styleSheet } from 'glamor'
+import { css } from 'glamor'
 
 import ErrorMessage from '../ErrorMessage'
+import IFrame from '../IFrame'
 
 import { intersperse } from '../../lib/utils/helpers'
 import withT from '../../lib/withT'
@@ -23,7 +24,6 @@ import {
 } from '@project-r/styleguide'
 
 import MaskedInput from 'react-maskedinput'
-import Frame from 'react-frame-component'
 
 import { query as treeQuery } from '../../pages/repo/tree'
 import { query as publicationQuery } from './Current'
@@ -133,30 +133,8 @@ class PublishForm extends Component {
       scheduled: false,
       scheduledAt: scheduledAtFormater(nextMorning),
       updateMailchimp: false,
-      css: '',
       size: PREVIEW_SIZES[0]
     }
-    this.containerRef = ref => { this.container = ref }
-
-    this.measure = () => {
-      this.setState(() => ({
-        width:
-          this.container &&
-          this.container.getBoundingClientRect().width
-      }))
-    }
-  }
-  componentDidMount () {
-    window.addEventListener('resize', this.measure)
-    this.measure()
-  }
-  componentWillUnmount () {
-    window.removeEventListener('resize', this.measure)
-  }
-  transferCSS () {
-    this.setState({
-      css: styleSheet.rules().map(r => r.cssText).join('')
-    })
   }
   render () {
     const { t, data, repoId } = this.props
@@ -170,7 +148,7 @@ class PublishForm extends Component {
     const scheduledAtError = scheduledAtDate === null && t('publish/label/scheduledAt')
 
     return (
-      <div ref={this.containerRef}>
+      <div>
         <Loader loading={loading} error={error} render={() => {
           const { commit, commit: { document: { meta } } } = repo
 
@@ -184,15 +162,8 @@ class PublishForm extends Component {
           const hasErrors = errors.length > 0
 
           const {
-            size,
-            css,
-            width
+            size
           } = this.state
-
-          const scale = width
-            ? Math.min(1, width / (size.width + PADDING_X * 2))
-            : 1
-          const roundedScale = Math.round(scale * 10) / 10
 
           return (
             <div>
@@ -333,10 +304,7 @@ class PublishForm extends Component {
                       previewSize.label
                     )
                     if (previewSize === size) {
-                      return [
-                        label,
-                        roundedScale !== 1 && ` (${roundedScale}x)`
-                      ].filter(Boolean).join(' ')
+                      return label
                     }
                     return (
                       <A
@@ -355,7 +323,7 @@ class PublishForm extends Component {
                 )}
               </Interaction.P>
 
-              <div style={{
+              <IFrame size={size} style={{
                 // transition: 'padding 400ms, border-radius 400ms, width 400ms',
                 paddingLeft: PADDING_X,
                 paddingRight: PADDING_X,
@@ -363,25 +331,10 @@ class PublishForm extends Component {
                 paddingBottom: size.paddingBottom,
                 borderRadius: size.borderRadius,
                 backgroundColor: '#eee',
-                width: size.width + PADDING_X * 2,
-                transformOrigin: '0% 0%',
-                transform: `scale(${scale})`
+                width: size.width + PADDING_X * 2
               }}>
-                <Frame
-                  frameBorder='0'
-                  allowTransparency='true'
-                  contentDidMount={() => this.transferCSS()}
-                  head={[
-                    <style key='glamor'>{css}</style>
-                  ]}
-                  style={{
-                    width: '100%',
-                    height: size.height
-                  }}
-                >
-                  {renderMdast(commit.document.content, schema)}
-                </Frame>
-              </div>
+                {renderMdast(commit.document.content, schema)}
+              </IFrame>
             </div>
           )
         }} />
