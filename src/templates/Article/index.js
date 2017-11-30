@@ -4,6 +4,8 @@ import Container from './Container'
 import Center from '../../components/Center'
 import TitleBlock from '../../components/TitleBlock'
 import * as Editorial from '../../components/Typography/Editorial'
+import * as Interaction from '../../components/Typography/Interaction'
+import { TeaserFeed } from '../../components/TeaserFeed'
 
 import {
   Figure,
@@ -184,7 +186,6 @@ const cover = {
 }
 
 const createSchema = ({
-  TitleBlockHeadline = Editorial.Headline,
   documentEditorOptions = {},
   titleBlockAppend = null
 } = {}) => ({
@@ -197,7 +198,30 @@ const createSchema = ({
       rules: [
         {
           matchMdast: () => false,
-          editorModule: 'meta'
+          editorModule: 'meta',
+          editorOptions: {
+            customFields: [
+              {
+                label: 'Gattung',
+                key: 'kind',
+                items: [
+                  {value: 'editorial', text: 'Editorial'},
+                  {value: 'meta', text: 'Meta'},
+                  {value: 'metaSocial', text: 'Social Meta'},
+                  {value: 'editorialSocial', text: 'Social Editorial'}
+                ]
+              },
+              {
+                label: 'Format',
+                key: 'format'
+              }
+            ],
+            teaser: props => (
+              <div style={{backgroundColor: '#fff', padding: '30px 30px 1px'}}>
+                <TeaserFeed {...props} />
+              </div>
+            )
+          }
         },
         cover,
         {
@@ -208,8 +232,9 @@ const createSchema = ({
               {titleBlockAppend}
             </TitleBlock>
           ),
-          props: node => ({
-            center: node.data.center
+          props: (node, index, parent) => ({
+            center: node.data.center,
+            kind: parent.meta.kind
           }),
           editorModule: 'title',
           editorOptions: {
@@ -218,7 +243,15 @@ const createSchema = ({
           rules: [
             {
               matchMdast: matchHeading(1),
-              component: TitleBlockHeadline,
+              props: (node, index, parent) => ({
+                kind: parent.kind
+              }),
+              component: ({ children, attributes, kind }) => {
+                const Headline = kind && kind.indexOf('meta') !== -1
+                  ? Interaction.Headline
+                  : Editorial.Headline
+                return <Headline attributes={attributes}>{children}</Headline>
+              },
               editorModule: 'headline',
               editorOptions: {
                 type: 'H1',

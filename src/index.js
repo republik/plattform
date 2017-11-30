@@ -275,26 +275,15 @@ ReactDOM.render(
         title: 'Templates',
         pages: [
           {
-            path: '/templates/editorial',
-            title: 'Editorial',
+            path: '/templates/article',
+            title: 'Article',
             imports: {
-              schema: require('./templates/Editorial').default(),
+              schema: require('./templates/Article').default(),
               ...require('./templates/docs'),
               renderMdast: require('mdast-react-render').renderMdast,
               serializer: new Serializer()
             },
-            src: require('./templates/Editorial/docs.md')
-          },
-          {
-            path: '/templates/meta',
-            title: 'Meta',
-            imports: {
-              schema: require('./templates/Meta').default(),
-              ...require('./templates/docs'),
-              renderMdast: require('mdast-react-render').renderMdast,
-              serializer: new Serializer()
-            },
-            src: require('./templates/Meta/docs.md')
+            src: require('./templates/Article/docs.md')
           }
         ]
       },

@@ -8,7 +8,6 @@ const schema = createEditorialSchema({
 
 `createEditorialSchema` take an optional options object with follow keys:
 
-- `TitleBlockHeadline`, the title react component
 - `documentEditorOptions`, forward options to the document editor module
 - `titleBlockAppend`, append React elements—e.g. share icons—to the title block
 
