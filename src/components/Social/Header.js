@@ -93,12 +93,12 @@ const UserLink = ({ handle, children }) => (
   <Link href={`https://twitter.com/${handle}`}>{children}</Link>
 )
 
-export const Header = ({ url, profilePicture, name, handle, date }) => {
-  const cleanHandle = handle.replace('@', '')
+export const Header = ({ url, userProfileImageUrl, name, handle, date }) => {
+  const cleanHandle = handle && handle.replace('@', '')
   return (
     <div {...styles.root}>
       <UserLink handle={cleanHandle}>
-        <img {...styles.profilePicture} src={profilePicture} alt="" />
+        <img {...styles.profilePicture} src={userProfileImageUrl} alt="" />
       </UserLink>
       <Link href={url}>
         <TwitterIcon {...styles.icon} />

@@ -456,3 +456,33 @@ Zweitens: ich habe erklärt mit diese zwei Spieler: nach Dortmund brauchen viell
 <hr /></section>
 `}</Markdown>
 ```
+
+## Tweet
+
+```react|noSource
+<Markdown schema={schema}>{`
+<section><h6>CENTER</h6>
+
+<section><h6>EMBEDTWITTER</h6>
+
+\`\`\`
+{
+  "userScreenName": "RepublikMagazin",
+  "__typename": "TwitterEmbed",
+  "userId": "786282996223598592",
+  "text": "90 Minuten. Und nur noch 300 Unterstützerinnen und Unterstützer fehlen! https://t.co/J66DGNWiKm https://t.co/qA3cEDI76p",
+  "userProfileImageUrl": "https://pbs.twimg.com/profile_images/851190311267307521/W2kHAHvv_normal.jpg",
+  "userName": "Republik",
+  "id": "869954605337243648",
+  "createdAt": "Wed May 31 16:31:55 +0000 2017",
+  "image": "https://pbs.twimg.com/media/DBKzF3cW0AENby6.jpg"
+}
+\`\`\`
+
+[](https://twitter.com/RepublikMagazin/status/869954605337243648)
+
+<hr /></section>
+
+<hr /></section>
+`}</Markdown>
+```

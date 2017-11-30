@@ -22,6 +22,9 @@ import {
   InfoBoxTitle,
   InfoBoxText
 } from '../../components/InfoBox'
+import {
+  Tweet
+} from '../../components/Social'
 
 import {
   matchType,
@@ -362,7 +365,25 @@ const createSchema = ({
                   ]
                 }
               ]
-            }
+            },
+            {
+              matchMdast: matchZone('EMBEDTWITTER'),
+              component: ({data, url}) => (
+                <Tweet {...data} date={new Date(data.createdAt)}>
+                  {data.text}
+                </Tweet>),
+              props: node => ({
+                data: {
+                  ...node.data,
+                  url: node.children[0].children[0].url
+                }
+              }),
+              editorModule: 'embedTwitter',
+              editorOptions: {
+                lookupType: 'paragraph'
+              },
+              isVoid: true
+            },
           ]
         },
         {

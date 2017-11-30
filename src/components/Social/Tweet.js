@@ -36,19 +36,19 @@ const Tweet = ({
   attributes,
   platform,
   url,
-  name,
-  handle,
+  userName,
+  userScreenName,
   date,
-  profilePicture,
+  userProfileImageUrl,
   image
 }) => {
   return (
     <div {...styles.container}>
       <Header
         url={url}
-        profilePicture={profilePicture}
-        name={name}
-        handle={handle}
+        userProfileImageUrl={userProfileImageUrl}
+        name={userName}
+        handle={userScreenName}
         date={date}
       />
       <p {...styles.text}>{children}</p>
@@ -65,9 +65,9 @@ Tweet.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
   url: PropTypes.string.isRequired,
-  profilePicture: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  handle: PropTypes.string.isRequired,
+  userProfileImageUrl: PropTypes.string.isRequired,
+  userName: PropTypes.string.isRequired,
+  userScreenName: PropTypes.string.isRequired,
   date: PropTypes.object.isRequired,
   image: PropTypes.string
 }
