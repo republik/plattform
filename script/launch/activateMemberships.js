@@ -35,7 +35,6 @@ PgDb.connect().then(async pgdb => {
     `)
 
     let max = 0
-    let numRedeemed = 0
     const beginDate = new Date('2018-01-14T01:00:00.000+01:00')
     const endDate = moment(beginDate).add(1, 'year')
     for (let user of usersWithMemberships) {
@@ -45,13 +44,15 @@ PgDb.connect().then(async pgdb => {
       max = Math.max(max, user.memberships.length)
       let electedMembership
 
-      const membershipsWithoutVoucherCode = user.memberships
-        .filter(membership => membership.voucherCode === null)
-      numRedeemed += membershipsWithoutVoucherCode.length
-
       if (user.memberships.length === 1) {
         electedMembership = user.memberships[0]
       } else {
+        const membershipsWithoutVoucherCode = user.memberships
+          .filter(membership => membership.voucherCode === null)
+        if (membershipsWithoutVoucherCode.length > 1) {
+          console.warn('multiple memberships without voucherCode!!!!!!!!', user.memberships)
+        }
+
         const benefactorMemberships = user.memberships
           .filter(membership => membership.membershipTypeId === benefactorMembershipType.id)
 
@@ -63,7 +64,8 @@ PgDb.connect().then(async pgdb => {
       await transaction.public.memberships.update({
         id: electedMembership.id
       }, {
-        active: true
+        active: true,
+        voucherCode: null
       })
 
       await transaction.public.membershipPeriods.insert({
@@ -72,16 +74,12 @@ PgDb.connect().then(async pgdb => {
         endDate
       })
 
-      if (membershipsWithoutVoucherCode.length > 1) {
-        console.warn('multiple memberships without voucherCode!!!!!!!!', user.memberships)
-      }
       // console.log('-------')
       // console.log(user.email, user.memberships)
       // console.log('electedMembership', electedMembership)
     }
 
     console.log('usersWithMemberships:', usersWithMemberships.length)
-    console.log('numRedeemed:', numRedeemed)
     console.log('max memberships:', max)
     console.log('memberships !active:', await pgdb.public.memberships.count({active: false}), '\n')
 
