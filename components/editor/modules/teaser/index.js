@@ -20,7 +20,8 @@ export const getData = data => ({
   bgColor: '#000',
   center: false,
   image: gray2x1,
-  ...data
+  teaserType: 'frontImage',
+  ...data || {}
 })
 
 const getNewItem = options => () => {
@@ -33,6 +34,9 @@ const getNewItem = options => () => {
 
   return Block.create({
     type: options.TYPE,
+    data: getData({
+      teaserType: options.rule.editorOptions.teaserType
+    }),
     nodes: [
       Block.create({
         type: formatModule.TYPE

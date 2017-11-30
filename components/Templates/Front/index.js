@@ -14,14 +14,12 @@ import {
   TeaserFrontAuthorLink
 } from '@project-r/styleguide'
 
-const paragraph = {
+const paragraph = component => ({
   matchMdast: matchParagraph,
-  component: ({ children, attributes = {} }) =>
-    <TeaserFrontCredit {...attributes}>{children}</TeaserFrontCredit>,
+  component,
   editorModule: 'paragraph',
   editorOptions: {
     type: 'credit',
-    formatButtonText: 'Paragraph',
     placeholder: 'Credit'
   },
   rules: [
@@ -43,35 +41,29 @@ const paragraph = {
       editorModule: 'link'
     }
   ]
-}
+})
 
-const title = {
+const title = component => ({
   matchMdast: matchHeading(1),
-  component: ({ children, attributes = {} }) =>
-    <TeaserFrontImageHeadline.Editorial {...attributes}>
-      {children}
-    </TeaserFrontImageHeadline.Editorial>,
+  component,
   editorModule: 'headline',
   editorOptions: {
     type: 'title',
     placeholder: 'Titel',
     depth: 1
   }
-}
+})
 
-const lead = {
+const lead = component => ({
   matchMdast: matchHeading(4),
-  component: ({ children, attributes = {} }) =>
-    <TeaserFrontLead {...attributes}>
-      {children}
-    </TeaserFrontLead>,
+  component,
   editorModule: 'headline',
   editorOptions: {
     type: 'lead',
     placeholder: 'Lead',
     depth: 4
   }
-}
+})
 
 const format = {
   matchMdast: matchHeading(6),
@@ -106,7 +98,10 @@ const schema = {
           editorModule: 'meta'
         },
         {
-          matchMdast: matchZone('TEASER'),
+          matchMdast: node => {
+            console.log(node.data)
+            return matchZone('TEASER')(node) && node.data.teaserType === 'frontImage'
+          },
           component: ({ children, attributes = {}, ...props }) => {
             return <TeaserFrontImage {...attributes} {...props}>
               {children}
@@ -114,12 +109,28 @@ const schema = {
           },
 
           editorModule: 'teaser',
+          editorOptions: {
+            teaserType: 'frontImage'
+          },
           rules: [
             image,
-            title,
-            lead,
+            title(
+              ({ children, attributes = {} }) =>
+                <TeaserFrontImageHeadline.Editorial {...attributes}>
+                  {children}
+                </TeaserFrontImageHeadline.Editorial>
+            ),
+            lead(
+              ({ children, attributes = {} }) =>
+                <TeaserFrontLead {...attributes}>
+                  {children}
+                </TeaserFrontLead>
+            ),
             format,
-            paragraph
+            paragraph(
+              ({ children, attributes = {} }) =>
+                <TeaserFrontCredit {...attributes}>{children}</TeaserFrontCredit>
+            )
           ]
         }
       ]

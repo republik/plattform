@@ -45,6 +45,11 @@ template: ${template}
 ---
 
 <section><h6>TEASER</h6>
+\`\`\`
+{
+  "teaserType": "frontImage"
+}
+\`\`\`
 
 ![desert](/static/desert.jpg)
 
@@ -55,6 +60,11 @@ An article by [Christof Moser](), 31 December 2017
 <hr/></section>
 
 <section><h6>TEASER</h6>
+\`\`\`
+{
+  "teaserType": "frontImage"
+}
+\`\`\`
 
 ![desert](/static/desert.jpg)
 
@@ -69,6 +79,11 @@ An article by [Christof Moser](), 31 December 2017
 <hr/></section>
 
 <section><h6>TEASER</h6>
+\`\`\`
+{
+  "teaserType": "frontImage"
+}
+\`\`\`
 
 ###### Teaser 2
 
@@ -81,6 +96,11 @@ An article by [Christof Moser](), 31 December 2017
 <hr/></section>
 
 <section><h6>TEASER</h6>
+\`\`\`
+{
+  "teaserType": "frontImage"
+}
+\`\`\`
 
 ![desert](/static/desert.jpg)
 
