@@ -80,12 +80,12 @@ type MembershipType {
 type Membership {
   id: ID!
   type: MembershipType!
-  startDate: DateTime
   pledge: Pledge!
   voucherCode: String
   reducedPrice: Boolean!
   claimerName: String
   sequenceNumber: Int
+  active: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
