@@ -417,6 +417,10 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
+autolinker@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/autolinker/-/autolinker-1.6.0.tgz#bad376b7ad8e415f22f102fc0f37f640e64f1cbf"
+
 await-sleep@0.0.1, await-sleep@^0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/await-sleep/-/await-sleep-0.0.1.tgz#044532e49f1f4219d2030d79f517d64569a27d50"

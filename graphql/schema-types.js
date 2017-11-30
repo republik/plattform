@@ -90,11 +90,13 @@ interface Embed {
 
 type TwitterEmbed implements Embed {
   id: ID!
-  text: String!
+  html: String!
   createdAt: String!
   userId: String!
   userName: String!
   userScreenName: String!
+  userProfileImageUrl: String!,
+  image: String
 }
 
 type YoutubeEmbed implements Embed {
