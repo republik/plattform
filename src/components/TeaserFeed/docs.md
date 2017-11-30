@@ -2,53 +2,71 @@ A `<TeaserFeed />` is a concise article teaser used in a feed context.
 
 Supported props:
 - `format`: An optional format name which appears on top of the headline.
-- `type`: An optional type `editorial`, `meta` or `social`.
+- `kind`: An optional kind `editorial`, `meta`, `metaSocial` or `editorialSocial`.
 
 ```react
-<TeaserFeed>
-  <TeaserFeedHeadline.Editorial>The quick brown fox jumps over the lazy dog</TeaserFeedHeadline.Editorial>
-  <TeaserFeedLead>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</TeaserFeedLead>
-  <TeaserFeedCredit>An article by <Editorial.A href='#'>Christof Moser</Editorial.A>, 31 December 2017</TeaserFeedCredit>
-</TeaserFeed>
+<TeaserFeed
+  title='The quick brown fox jumps over the lazy dog'
+  description='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
+  creditMdast={{type: 'paragraph', children: [
+    {type: 'text', value: 'An article by '},
+    {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
+    {type: 'text', value: ', 31 December 2017'},
+  ]}} />
 ```
 
 ```react
-<TeaserFeed format='Format'>
-  <TeaserFeedHeadline.Editorial>The quick brown fox jumps over the lazy dog</TeaserFeedHeadline.Editorial>
-  <TeaserFeedLead>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</TeaserFeedLead>
-  <TeaserFeedCredit>An article by <Editorial.A href='#'>Christof Moser</Editorial.A>, 31 December 2017</TeaserFeedCredit>
-</TeaserFeed>
+<TeaserFeed format='Format'
+  title='The quick brown fox jumps over the lazy dog'
+  description='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
+  creditMdast={{type: 'paragraph', children: [
+    {type: 'text', value: 'An article by '},
+    {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
+    {type: 'text', value: ', 31 December 2017'},
+  ]}} />
 ```
 
 ```react
-<TeaserFeed type='editorial' format='Format'>
-  <TeaserFeedHeadline.Editorial>The quick brown fox jumps over the lazy dog</TeaserFeedHeadline.Editorial>
-  <TeaserFeedLead>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</TeaserFeedLead>
-  <TeaserFeedCredit>An article by <Editorial.A href='#'>Christof Moser</Editorial.A>, 31 December 2017</TeaserFeedCredit>
-</TeaserFeed>
+<TeaserFeed kind='editorial' format='Format'
+  title='The quick brown fox jumps over the lazy dog'
+  description='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
+  creditMdast={{type: 'paragraph', children: [
+    {type: 'text', value: 'An article by '},
+    {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
+    {type: 'text', value: ', 31 December 2017'},
+  ]}} />
 ```
 
 
 ```react
-<TeaserFeed type='social' format='Format'>
-  <TeaserFeedHeadline.Editorial>The quick brown fox jumps over the lazy dog</TeaserFeedHeadline.Editorial>
-  <TeaserFeedLead>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</TeaserFeedLead>
-  <TeaserFeedCredit>An article by <Editorial.A href='#'>Christof Moser</Editorial.A>, 31 December 2017</TeaserFeedCredit>
-</TeaserFeed>
+<TeaserFeed kind='editorialSocial' format='Format'
+  title='The quick brown fox jumps over the lazy dog'
+  description='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
+  creditMdast={{type: 'paragraph', children: [
+    {type: 'text', value: 'An article by '},
+    {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
+    {type: 'text', value: ', 31 December 2017'},
+  ]}} />
 ```
 
 ```react
-<TeaserFeed type='meta' format='Format'>
-  <TeaserFeedHeadline.Interaction>The quick brown fox jumps over the lazy dog</TeaserFeedHeadline.Interaction>
-  <TeaserFeedLead>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</TeaserFeedLead>
-  <TeaserFeedCredit>An article by <Editorial.A href='#'>Christof Moser</Editorial.A>, 31 December 2017</TeaserFeedCredit>
-</TeaserFeed>
+<TeaserFeed kind='meta' format='Format'
+  title='The quick brown fox jumps over the lazy dog'
+  description='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
+  creditMdast={{type: 'paragraph', children: [
+    {type: 'text', value: 'An article by '},
+    {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
+    {type: 'text', value: ', 31 December 2017'},
+  ]}} />
 ```
 
 ```react
-<TeaserFeed type='social' format='Format'>
-  <TeaserFeedHeadline.Interaction>The quick brown fox jumps over the lazy dog</TeaserFeedHeadline.Interaction>
-  <TeaserFeedLead>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</TeaserFeedLead>
-  <TeaserFeedCredit>An article by <Editorial.A href='#'>Christof Moser</Editorial.A>, 31 December 2017</TeaserFeedCredit>
-</TeaserFeed>
+<TeaserFeed kind='metaSocial' format='Format'
+  title='The quick brown fox jumps over the lazy dog'
+  description='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
+  creditMdast={{type: 'paragraph', children: [
+    {type: 'text', value: 'An article by '},
+    {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
+    {type: 'text', value: ', 31 December 2017'},
+  ]}} />
 ```

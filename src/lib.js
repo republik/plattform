@@ -43,10 +43,7 @@ export {
   Tweet
 } from './components/Social'
 export {
-  TeaserFeed,
-  TeaserFeedHeadline,
-  TeaserFeedLead,
-  TeaserFeedCredit
+  TeaserFeed
 } from './components/TeaserFeed'
 export {
   TeaserFrontImage,

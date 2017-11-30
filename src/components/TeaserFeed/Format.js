@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { sansSerifMedium14, sansSerifMedium16 } from '../Typography/styles'
 import { css } from 'glamor'
-import colors from '../../theme/colors'
+import { colorForKind } from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { underline } from '../../lib/styleMixins'
 
@@ -18,8 +18,8 @@ const styles = {
   })
 }
 
-export const Format = ({ children, type }) => {
-  const color = (type && colors[type]) || {}
+export const Format = ({ children, kind }) => {
+  const color = kind && colorForKind(kind)
   return (
     <p {...styles.main} style={{ color }}>
       {children}
@@ -29,7 +29,7 @@ export const Format = ({ children, type }) => {
 
 Format.propTypes = {
   children: PropTypes.node.isRequired,
-  type: PropTypes.oneOf([null, 'editorial', 'meta', 'social'])
+  kind: PropTypes.oneOf(['editorial', 'meta', 'metaSocial', 'editorialSocial'])
 }
 
 export default Format

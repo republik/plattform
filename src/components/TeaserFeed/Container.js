@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { Format } from './Format'
+import colors, { colorForKind } from '../../theme/colors'
 
 const styles = {
   main: css({
@@ -17,11 +17,11 @@ const styles = {
   })
 }
 
-const Teaser = ({ children, type, format, interaction }) => {
-  const borderColor = (format && type && colors[type]) || {}
+const Teaser = ({ children, kind, format, interaction }) => {
+  const borderColor = format && kind && colorForKind(kind)
   return (
     <div {...styles.main} style={{ borderColor }}>
-      {format && <Format type={type}>{format}</Format>}
+      {format && <Format kind={kind}>{format}</Format>}
       {children}
     </div>
   )
@@ -29,7 +29,7 @@ const Teaser = ({ children, type, format, interaction }) => {
 
 Teaser.propTypes = {
   children: PropTypes.node.isRequired,
-  type: PropTypes.oneOf(['editorial', 'meta', 'social']),
+  kind: PropTypes.oneOf(['editorial', 'meta', 'metaSocial', 'editorialSocial']),
   format: PropTypes.string,
   interaction: PropTypes.bool
 }

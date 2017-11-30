@@ -1,8 +1,69 @@
-import * as Headline from './Headline'
+import React from 'react'
+import Container from './Container'
+import * as Headlines from './Headline'
+import Lead from './Lead'
+import Credit from './Credit'
+import { css } from 'glamor'
+import { renderMdast } from 'mdast-react-render'
+import { Editorial } from '../Typography'
 
-export { default as TeaserFeed } from './Teaser'
-export const TeaserFeedHeadline = {
-  ...Headline
+import {
+  matchType,
+  matchParagraph
+} from 'mdast-react-render/lib/utils'
+
+const styles = {
+  link: css({
+    color: 'inherit',
+    textDecoration: 'none'
+  })
 }
-export { default as TeaserFeedLead } from './Lead'
-export { default as TeaserFeedCredit } from './Credit'
+
+const br = {
+  matchMdast: matchType('break'),
+  component: () => <br />,
+  isVoid: true
+}
+const link = {
+  matchMdast: matchType('link'),
+  props: node => ({
+    title: node.title,
+    href: node.url
+  }),
+  component: Editorial.A
+}
+const creditSchema = {
+  rules: [{
+    matchMdast: matchParagraph,
+    component: Credit,
+    rules: [
+      br,
+      link
+    ]
+  }]
+}
+
+const DefaultLink = ({ children, slug }) => children
+
+export const TeaserFeed = ({ kind, format, slug, title, description, creditMdast, Link = DefaultLink }) => {
+  const Headline = kind && kind.indexOf('meta') !== -1
+    ? Headlines.Interaction
+    : Headlines.Editorial
+
+  return (
+    <Container kind={kind} format={format}>
+      <Headline>
+        <Link slug={slug}>
+          <a {...styles.link}>{title}</a>
+        </Link>
+      </Headline>
+      <Lead>
+        <Link slug={slug}>
+          <a {...styles.link}>{description}</a>
+        </Link>
+      </Lead>
+      {!!creditMdast && renderMdast(creditMdast, creditSchema)}
+    </Container>
+  )
+}
+
