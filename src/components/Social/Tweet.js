@@ -53,9 +53,9 @@ const Tweet = ({
         handle={userScreenName}
         date={date}
       />
-      {html && <p {...styles.text} dangerouslySetInnerHTML={
+      <p {...styles.text} dangerouslySetInnerHTML={
         {__html: html}
-      }/>}
+      }/>
       {image && (
         <Figure>
           <FigureImage src={image} alt='' />
