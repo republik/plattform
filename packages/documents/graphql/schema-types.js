@@ -17,6 +17,9 @@ type Meta {
   twitterDescription: String
   publishDate: DateTime
   template: String
+  kind: String
+  format: String
+  credits: JSON
 }
 
 # implements FileInterface
