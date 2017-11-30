@@ -7,7 +7,7 @@
 
 require('dotenv').config()
 
-const { lib: { redis } } = require('backend-modules-base')
+const { lib: { redis } } = require('@orbiting/backend-modules-base')
 const getRepos = require('../graphql/resolvers/_queries/repos')
 const { latestPublications: getLatestPublications } = require('../graphql/resolvers/Repo')
 const { document: getDocument } = require('../graphql/resolvers/Commit')
