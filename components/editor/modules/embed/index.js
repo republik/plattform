@@ -34,10 +34,13 @@ query getTwitterEmbed($id: ID!, $embedType: EmbedType!) {
     __typename
     ... on TwitterEmbed {
       id
-      text
+      createdAt
+      html
       userId
       userName
       userScreenName
+      userProfileImageUrl
+      image
     }
   }
 }

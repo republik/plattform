@@ -22,7 +22,8 @@ export default ({ matchSource, matchUrl, getQueryParams, TYPE }) => ({
         kind: 'block',
         type: TYPE,
         data: {
-          queryParams: getQueryParams(url)
+          queryParams: getQueryParams(url),
+          url
         },
         isVoid: true
       }
