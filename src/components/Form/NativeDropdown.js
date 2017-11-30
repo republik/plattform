@@ -18,12 +18,12 @@ export class NativeDropdown extends PureComponent {
   }
 
   render () {
-    const {label, items, value, onChange} = this.props
+    const {label, items, value, white, black, onChange} = this.props
     const {focus} = this.state
 
     return (
-      <Label top={true} focus={focus} text={label}>
-        <LSelect value={value} onChange={onChange} onFocus={this.onFocus} onBlur={this.onBlur}>
+      <Label top={true} focus={focus} text={label} white={white} black={black}>
+        <LSelect value={value} onChange={onChange} onFocus={this.onFocus} onBlur={this.onBlur} white={white} black={black}>
           {items.map((item, index) => (
             <option key={index} value={item.value}>
               {item.text}

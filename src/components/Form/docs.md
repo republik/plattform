@@ -367,6 +367,20 @@ The virtual dropdown element uses negative margin left/right. This is needed so 
 </div>
 ```
 
+### Black and White
+
+```react|span-3
+<Dropdown black
+  label='Bezeichnung'
+  items={dropdownItems} />
+```
+
+```react|span-3,dark
+<Dropdown white
+  label='Bezeichnung'
+  items={dropdownItems} />
+```
+
 ### VirtualDropdown Internal Components
 
 #### `<Items />`

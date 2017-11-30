@@ -85,7 +85,7 @@ export class VirtualDropdown extends PureComponent {
   }
 
   render () {
-    const {label, items, onChange, value} = this.props
+    const {label, items, onChange, white, black, value} = this.props
     const {focus} = this.state
     const selectedItem = items.find(item => item.value === value)
 
@@ -95,6 +95,8 @@ export class VirtualDropdown extends PureComponent {
           label,
           items,
           focus,
+          white,
+          black,
           onFocus: this.onFocus,
           onBlur: this.onBlur
         })}
@@ -105,15 +107,19 @@ export class VirtualDropdown extends PureComponent {
 
 export default VirtualDropdown
 
-const renderDropdown = ({label, focus, items, onFocus, onBlur}) => ({getButtonProps, getItemProps, isOpen, inputValue, selectedItem, highlightedIndex}) => (
+const renderDropdown = ({label, focus, white, black, items, onFocus, onBlur}) => ({getButtonProps, getItemProps, isOpen, inputValue, selectedItem, highlightedIndex}) => (
   <div {...styles.root}>
     <Inner isOpen={isOpen}>
-      <Label top={!!selectedItem} focus={isOpen || focus} text={label}>
-        <LButton {...getButtonProps()} onFocus={onFocus} onBlur={onBlur}>
+      <Label top={!!selectedItem} focus={isOpen || focus} text={label} white={white && !isOpen} black={black || (white && isOpen)}>
+        <LButton {...getButtonProps()} onFocus={onFocus} onBlur={onBlur} white={white && !isOpen} black={black || (white && isOpen)}>
           {selectedItem ? selectedItem.text : ''}
         </LButton>
         <ArrowDown
-          fill={(isOpen || focus) ? colors.primary : colors.disabled}
+          fill={
+            (black && '#000') ||
+            (white && (isOpen ? '#000' : '#fff')) ||
+            ((isOpen || focus) ? colors.primary : colors.disabled)
+          }
           size={30}
         />
       </Label>
