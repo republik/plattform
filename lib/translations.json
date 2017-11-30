@@ -1,5 +1,5 @@
 {
-  "updated": "2017-11-25T00:18:17.823Z",
+  "updated": "2017-11-29T00:25:30.928Z",
   "title": "live",
   "data": [
     {
@@ -85,6 +85,10 @@
     {
       "key": "repo/list/add/template/editorial",
       "value": "Editorial"
+    },
+    {
+      "key": "repo/list/add/template/meta",
+      "value": "Meta"
     },
     {
       "key": "baseCommit/title",
@@ -229,6 +233,14 @@
     {
       "key": "metaData/field/href",
       "value": "URL"
+    },
+    {
+      "key": "metaData/field/center",
+      "value": "Zentriert"
+    },
+    {
+      "key": "metaData/field/figureFloat",
+      "value": "Für Text optimieren (Desktop Float)"
     },
     {
       "key": "uncommittedChanges/title",

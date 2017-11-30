@@ -67,10 +67,7 @@ export default ({rule, subModules, TYPE}) => {
               {...styles.border}
               {...attributes}
               data-active={active}>
-              <Image data={{
-                src: node.data.get('src') || gray2x1,
-                alt: node.data.get('alt')
-              }} />
+              <Image src={node.data.get('src') || gray2x1} alt={node.data.get('alt')} />
             </span>
           )
         },

@@ -1,15 +1,15 @@
 import React from 'react'
 import MarkdownSerializer from 'slate-mdast-serializer'
-import { Block } from 'slate'
 
-import { matchBlock, createActionButton, buttonStyles } from '../../utils'
-import injectBlock from '../../utils/injectBlock'
+import { matchBlock } from '../../utils'
+import createUi from './ui'
 
 export default ({rule, subModules, TYPE}) => {
+  const editorOptions = rule.editorOptions || {}
+
   const {
-    insertButtonText,
-    defaultProps
-  } = rule.editorOptions || {}
+    identifier = 'TITLE'
+  } = editorOptions
 
   const childSerializer = new MarkdownSerializer({
     rules: subModules.reduce(
@@ -30,13 +30,15 @@ export default ({rule, subModules, TYPE}) => {
       return {
         kind: 'block',
         type: TYPE,
+        data: node.data,
         nodes: childSerializer.fromMdast(node.children, 0, node, rest)
       }
     },
     toMdast: (object, index, parent, rest) => {
       return {
         type: 'zone',
-        identifier: TYPE,
+        identifier,
+        data: object.data,
         children: childSerializer.toMdast(object.nodes, 0, object, rest)
       }
     }
@@ -54,67 +56,20 @@ export default ({rule, subModules, TYPE}) => {
       serializer
     },
     changes: {},
-    ui: {
-      insertButtons: [
-        insertButtonText && createActionButton({
-          isDisabled: ({ value }) => {
-            return value.isBlurred
-          },
-          reducer: ({ value, onChange }) => event => {
-            event.preventDefault()
-
-            return onChange(
-              value
-                .change()
-                .call(
-                  injectBlock,
-                  Block.create({
-                    type: TYPE,
-                    nodes: subModules.map(module => Block.create(module.TYPE))
-                  })
-                )
-            )
-          }
-        })(
-          ({ disabled, visible, ...props }) =>
-            <span
-              {...buttonStyles.insert}
-              {...props}
-              data-disabled={disabled}
-              data-visible={visible}
-              >
-              {insertButtonText}
-            </span>
-        )
-      ]
-    },
+    ui: createUi({
+      TYPE,
+      subModules,
+      editorOptions
+    }),
     plugins: [
       {
         renderNode ({node, children, attributes}) {
           if (!serializerRule.match(node)) return
           return (
-            <Container {...defaultProps} {...node.data.toJS()} attributes={attributes}>
+            <Container {...node.data.toJS()} attributes={attributes}>
               {children}
             </Container>
           )
-        },
-        onKeyDown (event, change) {
-          const isBackspace = event.key === 'Backspace'
-          if (event.key !== 'Enter' && !isBackspace) return
-
-          const { value } = change
-          const inBlock = value.document.getClosest(
-            value.startBlock.key,
-            serializerRule.match
-          )
-          if (!inBlock) return
-
-          const isEmpty = !inBlock.text
-          if (isEmpty && isBackspace) {
-            event.preventDefault()
-            return change
-              .removeNodeByKey(inBlock.key)
-          }
         },
         schema: {
           blocks: {
