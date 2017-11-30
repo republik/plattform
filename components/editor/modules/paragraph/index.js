@@ -100,7 +100,9 @@ export default ({rule, subModules, TYPE}) => {
             <Paragraph
               attributes={{...attributes, style: {position: 'relative'}}}
               data={node.data.toJS()}>
-              {children}
+              <span style={{position: 'relative', display: 'block'}}>
+                {children}
+              </span>
             </Paragraph>
           )
         },

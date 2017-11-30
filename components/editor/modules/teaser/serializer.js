@@ -6,9 +6,36 @@ import {
   matchHeading
 } from 'mdast-react-render/lib/utils'
 
-import { gray2x1 } from '../../utils/placeholder'
+import { getData } from './'
 
-const fromMdast = ({
+export const getSubmodules = ({ subModules }) => {
+  const [titleModule, leadModule, formatModule, paragraphModule] = subModules
+
+  if (!titleModule) {
+    throw new Error('Missing headline with type `TITLE` submodule')
+  }
+
+  if (!leadModule) {
+    throw new Error('Missing headline with type `LEAD` submodule')
+  }
+
+  if (!formatModule) {
+    throw new Error('Missing headline with type `FORMAT` submodule')
+  }
+
+  if (!paragraphModule) {
+    throw new Error('Missing paragraph submodule')
+  }
+
+  return {
+    titleModule,
+    leadModule,
+    formatModule,
+    paragraphModule
+  }
+}
+
+export const fromMdast = ({
   TYPE,
   subModules
 }) => (node,
@@ -19,25 +46,12 @@ const fromMdast = ({
     context
   }
 ) => {
-  const titleModule = subModules.find(m => m.TYPE === 'TITLE')
-  if (!titleModule) {
-    throw new Error('Missing headline with type `TITLE` submodule')
-  }
-
-  const leadModule = subModules.find(m => m.TYPE === 'LEAD')
-  if (!leadModule) {
-    throw new Error('Missing headline with type `TITLE` submodule')
-  }
-
-  const formatModule = subModules.find(m => m.TYPE === 'FORMAT')
-  if (!formatModule) {
-    throw new Error('Missing headline with type `TITLE` submodule')
-  }
-
-  const paragraphModule = subModules.find(m => m.name === 'paragraph')
-  if (!paragraphModule) {
-    throw new Error('Missing paragraph submodule')
-  }
+  const {
+    titleModule,
+    leadModule,
+    formatModule,
+    paragraphModule
+  } = getSubmodules({ subModules })
 
   const titleSerializer = titleModule.helpers.serializer
   const leadSerializer = leadModule.helpers.serializer
@@ -51,15 +65,10 @@ const fromMdast = ({
   const format = node.children.find(matchHeading(6))
   const credit = node.children.find(n => matchParagraph(n) && n !== imageParagraph)
 
-  const data = {
-    textPosition: 'topleft',
-    color: '#fff',
-    bgColor: '#000',
-    center: false,
-    image: imageParagraph
-      ? imageParagraph.children[0].url
-      : gray2x1,
-    ...node.data
+  const data = getData(node.data)
+
+  if (imageParagraph) {
+    data.image = imageParagraph.children[0].url
   }
 
   const nodes = [
@@ -78,7 +87,7 @@ const fromMdast = ({
   return result
 }
 
-const toMdast = ({
+export const toMdast = ({
   TYPE,
   subModules
 }) => (
@@ -112,7 +121,7 @@ const toMdast = ({
   }
 }
 
-export default options =>
+export const getSerializer = options =>
   new MarkdownSerializer({
     rules: [
       {

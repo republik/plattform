@@ -15,7 +15,7 @@ import {
 
 const styles = {
   line: css({
-    // position: 'absolute',
+    position: 'absolute',
     margin: 0,
     padding: 0,
     top: 0,
@@ -24,12 +24,12 @@ const styles = {
     borderTop: `1px dashed ${colors.primary}`
   }),
   dragButton: css(
+    buttonStyles.mark,
     {
       position: 'absolute',
       top: 0,
       left: 0
-    },
-    buttonStyles.mark
+    }
   )
 }
 
@@ -62,17 +62,16 @@ export const TeaserInlineUI = createDropTarget(createMoveDragSource(
     const dragSource = connectDragSource(
       <span contentEditable={false} {...styles.dragButton}><ArrowsIcon /></span>)
     const dropTarget = connectDropTarget(
-      <div style={{ margin: 0 }}> {
+      <span> {
         children
-      } </div>
+      } </span>
     )
 
     return (
-      <div style={{position: 'relative', margin: 0}}>
-        { <hr {...styles.line} />}
+      <span style={{ position: 'relative', display: 'block' }}>
         {dragSource}
         {dropTarget}
-      </div>
+      </span>
     )
   }
 ))

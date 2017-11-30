@@ -48,6 +48,16 @@ template: ${template}
 
 ![desert](/static/desert.jpg)
 
+# The sand is near aka Teaser 3
+
+An article by [Christof Moser](), 31 December 2017
+
+<hr/></section>
+
+<section><h6>TEASER</h6>
+
+![desert](/static/desert.jpg)
+
 ###### Teaser 1
 
 # The sand is near
@@ -82,16 +92,8 @@ An article by [Christof Moser](), 31 December 2017
 
 <hr/></section>
 
-<section><h6>TEASER</h6>
-
-###### Teaser 4
-
-# The sand is near
-
-An article by [Christof Moser](), 31 December 2017
-
-<hr/></section>
 `
+
   )
 
   const Container = rule.component

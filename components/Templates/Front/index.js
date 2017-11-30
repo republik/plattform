@@ -14,29 +14,15 @@ import {
   TeaserFrontAuthorLink
 } from '@project-r/styleguide'
 
-/*
-<TeaserFrontImage
-  image='/static/desert.jpg'
-  color='#fff' bgColor='#000'>
-  <Editorial.Format>Neutrum</Editorial.Format>
-  <TeaserFrontImageHeadline.Editorial>The sand is near</TeaserFrontImageHeadline.Editorial>
-  <TeaserFrontLead>
-    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
-  </TeaserFrontLead>
-  <TeaserFrontCredit>
-    An article by <TeaserFrontAuthorLink href='#' color='#adf'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
-  </TeaserFrontCredit>
-</TeaserFrontImage>
-
-*/
-
 const paragraph = {
   matchMdast: matchParagraph,
   component: ({ children, attributes = {} }) =>
     <TeaserFrontCredit {...attributes}>{children}</TeaserFrontCredit>,
   editorModule: 'paragraph',
   editorOptions: {
-    formatButtonText: 'Paragraph'
+    type: 'credit',
+    formatButtonText: 'Paragraph',
+    placeholder: 'Credit'
   },
   rules: [
     {
@@ -130,8 +116,8 @@ const schema = {
           editorModule: 'teaser',
           rules: [
             image,
-            lead,
             title,
+            lead,
             format,
             paragraph
           ]

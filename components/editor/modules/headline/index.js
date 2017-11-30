@@ -68,7 +68,9 @@ export default ({rule, subModules, TYPE}) => {
           if (!title.match(node)) return
           return (
             <rule.component attributes={{...attributes, style: {position: 'relative'}}}>
-              {children}
+              <span style={{position: 'relative', display: 'block'}}>
+                {children}
+              </span>
             </rule.component>
           )
         },
