@@ -90,8 +90,10 @@ interface Embed {
 
 type TwitterEmbed implements Embed {
   id: ID!
+  text: String!
   html: String!
   createdAt: String!
+  retrievedAt: String!
   userId: String!
   userName: String!
   userScreenName: String!
