@@ -53,6 +53,16 @@ module.exports = {
       }
     })
 
+    let credits
+    visit(mdast, 'zone', node => {
+      if (node.identifier === 'TITLE') {
+        const ps = node.children.filter(child => child.type === 'paragraph')
+        if (ps.length >= 2) {
+          credits = ps[ps.length - 1].children
+        }
+      }
+    })
+
     // TODO remove when editor sends a real date for meta.publishDate
     const parsePublishDate = timeParse('%d.%m.%Y %H:%M')
     const publishDate = mdast.meta.publishDate
@@ -63,6 +73,7 @@ module.exports = {
       content: mdast,
       meta: {
         ...mdast.meta,
+        credits,
         publishDate
       }
     }
