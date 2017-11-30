@@ -120,7 +120,7 @@ const schema = {
                 'EMBEDTWITTER'
               ),
               component: props => (
-                <Tweet {...props.data} date={new Date(props.data.createdAt)} />
+                <Tweet {...props.data} />
               ),
               editorModule: 'embedTwitter',
               editorOptions: {

@@ -35,6 +35,8 @@ query getTwitterEmbed($id: ID!, $embedType: EmbedType!) {
     ... on TwitterEmbed {
       id
       createdAt
+      retrievedAt
+      text
       html
       userId
       userName
