@@ -28,9 +28,13 @@ PgDb.connect().then(async (pgdb) => {
     })
 
     // insert lunch crowdfunding
+    console.warn('#####################################################')
+    console.warn('LAUNCH crowdfunding begins NOW! Remove before flight!')
+    console.warn('#####################################################')
     const launch = await transaction.public.crowdfundings.insertAndGet({
       name: 'LAUNCH',
-      beginDate: '2018-01-14T07:00:00.000+01:00',
+      // beginDate: '2018-01-14T07:00:00.000+01:00',
+      beginDate: now,
       endDate: '2019-01-15T07:00:00.000+01:00'
     })
 
