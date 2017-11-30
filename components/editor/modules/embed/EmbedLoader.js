@@ -50,7 +50,8 @@ export default (query, Component) => (
               this.setState({ error: null, loading: false })
               editor.change(t =>
                 t.setNodeByKey(node.key, { data: {
-                  ...data.embed
+                  ...data.embed,
+                  url: node.data.get('url')
                 } })
               )
             }
