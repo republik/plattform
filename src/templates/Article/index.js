@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Container from './Container'
+import Container, { withMeta } from './Container'
 import Center from '../../components/Center'
 import TitleBlock from '../../components/TitleBlock'
 import * as Editorial from '../../components/Typography/Editorial'
@@ -187,12 +187,17 @@ const cover = {
 
 const createSchema = ({
   documentEditorOptions = {},
-  titleBlockAppend = null
+  titleBlockAppend = null,
+  repoPrefix = 'article-'
 } = {}) => ({
+  repoPrefix,
   rules: [
     {
       matchMdast: matchType('root'),
       component: Container,
+      props: node => ({
+        meta: node.meta
+      }),
       editorModule: 'documentPlain',
       editorOptions: documentEditorOptions,
       rules: [
@@ -202,7 +207,7 @@ const createSchema = ({
           editorOptions: {
             customFields: [
               {
-                label: 'Gattung',
+                label: 'Ebene',
                 key: 'kind',
                 items: [
                   {value: 'editorial', text: 'Editorial'},
@@ -233,8 +238,7 @@ const createSchema = ({
             </TitleBlock>
           ),
           props: (node, index, parent) => ({
-            center: node.data.center,
-            kind: parent.meta.kind
+            center: node.data.center
           }),
           editorModule: 'title',
           editorOptions: {
@@ -243,15 +247,12 @@ const createSchema = ({
           rules: [
             {
               matchMdast: matchHeading(1),
-              props: (node, index, parent) => ({
-                kind: parent.kind
-              }),
-              component: ({ children, attributes, kind }) => {
-                const Headline = kind && kind.indexOf('meta') !== -1
+              component: withMeta(({ children, attributes, meta }) => {
+                const Headline = meta.kind && meta.kind.indexOf('meta') !== -1
                   ? Interaction.Headline
                   : Editorial.Headline
                 return <Headline attributes={attributes}>{children}</Headline>
-              },
+              }),
               editorModule: 'headline',
               editorOptions: {
                 type: 'H1',
