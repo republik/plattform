@@ -8,8 +8,7 @@ import { renderMdast } from 'mdast-react-render'
 import { Editorial } from '../Typography'
 
 import {
-  matchType,
-  matchParagraph
+  matchType
 } from 'mdast-react-render/lib/utils'
 
 const styles = {
