@@ -3,9 +3,14 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
-import { link, sansSerifRegular15, sansSerifRegular18 } from '../Typography/styles'
-import { Figure, FigureImage } from '../Figure'
+import {
+  link,
+  sansSerifRegular15,
+  sansSerifRegular18
+} from '../Typography/styles'
+import { Figure, FigureImage, FigureCaption } from '../Figure'
 import { Header } from './Header'
+import PlayIcon from 'react-icons/lib/md/play-arrow'
 
 const styles = {
   container: css({
@@ -31,6 +36,18 @@ const styles = {
     '& a': {
       ...link
     }
+  }),
+  mediaContainer: css({
+    display: 'inline-block',
+    position: 'relative'
+  }),
+  playIcon: css({
+    color: '#fff',
+    lineHeight: 0,
+    position: 'absolute',
+    fontSize: '80px',
+    left: 'calc(50% - 40px)',
+    top: 'calc(50% - 40px)'
   })
 }
 
@@ -42,7 +59,9 @@ const Tweet = ({
   userScreenName,
   date,
   userProfileImageUrl,
-  image
+  image,
+  more,
+  playable
 }) => {
   return (
     <div {...styles.container}>
@@ -53,12 +72,20 @@ const Tweet = ({
         handle={userScreenName}
         date={date}
       />
-      <p {...styles.text} dangerouslySetInnerHTML={
-        {__html: html}
-      }/>
+      <p {...styles.text} dangerouslySetInnerHTML={{ __html: html }} />
       {image && (
         <Figure>
-          <FigureImage src={image} alt='' />
+          <a href={url} target="_blank" {...styles.mediaContainer}>
+            {playable && <span {...styles.playIcon}><PlayIcon/></span>}
+            <FigureImage src={image} alt="" />
+          </a>
+          {more && (
+            <FigureCaption>
+              <a href={url} target="_blank" {...css(link)}>
+                {more}
+              </a>
+            </FigureCaption>
+          )}
         </Figure>
       )}
     </div>
@@ -73,7 +100,9 @@ Tweet.propTypes = {
   userName: PropTypes.string.isRequired,
   userScreenName: PropTypes.string.isRequired,
   date: PropTypes.object.isRequired,
-  image: PropTypes.string
+  image: PropTypes.string,
+  more: PropTypes.string,
+  playable: PropTypes.bool
 }
 
 Tweet.defaultProps = {
