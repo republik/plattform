@@ -123,13 +123,23 @@ export default ({rule, subModules, TYPE}) => {
                 }
               ].filter(Boolean),
               normalize: (change, reason, {node, index, child}) => {
+                let orderedTypes = orderedSubModules
+                  .map(subModule => subModule.TYPE)
+                let hasFigure
+                if (figureModule) {
+                  hasFigure = !!node.nodes.find(n => n.type === figureModule.TYPE)
+                  if (!hasFigure) {
+                    orderedTypes = orderedTypes.filter(type => type !== figureModule.TYPE)
+                  }
+                }
+
                 if (reason === 'child_required') {
                   change.insertNodeByKey(
                     node.key,
                     index,
                     {
                       kind: 'block',
-                      type: orderedSubModules[index].TYPE
+                      type: orderedTypes[index]
                     }
                   )
                 }
@@ -137,7 +147,7 @@ export default ({rule, subModules, TYPE}) => {
                   change.wrapBlockByKey(
                     child.key,
                     {
-                      type: orderedSubModules[index].TYPE
+                      type: orderedTypes[index]
                     }
                   )
                 }
@@ -145,13 +155,12 @@ export default ({rule, subModules, TYPE}) => {
                   change.setNodeByKey(
                     child.key,
                     {
-                      type: orderedSubModules[index].TYPE
+                      type: orderedTypes[index]
                     }
                   )
                 }
                 if (reason === 'child_unknown') {
-                  const hasFigure = figureModule && !!node.nodes.find(n => n.type === figureModule.TYPE)
-                  if (index >= orderedSubModules.length - (figureModule && !hasFigure ? 1 : 0)) {
+                  if (index >= orderedTypes.length) {
                     change.unwrapNodeByKey(child.key)
                   }
                 }
