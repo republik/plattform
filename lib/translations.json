@@ -1,5 +1,5 @@
 {
-  "updated": "2017-09-18T10:04:42.657Z",
+  "updated": "2017-12-01T17:33:01.287Z",
   "title": "live",
   "data": [
     {
@@ -33,6 +33,18 @@
     {
       "key": "api/github/yaml/warning",
       "value": "✋ The message contains yaml values used by Project R's CMS. Changing the values here is not supported (yet) and might result in unexpected consequences."
+    },
+    {
+      "key": "api/publish/scheduledAt/tooFarInTheFuture",
+      "value": "Sorry, the latest possible scheduling date is {days} into the future. "
+    },
+    {
+      "key": "api/twitter/morephotos/other",
+      "value": "{count} weitere Fotos"
+    },
+    {
+      "key": "api/twitter/morephotos/1",
+      "value": "1 weiteres Foto"
     }
   ]
 }

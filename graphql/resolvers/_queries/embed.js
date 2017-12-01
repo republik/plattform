@@ -12,13 +12,13 @@ const { getVimeoVideoById } = require('../../../lib/vimeo')
 // // One capturing group at match[1] that catches the video id
 // const VIMEO_REGEX = /^(?:http|https)?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^/]*)\/videos\/|)(\d+)(?:|\/\?)$/
 
-module.exports = async (_, args, { user }) => {
+module.exports = async (_, args, { user, t }) => {
   ensureUserHasRole(user, 'editor')
 
   const { id, embedType } = args
 
   if (embedType === 'TwitterEmbed') {
-    const tweetData = await getTweetById(id)
+    const tweetData = await getTweetById(id, t)
 
     return {
       embedType,

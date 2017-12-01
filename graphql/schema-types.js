@@ -99,6 +99,8 @@ type TwitterEmbed implements Embed {
   userScreenName: String!
   userProfileImageUrl: String!,
   image: String
+  more: String
+  playable: Boolean!
 }
 
 type YoutubeEmbed implements Embed {
