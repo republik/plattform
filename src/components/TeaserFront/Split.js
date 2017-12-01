@@ -23,7 +23,8 @@ const styles = {
   content: css({
     padding: '15px 15px 45px 15px',
     [mUp]: {
-      padding: '0 0 0 5%'
+      padding: '0 0 0 5%',
+      width: '50%'
     }
   }),
   contentReverse: css({
@@ -34,7 +35,8 @@ const styles = {
   contentPortrait: css({
     padding: '15px 15px 45px 15px',
     [mUp]: {
-      padding: '5%'
+      padding: '5%',
+      width: '60%',
     },
     [dUp]: {
       padding: '5% 5% 5% 10%'
