@@ -125,9 +125,8 @@ export default ({rule, subModules, TYPE}) => {
               normalize: (change, reason, {node, index, child}) => {
                 let orderedTypes = orderedSubModules
                   .map(subModule => subModule.TYPE)
-                let hasFigure
                 if (figureModule) {
-                  hasFigure = !!node.nodes.find(n => n.type === figureModule.TYPE)
+                  const hasFigure = !!node.nodes.find(n => n.type === figureModule.TYPE)
                   if (!hasFigure) {
                     orderedTypes = orderedTypes.filter(type => type !== figureModule.TYPE)
                   }
