@@ -11,7 +11,7 @@ const schemas = {
 
 export const getSchema = template => {
   const key = template || Object.keys(schemas)[0]
-  const schema = schemas[key]
+  const schema = schemas[key] || (key === 'editorial' && schemas.article)
 
   if (!schema) {
     throw new Error(`Unkown Schema ${key}`)
