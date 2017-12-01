@@ -2,12 +2,13 @@ import React from 'react'
 import { css } from 'glamor'
 import { Map, Set } from 'immutable'
 
-import { Interaction, Label, colors } from '@project-r/styleguide'
+import { Interaction, Dropdown, Field, Label, colors } from '@project-r/styleguide'
 
 import withT from '../../../../lib/withT'
 import MetaForm from '../../utils/MetaForm'
 import FBPreview from './FBPreview'
 import TwitterPreview from './TwitterPreview'
+import SidebarForm from '../../SidebarForm'
 
 const styles = {
   container: css({
@@ -23,7 +24,7 @@ const styles = {
 
 const getWidth = key => key.match(/title/i) ? '100%' : ''
 
-const MetaData = ({value, editor, additionalFields = [], teaser: Teaser, t}) => {
+const MetaData = ({value, editor, additionalFields = [], customFields = [], teaser: Teaser, t}) => {
   const node = value.document
 
   const genericKeys = Set([
@@ -79,6 +80,26 @@ const MetaData = ({value, editor, additionalFields = [], teaser: Teaser, t}) => 
         </Interaction.H2>
         <br />
         <MetaForm data={genericData} onInputChange={onInputChange} black getWidth={getWidth} />
+        <SidebarForm getWidth={() => '50%'}>
+          {customFields.map(customField => {
+            const label = customField.label || t(`metaData/field/${customField.key}`, undefined, customField.key)
+            const value = node.data.get(customField.key)
+            const onChange = onInputChange(customField.key)
+            if (customField.items) {
+              return <Dropdown key={customField.key}
+                black
+                items={customField.items}
+                label={label}
+                value={value}
+                onChange={item => onChange(undefined, item.value)} />
+            }
+            return <Field key={customField.key}
+              black
+              label={label}
+              value={value}
+              onChange={onChange} />
+          })}
+        </SidebarForm>
         {!!Teaser && (<div>
           <Label>{t('metaData/preview')}</Label><br />
           <Teaser {...node.data.toJS()} />

@@ -14,6 +14,7 @@ import Editor from '../../components/editor'
 import EditSidebar from '../../components/EditSidebar'
 import Loader from '../../components/Loader'
 import withT from '../../lib/withT'
+import withMe from '../../lib/withMe'
 
 import { errorToString } from '../../lib/utils/errors'
 import initLocalStore from '../../lib/utils/localStorage'
@@ -245,7 +246,7 @@ class EditorPage extends Component {
     const isNew = commitId === 'new'
     let committedEditorState
     if (isNew) {
-      committedEditorState = this.editor.newDocument(url.query)
+      committedEditorState = this.editor.newDocument(url.query, this.props.me)
     } else {
       const commit = repo.commit
       if (!commit) {
@@ -420,6 +421,7 @@ export default compose(
   withData,
   withT,
   withAuthorization(['editor']),
+  withMe,
   graphql(getCommitById, {
     skip: ({ url }) => url.query.commitId === 'new' || !url.query.commitId,
     options: ({ url }) => ({
