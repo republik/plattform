@@ -85,7 +85,7 @@ However if now an error occurs you'll end up with a padding-less error message a
 
 ```react|responsive
 <Loader
-  height='calc(100vh - 80px)'
+  style={{minHeight: 'calc(100vh - 80px)'}}
   error='This is a nice error message. Please avoid edge-to-edge error messages please.'
   ErrorContainer={NarrowContainer} />
 ```
