@@ -2023,7 +2023,7 @@ test('fetch twitter data', async (t) => {
   t.deepEqual(result.data.embed, {
     __typename: 'TwitterEmbed',
     id: '931088218279366656',
-    text: 'What’s the manager’s message to the fans ahead of #AFCvTHFC?\n\n“Just to support the team and stand with us for the 9… https://t.co/iwipqW8UlF',
+    text: 'What’s the manager’s message to the fans ahead of #AFCvTHFC?\n\n“Just to support the team and stand with us for the 90 minutes”\n\n#WeAreTheArsenal🔴 https://t.co/GQM6lFfcVr',
     userName: 'Arsenal FC'
   })
   t.end()
