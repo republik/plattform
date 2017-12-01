@@ -6,7 +6,7 @@ export default curry(
       value
         .change()
         .setNodeByKey(node.key, {
-          data: fieldValue
+          data: fieldValue || fieldValue === false
             ? node.data.set(key, fieldValue)
             : node.data.remove(key)
         })

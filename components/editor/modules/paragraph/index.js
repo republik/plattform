@@ -96,10 +96,11 @@ export default ({rule, subModules, TYPE}) => {
         renderNode ({node, children, attributes}) {
           if (!paragraph.match(node)) return
 
+          // #TODO: Either data attribute or spread
           return (
             <Paragraph
               attributes={{...attributes, style: {position: 'relative'}}}
-              data={node.data.toJS()}>
+              data={node.data.toJS()} {...node.data.toJS()}>
               <span style={{position: 'relative', display: 'block'}}>
                 {children}
               </span>

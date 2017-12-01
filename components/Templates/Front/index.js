@@ -11,25 +11,33 @@ import {
   TeaserFrontImageHeadline,
   TeaserFrontLead,
   TeaserFrontCredit,
-  TeaserFrontAuthorLink
+  TeaserFrontAuthorLink,
+  TeaserFrontTypo,
+  TeaserFrontTypoHeadline,
+  TeaserFrontSplitHeadline,
+  TeaserFrontSplit,
+  TeaserFrontTileRow,
+  TeaserFrontTile,
+  TeaserFrontTileHeadline
 } from '@project-r/styleguide'
 
-const paragraph = component => ({
+const paragraph = (type, component) => ({
   matchMdast: matchParagraph,
   component,
   editorModule: 'paragraph',
   editorOptions: {
-    type: 'credit',
+    type,
     placeholder: 'Credit'
   },
   rules: [
     {
       matchMdast: matchType('link'),
-      props: node => ({
+      props: (node, index, parent) => ({
         data: {
           title: node.title,
           href: node.url
-        }
+        },
+        color: parent.data.linkColor
       }),
       component: ({ children, data, attributes = {} }) =>
         <TeaserFrontAuthorLink
@@ -38,34 +46,43 @@ const paragraph = component => ({
           {...attributes}>
           {children}
         </TeaserFrontAuthorLink>,
-      editorModule: 'link'
+      editorModule: 'link',
+      editorOptions: {
+        type: 'teaserLink'
+      }
     }
   ]
 })
 
-const title = component => ({
+const title = (type, component) => ({
   matchMdast: matchHeading(1),
   component,
+  props (node, index, parent) {
+    return {
+      kind: parent.data.kind,
+      titleSize: parent.data.titleSize
+    }
+  },
   editorModule: 'headline',
   editorOptions: {
-    type: 'title',
+    type,
     placeholder: 'Titel',
     depth: 1
   }
 })
 
-const lead = component => ({
+const lead = (type, component) => ({
   matchMdast: matchHeading(4),
   component,
   editorModule: 'headline',
   editorOptions: {
-    type: 'lead',
+    type,
     placeholder: 'Lead',
     depth: 4
   }
 })
 
-const format = {
+const format = type => ({
   matchMdast: matchHeading(6),
   component: ({ children, attributes = {} }) =>
     <Editorial.Format {...attributes}>
@@ -73,16 +90,214 @@ const format = {
     </Editorial.Format>,
   editorModule: 'headline',
   editorOptions: {
-    type: 'format',
+    type,
     placeholder: 'Format',
     depth: 6
   }
-}
+})
 
 const image = {
   matchMdast: matchImageParagraph,
   component: () => null,
   isVoid: true
+}
+
+const frontImageTeaser = {
+  matchMdast: node => {
+    return matchZone('TEASER')(node) && node.data.teaserType === 'frontImage'
+  },
+  component: ({ children, attributes = {}, ...props }) => {
+    return <TeaserFrontImage {...attributes} {...props}>
+      {children}
+    </TeaserFrontImage>
+  },
+
+  editorModule: 'teaser',
+  editorOptions: {
+    type: 'frontImage',
+    teaserType: 'frontImage',
+    insertButton: 'Front Image'
+  },
+  rules: [
+    image,
+    title(
+      'frontImageTitle',
+      ({ children, attributes = {}, ...props }) => {
+        const { kind, titleSize } = props
+        const Component = kind === 'editorial'
+          ? TeaserFrontImageHeadline.Editorial
+          : TeaserFrontImageHeadline.Interaction
+        const sizes = {
+          medium: titleSize === 'medium',
+          large: titleSize === 'large'
+        }
+        return <Component {...attributes} {...sizes}>
+          {children}
+        </Component>
+      }
+    ),
+    lead(
+      'frontImageLead',
+      ({ children, attributes = {} }) =>
+        <TeaserFrontLead {...attributes}>
+          {children}
+        </TeaserFrontLead>
+    ),
+    format('frontImageFormat'),
+    paragraph(
+      'frontImageCredit',
+      ({ children, attributes = {} }) =>
+        <TeaserFrontCredit {...attributes}>{children}</TeaserFrontCredit>
+    )
+  ]
+}
+
+const frontSplitTeaser = {
+  matchMdast: node => {
+    return matchZone('TEASER')(node) && node.data.teaserType === 'frontSplit'
+  },
+  component: ({ children, attributes = {}, ...props }) => {
+    return <TeaserFrontSplit {...attributes} {...props}>
+      {children}
+    </TeaserFrontSplit>
+  },
+
+  editorModule: 'teaser',
+  editorOptions: {
+    type: 'frontSplit',
+    teaserType: 'frontSplit',
+    insertButton: 'Front Split'
+  },
+  rules: [
+    image,
+    title(
+      'frontSplitTitle',
+      ({ children, attributes = {}, ...props }) => {
+        const { kind, titleSize } = props
+        const Component = kind === 'editorial'
+          ? TeaserFrontSplitHeadline.Editorial
+          : TeaserFrontSplitHeadline.Interaction
+        const sizes = {
+          medium: titleSize === 'medium',
+          large: titleSize === 'large'
+        }
+        return <Component {...attributes} {...sizes}>
+          {children}
+        </Component>
+      }
+    ),
+    lead(
+      'frontSplitLead',
+      ({ children, attributes = {} }) =>
+        <TeaserFrontLead {...attributes}>
+          {children}
+        </TeaserFrontLead>
+    ),
+    format('frontSplitFormat'),
+    paragraph(
+      'frontSplitCredit',
+      ({ children, attributes = {} }) =>
+        <TeaserFrontCredit {...attributes}>{children}</TeaserFrontCredit>
+    )
+  ]
+}
+
+const frontTypoTeaser = {
+  matchMdast: node => {
+    return matchZone('TEASER')(node) && node.data.teaserType === 'frontTypo'
+  },
+  component: ({ children, attributes = {}, ...props }) => {
+    return <TeaserFrontTypo {...attributes} {...props}>
+      {children}
+    </TeaserFrontTypo>
+  },
+  editorModule: 'teaser',
+  editorOptions: {
+    type: 'frontTypo',
+    teaserType: 'frontTypo',
+    insertButton: 'Front Typo'
+  },
+  rules: [
+    image,
+    title(
+      'frontTypoTitle',
+      ({ children, attributes = {}, ...props }) => {
+        const { kind, titleSize } = props
+        const Component = kind === 'editorial'
+        ? TeaserFrontTypoHeadline.Editorial
+        : TeaserFrontTypoHeadline.Interaction
+        const sizes = {
+          medium: titleSize === 'medium',
+          large: titleSize === 'large'
+        }
+        return <Component {...attributes} {...sizes}>
+          {children}
+        </Component>
+      }
+    ),
+    lead(
+      'frontTypoLead',
+      ({ children, attributes = {} }) =>
+        <TeaserFrontLead {...attributes}>
+          {children}
+        </TeaserFrontLead>
+    ),
+    format('frontTypoFormat'),
+    paragraph(
+      'frontTypoCredit',
+      ({ children, attributes = {} }) =>
+        <TeaserFrontCredit {...attributes}>{children}</TeaserFrontCredit>
+    )
+  ]
+}
+
+const frontTileTeaser = {
+  matchMdast: node => {
+    return matchZone('TEASER')(node) && node.data.teaserType === 'frontTile'
+  },
+  component: ({ children, attributes = {}, ...props }) => {
+    return <TeaserFrontTile {...attributes} {...props}>
+      {children}
+    </TeaserFrontTile>
+  },
+  editorModule: 'teaser',
+  editorOptions: {
+    type: 'frontTile',
+    teaserType: 'frontTile',
+    insertButton: 'Front Tile'
+  },
+  rules: [
+    image,
+    title(
+      'frontTileTitle',
+      ({ children, attributes = {}, ...props }) => {
+        const { kind, titleSize } = props
+        const Component = kind === 'editorial'
+        ? TeaserFrontTileHeadline.Editorial
+        : TeaserFrontTileHeadline.Interaction
+        const sizes = {
+          medium: titleSize === 'medium',
+          large: titleSize === 'large'
+        }
+        return <Component {...attributes} {...sizes}>
+          {children}
+        </Component>
+      }
+    ),
+    lead(
+      'frontTileLead',
+      ({ children, attributes = {} }) =>
+        <TeaserFrontLead {...attributes}>
+          {children}
+        </TeaserFrontLead>
+    ),
+    format('frontTileFormat'),
+    paragraph(
+      'frontTileCredit',
+      ({ children, attributes = {} }) =>
+        <TeaserFrontCredit {...attributes}>{children}</TeaserFrontCredit>
+    )
+  ]
 }
 
 const schema = {
@@ -97,40 +312,22 @@ const schema = {
           matchMdast: () => false,
           editorModule: 'meta'
         },
+        frontImageTeaser,
+        frontTypoTeaser,
+        frontSplitTeaser,
         {
-          matchMdast: node => {
-            console.log(node.data)
-            return matchZone('TEASER')(node) && node.data.teaserType === 'frontImage'
-          },
-          component: ({ children, attributes = {}, ...props }) => {
-            return <TeaserFrontImage {...attributes} {...props}>
+          matchMdast: matchZone('TEASERGROUP'),
+          component: ({ children, attributes = {}, ...props }) =>
+            <TeaserFrontTileRow {...attributes} {...props}>
               {children}
-            </TeaserFrontImage>
-          },
-
-          editorModule: 'teaser',
+            </TeaserFrontTileRow>,
+          editorModule: 'teasergroup',
           editorOptions: {
-            teaserType: 'frontImage'
+            type: 'frontTileRow',
+            insertButton: 'Front Tile Row'
           },
           rules: [
-            image,
-            title(
-              ({ children, attributes = {} }) =>
-                <TeaserFrontImageHeadline.Editorial {...attributes}>
-                  {children}
-                </TeaserFrontImageHeadline.Editorial>
-            ),
-            lead(
-              ({ children, attributes = {} }) =>
-                <TeaserFrontLead {...attributes}>
-                  {children}
-                </TeaserFrontLead>
-            ),
-            format,
-            paragraph(
-              ({ children, attributes = {} }) =>
-                <TeaserFrontCredit {...attributes}>{children}</TeaserFrontCredit>
-            )
+            frontTileTeaser
           ]
         }
       ]

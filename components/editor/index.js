@@ -25,6 +25,7 @@ import createFigureModule from './modules/figure'
 import createFigureImageModule from './modules/figure/image'
 import createFrontModule from './modules/front'
 import createTeaserModule from './modules/teaser'
+import createTeaserGroupModule from './modules/teaser/teasergroup'
 import {
   createEmbedVideoModule,
   createEmbedTwitterModule
@@ -60,7 +61,8 @@ const moduleCreators = {
   specialchars: createSpecialCharsModule,
   block: createBlockModule,
   front: createFrontModule,
-  teaser: createTeaserModule
+  teaser: createTeaserModule,
+  teasergroup: createTeaserGroupModule
 }
 const initModule = rule => {
   const { editorModule, editorOptions = {} } = rule
@@ -124,8 +126,6 @@ class Editor extends Component {
     this.onChange = (change) => {
       const { value, onChange, onDocumentChange } = this.props
 
-      console.log('change', change.value.toJSON())
-
       if (change.value !== value) {
         onChange(change)
         if (!change.value.document.equals(value.document)) {
@@ -179,7 +179,6 @@ class Editor extends Component {
   }
   render () {
     const { value } = this.props
-    console.log('render', value && value.toJSON())
     return (
       <Loader loading={!value} render={() => (
         <DragDropContextProvider backend={SlateHTML5Backend}>

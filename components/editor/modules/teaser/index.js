@@ -12,19 +12,24 @@ import {
   move
 } from './dnd'
 
-import { TeaserButton, TeaserInlineUI } from './ui'
+import { TeaserButton, TeaserInlineUI, TeaserForm } from './ui'
 
 export const getData = data => ({
   textPosition: 'topleft',
   color: '#fff',
   bgColor: '#000',
+  linkColor: '#f00',
   center: false,
   image: gray2x1,
+  kind: 'editorial',
+  titleSize: 'standard',
   teaserType: 'frontImage',
+  reverse: false,
+  portrait: true,
   ...data || {}
 })
 
-const getNewItem = options => () => {
+export const getNewItem = options => () => {
   const {
     titleModule,
     leadModule,
@@ -32,23 +37,29 @@ const getNewItem = options => () => {
     paragraphModule
   } = getSubmodules(options)
 
+  const data = getData({
+    teaserType: options.rule.editorOptions.teaserType
+  })
+
   return Block.create({
     type: options.TYPE,
-    data: getData({
-      teaserType: options.rule.editorOptions.teaserType
-    }),
+    data,
     nodes: [
       Block.create({
-        type: formatModule.TYPE
+        type: formatModule.TYPE,
+        data
       }),
       Block.create({
-        type: titleModule.TYPE
+        type: titleModule.TYPE,
+        data
       }),
       Block.create({
-        type: leadModule.TYPE
+        type: leadModule.TYPE,
+        data
       }),
       Block.create({
-        type: paragraphModule.TYPE
+        type: paragraphModule.TYPE,
+        data
       })
     ]
   })
@@ -71,8 +82,10 @@ const teaserPlugin = options => {
       if (!matchBlock(TYPE)(node)) {
         return
       }
+      const UI = TeaserInlineUI(options)
+
       return (
-        <TeaserInlineUI
+        <UI
           nodeKey={node.key}
           getIndex={getIndex(editor)}
           getParentKey={getParentKey(editor)}
@@ -82,7 +95,7 @@ const teaserPlugin = options => {
           <Teaser {...node.data.toJS()} attributes={attributes}>
             {children}
           </Teaser>
-        </TeaserInlineUI>
+        </UI>
       )
     },
     onKeyDown (event, change) {
@@ -170,6 +183,11 @@ export default options => ({
     teaserPlugin(options)
   ],
   ui: {
-    insertButtons: [() => <TeaserButton getNewItem={getNewItem(options)} />]
+    insertButtons: [
+      TeaserButton(options)
+    ],
+    forms: [
+      TeaserForm(options)
+    ]
   }
 })

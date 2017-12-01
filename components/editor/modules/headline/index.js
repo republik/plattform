@@ -66,8 +66,12 @@ export default ({rule, subModules, TYPE}) => {
         }),
         renderNode ({node, children, attributes}) {
           if (!title.match(node)) return
+
           return (
-            <rule.component attributes={{...attributes, style: {position: 'relative'}}}>
+            <rule.component
+              attributes={{...attributes, style: {position: 'relative'}}}
+              {...node.data.toJS()}
+            >
               <span style={{position: 'relative', display: 'block'}}>
                 {children}
               </span>

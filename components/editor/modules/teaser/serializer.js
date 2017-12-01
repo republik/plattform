@@ -12,26 +12,33 @@ export const getSubmodules = ({ subModules }) => {
   const [titleModule, leadModule, formatModule, paragraphModule] = subModules
 
   if (!titleModule) {
-    throw new Error('Missing headline with type `TITLE` submodule')
+    throw new Error('Missing headline submodule')
   }
 
   if (!leadModule) {
-    throw new Error('Missing headline with type `LEAD` submodule')
+    throw new Error('Missing headline submodule')
   }
 
   if (!formatModule) {
-    throw new Error('Missing headline with type `FORMAT` submodule')
+    throw new Error('Missing headline submodule')
   }
 
   if (!paragraphModule) {
     throw new Error('Missing paragraph submodule')
   }
 
+  const linkModule = paragraphModule.subModules[0]
+
+  if (!linkModule) {
+    throw new Error('Missing link module in paragraph submodule')
+  }
+
   return {
     titleModule,
     leadModule,
     formatModule,
-    paragraphModule
+    paragraphModule,
+    linkModule
   }
 }
 
@@ -66,7 +73,6 @@ export const fromMdast = ({
   const credit = node.children.find(n => matchParagraph(n) && n !== imageParagraph)
 
   const data = getData(node.data)
-
   if (imageParagraph) {
     data.image = imageParagraph.children[0].url
   }
@@ -82,7 +88,7 @@ export const fromMdast = ({
     kind: 'block',
     type: TYPE,
     data,
-    nodes: nodes.filter(v => !!v)
+    nodes: nodes.filter(v => !!v).map(v => ({...v, data}))
   }
   return result
 }

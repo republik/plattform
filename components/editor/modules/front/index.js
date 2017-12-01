@@ -45,6 +45,7 @@ template: ${template}
 ---
 
 <section><h6>TEASER</h6>
+
 \`\`\`
 {
   "teaserType": "frontImage"
@@ -60,6 +61,7 @@ An article by [Christof Moser](), 31 December 2017
 <hr/></section>
 
 <section><h6>TEASER</h6>
+
 \`\`\`
 {
   "teaserType": "frontImage"
@@ -79,6 +81,7 @@ An article by [Christof Moser](), 31 December 2017
 <hr/></section>
 
 <section><h6>TEASER</h6>
+
 \`\`\`
 {
   "teaserType": "frontImage"
@@ -96,6 +99,7 @@ An article by [Christof Moser](), 31 December 2017
 <hr/></section>
 
 <section><h6>TEASER</h6>
+
 \`\`\`
 {
   "teaserType": "frontImage"
