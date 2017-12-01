@@ -7,7 +7,7 @@ import {
 
 import {
   H1, H2,
-  P, A, NarrowContainer
+  P, A, NarrowContainer, Tweet
 } from '@project-r/styleguide'
 
 const Br = () => <br />
@@ -92,10 +92,7 @@ const schema = {
           matchMdast: matchZone('TITLE'),
           component: ({ children, attributes = {} }) =>
             <NarrowContainer {...attributes}>{children}</NarrowContainer>,
-          editorModule: 'block',
-          editorOptions: {
-            type: 'title'
-          },
+          editorModule: 'title',
           rules: [
             {
               matchMdast: matchHeading(1),
@@ -123,11 +120,7 @@ const schema = {
                 'EMBEDTWITTER'
               ),
               component: props => (
-                <pre
-                  style={{lineHeight: '1em'}}
-                >
-                  {JSON.stringify(props.data, null, 3)}
-                </pre>
+                <Tweet {...props.data} />
               ),
               editorModule: 'embedTwitter',
               editorOptions: {

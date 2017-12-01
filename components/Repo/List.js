@@ -18,7 +18,7 @@ import {
 import Loader from '../Loader'
 import List from '../List'
 
-import { GITHUB_ORG, TEMPLATES } from '../../lib/settings'
+import { GITHUB_ORG, TEMPLATES, REPO_PREFIX } from '../../lib/settings'
 
 import schemas from '../Templates'
 
@@ -74,10 +74,15 @@ class RepoList extends Component {
       this.handleTitle(title, true)
       return
     }
+    const schema = schemas[template]
+    const prefix = [
+      REPO_PREFIX,
+      schema.repoPrefix
+    ].filter(Boolean).join('')
     const slug = [
-      'newsletter',
+      prefix,
       slugify(title)
-    ].join('-')
+    ].join('')
 
     Router.replaceRoute('repo/edit', {
       repoId: [GITHUB_ORG, slug],

@@ -1,18 +1,31 @@
 import React from 'react'
 import MarkdownSerializer from 'slate-mdast-serializer'
-import { Block } from 'slate'
 
-import { matchBlock, createActionButton, buttonStyles } from '../../utils'
-import injectBlock from '../../utils/injectBlock'
+import { matchBlock } from '../../utils'
+import createUi from './ui'
 
 export default ({rule, subModules, TYPE}) => {
-  const {
-    insertButtonText,
-    defaultProps
-  } = rule.editorOptions || {}
+  const editorOptions = rule.editorOptions || {}
+
+  const paragrapQuoteModule = subModules.find(m => m.name === 'paragraph')
+  if (!paragrapQuoteModule) {
+    throw new Error('Missing paragraph submodule (quote)')
+  }
+  const paragraphSourceModule = subModules.find(m => m.name === 'paragraph' && m !== paragrapQuoteModule)
+  if (!paragraphSourceModule) {
+    throw new Error('Missing a second paragraph submodule (source)')
+  }
+
+  const figureModule = subModules.find(m => m.name === 'figure')
+
+  const orderedSubModules = [
+    figureModule,
+    paragrapQuoteModule,
+    paragraphSourceModule
+  ].filter(Boolean)
 
   const childSerializer = new MarkdownSerializer({
-    rules: subModules.reduce(
+    rules: orderedSubModules.reduce(
       (a, m) => a.concat(
         m.helpers && m.helpers.serializer &&
         m.helpers.serializer.rules
@@ -30,6 +43,7 @@ export default ({rule, subModules, TYPE}) => {
       return {
         kind: 'block',
         type: TYPE,
+        data: node.data,
         nodes: childSerializer.fromMdast(node.children, 0, node, rest)
       }
     },
@@ -37,6 +51,7 @@ export default ({rule, subModules, TYPE}) => {
       return {
         type: 'zone',
         identifier: TYPE,
+        data: object.data,
         children: childSerializer.toMdast(object.nodes, 0, object, rest)
       }
     }
@@ -54,46 +69,23 @@ export default ({rule, subModules, TYPE}) => {
       serializer
     },
     changes: {},
-    ui: {
-      insertButtons: [
-        insertButtonText && createActionButton({
-          isDisabled: ({ value }) => {
-            return value.isBlurred
-          },
-          reducer: ({ value, onChange }) => event => {
-            event.preventDefault()
-
-            return onChange(
-              value
-                .change()
-                .call(
-                  injectBlock,
-                  Block.create({
-                    type: TYPE,
-                    nodes: subModules.map(module => Block.create(module.TYPE))
-                  })
-                )
-            )
-          }
-        })(
-          ({ disabled, visible, ...props }) =>
-            <span
-              {...buttonStyles.insert}
-              {...props}
-              data-disabled={disabled}
-              data-visible={visible}
-              >
-              {insertButtonText}
-            </span>
-        )
-      ]
-    },
+    ui: createUi({
+      TYPE,
+      subModules: orderedSubModules,
+      editorOptions,
+      figureModule
+    }),
     plugins: [
       {
         renderNode ({node, children, attributes}) {
           if (!serializerRule.match(node)) return
+
+          const hasFigure = figureModule && !!node.nodes.find(n => n.type === figureModule.TYPE)
           return (
-            <Container {...defaultProps} {...node.data.toJS()} attributes={attributes}>
+            <Container
+              {...node.data.toJS()}
+              hasFigure={hasFigure}
+              attributes={attributes}>
               {children}
             </Container>
           )
@@ -119,20 +111,34 @@ export default ({rule, subModules, TYPE}) => {
         schema: {
           blocks: {
             [TYPE]: {
-              nodes: subModules.map(module => ({
-                types: [module.TYPE],
-                kinds: ['block'],
-                min: 1,
-                max: 1
-              })),
+              nodes: [
+                figureModule && {
+                  types: [figureModule.TYPE], min: 0, max: 1
+                },
+                {
+                  types: [paragrapQuoteModule.TYPE], min: 1, max: 1
+                },
+                {
+                  types: [paragraphSourceModule.TYPE], min: 1, max: 1
+                }
+              ].filter(Boolean),
               normalize: (change, reason, {node, index, child}) => {
+                let orderedTypes = orderedSubModules
+                  .map(subModule => subModule.TYPE)
+                if (figureModule) {
+                  const hasFigure = !!node.nodes.find(n => n.type === figureModule.TYPE)
+                  if (!hasFigure) {
+                    orderedTypes = orderedTypes.filter(type => type !== figureModule.TYPE)
+                  }
+                }
+
                 if (reason === 'child_required') {
                   change.insertNodeByKey(
                     node.key,
                     index,
                     {
                       kind: 'block',
-                      type: subModules[index].TYPE
+                      type: orderedTypes[index]
                     }
                   )
                 }
@@ -140,7 +146,7 @@ export default ({rule, subModules, TYPE}) => {
                   change.wrapBlockByKey(
                     child.key,
                     {
-                      type: subModules[index].TYPE
+                      type: orderedTypes[index]
                     }
                   )
                 }
@@ -148,12 +154,12 @@ export default ({rule, subModules, TYPE}) => {
                   change.setNodeByKey(
                     child.key,
                     {
-                      type: subModules[index].TYPE
+                      type: orderedTypes[index]
                     }
                   )
                 }
                 if (reason === 'child_unknown') {
-                  if (index >= subModules.length) {
+                  if (index >= orderedTypes.length) {
                     change.unwrapNodeByKey(child.key)
                   }
                 }
