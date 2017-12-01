@@ -115,7 +115,7 @@ template: ${template}
 
 Lead
 
-Von ${me ? `[${me.name}](https://republik.love/~${me.id})` : '[Autor](<>)'} (Text) und [Thomas Preusse](https://republik.love/~t) (Template), ${pubDateFormat(new Date())}
+Von ${me ? `[${me.name}](https://republik.love/~${me.id})` : '[Autor](<>)'} (Text) und [Kollaborator](https://republik.love/~kollaborator) (☄️), ${pubDateFormat(new Date())}
 
 <hr/></section>
 
