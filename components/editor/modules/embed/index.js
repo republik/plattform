@@ -43,6 +43,8 @@ query getTwitterEmbed($id: ID!, $embedType: EmbedType!) {
       userScreenName
       userProfileImageUrl
       image
+      more
+      playable
     }
   }
 }
