@@ -1,7 +1,14 @@
+import React from 'react'
 import { Document as SlateDocument } from 'slate'
 import { timeHour } from 'd3-time'
+import { timeFormat } from 'd3-time-format'
 
+import { swissTime } from '../../../../lib/utils/format'
+import slugify from '../../../../lib/utils/slug'
 import MarkdownSerializer from 'slate-mdast-serializer'
+
+const slugDateFormat = timeFormat('%Y/%m/%d')
+const pubDateFormat = swissTime.format('%-d. %B %Y')
 
 export default ({rule, subModules, TYPE}) => {
   const centerModule = subModules.find(m => m.name === 'center')
@@ -31,17 +38,25 @@ export default ({rule, subModules, TYPE}) => {
     if (!autoMeta) {
       return null
     }
-    const center = documentNode.nodes
-      .find(n => n.type === centerModule.TYPE && n.kind === 'block')
-    if (!center) {
+    const title = documentNode.nodes
+      .find(n => n.type === titleModule.TYPE && n.kind === 'block')
+    if (!title) {
       return null
     }
-    const title = center.nodes.first()
+    const headline = title.nodes.first()
+    const headlineText = headline ? headline.text : ''
+    const lead = title.nodes.get(1)
 
+    const nextHour = timeHour.ceil(new Date())
     const newData = data
       .set('auto', true)
-      .set('title', title ? title.text : '')
-      .set('publishDate', timeHour.ceil(new Date()).toISOString())
+      .set('title', headlineText)
+      .set('description', lead ? lead.text : '')
+      .set('publishDate', nextHour.toISOString())
+      .set('slug', [
+        slugDateFormat(nextHour),
+        slugify(headlineText)
+      ].join('/'))
 
     return data.equals(newData)
       ? null
@@ -89,7 +104,7 @@ export default ({rule, subModules, TYPE}) => {
     ]
   })
 
-  const newDocument = ({title, template}) => serializer.deserialize(
+  const newDocument = ({title, template}, me) => serializer.deserialize(
 `---
 template: ${template}
 ---
@@ -100,7 +115,7 @@ template: ${template}
 
 Lead
 
-Von [Franz Kafka](<>) (Text) und [Everett Collection]() (Bilder), 13. Juli 2017
+Von ${me ? `[${me.name}](https://republik.love/~${me.id})` : '[Autor](<>)'} (Text) und [Thomas Preusse](https://republik.love/~t) (Template), ${pubDateFormat(new Date())}
 
 <hr/></section>
 
@@ -123,7 +138,9 @@ Hurray!
     changes: {},
     plugins: [
       {
-        renderEditor: ({children}) => <Container>{children}</Container>,
+        renderEditor: ({children, value}) => (
+          <Container meta={value.document.data}>{children}</Container>
+        ),
         validateNode: (node) => {
           if (node.kind !== 'document') return
 

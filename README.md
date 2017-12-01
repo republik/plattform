@@ -51,6 +51,18 @@ TEMPLATES=newsletter,neutrum
 
 Default is all.
 
+### Repo Prefix
+
+You can prefix all repos name on creation:
+
+```
+REPO_PREFIX=newsletter-
+```
+
+Default is none.
+
+Will be combined with template specific prefixes.
+
 ## License
 
 The source code is «BSD 3-clause» licensed.
