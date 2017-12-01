@@ -50,6 +50,7 @@ export default ({TYPE, subModules, editorOptions = {}, figureModule}) => {
               )
             }
             const hasFigure = figureModule && block.nodes.find(n => n.type === figureModule.TYPE)
+            const floatSize = block.data.get('size') === 'float'
 
             return (
               <div key={`infobox-${i}`}>
@@ -84,7 +85,7 @@ export default ({TYPE, subModules, editorOptions = {}, figureModule}) => {
                     ]
                   })}
                 </p>
-                {hasFigure && <p style={{margin: '10px 0'}}>
+                {hasFigure && !floatSize && <p style={{margin: '10px 0'}}>
                   <Label>Bildgrösse</Label><br />
                   {[
                     'S',
@@ -116,7 +117,7 @@ export default ({TYPE, subModules, editorOptions = {}, figureModule}) => {
                     ]
                   })}
                 </p>}
-                {hasFigure && <MetaForm
+                {hasFigure && !floatSize && <MetaForm
                   data={Map({
                     figureFloat: block.data.get('figureFloat') || false
                   })}
