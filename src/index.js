@@ -268,6 +268,17 @@ ReactDOM.render(
               Center: require('./components/Center')
             },
             src: require('./components/Figure/docs.md')
+          },
+          {
+            path: '/list',
+            title: 'List',
+            imports: {
+              css,
+              ...require('./components/Typography'),
+              ...require('./components/List'),
+              Center: require('./components/Center')
+            },
+            src: require('./components/List/docs.md')
           }
         ]
       },
