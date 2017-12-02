@@ -1,4 +1,4 @@
-Note that dashes and counts are positioned outside of the text block on desktop, and inside on mobile.
+Note that ndashes and counts are positioned outside of the text block on desktop, and inside on mobile.
 
 ## `<UL />`
 
