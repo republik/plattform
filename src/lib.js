@@ -42,7 +42,6 @@ export {
 export {
   Tweet
 } from './components/Social'
-export { UL, OL } from './components/List'
 export {
   TeaserFeed
 } from './components/TeaserFeed'

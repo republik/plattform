@@ -1,34 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { serifRegular16, serifRegular19 } from '../Typography/styles'
+import {
+  serifRegular14,
+  serifRegular16,
+  serifRegular17,
+  serifRegular19
+} from '../Typography/styles'
 import colors from '../../theme/colors'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 
 const SPACING = 22
-
-const unorderedBefore = {
-  '& > li:before': {
-    content: '–',
-    position: 'absolute',
-    left: 0,
-    [mUp]: {
-      left: `-${SPACING}px`
-    }
-  }
-}
-
-const orderedBefore = {
-  '& > li:before': {
-    content: 'counter(item) ". "',
-    counterIncrement: 'item',
-    position: 'absolute',
-    left: 0,
-    [mUp]: {
-      left: `-${SPACING}px`
-    }
-  }
-}
 
 const styles = {
   list: css({
@@ -36,48 +18,72 @@ const styles = {
     paddingLeft: 0,
     listStyle: 'none',
     counterReset: 'item',
-    '& li': {
-      color: colors.text,
-      margin: '24px 0',
-      paddingLeft: `${SPACING}px`,
-      position: 'relative',
-      ...serifRegular16,
-      [mUp]: {
-        ...serifRegular19,
-        paddingLeft: 0,
-        margin: '30px 0',
-        lineHeight: '30px'
-      }
-    },
-    '& li li': {
-      fontSize: '14px',
-      margin: '12px 0',
-      [mUp]: {
-        fontSize: '17px',
-        margin: '14px 0'
-      }
-    },
     'li &': {
       [mUp]: {
         marginLeft: `${SPACING}px`
       }
     }
   }),
-  compact: {
-    '& li': {
-      margin: '0 !important',
+  unorderedBefore: css({
+    '& > li:before': {
+      content: '–',
+      position: 'absolute',
+      left: 0,
       [mUp]: {
-        margin: '0 !important'
+        left: `-${SPACING}px`
       }
     }
-  }
+  }),
+  orderedBefore: css({
+    '& > li:before': {
+      content: 'counter(item) ". "',
+      counterIncrement: 'item',
+      position: 'absolute',
+      left: 0,
+      [mUp]: {
+        left: `-${SPACING}px`
+      }
+    }
+  }),
+  li: css({
+    color: colors.text,
+    paddingLeft: `${SPACING}px`,
+    position: 'relative',
+    ...serifRegular16,
+    [mUp]: {
+      ...serifRegular19,
+      paddingLeft: 0,
+      lineHeight: '30px'
+    },
+    '& p:last-child': {
+      marginBottom: 0
+    },
+    'li &': {
+      ...serifRegular14,
+      lineHeight: '22px',
+      margin: '12px 0',
+      [mUp]: {
+        ...serifRegular17,
+        margin: '14px 0'
+      }
+    }
+  })
 }
+
+styles.listCompact = merge(styles.list, {
+  '& li, & li p': {
+    margin: 0
+  }
+})
 
 export const UnorderedList = ({ children, attributes, compact }) => {
   return (
     <ul
       {...attributes}
-      {...css(styles.list, unorderedBefore, compact ? styles.compact : {})}
+      {...css(
+        compact ? styles.listCompact : styles.list,
+        styles.unorderedBefore
+      )}
     >
       {children}
     </ul>
@@ -94,7 +100,7 @@ export const OrderedList = ({ children, attributes, compact }) => {
   return (
     <ol
       {...attributes}
-      {...css(styles.list, orderedBefore, compact ? styles.compact : {})}
+      {...css(compact ? styles.listCompact : styles.list, styles.orderedBefore)}
     >
       {children}
     </ol>
@@ -105,4 +111,15 @@ OrderedList.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
   compact: PropTypes.bool
+}
+
+export const ListItem = ({ children, attributes = {} }) => (
+  <li {...styles.li} {...attributes}>
+    {children}
+  </li>
+)
+
+ListItem.propTypes = {
+  children: PropTypes.node.isRequired,
+  attributes: PropTypes.object
 }
