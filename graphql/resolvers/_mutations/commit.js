@@ -215,6 +215,17 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
     })
   }
 
+  // latest commit -> default branch
+  githubRest.repos.edit({
+    owner: login,
+    repo: repoName,
+    name: repoName,
+    default_branch: branch
+  })
+    .catch(e =>
+      console.error('edit default_branch failed!', e)
+    )
+
   await pubsub.publish('repoUpdate', {
     repoUpdate: {
       id: repoId
