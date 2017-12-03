@@ -113,13 +113,13 @@ export default ({rule, subModules, TYPE}) => {
             [TYPE]: {
               nodes: [
                 figureModule && {
-                  types: [figureModule.TYPE], min: 0, max: 1
+                  kinds: ['block'], types: [figureModule.TYPE], min: 0, max: 1
                 },
                 {
-                  types: [paragrapQuoteModule.TYPE], min: 1, max: 1
+                  kinds: ['block'], types: [paragrapQuoteModule.TYPE], min: 1, max: 1
                 },
                 {
-                  types: [paragraphSourceModule.TYPE], min: 1, max: 1
+                  kinds: ['block'], types: [paragraphSourceModule.TYPE], min: 1, max: 1
                 }
               ].filter(Boolean),
               normalize: (change, reason, {node, index, child}) => {
@@ -130,6 +130,17 @@ export default ({rule, subModules, TYPE}) => {
                   if (!hasFigure) {
                     orderedTypes = orderedTypes.filter(type => type !== figureModule.TYPE)
                   }
+                }
+
+                // TMP Fix
+                //   slate triggers child_required before child_kind_invalid
+                //   if the first node is not a block note
+                //   slate core schema rules will remove block nodes added here
+                //   so we trigger a child_kind_invalid instead
+                if (node.nodes.first().kind !== 'block') {
+                  child = node.nodes.first()
+                  reason = 'child_kind_invalid'
+                  index = 0
                 }
 
                 if (reason === 'child_required') {
