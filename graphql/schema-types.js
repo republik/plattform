@@ -16,7 +16,50 @@ type Repo {
 
   mailchimpUrl: String
   unpublished: Boolean!
+
+  meta: RepoMeta!
 }
+
+type RepoMeta {
+  creationDeadline: DateTime!
+  productionDeadline: DateTime!
+  phase: RepoPhase!
+}
+
+enum RepoPhase {
+  CONCEPTION
+  CREATION
+  PRODUCTION
+  READY
+  PUBLISHED
+}
+
+input RepoOrderBy {
+  field: RepoOrderField!
+  direction: OrderDirection!
+}
+
+enum RepoOrderField {
+  PUSHED_AT
+  FORMAT
+  CREATION_DEADLINE
+  PRODUCTION_DEADLINE
+  PHASE
+}
+
+enum OrderDirection {
+  ASC
+  DESC
+}
+
+input RepoMilestoneFilter {
+  # name of the milestone
+  # eg. chiefEditor, imageEditor, journalist, managingEditor
+  # proofReader, textEditor
+  key: String!
+  value: Boolean!
+}
+
 
 interface MilestoneInterface {
   name: String!

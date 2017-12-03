@@ -6,7 +6,11 @@ schema {
 }
 
 type queries {
-  repos(first: Int!): [Repo]!
+  repos(
+    orderBy: RepoOrderBy
+    milestones: [RepoMilestoneFilter!]
+    phase: RepoPhase
+  ): [Repo]!
   repo(id: ID!): Repo!
   embed(id: ID!, embedType: EmbedType!): Embed!
 }
