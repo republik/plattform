@@ -8,8 +8,9 @@ schema {
 type queries {
   repos(
     orderBy: RepoOrderBy
-    milestones: [RepoMilestoneFilter!]
-    phase: RepoPhase
+    milestonesFilter: [RepoMilestoneFilter!]
+    #phaseFilter: RepoPhase
+    formatFilter: String
   ): [Repo]!
   repo(id: ID!): Repo!
   embed(id: ID!, embedType: EmbedType!): Embed!
@@ -58,6 +59,12 @@ type mutations {
   uncommittedChanges(
     repoId: ID!
     action: Action!
+  ): Boolean!
+
+  editRepoMeta(
+    repoId: ID!
+    creationDeadline: DateTime
+    productionDeadline: DateTime
   ): Boolean!
 }
 
