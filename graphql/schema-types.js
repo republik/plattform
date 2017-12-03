@@ -21,18 +21,18 @@ type Repo {
 }
 
 type RepoMeta {
-  creationDeadline: DateTime!
-  productionDeadline: DateTime!
-  phase: RepoPhase!
+  creationDeadline: DateTime
+  productionDeadline: DateTime
+  #phase: RepoPhase!
 }
 
-enum RepoPhase {
-  CONCEPTION
-  CREATION
-  PRODUCTION
-  READY
-  PUBLISHED
-}
+#enum RepoPhase {
+#  CONCEPTION
+#  CREATION
+#  PRODUCTION
+#  READY
+#  PUBLISHED
+#}
 
 input RepoOrderBy {
   field: RepoOrderField!
@@ -41,10 +41,9 @@ input RepoOrderBy {
 
 enum RepoOrderField {
   PUSHED_AT
-  FORMAT
   CREATION_DEADLINE
   PRODUCTION_DEADLINE
-  PHASE
+  PUBLISHED_AT
 }
 
 enum OrderDirection {

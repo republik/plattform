@@ -8,7 +8,7 @@ schema {
 type queries {
   repos(
     orderBy: RepoOrderBy
-    milestonesFilter: [RepoMilestoneFilter!]
+    milestonesFilters: [RepoMilestoneFilter!]
     #phaseFilter: RepoPhase
     formatFilter: String
   ): [Repo]!
