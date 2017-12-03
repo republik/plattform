@@ -8,6 +8,7 @@ const {
   getAnnotatedTags,
   getAnnotatedTag
 } = require('../../lib/github')
+const debug = require('debug')('publikator:repo')
 
 module.exports = {
   commits: async (repo, { page }) => {
@@ -132,5 +133,25 @@ module.exports = {
       .then(tags => tags
         .map(tag => publicationMetaDecorator(tag))
       )
+  },
+  meta: async (repo) => {
+    let message
+    if (repo.metaTag !== undefined) {
+      message = repo.metaTag && repo.metaTag.target
+        ? repo.metaTag.target.message
+        : ''
+    } else {
+      console.log('meta needs to query tag for repo %O', repo)
+      debug('meta needs to query tag for repo %O', repo)
+      const tag = await getAnnotatedTag(
+        repo.id,
+        'meta'
+      )
+      message = tag.message
+    }
+    if (!message || message.length === 0) {
+      return {}
+    }
+    return yaml.parse(message)
   }
 }

@@ -29,6 +29,7 @@
     "data-uri-to-buffer": "^2.0.0",
     "db-migrate": "^0.10.0",
     "db-migrate-pg": "^0.2.5",
+    "debug": "^3.1.0",
     "deep-diff": "^0.3.8",
     "dotenv": "^4.0.0",
     "dynamic-dedupe": "^0.3.0",
