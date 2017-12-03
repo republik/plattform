@@ -1,7 +1,14 @@
 const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
 const { createGithubClients } = require('../../../lib/github')
+const { descending, ascending } = require('d3-array')
+const _ = {
+  get: require('lodash/get')
+}
 
-const { commit: getCommit } = require('../Repo')
+const {
+  commit: getCommit,
+  meta: getMeta
+} = require('../Repo')
 const { document: getDocument } = require('../Commit')
 
 const {
@@ -9,12 +16,13 @@ const {
   REPOS_NAME_FILTER
 } = process.env
 
-module.exports = async (_, args, { user }) => {
+module.exports = async (__, args, { user }) => {
   ensureUserHasRole(user, 'editor')
   const { githubApolloFetch } = await createGithubClients()
 
   const {
     first = 100,
+    orderBy,
     milestonesFilters,
     formatFilter
   } = args
@@ -32,13 +40,14 @@ module.exports = async (_, args, { user }) => {
       query repositories(
         $login: String!
         $first: Int!
+        $orderByDirection: OrderDirection!
       ) {
         repositoryOwner(login: $login) {
           repositories(
             first: $first,
             orderBy: {
               field: PUSHED_AT,
-              direction: DESC
+              direction: $orderByDirection
             }
           ) {
             nodes {
@@ -69,7 +78,10 @@ module.exports = async (_, args, { user }) => {
     `,
     variables: {
       login: GITHUB_LOGIN,
-      first
+      first,
+      orderByDirection: orderBy
+        ? orderBy.direction
+        : 'DESC'
     }
   })
 
@@ -82,6 +94,7 @@ module.exports = async (_, args, { user }) => {
     const document = await getDocument(latestCommit, { oneway: true }, { user })
     return {
       ...repo,
+      meta: await getMeta(repo),
       latestCommit: {
         ...latestCommit,
         document
@@ -111,6 +124,28 @@ module.exports = async (_, args, { user }) => {
       }
       return true
     })
+  }
+
+  // PUSHED_AT is done by github, see query above
+  if (orderBy && orderBy.field !== 'PUSHED_AT') {
+    const ascDesc = orderBy.direction === 'ASC'
+      ? ascending
+      : descending
+    let selector
+    switch (orderBy.field) {
+      case 'CREATION_DEADLINE':
+        selector = 'meta.creationDeadline'
+        break
+      case 'PRODUCTION_DEADLINE':
+        selector = 'meta.productionDeadline'
+        break
+      case 'PUBLISHED_AT':
+        selector = 'latestCommit.document.meta.publishDate'
+        break
+      default:
+        throw new Error(`missing selector for orderBy.field: ${orderBy.field}`)
+    }
+    repos = repos.sort((a, b) => ascDesc(_.get(a, selector), _.get(b, selector)))
   }
 
   return repos

@@ -40,6 +40,10 @@ module.exports = {
       .then(commits => commits.sort((a, b) => descending(a.date, b.date)))
   },
   latestCommit: async (repo) => {
+    if (repo.latestCommit) {
+      debug('latestCommit: reusing existing latestCommit for repoId: %s', repo.id)
+      return repo.latestCommit
+    }
     const { githubRest } = await createGithubClients()
     const [login, repoName] = repo.id.split('/')
     return getHeads(repo.id)
@@ -62,6 +66,7 @@ module.exports = {
       }))
   },
   commit: async (repo, { id: sha }) => {
+    console.log('loading commit: ', sha)
     const { githubRest } = await createGithubClients()
     const [login, repoName] = repo.id.split('/')
     return githubRest.repos.getCommit({
@@ -141,7 +146,7 @@ module.exports = {
         ? repo.metaTag.target.message
         : ''
     } else {
-      console.log('meta needs to query tag for repo %O', repo)
+      console.log('meta: needs to query tag for repo %O', repo)
       debug('meta needs to query tag for repo %O', repo)
       const tag = await getAnnotatedTag(
         repo.id,

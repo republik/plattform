@@ -3,9 +3,23 @@ const MDAST = require('../../lib/mdast/mdast')
 const { createPrefixUrl } = require('../../lib/assets')
 const visit = require('unist-util-visit')
 const { timeParse } = require('d3-time-format')
+const debug = require('debug')('publikator:commit')
 
 module.exports = {
-  document: async ({ id: commitId, repo: { id: repoId } }, { oneway }, { user }) => {
+  document: async (
+    {
+      id: commitId,
+      repo: { id: repoId },
+      document: existingDocument
+    },
+    { oneway },
+    { user }
+  ) => {
+    if (existingDocument) {
+      debug('documents: reusing existing document for repoId: %s', repoId)
+      return existingDocument
+    }
+    console.log('loading document:', repoId)
     const { githubApolloFetch } = await createGithubClients()
     const [login, repoName] = repoId.split('/')
 
@@ -37,7 +51,7 @@ module.exports = {
     })
 
     if (!repository.blob) {
-      throw new Error('no document found')
+      throw new Error(`no document found for ${repoId}`)
     }
 
     const mdast = MDAST.parse(repository.blob.text)
