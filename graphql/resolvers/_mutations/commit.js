@@ -205,7 +205,7 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
       force: !parentId
     })
   } else {
-    branch = `${superb()}-${superheroes.random()}`
+    branch = `${superb()}-${superheroes.random().toLowerCase()}`
       .replace(/\s/g, '-')
     await githubRest.gitdata.createReference({
       owner: login,
