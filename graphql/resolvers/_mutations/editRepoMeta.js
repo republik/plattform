@@ -59,5 +59,11 @@ module.exports = async (_, args, { user, t, pubsub }) => {
     newTag.sha
   )
 
+  await pubsub.publish('repoUpdate', {
+    repoUpdate: {
+      id: repoId
+    }
+  })
+
   return true
 }
