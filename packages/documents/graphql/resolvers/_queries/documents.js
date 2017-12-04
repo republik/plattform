@@ -1,7 +1,21 @@
-const { Roles: { userHasRole } } = require('@orbiting/backend-modules-auth')
 const { descending } = require('d3-array')
+const {
+  Roles: {
+    userHasRole,
+    ensureUserIsInRoles
+  }
+} = require('@orbiting/backend-modules-auth')
+
+const {
+  DOCUMENTS_RESTRICT_TO_ROLES
+} = process.env
 
 module.exports = async (_, args, { user, redis }) => {
+  if (DOCUMENTS_RESTRICT_TO_ROLES) {
+    const roles = DOCUMENTS_RESTRICT_TO_ROLES.split(',')
+    ensureUserIsInRoles(user, roles)
+  }
+
   const ref = userHasRole(user, 'editor')
     ? 'prepublication'
     : 'publication'
