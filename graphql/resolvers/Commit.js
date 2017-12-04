@@ -18,49 +18,53 @@ module.exports = {
     if (existingDocument) {
       return existingDocument
     }
-    const redisKey = `repos:${repoId}/commits/${commitId}/document${oneway ? '/oneway' : ''}`
-    const redisDocument = await redis.getAsync(redisKey)
-    if (redisDocument) {
+
+    let mdast
+
+    const redisKey = `repos:${repoId}/commits/${commitId}/document/mdast`
+    const redisMdast = await redis.getAsync(redisKey)
+    if (redisMdast) {
       debug('document: redis HIT (%s)', redisKey)
-      return JSON.parse(redisDocument)
-    }
-    debug('document: redis MISS (%s)', redisKey)
+      mdast = JSON.parse(redisMdast)
+    } else {
+      debug('document: redis MISS (%s)', redisKey)
+      const { githubApolloFetch } = await createGithubClients()
+      const [login, repoName] = repoId.split('/')
 
-    const { githubApolloFetch } = await createGithubClients()
-    const [login, repoName] = repoId.split('/')
-
-    const {
-      data: {
-        repository
-      }
-    } = await githubApolloFetch({
-      query: `
-        query document(
-          $login: String!,
-          $repoName: String!,
-          $blobExpression: String!
-        ) {
-          repository(owner: $login, name: $repoName) {
-            blob: object(expression: $blobExpression) {
-              ... on Blob {
-                text
+      const {
+        data: {
+          repository
+        }
+      } = await githubApolloFetch({
+        query: `
+          query document(
+            $login: String!,
+            $repoName: String!,
+            $blobExpression: String!
+          ) {
+            repository(owner: $login, name: $repoName) {
+              blob: object(expression: $blobExpression) {
+                ... on Blob {
+                  text
+                }
               }
             }
           }
+        `,
+        variables: {
+          login,
+          repoName,
+          blobExpression: `${commitId}:article.md`
         }
-      `,
-      variables: {
-        login,
-        repoName,
-        blobExpression: `${commitId}:article.md`
+      })
+
+      if (!repository.blob) {
+        throw new Error(`no document found for ${repoId}`)
       }
-    })
 
-    if (!repository.blob) {
-      throw new Error(`no document found for ${repoId}`)
+      mdast = MDAST.parse(repository.blob.text)
+      await redis.setAsync(redisKey, JSON.stringify(mdast))
     }
-
-    const mdast = MDAST.parse(repository.blob.text)
 
     // prefix image urls
     const prefixUrl = createPrefixUrl(repoId, oneway)
@@ -89,7 +93,7 @@ module.exports = {
       ? parsePublishDate(mdast.meta.publishDate) || mdast.meta.publishDate
       : null
 
-    const doc = {
+    return {
       content: mdast,
       meta: {
         ...mdast.meta,
@@ -97,7 +101,5 @@ module.exports = {
         publishDate
       }
     }
-    await redis.setAsync(redisKey, JSON.stringify(doc))
-    return doc
   }
 }
