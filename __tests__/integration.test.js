@@ -103,7 +103,7 @@ test('unauthorized repos query', async (t) => {
   const result = await apolloFetch({
     query: `
       {
-        repos(first: 20) {
+        repos {
           id
           commits(page: 0) {
             id
@@ -250,7 +250,7 @@ test('repos (signed in, without role)', async (t) => {
   const result = await apolloFetch({
     query: `
       {
-        repos(first: 2) {
+        repos {
           id
         }
       }
@@ -344,7 +344,7 @@ test('repos (signed in)', async (t) => {
   const result = await apolloFetch({
     query: `
       {
-        repos(first: 1) {
+        repos {
           id
         }
       }
@@ -2079,7 +2079,7 @@ test('unauthorized repos query', async (t) => {
   const result = await apolloFetch({
     query: `
       {
-        repos(first: 20) {
+        repos {
           id
           commits(page: 0) {
             id
