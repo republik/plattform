@@ -107,7 +107,7 @@ module.exports = async (__, args, { user, redis }) => {
       if (formatFilter && (
         !repo.latestCommit.document ||
         !repo.latestCommit.document.meta ||
-        !(repo.latestCommit.document.meta.format === formatFilter)
+        repo.latestCommit.document.meta.format !== formatFilter
       )) {
         return false
       }
@@ -145,7 +145,17 @@ module.exports = async (__, args, { user, redis }) => {
       default:
         throw new Error(`missing selector for orderBy.field: ${orderBy.field}`)
     }
-    repos = repos.sort((a, b) => ascDesc(_.get(a, selector), _.get(b, selector)))
+    repos = repos.sort((a, b) => {
+      const aValueRaw = _.get(a, selector)
+      const aValue = aValueRaw
+        ? new Date(aValueRaw)
+        : null
+      const bValueRaw = _.get(b, selector)
+      const bValue = bValueRaw
+        ? new Date(bValueRaw)
+        : null
+      return ascDesc(aValue, bValue)
+    })
   }
 
   return repos
