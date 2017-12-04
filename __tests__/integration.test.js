@@ -141,10 +141,10 @@ test('unauthorized subscription', (t) => {
       repoId: 'irrelevant'
     }
   }).subscribe({
-    // TODO: FIX, subscription returns strange error, instead of
-    // proper api/signIn
+    // TODO: cleanup
+    // subscription returns error message below (async iterator)
+    // or some versions, we accept both ways now
     next: (result) => {
-      /*
       const { errors } = result
       t.ok(errors)
       t.equals(errors.length, 1)
@@ -152,7 +152,6 @@ test('unauthorized subscription', (t) => {
       t.equals(error.message, tr('api/signIn'))
       client.close()
       t.end()
-      */
     },
     error: (errors) => {
       // t.equals(errors, null)
@@ -285,10 +284,10 @@ test('subscription (signed in, without role)', (t) => {
       repoId: 'irrelevant'
     }
   }).subscribe({
-    // TODO: FIX, subscription returns strange error, instead of
-    // proper api/signIn
+    // TODO: cleanup
+    // subscription returns error message below (async iterator)
+    // or some versions, we accept both ways now
     next: (result) => {
-      /*
       const { errors } = result
       t.ok(errors)
       t.equals(errors.length, 1)
@@ -296,7 +295,6 @@ test('subscription (signed in, without role)', (t) => {
       t.equals(error.message, tr('api/unauthorized', { role: 'editor' }))
       client.close()
       t.end()
-      */
     },
     error: (errors) => {
       // t.equals(errors, null)
