@@ -41,7 +41,7 @@ export const getNewItem = options => () => {
     teaserType: options.rule.editorOptions.teaserType
   })
 
-  return Block.create({
+  const res = Block.create({
     type: options.TYPE,
     data,
     nodes: [
@@ -63,6 +63,7 @@ export const getNewItem = options => () => {
       })
     ]
   })
+  return res
 }
 
 const teaserPlugin = options => {
@@ -82,21 +83,29 @@ const teaserPlugin = options => {
       if (!matchBlock(TYPE)(node)) {
         return
       }
+
       const UI = TeaserInlineUI(options)
 
-      return (
+      if (options.rule.editorOptions.dnd === false) {
+        return (
+          <Teaser key='teaser' {...node.data.toJS()} attributes={attributes}>
+            {children}
+          </Teaser>
+        )
+      }
+      return ([
         <UI
+          key='ui'
           nodeKey={node.key}
           getIndex={getIndex(editor)}
           getParentKey={getParentKey(editor)}
           move={move(editor)}
           insert={insert(editor)}
-        >
-          <Teaser {...node.data.toJS()} attributes={attributes}>
-            {children}
-          </Teaser>
-        </UI>
-      )
+      />,
+        <Teaser key='teaser' {...node.data.toJS()} attributes={attributes}>
+          {children}
+        </Teaser>
+      ])
     },
     onKeyDown (event, change) {
       if (event.key !== 'Enter') {
@@ -177,15 +186,16 @@ const teaserPlugin = options => {
 
 export default options => ({
   helpers: {
-    serializer: getSerializer(options)
+    serializer: getSerializer(options),
+    newItem: getNewItem(options)
   },
   plugins: [
     teaserPlugin(options)
   ],
   ui: {
-    insertButtons: [
+    insertButtons: options.rule.editorOptions.dnd !== false ? [
       TeaserButton(options)
-    ],
+    ] : [],
     forms: [
       TeaserForm(options)
     ]

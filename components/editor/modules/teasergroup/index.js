@@ -1,6 +1,5 @@
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { Block } from 'slate'
-import { getData as getTeaserData } from './'
 import React from 'react'
 import { matchBlock } from '../../utils'
 
@@ -9,9 +8,10 @@ import {
   getParentKey,
   insert,
   move
-} from './dnd'
+} from '../teaser/dnd'
 
-import { TeaserInlineUI, TeaserButton } from './ui'
+import { TeaserInlineUI } from '../teaser/ui'
+import { TeaserGroupButton, TeaserGroupForm } from './ui'
 
 export const getData = data => ({
   columns: 2,
@@ -31,18 +31,8 @@ export const getNewItem = options => () => {
     type: options.TYPE,
     data,
     nodes: [
-      Block.create({
-        type: teaserModule.TYPE,
-        data: getTeaserData({
-          teaserType: teaserModule.TYPE
-        })
-      }),
-      Block.create({
-        type: teaserModule.TYPE,
-        data: getTeaserData({
-          teaserType: teaserModule.TYPE
-        })
-      })
+      teaserModule.helpers.newItem(),
+      teaserModule.helpers.newItem()
     ]
   })
 }
@@ -122,22 +112,36 @@ const teaserGroupPlugin = options => {
       }
       const UI = TeaserInlineUI(options)
 
-      return (
+      return ([
         <UI
+          key='ui'
           nodeKey={node.key}
           getIndex={getIndex(editor)}
           getParentKey={getParentKey(editor)}
           move={move(editor)}
           insert={insert(editor)}
-        >
-          <TeaserGroup {...node.data.toJS()}
-            attributes={attributes}
-            style={{minHeight: '200px'}}
-          >
-            {children}
-          </TeaserGroup>
-        </UI>
-      )
+      />,
+        <TeaserGroup key='teaser' {...node.data.toJS()} attributes={attributes}>
+          {children}
+        </TeaserGroup>
+      ])
+    },
+    validateNode (node, ...args) {
+      if (!matchBlock(TYPE)(node)) {
+        return
+      }
+      const numNodes = node.nodes.size
+      const wantedNodes = node.data.get('columns')
+      if (numNodes === wantedNodes) {
+        return
+      }
+      if (numNodes > wantedNodes) {
+        const keyToRemove = node.nodes.last().key
+        return change => change.removeNodeByKey(keyToRemove)
+      } else {
+        const keyToInsertAt = node.key
+        return change => change.insertNodeByKey(keyToInsertAt, 1, teaserModule.helpers.newItem())
+      }
     },
     schema: {
       blocks: {
@@ -170,14 +174,18 @@ export const getSerializer = options =>
 
 export default options => ({
   helpers: {
-    serializer: getSerializer(options)
+    serializer: getSerializer(options),
+    newItem: getNewItem(options)
   },
   plugins: [
     teaserGroupPlugin(options)
   ],
   ui: {
     insertButtons: [
-      TeaserButton(options)
+      TeaserGroupButton(options)
+    ],
+    forms: [
+      TeaserGroupForm(options)
     ]
   }
 })

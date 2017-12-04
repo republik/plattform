@@ -1,6 +1,5 @@
 import { colors, Dropdown, Checkbox, Label } from '@project-r/styleguide'
 import React from 'react'
-import ArrowsIcon from 'react-icons/lib/fa/arrows'
 import { css } from 'glamor'
 import {
   createActionButton,
@@ -43,6 +42,28 @@ const kinds = [
 ]
 
 const styles = {
+  uiContainer: css({
+    position: 'relative',
+    height: 0,
+    overflow: 'visible'
+  }),
+  ui: css({
+    position: 'absolute',
+    zIndex: 4999,
+    margin: 0,
+    padding: 0,
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 0,
+    overflow: 'hidden',
+    color: '#fff',
+    transition: 'height 0.1s',
+    backgroundColor: '#00f'
+  }),
+  uiOpen: css({
+    height: '30px'
+  }),
   line: css({
     position: 'absolute',
     margin: 0,
@@ -207,19 +228,10 @@ export const TeaserForm = options => {
 
 export const TeaserInlineUI = options => createDropTarget(createMoveDragSource(
   ({ connectDragSource, connectDropTarget, isDragging, isOver, children }) => {
-    const dragSource = connectDragSource(
-      <span contentEditable={false} {...styles.dragButton}><ArrowsIcon /></span>)
-    const dropTarget = connectDropTarget(
-      <span> {
-        children
-      } </span>
-    )
-
-    return (
-      <span style={{ position: 'relative', display: 'block' }}>
-        {dragSource}
-        {dropTarget}
-      </span>
-    )
+    return connectDragSource(connectDropTarget(
+      <div {...styles.uiContainer}>
+        <div {...css(styles.ui, styles.uiOpen)} />
+      </div>
+    ))
   }
 ))

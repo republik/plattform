@@ -16,9 +16,9 @@ import {
   TeaserFrontTypoHeadline,
   TeaserFrontSplitHeadline,
   TeaserFrontSplit,
-  TeaserFrontTileRow,
   TeaserFrontTile,
-  TeaserFrontTileHeadline
+  TeaserFrontTileHeadline,
+  TeaserFrontTileRow
 } from '@project-r/styleguide'
 
 const paragraph = (type, component) => ({
@@ -39,10 +39,9 @@ const paragraph = (type, component) => ({
         },
         color: parent.data.linkColor
       }),
-      component: ({ children, data, attributes = {} }) =>
+      component: ({ children, data, attributes = {}, ...props }) =>
         <TeaserFrontAuthorLink
-          href={data.href}
-          title={data.title}
+          {...props}
           {...attributes}>
           {children}
         </TeaserFrontAuthorLink>,
@@ -264,7 +263,8 @@ const frontTileTeaser = {
   editorOptions: {
     type: 'frontTile',
     teaserType: 'frontTile',
-    insertButton: 'Front Tile'
+    insertButton: 'Front Tile',
+    dnd: false
   },
   rules: [
     image,
@@ -279,9 +279,12 @@ const frontTileTeaser = {
           medium: titleSize === 'medium',
           large: titleSize === 'large'
         }
-        return <Component {...attributes} {...sizes}>
-          {children}
-        </Component>
+        return (
+
+          <Component {...attributes} {...sizes}>
+            {children}
+          </Component>
+        )
       }
     ),
     lead(
@@ -316,11 +319,14 @@ const schema = {
         frontTypoTeaser,
         frontSplitTeaser,
         {
-          matchMdast: matchZone('TEASERGROUP'),
-          component: ({ children, attributes = {}, ...props }) =>
-            <TeaserFrontTileRow {...attributes} {...props}>
+          matchMdast: node => {
+            return matchZone('TEASERGROUP')(node)
+          },
+          component: ({ children, attributes = {}, ...props }) => {
+            return <TeaserFrontTileRow {...attributes} {...props}>
               {children}
-            </TeaserFrontTileRow>,
+            </TeaserFrontTileRow>
+          },
           editorModule: 'teasergroup',
           editorOptions: {
             type: 'frontTileRow',

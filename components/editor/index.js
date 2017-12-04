@@ -25,7 +25,7 @@ import createFigureModule from './modules/figure'
 import createFigureImageModule from './modules/figure/image'
 import createFrontModule from './modules/front'
 import createTeaserModule from './modules/teaser'
-import createTeaserGroupModule from './modules/teaser/teasergroup'
+import createTeaserGroupModule from './modules/teasergroup'
 import {
   createEmbedVideoModule,
   createEmbedTwitterModule
