@@ -166,7 +166,7 @@ class RepoList extends Component {
 
 const query = gql`
 query repos {
-  repos(first: 100) {
+  repos {
     id
   }
 }
