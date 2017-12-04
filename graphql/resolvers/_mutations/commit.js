@@ -73,6 +73,8 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
       auto_init: true
     })
 
+    await sleep(200)
+
     let ready = false
     let count = 20
     while (ready === false) {
