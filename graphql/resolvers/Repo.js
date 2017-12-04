@@ -41,7 +41,6 @@ module.exports = {
   },
   latestCommit: async (repo) => {
     if (repo.latestCommit) {
-      debug('latestCommit: reusing existing latestCommit for repoId: %s', repo.id)
       return repo.latestCommit
     }
     const { githubRest } = await createGithubClients()
@@ -65,8 +64,15 @@ module.exports = {
         repo
       }))
   },
-  commit: async (repo, { id: sha }) => {
-    console.log('loading commit: ', sha)
+  commit: async (repo, { id: sha }, { redis }) => {
+    const redisKey = `repos:${repo.id}/commits/${sha}`
+    const redisCommit = await redis.getAsync(redisKey)
+    if (redisCommit) {
+      debug('commit: redis HIT (%s)', redisKey)
+      return JSON.parse(redisCommit)
+    }
+    debug('commit: redis MISS (%s)', redisKey)
+
     const { githubRest } = await createGithubClients()
     const [login, repoName] = repo.id.split('/')
     return githubRest.repos.getCommit({
@@ -79,6 +85,10 @@ module.exports = {
       ...commit,
       repo
     }))
+    .then(async (commit) => {
+      await redis.setAsync(redisKey, JSON.stringify(commit))
+      return commit
+    })
   },
   uncommittedChanges: async (
     { id: repoId },
@@ -146,7 +156,6 @@ module.exports = {
         ? repo.metaTag.target.message
         : ''
     } else {
-      console.log('meta: needs to query tag for repo %O', repo)
       debug('meta needs to query tag for repo %O', repo)
       const tag = await getAnnotatedTag(
         repo.id,

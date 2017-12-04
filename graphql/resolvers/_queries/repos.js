@@ -16,7 +16,7 @@ const {
   REPOS_NAME_FILTER
 } = process.env
 
-module.exports = async (__, args, { user }) => {
+module.exports = async (__, args, { user, redis }) => {
   ensureUserHasRole(user, 'editor')
   const { githubApolloFetch } = await createGithubClients()
 
@@ -90,8 +90,8 @@ module.exports = async (__, args, { user }) => {
       ...repository,
       id: `${GITHUB_LOGIN}/${repository.name}`
     }
-    const latestCommit = await getCommit(repo, { id: repo.defaultBranchRef.target.oid })
-    const document = await getDocument(latestCommit, { oneway: true }, { user })
+    const latestCommit = await getCommit(repo, { id: repo.defaultBranchRef.target.oid }, { redis })
+    const document = await getDocument(latestCommit, { oneway: true }, { user, redis })
     return {
       ...repo,
       meta: await getMeta(repo),

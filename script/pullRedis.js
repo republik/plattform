@@ -22,18 +22,20 @@ const user = {
 }
 Promise.resolve().then(async () => {
   const noflush = process.argv[2] === '--noflush'
+  if (!noflush) {
+    await redis.flushdbAsync()
+  }
+
   const now = new Date()
 
-  const repos = await getRepos(null, { first: 100 }, { user })
+  const repos = await getRepos(null, { first: 100 }, { user, redis })
   const allLatestPublications = await Promise.all(
     repos.map(repo => getLatestPublications(repo))
   )
     .then(arr => arr.filter(arr2 => arr2.length > 0))
   // console.log(util.inspect(allLatestPublications, {depth: null}))
 
-  let redisOps = noflush
-    ? [ ]
-    : [ redis.flushdbAsync() ]
+  let redisOps = []
 
   for (let publications of allLatestPublications) {
     redisOps.push(
@@ -45,7 +47,7 @@ Promise.resolve().then(async () => {
       const doc = await getDocument(
         { id: commit.id, repo },
         { oneway: true },
-        { user }
+        { user, redis }
       )
       const payload = JSON.stringify({
         doc,

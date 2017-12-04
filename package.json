@@ -61,6 +61,7 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon -w graphql -w src -w lib -w .env -w server.js -w index.js index.js",
+    "debug": "DEBUG=publikator:* yarn run dev",
     "start": "node index.js",
     "precommit": "lint-staged",
     "standardize": "standard --fix",

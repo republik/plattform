@@ -130,7 +130,7 @@ module.exports = async (
   const doc = await getDocument(
     { id: commitId, repo: { id: repoId } },
     { oneway: true },
-    { user }
+    { user, redis }
   )
   const payload = JSON.stringify({
     doc,

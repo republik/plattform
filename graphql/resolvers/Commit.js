@@ -13,13 +13,19 @@ module.exports = {
       document: existingDocument
     },
     { oneway },
-    { user }
+    { user, redis }
   ) => {
     if (existingDocument) {
-      debug('documents: reusing existing document for repoId: %s', repoId)
       return existingDocument
     }
-    console.log('loading document:', repoId)
+    const redisKey = `repos:${repoId}/commits/${commitId}/document${oneway ? '/oneway' : ''}`
+    const redisDocument = await redis.getAsync(redisKey)
+    if (redisDocument) {
+      debug('document: redis HIT (%s)', redisKey)
+      return JSON.parse(redisDocument)
+    }
+    debug('document: redis MISS (%s)', redisKey)
+
     const { githubApolloFetch } = await createGithubClients()
     const [login, repoName] = repoId.split('/')
 
@@ -83,7 +89,7 @@ module.exports = {
       ? parsePublishDate(mdast.meta.publishDate) || mdast.meta.publishDate
       : null
 
-    return {
+    const doc = {
       content: mdast,
       meta: {
         ...mdast.meta,
@@ -91,5 +97,7 @@ module.exports = {
         publishDate
       }
     }
+    await redis.setAsync(redisKey, JSON.stringify(doc))
+    return doc
   }
 }
