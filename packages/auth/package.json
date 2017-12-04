@@ -4,7 +4,8 @@
   "description": "auth migrations, seeds, middleware, graphql schema and resolvers",
   "main": "index.js",
   "scripts": {
-    "link": "yarn link"
+    "link": "yarn link",
+    "translations": "gsheets --key=1mgLz3k2rQ_qcB2ZpmJRZbGLAX5vGcr0P9I2jbWaIgog --title=live --pretty --out lib/translations.json"
   },
   "repository": {
     "type": "git",
