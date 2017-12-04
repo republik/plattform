@@ -354,6 +354,12 @@ test('repos (signed in)', async (t) => {
   t.end()
 })
 
+const reposQueryTests = require('./reposQuery.js')
+test('repos query', async (t) => {
+  await reposQueryTests(t, apolloFetch, githubRest)
+  t.end()
+})
+
 test('commit (create repo)', async (t) => {
   const repoName = getNewRepoId()
   const variables = {
@@ -1914,9 +1920,7 @@ test('parentId on non existing repo must be denied', async (t) => {
   t.end()
 })
 
-/**
-  Embed API tests
-*/
+// Embed API tests
 test('fetch youtube data', async (t) => {
   const result = await apolloFetch({
     query: `
