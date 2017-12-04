@@ -23,12 +23,9 @@ const ensureUserHasRole = (user, role) => {
 }
 
 
-const userIsInRoles = (user, roles) => {
-  if (!user || !user.roles || user.roles.length < 1) {
-    return false
-  }
-  const matches = user.roles.filter( role =>
-    roles.indexOf(role) > -1
+const userIsInRoles = (user, roles = []) => {
+  const matches = roles.filter( role =>
+    userHasRole(user, role)
   )
   return matches.length > 0
 }
