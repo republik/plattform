@@ -73,12 +73,12 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
       auto_init: true
     })
 
-    await sleep(1500)
-
     let ready = false
     let count = 20
     while (ready === false) {
       const heads = await getHeads(repoId)
+      const util = require('util')
+      console.log(util.inspect(heads, {depth: null}))
       if (heads.length > 0 && heads[0] && heads[0].target && heads[0].target.oid.length > 0) {
         ready = true
       } else {
