@@ -57,6 +57,8 @@ module.exports.run = (executableSchema, middlewares, t) => {
       server.use(engine.expressMiddleware())
     }
 
+    server.use(requestLog)
+
     // Once DB is available, setup sessions and routes for authentication
     auth.configure({
       server: server,
@@ -65,8 +67,6 @@ module.exports.run = (executableSchema, middlewares, t) => {
       dev: DEV,
       pgdb: pgdb
     })
-
-    server.use(requestLog)
 
     if (CORS_WHITELIST_URL) {
       const corsOptions = {
