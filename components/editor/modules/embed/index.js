@@ -167,6 +167,7 @@ const moduleFactory = ({ query, matchUrl, getQueryParams }) => options => {
       serializer: getSerializer(options)
     },
     changes: {},
+    // TODO: Implement UI for size selection of video embeds.
     plugins: [
       embedPlugin({ query, ...options }),
       embedFromUrlPlugin({
