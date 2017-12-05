@@ -78,7 +78,7 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
     // be enough. CreateBlob fails even with "Initial commit"
     // on master present. Wait for feedback from github.
     //
-    await sleep(1500)
+    await sleep(2000)
     /*
     let ready = false
     let count = 20
