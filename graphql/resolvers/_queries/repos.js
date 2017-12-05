@@ -85,33 +85,37 @@ module.exports = async (__, args, { user, redis }) => {
     }
   })
 
-  let repos = await Promise.all(repositories.map(async (repository) => {
-    const repo = {
-      ...repository,
-      id: `${GITHUB_LOGIN}/${repository.name}`
-    }
-    const latestCommit = await getCommit(repo, { id: repo.defaultBranchRef.target.oid }, { redis })
-    const document = await getDocument(latestCommit, { oneway: true }, { user, redis })
-    return {
-      ...repo,
-      meta: await getMeta(repo),
-      latestCommit: {
-        ...latestCommit,
-        document
-      }
-    }
-  }))
+  let repos = await Promise.all(
+    repositories
+      .filter(repository => repository.defaultBranchRef) // skip uninitialized repos
+      .filter(repository => !REPOS_NAME_FILTER || repository.name.indexOf(REPOS_NAME_FILTER) > -1)
+      .map(async (repository) => {
+        const repo = {
+          ...repository,
+          id: `${GITHUB_LOGIN}/${repository.name}`
+        }
 
-  if (milestonesFilters || formatFilter || REPOS_NAME_FILTER) {
+        const latestCommit = await getCommit(repo, { id: repo.defaultBranchRef.target.oid }, { redis })
+        const document = await getDocument(latestCommit, { oneway: true }, { user, redis })
+        return {
+          ...repo,
+          meta: await getMeta(repo),
+          latestCommit: {
+            ...latestCommit,
+            document
+          }
+        }
+      }
+    )
+  )
+
+  if (milestonesFilters || formatFilter) {
     repos = repos.filter(repo => {
       if (formatFilter && (
         !repo.latestCommit.document ||
         !repo.latestCommit.document.meta ||
         repo.latestCommit.document.meta.format !== formatFilter
       )) {
-        return false
-      }
-      if (REPOS_NAME_FILTER && repo.name.indexOf(REPOS_NAME_FILTER) === -1) {
         return false
       }
       if (milestonesFilters) {
