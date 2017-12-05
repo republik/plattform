@@ -15,7 +15,7 @@ export default ({rule, subModules, TYPE}) => {
     match: object => object.kind === 'document',
     matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, rest) => {
-      return {
+      const res = {
         document: {
           data: node.meta,
           kind: 'document',
@@ -23,6 +23,7 @@ export default ({rule, subModules, TYPE}) => {
         },
         kind: 'value'
       }
+      return res
     },
     toMdast: (object, index, parent, rest) => {
       return {

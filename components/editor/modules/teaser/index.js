@@ -193,8 +193,19 @@ const teaserPlugin = options => {
                   }
                 }
                 break
+              case 'child_required':
+                if (index === 3) {
+                  return change.insertNodeByKey(
+                    node.key,
+                    3,
+                    {
+                      kind: 'block',
+                      type: paragraphModule.TYPE
+                    }
+                  )
+                }
             }
-            console.error({ reason, context: context.child.toJS() })
+            console.error({ reason, context })
           }
         }
       }

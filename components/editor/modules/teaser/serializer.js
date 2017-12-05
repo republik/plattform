@@ -121,11 +121,24 @@ export const toMdast = ({
     ).filter(Boolean)
   })
 
+  const { image, ...data } = node.data
+
   return {
     type: 'zone',
     identifier: 'TEASER',
-    data: node.data,
-    children: childSerializer.toMdast(node.nodes, 0, node, ...args)
+    data,
+    children: [
+      {
+        type: 'paragraph',
+        children: [
+          {
+            type: 'image',
+            url: image
+          }
+        ]
+      },
+      ...childSerializer.toMdast(node.nodes, 0, node, ...args)
+    ]
   }
 }
 

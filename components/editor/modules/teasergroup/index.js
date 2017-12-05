@@ -59,7 +59,9 @@ export const fromMdast = ({
     kind: 'block',
     type: TYPE,
     data,
-    nodes: node.children.map(teaserSerializer.fromMdast)
+    nodes: node.children.map(
+      v => teaserSerializer.fromMdast(v)
+    )
   }
   return result
 }
