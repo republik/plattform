@@ -60,7 +60,8 @@ const Text = ({
   position,
   center,
   color,
-  maxWidth
+  maxWidth,
+  margin
 }) => {
   const textAlign = center ? 'center' : ''
   const rootStyles = position ? styles.rootPosition : {}
@@ -69,7 +70,7 @@ const Text = ({
       <div
         {...attributes}
         {...css(styles.positioned, position ? styles[position] : {})}
-        style={{ color, textAlign, maxWidth }}
+        style={{ color, textAlign, maxWidth, margin }}
       >
         {children}
       </div>
@@ -87,12 +88,14 @@ Text.propTypes = {
     'bottomright'
   ]),
   textColor: PropTypes.string,
-  maxWidth: PropTypes.string
+  maxWidth: PropTypes.string,
+  margin: PropTypes.string
 }
 
 Text.defaultProps = {
   color: colors.text,
-  maxWidth: ''
+  maxWidth: '',
+  margin: ''
 }
 
 export default Text

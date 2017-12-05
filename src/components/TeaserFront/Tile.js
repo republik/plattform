@@ -42,7 +42,8 @@ const styles = {
   textContainer: css({
     padding: 0,
     [mUp]: {
-      padding: '0 13%'
+      padding: '0 13%',
+      width: '100%'
     }
   }),
   imageContainer: css({
@@ -55,6 +56,7 @@ const styles = {
     }
   }),
   image: css({
+    minWidth: '100px',
     ...sizeSmall,
     [mUp]: {
       ...sizeMedium
@@ -125,7 +127,7 @@ const Tile = ({ children, attributes, image, alt, color, bgColor }) => {
         </div>
       )}
       <div {...styles.textContainer}>
-        <Text color={color} maxWidth={'600px'}>
+        <Text color={color} maxWidth={'600px'} margin={'0 auto'}>
           {children}
         </Text>
       </div>
