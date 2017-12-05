@@ -14,8 +14,7 @@ type queries {
 
 type mutations {
   # signIn with an email address
-  # context is deprecated
-  signIn(email: String!, context: String @deprecated): SignInResponse!
+  signIn(email: String!, context: String): SignInResponse!
   signOut: Boolean!
 }
 `

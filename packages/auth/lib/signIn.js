@@ -1,4 +1,3 @@
-const { sendMail } = require('@orbiting/backend-modules-mail')
 const uuid = require('uuid/v4')
 const querystring = require('querystring')
 const isEmail = require('email-validator').validate
@@ -7,6 +6,11 @@ const geoForIP = require('./geoForIP')
 const fetch = require('isomorphic-unfetch')
 const checkEnv = require('check-env')
 const t = require('./t')
+const debug = require('debug')('auth')
+const {
+  sendMail,
+  sendMailTemplate
+} = require('@orbiting/backend-modules-mail')
 
 checkEnv([
   'AUTH_MAIL_FROM_ADDRESS'
@@ -17,17 +21,19 @@ const {
   PUBLIC_URL,
   AUTO_LOGIN,
   BASIC_AUTH_USER,
-  BASIC_AUTH_PASS
+  BASIC_AUTH_PASS,
+  AUTH_MAIL_TEMPLATE_NAME,
+  AUTH_MAIL_SUBJECT
 } = process.env
 
-module.exports = async (_email, pgdb, req) => {
+module.exports = async (_email, context, pgdb, req) => {
   if (req.user) {
     return {phrase: ''}
   }
 
   if (!isEmail(_email)) {
-    console.info('invalid email', {
-      req,
+    debug('invalid email: %O', {
+      req: req._log(),
       _email
     })
     throw new Error(t('api/email/invalid'))
@@ -59,7 +65,7 @@ module.exports = async (_email, pgdb, req) => {
   await new Promise(function (resolve, reject) {
     req.session.save(function (err) {
       if (err) {
-        console.error('auth: error saving session', { req, err })
+        console.error('auth: error saving session', { req: req._log(), err })
         return reject((t('api/auth/errorSavingSession')))
       }
       return resolve()
@@ -69,7 +75,11 @@ module.exports = async (_email, pgdb, req) => {
   const verificationUrl =
     (PUBLIC_URL || 'http://' + req.headers.host) +
     '/auth/email/signin/?' +
-    querystring.stringify({email, token})
+    querystring.stringify({
+      email,
+      context,
+      token
+    })
 
   // AUTO_LOGIN for automated testing
   if (AUTO_LOGIN) {
@@ -96,11 +106,30 @@ module.exports = async (_email, pgdb, req) => {
     }
   }
 
-  await sendMail({
-    to: email,
-    fromEmail: AUTH_MAIL_FROM_ADDRESS,
-    subject: 'signin link',
-    text: `
+  if (AUTH_MAIL_TEMPLATE_NAME) {
+    await sendMailTemplate({
+      to: email,
+      fromEmail: AUTH_MAIL_FROM_ADDRESS,
+      subject: AUTH_MAIL_SUBJECT || t('api/signin/mail/subject'),
+      templateName: AUTH_MAIL_TEMPLATE_NAME,
+      globalMergeVars: [
+        { name: 'LOCATION',
+          content: geoString
+        },
+        { name: 'SECRET_WORDS',
+          content: phrase
+        },
+        { name: 'LOGIN_LINK',
+          content: verificationUrl
+        }
+      ]
+    })
+  } else {
+    await sendMail({
+      to: email,
+      fromEmail: AUTH_MAIL_FROM_ADDRESS,
+      subject: AUTH_MAIL_SUBJECT || t('api/signin/mail/subject'),
+      text: `
 Hi!
 ${geoString ? '\nLogin attempt from ' + geoString + '\n' : ''}
 Verify that the provided security code matches *${phrase}* before proceeding.
@@ -108,7 +137,8 @@ Verify that the provided security code matches *${phrase}* before proceeding.
 Then please follow this link to signin.
 ${verificationUrl}
 `
-  })
+    })
+  }
 
-  return {phrase}
+  return { phrase }
 }

@@ -2,6 +2,17 @@ const session = require('express-session')
 const PgSession = require('connect-pg-simple')(session)
 const passport = require('passport')
 const transformUser = require('../lib/transformUser')
+const checkEnv = require('check-env')
+const querystring = require('querystring')
+const debug = require('debug')('auth')
+
+checkEnv([
+  'FRONTEND_BASE_URL',
+])
+
+const {
+  FRONTEND_BASE_URL
+} = process.env
 
 exports.configure = ({
   server = null, // Express Server
@@ -10,10 +21,10 @@ exports.configure = ({
   secret = null,
   // Specifies the value for the Domain Set-Cookie attribute
   domain = undefined,
-  // Max session age in ms (default is 4 weeks)
+  // Max session age in ms (default is 2 weeks)
   // NB: With 'rolling: true' passed to session() the session expiry time will
   // be reset every time a user visits the site again before it expires.
-  maxAge = 60000 * 60 * 24 * 7 * 4,
+  maxAge = 60000 * 60 * 24 * 7 * 2,
   // is the server running in development
   dev = false
 } = {}) => {
@@ -55,46 +66,107 @@ exports.configure = ({
 
   // authenticate a token sent by email
   server.get('/auth/email/signin/:token?', async (req, res) => {
-    const emailFromQuery = req.query.email
-    const token = req.query.token
+    const {
+      token,
+      email: emailFromQuery,
+      context
+    } = req.query
 
     if (!token) {
-      return res.status(400).end('please provide token')
+      debug('no token: %O', { req: req._log(), emailFromQuery, context })
+      return res.redirect(
+        `${FRONTEND_BASE_URL}/notifications?` +
+        querystring.stringify({
+          type: 'invalid-token',
+          email: emailFromQuery,
+          context
+        })
+      )
     }
 
     try {
       // Look up session by token
-      const session = await Sessions.findOne({'sess @>': {token}})
+      const session = await Sessions.findOne({
+        'sess @>': { token }
+      })
       if (!session) {
-        return res.status(400).end('invalid token')
+        debug('no session: %O', { req: req._log(), token, emailFromQuery, context })
+        return res.redirect(
+          `${FRONTEND_BASE_URL}/notifications?` +
+          querystring.stringify({
+            type: 'invalid-token',
+            email: emailFromQuery,
+            context
+          })
+        )
       }
 
-      const email = session.sess.email
-      if (emailFromQuery && email !== emailFromQuery) {
-        return res.status(400).end('email missmatch')
+      const {
+        email
+      } = session.sess
+      if (emailFromQuery && email !== emailFromQuery) { // emailFromQuery might be null for old links
+        debug("session.email and query.email don't match: %O", { req: req._log(), token, email, emailFromQuery, context })
+        return res.redirect(
+          `${FRONTEND_BASE_URL}/notifications?` +
+          querystring.stringify({
+            type: 'invalid-token',
+            email,
+            context
+          })
+        )
       }
 
       // verify and/or create the user
-      let user = await Users.findOne({email})
-      if (user) {
-        if (!user.verified) {
-          await Users.updateOne({id: user.id}, {verified: true})
-        }
-      } else {
-        user = await Users.insertAndGet({email, verified: true})
+      const existingUser = await Users.findOne({
+        email
+      })
+      const user = existingUser
+        ? existingUser
+        : await Users.insertAndGet({
+            email,
+            verified: true
+          })
+      if (!user.verified) {
+        await Users.updateOne({
+          id: user.id
+        }, {
+          verified: true
+        })
       }
 
       // log in the session and delete token
-      const sess = Object.assign({}, session.sess, {
-        passport: {user: user.id},
-        token: null
+      await Sessions.updateOne({
+        sid: session.sid
+      }, {
+        sess: {
+          ...session.sess,
+          token: null,
+          passport: {
+            user: user.id
+          }
+        }
       })
-      await Sessions.updateOne({sid: session.sid}, {sess})
 
-      return res.status(200).end('you are signed in now!')
+      // success
+      return res.redirect(
+        `${FRONTEND_BASE_URL}/notifications?` +
+        querystring.stringify({
+          type: 'email-confirmed',
+          email,
+          context
+        })
+      )
     } catch (e) {
-      console.error('auth: exception', e)
-      return res.status(500).end('error')
+      const util = require('util')
+      console.error('auth: exception', util.inspect({ req: req._log(), emailFromQuery, context, e }, {depth: null}))
+      return res.redirect(
+        `${FRONTEND_BASE_URL}/notifications?` +
+        querystring.stringify({
+          type: 'unavailable',
+          emailFromQuery,
+          context
+        })
+      )
     }
   })
 

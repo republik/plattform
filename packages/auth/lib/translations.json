@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-04T14:03:33.359Z",
+  "updated": "2017-12-05T17:46:36.201Z",
   "title": "live",
   "data": [
     {
@@ -29,6 +29,10 @@
     {
       "key": "api/auth/errorDestroyingSession",
       "value": "Ups, da ist was schiefgelaufen. Sorry!"
+    },
+    {
+      "key": "api/signin/mail/subject",
+      "value": "E-Mail-Adresse bestätigen (für die Republik)"
     }
   ]
 }
