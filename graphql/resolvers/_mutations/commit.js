@@ -73,6 +73,13 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
       auto_init: true
     })
 
+    // TODO: fix sleep for createRepo
+    // waiting for a head to be present does not seam to
+    // be enough. CreateBlob fails even with "Initial commit"
+    // on master present. Wait for feedback from github.
+    //
+    await sleep(1500)
+    /*
     let ready = false
     let count = 20
     while (ready === false) {
@@ -88,6 +95,7 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
         await sleep(300)
       }
     }
+    */
   }
 
   // reverse asset url prefixing
