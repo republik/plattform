@@ -147,17 +147,29 @@ type TwitterEmbed implements Embed {
 
 type YoutubeEmbed implements Embed {
   id: ID!
-  createdAt: String!
-  userId: String!
+  platform: String!
+  createdAt: DateTime!
+  retrievedAt: DateTime!
+  userUrl: String!
   userName: String!
   thumbnail: String!
+  title: String!
+  userName: String!
+  userProfileImageUrl: String
+  aspectRatio: Float
 }
 
 type VimeoEmbed implements Embed {
   id: ID!
-  createdAt: String!
-  userId: String!
+  platform: String!
+  createdAt: DateTime!
+  retrievedAt: DateTime!
+  userUrl: String!
   userName: String!
   thumbnail: String!
+  title: String!
+  userName: String!
+  userProfileImageUrl: String
+  aspectRatio: Float
 }
 `
