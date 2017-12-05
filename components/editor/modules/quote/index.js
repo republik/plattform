@@ -132,17 +132,6 @@ export default ({rule, subModules, TYPE}) => {
                   }
                 }
 
-                // TMP Fix
-                //   slate triggers child_required before child_kind_invalid
-                //   if the first node is not a block note
-                //   slate core schema rules will remove block nodes added here
-                //   so we trigger a child_kind_invalid instead
-                if (node.nodes.first().kind !== 'block') {
-                  child = node.nodes.first()
-                  reason = 'child_kind_invalid'
-                  index = 0
-                }
-
                 if (reason === 'child_required') {
                   change.insertNodeByKey(
                     node.key,
