@@ -72,30 +72,6 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
       private: true,
       auto_init: true
     })
-
-    // TODO: fix sleep for createRepo
-    // waiting for a head to be present does not seam to
-    // be enough. CreateBlob fails even with "Initial commit"
-    // on master present. Wait for feedback from github.
-    //
-    await sleep(2000)
-    /*
-    let ready = false
-    let count = 20
-    while (ready === false) {
-      const heads = await getHeads(repoId)
-      const util = require('util')
-      console.log(util.inspect(heads, {depth: null}))
-      if (heads.length > 0 && heads[0] && heads[0].target && heads[0].target.oid.length > 0) {
-        ready = true
-      } else {
-        if (count-- < 0) {
-          throw new Error('commit could not create a repo in time. please try again.')
-        }
-        await sleep(300)
-      }
-    }
-    */
   }
 
   // reverse asset url prefixing
@@ -131,13 +107,34 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
   const markdown = MDAST.stringify(mdast)
 
   // markdown -> blob
-  const markdownBlob = await githubRest.gitdata.createBlob({
-    owner: login,
-    repo: repoName,
-    content: markdown,
-    encoding: 'utf-8'
-  })
-    .then(result => result.data)
+  // try this until success
+  // CreateBlob sometimes fails even with "Initial commit" present
+  // on master. Issue under investigation with github.
+  let markdownBlob
+  let success = false
+  let count = 20
+  while (success === false) {
+    markdownBlob = await githubRest.gitdata.createBlob({
+      owner: login,
+      repo: repoName,
+      content: markdown,
+      encoding: 'utf-8'
+    })
+      .then(result => result.data)
+      .catch(e => {
+        const util = require('util')
+        console.log('createBlob failed!', util.inspect(e, {depth: null}))
+      })
+
+    if (markdownBlob) {
+      success = true
+    } else {
+      if (count-- < 0) {
+        throw new Error('commit could not create a repo in time. please try again.')
+      }
+      await sleep(300)
+    }
+  }
 
   // images -> blobs
   await Promise.all(images.map(({ blob }) => {
