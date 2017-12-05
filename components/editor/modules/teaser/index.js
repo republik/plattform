@@ -17,6 +17,7 @@ import {
 import { TeaserButton, TeaserInlineUI, TeaserForm } from './ui'
 
 export const getData = data => ({
+  url: null,
   textPosition: 'topleft',
   color: '#fff',
   bgColor: '#000',
@@ -107,7 +108,7 @@ const teaserPlugin = options => {
       return ([
         <UI
           key='ui'
-          isSelected={isSelected}
+          isSelected={isSelected && editor.value.document.nodes.size > 1}
           nodeKey={node.key}
           getIndex={getIndex(editor)}
           getParentKey={getParentKey(editor)}
@@ -121,6 +122,10 @@ const teaserPlugin = options => {
       ])
     },
     onKeyDown (event, change) {
+      if (change.value.blocks.size > 1) {
+        event.preventDefault()
+        return change.collapseToEnd()
+      }
       if (event.key !== 'Enter') {
         return
       }

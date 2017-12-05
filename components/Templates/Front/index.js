@@ -77,7 +77,8 @@ const lead = (type, component) => ({
   editorOptions: {
     type,
     placeholder: 'Lead',
-    depth: 4
+    depth: 4,
+    optional: true
   }
 })
 
@@ -91,7 +92,8 @@ const format = type => ({
   editorOptions: {
     type,
     placeholder: 'Format',
-    depth: 6
+    depth: 6,
+    optional: true
   }
 })
 
@@ -130,15 +132,11 @@ const frontImageTeaser = {
     title(
       'frontImageTitle',
       ({ children, attributes = {}, ...props }) => {
-        const { kind, titleSize } = props
+        const { kind } = props
         const Component = kind === 'editorial'
           ? TeaserFrontImageHeadline.Editorial
           : TeaserFrontImageHeadline.Interaction
-        const sizes = {
-          medium: titleSize === 'medium',
-          large: titleSize === 'large'
-        }
-        return <Component {...attributes} {...sizes}>
+        return <Component {...attributes}>
           {children}
         </Component>
       }
@@ -253,7 +251,8 @@ const frontTypoTeaser = {
         : TeaserFrontTypoHeadline.Interaction
         const sizes = {
           medium: titleSize === 'medium',
-          large: titleSize === 'large'
+          large: titleSize === 'large',
+          small: titleSize === 'small'
         }
         return <Component {...attributes} {...sizes}>
           {children}
@@ -379,6 +378,9 @@ const schema = {
           rules: [
             frontTileTeaser
           ]
+        },
+        {
+          editorModule: 'specialchars'
         }
       ]
     }

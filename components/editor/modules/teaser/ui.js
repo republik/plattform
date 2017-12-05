@@ -1,4 +1,4 @@
-import { colors, Dropdown, Checkbox, Label, P } from '@project-r/styleguide'
+import { colors, Field, Dropdown, Checkbox, Label, P } from '@project-r/styleguide'
 import React from 'react'
 import { css } from 'glamor'
 import {
@@ -62,9 +62,11 @@ const styles = {
     right: 0,
     height: '0px',
     overflow: 'hidden',
-    transition: 'height 0.2s'
+    opacity: 0,
+    transition: 'opacity 0.2s'
   }),
   uiOpen: css({
+    opacity: 1,
     height: '32px'
   }),
   uiInlineRow: css({
@@ -143,6 +145,11 @@ export const TeaserButton = options => createActionButton({
 
 const Form = ({ node, onChange, options }) => {
   return <SidebarForm>
+    <Field
+      label='URL'
+      value={node.data.get('url')}
+      onChange={onChange('url')}
+  />
     {
       options.includes('textPosition') &&
       <Dropdown
