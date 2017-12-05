@@ -506,7 +506,6 @@ Zweitens: ich habe erklärt mit diese zwei Spieler: nach Dortmund brauchen viell
   "id": "t0nfMr_wXVY",
   "createdAt": "2017-04-26T04:51:29.000Z",
   "retrievedAt": "2017-12-04T16:15:33.260Z",
-  "description": "",
   "aspectRatio": 1.7761989342806395
 }
 \`\`\`
@@ -537,7 +536,6 @@ Zweitens: ich habe erklärt mit diese zwei Spieler: nach Dortmund brauchen viell
   "id": "214306781",
   "createdAt": "2017-04-22T16:06:44.000Z",
   "retrievedAt": "2017-12-04T16:25:57.671Z",
-  "description": "Viktor Giacobbo unterstützt die Republik",
   "aspectRatio": 1
 }
 \`\`\`
