@@ -13,16 +13,30 @@ query getVideoEmbed($id: ID!, $embedType: EmbedType!) {
   embed(id: $id, embedType: $embedType) {
     __typename
     ... on YoutubeEmbed {
+      platform
       id
-      userId
+      createdAt
+      retrievedAt
       userName
+      userUrl
       thumbnail
+      title
+      userName
+      userProfileImageUrl
+      aspectRatio
     }
     ... on VimeoEmbed {
+      platform
       id
-      userId
+      createdAt
+      retrievedAt
       userName
+      userUrl
       thumbnail
+      title
+      userName
+      userProfileImageUrl
+      aspectRatio
     }
   }
 }
@@ -121,6 +135,7 @@ const getSerializer = options =>
 const embedPlugin = ({ query, ...options }) => {
   const Embed = options.rule.component
   const Component = withApollo(EmbedLoader(query, Embed))
+  console.log('plugin', options)
 
   return {
     renderNode (props) {
@@ -148,6 +163,7 @@ const embedPlugin = ({ query, ...options }) => {
 
 const moduleFactory = ({ query, matchUrl, getQueryParams }) => options => {
   const { rule, TYPE } = options
+  console.log('factory', TYPE)
   return {
     helpers: {
       serializer: getSerializer(options)
@@ -180,6 +196,7 @@ const matchVideoUrl = url =>
   YOUTUBE_REGEX.test(url) || VIMEO_REGEX.test(url)
 
 const getVideoQueryParams = url => {
+  console.log('video')
   if (YOUTUBE_REGEX.test(url)) {
     return {
       embedType: 'YoutubeEmbed',
@@ -199,6 +216,7 @@ const matchTwitterUrl = url =>
   TWITTER_REGEX.test(url)
 
 const getTwitterQueryParams = url => {
+  console.log('TWITTER')
   if (TWITTER_REGEX.test(url)) {
     return {
       embedType: 'TwitterEmbed',

@@ -7,7 +7,7 @@ import {
 
 import {
   H1, H2,
-  P, A, NarrowContainer, Tweet
+  P, A, NarrowContainer, Tweet, Video
 } from '@project-r/styleguide'
 
 const Br = () => <br />
@@ -132,11 +132,7 @@ const schema = {
                 'EMBEDVIDEO'
               ),
               component: props => (
-                <pre
-                  style={{lineHeight: '1em'}}
-                >
-                  {JSON.stringify(props.data, null, 3)}
-                </pre>
+                <Video {...props.data} />
               ),
               editorModule: 'embedVideo',
               editorOptions: {

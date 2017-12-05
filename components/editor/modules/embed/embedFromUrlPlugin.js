@@ -15,6 +15,7 @@ export default ({ matchSource, matchUrl, getQueryParams, TYPE }) => ({
     if (!text) return
 
     const url = text.trim()
+    console.log(url, TYPE)
 
     if (matchUrl(url)) {
       const parent = value.document.getParent(block.key)
