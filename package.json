@@ -52,7 +52,7 @@
     "tape": "^4.8.0"
   },
   "dependencies": {
-    "@project-r/styleguide": "^5.11.2",
+    "@project-r/styleguide": "^5.12.1",
     "@project-r/template-newsletter": "^1.4.3",
     "d3-array": "^1.2.0",
     "d3-color": "^1.0.3",
@@ -89,9 +89,9 @@
     "remark-frontmatter": "^1.1.0",
     "remark-parse": "^4.0.0",
     "remark-stringify": "^4.0.0",
-    "slate": "^0.30.6",
+    "slate": "^0.31.5",
     "slate-mdast-serializer": "^1.0.0",
-    "slate-react": "^0.10.10",
+    "slate-react": "^0.10.20",
     "subscriptions-transport-ws": "^0.8.2",
     "unified": "^6.1.5"
   }

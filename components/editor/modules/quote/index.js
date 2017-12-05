@@ -113,13 +113,13 @@ export default ({rule, subModules, TYPE}) => {
             [TYPE]: {
               nodes: [
                 figureModule && {
-                  types: [figureModule.TYPE], min: 0, max: 1
+                  kinds: ['block'], types: [figureModule.TYPE], min: 0, max: 1
                 },
                 {
-                  types: [paragrapQuoteModule.TYPE], min: 1, max: 1
+                  kinds: ['block'], types: [paragrapQuoteModule.TYPE], min: 1, max: 1
                 },
                 {
-                  types: [paragraphSourceModule.TYPE], min: 1, max: 1
+                  kinds: ['block'], types: [paragraphSourceModule.TYPE], min: 1, max: 1
                 }
               ].filter(Boolean),
               normalize: (change, reason, {node, index, child}) => {
