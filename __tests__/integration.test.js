@@ -103,7 +103,7 @@ test('unauthorized repos query', async (t) => {
   const result = await apolloFetch({
     query: `
       {
-        repos(first: 20) {
+        repos {
           id
           commits(page: 0) {
             id
@@ -141,10 +141,10 @@ test('unauthorized subscription', (t) => {
       repoId: 'irrelevant'
     }
   }).subscribe({
-    // TODO: FIX, subscription returns strange error, instead of
-    // proper api/signIn
+    // TODO: cleanup
+    // subscription returns error message below (async iterator)
+    // or some versions, we accept both ways now
     next: (result) => {
-      /*
       const { errors } = result
       t.ok(errors)
       t.equals(errors.length, 1)
@@ -152,7 +152,6 @@ test('unauthorized subscription', (t) => {
       t.equals(error.message, tr('api/signIn'))
       client.close()
       t.end()
-      */
     },
     error: (errors) => {
       // t.equals(errors, null)
@@ -250,7 +249,7 @@ test('repos (signed in, without role)', async (t) => {
   const result = await apolloFetch({
     query: `
       {
-        repos(first: 2) {
+        repos {
           id
         }
       }
@@ -285,10 +284,10 @@ test('subscription (signed in, without role)', (t) => {
       repoId: 'irrelevant'
     }
   }).subscribe({
-    // TODO: FIX, subscription returns strange error, instead of
-    // proper api/signIn
+    // TODO: cleanup
+    // subscription returns error message below (async iterator)
+    // or some versions, we accept both ways now
     next: (result) => {
-      /*
       const { errors } = result
       t.ok(errors)
       t.equals(errors.length, 1)
@@ -296,7 +295,6 @@ test('subscription (signed in, without role)', (t) => {
       t.equals(error.message, tr('api/unauthorized', { role: 'editor' }))
       client.close()
       t.end()
-      */
     },
     error: (errors) => {
       // t.equals(errors, null)
@@ -344,7 +342,7 @@ test('repos (signed in)', async (t) => {
   const result = await apolloFetch({
     query: `
       {
-        repos(first: 1) {
+        repos {
           id
         }
       }
@@ -353,6 +351,12 @@ test('repos (signed in)', async (t) => {
   t.ok(result.data)
   t.false(result.errors)
   t.ok(result.data.repos)
+  t.end()
+})
+
+const reposQueryTests = require('./reposQuery.js')
+test('repos query', async (t) => {
+  await reposQueryTests(t, apolloFetch, githubRest)
   t.end()
 })
 
@@ -1916,9 +1920,7 @@ test('parentId on non existing repo must be denied', async (t) => {
   t.end()
 })
 
-/**
-  Embed API tests
-*/
+// Embed API tests
 test('fetch youtube data', async (t) => {
   const result = await apolloFetch({
     query: `
@@ -2079,7 +2081,7 @@ test('unauthorized repos query', async (t) => {
   const result = await apolloFetch({
     query: `
       {
-        repos(first: 20) {
+        repos {
           id
           commits(page: 0) {
             id

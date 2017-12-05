@@ -1,22 +1,20 @@
+const { makeExecutableSchema } = require('graphql-tools')
 const { server } = require('@orbiting/backend-modules-base')
+const { merge } = require('apollo-modules-node')
+const t = require('./lib/t')
+
+const { graphql: documents } = require('@orbiting/backend-modules-documents')
+const { graphql: auth } = require('@orbiting/backend-modules-auth')
 
 module.exports.run = () => {
-  const { makeExecutableSchema, mergeSchemas } = require('graphql-tools')
-  const t = require('./lib/t')
+  const localModule = require('./graphql')
+  const executableSchema = makeExecutableSchema(merge(localModule, [documents, auth]))
 
-  // middlewares
-  const assets = require('./express/assets')
+  const middlewares = [
+    require('./express/assets')
+  ]
 
-  // graphql schema
-  const executableSchema = mergeSchemas({
-    schemas: [
-      makeExecutableSchema(require('@orbiting/backend-modules-auth').graphql),
-      makeExecutableSchema(require('@orbiting/backend-modules-documents').graphql),
-      makeExecutableSchema(require('./graphql'))
-    ]
-  })
-
-  return server.run(executableSchema, [assets], t)
+  return server.run(executableSchema, middlewares, t)
     .then(async (obj) => {
       const scheduler = require('./lib/publicationScheduler')
       await scheduler.init()
