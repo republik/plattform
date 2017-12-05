@@ -485,3 +485,68 @@ Zweitens: ich habe erklärt mit diese zwei Spieler: nach Dortmund brauchen viell
 <hr /></section>
 `}</Markdown>
 ```
+
+## Video
+
+```react|noSource
+<Markdown schema={schema}>{`
+<section><h6>CENTER</h6>
+
+<section><h6>EMBEDVIDEO</h6>
+
+\`\`\`
+{
+  "userUrl": "https://www.youtube.com/channel/UC82dvTzW_mXuQtw3lIYYCZg",
+  "__typename": "YoutubeEmbed",
+  "thumbnail": "https://i.ytimg.com/vi/t0nfMr_wXVY/maxresdefault.jpg",
+  "userProfileImageUrl": "https://yt3.ggpht.com/-ioa9x6qF4KU/AAAAAAAAAAI/AAAAAAAAAAA/f0ivHR9UWTA/s88-c-k-no-mo-rj-c0xffffff/photo.jpg",
+  "platform": "youtube",
+  "userName": "Republik",
+  "title": "Republik: Das Team stellt sich vor",
+  "id": "t0nfMr_wXVY",
+  "createdAt": "2017-04-26T04:51:29.000Z",
+  "retrievedAt": "2017-12-04T16:15:33.260Z",
+  "description": "",
+  "aspectRatio": 1.7761989342806395
+}
+\`\`\`
+
+<https://www.youtube.com/watch?v=t0nfMr_wXVY>
+
+<hr /></section>
+
+<hr /></section>
+`}</Markdown>
+```
+
+```react|noSource
+<Markdown schema={schema}>{`
+<section><h6>CENTER</h6>
+
+<section><h6>EMBEDVIDEO</h6>
+
+\`\`\`
+{
+  "userUrl": "https://vimeo.com/republikmagazin",
+  "__typename": "VimeoEmbed",
+  "thumbnail": "https://i.vimeocdn.com/video/632002647_960x960.jpg?r=pad",
+  "userProfileImageUrl": "https://i.vimeocdn.com/portrait/19083661_100x100",
+  "platform": "vimeo",
+  "userName": "Republik",
+  "title": "Viktor Giacobbo unterstützt die Republik",
+  "id": "214306781",
+  "createdAt": "2017-04-22T16:06:44.000Z",
+  "retrievedAt": "2017-12-04T16:25:57.671Z",
+  "description": "Viktor Giacobbo unterstützt die Republik",
+  "aspectRatio": 1
+}
+\`\`\`
+
+<https://vimeo.com/214306781>
+
+<hr /></section>
+
+<hr /></section>
+`}</Markdown>
+```
+

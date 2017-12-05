@@ -259,6 +259,17 @@ ReactDOM.render(
             src: require('./components/Social/docs.md')
           },
           {
+            path: '/video',
+            title: 'Video',
+            imports: {
+              css,
+              ...require('./components/Typography'),
+              ...require('./components/Video'),
+              Center: require('./components/Center'),
+            },
+            src: require('./components/Video/docs.md')
+          },
+          {
             path: '/figure',
             title: 'Figure',
             imports: {

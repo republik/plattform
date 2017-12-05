@@ -27,7 +27,9 @@ import {
 import {
   Tweet
 } from '../../components/Social'
-
+import {
+  Video
+} from '../../components/Video'
 import {
   matchType,
   matchZone,
@@ -412,6 +414,23 @@ const createSchema = ({
                 }
               }),
               editorModule: 'embedTwitter',
+              editorOptions: {
+                lookupType: 'PARAGRAPH'
+              },
+              isVoid: true
+            },
+            {
+              matchMdast: matchZone('EMBEDVIDEO'),
+              component: ({data, url}) => (
+                <Video {...data} date={new Date(data.createdAt)} />
+              ),
+              props: node => ({
+                data: {
+                  ...node.data,
+                  url: node.children[0].children[0].url
+                }
+              }),
+              editorModule: 'embedVideo',
               editorOptions: {
                 lookupType: 'PARAGRAPH'
               },
