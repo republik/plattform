@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
+import { breakoutStyles } from '../Center'
 import { Figure, FigureImage, FigureCaption } from '../Figure'
 import { Meta } from './Meta'
 import PlayIcon from 'react-icons/lib/md/play-arrow'
@@ -11,7 +12,6 @@ const styles = {
     display: 'block',
     textDecoration: 'none',
     position: 'relative',
-    maxWidth: '455px',
     margin: '36px auto',
     [mUp]: {
       margin: '45px auto'
@@ -45,18 +45,6 @@ const styles = {
   })
 }
 
-export const sizeStyles = {
-  default: css({
-    maxWidth: '455px'
-  }),
-  full: css({
-    maxWidth: '100%'
-  }),
-  narrow: css({
-    maxWidth: '270px'
-  })
-}
-
 const Embed = ({ id, platform, aspectRatio, title }) => {
   let src = ''
   if (platform === 'youtube') {
@@ -86,7 +74,7 @@ class Video extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      play: false
+      embedIframe: false
     }
 
     this.handleClick = this.handleClick.bind(this)
@@ -94,7 +82,7 @@ class Video extends Component {
 
   handleClick(e) {
     e.preventDefault()
-    this.setState({ play: true })
+    this.setState({ embedIframe: true })
   }
 
   render() {
@@ -112,12 +100,12 @@ class Video extends Component {
       userProfileImageUrl,
       date
     } = this.props
-    const { play } = this.state
+    const { embedIframe } = this.state
 
     return (
-      <div {...css(styles.container, sizeStyles[size])}>
-        <Figure>
-          {!play && (
+      <div {...styles.container}>
+        <Figure size={size}>
+          {!embedIframe && (
             <a {...styles.thumbnail} onClick={this.handleClick}>
               <span {...styles.playIcon}>
                 <PlayIcon />
@@ -125,7 +113,7 @@ class Video extends Component {
               <FigureImage src={thumbnail} alt="" />
             </a>
           )}
-          {play && (
+          {embedIframe && (
             <Embed
               id={id}
               platform={platform}
@@ -134,8 +122,7 @@ class Video extends Component {
             />
           )}
           <FigureCaption>{title}</FigureCaption>
-        </Figure>
-        {showMeta && (
+          {showMeta && (
           <Meta
             url={url}
             platform={platform}
@@ -146,6 +133,7 @@ class Video extends Component {
             date={date}
           />
         )}
+        </Figure>
       </div>
     )
   }
@@ -157,7 +145,7 @@ Video.propTypes = {
   platform: PropTypes.oneOf(['vimeo', 'youtube']).isRequired,
   thumbnail: PropTypes.string.isRequired,
   aspectRatio: PropTypes.number.isRequired,
-  size: PropTypes.oneOf(Object.keys(sizeStyles)),
+  size: PropTypes.oneOf(Object.keys(breakoutStyles)),
   showMeta: PropTypes.bool.isRequired,
   userName: PropTypes.string,
   userUrl: PropTypes.string,
@@ -167,7 +155,7 @@ Video.propTypes = {
 
 Video.defaultProps = {
   platform: 'youtube',
-  size: 'default',
+  size: undefined,
   showMeta: false
 }
 
