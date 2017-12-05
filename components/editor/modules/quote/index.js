@@ -132,6 +132,12 @@ export default ({rule, subModules, TYPE}) => {
                   }
                 }
 
+                if (node.nodes.first().kind !== 'block') {
+                  child = node.nodes.first()
+                  reason = 'child_kind_invalid'
+                  index = 0
+                }
+
                 if (reason === 'child_required') {
                   change.insertNodeByKey(
                     node.key,
