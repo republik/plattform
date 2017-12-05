@@ -115,7 +115,15 @@ const frontImageTeaser = {
   editorOptions: {
     type: 'frontImage',
     teaserType: 'frontImage',
-    insertButton: 'Front Image'
+    insertButton: 'Front Image',
+    formOptions: [
+      'textPosition',
+      'color',
+      'bgColor',
+      'linkColor',
+      'center',
+      'image'
+    ]
   },
   rules: [
     image,
@@ -165,7 +173,18 @@ const frontSplitTeaser = {
   editorOptions: {
     type: 'frontSplit',
     teaserType: 'frontSplit',
-    insertButton: 'Front Split'
+    insertButton: 'Front Split',
+    formOptions: [
+      'color',
+      'bgColor',
+      'linkColor',
+      'center',
+      'image',
+      'kind',
+      'titleSize',
+      'reverse',
+      'portrait'
+    ]
   },
   rules: [
     image,
@@ -214,7 +233,14 @@ const frontTypoTeaser = {
   editorOptions: {
     type: 'frontTypo',
     teaserType: 'frontTypo',
-    insertButton: 'Front Typo'
+    insertButton: 'Front Typo',
+    formOptions: [
+      'color',
+      'bgColor',
+      'linkColor',
+      'kind',
+      'titleSize'
+    ]
   },
   rules: [
     image,
@@ -250,6 +276,20 @@ const frontTypoTeaser = {
   ]
 }
 
+/*
+textPosition: 'topleft',
+color: '#fff',
+bgColor: '#000',
+linkColor: colors.primary,
+center: false,
+image: gray2x1,
+kind: 'editorial',
+titleSize: 'standard',
+teaserType: 'frontImage',
+reverse: false,
+portrait: true,
+*/
+
 const frontTileTeaser = {
   matchMdast: node => {
     return matchZone('TEASER')(node) && node.data.teaserType === 'frontTile'
@@ -264,24 +304,28 @@ const frontTileTeaser = {
     type: 'frontTile',
     teaserType: 'frontTile',
     insertButton: 'Front Tile',
-    dnd: false
+    dnd: false,
+    formOptions: [
+      'color',
+      'bgColor',
+      'linkColor',
+      'center',
+      'image',
+      'kind'
+    ]
   },
   rules: [
     image,
     title(
       'frontTileTitle',
       ({ children, attributes = {}, ...props }) => {
-        const { kind, titleSize } = props
+        const { kind } = props
         const Component = kind === 'editorial'
         ? TeaserFrontTileHeadline.Editorial
         : TeaserFrontTileHeadline.Interaction
-        const sizes = {
-          medium: titleSize === 'medium',
-          large: titleSize === 'large'
-        }
         return (
 
-          <Component {...attributes} {...sizes}>
+          <Component {...attributes}>
             {children}
           </Component>
         )

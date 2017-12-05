@@ -1,3 +1,4 @@
+import { colors } from '@project-r/styleguide'
 import React from 'react'
 import { matchBlock } from '../../utils'
 import { Block } from 'slate'
@@ -9,7 +10,8 @@ import {
   getIndex,
   getParentKey,
   insert,
-  move
+  move,
+  remove
 } from './dnd'
 
 import { TeaserButton, TeaserInlineUI, TeaserForm } from './ui'
@@ -18,7 +20,7 @@ export const getData = data => ({
   textPosition: 'topleft',
   color: '#fff',
   bgColor: '#000',
-  linkColor: '#f00',
+  linkColor: colors.primary,
   center: false,
   image: gray2x1,
   kind: 'editorial',
@@ -84,8 +86,6 @@ const teaserPlugin = options => {
         return
       }
 
-      const UI = TeaserInlineUI(options)
-
       if (options.rule.editorOptions.dnd === false) {
         return (
           <Teaser key='teaser' {...node.data.toJS()} attributes={attributes}>
@@ -93,14 +93,27 @@ const teaserPlugin = options => {
           </Teaser>
         )
       }
+
+      const UI = TeaserInlineUI(options)
+
+      const teaser = editor.value.blocks.reduce(
+        (memo, node) =>
+          memo || editor.value.document.getFurthest(node.key, matchBlock(TYPE)),
+        undefined
+      )
+
+      const isSelected = teaser === node && !editor.value.isBlurred
+
       return ([
         <UI
           key='ui'
+          isSelected={isSelected}
           nodeKey={node.key}
           getIndex={getIndex(editor)}
           getParentKey={getParentKey(editor)}
           move={move(editor)}
           insert={insert(editor)}
+          remove={remove(editor)}
       />,
         <Teaser key='teaser' {...node.data.toJS()} attributes={attributes}>
           {children}

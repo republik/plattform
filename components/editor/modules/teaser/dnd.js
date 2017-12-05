@@ -53,7 +53,8 @@ export const createDropTarget = DropTarget(
   teaserTarget,
   (connect, monitor) => ({
     connectDropTarget: connect.dropTarget(),
-    isOver: monitor.isOver()
+    isOver: monitor.isOver(),
+    dragInProcess: monitor.getItem() !== null
   }))
 
 export const createInsertDragSource = DragSource(TEASER, insertTeaserSource, (connect, monitor) => ({
@@ -89,4 +90,8 @@ export const move = editor => (nodeKey, parentKey, index) => {
 
 export const insert = editor => (parentKey, index, newNode) => {
   editor.change(t => t.insertNodeByKey(parentKey, index, newNode))
+}
+
+export const remove = editor => nodeKey => {
+  editor.change(t => t.removeNodeByKey(nodeKey))
 }

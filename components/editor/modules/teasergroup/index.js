@@ -7,7 +7,8 @@ import {
   getIndex,
   getParentKey,
   insert,
-  move
+  move,
+  remove
 } from '../teaser/dnd'
 
 import { TeaserInlineUI } from '../teaser/ui'
@@ -75,25 +76,17 @@ export const toMdast = ({
     context
   }
 ) => {
-  const childSerializer = new MarkdownSerializer({
-    rules: subModules.reduce(
-      (a, m) => a.concat(
-        m.helpers && m.helpers.serializer &&
-        m.helpers.serializer.rules
-      ),
-      []
-    ).filter(Boolean).concat({
-      matchMdast: (node) => node.type === 'break',
-      fromMdast: () => ({
-        kind: 'text',
-        leaves: [{text: '\n'}]
-      })
-    })
-  })
+  const [ teaserModule ] = subModules
+
+  const mdastChildren = node.nodes.map(v =>
+    teaserModule.helpers.serializer.toMdast(v)
+  )
+
   return {
     type: 'zone',
-    identifier: 'TEASER',
-    children: childSerializer.toMdast(node.nodes)
+    identifier: 'TEASERGROUP',
+    children: mdastChildren,
+    data: node.data
   }
 }
 
@@ -112,14 +105,24 @@ const teaserGroupPlugin = options => {
       }
       const UI = TeaserInlineUI(options)
 
+      const teaser = editor.value.blocks.reduce(
+        (memo, node) =>
+          memo || editor.value.document.getFurthest(node.key, matchBlock(TYPE)),
+        undefined
+      )
+
+      const isSelected = teaser === node && !editor.value.isBlurred
+
       return ([
         <UI
           key='ui'
+          isSelected={isSelected}
           nodeKey={node.key}
           getIndex={getIndex(editor)}
           getParentKey={getParentKey(editor)}
           move={move(editor)}
           insert={insert(editor)}
+          remove={remove(editor)}
       />,
         <TeaserGroup key='teaser' {...node.data.toJS()} attributes={attributes}>
           {children}

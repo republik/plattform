@@ -63,7 +63,6 @@ export const fromMdast = ({
   const titleSerializer = titleModule.helpers.serializer
   const leadSerializer = leadModule.helpers.serializer
   const formatSerializer = formatModule.helpers.serializer
-
   const paragraphSerializer = paragraphModule.helpers.serializer
 
   const imageParagraph = node.children.find(matchImageParagraph)
@@ -105,6 +104,13 @@ export const toMdast = ({
     context
   }
 ) => {
+  const args = [
+    {
+      visitChildren,
+      context
+    }
+  ]
+
   const childSerializer = new MarkdownSerializer({
     rules: subModules.reduce(
       (a, m) => a.concat(
@@ -112,18 +118,14 @@ export const toMdast = ({
         m.helpers.serializer.rules
       ),
       []
-    ).filter(Boolean).concat({
-      matchMdast: (node) => node.type === 'break',
-      fromMdast: () => ({
-        kind: 'text',
-        leaves: [{text: '\n'}]
-      })
-    })
+    ).filter(Boolean)
   })
+
   return {
     type: 'zone',
     identifier: 'TEASER',
-    children: childSerializer.toMdast(node.nodes)
+    data: node.data,
+    children: childSerializer.toMdast(node.nodes, 0, node, ...args)
   }
 }
 

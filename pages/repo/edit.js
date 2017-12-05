@@ -326,6 +326,9 @@ class EditorPage extends Component {
       t
     } = this.props
     const { editorState } = this.state
+    console.log(this.editor.serializer.serialize(editorState, {
+      mdast: true
+    }))
 
     const message = window.prompt(t('commit/promtMessage'))
     if (!message) {
