@@ -10,6 +10,8 @@ import { intersperse } from '../../lib/utils/helpers'
 import { swissTime } from '../../lib/utils/format'
 
 import GithubIcon from 'react-icons/lib/fa/github'
+import LockIcon from 'react-icons/lib/md/lock'
+import PublicIcon from 'react-icons/lib/md/public'
 
 import {
   Interaction,
@@ -25,14 +27,17 @@ import { Table, Tr, Th, ThOrder, Td, TdNum } from '../Table'
 
 import Loader from '../Loader'
 
-import { GITHUB_ORG, TEMPLATES, REPO_PREFIX } from '../../lib/settings'
+import { GITHUB_ORG, TEMPLATES, REPO_PREFIX, FRONTEND_BASE_URL } from '../../lib/settings'
 
 import schemas from '../Templates'
 
 import {
   matchType
 } from 'mdast-react-render/lib/utils'
+
 import { renderMdast } from 'mdast-react-render'
+
+import { phases } from '../EditSidebar/Checklist'
 
 const dateTimeFormat = '%d.%m %H:%M'
 const formatDateTime = swissTime.format(dateTimeFormat)
@@ -92,8 +97,42 @@ const styles = {
       width: '38%',
       minWidth: 160
     }
+  }),
+  phase: css({
+    color: '#fff',
+    borderRadius: 3,
+    padding: '3px 6px',
+    marginRight: 6
   })
 }
+
+const phaseForRepo = repo => {
+  const phasesReached = phases.filter(phase => {
+    if (phase.milestones) {
+      return phase.milestones.every(name =>
+        repo.milestones.find(milestone => milestone.name === name)
+      )
+    }
+    if (phase.published) {
+      if (phase.scheduled) {
+        return repo.latestPublications.find(p => p.scheduledAt && !p.live && !p.prepublication)
+      }
+      if (phase.live) {
+        return repo.latestPublications.find(p => p.live && !p.prepublication)
+      }
+    }
+  })
+
+  return phasesReached[phasesReached.length - 1]
+}
+
+const Phase = ({phase, onClick, disabled}) =>
+  <span {...styles.phase} style={{
+    backgroundColor: disabled ? 'gray' : phase.color,
+    cursor: onClick ? 'pointer' : 'default'
+  }} onClick={onClick}>
+    {phase.name}
+  </span>
 
 class RepoList extends Component {
   constructor (props) {
@@ -140,7 +179,7 @@ class RepoList extends Component {
     })
   }
   render () {
-    const { t, data, orderField, orderDirection } = this.props
+    const { t, data, orderField, orderDirection, phase: filterPhase } = this.props
     const { title, template, dirty, error } = this.state
 
     const templateOptions = templateKeys.map(key => ({
@@ -148,9 +187,37 @@ class RepoList extends Component {
       text: t(`repo/list/add/template/${key}`, null, key)
     }))
 
+    const getParams = ({field = orderField, phase = filterPhase, order = false}) => {
+      const params = {
+        orderBy: [
+          field,
+          orderField === field && order
+            ? (orderDirection === 'DESC' ? 'ASC' : 'DESC')
+            : orderDirection
+        ].join('-')
+      }
+      if (phase) {
+        params.phase = phase
+      }
+
+      return params
+    }
+
     return (
       <div style={{padding: 20}}>
-        <Interaction.H1 style={{paddingBottom: 20}}>{t('repo/list/title')}</Interaction.H1>
+        <Interaction.H1 style={{marginBottom: 30}}>{t('repo/list/title')}</Interaction.H1>
+        <div style={{marginBottom: 20}}>
+          {phases.map(phase => {
+            const active = filterPhase && filterPhase === phase.name
+            return (
+              <Link key={phase.name} route='index' params={getParams({phase: active ? null : phase.name})}>
+                <Phase
+                  phase={phase}
+                  disabled={filterPhase && !active} />
+              </Link>
+            )
+          })}
+        </div>
         <Table>
           <thead>
             <Tr>
@@ -163,6 +230,8 @@ class RepoList extends Component {
                 {field: 'PRODUCTION_DEADLINE', label: 'Produktions-Deadline'}
               ].map(({field, label}) => (
                 <ThOrder key={field}
+                  route='index'
+                  params={getParams({field, order: true})}
                   activeDirection={orderDirection}
                   activeField={orderField}
                   field={field}
@@ -177,36 +246,64 @@ class RepoList extends Component {
           <tbody>
             {data.loading || data.error
               ? (
-                <tr><td colspan='8'>
-                  <Loader loading={data.loading} error={data.error} style={{height: '80vh'}} />
-                </td></tr>
+                <tr>
+                  <td colSpan='8'>
+                    <Loader loading={data.loading} error={data.error} style={{height: '80vh'}} />
+                  </td>
+                </tr>
               )
               : data.repos
-              .map(({id, meta: {creationDeadline, productionDeadline}, latestCommit: {date, document: {meta}}}) => (
-                <Tr key={id}>
-                  <Td>
-                    <Label>{meta.format}</Label>
-                    {meta.format && <br />}
-                    <Link route='repo/tree' params={{repoId: id.split('/')}}>
-                      <a {...linkRule} title={id}>
-                        {meta.title || id.replace([GITHUB_ORG, REPO_PREFIX || ''].join('/'), '')}
-                      </a>
-                    </Link>
-                  </Td>
-                  <Td>{meta.credits && intersperse(
-                    renderMdast(meta.credits.filter(link.matchMdast), creditSchema),
-                    () => ', '
-                  )}</Td>
-                  <TdNum>{displayDateTime(date)}</TdNum>
-                  <TdNum>{displayDateTime(meta.publishDate)}</TdNum>
-                  <TdNum>{displayDateTime(creationDeadline)}</TdNum>
-                  <TdNum>{displayDateTime(productionDeadline)}</TdNum>
-                  <td />
-                  <Td style={{textAlign: 'right'}}>
-                    <a href={`https://github.com/${id}`}><GithubIcon color={colors.primary} /></a>
-                  </Td>
-                </Tr>
-              ))
+              .map(repo => ({
+                phase: phaseForRepo(repo),
+                repo
+              }))
+              .filter(({phase}) => !filterPhase || filterPhase === phase.name)
+              .map(({repo, phase}) => {
+                const {id, meta: {creationDeadline, productionDeadline}, latestCommit: {date, document: {meta}}} = repo
+                return (
+                  <Tr key={id}>
+                    <Td>
+                      <Label>{meta.format}</Label>
+                      {meta.format && <br />}
+                      <Link route='repo/tree' params={{repoId: id.split('/')}}>
+                        <a {...linkRule} title={id}>
+                          {meta.title || id.replace([GITHUB_ORG, REPO_PREFIX || ''].join('/'), '')}
+                        </a>
+                      </Link>
+                    </Td>
+                    <Td>{meta.credits && intersperse(
+                      renderMdast(meta.credits.filter(link.matchMdast), creditSchema),
+                      () => ', '
+                    )}</Td>
+                    <TdNum>{displayDateTime(date)}</TdNum>
+                    <TdNum>{displayDateTime(meta.publishDate)}</TdNum>
+                    <TdNum>{displayDateTime(creationDeadline)}</TdNum>
+                    <TdNum>{displayDateTime(productionDeadline)}</TdNum>
+                    <Td>
+                      <Phase phase={phase} />
+                    </Td>
+                    <Td style={{textAlign: 'right'}}>
+                      {repo.latestPublications
+                        .filter(publication => publication.prepublication)
+                        .map(publication => (
+                          <a key={publication.name} href={`${FRONTEND_BASE_URL}/${publication.commit.document.meta.slug}`}>
+                            <LockIcon color={colors.primary} />
+                          </a>
+                        ))}
+                      {' '}
+                      {repo.latestPublications
+                        .filter(publication => !publication.prepublication && publication.live)
+                        .map(publication => (
+                          <a key={publication.name} href={`${FRONTEND_BASE_URL}/${publication.commit.document.meta.slug}`}>
+                            <PublicIcon color={colors.primary} />
+                          </a>
+                        ))}
+                      {' '}
+                      <a href={`https://github.com/${id}`}><GithubIcon color={colors.primary} /></a>
+                    </Td>
+                  </Tr>
+                )
+              })
             }
           </tbody>
         </Table>
@@ -266,6 +363,24 @@ query repos($orderField: RepoOrderField!, $orderDirection: OrderDirection!) {
           format
           publishDate
           credits
+        }
+      }
+    }
+    milestones {
+      name
+      immutable
+    }
+    latestPublications {
+      name
+      prepublication
+      live
+      scheduledAt
+      commit {
+        id
+        document {
+          meta {
+            slug
+          }
         }
       }
     }

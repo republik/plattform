@@ -13,7 +13,7 @@ const Index = ({ url }) => {
     .filter(Boolean)
   return (
     <Frame url={url} raw>
-      <RepoTable orderField={orderField} orderDirection={orderDirection} />
+      <RepoTable orderField={orderField} orderDirection={orderDirection} phase={url.query.phase} />
     </Frame>
   )
 }

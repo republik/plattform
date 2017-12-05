@@ -25,6 +25,7 @@ PORT=3005
 
 API_BASE_URL=http://localhost:3004/graphql
 API_WS_BASE_URL=ws://localhost:3004/graphql
+FRONTEND_BASE_URL=http://localhost:3010
 GITHUB_ORG=orbiting
 ```
 

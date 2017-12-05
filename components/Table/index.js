@@ -73,15 +73,10 @@ export const Td = ({ children, style }) =>
 export const TdNum = ({ children }) =>
   <td {...styles.td} {...styles.num}>{children}</td>
 
-export const ThOrder = ({ activeDirection, activeField, field, children, style }) => (
+export const ThOrder = ({ activeDirection, activeField, field, route, params, children, style }) => (
   <Th style={style}>
     <span {...styles.order}>
-      <Link route='index' params={{orderBy: [
-        field,
-        activeField === field
-          ? (activeDirection === 'DESC' ? 'ASC' : 'DESC')
-          : activeDirection
-      ].join('-')}}>
+      <Link route={route} params={params}>
         <a {...styles.orderLink}>
           {children}
           {activeField === field && (
