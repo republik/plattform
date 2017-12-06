@@ -13,16 +13,30 @@ query getVideoEmbed($id: ID!, $embedType: EmbedType!) {
   embed(id: $id, embedType: $embedType) {
     __typename
     ... on YoutubeEmbed {
+      platform
       id
-      userId
+      createdAt
+      retrievedAt
       userName
+      userUrl
       thumbnail
+      title
+      userName
+      userProfileImageUrl
+      aspectRatio
     }
     ... on VimeoEmbed {
+      platform
       id
-      userId
+      createdAt
+      retrievedAt
       userName
+      userUrl
       thumbnail
+      title
+      userName
+      userProfileImageUrl
+      aspectRatio
     }
   }
 }
@@ -153,6 +167,7 @@ const moduleFactory = ({ query, matchUrl, getQueryParams }) => options => {
       serializer: getSerializer(options)
     },
     changes: {},
+    // TODO: Implement UI for size selection of video embeds.
     plugins: [
       embedPlugin({ query, ...options }),
       embedFromUrlPlugin({
