@@ -19,6 +19,7 @@ import {
   PullQuoteText,
   PullQuoteSource
 } from '../../components/PullQuote'
+import {List, ListItem} from '../../components/List'
 import {
   InfoBox,
   InfoBoxTitle,
@@ -399,6 +400,25 @@ const createSchema = ({
                     br,
                     link
                   ]
+                }
+              ]
+            },
+            {
+              matchMdast: matchType('list'),
+              component: List,
+              props: node => ({
+                data: {
+                  ordered: node.ordered,
+                  start: node.start
+                }
+              }),
+              editorModule: 'list',
+              rules: [
+                {
+                  matchMdast: matchType('listItem'),
+                  component: ListItem,
+                  editorModule: 'listItem',
+                  rules: [paragraph]
                 }
               ]
             },

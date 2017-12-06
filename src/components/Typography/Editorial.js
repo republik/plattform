@@ -6,7 +6,7 @@ import { fontFamilies } from '../../theme/fonts'
 import { underline } from '../../lib/styleMixins'
 import colors, { colorForKind } from '../../theme/colors'
 
-export { UnorderedList as UL, OrderedList as OL, ListItem as LI } from '../List'
+export { List, UnorderedList as UL, OrderedList as OL, ListItem as LI } from '../List'
 
 const headline = css({
   ...styles.serifTitle30,

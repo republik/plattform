@@ -96,9 +96,10 @@ UnorderedList.propTypes = {
   compact: PropTypes.bool
 }
 
-export const OrderedList = ({ children, attributes, compact }) => {
+export const OrderedList = ({ children, attributes, start, compact }) => {
   return (
     <ol
+      start={start}
       {...attributes}
       {...css(compact ? styles.listCompact : styles.list, styles.orderedBefore)}
     >
@@ -123,3 +124,7 @@ ListItem.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object
 }
+
+export const List = ({ children, data, attributes = {} }) => data.ordered
+  ? <OrderedList start={data.start} {...attributes}>{ children }</OrderedList>
+  : <UnorderedList>{ children }</UnorderedList>
