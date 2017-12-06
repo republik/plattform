@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { compose } from 'redux'
 import { css } from 'glamor'
 import { gql, graphql } from 'react-apollo'
+import { descending, ascending } from 'd3-array'
 
 import withT from '../../lib/withT'
 import { Router, Link } from '../../lib/routes'
@@ -66,7 +67,8 @@ if (TEMPLATES) {
 
 const styles = {
   container: css({
-    padding: 20
+    padding: 20,
+    paddingBottom: 80
   }),
   new: css({
     maxWidth: 600,
@@ -127,6 +129,29 @@ const phaseForRepo = repo => {
 
   return phasesReached[phasesReached.length - 1]
 }
+
+const orderFields = [
+  {
+    field: 'PUSHED_AT',
+    label: 'Letzte Änderung',
+    accessor: repo => new Date(repo.latestCommit.date)
+  },
+  {
+    field: 'PUBLISHED_AT',
+    label: 'Publikationsdatum',
+    accessor: repo => new Date(repo.latestCommit.document.meta.publishDate)
+  },
+  {
+    field: 'CREATION_DEADLINE',
+    label: 'Creation-Deadline',
+    accessor: repo => new Date(repo.meta.creationDeadline)
+  },
+  {
+    field: 'PRODUCTION_DEADLINE',
+    label: 'Produktions-Deadline',
+    accessor: repo => new Date(repo.meta.productionDeadline)
+  }
+]
 
 const Phase = ({phase, onClick, disabled}) =>
   <span {...styles.phase} style={{
@@ -214,6 +239,11 @@ class RepoList extends Component {
       return params
     }
 
+    const orderCompare = orderDirection === 'DESC'
+      ? descending : ascending
+
+    const orderAccessor = orderFields.find(order => order.field === orderField).accessor
+
     return (
       <div {...styles.container}>
         <div {...styles.new}>
@@ -267,12 +297,7 @@ class RepoList extends Component {
             <Tr>
               <Th style={{width: '30%'}}>Titel</Th>
               <Th style={{width: '15%'}}>Credits</Th>
-              {[
-                {field: 'PUSHED_AT', label: 'Letzte Änderung'},
-                {field: 'PUBLISHED_AT', label: 'Publikationsdatum'},
-                {field: 'CREATION_DEADLINE', label: 'Creation-Deadline'},
-                {field: 'PRODUCTION_DEADLINE', label: 'Produktions-Deadline'}
-              ].map(({field, label}) => (
+              {orderFields.map(({field, label}) => (
                 <ThOrder key={field}
                   route='index'
                   params={getParams({field, order: true})}
@@ -302,6 +327,7 @@ class RepoList extends Component {
                 repo
               }))
               .filter(({phase}) => !filterPhase || filterPhase === phase.name)
+              .sort((a, b) => orderCompare(orderAccessor(a.repo), orderAccessor(b.repo)))
               .map(({repo, phase}) => {
                 const {id, meta: {creationDeadline, productionDeadline}, latestCommit: {date, document: {meta}}} = repo
                 return (
@@ -371,8 +397,8 @@ class RepoList extends Component {
 }
 
 const query = gql`
-query repos($orderField: RepoOrderField!, $orderDirection: OrderDirection!) {
-  repos(orderBy: {field: $orderField, direction: $orderDirection}) {
+query repos {
+  repos {
     id
     meta {
       creationDeadline
@@ -425,7 +451,7 @@ const RepoListWithQuery = compose(
   graphql(query),
   graphql(mutation, {
     props: ({mutate}) => ({
-      editRepoMeta: (variables, {orderField, orderDirection}) =>
+      editRepoMeta: (variables) =>
         mutate({
           variables,
           update: (store, { data: { editRepoMeta } }) => {
@@ -433,11 +459,7 @@ const RepoListWithQuery = compose(
               return
             }
             const oldData = store.readQuery({
-              query,
-              variables: {
-                orderField,
-                orderDirection
-              }
+              query
             })
             const data = {
               ...oldData,
@@ -456,10 +478,6 @@ const RepoListWithQuery = compose(
             }
             store.writeQuery({
               query,
-              variables: {
-                orderField,
-                orderDirection
-              },
               data
             })
           }
@@ -469,7 +487,7 @@ const RepoListWithQuery = compose(
 )(RepoList)
 
 RepoListWithQuery.defaultProps = {
-  orderField: 'PUSHED_AT',
+  orderField: orderFields[0].field,
   orderDirection: 'DESC'
 }
 
