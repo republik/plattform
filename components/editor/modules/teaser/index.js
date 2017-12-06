@@ -134,7 +134,7 @@ const teaserPlugin = options => {
       } else if (change.value.blocks.size > 0) {
         const nextText = change.value.document.getNextBlock(change.value.blocks.first().key)
         if (nextText) {
-          event.preventDefault()
+          if (event.key === 'Tab') event.preventDefault()
           return change.collapseToStartOf(
             change.value.document.getNextBlock(change.value.blocks.first().key)
           )
