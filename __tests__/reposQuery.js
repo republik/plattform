@@ -4,8 +4,8 @@ const getNewRepoId = () =>
   `test-${supervillains.random()}`.replace(/\s/g, '-')
 
 const {
-  GITHUB_LOGIN
-} = process.env
+    GITHUB_LOGIN
+  } = process.env
 
 const repos = [
   {
@@ -150,7 +150,9 @@ module.exports = async (t, apolloFetch, githubRest) => {
                 repoId: $repoId
                 creationDeadline: $creationDeadline
                 productionDeadline: $productionDeadline
-              )
+              ) {
+                id
+              }
             }
           `,
         variables: metaVariables
@@ -165,7 +167,9 @@ module.exports = async (t, apolloFetch, githubRest) => {
     query: `
       {
         repos {
-          id
+          nodes {
+            id
+          }
         }
       }
       `
@@ -181,14 +185,18 @@ module.exports = async (t, apolloFetch, githubRest) => {
             field: PUSHED_AT
             direction: ASC
           }
-        ) { id }
+        ) {
+          nodes {
+            id
+          }
+        }
       }
       `
   })
   t.ok(result.data)
   {
     // TODO remove filter when tests run in an isolated github org
-    const _repos = result.data.repos.filter(repo => repos.find(r => r.id === repo.id))
+    const _repos = result.data.repos.nodes.filter(repo => repos.find(r => r.id === repo.id))
     t.equals(_repos[0].id, repos[0].id)
     t.equals(_repos[1].id, repos[1].id)
     t.equals(_repos[2].id, repos[2].id)
@@ -203,205 +211,20 @@ module.exports = async (t, apolloFetch, githubRest) => {
             field: PUSHED_AT
             direction: DESC
           }
-        ) { id }
+        ) {
+          nodes {
+            id
+          }
+        }
       }
       `
   })
   t.ok(result.data)
   {
-    const _repos = result.data.repos.filter(repo => repos.find(r => r.id === repo.id))
+    const _repos = result.data.repos.nodes.filter(repo => repos.find(r => r.id === repo.id))
     t.equals(_repos[0].id, repos[2].id)
     t.equals(_repos[1].id, repos[1].id)
     t.equals(_repos[2].id, repos[0].id)
-  }
-
-  console.log('test repos orderBy PUSHED_AT DESC')
-  result = await apolloFetch({
-    query: `
-      {
-        repos(
-          orderBy: {
-            field: PUSHED_AT
-            direction: DESC
-          }
-        ) { id }
-      }
-      `
-  })
-  t.ok(result.data)
-  {
-    const _repos = result.data.repos.filter(repo => repos.find(r => r.id === repo.id))
-    t.equals(_repos[0].id, repos[2].id)
-    t.equals(_repos[1].id, repos[1].id)
-    t.equals(_repos[2].id, repos[0].id)
-  }
-
-  console.log('test repos orderBy CREATION_DEADLINE DESC')
-  result = await apolloFetch({
-    query: `
-      {
-        repos(
-          orderBy: {
-            field: CREATION_DEADLINE
-            direction: DESC
-          }
-        ) { id }
-      }
-      `
-  })
-  t.ok(result.data)
-  {
-    const _repos = result.data.repos.filter(repo => repos.find(r => r.id === repo.id))
-    t.equals(_repos[0].id, repos[2].id)
-    t.equals(_repos[1].id, repos[1].id)
-    t.equals(_repos[2].id, repos[0].id)
-  }
-
-  console.log('test repos orderBy PRODUCTION_DEADLINE ASC')
-  result = await apolloFetch({
-    query: `
-      {
-        repos(
-          orderBy: {
-            field: PRODUCTION_DEADLINE
-            direction: ASC
-          }
-        ) { id }
-      }
-      `
-  })
-  t.ok(result.data)
-  {
-    const _repos = result.data.repos.filter(repo => repos.find(r => r.id === repo.id))
-    t.equals(_repos[0].id, repos[2].id)
-    t.equals(_repos[1].id, repos[1].id)
-    t.equals(_repos[2].id, repos[0].id)
-  }
-
-  console.log('test repos orderBy PUBLISHED_AT DESC')
-  result = await apolloFetch({
-    query: `
-      {
-        repos(
-          orderBy: {
-            field: PUBLISHED_AT
-            direction: DESC
-          }
-        ) { id }
-      }
-      `
-  })
-  t.ok(result.data)
-  {
-    const _repos = result.data.repos.filter(repo => repos.find(r => r.id === repo.id))
-    t.equals(_repos[0].id, repos[2].id)
-    t.equals(_repos[1].id, repos[1].id)
-    t.equals(_repos[2].id, repos[0].id)
-  }
-
-  console.log('test repos milestonesFilters 1')
-  result = await apolloFetch({
-    query: `
-      {
-        repos(
-          milestonesFilters: [
-            {
-              key: "milestone0",
-              value: true
-            }
-          ],
-          orderBy: {
-            field: PUSHED_AT
-            direction: ASC
-          }
-        ) { id }
-      }
-      `
-  })
-  t.ok(result.data)
-  {
-    const _repos = result.data.repos.filter(repo => repos.find(r => r.id === repo.id))
-    t.equals(_repos.length, 2)
-    t.equals(_repos[0].id, repos[0].id)
-    t.equals(_repos[1].id, repos[1].id)
-  }
-
-  console.log('test repos milestonesFilters 2')
-  result = await apolloFetch({
-    query: `
-      {
-        repos(
-          milestonesFilters: [
-            {
-              key: "milestone0",
-              value: false
-            }
-          ],
-          orderBy: {
-            field: PUSHED_AT
-            direction: ASC
-          }
-        ) { id }
-      }
-      `
-  })
-  t.ok(result.data)
-  {
-    const _repos = result.data.repos.filter(repo => repos.find(r => r.id === repo.id))
-    t.equals(_repos.length, 1)
-    t.equals(_repos[0].id, repos[2].id)
-  }
-
-  console.log('test repos milestonesFilters 3')
-  result = await apolloFetch({
-    query: `
-      {
-        repos(
-          milestonesFilters: [
-            {
-              key: "milestone0",
-              value: true
-            },
-            {
-              key: "milestone1",
-              value: true
-            }
-          ],
-          orderBy: {
-            field: PUSHED_AT
-            direction: ASC
-          }
-        ) { id }
-      }
-      `
-  })
-  t.ok(result.data)
-  {
-    const _repos = result.data.repos.filter(repo => repos.find(r => r.id === repo.id))
-    t.equals(_repos.length, 1)
-    t.equals(_repos[0].id, repos[1].id)
-  }
-
-  console.log('test repos formatFilter')
-  result = await apolloFetch({
-    query: `
-      {
-        repos(
-          formatFilter: "format1",
-          orderBy: {
-            field: PUSHED_AT
-            direction: ASC
-          }
-        ) { id }
-      }
-      `
-  })
-  t.ok(result.data)
-  {
-    const _repos = result.data.repos.filter(repo => repos.find(r => r.id === repo.id))
-    t.equals(_repos.length, 2)
-    t.equals(_repos[0].id, repos[0].id)
-    t.equals(_repos[1].id, repos[1].id)
   }
 
   // cleanup

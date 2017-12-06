@@ -5,7 +5,7 @@ cache:
 notifications:
   email: false
 node_js:
-  - '8'
+  - '8.9.1'
 addons:
   postgresql: "9.6"
 services:
@@ -39,3 +39,4 @@ env:
     - DEFAULT_MAIL_FROM_NAME='publikator'
     - DEFAULT_MAIL_FROM_ADDRESS='publikator@project-r.construction'
     - AUTH_MAIL_FROM_ADDRESS='publikator@project-r.construction'
+    - FRONTEND_BASE_URL=http://localhost:6000

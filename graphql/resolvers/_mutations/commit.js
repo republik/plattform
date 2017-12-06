@@ -124,6 +124,7 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
       .catch(e => {
         const util = require('util')
         console.log('createBlob failed!', util.inspect(e, {depth: null}))
+        markdownBlob = null
       })
 
     if (markdownBlob) {

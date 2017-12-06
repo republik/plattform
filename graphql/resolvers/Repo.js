@@ -100,12 +100,17 @@ module.exports = {
       ? pgdb.public.users.find({ id: userIds })
       : []
   },
-  milestones: (
-    { id: repoId }
-  ) => getAnnotatedTags(repoId),
-  latestPublications: async (
-    { id: repoId }
-  ) => {
+  milestones: (repo) => {
+    if (repo.tags && repo.tags.nodes) { // repos query
+      return repo.tags.nodes
+    }
+    debug('milestones needs to query getAnnotatedTags repo %O', repo)
+    return getAnnotatedTags(repo.id)
+  },
+  latestPublications: async (repo) => {
+    const {
+      id: repoId
+    } = repo
     const publicationMetaDecorator = (publication) => {
       const {
         scheduledAt = undefined,
@@ -130,17 +135,26 @@ module.exports = {
       'scheduled-prepublication'
     ]
 
-    return Promise.all(
-      refs.map(ref => getAnnotatedTag(repoId, ref)
-        .then(tag => ({ tag, ref }))
+    if (!repo.latestPublications) {
+      debug('latestPublications needs getAnnotatedTag for repo %O', repo)
+    }
+
+    // repos query gets the refs for us
+    let annotatedTags = repo.latestPublications
+      ? repo.latestPublications
+      : await Promise.all(
+        refs.map(ref => getAnnotatedTag(repoId, ref))
       )
+
+    return Promise.all(
+      annotatedTags
     )
-      .then(objs => objs
-        .filter(obj => !!obj.tag)
-        .map(obj => ({
-          ...obj.tag,
-          sha: obj.tag.oid,
-          live: liveRefs.indexOf(obj.ref) > -1
+      .then(tags => tags
+        .filter(tag => !!tag)
+        .map(tag => ({
+          ...tag,
+          sha: tag.oid,
+          live: liveRefs.indexOf(tag.refName) > -1
         })
         )
       )
@@ -154,7 +168,6 @@ module.exports = {
     if (repo.meta) {
       return repo.meta
     } else if (repo.metaTag !== undefined) {
-      debug('meta needs to parse tag message for repo %O', repo)
       message = repo.metaTag && repo.metaTag.target
         ? repo.metaTag.target.message
         : ''

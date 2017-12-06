@@ -1,9 +1,5 @@
 const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
-const { createGithubClients } = require('../../../lib/github')
-const { descending, ascending } = require('d3-array')
-const _ = {
-  get: require('lodash/get')
-}
+const { createGithubClients, tagNormalizer } = require('../../../lib/github')
 
 const {
   commit: getCommit,
@@ -21,35 +17,62 @@ module.exports = async (__, args, { user, redis }) => {
   const { githubApolloFetch } = await createGithubClients()
 
   const {
-    first = 100,
-    orderBy,
-    milestonesFilters,
-    formatFilter
-  } = args
-
-  const {
     data: {
       repositoryOwner: {
         repositories: {
+          pageInfo,
+          totalCount,
+          totalDiskUsage,
           nodes: repositories
         }
       }
     }
   } = await githubApolloFetch({
     query: `
+      fragment LatestPublicationProbs on Ref {
+        name
+        target {
+          ... on Tag {
+            name
+            message
+            oid
+            author: tagger {
+              name
+              email
+              date
+            }
+            commit: target {
+              ... on Commit {
+                id: oid
+              }
+            }
+          }
+        }
+      }
       query repositories(
         $login: String!
-        $first: Int!
-        $orderByDirection: OrderDirection!
+        $first: Int
+        $last: Int
+        $before: String
+        $after: String
+        $orderBy: RepositoryOrder
       ) {
         repositoryOwner(login: $login) {
           repositories(
             first: $first,
-            orderBy: {
-              field: PUSHED_AT,
-              direction: $orderByDirection
-            }
+            last: $last,
+            before: $before,
+            after: $after,
+            orderBy: $orderBy
           ) {
+            pageInfo {
+              endCursor,
+              hasNextPage,
+              hasPreviousPage,
+              startCursor
+            }
+            totalCount
+            totalDiskUsage
             nodes {
               name
               defaultBranchRef {
@@ -71,21 +94,30 @@ module.exports = async (__, args, { user, redis }) => {
                   name
                 }
               }
+              publication: ref(qualifiedName: "refs/tags/publication") {
+                ...LatestPublicationProbs
+              }
+              prepublication: ref(qualifiedName: "refs/tags/prepublication") {
+                ...LatestPublicationProbs
+              }
+              scheduledPublication: ref(qualifiedName: "refs/tags/scheduled-publication") {
+                ...LatestPublicationProbs
+              }
+              scheduledPrepublication: ref(qualifiedName: "refs/tags/scheduled-prepublication") {
+                ...LatestPublicationProbs
+              }
             }
           }
         }
       }
     `,
     variables: {
-      login: GITHUB_LOGIN,
-      first,
-      orderByDirection: orderBy
-        ? orderBy.direction
-        : 'DESC'
+      ...args,
+      login: GITHUB_LOGIN
     }
   })
 
-  let repos = await Promise.all(
+  const repos = await Promise.all(
     repositories
       .filter(repository => repository.defaultBranchRef) // skip uninitialized repos
       .filter(repository => !REPOS_NAME_FILTER || repository.name.indexOf(REPOS_NAME_FILTER) > -1)
@@ -103,64 +135,24 @@ module.exports = async (__, args, { user, redis }) => {
           latestCommit: {
             ...latestCommit,
             document
-          }
+          },
+          latestPublications: [
+            { refName: 'publication', ref: repo.publication },
+            { refName: 'prepublication', ref: repo.prepublication },
+            { refName: 'scheduled-publication', ref: repo.scheduledPublication },
+            { refName: 'scheduled-prepublication', ref: repo.scheduledPrepublication }
+          ]
+            .filter(pub => pub.ref && pub.ref.target)
+            .map(pub => tagNormalizer(pub.ref.target, repo.id, pub.refName))
         }
       }
     )
   )
 
-  if (milestonesFilters || formatFilter) {
-    repos = repos.filter(repo => {
-      if (formatFilter && (
-        !repo.latestCommit.document ||
-        !repo.latestCommit.document.meta ||
-        repo.latestCommit.document.meta.format !== formatFilter
-      )) {
-        return false
-      }
-      if (milestonesFilters) {
-        for (let milestoneFilter of milestonesFilters) {
-          const tag = repo.tags.nodes.find(node => node.name === milestoneFilter.key)
-          if ((milestoneFilter.value && !tag) || (!milestoneFilter.value && tag)) {
-            return false
-          }
-        }
-      }
-      return true
-    })
+  return {
+    nodes: repos,
+    pageInfo,
+    totalCount,
+    totalDiskUsage
   }
-
-  // PUSHED_AT is done by github, see query above
-  if (orderBy && orderBy.field !== 'PUSHED_AT') {
-    const ascDesc = orderBy.direction === 'ASC'
-      ? ascending
-      : descending
-    let selector
-    switch (orderBy.field) {
-      case 'CREATION_DEADLINE':
-        selector = 'meta.creationDeadline'
-        break
-      case 'PRODUCTION_DEADLINE':
-        selector = 'meta.productionDeadline'
-        break
-      case 'PUBLISHED_AT':
-        selector = 'latestCommit.document.meta.publishDate'
-        break
-      default:
-        throw new Error(`missing selector for orderBy.field: ${orderBy.field}`)
-    }
-    repos = repos.sort((a, b) => {
-      const aValueRaw = _.get(a, selector)
-      const aValue = aValueRaw
-        ? new Date(aValueRaw)
-        : null
-      const bValueRaw = _.get(b, selector)
-      const bValue = bValueRaw
-        ? new Date(bValueRaw)
-        : null
-      return ascDesc(aValue, bValue)
-    })
-  }
-
-  return repos
 }

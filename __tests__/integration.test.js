@@ -104,9 +104,11 @@ test('unauthorized repos query', async (t) => {
     query: `
       {
         repos {
-          id
-          commits(page: 0) {
+          nodes {
             id
+            commits(page: 0) {
+              id
+            }
           }
         }
       }
@@ -250,7 +252,9 @@ test('repos (signed in, without role)', async (t) => {
     query: `
       {
         repos {
-          id
+          nodes {
+            id
+          }
         }
       }
     `
@@ -343,7 +347,9 @@ test('repos (signed in)', async (t) => {
     query: `
       {
         repos {
-          id
+          nodes {
+            id
+          }
         }
       }
     `
@@ -2082,9 +2088,11 @@ test('unauthorized repos query', async (t) => {
     query: `
       {
         repos {
-          id
-          commits(page: 0) {
+          nodes {
             id
+            commits(page: 0) {
+              id
+            }
           }
         }
       }
