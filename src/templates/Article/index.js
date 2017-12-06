@@ -404,8 +404,8 @@ const createSchema = ({
             },
             {
               matchMdast: matchZone('EMBEDTWITTER'),
-              component: ({data, url}) => (
-                <Tweet {...data} date={new Date(data.createdAt)} />
+              component: ({attributes, data, url}) => (
+                <Tweet attributes={attributes} {...data} date={new Date(data.createdAt)} />
               ),
               props: node => ({
                 data: {
@@ -421,8 +421,8 @@ const createSchema = ({
             },
             {
               matchMdast: matchZone('EMBEDVIDEO'),
-              component: ({data, url}) => (
-                <Video {...data} date={new Date(data.createdAt)} />
+              component: ({attributes, data, url}) => (
+                <Video attributes={attributes} {...data} date={new Date(data.createdAt)} />
               ),
               props: node => ({
                 data: {

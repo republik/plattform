@@ -64,7 +64,7 @@ const Tweet = ({
   playable
 }) => {
   return (
-    <div {...styles.container}>
+    <div {...attributes} {...styles.container}>
       <Header
         url={url}
         userProfileImageUrl={userProfileImageUrl}

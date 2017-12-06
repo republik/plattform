@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { breakoutStyles } from '../Center'
 import { Figure, FigureImage, FigureCaption } from '../Figure'
@@ -9,12 +9,15 @@ import PlayIcon from 'react-icons/lib/md/play-arrow'
 
 const styles = {
   container: css({
-    display: 'block',
     textDecoration: 'none',
     position: 'relative',
-    margin: '36px auto',
+    padding: 0,
+    margin: 0,
+    marginTop: 36,
+    marginBottom: 36,
     [mUp]: {
-      margin: '45px auto'
+      marginTop: 45,
+      marginBottom: 45,
     }
   }),
   thumbnail: css({
@@ -98,13 +101,13 @@ class Video extends Component {
       userName,
       userUrl,
       userProfileImageUrl,
-      date
+      date,
+      attributes
     } = this.props
     const { embedIframe } = this.state
 
     return (
-      <div {...styles.container}>
-        <Figure size={size}>
+      <figure {...attributes} {...merge(styles.container, breakoutStyles[size])}>
           {!embedIframe && (
             <a {...styles.thumbnail} onClick={this.handleClick}>
               <span {...styles.playIcon}>
@@ -133,8 +136,7 @@ class Video extends Component {
             date={date}
           />
         )}
-        </Figure>
-      </div>
+      </figure>
     )
   }
 }
