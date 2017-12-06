@@ -29,8 +29,8 @@ module.exports = async (_, args, { user, t, pubsub }) => {
     ...tag
       ? yaml.parse(tag.message)
       : {},
-    ...(creationDeadline && { creationDeadline }),
-    ...(productionDeadline && { productionDeadline })
+    ...(creationDeadline !== undefined && { creationDeadline }),
+    ...(productionDeadline !== undefined && { productionDeadline })
   }
   const message = yaml.stringify(meta)
 
