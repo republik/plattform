@@ -19,7 +19,10 @@ import {
   PullQuoteText,
   PullQuoteSource
 } from '../../components/PullQuote'
-import {List, ListItem} from '../../components/List'
+import {
+  List,
+  ListItem
+} from '../../components/List'
 import {
   InfoBox,
   InfoBoxTitle,
