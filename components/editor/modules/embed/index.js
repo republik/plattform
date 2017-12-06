@@ -5,6 +5,7 @@ import { gql, withApollo } from 'react-apollo'
 import { matchBlock } from '../../utils'
 import { findOrCreate } from '../../utils/serialization'
 
+import createUi from './ui'
 import embedFromUrlPlugin from './embedFromUrlPlugin'
 import EmbedLoader from './EmbedLoader'
 
@@ -13,16 +14,30 @@ query getVideoEmbed($id: ID!, $embedType: EmbedType!) {
   embed(id: $id, embedType: $embedType) {
     __typename
     ... on YoutubeEmbed {
+      platform
       id
-      userId
+      createdAt
+      retrievedAt
       userName
+      userUrl
       thumbnail
+      title
+      userName
+      userProfileImageUrl
+      aspectRatio
     }
     ... on VimeoEmbed {
+      platform
       id
-      userId
+      createdAt
+      retrievedAt
       userName
+      userUrl
       thumbnail
+      title
+      userName
+      userProfileImageUrl
+      aspectRatio
     }
   }
 }
@@ -153,6 +168,7 @@ const moduleFactory = ({ query, matchUrl, getQueryParams }) => options => {
       serializer: getSerializer(options)
     },
     changes: {},
+    ui: createUi({TYPE, editorOptions: rule.editorOptions}),
     plugins: [
       embedPlugin({ query, ...options }),
       embedFromUrlPlugin({
