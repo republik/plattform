@@ -1,8 +1,6 @@
 import React from 'react'
-import { Map } from 'immutable'
 import { Radio, Label } from '@project-r/styleguide'
 import { createPropertyForm } from '../../utils'
-import MetaForm from '../../utils/MetaForm'
 
 export default ({ TYPE, editorOptions }) => {
   const isVideoBlock = block => block.type === 'EMBEDVIDEO'
@@ -19,24 +17,8 @@ export default ({ TYPE, editorOptions }) => {
     return (
       <div>
         {value.blocks.filter(isVideoBlock).map((block, i) => {
-          const onInputChange = subject => key => (_, val) => {
-            onChange(
-              value.change().setNodeByKey(subject.key, {
-                data: val
-                  ? subject.data.set(key, val)
-                  : subject.data.remove(key)
-              })
-            )
-          }
-          const videoBlock = block
-
           return (
             <div key={`video-${i}`}>
-              <MetaForm
-                data={Map({})}
-                onInputChange={onInputChange(videoBlock)}
-              />
-
               {!!sizes.length && (
                 <p style={{ margin: '10px 0' }}>
                   <Label
