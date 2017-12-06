@@ -26,6 +26,7 @@ const styles = {
     border: 'none',
     backgroundColor: 'transparent',
     font: 'inherit',
+    marginRight: -10,
     '::placeholder': {
       color: '#ccc'
     },
@@ -35,10 +36,10 @@ const styles = {
   })
 }
 
-const dateFormat = '%d.%m.%Y %H:%M'
+const dateFormat = '%d.%m.%y %H:%M'
 const dateMask = dateFormat
   .replace('%Y', '1111')
-  .replace(/%(d|m|H|M)/g, '11')
+  .replace(/%(d|m|y|H|M)/g, '11')
 const parseDate = timeParse(dateFormat)
 const formatDate = timeFormat(dateFormat)
 

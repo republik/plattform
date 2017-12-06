@@ -65,9 +65,12 @@ if (TEMPLATES) {
 }
 
 const styles = {
+  container: css({
+    padding: 20
+  }),
   new: css({
     maxWidth: 600,
-    paddingBottom: 100
+    paddingBottom: 60
   }),
   form: css({
     display: 'flex',
@@ -93,6 +96,9 @@ const styles = {
       width: '38%',
       minWidth: 160
     }
+  }),
+  phases: css({
+    marginBottom: 20
   }),
   phase: css({
     color: '#fff',
@@ -161,6 +167,8 @@ class RepoList extends Component {
       commitId: 'new',
       title,
       template
+    }).then(() => {
+      window.scrollTo(0, 0)
     })
   }
   handleTitle (value, shouldValidate) {
@@ -207,8 +215,42 @@ class RepoList extends Component {
     }
 
     return (
-      <div style={{padding: 20}}>
-        <div style={{marginBottom: 20}}>
+      <div {...styles.container}>
+        <div {...styles.new}>
+          <Interaction.H2>{t('repo/list/add/title')}</Interaction.H2>
+          <form {...styles.form} onSubmit={e => this.onSubmit(e)} onKeyPress={e => {
+            if (e.key === 'Enter') {
+              this.onSubmit(e)
+            }
+          }}>
+            <div {...styles.select}>
+              <Dropdown
+                label='Vorlage'
+                items={templateOptions}
+                value={template}
+                onChange={item => {
+                  this.setState({template: item.value})
+                }} />
+            </div>
+            <div {...styles.input}>
+              <Field
+                label={t('repo/list/add/titleField/label')}
+                value={title}
+                onChange={(_, value, shouldValidate) => {
+                  this.handleTitle(value, shouldValidate)
+                }}
+                error={dirty && error}
+              />
+            </div>
+            <div {...styles.button}>
+              <Button type='submit' block>
+                {t('repo/list/add/submit')}
+              </Button>
+            </div>
+          </form>
+        </div>
+
+        <div {...styles.phases}>
           {phases.map(phase => {
             const active = filterPhase && filterPhase === phase.name
             return (
@@ -323,38 +365,6 @@ class RepoList extends Component {
             }
           </tbody>
         </Table>
-
-        <br /><br />
-
-        <div {...styles.new}>
-          <Interaction.H2>{t('repo/list/add/title')}</Interaction.H2>
-          <form {...styles.form} onSubmit={e => this.onSubmit(e)}>
-            <div {...styles.select}>
-              <Dropdown
-                label='Vorlage'
-                items={templateOptions}
-                value={template}
-                onChange={item => {
-                  this.setState({template: item.value})
-                }} />
-            </div>
-            <div {...styles.input}>
-              <Field
-                label={t('repo/list/add/titleField/label')}
-                value={title}
-                onChange={(_, value, shouldValidate) => {
-                  this.handleTitle(value, shouldValidate)
-                }}
-                error={dirty && error}
-              />
-            </div>
-            <div {...styles.button}>
-              <Button block>
-                {t('repo/list/add/submit')}
-              </Button>
-            </div>
-          </form>
-        </div>
       </div>
     )
   }
