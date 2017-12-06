@@ -7,7 +7,7 @@ import {
 
 import {
   H1, H2,
-  P, A, NarrowContainer, Tweet, Video
+  P, A, NarrowContainer, Tweet, Video, Editorial
 } from '@project-r/styleguide'
 
 const Br = () => <br />
@@ -153,6 +153,25 @@ const schema = {
                 formatButtonText:
                   'Zwischentitel'
               }
+            },
+            {
+              matchMdast: matchType('list'),
+              component: Editorial.List,
+              props: node => ({
+                data: {
+                  ordered: node.ordered,
+                  start: node.start
+                }
+              }),
+              editorModule: 'list',
+              rules: [
+                {
+                  matchMdast: matchType('listItem'),
+                  component: Editorial.LI,
+                  editorModule: 'listItem',
+                  rules: [paragraph]
+                }
+              ]
             }
           ]
         },
