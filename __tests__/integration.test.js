@@ -354,12 +354,6 @@ test('repos (signed in)', async (t) => {
   t.end()
 })
 
-const reposQueryTests = require('./reposQuery.js')
-test('repos query', async (t) => {
-  await reposQueryTests(t, apolloFetch, githubRest)
-  t.end()
-})
-
 test('commit (create repo)', async (t) => {
   const repoName = getNewRepoId()
   const variables = {

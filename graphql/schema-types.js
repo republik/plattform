@@ -20,19 +20,24 @@ type Repo {
   meta: RepoMeta!
 }
 
+type RepoConnection {
+  nodes: [Repo]
+  pageInfo: PageInfo!
+  totalCount: Int!
+  totalDiskUsage: Int!
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
 type RepoMeta {
   creationDeadline: DateTime
   productionDeadline: DateTime
-  #phase: RepoPhase!
 }
-
-#enum RepoPhase {
-#  CONCEPTION
-#  CREATION
-#  PRODUCTION
-#  READY
-#  PUBLISHED
-#}
 
 input RepoOrderBy {
   field: RepoOrderField!
@@ -40,25 +45,22 @@ input RepoOrderBy {
 }
 
 enum RepoOrderField {
+  #Order repositories by creation time
+  CREATED_AT
+  #Order repositories by update time
+  UPDATED_AT
+  #Order repositories by push time
   PUSHED_AT
-  CREATION_DEADLINE
-  PRODUCTION_DEADLINE
-  PUBLISHED_AT
+  #Order repositories by name
+  NAME
+  #Order repositories by number of stargazers
+  STARGAZERS
 }
 
 enum OrderDirection {
   ASC
   DESC
 }
-
-input RepoMilestoneFilter {
-  # name of the milestone
-  # eg. chiefEditor, imageEditor, journalist, managingEditor
-  # proofReader, textEditor
-  key: String!
-  value: Boolean!
-}
-
 
 interface MilestoneInterface {
   name: String!

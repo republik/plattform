@@ -7,11 +7,12 @@ schema {
 
 type queries {
   repos(
+    first: Int
+    last: Int
+    before: String
+    after: String
     orderBy: RepoOrderBy
-    milestonesFilters: [RepoMilestoneFilter!]
-    #phaseFilter: RepoPhase
-    formatFilter: String
-  ): [Repo]!
+  ): RepoConnection!
   repo(id: ID!): Repo!
   embed(id: ID!, embedType: EmbedType!): Embed!
 }
