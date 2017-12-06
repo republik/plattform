@@ -208,7 +208,6 @@ class RepoList extends Component {
 
     return (
       <div style={{padding: 20}}>
-        <Interaction.H1 style={{marginBottom: 30}}>{t('repo/list/title')}</Interaction.H1>
         <div style={{marginBottom: 20}}>
           {phases.map(phase => {
             const active = filterPhase && filterPhase === phase.name
