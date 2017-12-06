@@ -432,7 +432,21 @@ const createSchema = ({
               }),
               editorModule: 'embedVideo',
               editorOptions: {
-                lookupType: 'PARAGRAPH'
+                lookupType: 'PARAGRAPH',
+                 sizes: [
+                  {
+                    label: 'Normal',
+                    props: {size: undefined}
+                  },
+                  {
+                    label: 'Mittel',
+                    props: {size: 'narrow'}
+                  },
+                   {
+                    label: 'Klein',
+                    props: {size: 'tiny'}
+                  }
+                ]
               },
               isVoid: true
             },
