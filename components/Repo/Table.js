@@ -5,8 +5,7 @@ import { gql, graphql } from 'react-apollo'
 import { descending, ascending } from 'd3-array'
 
 import withT from '../../lib/withT'
-import { Router, Link } from '../../lib/routes'
-import slugify from '../../lib/utils/slug'
+import { Link } from '../../lib/routes'
 import { intersperse } from '../../lib/utils/helpers'
 import { swissTime } from '../../lib/utils/format'
 
@@ -15,11 +14,7 @@ import LockIcon from 'react-icons/lib/md/lock'
 import PublicIcon from 'react-icons/lib/md/public'
 
 import {
-  Interaction,
-  Field, Button,
-  Dropdown,
   linkRule,
-  mediaQueries,
   A, Label,
   colors
 } from '@project-r/styleguide'
@@ -28,9 +23,7 @@ import { Table, Tr, Th, ThOrder, Td, TdNum } from '../Table'
 
 import Loader from '../Loader'
 
-import { GITHUB_ORG, TEMPLATES, REPO_PREFIX, FRONTEND_BASE_URL } from '../../lib/settings'
-
-import schemas from '../Templates'
+import { GITHUB_ORG, REPO_PREFIX, FRONTEND_BASE_URL } from '../../lib/settings'
 
 import {
   matchType
@@ -38,8 +31,9 @@ import {
 
 import { renderMdast } from 'mdast-react-render'
 
-import { phases } from '../EditSidebar/Checklist'
 import EditMetaDate from './EditMetaDate'
+import { phases } from './workflow'
+import RepoAdd from './Add'
 
 const dateTimeFormat = '%d.%m %H:%M'
 const formatDateTime = swissTime.format(dateTimeFormat)
@@ -58,46 +52,10 @@ const creditSchema = {
   rules: [link]
 }
 
-let templateKeys = Object.keys(schemas)
-if (TEMPLATES) {
-  const allowedTemplates = TEMPLATES.split(',')
-  templateKeys = templateKeys
-    .filter(key => allowedTemplates.indexOf(key) !== -1)
-}
-
 const styles = {
   container: css({
     padding: 20,
     paddingBottom: 80
-  }),
-  new: css({
-    maxWidth: 600,
-    paddingBottom: 60
-  }),
-  form: css({
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexFlow: 'row wrap',
-    margin: '0 auto'
-  }),
-  select: css({
-    width: '100%',
-    marginTop: 10
-  }),
-  input: css({
-    width: '100%',
-    [mediaQueries.mUp]: {
-      marginRight: 10,
-      marginBottom: 0,
-      width: '58%'
-    }
-  }),
-  button: css({
-    width: '100%',
-    [mediaQueries.mUp]: {
-      width: '38%',
-      minWidth: 160
-    }
   }),
   filterBar: css({
     marginBottom: 20
@@ -166,54 +124,8 @@ const Phase = ({phase, onClick, disabled}) =>
   </span>
 
 class RepoList extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      title: '',
-      template: ''
-    }
-  }
-  onSubmit (event) {
-    event.preventDefault()
-
-    const { title, template, error } = this.state
-    if (error || !title) {
-      this.handleTitle(title, true)
-      return
-    }
-    const schema = schemas[template]
-    const prefix = [
-      REPO_PREFIX,
-      schema.repoPrefix
-    ].filter(Boolean).join('')
-    const slug = [
-      prefix,
-      slugify(title)
-    ].join('')
-
-    Router.replaceRoute('repo/edit', {
-      repoId: [GITHUB_ORG, slug],
-      commitId: 'new',
-      title,
-      template
-    }).then(() => {
-      window.scrollTo(0, 0)
-    })
-  }
-  handleTitle (value, shouldValidate) {
-    const { t } = this.props
-
-    this.setState({
-      title: value,
-      dirty: shouldValidate,
-      error: (
-        value.trim().length <= 0 && t('repo/list/add/titleField/error')
-      )
-    })
-  }
   render () {
     const {
-      t,
       data,
       orderField,
       orderDirection,
@@ -221,12 +133,6 @@ class RepoList extends Component {
       editRepoMeta,
       fetchMore
     } = this.props
-    const { title, template, dirty, error } = this.state
-
-    const templateOptions = templateKeys.map(key => ({
-      value: key,
-      text: t(`repo/list/add/template/${key}`, null, key)
-    }))
 
     const getParams = ({field = orderField, phase = filterPhase, order = false}) => {
       const params = {
@@ -251,39 +157,7 @@ class RepoList extends Component {
 
     return (
       <div {...styles.container}>
-        <div {...styles.new}>
-          <Interaction.H2>{t('repo/list/add/title')}</Interaction.H2>
-          <form {...styles.form} onSubmit={e => this.onSubmit(e)} onKeyPress={e => {
-            if (e.key === 'Enter') {
-              this.onSubmit(e)
-            }
-          }}>
-            <div {...styles.select}>
-              <Dropdown
-                label='Vorlage'
-                items={templateOptions}
-                value={template}
-                onChange={item => {
-                  this.setState({template: item.value})
-                }} />
-            </div>
-            <div {...styles.input}>
-              <Field
-                label={t('repo/list/add/titleField/label')}
-                value={title}
-                onChange={(_, value, shouldValidate) => {
-                  this.handleTitle(value, shouldValidate)
-                }}
-                error={dirty && error}
-              />
-            </div>
-            <div {...styles.button}>
-              <Button type='submit' block>
-                {t('repo/list/add/submit')}
-              </Button>
-            </div>
-          </form>
-        </div>
+        <RepoAdd />
 
         <div {...styles.filterBar}>
           {phases.map(phase => {

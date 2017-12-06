@@ -11,6 +11,8 @@ import Loader from '../Loader'
 import withT from '../../lib/withT'
 import { ascending } from 'd3-array'
 
+import { milestoneNames } from '../Repo/workflow'
+
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
 const styles = {
@@ -28,41 +30,6 @@ const styles = {
     paddingTop: '3px'
   })
 }
-
-export const phases = [
-  {
-    name: 'Entwurf',
-    color: 'Indigo',
-    milestones: []
-  },
-  {
-    name: 'Produktion',
-    color: 'Tomato',
-    milestones: ['journalist']
-  },
-  {
-    name: 'Ready',
-    color: 'MediumSeaGreen',
-    milestones: ['textEditor', 'managingEditor', 'imageEditor', 'proofReader', 'chiefEditor']
-  },
-  {
-    name: 'Terminiert',
-    color: 'LightPink',
-    published: true,
-    scheduled: true
-  },
-  {
-    name: 'Publiziert',
-    color: 'HotPink',
-    published: true,
-    live: true
-  }
-]
-
-const milestoneNames = phases.reduce(
-  (all, phase) => all.concat(phase.milestones),
-  []
-)
 
 class Checklist extends Component {
   constructor (props) {
