@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {compose} from 'redux'
+import { compose } from 'redux'
 import { css } from 'glamor'
 import { gql, graphql } from 'react-apollo'
 
@@ -38,17 +38,13 @@ import {
 import { renderMdast } from 'mdast-react-render'
 
 import { phases } from '../EditSidebar/Checklist'
+import EditMetaDate from './EditMetaDate'
 
 const dateTimeFormat = '%d.%m %H:%M'
 const formatDateTime = swissTime.format(dateTimeFormat)
 
-const displayDateTime = string => string && formatDateTime(new Date(string))
+export const displayDateTime = string => string && formatDateTime(new Date(string))
 
-const br = {
-  matchMdast: matchType('break'),
-  component: () => <br />,
-  isVoid: true
-}
 const link = {
   matchMdast: matchType('link'),
   props: node => ({
@@ -58,7 +54,7 @@ const link = {
   component: A
 }
 const creditSchema = {
-  rules: [link, br]
+  rules: [link]
 }
 
 let templateKeys = Object.keys(schemas)
@@ -179,7 +175,14 @@ class RepoList extends Component {
     })
   }
   render () {
-    const { t, data, orderField, orderDirection, phase: filterPhase } = this.props
+    const {
+      t,
+      data,
+      orderField,
+      orderDirection,
+      phase: filterPhase,
+      editRepoMeta
+    } = this.props
     const { title, template, dirty, error } = this.state
 
     const templateOptions = templateKeys.map(key => ({
@@ -277,8 +280,22 @@ class RepoList extends Component {
                     )}</Td>
                     <TdNum>{displayDateTime(date)}</TdNum>
                     <TdNum>{displayDateTime(meta.publishDate)}</TdNum>
-                    <TdNum>{displayDateTime(creationDeadline)}</TdNum>
-                    <TdNum>{displayDateTime(productionDeadline)}</TdNum>
+                    <TdNum>
+                      <EditMetaDate
+                        value={creationDeadline}
+                        onChange={(value) => editRepoMeta(
+                          {repoId: id, creationDeadline: value},
+                          {orderField, orderDirection}
+                        )} />
+                    </TdNum>
+                    <TdNum>
+                      <EditMetaDate
+                        value={productionDeadline}
+                        onChange={(value) => editRepoMeta(
+                          {repoId: id, productionDeadline: value},
+                          {orderField, orderDirection}
+                        )} />
+                    </TdNum>
                     <Td>
                       <Phase phase={phase} />
                     </Td>
@@ -388,9 +405,58 @@ query repos($orderField: RepoOrderField!, $orderDirection: OrderDirection!) {
 }
 `
 
+const mutation = gql`
+mutation editRepoMeta($repoId: ID!, $creationDeadline: DateTime, $productionDeadline: DateTime) {
+  editRepoMeta(repoId: $repoId, creationDeadline: $creationDeadline, productionDeadline: $productionDeadline)
+}
+`
+
 const RepoListWithQuery = compose(
   withT,
-  graphql(query)
+  graphql(query),
+  graphql(mutation, {
+    props: ({mutate}) => ({
+      editRepoMeta: (variables, {orderField, orderDirection}) =>
+        mutate({
+          variables,
+          update: (store, { data: { editRepoMeta } }) => {
+            if (!editRepoMeta) {
+              return
+            }
+            const oldData = store.readQuery({
+              query,
+              variables: {
+                orderField,
+                orderDirection
+              }
+            })
+            const data = {
+              ...oldData,
+              repos: oldData.repos.map(repo => {
+                if (repo.id === variables.repoId) {
+                  return {
+                    ...repo,
+                    meta: {
+                      ...repo.meta,
+                      ...variables
+                    }
+                  }
+                }
+                return repo
+              })
+            }
+            store.writeQuery({
+              query,
+              variables: {
+                orderField,
+                orderDirection
+              },
+              data
+            })
+          }
+        })
+    })
+  })
 )(RepoList)
 
 RepoListWithQuery.defaultProps = {
