@@ -125,15 +125,20 @@ const teaserPlugin = options => {
         event.preventDefault()
         return change.collapseToEnd()
       }
-      if (event.key !== 'Enter') {
+      if (event.key !== 'Enter' && event.key !== 'Tab') {
         return
       }
       if (change.value.isExpanded) {
+        event.preventDefault()
         return change.collapseToEnd()
       } else if (change.value.blocks.size > 0) {
-        return change.collapseToStartOf(
-          change.value.document.getNextBlock(change.value.blocks.first().key)
-        )
+        const nextText = change.value.document.getNextBlock(change.value.blocks.first().key)
+        if (nextText) {
+          event.preventDefault()
+          return change.collapseToStartOf(
+            change.value.document.getNextBlock(change.value.blocks.first().key)
+          )
+        }
       }
     },
     schema: {
