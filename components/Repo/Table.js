@@ -321,7 +321,7 @@ class RepoList extends Component {
                   </td>
                 </tr>
               )
-              : data.repos
+              : data.repos.nodes
               .map(repo => ({
                 phase: phaseForRepo(repo),
                 repo
@@ -404,39 +404,41 @@ class RepoList extends Component {
 const query = gql`
 query repos {
   repos {
-    id
-    meta {
-      creationDeadline
-      productionDeadline
-    }
-    latestCommit {
+    nodes {
       id
-      date
-      message
-      document {
-        meta {
-          template
-          title
-          format
-          publishDate
-          credits
-        }
+      meta {
+        creationDeadline
+        productionDeadline
       }
-    }
-    milestones {
-      name
-      immutable
-    }
-    latestPublications {
-      name
-      prepublication
-      live
-      scheduledAt
-      commit {
+      latestCommit {
         id
+        date
+        message
         document {
           meta {
-            slug
+            template
+            title
+            format
+            publishDate
+            credits
+          }
+        }
+      }
+      milestones {
+        name
+        immutable
+      }
+      latestPublications {
+        name
+        prepublication
+        live
+        scheduledAt
+        commit {
+          id
+          document {
+            meta {
+              slug
+            }
           }
         }
       }
@@ -447,7 +449,13 @@ query repos {
 
 const mutation = gql`
 mutation editRepoMeta($repoId: ID!, $creationDeadline: DateTime, $productionDeadline: DateTime) {
-  editRepoMeta(repoId: $repoId, creationDeadline: $creationDeadline, productionDeadline: $productionDeadline)
+  editRepoMeta(repoId: $repoId, creationDeadline: $creationDeadline, productionDeadline: $productionDeadline) {
+    id
+    meta {
+      creationDeadline
+      productionDeadline
+    }
+  }
 }
 `
 
@@ -458,34 +466,7 @@ const RepoListWithQuery = compose(
     props: ({mutate}) => ({
       editRepoMeta: (variables) =>
         mutate({
-          variables,
-          update: (store, { data: { editRepoMeta } }) => {
-            if (!editRepoMeta) {
-              return
-            }
-            const oldData = store.readQuery({
-              query
-            })
-            const data = {
-              ...oldData,
-              repos: oldData.repos.map(repo => {
-                if (repo.id === variables.repoId) {
-                  return {
-                    ...repo,
-                    meta: {
-                      ...repo.meta,
-                      ...variables
-                    }
-                  }
-                }
-                return repo
-              })
-            }
-            store.writeQuery({
-              query,
-              data
-            })
-          }
+          variables
         })
     })
   })
