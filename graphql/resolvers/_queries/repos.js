@@ -1,5 +1,5 @@
 const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
-const { createGithubClients } = require('../../../lib/github')
+const { createGithubClients, tagNormalizer } = require('../../../lib/github')
 
 const {
   commit: getCommit,
@@ -29,6 +29,26 @@ module.exports = async (__, args, { user, redis }) => {
     }
   } = await githubApolloFetch({
     query: `
+      fragment LatestPublicationProbs on Ref {
+        name
+        target {
+          ... on Tag {
+            name
+            message
+            oid
+            author: tagger {
+              name
+              email
+              date
+            }
+            commit: target {
+              ... on Commit {
+                id: oid
+              }
+            }
+          }
+        }
+      }
       query repositories(
         $login: String!
         $first: Int
@@ -74,6 +94,18 @@ module.exports = async (__, args, { user, redis }) => {
                   name
                 }
               }
+              publication: ref(qualifiedName: "refs/tags/publication") {
+                ...LatestPublicationProbs
+              }
+              prepublication: ref(qualifiedName: "refs/tags/prepublication") {
+                ...LatestPublicationProbs
+              }
+              scheduledPublication: ref(qualifiedName: "refs/tags/scheduled-publication") {
+                ...LatestPublicationProbs
+              }
+              scheduledPrepublication: ref(qualifiedName: "refs/tags/scheduled-prepublication") {
+                ...LatestPublicationProbs
+              }
             }
           }
         }
@@ -103,7 +135,15 @@ module.exports = async (__, args, { user, redis }) => {
           latestCommit: {
             ...latestCommit,
             document
-          }
+          },
+          latestPublications: [
+            { refName: 'publication', ref: repo.publication },
+            { refName: 'prepublication', ref: repo.prepublication },
+            { refName: 'scheduled-publication', ref: repo.scheduledPublication },
+            { refName: 'scheduled-prepublication', ref: repo.scheduledPrepublication }
+          ]
+            .filter(pub => pub.ref && pub.ref.target)
+            .map(pub => tagNormalizer(pub.ref.target, repo.id, pub.refName))
         }
       }
     )
