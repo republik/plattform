@@ -3,6 +3,7 @@ import { compose } from 'redux'
 import { Router } from '../../lib/routes'
 import { gql, graphql } from 'react-apollo'
 import { Value, resetKeyGenerator } from 'slate'
+import debounce from 'lodash.debounce'
 
 import withData from '../../lib/apollo/withData'
 import withAuthorization from '../../components/Auth/withAuthorization'
@@ -107,7 +108,10 @@ class EditorPage extends Component {
 
     this.changeHandler = this.changeHandler.bind(this)
     this.commitHandler = this.commitHandler.bind(this)
-    this.documentChangeHandler = this.documentChangeHandler.bind(this)
+    this.documentChangeHandler = debounce(
+      this.documentChangeHandler.bind(this),
+      500
+    )
     this.revertHandler = this.revertHandler.bind(this)
 
     this.editorRef = ref => {
