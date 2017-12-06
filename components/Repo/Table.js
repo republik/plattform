@@ -329,7 +329,12 @@ class RepoList extends Component {
               .filter(({phase}) => !filterPhase || filterPhase === phase.name)
               .sort((a, b) => orderCompare(orderAccessor(a.repo), orderAccessor(b.repo)))
               .map(({repo, phase}) => {
-                const {id, meta: {creationDeadline, productionDeadline}, latestCommit: {date, document: {meta}}} = repo
+                const {
+                  id,
+                  meta: {creationDeadline, productionDeadline},
+                  latestCommit: {date, document: {meta}}
+                } = repo
+
                 return (
                   <Tr key={id}>
                     <Td>
