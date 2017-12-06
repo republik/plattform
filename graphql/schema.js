@@ -65,7 +65,7 @@ type mutations {
     repoId: ID!
     creationDeadline: DateTime
     productionDeadline: DateTime
-  ): Boolean!
+  ): Repo!
 }
 
 type subscriptions {

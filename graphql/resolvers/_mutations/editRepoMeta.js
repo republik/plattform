@@ -25,15 +25,14 @@ module.exports = async (_, args, { user, t, pubsub }) => {
     TAG_NAME
   )
 
-  const message = yaml.stringify(
-    {
-      ...tag
-        ? yaml.parse(tag.message)
-        : {},
-      ...(creationDeadline && { creationDeadline }),
-      ...(productionDeadline && { productionDeadline })
-    }
-  )
+  const meta = {
+    ...tag
+      ? yaml.parse(tag.message)
+      : {},
+    ...(creationDeadline && { creationDeadline }),
+    ...(productionDeadline && { productionDeadline })
+  }
+  const message = yaml.stringify(meta)
 
   const commitId = tag
     ? tag.commit.id
@@ -65,5 +64,8 @@ module.exports = async (_, args, { user, t, pubsub }) => {
     }
   })
 
-  return true
+  return {
+    id: repoId,
+    meta
+  }
 }

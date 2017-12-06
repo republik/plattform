@@ -151,7 +151,10 @@ module.exports = {
   },
   meta: async (repo) => {
     let message
-    if (repo.metaTag !== undefined) {
+    if (repo.meta) {
+      return repo.meta
+    } else if (repo.metaTag !== undefined) {
+      debug('meta needs to parse tag message for repo %O', repo)
       message = repo.metaTag && repo.metaTag.target
         ? repo.metaTag.target.message
         : ''
