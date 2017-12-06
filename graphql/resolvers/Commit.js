@@ -59,7 +59,11 @@ module.exports = {
       })
 
       if (!repository.blob) {
-        throw new Error(`no document found for ${repoId}`)
+        console.warn(`no document found for ${repoId}`)
+        return {
+          content: {},
+          meta: {}
+        }
       }
 
       mdast = MDAST.parse(repository.blob.text)
