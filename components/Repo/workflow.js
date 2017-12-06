@@ -32,4 +32,4 @@ export const phases = [
 export const milestoneNames = phases.reduce(
   (all, phase) => all.concat(phase.milestones),
   []
-)
+).filter(Boolean).filter(name => name !== 'meta')
