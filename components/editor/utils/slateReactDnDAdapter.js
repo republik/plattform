@@ -4,19 +4,15 @@ export default () => {
   let dropHandler
   const ReactDnDPlugin = {
     onDrop (event, change, editor) {
-      return dropHandler(event, change, editor)
+      dropHandler(event)
+      return true
     }
   }
 
   const SlateHTML5Backend = (...args) => {
     const backend = new HTML5Backend(...args)
-    dropHandler = (event, change, editor) => {
-      const before = backend.monitor.store.getState()
+    dropHandler = (event) => {
       backend.handleTopDrop(event)
-      const after = backend.monitor.store.getState()
-      if (before.dragOperation.targetIds.length !== after.dragOperation.targetIds.length) {
-        return true
-      }
     }
 
     return backend
