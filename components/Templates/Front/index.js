@@ -6,6 +6,7 @@ import {
   matchImageParagraph
 } from 'mdast-react-render/lib/utils'
 import {
+  colors,
   TeaserFrontImage,
   Editorial,
   TeaserFrontImageHeadline,
@@ -20,6 +21,8 @@ import {
   TeaserFrontTileHeadline,
   TeaserFrontTileRow
 } from '@project-r/styleguide'
+
+let linkColor
 
 const paragraph = (type, component) => ({
   matchMdast: matchParagraph,
@@ -37,7 +40,7 @@ const paragraph = (type, component) => ({
           title: node.title,
           href: node.url
         },
-        color: parent.data.linkColor
+        color: linkColor || colors.primary
       }),
       component: ({ children, data, attributes = {}, ...props }) =>
         <TeaserFrontAuthorLink
@@ -107,6 +110,10 @@ const frontImageTeaser = {
   matchMdast: node => {
     return matchZone('TEASER')(node) && node.data.teaserType === 'frontImage'
   },
+  props (node) {
+    linkColor = node.data.linkColor
+    return { data: node.data }
+  },
   component: ({ children, attributes = {}, ...props }) => {
     return <TeaserFrontImage {...attributes} {...props}>
       {children}
@@ -166,7 +173,10 @@ const frontSplitTeaser = {
       {children}
     </TeaserFrontSplit>
   },
-
+  props (node) {
+    linkColor = node.data.linkColor
+    return { data: node.data }
+  },
   editorModule: 'teaser',
   editorOptions: {
     type: 'frontSplit',
@@ -227,6 +237,10 @@ const frontTypoTeaser = {
       {children}
     </TeaserFrontTypo>
   },
+  props (node) {
+    linkColor = node.data.linkColor
+    return { data: node.data }
+  },
   editorModule: 'teaser',
   editorOptions: {
     type: 'frontTypo',
@@ -275,20 +289,6 @@ const frontTypoTeaser = {
   ]
 }
 
-/*
-textPosition: 'topleft',
-color: '#fff',
-bgColor: '#000',
-linkColor: colors.primary,
-center: false,
-image: gray2x1,
-kind: 'editorial',
-titleSize: 'standard',
-teaserType: 'frontImage',
-reverse: false,
-portrait: true,
-*/
-
 const frontTileTeaser = {
   matchMdast: node => {
     return matchZone('TEASER')(node) && node.data.teaserType === 'frontTile'
@@ -297,6 +297,10 @@ const frontTileTeaser = {
     return <TeaserFrontTile {...attributes} {...props}>
       {children}
     </TeaserFrontTile>
+  },
+  props (node) {
+    linkColor = node.data.linkColor
+    return { data: node.data }
   },
   editorModule: 'teaser',
   editorOptions: {
