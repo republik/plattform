@@ -5,7 +5,7 @@ cache:
 notifications:
   email: false
 node_js:
-  - '8'
+  - '8.9.1'
 addons:
   postgresql: "9.6"
 services:
