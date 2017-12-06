@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-06T01:14:16.672Z",
+  "updated": "2017-12-06T16:26:45.689Z",
   "title": "live",
   "data": [
     {
@@ -55,32 +55,96 @@
       "value": "Zugelassene Rollen: {roles}"
     },
     {
-      "key": "repo/list/add/title",
+      "key": "repo/add/title",
       "value": "Neuer Artikel"
     },
     {
-      "key": "repo/list/add/titleField/label",
+      "key": "repo/add/titleField/label",
       "value": "Titel"
     },
     {
-      "key": "repo/list/add/titleField/error",
+      "key": "repo/add/titleField/error",
       "value": "Titel fehlt"
     },
     {
-      "key": "repo/list/add/submit",
+      "key": "repo/add/submit",
       "value": "erstellen"
     },
     {
-      "key": "repo/list/add/template/newsletter",
+      "key": "repo/add/template/newsletter",
       "value": "Newsletter"
     },
     {
-      "key": "repo/list/add/template/neutrum",
+      "key": "repo/add/template/neutrum",
       "value": "Neutrum"
     },
     {
-      "key": "repo/list/add/template/article",
+      "key": "repo/add/template/article",
       "value": "Artikel"
+    },
+    {
+      "key": "repo/add/template/front",
+      "value": "Front"
+    },
+    {
+      "key": "repo/phase/draft",
+      "value": "Entwurf"
+    },
+    {
+      "key": "repo/phase/production",
+      "value": "Produktion"
+    },
+    {
+      "key": "repo/phase/ready",
+      "value": "Ready"
+    },
+    {
+      "key": "repo/phase/scheduled",
+      "value": "Terminiert"
+    },
+    {
+      "key": "repo/phase/published",
+      "value": "Publiziert"
+    },
+    {
+      "key": "repo/table/pageInfo/loadMore",
+      "value": "mehr laden"
+    },
+    {
+      "key": "repo/table/pageInfo/total",
+      "value": "Total {count} Artikel"
+    },
+    {
+      "key": "repo/table/pageInfo/loadedTotal",
+      "value": "die zuletzt bearbeiteten {loaded} von etwa {total} Artikel"
+    },
+    {
+      "key": "repo/table/col/title",
+      "value": "Titel"
+    },
+    {
+      "key": "repo/table/col/credits",
+      "value": "Credits"
+    },
+    {
+      "key": "repo/table/col/phase",
+      "value": "Phase"
+    },
+    {
+      "key": "repo/table/col/pushed",
+      "value": "Letzte Änderung"
+    },
+    {
+      "key": "repo/table/col/published",
+      "value": "Publikationsdatum"
+    },
+    {
+      "key": "repo/table/col/creationDeadline",
+      "value": "Creation-Deadline"
+    },
+    {
+      "key": "repo/table/col/productionDeadline",
+      "value": "Produktions-Deadline"
     },
     {
       "key": "baseCommit/title",

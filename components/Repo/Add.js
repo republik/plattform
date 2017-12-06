@@ -95,7 +95,7 @@ class RepoAdd extends Component {
       title: value,
       dirty: shouldValidate,
       error: (
-        value.trim().length <= 0 && t('repo/list/add/titleField/error')
+        value.trim().length <= 0 && t('repo/add/titleField/error')
       )
     })
   }
@@ -105,12 +105,12 @@ class RepoAdd extends Component {
 
     const templateOptions = templateKeys.map(key => ({
       value: key,
-      text: t(`repo/list/add/template/${key}`, null, key)
+      text: t(`repo/add/template/${key}`, null, key)
     }))
 
     return (
       <div {...styles.new}>
-        <Interaction.H2>{t('repo/list/add/title')}</Interaction.H2>
+        <Interaction.H2>{t('repo/add/title')}</Interaction.H2>
         <form {...styles.form} onSubmit={e => this.onSubmit(e)} onKeyPress={e => {
           if (e.key === 'Enter') {
             this.onSubmit(e)
@@ -127,7 +127,7 @@ class RepoAdd extends Component {
           </div>
           <div {...styles.input}>
             <Field
-              label={t('repo/list/add/titleField/label')}
+              label={t('repo/add/titleField/label')}
               value={title}
               onChange={(_, value, shouldValidate) => {
                 this.handleTitle(value, shouldValidate)
@@ -137,7 +137,7 @@ class RepoAdd extends Component {
           </div>
           <div {...styles.button}>
             <Button type='submit' block>
-              {t('repo/list/add/submit')}
+              {t('repo/add/submit')}
             </Button>
           </div>
         </form>

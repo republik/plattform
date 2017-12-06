@@ -94,38 +94,39 @@ const phaseForRepo = repo => {
 
 const orderFields = [
   {
-    field: 'PUSHED_AT',
+    field: 'pushed',
     label: 'Letzte Änderung',
     accessor: repo => new Date(repo.latestCommit.date)
   },
   {
-    field: 'PUBLISHED_AT',
+    field: 'published',
     label: 'Publikationsdatum',
     accessor: repo => new Date(repo.latestCommit.document.meta.publishDate)
   },
   {
-    field: 'CREATION_DEADLINE',
+    field: 'creationDeadline',
     label: 'Creation-Deadline',
     accessor: repo => new Date(repo.meta.creationDeadline)
   },
   {
-    field: 'PRODUCTION_DEADLINE',
+    field: 'productionDeadline',
     label: 'Produktions-Deadline',
     accessor: repo => new Date(repo.meta.productionDeadline)
   }
 ]
 
-const Phase = ({phase, onClick, disabled}) =>
+const Phase = ({phase, onClick, disabled, t}) =>
   <span {...styles.phase} style={{
     backgroundColor: disabled ? 'gray' : phase.color,
     cursor: onClick ? 'pointer' : 'default'
   }} onClick={onClick}>
-    {phase.name}
+    {t(`repo/phase/${phase.key}`, undefined, phase.key)}
   </span>
 
 class RepoList extends Component {
   render () {
     const {
+      t,
       data,
       orderField,
       orderDirection,
@@ -153,7 +154,13 @@ class RepoList extends Component {
     const orderCompare = orderDirection === 'DESC'
       ? descending : ascending
 
-    const orderAccessor = orderFields.find(order => order.field === orderField).accessor
+    const activeOrderField = orderFields.find(order => order.field === orderField)
+
+    const activeFilterPhase = phases.find(phase => phase.key === filterPhase)
+
+    const orderAccessor = activeOrderField
+      ? activeOrderField.accessor
+      : orderFields[0].accessor
 
     return (
       <div {...styles.container}>
@@ -161,27 +168,31 @@ class RepoList extends Component {
 
         <div {...styles.filterBar}>
           {phases.map(phase => {
-            const active = filterPhase && filterPhase === phase.name
+            const active = activeFilterPhase && activeFilterPhase.key === phase.key
             return (
-              <Link key={phase.name} route='index' params={getParams({phase: active ? null : phase.name})}>
+              <Link key={phase.key} route='index' params={getParams({phase: active ? null : phase.key})}>
                 <Phase
+                  t={t}
                   phase={phase}
-                  disabled={filterPhase && !active} />
+                  disabled={activeFilterPhase && !active} />
               </Link>
             )
           })}
           {data.repos && (
             <Label {...styles.pageInfo}>
               {data.repos.nodes.length === data.repos.totalCount
-                ? data.repos.totalCount
-                : `${data.repos.nodes.length}/${data.repos.totalCount}`
+                ? t('repo/table/pageInfo/total', {count: data.repos.totalCount})
+                : t('repo/table/pageInfo/loadedTotal', {
+                  loaded: data.repos.nodes.length,
+                  total: data.repos.totalCount
+                })
               }
               <br />
               {!data.loading && data.repos.pageInfo.hasNextPage && (
                 <a {...linkRule} href='#' onClick={() => {
                   fetchMore({after: data.repos.pageInfo.endCursor})
                 }}>
-                  Mehr Laden
+                  {t('repo/table/pageInfo/loadMore')}
                 </a>
               )}
             </Label>
@@ -190,9 +201,9 @@ class RepoList extends Component {
         <Table>
           <thead>
             <Tr>
-              <Th style={{width: '30%'}}>Titel</Th>
-              <Th style={{width: '15%'}}>Credits</Th>
-              {orderFields.map(({field, label}) => (
+              <Th style={{width: '30%'}}>{t('repo/table/col/title')}</Th>
+              <Th style={{width: '15%'}}>{t('repo/table/col/credits')}</Th>
+              {orderFields.map(({field}) => (
                 <ThOrder key={field}
                   route='index'
                   params={getParams({field, order: true})}
@@ -200,10 +211,10 @@ class RepoList extends Component {
                   activeField={orderField}
                   field={field}
                   style={{width: '10%'}}>
-                  {label}
+                  {t(`repo/table/col/${field}`, undefined, field)}
                 </ThOrder>
               ))}
-              <Th style={{width: '10%'}}>Phase</Th>
+              <Th style={{width: '10%'}}>{t('repo/table/col/phase')}</Th>
               <Th style={{width: '5%'}} />
             </Tr>
           </thead>
@@ -221,7 +232,7 @@ class RepoList extends Component {
                 phase: phaseForRepo(repo),
                 repo
               }))
-              .filter(({phase}) => !filterPhase || filterPhase === phase.name)
+              .filter(({phase}) => !activeFilterPhase || activeFilterPhase.key === phase.key)
               .sort((a, b) => orderCompare(orderAccessor(a.repo), orderAccessor(b.repo)))
               .map(({repo, phase}) => {
                 const {
@@ -262,7 +273,7 @@ class RepoList extends Component {
                         )} />
                     </TdNum>
                     <Td>
-                      <Phase phase={phase} />
+                      <Phase t={t} phase={phase} />
                     </Td>
                     <Td style={{textAlign: 'right'}}>
                       {repo.latestPublications

@@ -1,28 +1,28 @@
 
 export const phases = [
   {
-    name: 'Entwurf',
+    key: 'draft',
     color: 'Indigo',
     milestones: []
   },
   {
-    name: 'Produktion',
+    key: 'production',
     color: 'Tomato',
     milestones: ['journalist']
   },
   {
-    name: 'Ready',
+    key: 'ready',
     color: 'MediumSeaGreen',
     milestones: ['textEditor', 'managingEditor', 'imageEditor', 'proofReader', 'chiefEditor']
   },
   {
-    name: 'Terminiert',
+    key: 'scheduled',
     color: 'LightPink',
     published: true,
     scheduled: true
   },
   {
-    name: 'Publiziert',
+    key: 'published',
     color: 'HotPink',
     published: true,
     live: true
