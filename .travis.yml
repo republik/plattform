@@ -39,3 +39,4 @@ env:
     - DEFAULT_MAIL_FROM_NAME='publikator'
     - DEFAULT_MAIL_FROM_ADDRESS='publikator@project-r.construction'
     - AUTH_MAIL_FROM_ADDRESS='publikator@project-r.construction'
+    - FRONTEND_BASE_URL=http://localhost:6000
