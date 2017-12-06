@@ -1,7 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
 import { Label } from '@project-r/styleguide'
-import { gray2x1 } from './placeholder'
 
 const styles = {
   label: css({
@@ -40,7 +39,7 @@ const ImageInput = ({onChange, src, label, maxWidth = 200}) => (
       {label}
     </Label>
     <img
-      src={src || gray2x1}
+      src={src || '/static/placeholder.png'}
       style={{
         maxWidth,
         width: src ? undefined : '100%'

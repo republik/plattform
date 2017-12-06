@@ -112,10 +112,13 @@ const frontImageTeaser = {
   },
   props (node) {
     linkColor = node.data.linkColor
-    return { data: node.data }
+    return matchImageParagraph(node.children[0])
+      ? { image: node.children[0].children[0].url }
+      : {}
   },
-  component: ({ children, attributes = {}, ...props }) => {
-    return <TeaserFrontImage {...attributes} {...props}>
+  component: ({ children, attributes = {}, image, ...props }) => {
+    const imageSrc = image || '/static/placeholder.png'
+    return <TeaserFrontImage image={imageSrc} {...attributes} {...props}>
       {children}
     </TeaserFrontImage>
   },
@@ -168,14 +171,17 @@ const frontSplitTeaser = {
   matchMdast: node => {
     return matchZone('TEASER')(node) && node.data.teaserType === 'frontSplit'
   },
-  component: ({ children, attributes = {}, ...props }) => {
-    return <TeaserFrontSplit {...attributes} {...props}>
+  component: ({ children, attributes = {}, image, ...props }) => {
+    const imageSrc = image || '/static/placeholder.png'
+    return <TeaserFrontSplit image={imageSrc} {...attributes} {...props}>
       {children}
     </TeaserFrontSplit>
   },
   props (node) {
     linkColor = node.data.linkColor
-    return { data: node.data }
+    return matchImageParagraph(node.children[0])
+      ? { image: node.children[0].children[0].url }
+      : {}
   },
   editorModule: 'teaser',
   editorOptions: {
@@ -293,14 +299,17 @@ const frontTileTeaser = {
   matchMdast: node => {
     return matchZone('TEASER')(node) && node.data.teaserType === 'frontTile'
   },
-  component: ({ children, attributes = {}, ...props }) => {
-    return <TeaserFrontTile {...attributes} {...props}>
+  component: ({ children, attributes = {}, image, ...props }) => {
+    const imageSrc = image || '/static/placeholder.png'
+    return <TeaserFrontTile image={imageSrc} {...attributes} {...props}>
       {children}
     </TeaserFrontTile>
   },
   props (node) {
     linkColor = node.data.linkColor
-    return { data: node.data }
+    return matchImageParagraph(node.children[0])
+      ? { image: node.children[0].children[0].url }
+      : {}
   },
   editorModule: 'teaser',
   editorOptions: {

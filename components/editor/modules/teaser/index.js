@@ -2,7 +2,6 @@ import { colors } from '@project-r/styleguide'
 import React from 'react'
 import { matchBlock } from '../../utils'
 import { Block } from 'slate'
-import { gray2x1 } from '../../utils/placeholder'
 
 import { getSerializer, getSubmodules } from './serializer'
 
@@ -23,7 +22,7 @@ export const getData = data => ({
   bgColor: '#000',
   linkColor: colors.primary,
   center: false,
-  image: gray2x1,
+  image: null,
   kind: 'editorial',
   titleSize: 'standard',
   teaserType: 'frontImage',

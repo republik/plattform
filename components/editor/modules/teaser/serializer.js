@@ -122,21 +122,21 @@ export const toMdast = ({
   })
 
   const { image, ...data } = node.data
-
+  const imageNode = image && {
+    type: 'paragraph',
+    children: [
+      {
+        type: 'image',
+        url: image
+      }
+    ]
+  }
   return {
     type: 'zone',
     identifier: 'TEASER',
     data,
     children: [
-      {
-        type: 'paragraph',
-        children: [
-          {
-            type: 'image',
-            url: image
-          }
-        ]
-      },
+      ...(imageNode ? [imageNode] : []),
       ...childSerializer.toMdast(node.nodes, 0, node, ...args)
     ]
   }
