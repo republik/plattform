@@ -433,7 +433,7 @@ const createSchema = ({
               editorModule: 'embedVideo',
               editorOptions: {
                 lookupType: 'PARAGRAPH',
-                 sizes: [
+                sizes: [
                   {
                     label: 'Normal',
                     props: {size: undefined}
