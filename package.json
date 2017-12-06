@@ -52,7 +52,7 @@
     "tape": "^4.8.0"
   },
   "dependencies": {
-    "@project-r/styleguide": "^5.12.1",
+    "@project-r/styleguide": "^5.13.0",
     "@project-r/template-newsletter": "^1.4.3",
     "d3-array": "^1.2.0",
     "d3-color": "^1.0.3",
