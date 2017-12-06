@@ -5,6 +5,7 @@ import { gql, withApollo } from 'react-apollo'
 import { matchBlock } from '../../utils'
 import { findOrCreate } from '../../utils/serialization'
 
+import createUi from './ui'
 import embedFromUrlPlugin from './embedFromUrlPlugin'
 import EmbedLoader from './EmbedLoader'
 
@@ -167,7 +168,7 @@ const moduleFactory = ({ query, matchUrl, getQueryParams }) => options => {
       serializer: getSerializer(options)
     },
     changes: {},
-    // TODO: Implement UI for size selection of video embeds.
+    ui: createUi({TYPE, editorOptions: rule.editorOptions}),
     plugins: [
       embedPlugin({ query, ...options }),
       embedFromUrlPlugin({
