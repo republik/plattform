@@ -58,9 +58,10 @@ class EditMeta extends Component {
     const { editing, disabled } = this.state
     const { value, onChange } = this.props
 
+    const formattedPropValue = (value ? formatDate(new Date(value)) : '')
     let formattedValue =
       this.state.value ||
-      (value ? formatDate(new Date(value)) : '')
+      formattedPropValue
 
     return (
       <span {...styles.span} onClick={() => {
@@ -81,8 +82,8 @@ class EditMeta extends Component {
                   if (!parsedValue) {
                     return
                   }
-                  if (formatDate(value) === formattedValue) {
-                    this.setState({editing: false, value: undefined})
+                  if (formattedPropValue === formattedValue) {
+                    this.ref.blur()
                   }
 
                   this.setState({disabled: true})
@@ -97,6 +98,11 @@ class EditMeta extends Component {
                 }
                 if (event.key === 'Escape') {
                   this.setState({editing: false, value: undefined, disabled: false})
+                }
+              }}
+              onBlur={() => {
+                if (formattedPropValue === formattedValue) {
+                  this.setState({editing: false, value: undefined})
                 }
               }}
               onChange={event => this.setState({value: event.target.value})}
