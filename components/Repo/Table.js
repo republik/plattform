@@ -99,7 +99,7 @@ const styles = {
       minWidth: 160
     }
   }),
-  phases: css({
+  filterBar: css({
     marginBottom: 20
   }),
   phase: css({
@@ -107,6 +107,10 @@ const styles = {
     borderRadius: 3,
     padding: '3px 6px',
     marginRight: 6
+  }),
+  pageInfo: css({
+    float: 'right',
+    textAlign: 'right'
   })
 }
 
@@ -214,7 +218,8 @@ class RepoList extends Component {
       orderField,
       orderDirection,
       phase: filterPhase,
-      editRepoMeta
+      editRepoMeta,
+      fetchMore
     } = this.props
     const { title, template, dirty, error } = this.state
 
@@ -280,7 +285,7 @@ class RepoList extends Component {
           </form>
         </div>
 
-        <div {...styles.phases}>
+        <div {...styles.filterBar}>
           {phases.map(phase => {
             const active = filterPhase && filterPhase === phase.name
             return (
@@ -291,6 +296,22 @@ class RepoList extends Component {
               </Link>
             )
           })}
+          {data.repos && (
+            <Label {...styles.pageInfo}>
+              {data.repos.nodes.length === data.repos.totalCount
+                ? data.repos.totalCount
+                : `${data.repos.nodes.length}/${data.repos.totalCount}`
+              }
+              <br />
+              {!data.loading && data.repos.pageInfo.hasNextPage && (
+                <a {...linkRule} href='#' onClick={() => {
+                  fetchMore({after: data.repos.pageInfo.endCursor})
+                }}>
+                  Mehr Laden
+                </a>
+              )}
+            </Label>
+          )}
         </div>
         <Table>
           <thead>
@@ -356,16 +377,14 @@ class RepoList extends Component {
                       <EditMetaDate
                         value={creationDeadline}
                         onChange={(value) => editRepoMeta(
-                          {repoId: id, creationDeadline: value},
-                          {orderField, orderDirection}
+                          {repoId: id, creationDeadline: value}
                         )} />
                     </TdNum>
                     <TdNum>
                       <EditMetaDate
                         value={productionDeadline}
                         onChange={(value) => editRepoMeta(
-                          {repoId: id, productionDeadline: value},
-                          {orderField, orderDirection}
+                          {repoId: id, productionDeadline: value}
                         )} />
                     </TdNum>
                     <Td>
@@ -402,8 +421,13 @@ class RepoList extends Component {
 }
 
 const query = gql`
-query repos {
-  repos {
+query repos($after: String) {
+  repos(first: 100, after: $after) {
+    totalCount
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
     nodes {
       id
       meta {
@@ -461,13 +485,43 @@ mutation editRepoMeta($repoId: ID!, $creationDeadline: DateTime, $productionDead
 
 const RepoListWithQuery = compose(
   withT,
-  graphql(query),
+  graphql(query, {
+    options: {
+      notifyOnNetworkStatusChange: true
+    },
+    props: ({data}) => ({
+      data,
+      fetchMore: ({after}) => data.fetchMore({
+        variables: {
+          after
+        },
+        updateQuery: (previousResult, { fetchMoreResult, queryVariables }) => {
+          const nodes = [
+            ...previousResult.repos.nodes,
+            ...fetchMoreResult.repos.nodes
+          ].filter(({id}, i, all) =>
+            // deduplicate by id
+            i === all.findIndex(repo => repo.id === id)
+          )
+          return {
+            ...previousResult,
+            totalCount: fetchMoreResult.repos.pageInfo.hasNextPage
+              ? fetchMoreResult.repos.totalCount
+              : nodes.length,
+            repos: {
+              ...previousResult.repos,
+              ...fetchMoreResult.repos,
+              nodes
+            }
+          }
+        }
+      })
+    })
+  }),
   graphql(mutation, {
     props: ({mutate}) => ({
       editRepoMeta: (variables) =>
-        mutate({
-          variables
-        })
+        mutate({variables})
     })
   })
 )(RepoList)
