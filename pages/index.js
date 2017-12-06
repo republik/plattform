@@ -5,13 +5,18 @@ import withData from '../lib/apollo/withData'
 import withAuthorization from '../components/Auth/withAuthorization'
 
 import Frame from '../components/Frame'
-import RepoList from '../components/Repo/List'
+import RepoTable from '../components/Repo/Table'
 
-const Index = ({ url }) => (
-  <Frame url={url}>
-    <RepoList />
-  </Frame>
-)
+const Index = ({ url }) => {
+  const [orderField, orderDirection] = (url.query.orderBy || '')
+    .split('-')
+    .filter(Boolean)
+  return (
+    <Frame url={url} raw>
+      <RepoTable orderField={orderField} orderDirection={orderDirection} phase={url.query.phase} />
+    </Frame>
+  )
+}
 
 export default compose(
   withData,
