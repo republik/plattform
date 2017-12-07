@@ -1068,6 +1068,10 @@ email-validator@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/email-validator/-/email-validator-1.1.1.tgz#b07f3be7bac1dc099bc43e75f6ae399f552d5a80"
 
+emojione_minimal@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/emojione_minimal/-/emojione_minimal-2.1.2.tgz#48341218174ddc85d790c33671d039e68f75d0f7"
+
 encodeurl@~1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.1.tgz#79e3d58655346909fe6f0f45a5de68103b294d20"

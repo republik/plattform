@@ -24,6 +24,7 @@
     "debug": "^3.1.0",
     "dotenv": "^4.0.0",
     "dynamic-dedupe": "^0.3.0",
+    "emojione_minimal": "^2.1.2",
     "graphql": "^0.11.7",
     "graphql-fields": "^1.0.2",
     "graphql-tools": "https://github.com/orbiting/graphql-tools.git#upstream",
