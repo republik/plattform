@@ -6,6 +6,7 @@ const t = require('./lib/t')
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 
 module.exports.run = () => {
+  require('./lib/slackGreeter')
   const localModule = require('./graphql')
   const executableSchema = makeExecutableSchema(merge(localModule, [documents]))
 

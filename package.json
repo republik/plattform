@@ -15,6 +15,7 @@
     "@orbiting/backend-modules-scalars": "^0.0.4",
     "@orbiting/backend-modules-scripts": "^1.0.0",
     "@orbiting/backend-modules-translate": "^0.0.0",
+    "@slack/client": "^3.14.2",
     "apollo-modules-node": "^0.1.1",
     "aws-sign": "^0.1.2",
     "d3-array": "^1.2.1",
@@ -36,7 +37,7 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon -w graphql -w src -w lib -w .env -w package.json -w server.js -w index.js index.js",
-    "debug": "DEBUG=crowdfundings:* yarn run dev",
+    "debug": "DEBUG=crowdfundings:*,republik:* yarn run dev",
     "inspect": "NODE_ENV=development node --inspect index.js",
     "start": "node index.js",
     "precommit": "lint-staged",
