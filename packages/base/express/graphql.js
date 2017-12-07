@@ -6,6 +6,7 @@ const { pubsub } = require('../lib/RedisPubSub')
 const cookie = require('cookie')
 const cookieParser = require('cookie-parser')
 const checkEnv = require('check-env')
+const { transformUser } = require('@orbiting/backend-modules-auth')
 
 checkEnv([
   'PUBLIC_WS_URL_BASE',
@@ -39,7 +40,9 @@ module.exports = (server, pgdb, httpServer, executableSchema, t) => {
         const session = await pgdb.public.sessions.findOne({ sid })
         if (session) {
           const user = await pgdb.public.users.findOne({id: session.sess.passport.user})
-          return { user }
+          return {
+            user: transformUser(user)
+          }
         }
         return { }
       },
