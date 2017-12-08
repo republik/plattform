@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { breakoutStyles } from '../Center'
-import { Figure, FigureImage, FigureCaption } from '../Figure'
+import { FigureImage, FigureCaption } from '../Figure'
 import { Meta } from './Meta'
 import PlayIcon from 'react-icons/lib/md/play-arrow'
 
