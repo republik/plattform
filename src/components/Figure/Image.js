@@ -9,8 +9,6 @@ const styles = {
   }),
   imageLoading: css({
     backgroundColor: '#eee',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'contain',
     height: 0
   })
 }
