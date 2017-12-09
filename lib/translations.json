@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-06T16:26:45.689Z",
+  "updated": "2017-12-09T12:30:39.382Z",
   "title": "live",
   "data": [
     {
@@ -91,8 +91,20 @@
       "value": "Entwurf"
     },
     {
+      "key": "repo/phase/creation",
+      "value": "Kreation"
+    },
+    {
       "key": "repo/phase/production",
       "value": "Produktion"
+    },
+    {
+      "key": "repo/phase/proofReading",
+      "value": "Korrektorat"
+    },
+    {
+      "key": "repo/phase/finalControl",
+      "value": "Endkontrolle"
     },
     {
       "key": "repo/phase/ready",
@@ -175,28 +187,40 @@
       "value": "{name} für"
     },
     {
-      "key": "checklist/labels/journalist",
-      "value": "Text fertig"
+      "key": "checklist/labels/startCreation",
+      "value": "Start Kreation"
     },
     {
-      "key": "checklist/labels/textEditor",
-      "value": "Textchef"
+      "key": "checklist/labels/startProduction",
+      "value": "Start Produktion"
     },
     {
-      "key": "checklist/labels/managingEditor",
-      "value": "CvD"
+      "key": "checklist/labels/numbersOk",
+      "value": "Grafik / Zahlen OK"
     },
     {
-      "key": "checklist/labels/imageEditor",
-      "value": "Bildredaktion"
+      "key": "checklist/labels/imagesOk",
+      "value": "Bild OK"
     },
     {
-      "key": "checklist/labels/proofReader",
-      "value": "Korrektur"
+      "key": "checklist/labels/startProofReading",
+      "value": "Start Korrektorat "
+    },
+    {
+      "key": "checklist/labels/factCheckOk",
+      "value": "Faktencheck OK"
+    },
+    {
+      "key": "checklist/labels/proofReadingOk",
+      "value": "Korrektorat OK"
+    },
+    {
+      "key": "checklist/labels/finalControl",
+      "value": "Endkontrolle OK"
     },
     {
       "key": "checklist/labels/chiefEditor",
-      "value": "CR"
+      "value": "CR OK"
     },
     {
       "key": "tree/commit/publish",
