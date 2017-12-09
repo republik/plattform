@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-09T12:30:39.382Z",
+  "updated": "2017-12-09T14:48:15.459Z",
   "title": "live",
   "data": [
     {
@@ -136,11 +136,11 @@
     },
     {
       "key": "repo/table/col/credits",
-      "value": "Credits"
+      "value": "Autoren"
     },
     {
       "key": "repo/table/col/phase",
-      "value": "Phase"
+      "value": "Status"
     },
     {
       "key": "repo/table/col/pushed",
@@ -148,11 +148,11 @@
     },
     {
       "key": "repo/table/col/published",
-      "value": "Publikationsdatum"
+      "value": "Geplantes Publikationsdatum"
     },
     {
       "key": "repo/table/col/creationDeadline",
-      "value": "Creation-Deadline"
+      "value": "Kreations-Deadline"
     },
     {
       "key": "repo/table/col/productionDeadline",
