@@ -2,6 +2,7 @@ import React from 'react'
 import { Document as SlateDocument } from 'slate'
 import { timeHour } from 'd3-time'
 import { timeFormat } from 'd3-time-format'
+import { parse } from '@orbiting/remark-preset'
 
 import { swissTime } from '../../../../lib/utils/format'
 import slugify from '../../../../lib/utils/slug'
@@ -104,7 +105,7 @@ export default ({rule, subModules, TYPE}) => {
     ]
   })
 
-  const newDocument = ({title, template}, me) => serializer.deserialize(
+  const newDocument = ({title, template}, me) => serializer.deserialize(parse(
 `---
 template: ${template}
 ---
@@ -125,7 +126,7 @@ Hurray!
 
 <hr/></section>
 `
-  )
+  ))
 
   const Container = rule.component
 

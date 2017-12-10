@@ -1,6 +1,7 @@
 import test from 'tape'
 import createMarkModule from './'
 import createParagraphModule from '../paragraph'
+import { parse, stringify } from '@orbiting/remark-preset'
 
 const boldModule = createMarkModule({
   TYPE: 'STRONG',
@@ -44,7 +45,7 @@ const serializer = paragraphModule.helpers.serializer
 
 test('mark serialization', assert => {
   const md = `_Hello_ ~~World~~**You**`
-  const value = serializer.deserialize(md)
+  const value = serializer.deserialize(parse(md))
   const node = value.document.nodes.first()
 
   assert.equal(node.kind, 'block')
@@ -92,6 +93,6 @@ test('mark serialization', assert => {
   assert.equal(youMarks.size, 1)
   assert.equal(youMarks.first().type, 'STRONG')
 
-  assert.equal(serializer.serialize(value).trimRight(), md)
+  assert.equal(stringify(serializer.serialize(value)).trimRight(), md)
   assert.end()
 })
