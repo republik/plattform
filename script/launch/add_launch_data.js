@@ -63,6 +63,11 @@ PgDb.connect().then(async (pgdb) => {
       }
     }
 
+    // get republik company
+    const republikCompany = await transaction.public.companies.findOne({
+      name: 'Republik'
+    })
+
     // insert monthly membership
     const monthlyMembershipReward = await transaction.public.rewards.insertAndGet({
       type: 'MembershipType'
@@ -74,12 +79,15 @@ PgDb.connect().then(async (pgdb) => {
       name: 'MONTHLY_ABO',
       interval: 'month',
       intervalCount: 1,
-      price: 2000
+      price: 2000,
+      companyId: republikCompany.id
     })
 
     const monthlyMembershipPackage = await transaction.public.packages.insertAndGet({
       name: 'MONTHLY_ABO',
-      crowdfundingId: launch.id
+      crowdfundingId: launch.id,
+      companyId: republikCompany.id,
+      paymentMethods: ['STRIPE']
     })
 
     await transaction.public.packageOptions.insert({

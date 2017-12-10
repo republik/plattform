@@ -107,3 +107,34 @@ INSERT INTO comments(
   "createdAt",
   "updatedAt"
 FROM cf.comments;
+
+
+-- add companies
+CREATE TABLE companies(
+  "id"                  uuid primary key not null default uuid_generate_v4(),
+  "name"                text not null,
+  "createdAt"           timestamptz default now(),
+  "updatedAt"           timestamptz default now(),
+  UNIQUE("name")
+);
+
+INSERT INTO companies("name") VALUES ('Project-R');
+INSERT INTO companies("name") VALUES ('Republik');
+
+ALTER TABLE "packages" ADD COLUMN "companyId" uuid references "companies";
+ALTER TABLE "membershipTypes" ADD COLUMN "companyId" uuid references "companies";
+ALTER TABLE "paymentSources" ADD COLUMN "companyId" uuid references "companies";
+
+UPDATE packages SET "companyId" = (SELECT id FROM companies WHERE name = 'Project-R');
+UPDATE "membershipTypes" SET "companyId" = (SELECT id FROM companies WHERE name = 'Project-R');
+UPDATE "paymentSources" SET "companyId" = (SELECT id FROM companies WHERE name = 'Project-R');
+
+ALTER TABLE "packages" ALTER COLUMN "companyId" SET NOT NULL;
+ALTER TABLE "membershipTypes" ALTER COLUMN "companyId" SET NOT NULL;
+ALTER TABLE "paymentSources" ALTER COLUMN "companyId" SET NOT NULL;
+
+-- paymentMethods on packages
+ALTER TABLE "packages" ADD COLUMN "paymentMethods" "paymentMethod"[];
+UPDATE "packages"
+  SET "paymentMethods" = '{STRIPE, POSTFINANCECARD, PAYPAL, PAYMENTSLIP}'::"paymentMethod"[];
+ALTER TABLE "packages" ALTER COLUMN "paymentMethods" SET NOT NULL;
