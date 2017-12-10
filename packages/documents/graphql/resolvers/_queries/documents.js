@@ -21,15 +21,29 @@ module.exports = async (_, args, { user, redis }) => {
     : 'publication'
 
   const repoIds = await redis.smembersAsync('repos:ids')
+  const {
+    feed
+  } = args
 
   return Promise.all(
     repoIds.map(repoId => {
       return redis.getAsync(`repos:${repoId}/${ref}`)
     })
   )
-    .then(publications => publications
-      .filter(Boolean)
-      .map(publication => JSON.parse(publication).doc)
-      .sort((a, b) => descending(new Date(a.meta.publishDate), new Date(b.meta.publishDate)))
+    .then(publications => {
+      let documents = publications
+        .filter(Boolean)
+        .map(publication => JSON.parse(publication).doc)
+      if (feed) {
+        documents = documents.filter(d => (
+          d.meta.feed ||
+          (d.meta.feed === undefined && d.meta.template === 'article')
+        ))
+      }
+
+      return documents.sort((a, b) =>
+        descending(new Date(a.meta.publishDate), new Date(b.meta.publishDate))
+      )
+    }
     )
 }

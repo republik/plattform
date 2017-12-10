@@ -17,6 +17,7 @@ type Meta {
   twitterDescription: String
   publishDate: DateTime
   template: String
+  feed: Boolean
   kind: String
   format: String
   credits: JSON

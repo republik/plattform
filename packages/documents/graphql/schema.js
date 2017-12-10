@@ -6,7 +6,7 @@ schema {
 
 type queries {
   # (pre)published documents
-  documents: [Document]!
+  documents(feed: Boolean): [Document]!
   # (pre)published document
   document(slug: String!): Document
 }
