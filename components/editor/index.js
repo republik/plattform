@@ -175,6 +175,10 @@ class Editor extends Component {
       uniqModules,
       m => m.ui && m.ui.forms
     )
+
+    this.slateRef = ref => {
+      this.slate = ref
+    }
   }
   componentWillReceiveProps (nextProps) {
     if (nextProps.schema !== this.props.schema) {
@@ -184,25 +188,36 @@ class Editor extends Component {
   render () {
     const { value } = this.props
     return (
-      <Loader loading={!value} render={() => (
-        <DragDropContextProvider backend={SlateHTML5Backend}>
-          <Container>
+      <DragDropContextProvider backend={SlateHTML5Backend}>
+        <Container>
+          <Loader loading={!value} render={() => [
             <Sidebar
+              key='sidebar'
               textFormatButtons={this.textFormatButtons}
               blockFormatButtons={this.blockFormatButtons}
               insertButtons={this.insertButtons}
               propertyForms={this.propertyForms}
               value={value}
-              onChange={this.onChange} />
-            <Document>
+              onChange={this.onChange} />,
+            <Document key='document'>
               <SlateEditor
+                ref={this.slateRef}
                 value={value}
                 onChange={this.onChange}
                 plugins={this.plugins} />
             </Document>
-          </Container>
-        </DragDropContextProvider>
-      )} />
+          ]} />
+          { /* A full slate instance to normalize
+               initially loaded docs but ignoring
+               change events from it */ }
+          {!value && (
+            <SlateEditor
+              ref={this.slateRef}
+              value={this.newDocument({title: 'Loading...'})}
+              plugins={this.plugins} />
+          )}
+        </Container>
+      </DragDropContextProvider>
     )
   }
 }
