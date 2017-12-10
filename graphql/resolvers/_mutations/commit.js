@@ -1,7 +1,7 @@
 const { hashObject } = require('../../../lib/git')
 const visit = require('unist-util-visit')
 const dataUriToBuffer = require('data-uri-to-buffer')
-const MDAST = require('../../../lib/mdast/mdast')
+const MDAST = require('@orbiting/remark-preset')
 const { unprefixUrl } = require('../../../lib/assets')
 const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
 const superb = require('superb')
