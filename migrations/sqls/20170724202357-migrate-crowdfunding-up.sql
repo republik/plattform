@@ -107,22 +107,3 @@ INSERT INTO comments(
   "createdAt",
   "updatedAt"
 FROM cf.comments;
-
-
--- add role member to all users with a membership
-UPDATE
-  users
-SET
-  roles = COALESCE(roles, '[]'::jsonb)::jsonb || '["member"]'::jsonb
-WHERE
-  (roles IS NULL OR NOT roles @> '["member"]') AND
-  id IN (
-    SELECT
-      u.id
-    FROM
-      users u
-    JOIN
-      memberships m
-      ON m."userId" = u.id
-  )
-;
