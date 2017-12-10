@@ -30,7 +30,7 @@ Promise.resolve().then(async () => {
 
   const repos = await getRepos(null, { first: 100 }, { user, redis })
   const allLatestPublications = await Promise.all(
-    repos.map(repo => getLatestPublications(repo))
+    repos.nodes.map(repo => getLatestPublications(repo))
   )
     .then(arr => arr.filter(arr2 => arr2.length > 0))
   // console.log(util.inspect(allLatestPublications, {depth: null}))
