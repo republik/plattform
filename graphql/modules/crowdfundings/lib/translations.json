@@ -1,5 +1,5 @@
 {
-  "updated": "2017-11-30T15:47:35.184Z",
+  "updated": "2017-12-10T19:06:43.499Z",
   "title": "live",
   "data": [
     {
@@ -33,6 +33,10 @@
     {
       "key": "api/pledge/alreadyPaid",
       "value": "Sie haben bereits bezahlt."
+    },
+    {
+      "key": "api/pledge/paymentMethod/notAllowed",
+      "value": "Die von Ihnen gewählte Zahlungsart wird für das gewünschte Packet nicht unterstützt. Bitte kontaktieren Sie uns unter zahlung@republik.ch"
     },
     {
       "key": "api/pledge/reason",

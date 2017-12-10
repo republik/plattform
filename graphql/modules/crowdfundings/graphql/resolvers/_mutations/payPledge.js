@@ -62,6 +62,15 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     // load user
     const user = await transaction.public.users.findOne({id: pledge.userId})
 
+    // check if paymentMethod is allowed
+    const pkg = await transaction.public.packages.findOne({
+      id: pledge.packageId
+    })
+    if (pkg.paymentMethods.indexOf(pledgePayment.method) === -1) {
+      logger.error('payPledge paymentMethod not allowed', { req: req._log(), args, pledge, pledgePayment })
+      throw new Error(t('api/pledge/paymentMethod/notAllowed'))
+    }
+
     // check/charge payment
     let pledgeStatus
     if (pledgePayment.method === 'PAYMENTSLIP') {
