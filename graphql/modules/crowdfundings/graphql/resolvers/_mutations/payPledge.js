@@ -50,6 +50,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       if (
         payment && payment.pspPayload && pspPayload &&
         payment.pspPayload.TRANSACTIONID === pspPayload.tx) {
+        await transaction.transactionCommit()
         return {
           pledgeId: pledge.id
         }
