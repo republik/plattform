@@ -36,6 +36,7 @@ type Package {
   id: ID!
   name: String!
   options: [PackageOption!]!
+  paymentMethods: [PaymentMethod!]!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
