@@ -23,6 +23,8 @@ import {
 } from '@project-r/styleguide'
 
 const matchTeaser = matchZone('TEASER')
+const matchTeaserType = teaserType =>
+  node => matchTeaser(node) && node.data.teaserType === teaserType
 
 const paragraph = (type, component) => ({
   matchMdast: matchParagraph,
@@ -47,7 +49,7 @@ const paragraph = (type, component) => ({
             : colors.primary
         }
       },
-      component: ({ children, data, attributes = {}, ...props }) =>
+      component: ({ children, data, attributes, ...props }) =>
         <TeaserFrontAuthorLink
           {...props}
           attributes={attributes}>
@@ -92,7 +94,7 @@ const lead = (type, component) => ({
 
 const format = type => ({
   matchMdast: matchHeading(6),
-  component: ({ children, attributes = {} }) =>
+  component: ({ children, attributes }) =>
     <Editorial.Format attributes={attributes}>
       {children}
     </Editorial.Format>,
@@ -111,25 +113,22 @@ const image = {
   isVoid: true
 }
 
+const extracImage = node => matchImageParagraph(node)
+  ? node.children[0].url
+  : undefined
+
 const frontImageTeaser = {
-  matchMdast: node => {
-    return matchTeaser(node) && node.data.teaserType === 'frontImage'
-  },
-  props (node) {
-    return matchImageParagraph(node.children[0])
-      ? {
-        image: node.children[0].children[0].url,
-        ...node.data
-      }
-      : node.data
-  },
-  component: ({ children, attributes = {}, image, ...props }) => {
+  matchMdast: matchTeaserType('frontImage'),
+  props: node => ({
+    image: extracImage(node.children[0]),
+    ...node.data
+  }),
+  component: ({ children, attributes, image, ...props }) => {
     const imageSrc = image || '/static/placeholder.png'
     return <TeaserFrontImage image={imageSrc} attributes={attributes} {...props}>
       {children}
     </TeaserFrontImage>
   },
-
   editorModule: 'teaser',
   editorOptions: {
     type: 'frontImage',
@@ -148,8 +147,7 @@ const frontImageTeaser = {
     image,
     title(
       'frontImageTitle',
-      ({ children, attributes = {}, ...props }) => {
-        const { kind } = props
+      ({ children, attributes, kind }) => {
         const Component = kind === 'editorial'
           ? TeaserFrontImageHeadline.Editorial
           : TeaserFrontImageHeadline.Interaction
@@ -160,7 +158,7 @@ const frontImageTeaser = {
     ),
     lead(
       'frontImageLead',
-      ({ children, attributes = {} }) =>
+      ({ children, attributes }) =>
         <TeaserFrontLead attributes={attributes}>
           {children}
         </TeaserFrontLead>
@@ -168,30 +166,24 @@ const frontImageTeaser = {
     format('frontImageFormat'),
     paragraph(
       'frontImageCredit',
-      ({ children, attributes = {} }) =>
+      ({ children, attributes }) =>
         <TeaserFrontCredit attributes={attributes}>{children}</TeaserFrontCredit>
     )
   ]
 }
 
 const frontSplitTeaser = {
-  matchMdast: node => {
-    return matchTeaser(node) && node.data.teaserType === 'frontSplit'
-  },
-  component: ({ children, attributes = {}, image, ...props }) => {
+  matchMdast: matchTeaserType('frontSplit'),
+  component: ({ children, attributes, image, ...props }) => {
     const imageSrc = image || '/static/placeholder.png'
     return <TeaserFrontSplit image={imageSrc} attributes={attributes} {...props}>
       {children}
     </TeaserFrontSplit>
   },
-  props (node) {
-    return matchImageParagraph(node.children[0])
-      ? {
-        image: node.children[0].children[0].url,
-        ...node.data
-      }
-      : node.data
-  },
+  props: node => ({
+    image: extracImage(node.children[0]),
+    ...node.data
+  }),
   editorModule: 'teaser',
   editorOptions: {
     type: 'frontSplit',
@@ -213,8 +205,7 @@ const frontSplitTeaser = {
     image,
     title(
       'frontSplitTitle',
-      ({ children, attributes = {}, ...props }) => {
-        const { kind, titleSize } = props
+      ({ children, attributes, kind, titleSize }) => {
         const Component = kind === 'editorial'
           ? TeaserFrontSplitHeadline.Editorial
           : TeaserFrontSplitHeadline.Interaction
@@ -229,7 +220,7 @@ const frontSplitTeaser = {
     ),
     lead(
       'frontSplitLead',
-      ({ children, attributes = {} }) =>
+      ({ children, attributes }) =>
         <TeaserFrontLead attributes={attributes}>
           {children}
         </TeaserFrontLead>
@@ -237,17 +228,15 @@ const frontSplitTeaser = {
     format('frontSplitFormat'),
     paragraph(
       'frontSplitCredit',
-      ({ children, attributes = {} }) =>
+      ({ children, attributes }) =>
         <TeaserFrontCredit attributes={attributes}>{children}</TeaserFrontCredit>
     )
   ]
 }
 
 const frontTypoTeaser = {
-  matchMdast: node => {
-    return matchTeaser(node) && node.data.teaserType === 'frontTypo'
-  },
-  component: ({ children, attributes = {}, ...props }) => {
+  matchMdast: matchTeaserType('frontTypo'),
+  component: ({ children, attributes, ...props }) => {
     return <TeaserFrontTypo attributes={attributes} {...props}>
       {children}
     </TeaserFrontTypo>
@@ -272,8 +261,7 @@ const frontTypoTeaser = {
     image,
     title(
       'frontTypoTitle',
-      ({ children, attributes = {}, ...props }) => {
-        const { kind, titleSize } = props
+      ({ children, attributes, kind, titleSize }) => {
         const Component = kind === 'editorial'
         ? TeaserFrontTypoHeadline.Editorial
         : TeaserFrontTypoHeadline.Interaction
@@ -289,7 +277,7 @@ const frontTypoTeaser = {
     ),
     lead(
       'frontTypoLead',
-      ({ children, attributes = {} }) =>
+      ({ children, attributes }) =>
         <TeaserFrontLead attributes={attributes}>
           {children}
         </TeaserFrontLead>
@@ -297,27 +285,24 @@ const frontTypoTeaser = {
     format('frontTypoFormat'),
     paragraph(
       'frontTypoCredit',
-      ({ children, attributes = {} }) =>
+      ({ children, attributes }) =>
         <TeaserFrontCredit attributes={attributes}>{children}</TeaserFrontCredit>
     )
   ]
 }
 
 const frontTileTeaser = {
-  matchMdast: node => {
-    return matchTeaser(node) && node.data.teaserType === 'frontTile'
-  },
-  component: ({ children, attributes = {}, image, ...props }) => {
+  matchMdast: matchTeaserType('frontTile'),
+  component: ({ children, attributes, image, ...props }) => {
     const imageSrc = image || '/static/placeholder.png'
     return <TeaserFrontTile image={imageSrc} attributes={attributes} {...props}>
       {children}
     </TeaserFrontTile>
   },
-  props (node) {
-    return matchImageParagraph(node.children[0])
-      ? { image: node.children[0].children[0].url, ...node.data }
-      : node.data
-  },
+  props: node => ({
+    image: extracImage(node.children[0]),
+    ...node.data
+  }),
   editorModule: 'teaser',
   editorOptions: {
     type: 'frontTile',
@@ -337,13 +322,11 @@ const frontTileTeaser = {
     image,
     title(
       'frontTileTitle',
-      ({ children, attributes = {}, ...props }) => {
-        const { kind } = props
+      ({ children, attributes, kind }) => {
         const Component = kind === 'editorial'
         ? TeaserFrontTileHeadline.Editorial
         : TeaserFrontTileHeadline.Interaction
         return (
-
           <Component attributes={attributes}>
             {children}
           </Component>
@@ -352,7 +335,7 @@ const frontTileTeaser = {
     ),
     lead(
       'frontTileLead',
-      ({ children, attributes = {} }) =>
+      ({ children, attributes }) =>
         <TeaserFrontLead attributes={attributes}>
           {children}
         </TeaserFrontLead>
@@ -360,7 +343,7 @@ const frontTileTeaser = {
     format('frontTileFormat'),
     paragraph(
       'frontTileCredit',
-      ({ children, attributes = {} }) =>
+      ({ children, attributes }) =>
         <TeaserFrontCredit attributes={attributes}>{children}</TeaserFrontCredit>
     )
   ]
@@ -385,7 +368,7 @@ const schema = {
           matchMdast: node => {
             return matchZone('TEASERGROUP')(node)
           },
-          component: ({ children, attributes = {}, ...props }) => {
+          component: ({ children, attributes, ...props }) => {
             return <TeaserFrontTileRow attributes={attributes} {...props}>
               {children}
             </TeaserFrontTileRow>
