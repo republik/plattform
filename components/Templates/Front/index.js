@@ -123,9 +123,8 @@ const frontImageTeaser = {
     image: extracImage(node.children[0]),
     ...node.data
   }),
-  component: ({ children, attributes, image, ...props }) => {
-    const imageSrc = image || '/static/placeholder.png'
-    return <TeaserFrontImage image={imageSrc} attributes={attributes} {...props}>
+  component: ({ children, attributes, ...props }) => {
+    return <TeaserFrontImage attributes={attributes} {...props}>
       {children}
     </TeaserFrontImage>
   },
@@ -174,9 +173,8 @@ const frontImageTeaser = {
 
 const frontSplitTeaser = {
   matchMdast: matchTeaserType('frontSplit'),
-  component: ({ children, attributes, image, ...props }) => {
-    const imageSrc = image || '/static/placeholder.png'
-    return <TeaserFrontSplit image={imageSrc} attributes={attributes} {...props}>
+  component: ({ children, attributes, ...props }) => {
+    return <TeaserFrontSplit attributes={attributes} {...props}>
       {children}
     </TeaserFrontSplit>
   },
@@ -293,9 +291,8 @@ const frontTypoTeaser = {
 
 const frontTileTeaser = {
   matchMdast: matchTeaserType('frontTile'),
-  component: ({ children, attributes, image, ...props }) => {
-    const imageSrc = image || '/static/placeholder.png'
-    return <TeaserFrontTile image={imageSrc} attributes={attributes} {...props}>
+  component: ({ children, attributes, ...props }) => {
+    return <TeaserFrontTile attributes={attributes} {...props}>
       {children}
     </TeaserFrontTile>
   },
