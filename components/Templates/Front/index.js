@@ -32,7 +32,7 @@ const credit = {
     <TeaserFrontCredit attributes={attributes}>{children}</TeaserFrontCredit>,
   editorModule: 'paragraph',
   editorOptions: {
-    type: 'frontCredit',
+    type: 'FRONTCREDIT',
     placeholder: 'Credit'
   },
   rules: [
@@ -58,7 +58,7 @@ const credit = {
         </TeaserFrontAuthorLink>,
       editorModule: 'link',
       editorOptions: {
-        type: 'teaserLink'
+        type: 'FRONTLINK'
       }
     }
   ]
@@ -89,7 +89,7 @@ const lead = {
     </TeaserFrontLead>,
   editorModule: 'headline',
   editorOptions: {
-    type: 'frontLead',
+    type: 'FRONTLEAD',
     placeholder: 'Lead',
     depth: 4,
     optional: true
@@ -104,7 +104,7 @@ const format = {
     </Editorial.Format>,
   editorModule: 'headline',
   editorOptions: {
-    type: 'frontFormat',
+    type: 'FRONTFORMAT',
     placeholder: 'Format',
     depth: 6,
     optional: true
@@ -134,7 +134,7 @@ const frontImageTeaser = {
   },
   editorModule: 'teaser',
   editorOptions: {
-    type: 'frontImage',
+    type: 'FRONTIMAGE',
     teaserType: 'frontImage',
     insertButton: 'Front Image',
     formOptions: [
@@ -149,7 +149,7 @@ const frontImageTeaser = {
   rules: [
     image,
     title(
-      'frontImageTitle',
+      'FRONTIMAGETITLE',
       ({ children, attributes, kind }) => {
         const Component = kind === 'editorial'
           ? TeaserFrontImageHeadline.Editorial
@@ -178,7 +178,7 @@ const frontSplitTeaser = {
   }),
   editorModule: 'teaser',
   editorOptions: {
-    type: 'frontSplit',
+    type: 'FRONTSPLIT',
     teaserType: 'frontSplit',
     insertButton: 'Front Split',
     formOptions: [
@@ -196,7 +196,7 @@ const frontSplitTeaser = {
   rules: [
     image,
     title(
-      'frontSplitTitle',
+      'FRONTSPLITTITLE',
       ({ children, attributes, kind, titleSize }) => {
         const Component = kind === 'editorial'
           ? TeaserFrontSplitHeadline.Editorial
@@ -228,7 +228,7 @@ const frontTypoTeaser = {
   },
   editorModule: 'teaser',
   editorOptions: {
-    type: 'frontTypo',
+    type: 'FRONTTYPO',
     teaserType: 'frontTypo',
     insertButton: 'Front Typo',
     formOptions: [
@@ -242,7 +242,7 @@ const frontTypoTeaser = {
   rules: [
     image,
     title(
-      'frontTypoTitle',
+      'FRONTTYPOTITLE',
       ({ children, attributes, kind, titleSize }) => {
         const Component = kind === 'editorial'
         ? TeaserFrontTypoHeadline.Editorial
@@ -276,7 +276,7 @@ const frontTileTeaser = {
   }),
   editorModule: 'teaser',
   editorOptions: {
-    type: 'frontTile',
+    type: 'FRONTTILE',
     teaserType: 'frontTile',
     insertButton: 'Front Tile',
     dnd: false,
@@ -292,7 +292,7 @@ const frontTileTeaser = {
   rules: [
     image,
     title(
-      'frontTileTitle',
+      'FRONTTILETITLE',
       ({ children, attributes, kind }) => {
         const Component = kind === 'editorial'
         ? TeaserFrontTileHeadline.Editorial
@@ -336,7 +336,7 @@ const schema = {
           },
           editorModule: 'teasergroup',
           editorOptions: {
-            type: 'frontTileRow',
+            type: 'FRONTTILEROW',
             insertButton: 'Front Tile Row'
           },
           rules: [
