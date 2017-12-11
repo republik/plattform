@@ -22,7 +22,7 @@ Supported props:
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
     </TeaserFrontLead>
     <TeaserFrontCredit>
-      An article by <TeaserFrontAuthorLink href='#'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
+      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
   <TeaserFrontTile image='/static/rothaus_landscape.jpg'
@@ -32,7 +32,7 @@ Supported props:
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
     </TeaserFrontLead>
     <TeaserFrontCredit>
-      An article by <TeaserFrontAuthorLink href='#'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
+      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>
@@ -47,14 +47,14 @@ Supported props:
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
     </TeaserFrontLead>
     <TeaserFrontCredit>
-      An article by <TeaserFrontAuthorLink href='#'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
+      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
   <TeaserFrontTile color='#000' bgColor='#fff'>
     <Editorial.Format>Umfrage</Editorial.Format>
     <TeaserFrontTileHeadline.Interaction>Mehr Geld für ausländische Autorinnen oder einen Bundeshaus&shy;korrespondent?</TeaserFrontTileHeadline.Interaction>
     <TeaserFrontCredit>
-      <TeaserFrontAuthorLink href='#'>Constantin Seibt</TeaserFrontAuthorLink> fragt nach<br />31. December 2017
+      <TeaserFrontCreditLink href='#'>Constantin Seibt</TeaserFrontCreditLink> fragt nach<br />31. December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>
@@ -69,7 +69,7 @@ Supported props:
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
     </TeaserFrontLead>
     <TeaserFrontCredit>
-      An article by <TeaserFrontAuthorLink href='#' color='#fba'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
+      An article by <TeaserFrontCreditLink href='#' color='#fba'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>
@@ -84,7 +84,7 @@ Supported props:
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
     </TeaserFrontLead>
     <TeaserFrontCredit>
-      An article by <TeaserFrontAuthorLink href='#' color='#fba'>Christof Moser</TeaserFrontAuthorLink>, 31 December 2017
+      An article by <TeaserFrontCreditLink href='#' color='#fba'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>
@@ -96,7 +96,7 @@ Supported props:
     <Editorial.Format>Umfrage</Editorial.Format>
     <TeaserFrontTileHeadline.Interaction>Mehr Geld für ausländische Autorinnen oder einen Bundeshaus&shy;korrespondent?</TeaserFrontTileHeadline.Interaction>
     <TeaserFrontCredit>
-      <TeaserFrontAuthorLink href='#'>Constantin Seibt</TeaserFrontAuthorLink> fragt nach<br />31. December 2017
+      <TeaserFrontCreditLink href='#'>Constantin Seibt</TeaserFrontCreditLink> fragt nach<br />31. December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>

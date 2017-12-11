@@ -23,7 +23,7 @@ import {
   TeaserFrontTileRow,
   TeaserFrontLead,
   TeaserFrontCredit,
-  TeaserFrontAuthorLink
+  TeaserFrontCreditLink
 } from '../../components/TeaserFront'
 
 const matchTeaser = matchZone('TEASER')
@@ -55,11 +55,11 @@ const credit = {
         }
       },
       component: ({ children, data, attributes, ...props }) =>
-        <TeaserFrontAuthorLink
+        <TeaserFrontCreditLink
           {...props}
           attributes={attributes}>
           {children}
-        </TeaserFrontAuthorLink>,
+        </TeaserFrontCreditLink>,
       editorModule: 'link',
       editorOptions: {
         type: 'FRONTLINK'

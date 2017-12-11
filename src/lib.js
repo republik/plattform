@@ -60,7 +60,7 @@ export {
   TeaserFrontTileRow,
   TeaserFrontLead,
   TeaserFrontCredit,
-  TeaserFrontAuthorLink
+  TeaserFrontCreditLink
 } from './components/TeaserFront'
 export {
   Spinner,

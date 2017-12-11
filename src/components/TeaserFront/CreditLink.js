@@ -5,7 +5,7 @@ import { lab } from 'd3-color'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
 
-const AuthorLink = ({ children, color }) => {
+const CreditLink = ({ children, color, ...props }) => {
   const labColor = lab(color)
   const style = css({
     color,
@@ -15,19 +15,19 @@ const AuthorLink = ({ children, color }) => {
     }
   })
   return (
-    <Editorial.A {...style}>
+    <Editorial.A {...props} {...style}>
       {children}
     </Editorial.A>
   )
 }
 
-AuthorLink.propTypes = {
+CreditLink.propTypes = {
   children: PropTypes.node.isRequired,
   color: PropTypes.string
 }
 
-AuthorLink.defaultProps = {
+CreditLink.defaultProps = {
   color: colors.primary
 }
 
-export default AuthorLink
+export default CreditLink
