@@ -369,8 +369,8 @@ const schema = {
   rules: [
     {
       matchMdast: matchType('root'),
-      component: ({ children, attributes = {} }) =>
-        <div {...attributes} style={{padding: '20px 0'}}>{children}</div>,
+      // the document is not a node in slate and doesn't need attributes
+      component: ({ children }) => children,
       editorModule: 'front',
       rules: [
         {
