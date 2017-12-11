@@ -52,7 +52,7 @@ class Checklist extends Component {
     return (
       <Loader loading={loading} error={error} render={() => {
         const allMilestones = milestones
-          .filter(m => !m.immutable)
+          .filter(m => !m.immutable && m.name !== 'meta')
           .concat(
             milestoneNames
               .filter(name =>
