@@ -6,24 +6,39 @@ export const phases = [
     milestones: []
   },
   {
+    key: 'creation',
+    color: 'Gold',
+    milestones: ['startCreation']
+  },
+  {
     key: 'production',
     color: 'Tomato',
-    milestones: ['journalist']
+    milestones: ['startProduction']
+  },
+  {
+    key: 'proofReading',
+    color: 'HotPink',
+    milestones: ['numbersOk', 'imagesOk', 'startProofReading']
+  },
+  {
+    key: 'finalControl',
+    color: 'Fuchsia',
+    milestones: ['factCheckOk', 'proofReadingOk']
   },
   {
     key: 'ready',
     color: 'MediumSeaGreen',
-    milestones: ['textEditor', 'managingEditor', 'imageEditor', 'proofReader', 'chiefEditor']
+    milestones: ['finalControl', 'chiefEditor']
   },
   {
     key: 'scheduled',
-    color: 'LightPink',
+    color: 'Turquoise',
     published: true,
     scheduled: true
   },
   {
     key: 'published',
-    color: 'HotPink',
+    color: 'RoyalBlue',
     published: true,
     live: true
   }
@@ -32,4 +47,4 @@ export const phases = [
 export const milestoneNames = phases.reduce(
   (all, phase) => all.concat(phase.milestones),
   []
-).filter(Boolean).filter(name => name !== 'meta')
+).filter(Boolean)
