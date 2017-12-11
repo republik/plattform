@@ -22,6 +22,10 @@ import initLocalStore from '../../lib/utils/localStorage'
 
 import { getSchema } from '../../components/Templates'
 
+import createDebug from 'debug'
+
+const debug = createDebug('publikator:pages:edit')
+
 const fragments = {
   commit: gql`
     fragment EditPageCommit on Commit {
@@ -216,11 +220,13 @@ class EditorPage extends Component {
       return
     }
     if (loading || error) {
+      debug('loadState', 'isLoading', loading, 'hasError', error)
       return
     }
     const repoId = url.query.repoId
     const commitId = url.query.commitId
     if (!commitId && repo && repo.latestCommit) {
+      debug('loadState', 'redirect', repo.latestCommit)
       Router.replaceRoute('repo/edit', {
         repoId: repoId.split('/'),
         commitId: repo.latestCommit.id
@@ -236,6 +242,7 @@ class EditorPage extends Component {
         (commit && commit.document.meta.template) ||
         url.query.template
       )
+      debug('loadState', 'loadSchema', template)
       this.setState({
         schema: getSchema(template)
       }, () => {
@@ -243,7 +250,8 @@ class EditorPage extends Component {
       })
       return
     }
-    if (!this.editor) {
+    if (!this.editor || !this.editor.slate) {
+      debug('loadState', 'waiting for slate')
       return
     }
 
@@ -251,6 +259,7 @@ class EditorPage extends Component {
     let committedEditorState
     if (isNew) {
       committedEditorState = this.editor.newDocument(url.query, this.props.me)
+      debug('loadState', 'new document', committedEditorState)
     } else {
       const commit = repo.commit
       if (!commit) {
@@ -261,9 +270,21 @@ class EditorPage extends Component {
       }
 
       const json = commit.document.content
-      committedEditorState = this.editor.serializer.deserialize(json, {
-        mdast: true
-      })
+      committedEditorState = this.editor.serializer.deserialize(json)
+
+      // normalize
+      const normalizedState = committedEditorState
+        .change()
+        .setValue({ schema: this.editor.slate.schema })
+        .normalize()
+        .value
+
+      if (normalizedState.document !== committedEditorState.document) {
+        debug('loadState', 'normalize committed document', committedEditorState)
+        committedEditorState = normalizedState
+      }
+
+      debug('loadState', 'edit document', committedEditorState)
     }
     const committedRawDocString = JSON.stringify(
       committedEditorState.document.toJSON()
@@ -280,6 +301,7 @@ class EditorPage extends Component {
     if (localState) {
       try {
         localEditorState = Value.fromJSON(localState)
+        debug('loadState', 'using local document', localEditorState)
       } catch (e) {
         console.error(e)
         this.warn(t('commit/warn/localParseError'))
@@ -311,11 +333,23 @@ class EditorPage extends Component {
       JSON.stringify(newEditorState.document.toJSON()) !== committedRawDocString
     ) {
       this.store.set('editorState', newEditorState.toJSON())
+      debug('loadState', 'documentChangeHandler', 'edited document', newEditorState)
+      if (process.env.NODE_ENV !== 'production') {
+        debug(
+          'loadState', 'documentChangeHandler', 'diff',
+          require('diff').createPatch(
+            'string',
+            JSON.stringify(JSON.parse(committedRawDocString), null, 2),
+            JSON.stringify(newEditorState.document.toJSON(), null, 2)
+          )
+        )
+      }
 
       if (!uncommittedChanges) {
         this.beginChanges(repoId)
       }
     } else {
+      debug('loadState', 'documentChangeHandler', 'committed document')
       if (uncommittedChanges) {
         this.store.clear()
         this.concludeChanges(repoId)
@@ -346,9 +380,7 @@ class EditorPage extends Component {
         : commitId,
       message: message,
       document: {
-        content: this.editor.serializer.serialize(editorState, {
-          mdast: true
-        })
+        content: this.editor.serializer.serialize(editorState)
       }
     })
       .then(({data}) => {

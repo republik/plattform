@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-06T16:26:45.689Z",
+  "updated": "2017-12-11T00:07:31.402Z",
   "title": "live",
   "data": [
     {
@@ -91,8 +91,20 @@
       "value": "Entwurf"
     },
     {
+      "key": "repo/phase/creation",
+      "value": "Kreation"
+    },
+    {
       "key": "repo/phase/production",
       "value": "Produktion"
+    },
+    {
+      "key": "repo/phase/proofReading",
+      "value": "Korrektorat"
+    },
+    {
+      "key": "repo/phase/finalControl",
+      "value": "Endkontrolle"
     },
     {
       "key": "repo/phase/ready",
@@ -124,11 +136,11 @@
     },
     {
       "key": "repo/table/col/credits",
-      "value": "Credits"
+      "value": "Autoren"
     },
     {
       "key": "repo/table/col/phase",
-      "value": "Phase"
+      "value": "Status"
     },
     {
       "key": "repo/table/col/pushed",
@@ -136,11 +148,11 @@
     },
     {
       "key": "repo/table/col/published",
-      "value": "Publikationsdatum"
+      "value": "Geplantes Publikationsdatum"
     },
     {
       "key": "repo/table/col/creationDeadline",
-      "value": "Creation-Deadline"
+      "value": "Kreations-Deadline"
     },
     {
       "key": "repo/table/col/productionDeadline",
@@ -175,28 +187,40 @@
       "value": "{name} für"
     },
     {
-      "key": "checklist/labels/journalist",
-      "value": "Text fertig"
+      "key": "checklist/labels/startCreation",
+      "value": "Start Kreation"
     },
     {
-      "key": "checklist/labels/textEditor",
-      "value": "Textchef"
+      "key": "checklist/labels/startProduction",
+      "value": "Start Produktion"
     },
     {
-      "key": "checklist/labels/managingEditor",
-      "value": "CvD"
+      "key": "checklist/labels/numbersOk",
+      "value": "Grafik und Zahlen OK"
     },
     {
-      "key": "checklist/labels/imageEditor",
-      "value": "Bildredaktion"
+      "key": "checklist/labels/imagesOk",
+      "value": "Bild OK"
     },
     {
-      "key": "checklist/labels/proofReader",
-      "value": "Korrektur"
+      "key": "checklist/labels/startProofReading",
+      "value": "Start Korrektorat "
+    },
+    {
+      "key": "checklist/labels/factCheckOk",
+      "value": "Faktencheck OK"
+    },
+    {
+      "key": "checklist/labels/proofReadingOk",
+      "value": "Korrektorat OK"
+    },
+    {
+      "key": "checklist/labels/finalControl",
+      "value": "Endkontrolle OK"
     },
     {
       "key": "checklist/labels/chiefEditor",
-      "value": "CR"
+      "value": "CR OK"
     },
     {
       "key": "tree/commit/publish",
@@ -233,6 +257,10 @@
     {
       "key": "metaData/field/publishDate",
       "value": "Publikationsdatum"
+    },
+    {
+      "key": "metaData/field/feed",
+      "value": "Erscheint im Feed"
     },
     {
       "key": "metaData/field/description",
@@ -445,6 +473,26 @@
     {
       "key": "publication/current/unpublish/confirmAll",
       "value": "Wollen sie wirklich alle veröffentlichten Versionen zurückziehen?"
+    },
+    {
+      "key": "dashboard/links",
+      "value": "gdrive,slack"
+    },
+    {
+      "key": "dashboard/links/gdrive/label",
+      "value": "Komandobrücke"
+    },
+    {
+      "key": "dashboard/links/gdrive/href",
+      "value": "wtfwtfwtf"
+    },
+    {
+      "key": "dashboard/links/slack/label",
+      "value": "Teamfunk"
+    },
+    {
+      "key": "dashboard/links/slack/href",
+      "value": "https://piratinnen.slack.com"
     }
   ]
 }

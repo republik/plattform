@@ -38,6 +38,7 @@
     "babel-preset-env": "^1.6.0",
     "babel-tape-runner": "^2.0.1",
     "cross-env": "^5.1.1",
+    "diff": "^3.4.0",
     "enzyme": "^3.2.0",
     "enzyme-adapter-react-16": "^1.1.0",
     "eslint-plugin-import": "^2.7.0",
@@ -52,7 +53,8 @@
     "tape": "^4.8.0"
   },
   "dependencies": {
-    "@project-r/styleguide": "^5.14.0",
+    "@orbiting/remark-preset": "^1.2.1",
+    "@project-r/styleguide": "^5.15.0",
     "@project-r/template-newsletter": "^1.4.3",
     "d3-array": "^1.2.0",
     "d3-color": "^1.0.3",
@@ -60,6 +62,7 @@
     "d3-scale": "^1.0.6",
     "d3-time": "^1.0.7",
     "d3-time-format": "^2.1.1",
+    "debug": "^2.6.9",
     "dotenv": "^4.0.0",
     "downshift": "^1.18.0",
     "email-validator": "^1.1.1",
@@ -91,7 +94,7 @@
     "remark-parse": "^4.0.0",
     "remark-stringify": "^4.0.0",
     "slate": "^0.30.6",
-    "slate-mdast-serializer": "^1.0.0",
+    "slate-mdast-serializer": "^2.0.0",
     "slate-react": "^0.10.10",
     "subscriptions-transport-ws": "^0.8.2",
     "unified": "^6.1.5"

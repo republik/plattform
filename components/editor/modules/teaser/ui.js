@@ -2,7 +2,6 @@ import { colors, Field, Dropdown, Checkbox, Label, P } from '@project-r/stylegui
 import React from 'react'
 import { css } from 'glamor'
 import {
-  createActionButton,
   buttonStyles,
   createPropertyForm,
   matchBlock
@@ -119,19 +118,15 @@ const styles = {
   )
 }
 
-export const TeaserButton = options => createActionButton({
-  reducer: ({ value, onChange }) => event => {
-  }
-})(
-  ({ disabled, children, visible, ...props }) => {
+export const TeaserButton = options => {
+  return ({ children }) => {
     const Component = createInsertDragSource(
       ({ connectDragSource }) =>
       connectDragSource(
         <span
           {...buttonStyles.insert}
-          {...props}
-          data-disabled={disabled}
-          data-visible={visible}
+          data-disabled={false}
+          data-visible
           >
           {options.rule.editorOptions.insertButton}
         </span>
@@ -141,7 +136,7 @@ export const TeaserButton = options => createActionButton({
       <Component getNewItem={getNewItem(options)} />
     )
   }
-)
+}
 
 const Form = ({ node, onChange, options }) => {
   return <SidebarForm>

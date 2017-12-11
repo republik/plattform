@@ -22,7 +22,7 @@ const styles = {
   })
 }
 
-const getWidth = key => key.match(/title/i) ? '100%' : ''
+const getWidth = key => key.match(/title|feed|emailSubject/i) ? '100%' : ''
 
 const MetaData = ({value, editor, additionalFields = [], customFields = [], teaser: Teaser, t}) => {
   const node = value.document
@@ -30,12 +30,16 @@ const MetaData = ({value, editor, additionalFields = [], customFields = [], teas
   const genericKeys = Set([
     'publishDate',
     'slug',
+    'feed',
     ...additionalFields,
     'title',
     'image',
     'description'
   ])
-  const genericDefaultValues = Map(genericKeys.map(key => [key, '']))
+  const genericDefaultValues = Map(genericKeys.map(key => [
+    key,
+    key === 'feed' ? false : ''
+  ]))
   const genericData = genericDefaultValues.merge(
     node.data.filter((_, key) => genericKeys.has(key))
   )
@@ -65,7 +69,7 @@ const MetaData = ({value, editor, additionalFields = [], customFields = [], teas
     editor.change(change => {
       change
         .setNodeByKey(node.key, {
-          data: inputValue
+          data: inputValue || inputValue === false
             ? newData.set(key, inputValue)
             : newData.remove(key)
         })
