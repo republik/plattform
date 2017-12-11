@@ -22,7 +22,7 @@ import {
   TeaserFrontTileRow
 } from '@project-r/styleguide'
 
-let linkColor
+const matchTeaser = matchZone('TEASER')
 
 const paragraph = (type, component) => ({
   matchMdast: matchParagraph,
@@ -35,13 +35,18 @@ const paragraph = (type, component) => ({
   rules: [
     {
       matchMdast: matchType('link'),
-      props: (node, index, parent) => ({
-        data: {
-          title: node.title,
-          href: node.url
-        },
-        color: linkColor || colors.primary
-      }),
+      props: (node, index, parent, { ancestors }) => {
+        const teaser = ancestors.find(matchTeaser)
+        return {
+          data: {
+            title: node.title,
+            href: node.url
+          },
+          color: teaser
+            ? teaser.data.linkColor
+            : colors.primary
+        }
+      },
       component: ({ children, data, attributes = {}, ...props }) =>
         <TeaserFrontAuthorLink
           {...props}
@@ -108,10 +113,9 @@ const image = {
 
 const frontImageTeaser = {
   matchMdast: node => {
-    return matchZone('TEASER')(node) && node.data.teaserType === 'frontImage'
+    return matchTeaser(node) && node.data.teaserType === 'frontImage'
   },
   props (node) {
-    linkColor = node.data.linkColor
     return matchImageParagraph(node.children[0])
       ? {
         image: node.children[0].children[0].url,
@@ -172,7 +176,7 @@ const frontImageTeaser = {
 
 const frontSplitTeaser = {
   matchMdast: node => {
-    return matchZone('TEASER')(node) && node.data.teaserType === 'frontSplit'
+    return matchTeaser(node) && node.data.teaserType === 'frontSplit'
   },
   component: ({ children, attributes = {}, image, ...props }) => {
     const imageSrc = image || '/static/placeholder.png'
@@ -181,7 +185,6 @@ const frontSplitTeaser = {
     </TeaserFrontSplit>
   },
   props (node) {
-    linkColor = node.data.linkColor
     return matchImageParagraph(node.children[0])
       ? {
         image: node.children[0].children[0].url,
@@ -242,7 +245,7 @@ const frontSplitTeaser = {
 
 const frontTypoTeaser = {
   matchMdast: node => {
-    return matchZone('TEASER')(node) && node.data.teaserType === 'frontTypo'
+    return matchTeaser(node) && node.data.teaserType === 'frontTypo'
   },
   component: ({ children, attributes = {}, ...props }) => {
     return <TeaserFrontTypo attributes={attributes} {...props}>
@@ -250,7 +253,6 @@ const frontTypoTeaser = {
     </TeaserFrontTypo>
   },
   props (node) {
-    linkColor = node.data.linkColor
     return node.data
   },
   editorModule: 'teaser',
@@ -303,7 +305,7 @@ const frontTypoTeaser = {
 
 const frontTileTeaser = {
   matchMdast: node => {
-    return matchZone('TEASER')(node) && node.data.teaserType === 'frontTile'
+    return matchTeaser(node) && node.data.teaserType === 'frontTile'
   },
   component: ({ children, attributes = {}, image, ...props }) => {
     const imageSrc = image || '/static/placeholder.png'
@@ -312,7 +314,6 @@ const frontTileTeaser = {
     </TeaserFrontTile>
   },
   props (node) {
-    linkColor = node.data.linkColor
     return matchImageParagraph(node.children[0])
       ? { image: node.children[0].children[0].url, ...node.data }
       : node.data
