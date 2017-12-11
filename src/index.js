@@ -306,6 +306,17 @@ ReactDOM.render(
               serializer: new Serializer()
             },
             src: require('./templates/Article/docs.md')
+          },
+          {
+            path: '/templates/front',
+            title: 'Front',
+            imports: {
+              schema: require('./templates/Front').default,
+              ...require('./templates/docs'),
+              renderMdast: require('mdast-react-render').renderMdast,
+              serializer: new Serializer()
+            },
+            src: require('./templates/Front/docs.md')
           }
         ]
       },

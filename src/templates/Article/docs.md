@@ -1,4 +1,4 @@
-```
+```code|lang-jsx
 import createEditorialSchema from '@project-r/styleguide/lib/templates/Editorial'
 
 const schema = createEditorialSchema({
