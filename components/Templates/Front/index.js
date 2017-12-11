@@ -26,12 +26,13 @@ const matchTeaser = matchZone('TEASER')
 const matchTeaserType = teaserType =>
   node => matchTeaser(node) && node.data.teaserType === teaserType
 
-const paragraph = (type, component) => ({
+const credit = {
   matchMdast: matchParagraph,
-  component,
+  component: ({ children, attributes }) =>
+    <TeaserFrontCredit attributes={attributes}>{children}</TeaserFrontCredit>,
   editorModule: 'paragraph',
   editorOptions: {
-    type,
+    type: 'frontCredit',
     placeholder: 'Credit'
   },
   rules: [
@@ -61,7 +62,7 @@ const paragraph = (type, component) => ({
       }
     }
   ]
-})
+}
 
 const title = (type, component) => ({
   matchMdast: matchHeading(1),
@@ -113,14 +114,14 @@ const image = {
   isVoid: true
 }
 
-const extracImage = node => matchImageParagraph(node)
+const extractImage = node => matchImageParagraph(node)
   ? node.children[0].url
   : undefined
 
 const frontImageTeaser = {
   matchMdast: matchTeaserType('frontImage'),
   props: node => ({
-    image: extracImage(node.children[0]),
+    image: extractImage(node.children[0]),
     ...node.data
   }),
   component: ({ children, attributes, ...props }) => {
@@ -163,11 +164,7 @@ const frontImageTeaser = {
         </TeaserFrontLead>
     ),
     format('frontImageFormat'),
-    paragraph(
-      'frontImageCredit',
-      ({ children, attributes }) =>
-        <TeaserFrontCredit attributes={attributes}>{children}</TeaserFrontCredit>
-    )
+    credit
   ]
 }
 
@@ -179,7 +176,7 @@ const frontSplitTeaser = {
     </TeaserFrontSplit>
   },
   props: node => ({
-    image: extracImage(node.children[0]),
+    image: extractImage(node.children[0]),
     ...node.data
   }),
   editorModule: 'teaser',
@@ -224,11 +221,7 @@ const frontSplitTeaser = {
         </TeaserFrontLead>
     ),
     format('frontSplitFormat'),
-    paragraph(
-      'frontSplitCredit',
-      ({ children, attributes }) =>
-        <TeaserFrontCredit attributes={attributes}>{children}</TeaserFrontCredit>
-    )
+    credit
   ]
 }
 
@@ -281,11 +274,7 @@ const frontTypoTeaser = {
         </TeaserFrontLead>
     ),
     format('frontTypoFormat'),
-    paragraph(
-      'frontTypoCredit',
-      ({ children, attributes }) =>
-        <TeaserFrontCredit attributes={attributes}>{children}</TeaserFrontCredit>
-    )
+    credit
   ]
 }
 
@@ -297,7 +286,7 @@ const frontTileTeaser = {
     </TeaserFrontTile>
   },
   props: node => ({
-    image: extracImage(node.children[0]),
+    image: extractImage(node.children[0]),
     ...node.data
   }),
   editorModule: 'teaser',
@@ -338,11 +327,7 @@ const frontTileTeaser = {
         </TeaserFrontLead>
     ),
     format('frontTileFormat'),
-    paragraph(
-      'frontTileCredit',
-      ({ children, attributes }) =>
-        <TeaserFrontCredit attributes={attributes}>{children}</TeaserFrontCredit>
-    )
+    credit
   ]
 }
 
