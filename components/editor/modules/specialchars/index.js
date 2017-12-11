@@ -1,82 +1,72 @@
-import { createActionButton, buttonStyles } from '../../utils'
+import { buttonStyles } from '../../utils'
 
-const DoubleGuillemetButton = createActionButton({
-  isDisabled: ({ value }) => {
-    return value.isBlurred || value.isCollapsed
-  },
-  reducer: ({ value, onChange }) => event => {
-    event.preventDefault()
-
-    return onChange(
+const doubleGuillemetClickHandler = (value, onChange) => event => {
+  event.preventDefault()
+  return onChange(
     value
       .change()
       .wrapText('«', '»')
   )
-  }
-})(
-({ disabled, visible, ...props }) =>
-  <span
+}
+
+const DoubleGuillemetButton = ({ value, onChange }) => {
+  const disabled = value.isBlurred || value.isCollapsed
+  return <span
     {...buttonStyles.insert}
-    {...props}
     data-disabled={disabled}
-    data-visible={visible}
-    >
+    data-visible
+    onMouseDown={doubleGuillemetClickHandler(value, onChange)}
+      >
     {'«»'}
   </span>
-)
+}
 
-const SingleGuillemetButton = createActionButton({
-  isDisabled: ({ value }) => {
-    return value.isBlurred || value.isCollapsed
-  },
-  reducer: ({ value, onChange }) => event => {
-    event.preventDefault()
-    return onChange(
-      value
-        .change()
-        .wrapText('‹', '›')
-    )
-  }
-})(
-({ disabled, visible, ...props }) =>
-  <span
+const singleGuillemetClickHandler = (value, onChange) => event => {
+  event.preventDefault()
+  return onChange(
+    value
+      .change()
+      .wrapText('‹', '›')
+  )
+}
+
+const SingleGuillemetButton = ({ value, onChange }) => {
+  const disabled = value.isBlurred || value.isCollapsed
+  return <span
     {...buttonStyles.insert}
-    {...props}
     data-disabled={disabled}
-    data-visible={visible}
-    >
+    data-visible
+    onMouseDown={singleGuillemetClickHandler(value, onChange)}
+      >
     {'‹›'}
   </span>
-)
+}
 
-const LongDashButton = createActionButton({
-  isDisabled: ({ value }) => {
-    return value.isBlurred
-  },
-  reducer: ({ value, onChange }) => event => {
-    event.preventDefault()
+const longDashClickHandler = (value, onChange) => event => {
+  event.preventDefault()
 
-    return onChange(
-      !value.isCollapsed
-        ? value
-            .change()
-            .wrapText(' – ', ' – ')
-        : value
-            .change()
-            .insertText(' – ')
-  )
-  }
-})(
-({ disabled, visible, ...props }) =>
-  <span
+  return onChange(
+    !value.isCollapsed
+      ? value
+          .change()
+          .wrapText(' – ', ' – ')
+      : value
+          .change()
+          .insertText(' – ')
+        )
+}
+
+const LongDashButton = ({ value, onChange }) => {
+  const disabled = value.isBlurred || value.isCollapsed
+  return <span
     {...buttonStyles.insert}
-    {...props}
     data-disabled={disabled}
-    data-visible={visible}
-    >
-    {'–'}
+    data-visible
+    onMouseDown={longDashClickHandler(value, onChange)}
+      >
+    {'‹›'}
   </span>
-)
+}
 
 export default ({ TYPE }) => ({
   TYPE,
