@@ -1,84 +1,51 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { css, merge } from 'glamor'
-import { parse, format } from 'url'
+import { css } from 'glamor'
+import { imageSizeInfo, imageResizeUrl } from 'mdast-react-render/lib/utils'
 
 const styles = {
   image: css({
     width: '100%'
   }),
-  imageLoading: css({
+  wrappedImage: css({
+    position: 'absolute',
+    width: '100%'
+  }),
+  aspectRatio: css({
     backgroundColor: '#eee',
-    height: 0
+    display: 'block',
+    position: 'relative'
   })
 }
 
-const imageSizeInfo = url => {
-  const urlObject = parse(url, true)
-  const { size } = urlObject.query
-  if (!size) {
-    return null
-  }
-  const [width, height] = size.split('x')
-  return {
-    width,
-    height
-  }
-}
-
-const imageResizeUrl = (url, size) => {
-  if (!url) {
-    return url
-  }
-
-  const urlObject = parse(url, true)
-  if (urlObject.protocol === 'data:') {
-    return url
-  }
-
-  urlObject.query.resize = size
-  // ensure format calculates from query object
-  urlObject.search = undefined
-
-  return format(urlObject)
-}
-
 class Image extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { loadStatus: 'loading' }
-
-    this.handleLoaded = this.handleLoaded.bind(this)
-  }
-
-  handleLoaded() {
-    this.setState({ loadStatus: 'loaded' })
-  }
+  // This will eventually become a stateful component.
 
   render() {
     const { src, alt, attributes = {}, resize } = this.props
-    const { loadStatus } = this.state
     const resizedSrc = resize ? imageResizeUrl(src, resize) : src
     const sizeInfo = imageSizeInfo(src)
-    const aspectRatio =
-      sizeInfo && sizeInfo.width ? sizeInfo.width / sizeInfo.height : undefined
+    const aspectRatio = sizeInfo ? sizeInfo.width / sizeInfo.height : undefined
 
-    return (
-      <img
-        {...attributes}
-        {...css(
-          styles.image,
-          aspectRatio && loadStatus === 'loading'
-            ? merge(styles.imageLoading, {
-                paddingBottom: `${100 / aspectRatio}%`
-              })
-            : {}
-        )}
-        onLoad={this.handleLoaded}
-        src={resizedSrc}
-        alt={alt}
-      />
-    )
+    if (isFinite(aspectRatio)) {
+      return (
+        <span
+          {...styles.aspectRatio}
+          style={{ paddingBottom: `${100 / aspectRatio}%` }}
+        >
+          <img
+            {...attributes}
+            {...styles.wrappedImage}
+            src={resizedSrc}
+            alt={alt}
+          />
+        </span>
+      )
+    } else {
+      return (
+        <img {...attributes} {...styles.image} src={resizedSrc} alt={alt} />
+      )
+    }
   }
 }
 

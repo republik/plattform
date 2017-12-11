@@ -193,3 +193,24 @@ Supports `breakout` sizes:
 </Center>
 ```
 
+#### Placeholder
+
+If the source of a `<FigureImage />` includes `size` information, the image is wrapped in a placeholder that takes up the expected image size before the image is actually loaded. This is great to avoid jumpy layouting while the page loads. For demonstration purposes here's a figure group with one non-existant image source:
+
+```react
+<FigureGroup>
+  <Figure>
+    <FigureImage src='/static/missing-file.jpg?size=974x687' alt='' />
+    <FigureCaption>
+      A placeholder for an image with size information.
+    </FigureCaption>
+  </Figure>
+  <Figure>
+    <FigureImage src='/static/landscape.jpg' alt='' />
+    <FigureCaption>
+      A caption for the right photo.{' '}
+      <FigureByline>Photo: Laurent Burst</FigureByline>
+    </FigureCaption>
+  </Figure>
+</FigureGroup>
+```

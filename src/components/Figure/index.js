@@ -12,7 +12,8 @@ const styles = {
   figure: css({
     margin: 0,
     marginBottom: 15,
-    padding: 0
+    padding: 0,
+    width: '100%'
   }),
   figureGroup: css({
     margin: 0,
