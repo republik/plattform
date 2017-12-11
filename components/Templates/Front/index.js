@@ -113,8 +113,11 @@ const frontImageTeaser = {
   props (node) {
     linkColor = node.data.linkColor
     return matchImageParagraph(node.children[0])
-      ? { image: node.children[0].children[0].url }
-      : {}
+      ? {
+        image: node.children[0].children[0].url,
+        ...node.data
+      }
+      : node.data
   },
   component: ({ children, attributes = {}, image, ...props }) => {
     const imageSrc = image || '/static/placeholder.png'
@@ -180,8 +183,11 @@ const frontSplitTeaser = {
   props (node) {
     linkColor = node.data.linkColor
     return matchImageParagraph(node.children[0])
-      ? { image: node.children[0].children[0].url }
-      : {}
+      ? {
+        image: node.children[0].children[0].url,
+        ...node.data
+      }
+      : node.data
   },
   editorModule: 'teaser',
   editorOptions: {
@@ -245,7 +251,7 @@ const frontTypoTeaser = {
   },
   props (node) {
     linkColor = node.data.linkColor
-    return { data: node.data }
+    return node.data
   },
   editorModule: 'teaser',
   editorOptions: {
@@ -308,8 +314,8 @@ const frontTileTeaser = {
   props (node) {
     linkColor = node.data.linkColor
     return matchImageParagraph(node.children[0])
-      ? { image: node.children[0].children[0].url }
-      : {}
+      ? { image: node.children[0].children[0].url, ...node.data }
+      : node.data
   },
   editorModule: 'teaser',
   editorOptions: {
