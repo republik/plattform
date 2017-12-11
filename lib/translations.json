@@ -235,6 +235,10 @@
       "value": "Publikationsdatum"
     },
     {
+      "key": "metaData/field/feed",
+      "value": "Erscheint im Feed"
+    },
+    {
       "key": "metaData/field/description",
       "value": "Deskription"
     },
