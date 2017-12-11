@@ -64,7 +64,7 @@ const LongDashButton = ({ value, onChange }) => {
     data-visible
     onMouseDown={longDashClickHandler(value, onChange)}
       >
-    {'‹›'}
+    {'–'}
   </span>
 }
 

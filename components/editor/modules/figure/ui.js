@@ -157,11 +157,11 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions}) =
   }
 
   const FigureButton = ({ value, onChange }) => {
-    // const disabled = value.isBlurred
+    const disabled = value.isBlurred
     return (
       <span
         {...buttonStyles.insert}
-        data-disabled={false}
+        data-disabled={disabled}
         data-visible
         onMouseDown={figureButtonClickHandler(value, onChange)}
         >
