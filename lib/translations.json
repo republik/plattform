@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-09T14:48:15.459Z",
+  "updated": "2017-12-11T00:07:31.402Z",
   "title": "live",
   "data": [
     {
@@ -196,7 +196,7 @@
     },
     {
       "key": "checklist/labels/numbersOk",
-      "value": "Grafik / Zahlen OK"
+      "value": "Grafik und Zahlen OK"
     },
     {
       "key": "checklist/labels/imagesOk",
@@ -473,6 +473,26 @@
     {
       "key": "publication/current/unpublish/confirmAll",
       "value": "Wollen sie wirklich alle veröffentlichten Versionen zurückziehen?"
+    },
+    {
+      "key": "dashboard/links",
+      "value": "gdrive,slack"
+    },
+    {
+      "key": "dashboard/links/gdrive/label",
+      "value": "Komandobrücke"
+    },
+    {
+      "key": "dashboard/links/gdrive/href",
+      "value": "wtfwtfwtf"
+    },
+    {
+      "key": "dashboard/links/slack/label",
+      "value": "Teamfunk"
+    },
+    {
+      "key": "dashboard/links/slack/href",
+      "value": "https://piratinnen.slack.com"
     }
   ]
 }
