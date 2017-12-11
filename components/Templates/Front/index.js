@@ -81,19 +81,22 @@ const title = (type, component) => ({
   }
 })
 
-const lead = (type, component) => ({
+const lead = {
   matchMdast: matchHeading(4),
-  component,
+  component: ({ children, attributes }) =>
+    <TeaserFrontLead attributes={attributes}>
+      {children}
+    </TeaserFrontLead>,
   editorModule: 'headline',
   editorOptions: {
-    type,
+    type: 'frontLead',
     placeholder: 'Lead',
     depth: 4,
     optional: true
   }
-})
+}
 
-const format = type => ({
+const format = {
   matchMdast: matchHeading(6),
   component: ({ children, attributes }) =>
     <Editorial.Format attributes={attributes}>
@@ -101,12 +104,12 @@ const format = type => ({
     </Editorial.Format>,
   editorModule: 'headline',
   editorOptions: {
-    type,
+    type: 'frontFormat',
     placeholder: 'Format',
     depth: 6,
     optional: true
   }
-})
+}
 
 const image = {
   matchMdast: matchImageParagraph,
@@ -156,14 +159,8 @@ const frontImageTeaser = {
         </Component>
       }
     ),
-    lead(
-      'frontImageLead',
-      ({ children, attributes }) =>
-        <TeaserFrontLead attributes={attributes}>
-          {children}
-        </TeaserFrontLead>
-    ),
-    format('frontImageFormat'),
+    lead,
+    format,
     credit
   ]
 }
@@ -213,14 +210,8 @@ const frontSplitTeaser = {
         </Component>
       }
     ),
-    lead(
-      'frontSplitLead',
-      ({ children, attributes }) =>
-        <TeaserFrontLead attributes={attributes}>
-          {children}
-        </TeaserFrontLead>
-    ),
-    format('frontSplitFormat'),
+    lead,
+    format,
     credit
   ]
 }
@@ -266,14 +257,8 @@ const frontTypoTeaser = {
         </Component>
       }
     ),
-    lead(
-      'frontTypoLead',
-      ({ children, attributes }) =>
-        <TeaserFrontLead attributes={attributes}>
-          {children}
-        </TeaserFrontLead>
-    ),
-    format('frontTypoFormat'),
+    lead,
+    format,
     credit
   ]
 }
@@ -319,14 +304,8 @@ const frontTileTeaser = {
         )
       }
     ),
-    lead(
-      'frontTileLead',
-      ({ children, attributes }) =>
-        <TeaserFrontLead attributes={attributes}>
-          {children}
-        </TeaserFrontLead>
-    ),
-    format('frontTileFormat'),
+    lead,
+    format,
     credit
   ]
 }
