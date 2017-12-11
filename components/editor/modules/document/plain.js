@@ -50,6 +50,7 @@ export default ({rule, subModules, TYPE}) => {
     const nextHour = timeHour.ceil(new Date())
     const newData = data
       .set('auto', true)
+      .set('feed', true)
       .set('title', headlineText)
       .set('description', lead ? lead.text : '')
       .set('publishDate', nextHour.toISOString())

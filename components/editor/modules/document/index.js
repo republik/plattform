@@ -34,6 +34,7 @@ export default ({rule, subModules, TYPE}) => {
 
     const newData = data
       .set('auto', true)
+      .set('feed', true)
       .set('title', title ? title.text : '')
       .set('description', lead ? lead.text : '')
       .set('image', cover.data.get('src'))
