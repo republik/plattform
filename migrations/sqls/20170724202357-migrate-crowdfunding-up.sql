@@ -118,20 +118,30 @@ CREATE TABLE companies(
   UNIQUE("name")
 );
 
-INSERT INTO companies("name") VALUES ('Project-R');
-INSERT INTO companies("name") VALUES ('Republik');
+INSERT INTO companies("name") VALUES ('PROJECT_R');
+INSERT INTO companies("name") VALUES ('REPUBLIK');
 
 ALTER TABLE "packages" ADD COLUMN "companyId" uuid references "companies";
 ALTER TABLE "membershipTypes" ADD COLUMN "companyId" uuid references "companies";
 ALTER TABLE "paymentSources" ADD COLUMN "companyId" uuid references "companies";
 
-UPDATE packages SET "companyId" = (SELECT id FROM companies WHERE name = 'Project-R');
-UPDATE "membershipTypes" SET "companyId" = (SELECT id FROM companies WHERE name = 'Project-R');
-UPDATE "paymentSources" SET "companyId" = (SELECT id FROM companies WHERE name = 'Project-R');
+UPDATE packages SET "companyId" = (SELECT id FROM companies WHERE name = 'PROJECT_R');
+UPDATE "membershipTypes" SET "companyId" = (SELECT id FROM companies WHERE name = 'PROJECT_R');
+UPDATE "paymentSources" SET "companyId" = (SELECT id FROM companies WHERE name = 'PROJECT_R');
 
 ALTER TABLE "packages" ALTER COLUMN "companyId" SET NOT NULL;
 ALTER TABLE "membershipTypes" ALTER COLUMN "companyId" SET NOT NULL;
 ALTER TABLE "paymentSources" ALTER COLUMN "companyId" SET NOT NULL;
+
+-- stripe customers
+CREATE TABLE "stripeCustomers"(
+  "id"                  text not null,
+  "userId"              uuid not null references "users",
+  "companyId"           uuid not null references "companies",
+  "createdAt"           timestamptz default now(),
+  "updatedAt"           timestamptz default now(),
+  UNIQUE("userId", "companyId")
+);
 
 -- paymentMethods on packages
 ALTER TABLE "packages" ADD COLUMN "paymentMethods" "paymentMethod"[];

@@ -1,10 +1,12 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+const createCustomer = require('./createCustomer')
+const createCharge = require('./createCharge')
 
 module.exports = async ({
   pledgeId,
   total,
   sourceId,
   userId,
+  pkg,
   transaction,
   t,
   logger = console
@@ -16,10 +18,23 @@ module.exports = async ({
 
   let charge
   try {
-    charge = await stripe.charges.create({
+    if (!(await transaction.public.stripeCustomers.findFirst({ userId }))) {
+      await createCustomer({
+        sourceId,
+        userId,
+        pgdb: transaction
+      })
+    } else {
+      console.warn(
+        'payPledge: user already has a stripeCustomer, ignoring new source', { userId }
+      )
+    }
+
+    charge = await createCharge({
       amount: total,
-      currency: 'chf',
-      source: sourceId
+      userId,
+      companyId: pkg.companyId,
+      pgdb: transaction
     })
   } catch (e) {
     logger.info('stripe charge failed', { pledgeId, e })
@@ -52,14 +67,6 @@ module.exports = async ({
     pledgeId,
     paymentId: payment.id,
     paymentType: 'PLEDGE'
-  })
-
-  // save sourceId to user
-  await transaction.public.paymentSources.insert({
-    userId,
-    method: 'STRIPE',
-    pspId: charge.source.id,
-    pspPayload: charge.source
   })
 
   return 'SUCCESSFUL'

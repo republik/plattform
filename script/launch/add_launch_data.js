@@ -65,7 +65,7 @@ PgDb.connect().then(async (pgdb) => {
 
     // get republik company
     const republikCompany = await transaction.public.companies.findOne({
-      name: 'Republik'
+      name: 'REPUBLIK'
     })
 
     // insert monthly membership
