@@ -5,7 +5,6 @@ import { Radio, Label } from '@project-r/styleguide'
 
 import {
   createPropertyForm,
-  createActionButton,
   buttonStyles
 } from '../../utils'
 
@@ -77,38 +76,39 @@ export default ({TYPE, subModules, editorOptions = {}, figureModule}) => {
     </div>
   })
 
+  const quoteButtonClickHandler = (value, onChange) => event => {
+    event.preventDefault()
+
+    return onChange(
+      value
+        .change()
+        .call(
+          injectBlock,
+          Block.create({
+            type: TYPE,
+            nodes: subModules.map(module => Block.create(module.TYPE))
+          })
+        )
+    )
+  }
+
+  const QuoteButton = ({ value, onChange }) => {
+    const disabled = value.isBlurred
+    return (
+      <span
+        {...buttonStyles.insert}
+        data-disabled={disabled}
+        data-visible
+        onMouseDown={quoteButtonClickHandler(value, onChange)}
+        >
+        {insertButtonText}
+      </span>
+    )
+  }
+
   return {
     insertButtons: [
-      insertButtonText && createActionButton({
-        isDisabled: ({ value }) => {
-          return value.isBlurred
-        },
-        reducer: ({ value, onChange }) => event => {
-          event.preventDefault()
-
-          return onChange(
-            value
-              .change()
-              .call(
-                injectBlock,
-                Block.create({
-                  type: TYPE,
-                  nodes: subModules.map(module => Block.create(module.TYPE))
-                })
-              )
-          )
-        }
-      })(
-        ({ disabled, visible, ...props }) =>
-          <span
-            {...buttonStyles.insert}
-            {...props}
-            data-disabled={disabled}
-            data-visible={visible}
-            >
-            {insertButtonText}
-          </span>
-      )
+      insertButtonText && QuoteButton
     ],
     forms: [Form]
   }

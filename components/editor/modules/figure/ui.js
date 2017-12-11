@@ -5,7 +5,6 @@ import { Radio, Label } from '@project-r/styleguide'
 
 import {
   createPropertyForm,
-  createActionButton,
   buttonStyles
 } from '../../utils'
 import injectBlock from '../../utils/injectBlock'
@@ -145,37 +144,34 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions}) =
     </div>
   })
 
-  const FigureButton = createActionButton({
-    isDisabled: ({ value }) => {
-      return value.isBlurred
-    },
-    reducer: ({ value, onChange }) => event => {
-      event.preventDefault()
+  const figureButtonClickHandler = (value, onChange) => event => {
+    event.preventDefault()
+    return onChange(
+      value
+        .change()
+        .call(
+          injectBlock,
+          newBlock()
+        )
+    )
+  }
 
-      return onChange(
-        value
-          .change()
-          .call(
-            injectBlock,
-            newBlock()
-          )
-      )
-    }
-  })(
-    ({ disabled, visible, ...props }) =>
+  const FigureButton = ({ value, onChange }) => {
+    const disabled = value.isBlurred
+    return (
       <span
         {...buttonStyles.insert}
-        {...props}
         data-disabled={disabled}
-        data-visible={visible}
+        data-visible
+        onMouseDown={figureButtonClickHandler(value, onChange)}
         >
         {insertButtonText}
       </span>
-
-  )
+    )
+  }
 
   return {
     forms: [FigureForm],
-    insertButtons: [insertButtonText && FigureButton].filter(Boolean)
+    insertButtons: [insertButtonText && FigureButton]
   }
 }
