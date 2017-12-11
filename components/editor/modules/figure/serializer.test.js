@@ -2,6 +2,7 @@ import test from 'tape'
 import createFigureModule from './'
 import createImageModule from './image'
 import createParagraphModule from '../paragraph'
+import { parse, stringify } from '@orbiting/remark-preset'
 
 const TYPE = 'FIGURE'
 
@@ -44,7 +45,7 @@ test('figure serialization', assert => {
 Caption
 
 <hr /></section>`
-  const value = serializer.deserialize(md)
+  const value = serializer.deserialize(parse(md))
   const node = value.document.nodes.first()
 
   const image = node.nodes.first()
@@ -59,6 +60,6 @@ Caption
   assert.equal(caption.type, 'FIGURE_CAPTION')
   assert.equal(caption.text, 'Caption')
 
-  assert.equal(serializer.serialize(value).trimRight(), md)
+  assert.equal(stringify(serializer.serialize(value)).trimRight(), md)
   assert.end()
 })

@@ -1,6 +1,7 @@
 import test from 'tape'
 import createMarkModule from './'
 import createParagraphModule from '../paragraph'
+import { parse, stringify } from '@orbiting/remark-preset'
 
 const boldModule = createMarkModule({
   TYPE: 'STRONG',
@@ -32,11 +33,31 @@ const deleteModule = createMarkModule({
   },
   subModules: []
 })
+const subModule = createMarkModule({
+  TYPE: 'SUB',
+  rule: {
+    matchMdast: node => node.type === 'sub',
+    editorOptions: {
+      type: 'sub'
+    }
+  },
+  subModules: []
+})
+const supModule = createMarkModule({
+  TYPE: 'SUP',
+  rule: {
+    matchMdast: node => node.type === 'sup',
+    editorOptions: {
+      type: 'sup'
+    }
+  },
+  subModules: []
+})
 
 const paragraphModule = createParagraphModule({
   TYPE: 'P',
   rule: {},
-  subModules: [boldModule, emphasisModule, deleteModule]
+  subModules: [boldModule, emphasisModule, deleteModule, subModule, supModule]
 })
 paragraphModule.name = 'paragraph'
 
@@ -44,7 +65,7 @@ const serializer = paragraphModule.helpers.serializer
 
 test('mark serialization', assert => {
   const md = `_Hello_ ~~World~~**You**`
-  const value = serializer.deserialize(md)
+  const value = serializer.deserialize(parse(md))
   const node = value.document.nodes.first()
 
   assert.equal(node.kind, 'block')
@@ -92,6 +113,14 @@ test('mark serialization', assert => {
   assert.equal(youMarks.size, 1)
   assert.equal(youMarks.first().type, 'STRONG')
 
-  assert.equal(serializer.serialize(value).trimRight(), md)
+  assert.equal(stringify(serializer.serialize(value)).trimRight(), md)
+  assert.end()
+})
+
+test('mark subsup serialization', assert => {
+  const md = 'CO<sub>2eq</sub> 40 µg/m<sup>3</sup>\n'
+  const value = serializer.deserialize(parse(md))
+
+  assert.equal(stringify(serializer.serialize(value)), md)
   assert.end()
 })

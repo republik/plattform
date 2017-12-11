@@ -5,12 +5,17 @@ import { matchMark, createMarkButton, buttonStyles } from '../../utils'
 import BoldIcon from 'react-icons/lib/fa/bold'
 import ItalicIcon from 'react-icons/lib/fa/italic'
 import StrikethroughIcon from 'react-icons/lib/fa/strikethrough'
+import SubIcon from 'react-icons/lib/fa/subscript'
+import SupIcon from 'react-icons/lib/fa/superscript'
+
 import MarkdownSerializer from 'slate-mdast-serializer'
 
 const icons = {
   strong: BoldIcon,
   emphasis: ItalicIcon,
-  delete: StrikethroughIcon
+  delete: StrikethroughIcon,
+  sub: SubIcon,
+  sup: SupIcon
 }
 
 export default ({rule, subModules, TYPE}) => {

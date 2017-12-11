@@ -261,9 +261,7 @@ class EditorPage extends Component {
       }
 
       const json = commit.document.content
-      committedEditorState = this.editor.serializer.deserialize(json, {
-        mdast: true
-      })
+      committedEditorState = this.editor.serializer.deserialize(json)
     }
     const committedRawDocString = JSON.stringify(
       committedEditorState.document.toJSON()
@@ -346,9 +344,7 @@ class EditorPage extends Component {
         : commitId,
       message: message,
       document: {
-        content: this.editor.serializer.serialize(editorState, {
-          mdast: true
-        })
+        content: this.editor.serializer.serialize(editorState)
       }
     })
       .then(({data}) => {

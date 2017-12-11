@@ -17,6 +17,10 @@ const Em = ({ children, attributes = {} }) =>
   <em {...attributes}>{ children }</em>
 const Del = ({ children, attributes = {} }) =>
   <del {...attributes}>{ children }</del>
+const Sub = ({ children, attributes = {} }) =>
+  <sub {...attributes}>{ children }</sub>
+const Sup = ({ children, attributes = {} }) =>
+  <sup {...attributes}>{ children }</sup>
 
 const paragraph = {
   matchMdast: matchParagraph,
@@ -57,6 +61,22 @@ const paragraph = {
       }
     },
     {
+      matchMdast: matchType('sub'),
+      component: Sub,
+      editorModule: 'mark',
+      editorOptions: {
+        type: 'sub'
+      }
+    },
+    {
+      matchMdast: matchType('sup'),
+      component: Sup,
+      editorModule: 'mark',
+      editorOptions: {
+        type: 'sup'
+      }
+    },
+    {
       matchMdast: matchType('link'),
       props: node => ({
         data: {
@@ -77,6 +97,7 @@ const paragraph = {
 }
 
 const schema = {
+  repoPrefix: 'dev-',
   rules: [
     {
       matchMdast: matchType('root'),
