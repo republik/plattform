@@ -7,7 +7,7 @@ import {
 
 import {
   H1, H2,
-  P, A, NarrowContainer, Tweet, Video
+  P, A, NarrowContainer, Tweet, Video, Editorial
 } from '@project-r/styleguide'
 
 const Br = () => <br />
@@ -17,6 +17,10 @@ const Em = ({ children, attributes = {} }) =>
   <em {...attributes}>{ children }</em>
 const Del = ({ children, attributes = {} }) =>
   <del {...attributes}>{ children }</del>
+const Sub = ({ children, attributes = {} }) =>
+  <sub {...attributes}>{ children }</sub>
+const Sup = ({ children, attributes = {} }) =>
+  <sup {...attributes}>{ children }</sup>
 
 const paragraph = {
   matchMdast: matchParagraph,
@@ -57,6 +61,22 @@ const paragraph = {
       }
     },
     {
+      matchMdast: matchType('sub'),
+      component: Sub,
+      editorModule: 'mark',
+      editorOptions: {
+        type: 'sub'
+      }
+    },
+    {
+      matchMdast: matchType('sup'),
+      component: Sup,
+      editorModule: 'mark',
+      editorOptions: {
+        type: 'sup'
+      }
+    },
+    {
       matchMdast: matchType('link'),
       props: node => ({
         data: {
@@ -77,6 +97,7 @@ const paragraph = {
 }
 
 const schema = {
+  repoPrefix: 'dev-',
   rules: [
     {
       matchMdast: matchType('root'),
@@ -153,6 +174,25 @@ const schema = {
                 formatButtonText:
                   'Zwischentitel'
               }
+            },
+            {
+              matchMdast: matchType('list'),
+              component: Editorial.List,
+              props: node => ({
+                data: {
+                  ordered: node.ordered,
+                  start: node.start
+                }
+              }),
+              editorModule: 'list',
+              rules: [
+                {
+                  matchMdast: matchType('listItem'),
+                  component: Editorial.LI,
+                  editorModule: 'listItem',
+                  rules: [paragraph]
+                }
+              ]
             }
           ]
         },

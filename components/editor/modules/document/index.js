@@ -1,5 +1,6 @@
 import { Document as SlateDocument } from 'slate'
 import { timeHour } from 'd3-time'
+import { parse } from '@orbiting/remark-preset'
 
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { findOrCreate } from '../../utils/serialization'
@@ -134,7 +135,7 @@ export default ({rule, subModules, TYPE}) => {
     ]
   })
 
-  const newDocument = ({title}) => serializer.deserialize(
+  const newDocument = ({title}) => serializer.deserialize(parse(
 `<section><h6>${coverModule.TYPE}</h6>
 
 # ${title}
@@ -147,7 +148,7 @@ Ladies and Gentlemen,
 
 <hr/></section>
 `
-  )
+  ))
 
   const Container = rule.component
 

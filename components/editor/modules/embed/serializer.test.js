@@ -2,6 +2,7 @@ import test from 'tape'
 import {
   matchZone
 } from 'mdast-react-render/lib/utils'
+import { parse, stringify } from '@orbiting/remark-preset'
 
 import { createEmbedVideoModule, createEmbedTwitterModule } from './'
 import createParagraphModule from '../paragraph'
@@ -57,7 +58,7 @@ test('embedVideo serialization', assert => {
 
 <hr /></section>`
 
-  const value = embedVideoSerializer.deserialize(md)
+  const value = embedVideoSerializer.deserialize(parse(md))
   const embed = value.document.nodes.first()
 
   assert.equal(embed.kind, 'block')
@@ -72,7 +73,7 @@ test('embedVideo serialization', assert => {
     url: 'https://vimeo.com/channels/staffpicks/242527960'
   })
 
-  assert.equal(embedVideoSerializer.serialize(value).trimRight(), md)
+  assert.equal(stringify(embedVideoSerializer.serialize(value)).trimRight(), md)
   assert.end()
 })
 
@@ -94,7 +95,7 @@ test('embedTwitter serialization', assert => {
 
 <hr /></section>`
 
-  const value = embedTwitterSerializer.deserialize(md)
+  const value = embedTwitterSerializer.deserialize(parse(md))
   const embed = value.document.nodes.first()
 
   assert.equal(embed.kind, 'block')
@@ -110,6 +111,6 @@ test('embedTwitter serialization', assert => {
     url: 'https://twitter.com/Arsenal/status/930363029669203969'
   })
 
-  assert.equal(embedTwitterSerializer.serialize(value).trimRight(), md)
+  assert.equal(stringify(embedTwitterSerializer.serialize(value)).trimRight(), md)
   assert.end()
 })

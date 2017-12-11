@@ -1,4 +1,5 @@
 import test from 'tape'
+import { parse, stringify } from '@orbiting/remark-preset'
 
 import createLinkModule from './'
 import createParagraphModule from '../paragraph'
@@ -24,7 +25,7 @@ paragraphModule.name = 'paragraph'
 const serializer = paragraphModule.helpers.serializer
 
 test('link serialization', assert => {
-  const value = serializer.deserialize('[Test](example.com)')
+  const value = serializer.deserialize(parse('[Test](example.com)'))
   const node = value.document.nodes.first()
 
   assert.equal(node.kind, 'block')
@@ -36,6 +37,6 @@ test('link serialization', assert => {
 
   assert.equal(link.getIn(['data', 'href']), 'example.com')
 
-  assert.equal(serializer.serialize(value).trimRight(), '[Test](example.com)')
+  assert.equal(stringify(serializer.serialize(value)).trimRight(), '[Test](example.com)')
   assert.end()
 })

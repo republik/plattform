@@ -1,4 +1,5 @@
 import MarkdownSerializer from 'slate-mdast-serializer'
+import { parse } from '@orbiting/remark-preset'
 
 export default ({rule, subModules, TYPE}) => {
   const childSerializer = new MarkdownSerializer({
@@ -40,7 +41,7 @@ export default ({rule, subModules, TYPE}) => {
     ]
   })
 
-  const newDocument = ({title, template}) => serializer.deserialize(
+  const newDocument = ({title, template}) => serializer.deserialize(parse(
 `---
 template: ${template}
 ---
@@ -118,8 +119,7 @@ An article by [Christof Moser](), 31 December 2017
 <hr/></section>
 
 `
-
-  )
+  ))
 
   const Container = rule.component
 
