@@ -10,12 +10,13 @@ export default ({rule, subModules, TYPE}) => {
   const link = {
     match: matchInline(TYPE),
     matchMdast: rule.matchMdast,
-    fromMdast: (node, index, parent, {visitChildren}) => ({
+    fromMdast: (node, index, parent, {visitChildren, context}) => ({
       kind: 'inline',
       type: TYPE,
       data: {
         title: node.title,
-        href: node.url
+        href: node.url,
+        color: context.linkColor
       },
       nodes: visitChildren(node)
     }),

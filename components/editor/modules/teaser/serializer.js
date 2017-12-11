@@ -1,10 +1,6 @@
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { matchBlock } from '../../utils'
-import {
-  matchImageParagraph,
-  matchParagraph,
-  matchHeading
-} from 'mdast-react-render/lib/utils'
+import { matchImageParagraph } from 'mdast-react-render/lib/utils'
 
 import { getData } from './'
 
@@ -42,52 +38,53 @@ export const getSubmodules = ({ subModules }) => {
   }
 }
 
+const getRules = subModules => subModules.reduce(
+  (a, m) => a.concat(
+    m.helpers && m.helpers.serializer &&
+    m.helpers.serializer.rules
+  ),
+  []
+).filter(Boolean)
+
 export const fromMdast = ({
   TYPE,
   subModules
 }) => (node,
   index,
   parent,
-  {
-    visitChildren,
-    context
-  }
+  rest
 ) => {
-  const {
-    titleModule,
-    leadModule,
-    formatModule,
-    paragraphModule
-  } = getSubmodules({ subModules })
-
-  const titleSerializer = titleModule.helpers.serializer
-  const leadSerializer = leadModule.helpers.serializer
-  const formatSerializer = formatModule.helpers.serializer
-  const paragraphSerializer = paragraphModule.helpers.serializer
-
   const imageParagraph = node.children.find(matchImageParagraph)
-  const title = node.children.find(matchHeading(1))
-  const lead = node.children.find(matchHeading(4))
-  const format = node.children.find(matchHeading(6))
-  const credit = node.children.find(n => matchParagraph(n) && n !== imageParagraph)
 
   const data = getData(node.data)
   if (imageParagraph) {
     data.image = imageParagraph.children[0].url
   }
 
-  const nodes = [
-    format && formatSerializer.fromMdast(format),
-    title && titleSerializer.fromMdast(title),
-    lead && leadSerializer.fromMdast(lead),
-    credit && paragraphSerializer.fromMdast(credit)
-  ]
+  const childSerializer = new MarkdownSerializer({
+    rules: getRules(subModules)
+  })
+
+  const nodes = childSerializer.fromMdast(
+    node.children.filter(node => node !== imageParagraph),
+    0,
+    node,
+    {
+      context: {
+        ...rest.context,
+        // pass link color to link through context
+        linkColor: data.linkColor
+      }
+    }
+  )
+    // enhance all immediate children with data
+    .map(node => ({...node, data: {...node.data, ...data}}))
 
   const result = {
     kind: 'block',
     type: TYPE,
     data,
-    nodes: nodes.filter(v => !!v).map(v => ({...v, data}))
+    nodes: nodes
   }
   return result
 }
@@ -112,13 +109,7 @@ export const toMdast = ({
   ]
 
   const childSerializer = new MarkdownSerializer({
-    rules: subModules.reduce(
-      (a, m) => a.concat(
-        m.helpers && m.helpers.serializer &&
-        m.helpers.serializer.rules
-      ),
-      []
-    ).filter(Boolean)
+    rules: getRules(subModules)
   })
 
   const { image, ...data } = node.data
