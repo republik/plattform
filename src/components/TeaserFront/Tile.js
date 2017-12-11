@@ -112,14 +112,18 @@ TeaserFrontTileRow.defaultProps = {
   columns: 1
 }
 
-const Tile = ({ children, attributes, image, alt, color, bgColor }) => {
+const Tile = ({ children, attributes, image, alt, onClick, color, bgColor }) => {
   const background = bgColor || ''
   return (
     <div
       {...attributes}
       {...styles.container}
-      style={{ background }}
-      className="tile"
+      onClick={onClick}
+      style={{
+        background,
+        cursor: onClick ? 'pointer' : 'default'
+      }}
+      className='tile'
     >
       {image && (
         <div {...styles.imageContainer}>

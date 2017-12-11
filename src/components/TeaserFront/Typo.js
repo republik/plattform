@@ -23,10 +23,13 @@ const styles = {
   })
 }
 
-const TypoBlock = ({ children, attributes, color, bgColor }) => {
+const TypoBlock = ({ children, attributes, onClick, color, bgColor }) => {
   const background = bgColor || ''
   return (
-    <div {...attributes} {...styles.root} style={{ background }}>
+    <div {...attributes} {...styles.root} onClick={onClick} style={{
+      background,
+      cursor: onClick ? 'pointer' : 'default'
+    }}>
       <div {...styles.textContainer}>
         <Text center color={color}>
           {children}

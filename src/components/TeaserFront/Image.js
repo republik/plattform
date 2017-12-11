@@ -30,6 +30,7 @@ const ImageBlock = ({
   attributes,
   image,
   alt,
+  onClick,
   color,
   bgColor,
   textPosition,
@@ -37,7 +38,10 @@ const ImageBlock = ({
 }) => {
   const background = bgColor || ''
   return (
-    <div {...attributes} {...styles.container} style={{ background }}>
+    <div {...attributes} {...styles.container} onClick={onClick} style={{
+      background,
+      cursor: onClick ? 'pointer' : 'default'
+    }}>
       <Image src={image} alt={alt} />
       <div {...styles.textContainer}>
         <Text position={textPosition} color={color} center={center}>

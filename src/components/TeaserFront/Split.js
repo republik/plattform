@@ -67,6 +67,7 @@ const Split = ({
   attributes,
   image,
   alt,
+  onClick,
   color,
   bgColor,
   center,
@@ -79,7 +80,12 @@ const Split = ({
     <div
       {...attributes}
       {...css(styles.container, portrait ? styles.containerPortrait : {})}
-      style={{ background, flexDirection }}
+      onClick={onClick}
+      style={{
+        background,
+        flexDirection,
+        cursor: onClick ? 'pointer' : 'default'
+      }}
     >
       <div
         {...css(

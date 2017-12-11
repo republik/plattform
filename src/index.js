@@ -370,7 +370,7 @@ ReactDOM.render(
             path: '/templates/front',
             title: 'Front',
             imports: {
-              schema: require('./templates/Front').default,
+              schema: require('./templates/Front').default(),
               ...require('./templates/docs'),
               renderMdast: require('mdast-react-render').renderMdast,
               serializer: new Serializer()

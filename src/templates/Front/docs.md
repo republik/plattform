@@ -1,6 +1,18 @@
 ```code|lang-jsx
-import schema from '@project-r/styleguide/lib/templates/Front'
+import Link from 'next/link'
+import createFrontSchema from '@project-r/styleguide/lib/templates/Front'
+
+const schema = createFrontSchema({
+  Link
+})
 ```
+
+`createFrontSchema` take an optional options object with following key:
+
+`Link`, a Next.js like `<Link />` component
+This will be wrapped around and links (headlines and credits) and the whole teaser. You should attach an `onClick` handler within, if you wish to do client side routing and or prefetching. The component recieves following props:
+- `href` String, target url or path
+- `passHref` Boolean, indicates this will eventually end in an a tag and you may overwrite href
 
 # Example
 
@@ -21,7 +33,7 @@ import schema from '@project-r/styleguide/lib/templates/Front'
   "teaserType": "frontImage",
   "textPosition": "bottomleft",
   "titleSize": "standard",
-  "url": null
+  "url": "https://www.republik.ch/manifest"
 }
 \`\`\`
 
@@ -59,7 +71,7 @@ Foto: [Thomas Vuillemin on Unsplash](https://unsplash.com/photos/c1_K8Qfd_iQ)
   "teaserType": "frontTile",
   "textPosition": "topleft",
   "titleSize": "standard",
-  "url": "https://republik.love/2017/12/01/mehr-salz"
+  "url": "https://www.republik.ch/updates/portraets"
 }
 \`\`\`
 
@@ -89,7 +101,7 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
   "teaserType": "frontTile",
   "textPosition": "topleft",
   "titleSize": "standard",
-  "url": "https://republik.love/2017/12/01/alles-wird-gut"
+  "url": "https://www.republik.ch/updates/portraets"
 }
 \`\`\`
 
@@ -121,7 +133,7 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
   "teaserType": "frontTypo",
   "textPosition": "topleft",
   "titleSize": "standard",
-  "url": null
+  "url": "https://www.republik.ch/community?id=32464aa8-ccce-4ffa-9b84-0b113aff32f0"
 }
 \`\`\`
 
@@ -149,7 +161,7 @@ Von Sonderkorrespondent [Lukas Bünger](<>)
   "teaserType": "frontSplit",
   "textPosition": "topleft",
   "titleSize": "small",
-  "url": "https://republik.love/2017/12/04/republik-stand-der-arbeit-stand-des-irrtums"
+  "url": "https://www.republik.ch/crew"
 }
 \`\`\`
 
