@@ -1,23 +1,24 @@
 const getClients = require('./clients')
+const addSource = require('./addSource')
 
 // this method doesn't check if the user has a stripe customer already
 module.exports = async ({
   sourceId,
   userId,
-  pgdb
+  pgdb,
+  clients // optional
 }) => {
   const {
     provider,
     connectedAccounts
-  } = await getClients(pgdb)
+  } = clients || await getClients(pgdb)
 
   const user = await pgdb.public.users.findOne({
     id: userId
   })
 
   const customer = await provider.stripe.customers.create({
-    email: user.email,
-    source: sourceId
+    email: user.email
   })
 
   await pgdb.public.stripeCustomers.insert({
@@ -27,17 +28,8 @@ module.exports = async ({
   })
 
   for (let connectedAccount of connectedAccounts) {
-    const connectedSource = await provider.stripe.sources.create({
-      customer: customer.id,
-      usage: 'reusable',
-      original_source: sourceId
-    }, {
-      stripe_account: connectedAccount.accountId
-    })
-
     const connectedCustomer = await connectedAccount.stripe.customers.create({
-      email: user.email,
-      source: connectedSource.id
+      email: user.email
     })
 
     await pgdb.public.stripeCustomers.insert({
@@ -46,4 +38,11 @@ module.exports = async ({
       companyId: connectedAccount.company.id
     })
   }
+
+  await addSource({
+    sourceId,
+    userId,
+    pgdb,
+    clients
+  })
 }

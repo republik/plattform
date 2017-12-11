@@ -1,5 +1,6 @@
 const createCustomer = require('./createCustomer')
 const createCharge = require('./createCharge')
+const addSource = require('./addSource')
 
 module.exports = async ({
   pledgeId,
@@ -11,29 +12,32 @@ module.exports = async ({
   t,
   logger = console
 }) => {
-  if (!sourceId) {
-    logger.error('sourceId required', { pledgeId, sourceId })
-    throw new Error(t('api/unexpected'))
-  }
-
   let charge
   try {
     if (!(await transaction.public.stripeCustomers.findFirst({ userId }))) {
+      if (!sourceId) {
+        logger.error('missing sourceId', { userId, pledgeId, sourceId })
+        throw new Error(t('api/unexpected'))
+      }
       await createCustomer({
         sourceId,
         userId,
         pgdb: transaction
       })
     } else {
-      console.warn(
-        'payPledge: user already has a stripeCustomer, ignoring new source', { userId }
-      )
+      await addSource({
+        sourceId,
+        userId,
+        pgdb: transaction,
+        deduplicate: true
+      })
     }
 
     charge = await createCharge({
       amount: total,
       userId,
       companyId: pkg.companyId,
+      sourceId,
       pgdb: transaction
     })
   } catch (e) {
