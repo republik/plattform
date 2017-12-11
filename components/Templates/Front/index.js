@@ -45,7 +45,7 @@ const paragraph = (type, component) => ({
       component: ({ children, data, attributes = {}, ...props }) =>
         <TeaserFrontAuthorLink
           {...props}
-          {...attributes}>
+          attributes={attributes}>
           {children}
         </TeaserFrontAuthorLink>,
       editorModule: 'link',
@@ -88,7 +88,7 @@ const lead = (type, component) => ({
 const format = type => ({
   matchMdast: matchHeading(6),
   component: ({ children, attributes = {} }) =>
-    <Editorial.Format {...attributes}>
+    <Editorial.Format attributes={attributes}>
       {children}
     </Editorial.Format>,
   editorModule: 'headline',
@@ -121,7 +121,7 @@ const frontImageTeaser = {
   },
   component: ({ children, attributes = {}, image, ...props }) => {
     const imageSrc = image || '/static/placeholder.png'
-    return <TeaserFrontImage image={imageSrc} {...attributes} {...props}>
+    return <TeaserFrontImage image={imageSrc} attributes={attributes} {...props}>
       {children}
     </TeaserFrontImage>
   },
@@ -149,7 +149,7 @@ const frontImageTeaser = {
         const Component = kind === 'editorial'
           ? TeaserFrontImageHeadline.Editorial
           : TeaserFrontImageHeadline.Interaction
-        return <Component {...attributes}>
+        return <Component attributes={attributes}>
           {children}
         </Component>
       }
@@ -157,7 +157,7 @@ const frontImageTeaser = {
     lead(
       'frontImageLead',
       ({ children, attributes = {} }) =>
-        <TeaserFrontLead {...attributes}>
+        <TeaserFrontLead attributes={attributes}>
           {children}
         </TeaserFrontLead>
     ),
@@ -165,7 +165,7 @@ const frontImageTeaser = {
     paragraph(
       'frontImageCredit',
       ({ children, attributes = {} }) =>
-        <TeaserFrontCredit {...attributes}>{children}</TeaserFrontCredit>
+        <TeaserFrontCredit attributes={attributes}>{children}</TeaserFrontCredit>
     )
   ]
 }
@@ -176,7 +176,7 @@ const frontSplitTeaser = {
   },
   component: ({ children, attributes = {}, image, ...props }) => {
     const imageSrc = image || '/static/placeholder.png'
-    return <TeaserFrontSplit image={imageSrc} {...attributes} {...props}>
+    return <TeaserFrontSplit image={imageSrc} attributes={attributes} {...props}>
       {children}
     </TeaserFrontSplit>
   },
@@ -219,7 +219,7 @@ const frontSplitTeaser = {
           medium: titleSize === 'medium',
           large: titleSize === 'large'
         }
-        return <Component {...attributes} {...sizes}>
+        return <Component attributes={attributes} {...sizes}>
           {children}
         </Component>
       }
@@ -227,7 +227,7 @@ const frontSplitTeaser = {
     lead(
       'frontSplitLead',
       ({ children, attributes = {} }) =>
-        <TeaserFrontLead {...attributes}>
+        <TeaserFrontLead attributes={attributes}>
           {children}
         </TeaserFrontLead>
     ),
@@ -235,7 +235,7 @@ const frontSplitTeaser = {
     paragraph(
       'frontSplitCredit',
       ({ children, attributes = {} }) =>
-        <TeaserFrontCredit {...attributes}>{children}</TeaserFrontCredit>
+        <TeaserFrontCredit attributes={attributes}>{children}</TeaserFrontCredit>
     )
   ]
 }
@@ -245,7 +245,7 @@ const frontTypoTeaser = {
     return matchZone('TEASER')(node) && node.data.teaserType === 'frontTypo'
   },
   component: ({ children, attributes = {}, ...props }) => {
-    return <TeaserFrontTypo {...attributes} {...props}>
+    return <TeaserFrontTypo attributes={attributes} {...props}>
       {children}
     </TeaserFrontTypo>
   },
@@ -280,7 +280,7 @@ const frontTypoTeaser = {
           large: titleSize === 'large',
           small: titleSize === 'small'
         }
-        return <Component {...attributes} {...sizes}>
+        return <Component attributes={attributes} {...sizes}>
           {children}
         </Component>
       }
@@ -288,7 +288,7 @@ const frontTypoTeaser = {
     lead(
       'frontTypoLead',
       ({ children, attributes = {} }) =>
-        <TeaserFrontLead {...attributes}>
+        <TeaserFrontLead attributes={attributes}>
           {children}
         </TeaserFrontLead>
     ),
@@ -296,7 +296,7 @@ const frontTypoTeaser = {
     paragraph(
       'frontTypoCredit',
       ({ children, attributes = {} }) =>
-        <TeaserFrontCredit {...attributes}>{children}</TeaserFrontCredit>
+        <TeaserFrontCredit attributes={attributes}>{children}</TeaserFrontCredit>
     )
   ]
 }
@@ -307,7 +307,7 @@ const frontTileTeaser = {
   },
   component: ({ children, attributes = {}, image, ...props }) => {
     const imageSrc = image || '/static/placeholder.png'
-    return <TeaserFrontTile image={imageSrc} {...attributes} {...props}>
+    return <TeaserFrontTile image={imageSrc} attributes={attributes} {...props}>
       {children}
     </TeaserFrontTile>
   },
@@ -343,7 +343,7 @@ const frontTileTeaser = {
         : TeaserFrontTileHeadline.Interaction
         return (
 
-          <Component {...attributes}>
+          <Component attributes={attributes}>
             {children}
           </Component>
         )
@@ -352,7 +352,7 @@ const frontTileTeaser = {
     lead(
       'frontTileLead',
       ({ children, attributes = {} }) =>
-        <TeaserFrontLead {...attributes}>
+        <TeaserFrontLead attributes={attributes}>
           {children}
         </TeaserFrontLead>
     ),
@@ -360,7 +360,7 @@ const frontTileTeaser = {
     paragraph(
       'frontTileCredit',
       ({ children, attributes = {} }) =>
-        <TeaserFrontCredit {...attributes}>{children}</TeaserFrontCredit>
+        <TeaserFrontCredit attributes={attributes}>{children}</TeaserFrontCredit>
     )
   ]
 }
@@ -385,7 +385,7 @@ const schema = {
             return matchZone('TEASERGROUP')(node)
           },
           component: ({ children, attributes = {}, ...props }) => {
-            return <TeaserFrontTileRow {...attributes} {...props}>
+            return <TeaserFrontTileRow attributes={attributes} {...props}>
               {children}
             </TeaserFrontTileRow>
           },
