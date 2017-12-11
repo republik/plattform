@@ -22,7 +22,12 @@ class Image extends Component {
   // This will eventually become a stateful component.
 
   render() {
-    const { src, alt, attributes = {}, resize } = this.props
+    const {
+      src = '', // protect from exception in image helpers
+      alt,
+      attributes = {},
+      resize
+    } = this.props
     const resizedSrc = resize ? imageResizeUrl(src, resize) : src
     const sizeInfo = imageSizeInfo(src)
     const aspectRatio = sizeInfo ? sizeInfo.width / sizeInfo.height : undefined
@@ -41,11 +46,10 @@ class Image extends Component {
           />
         </span>
       )
-    } else {
-      return (
-        <img {...attributes} {...styles.image} src={resizedSrc} alt={alt} />
-      )
     }
+    return (
+      <img {...attributes} {...styles.image} src={resizedSrc} alt={alt} />
+    )
   }
 }
 
