@@ -17,7 +17,7 @@ import {createFormatter} from './lib/translate'
 import Serializer from 'slate-mdast-serializer'
 
 simulations(true)
-// prevent speed in catalog
+// prevent speedy in catalog
 // - iframe rendering (e.g. responsive preview)
 //   does not support insertRule
 speedy(false)
@@ -294,34 +294,7 @@ ReactDOM.render(
         ]
       },
       {
-        title: 'Templates',
-        pages: [
-          {
-            path: '/templates/article',
-            title: 'Article',
-            imports: {
-              schema: require('./templates/Article').default(),
-              ...require('./templates/docs'),
-              renderMdast: require('mdast-react-render').renderMdast,
-              serializer: new Serializer()
-            },
-            src: require('./templates/Article/docs.md')
-          },
-          {
-            path: '/templates/front',
-            title: 'Front',
-            imports: {
-              schema: require('./templates/Front').default,
-              ...require('./templates/docs'),
-              renderMdast: require('mdast-react-render').renderMdast,
-              serializer: new Serializer()
-            },
-            src: require('./templates/Front/docs.md')
-          }
-        ]
-      },
-      {
-        title: 'Teaser',
+        title: 'Teasers',
         pages: [
           {
             path: '/teaserfeed',
@@ -377,6 +350,33 @@ ReactDOM.render(
             },
             src: require('./components/TeaserFront/Tile.md')
           },
+        ]
+      },
+      {
+        title: 'Templates',
+        pages: [
+          {
+            path: '/templates/article',
+            title: 'Article',
+            imports: {
+              schema: require('./templates/Article').default(),
+              ...require('./templates/docs'),
+              renderMdast: require('mdast-react-render').renderMdast,
+              serializer: new Serializer()
+            },
+            src: require('./templates/Article/docs.md')
+          },
+          {
+            path: '/templates/front',
+            title: 'Front',
+            imports: {
+              schema: require('./templates/Front').default,
+              ...require('./templates/docs'),
+              renderMdast: require('mdast-react-render').renderMdast,
+              serializer: new Serializer()
+            },
+            src: require('./templates/Front/docs.md')
+          }
         ]
       },
       {
