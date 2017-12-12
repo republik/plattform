@@ -34,13 +34,7 @@ module.exports = async ({
     }
   }
 
-  // see problem description below
-  // as long as we can't add source on the connected account
-  // we can also not do it for the provider (deduplication would fail)
-  // await provider.stripe.customers.createSource(customer.id, {
-  //  source: sourceId
-  // })
-  await provider.stripe.customers.update(customer.id, {
+  await provider.stripe.customers.createSource(customer.id, {
     source: sourceId
   })
 
@@ -67,15 +61,11 @@ module.exports = async ({
       stripe_account: connectedAccount.accountId
     })
 
-    // this should work but doesn't. stripe throws the following strange error
-    // 402 type: 'StripeCardError', code: 'invalid_cvc',
-    // until we get feedback from stripe we have no other choice than to replace
-    // the card on the connected accounts customer
-    // await connectedAccount.stripe.customers.createSource(connectedCustomer.id, {
-    //  source: connectedSource.id
-    // })
-    await connectedAccount.stripe.customers.update(connectedCustomer.id, {
-      source: connectedSource.id
+    await provider.stripe.customers.createSource(connectedCustomer.id, {
+      source: connectedSource.id,
+      validate: false // workaround suggested by stripe suppor for 402 invalid_cvc
+    }, {
+      stripe_account: connectedAccount.accountId
     })
   }
 }
