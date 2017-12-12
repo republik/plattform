@@ -1,5 +1,5 @@
 const { createGithubClients } = require('../../lib/github')
-const MDAST = require('../../lib/mdast/mdast')
+const MDAST = require('@orbiting/remark-preset')
 const { createPrefixUrl } = require('../../lib/assets')
 const visit = require('unist-util-visit')
 const { timeParse } = require('d3-time-format')

@@ -45,7 +45,7 @@ const {
 } = require('./clientsWithCookie')
 const apolloFetch = createApolloFetchWithCookie(GRAPHQL_URI)
 const apolloFetchUnauthorized = createApolloFetch({ uri: GRAPHQL_URI })
-const MDAST = require('../lib/mdast/mdast')
+const MDAST = require('@orbiting/remark-preset')
 const {
   createGithubClients,
   getHeads
