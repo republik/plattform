@@ -1,14 +1,14 @@
-import frontSchema from './Front'
 import newsletterSchema from '@project-r/template-newsletter'
 import neutrumSchema from './Neutrum'
 
 import createArticleSchema from '@project-r/styleguide/lib/templates/Article'
+import createFrontSchema from '@project-r/styleguide/lib/templates/Front'
 
 const schemas = {
   newsletter: newsletterSchema,
   neutrum: neutrumSchema,
   article: createArticleSchema(),
-  front: frontSchema
+  front: createFrontSchema()
 }
 
 export const getSchema = template => {

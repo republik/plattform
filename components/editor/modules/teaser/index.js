@@ -86,9 +86,10 @@ const teaserPlugin = options => {
         return
       }
 
+      const image = node.data.get('image') || '/static/placeholder.png'
       if (options.rule.editorOptions.dnd === false) {
         return (
-          <Teaser key='teaser' {...node.data.toJS()} attributes={attributes}>
+          <Teaser key='teaser' {...node.data.toJS()} image={image} attributes={attributes}>
             {children}
           </Teaser>
         )
@@ -115,7 +116,7 @@ const teaserPlugin = options => {
           insert={insert(editor)}
           remove={remove(editor)}
       />,
-        <Teaser key='teaser' {...node.data.toJS()} attributes={attributes}>
+        <Teaser key='teaser' {...node.data.toJS()} image={image} attributes={attributes}>
           {children}
         </Teaser>
       ])
