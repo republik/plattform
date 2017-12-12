@@ -79,7 +79,7 @@ PgDb.connect().then(async (pgdb) => {
       name: 'MONTHLY_ABO',
       interval: 'month',
       intervalCount: 1,
-      price: 2000,
+      price: 2200,
       companyId: republikCompany.id
     })
 
@@ -96,7 +96,7 @@ PgDb.connect().then(async (pgdb) => {
       minAmount: 1,
       maxAmount: 1,
       defaultAmount: 1,
-      price: 2000,
+      price: 2200,
       userPrice: false
     })
 
