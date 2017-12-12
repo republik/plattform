@@ -14,6 +14,7 @@ module.exports = async ({
 }) => {
   let charge
   try {
+    let deduplicatedSourceId
     if (!(await transaction.public.stripeCustomers.findFirst({ userId }))) {
       if (!sourceId) {
         logger.error('missing sourceId', { userId, pledgeId, sourceId })
@@ -24,8 +25,8 @@ module.exports = async ({
         userId,
         pgdb: transaction
       })
-    } else {
-      await addSource({
+    } else { // stripe customer exists
+      deduplicatedSourceId = await addSource({
         sourceId,
         userId,
         pgdb: transaction,
@@ -37,7 +38,7 @@ module.exports = async ({
       amount: total,
       userId,
       companyId: pkg.companyId,
-      sourceId,
+      sourceId: deduplicatedSourceId || sourceId,
       pgdb: transaction
     })
   } catch (e) {

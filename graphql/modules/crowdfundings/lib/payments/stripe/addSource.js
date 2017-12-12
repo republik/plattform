@@ -29,8 +29,7 @@ module.exports = async ({
       s.card && s.card.fingerprint === source.card.fingerprint
     )
     if (existingSource) {
-      console.log('addSource detected card duplicate, not adding!')
-      return
+      return existingSource.id
     }
   }
 
@@ -68,4 +67,6 @@ module.exports = async ({
       stripe_account: connectedAccount.accountId
     })
   }
+
+  return sourceId
 }
