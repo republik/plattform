@@ -1,5 +1,6 @@
 const moment = require('moment')
 const { getPledgeOptionsTree } = require('./Pledge')
+const { Roles } = require('@orbiting/backend-modules-auth')
 const debug = require('debug')('crowdfundings:memberships')
 
 module.exports = async (pledgeId, pgdb, t, logger = console) => {
@@ -91,5 +92,6 @@ module.exports = async (pledgeId, pgdb, t, logger = console) => {
       createdAt: now,
       updatedAt: now
     })
+    await Roles.addUserToRole(membership.userId, 'member', pgdb)
   }
 }
