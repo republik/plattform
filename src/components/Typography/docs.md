@@ -294,6 +294,16 @@ UI elements and structured information uses the sans serif cuts. Without margins
 </Interaction.P>
 ```
 
+## Generic
+
+### Sub and Super-Script
+
+```react
+<div>
+  <Interaction.P>40 µg/m<Sup>3</Sup></Interaction.P>
+  <Editorial.P>CO<Sub>2eq</Sub></Editorial.P>
+</div>
+```
 
 ## Legacy Editorial Content Styles
 

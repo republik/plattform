@@ -103,5 +103,6 @@ export {
   Label,
   Quote,
   Interaction,
-  Editorial
+  Editorial,
+  Sub, Sup
 } from './components/Typography'

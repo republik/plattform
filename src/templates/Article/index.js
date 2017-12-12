@@ -5,6 +5,7 @@ import Center from '../../components/Center'
 import TitleBlock from '../../components/TitleBlock'
 import * as Editorial from '../../components/Typography/Editorial'
 import * as Interaction from '../../components/Typography/Interaction'
+import { Sub, Sup } from '../../components/Typography'
 import { TeaserFeed } from '../../components/TeaserFeed'
 
 import {
@@ -54,11 +55,29 @@ const link = {
   editorModule: 'link'
 }
 
-const br = {
-  matchMdast: matchType('break'),
-  component: () => <br />,
-  isVoid: true
-}
+const globalInlines = [
+  {
+    matchMdast: matchType('sub'),
+    component: Sub,
+    editorModule: 'mark',
+    editorOptions: {
+      type: 'sub'
+    }
+  },
+  {
+    matchMdast: matchType('sup'),
+    component: Sup,
+    editorModule: 'mark',
+    editorOptions: {
+      type: 'sup'
+    }
+  },
+  {
+    matchMdast: matchType('break'),
+    component: () => <br />,
+    isVoid: true
+  }
+]
 
 const paragraph = {
   matchMdast: matchParagraph,
@@ -68,7 +87,7 @@ const paragraph = {
     formatButtonText: 'Paragraph'
   },
   rules: [
-    br,
+    ...globalInlines,
     {
       matchMdast: matchType('strong'),
       component: Editorial.Emphasis,
@@ -100,7 +119,7 @@ const figureCaption = {
       }
     },
     link,
-    br
+    ...globalInlines
   ]
 }
 
@@ -275,7 +294,7 @@ const createSchema = ({
                 placeholder: 'Lead'
               },
               rules: [
-                br,
+                ...globalInlines,
                 link
               ]
             },
@@ -288,7 +307,7 @@ const createSchema = ({
                 placeholder: 'Autoren, Datum'
               },
               rules: [
-                br,
+                ...globalInlines,
                 link
               ]
             }
@@ -387,7 +406,7 @@ const createSchema = ({
                     placeholder: 'Zitat'
                   },
                   rules: [
-                    br,
+                    ...globalInlines,
                     link
                   ]
                 },
@@ -400,7 +419,7 @@ const createSchema = ({
                     placeholder: 'Quellenangabe / Autor'
                   },
                   rules: [
-                    br,
+                    ...globalInlines,
                     link
                   ]
                 }

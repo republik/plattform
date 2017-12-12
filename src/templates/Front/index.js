@@ -11,6 +11,7 @@ import {
 
 import colors from '../../theme/colors'
 import * as Editorial from '../../components/Typography/Editorial'
+import { Sub, Sup } from '../../components/Typography'
 
 import {
   TeaserFrontImage,
@@ -48,6 +49,30 @@ const styles = {
   })
 }
 
+const globalInlines = [
+  {
+    matchMdast: matchType('sub'),
+    component: Sub,
+    editorModule: 'mark',
+    editorOptions: {
+      type: 'sub'
+    }
+  },
+  {
+    matchMdast: matchType('sup'),
+    component: Sup,
+    editorModule: 'mark',
+    editorOptions: {
+      type: 'sup'
+    }
+  },
+  {
+    matchMdast: matchType('break'),
+    component: () => <br />,
+    isVoid: true
+  }
+]
+
 const DefaultLink = ({ children }) => children
 
 const createSchema = ({
@@ -63,6 +88,7 @@ const createSchema = ({
       placeholder: 'Credit'
     },
     rules: [
+      ...globalInlines,
       {
         matchMdast: matchType('link'),
         props: (node, index, parent, { ancestors }) => {
@@ -112,7 +138,8 @@ const createSchema = ({
       type,
       placeholder: 'Titel',
       depth: 1
-    }
+    },
+    rules: globalInlines
   })
 
   const lead = {
@@ -127,7 +154,8 @@ const createSchema = ({
       placeholder: 'Lead',
       depth: 4,
       optional: true
-    }
+    },
+    rules: globalInlines
   }
 
   const format = {
@@ -142,7 +170,8 @@ const createSchema = ({
       placeholder: 'Format',
       depth: 6,
       optional: true
-    }
+    },
+    rules: globalInlines
   }
 
   const frontImageTeaser = {

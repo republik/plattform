@@ -41,6 +41,27 @@ export const Label = ({children, ...props}) => (
   <span {...props} {...labelRule}>{children}</span>
 )
 
+const subSupStyles = {
+  base: css({
+    fontSize: '75%',
+    lineHeight: '0',
+    position: 'relative',
+    verticalAlign: 'baseline'
+  }),
+  sub: css({
+    bottom: '-0.25em'
+  }),
+  sup: css({
+    top: '-0.5em'
+  })
+}
+
+export const Sub = ({children, attributes}) =>
+  <sub {...attributes} {...subSupStyles.base} {...subSupStyles.sub}>{children}</sub>
+
+export const Sup = ({children, attributes}) =>
+  <sup {...attributes} {...subSupStyles.base} {...subSupStyles.sup}>{children}</sup>
+
 const quoteRule = css(styles.quote)
 const quoteTextRule = css(styles.quoteText)
 
