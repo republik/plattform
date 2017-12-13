@@ -4,6 +4,8 @@ import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { Breakout } from '../Center'
 
+export const IMAGE_SIZE = 155
+
 const styles = {
   container: css({
     margin: '0 auto'
@@ -15,7 +17,7 @@ const styles = {
         marginLeft: -170,
         marginRight: 15,
         float: 'left',
-        width: '155px'
+        width: IMAGE_SIZE
       }
     }
   }),

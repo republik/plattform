@@ -2,10 +2,16 @@ import React from 'react'
 import { css } from 'glamor'
 import PropTypes from 'prop-types'
 
-export const MAX_WIDTH = 665
+
 export const PADDING = 20
+
+export const MAX_WIDTH = 625
+// iPhone Plus, for max image sizes
+export const MAX_WIDTH_MOBILE = 414 - PADDING * 2
+
 const DEFAULT_MARGIN = 15
 export const BREAKOUT = 155 + DEFAULT_MARGIN
+
 const FLOAT_MARGIN = 100
 const NARROW_WIDTH = 495
 const SMALL_WIDTH = 410
@@ -22,19 +28,31 @@ const floatStyle = {
   width: '100%'
 }
 
-const breakoutUp = `@media only screen and (min-width: ${MAX_WIDTH +
+const breakoutUp = `@media only screen and (min-width: ${
+  MAX_WIDTH +
   BREAKOUT * 2 +
-  PADDING * 2}px)`
+  PADDING * 2 + 
+  PADDING}px)`
 
 const styles = {
   center: css({
-    maxWidth: MAX_WIDTH,
+    maxWidth: MAX_WIDTH + PADDING * 2,
     margin: '0 auto',
     padding: PADDING
   }),
   clear: css({
     clear: 'both'
   })
+}
+
+export const BREAKOUT_SIZES = {
+  narrow: NARROW_WIDTH,
+  tiny: TINY_WIDTH,
+  breakout: MAX_WIDTH + BREAKOUT * 2,
+  breakoutLeft: MAX_WIDTH + BREAKOUT,
+  float: NARROW_WIDTH,
+  floatSmall: SMALL_WIDTH,
+  floatTiny: TINY_WIDTH
 }
 
 export const breakoutStyles = {

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import Container, { withMeta } from './Container'
-import Center from '../../components/Center'
+import Center, { MAX_WIDTH_MOBILE } from '../../components/Center'
 import TitleBlock from '../../components/TitleBlock'
 import * as Editorial from '../../components/Typography/Editorial'
 import * as Interaction from '../../components/Typography/Interaction'
@@ -13,12 +13,14 @@ import {
   FigureImage,
   FigureCaption,
   FigureByline,
-  FigureGroup
+  FigureGroup,
+  FIGURE_SIZES
 } from '../../components/Figure'
 import {
   PullQuote,
   PullQuoteText,
-  PullQuoteSource
+  PullQuoteSource,
+  PULLQUOTE_IMAGE_SIZE
 } from '../../components/PullQuote'
 import {
   List,
@@ -27,7 +29,9 @@ import {
 import {
   InfoBox,
   InfoBoxTitle,
-  InfoBoxText
+  InfoBoxText,
+  INFOBOX_IMAGE_SIZES,
+  INFOBOX_DEFAULT_IMAGE_SIZE
 } from '../../components/InfoBox'
 import {
   Tweet
@@ -40,7 +44,9 @@ import {
   matchZone,
   matchHeading,
   matchParagraph,
-  matchImageParagraph
+  matchImageParagraph,
+  imageSizeInfo,
+  imageResizeUrl
 } from 'mdast-react-render/lib/utils'
 
 const matchLast = (node, index, parent) => index === parent.children.length - 1
@@ -123,8 +129,12 @@ const figureCaption = {
   ]
 }
 
+const matchInfoBox = matchZone('INFOBOX')
+const matchQuote = matchZone('QUOTE')
+const matchFigure = matchZone('FIGURE')
+
 const figure = {
-  matchMdast: matchZone('FIGURE'),
+  matchMdast: matchFigure,
   component: Figure,
   props: node => ({
     size: node.data.size
@@ -159,10 +169,54 @@ const figure = {
     {
       matchMdast: matchImageParagraph,
       component: FigureImage,
-      props: node => ({
-        src: node.children[0].url,
-        alt: node.children[0].alt
-      }),
+      props: (node, index, parent, { ancestors }) => {
+        let maxDisplayWidth
+        const infobox = ancestors.find(matchInfoBox)
+        if (infobox) {
+          maxDisplayWidth = INFOBOX_IMAGE_SIZES[
+            infobox.data.figureSize || INFOBOX_DEFAULT_IMAGE_SIZE
+          ]
+        }
+        const quote = ancestors.find(matchQuote)
+        if (quote) {
+          maxDisplayWidth = PULLQUOTE_IMAGE_SIZE
+        }
+        const figure = ancestors.find(matchFigure)
+        if (figure) {
+          if (figure.data.size) {
+            maxDisplayWidth = FIGURE_SIZES[figure.data.size]
+          } else {
+            // child of root === e2e, root === ancestor[-1]
+            if (ancestors.indexOf(figure) === ancestors.length - 2) {
+              maxDisplayWidth = 1000
+            } else {
+              maxDisplayWidth = FIGURE_SIZES.center
+            }
+          }
+        }
+        maxDisplayWidth = Math.max(
+          MAX_WIDTH_MOBILE,
+          maxDisplayWidth
+        ) * 2 // retina
+
+        const src = node.children[0].url
+
+        const sizeInfo = imageSizeInfo(src)
+        const maxWidth = sizeInfo ? sizeInfo.width : undefined
+        if (maxWidth < maxDisplayWidth) {
+          maxDisplayWidth = maxWidth
+        }
+
+        const resizedSrc = imageResizeUrl(
+          src,
+          `${maxDisplayWidth}x`
+        )
+
+        return {
+          src: resizedSrc,
+          alt: node.children[0].alt
+        }
+      },
       editorModule: 'figureImage',
       isVoid: true
     },
@@ -172,7 +226,7 @@ const figure = {
 
 const cover = {
   matchMdast: (node, index) => (
-    matchZone('FIGURE')(node) &&
+    matchFigure(node) &&
     index === 0
   ),
   component: Figure,
@@ -199,10 +253,36 @@ const cover = {
     {
       matchMdast: matchImageParagraph,
       component: FigureImage,
-      props: node => ({
-        src: node.children[0].url,
-        alt: node.children[0].alt
-      }),
+      props: (node, index, parent) => {
+        let maxDisplayWidth
+        if (parent.data.size) {
+          maxDisplayWidth = FIGURE_SIZES[parent.data.size]
+        } else {
+          maxDisplayWidth = 1000
+        }
+        maxDisplayWidth = Math.max(
+          MAX_WIDTH_MOBILE,
+          maxDisplayWidth
+        ) * 2
+
+        const src = node.children[0].url
+
+        const sizeInfo = imageSizeInfo(src)
+        const maxWidth = sizeInfo ? sizeInfo.width : undefined
+        if (maxWidth < maxDisplayWidth) {
+          maxDisplayWidth = maxWidth
+        }
+
+        const resizedSrc = imageResizeUrl(
+          src,
+          `${maxDisplayWidth}x`
+        )
+
+        return {
+          src: resizedSrc,
+          alt: node.children[0].alt
+        }
+      },
       editorModule: 'figureImage',
       isVoid: true
     },
@@ -344,12 +424,12 @@ const createSchema = ({
               ]
             },
             {
-              matchMdast: matchZone('INFOBOX'),
+              matchMdast: matchInfoBox,
               component: InfoBox,
               props: node => ({
                 size: node.data.size,
                 figureSize: node.children.find(matchZone('FIGURE'))
-                  ? node.data.figureSize || 'S'
+                  ? node.data.figureSize || INFOBOX_DEFAULT_IMAGE_SIZE
                   : undefined,
                 figureFloat: node.data.figureFloat
               }),
@@ -382,7 +462,7 @@ const createSchema = ({
               ]
             },
             {
-              matchMdast: matchZone('QUOTE'),
+              matchMdast: matchQuote,
               component: PullQuote,
               props: node => ({
                 size: node.data.size,

@@ -2,7 +2,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
-import { breakoutStyles, MAX_WIDTH, PADDING } from '../Center'
+import {
+  breakoutStyles,
+  MAX_WIDTH,
+  PADDING,
+  BREAKOUT_SIZES
+} from '../Center'
 
 export { default as FigureImage } from './Image'
 export { default as FigureCaption } from './Caption'
@@ -50,12 +55,17 @@ const styles = {
 const figureBreakout = {
   ...breakoutStyles,
   center: css({
-    maxWidth: MAX_WIDTH,
+    maxWidth: MAX_WIDTH + PADDING * 2,
     padding: PADDING,
     marginLeft: 'auto',
     marginRight: 'auto',
     marginBottom: 0
   })
+}
+
+export const FIGURE_SIZES = {
+  ...BREAKOUT_SIZES,
+  center: MAX_WIDTH
 }
 
 export const Figure = ({ children, attributes, size }) => (

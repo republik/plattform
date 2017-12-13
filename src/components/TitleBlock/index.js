@@ -7,7 +7,7 @@ import { Editorial } from '../Typography'
 
 const styles = {
   container: css({
-    maxWidth: MAX_WIDTH,
+    maxWidth: MAX_WIDTH + PADDING * 2,
     margin: '0 auto 40px auto',
     paddingTop: 30,
     paddingLeft: PADDING,
