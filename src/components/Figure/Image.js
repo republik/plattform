@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { imageSizeInfo, imageResizeUrl } from 'mdast-react-render/lib/utils'
+import { imageSizeInfo } from 'mdast-react-render/lib/utils'
+import { getSrcSizes } from './utils'
 
 const styles = {
   image: css({
@@ -22,44 +23,58 @@ const styles = {
 }
 
 class Image extends Component {
-  // This will eventually become a stateful component.
-
   render() {
     const {
-      src = '', // protect from exception in image helpers
+      src,
+      srcSet,
       alt,
       attributes = {},
-      resize
+      maxWidth,
+      size: sizeProp
     } = this.props
-    const resizedSrc = resize ? imageResizeUrl(src, resize) : src
-    const sizeInfo = imageSizeInfo(src)
-    const aspectRatio = sizeInfo ? sizeInfo.width / sizeInfo.height : undefined
 
-    if (isFinite(aspectRatio)) {
+    const size = sizeProp || (sizeProp === undefined && imageSizeInfo(src))
+    const aspectRatio = size ? size.width / size.height : undefined
+
+    const image = isFinite(aspectRatio)
+      ? (
+        <span
+          {...attributes}
+          {...styles.aspectRatio}
+          style={{paddingBottom: `${100 / aspectRatio}%`}}>
+          <img
+            {...styles.wrappedImage}
+            src={src}
+            srcSet={srcSet}
+            alt={alt} />
+        </span>
+      )
+      : <img {...attributes} {...styles.image} src={src} srcSet={srcSet} alt={alt} />
+
+    if (maxWidth) {
       return (
-        <span {...styles.maxWidth} style={{maxWidth: +sizeInfo.width}}>
-          <span
-            {...styles.aspectRatio}
-            style={{paddingBottom: `${100 / aspectRatio}%`}}>
-            <img
-              {...attributes}
-              {...styles.wrappedImage}
-              src={resizedSrc}
-              alt={alt} />
-          </span>
+        <span {...styles.maxWidth} style={{maxWidth}}>
+          {image}
         </span>
       )
     }
-    return (
-      <img {...attributes} {...styles.image} src={resizedSrc} alt={alt} />
-    )
+    return image
   }
 }
 
 Image.propTypes = {
   src: PropTypes.string.isRequired,
+  srcSet: PropTypes.string,
   alt: PropTypes.string,
-  resize: PropTypes.string
+  size: PropTypes.shape({
+    width: PropTypes.number,
+    height: PropTypes.number
+  }),
+  maxWidth: PropTypes.number
+}
+
+Image.utils = {
+  getSrcSizes: getSrcSizes
 }
 
 export default Image

@@ -41,24 +41,38 @@ Properties
 
 #### Placeholder
 
-If the source of a `<FigureImage />` includes `size` information, the image is wrapped in a placeholder that takes up the expected image size before the image is actually loaded. This is great to avoid jumpy layouting while the page loads. For demonstration purposes here's a figure with a non-existant image source:
+If `size` is provided or the `src` of a `<FigureImage />` includes `size` information in the query string, the image is wrapped in a placeholder that takes up the expected image size before the image is actually loaded. This is great to avoid jumpy layouting while the page loads.
 
 ```react|span-3
 <Figure>
-  <FigureImage src='/static/missing-file.jpg?size=974x687' alt='' />
+  <FigureImage
+    src='/static/missing-file.jpg'
+    size={{width: 974, height: 687}}
+    alt='' />
   <FigureCaption>
-    A placeholder for an image with size information.
+    Placeholder from explicit size information.
+  </FigureCaption>
+</Figure>
+```
+
+```react|span-3
+<Figure>
+  <FigureImage
+    src='/static/missing-file.jpg?size=974x687'
+    alt='' />
+  <FigureCaption>
+    Placeholder from automatic size information.
   </FigureCaption>
 </Figure>
 ```
 
 #### Max Width
 
-If the source of a `<FigureImage />` includes `size` information, the image will never be displayed larger than it actually is.
+You may provide an `maxWidth`, e.g. the resolution of the file.
 
 ```react
 <Figure>
-  <FigureImage src='/static/profilePicture1.png?size=200x200' alt='' />
+  <FigureImage src='/static/profilePicture1.png' maxWidth={200} alt='' />
 </Figure>
 ```
 

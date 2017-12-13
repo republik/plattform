@@ -1,7 +1,7 @@
 import React from 'react'
 
 import Container, { withMeta } from './Container'
-import Center, { MAX_WIDTH_MOBILE } from '../../components/Center'
+import Center from '../../components/Center'
 import TitleBlock from '../../components/TitleBlock'
 import * as Editorial from '../../components/Typography/Editorial'
 import * as Interaction from '../../components/Typography/Interaction'
@@ -44,9 +44,7 @@ import {
   matchZone,
   matchHeading,
   matchParagraph,
-  matchImageParagraph,
-  imageSizeInfo,
-  imageResizeUrl
+  matchImageParagraph
 } from 'mdast-react-render/lib/utils'
 
 const matchLast = (node, index, parent) => index === parent.children.length - 1
@@ -133,6 +131,30 @@ const matchInfoBox = matchZone('INFOBOX')
 const matchQuote = matchZone('QUOTE')
 const matchFigure = matchZone('FIGURE')
 
+const getDisplayWidth = ancestors => {
+  const infobox = ancestors.find(matchInfoBox)
+  if (infobox) {
+    return INFOBOX_IMAGE_SIZES[
+      infobox.data.figureSize || INFOBOX_DEFAULT_IMAGE_SIZE
+    ]
+  }
+  const quote = ancestors.find(matchQuote)
+  if (quote) {
+    return PULLQUOTE_IMAGE_SIZE
+  }
+  const figure = ancestors.find(matchFigure)
+  if (figure) {
+    if (figure.data.size) {
+      return FIGURE_SIZES[figure.data.size]
+    }
+    // child of root === e2e, root === ancestor[-1]
+    if (ancestors.indexOf(figure) === ancestors.length - 2) {
+      return 1200
+    }
+  }
+  return FIGURE_SIZES.center
+}
+
 const figure = {
   matchMdast: matchFigure,
   component: Figure,
@@ -170,50 +192,14 @@ const figure = {
       matchMdast: matchImageParagraph,
       component: FigureImage,
       props: (node, index, parent, { ancestors }) => {
-        let maxDisplayWidth
-        const infobox = ancestors.find(matchInfoBox)
-        if (infobox) {
-          maxDisplayWidth = INFOBOX_IMAGE_SIZES[
-            infobox.data.figureSize || INFOBOX_DEFAULT_IMAGE_SIZE
-          ]
-        }
-        const quote = ancestors.find(matchQuote)
-        if (quote) {
-          maxDisplayWidth = PULLQUOTE_IMAGE_SIZE
-        }
-        const figure = ancestors.find(matchFigure)
-        if (figure) {
-          if (figure.data.size) {
-            maxDisplayWidth = FIGURE_SIZES[figure.data.size]
-          } else {
-            // child of root === e2e, root === ancestor[-1]
-            if (ancestors.indexOf(figure) === ancestors.length - 2) {
-              maxDisplayWidth = 1000
-            } else {
-              maxDisplayWidth = FIGURE_SIZES.center
-            }
-          }
-        }
-        maxDisplayWidth = Math.max(
-          MAX_WIDTH_MOBILE,
-          maxDisplayWidth
-        ) * 2 // retina
-
         const src = node.children[0].url
-
-        const sizeInfo = imageSizeInfo(src)
-        const maxWidth = sizeInfo ? sizeInfo.width : undefined
-        if (maxWidth < maxDisplayWidth) {
-          maxDisplayWidth = maxWidth
-        }
-
-        const resizedSrc = imageResizeUrl(
-          src,
-          `${maxDisplayWidth}x`
-        )
+        const displayWidth = getDisplayWidth(ancestors)
 
         return {
-          src: resizedSrc,
+          ...FigureImage.utils.getSrcSizes(
+            src,
+            displayWidth
+          ),
           alt: node.children[0].alt
         }
       },
@@ -254,32 +240,14 @@ const cover = {
       matchMdast: matchImageParagraph,
       component: FigureImage,
       props: (node, index, parent) => {
-        let maxDisplayWidth
-        if (parent.data.size) {
-          maxDisplayWidth = FIGURE_SIZES[parent.data.size]
-        } else {
-          maxDisplayWidth = 1000
-        }
-        maxDisplayWidth = Math.max(
-          MAX_WIDTH_MOBILE,
-          maxDisplayWidth
-        ) * 2
-
         const src = node.children[0].url
-
-        const sizeInfo = imageSizeInfo(src)
-        const maxWidth = sizeInfo ? sizeInfo.width : undefined
-        if (maxWidth < maxDisplayWidth) {
-          maxDisplayWidth = maxWidth
-        }
-
-        const resizedSrc = imageResizeUrl(
-          src,
-          `${maxDisplayWidth}x`
-        )
+        const displayWidth = FIGURE_SIZES[parent.data.size] || 1500
 
         return {
-          src: resizedSrc,
+          ...FigureImage.utils.getSrcSizes(
+            src,
+            displayWidth
+          ),
           alt: node.children[0].alt
         }
       },

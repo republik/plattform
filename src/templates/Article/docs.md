@@ -36,7 +36,7 @@ In den letzten Jahrzehnten ist das Interesse an Hungerkünstlern sehr zurückgeg
 
 <section><h6>FIGURE</h6>
 
-![](/static/landscape.jpg)
+![](/static/landscape.jpg?size=2000x1411)
 
 Etwas Böses _Foto: Laurent Burst_
 
@@ -112,7 +112,7 @@ Von [Franz Kafka](<>) (Text) und [Everett Collection](<>) (Bilder), 13. Juli 201
 
 <section><h6>FIGURE</h6>
 
-![](/static/landscape.jpg)
+![](/static/landscape.jpg?size=2000x1411)
 
 Etwas Böses _Foto: Laurent Burst_
 
@@ -130,7 +130,7 @@ Simpy unwrap from center
 <Markdown schema={schema}>{`
 <section><h6>FIGURE</h6>
 
-![](/static/landscape.jpg)
+![](/static/landscape.jpg?size=2000x1411)
 
 Etwas Böses _Foto: Laurent Burst_
 
@@ -154,7 +154,7 @@ Values: `undefined` (default), `breakout`
 {"size": "breakout"}
 \`\`\`
 
-![](/static/landscape.jpg)
+![](/static/landscape.jpg?size=2000x1411)
 
 Etwas Böses _Foto: Laurent Burst_
 
@@ -176,13 +176,13 @@ Etwas Böses _Foto: Laurent Burst_
 
 <section><h6>FIGURE</h6>
 
-![](/static/landscape.jpg)
+![](/static/landscape.jpg?size=2000x1411)
 
 <hr /></section>
 
 <section><h6>FIGURE</h6>
 
-![](/static/landscape.jpg)
+![](/static/landscape.jpg?size=2000x1411)
 
 <hr /></section>
 
@@ -212,7 +212,7 @@ Values: `2` (default), `3`, `4`
 
 <section><h6>FIGURE</h6>
 
-![](/static/landscape.jpg)
+![](/static/landscape.jpg?size=2000x1411)
 
 Ein Monster
 
@@ -220,7 +220,7 @@ Ein Monster
 
 <section><h6>FIGURE</h6>
 
-![](/static/landscape.jpg)
+![](/static/landscape.jpg?size=2000x1411)
 
 Wirklich
 
@@ -228,7 +228,7 @@ Wirklich
 
 <section><h6>FIGURE</h6>
 
-![](/static/landscape.jpg)
+![](/static/landscape.jpg?size=2000x1411)
 
 MONSTER!
 
@@ -300,7 +300,7 @@ Genau zu diesem Zwecke erschaffen, immer im Schatten meines großen Bruders «Lo
 
 <section><h6>FIGURE</h6>
 
-![](/static/landscape.jpg)
+![](/static/landscape.jpg?size=2000x1411)
 
 _Foto: Laurent Burst_
 
@@ -374,7 +374,7 @@ Was für eine Erleichterung. Standards sparen Zeit bei den Entwicklungskosten un
 
 <section><h6>FIGURE</h6>
 
-![](/static/landscape.jpg)
+![](/static/landscape.jpg?size=2000x1411)
 
 _Foto: Laurent Burst_
 
@@ -406,7 +406,7 @@ Values: `XS`, `S` (default), `M`, `L`
 
 <section><h6>FIGURE</h6>
 
-![](/static/landscape.jpg)
+![](/static/landscape.jpg?size=2000x1411)
 
 _Foto: Laurent Burst_
 
@@ -438,7 +438,7 @@ Values: `falsy` (default), `true`
 
 <section><h6>FIGURE</h6>
 
-![](/static/landscape.jpg)
+![](/static/landscape.jpg?size=2000x1411)
 
 _Foto: Laurent Burst_
 
