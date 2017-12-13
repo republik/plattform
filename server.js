@@ -11,7 +11,7 @@ module.exports.run = () => {
   const executableSchema = makeExecutableSchema(merge(localModule, [documents]))
 
   // middlewares
-  const middlewares = []
+  const middlewares = [ require('./modules/crowdfundings/express/paymentWebhooks') ]
 
   return server.run(executableSchema, middlewares, t)
 }
