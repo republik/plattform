@@ -11,7 +11,7 @@ A `<TeaserFrontImageHeadline />` should be used.
 
 ```react
 <TeaserFrontImage
-  image='/static/desert.jpg'
+  image='/static/desert.jpg?size=4323x2962'
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
   <TeaserFrontImageHeadline.Editorial>The sand is near</TeaserFrontImageHeadline.Editorial>

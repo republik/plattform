@@ -10,7 +10,7 @@ Supported props:
 A `<TeaserFrontSplitHeadline />` should be used.
 
 ```react
-<TeaserFrontSplit image='/static/rothaus_portrait.jpg'
+<TeaserFrontSplit image='/static/rothaus_portrait.jpg?size=945x1331'
   portrait
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>

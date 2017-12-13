@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp, dUp } from './mediaQueries'
-import Image from '../Figure/Image'
+import { FigureImage } from '../Figure'
 import Text from './Text'
 
 const styles = {
@@ -42,7 +42,7 @@ const ImageBlock = ({
       background,
       cursor: onClick ? 'pointer' : 'default'
     }}>
-      <Image src={image} alt={alt} />
+      <FigureImage {...FigureImage.utils.getSrcSizes(image, 1500)} alt={alt} />
       <div {...styles.textContainer}>
         <Text position={textPosition} color={color} center={center}>
           {children}

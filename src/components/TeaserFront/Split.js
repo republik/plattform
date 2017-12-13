@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp, dUp } from './mediaQueries'
-import Image from '../Figure/Image'
+import { FigureImage } from '../Figure'
 import Text from './Text'
 
 const styles = {
@@ -93,7 +93,7 @@ const Split = ({
           portrait ? styles.imageContainerPortrait : {}
         )}
       >
-        <Image src={image} alt={alt} />
+        <FigureImage {...FigureImage.utils.getSrcSizes(image, 750)} alt={alt} />
       </div>
       <div
         {...css(
