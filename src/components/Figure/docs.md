@@ -39,6 +39,29 @@ Properties
 - `src` string, the image url, mandatory
 - `alt` string, the alternative text
 
+#### Placeholder
+
+If the source of a `<FigureImage />` includes `size` information, the image is wrapped in a placeholder that takes up the expected image size before the image is actually loaded. This is great to avoid jumpy layouting while the page loads. For demonstration purposes here's a figure with a non-existant image source:
+
+```react|span-3
+<Figure>
+  <FigureImage src='/static/missing-file.jpg?size=974x687' alt='' />
+  <FigureCaption>
+    A placeholder for an image with size information.
+  </FigureCaption>
+</Figure>
+```
+
+#### Max Width
+
+If the source of a `<FigureImage />` includes `size` information, the image will never be displayed larger than it actually is.
+
+```react
+<Figure>
+  <FigureImage src='/static/profilePicture1.png?size=200x200' alt='' />
+</Figure>
+```
+
 ### `<FigureGroup />`
 
 A `<FigureGroup />` arranges multiple `<Figure />` elements in columns. Use the `columns` prop to specify `2` to `4` columns, defaults to `2`. There's no auto-cropping magic in place, so image files should already be cropped to the same aspect ratio.
@@ -191,26 +214,4 @@ Supports `breakout` sizes:
     </FigureCaption>
   </FigureGroup>
 </Center>
-```
-
-#### Placeholder
-
-If the source of a `<FigureImage />` includes `size` information, the image is wrapped in a placeholder that takes up the expected image size before the image is actually loaded. This is great to avoid jumpy layouting while the page loads. For demonstration purposes here's a figure group with one non-existant image source:
-
-```react
-<FigureGroup>
-  <Figure>
-    <FigureImage src='/static/missing-file.jpg?size=974x687' alt='' />
-    <FigureCaption>
-      A placeholder for an image with size information.
-    </FigureCaption>
-  </Figure>
-  <Figure>
-    <FigureImage src='/static/landscape.jpg' alt='' />
-    <FigureCaption>
-      A caption for the right photo.{' '}
-      <FigureByline>Photo: Laurent Burst</FigureByline>
-    </FigureCaption>
-  </Figure>
-</FigureGroup>
 ```

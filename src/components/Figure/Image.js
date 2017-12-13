@@ -15,6 +15,9 @@ const styles = {
     backgroundColor: '#eee',
     display: 'block',
     position: 'relative'
+  }),
+  maxWidth: css({
+    display: 'block',
   })
 }
 
@@ -34,16 +37,16 @@ class Image extends Component {
 
     if (isFinite(aspectRatio)) {
       return (
-        <span
-          {...styles.aspectRatio}
-          style={{ paddingBottom: `${100 / aspectRatio}%` }}
-        >
-          <img
-            {...attributes}
-            {...styles.wrappedImage}
-            src={resizedSrc}
-            alt={alt}
-          />
+        <span {...styles.maxWidth} style={{maxWidth: +sizeInfo.width}}>
+          <span
+            {...styles.aspectRatio}
+            style={{paddingBottom: `${100 / aspectRatio}%`}}>
+            <img
+              {...attributes}
+              {...styles.wrappedImage}
+              src={resizedSrc}
+              alt={alt} />
+          </span>
         </span>
       )
     }
