@@ -37,7 +37,10 @@ The `<FigureImage>` component scales the image to 100% of the available space.
 Properties
 
 - `src` string, the image url, mandatory
+- `srcSet` string, alt src, e.g. retina
 - `alt` string, the alternative text
+- `maxWidth` number, e.g. the src width you don't want to exceed
+- `size` object, pre-calculated `width` and `height`
 
 #### Placeholder
 
@@ -74,6 +77,30 @@ You may provide an `maxWidth`, e.g. the resolution of the file.
 <Figure>
   <FigureImage src='/static/profilePicture1.png' maxWidth={200} alt='' />
 </Figure>
+```
+
+#### Utils
+
+`FigureImage.utils.getResizedSrcs(src, displayWidth)`
+Tries to get size information from the url and if successful returns a resized `src`, a `srcSet` with retina resolution, `size` and `maxWidth`.
+
+You can directly pass the result as props to `FigureImage`:
+
+```react|span-3
+<FigureImage
+  {...FigureImage.utils.getResizedSrcs(
+    '/static/desert.jpg?size=4323x2962',
+    1500
+  )} />
+```
+
+```react|no-source,span-3
+<pre style={{backgroundColor: '#fff', padding: 20, margin: -20, overflow: 'auto'}}>
+  {JSON.stringify(FigureImage.utils.getResizedSrcs(
+    '/static/desert.jpg?size=4323x2962',
+    1500
+  ), null, 2)}
+</pre>
 ```
 
 ### `<FigureGroup />`

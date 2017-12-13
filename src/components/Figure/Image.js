@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { imageSizeInfo } from 'mdast-react-render/lib/utils'
-import { getSrcSizes } from './utils'
+import { getResizedSrcs } from './utils'
 
 const styles = {
   image: css({
@@ -74,7 +74,7 @@ Image.propTypes = {
 }
 
 Image.utils = {
-  getSrcSizes: getSrcSizes
+  getResizedSrcs
 }
 
 export default Image

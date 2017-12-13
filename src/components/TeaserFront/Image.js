@@ -42,7 +42,7 @@ const ImageBlock = ({
       background,
       cursor: onClick ? 'pointer' : 'default'
     }}>
-      <FigureImage {...FigureImage.utils.getSrcSizes(image, 1500)} alt={alt} />
+      <FigureImage {...FigureImage.utils.getResizedSrcs(image, 1500)} alt={alt} />
       <div {...styles.textContainer}>
         <Text position={textPosition} color={color} center={center}>
           {children}

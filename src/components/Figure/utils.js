@@ -6,7 +6,7 @@ import {
   MAX_WIDTH_MOBILE
 } from '../Center'
 
-export const getSrcSizes = (src, displayWidth) => {
+export const getResizedSrcs = (src, displayWidth) => {
   const sizeInfo = imageSizeInfo(src)
   if (!sizeInfo) {
     return {

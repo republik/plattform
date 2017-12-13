@@ -93,7 +93,7 @@ const Split = ({
           portrait ? styles.imageContainerPortrait : {}
         )}
       >
-        <FigureImage {...FigureImage.utils.getSrcSizes(image, 750)} alt={alt} />
+        <FigureImage {...FigureImage.utils.getResizedSrcs(image, 750)} alt={alt} />
       </div>
       <div
         {...css(

@@ -196,7 +196,7 @@ const figure = {
         const displayWidth = getDisplayWidth(ancestors)
 
         return {
-          ...FigureImage.utils.getSrcSizes(
+          ...FigureImage.utils.getResizedSrcs(
             src,
             displayWidth
           ),
@@ -244,7 +244,7 @@ const cover = {
         const displayWidth = FIGURE_SIZES[parent.data.size] || 1500
 
         return {
-          ...FigureImage.utils.getSrcSizes(
+          ...FigureImage.utils.getResizedSrcs(
             src,
             displayWidth
           ),
