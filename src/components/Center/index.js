@@ -53,12 +53,14 @@ export const breakoutStyles = {
   breakout: css({
     [breakoutUp]: {
       marginLeft: -BREAKOUT,
-      marginRight: -BREAKOUT
+      marginRight: -BREAKOUT,
+      width: `calc(100% + ${BREAKOUT * 2}px)`
     }
   }),
   breakoutLeft: css({
     [breakoutUp]: {
-      marginLeft: -BREAKOUT
+      marginLeft: -BREAKOUT,
+      width: `calc(100% + ${BREAKOUT}px)`
     }
   }),
   float: css({
