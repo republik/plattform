@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { gql, graphql } from 'react-apollo'
 import { css } from 'glamor'
 import { compose } from 'redux'
-import { A, Button, Label } from '@project-r/styleguide'
+import { Label } from '@project-r/styleguide'
 import Loader from '../Loader'
 import withT from '../../lib/withT'
 
@@ -107,10 +107,7 @@ class EditSidebar extends Component {
     const {
       t,
       commit,
-      isNew,
       uncommittedChanges,
-      commitHandler,
-      revertHandler,
       warnings,
       data = {}
     } = this.props
@@ -134,39 +131,6 @@ class EditSidebar extends Component {
                 commits={repo.commits}
               />
             )}
-            <div {...css(styles.uncommittedChanges)}>
-              <div style={{ marginBottom: 10 }}>
-                <Label style={{ fontSize: 12 }}>
-                  <span>
-                    {isNew ? (
-                      t('commit/status/new')
-                    ) : (
-                      t(
-                        uncommittedChanges
-                          ? 'commit/status/uncommitted'
-                          : 'commit/status/committed'
-                      )
-                    )}
-                  </span>
-                </Label>
-              </div>
-              <Button
-                primary
-                block
-                disabled={!uncommittedChanges && !isNew}
-                onClick={commitHandler}
-                style={styles.button}
-              >
-                {t('commit/button')}
-              </Button>
-              {!!uncommittedChanges && (
-                <div style={{ textAlign: 'center', marginTop: 10 }}>
-                  <A href='#' onClick={revertHandler}>
-                    {t('commit/revert')}
-                  </A>
-                </div>
-              )}
-            </div>
             {!!repo && (
               <div>
                 <Label>{t('checklist/title')}</Label>

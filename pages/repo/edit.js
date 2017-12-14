@@ -14,6 +14,7 @@ import Editor from '../../components/editor'
 import EditorSidebar from '../../components/editor/Sidebar'
 
 import VersionControl from '../../components/VersionControl'
+import CommitButton from '../../components/VersionControl/CommitButton'
 import Sidebar from '../../components/Sidebar'
 
 import Loader from '../../components/Loader'
@@ -414,7 +415,8 @@ class EditorPage extends Component {
       })
   }
 
-  toggleSidebarHandler () {
+  toggleSidebarHandler (event) {
+    event.preventDefault()
     this.setState(state => ({
       ...state,
       showSidebar: !state.showSidebar
@@ -463,19 +465,16 @@ class EditorPage extends Component {
               <SettingsIcon size='32' />
             </Button>
           </Frame.Header.Section>
-          {!showSidebar && <Frame.Header.Section align='right'>
+          <Frame.Header.Section align='right'>
+            <CommitButton
+              isNew={isNew}
+              uncommittedChanges={uncommittedChanges}
+              onCommit={this.commitHandler}
+              onRevert={this.revertHandler}
+              />
 
-            <Button
-              style={{ margin: '9px 2px 9px 0', width: '180px' }}
-              primary
-              block
-              disabled={!uncommittedChanges && !isNew}
-              onClick={this.commitHandler}
-              >
-                Commit
-              </Button>
-            </Frame.Header.Section>
-          }
+          </Frame.Header.Section>
+
         </Frame.Header>
         <Frame.Body raw>
           <Loader loading={showLoading} error={error} render={() => (
@@ -487,7 +486,14 @@ class EditorPage extends Component {
                 onChange={this.changeHandler}
                 onDocumentChange={this.documentChangeHandler}
               />
-              <Sidebar selectedTabId='workflow' isOpen={showSidebar}>
+              <Sidebar selectedTabId='edit' isOpen={showSidebar}>
+                <Sidebar.Tab tabId='edit' label='Editieren'>
+                  <EditorSidebar
+                    schema={schema}
+                    onChange={this.changeHandler}
+                    value={editorState}
+                  />
+                </Sidebar.Tab>
                 <Sidebar.Tab tabId='workflow' label='Workflow'>
                   <VersionControl
                     repoId={repoId}
@@ -498,13 +504,6 @@ class EditorPage extends Component {
                     commitHandler={this.commitHandler}
                     revertHandler={this.revertHandler}
                     width={sidebarWidth}
-                  />
-                </Sidebar.Tab>
-                <Sidebar.Tab tabId='edit' label='Editieren'>
-                  <EditorSidebar
-                    schema={schema}
-                    onChange={this.changeHandler}
-                    value={editorState}
                   />
                 </Sidebar.Tab>
               </Sidebar>
