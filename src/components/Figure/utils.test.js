@@ -12,6 +12,24 @@ test('getResizedSrcs: no size info', assert => {
   assert.end()
 })
 
+test('getResizedSrcs: undefined src', assert => {
+  let props = {}
+  assert.doesNotThrow(
+    () => {
+      props = getResizedSrcs(undefined, 2000)
+    },
+    'handle undefined src gracefully'
+  )
+  
+
+  assert.equal(props.src, undefined)
+  assert.equal(props.size, null)
+  assert.equal(props.srcSet, undefined)
+  assert.equal(props.maxWidth, undefined)
+
+  assert.end()
+})
+
 test('getResizedSrcs: size info', assert => {
   const props = getResizedSrcs('image.jpg?size=4500x2500', 2000)
   assert.equal(props.src, 'image.jpg?size=4500x2500&resize=2000x')

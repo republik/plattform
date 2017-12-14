@@ -7,6 +7,11 @@ import {
 } from '../Center'
 
 export const getResizedSrcs = (src, displayWidth) => {
+  if (!src) {
+    return {
+      size: null
+    }
+  }
   const sizeInfo = imageSizeInfo(src)
   if (!sizeInfo) {
     return {
