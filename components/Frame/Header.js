@@ -36,7 +36,7 @@ const styles = {
 }
 
 export const Section = ({ align, children }) => (
-  <div {...styles[align]}>
+  <div {...styles[align || 'left']}>
     {children}
   </div>
 )
