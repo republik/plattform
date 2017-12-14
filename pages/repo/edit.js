@@ -9,6 +9,10 @@ import withData from '../../lib/apollo/withData'
 import withAuthorization from '../../components/Auth/withAuthorization'
 
 import Frame from '../../components/Frame'
+import FrameBody from '../../components/Frame/Body'
+import FrameHeader from '../../components/Frame/Header'
+import FrameNav from '../../components/Frame/Nav'
+import FrameMe from '../../components/Frame/Me'
 import RepoNav from '../../components/Repo/Nav'
 import Editor from '../../components/editor'
 import EditorSidebar from '../../components/editor/Sidebar'
@@ -24,6 +28,9 @@ import { errorToString } from '../../lib/utils/errors'
 import initLocalStore from '../../lib/utils/localStorage'
 
 import { getSchema } from '../../components/Templates'
+
+import { Button } from '@project-r/styleguide'
+import SettingsIcon from 'react-icons/lib/md/settings'
 
 import createDebug from 'debug'
 
@@ -113,6 +120,7 @@ class EditorPage extends Component {
   constructor (...args) {
     super(...args)
 
+    this.toggleSidebarHandler = this.toggleSidebarHandler.bind(this)
     this.changeHandler = this.changeHandler.bind(this)
     this.commitHandler = this.commitHandler.bind(this)
     this.documentChangeHandler = debounce(
@@ -130,7 +138,8 @@ class EditorPage extends Component {
       editorState: null,
       repo: null,
       uncommittedChanges: null,
-      warnings: []
+      warnings: [],
+      showSidebar: false
     }
   }
 
@@ -409,6 +418,13 @@ class EditorPage extends Component {
       })
   }
 
+  toggleSidebarHandler () {
+    this.setState(state => ({
+      ...state,
+      showSidebar: !state.showSidebar
+    }))
+  }
+
   render () {
     const { url, data = {} } = this.props
     const { repoId, commitId } = url.query
@@ -418,7 +434,8 @@ class EditorPage extends Component {
       editorState,
       committing,
       uncommittedChanges,
-      warnings
+      warnings,
+      showSidebar
     } = this.state
     const sidebarWidth = 200
 
@@ -426,40 +443,78 @@ class EditorPage extends Component {
     const error = data.error || this.state.error
     const showLoading = committing || loading || (!schema && !error)
 
+    const nav = [
+      <RepoNav key='repo-nav' route='repo/edit' url={url} isNew={isNew} />
+    ]
+
     return (
-      <Frame url={url} raw nav={<RepoNav route='repo/edit' url={url} isNew={isNew} />}>
-        <Loader loading={showLoading} error={error} render={() => (
-          <div>
-            <Editor
-              ref={this.editorRef}
-              schema={schema}
-              value={editorState}
-              onChange={this.changeHandler}
-              onDocumentChange={this.documentChangeHandler}
+      <Frame url={url} raw nav={nav}>
+        <FrameHeader>
+          <FrameHeader.Section align='left'>
+            <FrameNav url={url}>
+              <RepoNav route='repo/edit' url={url} isNew={isNew} />
+            </FrameNav>
+          </FrameHeader.Section>
+          <FrameHeader.Section align='right'>
+            <FrameMe />
+          </FrameHeader.Section>
+          <FrameHeader.Section align='right'>
+            <Button
+              style={{ margin: '9px 0 9px 0', minWidth: '60px' }}
+              block
+              onClick={this.toggleSidebarHandler}
+          >
+              <SettingsIcon size='32' />
+            </Button>
+          </FrameHeader.Section>
+          {!showSidebar && <FrameHeader.Section align='right'>
+
+            <Button
+              style={{ margin: '9px 2px 9px 0', width: '180px' }}
+              primary
+              block
+              disabled={!uncommittedChanges && !isNew}
+              onClick={this.commitHandler}
+              >
+                Commit
+              </Button>
+            </FrameHeader.Section>
+          }
+        </FrameHeader>
+        <FrameBody raw>
+          <Loader loading={showLoading} error={error} render={() => (
+            <div>
+              <Editor
+                ref={this.editorRef}
+                schema={schema}
+                value={editorState}
+                onChange={this.changeHandler}
+                onDocumentChange={this.documentChangeHandler}
               />
-            <Sidebar selectedTabId='workflow'>
-              <Sidebar.Tab tabId='workflow' label='Workflow'>
-                <VersionControl
-                  repoId={repoId}
-                  commit={repo && (repo.commit || repo.latestCommit)}
-                  isNew={isNew}
-                  uncommittedChanges={uncommittedChanges}
-                  warnings={warnings}
-                  commitHandler={this.commitHandler}
-                  revertHandler={this.revertHandler}
-                  width={sidebarWidth}
-              />
-              </Sidebar.Tab>
-              <Sidebar.Tab tabId='edit' label='Editieren'>
-                <EditorSidebar
-                  schema={schema}
-                  onChange={this.changeHandler}
-                  value={editorState}
-                />
-              </Sidebar.Tab>
-            </Sidebar>
-          </div>
+              <Sidebar selectedTabId='workflow' isOpen={showSidebar}>
+                <Sidebar.Tab tabId='workflow' label='Workflow'>
+                  <VersionControl
+                    repoId={repoId}
+                    commit={repo && (repo.commit || repo.latestCommit)}
+                    isNew={isNew}
+                    uncommittedChanges={uncommittedChanges}
+                    warnings={warnings}
+                    commitHandler={this.commitHandler}
+                    revertHandler={this.revertHandler}
+                    width={sidebarWidth}
+                  />
+                </Sidebar.Tab>
+                <Sidebar.Tab tabId='edit' label='Editieren'>
+                  <EditorSidebar
+                    schema={schema}
+                    onChange={this.changeHandler}
+                    value={editorState}
+                  />
+                </Sidebar.Tab>
+              </Sidebar>
+            </div>
         )} />
+        </FrameBody>
       </Frame>
     )
   }

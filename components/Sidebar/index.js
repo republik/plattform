@@ -7,7 +7,7 @@ const styles = {
   container: css({
     position: 'fixed',
     top: HEADER_HEIGHT,
-    right: 0,
+    right: -340,
     bottom: 0,
     width: 340,
     overflow: 'auto',
@@ -16,7 +16,11 @@ const styles = {
     opacity: 1,
     zIndex: ZINDEX_SIDEBAR,
     padding: 10,
-    boxShadow: `-1px 0px 2px ${colors.divider}`
+    boxShadow: `-1px 0px 2px ${colors.divider}`,
+    transition: 'right 0.2s ease',
+    '&.open': {
+      right: 0
+    }
   }),
   tabButtonContainer: css({
     borderBottom: `1px solid ${colors.divider}`,
@@ -68,7 +72,7 @@ export default class Sidebar extends Component {
   }
 
   render () {
-    const { children } = this.props
+    const { children, isOpen } = this.props
     const { selectedTabId } = this.state
 
     const tabProperties = children.map(
@@ -101,7 +105,7 @@ export default class Sidebar extends Component {
     )
 
     return (
-      <div {...styles.container}>
+      <div {...styles.container} className={isOpen ? 'open' : ''}>
         <div {...styles.tabButtonContainer}>
           {tabButtons}
         </div>
