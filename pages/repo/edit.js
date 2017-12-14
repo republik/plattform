@@ -13,7 +13,7 @@ import RepoNav from '../../components/Repo/Nav'
 import Editor from '../../components/editor'
 import EditorSidebar from '../../components/editor/Sidebar'
 
-import History from '../../components/History'
+import VersionControl from '../../components/VersionControl'
 import Sidebar from '../../components/Sidebar'
 
 import Loader from '../../components/Loader'
@@ -437,9 +437,9 @@ class EditorPage extends Component {
               onChange={this.changeHandler}
               onDocumentChange={this.documentChangeHandler}
               />
-            <Sidebar selectedTabId='history'>
-              <Sidebar.Tab tabId='history' label='History'>
-                <History
+            <Sidebar selectedTabId='workflow'>
+              <Sidebar.Tab tabId='workflow' label='Workflow'>
+                <VersionControl
                   repoId={repoId}
                   commit={repo && (repo.commit || repo.latestCommit)}
                   isNew={isNew}

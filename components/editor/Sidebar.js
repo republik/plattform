@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { initModule, getAllModules, getFromModules } from './'
-import { Interaction, Label } from '@project-r/styleguide'
+import { Interaction, Label, colors } from '@project-r/styleguide'
 
 const Sidebar = ({
   textFormatButtons,
@@ -46,7 +46,7 @@ const Sidebar = ({
         ))
       }
     </Interaction.P>
-    <div style={{marginTop: 20}}>
+    <div style={{marginTop: 10, paddingTop: 20, borderTop: `1px solid ${colors.divider}`}}>
       {
         propertyForms.map((Form, i) => (
           <Form
