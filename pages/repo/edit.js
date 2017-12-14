@@ -14,7 +14,7 @@ import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
 
 import Editor from '../../components/editor'
-import EditorSidebar from '../../components/editor/Sidebar'
+import EditorUI from '../../components/editor/UI'
 import slateReactDnDAdapter from '../../components/editor/utils/slateReactDnDAdapter'
 
 import VersionControl from '../../components/VersionControl'
@@ -497,7 +497,7 @@ class EditorPage extends Component {
               />
                 <Sidebar selectedTabId='edit' isOpen={showSidebar}>
                   <Sidebar.Tab tabId='edit' label='Editieren'>
-                    <EditorSidebar
+                    <EditorUI
                       schema={schema}
                       onChange={this.changeHandler}
                       value={editorState}
