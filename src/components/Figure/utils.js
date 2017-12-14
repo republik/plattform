@@ -42,7 +42,7 @@ export const getResizedSrcs = (src, displayWidth) => {
       : maxWidth
     ]
       .map(size => [
-        imageResizeUrl(src, size),
+        imageResizeUrl(src, `${size}x`),
         `${size}w`
       ].join(' '))
       .join(',')
