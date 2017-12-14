@@ -160,6 +160,17 @@ ReactDOM.render(
             },
             src: require('./components/RawHtml/docs.md')
           },
+          {
+            path: '/videoplayer',
+            title: 'VideoPlayer',
+            imports: {
+              css,
+              ...require('./components/Typography'),
+              ...require('./components/VideoPlayer'),
+              Center: require('./components/Center'),
+            },
+            src: require('./components/VideoPlayer/docs.md')
+          },
         ]
       },
       {
