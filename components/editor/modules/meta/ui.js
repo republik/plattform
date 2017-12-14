@@ -8,7 +8,7 @@ import withT from '../../../../lib/withT'
 import MetaForm from '../../utils/MetaForm'
 import FBPreview from './FBPreview'
 import TwitterPreview from './TwitterPreview'
-import SidebarForm from '../../SidebarForm'
+import UIForm from '../../UIForm'
 
 const styles = {
   container: css({
@@ -84,7 +84,7 @@ const MetaData = ({value, editor, additionalFields = [], customFields = [], teas
         </Interaction.H2>
         <br />
         <MetaForm data={genericData} onInputChange={onInputChange} black getWidth={getWidth} />
-        <SidebarForm getWidth={() => '50%'}>
+        <UIForm getWidth={() => '50%'}>
           {customFields.map(customField => {
             const label = customField.label || t(`metaData/field/${customField.key}`, undefined, customField.key)
             const value = node.data.get(customField.key)
@@ -103,7 +103,7 @@ const MetaData = ({value, editor, additionalFields = [], customFields = [], teas
               value={value}
               onChange={onChange} />
           })}
-        </SidebarForm>
+        </UIForm>
         {!!Teaser && (<div>
           <Label>{t('metaData/preview')}</Label><br />
           <Teaser {...node.data.toJS()} />

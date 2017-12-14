@@ -4,7 +4,7 @@ import React, { Component} from 'react'
 import { gql, graphql } from 'react-apollo'
 import { Label, Field, Autocomplete } from '@project-r/styleguide'
 import LinkIcon from 'react-icons/lib/fa/chain'
-import SidebarForm from '../../SidebarForm'
+import UIForm from '../../UIForm'
 import createOnFieldChange from '../../utils/createOnFieldChange'
 import withT from '../../../../lib/withT'
 
@@ -135,7 +135,7 @@ export default ({TYPE}) => {
           .map((node, i) => {
             const onInputChange = handlerFactory(node)
             return (
-              <SidebarForm key={`link-form-${i}`}>
+              <UIForm key={`link-form-${i}`}>
                 <Field
                   label={t(`metaData/field/href`, undefined, 'href')}
                   value={node.data.get('href')}
@@ -147,7 +147,7 @@ export default ({TYPE}) => {
                   onChange={onInputChange('title')}
                 />
                 <SearchUserForm onChange={authorChange(onChange, value, node)} />
-              </SidebarForm>
+              </UIForm>
             )
           })
       }
