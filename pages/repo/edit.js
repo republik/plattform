@@ -9,10 +9,6 @@ import withData from '../../lib/apollo/withData'
 import withAuthorization from '../../components/Auth/withAuthorization'
 
 import Frame from '../../components/Frame'
-import FrameBody from '../../components/Frame/Body'
-import FrameHeader from '../../components/Frame/Header'
-import FrameNav from '../../components/Frame/Nav'
-import FrameMe from '../../components/Frame/Me'
 import RepoNav from '../../components/Repo/Nav'
 import Editor from '../../components/editor'
 import EditorSidebar from '../../components/editor/Sidebar'
@@ -449,16 +445,16 @@ class EditorPage extends Component {
 
     return (
       <Frame url={url} raw nav={nav}>
-        <FrameHeader>
-          <FrameHeader.Section align='left'>
-            <FrameNav url={url}>
+        <Frame.Header>
+          <Frame.Header.Section align='left'>
+            <Frame.Nav url={url}>
               <RepoNav route='repo/edit' url={url} isNew={isNew} />
-            </FrameNav>
-          </FrameHeader.Section>
-          <FrameHeader.Section align='right'>
-            <FrameMe />
-          </FrameHeader.Section>
-          <FrameHeader.Section align='right'>
+            </Frame.Nav>
+          </Frame.Header.Section>
+          <Frame.Header.Section align='right'>
+            <Frame.Me />
+          </Frame.Header.Section>
+          <Frame.Header.Section align='right'>
             <Button
               style={{ margin: '9px 0 9px 0', minWidth: '60px' }}
               block
@@ -466,8 +462,8 @@ class EditorPage extends Component {
           >
               <SettingsIcon size='32' />
             </Button>
-          </FrameHeader.Section>
-          {!showSidebar && <FrameHeader.Section align='right'>
+          </Frame.Header.Section>
+          {!showSidebar && <Frame.Header.Section align='right'>
 
             <Button
               style={{ margin: '9px 2px 9px 0', width: '180px' }}
@@ -478,10 +474,10 @@ class EditorPage extends Component {
               >
                 Commit
               </Button>
-            </FrameHeader.Section>
+            </Frame.Header.Section>
           }
-        </FrameHeader>
-        <FrameBody raw>
+        </Frame.Header>
+        <Frame.Body raw>
           <Loader loading={showLoading} error={error} render={() => (
             <div>
               <Editor
@@ -514,7 +510,7 @@ class EditorPage extends Component {
               </Sidebar>
             </div>
         )} />
-        </FrameBody>
+        </Frame.Body>
       </Frame>
     )
   }

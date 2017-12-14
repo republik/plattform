@@ -124,20 +124,32 @@ class EditorPage extends Component {
     const { repoId } = url.query
 
     return (
-      <Frame url={url} raw nav={<RepoNav route='repo/tree' url={url} />}>
-        <Loader loading={loading} error={error} render={() => (
-          <div>
-            <br />
-            <NarrowContainer>
-              <CurrentPublications repoId={repoId} />
-            </NarrowContainer>
-            <Tree
-              commits={repo.commits}
-              milestones={repo.milestones}
-              repoId={repoId}
-            />
-          </div>
+      <Frame>
+        <Frame.Header>
+          <Frame.Header.Section align='left'>
+            <Frame.Nav url={url}>
+              <RepoNav route='repo/tree' url={url} />
+            </Frame.Nav>
+          </Frame.Header.Section>
+          <Frame.Header.Section align='right'>
+            <Frame.Me />
+          </Frame.Header.Section>
+        </Frame.Header>
+        <Frame.Body raw>
+          <Loader loading={loading} error={error} render={() => (
+            <div>
+              <br />
+              <NarrowContainer>
+                <CurrentPublications repoId={repoId} />
+              </NarrowContainer>
+              <Tree
+                commits={repo.commits}
+                milestones={repo.milestones}
+                repoId={repoId}
+          />
+            </div>
         )} />
+        </Frame.Body>
       </Frame>
     )
   }
