@@ -363,6 +363,10 @@
       "value": "Commite um das neue Dokument zu erstellen"
     },
     {
+      "key": "commit/status/new/short",
+      "value": "Neues Dokument"
+    },
+    {
       "key": "commit/status/committed",
       "value": "Keine Änderungen"
     },

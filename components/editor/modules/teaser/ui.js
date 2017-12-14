@@ -53,7 +53,7 @@ const styles = {
   }),
   ui: css({
     position: 'absolute',
-    zIndex: 12,
+    zIndex: 10,
     margin: 0,
     padding: 0,
     top: 0,

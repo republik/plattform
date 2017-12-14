@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { DragDropContextProvider } from 'react-dnd'
+
 import { compose } from 'redux'
 import { Router } from '../../lib/routes'
 import { gql, graphql } from 'react-apollo'
@@ -10,8 +12,10 @@ import withAuthorization from '../../components/Auth/withAuthorization'
 
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
+
 import Editor from '../../components/editor'
 import EditorSidebar from '../../components/editor/Sidebar'
+import slateReactDnDAdapter from '../../components/editor/utils/slateReactDnDAdapter'
 
 import VersionControl from '../../components/VersionControl'
 import CommitButton from '../../components/VersionControl/CommitButton'
@@ -32,6 +36,10 @@ import SettingsIcon from 'react-icons/lib/md/settings'
 import createDebug from 'debug'
 
 const debug = createDebug('publikator:pages:edit')
+
+const {
+  SlateHTML5Backend
+} = slateReactDnDAdapter()
 
 const fragments = {
   commit: gql`
@@ -478,36 +486,38 @@ class EditorPage extends Component {
         </Frame.Header>
         <Frame.Body raw>
           <Loader loading={showLoading} error={error} render={() => (
-            <div>
-              <Editor
-                ref={this.editorRef}
-                schema={schema}
-                value={editorState}
-                onChange={this.changeHandler}
-                onDocumentChange={this.documentChangeHandler}
+            <DragDropContextProvider backend={SlateHTML5Backend}>
+              <div>
+                <Editor
+                  ref={this.editorRef}
+                  schema={schema}
+                  value={editorState}
+                  onChange={this.changeHandler}
+                  onDocumentChange={this.documentChangeHandler}
               />
-              <Sidebar selectedTabId='edit' isOpen={showSidebar}>
-                <Sidebar.Tab tabId='edit' label='Editieren'>
-                  <EditorSidebar
-                    schema={schema}
-                    onChange={this.changeHandler}
-                    value={editorState}
+                <Sidebar selectedTabId='edit' isOpen={showSidebar}>
+                  <Sidebar.Tab tabId='edit' label='Editieren'>
+                    <EditorSidebar
+                      schema={schema}
+                      onChange={this.changeHandler}
+                      value={editorState}
                   />
-                </Sidebar.Tab>
-                <Sidebar.Tab tabId='workflow' label='Workflow'>
-                  <VersionControl
-                    repoId={repoId}
-                    commit={repo && (repo.commit || repo.latestCommit)}
-                    isNew={isNew}
-                    uncommittedChanges={uncommittedChanges}
-                    warnings={warnings}
-                    commitHandler={this.commitHandler}
-                    revertHandler={this.revertHandler}
-                    width={sidebarWidth}
+                  </Sidebar.Tab>
+                  <Sidebar.Tab tabId='workflow' label='Workflow'>
+                    <VersionControl
+                      repoId={repoId}
+                      commit={repo && (repo.commit || repo.latestCommit)}
+                      isNew={isNew}
+                      uncommittedChanges={uncommittedChanges}
+                      warnings={warnings}
+                      commitHandler={this.commitHandler}
+                      revertHandler={this.revertHandler}
+                      width={sidebarWidth}
                   />
-                </Sidebar.Tab>
-              </Sidebar>
-            </div>
+                  </Sidebar.Tab>
+                </Sidebar>
+              </div>
+            </DragDropContextProvider>
         )} />
         </Frame.Body>
       </Frame>

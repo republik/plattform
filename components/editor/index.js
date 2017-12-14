@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Editor as SlateEditor } from 'slate-react'
 import { css } from 'glamor'
-import { DragDropContextProvider } from 'react-dnd'
 
 import slateReactDnDAdapter from './utils/slateReactDnDAdapter'
 
@@ -36,8 +35,7 @@ import createInfoBoxModule from './modules/infobox'
 import createQuoteModule from './modules/quote'
 
 const {
-  ReactDnDPlugin,
-  SlateHTML5Backend
+  ReactDnDPlugin
 } = slateReactDnDAdapter()
 
 const moduleCreators = {
@@ -165,28 +163,26 @@ class Editor extends Component {
   render () {
     const { value } = this.props
     return (
-      <DragDropContextProvider backend={SlateHTML5Backend}>
-        <Container>
-          <Loader loading={!value} render={() =>
-            <Document key='document'>
-              <SlateEditor
-                ref={this.slateRef}
-                value={value}
-                onChange={this.onChange}
-                plugins={this.plugins} />
-            </Document>
-          } />
-          { /* A full slate instance to normalize
-               initially loaded docs but ignoring
-               change events from it */ }
-          {!value && (
+      <Container>
+        <Loader loading={!value} render={() =>
+          <Document key='document'>
             <SlateEditor
               ref={this.slateRef}
-              value={this.newDocument({title: 'Loading...'})}
+              value={value}
+              onChange={this.onChange}
               plugins={this.plugins} />
+          </Document>
+          } />
+        { /* A full slate instance to normalize
+               initially loaded docs but ignoring
+               change events from it */ }
+        {!value && (
+        <SlateEditor
+          ref={this.slateRef}
+          value={this.newDocument({title: 'Loading...'})}
+          plugins={this.plugins} />
           )}
-        </Container>
-      </DragDropContextProvider>
+      </Container>
     )
   }
 }

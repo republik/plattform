@@ -109,9 +109,14 @@ class EditSidebar extends Component {
       commit,
       uncommittedChanges,
       warnings,
+      isNew,
       data = {}
     } = this.props
     const { loading, error, repo } = data
+
+    if (isNew) {
+      return <span>{t('commit/status/new')}</span>
+    }
 
     return (
       <Loader

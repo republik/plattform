@@ -15,10 +15,12 @@ const CommitButton = ({ t, uncommittedChanges, isNew, onCommit, onRevert }) => (
     </Button>
 
     <div style={{ textAlign: 'center', fontSize: '14px' }}>
-      {uncommittedChanges
+      {!isNew && uncommittedChanges
           ? <A href='#' onClick={onRevert}>
             {t('commit/revert')}
           </A>
+          : isNew
+          ? <span>{t('commit/status/new/short')}</span>
           : <span>{t('commit/status/committed')}</span>
         }
     </div>
