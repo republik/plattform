@@ -11,8 +11,11 @@ import withAuthorization from '../../components/Auth/withAuthorization'
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
 import Editor from '../../components/editor'
+import EditorSidebar from '../../components/editor/Sidebar'
 
-import EditSidebar from '../../components/EditSidebar'
+import History from '../../components/History'
+import Sidebar from '../../components/Sidebar'
+
 import Loader from '../../components/Loader'
 import withT from '../../lib/withT'
 import withMe from '../../lib/withMe'
@@ -427,25 +430,34 @@ class EditorPage extends Component {
       <Frame url={url} raw nav={<RepoNav route='repo/edit' url={url} isNew={isNew} />}>
         <Loader loading={showLoading} error={error} render={() => (
           <div>
-            <div style={{paddingRight: sidebarWidth}}>
-              <Editor
-                ref={this.editorRef}
-                schema={schema}
-                value={editorState}
-                onChange={this.changeHandler}
-                onDocumentChange={this.documentChangeHandler}
+            <Editor
+              ref={this.editorRef}
+              schema={schema}
+              value={editorState}
+              onChange={this.changeHandler}
+              onDocumentChange={this.documentChangeHandler}
               />
-            </div>
-            <EditSidebar
-              repoId={repoId}
-              commit={repo && (repo.commit || repo.latestCommit)}
-              isNew={isNew}
-              uncommittedChanges={uncommittedChanges}
-              warnings={warnings}
-              commitHandler={this.commitHandler}
-              revertHandler={this.revertHandler}
-              width={sidebarWidth}
-            />
+            <Sidebar selectedTabId='history'>
+              <Sidebar.Tab tabId='history' label='History'>
+                <History
+                  repoId={repoId}
+                  commit={repo && (repo.commit || repo.latestCommit)}
+                  isNew={isNew}
+                  uncommittedChanges={uncommittedChanges}
+                  warnings={warnings}
+                  commitHandler={this.commitHandler}
+                  revertHandler={this.revertHandler}
+                  width={sidebarWidth}
+              />
+              </Sidebar.Tab>
+              <Sidebar.Tab tabId='edit' label='Editieren'>
+                <EditorSidebar
+                  schema={schema}
+                  onChange={this.changeHandler}
+                  value={editorState}
+                />
+              </Sidebar.Tab>
+            </Sidebar>
           </div>
         )} />
       </Frame>

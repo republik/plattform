@@ -1,23 +1,6 @@
-import React from 'react'
-import { css } from 'glamor'
-
-import { Interaction, Label, colors } from '@project-r/styleguide'
-import { HEADER_HEIGHT, ZINDEX_SIDEBAR } from '../Frame/constants'
-
-const styles = {
-  sidebar: css({
-    position: 'fixed',
-    zIndex: ZINDEX_SIDEBAR,
-    backgroundColor: '#fff',
-    top: HEADER_HEIGHT,
-    left: 0,
-    bottom: 0,
-    width: 170,
-    overflow: 'auto',
-    padding: '0 7px 10px',
-    borderRight: `1px solid ${colors.divider}`
-  })
-}
+import React, { Component } from 'react'
+import { initModule, getAllModules, getFromModules } from './'
+import { Interaction, Label } from '@project-r/styleguide'
 
 const Sidebar = ({
   textFormatButtons,
@@ -26,7 +9,7 @@ const Sidebar = ({
   propertyForms,
   value, onChange
 }) => (
-  <div {...css(styles.sidebar)}>
+  <div>
     <Interaction.P>
       <Label>Text</Label>
       <br />
@@ -77,4 +60,49 @@ const Sidebar = ({
   </div>
 )
 
-export default Sidebar
+export default class extends Component {
+  constructor (props, ...args) {
+    super(props, ...args)
+
+    const rootRule = props.schema.rules[0]
+    const rootModule = initModule(rootRule)
+
+    const allModules = getAllModules(rootModule)
+    const uniqModules = allModules.filter((m, i, a) => a.findIndex(mm => mm.TYPE === m.TYPE) === i)
+
+    this.textFormatButtons = getFromModules(
+      uniqModules,
+      m => m.ui && m.ui.textFormatButtons
+    )
+
+    this.blockFormatButtons = getFromModules(
+      uniqModules,
+      m => m.ui && m.ui.blockFormatButtons
+    )
+
+    this.insertButtons = getFromModules(
+      uniqModules,
+      m => m.ui && m.ui.insertButtons
+    )
+
+    this.propertyForms = getFromModules(
+      uniqModules,
+      m => m.ui && m.ui.forms
+    )
+  }
+
+  render () {
+    if (!this.props.value) {
+      return null
+    }
+    return (
+      <Sidebar
+        textFormatButtons={this.textFormatButtons}
+        blockFormatButtons={this.blockFormatButtons}
+        insertButtons={this.insertButtons}
+        propertyForms={this.propertyForms}
+        value={this.props.value}
+        onChange={this.props.onChange} />
+    )
+  }
+}

@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import { gql, graphql } from 'react-apollo'
 import { css } from 'glamor'
 import { compose } from 'redux'
-import { A, Button, Label, colors } from '@project-r/styleguide'
-import { HEADER_HEIGHT, ZINDEX_SIDEBAR } from '../Frame/constants'
+import { A, Button, Label } from '@project-r/styleguide'
 import Loader from '../Loader'
 import withT from '../../lib/withT'
 
@@ -14,16 +13,7 @@ import UncommittedChanges from './UncommittedChanges'
 
 const styles = {
   container: css({
-    position: 'fixed',
-    top: HEADER_HEIGHT,
-    right: 0,
-    bottom: 0,
-    overflow: 'auto',
-    backgroundColor: '#fff',
-    borderLeft: `1px solid ${colors.divider}`,
-    opacity: 1,
-    padding: 10,
-    zIndex: ZINDEX_SIDEBAR
+    backgroundColor: '#fff'
   }),
   uncommittedChanges: {
     fontSize: '13px',
@@ -122,7 +112,6 @@ class EditSidebar extends Component {
       commitHandler,
       revertHandler,
       warnings,
-      width = 200,
       data = {}
     } = this.props
     const { loading, error, repo } = data
@@ -132,7 +121,7 @@ class EditSidebar extends Component {
         loading={loading}
         error={error}
         render={() => (
-          <div {...styles.container} style={{ width }}>
+          <div {...styles.container}>
             {warnings.map((message, i) => (
               <div key={i} {...css(styles.danger)}>
                 {message}
