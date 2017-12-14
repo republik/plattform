@@ -71,6 +71,14 @@ export default class Sidebar extends Component {
     })
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.selectedTabId) {
+      this.setState({
+        selectedTabId: nextProps.selectedTabId
+      })
+    }
+  }
+
   render () {
     const { children, isOpen } = this.props
     const { selectedTabId } = this.state
