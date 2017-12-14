@@ -14,8 +14,6 @@ import 'core-js/es6'
 import {fontFaces} from './theme/fonts'
 import {createFormatter} from './lib/translate'
 
-import Serializer from 'slate-mdast-serializer'
-
 simulations(true)
 // prevent speedy in catalog
 // - iframe rendering (e.g. responsive preview)
@@ -372,8 +370,7 @@ ReactDOM.render(
             imports: {
               schema: require('./templates/Article').default(),
               ...require('./templates/docs'),
-              renderMdast: require('mdast-react-render').renderMdast,
-              serializer: new Serializer()
+              renderMdast: require('mdast-react-render').renderMdast
             },
             src: require('./templates/Article/docs.md')
           },
@@ -383,8 +380,7 @@ ReactDOM.render(
             imports: {
               schema: require('./templates/Front').default(),
               ...require('./templates/docs'),
-              renderMdast: require('mdast-react-render').renderMdast,
-              serializer: new Serializer()
+              renderMdast: require('mdast-react-render').renderMdast
             },
             src: require('./templates/Front/docs.md')
           }

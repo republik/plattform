@@ -19,8 +19,7 @@ import {
 import {
   PullQuote,
   PullQuoteText,
-  PullQuoteSource,
-  PULLQUOTE_IMAGE_SIZE
+  PullQuoteSource
 } from '../../components/PullQuote'
 import {
   List,
@@ -30,7 +29,6 @@ import {
   InfoBox,
   InfoBoxTitle,
   InfoBoxText,
-  INFOBOX_IMAGE_SIZES,
   INFOBOX_DEFAULT_IMAGE_SIZE
 } from '../../components/InfoBox'
 import {
@@ -46,6 +44,12 @@ import {
   matchParagraph,
   matchImageParagraph
 } from 'mdast-react-render/lib/utils'
+import {
+  matchInfoBox,
+  matchQuote,
+  matchFigure,
+  getDisplayWidth
+} from './utils'
 
 const matchLast = (node, index, parent) => index === parent.children.length - 1
 
@@ -125,34 +129,6 @@ const figureCaption = {
     link,
     ...globalInlines
   ]
-}
-
-const matchInfoBox = matchZone('INFOBOX')
-const matchQuote = matchZone('QUOTE')
-const matchFigure = matchZone('FIGURE')
-
-const getDisplayWidth = ancestors => {
-  const infobox = ancestors.find(matchInfoBox)
-  if (infobox) {
-    return INFOBOX_IMAGE_SIZES[
-      infobox.data.figureSize || INFOBOX_DEFAULT_IMAGE_SIZE
-    ]
-  }
-  const quote = ancestors.find(matchQuote)
-  if (quote) {
-    return PULLQUOTE_IMAGE_SIZE
-  }
-  const figure = ancestors.find(matchFigure)
-  if (figure) {
-    if (figure.data.size) {
-      return FIGURE_SIZES[figure.data.size]
-    }
-    // child of root === e2e, root === ancestor[-1]
-    if (ancestors.indexOf(figure) === ancestors.length - 2) {
-      return 1200
-    }
-  }
-  return FIGURE_SIZES.center
 }
 
 const figure = {
