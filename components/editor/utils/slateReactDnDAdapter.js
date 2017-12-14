@@ -3,8 +3,10 @@ import HTML5Backend from 'react-dnd-html5-backend'
 let dropHandler
 const ReactDnDPlugin = {
   onDrop (event, change, editor) {
-    dropHandler(event)
-    return true
+    if (dropHandler) {
+      dropHandler(event)
+      return true
+    }
   }
 }
 
