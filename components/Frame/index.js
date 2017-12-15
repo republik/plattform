@@ -1,10 +1,13 @@
 import React from 'react'
 import Head from 'next/head'
-import { NarrowContainer, fontFamilies } from '@project-r/styleguide'
-import Header from './Header'
-import { HEADER_HEIGHT } from './constants'
+import { fontFamilies } from '@project-r/styleguide'
 import { css } from 'glamor'
 import withT from '../../lib/withT'
+
+import Header from './Header'
+import Nav from './Nav'
+import Body from './Body'
+import Me from './Me'
 
 import 'glamor/reset'
 
@@ -15,24 +18,19 @@ css.global('body', {
   fontFamily: fontFamilies.sansSerifRegular
 })
 
-const Index = ({ t, children, url, raw, nav }) =>
+const Frame = ({ t, children }) =>
   <main>
     <Head>
       <title>Project R – {t('app/name')}</title>
     </Head>
-    <Header url={url}>{nav}</Header>
-    <div style={{paddingTop: HEADER_HEIGHT}}>
-      {raw
-        ? children
-        : (
-          <NarrowContainer>
-            <div style={{paddingTop: 40, paddingBottom: 20}}>
-              {children}
-            </div>
-          </NarrowContainer>
-        )
-      }
-    </div>
+    {children}
   </main>
 
-export default withT(Index)
+const FrameWithT = withT(Frame)
+
+FrameWithT.Header = Header
+FrameWithT.Nav = Nav
+FrameWithT.Body = Body
+FrameWithT.Me = Me
+
+export default FrameWithT

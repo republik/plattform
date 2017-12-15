@@ -12,8 +12,18 @@ const Index = ({ url }) => {
     .split('-')
     .filter(Boolean)
   return (
-    <Frame url={url} raw>
-      <RepoTable orderField={orderField} orderDirection={orderDirection} phase={url.query.phase} />
+    <Frame>
+      <Frame.Header>
+        <Frame.Header.Section align='left'>
+          <Frame.Nav url={url} />
+        </Frame.Header.Section>
+        <Frame.Header.Section align='right'>
+          <Frame.Me />
+        </Frame.Header.Section>
+      </Frame.Header>
+      <Frame.Body raw>
+        <RepoTable orderField={orderField} orderDirection={orderDirection} phase={url.query.phase} />
+      </Frame.Body>
     </Frame>
   )
 }

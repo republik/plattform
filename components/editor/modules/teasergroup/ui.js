@@ -7,7 +7,7 @@ import {
   matchBlock
 } from '../../utils'
 
-import SidebarForm from '../../SidebarForm'
+import UIForm from '../../UIForm'
 
 import createOnFieldChange from '../../utils/createOnFieldChange'
 
@@ -19,7 +19,7 @@ import { getNewItem } from './'
 
 const Form = ({ node, onChange }) => {
   return (
-    <SidebarForm>
+    <UIForm>
 
       <Radio
         value={2}
@@ -34,7 +34,7 @@ const Form = ({ node, onChange }) => {
         onChange={event => onChange('columns', null, Number(event.target.value))}>
     1 Teaser
     </Radio>
-    </SidebarForm>
+    </UIForm>
   )
 }
 

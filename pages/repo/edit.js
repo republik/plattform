@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { DragDropContextProvider } from 'react-dnd'
+
 import { compose } from 'redux'
 import { Router } from '../../lib/routes'
 import { gql, graphql } from 'react-apollo'
@@ -10,9 +12,15 @@ import withAuthorization from '../../components/Auth/withAuthorization'
 
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
-import Editor from '../../components/editor'
 
-import EditSidebar from '../../components/EditSidebar'
+import Editor from '../../components/editor'
+import EditorUI from '../../components/editor/UI'
+import slateReactDnDAdapter from '../../components/editor/utils/slateReactDnDAdapter'
+
+import VersionControl from '../../components/VersionControl'
+import CommitButton from '../../components/VersionControl/CommitButton'
+import Sidebar from '../../components/Sidebar'
+
 import Loader from '../../components/Loader'
 import withT from '../../lib/withT'
 import withMe from '../../lib/withMe'
@@ -22,9 +30,16 @@ import initLocalStore from '../../lib/utils/localStorage'
 
 import { getSchema } from '../../components/Templates'
 
+import { colors } from '@project-r/styleguide'
+import SettingsIcon from 'react-icons/lib/fa/cogs'
+
 import createDebug from 'debug'
 
 const debug = createDebug('publikator:pages:edit')
+
+const {
+  SlateHTML5Backend
+} = slateReactDnDAdapter()
 
 const fragments = {
   commit: gql`
@@ -110,6 +125,7 @@ class EditorPage extends Component {
   constructor (...args) {
     super(...args)
 
+    this.toggleSidebarHandler = this.toggleSidebarHandler.bind(this)
     this.changeHandler = this.changeHandler.bind(this)
     this.commitHandler = this.commitHandler.bind(this)
     this.documentChangeHandler = debounce(
@@ -127,7 +143,8 @@ class EditorPage extends Component {
       editorState: null,
       repo: null,
       uncommittedChanges: null,
-      warnings: []
+      warnings: [],
+      showSidebar: false
     }
   }
 
@@ -406,6 +423,14 @@ class EditorPage extends Component {
       })
   }
 
+  toggleSidebarHandler (event) {
+    event.preventDefault()
+    this.setState(state => ({
+      ...state,
+      showSidebar: !state.showSidebar
+    }))
+  }
+
   render () {
     const { url, data = {} } = this.props
     const { repoId, commitId } = url.query
@@ -415,7 +440,8 @@ class EditorPage extends Component {
       editorState,
       committing,
       uncommittedChanges,
-      warnings
+      warnings,
+      showSidebar
     } = this.state
     const sidebarWidth = 200
 
@@ -423,31 +449,79 @@ class EditorPage extends Component {
     const error = data.error || this.state.error
     const showLoading = committing || loading || (!schema && !error)
 
+    const nav = [
+      <RepoNav key='repo-nav' route='repo/edit' url={url} isNew={isNew} />
+    ]
+
     return (
-      <Frame url={url} raw nav={<RepoNav route='repo/edit' url={url} isNew={isNew} />}>
-        <Loader loading={showLoading} error={error} render={() => (
-          <div>
-            <div style={{paddingRight: sidebarWidth}}>
-              <Editor
-                ref={this.editorRef}
-                schema={schema}
-                value={editorState}
-                onChange={this.changeHandler}
-                onDocumentChange={this.documentChangeHandler}
-              />
+      <Frame url={url} raw nav={nav}>
+        <Frame.Header>
+          <Frame.Header.Section align='left'>
+            <Frame.Nav url={url}>
+              <RepoNav route='repo/edit' url={url} isNew={isNew} />
+            </Frame.Nav>
+          </Frame.Header.Section>
+          <Frame.Header.Section align='right'>
+            <div
+              style={{
+                padding: 25,
+                paddingTop: 30,
+                cursor: 'pointer',
+                color: showSidebar ? colors.primary : undefined
+              }}
+              onClick={this.toggleSidebarHandler}
+            >
+              <SettingsIcon size='30' />
             </div>
-            <EditSidebar
-              repoId={repoId}
-              commit={repo && (repo.commit || repo.latestCommit)}
+          </Frame.Header.Section>
+          <Frame.Header.Section align='right'>
+            <CommitButton
               isNew={isNew}
               uncommittedChanges={uncommittedChanges}
-              warnings={warnings}
-              commitHandler={this.commitHandler}
-              revertHandler={this.revertHandler}
-              width={sidebarWidth}
-            />
-          </div>
+              onCommit={this.commitHandler}
+              onRevert={this.revertHandler}
+              />
+          </Frame.Header.Section>
+          <Frame.Header.Section align='right'>
+            <Frame.Me />
+          </Frame.Header.Section>
+        </Frame.Header>
+        <Frame.Body raw>
+          <Loader loading={showLoading} error={error} render={() => (
+            <DragDropContextProvider backend={SlateHTML5Backend}>
+              <div>
+                <Editor
+                  ref={this.editorRef}
+                  schema={schema}
+                  value={editorState}
+                  onChange={this.changeHandler}
+                  onDocumentChange={this.documentChangeHandler}
+              />
+                <Sidebar selectedTabId='edit' isOpen={showSidebar}>
+                  <Sidebar.Tab tabId='edit' label='Editieren'>
+                    <EditorUI
+                      schema={schema}
+                      onChange={this.changeHandler}
+                      value={editorState}
+                  />
+                  </Sidebar.Tab>
+                  <Sidebar.Tab tabId='workflow' label='Workflow'>
+                    <VersionControl
+                      repoId={repoId}
+                      commit={repo && (repo.commit || repo.latestCommit)}
+                      isNew={isNew}
+                      uncommittedChanges={uncommittedChanges}
+                      warnings={warnings}
+                      commitHandler={this.commitHandler}
+                      revertHandler={this.revertHandler}
+                      width={sidebarWidth}
+                  />
+                  </Sidebar.Tab>
+                </Sidebar>
+              </div>
+            </DragDropContextProvider>
         )} />
+        </Frame.Body>
       </Frame>
     )
   }

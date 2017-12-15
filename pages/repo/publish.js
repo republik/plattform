@@ -14,9 +14,21 @@ const Page = ({ url, data, t }) => {
   const { repoId, commitId } = url.query
 
   return (
-    <Frame url={url} nav={<RepoNav route='repo/publish' url={url} />}>
-      <h1>{t('publish/title')}</h1>
-      <PublishForm repoId={repoId} commitId={commitId} t={t} />
+    <Frame>
+      <Frame.Header>
+        <Frame.Header.Section align='left'>
+          <Frame.Nav url={url}>
+            <RepoNav route='repo/tree' url={url} />
+          </Frame.Nav>
+        </Frame.Header.Section>
+        <Frame.Header.Section align='right'>
+          <Frame.Me />
+        </Frame.Header.Section>
+      </Frame.Header>
+      <Frame.Body>
+        <h1>{t('publish/title')}</h1>
+        <PublishForm repoId={repoId} commitId={commitId} t={t} />
+      </Frame.Body>
     </Frame>
   )
 }

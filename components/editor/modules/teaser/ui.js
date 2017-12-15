@@ -14,7 +14,7 @@ import { getSubmodules } from './serializer'
 import ArrowIcon from 'react-icons/lib/md/swap-vert'
 import CloseIcon from 'react-icons/lib/md/close'
 
-import SidebarForm from '../../SidebarForm'
+import UIForm from '../../UIForm'
 import ImageInput from '../../utils/ImageInput'
 import ColorPicker from '../../utils/ColorPicker'
 import createOnFieldChange from '../../utils/createOnFieldChange'
@@ -53,7 +53,7 @@ const styles = {
   }),
   ui: css({
     position: 'absolute',
-    zIndex: 12,
+    zIndex: 10,
     margin: 0,
     padding: 0,
     top: 0,
@@ -139,7 +139,7 @@ export const TeaserButton = options => {
 }
 
 const Form = ({ node, onChange, options }) => {
-  return <SidebarForm>
+  return <UIForm>
     <Field
       label='URL'
       value={node.data.get('url')}
@@ -241,7 +241,7 @@ const Form = ({ node, onChange, options }) => {
         onChange={onChange('image')}
       />
     }
-  </SidebarForm>
+  </UIForm>
 }
 
 export const TeaserForm = options => {

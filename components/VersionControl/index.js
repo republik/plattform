@@ -2,8 +2,7 @@ import React, { Component } from 'react'
 import { gql, graphql } from 'react-apollo'
 import { css } from 'glamor'
 import { compose } from 'redux'
-import { A, Button, Label, colors } from '@project-r/styleguide'
-import { HEADER_HEIGHT, ZINDEX_SIDEBAR } from '../Frame/constants'
+import { Label } from '@project-r/styleguide'
 import Loader from '../Loader'
 import withT from '../../lib/withT'
 
@@ -14,16 +13,7 @@ import UncommittedChanges from './UncommittedChanges'
 
 const styles = {
   container: css({
-    position: 'fixed',
-    top: HEADER_HEIGHT,
-    right: 0,
-    bottom: 0,
-    overflow: 'auto',
-    backgroundColor: '#fff',
-    borderLeft: `1px solid ${colors.divider}`,
-    opacity: 1,
-    padding: 10,
-    zIndex: ZINDEX_SIDEBAR
+    backgroundColor: '#fff'
   }),
   uncommittedChanges: {
     fontSize: '13px',
@@ -117,22 +107,23 @@ class EditSidebar extends Component {
     const {
       t,
       commit,
-      isNew,
       uncommittedChanges,
-      commitHandler,
-      revertHandler,
       warnings,
-      width = 200,
+      isNew,
       data = {}
     } = this.props
     const { loading, error, repo } = data
+
+    if (isNew) {
+      return <span>{t('commit/status/new')}</span>
+    }
 
     return (
       <Loader
         loading={loading}
         error={error}
         render={() => (
-          <div {...styles.container} style={{ width }}>
+          <div {...styles.container}>
             {warnings.map((message, i) => (
               <div key={i} {...css(styles.danger)}>
                 {message}
@@ -145,39 +136,6 @@ class EditSidebar extends Component {
                 commits={repo.commits}
               />
             )}
-            <div {...css(styles.uncommittedChanges)}>
-              <div style={{ marginBottom: 10 }}>
-                <Label style={{ fontSize: 12 }}>
-                  <span>
-                    {isNew ? (
-                      t('commit/status/new')
-                    ) : (
-                      t(
-                        uncommittedChanges
-                          ? 'commit/status/uncommitted'
-                          : 'commit/status/committed'
-                      )
-                    )}
-                  </span>
-                </Label>
-              </div>
-              <Button
-                primary
-                block
-                disabled={!uncommittedChanges && !isNew}
-                onClick={commitHandler}
-                style={styles.button}
-              >
-                {t('commit/button')}
-              </Button>
-              {!!uncommittedChanges && (
-                <div style={{ textAlign: 'center', marginTop: 10 }}>
-                  <A href='#' onClick={revertHandler}>
-                    {t('commit/revert')}
-                  </A>
-                </div>
-              )}
-            </div>
             {!!repo && (
               <div>
                 <Label>{t('checklist/title')}</Label>

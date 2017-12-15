@@ -2,13 +2,10 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Editor as SlateEditor } from 'slate-react'
 import { css } from 'glamor'
-import { DragDropContextProvider } from 'react-dnd'
 
 import slateReactDnDAdapter from './utils/slateReactDnDAdapter'
 
 import Loader from '../Loader'
-
-import Sidebar from './Sidebar'
 
 import createDocumentModule from './modules/document'
 import createDocumentPlainModule from './modules/document/plain'
@@ -38,8 +35,7 @@ import createInfoBoxModule from './modules/infobox'
 import createQuoteModule from './modules/quote'
 
 const {
-  ReactDnDPlugin,
-  SlateHTML5Backend
+  ReactDnDPlugin
 } = slateReactDnDAdapter()
 
 const moduleCreators = {
@@ -68,7 +64,7 @@ const moduleCreators = {
   teaser: createTeaserModule,
   teasergroup: createTeaserGroupModule
 }
-const initModule = rule => {
+export const initModule = rule => {
   const { editorModule, editorOptions = {} } = rule
   if (editorModule) {
     const create = moduleCreators[editorModule]
@@ -92,7 +88,7 @@ const initModule = rule => {
     return module
   }
 }
-const getAllModules = module => [module].concat(
+export const getAllModules = module => [module].concat(
   (module.subModules || []).reduce(
     (collector, subModule) => collector.concat(
       getAllModules(subModule)
@@ -100,7 +96,7 @@ const getAllModules = module => [module].concat(
     []
   )
 )
-const getFromModules = (modules, accessor) => modules.reduce(
+export const getFromModules = (modules, accessor) => modules.reduce(
   (collector, m) => collector.concat(accessor(m)),
   []
 ).filter(Boolean)
@@ -108,7 +104,6 @@ const getFromModules = (modules, accessor) => modules.reduce(
 const styles = {
   container: css({
     width: '100%',
-    paddingLeft: 170,
     position: 'relative'
   }),
   document: {
@@ -156,26 +151,6 @@ class Editor extends Component {
       ReactDnDPlugin
     ]
 
-    this.textFormatButtons = getFromModules(
-      uniqModules,
-      m => m.ui && m.ui.textFormatButtons
-    )
-
-    this.blockFormatButtons = getFromModules(
-      uniqModules,
-      m => m.ui && m.ui.blockFormatButtons
-    )
-
-    this.insertButtons = getFromModules(
-      uniqModules,
-      m => m.ui && m.ui.insertButtons
-    )
-
-    this.propertyForms = getFromModules(
-      uniqModules,
-      m => m.ui && m.ui.forms
-    )
-
     this.slateRef = ref => {
       this.slate = ref
     }
@@ -188,36 +163,26 @@ class Editor extends Component {
   render () {
     const { value } = this.props
     return (
-      <DragDropContextProvider backend={SlateHTML5Backend}>
-        <Container>
-          <Loader loading={!value} render={() => [
-            <Sidebar
-              key='sidebar'
-              textFormatButtons={this.textFormatButtons}
-              blockFormatButtons={this.blockFormatButtons}
-              insertButtons={this.insertButtons}
-              propertyForms={this.propertyForms}
-              value={value}
-              onChange={this.onChange} />,
-            <Document key='document'>
-              <SlateEditor
-                ref={this.slateRef}
-                value={value}
-                onChange={this.onChange}
-                plugins={this.plugins} />
-            </Document>
-          ]} />
-          { /* A full slate instance to normalize
-               initially loaded docs but ignoring
-               change events from it */ }
-          {!value && (
+      <Container>
+        <Loader loading={!value} render={() =>
+          <Document key='document'>
             <SlateEditor
               ref={this.slateRef}
-              value={this.newDocument({title: 'Loading...'})}
+              value={value}
+              onChange={this.onChange}
               plugins={this.plugins} />
+          </Document>
+          } />
+        { /* A full slate instance to normalize
+               initially loaded docs but ignoring
+               change events from it */ }
+        {!value && (
+        <SlateEditor
+          ref={this.slateRef}
+          value={this.newDocument({title: 'Loading...'})}
+          plugins={this.plugins} />
           )}
-        </Container>
-      </DragDropContextProvider>
+      </Container>
     )
   }
 }
