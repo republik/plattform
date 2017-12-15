@@ -120,7 +120,9 @@ module.exports = async (__, args, { user, redis }) => {
   const repos = await Promise.all(
     repositories
       .filter(repository => repository.defaultBranchRef) // skip uninitialized repos
-      .filter(repository => !REPOS_NAME_FILTER || repository.name.indexOf(REPOS_NAME_FILTER) > -1)
+      .filter(repository =>
+        !REPOS_NAME_FILTER || !!REPOS_NAME_FILTER.split(',').find(name => repository.name.indexOf(name) > -1)
+      )
       .map(async (repository) => {
         const repo = {
           ...repository,
