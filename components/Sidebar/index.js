@@ -16,7 +16,6 @@ const styles = {
     opacity: 1,
     zIndex: ZINDEX_SIDEBAR,
     padding: 10,
-    boxShadow: `-1px 0px 2px ${colors.divider}`,
     transition: 'right 0.2s ease',
     '&.open': {
       right: 0
