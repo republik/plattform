@@ -17,6 +17,7 @@ const {
   CORS_WHITELIST_URL,
   SESSION_SECRET,
   COOKIE_DOMAIN,
+  COOKIE_NAME,
   ENGINE_API_KEY
 } = process.env
 
@@ -47,7 +48,7 @@ module.exports.run = (executableSchema, middlewares, t) => {
     engine.start()
   }
 
-  return PgDb.connect().then((_pgdb) => {
+  return PgDb.connect().then( async (_pgdb) => {
     pgdb = _pgdb
     server = express()
     httpServer = createServer(server)
@@ -64,6 +65,7 @@ module.exports.run = (executableSchema, middlewares, t) => {
       server: server,
       secret: SESSION_SECRET,
       domain: COOKIE_DOMAIN || undefined,
+      cookieName: COOKIE_NAME,
       dev: DEV,
       pgdb: pgdb
     })
@@ -80,7 +82,7 @@ module.exports.run = (executableSchema, middlewares, t) => {
     subscriptionServer = graphql(server, pgdb, httpServer, executableSchema, t)
 
     for(let middleware of middlewares) {
-      middleware(server)
+      await middleware(server, pgdb, t)
     }
 
     // start the server

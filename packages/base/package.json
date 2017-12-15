@@ -24,7 +24,7 @@
     "isomorphic-unfetch": "^2.0.0"
   },
   "dependencies": {
-    "@orbiting/backend-modules-auth": "^1.0.0",
+    "@orbiting/backend-modules-auth": "^1.1.0",
     "apollo-engine": "^0.6.0",
     "apollo-modules-node": "^0.1.1",
     "apollo-server-express": "^1.2.0",
