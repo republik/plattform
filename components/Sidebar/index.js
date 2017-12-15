@@ -1,4 +1,4 @@
-import React, { Component, cloneElement } from 'react'
+import React, { Component } from 'react'
 import { css } from 'glamor'
 import { HEADER_HEIGHT, ZINDEX_SIDEBAR } from '../Frame/constants'
 import { colors, Label } from '@project-r/styleguide'
@@ -49,7 +49,7 @@ export const TabButton = ({ active, tabId, onSelect, children }) => (
 
 export const Tab = ({ active, children }) => {
   return (
-    <div style={{ display: active === true ? 'block' : 'none' }}>
+    <div>
       {children}
     </div>
   )
@@ -100,16 +100,8 @@ export default class Sidebar extends Component {
       )
     )
 
-    const tabs = children.map(
-      (child) => cloneElement(
-          child,
-        {
-          active: selectedTabId &&
-              child.props.tabId === selectedTabId,
-          key: `tab-${child.props.tabId}`,
-          ...child.props
-        }
-        )
+    const activeTab = children.find(
+      child => child.props.tabId === selectedTabId
     )
 
     return (
@@ -117,7 +109,7 @@ export default class Sidebar extends Component {
         <div {...styles.tabButtonContainer}>
           {tabButtons}
         </div>
-        {tabs}
+        {activeTab}
       </div>
     )
   }
