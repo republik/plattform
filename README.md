@@ -23,6 +23,7 @@ SESSION_SECRET=replaceMe
 
 # your frontend
 CORS_WHITELIST_URL=http://localhost:3005
+FRONTEND_BASE_URL=http://localhost:3005
 
 # don't use the crowdfunding-backend DB directly! (read below)
 DATABASE_URL=postgres://postgres@localhost:5432/republik
@@ -31,6 +32,8 @@ SEND_MAILS=true  # or false if you don't have mandrill at hand
 MANDRILL_API_KEY=replaceMe
 DEFAULT_MAIL_FROM_NAME='discussion'
 DEFAULT_MAIL_FROM_ADDRESS='discussion@project-r.construction'
+AUTH_MAIL_FROM_ADDRESS=service@project-r.construction
+DISPLAY_AUTHOR_SECRET=replaceMe
 
 # leave blank for default: 127.0.0.1:6379
 REDIS_URL=
@@ -78,6 +81,19 @@ Checkout the API: `http://localhost:3020/graphiql`
 - [signin](http://localhost:3020/graphiql?query=mutation%20%7BsignIn(email%3A%20%22patrick.recher%40project-r.construction%22)%20%7B%0A%20%20phrase%0A%7D%7D)
 - [me](http://localhost:3020/graphiql?query=query%20%7Bme%20%7B%0A%20%20id%0A%20%20email%0A%7D%7D)
 
+### Usage with Docker
+
+You can start the whole stack with docker-compose in production mode:
+```
+  docker-compose build && docker-compose up
+  open http://localhost:8080/graphiql
+```
+
+If you just want to start redis & postgres for local development:
+```
+  docker-compose up -d redis postgres
+  yarn run dev
+```
 
 ### backend-modules
 To develop [backend-modules](https://github.com/orbiting/backend-modules) first run `yarn run link` inside a local copy of the backend-modules repo then execute `yarn run link:backend-modules` here. The backend-modules are now symlinked inside node_modules and development should work seamlessly.
