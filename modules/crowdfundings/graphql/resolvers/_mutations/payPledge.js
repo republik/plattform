@@ -71,8 +71,8 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       throw new Error(t('api/pledge/paymentMethod/notAllowed'))
     }
 
-    // check/charge payment
     let pledgeStatus
+    // check/charge payment
     if (pledgePayment.method === 'PAYMENTSLIP') {
       pledgeStatus = await payPledgePaymentslip({
         pledgeId: pledge.id,
@@ -137,12 +137,14 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       })
     }
 
-    // send a confirmation email for this pledge
-    await transaction.public.pledges.updateOne({
-      id: pledge.id
-    }, {
-      sendConfirmMail: true
-    })
+    if (pkg.name !== 'MONTHLY_ABO') {
+      // send a confirmation email for this pledge
+      await transaction.public.pledges.updateOne({
+        id: pledge.id
+      }, {
+        sendConfirmMail: true
+      })
+    }
 
     // commit transaction
     await transaction.transactionCommit()

@@ -26,15 +26,26 @@ module.exports = async (pgdb) => {
       if (!key) {
         throw new Error(`missing STRIPE_SECRET_KEY_${accountName}`)
       }
+
       const accountId = process.env[`STRIPE_ACCOUNT_ID_${accountName}`]
       if (!accountId) {
         throw new Error(`missing STRIPE_ACCOUNT_ID_${accountName}`)
       }
+
+      const endpointSecretKey = accountName === STRIPE_PROVIDER
+        ? 'STRIPE_PROVIDER_ENDPOINT_SECRET'
+        : 'STRIPE_CONNECTED_ENDPOINT_SECRET'
+      const endpointSecret = process.env[endpointSecretKey]
+      if (!endpointSecretKey) {
+        throw new Error(`missing ${endpointSecretKey}`)
+      }
+
       const company = companies.find(c => c.name === accountName)
       return {
         name: accountName,
         stripe: require('stripe')(key),
         accountId,
+        endpointSecret,
         company
       }
     })

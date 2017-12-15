@@ -4,6 +4,7 @@ module.exports = async ({
   plan,
   userId,
   companyId,
+  metadata,
   pgdb
 }) => {
   const { accounts } = await getClients(pgdb)
@@ -25,6 +26,7 @@ module.exports = async ({
     customer: customer.id,
     items: [
       { plan }
-    ]
+    ],
+    metadata
   })
 }

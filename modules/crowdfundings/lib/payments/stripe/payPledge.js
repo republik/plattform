@@ -1,5 +1,6 @@
 const createCustomer = require('./createCustomer')
 const createCharge = require('./createCharge')
+const createSubscription = require('./createSubscription')
 const addSource = require('./addSource')
 
 module.exports = async ({
@@ -12,6 +13,7 @@ module.exports = async ({
   t,
   logger = console
 }) => {
+  let isSubscription = pkg.name === 'MONTHLY_ABO'
   let charge
   try {
     let deduplicatedSourceId
@@ -34,13 +36,25 @@ module.exports = async ({
       })
     }
 
-    charge = await createCharge({
-      amount: total,
-      userId,
-      companyId: pkg.companyId,
-      sourceId: deduplicatedSourceId || sourceId,
-      pgdb: transaction
-    })
+    if (isSubscription) {
+      await createSubscription({
+        plan: pkg.name,
+        userId,
+        companyId: pkg.companyId,
+        metadata: {
+          pledgeId
+        },
+        pgdb: transaction
+      })
+    } else {
+      charge = await createCharge({
+        amount: total,
+        userId,
+        companyId: pkg.companyId,
+        sourceId: deduplicatedSourceId || sourceId,
+        pgdb: transaction
+      })
+    }
   } catch (e) {
     logger.info('stripe charge failed', { pledgeId, e })
     if (e.type === 'StripeCardError') {
@@ -57,22 +71,24 @@ module.exports = async ({
     }
   }
 
-  // save payment
-  const payment = await transaction.public.payments.insertAndGet({
-    type: 'PLEDGE',
-    method: 'STRIPE',
-    total: charge.amount,
-    status: 'PAID',
-    pspId: charge.id,
-    pspPayload: charge
-  })
+  if (!isSubscription) {
+    // save payment
+    const payment = await transaction.public.payments.insertAndGet({
+      type: 'PLEDGE',
+      method: 'STRIPE',
+      total: charge.amount,
+      status: 'PAID',
+      pspId: charge.id,
+      pspPayload: charge
+    })
 
-  // insert pledgePayment
-  await transaction.public.pledgePayments.insert({
-    pledgeId,
-    paymentId: payment.id,
-    paymentType: 'PLEDGE'
-  })
+    // insert pledgePayment
+    await transaction.public.pledgePayments.insert({
+      pledgeId,
+      paymentId: payment.id,
+      paymentType: 'PLEDGE'
+    })
+  }
 
   return 'SUCCESSFUL'
 }

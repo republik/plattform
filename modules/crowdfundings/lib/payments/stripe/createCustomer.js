@@ -18,7 +18,10 @@ module.exports = async ({
   })
 
   const customer = await provider.stripe.customers.create({
-    email: user.email
+    email: user.email,
+    metadata: {
+      userId
+    }
   })
 
   await pgdb.public.stripeCustomers.insert({
@@ -29,7 +32,10 @@ module.exports = async ({
 
   for (let connectedAccount of connectedAccounts) {
     const connectedCustomer = await connectedAccount.stripe.customers.create({
-      email: user.email
+      email: user.email,
+      metadata: {
+        userId
+      }
     })
 
     await pgdb.public.stripeCustomers.insert({

@@ -3,17 +3,53 @@ const logger = console
 const payPledgePaypal = require('../lib/payments/paypal/payPledge')
 const generateMemberships = require('../lib/generateMemberships')
 const sendPendingPledgeConfirmations = require('../lib/sendPendingPledgeConfirmations')
+const debug = require('debug')('crowdfundings:webhooks:all')
 
-module.exports = (server, pgdb, t) => {
+const getWebhookHandler = require('../lib/payments/stripe/webhookHandler')
+
+module.exports = async (server, pgdb, t) => {
+  const handleWebhook = await getWebhookHandler({ pgdb })
+
   // https://stripe.com/docs/webhooks
   server.post('/payments/stripe',
-    bodyParser.json(),
+    bodyParser.raw({type: '*/*'}),
     async (req, res) => {
+      debug('stripe: %O', req.body)
       await pgdb.public.paymentsLog.insert({
         method: 'STRIPE',
         pspPayload: req.body
       })
-      return res.sendStatus(200)
+
+      let code
+      try {
+        code = await handleWebhook({
+          req
+        })
+      } catch (e) {
+        code = 500
+      }
+      return res.sendStatus(code)
+    })
+
+  server.post('/payments/stripe/connected',
+    bodyParser.raw({type: '*/*'}),
+    async (req, res) => {
+      debug('stripe:connected %O', req.body)
+      await pgdb.public.paymentsLog.insert({
+        method: 'STRIPE',
+        pspPayload: req.body
+      })
+
+      let code
+      try {
+        code = await handleWebhook({
+          req,
+          connected: true
+        })
+      } catch (e) {
+        code = 500
+      }
+      return res.sendStatus(code)
     })
 
   // https://e-payment-postfinance.v-psp.com/de/guides/integration%20guides/e-commerce/transaction-feedback#servertoserver-feedback
