@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import colors from '../../theme/colors'
-import { css } from 'glamor'
+import { css, merge } from 'glamor'
+import { breakoutStyles } from '../Center'
 import { InlineSpinner } from '../Spinner'
 import Play from './Icons/Play'
 import Volume from './Icons/Volume'
@@ -261,11 +262,11 @@ class VideoPlayer extends Component {
     this.video.removeEventListener('loadedmetadata', this.onLoadedMetaData)
   }
   render() {
-    const { src, showPlay } = this.props
+    const { src, showPlay, size } = this.props
     const { playing, progress, muted, subtitles, loading } = this.state
 
     return (
-      <div {...styles.wrapper}>
+      <div {...merge(styles.wrapper, breakoutStyles[size])}>
         <video
           {...styles.video}
           style={this.props.style}
@@ -361,13 +362,15 @@ VideoPlayer.propTypes = {
     hls: PropTypes.string.isRequired,
     mp4: PropTypes.string.isRequired,
     thumbnail: PropTypes.string.isRequired,
-    subtitles: PropTypes.string
+    subtitles: PropTypes.string,
+    size: PropTypes.oneOf(Object.keys(breakoutStyles))
   }),
   showPlay: PropTypes.bool
 }
 
 VideoPlayer.defaultProps = {
-  showPlay: true
+  showPlay: true,
+  size: undefined
 }
 
 export default VideoPlayer

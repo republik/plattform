@@ -5,7 +5,7 @@ import { mUp } from '../../theme/mediaQueries'
 import { breakoutStyles } from '../Center'
 import { FigureImage, FigureCaption } from '../Figure'
 import { Meta } from './Meta'
-import PlayIcon from 'react-icons/lib/md/play-arrow'
+import PlayIcon from '../VideoPlayer/Icons/Play'
 
 const styles = {
   container: css({
@@ -23,15 +23,23 @@ const styles = {
   thumbnail: css({
     cursor: 'pointer',
     display: 'inline-block',
-    position: 'relative'
+    lineHeight: 0,
+    position: 'relative',
+    '::before': {
+      position: 'absolute',
+      background: 'rgba(0, 0, 0, .6)',
+      content: ' ',
+      height: '100%',
+      width: '100%'
+    }
   }),
   playIcon: css({
     color: '#fff',
     lineHeight: 0,
     position: 'absolute',
-    fontSize: '80px',
-    left: 'calc(50% - 40px)',
-    top: 'calc(50% - 40px)'
+    fontSize: '60px',
+    left: 'calc(50% - 13px)',
+    top: 'calc(50% - 18px)'
   }),
   embedContainer: css({
     position: 'relative',

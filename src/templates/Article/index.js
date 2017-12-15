@@ -38,6 +38,9 @@ import {
   Video
 } from '../../components/Video'
 import {
+  VideoPlayer
+} from '../../components/VideoPlayer'
+import {
   matchType,
   matchZone,
   matchHeading,
@@ -487,9 +490,14 @@ const createSchema = ({
             },
             {
               matchMdast: matchZone('EMBEDVIDEO'),
-              component: ({attributes, data, url}) => (
-                <Video attributes={attributes} {...data} date={new Date(data.createdAt)} />
-              ),
+              component: ({attributes, data, url}) => {
+                if (data.src) {
+                  return <VideoPlayer attributes={attributes} {...data} />
+                }
+                return (
+                  <Video attributes={attributes} {...data} date={new Date(data.createdAt)} />
+                )
+              },
               props: node => ({
                 data: {
                   ...node.data,
