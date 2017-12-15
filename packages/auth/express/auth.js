@@ -21,6 +21,8 @@ exports.configure = ({
   secret = null,
   // Specifies the value for the Domain Set-Cookie attribute
   domain = undefined,
+  // name of the session ID cookie to set in the response (and read from request)
+  cookieName = 'connect.sid',
   // Max session age in ms (default is 2 weeks)
   // NB: With 'rolling: true' passed to session() the session expiry time will
   // be reset every time a user visits the site again before it expires.
@@ -52,6 +54,7 @@ exports.configure = ({
     rolling: true,
     saveUninitialized: false,
     httpOnly: true,
+    name: cookieName,
     cookie: {
       domain,
       maxAge: maxAge,
