@@ -70,6 +70,10 @@ export default (query, Component) => (
       const active = editor.value.blocks.some(
         block => block.key === node.key
       )
+
+      const data = node.data.toJS()
+      // We need to guard against undefined thumbnail below which happens
+      // initially and would break the UI because FigureImage now relies on it.
       return (
         <Loader loading={loading} error={error} render={() => {
           return (
@@ -79,9 +83,7 @@ export default (query, Component) => (
               data-active={active}
               contentEditable={false}
               >
-              <Component
-                data={node.data.toJS()}
-                />
+              {data.thumbnail && <Component data={data} />}
             </div>
           )
         }} />

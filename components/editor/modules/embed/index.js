@@ -38,6 +38,11 @@ query getVideoEmbed($id: ID!, $embedType: EmbedType!) {
       userName
       userProfileImageUrl
       aspectRatio
+      src {
+        mp4
+        hls
+        thumbnail
+      }
     }
   }
 }
