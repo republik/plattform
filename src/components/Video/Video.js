@@ -37,7 +37,6 @@ const styles = {
     color: '#fff',
     lineHeight: 0,
     position: 'absolute',
-    fontSize: '60px',
     left: 'calc(50% - 13px)',
     top: 'calc(50% - 18px)'
   }),
