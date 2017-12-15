@@ -30,8 +30,8 @@ import initLocalStore from '../../lib/utils/localStorage'
 
 import { getSchema } from '../../components/Templates'
 
-import { Button } from '@project-r/styleguide'
-import SettingsIcon from 'react-icons/lib/md/settings'
+import { colors } from '@project-r/styleguide'
+import SettingsIcon from 'react-icons/lib/fa/cogs'
 
 import createDebug from 'debug'
 
@@ -462,16 +462,17 @@ class EditorPage extends Component {
             </Frame.Nav>
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
-            <Frame.Me />
-          </Frame.Header.Section>
-          <Frame.Header.Section align='right'>
-            <Button
-              style={{ margin: '9px 0 9px 0', minWidth: '60px' }}
-              block
+            <div
+              style={{
+                padding: 25,
+                paddingTop: 30,
+                cursor: 'pointer',
+                color: showSidebar ? colors.primary : undefined
+              }}
               onClick={this.toggleSidebarHandler}
-          >
-              <SettingsIcon size='32' />
-            </Button>
+            >
+              <SettingsIcon size='30' />
+            </div>
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
             <CommitButton
@@ -480,9 +481,10 @@ class EditorPage extends Component {
               onCommit={this.commitHandler}
               onRevert={this.revertHandler}
               />
-
           </Frame.Header.Section>
-
+          <Frame.Header.Section align='right'>
+            <Frame.Me />
+          </Frame.Header.Section>
         </Frame.Header>
         <Frame.Body raw>
           <Loader loading={showLoading} error={error} render={() => (
