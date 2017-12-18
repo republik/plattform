@@ -1,26 +1,21 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 
-const isMeOrHasProfile = (user, me) => (
-  user._data.hasPublicProfile ||
-  Roles.userIsMe(user, me)
-)
-
 module.exports = {
   hasPublicProfile (user, args, { pgdb, user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
-      return user._data.hasPublicProfile
+      return user._raw.hasPublicProfile
     }
     return null
   },
   email (user, args, { pgdb, user: me }) {
-    if (user._data.isEmailPublic || Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
-      return user._data.email
+    if (user._raw.isEmailPublic || Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return user._raw.email
     }
     return null
   },
   badges (user, args, { pgdb, user: me }) {
-    if (isMeOrHasProfile(user, me)) {
-      return user._data.badges
+    if (Roles.userIsMeOrHasProfile(user, me)) {
+      return user._raw.badges
     }
     return null
   },
@@ -39,7 +34,7 @@ module.exports = {
     }
   },
   async latestComments (user, args, { pgdb, user: me }) {
-    if (!isMeOrHasProfile(user, me)) {
+    if (!Roles.userIsMeOrHasProfile(user, me)) {
       return null
     }
     const userId = user.id
@@ -81,7 +76,7 @@ module.exports = {
     }
   },
   async credentials (user, args, { pgdb, user: me }) {
-    if (isMeOrHasProfile(user, me)) {
+    if (Roles.userIsMeOrHasProfile(user, me)) {
       return pgdb.public.credentials.find({
         userId: user.id
       })
@@ -89,11 +84,11 @@ module.exports = {
   },
   async address (user, args, {pgdb, user: me}) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
-      if (!user._data.addressId) {
+      if (!user._raw.addressId) {
         return null
       }
       return pgdb.public.addresses.findOne({
-        id: user._data.addressId
+        id: user._raw.addressId
       })
     }
     return null
