@@ -7,6 +7,9 @@ schema {
 type queries {
   me: User
 
+  # get user by id or username
+  # only returns users with a public profile
+  user(id: ID, username: String): User
   # search for users
   # required role: editor
   users(search: String!, role: String!): [User]!

@@ -1,4 +1,5 @@
 const Roles = require('../../../lib/Roles')
+const transformUser = require('../../../lib/transformUser')
 
 module.exports = async (
   _,
@@ -7,7 +8,7 @@ module.exports = async (
 ) => {
   Roles.ensureUserHasRole(user, 'editor')
 
-  return await pgdb.query(`
+  const users = await pgdb.query(`
     SELECT
       u.*,
       concat_ws(' ',
@@ -32,5 +33,6 @@ module.exports = async (
     role: JSON.stringify([role]),
     limit: 30
   })
-}
 
+  return users.map(transformUser)
+}

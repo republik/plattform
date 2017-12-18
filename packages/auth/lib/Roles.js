@@ -78,11 +78,22 @@ const removeUserFromRoll = async (userId, role, pgdb) => {
   return pgdb.public.users.findOne({id: userId})
 }
 
+const userIsMe = (user, me) => (
+  me && me.id === user.id
+)
+
+const userIsMeOrInRoles = (user, me, roles) => (
+  userIsMe(user, me) ||
+  userIsInRoles(user, roles)
+)
+
 module.exports = {
   roles,
   userHasRole,
   ensureUserHasRole,
   userIsInRoles,
+  userIsMe,
+  userIsMeOrInRoles,
   ensureUserIsInRoles,
   addUserToRole,
   removeUserFromRoll
