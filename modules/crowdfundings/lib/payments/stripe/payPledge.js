@@ -71,6 +71,8 @@ module.exports = async ({
     }
   }
 
+  // for subscriptions the payment doesn't exist yet
+  // and is saved by the webhookHandler
   if (!isSubscription) {
     // save payment
     const payment = await transaction.public.payments.insertAndGet({

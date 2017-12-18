@@ -13,6 +13,7 @@ module.exports = async ({ pgdb }) => {
   const typesOfIntereset = [
     'invoice.payment_succeeded',
     'charge.succeeded',
+    'charge.refunded',
     'customer.subscription.deleted',
     'customer.subscription.updated'
   ]
@@ -54,7 +55,7 @@ module.exports = async ({ pgdb }) => {
       // invoice.payment_succeeded includes:
       // pledgeId, charge total and charge id
       // but not the charge details, charge may not
-      // exists at the time this hook is received
+      // exist at the time this hook is received
       if (event.type === 'invoice.payment_succeeded') {
         const invoice = _.get(event, 'data.object')
         const subscription = _.get(event, 'data.object.lines.data[0]')
@@ -68,7 +69,7 @@ module.exports = async ({ pgdb }) => {
           const transaction = await pgdb.transactionBegin()
           try {
             // synchronize with payPledge
-            await transaction.query(`
+            const pledge = await transaction.query(`
               SELECT *
               FROM pledges
               WHERE id = :pledgeId
@@ -77,6 +78,13 @@ module.exports = async ({ pgdb }) => {
               pledgeId
             })
               .then(response => response[0])
+              .catch(e => null)
+
+            if (!pledge) {
+              console.warn(`received webhook for unknown pledgeId ${pledgeId}`)
+              await transaction.transactionRollback()
+              return 500
+            }
 
             const existingPayments = await transaction.public.payments.find({
               method: 'STRIPE',
@@ -84,7 +92,8 @@ module.exports = async ({ pgdb }) => {
             })
 
             if (!existingPayments.length) {
-              // the first membershipPeriod is inserted by generateMemberships
+              // the first membershipPeriod was already inserted by generateMemberships
+              // but not the corresponding payment, save that here
               const payment = await transaction.public.payments.insertAndGet({
                 type: 'PLEDGE',
                 method: 'STRIPE',
@@ -98,24 +107,62 @@ module.exports = async ({ pgdb }) => {
                 paymentId: payment.id,
                 paymentType: 'PLEDGE'
               })
+            }
+
+            const memberships = await transaction.public.memberships.find({
+              pledgeId
+            })
+            const firstNotification = await transaction.query(`
+              SELECT *
+              FROM "membershipPeriods" mp
+              JOIN
+                memberships m
+                ON mp."membershipId" = m.id
+              JOIN
+                pledges p
+                ON m."pledgeId" = p.id
+              WHERE
+                mp.webhook = false AND
+                p.id = :pledgeId
+            `, {
+              pledgeId
+            })
+              .then(response => !response.length)
+              .catch(e => null)
+
+            const beginDate = new Date(subscription.period.start * 1000)
+            const endDate = new Date(subscription.period.end * 1000)
+            if (firstNotification) {
+              await transaction.query(`
+                UPDATE "membershipPeriods" mp
+                SET
+                  "beginDate" = :beginDate,
+                  "endDate" = :endDate,
+                  "updatedAt" = :now
+                WHERE
+                  ARRAY[mp."membershipId"] && :membershipIds AND
+                  mp.webhook = false
+              `, {
+                membershipIds: memberships.map(m => m.id),
+                beginDate,
+                endDate,
+                now: new Date()
+              })
             } else {
               // insert membershipPeriods
-              const beginDate = new Date(subscription.period.start)
-              const endDate = new Date(subscription.period.end)
-              const memberships = await transaction.public.memberships.find({
-                pledgeId
-              })
               await Promise.all(memberships.map(membership => {
                 return transaction.public.membershipPeriods.insert({
                   membershipId: membership.id,
                   beginDate,
-                  endDate
+                  endDate,
+                  webhook: true
                 })
               }))
               await transaction.public.memberships.update({
                 id: memberships.map(m => m.id)
               }, {
-                active: true
+                active: true,
+                updatedAt: new Date()
               })
             }
             await transaction.transactionCommit()
@@ -128,8 +175,8 @@ module.exports = async ({ pgdb }) => {
         }
       // charge.succeeded contains all the charge details
       // but not the pledgeId
-      // if this event arrives before invoi.payment_succeeded
-      // we reject it and wait for it to come again
+      // if this event arrives before invoice.payment_succeeded
+      // we reject it and wait for the webhook to fire again
       } else if (event.type === 'charge.succeeded') {
         const charge = _.get(event, 'data.object')
         const transaction = await pgdb.transactionBegin()
@@ -143,15 +190,52 @@ module.exports = async ({ pgdb }) => {
             pspId: charge.id
           })
             .then(response => response[0])
+            .catch(e => null)
 
           if (existingPayment) {
             await transaction.public.payments.update({
               id: existingPayment.id
             }, {
-              pspPayload: charge
+              pspPayload: charge,
+              updatedAt: new Date()
             })
           } else {
             debug('no existing payment found in charge.succeeded. rejecting event %O', event)
+            await transaction.transactionRollback()
+            return 503
+          }
+
+          await transaction.transactionCommit()
+        } catch (e) {
+          await transaction.transactionRollback()
+          console.info('transaction rollback', { error: e })
+          console.error(e)
+          throw e
+        }
+      } else if (event.type === 'charge.refunded') {
+        const charge = _.get(event, 'data.object')
+        const transaction = await pgdb.transactionBegin()
+        try {
+          const existingPayment = await transaction.query(`
+            SELECT *
+            FROM payments
+            WHERE "pspId" = :pspId
+            FOR UPDATE
+          `, {
+            pspId: charge.id
+          })
+            .then(response => response[0])
+            .catch(e => null)
+
+          if (existingPayment) {
+            await transaction.public.payments.update({
+              id: existingPayment.id
+            }, {
+              status: 'REFUNDED',
+              updatedAt: new Date()
+            })
+          } else {
+            debug('no existing payment found in charge.refunded. rejecting event %O', event)
             await transaction.transactionRollback()
             return 503
           }
@@ -196,14 +280,16 @@ module.exports = async ({ pgdb }) => {
             await transaction.public.memberships.update({
               pledgeId
             }, {
-              renew: false
+              renew: false,
+              updatedAt: new Date()
             })
           } else if (subscription.status === 'unpaid') {
             // we might ignore this event and do it in a local cron
             await transaction.public.memberships.update({
               pledgeId
             }, {
-              active: false
+              active: false,
+              updatedAt: new Date()
             })
           }
           await transaction.transactionCommit()
