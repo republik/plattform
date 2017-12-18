@@ -12,7 +12,8 @@ const {
   createGithubClients,
   commitNormalizer,
   getRepo,
-  getHeads
+  getHeads,
+  gitAuthor
 } = require('../../../lib/github')
 
 const extractImage = async (url, images) => {
@@ -187,7 +188,7 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
     message,
     tree: tree.sha,
     parents: parentId ? [parentId] : [],
-    author: user.gitAuthor()
+    author: gitAuthor(user)
   })
     .then(result => result.data)
 

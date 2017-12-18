@@ -1,5 +1,8 @@
 const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
-const { createGithubClients } = require('../../../lib/github')
+const {
+  createGithubClients,
+  gitAuthor
+} = require('../../../lib/github')
 
 module.exports = async (
   _,
@@ -19,7 +22,7 @@ module.exports = async (
     message,
     object: commitId,
     type: 'commit',
-    tagger: user.gitAuthor()
+    tagger: gitAuthor(user)
   })
     .then(result => result.data)
 
