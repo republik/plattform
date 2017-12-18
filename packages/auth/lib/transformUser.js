@@ -17,14 +17,6 @@ module.exports = user => {
     roles: user.roles || [],
     // use resolver functions to access _raw
     // and expose more fields according to custom logic
-    _raw: user,
-    // mv to publikator-backend?
-    gitAuthor (date = new Date()) {
-      return {
-        name,
-        email: user.email,
-        date
-      }
-    }
+    _raw: user
   }
 }
