@@ -12,7 +12,7 @@ module.exports = async (_, args, { pgdb, user: me }) => {
   }, { skipUndefined: true })
   if (
     !user ||
-    (!user.hasPublicProfile && Roles.userIsMe(user, me))
+    (!user.hasPublicProfile && !Roles.userIsMe(user, me))
   ) {
     return null
   }

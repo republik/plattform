@@ -13,6 +13,8 @@ module.exports = user => {
     firstName: user.firstName,
     lastName: user.lastName,
     name,
+    // read access to roles is protected by a resolver function
+    roles: user.roles || [],
     // use resolver functions to access _data
     // and expose more fields according to custom logic
     _data: user,

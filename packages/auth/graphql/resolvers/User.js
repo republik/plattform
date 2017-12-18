@@ -11,7 +11,7 @@ module.exports = {
     if (
       Roles.userIsMeOrInRoles(user, me, ['admin'])
     ) {
-      return user._data.roles || []
+      return user.roles
     }
     return []
   }
