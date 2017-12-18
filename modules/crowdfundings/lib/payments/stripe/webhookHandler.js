@@ -78,7 +78,10 @@ module.exports = async ({ pgdb }) => {
               pledgeId
             })
               .then(response => response[0])
-              .catch(e => null)
+              .catch(e => {
+                console.error(e)
+                return null
+              })
 
             if (!pledge) {
               console.warn(`received webhook for unknown pledgeId ${pledgeId}`)
@@ -113,8 +116,10 @@ module.exports = async ({ pgdb }) => {
               pledgeId
             })
             const firstNotification = await transaction.query(`
-              SELECT *
-              FROM "membershipPeriods" mp
+              SELECT
+                DISTINCT(m.id)
+              FROM
+                "membershipPeriods" mp
               JOIN
                 memberships m
                 ON mp."membershipId" = m.id
@@ -122,13 +127,16 @@ module.exports = async ({ pgdb }) => {
                 pledges p
                 ON m."pledgeId" = p.id
               WHERE
-                mp.webhook = false AND
+                mp."webhookEventId" IS NOT NULL AND
                 p.id = :pledgeId
             `, {
               pledgeId
             })
               .then(response => !response.length)
-              .catch(e => null)
+              .catch(e => {
+                console.error(e)
+                return null
+              })
 
             const beginDate = new Date(subscription.period.start * 1000)
             const endDate = new Date(subscription.period.end * 1000)
@@ -141,7 +149,7 @@ module.exports = async ({ pgdb }) => {
                   "updatedAt" = :now
                 WHERE
                   ARRAY[mp."membershipId"] && :membershipIds AND
-                  mp.webhook = false
+                  mp."webhookEventId" is null
               `, {
                 membershipIds: memberships.map(m => m.id),
                 beginDate,
@@ -149,21 +157,24 @@ module.exports = async ({ pgdb }) => {
                 now: new Date()
               })
             } else {
-              // insert membershipPeriods
-              await Promise.all(memberships.map(membership => {
-                return transaction.public.membershipPeriods.insert({
-                  membershipId: membership.id,
-                  beginDate,
-                  endDate,
-                  webhook: true
+              // check for duplicate event
+              if (!(await transaction.public.membershipPeriods.findFirst({ webhookEventId: event.id }))) {
+                // insert membershipPeriods
+                await Promise.all(memberships.map(membership => {
+                  return transaction.public.membershipPeriods.insert({
+                    membershipId: membership.id,
+                    beginDate,
+                    endDate,
+                    webhookEventId: event.id
+                  })
+                }))
+                await transaction.public.memberships.update({
+                  id: memberships.map(m => m.id)
+                }, {
+                  active: true,
+                  updatedAt: new Date()
                 })
-              }))
-              await transaction.public.memberships.update({
-                id: memberships.map(m => m.id)
-              }, {
-                active: true,
-                updatedAt: new Date()
-              })
+              }
             }
             await transaction.transactionCommit()
           } catch (e) {
@@ -190,7 +201,10 @@ module.exports = async ({ pgdb }) => {
             pspId: charge.id
           })
             .then(response => response[0])
-            .catch(e => null)
+            .catch(e => {
+              console.error(e)
+              return null
+            })
 
           if (existingPayment) {
             await transaction.public.payments.update({
@@ -225,7 +239,10 @@ module.exports = async ({ pgdb }) => {
             pspId: charge.id
           })
             .then(response => response[0])
-            .catch(e => null)
+            .catch(e => {
+              console.error(e)
+              return null
+            })
 
           if (existingPayment) {
             await transaction.public.payments.update({
@@ -263,6 +280,11 @@ module.exports = async ({ pgdb }) => {
             pledgeId
           })
             .then(response => response[0])
+            .catch(e => {
+              console.error(e)
+              return null
+            })
+
           if (!pledge) {
             throw new Error('pledge for customer.subscription event not found! subscriptionId:' + subscription.id)
           }

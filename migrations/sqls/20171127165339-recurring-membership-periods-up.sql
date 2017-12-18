@@ -1,3 +1,4 @@
+
 alter table "memberships"
   drop column "beginDate",
   add column "active" boolean not null default false,
@@ -11,13 +12,13 @@ alter table "membershipTypes"
   add column "intervalCount" integer not null default 1;
 
 create table "membershipPeriods" (
-  "id"            uuid primary key not null default uuid_generate_v4(),
-  "membershipId"  uuid not null references "memberships" on update cascade on delete cascade,
-  "beginDate"     timestamptz not null,
-  "endDate"       timestamptz not null,
-  "webhook"       boolean not null default false,
-  "createdAt"     timestamptz default now(),
-  "updatedAt"     timestamptz default now()
+  "id"              uuid primary key not null default uuid_generate_v4(),
+  "membershipId"    uuid not null references "memberships" on update cascade on delete cascade,
+  "beginDate"       timestamptz not null,
+  "endDate"         timestamptz not null,
+  "webhookEventId"  text,
+  "createdAt"       timestamptz default now(),
+  "updatedAt"       timestamptz default now()
 );
 
 -- can't apply this in the migration (transaction), please run it manually before this migrations
