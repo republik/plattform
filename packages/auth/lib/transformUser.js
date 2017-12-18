@@ -13,6 +13,7 @@ module.exports = user => {
     firstName: user.firstName,
     lastName: user.lastName,
     name,
+    hasPublicProfile: user.hasPublicProfile,
     // read access to roles is protected by a resolver function
     roles: user.roles || [],
     // use resolver functions to access _raw
