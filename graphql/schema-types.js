@@ -10,7 +10,7 @@ extend type User {
   address: Address
   birthday: Date
   phoneNumber: String
-  isPrivate: Boolean
+  hasPublicProfile: Boolean
   credentials: [Credential]!
   testimonial: Testimonial
   facebookId: String

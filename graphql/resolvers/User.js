@@ -6,9 +6,21 @@ const isMeOrHasProfile = (user, me) => (
 )
 
 module.exports = {
+  hasPublicProfile (user, args, { pgdb, user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return user._data.hasPublicProfile
+    }
+    return null
+  },
   email (user, args, { pgdb, user: me }) {
     if (user._data.isEmailPublic || Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return user._data.email
+    }
+    return null
+  },
+  badges (user, args, { pgdb, user: me }) {
+    if (isMeOrHasProfile(user, me)) {
+      return user._data.badges
     }
     return null
   },
@@ -27,7 +39,7 @@ module.exports = {
     }
   },
   async latestComments (user, args, { pgdb, user: me }) {
-    if (isMeOrHasProfile(user, me)) {
+    if (!isMeOrHasProfile(user, me)) {
       return null
     }
     const userId = user.id
@@ -77,7 +89,9 @@ module.exports = {
   },
   async address (user, args, {pgdb, user: me}) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
-      if (!user._data.addressId) return null
+      if (!user._data.addressId) {
+        return null
+      }
       return pgdb.public.addresses.findOne({
         id: user._data.addressId
       })
