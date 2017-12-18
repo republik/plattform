@@ -8,6 +8,7 @@ import { PADDING } from '../Center'
 const styles = {
   caption: css({
     margin: '0 auto',
+    minWidth: '100%',
     maxWidth: `calc(100vw - ${PADDING * 2}px)`,
     ...sansSerifRegular14,
     [mUp]: {
