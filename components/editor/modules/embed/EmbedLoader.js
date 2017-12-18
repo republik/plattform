@@ -16,78 +16,70 @@ const styles = {
   })
 }
 
-export default (query, Component) => (
+export default (query, Component) =>
   class EmbedLoader extends React.Component {
-    constructor (...args) {
-      super(...args)
+    constructor (props, ...args) {
+      super(props, ...args)
+      const { node } = props
+      const hasId = node.data.has('id')
       this.state = {
-        loading: false,
-        error: null
+        loading: !hasId,
+        error:
+          !hasId && !node.data.has('queryParams') && 'No embed params found.'
       }
     }
 
     componentDidMount () {
-      const { node, client, editor } = this.props
-
-      if (node.data.has('id')) {
+      const { loading, error } = this.state
+      if (!loading || error) {
         return
-      } else if (!node.data.has('queryParams')) {
-        return console.warn('No embed params found.')
       }
 
-      this.setState(state => ({
-        loading: true,
-        ...state
-      }), () => {
-        const { id, embedType } = node.data.get('queryParams')
-        client
-          .query({
-            query,
-            variables: { id, embedType }
-          })
-          .then(
-            ({ data }) => {
-              this.setState({ error: null, loading: false })
-              editor.change(t =>
-                t.setNodeByKey(node.key, { data: {
-                  ...data.embed,
-                  url: node.data.get('url')
-                } })
-              )
-            }
+      const { node, client, editor } = this.props
+      const { id, embedType } = node.data.get('queryParams')
+
+      client
+        .query({
+          query,
+          variables: { id, embedType }
+        })
+        .then(({ data }) => {
+          editor.change(t =>
+            t.setNodeByKey(node.key, {
+              data: {
+                ...data.embed,
+                url: node.data.get('url')
+              }
+            })
           )
-          .catch(
-            error => this.setState({ error, loading: false })
-          )
-      })
+          this.setState({ error: null, loading: false })
+        })
+        .catch(error => this.setState({ error, loading: false }))
     }
 
     render () {
       const { loading, error } = this.state
       const { client, ...props } = this.props
       const { node, editor } = props
+      const active = editor.value.blocks.some(block => block.key === node.key)
 
-      const active = editor.value.blocks.some(
-        block => block.key === node.key
-      )
-
-      const data = node.data.toJS()
-      // We need to guard against undefined thumbnail below which happens
-      // initially and would break the UI because FigureImage now relies on it.
       return (
-        <Loader loading={loading} error={error} render={() => {
-          return (
-            <div
-              {...styles.border}
-              {...props.attributes}
-              data-active={active}
-              contentEditable={false}
+        <Loader
+          loading={loading}
+          error={error}
+          render={() => {
+            return (
+              <div
+                {...styles.border}
+                {...props.attributes}
+                data-active={active}
+                contentEditable={false}
               >
-              {data.thumbnail && <Component data={data} />}
-            </div>
-          )
-        }} />
+                <Component data={node.data.toJS()} />
+              </div>
+            )
+          }}
+        />
       )
     }
   }
-)
