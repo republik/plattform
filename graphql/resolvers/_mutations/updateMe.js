@@ -3,6 +3,7 @@ const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 module.exports = async (_, args, { pgdb, req, t }) => {
   ensureSignedIn(req)
   const {
+    username,
     firstName,
     lastName,
     birthday,
@@ -12,11 +13,12 @@ module.exports = async (_, args, { pgdb, req, t }) => {
     twitterHandle,
     publicUrl,
     isEmailPublic,
-    isPrivate
+    hasPublicProfile
   } = args
   const transaction = await pgdb.transactionBegin()
   try {
     if (
+      username ||
       firstName ||
       lastName ||
       birthday ||
@@ -25,11 +27,12 @@ module.exports = async (_, args, { pgdb, req, t }) => {
       twitterHandle ||
       publicUrl ||
       isEmailPublic ||
-      isPrivate
+      hasPublicProfile
     ) {
       await transaction.public.users.update(
         { id: req.user.id },
         {
+          username,
           firstName,
           lastName,
           birthday,
@@ -38,7 +41,7 @@ module.exports = async (_, args, { pgdb, req, t }) => {
           twitterHandle,
           publicUrl,
           isEmailPublic,
-          isPrivate
+          hasPublicProfile
         },
         { skipUndefined: true }
       )
