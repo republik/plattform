@@ -1,4 +1,4 @@
-alter table users
-  drop column "username",
-  drop column "hasPublicProfile"
+ALTER TABLE users
+  DROP COLUMN "username",
+  DROP COLUMN "hasPublicProfile"
 ;
