@@ -15,9 +15,9 @@ module.exports = user => {
     name,
     // read access to roles is protected by a resolver function
     roles: user.roles || [],
-    // use resolver functions to access _data
+    // use resolver functions to access _raw
     // and expose more fields according to custom logic
-    _data: user,
+    _raw: user,
     // mv to publikator-backend?
     gitAuthor (date = new Date()) {
       return {

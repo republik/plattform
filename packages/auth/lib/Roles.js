@@ -88,7 +88,7 @@ const userIsMeOrInRoles = (user, me, roles) => (
 )
 
 const userIsMeOrHasProfile = (user, me) => (
-  user._data.hasPublicProfile ||
+  user._raw.hasPublicProfile ||
   userIsMe(user, me)
 )
 
