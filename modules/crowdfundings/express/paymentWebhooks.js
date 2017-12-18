@@ -17,7 +17,7 @@ module.exports = async (server, pgdb, t) => {
       debug('stripe: %O', req.body)
       await pgdb.public.paymentsLog.insert({
         method: 'STRIPE',
-        pspPayload: req.body
+        pspPayload: JSON.parse(req.body.toString('utf8'))
       })
 
       let code
@@ -37,7 +37,7 @@ module.exports = async (server, pgdb, t) => {
       debug('stripe:connected %O', req.body)
       await pgdb.public.paymentsLog.insert({
         method: 'STRIPE',
-        pspPayload: req.body
+        pspPayload: JSON.parse(req.body.toString('utf8'))
       })
 
       let code
