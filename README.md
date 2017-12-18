@@ -46,17 +46,13 @@ GITHUB_APP_KEY=
 # Auth keys for the embedding endpoint.
 
 # Twitter App Stuff
-
 TWITTER_APP_KEY=
 TWITTER_APP_SECRET=
 
 # Vimeo App Stuff
-
-VIMEO_APP_KEY=
-VIMEO_APP_SECRET=
+VIMEO_APP_ACCESS_TOKEN=
 
 # Youtube App Stuff
-
 YOUTUBE_APP_KEY=
 
 # optional: filter for the repos query (repo name must contain term)

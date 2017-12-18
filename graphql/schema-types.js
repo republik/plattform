@@ -161,6 +161,12 @@ type YoutubeEmbed implements Embed {
   aspectRatio: Float
 }
 
+type VimeoSrc {
+  mp4: String,
+  hls: String,
+  thumbnail: String
+}
+
 type VimeoEmbed implements Embed {
   id: ID!
   platform: String!
@@ -172,6 +178,7 @@ type VimeoEmbed implements Embed {
   title: String!
   userName: String!
   userProfileImageUrl: String
-  aspectRatio: Float
+  aspectRatio: Float,
+  src: VimeoSrc
 }
 `
