@@ -22,7 +22,8 @@ module.exports = async (_, args, { user, redis }) => {
 
   const repoIds = await redis.smembersAsync('repos:ids')
   const {
-    feed
+    feed,
+    userId
   } = args
 
   return Promise.all(
@@ -40,10 +41,18 @@ module.exports = async (_, args, { user, redis }) => {
           (d.meta.feed === undefined && d.meta.template === 'article')
         ))
       }
+      if (userId) {
+        documents = documents.filter(d => {
+          const userIds = (d.meta.credits || [])
+            .filter(c => c.type === 'link')
+            .map(c => c.url.split('~')[1])
+            .filter(Boolean)
+          return userIds.includes(userId)
+        })
+      }
 
       return documents.sort((a, b) =>
         descending(new Date(a.meta.publishDate), new Date(b.meta.publishDate))
       )
-    }
-    )
+    })
 }

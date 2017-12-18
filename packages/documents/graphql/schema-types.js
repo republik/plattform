@@ -39,4 +39,8 @@ type Document implements FileInterface {
   content: JSON!
   meta: Meta!
 }
+
+extend type User {
+  documents(feed: Boolean): [Document!]!
+}
 `

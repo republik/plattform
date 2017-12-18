@@ -87,6 +87,11 @@ const userIsMeOrInRoles = (user, me, roles) => (
   userIsInRoles(user, roles)
 )
 
+const userIsMeOrHasProfile = (user, me) => (
+  user._data.hasPublicProfile ||
+  userIsMe(user, me)
+)
+
 module.exports = {
   roles,
   userHasRole,
@@ -94,6 +99,7 @@ module.exports = {
   userIsInRoles,
   userIsMe,
   userIsMeOrInRoles,
+  userIsMeOrHasProfile,
   ensureUserIsInRoles,
   addUserToRole,
   removeUserFromRoll
