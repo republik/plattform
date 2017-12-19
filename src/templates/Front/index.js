@@ -117,7 +117,7 @@ const createSchema = ({
 
   const title = (type, Headline) => ({
     matchMdast: matchHeading(1),
-    component: ({ children, href, ...props }) => 
+    component: ({ children, href, ...props }) =>
       <Link href={href} passHref>
         <a {...styles.link} href={href}>
           <Headline {...props}>{children}</Headline>
@@ -346,6 +346,7 @@ const createSchema = ({
         'bgColor',
         'linkColor',
         'center',
+        'showImage',
         'image',
         'kind'
       ]
