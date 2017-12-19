@@ -1,5 +1,5 @@
 {
-  "updated": "2017-11-01T11:30:19.255Z",
+  "updated": "2017-12-19T16:18:24.288Z",
   "title": "live",
   "data": [
     {
@@ -28,7 +28,16 @@
     },
     {
       "key": "styleguide/CommentTreeCollapse/label",
-      "value": "ausblenden"
+      "value": "ausblenden",
+      "undefined": " "
+    },
+    {
+      "key": "styleguide/Dossier/label",
+      "value": "Dossier"
+    },
+    {
+      "key": "styleguide/Dossier/showmore/other",
+      "value": "Mehr anzeigen ({count})"
     }
   ]
 }

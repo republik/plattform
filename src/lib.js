@@ -64,6 +64,17 @@ export {
   TeaserFrontCreditLink
 } from './components/TeaserFront'
 export {
+  TeaserFrontDossier,
+  TeaserFrontDossierIntro,
+  // Components below aren't teaser-specific.
+  DossierTag,
+  DossierHeadline,
+  DossierLead,
+  DossierTile,
+  DossierTileHeadline,
+  DossierTileRow
+} from './components/Dossier'
+export {
   Spinner,
   InlineSpinner
 } from './components/Spinner'

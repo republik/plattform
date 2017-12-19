@@ -359,6 +359,19 @@ ReactDOM.render(
             },
             src: require('./components/TeaserFront/Tile.md')
           },
+          {
+            path: '/teaserfrontdossier',
+            title: 'FrontDossier',
+            imports: {
+              css,
+              t,
+              ...require('./components/Typography'),
+              ...require('./components/Dossier'),
+              ...require('./components/TeaserFront'),
+              ...require('./components/Figure'),
+            },
+            src: require('./components/Dossier/Teaser.md')
+          },
         ]
       },
       {
