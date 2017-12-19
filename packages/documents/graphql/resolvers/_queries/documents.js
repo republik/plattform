@@ -31,6 +31,9 @@ module.exports = async (_, args, { user, redis }) => {
       return redis.getAsync(`repos:${repoId}/${ref}`)
         .then(publication => {
           const json = JSON.parse(publication)
+          if (!json) {
+            return null
+          }
           return {
             id: Buffer.from(`repo:${repoId}`).toString('base64'),
             ...json.doc
@@ -39,7 +42,7 @@ module.exports = async (_, args, { user, redis }) => {
     })
   )
     .then(docs => {
-      let documents = docs
+      let documents = docs.filter(Boolean)
       if (feed) {
         documents = documents.filter(d => (
           d.meta.feed ||
