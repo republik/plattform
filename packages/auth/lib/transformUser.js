@@ -14,8 +14,9 @@ module.exports = user => {
     lastName: user.lastName,
     name,
     hasPublicProfile: user.hasPublicProfile,
-    // read access to roles is protected by a resolver function
+    // api read access protected by a resolver functions
     roles: user.roles || [],
+    email: user.email,
     // use resolver functions to access _raw
     // and expose more fields according to custom logic
     _raw: user
