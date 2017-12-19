@@ -1,12 +1,6 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 
 module.exports = {
-  hasPublicProfile (user, args, { pgdb, user: me }) {
-    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
-      return user._raw.hasPublicProfile
-    }
-    return null
-  },
   email (user, args, { pgdb, user: me }) {
     if (user._raw.isEmailPublic || Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return user._raw.email

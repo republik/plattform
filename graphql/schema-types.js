@@ -6,11 +6,9 @@ type Credential {
 }
 
 extend type User {
-  initials: String!
   address: Address
   birthday: Date
   phoneNumber: String
-  hasPublicProfile: Boolean
   credentials: [Credential]!
   testimonial: Testimonial
   facebookId: String

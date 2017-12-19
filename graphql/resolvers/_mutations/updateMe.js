@@ -1,6 +1,6 @@
-const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
+const { ensureSignedIn, checkUsername } = require('@orbiting/backend-modules-auth')
 
-module.exports = async (_, args, { pgdb, req, t }) => {
+module.exports = async (_, args, { pgdb, req, user: me, t }) => {
   ensureSignedIn(req)
   const {
     username,
@@ -15,6 +15,11 @@ module.exports = async (_, args, { pgdb, req, t }) => {
     isEmailPublic,
     hasPublicProfile
   } = args
+
+  if (username !== undefined) {
+    await checkUsername(username, me, pgdb)
+  }
+
   const transaction = await pgdb.transactionBegin()
   try {
     if (
@@ -29,7 +34,7 @@ module.exports = async (_, args, { pgdb, req, t }) => {
       isEmailPublic ||
       hasPublicProfile
     ) {
-      await transaction.public.users.update(
+      await transaction.public.users.updateOne(
         { id: req.user.id },
         {
           username,
@@ -58,7 +63,7 @@ module.exports = async (_, args, { pgdb, req, t }) => {
         const userAddress = await transaction.public.addresses.insertAndGet(
           address
         )
-        await transaction.public.users.update(
+        await transaction.public.users.updateOne(
           { id: req.user.id },
           { addressId: userAddress.id }
         )
@@ -67,6 +72,7 @@ module.exports = async (_, args, { pgdb, req, t }) => {
     await transaction.transactionCommit()
     return pgdb.public.users.findOne({ id: req.user.id })
   } catch (e) {
+    console.error('updateMe', e)
     await transaction.transactionRollback()
     throw new Error(t('api/unexpected'))
   }
