@@ -7,6 +7,11 @@ schema {
 type queries {
   me: User
 
+  # check if a username is available
+  # also returns true if you already own it
+  # ensures signed in
+  checkUsername(username: String): Boolean
+
   # get user by slug—a id or username
   # only returns users with a public profile
   user(slug: String): User
