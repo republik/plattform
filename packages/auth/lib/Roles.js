@@ -84,7 +84,7 @@ const userIsMe = (user, me) => (
 
 const userIsMeOrInRoles = (user, me, roles) => (
   userIsMe(user, me) ||
-  userIsInRoles(user, roles)
+  userIsInRoles(me, roles)
 )
 
 const userIsMeOrHasProfile = (user, me) => (
