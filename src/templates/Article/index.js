@@ -462,7 +462,8 @@ const createSchema = ({
               props: node => ({
                 data: {
                   ordered: node.ordered,
-                  start: node.start
+                  start: node.start,
+                  compact: !node.loose
                 }
               }),
               editorModule: 'list',
