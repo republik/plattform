@@ -25,7 +25,10 @@ const styles = {
 }
 
 export default ({ children, getWidth = defaultGetWidth, ...props }) => {
-  const wrappedChildren = children.map(
+  const childComponents = Array.isArray(children)
+    ? children
+    : Array.of(children)
+  const wrappedChildren = childComponents.map(
     (child, index) => (
       <div
         key={`input-${index}`}
