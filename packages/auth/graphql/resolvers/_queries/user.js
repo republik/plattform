@@ -2,13 +2,12 @@ const transformUser = require('../../../lib/transformUser')
 const Roles = require('../../../lib/Roles')
 
 module.exports = async (_, args, { pgdb, user: me }) => {
-  const { id, username } = args
-  if (!id && !username) {
+  const { slug } = args
+  if (!slug) {
     return null
   }
   const user = await pgdb.public.users.findOne({
-    id,
-    username
+    or: [{id: slug}, {username: slug}]
   }, { skipUndefined: true })
   if (
     !user ||
