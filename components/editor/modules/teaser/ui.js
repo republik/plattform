@@ -241,6 +241,15 @@ const Form = ({ node, onChange, options }) => {
         onChange={onChange('image')}
       />
     }
+    {
+      options.includes('showImage') &&
+      <Checkbox
+        checked={node.data.get('showImage')}
+        onChange={onChange('showImage')}
+      >
+        Bild anzeigen
+      </Checkbox>
+    }
   </UIForm>
 }
 
