@@ -35,12 +35,32 @@ interface FileInterface {
 }
 
 type Document implements FileInterface {
+  id: ID!
   # AST of /article.md
   content: JSON!
   meta: Meta!
 }
 
+type DocumentPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type DocumentConnection {
+  nodes: [Document!]!
+  pageInfo: DocumentPageInfo!
+  totalCount: Int!
+}
+
 extend type User {
-  documents(feed: Boolean): [Document!]!
+  documents(
+    feed: Boolean
+    first: Int
+    last: Int
+    before: String
+    after: String
+  ): DocumentConnection!
 }
 `

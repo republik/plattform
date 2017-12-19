@@ -6,7 +6,13 @@ schema {
 
 type queries {
   # (pre)published documents
-  documents(feed: Boolean): [Document]!
+  documents(
+    feed: Boolean
+    first: Int
+    last: Int
+    before: String
+    after: String
+  ): DocumentConnection!
   # (pre)published document
   document(slug: String!): Document
 }
