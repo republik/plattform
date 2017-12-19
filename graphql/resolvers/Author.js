@@ -1,6 +1,9 @@
+const { transformUser } = require('@orbiting/backend-modules-auth')
+
 module.exports = {
   user: async (author, args, { pgdb }) => {
     const { email } = author
-    return pgdb.public.users.findOne({ email })
+    const user = await pgdb.public.users.findOne({ email })
+    return user && transformUser(user)
   }
 }

@@ -8,6 +8,7 @@ const {
   getAnnotatedTags,
   getAnnotatedTag
 } = require('../../lib/github')
+const { transformUser } = require('@orbiting/backend-modules-auth')
 const debug = require('debug')('publikator:repo')
 
 module.exports = {
@@ -98,6 +99,7 @@ module.exports = {
     const userIds = await redis.zrangeAsync(repoId, 0, -1)
     return userIds.length
       ? pgdb.public.users.find({ id: userIds })
+          .then(users => users.map(transformUser))
       : []
   },
   milestones: (repo) => {
