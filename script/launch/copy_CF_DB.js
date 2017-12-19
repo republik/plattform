@@ -3,8 +3,10 @@
  * This only works locally, not on heroku.
  *
  * usage:
- * node script/copy_CF_DB.js [PG_USERNAME]
+ * node script/launch/copy_CF_DB.js [PG_USERNAME]
  */
+
+process.on('unhandledRejection', up => { throw up })
 
 const exec = require('child-process-promise').exec
 

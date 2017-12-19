@@ -18,6 +18,7 @@ type queries {
     firstId: ID,
     videosOnly: Boolean
   ): [Testimonial!]!
+  greeting: Greeting
 }
 
 type mutations {
@@ -77,5 +78,6 @@ type subscriptions {
   # all in one subscription:
   # create, update, unpublish, vote
   comments(discussionId: ID!): Comment!
+  greeting: Greeting!
 }
 `
