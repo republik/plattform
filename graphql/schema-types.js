@@ -212,4 +212,9 @@ type Comment {
   _depth: Int!
   hottnes: Float!
 }
+
+type Greeting {
+  id: ID!
+  text: String!
+}
 `

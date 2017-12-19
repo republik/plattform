@@ -1,13 +1,15 @@
 const logger = console
 const postfinanceSHA = require('../../../lib/payments/postfinance/sha')
 const uuid = require('uuid/v4')
-const {minTotal, regularTotal} = require('../../../lib/Pledge')
+const { minTotal, regularTotal, getPledgeOptionsTree } = require('../../../lib/Pledge')
+const debug = require('debug')('crowdfundings:pledge')
 
 module.exports = async (_, args, {pgdb, req, t}) => {
   const transaction = await pgdb.transactionBegin()
   try {
     const { pledge } = args
     const pledgeOptions = pledge.options
+    debug('submitPledge %O', pledge)
 
     // load original of chosen packageOptions
     const pledgeOptionsTemplateIds = pledgeOptions.map((plo) => plo.templateId)
@@ -126,6 +128,24 @@ module.exports = async (_, args, {pgdb, req, t}) => {
             logger.info('user tried to buy a reduced membership and already pledged before', { req: req._log(), args })
             throw new Error(t('api/membership/reduced/alreadyHas'))
           }
+        }
+      }
+    }
+
+    // MONTHLY_ABO can only be bought if user has no active membership
+    const userHasActiveMembership = await transaction.public.memberships.findFirst({
+      userId: user.id,
+      active: true
+    })
+    if (userHasActiveMembership) {
+      const pledgeOptionsTree = await getPledgeOptionsTree(pledge.options, transaction)
+      for (let plo of pledgeOptionsTree) {
+        if (
+          plo.packageOption.reward &&
+          plo.packageOption.reward.membershipType &&
+          plo.packageOption.reward.membershipType.name === 'MONTHLY_ABO'
+        ) {
+          throw new Error(t('api/membership/monthly/hasActive'))
         }
       }
     }

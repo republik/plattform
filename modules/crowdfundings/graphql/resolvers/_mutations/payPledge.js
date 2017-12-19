@@ -50,6 +50,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       if (
         payment && payment.pspPayload && pspPayload &&
         payment.pspPayload.TRANSACTIONID === pspPayload.tx) {
+        await transaction.transactionCommit()
         return {
           pledgeId: pledge.id
         }
@@ -61,8 +62,17 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     // load user
     const user = await transaction.public.users.findOne({id: pledge.userId})
 
-    // check/charge payment
+    // check if paymentMethod is allowed
+    const pkg = await transaction.public.packages.findOne({
+      id: pledge.packageId
+    })
+    if (pkg.paymentMethods.indexOf(pledgePayment.method) === -1) {
+      logger.error('payPledge paymentMethod not allowed', { req: req._log(), args, pledge, pledgePayment })
+      throw new Error(t('api/pledge/paymentMethod/notAllowed'))
+    }
+
     let pledgeStatus
+    // check/charge payment
     if (pledgePayment.method === 'PAYMENTSLIP') {
       pledgeStatus = await payPledgePaymentslip({
         pledgeId: pledge.id,
@@ -80,6 +90,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
         total: pledge.total,
         sourceId: pledgePayment.sourceId,
         userId: user.id,
+        pkg,
         transaction,
         t,
         logger
@@ -126,12 +137,14 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       })
     }
 
-    // send a confirmation email for this pledge
-    await transaction.public.pledges.updateOne({
-      id: pledge.id
-    }, {
-      sendConfirmMail: true
-    })
+    if (pkg.name !== 'MONTHLY_ABO') {
+      // send a confirmation email for this pledge
+      await transaction.public.pledges.updateOne({
+        id: pledge.id
+      }, {
+        sendConfirmMail: true
+      })
+    }
 
     // commit transaction
     await transaction.transactionCommit()

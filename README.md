@@ -60,17 +60,30 @@ Install dependencies.
 yarn install
 ```
 
+#### DB
+To begin from a fresh DB, some more manual steps are required. We hope to improve the initial setup of this repo in the future.
+First checkout [crowdfunding-backend](https://github.com/orbiting/crowdfunding-backend) and follow it's quicksteps to initialize the DB and seed it.
+After that's done follow the steps below.
+
+
 If you are migrating from [crowdfunding-backend](https://github.com/orbiting/crowdfunding-backend):
+
+Copy the `/postgres` to `/republik` to not touch the local crowdfunding db. This script will not work on heroku obviously.
 ```
-node script/copy_CF_DB.js [YOUR_PG_USERNAME]
-yarn run db:migrate:up
+node script/launch/copy_CF_DB.js [YOUR_PG_USERNAME]
 ```
 
-If you want to begin with a fresh DB:
 ```
-createdb -U postgres republik
-yarn run db:migrate:up
+psql postgres://YOUR_PG_USERNAME@localhost:5432/republik -c "ALTER TYPE \"paymentType\" ADD VALUE IF NOT EXISTS 'MEMBERSHIP_PERIOD' AFTER 'PLEDGE'"
+yarn run launch
 ```
+`yarn run launch` does the following:
+ - migrates the DB to match republik-backends expectations (`yarn run db:migrate:up`)
+ - activates memberships and generates membershipPeriods `node script/launch/activateMemberships.js`
+ - inserts the LAUNCH crowdfunding with the monthly membership `node script/launch/add_launch_data.js`
+
+Hint: `yarn run launch:local [YOUR_PG_USERNAME]` is a shortcut for the 3 commands above.
+
 
 Run it.
 ```

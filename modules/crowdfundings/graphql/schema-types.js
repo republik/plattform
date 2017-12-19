@@ -36,6 +36,7 @@ type Package {
   id: ID!
   name: String!
   options: [PackageOption!]!
+  paymentMethods: [PaymentMethod!]!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -80,12 +81,23 @@ type MembershipType {
 type Membership {
   id: ID!
   type: MembershipType!
-  startDate: DateTime
   pledge: Pledge!
   voucherCode: String
   reducedPrice: Boolean!
   claimerName: String
   sequenceNumber: Int
+  active: Boolean!
+  renew: Boolean!
+  periods: [MembershipPeriod]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type MembershipPeriod {
+  id: ID!
+  membership: Membership!
+  beginDate: DateTime!
+  endDate: DateTime!
   createdAt: DateTime!
   updatedAt: DateTime!
 }

@@ -6,11 +6,12 @@ const t = require('./lib/t')
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 
 module.exports.run = () => {
+  require('./lib/slackGreeter')
   const localModule = require('./graphql')
   const executableSchema = makeExecutableSchema(merge(localModule, [documents]))
 
   // middlewares
-  const middlewares = []
+  const middlewares = [ require('./modules/crowdfundings/express/paymentWebhooks') ]
 
   return server.run(executableSchema, middlewares, t)
 }
