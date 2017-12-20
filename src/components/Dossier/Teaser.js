@@ -9,15 +9,9 @@ const styles = {
     position: 'relative',
     lineHeight: 0,
     margin: 0,
-    padding: '60px 0 40px 0',
-    [dUp]: {
-      background: 'none'
-    }
-  }),
-  textContainer: css({
     padding: '15px',
     [dUp]: {
-      padding: 0
+      padding: '60px 0'
     }
   })
 }
@@ -32,7 +26,7 @@ const Teaser = ({ children, attributes, onClick }) => {
         cursor: onClick ? 'pointer' : 'default'
       }}
     >
-      <div {...styles.textContainer}>{children}</div>
+      {children}
     </div>
   )
 }
