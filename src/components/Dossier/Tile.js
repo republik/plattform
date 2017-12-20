@@ -21,7 +21,7 @@ const sizeMedium = {
 }
 
 const styles = {
-  container: css({
+  tile: css({
     margin: '0',
     textAlign: 'center',
     padding: '30px 15px',
@@ -32,10 +32,14 @@ const styles = {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
+      marginBottom: '50px',
       padding: '20px 0',
       borderTop: 'none',
       '& ~ &': {
         borderLeft: `1px solid ${colors.divider}`
+      },
+      '&:nth-child(3n+4)': {
+        borderLeft: 'none'
       }
     }
   }),
@@ -64,6 +68,7 @@ const styles = {
     display: 'block',
     [mUp]: {
       display: 'flex',
+      flexFlow: 'row wrap',
       '& .tile': {
         width: '33.3%'
       },
@@ -100,7 +105,7 @@ const Tile = ({ children, attributes, image, alt, onClick}) => {
   return (
     <div
       {...attributes}
-      {...styles.container}
+      {...styles.tile}
       onClick={onClick}
       style={{
         cursor: onClick ? 'pointer' : 'default'

@@ -9,10 +9,10 @@ Props:
 <TeaserFrontDossier>
   <TeaserFrontDossierIntro>
     <DossierTag>Dossier</DossierTag>
-    <DossierHeadline>Dossiertitel</DossierHeadline>
-    <DossierLead>
+    <TeaserFrontDossierHeadline>Dossiertitel</TeaserFrontDossierHeadline>
+    <TeaserFrontDossierLead>
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-    </DossierLead>
+    </TeaserFrontDossierLead>
   </TeaserFrontDossierIntro>
   <DossierTileRow>
     <DossierTile image='/static/rothaus_landscape.jpg'>
@@ -49,10 +49,10 @@ Props:
 <TeaserFrontDossier>
   <TeaserFrontDossierIntro image='/static/desert.jpg?size=4323x2962'>
     <DossierTag>Dossier</DossierTag>
-    <DossierHeadline>Dossiertitel</DossierHeadline>
-    <DossierLead>
+    <TeaserFrontDossierHeadline>Dossiertitel</TeaserFrontDossierHeadline>
+    <TeaserFrontDossierLead>
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
-    </DossierLead>
+    </TeaserFrontDossierLead>
   </TeaserFrontDossierIntro>
   <DossierTileRow>
     <DossierTile image='/static/rothaus_landscape.jpg'>
@@ -90,10 +90,10 @@ Props:
 <TeaserFrontDossier>
   <TeaserFrontDossierIntro image='/static/rothaus_portrait.jpg'>
     <DossierTag>Dossier</DossierTag>
-    <DossierHeadline>Dossiertitel</DossierHeadline>
-    <DossierLead>
+    <TeaserFrontDossierHeadline>Dossiertitel</TeaserFrontDossierHeadline>
+    <TeaserFrontDossierLead>
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
-    </DossierLead>
+    </TeaserFrontDossierLead>
   </TeaserFrontDossierIntro>
   <DossierTileRow>
     <DossierTile image='/static/rothaus_landscape.jpg'>

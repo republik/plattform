@@ -4,7 +4,6 @@ import { link } from '../Typography/Editorial'
 
 const styles = {
   more: css({
-    marginTop: '40px',
     textAlign: 'center'
   })
 }

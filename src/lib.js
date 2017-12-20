@@ -66,10 +66,11 @@ export {
 export {
   TeaserFrontDossier,
   TeaserFrontDossierIntro,
+  TeaserFrontDossierHeadline,
+  TeaserFrontDossierLead,
   // Components below aren't teaser-specific.
   DossierTag,
-  DossierHeadline,
-  DossierLead,
+  DossierSubheader,
   DossierTile,
   DossierTileHeadline,
   DossierTileRow

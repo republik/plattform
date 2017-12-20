@@ -232,16 +232,19 @@ export const sansSerifMedium20 = {
 export const sansSerifMedium19 = {
   fontFamily: fontFamilies.sansSerifMedium,
   fontSize: 19,
+  fontWeight: 'normal',
   lineHeight: '30px',
 }
 export const sansSerifMedium16 = {
   fontFamily: fontFamilies.sansSerifMedium,
   fontSize: 16,
+  fontWeight: 'normal',
   lineHeight: '25px',
 }
 export const sansSerifMedium14 = {
   fontFamily: fontFamilies.sansSerifMedium,
   fontSize: 14,
+  fontWeight: 'normal',
   lineHeight: '17px',
 }
 

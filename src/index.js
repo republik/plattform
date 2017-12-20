@@ -299,7 +299,20 @@ ReactDOM.render(
               Center: require('./components/Center')
             },
             src: require('./components/List/docs.md')
-          }
+          },
+          {
+            path: '/dossier',
+            title: 'Dossier',
+            imports: {
+              css,
+              t,
+              ...require('./components/Typography'),
+              ...require('./components/Dossier'),
+              ...require('./components/TeaserFront'),
+              ...require('./components/Figure'),
+            },
+            src: require('./components/Dossier/docs.md')
+          },
         ]
       },
       {
