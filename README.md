@@ -124,6 +124,7 @@ edit `script/db-migrate-all.js` and comment out the path "migrations".
 
 ```
   yarn run db:migrate:up
+  psql postgres://YOUR_USERNAME@localhost:5432/republik -c "ALTER TABLE companies add column title TEXT"
   psql postgres://YOUR_USERNAME@localhost:5432/republik -c "ALTER TYPE \"paymentType\" ADD VALUE IF NOT EXISTS 'MEMBERSHIP_PERIOD' AFTER 'PLEDGE'"
 ```
 
@@ -133,11 +134,19 @@ revert the changes to `script/db-migrate-all.js`
   yarn run db:migrate:up
 ```
 
-import the seed data from `seeds/crowdfunding.sql`:
+now import the seed data from `seeds/crowdfunding.sql`:
 
 ```
   psql -u YOUR_USERNAME -d republik -f seeds/crowdfunding.sql
 ```
+
+...or use the test data instead:
+
+```
+  DATABASE_URL=postgres://YOUR_USERNAME@localhost:5432/republik-test node seeds/seedCrowdfundings.js
+```
+
+
 
 
 ## Seed: comments

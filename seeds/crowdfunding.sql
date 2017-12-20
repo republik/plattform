@@ -20,11 +20,12 @@ SET search_path = public, pg_catalog;
 -- Data for Name: companies; Type: TABLE DATA; Schema: public; Owner: patte
 --
 
+DELETE FROM "membershipTypes" CASCADE;
+DELETE FROM packages CASCADE;
 DELETE FROM companies CASCADE;
 DELETE FROM crowdfundings;
 DELETE FROM rewards CASCADE;
 DELETE FROM goodies CASCADE;
-DELETE FROM packages CASCADE;
 INSERT INTO companies (id, name, "createdAt", "updatedAt", title) VALUES ('a39ed529-cb41-497f-826d-4d8cf5ccd483', 'PROJECT_R', '2017-12-11 22:48:40.440096+01', '2017-12-11 22:48:40.440096+01', NULL);
 INSERT INTO companies (id, name, "createdAt", "updatedAt", title) VALUES ('ee5f7aa3-9083-4738-86c9-91fd8757b7aa', 'REPUBLIK', '2017-12-11 22:48:40.440096+01', '2017-12-11 22:48:40.440096+01', NULL);
 INSERT INTO companies (id, name, "createdAt", "updatedAt", title) VALUES ('8f703369-1c07-4589-821f-c551041fc71a', 'name1', '2017-12-15 17:16:18.653879+01', '2017-12-15 17:16:18.653879+01', 'title1');
