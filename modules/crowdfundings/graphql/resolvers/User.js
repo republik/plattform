@@ -1,4 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
+const getStripeClients = require('../../lib/payments/stripe/clients')
 
 module.exports = {
   async memberships (user, args, {pgdb, user: me}) {
@@ -26,5 +27,29 @@ module.exports = {
         name: user.name
       }
     }
+  },
+  async paymentSources (user, args, { pgdb, user: me }) {
+    const { provider } = await getStripeClients(pgdb)
+    if (Roles.userIsMeOrInRoles(user, me, ['admin'])) {
+      const customer = await pgdb.public.stripeCustomers.findOne({
+        userId: user.id,
+        companyId: provider.company.id
+      })
+      if (!customer) {
+        return []
+      }
+      const stripeCustomer = await provider.stripe.customers.retrieve(customer.id)
+      if (!stripeCustomer || !stripeCustomer.sources || !stripeCustomer.sources.data) {
+        return []
+      }
+      return stripeCustomer.sources.data.map(source => ({
+        id: source.id,
+        isDefault: source.id === stripeCustomer.default_source,
+        status: source.status.toUpperCase(),
+        brand: source.card.brand,
+        last4: source.card.last4
+      }))
+    }
+    return []
   }
 }

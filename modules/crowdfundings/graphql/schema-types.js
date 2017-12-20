@@ -7,6 +7,7 @@ extend type User {
   pledges: [Pledge!]!
   memberships: [Membership!]!
   testimonial: Testimonial
+  paymentSources: [PaymentSource!]!
 }
 
 type Crowdfunding {
@@ -200,5 +201,20 @@ type PledgePayment {
 type PledgePayments {
   items: [PledgePayment!]!
   count: Int!
+}
+
+enum PaymentSourceStatus {
+  CANCELED
+  CHARGEABLE
+  CONSUMED
+  FAILED
+  PENDING
+}
+type PaymentSource {
+  id: String!
+  isDefault: Boolean!
+  status: PaymentSourceStatus!
+  brand: String!
+  last4: String!
 }
 `
