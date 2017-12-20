@@ -18,5 +18,7 @@ type mutations {
   payPledge(pledgePayment: PledgePaymentInput): PledgeResponse!
   reclaimPledge(pledgeId: ID!): Boolean!
   claimMembership(voucherCode: String!): Boolean!
+  # adds a new paymentSource and makes it the default
+  addPaymentSource(sourceId: String!): [PaymentSource!]!
 }
 `

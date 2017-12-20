@@ -6,7 +6,8 @@ module.exports = async ({
   userId,
   pgdb,
   clients, // optional
-  deduplicate = false
+  deduplicate = false,
+  makeDefault = false
 }) => {
   const {
     provider,
@@ -36,6 +37,11 @@ module.exports = async ({
   await provider.stripe.customers.createSource(customer.id, {
     source: sourceId
   })
+  if (makeDefault) {
+    await provider.stripe.customers.update(customer.id, {
+      default_source: sourceId
+    })
+  }
 
   for (let connectedAccount of connectedAccounts) {
     const connectedCustomer = await pgdb.public.stripeCustomers.findOne({
@@ -66,6 +72,13 @@ module.exports = async ({
     }, {
       stripe_account: connectedAccount.accountId
     })
+    if (makeDefault) {
+      await provider.stripe.customers.update(connectedCustomer.id, {
+        default_source: connectedSource.id
+      }, {
+        stripe_account: connectedAccount.accountId
+      })
+    }
   }
 
   return sourceId
