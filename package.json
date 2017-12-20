@@ -37,7 +37,7 @@
     "uuid": "^3.1.0"
   },
   "scripts": {
-    "dev": "NODE_ENV=development nodemon -w graphql -w src -w lib -w modules -w .env -w package.json -w server.js -w index.js index.js",
+    "dev": "NODE_ENV=development nodemon -w graphql -w ../backend-modules -w src -w lib -w modules -w .env -w package.json -w server.js -w index.js index.js",
     "debug": "DEBUG=crowdfundings:*,republik:* yarn run dev",
     "inspect": "NODE_ENV=development node --inspect index.js",
     "start": "node index.js",
