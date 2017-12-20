@@ -1,5 +1,12 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 
+const exposeProfileField = key => (user, args, { pgdb, user: me }) => {
+  if (Roles.userIsMeOrHasProfile(user, me)) {
+    return user._raw[key]
+  }
+  return null
+}
+
 module.exports = {
   email (user, args, { pgdb, user: me }) {
     if (user._raw.isEmailPublic || Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
@@ -7,12 +14,10 @@ module.exports = {
     }
     return null
   },
-  badges (user, args, { pgdb, user: me }) {
-    if (Roles.userIsMeOrHasProfile(user, me)) {
-      return user._raw.badges
-    }
-    return null
-  },
+  badges: exposeProfileField('badges'),
+  facebookId: exposeProfileField('facebookId'),
+  twitterHandle: exposeProfileField('twitterHandle'),
+  publicUrl: exposeProfileField('publicUrl'),
   async latestComments (user, args, { pgdb, user: me }) {
     if (!Roles.userIsMeOrHasProfile(user, me)) {
       return null
