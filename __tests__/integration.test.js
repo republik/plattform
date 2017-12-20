@@ -395,6 +395,7 @@ test('commit (create repo)', async (t) => {
             name
             email
             user {
+              id
               email
             }
           }
@@ -1136,8 +1137,10 @@ test('publish', async (t) => {
   const documentsQuery = `
     {
       documents {
-        content
-        ${documentMetaQuery}
+        nodes {
+          content
+          ${documentMetaQuery}
+        }
       }
     }
   `
@@ -1236,18 +1239,18 @@ test('publish', async (t) => {
       const fetchDocuments = await apolloFetch({
         query: documentsQuery
       })
-      t.ok(fetchDocuments.data.documents)
+      t.ok(fetchDocuments.data.documents.nodes)
       // console.log('authenticated')
-      checkDocuments(fetchDocuments.data.documents, _documents)
+      checkDocuments(fetchDocuments.data.documents.nodes, _documents)
     }
 
     if (_unauthorizedDocuments) {
       const fetchDocumentsUnauth = await apolloFetchUnauthorized({
         query: documentsQuery
       })
-      t.ok(fetchDocumentsUnauth.data.documents)
+      t.ok(fetchDocumentsUnauth.data.documents.nodes)
       // console.log('not authenticated')
-      checkDocuments(fetchDocumentsUnauth.data.documents, _unauthorizedDocuments)
+      checkDocuments(fetchDocumentsUnauth.data.documents.nodes, _unauthorizedDocuments)
     }
 
     const liveRefs = [
