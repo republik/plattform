@@ -6,7 +6,7 @@ const _ = {
 
 module.exports = async ({ pgdb }) => {
   const {
-    provider,
+    platform,
     connectedAccounts
   } = await getStripeClients(pgdb)
 
@@ -28,7 +28,7 @@ module.exports = async ({ pgdb }) => {
       // all events for connected accounts share the same secret
       const account = connected
         ? connectedAccounts[0]
-        : provider
+        : platform
 
       event = account.stripe.webhooks.constructEvent(
         req.body,
@@ -46,7 +46,7 @@ module.exports = async ({ pgdb }) => {
       /*
       const account = event.accountId
         ? accounts.find( a => a.accountId === event.account )
-        : provider
+        : platform
       if (!account) {
         throw new Error("stripe handleWebhook didn't find local account for event")
       }

@@ -29,16 +29,16 @@ module.exports = {
     }
   },
   async paymentSources (user, args, { pgdb, user: me }) {
-    const { provider } = await getStripeClients(pgdb)
+    const { platform } = await getStripeClients(pgdb)
     if (Roles.userIsMeOrInRoles(user, me, ['admin'])) {
       const customer = await pgdb.public.stripeCustomers.findOne({
         userId: user.id,
-        companyId: provider.company.id
+        companyId: platform.company.id
       })
       if (!customer) {
         return []
       }
-      const stripeCustomer = await provider.stripe.customers.retrieve(customer.id)
+      const stripeCustomer = await platform.stripe.customers.retrieve(customer.id)
       if (!stripeCustomer || !stripeCustomer.sources || !stripeCustomer.sources.data) {
         return []
       }

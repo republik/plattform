@@ -2,13 +2,13 @@ const _ = {
   difference: require('lodash/difference')
 }
 const {
-  STRIPE_PROVIDER,
+  STRIPE_PLATFORM,
   STRIPE_CONNECTED_ACCOUNTS
 } = process.env
 
 module.exports = async (pgdb) => {
   const accountNames = [
-    STRIPE_PROVIDER,
+    STRIPE_PLATFORM,
     ...STRIPE_CONNECTED_ACCOUNTS.split(',')
   ]
 
@@ -32,8 +32,8 @@ module.exports = async (pgdb) => {
         throw new Error(`missing STRIPE_ACCOUNT_ID_${accountName}`)
       }
 
-      const endpointSecretKey = accountName === STRIPE_PROVIDER
-        ? 'STRIPE_PROVIDER_ENDPOINT_SECRET'
+      const endpointSecretKey = accountName === STRIPE_PLATFORM
+        ? 'STRIPE_PLATFORM_ENDPOINT_SECRET'
         : 'STRIPE_CONNECTED_ENDPOINT_SECRET'
       const endpointSecret = process.env[endpointSecretKey]
       if (!endpointSecretKey) {
@@ -51,8 +51,8 @@ module.exports = async (pgdb) => {
     })
 
   return {
-    provider: accounts.find(a => a.name === STRIPE_PROVIDER),
-    connectedAccounts: accounts.filter(a => a.name !== STRIPE_PROVIDER),
+    platform: accounts.find(a => a.name === STRIPE_PLATFORM),
+    connectedAccounts: accounts.filter(a => a.name !== STRIPE_PLATFORM),
     accounts
   }
 }

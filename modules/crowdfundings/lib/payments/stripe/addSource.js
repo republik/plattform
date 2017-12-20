@@ -10,21 +10,21 @@ module.exports = async ({
   makeDefault = false
 }) => {
   const {
-    provider,
+    platform,
     connectedAccounts
   } = clients || await getClients(pgdb)
 
   const customer = await pgdb.public.stripeCustomers.findOne({
     userId,
-    companyId: provider.company.id
+    companyId: platform.company.id
   })
   if (!customer) {
-    throw new Error(`could not find stripeCustomer for userId: ${userId} companyId: ${provider.company.id}`)
+    throw new Error(`could not find stripeCustomer for userId: ${userId} companyId: ${platform.company.id}`)
   }
 
   if (deduplicate) {
-    const source = await provider.stripe.sources.retrieve(sourceId)
-    const stripeCustomer = await provider.stripe.customers.retrieve(customer.id)
+    const source = await platform.stripe.sources.retrieve(sourceId)
+    const stripeCustomer = await platform.stripe.customers.retrieve(customer.id)
 
     const existingSource = stripeCustomer.sources.data.find(s =>
       s.card && s.card.fingerprint === source.card.fingerprint
@@ -34,11 +34,11 @@ module.exports = async ({
     }
   }
 
-  await provider.stripe.customers.createSource(customer.id, {
+  await platform.stripe.customers.createSource(customer.id, {
     source: sourceId
   })
   if (makeDefault) {
-    await provider.stripe.customers.update(customer.id, {
+    await platform.stripe.customers.update(customer.id, {
       default_source: sourceId
     })
   }
@@ -52,7 +52,7 @@ module.exports = async ({
       throw new Error(`could not find stripeCustomer for userId: ${userId} companyId: ${connectedAccount.company.id}`)
     }
 
-    const connectedSource = await provider.stripe.sources.create({
+    const connectedSource = await platform.stripe.sources.create({
       customer: customer.id,
       usage: 'reusable',
       original_source: sourceId,
@@ -66,14 +66,14 @@ module.exports = async ({
       stripe_account: connectedAccount.accountId
     })
 
-    await provider.stripe.customers.createSource(connectedCustomer.id, {
+    await platform.stripe.customers.createSource(connectedCustomer.id, {
       source: connectedSource.id,
       validate: false // workaround suggested by stripe suppor for 402 invalid_cvc
     }, {
       stripe_account: connectedAccount.accountId
     })
     if (makeDefault) {
-      await provider.stripe.customers.update(connectedCustomer.id, {
+      await platform.stripe.customers.update(connectedCustomer.id, {
         default_source: connectedSource.id
       }, {
         stripe_account: connectedAccount.accountId
