@@ -7,8 +7,9 @@ Props:
 - `moreCount`: The number of more articles available in the dossier.
 
 ```react
-<TeaserFrontDossier t={t} moreCount={2}>
-  <TeaserFrontDossierIntro t={t}>
+<TeaserFrontDossier>
+  <TeaserFrontDossierIntro>
+    <DossierTag>Dossier</DossierTag>
     <DossierHeadline>Dossiertitel</DossierHeadline>
     <DossierLead>
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
@@ -41,12 +42,14 @@ Props:
       </TeaserFrontCredit>
     </DossierTile>
   </DossierTileRow>
+  <TeaserFrontDossierMore>Mehr zum Thema</TeaserFrontDossierMore>
 </TeaserFrontDossier>
 ```
 
 ```react
-<TeaserFrontDossier t={t} moreCount={2}>
-  <TeaserFrontDossierIntro t={t} image='/static/desert.jpg?size=4323x2962'>
+<TeaserFrontDossier>
+  <TeaserFrontDossierIntro image='/static/desert.jpg?size=4323x2962'>
+    <DossierTag>Dossier</DossierTag>
     <DossierHeadline>Dossiertitel</DossierHeadline>
     <DossierLead>
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
@@ -79,13 +82,15 @@ Props:
       </TeaserFrontCredit>
     </DossierTile>
   </DossierTileRow>
+  <TeaserFrontDossierMore>Mehr zum Thema</TeaserFrontDossierMore>
 </TeaserFrontDossier>
 ```
 
 
 ```react
-<TeaserFrontDossier t={t} moreCount={2}>
-  <TeaserFrontDossierIntro t={t} image='/static/rothaus_portrait.jpg'>
+<TeaserFrontDossier>
+  <TeaserFrontDossierIntro image='/static/rothaus_portrait.jpg'>
+    <DossierTag>Dossier</DossierTag>
     <DossierHeadline>Dossiertitel</DossierHeadline>
     <DossierLead>
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
@@ -118,5 +123,6 @@ Props:
       </TeaserFrontCredit>
     </DossierTile>
   </DossierTileRow>
+  <TeaserFrontDossierMore>Mehr zum Thema</TeaserFrontDossierMore>
 </TeaserFrontDossier>
 ```

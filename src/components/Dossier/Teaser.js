@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp, dUp } from '../TeaserFront/mediaQueries'
-import MoreLink from './MoreLink'
 
 const styles = {
   container: css({
@@ -23,7 +22,7 @@ const styles = {
   })
 }
 
-const Teaser = ({ t, children, attributes, onClick, moreCount }) => {
+const Teaser = ({ children, attributes, onClick }) => {
   return (
     <div
       {...attributes}
@@ -33,10 +32,7 @@ const Teaser = ({ t, children, attributes, onClick, moreCount }) => {
         cursor: onClick ? 'pointer' : 'default'
       }}
     >
-      <div {...styles.textContainer}>
-        {children}
-        {moreCount && <MoreLink count={moreCount} t={t} />}
-      </div>
+      <div {...styles.textContainer}>{children}</div>
     </div>
   )
 }
@@ -44,8 +40,7 @@ const Teaser = ({ t, children, attributes, onClick, moreCount }) => {
 Teaser.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
-  onClick: PropTypes.func,
-  moreCount: PropTypes.number
+  onClick: PropTypes.func
 }
 
 Teaser.defaultProps = {}

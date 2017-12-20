@@ -1,14 +1,12 @@
 import React from 'react'
 import { css } from 'glamor'
 import { mUp } from '../TeaserFront/mediaQueries'
-import { serifTitle20, serifTitle58 } from '../Typography/styles'
+import { serifTitle38, serifTitle58 } from '../Typography/styles'
 
 const styles = {
   base: css({
     margin: 0,
-    ...serifTitle20,
-    fontSize: '38px',
-    lineHeight: '43px',
+    ...serifTitle38,
     marginBottom: '30px',
     [mUp]: {
       ...serifTitle58

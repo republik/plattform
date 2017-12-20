@@ -56,14 +56,15 @@ const TeaserIntro = ({ children, attributes, image, alt, onClick, t }) => {
         cursor: onClick ? 'pointer' : 'default'
       }}
     >
-      {image && <div {...styles.imageContainer}>
-        <FigureImage
-          {...FigureImage.utils.getResizedSrcs(image, 750)}
-          alt={alt}
-        />
-      </div>}
+      {image && (
+        <div {...styles.imageContainer}>
+          <FigureImage
+            {...FigureImage.utils.getResizedSrcs(image, 750)}
+            alt={alt}
+          />
+        </div>
+      )}
       <div {...merge(styles.content, image ? styles.contentWithImage : {})}>
-        <Tag t={t} />
         {children}
       </div>
     </div>

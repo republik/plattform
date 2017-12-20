@@ -15,21 +15,16 @@ const styles = {
     }
   }),
   icon: css({
-    fontSize: '24px',
     marginRight: '8px'
   })
 }
 
-const DefaultLink = ({ children, slug }) => children
-
-const Tag = ({ t, slug, Link = DefaultLink }) => {
+const Tag = ({ children }) => {
   return (
-    <Link slug={slug}>
-      <a {...styles.tag}>
-        <FolderOpen {...styles.icon} />
-        {t('styleguide/Dossier/label')}
-      </a>
-    </Link>
+    <div {...styles.tag}>
+      <FolderOpen {...styles.icon} size={24} />
+      {children}
+    </div>
   )
 }
 

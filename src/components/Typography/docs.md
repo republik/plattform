@@ -46,9 +46,12 @@ import {colors: {text}, fontStyles: {serifRegular21}} from '@project-r/styleguid
 <div {...css({...serifRegular21, color: text})}>…</div>
 ```
 
-#### `serifTitle{58,30,22,20}`
+#### `serifTitle{58,38,30,22,20}`
 ```react|noSource,plain
 <div {...css(styles.serifTitle58)}>The quick brown fox jumps over</div>
+```
+```react|noSource,plain
+<div {...css(styles.serifTitle38)}>The quick brown fox jumps over the lazy dog</div>
 ```
 ```react|noSource,plain
 <div {...css(styles.serifTitle30)}>The quick brown fox jumps over the lazy dog</div>

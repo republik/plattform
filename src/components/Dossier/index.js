@@ -4,6 +4,7 @@ export const DossierTileHeadline = { ..._DossierTileHeadline }
 
 export { default as TeaserFrontDossier } from './Teaser'
 export { default as TeaserFrontDossierIntro } from './TeaserIntro'
+export { default as TeaserFrontDossierMore } from './More'
 
 export { default as DossierTag} from './Tag'
 export { default as DossierHeadline} from './Headline'

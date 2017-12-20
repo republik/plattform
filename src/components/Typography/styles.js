@@ -20,6 +20,12 @@ export const serifTitle58 = {
   fontWeight: 'normal',
   lineHeight: '60px'
 }
+export const serifTitle38 = {
+  fontFamily: fontFamilies.serifTitle,
+  fontSize: 38,
+  fontWeight: 'normal',
+  lineHeight: '43px'
+}
 export const serifTitle30 = {
   fontFamily: fontFamilies.serifTitle,
   fontSize: 30,
