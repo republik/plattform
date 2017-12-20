@@ -13,20 +13,6 @@ module.exports = {
     }
     return null
   },
-  async testimonial (user, args, { pgdb, user: me }) {
-    const testimonial = await pgdb.public.testimonials.findOne({
-      userId: user.id
-    })
-    if (
-      (testimonial.published && !testimonial.adminUnpublished) ||
-      (me && me.id === testimonial.userId)
-    ) {
-      return {
-        ...testimonial,
-        name: user.name
-      }
-    }
-  },
   async latestComments (user, args, { pgdb, user: me }) {
     if (!Roles.userIsMeOrHasProfile(user, me)) {
       return null
