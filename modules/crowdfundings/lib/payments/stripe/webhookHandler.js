@@ -148,7 +148,7 @@ module.exports = async ({ pgdb }) => {
                   "webhookEventId" = :webhookEventId,
                   "beginDate" = :beginDate,
                   "endDate" = :endDate,
-                  "updatedAt" = :now,
+                  "updatedAt" = :now
                 WHERE
                   ARRAY[mp."membershipId"] && :membershipIds AND
                   mp."webhookEventId" is null
