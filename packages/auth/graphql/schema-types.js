@@ -9,6 +9,8 @@ type User {
   email: String
   hasPublicProfile: Boolean
   roles: [String!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type SignInResponse {
