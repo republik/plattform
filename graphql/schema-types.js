@@ -24,7 +24,7 @@ type RepoConnection {
   nodes: [Repo]
   pageInfo: PageInfo!
   totalCount: Int!
-  totalDiskUsage: Int!
+  totalDiskUsage: Int
 }
 
 type PageInfo {

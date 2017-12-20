@@ -11,6 +11,8 @@ type queries {
     last: Int
     before: String
     after: String
+    # can not be combined with orderBy
+    search: String
     orderBy: RepoOrderBy
   ): RepoConnection!
   repo(id: ID!): Repo!
