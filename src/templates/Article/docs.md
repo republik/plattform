@@ -94,13 +94,8 @@ Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten Absichten, 
 
 \`\`\`
 {
-  "bgColor": "#000",
-  "center": false,
-  "color": "#fff",
   "kind": "editorial",
-  "portrait": true,
   "teaserType": "dossierTile",
-  "titleSize": "standard",
   "url": "https://www.republik.ch/updates/portraets"
 }
 \`\`\`
@@ -121,13 +116,8 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 
 \`\`\`
 {
-  "bgColor": "#ffffff",
-  "center": false,
-  "color": "#000000",
   "kind": "interaction",
-  "portrait": true,
   "teaserType": "dossierTile",
-  "titleSize": "standard",
   "url": "https://www.republik.ch/updates/portraets"
 }
 \`\`\`
@@ -143,13 +133,8 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 
 \`\`\`
 {
-  "bgColor": "#ffffff",
-  "center": false,
-  "color": "#000000",
   "kind": "editorial",
-  "portrait": true,
   "teaserType": "dossierTile",
-  "titleSize": "standard",
   "url": "https://www.republik.ch/updates/portraets"
 }
 \`\`\`
