@@ -34,7 +34,7 @@ const disconnect = async () => {
 }
 
 module.exports = {
-  createLocalApolloFetch,
+  apolloFetch: createLocalApolloFetch(),
   connectIfNeeded,
   pgDatabase,
   disconnect

@@ -1,7 +1,5 @@
 const test = require('tape-async')
-const { createLocalApolloFetch, connectIfNeeded, disconnect } = require('./helpers.js')
-
-const apolloFetch = createLocalApolloFetch()
+const { apolloFetch, connectIfNeeded, disconnect } = require('./helpers.js')
 
 test('setup', async (t) => {
   await connectIfNeeded()
@@ -16,7 +14,7 @@ test('setup', async (t) => {
       }
     `
   })
-  t.ok(result.data.__schema)
+  t.ok(result.data.__schema, 'graphql schema received')
   t.end()
 })
 

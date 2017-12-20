@@ -16,7 +16,6 @@
     "@orbiting/backend-modules-scripts": "^1.0.0",
     "@orbiting/backend-modules-translate": "^0.0.0",
     "@slack/client": "^3.14.2",
-    "apollo-fetch": "^0.7.0",
     "apollo-modules-node": "^0.1.1",
     "aws-sign": "^0.1.2",
     "d3-array": "^1.2.1",
@@ -72,11 +71,11 @@
     "faucet": "^0.0.1",
     "gsheets": "^2.0.0",
     "husky": "^0.14.3",
-    "istanbul": "^0.4.5",
     "lint-staged": "^4.3.0",
     "nodemon": "^1.12.1",
     "snoowrap": "^1.14.2",
     "standard": "^10.0.3",
-    "tape-async": "^2.3.0"
+    "tape-async": "^2.3.0",
+    "apollo-fetch": "^0.7.0"
   }
 }
