@@ -4,7 +4,6 @@ A `<TeaserFrontDossier />` is a front page teaser for a dossier. It features
 
 Props:
 - `onClick`: An onclick handler.
-- `moreCount`: The number of more articles available in the dossier.
 
 ```react
 <TeaserFrontDossier>

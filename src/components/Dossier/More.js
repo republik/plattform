@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import { Editorial } from '../Typography'
+import { link } from '../Typography/Editorial'
 
 const styles = {
   more: css({
@@ -10,11 +10,7 @@ const styles = {
 }
 
 const More = ({ children }) => {
-  return (
-    <div {...styles.more}>
-      <Editorial.A>{children}</Editorial.A>
-    </div>
-  )
+  return <div {...styles.more} {...link}>{children}</div>
 }
 
 export default More

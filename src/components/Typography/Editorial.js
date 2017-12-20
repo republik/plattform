@@ -146,7 +146,7 @@ export const Emphasis = ({ children, attributes, ...props }) => (
   </strong>
 )
 
-const link = css({
+export const link = css({
   ...underline,
   color: colors.text,
   ':hover': {
