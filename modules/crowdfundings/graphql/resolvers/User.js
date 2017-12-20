@@ -19,8 +19,9 @@ module.exports = {
       userId: user.id
     })
     if (
-      (testimonial.published && !testimonial.adminUnpublished) ||
-      (me && me.id === testimonial.userId)
+      testimonial &&
+      ((testimonial.published && !testimonial.adminUnpublished) ||
+      (me && me.id === testimonial.userId))
     ) {
       return {
         ...testimonial,
