@@ -7,7 +7,6 @@ ALTER TABLE users
   ADD COLUMN "twitterHandle"  text,
   ADD COLUMN "publicUrl"      text,
   ADD COLUMN "isEmailPublic"  boolean not null default false,
-  ADD COLUMN "isPrivate"      boolean not null default false,
   ADD COLUMN "badges"         jsonb
 ;
 
