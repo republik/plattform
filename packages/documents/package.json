@@ -1,6 +1,6 @@
 {
   "name": "@orbiting/backend-modules-documents",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "(redis-)documents schema and resolvers",
   "main": "index.js",
   "repository": {
