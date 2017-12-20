@@ -1,30 +1,10 @@
 const test = require('tape-async')
+const { createLocalApolloFetch, connectIfNeeded, disconnect } = require('./helpers.js')
 
-require('dotenv').config({ path: '.test.env' })
-
-const dedupe = require('dynamic-dedupe')
-dedupe.activate()
-
-const { PORT } = process.env
-
-const Server = require('../../../server')
-const sleep = require('await-sleep')
-const { lib: { redis } } = require('@orbiting/backend-modules-base')
-
-const GRAPHQL_URI = `http://localhost:${PORT}/graphql`
-const { createApolloFetch } = require('apollo-fetch')
-
-const apolloFetch = createApolloFetch({ uri: GRAPHQL_URI })
-
-// shared
-let pgdb
+const apolloFetch = createLocalApolloFetch()
 
 test('setup', async (t) => {
-  await redis.flushdbAsync()
-  await sleep(1000)
-  const server = await Server.run()
-  pgdb = server.pgdb
-  console.log(pgdb)
+  await connectIfNeeded()
   const result = await apolloFetch({
     query: `
       {
@@ -40,30 +20,16 @@ test('setup', async (t) => {
   t.end()
 })
 
-//
-// test('login with existing e-mail address', async (t) => {
-//   const result = await apolloFetch({
-//     query: `
-//       {
-//         embed(id: "2lXD0vv-ds8", embedType: YoutubeEmbed) {
-//           __typename
-//           ... on YoutubeEmbed {
-//             id
-//             userName
-//           }
-//         }
-//       }
-//     `
-//   })
-//   t.deepEqual(result.data.embed, {
-//     __typename: 'YoutubeEmbed',
-//     id: '2lXD0vv-ds8',
-//     userName: 'FlyingLotusVEVO'
-//   })
-//   t.end()
-// })
-
-test('teardown', (t) => {
-  Server.close()
+test('login with existing e-mail address', async (t) => {
+  await connectIfNeeded()
+  t.fail()
   t.end()
 })
+
+if (process.env.NODE_ENV !== 'development') {
+  test('teardown', async (t) => {
+    await disconnect()
+    t.pass()
+    t.end()
+  })
+}
