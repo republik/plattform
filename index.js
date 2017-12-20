@@ -1,4 +1,7 @@
-const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
+const DEV = process.env.NODE_ENV
+  ? process.env.NODE_ENV !== 'production'
+  : true
+
 if (DEV) {
   require('dotenv').config()
   // use dynamic-dedupe: otherwise peerDependencies of symlinked modules don't work

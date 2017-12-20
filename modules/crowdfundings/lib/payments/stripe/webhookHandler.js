@@ -141,9 +141,11 @@ module.exports = async ({ pgdb }) => {
             const beginDate = new Date(subscription.period.start * 1000)
             const endDate = new Date(subscription.period.end * 1000)
             if (firstNotification) {
+              // synchronize beginDate and endDate with stripe
               await transaction.query(`
                 UPDATE "membershipPeriods" mp
                 SET
+                  "webhookEventId" = :webhookEventId,
                   "beginDate" = :beginDate,
                   "endDate" = :endDate,
                   "updatedAt" = :now
@@ -152,6 +154,7 @@ module.exports = async ({ pgdb }) => {
                   mp."webhookEventId" is null
               `, {
                 membershipIds: memberships.map(m => m.id),
+                webhookEventId: event.id,
                 beginDate,
                 endDate,
                 now: new Date()

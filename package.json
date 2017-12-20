@@ -8,9 +8,9 @@
   "private": true,
   "license": "AGPL-3.0",
   "dependencies": {
-    "@orbiting/backend-modules-auth": "^1.0.0",
-    "@orbiting/backend-modules-base": "^0.1.6",
-    "@orbiting/backend-modules-documents": "^0.3.0",
+    "@orbiting/backend-modules-auth": "^2.0.0",
+    "@orbiting/backend-modules-base": "^0.2.1",
+    "@orbiting/backend-modules-documents": "^1.0.1",
     "@orbiting/backend-modules-mail": "^0.1.0",
     "@orbiting/backend-modules-scalars": "^0.0.4",
     "@orbiting/backend-modules-scripts": "^1.0.0",
@@ -37,7 +37,7 @@
     "uuid": "^3.1.0"
   },
   "scripts": {
-    "dev": "NODE_ENV=development nodemon -w graphql -w src -w lib -w modules -w .env -w package.json -w server.js -w index.js index.js",
+    "dev": "NODE_ENV=development nodemon -w graphql -w ../backend-modules -w src -w lib -w modules -w .env -w package.json -w server.js -w index.js index.js",
     "debug": "DEBUG=crowdfundings:*,republik:* yarn run dev",
     "inspect": "NODE_ENV=development node --inspect index.js",
     "start": "node index.js",

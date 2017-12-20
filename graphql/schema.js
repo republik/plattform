@@ -7,7 +7,6 @@ schema {
 }
 
 type queries {
-  publicUser(id: ID!): PublicUser
   discussions: [Discussion!]!
   discussion(id: ID!): Discussion
   testimonials(
@@ -23,6 +22,7 @@ type queries {
 
 type mutations {
   updateMe(
+    username: String,
     firstName: String,
     lastName: String,
     birthday: Date,
@@ -32,7 +32,7 @@ type mutations {
     twitterHandle: String,
     publicUrl: String,
     isEmailPublic: Boolean,
-    isPrivate: Boolean
+    hasPublicProfile: Boolean
   ): User!
 
   submitTestimonial(
