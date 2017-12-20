@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-11T00:07:31.402Z",
+  "updated": "2017-12-20T19:18:48.692Z",
   "title": "live",
   "data": [
     {
@@ -71,8 +71,12 @@
       "value": "erstellen"
     },
     {
-      "key": "repo/add/template/newsletter",
-      "value": "Newsletter"
+      "key": "repo/add/template/projectrNewsletter",
+      "value": "Project R Newsletter"
+    },
+    {
+      "key": "repo/add/template/republikNewsletter",
+      "value": "Republik Newsletter"
     },
     {
       "key": "repo/add/template/neutrum",
@@ -117,6 +121,18 @@
     {
       "key": "repo/phase/published",
       "value": "Publiziert"
+    },
+    {
+      "key": "repo/search/field/label",
+      "value": "Suche"
+    },
+    {
+      "key": "repo/search/field/minLength",
+      "value": "Suche, minimal {count} Zeichen"
+    },
+    {
+      "key": "repo/search/noResults",
+      "value": "Keine Resultate"
     },
     {
       "key": "repo/table/pageInfo/loadMore",
@@ -361,10 +377,6 @@
     {
       "key": "commit/status/new",
       "value": "Commite um das neue Dokument zu erstellen"
-    },
-    {
-      "key": "commit/status/new/short",
-      "value": "Neues Dokument"
     },
     {
       "key": "commit/status/committed",

@@ -5,7 +5,7 @@ import { gql, graphql } from 'react-apollo'
 import { descending, ascending } from 'd3-array'
 
 import withT from '../../lib/withT'
-import { Link } from '../../lib/routes'
+import { Link, Router } from '../../lib/routes'
 import { intersperse } from '../../lib/utils/helpers'
 import { swissTime } from '../../lib/utils/format'
 
@@ -16,7 +16,8 @@ import PublicIcon from 'react-icons/lib/md/public'
 import {
   linkRule,
   A, Label,
-  colors
+  colors,
+  Field
 } from '@project-r/styleguide'
 
 import { Table, Tr, Th, ThOrder, Td, TdNum } from '../Table'
@@ -123,6 +124,8 @@ const Phase = ({phase, onClick, disabled, t}) =>
     {t(`repo/phase/${phase.key}`, undefined, phase.key)}
   </span>
 
+const SEARCH_MIN_LENGTH = 3
+
 class RepoList extends Component {
   render () {
     const {
@@ -131,11 +134,12 @@ class RepoList extends Component {
       orderField,
       orderDirection,
       phase: filterPhase,
+      search,
       editRepoMeta,
       fetchMore
     } = this.props
 
-    const getParams = ({field = orderField, phase = filterPhase, order = false}) => {
+    const getParams = ({field = orderField, phase = filterPhase, q = search, order = false}) => {
       const params = {
         orderBy: [
           field,
@@ -146,6 +150,9 @@ class RepoList extends Component {
       }
       if (phase) {
         params.phase = phase
+      }
+      if (q) {
+        params.q = q
       }
 
       return params
@@ -166,11 +173,25 @@ class RepoList extends Component {
       <div {...styles.container}>
         <RepoAdd />
 
+        <Field
+          label={t('repo/search/field/label')}
+          value={search}
+          error={search && search.length < SEARCH_MIN_LENGTH && t(
+            'repo/search/field/minLength',
+            {count: SEARCH_MIN_LENGTH}
+          )}
+          onChange={(_, value) => {
+            Router.replaceRoute(
+              'index',
+              getParams({q: value})
+            )
+          }} />
+
         <div {...styles.filterBar}>
           {phases.map(phase => {
             const active = activeFilterPhase && activeFilterPhase.key === phase.key
             return (
-              <Link key={phase.key} route='index' params={getParams({phase: active ? null : phase.key})}>
+              <Link key={phase.key} route='index' replace params={getParams({phase: active ? null : phase.key})}>
                 <Phase
                   t={t}
                   phase={phase}
@@ -219,6 +240,15 @@ class RepoList extends Component {
             </Tr>
           </thead>
           <tbody>
+            {
+              !(data.loading || data.error) && data.repos.nodes.length === 0 && (
+                <Tr>
+                  <Td colSpan='8'>
+                    {t('repo/search/noResults')}
+                  </Td>
+                </Tr>
+              )
+            }
             {data.loading || data.error
               ? (
                 <tr>
@@ -306,8 +336,8 @@ class RepoList extends Component {
 }
 
 const query = gql`
-query repos($after: String) {
-  repos(first: 100, after: $after) {
+query repos($after: String, $search: String) {
+  repos(first: 100, after: $after, search: $search) {
     totalCount
     pageInfo {
       endCursor
@@ -371,14 +401,20 @@ mutation editRepoMeta($repoId: ID!, $creationDeadline: DateTime, $productionDead
 const RepoListWithQuery = compose(
   withT,
   graphql(query, {
-    options: {
-      notifyOnNetworkStatusChange: true
-    },
-    props: ({data}) => ({
+    options: ({ search }) => ({
+      notifyOnNetworkStatusChange: true,
+      variables: {
+        search: search && search.length >= SEARCH_MIN_LENGTH
+          ? search
+          : undefined
+      }
+    }),
+    props: ({data, ownProps}) => ({
       data,
       fetchMore: ({after}) => data.fetchMore({
         variables: {
-          after
+          after,
+          search: ownProps.search
         },
         updateQuery: (previousResult, { fetchMoreResult, queryVariables }) => {
           const nodes = [
