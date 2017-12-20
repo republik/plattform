@@ -217,4 +217,72 @@ type PaymentSource {
   brand: String!
   last4: String!
 }
+
+######################################
+# admin
+######################################
+
+input DateRangeFilter {
+  field: Field!
+  from: DateTime!
+  to: DateTime!
+}
+input StringArrayFilter {
+  field: Field!
+  values: [String!]!
+}
+input BooleanFilter {
+  field: Field!
+  value: Boolean!
+}
+
+enum Field {
+  createdAt
+  updatedAt
+  dueDate
+  status
+  matched
+  paperInvoice
+  verified
+  email
+  buchungsdatum
+  valuta
+  avisierungstext
+  gutschrift
+  mitteilung
+  hrid
+  total
+  method
+  firstName
+  lastName
+  hidden
+}
+
+input OrderBy {
+  field: Field!
+  direction: OrderDirection!
+}
+
+type Users {
+  items: [User!]!
+  count: Int!
+}
+
+type PostfinancePayment {
+  id: ID!
+  buchungsdatum: Date!
+  valuta: Date!
+  avisierungstext: String!
+  gutschrift: Int!
+  mitteilung: String
+  matched: Boolean!
+  hidden: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type PostfinancePayments {
+  items: [PostfinancePayment!]!
+  count: Int!
+}
 `

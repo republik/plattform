@@ -820,7 +820,7 @@ d3-array@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-1.2.1.tgz#d1ca33de2f6ac31efadb8e050a021d7e2396d5dc"
 
-d3-dsv@^1.0.3:
+d3-dsv@^1.0.3, d3-dsv@^1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/d3-dsv/-/d3-dsv-1.0.8.tgz#907e240d57b386618dc56468bacfe76bf19764ae"
   dependencies:
