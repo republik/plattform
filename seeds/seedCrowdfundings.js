@@ -16,18 +16,22 @@ const gracefulUpsert = (table) => async (data) => {
   }
 }
 
+const TRUNCATE = false
+
 PgDb.connect().then(async (pgdb) => {
-  try {
-    await pgdb.public.packageOptions.truncate({ cascade: true })
-    await pgdb.public.packages.truncate({ cascade: true })
-    await pgdb.public.membershipTypes.truncate({ cascade: true })
-    await pgdb.public.goodies.truncate({ cascade: true })
-    await pgdb.public.rewards.truncate({ cascade: true })
-    await pgdb.public.crowdfundingGoals.truncate({ cascade: true })
-    await pgdb.public.crowdfundings.truncate({ cascade: true })
-    await pgdb.public.companies.truncate({ cascade: true })
-  } catch (e) {
-    console.error(e)
+  if (TRUNCATE) {
+    try {
+      await pgdb.public.packageOptions.truncate({ cascade: true })
+      await pgdb.public.packages.truncate({ cascade: true })
+      await pgdb.public.membershipTypes.truncate({ cascade: true })
+      await pgdb.public.goodies.truncate({ cascade: true })
+      await pgdb.public.rewards.truncate({ cascade: true })
+      await pgdb.public.crowdfundingGoals.truncate({ cascade: true })
+      await pgdb.public.crowdfundings.truncate({ cascade: true })
+      await pgdb.public.companies.truncate({ cascade: true })
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   console.log('> seed companies')

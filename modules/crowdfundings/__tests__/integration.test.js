@@ -1,5 +1,6 @@
+require('dotenv').config()
 const test = require('tape-async')
-const { apolloFetch, connectIfNeeded, disconnect } = require('./helpers.js')
+const { apolloFetch, connectIfNeeded } = require('./helpers.js')
 
 test('setup', async (t) => {
   await connectIfNeeded()
@@ -18,16 +19,70 @@ test('setup', async (t) => {
   t.end()
 })
 
-test('login with existing e-mail address', async (t) => {
+test('check test data existence', async (t) => {
   await connectIfNeeded()
-  t.fail()
+  const result = await apolloFetch({
+    query: `
+      {
+        crowdfunding(name: "TEST") {
+          id
+          name
+          packages {
+            id
+            name
+            options {
+              id
+              price
+              userPrice
+              minAmount
+              maxAmount
+              defaultAmount
+              reward {
+                ... on MembershipType {
+                  id
+                  name
+                }
+                ... on Goodie {
+                  id
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    `
+  })
+  t.deepEqual(result.data, {
+    'crowdfunding': {
+      'id': 'f0000000-0000-0000-0002-000000000001',
+      'name': 'TEST',
+      'packages': [
+        {
+          'id': '00000000-0000-0000-0007-000000000001',
+          'name': 'ABO',
+          'options': [
+            {
+              'id': '00000000-0000-0000-0008-000000000001',
+              'price': 24000,
+              'userPrice': true,
+              'minAmount': 1,
+              'maxAmount': 1,
+              'defaultAmount': 1,
+              'reward': {
+                'id': '00000000-0000-0000-0006-000000000001',
+                'name': 'ABO'
+              }
+            }
+          ]
+        },
+        {
+          'id': '00000000-0000-0000-0007-000000000002',
+          'name': 'ABO_MONTHLY',
+          'options': []
+        }
+      ]
+    }
+  }, 'test data exists and looks good')
   t.end()
 })
-
-if (process.env.NODE_ENV !== 'development') {
-  test('teardown', async (t) => {
-    await disconnect()
-    t.pass()
-    t.end()
-  })
-}

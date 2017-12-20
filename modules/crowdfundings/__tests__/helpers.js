@@ -1,5 +1,3 @@
-require('dotenv').config({ path: '.test.env' })
-
 const dedupe = require('dynamic-dedupe')
 dedupe.activate()
 
