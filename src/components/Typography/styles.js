@@ -26,11 +26,23 @@ export const serifTitle38 = {
   fontWeight: 'normal',
   lineHeight: '43px'
 }
+export const serifTitle32 = {
+  fontFamily: fontFamilies.serifTitle,
+  fontSize: 32,
+  fontWeight: 'normal',
+  lineHeight: '34px'
+}
 export const serifTitle30 = {
   fontFamily: fontFamilies.serifTitle,
   fontSize: 30,
   fontWeight: 'normal',
   lineHeight: '34px'
+}
+export const serifTitle26 = {
+  fontFamily: fontFamilies.serifTitle,
+  fontSize: 26,
+  fontWeight: 'normal',
+  lineHeight: '28px'
 }
 export const serifTitle22 = {
   fontFamily: fontFamilies.serifTitle,
@@ -186,10 +198,22 @@ export const sansSerifMedium40 = {
   lineHeight: '46px',
   letterSpacing: -0.35,
 }
+export const sansSerifMedium32 = {
+  fontFamily: fontFamilies.sansSerifMedium,
+  fontSize: 32,
+  fontWeight: 'normal',
+  lineHeight: '34px'
+}
 export const sansSerifMedium30 = {
   fontFamily: fontFamilies.sansSerifMedium,
   fontSize: 30,
   lineHeight: '34px',
+}
+export const sansSerifMedium26 = {
+  fontFamily: fontFamilies.sansSerifMedium,
+  fontSize: 26,
+  fontWeight: 'normal',
+  lineHeight: '28px'
 }
 export const sansSerifMedium22 = {
   fontFamily: fontFamilies.sansSerifMedium,

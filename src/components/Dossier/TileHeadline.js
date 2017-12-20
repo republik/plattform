@@ -1,40 +1,31 @@
 import React from 'react'
 import { css } from 'glamor'
 import { tUp } from '../TeaserFront/mediaQueries'
-import { serifTitle20, sansSerifMedium20 } from '../Typography/styles'
-
-const smallSize = {
-  fontSize: '26px',
-  lineHeight: '28px',
-  marginBottom: '16px'
-}
-
-const mediumSize = {
-  fontSize: '32px',
-  lineHeight: '34px',
-  marginBottom: '25px'
-}
+import {
+  serifTitle26,
+  serifTitle32,
+  sansSerifMedium26,
+  sansSerifMedium32
+} from '../Typography/styles'
 
 const styles = {
   base: css({
     margin: 0,
-    marginBottom: 6,
+    marginBottom: '16px',
     [tUp]: {
-      marginBottom: 8
+      marginBottom: '25px'
     }
   }),
   editorial: css({
-    ...serifTitle20,
-    ...smallSize,
+    ...serifTitle26,
     [tUp]: {
-      ...mediumSize
+      ...serifTitle32
     }
   }),
   interaction: css({
-    ...sansSerifMedium20,
-    ...smallSize,
+    ...sansSerifMedium26,
     [tUp]: {
-      ...mediumSize
+      ...sansSerifMedium32
     }
   })
 }

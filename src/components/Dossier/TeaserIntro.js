@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 import { mUp } from '../TeaserFront/mediaQueries'
 import { FigureImage } from '../Figure'
-import Tag from './Tag'
 
 const styles = {
   container: css({

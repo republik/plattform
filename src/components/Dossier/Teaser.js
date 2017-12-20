@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { mUp, dUp } from '../TeaserFront/mediaQueries'
+import { dUp } from '../TeaserFront/mediaQueries'
 
 const styles = {
   container: css({
