@@ -1,4 +1,3 @@
-
 alter table "memberships"
   drop column "beginDate",
   add column "active" boolean not null default false,
@@ -58,5 +57,49 @@ BEFORE INSERT ON memberships
 FOR EACH ROW
 EXECUTE PROCEDURE voucher_code_trigger_function();
 
+
+-- maintain member role
+CREATE FUNCTION refresh_member_role_function()
+RETURNS trigger AS $$
+DECLARE
+   _active boolean;
+   _role text := 'member';
+   _role_array jsonb := '["member"]';
+BEGIN
+  SELECT
+    COALESCE(bool_or(active), false) INTO _active
+  FROM
+    memberships m
+  JOIN
+    users u
+    ON m."userId"=u.id
+  WHERE
+    u.id = NEW."userId";
+
+  IF _active = true THEN
+    UPDATE
+      users
+    SET
+      roles = COALESCE(roles, '[]'::jsonb)::jsonb || _role_array::jsonb
+    WHERE
+      id = NEW."userId" AND
+      (roles IS NULL OR NOT roles @> _role_array);
+  ELSE
+    UPDATE
+      users
+    SET
+      roles = roles - _role
+    WHERE
+      id = NEW."userId";
+  END IF;
+
+  RETURN NEW;
+END
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER trigger_member_role
+AFTER INSERT OR UPDATE ON memberships
+FOR EACH ROW
+EXECUTE PROCEDURE refresh_member_role_function();
 
 -- ready to run activateMemberships and launch now
