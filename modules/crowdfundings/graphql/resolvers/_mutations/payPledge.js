@@ -137,27 +137,29 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       })
     }
 
-    if (pkg.name !== 'MONTHLY_ABO') {
-      // send a confirmation email for this pledge
-      await transaction.public.pledges.updateOne({
-        id: pledge.id
-      }, {
-        sendConfirmMail: true
-      })
-    }
+    // send a confirmation email for this pledge
+    await transaction.public.pledges.updateOne({
+      id: pledge.id
+    }, {
+      sendConfirmMail: true
+    })
 
     // commit transaction
     await transaction.transactionCommit()
 
-    // if the user is signed in, send mail immediately
-    if (req.user) {
-      await sendPendingPledgeConfirmations(pledge.userId, pgdb, t)
-    }
+    try {
+      // if the user is signed in, send mail immediately
+      if (req.user) {
+        await sendPendingPledgeConfirmations(pledge.userId, pgdb, t)
+      }
 
-    updateUserOnMailchimp({
-      userId: pledge.userId,
-      pgdb
-    })
+      updateUserOnMailchimp({
+        userId: pledge.userId,
+        pgdb
+      })
+    } catch (e) {
+      console.warn('error in payPledge after transactionCommit', e)
+    }
 
     return {
       pledgeId: pledge.id

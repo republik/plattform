@@ -31,7 +31,9 @@ module.exports = async (userId, pgdb, t) => {
     const pkg = await pgdb.public.packages.findOne({id: pledge.packageId})
     const memberships = await pgdb.public.memberships.find({pledgeId: pledge.id})
     const pledgePayment = await pgdb.public.pledgePayments.findFirst({pledgeId: pledge.id}, {orderBy: ['createdAt desc']})
-    const payment = await pgdb.public.payments.findOne({id: pledgePayment.paymentId})
+    const payment = pledgePayment
+      ? await pgdb.public.payments.findOne({id: pledgePayment.paymentId})
+      : null
 
     const notebook = await pgdb.public.pledgeOptions.count({
       pledgeId: pledge.id,
@@ -44,35 +46,43 @@ module.exports = async (userId, pgdb, t) => {
       'amount >': 0
     })
 
+    const templateName = pkg.name === 'MONTHLY_ABO'
+      ? 'subscription_pledge'
+      : 'cf_pledge'
+
     return sendMailTemplate({
       to: user.email,
       fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
       subject: t('api/pledge/mail/subject'),
-      templateName: 'cf_pledge',
+      templateName,
       globalMergeVars: [
         { name: 'NAME',
           content: user.firstName + ' ' + user.lastName
         },
+        ...payment
+          ? [
+            { name: 'PAPER_INVOICE',
+              content: payment.paperInvoice
+            },
+            { name: 'NOT_PAPER_INVOICE',
+              content: !payment.paperInvoice
+            },
+            { name: 'HRID',
+              content: payment.hrid
+            },
+            { name: 'DUE_DATE',
+              content: dateFormat(payment.dueDate)
+            },
+            { name: 'PAYMENTSLIP',
+              content: payment.method === 'PAYMENTSLIP'
+            },
+            { name: 'NOT_PAYMENTSLIP',
+              content: !(payment.method === 'PAYMENTSLIP')
+            }
+          ]
+          : [],
         { name: 'WAITING_FOR_PAYMENT',
           content: pledge.status === 'WAITING_FOR_PAYMENT'
-        },
-        { name: 'PAPER_INVOICE',
-          content: payment.paperInvoice
-        },
-        { name: 'NOT_PAPER_INVOICE',
-          content: !payment.paperInvoice
-        },
-        { name: 'HRID',
-          content: payment.hrid
-        },
-        { name: 'DUE_DATE',
-          content: dateFormat(payment.dueDate)
-        },
-        { name: 'PAYMENTSLIP',
-          content: payment.method === 'PAYMENTSLIP'
-        },
-        { name: 'NOT_PAYMENTSLIP',
-          content: !(payment.method === 'PAYMENTSLIP')
         },
         { name: 'ASK_PERSONAL_INFO',
           content: (!user.addressId || !user.birthday) && pkg.name !== 'DONATE' && pkg.name !== 'ABO_GIVE'
