@@ -31,7 +31,7 @@ let server
 let httpServer
 let subscriptionServer
 
-module.exports.run = (executableSchema, middlewares, t) => {
+module.exports.run = (executableSchema, middlewares, t, signInHooks) => {
   // init apollo engine
   const engine = ENGINE_API_KEY
     ? new Engine({
@@ -67,7 +67,8 @@ module.exports.run = (executableSchema, middlewares, t) => {
       domain: COOKIE_DOMAIN || undefined,
       cookieName: COOKIE_NAME,
       dev: DEV,
-      pgdb: pgdb
+      pgdb: pgdb,
+      signInHooks
     })
 
     if (CORS_WHITELIST_URL) {
