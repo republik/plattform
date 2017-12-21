@@ -299,8 +299,8 @@ const emailMutation = gql`
 `
 
 const userQuery = gql`
-  query user($id: ID!) {
-    user(id: $id) {
+  query user($id: String) {
+    user(slug: $id) {
       id
       name
       email
