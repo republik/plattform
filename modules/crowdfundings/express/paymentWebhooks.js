@@ -8,7 +8,7 @@ const debug = require('debug')('crowdfundings:webhooks:all')
 const getWebhookHandler = require('../lib/payments/stripe/webhookHandler')
 
 module.exports = async (server, pgdb, t) => {
-  const handleWebhook = await getWebhookHandler({ pgdb })
+  const handleWebhook = await getWebhookHandler({ pgdb, t })
 
   // https://stripe.com/docs/webhooks
   server.post('/payments/stripe',

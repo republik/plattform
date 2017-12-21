@@ -1,10 +1,11 @@
 const debug = require('debug')('crowdfundings:webhooks:stripe')
 const getStripeClients = require('./clients')
+const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const _ = {
   get: require('lodash/get')
 }
 
-module.exports = async ({ pgdb }) => {
+module.exports = async ({ pgdb, t }) => {
   const {
     platform,
     connectedAccounts
@@ -12,6 +13,7 @@ module.exports = async ({ pgdb }) => {
 
   const typesOfIntereset = [
     'invoice.payment_succeeded',
+    'invoice.payment_failed',
     'charge.succeeded',
     'charge.refunded',
     'customer.subscription.deleted',
@@ -186,6 +188,41 @@ module.exports = async ({ pgdb }) => {
             console.error(e)
             throw e
           }
+        }
+      // stripe tried to charge the card but this failed
+      } else if (event.type === 'invoice.payment_failed') {
+        const subscription = _.get(event, 'data.object.lines.data[0]')
+        if (subscription.type === 'subscription') {
+          const pledgeId = subscription.metadata.pledgeId
+          const user = await pgdb.query(`
+            SELECT u.*
+            FROM users u
+            JOIN pledges p
+            ON u.id = p."userId" AND
+            p.id = :pledgeId
+          `, {
+            pledgeId
+          })
+            .then(response => response[0])
+            .catch(e => {
+              console.error(e)
+              return null
+            })
+
+          if (!user) {
+            throw new Error('user for invoice.payment_failed event not found! subscriptionId:' + subscription.id)
+          }
+
+          await sendMailTemplate({
+            to: user.email,
+            subject: t('api/email/payment/subscription/failed/subject'),
+            templateName: 'subscription_failed',
+            globalMergeVars: [
+              { name: 'NAME',
+                content: user.name
+              }
+            ]
+          })
         }
       // charge.succeeded contains all the charge details
       // but not the pledgeId

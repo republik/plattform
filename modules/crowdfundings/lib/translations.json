@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-20T23:52:41.272Z",
+  "updated": "2017-12-21T16:49:28.269Z",
   "title": "live",
   "data": [
     {
@@ -117,6 +117,10 @@
     {
       "key": "api/payment/received/mail/subject",
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/payment/subscription/failed/subject",
+      "value": "Ihre Kreditkarte konnte nicht abgebucht werden."
     },
     {
       "key": "api/users/404",
