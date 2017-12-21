@@ -22,7 +22,11 @@ const Index = ({ url }) => {
         </Frame.Header.Section>
       </Frame.Header>
       <Frame.Body raw>
-        <RepoTable orderField={orderField} orderDirection={orderDirection} phase={url.query.phase} />
+        <RepoTable
+          orderField={orderField}
+          orderDirection={orderDirection}
+          phase={url.query.phase}
+          search={url.query.q} />
       </Frame.Body>
     </Frame>
   )

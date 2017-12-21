@@ -68,15 +68,15 @@ export const Tr = ({ children }) =>
   <tr {...styles.tr}>{children}</tr>
 export const Th = ({ children, style }) =>
   <th {...styles.th} style={style}>{children}</th>
-export const Td = ({ children, style }) =>
-  <td {...styles.td} style={style}>{children}</td>
+export const Td = ({ children, style, colSpan }) =>
+  <td {...styles.td} style={style} colSpan={colSpan}>{children}</td>
 export const TdNum = ({ children }) =>
   <td {...styles.td} {...styles.num}>{children}</td>
 
 export const ThOrder = ({ activeDirection, activeField, field, route, params, children, style }) => (
   <Th style={style}>
     <span {...styles.order}>
-      <Link route={route} params={params}>
+      <Link route={route} replace params={params}>
         <a {...styles.orderLink}>
           {children}
           {activeField === field && (
