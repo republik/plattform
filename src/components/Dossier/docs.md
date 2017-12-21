@@ -10,7 +10,7 @@
 
 ### `<DossierTileRow />`
 
-A `<DossierTileRow />` will take any number of `<DossierTile />` children and group them into three per row.
+A `<DossierTileRow />` will take any number of `<DossierTile />` children and group them into three per row (desktop only).
 
 ```react
 <DossierTileRow>

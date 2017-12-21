@@ -1,5 +1,11 @@
+import React from 'react'
+import { css } from 'glamor'
+import { Sub, Sup } from '../../components/Typography'
+
 import {
-  matchZone
+  matchType,
+  matchZone,
+  matchImageParagraph
 } from 'mdast-react-render/lib/utils'
 
 import {
@@ -16,6 +22,14 @@ import {
 export const matchInfoBox = matchZone('INFOBOX')
 export const matchQuote = matchZone('QUOTE')
 export const matchFigure = matchZone('FIGURE')
+
+export const matchLast = (node, index, parent) => index === parent.children.length - 1
+export const matchTeaser = matchZone('TEASER')
+export const matchTeaserType = teaserType =>
+  node => matchTeaser(node) && node.data.teaserType === teaserType
+export const extractImage = node => matchImageParagraph(node)
+  ? node.children[0].url
+  : undefined
 
 export const getDisplayWidth = ancestors => {
   const infobox = ancestors.find(matchInfoBox)
@@ -39,4 +53,41 @@ export const getDisplayWidth = ancestors => {
     }
   }
   return FIGURE_SIZES.center
+}
+
+export const globalInlines = [
+  {
+    matchMdast: matchType('sub'),
+    component: Sub,
+    editorModule: 'mark',
+    editorOptions: {
+      type: 'sub'
+    }
+  },
+  {
+    matchMdast: matchType('sup'),
+    component: Sup,
+    editorModule: 'mark',
+    editorOptions: {
+      type: 'sup'
+    }
+  },
+  {
+    matchMdast: matchType('break'),
+    component: () => <br />,
+    isVoid: true
+  }
+]
+
+export const skipMdastImage = {
+  matchMdast: matchImageParagraph,
+  component: () => null,
+  isVoid: true
+}
+
+export const styles = {
+  link: css({
+    color: 'inherit',
+    textDecoration: 'none'
+  })
 }

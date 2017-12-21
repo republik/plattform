@@ -26,21 +26,13 @@ const styles = {
     textAlign: 'center',
     padding: '30px 15px',
     width: '100%',
-    borderTop: `1px solid ${colors.divider}`,
     [mUp]: {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
       marginBottom: '50px',
-      padding: '20px 0',
-      borderTop: 'none',
-      '& ~ &': {
-        borderLeft: `1px solid ${colors.divider}`
-      },
-      '&:nth-child(3n+4)': {
-        borderLeft: 'none'
-      }
+      padding: '20px 0'
     }
   }),
   textContainer: css({
@@ -66,11 +58,19 @@ const styles = {
   row: css({
     margin: 0,
     display: 'block',
+    '& .tile': {
+      borderTop: `1px solid ${colors.divider}`
+    },
     [mUp]: {
       display: 'flex',
       flexFlow: 'row wrap',
       '& .tile': {
-        width: '33.3%'
+        width: '33.3%',
+        borderTop: 'none',
+        borderLeft: `1px solid ${colors.divider}`
+      },
+      '& .tile:nth-child(3n+1)': {
+        borderLeft: 'none'
       },
       '& img': {
         ...sizeSmall

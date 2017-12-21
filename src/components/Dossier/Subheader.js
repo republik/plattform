@@ -5,6 +5,7 @@ import { sansSerifMedium16, sansSerifMedium20 } from '../Typography/styles'
 
 const styles = {
   subheader: css({
+    width: '100%',
     ...sansSerifMedium16,
     margin: '70px 0 30px 0',
     textAlign: 'center',

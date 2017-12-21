@@ -1,12 +1,10 @@
 import React from 'react'
-import { css } from 'glamor'
 
 import Container, { withMeta } from './Container'
-import Center, { Breakout } from '../../components/Center'
+import Center from '../../components/Center'
 import TitleBlock from '../../components/TitleBlock'
 import * as Editorial from '../../components/Typography/Editorial'
 import * as Interaction from '../../components/Typography/Interaction'
-import { Sub, Sup } from '../../components/Typography'
 import { TeaserFeed } from '../../components/TeaserFeed'
 
 import {
@@ -42,17 +40,9 @@ import {
   VideoPlayer
 } from '../../components/VideoPlayer'
 import {
-  DossierTag,
-  DossierSubheader,
-  DossierTile,
-  DossierTileHeadline,
-  DossierTileRow
+  DossierTag
 } from '../../components/Dossier'
-import {
-  TeaserFrontLead,
-  TeaserFrontCredit,
-  TeaserFrontCreditLink
-} from '../../components/TeaserFront'
+
 import {
   matchType,
   matchZone,
@@ -61,26 +51,16 @@ import {
   matchImageParagraph
 } from 'mdast-react-render/lib/utils'
 import {
+  matchLast,
   matchInfoBox,
   matchQuote,
   matchFigure,
-  getDisplayWidth
+  getDisplayWidth,
+  extractImage,
+  globalInlines
 } from './utils'
 
-const matchLast = (node, index, parent) => index === parent.children.length - 1
-const matchTeaser = matchZone('TEASER')
-const matchTeaserType = teaserType =>
-  node => matchTeaser(node) && node.data.teaserType === teaserType
-
-const image = {
-  matchMdast: matchImageParagraph,
-  component: () => null,
-  isVoid: true
-}
-
-const extractImage = node => matchImageParagraph(node)
-  ? node.children[0].url
-  : undefined
+import createTeasers from './teasers'
 
 const link = {
   matchMdast: matchType('link'),
@@ -91,37 +71,6 @@ const link = {
   component: Editorial.A,
   editorModule: 'link'
 }
-
-const styles = {
-  link: css({
-    color: 'inherit',
-    textDecoration: 'none'
-  })
-}
-
-const globalInlines = [
-  {
-    matchMdast: matchType('sub'),
-    component: Sub,
-    editorModule: 'mark',
-    editorOptions: {
-      type: 'sub'
-    }
-  },
-  {
-    matchMdast: matchType('sup'),
-    component: Sup,
-    editorModule: 'mark',
-    editorOptions: {
-      type: 'sup'
-    }
-  },
-  {
-    matchMdast: matchType('break'),
-    component: () => <br />,
-    isVoid: true
-  }
-]
 
 const paragraph = {
   matchMdast: matchParagraph,
@@ -204,7 +153,7 @@ const figure = {
       matchMdast: matchImageParagraph,
       component: FigureImage,
       props: (node, index, parent, { ancestors }) => {
-        const src = node.children[0].url
+        const src = extractImage(node)
         const displayWidth = getDisplayWidth(ancestors)
 
         return {
@@ -252,7 +201,7 @@ const cover = {
       matchMdast: matchImageParagraph,
       component: FigureImage,
       props: (node, index, parent) => {
-        const src = node.children[0].url
+        const src = extractImage(node)
         const displayWidth = FIGURE_SIZES[parent.data.size] || 1500
 
         return {
@@ -278,197 +227,9 @@ const createSchema = ({
   repoPrefix = 'article-',
   Link = DefaultLink
 } = {}) => {
-  const teaserTitle = (type, Headline) => ({
-    matchMdast: matchHeading(1),
-    component: ({ children, href, ...props }) =>
-      <Link href={href} passHref>
-        <a {...styles.link} href={href}>
-          <Headline {...props}>{children}</Headline>
-        </a>
-      </Link>,
-    props (node, index, parent, { ancestors }) {
-      const teaser = ancestors.find(matchTeaser)
-      return {
-        kind: parent.data.kind,
-        titleSize: parent.data.titleSize,
-        href: teaser
-          ? teaser.data.url
-          : undefined
-      }
-    },
-    editorModule: 'headline',
-    editorOptions: {
-      type,
-      placeholder: 'Titel',
-      depth: 1
-    },
-    rules: globalInlines
+  const teasers = createTeasers({
+    Link
   })
-
-  const teaserLead = {
-    matchMdast: matchHeading(4),
-    component: ({ children, attributes }) =>
-      <TeaserFrontLead attributes={attributes}>
-        {children}
-      </TeaserFrontLead>,
-    editorModule: 'headline',
-    editorOptions: {
-      type: 'FRONTLEAD',
-      placeholder: 'Lead',
-      depth: 4,
-      optional: true
-    },
-    rules: globalInlines
-  }
-
-  const teaserFormat = {
-    matchMdast: matchHeading(6),
-    component: ({ children, attributes }) =>
-      <Editorial.Format attributes={attributes}>
-        {children}
-      </Editorial.Format>,
-    editorModule: 'headline',
-    editorOptions: {
-      type: 'FRONTFORMAT',
-      placeholder: 'Format',
-      depth: 6,
-      optional: true
-    },
-    rules: globalInlines
-  }
-
-  const teaserCredit = {
-    matchMdast: matchParagraph,
-    component: ({ children, attributes }) =>
-      <TeaserFrontCredit attributes={attributes}>
-        {children}
-      </TeaserFrontCredit>,
-    editorModule: 'paragraph',
-    editorOptions: {
-      type: 'FRONTCREDIT',
-      placeholder: 'Credit'
-    },
-    rules: [
-      ...globalInlines,
-      {
-        matchMdast: matchType('link'),
-        props: (node) => {
-          return {
-            title: node.title,
-            href: node.url
-          }
-        },
-        component: ({ children, data, ...props }) =>
-          <Link href={props.href} passHref>
-            <TeaserFrontCreditLink {...props}>
-              {children}
-            </TeaserFrontCreditLink>
-          </Link>,
-        editorModule: 'link',
-        editorOptions: {
-          type: 'FRONTLINK'
-        }
-      }
-    ]
-  }
-
-  const dossierTile = {
-    matchMdast: matchTeaserType('dossierTile'),
-    component: ({ children, attributes, ...props }) => (
-      <Link href={props.url}>
-        <DossierTile attributes={attributes} {...props}>
-          {children}
-        </DossierTile>
-      </Link>
-    ),
-    props: node => ({
-      image: extractImage(node.children[0]),
-      ...node.data
-    }),
-    editorModule: 'teaser',
-    editorOptions: {
-      type: 'DOSSIERTILE',
-      teaserType: 'dossierTile',
-      insertButton: 'Dossier Tile',
-      dnd: false,
-      formOptions: [
-        'showImage',
-        'image',
-        'kind'
-      ]
-    },
-    rules: [
-      image,
-      teaserTitle(
-        'DOSSIERTILETITLE',
-        ({ children, attributes, kind }) => {
-          const Component = kind === 'editorial'
-          ? DossierTileHeadline.Editorial
-          : DossierTileHeadline.Interaction
-          return (
-            <Component attributes={attributes}>
-              {children}
-            </Component>
-          )
-        }
-      ),
-      teaserLead,
-      teaserFormat,
-      teaserCredit
-    ]
-  }
-
-  const dossierTileRow = {
-    matchMdast: node => {
-      return matchZone('TEASERGROUP')(node)
-    },
-    component: ({ children, attributes, ...props }) => {
-      return <DossierTileRow attributes={attributes} {...props}>
-        {children}
-      </DossierTileRow>
-    },
-    editorModule: 'teasergroup',
-    editorOptions: {
-      type: 'DOSSIERTILEROW',
-      insertButton: 'Dossier Tile Row'
-    },
-    rules: [
-      dossierTile
-    ]
-  }
-
-  const dossierBlock = {
-    matchMdast: node => {
-      return matchZone('DOSSIERBLOCK')(node)
-    },
-    component: ({ children, attributes, ...props }) => {
-      return <Breakout size='breakout' attributes={attributes} {...props}>
-        {children}
-      </Breakout>
-    },
-    editorModule: 'dossierblock',
-    editorOptions: {
-      type: 'DOSSIERBLOCK',
-      insertButton: 'Dossier Block'
-    },
-    rules: [
-      {
-        matchMdast: matchHeading(2),
-        component: ({ children, attributes }) => (
-          <DossierSubheader attributes={attributes}>
-            {children}
-          </DossierSubheader>
-        ),
-        editorModule: 'headline',
-        editorOptions: {
-          type: 'DOSSIERSUBHEADER',
-          placeholder: 'Dossier',
-          depth: 2
-        }
-      },
-      dossierTileRow
-    ]
-  }
 
   return {
     repoPrefix,
@@ -774,7 +535,7 @@ const createSchema = ({
                 },
                 isVoid: true
               },
-              dossierBlock,
+              teasers.articleCollection
             ]
           },
           {

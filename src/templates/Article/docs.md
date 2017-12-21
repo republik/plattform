@@ -84,7 +84,14 @@ Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas Böses getan h�
 
 Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten Absichten, als am Ziele ihrer Fahrt die Tochter als erste sich erhob und ihren jungen Körper dehnte. «Es ist ein eigentümlicher Apparat», sagte der Offizier zu dem Forschungsreisenden und überblickte mit einem gewissermaßen bewundernden Blick den ihm doch wohlbekannten Apparat. «Es ist ein eigentümlicher Apparat», sagte der Offizier zu dem Forschungsreisenden und überblickte mit einem gewissermaßen bewundernden Blick den ihm doch wohlbekannten Apparat.
 
-<section><h6>DOSSIERBLOCK</h6>
+<section><h6>TEASER</h6>
+
+\`\`\`
+{
+  "kind": "meta",
+  "teaserType": "articleCollection"
+}
+\`\`\`
 
 ## Diese Artikel sind im Dossier enthalten:
 
@@ -95,7 +102,7 @@ Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten Absichten, 
 \`\`\`
 {
   "kind": "editorial",
-  "teaserType": "dossierTile",
+  "teaserType": "articleTile",
   "url": "https://www.republik.ch/updates/portraets"
 }
 \`\`\`
@@ -117,7 +124,7 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 \`\`\`
 {
   "kind": "interaction",
-  "teaserType": "dossierTile",
+  "teaserType": "articleTile",
   "url": "https://www.republik.ch/updates/portraets"
 }
 \`\`\`
@@ -134,7 +141,7 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 \`\`\`
 {
   "kind": "editorial",
-  "teaserType": "dossierTile",
+  "teaserType": "articleTile",
   "url": "https://www.republik.ch/updates/portraets"
 }
 \`\`\`
