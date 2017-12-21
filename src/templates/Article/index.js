@@ -39,9 +39,6 @@ import {
 import {
   VideoPlayer
 } from '../../components/VideoPlayer'
-import {
-  DossierTag
-} from '../../components/Dossier'
 
 import {
   matchType,
@@ -223,6 +220,7 @@ const DefaultLink = ({ children }) => children
 
 const createSchema = ({
   documentEditorOptions = {},
+  titleBlockPrepend = null,
   titleBlockAppend = null,
   repoPrefix = 'article-',
   Link = DefaultLink
@@ -275,6 +273,7 @@ const createSchema = ({
             matchMdast: matchZone('TITLE'),
             component: withMeta(({children, meta, ...props}) => (
               <TitleBlock {...props} kind={meta.kind} format={meta.format}>
+                {titleBlockPrepend}
                 {children}
                 {titleBlockAppend}
               </TitleBlock>
@@ -287,18 +286,6 @@ const createSchema = ({
               coverType: cover.editorOptions.type
             },
             rules: [
-              {
-                matchMdast: matchHeading(6),
-                component: ({ children, attributes }) => (
-                  <DossierTag attributes={attributes}>{children}</DossierTag>
-                ),
-                editorModule: 'headline',
-                editorOptions: {
-                  type: 'DOSSIERTAG',
-                  placeholder: 'Dossier',
-                  depth: 1
-                }
-              },
               {
                 matchMdast: matchHeading(1),
                 component: withMeta(({ children, attributes, meta }) => {

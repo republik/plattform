@@ -401,6 +401,16 @@ ReactDOM.render(
             src: require('./templates/Article/docs.md')
           },
           {
+            path: '/templates/dossier',
+            title: 'Dossier',
+            imports: {
+              schema: require('./templates/Dossier').default(),
+              ...require('./templates/docs'),
+              renderMdast: require('mdast-react-render').renderMdast
+            },
+            src: require('./templates/Dossier/docs.md')
+          },
+          {
             path: '/templates/front',
             title: 'Front',
             imports: {

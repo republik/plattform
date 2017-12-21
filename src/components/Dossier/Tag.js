@@ -19,9 +19,9 @@ const styles = {
   })
 }
 
-const Tag = ({ children }) => {
+const Tag = ({ children, attributes }) => {
   return (
-    <div {...styles.tag}>
+    <div {...attributes} {...styles.tag}>
       <FolderOpen {...styles.icon} size={24} />
       {children}
     </div>
