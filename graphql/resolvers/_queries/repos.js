@@ -1,5 +1,5 @@
 const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
-const { createGithubClients, tagNormalizer } = require('../../../lib/github')
+const { getRepos, tagNormalizer } = require('../../../lib/github')
 
 const {
   commit: getCommit,
@@ -14,108 +14,13 @@ const {
 
 module.exports = async (__, args, { user, redis }) => {
   ensureUserHasRole(user, 'editor')
-  const { githubApolloFetch } = await createGithubClients()
 
   const {
-    data: {
-      repositoryOwner: {
-        repositories: {
-          pageInfo,
-          totalCount,
-          totalDiskUsage,
-          nodes: repositories
-        }
-      }
-    }
-  } = await githubApolloFetch({
-    query: `
-      fragment LatestPublicationProbs on Ref {
-        name
-        target {
-          ... on Tag {
-            name
-            message
-            oid
-            author: tagger {
-              name
-              email
-              date
-            }
-            commit: target {
-              ... on Commit {
-                id: oid
-              }
-            }
-          }
-        }
-      }
-      query repositories(
-        $login: String!
-        $first: Int
-        $last: Int
-        $before: String
-        $after: String
-        $orderBy: RepositoryOrder
-      ) {
-        repositoryOwner(login: $login) {
-          repositories(
-            first: $first,
-            last: $last,
-            before: $before,
-            after: $after,
-            orderBy: $orderBy
-          ) {
-            pageInfo {
-              endCursor,
-              hasNextPage,
-              hasPreviousPage,
-              startCursor
-            }
-            totalCount
-            totalDiskUsage
-            nodes {
-              name
-              defaultBranchRef {
-                target {
-                  ... on Commit {
-                    oid
-                  }
-                }
-              }
-              metaTag: ref(qualifiedName: "refs/tags/meta") {
-                target {
-                  ... on Tag {
-                    message
-                  }
-                }
-              }
-              tags: refs(refPrefix: "refs/tags/", first: 100) {
-                nodes {
-                  name
-                }
-              }
-              publication: ref(qualifiedName: "refs/tags/publication") {
-                ...LatestPublicationProbs
-              }
-              prepublication: ref(qualifiedName: "refs/tags/prepublication") {
-                ...LatestPublicationProbs
-              }
-              scheduledPublication: ref(qualifiedName: "refs/tags/scheduled-publication") {
-                ...LatestPublicationProbs
-              }
-              scheduledPrepublication: ref(qualifiedName: "refs/tags/scheduled-prepublication") {
-                ...LatestPublicationProbs
-              }
-            }
-          }
-        }
-      }
-    `,
-    variables: {
-      ...args,
-      login: GITHUB_LOGIN
-    }
-  })
+    pageInfo,
+    totalCount,
+    totalDiskUsage,
+    repositories
+  } = await getRepos(args)
 
   const repos = await Promise.all(
     repositories
