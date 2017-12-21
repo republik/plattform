@@ -1,6 +1,6 @@
 import React from 'react'
 import { matchBlock } from '../../utils'
-import { createListButton } from './ui'
+import { createListButton, ListForm } from './ui'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { Block } from 'slate'
 
@@ -23,16 +23,21 @@ export default ({rule, subModules, TYPE}) => {
       type: TYPE,
       data: {
         ordered: node.ordered,
-        start: node.start
+        start: node.start,
+        compact: !node.loose
       },
       nodes: itemSerializer.fromMdast(node.children, 0, node, rest)
     }),
-    toMdast: (object, index, parent, rest) => ({
-      type: 'list',
-      ordered: object.data.ordered,
-      start: object.data.start || 1,
-      children: itemSerializer.toMdast(object.nodes, 0, object, rest)
-    })
+    toMdast: (object, index, parent, rest) => {
+      const res = ({
+        type: 'list',
+        loose: !object.data.compact,
+        ordered: object.data.ordered,
+        start: object.data.start || 1,
+        children: itemSerializer.toMdast(object.nodes, 0, object, rest)
+      })
+      return res
+    }
   }
 
   const serializer = new MarkdownSerializer({
@@ -41,9 +46,10 @@ export default ({rule, subModules, TYPE}) => {
     ]
   })
 
-  const newBlock = ({ordered = false}) => Block.fromJSON(
+  const newBlock = ({ordered = false, compact = true}) => Block.fromJSON(
     list.fromMdast({
       ordered,
+      loose: !compact,
       children: [
         {
           type: 'listItem',
@@ -80,6 +86,9 @@ export default ({rule, subModules, TYPE}) => {
           label: 'Aufzählung',
           newBlock
         })
+      ],
+      forms: [
+        ListForm({ TYPE })
       ]
     },
     plugins: [

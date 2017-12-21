@@ -19,6 +19,7 @@ export default ({rule, subModules, TYPE}) => {
     }),
     toMdast: (object, index, parent, rest) => ({
       type: 'listItem',
+      loose: !parent.data.compact,
       children: paragraphSerializer.toMdast(object.nodes, 0, object, rest)
     })
   }
