@@ -17,7 +17,6 @@ import {
 } from './utils'
 
 import {
-  TeaserFrontLead,
   TeaserFrontCredit,
   TeaserFrontCreditLink
 } from '../../components/TeaserFront'
@@ -26,6 +25,7 @@ import {
   DossierSubheader,
   DossierTile,
   DossierTileHeadline,
+  DossierTileLead,
   DossierTileRow
 } from '../../components/Dossier'
 
@@ -63,15 +63,15 @@ const createTeasers = ({
     rules: globalInlines
   })
 
-  const teaserLead = {
+  const articleTileLead = {
     matchMdast: matchHeading(4),
     component: ({ children, attributes }) =>
-      <TeaserFrontLead attributes={attributes}>
+      <DossierTileLead attributes={attributes}>
         {children}
-      </TeaserFrontLead>,
+      </DossierTileLead>,
     editorModule: 'headline',
     editorOptions: {
-      type: 'FRONTLEAD',
+      type: 'ARTICLETILELEAD',
       placeholder: 'Lead',
       depth: 4,
       optional: true
@@ -170,7 +170,7 @@ const createTeasers = ({
           )
         }
       ),
-      teaserLead,
+      articleTileLead,
       teaserFormat,
       teaserCredit
     ]

@@ -17,9 +17,9 @@ Props:
   <DossierTileRow>
     <DossierTile image='/static/rothaus_landscape.jpg'>
       <DossierTileHeadline.Editorial>The quick brown fox</DossierTileHeadline.Editorial>
-      <TeaserFrontLead>
+      <DossierTileLead>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
-      </TeaserFrontLead>
+      </DossierTileLead>
       <TeaserFrontCredit>
         An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
       </TeaserFrontCredit>
@@ -33,9 +33,9 @@ Props:
     </DossierTile>
     <DossierTile image='/static/rothaus_portrait.jpg'>
       <DossierTileHeadline.Editorial>The fox</DossierTileHeadline.Editorial>
-      <TeaserFrontLead>
+      <DossierTileLead>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
-      </TeaserFrontLead>
+      </DossierTileLead>
       <TeaserFrontCredit>
         An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
       </TeaserFrontCredit>
@@ -57,9 +57,9 @@ Props:
   <DossierTileRow>
     <DossierTile image='/static/rothaus_landscape.jpg'>
       <DossierTileHeadline.Editorial>The quick brown fox</DossierTileHeadline.Editorial>
-      <TeaserFrontLead>
+      <DossierTileLead>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
-      </TeaserFrontLead>
+      </DossierTileLead>
       <TeaserFrontCredit>
         An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
       </TeaserFrontCredit>
@@ -73,9 +73,9 @@ Props:
     </DossierTile>
     <DossierTile image='/static/rothaus_portrait.jpg'>
       <DossierTileHeadline.Editorial>The fox</DossierTileHeadline.Editorial>
-      <TeaserFrontLead>
+      <DossierTileLead>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
-      </TeaserFrontLead>
+      </DossierTileLead>
       <TeaserFrontCredit>
         An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
       </TeaserFrontCredit>
@@ -98,9 +98,9 @@ Props:
   <DossierTileRow>
     <DossierTile image='/static/rothaus_landscape.jpg'>
       <DossierTileHeadline.Editorial>The quick brown fox</DossierTileHeadline.Editorial>
-      <TeaserFrontLead>
+      <DossierTileLead>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
-      </TeaserFrontLead>
+      </DossierTileLead>
       <TeaserFrontCredit>
         An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
       </TeaserFrontCredit>
@@ -114,9 +114,9 @@ Props:
     </DossierTile>
     <DossierTile image='/static/rothaus_portrait.jpg'>
       <DossierTileHeadline.Editorial>The fox</DossierTileHeadline.Editorial>
-      <TeaserFrontLead>
+      <DossierTileLead>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
-      </TeaserFrontLead>
+      </DossierTileLead>
       <TeaserFrontCredit>
         An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
       </TeaserFrontCredit>

@@ -35,6 +35,7 @@ import {
   DossierTag,
   DossierTile,
   DossierTileHeadline,
+  DossierTileLead,
   DossierTileRow
 } from '../../components/Dossier'
 
@@ -367,6 +368,22 @@ const createSchema = ({
     rules: globalInlines
   }
 
+  const articleTileLead = {
+    matchMdast: matchHeading(4),
+    component: ({ children, attributes }) =>
+      <DossierTileLead attributes={attributes}>
+        {children}
+      </DossierTileLead>,
+    editorModule: 'headline',
+    editorOptions: {
+      type: 'ARTICLETILELEAD',
+      placeholder: 'Lead',
+      depth: 4,
+      optional: true
+    },
+    rules: globalInlines
+  }
+
   const articleTile = {
     matchMdast: matchTeaserType('articleTile'),
     component: ({ children, attributes, ...props }) => (
@@ -406,7 +423,7 @@ const createSchema = ({
           )
         }
       ),
-      lead,
+      articleTileLead,
       format,
       credit
     ]

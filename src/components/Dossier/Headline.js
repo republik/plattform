@@ -7,9 +7,10 @@ const styles = {
   base: css({
     margin: 0,
     ...serifTitle38,
-    marginBottom: '30px',
+    marginBottom: '25px',
     [mUp]: {
-      ...serifTitle58
+      ...serifTitle58,
+      marginBottom: '35px'
     }
   })
 }

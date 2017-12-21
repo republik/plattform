@@ -26,6 +26,9 @@ const styles = {
     textAlign: 'center',
     padding: '30px 15px',
     width: '100%',
+    '&:last-child': {
+      marginBottom: '20px',
+    },
     [mUp]: {
       display: 'flex',
       flexDirection: 'column',

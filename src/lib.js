@@ -73,6 +73,7 @@ export {
   DossierSubheader,
   DossierTile,
   DossierTileHeadline,
+  DossierTileLead,
   DossierTileRow
 } from './components/Dossier'
 export {
