@@ -215,7 +215,7 @@ module.exports = async ({ pgdb, t }) => {
 
           await sendMailTemplate({
             to: user.email,
-            subject: t('api/email/payment/subscription/failed/subject'),
+            subject: t('api/email/subscription/payment/failed/subject'),
             templateName: 'subscription_failed',
             globalMergeVars: [
               { name: 'NAME',
@@ -329,30 +329,46 @@ module.exports = async ({ pgdb, t }) => {
             throw new Error('pledge for customer.subscription event not found! subscriptionId:' + subscription.id)
           }
 
-          const memberships = await transaction.public.memberships.find({
-            pledgeId
-          })
-          if (!memberships.length) {
-            throw new Error('pledge for customer.subscription event has no memberships! subscriptionId:' + subscription.id)
-          }
-
-          // Possible values are trialing, active, past_due, canceled, or unpaid
-          // https://stripe.com/docs/api/node#subscription_object
-          if (subscription.status === 'canceled') {
+          if (subscription.cancel_at_period_end) {
             await transaction.public.memberships.update({
               pledgeId
             }, {
               renew: false,
               updatedAt: new Date()
             })
-          } else if (subscription.status === 'unpaid') {
-            // we might ignore this event and do it in a local cron
+          }
+
+          // Possible values are trialing, active, past_due, canceled, or unpaid
+          // https://stripe.com/docs/api/node#subscription_object
+          if (subscription.status === 'canceled') {
+            const existingMembership = await transaction.public.memberships.findFirst({
+              pledgeId
+            })
+
             await transaction.public.memberships.update({
               pledgeId
             }, {
               active: false,
+              renew: false,
               updatedAt: new Date()
             })
+
+            const user = await transaction.public.users.findOne({
+              id: pledge.userId
+            })
+
+            if (existingMembership.active) {
+              await sendMailTemplate({
+                to: user.email,
+                subject: t('api/email/subscription/deactivated/subject'),
+                templateName: 'subscription_end',
+                globalMergeVars: [
+                  { name: 'NAME',
+                    content: user.name
+                  }
+                ]
+              })
+            }
           }
           await transaction.transactionCommit()
         } catch (e) {
