@@ -57,7 +57,9 @@ module.exports = async (userId, pgdb, t) => {
       templateName,
       globalMergeVars: [
         { name: 'NAME',
-          content: user.name
+          content: [user.firstName, user.lastName]
+            .filter(Boolean)
+            .join(' ')
         },
         ...payment
           ? [

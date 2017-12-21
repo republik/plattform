@@ -219,7 +219,9 @@ module.exports = async ({ pgdb, t }) => {
             templateName: 'subscription_failed',
             globalMergeVars: [
               { name: 'NAME',
-                content: user.name
+                content: [user.firstName, user.lastName]
+                  .filter(Boolean)
+                  .join(' ')
               }
             ]
           })
@@ -364,7 +366,9 @@ module.exports = async ({ pgdb, t }) => {
                 templateName: 'subscription_end',
                 globalMergeVars: [
                   { name: 'NAME',
-                    content: user.name
+                    content: [user.firstName, user.lastName]
+                      .filter(Boolean)
+                      .join(' ')
                   }
                 ]
               })

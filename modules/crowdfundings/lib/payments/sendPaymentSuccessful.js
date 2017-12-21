@@ -25,7 +25,9 @@ module.exports = async (pledgeId, pgdb, t) => {
     templateName: 'cf_successful_payment',
     globalMergeVars: [
       { name: 'NAME',
-        content: user.firstName + ' ' + user.lastName
+        content: [user.firstName, user.lastName]
+          .filter(Boolean)
+          .join(' ')
       },
       { name: 'ASK_PERSONAL_INFO',
         content: (!user.addressId || !user.birthday)
