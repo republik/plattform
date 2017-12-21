@@ -14,7 +14,7 @@ module.exports = async (_, args, { pgdb, user: me }) => {
   )
   if (
     user &&
-    user.hasPublicProfile || Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])
+    (user.hasPublicProfile || Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter']))
   ) {
     return transformUser(user)
   }
