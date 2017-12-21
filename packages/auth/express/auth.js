@@ -28,7 +28,9 @@ exports.configure = ({
   // be reset every time a user visits the site again before it expires.
   maxAge = 60000 * 60 * 24 * 7 * 2,
   // is the server running in development
-  dev = false
+  dev = false,
+  // hooks are called upon successful signIn
+  signInHooks = []
 } = {}) => {
   if (server === null) {
     throw new Error('server option must be an express server instance')
@@ -149,6 +151,13 @@ exports.configure = ({
           }
         }
       })
+
+      //call signIn hooks
+      await Promise.all(
+        signInHooks.map( hook =>
+          hook(user.id, pgdb)
+        )
+      )
 
       // success
       return res.redirect(
