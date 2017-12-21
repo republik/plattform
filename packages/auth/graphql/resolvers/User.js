@@ -1,9 +1,9 @@
 const Roles = require('../../lib/Roles')
-const userAccessRoles = ['admin', 'supporter', 'editor']
+const userAccessRoles = ['admin', 'supporter']
 
 module.exports = {
   email (user, args, { pgdb, user: me }) {
-    if (Roles.userIsMeOrInRoles(user, me, userAccessRoles)) {
+    if (Roles.userIsMeOrInRoles(user, me, [...userAccessRoles, 'editor'])) {
       return user.email
     }
     return null
