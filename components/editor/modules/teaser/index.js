@@ -28,6 +28,7 @@ export const getData = data => ({
   teaserType: 'frontImage',
   reverse: false,
   portrait: true,
+  showImage: true,
   ...data || {}
 })
 
@@ -86,7 +87,10 @@ const teaserPlugin = options => {
         return
       }
 
-      const image = node.data.get('image') || '/static/placeholder.png'
+      const image = node.data.get('showImage') === true
+        ? node.data.get('image') || '/static/placeholder.png'
+        : null
+
       if (options.rule.editorOptions.dnd === false) {
         return (
           <Teaser key='teaser' {...node.data.toJS()} image={image} attributes={attributes}>
