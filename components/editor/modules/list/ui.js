@@ -10,6 +10,7 @@ export const ListForm = options => {
     if (disabled) {
       return null
     }
+    // Multiple lists would involve more iteration work and given the fact, that this would happen on every select, I'd avoid it until necessary.
     const list = value.blocks.reduce(
     (memo, node) =>
         memo || value.document.getFurthest(node.key, matchBlock(options.TYPE)),
