@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { dUp } from '../TeaserFront/mediaQueries'
+import { mUp } from '../TeaserFront/mediaQueries'
 
 const styles = {
   container: css({
@@ -9,8 +9,8 @@ const styles = {
     position: 'relative',
     lineHeight: 0,
     margin: 0,
-    padding: '15px',
-    [dUp]: {
+    padding: '30px 15px',
+    [mUp]: {
       padding: '60px 0'
     }
   })

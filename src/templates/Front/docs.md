@@ -177,5 +177,95 @@ Von [Christof Moser](/~6556e282-4ac4-4129-8f8f-d20f28170c39 "Christof Moser")
 
 <hr /></section>
 
+<section><h6>TEASER</h6>
+
+\`\`\`
+{
+  "teaserType": "frontArticleCollection",
+  "url": "https://www.republik.ch/updates/wer-sind-sie"
+}
+\`\`\`
+
+<section><h6>ARTICLECOLLECTIONINTRO</h6>
+
+![](/static/rothaus_landscape.jpg)
+
+###### Dossier
+
+# Im Rothaus
+
+#### Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.
+
+<hr /></section>
+
+<section><h6>TEASERGROUP</h6>
+
+<section><h6>TEASER</h6>
+
+\`\`\`
+{
+  "kind": "editorial",
+  "teaserType": "articleTile",
+  "url": "https://www.republik.ch/updates/portraets"
+}
+\`\`\`
+
+![](https://assets.republik.ch/images/pierre_rom.jpeg?size=853x853)
+
+###### Echte Republikaner
+
+# Pierre
+
+#### Republik-Verleger, 93 Jahre
+
+Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
+
+<hr /></section>
+
+<section><h6>TEASER</h6>
+
+\`\`\`
+{
+  "kind": "interaction",
+  "teaserType": "articleTile",
+  "url": "https://www.republik.ch/updates/portraets"
+}
+\`\`\`
+
+###### Aus der Redaktion
+
+# Unsere aktuellen Recherchen zum Thema Gregor Samsa
+
+
+<hr /></section>
+
+<section><h6>TEASER</h6>
+
+\`\`\`
+{
+  "kind": "editorial",
+  "teaserType": "articleTile",
+  "url": "https://www.republik.ch/updates/portraets"
+}
+\`\`\`
+
+![](https://assets.republik.ch/images/mavie.jpeg?size=848x848)
+
+###### Echte Republikaner
+
+# Mavie
+
+#### Republik-Verlegerin, 8 Monate
+
+Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
+
+<hr /></section>
+
+<hr /></section>
+
+[Mehr zum Thema](https://www.republik.ch/updates/wer-sind-sie)
+
+<hr /></section>
+
 `}</Markdown>
 ```

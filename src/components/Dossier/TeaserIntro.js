@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
-import { mUp } from '../TeaserFront/mediaQueries'
+import { mUp, tUp } from '../TeaserFront/mediaQueries'
 import { FigureImage } from '../Figure'
 
 const styles = {
@@ -19,15 +19,21 @@ const styles = {
     }
   }),
   content: css({
-    padding: '15px 15px 45px 15px',
+    paddingBottom: '15px',
     [mUp]: {
-      padding: 0,
-      width: '50%'
+      width: '67%'
+    },
+    [tUp]: {
+      width: '51%'
     }
   }),
   contentWithImage: css({
+    paddingTop: '15px',
     [mUp]: {
       padding: '0 0 0 5%',
+      width: '60%'
+    },
+    [tUp]: {
       width: '60%'
     }
   }),
