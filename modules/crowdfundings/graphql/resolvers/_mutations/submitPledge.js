@@ -133,6 +133,8 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     }
 
     // MONTHLY_ABO can only be bought if user has no active membership
+    // TODO: and if user did not buy a MONTHLY already, then he has to
+    // reactivate it
     const userHasActiveMembership = await transaction.public.memberships.findFirst({
       userId: user.id,
       active: true

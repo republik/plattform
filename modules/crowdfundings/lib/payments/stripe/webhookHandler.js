@@ -1,17 +1,19 @@
 const debug = require('debug')('crowdfundings:webhooks:stripe')
 const getStripeClients = require('./clients')
+const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const _ = {
   get: require('lodash/get')
 }
 
-module.exports = async ({ pgdb }) => {
+module.exports = async ({ pgdb, t }) => {
   const {
-    provider,
+    platform,
     connectedAccounts
   } = await getStripeClients(pgdb)
 
   const typesOfIntereset = [
     'invoice.payment_succeeded',
+    'invoice.payment_failed',
     'charge.succeeded',
     'charge.refunded',
     'customer.subscription.deleted',
@@ -28,7 +30,7 @@ module.exports = async ({ pgdb }) => {
       // all events for connected accounts share the same secret
       const account = connected
         ? connectedAccounts[0]
-        : provider
+        : platform
 
       event = account.stripe.webhooks.constructEvent(
         req.body,
@@ -46,7 +48,7 @@ module.exports = async ({ pgdb }) => {
       /*
       const account = event.accountId
         ? accounts.find( a => a.accountId === event.account )
-        : provider
+        : platform
       if (!account) {
         throw new Error("stripe handleWebhook didn't find local account for event")
       }
@@ -117,7 +119,7 @@ module.exports = async ({ pgdb }) => {
             })
             const firstNotification = await transaction.query(`
               SELECT
-                DISTINCT(m.id)
+                COUNT(m.id)
               FROM
                 "membershipPeriods" mp
               JOIN
@@ -132,7 +134,7 @@ module.exports = async ({ pgdb }) => {
             `, {
               pledgeId
             })
-              .then(response => !response.length)
+              .then(response => !response)
               .catch(e => {
                 console.error(e)
                 return null
@@ -153,11 +155,11 @@ module.exports = async ({ pgdb }) => {
                   ARRAY[mp."membershipId"] && :membershipIds AND
                   mp."webhookEventId" is null
               `, {
-                membershipIds: memberships.map(m => m.id),
                 webhookEventId: event.id,
                 beginDate,
                 endDate,
-                now: new Date()
+                now: new Date(),
+                membershipIds: memberships.map(m => m.id)
               })
             } else {
               // check for duplicate event
@@ -186,6 +188,43 @@ module.exports = async ({ pgdb }) => {
             console.error(e)
             throw e
           }
+        }
+      // stripe tried to charge the card but this failed
+      } else if (event.type === 'invoice.payment_failed') {
+        const subscription = _.get(event, 'data.object.lines.data[0]')
+        if (subscription.type === 'subscription') {
+          const pledgeId = subscription.metadata.pledgeId
+          const user = await pgdb.query(`
+            SELECT u.*
+            FROM users u
+            JOIN pledges p
+            ON u.id = p."userId" AND
+            p.id = :pledgeId
+          `, {
+            pledgeId
+          })
+            .then(response => response[0])
+            .catch(e => {
+              console.error(e)
+              return null
+            })
+
+          if (!user) {
+            throw new Error('user for invoice.payment_failed event not found! subscriptionId:' + subscription.id)
+          }
+
+          await sendMailTemplate({
+            to: user.email,
+            subject: t('api/email/subscription/payment/failed/subject'),
+            templateName: 'subscription_failed',
+            globalMergeVars: [
+              { name: 'NAME',
+                content: [user.firstName, user.lastName]
+                  .filter(Boolean)
+                  .join(' ')
+              }
+            ]
+          })
         }
       // charge.succeeded contains all the charge details
       // but not the pledgeId
@@ -292,30 +331,48 @@ module.exports = async ({ pgdb }) => {
             throw new Error('pledge for customer.subscription event not found! subscriptionId:' + subscription.id)
           }
 
-          const memberships = await transaction.public.memberships.find({
-            pledgeId
-          })
-          if (!memberships.length) {
-            throw new Error('pledge for customer.subscription event has no memberships! subscriptionId:' + subscription.id)
-          }
-
-          // Possible values are trialing, active, past_due, canceled, or unpaid
-          // https://stripe.com/docs/api/node#subscription_object
-          if (subscription.status === 'canceled') {
+          if (subscription.cancel_at_period_end) {
             await transaction.public.memberships.update({
               pledgeId
             }, {
               renew: false,
               updatedAt: new Date()
             })
-          } else if (subscription.status === 'unpaid') {
-            // we might ignore this event and do it in a local cron
+          }
+
+          // Possible values are trialing, active, past_due, canceled, or unpaid
+          // https://stripe.com/docs/api/node#subscription_object
+          if (subscription.status === 'canceled') {
+            const existingMembership = await transaction.public.memberships.findFirst({
+              pledgeId
+            })
+
             await transaction.public.memberships.update({
               pledgeId
             }, {
               active: false,
+              renew: false,
               updatedAt: new Date()
             })
+
+            const user = await transaction.public.users.findOne({
+              id: pledge.userId
+            })
+
+            if (existingMembership.active) {
+              await sendMailTemplate({
+                to: user.email,
+                subject: t('api/email/subscription/deactivated/subject'),
+                templateName: 'subscription_end',
+                globalMergeVars: [
+                  { name: 'NAME',
+                    content: [user.firstName, user.lastName]
+                      .filter(Boolean)
+                      .join(' ')
+                  }
+                ]
+              })
+            }
           }
           await transaction.transactionCommit()
         } catch (e) {

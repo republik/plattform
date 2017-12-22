@@ -9,7 +9,7 @@ module.exports = async ({
   clients // optional
 }) => {
   const {
-    provider,
+    platform,
     connectedAccounts
   } = clients || await getClients(pgdb)
 
@@ -17,7 +17,7 @@ module.exports = async ({
     id: userId
   })
 
-  const customer = await provider.stripe.customers.create({
+  const customer = await platform.stripe.customers.create({
     email: user.email,
     metadata: {
       userId
@@ -27,7 +27,7 @@ module.exports = async ({
   await pgdb.public.stripeCustomers.insert({
     id: customer.id,
     userId,
-    companyId: provider.company.id
+    companyId: platform.company.id
   })
 
   for (let connectedAccount of connectedAccounts) {

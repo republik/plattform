@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-10T19:06:43.499Z",
+  "updated": "2017-12-22T02:12:52.262Z",
   "title": "live",
   "data": [
     {
@@ -119,8 +119,76 @@
       "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
     {
+      "key": "api/email/subscription/payment/failed/subject",
+      "value": "Ihre Kreditkarte konnte nicht abgebucht werden."
+    },
+    {
+      "key": "api/email/subscription/deactivated/subject",
+      "value": "We are sad to see you go 😥"
+    },
+    {
+      "key": "api/email/subscription/reactivated/subject",
+      "value": "Happy to see you back ❤️"
+    },
+    {
       "key": "api/users/404",
       "value": "Der User konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/users/merge/sourceAndTargetIdentical",
+      "value": "Bei Quelle und Ziel darf es sich nicht um denselben User handeln."
+    },
+    {
+      "key": "api/email/change/confirmation/subject",
+      "value": "Ihre E-Mail-Adresse wurde geändert"
+    },
+    {
+      "key": "api/email/change/exists",
+      "value": "Es existiert bereits jemand mit der gewünschten E-Mail-Adresse."
+    },
+    {
+      "key": "api/email/payment/reminder/subject",
+      "value": "Erinnerung: Republik-Abonnement"
+    },
+    {
+      "key": "api/pledge/404",
+      "value": "Der Pledge konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/pledge/resolve/status",
+      "value": "Der Pledge muss im status PAID_INVESTIGATE sein um gelöst werden zu können."
+    },
+    {
+      "key": "api/pledge/resolve/multiplePayments",
+      "value": "Dieser Pledge kann nicht editiert werden, da mehrere Zahlungen dazu vorliegen."
+    },
+    {
+      "key": "api/pledge/resolve/payment/status",
+      "value": "Die Zahlung dieses Pledges muss den status 'PAID' haben."
+    },
+    {
+      "key": "api/pledge/resolve/payment/notEnough",
+      "value": "Die Zahlung reicht nicht aus um den Pledge zu begleichen (min: {minTotal})."
+    },
+    {
+      "key": "api/payment/404",
+      "value": "Die Zahlung konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/postfinancePayment/hide/matched",
+      "value": "Postfinance Zahlungen mit Status \"matched\" können nicht versteckt werden."
+    },
+    {
+      "key": "api/postfinancePayment/match/noPayment",
+      "value": "Es konnte keine Zahlung mit der HRID {hrid} und dem Status \"PAID\" gefunden werden."
+    },
+    {
+      "key": "api/postfinancePayment/match/duplicate",
+      "value": "Es liegt bereits eine gematchte Postfinance Zahlung mit der HRID {hrid} vor."
+    },
+    {
+      "key": "api/postfinancePayment/match/noChange",
+      "value": "Diese Postfinance Zahlung ist bereits gematched."
     }
   ]
 }

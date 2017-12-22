@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@orbiting/backend-modules-auth@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-2.0.0.tgz#295101aca3613a0ec107c3771de45c7f0b4eb5c7"
+"@orbiting/backend-modules-auth@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-2.2.0.tgz#907353123239b6983d4c2c64d4b1f5e7044e6e5b"
   dependencies:
     "@orbiting/backend-modules-mail" "^0.1.0"
     "@orbiting/backend-modules-translate" "^0.0.0"
@@ -25,11 +25,11 @@
     rw "^1.3.3"
     uuid "^3.1.0"
 
-"@orbiting/backend-modules-base@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.2.1.tgz#9d573e3c964379dc16eff8424c8fcf777e05599f"
+"@orbiting/backend-modules-base@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.3.0.tgz#2a73b08982520643de69674790f1a1de4bc136cf"
   dependencies:
-    "@orbiting/backend-modules-auth" "^2.0.0"
+    "@orbiting/backend-modules-auth" "^2.2.0"
     apollo-engine "^0.6.0"
     apollo-modules-node "^0.1.1"
     apollo-server-express "^1.2.0"
@@ -48,11 +48,11 @@
     redis "^2.8.0"
     subscriptions-transport-ws "^0.9.2"
 
-"@orbiting/backend-modules-documents@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-1.0.1.tgz#6c324f4e2b782d132467d41d023f10d8d9456194"
+"@orbiting/backend-modules-documents@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-1.0.2.tgz#4e382e5c6e447c11eb6c5cd146b3a9126826da2f"
   dependencies:
-    "@orbiting/backend-modules-auth" "^2.0.0"
+    "@orbiting/backend-modules-auth" "^2.2.0"
     apollo-modules-node "^0.1.1"
     check-env "^1.3.0"
     d3-array "^1.2.1"
@@ -833,7 +833,7 @@ d3-array@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-1.2.1.tgz#d1ca33de2f6ac31efadb8e050a021d7e2396d5dc"
 
-d3-dsv@^1.0.3:
+d3-dsv@^1.0.3, d3-dsv@^1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/d3-dsv/-/d3-dsv-1.0.8.tgz#907e240d57b386618dc56468bacfe76bf19764ae"
   dependencies:

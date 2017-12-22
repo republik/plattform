@@ -7,6 +7,7 @@ extend type User {
   pledges: [Pledge!]!
   memberships: [Membership!]!
   testimonial: Testimonial
+  paymentSources: [PaymentSource!]!
 }
 
 type Crowdfunding {
@@ -70,10 +71,16 @@ type Goodie {
   updatedAt: DateTime!
 }
 
+enum MembershipTypeInterval {
+  year
+  month
+}
+
 type MembershipType {
   id: ID!
   name: String!
-  duration: Int!
+  interval: MembershipTypeInterval
+  intervalCount: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -199,6 +206,89 @@ type PledgePayment {
 
 type PledgePayments {
   items: [PledgePayment!]!
+  count: Int!
+}
+
+enum PaymentSourceStatus {
+  CANCELED
+  CHARGEABLE
+  CONSUMED
+  FAILED
+  PENDING
+}
+type PaymentSource {
+  id: String!
+  isDefault: Boolean!
+  status: PaymentSourceStatus!
+  brand: String!
+  last4: String!
+}
+
+######################################
+# admin
+######################################
+
+input DateRangeFilter {
+  field: Field!
+  from: DateTime!
+  to: DateTime!
+}
+input StringArrayFilter {
+  field: Field!
+  values: [String!]!
+}
+input BooleanFilter {
+  field: Field!
+  value: Boolean!
+}
+
+enum Field {
+  createdAt
+  updatedAt
+  dueDate
+  status
+  matched
+  paperInvoice
+  verified
+  email
+  buchungsdatum
+  valuta
+  avisierungstext
+  gutschrift
+  mitteilung
+  hrid
+  total
+  method
+  firstName
+  lastName
+  hidden
+}
+
+input OrderBy {
+  field: Field!
+  direction: OrderDirection!
+}
+
+type Users {
+  items: [User!]!
+  count: Int!
+}
+
+type PostfinancePayment {
+  id: ID!
+  buchungsdatum: Date!
+  valuta: Date!
+  avisierungstext: String!
+  gutschrift: Int!
+  mitteilung: String
+  matched: Boolean!
+  hidden: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type PostfinancePayments {
+  items: [PostfinancePayment!]!
   count: Int!
 }
 `
