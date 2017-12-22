@@ -115,9 +115,10 @@ const figureCaption = {
   matchMdast: matchParagraph,
   component: FigureCaption,
   // ToDo: replace with module that enforces a byline at the end
-  editorModule: 'paragraph',
+  editorModule: 'figurecaption',
   editorOptions: {
-    type: 'FIGURECAPTION',
+    afterType: 'PARAGRAPH',
+    insertAfterType: 'FIGURE',
     placeholder: 'Legende'
   },
   rules: [
@@ -142,7 +143,6 @@ const figure = {
   }),
   editorModule: 'figure',
   editorOptions: {
-    afterType: 'PARAGRAPH',
     pixelNote: 'Auflösung: min. 1200x, für E2E min. 2000x (proportionaler Schnitt)',
     insertButtonText: 'Bild',
     sizes: [
