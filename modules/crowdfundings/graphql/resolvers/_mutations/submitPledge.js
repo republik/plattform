@@ -133,13 +133,24 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     }
 
     // MONTHLY_ABO can only be bought if user has no active membership
-    // TODO: and if user did not buy a MONTHLY already, then he has to
-    // reactivate it
+    // and if user did not buy a MONTHLY already (then he has to reactivateMembership)
     const userHasActiveMembership = await transaction.public.memberships.findFirst({
       userId: user.id,
       active: true
     })
-    if (userHasActiveMembership) {
+    const userHasMonthlyMembership = await transaction.queryOneField(`
+      SELECT COUNT(*)
+      FROM memberships m
+      JOIN "membershipTypes" mt
+        ON m."membershipTypeId" = mt.id
+      WHERE
+        m."userId" = :userId AND
+        mt.name = :membershipTypeName
+    `, {
+      userId: user.id,
+      membershipTypeName: 'MONTHLY_ABO'
+    })
+    if (userHasActiveMembership || userHasMonthlyMembership) {
       const pledgeOptionsTree = await getPledgeOptionsTree(pledge.options, transaction)
       for (let plo of pledgeOptionsTree) {
         if (
@@ -147,7 +158,11 @@ module.exports = async (_, args, {pgdb, req, t}) => {
           plo.packageOption.reward.membershipType &&
           plo.packageOption.reward.membershipType.name === 'MONTHLY_ABO'
         ) {
-          throw new Error(t('api/membership/monthly/hasActive'))
+          if (userHasActiveMembership) {
+            throw new Error(t('api/membership/monthly/hasActive'))
+          } else if (userHasMonthlyMembership) {
+            throw new Error(t('api/membership/monthly/reactivate'))
+          }
         }
       }
     }
