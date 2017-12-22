@@ -25,19 +25,27 @@ const prepare = async () => {
   await pgDatabase().public.pledges.truncate({ cascade: true })
 }
 
-test('default pledge with ABO package', async (t) => {
-  await prepare()
-  const result = await apolloFetch({
+const submitPledge = async (variables) => {
+  return apolloFetch({
     query: SUBMIT_PLEDGE_MUTATION,
     variables: {
-      'total': 24000,
-      'options': [{
-        'amount': 1,
-        'price': 24000,
-        'templateId': '00000000-0000-0000-0008-000000000001'
-      }],
-      'user': SUBMIT_PLEDGE_USER
+      'user': SUBMIT_PLEDGE_USER,
+      ...variables
     }
+  })
+}
+
+module.exports = { prepare, submitPledge }
+
+test('default pledge with ABO package', async (t) => {
+  await prepare()
+  const result = await submitPledge({
+    'total': 24000,
+    'options': [{
+      'amount': 1,
+      'price': 24000,
+      'templateId': '00000000-0000-0000-0008-000000000001'
+    }]
   })
   t.notOk(result.errors, 'graphql query successful')
   t.notEqual(result.data.submitPledge.pledgeId, null, 'pledgeId returned')
@@ -50,17 +58,13 @@ test('default pledge with ABO package', async (t) => {
   t.equal(pledge.total, 24000, 'correct total value in db')
 
   t.comment('submit pledge again with the same e-mail address')
-  const result2 = await apolloFetch({
-    query: SUBMIT_PLEDGE_MUTATION,
-    variables: {
-      'total': 24000,
-      'options': [{
-        'amount': 1,
-        'price': 24000,
-        'templateId': '00000000-0000-0000-0008-000000000001'
-      }],
-      'user': SUBMIT_PLEDGE_USER
-    }
+  const result2 = await submitPledge({
+    'total': 24000,
+    'options': [{
+      'amount': 1,
+      'price': 24000,
+      'templateId': '00000000-0000-0000-0008-000000000001'
+    }]
   })
   t.notOk(result2.errors, 'graphql query successful')
   t.equal(result2.data.submitPledge.pledgeId, null, 'no pledgeId returned')
@@ -73,17 +77,13 @@ test('default pledge with ABO package', async (t) => {
 
 test('pledge with ABO package and donation', async (t) => {
   await prepare()
-  const result = await apolloFetch({
-    query: SUBMIT_PLEDGE_MUTATION,
-    variables: {
-      'total': 40000,
-      'options': [{
-        'amount': 1,
-        'price': 24000,
-        'templateId': '00000000-0000-0000-0008-000000000001'
-      }],
-      'user': SUBMIT_PLEDGE_USER
-    }
+  const result = await submitPledge({
+    'total': 40000,
+    'options': [{
+      'amount': 1,
+      'price': 24000,
+      'templateId': '00000000-0000-0000-0008-000000000001'
+    }]
   })
   t.notOk(result.errors, 'graphql query successful')
   t.notEqual(result.data.submitPledge.pledgeId, null, 'pledgeId returned')
@@ -97,18 +97,14 @@ test('pledge with ABO package and donation', async (t) => {
 
 test('pledge with ABO package and userPrice', async (t) => {
   await prepare()
-  const result = await apolloFetch({
-    query: SUBMIT_PLEDGE_MUTATION,
-    variables: {
-      'total': 10000,
-      'options': [{
-        'amount': 1,
-        'price': 24000,
-        'templateId': '00000000-0000-0000-0008-000000000001'
-      }],
-      'user': SUBMIT_PLEDGE_USER,
-      'reason': 'student'
-    }
+  const result = await submitPledge({
+    'total': 10000,
+    'options': [{
+      'amount': 1,
+      'price': 24000,
+      'templateId': '00000000-0000-0000-0008-000000000001'
+    }],
+    reason: 'testing the reason'
   })
   t.notOk(result.errors, 'graphql query successful')
   t.notEqual(result.data.submitPledge.pledgeId, null, 'pledgeId returned')
@@ -123,17 +119,13 @@ test('pledge with ABO package and userPrice', async (t) => {
 test('pledge with userPrice but no reason', async (t) => {
   await connectIfNeeded()
   pgDatabase().public.pledges.truncate({ cascade: true })
-  const result = await apolloFetch({
-    query: SUBMIT_PLEDGE_MUTATION,
-    variables: {
-      'total': 10000,
-      'options': [{
-        'amount': 1,
-        'price': 24000,
-        'templateId': '00000000-0000-0000-0008-000000000001'
-      }],
-      'user': SUBMIT_PLEDGE_USER
-    }
+  const result = await submitPledge({
+    'total': 10000,
+    'options': [{
+      'amount': 1,
+      'price': 24000,
+      'templateId': '00000000-0000-0000-0008-000000000001'
+    }]
   })
   t.ok(result.errors, 'no reason, no pledge')
   t.end()
@@ -141,18 +133,13 @@ test('pledge with userPrice but no reason', async (t) => {
 
 test('pledge with ABO package and userPrice too low (minUserPrice = 1000) is not possible', async (t) => {
   await prepare()
-  const result = await apolloFetch({
-    query: SUBMIT_PLEDGE_MUTATION,
-    variables: {
-      'total': 999,
-      'options': [{
-        'amount': 1,
-        'price': 999,
-        'templateId': '00000000-0000-0000-0008-000000000001'
-      }],
-      'user': SUBMIT_PLEDGE_USER,
-      'reason': 'student'
-    }
+  const result = await submitPledge({
+    'total': 999,
+    'options': [{
+      'amount': 1,
+      'price': 999,
+      'templateId': '00000000-0000-0000-0008-000000000001'
+    }]
   })
   t.ok(result.errors, 'userPrice too low, no pledge')
   t.end()
@@ -160,18 +147,13 @@ test('pledge with ABO package and userPrice too low (minUserPrice = 1000) is not
 
 test('pledge with 2 x ABO (maxAmount = 1) is not possible', async (t) => {
   await prepare()
-  const result = await apolloFetch({
-    query: SUBMIT_PLEDGE_MUTATION,
-    variables: {
-      'total': 40000,
-      'options': [{
-        'amount': 2,
-        'price': 24000,
-        'templateId': '00000000-0000-0000-0008-000000000001'
-      }],
-      'user': SUBMIT_PLEDGE_USER,
-      'reason': 'student'
-    }
+  const result = await submitPledge({
+    'total': 40000,
+    'options': [{
+      'amount': 2,
+      'price': 24000,
+      'templateId': '00000000-0000-0000-0008-000000000001'
+    }]
   })
   t.ok(result.errors, 'amount too high, no pledge')
   t.end()
@@ -179,21 +161,17 @@ test('pledge with 2 x ABO (maxAmount = 1) is not possible', async (t) => {
 
 test('pledge with PATRON and 1 x SWEETS (minAmount = 2) is not possible', async (t) => {
   await prepare()
-  const result = await apolloFetch({
-    query: SUBMIT_PLEDGE_MUTATION,
-    variables: {
-      'total': 103000,
-      'options': [{
-        'amount': 1,
-        'price': 100000,
-        'templateId': '00000000-0000-0000-0008-000000000003'
-      }, {
-        'amount': 1,
-        'price': 3000,
-        'templateId': '00000000-0000-0000-0008-000000000004'
-      }],
-      'user': SUBMIT_PLEDGE_USER
-    }
+  const result = await submitPledge({
+    'total': 103000,
+    'options': [{
+      'amount': 1,
+      'price': 100000,
+      'templateId': '00000000-0000-0000-0008-000000000003'
+    }, {
+      'amount': 1,
+      'price': 3000,
+      'templateId': '00000000-0000-0000-0008-000000000004'
+    }]
   })
   t.ok(result.errors, 'amount too low, no pledge')
   t.end()
@@ -201,17 +179,13 @@ test('pledge with PATRON and 1 x SWEETS (minAmount = 2) is not possible', async 
 
 test('pledge with PATRON and no SWEETS (minAmount = 2) is not possible', async (t) => {
   await prepare()
-  const result = await apolloFetch({
-    query: SUBMIT_PLEDGE_MUTATION,
-    variables: {
-      'total': 103000,
-      'options': [{
-        'amount': 1,
-        'price': 100000,
-        'templateId': '00000000-0000-0000-0008-000000000003'
-      }],
-      'user': SUBMIT_PLEDGE_USER
-    }
+  const result = await submitPledge({
+    'total': 103000,
+    'options': [{
+      'amount': 1,
+      'price': 100000,
+      'templateId': '00000000-0000-0000-0008-000000000003'
+    }]
   })
   t.ok(result.errors, 'mandatory package option does not exist, no pledge')
   t.end()
@@ -219,17 +193,13 @@ test('pledge with PATRON and no SWEETS (minAmount = 2) is not possible', async (
 
 test('pledge with PATRON package (userPrice = false) and a total that is lower than the price is not possible', async (t) => {
   await prepare()
-  const result = await apolloFetch({
-    query: SUBMIT_PLEDGE_MUTATION,
-    variables: {
-      'total': 99999,
-      'options': [{
-        'amount': 1,
-        'price': 10000,
-        'templateId': '00000000-0000-0000-0008-000000000003'
-      }],
-      'user': SUBMIT_PLEDGE_USER
-    }
+  const result = await submitPledge({
+    'total': 99999,
+    'options': [{
+      'amount': 1,
+      'price': 10000,
+      'templateId': '00000000-0000-0000-0008-000000000003'
+    }]
   })
   t.ok(result.errors, 'total lower than price, no pledge')
   t.end()
@@ -237,21 +207,17 @@ test('pledge with PATRON package (userPrice = false) and a total that is lower t
 
 test('pledge with mixed PATRON package options and ABO package option is not possible', async (t) => {
   await prepare()
-  const result = await apolloFetch({
-    query: SUBMIT_PLEDGE_MUTATION,
-    variables: {
-      'total': 100000,
-      'options': [{
-        'amount': 1,
-        'price': 100000,
-        'templateId': '00000000-0000-0000-0008-000000000002'
-      }, {
-        'amount': 1,
-        'price': 20000,
-        'templateId': '00000000-0000-0000-0008-000000000001'
-      }],
-      'user': SUBMIT_PLEDGE_USER
-    }
+  const result = await submitPledge({
+    'total': 100000,
+    'options': [{
+      'amount': 1,
+      'price': 100000,
+      'templateId': '00000000-0000-0000-0008-000000000002'
+    }, {
+      'amount': 1,
+      'price': 20000,
+      'templateId': '00000000-0000-0000-0008-000000000001'
+    }]
   })
   t.ok(result.errors, 'cannot mix options of two packages, no pledge')
   t.end()
