@@ -183,7 +183,8 @@ module.exports = async (
     .then(response => response.data)
 
   if (updateMailchimp) {
-    const { content, meta: { title, emailSubject, slug } } = doc
+    const { content } = doc
+    const { title, emailSubject, slug } = content.meta
     // TODO proper error handling
     if (!title || !emailSubject || !slug) {
       throw new Error('updateMailchimp missing one or more params', { title, emailSubject, slug })
