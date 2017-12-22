@@ -176,8 +176,7 @@ test('default pledge with ABO package', async (t) => {
         'price': 24000,
         'templateId': '00000000-0000-0000-0008-000000000001'
       }],
-      'user': SUBMIT_PLEDGE_USER,
-      'reason': 'student'
+      'user': SUBMIT_PLEDGE_USER
     }
   })
   t.notOk(result.errors, 'graphql query successful')
@@ -200,8 +199,7 @@ test('default pledge with ABO package', async (t) => {
         'price': 24000,
         'templateId': '00000000-0000-0000-0008-000000000001'
       }],
-      'user': SUBMIT_PLEDGE_USER,
-      'reason': 'student'
+      'user': SUBMIT_PLEDGE_USER
     }
   })
   t.notOk(result2.errors, 'graphql query successful')
@@ -226,8 +224,7 @@ test('pledge with ABO package and donation', async (t) => {
         'price': 24000,
         'templateId': '00000000-0000-0000-0008-000000000001'
       }],
-      'user': SUBMIT_PLEDGE_USER,
-      'reason': 'student'
+      'user': SUBMIT_PLEDGE_USER
     }
   })
   t.notOk(result.errors, 'graphql query successful')
@@ -267,6 +264,25 @@ test('pledge with ABO package and userPrice', async (t) => {
   t.end()
 })
 
+test('pledge with userPrice but no reason', async (t) => {
+  await connectIfNeeded()
+  pgDatabase().public.pledges.truncate({ cascade: true })
+  const result = await apolloFetch({
+    query: PLEDGE_MUTATION,
+    variables: {
+      'total': 10000,
+      'options': [{
+        'amount': 1,
+        'price': 24000,
+        'templateId': '00000000-0000-0000-0008-000000000001'
+      }],
+      'user': SUBMIT_PLEDGE_USER
+    }
+  })
+  t.ok(result.errors, 'no reason, no pledge')
+  t.end()
+})
+
 test('pledge with ABO package and userPrice too low (minUserPrice = 1000) is not possible', async (t) => {
   await connectIfNeeded()
   pgDatabase().public.pledges.truncate({ cascade: true })
@@ -284,7 +300,7 @@ test('pledge with ABO package and userPrice too low (minUserPrice = 1000) is not
       'reason': 'student'
     }
   })
-  t.ok(result.errors, 'rollback & throws exception, no pledge created')
+  t.ok(result.errors, 'userPrice too low, no pledge')
   t.end()
 })
 
@@ -305,7 +321,7 @@ test('pledge with 2 x ABO (maxAmount = 1) is not possible', async (t) => {
       'reason': 'student'
     }
   })
-  t.ok(result.errors, 'rollback & throws exception, no pledge created')
+  t.ok(result.errors, 'amount too high, no pledge')
   t.end()
 })
 
@@ -329,7 +345,7 @@ test('pledge with PATRON and 1 x SWEETS (minAmount = 2) is not possible', async 
       'user': SUBMIT_PLEDGE_USER
     }
   })
-  t.ok(result.errors, 'rollback & throws exception, no pledge created')
+  t.ok(result.errors, 'amount too low, no pledge')
   t.end()
 })
 
@@ -349,7 +365,7 @@ test('pledge with PATRON and no SWEETS (minAmount = 2) is not possible', async (
       'user': SUBMIT_PLEDGE_USER
     }
   })
-  t.ok(result.errors, 'rollback & throws exception, no pledge created')
+  t.ok(result.errors, 'mandatory package option does not exist, no pledge')
   t.end()
 })
 
@@ -366,14 +382,10 @@ test('pledge with PATRON package (userPrice = false) and a total that is lower t
         'price': 10000,
         'templateId': '00000000-0000-0000-0008-000000000003'
       }],
-      'user': {
-        'firstName': 'pascal',
-        'lastName': 'kaufmann',
-        'email': 'pascal@reactive.one'
-      }
+      'user': SUBMIT_PLEDGE_USER
     }
   })
-  t.ok(result.errors, 'rollback, throws exception, no pledge created')
+  t.ok(result.errors, 'total lower than price, no pledge')
   t.end()
 })
 
@@ -394,13 +406,9 @@ test('pledge with mixed PATRON package options and ABO package option is not pos
         'price': 20000,
         'templateId': '00000000-0000-0000-0008-000000000001'
       }],
-      'user': {
-        'firstName': 'pascal',
-        'lastName': 'kaufmann',
-        'email': 'pascal@reactive.one'
-      }
+      'user': SUBMIT_PLEDGE_USER
     }
   })
-  t.ok(result.errors, 'rollback, throws exception, you cannot mix options of two packages')
+  t.ok(result.errors, 'cannot mix options of two packages, no pledge')
   t.end()
 })
