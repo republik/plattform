@@ -57,6 +57,11 @@ type mutations {
   # adds a new paymentSource and makes it the default
   addPaymentSource(sourceId: String!): [PaymentSource!]!
 
+  reactivateMembership(
+    id: ID!
+    membershipTypeId: ID!
+  ): Membership!
+
   # required role: supporter
   updateUser(firstName: String, lastName: String, birthday: Date, phoneNumber: String, address: AddressInput, userId: ID!): User!
 

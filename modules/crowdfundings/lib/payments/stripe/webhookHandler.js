@@ -119,7 +119,7 @@ module.exports = async ({ pgdb, t }) => {
             })
             const firstNotification = await transaction.query(`
               SELECT
-                DISTINCT(m.id)
+                COUNT(m.id)
               FROM
                 "membershipPeriods" mp
               JOIN
@@ -134,7 +134,7 @@ module.exports = async ({ pgdb, t }) => {
             `, {
               pledgeId
             })
-              .then(response => !response.length)
+              .then(response => !response)
               .catch(e => {
                 console.error(e)
                 return null
@@ -155,11 +155,11 @@ module.exports = async ({ pgdb, t }) => {
                   ARRAY[mp."membershipId"] && :membershipIds AND
                   mp."webhookEventId" is null
               `, {
-                membershipIds: memberships.map(m => m.id),
                 webhookEventId: event.id,
                 beginDate,
                 endDate,
-                now: new Date()
+                now: new Date(),
+                membershipIds: memberships.map(m => m.id)
               })
             } else {
               // check for duplicate event

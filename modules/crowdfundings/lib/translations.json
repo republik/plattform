@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-21T16:56:23.536Z",
+  "updated": "2017-12-22T02:12:52.262Z",
   "title": "live",
   "data": [
     {
@@ -124,7 +124,11 @@
     },
     {
       "key": "api/email/subscription/deactivated/subject",
-      "value": "We are sad to see you go"
+      "value": "We are sad to see you go 😥"
+    },
+    {
+      "key": "api/email/subscription/reactivated/subject",
+      "value": "Happy to see you back ❤️"
     },
     {
       "key": "api/users/404",

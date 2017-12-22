@@ -63,6 +63,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     const user = await transaction.public.users.findOne({id: pledge.userId})
 
     // check if paymentMethod is allowed
+    // check by MembershipType would be more precise
     const pkg = await transaction.public.packages.findOne({
       id: pledge.packageId
     })
