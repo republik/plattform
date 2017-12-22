@@ -37,19 +37,33 @@ export const fromMdast = ({
     context
   }
 ) => {
-  const [ figureModule ] = subModules
+  const [
+    figureModule,
+    captionModule
+ ] = subModules
 
   const figureSerializer = figureModule.helpers.serializer
 
   const data = getData(node.data)
 
+  const caption = node.children[ node.children.length - 1 ]
+  const hasCaption = caption.type === 'paragraph'
+  const figures = (hasCaption
+    ? node.children.slice(0, -1)
+    : node.children).map(
+      v => figureSerializer.fromMdast(v)
+    )
+  const nodes = hasCaption
+    ? figures.concat(
+      captionModule.helpers.serializer.fromMdast(caption)
+    )
+    : figures
+
   const result = {
     kind: 'block',
     type: TYPE,
     data,
-    nodes: node.children.map(
-      v => figureSerializer.fromMdast(v)
-    )
+    nodes
   }
   return result
 }
@@ -66,11 +80,17 @@ export const toMdast = ({
     context
   }
 ) => {
-  const [ figureModule ] = subModules
+  const [ figureModule, captionModule ] = subModules
 
-  const mdastChildren = node.nodes.map(v =>
-    figureModule.helpers.serializer.toMdast(v)
-  )
+  const mdastChildren = node.nodes
+    .slice(0, -1).map(v =>
+      figureModule.helpers.serializer.toMdast(v)
+    )
+    .concat(
+      captionModule.helpers.serializer.toMdast(
+        node.nodes[node.nodes.length - 1]
+      )
+    )
 
   return {
     type: 'zone',
@@ -114,9 +134,6 @@ const figureGroupPlugin = options => {
               max: 1
             }
           ],
-          last: {
-            types: [captionModule.TYPE]
-          },
           normalize (change, reason, { index, node, child }) {
             switch (reason) {
               case 'last_child_type_invalid':
@@ -136,7 +153,6 @@ const figureGroupPlugin = options => {
                   )
                 }
             }
-
             throw reason
           }
         }

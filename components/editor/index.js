@@ -20,6 +20,7 @@ import createListModule from './modules/list'
 import createListItemModule from './modules/list/item'
 import createFigureModule from './modules/figure'
 import createFigureImageModule from './modules/figure/image'
+import createFigureCaptionModule from './modules/figure/caption'
 import createFigureGroupModule from './modules/figuregroup'
 import createFrontModule from './modules/front'
 import createTeaserModule from './modules/teaser'
@@ -56,6 +57,7 @@ const moduleCreators = {
   figure: createFigureModule,
   figureImage: createFigureImageModule,
   figuregroup: createFigureGroupModule,
+  figurecaption: createFigureCaptionModule,
   special: createSpecialModule,
   meta: createMetaModule,
   specialchars: createSpecialCharsModule,
