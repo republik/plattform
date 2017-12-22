@@ -19,7 +19,8 @@ type Meta {
   template: String
   feed: Boolean
   kind: String
-  format: String
+  format: Document
+  dossier: Document
   credits: JSON
 }
 

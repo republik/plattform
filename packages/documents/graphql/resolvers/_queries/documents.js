@@ -7,6 +7,10 @@ const {
 } = require('@orbiting/backend-modules-auth')
 
 const {
+  getMeta
+} = require('../../../lib/meta')
+
+const {
   DOCUMENTS_RESTRICT_TO_ROLES
 } = process.env
 
@@ -19,6 +23,9 @@ module.exports = async (_, args, { user, redis }) => {
   const {
     feed,
     userId,
+    dossier: dossierId,
+    template,
+    format: formatId,
     after,
     first,
     before,
@@ -35,6 +42,7 @@ module.exports = async (_, args, { user, redis }) => {
             return null
           }
           return {
+            repoId,
             id: Buffer.from(`repo:${repoId}`).toString('base64'),
             ...json.doc
           }
@@ -42,30 +50,60 @@ module.exports = async (_, args, { user, redis }) => {
     })
   )
     .then(docs => {
-      let documents = docs.filter(Boolean)
+      const allDocuments = docs.filter(Boolean)
+      allDocuments.forEach(doc => {
+        // expose all documents to each document
+        // for link resolving in lib/resolve
+        doc._all = allDocuments
+      })
+
+      let documents = allDocuments
       if (feed) {
         documents = documents.filter(d => (
-          d.meta.feed ||
-          (d.meta.feed === undefined && d.meta.template === 'article')
+          d.content.meta.feed ||
+          (d.content.meta.feed === undefined && d.content.meta.template === 'article')
         ))
       }
       if (userId) {
         documents = documents.filter(d => {
-          const userIds = (d.meta.credits || [])
+          const userIds = (getMeta(d).credits || [])
             .filter(c => c.type === 'link')
             .map(c => c.url.split('~')[1])
             .filter(Boolean)
           return userIds.includes(userId)
         })
       }
+      if (dossierId) {
+        documents = documents.filter(d => {
+          const dossier = getMeta(d).dossier
+          return dossier && (
+            dossier.id === dossierId ||
+            dossier.repoId === dossierId
+          )
+        })
+      }
+      if (formatId) {
+        documents = documents.filter(d => {
+          const format = getMeta(d).format
+          return format && (
+            format.id === formatId ||
+            format.repoId === formatId
+          )
+        })
+      }
       if (slug) {
         documents = documents.filter(d => (
-          d.meta.slug === slug
+          d.content.meta.slug === slug
+        ))
+      }
+      if (template) {
+        documents = documents.filter(d => (
+          d.content.meta.template === template
         ))
       }
 
       documents = documents.sort((a, b) =>
-        descending(new Date(a.meta.publishDate), new Date(b.meta.publishDate))
+        descending(new Date(a.content.meta.publishDate), new Date(b.content.meta.publishDate))
       )
 
       let readNodes = true
