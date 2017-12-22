@@ -1,7 +1,9 @@
-require('dotenv').config()
+require('dotenv').config({path: '.test.env'})
 const test = require('tape-async')
 const { apolloFetch, connectIfNeeded, pgDatabase } = require('./helpers.js')
 const { submitPledge } = require('./submitPledge.test.js')
+const { createSource } = require('./stripeHelpers')
+const { createTransaction } = require('./paypalHelpers')
 
 const PAYMENT_METHODS = {
   STRIPE: 'STRIPE',
@@ -62,24 +64,46 @@ const prepare = async () => {
   return { ...newPledge }
 }
 
-test('pay pledge with invoice (setup post-payment process)', async (t) => {
+test('pay ABO pledge with PAYMENTSLIP (post-payment)', async (t) => {
   const { pledgeId } = await prepare()
   const result = await payPledge({
     pledgeId,
     method: PAYMENT_METHODS.PAYMENTSLIP,
-    // sourceId: '',
-    // pspPayload: '',
     paperInvoice: true
   })
-  console.log(result)
   t.notOk(result.errors, 'graphql query successful')
-  // t.notEqual(result.data.submitPledge.pledgeId, null, 'pledgeId returned')
-  // t.notEqual(result.data.submitPledge.userId, null, 'userId returned')
-  // t.notEqual(result.data.submitPledge.pfAliasId, null, 'alias id returned')
-  // t.equal(result.data.submitPledge.emailVerify, null, 'email must not be verified, because user does not exist')
-  // t.ok(result.data.submitPledge.pfSHA, 'hash returned')
+  const pledgePayment = await pgDatabase().public.pledgePayments.findOne({ pledgeId })
+  const payment = await pgDatabase().public.payments.findOne({ id: pledgePayment.paymentId })
+  t.equal(payment.status, 'WAITING', 'status is WAITING')
+  t.end()
+})
 
-  // const pledge = await pgDatabase().public.pledges.findOne({ id: result.data.submitPledge.pledgeId })
-  // t.equal(pledge.total, 24000, 'correct total value in db')
+test('pay ABO pledge with PAYPAL', async (t) => {
+  const { pledgeId } = await prepare()
+  const transaction = await createTransaction()
+  const result = await payPledge({
+    pledgeId,
+    method: PAYMENT_METHODS.PAYPAL,
+    pspPayload: JSON.stringify({ tx: transaction.id })
+  })
+  t.notOk(result.errors, 'graphql query successful')
+  const pledgePayment = await pgDatabase().public.pledgePayments.findOne({ pledgeId })
+  const payment = await pgDatabase().public.payments.findOne({ id: pledgePayment.paymentId })
+  t.equal(payment.status, 'PAID', 'status is PAID')
+  t.end()
+})
+
+test('pay ABO pledge with STRIPE', async (t) => {
+  const { pledgeId } = await prepare()
+  const source = await createSource('tok_visa')
+  const result = await payPledge({
+    pledgeId,
+    method: PAYMENT_METHODS.STRIPE,
+    sourceId: source.id
+  })
+  t.notOk(result.errors, 'graphql query successful')
+  const pledgePayment = await pgDatabase().public.pledgePayments.findOne({ pledgeId })
+  const payment = await pgDatabase().public.payments.findOne({ id: pledgePayment.paymentId })
+  t.equal(payment.status, 'PAID', 'status is PAID')
   t.end()
 })

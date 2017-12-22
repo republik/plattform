@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config({path: '.test.env'})
 const test = require('tape-async')
 const { apolloFetch, connectIfNeeded } = require('./helpers.js')
 

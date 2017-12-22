@@ -16,6 +16,10 @@ module.exports = async ({userId, pgdb}) => {
     logger.error('user not found in updateUserOnMailchimp', { userId })
     return
   }
+  if (!MAILCHIMP_URL) {
+    logger.error('MAILCHIMP_URL environment variable is not set, skiping updateUserOnMailchimp')
+    return
+  }
 
   const hasPledge = await pgdb.public.pledges.findFirst({
     userId: userId,
@@ -29,7 +33,7 @@ module.exports = async ({userId, pgdb}) => {
   })
   const isBenefactor = await pgdb.public.memberships.findFirst({
     userId: userId,
-    membershipTypeId: membershipTypeBenefactor.id
+    membershipTypeId: membershipTypeBenefactor ? membershipTypeBenefactor.id : null
   })
   const hash = crypto
     .createHash('md5')
