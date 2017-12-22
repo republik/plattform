@@ -71,10 +71,16 @@ type Goodie {
   updatedAt: DateTime!
 }
 
+enum MembershipTypeInterval {
+  year
+  month
+}
+
 type MembershipType {
   id: ID!
   name: String!
-  duration: Int!
+  interval: MembershipTypeInterval
+  intervalCount: Int!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
