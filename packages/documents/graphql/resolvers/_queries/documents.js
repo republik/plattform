@@ -1,4 +1,5 @@
 const { descending } = require('d3-array')
+const visit = require('unist-util-visit')
 const {
   Roles: {
     userHasRole,
@@ -9,12 +10,15 @@ const {
 const {
   getMeta
 } = require('../../../lib/meta')
+const {
+  extractUserUrl
+} = require('../../../lib/resolve')
 
 const {
   DOCUMENTS_RESTRICT_TO_ROLES
 } = process.env
 
-module.exports = async (_, args, { user, redis }) => {
+module.exports = async (_, args, { user, redis, pgdb }) => {
   const ref = userHasRole(user, 'editor')
     ? 'prepublication'
     : 'publication'
@@ -49,12 +53,37 @@ module.exports = async (_, args, { user, redis }) => {
         })
     })
   )
-    .then(docs => {
+    .then(async docs => {
       const allDocuments = docs.filter(Boolean)
+      const userIds = []
+      allDocuments.forEach(doc => {
+        visit(doc.content, 'link', node => {
+          const info = extractUserUrl(node.url)
+          if (info) {
+            node.url = info.path
+            userIds.push(info.id)
+          }
+        })
+      })
+      const usernames = userIds.length
+        ? await pgdb.public.users.find(
+          {
+            id: userIds,
+            hasPublicProfile: true,
+            'username !=': null
+          },
+          {
+            fields: ['id', 'username'],
+            limit: userIds.length
+          }
+        )
+        : []
       allDocuments.forEach(doc => {
         // expose all documents to each document
         // for link resolving in lib/resolve
+        // - including the usernames
         doc._all = allDocuments
+        doc._usernames = usernames
       })
 
       let documents = allDocuments

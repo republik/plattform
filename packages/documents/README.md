@@ -11,4 +11,8 @@ used by:
 # This var restricts the documents query to the specified roles.
 # Without it beeing specified, documents are server to everybody.
 DOCUMENTS_RESTRICT_TO_ROLES=editor,member
+# Used to resolve inter document links
+GITHUB_LOGIN
+# Used to resolve user profile links
+FRONTEND_BASE_URL
 ```
