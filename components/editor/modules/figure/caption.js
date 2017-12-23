@@ -99,17 +99,19 @@ const focusNext = change => {
   return true
 }
 
-const captionPlugin = options => {
-  const Caption = options.component
-  const placeholder = options.rule.editorOptions.placeholder
+const captionPlugin = ({TYPE, rule}) => {
+  const Caption = rule.component
+  const placeholder = rule.editorOptions.placeholder
+
+  const matchCaption = matchBlock(TYPE)
 
   return {
-    renderNode (
+    renderNode ({
       children,
       node,
       attributes
-    ) {
-      if (!matchBlock(options.type)(node)) {
+    }) {
+      if (!matchCaption(node)) {
         return
       }
 
@@ -124,7 +126,7 @@ const captionPlugin = options => {
       )
     },
     renderPlaceholder: placeholder && (({node}) => {
-      if (!matchBlock(options.TYPE)(node)) return
+      if (!matchCaption(node)) return
       if (node.text.length) return null
 
       return <Placeholder>{placeholder}</Placeholder>
@@ -137,7 +139,7 @@ const captionPlugin = options => {
       if (!isEnter && !isBackspace && !isTab) return
 
       const { value } = change
-      const inSelection = value.blocks.some(matchBlock(options.TYPE))
+      const inSelection = value.blocks.some(matchCaption)
 
       if (!inSelection) return
 

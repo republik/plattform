@@ -15,9 +15,9 @@ export default ({rule, subModules, TYPE}) => {
   }
   const imageSerializer = imageModule.helpers.serializer
 
-  const captionModule = subModules.find(m => m.name === 'figurecaption')
+  const captionModule = subModules.find(m => m.name === 'figureCaption')
   if (!captionModule) {
-    throw new Error('Missing figurecaption submodule')
+    throw new Error('Missing figureCaption submodule')
   }
   const captionSerializer = captionModule.helpers.serializer
 
