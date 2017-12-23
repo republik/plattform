@@ -143,7 +143,8 @@ const createTeasers = ({
       image: extractImage(node.children[0]),
       ...node.data
     }),
-    editorModule: 'teaser',
+    // TMP: Disabled until editor integration
+    // editorModule: 'teaser',
     editorOptions: {
       type: 'ARTICLETILE',
       teaserType: 'articleTile',
@@ -185,7 +186,8 @@ const createTeasers = ({
         {children}
       </DossierTileRow>
     },
-    editorModule: 'teasergroup',
+    // TMP: Disabled until editor integration
+    // editorModule: 'teasergroup',
     editorOptions: {
       type: 'ARTICLETILEROW',
       dnd: false
@@ -204,7 +206,8 @@ const createTeasers = ({
         </Breakout>
       ),
       props: node => node.data,
-      editorModule: 'teaser',
+      // TMP: Disabled until editor integration
+      // editorModule: 'teaser',
       editorOptions: {
         type: 'ARTICLECOLLECTION',
         teaserType: 'articleCollection',

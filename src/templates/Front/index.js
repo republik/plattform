@@ -397,7 +397,8 @@ const createSchema = ({
       image: extractImage(node.children[0]),
       ...node.data
     }),
-    editorModule: 'teaser',
+    // TMP: Disabled until editor integration
+    // editorModule: 'teaser',
     editorOptions: {
       type: 'ARTICLETILE',
       teaserType: 'articleTile',
@@ -430,15 +431,14 @@ const createSchema = ({
   }
 
   const articleTileRow = {
-    matchMdast: node => {
-      return matchZone('TEASERGROUP')(node)
-    },
+    matchMdast: matchZone('TEASERGROUP'),
     component: ({ children, attributes, ...props }) => {
       return <DossierTileRow attributes={attributes} {...props}>
         {children}
       </DossierTileRow>
     },
-    editorModule: 'teasergroup',
+    // TMP: Disabled until editor integration
+    // editorModule: 'teasergroup',
     editorOptions: {
       type: 'ARTICLETILEROW'
     },
@@ -501,7 +501,8 @@ const createSchema = ({
         {children}
       </TeaserFrontDossier>
     },
-    editorModule: 'teaser',
+    // TMP: Disabled until editor integration
+    // editorModule: 'teaser',
     editorOptions: {
       type: 'FRONTARTICLECOLLECTION',
       insertButton: 'Artikelsammlung / Dossier'
