@@ -1,9 +1,8 @@
 const getDocuments = require('./documents')
 
-module.exports = async (_, args, { user, redis }) => {
+module.exports = async (_, args, context) => {
   const { slug } = args
 
-  return getDocuments(_, {
-    slug
-  }, { user, redis }).then(docCon => docCon.nodes[0])
+  return getDocuments(_, { slug }, context)
+    .then(docCon => docCon.nodes[0])
 }
