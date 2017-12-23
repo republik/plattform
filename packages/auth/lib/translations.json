@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-19T11:04:58.317Z",
+  "updated": "2017-12-23T19:46:52.017Z",
   "title": "live",
   "data": [
     {
@@ -41,6 +41,10 @@
     {
       "key": "api/checkUsername/max",
       "value": "Username, maximal {count} Zeichen"
+    },
+    {
+      "key": "api/checkUsername/invalid",
+      "value": "Username, nur a-z, 0-9 und . erlaubt"
     },
     {
       "key": "api/checkUsername/taken",

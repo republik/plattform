@@ -14,6 +14,10 @@ module.exports = async (username, me, pgdb) => {
     }))
   }
 
+  if (!username.match(/^[.a-z0-9]+$/)) {
+    throw new Error(t('api/checkUsername/invalid'))
+  }
+
   const id = await pgdb.public.users.findOneFieldOnly({username}, 'id')
   if (!id || (me && me.id === id)) {
     return true
