@@ -5,18 +5,36 @@ type Credential {
   verified: Boolean!
 }
 
+enum AccessRole {
+  ADMIN
+  EDITOR
+  MEMBER
+  PUBLIC
+}
+
 extend type User {
   address: Address
-  birthday: Date
-  phoneNumber: String
   credentials: [Credential]!
   testimonial: Testimonial
+  badges: [Badge]
+  latestComments(limit: Int): [Comment]
+
+  birthday: Date
+  ageAccessRole: AccessRole
+  age: Int
+
+  phoneNumber: String
+  phoneNumberNote: String
+  phoneNumberAccessRole: AccessRole
+
+  pgpPublicKey: String
+  pgpPublicKeyId: String
+  emailAccessRole: AccessRole
+
+  biography: String
   facebookId: String
   twitterHandle: String
   publicUrl: String
-  isEmailPublic: Boolean
-  badges: [Badge]
-  latestComments(limit: Int): [Comment]
 }
 
 type Address {

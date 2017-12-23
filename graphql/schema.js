@@ -22,17 +22,27 @@ type queries {
 
 type mutations {
   updateMe(
-    username: String,
-    firstName: String,
-    lastName: String,
-    birthday: Date,
-    phoneNumber: String,
-    address: AddressInput,
-    facebookId: String,
-    twitterHandle: String,
-    publicUrl: String,
-    isEmailPublic: Boolean,
+    username: String
+    firstName: String
+    lastName: String
     hasPublicProfile: Boolean
+
+    address: AddressInput
+
+    birthday: Date
+    ageAccessRole: AccessRole
+
+    phoneNumber: String
+    phoneNumberNote: String
+    phoneNumberAccessRole: AccessRole
+
+    pgpPublicKey: String
+    emailAccessRole: AccessRole
+
+    biography: String
+    facebookId: String
+    twitterHandle: String
+    publicUrl: String
   ): User!
 
   submitTestimonial(

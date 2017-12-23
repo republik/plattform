@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-20T23:53:41.470Z",
+  "updated": "2017-12-23T23:39:36.852Z",
   "title": "live",
   "data": [
     {
@@ -69,6 +69,10 @@
     {
       "key": "api/greeting",
       "value": "Willkommen {name}"
+    },
+    {
+      "key": "api/pgpPublicKey/invalid",
+      "value": "Ungültiger PGP Public Key"
     }
   ]
 }

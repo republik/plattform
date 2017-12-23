@@ -1,4 +1,6 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
+const { age } = require('../../lib/age')
+const { getKeyId } = require('../../lib/pgp')
 
 const exposeProfileField = key => (user, args, { pgdb, user: me }) => {
   if (Roles.userIsMeOrHasProfile(user, me)) {
@@ -7,14 +9,43 @@ const exposeProfileField = key => (user, args, { pgdb, user: me }) => {
   return null
 }
 
+const exposeAccessField = (accessRoleKey, key, format) => (user, args, { pgdb, user: me }) => {
+  if (
+    user._raw[accessRoleKey] === 'public' ||
+    Roles.userIsMeOrInRoles(user, me, [
+      user._raw[accessRoleKey], 'admin', 'supporter'
+    ])
+  ) {
+    return format
+      ? format(user._raw[key])
+      : user._raw[key]
+  }
+  return null
+}
+
 module.exports = {
-  email (user, args, { pgdb, user: me }) {
-    if (user._raw.isEmailPublic || Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
-      return user._raw.email
+  pgpPublicKey: exposeAccessField('emailAccessRole', 'pgpPublicKey'),
+  pgpPublicKeyId: exposeAccessField('emailAccessRole', 'pgpPublicKey', key => key
+    ? getKeyId(key)
+    : null
+  ),
+  email: exposeAccessField('emailAccessRole', 'email'),
+  emailAccessRole (user, args, { user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return user._raw.emailAccessRole
+    }
+    return null
+  },
+  phoneNumber: exposeAccessField('phoneNumberAccessRole', 'phoneNumber'),
+  phoneNumberNote: exposeAccessField('phoneNumberAccessRole', 'phoneNumberNote'),
+  phoneNumberAccessRole (user, args, { user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return user._raw.phoneNumberAccessRole
     }
     return null
   },
   badges: exposeProfileField('badges'),
+  biography: exposeProfileField('biography'),
   facebookId: exposeProfileField('facebookId'),
   twitterHandle: exposeProfileField('twitterHandle'),
   publicUrl: exposeProfileField('publicUrl'),
@@ -60,6 +91,16 @@ module.exports = {
       })
     }
   },
+  birthday (user, args, { pgdb, user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return user._raw.birthday
+    }
+    return null
+  },
+  age: exposeAccessField('ageAccessRole', 'birthday', dob => dob
+    ? age(dob)
+    : null
+  ),
   async credentials (user, args, { pgdb, user: me }) {
     if (Roles.userIsMeOrHasProfile(user, me)) {
       return pgdb.public.credentials.find({
@@ -78,6 +119,4 @@ module.exports = {
     }
     return null
   }
-  // TODO: Implement memberships
-  // TODO: Implement pledges
 }

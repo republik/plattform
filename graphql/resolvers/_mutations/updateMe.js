@@ -1,61 +1,66 @@
-const { ensureSignedIn, checkUsername } = require('@orbiting/backend-modules-auth')
+const {
+  ensureSignedIn, checkUsername, transformUser
+} = require('@orbiting/backend-modules-auth')
+const { getKeyId } = require('../../../lib/pgp')
 
 module.exports = async (_, args, { pgdb, req, user: me, t }) => {
   ensureSignedIn(req)
+
   const {
     username,
-    firstName,
-    lastName,
-    birthday,
     address,
-    phoneNumber,
-    facebookId,
-    twitterHandle,
-    publicUrl,
-    isEmailPublic,
-    hasPublicProfile
+    pgpPublicKey
   } = args
+
+  const updateFields = [
+    'username',
+    'firstName',
+    'lastName',
+    'birthday',
+    'ageAccessRole',
+    'phoneNumber',
+    'phoneNumberNote',
+    'phoneNumberAccessRole',
+    'facebookId',
+    'twitterHandle',
+    'publicUrl',
+    'emailAccessRole',
+    'pgpPublicKey',
+    'hasPublicProfile',
+    'biography'
+  ]
 
   if (username !== undefined) {
     await checkUsername(username, me, pgdb)
+  }
+  if (pgpPublicKey) {
+    if (!getKeyId(pgpPublicKey)) {
+      throw new Error(t('api/pgpPublicKey/invalid'))
+    }
   }
 
   const transaction = await pgdb.transactionBegin()
   try {
     if (
-      username ||
-      firstName ||
-      lastName ||
-      birthday ||
-      phoneNumber ||
-      facebookId ||
-      twitterHandle ||
-      publicUrl ||
-      isEmailPublic ||
-      hasPublicProfile
+      updateFields.some(field => args[field] !== undefined)
     ) {
       await transaction.public.users.updateOne(
-        { id: req.user.id },
-        {
-          username,
-          firstName,
-          lastName,
-          birthday,
-          phoneNumber,
-          facebookId,
-          twitterHandle,
-          publicUrl,
-          isEmailPublic,
-          hasPublicProfile
-        },
+        { id: me.id },
+        updateFields.reduce(
+          (updates, key) => {
+            updates[key] = args[key]
+            return updates
+          },
+          {}
+        ),
         { skipUndefined: true }
       )
     }
     if (address) {
-      if (req.user.addressId) {
+      if (me._raw.addressId) {
         // update address of user
         await transaction.public.addresses.update(
-          { id: req.user.addressId },
+          { id: me._raw.addressId },
           address
         )
       } else {
@@ -64,13 +69,14 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
           address
         )
         await transaction.public.users.updateOne(
-          { id: req.user.id },
+          { id: me.id },
           { addressId: userAddress.id }
         )
       }
     }
     await transaction.transactionCommit()
-    return pgdb.public.users.findOne({ id: req.user.id })
+    const updatedUser = await pgdb.public.users.findOne({ id: me.id })
+    return transformUser(updatedUser)
   } catch (e) {
     console.error('updateMe', e)
     await transaction.transactionRollback()

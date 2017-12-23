@@ -2,12 +2,24 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "citext";
 CREATE EXTENSION IF NOT EXISTS "pg_trgm";
 
+create type "accessRole" as ENUM (
+  'ADMIN',
+  'EDITOR',
+  'MEMBER',
+  'PUBLIC'
+);
+
 ALTER TABLE users
-  ADD COLUMN "facebookId"     text,
-  ADD COLUMN "twitterHandle"  text,
-  ADD COLUMN "publicUrl"      text,
-  ADD COLUMN "isEmailPublic"  boolean not null default false,
-  ADD COLUMN "badges"         jsonb
+  ADD COLUMN "facebookId"            text,
+  ADD COLUMN "twitterHandle"         text,
+  ADD COLUMN "publicUrl"             text,
+  ADD COLUMN "badges"                jsonb,
+  ADD COLUMN "biography"             text,
+  ADD COLUMN "pgpPublicKey"          text,
+  ADD COLUMN "phoneNumberNote"       text,
+  ADD COLUMN "phoneNumberAccessRole" "accessRole" not null default 'ADMIN',
+  ADD COLUMN "emailAccessRole"       "accessRole" not null default 'ADMIN',
+  ADD COLUMN "ageAccessRole"         "accessRole" not null default 'ADMIN'
 ;
 
 CREATE SCHEMA IF NOT EXISTS cf;
