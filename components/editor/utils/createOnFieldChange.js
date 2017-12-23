@@ -1,7 +1,7 @@
 import { curry } from 'ramda'
 
 export default curry(
-  (onChange, value, node, key, event, fieldValue) =>
+  (onChange, value, node, key, event, fieldValue) => {
     onChange(
       value
         .change()
@@ -11,4 +11,5 @@ export default curry(
             : node.data.remove(key)
         })
     )
+  }
 )

@@ -357,7 +357,6 @@ query repos($after: String, $search: String) {
           meta {
             template
             title
-            format
             publishDate
             credits
           }
