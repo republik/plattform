@@ -115,7 +115,7 @@ const figureGroupPlugin = options => {
       }
 
       return (
-        <FigureGroup key='teaser' {...node.data.toJS()} attributes={attributes}>
+        <FigureGroup size='breakout' {...node.data.toJS()} attributes={attributes}>
           {children}
         </FigureGroup>
       )
