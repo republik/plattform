@@ -135,22 +135,33 @@ const figureGroupPlugin = options => {
             }
           ],
           normalize (change, reason, { index, node, child }) {
+            const insertCaption = () =>
+              change.insertNodeByKey(
+                node.key,
+                index,
+                Block.create({
+                  type: captionModule.TYPE
+                })
+              )
+            const insertFigure = () =>
+              change.insertNodeByKey(
+                node.key,
+                index,
+                figureModule.helpers.newBlock()
+              )
             switch (reason) {
               case 'last_child_type_invalid':
-                return change.insertNodeByKey(
-                  node.key,
-                  index,
-                  Block.create({
-                    type: captionModule.TYPE
-                  })
-                )
+                return insertCaption()
               case 'child_type_invalid':
                 if (child.type === captionModule.TYPE) {
-                  return change.insertNodeByKey(
-                    node.key,
-                    index,
-                    figureModule.helpers.newBlock()
-                  )
+                  return insertFigure()
+                }
+                break
+              case 'child_required':
+                if (index === node.nodes.size) {
+                  return insertCaption()
+                } else {
+                  return insertFigure()
                 }
             }
             throw reason
