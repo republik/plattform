@@ -93,8 +93,7 @@ const paragraph = {
 const figureCaption = {
   matchMdast: matchParagraph,
   component: FigureCaption,
-  // ToDo: replace with module that enforces a byline at the end
-  editorModule: 'figurecaption',
+  editorModule: 'figureCaption',
   editorOptions: {
     afterType: 'PARAGRAPH',
     insertAfterType: 'FIGURE',
