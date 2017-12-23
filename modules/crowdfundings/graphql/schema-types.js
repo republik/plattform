@@ -74,6 +74,7 @@ type Goodie {
 enum MembershipTypeInterval {
   year
   month
+  day
 }
 
 type MembershipType {

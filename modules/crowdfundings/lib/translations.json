@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-22T13:16:55.626Z",
+  "updated": "2017-12-23T17:22:47.582Z",
   "title": "live",
   "data": [
     {
@@ -33,6 +33,26 @@
     {
       "key": "api/membership/monthly/reactivate",
       "value": "Sie können nicht noch einmal ein Monatsabo kaufen. Bitte verlängern sie Ihre Mitgliedschaft stattdessen."
+    },
+    {
+      "key": "api/membership/cancel/isInactive",
+      "value": "Die Mitgliedschaft ist bereits deaktiviert."
+    },
+    {
+      "key": "api/membership/cancel/notRenewing",
+      "value": "Die Mitgliedschaft ist bereits terminiert."
+    },
+    {
+      "key": "api/membership/pleaseWait",
+      "value": "Die Mitgliedschaft wird von unserem System noch bearbeitet, bitte versuchen Sie es später nochmals."
+    },
+    {
+      "key": "api/membership/404",
+      "value": "Die Mitgliedschaft konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/membershipType/404",
+      "value": "Der Mitgliedschafts-Typ konnte nicht gefunden werden."
     },
     {
       "key": "api/pledge/alreadyPaid",

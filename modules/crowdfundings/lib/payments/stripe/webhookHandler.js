@@ -117,32 +117,18 @@ module.exports = async ({ pgdb, t }) => {
             const memberships = await transaction.public.memberships.find({
               pledgeId
             })
-            const firstNotification = await transaction.query(`
-              SELECT
-                COUNT(m.id)
-              FROM
-                "membershipPeriods" mp
-              JOIN
-                memberships m
-                ON mp."membershipId" = m.id
-              JOIN
-                pledges p
-                ON m."pledgeId" = p.id
-              WHERE
-                mp."webhookEventId" IS NOT NULL AND
-                p.id = :pledgeId
-            `, {
-              pledgeId
-            })
-              .then(response => !response)
-              .catch(e => {
-                console.error(e)
-                return null
-              })
+            const firstNotification = memberships[0].subscriptionId === null
+            console.log({firstNotification})
 
             const beginDate = new Date(subscription.period.start * 1000)
             const endDate = new Date(subscription.period.end * 1000)
             if (firstNotification) {
+              // remember subscriptionId
+              await transaction.public.memberships.update({
+                id: memberships.map(m => m.id)
+              }, {
+                subscriptionId: subscription.id
+              })
               // synchronize beginDate and endDate with stripe
               await transaction.query(`
                 UPDATE "membershipPeriods" mp
