@@ -75,19 +75,6 @@ export const getSerializer = options => {
   })
 }
 
-const focusPrevious = change => {
-  const { value } = change
-  const previousBlock = !!value.startBlock &&
-    value.document.getPreviousBlock(value.startBlock.key)
-
-  if (previousBlock) {
-    return change.collapseToEndOf(
-      previousBlock
-    )
-  }
-  return true
-}
-
 const focusNext = change => {
   const { value } = change
   const nextBlock = value.document.getNextBlock(value.endBlock.key)
@@ -147,10 +134,6 @@ const captionPlugin = ({TYPE, rule}) => {
 
       if (isEnter || isTab) {
         return focusNext(change)
-      }
-
-      if (isBackspace && value.blocks.some(v => value.selection.hasStartAtStartOf(v))) {
-        return focusPrevious(change)
       }
     }
   }
