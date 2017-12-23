@@ -1,7 +1,7 @@
 import test from 'tape'
 import createFigureModule from './'
 import createImageModule from './image'
-import createParagraphModule from '../paragraph'
+import createCaptionModule from './caption'
 import { parse, stringify } from '@orbiting/remark-preset'
 
 const TYPE = 'FIGURE'
@@ -17,12 +17,14 @@ const imageModule = createImageModule({
 })
 imageModule.name = 'figureImage'
 
-const paragraphModule = createParagraphModule({
+const captionModule = createCaptionModule({
   TYPE: 'FIGURE_CAPTION',
-  rule: {},
+  rule: {
+    matchMdast: node => node.type === 'paragraph'
+  },
   subModules: []
 })
-paragraphModule.name = 'paragraph'
+captionModule.name = 'figureCaption'
 
 const figureModule = createFigureModule({
   TYPE,
@@ -31,7 +33,7 @@ const figureModule = createFigureModule({
   },
   subModules: [
     imageModule,
-    paragraphModule
+    captionModule
   ]
 })
 

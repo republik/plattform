@@ -3,7 +3,7 @@ import { Block } from 'slate'
 import { matchBlock } from '../../utils'
 import Placeholder from '../../Placeholder'
 
-export const getSerializer = options => {
+const getSerializer = options => {
   const inlineSerializer = new MarkdownSerializer(
     {
       rules: options.subModules
@@ -67,9 +67,10 @@ export const getSerializer = options => {
   return new MarkdownSerializer({
     rules: [
       {
+        match: matchBlock(options.TYPE),
+        matchMdast: options.rule.matchMdast,
         fromMdast,
-        toMdast,
-        matchMdast: options.rule.matchMdast
+        toMdast
       }
     ]
   })
@@ -88,7 +89,9 @@ const focusNext = change => {
 
 const captionPlugin = ({TYPE, rule}) => {
   const Caption = rule.component
-  const placeholder = rule.editorOptions.placeholder
+  const {
+    placeholder
+  } = rule.editorOptions || {}
 
   const matchCaption = matchBlock(TYPE)
 
@@ -140,6 +143,7 @@ const captionPlugin = ({TYPE, rule}) => {
 }
 
 export default options => ({
+  TYPE: options.TYPE,
   helpers: {
     serializer: getSerializer(options),
     newBlock: () => Block.create(options.TYPE)

@@ -172,7 +172,7 @@ const figureGroupPlugin = options => {
   }
 }
 
-export const getSerializer = options =>
+const getSerializer = options =>
   new MarkdownSerializer({
     rules: [
       {
