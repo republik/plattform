@@ -118,8 +118,6 @@ module.exports = async ({ pgdb, t }) => {
               pledgeId
             })
             const firstNotification = memberships[0].subscriptionId === null
-            console.log({firstNotification})
-
             const beginDate = new Date(subscription.period.start * 1000)
             const endDate = new Date(subscription.period.end * 1000)
             if (firstNotification) {
@@ -332,32 +330,34 @@ module.exports = async ({ pgdb, t }) => {
             const existingMembership = await transaction.public.memberships.findFirst({
               pledgeId
             })
-
-            await transaction.public.memberships.update({
-              pledgeId
-            }, {
-              active: false,
-              renew: false,
-              updatedAt: new Date()
-            })
-
-            const user = await transaction.public.users.findOne({
-              id: pledge.userId
-            })
-
-            if (existingMembership.active) {
-              await sendMailTemplate({
-                to: user.email,
-                subject: t('api/email/subscription/deactivated/subject'),
-                templateName: 'subscription_end',
-                globalMergeVars: [
-                  { name: 'NAME',
-                    content: [user.firstName, user.lastName]
-                      .filter(Boolean)
-                      .join(' ')
-                  }
-                ]
+            // membership might have been moved by cancelPledge
+            if (!existingMembership) {
+              await transaction.public.memberships.update({
+                pledgeId
+              }, {
+                active: false,
+                renew: false,
+                updatedAt: new Date()
               })
+
+              const user = await transaction.public.users.findOne({
+                id: pledge.userId
+              })
+
+              if (existingMembership.active) {
+                await sendMailTemplate({
+                  to: user.email,
+                  subject: t('api/email/subscription/deactivated/subject'),
+                  templateName: 'subscription_end',
+                  globalMergeVars: [
+                    { name: 'NAME',
+                      content: [user.firstName, user.lastName]
+                        .filter(Boolean)
+                        .join(' ')
+                    }
+                  ]
+                })
+              }
             }
           }
           await transaction.transactionCommit()

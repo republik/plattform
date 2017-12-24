@@ -29,6 +29,16 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       throw new Error(t('api/membership/pleaseWait'))
     }
 
+    const newMembership = await transaction.public.memberships.updateAndGetOne({
+      id: membershipId
+    }, {
+      renew: false,
+      active: immediately
+        ? false
+        : membership.active,
+      updatedAt: new Date()
+    })
+
     if (membership.subscriptionId) {
       await cancelSubscription({
         id: membership.subscriptionId,
@@ -38,11 +48,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       })
     }
 
-    const newMembership = await transaction.public.memberships.updateAndGetOne({
-      id: membershipId
-    }, {
-      renew: false
-    })
+    await transaction.transactionCommit()
 
     return newMembership
   } catch (e) {
