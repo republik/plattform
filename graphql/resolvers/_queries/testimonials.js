@@ -22,7 +22,8 @@ module.exports = async (_, args, {pgdb}) => {
     return testimonials.map(testimonial => {
       const user = users.find(user => user.id === testimonial.userId)
       return Object.assign({}, testimonial, {
-        name: `${user.firstName} ${user.lastName}`
+        name: `${user.firstName} ${user.lastName}`,
+        image: user.portraitUrl
       })
     })
   }
@@ -36,7 +37,6 @@ module.exports = async (_, args, {pgdb}) => {
         t.role,
         t.quote,
         t.video,
-        t.image,
         t."smImage",
         t."sequenceNumber",
         t."createdAt",
@@ -59,7 +59,7 @@ module.exports = async (_, args, {pgdb}) => {
     return results(testimonials, users)
   } else {
     const testimonials = await pgdb.query(`
-      SELECT id, "userId", role, quote, video, image, "smImage", "sequenceNumber", "createdAt", "updatedAt"
+      SELECT id, "userId", role, quote, video, "smImage", "sequenceNumber", "createdAt", "updatedAt"
       FROM (
         SELECT
           setseed(:seed),
@@ -68,7 +68,6 @@ module.exports = async (_, args, {pgdb}) => {
           NULL AS role,
           NULL AS quote,
           NULL AS video,
-          NULL AS image,
           NULL AS "smImage",
           NULL AS "sequenceNumber",
           NULL AS "createdAt",
@@ -83,7 +82,6 @@ module.exports = async (_, args, {pgdb}) => {
           role,
           quote,
           video,
-          image,
           "smImage",
           "sequenceNumber",
           "createdAt",

@@ -1,31 +1,24 @@
 // SM image and sendMail are copied over from crowdfunding,
 // but currently disabled.
 
-const uuid = require('uuid/v4')
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
-const keyCDN = require('../../../lib/keyCDN')
-const convertImage = require('../../../lib/convertImage')
-const uploadExoscale = require('../../../lib/uploadExoscale')
 // const renderUrl = require('../../../lib/renderUrl')
 // const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
-const FOLDER = 'testimonials'
-const {IMAGE_SIZE_SMALL, IMAGE_SIZE_SHARE} = convertImage
 const MAX_QUOTE_LENGTH = 140
 const MAX_ROLE_LENGTH = 60
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, {pgdb, req, user: me, t}) => {
   ensureSignedIn(req)
 
   // check if user is eligitable: has pledged and/or was vouchered a membership
-  const hasPledges = !!(await pgdb.public.pledges.findFirst({userId: req.user.id}))
-  if (!hasPledges && !(await pgdb.public.memberships.findFirst({userId: req.user.id}))) {
+  const hasPledges = !!(await pgdb.public.pledges.findFirst({userId: me.id}))
+  if (!hasPledges && !(await pgdb.public.memberships.findFirst({userId: me.id}))) {
     console.error('not allowed submitTestimonial', args)
     throw new Error(t('api/testimonial/pledge/required'))
   }
 
-  const { role, quote, image } = args
-  const { ASSETS_BASE_URL, S3BUCKET } = process.env
+  const { role, quote } = args
 
   // check max lengths
   if (quote.trim().length > MAX_QUOTE_LENGTH) {
@@ -38,12 +31,12 @@ module.exports = async (_, args, {pgdb, req, t}) => {
   // let sendConfirmEmail = false
   let testimonial
 
-  testimonial = await pgdb.public.testimonials.findOne({userId: req.user.id})
+  testimonial = await pgdb.public.testimonials.findOne({userId: me.id})
   // if (!testimonial || !testimonial.published) { sendConfirmEmail = true }
 
-  if (!testimonial && !image) {
-    console.error('a new testimonials requires an image', args)
-    throw new Error(t('api/testimonial/image/required'))
+  if (!me._raw.portraitUrl) {
+    console.error('a testimonial requires a portrait', args)
+    throw new Error(t('api/testimonial/portrait/required'))
   }
 
   // block if testimonial has a video
@@ -52,76 +45,26 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     throw new Error(t('api/unexpected'))
   }
 
-  const firstMembership = await pgdb.public.memberships.findFirst({userId: req.user.id}, {orderBy: ['sequenceNumber asc']})
+  const firstMembership = await pgdb.public.memberships.findFirst({userId: me.id}, {orderBy: ['sequenceNumber asc']})
   let seqNumber
   if (firstMembership) { seqNumber = firstMembership.sequenceNumber }
 
-  if (!image) {
+  if (testimonial) {
     testimonial = await pgdb.public.testimonials.updateAndGetOne({id: testimonial.id}, {
       role,
       quote,
+      updatedAt: new Date(),
       published: true,
       sequenceNumber: testimonial.sequenceNumber || seqNumber
     }, {skipUndefined: true})
-  } else { // new image
-    const inputBuffer = Buffer.from(image, 'base64')
-    const id = testimonial ? testimonial.id : uuid()
-
-    const pathOriginal = `/${FOLDER}/${id}_original.jpeg`
-    const pathSmall = `/${FOLDER}/${id}_${IMAGE_SIZE_SMALL}x${IMAGE_SIZE_SMALL}.jpeg`
-    const pathShare = `/${FOLDER}/${id}_${IMAGE_SIZE_SHARE}x${IMAGE_SIZE_SHARE}.jpeg`
-
-    await Promise.all([
-      convertImage.toJPEG(inputBuffer)
-        .then((data) => {
-          return uploadExoscale({
-            stream: data,
-            path: pathOriginal,
-            mimeType: 'image/jpeg',
-            bucket: S3BUCKET
-          })
-        }),
-      convertImage.toSmallBW(inputBuffer)
-        .then((data) => {
-          return uploadExoscale({
-            stream: data,
-            path: pathSmall,
-            mimeType: 'image/jpeg',
-            bucket: S3BUCKET
-          })
-        }),
-      convertImage.toShare(inputBuffer)
-        .then((data) => {
-          return uploadExoscale({
-            stream: data,
-            path: pathShare,
-            mimeType: 'image/jpeg',
-            bucket: S3BUCKET
-          })
-        })
-    ])
-
-    if (testimonial) {
-      await keyCDN.purgeUrls([pathOriginal, pathSmall, pathShare])
-      testimonial = await pgdb.public.testimonials.updateAndGetOne({id: testimonial.id}, {
-        role,
-        quote,
-        image: ASSETS_BASE_URL + pathSmall,
-        updatedAt: new Date(),
-        published: true,
-        sequenceNumber: testimonial.sequenceNumber || seqNumber
-      }, {skipUndefined: true})
-    } else {
-      testimonial = await pgdb.public.testimonials.insertAndGet({
-        id,
-        userId: req.user.id,
-        role,
-        quote,
-        image: ASSETS_BASE_URL + pathSmall,
-        published: true,
-        sequenceNumber: seqNumber
-      }, {skipUndefined: true})
-    }
+  } else {
+    testimonial = await pgdb.public.testimonials.insertAndGet({
+      userId: me.id,
+      role,
+      quote,
+      published: true,
+      sequenceNumber: seqNumber
+    }, {skipUndefined: true})
   }
 
   // generate sm picture (PNG!)
@@ -147,20 +90,21 @@ module.exports = async (_, args, {pgdb, req, t}) => {
 
   /* if (sendConfirmEmail) {
     await sendMailTemplate({
-      to: req.user.email,
+      to: me.email,
       fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
       subject: t('api/testimonial/mail/subject'),
       templateName: 'cf_community',
       globalMergeVars: [
         { name: 'NAME',
-          content: req.user.firstName + ' ' + req.user.lastName
+          content: me.firstName + ' ' + me.lastName
         }
       ]
     })
   } */
 
   // augement with name
-  testimonial.name = `${req.user.firstName} ${req.user.lastName}`
+  testimonial.name = me.name
+  testimonial.image = me._raw.portraitUrl
 
   return testimonial
 }

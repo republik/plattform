@@ -1,10 +1,13 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { age } = require('../../lib/age')
 const { getKeyId } = require('../../lib/pgp')
+const { getImageUrl } = require('../../lib/convertImage')
 
-const exposeProfileField = key => (user, args, { pgdb, user: me }) => {
+const exposeProfileField = (key, format) => (user, args, { pgdb, user: me }) => {
   if (Roles.userIsMeOrHasProfile(user, me)) {
-    return user._raw[key]
+    return format
+      ? format(user._raw[key], args)
+      : user._raw[key]
   }
   return null
 }
@@ -24,6 +27,23 @@ const exposeAccessField = (accessRoleKey, key, format) => (user, args, { pgdb, u
 }
 
 module.exports = {
+  async testimonial (user, args, { pgdb, user: me }) {
+    const testimonial = await pgdb.public.testimonials.findOne({
+      userId: user.id
+    })
+    if (
+      testimonial &&
+      ((testimonial.published && !testimonial.adminUnpublished) ||
+      (me && me.id === testimonial.userId))
+    ) {
+      return {
+        ...testimonial,
+        image: user._raw.portraitUrl,
+        name: user.name
+      }
+    }
+  },
+  portrait: exposeProfileField('portraitUrl', getImageUrl),
   pgpPublicKey: exposeAccessField('emailAccessRole', 'pgpPublicKey'),
   pgpPublicKeyId: exposeAccessField('emailAccessRole', 'pgpPublicKey', key => key
     ? getKeyId(key)

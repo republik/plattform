@@ -10,6 +10,7 @@ create type "accessRole" as ENUM (
 );
 
 ALTER TABLE users
+  ADD COLUMN "portraitUrl"            text,
   ADD COLUMN "facebookId"            text,
   ADD COLUMN "twitterHandle"         text,
   ADD COLUMN "publicUrl"             text,
@@ -21,6 +22,15 @@ ALTER TABLE users
   ADD COLUMN "emailAccessRole"       "accessRole" not null default 'ADMIN',
   ADD COLUMN "ageAccessRole"         "accessRole" not null default 'ADMIN'
 ;
+
+-- carry testimonials images over as portaits
+UPDATE users u
+SET    "portraitUrl" = t.image
+FROM   testimonials t
+WHERE  u.id = t."userId";
+
+ALTER TABLE testimonials
+  drop column image;
 
 CREATE SCHEMA IF NOT EXISTS cf;
 

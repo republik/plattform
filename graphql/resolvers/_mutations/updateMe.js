@@ -1,7 +1,24 @@
+const crypto = require('crypto')
 const {
   ensureSignedIn, checkUsername, transformUser
 } = require('@orbiting/backend-modules-auth')
 const { getKeyId } = require('../../../lib/pgp')
+
+const convertImage = require('../../../lib/convertImage')
+const uploadExoscale = require('../../../lib/uploadExoscale')
+
+const {
+  ASSETS_BASE_URL,
+  S3BUCKET
+} = process.env
+
+const PORTRAIT_FOLDER = 'portraits'
+
+const {
+  IMAGE_ORIGINAL_SUFFIX,
+  IMAGE_SMALL_SUFFIX,
+  IMAGE_SHARE_SUFFIX
+} = convertImage
 
 module.exports = async (_, args, { pgdb, req, user: me, t }) => {
   ensureSignedIn(req)
@@ -9,7 +26,8 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
   const {
     username,
     address,
-    pgpPublicKey
+    pgpPublicKey,
+    portrait
   } = args
 
   const updateFields = [
@@ -30,6 +48,54 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
     'biography'
   ]
 
+  let portraitUrl = portrait === null
+    ? null
+    : undefined
+
+  if (portrait) {
+    console.log('portrait')
+    const inputBuffer = Buffer.from(portrait, 'base64')
+
+    const portaitBasePath = [
+      `/${PORTRAIT_FOLDER}/`,
+      // always a new path—cache busters!
+      crypto.createHash('md5').update(portrait).digest('hex')
+    ].join('')
+
+    // IMAGE_SMALL_SUFFIX for cf compat
+    portraitUrl = `${ASSETS_BASE_URL}${portaitBasePath}${IMAGE_SMALL_SUFFIX}`
+
+    await Promise.all([
+      convertImage.toJPEG(inputBuffer)
+        .then((data) => {
+          return uploadExoscale({
+            stream: data,
+            path: `${portaitBasePath}${IMAGE_ORIGINAL_SUFFIX}`,
+            mimeType: 'image/jpeg',
+            bucket: S3BUCKET
+          })
+        }),
+      convertImage.toSmallBW(inputBuffer)
+        .then((data) => {
+          return uploadExoscale({
+            stream: data,
+            path: `${portaitBasePath}${IMAGE_SMALL_SUFFIX}`,
+            mimeType: 'image/jpeg',
+            bucket: S3BUCKET
+          })
+        }),
+      convertImage.toShare(inputBuffer)
+        .then((data) => {
+          return uploadExoscale({
+            stream: data,
+            path: `${portaitBasePath}${IMAGE_SHARE_SUFFIX}`,
+            mimeType: 'image/jpeg',
+            bucket: S3BUCKET
+          })
+        })
+    ])
+  }
+
   if (username !== undefined) {
     await checkUsername(username, me, pgdb)
   }
@@ -42,7 +108,8 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
   const transaction = await pgdb.transactionBegin()
   try {
     if (
-      updateFields.some(field => args[field] !== undefined)
+      updateFields.some(field => args[field] !== undefined) ||
+      portraitUrl !== undefined
     ) {
       await transaction.public.users.updateOne(
         { id: me.id },
@@ -51,7 +118,9 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
             updates[key] = args[key]
             return updates
           },
-          {}
+          {
+            portraitUrl
+          }
         ),
         { skipUndefined: true }
       )

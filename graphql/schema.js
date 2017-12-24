@@ -29,6 +29,8 @@ type mutations {
 
     address: AddressInput
 
+    portrait: String
+
     birthday: Date
     ageAccessRole: AccessRole
 

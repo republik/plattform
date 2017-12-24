@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-23T23:39:36.852Z",
+  "updated": "2017-12-24T01:16:59.702Z",
   "title": "live",
   "data": [
     {
@@ -73,6 +73,18 @@
     {
       "key": "api/pgpPublicKey/invalid",
       "value": "Ungültiger PGP Public Key"
+    },
+    {
+      "key": "api/testimonial/portrait/required",
+      "value": "Ein Testimonial braucht ein Portrait."
+    },
+    {
+      "key": "api/testimonial/pledge/required",
+      "value": "Sie müssen uns zuerst unterstützen, bevor Sie ein Testimonial abgeben können."
+    },
+    {
+      "key": "api/testimonial/mail/subject",
+      "value": "Vielen Dank für das Testimonial"
     }
   ]
 }

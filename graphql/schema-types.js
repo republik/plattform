@@ -12,12 +12,25 @@ enum AccessRole {
   PUBLIC
 }
 
+enum PortraitSize {
+  # 384x384
+  SMALL
+  # 1000x1000
+  SHARE
+  # original, in color
+  # not exposed
+  # ORIGINAL 
+}
+
 extend type User {
   address: Address
   credentials: [Credential]!
   testimonial: Testimonial
   badges: [Badge]
   latestComments(limit: Int): [Comment]
+
+  # url to portrait image
+  portrait(size: PortraitSize): String
 
   birthday: Date
   ageAccessRole: AccessRole
