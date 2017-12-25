@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-24T01:16:59.702Z",
+  "updated": "2017-12-25T20:24:28.819Z",
   "title": "live",
   "data": [
     {
@@ -73,6 +73,14 @@
     {
       "key": "api/pgpPublicKey/invalid",
       "value": "Ungültiger PGP Public Key"
+    },
+    {
+      "key": "api/publicProfile/usernameRequired",
+      "value": "Sie benötigen einen Benutzernamen um ihr Profil zu publizieren"
+    },
+    {
+      "key": "api/publicProfile/usernameNeeded",
+      "value": "Sie benötigen einen Benutzernamen aufgrund ihres öffentlichen Profil"
     },
     {
       "key": "api/testimonial/portrait/required",

@@ -53,7 +53,6 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
     : undefined
 
   if (portrait) {
-    console.log('portrait')
     const inputBuffer = Buffer.from(portrait, 'base64')
 
     const portaitBasePath = [
@@ -96,8 +95,18 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
     ])
   }
 
-  if (username !== undefined) {
+  if (username !== undefined && username !== null) {
     await checkUsername(username, me, pgdb)
+  }
+  if (args.hasPublicProfile && !username && !me.username) {
+    throw new Error(t('api/publicProfile/usernameRequired'))
+  }
+  if (
+    username === null &&
+    me.hasPublicProfile &&
+    args.hasPublicProfile !== false
+  ) {
+    throw new Error(t('api/publicProfile/usernameNeeded'))
   }
   if (pgpPublicKey) {
     if (!getKeyId(pgpPublicKey)) {
