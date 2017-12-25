@@ -419,7 +419,17 @@ ReactDOM.render(
               renderMdast: require('mdast-react-render').renderMdast
             },
             src: require('./templates/Front/docs.md')
-          }
+          },
+          {
+            path: '/templates/editorialnewsletter',
+            title: 'EditorialNewsletter',
+            imports: {
+              schema: require('./templates/EditorialNewsletter'),
+              ...require('./templates/docs'),
+              renderMdast: require('mdast-react-render').renderMdast
+            },
+            src: require('./templates/EditorialNewsletter/docs.md')
+          },
         ]
       },
       {
