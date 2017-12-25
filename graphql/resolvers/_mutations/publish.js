@@ -23,6 +23,7 @@ const placeMilestone = require('./placeMilestone')
 const { document: getDocument } = require('../Commit')
 
 const newsletterEmailSchema = require('@project-r/template-newsletter/lib/email')
+const editorialNewsletterSchema = require('@project-r/styleguide/lib/templates/EditorialNewsletter')
 const { renderEmail } = require('mdast-react-render/lib/email')
 
 module.exports = async (
@@ -205,7 +206,11 @@ module.exports = async (
       campaignId = id
       await redis.setAsync(campaignKey, campaignId)
     }
-    const html = renderEmail(content, newsletterEmailSchema)
+
+    const emailSchema = repoName.startsWith('newsletter-editorial-')
+      ? editorialNewsletterSchema.default  // Why do we need default here?
+      : newsletterEmailSchema
+    const html = renderEmail(content, emailSchema)
     const updateResponse = await updateCampaignContent({
       campaignId,
       html
