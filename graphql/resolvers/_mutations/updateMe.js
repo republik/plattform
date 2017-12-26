@@ -147,7 +147,8 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
             return updates
           },
           {
-            portraitUrl
+            portraitUrl,
+            updatedAt: new Date()
           }
         ),
         { skipUndefined: true }
@@ -156,9 +157,12 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
     if (address) {
       if (me._raw.addressId) {
         // update address of user
-        await transaction.public.addresses.update(
+        await transaction.public.addresses.updateOne(
           { id: me._raw.addressId },
-          address
+          {
+            ...address,
+            updatedAt: new Date()
+          }
         )
       } else {
         // user has no address yet
@@ -167,7 +171,7 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
         )
         await transaction.public.users.updateOne(
           { id: me.id },
-          { addressId: userAddress.id }
+          { addressId: userAddress.id, updatedAt: new Date() }
         )
       }
     }
