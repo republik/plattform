@@ -2,7 +2,6 @@ const { createGithubClients } = require('../../lib/github')
 const MDAST = require('@orbiting/remark-preset')
 const { createPrefixUrl } = require('../../lib/assets')
 const visit = require('unist-util-visit')
-const { timeParse } = require('d3-time-format')
 const debug = require('debug')('publikator:commit')
 
 module.exports = {
@@ -71,6 +70,7 @@ module.exports = {
     }
 
     // prefix image urls
+    // - editor specific
     const prefixUrl = createPrefixUrl(repoId, oneway)
     visit(mdast, 'image', node => {
       node.url = prefixUrl(node.url)
@@ -81,29 +81,8 @@ module.exports = {
       }
     })
 
-    let credits
-    visit(mdast, 'zone', node => {
-      if (node.identifier === 'TITLE') {
-        const ps = node.children.filter(child => child.type === 'paragraph')
-        if (ps.length >= 2) {
-          credits = ps[ps.length - 1].children
-        }
-      }
-    })
-
-    // TODO remove when editor sends a real date for meta.publishDate
-    const parsePublishDate = timeParse('%d.%m.%Y %H:%M')
-    const publishDate = mdast.meta.publishDate
-      ? parsePublishDate(mdast.meta.publishDate) || mdast.meta.publishDate
-      : null
-
     return {
-      content: mdast,
-      meta: {
-        ...mdast.meta,
-        credits,
-        publishDate
-      }
+      content: mdast
     }
   }
 }
