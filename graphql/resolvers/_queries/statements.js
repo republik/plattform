@@ -67,8 +67,13 @@ module.exports = async (_, args, { pgdb, t }) => {
 
   if (search) {
     const userRows = await pgdb.query(`
-      SELECT
+      SELECT DISTINCT
         u.id
+      FROM
+        users u
+      JOIN
+        credentials c
+      ON c."userId" = u.id AND c."isListed" = true
       WHERE
         u."isListed" = true AND u."isAdminUnlisted" = false AND
         (
