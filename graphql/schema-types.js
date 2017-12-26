@@ -5,11 +5,10 @@ type Credential {
   verified: Boolean!
 }
 
-type PublicUser {
-  # TODO: Review existing user objects.
-  id: ID!
-  name: String!
-  email: String
+extend type User {
+  address: Address
+  birthday: Date
+  phoneNumber: String
   credentials: [Credential]!
   testimonial: Testimonial
   facebookId: String
@@ -18,15 +17,6 @@ type PublicUser {
   isEmailPublic: Boolean
   badges: [Badge]
   latestComments(limit: Int): [Comment]
-}
-
-extend type User {
-  initials: String!
-  address: Address
-  birthday: Date
-  phoneNumber: String
-  publicUser: PublicUser
-  isPrivate: Boolean
 }
 
 type Address {
@@ -211,5 +201,10 @@ type Comment {
   depth: Int!
   _depth: Int!
   hottnes: Float!
+}
+
+type Greeting {
+  id: ID!
+  text: String!
 }
 `

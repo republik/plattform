@@ -7,7 +7,6 @@ ALTER TABLE users
   ADD COLUMN "twitterHandle"  text,
   ADD COLUMN "publicUrl"      text,
   ADD COLUMN "isEmailPublic"  boolean not null default false,
-  ADD COLUMN "isPrivate"      boolean not null default false,
   ADD COLUMN "badges"         jsonb
 ;
 
@@ -109,20 +108,42 @@ INSERT INTO comments(
 FROM cf.comments;
 
 
--- add role member to all users with a membership
-UPDATE
-  users
-SET
-  roles = COALESCE(roles, '[]'::jsonb)::jsonb || '["member"]'::jsonb
-WHERE
-  (roles IS NULL OR NOT roles @> '["member"]') AND
-  id IN (
-    SELECT
-      u.id
-    FROM
-      users u
-    JOIN
-      memberships m
-      ON m."userId" = u.id
-  )
-;
+-- add companies
+CREATE TABLE companies(
+  "id"                  uuid primary key not null default uuid_generate_v4(),
+  "name"                text not null,
+  "createdAt"           timestamptz default now(),
+  "updatedAt"           timestamptz default now(),
+  UNIQUE("name")
+);
+
+INSERT INTO companies("name") VALUES ('PROJECT_R');
+INSERT INTO companies("name") VALUES ('REPUBLIK');
+
+ALTER TABLE "packages" ADD COLUMN "companyId" uuid references "companies";
+ALTER TABLE "membershipTypes" ADD COLUMN "companyId" uuid references "companies";
+ALTER TABLE "paymentSources" ADD COLUMN "companyId" uuid references "companies";
+
+UPDATE packages SET "companyId" = (SELECT id FROM companies WHERE name = 'PROJECT_R');
+UPDATE "membershipTypes" SET "companyId" = (SELECT id FROM companies WHERE name = 'PROJECT_R');
+UPDATE "paymentSources" SET "companyId" = (SELECT id FROM companies WHERE name = 'PROJECT_R');
+
+ALTER TABLE "packages" ALTER COLUMN "companyId" SET NOT NULL;
+ALTER TABLE "membershipTypes" ALTER COLUMN "companyId" SET NOT NULL;
+ALTER TABLE "paymentSources" ALTER COLUMN "companyId" SET NOT NULL;
+
+-- stripe customers
+CREATE TABLE "stripeCustomers"(
+  "id"                  text not null,
+  "userId"              uuid not null references "users",
+  "companyId"           uuid not null references "companies",
+  "createdAt"           timestamptz default now(),
+  "updatedAt"           timestamptz default now(),
+  UNIQUE("userId", "companyId")
+);
+
+-- paymentMethods on packages
+ALTER TABLE "packages" ADD COLUMN "paymentMethods" "paymentMethod"[];
+UPDATE "packages"
+  SET "paymentMethods" = '{STRIPE, POSTFINANCECARD, PAYPAL, PAYMENTSLIP}'::"paymentMethod"[];
+ALTER TABLE "packages" ALTER COLUMN "paymentMethods" SET NOT NULL;
