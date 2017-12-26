@@ -26,7 +26,8 @@ const exposeAccessField = (accessRoleKey, key, format) => (user, args, { pgdb, u
   return null
 }
 
-const canAccessStatement = (user, me) => (
+// statement & portrait and related content
+const canAccessBasics = (user, me) => (
   Roles.userIsMeOrHasProfile(user, me) ||
   (user._raw.isListed && !user._raw.isAdminUnlisted)
 )
@@ -40,13 +41,13 @@ module.exports = {
     return null
   },
   statement (user, args, { pgdb, user: me }) {
-    if (canAccessStatement(user, me)) {
+    if (canAccessBasics(user, me)) {
       return user._raw.statement
     }
     return null
   },
   async sequenceNumber (user, args, { pgdb, user: me }) {
-    if (canAccessStatement(user, me)) {
+    if (canAccessBasics(user, me)) {
       if (user._raw.sequenceNumber) {
         return user._raw.sequenceNumber
       }
@@ -57,7 +58,15 @@ module.exports = {
     }
     return null
   },
-  portrait: exposeProfileField('portraitUrl', getImageUrl),
+  portrait (user, args, { user: me }) {
+    if (canAccessBasics(user, me)) {
+      const { portraitUrl } = user._raw
+      return portraitUrl
+        ? getImageUrl(portraitUrl, args)
+        : portraitUrl
+    }
+    return null
+  },
   pgpPublicKey: exposeAccessField('emailAccessRole', 'pgpPublicKey'),
   pgpPublicKeyId: exposeAccessField('emailAccessRole', 'pgpPublicKey', key => key
     ? getKeyId(key)
@@ -136,10 +145,9 @@ module.exports = {
     : null
   ),
   async credentials (user, args, { pgdb, user: me }) {
-    const canAccessOnePublic = canAccessStatement(user, me)
-    const canAccessPublic = Roles.userIsMeOrHasProfile(user, me)
+    const canAccessListed = canAccessBasics(user, me)
     const canAccessAll = Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])
-    if (canAccessOnePublic || canAccessPublic || canAccessAll) {
+    if (canAccessListed || canAccessAll) {
       // ToDo: optimize for statements (adds 40ms per 100 records)
       const all = await pgdb.public.credentials.find({
         userId: user.id
@@ -148,10 +156,7 @@ module.exports = {
         return all
       }
       const allListed = all.filter(c => c.isListed)
-      if (canAccessPublic) {
-        return allListed
-      }
-      return allListed.slice(0, 1)
+      return allListed
     }
   },
   async address (user, args, {pgdb, user: me}) {
