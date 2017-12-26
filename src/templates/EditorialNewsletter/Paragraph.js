@@ -19,7 +19,7 @@ export const Strong = ({ children }) => (
 )
 export const Em = ({ children }) => <em>{children}</em>
 export const Link = ({ children, href, title }) => (
-  <a href={href} title={title} style={{ color: '#000' }}>
+  <a href={href} title={title} style={{ color: '#000', textDecorationSkip: 'ink' }}>
     {children}
   </a>
 )
