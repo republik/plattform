@@ -208,7 +208,7 @@ module.exports = async (
     }
 
     const emailSchema = repoName.startsWith('newsletter-editorial-')
-      ? editorialNewsletterSchema
+      ? editorialNewsletterSchema.default  // Because styleguide currently doesn't support module.exports
       : newsletterEmailSchema
     const html = renderEmail(content, emailSchema)
     const updateResponse = await updateCampaignContent({
