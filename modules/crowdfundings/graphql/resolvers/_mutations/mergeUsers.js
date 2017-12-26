@@ -30,6 +30,16 @@ module.exports = async (_, args, {pgdb, req, t}) => {
 
     const users = [targetUser, sourceUser]
 
+    const publishedStatement = (u) => (
+      u.isListed && !u.isAdminUnlisted
+    )
+    const statementUser = users.filter(u => u.statement).sort(
+      (a, b) => ascending(
+        publishedStatement(a) ? 0 : 1,
+        publishedStatement(b) ? 0 : 1
+      )
+    )[0]
+
     const newUser = await transaction.public.users.updateAndGetOne({
       id: targetUser.id
     }, {
@@ -38,6 +48,13 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       birthday: users.map(u => u.birthday).filter(Boolean)[0],
       phoneNumber: users.map(u => u.phoneNumber).filter(Boolean)[0],
       addressId: users.map(u => u.addressId).filter(Boolean)[0],
+      statement: statementUser && statementUser.statement,
+      isListed: statementUser && statementUser.isListed,
+      isAdminUnlisted: statementUser && statementUser.isAdminUnlisted,
+      testimonialId: statementUser && statementUser.testimonialId,
+      portraitUrl: statementUser
+        ? statementUser.portraitUrl
+        : users.map(u => u.portraitUrl).filter(Boolean)[0],
       createdAt: users.map(u => u.createdAt).sort((a, b) => ascending(a.createdAt, b.createdAt))[0],
       updatedAt: now
     })
@@ -49,9 +66,6 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     await transaction.public.pledges.update(from, to)
     await transaction.public.memberships.update(from, to)
     await transaction.public.comments.update(from, to)
-    if (!(await transaction.public.testimonials.findFirst(to))) {
-      await transaction.public.testimonials.update(from, to)
-    }
     if (!await (transaction.public.ballots.findFirst(to))) {
       await transaction.public.ballots.update(from, to)
     }

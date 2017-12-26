@@ -9,38 +9,43 @@ schema {
 type queries {
   discussions: [Discussion!]!
   discussion(id: ID!): Discussion
-  testimonials(
-    offset: Int,
-    limit: Int,
-    seed: Float,
-    search: String,
-    firstId: ID,
-    videosOnly: Boolean
-  ): [Testimonial!]!
+  statements(
+    first: Int!
+    after: String
+    seed: Float
+    search: String
+    # user id, legacy testimonial id or username to inject as first result
+    focus: String
+  ): UserConnection!
   greeting: Greeting
 }
 
 type mutations {
   updateMe(
-    username: String,
-    firstName: String,
-    lastName: String,
-    birthday: Date,
-    phoneNumber: String,
-    address: AddressInput,
-    facebookId: String,
-    twitterHandle: String,
-    publicUrl: String,
-    isEmailPublic: Boolean,
+    username: String
+    firstName: String
+    lastName: String
     hasPublicProfile: Boolean
-  ): User!
 
-  submitTestimonial(
-    role: String,
-    quote: String!,
-    image: String
-  ): Testimonial!
-  unpublishTestimonial: Boolean
+    address: AddressInput
+
+    portrait: String
+
+    birthday: Date
+    ageAccessRole: AccessRole
+
+    phoneNumber: String
+    phoneNumberNote: String
+    phoneNumberAccessRole: AccessRole
+
+    pgpPublicKey: String
+    emailAccessRole: AccessRole
+
+    biography: String
+    facebookId: String
+    twitterHandle: String
+    publicUrl: String
+  ): User!
 
   createDiscussion(
     title: String

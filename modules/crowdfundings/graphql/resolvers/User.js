@@ -14,21 +14,6 @@ module.exports = {
     }
     return []
   },
-  async testimonial (user, args, { pgdb, user: me }) {
-    const testimonial = await pgdb.public.testimonials.findOne({
-      userId: user.id
-    })
-    if (
-      testimonial &&
-      ((testimonial.published && !testimonial.adminUnpublished) ||
-      (me && me.id === testimonial.userId))
-    ) {
-      return {
-        ...testimonial,
-        name: user.name
-      }
-    }
-  },
   async paymentSources (user, args, { pgdb, user: me }) {
     const { platform } = await getStripeClients(pgdb)
     if (Roles.userIsMeOrInRoles(user, me, ['admin'])) {

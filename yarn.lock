@@ -25,6 +25,29 @@
     rw "^1.3.3"
     uuid "^3.1.0"
 
+"@orbiting/backend-modules-auth@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-2.2.1.tgz#f1133f551626e8451a5babef69c4d945b41252c6"
+  dependencies:
+    "@orbiting/backend-modules-mail" "^0.1.0"
+    "@orbiting/backend-modules-translate" "^0.0.0"
+    apollo-modules-node "^0.1.1"
+    check-env "^1.3.0"
+    connect-pg-simple "^3.1.2"
+    debug "^3.1.0"
+    email-validator "^1.1.1"
+    export-files "^2.1.0"
+    express-session "^1.15.6"
+    geoip-database "^1.0.9"
+    is-uuid "^1.0.2"
+    kraut "^0.1.1"
+    maxmind "^2.3.0"
+    passport "^0.4.0"
+    pogi "^2.5.1"
+    querystring "^0.2.0"
+    rw "^1.3.3"
+    uuid "^3.1.0"
+
 "@orbiting/backend-modules-base@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.3.0.tgz#2a73b08982520643de69674790f1a1de4bc136cf"
@@ -48,14 +71,15 @@
     redis "^2.8.0"
     subscriptions-transport-ws "^0.9.2"
 
-"@orbiting/backend-modules-documents@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-1.0.2.tgz#4e382e5c6e447c11eb6c5cd146b3a9126826da2f"
+"@orbiting/backend-modules-documents@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-1.1.0.tgz#599e3c64f208519edfe133e786969bd7a1cfed48"
   dependencies:
     "@orbiting/backend-modules-auth" "^2.2.0"
     apollo-modules-node "^0.1.1"
     check-env "^1.3.0"
     d3-array "^1.2.1"
+    unist-util-visit "^1.3.0"
 
 "@orbiting/backend-modules-formats@^0.1.2":
   version "0.1.2"
@@ -834,7 +858,7 @@ d3-time-format@^2.1.0, d3-time-format@^2.1.1:
   dependencies:
     d3-time "1"
 
-d3-time@1:
+d3-time@1, d3-time@^1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/d3-time/-/d3-time-1.0.8.tgz#dbd2d6007bf416fe67a76d17947b784bffea1e84"
 
@@ -873,9 +897,9 @@ db-migrate-shared@^1.1.2:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/db-migrate-shared/-/db-migrate-shared-1.1.3.tgz#edb3c817b295022c61984c187267419bb36a2d58"
 
-db-migrate@^0.10.0-beta.24:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/db-migrate/-/db-migrate-0.10.0.tgz#60f7f2c0a0ca09c8d934dfc8efd5bfaed412aed4"
+db-migrate@^0.10.2:
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/db-migrate/-/db-migrate-0.10.2.tgz#4be7a4fb295016e71c9e591a562fac9cdf939a71"
   dependencies:
     balanced-match "^0.4.2"
     bluebird "^3.1.1"
@@ -2785,7 +2809,11 @@ mkdirp@0.x.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0:
   dependencies:
     minimist "0.0.8"
 
-moment@^2.14.1, moment@^2.15.1:
+moment@^2.14.1:
+  version "2.20.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.20.1.tgz#d6eb1a46cbcc14a2b2f9434112c1ff8907f313fd"
+
+moment@^2.15.1:
   version "2.19.2"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.19.2.tgz#8a7f774c95a64550b4c7ebd496683908f9419dbe"
 
@@ -2829,7 +2857,7 @@ negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
-node-fetch@^1.0.1, node-fetch@^1.7.1:
+node-fetch@^1.0.1, node-fetch@^1.3.3, node-fetch@^1.7.1:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-1.7.3.tgz#980f6f72d85211a5347c6b2bc18c5b84c3eb47ef"
   dependencies:
@@ -2839,6 +2867,12 @@ node-fetch@^1.0.1, node-fetch@^1.7.1:
 node-fs@~0.1.5:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/node-fs/-/node-fs-0.1.7.tgz#32323cccb46c9fbf0fc11812d45021cc31d325bb"
+
+node-localstorage@~1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/node-localstorage/-/node-localstorage-1.3.0.tgz#2e436aae8dcc9ace97b43c65c16c0d577be0a55c"
+  dependencies:
+    write-file-atomic "^1.1.4"
 
 node-pre-gyp@^0.6.39:
   version "0.6.39"
@@ -2992,6 +3026,13 @@ once@^1.3.0, once@^1.3.1, once@^1.3.3:
 onetime@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/onetime/-/onetime-1.1.0.tgz#a1f7838f8314c516f05ecefcbc4ccfe04b4ed789"
+
+openpgp@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/openpgp/-/openpgp-2.6.1.tgz#7d9da10433e37d87300fbac1fe173c80f0a908c9"
+  dependencies:
+    node-fetch "^1.3.3"
+    node-localstorage "~1.3.0"
 
 optimist@~0.6.1:
   version "0.6.1"
@@ -3848,6 +3889,10 @@ slice-ansi@0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/slice-ansi/-/slice-ansi-0.0.4.tgz#edbf8903f66f7ce2f8eafd6ceed65e264c831b35"
 
+slide@^1.1.5:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/slide/-/slide-1.1.6.tgz#56eb027d65b4d2dce6cb2e2d32c4d4afc9e1d707"
+
 snoowrap@^1.14.2:
   version "1.14.2"
   resolved "https://registry.yarnpkg.com/snoowrap/-/snoowrap-1.14.2.tgz#f8f8443fef66c4f7d8f8886beb59cd57036db2c3"
@@ -4271,6 +4316,16 @@ unique-string@^1.0.0:
   dependencies:
     crypto-random-string "^1.0.0"
 
+unist-util-is@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/unist-util-is/-/unist-util-is-2.1.1.tgz#0c312629e3f960c66e931e812d3d80e77010947b"
+
+unist-util-visit@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/unist-util-visit/-/unist-util-visit-1.3.0.tgz#41ca7c82981fd1ce6c762aac397fc24e35711444"
+  dependencies:
+    unist-util-is "^2.1.1"
+
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/unpipe/-/unpipe-1.0.0.tgz#b2bf4ee8514aae6165b4817829d21b2ef49904ec"
@@ -4408,6 +4463,14 @@ wordwrap@~1.0.0:
 wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
+
+write-file-atomic@^1.1.4:
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/write-file-atomic/-/write-file-atomic-1.3.4.tgz#f807a4f0b1d9e913ae7a48112e6cc3af1991b45f"
+  dependencies:
+    graceful-fs "^4.1.11"
+    imurmurhash "^0.1.4"
+    slide "^1.1.5"
 
 write-file-atomic@^2.0.0:
   version "2.3.0"
