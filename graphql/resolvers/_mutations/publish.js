@@ -208,7 +208,7 @@ module.exports = async (
     }
 
     const emailSchema = repoName.startsWith('newsletter-editorial-')
-      ? editorialNewsletterSchema.default  // Why do we need default here?
+      ? editorialNewsletterSchema
       : newsletterEmailSchema
     const html = renderEmail(content, emailSchema)
     const updateResponse = await updateCampaignContent({
