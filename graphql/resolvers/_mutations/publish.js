@@ -207,8 +207,8 @@ module.exports = async (
       await redis.setAsync(campaignKey, campaignId)
     }
 
-    const emailSchema = repoName.startsWith('newsletter-editorial-')
-      ? editorialNewsletterSchema.default  // Because styleguide currently doesn't support module.exports
+    const emailSchema = content.meta.template === 'editorialNewsletter'
+      ? editorialNewsletterSchema.default  // Because styleguide currently doesn't module.exports
       : newsletterEmailSchema
     const html = renderEmail(content, emailSchema)
     const updateResponse = await updateCampaignContent({
