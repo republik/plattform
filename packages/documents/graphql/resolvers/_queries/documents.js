@@ -73,8 +73,7 @@ module.exports = async (_, args, { user, redis, pgdb }) => {
             'username !=': null
           },
           {
-            fields: ['id', 'username'],
-            limit: userIds.length
+            fields: ['id', 'username']
           }
         )
         : []
