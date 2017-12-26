@@ -25,6 +25,29 @@
     rw "^1.3.3"
     uuid "^3.1.0"
 
+"@orbiting/backend-modules-auth@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-2.2.1.tgz#f1133f551626e8451a5babef69c4d945b41252c6"
+  dependencies:
+    "@orbiting/backend-modules-mail" "^0.1.0"
+    "@orbiting/backend-modules-translate" "^0.0.0"
+    apollo-modules-node "^0.1.1"
+    check-env "^1.3.0"
+    connect-pg-simple "^3.1.2"
+    debug "^3.1.0"
+    email-validator "^1.1.1"
+    export-files "^2.1.0"
+    express-session "^1.15.6"
+    geoip-database "^1.0.9"
+    is-uuid "^1.0.2"
+    kraut "^0.1.1"
+    maxmind "^2.3.0"
+    passport "^0.4.0"
+    pogi "^2.5.1"
+    querystring "^0.2.0"
+    rw "^1.3.3"
+    uuid "^3.1.0"
+
 "@orbiting/backend-modules-base@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.3.0.tgz#2a73b08982520643de69674790f1a1de4bc136cf"
@@ -48,14 +71,15 @@
     redis "^2.8.0"
     subscriptions-transport-ws "^0.9.2"
 
-"@orbiting/backend-modules-documents@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-1.0.2.tgz#4e382e5c6e447c11eb6c5cd146b3a9126826da2f"
+"@orbiting/backend-modules-documents@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-1.1.0.tgz#599e3c64f208519edfe133e786969bd7a1cfed48"
   dependencies:
     "@orbiting/backend-modules-auth" "^2.2.0"
     apollo-modules-node "^0.1.1"
     check-env "^1.3.0"
     d3-array "^1.2.1"
+    unist-util-visit "^1.3.0"
 
 "@orbiting/backend-modules-formats@^0.1.2":
   version "0.1.2"
@@ -4291,6 +4315,16 @@ unique-string@^1.0.0:
   resolved "https://registry.yarnpkg.com/unique-string/-/unique-string-1.0.0.tgz#9e1057cca851abb93398f8b33ae187b99caec11a"
   dependencies:
     crypto-random-string "^1.0.0"
+
+unist-util-is@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/unist-util-is/-/unist-util-is-2.1.1.tgz#0c312629e3f960c66e931e812d3d80e77010947b"
+
+unist-util-visit@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/unist-util-visit/-/unist-util-visit-1.3.0.tgz#41ca7c82981fd1ce6c762aac397fc24e35711444"
+  dependencies:
+    unist-util-is "^2.1.1"
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"
