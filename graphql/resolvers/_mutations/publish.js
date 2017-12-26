@@ -208,7 +208,7 @@ module.exports = async (
     }
 
     const emailSchema = content.meta.template === 'editorialNewsletter'
-      ? editorialNewsletterSchema.default  // Because styleguide currently doesn't module.exports
+      ? editorialNewsletterSchema.default  // Because styleguide currently doesn't support module.exports
       : newsletterEmailSchema
     const html = renderEmail(content, emailSchema)
     const updateResponse = await updateCampaignContent({
