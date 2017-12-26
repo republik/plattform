@@ -57,7 +57,7 @@ module.exports = async (_, args, { pgdb, t }) => {
       nodes: users.map(transformUser),
       pageInfo: {
         endCursor: endId,
-        hasNextPage: endIndex < nodeIds.length - 1,
+        hasNextPage: endIndex < ids.length - 1,
         hasPreviousPage: startIndex > 0,
         startCursor: startId
       }
