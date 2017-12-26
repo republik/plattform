@@ -10,7 +10,7 @@ create type "accessRole" as ENUM (
 );
 
 ALTER TABLE users
-  ADD COLUMN "portraitUrl"            text,
+  ADD COLUMN "portraitUrl"           text,
   ADD COLUMN "facebookId"            text,
   ADD COLUMN "twitterHandle"         text,
   ADD COLUMN "publicUrl"             text,
@@ -129,6 +129,11 @@ INSERT INTO comments(
   "updatedAt"
 FROM cf.comments;
 
+INSERT INTO
+  credentials("userId", "description")
+SELECT
+  "userId", "role"
+FROM testimonials;
 
 -- add companies
 CREATE TABLE companies(
