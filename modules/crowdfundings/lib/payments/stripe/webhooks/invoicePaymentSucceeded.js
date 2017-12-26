@@ -41,14 +41,12 @@ module.exports = {
           return 500
         }
 
-        const existingPayments = await transaction.public.payments.find({
+        // save payment deduplicated
+        const existingPayment = await transaction.public.payments.findFirst({
           method: 'STRIPE',
           pspId: chargeId
         })
-
-        if (!existingPayments.length) {
-          // the first membershipPeriod was already inserted by generateMemberships
-          // but not the corresponding payment, save that here
+        if (!existingPayment) {
           const payment = await transaction.public.payments.insertAndGet({
             type: 'PLEDGE',
             method: 'STRIPE',
@@ -64,6 +62,7 @@ module.exports = {
           })
         }
 
+        // save membershipPeriod
         const memberships = await transaction.public.memberships.find({
           pledgeId
         })
@@ -79,25 +78,27 @@ module.exports = {
           })
           // synchronize beginDate and endDate with stripe
           await transaction.query(`
-                UPDATE "membershipPeriods" mp
-                SET
-                  "webhookEventId" = :webhookEventId,
-                  "beginDate" = :beginDate,
-                  "endDate" = :endDate,
-                  "updatedAt" = :now
-                WHERE
-                  ARRAY[mp."membershipId"] && :membershipIds AND
-                  mp."webhookEventId" is null
-              `, {
-                webhookEventId: event.id,
-                beginDate,
-                endDate,
-                now: new Date(),
-                membershipIds: memberships.map(m => m.id)
-              })
+            UPDATE "membershipPeriods" mp
+            SET
+              "webhookEventId" = :webhookEventId,
+              "beginDate" = :beginDate,
+              "endDate" = :endDate,
+              "updatedAt" = :now
+            WHERE
+              ARRAY[mp."membershipId"] && :membershipIds AND
+              mp."webhookEventId" is null
+          `, {
+            webhookEventId: event.id,
+            beginDate,
+            endDate,
+            now: new Date(),
+            membershipIds: memberships.map(m => m.id)
+          })
         } else {
           // check for duplicate event
-          if (!(await transaction.public.membershipPeriods.findFirst({ webhookEventId: event.id }))) {
+          if (!(await transaction.public.membershipPeriods.findFirst({
+            webhookEventId: event.id })
+          )) {
             // insert membershipPeriods
             await Promise.all(memberships.map(membership => {
               return transaction.public.membershipPeriods.insert({
