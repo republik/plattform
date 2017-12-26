@@ -249,4 +249,3 @@ const schema = {
 }
 
 export default schema
-module.exports = schema
