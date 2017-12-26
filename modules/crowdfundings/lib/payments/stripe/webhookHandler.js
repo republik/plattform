@@ -38,8 +38,11 @@ module.exports = async ({ pgdb, t }) => {
     if (typesOfInterest.includes(event.type)) {
       debug('%O', event)
 
-      const { handle } = typesOfInterest.find(handler => handler.eventTypes.includes(event.type))
-      return handle(event, pgdb)
+      const { handle } = handlers.find(handler => handler.eventTypes.includes(event.type))
+      const result = await handle(event, pgdb, t)
+      if (result) {
+        return result
+      }
     } else {
       debug(`webhookHandler ignoring event with type: ${event.type}`)
     }
