@@ -1,4 +1,5 @@
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
+const moment = require('moment')
 const _ = {
   get: require('lodash/get')
 }
@@ -24,9 +25,28 @@ module.exports = {
           console.error(e)
           return null
         })
-
       if (!user) {
         throw new Error('user for invoice.payment_failed event not found! subscriptionId:' + subscription.id)
+      }
+
+      // send reminder every 20h max
+      const minHours = 20
+      const memberships = await pgdb.public.memberships.find({
+        pledgeId
+      })
+      if (memberships.length) {
+        const membership = memberships[0]
+        if (membership.latestPaymentFailedAt) {
+          const latestPaymentFailedAt = moment(membership.latestPaymentFailedAt)
+          if (moment().diff(latestPaymentFailedAt, 'hours') < minHours) {
+            return 200
+          }
+        }
+        await pgdb.public.memberships.update({
+          id: memberships.map(m => m.id)
+        }, {
+          latestPaymentFailedAt: new Date()
+        })
       }
 
       await sendMailTemplate({
