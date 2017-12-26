@@ -23,7 +23,8 @@ export const Caption = ({ children, data }) => (
     fontSize: '15px',
     fontFamily: fontFamilies.sansSerifRegular,
     marginTop: '5px',
-    marginBottom: '30px'
+    marginBottom: '30px',
+    textAlign: 'left'
   }}>
     {children}
   </p>

@@ -7,9 +7,11 @@ import editorialNewsletterSchema from '@project-r/styleguide/lib/templates/Edito
 ```react|noSource
 <Markdown schema={schema}>{`
 
-<section><h6>COVER</h6>
+<section><h6>FIGURE</h6>
 
 ![](/static/landscape.jpg?size=2000x1411)
+
+A caption. _Foto: Laurent Burst_
 
 <hr /></section>
 

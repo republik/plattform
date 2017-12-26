@@ -1,5 +1,5 @@
 import Container from './Container'
-import Cover, { Title, Lead } from './Cover'
+import Cover, { CoverImage } from './Cover'
 import Paragraph, { Strong, Em, Link, Br } from './Paragraph'
 import Center from './Center'
 import { H2 } from './Headlines'
@@ -14,6 +14,16 @@ import {
   matchParagraph,
   matchImageParagraph
 } from 'mdast-react-render/lib/utils'
+
+import {
+  FigureImage
+} from '../../components/Figure'
+
+import {
+  matchFigure,
+  extractImage,
+  getDisplayWidth
+} from '../Article/utils'
 
 const matchLast = (node, index, parent) => index === parent.children.length - 1
 
@@ -86,6 +96,73 @@ const figureCaption = {
   ]
 }
 
+const figure = {
+  matchMdast: matchFigure,
+  component: Figure,
+  editorModule: 'figure',
+  editorOptions: {
+    pixelNote: 'Auflösung: min. 1200x (proportionaler Schnitt)',
+    insertButtonText: 'Bild'
+  },
+  rules: [
+    {
+      matchMdast: matchImageParagraph,
+      component: Image,
+      props: (node, index, parent, { ancestors }) => {
+        const src = extractImage(node)
+        const displayWidth = getDisplayWidth(ancestors)
+
+        return {
+          ...FigureImage.utils.getResizedSrcs(
+            src,
+            displayWidth
+          ),
+          alt: node.children[0].alt
+        }
+      },
+      editorModule: 'figureImage',
+      isVoid: true
+    },
+    figureCaption
+  ]
+}
+
+const cover = {
+  matchMdast: (node, index, parent) => {
+    return (
+      matchFigure(node) &&
+      index === 0
+  )},
+  component: Cover,
+  editorModule: 'figure',
+  editorOptions: {
+    type: 'COVERFIGURE',
+    afterType: 'PARAGRAPH',
+    pixelNote: 'Auflösung: min. 2000x (proportionaler Schnitt)'
+  },
+  rules: [
+    {
+      matchMdast: matchImageParagraph,
+      component: CoverImage,
+      props: (node, index, parent) => {
+        const src = extractImage(node)
+        const displayWidth = 1280
+
+        return {
+          ...FigureImage.utils.getResizedSrcs(
+            src,
+            displayWidth
+          ),
+          alt: node.children[0].alt
+        }
+      },
+      editorModule: 'figureImage',
+      isVoid: true
+    },
+    figureCaption
+  ]
+}
+
 const schema = {
   emailTemplate: 'newsletter-editorial',
   repoPrefix: 'newsletter-editorial-',
@@ -93,7 +170,7 @@ const schema = {
     {
       matchMdast: matchType('root'),
       component: Container,
-      editorModule: 'document',
+      editorModule: 'documentPlain',
       rules: [
         {
           matchMdast: () => false,
@@ -102,53 +179,14 @@ const schema = {
             additionalFields: ['emailSubject']
           }
         },
-        {
-          matchMdast: matchZone('COVER'),
-          component: Cover,
-          editorModule: 'cover',
-          props: node => {
-            const img = node.children[0].children[0]
-            return {
-              data: {
-                alt: img.alt,
-                src: img.url
-              }
-            }
-          },
-          rules: [
-            {
-              matchMdast: matchImageParagraph,
-              component: () => null,
-              isVoid: true
-            },
-            {
-              matchMdast: matchHeading(1),
-              component: Title,
-              editorModule: 'headline',
-              editorOptions: {
-                type: 'title',
-                depth: 1,
-                placeholder: 'Title'
-              }
-            },
-            {
-              matchMdast: matchType('paragraph'),
-              component: Lead,
-              editorModule: 'paragraph',
-              editorOptions: {
-                type: 'lead',
-                placeholder: 'Lead'
-              },
-              rules: paragraph.rules
-            }
-          ]
-        },
+        cover,
         {
           matchMdast: matchZone('CENTER'),
           component: Center,
           editorModule: 'center',
           rules: [
             paragraph,
+            figure,
             {
               matchMdast: matchHeading(2),
               component: H2,
@@ -158,36 +196,6 @@ const schema = {
                 depth: 2,
                 formatButtonText: 'Zwischentitel'
               }
-            },
-            {
-              matchMdast: matchZone('FIGURE'),
-              component: Figure,
-              editorModule: 'figure',
-              editorOptions: {
-                afterType: 'PARAGRAPH',
-                pixelNote:
-                  'Anzeigegrössen: 1200x und 600x (proportionaler Schnitt)',
-                insertButtonText: 'Bild',
-                captionRight: true,
-                sizes: [
-                  { label: 'Gross', props: { float: undefined } },
-                  { label: 'Left', props: { float: 'left' } },
-                  { label: 'Right', props: { float: 'right' } }
-                ]
-              },
-              rules: [
-                {
-                  matchMdast: matchImageParagraph,
-                  component: Image,
-                  props: node => ({
-                    src: node.children[0].url,
-                    alt: node.children[0].alt
-                  }),
-                  editorModule: 'figureImage',
-                  isVoid: true
-                },
-                figureCaption
-              ]
             },
             {
               matchMdast: matchZone('QUOTE'),
