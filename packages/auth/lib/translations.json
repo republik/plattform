@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-23T19:46:52.017Z",
+  "updated": "2017-12-26T00:34:56.432Z",
   "title": "live",
   "data": [
     {
@@ -36,19 +36,19 @@
     },
     {
       "key": "api/checkUsername/min",
-      "value": "Username, minimal {count} Zeichen"
+      "value": "Benutzername, minimal {count} Zeichen"
     },
     {
       "key": "api/checkUsername/max",
-      "value": "Username, maximal {count} Zeichen"
+      "value": "Benutzername, maximal {count} Zeichen"
     },
     {
       "key": "api/checkUsername/invalid",
-      "value": "Username, nur a-z, 0-9 und . erlaubt"
+      "value": "Benutzername, nur a-z, 0-9 und . erlaubt"
     },
     {
       "key": "api/checkUsername/taken",
-      "value": "Username, nicht mehr verfügbar"
+      "value": "Benutzername, nicht mehr verfügbar"
     }
   ]
 }
