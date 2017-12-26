@@ -2,6 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 import { Mso } from 'mdast-react-render/lib/email'
 import Header from './Header'
+import SG from '../../theme/env'
 
 const styles = {
   container: {
@@ -24,7 +25,7 @@ export default ({ children, attributes = {} }) => (
       type="text/css"
       dangerouslySetInnerHTML={{
         __html: `
-        @font-face{font-family:'Rubis-Regular';src:url(https://assets.republik.ch/fonts/rubis-regular.eot);src:url('https://assets.republik.ch/fonts/rubis-regular.eot?#iefix') format('embedded-opentype'),url(https://assets.republik.ch/fonts/rubis-regular.woff2) format('woff2'),url(https://assets.republik.ch/fonts/rubis-regular.woff) format('woff'),url(https://assets.republik.ch/fonts/rubis-regular.ttf) format('truetype')}@font-face{font-family:'Rubis-Bold';src:url(https://assets.republik.ch/fonts/rubis-bold.eot);src:url('https://assets.republik.ch/fonts/rubis-bold.eot?#iefix') format('embedded-opentype'),url(https://assets.republik.ch/fonts/rubis-bold.woff2) format('woff2'),url(https://assets.republik.ch/fonts/rubis-bold.woff) format('woff'),url(https://assets.republik.ch/fonts/rubis-bold.ttf) format('truetype')}@font-face{font-family:'GT-America-Standard-Regular';src:url(https://assets.republik.ch/fonts/gt-america-standard-regular.eot);src:url('https://assets.republik.ch/fonts/gt-america-standard-regular.eot?#iefix') format('embedded-opentype'),url(https://assets.republik.ch/fonts/gt-america-standard-regular.woff) format('woff'),url(https://assets.republik.ch/fonts/gt-america-standard-regular.ttf) format('truetype')}@font-face{font-family:'GT-America-Standard-Medium';src:url(https://assets.republik.ch/fonts/gt-america-standard-medium.eot);src:url('https://assets.republik.ch/fonts/gt-america-standard-medium.eot?#iefix') format('embedded-opentype'),url(https://assets.republik.ch/fonts/gt-america-standard-medium.woff) format('woff'),url(https://assets.republik.ch/fonts/gt-america-standard-medium.ttf) format('truetype')}@font-face{font-family:'RepublikSerif-Black';src:url(https://assets.republik.ch/fonts/republik-serif-black-001.eot);src:url('https://assets.republik.ch/fonts/republik-serif-black-001.eot?#iefix') format('embedded-opentype'),url(https://assets.republik.ch/fonts/republik-serif-black-001.woff2) format('woff2'),url(https://assets.republik.ch/fonts/republik-serif-black-001.woff) format('woff'),url(https://assets.republik.ch/fonts/republik-serif-black-001.ttf) format('truetype')}
+        ${SG.FONT_FACES}
         mso{
           display: none;
         }
