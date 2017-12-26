@@ -11,6 +11,10 @@ create type "accessRole" as ENUM (
 
 ALTER TABLE users
   ADD COLUMN "portraitUrl"           text,
+  ADD COLUMN "statement"             text,
+  ADD COLUMN "isListed"              boolean not null default false,
+  ADD COLUMN "isAdminUnlisted"       boolean not null default false,
+  ADD COLUMN "testimonialId"         uuid unique,
   ADD COLUMN "facebookId"            text,
   ADD COLUMN "twitterHandle"         text,
   ADD COLUMN "publicUrl"             text,
@@ -25,12 +29,14 @@ ALTER TABLE users
 
 -- carry testimonials images over as portaits
 UPDATE users u
-SET    "portraitUrl" = t.image
+SET    "portraitUrl"     = t.image,
+       "statement"       = t.quote,
+       "isListed"        = t.published,
+       "isAdminUnlisted" = t."adminUnpublished",
+       "testimonialId"   = t.id
 FROM   testimonials t
 WHERE  u.id = t."userId";
 
-ALTER TABLE testimonials
-  drop column image;
 
 CREATE SCHEMA IF NOT EXISTS cf;
 
@@ -78,11 +84,13 @@ create table "credentials" (
   "id"                  uuid primary key not null default uuid_generate_v4(),
   "userId"              uuid not null references "users",
   "description"         text not null,
+  "isListed"            boolean not null default false,
   "verified"            boolean not null default false,
   "createdAt"           timestamptz default now(),
   "updatedAt"           timestamptz default now(),
   UNIQUE("userId", "description")
 );
+CREATE index "credentials_description_idx" on "credentials" using GIN ("description" gin_trgm_ops);
 
 create table "discussionPreferences" (
   "userId"              uuid not null references "users",
@@ -130,10 +138,14 @@ INSERT INTO comments(
 FROM cf.comments;
 
 INSERT INTO
-  credentials("userId", "description")
+  credentials("userId", "description", "isListed")
 SELECT
-  "userId", "role"
-FROM testimonials;
+  "userId", "role", true
+FROM testimonials
+WHERE
+  role is not null;
+
+DROP TABLE testimonials;
 
 -- add companies
 CREATE TABLE companies(

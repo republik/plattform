@@ -25,7 +25,6 @@ enum PortraitSize {
 extend type User {
   address: Address
   credentials: [Credential]!
-  testimonial: Testimonial
   badges: [Badge]
   latestComments(limit: Int): [Comment]
 
@@ -48,6 +47,17 @@ extend type User {
   facebookId: String
   twitterHandle: String
   publicUrl: String
+
+  statement: String
+  isListed: Boolean!
+  isAdminUnlisted: Boolean
+  sequenceNumber: Int
+}
+
+type UserConnection {
+  totalCount: Int!
+  pageInfo: PageInfo
+  nodes: [User]!
 }
 
 type Address {
@@ -73,27 +83,6 @@ enum Badge {
   PATRON
   STAFF
   FREELANCER
-}
-
-type Testimonial {
-  # This is a plain copy of the crowdfunding testimonial schema.
-  # TODO: Review for improvements, e.g. merging with profilePicture.
-  id: ID!
-  userId: ID!
-  name: String!
-  role: String
-  quote: String
-  video: Video
-  # 384x384 JPEG HTTPS URL
-  image(size: ImageSize): String!
-  smImage: String
-  published: Boolean
-  adminUnpublished: Boolean
-  sequenceNumber: Int
-}
-
-enum ImageSize {
-  SHARE
 }
 
 type Video {

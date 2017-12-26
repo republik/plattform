@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-23T17:22:47.582Z",
+  "updated": "2017-12-24T17:17:58.485Z",
   "title": "live",
   "data": [
     {
@@ -65,6 +65,10 @@
     {
       "key": "api/pledge/reason",
       "value": "Für eine reduzierte Mitgliedschaft wird eine Begründung benötigt."
+    },
+    {
+      "key": "api/pledge/cancel/tooLate",
+      "value": "Dieser pledge kann höchstes {maxDays} nach dem Kauf gecancelled werden."
     },
     {
       "key": "api/pay/stripe/invalid_number",

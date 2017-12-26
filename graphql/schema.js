@@ -9,14 +9,14 @@ schema {
 type queries {
   discussions: [Discussion!]!
   discussion(id: ID!): Discussion
-  testimonials(
-    offset: Int,
-    limit: Int,
-    seed: Float,
-    search: String,
-    firstId: ID,
-    videosOnly: Boolean
-  ): [Testimonial!]!
+  statements(
+    first: Int!
+    after: String
+    seed: Float
+    search: String
+    # user id, legacy testimonial id or username to inject as first result
+    focus: String
+  ): UserConnection!
   greeting: Greeting
 }
 
@@ -46,13 +46,6 @@ type mutations {
     twitterHandle: String
     publicUrl: String
   ): User!
-
-  submitTestimonial(
-    role: String,
-    quote: String!,
-    image: String
-  ): Testimonial!
-  unpublishTestimonial: Boolean
 
   createDiscussion(
     title: String

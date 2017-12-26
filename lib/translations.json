@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-25T20:24:28.819Z",
+  "updated": "2017-12-26T16:07:02.642Z",
   "title": "live",
   "data": [
     {
@@ -83,16 +83,20 @@
       "value": "Sie benötigen einen Benutzernamen aufgrund ihres öffentlichen Profil"
     },
     {
-      "key": "api/testimonial/portrait/required",
-      "value": "Ein Testimonial braucht ein Portrait."
-    },
-    {
       "key": "api/testimonial/pledge/required",
       "value": "Sie müssen uns zuerst unterstützen, bevor Sie ein Testimonial abgeben können."
     },
     {
-      "key": "api/testimonial/mail/subject",
-      "value": "Vielen Dank für das Testimonial"
+      "key": "api/statements/maxNodes",
+      "value": "Sie können maximal 100 Statements auf einmal abfragen"
+    },
+    {
+      "key": "profile/statement/tooLong",
+      "value": "Statement, maximal 140 Zeichen"
+    },
+    {
+      "key": "profile/statement/needed",
+      "value": "Ein Statement ist erforderlich"
     }
   ]
 }

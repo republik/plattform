@@ -26,22 +26,36 @@ const exposeAccessField = (accessRoleKey, key, format) => (user, args, { pgdb, u
   return null
 }
 
+const canAccessStatement = (user, me) => (
+  Roles.userIsMeOrHasProfile(user, me) ||
+  (user._raw.isListed && !user._raw.isAdminUnlisted)
+)
+
 module.exports = {
-  async testimonial (user, args, { pgdb, user: me }) {
-    const testimonial = await pgdb.public.testimonials.findOne({
-      userId: user.id
-    })
-    if (
-      testimonial &&
-      ((testimonial.published && !testimonial.adminUnpublished) ||
-      (me && me.id === testimonial.userId))
-    ) {
-      return {
-        ...testimonial,
-        image: user._raw.portraitUrl,
-        name: user.name
+  isListed: (user) => user._raw.isListed,
+  isAdminUnlisted (user, args, { user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return user._raw.isAdminUnlisted
+    }
+    return null
+  },
+  statement (user, args, { pgdb, user: me }) {
+    if (canAccessStatement(user, me)) {
+      return user._raw.statement
+    }
+    return null
+  },
+  async sequenceNumber (user, args, { pgdb, user: me }) {
+    if (canAccessStatement(user, me)) {
+      if (user._raw.sequenceNumber) {
+        return user._raw.sequenceNumber
+      }
+      const firstMembership = await pgdb.public.memberships.findFirst({userId: me.id}, {orderBy: ['sequenceNumber asc']})
+      if (firstMembership) {
+        return firstMembership.sequenceNumber
       }
     }
+    return null
   },
   portrait: exposeProfileField('portraitUrl', getImageUrl),
   pgpPublicKey: exposeAccessField('emailAccessRole', 'pgpPublicKey'),
@@ -122,10 +136,22 @@ module.exports = {
     : null
   ),
   async credentials (user, args, { pgdb, user: me }) {
-    if (Roles.userIsMeOrHasProfile(user, me)) {
-      return pgdb.public.credentials.find({
+    const canAccessOnePublic = canAccessStatement(user, me)
+    const canAccessPublic = Roles.userIsMeOrHasProfile(user, me)
+    const canAccessAll = Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])
+    if (canAccessOnePublic || canAccessPublic || canAccessAll) {
+      // ToDo: optimize for statements (adds 40ms per 100 records)
+      const all = await pgdb.public.credentials.find({
         userId: user.id
       })
+      if (canAccessAll) {
+        return all
+      }
+      const allListed = all.filter(c => c.isListed)
+      if (canAccessPublic) {
+        return allListed
+      }
+      return allListed.slice(0, 1)
     }
   },
   async address (user, args, {pgdb, user: me}) {

@@ -1,0 +1,108 @@
+const isUUID = require('is-uuid')
+const {
+  transformUser
+} = require('@orbiting/backend-modules-auth')
+
+module.exports = async (_, args, { pgdb, t }) => {
+  const {first, after, search, focus} = args
+  const seed = args.seed || Math.random() * 2 - 1
+
+  if (first > 100) {
+    throw new Error(t('api/statements/maxNodes'))
+  }
+
+  let firstId
+  if (focus) {
+    firstId = await pgdb.public.users.findOneFieldOnly({
+      or: isUUID.v4(focus)
+        ? [
+          {testimonialId: focus},
+          {id: focus}
+        ]
+        : [{slug: focus}]
+    }, 'id')
+  }
+
+  const results = async (userRows) => {
+    let ids = userRows.map(user => user.id)
+    if (firstId) {
+      ids = [firstId].concat(ids)
+    }
+
+    let startIndex = 0
+    let endIndex = ids.length
+    if (after) {
+      startIndex = ids.findIndex(id => id === after)
+    }
+    endIndex = startIndex + first
+
+    const nodeIds = ids.slice(startIndex, endIndex)
+
+    const users = await pgdb.query(`
+      SELECT
+        u.*,
+        m."sequenceNumber" as "sequenceNumber"
+      FROM users u
+      JOIN memberships m
+        ON m.id = (SELECT id FROM memberships WHERE "userId" = u.id ORDER BY "sequenceNumber" ASC LIMIT 1) 
+      WHERE
+        ARRAY[u.id] && 
+        :ids;
+    `, {ids: nodeIds})
+
+    const endId = nodeIds[nodeIds.length - 1]
+    const startId = nodeIds[0]
+
+    return {
+      totalCount: ids.length,
+      nodes: users.map(transformUser),
+      pageInfo: {
+        endCursor: endId,
+        hasNextPage: endIndex < nodeIds.length - 1,
+        hasPreviousPage: startIndex > 0,
+        startCursor: startId
+      }
+    }
+  }
+
+  if (search) {
+    const userRows = await pgdb.query(`
+      SELECT
+        u.id
+      WHERE
+        u."isListed" = true AND u."isAdminUnlisted" = false AND
+        (
+          u."firstName" % :search OR
+          u."lastName" % :search OR
+          u."firstName" ILIKE :searchLike OR
+          u."lastName" ILIKE :searchLike OR
+          c.description % :search OR
+          c.description ILIKE :searchLike
+        );
+    `, { search, searchLike: search + '%', seed })
+
+    return results(userRows)
+  } else {
+    const userRows = await pgdb.query(`
+      SELECT id
+      FROM (
+        SELECT
+          setseed(:seed),
+          NULL AS id
+
+        UNION ALL
+
+        SELECT
+          null,
+          u.id
+        FROM users u
+        WHERE
+          u."isListed" = true AND u."isAdminUnlisted" = false
+        OFFSET 1
+      ) s
+      ORDER BY random();
+    `, { seed })
+
+    return results(userRows)
+  }
+}

@@ -15,10 +15,6 @@ module.exports = async (userId, pgdb, t) => {
 
   const address = await pgdb.public.addresses.findOne({id: user.addressId})
 
-  const testimonial = await pgdb.public.testimonials.findFirst({
-    userId: user.id
-  })
-
   // get packageOptions which include the NOTEBOOK
   const goodieNotebook = await pgdb.public.goodies.findOne({name: 'NOTEBOOK'})
   const rewardNotebook = await pgdb.public.rewards.findOne({id: goodieNotebook.rewardId})
@@ -89,8 +85,9 @@ module.exports = async (userId, pgdb, t) => {
         { name: 'ASK_PERSONAL_INFO',
           content: (!user.addressId || !user.birthday) && pkg.name !== 'DONATE' && pkg.name !== 'ABO_GIVE'
         },
+        // ToDo: Consider asking for profile instead
         { name: 'ASK_TESTIMONIAL',
-          content: !testimonial && pkg.name !== 'ABO_GIVE'
+          content: false
         },
         { name: 'VOUCHER_CODES',
           content: pkg.name === 'ABO_GIVE'

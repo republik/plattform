@@ -12,6 +12,7 @@ const {
   S3BUCKET
 } = process.env
 
+const MAX_STATEMENT_LENGTH = 140
 const PORTRAIT_FOLDER = 'portraits'
 
 const {
@@ -27,7 +28,9 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
     username,
     address,
     pgpPublicKey,
-    portrait
+    portrait,
+    statement,
+    isListed
   } = args
 
   const updateFields = [
@@ -45,12 +48,28 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
     'emailAccessRole',
     'pgpPublicKey',
     'hasPublicProfile',
-    'biography'
+    'biography',
+    'isListed',
+    'statement'
   ]
 
   let portraitUrl = portrait === null
     ? null
     : undefined
+
+  if (statement) {
+    if (statement.length > MAX_STATEMENT_LENGTH) {
+      throw new Error(t('profile/statement/tooLong'))
+    }
+  }
+  if (isListed || (isListed === undefined && me.isListed)) {
+    if (
+      !(statement && statement.trim()) &&
+      !(statement === undefined && me.statement && me.statement.trim())
+    ) {
+      throw new Error(t('profile/statement/needed'))
+    }
+  }
 
   if (portrait) {
     const inputBuffer = Buffer.from(portrait, 'base64')
