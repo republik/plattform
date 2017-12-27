@@ -158,6 +158,9 @@ const cover = {
         }
       },
       editorModule: 'figureImage',
+      editorOptions: {
+        type: 'COVERFIGUREIMAGE',
+      },
       isVoid: true
     },
     figureCaption
