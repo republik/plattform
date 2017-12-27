@@ -1,0 +1,39 @@
+language: node_js
+cache:
+  directories:
+    - node_modules
+notifications:
+  email: false
+node_js:
+  - '8.9.3'
+addons:
+  postgresql: "9.6"
+services:
+  - postgresql
+  - redis-server
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
+before_install:
+  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.3.2
+  - export PATH=$HOME/.yarn/bin:$PATH
+cache:
+  yarn: true
+script:
+  - yarn run test:travis
+branches:
+  only:
+  - master
+env:
+  global:
+    - NODE_ENV=testing
+    - PORT=6000
+    - PUBLIC_URL=http://localhost:6000
+    - PUBLIC_WS_URL_BASE=ws://localhost:6000
+    - PUBLIC_WS_URL_PATH=/graphql
+    - SESSION_SECRET=asdfasdf
+    - AUTO_LOGIN=true
+    - DATABASE_URL=postgres://postgres@localhost:5432/travis_ci_test
+    - DEFAULT_MAIL_FROM_NAME='test'
+    - DEFAULT_MAIL_FROM_ADDRESS='test@test.project-r.construction'
+    - AUTH_MAIL_FROM_ADDRESS='test@test.project-r.construction'
+    - FRONTEND_BASE_URL=http://localhost:6001
