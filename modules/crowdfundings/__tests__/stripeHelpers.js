@@ -1,25 +1,99 @@
-const invoicePaymentSuccess = async () => {
-  console.log(this)
+const invoicePaymentSucceeded = require('../lib/payments/stripe/webhooks/invoicePaymentSucceeded')
+const invoicePaymentFailed = require('../lib/payments/stripe/webhooks/invoicePaymentFailed')
+const chargeSucceeded = require('../lib/payments/stripe/webhooks/chargeSucceeded')
+// const chargeRefunded = require('../lib/payments/stripe/webhooks/chargeRefunded')
+const customerSubscription = require('../lib/payments/stripe/webhooks/customerSubscription')
+
+const t = (text) => text
+
+const invoicePaymentSuccess = async ({ pledgeId, total, chargeId, start, end }, pgdb) => {
+  const event = {
+    id: `INVOICE_PAYMENT_${pledgeId}`,
+    data: {
+      object: {
+        charge: `CHARGE_${chargeId}`,
+        total,
+        lines: {
+          data: [
+            {
+              id: `SUBSCRIPTION_${chargeId}`,
+              metadata: {
+                pledgeId
+              },
+              period: {
+                start,
+                end
+              },
+              type: 'subscription'
+            }
+          ]
+        }
+      }
+    }
+  }
+  await invoicePaymentSucceeded.handle(event, pgdb, t)
 }
 
-const invoicePaymentFail = async () => {
-  console.log(this)
+const invoicePaymentFail = async ({ pledgeId }, pgdb) => {
+  const event = {
+    id: `INVOICE_PAYMENT_${pledgeId}`,
+    data: {
+      object: {
+        lines: {
+          data: [
+            {
+              metadata: {
+                pledgeId
+              },
+              type: 'subscription'
+            }
+          ]
+        }
+      }
+    }
+  }
+  await invoicePaymentFailed.handle(event, pgdb, t)
 }
 
-const chargeSuccess = async () => {
-  console.log(this)
+const chargeSuccess = async ({ total, chargeId }, pgdb) => {
+  const event = {
+    data: {
+      object: {
+        id: `CHARGE_${chargeId}`,
+        amount: total
+      }
+    }
+  }
+  await chargeSucceeded.handle(event, pgdb, t)
 }
 
 const chargeRefund = async () => {
   console.log(this)
 }
 
-const customerSubscriptionDelete = async () => {
-  console.log(this)
+const cancelSubscription = async ({ pledgeId, status, atPeriodEnd }, pgdb) => {
+  const event = {
+    data: {
+      object: {
+        id: `SUBSCRIPTION_${pledgeId}`,
+        status,
+        cancel_at_period_end: atPeriodEnd,
+        metadata: {
+          pledgeId
+        }
+      }
+    }
+  }
+  await customerSubscription.handle(event, pgdb, t)
 }
 
-const customerSubscriptionUpdate = async () => {
-  console.log(this)
+const resetCustomers = async (pgdb) => {
+  const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY_COMPANY_ONE)
+  const customers = await stripe.customers.list({ limit: 100 })
+  pgdb.public.stripeCustomers.truncate({ cascade: true })
+  for (const customer of customers.data) {
+    await stripe.customers.del(customer.id)
+  }
 }
 
 const createSource = async (token) => {
@@ -38,10 +112,10 @@ const createSource = async (token) => {
 // see typesOfIntereset in webhookHandler.js
 module.exports = {
   createSource,
+  resetCustomers,
   invoicePaymentSuccess,
   invoicePaymentFail,
   chargeSuccess,
   chargeRefund,
-  customerSubscriptionDelete,
-  customerSubscriptionUpdate
+  cancelSubscription
 }

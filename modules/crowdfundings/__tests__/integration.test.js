@@ -78,7 +78,7 @@ test('test data exists', async (t) => {
         },
         {
           'id': '00000000-0000-0000-0007-000000000002',
-          'name': 'ABO_MONTHLY',
+          'name': 'MONTHLY_ABO',
           'options': [
             {
               'id': '00000000-0000-0000-0008-000000000002',
@@ -89,7 +89,7 @@ test('test data exists', async (t) => {
               'defaultAmount': 1,
               'reward': {
                 'id': '00000000-0000-0000-0006-000000000002',
-                'name': 'ABO_MONTHLY'
+                'name': 'MONTHLY_ABO'
               }
             }
           ]
