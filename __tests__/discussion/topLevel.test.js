@@ -8,7 +8,7 @@ const {
 const discussion1 = require('./seeds/discussion1')
 const commentsTopLevel = require('./seeds/commentsTopLevel')
 const getUsers = require('./seeds/getUsers')
-const { level1 } = require('./queries')
+const { level1: level1Query } = require('./queries')
 
 const prepare = async () => {
   await connectIfNeeded()
@@ -29,56 +29,91 @@ const getIdsString = arr => arr
   .map(c => c.id)
   .join('')
 
-test('top level comments ASC (no pagination)', async (t) => {
-  await prepare()
+const testDiscussion = async (query, variables, comments, t) => {
   const result = await apolloFetch({
-    query: level1,
-    variables: {
-      discussionId: 'd0000000-0000-0000-0000-000000000001',
-      first: 100,
-      orderBy: 'DATE',
-      orderDirection: 'ASC'
-    }
+    query,
+    variables
   })
   t.notOk(result.errors, 'graphql query successful')
   const { discussion } = result.data
   t.ok(discussion, 'discussion present')
+  const slicedComments = comments
+    .slice(0, variables.first)
   t.equals(
     discussion.comments.totalCount,
     commentsTopLevel.length,
-    'all comments present'
+    'totalCount is correct'
   )
   t.equals(
     getIdsString(discussion.comments.nodes),
-    getIdsString(commentsTopLevel),
-    'comments in correct order'
+    getIdsString(slicedComments),
+    'the right comments in correct order'
+  )
+  if (comments.length > slicedComments.length) { // paginated
+    t.ok(discussion.comments.pageInfo.hasNextPage, 'has next page')
+    t.ok(discussion.comments.pageInfo.endCursor, 'has endCursor')
+    await testDiscussion(
+      query,
+      {
+        ...variables,
+        first: 100, // get all remaining
+        after: discussion.comments.pageInfo.endCursor
+      },
+      comments
+        .slice(variables.first, comments.length),
+      t
+    )
+  } else {
+    t.notOk(discussion.comments.pageInfo.hasNextPage, 'no next page')
+    t.notOk(discussion.comments.pageInfo.endCursor, 'no endCursor')
+  }
+  // const util = require('util')
+  // console.log(util.inspect(discussion, {depth:null}))
+  return discussion
+}
+
+test('top level comments ASC (no pagination)', async (t) => {
+  await prepare()
+  await testDiscussion(
+    level1Query,
+    {
+      discussionId: 'd0000000-0000-0000-0000-000000000001',
+      first: 100,
+      orderBy: 'DATE',
+      orderDirection: 'ASC'
+    },
+    commentsTopLevel,
+    t
   )
   t.end()
 })
 
 test('top level comments DESC (no pagination)', async (t) => {
-  await prepare()
-  const result = await apolloFetch({
-    query: level1,
-    variables: {
+  await testDiscussion(
+    level1Query,
+    {
       discussionId: 'd0000000-0000-0000-0000-000000000001',
       first: 100,
       orderBy: 'DATE',
       orderDirection: 'DESC'
-    }
-  })
-  t.notOk(result.errors, 'graphql query successful')
-  const { discussion } = result.data
-  t.ok(discussion, 'discussion present')
-  t.equals(
-    discussion.comments.totalCount,
-    commentsTopLevel.length,
-    'all comments present'
+    },
+    commentsTopLevel.slice().reverse(),
+    t
   )
-  t.equals(
-    getIdsString(discussion.comments.nodes),
-    getIdsString(commentsTopLevel.reverse()),
-    'comments in correct order'
+  t.end()
+})
+
+test('top level comments ASC paginated', async (t) => {
+  await testDiscussion(
+    level1Query,
+    {
+      discussionId: 'd0000000-0000-0000-0000-000000000001',
+      first: 3,
+      orderBy: 'DATE',
+      orderDirection: 'DESC'
+    },
+    commentsTopLevel.slice().reverse(),
+    t
   )
   t.end()
 })

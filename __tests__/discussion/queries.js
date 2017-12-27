@@ -4,6 +4,7 @@ module.exports.level1 = `
     $first: Int
     $orderBy: DiscussionOrder
     $orderDirection: OrderDirection
+    $after: String
   ){
     discussion(id: $discussionId) {
       id
@@ -17,6 +18,7 @@ module.exports.level1 = `
         first: $first
         orderBy: $orderBy
         orderDirection: $orderDirection
+        after: $after
       ) {
         totalCount
         pageInfo {
