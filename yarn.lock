@@ -102,6 +102,12 @@
     stringify-entities "^1.3.1"
     unified "^6.1.5"
 
+"@project-r/styleguide@^5.23.1":
+  version "5.23.1"
+  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.23.1.tgz#88a7d658af3909bd0a8dc218f6051867f419d964"
+  dependencies:
+    react-icons "^2.2.7"
+
 "@project-r/template-newsletter@^1.4.3":
   version "1.4.3"
   resolved "https://registry.yarnpkg.com/@project-r/template-newsletter/-/template-newsletter-1.4.3.tgz#f13a9bcd383379413405dd7b7cf4c2a2b1fe0ee9"
@@ -3967,6 +3973,16 @@ react-dom@^16.0.0:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.0"
+
+react-icon-base@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/react-icon-base/-/react-icon-base-2.1.0.tgz#a196e33fdf1e7aaa1fda3aefbb68bdad9e82a79d"
+
+react-icons@^2.2.7:
+  version "2.2.7"
+  resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-2.2.7.tgz#d7860826b258557510dac10680abea5ca23cf650"
+  dependencies:
+    react-icon-base "2.1.0"
 
 react@^16.0.0:
   version "16.1.1"
