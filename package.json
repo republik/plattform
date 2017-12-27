@@ -50,12 +50,11 @@
     "standardize": "standard --fix",
     "db:migrate:up": "node script/db-migrate-all.js up",
     "db:migrate:down": "node script/db-migrate-all.js down",
-    "db:seed": "cat seeds/seeds.json | node node_modules/@orbiting/backend-modules-auth/seeds/seed.js --truncate",
-    "db:reset:noseeds": "node script/db-migrate-all.js reset && node script/db-migrate-all.js up",
-    "db:reset:tests": "yarn run db:reset:noseeds && node seeds/seedCrowdfundings.js",
-    "db:reset": "yarn run db:reset:noseeds && yarn run db:seed",
-    "test:watch": "yarn run db:reset:tests && NODE_ENV=development yarn nodemon --exec tape **/modules/**/*.test.js",
-    "test": "yarn run db:reset:tests && yarn tape **/modules/**/*.test.js | faucet",
+    "db:seed:users": "cat node_modules/@orbiting/backend-modules-auth/seeds/seeds.example.json | node node_modules/@orbiting/backend-modules-auth/seeds/seed.js --truncate",
+    "db:seed:crowdfundings": "node seeds/seedCrowdfundings.js",
+    "db:reset:seed": "yarn run db:reset && yarn run db:seed:users && yarn run db:seed:crowdfundings",
+    "db:reset": "node script/db-migrate-all.js reset && node script/db-migrate-all.js up",
+    "db:reset:test": "yarn run db:reset && yarn run db:seed:crowdfundings",
     "translations": "yarn run translations:local && yarn run translations:crowdfunding",
     "translations:crowdfunding": "gsheets --key=1PckJT0ft4snNWmtlJHHXN93-Rk8eyalHsDCjfA1wc5g --title=live --pretty --out modules/crowdfundings/lib/translations.json",
     "translations:local": "gsheets --key=1NE1igcbxtTrVd5P72Ubqmgv4yKYh0LRGa0EuYSEQKxE --title=live --pretty --out lib/translations.json",
@@ -65,8 +64,8 @@
     "launch:local": "sh script/launch/launch_local.sh",
     "roleUser": "node node_modules/@orbiting/backend-modules-auth/script/roleUser",
     "roleUsers": "node node_modules/@orbiting/backend-modules-auth/script/roleUsers",
-    "test:watch": "NODE_ENV=development yarn nodemon --exec tape **/**/*.test.js",
-    "test": "yarn tape **/**/*.test.js | faucet"
+    "test:watch": "yarn run db:reset:test && NODE_ENV=development yarn nodemon --exec tape **/**/*.test.js",
+    "test": "yarn run db:reset:test && yarn tape **/**/*.test.js | faucet"
   },
   "lint-staged": {
     "*.js": [
