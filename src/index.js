@@ -424,8 +424,8 @@ ReactDOM.render(
             path: '/templates/editorialnewsletter',
             title: 'Newsletter',
             imports: {
-              webSchema: require('./templates/EditorialNewsletter/web'),
-              emailSchema: require('./templates/EditorialNewsletter/email'),
+              webSchema: require('./templates/EditorialNewsletter/web').default(),
+              emailSchema: require('./templates/EditorialNewsletter/email').default(),
               ...require('./templates/docs'),
               renderMdast: require('mdast-react-render').renderMdast
             },

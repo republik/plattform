@@ -24,7 +24,7 @@ import {
 
 const matchLast = (node, index, parent) => index === parent.children.length - 1
 
-const createSchema = ({
+const createNewsletterSchema = ({
   Container,
   Cover,
   CoverImage,
@@ -280,4 +280,4 @@ const createSchema = ({
   }
 }
 
-export default createSchema
+export default createNewsletterSchema
