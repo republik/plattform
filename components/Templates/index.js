@@ -6,7 +6,7 @@ import createArticleSchema from '@project-r/styleguide/lib/templates/Article'
 import createFrontSchema from '@project-r/styleguide/lib/templates/Front'
 
 const schemas = {
-  editorialNewsletter: editorialNewsletterSchema,
+  editorialNewsletter: editorialNewsletterSchema(),
   newsletter: newsletterSchema,
   neutrum: neutrumSchema,
   article: createArticleSchema(),
