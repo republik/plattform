@@ -18,7 +18,8 @@ module.exports = async (_, args, { user, t, pubsub }) => {
   const {
     repoId,
     creationDeadline,
-    productionDeadline
+    productionDeadline,
+    briefingUrl
   } = args
 
   const tag = await getAnnotatedTag(
@@ -31,7 +32,8 @@ module.exports = async (_, args, { user, t, pubsub }) => {
       ? yaml.parse(tag.message)
       : {},
     ...(creationDeadline !== undefined && { creationDeadline }),
-    ...(productionDeadline !== undefined && { productionDeadline })
+    ...(productionDeadline !== undefined && { productionDeadline }),
+    ...(briefingUrl !== undefined && { briefingUrl })
   }
   const message = yaml.stringify(meta)
 
