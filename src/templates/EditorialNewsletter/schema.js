@@ -1,3 +1,9 @@
+import Paragraph, { Strong, Em, Link, Br } from './email/Paragraph'
+import { H2 } from './email/Headlines'
+import Figure, { Image, Caption, Byline } from './email/Figure'
+import Blockquote, { BlockquoteText, BlockquoteSource } from './email/Blockquote'
+import List, { ListItem } from './email/List'
+
 import {
   matchType,
   matchZone,
@@ -21,22 +27,7 @@ const createSchema = ({
   Container,
   Cover,
   CoverImage,
-  Center,
-  Paragraph,
-  Strong,
-  Em,
-  Link,
-  Br,
-  H2,
-  Figure,
-  Image,
-  Caption,
-  Byline,
-  Blockquote,
-  BlockquoteText,
-  BlockquoteSource,
-  List,
-  ListItem
+  Center
 } = {}) => {
 
   const globalInlines = [
