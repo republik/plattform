@@ -38,3 +38,4 @@ env:
     - AUTH_MAIL_FROM_ADDRESS='test@test.project-r.construction'
     - FRONTEND_BASE_URL=http://localhost:6001
     - DISPLAY_AUTHOR_SECRET=test
+    - GITHUB_LOGIN=orbiting-test
