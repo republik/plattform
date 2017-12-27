@@ -51,7 +51,7 @@ module.exports = {
       if (user._raw.sequenceNumber) {
         return user._raw.sequenceNumber
       }
-      const firstMembership = await pgdb.public.memberships.findFirst({userId: me.id}, {orderBy: ['sequenceNumber asc']})
+      const firstMembership = await pgdb.public.memberships.findFirst({userId: user.id}, {orderBy: ['sequenceNumber asc']})
       if (firstMembership) {
         return firstMembership.sequenceNumber
       }
