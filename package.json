@@ -2,7 +2,7 @@
   "name": "@project-r/styleguide",
   "version": "0.0.0-development",
   "engines": {
-    "node": "8.4.0"
+    "node": "8.9.3"
   },
   "peerDependencies": {
     "d3-color": "^1.0.3",
