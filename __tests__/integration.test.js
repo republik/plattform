@@ -1,6 +1,6 @@
 require('dotenv').config({path: '.test.env'})
 const test = require('tape-async')
-const { apolloFetch, connectIfNeeded } = require('../helpers.js')
+const { apolloFetch, connectIfNeeded, disconnect } = require('./helpers.js')
 
 test('setup', async (t) => {
   await connectIfNeeded()
@@ -17,4 +17,10 @@ test('setup', async (t) => {
   })
   t.ok(result.data.__schema, 'graphql schema received')
   t.end()
+})
+
+test.onFinish(() => {
+  if (process.env.NODE_ENV !== 'development') {
+    disconnect()
+  }
 })

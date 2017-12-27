@@ -16,7 +16,6 @@
     "@orbiting/backend-modules-scripts": "^1.0.0",
     "@orbiting/backend-modules-translate": "^0.0.0",
     "@slack/client": "^3.14.2",
-    "apollo-fetch": "^0.7.0",
     "apollo-modules-node": "^0.1.1",
     "aws-sign": "^0.1.2",
     "d3-array": "^1.2.1",
@@ -53,7 +52,10 @@
     "db:migrate:down": "node script/db-migrate-all.js down",
     "db:seed": "cat seeds/seeds.json | node node_modules/@orbiting/backend-modules-auth/seeds/seed.js --truncate",
     "db:reset:noseeds": "node script/db-migrate-all.js reset && node script/db-migrate-all.js up",
+    "db:reset:tests": "yarn run db:reset:noseeds && node seeds/seedCrowdfundings.js",
     "db:reset": "yarn run db:reset:noseeds && yarn run db:seed",
+    "test:watch": "yarn run db:reset:tests && NODE_ENV=development yarn nodemon --exec tape **/modules/**/*.test.js",
+    "test": "yarn run db:reset:tests && yarn tape **/modules/**/*.test.js | faucet",
     "translations": "yarn run translations:local && yarn run translations:crowdfunding",
     "translations:crowdfunding": "gsheets --key=1PckJT0ft4snNWmtlJHHXN93-Rk8eyalHsDCjfA1wc5g --title=live --pretty --out modules/crowdfundings/lib/translations.json",
     "translations:local": "gsheets --key=1NE1igcbxtTrVd5P72Ubqmgv4yKYh0LRGa0EuYSEQKxE --title=live --pretty --out lib/translations.json",
@@ -74,6 +76,7 @@
   },
   "devDependencies": {
     "child-process-promise": "^2.2.1",
+    "faucet": "^0.0.1",
     "gsheets": "^2.0.0",
     "husky": "^0.14.3",
     "lint-staged": "^4.3.0",
@@ -81,6 +84,7 @@
     "snoowrap": "^1.14.2",
     "standard": "^10.0.3",
     "tape-async": "^2.3.0",
-    "zero-fill": "^2.2.3"
+    "zero-fill": "^2.2.3",
+    "apollo-fetch": "^0.7.0"
   }
 }
