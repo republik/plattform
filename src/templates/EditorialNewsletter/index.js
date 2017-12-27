@@ -21,8 +21,7 @@ import {
 
 import {
   matchFigure,
-  extractImage,
-  getDisplayWidth
+  extractImage
 } from '../Article/utils'
 
 const matchLast = (node, index, parent) => index === parent.children.length - 1
