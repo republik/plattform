@@ -17,10 +17,6 @@ export default ({rule, subModules, TYPE}) => {
     throw new Error('Missing center submodule')
   }
   const titleModule = subModules.find(m => m.name === 'title')
-  if (!titleModule) {
-    throw new Error('Missing title submodule')
-  }
-
   const figureModule = subModules.find(m => m.name === 'figure')
 
   const childSerializer = new MarkdownSerializer({
@@ -39,26 +35,34 @@ export default ({rule, subModules, TYPE}) => {
     if (!autoMeta) {
       return null
     }
-    const title = documentNode.nodes
-      .find(n => n.type === titleModule.TYPE && n.kind === 'block')
-    if (!title) {
-      return null
-    }
-    const headline = title.nodes.first()
-    const headlineText = headline ? headline.text : ''
-    const lead = title.nodes.get(1)
 
     const nextHour = timeHour.ceil(new Date())
-    const newData = data
+    let newData = data
       .set('auto', true)
       .set('feed', true)
-      .set('title', headlineText)
-      .set('description', lead ? lead.text : '')
       .set('publishDate', nextHour.toISOString())
-      .set('slug', [
-        slugDateFormat(nextHour),
-        slugify(headlineText)
-      ].join('/'))
+
+    const title = titleModule && documentNode.nodes
+      .find(n => n.type === titleModule.TYPE && n.kind === 'block')
+    if (title) {
+      const headline = title.nodes.first()
+      const headlineText = headline ? headline.text : ''
+      const lead = title.nodes.get(1)
+
+      newData = newData
+        .set('title', headlineText)
+        .set('description', lead ? lead.text : '')
+        .set('slug', [
+          slugDateFormat(nextHour),
+          slugify(headlineText)
+        ].join('/'))
+    } else {
+      newData = newData
+        .set('slug', [
+          slugDateFormat(nextHour),
+          ''
+        ].join('/'))
+    }
 
     return data.equals(newData)
       ? null
@@ -110,20 +114,21 @@ export default ({rule, subModules, TYPE}) => {
 `---
 template: ${template}
 ---
-
+${titleModule ? `
 <section><h6>${titleModule.TYPE}</h6>
 
 # ${title}
 
 Lead
 
-Von ${me ? `[${me.name}](https://republik.love/~${me.id})` : '[Autor](<>)'} (Text) und [Kollaborator](https://republik.love/~kollaborator) (☄️), ${pubDateFormat(new Date())}
+Von ${me ? `[${me.name}](/~${me.id})` : '[Autor](<>)'} (Text) und Kollaborator, ${pubDateFormat(new Date())}
 
 <hr/></section>
 
+` : ''}
 <section><h6>${centerModule.TYPE}</h6>
 
-Hurray!
+${titleModule ? 'Text' : title}
 
 <hr/></section>
 `
@@ -161,7 +166,7 @@ Hurray!
               figureModule && {
                 types: [figureModule.TYPE], min: 0, max: 1
               },
-              {
+              titleModule && {
                 types: [titleModule.TYPE], min: 1, max: 1
               },
               {
@@ -171,8 +176,11 @@ Hurray!
                 min: 1
               }
             ].filter(Boolean),
-            first: {
-              types: [titleModule.TYPE, figureModule && figureModule.TYPE].filter(Boolean)
+            first: (titleModule || figureModule) && {
+              types: [
+                titleModule && titleModule.TYPE,
+                figureModule && figureModule.TYPE
+              ].filter(Boolean)
             },
             last: {
               types: [centerModule.TYPE]
@@ -184,7 +192,7 @@ Hurray!
                   index,
                   {
                     kind: 'block',
-                    type: node.nodes.find(n => n.type === titleModule.TYPE)
+                    type: !titleModule || node.nodes.find(n => n.type === titleModule.TYPE)
                       ? centerModule.TYPE
                       : titleModule.TYPE
                   }
@@ -194,7 +202,7 @@ Hurray!
                 change.setNodeByKey(
                   child.key,
                   {
-                    type: index === 0
+                    type: index === 0 && titleModule
                       ? titleModule.TYPE
                       : centerModule.TYPE
                   }
@@ -206,7 +214,9 @@ Hurray!
                   0,
                   {
                     kind: 'block',
-                    type: titleModule.TYPE
+                    type: titleModule
+                      ? titleModule.TYPE
+                      : figureModule.TYPE
                   }
                 )
               }
