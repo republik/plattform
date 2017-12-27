@@ -28,10 +28,10 @@ module.exports = async ({userId, pgdb}) => {
     const membershipTypeBenefactor = await pgdb.public.membershipTypes.findOne({
       name: 'BENEFACTOR_ABO'
     })
-    const isBenefactor = await pgdb.public.memberships.findFirst({
+    const isBenefactor = membershipTypeBenefactor ? await pgdb.public.memberships.findFirst({
       userId: userId,
       membershipTypeId: membershipTypeBenefactor.id
-    })
+    }) : false
     const hash = crypto
       .createHash('md5')
       .update(email)
