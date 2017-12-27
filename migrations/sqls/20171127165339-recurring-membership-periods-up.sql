@@ -1,7 +1,9 @@
 alter table "memberships"
   drop column "beginDate",
   add column "active" boolean not null default false,
-  add column "renew" boolean not null default false;
+  add column "renew" boolean not null default false,
+  add column "subscriptionId" text,
+  add column "latestPaymentFailedAt" timestamptz;
 
 create type "intervalType" as ENUM ('year', 'month', 'week', 'day');
 

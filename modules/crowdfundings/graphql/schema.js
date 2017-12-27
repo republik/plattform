@@ -57,10 +57,19 @@ type mutations {
   # adds a new paymentSource and makes it the default
   addPaymentSource(sourceId: String!): [PaymentSource!]!
 
+  cancelMembership(
+    id: ID!
+    immediately: Boolean
+  ): Membership!
+
+  # MONTHLY_ABO: if cancelled immediately a new subscription is created
+  # if canceled !immediately and subscription is still running, it is
+  # reactivated.
+  # YEARLYs are just marked as renew = true
   reactivateMembership(
     id: ID!
-    membershipTypeId: ID!
   ): Membership!
+
 
   # required role: supporter
   updateUser(firstName: String, lastName: String, birthday: Date, phoneNumber: String, address: AddressInput, userId: ID!): User!

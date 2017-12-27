@@ -1,11 +1,23 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const logger = console
 const updateUserOnMailchimp = require('../../../lib/updateUserOnMailchimp')
+const cancelMembership = require('./cancelMembership')
+const moment = require('moment')
+const checkEnv = require('check-env')
+
+checkEnv([
+  'PARKING_PLEDGE_ID',
+  'PARKING_USER_ID'
+])
+
+const {
+  PARKING_PLEDGE_ID,
+  PARKING_USER_ID
+} = process.env
 
 module.exports = async (_, args, {pgdb, req, t}) => {
   Roles.ensureUserHasRole(req.user, 'supporter')
   const { pledgeId } = args
-  const { PARKING_PLEDGE_ID, PARKING_USER_ID } = process.env
   const now = new Date()
   const transaction = await pgdb.transactionBegin()
   try {
@@ -19,6 +31,16 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       logger.error(message, { req: req._log(), pledge })
       throw new Error(message)
     }
+
+    // MONTHLY can only be cancelled 14 days max after pledge
+    const maxDays = 14
+    const pkg = await transaction.public.packages.findOne({
+      id: pledge.packageId
+    })
+    if (pkg.name === 'MONTHLY_ABO' && moment().diff(moment(pledge.createdAt), 'days') > maxDays) {
+      throw new Error(t('api/pledge/cancel/tooLate', { maxDays }))
+    }
+
     await transaction.public.pledges.updateOne({id: pledgeId}, {
       status: 'CANCELLED',
       updatedAt: now
@@ -63,6 +85,19 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       }
     }
 
+    if (pkg.name === 'MONTHLY_ABO') {
+      const memberships = await transaction.public.memberships.find({
+        pledgeId
+      })
+      await cancelMembership(
+        null,
+        {
+          id: memberships[0].id,
+          immediately: true
+        },
+        { pgdb: transaction, req, t }
+      )
+    }
     await transaction.public.memberships.update({
       pledgeId: pledgeId
     }, {
