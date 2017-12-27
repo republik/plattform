@@ -1,5 +1,5 @@
 import React from 'react'
-import { fontFamilies } from '../../theme/fonts'
+import { fontFamilies } from '../../../theme/fonts'
 
 export const paragraphStyle = {
   color: '#000',

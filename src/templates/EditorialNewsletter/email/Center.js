@@ -1,5 +1,5 @@
 import React from 'react'
-import { fontFamilies } from '../../theme/fonts'
+import { fontFamilies } from '../../../theme/fonts'
 import { paragraphStyle } from './Paragraph'
 import { Mso } from 'mdast-react-render/lib/email'
 

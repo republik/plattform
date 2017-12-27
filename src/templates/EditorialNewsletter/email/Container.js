@@ -2,7 +2,7 @@ import React from 'react'
 import { css } from 'glamor'
 import { Mso } from 'mdast-react-render/lib/email'
 import Header from './Header'
-import SG from '../../theme/env'
+import SG from '../../../theme/env'
 
 const styles = {
   container: {

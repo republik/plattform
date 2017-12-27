@@ -1,5 +1,5 @@
 import React from 'react'
-import { fontFamilies } from '../../theme/fonts'
+import { fontFamilies } from '../../../theme/fonts'
 
 const h2Style = {
   fontFamily: fontFamilies.serifBold,
