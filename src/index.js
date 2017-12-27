@@ -422,7 +422,7 @@ ReactDOM.render(
           },
           {
             path: '/templates/editorialnewsletter',
-            title: 'EditorialNewsletter',
+            title: 'Newsletter',
             imports: {
               webSchema: require('./templates/EditorialNewsletter/web'),
               emailSchema: require('./templates/EditorialNewsletter/email'),

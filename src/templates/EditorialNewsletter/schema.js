@@ -3,6 +3,7 @@ import { H2 } from './email/Headlines'
 import Figure, { Image, Caption, Byline } from './email/Figure'
 import Blockquote, { BlockquoteText, BlockquoteSource } from './email/Blockquote'
 import List, { ListItem } from './email/List'
+import { Sub, Sup } from '../../components/Typography'
 
 import {
   matchType,
@@ -42,6 +43,22 @@ const createSchema = ({
       editorModule: 'mark',
       editorOptions: {
         type: 'strong'
+      }
+    },
+    {
+      matchMdast: matchType('sub'),
+      component: Sub,
+      editorModule: 'mark',
+      editorOptions: {
+        type: 'sub'
+      }
+    },
+    {
+      matchMdast: matchType('sup'),
+      component: Sup,
+      editorModule: 'mark',
+      editorOptions: {
+        type: 'sup'
       }
     }
   ]
