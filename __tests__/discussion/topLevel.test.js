@@ -71,7 +71,7 @@ const testDiscussion = async (query, variables, comments, t) => {
   return discussion
 }
 
-test('top level comments ASC (no pagination)', async (t) => {
+test('discussion: top level comments ASC (no pagination)', async (t) => {
   await prepare()
   await testDiscussion(
     level1Query,
@@ -87,7 +87,7 @@ test('top level comments ASC (no pagination)', async (t) => {
   t.end()
 })
 
-test('top level comments DESC (no pagination)', async (t) => {
+test('discussion: top level comments DESC (no pagination)', async (t) => {
   await testDiscussion(
     level1Query,
     {
@@ -102,7 +102,7 @@ test('top level comments DESC (no pagination)', async (t) => {
   t.end()
 })
 
-test('top level comments DESC paginated', async (t) => {
+test('discussion: top level comments DESC paginated', async (t) => {
   await testDiscussion(
     level1Query,
     {
