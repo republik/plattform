@@ -187,7 +187,7 @@ test('failing payments on MONTHLY_ABO pledge with STRIPE', async (t) => {
   t.end()
 })
 
-test.only('failed payments on MONTHLY_ABO pledge with STRIPE lead to disabled membership', async (t) => {
+test('failed payments on MONTHLY_ABO pledge with STRIPE lead to disabled membership', async (t) => {
   const { pledgeId } = await prepare({ templateId: '00000000-0000-0000-0008-000000000002' })
   await resetCustomers(pgDatabase())
   const source = await createSource('tok_visa')
