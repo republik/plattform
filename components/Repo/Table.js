@@ -32,6 +32,7 @@ import {
 
 import { renderMdast } from 'mdast-react-render'
 
+import Briefing from './Briefing'
 import EditMetaDate from './EditMetaDate'
 import { phases } from './workflow'
 import RepoAdd from './Add'
@@ -222,7 +223,7 @@ class RepoList extends Component {
         <Table>
           <thead>
             <Tr>
-              <Th style={{width: '30%'}}>{t('repo/table/col/title')}</Th>
+              <Th style={{width: '28%'}}>{t('repo/table/col/title')}</Th>
               <Th style={{width: '15%'}}>{t('repo/table/col/credits')}</Th>
               {orderFields.map(({field}) => (
                 <ThOrder key={field}
@@ -236,7 +237,7 @@ class RepoList extends Component {
                 </ThOrder>
               ))}
               <Th style={{width: '10%'}}>{t('repo/table/col/phase')}</Th>
-              <Th style={{width: '5%'}} />
+              <Th style={{width: 70}} />
             </Tr>
           </thead>
           <tbody>
@@ -267,7 +268,7 @@ class RepoList extends Component {
               .map(({repo, phase}) => {
                 const {
                   id,
-                  meta: {creationDeadline, productionDeadline},
+                  meta: {creationDeadline, productionDeadline, briefingUrl},
                   latestCommit: {date, document: {meta}}
                 } = repo
 
@@ -306,6 +307,10 @@ class RepoList extends Component {
                       <Phase t={t} phase={phase} />
                     </Td>
                     <Td style={{textAlign: 'right'}}>
+                      <Briefing value={briefingUrl} onChange={value => editRepoMeta(
+                        {repoId: id, briefingUrl: value}
+                      )} />
+                      {' '}
                       {repo.latestPublications
                         .filter(publication => publication.prepublication)
                         .map(publication => (
@@ -348,6 +353,7 @@ query repos($after: String, $search: String) {
       meta {
         creationDeadline
         productionDeadline
+        briefingUrl
       }
       latestCommit {
         id
@@ -386,12 +392,13 @@ query repos($after: String, $search: String) {
 `
 
 const mutation = gql`
-mutation editRepoMeta($repoId: ID!, $creationDeadline: DateTime, $productionDeadline: DateTime) {
-  editRepoMeta(repoId: $repoId, creationDeadline: $creationDeadline, productionDeadline: $productionDeadline) {
+mutation editRepoMeta($repoId: ID!, $creationDeadline: DateTime, $productionDeadline: DateTime, $briefingUrl: String) {
+  editRepoMeta(repoId: $repoId, creationDeadline: $creationDeadline, productionDeadline: $productionDeadline, briefingUrl: $briefingUrl) {
     id
     meta {
       creationDeadline
       productionDeadline
+      briefingUrl
     }
   }
 }
