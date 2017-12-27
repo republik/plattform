@@ -23,7 +23,7 @@ const placeMilestone = require('./placeMilestone')
 const { document: getDocument } = require('../Commit')
 
 const newsletterEmailSchema = require('@project-r/template-newsletter/lib/email')
-const editorialNewsletterSchema = require('@project-r/styleguide/lib/templates/EditorialNewsletter')
+const editorialNewsletterSchema = require('@project-r/styleguide/lib/templates/EditorialNewsletter/email')
 const { renderEmail } = require('mdast-react-render/lib/email')
 
 module.exports = async (
