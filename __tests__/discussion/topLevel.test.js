@@ -37,13 +37,13 @@ const testDiscussion = async (query, variables, comments, t) => {
   t.notOk(result.errors, 'graphql query successful')
   const { discussion } = result.data
   t.ok(discussion, 'discussion present')
-  const slicedComments = comments
-    .slice(0, variables.first)
   t.equals(
     discussion.comments.totalCount,
     commentsTopLevel.length,
     'totalCount is correct'
   )
+  const slicedComments = comments
+    .slice(0, variables.first)
   t.equals(
     getIdsString(discussion.comments.nodes),
     getIdsString(slicedComments),
