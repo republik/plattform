@@ -107,11 +107,10 @@ const figure = {
   rules: [
     {
       matchMdast: matchImageParagraph,
-      // TODO: CoverImage rule trumps this Image rule only in editor, why?
       component: Image,
-      props: (node, index, parent, { ancestors }) => {
+      props: (node, index, parent) => {
         const src = extractImage(node)
-        const displayWidth = getDisplayWidth(ancestors)
+        const displayWidth = 600
 
         return {
           ...FigureImage.utils.getResizedSrcs(
