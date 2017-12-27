@@ -1,6 +1,6 @@
 require('dotenv').config({path: '.test.env'})
 const test = require('tape-async')
-const { apolloFetch, connectIfNeeded } = require('./helpers.js')
+const { apolloFetch, connectIfNeeded, disconnect } = require('./helpers.js')
 
 test('setup', async (t) => {
   await connectIfNeeded()
@@ -19,7 +19,7 @@ test('setup', async (t) => {
   t.end()
 })
 
-test('test data exists', async (t) => {
+test.only('test data exists', async (t) => {
   await connectIfNeeded()
   const result = await apolloFetch({
     query: `
@@ -143,4 +143,10 @@ test('test data exists', async (t) => {
     }
   }, 'test data exists and looks good')
   t.end()
+})
+
+test.onFinish(() => {
+  if (process.env.NODE_ENV !== 'development') {
+    disconnect()
+  }
 })
