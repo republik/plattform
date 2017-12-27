@@ -42,7 +42,7 @@ module.exports = {
           pledgeId
         })
         // membership might have been moved by cancelPledge
-        if (!existingMembership) {
+        if (existingMembership) {
           await transaction.public.memberships.update({
             pledgeId
           }, {
