@@ -16,6 +16,7 @@
     "@orbiting/backend-modules-scripts": "^1.0.0",
     "@orbiting/backend-modules-translate": "^0.0.0",
     "@slack/client": "^3.14.2",
+    "apollo-fetch": "^0.7.0",
     "apollo-modules-node": "^0.1.1",
     "aws-sign": "^0.1.2",
     "d3-array": "^1.2.1",
@@ -27,6 +28,7 @@
     "dotenv": "^4.0.0",
     "dynamic-dedupe": "^0.3.0",
     "emojione_minimal": "^2.1.2",
+    "faucet": "^0.0.1",
     "graphql": "^0.11.7",
     "graphql-fields": "^1.0.2",
     "graphql-tools": "https://github.com/orbiting/graphql-tools.git#upstream",
@@ -60,7 +62,9 @@
     "launch": "yarn run db:migrate:up && node script/launch/activateMemberships.js && node script/launch/add_launch_data.js",
     "launch:local": "sh script/launch/launch_local.sh",
     "roleUser": "node node_modules/@orbiting/backend-modules-auth/script/roleUser",
-    "roleUsers": "node node_modules/@orbiting/backend-modules-auth/script/roleUsers"
+    "roleUsers": "node node_modules/@orbiting/backend-modules-auth/script/roleUsers",
+    "test:watch": "NODE_ENV=development yarn nodemon --exec tape **/**/*.test.js",
+    "test": "yarn tape **/**/*.test.js | faucet"
   },
   "lint-staged": {
     "*.js": [
@@ -76,6 +80,7 @@
     "nodemon": "^1.12.1",
     "snoowrap": "^1.14.2",
     "standard": "^10.0.3",
-    "tape-async": "^2.3.0"
+    "tape-async": "^2.3.0",
+    "zero-fill": "^2.2.3"
   }
 }
