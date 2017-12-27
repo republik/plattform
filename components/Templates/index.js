@@ -1,5 +1,5 @@
 import newsletterSchema from '@project-r/template-newsletter'
-import editorialNewsletterSchema from '@project-r/styleguide/lib/templates/EditorialNewsletter'
+import editorialNewsletterSchema from '@project-r/styleguide/lib/templates/EditorialNewsletter/web'
 import neutrumSchema from './Neutrum'
 
 import createArticleSchema from '@project-r/styleguide/lib/templates/Article'
