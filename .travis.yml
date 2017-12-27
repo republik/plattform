@@ -17,7 +17,7 @@ before_install:
 cache:
   yarn: true
 script:
-  - yarn run test
+  - yarn run test:travis
 branches:
   only:
   - master
