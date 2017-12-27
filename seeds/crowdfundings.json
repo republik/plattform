@@ -56,9 +56,9 @@
       "rewardId": "00000000-0000-0000-0004-000000000003",
       "rewardType": "MembershipType",
       "companyId": "c0000000-0000-0000-0001-000000000002",
-      "name": "ABO_MONTHLY",
-      "price": 100,
-      "interval": "day",
+      "name": "MONTHLY_ABO",
+      "price": 3500,
+      "interval": "month",
       "intervalCount": 1
     }
   ],
@@ -72,8 +72,8 @@
       "id": "00000000-0000-0000-0007-000000000002",
       "crowdfundingId": "f0000000-0000-0000-0002-000000000001",
       "companyId": "c0000000-0000-0000-0001-000000000002",
-      "name": "ABO_MONTHLY",
-      "paymentMethods": "{STRIPE,POSTFINANCECARD,PAYPAL,PAYMENTSLIP}"
+      "name": "MONTHLY_ABO",
+      "paymentMethods": "{STRIPE}"
     }, {
       "id": "00000000-0000-0000-0007-000000000003",
       "crowdfundingId": "f0000000-0000-0000-0002-000000000001",
