@@ -23,6 +23,7 @@ const placeMilestone = require('./placeMilestone')
 const { document: getDocument } = require('../Commit')
 
 const newsletterEmailSchema = require('@project-r/template-newsletter/lib/email')
+const editorialNewsletterSchema = require('@project-r/styleguide/lib/templates/EditorialNewsletter/email')
 const { renderEmail } = require('mdast-react-render/lib/email')
 
 module.exports = async (
@@ -206,7 +207,11 @@ module.exports = async (
       campaignId = id
       await redis.setAsync(campaignKey, campaignId)
     }
-    const html = renderEmail(content, newsletterEmailSchema)
+
+    const emailSchema = content.meta.template === 'editorialNewsletter'
+      ? editorialNewsletterSchema.default()  // Because styleguide currently doesn't support module.exports
+      : newsletterEmailSchema
+    const html = renderEmail(content, emailSchema)
     const updateResponse = await updateCampaignContent({
       campaignId,
       html
