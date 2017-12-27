@@ -1,4 +1,4 @@
-Republik Backend
+Republik Backend [![Build Status](https://travis-ci.org/orbiting/republik-backend.svg?branch=master)](https://travis-ci.org/orbiting/republik-backend)
 -----------------
 
 This is the successor to [crowdfunding-backend](https://github.com/orbiting/republik-backend) and still under heavy development.

@@ -4609,3 +4609,7 @@ yallist@^2.1.2:
 yallist@^3.0.0, yallist@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-3.0.2.tgz#8452b4bb7e83c7c188d8041c1a837c773d6d8bb9"
+
+zero-fill@^2.2.3:
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/zero-fill/-/zero-fill-2.2.3.tgz#a3def06ba5e39ae644850bb4ca2ad4112b4855e9"

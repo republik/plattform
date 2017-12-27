@@ -3,7 +3,7 @@ dedupe.activate()
 
 const { PORT } = process.env
 
-const Server = require('../../../server')
+const Server = require('../server')
 const sleep = require('await-sleep')
 const { lib: { redis } } = require('@orbiting/backend-modules-base')
 

@@ -1,8 +1,8 @@
-const invoicePaymentSucceeded = require('../lib/payments/stripe/webhooks/invoicePaymentSucceeded')
-const invoicePaymentFailed = require('../lib/payments/stripe/webhooks/invoicePaymentFailed')
-const chargeSucceeded = require('../lib/payments/stripe/webhooks/chargeSucceeded')
-// const chargeRefunded = require('../lib/payments/stripe/webhooks/chargeRefunded')
-const customerSubscription = require('../lib/payments/stripe/webhooks/customerSubscription')
+const invoicePaymentSucceeded = require('../../modules/crowdfundings/lib/payments/stripe/webhooks/invoicePaymentSucceeded')
+const invoicePaymentFailed = require('../../modules/crowdfundings/lib/payments/stripe/webhooks/invoicePaymentFailed')
+const chargeSucceeded = require('../../modules/crowdfundings/lib/payments/stripe/webhooks/chargeSucceeded')
+// const chargeRefunded = require('../../modules/crowdfundings/lib/payments/stripe/webhooks/chargeRefunded')
+const customerSubscription = require('../../modules/crowdfundings/lib/payments/stripe/webhooks/customerSubscription')
 
 const t = (text) => text
 

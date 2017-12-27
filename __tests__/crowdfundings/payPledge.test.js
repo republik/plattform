@@ -1,6 +1,6 @@
 require('dotenv').config({path: '.test.env'})
 const test = require('tape-async')
-const { apolloFetch, connectIfNeeded, pgDatabase } = require('./helpers.js')
+const { apolloFetch, connectIfNeeded, pgDatabase } = require('../helpers.js')
 const { submitPledge } = require('./submitPledge.test.js')
 const {
   createSource,
