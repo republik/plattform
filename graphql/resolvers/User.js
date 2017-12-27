@@ -1,20 +1,94 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
+const { age } = require('../../lib/age')
+const { getKeyId } = require('../../lib/pgp')
+const { getImageUrl } = require('../../lib/convertImage')
 
-const exposeProfileField = key => (user, args, { pgdb, user: me }) => {
+const exposeProfileField = (key, format) => (user, args, { pgdb, user: me }) => {
   if (Roles.userIsMeOrHasProfile(user, me)) {
-    return user._raw[key]
+    return format
+      ? format(user._raw[key], args)
+      : user._raw[key]
   }
   return null
 }
 
+const exposeAccessField = (accessRoleKey, key, format) => (user, args, { pgdb, user: me }) => {
+  if (
+    user._raw[accessRoleKey] === 'public' ||
+    Roles.userIsMeOrInRoles(user, me, [
+      user._raw[accessRoleKey], 'admin', 'supporter'
+    ])
+  ) {
+    return format
+      ? format(user._raw[key])
+      : user._raw[key]
+  }
+  return null
+}
+
+// statement & portrait and related content
+const canAccessBasics = (user, me) => (
+  Roles.userIsMeOrHasProfile(user, me) ||
+  (user._raw.isListed && !user._raw.isAdminUnlisted)
+)
+
 module.exports = {
-  email (user, args, { pgdb, user: me }) {
-    if (user._raw.isEmailPublic || Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
-      return user._raw.email
+  isListed: (user) => user._raw.isListed,
+  isAdminUnlisted (user, args, { user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return user._raw.isAdminUnlisted
+    }
+    return null
+  },
+  statement (user, args, { pgdb, user: me }) {
+    if (canAccessBasics(user, me)) {
+      return user._raw.statement
+    }
+    return null
+  },
+  async sequenceNumber (user, args, { pgdb, user: me }) {
+    if (canAccessBasics(user, me)) {
+      if (user._raw.sequenceNumber) {
+        return user._raw.sequenceNumber
+      }
+      const firstMembership = await pgdb.public.memberships.findFirst({userId: me.id}, {orderBy: ['sequenceNumber asc']})
+      if (firstMembership) {
+        return firstMembership.sequenceNumber
+      }
+    }
+    return null
+  },
+  portrait (user, args, { user: me }) {
+    if (canAccessBasics(user, me)) {
+      const { portraitUrl } = user._raw
+      return portraitUrl
+        ? getImageUrl(portraitUrl, args)
+        : portraitUrl
+    }
+    return null
+  },
+  pgpPublicKey: exposeAccessField('emailAccessRole', 'pgpPublicKey'),
+  pgpPublicKeyId: exposeAccessField('emailAccessRole', 'pgpPublicKey', key => key
+    ? getKeyId(key)
+    : null
+  ),
+  email: exposeAccessField('emailAccessRole', 'email'),
+  emailAccessRole (user, args, { user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return user._raw.emailAccessRole
+    }
+    return null
+  },
+  phoneNumber: exposeAccessField('phoneNumberAccessRole', 'phoneNumber'),
+  phoneNumberNote: exposeAccessField('phoneNumberAccessRole', 'phoneNumberNote'),
+  phoneNumberAccessRole (user, args, { user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return user._raw.phoneNumberAccessRole
     }
     return null
   },
   badges: exposeProfileField('badges'),
+  biography: exposeProfileField('biography'),
   facebookId: exposeProfileField('facebookId'),
   twitterHandle: exposeProfileField('twitterHandle'),
   publicUrl: exposeProfileField('publicUrl'),
@@ -60,11 +134,29 @@ module.exports = {
       })
     }
   },
+  birthday (user, args, { pgdb, user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return user._raw.birthday
+    }
+    return null
+  },
+  age: exposeAccessField('ageAccessRole', 'birthday', dob => dob
+    ? age(dob)
+    : null
+  ),
   async credentials (user, args, { pgdb, user: me }) {
-    if (Roles.userIsMeOrHasProfile(user, me)) {
-      return pgdb.public.credentials.find({
+    const canAccessListed = canAccessBasics(user, me)
+    const canAccessAll = Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])
+    if (canAccessListed || canAccessAll) {
+      // ToDo: optimize for statements (adds 40ms per 100 records)
+      const all = await pgdb.public.credentials.find({
         userId: user.id
       })
+      if (canAccessAll) {
+        return all
+      }
+      const allListed = all.filter(c => c.isListed)
+      return allListed
     }
   },
   async address (user, args, {pgdb, user: me}) {
@@ -78,6 +170,4 @@ module.exports = {
     }
     return null
   }
-  // TODO: Implement memberships
-  // TODO: Implement pledges
 }

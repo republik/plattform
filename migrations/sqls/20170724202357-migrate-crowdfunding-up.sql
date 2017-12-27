@@ -2,13 +2,41 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "citext";
 CREATE EXTENSION IF NOT EXISTS "pg_trgm";
 
+create type "accessRole" as ENUM (
+  'ADMIN',
+  'EDITOR',
+  'MEMBER',
+  'PUBLIC'
+);
+
 ALTER TABLE users
-  ADD COLUMN "facebookId"     text,
-  ADD COLUMN "twitterHandle"  text,
-  ADD COLUMN "publicUrl"      text,
-  ADD COLUMN "isEmailPublic"  boolean not null default false,
-  ADD COLUMN "badges"         jsonb
+  ADD COLUMN "portraitUrl"           text,
+  ADD COLUMN "statement"             text,
+  ADD COLUMN "isListed"              boolean not null default false,
+  ADD COLUMN "isAdminUnlisted"       boolean not null default false,
+  ADD COLUMN "testimonialId"         uuid unique,
+  ADD COLUMN "facebookId"            text,
+  ADD COLUMN "twitterHandle"         text,
+  ADD COLUMN "publicUrl"             text,
+  ADD COLUMN "badges"                jsonb,
+  ADD COLUMN "biography"             text,
+  ADD COLUMN "pgpPublicKey"          text,
+  ADD COLUMN "phoneNumberNote"       text,
+  ADD COLUMN "phoneNumberAccessRole" "accessRole" not null default 'ADMIN',
+  ADD COLUMN "emailAccessRole"       "accessRole" not null default 'ADMIN',
+  ADD COLUMN "ageAccessRole"         "accessRole" not null default 'ADMIN'
 ;
+
+-- carry testimonials images over as portaits
+UPDATE users u
+SET    "portraitUrl"     = t.image,
+       "statement"       = t.quote,
+       "isListed"        = t.published,
+       "isAdminUnlisted" = t."adminUnpublished",
+       "testimonialId"   = t.id
+FROM   testimonials t
+WHERE  u.id = t."userId";
+
 
 CREATE SCHEMA IF NOT EXISTS cf;
 
@@ -56,11 +84,13 @@ create table "credentials" (
   "id"                  uuid primary key not null default uuid_generate_v4(),
   "userId"              uuid not null references "users",
   "description"         text not null,
+  "isListed"            boolean not null default false,
   "verified"            boolean not null default false,
   "createdAt"           timestamptz default now(),
   "updatedAt"           timestamptz default now(),
   UNIQUE("userId", "description")
 );
+CREATE index "credentials_description_idx" on "credentials" using GIN ("description" gin_trgm_ops);
 
 create table "discussionPreferences" (
   "userId"              uuid not null references "users",
@@ -107,6 +137,15 @@ INSERT INTO comments(
   "updatedAt"
 FROM cf.comments;
 
+INSERT INTO
+  credentials("userId", "description", "isListed")
+SELECT
+  "userId", "role", true
+FROM testimonials
+WHERE
+  role is not null;
+
+DROP TABLE testimonials;
 
 -- add companies
 CREATE TABLE companies(

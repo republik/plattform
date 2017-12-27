@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-20T23:53:41.470Z",
+  "updated": "2017-12-26T16:07:02.642Z",
   "title": "live",
   "data": [
     {
@@ -69,6 +69,34 @@
     {
       "key": "api/greeting",
       "value": "Willkommen {name}"
+    },
+    {
+      "key": "api/pgpPublicKey/invalid",
+      "value": "Ungültiger PGP Public Key"
+    },
+    {
+      "key": "api/publicProfile/usernameRequired",
+      "value": "Sie benötigen einen Benutzernamen um ihr Profil zu publizieren"
+    },
+    {
+      "key": "api/publicProfile/usernameNeeded",
+      "value": "Sie benötigen einen Benutzernamen aufgrund ihres öffentlichen Profil"
+    },
+    {
+      "key": "api/testimonial/pledge/required",
+      "value": "Sie müssen uns zuerst unterstützen, bevor Sie ein Testimonial abgeben können."
+    },
+    {
+      "key": "api/statements/maxNodes",
+      "value": "Sie können maximal 100 Statements auf einmal abfragen"
+    },
+    {
+      "key": "profile/statement/tooLong",
+      "value": "Statement, maximal 140 Zeichen"
+    },
+    {
+      "key": "profile/statement/needed",
+      "value": "Ein Statement ist erforderlich"
     }
   ]
 }

@@ -5,18 +5,59 @@ type Credential {
   verified: Boolean!
 }
 
+enum AccessRole {
+  ADMIN
+  EDITOR
+  MEMBER
+  PUBLIC
+}
+
+enum PortraitSize {
+  # 384x384
+  SMALL
+  # 1000x1000
+  SHARE
+  # original, in color
+  # not exposed
+  # ORIGINAL 
+}
+
 extend type User {
   address: Address
-  birthday: Date
-  phoneNumber: String
   credentials: [Credential]!
-  testimonial: Testimonial
+  badges: [Badge]
+  latestComments(limit: Int): [Comment]
+
+  # url to portrait image
+  portrait(size: PortraitSize): String
+
+  birthday: Date
+  ageAccessRole: AccessRole
+  age: Int
+
+  phoneNumber: String
+  phoneNumberNote: String
+  phoneNumberAccessRole: AccessRole
+
+  pgpPublicKey: String
+  pgpPublicKeyId: String
+  emailAccessRole: AccessRole
+
+  biography: String
   facebookId: String
   twitterHandle: String
   publicUrl: String
-  isEmailPublic: Boolean
-  badges: [Badge]
-  latestComments(limit: Int): [Comment]
+
+  statement: String
+  isListed: Boolean!
+  isAdminUnlisted: Boolean
+  sequenceNumber: Int
+}
+
+type UserConnection {
+  totalCount: Int!
+  pageInfo: PageInfo
+  nodes: [User]!
 }
 
 type Address {
@@ -42,27 +83,6 @@ enum Badge {
   PATRON
   STAFF
   FREELANCER
-}
-
-type Testimonial {
-  # This is a plain copy of the crowdfunding testimonial schema.
-  # TODO: Review for improvements, e.g. merging with profilePicture.
-  id: ID!
-  userId: ID!
-  name: String!
-  role: String
-  quote: String
-  video: Video
-  # 384x384 JPEG HTTPS URL
-  image(size: ImageSize): String!
-  smImage: String
-  published: Boolean
-  adminUnpublished: Boolean
-  sequenceNumber: Int
-}
-
-enum ImageSize {
-  SHARE
 }
 
 type Video {

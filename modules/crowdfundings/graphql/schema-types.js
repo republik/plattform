@@ -6,7 +6,6 @@ scalar JSON
 extend type User {
   pledges: [Pledge!]!
   memberships: [Membership!]!
-  testimonial: Testimonial
   paymentSources: [PaymentSource!]!
 }
 

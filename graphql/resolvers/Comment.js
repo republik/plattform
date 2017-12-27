@@ -101,9 +101,7 @@ module.exports = {
       }
     }
 
-    // TODO: Don't load from testimonial image once we have a profileImage on the user.
-    const testimonial = !anonymous && await pgdb.public.testimonials.findOne({userId: commenter.id})
-    const profilePicture = testimonial && testimonial.image
+    const profilePicture = commenter._raw.portraitUrl
 
     const id = crypto
       .createHmac('sha256', DISPLAY_AUTHOR_SECRET)
