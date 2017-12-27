@@ -4,7 +4,7 @@
 // usage
 // node script/db-migrate-all.js [db-migrate args]
 //
-require('dotenv').config()
+require('../lib/env')
 const { dbMigrateAll } = require('@orbiting/backend-modules-scripts')
 
 const migrationDirs = [

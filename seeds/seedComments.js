@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('../lib/env')
 
 /* download comments from reddit
  * https://github.com/not-an-aardvark/snoowrap

@@ -5,9 +5,8 @@
 // usage
 // node seeds/launch/add_launch_data.js
 //
+require('../../lib/env')
 process.on('unhandledRejection', up => { throw up })
-
-require('dotenv').config()
 const { lib: { pgdb: PgDb } } = require('@orbiting/backend-modules-base')
 
 console.log('running add_launch_data.js...')

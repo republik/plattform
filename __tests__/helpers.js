@@ -1,8 +1,4 @@
-const dedupe = require('dynamic-dedupe')
-dedupe.activate()
-
-const { PORT } = process.env
-
+require('../lib/env')
 const Server = require('../server')
 const sleep = require('await-sleep')
 const { lib: { redis } } = require('@orbiting/backend-modules-base')
@@ -13,7 +9,7 @@ const { createApolloFetch } = require('apollo-fetch')
 var server = null
 
 const createLocalApolloFetch = () => {
-  const GRAPHQL_URI = `http://localhost:${PORT}/graphql`
+  const GRAPHQL_URI = `http://localhost:${process.env.PORT}/graphql`
   return createApolloFetch({ uri: GRAPHQL_URI })
 }
 

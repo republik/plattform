@@ -1,4 +1,4 @@
-require('dotenv').config({path: '.test.env'})
+require('../lib/env')
 
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const seed = require('./crowdfundings.json')

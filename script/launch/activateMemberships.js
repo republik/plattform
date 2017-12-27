@@ -6,8 +6,7 @@
  * Usage:
  * node script/activeMemberships.js
  */
-require('dotenv').config()
-
+require('../../lib/env')
 const { lib: { pgdb: PgDb } } = require('@orbiting/backend-modules-base')
 const moment = require('moment')
 

@@ -4,7 +4,7 @@
  * Usage:
  * node script/userBadge.js PATRON sample@email.com [remove]
  */
-require('dotenv').config()
+require('../lib/env')
 
 const { lib: { pgdb: PgDb } } = require('@orbiting/backend-modules-base')
 const Badges = require('../lib/Badges')

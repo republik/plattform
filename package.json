@@ -64,8 +64,8 @@
     "launch:local": "sh script/launch/launch_local.sh",
     "roleUser": "node node_modules/@orbiting/backend-modules-auth/script/roleUser",
     "roleUsers": "node node_modules/@orbiting/backend-modules-auth/script/roleUsers",
-    "test:watch": "yarn run db:reset:test && NODE_ENV=development yarn nodemon --exec tape **/**/*.test.js",
-    "test": "yarn run db:reset:test && yarn tape **/**/*.test.js | faucet"
+    "test:watch": "OVERWRITE_ENV=.test.env yarn run db:reset:test && NODE_ENV=development yarn nodemon --exec tape **/**/*.test.js",
+    "test": "OVERWRITE_ENV=.test.env yarn run db:reset:test && yarn tape **/**/*.test.js | faucet"
   },
   "lint-staged": {
     "*.js": [
