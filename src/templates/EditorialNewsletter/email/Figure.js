@@ -13,7 +13,7 @@ export const Image = ({ src, alt }) =>
       margin: '0px',
       maxWidth: '100% !important'
     }}
-    width='640'
+    width='600'
     src={imageResizeUrl(src, '600x')}
     alt={alt}
   />

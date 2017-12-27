@@ -1,3 +1,3 @@
-import schema from './email'
+import schema from './web'
 
 export default schema

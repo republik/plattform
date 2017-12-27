@@ -3,11 +3,11 @@ import createSchema from '../schema'
 import Container from './Container'
 import Cover, { CoverImage } from './Cover'
 import Center from './Center'
-import Paragraph, { Strong, Em, Link, Br } from './Paragraph'
-import { H2 } from './Headlines'
-import Figure, { Image, Caption, Byline } from './Figure'
-import Blockquote, { BlockquoteText, BlockquoteSource } from './Blockquote'
-import List, { ListItem } from './List'
+import Paragraph, { Strong, Em, Link, Br } from '../email/Paragraph'
+import { H2 } from '../email/Headlines'
+import Figure, { Image, Caption, Byline } from '../email/Figure'
+import Blockquote, { BlockquoteText, BlockquoteSource } from '../email/Blockquote'
+import List, { ListItem } from '../email/List'
 
 export default createSchema({
   Container,
