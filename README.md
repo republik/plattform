@@ -1,4 +1,4 @@
-Republik Backend [![Build Status](https://travis-ci.org/orbiting/republik-backend.svg?branch=master)](https://travis-ci.org/orbiting/republik-backend)
+Republik Backend [![Build Status](https://travis-ci.org/orbiting/republik-backend.svg?branch=master)](https://travis-ci.org/orbiting/republik-backend) [![Coverage Status](https://coveralls.io/repos/github/orbiting/republik-backend/badge.svg?branch=master)](https://coveralls.io/github/orbiting/republik-backend?branch=master)
 -----------------
 
 This is the successor to [crowdfunding-backend](https://github.com/orbiting/republik-backend) and still under heavy development.
