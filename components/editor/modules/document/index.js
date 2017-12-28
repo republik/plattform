@@ -1,5 +1,4 @@
 import { Document as SlateDocument } from 'slate'
-import { timeHour } from 'd3-time'
 import { parse } from '@orbiting/remark-preset'
 
 import MarkdownSerializer from 'slate-mdast-serializer'
@@ -39,7 +38,6 @@ export default ({rule, subModules, TYPE}) => {
       .set('title', title ? title.text : '')
       .set('description', lead ? lead.text : '')
       .set('image', cover.data.get('src'))
-      .set('publishDate', timeHour.ceil(new Date()).toISOString())
 
     return data.equals(newData)
       ? null

@@ -40,7 +40,6 @@ export default ({rule, subModules, TYPE}) => {
     let newData = data
       .set('auto', true)
       .set('feed', true)
-      .set('publishDate', nextHour.toISOString())
 
     const title = titleModule && documentNode.nodes
       .find(n => n.type === titleModule.TYPE && n.kind === 'block')
