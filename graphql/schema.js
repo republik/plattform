@@ -26,6 +26,7 @@ type mutations {
     firstName: String
     lastName: String
     hasPublicProfile: Boolean
+    isListed: Boolean
 
     address: AddressInput
 

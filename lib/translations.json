@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-26T16:07:02.642Z",
+  "updated": "2017-12-28T16:50:27.198Z",
   "title": "live",
   "data": [
     {
@@ -96,7 +96,11 @@
     },
     {
       "key": "profile/statement/needed",
-      "value": "Ein Statement ist erforderlich"
+      "value": "Ein Statement ist erforderlich um auf der Community-Seite angezeigt zu werden"
+    },
+    {
+      "key": "profile/portrait/needed",
+      "value": "Ein Portrait ist erforderlich um auf der Community-Seite angezeigt zu werden"
     }
   ]
 }

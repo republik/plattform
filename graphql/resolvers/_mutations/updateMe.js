@@ -62,12 +62,18 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
       throw new Error(t('profile/statement/tooLong'))
     }
   }
-  if (isListed || (isListed === undefined && me.isListed)) {
+  if (isListed || (isListed === undefined && me._raw.isListed)) {
     if (
       !(statement && statement.trim()) &&
-      !(statement === undefined && me.statement && me.statement.trim())
+      !(statement === undefined && me._raw.statement && me._raw.statement.trim())
     ) {
       throw new Error(t('profile/statement/needed'))
+    }
+    if (
+      !portrait &&
+      !(portrait === undefined && me._raw.portraitUrl)
+    ) {
+      throw new Error(t('profile/portrait/needed'))
     }
   }
 

@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-24T17:17:58.485Z",
+  "updated": "2017-12-26T16:31:46.340Z",
   "title": "live",
   "data": [
     {
@@ -28,11 +28,11 @@
     },
     {
       "key": "api/membership/monthly/hasActive",
-      "value": "Sie können leider keine monats-Mitgliedschaft kaufen, da sie bereits eine aktive Mitgliedschaft besitzen."
+      "value": "Sie können leider kein Monatsabo kaufen, da sie bereits eine aktive Mitgliedschaft besitzen."
     },
     {
       "key": "api/membership/monthly/reactivate",
-      "value": "Sie können nicht noch einmal ein Monatsabo kaufen. Bitte verlängern sie Ihre Mitgliedschaft stattdessen."
+      "value": "Sie können nicht noch einmal ein Monatsabo kaufen. Bitte verlängern sie Ihr Abo stattdessen."
     },
     {
       "key": "api/membership/cancel/isInactive",
