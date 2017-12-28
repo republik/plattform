@@ -41,6 +41,7 @@ type mutations {
     pgpPublicKey: String
     emailAccessRole: AccessRole
 
+    statement: String
     biography: String
     facebookId: String
     twitterHandle: String
