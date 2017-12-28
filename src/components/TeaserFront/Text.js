@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { dUp } from './mediaQueries'
+import { tUp } from './mediaQueries'
 import colors from '../../theme/colors'
 
 const TEXT_PADDING = 50
@@ -13,7 +13,7 @@ const positionDefault = {
 
 const styles = {
   rootPosition: css({
-    [dUp]: {
+    [tUp]: {
       position: 'absolute',
       left: 0,
       top: 0,
@@ -25,28 +25,28 @@ const styles = {
     position: 'relative'
   }),
   topleft: css({
-    [dUp]: {
+    [tUp]: {
       ...positionDefault,
       left: `${TEXT_PADDING}px`,
       top: `${TEXT_PADDING}px`
     }
   }),
   topright: css({
-    [dUp]: {
+    [tUp]: {
       ...positionDefault,
       left: '50%',
       top: `${TEXT_PADDING}px`
     }
   }),
   bottomleft: css({
-    [dUp]: {
+    [tUp]: {
       ...positionDefault,
       left: `${TEXT_PADDING}px`,
       top: '50%'
     }
   }),
   bottomright: css({
-    [dUp]: {
+    [tUp]: {
       ...positionDefault,
       left: '50%',
       top: '50%'

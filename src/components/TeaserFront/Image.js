@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { mUp, dUp } from './mediaQueries'
+import { mUp, tUp } from './mediaQueries'
 import { FigureImage } from '../Figure'
 import Text from './Text'
 
@@ -10,16 +10,16 @@ const styles = {
     position: 'relative',
     lineHeight: 0,
     margin: 0,
-    [dUp]: {
+    [tUp]: {
       background: 'none'
     }
   }),
   textContainer: css({
-    padding: '15px',
+    padding: '15px 15px 30px 15px',
     [mUp]: {
       padding: '40px 15% 70px 15%'
     },
-    [dUp]: {
+    [tUp]: {
       padding: 0
     }
   })
