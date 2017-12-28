@@ -2,7 +2,10 @@ const crypto = require('crypto')
 const {
   ensureSignedIn, checkUsername, transformUser
 } = require('@orbiting/backend-modules-auth')
-const { getKeyId } = require('../../../lib/pgp')
+const {
+  getKeyId,
+  containsPrivateKey
+} = require('../../../lib/pgp')
 const { isEligible } = require('../../../lib/profile')
 
 const convertImage = require('../../../lib/convertImage')
@@ -145,6 +148,9 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
     throw new Error(t('api/publicProfile/usernameNeeded'))
   }
   if (pgpPublicKey) {
+    if (containsPrivateKey(pgpPublicKey)) {
+      throw new Error(t('api/pgpPublicKey/private'))
+    }
     if (!getKeyId(pgpPublicKey)) {
       throw new Error(t('api/pgpPublicKey/invalid'))
     }

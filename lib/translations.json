@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-28T18:15:15.208Z",
+  "updated": "2017-12-28T22:43:51.860Z",
   "title": "live",
   "data": [
     {
@@ -73,6 +73,10 @@
     {
       "key": "api/pgpPublicKey/invalid",
       "value": "Ungültiger PGP Public Key"
+    },
+    {
+      "key": "api/pgpPublicKey/private",
+      "value": "Dies ist ein privater PGP key, diesen sollten Sie nie auf eine Webseite hochladen. Bitte geben Sie einen public key an."
     },
     {
       "key": "api/publicProfile/usernameRequired",
