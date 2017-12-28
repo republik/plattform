@@ -27,6 +27,7 @@ extend type User {
   credentials: [Credential]!
   badges: [Badge]
   latestComments(limit: Int): [Comment]
+  isEligibleForProfile: Boolean
 
   # url to portrait image
   portrait(size: PortraitSize): String

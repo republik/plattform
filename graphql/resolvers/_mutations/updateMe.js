@@ -3,6 +3,7 @@ const {
   ensureSignedIn, checkUsername, transformUser
 } = require('@orbiting/backend-modules-auth')
 const { getKeyId } = require('../../../lib/pgp')
+const { isEligible } = require('../../../lib/profile')
 
 const convertImage = require('../../../lib/convertImage')
 const uploadExoscale = require('../../../lib/uploadExoscale')
@@ -57,17 +58,33 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
     ? null
     : undefined
 
+  if (
+    (isListed && !me._raw.isListed) ||
+    (args.hasPublicProfile && !me.hasPublicProfile)
+  ) {
+    const check = await isEligible(me.id, pgdb)
+    if (!check) {
+      throw new Error(t('profile/notEligible'))
+    }
+  }
+
   if (statement) {
     if (statement.length > MAX_STATEMENT_LENGTH) {
       throw new Error(t('profile/statement/tooLong'))
     }
   }
-  if (isListed || (isListed === undefined && me.isListed)) {
+  if (isListed || (isListed === undefined && me._raw.isListed)) {
     if (
       !(statement && statement.trim()) &&
-      !(statement === undefined && me.statement && me.statement.trim())
+      !(statement === undefined && me._raw.statement && me._raw.statement.trim())
     ) {
       throw new Error(t('profile/statement/needed'))
+    }
+    if (
+      !portrait &&
+      !(portrait === undefined && me._raw.portraitUrl)
+    ) {
+      throw new Error(t('profile/portrait/needed'))
     }
   }
 
@@ -117,7 +134,7 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
   if (username !== undefined && username !== null) {
     await checkUsername(username, me, pgdb)
   }
-  if (args.hasPublicProfile && !username && !me.username) {
+  if (args.hasPublicProfile && !username && (!me.username || username === null)) {
     throw new Error(t('api/publicProfile/usernameRequired'))
   }
   if (
