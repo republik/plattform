@@ -71,9 +71,9 @@
     redis "^2.8.0"
     subscriptions-transport-ws "^0.9.2"
 
-"@orbiting/backend-modules-documents@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-1.1.0.tgz#599e3c64f208519edfe133e786969bd7a1cfed48"
+"@orbiting/backend-modules-documents@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-1.1.1.tgz#bd600f6d2d45f73b39f49b3026e50c5b0ba33fd4"
   dependencies:
     "@orbiting/backend-modules-auth" "^2.2.0"
     apollo-modules-node "^0.1.1"
