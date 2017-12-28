@@ -15,10 +15,10 @@ const styles = {
     padding: '15px',
     [mUp]: {
       maxWidth: `${MAX_WIDTH_PERCENT}%`,
-      padding: '30px 0'
+      padding: '60px 0 80px 0'
     },
     [tUp]: {
-      padding: '50px 0'
+      padding: '80px 0 100px 0'
     }
   })
 }
