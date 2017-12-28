@@ -79,7 +79,7 @@
     "coveralls": "^3.0.0",
     "gsheets": "^2.0.0",
     "husky": "^0.14.3",
-    "istanbul": "^0.4.5",
+    "istanbul": "^1.1.0-alpha.1",
     "lint-staged": "^4.3.0",
     "nodemon": "^1.12.1",
     "snoowrap": "^1.14.2",
