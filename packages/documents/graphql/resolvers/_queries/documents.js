@@ -1,5 +1,7 @@
 const { descending } = require('d3-array')
 const visit = require('unist-util-visit')
+const isUUID = require('is-uuid')
+const debug = require('debug')('documents')
 const {
   Roles: {
     userHasRole,
@@ -61,7 +63,11 @@ module.exports = async (_, args, { user, redis, pgdb }) => {
           const info = extractUserUrl(node.url)
           if (info) {
             node.url = info.path
-            userIds.push(info.id)
+            if(isUUID.v4(info.id)) {
+              userIds.push(info.id)
+            } else {
+              debug('documents found nonUUID %s in repo %s', info.id, doc.repoId)
+            }
           }
         })
       })
