@@ -62,7 +62,7 @@
     "launch:local": "sh script/launch/launch_local.sh",
     "roleUser": "node node_modules/@orbiting/backend-modules-auth/script/roleUser",
     "roleUsers": "node node_modules/@orbiting/backend-modules-auth/script/roleUsers",
-    "test:prepare": "dropdb --if-exists republik-test && createdb republik-test && NODE_ENV=development OVERWRITE_ENV=.test.env yarn run db:reset",
+    "test:prepare": "dropdb --if-exists republik-test && createdb republik-test && NODE_ENV=development OVERWRITE_ENV=.test.env yarn run db:reset:seed",
     "test:travis": "yarn run test:prepare && FORCE_TEST_END=true istanbul cover tape \"__tests__/**/*.test.js\" --report lcovonly && cat ./coverage/lcov.info | coveralls",
     "test:watch": "yarn run test:prepare && NODE_ENV=development OVERWRITE_ENV=.test.env nodemon --exec 'tape \"__tests__/**/*.test.js\"' | tap-diff",
     "test": "yarn run test:prepare && NODE_ENV=development OVERWRITE_ENV=.test.env FORCE_TEST_END=true istanbul cover tape \"__tests__/**/*.test.js\" | tap-diff"
