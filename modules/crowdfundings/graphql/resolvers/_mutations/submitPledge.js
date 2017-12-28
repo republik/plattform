@@ -33,7 +33,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
         logger.error('options must all be part of the same package!', { req: req._log(), args, plo, pko })
         throw new Error(t('api/unexpected'))
       }
-      if (!(pko.minAmount <= plo.amount <= pko.maxAmount)) {
+      if (!(pko.minAmount <= plo.amount && plo.amount <= pko.maxAmount)) {
         logger.error(`amount in option (templateId: ${plo.templateId}) out of range`, { req: req._log(), args, pko, plo })
         throw new Error(t('api/unexpected'))
       }

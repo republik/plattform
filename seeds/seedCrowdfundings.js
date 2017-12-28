@@ -1,6 +1,6 @@
 require('../lib/env')
 
-const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
+const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const seed = require('./crowdfundings.json')
 
 const gracefulUpsert = (table) => async (data) => {
