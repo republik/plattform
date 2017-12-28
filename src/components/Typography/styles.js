@@ -166,7 +166,7 @@ export const sansSerifRegular16 = {
 export const sansSerifRegular15 = {
   fontFamily: fontFamilies.sansSerifRegular,
   fontSize: 15,
-  lineHeight: '24px'
+  lineHeight: '21px'
 }
 export const sansSerifRegular14 = {
   fontFamily: fontFamilies.sansSerifRegular,
