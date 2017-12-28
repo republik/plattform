@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-28T17:36:37.801Z",
+  "updated": "2017-12-28T18:15:15.208Z",
   "title": "live",
   "data": [
     {
@@ -100,7 +100,7 @@
     },
     {
       "key": "profile/notEligible",
-      "value": "Sie müssen uns zuerst unterstützen, bevor Sie ein Profil anlegen können."
+      "value": "Sie müssen uns zuerst unterstützen, bevor Sie ein Profil veröffentlichen können."
     }
   ]
 }
