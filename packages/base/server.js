@@ -108,8 +108,8 @@ module.exports.close = () => {
   httpServer = null
   subscriptionServer = null
   // TODO server leaks timers, force teardown for now
-  console.info('exiting server in 30s')
+  console.info('forced server shutdown in 15s max')
   setTimeout(() => {
     process.exit(0)
-  }, 30000)
+  }, 15000)
 }
