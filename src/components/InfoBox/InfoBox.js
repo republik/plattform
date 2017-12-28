@@ -48,6 +48,17 @@ const figureChildStyles = Object.keys(IMAGE_SIZES).reduce((styles, key) => {
       float: 'left',
       margin: '10px 15px 5px 0',
       width: '99px'
+    },
+    // Micro clearfix hack to avoid surrounding text floating into info boxes
+    // with image and very short text.
+    '&::before': {
+      content: ' ',
+      display: 'table'
+    },
+    '&::after': {
+      content: ' ',
+      display: 'table',
+      clear: 'both'
     }
   })
 })
