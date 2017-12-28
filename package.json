@@ -9,11 +9,11 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "@orbiting/backend-modules-auth": "^2.2.1",
-    "@orbiting/backend-modules-base": "^0.3.0",
+    "@orbiting/backend-modules-base": "^0.3.1",
     "@orbiting/backend-modules-documents": "^1.1.0",
     "@orbiting/backend-modules-mail": "^0.1.0",
     "@orbiting/backend-modules-scalars": "^0.0.4",
-    "@orbiting/backend-modules-scripts": "^1.0.0",
+    "@orbiting/backend-modules-scripts": "^1.0.1",
     "@orbiting/backend-modules-translate": "^0.0.0",
     "@slack/client": "^3.14.2",
     "apollo-modules-node": "^0.1.1",
@@ -63,9 +63,9 @@
     "roleUser": "node node_modules/@orbiting/backend-modules-auth/script/roleUser",
     "roleUsers": "node node_modules/@orbiting/backend-modules-auth/script/roleUsers",
     "test:prepare": "OVERWRITE_ENV=.test.env dropdb --if-exists republik-test && createdb republik-test && yarn run db:reset",
-    "test:travis": "yarn run test:prepare && yarn istanbul cover tape \"__tests__/**/*.test.js\" --report lcovonly && cat ./coverage/lcov.info | coveralls",
-    "test:watch": "OVERWRITE_ENV=.test.env yarn run test:prepare && NODE_ENV=development yarn nodemon --exec tape \"__tests__/**/*.test.js\"",
-    "test": "OVERWRITE_ENV=.test.env yarn run test:prepare && istanbul cover tape \"__tests__/**/*.test.js\""
+    "test:travis": "yarn run test:prepare && FORCE_TEST_END=true istanbul cover tape \"__tests__/**/*.test.js\" --report lcovonly && cat ./coverage/lcov.info | coveralls",
+    "test:watch": "OVERWRITE_ENV=.test.env yarn run test:prepare && NODE_ENV=development nodemon --exec 'tape \"__tests__/**/*.test.js\"' | tap-diff",
+    "test": "OVERWRITE_ENV=.test.env yarn run test:prepare && FORCE_TEST_END=true istanbul cover tape \"__tests__/**/*.test.js\" | tap-diff"
   },
   "lint-staged": {
     "*.js": [
@@ -84,6 +84,7 @@
     "nodemon": "^1.12.1",
     "snoowrap": "^1.14.2",
     "standard": "^10.0.3",
+    "tap-diff": "^0.1.1",
     "tape-async": "https://github.com/orbiting/tape-async",
     "zero-fill": "^2.2.3"
   }
