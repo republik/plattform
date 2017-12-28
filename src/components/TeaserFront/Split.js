@@ -17,7 +17,8 @@ const styles = {
   }),
   containerPortrait: css({
     [mUp]: {
-      padding: 0
+      padding: 0,
+      alignItems: 'flex-start'
     }
   }),
   content: css({
@@ -39,7 +40,7 @@ const styles = {
       width: '60%',
     },
     [dUp]: {
-      padding: '5% 5% 5% 10%'
+      padding: '5%'
     }
   }),
   imageContainer: css({
