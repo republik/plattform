@@ -18,12 +18,12 @@ export const phases = [
   {
     key: 'proofReading',
     color: 'HotPink',
-    milestones: ['numbersOk', 'imagesOk', 'startProofReading']
+    milestones: ['startProofReading']
   },
   {
     key: 'finalControl',
     color: 'Fuchsia',
-    milestones: ['factCheckOk', 'proofReadingOk']
+    milestones: ['numbersOk', 'imagesOk', 'factCheckOk', 'proofReadingOk']
   },
   {
     key: 'ready',
