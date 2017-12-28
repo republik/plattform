@@ -2,6 +2,7 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const { age } = require('../../lib/age')
 const { getKeyId } = require('../../lib/pgp')
 const { getImageUrl } = require('../../lib/convertImage')
+const { isEligible } = require('../../lib/profile')
 
 const exposeProfileField = (key, format) => (user, args, { pgdb, user: me }) => {
   if (Roles.userIsMeOrHasProfile(user, me)) {
@@ -41,7 +42,13 @@ module.exports = {
     }
     return null
   },
-  statement (user, args, { pgdb, user: me }) {
+  isEligibleForProfile (user, args, { user: me, pgdb }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return isEligible(user.id, pgdb)
+    }
+    return null
+  },
+  statement (user, args, { user: me }) {
     if (canAccessBasics(user, me)) {
       return user._raw.statement
     }
@@ -135,7 +142,7 @@ module.exports = {
       })
     }
   },
-  birthday (user, args, { pgdb, user: me }) {
+  birthday (user, args, { user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return user._raw.birthday
     }

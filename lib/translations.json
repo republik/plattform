@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-28T16:50:27.198Z",
+  "updated": "2017-12-28T17:36:37.801Z",
   "title": "live",
   "data": [
     {
@@ -83,10 +83,6 @@
       "value": "Sie benötigen einen Benutzernamen aufgrund ihres öffentlichen Profil"
     },
     {
-      "key": "api/testimonial/pledge/required",
-      "value": "Sie müssen uns zuerst unterstützen, bevor Sie ein Testimonial abgeben können."
-    },
-    {
       "key": "api/statements/maxNodes",
       "value": "Sie können maximal 100 Statements auf einmal abfragen"
     },
@@ -101,6 +97,10 @@
     {
       "key": "profile/portrait/needed",
       "value": "Ein Portrait ist erforderlich um auf der Community-Seite angezeigt zu werden"
+    },
+    {
+      "key": "profile/notEligible",
+      "value": "Sie müssen uns zuerst unterstützen, bevor Sie ein Profil anlegen können."
     }
   ]
 }

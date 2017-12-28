@@ -3,6 +3,7 @@ const {
   ensureSignedIn, checkUsername, transformUser
 } = require('@orbiting/backend-modules-auth')
 const { getKeyId } = require('../../../lib/pgp')
+const { isEligible } = require('../../../lib/profile')
 
 const convertImage = require('../../../lib/convertImage')
 const uploadExoscale = require('../../../lib/uploadExoscale')
@@ -56,6 +57,16 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
   let portraitUrl = portrait === null
     ? null
     : undefined
+
+  if (
+    (isListed && !me._raw.isListed) ||
+    (args.hasPublicProfile && !me.hasPublicProfile)
+  ) {
+    const check = await isEligible(me.id, pgdb)
+    if (!check) {
+      throw new Error(t('profile/notEligible'))
+    }
+  }
 
   if (statement) {
     if (statement.length > MAX_STATEMENT_LENGTH) {
