@@ -15,7 +15,7 @@ const exposeProfileField = (key, format) => (user, args, { pgdb, user: me }) => 
 
 const exposeAccessField = (accessRoleKey, key, format) => (user, args, { pgdb, user: me }) => {
   if (
-    user._raw[accessRoleKey] === 'public' ||
+    user._raw[accessRoleKey] === 'PUBLIC' ||
     Roles.userIsMeOrInRoles(user, me, [
       user._raw[accessRoleKey].toLowerCase(),
       'admin', 'supporter'
