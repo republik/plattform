@@ -176,20 +176,6 @@ test('pledge with PATRON and 1 x SWEETS (minAmount = 2) is not possible', async 
   t.end()
 })
 
-test('pledge with PATRON and no SWEETS (minAmount = 2) is not possible', async (t) => {
-  await prepare()
-  const result = await submitPledge({
-    'total': 103000,
-    'options': [{
-      'amount': 1,
-      'price': 100000,
-      'templateId': '00000000-0000-0000-0008-000000000003'
-    }]
-  })
-  t.ok(result.errors, 'mandatory package option does not exist, no pledge')
-  t.end()
-})
-
 test('pledge with PATRON package (userPrice = false) and a total that is lower than the price is not possible', async (t) => {
   await prepare()
   const result = await submitPledge({
