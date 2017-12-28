@@ -123,7 +123,7 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
   if (username !== undefined && username !== null) {
     await checkUsername(username, me, pgdb)
   }
-  if (args.hasPublicProfile && !username && !me.username) {
+  if (args.hasPublicProfile && !username && (!me.username || username === null)) {
     throw new Error(t('api/publicProfile/usernameRequired'))
   }
   if (
