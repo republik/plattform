@@ -9,7 +9,9 @@ const {
 module.exports = async (pgdb) => {
   const accountNames = [
     STRIPE_PLATFORM,
-    ...STRIPE_CONNECTED_ACCOUNTS.split(',')
+    ...STRIPE_CONNECTED_ACCOUNTS
+      ? STRIPE_CONNECTED_ACCOUNTS.split(',')
+      : { }
   ]
 
   const companies = await pgdb.public.companies.find({
