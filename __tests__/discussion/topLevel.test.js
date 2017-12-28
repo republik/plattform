@@ -17,11 +17,9 @@ const prepare = async () => {
     pgdb.public.users.truncate({ cascade: true })
   ])
   const users = getUsers(10)
-  await Promise.all([
-    pgdb.public.users.insert(users),
-    pgdb.public.discussions.insert(discussion1),
-    pgdb.public.comments.insert(commentsTopLevel)
-  ])
+  await pgdb.public.users.insert(users)
+  await pgdb.public.discussions.insert(discussion1)
+  await pgdb.public.comments.insert(commentsTopLevel)
 }
 
 const getIdsString = arr => arr
