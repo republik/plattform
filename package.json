@@ -27,7 +27,6 @@
     "dotenv": "^4.0.0",
     "dynamic-dedupe": "^0.3.0",
     "emojione_minimal": "^2.1.2",
-    "faucet": "^0.0.1",
     "graphql": "^0.11.7",
     "graphql-fields": "^1.0.2",
     "graphql-tools": "https://github.com/orbiting/graphql-tools.git#upstream",
@@ -63,10 +62,10 @@
     "launch:local": "sh script/launch/launch_local.sh",
     "roleUser": "node node_modules/@orbiting/backend-modules-auth/script/roleUser",
     "roleUsers": "node node_modules/@orbiting/backend-modules-auth/script/roleUsers",
-    "test:travis": "yarn run test:prepare && yarn istanbul cover tape **/**/*.test.js --report lcovonly && cat ./coverage/lcov.info | coveralls",
     "test:prepare": "OVERWRITE_ENV=.test.env dropdb --if-exists republik-test && createdb republik-test && yarn run db:reset",
-    "test:watch": "OVERWRITE_ENV=.test.env yarn run test:prepare && NODE_ENV=development yarn nodemon --exec tape **/**/*.test.js",
-    "test": "OVERWRITE_ENV=.test.env yarn run test:prepare && yarn tape **/**/*.test.js | faucet"
+    "test:travis": "yarn run test:prepare && yarn istanbul cover tape \"__tests__/**/*.test.js\" --report lcovonly && cat ./coverage/lcov.info | coveralls",
+    "test:watch": "OVERWRITE_ENV=.test.env yarn run test:prepare && NODE_ENV=development yarn nodemon --exec tape \"__tests__/**/*.test.js\"",
+    "test": "OVERWRITE_ENV=.test.env yarn run test:prepare && istanbul cover tape \"__tests__/**/*.test.js\""
   },
   "lint-staged": {
     "*.js": [
@@ -78,7 +77,6 @@
     "apollo-fetch": "^0.7.0",
     "child-process-promise": "^2.2.1",
     "coveralls": "^3.0.0",
-    "faucet": "^0.0.1",
     "gsheets": "^2.0.0",
     "husky": "^0.14.3",
     "istanbul": "^0.4.5",
@@ -86,7 +84,7 @@
     "nodemon": "^1.12.1",
     "snoowrap": "^1.14.2",
     "standard": "^10.0.3",
-    "tape-async": "^2.3.0",
+    "tape-async": "https://github.com/orbiting/tape-async",
     "zero-fill": "^2.2.3"
   }
 }
