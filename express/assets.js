@@ -73,7 +73,7 @@ module.exports = (server) => {
       if (isJPEG) {
         image = image.jpeg({
           progressive: true,
-          quality: 90
+          quality: 80
         })
       }
       return res.end(await image.toBuffer())
