@@ -157,7 +157,6 @@ type YoutubeEmbed implements Embed {
   userName: String!
   thumbnail: String!
   title: String!
-  userName: String!
   userProfileImageUrl: String
   aspectRatio: Float
 }
@@ -177,7 +176,6 @@ type VimeoEmbed implements Embed {
   userName: String!
   thumbnail: String!
   title: String!
-  userName: String!
   userProfileImageUrl: String
   aspectRatio: Float,
   src: VimeoSrc
