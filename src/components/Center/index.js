@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 
 export const PADDING = 20
 
-export const MAX_WIDTH = 625
+export const MAX_WIDTH = 665
 // iPhone Plus, for max image sizes
 export const MAX_WIDTH_MOBILE = 414 - PADDING * 2
 

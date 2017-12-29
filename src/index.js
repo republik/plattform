@@ -36,7 +36,7 @@ ReactDOM.render(
     theme={theme}
     useBrowserHistory
     responsiveSizes={[
-      {name: 'Desktop large', width: 1045, height: 800},
+      {name: 'Desktop large', width: 1095, height: 800},
       {name: 'Desktop small', width: 800, height: 600},
       {name: 'Mobile', width: 320, height: 480}
     ]}
