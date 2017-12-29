@@ -36,7 +36,7 @@ const styles = {
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '8% 0'
+      padding: '60px 0'
     }
   }),
   textContainer: css({

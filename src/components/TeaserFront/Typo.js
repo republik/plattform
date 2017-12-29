@@ -12,7 +12,7 @@ const styles = {
   }),
   textContainer: css({
     margin: '0 auto',
-    padding: '15px',
+    padding: '15px 15px 40px 15px',
     [mUp]: {
       maxWidth: `${MAX_WIDTH_PERCENT}%`,
       padding: '60px 0 80px 0'

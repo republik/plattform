@@ -12,7 +12,7 @@ const styles = {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '8% 5%'
+      padding: '70px 5%'
     }
   }),
   containerPortrait: css({
@@ -36,11 +36,11 @@ const styles = {
   contentPortrait: css({
     padding: '15px 15px 45px 15px',
     [mUp]: {
-      padding: '5%',
+      padding: '40px 5%',
       width: '60%',
     },
     [dUp]: {
-      padding: '5%'
+      padding: '40px 5%'
     }
   }),
   imageContainer: css({
