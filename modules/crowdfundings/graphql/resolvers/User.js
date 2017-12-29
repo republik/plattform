@@ -10,7 +10,7 @@ module.exports = {
   },
   async pledges (user, args, {pgdb, user: me}) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'accountant'])) {
-      return pgdb.public.pledges.find({userId: user.id})
+      return pgdb.public.pledges.find({userId: user.id}, {orderBy: ['createdAt desc']})
     }
     return []
   },
