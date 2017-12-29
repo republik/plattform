@@ -2,14 +2,17 @@
 // This script syncs redis with the status quo on github.
 //
 // usage
-// ❯ node script/pullRedis.js --noflush
+// node script/pullRedis.js --noflush
 //
 
 require('dotenv').config()
 
 const { lib: { redis } } = require('@orbiting/backend-modules-base')
 const getRepos = require('../graphql/resolvers/_queries/repos')
-const { latestPublications: getLatestPublications } = require('../graphql/resolvers/Repo')
+const {
+  latestPublications: getLatestPublications,
+  meta: getRepoMeta
+} = require('../graphql/resolvers/Repo')
 const { document: getDocument } = require('../graphql/resolvers/Commit')
 const {
   redlock,
@@ -50,11 +53,18 @@ Promise.resolve().then(async () => {
     let redisOps = []
 
     for (let publications of allLatestPublications) {
+      const repo = repos.nodes.find(r => r.id === publications[0].repo.id)
       redisOps.push(
-        redis.saddAsync('repos:ids', publications[0].repo.id)
+        redis.saddAsync('repos:ids', repo.id)
       )
+      const meta = await getRepoMeta(repo)
+      if (meta && meta.mailchimpCampaignId) {
+        redisOps.push(
+          redis.saddAsync(`repos:${repo.id}/mailchimp/campaignId`, meta.mailchimpCampaignId)
+        )
+      }
       for (let publication of publications) {
-        const { repo, commit, sha, meta: { scheduledAt: _scheduledAt } } = publication
+        const { commit, sha, meta: { scheduledAt: _scheduledAt } } = publication
 
         const doc = await getDocument(
           { id: commit.id, repo },

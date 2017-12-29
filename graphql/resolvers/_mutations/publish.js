@@ -21,6 +21,8 @@ const {
 
 const placeMilestone = require('./placeMilestone')
 const { document: getDocument } = require('../Commit')
+const editRepoMeta = require('./editRepoMeta')
+const { meta: getRepoMeta } = require('../Repo')
 
 const newsletterEmailSchema = require('@project-r/template-newsletter/lib/email')
 const editorialNewsletterSchema = require('@project-r/styleguide/lib/templates/EditorialNewsletter/email')
@@ -192,6 +194,12 @@ module.exports = async (
     }
     const campaignKey = `repos:${repoId}/mailchimp/campaignId`
     let campaignId = await redis.getAsync(campaignKey)
+    if (!campaignId) {
+      const meta = await getRepoMeta({ id: repoId })
+      if (meta && meta.mailchimpCampaignId) {
+        campaignId = meta.mailchimpCampaignId
+      }
+    }
     if (campaignId) {
       const { status } = await getCampaign({ id: campaignId })
       if (status === 404) {
@@ -206,6 +214,7 @@ module.exports = async (
       }
       campaignId = id
       await redis.setAsync(campaignKey, campaignId)
+      await editRepoMeta(null, { mailchimpCampaignId: campaignId }, { user, t, pubsub })
     }
 
     const emailSchema = content.meta.template === 'editorialNewsletter'
