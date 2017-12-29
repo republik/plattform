@@ -179,7 +179,7 @@ module.exports = {
         repo.id,
         'meta'
       )
-      message = tag.message
+      message = tag && tag.message
     }
     if (!message || message.length === 0) {
       return {}
