@@ -33,7 +33,9 @@ module.exports = {
         isDefault: source.id === stripeCustomer.default_source,
         status: source.status.toUpperCase(),
         brand: source.card.brand,
-        last4: source.card.last4
+        last4: source.card.last4,
+        expMonth: source.card.exp_month,
+        expYear: source.card.exp_year
       }))
     }
     return []

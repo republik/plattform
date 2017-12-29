@@ -222,6 +222,8 @@ type PaymentSource {
   status: PaymentSourceStatus!
   brand: String!
   last4: String!
+  expMonth: Int!
+  expYear: Int!
 }
 
 ######################################
