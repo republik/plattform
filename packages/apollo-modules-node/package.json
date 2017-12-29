@@ -16,10 +16,10 @@
     "link": "yarn link"
   },
   "devDependencies": {
-    "graphql": "^0.11.7"
+    "graphql": "^0.12.3"
   },
   "peerDependencies": {
-    "graphql": "^0.11.7"
+    "graphql": "^0.12.3"
   },
   "dependencies": {
     "lodash.merge": "^4.6.0",
