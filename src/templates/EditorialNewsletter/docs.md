@@ -86,7 +86,7 @@ At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergr
 import schema from '@project-r/styleguide/lib/templates/EditorialNewsletter/web'
 ```
 
-The web schema reuses most of the email components, but uses web-specific container components without table layout.
+The web schema reuses most of the email components, but uses web-specific container components without table layout and without header and footer.
 
 ### With cover image
 

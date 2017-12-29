@@ -1,6 +1,5 @@
 import React from 'react'
 import { css } from 'glamor'
-import Header from './Header'
 
 const styles = {
   container: {
@@ -17,7 +16,6 @@ const styles = {
 
 export default ({ children, attributes = {} }) => (
   <div {...css(styles.container)} {...attributes}>
-    <Header />
     {children}
   </div>
 )
