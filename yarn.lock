@@ -280,6 +280,13 @@ apollo-modules-node@^0.1.1:
     lodash.merge "^4.6.0"
     lodash.pickby "^4.6.0"
 
+apollo-modules-node@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/apollo-modules-node/-/apollo-modules-node-0.1.2.tgz#b8b267fbc654cf5c6c478b8b8d8340d3633a2593"
+  dependencies:
+    lodash.merge "^4.6.0"
+    lodash.pickby "^4.6.0"
+
 apollo-server-core@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/apollo-server-core/-/apollo-server-core-1.2.0.tgz#e851c47444991b6f89f88529237076b83e01e8ee"
