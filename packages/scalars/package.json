@@ -1,6 +1,6 @@
 {
   "name": "@orbiting/backend-modules-scalars",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "common graphql scalars: JSON, Date, DateTime",
   "main": "index.js",
   "repository": {
