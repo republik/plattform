@@ -38,6 +38,7 @@ type RepoMeta {
   creationDeadline: DateTime
   productionDeadline: DateTime
   briefingUrl: String
+  publishDate: Date
 }
 
 input RepoOrderBy {
