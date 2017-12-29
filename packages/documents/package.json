@@ -23,8 +23,8 @@
     "isomorphic-unfetch": "^2.0.0"
   },
   "dependencies": {
-    "@orbiting/backend-modules-auth": "^2.2.0",
-    "apollo-modules-node": "^0.1.1",
+    "@orbiting/backend-modules-auth": "^2.2.3",
+    "apollo-modules-node": "^0.1.4",
     "check-env": "^1.3.0",
     "d3-array": "^1.2.1",
     "unist-util-visit": "^1.3.0"
