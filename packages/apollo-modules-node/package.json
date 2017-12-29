@@ -1,6 +1,6 @@
 {
   "name": "apollo-modules-node",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "bundles in(ter)dependent graphql schemas and resolvers from directories by convention",
   "main": "index.js",
   "repository": {
