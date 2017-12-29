@@ -84,7 +84,7 @@ const _addTypes = (master, donor) => {
     ...master,
     schemaTypes: mergedSchemaTypes,
     typeDefs: [...master.schema, ...mergedSchemaTypes],
-    resolvers: _.merge(master.resolvers, donor.typeResolvers)
+    resolvers: _.merge(donor.resolvers, master.typeResolvers)
   }
 }
 
@@ -128,9 +128,9 @@ const _merge = (module1, module2) => {
     typeDefs: [newSchema, ...newModule.schemaTypes],
     resolvers: {
       ...newModule.resolvers,
-      queries: _.merge(module1.resolvers.queries, module2.resolvers.queries),
-      mutations: _.merge(module1.resolvers.mutations, module2.resolvers.mutations),
-      subscriptions: _.merge(module1.resolvers.subscriptions, module2.resolvers.subscriptions)
+      queries: _.merge(module2.resolvers.queries, module1.resolvers.queries),
+      mutations: _.merge(module2.resolvers.mutations, module1.resolvers.mutations),
+      subscriptions: _.merge(module2.resolvers.subscriptions, module1.resolvers.subscriptions)
     }
   }
 }
