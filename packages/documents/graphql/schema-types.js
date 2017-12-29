@@ -6,6 +6,7 @@ scalar JSON
 type Meta {
   title: String
   slug: String
+  path: String
   image: String
   emailSubject: String
   description: String
