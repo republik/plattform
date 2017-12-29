@@ -77,7 +77,7 @@ const createSchema = ({
             title: node.title,
             href: node.url,
             color: teaser
-              ? teaser.data.linkColor
+              ? teaser.data.color
               : colors.primary
           }
         },
@@ -176,7 +176,6 @@ const createSchema = ({
         'textPosition',
         'color',
         'bgColor',
-        'linkColor',
         'center',
         'image'
       ]
@@ -221,7 +220,6 @@ const createSchema = ({
       formOptions: [
         'color',
         'bgColor',
-        'linkColor',
         'center',
         'image',
         'kind',
@@ -273,7 +271,6 @@ const createSchema = ({
       formOptions: [
         'color',
         'bgColor',
-        'linkColor',
         'kind',
         'titleSize'
       ]
@@ -324,7 +321,6 @@ const createSchema = ({
       formOptions: [
         'color',
         'bgColor',
-        'linkColor',
         'center',
         'showImage',
         'image',
