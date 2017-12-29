@@ -146,5 +146,22 @@ module.exports = async (_, args, {pgdb, user}) => {
     }
   })
 
-  return csvFormat(payments)
+  const paymentsEnhancedWithSimulatedSuccessfulPayments = payments
+    .reduce((result, payment) => {
+      if (payment.pledgeStatus === 'cancelled') {
+        // build and concat with result:
+        // - simulated entry with status successful and set the booking date to the date when the payment was created
+        // - original entry (cancelled) enhanced with a booking date set to the date the payment was last updated
+        const simulatedSuccessfulPayment = { ...payment, simulatedBookingDate: payment.pledgeCreatedAt }
+        simulatedSuccessfulPayment.pledgeStatus = 'successful' // we don't want to reorder object keys
+        const enhancedOriginalPayment = { ...payment, simulatedBookingDate: payment.paymentUpdatedAt }
+        return [ ...result, simulatedSuccessfulPayment, enhancedOriginalPayment ]
+      }
+      // build and concat with result:
+      // - original entry (cancelled) enhanced with a booking date set to the date the payment was created
+      const enhancedOriginalPayment = { ...payment, simulatedBookingDate: payment.pledgeCreatedAt }
+      return [ ...result, enhancedOriginalPayment ]
+    }, [])
+
+  return csvFormat(paymentsEnhancedWithSimulatedSuccessfulPayments)
 }
