@@ -4,7 +4,6 @@ import { sansSerifMedium14, sansSerifMedium16 } from '../Typography/styles'
 import { css } from 'glamor'
 import { colorForKind } from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
-import { underline } from '../../lib/styleMixins'
 
 const styles = {
   main: css({
@@ -13,8 +12,7 @@ const styles = {
     [mUp]: {
       ...sansSerifMedium16,
       margin: '-5px 0 8px 0'
-    },
-    ...underline
+    }
   })
 }
 

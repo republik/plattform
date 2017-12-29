@@ -86,8 +86,7 @@ const format = css({
   [mUp]: {
     ...styles.sansSerifMedium20,
     margin: '0 0 28px 0'
-  },
-  ...underline
+  }
 })
 
 export const Format = ({ children, kind, attributes, ...props }) => (
