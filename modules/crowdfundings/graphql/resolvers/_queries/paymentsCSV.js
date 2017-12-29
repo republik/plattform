@@ -5,6 +5,14 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 
 const dateTimeFormat = timeFormat('%x %H:%M') // %x - the locale’s date
 
+const convertPackage = (name, options, value) => {
+  const resultPairs = {}
+  resultPairs[`${name} #`] = options.reduce((sum, d) => sum + d.amount, 0)
+  resultPairs[`${name} wert`] = formatPrice(value || options.reduce((sum, d) => sum + d.amount, 0))
+  resultPairs[`${name} total`] = formatPrice(options.reduce((sum, d) => sum + d.price, 0))
+  return resultPairs
+}
+
 module.exports = async (_, args, {pgdb, user}) => {
   Roles.ensureUserHasRole(user, 'accountant')
 
@@ -132,36 +140,47 @@ module.exports = async (_, args, {pgdb, user}) => {
       paymentStatus: result.paymentStatus,
       paymentTotal: formatPrice(result.paymentTotal),
       paymentUpdatedAt: dateTimeFormat(result.paymentUpdatedAt),
-      'ABO #': regularAbos.reduce((sum, d) => sum + d.amount, 0),
-      'ABO total': formatPrice(regularAbos.reduce((sum, d) => sum + d.price, 0)),
-      'ABO_REDUCED #': reducedAbos.reduce((sum, d) => sum + d.amount, 0),
-      'ABO_REDUCED total': formatPrice(reducedAbos.reduce((sum, d) => sum + d.price, 0)),
-      'ABO_BENEFACTOR #': benefactorAbos.reduce((sum, d) => sum + d.amount, 0),
-      'ABO_BENEFACTOR total': formatPrice(benefactorAbos.reduce((sum, d) => sum + d.price, 0)),
-      'NOTEBOOK #': notebooks.reduce((sum, d) => sum + d.amount, 0),
-      'NOTEBOOK total': formatPrice(notebooks.reduce((sum, d) => sum + d.price, 0)),
+      ...(convertPackage('ABO', regularAbos)),
+      ...(convertPackage('ABO_REDUCED', reducedAbos, 24000)),
+      ...(convertPackage('ABO_BENEFACTOR', benefactorAbos)),
+      ...(convertPackage('NOTEBOOK', notebooks)),
       'DONATION #': numDonations,
       // 'DONATION total': formatPrice(donations.reduce((sum, d) => sum + d.price, 0)),
       donation: formatPrice(donation)
     }
   })
 
-  const paymentsEnhancedWithSimulatedSuccessfulPayments = payments
+  const paymentsEnhancedWithSimulatedSuccessfulPaymentEntries = payments
     .reduce((result, payment) => {
-      if (payment.pledgeStatus === 'cancelled') {
+      if (payment.pledgeStatus === 'CANCELLED') {
         // build and concat with result:
         // - simulated entry with status successful and set the booking date to the date when the payment was created
         // - original entry (cancelled) enhanced with a booking date set to the date the payment was last updated
-        const simulatedSuccessfulPayment = { ...payment, simulatedBookingDate: payment.pledgeCreatedAt }
-        simulatedSuccessfulPayment.pledgeStatus = 'successful' // we don't want to reorder object keys
-        const enhancedOriginalPayment = { ...payment, simulatedBookingDate: payment.paymentUpdatedAt }
+        const simulatedSuccessfulPayment = {
+          type: 'verkauf',
+          simulatedBookingDate: payment.pledgeCreatedAt,
+          ...payment,
+          total: payment.paymentTotal
+        }
+        const enhancedOriginalPayment = {
+          type: 'storno',
+          simulatedBookingDate: payment.paymentUpdatedAt,
+          ...payment,
+          total: (parseFloat(payment.paymentTotal) * -1).toFixed(2)
+        }
+
         return [ ...result, simulatedSuccessfulPayment, enhancedOriginalPayment ]
       }
       // build and concat with result:
       // - original entry (cancelled) enhanced with a booking date set to the date the payment was created
-      const enhancedOriginalPayment = { ...payment, simulatedBookingDate: payment.pledgeCreatedAt }
+      const enhancedOriginalPayment = {
+        type: 'verkauf',
+        simulatedBookingDate: payment.pledgeCreatedAt,
+        ...payment,
+        total: payment.paymentTotal
+      }
       return [ ...result, enhancedOriginalPayment ]
     }, [])
 
-  return csvFormat(paymentsEnhancedWithSimulatedSuccessfulPayments)
+  return csvFormat(paymentsEnhancedWithSimulatedSuccessfulPaymentEntries)
 }
