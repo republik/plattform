@@ -8,7 +8,7 @@ const dateTimeFormat = timeFormat('%x %H:%M') // %x - the locale’s date
 const convertPackage = (name, options, value) => {
   const resultPairs = {}
   resultPairs[`${name} #`] = options.reduce((sum, d) => sum + d.amount, 0)
-  resultPairs[`${name} wert`] = formatPrice(value || options.reduce((sum, d) => sum + d.amount, 0))
+  resultPairs[`${name} wert`] = formatPrice(value || options.reduce((sum, d) => sum + d.price, 0))
   resultPairs[`${name} total`] = formatPrice(options.reduce((sum, d) => sum + d.price, 0))
   return resultPairs
 }
