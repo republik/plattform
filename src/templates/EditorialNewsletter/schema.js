@@ -1,6 +1,5 @@
 import Paragraph, { Strong, Em, Link, Br } from './email/Paragraph'
 import { H2 } from './email/Headlines'
-import Figure, { Image, Caption, Byline } from './email/Figure'
 import Blockquote, { BlockquoteText, BlockquoteSource } from './email/Blockquote'
 import List, { ListItem } from './email/List'
 import { Sub, Sup } from '../../components/Typography'
@@ -28,7 +27,11 @@ const createNewsletterSchema = ({
   Container,
   Cover,
   CoverImage,
-  Center
+  Center,
+  Figure,
+  Image,
+  Caption,
+  Byline
 } = {}) => {
 
   const globalInlines = [
