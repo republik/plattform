@@ -214,7 +214,12 @@ module.exports = async (
       }
       campaignId = id
       await redis.setAsync(campaignKey, campaignId)
-      await editRepoMeta(null, { mailchimpCampaignId: campaignId }, { user, t, pubsub })
+      await editRepoMeta(null, {
+        repoId,
+        mailchimpCampaignId: campaignId
+      }, {
+        user, t, pubsub
+      })
     }
 
     const emailSchema = content.meta.template === 'editorialNewsletter'
