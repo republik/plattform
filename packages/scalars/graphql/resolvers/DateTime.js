@@ -11,7 +11,12 @@ module.exports = new GraphQLScalarType({
     const date = (typeof value) === 'string'
       ? new Date(value)
       : value
-    return date.toISOString()
+    try {
+      return date.toISOString()
+    } catch(e) {
+      console.error(value, e)
+      return null
+    }
   },
   parseLiteral (ast) {
     if (ast.kind === Kind.STRING) {
