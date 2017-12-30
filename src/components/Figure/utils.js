@@ -6,7 +6,7 @@ import {
   MAX_WIDTH_MOBILE
 } from '../Center'
 
-export const getResizedSrcs = (src, displayWidth, fillMaxWidth = true) => {
+export const getResizedSrcs = (src, displayWidth, setMaxWidth = true) => {
   if (!src) {
     return {
       size: null
@@ -56,7 +56,7 @@ export const getResizedSrcs = (src, displayWidth, fillMaxWidth = true) => {
   return {
     src: resizedSrc,
     srcSet,
-    maxWidth: fillMaxWidth ? maxWidth : undefined,
+    maxWidth: setMaxWidth ? maxWidth : undefined,
     size
   }
 }

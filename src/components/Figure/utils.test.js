@@ -43,7 +43,7 @@ test('getResizedSrcs: size info', assert => {
   assert.end()
 })
 
-test('getResizedSrcs: undefined maxWidth if fillMaxWidth is false', assert => {
+test('getResizedSrcs: undefined maxWidth if setMaxWidth is false', assert => {
   const props = getResizedSrcs('image.jpg?size=4500x2500', 2000, false)
   assert.equal(props.src, 'image.jpg?size=4500x2500&resize=2000x')
   assert.deepEqual(props.size, {
