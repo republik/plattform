@@ -73,7 +73,7 @@ export const fromMdast = ({
       context: {
         ...rest.context,
         // pass link color to link through context
-        linkColor: data.linkColor
+        color: data.color
       }
     }
   )
