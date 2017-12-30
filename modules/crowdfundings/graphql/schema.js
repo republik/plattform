@@ -60,6 +60,7 @@ type mutations {
   cancelMembership(
     id: ID!
     immediately: Boolean
+    reason: String
   ): Membership!
 
   # MONTHLY_ABO: if cancelled immediately a new subscription is created
