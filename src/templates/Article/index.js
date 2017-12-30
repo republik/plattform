@@ -199,11 +199,13 @@ const cover = {
       props: (node, index, parent) => {
         const src = extractImage(node)
         const displayWidth = FIGURE_SIZES[parent.data.size] || 1500
+        const fillMaxWidth = parent.data.size !== undefined
 
         return {
           ...FigureImage.utils.getResizedSrcs(
             src,
-            displayWidth
+            displayWidth,
+            fillMaxWidth
           ),
           alt: node.children[0].alt
         }
