@@ -22,19 +22,28 @@ const interactionHeadline = css({
 })
 
 const interactionH1 = css({
-  ...styles.sansSerifMedium40,
+  ...styles.sansSerifMedium30,
+  [mUp]: {
+    ...styles.sansSerifMedium40
+  },
   color: colors.text,
   margin: 0
 })
 
 const interactionH2 = css({
-  ...styles.sansSerifRegular30,
+  ...styles.sansSerifMedium22,
+  [mUp]: {
+    ...styles.sansSerifMedium30
+  },
   color: colors.text,
   margin: 0
 })
 
 const interactionH3 = css({
-  ...styles.sansSerifMedium22,
+  ...styles.sansSerifMedium19,
+  [mUp]: {
+    ...styles.sansSerifMedium22
+  },
   color: colors.text,
   margin: 0
 })
