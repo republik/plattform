@@ -16,7 +16,7 @@ export default ({rule, subModules, TYPE}) => {
       data: {
         title: node.title,
         href: node.url,
-        color: context.linkColor
+        color: context.color
       },
       nodes: visitChildren(node)
     }),

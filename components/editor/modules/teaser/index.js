@@ -1,4 +1,3 @@
-import { colors } from '@project-r/styleguide'
 import React from 'react'
 import { matchBlock } from '../../utils'
 import { Block } from 'slate'
@@ -20,7 +19,6 @@ export const getData = data => ({
   textPosition: 'topleft',
   color: '#fff',
   bgColor: '#000',
-  linkColor: colors.primary,
   center: false,
   image: null,
   kind: 'editorial',

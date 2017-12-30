@@ -224,16 +224,6 @@ const Form = ({ node, onChange, options }) => {
       />
     }
     {
-      options.includes('linkColor') &&
-      <ColorPicker
-        label='Linkfarbe'
-        value={node.data.get('linkColor')}
-        onChange={color => {
-          onChange('linkColor', null, color)
-        }}
-      />
-    }
-    {
       options.includes('image') &&
       <ImageInput
         label='Bild'
@@ -299,7 +289,7 @@ export const TeaserForm = options => {
               return t.setNodeByKey(
                 node.key,
                 {
-                  data: node.data.set('color', newTeaser.data.get('linkColor'))
+                  data: node.data.set('color', newTeaser.data.get('color'))
                 }
               )
             } else {
