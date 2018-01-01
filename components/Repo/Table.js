@@ -103,7 +103,7 @@ const orderFields = [
   {
     field: 'published',
     label: 'Publikationsdatum',
-    accessor: repo => new Date(repo.latestCommit.document.meta.publishDate)
+    accessor: repo => new Date(repo.meta.publishDate)
   },
   {
     field: 'creationDeadline',
@@ -268,7 +268,7 @@ class RepoList extends Component {
               .map(({repo, phase}) => {
                 const {
                   id,
-                  meta: {creationDeadline, productionDeadline, briefingUrl},
+                  meta: {creationDeadline, productionDeadline, publishDate, briefingUrl},
                   latestCommit: {date, document: {meta}}
                 } = repo
 
@@ -288,7 +288,13 @@ class RepoList extends Component {
                       () => ', '
                     )}</Td>
                     <TdNum>{displayDateTime(date)}</TdNum>
-                    <TdNum>{displayDateTime(meta.publishDate)}</TdNum>
+                    <TdNum>
+                      <EditMetaDate
+                        value={publishDate}
+                        onChange={(value) => editRepoMeta(
+                          {repoId: id, publishDate: value}
+                        )} />
+                    </TdNum>
                     <TdNum>
                       <EditMetaDate
                         value={creationDeadline}
@@ -353,6 +359,7 @@ query repos($after: String, $search: String) {
       meta {
         creationDeadline
         productionDeadline
+        publishDate
         briefingUrl
       }
       latestCommit {
@@ -363,7 +370,6 @@ query repos($after: String, $search: String) {
           meta {
             template
             title
-            publishDate
             credits
           }
         }
@@ -392,12 +398,13 @@ query repos($after: String, $search: String) {
 `
 
 const mutation = gql`
-mutation editRepoMeta($repoId: ID!, $creationDeadline: DateTime, $productionDeadline: DateTime, $briefingUrl: String) {
-  editRepoMeta(repoId: $repoId, creationDeadline: $creationDeadline, productionDeadline: $productionDeadline, briefingUrl: $briefingUrl) {
+mutation editRepoMeta($repoId: ID!, $creationDeadline: DateTime, $productionDeadline: DateTime, $publishDate: DateTime, $briefingUrl: String) {
+  editRepoMeta(repoId: $repoId, creationDeadline: $creationDeadline, productionDeadline: $productionDeadline, publishDate: $publishDate, briefingUrl: $briefingUrl) {
     id
     meta {
       creationDeadline
       productionDeadline
+      publishDate
       briefingUrl
     }
   }
