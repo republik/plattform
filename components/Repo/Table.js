@@ -318,17 +318,17 @@ class RepoList extends Component {
                       )} />
                       {' '}
                       {repo.latestPublications
-                        .filter(publication => publication.prepublication)
-                        .map(publication => (
-                          <a key={publication.name} href={`${FRONTEND_BASE_URL}/${publication.commit.document.meta.slug}`}>
+                        .filter(publication => publication.document && publication.prepublication)
+                        .map(({name, document: {meta: {path, slug}}}) => (
+                          <a key={name} href={`${FRONTEND_BASE_URL}${path || '/' + slug}`}>
                             <LockIcon color={colors.primary} />
                           </a>
                         ))}
                       {' '}
                       {repo.latestPublications
-                        .filter(publication => !publication.prepublication && publication.live)
-                        .map(publication => (
-                          <a key={publication.name} href={`${FRONTEND_BASE_URL}/${publication.commit.document.meta.slug}`}>
+                        .filter(publication => publication.document && !publication.prepublication && publication.live)
+                        .map(({name, document: {meta: {path, slug}}}) => (
+                          <a key={name} href={`${FRONTEND_BASE_URL}${path || '/' + slug}`}>
                             <PublicIcon color={colors.primary} />
                           </a>
                         ))}
@@ -383,12 +383,10 @@ query repos($after: String, $search: String) {
         prepublication
         live
         scheduledAt
-        commit {
-          id
-          document {
-            meta {
-              slug
-            }
+        document {
+          meta {
+            path
+            slug
           }
         }
       }
