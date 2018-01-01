@@ -288,6 +288,7 @@ module.exports = async (
     meta: {
       scheduledAt,
       updateMailchimp
-    }
+    },
+    document: doc.content
   }
 }
