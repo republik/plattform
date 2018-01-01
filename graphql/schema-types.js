@@ -37,8 +37,8 @@ type PageInfo {
 type RepoMeta {
   creationDeadline: DateTime
   productionDeadline: DateTime
+  publishDate: DateTime
   briefingUrl: String
-  publishDate: Date
 }
 
 input RepoOrderBy {

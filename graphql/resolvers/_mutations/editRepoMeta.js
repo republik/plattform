@@ -19,8 +19,8 @@ module.exports = async (_, args, { user, t, pubsub }) => {
     repoId,
     creationDeadline,
     productionDeadline,
-    briefingUrl,
     publishDate,
+    briefingUrl,
     mailchimpCampaignId
   } = args
 
@@ -35,8 +35,8 @@ module.exports = async (_, args, { user, t, pubsub }) => {
       : {},
     ...(creationDeadline !== undefined && { creationDeadline }),
     ...(productionDeadline !== undefined && { productionDeadline }),
-    ...(briefingUrl !== undefined && { briefingUrl }),
     ...(publishDate !== undefined && { publishDate }),
+    ...(briefingUrl !== undefined && { briefingUrl }),
     ...(mailchimpCampaignId !== undefined && { mailchimpCampaignId })
   }
   const message = yaml.stringify(meta)
