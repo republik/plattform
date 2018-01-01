@@ -156,7 +156,6 @@ class PublishForm extends Component {
 
           const errors = [
             !meta.slug && t('publish/validation/slug/empty'),
-            !meta.publishDate && t('publish/validation/publishDate/empty'),
             (updateMailchimp && !meta.emailSubject) && t('publish/validation/emailSubject/empty')
           ].filter(Boolean)
           const hasErrors = errors.length > 0
