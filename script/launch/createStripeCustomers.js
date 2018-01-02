@@ -48,7 +48,17 @@ PgDb.connect().then(async pgdb => {
       await transaction.transactionCommit()
     } catch (e) {
       await transaction.transactionRollback()
-      console.error('--------------------------------\ntransaction rollback', { error: e, source })
+      console.error('--------------------------------\ntransaction rollback', {
+        error: e,
+        source: {
+          id: source.id,
+          pspId: source.pspId,
+          user: {
+            id: source.user.id,
+            email: source.user.email
+          }
+        }
+      })
     }
   }
 
