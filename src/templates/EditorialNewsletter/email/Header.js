@@ -14,7 +14,6 @@ export default withMeta(({ meta }) => {
         <a
           href={`https://www.republik.ch/${slug}`}
           title="Im Web lesen"
-          alt="Im Web lesen"
         >
           <img
             height="79"
@@ -27,7 +26,7 @@ export default withMeta(({ meta }) => {
               maxWidth: '100% !important'
             }}
             width="180"
-            alt="REPUBLIK"
+            alt="Im Web lesen"
           />
         </a>
       </td>
