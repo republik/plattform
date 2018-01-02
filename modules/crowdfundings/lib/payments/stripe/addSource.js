@@ -65,7 +65,11 @@ module.exports = async ({
 
     const originalSourceChecksum = crypto
       .createHash('sha1')
-      .update(sourceId)
+      .update(
+        existingSource
+          ? existingSource.id
+          : sourceId
+      )
       .digest('hex')
 
     let connectedSource
