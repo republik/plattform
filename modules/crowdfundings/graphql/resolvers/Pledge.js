@@ -1,3 +1,4 @@
+const { transformUser } = require('@orbiting/backend-modules-auth')
 module.exports = {
   async options (pledge, args, {pgdb}) {
     // we augment pledgeOptions with packageOptions
@@ -20,7 +21,7 @@ module.exports = {
     return pgdb.public.packages.findOne({id: pledge.packageId})
   },
   async user (pledge, args, {pgdb}) {
-    return pgdb.public.users.findOne({id: pledge.userId})
+    return transformUser(await pgdb.public.users.findOne({id: pledge.userId}))
   },
   async payments (pledge, args, {pgdb}) {
     const pledgePayments = await pgdb.public.pledgePayments.find({pledgeId: pledge.id})
