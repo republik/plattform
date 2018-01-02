@@ -1,7 +1,9 @@
 import React from 'react'
 import colors from '../../../theme/colors'
+import { withMeta } from '../../Article/Container'
 
-export default () => {
+export default withMeta(({ meta }) => {
+  const { slug } = meta
   return (
     <tr>
       <td
@@ -9,7 +11,11 @@ export default () => {
         valign="top"
         style={{ borderBottom: `1px solid ${colors.divider}` }}
       >
-        <a href="https://www.republik.ch/">
+        <a
+          href={`https://www.republik.ch/${slug}`}
+          title="Im Web lesen"
+          alt="Im Web lesen"
+        >
           <img
             height="79"
             src="https://assets.project-r.construction/images/logo_republik_newsletter.png"
@@ -27,4 +33,4 @@ export default () => {
       </td>
     </tr>
   )
-}
+})
