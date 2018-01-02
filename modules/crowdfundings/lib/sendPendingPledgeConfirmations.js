@@ -19,9 +19,9 @@ module.exports = async (userId, pgdb, t) => {
   const goodieNotebook = await pgdb.public.goodies.findOne({name: 'NOTEBOOK'})
   const rewardNotebook = await pgdb.public.rewards.findOne({id: goodieNotebook.rewardId})
   const pkgOptionsNotebook = await pgdb.public.packageOptions.find({rewardId: rewardNotebook.id})
-  const goodieToadbag = await pgdb.public.goodies.findOne({name: 'TOADBAG'})
-  const rewardToadbag = await pgdb.public.rewards.findOne({id: goodieToadbag.rewardId})
-  const pkgOptionsToadbag = await pgdb.public.packageOptions.find({rewardId: rewardToadbag.id})
+  const goodieTotebag = await pgdb.public.goodies.findOne({name: 'TOTEBAG'})
+  const rewardTotebag = await pgdb.public.rewards.findOne({id: goodieTotebag.rewardId})
+  const pkgOptionsTotebag = await pgdb.public.packageOptions.find({rewardId: rewardTotebag.id})
 
   await Promise.all(pledges.map(async (pledge) => {
     const pkg = await pgdb.public.packages.findOne({id: pledge.packageId})
@@ -36,9 +36,9 @@ module.exports = async (userId, pgdb, t) => {
       templateId: pkgOptionsNotebook.map(p => p.id),
       'amount >': 0
     })
-    const toadbag = await pgdb.public.pledgeOptions.count({
+    const totebag = await pgdb.public.pledgeOptions.count({
       pledgeId: pledge.id,
-      templateId: pkgOptionsToadbag.map(p => p.id),
+      templateId: pkgOptionsTotebag.map(p => p.id),
       'amount >': 0
     })
 
@@ -97,8 +97,8 @@ module.exports = async (userId, pgdb, t) => {
         { name: 'TOTAL',
           content: pledge.total / 100.0
         },
-        { name: 'NOTEBOOK_OR_TOADBAG',
-          content: !!notebook || !!toadbag
+        { name: 'NOTEBOOK_OR_TOTEBAG',
+          content: !!notebook || !!totebag
         },
         { name: 'ADDRESS',
           content: address

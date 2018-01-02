@@ -259,7 +259,7 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
   const sortKeyMap = {
     'DATE': 'createdAt',
     'VOTES': 'score',
-    'HOT': 'hottnes'
+    'HOT': 'hotness'
   }
   const sortKey = sortKeyMap[orderBy]
   const compare =
