@@ -94,7 +94,7 @@ module.exports = async ({
 
       await platform.stripe.customers.createSource(connectedCustomer.id, {
         source: connectedSource.id,
-        validate: false // workaround suggested by stripe suppor for 402 invalid_cvc
+        validate: false // workaround suggested by stripe support for 402 invalid_cvc
       }, {
         stripe_account: connectedAccount.accountId
       })
