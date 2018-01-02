@@ -84,6 +84,10 @@ type mutations {
     id: ID!
     subscribed: Boolean!
   ): NewsletterSubscription!
+
+  # for me
+  # max 3 unique dates in three weeks
+  requestPreview: Boolean!
 }
 
 type subscriptions {
