@@ -16,9 +16,23 @@ const convertPackage = (name, options, value) => {
 module.exports = async (_, args, {pgdb, user}) => {
   Roles.ensureUserHasRole(user, 'accountant')
 
-  let {paymentIds} = args
+  let { paymentIds, companyName } = args
+  let packageIds
   if (!paymentIds) {
     paymentIds = await pgdb.queryOneColumn(`SELECT id FROM payments`)
+  }
+
+  try {
+    packageIds = await pgdb.queryOneColumn(`
+      SELECT pkg.id
+      FROM packages pkg
+      INNER JOIN
+        companies c
+        ON pkg."companyId" = c.id
+      WHERE c.name = :companyName
+    `, { companyName })
+  } catch (e) {
+    throw new Error('You need to provide a companyName that exists in order to get an export')
   }
 
   const goodies = await pgdb.public.goodies.findAll()
@@ -51,6 +65,9 @@ module.exports = async (_, args, {pgdb, user}) => {
   )
   const notebookPkgos = pkgOptions.filter(pkgo =>
       (pkgo.reward && pkgo.reward.name === 'NOTEBOOK')
+  )
+  const totebagPkgos = pkgOptions.filter(pkgo =>
+      (pkgo.reward && pkgo.reward.name === 'TOTEBAG')
   )
   const donationPkgos = pkgOptions.filter(pkgo => !pkgo.reward)
 
@@ -86,13 +103,15 @@ module.exports = async (_, args, {pgdb, user}) => {
       users u
       ON p."userId" = u.id
     WHERE
-      ARRAY[pay.id] && :paymentIds
+      ARRAY[pay.id] && :paymentIds AND
+      ARRAY[p."packageId"] && :packageIds
     GROUP BY
       pay.id, p.id, u.id
     ORDER BY
       u.email
   `, {
-    paymentIds
+    paymentIds,
+    packageIds
   })).map(result => {
     const {pledgeOptions} = result
 
@@ -116,6 +135,9 @@ module.exports = async (_, args, {pgdb, user}) => {
     )
     const notebooks = pledgeOptions.filter(plo =>
       !!notebookPkgos.find(pko => pko.id === plo.templateId)
+    )
+    const totebags = pledgeOptions.filter(plo =>
+      !!totebagPkgos.find(pko => pko.id === plo.templateId)
     )
 
     const donations = pledgeOptions.filter(plo =>
@@ -144,6 +166,7 @@ module.exports = async (_, args, {pgdb, user}) => {
       ...(convertPackage('ABO_REDUCED', reducedAbos, 24000)),
       ...(convertPackage('ABO_BENEFACTOR', benefactorAbos)),
       ...(convertPackage('NOTEBOOK', notebooks)),
+      ...(convertPackage('TOTEBAG', totebags)),
       'DONATION #': numDonations,
       // 'DONATION total': formatPrice(donations.reduce((sum, d) => sum + d.price, 0)),
       donation: formatPrice(donation)
