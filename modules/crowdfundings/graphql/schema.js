@@ -46,7 +46,7 @@ type queries {
 
   # This exports a CSV containing all payments IN paymentIds
   # required role: accountant
-  paymentsCSV(paymentIds: [ID!]): String!
+  paymentsCSV(companyName: String!, paymentIds: [ID!]): String!
 }
 
 type mutations {

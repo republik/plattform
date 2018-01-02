@@ -20,7 +20,7 @@ create table "comments" (
   "upVotes"               integer not null default 0,
   "downVotes"             integer not null default 0,
   "votes"                 jsonb not null default '[]',
-  "hotness"               float not null,
+  "hottnes"               float not null,
   "smImage"               text,
   "published"             boolean not null default true,
   "adminUnpublished"      boolean not null default false,
