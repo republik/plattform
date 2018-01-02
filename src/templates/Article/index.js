@@ -259,7 +259,18 @@ const createSchema = ({
                 },
                 {
                   label: 'Format',
-                  key: 'format'
+                  key: 'format',
+                  ref: 'repo'
+                },
+                {
+                  label: 'Dossier',
+                  key: 'dossier',
+                  ref: 'repo'
+                },
+                {
+                  label: 'Diskussion',
+                  key: 'discussion',
+                  ref: 'repo'
                 }
               ],
               teaser: props => (
