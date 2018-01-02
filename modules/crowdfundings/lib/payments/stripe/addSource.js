@@ -48,7 +48,9 @@ module.exports = async ({
   }
   if (makeDefault) {
     await platform.stripe.customers.update(customer.id, {
-      default_source: existingSource.id || sourceId
+      default_source: existingSource
+        ? existingSource.id
+        : sourceId
     })
   }
 
