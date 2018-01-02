@@ -83,10 +83,12 @@ export default class RepoSearch extends Component {
     this.state = {
       items: [],
       filter: '',
+      search: '',
       value: safeValue(props.value)
     }
     this.filterChangeHandler = this.filterChangeHandler.bind(this)
     this.changeHandler = this.changeHandler.bind(this)
+    this.setSearchValue = debounce(this.setSearchValue.bind(this), 500)
   }
   componentDidMount () {
     this._isMounted = true
@@ -103,12 +105,20 @@ export default class RepoSearch extends Component {
     })
   }
 
+  setSearchValue () {
+    this.setState({
+      ...this.state,
+      search: this.state.filter
+    })
+  }
+
   filterChangeHandler (value) {
     this.setState(
         state => ({
           ...this.state,
           filter: value
-        })
+        }),
+        this.setSearchValue
       )
   }
 
@@ -123,16 +133,17 @@ export default class RepoSearch extends Component {
   }
 
   render () {
-    const { filter, value } = this.state
+    const { filter, value, search } = this.state
 
     return (
       <ConnectedAutoComplete
         label={this.props.label}
         filter={filter}
         value={value}
+        search={search}
         items={[]}
         onChange={this.changeHandler}
-        onFilterChange={debounce(this.filterChangeHandler, 100)}
+        onFilterChange={this.filterChangeHandler}
         />
     )
   }
