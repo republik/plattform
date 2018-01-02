@@ -90,9 +90,11 @@ module.exports = async (_, args, {pgdb, req, t}) => {
         pledgeId: pledge.id,
         total: pledge.total,
         sourceId: pledgePayment.sourceId,
+        pspPayloadRaw: pledgePayment.pspPayload,
         userId: user.id,
         pkg,
         transaction,
+        pgdb,
         t,
         logger
       })
