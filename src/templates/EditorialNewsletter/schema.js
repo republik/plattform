@@ -197,6 +197,9 @@ const createNewsletterSchema = ({
         matchMdast: matchType('root'),
         component: Container,
         editorModule: 'documentPlain',
+        props: node => ({
+          meta: node.meta
+        }),
         rules: [
           {
             matchMdast: () => false,
