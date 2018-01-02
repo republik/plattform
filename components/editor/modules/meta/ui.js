@@ -6,6 +6,7 @@ import { Interaction, Dropdown, Field, Label, colors } from '@project-r/stylegui
 
 import withT from '../../../../lib/withT'
 import MetaForm from '../../utils/MetaForm'
+import RepoSearch from '../../utils/RepoSearch'
 import FBPreview from './FBPreview'
 import TwitterPreview from './TwitterPreview'
 import UIForm from '../../UIForm'
@@ -75,7 +76,6 @@ const MetaData = ({value, editor, additionalFields = [], customFields = [], teas
         })
     })
   }
-
   return (
     <div {...styles.container}>
       <div {...styles.center}>
@@ -96,6 +96,13 @@ const MetaData = ({value, editor, additionalFields = [], customFields = [], teas
                 label={label}
                 value={value}
                 onChange={item => onChange(undefined, item.value)} />
+            }
+            if (customField.ref === 'repo') {
+              return <RepoSearch key={customField.key}
+                label={label}
+                value={value}
+                onChange={item => onChange(undefined, item.value)}
+                />
             }
             return <Field key={customField.key}
               black
