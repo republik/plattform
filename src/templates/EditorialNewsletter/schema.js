@@ -276,6 +276,9 @@ const createNewsletterSchema = ({
                 ]
               }
             ]
+          },
+          {
+            editorModule: 'specialchars'
           }
         ]
       }
