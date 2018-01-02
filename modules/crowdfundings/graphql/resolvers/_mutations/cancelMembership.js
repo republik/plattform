@@ -25,7 +25,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       id: membership.membershipTypeId
     })
 
-    if (membershipType === 'MONTHLY_ABO' && !membership.subscriptionId) {
+    if (membershipType.name === 'MONTHLY_ABO' && !membership.subscriptionId) {
       throw new Error(t('api/membership/pleaseWait'))
     }
 
