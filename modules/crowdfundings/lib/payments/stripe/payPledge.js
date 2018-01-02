@@ -24,6 +24,10 @@ module.exports = async ({
     ? pspPayload.three_d_secure.card
     : sourceId
 
+  if (isSubscription && threeDSecure) {
+    throw new Error(t('api/payment/subscription/threeDsecure/notSupported'))
+  }
+
   let charge
   try {
     let deduplicatedSourceId

@@ -7,7 +7,8 @@ module.exports = async ({
   pgdb,
   clients, // optional
   deduplicate = false,
-  makeDefault = false
+  makeDefault = false,
+  t
 }) => {
   const {
     platform,
@@ -25,6 +26,11 @@ module.exports = async ({
   if (deduplicate) {
     const source = await platform.stripe.sources.retrieve(sourceId)
     const stripeCustomer = await platform.stripe.customers.retrieve(customer.id)
+
+    // see _mutations/addPaymentSource
+    if (source.type === 'three_d_secure') {
+      throw new Error('three_d_secure sources cannot be attached like this!')
+    }
 
     const existingSource = stripeCustomer.sources.data.find(s =>
       s.card && s.card.fingerprint === source.card.fingerprint
