@@ -7,7 +7,7 @@ module.exports = async ({
   pledgeId,
   total,
   sourceId,
-  pspPayloadRaw,
+  pspPayload,
   userId,
   pkg,
   transaction,
@@ -17,9 +17,7 @@ module.exports = async ({
 }) => {
   let isSubscription = pkg.name === 'MONTHLY_ABO'
 
-  const pspPayload = JSON.parse(pspPayloadRaw)
-
-  const threeDSecure = pspPayload.type === 'three_d_secure'
+  const threeDSecure = pspPayload && pspPayload.type === 'three_d_secure'
   const rememberSourceId = threeDSecure
     ? pspPayload.three_d_secure.card
     : sourceId
