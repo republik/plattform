@@ -15,39 +15,14 @@ query repos($after: String, $search: String) {
     }
     nodes {
       id
-      meta {
-        creationDeadline
-        productionDeadline
-        briefingUrl
-      }
       latestCommit {
-        id
-        date
-        message
         document {
           meta {
-            template
+            format
             title
-            publishDate
+            image
+            description
             credits
-          }
-        }
-      }
-      milestones {
-        name
-        immutable
-      }
-      latestPublications {
-        name
-        prepublication
-        live
-        scheduledAt
-        commit {
-          id
-          document {
-            meta {
-              slug
-            }
           }
         }
       }
