@@ -79,6 +79,11 @@ type mutations {
     id: ID!
     discussionPreferences: DiscussionPreferencesInput!
   ): Discussion!
+
+  updateNewsletterSubscription(
+    id: ID!
+    subscribed: Boolean!
+  ): NewsletterSubscription!
 }
 
 type subscriptions {

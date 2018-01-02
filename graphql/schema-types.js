@@ -53,6 +53,17 @@ extend type User {
   isListed: Boolean!
   isAdminUnlisted: Boolean
   sequenceNumber: Int
+
+  newsletters: [NewsletterSubscription]
+}
+
+type NewsletterSubscription {
+  # Base64(userId + name)
+  id: ID!
+  name: String!
+  subscribed: Boolean!
+  isEligible: Boolean!
+  requiredRoles: [String!]!
 }
 
 type UserConnection {
