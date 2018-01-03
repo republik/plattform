@@ -2,7 +2,8 @@ import Paragraph, { Strong, Em, Link, Br } from './email/Paragraph'
 import { H2 } from './email/Headlines'
 import Blockquote, { BlockquoteText, BlockquoteSource } from './email/Blockquote'
 import List, { ListItem } from './email/List'
-import { Sub, Sup } from '../../components/Typography'
+//import { Sub, Sup } from '../../components/Typography'
+import { Sub, Sup } from './email/SubSup'
 
 import {
   matchType,
