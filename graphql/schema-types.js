@@ -37,6 +37,7 @@ type PageInfo {
 type RepoMeta {
   creationDeadline: DateTime
   productionDeadline: DateTime
+  publishDate: DateTime
   briefingUrl: String
 }
 
@@ -73,6 +74,8 @@ interface MilestoneInterface {
 type Publication implements MilestoneInterface {
   name: String!
   commit: Commit!
+  # this document comes straight out of the publication cache and includes all transforms done on publish.
+  document: Document
   author: Author!
   date: DateTime!
 

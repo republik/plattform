@@ -23,6 +23,7 @@ const placeMilestone = require('./placeMilestone')
 const { document: getDocument } = require('../Commit')
 const editRepoMeta = require('./editRepoMeta')
 const { meta: getRepoMeta } = require('../Repo')
+const { prepareMetaForPublish } = require('../../../lib/Document')
 
 const newsletterEmailSchema = require('@project-r/template-newsletter/lib/email')
 const editorialNewsletterSchema = require('@project-r/styleguide/lib/templates/EditorialNewsletter/email')
@@ -37,12 +38,14 @@ module.exports = async (
     scheduledAt: _scheduledAt,
     updateMailchimp = false
   },
-  { user, t, redis, pubsub }
+  context
 ) => {
+  const { user, t, redis, pubsub } = context
   ensureUserHasRole(user, 'editor')
   const { githubRest } = await createGithubClients()
   const now = new Date()
 
+  // check max scheduledAt
   let scheduledAt
   if (_scheduledAt) {
     const maxDate = new Date()
@@ -57,6 +60,26 @@ module.exports = async (
     }
   }
 
+  // load and check document
+  const doc = await getDocument(
+    { id: commitId, repo: { id: repoId } },
+    { oneway: true },
+    { user, redis }
+  )
+  if (doc.content.meta.template !== 'front' && !doc.content.meta.slug) {
+    throw new Error(t('api/publish/document/slug/404'))
+  }
+  const repoMeta = await getRepoMeta({ id: repoId })
+  doc.content.meta = await prepareMetaForPublish(
+    repoId,
+    doc.content.meta,
+    repoMeta,
+    scheduledAt,
+    now,
+    context
+  )
+
+  // calc version number
   const latestPublicationVersion = await getAnnotatedTags(repoId)
     .then(tags => tags
       .filter(tag => publicationVersionRegex.test(tag.name))
@@ -130,11 +153,6 @@ module.exports = async (
   await Promise.all(gitOps)
 
   // cache in redis
-  const doc = await getDocument(
-    { id: commitId, repo: { id: repoId } },
-    { oneway: true },
-    { user, redis }
-  )
   const payload = JSON.stringify({
     doc,
     sha: milestone.sha
@@ -186,18 +204,15 @@ module.exports = async (
     .then(response => response.data)
 
   if (updateMailchimp) {
-    const { content } = doc
-    const { title, emailSubject, slug } = content.meta
-    // TODO proper error handling
-    if (!title || !emailSubject || !slug) {
-      throw new Error('updateMailchimp missing one or more params', { title, emailSubject, slug })
+    const { title, emailSubject } = doc.content.meta
+    if (!title || !emailSubject) {
+      throw new Error('updateMailchimp missing title or subject', { title, emailSubject })
     }
     const campaignKey = `repos:${repoId}/mailchimp/campaignId`
     let campaignId = await redis.getAsync(campaignKey)
     if (!campaignId) {
-      const meta = await getRepoMeta({ id: repoId })
-      if (meta && meta.mailchimpCampaignId) {
-        campaignId = meta.mailchimpCampaignId
+      if (repoMeta && repoMeta.mailchimpCampaignId) {
+        campaignId = repoMeta.mailchimpCampaignId
       }
     }
     if (campaignId) {
@@ -217,15 +232,13 @@ module.exports = async (
       await editRepoMeta(null, {
         repoId,
         mailchimpCampaignId: campaignId
-      }, {
-        user, t, pubsub
-      })
+      }, context)
     }
 
-    const emailSchema = content.meta.template === 'editorialNewsletter'
+    const emailSchema = doc.content.meta.template === 'editorialNewsletter'
       ? editorialNewsletterSchema.default()  // Because styleguide currently doesn't support module.exports
       : newsletterEmailSchema
-    const html = renderEmail(content, emailSchema)
+    const html = renderEmail(doc.content, emailSchema)
     const updateResponse = await updateCampaignContent({
       campaignId,
       html
@@ -247,6 +260,7 @@ module.exports = async (
     meta: {
       scheduledAt,
       updateMailchimp
-    }
+    },
+    document: doc.content
   }
 }

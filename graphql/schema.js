@@ -68,6 +68,7 @@ type mutations {
     repoId: ID!
     creationDeadline: DateTime
     productionDeadline: DateTime
+    publishDate: DateTime
     briefingUrl: String
   ): Repo!
 }

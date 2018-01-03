@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-01T17:33:01.287Z",
+  "updated": "2017-12-29T14:18:29.215Z",
   "title": "live",
   "data": [
     {
@@ -37,6 +37,10 @@
     {
       "key": "api/publish/scheduledAt/tooFarInTheFuture",
       "value": "Sorry, the latest possible scheduling date is {days} into the future. "
+    },
+    {
+      "key": "api/publish/document/slug/404",
+      "value": "The slug is missing."
     },
     {
       "key": "api/twitter/morephotos/other",

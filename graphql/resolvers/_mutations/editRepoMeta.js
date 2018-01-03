@@ -19,6 +19,7 @@ module.exports = async (_, args, { user, t, pubsub }) => {
     repoId,
     creationDeadline,
     productionDeadline,
+    publishDate,
     briefingUrl,
     mailchimpCampaignId
   } = args
@@ -34,6 +35,7 @@ module.exports = async (_, args, { user, t, pubsub }) => {
       : {},
     ...(creationDeadline !== undefined && { creationDeadline }),
     ...(productionDeadline !== undefined && { productionDeadline }),
+    ...(publishDate !== undefined && { publishDate }),
     ...(briefingUrl !== undefined && { briefingUrl }),
     ...(mailchimpCampaignId !== undefined && { mailchimpCampaignId })
   }
