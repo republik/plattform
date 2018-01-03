@@ -186,3 +186,7 @@ ALTER TABLE "packages" ADD COLUMN "paymentMethods" "paymentMethod"[];
 UPDATE "packages"
   SET "paymentMethods" = '{STRIPE, POSTFINANCECARD, PAYPAL, PAYMENTSLIP}'::"paymentMethod"[];
 ALTER TABLE "packages" ALTER COLUMN "paymentMethods" SET NOT NULL;
+
+-- fix hottnes column name typo and rename goodie name to TOADBAG
+ALTER TABLE "comments" RENAME COLUMN hottnes TO hotness;
+UPDATE "goodies" SET "name"='TOTEBAG' WHERE "name" = 'TOADBAG';
