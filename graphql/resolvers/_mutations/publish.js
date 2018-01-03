@@ -35,7 +35,7 @@ const getPath = (docMeta) => {
   const { slug, template, publishDate } = docMeta
   switch (template) {
     case 'front':
-      return `/${slug}`
+      return `/${slug || ''}`
     case 'dossier':
       return `/dossier/${slug}`
     case 'format':
@@ -83,7 +83,7 @@ module.exports = async (
     { oneway: true },
     { user, redis }
   )
-  if (!doc.content.meta.slug) {
+  if (doc.content.meta.template !== 'front' && !doc.content.meta.slug) {
     throw new Error(t('api/publish/document/slug/404'))
   }
 
