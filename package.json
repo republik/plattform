@@ -10,7 +10,7 @@
   "dependencies": {
     "@orbiting/backend-modules-auth": "^2.2.3",
     "@orbiting/backend-modules-base": "^0.3.3",
-    "@orbiting/backend-modules-documents": "^1.1.2",
+    "@orbiting/backend-modules-documents": "^2.0.0",
     "@orbiting/backend-modules-mail": "^0.1.0",
     "@orbiting/backend-modules-scalars": "^0.0.6",
     "@orbiting/backend-modules-scripts": "^1.0.1",
