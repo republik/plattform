@@ -105,6 +105,6 @@ export default ({
       />
     </div>
     <div style={formSectionStyles}>
-      <CSVDownloader />
+      <CSVDownloader companyName={companyName || 'PROJECT_R'} />
     </div>
   </div>

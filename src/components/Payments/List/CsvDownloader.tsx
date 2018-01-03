@@ -32,16 +32,16 @@ const link = css({
 })
 
 const query = gql`
-  query {
-    paymentsCSV
+  query paymentsCSV($companyName: String!) {
+    paymentsCSV(companyName: $companyName)
   }
 `
 
 class CSVDownloader extends React.Component<
-  { client: ApolloClient },
+  { client: ApolloClient, companyName: string },
   any
 > {
-  constructor(props: { client: ApolloClient }) {
+  constructor(props: { client: ApolloClient, companyName: string }) {
     super(props)
     this.state = {
       csv: null,
@@ -55,9 +55,12 @@ class CSVDownloader extends React.Component<
       loading: true
     }))
 
+    const { companyName } = this.props;
+
     this.props.client
       .query({
         query,
+        variables: { companyName },
         fetchPolicy: 'network-only'
       })
       .then(({ data }: any) => {
