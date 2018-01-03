@@ -56,13 +56,11 @@ const subSupStyles = {
   })
 }
 
-export const Sub = ({ children, attributes }) => (
+export const Sub = ({children, attributes}) =>
   <sub {...attributes} {...subSupStyles.base} {...subSupStyles.sub}>{children}</sub>
-)
 
-export const Sup = ({ children, attributes }) => (
+export const Sup = ({children, attributes}) =>
   <sup {...attributes} {...subSupStyles.base} {...subSupStyles.sup}>{children}</sup>
-)
 
 const quoteRule = css(styles.quote)
 const quoteTextRule = css(styles.quoteText)
