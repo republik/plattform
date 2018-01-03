@@ -23,7 +23,11 @@ export const getSubmodules = ({ subModules }) => {
     throw new Error('Missing paragraph submodule')
   }
 
-  const linkModule = paragraphModule.subModules[0]
+  const linkModule = paragraphModule.subModules.find(
+    subModule => {
+      return subModule.name === 'link'
+    }
+  )
 
   if (!linkModule) {
     throw new Error('Missing link module in paragraph submodule')

@@ -7,6 +7,8 @@ import {
   matchBlock
 } from '../../utils'
 
+import { Block, Text } from 'slate'
+
 import { getNewItem } from './'
 
 import { getSubmodules } from './serializer'
@@ -18,6 +20,7 @@ import UIForm from '../../UIForm'
 import ImageInput from '../../utils/ImageInput'
 import ColorPicker from '../../utils/ColorPicker'
 import createOnFieldChange from '../../utils/createOnFieldChange'
+import RepoSearch from '../../utils/RepoSearch'
 
 import {
   createInsertDragSource,
@@ -116,6 +119,56 @@ const styles = {
       left: 0
     }
   )
+}
+
+const cloneWithRepoData = options => (node, repoData) => {
+  const {
+    titleModule,
+    leadModule,
+    formatModule,
+    paragraphModule,
+    linkModule
+  } = getSubmodules(options)
+
+  const data = node.data.set('url', `https://github.com/${repoData.id}?autoSlug`)
+  const meta = repoData.latestCommit.document.meta
+
+  const credits = paragraphModule.helpers.serializer.fromMdast({
+    type: 'paragraph',
+    children: meta.credits
+  })
+
+  credits.nodes = credits.nodes.map(v => {
+    if (v.type === linkModule.TYPE) {
+      v.data.color = node.data.get('color')
+    }
+    return v
+  })
+
+  const res = Block.create({
+    type: options.TYPE,
+    data,
+    nodes: [
+      Block.create({
+        type: formatModule.TYPE,
+        data
+      }),
+      Block.create({
+        type: titleModule.TYPE,
+        data,
+        nodes: [Text.create(meta.title)]
+      }),
+      Block.create({
+        type: leadModule.TYPE,
+        data,
+        nodes: meta.description
+          ? [Text.create(meta.description)]
+          : []
+      }),
+      credits
+    ]
+  })
+  return res
 }
 
 export const TeaserButton = options => {
@@ -304,8 +357,25 @@ export const TeaserForm = options => {
         return onChange(newChange)
       }, value, teaser)
 
+      const clone = cloneWithRepoData(options)
+
+      const handleRepo = repoData => {
+        const newNode = clone(teaser, repoData.value)
+        return onChange(
+          value.change().replaceNodeByKey(
+            teaser.key,
+            newNode
+          )
+        )
+      }
+
       return <div>
         <Label>Teaser</Label>
+        <RepoSearch
+          value={null}
+          label='Von Artikel übernehmen'
+          onChange={handleRepo}
+        />
         <Form node={teaser} onChange={handlerFactory} options={options.rule.editorOptions.formOptions} />
       </div>
     }
