@@ -23,29 +23,11 @@ const placeMilestone = require('./placeMilestone')
 const { document: getDocument } = require('../Commit')
 const editRepoMeta = require('./editRepoMeta')
 const { meta: getRepoMeta } = require('../Repo')
+const { prepareMetaForPublish } = require('../../../lib/Document')
 
 const newsletterEmailSchema = require('@project-r/template-newsletter/lib/email')
 const editorialNewsletterSchema = require('@project-r/styleguide/lib/templates/EditorialNewsletter/email')
 const { renderEmail } = require('mdast-react-render/lib/email')
-
-const { timeFormat } = require('@orbiting/backend-modules-formats')
-const slugDateFormat = timeFormat('%Y/%m/%d')
-
-const getPath = (docMeta) => {
-  const { slug, template, publishDate } = docMeta
-  switch (template) {
-    case 'front':
-      return `/${slug || ''}`
-    case 'dossier':
-      return `/dossier/${slug}`
-    case 'format':
-      return `/format/${slug}`
-    case 'discussion':
-      return `/${slugDateFormat(publishDate)}/${slug}/diskussion`
-    default:
-      return `/${slugDateFormat(publishDate)}/${slug}`
-  }
-}
 
 module.exports = async (
   _,
@@ -56,8 +38,9 @@ module.exports = async (
     scheduledAt: _scheduledAt,
     updateMailchimp = false
   },
-  { user, t, redis, pubsub }
+  context
 ) => {
+  const { user, t, redis, pubsub } = context
   ensureUserHasRole(user, 'editor')
   const { githubRest } = await createGithubClients()
   const now = new Date()
@@ -86,6 +69,15 @@ module.exports = async (
   if (doc.content.meta.template !== 'front' && !doc.content.meta.slug) {
     throw new Error(t('api/publish/document/slug/404'))
   }
+  const repoMeta = await getRepoMeta({ id: repoId })
+  doc.content.meta = await prepareMetaForPublish(
+    repoId,
+    doc.content.meta,
+    repoMeta,
+    scheduledAt,
+    now,
+    context
+  )
 
   // calc version number
   const latestPublicationVersion = await getAnnotatedTags(repoId)
@@ -161,26 +153,6 @@ module.exports = async (
   await Promise.all(gitOps)
 
   // cache in redis
-  const repoMeta = await getRepoMeta({ id: repoId })
-  let publishDate = repoMeta.publishDate
-  if (!publishDate) {
-    publishDate = scheduledAt || now
-    await editRepoMeta(null, {
-      repoId,
-      publishDate
-    }, { user, t, pubsub })
-  }
-
-  // transform docMeta
-  doc.content.meta = {
-    ...doc.content.meta,
-    path: getPath({
-      ...doc.content.meta,
-      publishDate
-    }),
-    publishDate
-  }
-
   const payload = JSON.stringify({
     doc,
     sha: milestone.sha
@@ -260,7 +232,7 @@ module.exports = async (
       await editRepoMeta(null, {
         repoId,
         mailchimpCampaignId: campaignId
-      }, { user, t, pubsub })
+      }, context)
     }
 
     const emailSchema = doc.content.meta.template === 'editorialNewsletter'

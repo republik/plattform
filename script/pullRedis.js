@@ -19,6 +19,7 @@ const {
   lockKey,
   channelKey: schedulingChannelKey
 } = require('../lib/publicationScheduler')
+const { prepareMetaForPublish } = require('../lib/Document')
 
 const user = {
   roles: [ 'editor' ]
@@ -57,28 +58,35 @@ Promise.resolve().then(async () => {
       redisOps.push(
         redis.saddAsync('repos:ids', repo.id)
       )
-      const meta = await getRepoMeta(repo)
-      if (meta && meta.mailchimpCampaignId) {
+      const repoMeta = await getRepoMeta(repo)
+      if (repoMeta && repoMeta.mailchimpCampaignId) {
         redisOps.push(
-          redis.saddAsync(`repos:${repo.id}/mailchimp/campaignId`, meta.mailchimpCampaignId)
+          redis.saddAsync(`repos:${repo.id}/mailchimp/campaignId`, repoMeta.mailchimpCampaignId)
         )
       }
       for (let publication of publications) {
         const { commit, sha, meta: { scheduledAt: _scheduledAt } } = publication
+        const scheduledAt = _scheduledAt && _scheduledAt > now
+          ? _scheduledAt
+          : null
 
         const doc = await getDocument(
           { id: commit.id, repo },
           { oneway: true },
           { user, redis }
         )
+        doc.content.meta = await prepareMetaForPublish(
+          repo.id,
+          doc.content.meta,
+          repoMeta,
+          scheduledAt,
+          now
+        )
         const payload = JSON.stringify({
           doc,
           sha
         })
 
-        const scheduledAt = _scheduledAt && _scheduledAt > now
-          ? _scheduledAt
-          : null
         let ref = publication.name.indexOf('prepublication') > -1
           ? 'prepublication'
           : 'publication'
