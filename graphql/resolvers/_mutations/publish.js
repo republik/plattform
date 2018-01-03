@@ -4,7 +4,6 @@ const yaml = require('../../../lib/yaml')
 const {
   createGithubClients,
   publicationVersionRegex,
-  getAnnotatedTags,
   upsertRef,
   deleteRef
 } = require('../../../lib/github')
@@ -22,7 +21,10 @@ const {
 const placeMilestone = require('./placeMilestone')
 const { document: getDocument } = require('../Commit')
 const editRepoMeta = require('./editRepoMeta')
-const { meta: getRepoMeta } = require('../Repo')
+const {
+  meta: getRepoMeta,
+  latestPublications: getLatestPublications
+} = require('../Repo')
 const { prepareMetaForPublish } = require('../../../lib/Document')
 
 const newsletterEmailSchema = require('@project-r/template-newsletter/lib/email')
@@ -80,7 +82,7 @@ module.exports = async (
   )
 
   // calc version number
-  const latestPublicationVersion = await getAnnotatedTags(repoId)
+  const latestPublicationVersion = await getLatestPublications({ id: repoId })
     .then(tags => tags
       .filter(tag => publicationVersionRegex.test(tag.name))
       .map(tag => parseInt(publicationVersionRegex.exec(tag.name)[1]))
