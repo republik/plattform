@@ -18,7 +18,10 @@ query repos($after: String, $search: String) {
       latestCommit {
         document {
           meta {
-            format
+            format {
+              id
+              content
+            }
             title
             image
             description
@@ -39,7 +42,7 @@ const ConnectedAutoComplete = graphql(repoQuery, {
     const { data: { repos: { nodes = [] } } } = props
     return ({
       items: nodes.map(v => ({
-        value: v.id,
+        value: v,
         text: v.latestCommit.document.meta.title ||
           v.id.replace([GITHUB_ORG, REPO_PREFIX || ''].join('/'), '')
       }))
@@ -68,7 +71,6 @@ export default class RepoSearch extends Component {
 
   componentWillReceiveProps (nextProps) {
     this.setState({
-      ...this.state,
       value: safeValue(nextProps.value)
     })
   }
