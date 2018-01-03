@@ -9,9 +9,18 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       reason
     } = args
 
-    const membership = await transaction.public.memberships.findOne({
-      id: membershipId
+    const membership = await transaction.query(`
+      SELECT
+        m.*
+      FROM
+        memberships m
+      WHERE
+        id = :membershipId
+      FOR UPDATE
+    `, {
+      membershipId
     })
+      .then(result => result[0])
     if (!membership) {
       throw new Error(t('api/membership/404'))
     }
