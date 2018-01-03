@@ -103,9 +103,9 @@
     stringify-entities "^1.3.1"
     unified "^6.1.5"
 
-"@project-r/styleguide@^5.23.12":
-  version "5.23.12"
-  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.23.12.tgz#415674baf569bf107188c9fac64a4571698e08db"
+"@project-r/styleguide@^5.24.0":
+  version "5.24.0"
+  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.24.0.tgz#60b73238111a68a2d304ff35ad647ea846c3134a"
   dependencies:
     react-icons "^2.2.7"
 
