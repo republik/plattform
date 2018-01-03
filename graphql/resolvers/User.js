@@ -80,7 +80,13 @@ module.exports = {
     ? getKeyId(key)
     : null
   ),
-  email: exposeAccessField('emailAccessRole', 'email'),
+  email: (user, ...rest) => {
+    // special case for pledging: check modules/crowdfundings/graphql/resolvers/Pledge.js
+    if (user._exposeEmail) {
+      return user.email
+    }
+    return exposeAccessField('emailAccessRole', 'email')(user, ...rest)
+  },
   emailAccessRole (user, args, { user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return user._raw.emailAccessRole

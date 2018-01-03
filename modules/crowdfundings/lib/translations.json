@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-26T16:31:46.340Z",
+  "updated": "2018-01-02T14:29:46.187Z",
   "title": "live",
   "data": [
     {
@@ -217,6 +217,10 @@
     {
       "key": "api/postfinancePayment/match/noChange",
       "value": "Diese Postfinance Zahlung ist bereits gematched."
+    },
+    {
+      "key": "api/payment/subscription/threeDsecure/notSupported",
+      "value": "Es tut uns leid, aus technischen Gründen können wir zurzeit kein Monatsabo auf eine Kreditkarte buchen, die 3D secure voraussetzt. Sie können es entweder mit einer anderen Karte versuchen und/oder uns kontaktieren unter: zahlungen@republik.ch. "
     }
   ]
 }

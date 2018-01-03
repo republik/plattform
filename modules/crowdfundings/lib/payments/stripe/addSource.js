@@ -7,7 +7,8 @@ module.exports = async ({
   pgdb,
   clients, // optional
   deduplicate = false,
-  makeDefault = false
+  makeDefault = false,
+  t
 }) => {
   const {
     platform,
@@ -22,24 +23,34 @@ module.exports = async ({
     throw new Error(`could not find stripeCustomer for userId: ${userId} companyId: ${platform.company.id}`)
   }
 
+  let existingSource
   if (deduplicate) {
     const source = await platform.stripe.sources.retrieve(sourceId)
     const stripeCustomer = await platform.stripe.customers.retrieve(customer.id)
 
-    const existingSource = stripeCustomer.sources.data.find(s =>
+    // see _mutations/addPaymentSource
+    if (source.type === 'three_d_secure') {
+      throw new Error('three_d_secure sources cannot be attached like this!')
+    }
+
+    existingSource = stripeCustomer.sources.data.find(s =>
       s.card && s.card.fingerprint === source.card.fingerprint
     )
-    if (existingSource) {
+    if (existingSource && makeDefault === false) {
       return existingSource.id
     }
   }
 
-  await platform.stripe.customers.createSource(customer.id, {
-    source: sourceId
-  })
+  if (!existingSource) {
+    await platform.stripe.customers.createSource(customer.id, {
+      source: sourceId
+    })
+  }
   if (makeDefault) {
     await platform.stripe.customers.update(customer.id, {
-      default_source: sourceId
+      default_source: existingSource
+        ? existingSource.id
+        : sourceId
     })
   }
 
@@ -52,26 +63,47 @@ module.exports = async ({
       throw new Error(`could not find stripeCustomer for userId: ${userId} companyId: ${connectedAccount.company.id}`)
     }
 
-    const connectedSource = await platform.stripe.sources.create({
-      customer: customer.id,
-      usage: 'reusable',
-      original_source: sourceId,
-      metadata: {
-        original_source_checksum: crypto
-          .createHash('sha1')
-          .update(sourceId)
-          .digest('hex')
-      }
-    }, {
-      stripe_account: connectedAccount.accountId
-    })
+    const originalSourceChecksum = crypto
+      .createHash('sha1')
+      .update(
+        existingSource
+          ? existingSource.id
+          : sourceId
+      )
+      .digest('hex')
 
-    await platform.stripe.customers.createSource(connectedCustomer.id, {
-      source: connectedSource.id,
-      validate: false // workaround suggested by stripe suppor for 402 invalid_cvc
-    }, {
-      stripe_account: connectedAccount.accountId
-    })
+    let connectedSource
+    if (existingSource) {
+      const connectedCustomerStripe = await connectedAccount.stripe.customers.retrieve(
+        connectedCustomer.id
+      )
+      connectedSource = connectedCustomerStripe.sources.data.find(s =>
+        (s.metadata && s.metadata.original_source_checksum &&
+          s.metadata.original_source_checksum === originalSourceChecksum)
+      )
+      if (!connectedSource) {
+        throw new Error('could not find source for connectedCustomerStripe with existingSource')
+      }
+    } else {
+      connectedSource = await platform.stripe.sources.create({
+        customer: customer.id,
+        usage: 'reusable',
+        original_source: sourceId,
+        metadata: {
+          original_source_checksum: originalSourceChecksum
+        }
+      }, {
+        stripe_account: connectedAccount.accountId
+      })
+
+      await platform.stripe.customers.createSource(connectedCustomer.id, {
+        source: connectedSource.id,
+        validate: false // workaround suggested by stripe support for 402 invalid_cvc
+      }, {
+        stripe_account: connectedAccount.accountId
+      })
+    }
+
     if (makeDefault) {
       await platform.stripe.customers.update(connectedCustomer.id, {
         default_source: connectedSource.id
@@ -79,6 +111,10 @@ module.exports = async ({
         stripe_account: connectedAccount.accountId
       })
     }
+  }
+
+  if (existingSource) {
+    return existingSource.id
   }
 
   return sourceId

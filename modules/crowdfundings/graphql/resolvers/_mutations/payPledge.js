@@ -43,10 +43,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       `, {
         pledgeId: pledge.id
       }))[0]
-      let pspPayload
-      try {
-        pspPayload = JSON.parse(pledgePayment.pspPayload)
-      } catch (e) { }
+      const { pspPayload } = pledgePayment
       if (
         payment && payment.pspPayload && pspPayload &&
         payment.pspPayload.TRANSACTIONID === pspPayload.tx) {
@@ -90,9 +87,11 @@ module.exports = async (_, args, {pgdb, req, t}) => {
         pledgeId: pledge.id,
         total: pledge.total,
         sourceId: pledgePayment.sourceId,
+        pspPayload: pledgePayment.pspPayload,
         userId: user.id,
         pkg,
         transaction,
+        pgdb,
         t,
         logger
       })
@@ -100,7 +99,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       pledgeStatus = await payPledgePostfinance({
         pledgeId: pledge.id,
         total: pledge.total,
-        pspPayloadRaw: pledgePayment.pspPayload,
+        pspPayload: pledgePayment.pspPayload,
         userId: user.id,
         transaction,
         t,
@@ -110,7 +109,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       pledgeStatus = await payPledgePaypal({
         pledgeId: pledge.id,
         total: pledge.total,
-        pspPayloadRaw: pledgePayment.pspPayload,
+        pspPayload: pledgePayment.pspPayload,
         transaction,
         t,
         logger
