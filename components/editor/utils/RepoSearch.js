@@ -18,10 +18,6 @@ query repos($after: String, $search: String) {
       latestCommit {
         document {
           meta {
-            format {
-              id
-              content
-            }
             title
             image
             description
@@ -36,7 +32,7 @@ query repos($after: String, $search: String) {
 
 const ConnectedAutoComplete = graphql(repoQuery, {
   skip: props => !props.filter,
-  options: ({ filter }) => ({ variables: { search: filter } }),
+  options: ({ search }) => ({ variables: { search: search } }),
   props: (props) => {
     if (props.data.loading) return
     const { data: { repos: { nodes = [] } } } = props
