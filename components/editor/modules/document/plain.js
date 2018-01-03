@@ -1,14 +1,11 @@
 import React from 'react'
 import { Document as SlateDocument } from 'slate'
-import { timeHour } from 'd3-time'
-import { timeFormat } from 'd3-time-format'
 import { parse } from '@orbiting/remark-preset'
 
 import { swissTime } from '../../../../lib/utils/format'
 import slugify from '../../../../lib/utils/slug'
 import MarkdownSerializer from 'slate-mdast-serializer'
 
-const slugDateFormat = timeFormat('%Y/%m/%d')
 const pubDateFormat = swissTime.format('%-d. %B %Y')
 
 export default ({rule, subModules, TYPE}) => {
@@ -36,11 +33,9 @@ export default ({rule, subModules, TYPE}) => {
       return null
     }
 
-    const nextHour = timeHour.ceil(new Date())
     let newData = data
       .set('auto', true)
       .set('feed', true)
-      .set('publishDate', nextHour.toISOString())
 
     const title = titleModule && documentNode.nodes
       .find(n => n.type === titleModule.TYPE && n.kind === 'block')
@@ -52,16 +47,7 @@ export default ({rule, subModules, TYPE}) => {
       newData = newData
         .set('title', headlineText)
         .set('description', lead ? lead.text : '')
-        .set('slug', [
-          slugDateFormat(nextHour),
-          slugify(headlineText)
-        ].join('/'))
-    } else {
-      newData = newData
-        .set('slug', [
-          slugDateFormat(nextHour),
-          ''
-        ].join('/'))
+        .set('slug', slugify(headlineText))
     }
 
     return data.equals(newData)

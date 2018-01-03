@@ -124,12 +124,11 @@ class Form extends Component {
                 ? value
                 : (
                   parseDate(value) ||
-                  (value && new Date(value)) ||
-                  new Date()
+                  (value && new Date(value))
                 )
               formattedValue = this.state[key] !== undefined
                 ? this.state[key].formatted
-                : formatDate(dateValue)
+                : dateValue ? formatDate(dateValue) : ''
 
               onChange = (_, inputValue) => {
                 const parsedValue = parseDate(inputValue) || ''

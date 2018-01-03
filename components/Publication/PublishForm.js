@@ -155,8 +155,7 @@ class PublishForm extends Component {
           const schema = getSchema(meta.template)
 
           const errors = [
-            !meta.slug && t('publish/validation/slug/empty'),
-            !meta.publishDate && t('publish/validation/publishDate/empty'),
+            (meta.template !== 'front' && !meta.slug) && t('publish/validation/slug/empty'),
             (updateMailchimp && !meta.emailSubject) && t('publish/validation/emailSubject/empty')
           ].filter(Boolean)
           const hasErrors = errors.length > 0
