@@ -101,7 +101,7 @@ const MetaData = ({value, editor, additionalFields = [], customFields = [], teas
               return <RepoSearch key={customField.key}
                 label={label}
                 value={value}
-                onChange={item => onChange(undefined, item.value.id)}
+                onChange={item => onChange(undefined, `https://github.com/${item.value.id}`)}
                 />
             }
             return <Field key={customField.key}

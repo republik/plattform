@@ -46,13 +46,6 @@ const SearchUserForm = withT(class extends Component {
     this.filterChangeHandler = this.filterChangeHandler.bind(this)
     this.changeHandler = this.changeHandler.bind(this)
   }
-  componentDidMount () {
-    this._isMounted = true
-  }
-
-  componentWillUnmount () {
-    this._isMounted = false
-  }
 
   filterChangeHandler (value) {
     this.setState(

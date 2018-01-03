@@ -64,6 +64,7 @@ export default class RepoSearch extends Component {
       search: '',
       value: safeValue(props.value)
     }
+
     this.filterChangeHandler = this.filterChangeHandler.bind(this)
     this.changeHandler = this.changeHandler.bind(this)
     this.setSearchValue = debounce(this.setSearchValue.bind(this), 500)
@@ -73,6 +74,10 @@ export default class RepoSearch extends Component {
     this.setState({
       value: safeValue(nextProps.value)
     })
+  }
+
+  componentWillUnmount () {
+    this.setSearchValue.cancel()
   }
 
   setSearchValue () {
