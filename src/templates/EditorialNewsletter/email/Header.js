@@ -2,7 +2,7 @@ import React from 'react'
 import colors from '../../../theme/colors'
 
 export default ({ meta }) => {
-  const { slug } = meta
+  const { slug, path } = meta
   return (
     <tr>
       <td
@@ -11,7 +11,7 @@ export default ({ meta }) => {
         style={{ borderBottom: `1px solid ${colors.divider}` }}
       >
         <a
-          href={`https://www.republik.ch/${slug}`}
+          href={`https://www.republik.ch${path ? path : `/${slug}`}`}
           title="Im Web lesen"
         >
           <img

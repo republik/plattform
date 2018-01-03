@@ -4,7 +4,7 @@ import { paragraphStyle } from './Paragraph'
 import { Mso } from 'mdast-react-render/lib/email'
 
 export default ({ children, meta }) => {
-  const { slug } = meta
+  const { slug, path } = meta
   return (
     <tr>
       <td align="center" valign="top">
@@ -59,7 +59,7 @@ export default ({ children, meta }) => {
                 <hr />
                 <p>
                   <a
-                    href={`https://www.republik.ch/${slug}`}
+                    href={`https://www.republik.ch${path ? path : `/${slug}`}`}
                     style={{
                       color: '#000',
                       fontFamily: fontFamilies.sansSerifRegular,

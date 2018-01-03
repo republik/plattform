@@ -35,9 +35,9 @@ const creditSchema = {
   rules: [link, br]
 }
 
-const DefaultLink = ({ children, slug }) => children
+const DefaultLink = ({ children, path, slug }) => children
 
-export const TeaserFeed = ({ kind, format, slug, title, description, credits, Link = DefaultLink }) => {
+export const TeaserFeed = ({ kind, format, path, slug, title, description, credits, Link = DefaultLink }) => {
   const Headline = kind && kind.indexOf('meta') !== -1
     ? Headlines.Interaction
     : Headlines.Editorial
@@ -45,12 +45,12 @@ export const TeaserFeed = ({ kind, format, slug, title, description, credits, Li
   return (
     <Container kind={kind} format={format}>
       <Headline>
-        <Link slug={slug}>
+        <Link slug={slug} path={path}>
           <a {...styles.link}>{title}</a>
         </Link>
       </Headline>
       <Lead>
-        <Link slug={slug}>
+        <Link slug={slug} path={path}>
           <a {...styles.link}>{description}</a>
         </Link>
       </Lead>
