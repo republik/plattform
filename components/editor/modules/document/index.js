@@ -3,6 +3,7 @@ import { parse } from '@orbiting/remark-preset'
 
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { findOrCreate } from '../../utils/serialization'
+import slugify from '../../../../lib/utils/slug'
 
 export default ({rule, subModules, TYPE}) => {
   const coverModule = subModules.find(m => m.name === 'cover')
@@ -36,6 +37,7 @@ export default ({rule, subModules, TYPE}) => {
       .set('auto', true)
       .set('feed', true)
       .set('title', title ? title.text : '')
+      .set('slug', title ? slugify(title.text) : '')
       .set('description', lead ? lead.text : '')
       .set('image', cover.data.get('src'))
 
