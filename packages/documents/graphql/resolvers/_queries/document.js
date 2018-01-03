@@ -1,8 +1,8 @@
 const getDocuments = require('./documents')
 
 module.exports = async (_, args, context) => {
-  const { slug } = args
+  const { path } = args
 
-  return getDocuments(_, { slug }, context)
+  return getDocuments(_, { path }, context)
     .then(docCon => docCon.nodes[0])
 }

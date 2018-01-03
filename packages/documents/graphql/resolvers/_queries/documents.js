@@ -36,7 +36,7 @@ module.exports = async (_, args, { user, redis, pgdb }) => {
     first,
     before,
     last,
-    slug
+    path
   } = args
 
   return Promise.all(
@@ -125,9 +125,10 @@ module.exports = async (_, args, { user, redis, pgdb }) => {
           )
         })
       }
-      if (slug) {
+      if (path) {
         documents = documents.filter(d => (
-          d.content.meta.slug === slug
+          d.content.meta.path === path ||
+          '/'+d.content.meta.slug === path
         ))
       }
       if (template) {
@@ -143,8 +144,8 @@ module.exports = async (_, args, { user, redis, pgdb }) => {
       let readNodes = true
       // we only restrict the nodes array
       // making totalCount always available
-      // - querying a single document by slug is always allowed
-      if (DOCUMENTS_RESTRICT_TO_ROLES && !slug) {
+      // - querying a single document by path is always allowed
+      if (DOCUMENTS_RESTRICT_TO_ROLES && !path) {
         const roles = DOCUMENTS_RESTRICT_TO_ROLES.split(',')
         readNodes = userIsInRoles(user, roles)
       }

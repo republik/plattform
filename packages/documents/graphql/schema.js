@@ -17,6 +17,6 @@ type queries {
     after: String
   ): DocumentConnection!
   # (pre)published document
-  document(slug: String!): Document
+  document(path: String!): Document
 }
 `

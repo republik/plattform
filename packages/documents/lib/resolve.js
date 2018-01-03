@@ -89,7 +89,7 @@ const createUrlReplacer = (allDocuments = [], usernames = []) => url => {
   const linkedDoc = allDocuments
     .find(d => d.repoId === repoId)
   if (linkedDoc) {
-    return `/${linkedDoc.content.meta.slug}`
+    return linkedDoc.content.meta.path
   }
   // autoSlug links pointing to
   // not published or missing documents are stripped
