@@ -1,8 +1,7 @@
 import React from 'react'
 import colors from '../../../theme/colors'
-import { withMeta } from '../../Article/Container'
 
-export default withMeta(({ meta }) => {
+export default ({ meta }) => {
   const { slug } = meta
   return (
     <tr>
@@ -26,10 +25,10 @@ export default withMeta(({ meta }) => {
               maxWidth: '100% !important'
             }}
             width="180"
-            alt="Im Web lesen"
+            alt="REPUBLIK"
           />
         </a>
       </td>
     </tr>
   )
-})
+}

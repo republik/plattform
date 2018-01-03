@@ -2,9 +2,8 @@ import React from 'react'
 import { fontFamilies } from '../../../theme/fonts'
 import { paragraphStyle } from './Paragraph'
 import { Mso } from 'mdast-react-render/lib/email'
-import { withMeta } from '../../Article/Container'
 
-export default withMeta(({ children, meta }) => {
+export default ({ children, meta }) => {
   const { slug } = meta
   return (
     <tr>
@@ -95,4 +94,4 @@ export default withMeta(({ children, meta }) => {
       </td>
     </tr>
   )
-})
+}

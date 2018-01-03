@@ -198,7 +198,7 @@ const createNewsletterSchema = ({
         component: Container,
         editorModule: 'documentPlain',
         props: node => ({
-          meta: node.meta
+          meta: node.meta || {}
         }),
         rules: [
           {
@@ -213,6 +213,9 @@ const createNewsletterSchema = ({
             matchMdast: matchZone('CENTER'),
             component: Center,
             editorModule: 'center',
+            props: (mdast, index, parent, {ancestors}) => ({
+              meta: ancestors[ancestors.length - 1].meta || {}
+            }),
             rules: [
               paragraph,
               figure,
