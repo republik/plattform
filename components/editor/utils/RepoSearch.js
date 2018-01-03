@@ -65,13 +65,6 @@ export default class RepoSearch extends Component {
     this.changeHandler = this.changeHandler.bind(this)
     this.setSearchValue = debounce(this.setSearchValue.bind(this), 500)
   }
-  componentDidMount () {
-    this._isMounted = true
-  }
-
-  componentWillUnmount () {
-    this._isMounted = false
-  }
 
   componentWillReceiveProps (nextProps) {
     this.setState({
@@ -82,7 +75,6 @@ export default class RepoSearch extends Component {
 
   setSearchValue () {
     this.setState({
-      ...this.state,
       search: this.state.filter
     })
   }
@@ -90,7 +82,6 @@ export default class RepoSearch extends Component {
   filterChangeHandler (value) {
     this.setState(
         state => ({
-          ...this.state,
           filter: value
         }),
         this.setSearchValue
@@ -100,7 +91,6 @@ export default class RepoSearch extends Component {
   changeHandler (value) {
     this.setState(
         state => ({
-          ...this.state,
           value
         }),
         () => this.props.onChange(value)
