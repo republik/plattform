@@ -9,6 +9,7 @@ import {
   FigureCaption,
   FigureByline
 } from '../../../components/Figure'
+import { Sub, Sup } from '../../../components/Typography'
 
 const createSchema = ({ ...args } = {}) => {
   return createNewsletterSchema({
@@ -20,6 +21,8 @@ const createSchema = ({ ...args } = {}) => {
     Image: FigureImage,
     Caption: FigureCaption,
     Byline: FigureByline,
+    Sub,
+    Sup,
     ...args
   })
 }
