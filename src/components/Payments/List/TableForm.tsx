@@ -37,7 +37,9 @@ const formSectionStyles = {
 
 export default ({
   search,
+  companyName,
   onSearch,
+  onSelectCompany,
   dateRange,
   onDateRange,
   stringArray,
@@ -47,6 +49,19 @@ export default ({
   <div
     style={{ borderBottom: `1px solid ${colors.divider}` }}
   >
+    <div style={formSectionStyles}>
+      <div>
+        <Label htmlFor="companyName">Choose legal entity:</Label>
+      </div>
+      <select
+        name="companyName"
+        value={companyName}
+        onChange={searchHandler(onSelectCompany)}
+        >
+        <option value="PROJECT_R">Project R</option>
+        <option value="REPUBLIK">Republik</option>
+      </select>
+    </div>
     <div style={formSectionStyles}>
       <Input
         label="Search"
