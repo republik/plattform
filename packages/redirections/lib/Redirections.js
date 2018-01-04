@@ -31,6 +31,25 @@ const upsert = async (
   }
 }
 
+const get = async (
+  source, resource,
+  { pgdb }
+) => {
+  return pgdb.query(`
+    SELECT
+      *
+    FROM
+      redirections
+    WHERE
+      source = :source AND
+      NOT (resource @> :resource)
+  `, {
+    source,
+    resource
+  })
+}
+
 module.exports = {
-  upsert
+  upsert,
+  get
 }
