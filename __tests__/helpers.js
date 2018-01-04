@@ -27,9 +27,20 @@ const disconnect = async () => {
   await Server.close()
 }
 
+const loginUser = async (user) => {
+  console.log(user)
+}
+
+loginUser.Unverified = {
+  'firstName': 'willhelm',
+  'lastName': 'tell',
+  'email': 'willhelmtell@republik.ch'
+}
+
 module.exports = {
   apolloFetch: createLocalApolloFetch(),
   connectIfNeeded,
   pgDatabase,
-  disconnect
+  disconnect,
+  loginUser
 }

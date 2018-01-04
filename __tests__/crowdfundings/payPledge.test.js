@@ -1,7 +1,6 @@
 const test = require('tape-async')
-const { apolloFetch, connectIfNeeded, pgDatabase } = require('../helpers.js')
+const { apolloFetch, connectIfNeeded, pgDatabase, loginUser } = require('../helpers.js')
 const { submitPledge } = require('./submitPledge.test.js')
-/* see below
 const {
   createSource,
   invoicePaymentSuccess,
@@ -9,7 +8,6 @@ const {
   resetCustomers,
   invoicePaymentFail,
   cancelSubscription } = require('./stripeHelpers')
-*/
 // const { createTransaction } = require('./paypalHelpers')
 
 const PAYMENT_METHODS = {
@@ -102,11 +100,10 @@ test('pay ABO pledge with PAYMENTSLIP (post-payment)', async (t) => {
 //   t.end()
 // })
 
-/* TODO: fix createSource before uncommenting
 test('pay ABO pledge with STRIPE', async (t) => {
   const { pledgeId } = await prepare()
   await resetCustomers(pgDatabase())
-  const source = await createSource('tok_visa')
+  const source = await createSource('tok_visa', loginUser.Unverified.email)
   const result = await payPledge({
     pledgeId,
     method: PAYMENT_METHODS.STRIPE,
@@ -122,7 +119,7 @@ test('pay ABO pledge with STRIPE', async (t) => {
 test('pay MONTHLY_ABO pledge with STRIPE', async (t) => {
   const { pledgeId } = await prepare({ templateId: '00000000-0000-0000-0008-000000000002' })
   await resetCustomers(pgDatabase())
-  const source = await createSource('tok_visa')
+  const source = await createSource('tok_visa', loginUser.Unverified.email)
   const result = await payPledge({
     pledgeId,
     method: PAYMENT_METHODS.STRIPE,
@@ -163,7 +160,7 @@ test('pay MONTHLY_ABO pledge with STRIPE', async (t) => {
 test('failing payments on MONTHLY_ABO pledge with STRIPE', async (t) => {
   const { pledgeId } = await prepare({ templateId: '00000000-0000-0000-0008-000000000002' })
   await resetCustomers(pgDatabase())
-  const source = await createSource('tok_visa')
+  const source = await createSource('tok_visa', loginUser.Unverified.email)
   const result = await payPledge({
     pledgeId,
     method: PAYMENT_METHODS.STRIPE,
@@ -192,7 +189,7 @@ test('failing payments on MONTHLY_ABO pledge with STRIPE', async (t) => {
 test('failed payments on MONTHLY_ABO pledge with STRIPE lead to disabled membership', async (t) => {
   const { pledgeId } = await prepare({ templateId: '00000000-0000-0000-0008-000000000002' })
   await resetCustomers(pgDatabase())
-  const source = await createSource('tok_visa')
+  const source = await createSource('tok_visa', loginUser.Unverified.email)
   const result = await payPledge({
     pledgeId,
     method: PAYMENT_METHODS.STRIPE,
@@ -219,4 +216,3 @@ test('failed payments on MONTHLY_ABO pledge with STRIPE lead to disabled members
   t.ok(periods.length === 0, 'no membership periods generated yet')
   t.end()
 })
-*/

@@ -96,14 +96,14 @@ const resetCustomers = async (pgdb) => {
   }
 }
 
-const createSource = async (token) => {
+const createSource = async (token, email) => {
   const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY_COMPANY_ONE)
   const source = await stripe.sources.create({
     type: 'card',
     token,
     currency: 'usd',
     owner: {
-      email: 'willhelm.tell@republik.ch'
+      email
     }
   })
   return source
