@@ -169,7 +169,7 @@ test('failing payments on MONTHLY_ABO pledge with STRIPE', async (t) => {
   })
   t.notOk(result.errors, 'graphql query successful')
 
-  // simulate successful payment of the pledge
+  // simulate failed payment of the pledge
   await invoicePaymentFail({
     pledgeId
   }, pgDatabase())
@@ -179,7 +179,7 @@ test('failing payments on MONTHLY_ABO pledge with STRIPE', async (t) => {
 
   const membership = await pgDatabase().public.memberships.findOne({ pledgeId })
   t.ok(membership.latestPaymentFailedAt, 'membership last payment failed date exists')
-  t.equal(membership.active, false, 'membership is not active')
+  t.equal(membership.active, true, 'membership still active, we will send a reminder before disabling')
   t.equal(membership.voucherable, false, 'membership is not voucherable')
 
   const periods = await pgDatabase().public.membershipPeriods.find({ membershipId: membership.id })
