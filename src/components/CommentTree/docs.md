@@ -2,61 +2,77 @@ A discussion is logically a tree structure, but is displayed more like a list. T
 
 Each comment is shown as a full-width div, indented such that the profile picture is shown at a particular depth (`visualDepth`, starting at 1). The empty space on the left left is filled with vertical bars. The `otherChild` flag controls whether a vertical bar is placed through the profile picture or not.
 
-Keep in mind that each vertical bar is 40 + 10 px wide, so there's a limit how deep you can go while still leaving enough space for the comment content.
+```react|span-3,plain
+<Row t={t} comment={comments.comment1}
+  visualDepth={1} otherChild />
+```
+```react|span-3,plain
+<Row t={t} comment={comments.comment1}
+  visualDepth={1} />
+```
 
-```react|noSource,span-3,plain
-<Row t={t} comment={comments.comment1} visualDepth={1} otherChild />
-```
-```react|noSource,span-3,plain
-<Row t={t} comment={comments.comment1} visualDepth={3} />
-```
+Keep in mind that each vertical bar is 40 + 10 px wide, so there's a limit how deep you can go while still leaving enough space for the comment content.
 
 The right-most vertical bar can be placed directly through the center of the profile pictur, to indicate that the comment is part of a sequence. The comment can be either the first one in a sequence (`head`), in the middle (`??`) or last (`tail`).
 
-```react|noSource,span-2,plain
-<Row t={t} comment={comments.comment1} visualDepth={3} head />
+```react|span-2,plain
+<Row t={t} comment={comments.comment1}
+  visualDepth={3} head />
 ```
-```react|noSource,span-2,plain
-<Row t={t} comment={comments.comment1} visualDepth={3} />
+```react|span-2,plain
+<Row t={t} comment={comments.comment1}
+  visualDepth={3} />
 ```
-```react|noSource,span-2,plain
-<Row t={t} comment={comments.comment1} visualDepth={3} tail />
+```react|span-2,plain
+<Row t={t} comment={comments.comment1}
+  visualDepth={3} tail />
 ```
 
 ### `<CommentTreeLoadMore />`
 
 To indicate that there are more comments which can be loaded at a particular depth, use `<CommentTreeLoadMore />`. The component uses the same `visualDepth` concept as  `<Row />`. The left edge of the horizontal bar is aligned with the left edge of the profile picture. But it can also be indented a bit so that it connects with the last vertical bar of the preceding `<Row />` (make sure to set `otherChild=false` on the preceding `<Row />` so that the last vertical bar is drawn).
 
-```react|noSource,span-3,plain
+```react|span-3,plain
 <div>
-  <Row t={t} comment={comments.comment1} visualDepth={1} head otherChild />
-  <LoadMore t={t} visualDepth={1} count={128} onClick={() => {}} />
+  <Row t={t} comment={comments.comment1}
+    visualDepth={1} head otherChild />
+  <LoadMore t={t} onClick={() => {}}
+    visualDepth={1} count={128} />
 </div>
 ```
-```react|noSource,span-3,plain
+```react|span-3,plain
 <div>
-  <Row t={t} comment={comments.comment1} visualDepth={1} head />
-  <LoadMore t={t} visualDepth={1} connected count={128} onClick={() => {}} />
+  <Row t={t} comment={comments.comment1}
+    visualDepth={1} head />
+  <LoadMore t={t} onClick={() => {}}
+    visualDepth={1} connected count={128} />
 </div>
 ```
-```react|noSource,span-3,plain
+```react|span-3,plain
 <div>
-  <Row t={t} comment={comments.comment1} visualDepth={3} otherChild />
-  <LoadMore t={t} visualDepth={3} count={128} onClick={() => {}} />
+  <Row t={t} comment={comments.comment1}
+    visualDepth={3} otherChild />
+  <LoadMore t={t} onClick={() => {}}
+    visualDepth={3} count={128} />
 </div>
 ```
-```react|noSource,span-3,plain
+```react|span-3,plain
 <div>
-  <Row t={t} comment={comments.comment1} visualDepth={3} />
-  <LoadMore t={t} visualDepth={3} connected count={128} onClick={() => {}} />
+  <Row t={t} comment={comments.comment1}
+    visualDepth={3} />
+  <LoadMore t={t} onClick={() => {}}
+    visualDepth={3} connected count={128} />
 </div>
 ```
 
-```react|noSource,plain
+```react|plain
 <div>
-  <Row t={t} comment={comments.comment1} visualDepth={2} head />
-  <LoadMore t={t} visualDepth={3} count={72} onClick={() => {}} />
-  <LoadMore t={t} visualDepth={2} connected count={128} onClick={() => {}} />
+  <Row t={t} comment={comments.comment1}
+    visualDepth={2} head />
+  <LoadMore t={t} onClick={() => {}}
+    visualDepth={3} count={72} />
+  <LoadMore t={t} onClick={() => {}}
+    visualDepth={2} connected count={128} />
 </div>
 ```
 
@@ -65,10 +81,12 @@ To indicate that there are more comments which can be loaded at a particular dep
 If the comments after a certain point can be collapsed, use `<CommentTreeCollapse />`. This element is always shown full-width, there is no way to indent it.
 
 
-```react|noSource,plain
+```react|plain
 <div>
-  <Row t={t} comment={comments.comment1} visualDepth={3} head />
-  <Collapse t={t} visualDepth={3} onClick={() => {}} />
+  <Row t={t} comment={comments.comment1}
+    visualDepth={3} head />
+  <Collapse t={t} onClick={() => {}}
+    visualDepth={3} />
 </div>
 ```
 
