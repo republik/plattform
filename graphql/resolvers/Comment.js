@@ -31,6 +31,7 @@ module.exports = {
     return null
   },
 
+  parentIds: ({ parentId }) => [parentId].filter(Boolean),
   parent: async ({ parentId }, args, { pgdb }, info) => {
     if (!parentId) {
       return null

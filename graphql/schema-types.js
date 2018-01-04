@@ -205,6 +205,7 @@ type Comment {
   discussion: Discussion!
   id: ID!
   parent: Comment
+  parentIds: [ID!]!
   comments: CommentConnection!
   # maybe becomes mdast/JSON later
   content: String!
