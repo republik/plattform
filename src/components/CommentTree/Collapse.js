@@ -14,6 +14,7 @@ const styles = {
     marginTop: '-2px'
   }),
   button: css({
+    outline: 'none',
     position: 'absolute',
     top: 0,
     right: 0,
