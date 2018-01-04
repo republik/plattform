@@ -94,6 +94,34 @@ type Video {
   poster: String
 }
 
+type Faq {
+  category: String
+  question: String
+  answer: String
+}
+
+type Event {
+  slug: String
+  title: String
+  description: String
+  link: String
+  date: Date
+  time: String
+  where: String
+  locationLink: String
+  metaDescription: String
+  socialMediaImage: String
+}
+
+type Update {
+  slug: String
+  title: String
+  text: String
+  publishedDateTime: DateTime
+  metaDescription: String
+  socialMediaImage: String
+}
+
 enum Permission {
   ALLOWED
   ENFORCED
@@ -227,5 +255,9 @@ type Comment {
 type Greeting {
   id: ID!
   text: String!
+}
+
+type MutationResult {
+  success: Boolean!
 }
 `

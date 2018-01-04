@@ -18,6 +18,9 @@ type queries {
     focus: String
   ): UserConnection!
   greeting: Greeting
+  faqs: [Faq!]!
+  events: [Event!]!
+  updates: [Update!]!
 }
 
 type mutations {
@@ -79,6 +82,8 @@ type mutations {
     id: ID!
     discussionPreferences: DiscussionPreferencesInput!
   ): Discussion!
+
+  submitQuestion(question: String!): MutationResult
 }
 
 type subscriptions {

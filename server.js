@@ -12,7 +12,10 @@ module.exports.run = () => {
   const executableSchema = makeExecutableSchema(merge(localModule, [documents]))
 
   // middlewares
-  const middlewares = [ require('./modules/crowdfundings/express/paymentWebhooks') ]
+  const middlewares = [
+    require('./modules/crowdfundings/express/paymentWebhooks'),
+    require('./lib/gsheets')
+  ]
 
   // signin hooks
   const signInHooks = [

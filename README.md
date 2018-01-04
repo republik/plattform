@@ -32,6 +32,7 @@ SEND_MAILS=true  # or false if you don't have mandrill at hand
 MANDRILL_API_KEY=replaceMe
 DEFAULT_MAIL_FROM_NAME='discussion'
 DEFAULT_MAIL_FROM_ADDRESS='discussion@project-r.construction'
+QUESTIONS_MAIL_FROM_ADDRESS=
 AUTH_MAIL_FROM_ADDRESS=service@project-r.construction
 DISPLAY_AUTHOR_SECRET=replaceMe
 
