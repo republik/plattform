@@ -33,6 +33,13 @@ module.exports = {
           renew: false,
           updatedAt: new Date()
         })
+      } else if (subscription.status !== 'canceled') {
+        await transaction.public.memberships.update({
+          pledgeId
+        }, {
+          renew: true,
+          updatedAt: new Date()
+        })
       }
 
       // Possible values are trialing, active, past_due, canceled, or unpaid

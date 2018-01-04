@@ -5,12 +5,22 @@ module.exports = async (_, args, {pgdb, req, t}) => {
   try {
     const {
       id: membershipId,
-      immediately = false
+      immediately = false,
+      reason
     } = args
 
-    const membership = await transaction.public.memberships.findOne({
-      id: membershipId
+    const membership = await transaction.query(`
+      SELECT
+        m.*
+      FROM
+        memberships m
+      WHERE
+        id = :membershipId
+      FOR UPDATE
+    `, {
+      membershipId
     })
+      .then(result => result[0])
     if (!membership) {
       throw new Error(t('api/membership/404'))
     }
@@ -25,8 +35,14 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       id: membership.membershipTypeId
     })
 
-    if (membershipType === 'MONTHLY_ABO' && !membership.subscriptionId) {
+    if (membershipType.name === 'MONTHLY_ABO' && !membership.subscriptionId) {
       throw new Error(t('api/membership/pleaseWait'))
+    }
+
+    let cancelReasons
+    if (reason) {
+      cancelReasons = membership.cancelReasons || []
+      cancelReasons.push(reason)
     }
 
     const newMembership = await transaction.public.memberships.updateAndGetOne({
@@ -36,7 +52,10 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       active: immediately
         ? false
         : membership.active,
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      ...cancelReasons
+        ? { cancelReasons }
+        : { }
     })
 
     if (membership.subscriptionId) {

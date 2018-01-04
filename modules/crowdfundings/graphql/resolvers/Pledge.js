@@ -21,7 +21,16 @@ module.exports = {
     return pgdb.public.packages.findOne({id: pledge.packageId})
   },
   async user (pledge, args, {pgdb}) {
-    return transformUser(await pgdb.public.users.findOne({id: pledge.userId}))
+    const user = transformUser(await pgdb.public.users.findOne({
+      id: pledge.userId
+    }))
+    if (user && !user.verified && pledge.status === 'DRAFT') {
+      return {
+        ...user,
+        _exposeEmail: true
+      }
+    }
+    return user
   },
   async payments (pledge, args, {pgdb}) {
     const pledgePayments = await pgdb.public.pledgePayments.find({pledgeId: pledge.id})

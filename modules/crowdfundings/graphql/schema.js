@@ -55,11 +55,12 @@ type mutations {
   reclaimPledge(pledgeId: ID!): Boolean!
   claimMembership(voucherCode: String!): Boolean!
   # adds a new paymentSource and makes it the default
-  addPaymentSource(sourceId: String!): [PaymentSource!]!
+  addPaymentSource(sourceId: String!, pspPayload: JSON!): [PaymentSource!]!
 
   cancelMembership(
     id: ID!
     immediately: Boolean
+    reason: String
   ): Membership!
 
   # MONTHLY_ABO: if cancelled immediately a new subscription is created

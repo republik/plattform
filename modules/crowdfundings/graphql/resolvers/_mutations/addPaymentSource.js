@@ -3,9 +3,16 @@ const { paymentSources: getPaymentSources } = require('../User')
 const addSource = require('../../../lib/payments/stripe/addSource')
 const createCustomer = require('../../../lib/payments/stripe/createCustomer')
 
-module.exports = async (_, { sourceId }, { pgdb, req, user: me }) => {
+module.exports = async (_, { sourceId, pspPayload }, { pgdb, req, user: me, t }) => {
   ensureSignedIn(req)
   const userId = me.id
+
+  // adding a threeD secure source is not supported
+  // we would need to attach the source.three_d_secure.card source
+  // and make sure to route the first payment through makeCharge
+  if (pspPayload.type === 'three_d_secure') {
+    throw new Error(t('api/payment/subscription/threeDsecure/notSupported'))
+  }
 
   const transaction = await pgdb.transactionBegin()
   try {

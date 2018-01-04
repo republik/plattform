@@ -29,7 +29,7 @@ const PAY_PLEDGE_ADDRESS = {
 }
 
 const PAY_PLEDGE_MUTATION = `
-  mutation payPledge($pledgeId: ID!, $method: PaymentMethod!, $sourceId: String, $pspPayload: String, $address: AddressInput, $paperInvoice: Boolean) {
+  mutation payPledge($pledgeId: ID!, $method: PaymentMethod!, $sourceId: String, $pspPayload: JSON, $address: AddressInput, $paperInvoice: Boolean) {
     payPledge(pledgePayment: {pledgeId: $pledgeId, method: $method, sourceId: $sourceId, pspPayload: $pspPayload, address: $address, paperInvoice: $paperInvoice}) {
       pledgeId
       userId
@@ -93,7 +93,7 @@ test('pay ABO pledge with PAYMENTSLIP (post-payment)', async (t) => {
 //   const result = await payPledge({
 //     pledgeId,
 //     method: PAYMENT_METHODS.PAYPAL,
-//     pspPayload: JSON.stringify({ tx: transaction.id })
+//     pspPayload: { tx: transaction.id }
 //   })
 //   t.notOk(result.errors, 'graphql query successful')
 //   const pledgePayment = await pgDatabase().public.pledgePayments.findOne({ pledgeId })

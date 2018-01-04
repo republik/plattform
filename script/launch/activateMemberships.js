@@ -4,10 +4,10 @@
  * are yearly memberships.
  *
  * Usage:
- * node script/activeMemberships.js
+ * node script/launch/activeMemberships.js
  */
 require('../../lib/env')
-const { lib: { pgdb: PgDb } } = require('@orbiting/backend-modules-base')
+const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const moment = require('moment')
 
 console.log('running activateMemberships.js...')

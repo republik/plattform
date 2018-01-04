@@ -4,21 +4,14 @@ const { ascending } = require('d3-array')
 module.exports = async ({
   pledgeId,
   total,
-  pspPayloadRaw,
+  pspPayload,
   userId,
   transaction,
   t,
   logger = console
 }) => {
-  let pspPayload = null
-  try {
-    pspPayload = JSON.parse(pspPayloadRaw)
-  } catch (e) {
-    logger.error('failed to parse pspPayload', { pledgeId, pspPayloadRaw })
-    throw new Error(t('api/pay/parseFailed', { id: pledgeId }))
-  }
   if (!pspPayload) {
-    logger.error('pspPayload required', { pledgeId, pspPayloadRaw })
+    logger.error('pspPayload required', { pledgeId, pspPayload })
     throw new Error(t('api/pay/parseFailed', { id: pledgeId }))
   }
 

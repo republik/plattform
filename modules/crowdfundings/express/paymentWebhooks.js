@@ -106,7 +106,7 @@ module.exports = async (server, pgdb, t) => {
             const pledgeStatus = await payPledgePaypal({
               pledgeId: pledge.id,
               total: pledge.total,
-              pspPayloadRaw: pspPayload,
+              pspPayload,
               transaction,
               t,
               logger

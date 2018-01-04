@@ -7,31 +7,43 @@ module.exports = async ({
   pledgeId,
   total,
   sourceId,
+  pspPayload,
   userId,
   pkg,
   transaction,
+  pgdb,
   t,
   logger = console
 }) => {
   let isSubscription = pkg.name === 'MONTHLY_ABO'
+
+  const threeDSecure = pspPayload && pspPayload.type === 'three_d_secure'
+  const rememberSourceId = threeDSecure
+    ? pspPayload.three_d_secure.card
+    : sourceId
+
+  if (isSubscription && threeDSecure) {
+    throw new Error(t('api/payment/subscription/threeDsecure/notSupported'))
+  }
+
   let charge
   try {
     let deduplicatedSourceId
-    if (!(await transaction.public.stripeCustomers.findFirst({ userId }))) {
-      if (!sourceId) {
+    if (!(await pgdb.public.stripeCustomers.findFirst({ userId }))) {
+      if (!rememberSourceId) {
         logger.error('missing sourceId', { userId, pledgeId, sourceId })
         throw new Error(t('api/unexpected'))
       }
       await createCustomer({
-        sourceId,
+        sourceId: rememberSourceId,
         userId,
-        pgdb: transaction
+        pgdb
       })
     } else { // stripe customer exists
       deduplicatedSourceId = await addSource({
-        sourceId,
+        sourceId: rememberSourceId,
         userId,
-        pgdb: transaction,
+        pgdb,
         deduplicate: true
       })
     }
@@ -51,7 +63,10 @@ module.exports = async ({
         amount: total,
         userId,
         companyId: pkg.companyId,
-        sourceId: deduplicatedSourceId || sourceId,
+        sourceId: threeDSecure
+          ? sourceId
+          : deduplicatedSourceId || sourceId,
+        threeDSecure,
         pgdb: transaction
       })
     }

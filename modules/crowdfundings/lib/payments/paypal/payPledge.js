@@ -11,24 +11,13 @@ const {
 module.exports = async ({
   pledgeId,
   total,
-  pspPayloadRaw,
+  pspPayload,
   transaction,
   t,
   logger = console
 }) => {
-  let pspPayload
-  if ((typeof pspPayloadRaw) === 'object') {
-    pspPayload = pspPayloadRaw
-  } else {
-    try {
-      pspPayload = JSON.parse(pspPayloadRaw)
-    } catch (e) {
-      logger.error('failed to parse pspPayload', { pledgeId, pspPayloadRaw })
-      throw new Error(t('api/pay/parseFailed', {id: pledgeId}))
-    }
-  }
   if (!pspPayload || !pspPayload.tx) {
-    logger.error('pspPayload(.tx) required', { pledgeId, pspPayloadRaw, pspPayload })
+    logger.error('pspPayload(.tx) required', { pledgeId, pspPayload })
     throw new Error(t('api/pay/parseFailed', { id: pledgeId }))
   }
 

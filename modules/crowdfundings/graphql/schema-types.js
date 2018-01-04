@@ -96,6 +96,7 @@ type Membership {
   active: Boolean!
   renew: Boolean!
   periods: [MembershipPeriod]!
+  overdue: Boolean!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -169,7 +170,7 @@ input PledgePaymentInput {
   method: PaymentMethod!
   paperInvoice: Boolean
   sourceId: String
-  pspPayload: String
+  pspPayload: JSON
   address: AddressInput
 }
 
