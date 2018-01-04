@@ -147,6 +147,7 @@ type PageInfo {
   hasNextPage: Boolean
 }
 type CommentConnection {
+  id: ID!
   # recursive down the tree
   totalCount: Int!
   pageInfo: PageInfo

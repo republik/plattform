@@ -46,6 +46,7 @@ const measureTree = comment => {
   )
   comment.comments = {
     ...comments,
+    id: comment.id,
     totalCount: numChildren,
     pageInfo: {
       hasNextPage: false,
@@ -243,6 +244,7 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
 
   if (!comments.length) {
     return {
+      id: discussion.id,
       totalCount: 0,
       nodes: []
     }
@@ -327,6 +329,7 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
   // if parentId is given, we return the totalCount of the subtree
   // otherwise it's the totalCount of the hole discussion
   if (!parentId) {
+    tree.comments.id = discussion.id
     tree.comments.totalCount = discussionTotalCount
   }
 
