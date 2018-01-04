@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-29T14:18:29.215Z",
+  "updated": "2018-01-04T20:38:05.827Z",
   "title": "live",
   "data": [
     {
@@ -41,6 +41,14 @@
     {
       "key": "api/publish/document/slug/404",
       "value": "The slug is missing."
+    },
+    {
+      "key": "api/publish/document/slug/redirectsExist",
+      "value": "Der Slug ({path}) muss geändert werden da dieser bereits von einer Umleitung verwendet wird."
+    },
+    {
+      "key": "api/publish/document/slug/docExists",
+      "value": "Der Slug ({path}) muss geändert werden da dieser bereits von einem Artikel verwendet wird."
     },
     {
       "key": "api/twitter/morephotos/other",

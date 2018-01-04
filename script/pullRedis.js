@@ -84,7 +84,8 @@ Promise.resolve().then(async () => {
         )
         const payload = JSON.stringify({
           doc,
-          sha
+          sha,
+          repoId: repo.id
         })
 
         let ref = publication.name.indexOf('prepublication') > -1
