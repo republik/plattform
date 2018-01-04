@@ -69,7 +69,7 @@ create table "comments" (
   "upVotes"             integer not null default 0,
   "downVotes"           integer not null default 0,
   "votes"               jsonb not null default '[]',
-  "hottnes"             float not null,
+  "hotness"             float not null,
   "depth"               integer not null default 0,
   "published"           boolean not null default true,
   "adminUnpublished"    boolean not null default false,
@@ -117,7 +117,7 @@ INSERT INTO comments(
   "upVotes",
   "downVotes",
   "votes",
-  "hottnes",
+  "hotness",
   "published",
   "adminUnpublished",
   "createdAt",
@@ -187,6 +187,5 @@ UPDATE "packages"
   SET "paymentMethods" = '{STRIPE, POSTFINANCECARD, PAYPAL, PAYMENTSLIP}'::"paymentMethod"[];
 ALTER TABLE "packages" ALTER COLUMN "paymentMethods" SET NOT NULL;
 
--- fix hottnes column name typo and rename goodie name to TOADBAG
-ALTER TABLE "comments" RENAME COLUMN hottnes TO hotness;
+-- rename goodie name to TOADBAG
 UPDATE "goodies" SET "name"='TOTEBAG' WHERE "name" = 'TOADBAG';
