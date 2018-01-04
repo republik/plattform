@@ -120,6 +120,12 @@ const Cards = {
     cvc: '104',
     exp_month: '12',
     exp_year: '2024'
+  },
+  Disputed: {
+    number: '4000000000000259',
+    cvc: '105',
+    exp_month: '12',
+    exp_year: '2025'
   }
 }
 

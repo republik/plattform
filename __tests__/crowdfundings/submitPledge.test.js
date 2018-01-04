@@ -31,7 +31,7 @@ const submitPledge = async (variables) => {
 
 module.exports = { prepare, submitPledge }
 
-test('default pledge with ABO package', async (t) => {
+test('submitPledge: default pledge with ABO package', async (t) => {
   await prepare()
   const result = await submitPledge({
     'total': 24000,
@@ -69,7 +69,7 @@ test('default pledge with ABO package', async (t) => {
   t.end()
 })
 
-test('pledge with ABO package and donation', async (t) => {
+test('submitPledge: pledge with ABO package and donation', async (t) => {
   await prepare()
   const result = await submitPledge({
     'total': 40000,
@@ -89,7 +89,7 @@ test('pledge with ABO package and donation', async (t) => {
   t.end()
 })
 
-test('pledge with ABO package and userPrice', async (t) => {
+test('submitPledge: pledge with ABO package and userPrice', async (t) => {
   await prepare()
   const result = await submitPledge({
     'total': 10000,
@@ -110,7 +110,7 @@ test('pledge with ABO package and userPrice', async (t) => {
   t.end()
 })
 
-test('pledge with userPrice but no reason', async (t) => {
+test('submitPledge: pledge with userPrice but no reason', async (t) => {
   await connectIfNeeded()
   pgDatabase().public.pledges.truncate({ cascade: true })
   const result = await submitPledge({
@@ -125,7 +125,7 @@ test('pledge with userPrice but no reason', async (t) => {
   t.end()
 })
 
-test('pledge with ABO package and userPrice too low (minUserPrice = 1000) is not possible', async (t) => {
+test('submitPledge: pledge with ABO package and userPrice too low (minUserPrice = 1000) is not possible', async (t) => {
   await prepare()
   const result = await submitPledge({
     'total': 999,
@@ -139,7 +139,7 @@ test('pledge with ABO package and userPrice too low (minUserPrice = 1000) is not
   t.end()
 })
 
-test('pledge with 2 x ABO (maxAmount = 1) is not possible', async (t) => {
+test('submitPledge: pledge with 2 x ABO (maxAmount = 1) is not possible', async (t) => {
   await prepare()
   const result = await submitPledge({
     'total': 40000,
@@ -153,7 +153,7 @@ test('pledge with 2 x ABO (maxAmount = 1) is not possible', async (t) => {
   t.end()
 })
 
-test('pledge with PATRON and 1 x SWEETS (minAmount = 2) is not possible', async (t) => {
+test('submitPledge: pledge with PATRON and 1 x SWEETS (minAmount = 2) is not possible', async (t) => {
   await prepare()
   const result = await submitPledge({
     'total': 103000,
@@ -171,7 +171,7 @@ test('pledge with PATRON and 1 x SWEETS (minAmount = 2) is not possible', async 
   t.end()
 })
 
-test('pledge with PATRON package (userPrice = false) and a total that is lower than the price is not possible', async (t) => {
+test('submitPledge: pledge with PATRON package (userPrice = false) and a total that is lower than the price is not possible', async (t) => {
   await prepare()
   const result = await submitPledge({
     'total': 99999,
@@ -185,7 +185,7 @@ test('pledge with PATRON package (userPrice = false) and a total that is lower t
   t.end()
 })
 
-test('pledge with mixed PATRON package options and ABO package option is not possible', async (t) => {
+test('submitPledge: pledge with mixed PATRON package options and ABO package option is not possible', async (t) => {
   await prepare()
   const result = await submitPledge({
     'total': 100000,

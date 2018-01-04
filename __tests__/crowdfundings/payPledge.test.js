@@ -1,4 +1,5 @@
 const test = require('tape-async')
+const moment = require('moment')
 const { apolloFetch, connectIfNeeded, pgDatabase } = require('../helpers.js')
 const { submitPledge } = require('./submitPledge.test.js')
 const {
@@ -72,7 +73,7 @@ const prepare = async (options) => {
   return { ...newPledge }
 }
 
-test('pay ABO pledge with PAYMENTSLIP (post-payment)', async (t) => {
+test('payPledge: ABO pledge with PAYMENTSLIP (post-payment)', async (t) => {
   const { pledgeId } = await prepare()
   const result = await payPledge({
     pledgeId,
@@ -86,7 +87,7 @@ test('pay ABO pledge with PAYMENTSLIP (post-payment)', async (t) => {
   t.end()
 })
 
-// test('pay ABO pledge with PAYPAL', async (t) => {
+// test('payPledge: ABO pledge with PAYPAL', async (t) => {
 //   const { pledgeId } = await prepare()
 //   const transaction = await createTransaction()
 //   const result = await payPledge({
@@ -101,7 +102,7 @@ test('pay ABO pledge with PAYMENTSLIP (post-payment)', async (t) => {
 //   t.end()
 // })
 
-test('pay ABO pledge with STRIPE', async (t) => {
+test('payPledge: ABO pledge with STRIPE', async (t) => {
   const { pledgeId } = await prepare()
   await resetCustomers(pgDatabase())
   const source = await createSource({ card: Cards.Visa, pledgeId })
@@ -114,10 +115,19 @@ test('pay ABO pledge with STRIPE', async (t) => {
   const pledgePayment = await pgDatabase().public.pledgePayments.findOne({ pledgeId })
   const payment = await pgDatabase().public.payments.findOne({ id: pledgePayment.paymentId })
   t.equal(payment.status, 'PAID', 'status is PAID')
+
+  const membership = await pgDatabase().public.memberships.findOne({ pledgeId })
+  t.equal(membership.active, true, 'membership is active')
+  t.equal(membership.voucherable, false, 'membership is not voucherable')
+
+  const periods = await pgDatabase().public.membershipPeriods.find({ membershipId: membership.id })
+  t.ok(periods.length === 1, 'exactly 1 membership period generated')
+  t.ok(moment().add('1', 'year').isAfter(moment(periods[0].endDate)), 'membership ends after 1 year from now')
+
   t.end()
 })
 
-test('pay MONTHLY_ABO pledge with STRIPE', async (t) => {
+test('payPledge: MONTHLY_ABO pledge with STRIPE', async (t) => {
   const { pledgeId } = await prepare({ templateId: '00000000-0000-0000-0008-000000000002' })
   await resetCustomers(pgDatabase())
   const source = await createSource({ card: Cards.Visa, pledgeId })
@@ -155,13 +165,14 @@ test('pay MONTHLY_ABO pledge with STRIPE', async (t) => {
 
   const periods = await pgDatabase().public.membershipPeriods.find({ membershipId: membership.id })
   t.ok(periods.length === 1, 'exactly 1 membership period generated')
+  t.ok(moment().add('1', 'month').isAfter(moment(periods[0].endDate)), 'membership ends after 1 month from now')
   t.end()
 })
 
-test('failing payments on MONTHLY_ABO pledge with STRIPE', async (t) => {
+test('payPledge: Membership that never got charged successfully on MONTHLY_ABO pledge with STRIPE', async (t) => {
   const { pledgeId } = await prepare({ templateId: '00000000-0000-0000-0008-000000000002' })
   await resetCustomers(pgDatabase())
-  const source = await createSource({ card: Cards.Visa, pledgeId })
+  const source = await createSource({ card: Cards.Untrusted, pledgeId })
   const result = await payPledge({
     pledgeId,
     method: PAYMENT_METHODS.STRIPE,
@@ -183,11 +194,11 @@ test('failing payments on MONTHLY_ABO pledge with STRIPE', async (t) => {
   t.equal(membership.voucherable, false, 'membership is not voucherable')
 
   const periods = await pgDatabase().public.membershipPeriods.find({ membershipId: membership.id })
-  t.ok(periods.length === 0, 'no membership periods generated yet')
+  t.equal(periods.length, 1, 'one membership period')
   t.end()
 })
 
-test('failed payments on MONTHLY_ABO pledge with STRIPE lead to disabled membership', async (t) => {
+test('payPledge: Multiple failed payments on MONTHLY_ABO pledge with STRIPE', async (t) => {
   const { pledgeId } = await prepare({ templateId: '00000000-0000-0000-0008-000000000002' })
   await resetCustomers(pgDatabase())
   const source = await createSource({ card: Cards.Visa, pledgeId })
@@ -203,17 +214,17 @@ test('failed payments on MONTHLY_ABO pledge with STRIPE lead to disabled members
     pledgeId
   }, pgDatabase())
 
-  // triggered from stripe subscription
+  // triggered from stripe subscription, this happens after X tries to charge
   await cancelSubscription({
     pledgeId,
     status: 'canceled',
-    atPeriodEnd: true
+    atPeriodEnd: false
   }, pgDatabase())
 
   const membership = await pgDatabase().public.memberships.findOne({ pledgeId })
-  t.equal(membership.active, false, 'membership is not active')
+  t.equal(membership.active, false, 'membership is not active anymore')
 
   const periods = await pgDatabase().public.membershipPeriods.find({ membershipId: membership.id })
-  t.ok(periods.length === 0, 'no membership periods generated yet')
+  t.equal(periods.length, 1, 'one membership period')
   t.end()
 })
