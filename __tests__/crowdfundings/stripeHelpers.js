@@ -96,21 +96,49 @@ const resetCustomers = async (pgdb) => {
   }
 }
 
-const createSource = async (token, email) => {
+const Cards = {
+  Visa3D: {
+    number: '4000000000003063',
+    cvc: '101',
+    exp_month: '12',
+    exp_year: '2021'
+  },
+  Visa: {
+    number: '4242424242424242',
+    cvc: '102',
+    exp_month: '12',
+    exp_year: '2022'
+  },
+  Expired: {
+    number: '4000000000000069',
+    cvc: '103',
+    exp_month: '12',
+    exp_year: '2023'
+  },
+  Untrusted: {
+    number: '4000000000009235',
+    cvc: '104',
+    exp_month: '12',
+    exp_year: '2024'
+  }
+}
+
+const createSource = async ({ total, card, ...metadata }) => {
   const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY_COMPANY_ONE)
   const source = await stripe.sources.create({
     type: 'card',
-    token,
-    currency: 'usd',
-    owner: {
-      email
-    }
+    currency: 'CHF',
+    amount: total,
+    usage: 'reusable',
+    card,
+    metadata
   })
   return source
 }
 
 // see typesOfIntereset in webhookHandler.js
 module.exports = {
+  Cards,
   createSource,
   resetCustomers,
   invoicePaymentSuccess,

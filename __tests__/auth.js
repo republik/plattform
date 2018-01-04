@@ -9,8 +9,15 @@ const LOGIN_USER_MUTATION = `
   }
 `
 
+const LOGOUT_USER_MUTATION = `
+  mutation signOut {
+    signOut
+  }
+`
+
 const signIn = async ({ user: { email, ...users }, ...rest }) => {
-  pgDatabase().public.sessions.truncate()
+  if (!email) return null
+  await pgDatabase().public.sessions.truncate()
   await apolloFetch({
     query: LOGIN_USER_MUTATION,
     variables: {
@@ -18,16 +25,25 @@ const signIn = async ({ user: { email, ...users }, ...rest }) => {
       ...rest
     }
   })
-  const { sess } = await pgDatabase().public.sessions.findOne({
+  const { sess: { token } } = await pgDatabase().public.sessions.findOne({
     'sess @>': { email: email }
   })
-  const verifyUrl = `${process.env.PUBLIC_URL}/auth/email/signin?token=${sess.token}&email=${email}`
-  console.log(verifyUrl)
+  const verifyUrl = `${process.env.PUBLIC_URL}/auth/email/signin?token=${token}&email=${email}`
   try {
     await fetch(verifyUrl)
   } catch (e) {
-    console.log(e)
+    console.warn(e)
   }
+  const { id: userId } = await pgDatabase().public.users.findOne({ email })
+  return userId
+}
+
+const signOut = async () => {
+  await apolloFetch({
+    query: LOGOUT_USER_MUTATION
+  })
+  await pgDatabase().public.sessions.truncate()
+  return true
 }
 
 const Unverified = {
@@ -42,10 +58,15 @@ const Member = {
   'email': 'willhelmtell_member@project-r.construction'
 }
 
-const Anonymous = null
+const Anonymous = {
+  firstName: null,
+  lastName: null,
+  email: null
+}
 
 module.exports = {
   signIn,
+  signOut,
   Users: {
     Unverified,
     Anonymous,
