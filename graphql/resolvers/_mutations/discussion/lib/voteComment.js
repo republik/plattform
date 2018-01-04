@@ -1,4 +1,4 @@
-const hottnes = require('../../../../../lib/hottnes')
+const hotness = require('../../../../../lib/hotness')
 
 module.exports = async (commentId, vote, pgdb, user, t, pubsub) => {
   if (vote !== 1 && vote !== -1) {
@@ -50,7 +50,7 @@ module.exports = async (commentId, vote, pgdb, user, t, pubsub) => {
       newComment = await transaction.public.comments.updateAndGetOne({
         id: commentId
       }, {
-        hottnes: hottnes(newComment.upVotes, newComment.downVotes, newComment.createdAt.getTime())
+        hotness: hotness(newComment.upVotes, newComment.downVotes, newComment.createdAt.getTime())
       })
     }
 

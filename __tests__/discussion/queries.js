@@ -34,7 +34,7 @@ module.exports.level1 = `
           upVotes
           downVotes
           score
-          hottnes
+          hotness
           displayAuthor {
             id
           }

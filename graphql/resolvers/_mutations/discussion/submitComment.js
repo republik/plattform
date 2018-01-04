@@ -1,5 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const hottnes = require('../../../../lib/hottnes')
+const hotness = require('../../../../lib/hotness')
 const setDiscussionPreferences = require('./lib/setDiscussionPreferences')
 const userWaitUntil = require('../../Discussion/userWaitUntil')
 
@@ -60,7 +60,7 @@ module.exports = async (_, args, { pgdb, user, t, pubsub }) => {
       parentId,
       userId,
       content,
-      hottnes: hottnes(0, 0, (new Date().getTime()))
+      hotness: hotness(0, 0, (new Date().getTime()))
     }, {
       skipUndefined: true
     })

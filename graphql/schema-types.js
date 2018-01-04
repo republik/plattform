@@ -221,7 +221,7 @@ type Comment {
 
   depth: Int!
   _depth: Int!
-  hottnes: Float!
+  hotness: Float!
 }
 
 type Greeting {
