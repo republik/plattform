@@ -19,6 +19,8 @@ export interface FormProps {
   [key: string]: any
   onSearch: (value: string) => void
   search?: string
+  onSelectCompany: (value: string) => void
+  companyName?: string
   onDateRange: (value?: DateRange.Options) => void
   dateRange?: DateRange.Options
   onStringArray?: (value?: StringArray.Options) => void
@@ -34,6 +36,16 @@ const searchHandler = (
 const formSectionStyles = {
   margin: '15px 0 15px 0'
 }
+
+interface Company {
+  name: string
+  label: string
+}
+
+const companies : [Company] = [
+  { label: "Project R", name: "PROJECT_R" },
+  { label: "Republik AG", name: "REPUBLIK" }
+]
 
 export default ({
   search,
@@ -55,11 +67,12 @@ export default ({
       </div>
       <select
         name="companyName"
-        value={companyName}
+        value={companyName || companies[0].name}
         onChange={searchHandler(onSelectCompany)}
         >
-        <option value="PROJECT_R">Project R</option>
-        <option value="REPUBLIK">Republik</option>
+        {companies.map(({ name, label }) => (
+          <option key={name} value={name}>{label}</option>
+        ))}
       </select>
     </div>
     <div style={formSectionStyles}>
@@ -105,6 +118,6 @@ export default ({
       />
     </div>
     <div style={formSectionStyles}>
-      <CSVDownloader companyName={companyName || 'PROJECT_R'} />
+      <CSVDownloader companyName={companyName || companies[0].name} />
     </div>
   </div>
