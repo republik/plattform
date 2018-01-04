@@ -97,7 +97,9 @@ const Payments = (props: Props) => {
       <div>
         <TableForm
           search={params.search}
+          companyName={params.companyName}
           onSearch={changeHandler('search')}
+          onSelectCompany={changeHandler('companyName')}
           dateRange={DateRange.parse(params.dateRange)}
           onDateRange={changeHandler(
             'dateRange',

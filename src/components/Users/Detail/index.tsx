@@ -133,7 +133,7 @@ class Detail extends React.Component<Props, State> {
       return <ErrorMessage error={props.data.error} />
     } else if (props.data.loading) {
       return <div>Loading ...</div>
-    } 
+    }
     return (
       <div style={{ overflow: 'hidden' }}>
         <Interaction.H1>
@@ -157,23 +157,24 @@ class Detail extends React.Component<Props, State> {
             />
             <br />
             <br />
-            {!!props.data.user.testimonial &&
+            {!!props.data.user.portrait &&
               <div>
-                <Interaction.H3>Statement</Interaction.H3>
+                <Interaction.H3>Portrait</Interaction.H3>
                 <br />
                 <img
                   style={{
                     width: '100%',
                     maxWidth: '200px'
                   }}
-                  src={props.data.user.testimonial.image}
+                  src={props.data.user.portrait}
                 />
+              </div>}
+            {!!props.data.user.statement &&
+              <div>
+                <Interaction.H3>Statement</Interaction.H3>
                 <br />
-                <Label>
-                  {props.data.user.testimonial.role}
-                </Label>
                 <P>
-                  «{props.data.user.testimonial.quote}»
+                  «{props.data.user.statement}»
                 </P>
               </div>}
           </div>
@@ -299,8 +300,8 @@ const emailMutation = gql`
 `
 
 const userQuery = gql`
-  query user($id: ID!) {
-    user(id: $id) {
+  query user($id: String) {
+    user(slug: $id) {
       id
       name
       email
@@ -316,11 +317,8 @@ const userQuery = gql`
       }
       createdAt
       updatedAt
-      testimonial {
-        role
-        quote
-        image
-      }
+      statement
+      portrait(size: SMALL)
       roles
       memberships {
         id

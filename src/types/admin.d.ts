@@ -30,7 +30,8 @@ export interface User {
   phoneNumber?: string
   createdAt: string
   updatedAt: string
-  testimonial?: Testimonial
+  statement?: string
+  portrait?: string
   pledges: Pledge[]
   memberships: Membership[]
   roles: string[]

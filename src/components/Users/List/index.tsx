@@ -118,7 +118,7 @@ const usersQuery = gql`
     $search: String
     $dateRange: DateRangeFilter
   ) {
-    users(
+    users: adminUsers(
       limit: $limit
       offset: $offset
       orderBy: $orderBy
