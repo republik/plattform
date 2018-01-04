@@ -23,7 +23,10 @@ const placeMilestone = require('./placeMilestone')
 const { document: getDocument } = require('../Commit')
 const editRepoMeta = require('./editRepoMeta')
 const { meta: getRepoMeta } = require('../Repo')
-const { prepareMetaForPublish } = require('../../../lib/Document')
+const {
+  prepareMetaForPublish,
+  handleRedirection
+} = require('../../../lib/Document')
 
 const newsletterEmailSchema = require('@project-r/template-newsletter/lib/email')
 const editorialNewsletterSchema = require('@project-r/styleguide/lib/templates/EditorialNewsletter/email')
@@ -78,6 +81,11 @@ module.exports = async (
     now,
     context
   )
+
+  // check if slug changed
+  if (!prepublication && !scheduledAt) {
+    await handleRedirection(repoId, doc.content.meta, context)
+  }
 
   // calc version number
   const latestPublicationVersion = await getAnnotatedTags(repoId)
