@@ -46,7 +46,7 @@
     "jsonwebtoken": "^8.1.0",
     "leaked-handles": "^5.2.0",
     "lodash": "^4.17.4",
-    "mdast-react-render": "^1.1.0",
+    "mdast-react-render": "^1.1.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "redis": "^2.8.0",
