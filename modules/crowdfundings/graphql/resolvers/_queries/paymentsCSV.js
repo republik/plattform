@@ -32,6 +32,7 @@ module.exports = async (_, args, {pgdb, user}) => {
       WHERE c.name = :companyName
     `, { companyName })
   } catch (e) {
+    console.warn(e)
     throw new Error('You need to provide a companyName that exists in order to get an export')
   }
 
