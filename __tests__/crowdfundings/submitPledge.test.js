@@ -1,5 +1,6 @@
 const test = require('tape-async')
-const { apolloFetch, connectIfNeeded, pgDatabase, loginUser } = require('../helpers.js')
+const { apolloFetch, connectIfNeeded, pgDatabase } = require('../helpers.js')
+const { Users } = require('../auth.js')
 
 const SUBMIT_PLEDGE_MUTATION = `
   mutation submitPledge($total: Int!, $options: [PackageOptionInput!]!, $user: UserInput!, $reason: String) {
@@ -22,7 +23,7 @@ const submitPledge = async (variables) => {
   return apolloFetch({
     query: SUBMIT_PLEDGE_MUTATION,
     variables: {
-      'user': loginUser.Unverified,
+      'user': Users.Unverified,
       ...variables
     }
   })

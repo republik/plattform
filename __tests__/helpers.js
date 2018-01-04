@@ -7,10 +7,30 @@ const { createApolloFetch } = require('apollo-fetch')
 
 // shared
 var server = null
+var cookie = null
 
 const createLocalApolloFetch = () => {
   const GRAPHQL_URI = `http://localhost:${process.env.PORT}/graphql`
   return createApolloFetch({ uri: GRAPHQL_URI })
+    .useAfter(({ response }, next) => {
+      let setCookie
+      try {
+        setCookie = response.headers._headers['set-cookie'][0]
+      } catch (e) {}
+      if (setCookie) {
+        cookie = setCookie.split(';')[0]
+      }
+      next()
+    })
+    .use(({ options }, next) => {
+      if (cookie) {
+        if (!options.headers) {
+          options.headers = {}
+        }
+        options.headers['Cookie'] = cookie
+      }
+      next()
+    })
 }
 
 const connectIfNeeded = async function () {
@@ -27,20 +47,9 @@ const disconnect = async () => {
   await Server.close()
 }
 
-const loginUser = async (user) => {
-  console.log(user)
-}
-
-loginUser.Unverified = {
-  'firstName': 'willhelm',
-  'lastName': 'tell',
-  'email': 'willhelmtell@republik.ch'
-}
-
 module.exports = {
   apolloFetch: createLocalApolloFetch(),
   connectIfNeeded,
   pgDatabase,
-  disconnect,
-  loginUser
+  disconnect
 }
