@@ -5,11 +5,13 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 
 const dateTimeFormat = timeFormat('%x %H:%M') // %x - the locale’s date
 
-const convertPackage = (name, options, value) => {
+const convertPackage = (name, options, wert) => {
   const resultPairs = {}
+  const amount = options.reduce((sum, d) => sum + d.amount, 0)
+  const price = options.reduce((sum, d) => sum + d.price, 0)
   resultPairs[`${name} #`] = options.reduce((sum, d) => sum + d.amount, 0)
-  resultPairs[`${name} wert`] = formatPrice(value || options.reduce((sum, d) => sum + d.price, 0))
-  resultPairs[`${name} total`] = formatPrice(options.reduce((sum, d) => sum + d.price, 0))
+  resultPairs[`${name} wert`] = formatPrice(wert || price)
+  resultPairs[`${name} total`] = formatPrice(price * amount)
   return resultPairs
 }
 
@@ -154,8 +156,8 @@ module.exports = async (_, args, {pgdb, user}) => {
       pledgeId: result.pledgeId.substring(0, 13),
       userId: result.userId.substring(0, 13),
       email: result.email,
-      firstName: result.firstName,
-      lastName: result.lastName,
+      firstName: result.firstName.replace(/,/gi, ''),
+      lastName: result.lastName.replace(/,/gi, ''),
       pledgeStatus: result.pledgeStatus,
       pledgeCreatedAt: dateTimeFormat(result.pledgeCreatedAt),
       pledgeTotal: formatPrice(result.pledgeTotal),
@@ -163,9 +165,9 @@ module.exports = async (_, args, {pgdb, user}) => {
       paymentStatus: result.paymentStatus,
       paymentTotal: formatPrice(result.paymentTotal),
       paymentUpdatedAt: dateTimeFormat(result.paymentUpdatedAt),
-      ...(convertPackage('ABO', regularAbos)),
+      ...(convertPackage('ABO', regularAbos, 24000)),
       ...(convertPackage('ABO_REDUCED', reducedAbos, 24000)),
-      ...(convertPackage('ABO_BENEFACTOR', benefactorAbos)),
+      ...(convertPackage('ABO_BENEFACTOR', benefactorAbos, 100000)),
       ...(convertPackage('NOTEBOOK', notebooks)),
       ...(convertPackage('TOTEBAG', totebags)),
       'DONATION #': numDonations,
