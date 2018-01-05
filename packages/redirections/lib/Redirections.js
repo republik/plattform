@@ -3,6 +3,11 @@ const upsert = async (
   { pgdb }
 ) => {
   const now = new Date()
+  // in case of A -> B -> A remove A -> B and only keep B -> A
+  await pgdb.public.redirections.delete({
+    target: redirection.source,
+    source: redirection.target
+  })
   if (redirection.resource) {
     await pgdb.public.redirections.update({
       resource: redirection.resource
