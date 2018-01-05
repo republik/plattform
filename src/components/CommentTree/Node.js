@@ -32,7 +32,7 @@ class Node extends PureComponent {
     }
     this.submitComment = (content) => {
       this.setState({composerState: 'submitting'})
-      this.props.submitComment(this.props.comment.id, content).then(
+      this.props.submitComment(this.props.comment, content).then(
         () => {
           this.setState({
             composerState: 'idle',
