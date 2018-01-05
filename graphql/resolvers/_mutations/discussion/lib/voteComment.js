@@ -57,7 +57,10 @@ module.exports = async (commentId, vote, pgdb, user, t, pubsub) => {
     await transaction.transactionCommit()
 
     if (newComment) {
-      await pubsub.publish('comments', { comments: newComment })
+      await pubsub.publish('comment', { comment: {
+        mutation: 'UPDATED',
+        node: newComment
+      }})
     }
 
     return newComment || comment

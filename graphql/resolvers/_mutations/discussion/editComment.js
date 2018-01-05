@@ -38,7 +38,10 @@ module.exports = async (_, args, { pgdb, user, req, t, pubsub }) => {
 
     await transaction.transactionCommit()
 
-    await pubsub.publish('comments', { comments: newComment })
+    await pubsub.publish('comment', { comment: {
+      mutation: 'UPDATED',
+      node: newComment
+    }})
 
     return newComment
   } catch (e) {

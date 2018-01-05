@@ -228,6 +228,17 @@ type Comment {
   hotness: Float!
 }
 
+enum MutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+type CommentUpdate {
+  mutation: MutationType!
+  node: Comment!
+}
+
 type Greeting {
   id: ID!
   text: String!

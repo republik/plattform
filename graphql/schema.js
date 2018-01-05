@@ -84,7 +84,7 @@ type mutations {
 type subscriptions {
   # all in one subscription:
   # create, update, unpublish, vote
-  comments(discussionId: ID!): Comment!
+  comment(discussionId: ID!): CommentUpdate!
   greeting: Greeting!
 }
 `
