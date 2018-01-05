@@ -7,7 +7,7 @@
   "peerDependencies": {
     "d3-color": "^1.0.3",
     "d3-time-format": "^2.1.1",
-    "glamor": "^2.20.37",
+    "glamor": "^2.20.40",
     "mdast-react-render": ">=1.1",
     "react": ">=16",
     "prop-types": "^15.5.7",
@@ -29,7 +29,7 @@
     "d3-time-format": "^2.1.1",
     "downshift": "^1.16.1",
     "faucet": "0.0.1",
-    "glamor": "^2.20.37",
+    "glamor": "^2.20.40",
     "gsheets": "^2.0.0",
     "husky": "^0.14.3",
     "immutable": "^3.8.2",
