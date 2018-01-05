@@ -32,6 +32,7 @@ module.exports = async (_, args, { pgdb, user, req, t, pubsub }) => {
       id: comment.id
     }, {
       content,
+      published: true,
       updatedAt: new Date()
     })
 
