@@ -23,7 +23,7 @@ const assembleTree = (_comment, _comments) => {
     const parentId = comment.id || null
     comment._depth = depth
     comment.comments = {
-      nodes: _.remove(comments, c => c.parentId === parentId)
+      nodes: _.remove(comments, c => (!parentId && !c.parentIds) || (c.parentIds && c.parentIds.slice(-1).pop() === parentId))
     }
     comment.comments.nodes = comment.comments.nodes
       .map(c => {
@@ -293,9 +293,16 @@ module.exports = async (discussion, args, context, info) => {
     if (focusId) {
       const focusComment = coveredComments
         .find(c => c.id === focusId)
+      const focusCommentParentId = focusComment.parentIds && focusComment.parentIds.slice(-1).pop()
 
       const focusLevelComments = coveredComments
-        .filter(c => c.parentId === focusComment.parentId && c._depth === focusComment._depth)
+        .filter(c =>
+            c._depth === focusComment._depth &&
+            (
+              c.parentIds === focusCommentParentId ||
+              (c.parentIds && c.parentIds.slice(-1).pop() === focusCommentParentId)
+            )
+        )
         .sort(compare)
 
       const focusIndex = focusLevelComments
@@ -305,7 +312,7 @@ module.exports = async (discussion, args, context, info) => {
         ...focusLevelComments
           .slice(focusIndex - 1, focusIndex + 2),
         ...coveredComments
-          .filter(c => c.parentId === focusId)
+          .filter(c => c.parentIds && c.parentIds.slice(-1).pop() === focusId)
           .slice(0, 1)
       ]
         .sort(compare)

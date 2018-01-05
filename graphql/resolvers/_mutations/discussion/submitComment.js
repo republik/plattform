@@ -44,6 +44,17 @@ module.exports = async (_, args, { pgdb, user, t, pubsub }) => {
       throw new Error(t('api/comment/tooLong', { maxLength: discussion.maxLength }))
     }
 
+    let parentIds
+    if (parentId) {
+      const parent = await transaction.public.comments.findOne({
+        id: parentId
+      })
+      if (!parent) {
+        throw new Error(t('api/comment/parent/404'))
+      }
+      parentIds = [...(parent.parentIds || []), parentId]
+    }
+
     if (discussionPreferences) {
       await setDiscussionPreferences({
         discussionPreferences,
@@ -57,7 +68,7 @@ module.exports = async (_, args, { pgdb, user, t, pubsub }) => {
     const comment = await transaction.public.comments.insertAndGet({
       ...id ? { id } : { },
       discussionId: discussion.id,
-      parentId,
+      parentIds,
       userId,
       content,
       hotness: hotness(0, 0, (new Date().getTime()))

@@ -37,11 +37,12 @@ module.exports = {
     return null
   },
 
-  parentIds: ({ parentId }) => [parentId].filter(Boolean),
-  parent: async ({ parentId }, args, { pgdb }, info) => {
-    if (!parentId) {
+  parentIds: ({ parentIds }) => parentIds || [],
+  parent: async ({ parentIds }, args, { pgdb }, info) => {
+    if (!parentIds) {
       return null
     }
+    const parentId = parentIds.slice(-1).pop()
     const selections = info.fieldNodes[0].selectionSet.selections
     if (selections.length === 1 && selections[0].name.value === 'id') {
       return {

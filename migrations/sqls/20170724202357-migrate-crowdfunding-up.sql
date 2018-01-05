@@ -63,7 +63,7 @@ create table "discussions" (
 create table "comments" (
   "id"                  uuid primary key not null default uuid_generate_v4(),
   "discussionId"        uuid not null references "discussions",
-  "parentId"            uuid references "comments",
+  "parentIds"           jsonb,
   "userId"              uuid not null references "users",
   "content"             text,
   "upVotes"             integer not null default 0,
