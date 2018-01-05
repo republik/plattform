@@ -101,11 +101,6 @@ const orderFields = [
     accessor: repo => new Date(repo.latestCommit.date)
   },
   {
-    field: 'published',
-    label: 'Publikationsdatum',
-    accessor: repo => new Date(repo.meta.publishDate)
-  },
-  {
     field: 'creationDeadline',
     label: 'Creation-Deadline',
     accessor: repo => new Date(repo.meta.creationDeadline)
@@ -114,6 +109,11 @@ const orderFields = [
     field: 'productionDeadline',
     label: 'Produktions-Deadline',
     accessor: repo => new Date(repo.meta.productionDeadline)
+  },
+  {
+    field: 'published',
+    label: 'Publikationsdatum',
+    accessor: repo => new Date(repo.meta.publishDate)
   }
 ]
 
@@ -290,13 +290,6 @@ class RepoList extends Component {
                     <TdNum>{displayDateTime(date)}</TdNum>
                     <TdNum>
                       <EditMetaDate
-                        value={publishDate}
-                        onChange={(value) => editRepoMeta(
-                          {repoId: id, publishDate: value}
-                        )} />
-                    </TdNum>
-                    <TdNum>
-                      <EditMetaDate
                         value={creationDeadline}
                         onChange={(value) => editRepoMeta(
                           {repoId: id, creationDeadline: value}
@@ -307,6 +300,13 @@ class RepoList extends Component {
                         value={productionDeadline}
                         onChange={(value) => editRepoMeta(
                           {repoId: id, productionDeadline: value}
+                        )} />
+                    </TdNum>
+                    <TdNum>
+                      <EditMetaDate
+                        value={publishDate}
+                        onChange={(value) => editRepoMeta(
+                          {repoId: id, publishDate: value}
                         )} />
                     </TdNum>
                     <Td>
