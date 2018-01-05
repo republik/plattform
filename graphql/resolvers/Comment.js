@@ -13,7 +13,7 @@ module.exports = {
   published: ({ published, adminUnpublished }) =>
     published && !adminUnpublished,
   adminUnpublished: ({ userId, adminUnpublished }, args, { user }) =>
-    Roles.userIsInRoles(user, ['editor', 'admin']) || (user && userId !== user.id)
+    Roles.userIsInRoles(user, ['editor', 'admin']) || (user && userId === user.id)
       ? adminUnpublished
       : null,
   content: ({ userId, content, published, adminUnpublished }, args, { user, t }) =>
@@ -24,7 +24,7 @@ module.exports = {
   score: comment =>
     comment.upVotes - comment.downVotes,
 
-  userCanEdit: ({ userId, adminUnpublished }, args, { user }) =>
+  userCanEdit: ({ userId }, args, { user }) =>
     user && userId === user.id,
 
   userVote: ({ votes }, args, { user }) => {
