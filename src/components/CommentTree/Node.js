@@ -62,6 +62,7 @@ class Node extends PureComponent {
       comment,
       timeago,
       onEditPreferences,
+      isAdmin,
       More
     } = this.props
     const {composerState, composerError} = this.state
@@ -132,6 +133,35 @@ class Node extends PureComponent {
       }
     })()
 
+    const edit = comment.userCanEdit && {
+      start: () => {
+        this.setState({
+          isEditing: true,
+          editError: undefined
+        })
+      },
+      submit: content => {
+        this.props.editComment(comment, content)
+          .then(() => {
+            this.setState({
+              isEditing: false
+            })
+          })
+          .catch(e => {
+            this.setState({
+              editError: e
+            })
+          })
+      },
+      cancel: () => {
+        this.setState({
+          isEditing: false
+        })
+      },
+      isEditing: this.state.isEditing,
+      error: this.state.editError
+    }
+
     const This = (
       <Row
         key='this'
@@ -148,8 +178,10 @@ class Node extends PureComponent {
         onAnswer={displayAuthor ? this.openComposer : undefined}
         onUpvote={(!displayAuthor || userVote === 'UP') ? undefined : this.upvoteComment}
         onDownvote={(!displayAuthor || userVote === 'DOWN') ? undefined : this.downvoteComment}
+        onUnpublish={(isAdmin || comment.userCanEdit) && comment.published && (() => this.props.unpublishComment(comment.id))}
         dismissComposer={this.dismissComposer}
         submitComment={this.submitComment}
+        edit={edit}
         timeago={timeago}
       />
     )

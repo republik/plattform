@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-20T11:41:31.175Z",
+  "updated": "2018-01-05T20:32:52.208Z",
   "title": "live",
   "data": [
     {
@@ -8,11 +8,27 @@
     },
     {
       "key": "styleguide/CommentComposer/answer",
-      "value": "Antworten"
+      "value": "antworten"
     },
     {
       "key": "styleguide/CommentActions/answer",
-      "value": "Antworten"
+      "value": "antworten"
+    },
+    {
+      "key": "styleguide/CommentActions/unpublish",
+      "value": "entfernen"
+    },
+    {
+      "key": "styleguide/CommentActions/edit",
+      "value": "bearbeiten"
+    },
+    {
+      "key": "styleguide/CommentActions/upvote",
+      "value": "+1"
+    },
+    {
+      "key": "styleguide/CommentActions/downvote",
+      "value": "-1"
     },
     {
       "key": "styleguide/CommentTeaser/commentLink",
@@ -30,6 +46,22 @@
       "key": "styleguide/CommentTreeCollapse/label",
       "value": "ausblenden",
       "undefined": " "
+    },
+    {
+      "key": "styleguide/comment/edit/submit",
+      "value": "bearbeiten"
+    },
+    {
+      "key": "styleguide/comment/unpublished",
+      "value": "(unveröffentlicht)"
+    },
+    {
+      "key": "styleguide/comment/unpublished/userCanEdit",
+      "value": "Bearbeiten Sie den Beitrag um ihn erneut zu publizieren."
+    },
+    {
+      "key": "styleguide/comment/adminUnpublished",
+      "value": "Leider mussen wir Ihren Beitrag unveröffentlichen. Wenden sie sich an kontakt@republik.ch."
     }
   ]
 }

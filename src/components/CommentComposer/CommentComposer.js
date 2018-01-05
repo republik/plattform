@@ -74,7 +74,7 @@ class CommentComposer extends PureComponent {
     super(props)
 
     this.state = {
-      text: ''
+      text: props.initialText || ''
     }
 
     this.onChange = ev => {

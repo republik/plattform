@@ -17,23 +17,41 @@ const styles = {
   }),
 }
 
-const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onEditPreferences, onAnswer, onUpvote, onDownvote, dismissComposer, submitComment, timeago}) => {
+const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onEditPreferences, onAnswer, edit, onUnpublish, onUpvote, onDownvote, dismissComposer, submitComment, timeago}) => {
+  const isEditing = edit && edit.isEditing
   const {createdAt, score} = comment
 
   return (
     <div {...styles.root}>
       <DepthBars count={visualDepth - (otherChild ? 1 : 0)} head={head} tail={tail} />
       <div style={{flexGrow: 1, margin: otherChild ? '20px 0' : `20px 0 20px -${profilePictureSize + profilePictureMargin}px`}}>
-        <Comment
-          timeago={timeago(createdAt)}
+        {!isEditing && <Comment
           {...comment}
-        />
+          timeago={timeago(createdAt)}
+          t={t}
+        />}
+        {isEditing && (
+          <div style={{marginBottom: 20}}>
+            <CommentComposer
+              t={t}
+              initialText={comment.content}
+              displayAuthor={displayAuthor}
+              error={edit.error}
+              onEditPreferences={onEditPreferences}
+              onCancel={edit.cancel}
+              submitComment={edit.submit}
+              submitLabel={t('styleguide/comment/edit/submit')}
+            />
+          </div>
+        )}
 
         <div style={{marginLeft: profilePictureSize + profilePictureMargin}}>
           <CommentActions
             t={t}
             score={score}
             onAnswer={onAnswer}
+            onEdit={edit && edit.start}
+            onUnpublish={onUnpublish}
             onUpvote={onUpvote}
             onDownvote={onDownvote}
           />
