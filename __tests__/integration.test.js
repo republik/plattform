@@ -35,6 +35,8 @@ const fetch = require('isomorphic-unfetch')
 const omit = require('lodash/omit')
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { lib: { redis } } = require('@orbiting/backend-modules-base')
+const moment = require('moment')
+const { timeFormat } = require('@orbiting/backend-modules-formats')
 
 const GRAPHQL_URI = `http://localhost:${PORT}/graphql`
 const WS_URL = PUBLIC_WS_URL_BASE + PUBLIC_WS_URL_PATH
@@ -360,9 +362,10 @@ test('repos (signed in)', async (t) => {
   t.end()
 })
 
+let testRepos
 const reposQueryTests = require('./reposQuery.js')
 test('repos query', async (t) => {
-  await reposQueryTests(t, apolloFetch, githubRest)
+  testRepos = await reposQueryTests(t, apolloFetch, githubRest)
   t.end()
 })
 
@@ -851,6 +854,7 @@ test('check recommit content and latestCommit', async (t) => {
   lastCommitId = newCommit.id
   t.end()
 })
+/*
 
 test('check num refs', async (t) => {
   const heads = await getHeads(testRepoId)
@@ -1046,6 +1050,7 @@ test('removeMilestone', async (t) => {
   t.equals(result1.data.repo.milestones.length, 0)
   t.end()
 })
+*/
 
 test('publish', async (t) => {
   // omited: image, facebookImage, twitterImage
@@ -1060,8 +1065,17 @@ test('publish', async (t) => {
       facebookDescription
       twitterTitle
       twitterDescription
+      path
+      publishDate
     }
   `
+  //publishDate
+  //template
+  //feed
+  //kind
+  //format
+  //dossier
+  //credits
 
   const publishMutation = `
     mutation publish(
@@ -1107,6 +1121,9 @@ test('publish', async (t) => {
         $repoId: ID!
       ){
         repo(id: $repoId) {
+          meta {
+            publishDate
+          }
           latestPublications {
             name
             live
@@ -1181,14 +1198,21 @@ test('publish', async (t) => {
     t.equals(author.user.email, testUser.email)
   }
 
-  const checkDocuments = (documents, _documents) => {
+  const checkDocuments = (documents, _documents, publishDate) => {
     t.equals(documents.length, _documents.length)
-    // console.log('documents', documents)
-    // console.log('_documents', _documents)
+    //console.log('documents', documents)
+    //console.log('_documents', _documents)
     for (let _doc of _documents) {
       const doc = documents.find(d => d.meta.title === _doc.meta.title)
       t.ok(doc, 'expected document present')
-      t.deepLooseEqual(doc.meta, omit(_doc.meta, documentMetaOmit))
+      const __documentMetaOmit = ['publishDate']
+      if (!_doc.meta.path) { // if not in test data, omit
+        __documentMetaOmit.push('path')
+      }
+      t.deepLooseEqual(omit(doc.meta, __documentMetaOmit), omit(_doc.meta, documentMetaOmit))
+      if (publishDate) {
+        t.ok(moment(publishDate).isSame(moment(doc.meta.publishDate)), 'docMeta.publishDate matches repoMeta.publishDate')
+      }
       t.ok(doc.content)
     }
   }
@@ -1198,7 +1222,9 @@ test('publish', async (t) => {
     publications,
     documents: _documents,
     unauthorizedDocuments: _unauthorizedDocuments,
-    refs: _refs
+    refs: _refs,
+    repoMeta: _repoMeta,
+    redirections: _redirections
   }) => {
     const name = publications.length
       ? publications[0].name
@@ -1235,13 +1261,24 @@ test('publish', async (t) => {
       testPublication(latestPublication, publication)
     }
 
+    let repoMetaPublishDate
+    if (_repoMeta) {
+      t.ok(fetchLatestPublications.data.repo.meta)
+      const repoMeta = fetchLatestPublications.data.repo.meta
+      if (_repoMeta.publishDateFrom) {
+        t.ok(repoMeta.publishDate, 'publishDate present')
+        t.ok(moment(repoMeta.publishDate).isBetween(_repoMeta.publishDateFrom, _repoMeta.publishDateTo), 'publishDate in acc. range')
+        repoMetaPublishDate = repoMeta.publishDate
+      }
+    }
+
     if (_documents) {
       const fetchDocuments = await apolloFetch({
         query: documentsQuery
       })
       t.ok(fetchDocuments.data.documents.nodes)
       // console.log('authenticated')
-      checkDocuments(fetchDocuments.data.documents.nodes, _documents)
+      checkDocuments(fetchDocuments.data.documents.nodes, _documents, repoMetaPublishDate)
     }
 
     if (_unauthorizedDocuments) {
@@ -1250,8 +1287,21 @@ test('publish', async (t) => {
       })
       t.ok(fetchDocumentsUnauth.data.documents.nodes)
       // console.log('not authenticated')
-      checkDocuments(fetchDocumentsUnauth.data.documents.nodes, _unauthorizedDocuments)
+      checkDocuments(fetchDocumentsUnauth.data.documents.nodes, _unauthorizedDocuments, repoMetaPublishDate)
     }
+
+    console.log('redirections')
+    const redirections = await pgdb.public.redirections.find()
+    console.log(redirections)
+    if (_redirections) {
+      for (let _redirection of _redirections) {
+        const redir = redirections.find( r => r.source === _redirection.source )
+        t.ok(redir, 'redirection preset')
+        t.equals(redir.target, _redirection.target, 'target matches')
+        t.deepLooseEqual(redir.resource, _redirection.resource, 'resource matches')
+      }
+    }
+
 
     const liveRefs = [
       'publication',
@@ -1293,6 +1343,9 @@ test('publish', async (t) => {
 
     return activeMilestone
   }
+  const slugDateFormat = timeFormat('%Y/%m/%d')
+  const now = moment()
+  const soon = moment(now).add(10, 'minutes')
 
   const v1 = await test({
     variables: {
@@ -1312,19 +1365,45 @@ test('publish', async (t) => {
     ],
     documents: [
       {
-        meta: loremMdast.meta
+        meta: {
+          ...loremMdast.meta,
+          path: `/${slugDateFormat(now)}/${loremMdast.meta.slug}`
+        }
       }
     ],
     unauthorizedDocuments: [
       {
-        meta: loremMdast.meta
+        meta: {
+          ...loremMdast.meta,
+          path: `/${slugDateFormat(now)}/${loremMdast.meta.slug}`
+        }
       }
     ],
     refs: [
       { name: 'publication', sha: null },
       { name: 'prepublication', sha: null }
-    ]
+    ],
+    repoMeta: {
+      publishDateFrom: now,
+      publishDateTo: soon
+    }
   })
+
+  // test slug duplicates
+  {
+    const testRepo = testRepos[0]
+    const mutation = await apolloFetch({
+      query: publishMutation,
+      variables: {
+        repoId: testRepo.id,
+        commitId: testRepo._commitId,
+        prepublication: false,
+        updateMailchimp: false
+      }
+    })
+    t.equals(mutation.data, null, 'dup slug, not data')
+    t.equals(mutation.errors.length, 1, 'dup slug errors present')
+  }
 
   await test({
     variables: {
@@ -1351,18 +1430,28 @@ test('publish', async (t) => {
     ],
     documents: [
       {
-        meta: loremWithImageMdast.meta
+        meta: {
+          ...loremWithImageMdast.meta,
+          path: `/${slugDateFormat(now)}/${loremWithImageMdast.meta.slug}`
+        }
       }
     ],
     unauthorizedDocuments: [
       {
-        meta: loremMdast.meta
+        meta: {
+          ...loremMdast.meta,
+          path: `/${slugDateFormat(now)}/${loremMdast.meta.slug}`
+        }
       }
     ],
     refs: [
       { name: 'publication', sha: v1.sha },
       { name: 'prepublication', sha: null }
-    ]
+    ],
+    repoMeta: {
+      publishDateFrom: now,
+      publishDateTo: soon
+    },
   })
 
   const v3 = await test({
@@ -1482,6 +1571,13 @@ test('publish', async (t) => {
       { name: 'publication', sha: v3.sha },
       { name: 'prepublication', sha: v3.sha },
       { name: 'scheduled-publication', sha: null }
+    ],
+    redirections: [
+      {
+        source: `/${slugDateFormat(now)}/${loremMdast.meta.slug}`,
+        target: `/${slugDateFormat(now)}/${loremWithImageMdast.meta.slug}`,
+        resource: { repo: { id: testRepoId } },
+      }
     ]
   })
   await sleep(30 * 1000)
@@ -1860,6 +1956,7 @@ test('publish', async (t) => {
   t.end()
 })
 
+/*
 test('null parentId on existing repo must be denied', async (t) => {
   const result = await apolloFetch({
     query: `
@@ -2107,12 +2204,15 @@ test('unauthorized repos query', async (t) => {
   t.end()
 })
 
+*/
 test('cleanup', async (t) => {
-  const [owner, repo] = testRepoId.split('/')
-  await githubRest.repos.delete({
-    owner,
-    repo
-  })
+  for (let _repo of [...testRepos, testRepoId]) {
+    const [owner, repo] = _repo.id.split('/')
+    await githubRest.repos.delete({
+      owner,
+      repo
+    })
+  }
   t.end()
 })
 
