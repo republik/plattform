@@ -207,6 +207,7 @@ export const sansSerifMedium32 = {
 export const sansSerifMedium30 = {
   fontFamily: fontFamilies.sansSerifMedium,
   fontSize: 30,
+  fontWeight: 'normal',
   lineHeight: '34px',
 }
 export const sansSerifMedium26 = {
