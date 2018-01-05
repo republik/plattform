@@ -19,17 +19,18 @@ const prepare = async () => {
   await pgDatabase().public.pledges.truncate({ cascade: true })
 }
 
-const submitPledge = async (variables) => {
+const submitPledge = async ({ user: userObject, ...variables }) => {
+  const { id, roles, verified, ...user } = (userObject || Users.Unverified)
   return apolloFetch({
     query: SUBMIT_PLEDGE_MUTATION,
     variables: {
-      'user': Users.Unverified,
+      user,
       ...variables
     }
   })
 }
 
-module.exports = { prepare, submitPledge }
+module.exports = { submitPledge }
 
 test('submitPledge: default pledge with ABO package', async (t) => {
   await prepare()

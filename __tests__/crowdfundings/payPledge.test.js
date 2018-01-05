@@ -64,6 +64,8 @@ const payPledge = async ({ method, ...variables }) => {
   })
 }
 
+module.exports = { payPledge, PAYMENT_METHODS }
+
 const prepare = async (options) => {
   await connectIfNeeded()
   await pgDatabase().public.payments.truncate({ cascade: true })

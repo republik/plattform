@@ -9,7 +9,7 @@
 //   await pgDatabase().public.pledges.truncate({ cascade: true })
 // }
 //
-// test('resolvePledgeToPayment', async (t) => {
+// test('reclaimPledge', async (t) => {
 //   await prepare()
 //   t.ok(true, 'true dat')
 //   t.end()

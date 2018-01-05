@@ -10,13 +10,16 @@ module.exports = async (pledgeId, pgdb, t) => {
 
   // get packageOptions which include the NOTEBOOK
   const goodie = await pgdb.public.goodies.findOne({name: 'NOTEBOOK'})
-  const reward = await pgdb.public.rewards.findOne({id: goodie.rewardId})
-  const pkgOptions = await pgdb.public.packageOptions.find({rewardId: reward.id})
-  const notebook = await pgdb.public.pledgeOptions.count({
-    pledgeId: pledge.id,
-    templateId: pkgOptions.map(p => p.id),
-    'amount >': 0
-  })
+  let notebook = null
+  if (goodie) {
+    const reward = await pgdb.public.rewards.findOne({id: goodie.rewardId})
+    const pkgOptions = await pgdb.public.packageOptions.find({rewardId: reward.id})
+    notebook = await pgdb.public.pledgeOptions.count({
+      pledgeId: pledge.id,
+      templateId: pkgOptions.map(p => p.id),
+      'amount >': 0
+    })
+  }
 
   await sendMailTemplate({
     to: user.email,

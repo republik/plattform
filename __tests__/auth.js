@@ -15,14 +15,21 @@ const LOGOUT_USER_MUTATION = `
   }
 `
 
-const signIn = async ({ user: { email, ...users }, ...rest }) => {
+const signIn = async ({ user, context }) => {
+  const { email } = user
   if (!email) return null
   await pgDatabase().public.sessions.truncate()
+  try {
+    await pgDatabase().public.users.insert(user)
+  } catch (e) {
+    console.warn(e)
+    // ignore
+  }
   await apolloFetch({
     query: LOGIN_USER_MUTATION,
     variables: {
       email,
-      ...rest
+      context
     }
   })
   const { sess: { token } } = await pgDatabase().public.sessions.findOne({
@@ -35,7 +42,7 @@ const signIn = async ({ user: { email, ...users }, ...rest }) => {
     console.warn(e)
   }
   const { id: userId } = await pgDatabase().public.users.findOne({ email })
-  return userId
+  return { userId }
 }
 
 const signOut = async () => {
@@ -47,15 +54,30 @@ const signOut = async () => {
 }
 
 const Unverified = {
-  'firstName': 'willhelm tell',
-  'lastName': 'unverified',
-  'email': 'willhelmtell@project-r.construction'
+  id: 'a0000000-0000-0000-0001-000000000001',
+  firstName: 'willhelm tell',
+  lastName: 'unverified',
+  email: 'willhelmtell@project-r.construction',
+  roles: ['member'],
+  verified: false
 }
 
 const Member = {
-  'firstName': 'willhelm tell',
-  'lastName': 'member',
-  'email': 'willhelmtell_member@project-r.construction'
+  id: 'a0000000-0000-0000-0001-000000000002',
+  firstName: 'willhelm tell',
+  lastName: 'member',
+  email: 'willhelmtell_member@project-r.construction',
+  roles: ['member'],
+  verified: true
+}
+
+const Supporter = {
+  id: 'a0000000-0000-0000-0001-000000000003',
+  firstName: 'willhelm tell',
+  lastName: 'supporter',
+  email: 'willhelmtell_supporter@project-r.construction',
+  roles: ['supporter'],
+  verified: true
 }
 
 const Anonymous = {
@@ -68,6 +90,7 @@ module.exports = {
   signIn,
   signOut,
   Users: {
+    Supporter,
     Unverified,
     Anonymous,
     Member

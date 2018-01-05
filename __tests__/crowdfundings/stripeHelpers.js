@@ -1,7 +1,7 @@
 const invoicePaymentSucceeded = require('../../modules/crowdfundings/lib/payments/stripe/webhooks/invoicePaymentSucceeded')
 const invoicePaymentFailed = require('../../modules/crowdfundings/lib/payments/stripe/webhooks/invoicePaymentFailed')
 const chargeSucceeded = require('../../modules/crowdfundings/lib/payments/stripe/webhooks/chargeSucceeded')
-// const chargeRefunded = require('../../modules/crowdfundings/lib/payments/stripe/webhooks/chargeRefunded')
+const chargeRefunded = require('../../modules/crowdfundings/lib/payments/stripe/webhooks/chargeRefunded')
 const customerSubscription = require('../../modules/crowdfundings/lib/payments/stripe/webhooks/customerSubscription')
 
 const t = (text) => text
@@ -67,8 +67,15 @@ const chargeSuccess = async ({ total, chargeId }, pgdb) => {
   await chargeSucceeded.handle(event, pgdb, t)
 }
 
-const chargeRefund = async () => {
-  console.log(this)
+const chargeRefund = async ({ pledgeId }, pgdb) => {
+  const event = {
+    data: {
+      object: {
+        id: `SUBSCRIPTION_${pledgeId}`
+      }
+    }
+  }
+  await chargeRefunded.handle(event, pgdb, t)
 }
 
 const cancelSubscription = async ({ pledgeId, status, atPeriodEnd }, pgdb) => {
