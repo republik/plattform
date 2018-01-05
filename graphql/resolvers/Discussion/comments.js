@@ -9,6 +9,7 @@ const _ = {
   uniq: require('lodash/uniq')
 }
 const {
+  published: getPublished,
   content: getContent,
   author: getAuthor,
   displayAuthor: getDisplayAuthor
@@ -132,7 +133,8 @@ const cutTreeX = (comment, maxDepth, depth = -1) => {
   return comment
 }
 
-const decorateTree = async (_comment, coveredComments, discussion, user, pgdb, t) => {
+const decorateTree = async (_comment, coveredComments, discussion, context) => {
+  const { pgdb } = context
   // preload data
   const userIds = _.uniq(
     coveredComments.map(c => c.userId)
@@ -163,19 +165,20 @@ const decorateTree = async (_comment, coveredComments, discussion, user, pgdb, t
           ? credentials.find(c => c.id === commenterPreferences.credentialId)
           : null
 
+        const preResolvedContext = {
+          ...context,
+          discussion,
+          commenter,
+          commenterPreferences,
+          credential
+        }
+
         return {
           ...c,
-          content: getContent(c, null, { t }),
-          author: getAuthor(c, null, { pgdb, user, commenter }),
-          displayAuthor: getDisplayAuthor(c, null, {
-            pgdb,
-            user,
-            t,
-            discussion,
-            commenter,
-            commenterPreferences,
-            credential
-          })
+          published: getPublished(c, {}, context),
+          content: getContent(c, {}, context),
+          author: getAuthor(c, {}, preResolvedContext),
+          displayAuthor: getDisplayAuthor(c, {}, preResolvedContext)
         }
       })
     }
@@ -211,7 +214,8 @@ const getCommentsArray = (_comment) => {
   return comments
 }
 
-module.exports = async (discussion, args, { pgdb, user, t }, info) => {
+module.exports = async (discussion, args, context, info) => {
+  const { pgdb } = context
   const maxDepth = meassureDepth(graphqlFields(info))
 
   const { after } = args
@@ -324,7 +328,7 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
     cutTreeX(tree, maxDepth)
   }
 
-  await decorateTree(tree, coveredComments, discussion, user, pgdb, t)
+  await decorateTree(tree, coveredComments, discussion, context)
 
   // if parentId is given, we return the totalCount of the subtree
   // otherwise it's the totalCount of the hole discussion

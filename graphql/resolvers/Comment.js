@@ -10,15 +10,17 @@ if (!DISPLAY_AUTHOR_SECRET) {
 }
 
 module.exports = {
-  content: ({ content, published, adminUnpublished }, args, { t }) =>
-    (!published || adminUnpublished)
+  published: ({ published, adminUnpublished }) =>
+    published && !adminUnpublished,
+  content: ({ userId, content, published, adminUnpublished }, args, { user, t }) =>
+    (!published || adminUnpublished) && userId !== user.id
       ? t('api/comment/removedPlaceholder')
       : content,
 
   score: comment =>
     comment.upVotes - comment.downVotes,
 
-  userCanEdit: ({ userId }, args, { user }) =>
+  userCanEdit: ({ userId, adminUnpublished }, args, { user }) =>
     user && userId === user.id,
 
   userVote: ({ votes }, args, { user }) => {

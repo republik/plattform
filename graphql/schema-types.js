@@ -209,6 +209,7 @@ type Comment {
   comments: CommentConnection!
   # maybe becomes mdast/JSON later
   content: String!
+  published: Boolean!
   upVotes: Int!
   downVotes: Int!
   # score based on votes

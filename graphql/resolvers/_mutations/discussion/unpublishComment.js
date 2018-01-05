@@ -12,7 +12,7 @@ module.exports = async (_, args, { pgdb, user, req, t, pubsub }) => {
     if (!comment) {
       throw new Error(t('api/comment/404'))
     }
-    if (comment.userId !== user.id && !Roles.ensureUserHasRole(user, 'admin')) {
+    if (comment.userId !== user.id && !Roles.userIsInRoles(user, ['editor', 'admin'])) {
       throw new Error(t('api/comment/notYours'))
     }
 
