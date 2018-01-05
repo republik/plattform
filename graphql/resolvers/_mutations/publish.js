@@ -68,12 +68,13 @@ module.exports = async (
   const doc = await getDocument(
     { id: commitId, repo: { id: repoId } },
     { oneway: true },
-    { user, redis }
+    context
   )
   if (doc.content.meta.template !== 'front' && !doc.content.meta.slug) {
     throw new Error(t('api/publish/document/slug/404'))
   }
   const repoMeta = await getRepoMeta({ id: repoId })
+  // prepareMetaForPublish creates missing discussions as a side-effect
   doc.content.meta = await prepareMetaForPublish(
     repoId,
     doc.content.meta,
@@ -242,6 +243,7 @@ module.exports = async (
   })
     .then(response => response.data)
 
+  // TODO: move to top to get a potential throw early
   if (updateMailchimp) {
     const { title, emailSubject } = doc.content.meta
     if (!title || !emailSubject) {
