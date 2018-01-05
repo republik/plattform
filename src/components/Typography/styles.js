@@ -251,7 +251,10 @@ export const sansSerifMedium14 = {
 
 
 export const h1 = {
-  ...serifBold52,
+  ...serifBold36,
+  [mUp]: {
+    ...serifBold52,
+  },
   color: colors.text,
   margin: '30px 0 20px 0',
   ':first-child': {
@@ -263,7 +266,10 @@ export const h1 = {
 }
 
 export const h2 = {
-  ...serifBold24,
+  ...serifBold19,
+  [mUp]: {
+    ...serifBold24
+  },
   color: colors.text,
   margin: '30px 0 20px 0',
   ':first-child': {
