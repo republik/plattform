@@ -101,6 +101,25 @@ test('setup', async (t) => {
   t.end()
 })
 
+/*
+test('delete old test repos', async (t) => {
+  const response = await githubRest.search.repos({
+    q: 'org:orbiting-test test-',
+    per_page: 100
+  })
+  const testRepoNames = response.data.items
+    .filter( r => new RegExp(/^test-/).test(r.name) )
+    .map( r => r.name )
+  for (let repoName of testRepoNames) {
+    await githubRest.repos.delete({
+      owner: 'orbiting-test',
+      repo: repoName
+    })
+  }
+  t.end()
+})
+*/
+
 test('unauthorized repos query', async (t) => {
   const result = await apolloFetch({
     query: `
@@ -1069,13 +1088,13 @@ test('publish', async (t) => {
       publishDate
     }
   `
-  //publishDate
-  //template
-  //feed
-  //kind
-  //format
-  //dossier
-  //credits
+  // publishDate
+  // template
+  // feed
+  // kind
+  // format
+  // dossier
+  // credits
 
   const publishMutation = `
     mutation publish(
@@ -1200,8 +1219,8 @@ test('publish', async (t) => {
 
   const checkDocuments = (documents, _documents, publishDate) => {
     t.equals(documents.length, _documents.length)
-    //console.log('documents', documents)
-    //console.log('_documents', _documents)
+    // console.log('documents', documents)
+    // console.log('_documents', _documents)
     for (let _doc of _documents) {
       const doc = documents.find(d => d.meta.title === _doc.meta.title)
       t.ok(doc, 'expected document present')
@@ -1295,13 +1314,12 @@ test('publish', async (t) => {
     console.log(redirections)
     if (_redirections) {
       for (let _redirection of _redirections) {
-        const redir = redirections.find( r => r.source === _redirection.source )
+        const redir = redirections.find(r => r.source === _redirection.source)
         t.ok(redir, 'redirection preset')
         t.equals(redir.target, _redirection.target, 'target matches')
         t.deepLooseEqual(redir.resource, _redirection.resource, 'resource matches')
       }
     }
-
 
     const liveRefs = [
       'publication',
@@ -1451,7 +1469,7 @@ test('publish', async (t) => {
     repoMeta: {
       publishDateFrom: now,
       publishDateTo: soon
-    },
+    }
   })
 
   const v3 = await test({
@@ -1571,13 +1589,6 @@ test('publish', async (t) => {
       { name: 'publication', sha: v3.sha },
       { name: 'prepublication', sha: v3.sha },
       { name: 'scheduled-publication', sha: null }
-    ],
-    redirections: [
-      {
-        source: `/${slugDateFormat(now)}/${loremMdast.meta.slug}`,
-        target: `/${slugDateFormat(now)}/${loremWithImageMdast.meta.slug}`,
-        resource: { repo: { id: testRepoId } },
-      }
     ]
   })
   await sleep(30 * 1000)
@@ -1609,6 +1620,14 @@ test('publish', async (t) => {
     ]
   })
 
+  let redirections = [
+    {
+      source: `/${slugDateFormat(now)}/${loremMdast.meta.slug}`,
+      target: `/${slugDateFormat(now)}/${loremWithImageMdast.meta.slug}`,
+      resource: { repo: { id: testRepoId } }
+    }
+  ]
+
   const v6 = await test({
     variables: {
       repoId: testRepoId,
@@ -1638,7 +1657,8 @@ test('publish', async (t) => {
     refs: [
       { name: 'publication', sha: null },
       { name: 'prepublication', sha: null }
-    ]
+    ],
+    redirections
   })
 
   let v7ScheduledAt = new Date()
@@ -1682,7 +1702,8 @@ test('publish', async (t) => {
       { name: 'publication', sha: v6.sha },
       { name: 'prepublication', sha: v6.sha },
       { name: 'scheduled-publication', sha: null }
-    ]
+    ],
+    redirections
   })
 
   await test({
@@ -1730,9 +1751,19 @@ test('publish', async (t) => {
       { name: 'publication', sha: v6.sha },
       { name: 'prepublication', sha: null },
       { name: 'scheduled-publication', sha: v7.sha }
-    ]
+    ],
+    redirections
   })
   await sleep(31 * 1000)
+  // turn around
+  redirections = [
+    {
+      source: `/${slugDateFormat(now)}/${loremWithImageMdast.meta.slug}`,
+      target: `/${slugDateFormat(now)}/${loremMdast.meta.slug}`,
+      resource: { repo: { id: testRepoId } }
+    }
+  ]
+  //
   await test({
     variables: null,
     publications: [
@@ -1758,7 +1789,8 @@ test('publish', async (t) => {
     refs: [
       { name: 'publication', sha: v7.sha },
       { name: 'prepublication', sha: v7.sha }
-    ]
+    ],
+    redirections
   })
 
   let v9ScheduledAt = new Date()
@@ -1803,7 +1835,8 @@ test('publish', async (t) => {
       { name: 'publication', sha: v7.sha },
       { name: 'prepublication', sha: v7.sha },
       { name: 'scheduled-publication', sha: null }
-    ]
+    ],
+    redirections
   })
 
   await apolloFetch({
@@ -1824,7 +1857,8 @@ test('publish', async (t) => {
     unauthorizedDocuments: [
     ],
     refs: [
-    ]
+    ],
+    redirections
   })
 
   const v10 = await test({
@@ -1851,7 +1885,8 @@ test('publish', async (t) => {
     unauthorizedDocuments: [],
     refs: [
       { name: 'prepublication', sha: null }
-    ]
+    ],
+    redirections
   })
 
   let v11ScheduledAt = new Date()
@@ -1890,7 +1925,8 @@ test('publish', async (t) => {
     refs: [
       { name: 'prepublication', sha: v10.sha },
       { name: 'scheduled-publication', sha: null }
-    ]
+    ],
+    redirections
   })
 
   const v12 = await test({
@@ -1922,7 +1958,8 @@ test('publish', async (t) => {
     refs: [
       { name: 'publication', sha: null },
       { name: 'prepublication', sha: null }
-    ]
+    ],
+    redirections
   })
 
   await sleep(25 * 1000)
@@ -1950,7 +1987,8 @@ test('publish', async (t) => {
     refs: [
       { name: 'publication', sha: v12.sha },
       { name: 'prepublication', sha: v12.sha }
-    ]
+    ],
+    redirections
   })
 
   t.end()
