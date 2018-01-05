@@ -11,6 +11,7 @@
   onEditPreferences={() => {}}
   onCancel={() => {}}
   submitComment={t => {alert(t)}}
+  submitLabel={t('styleguide/CommentComposer/answer')}
 />
 ```
 
