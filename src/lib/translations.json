@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-05T20:32:52.208Z",
+  "updated": "2018-01-05T23:39:10.533Z",
   "title": "live",
   "data": [
     {
@@ -16,7 +16,7 @@
     },
     {
       "key": "styleguide/CommentActions/unpublish",
-      "value": "entfernen"
+      "value": "unveröffentlichen"
     },
     {
       "key": "styleguide/CommentActions/edit",
