@@ -10,6 +10,7 @@ const _ = {
 }
 const {
   published: getPublished,
+  adminUnpublished: getAdminUnpublished,
   content: getContent,
   author: getAuthor,
   displayAuthor: getDisplayAuthor
@@ -176,6 +177,7 @@ const decorateTree = async (_comment, coveredComments, discussion, context) => {
         return {
           ...c,
           published: getPublished(c, {}, context),
+          adminUnpublished: getAdminUnpublished(c, {}, context),
           content: getContent(c, {}, context),
           author: getAuthor(c, {}, preResolvedContext),
           displayAuthor: getDisplayAuthor(c, {}, preResolvedContext)

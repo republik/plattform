@@ -12,8 +12,12 @@ if (!DISPLAY_AUTHOR_SECRET) {
 module.exports = {
   published: ({ published, adminUnpublished }) =>
     published && !adminUnpublished,
+  adminUnpublished: ({ userId, adminUnpublished }, args, { user }) =>
+    Roles.userIsInRoles(user, ['editor', 'admin']) || (user && userId !== user.id)
+      ? adminUnpublished
+      : null,
   content: ({ userId, content, published, adminUnpublished }, args, { user, t }) =>
-    (!published || adminUnpublished) && userId !== user.id
+    (!published || adminUnpublished) && (!user || userId !== user.id)
       ? t('api/comment/removedPlaceholder')
       : content,
 
@@ -50,7 +54,7 @@ module.exports = {
   },
 
   author: async ({ author, userId }, args, { pgdb, user, commenter }) => {
-    if (!(Roles.userHasRole(user, 'admin') || Roles.userHasRole(user, 'editor'))) {
+    if (!Roles.userIsInRoles(user, ['editor', 'admin'])) {
       return null
     }
     return author || commenter || transformUser(
