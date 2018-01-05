@@ -7,7 +7,8 @@
 
 require('dotenv').config()
 
-const { lib: { redis } } = require('@orbiting/backend-modules-base')
+const redis = require('@orbiting/backend-modules-base/lib/redis')
+const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const getRepos = require('../graphql/resolvers/_queries/repos')
 const {
   latestPublications: getLatestPublications,
@@ -21,16 +22,21 @@ const {
 } = require('../lib/publicationScheduler')
 const { prepareMetaForPublish } = require('../lib/Document')
 
-const user = {
-  roles: [ 'editor' ]
-}
-Promise.resolve().then(async () => {
+PgDb.connect().then(async pgdb => {
   const noflush = process.argv[2] === '--noflush'
   if (!noflush) {
+    console.warn('Flushing redis...')
     await redis.flushdbAsync()
   }
 
   const now = new Date()
+  const context = {
+    redis,
+    pgdb,
+    user: {
+      roles: [ 'editor' ]
+    }
+  }
 
   let pageInfo
   let pageCounter = 1
@@ -42,9 +48,7 @@ Promise.resolve().then(async () => {
       ...(pageInfo && pageInfo.hasNextPage)
         ? { after: pageInfo.endCursor }
         : { }
-    }, {
-      user, redis
-    })
+    }, context)
     pageInfo = repos.pageInfo
     const allLatestPublications = await Promise.all(
       repos.nodes.map(repo => getLatestPublications(repo))
@@ -73,14 +77,17 @@ Promise.resolve().then(async () => {
         const doc = await getDocument(
           { id: commit.id, repo },
           { oneway: true },
-          { user, redis }
+          context
         )
+
+        // prepareMetaForPublish creates missing discussions as a side-effect
         doc.content.meta = await prepareMetaForPublish(
           repo.id,
           doc.content.meta,
           repoMeta,
           scheduledAt,
-          now
+          now,
+          context
         )
         const payload = JSON.stringify({
           doc,
