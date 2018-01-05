@@ -7,6 +7,7 @@ const cookie = require('cookie')
 const cookieParser = require('cookie-parser')
 const checkEnv = require('check-env')
 const { transformUser } = require('@orbiting/backend-modules-auth')
+const redis = require('../lib/redis')
 
 checkEnv([
   'PUBLIC_WS_URL_BASE',
@@ -20,6 +21,15 @@ const {
 } = process.env
 
 module.exports = (server, pgdb, httpServer, executableSchema, t) => {
+  const createContext = ({user, ...additional}) => ({
+    ...additional,
+    pgdb,
+    user,
+    t,
+    pubsub,
+    redis
+  })
+
   const subscriptionServer = SubscriptionServer.create(
     {
       schema: executableSchema,
@@ -30,7 +40,7 @@ module.exports = (server, pgdb, httpServer, executableSchema, t) => {
           ? connectionParams.cookies
           : websocket.upgradeReq.headers.cookie
         if (!cookiesRaw) {
-          return { }
+          return createContext()
         }
         const cookies = cookie.parse(cookiesRaw)
         const sid = cookieParser.signedCookie(
@@ -40,11 +50,11 @@ module.exports = (server, pgdb, httpServer, executableSchema, t) => {
         const session = await pgdb.public.sessions.findOne({ sid })
         if (session) {
           const user = await pgdb.public.users.findOne({id: session.sess.passport.user})
-          return {
+          return createContext({
             user: transformUser(user)
-          }
+          })
         }
-        return { }
+        return createContext()
       },
       keepAlive: 40000
     },
@@ -62,14 +72,10 @@ module.exports = (server, pgdb, httpServer, executableSchema, t) => {
         return error
       },
       schema: executableSchema,
-      context: {
-        pgdb,
+      context: createContext({
         user: req.user,
-        req,
-        t,
-        pubsub,
-        redis: require('../lib/redis')
-      },
+        req
+      }),
       tracing: !!ENGINE_API_KEY
     }
   })
