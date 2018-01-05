@@ -19,7 +19,7 @@ enum PortraitSize {
   SHARE
   # original, in color
   # not exposed
-  # ORIGINAL 
+  # ORIGINAL
 }
 
 extend type User {
@@ -208,7 +208,7 @@ type Comment {
   parentIds: [ID!]!
   comments: CommentConnection!
   # maybe becomes mdast/JSON later
-  content: String!
+  content: String
   published: Boolean!
   adminUnpublished: Boolean
   upVotes: Int!
