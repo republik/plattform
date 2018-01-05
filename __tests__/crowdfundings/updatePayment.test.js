@@ -68,6 +68,8 @@ test('updatePayment: WAITING -> CANCELLED', async (t) => {
     reason: 'WAITING -> CANCELLED'
   })
   t.ok(result.errors, 'invalid transition')
+
+  await signOut()
   t.end()
 })
 
@@ -82,6 +84,8 @@ test('updatePayment: WAITING -> WAITING_FOR_REFUND', async (t) => {
     reason: 'WAITING -> WAITING_FOR_REFUND'
   })
   t.ok(result.errors, 'invalid transition')
+
+  await signOut()
   t.end()
 })
 
@@ -96,6 +100,8 @@ test('updatePayment: WAITING -> REFUNDED', async (t) => {
     reason: 'WAITING -> REFUNDED'
   })
   t.ok(result.errors, 'invalid transition')
+
+  await signOut()
   t.end()
 })
 
@@ -113,6 +119,8 @@ test('updatePayment: WAITING -> PAID', async (t) => {
   t.deepEqual(result.data, {
     updatePayment: { status }
   }, `payment status is ${status} now and no memberships generated at all`)
+
+  await signOut()
   t.end()
 })
 
@@ -140,11 +148,7 @@ test('updatePayment: WAITING_FOR_REFUND -> REFUNDED', async (t) => {
   t.deepEqual(result.data, {
     updatePayment: { status: 'REFUNDED' }
   }, `payment status is REFUNDED now and no memberships generated at all`)
-  t.end()
-})
 
-test('cancelPledge: sign out', async (t) => {
-  await connectIfNeeded()
-  t.ok(await signOut())
+  await signOut()
   t.end()
 })

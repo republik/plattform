@@ -92,6 +92,7 @@ test('cancelPledge: Unpaid ABO with PAYMENTSLIP', async (t) => {
   const membership = await pgDatabase().public.memberships.findOne({ pledgeId })
   t.notOk(membership, 'no membership')
 
+  await signOut()
   t.end()
 })
 
@@ -123,6 +124,7 @@ test('cancelPledge: Waiting ABO with PAYMENTSLIP', async (t) => {
   const membershipAfterCancel = await pgDatabase().public.memberships.findOne({ pledgeId })
   t.notOk(membershipAfterCancel, 'no membership anymore')
 
+  await signOut()
   t.end()
 })
 
@@ -154,11 +156,6 @@ test('cancelPledge: Waiting ABO with PAYMENTSLIP', async (t) => {
   const membershipAfterCancel = await pgDatabase().public.memberships.findOne({ pledgeId })
   t.notOk(membershipAfterCancel, 'no membership anymore')
 
-  t.end()
-})
-
-test('cancelPledge: sign out', async (t) => {
-  await connectIfNeeded()
-  t.ok(await signOut())
+  await signOut()
   t.end()
 })
