@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-28T23:48:43.983Z",
+  "updated": "2018-01-05T19:40:15.609Z",
   "title": "live",
   "data": [
     {
@@ -47,16 +47,16 @@
       "value": "Der Kommentar konnte nicht gefunden werden."
     },
     {
+      "key": "api/comment/parent/404",
+      "value": "Des Kommentars Vater konnte nicht gefunden werden."
+    },
+    {
       "key": "api/comment/notYours",
       "value": "Sie können nur Ihre eigenen Kommentare bearbeiten."
     },
     {
       "key": "api/unexpected",
       "value": "Ups, da ist was schiefgelaufen. Sorry!"
-    },
-    {
-      "key": "api/comment/removedPlaceholder",
-      "value": "[deleted]"
     },
     {
       "key": "api/comment/anonymous/displayName",
