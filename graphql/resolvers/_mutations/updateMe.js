@@ -182,7 +182,8 @@ module.exports = async (_, args, context) => {
         await upsertRedirection({
           source: `/~${me.username}`,
           target: `/~${username}`,
-          resource: { user: { id: me.id } }
+          resource: { user: { id: me.id } },
+          status: 302 // allow reclaiming by somebody else
         }, context)
       }
     }
