@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const gsheets = require('gsheets')
 const { utcTimeParse, timeParse } = require('@orbiting/backend-modules-formats')
-const slugify = require('./slugify')
+const slugify = require('../lib/slugify')
 
 const dateParse = utcTimeParse('%x') // %x - the locale’s date
 const dateTimeParse = timeParse('%x %H:%M')

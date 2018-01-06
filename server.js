@@ -14,7 +14,7 @@ module.exports.run = () => {
   // middlewares
   const middlewares = [
     require('./modules/crowdfundings/express/paymentWebhooks'),
-    require('./lib/gsheets')
+    require('./express/gsheets')
   ]
 
   // signin hooks
