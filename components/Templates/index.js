@@ -6,8 +6,10 @@ import createArticleSchema from '@project-r/styleguide/lib/templates/Article'
 import createFrontSchema from '@project-r/styleguide/lib/templates/Front'
 
 const schemas = {
-  editorialNewsletter: editorialNewsletterSchema(),
+  // first is default schema for the editor
+  // - for Project R this should be the newsletter
   newsletter: newsletterSchema,
+  editorialNewsletter: editorialNewsletterSchema(),
   neutrum: neutrumSchema,
   article: createArticleSchema(),
   front: createFrontSchema()
