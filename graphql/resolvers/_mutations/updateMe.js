@@ -7,6 +7,7 @@ const {
   containsPrivateKey
 } = require('../../../lib/pgp')
 const { isEligible } = require('../../../lib/profile')
+const { Redirections: { upsert: upsertRedirection } } = require('@orbiting/backend-modules-redirections')
 
 const convertImage = require('../../../lib/convertImage')
 const uploadExoscale = require('../../../lib/uploadExoscale')
@@ -25,7 +26,8 @@ const {
   IMAGE_SHARE_SUFFIX
 } = convertImage
 
-module.exports = async (_, args, { pgdb, req, user: me, t }) => {
+module.exports = async (_, args, context) => {
+  const { pgdb, req, user: me, t } = context
   ensureSignedIn(req)
 
   const {
@@ -176,6 +178,13 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
         ),
         { skipUndefined: true }
       )
+      if (me.username && username && me.username !== username) {
+        await upsertRedirection({
+          source: `/~${me.username}`,
+          target: `/~${username}`,
+          resource: { user: { id: me.id } }
+        }, context)
+      }
     }
     if (address) {
       if (me._raw.addressId) {
