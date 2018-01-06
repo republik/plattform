@@ -3,6 +3,7 @@ import createFigureModule from './'
 import createImageModule from './image'
 import createCaptionModule from './caption'
 import { parse, stringify } from '@orbiting/remark-preset'
+import { boldModule } from '../mark/testUtils'
 
 const TYPE = 'FIGURE'
 
@@ -22,7 +23,7 @@ const captionModule = createCaptionModule({
   rule: {
     matchMdast: node => node.type === 'paragraph'
   },
-  subModules: []
+  subModules: [boldModule]
 })
 captionModule.name = 'figureCaption'
 
@@ -63,5 +64,22 @@ Caption
   assert.equal(caption.text, 'Caption')
 
   assert.equal(stringify(serializer.serialize(value)).trimRight(), md)
+  assert.end()
+})
+
+test('figure caption with break in mark', assert => {
+  const serializer = captionModule.helpers.serializer
+
+  const md = `A**${'  '}
+B**
+`
+  const value = serializer.deserialize(parse(md))
+  const node = value.document.nodes.first()
+
+  assert.equal(node.kind, 'block')
+  assert.equal(node.type, 'FIGURE_CAPTION')
+  assert.equal(node.text, 'A\nB')
+
+  assert.equal(stringify(serializer.serialize(value)), md)
   assert.end()
 })

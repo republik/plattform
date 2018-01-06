@@ -21,7 +21,7 @@ export default ({rule, subModules, TYPE}) => {
       matchMdast: (node) => node.type === 'break',
       fromMdast: () => ({
         kind: 'text',
-        leaves: [{text: '\n'}]
+        leaves: [{kind: 'leaf', text: '\n', marks: []}]
       })
     })
   })

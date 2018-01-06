@@ -1,16 +1,17 @@
 import test from 'tape'
 import createParagraphModule from './'
 import { parse, stringify } from '@orbiting/remark-preset'
-
-const paragraphModule = createParagraphModule({
-  TYPE: 'P',
-  rule: {},
-  subModules: []
-})
-
-const serializer = paragraphModule.helpers.serializer
+import { boldModule } from '../mark/testUtils'
 
 test('paragraph serialization', assert => {
+  const paragraphModule = createParagraphModule({
+    TYPE: 'P',
+    rule: {},
+    subModules: []
+  })
+
+  const serializer = paragraphModule.helpers.serializer
+
   const value = serializer.deserialize(parse('Test'))
   const node = value.document.nodes.first()
 
@@ -19,5 +20,28 @@ test('paragraph serialization', assert => {
   assert.equal(node.text, 'Test')
 
   assert.equal(stringify(serializer.serialize(value)).trimRight(), 'Test')
+  assert.end()
+})
+
+test('paragraph with break in mark', assert => {
+  const paragraphModule = createParagraphModule({
+    TYPE: 'P',
+    rule: {},
+    subModules: [boldModule]
+  })
+
+  const serializer = paragraphModule.helpers.serializer
+
+  const md = `A**${'  '}
+B**
+`
+  const value = serializer.deserialize(parse(md))
+  const node = value.document.nodes.first()
+
+  assert.equal(node.kind, 'block')
+  assert.equal(node.type, 'P')
+  assert.equal(node.text, 'A\nB')
+
+  assert.equal(stringify(serializer.serialize(value)), md)
   assert.end()
 })
