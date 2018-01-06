@@ -65,8 +65,16 @@ module.exports = {
         }
       }
 
-      mdast = MDAST.parse(repository.blob.text)
-      await redis.setAsync(redisKey, JSON.stringify(mdast))
+      try {
+        mdast = MDAST.parse(repository.blob.text)
+      } catch (e) {
+        console.error(e)
+      }
+      if (mdast) {
+        await redis.setAsync(redisKey, JSON.stringify(mdast))
+      } else {
+        mdast = MDAST.parse('Dokument fehlerhaft. Reden Sie mit der IT.')
+      }
     }
 
     // prefix image urls
