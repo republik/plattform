@@ -81,7 +81,7 @@ type mutations {
   ): Discussion!
 
   updateNewsletterSubscription(
-    id: ID!
+    name: NewsletterName!,
     subscribed: Boolean!
   ): NewsletterSubscription!
 

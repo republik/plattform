@@ -58,12 +58,10 @@ extend type User {
 }
 
 type NewsletterSubscription {
-  # Base64(userId + name)
   id: ID!
   name: String!
   subscribed: Boolean!
   isEligible: Boolean!
-  requiredRoles: [String!]!
 }
 
 type UserConnection {
@@ -95,6 +93,12 @@ enum Badge {
   PATRON
   STAFF
   FREELANCER
+}
+
+enum NewsletterName {
+  DAILY
+  WEEKLY
+  PROJECTR
 }
 
 type Video {
