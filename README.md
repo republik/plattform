@@ -54,6 +54,9 @@ KEYCDN_ZONE_URL=
 
 # phantomjscloud.com to render social media share images
 PHANTOMJSCLOUD_API_KEY=
+
+# Sheet IDs for gsheets powered pages
+GSHEETS={"someSheetId": "faqs","someSheetId": "updates","someSheetId": "events"}
 ```
 
 Install dependencies.
