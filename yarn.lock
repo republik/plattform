@@ -91,9 +91,9 @@
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-translate/-/backend-modules-translate-0.0.0.tgz#7a3cecf0d9d4590e71ac06c29971e41d9b4b70f1"
 
-"@orbiting/remark-preset@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@orbiting/remark-preset/-/remark-preset-1.2.1.tgz#b4e5f744fd27332c1215e15c08e13e15c16776c0"
+"@orbiting/remark-preset@^1.2.2":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@orbiting/remark-preset/-/remark-preset-1.2.2.tgz#f9ce952164ef10d6197f920fb1df3eca7a9b9937"
   dependencies:
     js-yaml "^3.10.0"
     parse-entities "^1.1.1"
