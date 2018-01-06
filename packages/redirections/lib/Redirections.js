@@ -2,6 +2,12 @@ const upsert = async (
   redirection,
   { pgdb }
 ) => {
+  if (
+    redirection.source === null || redirection.source === undefined ||
+    redirection.target === null || redirection.target === undefined
+  ) {
+      throw new Error('neither redirection source nor target must be null')
+  }
   const now = new Date()
   // in case of A -> B -> A remove A -> B and only keep B -> A
   await pgdb.public.redirections.delete({
