@@ -19,7 +19,7 @@ const styles = {
 
 const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onEditPreferences, onAnswer, edit, onUnpublish, onUpvote, onDownvote, dismissComposer, submitComment, timeago}) => {
   const isEditing = edit && edit.isEditing
-  const {createdAt, score} = comment
+  const { score } = comment
 
   return (
     <div {...styles.root}>
@@ -27,7 +27,7 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
       <div style={{flexGrow: 1, margin: otherChild ? '20px 0' : `20px 0 20px -${profilePictureSize + profilePictureMargin}px`}}>
         {!isEditing && <Comment
           {...comment}
-          timeago={timeago(createdAt)}
+          timeago={timeago}
           t={t}
         />}
         {isEditing && (

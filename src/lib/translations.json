@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-05T23:39:10.533Z",
+  "updated": "2018-01-06T00:52:23.587Z",
   "title": "live",
   "data": [
     {
@@ -46,6 +46,10 @@
       "key": "styleguide/CommentTreeCollapse/label",
       "value": "ausblenden",
       "undefined": " "
+    },
+    {
+      "key": "styleguide/comment/header/updated",
+      "value": "editiert"
     },
     {
       "key": "styleguide/comment/edit/submit",

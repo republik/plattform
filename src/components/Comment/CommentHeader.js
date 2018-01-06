@@ -3,7 +3,9 @@ import {css} from 'glamor'
 import MdCheck from 'react-icons/lib/md/check'
 import colors from '../../theme/colors'
 import {sansSerifMedium16, sansSerifRegular14} from '../Typography/styles'
-import {ellipsize} from '../../lib/styleMixins'
+
+import { ellipsize } from '../../lib/styleMixins'
+import { timeFormat } from '../../lib/timeFormat'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -44,7 +46,9 @@ const styles = {
     ...sansSerifRegular14,
     lineHeight: '20px',
     color: colors.lightText,
-    flexShrink: 0
+    flexShrink: 0,
+    flexGrow: 1,
+    textAlign: 'right'
   }),
   description: css({
     ...sansSerifRegular14,
@@ -69,24 +73,35 @@ const styles = {
 
 const defaultProfilePicture = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAAAAACoWZBhAAAAF0lEQVQI12P4BAI/QICBFCaYBPNJYQIAkUZftTbC4sIAAAAASUVORK5CYII='
 
-export const CommentHeader = ({t, profilePicture, name, timeago, credential}) => (
-  <div {...styles.root}>
-    <img
-      {...styles.profilePicture}
-      src={profilePicture || defaultProfilePicture}
-      alt=''
-    />
-    <div {...styles.meta}>
-      <div {...styles.name}>
-        <div {...styles.nameText}>{name}</div>
-        {timeago && <span {...styles.timeago}>・{timeago}</span>}
+const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
+const titleDate = string => dateTimeFormat(new Date(string))
+
+export const CommentHeader = ({t, profilePicture, name, timeago, createdAt, updatedAt, credential}) => {
+  const updated = updatedAt && updatedAt !== createdAt
+  return (
+    <div {...styles.root}>
+      <img
+        {...styles.profilePicture}
+        src={profilePicture || defaultProfilePicture}
+        alt=''
+      />
+      <div {...styles.meta}>
+        <div {...styles.name}>
+          <div {...styles.nameText}>{name}</div>
+          {timeago && <span {...styles.timeago} title={titleDate(createdAt)}>
+            ・{timeago(createdAt)}
+          </span>}
+        </div>
+        {(credential || updated) && <div {...styles.description} {...(credential.verified ? styles.verifiedDescription : {})}>
+          <div {...styles.descriptionText} >{credential.description}</div>
+          {credential.verified && <MdCheck {...styles.verifiedCheck} />}
+          {updated && <span {...styles.timeago} title={titleDate(updatedAt)} style={{marginLeft: 15}}>
+            {t('styleguide/comment/header/updated')}
+          </span>}
+        </div>}
       </div>
-      {credential && <div {...styles.description} {...(credential.verified ? styles.verifiedDescription : {})}>
-        <div {...styles.descriptionText} >{credential.description}</div>
-        {credential.verified && <MdCheck {...styles.verifiedCheck} />}
-      </div>}
     </div>
-  </div>
-)
+  )
+}
 
 export default CommentHeader

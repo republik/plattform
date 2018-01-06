@@ -179,6 +179,7 @@ ReactDOM.render(
             title: 'Comment',
             imports: {
               t,
+              isoString: (new Date()).toString(),
               Comment: require('./components/Comment/Comment'),
               CommentHeader: require('./components/Comment/CommentHeader'),
               CommentActions: require('./components/Comment/CommentActions')

@@ -5,13 +5,13 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
 ```react|noSource,span-4
 <Comment
   t={t}
-  timeago='2h'
+  createdAt={isoString}
+  timeago={isoString => 'gerade eben'}
   displayAuthor={{
     profilePicture: '/static/profilePicture1.png',
     name: 'Christof Moser',
     credential: {description: 'Journalist', verified: true}
   }}
-  score={8}
   content="Aber wer hat irgend ein Recht, einen Menschen zu tadeln, der die Entscheidung trifft, eine Freude zu genießen, die keine unangenehmen Folgen hat, oder einen, der Schmerz vermeidet, welcher keine daraus resultierende Freude nach sich zieht? Auch gibt es niemanden, der den Schmerz an sich liebt, sucht oder wünscht, nur, weil er Schmerz ist, es sei denn, es kommt zu zufälligen Umständen, in denen Mühen und Schmerz ihm große Freude bereiten können. "
 />
 ```
@@ -19,13 +19,13 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
 ```react|noSource,span-2
 <Comment
   t={t}
-  timeago='2h'
+  createdAt={isoString}
+  timeago={isoString => 'gerade eben'}
   displayAuthor={{
     profilePicture: '/static/profilePicture1.png',
     name: 'Christof Moser',
     credential: {description: 'Bundesrat', verified: false}
   }}
-  score={8}
   content="Er versuchte, sich in der Dunkelheit seinen Weg zu ertasten und erstarrte: Anscheinend gab es keinen anderen Ausweg aus diesem kleinen Hof als den Durchgang, durch den er gekommen war."
 />
 ```
@@ -35,13 +35,13 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
 ```react|span-2
 <Comment
   t={t}
-  timeago='2h'
+  createdAt={isoString}
+  timeago={isoString => 'gerade eben'}
   displayAuthor={{
     profilePicture: '/static/profilePicture1.png',
     name: 'Christof Moser',
     credential: {description: 'Bundesrat', verified: false}
   }}
-  score={8}
   published={false}
   content={null}
 />
@@ -50,13 +50,13 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
 ```react|span-2
 <Comment
   t={t}
-  timeago='2h'
+  createdAt={isoString}
+  timeago={isoString => 'gerade eben'}
   displayAuthor={{
     profilePicture: '/static/profilePicture1.png',
     name: 'Christof Moser',
     credential: {description: 'Bundesrat', verified: false}
   }}
-  score={8}
   published={false}
   userCanEdit
   content={"Ich bin dumm."}
@@ -66,17 +66,48 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
 ```react|span-2
 <Comment
   t={t}
-  timeago='2h'
+  createdAt={isoString}
+  timeago={isoString => 'gerade eben'}
   displayAuthor={{
     profilePicture: '/static/profilePicture1.png',
     name: 'Christof Moser',
     credential: {description: 'Bundesrat', verified: false}
   }}
-  score={8}
   published={false}
   userCanEdit
   adminUnpublished
   content={"Du Arsch!"}
+/>
+```
+
+#### Updated Comments
+
+```react|span-3
+<Comment
+  t={t}
+  createdAt={(new Date((new Date()).setMinutes(-13))).toISOString()}
+  updatedAt={isoString}
+  timeago={isoString =>
+    'vor ' + Math.round((Date.now() - Date.parse(isoString)) / 1000 / 60) + 'm'}
+  displayAuthor={{
+    profilePicture: '/static/profilePicture1.png',
+    name: 'Christof Moser',
+    credential: {description: 'Bundesrat', verified: false}
+  }}
+/>
+```
+
+```react|span-3
+<Comment
+  t={t}
+  createdAt={(new Date((new Date()).setMinutes(-13))).toISOString()}
+  updatedAt={isoString}
+  timeago={isoString =>
+    'vor ' + Math.round((Date.now() - Date.parse(isoString)) / 1000 / 60) + 'm'}
+  displayAuthor={{
+    name: 'Agent Seymour Rutherford Simmons',
+    credential: {description: 'Member of Sector 7 Advanced Research Division', verified: true}
+  }}
 />
 ```
 
@@ -86,14 +117,16 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
 
 ```react|noSource,span-2
 <CommentHeader
-  timeago='2h'
+  createdAt={isoString}
+  timeago={isoString => 'gerade eben'}
   name='Anonym'
 />
 ```
 
 ```react|noSource,span-2
 <CommentHeader
-  timeago='2h'
+  createdAt={isoString}
+  timeago={isoString => 'gerade eben'}
   name='Anonym'
   credential={{description: 'Journalist', verified: true}}
 />
@@ -101,7 +134,8 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
 
 ```react|noSource,span-2
 <CommentHeader
-  timeago='2h'
+  createdAt={isoString}
+  timeago={isoString => 'gerade eben'}
   profilePicture='/static/profilePicture1.png'
   name='Christof Moser'
 />
@@ -109,7 +143,8 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
 
 ```react|noSource,span-2
 <CommentHeader
-  timeago='2h'
+  createdAt={isoString}
+  timeago={isoString => 'gerade eben'}
   profilePicture='/static/profilePicture1.png'
   name='Christof Moser'
   credential={{description: 'Journalist', verified: true}}
@@ -118,7 +153,8 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
 
 ```react|noSource,span-2
 <CommentHeader
-  timeago='2h'
+  createdAt={isoString}
+  timeago={isoString => 'gerade eben'}
   profilePicture='/static/profilePicture1.png'
   name='Christof Moser'
   credential={{description: 'Bundesrat', verified: false}}
@@ -127,7 +163,8 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
 
 ```react|noSource,span-2
 <CommentHeader
-  timeago='2h'
+  createdAt={isoString}
+  timeago={isoString => 'gerade eben'}
   name='Agent Seymour Rutherford Simmons'
   credential={{description: 'Member of Sector 7 Advanced Research Division', verified: true}}
 />
