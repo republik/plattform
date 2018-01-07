@@ -49,6 +49,10 @@ type mutations {
     publicUrl: String
   ): User!
 
+  publishCredential(
+    description: String!
+  ): Credential!
+
   createDiscussion(
     title: String
     # max length of a comments content
