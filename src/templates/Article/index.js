@@ -314,7 +314,8 @@ const createSchema = ({
                 editorModule: 'paragraph',
                 editorOptions: {
                   type: 'LEAD',
-                  placeholder: 'Lead'
+                  placeholder: 'Lead',
+                  mdastPlaceholder: '\u2063'
                 },
                 rules: [
                   ...globalInlines,
