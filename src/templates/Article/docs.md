@@ -1,16 +1,22 @@
 ```code|lang-jsx
-import createEditorialSchema from '@project-r/styleguide/lib/templates/Editorial'
+import createArticleSchema from '@project-r/styleguide/lib/templates/Article'
 
-const schema = createEditorialSchema({
+const schema = createArticleSchema({
   titleBlockAppend: <div>Share Actions</div>
 })
 ```
 
-`createEditorialSchema` take an optional options object with following keys:
+`createArticleSchema` take an optional options object with following keys:
 
+- `repoPrefix`, a prefix for publikator repo creation
 - `documentEditorOptions`, forward options to the document editor module
+- `customMetaFields`, passed to `customFields` of the `meta` module. Default to repo refs for discussion, format and dossier.
 - `titleBlockPrepend`, prepend React elements—e.g. a dossier tag—to the title block
 - `titleBlockAppend`, append React elements—e.g. share icons—to the title block
+- `Link`, a Next.js like `<Link />` component
+  This will be wrapped around links. You should attach an `onClick` handler within, if you wish to do client side routing and or prefetching. The component recieves following props:
+  - `href` String, target url or path
+  - `passHref` Boolean, indicates this will eventually end in an a tag and you may overwrite href
 
 # Example
 
