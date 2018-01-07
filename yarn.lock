@@ -25,9 +25,9 @@
     rw "^1.3.3"
     uuid "^3.1.0"
 
-"@orbiting/backend-modules-base@^0.3.3":
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.3.3.tgz#ef573066e11a213d7641edb76e96af3861b2a060"
+"@orbiting/backend-modules-base@^0.3.4":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.3.4.tgz#96d0778de597819bdc36b486d29a32744762f8f4"
   dependencies:
     "@orbiting/backend-modules-auth" "^2.2.3"
     apollo-engine "^0.8.1"
@@ -48,9 +48,9 @@
     redis "^2.8.0"
     subscriptions-transport-ws "^0.9.4"
 
-"@orbiting/backend-modules-documents@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.0.0.tgz#a63ea82b1802330e50c48adfa2df7d649e1e44f4"
+"@orbiting/backend-modules-documents@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.1.0.tgz#35353dd731931f2608350202160fcd47b244d5c5"
   dependencies:
     "@orbiting/backend-modules-auth" "^2.2.3"
     apollo-modules-node "^0.1.4"
@@ -72,6 +72,12 @@
     await-sleep "^0.0.1"
     check-env "^1.3.0"
     export-files "^2.1.1"
+
+"@orbiting/backend-modules-redirections@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-redirections/-/backend-modules-redirections-1.0.0.tgz#88fec89efef04b85cf3b87f123907e0fe4d7f0b9"
+  dependencies:
+    apollo-modules-node "^0.1.4"
 
 "@orbiting/backend-modules-scalars@^0.0.6":
   version "0.0.6"
@@ -4128,6 +4134,10 @@ slice-ansi@0.0.4:
 slide@^1.1.5:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/slide/-/slide-1.1.6.tgz#56eb027d65b4d2dce6cb2e2d32c4d4afc9e1d707"
+
+slugify@^1.2.9:
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/slugify/-/slugify-1.2.9.tgz#c3d518f5136b3c69345d5d0bbbcde7412b5694aa"
 
 snoowrap@^1.15.1:
   version "1.15.1"

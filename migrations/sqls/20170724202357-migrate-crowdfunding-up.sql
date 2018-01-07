@@ -56,6 +56,7 @@ create table "discussions" (
   "maxLength"           integer,
   "minInterval"         integer,
   "anonymity"           "permission" not null default 'ALLOWED',
+  "documentPath"        text,
   "createdAt"           timestamptz default now(),
   "updatedAt"           timestamptz default now()
 );
@@ -63,13 +64,13 @@ create table "discussions" (
 create table "comments" (
   "id"                  uuid primary key not null default uuid_generate_v4(),
   "discussionId"        uuid not null references "discussions",
-  "parentId"            uuid references "comments",
+  "parentIds"           jsonb,
   "userId"              uuid not null references "users",
   "content"             text,
   "upVotes"             integer not null default 0,
   "downVotes"           integer not null default 0,
   "votes"               jsonb not null default '[]',
-  "hottnes"             float not null,
+  "hotness"             float not null,
   "depth"               integer not null default 0,
   "published"           boolean not null default true,
   "adminUnpublished"    boolean not null default false,
@@ -117,7 +118,7 @@ INSERT INTO comments(
   "upVotes",
   "downVotes",
   "votes",
-  "hottnes",
+  "hotness",
   "published",
   "adminUnpublished",
   "createdAt",
@@ -186,3 +187,6 @@ ALTER TABLE "packages" ADD COLUMN "paymentMethods" "paymentMethod"[];
 UPDATE "packages"
   SET "paymentMethods" = '{STRIPE, POSTFINANCECARD, PAYPAL, PAYMENTSLIP}'::"paymentMethod"[];
 ALTER TABLE "packages" ALTER COLUMN "paymentMethods" SET NOT NULL;
+
+-- rename goodie name to TOADBAG
+UPDATE "goodies" SET "name"='TOTEBAG' WHERE "name" = 'TOADBAG';

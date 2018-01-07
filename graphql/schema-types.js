@@ -3,6 +3,7 @@ module.exports = `
 type Credential {
   description: String!
   verified: Boolean!
+  isListed: Boolean!
 }
 
 enum AccessRole {
@@ -19,14 +20,17 @@ enum PortraitSize {
   SHARE
   # original, in color
   # not exposed
-  # ORIGINAL 
+  # ORIGINAL
 }
 
 extend type User {
   address: Address
   credentials: [Credential]!
   badges: [Badge]
-  latestComments(limit: Int): [Comment]
+  comments(
+    after: String
+    first: Int
+  ): CommentConnection!
   isEligibleForProfile: Boolean
 
   # url to portrait image
@@ -109,6 +113,34 @@ type Video {
   poster: String
 }
 
+type Faq {
+  category: String
+  question: String
+  answer: String
+}
+
+type Event {
+  slug: String
+  title: String
+  description: String
+  link: String
+  date: Date
+  time: String
+  where: String
+  locationLink: String
+  metaDescription: String
+  socialMediaImage: String
+}
+
+type Update {
+  slug: String
+  title: String
+  text: String
+  publishedDateTime: DateTime
+  metaDescription: String
+  socialMediaImage: String
+}
+
 enum Permission {
   ALLOWED
   ENFORCED
@@ -162,6 +194,7 @@ type PageInfo {
   hasNextPage: Boolean
 }
 type CommentConnection {
+  id: ID!
   # recursive down the tree
   totalCount: Int!
   pageInfo: PageInfo
@@ -176,6 +209,7 @@ type Discussion {
   # args, the same _id is returned.
   _id: ID!
   title: String
+  documentPath: String
   comments(
     # get children of this parent
     parentId: ID
@@ -219,9 +253,12 @@ type Comment {
   discussion: Discussion!
   id: ID!
   parent: Comment
+  parentIds: [ID!]!
   comments: CommentConnection!
   # maybe becomes mdast/JSON later
-  content: String!
+  content: String
+  published: Boolean!
+  adminUnpublished: Boolean
   upVotes: Int!
   downVotes: Int!
   # score based on votes
@@ -236,11 +273,26 @@ type Comment {
 
   depth: Int!
   _depth: Int!
-  hottnes: Float!
+  hotness: Float!
+}
+
+enum MutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+type CommentUpdate {
+  mutation: MutationType!
+  node: Comment!
 }
 
 type Greeting {
   id: ID!
   text: String!
+}
+
+type MutationResult {
+  success: Boolean!
 }
 `

@@ -5,12 +5,35 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 
 const dateTimeFormat = timeFormat('%x %H:%M') // %x - the locale’s date
 
+const convertPackage = (name, options, value) => {
+  const resultPairs = {}
+  resultPairs[`${name} #`] = options.reduce((sum, d) => sum + d.amount, 0)
+  resultPairs[`${name} wert`] = formatPrice(value || options.reduce((sum, d) => sum + d.price, 0))
+  resultPairs[`${name} total`] = formatPrice(options.reduce((sum, d) => sum + d.price, 0))
+  return resultPairs
+}
+
 module.exports = async (_, args, {pgdb, user}) => {
   Roles.ensureUserHasRole(user, 'accountant')
 
-  let {paymentIds} = args
+  let { paymentIds, companyName } = args
+  let packageIds
   if (!paymentIds) {
     paymentIds = await pgdb.queryOneColumn(`SELECT id FROM payments`)
+  }
+
+  try {
+    packageIds = await pgdb.queryOneColumn(`
+      SELECT pkg.id
+      FROM packages pkg
+      INNER JOIN
+        companies c
+        ON pkg."companyId" = c.id
+      WHERE c.name = :companyName
+    `, { companyName })
+  } catch (e) {
+    console.warn(e)
+    throw new Error('You need to provide a companyName that exists in order to get an export')
   }
 
   const goodies = await pgdb.public.goodies.findAll()
@@ -43,6 +66,9 @@ module.exports = async (_, args, {pgdb, user}) => {
   )
   const notebookPkgos = pkgOptions.filter(pkgo =>
       (pkgo.reward && pkgo.reward.name === 'NOTEBOOK')
+  )
+  const totebagPkgos = pkgOptions.filter(pkgo =>
+      (pkgo.reward && pkgo.reward.name === 'TOTEBAG')
   )
   const donationPkgos = pkgOptions.filter(pkgo => !pkgo.reward)
 
@@ -78,13 +104,15 @@ module.exports = async (_, args, {pgdb, user}) => {
       users u
       ON p."userId" = u.id
     WHERE
-      ARRAY[pay.id] && :paymentIds
+      ARRAY[pay.id] && :paymentIds AND
+      ARRAY[p."packageId"] && :packageIds
     GROUP BY
       pay.id, p.id, u.id
     ORDER BY
       u.email
   `, {
-    paymentIds
+    paymentIds,
+    packageIds
   })).map(result => {
     const {pledgeOptions} = result
 
@@ -109,6 +137,9 @@ module.exports = async (_, args, {pgdb, user}) => {
     const notebooks = pledgeOptions.filter(plo =>
       !!notebookPkgos.find(pko => pko.id === plo.templateId)
     )
+    const totebags = pledgeOptions.filter(plo =>
+      !!totebagPkgos.find(pko => pko.id === plo.templateId)
+    )
 
     const donations = pledgeOptions.filter(plo =>
       !!donationPkgos.find(pko => pko.id === plo.templateId)
@@ -132,19 +163,48 @@ module.exports = async (_, args, {pgdb, user}) => {
       paymentStatus: result.paymentStatus,
       paymentTotal: formatPrice(result.paymentTotal),
       paymentUpdatedAt: dateTimeFormat(result.paymentUpdatedAt),
-      'ABO #': regularAbos.reduce((sum, d) => sum + d.amount, 0),
-      'ABO total': formatPrice(regularAbos.reduce((sum, d) => sum + d.price, 0)),
-      'ABO_REDUCED #': reducedAbos.reduce((sum, d) => sum + d.amount, 0),
-      'ABO_REDUCED total': formatPrice(reducedAbos.reduce((sum, d) => sum + d.price, 0)),
-      'ABO_BENEFACTOR #': benefactorAbos.reduce((sum, d) => sum + d.amount, 0),
-      'ABO_BENEFACTOR total': formatPrice(benefactorAbos.reduce((sum, d) => sum + d.price, 0)),
-      'NOTEBOOK #': notebooks.reduce((sum, d) => sum + d.amount, 0),
-      'NOTEBOOK total': formatPrice(notebooks.reduce((sum, d) => sum + d.price, 0)),
+      ...(convertPackage('ABO', regularAbos)),
+      ...(convertPackage('ABO_REDUCED', reducedAbos, 24000)),
+      ...(convertPackage('ABO_BENEFACTOR', benefactorAbos)),
+      ...(convertPackage('NOTEBOOK', notebooks)),
+      ...(convertPackage('TOTEBAG', totebags)),
       'DONATION #': numDonations,
       // 'DONATION total': formatPrice(donations.reduce((sum, d) => sum + d.price, 0)),
       donation: formatPrice(donation)
     }
   })
 
-  return csvFormat(payments)
+  const paymentsEnhancedWithSimulatedSuccessfulPaymentEntries = payments
+    .reduce((result, payment) => {
+      if (payment.pledgeStatus === 'CANCELLED') {
+        // build and concat with result:
+        // - simulated entry with status successful and set the booking date to the date when the payment was created
+        // - original entry (cancelled) enhanced with a booking date set to the date the payment was last updated
+        const simulatedSuccessfulPayment = {
+          type: 'verkauf',
+          simulatedBookingDate: payment.pledgeCreatedAt,
+          ...payment,
+          total: payment.paymentTotal
+        }
+        const enhancedOriginalPayment = {
+          type: 'storno',
+          simulatedBookingDate: payment.paymentUpdatedAt,
+          ...payment,
+          total: (parseFloat(payment.paymentTotal) * -1).toFixed(2)
+        }
+
+        return [ ...result, simulatedSuccessfulPayment, enhancedOriginalPayment ]
+      }
+      // build and concat with result:
+      // - original entry (cancelled) enhanced with a booking date set to the date the payment was created
+      const enhancedOriginalPayment = {
+        type: 'verkauf',
+        simulatedBookingDate: payment.pledgeCreatedAt,
+        ...payment,
+        total: payment.paymentTotal
+      }
+      return [ ...result, enhancedOriginalPayment ]
+    }, [])
+
+  return csvFormat(paymentsEnhancedWithSimulatedSuccessfulPaymentEntries)
 }

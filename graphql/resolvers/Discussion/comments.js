@@ -9,6 +9,8 @@ const _ = {
   uniq: require('lodash/uniq')
 }
 const {
+  published: getPublished,
+  adminUnpublished: getAdminUnpublished,
   content: getContent,
   author: getAuthor,
   displayAuthor: getDisplayAuthor
@@ -21,7 +23,7 @@ const assembleTree = (_comment, _comments) => {
     const parentId = comment.id || null
     comment._depth = depth
     comment.comments = {
-      nodes: _.remove(comments, c => c.parentId === parentId)
+      nodes: _.remove(comments, c => (!parentId && !c.parentIds) || (c.parentIds && c.parentIds.slice(-1).pop() === parentId))
     }
     comment.comments.nodes = comment.comments.nodes
       .map(c => {
@@ -46,6 +48,7 @@ const measureTree = comment => {
   )
   comment.comments = {
     ...comments,
+    id: comment.id,
     totalCount: numChildren,
     pageInfo: {
       hasNextPage: false,
@@ -131,7 +134,8 @@ const cutTreeX = (comment, maxDepth, depth = -1) => {
   return comment
 }
 
-const decorateTree = async (_comment, coveredComments, discussion, user, pgdb, t) => {
+const decorateTree = async (_comment, coveredComments, discussion, context) => {
+  const { pgdb } = context
   // preload data
   const userIds = _.uniq(
     coveredComments.map(c => c.userId)
@@ -162,19 +166,21 @@ const decorateTree = async (_comment, coveredComments, discussion, user, pgdb, t
           ? credentials.find(c => c.id === commenterPreferences.credentialId)
           : null
 
+        const preResolvedContext = {
+          ...context,
+          discussion,
+          commenter,
+          commenterPreferences,
+          credential
+        }
+
         return {
           ...c,
-          content: getContent(c, null, { t }),
-          author: getAuthor(c, null, { pgdb, user, commenter }),
-          displayAuthor: getDisplayAuthor(c, null, {
-            pgdb,
-            user,
-            t,
-            discussion,
-            commenter,
-            commenterPreferences,
-            credential
-          })
+          published: getPublished(c, {}, context),
+          adminUnpublished: getAdminUnpublished(c, {}, context),
+          content: getContent(c, {}, context),
+          author: getAuthor(c, {}, preResolvedContext),
+          displayAuthor: getDisplayAuthor(c, {}, preResolvedContext)
         }
       })
     }
@@ -210,7 +216,8 @@ const getCommentsArray = (_comment) => {
   return comments
 }
 
-module.exports = async (discussion, args, { pgdb, user, t }, info) => {
+module.exports = async (discussion, args, context, info) => {
+  const { pgdb } = context
   const maxDepth = meassureDepth(graphqlFields(info))
 
   const { after } = args
@@ -243,6 +250,7 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
 
   if (!comments.length) {
     return {
+      id: discussion.id,
       totalCount: 0,
       nodes: []
     }
@@ -259,7 +267,7 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
   const sortKeyMap = {
     'DATE': 'createdAt',
     'VOTES': 'score',
-    'HOT': 'hottnes'
+    'HOT': 'hotness'
   }
   const sortKey = sortKeyMap[orderBy]
   const compare =
@@ -285,9 +293,16 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
     if (focusId) {
       const focusComment = coveredComments
         .find(c => c.id === focusId)
+      const focusCommentParentId = focusComment.parentIds && focusComment.parentIds.slice(-1).pop()
 
       const focusLevelComments = coveredComments
-        .filter(c => c.parentId === focusComment.parentId && c._depth === focusComment._depth)
+        .filter(c =>
+            c._depth === focusComment._depth &&
+            (
+              c.parentIds === focusCommentParentId ||
+              (c.parentIds && c.parentIds.slice(-1).pop() === focusCommentParentId)
+            )
+        )
         .sort(compare)
 
       const focusIndex = focusLevelComments
@@ -297,7 +312,7 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
         ...focusLevelComments
           .slice(focusIndex - 1, focusIndex + 2),
         ...coveredComments
-          .filter(c => c.parentId === focusId)
+          .filter(c => c.parentIds && c.parentIds.slice(-1).pop() === focusId)
           .slice(0, 1)
       ]
         .sort(compare)
@@ -322,11 +337,12 @@ module.exports = async (discussion, args, { pgdb, user, t }, info) => {
     cutTreeX(tree, maxDepth)
   }
 
-  await decorateTree(tree, coveredComments, discussion, user, pgdb, t)
+  await decorateTree(tree, coveredComments, discussion, context)
 
   // if parentId is given, we return the totalCount of the subtree
   // otherwise it's the totalCount of the hole discussion
   if (!parentId) {
+    tree.comments.id = discussion.id
     tree.comments.totalCount = discussionTotalCount
   }
 

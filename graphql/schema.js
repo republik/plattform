@@ -18,6 +18,9 @@ type queries {
     focus: String
   ): UserConnection!
   greeting: Greeting
+  faqs: [Faq!]!
+  events: [Event!]!
+  updates: [Update!]!
 }
 
 type mutations {
@@ -48,6 +51,15 @@ type mutations {
     twitterHandle: String
     publicUrl: String
   ): User!
+
+  publishCredential(
+    description: String!
+  ): Credential!
+
+  verifyCredential(
+    userId: ID!
+    description: String!
+  ): Credential
 
   createDiscussion(
     title: String
@@ -88,12 +100,14 @@ type mutations {
   # for me
   # max 3 unique dates in three weeks
   requestPreview: Boolean!
+
+  submitQuestion(question: String!): MutationResult
 }
 
 type subscriptions {
   # all in one subscription:
   # create, update, unpublish, vote
-  comments(discussionId: ID!): Comment!
+  comment(discussionId: ID!): CommentUpdate!
   greeting: Greeting!
 }
 `
