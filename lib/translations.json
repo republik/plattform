@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-04T10:47:50.031Z",
+  "updated": "2018-01-07T01:56:43.707Z",
   "title": "live",
   "data": [
     {
@@ -89,6 +89,18 @@
     {
       "key": "repo/add/template/front",
       "value": "Front"
+    },
+    {
+      "key": "repo/add/template/format",
+      "value": "Format"
+    },
+    {
+      "key": "repo/add/template/discussion",
+      "value": "Diskussion"
+    },
+    {
+      "key": "repo/add/template/dossier",
+      "value": "Dossier"
     },
     {
       "key": "repo/phase/draft",
@@ -377,6 +389,10 @@
     {
       "key": "commit/status/new",
       "value": "Commite um das neue Dokument zu erstellen"
+    },
+    {
+      "key": "commit/status/new/short",
+      "value": "Neues Dokument erstellen"
     },
     {
       "key": "commit/status/committed",

@@ -4,6 +4,8 @@ import neutrumSchema from './Neutrum'
 
 import createArticleSchema from '@project-r/styleguide/lib/templates/Article'
 import createFrontSchema from '@project-r/styleguide/lib/templates/Front'
+import createFormatSchema from '@project-r/styleguide/lib/templates/Format'
+import createDiscussionSchema from '@project-r/styleguide/lib/templates/Discussion'
 
 const schemas = {
   // first is default schema for the editor
@@ -12,7 +14,9 @@ const schemas = {
   editorialNewsletter: editorialNewsletterSchema(),
   neutrum: neutrumSchema,
   article: createArticleSchema(),
-  front: createFrontSchema()
+  front: createFrontSchema(),
+  format: createFormatSchema(),
+  discussion: createDiscussionSchema()
 }
 
 export const getSchema = template => {

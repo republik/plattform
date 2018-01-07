@@ -7,7 +7,8 @@ import Placeholder from '../../Placeholder'
 export default ({rule, subModules, TYPE}) => {
   const {
     formatButtonText,
-    placeholder
+    placeholder,
+    mdastPlaceholder
   } = rule.editorOptions || {}
 
   const inlineSerializer = new MarkdownSerializer({
@@ -31,15 +32,47 @@ export default ({rule, subModules, TYPE}) => {
   const paragraph = {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast || ((node) => node.type === 'paragraph'),
-    fromMdast: (node, index, parent, rest) => ({
-      kind: 'block',
-      type: TYPE,
-      nodes: inlineSerializer.fromMdast(node.children, 0, node, rest)
-    }),
-    toMdast: (object, index, parent, rest) => ({
-      type: 'paragraph',
-      children: inlineSerializer.toMdast(object.nodes, 0, object, rest)
-    })
+    fromMdast: (node, index, parent, rest) => {
+      let children = node.children
+      if (mdastPlaceholder) {
+        if (
+          children &&
+          children.length === 1 &&
+          children[0].type === 'text' &&
+          children[0].value === mdastPlaceholder
+        ) {
+          children = [{type: 'text', value: ''}]
+        }
+      }
+
+      return {
+        kind: 'block',
+        type: TYPE,
+        nodes: inlineSerializer.fromMdast(children, 0, node, rest)
+      }
+    },
+    toMdast: (object, index, parent, rest) => {
+      let children = inlineSerializer.toMdast(object.nodes, 0, object, rest)
+
+      if (mdastPlaceholder) {
+        if (
+          !children ||
+          !children.length ||
+          (
+            children.length === 1 &&
+            children[0].type === 'text' &&
+            !(children[0].text || '').trim()
+          )
+        ) {
+          children = [{type: 'text', value: mdastPlaceholder}]
+        }
+      }
+
+      return {
+        type: 'paragraph',
+        children: children
+      }
+    }
   }
 
   const serializer = new MarkdownSerializer({
