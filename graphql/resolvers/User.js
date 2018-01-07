@@ -128,7 +128,7 @@ module.exports = {
       userId: user.id
     })
 
-    if (!me) {
+    if (!me || !Roles.userIsInRoles(me, ['member'])) {
       return {
         ...emptyCommentConnection,
         totalCount
