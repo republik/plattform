@@ -107,46 +107,87 @@ module.exports = {
   twitterHandle: exposeProfileField('twitterHandle'),
   publicUrl: exposeProfileField('publicUrl'),
   async latestComments (user, args, { pgdb, user: me }) {
-    if (!Roles.userIsMeOrHasProfile(user, me)) {
-      return null
+    const emptyCommentConnection = {
+      id: 'null', // TODO: check with @tpreusse
+      totalCount: 0,
+      pageInfo: null,
+      nodes: []
     }
-    const userId = user.id
-    const limit = args.limit || 10
+    if (!Roles.userIsMeOrHasProfile(user, me)) {
+      return emptyCommentConnection
+    }
+    const {
+      first = 10,
+      after
+    } = args
+    const afterRowNumber = after
+      ? Buffer.from(after, 'base64').toString('utf-8')
+      : null
 
-    const comments = await pgdb.query(
-      `
+    const totalCount = await pgdb.public.comments.count({
+      userId: user.id
+    })
+
+    if (!me) {
+      return {
+        ...emptyCommentConnection,
+        totalCount
+      }
+    }
+
+    const comments = await pgdb.query(`
       SELECT
-        c.id,
-        c."userId",
-        c.content,
-        c."adminUnpublished",
-        c.published,
-        c."createdAt",
-        c."updatedAt",
-        c."discussionId",
-        d.title AS "discussionTitle"
-      FROM comments c
-      JOIN discussions d ON d.id = c."discussionId"
+        c.*,
+        to_json(d.*) AS discussion
+      FROM
+        comments c
+      JOIN
+        discussions d
+        ON d.id = c."discussionId"
       WHERE
         c."userId" = :userId
       ORDER BY
         c."createdAt" DESC
-      LIMIT :limit;
-    `,
-      { userId, limit }
+      LIMIT :first
+      ${afterRowNumber
+        ? 'OFFSET :afterRowNumber'
+        : ''
+      }
+    `, {
+      userId: user.id,
+      first: Math.min(first, 100),
+      ...afterRowNumber
+        ? { afterRowNumber }
+        : { }
+    }
     )
+    const lastCommentId = await pgdb.query(`
+      SELECT
+        c.id
+      FROM
+        comments c
+      WHERE
+        c."userId" = :userId
+      ORDER BY
+        c."createdAt" ASC
+      LIMIT 1
+    `, {
+      userId: user.id
+    })
+      .then(result => result[0].id)
 
     if (comments.length) {
-      return comments.map(comment => {
-        return {
-          ...comment,
-          discussion: {
-            id: comment.discussionId,
-            title: comment.discussionTitle
-          }
-        }
-      })
+      return {
+        id: comments[0].id,
+        totalCount,
+        pageInfo: {
+          endCursor: Buffer.from((comments.length + (afterRowNumber || 0)) + '').toString('base64'),
+          hasNextPage: comments[comments.length - 1].id !== lastCommentId
+        },
+        nodes: comments
+      }
     }
+    return emptyCommentConnection
   },
   birthday (user, args, { user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {

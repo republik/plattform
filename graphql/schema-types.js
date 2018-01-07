@@ -26,7 +26,10 @@ extend type User {
   address: Address
   credentials: [Credential]!
   badges: [Badge]
-  latestComments(limit: Int): [Comment]
+  latestComments(
+    after: String
+    first: Int
+  ): CommentConnection!
   isEligibleForProfile: Boolean
 
   # url to portrait image
