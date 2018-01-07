@@ -23,7 +23,11 @@ const placeMilestone = require('./placeMilestone')
 const { document: getDocument } = require('../Commit')
 const editRepoMeta = require('./editRepoMeta')
 const { meta: getRepoMeta } = require('../Repo')
-const { prepareMetaForPublish } = require('../../../lib/Document')
+const { Redirections: { get: getRedirections } } = require('@orbiting/backend-modules-redirections')
+const {
+  prepareMetaForPublish,
+  handleRedirection
+} = require('../../../lib/Document')
 
 const newsletterEmailSchema = require('@project-r/template-newsletter/lib/email')
 const editorialNewsletterSchema = require('@project-r/styleguide/lib/templates/EditorialNewsletter/email')
@@ -78,6 +82,40 @@ module.exports = async (
     now,
     context
   )
+
+  // check if slug is taken
+  const newPath = doc.content.meta.path
+  // deny if present redirect to other article / sth. else
+  const existingRedirects = await getRedirections(
+    newPath,
+    { repo: { id: repoId } },
+    context
+  )
+  if (existingRedirects.length) {
+    throw new Error(t('api/publish/document/slug/redirectsExist', { path: newPath }))
+  }
+  // deny if published or scheduled-published slug exists
+  const repoIds = await redis.smembersAsync('repos:ids')
+  const publishedRepos = await Promise.all([
+    ...repoIds.map(id => redis.getAsync(`repos:${id}/publication`)),
+    ...repoIds.map(id => redis.getAsync(`repos:${id}/scheduled-publication`))
+  ])
+    .then(repos => repos
+      .filter(Boolean)
+      .map(repo => JSON.parse(repo))
+    )
+  for (let pubRepo of publishedRepos) {
+    const existingPath = pubRepo.doc && pubRepo.doc.content &&
+      pubRepo.doc.content.meta && pubRepo.doc.content.meta.path
+    if (existingPath && existingPath === newPath && repoId !== pubRepo.repoId) {
+      throw new Error(t('api/publish/document/slug/docExists', { path: newPath }))
+    }
+  }
+
+  // remember if slug changed
+  if (!prepublication && !scheduledAt) {
+    await handleRedirection(repoId, doc.content.meta, context)
+  }
 
   // calc version number
   const latestPublicationVersion = await getAnnotatedTags(repoId)
@@ -155,7 +193,8 @@ module.exports = async (
   // cache in redis
   const payload = JSON.stringify({
     doc,
-    sha: milestone.sha
+    sha: milestone.sha,
+    repoId: repoId
   })
   const key = `repos:${repoId}/${ref}`
   let redisOps = [
