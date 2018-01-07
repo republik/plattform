@@ -108,7 +108,7 @@ module.exports = {
   publicUrl: exposeProfileField('publicUrl'),
   async latestComments (user, args, { pgdb, user: me }) {
     const emptyCommentConnection = {
-      id: 'null', // TODO: check with @tpreusse
+      id: user.id,
       totalCount: 0,
       pageInfo: null,
       nodes: []
@@ -159,8 +159,7 @@ module.exports = {
       ...afterRowNumber
         ? { afterRowNumber }
         : { }
-    }
-    )
+    })
     const lastCommentId = await pgdb.query(`
       SELECT
         c.id
@@ -178,7 +177,7 @@ module.exports = {
 
     if (comments.length) {
       return {
-        id: comments[0].id,
+        id: user.id,
         totalCount,
         pageInfo: {
           endCursor: Buffer.from((comments.length + (afterRowNumber || 0)) + '').toString('base64'),
