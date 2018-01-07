@@ -1,6 +1,6 @@
 {
   "name": "@orbiting/backend-modules-redirections",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "store redirections and query them from graphql",
   "main": "index.js",
   "scripts": {
