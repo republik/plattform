@@ -1,7 +1,5 @@
 import createArticleSchema from '../Article'
 
-const DefaultLink = ({ children }) => children
-
 const createSchema = ({
   customMetaFields = [],
   ...args
