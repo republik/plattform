@@ -10,9 +10,17 @@ if (!DISPLAY_AUTHOR_SECRET) {
 }
 
 module.exports = {
-  content: ({ content, published, adminUnpublished }, args, { t }) =>
-    (!published || adminUnpublished)
-      ? t('api/comment/removedPlaceholder')
+  published: ({ published, adminUnpublished }) =>
+    published && !adminUnpublished,
+
+  adminUnpublished: ({ userId, adminUnpublished }, args, { user }) =>
+    Roles.userIsInRoles(user, ['editor', 'admin']) || (user && userId === user.id)
+      ? adminUnpublished
+      : null,
+
+  content: ({ userId, content, published, adminUnpublished }, args, { user, t }) =>
+    (!published || adminUnpublished) && (!user || userId !== user.id)
+      ? null
       : content,
 
   score: comment =>
@@ -31,10 +39,12 @@ module.exports = {
     return null
   },
 
-  parent: async ({ parentId }, args, { pgdb }, info) => {
-    if (!parentId) {
+  parentIds: ({ parentIds }) => parentIds || [],
+  parent: async ({ parentIds }, args, { pgdb }, info) => {
+    if (!parentIds) {
       return null
     }
+    const parentId = parentIds.slice(-1).pop()
     const selections = info.fieldNodes[0].selectionSet.selections
     if (selections.length === 1 && selections[0].name.value === 'id') {
       return {
@@ -47,7 +57,7 @@ module.exports = {
   },
 
   author: async ({ author, userId }, args, { pgdb, user, commenter }) => {
-    if (!(Roles.userHasRole(user, 'admin') || Roles.userHasRole(user, 'editor'))) {
+    if (!Roles.userIsInRoles(user, ['editor', 'admin'])) {
       return null
     }
     return author || commenter || transformUser(

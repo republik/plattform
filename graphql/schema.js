@@ -49,6 +49,15 @@ type mutations {
     publicUrl: String
   ): User!
 
+  publishCredential(
+    description: String!
+  ): Credential!
+
+  verifyCredential(
+    userId: ID!
+    description: String!
+  ): Credential
+
   createDiscussion(
     title: String
     # max length of a comments content
@@ -84,7 +93,7 @@ type mutations {
 type subscriptions {
   # all in one subscription:
   # create, update, unpublish, vote
-  comments(discussionId: ID!): Comment!
+  comment(discussionId: ID!): CommentUpdate!
   greeting: Greeting!
 }
 `

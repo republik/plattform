@@ -3,6 +3,7 @@ module.exports = `
 type Credential {
   description: String!
   verified: Boolean!
+  isListed: Boolean!
 }
 
 enum AccessRole {
@@ -19,14 +20,17 @@ enum PortraitSize {
   SHARE
   # original, in color
   # not exposed
-  # ORIGINAL 
+  # ORIGINAL
 }
 
 extend type User {
   address: Address
   credentials: [Credential]!
   badges: [Badge]
-  latestComments(limit: Int): [Comment]
+  comments(
+    after: String
+    first: Int
+  ): CommentConnection!
   isEligibleForProfile: Boolean
 
   # url to portrait image
@@ -147,6 +151,7 @@ type PageInfo {
   hasNextPage: Boolean
 }
 type CommentConnection {
+  id: ID!
   # recursive down the tree
   totalCount: Int!
   pageInfo: PageInfo
@@ -161,6 +166,7 @@ type Discussion {
   # args, the same _id is returned.
   _id: ID!
   title: String
+  documentPath: String
   comments(
     # get children of this parent
     parentId: ID
@@ -204,9 +210,12 @@ type Comment {
   discussion: Discussion!
   id: ID!
   parent: Comment
+  parentIds: [ID!]!
   comments: CommentConnection!
   # maybe becomes mdast/JSON later
-  content: String!
+  content: String
+  published: Boolean!
+  adminUnpublished: Boolean
   upVotes: Int!
   downVotes: Int!
   # score based on votes
@@ -222,6 +231,17 @@ type Comment {
   depth: Int!
   _depth: Int!
   hotness: Float!
+}
+
+enum MutationType {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+type CommentUpdate {
+  mutation: MutationType!
+  node: Comment!
 }
 
 type Greeting {

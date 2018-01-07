@@ -66,7 +66,9 @@ PgDb.connect().then(async (pgdb) => {
       await pgdb.public.comments.insert({
         id: fakeUUID('t1_' + comment.id),
         discussionId: discussion.id,
-        parentId,
+        ...parentId
+          ? { parentIds: [ parentId ] }
+          : { },
         userId: user.id,
         upVotes: comment.ups,
         downVotes: comment.downs,
