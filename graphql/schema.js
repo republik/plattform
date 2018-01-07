@@ -53,6 +53,11 @@ type mutations {
     description: String!
   ): Credential!
 
+  verifyCredential(
+    userId: ID!
+    description: String!
+  ): Credential
+
   createDiscussion(
     title: String
     # max length of a comments content
