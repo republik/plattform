@@ -7,7 +7,10 @@ const {
   containsPrivateKey
 } = require('../../../lib/pgp')
 const { isEligible } = require('../../../lib/profile')
-const { Redirections: { upsert: upsertRedirection } } = require('@orbiting/backend-modules-redirections')
+const { Redirections: {
+  upsert: upsertRedirection,
+  delete: deleteRedirection
+} } = require('@orbiting/backend-modules-redirections')
 
 const convertImage = require('../../../lib/convertImage')
 const uploadExoscale = require('../../../lib/uploadExoscale')
@@ -159,6 +162,7 @@ module.exports = async (_, args, context) => {
   }
 
   const transaction = await pgdb.transactionBegin()
+  const now = new Date()
   try {
     if (
       updateFields.some(field => args[field] !== undefined) ||
@@ -178,13 +182,19 @@ module.exports = async (_, args, context) => {
         ),
         { skipUndefined: true }
       )
+      if (username) {
+        // claim other's redirection
+        await deleteRedirection({
+          source: `/~${username}`
+        }, context, now)
+      }
       if (me.username && username && me.username !== username) {
         await upsertRedirection({
           source: `/~${me.username}`,
           target: `/~${username}`,
           resource: { user: { id: me.id } },
           status: 302 // allow reclaiming by somebody else
-        }, context)
+        }, context, now)
       }
     }
     if (address) {
@@ -194,7 +204,7 @@ module.exports = async (_, args, context) => {
           { id: me._raw.addressId },
           {
             ...address,
-            updatedAt: new Date()
+            updatedAt: now
           }
         )
       } else {
@@ -204,7 +214,7 @@ module.exports = async (_, args, context) => {
         )
         await transaction.public.users.updateOne(
           { id: me.id },
-          { addressId: userAddress.id, updatedAt: new Date() }
+          { addressId: userAddress.id, updatedAt: now }
         )
       }
     }
