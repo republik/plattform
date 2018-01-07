@@ -25,9 +25,9 @@
     rw "^1.3.3"
     uuid "^3.1.0"
 
-"@orbiting/backend-modules-base@^0.3.3":
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.3.3.tgz#ef573066e11a213d7641edb76e96af3861b2a060"
+"@orbiting/backend-modules-base@^0.3.4":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.3.4.tgz#96d0778de597819bdc36b486d29a32744762f8f4"
   dependencies:
     "@orbiting/backend-modules-auth" "^2.2.3"
     apollo-engine "^0.8.1"
@@ -48,9 +48,9 @@
     redis "^2.8.0"
     subscriptions-transport-ws "^0.9.4"
 
-"@orbiting/backend-modules-documents@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.0.0.tgz#a63ea82b1802330e50c48adfa2df7d649e1e44f4"
+"@orbiting/backend-modules-documents@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.1.0.tgz#35353dd731931f2608350202160fcd47b244d5c5"
   dependencies:
     "@orbiting/backend-modules-auth" "^2.2.3"
     apollo-modules-node "^0.1.4"
@@ -72,6 +72,12 @@
     await-sleep "^0.0.1"
     check-env "^1.3.0"
     export-files "^2.1.1"
+
+"@orbiting/backend-modules-redirections@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-redirections/-/backend-modules-redirections-1.0.0.tgz#88fec89efef04b85cf3b87f123907e0fe4d7f0b9"
+  dependencies:
+    apollo-modules-node "^0.1.4"
 
 "@orbiting/backend-modules-scalars@^0.0.6":
   version "0.0.6"
@@ -103,15 +109,15 @@
     stringify-entities "^1.3.1"
     unified "^6.1.5"
 
-"@project-r/styleguide@^5.24.0":
-  version "5.24.0"
-  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.24.0.tgz#60b73238111a68a2d304ff35ad647ea846c3134a"
+"@project-r/styleguide@^5.26.0":
+  version "5.26.0"
+  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.26.0.tgz#e0871bdea79257fd813fa8a2d937fda810279f66"
   dependencies:
     react-icons "^2.2.7"
 
-"@project-r/template-newsletter@^1.4.3":
-  version "1.4.3"
-  resolved "https://registry.yarnpkg.com/@project-r/template-newsletter/-/template-newsletter-1.4.3.tgz#f13a9bcd383379413405dd7b7cf4c2a2b1fe0ee9"
+"@project-r/template-newsletter@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@project-r/template-newsletter/-/template-newsletter-1.5.0.tgz#93d124500aba1d134c00799d2d662dc83446e4ce"
 
 "@types/node@^8.0.7":
   version "8.0.53"
