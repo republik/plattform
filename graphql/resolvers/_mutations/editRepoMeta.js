@@ -11,7 +11,7 @@ const { latestCommit: getLatestCommit } = require('../Repo')
 
 const TAG_NAME = 'meta'
 
-module.exports = async (_, args, { user, t, pubsub }) => {
+module.exports = async (_, args, { user, pubsub }) => {
   ensureUserHasRole(user, 'editor')
   const { githubRest } = await createGithubClients()
 
@@ -21,7 +21,8 @@ module.exports = async (_, args, { user, t, pubsub }) => {
     productionDeadline,
     publishDate,
     briefingUrl,
-    mailchimpCampaignId
+    mailchimpCampaignId,
+    discussionId
   } = args
 
   const tag = await getAnnotatedTag(
@@ -37,7 +38,8 @@ module.exports = async (_, args, { user, t, pubsub }) => {
     ...(productionDeadline !== undefined && { productionDeadline }),
     ...(publishDate !== undefined && { publishDate }),
     ...(briefingUrl !== undefined && { briefingUrl }),
-    ...(mailchimpCampaignId !== undefined && { mailchimpCampaignId })
+    ...(mailchimpCampaignId !== undefined && { mailchimpCampaignId }),
+    ...(discussionId !== undefined && { discussionId })
   }
   const message = yaml.stringify(meta)
 
@@ -65,11 +67,14 @@ module.exports = async (_, args, { user, t, pubsub }) => {
     newTag.sha
   )
 
-  await pubsub.publish('repoUpdate', {
-    repoUpdate: {
-      id: repoId
-    }
-  })
+  // pubsub not available if called by pullRedis
+  if (pubsub) {
+    await pubsub.publish('repoUpdate', {
+      repoUpdate: {
+        id: repoId
+      }
+    })
+  }
 
   return {
     id: repoId,
