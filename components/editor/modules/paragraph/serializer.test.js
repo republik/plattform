@@ -45,3 +45,29 @@ B**
   assert.equal(stringify(serializer.serialize(value)), md)
   assert.end()
 })
+
+test('paragraph with mdastPlaceholder', assert => {
+  const paragraphModule = createParagraphModule({
+    TYPE: 'P',
+    rule: {
+      editorOptions: {
+        mdastPlaceholder: '\u2063'
+      }
+    },
+    subModules: []
+  })
+
+  const serializer = paragraphModule.helpers.serializer
+
+  const md = `\u2063
+`
+  const value = serializer.deserialize(parse(md))
+  const node = value.document.nodes.first()
+
+  assert.equal(node.kind, 'block')
+  assert.equal(node.type, 'P')
+  assert.equal(node.text, String())
+
+  assert.equal(stringify(serializer.serialize(value)), md)
+  assert.end()
+})
