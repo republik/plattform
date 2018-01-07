@@ -34,6 +34,8 @@ PgDb.connect().then(async pgdb => {
     redis,
     pgdb,
     user: {
+      name: 'publikator-pullredis',
+      email: 'ruggedly@republik.ch',
       roles: [ 'editor' ]
     }
   }
