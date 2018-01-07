@@ -1,8 +1,8 @@
-import React from 'react'
-import {css} from 'glamor'
+import React, { Fragment } from 'react'
+import { css } from 'glamor'
 import MdCheck from 'react-icons/lib/md/check'
 import colors from '../../theme/colors'
-import {sansSerifMedium16, sansSerifRegular14} from '../Typography/styles'
+import { sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
 
 import { ellipsize } from '../../lib/styleMixins'
 import { timeFormat } from '../../lib/timeFormat'
@@ -60,10 +60,8 @@ const styles = {
   descriptionText: css({
     ...ellipsize,
   }),
-  verifiedDescription: css({
-    color: colors.text
-  }),
   verifiedCheck: css({
+    color: colors.text,
     flexShrink: 0,
     display: 'inline-block',
     marginLeft: 4,
@@ -92,9 +90,14 @@ export const CommentHeader = ({t, profilePicture, name, timeago, createdAt, upda
             ・{timeago(createdAt)}
           </span>}
         </div>
-        {(credential || updated) && <div {...styles.description} {...(credential.verified ? styles.verifiedDescription : {})}>
-          <div {...styles.descriptionText} >{credential.description}</div>
-          {credential.verified && <MdCheck {...styles.verifiedCheck} />}
+        {(credential || updated) && <div {...styles.description}>
+          {credential && <Fragment>
+            <div {...styles.descriptionText} style={{color: credential.verified ? colors.text : colors.lightText}}>
+              {credential.description}
+            </div>
+            {credential.verified &&
+              <MdCheck {...styles.verifiedCheck} />}
+          </Fragment>}
           {updated && <span {...styles.timeago} title={titleDate(updatedAt)} style={{marginLeft: 15}}>
             {t('styleguide/comment/header/updated')}
           </span>}
