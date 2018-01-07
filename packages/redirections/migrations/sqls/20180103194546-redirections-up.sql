@@ -10,7 +10,7 @@ create table "redirections" (
   "createdAt"           timestamptz default now(),
   "updatedAt"           timestamptz default now(),
   "deletedAt"           timestamptz,
-  UNIQUE("source", 'deletedAt')
+  UNIQUE("source", "deletedAt")
 );
 create index "redirections_source_idx" on "redirections" using GIN ("source" gin_trgm_ops);
 create index "redirections_target_idx" on "redirections" using GIN ("target" gin_trgm_ops);
