@@ -221,6 +221,23 @@ const DefaultLink = ({ children }) => children
 
 const createSchema = ({
   documentEditorOptions = {},
+  customMetaFields = [
+    {
+      label: 'Format',
+      key: 'format',
+      ref: 'repo'
+    },
+    {
+      label: 'Dossier',
+      key: 'dossier',
+      ref: 'repo'
+    },
+    {
+      label: 'Diskussion',
+      key: 'discussion',
+      ref: 'repo'
+    }
+  ],
   titleBlockPrepend = null,
   titleBlockAppend = null,
   repoPrefix = 'article-',
@@ -246,33 +263,7 @@ const createSchema = ({
             matchMdast: () => false,
             editorModule: 'meta',
             editorOptions: {
-              customFields: [
-                {
-                  label: 'Ebene',
-                  key: 'kind',
-                  items: [
-                    {value: 'editorial', text: 'Editorial'},
-                    {value: 'meta', text: 'Meta'},
-                    {value: 'metaSocial', text: 'Social Meta'},
-                    {value: 'editorialSocial', text: 'Social Editorial'}
-                  ]
-                },
-                {
-                  label: 'Format',
-                  key: 'format',
-                  ref: 'repo'
-                },
-                {
-                  label: 'Dossier',
-                  key: 'dossier',
-                  ref: 'repo'
-                },
-                {
-                  label: 'Diskussion',
-                  key: 'discussion',
-                  ref: 'repo'
-                }
-              ],
+              customFields: customMetaFields,
               teaser: props => (
                 <div style={{backgroundColor: '#fff', padding: '30px 30px 1px'}}>
                   <TeaserFeed {...props} />

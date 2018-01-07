@@ -12,6 +12,7 @@ const DefaultLink = ({ children }) => children
 const createSchema = ({
   dossierLabel = 'Dossier',
   dossierHref = '/dossier',
+  customMetaFields = [],
   Link = DefaultLink,
   titleBlockPrepend = null,
   ...args
@@ -28,6 +29,15 @@ const createSchema = ({
         </a>
       </Link>
     ],
+    customMetaFields: [
+      {
+        label: 'Diskussion',
+        key: 'discussion',
+        ref: 'repo'
+      },
+      ...customMetaFields
+    ],
+    Link,
     ...args
   })
 }
