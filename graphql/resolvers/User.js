@@ -180,7 +180,7 @@ module.exports = {
         id: user.id,
         totalCount,
         pageInfo: {
-          endCursor: Buffer.from((comments.length + (afterRowNumber || 0)) + '').toString('base64'),
+          endCursor: Buffer.from(`${comments.length + (afterRowNumber || 0)}`).toString('base64'),
           hasNextPage: comments[comments.length - 1].id !== lastCommentId
         },
         nodes: comments
