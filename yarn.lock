@@ -4135,6 +4135,10 @@ slide@^1.1.5:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/slide/-/slide-1.1.6.tgz#56eb027d65b4d2dce6cb2e2d32c4d4afc9e1d707"
 
+slugify@^1.2.9:
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/slugify/-/slugify-1.2.9.tgz#c3d518f5136b3c69345d5d0bbbcde7412b5694aa"
+
 snoowrap@^1.15.1:
   version "1.15.1"
   resolved "https://registry.yarnpkg.com/snoowrap/-/snoowrap-1.15.1.tgz#8d430d190d66c56a13f9c711f793767e299c9189"
