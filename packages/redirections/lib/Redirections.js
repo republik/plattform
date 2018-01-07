@@ -10,13 +10,16 @@ const upsert = async (
       throw new Error('neither redirection source nor target must be null')
   }
   // in case of A -> B -> A remove A -> B and only keep B -> A
-  await pgdb.public.redirections.delete({
+  await pgdb.public.redirections.update({
     target: redirection.source,
     source: redirection.target
+  }, {
+    deletedAt: now
   })
   if (redirection.resource) {
     await pgdb.public.redirections.update({
       resource: redirection.resource
+      deletedAt: null
     }, {
       target: redirection.target,
       status: redirection.status,
@@ -25,6 +28,7 @@ const upsert = async (
   }
   const existingRedir = await pgdb.public.redirections.findOne({
     source: redirection.source
+    deletedAt: null
   })
   if(existingRedir) {
     return pgdb.public.redirections.update({
@@ -42,9 +46,10 @@ const upsert = async (
   }
 }
 
+// notResource: get a redirection that does not match resource partial
 const get = async (
   source,
-  resource,
+  notResource,
   { pgdb }
 ) => {
   return pgdb.query(`
@@ -53,12 +58,17 @@ const get = async (
     FROM
       redirections
     WHERE
-      source = :source AND
-      NOT (resource @> :resource) AND
-      "deletedAt" IS NULL
+      source = :source
+      ${notResource
+        ? 'AND NOT (resource @> :notResource)'
+        : ''
+      }
+      AND "deletedAt" IS NULL
   `, {
     source,
-    resource
+    ...notResource
+      ? { notResource }
+      : { }
   })
 }
 

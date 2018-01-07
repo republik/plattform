@@ -1,10 +1,9 @@
+const { get } = require('../../lib/Redirections')
+
 module.exports = async (
   _,
   { path },
-  { pgdb }
+  context
 ) => {
-  return pgdb.public.redirections.findOne({
-    source: path,
-    deletedAt: null
-  })
+  return get(path, null, context)
 }
