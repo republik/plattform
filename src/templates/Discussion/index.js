@@ -10,6 +10,23 @@ const createSchema = ({
     repoPrefix: 'discussion-',
     customMetaFields: [
       {
+        label: 'Beitrag-Maximallänge',
+        key: 'commentsMaxLength'
+      },
+      {
+        label: 'Beitrag-Interval (ms)',
+        key: 'commentsMinInterval'
+      },
+      {
+        label: 'Anonymity',
+        key: 'discussionAnonymity',
+        items: [
+          {value: 'ALLOWED', text: 'Erlaubt'},
+          {value: 'ENFORCED', text: 'Zwingend'},
+          {value: 'FORBIDDEN', text: 'Verboten'}
+        ]
+      },
+      {
         label: 'Format',
         key: 'format',
         ref: 'repo'
