@@ -26,7 +26,7 @@ extend type User {
   address: Address
   credentials: [Credential]!
   badges: [Badge]
-  latestComments(
+  comments(
     after: String
     first: Int
   ): CommentConnection!

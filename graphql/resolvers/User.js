@@ -106,7 +106,7 @@ module.exports = {
   facebookId: exposeProfileField('facebookId'),
   twitterHandle: exposeProfileField('twitterHandle'),
   publicUrl: exposeProfileField('publicUrl'),
-  async latestComments (user, args, { pgdb, user: me }) {
+  async comments (user, args, { pgdb, user: me }) {
     const emptyCommentConnection = {
       id: user.id,
       totalCount: 0,
