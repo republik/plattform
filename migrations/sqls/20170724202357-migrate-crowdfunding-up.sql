@@ -56,6 +56,7 @@ create table "discussions" (
   "maxLength"           integer,
   "minInterval"         integer,
   "anonymity"           "permission" not null default 'ALLOWED',
+  "documentPath"        text,
   "createdAt"           timestamptz default now(),
   "updatedAt"           timestamptz default now()
 );

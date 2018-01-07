@@ -166,6 +166,7 @@ type Discussion {
   # args, the same _id is returned.
   _id: ID!
   title: String
+  documentPath: String
   comments(
     # get children of this parent
     parentId: ID
