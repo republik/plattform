@@ -68,7 +68,7 @@ export const TeaserFeed = ({
       </Lead>
 
       <Credit>
-        {!!credits.length > 0 ? (
+        {credits && credits.length > 0 ? (
           renderMdast(credits, creditSchema)
         ) : (
           dateFormat(Date.parse(publishDate))
