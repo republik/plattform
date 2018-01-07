@@ -14,6 +14,7 @@ const getMeta = doc => {
 
     resolvedFields.dossier = resolver(doc.content.meta.dossier)
     resolvedFields.format = resolver(doc.content.meta.format)
+    resolvedFields.discussion = resolver(doc.content.meta.discussion)
   }
 
   let credits = []

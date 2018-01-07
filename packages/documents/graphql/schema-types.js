@@ -20,8 +20,13 @@ type Meta {
   template: String
   feed: Boolean
   kind: String
+  color: String
   format: Document
+  # the discussion wrapping document
   dossier: Document
+  discussion: Document
+  # the id of the discussion itself
+  discussionId: ID
   credits: JSON
 }
 
