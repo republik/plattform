@@ -5,7 +5,7 @@ create table "redirections" (
   "id"                  uuid primary key not null default uuid_generate_v4(),
   "source"              text not null,
   "target"              text not null,
-  "status"              integer not null default 308,
+  "status"              integer not null default 301,
   "resource"            jsonb,
   "createdAt"           timestamptz default now(),
   "updatedAt"           timestamptz default now(),
