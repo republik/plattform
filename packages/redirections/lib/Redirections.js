@@ -1,6 +1,7 @@
 const upsert = async (
   redirection,
-  { pgdb }
+  { pgdb },
+  now = new Date()
 ) => {
   if (
     redirection.source === null || redirection.source === undefined ||
@@ -8,7 +9,6 @@ const upsert = async (
   ) {
       throw new Error('neither redirection source nor target must be null')
   }
-  const now = new Date()
   // in case of A -> B -> A remove A -> B and only keep B -> A
   await pgdb.public.redirections.delete({
     target: redirection.source,
@@ -43,7 +43,8 @@ const upsert = async (
 }
 
 const get = async (
-  source, resource,
+  source,
+  resource,
   { pgdb }
 ) => {
   return pgdb.query(`
@@ -53,14 +54,31 @@ const get = async (
       redirections
     WHERE
       source = :source AND
-      NOT (resource @> :resource)
+      NOT (resource @> :resource) AND
+      "deletedAt" IS NULL
   `, {
     source,
     resource
   })
 }
 
+const del = async (
+  source,
+  { pgdb },
+  now = new Date()
+) => {
+  return pgdb.public.redirections.updateAndGet(
+    {
+      source
+    },
+    {
+      deletedAt: now
+    }
+  )
+}
+
 module.exports = {
   upsert,
-  get
+  get,
+  delete: del
 }

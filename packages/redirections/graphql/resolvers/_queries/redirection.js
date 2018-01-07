@@ -4,6 +4,7 @@ module.exports = async (
   { pgdb }
 ) => {
   return pgdb.public.redirections.findOne({
-    source: path
+    source: path,
+    deletedAt: null
   })
 }

@@ -9,9 +9,9 @@ create table "redirections" (
   "resource"            jsonb,
   "createdAt"           timestamptz default now(),
   "updatedAt"           timestamptz default now(),
+  "deletedAt"           timestamptz,
   UNIQUE("source")
 );
 create index "redirections_source_idx" on "redirections" using GIN ("source" gin_trgm_ops);
 create index "redirections_target_idx" on "redirections" using GIN ("target" gin_trgm_ops);
 create index "redirections_resource_tags_idx" ON "redirections" using GIN ("resource");
-
