@@ -18,7 +18,7 @@ const upsert = async (
   })
   if (redirection.resource) {
     await pgdb.public.redirections.update({
-      resource: redirection.resource
+      resource: redirection.resource,
       deletedAt: null
     }, {
       target: redirection.target,
@@ -27,7 +27,7 @@ const upsert = async (
     })
   }
   const existingRedir = await pgdb.public.redirections.findOne({
-    source: redirection.source
+    source: redirection.source,
     deletedAt: null
   })
   if(existingRedir) {

@@ -1,4 +1,4 @@
-const { get } = require('../../lib/Redirections')
+const { get } = require('../../../lib/Redirections')
 
 module.exports = async (
   _,
