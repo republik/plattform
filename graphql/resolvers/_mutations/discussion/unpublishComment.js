@@ -1,4 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
+const slack = require('../../../../lib/slack')
 
 module.exports = async (_, args, { pgdb, user, req, t, pubsub }) => {
   Roles.ensureUserHasRole(user, 'member')
@@ -32,6 +33,11 @@ module.exports = async (_, args, { pgdb, user, req, t, pubsub }) => {
       mutation: 'UPDATED',
       node: updatedComment
     }})
+
+    const discussion = pgdb.public.discussions.findOne({
+      id: comment.discussionId
+    })
+    await slack.publishCommentUnpublish(user, comment, discussion)
 
     return updatedComment
   } catch (e) {

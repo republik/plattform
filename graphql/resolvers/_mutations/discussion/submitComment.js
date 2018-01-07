@@ -2,6 +2,7 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const hotness = require('../../../../lib/hotness')
 const setDiscussionPreferences = require('./lib/setDiscussionPreferences')
 const userWaitUntil = require('../../Discussion/userWaitUntil')
+const slack = require('../../../../lib/slack')
 
 module.exports = async (_, args, { pgdb, user, t, pubsub }) => {
   Roles.ensureUserHasRole(user, 'member')
@@ -82,6 +83,8 @@ module.exports = async (_, args, { pgdb, user, t, pubsub }) => {
       mutation: 'CREATED',
       node: comment
     }})
+
+    await slack.publishComment(user, comment, discussion)
 
     return comment
   } catch (e) {
