@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-08T12:27:05.969Z",
+  "updated": "2018-01-08T12:54:07.036Z",
   "title": "live",
   "data": [
     {
@@ -87,8 +87,20 @@
       "value": "Sie benötigen einen Benutzernamen aufgrund ihres öffentlichen Profil"
     },
     {
-      "key": "api/newsletters/userNotFound",
-      "value": "User nicht gefunden"
+      "key": "api/newsletters/get/userNotFound",
+      "value": "Ihre Newsletter-Abos konnten nicht abgefragt werden, bitte versuchen Sie es später nochmal."
+    },
+    {
+      "key": "api/newsletters/update/userNotFound",
+      "value": "Ihr Newsletter-Abo konnten nicht aktualisiert werden, bitte versuchen Sie es später nochmal."
+    },
+    {
+      "key": "api/newsletters/update/interestIdNotSupported",
+      "value": "Ihr Newsletter-Abo konnten nicht aktualisiert werden, bitte versuchen Sie es später nochmal."
+    },
+    {
+      "key": "api/newsletters/update/rolesNotEligible",
+      "value": "Sie haben keine Berechtigung, dieses Newsletter-Abo zu aktualisieren."
     },
     {
       "key": "api/statements/maxNodes",
