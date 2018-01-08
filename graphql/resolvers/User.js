@@ -185,7 +185,7 @@ module.exports = {
     }
     return null
   },
-  newsletters (user, args, {pgdb, user: me}) {
-    return getNewsletterSubscriptions(me.id, me.email, me.roles)
+  newsletters (user, args, context) {
+    return getNewsletterSubscriptions(user.id, context)
   }
 }
