@@ -1106,25 +1106,28 @@ test('publish', async (t) => {
         updateMailchimp: $updateMailchimp
         scheduledAt: $scheduledAt
       ) {
-        name
-        live
-        sha
-        prepublication
-        updateMailchimp
-        scheduledAt
-        date
-        author {
+        unresolvedRepoIds
+        publication {
           name
-          email
-          user {
+          live
+          sha
+          prepublication
+          updateMailchimp
+          scheduledAt
+          date
+          author {
+            name
             email
+            user {
+              email
+            }
           }
-        }
-        commit {
-          id
-          document {
-            content
-            ${documentMetaQuery}
+          commit {
+            id
+            document {
+              content
+              ${documentMetaQuery}
+            }
           }
         }
       }
