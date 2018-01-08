@@ -33,8 +33,8 @@ const styles = {
   })
 }
 
-export const Editorial = ({ children }) => 
-  <h1 {...styles.base} {...styles.editorial}>{children}</h1>
+export const Editorial = ({ children, style }) => 
+  <h1 {...styles.base} {...styles.editorial} style={style}>{children}</h1>
 
-export const Interaction = ({ children }) => 
-  <h1 {...styles.base} {...styles.interaction}>{children}</h1>
+export const Interaction = ({ children, style }) => 
+  <h1 {...styles.base} {...styles.interaction} style={style}>{children}</h1>

@@ -4,7 +4,7 @@ import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { fontFamilies } from '../../theme/fonts'
 import { underline } from '../../lib/styleMixins'
-import colors, { colorForKind } from '../../theme/colors'
+import colors from '../../theme/colors'
 
 export { List, UnorderedList as UL, OrderedList as OL, ListItem as LI } from '../List'
 
@@ -89,8 +89,8 @@ const format = css({
   }
 })
 
-export const Format = ({ children, kind, attributes, ...props }) => (
-  <p {...attributes} {...props} {...format} style={{color: colorForKind(kind)}}>
+export const Format = ({ children, color, attributes, ...props }) => (
+  <p {...attributes} {...props} {...format} style={{color}}>
     {children}
   </p>
 )

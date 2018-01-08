@@ -17,11 +17,4 @@ const colors = {
   ...getJson('COLORS')
 }
 
-export const colorForKind = kind => {
-  if (kind && kind.match(/social/i)) {
-    return colors.social
-  }
-  return colors[kind]
-}
-
 export default colors

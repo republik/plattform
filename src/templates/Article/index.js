@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Container, { withMeta } from './Container'
+import Container from './Container'
 import Center from '../../components/Center'
 import TitleBlock from '../../components/TitleBlock'
 import * as Editorial from '../../components/Typography/Editorial'
@@ -54,7 +54,8 @@ import {
   matchFigure,
   getDisplayWidth,
   extractImage,
-  globalInlines
+  globalInlines,
+  styles
 } from './utils'
 
 import createTeasers from './teasers'
@@ -279,15 +280,25 @@ const createSchema = ({
           cover,
           {
             matchMdast: matchZone('TITLE'),
-            component: withMeta(({children, meta, ...props}) => (
-              <TitleBlock {...props} kind={meta.kind} format={meta.format}>
+            component: ({children, format, ...props}) => (
+              <TitleBlock {...props} format={format} Link={Link}>
                 {titleBlockPrepend}
+                {format && format.meta && (
+                  <Editorial.Format color={format.meta.color} contentEditable={false}>
+                    <Link href={format.meta.path} passHref>
+                      <a {...styles.link} href={format.meta.path}>
+                        {format.meta.title}
+                      </a>
+                    </Link>
+                  </Editorial.Format>
+                )}
                 {children}
                 {titleBlockAppend}
               </TitleBlock>
-            )),
-            props: (node, index, parent) => ({
-              center: node.data.center
+            ),
+            props: (node, index, parent, { ancestors }) => ({
+              center: node.data.center,
+              format: ancestors[ancestors.length - 1].format
             }),
             editorModule: 'title',
             editorOptions: {
@@ -296,12 +307,22 @@ const createSchema = ({
             rules: [
               {
                 matchMdast: matchHeading(1),
-                component: withMeta(({ children, attributes, meta }) => {
-                  const Headline = meta.kind && meta.kind.indexOf('meta') !== -1
+                component: ({ children, attributes, format, meta }) => {
+                  const Headline = (
+                    (format && format.meta && format.meta.kind === 'meta') ||
+                    (meta && meta.kind === 'meta')
+                  )
                     ? Interaction.Headline
                     : Editorial.Headline
                   return <Headline attributes={attributes}>{children}</Headline>
-                }),
+                },
+                props: (node, index, parent, { ancestors }) => {
+                  const rootNode = ancestors[ancestors.length - 1]
+                  return {
+                    format: rootNode.format,
+                    meta: rootNode.meta
+                  }
+                },
                 editorModule: 'headline',
                 editorOptions: {
                   type: 'H1',

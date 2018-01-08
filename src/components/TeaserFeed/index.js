@@ -36,34 +36,37 @@ const creditSchema = {
   rules: [link, br]
 }
 
-const DefaultLink = ({ children, path, slug }) => children
+const DefaultLink = ({ children, path }) => children
 
 export const TeaserFeed = ({
-  kind,
+  kind: metaKind,
+  color: metaColor,
   format,
   path,
-  slug,
   title,
   description,
   credits,
   publishDate,
   Link = DefaultLink
 }) => {
-  const Headline =
-    kind && kind.indexOf('meta') !== -1
-      ? Headlines.Interaction
-      : Headlines.Editorial
+  const formatMeta = (format && format.meta) || {}
+  const Headline = (
+    formatMeta.kind === 'meta' ||
+    metaKind === 'meta'
+  )
+    ? Headlines.Interaction
+    : Headlines.Editorial
 
   return (
-    <Container kind={kind} format={format}>
-      <Headline>
-        <Link slug={slug} path={path}>
-          <a {...styles.link}>{title}</a>
+    <Container format={format} color={formatMeta.color || metaColor} Link={Link}>
+      <Headline style={{color: metaColor}}>
+        <Link href={path} passHref>
+          <a {...styles.link} href={path}>{title}</a>
         </Link>
       </Headline>
       <Lead>
-        <Link slug={slug} path={path}>
-          <a {...styles.link}>{description}</a>
+        <Link href={path} passHref>
+          <a {...styles.link} href={path}>{description}</a>
         </Link>
       </Lead>
 
@@ -71,7 +74,7 @@ export const TeaserFeed = ({
         {credits && credits.length > 0 ? (
           renderMdast(credits, creditSchema)
         ) : (
-          dateFormat(Date.parse(publishDate))
+          !!publishDate && dateFormat(Date.parse(publishDate))
         )}
       </Credit>
     </Container>
