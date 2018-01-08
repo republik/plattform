@@ -1184,7 +1184,12 @@ test('publish', async (t) => {
     }
   `
 
-  const testPublication = (publication, vars) => {
+  const testPublication = (publishResponse, vars) => {
+    // TODO test unresolvedRepoIds
+    const {
+      publication
+    } = publishResponse
+    t.ok(publication, 'publication exists on publishResponse')
     const {
       name,
       live,
@@ -1304,9 +1309,9 @@ test('publish', async (t) => {
       checkDocuments(fetchDocumentsUnauth.data.documents.nodes, _unauthorizedDocuments, repoMetaPublishDate)
     }
 
-    console.log('redirections')
+    // console.log('redirections')
     const redirections = await pgdb.public.redirections.find()
-    console.log(redirections)
+    // console.log(redirections)
     if (_redirections) {
       for (let _redirection of _redirections) {
         const redir = redirections.find(r => r.source === _redirection.source)
