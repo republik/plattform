@@ -110,6 +110,7 @@ const createResolver = allDocuments => url => {
 }
 
 module.exports = {
+  getRepoId,
   createResolver,
   createUrlReplacer,
   extractUserUrl
