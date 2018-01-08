@@ -52,7 +52,9 @@ type mutations {
     # this API never triggers sending
     # not immediately, not scheduled
     updateMailchimp: Boolean!
-  ): Publication!
+
+    ignoreUnresolvedRepoIds: Boolean
+  ): PublishResponse!
 
   unpublish(
     repoId: ID!

@@ -29,7 +29,13 @@ const {
   handleRedirection
 } = require('../../../lib/Document')
 
-const { lib: { html: { get: getHTML } } } = require('@orbiting/backend-modules-documents')
+const {
+  graphql: { resolvers: { queries: { documents: getPublishedDocuments } } },
+  lib: {
+    html: { get: getHTML },
+    resolve: { contentUrlResolver, metaUrlResolver }
+  }
+} = require('@orbiting/backend-modules-documents')
 
 module.exports = async (
   _,
@@ -38,7 +44,8 @@ module.exports = async (
     commitId,
     prepublication,
     scheduledAt: _scheduledAt,
-    updateMailchimp = false
+    updateMailchimp = false,
+    ignoreUnresolvedRepoIds = false
   },
   context
 ) => {
@@ -72,6 +79,21 @@ module.exports = async (
     throw new Error(t('api/publish/document/slug/404'))
   }
   const repoMeta = await getRepoMeta({ id: repoId })
+
+  // check if all references (link, format, dossiert, etc.) in the document can be resolved
+  // for front: warn if related document cannot be resolved
+  // for newsletter, preview email: stop publication
+  const unresolvedRepoIds = []
+  const allDocs = await getPublishedDocuments(null, { scheduledAt: scheduledAt || now }, context)
+  const _doc = JSON.parse(JSON.stringify(doc))
+  contentUrlResolver(_doc, allDocs._all, allDocs._usernames, unresolvedRepoIds)
+  metaUrlResolver(_doc.content.meta, allDocs._all, allDocs._usernames, unresolvedRepoIds)
+  if (unresolvedRepoIds.length && (!ignoreUnresolvedRepoIds || doc.content.meta.template === 'newsletter')) {
+    return {
+      unresolvedRepoIds
+    }
+  }
+
   // prepareMetaForPublish creates missing discussions as a side-effect
   doc.content.meta = await prepareMetaForPublish(
     repoId,
@@ -292,12 +314,15 @@ module.exports = async (
   })
 
   return {
-    ...milestone,
-    live: !scheduledAt,
-    meta: {
-      scheduledAt,
-      updateMailchimp
-    },
-    document: doc.content
+    unresolvedRepoIds,
+    publication: {
+      ...milestone,
+      live: !scheduledAt,
+      meta: {
+        scheduledAt,
+        updateMailchimp
+      },
+      document: doc.content
+    }
   }
 }
