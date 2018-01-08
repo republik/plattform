@@ -24,7 +24,8 @@ ALTER TABLE users
   ADD COLUMN "phoneNumberNote"       text,
   ADD COLUMN "phoneNumberAccessRole" "accessRole" not null default 'ADMIN',
   ADD COLUMN "emailAccessRole"       "accessRole" not null default 'ADMIN',
-  ADD COLUMN "ageAccessRole"         "accessRole" not null default 'ADMIN'
+  ADD COLUMN "ageAccessRole"         "accessRole" not null default 'ADMIN',
+  ADD COLUMN "previewsSentAt"        jsonb
 ;
 
 -- carry testimonials images over as portaits
