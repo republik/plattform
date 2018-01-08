@@ -90,6 +90,7 @@ module.exports = {
     })
 
     return {
+      id: Buffer.from(`repo:${repoId}:${commitId}`).toString('base64'),
       content: mdast
     }
   }
