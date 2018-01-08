@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-08T12:54:07.036Z",
+  "updated": "2018-01-08T14:17:42.734Z",
   "title": "live",
   "data": [
     {
@@ -87,16 +87,16 @@
       "value": "Sie benötigen einen Benutzernamen aufgrund ihres öffentlichen Profil"
     },
     {
-      "key": "api/newsletters/get/userNotFound",
+      "key": "api/newsletters/get/failed",
       "value": "Ihre Newsletter-Abos konnten nicht abgefragt werden, bitte versuchen Sie es später nochmal."
     },
     {
-      "key": "api/newsletters/update/userNotFound",
+      "key": "api/newsletters/update/failed",
       "value": "Ihr Newsletter-Abo konnten nicht aktualisiert werden, bitte versuchen Sie es später nochmal."
     },
     {
       "key": "api/newsletters/update/interestIdNotSupported",
-      "value": "Ihr Newsletter-Abo konnten nicht aktualisiert werden, bitte versuchen Sie es später nochmal."
+      "value": "Dieser Newsletter wird nicht unterstützt."
     },
     {
       "key": "api/newsletters/update/rolesNotEligible",
@@ -121,6 +121,14 @@
     {
       "key": "profile/notEligible",
       "value": "Sie müssen uns zuerst unterstützen, bevor Sie ein Profil veröffentlichen können."
+    },
+    {
+      "key": "api/preview/mail/404",
+      "value": "Das Preview-Mail steht zur Zeit nicht zur Verfügung. Bitte versuchen Sie es später nochmal."
+    },
+    {
+      "key": "api/preview/mail/subject",
+      "value": "Preview Mail"
     }
   ]
 }
