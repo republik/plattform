@@ -22,7 +22,7 @@ module.exports = async (_, args, context) => {
       .sort((a, b) => descending(new Date(a), new Date(b)))
       .shift()
     if (moment(latestPreviewSentAt).add(minIntervalHours, 'hours').isAfter(now)) {
-      throw new Error('api/preview/mail/tooEarly')
+      throw new Error(t('api/preview/mail/tooEarly'))
     }
   }
 
@@ -35,7 +35,7 @@ module.exports = async (_, args, context) => {
     context
   )
   if (!doc) {
-    throw new Error('api/preview/mail/404')
+    throw new Error(t('api/preview/mail/404'))
   }
   const html = await getHTML(doc)
 
