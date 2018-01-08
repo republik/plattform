@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@project-r/styleguide@^5.27.0":
-  version "5.27.0"
-  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.27.0.tgz#3f2628621ab32b5032e8a8f2a58b86528d97b01d"
+"@project-r/styleguide@^5.27.1":
+  version "5.27.1"
+  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.27.1.tgz#e48487a108f978b092ec605b65e88b260ebd8670"
   dependencies:
     react-icons "^2.2.7"
 
@@ -1047,6 +1047,10 @@ cz-lerna-changelog@1.2.1:
 d3-array@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-1.2.1.tgz#d1ca33de2f6ac31efadb8e050a021d7e2396d5dc"
+
+d3-color@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/d3-color/-/d3-color-1.0.3.tgz#bc7643fca8e53a8347e2fbdaffa236796b58509b"
 
 d3-dsv@^1.0.3:
   version "1.0.7"
@@ -4240,7 +4244,7 @@ prompt@^1.0.0:
     utile "0.3.x"
     winston "2.1.x"
 
-prop-types@^15.5.10, prop-types@^15.6.0:
+prop-types@^15.5.10, prop-types@^15.5.7, prop-types@^15.6.0:
   version "15.6.0"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.0.tgz#ceaf083022fc46b4a35f69e13ef75aed0d639856"
   dependencies:
