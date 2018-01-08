@@ -5,15 +5,30 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 
 const dateTimeFormat = timeFormat('%x %H:%M') // %x - the locale’s date
 
-const convertPackage = (name, options, wert) => {
-  const resultPairs = {}
+const aggregatePackageOptions = (options) => {
   const amount = options.reduce((sum, d) => sum + d.amount, 0)
   const price = options.reduce((sum, d) => sum + d.price, 0)
-  resultPairs[`${name} #`] = options.reduce((sum, d) => sum + d.amount, 0)
+  return { amount, price }
+}
+
+const convertPackage = (name, pledgeOptions, wert) => {
+  const resultPairs = {}
+  const { amount, price } = aggregatePackageOptions(pledgeOptions)
+  resultPairs[`${name} #`] = amount
   resultPairs[`${name} wert`] = formatPrice(wert || price)
   resultPairs[`${name} total`] = formatPrice(price * amount)
   return resultPairs
 }
+
+const filterPackageOptions = (packageOptions, rewardName) =>
+  packageOptions
+    .filter(packageOption =>
+      (packageOption.reward && packageOption.reward.name === rewardName))
+
+const filterPledgeOptions = (pledgeOptions, packageOptions) =>
+  pledgeOptions
+    .filter(pledgeOption =>
+      !!packageOptions.find(packageOption => packageOption.id === pledgeOption.templateId))
 
 module.exports = async (_, args, {pgdb, user}) => {
   Roles.ensureUserHasRole(user, 'accountant')
@@ -60,19 +75,12 @@ module.exports = async (_, args, {pgdb, user}) => {
         reward: rewards.find(r => r.id === pkgOption.rewardId)
       })
   )
-  const aboPkgo = pkgOptions.filter(pkgo =>
-      (pkgo.reward && pkgo.reward.name === 'ABO')
-  )
-  const aboBenefactorPkgos = pkgOptions.filter(pkgo =>
-      (pkgo.reward && pkgo.reward.name === 'BENEFACTOR_ABO')
-  )
-  const notebookPkgos = pkgOptions.filter(pkgo =>
-      (pkgo.reward && pkgo.reward.name === 'NOTEBOOK')
-  )
-  const totebagPkgos = pkgOptions.filter(pkgo =>
-      (pkgo.reward && pkgo.reward.name === 'TOTEBAG')
-  )
-  const donationPkgos = pkgOptions.filter(pkgo => !pkgo.reward)
+  const donationPackageOptions = pkgOptions.filter(pkgo => !pkgo.reward)
+
+  const aboPackageOptions = filterPackageOptions(pkgOptions, 'ABO')
+  const benefactorPackageOptions = filterPackageOptions(pkgOptions, 'BENEFACTOR_ABO')
+  const notebookPackageOptions = filterPackageOptions(pkgOptions, 'NOTEBOOK')
+  const totebagPackageOptions = filterPackageOptions(pkgOptions, 'TOTEBAG')
 
   const payments = (await pgdb.query(`
     SELECT
@@ -116,35 +124,27 @@ module.exports = async (_, args, {pgdb, user}) => {
     paymentIds,
     packageIds
   })).map(result => {
-    const {pledgeOptions} = result
-
-    const abos = pledgeOptions.filter(plo =>
-      !!aboPkgo.find(pko => pko.id === plo.templateId)
-    )
+    const { pledgeOptions } = result
 
     // the only way to determine if the abo was reduced
     // is to check if pledge.donation is < 0
     // If that's the case, it's the only product
     // bought in that pledge.
-    const regularAbos = result.donation >= 0
-      ? abos
-      : []
-    const reducedAbos = result.donation < 0
-      ? abos
-      : []
 
-    const benefactorAbos = pledgeOptions.filter(plo =>
-      !!aboBenefactorPkgos.find(pko => pko.id === plo.templateId)
-    )
-    const notebooks = pledgeOptions.filter(plo =>
-      !!notebookPkgos.find(pko => pko.id === plo.templateId)
-    )
-    const totebags = pledgeOptions.filter(plo =>
-      !!totebagPkgos.find(pko => pko.id === plo.templateId)
-    )
+    const abos = filterPledgeOptions(pledgeOptions, aboPackageOptions)
+    const regularAbos = result.donation >= 0 ? abos : []
+    const reducedAbos = result.donation < 0 ? abos : []
+    const benefactorAbos = filterPledgeOptions(pledgeOptions, benefactorPackageOptions)
+    const notebooks = filterPledgeOptions(pledgeOptions, notebookPackageOptions)
+    const totebags = filterPledgeOptions(pledgeOptions, totebagPackageOptions)
+
+    const aboDefaultPrice = aggregatePackageOptions(aboPackageOptions).price
+    const benefactorDefaultPrice = aggregatePackageOptions(benefactorPackageOptions).price
+    const notebookDefaultPrice = aggregatePackageOptions(notebookPackageOptions).price
+    const totebagDefaultPrice = aggregatePackageOptions(totebagPackageOptions).price
 
     const donations = pledgeOptions.filter(plo =>
-      !!donationPkgos.find(pko => pko.id === plo.templateId)
+      !!donationPackageOptions.find(pko => pko.id === plo.templateId)
     )
     const numDonations = donations.reduce((sum, d) => sum + d.amount, 0)
     const donation = numDonations > 0
@@ -156,8 +156,8 @@ module.exports = async (_, args, {pgdb, user}) => {
       pledgeId: result.pledgeId.substring(0, 13),
       userId: result.userId.substring(0, 13),
       email: result.email,
-      firstName: result.firstName.replace(/,/gi, ''),
-      lastName: result.lastName.replace(/,/gi, ''),
+      firstName: result.firstName,
+      lastName: result.lastName,
       pledgeStatus: result.pledgeStatus,
       pledgeCreatedAt: dateTimeFormat(result.pledgeCreatedAt),
       pledgeTotal: formatPrice(result.pledgeTotal),
@@ -165,11 +165,11 @@ module.exports = async (_, args, {pgdb, user}) => {
       paymentStatus: result.paymentStatus,
       paymentTotal: formatPrice(result.paymentTotal),
       paymentUpdatedAt: dateTimeFormat(result.paymentUpdatedAt),
-      ...(convertPackage('ABO', regularAbos, 24000)),
-      ...(convertPackage('ABO_REDUCED', reducedAbos, 24000)),
-      ...(convertPackage('ABO_BENEFACTOR', benefactorAbos, 100000)),
-      ...(convertPackage('NOTEBOOK', notebooks)),
-      ...(convertPackage('TOTEBAG', totebags)),
+      ...(convertPackage('ABO', regularAbos, aboDefaultPrice)),
+      ...(convertPackage('ABO_REDUCED', reducedAbos, aboDefaultPrice)),
+      ...(convertPackage('ABO_BENEFACTOR', benefactorAbos, benefactorDefaultPrice)),
+      ...(convertPackage('NOTEBOOK', notebooks, notebookDefaultPrice)),
+      ...(convertPackage('TOTEBAG', totebags, totebagDefaultPrice)),
       'DONATION #': numDonations,
       // 'DONATION total': formatPrice(donations.reduce((sum, d) => sum + d.price, 0)),
       donation: formatPrice(donation)
