@@ -37,7 +37,7 @@ module.exports = async (_, args, context) => {
   if (!doc) {
     throw new Error(t('api/preview/mail/404'))
   }
-  const html = await getHTML(doc)
+  const html = getHTML(doc)
 
   await sendMail({
     to: me.email,
