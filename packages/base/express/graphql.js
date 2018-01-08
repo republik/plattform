@@ -21,7 +21,7 @@ const {
 } = process.env
 
 module.exports = (server, pgdb, httpServer, executableSchema, t) => {
-  const createContext = ({user, ...additional}) => ({
+  const createContext = ({user, ...additional} = {}) => ({
     ...additional,
     pgdb,
     user,
