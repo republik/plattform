@@ -22,6 +22,15 @@ query repos($after: String, $search: String) {
             image
             description
             credits
+            kind
+            color
+            format {
+              meta {
+                title
+                color
+                kind
+              }
+            }
           }
         }
       }
