@@ -35,7 +35,7 @@ const ConnectedAutoComplete = graphql(repoQuery, {
   options: ({ search }) => ({ variables: { search: search } }),
   props: (props) => {
     if (props.data.loading) return
-    const { data: { repos: { nodes = [] } } } = props
+    const { data: { repos: { nodes = [] } = {} } } = props
     return ({
       items: nodes.map(v => ({
         value: v,
