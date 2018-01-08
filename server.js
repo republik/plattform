@@ -24,7 +24,7 @@ module.exports.run = () => {
     async (userId, isNew, pgdb) =>
       sendPendingPledgeConfirmations(userId, pgdb, t),
     async (userId, isNew, pgdb) => {
-      updateUserOnMailchimp({userId, pgdb, isNew})
+      isNew && updateUserOnMailchimp({userId, pgdb, isNew})
     }
   ]
 
