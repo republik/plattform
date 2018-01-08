@@ -68,7 +68,7 @@ test('claimMembership: Claim a membership with package isAutoActivateUserMembers
   t.end()
 })
 
-test.only('claimMembership: Claim a membership with package isAutoActivateUserMembership enabled', async (t) => {
+test('claimMembership: Claim a membership with package isAutoActivateUserMembership enabled', async (t) => {
   await prepare()
 
   const locks = await pgDatabase().query('SELECT state, count(*) FROM pg_stat_activity GROUP BY state')
