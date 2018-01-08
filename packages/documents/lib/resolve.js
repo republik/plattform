@@ -1,5 +1,6 @@
 const checkEnv = require('check-env')
 const { parse } = require('url')
+const visit = require('unist-util-visit')
 
 checkEnv([
   'GITHUB_LOGIN',
@@ -69,7 +70,7 @@ const extractUserUrl = url => {
   )
 }
 
-const createUrlReplacer = (allDocuments = [], usernames = []) => url => {
+const createUrlReplacer = (allDocuments = [], usernames = [], errors = []) => url => {
   const userInfo = extractUserPath(url)
   if (userInfo) {
     const user = usernames
@@ -90,13 +91,15 @@ const createUrlReplacer = (allDocuments = [], usernames = []) => url => {
     .find(d => d.repoId === repoId)
   if (linkedDoc) {
     return linkedDoc.content.meta.path
+  } else {
+    errors.push(repoId)
   }
   // autoSlug links pointing to
   // not published or missing documents are stripped
   return ''
 }
 
-const createResolver = allDocuments => url => {
+const createResolver = (allDocuments, errors = []) => url => {
   const repoId = getRepoId(url)
   if (!repoId) {
     return null
@@ -105,13 +108,58 @@ const createResolver = allDocuments => url => {
     .find(d => d.repoId === repoId)
   if (linkedDoc) {
     return linkedDoc
+  } else {
+    errors.push(repoId)
   }
   return null
+}
+
+const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors) => {
+  const urlReplacer = createUrlReplacer(
+    allDocuments,
+    usernames,
+    errors
+  )
+
+  visit(doc.content, 'link', node => {
+    node.url = urlReplacer(node.url)
+  })
+  visit(doc.content, 'zone', node => {
+    if (node.data) {
+      node.data.url = urlReplacer(node.data.url)
+    }
+  })
+}
+
+const metaUrlResolver = (meta, allDocuments = [], usernames = [], errors) => {
+  const urlReplacer = createUrlReplacer(
+    allDocuments,
+    usernames,
+    errors
+  )
+
+  meta.credits && meta.credits
+    .filter(c => c.type === 'link')
+    .forEach(c => {
+      c.url = urlReplacer(c.url)
+    })
+}
+
+const metaFieldResolver = (meta, allDocuments = [], errors) => {
+  const resolver = createResolver(allDocuments, errors)
+  return {
+    dossier: resolver(meta.dossier),
+    format: resolver(meta.format),
+    discussion: resolver(meta.discussion)
+  }
 }
 
 module.exports = {
   getRepoId,
   createResolver,
   createUrlReplacer,
-  extractUserUrl
+  extractUserUrl,
+  contentUrlResolver,
+  metaUrlResolver,
+  metaFieldResolver
 }
