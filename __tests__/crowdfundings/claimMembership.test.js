@@ -39,6 +39,7 @@ const prepareNewPledge = async ({ templateId, ...options }) => {
 
 const prepare = async (options) => {
   await connectIfNeeded()
+
   await pgDatabase().public.payments.truncate({ cascade: true })
   await pgDatabase().public.pledgePayments.truncate({ cascade: true })
   await pgDatabase().public.pledges.truncate({ cascade: true })
@@ -69,6 +70,10 @@ test('claimMembership: Claim a membership with package isAutoActivateUserMembers
 
 test.only('claimMembership: Claim a membership with package isAutoActivateUserMembership enabled', async (t) => {
   await prepare()
+
+  const locks = await pgDatabase().query('SELECT state, count(*) FROM pg_stat_activity GROUP BY state')
+  console.log(locks)
+
   const { pledgeId } = await prepareNewPledge({ templateId: '00000000-0000-0000-0008-000000000001' })
   await payPledge({
     pledgeId,

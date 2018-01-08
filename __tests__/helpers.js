@@ -47,8 +47,19 @@ const disconnect = async () => {
   await Server.close()
 }
 
+const throwOnOpenTransaction = async () => {
+  const locksEnd = await server.pgdb.query('SELECT count(*) FROM pg_stat_activity WHERE state = :state', {
+    'state': 'idle in transaction'
+  })
+  if (locksEnd && locksEnd[0] && locksEnd[0].count > 0) {
+    throw new Error('AT LEAST ONE OPEN TRANSACTION')
+  }
+  return true
+}
+
 module.exports = {
   apolloFetch: createLocalApolloFetch(),
+  throwOnOpenTransaction,
   connectIfNeeded,
   pgDatabase,
   disconnect
