@@ -1,21 +1,15 @@
 const visit = require('unist-util-visit')
-const { createResolver } = require('./resolve')
+const { metaFieldResolver } = require('./resolve')
 
 const getMeta = doc => {
   if (doc._meta) {
     return doc._meta
   }
 
-  const resolvedFields = {}
-
   // see _all note in Document.content resolver
-  if (doc._all) {
-    const resolver = createResolver(doc._all)
-
-    resolvedFields.dossier = resolver(doc.content.meta.dossier)
-    resolvedFields.format = resolver(doc.content.meta.format)
-    resolvedFields.discussion = resolver(doc.content.meta.discussion)
-  }
+  const resolvedFields = doc._all
+    ? metaFieldResolver(doc.content.meta, doc._all)
+    : { }
 
   let credits = []
   visit(doc.content, 'zone', node => {
