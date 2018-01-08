@@ -7,7 +7,9 @@ const {
   MAILCHIMP_MAIN_LIST_ID,
   MAILCHIMP_INTEREST_PLEDGE,
   MAILCHIMP_INTEREST_MEMBER,
-  MAILCHIMP_INTEREST_MEMBER_BENEFACTOR
+  MAILCHIMP_INTEREST_MEMBER_BENEFACTOR,
+  MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
+  MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY
 } = process.env
 
 module.exports = async ({userId, pgdb}) => {
@@ -32,6 +34,12 @@ module.exports = async ({userId, pgdb}) => {
       userId: userId,
       membershipTypeId: membershipTypeBenefactor.id
     }) : false
+
+    const newsletterRevocation = !hasMembership ? {
+      [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: false,
+      [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: false
+    } : {}
+
     const hash = crypto
       .createHash('md5')
       .update(email)
@@ -50,7 +58,8 @@ module.exports = async ({userId, pgdb}) => {
         interests: {
           [MAILCHIMP_INTEREST_PLEDGE]: !!hasPledge,
           [MAILCHIMP_INTEREST_MEMBER]: !!hasMembership,
-          [MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: !!isBenefactor
+          [MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: !!isBenefactor,
+          ...newsletterRevocation
         }
       })
     })
