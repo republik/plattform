@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-05T19:40:15.609Z",
+  "updated": "2018-01-08T12:27:05.969Z",
   "title": "live",
   "data": [
     {
@@ -85,6 +85,10 @@
     {
       "key": "api/publicProfile/usernameNeeded",
       "value": "Sie benötigen einen Benutzernamen aufgrund ihres öffentlichen Profil"
+    },
+    {
+      "key": "api/newsletters/userNotFound",
+      "value": "User nicht gefunden"
     },
     {
       "key": "api/statements/maxNodes",
