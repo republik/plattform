@@ -86,6 +86,13 @@
       "companyId": "c0000000-0000-0000-0001-000000000001",
       "name": "DONATION",
       "paymentMethods": "{STRIPE,POSTFINANCECARD,PAYPAL,PAYMENTSLIP}"
+    }, {
+      "id": "00000000-0000-0000-0007-000000000005",
+      "crowdfundingId": "f0000000-0000-0000-0002-000000000001",
+      "companyId": "c0000000-0000-0000-0001-000000000001",
+      "name": "PRESENT",
+      "paymentMethods": "{STRIPE,POSTFINANCECARD,PAYPAL,PAYMENTSLIP}",
+      "isAutoActivateUserMembership": false
     }
   ],
   "packageOptions": [{
@@ -134,6 +141,15 @@
       "price": 1,
       "userPrice": true,
       "minUserPrice": 1
+    }, {
+      "id": "00000000-0000-0000-0008-000000000006",
+      "packageId": "00000000-0000-0000-0007-000000000005",
+      "rewardId": "00000000-0000-0000-0004-000000000002",
+      "minAmount": 1,
+      "maxAmount": 1,
+      "defaultAmount": 1,
+      "price": 24000,
+      "userPrice": false
     }
   ]
 }

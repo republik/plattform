@@ -49,6 +49,9 @@ test('submitPledge: default pledge with ABO package', async (t) => {
   t.equal(result.data.submitPledge.emailVerify, null, 'email must not be verified, because user does not exist')
   t.ok(result.data.submitPledge.pfSHA, 'hash returned')
 
+  const membership = await pgDatabase().public.memberships.count({ pledgeId: result.data.submitPledge.pledgeId })
+  t.ok(!membership, 'no membership')
+
   const pledge = await pgDatabase().public.pledges.findOne({ id: result.data.submitPledge.pledgeId })
   t.equal(pledge.total, 24000, 'correct total value in db')
 
@@ -67,6 +70,9 @@ test('submitPledge: default pledge with ABO package', async (t) => {
   t.equal(result2.data.submitPledge.pfAliasId, null, 'aliasId is null')
   t.equal(result2.data.submitPledge.emailVerify, true, 'email must be verified, because e-mail')
   t.equal(result2.data.submitPledge.pfSHA, null, 'no hash')
+  const membership2 = await pgDatabase().public.memberships.count({ pledgeId: result2.data.submitPledge.pledgeId })
+  t.ok(!membership2, 'no membership')
+
   t.end()
 })
 

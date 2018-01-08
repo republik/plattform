@@ -46,11 +46,12 @@ module.exports = async (pledgeId, pgdb, t, logger = console) => {
   const now = new Date()
   pledgeOptions.forEach((plo) => {
     if (plo.packageOption.reward.type === 'MembershipType') {
+      const membershipType = plo.packageOption.reward.membershipType
       for (let c = 0; c < plo.amount; c++) {
         const membership = {
           userId: user.id,
           pledgeId: pledge.id,
-          membershipTypeId: plo.packageOption.reward.membershipType.id,
+          membershipTypeId: membershipType.id,
           reducedPrice,
           voucherable: !reducedPrice,
           active: false,
@@ -59,8 +60,7 @@ module.exports = async (pledgeId, pgdb, t, logger = console) => {
           updatedAt: now
         }
 
-        if (c === 0 && !membershipPeriod && !userHasActiveMembership && pkg.name !== 'ABO_GIVE') {
-          const membershipType = plo.packageOption.reward.membershipType
+        if (c === 0 && !membershipPeriod && !userHasActiveMembership && pkg.isAutoActivateUserMembership) {
           membershipPeriod = {
             beginDate: now,
             endDate: moment(now).add(membershipType.intervalCount, membershipType.interval),

@@ -190,3 +190,7 @@ ALTER TABLE "packages" ALTER COLUMN "paymentMethods" SET NOT NULL;
 
 -- rename goodie name to TOADBAG
 UPDATE "goodies" SET "name"='TOTEBAG' WHERE "name" = 'TOADBAG';
+
+-- set the isAutoActivateUserMembership flag to false on the ABO_GIVE abo, leading to voucherCode generation on memberships
+ALTER TABLE "packages" ADD COLUMN "isAutoActivateUserMembership" boolean not null default true;
+UPDATE "packages" SET "isAutoActivateUserMembership"=false WHERE "name" = 'ABO_GIVE';
