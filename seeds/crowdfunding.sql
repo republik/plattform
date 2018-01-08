@@ -70,7 +70,7 @@ INSERT INTO rewards (id, type, "createdAt", "updatedAt") VALUES ('003a5596-a797-
 --
 
 INSERT INTO goodies (id, "rewardId", "rewardType", name, "createdAt", "updatedAt") VALUES ('d6494b6e-2d53-4d3a-bfe7-34884778f708', '43f69dbd-dca9-40a0-82d4-5ed431cb7278', 'Goodie', 'NOTEBOOK', '2017-04-26 05:18:09.215+02', '2017-04-26 05:18:09.215+02');
-INSERT INTO goodies (id, "rewardId", "rewardType", name, "createdAt", "updatedAt") VALUES ('1b841cbc-b620-4771-9d26-25193319df37', '00b84bff-9b49-4ca7-b6d7-760783b49bf3', 'Goodie', 'TOADBAG', '2017-11-21 23:26:21.680285+01', '2017-11-21 23:26:21.680285+01');
+INSERT INTO goodies (id, "rewardId", "rewardType", name, "createdAt", "updatedAt") VALUES ('1b841cbc-b620-4771-9d26-25193319df37', '00b84bff-9b49-4ca7-b6d7-760783b49bf3', 'Goodie', 'TOTEBAG', '2017-11-21 23:26:21.680285+01', '2017-11-21 23:26:21.680285+01');
 
 
 --

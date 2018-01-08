@@ -28,7 +28,7 @@ Promise.resolve().then( async () => {
 
 const _comments = require('./comments.json')
 const PgDb = require('../lib/pgdb')
-const getHottnes = require('../lib/hottnes')
+const getHotnes = require('../lib/hotness')
 const fakeUUID = require('../lib/fakeUUID')
 
 PgDb.connect().then(async (pgdb) => {
@@ -66,11 +66,13 @@ PgDb.connect().then(async (pgdb) => {
       await pgdb.public.comments.insert({
         id: fakeUUID('t1_' + comment.id),
         discussionId: discussion.id,
-        parentId,
+        ...parentId
+          ? { parentIds: [ parentId ] }
+          : { },
         userId: user.id,
         upVotes: comment.ups,
         downVotes: comment.downs,
-        hottnes: getHottnes(comment.ups, comment.downs, comment.created * 1000),
+        hotness: getHotnes(comment.ups, comment.downs, comment.created * 1000),
         depth: comment.depth,
         content: comment.body,
         createdAt: new Date(comment.created * 1000)
