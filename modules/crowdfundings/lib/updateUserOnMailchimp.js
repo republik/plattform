@@ -9,10 +9,11 @@ const {
   MAILCHIMP_INTEREST_MEMBER,
   MAILCHIMP_INTEREST_MEMBER_BENEFACTOR,
   MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
-  MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY
+  MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
+  MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR
 } = process.env
 
-module.exports = async ({userId, pgdb, hasJustPaid = false}) => {
+module.exports = async ({userId, pgdb, hasJustPaid, isNew}) => {
   try {
     const { email } = await pgdb.public.users.findOne({ id: userId })
     if (!email) {
@@ -35,17 +36,24 @@ module.exports = async ({userId, pgdb, hasJustPaid = false}) => {
       membershipTypeId: membershipTypeBenefactor.id
     }) : false
 
-    const enforcedNewsletterSubscriptions = !hasMembership
+    const enforcedNewsletterSubscriptions = isNew
       ? {
-          // Revoke paid newsletters when membership is inactive.
-        [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: false,
-        [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: false
+          // Autosubscribe free newsletters when user is new.
+        [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true
       }
-      : hasJustPaid ? {
-          // Autosubscribe paid newsletters when member just paid.
-        [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
-        [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true
-      } : {}
+      : hasJustPaid
+        ? {
+            // Autosubscribe paid newsletters when user just paid.
+          [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
+          [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true
+        }
+        : !hasMembership
+          ? {
+              // Revoke paid newsletters when membership is inactive.
+            [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: false,
+            [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: false
+          }
+          : {}
 
     const hash = crypto
       .createHash('md5')
