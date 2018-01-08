@@ -38,18 +38,18 @@ module.exports = async ({userId, pgdb, hasJustPaid, isNew}) => {
 
     const enforcedNewsletterSubscriptions = isNew
       ? {
-          // Autosubscribe free newsletters when user is new.
+        // Autosubscribe free newsletters when user is new.
         [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true
       }
       : hasJustPaid
         ? {
-            // Autosubscribe paid newsletters when user just paid.
+          // Autosubscribe paid newsletters when user just paid.
           [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
           [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true
         }
         : !hasMembership
           ? {
-              // Revoke paid newsletters when membership is inactive.
+            // Revoke paid newsletters when membership is inactive.
             [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: false,
             [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: false
           }
