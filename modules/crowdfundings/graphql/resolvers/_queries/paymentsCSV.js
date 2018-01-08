@@ -11,16 +11,16 @@ const aggregatePackageOptions = (options) => {
   return { amount, price }
 }
 
-const convertPackage = (name, pledgeOptions, wert) => {
+const convertPackage = (name, pledgeOptions, fallbackPrice) => {
   const resultPairs = {}
   const { amount, price } = aggregatePackageOptions(pledgeOptions)
   resultPairs[`${name} #`] = amount
-  resultPairs[`${name} wert`] = formatPrice(wert || price)
+  resultPairs[`${name} wert`] = formatPrice(price || fallbackPrice)
   resultPairs[`${name} total`] = formatPrice(price * amount)
   return resultPairs
 }
 
-const filterPackageOptions = (packageOptions, rewardName) =>
+const filterPackageOptionsByRewardName = (packageOptions, rewardName) =>
   packageOptions
     .filter(packageOption =>
       (packageOption.reward && packageOption.reward.name === rewardName))
@@ -77,10 +77,10 @@ module.exports = async (_, args, {pgdb, user}) => {
   )
   const donationPackageOptions = pkgOptions.filter(pkgo => !pkgo.reward)
 
-  const aboPackageOptions = filterPackageOptions(pkgOptions, 'ABO')
-  const benefactorPackageOptions = filterPackageOptions(pkgOptions, 'BENEFACTOR_ABO')
-  const notebookPackageOptions = filterPackageOptions(pkgOptions, 'NOTEBOOK')
-  const totebagPackageOptions = filterPackageOptions(pkgOptions, 'TOTEBAG')
+  const aboPackageOptions = filterPackageOptionsByRewardName(pkgOptions, 'ABO')
+  const benefactorPackageOptions = filterPackageOptionsByRewardName(pkgOptions, 'BENEFACTOR_ABO')
+  const notebookPackageOptions = filterPackageOptionsByRewardName(pkgOptions, 'NOTEBOOK')
+  const totebagPackageOptions = filterPackageOptionsByRewardName(pkgOptions, 'TOTEBAG')
 
   const payments = (await pgdb.query(`
     SELECT
@@ -138,10 +138,12 @@ module.exports = async (_, args, {pgdb, user}) => {
     const notebooks = filterPledgeOptions(pledgeOptions, notebookPackageOptions)
     const totebags = filterPledgeOptions(pledgeOptions, totebagPackageOptions)
 
-    const aboDefaultPrice = aggregatePackageOptions(aboPackageOptions).price
-    const benefactorDefaultPrice = aggregatePackageOptions(benefactorPackageOptions).price
-    const notebookDefaultPrice = aggregatePackageOptions(notebookPackageOptions).price
-    const totebagDefaultPrice = aggregatePackageOptions(totebagPackageOptions).price
+    // if price changed during crowdfundings
+    // this is going to fuck up the "wert" column for old entries
+    const aboDefaultPrice = aboPackageOptions[0].price
+    const benefactorDefaultPrice = benefactorPackageOptions[0].price
+    const notebookDefaultPrice = notebookPackageOptions[0].price
+    const totebagDefaultPrice = totebagPackageOptions[0].price
 
     const donations = pledgeOptions.filter(plo =>
       !!donationPackageOptions.find(pko => pko.id === plo.templateId)
