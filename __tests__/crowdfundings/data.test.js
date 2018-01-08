@@ -120,6 +120,24 @@ test('crowdfundings test data exists', async (t) => {
               'reward': null
             }
           ]
+        },
+        {
+          'id': '00000000-0000-0000-0007-000000000005',
+          'name': 'PRESENT',
+          'options': [
+            {
+              'id': '00000000-0000-0000-0008-000000000006',
+              'price': 24000,
+              'userPrice': false,
+              'minAmount': 1,
+              'maxAmount': 1,
+              'defaultAmount': 1,
+              'reward': {
+                'id': '00000000-0000-0000-0006-000000000001',
+                'name': 'ABO'
+              }
+            }
+          ]
         }
       ]
     }

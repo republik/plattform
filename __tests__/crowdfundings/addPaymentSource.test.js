@@ -49,7 +49,7 @@ test('addPaymentSource: adding a 3d secure card', async (t) => {
   const { userId } = await signIn({ user: Users.Member })
   const source = await createSource({ card: Cards.Visa3D, userId })
   const result = await addPaymentSource({ sourceId: source.id, pspPayload: { type: 'three_d_secure' } })
-  t.equal(result.errors[0].message, 'Es tut uns leid, aus technischen Gründen können wir zurzeit kein Monatsabo auf eine Kreditkarte buchen, die 3D secure voraussetzt. Sie können es entweder mit einer anderen Karte versuchen und/oder uns kontaktieren unter: zahlungen@republik.ch. ', 'mutation fails because 3d secure currently not allowed')
+  t.equal(result.errors[0].message, 'Es tut uns leid, aus technischen Gründen können wir zurzeit kein Monatsabo auf eine Kreditkarte buchen, die 3D secure voraussetzt. Sie können es entweder mit einer anderen Karte versuchen und/oder uns kontaktieren unter: kontakt@republik.ch. ', 'mutation fails because 3d secure currently not allowed')
   await signOut()
   t.end()
 })
