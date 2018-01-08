@@ -189,6 +189,10 @@ const cover = {
       {
         label: 'Zentriert',
         props: {size: 'center'}
+      },
+      {
+        label: 'Klein',
+        props: {size: 'tiny'}
       }
     ]
   },
@@ -217,6 +221,7 @@ const cover = {
   ]
 }
 
+const mdastPlaceholder = '\u2063'
 const DefaultLink = ({ children }) => children
 
 const createSchema = ({
@@ -310,12 +315,21 @@ const createSchema = ({
                     child => child.type === 'heading').length
                   return matchParagraph(node) && index === numHeadings
                 },
-                component: Editorial.Lead,
+                component: ({children, ...props}) => {
+                  if (
+                    children &&
+                    children.length === 1 &&
+                    children[0] === mdastPlaceholder
+                  ) {
+                    return null
+                  }
+                  return <Editorial.Lead children={children} {...props} />
+                },
                 editorModule: 'paragraph',
                 editorOptions: {
                   type: 'LEAD',
                   placeholder: 'Lead',
-                  mdastPlaceholder: '\u2063'
+                  mdastPlaceholder
                 },
                 rules: [
                   ...globalInlines,
