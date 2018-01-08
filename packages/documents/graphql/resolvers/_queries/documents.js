@@ -36,7 +36,8 @@ module.exports = async (_, args, { user, redis, pgdb }) => {
     first,
     before,
     last,
-    path
+    path,
+    repoId
   } = args
 
   return Promise.all(
@@ -131,6 +132,11 @@ module.exports = async (_, args, { user, redis, pgdb }) => {
           '/'+d.content.meta.slug === path
         ))
       }
+      if (repoId) {
+        documents = documents.filter(d =>
+          d.repoId === repoId
+        )
+      }
       if (template) {
         documents = documents.filter(d => (
           d.content.meta.template === template
@@ -145,7 +151,7 @@ module.exports = async (_, args, { user, redis, pgdb }) => {
       // we only restrict the nodes array
       // making totalCount always available
       // - querying a single document by path is always allowed
-      if (DOCUMENTS_RESTRICT_TO_ROLES && !path) {
+      if (DOCUMENTS_RESTRICT_TO_ROLES && !path && !repoId) {
         const roles = DOCUMENTS_RESTRICT_TO_ROLES.split(',')
         readNodes = userIsInRoles(user, roles)
       }
