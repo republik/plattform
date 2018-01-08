@@ -58,8 +58,8 @@ PHANTOMJSCLOUD_API_KEY=
 # Sheet IDs for gsheets powered pages
 GSHEETS={"someSheetId": "faqs","someSheetId": "updates","someSheetId": "events"}
 
-# set the published path of the document sent as preview email
-PREVIEW_MAIL_PATH=/2018/01/08/preview
+# repoId for the preview mail (must be published)
+PREVIEW_MAIL_REPO_ID=republik/newsletter-preview
 ```
 
 Install dependencies.

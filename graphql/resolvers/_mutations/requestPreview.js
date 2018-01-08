@@ -1,13 +1,13 @@
 const { sendMail } = require('@orbiting/backend-modules-mail')
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const { graphql: { resolvers: { queries: { document: getDocument } } } } = require('@orbiting/backend-modules-documents')
-const { html: getHTML } = require('@orbiting/backend-modules-documents/lib')
+const { lib: { html: { get: getHTML } } } = require('@orbiting/backend-modules-documents')
 const { descending } = require('d3-array')
 const moment = require('moment')
 
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
-  PREVIEW_MAIL_PATH
+  PREVIEW_MAIL_REPO_ID
 } = process.env
 
 const minIntervalHours = 12
@@ -26,12 +26,12 @@ module.exports = async (_, args, context) => {
     }
   }
 
-  if (!PREVIEW_MAIL_PATH) {
+  if (!PREVIEW_MAIL_REPO_ID) {
     throw new Error('api/preview/mail/404')
   }
   const doc = await getDocument(
     null,
-    { path: PREVIEW_MAIL_PATH },
+    { repoId: PREVIEW_MAIL_REPO_ID },
     context
   )
   if (!doc) {
