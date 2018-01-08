@@ -57,6 +57,15 @@ const fragments = {
         meta {
           title
           template
+          kind
+          color
+          format {
+            meta {
+              title
+              color
+              kind
+            }
+          }
         }
       }
     }
@@ -286,7 +295,12 @@ class EditorPage extends Component {
         return
       }
 
-      const json = commit.document.content
+      const json = {
+        ...commit.document.content,
+        // add format to root mdast node
+        format: commit.document.meta.format
+      }
+
       committedEditorState = this.editor.serializer.deserialize(json)
 
       // normalize

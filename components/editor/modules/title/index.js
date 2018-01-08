@@ -27,18 +27,30 @@ export default ({rule, subModules, TYPE}) => {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, rest) => {
+      let nodes = childSerializer.fromMdast(node.children, 0, node, rest)
+      const { format } = rest.context
+      if (format) {
+        // enhance all immediate children with format
+        // - needed for headline
+        nodes = nodes.map(node => ({...node, data: {...node.data, format}}))
+      }
       return {
         kind: 'block',
         type: TYPE,
-        data: node.data,
-        nodes: childSerializer.fromMdast(node.children, 0, node, rest)
+        data: {
+          ...node.data,
+          format
+        },
+        nodes
       }
     },
     toMdast: (object, index, parent, rest) => {
+      // omit format
+      const {format, ...data} = object.data
       return {
         type: 'zone',
         identifier,
-        data: object.data,
+        data,
         children: childSerializer.toMdast(object.nodes, 0, object, rest)
       }
     }

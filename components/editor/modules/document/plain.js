@@ -66,7 +66,13 @@ export default ({rule, subModules, TYPE}) => {
       const documentNode = {
         data: node.meta,
         kind: 'document',
-        nodes: childSerializer.fromMdast(node.children, 0, node, rest)
+        nodes: childSerializer.fromMdast(node.children, 0, node, {
+          context: {
+            ...rest.context,
+            // pass format to title through context
+            format: node.format
+          }
+        })
       }
 
       const newData = autoMeta(
