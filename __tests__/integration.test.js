@@ -184,10 +184,7 @@ test('unauthorized subscription', (t) => {
   })
 })
 
-/**
-  Embed API tests w/ unauthorized user
-*/
-
+// Embed API tests w/ unauthorized user
 test('fetch youtube data with unathorized user', async (t) => {
   const result = await apolloFetch({
     query: `
@@ -873,7 +870,6 @@ test('check recommit content and latestCommit', async (t) => {
   lastCommitId = newCommit.id
   t.end()
 })
-/*
 
 test('check num refs', async (t) => {
   const heads = await getHeads(testRepoId)
@@ -1069,7 +1065,6 @@ test('removeMilestone', async (t) => {
   t.equals(result1.data.repo.milestones.length, 0)
   t.end()
 })
-*/
 
 test('publish', async (t) => {
   // omited: image, facebookImage, twitterImage
@@ -1994,7 +1989,6 @@ test('publish', async (t) => {
   t.end()
 })
 
-/*
 test('null parentId on existing repo must be denied', async (t) => {
   const result = await apolloFetch({
     query: `
@@ -2242,7 +2236,6 @@ test('unauthorized repos query', async (t) => {
   t.end()
 })
 
-*/
 test('cleanup', async (t) => {
   for (let _repo of [...testRepos, testRepoId]) {
     const [owner, repo] = _repo.id.split('/')
