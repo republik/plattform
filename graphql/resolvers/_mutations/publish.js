@@ -29,7 +29,7 @@ const {
   handleRedirection
 } = require('../../../lib/Document')
 
-const { html: getHTML } = require('@orbiting/backend-modules-documents/lib')
+const { lib: { html: { get: getHTML } } } = require('@orbiting/backend-modules-documents')
 
 module.exports = async (
   _,
