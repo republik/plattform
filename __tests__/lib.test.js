@@ -16,11 +16,16 @@ test('ensureStringLength', async (t) => {
 
   t.doesNotThrow(() => ensureStringLength('test', { max: -1.5, min: -1.5 }), 'floats are ignored')
   t.doesNotThrow(() => ensureStringLength('test', { max: 5, min: 0 }))
-  t.doesNotThrow(() => ensureStringLength(0, { max: 5, min: 0 }), 'not a string is not an error')
-  t.doesNotThrow(() => ensureStringLength(null, { max: 5, min: 0 }), 'not a string is not an error')
 
+  // check implicit empty string throws
+  t.doesNotThrow(() => ensureStringLength(null), 'no value is not an error and does not trigger implicit min = 1')
+  t.doesNotThrow(() => ensureStringLength(), 'no value is not an error and does not trigger implicit min = 1')
   t.doesNotThrow(() => ensureStringLength('test'))
-  t.throws(() => ensureStringLength(''), 'min = 1 is implicit')
+  t.doesNotThrow(() => ensureStringLength(0))
+  t.doesNotThrow(() => ensureStringLength(['test']))
+  t.throws(() => ensureStringLength(''), 'empty strings will throw an implicit min = 1 rule if no options')
+  t.throws(() => ensureStringLength('', {}), 'empty strings will throw an implicit min = 1 rule if no options')
+  t.throws(() => ensureStringLength('', { max: 1 }), 'empty strings will throw an implicit min = 1 rule if not specified')
 
   t.throws(() => ensureStringLength('test', { max: 3, min: 1, error: 'CUSTOM_ERROR' }, 'CUSTOM_ERROR'))
 
