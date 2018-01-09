@@ -5,6 +5,7 @@ const {
   createGithubClients,
   commitNormalizer,
   getHeads,
+  getCommit,
   getAnnotatedTags,
   getAnnotatedTag
 } = require('../../lib/github')
@@ -40,12 +41,10 @@ module.exports = {
       .then(commits => uniqBy(commits, 'id'))
       .then(commits => commits.sort((a, b) => descending(a.date, b.date)))
   },
-  latestCommit: async (repo) => {
+  latestCommit: async (repo, args, context) => {
     if (repo.latestCommit) {
       return repo.latestCommit
     }
-    const { githubRest } = await createGithubClients()
-    const [login, repoName] = repo.id.split('/')
     return getHeads(repo.id)
       .then(refs => refs
         .map(ref => ref.target)
@@ -53,44 +52,10 @@ module.exports = {
         .shift()
       )
       .then(({ oid: sha }) =>
-        githubRest.repos.getCommit({
-          owner: login,
-          repo: repoName,
-          sha
-        })
+        getCommit(repo, { id: sha }, context)
       )
-      .then(response => response ? response.data : response)
-      .then(commit => commitNormalizer({
-        ...commit,
-        repo
-      }))
   },
-  commit: async (repo, { id: sha }, { redis }) => {
-    const redisKey = `repos:${repo.id}/commits/${sha}`
-    const redisCommit = await redis.getAsync(redisKey)
-    if (redisCommit) {
-      debug('commit: redis HIT (%s)', redisKey)
-      return JSON.parse(redisCommit)
-    }
-    debug('commit: redis MISS (%s)', redisKey)
-
-    const { githubRest } = await createGithubClients()
-    const [login, repoName] = repo.id.split('/')
-    return githubRest.repos.getCommit({
-      owner: login,
-      repo: repoName,
-      sha
-    })
-    .then(response => response ? response.data : response)
-    .then(commit => commitNormalizer({
-      ...commit,
-      repo
-    }))
-    .then(async (commit) => {
-      await redis.setAsync(redisKey, JSON.stringify(commit))
-      return commit
-    })
-  },
+  commit: getCommit,
   uncommittedChanges: async (
     { id: repoId },
     args,

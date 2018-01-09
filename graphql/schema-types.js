@@ -190,4 +190,8 @@ type VimeoEmbed implements Embed {
   aspectRatio: Float,
   src: VimeoSrc
 }
+
+extend type Document {
+  repoId: String
+}
 `
