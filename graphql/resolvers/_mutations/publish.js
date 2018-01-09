@@ -85,7 +85,7 @@ module.exports = async (
   // for front: warn if related document cannot be resolved
   // for newsletter, preview email: stop publication
   let unresolvedRepoIds = []
-  const allDocs = await getPublishedDocuments(null, { scheduledAt: scheduledAt || now }, context)
+  const allDocs = await getPublishedDocuments(null, { scheduledAt }, context)
   const resolvedDoc = JSON.parse(JSON.stringify(doc))
   contentUrlResolver(resolvedDoc, allDocs._all, allDocs._usernames, unresolvedRepoIds)
   metaUrlResolver(resolvedDoc.content.meta, allDocs._all, allDocs._usernames, unresolvedRepoIds)
