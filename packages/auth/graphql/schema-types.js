@@ -2,11 +2,13 @@ module.exports = `
 
 type Session {
   id: ID!
-  ipAddress: String,
-  userAgent: String,
-  email: String
+  ipAddress: String!
+  userAgent: String!
+  email: String!
+  expiresAt: DateTime!
   cookie: String
-  expiresAt: DateTime
+  country: String
+  city: String
 }
 
 type User {
