@@ -16,7 +16,9 @@ query repos($after: String, $search: String) {
     nodes {
       id
       latestCommit {
+        id
         document {
+          id
           meta {
             title
             image
@@ -25,6 +27,8 @@ query repos($after: String, $search: String) {
             kind
             color
             format {
+              id
+              repoId
               meta {
                 title
                 color

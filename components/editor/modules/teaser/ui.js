@@ -129,8 +129,16 @@ const cloneWithRepoData = options => (node, repoData) => {
     linkModule
   } = getSubmodules(options)
 
-  const data = node.data.set('url', `https://github.com/${repoData.id}?autoSlug`)
+  let data = node.data.set('url', `https://github.com/${repoData.id}?autoSlug`)
   const meta = repoData.latestCommit.document.meta
+
+  const formatMeta = meta.format && meta.format.meta
+  if (formatMeta) {
+    data = data
+      .set('color', formatMeta.color)
+      .set('kind', formatMeta.kind)
+      .set('formatUrl', `https://github.com/${meta.format.repoId}?autoSlug`)
+  }
 
   const credits = paragraphModule.helpers.serializer.fromMdast({
     type: 'paragraph',
@@ -139,7 +147,7 @@ const cloneWithRepoData = options => (node, repoData) => {
 
   credits.nodes = credits.nodes.map(v => {
     if (v.type === linkModule.TYPE) {
-      v.data.color = node.data.get('color')
+      v.data.color = data.get('color')
     }
     return v
   })
@@ -150,7 +158,8 @@ const cloneWithRepoData = options => (node, repoData) => {
     nodes: [
       Block.create({
         type: formatModule.TYPE,
-        data
+        data,
+        nodes: [Text.create(formatMeta ? formatMeta.title : '')]
       }),
       Block.create({
         type: titleModule.TYPE,
@@ -196,6 +205,11 @@ const Form = ({ node, onChange, options }) => {
       label='URL'
       value={node.data.get('url')}
       onChange={onChange('url')}
+  />
+    <Field
+      label='Format URL'
+      value={node.data.get('formatUrl')}
+      onChange={onChange('formatUrl')}
   />
     {
       options.includes('textPosition') &&
