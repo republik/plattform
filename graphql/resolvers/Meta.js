@@ -13,7 +13,7 @@ const resolveRepoId = field => async (meta, args, context) => {
     return null
   }
 
-  const latestCommit = await repo.latestCommit({id: repoId})
+  const latestCommit = await repo.latestCommit({id: repoId}, null, context)
   const doc = await commit.document(latestCommit, {}, context)
 
   return doc || null

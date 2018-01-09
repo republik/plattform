@@ -11,7 +11,8 @@ const { latestCommit: getLatestCommit } = require('../Repo')
 
 const TAG_NAME = 'meta'
 
-module.exports = async (_, args, { user, pubsub }) => {
+module.exports = async (_, args, context) => {
+  const { user, pubsub } = context
   ensureUserHasRole(user, 'editor')
   const { githubRest } = await createGithubClients()
 
@@ -45,7 +46,7 @@ module.exports = async (_, args, { user, pubsub }) => {
 
   const commitId = tag
     ? tag.commit.id
-    : await getLatestCommit({ id: repoId })
+    : await getLatestCommit({ id: repoId }, null, context)
       .then(c => c.id)
 
   const [login, repoName] = repoId.split('/')
