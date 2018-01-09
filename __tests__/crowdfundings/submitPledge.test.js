@@ -1,11 +1,6 @@
 const test = require('tape-async')
 const { apolloFetch, connectIfNeeded, pgDatabase } = require('../helpers.js')
-
-const SUBMIT_PLEDGE_USER = {
-  'firstName': 'willhelm',
-  'lastName': 'tell',
-  'email': 'willhelmtell@republik.ch'
-}
+const { Users } = require('../auth.js')
 
 const SUBMIT_PLEDGE_MUTATION = `
   mutation submitPledge($total: Int!, $options: [PackageOptionInput!]!, $user: UserInput!, $reason: String) {
@@ -24,19 +19,20 @@ const prepare = async () => {
   await pgDatabase().public.pledges.truncate({ cascade: true })
 }
 
-const submitPledge = async (variables) => {
+const submitPledge = async ({ user: userObject, ...variables }) => {
+  const { id, roles, verified, ...user } = (userObject || Users.Unverified)
   return apolloFetch({
     query: SUBMIT_PLEDGE_MUTATION,
     variables: {
-      'user': SUBMIT_PLEDGE_USER,
+      user,
       ...variables
     }
   })
 }
 
-module.exports = { prepare, submitPledge }
+module.exports = { submitPledge }
 
-test('default pledge with ABO package', async (t) => {
+test('submitPledge: default pledge with ABO package', async (t) => {
   await prepare()
   const result = await submitPledge({
     'total': 24000,
@@ -52,6 +48,9 @@ test('default pledge with ABO package', async (t) => {
   t.notEqual(result.data.submitPledge.pfAliasId, null, 'alias id returned')
   t.equal(result.data.submitPledge.emailVerify, null, 'email must not be verified, because user does not exist')
   t.ok(result.data.submitPledge.pfSHA, 'hash returned')
+
+  const membership = await pgDatabase().public.memberships.count({ pledgeId: result.data.submitPledge.pledgeId })
+  t.ok(!membership, 'no membership')
 
   const pledge = await pgDatabase().public.pledges.findOne({ id: result.data.submitPledge.pledgeId })
   t.equal(pledge.total, 24000, 'correct total value in db')
@@ -71,10 +70,13 @@ test('default pledge with ABO package', async (t) => {
   t.equal(result2.data.submitPledge.pfAliasId, null, 'aliasId is null')
   t.equal(result2.data.submitPledge.emailVerify, true, 'email must be verified, because e-mail')
   t.equal(result2.data.submitPledge.pfSHA, null, 'no hash')
+  const membership2 = await pgDatabase().public.memberships.count({ pledgeId: result2.data.submitPledge.pledgeId })
+  t.ok(!membership2, 'no membership')
+
   t.end()
 })
 
-test('pledge with ABO package and donation', async (t) => {
+test('submitPledge: pledge with ABO package and donation', async (t) => {
   await prepare()
   const result = await submitPledge({
     'total': 40000,
@@ -94,7 +96,7 @@ test('pledge with ABO package and donation', async (t) => {
   t.end()
 })
 
-test('pledge with ABO package and userPrice', async (t) => {
+test('submitPledge: pledge with ABO package and userPrice', async (t) => {
   await prepare()
   const result = await submitPledge({
     'total': 10000,
@@ -115,7 +117,7 @@ test('pledge with ABO package and userPrice', async (t) => {
   t.end()
 })
 
-test('pledge with userPrice but no reason', async (t) => {
+test('submitPledge: pledge with userPrice but no reason', async (t) => {
   await connectIfNeeded()
   pgDatabase().public.pledges.truncate({ cascade: true })
   const result = await submitPledge({
@@ -130,7 +132,7 @@ test('pledge with userPrice but no reason', async (t) => {
   t.end()
 })
 
-test('pledge with ABO package and userPrice too low (minUserPrice = 1000) is not possible', async (t) => {
+test('submitPledge: pledge with ABO package and userPrice too low (minUserPrice = 1000) is not possible', async (t) => {
   await prepare()
   const result = await submitPledge({
     'total': 999,
@@ -144,7 +146,7 @@ test('pledge with ABO package and userPrice too low (minUserPrice = 1000) is not
   t.end()
 })
 
-test('pledge with 2 x ABO (maxAmount = 1) is not possible', async (t) => {
+test('submitPledge: pledge with 2 x ABO (maxAmount = 1) is not possible', async (t) => {
   await prepare()
   const result = await submitPledge({
     'total': 40000,
@@ -158,7 +160,7 @@ test('pledge with 2 x ABO (maxAmount = 1) is not possible', async (t) => {
   t.end()
 })
 
-test('pledge with PATRON and 1 x SWEETS (minAmount = 2) is not possible', async (t) => {
+test('submitPledge: pledge with PATRON and 1 x SWEETS (minAmount = 2) is not possible', async (t) => {
   await prepare()
   const result = await submitPledge({
     'total': 103000,
@@ -176,7 +178,7 @@ test('pledge with PATRON and 1 x SWEETS (minAmount = 2) is not possible', async 
   t.end()
 })
 
-test('pledge with PATRON package (userPrice = false) and a total that is lower than the price is not possible', async (t) => {
+test('submitPledge: pledge with PATRON package (userPrice = false) and a total that is lower than the price is not possible', async (t) => {
   await prepare()
   const result = await submitPledge({
     'total': 99999,
@@ -190,7 +192,7 @@ test('pledge with PATRON package (userPrice = false) and a total that is lower t
   t.end()
 })
 
-test('pledge with mixed PATRON package options and ABO package option is not possible', async (t) => {
+test('submitPledge: pledge with mixed PATRON package options and ABO package option is not possible', async (t) => {
   await prepare()
   const result = await submitPledge({
     'total': 100000,

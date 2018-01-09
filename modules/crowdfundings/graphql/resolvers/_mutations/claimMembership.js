@@ -21,7 +21,8 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     // transfer membership and remove voucherCode
     await transaction.public.memberships.updateOne({id: membership.id}, {
       userId: req.user.id,
-      voucherCode: null
+      voucherCode: null,
+      voucherable: false
     })
 
     // commit transaction
