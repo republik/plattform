@@ -41,9 +41,9 @@ const clearAllUserSessions = async ({ pgdb, store, userId }) => {
   const transaction = await pgdb.transactionBegin()
   try {
     const sessions = await findAllUserSessions({ pgdb, userId })
-    await Promise.all(sessions.map(session => {
-      return destroySession({ sid: session.sid })
-    }))
+    await Promise.all(sessions.map(session =>
+      transaction.public.sessions.delete({ sid: session.sid })
+    ))
     await transaction.transactionCommit()
     return true
   } catch (e) {
@@ -58,7 +58,7 @@ const clearUserSession = async ({ pgdb, userId, sessionId }) => {
     const sessions = (await findAllUserSessions({ pgdb, userId }))
       .filter((session) => (hashSessionId(session.sid) === sessionId))
     const session = sessions && sessions[0]
-    await transaction.public.sessions.delete({ sid: session.sid })
+    if (session) await transaction.public.sessions.delete({ sid: session.sid })
     await transaction.transactionCommit()
     return true
   } catch (e) {
