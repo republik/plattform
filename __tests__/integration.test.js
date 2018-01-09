@@ -101,25 +101,6 @@ test('setup', async (t) => {
   t.end()
 })
 
-/*
-test('delete old test repos', async (t) => {
-  const response = await githubRest.search.repos({
-    q: 'org:orbiting-test test-',
-    per_page: 100
-  })
-  const testRepoNames = response.data.items
-    .filter( r => new RegExp(/^test-/).test(r.name) )
-    .map( r => r.name )
-  for (let repoName of testRepoNames) {
-    await githubRest.repos.delete({
-      owner: 'orbiting-test',
-      repo: repoName
-    })
-  }
-  t.end()
-})
-*/
-
 test('unauthorized repos query', async (t) => {
   const result = await apolloFetch({
     query: `
@@ -1345,7 +1326,7 @@ test('publish', async (t) => {
         .filter(Boolean)
       )
 
-    // console.log('activeRefs', activeRefs)
+    console.log('activeRefs', activeRefs)
     t.equals(activeRefs.length, _refs.length)
     for (let _ref of _refs) {
       const activeRef = activeRefs.find(r => r.ref === `refs/tags/${_ref.name}`)
@@ -1363,6 +1344,7 @@ test('publish', async (t) => {
   const now = moment()
   const soon = moment(now).add(10, 'minutes')
 
+  console.log({testRepoId})
   const v1 = await test({
     variables: {
       repoId: testRepoId,
@@ -2239,6 +2221,7 @@ test('unauthorized repos query', async (t) => {
   t.end()
 })
 
+/*
 test('cleanup', async (t) => {
   for (let _repo of [...testRepos, testRepoId]) {
     const [owner, repo] = _repo.id.split('/')
@@ -2249,6 +2232,7 @@ test('cleanup', async (t) => {
   }
   t.end()
 })
+*/
 
 test('teardown', (t) => {
   Server.close()
