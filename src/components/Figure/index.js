@@ -29,6 +29,10 @@ const styles = {
       justifyContent: 'space-between'
     }
   }),
+  cover: css({
+    marginTop: 30,
+    marginBottom: 20
+  }),
   col2: css({
     [mUp]: {
       '& figure': {
@@ -78,6 +82,16 @@ Figure.propTypes = {
   children: PropTypes.node.isRequired,
   size: PropTypes.oneOf(Object.keys(figureBreakout)),
   attributes: PropTypes.object
+}
+
+export const FigureCover = ({size, ...props}) => {
+  if (size) {
+    return <div {...styles.cover}>
+      <Figure size={size} {...props} />
+    </div>
+  }
+  // edge to edge
+  return <Figure {...props} />
 }
 
 export const FigureGroup = ({ children, attributes, columns, size, data }) => {

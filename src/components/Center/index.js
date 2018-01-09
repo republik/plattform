@@ -57,16 +57,12 @@ export const BREAKOUT_SIZES = {
 
 export const breakoutStyles = {
   narrow: css({
-    [breakoutUp]: {
-      margin: '0 auto',
-      maxWidth: NARROW_WIDTH
-    }
+    margin: '0 auto',
+    maxWidth: NARROW_WIDTH
   }),
   tiny: css({
-    [breakoutUp]: {
-      margin: '0 auto',
-      maxWidth: TINY_WIDTH
-    }
+    margin: '0 auto',
+    maxWidth: TINY_WIDTH
   }),
   breakout: css({
     [breakoutUp]: {

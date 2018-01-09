@@ -35,6 +35,7 @@ export {
 } from './components/PullQuote'
 export {
   Figure,
+  FigureCover,
   FigureGroup,
   FigureByline,
   FigureCaption,

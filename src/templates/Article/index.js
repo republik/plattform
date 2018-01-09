@@ -9,6 +9,7 @@ import { TeaserFeed } from '../../components/TeaserFeed'
 
 import {
   Figure,
+  FigureCover,
   FigureImage,
   FigureCaption,
   FigureByline,
@@ -173,7 +174,7 @@ const cover = {
     matchFigure(node) &&
     index === 0
   ),
-  component: Figure,
+  component: FigureCover,
   props: node => ({
     size: node.data.size
   }),
@@ -309,8 +310,7 @@ const createSchema = ({
                 matchMdast: matchHeading(1),
                 component: ({ children, attributes, format, meta }) => {
                   const Headline = (
-                    (format && format.meta && format.meta.kind === 'meta') ||
-                    (meta && meta.kind === 'meta')
+                    format && format.meta && format.meta.kind === 'meta'
                   )
                     ? Interaction.Headline
                     : Editorial.Headline
@@ -319,8 +319,7 @@ const createSchema = ({
                 props: (node, index, parent, { ancestors }) => {
                   const rootNode = ancestors[ancestors.length - 1]
                   return {
-                    format: rootNode.format,
-                    meta: rootNode.meta
+                    format: rootNode.format
                   }
                 },
                 editorModule: 'headline',
