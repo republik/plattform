@@ -66,7 +66,7 @@ const MetaData = ({value, editor, additionalFields = [], customFields = [], teas
     node.data.filter((_, key) => twitterKeys.has(key))
   )
 
-  const onInputChange = key => (_, inputValue, extraChanges = () => {}) => {
+  const onInputChange = key => (_, inputValue) => {
     const newData = node.data.remove('auto')
     editor.change(change => {
       change
@@ -75,7 +75,6 @@ const MetaData = ({value, editor, additionalFields = [], customFields = [], teas
             ? newData.set(key, inputValue)
             : newData.remove(key)
         })
-        .call(extraChanges)
     })
   }
   return (
@@ -101,9 +100,14 @@ const MetaData = ({value, editor, additionalFields = [], customFields = [], teas
             }
             if (customField.ref === 'repo') {
               const onRefChange = item => {
-                let extraChanges
                 if (customField.key === 'format') {
-                  extraChanges = change => {
+                  editor.change(change => {
+                    change
+                      .setNodeByKey(node.key, {
+                        data: item
+                          ? node.data.set('format', item)
+                          : node.data.remove('format')
+                      })
                     let titleNode = change.value.document
                       .findDescendant(node => node.type === 'TITLE')
                     if (titleNode) {
@@ -119,14 +123,14 @@ const MetaData = ({value, editor, additionalFields = [], customFields = [], teas
                         })
                       })
                     }
-                  }
+                  })
+                  return
                 }
                 onChange(
                   undefined,
                   item
                     ? `https://github.com/${item.value.id}`
-                    : null,
-                  extraChanges
+                    : null
                 )
               }
               if (value) {
