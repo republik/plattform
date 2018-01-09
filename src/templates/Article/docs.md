@@ -13,6 +13,7 @@ const schema = createArticleSchema({
 - `customMetaFields`, passed to `customFields` of the `meta` module. Default to repo refs for discussion, format and dossier.
 - `titleBlockPrepend`, prepend React elements—e.g. a dossier tag—to the title block
 - `titleBlockAppend`, append React elements—e.g. share icons—to the title block
+- `titleBlockRule`, overwrite the whole title block, prepend and append are no longer applied
 - `Link`, a Next.js like `<Link />` component
   This will be wrapped around links. You should attach an `onClick` handler within, if you wish to do client side routing and or prefetching. The component recieves following props:
   - `href` String, target url or path

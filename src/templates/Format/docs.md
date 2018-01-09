@@ -27,23 +27,11 @@ Defaults:
 
 ![](/static/dada.jpg)
 
-
-
 <hr /></section>
 
 <section><h6>TITLE</h6>
 
-\`\`\`
-{
-  "center": true
-}
-\`\`\`
-
 # Dada
-
-⁣
-
-
 
 <hr /></section>
 

@@ -169,6 +169,8 @@ const figure = {
   ]
 }
 
+export const COVER_TYPE = 'COVERFIGURE'
+
 const cover = {
   matchMdast: (node, index) => (
     matchFigure(node) &&
@@ -180,7 +182,7 @@ const cover = {
   }),
   editorModule: 'figure',
   editorOptions: {
-    type: 'COVERFIGURE',
+    type: COVER_TYPE,
     afterType: 'PARAGRAPH',
     pixelNote: 'Auflösung: min. 2000x (proportionaler Schnitt)',
     sizes: [
@@ -245,6 +247,7 @@ const createSchema = ({
       ref: 'repo'
     }
   ],
+  titleBlockRule,
   titleBlockPrepend = null,
   titleBlockAppend = null,
   repoPrefix = 'article-',
@@ -279,7 +282,7 @@ const createSchema = ({
             }
           },
           cover,
-          {
+          titleBlockRule || {
             matchMdast: matchZone('TITLE'),
             component: ({children, format, ...props}) => (
               <TitleBlock {...props} format={format} Link={Link}>
@@ -303,7 +306,7 @@ const createSchema = ({
             }),
             editorModule: 'title',
             editorOptions: {
-              coverType: cover.editorOptions.type
+              coverType: COVER_TYPE
             },
             rules: [
               {
