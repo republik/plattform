@@ -1237,7 +1237,7 @@ test('publish', async (t) => {
       })
       t.ok(mutation.data)
       testPublication(mutation.data.publish && mutation.data.publish.publication, publications[0])
-      activeMilestone = mutation.data.publish
+      activeMilestone = mutation.data.publish && mutation.data.publish.publication
     }
 
     const fetchLatestPublications = await apolloFetch({
@@ -1326,7 +1326,7 @@ test('publish', async (t) => {
         .filter(Boolean)
       )
 
-    console.log('activeRefs', activeRefs)
+    // console.log('activeRefs', activeRefs)
     t.equals(activeRefs.length, _refs.length)
     for (let _ref of _refs) {
       const activeRef = activeRefs.find(r => r.ref === `refs/tags/${_ref.name}`)
@@ -2221,7 +2221,6 @@ test('unauthorized repos query', async (t) => {
   t.end()
 })
 
-/*
 test('cleanup', async (t) => {
   for (let _repo of [...testRepos, testRepoId]) {
     const [owner, repo] = _repo.id.split('/')
@@ -2232,7 +2231,6 @@ test('cleanup', async (t) => {
   }
   t.end()
 })
-*/
 
 test('teardown', (t) => {
   Server.close()
