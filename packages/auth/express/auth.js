@@ -1,11 +1,12 @@
 const session = require('express-session')
 const PgSession = require('connect-pg-simple')(session)
 const passport = require('passport')
-const transformUser = require('../lib/transformUser')
-const { signInWithToken, QueryEmailMismatchError, NoSessionError } = require('../lib/signInWithToken')
 const checkEnv = require('check-env')
 const querystring = require('querystring')
 const debug = require('debug')('auth')
+const { QueryEmailMismatchError, NoSessionError } = require('../lib/errors')
+const transformUser = require('../lib/transformUser')
+const signInWithToken = require('../lib/signInWithToken')
 
 checkEnv([
   'FRONTEND_BASE_URL'

@@ -18,6 +18,9 @@ type queries {
   # search for users
   # required role: editor
   users(search: String!, role: String!): [User]!
+
+  # search for an unverified session by token
+  unverifiedSession(email: String!, token: String!, context: String): Session
 }
 
 type mutations {
