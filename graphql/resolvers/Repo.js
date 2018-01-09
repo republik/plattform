@@ -52,7 +52,7 @@ module.exports = {
         .shift()
       )
       .then(({ oid: sha }) =>
-          getCommit(repo, { id: sha }, context)
+        getCommit(repo, { id: sha }, context)
       )
   },
   commit: getCommit,
