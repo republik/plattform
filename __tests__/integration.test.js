@@ -1187,12 +1187,7 @@ test('publish', async (t) => {
     }
   `
 
-  const testPublication = (publishResponse, vars) => {
-    // TODO test unresolvedRepoIds
-    const {
-      publication
-    } = publishResponse
-    // t.ok(publication, 'publication exists on publishResponse')
+  const testPublication = (publication, vars) => {
     const {
       name,
       live,
@@ -1202,7 +1197,7 @@ test('publish', async (t) => {
       date,
       author,
       commit
-    } = publication || { }
+    } = publication
     t.equals(name, vars.name)
     t.equals(live, vars.live)
     t.equals(prepublication, vars.prepublication)
@@ -1260,9 +1255,7 @@ test('publish', async (t) => {
         variables
       })
       t.ok(mutation.data)
-      console.log('mutation data:')
-      console.log(util.inspect(mutation.data, {depth: null}))
-      testPublication(mutation.data.publish, publications[0])
+      testPublication(mutation.data.publish && mutation.data.publish.publication, publications[0])
       activeMilestone = mutation.data.publish
     }
 
