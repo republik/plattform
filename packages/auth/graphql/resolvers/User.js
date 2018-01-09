@@ -1,5 +1,6 @@
 const Roles = require('../../lib/Roles')
 const userAccessRoles = ['admin', 'supporter']
+const { findAllUserSessions } = require('../../lib/Sessions')
 
 module.exports = {
   email (user, args, { pgdb, user: me }) {
@@ -10,7 +11,7 @@ module.exports = {
   },
   async sessions (user, args, { pgdb, user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, userAccessRoles)) {
-      return pgdb.public.sessions.find({ 'sess @>': { passport: { user: me.id } } })
+      return findAllUserSessions({ pgdb, userId: user.id })
     }
     return null
   },

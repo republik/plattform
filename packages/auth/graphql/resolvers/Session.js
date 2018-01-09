@@ -1,11 +1,8 @@
+const hashSessionId = require('../../lib/hashSessionId')
+
 module.exports = {
   id (session, args) {
-    // hash the session id
-    const crypto = require('crypto')
-    return crypto
-      .createHmac('sha256', process.env.SESSION_SECRET)
-      .update(session.sid)
-      .digest('hex')
+    return hashSessionId(session.sid)
   },
   ipAddress (session, args) {
     return session.sess.ip

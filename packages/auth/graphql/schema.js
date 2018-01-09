@@ -20,14 +20,23 @@ type queries {
   users(search: String!, role: String!): [User]!
 
   # search for an unverified session by token
-  unverifiedSession(email: String!, token: String!, context: String): Session
+  unauthorizedSession(email: String!, token: String!): Session
 }
 
 type mutations {
   # signIn with an email address
   signIn(email: String!, context: String): SignInResponse!
   signOut: Boolean!
-  # validate a token sent by mail to convert a login request token to a valid user session
-  signInWithToken(email: String!, token: String!, context: String): Boolean!
+
+  # authorize a token sent by mail to convert a login request to a valid user session
+  authorizeSession(email: String!, token: String!): Boolean!
+
+  # Clear a specific session. If there is no userId provided,
+  # the system defaults to the logged in user
+  clearSession(sessionId: ID!, userId: ID): Boolean!
+
+  # Sign out a user on all devices. If there is no userId provided,
+  # the system defaults to the logged in user
+  clearSessions(userId: ID): Boolean!
 }
 `

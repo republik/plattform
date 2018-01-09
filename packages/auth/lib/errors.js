@@ -1,5 +1,6 @@
 const ERROR_QUERY_EMAIL_MISMATCH = 'query-email-mismatch'
 const ERROR_NO_SESSION = 'no-session'
+const ERROR_SESSION_DESTROY_FAILED = 'session-destroy-failed'
 
 class AuthError extends Error {
   constructor (type, meta) {
@@ -7,6 +8,12 @@ class AuthError extends Error {
     super(message)
     this.type = type
     this.meta = meta
+  }
+}
+
+class DestroySessionError extends AuthError {
+  constructor (meta) {
+    super(ERROR_SESSION_DESTROY_FAILED, meta)
   }
 }
 
@@ -24,5 +31,6 @@ class NoSessionError extends AuthError {
 
 module.exports = {
   QueryEmailMismatchError,
-  NoSessionError
+  NoSessionError,
+  DestroySessionError
 }

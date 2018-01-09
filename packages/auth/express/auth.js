@@ -6,7 +6,7 @@ const querystring = require('querystring')
 const debug = require('debug')('auth')
 const { QueryEmailMismatchError, NoSessionError } = require('../lib/errors')
 const transformUser = require('../lib/transformUser')
-const signInWithToken = require('../lib/signInWithToken')
+const { authorizeSession } = require('../lib/Sessions')
 
 checkEnv([
   'FRONTEND_BASE_URL'
@@ -91,7 +91,7 @@ exports.configure = ({
     }
 
     try {
-      const user = signInWithToken({
+      const user = authorizeSession({
         pgdb, token, emailFromQuery, signInHooks
       })
       const { email } = user
