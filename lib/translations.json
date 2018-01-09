@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-09T09:36:20.961Z",
+  "updated": "2018-01-09T15:03:25.091Z",
   "title": "live",
   "data": [
     {
@@ -87,6 +87,10 @@
       "value": "Sie benötigen einen Benutzernamen aufgrund ihres öffentlichen Profil"
     },
     {
+      "key": "api/newsletters/userNotFound",
+      "value": "Wir konnten diesen Benutzer nicht finden. Bitte versuchen Sie es später nochmal."
+    },
+    {
       "key": "api/newsletters/get/failed",
       "value": "Ihre Newsletter-Abos konnten nicht abgefragt werden, bitte versuchen Sie es später nochmal."
     },
@@ -105,10 +109,6 @@
     {
       "key": "api/statements/maxNodes",
       "value": "Sie können maximal 100 Statements auf einmal abfragen"
-    },
-    {
-      "key": "profile/statement/tooLong",
-      "value": "Statement, maximal 140 Zeichen"
     },
     {
       "key": "profile/statement/needed",
@@ -133,6 +133,54 @@
     {
       "key": "api/preview/mail/tooEarly",
       "value": "Das Preview-Mail pro Tag nur einmal angeforder werden, bitte versuchen Sie es morgen nochmals."
+    },
+    {
+      "key": "profile/generic/tooLong",
+      "value": "{key}, maximal {max} Zeichen"
+    },
+    {
+      "key": "profile/generic/notInRange",
+      "value": "{key}, minimal {min} und maximal {max} Zeichen"
+    },
+    {
+      "key": "profile/statement/label",
+      "value": "Statement"
+    },
+    {
+      "key": "profile/biography/label",
+      "value": "Steckbrief"
+    },
+    {
+      "key": "profile/contact/pgpPublicKey/label",
+      "value": "PGP-Public-Key"
+    },
+    {
+      "key": "profile/contact/publicUrl/label",
+      "value": "Webseite"
+    },
+    {
+      "key": "profile/contact/facebook/label",
+      "value": "Facebook"
+    },
+    {
+      "key": "profile/contact/twitter/label",
+      "value": "Twitter"
+    },
+    {
+      "key": "profile/contact/phoneNumber/label",
+      "value": "Telefonnummer"
+    },
+    {
+      "key": "profile/contact/phoneNumberNote/label",
+      "value": "Verfügbarkeit"
+    },
+    {
+      "key": "pledge/contact/firstName/label",
+      "value": "Ihr Vorname"
+    },
+    {
+      "key": "pledge/contact/lastName/label",
+      "value": "Ihr Nachname"
     }
   ]
 }

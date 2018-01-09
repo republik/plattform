@@ -40,6 +40,16 @@ const {
   IMAGE_SHARE_SUFFIX
 } = convertImage
 
+const createEnsureStringLengthForProfile = (values, t) => (key, translationKey, max, min = 0) =>
+  ensureStringLength(
+    values[key],
+    {
+      min,
+      max,
+      error: t(`profile/generic/${min > 0 ? 'notInRange' : 'tooLong'}`, { key: t(translationKey), max, min })
+    }
+  )
+
 module.exports = async (_, args, context) => {
   const { pgdb, req, user: me, t } = context
   ensureSignedIn(req)
@@ -50,27 +60,20 @@ module.exports = async (_, args, context) => {
     pgpPublicKey,
     portrait,
     statement,
-    isListed,
-    biography,
-    publicUrl,
-    twitterHandle,
-    facebookId,
-    phoneNumberNote,
-    phoneNumber,
-    firstName,
-    lastName
+    isListed
   } = args
 
-  ensureStringLength(statement, { max: MAX_STATEMENT_LENGTH, error: t('profile/statement/tooLong') })
-  ensureStringLength(biography, { max: MAX_BIOGRAPHY_LENGTH })
-  ensureStringLength(pgpPublicKey, { max: MAX_PUBLIC_KEY_LENGTH })
-  ensureStringLength(publicUrl, { max: MAX_PUBLIC_URL_LENGTH })
-  ensureStringLength(twitterHandle, { max: MAX_TWITTER_HANDLE_LENGTH })
-  ensureStringLength(facebookId, { max: MAX_FACEBOOK_ID_LENGTH })
-  ensureStringLength(phoneNumberNote, { max: MAX_PHONE_NUMBER_NOTE_LENGTH })
-  ensureStringLength(phoneNumber, { max: MAX_PHONE_NUMBER_LENGTH })
-  ensureStringLength(firstName, { max: MAX_FIRSTNAME_LENGTH })
-  ensureStringLength(lastName, { max: MAX_LASTNAME_LENGTH })
+  const ensureStringLengthForProfile = createEnsureStringLengthForProfile(args, t)
+  ensureStringLengthForProfile('statement', 'profile/statement/label', MAX_STATEMENT_LENGTH)
+  ensureStringLengthForProfile('biography', 'profile/biography/label', MAX_BIOGRAPHY_LENGTH)
+  ensureStringLengthForProfile('pgpPublicKey', 'profile/contact/pgpPublicKey/label', MAX_PUBLIC_KEY_LENGTH)
+  ensureStringLengthForProfile('publicUrl', 'profile/contact/publicUrl/label', MAX_PUBLIC_URL_LENGTH)
+  ensureStringLengthForProfile('twitterHandle', 'profile/contact/twitter/label', MAX_TWITTER_HANDLE_LENGTH)
+  ensureStringLengthForProfile('facebookId', 'profile/contact/facebook/label', MAX_FACEBOOK_ID_LENGTH)
+  ensureStringLengthForProfile('phoneNumberNote', 'profile/contact/phoneNumberNote/label', MAX_PHONE_NUMBER_NOTE_LENGTH)
+  ensureStringLengthForProfile('phoneNumber', 'profile/contact/phoneNumber/label', MAX_PHONE_NUMBER_LENGTH)
+  ensureStringLengthForProfile('firstName', 'pledge/contact/firstName/label', MAX_FIRSTNAME_LENGTH, 1)
+  ensureStringLengthForProfile('lastName', 'pledge/contact/lastName/label', MAX_LASTNAME_LENGTH, 1)
 
   const updateFields = [
     'username',
