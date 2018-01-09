@@ -54,7 +54,7 @@
   },
   "dependencies": {
     "@orbiting/remark-preset": "^1.2.1",
-    "@project-r/styleguide": "^5.26.0",
+    "@project-r/styleguide": "^5.28.0",
     "@project-r/template-newsletter": "^1.5.0",
     "d3-array": "^1.2.0",
     "d3-color": "^1.0.3",
@@ -76,7 +76,7 @@
     "mdast-react-render": "^1.1.0",
     "next": "^4.1.4",
     "next-routes": "^1.0.40",
-    "prop-types": "^15.5.10",
+    "prop-types": "^15.6.0",
     "ramda": "^0.24.1",
     "react": "^16.1.1",
     "react-apollo": "^1.4.15",
