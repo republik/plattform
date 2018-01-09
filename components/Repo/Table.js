@@ -367,6 +367,7 @@ query repos($after: String, $search: String) {
         date
         message
         document {
+          id
           meta {
             template
             title

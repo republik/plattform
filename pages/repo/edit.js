@@ -53,6 +53,7 @@ const fragments = {
         name
       }
       document {
+        id
         content
         meta {
           title
