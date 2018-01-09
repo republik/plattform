@@ -275,8 +275,8 @@ class RepoList extends Component {
                 return (
                   <Tr key={id}>
                     <Td>
-                      <Label>{meta.format}</Label>
-                      {meta.format && <br />}
+                      <Label>{t(`repo/add/template/${meta.template}`, null, meta.template)}</Label>
+                      {meta.template && <br />}
                       <Link route='repo/tree' params={{repoId: id.split('/')}}>
                         <a {...linkRule} title={id}>
                           {meta.title || id.replace([GITHUB_ORG, REPO_PREFIX || ''].join('/'), '')}
