@@ -42,7 +42,8 @@ Teaser.propTypes = {
   children: PropTypes.node.isRequired,
   color: PropTypes.string,
   format: PropTypes.object,
-  interaction: PropTypes.bool
+  interaction: PropTypes.bool,
+  Link: PropTypes.func.isRequired // a react component
 }
 
 export default Teaser
