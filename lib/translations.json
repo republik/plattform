@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-08T14:17:42.734Z",
+  "updated": "2018-01-09T09:36:20.961Z",
   "title": "live",
   "data": [
     {
@@ -87,6 +87,10 @@
       "value": "Sie benötigen einen Benutzernamen aufgrund ihres öffentlichen Profil"
     },
     {
+      "key": "api/newsletters/userNotFound",
+      "value": "Wir konnten diesen Benutzer nicht finden. Bitte versuchen Sie es später nochmal."
+    },
+    {
       "key": "api/newsletters/get/failed",
       "value": "Ihre Newsletter-Abos konnten nicht abgefragt werden, bitte versuchen Sie es später nochmal."
     },
@@ -129,6 +133,10 @@
     {
       "key": "api/preview/mail/subject",
       "value": "Preview Mail"
+    },
+    {
+      "key": "api/preview/mail/tooEarly",
+      "value": "Das Preview-Mail pro Tag nur einmal angeforder werden, bitte versuchen Sie es morgen nochmals."
     }
   ]
 }

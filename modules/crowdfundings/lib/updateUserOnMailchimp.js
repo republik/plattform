@@ -21,10 +21,14 @@ module.exports = async ({userId, pgdb, hasJustPaid, isNew}) => {
       return
     }
 
-    const hasPledge = await pgdb.public.pledges.findFirst({
-      userId: userId,
-      status: 'SUCCESSFUL'
+    const pledges = await pgdb.public.pledges.find({
+      userId: userId, status: 'SUCCESSFUL'
     })
+
+    const hasPledge = !!pledges && pledges.length > 0
+
+    const hasJustPaidFirstPledge = !!hasJustPaid && hasPledge && pledges.length === 1
+
     const hasMembership = await pgdb.public.memberships.findFirst({
       userId: userId
     })
@@ -41,7 +45,7 @@ module.exports = async ({userId, pgdb, hasJustPaid, isNew}) => {
         // Autosubscribe free newsletters when user is new.
         [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true
       }
-      : hasJustPaid
+      : hasJustPaidFirstPledge
         ? {
           // Autosubscribe paid newsletters when user just paid.
           [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
