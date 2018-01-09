@@ -127,6 +127,7 @@ const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors) => {
   visit(doc.content, 'zone', node => {
     if (node.data) {
       node.data.url = urlReplacer(node.data.url)
+      node.data.formatUrl = urlReplacer(node.data.formatUrl)
     }
   })
 }
