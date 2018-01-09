@@ -14,7 +14,7 @@ test('ensureStringLength', async (t) => {
   t.doesNotThrow(() => ensureStringLength('test', { min: 0 }))
   t.doesNotThrow(() => ensureStringLength('test', { min: -1 }))
 
-  t.doesNotThrow(() => ensureStringLength('test', { max: -1.5, min: -1.5 }), 'floats are ignored')
+  t.throws(() => ensureStringLength('test', { max: -1.5, min: -1.5 }), 'floats are parsed as int')
   t.doesNotThrow(() => ensureStringLength('test', { max: 5, min: 0 }))
 
   // check implicit empty string throws
