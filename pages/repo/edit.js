@@ -188,13 +188,15 @@ class EditorPage extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    const { repo = {} } = this.props.data || {}
-    const { repo: nextRepo = {} } = nextProps.data || {}
+    const { repo = {}, loading } = this.props.data || {}
+    const { repo: nextRepo = {}, loading: nextLoading } = nextProps.data || {}
 
-    if (
+    const shouldLoad =
       repo !== nextRepo ||
-      repo.commit !== nextRepo.commit
-    ) {
+      repo.commit !== nextRepo.commit ||
+      loading !== nextLoading
+    debug('componentWillReceiveProps', 'shouldLoad', shouldLoad)
+    if (shouldLoad) {
       this.loadState(nextProps)
     }
   }
@@ -544,6 +546,8 @@ export default compose(
   graphql(getLatestCommit, {
     skip: ({ url }) => url.query.commitId === 'new' || !!url.query.commitId,
     options: ({ url }) => ({
+      // always the latest
+      fetchPolicy: 'network-only',
       variables: {
         repoId: url.query.repoId
       }
