@@ -140,10 +140,22 @@ const createSchema = ({
 
   const format = {
     matchMdast: matchHeading(6),
-    component: ({ children, attributes }) =>
+    component: ({ children, attributes, href }) =>
       <Editorial.Format attributes={attributes}>
-        {children}
+        <Link href={href} passHref>
+          <a href={href} {...styles.link}>
+            {children}
+          </a>
+        </Link>
       </Editorial.Format>,
+    props (node, index, parent, { ancestors }) {
+      const teaser = ancestors.find(matchTeaser)
+      return {
+        href: teaser
+          ? teaser.data.formatUrl
+          : undefined
+      }
+    },
     editorModule: 'headline',
     editorOptions: {
       type: 'FRONTFORMAT',
