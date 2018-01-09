@@ -106,7 +106,6 @@ module.exports = async (t, apolloFetch, githubRest) => {
     const commitId = resultCommit.data.commit.id
     repo._commitId = commitId
 
-    /*
     for (let milestoneName of repo.milestones) {
       const milestoneVariables = {
         repoId: repo.id,
@@ -163,10 +162,8 @@ module.exports = async (t, apolloFetch, githubRest) => {
       })
       t.ok(resultMeta.data)
     }
-    */
   }
 
-  /*
   console.log('test repos without params')
   let result
   result = await apolloFetch({
@@ -232,7 +229,6 @@ module.exports = async (t, apolloFetch, githubRest) => {
     t.equals(_repos[1].id, repos[1].id)
     t.equals(_repos[2].id, repos[0].id)
   }
-  */
 
   // cleanup is done in integration.test.js
   return repos

@@ -29,9 +29,14 @@ const {
   handleRedirection
 } = require('../../../lib/Document')
 
-const newsletterEmailSchema = require('@project-r/template-newsletter/lib/email')
-const editorialNewsletterSchema = require('@project-r/styleguide/lib/templates/EditorialNewsletter/email')
-const { renderEmail } = require('mdast-react-render/lib/email')
+const {
+  graphql: { resolvers: { queries: { documents: getPublishedDocuments } } },
+  lib: {
+    html: { get: getHTML },
+    resolve: { contentUrlResolver, metaUrlResolver, metaFieldResolver }
+  }
+} = require('@orbiting/backend-modules-documents')
+const uniq = require('lodash/uniq')
 
 module.exports = async (
   _,
@@ -40,7 +45,8 @@ module.exports = async (
     commitId,
     prepublication,
     scheduledAt: _scheduledAt,
-    updateMailchimp = false
+    updateMailchimp = false,
+    ignoreUnresolvedRepoIds = false
   },
   context
 ) => {
@@ -74,6 +80,31 @@ module.exports = async (
     throw new Error(t('api/publish/document/slug/404'))
   }
   const repoMeta = await getRepoMeta({ id: repoId })
+
+  // check if all references (link, format, dossiert, etc.) in the document can be resolved
+  // for front: warn if related document cannot be resolved
+  // for newsletter, preview email: stop publication
+  let unresolvedRepoIds = []
+  const docsConnection = await getPublishedDocuments(null, { scheduledAt }, context)
+
+  // see https://github.com/orbiting/backend-modules/blob/c25cf33336729590b114e5113e464be6bf1185e0/packages/documents/graphql/resolvers/_queries/documents.js#L107
+  // - the documents resolver exposes those two properties on individual docs for resolving
+  // - we steal them here for our new doc
+  const firstDoc = docsConnection.nodes[0] || {} // in case no docs are published
+  const allDocs = firstDoc._all
+  const allUsernames = firstDoc._usernames
+
+  const resolvedDoc = JSON.parse(JSON.stringify(doc))
+  contentUrlResolver(resolvedDoc, allDocs, allUsernames, unresolvedRepoIds)
+  metaUrlResolver(resolvedDoc.content.meta, allDocs, allUsernames, unresolvedRepoIds)
+  metaFieldResolver(resolvedDoc.content.meta, allDocs, unresolvedRepoIds)
+  unresolvedRepoIds = uniq(unresolvedRepoIds)
+  if (unresolvedRepoIds.length && (!ignoreUnresolvedRepoIds || doc.content.meta.template === 'editorialNewsletter' || updateMailchimp)) {
+    return {
+      unresolvedRepoIds
+    }
+  }
+
   // prepareMetaForPublish creates missing discussions as a side-effect
   doc.content.meta = await prepareMetaForPublish(
     repoId,
@@ -116,6 +147,42 @@ module.exports = async (
   // remember if slug changed
   if (!prepublication && !scheduledAt) {
     await handleRedirection(repoId, doc.content.meta, context)
+  }
+
+  // get/create campaign on mailchimp
+  // fail early if mailchimp not available
+  let campaignId
+  if (updateMailchimp) {
+    const { title, emailSubject } = doc.content.meta
+    if (!title || !emailSubject) {
+      throw new Error('updateMailchimp missing title or subject', { title, emailSubject })
+    }
+    const campaignKey = `repos:${repoId}/mailchimp/campaignId`
+    let campaignId = await redis.getAsync(campaignKey)
+    if (!campaignId) {
+      if (repoMeta && repoMeta.mailchimpCampaignId) {
+        campaignId = repoMeta.mailchimpCampaignId
+      }
+    }
+    if (campaignId) {
+      const { status } = await getCampaign({ id: campaignId })
+      if (status === 404) {
+        campaignId = null
+      }
+    }
+    if (!campaignId) {
+      const createResponse = await createCampaign({ title, subject: emailSubject })
+      const { id, status } = createResponse
+      if (status !== 'save') {
+        throw new Error('Mailchimp: could not create campaign', createResponse)
+      }
+      campaignId = id
+      await redis.setAsync(campaignKey, campaignId)
+      await editRepoMeta(null, {
+        repoId,
+        mailchimpCampaignId: campaignId
+      }, context)
+    }
   }
 
   // calc version number
@@ -243,43 +310,9 @@ module.exports = async (
   })
     .then(response => response.data)
 
-  // TODO: move to top to get a potential throw early
-  if (updateMailchimp) {
-    const { title, emailSubject } = doc.content.meta
-    if (!title || !emailSubject) {
-      throw new Error('updateMailchimp missing title or subject', { title, emailSubject })
-    }
-    const campaignKey = `repos:${repoId}/mailchimp/campaignId`
-    let campaignId = await redis.getAsync(campaignKey)
-    if (!campaignId) {
-      if (repoMeta && repoMeta.mailchimpCampaignId) {
-        campaignId = repoMeta.mailchimpCampaignId
-      }
-    }
-    if (campaignId) {
-      const { status } = await getCampaign({ id: campaignId })
-      if (status === 404) {
-        campaignId = null
-      }
-    }
-    if (!campaignId) {
-      const createResponse = await createCampaign({ title, subject: emailSubject })
-      const { id, status } = createResponse
-      if (status !== 'save') {
-        throw new Error('Mailchimp: could not create campaign', createResponse)
-      }
-      campaignId = id
-      await redis.setAsync(campaignKey, campaignId)
-      await editRepoMeta(null, {
-        repoId,
-        mailchimpCampaignId: campaignId
-      }, context)
-    }
-
-    const emailSchema = doc.content.meta.template === 'editorialNewsletter'
-      ? editorialNewsletterSchema.default()  // Because styleguide currently doesn't support module.exports
-      : newsletterEmailSchema
-    const html = renderEmail(doc.content, emailSchema)
+  // do the mailchimp update
+  if (campaignId) {
+    const html = getHTML(resolvedDoc)
     const updateResponse = await updateCampaignContent({
       campaignId,
       html
@@ -296,12 +329,15 @@ module.exports = async (
   })
 
   return {
-    ...milestone,
-    live: !scheduledAt,
-    meta: {
-      scheduledAt,
-      updateMailchimp
-    },
-    document: doc.content
+    unresolvedRepoIds,
+    publication: {
+      ...milestone,
+      live: !scheduledAt,
+      meta: {
+        scheduledAt,
+        updateMailchimp
+      },
+      document: doc.content
+    }
   }
 }

@@ -71,6 +71,13 @@ interface MilestoneInterface {
   date: DateTime!
 }
 
+type PublishResponse {
+  # repoIds of related documents that could not be resolved
+  unresolvedRepoIds: [ID!]!
+  # the finished publication. Empty if unresolvedRepoIds not allowed.
+  publication: Publication
+}
+
 type Publication implements MilestoneInterface {
   name: String!
   commit: Commit!

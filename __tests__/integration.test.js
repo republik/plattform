@@ -101,25 +101,6 @@ test('setup', async (t) => {
   t.end()
 })
 
-/*
-test('delete old test repos', async (t) => {
-  const response = await githubRest.search.repos({
-    q: 'org:orbiting-test test-',
-    per_page: 100
-  })
-  const testRepoNames = response.data.items
-    .filter( r => new RegExp(/^test-/).test(r.name) )
-    .map( r => r.name )
-  for (let repoName of testRepoNames) {
-    await githubRest.repos.delete({
-      owner: 'orbiting-test',
-      repo: repoName
-    })
-  }
-  t.end()
-})
-*/
-
 test('unauthorized repos query', async (t) => {
   const result = await apolloFetch({
     query: `
@@ -184,10 +165,7 @@ test('unauthorized subscription', (t) => {
   })
 })
 
-/**
-  Embed API tests w/ unauthorized user
-*/
-
+// Embed API tests w/ unauthorized user
 test('fetch youtube data with unathorized user', async (t) => {
   const result = await apolloFetch({
     query: `
@@ -873,7 +851,6 @@ test('check recommit content and latestCommit', async (t) => {
   lastCommitId = newCommit.id
   t.end()
 })
-/*
 
 test('check num refs', async (t) => {
   const heads = await getHeads(testRepoId)
@@ -1069,7 +1046,6 @@ test('removeMilestone', async (t) => {
   t.equals(result1.data.repo.milestones.length, 0)
   t.end()
 })
-*/
 
 test('publish', async (t) => {
   // omited: image, facebookImage, twitterImage
@@ -1111,25 +1087,28 @@ test('publish', async (t) => {
         updateMailchimp: $updateMailchimp
         scheduledAt: $scheduledAt
       ) {
-        name
-        live
-        sha
-        prepublication
-        updateMailchimp
-        scheduledAt
-        date
-        author {
+        unresolvedRepoIds
+        publication {
           name
-          email
-          user {
+          live
+          sha
+          prepublication
+          updateMailchimp
+          scheduledAt
+          date
+          author {
+            name
             email
+            user {
+              email
+            }
           }
-        }
-        commit {
-          id
-          document {
-            content
-            ${documentMetaQuery}
+          commit {
+            id
+            document {
+              content
+              ${documentMetaQuery}
+            }
           }
         }
       }
@@ -1257,8 +1236,8 @@ test('publish', async (t) => {
         variables
       })
       t.ok(mutation.data)
-      testPublication(mutation.data.publish, publications[0])
-      activeMilestone = mutation.data.publish
+      testPublication(mutation.data.publish && mutation.data.publish.publication, publications[0])
+      activeMilestone = mutation.data.publish && mutation.data.publish.publication
     }
 
     const fetchLatestPublications = await apolloFetch({
@@ -1309,9 +1288,9 @@ test('publish', async (t) => {
       checkDocuments(fetchDocumentsUnauth.data.documents.nodes, _unauthorizedDocuments, repoMetaPublishDate)
     }
 
-    console.log('redirections')
+    // console.log('redirections')
     const redirections = await pgdb.public.redirections.find()
-    console.log(redirections)
+    // console.log(redirections)
     if (_redirections) {
       for (let _redirection of _redirections) {
         const redir = redirections.find(r => r.source === _redirection.source)
@@ -1365,6 +1344,7 @@ test('publish', async (t) => {
   const now = moment()
   const soon = moment(now).add(10, 'minutes')
 
+  console.log({testRepoId})
   const v1 = await test({
     variables: {
       repoId: testRepoId,
@@ -1994,7 +1974,6 @@ test('publish', async (t) => {
   t.end()
 })
 
-/*
 test('null parentId on existing repo must be denied', async (t) => {
   const result = await apolloFetch({
     query: `
@@ -2242,9 +2221,8 @@ test('unauthorized repos query', async (t) => {
   t.end()
 })
 
-*/
 test('cleanup', async (t) => {
-  for (let _repo of [...testRepos, testRepoId]) {
+  for (let _repo of [...testRepos, { id: testRepoId }]) {
     const [owner, repo] = _repo.id.split('/')
     await githubRest.repos.delete({
       owner,
