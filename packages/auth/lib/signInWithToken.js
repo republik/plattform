@@ -72,7 +72,7 @@ const signInWithToken = async ({ pgdb, token, emailFromQuery, signInHooks = [] }
   // call signIn hooks
   await Promise.all(
     signInHooks.map(hook =>
-      hook(user.id, pgdb)
+      hook(user.id, !existingUser, pgdb)
     )
   )
 
