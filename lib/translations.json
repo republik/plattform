@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-07T01:56:43.707Z",
+  "updated": "2018-01-09T14:37:41.791Z",
   "title": "live",
   "data": [
     {
@@ -481,6 +481,18 @@
     {
       "key": "publish/validation/emailSubject/empty",
       "value": "E-Mail-Betreff fehlt"
+    },
+    {
+      "key": "publish/error/unresolvedRepoIds",
+      "value": "In dem Dokument hat es Referenzen auf andere Dokumente die zum Zeitpunkt dieser Publikation noch nicht veröffentlicht sind. Dies sind folgende Dokumente:"
+    },
+    {
+      "key": "publish/error/unresolvedRepoIds/ignore",
+      "value": "ignorieren"
+    },
+    {
+      "key": "publish/error/unresolvedRepoIds/mailchimp",
+      "value": "Sie können diese Publikation nicht auf Mailchimp laden solange nicht alle Referenzen zur Veröffentlichung ferigegeben sind."
     },
     {
       "key": "publication/current/title/1",

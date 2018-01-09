@@ -57,7 +57,6 @@ class IFrame extends Component {
         }}>
           <Frame
             frameBorder='0'
-            allowTransparency='true'
             contentDidMount={() => this.transferCSS()}
             head={[
               <style key='glamor'>{css}</style>
