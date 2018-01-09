@@ -48,7 +48,7 @@ module.exports.run = (executableSchema, middlewares, t, signInHooks) => {
     engine.start()
   }
 
-  return PgDb.connect().then( async (_pgdb) => {
+  return PgDb.connect().then(async (_pgdb) => {
     pgdb = _pgdb
     server = express()
     httpServer = createServer(server)
@@ -82,7 +82,7 @@ module.exports.run = (executableSchema, middlewares, t, signInHooks) => {
 
     subscriptionServer = graphql(server, pgdb, httpServer, executableSchema, t)
 
-    for(let middleware of middlewares) {
+    for (let middleware of middlewares) {
       await middleware(server, pgdb, t)
     }
 

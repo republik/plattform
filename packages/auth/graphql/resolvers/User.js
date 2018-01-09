@@ -8,6 +8,12 @@ module.exports = {
     }
     return null
   },
+  async sessions (user, args, { pgdb, user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, userAccessRoles)) {
+      return pgdb.public.sessions.find({ 'sess @>': { passport: { user: me.id } } })
+    }
+    return null
+  },
   initials (user) {
     return user.name
       .split(' ')

@@ -2,12 +2,13 @@ const session = require('express-session')
 const PgSession = require('connect-pg-simple')(session)
 const passport = require('passport')
 const transformUser = require('../lib/transformUser')
+const { signInWithToken, QueryEmailMismatchError, NoSessionError } = require('../lib/signInWithToken')
 const checkEnv = require('check-env')
 const querystring = require('querystring')
 const debug = require('debug')('auth')
 
 checkEnv([
-  'FRONTEND_BASE_URL',
+  'FRONTEND_BASE_URL'
 ])
 
 const {
@@ -46,7 +47,6 @@ exports.configure = ({
     tableName: 'sessions'
   })
   const Users = pgdb.public.users
-  const Sessions = pgdb.public.sessions
 
   // Configure sessions
   server.use(session({
@@ -90,76 +90,10 @@ exports.configure = ({
     }
 
     try {
-      // Look up session by token
-      const session = await Sessions.findOne({
-        'sess @>': { token }
+      const user = signInWithToken({
+        pgdb, token, emailFromQuery, signInHooks
       })
-      if (!session) {
-        debug('no session: %O', { req: req._log(), token, emailFromQuery, context })
-        return res.redirect(
-          `${FRONTEND_BASE_URL}/notifications?` +
-          querystring.stringify({
-            type: 'invalid-token',
-            email: emailFromQuery,
-            context
-          })
-        )
-      }
-
-      const {
-        email
-      } = session.sess
-      if (emailFromQuery && email !== emailFromQuery) { // emailFromQuery might be null for old links
-        debug("session.email and query.email don't match: %O", { req: req._log(), token, email, emailFromQuery, context })
-        return res.redirect(
-          `${FRONTEND_BASE_URL}/notifications?` +
-          querystring.stringify({
-            type: 'invalid-token',
-            email,
-            context
-          })
-        )
-      }
-
-      // verify and/or create the user
-      const existingUser = await Users.findOne({
-        email
-      })
-      const user = existingUser
-        ? existingUser
-        : await Users.insertAndGet({
-            email,
-            verified: true
-          })
-      if (!user.verified) {
-        await Users.updateOne({
-          id: user.id
-        }, {
-          verified: true
-        })
-      }
-
-      // log in the session and delete token
-      await Sessions.updateOne({
-        sid: session.sid
-      }, {
-        sess: {
-          ...session.sess,
-          token: null,
-          passport: {
-            user: user.id
-          }
-        }
-      })
-
-      //call signIn hooks
-      await Promise.all(
-        signInHooks.map( hook =>
-          hook(user.id, pgdb)
-        )
-      )
-
-      // success
+      const { email } = user
       return res.redirect(
         `${FRONTEND_BASE_URL}/notifications?` +
         querystring.stringify({
@@ -169,6 +103,29 @@ exports.configure = ({
         })
       )
     } catch (e) {
+      if (e instanceof QueryEmailMismatchError) {
+        const { email } = e.meta
+        debug("session.email and query.email don't match: %O", { req: req._log(), context, ...e.meta })
+        return res.redirect(
+          `${FRONTEND_BASE_URL}/notifications?` +
+          querystring.stringify({
+            type: 'invalid-token',
+            email,
+            context
+          })
+        )
+      }
+      if (e instanceof NoSessionError) {
+        debug('no session: %O', { req: req._log(), context, ...e.meta })
+        return res.redirect(
+          `${FRONTEND_BASE_URL}/notifications?` +
+          querystring.stringify({
+            type: 'invalid-token',
+            email: emailFromQuery,
+            context
+          })
+        )
+      }
       const util = require('util')
       console.error('auth: exception', util.inspect({ req: req._log(), emailFromQuery, context, e }, {depth: null}))
       return res.redirect(

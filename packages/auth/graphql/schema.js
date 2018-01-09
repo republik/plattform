@@ -24,5 +24,7 @@ type mutations {
   # signIn with an email address
   signIn(email: String!, context: String): SignInResponse!
   signOut: Boolean!
+  # validate a token sent by mail to convert a login request token to a valid user session
+  signInWithToken(email: String!, token: String!, context: String): Boolean!
 }
 `
