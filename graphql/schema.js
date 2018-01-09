@@ -93,6 +93,9 @@ type mutations {
   ): Discussion!
 
   submitQuestion(question: String!): MutationResult
+
+  # max every 12h
+  requestPreview: MutationResult!
 }
 
 type subscriptions {
