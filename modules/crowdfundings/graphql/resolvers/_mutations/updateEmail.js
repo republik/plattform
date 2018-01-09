@@ -5,6 +5,11 @@ const isEmail = require('email-validator').validate
 const querystring = require('querystring')
 const updateUserOnMailchimp = require('../../../lib/updateUserOnMailchimp')
 const unsubscribeFromMailchimp = require('../../../lib/unsubscribeFromMailchimp')
+const { transformUser } = require('@orbiting/backend-modules-auth')
+
+const {
+  FRONTEND_BASE_URL
+} = process.env
 
 module.exports = async (_, args, {pgdb, req, t}) => {
   ensureSignedIn(req, t)
@@ -19,12 +24,11 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     throw new Error(t('api/email/change/exists'))
   }
 
-  if (args.userId && args.userId !== req.userId) {
-    Roles.ensureUserHasRole(req.user, 'supporter')
-  }
   const user = args.userId
-    ? await pgdb.public.users.findOne({id: args.userId})
+    ? transformUser(await pgdb.public.users.findOne({id: args.userId}))
     : req.user
+
+  Roles.ensureUserIsMeOrInRoles(user, req.user, ['supporter', 'admin'])
 
   if (!user) {
     logger.error('user not found', { req: req._log() })
@@ -36,13 +40,20 @@ module.exports = async (_, args, {pgdb, req, t}) => {
 
   const transaction = await pgdb.transactionBegin()
   try {
-    await transaction.public.sessions.delete({'sess @>': {
-      passport: {user: user.id}
-    }})
-    await transaction.public.users.updateAndGetOne({id: user.id}, {
-      email,
-      verified: false
-    })
+    await transaction.public.sessions.delete(
+      {
+        'sess @>': {
+          passport: {user: user.id}
+        }
+      })
+    await transaction.public.users.updateAndGetOne(
+      {
+        id: user.id
+      }, {
+        email,
+        verified: false
+      }
+    )
     await transaction.transactionCommit()
   } catch (e) {
     await transaction.transactionRollback()
@@ -62,8 +73,9 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     ]
   })
 
-  const loginLink = (process.env.FRONTEND_BASE_URL || 'http://' + req.headers.host) +
-    '/merci?' +
+  const loginLink =
+    (FRONTEND_BASE_URL || 'http://' + req.headers.host) +
+    '/konto?' +
     querystring.stringify({email})
   await sendMailTemplate({
     to: email,
