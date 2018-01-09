@@ -29,7 +29,6 @@ const MetaData = ({value, editor, additionalFields = [], customFields = [], teas
   const node = value.document
 
   const genericKeys = Set([
-    'publishDate',
     'slug',
     'feed',
     ...additionalFields,
