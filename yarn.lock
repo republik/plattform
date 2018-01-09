@@ -2,29 +2,6 @@
 # yarn lockfile v1
 
 
-"@orbiting/backend-modules-auth@^2.2.3":
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-2.2.3.tgz#6420b564f2ba0daa1ec769a27f4ee87397995610"
-  dependencies:
-    "@orbiting/backend-modules-mail" "^0.1.0"
-    "@orbiting/backend-modules-translate" "^0.0.0"
-    apollo-modules-node "^0.1.4"
-    check-env "^1.3.0"
-    connect-pg-simple "^3.1.2"
-    debug "^3.1.0"
-    email-validator "^1.1.1"
-    export-files "^2.1.1"
-    express-session "^1.15.6"
-    geoip-database "^1.0.11"
-    is-uuid "^1.0.2"
-    kraut "^0.1.1"
-    maxmind "^2.4.0"
-    passport "^0.4.0"
-    pogi "^2.5.5"
-    querystring "^0.2.0"
-    rw "^1.3.3"
-    uuid "^3.1.0"
-
 "@orbiting/backend-modules-auth@^2.3.0":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-2.3.0.tgz#41a2a1190f4f096f5ba0e6949c9059883c2628d4"
@@ -48,11 +25,11 @@
     rw "^1.3.3"
     uuid "^3.1.0"
 
-"@orbiting/backend-modules-base@^0.3.5":
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.3.5.tgz#a2660d8719d714bf40b5a5608564fd03b794c7f5"
+"@orbiting/backend-modules-base@^0.3.6":
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.3.6.tgz#e20a03f7d673bcc19db5ccbe424a460b716aaea9"
   dependencies:
-    "@orbiting/backend-modules-auth" "^2.2.3"
+    "@orbiting/backend-modules-auth" "^2.3.0"
     apollo-engine "^0.8.1"
     apollo-modules-node "^0.1.4"
     apollo-server-express "^1.3.2"
@@ -71,11 +48,11 @@
     redis "^2.8.0"
     subscriptions-transport-ws "^0.9.4"
 
-"@orbiting/backend-modules-documents@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.3.0.tgz#d3553b80ceaa0c0b3f4d844438a968a32e0a2351"
+"@orbiting/backend-modules-documents@^2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.4.1.tgz#ffa79596b016026acb9f63c2cdf1aa8a13ddeabb"
   dependencies:
-    "@orbiting/backend-modules-auth" "^2.2.3"
+    "@orbiting/backend-modules-auth" "^2.3.0"
     "@project-r/styleguide" "^5.27.1"
     "@project-r/template-newsletter" "^1.5.0"
     apollo-modules-node "^0.1.4"
