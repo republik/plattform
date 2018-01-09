@@ -2222,7 +2222,7 @@ test('unauthorized repos query', async (t) => {
 })
 
 test('cleanup', async (t) => {
-  for (let _repo of [...testRepos, testRepoId]) {
+  for (let _repo of [...testRepos, { id: testRepoId }]) {
     const [owner, repo] = _repo.id.split('/')
     await githubRest.repos.delete({
       owner,
