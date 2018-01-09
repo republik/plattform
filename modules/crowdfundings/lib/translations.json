@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-05T18:02:42.392Z",
+  "updated": "2018-01-06T21:35:40.461Z",
   "title": "live",
   "data": [
     {
@@ -52,23 +52,23 @@
     },
     {
       "key": "api/membership/monthly/hasActive",
-      "value": "Sie können leider kein Monatsabo kaufen, da sie bereits ein aktives Abo besitzen.",
-      "Clara ok": "q",
+      "value": "Sie können leider kein Monatsabo kaufen, da sie bereits ein laufendes Abonnement besitzen.",
+      "Clara ok": "x",
       "Braucht Const": null,
       "Korrektorat": null,
-      "Bemerkung": "styleguide: aktive mitgliedschaft"
+      "Bemerkung": null
     },
     {
       "key": "api/membership/monthly/reactivate",
-      "value": "Sie können nicht noch einmal ein Monatsabo kaufen. Bitte verlängern sie Ihr Abo stattdessen.",
-      "Clara ok": "q",
+      "value": "Sie können nicht noch einmal ein Monats-Abonnement kaufen. Bitte verlängern sie Ihr Abonnement stattdessen in Ihrem Konto (www.republik.ch/konto).",
+      "Clara ok": "x",
       "Braucht Const": null,
       "Korrektorat": null,
-      "Bemerkung": "link auf profil?"
+      "Bemerkung": null
     },
     {
       "key": "api/membership/cancel/isInactive",
-      "value": "Das Abo ist bereits deaktiviert.",
+      "value": "Das Abonnement ist bereits deaktiviert.",
       "Clara ok": "x",
       "Braucht Const": null,
       "Korrektorat": null,
@@ -76,16 +76,16 @@
     },
     {
       "key": "api/membership/cancel/notRenewing",
-      "value": "Das Abo ist bereits terminiert.",
-      "Clara ok": "q",
+      "value": "Das Abonnement ist bereits gekündigt.",
+      "Clara ok": "x",
       "Braucht Const": null,
       "Korrektorat": null,
-      "Bemerkung": "styleguide: teminieren"
+      "Bemerkung": null
     },
     {
       "key": "api/membership/pleaseWait",
-      "value": "Das Abo wird von unserem System noch bearbeitet, bitte versuchen Sie es später nochmals.",
-      "Clara ok": "q",
+      "value": "Das Abonnement wird von unserem System noch bearbeitet, bitte versuchen Sie es später nochmals.",
+      "Clara ok": "x",
       "Braucht Const": null,
       "Korrektorat": null,
       "Bemerkung": "Kommt das nur bei Monatsabos oder auch bei Mitgliedschaften?"
@@ -436,8 +436,8 @@
     },
     {
       "key": "api/payment/subscription/threeDsecure/notSupported",
-      "value": "Es tut uns leid, aus technischen Gründen können wir zurzeit kein Monatsabo auf eine Kreditkarte buchen, die 3D secure voraussetzt. Sie können es entweder mit einer anderen Karte versuchen und/oder uns kontaktieren unter: kontakt@republik.ch. ",
-      "Clara ok": "q",
+      "value": "Es tut uns leid, aus technischen Gründen können wir zurzeit kein Monats-Abonnement auf eine Kreditkarte buchen, die 3D secure voraussetzt. Sie können es entweder mit einer anderen Karte versuchen und/oder uns kontaktieren unter: kontakt@republik.ch. ",
+      "Clara ok": "x",
       "Braucht Const": null,
       "Korrektorat": null,
       "Bemerkung": null

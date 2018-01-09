@@ -98,6 +98,9 @@ type mutations {
   ): NewsletterSubscription!
 
   submitQuestion(question: String!): MutationResult
+
+  # max every 12h
+  requestPreview: MutationResult!
 }
 
 type subscriptions {

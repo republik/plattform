@@ -7,7 +7,6 @@ const dateParse = utcTimeParse('%x') // %x - the locale’s date
 const dateTimeParse = timeParse('%x %H:%M')
 
 const { GSHEETS } = process.env
-const mapping = JSON.parse(GSHEETS)
 
 const normalize = data =>
   data.map(d => {
@@ -25,6 +24,11 @@ const normalize = data =>
   })
 
 module.exports = (server, pgdb) => {
+  if (!GSHEETS) {
+    console.warn('missing env GSHEETS, the /gsheets endpoint will not work')
+    return
+  }
+  const mapping = JSON.parse(GSHEETS)
   return server.use(
     router.get('/gsheets/:key', async function (req, res) {
       const { key } = req.params
