@@ -87,10 +87,6 @@
       "value": "Sie benötigen einen Benutzernamen aufgrund ihres öffentlichen Profil"
     },
     {
-      "key": "api/newsletters/userNotFound",
-      "value": "Wir konnten diesen Benutzer nicht finden. Bitte versuchen Sie es später nochmal."
-    },
-    {
       "key": "api/newsletters/get/failed",
       "value": "Ihre Newsletter-Abos konnten nicht abgefragt werden, bitte versuchen Sie es später nochmal."
     },
