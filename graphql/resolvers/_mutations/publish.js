@@ -90,15 +90,16 @@ module.exports = async (
   // see https://github.com/orbiting/backend-modules/blob/c25cf33336729590b114e5113e464be6bf1185e0/packages/documents/graphql/resolvers/_queries/documents.js#L107
   // - the documents resolver exposes those two properties on individual docs for resolving
   // - we steal them here for our new doc
-  const allDocs = docsConnection.nodes[0]._all
-  const allUsernames = docsConnection.nodes[0]._usernames
+  const firstDoc = docsConnection.nodes[0] || {} // in case no docs are published
+  const allDocs = firstDoc._all
+  const allUsernames = firstDoc._usernames
 
   const resolvedDoc = JSON.parse(JSON.stringify(doc))
   contentUrlResolver(resolvedDoc, allDocs, allUsernames, unresolvedRepoIds)
   metaUrlResolver(resolvedDoc.content.meta, allDocs, allUsernames, unresolvedRepoIds)
   metaFieldResolver(resolvedDoc.content.meta, allDocs, unresolvedRepoIds)
   unresolvedRepoIds = uniq(unresolvedRepoIds)
-  if (unresolvedRepoIds.length && (!ignoreUnresolvedRepoIds || doc.content.meta.template === 'editorialNewsletter')) {
+  if (unresolvedRepoIds.length && (!ignoreUnresolvedRepoIds || doc.content.meta.template === 'editorialNewsletter' || updateMailchimp)) {
     return {
       unresolvedRepoIds
     }
