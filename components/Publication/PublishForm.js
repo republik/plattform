@@ -298,8 +298,8 @@ class PublishForm extends Component {
                           </li>
                         ))}
                       </ul>
-                      {updateMailchimp
-                        ? <ErrorMessage error={t('publish/error/unresolvedRepoIds/mailchimp')} />
+                      {updateMailchimp || meta.template === 'editorialNewsletter'
+                        ? <ErrorMessage error={t('publish/error/unresolvedRepoIds/template')} />
                         : <Checkbox checked={!!this.state.ignoreUnresolvedRepoIds} onChange={(_, value) => {
                           this.setState({
                             ignoreUnresolvedRepoIds: value
@@ -331,6 +331,7 @@ class PublishForm extends Component {
                       } else {
                         this.setState({
                           publishing: false,
+                          ignoreUnresolvedRepoIds: undefined,
                           unresolvedRepoIds: publish.unresolvedRepoIds
                         })
                       }
@@ -338,6 +339,7 @@ class PublishForm extends Component {
                       this.setState(() => ({
                         publishing: false,
                         unresolvedRepoIds: undefined,
+                        ignoreUnresolvedRepoIds: undefined,
                         error: error
                       }))
                     })

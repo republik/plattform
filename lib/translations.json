@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-09T14:37:41.791Z",
+  "updated": "2018-01-09T15:11:47.324Z",
   "title": "live",
   "data": [
     {
@@ -491,8 +491,8 @@
       "value": "ignorieren"
     },
     {
-      "key": "publish/error/unresolvedRepoIds/mailchimp",
-      "value": "Sie können diese Publikation nicht auf Mailchimp laden solange nicht alle Referenzen zur Veröffentlichung ferigegeben sind."
+      "key": "publish/error/unresolvedRepoIds/template",
+      "value": "Sie können diese Publikation durchführen solange nicht alle Referenzen zur Veröffentlichung ferigegeben sind."
     },
     {
       "key": "publication/current/title/1",
