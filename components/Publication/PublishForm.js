@@ -48,6 +48,7 @@ const query = gql`
           name
         }
         document {
+          id
           content
           meta {
             slug
