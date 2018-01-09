@@ -61,8 +61,9 @@ test('reclaimPledge: Claim a pledge of a unverified user as verified user', asyn
   const result = await reclaimPledge({
     pledgeId
   })
-  console.log(result)
   t.ok(result.data.reclaimPledge, 'reclaim returns true')
+  const pledge = await pgDatabase().public.pledges.findOne({ id: pledgeId })
+  t.equal(pledge.userId, Users.Member.id)
   await signOut()
   t.end()
 })
@@ -74,7 +75,6 @@ test('reclaimPledge: Claim a pledge of a verified user as unverified user', asyn
   const result = await reclaimPledge({
     pledgeId
   })
-  console.log(result)
   t.ok(result.errors, 'is not possible')
   await signOut()
   t.end()
@@ -87,7 +87,6 @@ test('reclaimPledge: Claim a pledge of a verified user as a supporter', async (t
   const result = await reclaimPledge({
     pledgeId
   })
-  console.log(result)
   t.ok(result.errors, 'is not possible')
   await signOut()
   t.end()

@@ -67,11 +67,11 @@ const chargeSuccess = async ({ total, chargeId }, pgdb) => {
   await chargeSucceeded.handle(event, pgdb, t)
 }
 
-const chargeRefund = async ({ pledgeId }, pgdb) => {
+const chargeRefund = async ({ chargeId }, pgdb) => {
   const event = {
     data: {
       object: {
-        id: `SUBSCRIPTION_${pledgeId}`
+        id: `CHARGE_${chargeId}`
       }
     }
   }

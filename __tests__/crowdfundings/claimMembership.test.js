@@ -63,6 +63,7 @@ test('claimMembership: Claim a membership with package isAutoActivateUserMembers
   t.deepEqual(result, { data: { claimMembership: true } }, 'claimMembership should return success')
   const membershipAfterClaim = await pgDatabase().public.memberships.findFirst({ pledgeId })
   t.equal(membershipAfterClaim.userId, Users.Member.id, 'user should be "Member"')
+  t.notOk(membershipAfterClaim.voucherable, 'membership is not voucherable anymore')
 
   await signOut()
   t.end()

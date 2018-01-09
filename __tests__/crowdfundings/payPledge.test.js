@@ -7,9 +7,11 @@ const {
   createSource,
   invoicePaymentSuccess,
   chargeSuccess,
+  chargeRefund,
   resetCustomers,
   invoicePaymentFail,
   cancelSubscription } = require('./stripeHelpers')
+
 // const { createTransaction } = require('./paypalHelpers')
 
 const PAYMENT_METHODS = {
@@ -124,12 +126,13 @@ test('payPledge: ABO pledge with STRIPE', async (t) => {
 
   const periods = await pgDatabase().public.membershipPeriods.find({ membershipId: membership.id })
   t.ok(periods.length === 1, 'exactly 1 membership period generated')
+  t.ok(moment().add('360', 'days').isBefore(moment(periods[0].endDate)), 'membership does not end before 360 days from now')
   t.ok(moment().add('1', 'year').isAfter(moment(periods[0].endDate)), 'membership ends after 1 year from now')
 
   t.end()
 })
 
-test('payPledge: MONTHLY_ABO pledge with STRIPE', async (t) => {
+test('payPledge: MONTHLY_ABO pledge with STRIPE and then refund', async (t) => {
   const { pledgeId } = await prepare({ templateId: '00000000-0000-0000-0008-000000000002' })
   await resetCustomers(pgDatabase())
   const source = await createSource({ card: Cards.Visa, pledgeId })
@@ -167,7 +170,13 @@ test('payPledge: MONTHLY_ABO pledge with STRIPE', async (t) => {
 
   const periods = await pgDatabase().public.membershipPeriods.find({ membershipId: membership.id })
   t.ok(periods.length === 1, 'exactly 1 membership period generated')
-  t.ok(moment().add('1', 'month').isAfter(moment(periods[0].endDate)), 'membership ends after 1 month from now')
+  t.ok(moment().add('23', 'hours').isBefore(moment(periods[0].endDate)), 'membership does not end before 23 hours from now')
+  t.ok(moment().add('1', 'day').isAfter(moment(periods[0].endDate)), 'membership ends after 1 day from now')
+
+  await chargeRefund({ chargeId: 'TEST' }, pgDatabase())
+  const { status } = await pgDatabase().public.payments.findFirst({ id: payment.id })
+  t.equal(status, 'REFUNDED', `payment status is REFUNDED`)
+
   t.end()
 })
 

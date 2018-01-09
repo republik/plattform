@@ -114,37 +114,9 @@ test('cancelPledge: Waiting ABO with PAYMENTSLIP', async (t) => {
     cancelPledge: { status: 'CANCELLED', memberships: [] }
   }, 'pledge status is CANCELLED now and membership went to parking parker')
 
-  const pledgePayment = await pgDatabase().public.pledgePayments.findOne({ pledgeId })
-  t.ok(pledgePayment, 'pledge payment exists')
-
-  const payment = await pgDatabase().public.payments.findOne({ id: pledgePayment.paymentId })
-  t.ok(payment, 'payment exists')
-  t.equal(payment.status, 'CANCELLED', 'payment status CANCELLED')
-
-  const membershipAfterCancel = await pgDatabase().public.memberships.findOne({ pledgeId })
-  t.notOk(membershipAfterCancel, 'no membership anymore')
-
-  await signOut()
-  t.end()
-})
-
-test('cancelPledge: Waiting ABO with PAYMENTSLIP', async (t) => {
-  const { pledgeId } = await prepare()
-  await payPledge({
-    pledgeId,
-    method: PAYMENT_METHODS.PAYMENTSLIP,
-    paperInvoice: true
-  })
-  const membership = await pgDatabase().public.memberships.findOne({ pledgeId })
-  t.ok(membership, 'membership exists')
-  await signIn({ user: Users.Supporter })
-  const result = await cancelPledge({
-    pledgeId
-  })
-  t.notOk(result.errors, 'graphql query successful')
-  t.deepEqual(result.data, {
-    cancelPledge: { status: 'CANCELLED', memberships: [] }
-  }, 'pledge status is CANCELLED now and membership went to parking parker')
+  const parkedMembership = await pgDatabase().public.memberships.findOne({ id: membership.id })
+  t.equal(parkedMembership.pledgeId, process.env.PARKING_PLEDGE_ID, 'membership should be linked with parking pledge')
+  t.equal(parkedMembership.userId, process.env.PARKING_USER_ID, 'membership should be linked with parking user')
 
   const pledgePayment = await pgDatabase().public.pledgePayments.findOne({ pledgeId })
   t.ok(pledgePayment, 'pledge payment exists')
@@ -154,7 +126,7 @@ test('cancelPledge: Waiting ABO with PAYMENTSLIP', async (t) => {
   t.equal(payment.status, 'CANCELLED', 'payment status CANCELLED')
 
   const membershipAfterCancel = await pgDatabase().public.memberships.findOne({ pledgeId })
-  t.notOk(membershipAfterCancel, 'no membership anymore')
+  t.notOk(membershipAfterCancel, 'there should be no membership anymore for the original pledgeId')
 
   await signOut()
   t.end()

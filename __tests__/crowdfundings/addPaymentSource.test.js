@@ -1,13 +1,14 @@
 const test = require('tape-async')
 const { connectIfNeeded, pgDatabase, apolloFetch } = require('../helpers.js')
 const { signIn, signOut, Users } = require('../auth.js')
+const i18n = require('../../lib/t')
 const {
   Cards,
   createSource,
   resetCustomers
   } = require('./stripeHelpers')
 
-const PAY_PLEDGE_MUTATION = `
+const ADD_PAYMENT_SOURCE_MUTATION = `
   mutation addPaymentSource($sourceId: String!, $pspPayload: JSON!) {
     addPaymentSource(sourceId: $sourceId, pspPayload: $pspPayload) {
       isDefault
@@ -21,7 +22,7 @@ const PAY_PLEDGE_MUTATION = `
 
 const addPaymentSource = async ({ sourceId, pspPayload }) => {
   return apolloFetch({
-    query: PAY_PLEDGE_MUTATION,
+    query: ADD_PAYMENT_SOURCE_MUTATION,
     variables: {
       sourceId,
       pspPayload
@@ -39,7 +40,7 @@ test('addPaymentSource: adding a card as anonymous', async (t) => {
   await signIn({ user: Users.Anonymous })
   const source = await createSource({ card: Cards.Visa })
   const result = await addPaymentSource({ sourceId: source.id, pspPayload: '' })
-  t.equal(result.errors[0].message, 'Sie müssen sich zuerst einloggen.', 'mutation fails because not logged in')
+  t.equal(result.errors[0].message, i18n('api/signIn'), 'mutation fails because not logged in')
   await signOut()
   t.end()
 })
@@ -49,7 +50,7 @@ test('addPaymentSource: adding a 3d secure card', async (t) => {
   const { userId } = await signIn({ user: Users.Member })
   const source = await createSource({ card: Cards.Visa3D, userId })
   const result = await addPaymentSource({ sourceId: source.id, pspPayload: { type: 'three_d_secure' } })
-  t.equal(result.errors[0].message, 'Es tut uns leid, aus technischen Gründen können wir zurzeit kein Monatsabo auf eine Kreditkarte buchen, die 3D secure voraussetzt. Sie können es entweder mit einer anderen Karte versuchen und/oder uns kontaktieren unter: kontakt@republik.ch. ', 'mutation fails because 3d secure currently not allowed')
+  t.equal(result.errors[0].message, i18n('api/payment/subscription/threeDsecure/notSupported'), 'mutation fails because 3d secure currently not allowed')
   await signOut()
   t.end()
 })
@@ -99,6 +100,10 @@ test('addPaymentSource: adding two cards', async (t) => {
       expYear: parseInt(Cards.Untrusted.exp_year, 10)
     }]
   }, 'default card changed to most recent one')
+
+  const paymentSources = await pgDatabase().public.paymentSources.find({ userId })
+  t.equal(paymentSources.length, 0)
+
   await signOut()
   t.end()
 })
