@@ -92,7 +92,15 @@ type mutations {
     discussionPreferences: DiscussionPreferencesInput!
   ): Discussion!
 
+  updateNewsletterSubscription(
+    name: NewsletterName!,
+    subscribed: Boolean!
+  ): NewsletterSubscription!
+
   submitQuestion(question: String!): MutationResult
+
+  # max every 12h
+  requestPreview: MutationResult!
 }
 
 type subscriptions {

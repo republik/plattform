@@ -6,6 +6,7 @@ const t = require('./lib/t')
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: redirections } = require('@orbiting/backend-modules-redirections')
 const sendPendingPledgeConfirmations = require('./modules/crowdfundings/lib/sendPendingPledgeConfirmations')
+const updateUserOnMailchimp = require('./modules/crowdfundings/lib/updateUserOnMailchimp')
 
 module.exports.run = () => {
   require('./lib/slackGreeter')
@@ -20,8 +21,11 @@ module.exports.run = () => {
 
   // signin hooks
   const signInHooks = [
-    async (userId, pgdb) =>
-      sendPendingPledgeConfirmations(userId, pgdb, t)
+    async (userId, isNew, pgdb) =>
+      sendPendingPledgeConfirmations(userId, pgdb, t),
+    async (userId, isNew, pgdb) => {
+      isNew && updateUserOnMailchimp({userId, pgdb, isNew})
+    }
   ]
 
   return server.run(executableSchema, middlewares, t, signInHooks)

@@ -155,7 +155,8 @@ module.exports = async (_, args, {pgdb, req, t}) => {
 
       updateUserOnMailchimp({
         userId: pledge.userId,
-        pgdb
+        pgdb,
+        hasJustPaid: true
       })
     } catch (e) {
       console.warn('error in payPledge after transactionCommit', e)

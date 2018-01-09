@@ -7,10 +7,13 @@ const {
   MAILCHIMP_MAIN_LIST_ID,
   MAILCHIMP_INTEREST_PLEDGE,
   MAILCHIMP_INTEREST_MEMBER,
-  MAILCHIMP_INTEREST_MEMBER_BENEFACTOR
+  MAILCHIMP_INTEREST_MEMBER_BENEFACTOR,
+  MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
+  MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
+  MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR
 } = process.env
 
-module.exports = async ({userId, pgdb}) => {
+module.exports = async ({userId, pgdb, hasJustPaid, isNew}) => {
   try {
     const { email } = await pgdb.public.users.findOne({ id: userId })
     if (!email) {
@@ -18,10 +21,14 @@ module.exports = async ({userId, pgdb}) => {
       return
     }
 
-    const hasPledge = await pgdb.public.pledges.findFirst({
-      userId: userId,
-      status: 'SUCCESSFUL'
+    const pledges = await pgdb.public.pledges.find({
+      userId: userId, status: 'SUCCESSFUL'
     })
+
+    const hasPledge = !!pledges && pledges.length > 0
+
+    const hasJustPaidFirstPledge = !!hasJustPaid && hasPledge && pledges.length === 1
+
     const hasMembership = await pgdb.public.memberships.findFirst({
       userId: userId
     })
@@ -32,6 +39,26 @@ module.exports = async ({userId, pgdb}) => {
       userId: userId,
       membershipTypeId: membershipTypeBenefactor.id
     }) : false
+
+    const enforcedNewsletterSubscriptions = isNew
+      ? {
+        // Autosubscribe free newsletters when user is new.
+        [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true
+      }
+      : hasJustPaidFirstPledge
+        ? {
+          // Autosubscribe paid newsletters when user just paid.
+          [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
+          [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true
+        }
+        : !hasMembership
+          ? {
+            // Revoke paid newsletters when membership is inactive.
+            [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: false,
+            [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: false
+          }
+          : {}
+
     const hash = crypto
       .createHash('md5')
       .update(email)
@@ -50,7 +77,8 @@ module.exports = async ({userId, pgdb}) => {
         interests: {
           [MAILCHIMP_INTEREST_PLEDGE]: !!hasPledge,
           [MAILCHIMP_INTEREST_MEMBER]: !!hasMembership,
-          [MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: !!isBenefactor
+          [MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: !!isBenefactor,
+          ...enforcedNewsletterSubscriptions
         }
       })
     })

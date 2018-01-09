@@ -14,6 +14,7 @@ const { Redirections: {
 
 const convertImage = require('../../../lib/convertImage')
 const uploadExoscale = require('../../../lib/uploadExoscale')
+const ensureStringLength = require('../../../lib/ensureStringLength')
 
 const {
   ASSETS_BASE_URL,
@@ -21,6 +22,16 @@ const {
 } = process.env
 
 const MAX_STATEMENT_LENGTH = 140
+const MAX_BIOGRAPHY_LENGTH = 2000
+const MAX_PUBLIC_KEY_LENGTH = 10000 // 4k public key is 3114 chars
+const MAX_PUBLIC_URL_LENGTH = 2048
+const MAX_TWITTER_HANDLE_LENGTH = 15
+const MAX_FACEBOOK_ID_LENGTH = 64 // (can also be something like profile.php?id=xxxxxxxxxxxxxxx)
+const MAX_PHONE_NUMBER_NOTE_LENGTH = 140
+const MAX_PHONE_NUMBER_LENGTH = 20 // 20 (15 digits but let's give 5 spaces for formatting, e.g. 0049 XXX XX XX XX XX)
+const MAX_FIRSTNAME_LENGTH = 32
+const MAX_LASTNAME_LENGTH = 32
+
 const PORTRAIT_FOLDER = 'portraits'
 
 const {
@@ -39,8 +50,27 @@ module.exports = async (_, args, context) => {
     pgpPublicKey,
     portrait,
     statement,
-    isListed
+    isListed,
+    biography,
+    publicUrl,
+    twitterHandle,
+    facebookId,
+    phoneNumberNote,
+    phoneNumber,
+    firstName,
+    lastName
   } = args
+
+  ensureStringLength(statement, { max: MAX_STATEMENT_LENGTH, error: t('profile/statement/tooLong') })
+  ensureStringLength(biography, { max: MAX_BIOGRAPHY_LENGTH })
+  ensureStringLength(pgpPublicKey, { max: MAX_PUBLIC_KEY_LENGTH })
+  ensureStringLength(publicUrl, { max: MAX_PUBLIC_URL_LENGTH })
+  ensureStringLength(twitterHandle, { max: MAX_TWITTER_HANDLE_LENGTH })
+  ensureStringLength(facebookId, { max: MAX_FACEBOOK_ID_LENGTH })
+  ensureStringLength(phoneNumberNote, { max: MAX_PHONE_NUMBER_NOTE_LENGTH })
+  ensureStringLength(phoneNumber, { max: MAX_PHONE_NUMBER_LENGTH })
+  ensureStringLength(firstName, { max: MAX_FIRSTNAME_LENGTH })
+  ensureStringLength(lastName, { max: MAX_LASTNAME_LENGTH })
 
   const updateFields = [
     'username',
@@ -76,11 +106,6 @@ module.exports = async (_, args, context) => {
     }
   }
 
-  if (statement) {
-    if (statement.length > MAX_STATEMENT_LENGTH) {
-      throw new Error(t('profile/statement/tooLong'))
-    }
-  }
   if (isListed || (isListed === undefined && me._raw.isListed)) {
     if (
       !(statement && statement.trim()) &&

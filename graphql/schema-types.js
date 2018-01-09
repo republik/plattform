@@ -57,6 +57,15 @@ extend type User {
   isListed: Boolean!
   isAdminUnlisted: Boolean
   sequenceNumber: Int
+
+  newsletters: [NewsletterSubscription]
+}
+
+type NewsletterSubscription {
+  id: ID!
+  name: String!
+  subscribed: Boolean!
+  isEligible: Boolean!
 }
 
 type UserConnection {
@@ -88,6 +97,12 @@ enum Badge {
   PATRON
   STAFF
   FREELANCER
+}
+
+enum NewsletterName {
+  DAILY
+  WEEKLY
+  PROJECTR
 }
 
 type Video {
