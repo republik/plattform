@@ -1,4 +1,4 @@
-import { List, Seq } from 'immutable'
+import { Map, List, Seq } from 'immutable'
 import TreeUtils from 'immutable-treeutils'
 
 const tree = new TreeUtils(Seq.of('document'), 'key', 'nodes')
@@ -36,6 +36,7 @@ export const allBlocks = value => {
   const allBlockPaths = value.blocks
     .map(n => tree.byId(value, n.key))
     .reduce((memo, path) => memo.push(path).concat(tree.ancestors(value, path)), List())
+    .reduce((memo, path) => memo.set(tree.id(value, path), path), Map())
 
   console.log(
     allBlockPaths.map(p => value.getIn(p))
