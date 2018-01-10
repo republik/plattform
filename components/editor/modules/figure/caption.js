@@ -92,15 +92,21 @@ const getSerializer = options => {
     ]
     const bylineChildren = bylineModule.helpers.serializer.toMdast(
         byline.nodes,
-        0,
+        1,
         object,
         rest
     )
 
-    if (bylineChildren.length && bylineChildren[0].value !== '') {
+    if (
+      bylineChildren.length &&
+      !(
+        bylineChildren.length === 1 &&
+        bylineChildren[0].value === ''
+      )
+    ) {
       children.push({
         type: 'emphasis',
-        children: bylineModule.helpers.serializer.toMdast(byline.nodes)
+        children: bylineChildren
       })
     }
 
