@@ -154,7 +154,7 @@ class EditorPage extends Component {
       repo: null,
       uncommittedChanges: null,
       warnings: [],
-      showSidebar: false
+      showSidebar: true
     }
   }
 
@@ -486,7 +486,7 @@ class EditorPage extends Component {
                 cursor: 'pointer',
                 color: showSidebar ? colors.primary : undefined
               }}
-              onClick={this.toggleSidebarHandler}
+              onMouseDown={this.toggleSidebarHandler}
             >
               <SettingsIcon size='30' />
             </div>

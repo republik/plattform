@@ -3,12 +3,14 @@ import React from 'react'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import Placeholder from '../../Placeholder'
 import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
+import { keyHandler, staticKeyHandler } from '../../utils/keyHandlers'
 
 export default ({rule, subModules, TYPE}) => {
   const {
     depth,
     placeholder,
-    formatButtonText
+    formatButtonText,
+    isStatic = false
   } = rule.editorOptions || {}
 
   const title = {
@@ -58,6 +60,7 @@ export default ({rule, subModules, TYPE}) => {
     },
     plugins: [
       {
+        onKeyDown: isStatic ? staticKeyHandler({ TYPE, rule }) : keyHandler({ TYPE }),
         renderPlaceholder: placeholder && (({node}) => {
           if (!title.match(node)) return
           if (node.text.length) return null

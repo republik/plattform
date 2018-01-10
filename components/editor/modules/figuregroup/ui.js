@@ -127,24 +127,32 @@ export const FigureGroupForm = options => {
 }
 
 export const FigureGroupButton = options => {
-  const figureButtonClickHandler = (value, onChange) => event => {
+  const figureButtonClickHandler = (disabled, value, onChange) => event => {
     event.preventDefault()
-    onChange(value
+    if (!disabled) {
+      onChange(value
         .change()
         .call(
           injectBlock,
           getNewItem(options)()
         )
       )
+    }
   }
+
+  const insertTypes = options.rule.editorOptions.insertTypes || []
   return ({ value, onChange }) => {
-    const disabled = value.isBlurred
+    const disabled = value.isBlurred ||
+      !value.blocks.every(
+        n => insertTypes.includes(n.type)
+      )
+
     return (
       <span
         {...buttonStyles.insert}
         data-disabled={disabled}
         data-visible
-        onMouseDown={figureButtonClickHandler(value, onChange)}
+        onMouseDown={figureButtonClickHandler(disabled, value, onChange)}
       >
         {options.rule.editorOptions.insertButtonText}
       </span>

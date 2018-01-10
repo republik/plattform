@@ -92,8 +92,11 @@ export default ({TYPE, subModules, editorOptions = {}, figureModule}) => {
     )
   }
 
+  const insertTypes = editorOptions.insertTypes || []
+
   const QuoteButton = ({ value, onChange }) => {
-    const disabled = value.isBlurred
+    const disabled = value.isBlurred ||
+      !value.blocks.every(n => insertTypes.includes(n.type))
     return (
       <span
         {...buttonStyles.insert}
