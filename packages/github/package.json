@@ -1,0 +1,36 @@
+{
+  "name": "@orbiting/backend-modules-github",
+  "version": "0.0.0",
+  "description": "github clients and utils",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backend-modules.git"
+  },
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backend-modules/issues"
+  },
+  "homepage": "https://github.com/orbiting/backend-modules#readme",
+  "scripts": {
+    "link": "yarn link"
+  },
+  "devDependencies": {
+    "isomorphic-unfetch": "^2.0.0"
+  },
+  "dependencies": {
+    "apollo-fetch": "^0.7.0",
+    "await-sleep": "^0.0.1",
+    "check-env": "^1.3.0",
+    "export-files": "^2.1.1",
+    "github": "^13.1.0",
+    "jsonwebtoken": "^8.1.0"
+  },
+  "peerDependencies": {
+    "isomorphic-unfetch": "^2.0.0"
+  }
+}
