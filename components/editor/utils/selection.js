@@ -1,4 +1,7 @@
-import { Map } from 'immutable'
+import { Map, Seq } from 'immutable'
+import TreeUtils from 'immutable-treeutils'
+
+const tree = new TreeUtils(Seq.of('document'), 'key', 'nodes')
 
 const getClosest = (filter, node, value) => value.document.getClosest(node.key, filter)
 const getFurthest = (filter, node, value) => value.document.getClosest(node.key, filter)
@@ -28,3 +31,13 @@ export const getClosestAtEnd = getAtEdge(getClosest, 'end')
 
 export const getFurthestAtStart = getAtEdge(getFurthest, 'start')
 export const getFurthestAtEnd = getAtEdge(getFurthest, 'end')
+
+export const allBlocks = value => {
+  const allBlockPaths = value.blocks
+    .map(n => tree.byId(value, n.key))
+    .reduce((memo, path) => memo.push(path).concat(tree.ancestors(value, path)))
+
+  console.log(
+    allBlockPaths.map(p => value.getIn(p.concat('type')))
+  )
+}
