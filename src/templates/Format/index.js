@@ -29,7 +29,7 @@ const createSchema = ({
         key: 'kind',
         items: [
           {value: 'editorial', text: 'Editorial'},
-          {value: 'meta', text: 'Meta'},
+          {value: 'meta', text: 'Meta'}
         ]
       },
       {
@@ -72,7 +72,8 @@ const createSchema = ({
           editorOptions: {
             type: 'H1',
             placeholder: 'Titel',
-            depth: 1
+            depth: 1,
+            isStatic: true
           }
         },
         {
