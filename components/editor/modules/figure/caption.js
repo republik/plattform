@@ -51,8 +51,8 @@ const getSerializer = options => {
           type: 'CAPTION_TEXT',
           nodes: inlineSerializer.fromMdast(
             captionNodes,
-            index,
-            parent,
+            0,
+            node,
             rest
           )
         },
@@ -61,8 +61,8 @@ const getSerializer = options => {
           type: bylineModule.TYPE,
           nodes: bylineModule.helpers.serializer.fromMdast(
             bylineNodes,
-            index,
-            parent,
+            0,
+            node,
             rest
           )
         }
