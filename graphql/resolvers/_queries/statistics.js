@@ -1,4 +1,4 @@
-module.exports = async (_, args, { pgdb }) => {
+module.exports = (_, args, { pgdb }) => {
   return {
     memberCount: async () => {
       const result = await pgdb.public.query(
