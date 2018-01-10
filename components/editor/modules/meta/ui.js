@@ -2,8 +2,9 @@ import React from 'react'
 import { css } from 'glamor'
 import { Map, Set } from 'immutable'
 
-import { Interaction, Dropdown, Field, Label, colors } from '@project-r/styleguide'
+import { Interaction, A, Dropdown, Field, Label, colors } from '@project-r/styleguide'
 
+import { GITHUB_ORG } from '../../../../lib/settings'
 import withT from '../../../../lib/withT'
 import MetaForm from '../../utils/MetaForm'
 import RepoSearch from '../../utils/RepoSearch'
@@ -29,7 +30,6 @@ const MetaData = ({value, editor, additionalFields = [], customFields = [], teas
   const node = value.document
 
   const genericKeys = Set([
-    'publishDate',
     'slug',
     'feed',
     ...additionalFields,
@@ -98,11 +98,60 @@ const MetaData = ({value, editor, additionalFields = [], customFields = [], teas
                 onChange={item => onChange(undefined, item.value)} />
             }
             if (customField.ref === 'repo') {
+              const onRefChange = item => {
+                if (customField.key === 'format') {
+                  editor.change(change => {
+                    change
+                      .setNodeByKey(node.key, {
+                        data: item
+                          ? node.data.set('format', item)
+                          : node.data.remove('format')
+                      })
+                    let titleNode = change.value.document
+                      .findDescendant(node => node.type === 'TITLE')
+                    if (titleNode) {
+                      const format = item
+                        ? item.value.latestCommit.document
+                        : undefined
+                      change.setNodeByKey(titleNode.key, {
+                        data: {format}
+                      })
+                      titleNode.nodes.forEach(node => {
+                        change.setNodeByKey(node.key, {
+                          data: {format}
+                        })
+                      })
+                    }
+                  })
+                  return
+                }
+                onChange(
+                  undefined,
+                  item
+                    ? `https://github.com/${item.value.id}`
+                    : null
+                )
+              }
+              if (value) {
+                return (
+                  <div style={{height: 60, marginBottom: 12, borderBottom: '1px solid #000'}}>
+                    <Label style={{color: '#000'}}>{label}</Label><br />
+                    <Interaction.P>
+                      {value
+                        .replace('https://github.com/', '')
+                        .replace(`${GITHUB_ORG}/`, '')}
+                      {' '}
+                      <A href='#remove' onClick={() => {
+                        onRefChange(null)
+                      }}>x</A>
+                    </Interaction.P>
+                  </div>
+                )
+              }
               return <RepoSearch key={customField.key}
                 label={label}
-                value={value}
-                onChange={item => onChange(undefined, `https://github.com/${item.value.id}`)}
-                />
+                onChange={onRefChange}
+              />
             }
             return <Field key={customField.key}
               black

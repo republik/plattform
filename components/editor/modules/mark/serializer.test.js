@@ -1,65 +1,6 @@
 import test from 'tape'
-import createMarkModule from './'
-import createParagraphModule from '../paragraph'
+import { paragraphModule } from './testUtils'
 import { parse, stringify } from '@orbiting/remark-preset'
-
-const boldModule = createMarkModule({
-  TYPE: 'STRONG',
-  rule: {
-    matchMdast: node => node.type === 'strong',
-    editorOptions: {
-      type: 'strong'
-    }
-  },
-  subModules: []
-})
-const emphasisModule = createMarkModule({
-  TYPE: 'EMPHASIS',
-  rule: {
-    matchMdast: node => node.type === 'emphasis',
-    editorOptions: {
-      type: 'emphasis'
-    }
-  },
-  subModules: []
-})
-const deleteModule = createMarkModule({
-  TYPE: 'DELETE',
-  rule: {
-    matchMdast: node => node.type === 'delete',
-    editorOptions: {
-      type: 'delete'
-    }
-  },
-  subModules: []
-})
-const subModule = createMarkModule({
-  TYPE: 'SUB',
-  rule: {
-    matchMdast: node => node.type === 'sub',
-    editorOptions: {
-      type: 'sub'
-    }
-  },
-  subModules: []
-})
-const supModule = createMarkModule({
-  TYPE: 'SUP',
-  rule: {
-    matchMdast: node => node.type === 'sup',
-    editorOptions: {
-      type: 'sup'
-    }
-  },
-  subModules: []
-})
-
-const paragraphModule = createParagraphModule({
-  TYPE: 'P',
-  rule: {},
-  subModules: [boldModule, emphasisModule, deleteModule, subModule, supModule]
-})
-paragraphModule.name = 'paragraph'
 
 const serializer = paragraphModule.helpers.serializer
 

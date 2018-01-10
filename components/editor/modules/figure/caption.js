@@ -25,7 +25,7 @@ const getSerializer = options => {
             node.type === 'break',
           fromMdast: () => ({
             kind: 'text',
-            leaves: [{ text: '\n' }]
+            leaves: [{kind: 'leaf', text: '\n', marks: []}]
           })
         })
     }

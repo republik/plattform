@@ -53,10 +53,20 @@ const fragments = {
         name
       }
       document {
+        id
         content
         meta {
           title
           template
+          kind
+          color
+          format {
+            meta {
+              title
+              color
+              kind
+            }
+          }
         }
       }
     }
@@ -188,13 +198,15 @@ class EditorPage extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    const { repo = {} } = this.props.data || {}
-    const { repo: nextRepo = {} } = nextProps.data || {}
+    const { repo = {}, loading } = this.props.data || {}
+    const { repo: nextRepo = {}, loading: nextLoading } = nextProps.data || {}
 
-    if (
+    const shouldLoad =
       repo !== nextRepo ||
-      repo.commit !== nextRepo.commit
-    ) {
+      repo.commit !== nextRepo.commit ||
+      loading !== nextLoading
+    debug('componentWillReceiveProps', 'shouldLoad', shouldLoad)
+    if (shouldLoad) {
       this.loadState(nextProps)
     }
   }
@@ -286,7 +298,12 @@ class EditorPage extends Component {
         return
       }
 
-      const json = commit.document.content
+      const json = {
+        ...commit.document.content,
+        // add format to root mdast node
+        format: commit.document.meta.format
+      }
+
       committedEditorState = this.editor.serializer.deserialize(json)
 
       // normalize
@@ -544,6 +561,8 @@ export default compose(
   graphql(getLatestCommit, {
     skip: ({ url }) => url.query.commitId === 'new' || !!url.query.commitId,
     options: ({ url }) => ({
+      // always the latest
+      fetchPolicy: 'network-only',
       variables: {
         repoId: url.query.repoId
       }

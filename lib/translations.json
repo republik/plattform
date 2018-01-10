@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-22T10:50:01.860Z",
+  "updated": "2018-01-09T15:11:47.324Z",
   "title": "live",
   "data": [
     {
@@ -91,8 +91,20 @@
       "value": "Front"
     },
     {
+      "key": "repo/add/template/format",
+      "value": "Format"
+    },
+    {
+      "key": "repo/add/template/discussion",
+      "value": "Diskussion"
+    },
+    {
+      "key": "repo/add/template/dossier",
+      "value": "Dossier"
+    },
+    {
       "key": "repo/phase/draft",
-      "value": "Entwurf"
+      "value": "Briefing / Entwurf"
     },
     {
       "key": "repo/phase/creation",
@@ -204,11 +216,11 @@
     },
     {
       "key": "checklist/labels/startCreation",
-      "value": "Start Kreation"
+      "value": "Go Kreation"
     },
     {
       "key": "checklist/labels/startProduction",
-      "value": "Start Produktion"
+      "value": "Go Produktion"
     },
     {
       "key": "checklist/labels/numbersOk",
@@ -220,7 +232,7 @@
     },
     {
       "key": "checklist/labels/startProofReading",
-      "value": "Start Korrektorat "
+      "value": "Go Korrektorat "
     },
     {
       "key": "checklist/labels/factCheckOk",
@@ -379,6 +391,10 @@
       "value": "Commite um das neue Dokument zu erstellen"
     },
     {
+      "key": "commit/status/new/short",
+      "value": "Neues Dokument erstellen"
+    },
+    {
       "key": "commit/status/committed",
       "value": "Keine Änderungen"
     },
@@ -465,6 +481,18 @@
     {
       "key": "publish/validation/emailSubject/empty",
       "value": "E-Mail-Betreff fehlt"
+    },
+    {
+      "key": "publish/error/unresolvedRepoIds",
+      "value": "In dem Dokument hat es Referenzen auf andere Dokumente die zum Zeitpunkt dieser Publikation noch nicht veröffentlicht sind. Dies sind folgende Dokumente:"
+    },
+    {
+      "key": "publish/error/unresolvedRepoIds/ignore",
+      "value": "ignorieren"
+    },
+    {
+      "key": "publish/error/unresolvedRepoIds/template",
+      "value": "Sie können diese Publikation durchführen solange nicht alle Referenzen zur Veröffentlichung ferigegeben sind."
     },
     {
       "key": "publication/current/title/1",

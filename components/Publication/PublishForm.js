@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { gql, graphql } from 'react-apollo'
 import { compose } from 'redux'
 import { css } from 'glamor'
@@ -6,6 +6,7 @@ import { css } from 'glamor'
 import ErrorMessage from '../ErrorMessage'
 import IFrame from '../IFrame'
 
+import { GITHUB_ORG } from '../../lib/settings'
 import { intersperse } from '../../lib/utils/helpers'
 import withT from '../../lib/withT'
 import { Link, Router } from '../../lib/routes'
@@ -47,12 +48,21 @@ const query = gql`
           name
         }
         document {
+          id
           content
           meta {
             slug
             emailSubject
             publishDate
             template
+            format {
+              meta {
+                path
+                title
+                color
+                kind
+              }
+            }
           }
         }
       }
@@ -83,15 +93,20 @@ mutation publish(
   $commitId: ID!,
   $prepublication: Boolean!,
   $scheduledAt: DateTime,
-  $updateMailchimp: Boolean!
+  $updateMailchimp: Boolean!,
+  $ignoreUnresolvedRepoIds: Boolean
 ) {
   publish(
     repoId: $repoId,
     commitId: $commitId,
     prepublication: $prepublication,
     scheduledAt: $scheduledAt,
-    updateMailchimp: $updateMailchimp) {
-    name
+    updateMailchimp: $updateMailchimp,
+    ignoreUnresolvedRepoIds: $ignoreUnresolvedRepoIds) {
+    unresolvedRepoIds
+    publication {
+      name
+    }
   }
 }
 `
@@ -265,6 +280,37 @@ class PublishForm extends Component {
                   {!!this.state.error && (
                     <ErrorMessage error={this.state.error} />
                   )}
+                  {!!this.state.unresolvedRepoIds && (
+                    <Fragment>
+                      <ErrorMessage error={t('publish/error/unresolvedRepoIds')} />
+                      <ul>
+                        {this.state.unresolvedRepoIds.map(repoId => (
+                          <li key={repoId}>
+                            <Link
+                              route='repo/tree'
+                              params={{
+                                repoId: repoId.split('/')
+                              }}
+                            >
+                              <a {...linkRule}>
+                                {repoId.replace(`${GITHUB_ORG}/`, '')}
+                              </a>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                      {updateMailchimp || meta.template === 'editorialNewsletter'
+                        ? <ErrorMessage error={t('publish/error/unresolvedRepoIds/template')} />
+                        : <Checkbox checked={!!this.state.ignoreUnresolvedRepoIds} onChange={(_, value) => {
+                          this.setState({
+                            ignoreUnresolvedRepoIds: value
+                          })
+                        }}>
+                          {t('publish/error/unresolvedRepoIds/ignore')}
+                        </Checkbox>}
+                      <br /><br />
+                    </Fragment>
+                  )}
                   <Button block primary disabled={hasErrors} onClick={() => {
                     if (scheduled && scheduledAtError) {
                       return
@@ -275,14 +321,26 @@ class PublishForm extends Component {
                       commitId: commit.id,
                       prepublication,
                       updateMailchimp,
-                      scheduledAt: scheduled ? scheduledAtDate : undefined
-                    }).then(() => {
-                      Router.pushRoute('repo/tree', {
-                        repoId: repoId.split('/')
-                      })
+                      scheduledAt: scheduled ? scheduledAtDate : undefined,
+                      ignoreUnresolvedRepoIds: this.state.ignoreUnresolvedRepoIds
+                    }).then((response) => {
+                      const publish = response.data.publish
+                      if (publish.publication) {
+                        Router.pushRoute('repo/tree', {
+                          repoId: repoId.split('/')
+                        })
+                      } else {
+                        this.setState({
+                          publishing: false,
+                          ignoreUnresolvedRepoIds: undefined,
+                          unresolvedRepoIds: publish.unresolvedRepoIds
+                        })
+                      }
                     }).catch((error) => {
                       this.setState(() => ({
                         publishing: false,
+                        unresolvedRepoIds: undefined,
+                        ignoreUnresolvedRepoIds: undefined,
                         error: error
                       }))
                     })
@@ -332,7 +390,10 @@ class PublishForm extends Component {
                 backgroundColor: '#eee',
                 width: size.width + PADDING_X * 2
               }}>
-                {renderMdast(commit.document.content, schema)}
+                {renderMdast({
+                  ...commit.document.content,
+                  format: commit.document.meta.format
+                }, schema)}
               </IFrame>
             </div>
           )
