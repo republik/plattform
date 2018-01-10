@@ -15,26 +15,26 @@ const breakoutMargin = {
 const serifSizes = {
   large: css({
     [tUp]: {
-      fontSize: '165px',
-      lineHeight: '175px'
+      fontSize: '125px',
+      lineHeight: '137px'
     },
     [dUp]: {
-      fontSize: '205px',
-      lineHeight: '215px'
+      fontSize: '156px',
+      lineHeight: '169px'
     }
   }),
   medium: css({
     [tUp]: {
-      fontSize: '165px',
-      lineHeight: '175px'
+      fontSize: '125px',
+      lineHeight: '137px'
     }
   }),
   default: css({
     fontSize: '38px',
-    lineHeight: '43px',
+    lineHeight: '45px',
     [mUp]: {
-      fontSize: '125px',
-      lineHeight: '135px',
+      fontSize: '100px',
+      lineHeight: '110px',
       ...breakoutMargin
     }
   })
@@ -43,38 +43,38 @@ const serifSizes = {
 const sansSerifSizes = {
   large: css({
     [tUp]: {
-      fontSize: '157px',
-      lineHeight: '175px'
+      fontSize: '125px',
+      lineHeight: '137px'
     },
     [dUp]: {
-      fontSize: '195px',
-      lineHeight: '215px'
+      fontSize: '156px',
+      lineHeight: '169px'
     }
   }),
   medium: css({
     [tUp]: {
-      fontSize: '157px',
-      lineHeight: '175px'
+      fontSize: '125px',
+      lineHeight: '137px'
     }
   }),
   small: css({
     fontSize: '26px',
-    lineHeight: '28px',
+    lineHeight: '31px',
     [mUp]: {
-      fontSize: '32px',
-      lineHeight: '38px'
+      fontSize: '50px',
+      lineHeight: '57px'
     },
     [tUp]: {
-      fontSize: '75px',
-      lineHeight: '85px'
+      fontSize: '64px',
+      lineHeight: '72px'
     }
   }),
   default: css({
     fontSize: '38px',
-    lineHeight: '43px',
+    lineHeight: '45px',
     [mUp]: {
-      fontSize: '120px',
-      lineHeight: '135px',
+      fontSize: '100px',
+      lineHeight: '110px',
       ...breakoutMargin
     }
   })
