@@ -94,6 +94,9 @@ export const staticKeyHandler = ({ TYPE, rule }) => {
 
     if (isEnter) {
       event.preventDefault()
+      if (event.shiftKey === true) {
+        return change.insertText('\n')
+      }
       if (!afterType) {
         return focusNext(change)
       }

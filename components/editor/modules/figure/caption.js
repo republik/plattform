@@ -166,7 +166,7 @@ const captionPlugin = ({TYPE, rule, subModules}) => {
       }
       if (matchBlock('CAPTION_TEXT')(node)) {
         return (
-          <span style={{ display: 'inline-block' }} {...attributes}>{children}{' '}</span>
+          <span style={{ display: 'inline' }} {...attributes}>{children}{' '}</span>
         )
       }
       if (matchBlock(byLineModule.TYPE)(node)) {
