@@ -4,10 +4,12 @@ import { Block } from 'slate'
 import { matchBlock } from '../../utils'
 import createUi from './ui'
 import { findOrCreate } from '../../utils/serialization'
+import { removeEmptyHandler } from '../../utils/keyHandlers'
 
 import MarkdownSerializer from 'slate-mdast-serializer'
 
-export default ({rule, subModules, TYPE}) => {
+export default options => {
+  const {rule, subModules, TYPE} = options
   // Define submodule and serializers
   const imageModule = subModules.find(m => m.name === 'figureImage')
   if (!imageModule) {
@@ -27,7 +29,6 @@ export default ({rule, subModules, TYPE}) => {
   const Figure = rule.component
 
   const {
-    afterType,
     identifier = 'FIGURE'
   } = rule.editorOptions || {}
 
@@ -103,10 +104,16 @@ export default ({rule, subModules, TYPE}) => {
     })
   )
 
+  const isEmpty = node => (
+    !node.nodes.first().data.src &&
+    !node.nodes.last().text
+  )
+
   return {
     TYPE,
     helpers: {
       newBlock,
+      isEmpty,
       serializer
     },
     changes: {},
@@ -121,50 +128,7 @@ export default ({rule, subModules, TYPE}) => {
             </Figure>
           )
         },
-
-        onKeyDown (event, change) {
-          const isBackspace = event.key === 'Backspace'
-          if (event.key !== 'Enter' && !isBackspace) return
-
-          const { value } = change
-          const inFigure = value.document.getClosest(
-            value.focusBlock.key,
-            matchBlock(TYPE)
-          )
-
-          if (!inFigure) return
-
-          event.preventDefault()
-
-          if (isBackspace && value.focusBlock.type === FIGURE_IMAGE) {
-            const isEmpty = !inFigure.text.trim()
-            if (isEmpty) {
-              return change
-                .removeNodeByKey(inFigure.key)
-            } else {
-              return change.setNodeByKey(
-                value.focusBlock.key,
-                {
-                  data: {}
-                }
-              )
-            }
-          }
-          if (!isBackspace && value.endBlock.type === FIGURE_CAPTION) {
-            const parent = value.document.getParent(inFigure.key)
-            const node = Block.create(afterType)
-
-            return change
-              .insertNodeByKey(
-                parent.key,
-                parent.nodes.indexOf(inFigure) + 1,
-                node
-              )
-              .collapseToEndOf(
-                change.value.document.getNode(node.key)
-              )
-          }
-        },
+        onKeyDown: removeEmptyHandler({ TYPE, isEmpty }),
         schema: {
           blocks: {
             [TYPE]: {

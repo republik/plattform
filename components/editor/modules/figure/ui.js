@@ -1,6 +1,5 @@
 import React from 'react'
 import { Map } from 'immutable'
-
 import { Radio, Label } from '@project-r/styleguide'
 
 import {
@@ -144,26 +143,33 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions}) =
     </div>
   })
 
-  const figureButtonClickHandler = (value, onChange) => event => {
+  const figureButtonClickHandler = (disabled, value, onChange) => event => {
     event.preventDefault()
-    return onChange(
-      value
-        .change()
-        .call(
-          injectBlock,
-          newBlock()
-        )
-    )
+    if (!disabled) {
+      return onChange(
+        value
+          .change()
+          .call(
+            injectBlock,
+            newBlock()
+          )
+      )
+    }
   }
+  const insertTypes = editorOptions.insertTypes || []
 
   const FigureButton = ({ value, onChange }) => {
-    const disabled = value.isBlurred
+    const disabled = value.isBlurred ||
+    !value.blocks.every(
+          n => insertTypes.includes(n.type)
+        )
+
     return (
       <span
         {...buttonStyles.insert}
         data-disabled={disabled}
         data-visible
-        onMouseDown={figureButtonClickHandler(value, onChange)}
+        onMouseDown={figureButtonClickHandler(disabled, value, onChange)}
         >
         {insertButtonText}
       </span>

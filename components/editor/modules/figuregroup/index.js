@@ -3,9 +3,11 @@ import { Block } from 'slate'
 import React from 'react'
 import { FigureGroupButton, FigureGroupForm } from './ui'
 import { matchBlock } from '../../utils'
+import { removeEmptyHandler } from '../../utils/keyHandlers'
 
 export const getData = data => ({
   columns: 2,
+  module: 'figuregroup',
   ...data || {}
 })
 
@@ -100,6 +102,20 @@ export const toMdast = ({
   }
 }
 
+const isEmpty = options => {
+  const [
+    figureModule
+  ] = options.subModules
+  return node => {
+    const figures = node.nodes.skipLast(1)
+    return figures.every(
+        figureModule.helpers.isEmpty
+      ) &&
+      figures.size < 3 &&
+      !node.nodes.last().text
+  }
+}
+
 const figureGroupPlugin = options => {
   const { TYPE, rule } = options
   const [
@@ -120,6 +136,7 @@ const figureGroupPlugin = options => {
         </FigureGroup>
       )
     },
+    onKeyDown: removeEmptyHandler({ TYPE, isEmpty: isEmpty(options) }),
     schema: {
       blocks: {
         [TYPE]: {
@@ -188,7 +205,8 @@ const getSerializer = options =>
 export default options => ({
   helpers: {
     serializer: getSerializer(options),
-    newItem: getNewItem(options)
+    newItem: getNewItem(options),
+    isEmpty: isEmpty(options)
   },
   plugins: [
     figureGroupPlugin(options)

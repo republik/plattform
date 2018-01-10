@@ -1,12 +1,14 @@
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { Block } from 'slate'
 import { matchBlock } from '../../utils'
-import Placeholder from '../../Placeholder'
+import { staticKeyHandler } from '../../utils/keyHandlers'
+import { Inline } from '../../Placeholder'
 
 const getSerializer = options => {
+  const [ byLineModule, ...subModules ] = options.subModules
   const inlineSerializer = new MarkdownSerializer(
     {
-      rules: options.subModules
+      rules: subModules
         .reduce(
           (a, m) =>
             a.concat(
@@ -35,16 +37,31 @@ const getSerializer = options => {
     parent,
     rest
   ) => {
-    return {
+    const captionNodes = node.children.filter(n => n.type !== 'emphasis')
+    const byLine = node.children.find(n => n.type === 'emphasis')
+    const byLineNodes = byLine.children || []
+
+    const res = {
       kind: 'block',
       type: options.TYPE,
-      nodes: inlineSerializer.fromMdast(
-        node.children,
-        0,
-        node,
-        rest
-      )
+      nodes: [
+        {
+          kind: 'block',
+          type: 'CAPTION_TEXT',
+          nodes: inlineSerializer.fromMdast(
+            captionNodes
+          )
+        },
+        {
+          kind: 'block',
+          type: byLineModule.TYPE,
+          nodes: byLineModule.helpers.serializer.fromMdast(
+            byLineNodes
+          )
+        }
+      ]
     }
+    return res
   }
 
   const toMdast = (
@@ -53,15 +70,27 @@ const getSerializer = options => {
     parent,
     rest
   ) => {
-    return {
+    const [
+      caption,
+      byLine
+    ] = object.nodes
+
+    const res = {
       type: 'paragraph',
-      children: inlineSerializer.toMdast(
-        object.nodes,
-        0,
-        object,
-        rest
-      )
+      children: [
+        ...inlineSerializer.toMdast(
+          caption.nodes,
+          0,
+          object,
+          rest
+        ),
+        {
+          type: 'emphasis',
+          children: byLineModule.helpers.serializer.toMdast(byLine.nodes)
+        }
+      ]
     }
+    return res
   }
 
   return new MarkdownSerializer({
@@ -76,67 +105,134 @@ const getSerializer = options => {
   })
 }
 
-const focusNext = change => {
-  const { value } = change
-  const nextBlock = value.document.getNextBlock(value.endBlock.key)
-  if (nextBlock) {
-    return change.collapseToStartOf(
-      nextBlock
-    )
-  }
-  return true
-}
-
-const captionPlugin = ({TYPE, rule}) => {
+const captionPlugin = ({TYPE, rule, subModules}) => {
   const Caption = rule.component
+
+  const [ byLineModule ] = subModules
+
   const {
     placeholder
   } = rule.editorOptions || {}
 
+  const {
+    placeholder: byLinePlaceholder
+  } = byLineModule.rule.editorOptions || {}
+
+  const ByLine = byLineModule.rule.component
+
   const matchCaption = matchBlock(TYPE)
 
+  const textKeyHandler = staticKeyHandler({
+    TYPE: 'CAPTION_TEXT',
+    rule: { editorOptions: {} }
+  })
+
+  const byLineKeyHandler = staticKeyHandler({
+    TYPE: byLineModule.TYPE,
+    rule
+  })
+
+  const keyHandler = (event, change) => {
+    const res = textKeyHandler(event, change)
+    if (res) {
+      return res
+    }
+    return byLineKeyHandler(event, change)
+  }
+
   return {
+    onKeyDown: keyHandler,
     renderNode ({
       children,
       node,
       attributes
     }) {
-      if (!matchCaption(node)) {
+      if (
+        !matchBlock('CAPTION_TEXT')(node) &&
+        !matchCaption(node) &&
+        !matchBlock(byLineModule.TYPE)(node)
+      ) {
         return
       }
 
-      return (
-        <Caption
-          attributes={{...attributes, style: {position: 'relative'}}}
-          data={node.data.toJS()} {...node.data.toJS()}>
-          <span style={{position: 'relative', display: 'block'}}>
+      if (matchCaption(node)) {
+        return (
+          <Caption
+            attributes={{...attributes}}
+            data={node.data.toJS()} {...node.data.toJS()}>
             {children}
-          </span>
-        </Caption>
-      )
+          </Caption>
+        )
+      }
+      if (matchBlock('CAPTION_TEXT')(node)) {
+        return (
+          <span style={{ display: 'inline-block' }} {...attributes}>{children}{' '}</span>
+        )
+      }
+      if (matchBlock(byLineModule.TYPE)(node)) {
+        return (
+          <ByLine
+            attributes={attributes}>
+            {children}
+          </ByLine>
+        )
+      }
     },
     renderPlaceholder: placeholder && (({node}) => {
-      if (!matchCaption(node)) return
+      if (
+        !matchBlock('CAPTION_TEXT')(node) &&
+        !matchBlock(byLineModule.TYPE)(node)
+      ) return
       if (node.text.length) return null
 
-      return <Placeholder>{placeholder}</Placeholder>
+      if (matchBlock('CAPTION_TEXT')(node)) {
+        return <Inline>{placeholder}</Inline>
+      } else {
+        return <Inline>{byLinePlaceholder}</Inline>
+      }
     }),
-    onKeyDown (event, change) {
-      const isBackspace = event.key === 'Backspace'
-      const isEnter = event.key === 'Enter'
-      const isTab = event.key === 'Tab'
-
-      if (!isEnter && !isBackspace && !isTab) return
-
-      const { value } = change
-      const inSelection = value.blocks.some(matchCaption)
-
-      if (!inSelection) return
-
-      event.preventDefault()
-
-      if (isEnter || isTab) {
-        return focusNext(change)
+    schema: {
+      blocks: {
+        [TYPE]: {
+          nodes: [
+            {
+              types: ['CAPTION_TEXT'],
+              kinds: ['block'],
+              min: 1,
+              max: 1
+            },
+            {
+              types: [byLineModule.TYPE],
+              kinds: ['block'],
+              min: 1,
+              max: 1
+            }
+          ],
+          normalize (change, reason, { node, index, child }) {
+            switch (reason) {
+              case 'child_kind_invalid':
+                change.wrapBlockByKey(
+                  child.key,
+                  {
+                    kind: 'block',
+                    type: 'CAPTION_TEXT'
+                  }
+                )
+                break
+              case 'child_required':
+                change.insertNodeByKey(
+                  node.key,
+                  index,
+                  {
+                    kind: 'block',
+                    type: index > 0
+                      ? byLineModule.TYPE
+                      : 'CAPTION_TEXT'
+                  }
+                )
+            }
+          }
+        }
       }
     }
   }

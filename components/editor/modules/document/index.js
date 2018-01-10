@@ -180,6 +180,7 @@ Ladies and Gentlemen,
               }
             ],
             normalize: (change, reason, {node, index, child}) => {
+              console.log('normalize document', reason)
               if (reason === 'child_required') {
                 change.insertNodeByKey(
                   node.key,

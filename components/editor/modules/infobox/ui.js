@@ -131,7 +131,6 @@ export default ({TYPE, subModules, editorOptions = {}, figureModule}) => {
 
   const infoBoxButtonClickHandler = (value, onChange) => event => {
     event.preventDefault()
-
     return onChange(
       value
         .change()
@@ -144,9 +143,11 @@ export default ({TYPE, subModules, editorOptions = {}, figureModule}) => {
         )
     )
   }
+  const insertTypes = editorOptions.insertTypes || []
 
   const InfoboxButton = ({ value, onChange }) => {
-    const disabled = value.isBlurred
+    const disabled = value.isBlurred ||
+      !value.blocks.every(n => insertTypes.includes(n.type))
     return (
       <span
         {...buttonStyles.insert}

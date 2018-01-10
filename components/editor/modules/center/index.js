@@ -83,6 +83,12 @@ export default ({rule, subModules, TYPE}) => {
                   )
                 }
                 if (reason === 'last_child_type_invalid') {
+                  if (child.kind === 'text') {
+                    return change.wrapBlockByKey(
+                      child.key,
+                      { kind: 'block', type: paragraphModule.TYPE }
+                    )
+                  }
                   return change.insertNodeByKey(
                     node.key,
                     node.nodes.size,

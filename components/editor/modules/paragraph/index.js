@@ -2,12 +2,14 @@ import React from 'react'
 
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
+import { keyHandler, staticKeyHandler } from '../../utils/keyHandlers'
 import Placeholder from '../../Placeholder'
 
 export default ({rule, subModules, TYPE}) => {
   const {
     formatButtonText,
-    placeholder
+    placeholder,
+    isStatic = false
   } = rule.editorOptions || {}
 
   const inlineSerializer = new MarkdownSerializer({
@@ -50,6 +52,7 @@ export default ({rule, subModules, TYPE}) => {
 
   return {
     TYPE,
+    rule,
     helpers: {
       serializer
     },
@@ -74,19 +77,7 @@ export default ({rule, subModules, TYPE}) => {
     },
     plugins: [
       {
-        onKeyDown (e, change) {
-          const { value } = change
-          if (e.key !== 'Enter') return
-          if (e.shiftKey === false) return
-
-          const { startBlock } = value
-          const { type } = startBlock
-          if (type !== TYPE) {
-            return
-          }
-
-          return change.insertText('\n')
-        },
+        onKeyDown: isStatic ? staticKeyHandler({ TYPE, rule }) : keyHandler({ TYPE }),
         renderPlaceholder: placeholder && (({node}) => {
           if (!paragraph.match(node)) return
           if (node.text.length) return null
