@@ -210,6 +210,7 @@ type Discussion {
   _id: ID!
   title: String
   documentPath: String
+  closed: Boolean!
   comments(
     # get children of this parent
     parentId: ID
@@ -235,6 +236,7 @@ type Discussion {
   # date the user is allowed to submit new comments
   # if null the user can submit immediately
   userWaitUntil: DateTime
+  userCanComment: Boolean!
 }
 
 type DisplayUser {
