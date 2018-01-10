@@ -49,7 +49,15 @@ export default options => {
         node.children.find(child => child.type === 'paragraph' && child !== imageParagraph) ||
         ({
           type: 'paragraph',
-          children: []
+          children: [
+            { type: 'text', value: '' },
+            {
+              type: 'emphasis',
+              children: [
+                { type: 'text', value: '' }
+              ]
+            }
+          ]
         })
       )
 
