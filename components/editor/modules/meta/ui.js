@@ -104,7 +104,7 @@ const MetaData = ({value, editor, additionalFields = [], customFields = [], teas
                     change
                       .setNodeByKey(node.key, {
                         data: item
-                          ? node.data.set('format', item)
+                          ? node.data.set('format', `https://github.com/${item.value.id}`)
                           : node.data.remove('format')
                       })
                     let titleNode = change.value.document
@@ -137,7 +137,7 @@ const MetaData = ({value, editor, additionalFields = [], customFields = [], teas
                   <div style={{height: 60, marginBottom: 12, borderBottom: '1px solid #000'}}>
                     <Label style={{color: '#000'}}>{label}</Label><br />
                     <Interaction.P>
-                      {value
+                      {String(value)
                         .replace('https://github.com/', '')
                         .replace(`${GITHUB_ORG}/`, '')}
                       {' '}
