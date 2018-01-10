@@ -1,4 +1,5 @@
 import { Radio, Label } from '@project-r/styleguide'
+import { allBlocks } from '../../utils/selection'
 
 import {
   buttonStyles,
@@ -146,7 +147,7 @@ export const FigureGroupButton = options => {
       !value.blocks.every(
         n => insertTypes.includes(n.type)
       )
-
+    console.log(allBlocks(value))
     return (
       <span
         {...buttonStyles.insert}
