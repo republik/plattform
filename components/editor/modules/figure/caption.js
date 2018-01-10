@@ -38,8 +38,9 @@ const getSerializer = options => {
     rest
   ) => {
     const captionNodes = node.children.filter(n => n.type !== 'emphasis')
-    const byline = node.children.find(n => n.type === 'emphasis')
-    const bylineNodes = byline.children || []
+    const byline = node.children.find(n => n.type === 'emphasis') ||
+          { type: 'emphasis', children: [] }
+    const bylineNodes = byline.children
 
     const res = {
       kind: 'block',
@@ -49,14 +50,20 @@ const getSerializer = options => {
           kind: 'block',
           type: 'CAPTION_TEXT',
           nodes: inlineSerializer.fromMdast(
-            captionNodes
+            captionNodes,
+            index,
+            parent,
+            rest
           )
         },
         {
           kind: 'block',
           type: bylineModule.TYPE,
           nodes: bylineModule.helpers.serializer.fromMdast(
-            bylineNodes
+            bylineNodes,
+            index,
+            parent,
+            rest
           )
         }
       ]
