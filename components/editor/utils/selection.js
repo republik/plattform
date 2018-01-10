@@ -32,13 +32,37 @@ export const getClosestAtEnd = getAtEdge(getClosest, 'end')
 export const getFurthestAtStart = getAtEdge(getFurthest, 'start')
 export const getFurthestAtEnd = getAtEdge(getFurthest, 'end')
 
-export const allBlocks = value => {
-  const allBlockPaths = value.blocks
+const getAllBlocks = value => {
+  return value.blocks
     .map(n => tree.byId(value, n.key))
     .reduce((memo, path) => memo.push(path).concat(tree.ancestors(value, path)), List())
     .reduce((memo, path) => memo.set(tree.id(value, path), path), Map())
-
-  console.log(
-    allBlockPaths.map(p => value.getIn(p))
-  )
 }
+
+const createSelectionCache = () => {
+  let currentValue
+  let cache
+
+  const invalidate = nextValue => {
+    if (currentValue !== nextValue) {
+      currentValue = nextValue
+      cache = Map()
+    } else {
+      console.log('Cache hit', cache)
+    }
+  }
+
+  return (prefix, fn) => (value, ...args) => {
+    invalidate(value)
+    const key = `${prefix}-${JSON.stringify(args)}`
+    if (cache.has(key)) {
+      return cache.get(key)
+    }
+    const res = fn(value, ...args)
+    cache = cache.set(key, res)
+    return res
+  }
+}
+
+const selectionCache = createSelectionCache()
+export const allBlocks = selectionCache('allBlocks', getAllBlocks)
