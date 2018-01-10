@@ -52,7 +52,7 @@
     "standardize": "standard --fix",
     "db:migrate:up": "node script/db-migrate-all.js up",
     "db:migrate:down": "node script/db-migrate-all.js down",
-    "db:seed:redirections": "cat node_modules/@orbiting/backend-modules-redirections/seeds/seeds.example.json | node node_modules/@orbiting/backend-modules-redirections/seeds/seed.js --truncate",
+    "db:seed:redirections": "cat node_modules/@orbiting/backend-modules-redirections/seeds/seeds.example.json | node node_modules/@orbiting/backend-modules-redirections/seeds/seed.js",
     "db:seed:users": "cat node_modules/@orbiting/backend-modules-auth/seeds/seeds.example.json | node node_modules/@orbiting/backend-modules-auth/seeds/seed.js --truncate",
     "db:seed:crowdfundings": "node seeds/seedCrowdfundings.js",
     "db:reset:seed": "yarn run db:reset && yarn run db:seed:users && yarn run db:seed:crowdfundings",
