@@ -63,7 +63,7 @@ export default ({rule, subModules, TYPE}) => {
           (
             children.length === 1 &&
             children[0].type === 'text' &&
-            !(children[0].text || '').trim()
+            !(children[0].value || '').trim()
           )
         ) {
           children = [{type: 'text', value: mdastPlaceholder}]
