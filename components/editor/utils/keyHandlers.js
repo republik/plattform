@@ -61,7 +61,7 @@ export const staticKeyHandler = ({ TYPE, rule }) => {
     const { value } = change
     const inSelection = value.blocks.some(matchBlock(TYPE))
 
-    if (inSelection && value.isExpanded) {
+    if (inSelection && value.startBlock !== value.endBlock && value.isExpanded) {
       if (isBackspace || isDelete) {
         return change.collapseToStart()
       }
@@ -94,6 +94,9 @@ export const staticKeyHandler = ({ TYPE, rule }) => {
 
     if (isEnter) {
       event.preventDefault()
+      if (event.shiftKey === true) {
+        return change.insertText('\n')
+      }
       if (!afterType) {
         return focusNext(change)
       }

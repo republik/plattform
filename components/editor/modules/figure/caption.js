@@ -5,7 +5,7 @@ import { staticKeyHandler } from '../../utils/keyHandlers'
 import { Inline } from '../../Placeholder'
 
 const getSerializer = options => {
-  const [ byLineModule, ...subModules ] = options.subModules
+  const [ bylineModule, ...subModules ] = options.subModules
   const inlineSerializer = new MarkdownSerializer(
     {
       rules: subModules
@@ -38,8 +38,8 @@ const getSerializer = options => {
     rest
   ) => {
     const captionNodes = node.children.filter(n => n.type !== 'emphasis')
-    const byLine = node.children.find(n => n.type === 'emphasis')
-    const byLineNodes = byLine.children || []
+    const byline = node.children.find(n => n.type === 'emphasis')
+    const bylineNodes = byline.children || []
 
     const res = {
       kind: 'block',
@@ -54,9 +54,9 @@ const getSerializer = options => {
         },
         {
           kind: 'block',
-          type: byLineModule.TYPE,
-          nodes: byLineModule.helpers.serializer.fromMdast(
-            byLineNodes
+          type: bylineModule.TYPE,
+          nodes: bylineModule.helpers.serializer.fromMdast(
+            bylineNodes
           )
         }
       ]
@@ -72,7 +72,7 @@ const getSerializer = options => {
   ) => {
     const [
       caption,
-      byLine
+      byline
     ] = object.nodes
 
     const res = {
@@ -86,7 +86,7 @@ const getSerializer = options => {
         ),
         {
           type: 'emphasis',
-          children: byLineModule.helpers.serializer.toMdast(byLine.nodes)
+          children: bylineModule.helpers.serializer.toMdast(byline.nodes)
         }
       ]
     }
@@ -108,17 +108,17 @@ const getSerializer = options => {
 const captionPlugin = ({TYPE, rule, subModules}) => {
   const Caption = rule.component
 
-  const [ byLineModule ] = subModules
+  const [ bylineModule ] = subModules
 
   const {
     placeholder
   } = rule.editorOptions || {}
 
   const {
-    placeholder: byLinePlaceholder
-  } = byLineModule.rule.editorOptions || {}
+    placeholder: bylinePlaceholder
+  } = bylineModule.rule.editorOptions || {}
 
-  const ByLine = byLineModule.rule.component
+  const Byline = bylineModule.rule.component
 
   const matchCaption = matchBlock(TYPE)
 
@@ -127,8 +127,8 @@ const captionPlugin = ({TYPE, rule, subModules}) => {
     rule: { editorOptions: {} }
   })
 
-  const byLineKeyHandler = staticKeyHandler({
-    TYPE: byLineModule.TYPE,
+  const bylineKeyHandler = staticKeyHandler({
+    TYPE: bylineModule.TYPE,
     rule
   })
 
@@ -137,7 +137,7 @@ const captionPlugin = ({TYPE, rule, subModules}) => {
     if (res) {
       return res
     }
-    return byLineKeyHandler(event, change)
+    return bylineKeyHandler(event, change)
   }
 
   return {
@@ -150,7 +150,7 @@ const captionPlugin = ({TYPE, rule, subModules}) => {
       if (
         !matchBlock('CAPTION_TEXT')(node) &&
         !matchCaption(node) &&
-        !matchBlock(byLineModule.TYPE)(node)
+        !matchBlock(bylineModule.TYPE)(node)
       ) {
         return
       }
@@ -166,29 +166,29 @@ const captionPlugin = ({TYPE, rule, subModules}) => {
       }
       if (matchBlock('CAPTION_TEXT')(node)) {
         return (
-          <span style={{ display: 'inline-block' }} {...attributes}>{children}{' '}</span>
+          <span style={{ display: 'inline' }} {...attributes}>{children}{' '}</span>
         )
       }
-      if (matchBlock(byLineModule.TYPE)(node)) {
+      if (matchBlock(bylineModule.TYPE)(node)) {
         return (
-          <ByLine
+          <Byline
             attributes={attributes}>
             {children}
-          </ByLine>
+          </Byline>
         )
       }
     },
     renderPlaceholder: placeholder && (({node}) => {
       if (
         !matchBlock('CAPTION_TEXT')(node) &&
-        !matchBlock(byLineModule.TYPE)(node)
+        !matchBlock(bylineModule.TYPE)(node)
       ) return
       if (node.text.length) return null
 
       if (matchBlock('CAPTION_TEXT')(node)) {
         return <Inline>{placeholder}</Inline>
       } else {
-        return <Inline>{byLinePlaceholder}</Inline>
+        return <Inline>{bylinePlaceholder}</Inline>
       }
     }),
     schema: {
@@ -202,7 +202,7 @@ const captionPlugin = ({TYPE, rule, subModules}) => {
               max: 1
             },
             {
-              types: [byLineModule.TYPE],
+              types: [bylineModule.TYPE],
               kinds: ['block'],
               min: 1,
               max: 1
@@ -226,7 +226,7 @@ const captionPlugin = ({TYPE, rule, subModules}) => {
                   {
                     kind: 'block',
                     type: index > 0
-                      ? byLineModule.TYPE
+                      ? bylineModule.TYPE
                       : 'CAPTION_TEXT'
                   }
                 )

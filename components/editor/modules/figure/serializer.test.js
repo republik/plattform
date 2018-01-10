@@ -1,6 +1,7 @@
 import test from 'tape'
 import createFigureModule from './'
 import createImageModule from './image'
+import createParagraphModule from '../paragraph'
 import createCaptionModule from './caption'
 import { parse, stringify } from '@orbiting/remark-preset'
 import { boldModule } from '../mark/testUtils'
@@ -18,19 +19,32 @@ const imageModule = createImageModule({
 })
 imageModule.name = 'figureImage'
 
+const bylineModule = createParagraphModule({
+  TYPE: 'EMPHASIS',
+  rule: {
+    matchMdast: node => node.type === 'emphasis'
+  },
+  subModules: []
+})
+
 const captionModule = createCaptionModule({
   TYPE: 'FIGURE_CAPTION',
   rule: {
-    matchMdast: node => node.type === 'paragraph'
+    matchMdast: node => node.type === 'paragraph',
+    editorOptions: {}
   },
-  subModules: [boldModule]
+  subModules: [
+    bylineModule,
+    boldModule
+  ]
 })
 captionModule.name = 'figureCaption'
 
 const figureModule = createFigureModule({
   TYPE,
   rule: {
-    matchMdast: node => node.type === 'zone' && node.identifier === TYPE
+    matchMdast: node => node.type === 'zone' && node.identifier === TYPE,
+    editorOptions: {}
   },
   subModules: [
     imageModule,
@@ -45,7 +59,7 @@ test('figure serialization', assert => {
 
 ![Alt](example.com/img.jpg)
 
-Caption
+Caption_Byline_
 
 <hr /></section>`
   const value = serializer.deserialize(parse(md))
@@ -61,7 +75,7 @@ Caption
   const caption = node.nodes.get(1)
   assert.equal(caption.kind, 'block')
   assert.equal(caption.type, 'FIGURE_CAPTION')
-  assert.equal(caption.text, 'Caption')
+  assert.equal(caption.text, 'CaptionByline')
 
   assert.equal(stringify(serializer.serialize(value)).trimRight(), md)
   assert.end()
@@ -71,14 +85,14 @@ test('figure caption with break in mark', assert => {
   const serializer = captionModule.helpers.serializer
 
   const md = `A**${'  '}
-B**
+B**_Caption_
 `
   const value = serializer.deserialize(parse(md))
   const node = value.document.nodes.first()
 
   assert.equal(node.kind, 'block')
   assert.equal(node.type, 'FIGURE_CAPTION')
-  assert.equal(node.text, 'A\nB')
+  assert.equal(node.text, 'A\nBCaption')
 
   assert.equal(stringify(serializer.serialize(value)), md)
   assert.end()
