@@ -61,7 +61,7 @@ export const staticKeyHandler = ({ TYPE, rule }) => {
     const { value } = change
     const inSelection = value.blocks.some(matchBlock(TYPE))
 
-    if (inSelection && value.isExpanded) {
+    if (inSelection && value.startBlock !== value.endBlock && value.isExpanded) {
       if (isBackspace || isDelete) {
         return change.collapseToStart()
       }
