@@ -5,13 +5,14 @@ const t = require('./lib/t')
 
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: auth } = require('@orbiting/backend-modules-auth')
+const { express: { assets } } = require('@orbiting/backend-modules-assets')
 
 module.exports.run = () => {
   const localModule = require('./graphql')
   const executableSchema = makeExecutableSchema(merge(localModule, [documents, auth]))
 
   const middlewares = [
-    require('./express/assets')
+    assets
   ]
 
   return server.run(executableSchema, middlewares, t)

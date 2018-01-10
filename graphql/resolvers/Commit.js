@@ -1,6 +1,6 @@
 const { createGithubClients } = require('../../lib/github')
 const MDAST = require('@orbiting/remark-preset')
-const { createPrefixUrl } = require('../../lib/assets')
+const { lib: { createPrefixUrl } } = require('@orbiting/backend-modules-assets')
 const visit = require('unist-util-visit')
 const debug = require('debug')('publikator:commit')
 
