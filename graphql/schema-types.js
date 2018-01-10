@@ -296,7 +296,7 @@ type MutationResult {
   success: Boolean!
 }
 
-type Statistics {
-  memberCount: Int!
+type MembershipStats {
+  count: Int!
 }
 `
