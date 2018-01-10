@@ -11,7 +11,7 @@ module.exports = {
       repo: { id: repoId },
       document: existingDocument
     },
-    { oneway },
+    { publicAssets = false },
     { user, redis }
   ) => {
     if (existingDocument) {
@@ -79,7 +79,7 @@ module.exports = {
 
     // prefix image urls
     // - editor specific
-    const prefixUrl = createPrefixUrl(repoId, oneway)
+    const prefixUrl = createPrefixUrl(repoId, publicAssets)
     visit(mdast, 'image', node => {
       node.url = prefixUrl(node.url)
     })

@@ -73,7 +73,7 @@ module.exports = async (
   // load and check document
   const doc = await getDocument(
     { id: commitId, repo: { id: repoId } },
-    { oneway: true },
+    { publicAssets: true },
     context
   )
   if (doc.content.meta.template !== 'front' && !doc.content.meta.slug) {

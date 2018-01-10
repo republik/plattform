@@ -78,7 +78,7 @@ PgDb.connect().then(async pgdb => {
 
         const doc = await getDocument(
           { id: commit.id, repo },
-          { oneway: true },
+          { publicAssets: true },
           context
         )
 
