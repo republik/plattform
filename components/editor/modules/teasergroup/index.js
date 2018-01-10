@@ -19,7 +19,7 @@ export const getData = data => ({
   ...data || {}
 })
 
-export const getNewItem = options => () => {
+export const getNewBlock = options => () => {
   const [
     teaserModule
   ] = options.subModules
@@ -32,8 +32,8 @@ export const getNewItem = options => () => {
     type: options.TYPE,
     data,
     nodes: [
-      teaserModule.helpers.newItem(),
-      teaserModule.helpers.newItem()
+      teaserModule.helpers.newBlock(),
+      teaserModule.helpers.newBlock()
     ]
   })
 }
@@ -145,7 +145,7 @@ const teaserGroupPlugin = options => {
         return change => change.removeNodeByKey(keyToRemove)
       } else {
         const keyToInsertAt = node.key
-        return change => change.insertNodeByKey(keyToInsertAt, 1, teaserModule.helpers.newItem())
+        return change => change.insertNodeByKey(keyToInsertAt, 1, teaserModule.helpers.newBlock())
       }
     },
     schema: {
@@ -180,7 +180,7 @@ const getSerializer = options =>
 export default options => ({
   helpers: {
     serializer: getSerializer(options),
-    newItem: getNewItem(options)
+    newBlock: getNewBlock(options)
   },
   plugins: [
     teaserGroupPlugin(options)

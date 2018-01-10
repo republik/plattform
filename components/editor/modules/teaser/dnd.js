@@ -18,7 +18,7 @@ const moveTeaserSource = {
 const insertTeaserSource = {
   beginDrag (props) {
     return {
-      newItem: props.getNewItem(props),
+      newBlock: props.getNewBlock(props),
       operation: INSERT
     }
   }
@@ -43,7 +43,7 @@ const teaserTarget = {
     if (draggedItem.operation === MOVE) {
       move(draggedItem.nodeKey, newParentKey, newIndex)
     } else {
-      insert(newParentKey, newIndex, draggedItem.newItem)
+      insert(newParentKey, newIndex, draggedItem.newBlock)
     }
   }
 }

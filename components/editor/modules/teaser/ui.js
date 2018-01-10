@@ -9,7 +9,7 @@ import {
 
 import { Block, Text } from 'slate'
 
-import { getNewItem } from './'
+import { getNewBlock } from './'
 
 import { getSubmodules } from './serializer'
 
@@ -194,7 +194,7 @@ export const TeaserButton = options => {
       )
     )
     return (
-      <Component getNewItem={getNewItem(options)} />
+      <Component getNewBlock={getNewBlock(options)} />
     )
   }
 }

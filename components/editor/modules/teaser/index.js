@@ -30,7 +30,7 @@ export const getData = data => ({
   ...data || {}
 })
 
-export const getNewItem = options => () => {
+export const getNewBlock = options => () => {
   const {
     titleModule,
     leadModule,
@@ -223,7 +223,7 @@ const teaserPlugin = options => {
 export default options => ({
   helpers: {
     serializer: getSerializer(options),
-    newItem: getNewItem(options)
+    newBlock: getNewBlock(options)
   },
   plugins: [
     teaserPlugin(options)

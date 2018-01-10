@@ -11,7 +11,7 @@ export const getData = data => ({
   ...data || {}
 })
 
-export const getNewItem = options => () => {
+export const getNewBlock = options => () => {
   const [
     figureModule,
     captionModule
@@ -205,7 +205,7 @@ const getSerializer = options =>
 export default options => ({
   helpers: {
     serializer: getSerializer(options),
-    newItem: getNewItem(options),
+    newBlock: getNewBlock(options),
     isEmpty: isEmpty(options)
   },
   plugins: [

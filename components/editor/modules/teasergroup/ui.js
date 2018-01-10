@@ -15,7 +15,7 @@ import {
   createInsertDragSource
 } from '../teaser/dnd'
 
-import { getNewItem } from './'
+import { getNewBlock } from './'
 
 const Form = ({ node, onChange }) => {
   return (
@@ -91,7 +91,7 @@ export const TeaserGroupButton = options => createActionButton({
       )
     )
     return (
-      <Component getNewItem={getNewItem(options)} />
+      <Component getNewBlock={getNewBlock(options)} />
     )
   }
 )
