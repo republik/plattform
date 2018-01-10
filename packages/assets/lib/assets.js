@@ -1,23 +1,35 @@
 const { URL } = require('url')
 const querystring = require('querystring')
-const checkEnv = require('check-env')
-checkEnv([
-	'PUBLIC_ASSETS_URL'
-])
 
-const { PUBLIC_ASSETS_URL } = process.env
+const {
+  PUBLIC_ASSETS_URL,
+  INTERNAL_ASSETS_URL,
+} = process.env
+
+if (!PUBLIC_ASSETS_URL && !INTERNAL_ASSETS_URL) {
+  throw new Error('You need to at least set either PUBLIC_ASSETS_URL or INTERNAL_ASSETS_URL')
+}
 
 const originalKey = 'originalURL'
 
 module.exports = {
-  createPrefixUrl: (repoId, oneway) => {
+  createPrefixUrl: (repoId, public) => {
     if (!repoId) {
       throw new Error('createPrefixUrl needs a repoId')
     }
     return urlStr => {
       if (urlStr && urlStr.indexOf('images/') > -1) {
-        const url = new URL(`${PUBLIC_ASSETS_URL}/${repoId}/${urlStr}`)
-        if (!oneway) {
+        let url
+        if (public) {
+          if (!PUBLIC_ASSETS_URL) {
+            throw new Error('missing PUBLIC_ASSETS_URL')
+          }
+          url = new URL(`${PUBLIC_ASSETS_URL}/${repoId}/${urlStr}`)
+        } else {
+          if (!INTERNAL_ASSETS_URL) {
+            throw new Error('missing INTERNAL_ASSETS_URL')
+          }
+          url = new URL(`${INTERNAL_ASSETS_URL}/${repoId}/${urlStr}`)
           url.hash = querystring.stringify({
             [originalKey]: urlStr
           })
