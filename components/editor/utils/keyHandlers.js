@@ -83,9 +83,13 @@ export const staticKeyHandler = ({ TYPE, rule }) => {
       )
     ) return
 
+    const nextBlock = value.document.getNextBlock(value.endBlock.key)
     if (isTab) {
-      event.preventDefault()
-      return focusNext(change)
+      if (nextBlock) {
+        event.preventDefault()
+        return focusNext(change)
+      }
+      return
     }
 
     if (isEnter) {
@@ -93,7 +97,6 @@ export const staticKeyHandler = ({ TYPE, rule }) => {
       if (!afterType) {
         return focusNext(change)
       }
-      const nextBlock = value.document.getNextBlock(value.endBlock.key)
 
       if (!matchBlock(afterType)(nextBlock)) {
         return focusNext(insertAfter(change, afterType, insertAfterType))
