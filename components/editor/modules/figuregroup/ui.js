@@ -147,7 +147,6 @@ export const FigureGroupButton = options => {
         n => insertTypes.includes(n.type)
       )
 
-       // matchBlock(options.TYPE), value).size > 0
     return (
       <span
         {...buttonStyles.insert}
