@@ -20,13 +20,13 @@ const addFigure = options => {
   ] = options.subModules
   return (value, onChange, figureGroupNode) => event => {
     event.preventDefault()
-    const index = figureGroupNode.nodes.findLast(n => n === figureModule.TYPE)
+    const index = figureGroupNode.nodes.findLastIndex(n => n.type === figureModule.TYPE)
     onChange(
       value
         .change()
         .insertNodeByKey(
           figureGroupNode.key,
-          index,
+          index + 1,
           figureModule.helpers.newBlock()
         )
     )
