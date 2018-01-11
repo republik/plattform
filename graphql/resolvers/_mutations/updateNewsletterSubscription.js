@@ -4,13 +4,14 @@ const updateNewsletterSubscription = require('../../../lib/mailchimp/updateNewsl
 module.exports = async (_, args, context) => {
   const { req, t, user } = context
   ensureSignedIn(req, t)
-  const { name, subscribed } = args
+  const { name, subscribed, status } = args
 
   return updateNewsletterSubscription(
     {
       userId: user.id,
       name,
-      subscribed
+      subscribed,
+      status
     },
     context
   )
