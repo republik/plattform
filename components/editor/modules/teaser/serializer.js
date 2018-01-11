@@ -60,6 +60,7 @@ export const fromMdast = ({
 ) => {
   const imageParagraph = node.children.find(matchImageParagraph)
 
+  // Remove module key from data
   const { module, ...data } = getData(node.data)
   if (imageParagraph) {
     data.image = imageParagraph.children[0].url

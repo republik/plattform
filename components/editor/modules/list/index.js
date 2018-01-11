@@ -101,7 +101,6 @@ export default ({rule, subModules, TYPE}) => {
       {
         renderNode: ({ children, node, attributes }) => {
           if (node.type !== TYPE) return
-          console.log(node)
           return (
             <List attributes={attributes} data={node.data.toJS()}>
               { children }
