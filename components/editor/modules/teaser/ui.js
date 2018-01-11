@@ -164,7 +164,6 @@ export const TeaserButton = options => {
       return n.data.get('module') === 'teaser'
     })
     const node = nodes.first()
-    console.log(node, parent(value, node.key))
     if (node) {
       onChange(
         value.change().insertNodeByKey(
@@ -400,8 +399,14 @@ const MoveDownButton = props =>
   <span {...buttonStyles.mark} {...props}><ArrowDownIcon size={24} /></span>
 
 export const TeaserInlineUI = options =>
-({ remove, isSelected, nodeKey, getIndex, getParentKey, moveUp, moveDown, ...props }) => {
+({ remove, isSelected, nodeKey, getIndex, getParent, moveUp, moveDown, ...props }) => {
   const uiStyles = css(styles.ui, isSelected ? styles.uiOpen : {})
+
+  const parent = getParent(nodeKey)
+  const index = getIndex(nodeKey)
+  const isFirstChild = index === 0
+  const isLastChild = index === parent.nodes.size - 1
+  const isOnlyChild = parent.nodes.size === 1
 
   const removeHandler = event => {
     event.preventDefault()
@@ -410,21 +415,21 @@ export const TeaserInlineUI = options =>
 
   const moveUpHandler = event => {
     event.preventDefault()
-    moveUp(nodeKey, getParentKey(nodeKey), getIndex(nodeKey))
+    moveUp(nodeKey, getParent(nodeKey).key, getIndex(nodeKey))
   }
 
   const moveDownHandler = event => {
     event.preventDefault()
-    moveDown(nodeKey, getParentKey(nodeKey), getIndex(nodeKey))
+    moveDown(nodeKey, getParent(nodeKey).key, getIndex(nodeKey))
   }
 
   return (
     <div contentEditable={false} {...styles.uiContainer}>
       <div {...uiStyles}>
         <P {...styles.uiInlineRow}>
-          <RemoveButton onMouseDown={removeHandler} />
-          <MoveUpButton onMouseDown={moveUpHandler} />
-          <MoveDownButton onMouseDown={moveDownHandler} />
+          {!isOnlyChild && <RemoveButton onMouseDown={removeHandler} />}
+          {!isFirstChild && <MoveUpButton onMouseDown={moveUpHandler} />}
+          {!isLastChild && <MoveDownButton onMouseDown={moveDownHandler} />}
         </P>
       </div>
     </div>

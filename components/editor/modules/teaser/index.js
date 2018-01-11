@@ -6,7 +6,7 @@ import { getSerializer, getSubmodules } from './serializer'
 
 import {
   getIndex,
-  getParentKey,
+  getParent,
   insert,
   moveUp,
   moveDown,
@@ -117,7 +117,7 @@ const teaserPlugin = options => {
           isSelected={isSelected}
           nodeKey={node.key}
           getIndex={getIndex(editor)}
-          getParentKey={getParentKey(editor)}
+          getParent={getParent(editor)}
           moveUp={moveUp(editor)}
           moveDown={moveDown(editor)}
           insert={insert(editor)}
@@ -127,27 +127,6 @@ const teaserPlugin = options => {
           {children}
         </Teaser>
       ])
-    },
-    onKeyDown (event, change) {
-      if (change.value.blocks.size > 1) {
-        event.preventDefault()
-        return change.collapseToEnd()
-      }
-      if (event.key !== 'Enter' && event.key !== 'Tab') {
-        return
-      }
-      if (change.value.isExpanded) {
-        event.preventDefault()
-        return change.collapseToEnd()
-      } else if (change.value.blocks.size > 0) {
-        const nextText = change.value.document.getNextBlock(change.value.blocks.first().key)
-        if (nextText) {
-          if (event.key === 'Tab') event.preventDefault()
-          return change.collapseToStartOf(
-            change.value.document.getNextBlock(change.value.blocks.first().key)
-          )
-        }
-      }
     },
     schema: {
       blocks: {

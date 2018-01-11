@@ -5,7 +5,7 @@ import { matchBlock } from '../../utils'
 
 import {
   getIndex,
-  getParentKey,
+  getParent,
   insert,
   moveUp,
   moveDown,
@@ -99,6 +99,8 @@ const teaserGroupPlugin = options => {
 
   const TeaserGroup = rule.component
 
+  const [ teaserModule ] = options.subModules
+
   return {
     renderNode ({ editor, node, attributes, children }) {
       if (!matchBlock(TYPE)(node)) {
@@ -120,7 +122,7 @@ const teaserGroupPlugin = options => {
           isSelected={isSelected}
           nodeKey={node.key}
           getIndex={getIndex(editor)}
-          getParentKey={getParentKey(editor)}
+          getParent={getParent(editor)}
           moveUp={moveUp(editor)}
           moveDown={moveDown(editor)}
           insert={insert(editor)}
@@ -130,6 +132,23 @@ const teaserGroupPlugin = options => {
           {children}
         </TeaserGroup>
       ])
+    },
+    validateNode (node, ...args) {
+      if (!matchBlock(TYPE)(node)) {
+        return
+      }
+      const numNodes = node.nodes.size
+      const wantedNodes = node.data.get('columns')
+      if (numNodes === wantedNodes) {
+        return
+      }
+      if (numNodes > wantedNodes) {
+        const keyToRemove = node.nodes.last().key
+        return change => change.removeNodeByKey(keyToRemove)
+      } else {
+        const keyToInsertAt = node.key
+        return change => change.insertNodeByKey(keyToInsertAt, 1, teaserModule.helpers.newBlock())
+      }
     },
     schema: {
       blocks: {

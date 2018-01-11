@@ -15,9 +15,9 @@ export const getIndex = editor => nodeKey => {
   return index
 }
 
-export const getParentKey = editor => nodeKey => {
+export const getParent = editor => nodeKey => {
   const doc = editor.state.value.document
-  return doc.getParent(nodeKey).key
+  return doc.getParent(nodeKey)
 }
 
 export const moveUp = editor => (nodeKey, parentKey, index) => {
