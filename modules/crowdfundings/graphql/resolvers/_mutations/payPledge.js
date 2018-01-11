@@ -6,7 +6,7 @@ const payPledgePaymentslip = require('../../../lib/payments/paymentslip/payPledg
 const payPledgePaypal = require('../../../lib/payments/paypal/payPledge')
 const payPledgePostfinance = require('../../../lib/payments/postfinance/payPledge')
 const payPledgeStripe = require('../../../lib/payments/stripe/payPledge')
-const updateUserOnMailchimp = require('../../../lib/updateUserOnMailchimp')
+const { updateUserOnMailchimp } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, args, {pgdb, req, t}) => {
   const transaction = await pgdb.transactionBegin()

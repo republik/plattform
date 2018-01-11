@@ -6,7 +6,7 @@ const t = require('./lib/t')
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: redirections } = require('@orbiting/backend-modules-redirections')
 const sendPendingPledgeConfirmations = require('./modules/crowdfundings/lib/sendPendingPledgeConfirmations')
-const updateUserOnMailchimp = require('./modules/crowdfundings/lib/updateUserOnMailchimp')
+const { updateUserOnMailchimp } = require('@orbiting/backend-modules-auth')
 
 module.exports.run = () => {
   require('./lib/slackGreeter')

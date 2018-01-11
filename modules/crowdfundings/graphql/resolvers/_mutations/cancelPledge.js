@@ -1,6 +1,5 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
 const logger = console
-const updateUserOnMailchimp = require('../../../lib/updateUserOnMailchimp')
+const { Roles, updateUserOnMailchimp } = require('@orbiting/backend-modules-auth')
 const cancelMembership = require('./cancelMembership')
 const moment = require('moment')
 const checkEnv = require('check-env')
