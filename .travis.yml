@@ -37,3 +37,5 @@ env:
     - FRONTEND_BASE_URL=http://localhost:6001
     - DISPLAY_AUTHOR_SECRET=test
     - GITHUB_LOGIN=orbiting-test
+    - PUBLIC_ASSETS_HOSTNAME=http://localhost:6000
+    - ASSETS_HMAC_KEY=travis

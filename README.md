@@ -43,8 +43,14 @@ REDIS_URL=
 EXO_KEY=
 EXO_SECRET=
 S3BUCKET=republik-staging
-# where will the assets be available publicly
+# where will the S3 assets be available publicly
 ASSETS_BASE_URL=https://assets.staging.republik.ch
+
+# hostname of the frontend which will serve assets for the public
+# (most probably this republik-backend's url)
+PUBLIC_ASSETS_HOSTNAME=http://localhost:3020
+# min 32bit key to authenticate the public the access the asset proxy
+ASSETS_HMAC_KEY=
 
 # keyCDN access to clear cache on file uploads
 # must correspond with the object store config

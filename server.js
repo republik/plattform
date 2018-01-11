@@ -7,6 +7,7 @@ const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: redirections } = require('@orbiting/backend-modules-redirections')
 const sendPendingPledgeConfirmations = require('./modules/crowdfundings/lib/sendPendingPledgeConfirmations')
 const updateUserOnMailchimp = require('./modules/crowdfundings/lib/updateUserOnMailchimp')
+const { express: { assets } } = require('@orbiting/backend-modules-assets')
 
 module.exports.run = () => {
   require('./lib/slackGreeter')
@@ -16,7 +17,8 @@ module.exports.run = () => {
   // middlewares
   const middlewares = [
     require('./modules/crowdfundings/express/paymentWebhooks'),
-    require('./express/gsheets')
+    require('./express/gsheets'),
+    assets
   ]
 
   // signin hooks
