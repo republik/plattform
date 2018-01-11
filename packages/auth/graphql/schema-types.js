@@ -9,6 +9,7 @@ type Session {
   country: String
   countryFlag: String
   city: String
+  isCurrent: Boolean!
 }
 
 type User {
