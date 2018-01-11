@@ -1,6 +1,11 @@
 import React from 'react'
 import { matchBlock } from '../../utils'
-import { createListButton, ListForm } from './ui'
+
+import {
+  createListButton
+  // #TODO Enable Form with compact modus
+  // ListForm
+} from './ui'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { Block } from 'slate'
 
@@ -88,13 +93,15 @@ export default ({rule, subModules, TYPE}) => {
         })
       ],
       forms: [
-        ListForm({ TYPE })
+        // #TODO Enable and implement compact modus
+        // ListForm({ TYPE })
       ]
     },
     plugins: [
       {
         renderNode: ({ children, node, attributes }) => {
           if (node.type !== TYPE) return
+          console.log(node)
           return (
             <List attributes={attributes} data={node.data.toJS()}>
               { children }
