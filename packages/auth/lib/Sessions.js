@@ -1,5 +1,4 @@
 const { NoSessionError, QueryEmailMismatchError, DestroySessionError } = require('./errors')
-const hashSessionId = require('./hashSessionId')
 
 const destroySession = async (req) => {
   return new Promise((resolve, reject) => {
@@ -42,7 +41,7 @@ const clearAllUserSessions = async ({ pgdb, userId }) => {
   try {
     const sessions = await findAllUserSessions({ pgdb: transaction, userId })
     await Promise.all(sessions.map(session =>
-      transaction.public.sessions.delete({ sid: session.sid })
+      transaction.public.sessions.delete({ id: session.id })
     ))
     await transaction.transactionCommit()
     return (sessions.length > 0)
@@ -58,14 +57,12 @@ const clearUserSession = async ({ pgdb, userId, sessionId }) => {
     const email = await transaction.public.users.findOne({ id: userId }, 'email')
     const sessions = await findAllUserSessions({ pgdb: transaction, userId })
     const matchingSessions = sessions
-      .filter(async (session) => (
-        (await hashSessionId(session.sid, email)) === sessionId)
-      )
+      .filter((session) => (session.id === sessionId))
     const session = matchingSessions && matchingSessions[0]
     if (!session) {
       throw new NoSessionError({ userId, sessionId, email })
     }
-    await transaction.public.sessions.deleteOne({ sid: session.sid })
+    await transaction.public.sessions.deleteOne({ id: session.id })
     await transaction.transactionCommit()
     return true
   } catch (e) {
@@ -100,7 +97,7 @@ const authorizeSession = async ({ pgdb, token, emailFromQuery, signInHooks = [] 
 
   // log in the session and delete token
   await Sessions.updateOne({
-    sid: session.sid
+    id: session.id
   }, {
     sess: {
       ...session.sess,

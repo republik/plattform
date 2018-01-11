@@ -75,7 +75,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       const sess = Object.assign({}, session.sess, {
         passport: {user: targetUser.id}
       })
-      await transaction.public.sessions.updateOne({sid: session.sid}, {sess})
+      await transaction.public.sessions.updateOne({ id: session.id }, {sess})
     }
 
     // remove addresses
