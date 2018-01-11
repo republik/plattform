@@ -34,9 +34,11 @@ env:
     - SESSION_SECRET=asdfasdf
     - AUTO_LOGIN=true
     - GITHUB_LOGIN=orbiting-test
-    - PUBLIC_ASSETS_URL=http://localhost:6000/assets
     - DATABASE_URL=postgres://postgres@localhost:5432/travis_ci_test
     - DEFAULT_MAIL_FROM_NAME='publikator'
     - DEFAULT_MAIL_FROM_ADDRESS='publikator@project-r.construction'
     - AUTH_MAIL_FROM_ADDRESS='publikator@project-r.construction'
     - FRONTEND_BASE_URL=http://localhost:6000
+    - INTERNAL_ASSETS_HOSTNAME=http://localhost:6000
+    - PUBLIC_ASSETS_HOSTNAME=http://localhost:6001
+    - ASSETS_HMAC_KEY=travis
