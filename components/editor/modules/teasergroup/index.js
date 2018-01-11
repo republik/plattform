@@ -17,7 +17,6 @@ import { TeaserGroupButton, TeaserGroupForm } from './ui'
 
 export const getData = data => ({
   columns: 2,
-  module: 'teaser',
   ...data || {}
 })
 

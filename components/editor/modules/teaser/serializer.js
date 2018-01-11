@@ -60,7 +60,7 @@ export const fromMdast = ({
 ) => {
   const imageParagraph = node.children.find(matchImageParagraph)
 
-  const data = getData(node.data)
+  const { module, ...data } = getData(node.data)
   if (imageParagraph) {
     data.image = imageParagraph.children[0].url
   }
@@ -119,7 +119,7 @@ export const toMdast = ({
     rules: getRules(subModules)
   })
 
-  const { image, ...data } = node.data
+  const { image, module, ...data } = node.data
   const imageNode = image && {
     type: 'paragraph',
     children: [

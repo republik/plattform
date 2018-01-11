@@ -314,6 +314,7 @@ export const TeaserForm = options => {
 
       const handlerFactory = createOnFieldChange(change => {
         const newTeaser = change.value.document.getDescendant(teaser.key)
+        const newTeaserData = newTeaser.data.remove('module')
         const dataRecipients = newTeaser.filterDescendants(
           n => moduleTypes.includes(n.type)
         )
@@ -323,13 +324,13 @@ export const TeaserForm = options => {
               return t.setNodeByKey(
                 node.key,
                 {
-                  data: node.data.set('color', newTeaser.data.get('color'))
+                  data: node.data.set('color', newTeaserData.get('color'))
                 }
               )
             } else {
               return t.setNodeByKey(
                 node.key,
-                { data: newTeaser.data }
+                { data: newTeaserData }
               )
             }
           },
