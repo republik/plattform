@@ -21,6 +21,7 @@ type queries {
   faqs: [Faq!]!
   events: [Event!]!
   updates: [Update!]!
+  membershipStats: MembershipStats!
 }
 
 type mutations {
@@ -93,8 +94,9 @@ type mutations {
   ): Discussion!
 
   updateNewsletterSubscription(
-    name: NewsletterName!,
+    name: NewsletterName!
     subscribed: Boolean!
+    status: String!
   ): NewsletterSubscription!
 
   submitQuestion(question: String!): MutationResult
