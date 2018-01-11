@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-09T15:03:25.091Z",
+  "updated": "2018-01-10T18:11:34.692Z",
   "title": "live",
   "data": [
     {
@@ -29,6 +29,10 @@
     {
       "key": "api/comment/tooEarly",
       "value": "Sie sind zu früh. Bitte warten Sie, {waitFor} bevor Sie wieder kommentieren."
+    },
+    {
+      "key": "api/comment/closed",
+      "value": "Die Diskussion wurde stillgelegt."
     },
     {
       "key": "api/comment/tooLong",

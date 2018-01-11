@@ -30,12 +30,16 @@ module.exports = async (_, args, { pgdb, user, t, pubsub }) => {
       throw new Error(t('api/comment/id/duplicate'))
     }
 
+    if (discussion.closed) {
+      throw new Error(t('api/comment/closed'))
+    }
+
     // ensure user is within minInterval
     if (discussion.minInterval) {
       const waitUntil = await userWaitUntil(discussion, null, { pgdb, user })
       if (waitUntil) {
         throw new Error(t('api/comment/tooEarly', {
-          waitFor: `${(waitUntil.getTime() - new Date().getTime()) / 1000}s`
+          waitFor: `${Math.ceil((waitUntil.getTime() - new Date().getTime()) / 1000)}s`
         }))
       }
     }

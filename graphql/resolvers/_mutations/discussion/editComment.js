@@ -24,6 +24,9 @@ module.exports = async (_, args, { pgdb, user, req, t, pubsub }) => {
       id: comment.discussionId
     })
 
+    if (discussion.closed) {
+      throw new Error(t('api/comment/closed'))
+    }
     // ensure comment length is within limit
     if (discussion.maxLength && content.length > discussion.maxLength) {
       throw new Error(t('api/comment/tooLong', { maxLength: discussion.maxLength }))

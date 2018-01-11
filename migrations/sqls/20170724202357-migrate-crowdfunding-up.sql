@@ -58,6 +58,7 @@ create table "discussions" (
   "minInterval"         integer,
   "anonymity"           "permission" not null default 'ALLOWED',
   "documentPath"        text,
+  "closed"              boolean not null default false,
   "createdAt"           timestamptz default now(),
   "updatedAt"           timestamptz default now()
 );
@@ -106,9 +107,9 @@ create table "discussionPreferences" (
 
 -- copy existing feeds to new discussions API
 INSERT INTO
-  discussions(id, "maxLength", "minInterval")
+  discussions(id, "maxLength", "minInterval", "closed")
 SELECT
-  id, "commentMaxLength", "commentInterval"
+  id, "commentMaxLength", "commentInterval", true
 FROM cf.feeds;
 
 INSERT INTO comments(

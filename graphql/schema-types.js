@@ -197,8 +197,10 @@ type CommentConnection {
   id: ID!
   # recursive down the tree
   totalCount: Int!
+  directTotalCount: Int
   pageInfo: PageInfo
   nodes: [Comment]!
+  focus: Comment
 }
 
 type Discussion {
@@ -210,6 +212,7 @@ type Discussion {
   _id: ID!
   title: String
   documentPath: String
+  closed: Boolean!
   comments(
     # get children of this parent
     parentId: ID
@@ -223,11 +226,16 @@ type Discussion {
     # first elements are deep inside the tree, all coresponding
     # parents are returned as well.
     first: Int
-    # include this comment and context around it
-    # don't use in combination with parentId or after
+    # sort comments so that focus and it's parents are on top
+    # focus comment might not be returned in first query if
+    # it's too deep nested but it's always returned on
+    # the root CommentConnection
     focusId: ID
     orderBy: DiscussionOrder
     orderDirection: OrderDirection
+    # if set, the tree is returned flat instead of nested up upon
+    # the specified depth
+    flatDepth: Int
   ): CommentConnection!
   rules: DiscussionRules!
   userPreference: DiscussionPreferences
@@ -235,6 +243,7 @@ type Discussion {
   # date the user is allowed to submit new comments
   # if null the user can submit immediately
   userWaitUntil: DateTime
+  userCanComment: Boolean!
 }
 
 type DisplayUser {
