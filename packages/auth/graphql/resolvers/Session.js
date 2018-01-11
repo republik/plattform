@@ -24,8 +24,5 @@ module.exports = {
   },
   expiresAt (session, args) {
     return session.expire
-  },
-  cookie (session, args) {
-    return JSON.stringify(session.sess.cookie)
   }
 }
