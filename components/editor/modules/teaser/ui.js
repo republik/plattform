@@ -58,43 +58,17 @@ const styles = {
     left: 0,
     right: 0,
     height: '0px',
-    overflow: 'hidden',
-    opacity: 0,
-    transition: 'opacity 0.2s'
+    overflow: 'hidden'
   }),
   uiOpen: css({
-    opacity: 1,
-    height: '32px'
+    height: 'auto'
   }),
   uiInlineRow: css({
-    backgroundColor: colors.divider,
+    backgroundColor: '#fff',
+    border: `1px solid ${colors.divider}`,
+    padding: '5px',
     display: 'inline-block',
     margin: 0
-  }),
-  uiBlockRow: css({
-    height: '32px'
-  }),
-  uiInner: css({
-    position: 'absolute',
-    height: '32px',
-    left: 0,
-    right: 0,
-    transition: 'top 0.2s'
-  }),
-  iconButton: css({
-    textAlign: 'center',
-    display: 'inline-block',
-    height: '32px',
-    cursor: 'pointer'
-  }),
-  line: css({
-    position: 'absolute',
-    margin: 0,
-    padding: 0,
-    top: 0,
-    left: 0,
-    right: 0,
-    borderTop: `1px dashed ${colors.primary}`
   })
 }
 
