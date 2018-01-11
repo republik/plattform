@@ -295,4 +295,8 @@ type Greeting {
 type MutationResult {
   success: Boolean!
 }
+
+type MembershipStats {
+  count: Int!
+}
 `
