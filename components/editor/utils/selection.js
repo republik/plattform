@@ -32,13 +32,6 @@ export const getClosestAtEnd = getAtEdge(getClosest, 'end')
 export const getFurthestAtStart = getAtEdge(getFurthest, 'start')
 export const getFurthestAtEnd = getAtEdge(getFurthest, 'end')
 
-const getAllBlocks = value => {
-  return value.blocks
-    .map(n => tree.byId(value, n.key))
-    .reduce((memo, path) => memo.push(path).concat(tree.ancestors(value, path)), List())
-    .reduce((memo, path) => memo.set(tree.id(value, path), path), Map())
-}
-
 const createSelectionCache = () => {
   let currentValue
   let cache
@@ -47,8 +40,6 @@ const createSelectionCache = () => {
     if (currentValue !== nextValue) {
       currentValue = nextValue
       cache = Map()
-    } else {
-      console.log('Cache hit', cache)
     }
   }
 
@@ -65,4 +56,43 @@ const createSelectionCache = () => {
 }
 
 const selectionCache = createSelectionCache()
-export const allBlocks = selectionCache('allBlocks', getAllBlocks)
+
+export const byId = selectionCache('byId', (value, id) =>
+  tree.byId(value, id)
+)
+
+export const getAll = selectionCache('getAllBlocks', value => {
+  return value.blocks
+    .map(n => byId(value, n.key))
+    .reduce((memo, path) => memo.push(path).concat(tree.ancestors(value, path)), List())
+    .reduce((memo, path) => memo.set(tree.id(value, path), path), Map())
+})
+
+const getByType = selectionCache('getByType', (value, type) => {
+  return getAll(value)
+    .filter(p => value.getIn(p.concat('type')) === type)
+})
+
+const resolve = fn => (value, ...args) => {
+  const res = fn(value, ...args)
+  if (Map.isMap(res)) {
+    return res.map(p => value.getIn(p))
+  }
+  return value.getIn(res)
+}
+
+export const allBlocks = selectionCache('allBlocks',
+  resolve(getAll)
+)
+
+export const blockTypes = selectionCache('blockTypes',
+  resolve(getByType)
+)
+
+export const parent = selectionCache('getParent',
+  resolve((value, id) => tree.parent(value, byId(value, id)))
+)
+
+export const childIndex = selectionCache('childIndex',
+  (value, id) => tree.childIndex(value, byId(value, id))
+)

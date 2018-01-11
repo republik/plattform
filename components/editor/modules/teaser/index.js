@@ -8,9 +8,10 @@ import {
   getIndex,
   getParentKey,
   insert,
-  move,
+  moveUp,
+  moveDown,
   remove
-} from './dnd'
+} from './actions'
 
 import { TeaserButton, TeaserInlineUI, TeaserForm } from './ui'
 
@@ -44,7 +45,10 @@ export const getNewBlock = options => () => {
 
   const res = Block.create({
     type: options.TYPE,
-    data,
+    data: {
+      ...data,
+      module: 'teaser'
+    },
     nodes: [
       Block.create({
         type: formatModule.TYPE,
@@ -110,11 +114,12 @@ const teaserPlugin = options => {
       return ([
         <UI
           key='ui'
-          isSelected={isSelected && editor.value.document.nodes.size > 1}
+          isSelected={isSelected}
           nodeKey={node.key}
           getIndex={getIndex(editor)}
           getParentKey={getParentKey(editor)}
-          move={move(editor)}
+          moveUp={moveUp(editor)}
+          moveDown={moveDown(editor)}
           insert={insert(editor)}
           remove={remove(editor)}
       />,

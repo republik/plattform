@@ -7,15 +7,17 @@ import {
   getIndex,
   getParentKey,
   insert,
-  move,
+  moveUp,
+  moveDown,
   remove
-} from '../teaser/dnd'
+} from '../teaser/actions'
 
 import { TeaserInlineUI } from '../teaser/ui'
 import { TeaserGroupButton, TeaserGroupForm } from './ui'
 
 export const getData = data => ({
   columns: 2,
+  module: 'teaser',
   ...data || {}
 })
 
@@ -94,9 +96,6 @@ export const toMdast = ({
 
 const teaserGroupPlugin = options => {
   const { TYPE, rule } = options
-  const [
-    teaserModule
-  ] = options.subModules
 
   const TeaserGroup = rule.component
 
@@ -122,7 +121,8 @@ const teaserGroupPlugin = options => {
           nodeKey={node.key}
           getIndex={getIndex(editor)}
           getParentKey={getParentKey(editor)}
-          move={move(editor)}
+          moveUp={moveUp(editor)}
+          moveDown={moveDown(editor)}
           insert={insert(editor)}
           remove={remove(editor)}
       />,
@@ -131,31 +131,12 @@ const teaserGroupPlugin = options => {
         </TeaserGroup>
       ])
     },
-    validateNode (node, ...args) {
-      if (!matchBlock(TYPE)(node)) {
-        return
-      }
-      const numNodes = node.nodes.size
-      const wantedNodes = node.data.get('columns')
-      if (numNodes === wantedNodes) {
-        return
-      }
-      if (numNodes > wantedNodes) {
-        const keyToRemove = node.nodes.last().key
-        return change => change.removeNodeByKey(keyToRemove)
-      } else {
-        const keyToInsertAt = node.key
-        return change => change.insertNodeByKey(keyToInsertAt, 1, teaserModule.helpers.newBlock())
-      }
-    },
     schema: {
       blocks: {
         [TYPE]: {
           nodes: [
             {
-              types: [teaserModule.TYPE],
-              min: 1,
-              max: 2
+              blocks: options.subModules.map(m => m.TYPE)
             }
           ]
         }

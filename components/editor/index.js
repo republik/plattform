@@ -3,8 +3,6 @@ import PropTypes from 'prop-types'
 import { Editor as SlateEditor } from 'slate-react'
 import { css } from 'glamor'
 
-import slateReactDnDAdapter from './utils/slateReactDnDAdapter'
-
 import Loader from '../Loader'
 
 import createDocumentModule from './modules/document'
@@ -35,10 +33,6 @@ import createSpecialCharsModule from './modules/specialchars'
 import createTitleModule from './modules/title'
 import createInfoBoxModule from './modules/infobox'
 import createQuoteModule from './modules/quote'
-
-const {
-  ReactDnDPlugin
-} = slateReactDnDAdapter()
 
 const moduleCreators = {
   embedVideo: createEmbedVideoModule,
@@ -151,8 +145,7 @@ class Editor extends Component {
     const uniqModules = allModules.filter((m, i, a) => a.findIndex(mm => mm.TYPE === m.TYPE) === i)
 
     this.plugins = [
-      ...getFromModules(uniqModules, m => m.plugins),
-      ReactDnDPlugin
+      ...getFromModules(uniqModules, m => m.plugins)
     ]
 
     this.slateRef = ref => {

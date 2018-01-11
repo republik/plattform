@@ -87,7 +87,10 @@ export const fromMdast = ({
   const result = {
     kind: 'block',
     type: TYPE,
-    data,
+    data: {
+      ...data,
+      module: 'teaser'
+    },
     nodes: nodes
   }
   return result

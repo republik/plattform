@@ -82,7 +82,6 @@
     "react": "^16.1.1",
     "react-apollo": "^1.4.15",
     "react-color": "^2.13.8",
-    "react-dnd": "^2.5.4",
     "react-dnd-html5-backend": "^2.5.4",
     "react-dom": "^16.1.1",
     "react-frame-component": "^1.1.1",

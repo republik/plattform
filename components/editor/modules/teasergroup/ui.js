@@ -1,7 +1,6 @@
 import { Radio, Label } from '@project-r/styleguide'
 
 import {
-  createActionButton,
   buttonStyles,
   createPropertyForm,
   matchBlock
@@ -11,9 +10,7 @@ import UIForm from '../../UIForm'
 
 import createOnFieldChange from '../../utils/createOnFieldChange'
 
-import {
-  createInsertDragSource
-} from '../teaser/dnd'
+import { allBlocks, parent, childIndex } from '../../utils/selection'
 
 import { getNewBlock } from './'
 
@@ -72,26 +69,35 @@ export const TeaserGroupForm = options => {
   )
 }
 
-export const TeaserGroupButton = options => createActionButton({
-  reducer: ({ value, onChange }) => event => {
-  }
-})(
-  ({ disabled, children, visible, ...props }) => {
-    const Component = createInsertDragSource(
-      ({ connectDragSource }) =>
-      connectDragSource(
-        <span
-          {...buttonStyles.insert}
-          {...props}
-          data-disabled={disabled}
-          data-visible={visible}
-          >
-          {options.rule.editorOptions.insertButton}
-        </span>
+export const TeaserGroupButton = options => {
+  const mouseDownHandler = (disabled, value, onChange) => event => {
+    event.preventDefault()
+    const nodes = allBlocks(value).filter(n => {
+      return n.data.get('module') === 'teaser'
+    })
+    const node = nodes.first()
+    if (node) {
+      onChange(
+        value.change().insertNodeByKey(
+          parent(value, node.key).key,
+          childIndex(value, node.key),
+          getNewBlock(options)()
+        )
       )
-    )
+    }
+  }
+
+  return ({ value, onChange }) => {
+    const disabled = value.isBlurred
     return (
-      <Component getNewBlock={getNewBlock(options)} />
+      <span
+        {...buttonStyles.insert}
+        data-disabled={disabled}
+        data-visible
+        onMouseDown={mouseDownHandler(disabled, value, onChange)}
+          >
+        {options.rule.editorOptions.insertButton}
+      </span>
     )
   }
-)
+}
