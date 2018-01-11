@@ -103,10 +103,6 @@ module.exports = {
         }
       }
     })
-    const util = require('util')
-    console.log(util.inspect(mdast, {depth: null}))
-    // if(publicAssets)
-    //  throw new Error('test')
 
     return {
       id: Buffer.from(`repo:${repoId}:${commitId}`).toString('base64'),
