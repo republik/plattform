@@ -1,4 +1,5 @@
-const { Roles, updateUserOnMailchimp } = require('@orbiting/backend-modules-auth')
+const { Roles } = require('@orbiting/backend-modules-auth')
+const { updateUserOnMailchimp } = require('@orbiting/backend-modules-mail')
 const logger = console
 const {minTotal, regularTotal} = require('../../../lib/Pledge')
 const generateMemberships = require('../../../lib/generateMemberships')

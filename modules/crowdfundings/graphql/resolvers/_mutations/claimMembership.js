@@ -1,5 +1,6 @@
 const logger = console
-const { ensureSignedIn, updateUserOnMailchimp } = require('@orbiting/backend-modules-auth')
+const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
+const { updateUserOnMailchimp } = require('@orbiting/backend-modules-mail')
 
 module.exports = async (_, args, {pgdb, req, t}) => {
   ensureSignedIn(req, t)
