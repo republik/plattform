@@ -37,7 +37,7 @@ module.exports = {
         const hostname = public
           ? PUBLIC_ASSETS_HOSTNAME
           : INTERNAL_ASSETS_HOSTNAME
-        const url = new URL(`${hostname}/assets/${repoId}/${path}`)
+        const url = new URL(`${hostname}/assets/images/${repoId}/${path}`)
         if (!public) {
           url.hash = querystring.stringify({
             [originalKey]: path

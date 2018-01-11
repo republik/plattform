@@ -71,7 +71,7 @@ module.exports = (server) => {
   // response to our request.
   // https://developer.github.com/v3/repos/contents/#get-contents
   // https://developer.github.com/v3/git/blobs/#get-a-blob
-  server.get('/assets/:login/:repoName/:path(*)', async (req, res) => {
+  server.get('/assets/images/:login/:repoName/:path(*)', async (req, res) => {
     const { githubRest } = await createGithubClients()
 
     const { resize } = req.query
