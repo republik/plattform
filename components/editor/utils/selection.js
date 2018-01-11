@@ -96,3 +96,7 @@ export const parent = selectionCache('getParent',
 export const childIndex = selectionCache('childIndex',
   (value, id) => tree.childIndex(value, byId(value, id))
 )
+
+export const depth = selectionCache('depth',
+  (value, id) => tree.depth(value, byId(value, id))
+)

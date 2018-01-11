@@ -6,7 +6,7 @@ import {
   createPropertyForm,
   matchBlock
 } from '../../utils'
-import { allBlocks, parent, childIndex } from '../../utils/selection'
+import { allBlocks, parent, childIndex, depth } from '../../utils/selection'
 
 import { Block, Text } from 'slate'
 
@@ -134,9 +134,11 @@ const cloneWithRepoData = options => (node, repoData) => {
 export const TeaserButton = options => {
   const mouseDownHandler = (disabled, value, onChange) => event => {
     event.preventDefault()
-    const nodes = allBlocks(value).filter(n => {
-      return n.data.get('module') === 'teaser'
-    })
+    const nodes = allBlocks(value)
+      .filter(n => depth(value, n.key) < 2)
+      .filter(n => {
+        return ['teaser', 'teasergroup'].includes(n.data.get('module'))
+      })
     const node = nodes.first()
     if (node) {
       onChange(

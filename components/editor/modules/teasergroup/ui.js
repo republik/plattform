@@ -10,7 +10,7 @@ import UIForm from '../../UIForm'
 
 import createOnFieldChange from '../../utils/createOnFieldChange'
 
-import { allBlocks, parent, childIndex } from '../../utils/selection'
+import { allBlocks, parent, childIndex, depth } from '../../utils/selection'
 
 import { getNewBlock } from './'
 
@@ -72,9 +72,11 @@ export const TeaserGroupForm = options => {
 export const TeaserGroupButton = options => {
   const mouseDownHandler = (disabled, value, onChange) => event => {
     event.preventDefault()
-    const nodes = allBlocks(value).filter(n => {
-      return n.data.get('module') === 'teaser'
-    })
+    const nodes = allBlocks(value)
+      .filter(n => depth(value, n.key) < 2)
+      .filter(n => {
+        return ['teaser', 'teasergroup'].includes(n.data.get('module'))
+      })
     const node = nodes.first()
     if (node) {
       onChange(

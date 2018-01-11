@@ -31,7 +31,10 @@ export const getNewBlock = options => () => {
 
   return Block.create({
     type: options.TYPE,
-    data,
+    data: {
+      ...data,
+      module: 'teasergroup'
+    },
     nodes: [
       teaserModule.helpers.newBlock(),
       teaserModule.helpers.newBlock()
@@ -54,12 +57,15 @@ export const fromMdast = ({
 
   const teaserSerializer = teaserModule.helpers.serializer
 
-  const data = getData(node.data)
+  const { module, ...data } = getData(node.data)
 
   const result = {
     kind: 'block',
     type: TYPE,
-    data,
+    data: {
+      ...data,
+      module: 'teasergroup'
+    },
     nodes: node.children.map(
       v => teaserSerializer.fromMdast(v)
     )
@@ -84,12 +90,12 @@ export const toMdast = ({
   const mdastChildren = node.nodes.map(v =>
     teaserModule.helpers.serializer.toMdast(v)
   )
-
+  const { module, ...data } = node.data
   return {
     type: 'zone',
     identifier: 'TEASERGROUP',
     children: mdastChildren,
-    data: node.data
+    data
   }
 }
 
