@@ -8,6 +8,7 @@ import { GITHUB_ORG } from '../../../../lib/settings'
 import withT from '../../../../lib/withT'
 import MetaForm from '../../utils/MetaForm'
 import RepoSearch from '../../utils/RepoSearch'
+import SlugField from '../../utils/SlugField'
 import FBPreview from './FBPreview'
 import TwitterPreview from './TwitterPreview'
 import UIForm from '../../UIForm'
@@ -30,7 +31,6 @@ const MetaData = ({value, editor, additionalFields = [], customFields = [], teas
   const node = value.document
 
   const genericKeys = Set([
-    'slug',
     'feed',
     ...additionalFields,
     'title',
@@ -83,6 +83,11 @@ const MetaData = ({value, editor, additionalFields = [], customFields = [], teas
           {t('metaData/title')}
         </Interaction.H2>
         <br />
+        <SlugField
+          label={t(`metaData/field/slug`, undefined, 'slug')}
+          value={node.data.get('slug')}
+          onChange={onInputChange('slug')}
+        />
         <MetaForm data={genericData} onInputChange={onInputChange} black getWidth={getWidth} />
         <UIForm getWidth={() => '50%'}>
           {customFields.map(customField => {
