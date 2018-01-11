@@ -28,15 +28,23 @@ type mutations {
   signIn(email: String!, context: String): SignInResponse!
   signOut: Boolean!
 
+  # if userId is null, the logged in user's email is changed
+  # required role to change other's email: supporter
+  updateEmail(userId: ID, email: String!): User!
+
   # authorize a token sent by mail to convert a login request to a valid user session
   authorizeSession(email: String!, token: String!): Boolean!
 
-  # Clear a specific session. If there is no userId provided,
-  # the system defaults to the logged in user
+  # if userId is null, this operation will be scoped to the logged in user
+  # required role to clear other's session: supporter
   clearSession(sessionId: ID!, userId: ID): Boolean!
 
-  # Sign out a user on all devices. If there is no userId provided,
-  # the system defaults to the logged in user
+  # if userId is null, the logged in user's sessions get cleared
+  # required role to clear other's session: supporter
   clearSessions(userId: ID): Boolean!
+
+  # merges the belongings from source to target
+  # required role: admin
+  mergeUsers(targetUserId: ID!, sourceUserId: ID!): User!
 }
 `

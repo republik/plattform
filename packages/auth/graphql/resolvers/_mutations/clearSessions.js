@@ -24,7 +24,7 @@ module.exports = async (_, args, { pgdb, user: me, req }) => {
       if (await destroySession(req)) isSessionsCleared = true
     }
     if (Roles.userIsMeOrInRoles(user, me, userAccessRoles)) {
-      if (await clearAllUserSessions({ pgdb, store: req.sessionStore, userId: user.id })) {
+      if (await clearAllUserSessions({ pgdb, userId: user.id })) {
         isSessionsCleared = true
       }
     }

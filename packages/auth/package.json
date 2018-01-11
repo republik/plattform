@@ -49,6 +49,7 @@
   },
   "peerDependencies": {
     "dotenv": "^4.0.0",
-    "isomorphic-unfetch": "^2.0.0"
+    "isomorphic-unfetch": "^2.0.0",
+    "d3-array": "^1.2.1"
   }
 }
