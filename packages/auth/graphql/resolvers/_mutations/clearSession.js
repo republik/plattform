@@ -15,7 +15,7 @@ module.exports = async (_, args, { pgdb, user: me, req }) => {
   } = args
 
   const user = foreignUserId
-    ? (await pgdb.public.users.findOne({ userId: foreignUserId }))
+    ? (await pgdb.public.users.findOne({ id: foreignUserId }))
     : me
 
   try {
@@ -37,6 +37,6 @@ module.exports = async (_, args, { pgdb, user: me, req }) => {
       const util = require('util')
       console.error('clearSession: exception', util.inspect({ req: req._log(), userId: user.id, sessionId, e }, {depth: null}))
     }
-    throw new Error(t('api/unauthorized'))
+    throw new Error(t('api/auth/errorDestroyingSession'))
   }
 }
