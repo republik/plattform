@@ -19,14 +19,17 @@ module.exports = async (_, args, { pgdb, user: me, req }) => {
     : me
 
   try {
-    if (hashSessionId(req.sessionID, me.email) === sessionId) {
+    let isSessionCleared = false
+    if ((await hashSessionId(req.sessionID, me.email)) === sessionId) {
       // current session, normal logout
-      await destroySession(req)
+      if (await destroySession(req)) isSessionCleared = true
     }
     if (Roles.userIsMeOrInRoles(user, me, userAccessRoles)) {
-      await clearUserSession({ pgdb, store: req.sessionStore, userId: user.id || me.id, sessionId })
+      if (await clearUserSession({ pgdb, store: req.sessionStore, userId: user.id || me.id, sessionId })) {
+        isSessionCleared = true
+      }
     }
-    return true
+    return isSessionCleared
   } catch (e) {
     if (e instanceof DestroySessionError) {
       console.error('clearSession: exception %O', { req: req._log(), userId: user.id, sessionId, ...e.meta })
