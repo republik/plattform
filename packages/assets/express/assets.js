@@ -2,6 +2,8 @@ const sharp = require('sharp')
 const fileType = require('file-type')
 const { lib: { clients: createGithubClients } } = require('@orbiting/backend-modules-github')
 
+const { authenticate } = require('../lib')
+
 const maxSize = 6000
 
 // Because githubs get-contents is limited to 1MB the current
@@ -81,4 +83,34 @@ module.exports = (server) => {
 
     return res.end(buffer)
   })
+
+  const fetch = require('isomorphic-unfetch')
+  server.get('/assets/images', async (req, res) => {
+    const {
+      originalURL: url,
+      mac,
+      resize
+    } = req.query
+
+    if (!url) {
+      return res.status(404).end()
+    }
+
+    if (!mac || mac !== authenticate(url)) {
+      console.warn('unauthorized asset url requested: '+url)
+      return res.status(403).end()
+    }
+
+    const image = await fetch(url, {
+      method: 'GET',
+    })
+      .then(response => response.buffer())
+      .catch(error => {
+        console.error('gettting image failed', { error })
+        res.status(404).end()
+      })
+
+    return res.end(image)
+  })
+
 }
