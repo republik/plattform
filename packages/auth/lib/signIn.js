@@ -81,7 +81,6 @@ module.exports = async (_email, context, pgdb, req) => {
       token
     })
 
-
   // AUTO_LOGIN for automated testing
   if (AUTO_LOGIN) {
     // email addresses @test.project-r.construction will be auto logged in

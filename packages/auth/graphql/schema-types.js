@@ -6,8 +6,8 @@ type Session {
   userAgent: String!
   email: String!
   expiresAt: DateTime!
-  cookie: String
   country: String
+  countryFlag: String
   city: String
 }
 

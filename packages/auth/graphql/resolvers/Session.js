@@ -1,3 +1,4 @@
+const { flag, code } = require('country-emoji')
 const hashSessionId = require('../../lib/hashSessionId')
 
 module.exports = {
@@ -18,14 +19,16 @@ module.exports = {
     const { geo = {} } = session.sess
     return geo.country
   },
+  countryFlag (session, args) {
+    const { geo = {} } = session.sess
+    const countryCode = geo.country ? code(geo.country) : null
+    return countryCode ? flag(countryCode) : '🏴'
+  },
   city (session, args) {
     const { geo = {} } = session.sess
     return geo.city
   },
   expiresAt (session, args) {
     return session.expire
-  },
-  cookie (session, args) {
-    return JSON.stringify(session.sess.cookie)
   }
 }
