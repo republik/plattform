@@ -50,6 +50,7 @@ const t = createFormatter([
   {key: 'styleguide/Hello/message/other', value: 'Willkommen zum {count}. Mal {name}!'},
   {key: 'styleguide/Hello/label/visits', value: 'Anzahl Besuche'},
   {key: 'styleguide/Hello/label/name', value: 'Name'},
+  {key: 'styleguide/Hello/html', value: 'Hallo<br />{link}'}
 ])
 ```
 
@@ -111,6 +112,28 @@ t.pluralize('styleguide/Hello/message', {
   name: 'Thomas'
 })
 ```
+
+## Elements with Translation Keys that contain HTML
+
+```react
+<div>
+  {(() => {
+    const RawHtmlElements = ({t, translationKey, replacements, missingValue}) =>
+      t.elements(translationKey, replacements, missingValue).map((element, i) => (
+        typeof element === 'string'
+          ? <RawHtml key={`html${i}`} dangerouslySetInnerHTML={{
+            __html: element
+          }} />
+          : element
+      ))
+
+    return <RawHtmlElements t={t} translationKey='styleguide/Hello/html' replacements={{
+      link: <a href="#" key='name'>Thomas</a>
+    }} />
+  })()}
+</div>
+```
+
 
 ## Interactive Example
 

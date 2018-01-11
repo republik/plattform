@@ -479,8 +479,10 @@ ReactDOM.render(
                 {key: 'styleguide/Hello/message/2', value: 'Schön Sie wieder zu sehen!'},
                 {key: 'styleguide/Hello/message/other', value: 'Willkommen zum {count}. Mal {name}!'},
                 {key: 'styleguide/Hello/label/visits', value: 'Anzahl Besuche'},
-                {key: 'styleguide/Hello/label/name', value: 'Name'}
-              ])
+                {key: 'styleguide/Hello/label/name', value: 'Name'},
+                {key: 'styleguide/Hello/html', value: 'Hallo<br />{link}'}
+              ]),
+              RawHtml: require('./components/RawHtml')
             }
           },
           {
