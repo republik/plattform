@@ -58,10 +58,10 @@ extend type User {
   isAdminUnlisted: Boolean
   sequenceNumber: Int
 
-  newsletterProfile: NewsletterProfile!
+  newsletterSettings: NewsletterSettings!
 }
 
-type NewsletterProfile {
+type NewsletterSettings {
   status: String!
   subscriptions: [NewsletterSubscription]
 }
