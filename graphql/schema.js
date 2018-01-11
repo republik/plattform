@@ -94,8 +94,9 @@ type mutations {
   ): Discussion!
 
   updateNewsletterSubscription(
-    name: NewsletterName!,
+    name: NewsletterName!
     subscribed: Boolean!
+    status: String!
   ): NewsletterSubscription!
 
   submitQuestion(question: String!): MutationResult
