@@ -104,7 +104,7 @@ const createNewsletterSchema = ({
     editorOptions: {
       isStatic: true,
       afterType: 'PARAGRAPH',
-      insertAfterType: 'C',
+      insertAfterType: 'CENTER',
       placeholder: 'Legende'
     },
     rules: [
