@@ -25,7 +25,7 @@ module.exports = {
             owner: login,
             repo: repoName,
             sha: oid,
-            per_page: 30,
+            per_page: 100,
             page: page || 1
           })
           .then(response => response ? response.data : response)
