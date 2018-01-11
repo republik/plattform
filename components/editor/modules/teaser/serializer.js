@@ -60,7 +60,8 @@ export const fromMdast = ({
 ) => {
   const imageParagraph = node.children.find(matchImageParagraph)
 
-  const data = getData(node.data)
+  // Remove module key from data
+  const { module, ...data } = getData(node.data)
   if (imageParagraph) {
     data.image = imageParagraph.children[0].url
   }
@@ -87,7 +88,10 @@ export const fromMdast = ({
   const result = {
     kind: 'block',
     type: TYPE,
-    data,
+    data: {
+      ...data,
+      module: 'teaser'
+    },
     nodes: nodes
   }
   return result
@@ -116,7 +120,7 @@ export const toMdast = ({
     rules: getRules(subModules)
   })
 
-  const { image, ...data } = node.data
+  const { image, module, ...data } = node.data
   const imageNode = image && {
     type: 'paragraph',
     children: [

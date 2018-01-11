@@ -5,11 +5,12 @@ import { matchBlock } from '../../utils'
 
 import {
   getIndex,
-  getParentKey,
+  getParent,
   insert,
-  move,
+  moveUp,
+  moveDown,
   remove
-} from '../teaser/dnd'
+} from '../teaser/actions'
 
 import { TeaserInlineUI } from '../teaser/ui'
 import { TeaserGroupButton, TeaserGroupForm } from './ui'
@@ -19,7 +20,7 @@ export const getData = data => ({
   ...data || {}
 })
 
-export const getNewItem = options => () => {
+export const getNewBlock = options => () => {
   const [
     teaserModule
   ] = options.subModules
@@ -30,10 +31,13 @@ export const getNewItem = options => () => {
 
   return Block.create({
     type: options.TYPE,
-    data,
+    data: {
+      ...data,
+      module: 'teasergroup'
+    },
     nodes: [
-      teaserModule.helpers.newItem(),
-      teaserModule.helpers.newItem()
+      teaserModule.helpers.newBlock(),
+      teaserModule.helpers.newBlock()
     ]
   })
 }
@@ -53,12 +57,15 @@ export const fromMdast = ({
 
   const teaserSerializer = teaserModule.helpers.serializer
 
-  const data = getData(node.data)
+  const { module, ...data } = getData(node.data)
 
   const result = {
     kind: 'block',
     type: TYPE,
-    data,
+    data: {
+      ...data,
+      module: 'teasergroup'
+    },
     nodes: node.children.map(
       v => teaserSerializer.fromMdast(v)
     )
@@ -83,22 +90,21 @@ export const toMdast = ({
   const mdastChildren = node.nodes.map(v =>
     teaserModule.helpers.serializer.toMdast(v)
   )
-
+  const { module, ...data } = node.data
   return {
     type: 'zone',
     identifier: 'TEASERGROUP',
     children: mdastChildren,
-    data: node.data
+    data
   }
 }
 
 const teaserGroupPlugin = options => {
   const { TYPE, rule } = options
-  const [
-    teaserModule
-  ] = options.subModules
 
   const TeaserGroup = rule.component
+
+  const [ teaserModule ] = options.subModules
 
   return {
     renderNode ({ editor, node, attributes, children }) {
@@ -121,8 +127,9 @@ const teaserGroupPlugin = options => {
           isSelected={isSelected}
           nodeKey={node.key}
           getIndex={getIndex(editor)}
-          getParentKey={getParentKey(editor)}
-          move={move(editor)}
+          getParent={getParent(editor)}
+          moveUp={moveUp(editor)}
+          moveDown={moveDown(editor)}
           insert={insert(editor)}
           remove={remove(editor)}
       />,
@@ -145,7 +152,7 @@ const teaserGroupPlugin = options => {
         return change => change.removeNodeByKey(keyToRemove)
       } else {
         const keyToInsertAt = node.key
-        return change => change.insertNodeByKey(keyToInsertAt, 1, teaserModule.helpers.newItem())
+        return change => change.insertNodeByKey(keyToInsertAt, 1, teaserModule.helpers.newBlock())
       }
     },
     schema: {
@@ -153,9 +160,7 @@ const teaserGroupPlugin = options => {
         [TYPE]: {
           nodes: [
             {
-              types: [teaserModule.TYPE],
-              min: 1,
-              max: 2
+              blocks: options.subModules.map(m => m.TYPE)
             }
           ]
         }
@@ -180,7 +185,7 @@ const getSerializer = options =>
 export default options => ({
   helpers: {
     serializer: getSerializer(options),
-    newItem: getNewItem(options)
+    newBlock: getNewBlock(options)
   },
   plugins: [
     teaserGroupPlugin(options)

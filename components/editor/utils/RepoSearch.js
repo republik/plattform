@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { gql, graphql } from 'react-apollo'
-import { Autocomplete } from '@project-r/styleguide'
+import { Autocomplete, InlineSpinner } from '@project-r/styleguide'
 import debounce from 'lodash.debounce'
 
 import { GITHUB_ORG, REPO_PREFIX } from '../../../lib/settings'
@@ -47,9 +47,10 @@ const ConnectedAutoComplete = graphql(repoQuery, {
   skip: props => !props.filter,
   options: ({ search }) => ({ variables: { search: search } }),
   props: (props) => {
-    if (props.data.loading) return
+    if (props.data.loading) return { data: props.data, items: [] }
     const { data: { repos: { nodes = [] } = {} } } = props
     return ({
+      data: props.data,
       items: nodes.map(v => ({
         value: v,
         text: v.latestCommit.document.meta.title ||
@@ -57,7 +58,17 @@ const ConnectedAutoComplete = graphql(repoQuery, {
       }))
     })
   }
-})(Autocomplete)
+})(props => {
+  const showLoader = props.data && props.data.loading
+  return (
+    <span style={{position: 'relative', display: 'block'}}>
+      <Autocomplete key='autocomplete' {...props} />
+      {!!showLoader && <span style={{position: 'absolute', top: '21px', right: '0px', zIndex: 500}}>
+        <InlineSpinner size={35} />
+      </span>}
+    </span>
+  )
+})
 
 const safeValue = value =>
   typeof value === 'string'

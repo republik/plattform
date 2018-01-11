@@ -6,11 +6,12 @@ import { getSerializer, getSubmodules } from './serializer'
 
 import {
   getIndex,
-  getParentKey,
+  getParent,
   insert,
-  move,
+  moveUp,
+  moveDown,
   remove
-} from './dnd'
+} from './actions'
 
 import { TeaserButton, TeaserInlineUI, TeaserForm } from './ui'
 
@@ -30,7 +31,7 @@ export const getData = data => ({
   ...data || {}
 })
 
-export const getNewItem = options => () => {
+export const getNewBlock = options => () => {
   const {
     titleModule,
     leadModule,
@@ -44,7 +45,10 @@ export const getNewItem = options => () => {
 
   const res = Block.create({
     type: options.TYPE,
-    data,
+    data: {
+      ...data,
+      module: 'teaser'
+    },
     nodes: [
       Block.create({
         type: formatModule.TYPE,
@@ -110,11 +114,12 @@ const teaserPlugin = options => {
       return ([
         <UI
           key='ui'
-          isSelected={isSelected && editor.value.document.nodes.size > 1}
+          isSelected={isSelected}
           nodeKey={node.key}
           getIndex={getIndex(editor)}
-          getParentKey={getParentKey(editor)}
-          move={move(editor)}
+          getParent={getParent(editor)}
+          moveUp={moveUp(editor)}
+          moveDown={moveDown(editor)}
           insert={insert(editor)}
           remove={remove(editor)}
       />,
@@ -122,27 +127,6 @@ const teaserPlugin = options => {
           {children}
         </Teaser>
       ])
-    },
-    onKeyDown (event, change) {
-      if (change.value.blocks.size > 1) {
-        event.preventDefault()
-        return change.collapseToEnd()
-      }
-      if (event.key !== 'Enter' && event.key !== 'Tab') {
-        return
-      }
-      if (change.value.isExpanded) {
-        event.preventDefault()
-        return change.collapseToEnd()
-      } else if (change.value.blocks.size > 0) {
-        const nextText = change.value.document.getNextBlock(change.value.blocks.first().key)
-        if (nextText) {
-          if (event.key === 'Tab') event.preventDefault()
-          return change.collapseToStartOf(
-            change.value.document.getNextBlock(change.value.blocks.first().key)
-          )
-        }
-      }
     },
     schema: {
       blocks: {
@@ -223,7 +207,7 @@ const teaserPlugin = options => {
 export default options => ({
   helpers: {
     serializer: getSerializer(options),
-    newItem: getNewItem(options)
+    newBlock: getNewBlock(options)
   },
   plugins: [
     teaserPlugin(options)

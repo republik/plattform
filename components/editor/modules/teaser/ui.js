@@ -6,14 +6,16 @@ import {
   createPropertyForm,
   matchBlock
 } from '../../utils'
+import { allBlocks, parent, childIndex, depth } from '../../utils/selection'
 
 import { Block, Text } from 'slate'
 
-import { getNewItem } from './'
+import { getNewBlock } from './'
 
 import { getSubmodules } from './serializer'
 
-import ArrowIcon from 'react-icons/lib/md/swap-vert'
+import ArrowUpIcon from 'react-icons/lib/md/arrow-upward'
+import ArrowDownIcon from 'react-icons/lib/md/arrow-downward'
 import CloseIcon from 'react-icons/lib/md/close'
 
 import UIForm from '../../UIForm'
@@ -21,12 +23,6 @@ import ImageInput from '../../utils/ImageInput'
 import ColorPicker from '../../utils/ColorPicker'
 import createOnFieldChange from '../../utils/createOnFieldChange'
 import RepoSearch from '../../utils/RepoSearch'
-
-import {
-  createInsertDragSource,
-  createDropTarget,
-  createMoveDragSource
-} from './dnd'
 
 const textPositions = [
   { value: 'topleft', text: 'Top Left' },
@@ -62,62 +58,18 @@ const styles = {
     left: 0,
     right: 0,
     height: '0px',
-    overflow: 'hidden',
-    opacity: 0,
-    transition: 'opacity 0.2s'
+    overflow: 'hidden'
   }),
   uiOpen: css({
-    opacity: 1,
-    height: '32px'
+    height: 'auto'
   }),
   uiInlineRow: css({
-    backgroundColor: colors.divider,
+    backgroundColor: '#fff',
+    border: `1px solid ${colors.divider}`,
+    padding: '5px',
     display: 'inline-block',
     margin: 0
-  }),
-  uiBlockRow: css({
-    height: '32px'
-  }),
-  uiInner: css({
-    position: 'absolute',
-    height: '32px',
-    left: 0,
-    right: 0,
-    transition: 'top 0.2s'
-  }),
-  uiInnerToolbar: css({
-    top: -32
-  }),
-  uiInnerDropZone: css({
-    top: 0
-  }),
-  iconButton: css({
-    textAlign: 'center',
-    display: 'inline-block',
-    height: '32px',
-    cursor: 'pointer'
-  }),
-  dropZone: css({
-    display: 'inline-block',
-    height: '32px'
-  }),
-  line: css({
-    position: 'absolute',
-    margin: 0,
-    padding: 0,
-    top: 0,
-    left: 0,
-    right: 0,
-    borderTop: `1px dashed ${colors.primary}`
-  }),
-  dragButton: css(
-    buttonStyles.mark,
-    {
-      position: 'absolute',
-      top: 0,
-      left: 0
-    }
-  )
+  })
 }
 
 const cloneWithRepoData = options => (node, repoData) => {
@@ -180,21 +132,39 @@ const cloneWithRepoData = options => (node, repoData) => {
 }
 
 export const TeaserButton = options => {
-  return ({ children }) => {
-    const Component = createInsertDragSource(
-      ({ connectDragSource }) =>
-      connectDragSource(
-        <span
-          {...buttonStyles.insert}
-          data-disabled={false}
-          data-visible
-          >
-          {options.rule.editorOptions.insertButton}
-        </span>
+  const mouseDownHandler = (disabled, value, onChange) => event => {
+    event.preventDefault()
+    const nodes = allBlocks(value)
+      .filter(n => depth(value, n.key) < 2)
+      .filter(n => {
+        return ['teaser', 'teasergroup'].includes(n.data.get('module'))
+      })
+    const node = nodes.first()
+    if (node) {
+      onChange(
+        value.change().insertNodeByKey(
+          parent(value, node.key).key,
+          childIndex(value, node.key),
+          getNewBlock(options)()
+        )
       )
+    }
+  }
+
+  return ({ value, onChange }) => {
+    const disabled = (
+      value.isBlurred ||
+      value.isExpanded
     )
     return (
-      <Component getNewItem={getNewItem(options)} />
+      <span
+        {...buttonStyles.insert}
+        data-disabled={disabled}
+        data-visible
+        onMouseDown={mouseDownHandler(disabled, value, onChange)}
+          >
+        {options.rule.editorOptions.insertButton}
+      </span>
     )
   }
 }
@@ -346,6 +316,7 @@ export const TeaserForm = options => {
 
       const handlerFactory = createOnFieldChange(change => {
         const newTeaser = change.value.document.getDescendant(teaser.key)
+        const newTeaserData = newTeaser.data.remove('module')
         const dataRecipients = newTeaser.filterDescendants(
           n => moduleTypes.includes(n.type)
         )
@@ -355,13 +326,13 @@ export const TeaserForm = options => {
               return t.setNodeByKey(
                 node.key,
                 {
-                  data: node.data.set('color', newTeaser.data.get('color'))
+                  data: node.data.set('color', newTeaserData.get('color'))
                 }
               )
             } else {
               return t.setNodeByKey(
                 node.key,
-                { data: newTeaser.data }
+                { data: newTeaserData }
               )
             }
           },
@@ -398,41 +369,46 @@ export const TeaserForm = options => {
 const RemoveButton = props =>
   <span {...buttonStyles.mark} {...props}><CloseIcon size={24} /></span>
 
-const MoveButton = props =>
-  <span {...buttonStyles.mark} {...props}><ArrowIcon size={24} /></span>
+const MoveUpButton = props =>
+  <span {...buttonStyles.mark} {...props}><ArrowUpIcon size={24} /></span>
 
-export const TeaserInlineUI = options => createDropTarget(createMoveDragSource(
-  ({ connectDragSource, connectDropTarget, remove, dragInProcess, isSelected, nodeKey, isOver, ...props }) => {
-    const uiStyles = css(styles.ui, isSelected || dragInProcess ? styles.uiOpen : {})
-    const uiInnerStyles = css(
-      styles.uiInner,
-      dragInProcess
-      ? styles.uiInnerDropZone
-      : styles.uiInnerToolbar
-      )
+const MoveDownButton = props =>
+  <span {...buttonStyles.mark} {...props}><ArrowDownIcon size={24} /></span>
 
-    const dragSource = connectDragSource(<span><MoveButton /></span>)
-    const dropZone = connectDropTarget(
-      <div style={{backgroundColor: colors.primary}} {...styles.uiBlockRow} />
-    )
+export const TeaserInlineUI = options =>
+({ remove, isSelected, nodeKey, getIndex, getParent, moveUp, moveDown, ...props }) => {
+  const uiStyles = css(styles.ui, isSelected ? styles.uiOpen : {})
 
-    const removeHandler = event => {
-      event.preventDefault()
-      remove(nodeKey)
-    }
+  const parent = getParent(nodeKey)
+  const index = getIndex(nodeKey)
+  const isFirstChild = index === 0
+  const isLastChild = index === parent.nodes.size - 1
+  const isOnlyChild = parent.nodes.size === 1
 
-    return (
-      <div contentEditable={false} {...styles.uiContainer}>
-        <div {...uiStyles}>
-          <div {...uiInnerStyles}>
-            {dropZone}
-            <P {...styles.uiInlineRow}>
-              <RemoveButton onClick={removeHandler} />
-              {dragSource}
-            </P>
-          </div>
-        </div>
-      </div>
-    )
+  const removeHandler = event => {
+    event.preventDefault()
+    remove(nodeKey)
   }
-))
+
+  const moveUpHandler = event => {
+    event.preventDefault()
+    moveUp(nodeKey, getParent(nodeKey).key, getIndex(nodeKey))
+  }
+
+  const moveDownHandler = event => {
+    event.preventDefault()
+    moveDown(nodeKey, getParent(nodeKey).key, getIndex(nodeKey))
+  }
+
+  return (
+    <div contentEditable={false} {...styles.uiContainer}>
+      <div {...uiStyles}>
+        <P {...styles.uiInlineRow}>
+          {!isOnlyChild && <RemoveButton onMouseDown={removeHandler} />}
+          {!isFirstChild && <MoveUpButton onMouseDown={moveUpHandler} />}
+          {!isLastChild && <MoveDownButton onMouseDown={moveDownHandler} />}
+        </P>
+      </div>
+    </div>
+  )
+}

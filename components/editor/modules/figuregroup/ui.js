@@ -12,7 +12,7 @@ import UIForm from '../../UIForm'
 
 import createOnFieldChange from '../../utils/createOnFieldChange'
 
-import { getNewItem } from './'
+import { getNewBlock } from './'
 
 const addFigure = options => {
   const [
@@ -134,7 +134,7 @@ export const FigureGroupButton = options => {
         .change()
         .call(
           injectBlock,
-          getNewItem(options)()
+          getNewBlock(options)()
         )
       )
     }
@@ -146,7 +146,6 @@ export const FigureGroupButton = options => {
       !value.blocks.every(
         n => insertTypes.includes(n.type)
       )
-
     return (
       <span
         {...buttonStyles.insert}
