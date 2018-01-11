@@ -34,7 +34,6 @@ const createNewsletterSchema = ({
   Sub,
   Sup
 } = {}) => {
-
   const globalInlines = [
     {
       matchMdast: matchType('break'),
@@ -103,15 +102,18 @@ const createNewsletterSchema = ({
     component: Caption,
     editorModule: 'figureCaption',
     editorOptions: {
+      isStatic: true,
       afterType: 'PARAGRAPH',
-      insertAfterType: 'FIGURE',
+      insertAfterType: 'C',
       placeholder: 'Legende'
     },
     rules: [
       {
         matchMdast: matchType('emphasis'),
         component: Byline,
+        editorModule: 'paragraph',
         editorOptions: {
+          type: 'EMPHASIS',
           placeholder: 'Credit'
         }
       },
@@ -156,7 +158,8 @@ const createNewsletterSchema = ({
       return (
         matchFigure(node) &&
         index === 0
-    )},
+      )
+    },
     component: Cover,
     editorModule: 'figure',
     editorOptions: {
@@ -182,7 +185,7 @@ const createNewsletterSchema = ({
         },
         editorModule: 'figureImage',
         editorOptions: {
-          type: 'COVERFIGUREIMAGE',
+          type: 'COVERFIGUREIMAGE'
         },
         isVoid: true
       },

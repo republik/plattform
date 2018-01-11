@@ -303,8 +303,7 @@ const pullQuote = {
       editorModule: 'paragraph',
       editorOptions: {
         type: 'QUOTEP',
-        placeholder: 'Zitat',
-        isStatic: true
+        placeholder: 'Zitat'
       },
       rules: [...globalInlines, link]
     },

@@ -65,7 +65,8 @@ const createSchema = ({
     editorModule: 'paragraph',
     editorOptions: {
       type: 'FRONTCREDIT',
-      placeholder: 'Credit'
+      placeholder: 'Credit',
+      isStatic: true
     },
     rules: [
       ...globalInlines,
@@ -117,7 +118,8 @@ const createSchema = ({
     editorOptions: {
       type,
       placeholder: 'Titel',
-      depth: 1
+      depth: 1,
+      isStatic: true
     },
     rules: globalInlines
   })
@@ -133,7 +135,8 @@ const createSchema = ({
       type: 'FRONTLEAD',
       placeholder: 'Lead',
       depth: 4,
-      optional: true
+      optional: true,
+      isStatic: true
     },
     rules: globalInlines
   }
@@ -161,7 +164,8 @@ const createSchema = ({
       type: 'FRONTFORMAT',
       placeholder: 'Format',
       depth: 6,
-      optional: true
+      optional: true,
+      isStatic: true
     },
     rules: globalInlines
   }
@@ -531,14 +535,15 @@ const createSchema = ({
             }),
             component: ({ children, attributes, ...props }) => {
               return (
-              <Link href={props.href} passHref>
-                <a href={props.href}>
-                  <TeaserFrontDossierMore attributes={attributes}>
-                    {children}
-                  </TeaserFrontDossierMore>
-                 </a>
-              </Link>
-            )},
+                <Link href={props.href} passHref>
+                  <a href={props.href}>
+                    <TeaserFrontDossierMore attributes={attributes}>
+                      {children}
+                    </TeaserFrontDossierMore>
+                  </a>
+                </Link>
+              )
+            },
             editorModule: 'link'
           }
         ]
