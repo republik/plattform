@@ -21,5 +21,8 @@ module.exports = {
   },
   expiresAt (session, args) {
     return session.expire
+  },
+  isCurrent (session, args, { req }) {
+    return session.sid === req.sessionID
   }
 }

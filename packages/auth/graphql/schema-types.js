@@ -8,6 +8,7 @@ type Session {
   expiresAt: DateTime!
   country: String
   city: String
+  isCurrent: Boolean!
 }
 
 type User {
