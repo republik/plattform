@@ -2,6 +2,9 @@
 cd packages/apollo-modules-node
 ncu -f "/(@orbiting.*|apollo-modules-node)/" -u -a
 
+cd ../assets
+ncu -f "/(@orbiting.*|apollo-modules-node)/" -u -a
+
 cd ../auth
 ncu -f "/(@orbiting.*|apollo-modules-node)/" -u -a
 
@@ -12,6 +15,9 @@ cd ../documents
 ncu -f "/(@orbiting.*|apollo-modules-node)/" -u -a
 
 cd ../formats
+ncu -f "/(@orbiting.*|apollo-modules-node)/" -u -a
+
+cd ../github
 ncu -f "/(@orbiting.*|apollo-modules-node)/" -u -a
 
 cd ../mail
