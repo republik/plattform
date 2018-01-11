@@ -2,6 +2,15 @@
 # yarn lockfile v1
 
 
+"@orbiting/backend-modules-assets@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-assets/-/backend-modules-assets-1.0.0.tgz#1795b8a53e274a957ed1121ab00f0abcabcafae8"
+  dependencies:
+    check-env "^1.3.0"
+    export-files "^2.1.1"
+    file-type "^7.4.0"
+    sharp "^0.18.4"
+
 "@orbiting/backend-modules-auth@^2.3.0":
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-2.3.0.tgz#41a2a1190f4f096f5ba0e6949c9059883c2628d4"
@@ -75,6 +84,17 @@
   dependencies:
     apollo-modules-node "^0.1.4"
     d3-time-format "^2.1.1"
+
+"@orbiting/backend-modules-github@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-github/-/backend-modules-github-1.0.0.tgz#1268bf346ee5d8a82317a9a749b1ae15131316a1"
+  dependencies:
+    apollo-fetch "^0.7.0"
+    await-sleep "^0.0.1"
+    check-env "^1.3.0"
+    export-files "^2.1.1"
+    github "^13.1.0"
+    jsonwebtoken "^8.1.0"
 
 "@orbiting/backend-modules-mail@^0.1.0":
   version "0.1.0"
@@ -1942,6 +1962,18 @@ github@^13.0.1:
     debug "^3.1.0"
     dotenv "^4.0.0"
     https-proxy-agent "^2.1.0"
+    lodash "^4.17.4"
+    proxy-from-env "^1.0.0"
+    url-template "^2.0.8"
+
+github@^13.1.0:
+  version "13.1.0"
+  resolved "https://registry.yarnpkg.com/github/-/github-13.1.0.tgz#fc925950beebdff0cb0583197598b86f41bedaa4"
+  dependencies:
+    debug "^3.1.0"
+    dotenv "^4.0.0"
+    https-proxy-agent "^2.1.0"
+    is-stream "^1.1.0"
     lodash "^4.17.4"
     proxy-from-env "^1.0.0"
     url-template "^2.0.8"
