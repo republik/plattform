@@ -2,10 +2,11 @@
 # yarn lockfile v1
 
 
-"@orbiting/backend-modules-assets@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-assets/-/backend-modules-assets-1.0.0.tgz#1795b8a53e274a957ed1121ab00f0abcabcafae8"
+"@orbiting/backend-modules-assets@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-assets/-/backend-modules-assets-1.0.1.tgz#02d2ac705cd32b0c82c84139f806c302ae6d652c"
   dependencies:
+    "@orbiting/backend-modules-github" "^1.0.0"
     check-env "^1.3.0"
     export-files "^2.1.1"
     file-type "^7.4.0"
@@ -104,9 +105,9 @@
     check-env "^1.3.0"
     export-files "^2.1.1"
 
-"@orbiting/backend-modules-redirections@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-redirections/-/backend-modules-redirections-1.0.0.tgz#88fec89efef04b85cf3b87f123907e0fe4d7f0b9"
+"@orbiting/backend-modules-redirections@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-redirections/-/backend-modules-redirections-1.0.1.tgz#d14056e23b639dfbdf2140827f4507fc29fa1414"
   dependencies:
     apollo-modules-node "^0.1.4"
 
