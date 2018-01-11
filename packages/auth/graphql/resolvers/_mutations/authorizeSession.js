@@ -23,6 +23,6 @@ module.exports = async (_, args, { pgdb, req }) => {
       const util = require('util')
       console.error('authorizeSession: exception', util.inspect({ req: req._log(), emailFromQuery: email, e }, {depth: null}))
     }
-    throw new Error(t('api/unauthorized'))
+    throw new Error(t('api/token/invalid'))
   }
 }

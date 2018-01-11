@@ -7,6 +7,7 @@ type Session {
   email: String!
   expiresAt: DateTime!
   country: String
+  countryFlag: String
   city: String
   isCurrent: Boolean!
 }

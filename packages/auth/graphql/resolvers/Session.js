@@ -1,3 +1,5 @@
+const { flag, code } = require('country-emoji')
+
 module.exports = {
   id (session, args) {
     return session.id
@@ -14,6 +16,11 @@ module.exports = {
   country (session, args) {
     const { geo = {} } = session.sess
     return geo.country
+  },
+  countryFlag (session, args) {
+    const { geo = {} } = session.sess
+    const countryCode = geo.country ? code(geo.country) : null
+    return countryCode ? flag(countryCode) : '🏴'
   },
   city (session, args) {
     const { geo = {} } = session.sess

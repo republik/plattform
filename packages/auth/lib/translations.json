@@ -1,5 +1,5 @@
 {
-  "updated": "2017-12-26T00:34:56.432Z",
+  "updated": "2018-01-11T22:10:02.812Z",
   "title": "live",
   "data": [
     {
@@ -33,6 +33,10 @@
     {
       "key": "api/signin/mail/subject",
       "value": "E-Mail-Adresse bestätigen (für die Republik)"
+    },
+    {
+      "key": "api/token/invalid",
+      "value": "Token ungültig!"
     },
     {
       "key": "api/checkUsername/min",

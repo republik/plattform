@@ -18,7 +18,7 @@ checkEnv([
 
 const {
   AUTH_MAIL_FROM_ADDRESS,
-  PUBLIC_URL,
+  FRONTEND_BASE_URL,
   AUTO_LOGIN,
   BASIC_AUTH_USER,
   BASIC_AUTH_PASS,
@@ -73,9 +73,9 @@ module.exports = async (_email, context, pgdb, req) => {
   })
 
   const verificationUrl =
-    (PUBLIC_URL || 'http://' + req.headers.host) +
-    '/auth/email/signin/?' +
+    `${FRONTEND_BASE_URL}/mitteilung?` +
     querystring.stringify({
+      type: 'token-authorization',
       email,
       context,
       token
