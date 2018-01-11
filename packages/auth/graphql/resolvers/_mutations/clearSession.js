@@ -19,7 +19,7 @@ module.exports = async (_, args, { pgdb, user: me, req }) => {
     : me
 
   try {
-    if (hashSessionId(req.sessionID) === sessionId) {
+    if (hashSessionId(req.sessionID, me.email) === sessionId) {
       // current session, normal logout
       await destroySession(req)
     }

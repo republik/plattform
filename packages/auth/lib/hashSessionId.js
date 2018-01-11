@@ -1,7 +1,9 @@
-module.exports = (id) => {
+module.exports = async (id, salt) => {
   const crypto = require('crypto')
-  return crypto
-    .createHmac('sha256', process.env.SESSION_SECRET)
-    .update(id)
-    .digest('hex')
+  return new Promise((resolve, reject) => {
+    crypto.pbkdf2(id, salt, 1000, 64, 'sha512', (err, derivedKey) => {
+      if (err) return reject(err)
+      return resolve(derivedKey.toString('hex'))
+    })
+  })
 }

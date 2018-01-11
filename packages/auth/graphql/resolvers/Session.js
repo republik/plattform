@@ -1,8 +1,9 @@
 const hashSessionId = require('../../lib/hashSessionId')
 
 module.exports = {
-  id (session, args) {
-    return hashSessionId(session.sid)
+  async id (session, args) {
+    // email should be salty enough for a salt 🤡🤡
+    return hashSessionId(session.sid, session.sess.email)
   },
   ipAddress (session, args) {
     return session.sess.ip
