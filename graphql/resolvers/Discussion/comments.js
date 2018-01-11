@@ -62,10 +62,10 @@ const measureTree = comment => {
 // each node with children gets a topValue based on
 // node[sortKey] || topChild[topValue] || topChild[sortKey]
 // thus topValue bubbles up the tree, ensuring consistent sorting.
-const deepSortTree = (comment, ascDesc, sortKey) => {
+const deepSortTree = (comment, ascDesc, sortKey, topValue, topIds) => {
   const { comments } = comment
   if (comments.nodes.length > 0) {
-    comments.nodes.forEach(c => deepSortTree(c, ascDesc, sortKey))
+    comments.nodes.forEach(c => deepSortTree(c, ascDesc, sortKey, topValue, topIds))
     comment.comments = {
       ...comments,
       nodes: comments.nodes.sort(
@@ -73,12 +73,14 @@ const deepSortTree = (comment, ascDesc, sortKey) => {
           ascDesc(a.topValue || a[sortKey], b.topValue || b[sortKey])
       )
     }
-    if (comment[sortKey]) { // root is a fake comment
+    if (comment[sortKey]) { // root is a fake comment, doesn't have [sortKey]
       const firstChild = comment.comments.nodes[0]
-      comment.topValue = [
-        comment[sortKey],
-        firstChild.topValue || firstChild[sortKey]
-      ].sort((a, b) => ascDesc(a, b))[0]
+      comment.topValue = topIds && topIds.includes(comment.id)
+        ? topValue
+        : [
+          comment[sortKey],
+          firstChild.topValue || firstChild[sortKey]
+        ].sort((a, b) => ascDesc(a, b))[0]
     }
   }
   return comment
@@ -264,6 +266,9 @@ module.exports = async (discussion, args, context, info) => {
   const ascDesc = orderDirection === 'ASC'
     ? ascending
     : descending
+  const topValue = orderDirection === 'ASC'
+    ? Number.MIN_SAFE_INTEGER
+    : Number.MAX_SAFE_INTEGER
   const sortKeyMap = {
     'DATE': 'createdAt',
     'VOTES': 'score',
@@ -271,11 +276,29 @@ module.exports = async (discussion, args, context, info) => {
   }
   const sortKey = sortKeyMap[orderBy]
   const compare =
-    (a, b) => ascDesc(a[sortKey], b[sortKey]) || ascending(a.index, b.index) // index for stable sort
+    (a, b) => // topValue set  by deepSortTree // index for stable sort
+      ascDesc(a.topValue || a[sortKey], b.topValue || b[sortKey]) || ascending(a.index, b.index)
+
+  let focusComment
+  if (focusId) {
+    focusComment = comments.find(c => c.id === focusId)
+    // topValue used for sorting
+    // we assign it here, because focusComment might be a node without
+    // children, which deepSortTree doesn't calculate a topValue for
+    focusComment.topValue = topValue
+  }
 
   assembleTree(tree, comments)
   measureTree(tree)
-  deepSortTree(tree, ascDesc, sortKey)
+  deepSortTree(
+    tree,
+    ascDesc,
+    sortKey,
+    topValue,
+    focusComment && focusComment.parentIds
+      ? [...focusComment.parentIds, focusComment.id]
+      : null
+  )
 
   if (exceptIds) { // exceptIds are always on first level
     tree.comments.nodes = tree.comments.nodes.filter(c => exceptIds.indexOf(c.id) === -1)
@@ -287,50 +310,17 @@ module.exports = async (discussion, args, context, info) => {
       index
     }))
 
-  if (first || focusId) {
-    let filterCommentIds
+  if (first) {
+    const filterCommentIds = coveredComments
+      .sort(compare)
+      .slice(0, first)
+      .map(c => c.id)
 
-    if (focusId) {
-      const focusComment = coveredComments
-        .find(c => c.id === focusId)
-      const focusCommentParentId = focusComment.parentIds && focusComment.parentIds.slice(-1).pop()
-
-      const focusLevelComments = coveredComments
-        .filter(c =>
-            c._depth === focusComment._depth &&
-            (
-              c.parentIds === focusCommentParentId ||
-              (c.parentIds && c.parentIds.slice(-1).pop() === focusCommentParentId)
-            )
-        )
-        .sort(compare)
-
-      const focusIndex = focusLevelComments
-        .findIndex(c => c.id === focusId)
-
-      filterCommentIds = [
-        ...focusLevelComments
-          .slice(focusIndex - 1, focusIndex + 2),
-        ...coveredComments
-          .filter(c => c.parentIds && c.parentIds.slice(-1).pop() === focusId)
-          .slice(0, 1)
-      ]
-        .sort(compare)
-        .map(c => c.id)
-    } else if (first) {
-      filterCommentIds = coveredComments
-        .sort(compare)
-        .slice(0, first)
-        .map(c => c.id)
-    }
-
-    if (filterCommentIds) {
-      filterTree(tree, filterCommentIds, {
-        orderBy,
-        orderDirection,
-        exceptIds
-      })
-    }
+    filterTree(tree, filterCommentIds, {
+      orderBy,
+      orderDirection,
+      exceptIds
+    })
   }
 
   if (maxDepth != null) {
@@ -344,6 +334,11 @@ module.exports = async (discussion, args, context, info) => {
   if (!parentId) {
     tree.comments.id = discussion.id
     tree.comments.totalCount = discussionTotalCount
+  }
+
+  if (focusComment) {
+    // add focus to root CommentConnection
+    tree.comments.focus = focusComment
   }
 
   return tree.comments

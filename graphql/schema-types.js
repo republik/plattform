@@ -199,6 +199,7 @@ type CommentConnection {
   totalCount: Int!
   pageInfo: PageInfo
   nodes: [Comment]!
+  focus: Comment
 }
 
 type Discussion {
@@ -224,8 +225,10 @@ type Discussion {
     # first elements are deep inside the tree, all coresponding
     # parents are returned as well.
     first: Int
-    # include this comment and context around it
-    # don't use in combination with parentId or after
+    # sort comments so that focus and it's parents are on top
+    # focus comment might not be returned in first query if
+    # it's too deep nested but it's always returned on
+    # the root CommentConnection
     focusId: ID
     orderBy: DiscussionOrder
     orderDirection: OrderDirection
