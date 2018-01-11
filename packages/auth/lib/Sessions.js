@@ -37,7 +37,7 @@ const findAllUserSessions = async ({ pgdb, userId }) => {
   return sessions || []
 }
 
-const clearAllUserSessions = async ({ pgdb, store, userId }) => {
+const clearAllUserSessions = async ({ pgdb, userId }) => {
   const transaction = await pgdb.transactionBegin()
   try {
     const sessions = await findAllUserSessions({ pgdb: transaction, userId })
