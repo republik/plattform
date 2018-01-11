@@ -5,5 +5,6 @@ module.exports = async (
   { path },
   context
 ) => {
-  return get(path, null, context)
+  const result = await get(path, null, context)
+  return result[0]
 }

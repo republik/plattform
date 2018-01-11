@@ -1,6 +1,6 @@
 {
   "name": "@orbiting/backend-modules-documents",
-  "version": "2.3.0",
+  "version": "2.4.1",
   "description": "(redis-)documents schema and resolvers",
   "main": "index.js",
   "repository": {
@@ -23,7 +23,7 @@
     "isomorphic-unfetch": "^2.0.0"
   },
   "dependencies": {
-    "@orbiting/backend-modules-auth": "^2.2.3",
+    "@orbiting/backend-modules-auth": "^2.3.0",
     "@project-r/styleguide": "^5.27.1",
     "@project-r/template-newsletter": "^1.5.0",
     "apollo-modules-node": "^0.1.4",
