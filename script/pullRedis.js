@@ -67,7 +67,7 @@ PgDb.connect().then(async pgdb => {
       const repoMeta = await getRepoMeta(repo)
       if (repoMeta && repoMeta.mailchimpCampaignId) {
         redisOps.push(
-          redis.saddAsync(`repos:${repo.id}/mailchimp/campaignId`, repoMeta.mailchimpCampaignId)
+          redis.setAsync(`repos:${repo.id}/mailchimp/campaignId`, repoMeta.mailchimpCampaignId)
         )
       }
       for (let publication of publications) {
