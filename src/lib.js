@@ -97,6 +97,7 @@ export {
 } from './components/CommentTeaser'
 export {
   CommentTreeNode,
+  CommentTreeRow,
   CommentTreeLoadMore,
   CommentTreeCollapse
 } from './components/CommentTree'

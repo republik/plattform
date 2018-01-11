@@ -127,4 +127,120 @@ Composer.propTypes = {
   submitComment: PropTypes.func.isRequired,
 }
 
-export default Row
+class RowState extends PureComponent {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      composerState: 'idle', // idle | focused | submitting | error
+      composerError: undefined // or string
+    }
+
+    this.openComposer = () => {
+      this.setState({
+        composerState: 'focused',
+        composerError: undefined
+      })
+    }
+    this.dismissComposer = () => {
+      this.setState({
+        composerState: 'idle',
+        composerError: undefined
+      })
+    }
+
+    this.upvoteComment = () => {
+      this.props.upvoteComment(this.props.comment.id)
+    }
+    this.downvoteComment = () => {
+      this.props.downvoteComment(this.props.comment.id)
+    }
+    this.submitComment = (content) => {
+      this.setState({composerState: 'submitting'})
+      this.props.submitComment(this.props.comment, content).then(
+        () => {
+          this.setState({
+            composerState: 'idle',
+            composerError: undefined
+          })
+        },
+        (e) => {
+          this.setState({
+            composerState: 'error',
+            composerError: e
+          })
+        }
+      )
+    }
+  }
+
+  render () {
+    const {
+      t,
+      timeago,
+      comment,
+      visualDepth, head, tail,
+      otherChild,
+      displayAuthor,
+      onEditPreferences,
+      isAdmin
+    } = this.props
+    const {composerState, composerError} = this.state
+    const {userVote} = comment
+
+    const edit = comment.userCanEdit && {
+      start: () => {
+        this.setState({
+          isEditing: true,
+          editError: undefined
+        })
+      },
+      submit: content => {
+        this.props.editComment(comment, content)
+          .then(() => {
+            this.setState({
+              isEditing: false
+            })
+          })
+          .catch(e => {
+            this.setState({
+              editError: e
+            })
+          })
+      },
+      cancel: () => {
+        this.setState({
+          isEditing: false
+        })
+      },
+      isEditing: this.state.isEditing,
+      error: this.state.editError
+    }
+
+    return (
+      <Row
+        t={t}
+        visualDepth={visualDepth}
+        head={head}
+        tail={tail}
+        otherChild={otherChild}
+        comment={comment}
+        displayAuthor={displayAuthor}
+        showComposer={composerState !== 'idle'}
+        composerError={composerError}
+        onEditPreferences={onEditPreferences}
+        onAnswer={displayAuthor ? this.openComposer : undefined}
+        onUpvote={(!displayAuthor || userVote === 'UP') ? undefined : this.upvoteComment}
+        onDownvote={(!displayAuthor || userVote === 'DOWN') ? undefined : this.downvoteComment}
+        onUnpublish={(isAdmin || comment.userCanEdit) && comment.published && (() => this.props.unpublishComment(comment.id))}
+        dismissComposer={this.dismissComposer}
+        submitComment={this.submitComment}
+        edit={edit}
+        timeago={timeago}
+      />
+    )
+  }
+
+}
+
+export default RowState
