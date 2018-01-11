@@ -1,8 +1,12 @@
 const { createGithubClients } = require('../../lib/github')
 const MDAST = require('@orbiting/remark-preset')
-const { createPrefixUrl } = require('../../lib/assets')
+const { lib: {
+  createRepoUrlPrefixer,
+  createUrlPrefixer
+} } = require('@orbiting/backend-modules-assets')
 const visit = require('unist-util-visit')
 const debug = require('debug')('publikator:commit')
+const { imageKeys: embedImageKeys } = require('../../lib/embeds')
 
 module.exports = {
   document: async (
@@ -11,7 +15,7 @@ module.exports = {
       repo: { id: repoId },
       document: existingDocument
     },
-    { oneway },
+    { publicAssets = false },
     { user, redis }
   ) => {
     if (existingDocument) {
@@ -77,15 +81,26 @@ module.exports = {
       }
     }
 
-    // prefix image urls
-    // - editor specific
-    const prefixUrl = createPrefixUrl(repoId, oneway)
+    // prefix repo image's urls
+    const prefixRepoUrl = createRepoUrlPrefixer(repoId, publicAssets)
     visit(mdast, 'image', node => {
-      node.url = prefixUrl(node.url)
+      node.url = prefixRepoUrl(node.url)
     })
     Object.keys(mdast.meta).forEach(key => {
       if (key.match(/image/i)) {
-        mdast.meta[key] = prefixUrl(mdast.meta[key])
+        mdast.meta[key] = prefixRepoUrl(mdast.meta[key])
+      }
+    })
+
+    // prefix embed image's urls
+    const prefixUrl = createUrlPrefixer(publicAssets)
+    visit(mdast, 'zone', node => {
+      if (node.data && node.identifier.indexOf('EMBED') > -1) {
+        for (let key of embedImageKeys) {
+          if (node.data[key]) {
+            node.data[key] = prefixUrl(node.data[key])
+          }
+        }
       }
     })
 

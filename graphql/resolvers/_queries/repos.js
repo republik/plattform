@@ -35,7 +35,7 @@ module.exports = async (__, args, { user, redis }) => {
         }
 
         const latestCommit = await getCommit(repo, { id: repo.defaultBranchRef.target.oid }, { redis })
-        const document = await getDocument(latestCommit, { oneway: true }, { user, redis })
+        const document = await getDocument(latestCommit, { publicAssets: true }, { user, redis })
         return {
           ...repo,
           meta: await getMeta(repo),

@@ -60,8 +60,12 @@ YOUTUBE_APP_KEY=
 # optional: filter for the repos query (repo name must contain term)
 REPOS_NAME_FILTER=article-
 
-# URL which proxies assets from github
-PUBLIC_ASSETS_URL=http://localhost:3004/assets
+# host that proxies images internally (most probably this publikator)
+INTERNAL_ASSETS_HOSTNAME=http://localhost:3004
+# hostname of the frontend which will serve assets for the public
+PUBLIC_ASSETS_HOSTNAME=http://localhost:3020
+# min 32bit key to authenticate the public the access the asset proxy
+ASSETS_HMAC_KEY=
 ```
 
 Install dependencies.
