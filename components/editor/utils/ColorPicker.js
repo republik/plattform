@@ -21,7 +21,7 @@ const styles = {
   }
 }
 
-class ButtonExample extends Component {
+class ColorPicker extends Component {
   constructor (...args) {
     super(...args)
     this.state = {
@@ -64,4 +64,4 @@ class ButtonExample extends Component {
   }
 }
 
-export default ButtonExample
+export default ColorPicker
