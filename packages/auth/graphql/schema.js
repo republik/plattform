@@ -21,6 +21,9 @@ type queries {
 
   # search for an unverified session by token
   unauthorizedSession(email: String!, token: String!): Session
+
+  # the requesting userAgent
+  echo: RequestInfo!
 }
 
 type mutations {

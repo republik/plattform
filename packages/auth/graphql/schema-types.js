@@ -3,7 +3,7 @@ module.exports = `
 type Session {
   id: ID!
   ipAddress: String!
-  userAgent: String!
+  userAgent: String
   email: String!
   expiresAt: DateTime!
   country: String
@@ -29,5 +29,13 @@ type User {
 
 type SignInResponse {
   phrase: String!
+}
+
+type RequestInfo {
+  ipAddress: String!
+  userAgent: String
+  country: String
+  countryFlag: String
+  city: String
 }
 `
