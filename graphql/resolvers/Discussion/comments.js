@@ -50,6 +50,7 @@ const measureTree = comment => {
     ...comments,
     id: comment.id,
     totalCount: numChildren,
+    directTotalCount: comments.nodes.length || 0,
     pageInfo: {
       hasNextPage: false,
       endCursor: null
@@ -195,6 +196,37 @@ const decorateTree = async (_comment, coveredComments, discussion, context) => {
   return _decorateTree(_comment)
 }
 
+// the returned array has the same order as the tree
+// removes nested children
+const flattenTreeHorizontally = (_comment) => {
+  let comments = []
+  const _flattenTree = (comment, first) => {
+    if (!first) { // exclude root
+      comments.push(comment)
+    }
+    if (comment.comments.nodes.length > 0) {
+      comment.comments.nodes.forEach(c => _flattenTree(c))
+      comment.comments.nodes = []
+    }
+  }
+  _flattenTree(_comment, true)
+  return comments
+}
+
+// in the returned array lower depth comes first
+// doesn't remove nested children
+const flattenTreeVertically = (_comment) => {
+  let comments = []
+  const _flattenTree = comment => {
+    if (comment.comments.nodes.length > 0) {
+      comments.push(...comment.comments.nodes)
+      comment.comments.nodes.forEach(c => _flattenTree(c))
+    }
+  }
+  _flattenTree(_comment)
+  return comments
+}
+
 const meassureDepth = (fields, depth = 0) => {
   if (fields.nodes && fields.nodes.comments) {
     return meassureDepth(fields.nodes.comments, depth + 1)
@@ -206,21 +238,9 @@ const meassureDepth = (fields, depth = 0) => {
   }
 }
 
-const getCommentsArray = (_comment) => {
-  let comments = []
-  const _getCommentsArray = comment => {
-    if (comment.comments.nodes.length > 0) {
-      comments.push(...comment.comments.nodes)
-      comment.comments.nodes.forEach(c => _getCommentsArray(c))
-    }
-  }
-  _getCommentsArray(_comment)
-  return comments
-}
-
 module.exports = async (discussion, args, context, info) => {
   const { pgdb } = context
-  const maxDepth = meassureDepth(graphqlFields(info))
+  const maxDepth = args.flatDepth || meassureDepth(graphqlFields(info))
 
   const { after } = args
   const options = after
@@ -235,7 +255,8 @@ module.exports = async (discussion, args, context, info) => {
     first = 200,
     exceptIds = [],
     focusId,
-    parentId
+    parentId,
+    flatDepth
   } = options
 
   // get comments
@@ -304,7 +325,7 @@ module.exports = async (discussion, args, context, info) => {
     tree.comments.nodes = tree.comments.nodes.filter(c => exceptIds.indexOf(c.id) === -1)
   }
 
-  let coveredComments = getCommentsArray(tree)
+  let coveredComments = flattenTreeVertically(tree)
     .map((c, index) => ({ // remember index for stable sort
       ...c,
       index
@@ -339,6 +360,11 @@ module.exports = async (discussion, args, context, info) => {
   if (focusComment) {
     // add focus to root CommentConnection
     tree.comments.focus = focusComment
+  }
+
+  // return a flat array in the order of the tree
+  if (flatDepth) {
+    tree.comments.nodes = flattenTreeHorizontally(tree)
   }
 
   return tree.comments

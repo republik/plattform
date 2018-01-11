@@ -197,6 +197,7 @@ type CommentConnection {
   id: ID!
   # recursive down the tree
   totalCount: Int!
+  directTotalCount: Int
   pageInfo: PageInfo
   nodes: [Comment]!
   focus: Comment
@@ -232,6 +233,9 @@ type Discussion {
     focusId: ID
     orderBy: DiscussionOrder
     orderDirection: OrderDirection
+    # if set, the tree is returned flat instead of nested up upon
+    # the specified depth
+    flatDepth: Int
   ): CommentConnection!
   rules: DiscussionRules!
   userPreference: DiscussionPreferences
