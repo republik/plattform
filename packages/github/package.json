@@ -1,6 +1,6 @@
 {
   "name": "@orbiting/backend-modules-github",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "github clients and utils",
   "main": "index.js",
   "repository": {
