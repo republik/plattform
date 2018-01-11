@@ -1,39 +1,80 @@
 const sharp = require('sharp')
 const fileType = require('file-type')
+const fetch = require('isomorphic-unfetch')
 const { lib: { clients: createGithubClients } } = require('@orbiting/backend-modules-github')
-
 const { authenticate } = require('../lib')
 
 const maxSize = 6000
 
-// Because githubs get-contents is limited to 1MB the current
-// approach is to extract the blobs sha from the filename,
-// get the file via get-blob, and send the content directly as response.
-// Optimization: Find a way to get the download url of a blob
-// without requestion the content and pipe fetch(download_url) as
-// response to our request.
-// https://developer.github.com/v3/repos/contents/#get-contents
-// https://developer.github.com/v3/git/blobs/#get-a-blob
+const getDimensions = (resize) => {
+  if (!resize) {
+    return {
+      width: null,
+      height: null
+    }
+  }
+  const [_width, _height] = resize.split('x')
+  const width = _width ? parseInt(_width) : null
+  const height = _height ? parseInt(_height) : null
+  if (width && (typeof (width) !== 'number' || isNaN(width))) {
+    throw new Error('invalid with')
+  }
+  if (height && (typeof (height) !== 'number' || isNaN(height))) {
+    throw new Error('invalid height')
+  }
+  if (width > maxSize || height > maxSize) {
+    throw new Error('maxSize: '+ maxSize)
+  }
+  return {
+    width,
+    height
+  }
+}
+
+const returnImage = async (res, buffer, resize) => {
+  let width, height
+  try {
+    const dimensions = getDimensions(resize)
+    width = dimensions.width
+    height = dimensions.height
+  } catch(e) {
+    res.status(400).end(e.message)
+  }
+
+  const type = fileType(buffer)
+  const isJPEG = type && type.ext === 'jpg'
+
+  if (width || height || isJPEG) {
+    let image = sharp(buffer)
+    if (width || height) {
+      image = image.resize(width, height)
+    }
+    if (isJPEG) {
+      image = image.jpeg({
+        progressive: true,
+        quality: 80
+      })
+    }
+    return res.end(await image.toBuffer())
+  }
+
+  return res.end(buffer)
+}
+
 module.exports = (server) => {
+  // images out of repos
+  // Because githubs get-contents is limited to 1MB the current
+  // approach is to extract the blobs sha from the filename,
+  // get the file via get-blob, and send the content directly as response.
+  // Optimization: Find a way to get the download url of a blob
+  // without requestion the content and pipe fetch(download_url) as
+  // response to our request.
+  // https://developer.github.com/v3/repos/contents/#get-contents
+  // https://developer.github.com/v3/git/blobs/#get-a-blob
   server.get('/assets/:login/:repoName/:path(*)', async (req, res) => {
     const { githubRest } = await createGithubClients()
 
     const { resize } = req.query
-    let width, height
-    if (resize) {
-      let [_width, _height] = resize.split('x')
-      width = _width ? parseInt(_width) : null
-      height = _height ? parseInt(_height) : null
-      if (width && (typeof (width) !== 'number' || isNaN(width))) {
-        return res.status(400).end('invalid width')
-      }
-      if (height && (typeof (height) !== 'number' || isNaN(height))) {
-        return res.status(400).end('invalid height')
-      }
-      if (width > maxSize || height > maxSize) {
-        return res.status(400).end('max size: ' + maxSize)
-      }
-    }
 
     const {
       login,
@@ -59,32 +100,17 @@ module.exports = (server) => {
           res.status(500).end()
         }
       })
-    if (!result) return
-
-    const { data: { content } } = result
-
-    const buffer = Buffer.from(content, 'base64')
-    const type = fileType(buffer)
-    const isJPEG = type && type.ext === 'jpg'
-
-    if (width || height || isJPEG) {
-      let image = sharp(buffer)
-      if (width || height) {
-        image = image.resize(width, height)
-      }
-      if (isJPEG) {
-        image = image.jpeg({
-          progressive: true,
-          quality: 80
-        })
-      }
-      return res.end(await image.toBuffer())
+    if (!result) {
+      return res.status(404).end()
     }
 
-    return res.end(buffer)
+    const { data: { content } } = result
+    const buffer = Buffer.from(content, 'base64')
+
+    return returnImage(res, buffer, resize)
   })
 
-  const fetch = require('isomorphic-unfetch')
+  // embed images
   server.get('/assets/images', async (req, res) => {
     const {
       originalURL: url,
@@ -101,7 +127,7 @@ module.exports = (server) => {
       return res.status(403).end()
     }
 
-    const image = await fetch(url, {
+    const buffer = await fetch(url, {
       method: 'GET',
     })
       .then(response => response.buffer())
@@ -110,7 +136,7 @@ module.exports = (server) => {
         res.status(404).end()
       })
 
-    return res.end(image)
+    return returnImage(res, buffer, resize)
   })
 
 }

@@ -45,7 +45,7 @@ module.exports = {
         }
         return url.toString()
       }
-      return originalUrl
+      return path
     }
   },
 
