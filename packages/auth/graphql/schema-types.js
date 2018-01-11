@@ -1,4 +1,16 @@
 module.exports = `
+
+type Session {
+  id: ID!
+  ipAddress: String!
+  userAgent: String!
+  email: String!
+  expiresAt: DateTime!
+  country: String
+  city: String
+  isCurrent: Boolean!
+}
+
 type User {
   id: ID!
   initials: String
@@ -11,6 +23,7 @@ type User {
   roles: [String!]!
   createdAt: DateTime!
   updatedAt: DateTime!
+  sessions: [Session!]
 }
 
 type SignInResponse {
