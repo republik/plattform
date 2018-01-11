@@ -82,20 +82,37 @@ const getSerializer = options => {
       byline
     ] = object.nodes
 
+    const children = [
+      ...inlineSerializer.toMdast(
+        caption.nodes,
+        0,
+        object,
+        rest
+      )
+    ]
+    const bylineChildren = bylineModule.helpers.serializer.toMdast(
+        byline.nodes,
+        1,
+        object,
+        rest
+    )
+
+    if (
+      bylineChildren.length &&
+      !(
+        bylineChildren.length === 1 &&
+        bylineChildren[0].value === ''
+      )
+    ) {
+      children.push({
+        type: 'emphasis',
+        children: bylineChildren
+      })
+    }
+
     const res = {
       type: 'paragraph',
-      children: [
-        ...inlineSerializer.toMdast(
-          caption.nodes,
-          0,
-          object,
-          rest
-        ),
-        {
-          type: 'emphasis',
-          children: bylineModule.helpers.serializer.toMdast(byline.nodes)
-        }
-      ]
+      children
     }
     return res
   }
