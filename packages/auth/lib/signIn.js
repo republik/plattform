@@ -73,7 +73,7 @@ module.exports = async (_email, context, pgdb, req) => {
   })
 
   const verificationUrl =
-    `${FRONTEND_BASE_URL}/notifications?` +
+    `${FRONTEND_BASE_URL}/mitteilung?` +
     querystring.stringify({
       type: 'token-authorization',
       email,

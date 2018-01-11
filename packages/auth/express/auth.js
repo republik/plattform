@@ -81,7 +81,7 @@ exports.configure = ({
     if (!token) {
       debug('no token: %O', { req: req._log(), emailFromQuery, context })
       return res.redirect(
-        `${FRONTEND_BASE_URL}/notifications?` +
+        `${FRONTEND_BASE_URL}/mitteilung?` +
         querystring.stringify({
           type: 'invalid-token',
           email: emailFromQuery,
@@ -96,7 +96,7 @@ exports.configure = ({
       })
       const { email } = user
       return res.redirect(
-        `${FRONTEND_BASE_URL}/notifications?` +
+        `${FRONTEND_BASE_URL}/mitteilung?` +
         querystring.stringify({
           type: 'email-confirmed',
           email,
@@ -108,7 +108,7 @@ exports.configure = ({
         const { email } = e.meta
         debug("session.email and query.email don't match: %O", { req: req._log(), context, ...e.meta })
         return res.redirect(
-          `${FRONTEND_BASE_URL}/notifications?` +
+          `${FRONTEND_BASE_URL}/mitteilung?` +
           querystring.stringify({
             type: 'invalid-token',
             email,
@@ -119,7 +119,7 @@ exports.configure = ({
       if (e instanceof NoSessionError) {
         debug('no session: %O', { req: req._log(), context, ...e.meta })
         return res.redirect(
-          `${FRONTEND_BASE_URL}/notifications?` +
+          `${FRONTEND_BASE_URL}/mitteilung?` +
           querystring.stringify({
             type: 'invalid-token',
             email: emailFromQuery,
@@ -130,7 +130,7 @@ exports.configure = ({
       const util = require('util')
       console.error('auth: exception', util.inspect({ req: req._log(), emailFromQuery, context, e }, {depth: null}))
       return res.redirect(
-        `${FRONTEND_BASE_URL}/notifications?` +
+        `${FRONTEND_BASE_URL}/mitteilung?` +
         querystring.stringify({
           type: 'unavailable',
           emailFromQuery,
