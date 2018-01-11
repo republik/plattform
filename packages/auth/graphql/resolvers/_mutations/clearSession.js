@@ -3,7 +3,6 @@ const Roles = require('../../../lib/Roles')
 const { DestroySessionError } = require('../../../lib/errors')
 const ensureSignedIn = require('../../../lib/ensureSignedIn')
 const { clearUserSession, destroySession } = require('../../../lib/Sessions')
-const hashSessionId = require('../../../lib/hashSessionId')
 const userAccessRoles = ['admin', 'supporter']
 
 module.exports = async (_, args, { pgdb, user: me, req }) => {
@@ -19,7 +18,8 @@ module.exports = async (_, args, { pgdb, user: me, req }) => {
     : me
 
   try {
-    if ((await hashSessionId(req.sessionID, me.email)) === sessionId) {
+    const session = pgdb.public.sessions.findOne({ sid: req.sessionID, email: user.email })
+    if (session.id === sessionId) {
       // current session, normal logout
       await destroySession(req)
       return true

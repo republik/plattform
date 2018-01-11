@@ -1,10 +1,8 @@
 const { flag, code } = require('country-emoji')
-const hashSessionId = require('../../lib/hashSessionId')
 
 module.exports = {
-  async id (session, args) {
-    // email should be salty enough for a salt 🤡🤡
-    return hashSessionId(session.sid, session.sess.email)
+  id (session, args) {
+    return session.id
   },
   ipAddress (session, args) {
     return session.sess.ip

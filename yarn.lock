@@ -998,6 +998,10 @@ cosmiconfig@^1.1.0:
     pinkie-promise "^2.0.0"
     require-from-string "^1.1.0"
 
+country-emoji@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/country-emoji/-/country-emoji-1.2.0.tgz#7214abde696c27d5045fd2b1f731cbc70a81f2a4"
+
 cowsay@^1.1.9:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/cowsay/-/cowsay-1.2.1.tgz#3bde9f17ba64049bd359ff57b8916ec81d0332fe"
