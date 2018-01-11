@@ -1,7 +1,5 @@
 const querystring = require('querystring')
-const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
-const updateUserOnMailchimp = require('./updateUserOnMailchimp')
-const unsubscribeFromMailchimp = require('./unsubscribeFromMailchimp')
+const { sendMailTemplate, updateUserOnMailchimp, unsubscribeFromMailchimp } = require('@orbiting/backend-modules-mail')
 const t = require('./t')
 
 const {

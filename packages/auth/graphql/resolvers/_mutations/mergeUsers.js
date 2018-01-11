@@ -1,7 +1,6 @@
 const logger = console
 const {ascending} = require('d3-array')
-const updateUserOnMailchimp = require('../../../lib/updateUserOnMailchimp')
-const unsubscribeFromMailchimp = require('../../../lib/unsubscribeFromMailchimp')
+const { updateUserOnMailchimp, unsubscribeFromMailchimp } = require('@orbiting/backend-modules-mail')
 const Roles = require('../../../lib/Roles')
 
 module.exports = async (_, args, {pgdb, req, t}) => {
