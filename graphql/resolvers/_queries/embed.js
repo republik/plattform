@@ -1,7 +1,7 @@
 const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
-const { getTweetById } = require('../../../lib/twitter')
-const { getYoutubeVideoById } = require('../../../lib/youtube')
-const { getVimeoVideoById } = require('../../../lib/vimeo')
+const { getTweetById } = require('../../../lib/embeds/twitter')
+const { getYoutubeVideoById } = require('../../../lib/embeds/youtube')
+const { getVimeoVideoById } = require('../../../lib/embeds/vimeo')
 
 // // One capturing group at match[1] that catches the status
 // const TWITTER_REGEX = /^https?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)$/

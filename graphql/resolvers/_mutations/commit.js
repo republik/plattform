@@ -15,6 +15,7 @@ const {
   getHeads,
   gitAuthor
 } = require('../../../lib/github')
+const { imageKeys: embedImageKeys } = require('../../../lib/embeds')
 
 const extractImage = async (url, images) => {
   if (url) {
@@ -76,6 +77,7 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
   }
 
   // reverse asset url prefixing
+  // repo images
   visit(mdast, 'image', node => {
     node.url = unprefixUrl(node.url)
   })
@@ -86,8 +88,18 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
       }
     })
   }
+  // embeds
+  visit(mdast, 'zone', node => {
+    if (node.data && node.identifier.indexOf('EMBED') > -1) {
+      for (let key of embedImageKeys) {
+        if (node.data[key]) {
+          node.data[key] = unprefixUrl(node.data[key])
+        }
+      }
+    }
+  })
 
-  // extract images
+  // extract repo images
   const images = []
   const promises = []
   visit(mdast, 'image', async (node) => {
