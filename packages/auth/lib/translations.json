@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-11T22:10:02.812Z",
+  "updated": "2018-01-12T20:15:13.539Z",
   "title": "live",
   "data": [
     {
@@ -53,6 +53,22 @@
     {
       "key": "api/checkUsername/taken",
       "value": "Benutzername, nicht mehr verfügbar"
+    },
+    {
+      "key": "api/users/404",
+      "value": "Der User konnte leider nicht gefunden werden."
+    },
+    {
+      "key": "api/users/merge/sourceAndTargetIdentical",
+      "value": "Bei Quelle und Ziel darf es sich nicht um denselben User handeln."
+    },
+    {
+      "key": "api/email/change/confirmation/subject",
+      "value": "Ihre E-Mail-Adresse wurde geändert"
+    },
+    {
+      "key": "api/email/change/exists",
+      "value": "Es existiert bereits jemand mit der gewünschten E-Mail-Adresse."
     }
   ]
 }
