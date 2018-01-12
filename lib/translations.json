@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-09T15:11:47.324Z",
+  "updated": "2018-01-12T22:06:38.345Z",
   "title": "live",
   "data": [
     {
@@ -104,7 +104,7 @@
     },
     {
       "key": "repo/phase/draft",
-      "value": "Briefing / Entwurf"
+      "value": "Briefing/Entwurf"
     },
     {
       "key": "repo/phase/creation",
@@ -537,6 +537,10 @@
     {
       "key": "dashboard/links/slack/href",
       "value": "https://piratinnen.slack.com"
+    },
+    {
+      "key": "link/repo/search",
+      "value": "Artikel suchen"
     }
   ]
 }

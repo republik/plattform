@@ -155,7 +155,7 @@ export default ({TYPE}) => {
                 />
                 <SearchUserForm onChange={authorChange(onChange, value, node)} />
                 <RepoSearch
-                  label={t('link/repo/search', undefined, 'Artikel suchen')}
+                  label={t('link/repo/search')}
                   onChange={repoChange(onChange, value, node)}
                  />
               </UIForm>
