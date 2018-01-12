@@ -31,6 +31,7 @@ PgDb.connect().then(async pgdb => {
 
   let skippedUserEmails = []
   let doneUserEmails = []
+  let errorUserEmails = []
   // stop after one error, work done till then is saved
   for (let source of sources) {
     const transaction = await pgdb.transactionBegin()
@@ -50,6 +51,7 @@ PgDb.connect().then(async pgdb => {
       await transaction.transactionCommit()
     } catch (e) {
       await transaction.transactionRollback()
+      errorUserEmails.push(source.user.email)
       console.error('--------------------------------\ntransaction rollback', {
         error: e.message,
         source: {
@@ -65,15 +67,21 @@ PgDb.connect().then(async pgdb => {
   }
 
   console.log('\nResults:')
-  console.log('the following users already have a stripe customer and were skipped:', skippedUserEmails.length
+  console.log(`the following users (${skippedUserEmails.length}) already have a stripe customer and were skipped:`, skippedUserEmails.length
     ? skippedUserEmails.join(', ')
     : 'none'
   )
-  console.log('success for emails:', skippedUserEmails.length
+  console.log(`error for (${errorUserEmails.length}) emails:`, skippedUserEmails.length
+    ? errorUserEmails.join(', ')
+    : 'none'
+  )
+  console.log(`success for (${doneUserEmails.length}) emails:`, skippedUserEmails.length
     ? doneUserEmails.join(', ')
     : 'none'
   )
-  console.log(`stripeCustomers created for ${doneUserEmails.length} users!`)
+  console.log('stripeCustomers total:',
+    await pgdb.queryOneField('SELECT count(distinct("userId")) as count from "stripeCustomers"')
+  )
   console.log(`createStripeCustomers finished!`)
 }).then(() => {
   process.exit()
