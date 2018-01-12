@@ -12,15 +12,16 @@
     file-type "^7.4.0"
     sharp "^0.18.4"
 
-"@orbiting/backend-modules-auth@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-2.3.0.tgz#41a2a1190f4f096f5ba0e6949c9059883c2628d4"
+"@orbiting/backend-modules-auth@^2.4.1", "@orbiting/backend-modules-auth@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-2.5.0.tgz#ea6301486462cc3b8306010a5e31fb01adec0fc0"
   dependencies:
-    "@orbiting/backend-modules-mail" "^0.1.0"
+    "@orbiting/backend-modules-mail" "^0.1.1"
     "@orbiting/backend-modules-translate" "^0.0.0"
     apollo-modules-node "^0.1.4"
     check-env "^1.3.0"
     connect-pg-simple "^3.1.2"
+    country-emoji "^1.2.0"
     debug "^3.1.0"
     email-validator "^1.1.1"
     export-files "^2.1.1"
@@ -33,13 +34,14 @@
     pogi "^2.5.5"
     querystring "^0.2.0"
     rw "^1.3.3"
+    useragent "^2.2.1"
     uuid "^3.1.0"
 
-"@orbiting/backend-modules-base@^0.3.6":
-  version "0.3.6"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.3.6.tgz#e20a03f7d673bcc19db5ccbe424a460b716aaea9"
+"@orbiting/backend-modules-base@^0.3.9":
+  version "0.3.9"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.3.9.tgz#f37c86f9bdb80ca0aef065a09f9af3e6b5bb2571"
   dependencies:
-    "@orbiting/backend-modules-auth" "^2.3.0"
+    "@orbiting/backend-modules-auth" "^2.4.1"
     apollo-engine "^0.8.1"
     apollo-modules-node "^0.1.4"
     apollo-server-express "^1.3.2"
@@ -58,11 +60,11 @@
     redis "^2.8.0"
     subscriptions-transport-ws "^0.9.4"
 
-"@orbiting/backend-modules-documents@^2.4.1":
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.4.1.tgz#ffa79596b016026acb9f63c2cdf1aa8a13ddeabb"
+"@orbiting/backend-modules-documents@^2.4.3":
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.4.3.tgz#69f1f814a2879d280b3dc3422ac6dc46becec18a"
   dependencies:
-    "@orbiting/backend-modules-auth" "^2.3.0"
+    "@orbiting/backend-modules-auth" "^2.4.1"
     "@project-r/styleguide" "^5.27.1"
     "@project-r/template-newsletter" "^1.5.0"
     apollo-modules-node "^0.1.4"
@@ -97,9 +99,9 @@
     github "^13.1.0"
     jsonwebtoken "^8.1.0"
 
-"@orbiting/backend-modules-mail@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-mail/-/backend-modules-mail-0.1.0.tgz#45d138b8a643a71ab5c469f160e29e13a79e326d"
+"@orbiting/backend-modules-mail@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-mail/-/backend-modules-mail-0.1.1.tgz#638925a095278a4adc7751d93a72bd5fb0a2c660"
   dependencies:
     await-sleep "^0.0.1"
     check-env "^1.3.0"
@@ -961,6 +963,10 @@ cosmiconfig@^3.1.0:
     js-yaml "^3.9.0"
     parse-json "^3.0.0"
     require-from-string "^2.0.1"
+
+country-emoji@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/country-emoji/-/country-emoji-1.2.0.tgz#7214abde696c27d5045fd2b1f731cbc70a81f2a4"
 
 coveralls@^3.0.0:
   version "3.0.0"
@@ -3138,6 +3144,10 @@ lowercase-keys@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/lowercase-keys/-/lowercase-keys-1.0.0.tgz#4e3366b39e7f5457e35f1324bdf6f88d0bfc7306"
 
+lru-cache@2.2.x:
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-2.2.4.tgz#6c658619becf14031d0d0b594b16042ce4dc063d"
+
 lru-cache@^4.0.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-4.1.1.tgz#622e32e82488b49279114a4f9ecf45e7cd6bba55"
@@ -3511,7 +3521,7 @@ os-homedir@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/os-homedir/-/os-homedir-1.0.2.tgz#ffbc4988336e0e833de0c168c7ef152121aa7fb3"
 
-os-tmpdir@^1.0.0:
+os-tmpdir@^1.0.0, os-tmpdir@~1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/os-tmpdir/-/os-tmpdir-1.0.2.tgz#bbe67406c79aa85c5cfec766fe5734555dfa1274"
 
@@ -4816,6 +4826,12 @@ tiny-lru@^1.4.13:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/tiny-lru/-/tiny-lru-1.5.0.tgz#aa5fb1d22fcdd8aa1ff2d7b04c13357cfc997167"
 
+tmp@0.0.x:
+  version "0.0.33"
+  resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.0.33.tgz#6d34335889768d21b2bcda0aa277ced3b1bfadf9"
+  dependencies:
+    os-tmpdir "~1.0.2"
+
 to-fast-properties@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-1.0.3.tgz#b83571fa4d8c25b82e231b06e3a3055de4ca1a47"
@@ -4987,6 +5003,13 @@ user-home@^2.0.0:
   resolved "https://registry.yarnpkg.com/user-home/-/user-home-2.0.0.tgz#9c70bfd8169bc1dcbf48604e0f04b8b49cde9e9f"
   dependencies:
     os-homedir "^1.0.0"
+
+useragent@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/useragent/-/useragent-2.2.1.tgz#cf593ef4f2d175875e8bb658ea92e18a4fd06d8e"
+  dependencies:
+    lru-cache "2.2.x"
+    tmp "0.0.x"
 
 util-deprecate@~1.0.1:
   version "1.0.2"

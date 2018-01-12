@@ -1,4 +1,3 @@
-const fetch = require('node-fetch')
 const { apolloFetch, pgDatabase } = require('./helpers')
 
 const LOGIN_USER_MUTATION = `
@@ -6,6 +5,12 @@ const LOGIN_USER_MUTATION = `
     signIn(email: $email, context: $context) {
       phrase
     }
+  }
+`
+
+const AUTHORIZE_SESSION_MUTATION = `
+  mutation authorizeSession($email: String!, $token: String!) {
+    authorizeSession(email: $email, token: $token)
   }
 `
 
@@ -25,6 +30,8 @@ const signIn = async ({ user, context }) => {
     console.warn(e)
     // ignore
   }
+
+  // start login process
   await apolloFetch({
     query: LOGIN_USER_MUTATION,
     variables: {
@@ -35,12 +42,17 @@ const signIn = async ({ user, context }) => {
   const { sess: { token } } = await pgDatabase().public.sessions.findOne({
     'sess @>': { email: email }
   })
-  const verifyUrl = `${process.env.PUBLIC_URL}/auth/email/signin?token=${token}&email=${email}`
-  try {
-    await fetch(verifyUrl)
-  } catch (e) {
-    console.warn(e)
-  }
+
+  // authorize session by token
+  await apolloFetch({
+    query: AUTHORIZE_SESSION_MUTATION,
+    variables: {
+      email,
+      token
+    }
+  })
+
+  // resolve userId
   const { id: userId } = await pgDatabase().public.users.findOne({ email })
   return { userId }
 }
