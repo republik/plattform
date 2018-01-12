@@ -6,6 +6,7 @@ import { Label, Field, Autocomplete } from '@project-r/styleguide'
 import LinkIcon from 'react-icons/lib/fa/chain'
 import UIForm from '../../UIForm'
 import createOnFieldChange from '../../utils/createOnFieldChange'
+import RepoSearch from '../../utils/RepoSearch'
 import withT from '../../../../lib/withT'
 
 import {
@@ -120,6 +121,24 @@ export default ({TYPE}) => {
         )
       )
     }
+    const repoChange = (onChange, value, node) => repo => {
+      onChange(
+        value.change().replaceNodeByKey(
+          node.key,
+          {
+            type: TYPE,
+            kind: 'inline',
+            data: node.data.merge({
+              title: repo.text,
+              href: `/~${repo.value.id}?autoSlug`
+            }),
+            nodes: [
+              Text.create(repo.text)
+            ]
+          }
+        )
+      )
+    }
     return <div>
       <Label>Links</Label>
       {
@@ -140,6 +159,10 @@ export default ({TYPE}) => {
                   onChange={onInputChange('title')}
                 />
                 <SearchUserForm onChange={authorChange(onChange, value, node)} />
+                <RepoSearch
+                  label={t('link/repo/search', undefined, 'Artikel suchen')}
+                  onChange={repoChange(onChange, value, node)}
+                 />
               </UIForm>
             )
           })
