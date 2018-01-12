@@ -24,7 +24,7 @@ PgDb.connect().then(async pgdb => {
     WHERE
       p.method = 'STRIPE'
       ${testMode
-        ? "AND u.email ilike '%@project-r.construction'"
+        ? "AND u.email ilike '%@republik.ch'"
         : ''
       }
   `)
@@ -43,6 +43,7 @@ PgDb.connect().then(async pgdb => {
           userId: source.user.id,
           pgdb: transaction
         })
+        await transaction.public.paymentSources.deleteOne({ id: source.id })
         doneCount += 1
       }
       await transaction.transactionCommit()
