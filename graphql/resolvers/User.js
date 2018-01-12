@@ -161,9 +161,10 @@ module.exports = {
         ? { afterRowNumber }
         : { }
     })
-    const lastCommentId = await pgdb.public.comments.findFirst({
+    const oldestComment = await pgdb.public.comments.findFirst({
       userId: user.id
     }, {fields: ['id'], orderBy: ['createdAt asc']})
+    const lastCommentId = oldestComment && oldestComment.id
 
     if (comments.length) {
       return {
