@@ -34,7 +34,7 @@ PgDb.connect().then(async pgdb => {
     `)
 
     let max = 0
-    const beginDate = new Date('2018-01-14T01:00:00.000+01:00')
+    const beginDate = new Date('2018-01-15T12:00:00.000+01:00')
     const endDate = moment(beginDate).add(1, 'year')
     for (let user of usersWithMemberships) {
       if (user.email === 'jefferson@project-r.construction') {
