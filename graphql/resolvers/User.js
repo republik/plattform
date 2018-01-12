@@ -161,9 +161,9 @@ module.exports = {
         ? { afterRowNumber }
         : { }
     })
-    const lastCommentId = await pgdb.public.comments.findOneFieldOnly({
+    const lastCommentId = await pgdb.public.comments.findFirst({
       userId: user.id
-    }, 'id', {orderBy: ['createdAt asc']})
+    }, {fields: ['id'], orderBy: ['createdAt asc']})
 
     if (comments.length) {
       return {
