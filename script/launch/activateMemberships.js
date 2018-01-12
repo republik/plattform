@@ -9,6 +9,7 @@
 require('../../lib/env')
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const moment = require('moment')
+const { ascending } = require('d3-array')
 
 console.log('running activateMemberships.js...')
 PgDb.connect().then(async pgdb => {
@@ -27,11 +28,7 @@ PgDb.connect().then(async pgdb => {
         u.id
     `)
 
-    const benefactorMembershipType = await transaction.query(`
-      SELECT *
-      FROM "membershipTypes"
-      WHERE name = 'BENEFACTOR_ABO'
-    `)
+    const benefactorMembershipType = await transaction.public.membershipTypes.findOne({ name: 'BENEFACTOR_ABO' })
 
     let max = 0
     const beginDate = new Date('2018-01-15T12:00:00.000+01:00')
@@ -48,16 +45,25 @@ PgDb.connect().then(async pgdb => {
       } else {
         const membershipsWithoutVoucherCode = user.memberships
           .filter(membership => membership.voucherCode === null)
+          .sort((a, b) => ascending(a.sequenceNumber, b.sequenceNumber))
         if (membershipsWithoutVoucherCode.length > 1) {
           console.warn('multiple memberships without voucherCode!!!!!!!!', user.memberships)
         }
 
+        const reducedPriceMembership = user.memberships.find(m => m.reducedPrice)
+
         const benefactorMemberships = user.memberships
           .filter(membership => membership.membershipTypeId === benefactorMembershipType.id)
+          .sort((a, b) => ascending(a.sequenceNumber, b.sequenceNumber))
+
+        const smallestSeqMembership = user.memberships
+          .sort((a, b) => ascending(a.sequenceNumber, b.sequenceNumber))
+          .concat().shift()
 
         electedMembership = membershipsWithoutVoucherCode[0] ||
+          reducedPriceMembership ||
           benefactorMemberships[0] ||
-          user.memberships[0]
+          smallestSeqMembership
       }
 
       await transaction.public.memberships.update({
@@ -65,7 +71,8 @@ PgDb.connect().then(async pgdb => {
       }, {
         active: true,
         renew: true,
-        voucherCode: null
+        voucherCode: null,
+        voucherable: false
       })
 
       await transaction.public.membershipPeriods.insert({
