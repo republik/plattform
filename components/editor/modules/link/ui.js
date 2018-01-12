@@ -123,18 +123,13 @@ export default ({TYPE}) => {
     }
     const repoChange = (onChange, value, node) => repo => {
       onChange(
-        value.change().replaceNodeByKey(
+        value.change().setNodeByKey(
           node.key,
           {
-            type: TYPE,
-            kind: 'inline',
             data: node.data.merge({
               title: repo.text,
-              href: `/~${repo.value.id}?autoSlug`
-            }),
-            nodes: [
-              Text.create(repo.text)
-            ]
+              href: `https://github.com/${repo.value.id}?autoSlug`
+            })
           }
         )
       )
