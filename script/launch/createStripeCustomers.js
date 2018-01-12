@@ -30,7 +30,7 @@ PgDb.connect().then(async pgdb => {
   `)
 
   let skippedUserEmails = []
-  let doneCount = 0
+  let doneUserEmails = []
   // stop after one error, work done till then is saved
   for (let source of sources) {
     const transaction = await pgdb.transactionBegin()
@@ -44,13 +44,14 @@ PgDb.connect().then(async pgdb => {
           pgdb: transaction
         })
         await transaction.public.paymentSources.deleteOne({ id: source.id })
-        doneCount += 1
+        doneUserEmails.push(source.user.email)
+        console.log(source.user.email + ' success!')
       }
       await transaction.transactionCommit()
     } catch (e) {
       await transaction.transactionRollback()
       console.error('--------------------------------\ntransaction rollback', {
-        error: e,
+        error: e.message,
         source: {
           id: source.id,
           pspId: source.pspId,
@@ -68,7 +69,11 @@ PgDb.connect().then(async pgdb => {
     ? skippedUserEmails.join(', ')
     : 'none'
   )
-  console.log(`stripeCustomers created for ${doneCount} users!`)
+  console.log('success for emails:', skippedUserEmails.length
+    ? doneUserEmails.join(', ')
+    : 'none'
+  )
+  console.log(`stripeCustomers created for ${doneUserEmails.length} users!`)
   console.log(`createStripeCustomers finished!`)
 }).then(() => {
   process.exit()
