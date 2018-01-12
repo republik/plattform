@@ -16,6 +16,7 @@ module.exports = async (server, pgdb, t) => {
 
   const handleStripeWebhook = async (req, res, connected) => {
     const body = JSON.parse(req.body.toString('utf8'))
+    debug(`stripe${connected ? ':connected' : ''} %O`, body)
 
     // stripe sends test payments to test and prod endpoints
     // ignore test events on production
@@ -45,7 +46,6 @@ module.exports = async (server, pgdb, t) => {
   server.post('/payments/stripe',
     bodyParser.raw({type: '*/*'}),
     async (req, res) => {
-      debug('stripe: %O', req.body)
       return handleStripeWebhook(req, res, false)
     }
   )
@@ -53,7 +53,6 @@ module.exports = async (server, pgdb, t) => {
   server.post('/payments/stripe/connected',
     bodyParser.raw({type: '*/*'}),
     async (req, res) => {
-      debug('stripe:connected %O', req.body)
       return handleStripeWebhook(req, res, true)
     }
   )
