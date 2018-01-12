@@ -35,19 +35,19 @@ module.exports = ({orderId, amount, userId}) => {
     },
     {
       key: 'ACCEPTURL',
-      value: `${FRONTEND_BASE_URL}/pledge`
+      value: `${FRONTEND_BASE_URL}/angebote`
     },
     {
       key: 'EXCEPTIONURL',
-      value: `${FRONTEND_BASE_URL}/pledge`
+      value: `${FRONTEND_BASE_URL}/angebote`
     },
     {
       key: 'DECLINEURL',
-      value: `${FRONTEND_BASE_URL}/pledge`
+      value: `${FRONTEND_BASE_URL}/angebote`
     },
     {
       key: 'CANCELURL',
-      value: `${FRONTEND_BASE_URL}/pledge`
+      value: `${FRONTEND_BASE_URL}/angebote`
     },
     {
       key: 'USERID',
