@@ -62,7 +62,7 @@ const link = css({
 
 const findUserQuery = gql`
 query users($email: String!) {
-  users(limit: 1, search: $email) {
+  users: adminUsers(limit: 1, search: $email) {
     items {
       id
       email
