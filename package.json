@@ -7,31 +7,34 @@
   "description": "",
   "main": "server/index.js",
   "scripts": {
-    "dev": "nodemon --watch server --watch app --watch lib/routes.js server/index.js",
+    "dev":
+      "nodemon --watch server --watch app --watch lib/routes.js server/index.js",
     "start": "node server/index.js",
     "build": "next build",
     "heroku-postbuild": "npm run build",
     "tape": "cross-env NODE_ENV=test babel-tape-runner",
-    "test": "cross-env NODE_ENV=test babel-tape-runner \"?(lib|pages|components)/**/*.test.js\" | faucet",
+    "test":
+      "cross-env NODE_ENV=test babel-tape-runner \"?(lib|pages|components)/**/*.test.js\" | faucet",
     "standardize": "standard --fix",
-    "precommit": "lint-staged",
-    "translations": "gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json"
+    "precommit": "npm test && lint-staged",
+    "translations":
+      "gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/orbiting/haku-frontend.git"
+    "url":
+      "git+https://github.com/orbiting/haku-frontend.git"
   },
   "author": "",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/orbiting/haku-frontend/issues"
+    "url":
+      "https://github.com/orbiting/haku-frontend/issues"
   },
-  "homepage": "https://github.com/orbiting/haku-frontend#readme",
+  "homepage":
+    "https://github.com/orbiting/haku-frontend#readme",
   "lint-staged": {
-    "*.js": [
-      "standard --fix",
-      "git add"
-    ]
+    "*.js": ["standard --fix", "git add"]
   },
   "devDependencies": {
     "babel-plugin-transform-react-jsx": "^6.24.1",
