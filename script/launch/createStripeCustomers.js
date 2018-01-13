@@ -65,11 +65,15 @@ PgDb.connect().then(async pgdb => {
             deduplicate: true
           })
           successForCustomer = true
+          console.log('\tdeleting source from db...')
+          await transaction.public.paymentSources.deleteOne({ id: source.id })
         } catch (e2) {
-          console.log('\tfailed to add source', e2.message, source.pspId)
+          console.log('\tfailed to add source (moving to PAYMENTSLIP):', e2.message, source.pspId)
+          await transaction.public.paymentSources.updateOne(
+            { id: source.id },
+            { paymentMethod: 'PAYMENTSLIP' }
+          )
         }
-        console.log('\tdeleting source from db...')
-        await transaction.public.paymentSources.deleteOne({ id: source.id })
       }
       if (successForCustomer) {
         console.log('\tsuccess!')
