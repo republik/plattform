@@ -83,6 +83,9 @@ export default ({rule, subModules, TYPE}) => {
     ]
   })
 
+  const paragraphSoftBreakHandler = keyHandler({ TYPE })
+  const paragraphStaticHandler = staticKeyHandler({ TYPE, rule: rule || {} })
+
   return {
     TYPE,
     rule,
@@ -110,7 +113,15 @@ export default ({rule, subModules, TYPE}) => {
     },
     plugins: [
       {
-        onKeyDown: isStatic ? staticKeyHandler({ TYPE, rule }) : keyHandler({ TYPE }),
+        onKeyDown: (...args) => {
+          const softBreak = paragraphSoftBreakHandler(...args)
+          if (softBreak) {
+            return softBreak
+          }
+          if (isStatic) {
+            return paragraphStaticHandler(...args)
+          }
+        },
         renderPlaceholder: placeholder && (({node}) => {
           if (!paragraph.match(node)) return
           if (node.text.length) return null

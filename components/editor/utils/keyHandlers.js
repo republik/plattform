@@ -49,7 +49,7 @@ const insertAfter = (change, afterType, insertAfterType) => {
 }
 
 export const staticKeyHandler = ({ TYPE, rule }) => {
-  const { afterType, insertAfterType } = rule.editorOptions
+  const { afterType, insertAfterType } = rule.editorOptions || {}
 
   return (event, change) => {
     const isBackspace = event.key === 'Backspace'
@@ -93,10 +93,6 @@ export const staticKeyHandler = ({ TYPE, rule }) => {
     }
 
     if (isEnter) {
-      event.preventDefault()
-      if (event.shiftKey === true) {
-        return change.insertText('\n')
-      }
       if (!afterType) {
         return focusNext(change)
       }
@@ -136,7 +132,6 @@ export const keyHandler = ({ TYPE }) => (event, change) => {
   if (type !== TYPE) {
     return
   }
-
   return change.insertText('\n')
 }
 
