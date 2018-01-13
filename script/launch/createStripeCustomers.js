@@ -26,7 +26,7 @@ PgDb.connect().then(async pgdb => {
     WHERE
       p.method = 'STRIPE'
       ${testMode
-        ? "AND u.email ilike '%@republik.ch'"
+        ? ''// "AND u.email ilike '%@republik.ch'"
         : ''
       }
     GROUP BY 1
