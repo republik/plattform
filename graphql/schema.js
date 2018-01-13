@@ -17,6 +17,11 @@ type queries {
     # user id, legacy testimonial id or username to inject as first result
     focus: String
   ): UserConnection!
+  nextStatement(
+    sequenceNumber: Int!,
+    orderDirection: OrderDirection!
+  ): User!
+
   greeting: Greeting
   faqs: [Faq!]!
   events: [Event!]!
