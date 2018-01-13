@@ -120,11 +120,7 @@ const figureCaption = {
     isStatic: true,
     placeholder: 'Legende'
   },
-  rules: [
-    figureByLine,
-    link,
-    ...globalInlines
-  ]
+  rules: [figureByLine, link, ...globalInlines]
 }
 
 const figure = {
@@ -167,10 +163,7 @@ const figure = {
       }
     ]
   },
-  rules: [
-    figureImage,
-    figureCaption
-  ]
+  rules: [figureImage, figureCaption]
 }
 
 const centerFigureCaption = {
@@ -199,15 +192,10 @@ const centerFigure = {
   editorOptions: {
     ...figure.editorOptions,
     insertButtonText: 'Bild',
-    insertTypes: [
-      'PARAGRAPH'
-    ],
+    insertTypes: ['PARAGRAPH'],
     type: 'CENTERFIGURE'
   },
-  rules: [
-    figureImage,
-    centerFigureCaption
-  ]
+  rules: [figureImage, centerFigureCaption]
 }
 
 const infoBox = {
@@ -215,20 +203,15 @@ const infoBox = {
   component: InfoBox,
   props: node => ({
     size: node.data.size,
-    figureSize: node.children.find(
-      matchZone('FIGURE')
-    )
-      ? node.data.figureSize ||
-        INFOBOX_DEFAULT_IMAGE_SIZE
+    figureSize: node.children.find(matchZone('FIGURE'))
+      ? node.data.figureSize || INFOBOX_DEFAULT_IMAGE_SIZE
       : undefined,
     figureFloat: node.data.figureFloat
   }),
   editorModule: 'infobox',
   editorOptions: {
     insertButtonText: 'Infobox',
-    insertTypes: [
-      'PARAGRAPH'
-    ]
+    insertTypes: ['PARAGRAPH']
   },
   rules: [
     {
@@ -281,24 +264,19 @@ const pullQuote = {
   component: PullQuote,
   props: node => ({
     size: node.data.size,
-    hasFigure: !!node.children.find(
-      matchZone('FIGURE')
-    )
+    hasFigure: !!node.children.find(matchZone('FIGURE'))
   }),
   editorModule: 'quote',
   editorOptions: {
     insertButtonText: 'Zitat',
-    insertTypes: [
-      'PARAGRAPH'
-    ]
+    insertTypes: ['PARAGRAPH']
   },
   rules: [
     figure,
     {
       matchMdast: (node, index, parent) =>
         matchParagraph(node) &&
-        (index === 0 ||
-          !matchLast(node, index, parent)),
+        (index === 0 || !matchLast(node, index, parent)),
       component: PullQuoteText,
       editorModule: 'paragraph',
       editorOptions: {
@@ -328,10 +306,8 @@ const pullQuote = {
 export const COVER_TYPE = 'COVERFIGURE'
 
 const cover = {
-  matchMdast: (node, index) => (
-    matchFigure(node) &&
-    index === 0
-  ),
+  matchMdast: (node, index) =>
+    matchFigure(node) && index === 0,
   component: FigureCover,
   props: node => ({
     size: node.data.size
@@ -350,11 +326,11 @@ const cover = {
       },
       {
         label: 'Zentriert',
-        props: {size: 'center'}
+        props: { size: 'center' }
       },
       {
         label: 'Klein',
-        props: {size: 'tiny'}
+        props: { size: 'tiny' }
       }
     ]
   },
@@ -448,23 +424,42 @@ const createSchema = ({
           cover,
           titleBlockRule || {
             matchMdast: matchZone('TITLE'),
-            component: ({children, format, ...props}) => (
-              <TitleBlock {...props} format={format} Link={Link}>
+            component: ({ children, format, ...props }) => (
+              <TitleBlock
+                {...props}
+                format={format}
+                Link={Link}
+              >
                 {titleBlockPrepend}
-                {format && format.meta && (
-                  <Editorial.Format color={format.meta.color} contentEditable={false}>
-                    <Link href={format.meta.path} passHref>
-                      <a {...styles.link} href={format.meta.path}>
-                        {format.meta.title}
-                      </a>
-                    </Link>
-                  </Editorial.Format>
-                )}
+                {format &&
+                  format.meta && (
+                    <Editorial.Format
+                      color={format.meta.color}
+                      contentEditable={false}
+                    >
+                      <Link
+                        href={format.meta.path}
+                        passHref
+                      >
+                        <a
+                          {...styles.link}
+                          href={format.meta.path}
+                        >
+                          {format.meta.title}
+                        </a>
+                      </Link>
+                    </Editorial.Format>
+                  )}
                 {children}
                 {titleBlockAppend}
               </TitleBlock>
             ),
-            props: (node, index, parent, { ancestors }) => ({
+            props: (
+              node,
+              index,
+              parent,
+              { ancestors }
+            ) => ({
               center: node.data.center,
               format: ancestors[ancestors.length - 1].format
             }),
@@ -475,16 +470,32 @@ const createSchema = ({
             rules: [
               {
                 matchMdast: matchHeading(1),
-                component: ({ children, attributes, format, meta }) => {
-                  const Headline = (
-                    format && format.meta && format.meta.kind === 'meta'
+                component: ({
+                  children,
+                  attributes,
+                  format,
+                  meta
+                }) => {
+                  const Headline =
+                    format &&
+                    format.meta &&
+                    format.meta.kind === 'meta'
+                      ? Interaction.Headline
+                      : Editorial.Headline
+                  return (
+                    <Headline attributes={attributes}>
+                      {children}
+                    </Headline>
                   )
-                    ? Interaction.Headline
-                    : Editorial.Headline
-                  return <Headline attributes={attributes}>{children}</Headline>
                 },
-                props: (node, index, parent, { ancestors }) => {
-                  const rootNode = ancestors[ancestors.length - 1]
+                props: (
+                  node,
+                  index,
+                  parent,
+                  { ancestors }
+                ) => {
+                  const rootNode =
+                    ancestors[ancestors.length - 1]
                   return {
                     format: rootNode.format
                   }
@@ -507,7 +518,7 @@ const createSchema = ({
                     index === numHeadings
                   )
                 },
-                component: ({children, ...props}) => {
+                component: ({ children, ...props }) => {
                   if (
                     children &&
                     children.length === 1 &&
@@ -515,7 +526,12 @@ const createSchema = ({
                   ) {
                     return null
                   }
-                  return <Editorial.Lead children={children} {...props} />
+                  return (
+                    <Editorial.Lead
+                      children={children}
+                      {...props}
+                    />
+                  )
                 },
                 editorModule: 'paragraph',
                 editorOptions: {
@@ -567,9 +583,7 @@ const createSchema = ({
                 editorModule: 'figuregroup',
                 editorOptions: {
                   insertButtonText: 'Bildergruppe',
-                  insertTypes: [
-                    'PARAGRAPH'
-                  ]
+                  insertTypes: ['PARAGRAPH']
                 }
               },
               {
@@ -645,6 +659,10 @@ const createSchema = ({
                     {
                       label: 'Normal',
                       props: { size: undefined }
+                    },
+                    {
+                      label: 'Gross',
+                      props: { size: 'breakout' }
                     },
                     {
                       label: 'Mittel',
