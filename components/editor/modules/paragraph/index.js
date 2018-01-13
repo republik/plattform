@@ -2,7 +2,7 @@ import React from 'react'
 
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
-import { keyHandler, staticKeyHandler } from '../../utils/keyHandlers'
+import { createSoftBreakKeyHandler, createStaticKeyHandler } from '../../utils/keyHandlers'
 import Placeholder from '../../Placeholder'
 
 export default ({rule, subModules, TYPE}) => {
@@ -83,8 +83,8 @@ export default ({rule, subModules, TYPE}) => {
     ]
   })
 
-  const paragraphSoftBreakHandler = keyHandler({ TYPE })
-  const paragraphStaticHandler = staticKeyHandler({ TYPE, rule: rule || {} })
+  const paragraphSoftBreakHandler = createSoftBreakKeyHandler({ TYPE })
+  const paragraphStaticHandler = createStaticKeyHandler({ TYPE, rule: rule || {} })
 
   return {
     TYPE,

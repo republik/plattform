@@ -4,38 +4,43 @@ import { getClosestInSelection } from './selection'
 
 const focusNext = change => {
   const { value } = change
-  const nextBlock = value.document.getNextBlock(value.endBlock.key)
+  const nextBlock = value.document.getNextBlock(
+    value.endBlock.key
+  )
   if (nextBlock) {
-    return change.collapseToStartOf(
-      nextBlock
-    )
+    return change.collapseToStartOf(nextBlock)
   }
   return true
 }
 
 const focusPrevious = change => {
   const { value } = change
-  const nextBlock = value.document.getPreviousBlock(value.endBlock.key)
+  const nextBlock = value.document.getPreviousBlock(
+    value.endBlock.key
+  )
   if (nextBlock) {
-    return change.collapseToEndOf(
-      nextBlock
-    )
+    return change.collapseToEndOf(nextBlock)
   }
   return true
 }
 
-const insertAfter = (change, afterType, insertAfterType) => {
+const insertAfter = (
+  change,
+  afterType,
+  insertAfterType
+) => {
   const { value } = change
-  const rootNode = (
-      insertAfterType &&
+  const rootNode =
+    (insertAfterType &&
       value.document.getFurthest(
-        value.endBlock.key, matchBlock(insertAfterType)
-      )
-    ) ||
+        value.endBlock.key,
+        matchBlock(insertAfterType)
+      )) ||
     value.document
 
   const index = rootNode.nodes.findIndex(
-    n => !!n.findDescendant(m => m.key === value.endBlock.key)
+    n =>
+      !!n.findDescendant(m => m.key === value.endBlock.key)
   )
 
   if (index !== -1) {
@@ -48,8 +53,9 @@ const insertAfter = (change, afterType, insertAfterType) => {
   return change
 }
 
-export const staticKeyHandler = ({ TYPE, rule }) => {
-  const { afterType, insertAfterType } = rule.editorOptions || {}
+export const createStaticKeyHandler = ({ TYPE, rule }) => {
+  const { afterType, insertAfterType } =
+    rule.editorOptions || {}
 
   return (event, change) => {
     const isBackspace = event.key === 'Backspace'
@@ -57,11 +63,15 @@ export const staticKeyHandler = ({ TYPE, rule }) => {
     const isTab = event.key === 'Tab'
     const isDelete = event.key === 'Delete'
 
-    if (!isBackspace && !isEnter && !isDelete && !isTab) return
+    if (!isBackspace && !isEnter && !isDelete && !isTab) { return }
     const { value } = change
     const inSelection = value.blocks.some(matchBlock(TYPE))
 
-    if (inSelection && value.startBlock !== value.endBlock && value.isExpanded) {
+    if (
+      inSelection &&
+      value.startBlock !== value.endBlock &&
+      value.isExpanded
+    ) {
       if (isBackspace || isDelete) {
         return change.collapseToStart()
       }
@@ -72,18 +82,20 @@ export const staticKeyHandler = ({ TYPE, rule }) => {
       value.startBlock.key
     )
     const isCollapsed = value.isCollapsed
-    const cursorAtStart = isCollapsed &&
-    value.selection.hasStartAtStartOf(value.startBlock)
+    const cursorAtStart =
+      isCollapsed &&
+      value.selection.hasStartAtStartOf(value.startBlock)
 
     if (
-        !inSelection && (
-        !matchBlock(TYPE)(previousBlock) ||
+      !inSelection &&
+      (!matchBlock(TYPE)(previousBlock) ||
         !cursorAtStart ||
-        !isBackspace
-      )
-    ) return
+        !isBackspace)
+    ) { return }
 
-    const nextBlock = value.document.getNextBlock(value.endBlock.key)
+    const nextBlock = value.document.getNextBlock(
+      value.endBlock.key
+    )
     if (isTab) {
       if (nextBlock) {
         event.preventDefault()
@@ -98,13 +110,16 @@ export const staticKeyHandler = ({ TYPE, rule }) => {
       }
 
       if (!matchBlock(afterType)(nextBlock)) {
-        return focusNext(insertAfter(change, afterType, insertAfterType))
+        return focusNext(
+          insertAfter(change, afterType, insertAfterType)
+        )
       }
       return focusNext(change)
     }
 
-    const cursorAtEnd = isCollapsed &&
-    value.selection.hasEndAtEndOf(value.endBlock)
+    const cursorAtEnd =
+      isCollapsed &&
+      value.selection.hasEndAtEndOf(value.endBlock)
 
     if (isDelete && cursorAtEnd) {
       event.preventDefault()
@@ -113,8 +128,13 @@ export const staticKeyHandler = ({ TYPE, rule }) => {
 
     if (isBackspace && cursorAtStart) {
       event.preventDefault()
-      if (matchBlock(TYPE)(previousBlock) && value.startBlock.text === '') {
-        return focusPrevious(change).removeNodeByKey(value.startBlock.key)
+      if (
+        matchBlock(TYPE)(previousBlock) &&
+        value.startBlock.text === ''
+      ) {
+        return focusPrevious(change).removeNodeByKey(
+          value.startBlock.key
+        )
       } else {
         return focusPrevious(change)
       }
@@ -122,7 +142,10 @@ export const staticKeyHandler = ({ TYPE, rule }) => {
   }
 }
 
-export const keyHandler = ({ TYPE }) => (event, change) => {
+export const createSoftBreakKeyHandler = ({ TYPE }) => (
+  event,
+  change
+) => {
   const { value } = change
   if (event.key !== 'Enter') return
   if (event.shiftKey === false) return
@@ -135,8 +158,11 @@ export const keyHandler = ({ TYPE }) => (event, change) => {
   return change.insertText('\n')
 }
 
-export const removeEmptyHandler = ({ TYPE, isEmpty }) => (event, change) => {
-  if (event.key !== 'Backspace' && event.key !== 'Delete') return
+export const createRemoveEmptyKeyHandler = ({
+  TYPE,
+  isEmpty
+}) => (event, change) => {
+  if (event.key !== 'Backspace' && event.key !== 'Delete') { return }
 
   const emptyNodes = getClosestInSelection(
     n => matchBlock(TYPE)(n) && isEmpty(n),
@@ -144,10 +170,7 @@ export const removeEmptyHandler = ({ TYPE, isEmpty }) => (event, change) => {
   )
   if (emptyNodes.size < 1) return
 
-  return emptyNodes.reduce(
-    (t, node) => {
-      return t.removeNodeByKey(node.key)
-    },
-    change
-  )
+  return emptyNodes.reduce((t, node) => {
+    return t.removeNodeByKey(node.key)
+  }, change)
 }
