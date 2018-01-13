@@ -45,9 +45,5 @@ type mutations {
   # if userId is null, the logged in user's sessions get cleared
   # required role to clear other's session: supporter
   clearSessions(userId: ID): Boolean!
-
-  # merges the belongings from source to target
-  # required role: admin
-  mergeUsers(targetUserId: ID!, sourceUserId: ID!): User!
 }
 `
