@@ -49,7 +49,7 @@ const insertAfter = (change, afterType, insertAfterType) => {
 }
 
 export const staticKeyHandler = ({ TYPE, rule }) => {
-  const { afterType, insertAfterType } = rule.editorOptions
+  const { afterType, insertAfterType } = rule.editorOptions || {}
 
   return (event, change) => {
     const isBackspace = event.key === 'Backspace'
