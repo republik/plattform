@@ -20,12 +20,17 @@ const {
   ENGINE_API_KEY
 } = process.env
 
-module.exports = (server, pgdb, httpServer, executableSchema, t) => {
-  const createContext = ({user, ...additional} = {}) => ({
+module.exports = (
+  server,
+  pgdb,
+  httpServer,
+  executableSchema,
+  externalCreateGraphQLContext = a => a,
+) => {
+  const createContext = ({user, ...additional} = {}) => externalCreateGraphQLContext({
     ...additional,
     pgdb,
     user,
-    t,
     pubsub,
     redis
   })

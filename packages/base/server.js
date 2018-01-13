@@ -31,7 +31,7 @@ let server
 let httpServer
 let subscriptionServer
 
-module.exports.run = (executableSchema, middlewares, t, signInHooks) => {
+module.exports.run = (executableSchema, middlewares, t, createGraphqlContext) => {
   // init apollo engine
   const engine = ENGINE_API_KEY
     ? new Engine({
@@ -78,8 +78,7 @@ module.exports.run = (executableSchema, middlewares, t, signInHooks) => {
       domain: COOKIE_DOMAIN || undefined,
       cookieName: COOKIE_NAME,
       dev: DEV,
-      pgdb: pgdb,
-      signInHooks
+      pgdb: pgdb
     })
 
     if (CORS_WHITELIST_URL) {
@@ -91,7 +90,7 @@ module.exports.run = (executableSchema, middlewares, t, signInHooks) => {
       server.use('*', cors(corsOptions))
     }
 
-    subscriptionServer = graphql(server, pgdb, httpServer, executableSchema, t)
+    subscriptionServer = graphql(server, pgdb, httpServer, executableSchema, createGraphqlContext)
 
     for (let middleware of middlewares) {
       await middleware(server, pgdb, t)
