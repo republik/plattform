@@ -61,7 +61,7 @@ PgDb.connect().then(async pgdb => {
           await addSource({
             sourceId: source.pspId,
             userId: user.id,
-            pgdb,
+            pgdb: transaction,
             deduplicate: true
           })
           successForCustomer = true
