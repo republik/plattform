@@ -58,6 +58,17 @@ module.exports.run = (executableSchema, middlewares, t, signInHooks) => {
       server.use(engine.expressMiddleware())
     }
 
+    // redirect to https
+    if (!DEV) {
+      server.enable('trust proxy')
+      server.use( (req, res, next) => {
+        if (!req.secure) {
+          res.redirect(`https://${req.hostname}${req.url}`)
+        }
+        return next()
+      })
+    }
+
     server.use(requestLog)
 
     // Once DB is available, setup sessions and routes for authentication
