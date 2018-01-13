@@ -1,6 +1,7 @@
 const { sendMail } = require('@orbiting/backend-modules-mail')
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const { graphql: { resolvers: { queries: { document: getDocument } } } } = require('@orbiting/backend-modules-documents')
+const { graphql: { resolvers: { Document: DocResolver } } } = require('@orbiting/backend-modules-documents')
 const { lib: { html: { get: getHTML } } } = require('@orbiting/backend-modules-documents')
 const { descending } = require('d3-array')
 const moment = require('moment')
@@ -37,6 +38,9 @@ module.exports = async (_, args, context) => {
   if (!doc) {
     throw new Error(t('api/preview/mail/404'))
   }
+  // resolve Document
+  doc.content = DocResolver.content(doc, null, context)
+  doc.meta = DocResolver.meta(doc, null, context)
   const html = getHTML(doc)
 
   await sendMail({
