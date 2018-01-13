@@ -61,6 +61,9 @@ KEYCDN_ZONE_URL=
 # phantomjscloud.com to render social media share images
 PHANTOMJSCLOUD_API_KEY=
 
+# list urls allowed on the /render endpoint, the beginning must match
+RENDER_URL_WHITELIST=https://www.republik.ch/feed
+
 # Sheet IDs for gsheets powered pages
 GSHEETS={"someSheetId": "faqs","someSheetId": "updates","someSheetId": "events"}
 
