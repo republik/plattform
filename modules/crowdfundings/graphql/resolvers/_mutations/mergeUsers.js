@@ -1,9 +1,15 @@
 const logger = console
-const { ascending } = require('d3-array')
+const {ascending} = require('d3-array')
 const { updateUserOnMailchimp, unsubscribeFromMailchimp } = require('@orbiting/backend-modules-mail')
 const { Roles } = require('@orbiting/backend-modules-auth')
+const uniq = require('lodash/uniq')
+const { transformUser } = require('@orbiting/backend-modules-auth')
+const { Redirections: {
+  upsert: upsertRedirection
+} } = require('@orbiting/backend-modules-redirections')
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, context) => {
+  const {pgdb, req, t} = context
   Roles.ensureUserHasRole(req.user, 'admin')
 
   const {targetUserId, sourceUserId} = args
@@ -39,14 +45,34 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       )
     )[0]
 
+    // remove unique values from source
+    await transaction.public.users.updateOne(
+      { id: sourceUser.id },
+      {
+        testimonialId: null,
+        username: null
+      }
+    )
+
     const newUser = await transaction.public.users.updateAndGetOne({
       id: targetUser.id
     }, {
       firstName: users.map(u => u.firstName).filter(Boolean)[0],
       lastName: users.map(u => u.lastName).filter(Boolean)[0],
+      username: users.map(u => u.username).filter(Boolean)[0],
       birthday: users.map(u => u.birthday).filter(Boolean)[0],
       phoneNumber: users.map(u => u.phoneNumber).filter(Boolean)[0],
       addressId: users.map(u => u.addressId).filter(Boolean)[0],
+      hasPublicProfile: users.map(u => u.hasPublicProfile).filter(Boolean)[0],
+      facebookId: users.map(u => u.facebookId).filter(Boolean)[0],
+      twitterHandle: users.map(u => u.twitterHandle).filter(Boolean)[0],
+      publicUrl: users.map(u => u.publicUrl).filter(Boolean)[0],
+      biography: users.map(u => u.biography).filter(Boolean)[0],
+      pgpPublicKey: users.map(u => u.pgpPublicKey).filter(Boolean)[0],
+      phoneNumberNote: users.map(u => u.phoneNumberNote).filter(Boolean)[0],
+      phoneNumberAccessRole: users.map(u => u.phoneNumberAccessRole).filter(Boolean)[0],
+      emailAccessRole: users.map(u => u.emailAccessRole).filter(Boolean)[0],
+      ageAccessRole: users.map(u => u.ageAccessRole).filter(Boolean)[0],
       statement: statementUser && statementUser.statement,
       isListed: statementUser && statementUser.isListed,
       isAdminUnlisted: statementUser && statementUser.isAdminUnlisted,
@@ -54,9 +80,28 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       portraitUrl: statementUser
         ? statementUser.portraitUrl
         : users.map(u => u.portraitUrl).filter(Boolean)[0],
+      badges: uniq([
+        ...targetUser.badges || [],
+        ...sourceUser.badges || []
+      ].filter(Boolean)),
+      roles: uniq([
+        ...targetUser.roles || [],
+        ...sourceUser.roles || []
+      ].filter(Boolean)),
       createdAt: users.map(u => u.createdAt).sort((a, b) => ascending(a.createdAt, b.createdAt))[0],
       updatedAt: now
     })
+    // ignored:
+    //  previewsSentAt
+
+    if (sourceUser.username && targetUser.username) {
+      await upsertRedirection({
+        source: `/~${sourceUser.username}`,
+        target: `/~${targetUser.username}`,
+        resource: { user: { id: targetUser.id } },
+        status: 302 // allow reclaiming by somebody else
+      }, context, now)
+    }
 
     // transfer belongings
     const from = { userId: sourceUser.id }
@@ -64,10 +109,13 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     await transaction.public.paymentSources.update(from, to)
     await transaction.public.pledges.update(from, to)
     await transaction.public.memberships.update(from, to)
-    await transaction.public.comments.update(from, to)
     if (!await (transaction.public.ballots.findFirst(to))) {
       await transaction.public.ballots.update(from, to)
     }
+    await transaction.public.stripeCustomers.update(from, to)
+    await transaction.public.discussionPreferences.update(from, to)
+    await transaction.public.comments.update(from, to)
+    await transaction.public.credentials.update(from, to)
 
     let sessions = await transaction.public.sessions.find({'sess @>': {passport: {user: sourceUser.id}}})
     for (let session of sessions) {
@@ -76,6 +124,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       })
       await transaction.public.sessions.updateOne({ id: session.id }, {sess})
     }
+    await transaction.public.eventLog.update(from, to)
 
     // remove addresses
     const addressIds = users
@@ -107,5 +156,5 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     throw e
   }
 
-  return pgdb.public.users.findOne({id: targetUserId})
+  return transformUser(await pgdb.public.users.findOne({id: targetUserId}))
 }
