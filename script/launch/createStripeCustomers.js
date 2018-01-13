@@ -7,19 +7,21 @@
 require('../../lib/env')
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const createCustomer = require('../../modules/crowdfundings/lib/payments/stripe/createCustomer')
+const addSource = require('../../modules/crowdfundings/lib/payments/stripe/addSource')
+const removeCustomer = require('./removeStripeCustomer')
 
 const testMode = process.argv[2] === '--test'
 
 console.log(`running createStripeCustomers.js${testMode ? ' (in TEST mode)' : ''}...`)
 PgDb.connect().then(async pgdb => {
-  const sources = await pgdb.query(`
+  let users = await pgdb.query(`
     SELECT
-      p.*,
-      to_json(u.*) AS user
+      u.*,
+      to_json(array_agg(p.*)) AS sources
     FROM
-      "paymentSources" p
-    JOIN
       users u
+    JOIN
+      "paymentSources" p
       ON p."userId"=u.id
     WHERE
       p.method = 'STRIPE'
@@ -27,56 +29,84 @@ PgDb.connect().then(async pgdb => {
         ? "AND u.email ilike '%@republik.ch'"
         : ''
       }
+    GROUP BY 1
   `)
 
-  let skippedUserEmails = []
+  if (testMode) {
+    users = users.slice(-1)
+  }
+
   let doneUserEmails = []
   let errorUserEmails = []
-  // stop after one error, work done till then is saved
-  for (let source of sources) {
+  let investigateUserEmails = []
+
+  for (let user of users) {
+    console.log(user.email, user.id)
     const transaction = await pgdb.transactionBegin()
     try {
-      if (await transaction.public.stripeCustomers.findFirst({ userId: source.user.id })) {
-        skippedUserEmails.push(source.user.email)
-      } else {
+      let customerCreated = false
+      if (!(await transaction.public.stripeCustomers.findFirst({ userId: user.id }))) {
+        console.log('\tcreating stripe customer...')
         await createCustomer({
-          sourceId: source.pspId,
-          userId: source.user.id,
+          // sourceId: source.pspId,
+          userId: user.id,
           pgdb: transaction
         })
+        customerCreated = true
+      }
+      let successForCustomer = false
+      for (let source of user.sources) {
+        try {
+          console.log('\tadding source ' + source.pspId + '...')
+          await addSource({
+            sourceId: source.pspId,
+            userId: user.id,
+            pgdb,
+            deduplicate: true
+          })
+          successForCustomer = true
+        } catch (e2) {
+          console.log('\tfailed to add source', e2.message, source.pspId)
+        }
+        console.log('\tdeleting source from db...')
         await transaction.public.paymentSources.deleteOne({ id: source.id })
-        doneUserEmails.push(source.user.email)
-        console.log(source.user.email + ' success!')
+      }
+      if (successForCustomer) {
+        console.log('\tsuccess!')
+        doneUserEmails.push(user.email)
+      } else if (customerCreated) {
+        console.log('\tremoving customer again')
+        errorUserEmails.push(user.email)
+        await removeCustomer({
+          userId: user.id,
+          pgdb: transaction
+        })
+      } else {
+        console.log('\tINVESTIGATE', user.id, user.email)
+        investigateUserEmails.push(user.email)
       }
       await transaction.transactionCommit()
     } catch (e) {
       await transaction.transactionRollback()
-      errorUserEmails.push(source.user.email)
+      errorUserEmails.push(user.email)
       console.error('--------------------------------\ntransaction rollback', {
         error: e.message,
-        source: {
-          id: source.id,
-          pspId: source.pspId,
-          user: {
-            id: source.user.id,
-            email: source.user.email
-          }
-        }
+        user
       })
     }
   }
 
   console.log('\nResults:')
-  console.log(`the following users (${skippedUserEmails.length}) already have a stripe customer and were skipped:`, skippedUserEmails.length
-    ? skippedUserEmails.join(', ')
-    : 'none'
-  )
-  console.log(`error for (${errorUserEmails.length}) emails:`, skippedUserEmails.length
+  console.log(`error for (${errorUserEmails.length}) emails:`, errorUserEmails.length
     ? errorUserEmails.join(', ')
     : 'none'
   )
-  console.log(`success for (${doneUserEmails.length}) emails:`, skippedUserEmails.length
+  console.log(`success for (${doneUserEmails.length}) emails:`, doneUserEmails.length
     ? doneUserEmails.join(', ')
+    : 'none'
+  )
+  console.log(`investigate (${investigateUserEmails.length}) emails:`, investigateUserEmails.length
+    ? investigateUserEmails.join(', ')
     : 'none'
   )
   console.log('stripeCustomers total:',

@@ -45,10 +45,12 @@ module.exports = async ({
     })
   }
 
-  await addSource({
-    sourceId,
-    userId,
-    pgdb,
-    clients
-  })
+  if (sourceId) {
+    await addSource({
+      sourceId,
+      userId,
+      pgdb,
+      clients
+    })
+  }
 }
