@@ -74,6 +74,10 @@ type mutations {
   # required role: supporter
   updateUser(firstName: String, lastName: String, birthday: Date, phoneNumber: String, address: AddressInput, userId: ID!): User!
 
+  # merges the belongings from source to target
+  # required role: admin
+  mergeUsers(targetUserId: ID!, sourceUserId: ID!): User!
+
   # required role: supporter
   cancelPledge(pledgeId: ID!): Pledge!
 

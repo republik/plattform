@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-06T21:35:40.461Z",
+  "updated": "2018-01-13T14:55:24.674Z",
   "title": "live",
   "data": [
     {
@@ -276,7 +276,7 @@
     },
     {
       "key": "api/pledge/mail/subject",
-      "value": "Vielen Dank!",
+      "value": "Ihr Republik-Abo: Willkommen bei der Republik!",
       "Clara ok": "q",
       "Braucht Const": null,
       "Korrektorat": null,
@@ -292,7 +292,7 @@
     },
     {
       "key": "api/email/subscription/payment/failed/subject",
-      "value": "Ihre Kreditkarte konnte leider nicht abgebucht werden.",
+      "value": "Ihr Republik-Abo: Ihre Kreditkarte funktioniert nicht mehr",
       "Clara ok": "q",
       "Braucht Const": null,
       "Korrektorat": null,
@@ -300,7 +300,7 @@
     },
     {
       "key": "api/email/subscription/deactivated/subject",
-      "value": "We are sad to see you go 😥",
+      "value": "Ihr letzter Tag an Bord der Republik",
       "Clara ok": "q",
       "Braucht Const": null,
       "Korrektorat": null,
@@ -308,7 +308,7 @@
     },
     {
       "key": "api/email/subscription/reactivated/subject",
-      "value": "Happy to see you back ❤️",
+      "value": "Ihr Republik-Abo: Sie sind wieder da!",
       "Clara ok": "q",
       "Braucht Const": null,
       "Korrektorat": null,
@@ -333,14 +333,6 @@
     {
       "key": "api/email/change/confirmation/subject",
       "value": "Ihre E-Mail-Adresse wurde geändert",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
-    },
-    {
-      "key": "api/email/change/exists",
-      "value": "Es existiert bereits jemand mit der gewünschten E-Mail-Adresse.",
       "Clara ok": "x",
       "Braucht Const": null,
       "Korrektorat": null,
@@ -438,6 +430,14 @@
       "key": "api/payment/subscription/threeDsecure/notSupported",
       "value": "Es tut uns leid, aus technischen Gründen können wir zurzeit kein Monats-Abonnement auf eine Kreditkarte buchen, die 3D secure voraussetzt. Sie können es entweder mit einer anderen Karte versuchen und/oder uns kontaktieren unter: kontakt@republik.ch. ",
       "Clara ok": "x",
+      "Braucht Const": null,
+      "Korrektorat": null,
+      "Bemerkung": null
+    },
+    {
+      "key": "api/email/change/exists",
+      "value": "Diese E-Mail-Adresse ist schon besetzt. Sie können nur E-Mail-Adressen eingeben, die in unserem System noch nicht verwendet werden.",
+      "Clara ok": null,
       "Braucht Const": null,
       "Korrektorat": null,
       "Bemerkung": null
