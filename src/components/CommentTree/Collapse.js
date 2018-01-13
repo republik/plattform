@@ -6,11 +6,12 @@ import colors from '../../theme/colors'
 import {sansSerifRegular14} from '../Typography/styles'
 import {profilePictureSize, profilePictureMargin} from '../Comment/CommentHeader'
 
+const borderWidth = 2
 const styles = {
   root: css({
     position: 'relative',
     height: 0,
-    borderTop: `2px solid ${colors.primary}`,
+    borderTop: `${borderWidth}px solid ${colors.primary}`,
     marginTop: '-2px'
   }),
   button: css({
@@ -34,7 +35,7 @@ const styles = {
 }
 
 const width = (visualDepth) =>
-  visualDepth * (profilePictureSize + profilePictureMargin) - profilePictureMargin
+  visualDepth * (profilePictureSize + profilePictureMargin) - profilePictureMargin - profilePictureSize / 2 + borderWidth / 2
 
 const Collapse = ({t, visualDepth, onClick}) => (
   <div {...styles.root} style={{width: width(visualDepth)}}>

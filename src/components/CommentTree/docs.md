@@ -37,7 +37,7 @@ To indicate that there are more comments which can be loaded at a particular dep
   <Row t={t} comment={comments.comment1}
     visualDepth={1} head otherChild />
   <LoadMore t={t} onClick={() => {}}
-    visualDepth={1} count={128} />
+    visualDepth={0} count={128} />
 </div>
 ```
 ```react|span-3,plain
@@ -53,7 +53,7 @@ To indicate that there are more comments which can be loaded at a particular dep
   <Row t={t} comment={comments.comment1}
     visualDepth={3} otherChild />
   <LoadMore t={t} onClick={() => {}}
-    visualDepth={3} count={128} />
+    visualDepth={2} count={128} />
 </div>
 ```
 ```react|span-3,plain
@@ -70,7 +70,7 @@ To indicate that there are more comments which can be loaded at a particular dep
   <Row t={t} comment={comments.comment1}
     visualDepth={2} head />
   <LoadMore t={t} onClick={() => {}}
-    visualDepth={3} count={72} />
+    visualDepth={2} count={72} />
   <LoadMore t={t} onClick={() => {}}
     visualDepth={2} connected count={128} />
 </div>
