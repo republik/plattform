@@ -110,7 +110,15 @@ export default ({rule, subModules, TYPE}) => {
     },
     plugins: [
       {
-        onKeyDown: isStatic ? staticKeyHandler({ TYPE, rule }) : keyHandler({ TYPE }),
+        onKeyDown: (...args) => {
+          const softBreak = keyHandler({ TYPE })(...args)
+          if (softBreak) {
+            return softBreak
+          }
+          if (isStatic) {
+            return staticKeyHandler({ TYPE, rule })(...args)
+          }
+        },
         renderPlaceholder: placeholder && (({node}) => {
           if (!paragraph.match(node)) return
           if (node.text.length) return null
