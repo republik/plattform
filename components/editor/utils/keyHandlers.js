@@ -91,7 +91,9 @@ export const createStaticKeyHandler = ({ TYPE, rule }) => {
       (!matchBlock(TYPE)(previousBlock) ||
         !cursorAtStart ||
         !isBackspace)
-    ) { return }
+    ) {
+      return
+    }
 
     const nextBlock = value.document.getNextBlock(
       value.endBlock.key
@@ -162,7 +164,9 @@ export const createRemoveEmptyKeyHandler = ({
   TYPE,
   isEmpty
 }) => (event, change) => {
-  if (event.key !== 'Backspace' && event.key !== 'Delete') { return }
+  if (event.key !== 'Backspace' && event.key !== 'Delete') {
+    return
+  }
 
   const emptyNodes = getClosestInSelection(
     n => matchBlock(TYPE)(n) && isEmpty(n),
