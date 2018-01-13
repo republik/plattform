@@ -2,7 +2,7 @@ const { QueryEmailMismatchError, NoSessionError } = require('../../../lib/errors
 const t = require('../../../lib/t')
 const { authorizeSession } = require('../../../lib/Sessions')
 
-module.exports = async (_, args, { pgdb, req }) => {
+module.exports = async (_, args, { pgdb, req, signInHooks }) => {
   const {
     email,
     token
@@ -11,7 +11,8 @@ module.exports = async (_, args, { pgdb, req }) => {
     const user = await authorizeSession({
       pgdb,
       token,
-      emailFromQuery: email
+      emailFromQuery: email,
+      signInHooks
     })
     return !!user
   } catch (e) {

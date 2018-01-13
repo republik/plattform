@@ -31,8 +31,6 @@ exports.configure = ({
   maxAge = 60000 * 60 * 24 * 7 * 2,
   // is the server running in development
   dev = false,
-  // hooks are called upon successful signIn
-  signInHooks = []
 } = {}) => {
   if (server === null) {
     throw new Error('server option must be an express server instance')
@@ -69,76 +67,6 @@ exports.configure = ({
   if (!dev) {
     server.set('trust proxy', 1)
   }
-
-  // authenticate a token sent by email
-  server.get('/auth/email/signin/:token?', async (req, res) => {
-    const {
-      token,
-      email: emailFromQuery,
-      context
-    } = req.query
-
-    if (!token) {
-      debug('no token: %O', { req: req._log(), emailFromQuery, context })
-      return res.redirect(
-        `${FRONTEND_BASE_URL}/mitteilung?` +
-        querystring.stringify({
-          type: 'invalid-token',
-          email: emailFromQuery,
-          context
-        })
-      )
-    }
-
-    try {
-      const user = await authorizeSession({
-        pgdb, token, emailFromQuery, signInHooks
-      })
-      const { email } = user
-      return res.redirect(
-        `${FRONTEND_BASE_URL}/mitteilung?` +
-        querystring.stringify({
-          type: 'email-confirmed',
-          email,
-          context
-        })
-      )
-    } catch (e) {
-      if (e instanceof QueryEmailMismatchError) {
-        const { email } = e.meta
-        debug("session.email and query.email don't match: %O", { req: req._log(), context, ...e.meta })
-        return res.redirect(
-          `${FRONTEND_BASE_URL}/mitteilung?` +
-          querystring.stringify({
-            type: 'invalid-token',
-            email,
-            context
-          })
-        )
-      }
-      if (e instanceof NoSessionError) {
-        debug('no session: %O', { req: req._log(), context, ...e.meta })
-        return res.redirect(
-          `${FRONTEND_BASE_URL}/mitteilung?` +
-          querystring.stringify({
-            type: 'invalid-token',
-            email: emailFromQuery,
-            context
-          })
-        )
-      }
-      const util = require('util')
-      console.error('auth: exception', util.inspect({ req: req._log(), emailFromQuery, context, e }, {depth: null}))
-      return res.redirect(
-        `${FRONTEND_BASE_URL}/mitteilung?` +
-        querystring.stringify({
-          type: 'unavailable',
-          emailFromQuery,
-          context
-        })
-      )
-    }
-  })
 
   // Tell Passport how to seralize/deseralize user accounts
   passport.serializeUser(function (user, next) {
