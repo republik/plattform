@@ -146,15 +146,18 @@ const captionPlugin = ({TYPE, rule, subModules}) => {
 
   const matchCaption = matchBlock(TYPE)
 
+  const textSoftBreakHandler = keyHandler({ TYPE: 'CAPTION_TEXT' })
+  const textStaticHandler = staticKeyHandler({
+    TYPE: 'CAPTION_TEXT',
+    rule: { editorOptions: {} }
+  })
+
   const textKeyHandler = (...args) => {
-    const res = keyHandler({ TYPE: 'CAPTION_TEXT' })(...args)
+    const res = textSoftBreakHandler(...args)
     if (res) {
       return res
     }
-    return staticKeyHandler({
-      TYPE: 'CAPTION_TEXT',
-      rule: { editorOptions: {} }
-    })(...args)
+    return textStaticHandler(...args)
   }
 
   const bylineKeyHandler = staticKeyHandler({

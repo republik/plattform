@@ -83,6 +83,9 @@ export default ({rule, subModules, TYPE}) => {
     ]
   })
 
+  const paragraphSoftBreakHandler = keyHandler({ TYPE })
+  const paragraphStaticHandler = staticKeyHandler({ TYPE })
+
   return {
     TYPE,
     rule,
@@ -111,12 +114,12 @@ export default ({rule, subModules, TYPE}) => {
     plugins: [
       {
         onKeyDown: (...args) => {
-          const softBreak = keyHandler({ TYPE })(...args)
+          const softBreak = paragraphSoftBreakHandler(...args)
           if (softBreak) {
             return softBreak
           }
           if (isStatic) {
-            return staticKeyHandler({ TYPE, rule })(...args)
+            return paragraphStaticHandler(...args)
           }
         },
         renderPlaceholder: placeholder && (({node}) => {
