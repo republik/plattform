@@ -84,7 +84,7 @@ export default ({rule, subModules, TYPE}) => {
   })
 
   const paragraphSoftBreakHandler = keyHandler({ TYPE })
-  const paragraphStaticHandler = staticKeyHandler({ TYPE })
+  const paragraphStaticHandler = staticKeyHandler({ TYPE, rule })
 
   return {
     TYPE,
