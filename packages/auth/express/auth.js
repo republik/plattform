@@ -91,7 +91,7 @@ exports.configure = ({
     }
 
     try {
-      const user = authorizeSession({
+      const user = await authorizeSession({
         pgdb, token, emailFromQuery, signInHooks
       })
       const { email } = user
