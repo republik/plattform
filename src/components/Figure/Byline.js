@@ -1,12 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { sansSerifRegular11, sansSerifRegular12 } from '../Typography/styles'
+import { sansSerifRegular10, sansSerifRegular12 } from '../Typography/styles'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 
 const styles = {
   byline: css({
-    ...sansSerifRegular11,
+    ...sansSerifRegular10,
     [mUp]: {
       ...sansSerifRegular12
     }

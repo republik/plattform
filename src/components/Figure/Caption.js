@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { sansSerifRegular14, sansSerifRegular15 } from '../Typography/styles'
+import { sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import { css } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { PADDING } from '../Center'
@@ -10,7 +10,7 @@ const styles = {
     margin: '0 auto',
     width: '100%',
     maxWidth: `calc(100vw - ${PADDING * 2}px)`,
-    ...sansSerifRegular14,
+    ...sansSerifRegular12,
     [mUp]: {
       ...sansSerifRegular15,
       lineHeight: '18px'

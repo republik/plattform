@@ -176,11 +176,16 @@ export const sansSerifRegular14 = {
 export const sansSerifRegular12 = {
   fontFamily: fontFamilies.sansSerifRegular,
   fontSize: 12,
-  lineHeight: '12px'
+  lineHeight: '15px'
 }
 export const sansSerifRegular11 = {
   fontFamily: fontFamilies.sansSerifRegular,
   fontSize: 11,
+  lineHeight: '12px'
+}
+export const sansSerifRegular10 = {
+  fontFamily: fontFamilies.sansSerifRegular,
+  fontSize: 10,
   lineHeight: '12px'
 }
 
