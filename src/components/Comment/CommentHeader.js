@@ -48,7 +48,8 @@ const styles = {
     color: colors.lightText,
     flexShrink: 0,
     flexGrow: 1,
-    textAlign: 'right'
+    textAlign: 'right',
+    paddingLeft: 5
   }),
   description: css({
     ...sansSerifRegular14,
@@ -87,7 +88,7 @@ export const CommentHeader = ({t, profilePicture, name, timeago, createdAt, upda
         <div {...styles.name}>
           <div {...styles.nameText}>{name}</div>
           {timeago && <span {...styles.timeago} title={titleDate(createdAt)}>
-            ・{timeago(createdAt)}
+            {timeago(createdAt)}
           </span>}
         </div>
         {(credential || updated) && <div {...styles.description}>
