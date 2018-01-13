@@ -71,7 +71,7 @@ PgDb.connect().then(async pgdb => {
           console.log('\tfailed to add source (moving to PAYMENTSLIP):', e2.message, source.pspId)
           await transaction.public.paymentSources.updateOne(
             { id: source.id },
-            { paymentMethod: 'PAYMENTSLIP' }
+            { method: 'PAYMENTSLIP' }
           )
         }
       }
