@@ -12,9 +12,9 @@
     file-type "^7.4.0"
     sharp "^0.18.4"
 
-"@orbiting/backend-modules-auth@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-2.5.0.tgz#ea6301486462cc3b8306010a5e31fb01adec0fc0"
+"@orbiting/backend-modules-auth@^2.5.4":
+  version "2.5.4"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-2.5.4.tgz#f0a1447e644de02bd06a2c33bb9dd34a438e7b16"
   dependencies:
     "@orbiting/backend-modules-mail" "^0.1.1"
     "@orbiting/backend-modules-translate" "^0.0.0"
@@ -37,36 +37,11 @@
     useragent "^2.2.1"
     uuid "^3.1.0"
 
-"@orbiting/backend-modules-auth@^2.5.3":
-  version "2.5.3"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-2.5.3.tgz#14b62ce23c2b50aa0ad39c100d323233cfebe967"
+"@orbiting/backend-modules-base@^0.3.11":
+  version "0.3.11"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.3.11.tgz#f675db2ec688de80aabec59984f5921af02f2865"
   dependencies:
-    "@orbiting/backend-modules-mail" "^0.1.1"
-    "@orbiting/backend-modules-translate" "^0.0.0"
-    apollo-modules-node "^0.1.4"
-    check-env "^1.3.0"
-    connect-pg-simple "^3.1.2"
-    country-emoji "^1.2.0"
-    debug "^3.1.0"
-    email-validator "^1.1.1"
-    export-files "^2.1.1"
-    express-session "^1.15.6"
-    geoip-database "^1.0.11"
-    is-uuid "^1.0.2"
-    kraut "^0.1.1"
-    maxmind "^2.4.0"
-    passport "^0.4.0"
-    pogi "^2.5.5"
-    querystring "^0.2.0"
-    rw "^1.3.3"
-    useragent "^2.2.1"
-    uuid "^3.1.0"
-
-"@orbiting/backend-modules-base@^0.3.10":
-  version "0.3.10"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.3.10.tgz#b02a15d682f82a5cd2432b8aefe0ec18a908097e"
-  dependencies:
-    "@orbiting/backend-modules-auth" "^2.5.0"
+    "@orbiting/backend-modules-auth" "^2.5.4"
     apollo-engine "^0.8.1"
     apollo-modules-node "^0.1.4"
     apollo-server-express "^1.3.2"
@@ -85,11 +60,11 @@
     redis "^2.8.0"
     subscriptions-transport-ws "^0.9.4"
 
-"@orbiting/backend-modules-documents@^2.4.4":
-  version "2.4.4"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.4.4.tgz#02eefbd0ac05226a1a842b565dc723332d6fa5a8"
+"@orbiting/backend-modules-documents@^2.4.5":
+  version "2.4.5"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.4.5.tgz#cbae90dd7b6129aea6d2146ece72839b0543281d"
   dependencies:
-    "@orbiting/backend-modules-auth" "^2.5.0"
+    "@orbiting/backend-modules-auth" "^2.5.4"
     "@project-r/styleguide" "^5.27.1"
     "@project-r/template-newsletter" "^1.5.0"
     apollo-modules-node "^0.1.4"
