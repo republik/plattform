@@ -1,6 +1,6 @@
 {
   "name": "@orbiting/backend-modules-auth",
-  "version": "2.5.2",
+  "version": "2.5.3",
   "description": "auth migrations, seeds, middleware, graphql schema and resolvers",
   "main": "index.js",
   "scripts": {
