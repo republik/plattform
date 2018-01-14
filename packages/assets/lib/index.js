@@ -14,7 +14,7 @@ const {
 } = process.env
 
 if (!PUBLIC_ASSETS_HOSTNAME && !INTERNAL_ASSETS_HOSTNAME) {
-  throw new Error('You need to at least set either PUBLIC_ASSETS_URL or INTERNAL_ASSETS_URL')
+  throw new Error('You need to at least set either PUBLIC_ASSETS_HOSTNAME or INTERNAL_ASSETS_HOSTNAME')
 }
 
 const originalKey = 'originalURL'
