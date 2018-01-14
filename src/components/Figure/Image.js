@@ -13,7 +13,7 @@ const styles = {
     width: '100%'
   }),
   aspectRatio: css({
-    backgroundColor: '#eee',
+    backgroundColor: 'rgba(0,0,0,0.1)',
     display: 'block',
     position: 'relative'
   }),
