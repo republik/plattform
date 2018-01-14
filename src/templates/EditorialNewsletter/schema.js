@@ -209,6 +209,11 @@ const createNewsletterSchema = ({
             matchMdast: () => false,
             editorModule: 'meta',
             editorOptions: {
+              customFields: [{
+                label: 'Format',
+                key: 'format',
+                ref: 'repo'
+              }],
               additionalFields: ['emailSubject']
             }
           },
