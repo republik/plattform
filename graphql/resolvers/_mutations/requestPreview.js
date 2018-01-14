@@ -16,7 +16,7 @@ const minIntervalHours = 12
 
 module.exports = async (_, args, context) => {
   const { user: me, req, t, pgdb } = context
-  ensureSignedIn(req, t)
+  ensureSignedIn(req)
 
   const now = moment()
   if (me._raw.previewsSentAt) {
