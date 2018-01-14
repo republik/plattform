@@ -44,7 +44,7 @@ module.exports = async (_, args, { pgdb, t }) => {
         m."sequenceNumber" as "sequenceNumber"
       FROM users u
       JOIN memberships m
-        ON m.id = (SELECT id FROM memberships WHERE "userId" = u.id ORDER BY "sequenceNumber" ASC LIMIT 1) 
+        ON m.id = (SELECT id FROM memberships WHERE "userId" = u.id ORDER BY "sequenceNumber" ASC LIMIT 1)
       WHERE
         ARRAY[u.id] && :ids;
     `, {ids: nodeIds})
@@ -70,9 +70,9 @@ module.exports = async (_, args, { pgdb, t }) => {
         u.id
       FROM
         users u
-      JOIN
+      LEFT JOIN
         credentials c
-      ON c."userId" = u.id AND c."isListed" = true
+        ON c."userId" = u.id AND c."isListed" = true
       WHERE
         u."isListed" = true AND u."isAdminUnlisted" = false AND
         (
