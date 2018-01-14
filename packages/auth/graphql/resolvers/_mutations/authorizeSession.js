@@ -17,9 +17,9 @@ module.exports = async (_, args, { pgdb, req, signInHooks }) => {
     return !!user
   } catch (e) {
     if (e instanceof QueryEmailMismatchError) {
-      console.error("authorizeSession: session.email and query.email don't match: %O", { req: req._log(), ...e.meta })
+      console.info("authorizeSession: session.email and query.email don't match: %O", { req: req._log(), ...e.meta })
     } else if (e instanceof NoSessionError) {
-      console.error('authorizeSession: no session %O', { req: req._log(), ...e.meta })
+      console.info('authorizeSession: no session %O', { req: req._log(), ...e.meta })
     } else {
       const util = require('util')
       console.error('authorizeSession: exception', util.inspect({ req: req._log(), emailFromQuery: email, e }, {depth: null}))
