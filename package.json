@@ -9,9 +9,9 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "@orbiting/backend-modules-assets": "^1.0.2",
-    "@orbiting/backend-modules-auth": "^3.0.1",
-    "@orbiting/backend-modules-base": "^1.0.1",
-    "@orbiting/backend-modules-documents": "^2.5.2",
+    "@orbiting/backend-modules-auth": "^3.0.2",
+    "@orbiting/backend-modules-base": "^1.0.2",
+    "@orbiting/backend-modules-documents": "^2.5.3",
     "@orbiting/backend-modules-github": "^1.0.0",
     "@orbiting/backend-modules-mail": "^0.1.1",
     "@orbiting/backend-modules-redirections": "^1.0.1",
