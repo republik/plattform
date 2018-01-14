@@ -22,7 +22,8 @@ module.exports = async ({userId, pgdb, hasJustPaid, isNew}) => {
     }
 
     const pledges = await pgdb.public.pledges.find({
-      userId: userId, status: 'SUCCESSFUL'
+      userId: userId,
+      status: 'SUCCESSFUL'
     })
 
     const hasPledge = !!pledges && pledges.length > 0
@@ -40,24 +41,32 @@ module.exports = async ({userId, pgdb, hasJustPaid, isNew}) => {
       membershipTypeId: membershipTypeBenefactor.id
     }) : false
 
-    const enforcedNewsletterSubscriptions = isNew
-      ? {
-        // Autosubscribe free newsletters when user is new.
-        [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true
-      }
-      : hasJustPaidFirstPledge
-        ? {
-          // Autosubscribe paid newsletters when user just paid.
-          [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
-          [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true
-        }
-        : !hasMembership
-          ? {
-            // Revoke paid newsletters when membership is inactive.
-            [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: false,
-            [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: false
-          }
-          : {}
+    const enforcedNewsletterSubscriptions =
+     isNew && hasJustPaidFirstPledge
+       ? {
+           // Autosubscribe all newsletters when new user just paid.
+           [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
+           [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true,
+           [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true
+         }
+       : isNew
+         ? {
+             // Autosubscribe free newsletters when user is new.
+             [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true
+           }
+         : hasJustPaidFirstPledge
+           ? {
+               // Autosubscribe paid newsletters when user just paid.
+               [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
+               [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true
+             }
+           : !hasMembership
+             ? {
+                 // Revoke paid newsletters when membership is inactive.
+                 [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: false,
+                 [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: false
+               }
+             : {}
 
     const hash = crypto
       .createHash('md5')
