@@ -3,6 +3,7 @@ const fileType = require('file-type')
 const fetch = require('isomorphic-unfetch')
 const { lib: { clients: createGithubClients } } = require('@orbiting/backend-modules-github')
 const { authenticate } = require('../lib')
+const debug = require('debug')('assets')
 
 const maxSize = 6000
 
@@ -81,6 +82,7 @@ module.exports = (server) => {
       repoName,
       path
     } = req.params
+    debug('github getBlob %s/%s/%s', login, repoName, path)
 
     const blobSha = path
       .split('/')
@@ -117,6 +119,7 @@ module.exports = (server) => {
       mac,
       resize
     } = req.query
+    debug('external fetch %s', url)
 
     if (!url) {
       return res.status(404).end()
