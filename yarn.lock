@@ -12,9 +12,9 @@
     file-type "^7.4.0"
     sharp "^0.18.4"
 
-"@orbiting/backend-modules-auth@^2.5.4":
-  version "2.5.4"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-2.5.4.tgz#f0a1447e644de02bd06a2c33bb9dd34a438e7b16"
+"@orbiting/backend-modules-auth@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-3.0.0.tgz#a2e06825022a156902f744d6cc59ba4266107243"
   dependencies:
     "@orbiting/backend-modules-mail" "^0.1.1"
     "@orbiting/backend-modules-translate" "^0.0.0"
@@ -37,11 +37,11 @@
     useragent "^2.2.1"
     uuid "^3.1.0"
 
-"@orbiting/backend-modules-base@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-0.4.0.tgz#27810ee2c8ff124971c78c032da2d08e5e379502"
+"@orbiting/backend-modules-base@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-1.0.0.tgz#3335eac42a3407d5bfabf828dd50737a7655dc60"
   dependencies:
-    "@orbiting/backend-modules-auth" "^2.5.4"
+    "@orbiting/backend-modules-auth" "^3.0.0"
     apollo-engine "^0.8.1"
     apollo-modules-node "^0.1.4"
     apollo-server-express "^1.3.2"
@@ -60,11 +60,11 @@
     redis "^2.8.0"
     subscriptions-transport-ws "^0.9.4"
 
-"@orbiting/backend-modules-documents@^2.4.5":
-  version "2.4.5"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.4.5.tgz#cbae90dd7b6129aea6d2146ece72839b0543281d"
+"@orbiting/backend-modules-documents@^2.4.6":
+  version "2.4.6"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.4.6.tgz#1d26d8835d5a81527215935b9c6f05eec4e09a25"
   dependencies:
-    "@orbiting/backend-modules-auth" "^2.5.4"
+    "@orbiting/backend-modules-auth" "^3.0.0"
     "@project-r/styleguide" "^5.27.1"
     "@project-r/template-newsletter" "^1.5.0"
     apollo-modules-node "^0.1.4"

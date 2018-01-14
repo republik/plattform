@@ -11,11 +11,16 @@ module.exports.run = () => {
   const localModule = require('./graphql')
   const executableSchema = makeExecutableSchema(merge(localModule, [documents, auth]))
 
+  const createGraphQLContext = (defaultContext) => ({
+    ...defaultContext,
+    t
+  })
+
   const middlewares = [
     assets
   ]
 
-  return server.run(executableSchema, middlewares, t)
+  return server.run(executableSchema, middlewares, t, createGraphQLContext)
     .then(async (obj) => {
       const scheduler = require('./lib/publicationScheduler')
       await scheduler.init()
