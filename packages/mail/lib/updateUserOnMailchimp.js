@@ -31,7 +31,8 @@ module.exports = async ({userId, pgdb, hasJustPaid, isNew}) => {
     const hasJustPaidFirstPledge = !!hasJustPaid && hasPledge && pledges.length === 1
 
     const hasMembership = await pgdb.public.memberships.findFirst({
-      userId: userId
+      userId: userId,
+      active: true
     })
     const membershipTypeBenefactor = await pgdb.public.membershipTypes.findOne({
       name: 'BENEFACTOR_ABO'
@@ -45,8 +46,8 @@ module.exports = async ({userId, pgdb, hasJustPaid, isNew}) => {
      isNew && hasJustPaidFirstPledge
        ? {
            // Autosubscribe all newsletters when new user just paid.
-           [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
-           [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true,
+           [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: !!hasMembership,
+           [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: !!hasMembership,
            [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true
          }
        : isNew
@@ -57,8 +58,8 @@ module.exports = async ({userId, pgdb, hasJustPaid, isNew}) => {
          : hasJustPaidFirstPledge
            ? {
                // Autosubscribe paid newsletters when user just paid.
-               [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: true,
-               [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: true
+               [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: !!hasMembership,
+               [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: !!hasMembership
              }
            : !hasMembership
              ? {
