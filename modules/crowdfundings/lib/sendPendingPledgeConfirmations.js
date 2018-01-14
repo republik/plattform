@@ -59,12 +59,6 @@ module.exports = async (userId, pgdb, t) => {
         },
         ...payment
           ? [
-            { name: 'PAPER_INVOICE',
-              content: payment.paperInvoice
-            },
-            { name: 'NOT_PAPER_INVOICE',
-              content: !payment.paperInvoice
-            },
             { name: 'HRID',
               content: payment.hrid
             },
@@ -82,12 +76,8 @@ module.exports = async (userId, pgdb, t) => {
         { name: 'WAITING_FOR_PAYMENT',
           content: pledge.status === 'WAITING_FOR_PAYMENT'
         },
-        { name: 'ASK_PERSONAL_INFO',
-          content: (!user.addressId || !user.birthday) && pkg.name !== 'DONATE' && pkg.name !== 'ABO_GIVE'
-        },
-        // ToDo: Consider asking for profile instead
-        { name: 'ASK_TESTIMONIAL',
-          content: false
+        { name: 'ABO_FOR_ME',
+          content: pkg.name !== 'DONAT' && pkg.name !== 'ABO_GIVE'
         },
         { name: 'VOUCHER_CODES',
           content: pkg.name === 'ABO_GIVE'
