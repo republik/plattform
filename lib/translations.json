@@ -1,14 +1,14 @@
 {
-  "updated": "2018-01-14T02:32:14.618Z",
+  "updated": "2018-01-14T03:58:06.461Z",
   "title": "live",
   "data": [
     {
       "key": "api/signIn",
-      "value": "Sie müssen sich zuerst einloggen."
+      "value": "Sie müssen sich zuerst anmelden."
     },
     {
       "key": "api/unauthorized",
-      "value": "Nicht genehmigt. Sie müssen die Rolle «{role}» besitzen um die gwünschte Aktion auszuführen."
+      "value": "Nicht genehmigt. Sie müssen die Rolle «{role}» besitzen, um die gwünschte Aktion auszuführen."
     },
     {
       "key": "api/email/invalid",
@@ -28,7 +28,7 @@
     },
     {
       "key": "api/comment/tooEarly",
-      "value": "Sie sind zu früh. Bitte warten Sie, {waitFor} bevor Sie wieder kommentieren."
+      "value": "Sie sind zu früh. Bitte warten Sie, {waitFor} bevor Sie wieder einen Beitrag schreiben."
     },
     {
       "key": "api/comment/closed",
@@ -36,27 +36,27 @@
     },
     {
       "key": "api/comment/tooLong",
-      "value": "Ihr Kommentar darf höchstens {maxLength} Zeichen lang sein."
+      "value": "Ihr Beitrag darf höchstens {maxLength} Zeichen lang sein."
     },
     {
       "key": "api/discussion/anonymity/forbidden",
-      "value": "Anonyme Kommentare sind in dieser Diskussion nicht zugelassen."
+      "value": "Anonyme Kommentare sind in dieser Debatte nicht zugelassen."
     },
     {
       "key": "api/discussion/anonymity/enforced",
-      "value": "In dieser Diskussion sind nur anonyme Kommentare zugelassen."
+      "value": "In dieser Debatte sind nur anonyme Kommentare zugelassen."
     },
     {
       "key": "api/comment/404",
-      "value": "Der Kommentar konnte nicht gefunden werden."
+      "value": "Der Beitrag konnte nicht gefunden werden."
     },
     {
       "key": "api/comment/parent/404",
-      "value": "Des Kommentars Vater konnte nicht gefunden werden."
+      "value": "Des Beitrags Vater konnte nicht gefunden werden."
     },
     {
       "key": "api/comment/notYours",
-      "value": "Sie können nur Ihre eigenen Kommentare bearbeiten."
+      "value": "Sie können nur Ihre eigenen Beiträge bearbeiten."
     },
     {
       "key": "api/unexpected",
@@ -84,11 +84,11 @@
     },
     {
       "key": "api/publicProfile/usernameRequired",
-      "value": "Sie benötigen einen Benutzernamen um ihr Profil zu publizieren"
+      "value": "Sie benötigen einen Benutzernamen, um ihr Profil zu publizieren"
     },
     {
       "key": "api/publicProfile/usernameNeeded",
-      "value": "Sie benötigen einen Benutzernamen aufgrund ihres öffentlichen Profil"
+      "value": "Sie benötigen einen Benutzernamen für Ihr öffentliches Profil"
     },
     {
       "key": "api/newsletters/userNotFound",
@@ -96,11 +96,11 @@
     },
     {
       "key": "api/newsletters/get/failed",
-      "value": "Ihre Newsletter-Abos konnten nicht abgefragt werden, bitte versuchen Sie es später nochmal."
+      "value": "Ihre Newsletter-Einstellungen konnten nicht abgefragt werden, bitte versuchen Sie es später noch einmal."
     },
     {
       "key": "api/newsletters/update/failed",
-      "value": "Ihr Newsletter-Abo konnten nicht aktualisiert werden, bitte versuchen Sie es später nochmal."
+      "value": "Ihre Newsletter-Einstellunge konnten nicht aktualisiert werden, bitte versuchen Sie es später noch einmal."
     },
     {
       "key": "api/newsletters/update/interestIdNotSupported",
@@ -108,7 +108,7 @@
     },
     {
       "key": "api/newsletters/update/rolesNotEligible",
-      "value": "Sie haben keine Berechtigung, dieses Newsletter-Abo zu aktualisieren."
+      "value": "Sie haben keine Berechtigung, diesen Newsletter zu abonnieren."
     },
     {
       "key": "api/statements/maxNodes",
@@ -116,15 +116,15 @@
     },
     {
       "key": "profile/statement/needed",
-      "value": "Ein Statement ist erforderlich um auf der Community-Seite angezeigt zu werden"
+      "value": "Sie brauchen ein Statement, um auf der Community-Seite zu erscheinen"
     },
     {
       "key": "profile/portrait/needed",
-      "value": "Ein Portrait ist erforderlich um auf der Community-Seite angezeigt zu werden"
+      "value": "Sie benötigen ein Portrait, um auf der Community-Seite zu erscheinen"
     },
     {
       "key": "profile/notEligible",
-      "value": "Sie müssen uns zuerst unterstützen, bevor Sie ein Profil veröffentlichen können."
+      "value": "Nur Verlegerinnen und Abonnenten können ein Profil veröffentlichen."
     },
     {
       "key": "api/preview/mail/404",
@@ -136,7 +136,7 @@
     },
     {
       "key": "api/preview/mail/tooEarly",
-      "value": "Das Preview-Mail pro Tag nur einmal angeforder werden, bitte versuchen Sie es morgen nochmals."
+      "value": "Das Preview-Mail kann nur einmal pro Tag angefordert werden, bitte versuchen Sie es morgen nochmals."
     },
     {
       "key": "profile/generic/tooLong",

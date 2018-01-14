@@ -1,446 +1,226 @@
 {
-  "updated": "2018-01-13T14:55:24.674Z",
+  "updated": "2018-01-14T03:42:28.223Z",
   "title": "live",
   "data": [
     {
       "key": "api/unexpected",
-      "value": "Ups, da ist was schiefgelaufen. Sorry!",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Ups, da ist was schiefgelaufen. Sorry!"
     },
     {
       "key": "api/unauthorized",
-      "value": "Nicht genehmigt. Sie müssen die Rolle «{role}» besitzen um die gwünschte Aktion auszuführen.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Nicht genehmigt. Sie müssen die Rolle «{role}» besitzen um die gwünschte Aktion auszuführen."
     },
     {
       "key": "api/crowdfunding/tooLate",
-      "value": "Es tut uns sehr leid, das Crowdfunding ist bereits beendet.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Es tut uns sehr leid, das Crowdfunding ist bereits beendet."
     },
     {
       "key": "api/membership/claim/alreadyHave",
-      "value": "Sie können keinen Gutscheincode einlösen, weil Sie schon eine Mitgliedschaft haben.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Sie können keinen Gutscheincode einlösen, weil Sie schon eine Mitgliedschaft haben."
     },
     {
       "key": "api/membership/claim/invalidToken",
-      "value": "Ihr Gutscheincode ist leider ungültig.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Ihr Gutscheincode ist leider ungültig."
     },
     {
       "key": "api/membership/reduced/alreadyHas",
-      "value": "Sie können leider keine reduzierte Mitgliedschaft kaufen, da Sie bereits eine Mitgliedschaft besitzen.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Sie können leider keine reduzierte Mitgliedschaft kaufen, da Sie bereits eine Mitgliedschaft besitzen."
     },
     {
       "key": "api/membership/monthly/hasActive",
-      "value": "Sie können leider kein Monatsabo kaufen, da sie bereits ein laufendes Abonnement besitzen.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Sie können leider kein Monatsabo kaufen, da sie bereits ein laufendes Abonnement besitzen."
     },
     {
       "key": "api/membership/monthly/reactivate",
-      "value": "Sie können nicht noch einmal ein Monats-Abonnement kaufen. Bitte verlängern sie Ihr Abonnement stattdessen in Ihrem Konto (www.republik.ch/konto).",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Sie können nicht noch einmal ein Monats-Abonnement kaufen. Bitte verlängern sie Ihr Abonnement stattdessen in Ihrem Konto (www.republik.ch/konto)."
     },
     {
       "key": "api/membership/cancel/isInactive",
-      "value": "Das Abonnement ist bereits deaktiviert.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Das Abonnement ist bereits deaktiviert."
     },
     {
       "key": "api/membership/cancel/notRenewing",
-      "value": "Das Abonnement ist bereits gekündigt.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Das Abonnement ist bereits gekündigt."
     },
     {
       "key": "api/membership/pleaseWait",
-      "value": "Das Abonnement wird von unserem System noch bearbeitet, bitte versuchen Sie es später nochmals.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": "Kommt das nur bei Monatsabos oder auch bei Mitgliedschaften?"
+      "value": "Das Abonnement wird von unserem System noch bearbeitet, bitte versuchen Sie es später nochmals."
     },
     {
       "key": "api/membership/404",
-      "value": "Die Mitgliedschaft konnte nicht gefunden werden.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Die Mitgliedschaft konnte nicht gefunden werden."
     },
     {
       "key": "api/membershipType/404",
-      "value": "Der Mitgliedschafts-Typ konnte nicht gefunden werden.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Der Mitgliedschafts-Typ konnte nicht gefunden werden."
     },
     {
       "key": "api/pledge/alreadyPaid",
-      "value": "Sie haben bereits bezahlt. Vielen Dank!",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Sie haben bereits bezahlt. Vielen Dank!"
     },
     {
       "key": "api/pledge/paymentMethod/notAllowed",
-      "value": "Die von Ihnen gewählte Zahlungsart wird für das gewünschte Produkt nicht unterstützt. Bitte kontaktieren Sie uns unter kontakt@republik.ch.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Die von Ihnen gewählte Zahlungsart wird für das gewünschte Produkt nicht unterstützt. Bitte kontaktieren Sie uns unter kontakt@republik.ch."
     },
     {
       "key": "api/pledge/reason",
-      "value": "Für eine reduzierte Mitgliedschaft wird eine Begründung benötigt.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Für eine reduzierte Mitgliedschaft wird eine Begründung benötigt."
     },
     {
       "key": "api/pledge/cancel/tooLate",
-      "value": "Dieser pledge kann höchstes {maxDays} nach dem Kauf storniert werden.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Dieser pledge kann höchstes {maxDays} nach dem Kauf storniert werden."
     },
     {
       "key": "api/pay/stripe/invalid_number",
-      "value": "Dies ist keine valide Kreditkartennummer.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Dies ist keine valide Kreditkartennummer."
     },
     {
       "key": "api/pay/stripe/invalid_expiry_month",
-      "value": "Der Monat des Kartenablaufdatums ist ungültig.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Der Monat des Kartenablaufdatums ist ungültig."
     },
     {
       "key": "api/pay/stripe/invalid_expiry_year",
-      "value": "Das Jahr des Kartenablaufdatums ist ungültig.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Das Jahr des Kartenablaufdatums ist ungültig."
     },
     {
       "key": "api/pay/stripe/invalid_cvc",
-      "value": "Die Sicherheitsnummer der Karte ist ungültig.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Die Sicherheitsnummer der Karte ist ungültig."
     },
     {
       "key": "api/pay/stripe/invalid_swipe_data",
-      "value": "The card’s swipe data is invalid.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "The card’s swipe data is invalid."
     },
     {
       "key": "api/pay/stripe/incorrect_number",
-      "value": "Die Kartennummer ist ungültig.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Die Kartennummer ist ungültig."
     },
     {
       "key": "api/pay/stripe/expired_card",
-      "value": "Die Karte ist abgelaufen.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Die Karte ist abgelaufen."
     },
     {
       "key": "api/pay/stripe/incorrect_cvc",
-      "value": "Die Security Nummer ist falsch.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Die Security Nummer ist falsch."
     },
     {
       "key": "api/pay/stripe/incorrect_zip",
-      "value": "Die Postleitzahl der Karte konnte nicht geprüft werden.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Die Postleitzahl der Karte konnte nicht geprüft werden."
     },
     {
       "key": "api/pay/stripe/card_declined",
-      "value": "Ihre Karte wurde abgelehnt.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Ihre Karte wurde abgelehnt."
     },
     {
       "key": "api/pay/stripe/missing",
-      "value": "There is no card on a customer that is being charged.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "There is no card on a customer that is being charged."
     },
     {
       "key": "api/pay/stripe/processing_error",
-      "value": "Während der Bearbeitung der Karte ist ein Fehler aufgetreten.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Während der Bearbeitung der Karte ist ein Fehler aufgetreten."
     },
     {
       "key": "api/paypal/deny",
-      "value": "Die Zahlung ist leider fehlgeschlagen. Bitte wählen Sie ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Die Zahlung ist leider fehlgeschlagen. Bitte wählen Sie ein anderes Zahlungsmittel, um Ihre Bestellung abzuschliessen."
     },
     {
       "key": "api/paypal/contactUs",
-      "value": "Während des Zahlungsverfahrens mit PayPal ist ein Problem aufgetreten, das zu einem nicht vorhersehbaren Resultat geführt hat. Bitte nehmen Sie Kontakt mit uns auf unter kontakt@republik.ch. Sie sollten es nicht erneut versuchen da die Buchung möglicherweise bereits akzeptiert wurde.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Während des Zahlungsverfahrens mit PayPal ist ein Problem aufgetreten, das zu einem nicht vorhersehbaren Resultat geführt hat. Bitte nehmen Sie Kontakt mit uns auf unter kontakt@republik.ch. Sie sollten es nicht erneut versuchen da die Buchung möglicherweise bereits akzeptiert wurde."
     },
     {
       "key": "api/paypal/delayed",
-      "value": "Ihre PayPal Zahlung ist noch nicht bei uns eingetroffen. Falls Sie innerhalb von einigen Stunden nichts von uns hören, kontaktieren Sie uns bitte unter kontakt@republik.ch. Sie sollten es nicht erneut versuchen da die Buchung höchstwahrscheinlich bereits akzeptiert wurde und noch verarbeitet wird.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Ihre PayPal Zahlung ist noch nicht bei uns eingetroffen. Falls Sie innerhalb von einigen Stunden nichts von uns hören, kontaktieren Sie uns bitte unter kontakt@republik.ch. Sie sollten es nicht erneut versuchen da die Buchung höchstwahrscheinlich bereits akzeptiert wurde und noch verarbeitet wird."
     },
     {
       "key": "api/pay/pspPayload/parseFailed",
-      "value": "Die Zahlungsdaten konnten nicht überprüft werden. Bitte kontaktieren Sie uns unter kontakt@repulik.ch und geben Sie folgende Nummer an: ID: {id}",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Die Zahlungsdaten konnten nicht überprüft werden. Bitte kontaktieren Sie uns unter kontakt@repulik.ch und geben Sie folgende Nummer an: ID: {id}"
     },
     {
       "key": "api/pay/paymentIdUsedAlready",
-      "value": "Ihr Einkauf scheint bereits bezahlt zu sein. Bitte kontaktieren Sie uns unter kontakt@repulik.ch und geben Sie folgende Nummer an: ID: {id}",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Ihr Einkauf scheint bereits bezahlt zu sein. Bitte kontaktieren Sie uns unter kontakt@repulik.ch und geben Sie folgende Nummer an: ID: {id}"
     },
     {
       "key": "api/pledge/mail/subject",
-      "value": "Ihr Republik-Abo: Willkommen bei der Republik!",
-      "Clara ok": "q",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
     },
     {
       "key": "api/payment/received/mail/subject",
-      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten.",
-      "Clara ok": "q",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
     {
       "key": "api/email/subscription/payment/failed/subject",
-      "value": "Ihr Republik-Abo: Ihre Kreditkarte funktioniert nicht mehr",
-      "Clara ok": "q",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Ihr Republik-Abo: Ihre Kreditkarte funktioniert nicht mehr"
     },
     {
       "key": "api/email/subscription/deactivated/subject",
-      "value": "Ihr letzter Tag an Bord der Republik",
-      "Clara ok": "q",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Ihr letzter Tag an Bord der Republik"
     },
     {
       "key": "api/email/subscription/reactivated/subject",
-      "value": "Ihr Republik-Abo: Sie sind wieder da!",
-      "Clara ok": "q",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Ihr Republik-Abo: Sie sind wieder da!"
     },
     {
       "key": "api/users/404",
-      "value": "Der User konnte leider nicht gefunden werden.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Der User konnte leider nicht gefunden werden."
     },
     {
       "key": "api/users/merge/sourceAndTargetIdentical",
-      "value": "Bei Quelle und Ziel darf es sich nicht um denselben User handeln.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Bei Quelle und Ziel darf es sich nicht um denselben User handeln."
     },
     {
       "key": "api/email/change/confirmation/subject",
-      "value": "Ihre E-Mail-Adresse wurde geändert",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Ihre E-Mail-Adresse wurde geändert"
     },
     {
       "key": "api/email/payment/reminder/subject",
-      "value": "Erinnerung: Republik-Abonnement",
-      "Clara ok": "q",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Erinnerung: Republik-Abonnement"
     },
     {
       "key": "api/pledge/404",
-      "value": "Der Pledge konnte nicht gefunden werden.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Der Pledge konnte nicht gefunden werden."
     },
     {
       "key": "api/pledge/resolve/status",
-      "value": "Der Pledge muss im status PAID_INVESTIGATE sein um gelöst werden zu können.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Der Pledge muss im status PAID_INVESTIGATE sein um gelöst werden zu können."
     },
     {
       "key": "api/pledge/resolve/multiplePayments",
-      "value": "Dieser Pledge kann nicht editiert werden, da mehrere Zahlungen dazu vorliegen.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Dieser Pledge kann nicht editiert werden, da mehrere Zahlungen dazu vorliegen."
     },
     {
       "key": "api/pledge/resolve/payment/status",
-      "value": "Die Zahlung dieses Pledges muss den status 'PAID' haben.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Die Zahlung dieses Pledges muss den status 'PAID' haben."
     },
     {
       "key": "api/pledge/resolve/payment/notEnough",
-      "value": "Die Zahlung reicht nicht aus um den Pledge zu begleichen (min: {minTotal}).",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Die Zahlung reicht nicht aus um den Pledge zu begleichen (min: {minTotal})."
     },
     {
       "key": "api/payment/404",
-      "value": "Die Zahlung konnte nicht gefunden werden.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Die Zahlung konnte nicht gefunden werden."
     },
     {
       "key": "api/postfinancePayment/hide/matched",
-      "value": "Postfinance Zahlungen mit Status \"matched\" können nicht versteckt werden.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Postfinance Zahlungen mit Status \"matched\" können nicht versteckt werden."
     },
     {
       "key": "api/postfinancePayment/match/noPayment",
-      "value": "Es konnte keine Zahlung mit der HRID {hrid} und dem Status \"PAID\" gefunden werden.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Es konnte keine Zahlung mit der HRID {hrid} und dem Status \"PAID\" gefunden werden."
     },
     {
       "key": "api/postfinancePayment/match/duplicate",
-      "value": "Es liegt bereits eine zugeordnete Postfinance Zahlung mit der HRID {hrid} vor.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Es liegt bereits eine zugeordnete Postfinance Zahlung mit der HRID {hrid} vor."
     },
     {
       "key": "api/postfinancePayment/match/noChange",
-      "value": "Diese Postfinance Zahlung ist bereits zugeordnet.",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Diese Postfinance Zahlung ist bereits zugeordnet."
     },
     {
       "key": "api/payment/subscription/threeDsecure/notSupported",
-      "value": "Es tut uns leid, aus technischen Gründen können wir zurzeit kein Monats-Abonnement auf eine Kreditkarte buchen, die 3D secure voraussetzt. Sie können es entweder mit einer anderen Karte versuchen und/oder uns kontaktieren unter: kontakt@republik.ch. ",
-      "Clara ok": "x",
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Es tut uns leid, aus technischen Gründen können wir zurzeit kein Monats-Abonnement auf eine Kreditkarte buchen, die 3D secure voraussetzt. Sie können es entweder mit einer anderen Karte versuchen und/oder uns kontaktieren unter: kontakt@republik.ch. "
     },
     {
       "key": "api/email/change/exists",
-      "value": "Diese E-Mail-Adresse ist schon besetzt. Sie können nur E-Mail-Adressen eingeben, die in unserem System noch nicht verwendet werden.",
-      "Clara ok": null,
-      "Braucht Const": null,
-      "Korrektorat": null,
-      "Bemerkung": null
+      "value": "Diese E-Mail-Adresse ist schon besetzt. Sie können nur E-Mail-Adressen eingeben, die in unserem System noch nicht verwendet werden."
     }
   ]
 }

@@ -60,9 +60,9 @@
     redis "^2.8.0"
     subscriptions-transport-ws "^0.9.4"
 
-"@orbiting/backend-modules-documents@^2.4.6":
-  version "2.4.6"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.4.6.tgz#1d26d8835d5a81527215935b9c6f05eec4e09a25"
+"@orbiting/backend-modules-documents@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.5.0.tgz#de81df4dfd96c3075de883da3fbdfef00b6d6cf4"
   dependencies:
     "@orbiting/backend-modules-auth" "^3.0.0"
     "@project-r/styleguide" "^5.27.1"

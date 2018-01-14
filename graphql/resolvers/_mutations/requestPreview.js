@@ -8,7 +8,8 @@ const moment = require('moment')
 
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
-  PREVIEW_MAIL_REPO_ID
+  PREVIEW_MAIL_REPO_ID,
+  FRONTEND_BASE_URL
 } = process.env
 
 const minIntervalHours = 12
@@ -39,8 +40,8 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/preview/mail/404'))
   }
   // resolve Document
-  doc.content = DocResolver.content(doc, null, context)
-  doc.meta = DocResolver.meta(doc, null, context)
+  doc.content = DocResolver.content(doc, { urlPrefix: FRONTEND_BASE_URL }, context)
+  doc.meta = DocResolver.meta(doc, { urlPrefix: FRONTEND_BASE_URL }, context)
   const html = getHTML(doc)
 
   await sendMail({
