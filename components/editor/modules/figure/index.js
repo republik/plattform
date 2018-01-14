@@ -4,7 +4,7 @@ import { Block } from 'slate'
 import { matchBlock } from '../../utils'
 import createUi from './ui'
 import { findOrCreate } from '../../utils/serialization'
-import { removeEmptyHandler } from '../../utils/keyHandlers'
+import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
 
 import MarkdownSerializer from 'slate-mdast-serializer'
 
@@ -136,7 +136,7 @@ export default options => {
             </Figure>
           )
         },
-        onKeyDown: removeEmptyHandler({ TYPE, isEmpty }),
+        onKeyDown: createRemoveEmptyKeyHandler({ TYPE, isEmpty }),
         schema: {
           blocks: {
             [TYPE]: {

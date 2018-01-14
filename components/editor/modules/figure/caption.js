@@ -1,7 +1,7 @@
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { Block } from 'slate'
 import { matchBlock } from '../../utils'
-import { staticKeyHandler, keyHandler } from '../../utils/keyHandlers'
+import { createStaticKeyHandler, createSoftBreakKeyHandler } from '../../utils/keyHandlers'
 import { Inline } from '../../Placeholder'
 
 const getSerializer = options => {
@@ -146,8 +146,8 @@ const captionPlugin = ({TYPE, rule, subModules}) => {
 
   const matchCaption = matchBlock(TYPE)
 
-  const textSoftBreakHandler = keyHandler({ TYPE: 'CAPTION_TEXT' })
-  const textStaticHandler = staticKeyHandler({
+  const textSoftBreakHandler = createSoftBreakKeyHandler({ TYPE: 'CAPTION_TEXT' })
+  const textStaticHandler = createStaticKeyHandler({
     TYPE: 'CAPTION_TEXT',
     rule: { editorOptions: {} }
   })
@@ -160,7 +160,7 @@ const captionPlugin = ({TYPE, rule, subModules}) => {
     return textStaticHandler(...args)
   }
 
-  const bylineKeyHandler = staticKeyHandler({
+  const bylineKeyHandler = createStaticKeyHandler({
     TYPE: bylineModule.TYPE,
     rule
   })

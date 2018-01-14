@@ -3,7 +3,7 @@ import { Block } from 'slate'
 import React from 'react'
 import { FigureGroupButton, FigureGroupForm } from './ui'
 import { matchBlock } from '../../utils'
-import { removeEmptyHandler } from '../../utils/keyHandlers'
+import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
 
 export const getData = data => ({
   columns: 2,
@@ -136,7 +136,7 @@ const figureGroupPlugin = options => {
         </FigureGroup>
       )
     },
-    onKeyDown: removeEmptyHandler({ TYPE, isEmpty: isEmpty(options) }),
+    onKeyDown: createRemoveEmptyKeyHandler({ TYPE, isEmpty: isEmpty(options) }),
     schema: {
       blocks: {
         [TYPE]: {

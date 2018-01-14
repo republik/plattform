@@ -2,8 +2,26 @@ import React from 'react'
 
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
-import { keyHandler, staticKeyHandler } from '../../utils/keyHandlers'
+import { createSoftBreakKeyHandler, createStaticKeyHandler } from '../../utils/keyHandlers'
 import Placeholder from '../../Placeholder'
+
+const removeMarksFromSpace = node => {
+  return !node.leaves
+  ? node
+  : {
+    ...node,
+    leaves: node.leaves.map(
+      leaf => {
+        return leaf.text &&
+        leaf.text.trim() === '' &&
+        leaf.marks &&
+        leaf.marks.length
+        ? { ...leaf, marks: [] }
+        : leaf
+      }
+    )
+  }
+}
 
 export default ({rule, subModules, TYPE}) => {
   const {
@@ -54,7 +72,12 @@ export default ({rule, subModules, TYPE}) => {
       }
     },
     toMdast: (object, index, parent, rest) => {
-      let children = inlineSerializer.toMdast(object.nodes, 0, object, rest)
+      let children = inlineSerializer.toMdast(
+        object.nodes.map(removeMarksFromSpace),
+        0,
+        object,
+        rest
+      )
 
       if (mdastPlaceholder) {
         if (
@@ -83,8 +106,8 @@ export default ({rule, subModules, TYPE}) => {
     ]
   })
 
-  const paragraphSoftBreakHandler = keyHandler({ TYPE })
-  const paragraphStaticHandler = staticKeyHandler({ TYPE, rule: rule || {} })
+  const paragraphSoftBreakHandler = createSoftBreakKeyHandler({ TYPE })
+  const paragraphStaticHandler = createStaticKeyHandler({ TYPE, rule: rule || {} })
 
   return {
     TYPE,
