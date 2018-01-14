@@ -256,6 +256,8 @@ type DisplayUser {
   name: String!
   credential: Credential
   profilePicture: String
+  anonymity: Boolean!
+  username: String
 }
 
 enum CommentVote {

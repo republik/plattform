@@ -123,13 +123,19 @@ module.exports = {
         id,
         name: t('api/comment/anonymous/displayName'),
         profilePicture: null,
-        credential
+        credential,
+        anonymity: true,
+        username: null
       }
       : {
         id,
         name: commenter.name,
         profilePicture: profilePicture,
-        credential
+        credential,
+        anonymity: false,
+        username: commenter._raw.hasPublicProfile
+          ? commenter._raw.username
+          : null
       }
   }
 }
