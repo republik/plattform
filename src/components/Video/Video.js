@@ -40,6 +40,18 @@ const styles = {
     left: 'calc(50% - 13px)',
     top: 'calc(50% - 18px)'
   }),
+  playNote: css({
+    position: 'absolute',
+    top: 'calc(50% + 18px)',
+    left: '50%',
+    transform: 'translate(-50%,0)',
+    color: '#fff',
+    width: '100%',
+    maxWidth: 400,
+    padding: 10,
+    lineHeight: 1.2,
+    textAlign: 'center'
+  }),
   embedContainer: css({
     position: 'relative',
     height: 0,
@@ -97,6 +109,7 @@ class Video extends Component {
 
   render() {
     const {
+      t,
       id,
       url,
       platform,
@@ -119,6 +132,12 @@ class Video extends Component {
             <a {...styles.thumbnail} onClick={this.handleClick}>
               <span {...styles.playIcon}>
                 <PlayIcon />
+              </span>
+              <span {...styles.playNote}>
+                {t('styleguide/video/dnt/note', {
+                  player: t(`styleguide/video/dnt/player/${platform}`),
+                  platform: t(`styleguide/video/dnt/player/${platform}`)
+                })}
               </span>
               <FigureImage src={thumbnail} alt="" />
             </a>
@@ -149,6 +168,7 @@ class Video extends Component {
 }
 
 Video.propTypes = {
+  t: PropTypes.func.isRequired,
   id: PropTypes.string,
   url: PropTypes.string.isRequired,
   platform: PropTypes.oneOf(['vimeo', 'youtube']).isRequired,
@@ -163,6 +183,7 @@ Video.propTypes = {
 }
 
 Video.defaultProps = {
+  t: () => '',
   platform: 'youtube',
   size: undefined,
   showMeta: false

@@ -410,7 +410,8 @@ const createSchema = ({
   titleBlockPrepend = null,
   titleBlockAppend = null,
   repoPrefix = 'article-',
-  Link = DefaultLink
+  Link = DefaultLink,
+  t = () => ''
 } = {}) => {
   const teasers = createTeasers({
     Link
@@ -628,6 +629,7 @@ const createSchema = ({
                     <Video
                       attributes={attributes}
                       {...data}
+                      t={t}
                       date={new Date(data.createdAt)}
                     />
                   )

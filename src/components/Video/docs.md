@@ -16,6 +16,7 @@ Props:
 
 ```react
 <Video
+  t={t}
   id='t0nfMr_wXVY'
   platform='youtube'
   url='https://www.youtube.com/watch?v=t0nfMr_wXVY'
@@ -27,6 +28,7 @@ Props:
 
 ```react
 <Video
+  t={t}
   id='t0nfMr_wXVY'
   platform='youtube'
   url='https://www.youtube.com/watch?v=t0nfMr_wXVY'
@@ -43,6 +45,7 @@ Props:
 
 ```react
 <Video
+  t={t}
   id='214306781'
   platform='vimeo'
   url='https://vimeo.com/214306781'
@@ -58,6 +61,7 @@ Props:
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <Video
+    t={t}
     id='t0nfMr_wXVY'
     platform='youtube'
     url='https://www.youtube.com/watch?v=t0nfMr_wXVY'
@@ -73,6 +77,7 @@ Props:
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <Video
+    t={t}
     id='t0nfMr_wXVY'
     platform='youtube'
     url='https://www.youtube.com/watch?v=t0nfMr_wXVY'
@@ -89,6 +94,7 @@ Props:
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <Video
+    t={t}
     id='t0nfMr_wXVY'
     platform='youtube'
     url='https://www.youtube.com/watch?v=t0nfMr_wXVY'
@@ -105,6 +111,7 @@ Props:
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <Video
+    t={t}
     id='214306781'
     platform='vimeo'
     url='https://vimeo.com/214306781'
@@ -120,6 +127,7 @@ Props:
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <Video
+    t={t}
     id='214306781'
     platform='vimeo'
     url='https://vimeo.com/214306781'
@@ -137,6 +145,7 @@ Props:
 <Center>
   <Editorial.P>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.</Editorial.P>
   <Video
+    t={t}
     id='214306781'
     platform='vimeo'
     url='https://vimeo.com/214306781'

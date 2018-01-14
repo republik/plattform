@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-06T00:52:23.587Z",
+  "updated": "2018-01-14T07:30:35.630Z",
   "title": "live",
   "data": [
     {
@@ -66,6 +66,18 @@
     {
       "key": "styleguide/comment/adminUnpublished",
       "value": "Leider mussen wir Ihren Beitrag unveröffentlichen. Wenden sie sich an kontakt@republik.ch."
+    },
+    {
+      "key": "styleguide/video/dnt/note",
+      "value": "Kleine Warnung: Dies ist ein {player}-Video. Wenn Sie das Video abspielen, kann {platform} Sie tracken."
+    },
+    {
+      "key": "styleguide/video/dnt/player/youtube",
+      "value": "YouTube"
+    },
+    {
+      "key": "styleguide/video/dnt/player/vimeo",
+      "value": "Vimeo"
     }
   ]
 }

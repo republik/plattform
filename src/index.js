@@ -273,6 +273,7 @@ ReactDOM.render(
             path: '/video',
             title: 'Video',
             imports: {
+              t,
               css,
               ...require('./components/Typography'),
               ...require('./components/Video'),

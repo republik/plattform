@@ -14,6 +14,7 @@ const schema = createArticleSchema({
 - `titleBlockPrepend`, prepend React elements—e.g. a dossier tag—to the title block
 - `titleBlockAppend`, append React elements—e.g. share icons—to the title block
 - `titleBlockRule`, overwrite the whole title block, prepend and append are no longer applied
+- `t`, optional translation function, used for e.g. DNT notes
 - `Link`, a Next.js like `<Link />` component
   This will be wrapped around links. You should attach an `onClick` handler within, if you wish to do client side routing and or prefetching. The component recieves following props:
   - `href` String, target url or path
