@@ -10,6 +10,13 @@ module.exports = {
         userId: user.id
       }, context, info)
     }
-    return null
+    return {
+      pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false
+      }
+      totalCount: 0,
+      nodes: []
+    }
   }
 }
