@@ -1,3 +1,4 @@
+const { Roles } = require('@orbiting/backend-modules-auth')
 const cancelSubscription = require('../../../lib/payments/stripe/cancelSubscription')
 
 module.exports = async (_, args, {pgdb, req, t}) => {
@@ -30,6 +31,9 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     if (membership.renew === false) {
       throw new Error(t('api/membership/cancel/notRenewing'))
     }
+
+    const user = await transaction.public.users.findOne({ id: membership.userId })
+    Roles.ensureUserIsMeOrInRoles(user, req.user, ['supporter'])
 
     const membershipType = await transaction.public.membershipTypes.findOne({
       id: membership.membershipTypeId

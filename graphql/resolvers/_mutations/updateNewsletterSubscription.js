@@ -2,8 +2,8 @@ const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const updateNewsletterSubscription = require('../../../lib/mailchimp/updateNewsletterSubscription')
 
 module.exports = async (_, args, context) => {
-  const { req, t, user } = context
-  ensureSignedIn(req, t)
+  const { req, user } = context
+  ensureSignedIn(req)
   const { name, subscribed, status } = args
 
   return updateNewsletterSubscription(

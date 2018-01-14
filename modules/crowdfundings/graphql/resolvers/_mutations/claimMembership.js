@@ -3,7 +3,7 @@ const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const { updateUserOnMailchimp } = require('@orbiting/backend-modules-mail')
 
 module.exports = async (_, args, {pgdb, req, t}) => {
-  ensureSignedIn(req, t)
+  ensureSignedIn(req)
 
   // if this restriction gets removed, make sure to check if
   // the membership doesn't already belong to the user, before

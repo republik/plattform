@@ -2,7 +2,7 @@ const { sendMail, sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, args, {user, req, t}) => {
-  ensureSignedIn(req, t)
+  ensureSignedIn(req)
 
   const { question } = args
   let name = user.firstName ? [' - ', user.firstName, user.lastName].join(' ') : ''

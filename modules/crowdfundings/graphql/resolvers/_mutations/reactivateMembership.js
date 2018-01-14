@@ -1,3 +1,4 @@
+const { Roles } = require('@orbiting/backend-modules-auth')
 const getSubscription = require('../../../lib/payments/stripe/getSubscription')
 const createSubscription = require('../../../lib/payments/stripe/createSubscription')
 const reactivateSubscription = require('../../../lib/payments/stripe/reactivateSubscription')
@@ -25,6 +26,9 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     if (!membership) {
       throw new Error(t('api/membership/404'))
     }
+
+    const user = await transaction.public.users.findOne({ id: membership.userId })
+    Roles.ensureUserIsMeOrInRoles(user, req.user, ['supporter'])
 
     const membershipType = await transaction.public.membershipTypes.findOne({
       id: membership.membershipTypeId
