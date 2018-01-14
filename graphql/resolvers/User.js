@@ -118,23 +118,10 @@ module.exports = {
       return emptyCommentConnection
     }
     const {
-      first = 10,
+      first: _first = 10,
       after
     } = args
-    const afterRowNumber = after
-      ? Buffer.from(after, 'base64').toString('utf-8')
-      : null
-
-    const totalCount = await pgdb.public.comments.count({
-      userId: user.id
-    })
-
-    if (!me || !Roles.userIsInRoles(me, ['member'])) {
-      return {
-        ...emptyCommentConnection,
-        totalCount
-      }
-    }
+    const first = Math.min(_first, 100)
 
     const comments = await pgdb.query(`
       SELECT
@@ -145,39 +132,50 @@ module.exports = {
       JOIN
         discussions d
         ON d.id = c."discussionId"
+      LEFT JOIN
+        "discussionPreferences" dp
+        ON
+          dp."discussionId" = d.id AND
+          dp."userId" = :userId
       WHERE
-        c."userId" = :userId
+        c."userId" = :userId AND
+        (dp IS NULL OR dp.anonymous = false)
       ORDER BY
         c."createdAt" DESC
-      LIMIT :first
-      ${afterRowNumber
-        ? 'OFFSET :afterRowNumber'
-        : ''
-      }
     `, {
-      userId: user.id,
-      first: Math.min(first, 100),
-      ...afterRowNumber
-        ? { afterRowNumber }
-        : { }
-    })
-    const oldestComment = await pgdb.public.comments.findFirst({
       userId: user.id
-    }, {fields: ['id'], orderBy: ['createdAt asc']})
-    const lastCommentId = oldestComment && oldestComment.id
+    })
+    const totalCount = comments.length
 
-    if (comments.length) {
+    if (!me || !Roles.userIsInRoles(me, ['member']) || !comments.length) {
       return {
-        id: user.id,
-        totalCount,
-        pageInfo: {
-          endCursor: Buffer.from(`${comments.length + (afterRowNumber || 0)}`).toString('base64'),
-          hasNextPage: comments[comments.length - 1].id !== lastCommentId
-        },
-        nodes: comments
+        ...emptyCommentConnection,
+        totalCount
       }
     }
-    return emptyCommentConnection
+
+    const afterId = after
+      ? Buffer.from(after, 'base64').toString('utf-8')
+      : null
+
+    let startIndex = 0
+    if (afterId) {
+      startIndex = comments.findIndex(node => node.id === afterId)
+    }
+    const endIndex = startIndex + first
+    const nodes = comments.slice(startIndex, endIndex)
+
+    return {
+      id: user.id,
+      totalCount,
+      pageInfo: {
+        endCursor: nodes.length
+          ? Buffer.from(`${nodes[nodes.length - 1].id}`).toString('base64')
+          : null,
+        hasNextPage: endIndex < comments.length
+      },
+      nodes
+    }
   },
   birthday (user, args, { user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
