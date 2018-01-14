@@ -59,8 +59,8 @@ type mutations {
   ): User!
 
   publishCredential(
-    description: String!
-  ): Credential!
+    description: String
+  ): Credential
 
   verifyCredential(
     userId: ID!
