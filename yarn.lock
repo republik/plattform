@@ -13,31 +13,6 @@
     file-type "^7.4.0"
     sharp "^0.18.4"
 
-"@orbiting/backend-modules-auth@^3.0.4":
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-3.0.4.tgz#0c5af7cd074dd18ae3343223a25aeccb3cce12fb"
-  dependencies:
-    "@orbiting/backend-modules-mail" "^0.1.2"
-    "@orbiting/backend-modules-translate" "^0.0.0"
-    apollo-modules-node "^0.1.4"
-    check-env "^1.3.0"
-    connect-pg-simple "^3.1.2"
-    country-emoji "^1.2.0"
-    debug "^3.1.0"
-    email-validator "^1.1.1"
-    export-files "^2.1.1"
-    express-session "^1.15.6"
-    geoip-database "^1.0.11"
-    is-uuid "^1.0.2"
-    kraut "^0.1.1"
-    maxmind "^2.4.0"
-    passport "^0.4.0"
-    pogi "^2.5.5"
-    querystring "^0.2.0"
-    rw "^1.3.3"
-    useragent "^2.2.1"
-    uuid "^3.1.0"
-
 "@orbiting/backend-modules-auth@^3.0.5":
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-3.0.5.tgz#bfeff4db677af2a45358933e27eedb06ddc105ab"
@@ -63,11 +38,11 @@
     useragent "^2.2.1"
     uuid "^3.1.0"
 
-"@orbiting/backend-modules-base@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-1.1.0.tgz#baab9752b6953b55aba4a18d6b7c09023f6d54a7"
+"@orbiting/backend-modules-base@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-1.1.1.tgz#3d1662394f84094fbb54d64cb22ab17c172c7251"
   dependencies:
-    "@orbiting/backend-modules-auth" "^3.0.4"
+    "@orbiting/backend-modules-auth" "^3.0.5"
     apollo-engine "^0.8.1"
     apollo-modules-node "^0.1.4"
     apollo-server-express "^1.3.2"
@@ -86,11 +61,11 @@
     redis "^2.8.0"
     subscriptions-transport-ws "^0.9.4"
 
-"@orbiting/backend-modules-documents@^2.5.5":
-  version "2.5.5"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.5.5.tgz#a4fc445e37a8fcce959a0f1137418272f785ee40"
+"@orbiting/backend-modules-documents@^2.5.6":
+  version "2.5.6"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.5.6.tgz#c62c033cf4ef1ef044f51c6fad6a2c0893eaef45"
   dependencies:
-    "@orbiting/backend-modules-auth" "^3.0.4"
+    "@orbiting/backend-modules-auth" "^3.0.5"
     "@project-r/styleguide" "^5.27.1"
     "@project-r/template-newsletter" "^1.5.0"
     apollo-modules-node "^0.1.4"
