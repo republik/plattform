@@ -5,6 +5,23 @@ import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 import { createSoftBreakKeyHandler, createStaticKeyHandler } from '../../utils/keyHandlers'
 import Placeholder from '../../Placeholder'
 
+const removeMarksFromSpace = node => {
+  return !node.leaves
+  ? node
+  : {
+    ...node,
+    leaves: node.leaves.map(
+      leaf => {
+        return leaf.text === ' ' &&
+        leaf.marks &&
+        leaf.marks.length
+        ? { kind: 'leaf', text: ' ', marks: [] }
+        : leaf
+      }
+    )
+  }
+}
+
 export default ({rule, subModules, TYPE}) => {
   const {
     formatButtonText,
@@ -54,7 +71,12 @@ export default ({rule, subModules, TYPE}) => {
       }
     },
     toMdast: (object, index, parent, rest) => {
-      let children = inlineSerializer.toMdast(object.nodes, 0, object, rest)
+      let children = inlineSerializer.toMdast(
+        object.nodes.map(removeMarksFromSpace),
+        0,
+        object,
+        rest
+      )
 
       if (mdastPlaceholder) {
         if (
