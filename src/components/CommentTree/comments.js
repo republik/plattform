@@ -5,7 +5,7 @@ export const mkComment = (n, children, pageInfo) => ({
   displayAuthor: {
     profilePicture,
     name: `${n} – Christof Moser`,
-    credential: {description: 'Journalist', verified: true}
+    credential: {description: 'Journalist, Autor, Diktator, Rebel und Republikaner', verified: true}
   },
   score: 8,
   userVote: 'DOWN',

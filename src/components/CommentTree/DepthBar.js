@@ -7,6 +7,11 @@ import {profilePictureSize, profilePictureMargin} from '../Comment/CommentHeader
 
 const borderWidth = 2
 
+const marginLeft = (profilePictureSize / 2 - borderWidth / 2)
+const marginRight = (profilePictureSize / 2 - borderWidth / 2 + profilePictureMargin)
+
+export const WIDTH = marginLeft + marginRight
+
 const styles = {
   depthBar: css({
     width: 0,
@@ -15,8 +20,8 @@ const styles = {
     flexGrow: 0,
     alignSelf: 'stretch',
     borderLeft: `${borderWidth}px solid ${colors.primary}`,
-    marginLeft: (profilePictureSize / 2 - borderWidth / 2),
-    marginRight: (profilePictureSize / 2 - borderWidth / 2 + profilePictureMargin),
+    marginLeft,
+    marginRight
   }),
   head: css({
     marginTop: 20 + profilePictureSize,
