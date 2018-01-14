@@ -5,7 +5,7 @@ import {css} from 'glamor'
 import {Comment, CommentActions} from '../Comment'
 import {profilePictureSize, profilePictureMargin} from '../Comment/CommentHeader'
 import CommentComposer from '../CommentComposer/CommentComposer'
-import {DepthBars, WIDTH} from './DepthBar'
+import {DepthBars, getWidth} from './DepthBar'
 
 const styles = {
   root: css({
@@ -26,7 +26,7 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
   return (
     <div {...styles.root}>
       <DepthBars count={barCount} head={head} tail={tail} />
-      <div style={{flexGrow: 1, flexBasis: 0, margin: otherChild ? '20px 0' : `20px 0 20px -${profilePictureSize + profilePictureMargin}px`, width: `calc(100% - ${barCount * WIDTH}px)`}}>
+      <div style={{flexGrow: 1, flexBasis: 0, margin: otherChild ? '20px 0' : `20px 0 20px -${profilePictureSize + profilePictureMargin}px`, width: `calc(100% - ${getWidth(barCount)}px)`}}>
         {!isEditing && <Comment
           {...comment}
           timeago={timeago}

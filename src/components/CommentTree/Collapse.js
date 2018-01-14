@@ -5,6 +5,7 @@ import {css} from 'glamor'
 import colors from '../../theme/colors'
 import {sansSerifRegular14} from '../Typography/styles'
 import {profilePictureSize, profilePictureMargin} from '../Comment/CommentHeader'
+import {getWidth} from './DepthBar'
 
 const borderWidth = 2
 const styles = {
@@ -34,11 +35,8 @@ const styles = {
   })
 }
 
-const width = (visualDepth) =>
-  visualDepth * (profilePictureSize + profilePictureMargin) - profilePictureMargin - profilePictureSize / 2 + borderWidth / 2
-
 const Collapse = ({t, visualDepth, onClick}) => (
-  <div {...styles.root} style={{width: width(visualDepth)}}>
+  <div {...styles.root} style={{width: getWidth(visualDepth) - profilePictureSize / 2 - profilePictureMargin + borderWidth / 2}}>
     <button {...styles.button} onClick={onClick}>
       {t('styleguide/CommentTreeCollapse/label')}
     </button>

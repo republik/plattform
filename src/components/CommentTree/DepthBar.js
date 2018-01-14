@@ -7,10 +7,19 @@ import {profilePictureSize, profilePictureMargin} from '../Comment/CommentHeader
 
 const borderWidth = 2
 
-const marginLeft = (profilePictureSize / 2 - borderWidth / 2)
-const marginRight = (profilePictureSize / 2 - borderWidth / 2 + profilePictureMargin)
+const marginLeftFirst = profilePictureSize / 2 - borderWidth / 2
+const marginLeft = borderWidth / 2
+const marginRight = profilePictureSize / 2 - borderWidth / 2 + profilePictureMargin
 
-export const WIDTH = marginLeft + marginRight
+const FIRST_WIDTH = marginLeftFirst + marginRight + borderWidth
+const WIDTH = marginLeft + marginRight + borderWidth
+
+export const getWidth = (count) => {
+  if (!count) {
+    return 0
+  }
+  return FIRST_WIDTH + WIDTH * (count - 1)
+}
 
 const styles = {
   depthBar: css({
@@ -20,7 +29,6 @@ const styles = {
     flexGrow: 0,
     alignSelf: 'stretch',
     borderLeft: `${borderWidth}px solid ${colors.primary}`,
-    marginLeft,
     marginRight
   }),
   head: css({
@@ -33,10 +41,11 @@ const styles = {
 
 const range = (n) => Array.from(new Array(n))
 
-export const DepthBar = ({head, tail}) =>
+export const DepthBar = ({first, head, tail}) =>
   <div
     {...styles.depthBar}
     {...(head ? styles.head : {})} {...(tail ? styles.tail : {})}
+    style={{marginLeft: first ? marginLeftFirst : marginLeft}}
   />
 
 DepthBar.propTypes = {
@@ -48,6 +57,7 @@ export const DepthBars = ({count, head, tail}) =>
   range(count).map((_, index) => (
     <DepthBar
       key={index}
+      first={index === 0}
       head={index === count - 1 && head}
       tail={index === count - 1 && tail}
     />
