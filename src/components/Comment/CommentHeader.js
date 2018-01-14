@@ -7,6 +7,8 @@ import { sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
 import { ellipsize } from '../../lib/styleMixins'
 import { timeFormat } from '../../lib/timeFormat'
 
+import { DEFAULT_PROFILE_PICTURE } from '../Logo/BrandMark'
+
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
 const profilePictureBorderSize = 5
@@ -70,8 +72,6 @@ const styles = {
   })
 }
 
-const defaultProfilePicture = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAAAAACoWZBhAAAAF0lEQVQI12P4BAI/QICBFCaYBPNJYQIAkUZftTbC4sIAAAAASUVORK5CYII='
-
 const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
 const titleDate = string => dateTimeFormat(new Date(string))
 
@@ -81,7 +81,7 @@ export const CommentHeader = ({t, profilePicture, name, timeago, createdAt, upda
     <div {...styles.root}>
       <img
         {...styles.profilePicture}
-        src={profilePicture || defaultProfilePicture}
+        src={profilePicture || DEFAULT_PROFILE_PICTURE}
         alt=''
       />
       <div {...styles.meta}>

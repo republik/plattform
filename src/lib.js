@@ -9,7 +9,7 @@ export {fontFamilies, fontFaces} from './theme/fonts'
 export {createFormatter, createPlaceholderFormatter} from './lib/translate'
 
 export {default as Logo} from './components/Logo'
-export {default as BrandMark} from './components/Logo/BrandMark'
+export {default as BrandMark, DEFAULT_PROFILE_PICTURE} from './components/Logo/BrandMark'
 export {default as Button} from './components/Button'
 export {default as Field} from './components/Form/Field'
 export {default as FieldSet} from './components/Form/FieldSet'
