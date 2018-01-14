@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-12T22:06:38.345Z",
+  "updated": "2018-01-14T07:34:42.364Z",
   "title": "live",
   "data": [
     {
@@ -541,6 +541,18 @@
     {
       "key": "link/repo/search",
       "value": "Artikel suchen"
+    },
+    {
+      "key": "styleguide/video/dnt/note",
+      "value": "Kleine Warnung: Dies ist ein {player}-Video. Wenn Sie das Video abspielen, kann {platform} Sie tracken."
+    },
+    {
+      "key": "styleguide/video/dnt/player/youtube",
+      "value": "YouTube"
+    },
+    {
+      "key": "styleguide/video/dnt/player/vimeo",
+      "value": "Vimeo"
     }
   ]
 }
