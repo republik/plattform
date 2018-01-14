@@ -202,7 +202,7 @@ module.exports = async (_, args, { user, redis, pgdb }) => {
       endCursor: readNodes
         ? end && end.id
         : undefined,
-      hasNextPage: endIndex < documents.length - 1,
+      hasNextPage: endIndex < documents.length,
       hasPreviousPage: startIndex > 0,
       startCursor: readNodes
         ? start && start.id
