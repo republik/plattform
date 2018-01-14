@@ -189,7 +189,7 @@ class Tree extends Component {
         ? `0 ${MIN_PADDING}px`
         : '0 auto 0'
 
-    let colors = [...schemeCategory10]
+    let colors = [...schemeCategory10, ...schemeCategory10, ...schemeCategory10]
     let authorColor = {}
     this.state.commits.forEach(
       ({ data, author, nodeRef, listItemRef, milestoneBarRef, milestones }) => {
