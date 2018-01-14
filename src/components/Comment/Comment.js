@@ -17,10 +17,11 @@ const styles = {
   })
 }
 
-export const Comment = ({t, timeago, createdAt, updatedAt, published = true, userCanEdit, adminUnpublished, displayAuthor, content}) => (
+export const Comment = ({t, timeago, createdAt, updatedAt, published = true, userCanEdit, adminUnpublished, displayAuthor, content, Link}) => (
   <div>
     <CommentHeader
       {...displayAuthor}
+      Link={Link}
       t={t}
       createdAt={createdAt}
       updatedAt={updatedAt}

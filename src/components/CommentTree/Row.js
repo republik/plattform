@@ -17,7 +17,7 @@ const styles = {
   }),
 }
 
-const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onEditPreferences, onAnswer, edit, onUnpublish, onUpvote, onDownvote, dismissComposer, submitComment, timeago}) => {
+const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onEditPreferences, onAnswer, edit, onUnpublish, onUpvote, onDownvote, dismissComposer, submitComment, timeago, Link}) => {
   const isEditing = edit && edit.isEditing
   const { score } = comment
 
@@ -29,6 +29,7 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
       <div style={{flexGrow: 1, flexBasis: 0, margin: otherChild ? '20px 0' : `20px 0 20px -${profilePictureSize + profilePictureMargin}px`, width: `calc(100% - ${getWidth(barCount)}px)`}}>
         {!isEditing && <Comment
           {...comment}
+          Link={Link}
           timeago={timeago}
           t={t}
         />}
@@ -185,7 +186,8 @@ class RowState extends PureComponent {
       otherChild,
       displayAuthor,
       onEditPreferences,
-      isAdmin
+      isAdmin,
+      Link
     } = this.props
     const {composerState, composerError} = this.state
     const {userVote} = comment
@@ -239,6 +241,7 @@ class RowState extends PureComponent {
         submitComment={this.submitComment}
         edit={edit}
         timeago={timeago}
+        Link={Link}
       />
     )
   }

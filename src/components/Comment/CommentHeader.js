@@ -69,24 +69,39 @@ const styles = {
     display: 'inline-block',
     marginLeft: 4,
     marginTop: -2
+  }),
+  link: css({
+    color: 'inherit',
+    textDecoration: 'none'
   })
 }
 
 const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
 const titleDate = string => dateTimeFormat(new Date(string))
 
-export const CommentHeader = ({t, profilePicture, name, timeago, createdAt, updatedAt, credential}) => {
+const DefaultLink = ({ children }) => children
+
+export const CommentHeader = ({t, Link = DefaultLink, timeago, ...displayAuthor, createdAt, updatedAt, credential}) => {
   const updated = updatedAt && updatedAt !== createdAt
+  const { profilePicture, name } = displayAuthor
   return (
     <div {...styles.root}>
-      <img
-        {...styles.profilePicture}
-        src={profilePicture || DEFAULT_PROFILE_PICTURE}
-        alt=''
-      />
+      <Link displayAuthor={displayAuthor} passHref>
+        <a {...styles.link}>
+          <img
+            {...styles.profilePicture}
+            src={profilePicture || DEFAULT_PROFILE_PICTURE}
+            alt=''
+          />
+        </a>
+      </Link>
       <div {...styles.meta}>
         <div {...styles.name}>
-          <div {...styles.nameText}>{name}</div>
+          <div {...styles.nameText}>
+            <Link displayAuthor={displayAuthor} passHref>
+              <a {...styles.link}>{name}</a>
+            </Link>
+          </div>
           {timeago && <span {...styles.timeago} title={titleDate(createdAt)}>
             {timeago(createdAt)}
           </span>}
