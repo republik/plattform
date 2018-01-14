@@ -1,4 +1,6 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
+const { MAX_CREDENTIAL_LENGTH } = require('./discussion/lib/Credential')
+const ensureStringLength = require('../../../lib/ensureStringLength')
 
 module.exports = async (_, args, { pgdb, req, user: me, t }) => {
   ensureSignedIn(req)
@@ -6,6 +8,16 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
   const {
     description
   } = args
+
+  ensureStringLength(description, {
+    max: MAX_CREDENTIAL_LENGTH,
+    min: 1,
+    error: t('profile/generic/notInRange', {
+      key: t('profile/credential/label'),
+      min: 1,
+      max: MAX_CREDENTIAL_LENGTH
+    })
+  })
 
   const transaction = await pgdb.transactionBegin()
   try {

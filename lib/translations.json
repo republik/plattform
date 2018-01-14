@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-11T22:10:24.648Z",
+  "updated": "2018-01-14T02:32:14.618Z",
   "title": "live",
   "data": [
     {
@@ -185,6 +185,10 @@
     {
       "key": "pledge/contact/lastName/label",
       "value": "Ihr Nachname"
+    },
+    {
+      "key": "profile/credential/label",
+      "value": "Bezeichnung"
     }
   ]
 }

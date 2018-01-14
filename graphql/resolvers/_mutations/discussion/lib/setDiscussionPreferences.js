@@ -1,3 +1,6 @@
+const { MAX_CREDENTIAL_LENGTH } = require('./Credential')
+const ensureStringLength = require('../../../../../lib/ensureStringLength')
+
 module.exports = async ({
   discussionPreferences,
   userId,
@@ -18,6 +21,15 @@ module.exports = async ({
 
   let credentialId
   if (credentialDescription) {
+    ensureStringLength(credentialDescription, {
+      max: MAX_CREDENTIAL_LENGTH,
+      min: 1,
+      error: t('profile/generic/notInRange', {
+        key: t('profile/credential/label'),
+        min: 1,
+        max: MAX_CREDENTIAL_LENGTH
+      })
+    })
     const existingCredential = await transaction.public.credentials.findOne({
       userId,
       description: credentialDescription
