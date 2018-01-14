@@ -1,10 +1,10 @@
 {
-  "updated": "2018-01-04T20:38:05.827Z",
+  "updated": "2018-01-14T06:10:43.911Z",
   "title": "live",
   "data": [
     {
       "key": "api/signIn",
-      "value": "Sie müssen sich zuerst einloggen."
+      "value": "Sie müssen sich zuerst anmelden."
     },
     {
       "key": "api/unauthorized",
