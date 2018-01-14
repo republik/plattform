@@ -31,7 +31,13 @@ module.exports.run = () => {
     }
   ]
 
-  return server.run(executableSchema, middlewares, t, signInHooks)
+  const createGraphQLContext = (defaultContext) => ({
+    ...defaultContext,
+    t,
+    signInHooks
+  })
+
+  return server.run(executableSchema, middlewares, t, createGraphQLContext)
 }
 
 module.exports.close = () => {
