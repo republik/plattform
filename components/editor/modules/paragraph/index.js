@@ -12,10 +12,10 @@ const removeMarksFromSpace = node => {
     ...node,
     leaves: node.leaves.map(
       leaf => {
-        return leaf.text === ' ' &&
+        return leaf.text.trim() === '' &&
         leaf.marks &&
         leaf.marks.length
-        ? { kind: 'leaf', text: ' ', marks: [] }
+        ? { ...leaf, marks: [] }
         : leaf
       }
     )
