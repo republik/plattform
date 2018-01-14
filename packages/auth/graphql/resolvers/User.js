@@ -34,7 +34,6 @@ module.exports = {
     return user._raw.createdAt
   },
   updatedAt (user, args, { user: me }) {
-    Roles.ensureUserIsMeOrInRoles(user, me, userAccessRoles)
     return user._raw.updatedAt
   }
 }
