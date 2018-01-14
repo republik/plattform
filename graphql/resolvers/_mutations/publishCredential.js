@@ -11,34 +11,40 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
 
   ensureStringLength(description, {
     max: MAX_CREDENTIAL_LENGTH,
-    min: 1,
-    error: t('profile/generic/notInRange', {
+    error: t('profile/generic/tooLong', {
       key: t('profile/credential/label'),
-      min: 1,
       max: MAX_CREDENTIAL_LENGTH
     })
   })
 
   const transaction = await pgdb.transactionBegin()
   try {
-    const existingCredential = await transaction.public.credentials.findOne({
-      userId: me.id,
-      description
+    await transaction.public.credentials.update({
+      userId: me.id
+    }, {
+      isListed: false,
+      updatedAt: new Date()
     })
-    let newCredential
-    if (existingCredential) {
-      newCredential = await transaction.public.credentials.updateAndGetOne({
-        id: existingCredential.id
-      }, {
-        isListed: true,
-        updatedAt: new Date()
-      })
-    } else {
-      newCredential = await transaction.public.credentials.insertAndGet({
+    let newCredential = null
+    if (description) {
+      const existingCredential = await transaction.public.credentials.findOne({
         userId: me.id,
-        description,
-        isListed: true
+        description
       })
+      if (existingCredential) {
+        newCredential = await transaction.public.credentials.updateAndGetOne({
+          id: existingCredential.id
+        }, {
+          isListed: true,
+          updatedAt: new Date()
+        })
+      } else {
+        newCredential = await transaction.public.credentials.insertAndGet({
+          userId: me.id,
+          description,
+          isListed: true
+        })
+      }
     }
     await transaction.transactionCommit()
     return newCredential
