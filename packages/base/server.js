@@ -18,7 +18,8 @@ const {
   SESSION_SECRET,
   COOKIE_DOMAIN,
   COOKIE_NAME,
-  ENGINE_API_KEY
+  ENGINE_API_KEY,
+  IGNORE_SSL_HOSTNAME
 } = process.env
 
 // middlewares
@@ -62,7 +63,7 @@ module.exports.run = (executableSchema, middlewares, t, createGraphqlContext) =>
     if (!DEV) {
       server.enable('trust proxy')
       server.use( (req, res, next) => {
-        if (!req.secure) {
+        if (!req.secure && (!IGNORE_SSL_HOSTNAME || req.hostname !== IGNORE_SSL_HOSTNAME)) {
           res.redirect(`https://${req.hostname}${req.url}`)
         }
         return next()
