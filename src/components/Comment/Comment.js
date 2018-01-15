@@ -4,10 +4,25 @@ import { serifRegular14, serifRegular16 } from '../Typography/styles'
 import CommentHeader, { profilePictureSize, profilePictureMargin } from './CommentHeader'
 import { Label } from '../Typography'
 import { mUp } from '../../theme/mediaQueries'
+import colors from '../../theme/colors'
 
 import { intersperse } from '../../lib/helpers'
 
+const highlightPadding = 7
+
 const styles = {
+  container: css({
+    position: 'relative'
+  }),
+  highlight: css({
+    top: -highlightPadding,
+    left: -highlightPadding,
+    right: -highlightPadding,
+    bottom: -highlightPadding,
+    padding: highlightPadding,
+    width: `calc(100% + ${highlightPadding * 2}px)`,
+    backgroundColor: colors.primaryBg
+  }),
   margin: css({
     display: 'block',
     marginLeft: profilePictureSize + profilePictureMargin,
@@ -23,12 +38,14 @@ const styles = {
   })
 }
 
-export const Comment = ({t, timeago, createdAt, updatedAt, published = true, userCanEdit, adminUnpublished, displayAuthor, content, Link}) => (
-  <div>
+export const Comment = ({t, id, timeago, createdAt, updatedAt, published = true, userCanEdit, adminUnpublished, displayAuthor, content, highlighted, Link}) => (
+  <div data-comment-id={id} {...styles.container} {...(highlighted ? styles.highlight: {})}>
     <CommentHeader
       {...displayAuthor}
+      highlighted={highlighted}
       Link={Link}
       t={t}
+      commentId={id}
       createdAt={createdAt}
       updatedAt={updatedAt}
       timeago={timeago}

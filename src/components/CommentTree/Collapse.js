@@ -16,16 +16,14 @@ const styles = {
     marginTop: '-2px'
   }),
   button: css({
-    outline: 'none',
     position: 'absolute',
-    top: 0,
-    right: 0,
-    transform: 'translate(100%, -60%)',
+    top: -14,
+    outline: 'none',
     display: 'block',
     WebkitAppearance: 'none',
     background: 'white',
     border: 'none',
-    padding: '4px 0 4px 10px',
+    padding: '4px 0',
     cursor: 'pointer',
     whiteSpace: 'nowrap',
 
@@ -35,13 +33,17 @@ const styles = {
   })
 }
 
-const Collapse = ({t, visualDepth, onClick}) => (
-  <div {...styles.root} style={{width: getWidth(visualDepth) - profilePictureSize / 2 - profilePictureMargin + borderWidth / 2}}>
-    <button {...styles.button} onClick={onClick}>
-      {t('styleguide/CommentTreeCollapse/label')}
-    </button>
-  </div>
-)
+const Collapse = ({t, visualDepth, onClick}) => {
+  const depthWidth = getWidth(visualDepth)
+  const lineWidth = depthWidth - profilePictureSize / 2 - profilePictureMargin + borderWidth / 2
+  return (
+    <div {...styles.root} style={{width: lineWidth}}>
+      <button {...styles.button} style={{left: depthWidth}} onClick={onClick}>
+        {t('styleguide/CommentTreeCollapse/label')}
+      </button>
+    </div>
+  )
+}
 
 Collapse.propTypes = {
   t: PropTypes.func.isRequired,

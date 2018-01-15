@@ -17,7 +17,7 @@ const styles = {
   }),
 }
 
-const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onEditPreferences, onAnswer, edit, onUnpublish, onUpvote, onDownvote, dismissComposer, submitComment, timeago, Link}) => {
+const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onEditPreferences, onAnswer, edit, onUnpublish, onUpvote, onDownvote, dismissComposer, submitComment, highlighted, timeago, Link}) => {
   const isEditing = edit && edit.isEditing
   const { score } = comment
 
@@ -29,6 +29,7 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
       <div style={{flexGrow: 1, flexBasis: 0, margin: otherChild ? '20px 0' : `20px 0 20px -${profilePictureSize + profilePictureMargin}px`, width: `calc(100% - ${getWidth(barCount)}px)`}}>
         {!isEditing && <Comment
           {...comment}
+          highlighted={highlighted}
           Link={Link}
           timeago={timeago}
           t={t}
@@ -182,6 +183,7 @@ class RowState extends PureComponent {
       t,
       timeago,
       comment,
+      highlighted,
       visualDepth, head, tail,
       otherChild,
       displayAuthor,
@@ -229,6 +231,7 @@ class RowState extends PureComponent {
         tail={tail}
         otherChild={otherChild}
         comment={comment}
+        highlighted={highlighted}
         displayAuthor={displayAuthor}
         showComposer={composerState !== 'idle'}
         composerError={composerError}

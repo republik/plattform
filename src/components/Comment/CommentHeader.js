@@ -4,7 +4,7 @@ import MdCheck from 'react-icons/lib/md/check'
 import colors from '../../theme/colors'
 import { sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
 
-import { ellipsize } from '../../lib/styleMixins'
+import { ellipsize, underline } from '../../lib/styleMixins'
 import { timeFormat } from '../../lib/timeFormat'
 
 import { DEFAULT_PROFILE_PICTURE } from '../Logo/BrandMark'
@@ -25,7 +25,7 @@ const styles = {
     flexShrink: 0,
     height: `${profilePictureSize + 2 * profilePictureBorderSize}px`,
     margin: `${-profilePictureBorderSize}px ${-profilePictureBorderSize + profilePictureMargin}px ${-profilePictureBorderSize}px ${-profilePictureBorderSize}px`,
-    border: `${profilePictureBorderSize}px solid white`
+    border: `${profilePictureBorderSize}px solid`
   }),
   meta: css({
     alignSelf: 'stretch',
@@ -73,6 +73,13 @@ const styles = {
   link: css({
     color: 'inherit',
     textDecoration: 'none'
+  }),
+  linkUnderline: css({
+    color: 'inherit',
+    textDecoration: 'none',
+    ':hover': {
+      ...underline
+    }
   })
 }
 
@@ -81,7 +88,7 @@ const titleDate = string => dateTimeFormat(new Date(string))
 
 const DefaultLink = ({ children }) => children
 
-export const CommentHeader = ({t, Link = DefaultLink, timeago, ...displayAuthor, createdAt, updatedAt, credential}) => {
+export const CommentHeader = ({t, commentId, Link = DefaultLink, timeago, ...displayAuthor, createdAt, updatedAt, credential, highlighted}) => {
   const updated = updatedAt && updatedAt !== createdAt
   const { profilePicture, name } = displayAuthor
   return (
@@ -90,6 +97,9 @@ export const CommentHeader = ({t, Link = DefaultLink, timeago, ...displayAuthor,
         <a {...styles.link}>
           <img
             {...styles.profilePicture}
+            style={{
+              borderColor: highlighted ? colors.primaryBg : '#fff'
+            }}
             src={profilePicture || DEFAULT_PROFILE_PICTURE}
             alt=''
           />
@@ -103,7 +113,9 @@ export const CommentHeader = ({t, Link = DefaultLink, timeago, ...displayAuthor,
             </Link>
           </div>
           {timeago && <span {...styles.timeago} title={titleDate(createdAt)}>
-            {timeago(createdAt)}
+            <Link commentId={commentId} passHref>
+              <a {...styles.linkUnderline}>{timeago(createdAt)}</a>
+            </Link>
           </span>}
         </div>
         {(credential || updated) && <div {...styles.description}>
