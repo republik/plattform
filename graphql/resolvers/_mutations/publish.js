@@ -315,7 +315,7 @@ module.exports = async (
     // resolvedDoc currently has no path set.
     resolvedDoc.content.meta = {
       ...resolvedDoc.content.meta,
-      path: doc.content.meta.path
+      path: resolvedDoc.content.meta.path || doc.content.meta.path
     }
     const html = getHTML(resolvedDoc)
 
