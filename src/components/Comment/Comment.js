@@ -40,9 +40,10 @@ export const Comment = ({t, timeago, createdAt, updatedAt, published = true, use
     <div {...styles.body} style={{opacity: published ? 1 : 0.5}}>
       {intersperse(
         (content || '').trim().split('\n')
+          .map(text => text.trim())
           .filter((text, index, all) => {
             // prevent more than two brs in a row
-            return text || all[index - 1] || !all[index - 2]
+            return text || all[index - 1] || all[index - 2]
           })
         ,
         (_, i) => <br key={i} />

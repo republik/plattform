@@ -111,6 +111,59 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
 />
 ```
 
+#### Newlines
+
+Intersperses `<br />`s for up to two new lines between text. Leading and tailing new lines are completely ignored.
+
+```react|span-3
+<Comment
+  t={t}
+  content={`
+    Hallo
+
+    Zeil 1
+    Zeile 2
+
+    PS`}
+  createdAt={(new Date((new Date()).setMinutes(-13))).toISOString()}
+  updatedAt={isoString}
+  timeago={isoString =>
+    'vor ' + Math.round((Date.now() - Date.parse(isoString)) / 1000 / 60) + 'm'}
+  displayAuthor={{
+    profilePicture: '/static/profilePicture1.png',
+    name: 'Christof Moser'
+  }}
+/>
+```
+
+```react|span-3
+<Comment
+  t={t}
+  content={`
+
+
+    Hallo
+
+
+
+
+
+
+    ?
+
+
+    `}
+  createdAt={(new Date((new Date()).setMinutes(-13))).toISOString()}
+  updatedAt={isoString}
+  timeago={isoString =>
+    'vor ' + Math.round((Date.now() - Date.parse(isoString)) / 1000 / 60) + 'm'}
+  displayAuthor={{
+    name: 'Agent Seymour Rutherford Simmons'
+  }}
+/>
+```
+
+
 ### `<CommentHeader />`
 
 The profile picture in the `<CommentHeader />` has a white border so that we can place a vertical line underneath when this component is used in a `CommentTree`.
