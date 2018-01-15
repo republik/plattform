@@ -158,7 +158,7 @@ module.exports = async (
       throw new Error('updateMailchimp missing title or subject', { title, emailSubject })
     }
     const campaignKey = `repos:${repoId}/mailchimp/campaignId`
-    let campaignId = await redis.getAsync(campaignKey)
+    campaignId = await redis.getAsync(campaignKey)
     if (!campaignId) {
       if (repoMeta && repoMeta.mailchimpCampaignId) {
         campaignId = repoMeta.mailchimpCampaignId
