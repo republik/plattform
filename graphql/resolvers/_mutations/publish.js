@@ -312,7 +312,13 @@ module.exports = async (
 
   // do the mailchimp update
   if (campaignId) {
+    // resolvedDoc currently has no path set.
+    resolvedDoc.content.meta = {
+      ...resolvedDoc.content.meta,
+      path: doc.content.meta.path
+    }
     const html = getHTML(resolvedDoc)
+
     const updateResponse = await updateCampaignContent({
       campaignId,
       html
