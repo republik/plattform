@@ -1,8 +1,11 @@
 import React from 'react'
 import { css } from 'glamor'
-import { serifRegular14 } from '../Typography/styles'
+import { serifRegular14, serifRegular16 } from '../Typography/styles'
 import CommentHeader, { profilePictureSize, profilePictureMargin } from './CommentHeader'
 import { Label } from '../Typography'
+import { mUp } from '../../theme/mediaQueries'
+
+import { intersperse } from '../../lib/helpers'
 
 const styles = {
   margin: css({
@@ -13,7 +16,10 @@ const styles = {
   }),
   body: css({
     margin: `12px 0 12px ${profilePictureSize + profilePictureMargin}px`,
-    ...serifRegular14
+    ...serifRegular14,
+    [mUp]: {
+      ...serifRegular16
+    }
   })
 }
 
@@ -32,7 +38,15 @@ export const Comment = ({t, timeago, createdAt, updatedAt, published = true, use
       {t('styleguide/comment/unpublished')}
     </div>}
     <div {...styles.body} style={{opacity: published ? 1 : 0.5}}>
-      {content}
+      {intersperse(
+        (content || '').trim().split('\n')
+          .filter((text, index, all) => {
+            // prevent more than two brs in a row
+            return text || all[index - 1] || !all[index - 2]
+          })
+        ,
+        (_, i) => <br key={i} />
+      )}
     </div>
 
     {adminUnpublished && userCanEdit && <div {...styles.body}>
