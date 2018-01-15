@@ -43,7 +43,7 @@ export const Comment = ({t, timeago, createdAt, updatedAt, published = true, use
           .map(text => text.trim())
           .filter((text, index, all) => {
             // prevent more than two brs in a row
-            return text || all[index - 1] || all[index - 2]
+            return text || all[index - 1]
           })
         ,
         (_, i) => <br key={i} />
