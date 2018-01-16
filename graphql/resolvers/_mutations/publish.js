@@ -29,6 +29,8 @@ const {
   handleRedirection
 } = require('../../../lib/Document')
 
+const { FRONTEND_BASE_URL } = process.env
+
 const {
   graphql: { resolvers: { queries: { documents: getPublishedDocuments } } },
   lib: {
@@ -95,8 +97,8 @@ module.exports = async (
   const allUsernames = firstDoc._usernames
 
   const resolvedDoc = JSON.parse(JSON.stringify(doc))
-  contentUrlResolver(resolvedDoc, allDocs, allUsernames, unresolvedRepoIds)
-  metaUrlResolver(resolvedDoc.content.meta, allDocs, allUsernames, unresolvedRepoIds)
+  contentUrlResolver(resolvedDoc, allDocs, allUsernames, unresolvedRepoIds, FRONTEND_BASE_URL)
+  metaUrlResolver(resolvedDoc.content.meta, allDocs, allUsernames, unresolvedRepoIds, FRONTEND_BASE_URL)
   metaFieldResolver(resolvedDoc.content.meta, allDocs, unresolvedRepoIds)
   unresolvedRepoIds = uniq(unresolvedRepoIds)
   if (unresolvedRepoIds.length && (!ignoreUnresolvedRepoIds || doc.content.meta.template === 'editorialNewsletter' || updateMailchimp)) {
@@ -114,6 +116,14 @@ module.exports = async (
     now,
     context
   )
+
+  // add fileds from prepareMetaForPublish to resolvedDoc
+  resolvedDoc.content.meta = {
+    ...resolvedDoc.content.meta,
+    path: doc.content.meta.path,
+    publishDate: doc.content.meta.publishDate,
+    discussionId: doc.content.meta.discussionId
+  }
 
   // check if slug is taken
   const newPath = doc.content.meta.path
@@ -312,11 +322,6 @@ module.exports = async (
 
   // do the mailchimp update
   if (campaignId) {
-    // resolvedDoc currently has no path set.
-    resolvedDoc.content.meta = {
-      ...resolvedDoc.content.meta,
-      path: resolvedDoc.content.meta.path || doc.content.meta.path
-    }
     const html = getHTML(resolvedDoc)
 
     const updateResponse = await updateCampaignContent({
