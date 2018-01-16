@@ -1,8 +1,9 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
+const { getNewsletterSettings } = require('@orbiting/backend-modules-mail')
 const { age } = require('../../lib/age')
 const { getKeyId } = require('../../lib/pgp')
 const { getImageUrl } = require('../../lib/convertImage')
-const { getNewsletterSettings } = require('../../lib/mailchimp/getNewsletterSettings')
+
 const { isEligible } = require('../../lib/profile')
 
 const exposeProfileField = (key, format) => (user, args, { pgdb, user: me }) => {
@@ -213,7 +214,8 @@ module.exports = {
     }
     return null
   },
-  newsletterSettings (user, args, context) {
-    return getNewsletterSettings(user.id, context)
+  newsletterSettings (user, args, { user: me, ...context }) {
+    Roles.ensureUserIsMeOrInRoles(user, me, ['supporter, admin'])
+    return getNewsletterSettings(user, context)
   }
 }
