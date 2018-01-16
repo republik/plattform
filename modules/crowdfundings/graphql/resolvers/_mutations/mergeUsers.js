@@ -7,6 +7,7 @@ const { transformUser } = require('@orbiting/backend-modules-auth')
 const { Redirections: {
   upsert: upsertRedirection
 } } = require('@orbiting/backend-modules-redirections')
+const slack = require('../../../../../lib/slack')
 
 module.exports = async (_, args, context) => {
   const {pgdb, req, t} = context
@@ -150,6 +151,10 @@ module.exports = async (_, args, context) => {
     } catch (_e) {
       logger.error('updateMailchimp failed in mergeUsers!', _e)
     }
+
+    try {
+      await slack.publishMonitor(req.user, `mergeUsers ${sourceUser.email} -> ${targetUser.email}`)
+    } catch (_e) { }
   } catch (e) {
     await transaction.transactionRollback()
     logger.info('transaction rollback', { req: req._log(), args, error: e })
