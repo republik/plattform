@@ -22,7 +22,9 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     await transaction.public.memberships.updateOne({id: membership.id}, {
       userId: req.user.id,
       voucherCode: null,
-      voucherable: false
+      voucherable: false,
+      active: true,
+      renew: true
     })
 
     // commit transaction
