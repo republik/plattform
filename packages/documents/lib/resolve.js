@@ -73,16 +73,19 @@ const extractUserUrl = url => {
   )
 }
 
-const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPrefix = '') => url => {
+const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPrefix = '', searchString = '') => url => {
   const userInfo = extractUserPath(url)
   if (userInfo) {
     const user = usernames
       .find(u => u.id === userInfo.id)
     if (user) {
-      return urlPrefix+userInfo.path.replace(
-        user.id,
-        user.username
-      )
+      return
+        urlPrefix +
+        userInfo.path.replace(
+          user.id,
+          user.username
+        ) +
+        searchString
     }
   }
 
@@ -93,7 +96,7 @@ const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPr
   const linkedDoc = allDocuments
     .find(d => d.repoId === repoId)
   if (linkedDoc) {
-    return urlPrefix+linkedDoc.content.meta.path
+    return urlPrefix+linkedDoc.content.meta.path+searchString
   } else {
     errors.push(repoId)
   }
@@ -117,12 +120,13 @@ const createResolver = (allDocuments, errors = []) => url => {
   return null
 }
 
-const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors, urlPrefix) => {
+const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors, urlPrefix, searchString) => {
   const urlReplacer = createUrlReplacer(
     allDocuments,
     usernames,
     errors,
-    urlPrefix
+    urlPrefix,
+    searchString
   )
 
   visit(doc.content, 'link', node => {
@@ -136,12 +140,13 @@ const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors, urlP
   })
 }
 
-const metaUrlResolver = (meta, allDocuments = [], usernames = [], errors, urlPrefix) => {
+const metaUrlResolver = (meta, allDocuments = [], usernames = [], errors, urlPrefix, searchString) => {
   const urlReplacer = createUrlReplacer(
     allDocuments,
     usernames,
     errors,
-    urlPrefix
+    urlPrefix,
+    searchString
   )
 
   meta.credits && meta.credits
