@@ -24,7 +24,7 @@ const getDimensions = (resize) => {
     throw new Error('invalid height')
   }
   if (width > maxSize || height > maxSize) {
-    throw new Error('maxSize: '+ maxSize)
+    throw new Error('maxSize: ' + maxSize)
   }
   return {
     width,
@@ -38,12 +38,18 @@ const returnImage = async (res, buffer, resize) => {
     const dimensions = getDimensions(resize)
     width = dimensions.width
     height = dimensions.height
-  } catch(e) {
+  } catch (e) {
     res.status(400).end(e.message)
   }
 
   const type = fileType(buffer)
   const isJPEG = type && type.ext === 'jpg'
+
+  const isGIF = type && type.ext === 'gif'
+
+  if (isGIF) {
+    return res.end(buffer)
+  }
 
   if (width || height || isJPEG) {
     let image = sharp(buffer)
@@ -126,12 +132,12 @@ module.exports = (server) => {
     }
 
     if (!mac || mac !== authenticate(url)) {
-      console.warn('unauthorized asset url requested: '+url)
+      console.warn('unauthorized asset url requested: ' + url)
       return res.status(403).end()
     }
 
     const buffer = await fetch(url, {
-      method: 'GET',
+      method: 'GET'
     })
       .then(response => response.buffer())
       .catch(error => {
@@ -141,5 +147,4 @@ module.exports = (server) => {
 
     return returnImage(res, buffer, resize)
   })
-
 }
