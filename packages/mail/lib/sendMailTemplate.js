@@ -1,5 +1,6 @@
 const fetch = require('isomorphic-unfetch')
 const sleep = require('await-sleep')
+const logger = console
 
 // usage
 // sendMailTemplate({
@@ -36,14 +37,14 @@ module.exports = (mail) => {
   // don't send mails if SEND_MAILS is false
   const DEV = NODE_ENV && NODE_ENV !== 'production'
   if (SEND_MAILS === 'false' || (DEV && SEND_MAILS !== 'true')) {
-    console.log('\n\nSEND_MAIL prevented mail from being sent\n(SEND_MAIL == false or NODE_ENV != production and SEND_MAIL != true):\n', mail)
+    logger.log('\n\nSEND_MAIL prevented mail from being sent\n(SEND_MAIL == false or NODE_ENV != production and SEND_MAIL != true):\n', mail)
     return sleep(2000)
   }
 
   if (SEND_MAILS_DOMAIN_FILTER) {
     const domain = mail.to.split('@')[1]
     if (domain !== SEND_MAILS_DOMAIN_FILTER) {
-      console.log(`\n\nSEND_MAILS_DOMAIN_FILTER (${SEND_MAILS_DOMAIN_FILTER}) prevented mail from being sent:\n`, mail)
+      logger.log(`\n\nSEND_MAILS_DOMAIN_FILTER (${SEND_MAILS_DOMAIN_FILTER}) prevented mail from being sent:\n`, mail)
       return sleep(2000)
     }
   }

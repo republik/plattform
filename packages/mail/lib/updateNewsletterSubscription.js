@@ -5,6 +5,7 @@ const {
   isEligibleForInterestId,
   nameToInterestId
 } = require('./utils')
+const logger = console
 
 module.exports = async ({ user, name, subscribed, status }, { pgdb, t }) => {
   const { roles, email } = user
@@ -17,7 +18,7 @@ module.exports = async ({ user, name, subscribed, status }, { pgdb, t }) => {
   }
 
   if (!isEligibleForInterestId(interestId, roles)) {
-    console.error(
+    logger.error(
       'roles not eligible for interestId in updateNewsletterSubscription',
       {
         roles,
@@ -59,12 +60,12 @@ module.exports = async ({ user, name, subscribed, status }, { pgdb, t }) => {
     .then(response => response.json())
     .then(data => {
       if (data.status >= 400) {
-        console.error('updateNewsletterSubscription failed', { data })
+        logger.error('updateNewsletterSubscription failed', { data })
       }
       return data
     })
     .catch(error => {
-      console.error('updateNewsletterSubscription failed', { error })
+      logger.error('updateNewsletterSubscription failed', { error })
       throw new Error(t('api/newsletters/update/failed'))
     })
   return NewsletterSubscription(user.id, interestId, subscribed, roles)

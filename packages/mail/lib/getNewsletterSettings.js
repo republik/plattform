@@ -4,6 +4,7 @@ const {
   getMemberApiUrl,
   supportedInterestIds
 } = require('./utils')
+const logger = console
 
 module.exports.getNewsletterSettings = async (user, { pgdb, t }) => {
   const { email, roles } = user
@@ -22,7 +23,7 @@ module.exports.getNewsletterSettings = async (user, { pgdb, t }) => {
     .then(data => {
       let interests
       if (data.status >= 400) {
-        console.error(
+        logger.error(
           'getNewsletterProfile failed, returning fallback response',
           { data }
         )
@@ -53,7 +54,7 @@ module.exports.getNewsletterSettings = async (user, { pgdb, t }) => {
       return { status: data.status, subscriptions }
     })
     .catch(error => {
-      console.error('getNewsletterProfile failed', { error })
+      logger.error('getNewsletterProfile failed', { error })
       throw new Error(t('api/newsletters/get/failed'))
     })
 }
