@@ -45,29 +45,29 @@ module.exports = async ({userId, pgdb, hasJustPaid, isNew}) => {
     const enforcedNewsletterSubscriptions =
      isNew && hasJustPaidFirstPledge
        ? {
-           // Autosubscribe all newsletters when new user just paid.
-           [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: !!hasMembership,
-           [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: !!hasMembership,
-           [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true
-         }
+         // Autosubscribe all newsletters when new user just paid.
+         [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: !!hasMembership,
+         [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: !!hasMembership,
+         [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true
+       }
        : isNew
          ? {
-             // Autosubscribe free newsletters when user is new.
-             [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true
-           }
+           // Autosubscribe free newsletters when user is new.
+           [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true
+         }
          : hasJustPaidFirstPledge
            ? {
-               // Autosubscribe paid newsletters when user just paid.
-               [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: !!hasMembership,
-               [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: !!hasMembership
-             }
+             // Autosubscribe paid newsletters when user just paid.
+             [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: !!hasMembership,
+             [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: !!hasMembership
+           }
            : !hasMembership
              ? {
-                 // Revoke paid newsletters when membership is inactive.
-                 [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: false,
-                 [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: false
-               }
-             : {}
+               // Revoke paid newsletters when membership is inactive.
+               [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: false,
+               [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: false
+             }
+           : {}
 
     const hash = crypto
       .createHash('md5')
