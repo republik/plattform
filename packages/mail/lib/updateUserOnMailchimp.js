@@ -10,7 +10,7 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR
 } = process.env
 
-module.exports = async ({ user, pgdb, configuration = {} }) => {
+module.exports = async ({ pgdb, user, ...configuration }) => {
   const { email } = user
   const {
     isNew,
