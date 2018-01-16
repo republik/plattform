@@ -13,7 +13,10 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR
 } = process.env
 
-module.exports = async ({userId, pgdb, hasJustPaid, isNew}) => {
+// TODO: This module should not constist db lookups, else it's opinionated to
+// the crowdfunding module in republik-backend
+
+module.exports = async ({ userId, pgdb, hasJustPaid, isNew }) => {
   try {
     const { email } = await pgdb.public.users.findOne({ id: userId })
     if (!email) {

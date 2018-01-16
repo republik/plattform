@@ -1,8 +1,4 @@
-const crypto = require('crypto')
-
 const {
-  MAILCHIMP_URL,
-  MAILCHIMP_MAIN_LIST_ID,
   MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
   MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR
@@ -47,16 +43,6 @@ const isEligibleForInterestId = (interestId, roles) => {
   return false
 }
 module.exports.isEligibleForInterestId = isEligibleForInterestId
-
-module.exports.getMemberApiUrl = email => {
-  const hash = crypto
-    .createHash('md5')
-    .update(email)
-    .digest('hex')
-    .toLowerCase()
-
-  return `${MAILCHIMP_URL}/3.0/lists/${MAILCHIMP_MAIN_LIST_ID}/members/${hash}`
-}
 
 module.exports.NewsletterSubscription = (
   userId,

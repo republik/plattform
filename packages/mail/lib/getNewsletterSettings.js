@@ -1,60 +1,38 @@
-const fetch = require('isomorphic-unfetch')
-const {
-  NewsletterSubscription,
-  getMemberApiUrl,
-  supportedInterestIds
-} = require('./utils')
+const { NewsletterSubscription, supportedInterestIds } = require('./utils')
+const MailchimpInterface = require('../MailchimpInterface')
 const logger = console
 
-module.exports.getNewsletterSettings = async (user, { pgdb, t }) => {
+module.exports = async (user) => {
   const { email, roles } = user
+  const mailchimp = new MailchimpInterface({ logger })
+  const member = await mailchimp.getMember(email)
+  let interests, status
+  if (!member) {
+    status = ''
+    interests = supportedInterestIds.reduce(
+      (result, item) => {
+        result[item] = false
+        return result
+      },
+      {}
+    )
+  } else {
+    status = member.status
+    interests = member.interests
+  }
 
-  return fetch(getMemberApiUrl(email), {
-    method: 'GET',
-    headers: {
-      Authorization:
-        'Basic ' +
-        Buffer.from('anystring:' + process.env.MAILCHIMP_API_KEY).toString(
-          'base64'
+  const subscriptions = []
+  supportedInterestIds.forEach(interestId => {
+    if (interestId in interests) {
+      subscriptions.push(
+        NewsletterSubscription(
+          user.id,
+          interestId,
+          status !== 'subscribed' ? false : interests[interestId],
+          roles
         )
+      )
     }
   })
-    .then(response => response.json())
-    .then(data => {
-      let interests
-      if (data.status >= 400) {
-        logger.error(
-          'getNewsletterProfile failed, returning fallback response',
-          { data }
-        )
-        interests = supportedInterestIds.reduce(
-          (result, item) => {
-            result[item] = false
-            return result
-          },
-          {}
-        )
-      } else {
-        interests = data.interests
-      }
-
-      const subscriptions = []
-      supportedInterestIds.forEach(interestId => {
-        if (interestId in interests) {
-          subscriptions.push(
-            NewsletterSubscription(
-              user.id,
-              interestId,
-              data.status !== 'subscribed' ? false : interests[interestId],
-              roles
-            )
-          )
-        }
-      })
-      return { status: data.status, subscriptions }
-    })
-    .catch(error => {
-      logger.error('getNewsletterProfile failed', { error })
-      throw new Error(t('api/newsletters/get/failed'))
-    })
+  return { status, subscriptions }
 }

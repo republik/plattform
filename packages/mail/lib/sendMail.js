@@ -1,14 +1,6 @@
-const fetch = require('isomorphic-unfetch')
 const checkEnv = require('check-env')
+const MandrillInterface = require('../MandrillInterface')
 const logger = console
-// usage
-// sendMail({
-//  to: 'p@tte.io',
-//  fromEmail: 'jefferson@project-r.construction',
-//  fromName: 'Jefferson',
-//  subject: 'dear friend',
-//  text: 'asdf asdf'
-// })
 
 checkEnv([
   'DEFAULT_MAIL_FROM_ADDRESS',
@@ -22,7 +14,15 @@ const {
   SEND_MAILS
 } = process.env
 
-module.exports = (mail) => {
+// usage
+// sendMail({
+//  to: 'p@tte.io',
+//  fromEmail: 'jefferson@project-r.construction',
+//  fromName: 'Jefferson',
+//  subject: 'dear friend',
+//  text: 'asdf asdf'
+// })
+module.exports = async (mail) => {
   // sanitize
   mail.to = [{email: mail.to}]
   mail.from_email = mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS
@@ -38,14 +38,6 @@ module.exports = (mail) => {
     return true
   }
 
-  return fetch('https://mandrillapp.com/api/1.0/messages/send.json', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      key: process.env.MANDRILL_API_KEY,
-      message: mail
-    })
-  })
+  const mandrill = new MandrillInterface({ logger })
+  return mandrill.send(mail)
 }

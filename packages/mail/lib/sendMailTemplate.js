@@ -1,6 +1,20 @@
-const fetch = require('isomorphic-unfetch')
 const sleep = require('await-sleep')
+const checkEnv = require('check-env')
+const MandrillInterface = require('../MandrillInterface')
 const logger = console
+
+checkEnv([
+  'DEFAULT_MAIL_FROM_ADDRESS',
+  'DEFAULT_MAIL_FROM_NAME'
+])
+
+const {
+  DEFAULT_MAIL_FROM_ADDRESS,
+  DEFAULT_MAIL_FROM_NAME,
+  NODE_ENV,
+  SEND_MAILS,
+  SEND_MAILS_DOMAIN_FILTER
+} = process.env
 
 // usage
 // sendMailTemplate({
@@ -14,15 +28,7 @@ const logger = console
 //    content: 'replaced with this'
 //  }
 // })
-module.exports = (mail) => {
-  const {
-    DEFAULT_MAIL_FROM_ADDRESS,
-    DEFAULT_MAIL_FROM_NAME,
-    NODE_ENV,
-    SEND_MAILS,
-    SEND_MAILS_DOMAIN_FILTER
-  } = process.env
-
+module.exports = async (mail) => {
   // sanitize
   const message = {
     to: [{email: mail.to}],
@@ -49,16 +55,6 @@ module.exports = (mail) => {
     }
   }
 
-  return fetch('https://mandrillapp.com/api/1.0/messages/send-template.json', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      key: process.env.MANDRILL_API_KEY,
-      template_name: mail.templateName,
-      template_content: [],
-      message
-    })
-  })
+  const mandrill = new MandrillInterface({ logger })
+  return mandrill.sendTemplate(message, mail.templateName, [])
 }
