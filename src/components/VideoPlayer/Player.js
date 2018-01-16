@@ -241,6 +241,10 @@ class VideoPlayer extends Component {
     this.video.addEventListener('loadedmetadata', this.onLoadedMetaData)
 
     this.setTextTracksMode()
+
+    if (this.video && !this.video.paused) {
+      this.onPlay()
+    }
   }
   componentDidUpdate() {
     this.setTextTracksMode()
