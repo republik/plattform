@@ -15,22 +15,19 @@ module.exports = async ({ user, name, subscribed, status }) => {
     throw new RolesNotEligibleMailError({ roles, interestId })
   }
 
+  const body = {
+    interests: {
+      [interestId]: !!subscribed
+    }
+  }
+
   // If a user subscribes to a newsletter but their status is not subscribed,
   // we need to set their status to 'pending' which triggers a new confirmation email
   // from mailchimp to re-subscribe.
-  const body = (subscribed && status !== 'subscribed')
-    ? {
-      email_address: email,
-      status: 'pending',
-      interests: {
-        [interestId]: !!subscribed
-      }
-    }
-    : {
-      interests: {
-        [interestId]: !!subscribed
-      }
-    }
+  if (subscribed && status !== 'subscribed') {
+    body.email_address = email
+    body.status = 'pending'
+  }
 
   const mailchimp = new MailchimpInterface({ logger })
   await mailchimp.updateMember(email, body)
