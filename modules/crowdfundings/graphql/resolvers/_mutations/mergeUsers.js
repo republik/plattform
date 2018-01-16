@@ -137,14 +137,11 @@ module.exports = async (_, args, context) => {
 
     // remove old user
     await transaction.public.users.deleteOne({id: sourceUser.id})
-
     await transaction.transactionCommit()
 
     try {
-      unsubscribeFromMailchimp({
-        email: sourceUser.email
-      })
-      refreshNewsletterSettings({ pgdb, userId: targetUserId })
+      await unsubscribeFromMailchimp({ email: sourceUser.email })
+      await refreshNewsletterSettings({ pgdb, userId: targetUserId })
     } catch (_e) {
       logger.error('updateMailchimp failed in mergeUsers!', _e)
     }
