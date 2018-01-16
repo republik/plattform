@@ -1,10 +1,9 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { updateUserOnMailchimp } = require('@orbiting/backend-modules-mail')
 const logger = console
 const {minTotal, regularTotal} = require('../../../lib/Pledge')
 const generateMemberships = require('../../../lib/generateMemberships')
 const sendPaymentSuccessful = require('../../../lib/payments/sendPaymentSuccessful')
-const enforcedNewsletterSettings = require('../../../lib/enforcedNewsletterSettings')
+const refreshNewsletterSettings = require('../../../lib/refreshNewsletterSettings')
 
 module.exports = async (_, args, {pgdb, req, t}) => {
   Roles.ensureUserHasRole(req.user, 'supporter')
@@ -94,7 +93,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
 
     await transaction.transactionCommit()
 
-    updateUserOnMailchimp(enforcedNewsletterSettings({ pgdb, userId: pledge.userId }))
+    refreshNewsletterSettings({ pgdb, userId: pledge.userId })
   } catch (e) {
     await transaction.transactionRollback()
     logger.info('transaction rollback', { req: req._log(), args, error: e })
