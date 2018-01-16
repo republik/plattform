@@ -1,7 +1,15 @@
 import React from 'react'
 import { fontFamilies } from '../../../theme/fonts'
-import { paragraphStyle } from './Paragraph'
+import { paragraphStyle, linkStyle } from './Paragraph'
 import { Mso } from 'mdast-react-render/lib/email'
+import colors from '../../../theme/colors'
+
+const footerLinkStyle = {
+  ...linkStyle,
+  color: colors.text,
+  fontFamily: fontFamilies.sansSerifRegular,
+  fontSize: '15px'
+}
 
 export default ({ children, meta }) => {
   const { slug, path } = meta
@@ -36,7 +44,7 @@ export default ({ children, meta }) => {
             </tr>
             <tr>
               <td style={{ padding: 20 }}>
-                <a href="https://www.republik.ch/">
+                <a href="https://www.republik.ch/" style={linkStyle}>
                   <img
                     height="79"
                     src="https://assets.project-r.construction/images/logo_republik_newsletter.png"
@@ -60,22 +68,14 @@ export default ({ children, meta }) => {
                 <p>
                   <a
                     href={`https://www.republik.ch${path ? path : `/${slug}`}`}
-                    style={{
-                      color: '#000',
-                      fontFamily: fontFamilies.sansSerifRegular,
-                      fontSize: '15px'
-                    }}
+                    style={footerLinkStyle}
                   >
                     Im Web lesen
                   </a>
                   {' · '}
                   <a
                     href="*|UNSUB|*"
-                    style={{
-                      color: '#000',
-                      fontFamily: fontFamilies.sansSerifRegular,
-                      fontSize: '15px'
-                    }}
+                    style={footerLinkStyle}
                   >
                     Vom Newsletter abmelden
                   </a>

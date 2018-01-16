@@ -28,6 +28,13 @@ export default ({ children, attributes = {}, meta }) => (
       `
         }}
       />
+      <Mso>
+        {`
+        <style>
+          strong { font-weight:bold !important; }
+        </style>
+        `}
+      </Mso>
     </head>
     <body style={{ margin: 0, padding: 0, backgroundColor: '#fff' }}>
       <Mso>

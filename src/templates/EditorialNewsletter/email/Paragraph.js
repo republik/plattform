@@ -1,14 +1,22 @@
 import React from 'react'
+import colors from '../../../theme/colors'
 import { fontFamilies } from '../../../theme/fonts'
 
 export const paragraphStyle = {
-  color: '#000',
+  color: colors.text,
   fontSize: '19px',
   lineHeight: '158%',
   fontFamily: fontFamilies.serifRegular
 }
 
+export const linkStyle = {
+  color: colors.text,
+  textDecoration: 'underline',
+  textDecorationSkip: 'ink'
+}
+
 const strongStyle = {
+  color: colors.text,
   fontFamily: fontFamilies.serifBold,
   fontWeight: 'normal'
 }
@@ -19,7 +27,7 @@ export const Strong = ({ children }) => (
 )
 export const Em = ({ children }) => <em>{children}</em>
 export const Link = ({ children, href, title }) => (
-  <a href={href} title={title} style={{ color: '#000', textDecorationSkip: 'ink' }}>
+  <a href={href} title={title} style={linkStyle}>
     {children}
   </a>
 )
