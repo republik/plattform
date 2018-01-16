@@ -1,10 +1,7 @@
-const fetch = require('isomorphic-unfetch')
-const crypto = require('crypto')
+const MailchimpInterface = require('../MailchimpInterface')
 const logger = console
 
 const {
-  MAILCHIMP_URL,
-  MAILCHIMP_MAIN_LIST_ID,
   MAILCHIMP_INTEREST_PLEDGE,
   MAILCHIMP_INTEREST_MEMBER,
   MAILCHIMP_INTEREST_MEMBER_BENEFACTOR,
@@ -13,97 +10,50 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR
 } = process.env
 
-// TODO: This module should not constist db lookups, else it's opinionated to
-// the crowdfunding module in republik-backend
-
-module.exports = async ({ userId, pgdb, hasJustPaid, isNew }) => {
-  try {
-    const { email } = await pgdb.public.users.findOne({ id: userId })
-    if (!email) {
-      logger.error('user not found in updateUserOnMailchimp', { userId })
-      return
-    }
-
-    const pledges = await pgdb.public.pledges.find({
-      userId: userId,
-      status: 'SUCCESSFUL'
-    })
-
-    const hasPledge = !!pledges && pledges.length > 0
-
-    const hasJustPaidFirstPledge = !!hasJustPaid && hasPledge && pledges.length === 1
-
-    const hasMembership = await pgdb.public.memberships.findFirst({
-      userId: userId,
-      active: true
-    })
-    const membershipTypeBenefactor = await pgdb.public.membershipTypes.findOne({
-      name: 'BENEFACTOR_ABO'
-    })
-    const isBenefactor = membershipTypeBenefactor ? await pgdb.public.memberships.findFirst({
-      userId: userId,
-      membershipTypeId: membershipTypeBenefactor.id
-    }) : false
-
-    const enforcedNewsletterSubscriptions =
-     isNew && hasJustPaidFirstPledge
+module.exports = async ({ user, pgdb, configuration = {} }) => {
+  const { email } = user
+  const {
+    isNew,
+    hasJustPaidFirstPledge,
+    hasMembership,
+    isBenefactor,
+    hasPledge } = configuration
+  const enforcedNewsletterSubscriptions =
+   isNew && hasJustPaidFirstPledge
+     ? {
+       // Autosubscribe all newsletters when new user just paid.
+       [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: !!hasMembership,
+       [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: !!hasMembership,
+       [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true
+     }
+     : isNew
        ? {
-         // Autosubscribe all newsletters when new user just paid.
-         [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: !!hasMembership,
-         [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: !!hasMembership,
+         // Autosubscribe free newsletters when user is new.
          [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true
        }
-       : isNew
+       : hasJustPaidFirstPledge
          ? {
-           // Autosubscribe free newsletters when user is new.
-           [MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR]: true
+           // Autosubscribe paid newsletters when user just paid.
+           [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: !!hasMembership,
+           [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: !!hasMembership
          }
-         : hasJustPaidFirstPledge
+         : !hasMembership
            ? {
-             // Autosubscribe paid newsletters when user just paid.
-             [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: !!hasMembership,
-             [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: !!hasMembership
+             // Revoke paid newsletters when membership is inactive.
+             [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: false,
+             [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: false
            }
-           : !hasMembership
-             ? {
-               // Revoke paid newsletters when membership is inactive.
-               [MAILCHIMP_INTEREST_NEWSLETTER_DAILY]: false,
-               [MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY]: false
-             }
-           : {}
+         : {}
 
-    const hash = crypto
-      .createHash('md5')
-      .update(email)
-      .digest('hex')
-      .toLowerCase()
-
-    await fetch(`${MAILCHIMP_URL}/3.0/lists/${MAILCHIMP_MAIN_LIST_ID}/members/${hash}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + (Buffer.from('anystring:' + process.env.MAILCHIMP_API_KEY).toString('base64'))
-      },
-      body: JSON.stringify({
-        email_address: email,
-        status: 'subscribed',
-        interests: {
-          [MAILCHIMP_INTEREST_PLEDGE]: !!hasPledge,
-          [MAILCHIMP_INTEREST_MEMBER]: !!hasMembership,
-          [MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: !!isBenefactor,
-          ...enforcedNewsletterSubscriptions
-        }
-      })
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.status >= 400) {
-          logger.error('updateMailchimp failed', { data })
-        }
-        return data
-      })
-      .catch(error => logger.error('updateMailchimp failed', { error }))
-  } catch (e) {
-    logger.error(e, { userId })
-  }
+  const mailchimp = new MailchimpInterface({ logger })
+  return mailchimp.updateMember(email, {
+    email_address: email,
+    status: 'subscribed',
+    interests: {
+      [MAILCHIMP_INTEREST_PLEDGE]: !!hasPledge,
+      [MAILCHIMP_INTEREST_MEMBER]: !!hasMembership,
+      [MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: !!isBenefactor,
+      ...enforcedNewsletterSubscriptions
+    }
+  })
 }
