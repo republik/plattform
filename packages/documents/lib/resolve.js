@@ -23,6 +23,9 @@ const getRepoId = (url, requireQuery) => {
     pathname,
     query
   } = parse(String(url))
+  if (!pathname) { //empty for mailto
+    return
+  }
   const pathSegments = pathname.split('/').filter(Boolean)
   if (
     hostname !== 'github.com' ||
