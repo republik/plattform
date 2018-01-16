@@ -1,4 +1,4 @@
-const { updateUserOnMailchimp } = require('@orbiting/backend-modules-mail')
+const { updateNewsletterSubscriptions } = require('@orbiting/backend-modules-mail')
 const logger = console
 const {
   MAILCHIMP_INTEREST_PLEDGE,
@@ -72,5 +72,5 @@ module.exports = async ({ userId, hasJustPaid, isNew, pgdb, ...rest }) => {
     [MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: !!isBenefactor,
     ...enforcedNewsletterSubscriptions
   }
-  return updateUserOnMailchimp({ user, interests, ...rest })
+  return updateNewsletterSubscriptions({ user, interests, ...rest })
 }
