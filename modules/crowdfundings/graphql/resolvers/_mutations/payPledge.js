@@ -1,7 +1,7 @@
 const logger = console
 const sendPendingPledgeConfirmations = require('../../../lib/sendPendingPledgeConfirmations')
 const generateMemberships = require('../../../lib/generateMemberships')
-
+const enforcedNewsletterSettings = require('../../../lib/enforcedNewsletterSettings')
 const payPledgePaymentslip = require('../../../lib/payments/paymentslip/payPledge')
 const payPledgePaypal = require('../../../lib/payments/paypal/payPledge')
 const payPledgePostfinance = require('../../../lib/payments/postfinance/payPledge')
@@ -153,12 +153,12 @@ module.exports = async (_, args, {pgdb, req, t}) => {
         await sendPendingPledgeConfirmations(pledge.userId, pgdb, t)
       }
 
-      updateUserOnMailchimp({
-        userId: user.id,
+      updateUserOnMailchimp(enforcedNewsletterSettings({
         pgdb,
+        userId: user.id,
         hasJustPaid: true,
         isNew: !user.verified
-      })
+      }))
     } catch (e) {
       console.warn('error in payPledge after transactionCommit', e)
     }

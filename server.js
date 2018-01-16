@@ -5,9 +5,11 @@ const t = require('./lib/t')
 
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: redirections } = require('@orbiting/backend-modules-redirections')
-const sendPendingPledgeConfirmations = require('./modules/crowdfundings/lib/sendPendingPledgeConfirmations')
 const { updateUserOnMailchimp } = require('@orbiting/backend-modules-mail')
 const { express: { assets } } = require('@orbiting/backend-modules-assets')
+
+const sendPendingPledgeConfirmations = require('./modules/crowdfundings/lib/sendPendingPledgeConfirmations')
+const enforcedNewsletterSettings = require('./modules/crowdfundings/lib/enforcedNewsletterSettings')
 
 module.exports.run = () => {
   require('./lib/slackGreeter')
@@ -27,7 +29,7 @@ module.exports.run = () => {
     async (userId, isNew, pgdb) =>
       sendPendingPledgeConfirmations(userId, pgdb, t),
     async (userId, isNew, pgdb) => {
-      isNew && updateUserOnMailchimp({userId, pgdb, isNew})
+      isNew && updateUserOnMailchimp(enforcedNewsletterSettings({ pgdb, userId, isNew }))
     }
   ]
 

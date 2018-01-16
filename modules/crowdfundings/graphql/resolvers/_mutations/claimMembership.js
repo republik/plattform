@@ -1,6 +1,7 @@
 const logger = console
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const { updateUserOnMailchimp } = require('@orbiting/backend-modules-mail')
+const enforcedNewsletterSettings = require('../../../lib/enforcedNewsletterSettings')
 
 module.exports = async (_, args, {pgdb, req, t}) => {
   ensureSignedIn(req)
@@ -34,14 +35,8 @@ module.exports = async (_, args, {pgdb, req, t}) => {
   }
 
   if (giverId) {
-    updateUserOnMailchimp({
-      userId: giverId,
-      pgdb
-    })
-    updateUserOnMailchimp({
-      userId: req.user.id,
-      pgdb
-    })
+    updateUserOnMailchimp(enforcedNewsletterSettings({ pgdb, userId: giverId }))
+    updateUserOnMailchimp(enforcedNewsletterSettings({ pgdb, userId: req.user.id }))
   }
 
   return true
