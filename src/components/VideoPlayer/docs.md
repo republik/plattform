@@ -8,6 +8,9 @@ Props:
 -- `subtitles`: The optional URL of the subtitles file.
 - `size`: optional, `narrow` or `tiny`.
 - `showPlay`: Whether to show the play button, defaults to `true`
+- `autoPlay`: Boolean, mapped to the video tag
+- `loop`: Boolean, mapped to the video tag
+- `attributes`: Object, arbitrary attributes mapped to the video tag like playsinline, specific ones win
 
 
 ```react
@@ -21,6 +24,8 @@ Props:
 />
 ```
 
+#### showPlay `false`
+
 ```react
 <VideoPlayer
   src={{
@@ -30,6 +35,24 @@ Props:
     subtitles: '/static/main.vtt'
   }}
   showPlay={false}
+/>
+```
+
+#### forceMuted
+
+Generally the player manages its own global muted state but you can overwrite it with `forceMuted`. This also hides the mute interfaces.
+
+```react
+<VideoPlayer
+  src={{
+    hls: 'https://player.vimeo.com/external/250999239.m3u8?s=54d7c0e48ea4fcf914cfb34c580081f544618da2',
+    mp4: 'https://player.vimeo.com/external/250999239.hd.mp4?s=7d6d2504261c5341158efe3d882a71eb23381302&profile_id=174',
+    thumbnail: `/static/video.jpg`,
+    subtitles: '/static/main.vtt'
+  }}
+  loop
+  autoPlay
+  forceMuted
 />
 ```
 

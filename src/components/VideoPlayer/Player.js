@@ -262,24 +262,24 @@ class VideoPlayer extends Component {
     this.video.removeEventListener('loadedmetadata', this.onLoadedMetaData)
   }
   render() {
-    const { src, showPlay, size } = this.props
+    const { src, showPlay, size, forceMuted, autoPlay, loop, attributes = {} } = this.props
     const { playing, progress, muted, subtitles, loading } = this.state
 
     return (
       <div {...merge(styles.wrapper, breakoutStyles[size])}>
         <video
           {...styles.video}
+          {...attributes}
           style={this.props.style}
-          autoPlay={this.props.autoPlay}
-          muted={muted}
+          autoPlay={autoPlay}
+          muted={forceMuted !== undefined ? forceMuted : muted}
+          loop={loop}
           ref={this.ref}
           crossOrigin="anonymous"
-          thumbnail={src.thumbnail}
+          poster={src.thumbnail}
         >
           <source src={src.hls} type="application/x-mpegURL" />
           <source src={src.mp4} type="video/mp4" />
-          {/* crossOrigin subtitles won't work in older browsers,
-              they should be served from same domain. */}
           {!!src.subtitles && (
             <track
               label="Deutsch"
@@ -324,7 +324,7 @@ class VideoPlayer extends Component {
                 <Subtitles off={!subtitles} />
               </span>
             )}{' '}
-            <span
+            {forceMuted === undefined && <span
               role="button"
               title={`Audio ${muted ? 'aus' : 'an'}`}
               onClick={e => {
@@ -340,7 +340,7 @@ class VideoPlayer extends Component {
               }}
             >
               <Volume off={muted} />
-            </span>
+            </span>}
           </div>
         </div>
         <div {...styles.progress} style={{ width: `${progress * 100}%` }} />
@@ -362,10 +362,24 @@ VideoPlayer.propTypes = {
     hls: PropTypes.string.isRequired,
     mp4: PropTypes.string.isRequired,
     thumbnail: PropTypes.string.isRequired,
-    subtitles: PropTypes.string,
-    size: PropTypes.oneOf(Object.keys(breakoutStyles))
+    subtitles: (props, propName, componentName) => {
+      const value = props[propName]
+      if (value && value.match(/^https?:/)) {
+        return new Error(
+`Invalid prop \`${propName}\` supplied to
+\`${componentName}\`. Subtitles should be loaded from a relative or absolute path.
+CrossOrigin subtitles do not work in older browsers.'`
+        );
+      }
+    },
   }),
-  showPlay: PropTypes.bool
+  size: PropTypes.oneOf(Object.keys(breakoutStyles)),
+  showPlay: PropTypes.bool,
+  loop: PropTypes.bool,
+  // ignores global muted state and sets muted
+  forceMuted: PropTypes.bool,
+  // arbitrary attributes like playsinline, specific ones win
+  attributes: PropTypes.object
 }
 
 VideoPlayer.defaultProps = {
