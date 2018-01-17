@@ -1,58 +1,74 @@
 import React from 'react'
 import { css } from 'glamor'
-import { mUp } from './mediaQueries'
-import {
-  serifTitle20,
-  serifTitle58,
-  sansSerifMedium20,
-  sansSerifMedium58
-} from '../Typography/styles'
+import { mUp, tUp } from './mediaQueries'
+import { serifTitle58, sansSerifMedium58 } from '../Typography/styles'
+
+const baseSize = {
+  fontSize: '38px',
+  lineHeight: '43px',
+  [mUp]: {
+    fontSize: '58px',
+    lineHeight: '60px'
+  }
+}
 
 const styles = {
   base: css({
-    margin: 0,
-    marginBottom: 6,
-    [mUp]: {
-      marginBottom: 8
-    }
+    margin: '0 0 30px 0'
   }),
   editorial: css({
-    ...serifTitle20,
-    fontSize: '38px',
-    lineHeight: '43px',
-    marginBottom: '30px',
-    [mUp]: {
-      ...serifTitle58
-    }
+    ...serifTitle58
   }),
   interaction: css({
-    ...sansSerifMedium20,
-    fontSize: '38px',
-    lineHeight: '43px',
-    marginBottom: '30px',
-    [mUp]: {
-      ...sansSerifMedium58
+    ...sansSerifMedium58
+  }),
+  small: css({
+    ...baseSize
+  }),
+  large: css({
+    ...baseSize,
+    [tUp]: {
+      fontSize: '125px',
+      lineHeight: '137px'
+    }
+  }),
+  medium: css({
+    ...baseSize,
+    [tUp]: {
+      fontSize: '100px',
+      lineHeight: '110px'
+    }
+  }),
+  default: css({
+    ...baseSize,
+    [tUp]: {
+      fontSize: '80px',
+      lineHeight: '90px'
     }
   })
 }
 
-
-export const Editorial = ({ children, poster, large, medium }) => {
+export const Editorial = ({ children, small, large, medium }) => {
+  const sizeStyle =
+    (large && styles.large) ||
+    (medium && styles.medium) ||
+    (small && styles.small) ||
+    styles.default
   return (
-    <h1 {...styles.base} {...styles.editorial}>
+    <h1 {...styles.base} {...styles.editorial} {...sizeStyle}>
       {children}
     </h1>
   )
 }
 
-export const Interaction = ({ children, large, medium, small }) => {
-  const sizeStyle = (large && styles.large) || (medium && styles.medium) || {}
+export const Interaction = ({ children, small, large, medium }) => {
+  const sizeStyle =
+    (large && styles.large) ||
+    (medium && styles.medium) ||
+    (small && styles.small) ||
+    styles.default
   return (
-    <h1
-      {...styles.base}
-      {...styles.interaction}
-      {...css(styles.default, sizeStyle)}
-    >
+    <h1 {...styles.base} {...styles.interaction} {...sizeStyle}>
       {children}
     </h1>
   )

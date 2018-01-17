@@ -7,14 +7,17 @@ Supported props:
 - `bgColor`: The background color to use in stacked mode.
 - `center`: Whether the text should be center aligned.
 
-A `<TeaserFrontImageHeadline />` should be used.
+A `<TeaserFrontImageHeadline />` should be used. The default font size can be changed with either of these props:
+- `medium`: Whether the font size shoud be increased to medium.
+- `large`: Whether the font size shoud be increased to large.
+- `small`: Whether the font size should be decreased to small.
 
 ```react
 <TeaserFrontImage
   image='/static/desert.jpg?size=4323x2962'
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
-  <TeaserFrontImageHeadline.Editorial>The sand is near</TeaserFrontImageHeadline.Editorial>
+  <TeaserFrontImageHeadline.Editorial small>The sand is near</TeaserFrontImageHeadline.Editorial>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
@@ -29,7 +32,7 @@ A `<TeaserFrontImageHeadline />` should be used.
   textPosition='topright'
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
-  <TeaserFrontImageHeadline.Editorial>The sand is near</TeaserFrontImageHeadline.Editorial>
+  <TeaserFrontImageHeadline.Editorial small>The sand is near</TeaserFrontImageHeadline.Editorial>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
@@ -44,7 +47,7 @@ A `<TeaserFrontImageHeadline />` should be used.
   textPosition='bottomleft'
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
-  <TeaserFrontImageHeadline.Editorial>The sand</TeaserFrontImageHeadline.Editorial>
+  <TeaserFrontImageHeadline.Editorial small>The sand</TeaserFrontImageHeadline.Editorial>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
@@ -59,7 +62,7 @@ A `<TeaserFrontImageHeadline />` should be used.
   textPosition='bottomright'
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
-  <TeaserFrontImageHeadline.Editorial>The sand</TeaserFrontImageHeadline.Editorial>
+  <TeaserFrontImageHeadline.Editorial small>The sand</TeaserFrontImageHeadline.Editorial>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
@@ -75,7 +78,7 @@ A `<TeaserFrontImageHeadline />` should be used.
   textPosition='topright' 
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
-  <TeaserFrontImageHeadline.Editorial>The sand is near</TeaserFrontImageHeadline.Editorial>
+  <TeaserFrontImageHeadline.Editorial small>The sand is near</TeaserFrontImageHeadline.Editorial>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
@@ -90,7 +93,7 @@ A `<TeaserFrontImageHeadline />` should be used.
   textPosition='topright'
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
-  <TeaserFrontImageHeadline.Interaction>The sand is near</TeaserFrontImageHeadline.Interaction>
+  <TeaserFrontImageHeadline.Interaction small>The sand is near</TeaserFrontImageHeadline.Interaction>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
@@ -139,6 +142,38 @@ A `<TeaserFrontImageHeadline />` should be used.
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
   <TeaserFrontImageHeadline.Editorial>The sand is near</TeaserFrontImageHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontImage>
+```
+
+```react
+<TeaserFrontImage image='/static/desert.jpg'
+  center
+  textPosition='middle'
+  color='#fff' bgColor='#000'>
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <TeaserFrontImageHeadline.Editorial medium>The sand is near</TeaserFrontImageHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontImage>
+```
+
+```react
+<TeaserFrontImage image='/static/desert.jpg'
+  center
+  textPosition='middle'
+  color='#fff' bgColor='#000'>
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <TeaserFrontImageHeadline.Editorial large>The sand is near</TeaserFrontImageHeadline.Editorial>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
