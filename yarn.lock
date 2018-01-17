@@ -5,6 +5,13 @@
 "@orbiting/backend-modules-assets@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-assets/-/backend-modules-assets-1.1.0.tgz#266d8c4a7fc90b1ac17d1dfb95037110684bcf6e"
+  dependencies:
+    "@orbiting/backend-modules-github" "^1.0.0"
+    check-env "^1.3.0"
+    debug "^3.1.0"
+    export-files "^2.1.1"
+    file-type "^7.4.0"
+    sharp "^0.18.4"
 
 "@orbiting/backend-modules-auth@^3.0.5":
   version "3.0.5"
@@ -54,9 +61,9 @@
     redis "^2.8.0"
     subscriptions-transport-ws "^0.9.4"
 
-"@orbiting/backend-modules-documents@^2.8.0":
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.8.0.tgz#b6d996036874ac3454e05dacb21be9b484213477"
+"@orbiting/backend-modules-documents@^2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.8.1.tgz#df33254361b42f00e5da7134dd0a27901f48e222"
   dependencies:
     "@orbiting/backend-modules-auth" "^3.0.5"
     "@project-r/styleguide" "^5.37.1"
