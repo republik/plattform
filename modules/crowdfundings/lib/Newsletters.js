@@ -1,4 +1,4 @@
-const { updateNewsletterSubscriptions } = require('@orbiting/backend-modules-mail')
+const { updateNewsletterSubscriptions, configure } = require('@orbiting/backend-modules-mail')
 const logger = console
 const {
   MAILCHIMP_INTEREST_PLEDGE,
@@ -9,10 +9,16 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR
 } = process.env
 
-module.exports = async ({ userId, hasJustPaid, isNew, pgdb, ...rest }) => {
+configure([
+  { name: 'DAILY', interestId: MAILCHIMP_INTEREST_NEWSLETTER_DAILY, roles: ['member'] },
+  { name: 'WEEKLY', interestId: MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY, roles: ['member'] },
+  { name: 'PROJECTR', interestId: MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR, roles: [] }
+])
+
+exports.enforceSubscriptions = async ({ userId, hasJustPaid, isNew, pgdb, ...rest }) => {
   const user = await pgdb.public.users.findOne({id: userId})
   if (!user) {
-    logger.error('user not found in refreshNewsletterSettings', { userId })
+    logger.error('user not found in enforceSubscriptions', { userId })
     return
   }
 

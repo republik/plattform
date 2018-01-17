@@ -3,7 +3,7 @@ const logger = console
 const {minTotal, regularTotal} = require('../../../lib/Pledge')
 const generateMemberships = require('../../../lib/generateMemberships')
 const sendPaymentSuccessful = require('../../../lib/payments/sendPaymentSuccessful')
-const refreshNewsletterSettings = require('../../../lib/refreshNewsletterSettings')
+const { enforceSubscriptions } = require('../../../lib/Newsletters')
 
 module.exports = async (_, args, {pgdb, req, t}) => {
   Roles.ensureUserHasRole(req.user, 'supporter')
@@ -93,7 +93,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
 
     await transaction.transactionCommit()
 
-    refreshNewsletterSettings({ pgdb, userId: pledge.userId })
+    enforceSubscriptions({ pgdb, userId: pledge.userId })
   } catch (e) {
     await transaction.transactionRollback()
     logger.info('transaction rollback', { req: req._log(), args, error: e })

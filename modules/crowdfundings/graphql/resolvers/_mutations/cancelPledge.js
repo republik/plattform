@@ -1,6 +1,6 @@
 const logger = console
 const { Roles } = require('@orbiting/backend-modules-auth')
-const refreshNewsletterSettings = require('../../../lib/refreshNewsletterSettings')
+const { enforceSubscriptions } = require('../../../lib/Newsletters')
 const cancelMembership = require('./cancelMembership')
 
 const moment = require('moment')
@@ -109,7 +109,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
 
     await transaction.transactionCommit()
 
-    refreshNewsletterSettings({ pgdb, userId: pledge.userId })
+    enforceSubscriptions({ pgdb, userId: pledge.userId })
   } catch (e) {
     await transaction.transactionRollback()
     logger.info('transaction rollback', { req: req._log(), args, error: e })

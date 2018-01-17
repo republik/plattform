@@ -1,7 +1,7 @@
 const logger = console
 const sendPendingPledgeConfirmations = require('../../../lib/sendPendingPledgeConfirmations')
 const generateMemberships = require('../../../lib/generateMemberships')
-const refreshNewsletterSettings = require('../../../lib/refreshNewsletterSettings')
+const { enforceSubscriptions } = require('../../../lib/Newsletters')
 const payPledgePaymentslip = require('../../../lib/payments/paymentslip/payPledge')
 const payPledgePaypal = require('../../../lib/payments/paypal/payPledge')
 const payPledgePostfinance = require('../../../lib/payments/postfinance/payPledge')
@@ -152,7 +152,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
         await sendPendingPledgeConfirmations(pledge.userId, pgdb, t)
       }
 
-      refreshNewsletterSettings({
+      enforceSubscriptions({
         pgdb,
         userId: user.id,
         hasJustPaid: true,

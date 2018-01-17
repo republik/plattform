@@ -1,6 +1,6 @@
 const logger = console
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
-const refreshNewsletterSettings = require('../../../lib/refreshNewsletterSettings')
+const { enforceSubscriptions } = require('../../../lib/Newsletters')
 
 module.exports = async (_, args, {pgdb, req, t}) => {
   ensureSignedIn(req)
@@ -34,8 +34,8 @@ module.exports = async (_, args, {pgdb, req, t}) => {
   }
 
   if (giverId) {
-    refreshNewsletterSettings({ pgdb, userId: giverId })
-    refreshNewsletterSettings({ pgdb, userId: req.user.id })
+    enforceSubscriptions({ pgdb, userId: giverId })
+    enforceSubscriptions({ pgdb, userId: req.user.id })
   }
 
   return true
