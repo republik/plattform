@@ -4,6 +4,7 @@ const logger = console
 const {minTotal, regularTotal} = require('../../../lib/Pledge')
 const generateMemberships = require('../../../lib/generateMemberships')
 const sendPaymentSuccessful = require('../../../lib/payments/sendPaymentSuccessful')
+const { publishMonitor } = require('../../../../../lib/slack')
 
 module.exports = async (_, args, {pgdb, req, t}) => {
   Roles.ensureUserHasRole(req.user, 'supporter')
@@ -97,6 +98,11 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       userId: pledge.userId,
       pgdb
     })
+
+    await publishMonitor(
+      req.user,
+      `resolvePledgeToPayment pledgeId: ${pledge.id} pledge.total:${pledge.total} newTotal:${newTotal}`
+    )
   } catch (e) {
     await transaction.transactionRollback()
     logger.info('transaction rollback', { req: req._log(), args, error: e })

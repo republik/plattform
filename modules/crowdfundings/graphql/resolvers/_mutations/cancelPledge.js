@@ -4,6 +4,7 @@ const { updateUserOnMailchimp } = require('@orbiting/backend-modules-mail')
 const cancelMembership = require('./cancelMembership')
 const moment = require('moment')
 const checkEnv = require('check-env')
+const { publishMonitor } = require('../../../../../lib/slack')
 
 checkEnv([
   'PARKING_PLEDGE_ID',
@@ -112,6 +113,11 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       userId: pledge.userId,
       pgdb
     })
+
+    await publishMonitor(
+      req.user,
+      `cancelPledge pledgeId: ${pledge.id} pkgName: ${pkg.name}`
+    )
   } catch (e) {
     await transaction.transactionRollback()
     logger.info('transaction rollback', { req: req._log(), args, error: e })

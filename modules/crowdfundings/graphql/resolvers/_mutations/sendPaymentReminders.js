@@ -2,6 +2,7 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const logger = console
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { formatPrice } = require('@orbiting/backend-modules-formats')
+const { publishMonitor } = require('../../../../../lib/slack')
 
 module.exports = async (_, args, {pgdb, req, t}) => {
   Roles.ensureUserHasRole(req.user, 'supporter')
@@ -73,6 +74,11 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     })
 
     await transaction.transactionCommit()
+
+    await publishMonitor(
+      req.user,
+      `sendPaymentReminders paymentIds: ${paymentIds.join(',')}`
+    )
 
     return payments.length
   } catch (e) {
