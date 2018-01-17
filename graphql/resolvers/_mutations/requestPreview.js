@@ -5,6 +5,7 @@ const { graphql: { resolvers: { Document: DocResolver } } } = require('@orbiting
 const { lib: { html: { get: getHTML } } } = require('@orbiting/backend-modules-documents')
 const { descending } = require('d3-array')
 const moment = require('moment')
+const querystring = require('querystring')
 
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
@@ -40,8 +41,14 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/preview/mail/404'))
   }
   // resolve Document
-  doc.content = DocResolver.content(doc, { urlPrefix: FRONTEND_BASE_URL }, context)
-  doc.meta = DocResolver.meta(doc, { urlPrefix: FRONTEND_BASE_URL }, context)
+  const urlPrefix = FRONTEND_BASE_URL
+  const searchString = '?' + querystring.stringify({
+    'utm_source': 'newsletter',
+    'utm_medium': 'email',
+    'utm_campaign': PREVIEW_MAIL_REPO_ID
+  })
+  doc.content = DocResolver.content(doc, { urlPrefix, searchString }, context)
+  doc.meta = DocResolver.meta(doc, { urlPrefix, searchString }, context)
   const html = getHTML(doc)
 
   await sendMail({
