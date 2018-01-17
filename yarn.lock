@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@orbiting/backend-modules-assets@^1.0.3":
+"@orbiting/backend-modules-assets@^1.0.5":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-assets/-/backend-modules-assets-1.0.5.tgz#73272fb3641e6f1d52e6535e44e350d186e7d95b"
   dependencies:
