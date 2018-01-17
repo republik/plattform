@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@orbiting/backend-modules-assets@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-assets/-/backend-modules-assets-1.0.3.tgz#c3b50a332f677607b091683c57f3baec1abf7d07"
+"@orbiting/backend-modules-assets@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-assets/-/backend-modules-assets-1.0.5.tgz#73272fb3641e6f1d52e6535e44e350d186e7d95b"
   dependencies:
     "@orbiting/backend-modules-github" "^1.0.0"
     check-env "^1.3.0"
@@ -208,8 +208,8 @@ agent-base@2:
     semver "~5.0.1"
 
 agent-base@^4.1.0:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/agent-base/-/agent-base-4.1.2.tgz#80fa6cde440f4dcf9af2617cf246099b5d99f0c8"
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/agent-base/-/agent-base-4.2.0.tgz#9838b5c3392b962bad031e6a4c5e1024abec45ce"
   dependencies:
     es6-promisify "^5.0.0"
 
