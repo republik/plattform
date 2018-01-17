@@ -2,16 +2,9 @@
 # yarn lockfile v1
 
 
-"@orbiting/backend-modules-assets@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-assets/-/backend-modules-assets-1.0.5.tgz#73272fb3641e6f1d52e6535e44e350d186e7d95b"
-  dependencies:
-    "@orbiting/backend-modules-github" "^1.0.0"
-    check-env "^1.3.0"
-    debug "^3.1.0"
-    export-files "^2.1.1"
-    file-type "^7.4.0"
-    sharp "^0.18.4"
+"@orbiting/backend-modules-assets@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-assets/-/backend-modules-assets-1.1.0.tgz#266d8c4a7fc90b1ac17d1dfb95037110684bcf6e"
 
 "@orbiting/backend-modules-auth@^3.0.5":
   version "3.0.5"
@@ -61,12 +54,12 @@
     redis "^2.8.0"
     subscriptions-transport-ws "^0.9.4"
 
-"@orbiting/backend-modules-documents@^2.5.6":
-  version "2.5.6"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.5.6.tgz#c62c033cf4ef1ef044f51c6fad6a2c0893eaef45"
+"@orbiting/backend-modules-documents@^2.8.0":
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.8.0.tgz#b6d996036874ac3454e05dacb21be9b484213477"
   dependencies:
     "@orbiting/backend-modules-auth" "^3.0.5"
-    "@project-r/styleguide" "^5.27.1"
+    "@project-r/styleguide" "^5.37.1"
     "@project-r/template-newsletter" "^1.5.0"
     apollo-modules-node "^0.1.4"
     check-env "^1.3.0"
@@ -144,9 +137,9 @@
     stringify-entities "^1.3.1"
     unified "^6.1.5"
 
-"@project-r/styleguide@^5.27.1":
-  version "5.38.1"
-  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.38.1.tgz#a944b7a659cc97f72c029e766421dd66edeb5b70"
+"@project-r/styleguide@^5.37.1":
+  version "5.41.0"
+  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.41.0.tgz#ab646388ea0bb6229daab57355d3b20af9d88026"
   dependencies:
     react-icons "^2.2.7"
 

@@ -1,5 +1,6 @@
 const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
 const { descending } = require('d3-array')
+const querystring = require('querystring')
 const yaml = require('../../../lib/yaml')
 const {
   createGithubClients,
@@ -97,8 +98,13 @@ module.exports = async (
   const allUsernames = firstDoc._usernames
 
   const resolvedDoc = JSON.parse(JSON.stringify(doc))
-  contentUrlResolver(resolvedDoc, allDocs, allUsernames, unresolvedRepoIds, FRONTEND_BASE_URL)
-  metaUrlResolver(resolvedDoc.content.meta, allDocs, allUsernames, unresolvedRepoIds, FRONTEND_BASE_URL)
+  const searchString = '?' + querystring.stringify({
+    'utm_source': 'newsletter',
+    'utm_medium': 'email',
+    'utm_campaign': repoId
+  })
+  contentUrlResolver(resolvedDoc, allDocs, allUsernames, unresolvedRepoIds, FRONTEND_BASE_URL, searchString)
+  metaUrlResolver(resolvedDoc.content.meta, allDocs, allUsernames, unresolvedRepoIds, FRONTEND_BASE_URL, searchString)
   metaFieldResolver(resolvedDoc.content.meta, allDocs, unresolvedRepoIds)
   unresolvedRepoIds = uniq(unresolvedRepoIds)
   if (unresolvedRepoIds.length && (!ignoreUnresolvedRepoIds || doc.content.meta.template === 'editorialNewsletter' || updateMailchimp)) {
