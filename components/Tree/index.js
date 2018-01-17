@@ -217,6 +217,7 @@ class Tree extends Component {
       }
     )
 
+    // Draw connections.
     const adjustment = NODE_SIZE / 2
     this.state.links.forEach(({ sourceId, destinationId, ref }) => {
       let source = this.state.commits.filter(o => {
@@ -225,6 +226,9 @@ class Tree extends Component {
       let destination = this.state.commits.filter(o => {
         return o.id === destinationId
       })[0]
+      if (!source || !destination) {
+        return
+      }
 
       const sx = source.data.slotIndex * slotWidth + adjustment
       const sy =
