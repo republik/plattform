@@ -144,7 +144,7 @@ module.exports = async (_, args, context) => {
       await unsubscribeFromMailchimp({ email: sourceUser.email })
       await enforceSubscriptions({ pgdb, userId: targetUserId })
     } catch (_e) {
-      logger.error('updateMailchimp failed in mergeUsers!', _e)
+      logger.error('newsletter subscription changes failed in mergeUsers!', _e)
     }
 
     try {

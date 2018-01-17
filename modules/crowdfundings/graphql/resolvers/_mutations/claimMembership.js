@@ -36,8 +36,13 @@ module.exports = async (_, args, {pgdb, req, t}) => {
   }
 
   if (giverId) {
-    enforceSubscriptions({ pgdb, userId: giverId })
-    enforceSubscriptions({ pgdb, userId: req.user.id })
+    try {
+      await enforceSubscriptions({ pgdb, userId: giverId })
+      await enforceSubscriptions({ pgdb, userId: req.user.id })
+    } catch (e) {
+      // ignore issues with newsletter subscriptions
+      logger.error('newsletter subscription changes failed', { req: req._log(), args, error: e })
+    }
   }
 
   return true

@@ -216,6 +216,7 @@ module.exports = {
   },
   newsletterSettings (user, args, { user: me, ...context }) {
     Roles.ensureUserIsMeOrInRoles(user, me, ['supporter, admin'])
+    // TODO: Resolver level translation
     return getNewsletterSettings(user, context)
   }
 }

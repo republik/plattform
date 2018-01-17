@@ -7,6 +7,7 @@ module.exports = async (_, args, { user: me, ...context }) => {
   const { name, subscribed, status } = args
   Roles.ensureUserIsMeOrInRoles(user, me, ['supporter, admin'])
 
+  // TODO: Resolver level translation
   return updateNewsletterSubscription(
     {
       user,
