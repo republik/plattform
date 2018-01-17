@@ -32,27 +32,16 @@ class MandrillInterface {
     })
   }
 
-  async send (message) {
-    const url = this.buildApiUrl('/messages/send.json')
+  async send (message, templateName, templateContent) {
+    const url = this.buildApiUrl(
+      templateName ?
+        '/messages/send-template.json' :
+        '/messages/send.json')
     try {
       const body = { message }
-      const response = await this.fetchAuthenticated('POST', url, body)
-      const json = await response.json()
-      console.log(json)
-      return json
-    } catch (error) {
-      this.logger.error(`mandrill -> exception: ${error.message}`)
-      throw new NewsletterMemberMailError({ error, message })
-    }
-  }
-
-  async sendTemplate (message, templateName, templateContent) {
-    const url = this.buildApiUrl('/messages/send-template.json')
-    try {
-      const body = {
-        message,
-        template_name: templateName,
-        template_content: templateContent
+      if (templateName) {
+        body[template_name] = templateName,
+        body[template_content] = templateContent
       }
       const response = await this.fetchAuthenticated('POST', url, body)
       const json = await response.json()
