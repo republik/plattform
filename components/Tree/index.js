@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Link } from '../../lib/routes'
 import { css } from 'glamor'
 import { max } from 'd3-array'
-import { schemeCategory10 } from 'd3-scale'
+import { scaleOrdinal, schemeCategory10 } from 'd3-scale'
 import { color as d3Color } from 'd3-color'
 import CheckIcon from 'react-icons/lib/md/check'
 import TagIcon from 'react-icons/lib/md/grade'
@@ -189,12 +189,13 @@ class Tree extends Component {
         ? `0 ${MIN_PADDING}px`
         : '0 auto 0'
 
-    let colors = [...schemeCategory10, ...schemeCategory10, ...schemeCategory10]
+    let colors = scaleOrdinal(schemeCategory10)
     let authorColor = {}
+
     this.state.commits.forEach(
-      ({ data, author, nodeRef, listItemRef, milestoneBarRef, milestones }) => {
+      ({ data, author, nodeRef, listItemRef, milestoneBarRef, milestones }, i) => {
         if (!authorColor[author.email]) {
-          let color = colors.shift()
+          let color = colors(i)
           let lightColor = d3Color(color)
           lightColor.opacity = 0.2
           authorColor[author.email] = {
