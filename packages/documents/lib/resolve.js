@@ -79,13 +79,14 @@ const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPr
     const user = usernames
       .find(u => u.id === userInfo.id)
     if (user) {
-      return
-        urlPrefix +
+      return [
+        urlPrefix,
         userInfo.path.replace(
-          user.id,
-          user.username
-        ) +
+         user.id,
+         user.username
+        ),
         searchString
+      ].join('')
     }
   }
 
