@@ -64,7 +64,10 @@ ImageBlock.propTypes = {
     'topleft',
     'topright',
     'bottomleft',
-    'bottomright'
+    'bottomright',
+    'top',
+    'middle',
+    'bottom'
   ])
 }
 

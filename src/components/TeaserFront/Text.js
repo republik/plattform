@@ -6,9 +6,15 @@ import colors from '../../theme/colors'
 
 const TEXT_PADDING = 50
 
-const positionDefault = {
+const positionHalfWidth = {
   height: `calc(50% - ${TEXT_PADDING}px)`,
   width: `calc(50% - ${TEXT_PADDING}px)`
+}
+
+const positionFullWidth = {
+  position: 'absolute',
+  left: `${TEXT_PADDING}px`,
+  right: `${TEXT_PADDING}px`
 }
 
 const styles = {
@@ -21,35 +27,59 @@ const styles = {
       width: '100%'
     }
   }),
+  rootMiddle: css({
+    [tUp]: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center'
+    }
+  }),
   positioned: css({
     position: 'relative'
   }),
   topleft: css({
     [tUp]: {
-      ...positionDefault,
+      ...positionHalfWidth,
       left: `${TEXT_PADDING}px`,
       top: `${TEXT_PADDING}px`
     }
   }),
   topright: css({
     [tUp]: {
-      ...positionDefault,
+      ...positionHalfWidth,
       left: '50%',
       top: `${TEXT_PADDING}px`
     }
   }),
   bottomleft: css({
     [tUp]: {
-      ...positionDefault,
+      ...positionHalfWidth,
       left: `${TEXT_PADDING}px`,
       top: '50%'
     }
   }),
   bottomright: css({
     [tUp]: {
-      ...positionDefault,
+      ...positionHalfWidth,
       left: '50%',
       top: '50%'
+    }
+  }),
+  top: css({
+    [tUp]: {
+      ...positionFullWidth,
+      top: `${TEXT_PADDING}px`
+    }
+  }),
+  middle: css({
+    [tUp]: {
+      ...positionFullWidth
+    }
+  }),
+  bottom: css({
+    [tUp]: {
+      ...positionFullWidth,
+      bottom: `${TEXT_PADDING}px`
     }
   })
 }
@@ -65,8 +95,9 @@ const Text = ({
 }) => {
   const textAlign = center ? 'center' : ''
   const rootStyles = position ? styles.rootPosition : {}
+  const middleStyles = position === 'middle' ? styles.rootMiddle : {}
   return (
-    <div {...rootStyles}>
+    <div {...rootStyles} {...middleStyles}>
       <div
         {...attributes}
         {...css(styles.positioned, position ? styles[position] : {})}
@@ -85,7 +116,10 @@ Text.propTypes = {
     'topleft',
     'topright',
     'bottomleft',
-    'bottomright'
+    'bottomright',
+    'top',
+    'middle',
+    'bottom'
   ]),
   textColor: PropTypes.string,
   maxWidth: PropTypes.string,
