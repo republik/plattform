@@ -3,6 +3,17 @@ module.exports = `
 scalar DateTime
 scalar JSON
 
+type Series {
+  title: String!
+  episodes: [Episode!]!
+}
+
+type Episode {
+  title: String
+  publishDate: DateTime
+  document: Document
+}
+
 type Meta {
   title: String
   slug: String
@@ -21,6 +32,7 @@ type Meta {
   feed: Boolean
   kind: String
   color: String
+  series: Series
   format: Document
   # the discussion wrapping document
   dossier: Document
