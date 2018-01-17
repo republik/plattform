@@ -214,9 +214,13 @@ module.exports = {
     }
     return null
   },
-  newsletterSettings (user, args, { user: me, ...context }) {
+  newsletterSettings (user, args, { user: me, t, ...context }) {
     Roles.ensureUserIsMeOrInRoles(user, me, ['supporter, admin'])
-    // TODO: Resolver level translation
-    return getNewsletterSettings(user, context)
+    try {
+      return getNewsletterSettings(user, context)
+    } catch (error) {
+      console.error('getNewsletterProfile failed', { error })
+      throw new Error(t('api/newsletters/get/failed'))
+    }
   }
 }

@@ -1,6 +1,6 @@
 const logger = console
 const {ascending} = require('d3-array')
-const { unsubscribeFromMailchimp } = require('@orbiting/backend-modules-mail')
+const { unsubscribeFromAllNewsletters } = require('@orbiting/backend-modules-mail')
 const { enforceSubscriptions } = require('../../../lib/Newsletters')
 const { Roles } = require('@orbiting/backend-modules-auth')
 const uniq = require('lodash/uniq')
@@ -141,7 +141,7 @@ module.exports = async (_, args, context) => {
     await transaction.transactionCommit()
 
     try {
-      await unsubscribeFromMailchimp({ email: sourceUser.email })
+      await unsubscribeFromAllNewsletters({ email: sourceUser.email })
       await enforceSubscriptions({ pgdb, userId: targetUserId })
     } catch (_e) {
       logger.error('newsletter subscription changes failed in mergeUsers!', _e)
