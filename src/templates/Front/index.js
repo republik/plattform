@@ -193,6 +193,7 @@ const createSchema = ({
         'color',
         'bgColor',
         'center',
+        'titleSize',
         'image'
       ]
     },
@@ -200,11 +201,16 @@ const createSchema = ({
       image,
       title(
         'FRONTIMAGETITLE',
-        ({ children, attributes, kind }) => {
+        ({ children, attributes, kind, titleSize }) => {
           const Component = kind === 'editorial'
             ? TeaserFrontImageHeadline.Editorial
             : TeaserFrontImageHeadline.Interaction
-          return <Component attributes={attributes}>
+          const sizes = {
+            medium: titleSize === 'medium',
+            large: titleSize === 'large',
+            small: titleSize === 'small'
+          }
+          return <Component attributes={attributes} {...sizes}>
             {children}
           </Component>
         }
