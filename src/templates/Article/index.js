@@ -295,10 +295,7 @@ const pullQuote = {
   rules: [
     figure,
     {
-      matchMdast: (node, index, parent) =>
-        matchParagraph(node) &&
-        (index === 0 ||
-          !matchLast(node, index, parent)),
+      matchMdast: (node, index, parent) => matchParagraph(node) && index < 2,
       component: PullQuoteText,
       editorModule: 'paragraph',
       editorOptions: {
