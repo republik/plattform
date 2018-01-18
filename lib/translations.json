@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-18T03:07:01.645Z",
+  "updated": "2018-01-18T22:08:51.558Z",
   "title": "live",
   "data": [
     {
@@ -311,6 +311,10 @@
       "value": "Bildbeschrieb"
     },
     {
+      "key": "metaData/field/label",
+      "value": "Label"
+    },
+    {
       "key": "metaData/field/captionRight",
       "value": "Bildlegende rechts"
     },
@@ -367,6 +371,10 @@
       "value": "Master"
     },
     {
+      "key": "metaData/series/title/label",
+      "value": "Title"
+    },
+    {
       "key": "metaData/series/episode",
       "value": "Episode"
     },
@@ -385,6 +393,22 @@
     {
       "key": "metaData/series/episodes/document",
       "value": "Dokument"
+    },
+    {
+      "key": "metaData/series/coverText/anchor",
+      "value": "Text auf Cover"
+    },
+    {
+      "key": "metaData/series/coverText/offset",
+      "value": "Offset (CSS Units)"
+    },
+    {
+      "key": "metaData/series/coverText/color",
+      "value": "Farbe"
+    },
+    {
+      "key": "metaData/series/coverText/fontSize",
+      "value": "Schriftgrösse"
     },
     {
       "key": "uncommittedChanges/title",
@@ -524,7 +548,7 @@
     },
     {
       "key": "publish/error/unresolvedRepoIds/template",
-      "value": "Sie können diese Publikation durchführen solange nicht alle Referenzen zur Veröffentlichung ferigegeben sind."
+      "value": "Sie können diese Publikation nicht durchführen solange nicht alle Referenzen zur Veröffentlichung ferigegeben sind."
     },
     {
       "key": "publication/current/title/1",
