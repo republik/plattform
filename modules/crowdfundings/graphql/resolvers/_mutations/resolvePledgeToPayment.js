@@ -3,9 +3,8 @@ const logger = console
 const {minTotal, regularTotal} = require('../../../lib/Pledge')
 const generateMemberships = require('../../../lib/generateMemberships')
 const sendPaymentSuccessful = require('../../../lib/payments/sendPaymentSuccessful')
-const { enforceSubscriptions } = require('../../../lib/Newsletters')
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
   Roles.ensureUserHasRole(req.user, 'supporter')
   const { pledgeId, reason } = args
   const now = new Date()

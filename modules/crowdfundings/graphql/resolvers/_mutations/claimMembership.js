@@ -1,8 +1,7 @@
 const logger = console
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
-const { enforceSubscriptions } = require('../../../lib/Newsletters')
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
   ensureSignedIn(req)
 
   // if this restriction gets removed, make sure to check if

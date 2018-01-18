@@ -8,7 +8,7 @@ const { graphql: redirections } = require('@orbiting/backend-modules-redirection
 const { express: { assets } } = require('@orbiting/backend-modules-assets')
 
 const sendPendingPledgeConfirmations = require('./modules/crowdfundings/lib/sendPendingPledgeConfirmations')
-const { enforceSubscriptions } = require('./modules/crowdfundings/lib/Newsletters')
+const mail = require('./modules/crowdfundings/lib/Mail')
 
 module.exports.run = () => {
   require('./lib/slackGreeter')
@@ -28,13 +28,14 @@ module.exports.run = () => {
     async (userId, isNew, pgdb) =>
       sendPendingPledgeConfirmations(userId, pgdb, t),
     async (userId, isNew, pgdb) =>
-      isNew && enforceSubscriptions({ pgdb, userId, isNew })
+      isNew && mail.enforceSubscriptions({ pgdb, userId, isNew })
   ]
 
   const createGraphQLContext = (defaultContext) => ({
     ...defaultContext,
     t,
-    signInHooks
+    signInHooks,
+    mail
   })
 
   return server.run(executableSchema, middlewares, t, createGraphQLContext)

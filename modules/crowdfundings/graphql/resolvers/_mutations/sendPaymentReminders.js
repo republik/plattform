@@ -1,9 +1,8 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const logger = console
-const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { formatPrice } = require('@orbiting/backend-modules-formats')
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate}}) => {
   Roles.ensureUserHasRole(req.user, 'supporter')
 
   const {

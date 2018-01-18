@@ -1,4 +1,4 @@
-const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
+const { sendMailTemplate } = require('./Mail')
 const { timeFormat } = require('@orbiting/backend-modules-formats')
 
 const dateFormat = timeFormat('%x') // %x - the locale’s date

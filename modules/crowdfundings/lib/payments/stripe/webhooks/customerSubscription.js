@@ -1,4 +1,4 @@
-const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
+const { sendMailTemplate } = require('../../../Mail')
 
 module.exports = {
   eventTypes: ['customer.subscription.updated', 'customer.subscription.deleted'],

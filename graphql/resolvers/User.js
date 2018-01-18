@@ -1,5 +1,4 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { getNewsletterSettings } = require('@orbiting/backend-modules-mail')
 const { age } = require('../../lib/age')
 const { getKeyId } = require('../../lib/pgp')
 const { getImageUrl } = require('../../lib/convertImage')
@@ -214,10 +213,10 @@ module.exports = {
     }
     return null
   },
-  newsletterSettings (user, args, { user: me, t, ...context }) {
+  newsletterSettings (user, args, { user: me, t, mail: { getNewsletterSettings }, ...context }) {
     Roles.ensureUserIsMeOrInRoles(user, me, ['supporter, admin'])
     try {
-      return getNewsletterSettings(user, context)
+      return getNewsletterSettings({ user })
     } catch (error) {
       console.error('getNewsletterProfile failed', { error })
       throw new Error(t('api/newsletters/get/failed'))

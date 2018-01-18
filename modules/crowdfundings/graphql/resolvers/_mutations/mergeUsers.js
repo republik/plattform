@@ -1,7 +1,5 @@
 const logger = console
 const {ascending} = require('d3-array')
-const { unsubscribeFromAllNewsletters } = require('@orbiting/backend-modules-mail')
-const { enforceSubscriptions } = require('../../../lib/Newsletters')
 const { Roles } = require('@orbiting/backend-modules-auth')
 const uniq = require('lodash/uniq')
 const { transformUser } = require('@orbiting/backend-modules-auth')
@@ -11,7 +9,7 @@ const { Redirections: {
 const slack = require('../../../../../lib/slack')
 
 module.exports = async (_, args, context) => {
-  const {pgdb, req, t} = context
+  const {pgdb, req, t, mail: { unsubscribeEmail, enforceSubscriptions }} = context
   Roles.ensureUserHasRole(req.user, 'admin')
 
   const {targetUserId, sourceUserId} = args
@@ -141,7 +139,7 @@ module.exports = async (_, args, context) => {
     await transaction.transactionCommit()
 
     try {
-      await unsubscribeFromAllNewsletters({ email: sourceUser.email })
+      await unsubscribeEmail({ email: sourceUser.email })
       await enforceSubscriptions({ pgdb, userId: targetUserId })
     } catch (_e) {
       logger.error('newsletter subscription changes failed in mergeUsers!', _e)

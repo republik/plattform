@@ -1,4 +1,4 @@
-const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
+const { sendMailTemplate } = require('../Mail')
 
 module.exports = async (pledgeId, pgdb, t) => {
   const pledge = await pgdb.public.pledges.findOne({id: pledgeId})
