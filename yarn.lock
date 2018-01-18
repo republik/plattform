@@ -13,9 +13,9 @@
     file-type "^7.4.0"
     sharp "^0.18.4"
 
-"@orbiting/backend-modules-auth@^3.0.7":
-  version "3.0.7"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-3.0.7.tgz#9d184ae3d0459cc9657871345dc72f163916fb5a"
+"@orbiting/backend-modules-auth@^3.0.8":
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-3.0.8.tgz#fa1d4ab4271e03fbcc5f684bb09a7565eda750ee"
   dependencies:
     "@orbiting/backend-modules-mail" "^2.0.0"
     "@orbiting/backend-modules-translate" "^0.0.0"
@@ -38,11 +38,11 @@
     useragent "^2.2.1"
     uuid "^3.1.0"
 
-"@orbiting/backend-modules-base@^1.1.3":
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-1.1.3.tgz#1a06a34ad11edb5aa2b84eb2d40544689ce1d251"
+"@orbiting/backend-modules-base@^1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-1.1.4.tgz#ecdbc9eba7df347376cebe4b72741f89df886074"
   dependencies:
-    "@orbiting/backend-modules-auth" "^3.0.7"
+    "@orbiting/backend-modules-auth" "^3.0.8"
     apollo-engine "^0.8.1"
     apollo-modules-node "^0.1.4"
     apollo-server-express "^1.3.2"
@@ -61,11 +61,11 @@
     redis "^2.8.0"
     subscriptions-transport-ws "^0.9.4"
 
-"@orbiting/backend-modules-documents@^2.10.0":
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.10.0.tgz#c0a8a3bee50a561353008568a6ff51be5b5f9333"
+"@orbiting/backend-modules-documents@^2.10.1":
+  version "2.10.1"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.10.1.tgz#0c065668c969cf3ec34d5d40aa69848568c5a697"
   dependencies:
-    "@orbiting/backend-modules-auth" "^3.0.7"
+    "@orbiting/backend-modules-auth" "^3.0.8"
     "@project-r/styleguide" "^5.37.1"
     "@project-r/template-newsletter" "^1.5.0"
     apollo-modules-node "^0.1.4"
