@@ -1,6 +1,6 @@
 {
   "name": "@orbiting/backend-modules-mail",
-  "version": "0.1.3",
+  "version": "1.0.0",
   "description": "simple mails with mandrill, manage subscriptions on mailchimp",
   "main": "index.js",
   "repository": {
