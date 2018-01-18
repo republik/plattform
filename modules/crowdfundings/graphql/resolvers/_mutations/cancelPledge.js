@@ -4,6 +4,7 @@ const cancelMembership = require('./cancelMembership')
 
 const moment = require('moment')
 const checkEnv = require('check-env')
+const { publishMonitor } = require('../../../../../lib/slack')
 
 checkEnv([
   'PARKING_PLEDGE_ID',
@@ -109,6 +110,11 @@ module.exports = async (_, args, {pgdb, req, t, mail: { enforceSubscriptions }})
     await transaction.transactionCommit()
 
     enforceSubscriptions({ pgdb, userId: pledge.userId })
+
+    await publishMonitor(
+      req.user,
+      `cancelPledge pledgeId: ${pledge.id} pkgName: ${pkg.name}`
+    )
   } catch (e) {
     await transaction.transactionRollback()
     logger.info('transaction rollback', { req: req._log(), args, error: e })
