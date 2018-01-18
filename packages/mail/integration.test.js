@@ -1,6 +1,7 @@
 require('dotenv').config({ path: '../../.test.env' })
 const test = require('tape-async')
 const { createMail } = require('./lib')
+const MailchimpInterface = require('./MailchimpInterface')
 
 const prepare = () => createMail([
   { name: 'DAILY', interestId: process.env.MAILCHIMP_INTEREST_NEWSLETTER_DAILY, roles: ['member'] },
@@ -128,5 +129,12 @@ test('resubscribe after unsubscription', async (t) => {
   const subscribedSubscriptions = member.subscriptions
     .filter(({ subscribed }) => subscribed)
   t.equal(subscribedSubscriptions.length, 0)
+  t.end()
+})
+
+test('delete the member after all this shit', async (t) => {
+  const mailchimp = MailchimpInterface({ logger: console })
+  const result = await mailchimp.deleteMember(user().email)
+  console.log(result)
   t.end()
 })
