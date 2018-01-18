@@ -13,6 +13,7 @@ const createSchema = ({
   dossierLabel = 'Dossier',
   dossierHref = '/dossier',
   customMetaFields = [],
+  series = false,
   Link = DefaultLink,
   titleBlockPrepend = null,
   ...args
@@ -37,6 +38,7 @@ const createSchema = ({
       },
       ...customMetaFields
     ],
+    series,
     Link,
     ...args
   })

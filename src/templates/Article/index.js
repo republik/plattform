@@ -407,6 +407,7 @@ const createSchema = ({
   titleBlockPrepend = null,
   titleBlockAppend = null,
   repoPrefix = 'article-',
+  series = true,
   Link = DefaultLink,
   t = () => ''
 } = {}) => {
@@ -430,6 +431,7 @@ const createSchema = ({
             matchMdast: () => false,
             editorModule: 'meta',
             editorOptions: {
+              series,
               customFields: customMetaFields,
               teaser: props => (
                 <div

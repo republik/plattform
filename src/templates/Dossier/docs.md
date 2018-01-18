@@ -12,6 +12,11 @@ const schema = createDossierSchema()
 - `dossierHref`, href of dossier overview page, defaults to `/dossier`
 - all keys from article template
 
+Defaults:
+- `repoPrefix`, `dossier-`
+- `customMetaFields`, always adds repo ref for `discussion`
+- `series`, false
+
 # Example
 
 ```react|noSource
