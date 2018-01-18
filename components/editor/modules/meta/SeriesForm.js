@@ -1,12 +1,13 @@
 import React, { Fragment } from 'react'
 import { Set, Map } from 'immutable'
 
-import { A, Label, Radio, Field } from '@project-r/styleguide'
+import { A, Label, Radio, Field, Dropdown } from '@project-r/styleguide'
 
 import MetaForm from '../../utils/MetaForm'
 import withT from '../../../../lib/withT'
 
 import RepoSelect from './RepoSelect'
+import UIForm from '../../UIForm'
 
 const romanize = (num) => {
   if (!+num) return NaN
@@ -24,18 +25,26 @@ const romanize = (num) => {
   return Array(+digits.join('') + 1).join('M') + roman
 }
 
+const coverTextAnchors = [
+  { value: null, text: 'Aus' },
+  { value: 'top', text: 'Top' },
+  { value: 'middle', text: 'Middle' },
+  { value: 'bottom', text: 'Bottom' }
+]
+
 export default withT(({ t, editor, node, onInputChange }) => {
   const value = node.data.get('series')
-  const onChange = series => {
+  const onChange = key => newValue => {
     editor.change(change => {
       change
         .setNodeByKey(node.key, {
-          data: series !== null
-            ? node.data.set('series', series)
-            : node.data.remove('series')
+          data: newValue !== null
+            ? node.data.set(key, newValue)
+            : node.data.remove(key)
         })
     })
   }
+  const onSeriesChange = onChange('series')
 
   const isEpisode = typeof value === 'string'
   const isMaster = !!value && !isEpisode
@@ -47,7 +56,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
         onChange={event => {
           event.preventDefault()
 
-          onChange(undefined)
+          onSeriesChange(undefined)
         }}
       >
         {t('metaData/series/negative')}
@@ -57,7 +66,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
         checked={isMaster}
         onChange={event => {
           event.preventDefault()
-          onChange({
+          onSeriesChange({
             title: '',
             episodes: [
               {title: '', publishDate: '', document: null}
@@ -72,7 +81,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
         checked={isEpisode}
         onChange={event => {
           event.preventDefault()
-          onChange('')
+          onSeriesChange('')
         }}
       >
         {t('metaData/series/episode')}
@@ -82,25 +91,72 @@ export default withT(({ t, editor, node, onInputChange }) => {
 
   const episodes = isMaster && value.episodes
   const onEpisodeChange = episodes => {
-    onChange({
+    onSeriesChange({
       ...value,
       episodes: episodes
     })
   }
 
+  const coverText = node.data.get('coverText')
+
   return <Fragment>
     <Label>{t('metaData/series/label')}</Label><br />
     {role}
+    {(isMaster || isEpisode) && <UIForm getWidth={() => '25%'}>
+      <Dropdown
+        black
+        label={t('metaData/series/coverText/anchor')}
+        items={coverTextAnchors}
+        value={coverText ? coverText.anchor : null}
+        onChange={({value}) => onChange('coverText')(value && {
+          anchor: value,
+          offset: value === 'middle'
+            ? ''
+            : (coverText && coverText.offset) || '5%',
+          color: (coverText && coverText.color) || '#fff'
+        })}
+      />
+      {coverText && <Field
+        black
+        label={t('metaData/series/coverText/color')}
+        value={coverText.color}
+        onChange={(_, color) => {
+          onChange('coverText')({
+            ...coverText,
+            color
+          })
+        }} />}
+      {coverText && <Field
+        black
+        label={t('metaData/series/coverText/fontSize')}
+        value={coverText.fontSize}
+        onChange={(_, fontSize) => {
+          onChange('coverText')({
+            ...coverText,
+            fontSize
+          })
+        }} />}
+      {coverText && <Field
+        black
+        label={t('metaData/series/coverText/offset')}
+        value={coverText.offset}
+        onChange={(_, offset) => {
+          onChange('coverText')({
+            ...coverText,
+            offset
+          })
+        }} />}
+    </UIForm>}
     {isEpisode && <RepoSelect label={t('metaData/series/master')} value={value} onChange={(_, url) => {
-      onChange(url || '')
+      onSeriesChange(url || '')
     }} />}
     {isMaster && (
       <div style={{backgroundColor: '#fff', padding: '5px 10px 10px', marginTop: 5}}>
         <Field
-          label={'Title'}
+          label={t('metaData/series/title/label')}
           value={value.title}
           onChange={(_, title) => {
-            onChange({
+            onSeriesChange({
               ...value,
               title: title
             })
@@ -108,8 +164,8 @@ export default withT(({ t, editor, node, onInputChange }) => {
         {episodes.map((episode, i) => {
           const {document: episodeDoc, ...values} = episode
           const keys = Set([
-            'title',
-            'publishDate'
+            'label', 'title',
+            'image', 'publishDate'
           ])
           const defaultValues = Map(keys.map(key => [key, '']))
 
