@@ -167,6 +167,15 @@ const metaFieldResolver = (meta, allDocuments = [], errors) => {
     const seriesDocument = resolver(meta.series)
     series = seriesDocument && seriesDocument.meta.series
   }
+  if (series) {
+    series = {
+      ...series,
+      episodes: (series.episodes || []).map(episode => ({
+        ...episode,
+        document: resolver(episode.document)
+      }))
+    }
+  }
 
   return {
     series,
