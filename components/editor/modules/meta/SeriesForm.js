@@ -9,22 +9,6 @@ import withT from '../../../../lib/withT'
 import RepoSelect from './RepoSelect'
 import UIForm from '../../UIForm'
 
-const romanize = (num) => {
-  if (!+num) return NaN
-  let digits = String(+num).split('')
-  const key = [
-    '', 'C', 'CC', 'CCC', 'CD', 'D', 'DC', 'DCC', 'DCCC', 'CM',
-    '', 'X', 'XX', 'XXX', 'XL', 'L', 'LX', 'LXX', 'LXXX', 'XC',
-    '', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'
-  ]
-  let roman = ''
-  let i = 3
-  while (i--) {
-    roman = (key[+digits.pop() + (i * 10)] || '') + roman
-  }
-  return Array(+digits.join('') + 1).join('M') + roman
-}
-
 const coverTextAnchors = [
   { value: null, text: 'Aus' },
   { value: 'top', text: 'Top' },
@@ -182,10 +166,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
           }
           return (
             <Fragment>
-              <Label>{t('metaData/series/episodes/label', {
-                roman: romanize(i + 1),
-                count: i + 1
-              })}</Label>
+              <Label>{t('metaData/series/episodes/label')}</Label>
               {' '}&nbsp;{' '}
               <A href='#remove' onClick={(e) => {
                 e.preventDefault()

@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-18T22:08:51.558Z",
+  "updated": "2018-01-18T23:48:07.345Z",
   "title": "live",
   "data": [
     {
@@ -380,7 +380,7 @@
     },
     {
       "key": "metaData/series/episodes/label",
-      "value": "Episode {roman}"
+      "value": "Episode"
     },
     {
       "key": "metaData/series/episodes/add",
