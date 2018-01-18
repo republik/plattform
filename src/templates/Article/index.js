@@ -15,7 +15,8 @@ import {
   FigureCaption,
   FigureByline,
   FigureGroup,
-  FIGURE_SIZES
+  FIGURE_SIZES,
+  CoverTextTitleBlockHeadline
 } from '../../components/Figure'
 import {
   PullQuote,
@@ -326,15 +327,47 @@ const pullQuote = {
 
 export const COVER_TYPE = 'COVERFIGURE'
 
+const mdastToString = node => node
+  ? (
+    node.value ||
+    (node.children && node.children.map(mdastToString).join('')) ||
+    ''
+  )
+  : ''
+
 const cover = {
   matchMdast: (node, index) => (
     matchFigure(node) &&
     index === 0
   ),
   component: FigureCover,
-  props: node => ({
-    size: node.data.size
-  }),
+  props: (node, index, parent, { ancestors }) => {
+    let text
+    const rootNode = ancestors[ancestors.length - 1]
+    const meta = rootNode.meta
+    const headline = ((
+      rootNode.children.find(matchZone('TITLE')) || {}
+    ).children || []).find(matchHeading(1))
+
+    if (meta.coverText && headline) {
+      const Headline = (
+        rootNode.format && rootNode.format.meta && rootNode.format.meta.kind === 'meta'
+      )
+        ? Interaction.Headline
+        : Editorial.Headline
+      const element = <Headline>{mdastToString(headline)}</Headline>
+
+      text = {
+        element,
+        anchor: meta.coverText.anchor,
+        offset: meta.coverText.offset
+      }
+    }
+    return {
+      size: node.data.size,
+      text
+    }
+  },
   editorModule: 'figure',
   editorOptions: {
     type: COVER_TYPE,
@@ -477,18 +510,26 @@ const createSchema = ({
             rules: [
               {
                 matchMdast: matchHeading(1),
-                component: ({ children, attributes, format, meta }) => {
+                component: ({ children, attributes, format, coverText }) => {
                   const Headline = (
                     format && format.meta && format.meta.kind === 'meta'
                   )
                     ? Interaction.Headline
                     : Editorial.Headline
-                  return <Headline attributes={attributes}>{children}</Headline>
+
+                  const element = <Headline attributes={attributes}>{children}</Headline>
+
+                  if (coverText) {
+                    return <CoverTextTitleBlockHeadline>{element}</CoverTextTitleBlockHeadline>
+                  }
+
+                  return element
                 },
                 props: (node, index, parent, { ancestors }) => {
                   const rootNode = ancestors[ancestors.length - 1]
                   return {
-                    format: rootNode.format
+                    format: rootNode.format,
+                    coverText: rootNode.meta.coverText
                   }
                 },
                 editorModule: 'headline',

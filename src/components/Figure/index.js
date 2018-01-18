@@ -30,8 +30,27 @@ const styles = {
     }
   }),
   cover: css({
+    position: 'relative'
+  }),
+  coverSize: css({
     marginTop: 30,
     marginBottom: 20
+  }),
+  coverText: css({
+    position: 'absolute',
+    paddingLeft: 50,
+    paddingRight: 50,
+    textAlign: 'center',
+    display: 'none',
+    [mUp]: {
+      display: 'block'
+    }
+  }),
+  coverTextTitleBlockHeadline: css({
+    display: 'block',
+    [mUp]: {
+      display: 'none'
+    }
   }),
   col2: css({
     [mUp]: {
@@ -84,14 +103,39 @@ Figure.propTypes = {
   attributes: PropTypes.object
 }
 
-export const FigureCover = ({size, ...props}) => {
-  if (size) {
-    return <div {...styles.cover}>
-      <Figure size={size} {...props} />
-    </div>
+const textPosStyle = ({anchor, offset}) => {
+  if (anchor === 'middle') {
+    return {
+      position: 'absolute',
+      top: '50%',
+      transform: 'translate(-, -50%)',
+      marginTop: offset
+    }
   }
-  // edge to edge
-  return <Figure {...props} />
+  if (anchor === 'top') {
+    return {
+      position: 'absolute',
+      top: offset
+    }
+  }
+  if (anchor === 'bottom') {
+    return {
+      position: 'absolute',
+      bottom: offset
+    }
+  }
+}
+
+export const CoverTextTitleBlockHeadline = ({children, attributes}) =>
+  <div {...attributes} {...styles.coverTextTitleBlockHeadline}>{children}</div>
+
+export const FigureCover = ({size, text, ...props}) => {
+  return <div {...styles.cover} {...(size ? styles.coverSize : {})}>
+    <Figure size={size} {...props} />
+    {text && <div style={textPosStyle(text)} {...styles.coverText}>
+      {text.element}
+    </div>}
+  </div>
 }
 
 export const FigureGroup = ({ children, attributes, columns, size, data }) => {
