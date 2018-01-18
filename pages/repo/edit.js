@@ -328,8 +328,13 @@ class EditorPage extends Component {
     let localEditorState
     if (localState) {
       try {
-        localEditorState = Value.fromJSON(localState)
-        debug('loadState', 'using local document', localEditorState)
+        if (typeof localState.kind !== 'undefined') {
+          localEditorState = Value.fromJSON(localState)
+          debug('loadState', 'using local slate document', localEditorState)
+        } else {
+          localEditorState = this.editor.serializer.deserialize(localState)
+          debug('loadState', 'using local mdast document', localEditorState)
+        }
       } catch (e) {
         console.error(e)
         this.warn(t('commit/warn/localParseError'))
@@ -360,7 +365,7 @@ class EditorPage extends Component {
     if (
       JSON.stringify(newEditorState.document.toJSON()) !== committedRawDocString
     ) {
-      this.store.set('editorState', newEditorState.toJSON())
+      this.store.set('editorState', this.editor.serializer.serialize(newEditorState))
       debug('loadState', 'documentChangeHandler', 'edited document', newEditorState)
       if (process.env.NODE_ENV !== 'production') {
         debug(
