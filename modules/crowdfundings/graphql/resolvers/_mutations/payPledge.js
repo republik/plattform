@@ -6,7 +6,7 @@ const payPledgePaypal = require('../../../lib/payments/paypal/payPledge')
 const payPledgePostfinance = require('../../../lib/payments/postfinance/payPledge')
 const payPledgeStripe = require('../../../lib/payments/stripe/payPledge')
 
-module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
+module.exports = async (_, args, {pgdb, req, t}) => {
   const transaction = await pgdb.transactionBegin()
   try {
     const { pledgePayment } = args
@@ -145,20 +145,13 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
     // commit transaction
     await transaction.transactionCommit()
 
-    try {
-      // if the user is signed in, send mail immediately
-      if (req.user) {
+    if (req.user) {
+      try {
+        // if the user is signed in, send mail immediately
         await sendPendingPledgeConfirmations(pledge.userId, pgdb, t)
+      } catch (e) {
+        console.warn('error in payPledge after transactionCommit', e)
       }
-
-      enforceSubscriptions({
-        pgdb,
-        userId: user.id,
-        hasJustPaid: true,
-        isNew: !user.verified
-      })
-    } catch (e) {
-      console.warn('error in payPledge after transactionCommit', e)
     }
 
     return {

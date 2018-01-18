@@ -1,6 +1,7 @@
 const moment = require('moment')
 const { getPledgeOptionsTree } = require('./Pledge')
 const debug = require('debug')('crowdfundings:memberships')
+const { enforceSubscriptions } = require('./Mail')
 
 module.exports = async (pledgeId, pgdb, t, logger = console) => {
   const pledge = await pgdb.public.pledges.findOne({id: pledgeId})
@@ -91,5 +92,16 @@ module.exports = async (pledgeId, pgdb, t, logger = console) => {
       createdAt: now,
       updatedAt: now
     })
+
+    try {
+      await enforceSubscriptions({
+        pgdb,
+        userId: user.id,
+        isNew: !user.verified,
+        subscribeToEditorialNewsletters: true
+      })
+    } catch (e) {
+      console.error('enforceSubscriptions failed in generateMemberships', e)
+    }
   }
 }

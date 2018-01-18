@@ -15,7 +15,13 @@ const mail = createMail([
   { name: 'PROJECTR', interestId: MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR, roles: [] }
 ])
 
-mail.enforceSubscriptions = async ({ userId, hasJustPaid, isNew, pgdb, ...rest }) => {
+mail.enforceSubscriptions = async ({
+  userId,
+  subscribeToEditorialNewsletters,
+  isNew,
+  pgdb,
+  ...rest
+}) => {
   const user = await pgdb.public.users.findOne({id: userId})
   if (!user) {
     logger.error('user not found in enforceSubscriptions', { userId })
@@ -28,8 +34,6 @@ mail.enforceSubscriptions = async ({ userId, hasJustPaid, isNew, pgdb, ...rest }
   })
 
   const hasPledge = (!!pledges && pledges.length > 0)
-
-  const hasJustPaidFirstPledge = !!hasJustPaid && hasPledge && pledges.length === 1
 
   const hasMembership = !!(await pgdb.public.memberships.findFirst({
     userId: user.id,
@@ -57,7 +61,7 @@ mail.enforceSubscriptions = async ({ userId, hasJustPaid, isNew, pgdb, ...rest }
     interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] = true
   }
 
-  if (hasJustPaidFirstPledge || !hasMembership) {
+  if (subscribeToEditorialNewsletters || !hasMembership) {
     // Autosubscribe all newsletters when new user just paid the membersh.
     // Or revoke paid newsletters when membership is inactive
     interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = hasMembership
