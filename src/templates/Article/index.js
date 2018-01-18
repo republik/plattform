@@ -6,6 +6,7 @@ import TitleBlock from '../../components/TitleBlock'
 import * as Editorial from '../../components/Typography/Editorial'
 import * as Interaction from '../../components/Typography/Interaction'
 import { TeaserFeed } from '../../components/TeaserFeed'
+import IllustrationHtml from '../../components/IllustrationHtml'
 
 import {
   Figure,
@@ -667,7 +668,36 @@ const createSchema = ({
               pullQuote,
               paragraph,
               centerFigure,
-              teasers.articleCollection
+              teasers.articleCollection,
+              {
+                matchMdast: matchZone('HTML'),
+                component: IllustrationHtml,
+                props: node => {
+                  const code = node.children.find(c => c.type === 'code')
+                  const deepNodes = node.children.reduce(
+                    (children, child) => children
+                      .concat(child)
+                      .concat(child.children),
+                    []
+                  )
+                  const images = deepNodes.filter(matchImage).map(image => ({
+                    ref: image.alt,
+                    url: image.url
+                  }))
+                  return {
+                    code: code && code.value,
+                    images
+                  }
+                },
+                editorModule: 'html',
+                editorOptions: {
+                  insertTypes: [
+                    'PARAGRAPH'
+                  ],
+                  insertButtonText: 'HTML Illustration'
+                },
+                isVoid: true
+              }
             ]
           },
           cover,
