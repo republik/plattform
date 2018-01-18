@@ -10,6 +10,7 @@ import SlugField from '../../utils/SlugField'
 import FBPreview from './FBPreview'
 import TwitterPreview from './TwitterPreview'
 import RepoSelect from './RepoSelect'
+import SeriesForm from './SeriesForm'
 import UIForm from '../../UIForm'
 
 const styles = {
@@ -26,7 +27,7 @@ const styles = {
 
 const getWidth = key => key.match(/title|feed|emailSubject/i) ? '100%' : ''
 
-const MetaData = ({value, editor, additionalFields = [], customFields = [], teaser: Teaser, t}) => {
+const MetaData = ({value, editor, series, additionalFields = [], customFields = [], teaser: Teaser, t}) => {
   const node = value.document
 
   const genericKeys = Set([
@@ -141,6 +142,7 @@ const MetaData = ({value, editor, additionalFields = [], customFields = [], teas
               onChange={onChange} />
           })}
         </UIForm>
+        {!!series && <SeriesForm editor={editor} node={node} />}
         {!!Teaser && (<div>
           <Label>{t('metaData/preview')}</Label><br />
           <Teaser {...node.data.toJS()} />

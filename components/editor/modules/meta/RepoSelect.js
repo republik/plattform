@@ -24,7 +24,8 @@ export default ({ label, value, onChange }) => {
             .replace('https://github.com/', '')
             .replace(`${GITHUB_ORG}/`, '')}
           {' '}
-          <A href='#remove' onClick={() => {
+          <A href='#remove' onClick={(e) => {
+            e.preventDefault()
             onRefChange(null)
           }}>x</A>
         </Interaction.P>
