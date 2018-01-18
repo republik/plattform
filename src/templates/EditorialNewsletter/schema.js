@@ -293,6 +293,7 @@ const createNewsletterSchema = ({
             ]
           },
           {
+            matchMdast: () => false,
             editorModule: 'specialchars'
           }
         ]

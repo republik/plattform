@@ -592,6 +592,7 @@ const createSchema = ({
             ]
           },
           {
+            matchMdast: () => false,
             editorModule: 'specialchars'
           }
         ]

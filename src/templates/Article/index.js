@@ -673,6 +673,7 @@ const createSchema = ({
           cover,
           figure,
           {
+            matchMdast: () => false,
             editorModule: 'specialchars'
           }
         ]
