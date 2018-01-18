@@ -87,6 +87,15 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
         mdast.meta[key] = unprefixUrl(mdast.meta[key])
       }
     })
+
+    const series = mdast.meta.series
+    if (series && Array.isArray(series.episodes)) {
+      series.episodes.forEach(episode => {
+        if (episode.image) {
+          episode.image = unprefixUrl(episode.image)
+        }
+      })
+    }
   }
   // embeds
   visit(mdast, 'zone', node => {
@@ -113,6 +122,17 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
         mdast.meta[key] = await extractImage(mdast.meta[key], images)
       }
     }))
+
+    const series = mdast.meta.series
+    if (series && Array.isArray(series.episodes)) {
+      series.episodes.forEach(episode => {
+        if (episode.image) {
+          promises.push((async () => {
+            episode.image = await extractImage(episode.image, images)
+          })())
+        }
+      })
+    }
   }
   await Promise.all(promises)
 
