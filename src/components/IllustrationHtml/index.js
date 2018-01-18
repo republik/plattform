@@ -43,12 +43,12 @@ class IllustrationHtml extends Component {
 
     let resolvedCode = code
     images.forEach(image => {
-      let before
+      let index = 0
       do {
-        before = resolvedCode
         resolvedCode = resolvedCode.replace(image.ref, image.url)
+        index = resolvedCode.indexOf(image.ref, index + 1)
       }
-      while (resolvedCode != before)
+      while (index !== -1)
     })
     return <div
       ref={this.setRef}

@@ -38,6 +38,7 @@ import {
   matchZone,
   matchHeading,
   matchParagraph,
+  matchImage,
   matchImageParagraph
 } from 'mdast-react-render/lib/utils'
 import {
@@ -679,7 +680,7 @@ const createSchema = ({
                       .concat(child)
                       .concat(child.children),
                     []
-                  )
+                  ).filter(Boolean)
                   const images = deepNodes.filter(matchImage).map(image => ({
                     ref: image.alt,
                     url: image.url
