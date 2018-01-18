@@ -1,14 +1,6 @@
-const fetch = require('isomorphic-unfetch')
 const checkEnv = require('check-env')
-
-// usage
-// sendMail({
-//  to: 'p@tte.io',
-//  fromEmail: 'jefferson@project-r.construction',
-//  fromName: 'Jefferson',
-//  subject: 'dear friend',
-//  text: 'asdf asdf'
-// })
+const MandrillInterface = require('../MandrillInterface')
+const logger = console
 
 checkEnv([
   'DEFAULT_MAIL_FROM_ADDRESS',
@@ -22,7 +14,15 @@ const {
   SEND_MAILS
 } = process.env
 
-module.exports = (mail) => {
+// usage
+// sendMail({
+//  to: 'p@tte.io',
+//  fromEmail: 'jefferson@project-r.construction',
+//  fromName: 'Jefferson',
+//  subject: 'dear friend',
+//  text: 'asdf asdf'
+// })
+module.exports = async (mail) => {
   // sanitize
   mail.to = [{email: mail.to}]
   mail.from_email = mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS
@@ -34,18 +34,10 @@ module.exports = (mail) => {
   // don't send mails if SEND_MAILS is false
   const DEV = NODE_ENV && NODE_ENV !== 'production'
   if (SEND_MAILS === 'false' || (DEV && SEND_MAILS !== 'true')) {
-    console.log('\n\nSEND_MAIL prevented mail from being sent\n(SEND_MAIL == false or NODE_ENV != production and SEND_MAIL != true):\n', mail)
+    logger.log('\n\nSEND_MAIL prevented mail from being sent\n(SEND_MAIL == false or NODE_ENV != production and SEND_MAIL != true):\n', mail)
     return true
   }
 
-  return fetch('https://mandrillapp.com/api/1.0/messages/send.json', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      key: process.env.MANDRILL_API_KEY,
-      message: mail
-    })
-  })
+  const mandrill = MandrillInterface({ logger })
+  return mandrill.send(mail)
 }
