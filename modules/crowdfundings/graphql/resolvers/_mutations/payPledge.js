@@ -1,14 +1,12 @@
 const logger = console
 const sendPendingPledgeConfirmations = require('../../../lib/sendPendingPledgeConfirmations')
 const generateMemberships = require('../../../lib/generateMemberships')
-
 const payPledgePaymentslip = require('../../../lib/payments/paymentslip/payPledge')
 const payPledgePaypal = require('../../../lib/payments/paypal/payPledge')
 const payPledgePostfinance = require('../../../lib/payments/postfinance/payPledge')
 const payPledgeStripe = require('../../../lib/payments/stripe/payPledge')
-const { updateUserOnMailchimp } = require('@orbiting/backend-modules-mail')
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
   const transaction = await pgdb.transactionBegin()
   try {
     const { pledgePayment } = args
@@ -153,9 +151,9 @@ module.exports = async (_, args, {pgdb, req, t}) => {
         await sendPendingPledgeConfirmations(pledge.userId, pgdb, t)
       }
 
-      updateUserOnMailchimp({
-        userId: user.id,
+      enforceSubscriptions({
         pgdb,
+        userId: user.id,
         hasJustPaid: true,
         isNew: !user.verified
       })

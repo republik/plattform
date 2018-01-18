@@ -1,4 +1,3 @@
-const { sendMail } = require('@orbiting/backend-modules-mail')
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const { graphql: { resolvers: { queries: { document: getDocument } } } } = require('@orbiting/backend-modules-documents')
 const { graphql: { resolvers: { Document: DocResolver } } } = require('@orbiting/backend-modules-documents')
@@ -16,7 +15,7 @@ const {
 const minIntervalHours = 12
 
 module.exports = async (_, args, context) => {
-  const { user: me, req, t, pgdb } = context
+  const { user: me, req, t, pgdb, mail: { sendMail } } = context
   ensureSignedIn(req)
 
   const now = moment()

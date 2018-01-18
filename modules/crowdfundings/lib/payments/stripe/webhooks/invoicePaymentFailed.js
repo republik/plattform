@@ -1,4 +1,4 @@
-const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
+const { sendMailTemplate } = require('../../../Mail')
 const moment = require('moment')
 const _ = {
   get: require('lodash/get')

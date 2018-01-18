@@ -1,12 +1,11 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { updateUserOnMailchimp } = require('@orbiting/backend-modules-mail')
 const logger = console
 const {minTotal, regularTotal} = require('../../../lib/Pledge')
 const generateMemberships = require('../../../lib/generateMemberships')
 const sendPaymentSuccessful = require('../../../lib/payments/sendPaymentSuccessful')
 const { publishMonitor } = require('../../../../../lib/slack')
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
   Roles.ensureUserHasRole(req.user, 'supporter')
   const { pledgeId, reason } = args
   const now = new Date()
@@ -94,10 +93,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
 
     await transaction.transactionCommit()
 
-    updateUserOnMailchimp({
-      userId: pledge.userId,
-      pgdb
-    })
+    enforceSubscriptions({ pgdb, userId: pledge.userId })
 
     await publishMonitor(
       req.user,

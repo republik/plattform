@@ -2,9 +2,8 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const getSubscription = require('../../../lib/payments/stripe/getSubscription')
 const createSubscription = require('../../../lib/payments/stripe/createSubscription')
 const reactivateSubscription = require('../../../lib/payments/stripe/reactivateSubscription')
-const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate}}) => {
   const transaction = await pgdb.transactionBegin()
   try {
     const {

@@ -1,8 +1,7 @@
 const logger = console
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
-const { updateUserOnMailchimp } = require('@orbiting/backend-modules-mail')
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
   ensureSignedIn(req)
 
   // if this restriction gets removed, make sure to check if
@@ -36,14 +35,13 @@ module.exports = async (_, args, {pgdb, req, t}) => {
   }
 
   if (giverId) {
-    updateUserOnMailchimp({
-      userId: giverId,
-      pgdb
-    })
-    updateUserOnMailchimp({
-      userId: req.user.id,
-      pgdb
-    })
+    try {
+      await enforceSubscriptions({ pgdb, userId: giverId })
+      await enforceSubscriptions({ pgdb, userId: req.user.id })
+    } catch (e) {
+      // ignore issues with newsletter subscriptions
+      logger.error('newsletter subscription changes failed', { req: req._log(), args, error: e })
+    }
   }
 
   return true

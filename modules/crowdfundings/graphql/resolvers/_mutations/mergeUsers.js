@@ -1,6 +1,5 @@
 const logger = console
 const {ascending} = require('d3-array')
-const { updateUserOnMailchimp, unsubscribeFromMailchimp } = require('@orbiting/backend-modules-mail')
 const { Roles } = require('@orbiting/backend-modules-auth')
 const uniq = require('lodash/uniq')
 const { transformUser } = require('@orbiting/backend-modules-auth')
@@ -10,7 +9,7 @@ const { Redirections: {
 const { publishMonitor } = require('../../../../../lib/slack')
 
 module.exports = async (_, args, context) => {
-  const {pgdb, req, t} = context
+  const {pgdb, req, t, mail: { unsubscribeEmail, enforceSubscriptions }} = context
   Roles.ensureUserHasRole(req.user, 'admin')
 
   const {targetUserId, sourceUserId} = args
@@ -137,19 +136,13 @@ module.exports = async (_, args, context) => {
 
     // remove old user
     await transaction.public.users.deleteOne({id: sourceUser.id})
-
     await transaction.transactionCommit()
 
     try {
-      unsubscribeFromMailchimp({
-        email: sourceUser.email
-      })
-      updateUserOnMailchimp({
-        userId: targetUserId,
-        pgdb
-      })
+      await unsubscribeEmail({ email: sourceUser.email })
+      await enforceSubscriptions({ pgdb, userId: targetUserId })
     } catch (_e) {
-      logger.error('updateMailchimp failed in mergeUsers!', _e)
+      logger.error('newsletter subscription changes failed in mergeUsers!', _e)
     }
 
     await publishMonitor(

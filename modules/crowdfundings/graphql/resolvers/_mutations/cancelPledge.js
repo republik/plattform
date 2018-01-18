@@ -1,7 +1,7 @@
 const logger = console
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { updateUserOnMailchimp } = require('@orbiting/backend-modules-mail')
 const cancelMembership = require('./cancelMembership')
+
 const moment = require('moment')
 const checkEnv = require('check-env')
 const { publishMonitor } = require('../../../../../lib/slack')
@@ -16,7 +16,7 @@ const {
   PARKING_USER_ID
 } = process.env
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, {pgdb, req, t, mail: { enforceSubscriptions }}) => {
   Roles.ensureUserHasRole(req.user, 'supporter')
   const { pledgeId } = args
   const now = new Date()
@@ -109,10 +109,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
 
     await transaction.transactionCommit()
 
-    updateUserOnMailchimp({
-      userId: pledge.userId,
-      pgdb
-    })
+    enforceSubscriptions({ pgdb, userId: pledge.userId })
 
     await publishMonitor(
       req.user,
