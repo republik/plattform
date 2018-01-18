@@ -355,7 +355,11 @@ const cover = {
       )
         ? Interaction.Headline
         : Editorial.Headline
-      const element = <Headline style={{color: meta.coverText.color}}>
+      const element = <Headline style={{
+        color: meta.coverText.color,
+        fontSize: meta.coverText.fontSize,
+        lineHeight: meta.coverText.lineHeight || 1.03
+      }}>
         {mdastToString(headline)}
       </Headline>
 

@@ -38,10 +38,8 @@ const styles = {
   }),
   coverText: css({
     position: 'absolute',
-    left: 0,
-    right: 0,
-    paddingLeft: 50,
-    paddingRight: 50,
+    left: '5%',
+    right: '5%',
     textAlign: 'center',
     display: 'none',
     [mUp]: {
