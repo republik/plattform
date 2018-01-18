@@ -1,7 +1,8 @@
 const { ensureSignedIn, Roles } = require('@orbiting/backend-modules-auth')
 
-module.exports = async (_, args, { user: me, t, mail: { updateNewsletterSubscription, errors }, ...context }) => {
-  const { req, user } = context
+module.exports = async (_, args, context) => {
+  const { req, user, user: me, t, mail } = context
+  const { updateNewsletterSubscription, errors } = mail
   ensureSignedIn(req)
   const { name, subscribed, status } = args
   Roles.ensureUserIsMeOrInRoles(user, me, ['supporter, admin'])
