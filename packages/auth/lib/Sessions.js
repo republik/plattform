@@ -109,11 +109,15 @@ const authorizeSession = async ({ pgdb, token, emailFromQuery, signInHooks = [] 
   })
 
   // call signIn hooks
-  await Promise.all(
-    signInHooks.map(hook =>
-      hook(user.id, !existingUser, pgdb)
+  try {
+    await Promise.all(
+      signInHooks.map(hook =>
+        hook(user.id, !existingUser, pgdb)
+      )
     )
-  )
+  } catch (e) {
+    console.warn(`sign in hook failed in authorizeSession`, e)
+  }
 
   return user
 }
