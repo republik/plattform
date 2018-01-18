@@ -1,10 +1,10 @@
 const handlers = require('export-files')(__dirname)
 const { withConfiguration } = require('../NewsletterSubscription')
-const Errors = require('../errors')
+const errors = require('../errors')
 
 module.exports = {
   createMail: (interestConfiguration) => {
-    if (!interestConfiguration) throw new Errors.SubscriptionConfigurationMissingMailError()
+    if (!interestConfiguration) throw new errors.SubscriptionConfigurationMissingMailError()
     return Object
       .keys(handlers)
       .reduce((result, handlerName) => {
@@ -12,6 +12,6 @@ module.exports = {
           ...result,
           [handlerName]: withConfiguration(interestConfiguration, handlers[handlerName])
         }
-      }, { ...Errors })
+      }, { ...errors })
   }
 }
