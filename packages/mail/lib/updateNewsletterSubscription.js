@@ -7,7 +7,7 @@ const {
 const logger = console
 
 module.exports = async ({
-  user, name, subscribed, status
+  user, name, subscribed
 }, NewsletterSubscription) => {
   if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
 
@@ -23,20 +23,21 @@ module.exports = async ({
   }
 
   const body = {
+    email_address: email,
+    status_if_new: MailchimpInterface.MemberStatus.Subscribed,
     interests: {
       [interestId]: !!subscribed
     }
   }
 
-  // If a user subscribes to a newsletter but their status is not subscribed,
-  // we need to set their status to 'pending' which triggers a new confirmation email
-  // from mailchimp to re-subscribe.
-  if (subscribed && status !== MailchimpInterface.MemberStatus.Subscribed) {
-    body.email_address = email
+  const mailchimp = MailchimpInterface({ logger })
+  const member = await mailchimp.getMember(email)
+  if (member && member.status !== MailchimpInterface.MemberStatus.Subscribed) {
+    // If a user subscribes to a newsletter but their status is not subscribed,
+    // we need to set their status to 'pending' which triggers a new confirmation email
+    // from mailchimp to re-subscribe.
     body.status = MailchimpInterface.MemberStatus.Pending
   }
-
-  const mailchimp = MailchimpInterface({ logger })
   await mailchimp.updateMember(email, body)
   return NewsletterSubscription.buildSubscription(user.id, interestId, subscribed, roles)
 }

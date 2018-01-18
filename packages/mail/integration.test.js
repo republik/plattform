@@ -9,7 +9,7 @@ const prepare = () => createMail([
 ])
 
 const user = (role) => ({
-  email: 'test2@test.project-r.construction',
+  email: 'test8@test.project-r.construction',
   roles: role ? [role] : []
 })
 
@@ -27,25 +27,8 @@ test('get some member data with configuring mail first', async (t) => {
 test('member user settings which does not exist on mailchimp', async (t) => {
   const { getNewsletterSettings } = prepare()
   const member = await getNewsletterSettings({ user: user('member') })
-  t.ok(member.status)
+  t.equal(member.status, '')
   t.equal(member.subscriptions.length, 3)
-  t.end()
-})
-
-test('change interest settings of user which is not subscribed', async (t) => {
-  const { updateNewsletterSubscription, getNewsletterSettings } = prepare()
-  const settings = await updateNewsletterSubscription({
-    user: user('member'),
-    name: 'DAILY',
-    subscribed: true,
-    status: ''
-  })
-  t.equal(settings.subscribed, true)
-  t.equal(settings.isEligible, true)
-  t.equal(settings.name, 'DAILY')
-
-  const member = await getNewsletterSettings({ user: user('member') })
-  t.equal(member.status, 'pending')
   const subscribedSubscriptions = member.subscriptions
     .filter(({ subscribed }) => subscribed)
   t.equal(subscribedSubscriptions.length, 0)
@@ -58,8 +41,7 @@ test('illegible role for interest', async (t) => {
     await updateNewsletterSubscription({
       user: user(),
       name: 'DAILY',
-      subscribed: true,
-      status: 'subscribed'
+      subscribed: true
     })
     t.fail()
   } catch (e) {
@@ -69,7 +51,26 @@ test('illegible role for interest', async (t) => {
   t.end()
 })
 
-test('subscribe email to 1 of 3 interests', async (t) => {
+test('single-subscription: change interest settings of user which is not subscribed', async (t) => {
+  const { updateNewsletterSubscription, getNewsletterSettings } = prepare()
+  const settings = await updateNewsletterSubscription({
+    user: user('member'),
+    name: 'DAILY',
+    subscribed: true
+  })
+  t.equal(settings.subscribed, true)
+  t.equal(settings.isEligible, true)
+  t.equal(settings.name, 'DAILY')
+
+  const member = await getNewsletterSettings({ user: user('member') })
+  t.equal(member.status, 'subscribed')
+  const subscribedSubscriptions = member.subscriptions
+    .filter(({ subscribed }) => subscribed)
+  t.equal(subscribedSubscriptions.length, 1)
+  t.end()
+})
+
+test('multi-subscription: subscribe email to 1 more interest', async (t) => {
   const { updateNewsletterSubscriptions, getNewsletterSettings } = prepare()
   const interests = {}
   interests[process.env.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] = true
@@ -78,14 +79,40 @@ test('subscribe email to 1 of 3 interests', async (t) => {
     interests
   })
   const member = await getNewsletterSettings({ user: user() })
-  t.equal(member.status, 'pending') // ?!?! why?!
+  t.equal(member.status, 'subscribed')
   const subscribedSubscriptions = member.subscriptions
     .filter(({ subscribed }) => subscribed)
-  t.equal(subscribedSubscriptions.length, 0) // ?!?! why?!
+  t.equal(subscribedSubscriptions.length, 2) // 2 because we set daily before
   t.end()
 })
 
-test('change interest setting of 1 interest', async (t) => {
+test('single-subscribe: unsubscribe from 1 interest', async (t) => {
+  const { updateNewsletterSubscription, getNewsletterSettings } = prepare()
+  const settings = await updateNewsletterSubscription({
+    user: user(),
+    name: 'PROJECTR',
+    subscribed: false
+  })
+  t.equal(settings.subscribed, false)
+  t.equal(settings.isEligible, true)
+  t.equal(settings.name, 'PROJECTR')
+
+  const member = await getNewsletterSettings({ user: user() })
+  t.equal(member.status, 'subscribed')
+  const subscribedSubscriptions = member.subscriptions
+    .filter(({ subscribed }) => subscribed)
+  t.equal(subscribedSubscriptions.length, 1)
+  t.end()
+})
+
+test('unsubscripe from mailchimp completely (opt-out)', async (t) => {
+  const { unsubscribeEmail } = prepare()
+  const member = await unsubscribeEmail(user())
+  t.equal(member.status, 'unsubscribed')
+  t.end()
+})
+
+test('resubscribe after unsubscription', async (t) => {
   const { updateNewsletterSubscription, getNewsletterSettings } = prepare()
   const settings = await updateNewsletterSubscription({
     user: user(),
@@ -97,18 +124,9 @@ test('change interest setting of 1 interest', async (t) => {
   t.equal(settings.name, 'PROJECTR')
 
   const member = await getNewsletterSettings({ user: user() })
-  t.equal(member.status, 'pending') // ?!?! why?!
+  t.equal(member.status, 'pending')
   const subscribedSubscriptions = member.subscriptions
     .filter(({ subscribed }) => subscribed)
-  t.equal(subscribedSubscriptions.length, 0) // ?!?! why?!
-  t.end()
-})
-
-test('unsubscripe from mailchimp completely (opt-out)', async (t) => {
-  const { unsubscribeEmail } = prepare()
-  const member = await unsubscribeEmail({
-    email: 'test@test.project-r.construction'
-  })
-  t.notEqual(member.status, 'subscribed')
+  t.equal(subscribedSubscriptions.length, 0)
   t.end()
 })
