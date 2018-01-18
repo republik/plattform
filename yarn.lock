@@ -13,11 +13,11 @@
     file-type "^7.4.0"
     sharp "^0.18.4"
 
-"@orbiting/backend-modules-auth@^3.0.6":
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-3.0.6.tgz#32874e1306abd6353bdbccf21142adb91e9750b3"
+"@orbiting/backend-modules-auth@^3.0.7":
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-auth/-/backend-modules-auth-3.0.7.tgz#9d184ae3d0459cc9657871345dc72f163916fb5a"
   dependencies:
-    "@orbiting/backend-modules-mail" "^1.0.0"
+    "@orbiting/backend-modules-mail" "^2.0.0"
     "@orbiting/backend-modules-translate" "^0.0.0"
     apollo-modules-node "^0.1.4"
     check-env "^1.3.0"
@@ -38,11 +38,11 @@
     useragent "^2.2.1"
     uuid "^3.1.0"
 
-"@orbiting/backend-modules-base@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-1.1.2.tgz#952ee908f61bb011c3ab490af0be09592e9e035e"
+"@orbiting/backend-modules-base@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-1.1.3.tgz#1a06a34ad11edb5aa2b84eb2d40544689ce1d251"
   dependencies:
-    "@orbiting/backend-modules-auth" "^3.0.6"
+    "@orbiting/backend-modules-auth" "^3.0.7"
     apollo-engine "^0.8.1"
     apollo-modules-node "^0.1.4"
     apollo-server-express "^1.3.2"
@@ -61,11 +61,11 @@
     redis "^2.8.0"
     subscriptions-transport-ws "^0.9.4"
 
-"@orbiting/backend-modules-documents@^2.9.2":
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.9.2.tgz#fd86f61e9d9ddfac889e69c16d66056d52a65b63"
+"@orbiting/backend-modules-documents@^2.9.3":
+  version "2.9.3"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.9.3.tgz#ebc5401ac86e42e65d68e27d033a1c5f4980076c"
   dependencies:
-    "@orbiting/backend-modules-auth" "^3.0.6"
+    "@orbiting/backend-modules-auth" "^3.0.7"
     "@project-r/styleguide" "^5.37.1"
     "@project-r/template-newsletter" "^1.5.0"
     apollo-modules-node "^0.1.4"
@@ -100,9 +100,9 @@
     github "^13.1.0"
     jsonwebtoken "^8.1.0"
 
-"@orbiting/backend-modules-mail@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-mail/-/backend-modules-mail-1.0.0.tgz#556c7ffca1a88160e248ee6455dcd659bb6c1bf9"
+"@orbiting/backend-modules-mail@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-mail/-/backend-modules-mail-2.0.0.tgz#3b1ff5abfeb2344224a32e8244f1f06301445f37"
   dependencies:
     await-sleep "^0.0.1"
     check-env "^1.3.0"
