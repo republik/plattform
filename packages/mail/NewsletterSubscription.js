@@ -1,6 +1,6 @@
 const intersect = (arr1, arr2) => [...new Set(arr1)].filter(num => new Set(arr2).has(num))
 
-class NewsletterSubscription {
+const createNewsletterSubscription = (interestConfigurationMap) => class NewsletterSubscription {
   constructor (userId, interestId, subscribed, roles) {
     const interstConfiguration = this.constructor.interestConfiguration(interestId)
     this.name = interstConfiguration.name
@@ -9,16 +9,12 @@ class NewsletterSubscription {
     this.isEligible = this.constructor.isEligibleForInterestId(interestId, roles)
   }
 
-  static configure (config) {
-    this.interestConfigurationMap = config
-  }
-
   static allInterestConfigurations () {
-    return this.interestConfigurationMap || []
+    return interestConfigurationMap || []
   }
 
   static interestIdByName (name) {
-    return this.interestConfigurationMap
+    return interestConfigurationMap
       .reduce((oldResult, { name: currentName, interestId }) => {
         if (currentName === name) return interestId
         return oldResult
@@ -26,7 +22,7 @@ class NewsletterSubscription {
   }
 
   static interestConfiguration (interestId) {
-    return this.interestConfigurationMap
+    return interestConfigurationMap
       .filter(({ interestId: currentInterestId }) => currentInterestId === interestId)
       .reduce((last, interest) => interest, {})
   }
@@ -43,4 +39,13 @@ class NewsletterSubscription {
   }
 }
 
-module.exports = NewsletterSubscription
+/* fn is of signature: (data, NewsletterSubscription) => any */
+const withConfiguration = (interestConfiguration, fn) => {
+  const NewsletterSubscription = createNewsletterSubscription(interestConfiguration)
+  return (data) => fn(data, NewsletterSubscription)
+}
+
+module.exports = {
+  withConfiguration,
+  createNewsletterSubscription
+}

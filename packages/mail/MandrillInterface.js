@@ -1,6 +1,6 @@
 const fetch = require('isomorphic-unfetch')
 const checkEnv = require('check-env')
-const { NewsletterMemberMailError } = require('./lib/errors')
+const { NewsletterMemberMailError } = require('./errors')
 
 const {
   MANDRILL_API_KEY

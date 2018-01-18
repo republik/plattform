@@ -1,7 +1,7 @@
 const fetch = require('isomorphic-unfetch')
 const checkEnv = require('check-env')
 const crypto = require('crypto')
-const { NewsletterMemberMailError } = require('./lib/errors')
+const { NewsletterMemberMailError } = require('./errors')
 
 const {
   MAILCHIMP_API_KEY,
@@ -14,6 +14,8 @@ checkEnv([
   'MAILCHIMP_URL',
   'MAILCHIMP_MAIN_LIST_ID'
 ])
+
+const MINIMUM_HTTP_RESPONSE_STATUS_ERROR = 400
 
 class MailchimpInterface {
   constructor ({ logger } = {}) {
@@ -55,7 +57,7 @@ class MailchimpInterface {
     try {
       const response = await this.fetchAuthenticated('GET', url)
       const json = await response.json()
-      if (response.status >= 400) {
+      if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
         this.logger.error(`mailchimp -> could not get member: ${email} ${json.detail}`)
         return null
       }
@@ -72,7 +74,7 @@ class MailchimpInterface {
       const request = { body: JSON.stringify(data) }
       const response = await this.fetchAuthenticated('PUT', url, request)
       const json = await response.json()
-      if (response.status >= 400) {
+      if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
         this.logger.error(`mailchimp -> could not update member: ${email} ${json.detail}`)
         return null
       }
@@ -82,6 +84,12 @@ class MailchimpInterface {
       throw new NewsletterMemberMailError({ error, email })
     }
   }
+}
+
+MailchimpInterface.MemberStatus = {
+  'Subscribed': 'subscribed',
+  'Pending': 'pending',
+  'Unsubscribed': 'unsubscribed'
 }
 
 module.exports = MailchimpInterface

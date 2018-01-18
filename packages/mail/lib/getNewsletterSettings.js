@@ -1,9 +1,12 @@
-const NewsletterSubscription = require('../NewsletterSubscription')
 const MailchimpInterface = require('../MailchimpInterface')
+const { SubscriptionHandlerMissingMailError } = require('../errors')
 const logger = console
 
-module.exports = async (user) => {
+module.exports = async ({
+  user
+}, NewsletterSubscription) => {
   const { email, roles } = user
+  if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
 
   const supportedInterestIds = NewsletterSubscription
     .allInterestConfigurations()
@@ -34,7 +37,7 @@ module.exports = async (user) => {
       subscriptions.push(new NewsletterSubscription(
         user.id,
         interestId,
-        status === 'subscribed' ? member.interests[interestId] : false,
+        status === MailchimpInterface.MemberStatus.Subscribed ? member.interests[interestId] : false,
         roles
       ))
     }

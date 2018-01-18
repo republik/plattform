@@ -1,5 +1,5 @@
 const MailchimpInterface = require('../MailchimpInterface')
-const { EmailRequiredMailError } = require('./errors')
+const { EmailRequiredMailError } = require('../errors')
 const logger = console
 
 module.exports = async ({
@@ -12,6 +12,6 @@ module.exports = async ({
   const mailchimp = new MailchimpInterface({ logger })
   return mailchimp.updateMember(email, {
     email_address: email,
-    status: 'unsubscribed'
+    status: MailchimpInterface.MemberStatus.Unsubscribed
   })
 }

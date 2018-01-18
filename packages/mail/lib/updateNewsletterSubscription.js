@@ -1,10 +1,16 @@
 const MailchimpInterface = require('../MailchimpInterface')
-const NewsletterSubscription = require('../NewsletterSubscription')
-const { InterestIdNotFoundMailError, RolesNotEligibleMailError } = require('./errors')
-
+const {
+  InterestIdNotFoundMailError,
+  RolesNotEligibleMailError,
+  SubscriptionHandlerMissingMailError
+ } = require('../errors')
 const logger = console
 
-module.exports = async ({ user, name, subscribed, status }) => {
+module.exports = async ({
+  user, name, subscribed, status
+}, NewsletterSubscription) => {
+  if (!NewsletterSubscription) throw new SubscriptionHandlerMissingMailError()
+
   const { roles, email } = user
   const interestId = NewsletterSubscription.interestIdByName(name)
 
@@ -25,9 +31,9 @@ module.exports = async ({ user, name, subscribed, status }) => {
   // If a user subscribes to a newsletter but their status is not subscribed,
   // we need to set their status to 'pending' which triggers a new confirmation email
   // from mailchimp to re-subscribe.
-  if (subscribed && status !== 'subscribed') {
+  if (subscribed && status !== MailchimpInterface.MemberStatus.Subscribed) {
     body.email_address = email
-    body.status = 'pending'
+    body.status = MailchimpInterface.MemberStatus.Pending
   }
 
   const mailchimp = new MailchimpInterface({ logger })

@@ -1,6 +1,6 @@
 require('dotenv').config({ path: '../../.test.env' })
 const test = require('tape-async')
-const NewsletterSubscription = require('./NewsletterSubscription')
+const { createNewsletterSubscription } = require('./NewsletterSubscription')
 
 const INTEREST_ID_MEMBER_RESTRICTED = 'daily_interest_id'
 const INTEREST_ID_PUBLIC = 'public_interest_id'
@@ -10,12 +10,8 @@ const interestConfiguration = [
   { name: 'PUBLIC', interestId: INTEREST_ID_PUBLIC, roles: [] }
 ]
 
-const prepare = () => {
-  NewsletterSubscription.configure(interestConfiguration)
-}
-
-test('NewsletterSubscription -> constructor', async (t) => {
-  prepare()
+test('NewsletterSubscription -> correct flags', async (t) => {
+  const NewsletterSubscription = createNewsletterSubscription(interestConfiguration)
   const sub1 = new NewsletterSubscription('user_x', INTEREST_ID_MEMBER_RESTRICTED, true, ['member'])
   t.deepEqual({
     name: sub1.name,
@@ -53,13 +49,13 @@ test('NewsletterSubscription -> constructor', async (t) => {
 })
 
 test('NewsletterSubscription -> all interests', async (t) => {
-  prepare()
+  const NewsletterSubscription = createNewsletterSubscription(interestConfiguration)
   t.deepEqual(NewsletterSubscription.allInterestConfigurations(), interestConfiguration)
   t.end()
 })
 
 test('NewsletterSubscription -> single interest', async (t) => {
-  prepare()
+  const NewsletterSubscription = createNewsletterSubscription(interestConfiguration)
   const interestId = NewsletterSubscription.interestIdByName('PUBLIC')
   t.deepEqual(interestId, interestConfiguration[1].interestId)
   const interest = NewsletterSubscription.interestConfiguration(interestId)
@@ -68,7 +64,7 @@ test('NewsletterSubscription -> single interest', async (t) => {
 })
 
 test('NewsletterSubscription -> single interest', async (t) => {
-  prepare()
+  const NewsletterSubscription = createNewsletterSubscription(interestConfiguration)
   const interestIdPublic = NewsletterSubscription.interestIdByName('PUBLIC')
   const interestIdMember = NewsletterSubscription.interestIdByName('MEMBER')
 
