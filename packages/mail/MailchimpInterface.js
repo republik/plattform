@@ -75,6 +75,20 @@ const MailchimpInterface = ({ logger }) => ({
       logger.error(`mailchimp -> exception: ${error.message}`)
       throw new NewsletterMemberMailError({ error, email })
     }
+  },
+  async deleteMember (email) {
+    const url = this.buildMembersApiUrl(email)
+    try {
+      const response = await this.fetchAuthenticated('DELETE', url)
+      if (response.status >= MINIMUM_HTTP_RESPONSE_STATUS_ERROR) {
+        logger.error(`mailchimp -> could not delete member: ${email}`)
+        return null
+      }
+      return true
+    } catch (error) {
+      logger.error(`mailchimp -> exception: ${error.message}`)
+      throw new NewsletterMemberMailError({ error, email })
+    }
   }
 })
 
