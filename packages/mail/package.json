@@ -1,6 +1,6 @@
 {
   "name": "@orbiting/backend-modules-mail",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "simple mails with mandrill, manage subscriptions on mailchimp",
   "main": "index.js",
   "repository": {
@@ -19,7 +19,6 @@
   "scripts": {
     "link": "yarn link",
     "test": "NODE_ENV=development tape \"**/*.test.js\""
-
   },
   "devDependencies": {
     "isomorphic-unfetch": "^2.0.0",
