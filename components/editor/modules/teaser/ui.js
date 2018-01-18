@@ -25,6 +25,9 @@ import createOnFieldChange from '../../utils/createOnFieldChange'
 import RepoSearch from '../../utils/RepoSearch'
 
 const textPositions = [
+  { value: 'top', text: 'Top' },
+  { value: 'middle', text: 'Middle' },
+  { value: 'bottom', text: 'Bottom' },
   { value: 'topleft', text: 'Top Left' },
   { value: 'topright', text: 'Top Right' },
   { value: 'bottomleft', text: 'Bottom Left' },
