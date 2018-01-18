@@ -17,9 +17,7 @@
   },
   "homepage": "https://github.com/orbiting/backend-modules#readme",
   "scripts": {
-    "link": "yarn link",
-    "test": "NODE_ENV=development tape \"**/*.test.js\""
-
+    "link": "yarn link"
   },
   "devDependencies": {
     "isomorphic-unfetch": "^2.0.0",
