@@ -9,8 +9,11 @@ const prepare = () => createMail([
   { name: 'PROJECTR', interestId: process.env.MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR, roles: [] }
 ])
 
+// the mail address needs to stay the same while doing all the tests
+const randomString = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+
 const user = (role) => ({
-  email: 'test8@test.project-r.construction',
+  email: `${randomString}@test.project-r.construction`,
   roles: role ? [role] : []
 })
 
