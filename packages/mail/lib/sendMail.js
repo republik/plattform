@@ -38,6 +38,6 @@ module.exports = async (mail) => {
     return true
   }
 
-  const mandrill = new MandrillInterface({ logger })
+  const mandrill = MandrillInterface({ logger })
   return mandrill.send(mail)
 }

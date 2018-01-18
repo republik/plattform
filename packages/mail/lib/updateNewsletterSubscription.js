@@ -36,7 +36,7 @@ module.exports = async ({
     body.status = MailchimpInterface.MemberStatus.Pending
   }
 
-  const mailchimp = new MailchimpInterface({ logger })
+  const mailchimp = MailchimpInterface({ logger })
   await mailchimp.updateMember(email, body)
-  return new NewsletterSubscription(user.id, interestId, subscribed, roles)
+  return NewsletterSubscription.buildSubscription(user.id, interestId, subscribed, roles)
 }

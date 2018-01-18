@@ -55,6 +55,6 @@ module.exports = async (mail) => {
     }
   }
 
-  const mandrill = new MandrillInterface({ logger })
+  const mandrill = MandrillInterface({ logger })
   return mandrill.send(message, mail.templateName, [])
 }

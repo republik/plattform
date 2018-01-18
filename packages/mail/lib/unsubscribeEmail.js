@@ -9,7 +9,7 @@ module.exports = async ({
     throw new EmailRequiredMailError()
   }
 
-  const mailchimp = new MailchimpInterface({ logger })
+  const mailchimp = MailchimpInterface({ logger })
   return mailchimp.updateMember(email, {
     email_address: email,
     status: MailchimpInterface.MemberStatus.Unsubscribed

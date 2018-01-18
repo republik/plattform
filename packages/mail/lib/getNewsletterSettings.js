@@ -12,7 +12,7 @@ module.exports = async ({
     .allInterestConfigurations()
     .map(({ interestId }) => interestId)
 
-  const mailchimp = new MailchimpInterface({ logger })
+  const mailchimp = MailchimpInterface({ logger })
   const member = await mailchimp.getMember(email)
 
   if (!member) {
@@ -20,7 +20,7 @@ module.exports = async ({
     // return all possible interests / subscriptions
     const status = ''
     const subscriptions = supportedInterestIds
-      .map((interestId) => new NewsletterSubscription(
+      .map((interestId) => NewsletterSubscription.buildSubscription(
         user.id,
         interestId,
         false,
@@ -34,7 +34,7 @@ module.exports = async ({
   supportedInterestIds.forEach(interestId => {
     // only return already configured interests / subscriptions
     if (interestId in member.interests) {
-      subscriptions.push(new NewsletterSubscription(
+      subscriptions.push(NewsletterSubscription.buildSubscription(
         user.id,
         interestId,
         status === MailchimpInterface.MemberStatus.Subscribed ? member.interests[interestId] : false,

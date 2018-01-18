@@ -12,7 +12,7 @@ const interestConfiguration = [
 
 test('NewsletterSubscription -> correct flags', async (t) => {
   const NewsletterSubscription = createNewsletterSubscription(interestConfiguration)
-  const sub1 = new NewsletterSubscription('user_x', INTEREST_ID_MEMBER_RESTRICTED, true, ['member'])
+  const sub1 = NewsletterSubscription.buildSubscription('user_x', INTEREST_ID_MEMBER_RESTRICTED, true, ['member'])
   t.deepEqual({
     name: sub1.name,
     subscribed: sub1.subscribed,
@@ -23,7 +23,7 @@ test('NewsletterSubscription -> correct flags', async (t) => {
     isEligible: true
   })
 
-  const sub2 = new NewsletterSubscription('user_x', INTEREST_ID_MEMBER_RESTRICTED, true, [])
+  const sub2 = NewsletterSubscription.buildSubscription('user_x', INTEREST_ID_MEMBER_RESTRICTED, true, [])
   t.deepEqual({
     name: sub2.name,
     subscribed: sub2.subscribed,
@@ -34,7 +34,7 @@ test('NewsletterSubscription -> correct flags', async (t) => {
     isEligible: false
   })
 
-  const sub3 = new NewsletterSubscription('user_x', INTEREST_ID_PUBLIC, false, [])
+  const sub3 = NewsletterSubscription.buildSubscription('user_x', INTEREST_ID_PUBLIC, false, [])
   t.deepEqual({
     name: sub3.name,
     subscribed: sub3.subscribed,

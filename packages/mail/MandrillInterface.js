@@ -10,15 +10,10 @@ checkEnv([
   'MANDRILL_API_KEY'
 ])
 
-class MandrillInterface {
-  constructor ({ logger } = {}) {
-    this.logger = logger || console
-  }
-
+const MandrillInterface = ({ logger }) => ({
   buildApiUrl (path) {
     return `https://mandrillapp.com/api/1.0${path}`
-  }
-
+  },
   async fetchAuthenticated (method, url, request = {}) {
     return fetch(url, {
       method,
@@ -30,8 +25,7 @@ class MandrillInterface {
         ...request
       })
     })
-  }
-
+  },
   async send (message, templateName, templateContent) {
     const url = this.buildApiUrl(
       templateName
@@ -47,10 +41,10 @@ class MandrillInterface {
       const json = await response.json()
       return json
     } catch (error) {
-      this.logger.error(`mandrill -> exception: ${error.message}`)
+      logger.error(`mandrill -> exception: ${error.message}`)
       throw new NewsletterMemberMailError({ error, message })
     }
   }
-}
+})
 
 module.exports = MandrillInterface

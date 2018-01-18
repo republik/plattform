@@ -11,7 +11,7 @@ module.exports = async ({
 
   const { email, roles } = user
 
-  const mailchimp = new MailchimpInterface({ logger })
+  const mailchimp = MailchimpInterface({ logger })
   await mailchimp.updateMember(email, {
     email_address: email,
     status: MailchimpInterface.MemberStatus.Subscribed,
@@ -19,5 +19,5 @@ module.exports = async ({
   })
 
   return Object.keys(interests)
-    .map(interestId => new NewsletterSubscription(user.id, interestId, interests[interestId], roles))
+    .map(interestId => NewsletterSubscription.buildSubscription(user.id, interestId, interests[interestId], roles))
 }
