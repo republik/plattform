@@ -159,7 +159,26 @@ const metaUrlResolver = (meta, allDocuments = [], usernames = [], errors, urlPre
 
 const metaFieldResolver = (meta, allDocuments = [], errors) => {
   const resolver = createResolver(allDocuments, errors)
+
+  // object if this document is a series «master» itself
+  let series = meta.series
+  // string, aka github url if this document belongs to a series
+  if (typeof series === 'string') {
+    const seriesDocument = resolver(meta.series)
+    series = seriesDocument && seriesDocument.meta.series
+  }
+  if (series) {
+    series = {
+      ...series,
+      episodes: (series.episodes || []).map(episode => ({
+        ...episode,
+        document: resolver(episode.document)
+      }))
+    }
+  }
+
   return {
+    series,
     dossier: resolver(meta.dossier),
     format: resolver(meta.format),
     discussion: resolver(meta.discussion)
