@@ -40,7 +40,7 @@ export default ({rule, subModules, TYPE}) => {
           .concat(child)
           .concat(child.children),
         []
-      )
+      ).filter(Boolean)
       const images = deepNodes.filter(matchImage).map(image => ({
         ref: image.alt,
         url: image.url
