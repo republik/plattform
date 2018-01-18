@@ -165,7 +165,7 @@ const metaFieldResolver = (meta, allDocuments = [], errors) => {
   // string, aka github url if this document belongs to a series
   if (typeof series === 'string') {
     const seriesDocument = resolver(meta.series)
-    series = seriesDocument && seriesDocument.meta && seriesDocument.meta.series
+    series = seriesDocument && seriesDocument.content.meta.series
   }
   if (series) {
     series = {
