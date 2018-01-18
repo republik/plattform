@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-14T07:34:42.364Z",
+  "updated": "2018-01-18T03:07:01.645Z",
   "title": "live",
   "data": [
     {
@@ -353,6 +353,38 @@
     {
       "key": "metaData/field/figureFloat",
       "value": "Für Text optimieren (Desktop Float)"
+    },
+    {
+      "key": "metaData/series/label",
+      "value": "Serie"
+    },
+    {
+      "key": "metaData/series/negative",
+      "value": "Keine"
+    },
+    {
+      "key": "metaData/series/master",
+      "value": "Master"
+    },
+    {
+      "key": "metaData/series/episode",
+      "value": "Episode"
+    },
+    {
+      "key": "metaData/series/episodes/label",
+      "value": "Episode {roman}"
+    },
+    {
+      "key": "metaData/series/episodes/add",
+      "value": "Episode hinzufügen"
+    },
+    {
+      "key": "metaData/series/episodes/rm",
+      "value": "entfernen"
+    },
+    {
+      "key": "metaData/series/episodes/document",
+      "value": "Dokument"
     },
     {
       "key": "uncommittedChanges/title",
