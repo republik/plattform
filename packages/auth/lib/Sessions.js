@@ -112,7 +112,11 @@ const authorizeSession = async ({ pgdb, token, emailFromQuery, signInHooks = [] 
   try {
     await Promise.all(
       signInHooks.map(hook =>
-        hook(user.id, !existingUser, pgdb)
+        hook(
+          user.id,
+          (!existingUser || !existingUser.verified),
+          pgdb
+        )
       )
     )
   } catch (e) {
