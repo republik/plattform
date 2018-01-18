@@ -33,6 +33,7 @@ import createSpecialCharsModule from './modules/specialchars'
 import createTitleModule from './modules/title'
 import createInfoBoxModule from './modules/infobox'
 import createQuoteModule from './modules/quote'
+import createHtmlModule from './modules/html'
 
 const moduleCreators = {
   embedVideo: createEmbedVideoModule,
@@ -60,7 +61,8 @@ const moduleCreators = {
   quote: createQuoteModule,
   front: createFrontModule,
   teaser: createTeaserModule,
-  teasergroup: createTeaserGroupModule
+  teasergroup: createTeaserGroupModule,
+  html: createHtmlModule
 }
 export const initModule = rule => {
   const { editorModule, editorOptions = {} } = rule
