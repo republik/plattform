@@ -10,6 +10,8 @@ type Series {
 
 type Episode {
   title: String
+  label: String
+  image: String
   publishDate: DateTime
   document: Document
 }
