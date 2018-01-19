@@ -90,16 +90,15 @@ module.exports = {
       if (key.match(/image/i)) {
         mdast.meta[key] = prefixRepoUrl(mdast.meta[key])
       }
-
-      const series = mdast.meta.series
-      if (series && Array.isArray(series.episodes)) {
-        series.episodes.forEach(episode => {
-          if (episode.image) {
-            episode.image = prefixRepoUrl(episode.image)
-          }
-        })
-      }
     })
+    const series = mdast.meta.series
+    if (series && Array.isArray(series.episodes)) {
+      series.episodes.forEach(episode => {
+        if (episode.image) {
+          episode.image = prefixRepoUrl(episode.image)
+        }
+      })
+    }
 
     // prefix embed image's urls
     const prefixUrl = createUrlPrefixer(publicAssets)
