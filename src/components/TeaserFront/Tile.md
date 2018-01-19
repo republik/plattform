@@ -101,3 +101,41 @@ Supported props:
   </TeaserFrontTile>
 </TeaserFrontTileRow>
 ```
+
+```react
+<TeaserFrontTileRow columns={2} alignItems='top'>
+  <TeaserFrontTile image='/static/rothaus_landscape.jpg'
+    color='#000' bgColor='#fff'>
+    <TeaserFrontTileHeadline.Editorial>Short headline</TeaserFrontTileHeadline.Editorial>
+    <TeaserFrontCredit>
+      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+  <TeaserFrontTile image='/static/rothaus_landscape.jpg'
+    color='#000' bgColor='#fff'>
+    <TeaserFrontTileHeadline.Editorial>An article which deserves top-alignment</TeaserFrontTileHeadline.Editorial>
+    <TeaserFrontCredit>
+      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+</TeaserFrontTileRow>
+```
+
+```react
+<TeaserFrontTileRow columns={2} alignItems='bottom'>
+  <TeaserFrontTile image='/static/rothaus_landscape.jpg'
+    color='#000' bgColor='#fff'>
+    <TeaserFrontTileHeadline.Editorial>Short headline</TeaserFrontTileHeadline.Editorial>
+    <TeaserFrontCredit>
+      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+  <TeaserFrontTile image='/static/rothaus_landscape.jpg'
+    color='#000' bgColor='#fff'>
+    <TeaserFrontTileHeadline.Editorial>An article which deserves bottom-alignment</TeaserFrontTileHeadline.Editorial>
+    <TeaserFrontCredit>
+      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+</TeaserFrontTileRow>
+```
