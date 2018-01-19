@@ -86,7 +86,7 @@ module.exports = (
   })
 
   server.use('/graphql',
-    bodyParser.json({limit: '64mb'}),
+    bodyParser.json({limit: '128mb'}),
     graphqlMiddleware
   )
   server.use('/graphiql', graphiqlExpress({
