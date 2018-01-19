@@ -139,8 +139,10 @@ TeaserFrontTileRow.defaultProps = {
   columns: 1
 }
 
-const Tile = ({ children, attributes, image, alt, onClick, color, bgColor }) => {
+const Tile = ({ children, attributes, image, alt, onClick, color, bgColor, align }) => {
   const background = bgColor || ''
+  const justifyContent =
+    align === 'top' ? 'flex-start' : align === 'bottom' ? 'flex-end' : ''
   return (
     <div
       {...attributes}
@@ -148,7 +150,8 @@ const Tile = ({ children, attributes, image, alt, onClick, color, bgColor }) => 
       onClick={onClick}
       style={{
         background,
-        cursor: onClick ? 'pointer' : 'default'
+        cursor: onClick ? 'pointer' : 'default',
+        justifyContent
       }}
       className='tile'
     >
@@ -172,7 +175,12 @@ Tile.propTypes = {
   image: PropTypes.string,
   alt: PropTypes.string,
   color: PropTypes.string,
-  bgColor: PropTypes.string
+  bgColor: PropTypes.string,
+  align: PropTypes.oneOf([
+    'top',
+    'middle',
+    'bottom'
+  ])
 }
 
 Tile.defaultProps = {

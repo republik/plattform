@@ -102,6 +102,8 @@ Supported props:
 </TeaserFrontTileRow>
 ```
 
+### Aligning items globally on the row
+
 ```react
 <TeaserFrontTileRow columns={2} alignItems='top'>
   <TeaserFrontTile image='/static/rothaus_landscape.jpg'
@@ -124,6 +126,28 @@ Supported props:
 ```react
 <TeaserFrontTileRow columns={2} alignItems='bottom'>
   <TeaserFrontTile image='/static/rothaus_landscape.jpg'
+    color='#000' bgColor='#fff'>
+    <TeaserFrontTileHeadline.Editorial>Short headline</TeaserFrontTileHeadline.Editorial>
+    <TeaserFrontCredit>
+      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+  <TeaserFrontTile image='/static/rothaus_landscape.jpg'
+    color='#000' bgColor='#fff'>
+    <TeaserFrontTileHeadline.Editorial>An article which deserves bottom-alignment</TeaserFrontTileHeadline.Editorial>
+    <TeaserFrontCredit>
+      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+</TeaserFrontTileRow>
+```
+
+### Aligning items individually
+
+```react
+<TeaserFrontTileRow columns={2}>
+  <TeaserFrontTile image='/static/rothaus_landscape.jpg'
+    align='bottom'
     color='#000' bgColor='#fff'>
     <TeaserFrontTileHeadline.Editorial>Short headline</TeaserFrontTileHeadline.Editorial>
     <TeaserFrontCredit>
