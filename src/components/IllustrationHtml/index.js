@@ -1,5 +1,20 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { css } from 'glamor'
+
+const styles = {
+  ai2html: css({
+    '& [data-min-width]': {
+      display: 'none'
+    },
+    '& [data-min-width]:last-child': {
+      display: 'block'
+    }
+  })
+}
+
+const escapeRegExp = string =>
+  string.replace(/[-[\]/{}()*+?.\\^$|]/g, "\\$&")
 
 class IllustrationHtml extends Component {
   constructor (...args) {
@@ -43,14 +58,13 @@ class IllustrationHtml extends Component {
 
     let resolvedCode = code
     images.forEach(image => {
-      let index = 0
-      do {
-        resolvedCode = resolvedCode.replace(image.ref, image.url)
-        index = resolvedCode.indexOf(image.ref, index + 1)
-      }
-      while (index !== -1)
+      resolvedCode = resolvedCode.replace(
+        new RegExp(escapeRegExp(image.ref), 'g'),
+        image.url
+      )
     })
     return <div
+      {...styles.ai2html}
       ref={this.setRef}
       dangerouslySetInnerHTML={{
         __html: resolvedCode

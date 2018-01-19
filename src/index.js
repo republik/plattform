@@ -316,6 +316,14 @@ ReactDOM.render(
             },
             src: require('./components/Dossier/docs.md')
           },
+          {
+            path: '/illustration-html',
+            title: 'IllustrationHtml',
+            imports: {
+              IllustrationHtml: require('./components/IllustrationHtml')
+            },
+            src: require('./components/IllustrationHtml/docs.md')
+          }
         ]
       },
       {
