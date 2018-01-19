@@ -13,12 +13,12 @@ const { Redirections: {
 } } = require('@orbiting/backend-modules-redirections')
 
 const convertImage = require('../../../lib/convertImage')
-const uploadExoscale = require('../../../lib/uploadExoscale')
+const upload = require('../../../lib/uploadS3')
 const ensureStringLength = require('../../../lib/ensureStringLength')
 
 const {
   ASSETS_BASE_URL,
-  S3BUCKET
+  AWS_S3_BUCKET
 } = process.env
 
 const MAX_STATEMENT_LENGTH = 140
@@ -128,7 +128,7 @@ module.exports = async (_, args, context) => {
     const inputBuffer = Buffer.from(portrait, 'base64')
 
     const portaitBasePath = [
-      `/${PORTRAIT_FOLDER}/`,
+      `${PORTRAIT_FOLDER}/`,
       // always a new path—cache busters!
       crypto.createHash('md5').update(portrait).digest('hex')
     ].join('')
@@ -139,29 +139,29 @@ module.exports = async (_, args, context) => {
     await Promise.all([
       convertImage.toJPEG(inputBuffer)
         .then((data) => {
-          return uploadExoscale({
+          return upload({
             stream: data,
             path: `${portaitBasePath}${IMAGE_ORIGINAL_SUFFIX}`,
             mimeType: 'image/jpeg',
-            bucket: S3BUCKET
+            bucket: AWS_S3_BUCKET
           })
         }),
       convertImage.toSmallBW(inputBuffer)
         .then((data) => {
-          return uploadExoscale({
+          return upload({
             stream: data,
             path: `${portaitBasePath}${IMAGE_SMALL_SUFFIX}`,
             mimeType: 'image/jpeg',
-            bucket: S3BUCKET
+            bucket: AWS_S3_BUCKET
           })
         }),
       convertImage.toShare(inputBuffer)
         .then((data) => {
-          return uploadExoscale({
+          return upload({
             stream: data,
             path: `${portaitBasePath}${IMAGE_SHARE_SUFFIX}`,
             mimeType: 'image/jpeg',
-            bucket: S3BUCKET
+            bucket: AWS_S3_BUCKET
           })
         })
     ])
