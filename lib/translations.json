@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-20T19:29:46.639Z",
+  "updated": "2018-01-20T21:09:32.921Z",
   "title": "live",
   "data": [
     {
@@ -349,6 +349,10 @@
     {
       "key": "metaData/field/href",
       "value": "URL"
+    },
+    {
+      "key": "metaData/field/href/document",
+      "value": "Verlinktes Dokument: "
     },
     {
       "key": "metaData/field/center",

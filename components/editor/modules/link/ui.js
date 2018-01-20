@@ -7,6 +7,7 @@ import LinkIcon from 'react-icons/lib/fa/chain'
 import UIForm from '../../UIForm'
 import createOnFieldChange from '../../utils/createOnFieldChange'
 import RepoSearch from '../../utils/RepoSearch'
+import { AutoSlugLinkInfo } from '../../utils/github'
 import withT from '../../../../lib/withT'
 
 import {
@@ -148,6 +149,9 @@ export default ({TYPE}) => {
                   value={node.data.get('href')}
                   onChange={onInputChange('href')}
                 />
+                <AutoSlugLinkInfo
+                  value={node.data.get('href')}
+                  label={t('metaData/field/href/document')} />
                 <Field
                   label={t(`metaData/field/title`, undefined, 'title')}
                   value={node.data.get('title')}

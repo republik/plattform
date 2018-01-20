@@ -3,10 +3,10 @@ import { css } from 'glamor'
 
 import CloseIcon from 'react-icons/lib/md/close'
 
-import { A, Label } from '@project-r/styleguide'
+import { A, Label, colors } from '@project-r/styleguide'
 
-import { GITHUB_ORG } from '../../../../lib/settings'
 import RepoSearch from '../../utils/RepoSearch'
+import { RepoLink } from '../../utils/github'
 
 const styles = {
   value: css({
@@ -45,9 +45,9 @@ export default ({ label, value, onChange }) => {
       <div {...styles.value}>
         <Label style={{color: '#000'}}>{label}</Label><br />
         <div {...styles.valueText}>
-          {String(value)
-            .replace('https://github.com/', '')
-            .replace(`${GITHUB_ORG}/`, '')}
+          <RepoLink value={value} invalid={info => (
+            <span style={{color: colors.error}}>{value}</span>
+          )} />
         </div>
         <A href='#remove' {...styles.x} onClick={(e) => {
           e.preventDefault()
