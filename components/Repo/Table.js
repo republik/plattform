@@ -348,7 +348,12 @@ class RepoList extends Component {
 
 const query = gql`
 query repos($after: String, $search: String) {
-  repos(first: 100, after: $after, search: $search) {
+  repos(
+    first: 100,
+    after: $after,
+    search: $search,
+    orderBy: {field: PUSHED_AT, direction: DESC}
+  ) {
     totalCount
     pageInfo {
       endCursor
