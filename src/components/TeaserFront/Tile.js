@@ -4,6 +4,8 @@ import { css } from 'glamor'
 import { mUp, tUp } from './mediaQueries'
 import Text from './Text'
 
+import { FigureImage } from '../Figure'
+
 const IMAGE_SIZE = {
   small: 220,
   medium: 300,
@@ -143,6 +145,12 @@ const Tile = ({ children, attributes, image, alt, onClick, color, bgColor, align
   const background = bgColor || ''
   const justifyContent =
     align === 'top' ? 'flex-start' : align === 'bottom' ? 'flex-end' : ''
+  const imageProps = image && FigureImage.utils.getResizedSrcs(
+    image,
+    IMAGE_SIZE.large,
+    false
+  )
+
   return (
     <div
       {...attributes}
@@ -155,9 +163,9 @@ const Tile = ({ children, attributes, image, alt, onClick, color, bgColor, align
       }}
       className='tile'
     >
-      {image && (
+      {imageProps && (
         <div {...styles.imageContainer}>
-          <img src={image} alt={alt} {...styles.image} />
+          <img src={imageProps.src} srcSet={imageProps.srcSet} alt={alt} {...styles.image} />
         </div>
       )}
       <div {...styles.textContainer}>
