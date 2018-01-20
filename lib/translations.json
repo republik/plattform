@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-20T21:09:32.921Z",
+  "updated": "2018-01-20T21:28:17.001Z",
   "title": "live",
   "data": [
     {
@@ -616,7 +616,7 @@
     },
     {
       "key": "image/upload/excessiveSize",
-      "value": "Wollen Sie wirklich dieses {sizeInMb}mb grosses {format} hochladen? Für JPEG ist mehr als {jpegMb}mb kaum sinvoll. Bei andere Formate ist mehr als {restMb}mb nicht sinnvoll (können kaum komprimiert werden im Vergleich zu JPEG)."
+      "value": "Wollen Sie wirklich dieses {sizeInMb}mb grosses {format} hochladen? Für JPEG ist mehr als {jpegMb}mb kaum sinvoll. Bei anderen Formaten ist mehr als {restMb}mb nicht sinnvoll (können kaum komprimiert werden im Vergleich zu JPEG)."
     },
     {
       "key": "image/upload/notImage",
