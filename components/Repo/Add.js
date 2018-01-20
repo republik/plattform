@@ -61,23 +61,29 @@ class RepoAdd extends Component {
       template: ''
     }
   }
-  onSubmit (event) {
-    event.preventDefault()
-
-    const { title, template, error } = this.state
-    if (error || !title) {
-      this.handleTitle(title, true)
-      return
-    }
+  getSlug (title) {
+    const { template } = this.state
     const schema = schemas[template]
     const prefix = [
       REPO_PREFIX,
-      schema.repoPrefix
+      schema && schema.repoPrefix
     ].filter(Boolean).join('')
     const slug = [
       prefix,
       slugify(title)
     ].join('')
+
+    return slug
+  }
+  onSubmit (event) {
+    event.preventDefault()
+
+    const { title, template, error } = this.state
+    const slug = this.getSlug(title)
+    if (error || !title || slug.length > 100) {
+      this.handleTitle(title, true)
+      return
+    }
 
     Router.replaceRoute('repo/edit', {
       repoId: [GITHUB_ORG, slug],
@@ -91,11 +97,14 @@ class RepoAdd extends Component {
   handleTitle (value, shouldValidate) {
     const { t } = this.props
 
+    const slug = this.getSlug(value)
     this.setState({
+      slug,
       title: value,
       dirty: shouldValidate,
       error: (
-        value.trim().length <= 0 && t('repo/add/titleField/error')
+        (value.trim().length <= 0 && t('repo/add/titleField/error')) ||
+        (slug.length > 100 && t('repo/add/titleField/error/tooLong'))
       )
     })
   }
