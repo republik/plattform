@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-20T21:53:11.125Z",
+  "updated": "2018-01-20T22:12:01.520Z",
   "title": "live",
   "data": [
     {
@@ -69,6 +69,10 @@
     {
       "key": "repo/add/titleField/error/tooLong",
       "value": "Titel zu lange"
+    },
+    {
+      "key": "repo/add/alreadyExists",
+      "value": "Es gibt bereits ein Dokument mit diesem Titel. Beim Erstellen muss der Titel pro Vorlage einzigartig sein."
     },
     {
       "key": "repo/add/submit",
