@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-18T23:48:07.345Z",
+  "updated": "2018-01-20T22:12:01.520Z",
   "title": "live",
   "data": [
     {
@@ -65,6 +65,14 @@
     {
       "key": "repo/add/titleField/error",
       "value": "Titel fehlt"
+    },
+    {
+      "key": "repo/add/titleField/error/tooLong",
+      "value": "Titel zu lange"
+    },
+    {
+      "key": "repo/add/alreadyExists",
+      "value": "Es gibt bereits ein Dokument mit diesem Titel. Beim Erstellen muss der Titel pro Vorlage einzigartig sein."
     },
     {
       "key": "repo/add/submit",
@@ -351,6 +359,10 @@
       "value": "URL"
     },
     {
+      "key": "metaData/field/href/document",
+      "value": "Verlinktes Dokument: "
+    },
+    {
       "key": "metaData/field/center",
       "value": "Zentriert"
     },
@@ -609,6 +621,14 @@
     {
       "key": "styleguide/video/dnt/player/vimeo",
       "value": "Vimeo"
+    },
+    {
+      "key": "image/upload/excessiveSize",
+      "value": "Wollen Sie wirklich dieses {sizeInMb}mb grosses {format} hochladen? Für JPEG ist mehr als {jpegMb}mb kaum sinvoll. Bei anderen Formaten ist mehr als {restMb}mb nicht sinnvoll (können kaum komprimiert werden im Vergleich zu JPEG)."
+    },
+    {
+      "key": "image/upload/notImage",
+      "value": "Dies ist kein Bild."
     }
   ]
 }

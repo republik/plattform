@@ -556,14 +556,29 @@ export default compose(
     })
   }),
   graphql(getLatestCommit, {
-    skip: ({ url }) => url.query.commitId === 'new' || !!url.query.commitId,
+    skip: ({ url }) => !!url.query.commitId && url.query.commitId !== 'new',
     options: ({ url }) => ({
       // always the latest
       fetchPolicy: 'network-only',
       variables: {
         repoId: url.query.repoId
       }
-    })
+    }),
+    props: ({ data, ownProps: { url, t } }) => {
+      if (url.query.commitId === 'new') {
+        if (data.repo && data.repo.latestCommit) {
+          return {
+            data: {
+              error: t('repo/add/alreadyExists')
+            }
+          }
+        }
+        return {}
+      }
+      return {
+        data
+      }
+    }
   }),
   graphql(commitMutation, {
     props: ({ mutate, ownProps: { url } }) => ({

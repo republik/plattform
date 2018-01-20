@@ -23,6 +23,9 @@ import ImageInput from '../../utils/ImageInput'
 import ColorPicker from '../../utils/ColorPicker'
 import createOnFieldChange from '../../utils/createOnFieldChange'
 import RepoSearch from '../../utils/RepoSearch'
+import { AutoSlugLinkInfo } from '../../utils/github'
+
+import withT from '../../../../lib/withT'
 
 const textPositions = [
   { value: 'top', text: 'Top' },
@@ -172,18 +175,22 @@ export const TeaserButton = options => {
   }
 }
 
-const Form = ({ node, onChange, options }) => {
+const Form = withT(({ node, onChange, options, t }) => {
   return <UIForm>
     <Field
       label='URL'
       value={node.data.get('url')}
-      onChange={onChange('url')}
-  />
+      onChange={onChange('url')} />
+    <AutoSlugLinkInfo
+      value={node.data.get('url')}
+      label={t('metaData/field/href/document')} />
     <Field
       label='Format URL'
       value={node.data.get('formatUrl')}
-      onChange={onChange('formatUrl')}
-  />
+      onChange={onChange('formatUrl')} />
+    <AutoSlugLinkInfo
+      value={node.data.get('formatUrl')}
+      label={t('metaData/field/href/document')} />
     {
       options.includes('textPosition') &&
       <Dropdown
@@ -280,7 +287,7 @@ const Form = ({ node, onChange, options }) => {
       </Checkbox>
     }
   </UIForm>
-}
+})
 
 export const TeaserForm = options => {
   const { TYPE } = options
