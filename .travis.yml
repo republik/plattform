@@ -39,6 +39,5 @@ env:
     - DEFAULT_MAIL_FROM_ADDRESS='publikator@project-r.construction'
     - AUTH_MAIL_FROM_ADDRESS='publikator@project-r.construction'
     - FRONTEND_BASE_URL=http://localhost:6000
-    - INTERNAL_ASSETS_HOSTNAME=http://localhost:6000
-    - PUBLIC_ASSETS_HOSTNAME=http://localhost:6001
+    - ASSETS_SERVER_BASE_URL=http://localhost:6000
     - ASSETS_HMAC_KEY=travis
