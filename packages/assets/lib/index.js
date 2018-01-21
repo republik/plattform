@@ -4,18 +4,14 @@ const crypto = require('crypto')
 const checkEnv = require('check-env')
 
 checkEnv[
+  'ASSETS_SERVER_BASE_URL',
   'ASSETS_HMAC_KEY'
 ]
 
 const {
-  PUBLIC_ASSETS_HOSTNAME,
-  INTERNAL_ASSETS_HOSTNAME,
+  ASSETS_SERVER_BASE_URL,
   ASSETS_HMAC_KEY
 } = process.env
-
-if (!PUBLIC_ASSETS_HOSTNAME && !INTERNAL_ASSETS_HOSTNAME) {
-  throw new Error('You need to at least set either PUBLIC_ASSETS_HOSTNAME or INTERNAL_ASSETS_HOSTNAME')
-}
 
 const originalKey = 'originalURL'
 
@@ -34,10 +30,7 @@ module.exports = {
     }
     return path => {
       if (path && path.indexOf('images/') > -1) {
-        const hostname = public
-          ? PUBLIC_ASSETS_HOSTNAME
-          : INTERNAL_ASSETS_HOSTNAME
-        const url = new URL(`${hostname}/assets/images/${repoId}/${path}`)
+        const url = new URL(`${ASSETS_SERVER_BASE_URL}/assets/images/${repoId}/${path}`)
         if (!public) {
           url.hash = querystring.stringify({
             [originalKey]: path
@@ -50,10 +43,7 @@ module.exports = {
   },
 
   createUrlPrefixer: public => url => {
-    const hostname = public
-      ? PUBLIC_ASSETS_HOSTNAME
-      : INTERNAL_ASSETS_HOSTNAME
-    return `${hostname}/assets/images?` + querystring.stringify({
+    return `${ASSETS_SERVER_BASE_URL}/assets/images?` + querystring.stringify({
       [originalKey]: url,
       mac: authenticate(url)
     })
