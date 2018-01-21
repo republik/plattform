@@ -16,7 +16,7 @@ dedupe.activate()
 const {
   PORT,
   GITHUB_LOGIN,
-  INTERNAL_ASSETS_HOSTNAME,
+  ASSETS_SERVER_BASE_URL,
   PUBLIC_WS_URL_BASE,
   PUBLIC_WS_URL_PATH
 } = process.env
@@ -721,9 +721,8 @@ test('check image URLs and asset server', async (t) => {
   })
   t.equals(imageUrls.length, 1)
 
-  // check for INTERNAL_ASSETS_HOSTNAME
   for (let imageUrl of imageUrls) {
-    t.equals(imageUrl.indexOf(INTERNAL_ASSETS_HOSTNAME), 0)
+    t.equals(imageUrl.indexOf(ASSETS_SERVER_BASE_URL), 0, 'ASSETS_SERVER_BASE_URL prefix present')
   }
 
   // download images via asset server
