@@ -12,8 +12,7 @@ const { Redirections: {
   delete: deleteRedirection
 } } = require('@orbiting/backend-modules-redirections')
 
-const convertImage = require('../../../lib/convertImage')
-const upload = require('../../../lib/uploadS3')
+const { lib: { uploadS3: upload, convertImage } } = require('@orbiting/backend-modules-assets')
 const ensureStringLength = require('../../../lib/ensureStringLength')
 
 const {

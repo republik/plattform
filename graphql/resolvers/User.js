@@ -1,7 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { age } = require('../../lib/age')
 const { getKeyId } = require('../../lib/pgp')
-const { getImageUrl } = require('../../lib/convertImage')
+const { lib: { convertImage: { getImageUrl } } } = require('@orbiting/backend-modules-assets')
 
 const { isEligible } = require('../../lib/profile')
 
