@@ -5,9 +5,7 @@ const getWidthHeight = require('./getWidthHeight')
 module.exports = async (res, buffer, resize) => {
   let width, height
   try {
-    const dimensions = getWidthHeight(resize)
-    width = dimensions.width
-    height = dimensions.height
+    ({ width, height} = getWidthHeight(resize))
   } catch (e) {
     res.status(400).end(e.message)
   }

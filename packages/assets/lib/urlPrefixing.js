@@ -30,7 +30,7 @@ module.exports = {
     }
     return path => {
       if (path && path.indexOf('images/') > -1) {
-        const url = new URL(`${ASSETS_SERVER_BASE_URL}/assets/images/${repoId}/${path}`)
+        const url = new URL(`${ASSETS_SERVER_BASE_URL}/github/${repoId}/${path}`)
         if (!public) {
           url.hash = querystring.stringify({
             [originalKey]: path
@@ -43,7 +43,7 @@ module.exports = {
   },
 
   createUrlPrefixer: public => url => {
-    return `${ASSETS_SERVER_BASE_URL}/assets/images?` + querystring.stringify({
+    return `${ASSETS_SERVER_BASE_URL}/proxy?` + querystring.stringify({
       [originalKey]: url,
       mac: authenticate(url)
     })

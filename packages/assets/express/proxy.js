@@ -6,7 +6,7 @@ const {
 } = require('../lib')
 
 module.exports = (server) => {
-  server.get('/assets/images', async (req, res) => {
+  server.get('/proxy', async (req, res) => {
     const {
       originalURL: url,
       mac,
