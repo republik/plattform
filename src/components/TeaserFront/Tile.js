@@ -88,28 +88,13 @@ const styles = {
         ...sizeMedium
       }
     }
-  }),
-  alignItemsTop: css({
-    [mUp]: {
-      '& > .tile': {
-        justifyContent: 'flex-start'
-      }
-    }
-  }),
-  alignItemsBottom: css({
-    [mUp]: {
-      '& > .tile': {
-        justifyContent: 'flex-end'
-      }
-    }
   })
 }
 
 export const TeaserFrontTileRow = ({
   children,
   attributes,
-  columns,
-  alignItems
+  columns
 }) => {
   return (
     <div
@@ -117,9 +102,6 @@ export const TeaserFrontTileRow = ({
       {...attributes}
       {...styles.row}
       {...styles[`col${columns}`]}
-      {...(alignItems === 'top'
-        ? styles.alignItemsTop
-        : alignItems === 'bottom' ? styles.alignItemsBottom : {})}
     >
       {children}
     </div>
@@ -129,12 +111,7 @@ export const TeaserFrontTileRow = ({
 TeaserFrontTileRow.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
-  columns: PropTypes.oneOf([1, 2]).isRequired,
-  alignItems: PropTypes.oneOf([
-    'top',
-    'middle',
-    'bottom'
-  ])
+  columns: PropTypes.oneOf([1, 2]).isRequired
 }
 
 TeaserFrontTileRow.defaultProps = {
