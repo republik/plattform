@@ -23,15 +23,14 @@ module.exports = (server) => {
       return res.status(403).end()
     }
 
-    const buffer = await fetch(url, {
+    const result = await fetch(url, {
       method: 'GET'
     })
-      .then(response => response.buffer())
       .catch(error => {
         console.error('gettting image failed', { error })
-        res.status(404).end()
+        return res.status(404).end()
       })
 
-    return returnImage(res, buffer, resize)
+    return returnImage(res, result.body, resize)
   })
 }

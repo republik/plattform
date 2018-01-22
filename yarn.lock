@@ -1956,6 +1956,16 @@ file-entry-cache@^2.0.0:
     flat-cache "^1.2.1"
     object-assign "^4.0.1"
 
+file-type-stream@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/file-type-stream/-/file-type-stream-1.0.0.tgz#dd0a1edd1f5fe973623ed6fe16be19c8931b44c3"
+  dependencies:
+    file-type "^3.8.0"
+
+file-type@^3.8.0:
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/file-type/-/file-type-3.9.0.tgz#257a078384d1db8087bc449d107d52a52672b9e9"
+
 file-type@^7.4.0:
   version "7.4.0"
   resolved "https://registry.yarnpkg.com/file-type/-/file-type-7.4.0.tgz#2a7c94f62a0030150bb7d9b6c70cfa1d3e759c86"

@@ -43,11 +43,13 @@ module.exports = async (url, width, height) => {
     }
   }
 
-  return (await fetch(`https://PhantomJsCloud.com/api/browser/v2/${PHANTOMJSCLOUD_API_KEY}/`, {
+  const result = await fetch(`https://PhantomJsCloud.com/api/browser/v2/${PHANTOMJSCLOUD_API_KEY}/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(body)
-  })).buffer()
+  })
+
+  return result.body
 }

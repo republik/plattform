@@ -1,6 +1,7 @@
 const { lib: { clients: createGithubClients } } = require('@orbiting/backend-modules-github')
-const debug = require('debug')('assets:github')
+const { Readable } = require('stream')
 const { returnImage } = require('../lib')
+const debug = require('debug')('assets:github')
 
 module.exports = (server) => {
   // images out of repos
@@ -47,8 +48,11 @@ module.exports = (server) => {
     }
 
     const { data: { content } } = result
-    const buffer = Buffer.from(content, 'base64')
+    const stream = new Readable()
+    stream._read = function () {} // _read is required but you can noop it
+    stream.push(content, 'base64')
+    stream.push(null)
 
-    return returnImage(res, buffer, resize)
+    return returnImage(res, stream, resize)
   })
 }

@@ -1,8 +1,9 @@
 const sharp = require('sharp')
-const fileType = require('file-type')
 const getWidthHeight = require('./getWidthHeight')
+const fileTypeStream = require('file-type-stream').default
+const { PassThrough } = require('stream')
 
-module.exports = async (res, buffer, resize) => {
+module.exports = async (res, stream, resize) => {
   let width, height
   try {
     ({ width, height} = getWidthHeight(resize))
@@ -10,29 +11,31 @@ module.exports = async (res, buffer, resize) => {
     res.status(400).end(e.message)
   }
 
-  const type = fileType(buffer)
-  const isJPEG = type && type.ext === 'jpg'
+  const passThrough = new PassThrough()
 
-  const isGIF = type && type.ext === 'gif'
+  const { mime } = await new Promise(resolve => {
+    stream.pipe(fileTypeStream(resolve)).pipe(passThrough)
+  })
+  const isJPEG = mime === 'image/jpeg'
+  const isGIF = mime === 'image/gif'
 
   if (isGIF) {
-    return res.end(buffer)
+    return passThrough.pipe(res)
   }
 
   if (width || height || isJPEG) {
-    let image = sharp(buffer)
+    const pipeline = sharp()
     if (width || height) {
-      image = image.resize(width, height)
+      pipeline.resize(width, height)
     }
     if (isJPEG) {
-      image = image.jpeg({
+      pipeline.jpeg({
         progressive: true,
         quality: 80
       })
     }
-    return res.end(await image.toBuffer())
+    return passThrough.pipe(pipeline).pipe(res)
   }
 
-  return res.end(buffer)
+  return passThrough.pipe(res)
 }
-
