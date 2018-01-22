@@ -3,7 +3,8 @@ import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 import { breakoutStyles } from '../Center'
-import { FigureImage, FigureCaption } from '../Figure'
+import { FigureCaption } from '../Figure'
+import Image from './Image'
 import { Meta } from './Meta'
 import PlayIcon from '../VideoPlayer/Icons/Play'
 
@@ -25,12 +26,14 @@ const styles = {
     display: 'inline-block',
     lineHeight: 0,
     position: 'relative',
+    width: '100%',
     '::before': {
       position: 'absolute',
       background: 'rgba(0, 0, 0, .6)',
       content: ' ',
       height: '100%',
-      width: '100%'
+      width: '100%',
+      zIndex: 9
     }
   }),
   playIcon: css({
@@ -38,7 +41,8 @@ const styles = {
     lineHeight: 0,
     position: 'absolute',
     left: 'calc(50% - 13px)',
-    top: 'calc(50% - 18px)'
+    top: 'calc(50% - 18px)',
+    zIndex: 9
   }),
   playNote: css({
     position: 'absolute',
@@ -50,7 +54,8 @@ const styles = {
     maxWidth: 400,
     padding: 10,
     lineHeight: 1.2,
-    textAlign: 'center'
+    textAlign: 'center',
+    zIndex: 9
   }),
   embedContainer: css({
     position: 'relative',
@@ -139,7 +144,7 @@ class Video extends Component {
                   platform: t(`styleguide/video/dnt/player/${platform}`)
                 })}
               </span>
-              <FigureImage src={thumbnail} alt="" />
+              <Image src={thumbnail} alt="" aspectRatio={aspectRatio} />
             </a>
           )}
           {embedIframe && (
