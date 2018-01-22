@@ -219,7 +219,7 @@ const infoBox = {
   props: node => ({
     size: node.data.size,
     figureSize: node.children.find(
-      matchZone('FIGURE')
+      matchFigure
     )
       ? node.data.figureSize ||
         INFOBOX_DEFAULT_IMAGE_SIZE
@@ -285,7 +285,7 @@ const pullQuote = {
   props: node => ({
     size: node.data.size,
     hasFigure: !!node.children.find(
-      matchZone('FIGURE')
+      matchFigure
     )
   }),
   editorModule: 'quote',
@@ -298,7 +298,13 @@ const pullQuote = {
   rules: [
     figure,
     {
-      matchMdast: (node, index, parent) => matchParagraph(node) && index < 2,
+      matchMdast: (node, index, parent) =>
+        matchParagraph(node) &&
+        (
+          index === 0 ||
+          (index === 1 && matchFigure(parent.children[0])) ||
+          !matchLast(node, index, parent)
+        ),
       component: PullQuoteText,
       editorModule: 'paragraph',
       editorOptions: {
