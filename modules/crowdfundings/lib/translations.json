@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-14T03:42:28.223Z",
+  "updated": "2018-01-22T15:25:59.333Z",
   "title": "live",
   "data": [
     {
@@ -221,6 +221,10 @@
     {
       "key": "api/email/change/exists",
       "value": "Diese E-Mail-Adresse ist schon besetzt. Sie können nur E-Mail-Adressen eingeben, die in unserem System noch nicht verwendet werden."
+    },
+    {
+      "key": "api/email/invalid",
+      "value": "E-Mail ungültig"
     }
   ]
 }
