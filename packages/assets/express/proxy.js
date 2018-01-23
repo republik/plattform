@@ -10,19 +10,18 @@ module.exports = (server) => {
     const {
       originalURL: url,
       mac,
-      resize
     } = req.query
-    debug('external fetch %s', url)
 
     if (!url) {
       return res.status(404).end()
     }
 
-    if (!mac || mac !== authenticate(url)) {
-      console.warn('unauthorized asset url requested: ' + url)
-      return res.status(403).end()
-    }
+    //if (!mac || mac !== authenticate(url)) {
+    //  console.warn('unauthorized asset url requested: ' + url)
+    //  return res.status(403).end()
+    //}
 
+    debug('GET %s', url)
     const result = await fetch(url, {
       method: 'GET'
     })
@@ -31,6 +30,11 @@ module.exports = (server) => {
         return res.status(404).end()
       })
 
-    return returnImage(res, result.body, resize)
+    return returnImage({
+      response: res,
+      stream: result.body,
+      headers: result.headers.raw(),
+      options: req.query
+    })
   })
 }

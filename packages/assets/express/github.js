@@ -16,14 +16,12 @@ module.exports = (server) => {
   server.get('/github/:login/:repoName/:path(*)', async (req, res) => {
     const { githubRest } = await createGithubClients()
 
-    const { resize } = req.query
-
     const {
       login,
       repoName,
       path
     } = req.params
-    debug('github getBlob %s/%s/%s', login, repoName, path)
+    debug('getBlob %s/%s/%s', login, repoName, path)
 
     const blobSha = path
       .split('/')
@@ -47,12 +45,16 @@ module.exports = (server) => {
       return res.status(404).end()
     }
 
-    const { data: { content } } = result
+    const { data: { content, size } } = result
     const stream = new Readable()
     stream._read = function () {} // _read is required but you can noop it
     stream.push(content, 'base64')
     stream.push(null)
 
-    return returnImage(res, stream, resize)
+    return returnImage({
+      response: res,
+      stream,
+      options: req.query
+    })
   })
 }

@@ -51,5 +51,5 @@ module.exports = async (url, width, height) => {
     body: JSON.stringify(body)
   })
 
-  return result.body
+  return result
 }
