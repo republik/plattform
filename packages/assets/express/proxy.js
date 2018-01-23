@@ -6,7 +6,7 @@ const {
 } = require('../lib')
 
 module.exports = (server) => {
-  server.get('/proxy', async (req, res) => {
+  server.get('/proxy(.:webp)?', async (req, res) => {
     const {
       originalURL: url,
       mac,
@@ -16,25 +16,32 @@ module.exports = (server) => {
       return res.status(404).end()
     }
 
-    //if (!mac || mac !== authenticate(url)) {
-    //  console.warn('unauthorized asset url requested: ' + url)
-    //  return res.status(403).end()
-    //}
+    if (!mac || mac !== authenticate(url)) {
+      console.warn('proxy unauthorized url requested:', url)
+      return res.status(403).end()
+    }
 
     debug('GET %s', url)
     const result = await fetch(url, {
       method: 'GET'
     })
       .catch(error => {
-        console.error('gettting image failed', { error })
+        console.error('proxy fetch failed', { error })
         return res.status(404).end()
       })
+    if (!result.ok) {
+      console.error('proxy fetch failed', result.url, result.status)
+      return res.status(result.status).end()
+    }
 
     return returnImage({
       response: res,
       stream: result.body,
       headers: result.headers.raw(),
-      options: req.query
+      options: {
+        ...req.query,
+        webp: !!req.params.webp
+      }
     })
   })
 }

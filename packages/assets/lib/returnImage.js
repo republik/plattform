@@ -10,7 +10,7 @@ module.exports = async ({
   headers = {},
   options = {}
 }) => {
-  const { resize, bw } = options
+  const { resize, bw, webp } = options
   let width, height
   try {
     if (resize) {
@@ -29,7 +29,9 @@ module.exports = async ({
   // set headers
   res.set(pick({
     ...headers,
-    'Content-Type': mime
+    'Content-Type': webp
+      ? 'image/webp'
+      : mime
   }, [
     'Content-Type',
     'Last-Modified',
@@ -48,7 +50,7 @@ module.exports = async ({
     return passThrough.pipe(res)
   }
 
-  if (width || height || bw || isJPEG) {
+  if (width || height || bw || webp || isJPEG) {
     const pipeline = sharp()
     if (width || height) {
       pipeline.resize(width, height)
@@ -56,7 +58,11 @@ module.exports = async ({
     if (bw) {
       pipeline.greyscale()
     }
-    if (isJPEG) {
+    if (webp) {
+      pipeline.toFormat('webp', {
+        quality: 80
+      })
+    } else if (isJPEG) {
       pipeline.jpeg({
         progressive: true,
         quality: 80

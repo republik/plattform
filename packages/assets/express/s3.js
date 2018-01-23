@@ -22,7 +22,7 @@ if (!AWS_BUCKET_WHITELIST) {
 
 
 module.exports = (server) => {
-  server.get('/:bucket/:path(*)', async (req, res) => {
+  server.get('/s3/:bucket/:path(*)', async (req, res) => {
     const {
       bucket,
       path
@@ -33,20 +33,29 @@ module.exports = (server) => {
       return res.status(403).end()
     }
 
+    const [_, sanitizedPath, webp] = new RegExp(/(.*?)(\.webp)?$/, 'g').exec(path)
+
     const region = buckets[bucket]
-    const result = await fetch(`https://s3.${region}.amazonaws.com/${bucket}/${path}`, {
+    const result = await fetch(`https://s3.${region}.amazonaws.com/${bucket}/${sanitizedPath}`, {
       method: 'GET'
     })
       .catch(error => {
-        console.error('gettting image failed', { error })
+        console.error('s3 fetch failed', { error })
         return res.status(404).end()
       })
+    if (!result.ok) {
+      console.error('s3 fetch failed', result.url, result.status)
+      return res.status(result.status).end()
+    }
 
     return returnImage({
       response: res,
       stream: result.body,
       headers: result.headers.raw(),
-      options: req.query
+      options: {
+        ...req.query,
+        webp: !!webp
+      }
     })
   })
 }

@@ -23,6 +23,7 @@ module.exports = (server) => {
     } = req.params
     debug('getBlob %s/%s/%s', login, repoName, path)
 
+    const webp = new RegExp(/\.webp$/).test(path)
     const blobSha = path
       .split('/')
       .pop()
@@ -41,7 +42,7 @@ module.exports = (server) => {
           res.status(500).end()
         }
       })
-    if (!result) {
+    if (!result || !result.data) {
       return res.status(404).end()
     }
 
@@ -54,7 +55,10 @@ module.exports = (server) => {
     return returnImage({
       response: res,
       stream,
-      options: req.query
+      options: {
+        ...req.query,
+        webp
+      }
     })
   })
 }
