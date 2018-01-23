@@ -1,6 +1,8 @@
 # @orbiting/backend-modules-assets
 
-express routes and libs to get and handle assets.
+This module contains libs to un-/prefix relative asset urls, upload to S3 and most importantly express middlewares for asset proxying and image manipulation (resizing, greyscaling, webp format transformation). It streams assets from other urls, from s3 buckets, out of github repos and can render webpages to PNGs.
+
+Check [assets-backend](https://github.com/orbiting/assets-backend) for a deployable, standalone, express wrapper.
 
 ## URLs
 
@@ -16,7 +18,7 @@ express routes and libs to get and handle assets.
 
 - `/render?url=:url&width=:width&height=:height`
   renders :url with a viewport of :width x :hight to a png. webp conversion not supported.
-  ENVs: `RENDER_URL_WHITELIST`: comma separated, accept: :url.indexOf(whiteUrl) === 0
+  ENVs: `PHANTOMJSCLOUD_API_KEY`, `RENDER_URL_WHITELIST`: comma separated, accept: :url.indexOf(whiteUrl) === 0
 
 - `/s3/:bucket/:path*(.webp)`
   fetches resources from a S3 bucket.
