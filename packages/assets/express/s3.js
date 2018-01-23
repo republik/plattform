@@ -51,7 +51,7 @@ module.exports = (server) => {
     return returnImage({
       response: res,
       stream: result.body,
-      headers: result.headers.raw(),
+      headers: result.headers,
       options: {
         ...req.query,
         webp: !!webp

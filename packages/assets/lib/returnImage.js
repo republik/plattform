@@ -2,53 +2,64 @@ const sharp = require('sharp')
 const getWidthHeight = require('./getWidthHeight')
 const fileTypeStream = require('file-type-stream').default
 const { PassThrough } = require('stream')
-const pick = require('lodash/pick')
+
+const pipeHeaders = [
+  'Content-Type',
+  'Last-Modified',
+  'cache-control',
+  'expires',
+  'Access-Control-Allow-Credentials',
+  'Access-Control-Allow-Headers',
+  'Access-Control-Allow-Methods',
+  'Access-Control-Allow-Origin',
+]
 
 module.exports = async ({
   response: res,
   stream,
-  headers = {},
+  headers,
   options = {}
 }) => {
   const { resize, bw, webp } = options
   let width, height
-  try {
-    if (resize) {
+  if (resize) {
+    try {
       ({ width, height} = getWidthHeight(resize))
+    } catch (e) {
+      res.status(400).end(e.message)
     }
-  } catch (e) {
-    res.status(400).end(e.message)
+  }
+
+  // forward filtered headers
+  if (headers) {
+    for(let key of pipeHeaders) {
+      const value = headers.get(key)
+      if (value) {
+        res.set(key, value)
+      }
+    }
   }
 
   // detect mime
   const passThrough = new PassThrough()
-  const { mime } = await new Promise(resolve => {
-    stream.pipe(fileTypeStream(resolve)).pipe(passThrough)
-  })
-
-  // set headers
-  res.set(pick({
-    ...headers,
-    'Content-Type': webp
-      ? 'image/webp'
-      : mime
-  }, [
-    'Content-Type',
-    'Last-Modified',
-    'cache-control',
-    'expires',
-    'Access-Control-Allow-Credentials',
-    'Access-Control-Allow-Headers',
-    'Access-Control-Allow-Methods',
-    'Access-Control-Allow-Origin',
-  ]))
-
+  let mime
+  try {
+    ({ mime } = await new Promise(resolve => {
+      stream.pipe(fileTypeStream(resolve)).pipe(passThrough)
+    }))
+  } catch(e) { }
   const isJPEG = mime === 'image/jpeg'
-  const isGIF = mime === 'image/gif'
-  if (isGIF) {
-    // ignore image manipulation without throwing an error
+
+  // return unknown mime types, non images, and gifs without manipulation
+  if (!mime || mime.indexOf('image') !== 0 || mime === 'image/gif') {
     return passThrough.pipe(res)
   }
+
+  // update 'Content-Type'
+  res.set('Content-Type', webp
+    ? 'image/webp'
+    : mime
+  )
 
   if (width || height || bw || webp || isJPEG) {
     const pipeline = sharp()
