@@ -18,15 +18,15 @@ import {
 
 import {
   TeaserFrontCredit,
-  TeaserFrontCreditLink
+  TeaserFrontCreditLink,
+  TeaserFrontTile,
+  TeaserFrontTileRow,
 } from '../../components/TeaserFront'
 
 import {
   DossierSubheader,
-  DossierTile,
   DossierTileHeadline,
-  DossierTileLead,
-  DossierTileRow
+  DossierTileLead
 } from '../../components/Dossier'
 
 import { Breakout } from '../../components/Center'
@@ -134,9 +134,9 @@ const createTeasers = ({
     matchMdast: matchTeaserType('articleTile'),
     component: ({ children, attributes, ...props }) => (
       <Link href={props.url}>
-        <DossierTile attributes={attributes} {...props}>
+        <TeaserFrontTile attributes={attributes} {...props}>
           {children}
-        </DossierTile>
+        </TeaserFrontTile>
       </Link>
     ),
     props: node => ({
@@ -182,9 +182,9 @@ const createTeasers = ({
       return matchZone('TEASERGROUP')(node)
     },
     component: ({ children, attributes, ...props }) => {
-      return <DossierTileRow attributes={attributes} {...props}>
+      return <TeaserFrontTileRow columns={3} attributes={attributes} {...props}>
         {children}
-      </DossierTileRow>
+      </TeaserFrontTileRow>
     },
     // TMP: Disabled until editor integration
     // editorModule: 'teasergroup',

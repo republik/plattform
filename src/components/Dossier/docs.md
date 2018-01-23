@@ -8,13 +8,13 @@
 <DossierSubheader>Diese Artikel sind im Dossier enthalten:</DossierSubheader>
 ```
 
-### `<DossierTileRow />`
+### `<TeaserFrontTileRow />`
 
-A `<DossierTileRow />` will take any number of `<DossierTile />` children and group them into three per row (desktop only).
+For article teasers in a dossier, a `<TeaserFrontTileRow columns={3} />` should be used. It will take any number of `<TeaserFrontTile />` children and group them into three per row (desktop only).
 
 ```react
-<DossierTileRow>
-  <DossierTile image='/static/rothaus_landscape.jpg'>
+<TeaserFrontTileRow columns={3}>
+  <TeaserFrontTile image='/static/rothaus_landscape.jpg'>
     <DossierTileHeadline.Editorial>The quick brown fox</DossierTileHeadline.Editorial>
     <DossierTileLead>
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
@@ -22,15 +22,15 @@ A `<DossierTileRow />` will take any number of `<DossierTile />` children and gr
     <TeaserFrontCredit>
       An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
-  </DossierTile>
-  <DossierTile>
+  </TeaserFrontTile>
+  <TeaserFrontTile>
     <Editorial.Format>Umfrage</Editorial.Format>
     <DossierTileHeadline.Interaction>Mehr Geld für ausländische Autorinnen oder einen Bundeshaus&shy;korrespondent?</DossierTileHeadline.Interaction>
     <TeaserFrontCredit>
       <TeaserFrontCreditLink href='#'>Constantin Seibt</TeaserFrontCreditLink> fragt nach<br />31. December 2017
     </TeaserFrontCredit>
-  </DossierTile>
-  <DossierTile image='/static/rothaus_portrait.jpg'>
+  </TeaserFrontTile>
+  <TeaserFrontTile image='/static/rothaus_portrait.jpg'>
     <DossierTileHeadline.Editorial>The fox</DossierTileHeadline.Editorial>
     <DossierTileLead>
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
@@ -38,15 +38,15 @@ A `<DossierTileRow />` will take any number of `<DossierTile />` children and gr
     <TeaserFrontCredit>
       An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
-  </DossierTile>
-  <DossierTile>
+  </TeaserFrontTile>
+  <TeaserFrontTile>
     <Editorial.Format>Umfrage</Editorial.Format>
     <DossierTileHeadline.Interaction>Mehr Geld für ausländische Autorinnen oder einen Bundeshaus&shy;korrespondent?</DossierTileHeadline.Interaction>
     <TeaserFrontCredit>
       <TeaserFrontCreditLink href='#'>Constantin Seibt</TeaserFrontCreditLink> fragt nach<br />31. December 2017
     </TeaserFrontCredit>
-  </DossierTile>
-  <DossierTile image='/static/rothaus_portrait.jpg'>
+  </TeaserFrontTile>
+  <TeaserFrontTile image='/static/rothaus_portrait.jpg'>
     <DossierTileHeadline.Editorial>The fox</DossierTileHeadline.Editorial>
     <DossierTileLead>
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
@@ -54,6 +54,6 @@ A `<DossierTileRow />` will take any number of `<DossierTile />` children and gr
     <TeaserFrontCredit>
       An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
-  </DossierTile>
-</DossierTileRow>
+  </TeaserFrontTile>
+</TeaserFrontTileRow>
 ```

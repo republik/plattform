@@ -3,13 +3,20 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp, tUp } from './mediaQueries'
 import Text from './Text'
+import colors from '../../theme/colors'
 
 import { FigureImage } from '../Figure'
 
 const IMAGE_SIZE = {
+  tiny: 180,
   small: 220,
   medium: 300,
   large: 360
+}
+
+const sizeTiny = {
+  maxHeight: `${IMAGE_SIZE.tiny}px`,
+  maxWidth: `${IMAGE_SIZE.tiny}px`
 }
 
 const sizeSmall = {
@@ -88,6 +95,33 @@ const styles = {
         ...sizeMedium
       }
     }
+  }),
+  col3: css({
+    '& .tile': {
+      borderTop: `1px solid ${colors.divider}`
+    },
+    [mUp]: {
+      display: 'flex',
+      flexFlow: 'row wrap',
+      '& .tile': {
+        width: '33.3%',
+        borderTop: 'none',
+        borderLeft: `1px solid ${colors.divider}`,
+        margin: '0 0 50px 0',
+        padding: '20px 0'
+      },
+      '& .tile:nth-child(3n+1)': {
+        borderLeft: 'none'
+      },
+      '& img': {
+        ...sizeTiny
+      }
+    },
+    [tUp]: {
+      '& img': {
+        ...sizeSmall
+      }
+    }
   })
 }
 
@@ -111,7 +145,7 @@ export const TeaserFrontTileRow = ({
 TeaserFrontTileRow.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
-  columns: PropTypes.oneOf([1, 2]).isRequired
+  columns: PropTypes.oneOf([1, 2, 3]).isRequired
 }
 
 TeaserFrontTileRow.defaultProps = {

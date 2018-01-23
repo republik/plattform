@@ -33,10 +33,8 @@ import {
   TeaserFrontDossierLead,
   TeaserFrontDossierMore,
   DossierTag,
-  DossierTile,
   DossierTileHeadline,
-  DossierTileLead,
-  DossierTileRow
+  DossierTileLead
 } from '../../components/Dossier'
 
 import {
@@ -406,9 +404,9 @@ const createSchema = ({
     matchMdast: matchTeaserType('articleTile'),
     component: ({ children, attributes, ...props }) => (
       <Link href={props.url}>
-        <DossierTile attributes={attributes} {...props}>
+        <TeaserFrontTile attributes={attributes} {...props}>
           {children}
-        </DossierTile>
+        </TeaserFrontTile>
       </Link>
     ),
     props: node => ({
@@ -451,9 +449,9 @@ const createSchema = ({
   const articleTileRow = {
     matchMdast: matchZone('TEASERGROUP'),
     component: ({ children, attributes, ...props }) => {
-      return <DossierTileRow attributes={attributes} {...props}>
+      return <TeaserFrontTileRow columns={3} attributes={attributes} {...props}>
         {children}
-      </DossierTileRow>
+      </TeaserFrontTileRow>
     },
     // TMP: Disabled until editor integration
     // editorModule: 'teasergroup',
