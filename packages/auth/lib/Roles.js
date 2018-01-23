@@ -22,9 +22,8 @@ const ensureUserHasRole = (user, role) => {
   }
 }
 
-
 const userIsInRoles = (user, roles = []) => {
-  const matches = roles.filter( role =>
+  const matches = roles.filter(role =>
     userHasRole(user, role)
   )
   return matches.length > 0
@@ -35,17 +34,16 @@ const ensureUserIsInRoles = (user, roles) => {
     console.info('signIn', { stack: new Error().stack })
     throw new Error(t('api/signIn'))
   }
-  if(!userIsInRoles(user, roles)) {
+  if (!userIsInRoles(user, roles)) {
     console.info('unauthorized', { stack: new Error().stack })
     throw new Error(t.pluralize('api/unauthorized', {
       count: roles.length,
       role: roles
-        .map( role => `«${role}»`)
+        .map(role => `«${role}»`)
         .join(', ')
     }))
   }
 }
-
 
 const addUserToRole = async (userId, role, pgdb) => {
   await pgdb.query(`
