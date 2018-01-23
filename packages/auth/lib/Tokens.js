@@ -17,4 +17,4 @@ const findToken = (tokens, type) => {
       ), null)
 }
 
-module.exports = { validateTimeBasedPassword, findToken }
+module.exports = { validateTimeBasedPassword, findToken, TokenTypes }
