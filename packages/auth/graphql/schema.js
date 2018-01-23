@@ -15,12 +15,13 @@ type queries {
   # get user by slug—a id or username
   # only returns users with a public profile
   user(slug: String): User
+
   # search for users
   # required role: editor
   users(search: String!, role: String!): [User]!
 
   # search for an unverified session by token
-  unauthorizedSession(email: String!, token: String!): Session
+  unauthorizedSession(email: String!, token: SessionToken!): Session
 
   # the requesting userAgent
   echo: RequestInfo!
@@ -32,7 +33,7 @@ type mutations {
   signOut: Boolean!
 
   # authorize a token sent by mail to convert a login request to a valid user session
-  authorizeSession(email: String!, token: String!): Boolean!
+  authorizeSession(email: String!, tokens: [SessionToken!]!): Boolean!
 
   # if userId is null, this operation will be scoped to the logged in user
   # required role to clear other's session: supporter

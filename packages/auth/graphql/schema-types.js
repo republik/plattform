@@ -31,6 +31,16 @@ type SignInResponse {
   phrase: String!
 }
 
+enum SignInChallengeType {
+  EMAIL_TOKEN
+  TOTP
+}
+
+input SessionToken {
+  type: SignInChallengeType!
+  payload: String!
+}
+
 type RequestInfo {
   ipAddress: String!
   userAgent: String

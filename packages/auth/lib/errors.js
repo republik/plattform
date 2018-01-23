@@ -1,6 +1,7 @@
 const ERROR_QUERY_EMAIL_MISMATCH = 'query-email-mismatch'
 const ERROR_NO_SESSION = 'no-session'
 const ERROR_SESSION_DESTROY_FAILED = 'session-destroy-failed'
+const ERROR_TIME_BASED_PASSWORD_MISMATCH = 'time-based-password-mismatch'
 
 class AuthError extends Error {
   constructor (type, meta) {
@@ -29,8 +30,15 @@ class NoSessionError extends AuthError {
   }
 }
 
+class TimeBasedPasswordMismatchError extends AuthError {
+  constructor (meta) {
+    super(ERROR_TIME_BASED_PASSWORD_MISMATCH, meta)
+  }
+}
+
 module.exports = {
   QueryEmailMismatchError,
   NoSessionError,
-  DestroySessionError
+  DestroySessionError,
+  TimeBasedPasswordMismatchError
 }

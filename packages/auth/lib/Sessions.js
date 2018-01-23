@@ -1,4 +1,13 @@
-const { NoSessionError, QueryEmailMismatchError, DestroySessionError } = require('./errors')
+const {
+  NoSessionError,
+  QueryEmailMismatchError,
+  DestroySessionError,
+  TimeBasedPasswordMismatchError } = require('./errors')
+const {
+  validateTimeBasedPassword,
+  findToken,
+  TokenTypes
+} = require('./Tokens')
 
 const destroySession = async (req) => {
   return new Promise((resolve, reject) => {
@@ -12,13 +21,13 @@ const destroySession = async (req) => {
 }
 
 const sessionByToken = async ({ pgdb, token, email: emailFromQuery, ...meta }) => {
-  const Sessions = pgdb.public.sessions
-  const session = await Sessions.findOne({
+  if (!token || !token.payload) throw new NoSessionError({ emailFromQuery, ...meta })
+
+  const session = await pgdb.public.sessions.findOne({
     'sess @>': { token }
   })
-  if (!session) {
-    throw new NoSessionError({ token, emailFromQuery, ...meta })
-  }
+
+  if (!session) throw new NoSessionError({ token, emailFromQuery, ...meta })
 
   const { email } = session.sess
   if (emailFromQuery && email !== emailFromQuery) { // emailFromQuery might be null for old links
@@ -29,8 +38,7 @@ const sessionByToken = async ({ pgdb, token, email: emailFromQuery, ...meta }) =
 }
 
 const findAllUserSessions = async ({ pgdb, userId }) => {
-  const Sessions = pgdb.public.sessions
-  const sessions = await Sessions.find({
+  const sessions = await pgdb.public.sessions.find({
     'sess @>': { passport: { user: userId } }
   })
   return sessions || []
@@ -71,32 +79,62 @@ const clearUserSession = async ({ pgdb, userId, sessionId }) => {
   }
 }
 
-const authorizeSession = async ({ pgdb, token, emailFromQuery, signInHooks = [] }) => {
-  const Users = pgdb.public.users
-  const Sessions = pgdb.public.sessions
-
-  const session = await sessionByToken({ pgdb, token, email: emailFromQuery })
-  const { email } = session.sess
-
-  // verify and/or create the user
-  const existingUser = await Users.findOne({
-    email
-  })
+const upsertUserVerified = async({ pgdb, email }) => {
+  const existingUser = await pgdb.public.users.findOne({ email })
   const user = existingUser ||
-    await Users.insertAndGet({
+    await pgdb.public.users.insertAndGet({
       email,
       verified: true
     })
   if (!user.verified) {
-    await Users.updateOne({
+    await pgdb.public.users.updateOne({
       id: user.id
     }, {
       verified: true
     })
   }
+  return {
+    user,
+    isVerificationUpdated: (!existingUser || !existingUser.verified)
+  }
+}
+
+const authorizeSession = async ({ pgdb, tokens, emailFromQuery, signInHooks = [] }) => {
+  // try to get the initiating session by email_token
+  const emailToken = findToken(tokens, TokenTypes.EMAIL_TOKEN)
+  const session = await sessionByToken({
+    pgdb,
+    token: emailToken,
+    email: emailFromQuery
+  })
+
+  if (!session) {
+    throw new NoSessionError({ tokens, email: emailFromQuery })
+  }
+
+  // verify and/or create the user
+  const { user, isVerificationUpdated } = await upsertUserVerified({
+    pgdb,
+    email: session.sess.email
+  })
+
+  // check if user needs a second factor, if true, check for all tokens
+  // TODO: sharedSecret and isTwoFactorEnforced must be stored on the user table
+  user.isTwoFactorEnforced = true
+  user.sharedSecret = 'AAAA'
+  if (user.isTwoFactorEnforced) {
+    const token = findToken(tokens, TokenTypes.TOTP)
+    const isValid = await validateTimeBasedPassword({
+      totp: token.payload,
+      sharedSecret: user.sharedSecret
+    })
+    if (!isValid) {
+      throw new TimeBasedPasswordMismatchError({ token, email: emailFromQuery })
+    }
+  }
 
   // log in the session and delete token
-  await Sessions.updateOne({
+  await pgdb.public.sessions.updateOne({
     id: session.id
   }, {
     sess: {
@@ -114,7 +152,7 @@ const authorizeSession = async ({ pgdb, token, emailFromQuery, signInHooks = [] 
       signInHooks.map(hook =>
         hook(
           user.id,
-          (!existingUser || !existingUser.verified),
+          isVerificationUpdated,
           pgdb
         )
       )
