@@ -54,7 +54,7 @@ const clearAllUserSessions = async ({ pgdb, userId }) => {
 const clearUserSession = async ({ pgdb, userId, sessionId }) => {
   const transaction = await pgdb.transactionBegin()
   try {
-    const email = await transaction.public.users.findOne({ id: userId }, 'email')
+    const email = await transaction.public.users.findOneFieldOnly({ id: userId }, 'email')
     const sessions = await findAllUserSessions({ pgdb: transaction, userId })
     const matchingSessions = sessions
       .filter((session) => (session.id === sessionId))
