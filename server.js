@@ -36,7 +36,7 @@ module.exports.run = () => {
 
   // middlewares
   for (let key of Object.keys(middlewares)) {
-    server.use(middlewares[key])
+    middlewares[key](server)
   }
 
   server.listen(PORT, () => {
