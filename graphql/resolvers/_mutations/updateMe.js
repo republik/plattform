@@ -23,7 +23,14 @@ const {
 
 const MAX_STATEMENT_LENGTH = 140
 const MAX_BIOGRAPHY_LENGTH = 2000
-const MAX_PUBLIC_KEY_LENGTH = 10000 // 4k public key is 3114 chars
+
+// a resonable 4k key is around 3k to 10k chars (radix64 data + armour)
+// - however key file can contain meta data
+// - some people already have 8k keys
+// - a key will also need to pass getKeyId before we store it
+// therefore lets use a way too high limit
+const MAX_PUBLIC_KEY_LENGTH = 524288 // 0.5mb
+
 const MAX_PUBLIC_URL_LENGTH = 2048
 const MAX_TWITTER_HANDLE_LENGTH = 15
 const MAX_FACEBOOK_ID_LENGTH = 64 // (can also be something like profile.php?id=xxxxxxxxxxxxxxx)
