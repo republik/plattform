@@ -4,9 +4,11 @@ const { lib: {
   createRepoUrlPrefixer,
   createUrlPrefixer
 } } = require('@orbiting/backend-modules-assets')
-const visit = require('unist-util-visit')
+const { lib: { process: {
+  processRepoImageUrls,
+  processImageUrls
+} } } = require('@orbiting/backend-modules-documents')
 const debug = require('debug')('publikator:commit')
-const { imageKeys: embedImageKeys } = require('../../lib/embeds')
 
 module.exports = {
   document: async (
@@ -83,34 +85,11 @@ module.exports = {
 
     // prefix repo image's urls
     const prefixRepoUrl = createRepoUrlPrefixer(repoId, publicAssets)
-    visit(mdast, 'image', node => {
-      node.url = prefixRepoUrl(node.url)
-    })
-    Object.keys(mdast.meta).forEach(key => {
-      if (key.match(/image/i)) {
-        mdast.meta[key] = prefixRepoUrl(mdast.meta[key])
-      }
-    })
-    const series = mdast.meta.series
-    if (series && Array.isArray(series.episodes)) {
-      series.episodes.forEach(episode => {
-        if (episode.image) {
-          episode.image = prefixRepoUrl(episode.image)
-        }
-      })
-    }
+    processRepoImageUrls(mdast, prefixRepoUrl)
 
     // prefix embed image's urls
     const prefixUrl = createUrlPrefixer(publicAssets)
-    visit(mdast, 'zone', node => {
-      if (node.data && node.identifier.indexOf('EMBED') > -1) {
-        for (let key of embedImageKeys) {
-          if (node.data[key]) {
-            node.data[key] = prefixUrl(node.data[key])
-          }
-        }
-      }
-    })
+    processImageUrls(mdast, prefixUrl)
 
     return {
       id: Buffer.from(`repo:${repoId}:${commitId}`).toString('base64'),
