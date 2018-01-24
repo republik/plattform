@@ -87,15 +87,15 @@ module.exports = {
         portraitUrl = portraitUrl.replace('_384x384', '_original')
         portraitUrl = portraitUrl.replace(ASSETS_BASE_URL, `${ASSETS_SERVER_BASE_URL}/s3/${AWS_S3_BUCKET_PROD || AWS_S3_BUCKET}`)
       }
-      const bw = args.properties && args.properties.bw !== undefined
+      const bw = args && args.properties && args.properties.bw !== undefined
         ? args.properties.bw
         : true // bw is default for portrait images
       let resize
-      if (args.properties) {
+      if (args && args.properties) {
         const { width, height } = args.properties
         resize = `${width || ''}x${height || ''}`
-      } else if (args.size || legacyMode) { // PortraitSize is deprecated
-        resize = args.size === 'SHARE'
+      } else if ((args && args.size) || legacyMode) { // PortraitSize is deprecated
+        resize = args && args.size === 'SHARE'
           ? '1000x1000'
           : '384x384'
       }
