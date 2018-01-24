@@ -8,7 +8,7 @@ You need to have node (8.3.0+) installed, postgres and redis running somewhere.
 
 Boostrap your .env file.
 ```
-PUBLIC_BASE_URL=http://localhost:3000
+PUBLIC_BASE_URL=http://localhost:3003
 NODE_ENV=development
 PORT=3003
 BASIC_AUTH_PASS=
