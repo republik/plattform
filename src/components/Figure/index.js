@@ -15,7 +15,6 @@ export { default as FigureByline } from './Byline'
 
 const styles = {
   figure: css({
-    lineHeight: 0,
     margin: 0,
     marginBottom: 15,
     padding: 0,

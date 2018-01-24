@@ -6,6 +6,7 @@ import { getResizedSrcs } from './utils'
 
 const styles = {
   image: css({
+    display: 'block',
     width: '100%'
   }),
   wrappedImage: css({
