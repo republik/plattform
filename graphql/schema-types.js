@@ -15,12 +15,21 @@ enum AccessRole {
 
 enum PortraitSize {
   # 384x384
-  SMALL
+  SMALL @deprecated(reason: "use ImageProperties instead")
   # 1000x1000
-  SHARE
+  SHARE @deprecated(reason: "use ImageProperties instead")
   # original, in color
   # not exposed
   # ORIGINAL
+}
+
+input ImageProperties {
+  # resize width
+  width: Int
+  # resize height
+  height: Int
+  # greyscale
+  bw: Boolean
 }
 
 extend type User {
@@ -34,7 +43,10 @@ extend type User {
   isEligibleForProfile: Boolean
 
   # url to portrait image
-  portrait(size: PortraitSize): String
+  portrait(
+    size: PortraitSize @deprecated(reason: "use ImageProperties instead"),
+    properties: ImageProperties
+  ): String
 
   birthday: Date
   ageAccessRole: AccessRole
