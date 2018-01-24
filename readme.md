@@ -29,13 +29,13 @@ SG_BRAND_MARK_VIEWBOX=
 
 Install dependencies.
 ```
-yarn install
+npm install
 ```
 
 Run local admin frontend:
 
 ```
-yarn run dev
+npm run dev
 ```
 
 Run republik-backend (assuming you have a local git repository of the republik-backend in ../republik-backend).
