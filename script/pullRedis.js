@@ -2,7 +2,7 @@
 // This script syncs redis with the status quo on github.
 //
 // usage
-// node script/pullRedis.js --noflush
+// node script/pullRedis.js --flush
 //
 
 require('dotenv').config()
@@ -23,8 +23,8 @@ const {
 const { prepareMetaForPublish } = require('../lib/Document')
 
 PgDb.connect().then(async pgdb => {
-  const noflush = process.argv[2] === '--noflush'
-  if (!noflush) {
+  const flush = process.argv[2] === '--flush'
+  if (flush) {
     console.warn('Flushing redis...')
     await redis.flushdbAsync()
   }
