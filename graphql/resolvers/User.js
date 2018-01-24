@@ -75,7 +75,7 @@ module.exports = {
     }
     return null
   },
-  portrait (user, args, { user: me }) {
+  portrait (user, args, { user: me, req }) {
     if (canAccessBasics(user, me)) {
       let { portraitUrl } = user._raw
       if (!portraitUrl) {
@@ -105,7 +105,8 @@ module.exports = {
         resize,
         bw
       })
-      return `${url}?${newQuery}`
+      const webp = req.accepts('image/webp')
+      return `${url}${webp ? '.webp' : ''}?${newQuery}`
     }
     return null
   },
