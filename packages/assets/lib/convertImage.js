@@ -1,10 +1,13 @@
 const sharp = require('sharp')
 
-module.exports.toJPEG = (buffer) => {
-  return sharp(buffer)
+module.exports.toJPEG = async (buffer) => {
+  const image = sharp(buffer)
     .rotate()
     .jpeg({
       quality: 100
     })
-    .toBuffer()
+  return {
+    meta: await image.metadata(),
+    data: await image.toBuffer()
+  }
 }

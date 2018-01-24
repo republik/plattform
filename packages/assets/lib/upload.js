@@ -2,6 +2,7 @@ const crypto = require('crypto')
 const checkEnv = require('check-env')
 const uploadS3 = require('./uploadS3')
 const convertImage = require('./convertImage')
+const querystring = require('querystring')
 
 checkEnv[
   'ASSETS_SERVER_BASE_URL',
@@ -29,17 +30,17 @@ const uploadPortrait = async (portrait) => {
 
   const inputBuffer = Buffer.from(portrait, 'base64')
 
-  await convertImage.toJPEG(inputBuffer)
-    .then((data) => {
-      return uploadS3({
-        stream: data,
-        path: portraitPath,
-        mimeType: 'image/jpeg',
-        bucket: AWS_S3_BUCKET
-      })
-    })
-
-  return `${ASSETS_SERVER_BASE_URL}/s3/${AWS_S3_BUCKET}/${portraitPath}`
+  const {meta, data} = await convertImage.toJPEG(inputBuffer)
+  await uploadS3({
+    stream: data,
+    path: portraitPath,
+    mimeType: 'image/jpeg',
+    bucket: AWS_S3_BUCKET
+  })
+  const query = querystring.stringify({
+    size: `${meta.width}x${meta.height}`
+  })
+  return `${ASSETS_SERVER_BASE_URL}/s3/${AWS_S3_BUCKET}/${portraitPath}?${query}`
 }
 
 module.exports = {
