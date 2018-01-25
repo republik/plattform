@@ -22,8 +22,10 @@ module.exports.run = () => {
   const middlewares = []
 
   if (LOCAL_ASSETS_SERVER) {
-    const { express: { assets } } = require('@orbiting/backend-modules-assets')
-    middlewares.push(assets)
+    const { express } = require('@orbiting/backend-modules-assets')
+    for (let key of Object.keys(express)) {
+      middlewares.push(express[key])
+    }
   }
 
   return server.run(executableSchema, middlewares, t, createGraphQLContext)

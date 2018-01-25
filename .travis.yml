@@ -41,3 +41,4 @@ env:
     - FRONTEND_BASE_URL=http://localhost:6000
     - ASSETS_SERVER_BASE_URL=http://localhost:6000
     - ASSETS_HMAC_KEY=travis
+    - LOCAL_ASSETS_SERVER=true
