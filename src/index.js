@@ -169,6 +169,16 @@ ReactDOM.render(
             },
             src: require('./components/VideoPlayer/docs.md')
           },
+          {
+            path: '/lazyload',
+            title: 'LazyLoad',
+            imports: {
+              ...require('./components/Typography').Interaction,
+              LazyLoad: require('./components/LazyLoad'),
+              LazyImage: require('./components/LazyLoad/Image')
+            },
+            src: require('./components/LazyLoad/docs.md')
+          }
         ]
       },
       {

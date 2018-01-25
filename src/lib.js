@@ -23,6 +23,8 @@ export {default as Autocomplete} from './components/Form/Autocomplete'
 export {default as TitleBlock} from './components/TitleBlock'
 export {default as Center, Breakout} from './components/Center'
 export { VideoPlayer} from './components/VideoPlayer'
+export { LazyLoad } from './components/LazyLoad'
+export { LazyImage } from './components/LazyLoad/Image'
 export {
   InfoBox,
   InfoBoxText,
