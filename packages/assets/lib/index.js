@@ -4,6 +4,7 @@ const convertImage = require('./convertImage')
 const getWidthHeight = require('./getWidthHeight')
 const returnImage = require('./returnImage')
 const urlPrefixing = require('./urlPrefixing')
+const webp = require('./webp')
 
 module.exports = {
   upload,
@@ -11,6 +12,7 @@ module.exports = {
   convertImage,
   getWidthHeight,
   returnImage,
+  webp,
   urlPrefixing,
   ...urlPrefixing
 }
