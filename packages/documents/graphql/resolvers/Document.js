@@ -2,7 +2,16 @@ const {
   contentUrlResolver,
   metaUrlResolver
 } = require('../../lib/resolve')
+const {
+  processRepoImageUrlsInContent,
+  processRepoImageUrlsInMeta,
+  processImageUrlsInContent
+} = require('../../lib/process')
 const { getMeta } = require('../../lib/meta')
+
+const { lib: { webp: {
+  addSuffix: addWebpSuffix
+} } } = require('@orbiting/backend-modules-assets')
 
 module.exports = {
   content (doc, { urlPrefix, searchString }, context, info) {
@@ -12,6 +21,13 @@ module.exports = {
     //   https://gist.github.com/tpreusse/f79833a023706520da53647f9c61c7f6
     if (doc._all) {
       contentUrlResolver(doc, doc._all, doc._usernames, undefined, urlPrefix, searchString)
+
+      const webp = context.req.accepts('image/webp')
+      if(webp) {
+        processRepoImageUrlsInContent(doc.content, addWebpSuffix)
+        processImageUrlsInContent(doc.content, addWebpSuffix)
+      }
+
     }
     return doc.content
   },
@@ -19,6 +35,11 @@ module.exports = {
     const meta = getMeta(doc)
     if (doc._all) {
       metaUrlResolver(meta, doc._all, doc._usernames, undefined, urlPrefix, searchString)
+
+      const webp = context.req.accepts('image/webp')
+      if(webp) {
+        processRepoImageUrlsInMeta(doc.content, addWebpSuffix)
+      }
     }
     return meta
   }
