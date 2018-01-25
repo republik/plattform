@@ -690,6 +690,7 @@ test('check image dataURI is replaced with relative url (incl. image size)', asy
   t.end()
 })
 
+const sharp = require('sharp')
 test('check image URLs and asset server', async (t) => {
   const result = await apolloFetch({
     query: `
@@ -739,10 +740,20 @@ test('check image URLs and asset server', async (t) => {
   visit(loremWithImageMdast, 'image', node => {
     imageBuffersFromLorem.push(dataUriToBuffer(node.url))
   })
-  t.equals(imageBuffersFromLorem.length, imageBuffersFromServer.length)
+
+  const webpImageBuffersFromLorem = []
+  let i = 0
+  for (let buffer of imageBuffersFromLorem) {
+    webpImageBuffersFromLorem[i] = await sharp(buffer)
+      .toFormat('webp', {
+        quality: 80
+      })
+    i += 1
+  }
+  t.equals(webpImageBuffersFromLorem.length, imageBuffersFromServer.length)
 
   for (let i = 0; i < imageBuffersFromServer.length; i++) {
-    const buffer0 = imageBuffersFromLorem[i]
+    const buffer0 = webpImageBuffersFromLorem[i]
     const buffer1 = imageBuffersFromServer[i]
     t.notEquals(buffer0, null)
     t.notEquals(buffer1, null)
