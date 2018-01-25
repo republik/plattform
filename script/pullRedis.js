@@ -21,6 +21,9 @@ const {
   channelKey: schedulingChannelKey
 } = require('../lib/publicationScheduler')
 const { prepareMetaForPublish } = require('../lib/Document')
+const { lib: {
+  Repo: { uploadImages }
+} } = require('@orbiting/backend-modules-assets')
 
 PgDb.connect().then(async pgdb => {
   const flush = process.argv[2] === '--flush'
@@ -81,6 +84,9 @@ PgDb.connect().then(async pgdb => {
           { publicAssets: true },
           context
         )
+
+        // upload images to S3
+        await uploadImages(repo.id, doc.repoImagePaths)
 
         // prepareMetaForPublish creates missing discussions as a side-effect
         doc.content.meta = await prepareMetaForPublish(
