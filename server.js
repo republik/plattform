@@ -5,10 +5,13 @@ const t = require('./lib/t')
 
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: redirections } = require('@orbiting/backend-modules-redirections')
-const { express: { assets } } = require('@orbiting/backend-modules-assets')
 
 const sendPendingPledgeConfirmations = require('./modules/crowdfundings/lib/sendPendingPledgeConfirmations')
 const mail = require('./modules/crowdfundings/lib/Mail')
+
+const {
+  LOCAL_ASSETS_SERVER
+} = process.env
 
 module.exports.run = () => {
   require('./lib/slackGreeter')
@@ -18,10 +21,15 @@ module.exports.run = () => {
   // middlewares
   const middlewares = [
     require('./modules/crowdfundings/express/paymentWebhooks'),
-    require('./express/gsheets'),
-    require('./express/pageRenderer'),
-    assets
+    require('./express/gsheets')
   ]
+
+  if (LOCAL_ASSETS_SERVER) {
+    const { express } = require('@orbiting/backend-modules-assets')
+    for (let key of Object.keys(express)) {
+      middlewares.push(express[key])
+    }
+  }
 
   // signin hooks
   const signInHooks = [

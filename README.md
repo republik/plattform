@@ -39,30 +39,27 @@ DISPLAY_AUTHOR_SECRET=replaceMe
 # leave blank for default: 127.0.0.1:6379
 REDIS_URL=
 
-# credentials to upload assets to the exoscale object store
-EXO_KEY=
-EXO_SECRET=
-S3BUCKET=republik-staging
-# where will the S3 assets be available publicly
-ASSETS_BASE_URL=https://assets.staging.republik.ch
-
-# hostname of the frontend which will serve assets for the public
-# (most probably this republik-backend's url)
-PUBLIC_ASSETS_HOSTNAME=http://localhost:3020
+# start the asset server locally, handy for development
+# provide the value of PUBLIC_URL to ASSETS_SERVER_BASE_URL
+# check the README of assets-backend for which env vars you need to add to run
+# the assets server locally.
+LOCAL_ASSETS_SERVER=true
+# base url of the asssets server. Set to local if you use LOCAL_ASSETS_SERVER
+ASSETS_SERVER_BASE_URL=http://localhost:3020
 # min 32bit key to authenticate the public the access the asset proxy
+# you need to provide this regardless of LOCAL_ASSETS_SERVER
 ASSETS_HMAC_KEY=
+# url of where the assets uploaded to S3 will be avilable publictly
+# NOTE: this going to be obsolete soon, when the assets server if going
+# to serve resized images from S3
+#ASSETS_BASE_URL=https://assets.staging.republik.ch
 
-# keyCDN access to clear cache on file uploads
-# must correspond with the object store config
-KEYCDN_API_KEY=
-KEYCDN_ZONE_ID=
-KEYCDN_ZONE_URL=
-
-# phantomjscloud.com to render social media share images
-PHANTOMJSCLOUD_API_KEY=
-
-# list urls allowed on the /render endpoint, the beginning must match
-RENDER_URL_WHITELIST=https://www.republik.ch/feed
+# despite using a local or remote assets server, this backend still uploads images
+# to S3 directly, so you need this keys
+AWS_REGION=eu-central-1
+AWS_S3_BUCKET=republik-assets-staging
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
 
 # Sheet IDs for gsheets powered pages
 GSHEETS={"someSheetId": "faqs","someSheetId": "updates","someSheetId": "events"}

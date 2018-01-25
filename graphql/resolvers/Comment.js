@@ -1,6 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const crypto = require('crypto')
+const { portrait: getPortrait } = require('./User')
 
 const {
   DISPLAY_AUTHOR_SECRET
@@ -68,15 +69,17 @@ module.exports = {
   displayAuthor: async (
     comment,
     args,
-    {
+    context
+  ) => {
+    const {
       pgdb,
       t,
       discussion: _discussion,
       commenter: _commenter,
       commenterPreferences: _commenterPreferences,
       credential: _credential
-    }
-  ) => {
+    } = context
+
     if (comment.displayAuthor) {
       return comment.displayAuthor
     }
@@ -111,7 +114,7 @@ module.exports = {
       }
     }
 
-    const profilePicture = commenter._raw.portraitUrl
+    const profilePicture = getPortrait(commenter, null, context)
 
     const id = crypto
       .createHmac('sha256', DISPLAY_AUTHOR_SECRET)

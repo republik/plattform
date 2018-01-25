@@ -1,9 +1,17 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { age } = require('../../lib/age')
 const { getKeyId } = require('../../lib/pgp')
-const { getImageUrl } = require('../../lib/convertImage')
+const querystring = require('querystring')
 
 const { isEligible } = require('../../lib/profile')
+
+// the first 4 are old portrait URL legacy
+const {
+  ASSETS_BASE_URL,
+  ASSETS_SERVER_BASE_URL,
+  AWS_S3_BUCKET,
+  AWS_S3_BUCKET_PROD
+} = process.env
 
 const exposeProfileField = (key, format) => (user, args, { pgdb, user: me }) => {
   if (Roles.userIsMeOrHasProfile(user, me)) {
@@ -67,12 +75,40 @@ module.exports = {
     }
     return null
   },
-  portrait (user, args, { user: me }) {
+  portrait (user, args, { user: me, req }) {
     if (canAccessBasics(user, me)) {
-      const { portraitUrl } = user._raw
-      return portraitUrl
-        ? getImageUrl(portraitUrl, args)
-        : portraitUrl
+      let { portraitUrl } = user._raw
+      if (!portraitUrl) {
+        return portraitUrl
+      }
+      // TODO migrate DB entries from _384x384 to _original and from ASSETS_BASE_URL to ASSETS_SERVER_BASE_URL/s3/AWS_S3_BUCKET
+      const legacyMode = portraitUrl.indexOf('_384x384') > -1
+      if (legacyMode) {
+        portraitUrl = portraitUrl.replace('_384x384', '_original')
+        portraitUrl = portraitUrl.replace(ASSETS_BASE_URL, `${ASSETS_SERVER_BASE_URL}/s3/${AWS_S3_BUCKET_PROD || AWS_S3_BUCKET}`)
+      }
+      const bw = args && args.properties && args.properties.bw !== undefined
+        ? args.properties.bw
+        : true // bw is default for portrait images
+      let resize
+      if (args && args.properties) {
+        const { width, height } = args.properties
+        resize = `${width || ''}x${height || ''}`
+      } else if ((args && args.size) || legacyMode) { // PortraitSize is deprecated
+        resize = args && args.size === 'SHARE'
+          ? '1000x1000'
+          : '384x384'
+      } else {
+        resize = '384x384' // default for portraits
+      }
+      const [url, query] = portraitUrl.split('?')
+      const newQuery = querystring.stringify({
+        ...querystring.parse(query),
+        resize,
+        bw
+      })
+      const webp = req.accepts('image/webp')
+      return `${url}${webp ? '.webp' : ''}?${newQuery}`
     }
     return null
   },
