@@ -24,6 +24,8 @@ module.exports = (server) => {
     debug('getBlob %s/%s/%s', login, repoName, path)
 
     const webp = new RegExp(/\.webp$/).test(path)
+
+    // the filename is the blobSha
     const blobSha = path
       .split('/')
       .pop()

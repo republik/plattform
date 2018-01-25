@@ -2,6 +2,7 @@ const { URL } = require('url')
 const querystring = require('querystring')
 const crypto = require('crypto')
 const checkEnv = require('check-env')
+const { getS3UrlForGithubPath } = require('./Repo')
 
 checkEnv[
   'ASSETS_SERVER_BASE_URL',
@@ -24,18 +25,22 @@ const authenticate = url =>
 module.exports = {
   authenticate,
 
-  createRepoUrlPrefixer: (repoId, public) => {
+  createRepoUrlPrefixer: (repoId, public, originalPaths = []) => {
     if (!repoId) {
       throw new Error('createRepoUrlPrefixer needs a repoId')
     }
     return path => {
       if (path && path.indexOf('images/') > -1) {
-        const url = new URL(`${ASSETS_SERVER_BASE_URL}/github/${repoId}/${path}`)
-        if (!public) {
+        let url
+        if (public) {
+          url = new URL(getS3UrlForGithubPath(repoId, path))
+        } else {
+          url = new URL(`${ASSETS_SERVER_BASE_URL}/github/${repoId}/${path}`)
           url.hash = querystring.stringify({
             [originalKey]: path
           })
         }
+        originalPaths.push(path)
         return url.toString()
       }
       return path

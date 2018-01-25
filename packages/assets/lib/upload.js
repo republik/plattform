@@ -1,6 +1,6 @@
 const crypto = require('crypto')
 const checkEnv = require('check-env')
-const uploadS3 = require('./uploadS3')
+const { upload: uploadS3 } = require('./s3')
 const convertImage = require('./convertImage')
 const querystring = require('querystring')
 
