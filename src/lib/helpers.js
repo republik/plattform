@@ -7,3 +7,17 @@ export const intersperse = (list, separator) => {
     return items.concat([separator(item, i), item])
   }, [list[0]])
 }
+
+export const rafDebounce = fn => {
+  let next
+
+  return (...args) => {
+    if (!next) {
+      next = window.requestAnimationFrame(() => {
+        next = undefined
+        fn(...args)
+      })
+    }
+    return next
+  }
+}

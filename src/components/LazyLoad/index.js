@@ -1,28 +1,5 @@
 import React, { Component } from 'react'
-
-var supportsPassive = false
-try {
-  var opts = Object.defineProperty({}, 'passive', {
-    get: function() {
-      supportsPassive = true
-    }
-  })
-  window.addEventListener('testPassive', null, opts)
-  window.removeEventListener('testPassive', null, opts)
-} catch (e) {}
-
-const onFrame = fn => {
-  let next
-
-  return (...args) => {
-    if (!next) {
-      next = window.requestAnimationFrame(() => {
-        next = undefined
-        fn(...args)
-      })
-    }
-  }
-}
+import { rafDebounce } from '../../lib/helpers'
 
 const checkVisible = () => {
   const height = window.innerHeight
@@ -39,9 +16,9 @@ const checkVisible = () => {
     }
   })
 }
-const onScroll = onFrame(checkVisible)
+const onScroll = rafDebounce(checkVisible)
 
-const onResize = onFrame(() => {
+const onResize = rafDebounce(() => {
   const scrollY = window.pageYOffset
   
   instances.all.forEach(instance => {
@@ -59,8 +36,7 @@ const onResize = onFrame(() => {
 const instances = {
   add(instance) {
     if (!instances.all.length) {
-      const opts = supportsPassive ? { passive: true } : false
-      window.addEventListener('scroll', onScroll, opts)
+      window.addEventListener('scroll', onScroll)
       window.addEventListener('resize', onResize)
     }
     instances.all.push(instance)
