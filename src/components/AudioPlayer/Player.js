@@ -48,10 +48,11 @@ const styles = {
   }),
   controls: css({
     position: 'absolute',
-    top: 20,
+    top: 10,
     left: 0,
     right: 0,
-    cursor: 'pointer'
+    cursor: 'pointer',
+    height: '25px'
   }),
   play: css({
     position: 'absolute',
@@ -79,11 +80,10 @@ const styles = {
     position: 'absolute',
     zIndex: ZINDEX_AUDIOPLAYER_ICONS,
     right: 10,
-    //bottom: 10,
     cursor: 'pointer',
     fontSize: '16px',
+    lineHeight: '25px',
     height: '30px',
-    top: '50%',
     color: colors.text,
     [mUp]: {
       fontSize: '19px'
@@ -329,8 +329,8 @@ class AudioPlayer extends Component {
           {src.ogg && <source src={src.ogg} type="audio/ogg" />}
         </audio>
         <div {...styles.controls}>
-          <div {...styles.play} onClick={() => this.toggle()}>
-            {!playing && <Play size={30} fill="#000" />}
+          <div {...styles.play} onClick={loading ? null : () => this.toggle()}>
+            {!playing && <Play size={30} fill={loading ? colors.disabled : '#000'} />}
             {playing && <Pause size={30} fill="#000" />}
           </div>
           <div {...styles.mute}>
@@ -353,7 +353,7 @@ class AudioPlayer extends Component {
             </span>
           </div>
           <div {...styles.time}>
-            {loading && <InlineSpinner size={25} />}{' '}
+            {loading && <InlineSpinner size={25} />}
             {this.formattedCurrentTime &&
             this.formattedDuration && (
               <Fragment>

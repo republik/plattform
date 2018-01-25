@@ -36,3 +36,10 @@ Props:
 />
 ```
 
+```react
+<AudioPlayer
+  src={{
+    mp3: '/static/non-existing-sample.mp3'
+  }}
+/>
+```
