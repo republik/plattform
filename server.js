@@ -25,9 +25,10 @@ module.exports.run = () => {
   ]
 
   if (LOCAL_ASSETS_SERVER) {
-    const { express: { assets, pageRenderer } } = require('@orbiting/backend-modules-assets')
-    middlewares.push(assets)
-    middlewares.push(pageRenderer)
+    const { express } = require('@orbiting/backend-modules-assets')
+    for (let key of Object.keys(express)) {
+      middlewares.push(express[key])
+    }
   }
 
   // signin hooks
