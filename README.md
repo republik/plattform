@@ -60,12 +60,18 @@ YOUTUBE_APP_KEY=
 # optional: filter for the repos query (repo name must contain term)
 REPOS_NAME_FILTER=article-
 
-# host that proxies images internally (most probably this publikator)
-INTERNAL_ASSETS_HOSTNAME=http://localhost:3004
-# hostname of the frontend which will serve assets for the public
-PUBLIC_ASSETS_HOSTNAME=http://localhost:3020
+
+# start the asset server locally, handy for development
+# provide the value of PUBLIC_URL to ASSETS_SERVER_BASE_URL
+# check the README of assets-backend for which env vars you need to add to run
+# the assets server locally.
+LOCAL_ASSETS_SERVER=true
+# base url of the asssets server. Set to local if you use LOCAL_ASSETS_SERVER
+ASSETS_SERVER_BASE_URL=http://localhost:3020
 # min 32bit key to authenticate the public the access the asset proxy
+# you need to provide this regardless of LOCAL_ASSETS_SERVER
 ASSETS_HMAC_KEY=
+
 ```
 
 Install dependencies.

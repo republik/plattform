@@ -2,7 +2,7 @@
 // This script syncs redis with the status quo on github.
 //
 // usage
-// node script/pullRedis.js --noflush
+// node script/pullRedis.js --flush
 //
 
 require('dotenv').config()
@@ -21,10 +21,13 @@ const {
   channelKey: schedulingChannelKey
 } = require('../lib/publicationScheduler')
 const { prepareMetaForPublish } = require('../lib/Document')
+const { lib: {
+  Repo: { uploadImages }
+} } = require('@orbiting/backend-modules-assets')
 
 PgDb.connect().then(async pgdb => {
-  const noflush = process.argv[2] === '--noflush'
-  if (!noflush) {
+  const flush = process.argv[2] === '--flush'
+  if (flush) {
     console.warn('Flushing redis...')
     await redis.flushdbAsync()
   }
@@ -81,6 +84,9 @@ PgDb.connect().then(async pgdb => {
           { publicAssets: true },
           context
         )
+
+        // upload images to S3
+        await uploadImages(repo.id, doc.repoImagePaths)
 
         // prepareMetaForPublish creates missing discussions as a side-effect
         doc.content.meta = await prepareMetaForPublish(

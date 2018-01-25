@@ -15,7 +15,11 @@ const {
   getHeads,
   gitAuthor
 } = require('../../../lib/github')
-const { imageKeys: embedImageKeys } = require('../../../lib/embeds')
+const { lib: { process: {
+  processRepoImageUrlsInContent,
+  processRepoImageUrlsInMeta,
+  processImageUrlsInContent
+} } } = require('@orbiting/backend-modules-documents')
 
 const extractImage = async (url, images) => {
   if (url) {
@@ -78,35 +82,10 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
 
   // reverse asset url prefixing
   // repo images
-  visit(mdast, 'image', node => {
-    node.url = unprefixUrl(node.url)
-  })
-  if (mdast.meta) {
-    Object.keys(mdast.meta).forEach(key => {
-      if (key.match(/image/i)) {
-        mdast.meta[key] = unprefixUrl(mdast.meta[key])
-      }
-    })
-
-    const series = mdast.meta.series
-    if (series && Array.isArray(series.episodes)) {
-      series.episodes.forEach(episode => {
-        if (episode.image) {
-          episode.image = unprefixUrl(episode.image)
-        }
-      })
-    }
-  }
+  processRepoImageUrlsInContent(mdast, unprefixUrl)
+  processRepoImageUrlsInMeta(mdast, unprefixUrl)
   // embeds
-  visit(mdast, 'zone', node => {
-    if (node.data && node.identifier.indexOf('EMBED') > -1) {
-      for (let key of embedImageKeys) {
-        if (node.data[key]) {
-          node.data[key] = unprefixUrl(node.data[key])
-        }
-      }
-    }
-  })
+  processImageUrlsInContent(mdast, unprefixUrl)
 
   // extract repo images
   const images = []

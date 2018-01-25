@@ -29,17 +29,25 @@ const {
   prepareMetaForPublish,
   handleRedirection
 } = require('../../../lib/Document')
-
-const { FRONTEND_BASE_URL } = process.env
-
 const {
-  graphql: { resolvers: { queries: { documents: getPublishedDocuments } } },
+  graphql: {
+    resolvers: { queries: { documents: getPublishedDocuments } }
+  },
   lib: {
     html: { get: getHTML },
-    resolve: { contentUrlResolver, metaUrlResolver, metaFieldResolver }
+    resolve: {
+      contentUrlResolver,
+      metaUrlResolver,
+      metaFieldResolver
+    }
   }
 } = require('@orbiting/backend-modules-documents')
+const { lib: {
+  Repo: { uploadImages }
+} } = require('@orbiting/backend-modules-assets')
 const uniq = require('lodash/uniq')
+
+const { FRONTEND_BASE_URL } = process.env
 
 module.exports = async (
   _,
@@ -130,6 +138,9 @@ module.exports = async (
     publishDate: doc.content.meta.publishDate,
     discussionId: doc.content.meta.discussionId
   }
+
+  // upload images to S3
+  await uploadImages(repoId, doc.repoImagePaths)
 
   // check if slug is taken
   const newPath = doc.content.meta.path

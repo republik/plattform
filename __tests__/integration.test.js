@@ -16,7 +16,7 @@ dedupe.activate()
 const {
   PORT,
   GITHUB_LOGIN,
-  INTERNAL_ASSETS_HOSTNAME,
+  ASSETS_SERVER_BASE_URL,
   PUBLIC_WS_URL_BASE,
   PUBLIC_WS_URL_PATH
 } = process.env
@@ -690,6 +690,7 @@ test('check image dataURI is replaced with relative url (incl. image size)', asy
   t.end()
 })
 
+const sharp = require('sharp')
 test('check image URLs and asset server', async (t) => {
   const result = await apolloFetch({
     query: `
@@ -721,9 +722,8 @@ test('check image URLs and asset server', async (t) => {
   })
   t.equals(imageUrls.length, 1)
 
-  // check for INTERNAL_ASSETS_HOSTNAME
   for (let imageUrl of imageUrls) {
-    t.equals(imageUrl.indexOf(INTERNAL_ASSETS_HOSTNAME), 0)
+    t.equals(imageUrl.indexOf(ASSETS_SERVER_BASE_URL), 0, 'ASSETS_SERVER_BASE_URL prefix present')
   }
 
   // download images via asset server
@@ -740,10 +740,31 @@ test('check image URLs and asset server', async (t) => {
   visit(loremWithImageMdast, 'image', node => {
     imageBuffersFromLorem.push(dataUriToBuffer(node.url))
   })
-  t.equals(imageBuffersFromLorem.length, imageBuffersFromServer.length)
+
+  const convertedImageBuffersFromLorem = []
+  let counter = 0
+  for (let buffer of imageBuffersFromLorem) {
+    const image = await sharp(buffer)
+    const metadata = await image.metadata()
+    let newImage
+    if (metadata.format === 'jpeg') {
+      newImage = await image
+        .jpeg({
+          progressive: true,
+          quality: 80
+        })
+        .toBuffer()
+    } else {
+      newImage = buffer
+    }
+    convertedImageBuffersFromLorem[counter] = newImage
+
+    counter += 1
+  }
+  t.equals(convertedImageBuffersFromLorem.length, imageBuffersFromServer.length)
 
   for (let i = 0; i < imageBuffersFromServer.length; i++) {
-    const buffer0 = imageBuffersFromLorem[i]
+    const buffer0 = convertedImageBuffersFromLorem[i]
     const buffer1 = imageBuffersFromServer[i]
     t.notEquals(buffer0, null)
     t.notEquals(buffer1, null)
