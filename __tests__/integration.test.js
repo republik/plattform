@@ -748,6 +748,7 @@ test('check image URLs and asset server', async (t) => {
       .toFormat('webp', {
         quality: 80
       })
+      .toBuffer()
     i += 1
   }
   t.equals(webpImageBuffersFromLorem.length, imageBuffersFromServer.length)
