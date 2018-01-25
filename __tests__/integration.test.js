@@ -741,20 +741,30 @@ test('check image URLs and asset server', async (t) => {
     imageBuffersFromLorem.push(dataUriToBuffer(node.url))
   })
 
-  const webpImageBuffersFromLorem = []
-  let i = 0
+  const convertedImageBuffersFromLorem = []
+  let counter = 0
   for (let buffer of imageBuffersFromLorem) {
-    webpImageBuffersFromLorem[i] = await sharp(buffer)
-      .toFormat('webp', {
-        quality: 80
-      })
-      .toBuffer()
-    i += 1
+    const image = await sharp(buffer)
+    const metadata = await image.metadata()
+    let newImage
+    if (metadata.format === 'jpeg') {
+      newImage = await image
+        .jpeg({
+          progressive: true,
+          quality: 80
+        })
+        .toBuffer()
+    } else {
+      newImage = buffer
+    }
+    convertedImageBuffersFromLorem[counter] = newImage
+
+    counter += 1
   }
-  t.equals(webpImageBuffersFromLorem.length, imageBuffersFromServer.length)
+  t.equals(convertedImageBuffersFromLorem.length, imageBuffersFromServer.length)
 
   for (let i = 0; i < imageBuffersFromServer.length; i++) {
-    const buffer0 = webpImageBuffersFromLorem[i]
+    const buffer0 = convertedImageBuffersFromLorem[i]
     const buffer1 = imageBuffersFromServer[i]
     t.notEquals(buffer0, null)
     t.notEquals(buffer1, null)
