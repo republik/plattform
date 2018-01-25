@@ -98,6 +98,8 @@ module.exports = {
         resize = args && args.size === 'SHARE'
           ? '1000x1000'
           : '384x384'
+      } else {
+        resize = '384x384' // default for portraits
       }
       const [url, query] = portraitUrl.split('?')
       const newQuery = querystring.stringify({
