@@ -37,7 +37,7 @@ test('getResizedSrcs: size info', assert => {
     width: 4500,
     height: 2500
   })
-  assert.equal(props.srcSet, 'image.jpg?size=4500x2500&resize=4000x 4000w')
+  assert.equal(props.srcSet, 'image.jpg?size=4500x2500&resize=4000x 4000w,image.jpg?size=4500x2500&resize=3000x 3000w')
   assert.equal(props.maxWidth, 4500)
 
   assert.end()
@@ -50,7 +50,7 @@ test('getResizedSrcs: undefined maxWidth if setMaxWidth is false', assert => {
     width: 4500,
     height: 2500
   })
-  assert.equal(props.srcSet, 'image.jpg?size=4500x2500&resize=4000x 4000w')
+  assert.equal(props.srcSet, 'image.jpg?size=4500x2500&resize=4000x 4000w,image.jpg?size=4500x2500&resize=3000x 3000w')
   assert.equal(props.maxWidth, undefined)
 
   assert.end()
