@@ -170,6 +170,17 @@ ReactDOM.render(
             src: require('./components/VideoPlayer/docs.md')
           },
           {
+            path: '/audioplayer',
+            title: 'AudioPlayer',
+            imports: {
+              css,
+              ...require('./components/Typography'),
+              ...require('./components/AudioPlayer'),
+              Center: require('./components/Center'),
+            },
+            src: require('./components/AudioPlayer/docs.md')
+          },
+          {
             path: '/lazyload',
             title: 'LazyLoad',
             imports: {
