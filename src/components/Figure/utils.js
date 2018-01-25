@@ -39,20 +39,22 @@ export const getResizedSrcs = (src, displayWidth, setMaxWidth = true) => {
     `${defaultWidth}x`
   )
 
-  let srcSet
-  if (defaultWidth < maxWidth) {
-    const isHighRes = defaultWidth * 2 <= maxWidth
-    // add high res image
-    srcSet = [
-      isHighRes ? defaultWidth * 2 : maxWidth,
-      isHighRes && Math.round(defaultWidth * 1.5)
-    ].filter(Boolean)
-      .map(size => [
-        imageResizeUrl(src, `${size}x`),
-        `${size}w`
-      ].join(' '))
-      .join(',')
-  }
+  const isHighRes = defaultWidth * 2 <= maxWidth
+  // add high res image
+  const srcSet = [
+    Math.round(defaultWidth * 0.5),
+    defaultWidth,
+    defaultWidth < maxWidth && (isHighRes
+      ? defaultWidth * 2
+      : maxWidth
+    )
+  ]
+    .filter(Boolean)
+    .map(size => [
+      imageResizeUrl(src, `${size}x`),
+      `${size}w`
+    ].join(' '))
+    .join(',')
 
   return {
     src: resizedSrc,
