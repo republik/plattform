@@ -45,7 +45,7 @@ export const getResizedSrcs = (src, displayWidth, setMaxWidth = true) => {
     // add high res image
     srcSet = [
       isHighRes ? defaultWidth * 2 : maxWidth,
-      isHighRes && defaultWidth * 1.5
+      isHighRes && Math.round(defaultWidth * 1.5)
     ].filter(Boolean)
       .map(size => [
         imageResizeUrl(src, `${size}x`),
