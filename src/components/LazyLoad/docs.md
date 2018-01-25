@@ -1,6 +1,6 @@
 ### `<LazyLoad />`
 
-Awaits the viewport approaching to render its children. It works by rendering a span wrapper which should act as an placeholder—reserving the right amount of space. When `!process.browser` the children will be rendered in a `<noscript>` tag before beeing visible.
+Awaits the viewport approaching to render its children. It works by rendering a span wrapper which should act as an placeholder—reserving the right amount of space. When `!process.browser` the children will be rendered in a `<noscript>` tag before being visible.
 
 #### Properties
 
@@ -25,7 +25,7 @@ A convenience wrapper for width filling images with an known aspect ratio. It ta
 ```react
 <div>
   <P style={{paddingBottom: '150vh'}}>
-    By default a LazyLoad wrapped component will only load once it's half the screen height away. The is an image below, in 1.5 screen heights:
+    By default a LazyLoad wrapped component will only load once it's half the screen height away. There is an image below, in 1.5 screen heights:
   </P>
   <LazyLoad style={{
     display: 'block',
@@ -40,7 +40,7 @@ A convenience wrapper for width filling images with an known aspect ratio. It ta
     }} />
   </LazyLoad>
   <P style={{paddingTop: 50, paddingBottom: '100vh'}}>
-    The is another image below, in 1 screen heights:
+    There is another image below, in 1 screen heights:
   </P>
   <LazyImage src='/static/rothaus_landscape.jpg?size=2000x1331' aspectRatio={2000/1331} />
   <P style={{paddingTop: 50, paddingBottom: '100vh'}}>
