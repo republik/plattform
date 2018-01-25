@@ -3,20 +3,12 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { imageSizeInfo } from 'mdast-react-render/lib/utils'
 import { getResizedSrcs } from './utils'
+import LazyImage from '../LazyLoad/Image'
 
 const styles = {
   image: css({
     display: 'block',
     width: '100%'
-  }),
-  wrappedImage: css({
-    position: 'absolute',
-    width: '100%'
-  }),
-  aspectRatio: css({
-    backgroundColor: 'rgba(0,0,0,0.1)',
-    display: 'block',
-    position: 'relative'
   }),
   maxWidth: css({
     display: 'block',
@@ -38,19 +30,11 @@ class Image extends Component {
     const aspectRatio = size ? size.width / size.height : undefined
 
     const image = isFinite(aspectRatio)
-      ? (
-        <span
-          {...attributes}
-          {...styles.aspectRatio}
-          style={{paddingBottom: `${100 / aspectRatio}%`}}>
-          <img
-            {...styles.wrappedImage}
-            src={src}
-            srcSet={srcSet}
-            alt={alt} />
-        </span>
-      )
-      : <img {...attributes} {...styles.image} src={src} srcSet={srcSet} alt={alt} />
+      ? <LazyImage attributes={attributes}
+          aspectRatio={aspectRatio}
+          src={src} srcSet={srcSet} alt={alt} />
+      : <img {...attributes} {...styles.image}
+          src={src} srcSet={srcSet} alt={alt} />
 
     if (maxWidth) {
       return (

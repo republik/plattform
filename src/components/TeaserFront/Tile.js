@@ -6,6 +6,7 @@ import Text from './Text'
 import colors from '../../theme/colors'
 
 import { FigureImage } from '../Figure'
+import LazyLoad from '../LazyLoad'
 
 const IMAGE_SIZE = {
   tiny: 180,
@@ -176,7 +177,10 @@ const Tile = ({ children, attributes, image, alt, onClick, color, bgColor, align
     >
       {imageProps && (
         <div {...styles.imageContainer}>
-          <img src={imageProps.src} srcSet={imageProps.srcSet} alt={alt} {...styles.image} />
+          <LazyLoad>
+            <img src={imageProps.src} srcSet={imageProps.srcSet} alt={alt}
+              {...styles.image} />
+          </LazyLoad>
         </div>
       )}
       <div {...styles.textContainer}>

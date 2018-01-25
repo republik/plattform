@@ -160,7 +160,7 @@ Von Sonderkorrespondent [Lukas Bünger](<>)
 }
 \`\`\`
 
-![](https://assets.republik.ch/cf_gui/static/team/christof_moser.jpg)
+![](https://assets.republik.ch/cf_gui/static/team/christof_moser.jpg?size=1000x563)
 
 ###### Kluge Gedanken von alten Männern
 
@@ -183,7 +183,7 @@ Von [Christof Moser](/~6556e282-4ac4-4129-8f8f-d20f28170c39 "Christof Moser")
 
 <section><h6>ARTICLECOLLECTIONINTRO</h6>
 
-![](/static/rothaus_landscape.jpg)
+![](/static/rothaus_landscape.jpg?size=2000x1331)
 
 ###### Dossier
 
