@@ -16,8 +16,9 @@ const {
   gitAuthor
 } = require('../../../lib/github')
 const { lib: { process: {
-  processRepoImageUrls,
-  processImageUrls
+  processRepoImageUrlsInContent,
+  processRepoImageUrlsInMeta,
+  processImageUrlsInContent
 } } } = require('@orbiting/backend-modules-documents')
 
 const extractImage = async (url, images) => {
@@ -81,9 +82,10 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
 
   // reverse asset url prefixing
   // repo images
-  processRepoImageUrls(mdast, unprefixUrl)
+  processRepoImageUrlsInContent(mdast, unprefixUrl)
+  processRepoImageUrlsInMeta(mdast, unprefixUrl)
   // embeds
-  processImageUrls(mdast, unprefixUrl)
+  processImageUrlsInContent(mdast, unprefixUrl)
 
   // extract repo images
   const images = []

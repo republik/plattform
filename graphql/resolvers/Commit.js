@@ -5,8 +5,9 @@ const { lib: {
   createUrlPrefixer
 } } = require('@orbiting/backend-modules-assets')
 const { lib: { process: {
-  processRepoImageUrls,
-  processImageUrls
+  processRepoImageUrlsInContent,
+  processRepoImageUrlsInMeta,
+  processImageUrlsInContent
 } } } = require('@orbiting/backend-modules-documents')
 const debug = require('debug')('publikator:commit')
 
@@ -84,17 +85,20 @@ module.exports = {
     }
 
     // prefix repo image's urls
-    const prefixRepoUrl = createRepoUrlPrefixer(repoId, publicAssets)
-    processRepoImageUrls(mdast, prefixRepoUrl)
+    const repoImagePaths = []
+    const prefixRepoUrl = createRepoUrlPrefixer(repoId, publicAssets, repoImagePaths)
+    processRepoImageUrlsInContent(mdast, prefixRepoUrl)
+    processRepoImageUrlsInMeta(mdast, prefixRepoUrl)
 
     // prefix embed image's urls
     const prefixUrl = createUrlPrefixer(publicAssets)
-    processImageUrls(mdast, prefixUrl)
+    processImageUrlsInContent(mdast, prefixUrl)
 
     return {
       id: Buffer.from(`repo:${repoId}:${commitId}`).toString('base64'),
       repoId,
-      content: mdast
+      content: mdast,
+      repoImagePaths
     }
   }
 }
