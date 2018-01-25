@@ -34,7 +34,8 @@ const ImageBlock = ({
   color,
   bgColor,
   textPosition,
-  center
+  center,
+  aboveTheFold
 }) => {
   const background = bgColor || ''
   return (
@@ -42,7 +43,7 @@ const ImageBlock = ({
       background,
       cursor: onClick ? 'pointer' : 'default'
     }}>
-      <FigureImage {...FigureImage.utils.getResizedSrcs(image, 1500, false)} alt={alt} />
+      <FigureImage aboveTheFold={aboveTheFold} {...FigureImage.utils.getResizedSrcs(image, 1500, false)} alt={alt} />
       <div {...styles.textContainer}>
         <Text position={textPosition} color={color} center={center}>
           {children}

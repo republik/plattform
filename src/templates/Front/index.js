@@ -170,8 +170,9 @@ const createSchema = ({
 
   const frontImageTeaser = {
     matchMdast: matchTeaserType('frontImage'),
-    props: node => ({
+    props: (node, i) => ({
       image: extractImage(node.children[0]),
+      aboveTheFold: i < 2,
       ...node.data
     }),
     component: ({ children, attributes, ...props }) => (
@@ -228,8 +229,9 @@ const createSchema = ({
         </TeaserFrontSplit>
       </Link>
     ),
-    props: node => ({
+    props: (node, i) => ({
       image: extractImage(node.children[0]),
+      aboveTheFold: i < 2,
       ...node.data
     }),
     editorModule: 'teaser',
@@ -328,10 +330,14 @@ const createSchema = ({
         </TeaserFrontTile>
       </Link>
     ),
-    props: node => ({
-      image: extractImage(node.children[0]),
-      ...node.data
-    }),
+    props: (node, index, parent, {ancestors}) => {
+      const aboveTheFold = ancestors[1].children.indexOf(ancestors[0]) < 2
+      return {
+        image: extractImage(node.children[0]),
+        aboveTheFold,
+        ...node.data
+      }
+    },
     editorModule: 'teaser',
     editorOptions: {
       type: 'FRONTTILE',

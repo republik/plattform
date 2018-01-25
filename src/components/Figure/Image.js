@@ -23,14 +23,15 @@ class Image extends Component {
       alt,
       attributes = {},
       maxWidth,
-      size: sizeProp
+      size: sizeProp,
+      aboveTheFold
     } = this.props
 
     const size = sizeProp || (sizeProp === undefined && imageSizeInfo(src))
     const aspectRatio = size ? size.width / size.height : undefined
 
     const image = isFinite(aspectRatio)
-      ? <LazyImage attributes={attributes}
+      ? <LazyImage attributes={attributes} visible={aboveTheFold}
           aspectRatio={aspectRatio}
           src={src} srcSet={srcSet} alt={alt} />
       : <img {...attributes} {...styles.image}
@@ -55,7 +56,8 @@ Image.propTypes = {
     width: PropTypes.number,
     height: PropTypes.number
   }),
-  maxWidth: PropTypes.number
+  maxWidth: PropTypes.number,
+  aboveTheFold: PropTypes.bool
 }
 
 Image.utils = {

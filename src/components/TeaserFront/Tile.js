@@ -153,7 +153,7 @@ TeaserFrontTileRow.defaultProps = {
   columns: 1
 }
 
-const Tile = ({ children, attributes, image, alt, onClick, color, bgColor, align }) => {
+const Tile = ({ children, attributes, image, alt, onClick, color, bgColor, align, aboveTheFold }) => {
   const background = bgColor || ''
   const justifyContent =
     align === 'top' ? 'flex-start' : align === 'bottom' ? 'flex-end' : ''
@@ -177,7 +177,7 @@ const Tile = ({ children, attributes, image, alt, onClick, color, bgColor, align
     >
       {imageProps && (
         <div {...styles.imageContainer}>
-          <LazyLoad>
+          <LazyLoad visible={aboveTheFold}>
             <img src={imageProps.src} srcSet={imageProps.srcSet} alt={alt}
               {...styles.image} />
           </LazyLoad>

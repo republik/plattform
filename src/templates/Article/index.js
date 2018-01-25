@@ -418,6 +418,7 @@ const cover = {
             displayWidth,
             setMaxWidth
           ),
+          aboveTheFold: true,
           alt: node.children[0].alt
         }
       },

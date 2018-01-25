@@ -73,7 +73,8 @@ const Split = ({
   bgColor,
   center,
   reverse,
-  portrait
+  portrait,
+  aboveTheFold
 }) => {
   const background = bgColor || ''
   const flexDirection = reverse ? 'row-reverse' : ''
@@ -94,7 +95,7 @@ const Split = ({
           portrait ? styles.imageContainerPortrait : {}
         )}
       >
-        <FigureImage {...FigureImage.utils.getResizedSrcs(image, 750)} alt={alt} />
+        <FigureImage aboveTheFold={aboveTheFold} {...FigureImage.utils.getResizedSrcs(image, 750)} alt={alt} />
       </div>
       <div
         {...css(
