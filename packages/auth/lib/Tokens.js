@@ -1,10 +1,13 @@
+const OTP = require('otp')
+
 const TokenTypes = {
   EMAIL_TOKEN: 'EMAIL_TOKEN',
   TOTP: 'TOTP'
 }
 
 const validateTimeBasedPassword = async ({ totp, sharedSecret }) => {
-  return false
+  const otp = OTP({ secret: sharedSecret })
+  return (otp.totp() === totp)
 }
 
 const findToken = (tokens, type) => {
