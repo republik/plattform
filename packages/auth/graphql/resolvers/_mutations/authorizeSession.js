@@ -5,12 +5,13 @@ const { authorizeSession } = require('../../../lib/Sessions')
 module.exports = async (_, args, { pgdb, req, signInHooks }) => {
   const {
     email,
-    tokens
+    token,
+    secondFactorToken
   } = args
   try {
     const user = await authorizeSession({
       pgdb,
-      tokens,
+      tokens: [token, ...secondFactorToken],
       emailFromQuery: email,
       signInHooks
     })

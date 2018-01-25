@@ -21,7 +21,7 @@ type queries {
   users(search: String!, role: String!): [User]!
 
   # search for an unverified session by token
-  unauthorizedSession(email: String!, token: SessionToken!): Session
+  unauthorizedSession(email: String!, token: SignInTokenChallenge!): Session
 
   # the requesting userAgent
   echo: RequestInfo!
@@ -33,7 +33,7 @@ type mutations {
   signOut: Boolean!
 
   # authorize a token sent by mail to convert a login request to a valid user session
-  authorizeSession(email: String!, tokens: [SessionToken!]!): Boolean!
+  authorizeSession(email: String!, token: SignInTokenChallenge!, secondFactor: SignInTokenChallenge!): Boolean!
 
   # if userId is null, this operation will be scoped to the logged in user
   # required role to clear other's session: supporter

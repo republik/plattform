@@ -1,12 +1,13 @@
+const kraut = require('kraut')
+const geoForIP = require('./geoForIP')
+
 const {
   NoSessionError,
   QueryEmailMismatchError,
   DestroySessionError,
-  TimeBasedPasswordMismatchError } = require('./errors')
+  InitiateSessionError } = require('./errors')
 const {
-  validateTimeBasedPassword,
-  findToken,
-  TokenTypes
+  validateChallenge
 } = require('./Tokens')
 
 const destroySession = async (req) => {
@@ -18,6 +19,35 @@ const destroySession = async (req) => {
       return resolve()
     })
   })
+}
+
+const initiateSession = async ({ req, pgdb, ipAddress, userAgent, email }) => {
+  const phrase = `${kraut.adjectives.random()} ${kraut.verbs.random()} ${kraut.nouns.random()}`
+  const { country, city } = geoForIP(ipAddress)
+  req.session.email = email
+  req.session.ip = ipAddress
+  req.session.ua = userAgent
+  if (country || city) {
+    req.session.geo = { country, city }
+  }
+  await new Promise(function (resolve, reject) {
+    req.session.save(function (error, data) {
+      if (error) {
+        return reject(new InitiateSessionError({ req, error }))
+      }
+      return resolve(data)
+    })
+  })
+  const session = await pgdb.public.sessions.findOne({ sid: req.sessionID })
+  if (!session) {
+    throw new NoSessionError({ email })
+  }
+  return {
+    session,
+    country,
+    city,
+    phrase
+  }
 }
 
 const sessionByToken = async ({ pgdb, token, email: emailFromQuery, ...meta }) => {
@@ -100,17 +130,20 @@ const upsertUserVerified = async({ pgdb, email }) => {
 }
 
 const authorizeSession = async ({ pgdb, tokens, emailFromQuery, signInHooks = [] }) => {
-  // try to get the initiating session by email_token
-  const emailToken = findToken(tokens, TokenTypes.EMAIL_TOKEN)
-  const session = await sessionByToken({
-    pgdb,
-    token: emailToken,
-    email: emailFromQuery
-  })
-
-  if (!session) {
-    throw new NoSessionError({ tokens, email: emailFromQuery })
+  const validatedSessionIds = []
+  for (const tokenChallenge of tokens) {
+    const sessionId = await validateChallenge({ pgdb, email: emailFromQuery, ...tokenChallenge })
+    if (!sessionId) throw new Error('one of the challenges failed')
+    validatedSessionIds.push(sessionId)
   }
+
+  if ([...(new Set(validatedSessionIds))].length > 1) {
+    throw new Error('you can only validate one session at a time')
+  }
+
+  const sessionId = validatedSessionIds[0]
+  const session = await pgdb.public.sessions.findOne({ id: sessionId })
+  if (!session) throw new NoSessionError({ sessionId })
 
   // verify and/or create the user
   const { user, isVerificationUpdated } = await upsertUserVerified({
@@ -118,32 +151,22 @@ const authorizeSession = async ({ pgdb, tokens, emailFromQuery, signInHooks = []
     email: session.sess.email
   })
 
-  // check if user needs a second factor, if true, check for all tokens
-  // TODO: sharedSecret and isTwoFactorEnforced must be stored on the user table
-  user.isTwoFactorEnforced = true
-  user.sharedSecret = 'AAAA'
-  if (user.isTwoFactorEnforced) {
-    const token = findToken(tokens, TokenTypes.TOTP)
-    const isValid = await validateTimeBasedPassword({
-      totp: token.payload,
-      sharedSecret: user.sharedSecret
-    })
-    if (!isValid) {
-      throw new TimeBasedPasswordMismatchError({ token, email: emailFromQuery })
-    }
-  }
-
   // log in the session and delete token
   await pgdb.public.sessions.updateOne({
     id: session.id
   }, {
     sess: {
       ...session.sess,
-      token: null,
       passport: {
         user: user.id
       }
     }
+  })
+
+  await pgdb.public.tokens.update({
+    sessionId
+  }, {
+    expiresAt: new Date()
   })
 
   // call signIn hooks
@@ -165,6 +188,7 @@ const authorizeSession = async ({ pgdb, tokens, emailFromQuery, signInHooks = []
 }
 
 module.exports = {
+  initiateSession,
   sessionByToken,
   findAllUserSessions,
   authorizeSession,

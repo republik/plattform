@@ -31,13 +31,13 @@ type SignInResponse {
   phrase: String!
 }
 
-enum SignInChallengeType {
+enum SignInTokenType {
   EMAIL_TOKEN
   TOTP
 }
 
-input SessionToken {
-  type: SignInChallengeType!
+input SignInTokenChallenge {
+  type: SignInTokenType!
   payload: String!
 }
 

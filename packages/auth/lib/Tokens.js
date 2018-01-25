@@ -1,23 +1,54 @@
-const OTP = require('otp')
+const EmailTokenChallenge = require('./challenges/EmailTokenChallenge')
+const TOTPChallenge = require('./challenges/TOTPChallenge')
+
+const {
+  TokenTypeUnknownError
+} = require('./errors')
 
 const TokenTypes = {
   EMAIL_TOKEN: 'EMAIL_TOKEN',
   TOTP: 'TOTP'
 }
 
-const validateTimeBasedPassword = async ({ totp, sharedSecret }) => {
-  const otp = OTP({ secret: sharedSecret })
-  return (otp.totp() === totp)
+const TokenTypeMap = {
+  [TokenTypes.EMAIL_TOKEN]: EmailTokenChallenge,
+  [TokenTypes.TOTP]: TOTPChallenge
 }
 
-const findToken = (tokens, type) => {
-  if (!type || !tokens || tokens.length === 0) return null
-  return tokens
-    .reduce((previous, token) => (
-      token.type === type
-        ? token
-        : previous
-      ), null)
+const ChallengeHandlerProxy = ({ type, ...options }) => {
+  const handler = TokenTypeMap[type]
+  if (!handler) throw new TokenTypeUnknownError({ type })
+  return {
+    generateNewToken: async () => {
+      return handler.generateNewToken({
+        type,
+        ...options
+      })
+    },
+    startChallenge: async () => {
+      const { pgdb, email } = options
+      const user = await pgdb.public.users.findOne({ email })
+      return handler.startChallenge({
+        user,
+        type,
+        ...options
+      })
+    },
+    validateChallenge: async () => {
+      const { pgdb, email } = options
+      const user = await pgdb.public.users.findOne({ email })
+      return handler.validateChallenge({
+        user,
+        type,
+        ...options
+      })
+    }
+  }
 }
 
-module.exports = { validateTimeBasedPassword, findToken, TokenTypes }
+module.exports = {
+  TokenTypes,
+  validateChallenge: (options) => ChallengeHandlerProxy(options).validateChallenge(),
+  generateNewToken: (options) => ChallengeHandlerProxy(options).generateNewToken(),
+  startChallenge: (options) => ChallengeHandlerProxy(options).startChallenge()
+}
