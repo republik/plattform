@@ -22,7 +22,7 @@ module.exports = {
     if (doc._all) {
       contentUrlResolver(doc, doc._all, doc._usernames, undefined, urlPrefix, searchString)
 
-      const webp = context.req.accepts('image/webp')
+      const webp = context.req.get('Accept').indexOf('image/webp') > -1
       if(webp) {
         processRepoImageUrlsInContent(doc.content, addWebpSuffix)
         processImageUrlsInContent(doc.content, addWebpSuffix)
@@ -36,7 +36,7 @@ module.exports = {
     if (doc._all) {
       metaUrlResolver(meta, doc._all, doc._usernames, undefined, urlPrefix, searchString)
 
-      const webp = context.req.accepts('image/webp')
+      const webp = context.req.get('Accept').indexOf('image/webp') > -1
       if(webp) {
         processRepoImageUrlsInMeta(doc.content, addWebpSuffix)
       }
