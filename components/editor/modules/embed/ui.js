@@ -1,5 +1,5 @@
 import React from 'react'
-import { Radio, Label } from '@project-r/styleguide'
+import { Checkbox, Radio, Label } from '@project-r/styleguide'
 import { createPropertyForm } from '../../utils'
 
 export default ({ TYPE, editorOptions }) => {
@@ -17,6 +17,7 @@ export default ({ TYPE, editorOptions }) => {
     return (
       <div>
         {value.blocks.filter(isVideoBlock).map((block, i) => {
+          const src = block.data.get('src')
           return (
             <div key={`video-${i}`}>
               {!!sizes.length && (
@@ -51,6 +52,19 @@ export default ({ TYPE, editorOptions }) => {
                       <br key={`br${i}`} />
                     ]
                   })}
+                  <br />
+                  {!!src && src.hls && <Checkbox
+                    checked={block.data.get('forceAudio')}
+                    onChange={event => {
+                      const checked = block.data.get('forceAudio')
+                      let change = value.change().setNodeByKey(block.key, {
+                        data: block.data.merge({forceAudio: !checked})
+                      })
+                      onChange(change)
+                    }}
+                  >
+                    nur Audio
+                  </Checkbox>}
                 </p>
               )}
             </div>
