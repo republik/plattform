@@ -29,7 +29,8 @@
     "debug": "^3.1.0",
     "export-files": "^2.1.1",
     "file-type-stream": "^1.0.0",
-    "sharp": "^0.18.4"
+    "sharp": "^0.19.0",
+    "stream-to-array": "^2.3.0"
   },
   "peerDependencies": {
     "isomorphic-unfetch": "^2.0.0"
