@@ -324,7 +324,6 @@ class AudioPlayer extends Component {
         {!isVideo && <audio
           {...styles.audio}
           {...attributes}
-          style={this.props.style}
           muted={muted}
           ref={this.ref}
           crossOrigin="anonymous"
@@ -336,7 +335,6 @@ class AudioPlayer extends Component {
         {isVideo && <video
           {...styles.audio}
           {...attributes}
-          style={this.props.style}
           muted={muted}
           ref={this.ref}
           crossOrigin="anonymous"
