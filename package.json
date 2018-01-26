@@ -11,7 +11,7 @@
     "@orbiting/backend-modules-assets": "^2.0.0",
     "@orbiting/backend-modules-auth": "^3.0.9",
     "@orbiting/backend-modules-base": "^1.2.0",
-    "@orbiting/backend-modules-documents": "^2.11.0",
+    "@orbiting/backend-modules-documents": "^2.11.1",
     "@orbiting/backend-modules-mail": "^2.0.0",
     "@orbiting/backend-modules-redirections": "^1.0.1",
     "@orbiting/backend-modules-scalars": "^0.0.6",
