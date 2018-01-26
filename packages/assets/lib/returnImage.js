@@ -74,7 +74,7 @@ module.exports = async ({
       : mime
     )
 
-    const pipeline = await sharp(buffer)
+    const pipeline = sharp(buffer)
     if (width || height) {
       pipeline.resize(width, height)
     }
