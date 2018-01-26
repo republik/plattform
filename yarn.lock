@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@orbiting/backend-modules-assets@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-assets/-/backend-modules-assets-2.1.0.tgz#c0ce8e3f4642b7ea75017bd0fc82f8ad362eaf8a"
+"@orbiting/backend-modules-assets@^2.1.1":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-assets/-/backend-modules-assets-2.1.1.tgz#9f97019556cdc594c6e55ef79fa6becdf1252400"
   dependencies:
     "@orbiting/backend-modules-github" "^1.0.0"
     aws-sdk "^2.185.0"
