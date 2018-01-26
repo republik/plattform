@@ -93,6 +93,9 @@ const styles = {
   scrub: css({
     ...barStyle,
     zIndex: ZINDEX_AUDIOPLAYER_SCRUB,
+    height: 20,
+    marginTop: -((20 + PROGRESS_HEIGHT) / 2),
+    paddingTop: 20 / 2 - PROGRESS_HEIGHT / 2,
     cursor: 'ew-resize'
   }),
   buffer: css({
