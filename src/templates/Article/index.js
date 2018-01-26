@@ -33,6 +33,7 @@ import {
 import { Tweet } from '../../components/Social'
 import { Video } from '../../components/Video'
 import { VideoPlayer } from '../../components/VideoPlayer'
+import { AudioPlayer } from '../../components/AudioPlayer'
 
 import {
   matchType,
@@ -672,6 +673,14 @@ const createSchema = ({
               {
                 matchMdast: matchZone('EMBEDVIDEO'),
                 component: ({ attributes, data, url }) => {
+                  if (data.forceAudio && data.src) {
+                    return (
+                      <AudioPlayer
+                        attributes={attributes}
+                        {...data}
+                      />
+                    )
+                  }
                   if (data.src) {
                     return (
                       <VideoPlayer

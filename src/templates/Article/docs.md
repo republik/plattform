@@ -596,3 +596,43 @@ Zweitens: ich habe erklärt mit diese zwei Spieler: nach Dortmund brauchen viell
 <hr /></section>
 `}</Markdown>
 ```
+
+## Video using audio player
+
+```react|noSource
+<Markdown schema={schema}>{`
+<section><h6>CENTER</h6>
+
+<section><h6>EMBEDVIDEO</h6>
+
+\`\`\`
+{
+  "forceAudio": true,
+  "size": "narrow",
+  "userUrl": "https://vimeo.com/republikmagazin",
+  "src": {
+    "mp4": "https://player.vimeo.com/external/214306312.hd.mp4?s=55b08b7b1333bff98676842e704950f34fb17da7&profile_id=119&oauth2_token_id=1022641249",
+    "hls": "https://player.vimeo.com/external/214306312.m3u8?s=95ba60c75b3eac3da1f6bcccd1ef4f4bc984787a&oauth2_token_id=1022641249",
+    "thumbnail": "https://i.vimeocdn.com/video/632164185_960x960.jpg?r=pad",
+    "__typename": "VimeoSrc"
+  },
+  "__typename": "VimeoEmbed",
+  "thumbnail": "https://i.vimeocdn.com/video/632164185_960x960.jpg?r=pad",
+  "userProfileImageUrl": "https://i.vimeocdn.com/portrait/19083661_100x100",
+  "platform": "vimeo",
+  "aspectRatio": 1,
+  "userName": "Republik",
+  "title": "Corine Mauch unterstützt die Republik",
+  "id": "214306312",
+  "createdAt": "2017-04-22T16:00:59.000Z",
+  "retrievedAt": "2017-12-15T12:25:21.318Z"
+}
+\`\`\`
+
+<https://vimeo.com/214306312>
+
+<hr /></section>
+
+<hr /></section>
+`}</Markdown>
+```
