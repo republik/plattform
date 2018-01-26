@@ -5,6 +5,8 @@ Props:
 -- `mp3`: The mp3 source URL of the audio.
 -- `aac`: The aac source URL of the audio.
 -- `ogg`: The ogg source URL of the audio.
+-- `hls`: The hls source URL (when using a video).
+-- `mp4`: The mp4 source URL (when using a video).
 - `size`: optional, `narrow` or `tiny`.
 - `attributes`: Object, arbitrary attributes mapped to the audio tag.
 
