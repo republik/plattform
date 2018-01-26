@@ -35,6 +35,7 @@ const styles = {
     lineHeight: 0
   }),
   audio: css({
+    height: 0,
     width: '100%',
     '::-webkit-media-controls-panel': {
       display: 'none !important'
@@ -313,10 +314,11 @@ class AudioPlayer extends Component {
   render() {
     const { src, size, attributes = {} } = this.props
     const { playing, progress, muted, loading, buffered } = this.state
+    const isVideo = src.mp4 || src.hls
 
     return (
       <div {...merge(styles.wrapper, breakoutStyles[size])}>
-        <audio
+        {!isVideo && <audio
           {...styles.audio}
           {...attributes}
           style={this.props.style}
@@ -324,10 +326,21 @@ class AudioPlayer extends Component {
           ref={this.ref}
           crossOrigin="anonymous"
         >
-          <source src={src.mp3} type="audio/mpeg" />
+          {src.mp3 && <source src={src.mp3} type="audio/mpeg" />}
           {src.aac && <source src={src.aac} type="audio/mp4" />}
           {src.ogg && <source src={src.ogg} type="audio/ogg" />}
-        </audio>
+        </audio>}
+        {isVideo && <video
+          {...styles.audio}
+          {...attributes}
+          style={this.props.style}
+          muted={muted}
+          ref={this.ref}
+          crossOrigin="anonymous"
+        >
+          {src.hls && <source src={src.hls} type="application/x-mpegURL" />}
+          {src.mp4 && <source src={src.mp4} type="video/mp4" />}
+        </video>}
         <div {...styles.controls}>
           <div {...styles.play} onClick={loading ? null : () => this.toggle()}>
             {!playing && <Play size={30} fill={loading ? colors.disabled : '#000'} />}
@@ -398,9 +411,11 @@ class AudioPlayer extends Component {
 
 AudioPlayer.propTypes = {
   src: PropTypes.shape({
-    mp3: PropTypes.string.isRequired,
+    mp3: PropTypes.string,
     aac: PropTypes.string,
-    ogg: PropTypes.string
+    ogg: PropTypes.string,
+    hls: PropTypes.string,
+    mp4: PropTypes.string
   }),
   size: PropTypes.oneOf(Object.keys(breakoutStyles)),
   attributes: PropTypes.object
