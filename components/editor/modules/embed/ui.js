@@ -17,6 +17,7 @@ export default ({ TYPE, editorOptions }) => {
     return (
       <div>
         {value.blocks.filter(isVideoBlock).map((block, i) => {
+          const src = block.data.get('src')
           return (
             <div key={`video-${i}`}>
               {!!sizes.length && (
@@ -52,7 +53,7 @@ export default ({ TYPE, editorOptions }) => {
                     ]
                   })}
                   <br />
-                  <Checkbox
+                  {!!src && src.hls && <Checkbox
                     checked={block.data.get('forceAudio')}
                     onChange={event => {
                       const checked = block.data.get('forceAudio')
@@ -62,8 +63,8 @@ export default ({ TYPE, editorOptions }) => {
                       onChange(change)
                     }}
                   >
-                    nur Audio (für eigene Vimeo-Videos)
-                  </Checkbox>
+                    nur Audio
+                  </Checkbox>}
                 </p>
               )}
             </div>
