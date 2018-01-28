@@ -180,6 +180,8 @@ const figureGroupPlugin = options => {
                 } else {
                   return insertFigure()
                 }
+              case 'child_unknown':
+                return
             }
             throw reason
           }
