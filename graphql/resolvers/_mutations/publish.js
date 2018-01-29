@@ -153,7 +153,7 @@ module.exports = async (
   if (existingRedirects.length) {
     throw new Error(t('api/publish/document/slug/redirectsExist', { path: newPath }))
   }
-  // deny if published or scheduled-published slug exists
+  // deny if published or scheduled-published slug exists for another repo
   const repoIds = await redis.smembersAsync('repos:ids')
   const publishedRepos = await Promise.all([
     ...repoIds.map(id => redis.getAsync(`repos:${id}/publication`)),
@@ -172,7 +172,7 @@ module.exports = async (
   }
 
   // remember if slug changed
-  if (!prepublication && !scheduledAt) {
+  if (!prepublication) {
     await handleRedirection(repoId, doc.content.meta, context)
   }
 
