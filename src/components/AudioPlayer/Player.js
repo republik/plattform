@@ -338,13 +338,14 @@ class AudioPlayer extends Component {
           muted={muted}
           ref={this.ref}
           crossOrigin="anonymous"
+          playsInline
         >
           {src.hls && <source src={src.hls} type="application/x-mpegURL" />}
           {src.mp4 && <source src={src.mp4} type="video/mp4" />}
         </video>}
         <div {...styles.controls}>
-          <div {...styles.play} onClick={loading ? null : () => this.toggle()}>
-            {!playing && <Play size={30} fill={loading ? colors.disabled : '#000'} />}
+          <div {...styles.play} onClick={() => this.toggle()}>
+            {!playing && <Play size={30} fill='#000' />}
             {playing && <Pause size={30} fill="#000" />}
           </div>
           <div {...styles.mute}>
