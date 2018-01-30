@@ -66,7 +66,7 @@ const ImageInput = ({onChange, t, src, label, maxWidth = 200}) => (
       alt='' />
     <input
       type='file'
-      accept='image/*'
+      accept='image/jpeg,image/png,image/gif'
       {...styles.input}
       onChange={readImage(onChange, t)}
     />
