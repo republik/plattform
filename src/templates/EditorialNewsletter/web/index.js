@@ -5,7 +5,6 @@ import StyledFigure from './Figure'
 
 import Center from '../../../components/Center'
 import {
-  Figure,
   FigureCover,
   FigureImage,
   FigureCaption,
