@@ -10,6 +10,7 @@ const schema = createFormatSchema()
 
 Defaults:
 - `repoPrefix`, `format-`
+- `getPath`, `/format/:slug`
 - `customMetaFields`, always adds repo refs for `discussion`, `dossier` and `format` settings with a `kind` (font) and `color` field.
 - `series`, false
 

@@ -562,6 +562,7 @@ const createSchema = ({
   }
 
   const schema = {
+    getPath: ({ slug }) => `/${(slug || '').split('/').pop()}`,
     rules: [
       {
         matchMdast: matchType('root'),

@@ -6,6 +6,8 @@ import schema from '@project-r/styleguide/lib/templates/EditorialNewsletter/emai
 
 The email schema uses table layout in container components.
 
+`getPath`: `/YYYY/MM/DD/:slug`
+
 ### With cover image
 
 ```react|noSource

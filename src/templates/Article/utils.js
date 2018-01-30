@@ -1,5 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
+import { timeFormat } from 'd3-time-format'
+
 import { Sub, Sup } from '../../components/Typography'
 
 import {
@@ -91,3 +93,9 @@ export const styles = {
     textDecoration: 'none'
   })
 }
+
+const slugDateFormat = timeFormat('%Y/%m/%d')
+
+export const getDatePath = ({ publishDate, slug }) => (
+  `/${slugDateFormat(publishDate)}/${(slug || '').split('/').pop()}`
+)

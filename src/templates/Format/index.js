@@ -20,10 +20,12 @@ const createSchema = ({
   titleBlockPrepend = null,
   titleBlockAppend = null,
   titleBlockRule,
+  getPath = ({ slug }) => `/format/${(slug || '').split('/').pop()}`,
   ...args
 } = {}) => {
   return createArticleSchema({
     repoPrefix: 'format-',
+    getPath,
     customMetaFields: [
       {
         label: 'Ebene',

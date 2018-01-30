@@ -10,4 +10,5 @@ const schema = createDiscussionSchema()
 
 Defaults:
 - `repoPrefix`, `discussion-`
+- `getPath`, `/YYYY/MM/DD/:slug/diskussion`
 - `customMetaFields`, repo refs for `format`, `dossier` and `discussion` settings with a `commentsMaxLength`, `commentsMinInterval` and `discussionAnonymity` field.

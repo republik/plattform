@@ -20,6 +20,8 @@ import {
   extractImage
 } from '../Article/utils'
 
+import { getDatePath } from '../Article/utils'
+
 const matchLast = (node, index, parent) => index === parent.children.length - 1
 
 const createNewsletterSchema = ({
@@ -202,6 +204,7 @@ const createNewsletterSchema = ({
   return {
     emailTemplate: 'newsletter-editorial',
     repoPrefix: 'newsletter-editorial-',
+    getPath: getDatePath,
     rules: [
       {
         matchMdast: matchType('root'),

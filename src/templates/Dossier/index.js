@@ -16,10 +16,12 @@ const createSchema = ({
   series = false,
   Link = DefaultLink,
   titleBlockPrepend = null,
+  getPath = ({ slug }) => `/dossier/${(slug || '').split('/').pop()}`,
   ...args
 } = {}) => {
   return createArticleSchema({
     repoPrefix: 'dossier-',
+    getPath,
     titleBlockPrepend: [
       titleBlockPrepend,
       <Link key='dossierLink' href={dossierHref} passHref>

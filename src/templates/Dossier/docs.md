@@ -14,6 +14,7 @@ const schema = createDossierSchema()
 
 Defaults:
 - `repoPrefix`, `dossier-`
+- `getPath`, `/dossier/:slug`
 - `customMetaFields`, always adds repo ref for `discussion`
 - `series`, false
 

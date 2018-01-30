@@ -14,6 +14,8 @@ This will be wrapped around and links (headlines and credits) and the whole teas
 - `href` String, target url or path
 - `passHref` Boolean, indicates this will eventually end in an a tag and you may overwrite href
 
+`getPath`: `/:slug`
+
 # Example
 
 ```react|noSource

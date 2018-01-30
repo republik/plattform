@@ -51,7 +51,8 @@ import {
   getDisplayWidth,
   extractImage,
   globalInlines,
-  styles
+  styles,
+  getDatePath
 } from './utils'
 
 import createTeasers from './teasers'
@@ -458,6 +459,7 @@ const createSchema = ({
   repoPrefix = 'article-',
   series = true,
   Link = DefaultLink,
+  getPath = getDatePath,
   t = () => ''
 } = {}) => {
   const teasers = createTeasers({
@@ -466,6 +468,7 @@ const createSchema = ({
 
   return {
     repoPrefix,
+    getPath,
     rules: [
       {
         matchMdast: matchType('root'),
