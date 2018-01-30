@@ -1,10 +1,12 @@
 import createNewsletterSchema from '../schema'
 
 import Container from './Container'
-import Center from './Center'
 import StyledFigure from './Figure'
+
+import Center from '../../../components/Center'
 import {
   Figure,
+  FigureCover,
   FigureImage,
   FigureCaption,
   FigureByline
@@ -14,7 +16,7 @@ import { Sub, Sup } from '../../../components/Typography'
 const createSchema = ({ ...args } = {}) => {
   return createNewsletterSchema({
     Container,
-    Cover: Figure,
+    Cover: FigureCover,
     CoverImage: FigureImage,
     Center,
     Figure: StyledFigure,
