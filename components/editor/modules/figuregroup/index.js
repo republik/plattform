@@ -181,6 +181,7 @@ const figureGroupPlugin = options => {
                   return insertFigure()
                 }
               case 'child_unknown':
+                // use default delete node behaviour
                 return
             }
             throw reason
