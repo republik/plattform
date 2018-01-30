@@ -1,6 +1,9 @@
+const querystring = require('querystring')
 const isEmail = require('email-validator').validate
 const isUUID = require('is-uuid')
 const debug = require('debug')('auth')
+const { sendMailTemplate, moveNewsletterSubscriptions } = require('@orbiting/backend-modules-mail')
+const t = require('./t')
 const AuthError = require('./AuthError')
 
 const {
@@ -17,6 +20,7 @@ const {
 
 const ERROR_EMAIL_INVALID = 'email-invalid'
 const ERROR_SESSION_INITIALIZATION_FAILED = 'session-initialization-failed'
+const ERROR_AUTHORIZATION_FAILED = 'authorization-failed'
 
 class EmailInvalidError extends AuthError {
   constructor (meta) {
@@ -30,8 +34,15 @@ class SessionInitializationFailedError extends AuthError {
   }
 }
 
+class AuthorizationFailedError extends AuthError {
+  constructor (meta) {
+    super(ERROR_AUTHORIZATION_FAILED, meta)
+  }
+}
+
 const {
-  AUTO_LOGIN
+  AUTO_LOGIN,
+  FRONTEND_BASE_URL
 } = process.env
 
 const signIn = async (_email, context, pgdb, req) => {
@@ -124,25 +135,33 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
     email: session.sess.email
   })
 
-  // log in the session and delete token
-  await pgdb.public.sessions.updateOne({
-    id: session.id
-  }, {
-    sess: {
-      ...session.sess,
-      passport: {
-        user: user.id
+  const transaction = await pgdb.transactionBegin()
+  try {
+    // log in the session and delete token
+    await transaction.public.sessions.updateOne({
+      id: session.id
+    }, {
+      sess: {
+        ...session.sess,
+        passport: {
+          user: user.id
+        }
       }
-    }
-  })
+    })
 
-  // let the tokens expire
-  await pgdb.public.tokens.delete({
-    sessionId: session.id
-  }, {
-    updatedAt: new Date(),
-    expiresAt: new Date()
-  })
+    // let the tokens expire
+    await transaction.public.tokens.delete({
+      sessionId: session.id
+    }, {
+      updatedAt: new Date(),
+      expiresAt: new Date()
+    })
+    transaction.transactionCommit()
+  } catch (error) {
+    transaction.transactionRollback()
+    console.error('something failed badly during authorization')
+    throw new AuthorizationFailedError({ session })
+  }
 
   // call signIn hooks
   try {
@@ -158,27 +177,34 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   } catch (e) {
     console.warn(`sign in hook failed in authorizeSession`, e)
   }
-
   return user
 }
 
 const upsertUserVerified = async({ pgdb, email }) => {
-  const existingUser = await pgdb.public.users.findOne({ email })
-  const user = existingUser ||
-    await pgdb.public.users.insertAndGet({
-      email,
-      verified: true
-    })
-  if (!user.verified) {
-    await pgdb.public.users.updateOne({
-      id: user.id
-    }, {
-      verified: true
-    })
-  }
-  return {
-    user,
-    isVerificationUpdated: (!existingUser || !existingUser.verified)
+  const transaction = await pgdb.transactionBegin()
+  try {
+    const existingUser = await transaction.public.users.findOne({ email })
+    const user = existingUser ||
+      await transaction.public.users.insertAndGet({
+        email,
+        verified: true
+      })
+    if (!user.verified) {
+      await transaction.public.users.updateOne({
+        id: user.id
+      }, {
+        verified: true
+      })
+    }
+    await transaction.transactionCommit()
+    return {
+      user,
+      isVerificationUpdated: (!existingUser || !existingUser.verified)
+    }
+  } catch (error) {
+    await transaction.transactionRollback()
+    console.error('something bad happened during user verification')
+    throw error
   }
 }
 
@@ -190,10 +216,74 @@ const resolveUser = async ({ slug, pgdb, fallback }) => {
   return user || fallback
 }
 
+const updateUserEmail = async ({ pgdb, userId, oldEmail, newEmail }) => {
+  const transaction = await pgdb.transactionBegin()
+  try {
+    await transaction.public.sessions.delete(
+      {
+        'sess @>': {
+          passport: {user: userId}
+        }
+      })
+    await transaction.public.users.updateAndGetOne(
+      {
+        id: userId
+      }, {
+        email: newEmail,
+        verified: false
+      }
+    )
+    await transaction.transactionCommit()
+  } catch (e) {
+    await transaction.transactionRollback()
+    throw e
+  }
+
+  await sendMailTemplate({
+    to: oldEmail,
+    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+    subject: t('api/email/change/confirmation/subject'),
+    templateName: 'cf_email_change_old_address',
+    globalMergeVars: [
+      { name: 'EMAIL',
+        content: newEmail
+      }
+    ]
+  })
+
+  await sendMailTemplate({
+    to: newEmail,
+    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+    subject: t('api/email/change/confirmation/subject'),
+    templateName: 'cf_email_change_new_address',
+    globalMergeVars: [
+      { name: 'LOGIN_LINK',
+        content: `${FRONTEND_BASE_URL}/konto?${querystring.stringify({ email: newEmail })}`
+      }
+    ]
+  })
+
+  const user = pgdb.public.users.findOne({ email: newEmail })
+
+  try {
+    await moveNewsletterSubscriptions({
+      user: {
+        email: oldEmail
+      },
+      newEmail
+    })
+  } catch (e) {
+    console.error(e)
+  }
+
+  return user
+}
+
 module.exports = {
   signIn,
   authorizeSession,
   resolveUser,
+  updateUserEmail,
   EmailInvalidError,
   SessionInitializationFailedError
 }

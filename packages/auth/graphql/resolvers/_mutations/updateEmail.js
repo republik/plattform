@@ -2,7 +2,7 @@ const isEmail = require('email-validator').validate
 const t = require('../../../lib/t')
 const Roles = require('../../../lib/Roles')
 const ensureSignedIn = require('../../../lib/ensureSignedIn')
-const updateUserEmail = require('../../../lib/updateUserEmail')
+const { updateUserEmail } = require('../../../lib/Users')
 
 module.exports = async (_, args, { pgdb, user: me, req }) => {
   ensureSignedIn(req)
