@@ -174,11 +174,13 @@ const createNewsletterSchema = ({
         props: (node, index, parent) => {
           const src = extractImage(node)
           const displayWidth = 1280
+          const setMaxWidth = parent.data.size !== undefined
 
           return {
             ...FigureImage.utils.getResizedSrcs(
               src,
-              displayWidth
+              displayWidth,
+              setMaxWidth
             ),
             alt: node.children[0].alt
           }
