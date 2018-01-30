@@ -27,6 +27,7 @@ const figureChildStyles = Object.keys(IMAGE_SIZES).reduce((styles, key) => {
   return styles
 }, {
   absolute: css({
+    margin: '40px 0',
     [onlyS]: {
       '& figure': {
         maxWidth: MAX_WIDTH_MOBILE
@@ -34,6 +35,7 @@ const figureChildStyles = Object.keys(IMAGE_SIZES).reduce((styles, key) => {
     },
     [mUp]: {
       position: 'relative',
+      margin: '60px 0',
       minHeight: IMAGE_SIZES.S,
       '& figure': {
         position: 'absolute',
@@ -74,6 +76,12 @@ const textChildStyles = Object.keys(IMAGE_SIZES).reduce((styles, key) => {
   return styles
 }, {})
 
+const floatStyle = css({
+  [onlyS]: {
+    margin: '40px auto'
+  }
+})
+
 const getBreakoutSize = (size, hasFigure) => {
   if (size === 'float') {
     return hasFigure ? 'floatSmall' : 'floatTiny'
@@ -86,9 +94,9 @@ const getBreakoutSize = (size, hasFigure) => {
 
 const InfoBox = ({ children, attributes, size, figureSize, figureFloat }) => {
   let styles = {}
+  const float = figureFloat || size === 'float'
   if (figureSize) {
     const allowedFigureSize = size === 'float' ? 'XS' : figureSize
-    const float = figureFloat || size === 'float'
     styles = {
       ...(float ? figureChildStyles.float : figureChildStyles.absolute),
       ...figureChildStyles[allowedFigureSize]
@@ -98,6 +106,12 @@ const InfoBox = ({ children, attributes, size, figureSize, figureFloat }) => {
         ...styles,
         ...textChildStyles[allowedFigureSize]
       }
+    }
+  }
+  if (float) {
+    styles = {
+      ...styles,
+      ...floatStyle
     }
   }
 
