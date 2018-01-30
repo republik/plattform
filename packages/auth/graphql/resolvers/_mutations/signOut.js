@@ -1,6 +1,5 @@
-const { DestroySessionError } = require('../../../lib/errors')
 const t = require('../../../lib/t')
-const { destroySession } = require('../../../lib/Sessions')
+const { destroySession, DestroySessionError } = require('../../../lib/Sessions')
 
 module.exports = async (_, args, { req }) => {
   if (!req.session) return true

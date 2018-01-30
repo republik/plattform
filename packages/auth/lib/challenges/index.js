@@ -1,9 +1,14 @@
-const EmailTokenChallenge = require('./challenges/EmailTokenChallenge')
-const TOTPChallenge = require('./challenges/TOTPChallenge')
+const EmailTokenChallenge = require('./EmailTokenChallenge')
+const TOTPChallenge = require('./TOTPChallenge')
+const AuthError = require('../AuthError')
 
-const {
-  TokenTypeUnknownError
-} = require('./errors')
+const ERROR_TOKEN_TYPE_UNKNOWN = 'token-type-unknown'
+
+class TokenTypeUnknownError extends AuthError {
+  constructor (meta) {
+    super(ERROR_TOKEN_TYPE_UNKNOWN, meta)
+  }
+}
 
 const TokenTypes = {
   EMAIL_TOKEN: 'EMAIL_TOKEN',
@@ -42,6 +47,7 @@ const ChallengeHandlerProxy = ({ type, ...options }) => {
 
 module.exports = {
   TokenTypes,
+  TokenTypeUnknownError,
   validateChallenge: (options) => ChallengeHandlerProxy(options).validateChallenge(),
   generateNewToken: (options) => ChallengeHandlerProxy(options).generateNewToken(),
   startChallenge: (options) => ChallengeHandlerProxy(options).startChallenge()

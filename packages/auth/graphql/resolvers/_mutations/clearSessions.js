@@ -1,8 +1,8 @@
 const t = require('../../../lib/t')
 const Roles = require('../../../lib/Roles')
-const { DestroySessionError } = require('../../../lib/errors')
 const ensureSignedIn = require('../../../lib/ensureSignedIn')
-const { clearAllUserSessions, destroySession } = require('../../../lib/Sessions')
+const { resolveUser } = require('../../../lib/Users')
+const { clearAllUserSessions, destroySession, DestroySessionError } = require('../../../lib/Sessions')
 const userAccessRoles = ['admin', 'supporter']
 
 module.exports = async (_, args, { pgdb, user: me, req }) => {
@@ -12,9 +12,7 @@ module.exports = async (_, args, { pgdb, user: me, req }) => {
     userId: foreignUserId
   } = args
 
-  const user = foreignUserId
-    ? (await pgdb.public.users.findOne({ id: foreignUserId }))
-    : me
+  const user = await resolveUser({ slug: foreignUserId, pgdb, fallback: me })
 
   try {
     let isSessionsCleared = false

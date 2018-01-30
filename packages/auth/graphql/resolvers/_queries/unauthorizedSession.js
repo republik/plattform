@@ -1,6 +1,5 @@
-const { NoSessionError, QueryEmailMismatchError } = require('../../../lib/errors')
 const t = require('../../../lib/t')
-const { sessionByToken } = require('../../../lib/Sessions')
+const { sessionByToken, NoSessionError, QueryEmailMismatchError } = require('../../../lib/Sessions')
 
 module.exports = async (_, args, { pgdb, user: me, req }) => {
   const { email, token } = args

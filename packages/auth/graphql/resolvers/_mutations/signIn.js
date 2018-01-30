@@ -1,9 +1,8 @@
-const signIn = require('../../../lib/signIn')
 const t = require('../../../lib/t')
+const { signIn } = require('../../../lib/Users')
 const {
-  // SessionInitializationFailedError,
   EmailInvalidError
-} = require('../../../lib/errors')
+} = require('../../../lib/Sessions')
 
 module.exports = async (_, args, { pgdb, req }) => {
   const {

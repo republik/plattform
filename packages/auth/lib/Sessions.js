@@ -1,15 +1,49 @@
 const kraut = require('kraut')
 const geoForIP = require('./geoForIP')
+const AuthError = require('./AuthError')
 
-const {
-  NoSessionError,
-  QueryEmailMismatchError,
-  DestroySessionError,
-  TokenExpiredError,
-  InitiateSessionError } = require('./errors')
-const {
-  validateChallenge
-} = require('./Tokens')
+const ERROR_QUERY_EMAIL_MISMATCH = 'query-email-mismatch'
+const ERROR_NO_SESSION = 'no-session'
+const ERROR_SESSION_DESTROY_FAILED = 'session-destroy-failed'
+const ERROR_TIME_BASED_PASSWORD_MISMATCH = 'time-based-password-mismatch'
+const ERROR_SESSION_INIT_FAILED = 'session-init-failed'
+const ERROR_TOKEN_EXPIRED = 'token-expired'
+
+class DestroySessionError extends AuthError {
+  constructor (meta) {
+    super(ERROR_SESSION_DESTROY_FAILED, meta)
+  }
+}
+
+class InitiateSessionError extends AuthError {
+  constructor (meta) {
+    super(ERROR_SESSION_INIT_FAILED, meta)
+  }
+}
+
+class QueryEmailMismatchError extends AuthError {
+  constructor (meta) {
+    super(ERROR_QUERY_EMAIL_MISMATCH, meta)
+  }
+}
+
+class NoSessionError extends AuthError {
+  constructor (meta) {
+    super(ERROR_NO_SESSION, meta)
+  }
+}
+
+class TimeBasedPasswordMismatchError extends AuthError {
+  constructor (meta) {
+    super(ERROR_TIME_BASED_PASSWORD_MISMATCH, meta)
+  }
+}
+
+class TokenExpiredError extends AuthError {
+  constructor (meta) {
+    super(ERROR_TOKEN_EXPIRED, meta)
+  }
+}
 
 const destroySession = async (req) => {
   return new Promise((resolve, reject) => {
@@ -109,7 +143,7 @@ const clearAllUserSessions = async ({ pgdb, userId }) => {
 const clearUserSession = async ({ pgdb, userId, sessionId }) => {
   const transaction = await pgdb.transactionBegin()
   try {
-    const email = await transaction.public.users.findOne({ id: userId }, 'email')
+    const email = await transaction.public.users.findOneFieldOnly({ id: userId }, 'email')
     const sessions = await findAllUserSessions({ pgdb: transaction, userId })
     const matchingSessions = sessions
       .filter((session) => (session.id === sessionId))
@@ -126,101 +160,17 @@ const clearUserSession = async ({ pgdb, userId, sessionId }) => {
   }
 }
 
-const upsertUserVerified = async({ pgdb, email }) => {
-  const existingUser = await pgdb.public.users.findOne({ email })
-  const user = existingUser ||
-    await pgdb.public.users.insertAndGet({
-      email,
-      verified: true
-    })
-  if (!user.verified) {
-    await pgdb.public.users.updateOne({
-      id: user.id
-    }, {
-      verified: true
-    })
-  }
-  return {
-    user,
-    isVerificationUpdated: (!existingUser || !existingUser.verified)
-  }
-}
-
-const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [] }) => {
-  // validate the challenges
-  const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
-  const sessions = []
-  for (const tokenChallenge of tokens) {
-    const session = await sessionByToken({ pgdb, token: tokenChallenge, email: emailFromQuery })
-    const validated = await validateChallenge({ pgdb, session, user: existingUser, ...tokenChallenge })
-    if (!validated) {
-      console.error('invalid challenge ', tokenChallenge)
-      throw new Error('one of the challenges failed')
-    }
-    sessions.push(session)
-  }
-
-  // security net
-  if ([...(new Set(sessions))].length !== 1) {
-    console.error('somebody tries to authorize multiple sessions')
-    throw new NoSessionError({ email: emailFromQuery })
-  }
-  if (sessions.length < 2 && (existingUser && existingUser.isTwoFactorEnabled)) {
-    console.error('two factor is enabled but less than 2 challenges provided')
-    throw new NoSessionError({ email: emailFromQuery })
-  }
-  const session = sessions[0]
-
-  // verify and/or create the user
-  const { user, isVerificationUpdated } = await upsertUserVerified({
-    pgdb,
-    email: session.sess.email
-  })
-
-  // log in the session and delete token
-  await pgdb.public.sessions.updateOne({
-    id: session.id
-  }, {
-    sess: {
-      ...session.sess,
-      passport: {
-        user: user.id
-      }
-    }
-  })
-
-  // let the tokens expire
-  await pgdb.public.tokens.delete({
-    sessionId: session.id
-  }, {
-    updatedAt: new Date(),
-    expiresAt: new Date()
-  })
-
-  // call signIn hooks
-  try {
-    await Promise.all(
-      signInHooks.map(hook =>
-        hook(
-          user.id,
-          isVerificationUpdated,
-          pgdb
-        )
-      )
-    )
-  } catch (e) {
-    console.warn(`sign in hook failed in authorizeSession`, e)
-  }
-
-  return user
-}
-
 module.exports = {
   initiateSession,
   sessionByToken,
   findAllUserSessions,
-  authorizeSession,
   clearUserSession,
   clearAllUserSessions,
-  destroySession
+  destroySession,
+  QueryEmailMismatchError,
+  NoSessionError,
+  DestroySessionError,
+  InitiateSessionError,
+  TimeBasedPasswordMismatchError,
+  TokenExpiredError
 }
