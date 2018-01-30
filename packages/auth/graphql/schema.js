@@ -32,6 +32,10 @@ type mutations {
   signIn(email: String!, context: String): SignInResponse!
   signOut: Boolean!
 
+  # if userId is null, the logged in user's email is changed
+  # required role to change other's email: supporter
+  updateEmail(userId: ID, email: String!): User!
+
   # authorize a token sent by mail to convert a login request to a valid user session
   authorizeSession(email: String!, tokenChallenge: SignInTokenChallenge!, secondFactor: SignInTokenChallenge): Boolean!
 
