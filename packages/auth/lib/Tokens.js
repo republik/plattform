@@ -26,19 +26,13 @@ const ChallengeHandlerProxy = ({ type, ...options }) => {
       })
     },
     startChallenge: async () => {
-      const { pgdb, email } = options
-      const user = await pgdb.public.users.findOne({ email })
       return handler.startChallenge({
-        user,
         type,
         ...options
       })
     },
     validateChallenge: async () => {
-      const { pgdb, email } = options
-      const user = await pgdb.public.users.findOne({ email })
       return handler.validateChallenge({
-        user,
         type,
         ...options
       })

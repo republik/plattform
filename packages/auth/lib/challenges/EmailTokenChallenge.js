@@ -26,11 +26,11 @@ const DAY_IN_MS = HOUR_IN_MS * 24
 module.exports = {
   generateNewToken: async ({ pgdb, session, type }) => {
     const payload = uuid()
-    const expireAt = new Date(new Date().getTime() + DAY_IN_MS)
+    const expiresAt = new Date(new Date().getTime() + DAY_IN_MS)
     return pgdb.public.tokens.insertAndGet({
       sessionId: session.id,
       payload,
-      expireAt,
+      expiresAt,
       type
     })
   },

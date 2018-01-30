@@ -51,7 +51,7 @@ module.exports = async (_email, context, pgdb, req) => {
         await authorizeSession({
           pgdb,
           tokens: [token],
-          emailFromQuery: email
+          email
         })
       }, 2000)
     } else {

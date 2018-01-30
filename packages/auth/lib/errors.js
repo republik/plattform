@@ -6,9 +6,11 @@ const ERROR_SESSION_INIT_FAILED = 'session-init-failed'
 const ERROR_EMAIL_INVALID = 'email-invalid'
 const ERROR_SESSION_INITIALIZATION_FAILED = 'session-initialization-failed'
 const ERROR_TOKEN_TYPE_UNKNOWN = 'token-type-unknown'
+const ERROR_TOKEN_EXPIRED = 'token-expired'
 
 class AuthError extends Error {
   constructor (type, meta) {
+    console.log(meta)
     const message = `auth exception: ${type} ${JSON.stringify(meta)}`
     super(message)
     this.type = type
@@ -58,6 +60,12 @@ class SessionInitializationFailedError extends AuthError {
   }
 }
 
+class TokenExpiredError extends AuthError {
+  constructor (meta) {
+    super(ERROR_TOKEN_EXPIRED, meta)
+  }
+}
+
 class TokenTypeUnknownError extends AuthError {
   constructor (meta) {
     super(ERROR_TOKEN_TYPE_UNKNOWN, meta)
@@ -72,5 +80,6 @@ module.exports = {
   EmailInvalidError,
   SessionInitializationFailedError,
   TimeBasedPasswordMismatchError,
-  TokenTypeUnknownError
+  TokenTypeUnknownError,
+  TokenExpiredError
 }

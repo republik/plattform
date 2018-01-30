@@ -5,6 +5,7 @@ const {
   NoSessionError,
   QueryEmailMismatchError,
   DestroySessionError,
+  TokenExpiredError,
   InitiateSessionError } = require('./errors')
 const {
   validateChallenge
@@ -14,7 +15,7 @@ const destroySession = async (req) => {
   return new Promise((resolve, reject) => {
     req.session.destroy(error => {
       if (error) {
-        return reject(new DestroySessionError({ req, error }))
+        return reject(new DestroySessionError({ headers: req.headers, error }))
       }
       return resolve()
     })
@@ -33,7 +34,7 @@ const initiateSession = async ({ req, pgdb, ipAddress, userAgent, email }) => {
   await new Promise(function (resolve, reject) {
     req.session.save(function (error, data) {
       if (error) {
-        return reject(new InitiateSessionError({ req, error }))
+        return reject(new InitiateSessionError({ headers: req.headers, error }))
       }
       return resolve(data)
     })
@@ -53,17 +54,33 @@ const initiateSession = async ({ req, pgdb, ipAddress, userAgent, email }) => {
 const sessionByToken = async ({ pgdb, token, email: emailFromQuery, ...meta }) => {
   if (!token || !token.payload) throw new NoSessionError({ emailFromQuery, ...meta })
 
-  const session = await pgdb.public.sessions.findOne({
-    'sess @>': { token }
-  })
+  const sessions = await pgdb.query(`
+    SELECT DISTINCT
+      s.*,
+      t."expiresAt" as "tokenExpiresAt"
+    FROM
+      sessions s
+    RIGHT OUTER JOIN
+      tokens t
+      ON t."sessionId" = s.id
+    WHERE
+      t.payload = :payload AND
+      t.type = :type
+    `, token)
 
-  if (!session) throw new NoSessionError({ token, emailFromQuery, ...meta })
-
+  if (!sessions || sessions.length !== 1) {
+    if (sessions.length > 1) console.error('wtf why?', sessions)
+    throw new NoSessionError({ token, emailFromQuery, ...meta })
+  }
+  const session = sessions[0]
+  const { tokenExpiresAt, id } = session
+  if (tokenExpiresAt.getTime() < (new Date()).getTime() || !id) {
+    throw new TokenExpiredError({ token, tokenExpiresAt, sessionId: session.id })
+  }
   const { email } = session.sess
   if (emailFromQuery && email !== emailFromQuery) { // emailFromQuery might be null for old links
     throw new QueryEmailMismatchError({ token, email, emailFromQuery })
   }
-
   return session
 }
 
@@ -129,21 +146,30 @@ const upsertUserVerified = async({ pgdb, email }) => {
   }
 }
 
-const authorizeSession = async ({ pgdb, tokens, emailFromQuery, signInHooks = [] }) => {
-  const validatedSessionIds = []
+const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [] }) => {
+  // validate the challenges
+  const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
+  const sessions = []
   for (const tokenChallenge of tokens) {
-    const sessionId = await validateChallenge({ pgdb, email: emailFromQuery, ...tokenChallenge })
-    if (!sessionId) throw new Error('one of the challenges failed')
-    validatedSessionIds.push(sessionId)
+    const session = await sessionByToken({ pgdb, token: tokenChallenge, email: emailFromQuery })
+    const validated = await validateChallenge({ pgdb, session, user: existingUser, ...tokenChallenge })
+    if (!validated) {
+      console.error('invalid challenge ', tokenChallenge)
+      throw new Error('one of the challenges failed')
+    }
+    sessions.push(session)
   }
 
-  if ([...(new Set(validatedSessionIds))].length > 1) {
-    throw new Error('you can only validate one session at a time')
+  // security net
+  if ([...(new Set(sessions))].length !== 1) {
+    console.error('somebody tries to authorize multiple sessions')
+    throw new NoSessionError({ email: emailFromQuery })
   }
-
-  const sessionId = validatedSessionIds[0]
-  const session = await pgdb.public.sessions.findOne({ id: sessionId })
-  if (!session) throw new NoSessionError({ sessionId })
+  if (sessions.length < 2 && (existingUser && existingUser.isTwoFactorEnabled)) {
+    console.error('two factor is enabled but less than 2 challenges provided')
+    throw new NoSessionError({ email: emailFromQuery })
+  }
+  const session = sessions[0]
 
   // verify and/or create the user
   const { user, isVerificationUpdated } = await upsertUserVerified({
@@ -163,9 +189,11 @@ const authorizeSession = async ({ pgdb, tokens, emailFromQuery, signInHooks = []
     }
   })
 
-  await pgdb.public.tokens.update({
-    sessionId
+  // let the tokens expire
+  await pgdb.public.tokens.delete({
+    sessionId: session.id
   }, {
+    updatedAt: new Date(),
     expiresAt: new Date()
   })
 

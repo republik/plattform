@@ -33,7 +33,7 @@ type mutations {
   signOut: Boolean!
 
   # authorize a token sent by mail to convert a login request to a valid user session
-  authorizeSession(email: String!, token: SignInTokenChallenge!, secondFactor: SignInTokenChallenge!): Boolean!
+  authorizeSession(email: String!, tokenChallenge: SignInTokenChallenge!, secondFactor: SignInTokenChallenge): Boolean!
 
   # if userId is null, this operation will be scoped to the logged in user
   # required role to clear other's session: supporter
