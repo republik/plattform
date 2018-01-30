@@ -25,7 +25,6 @@ const {
 // middlewares
 const { express: { auth } } = require('@orbiting/backend-modules-auth')
 const requestLog = require('./express/requestLog')
-const graphql = require('./express/graphql')
 
 let pgdb
 let server
@@ -70,6 +69,13 @@ module.exports.run = (executableSchema, middlewares, t, createGraphqlContext) =>
       })
     }
 
+    // clear obsolete cf cookie
+    // this code was added 2018.01.19 - remove it after 2018.02.02
+    server.use((req, res, next) => {
+      res.clearCookie('__cfduid', { path: '/', httpOnly: true, domain: '.republik.ch' })
+      next()
+    })
+
     server.use(requestLog)
 
     // Once DB is available, setup sessions and routes for authentication
@@ -91,7 +97,10 @@ module.exports.run = (executableSchema, middlewares, t, createGraphqlContext) =>
       server.use('*', cors(corsOptions))
     }
 
-    subscriptionServer = graphql(server, pgdb, httpServer, executableSchema, createGraphqlContext)
+    if (executableSchema) {
+      const graphql = require('./express/graphql')
+      subscriptionServer = graphql(server, pgdb, httpServer, executableSchema, createGraphqlContext)
+    }
 
     for (let middleware of middlewares) {
       await middleware(server, pgdb, t)
@@ -110,7 +119,9 @@ module.exports.close = () => {
   const { pubsub } = require('./lib/RedisPubSub')
   pubsub.getSubscriber().quit()
   pubsub.getPublisher().quit()
-  subscriptionServer.close()
+  if (subscriptionServer) {
+    subscriptionServer.close()
+  }
   httpServer.close()
   pgdb.close()
   require('./lib/redis').quit()
