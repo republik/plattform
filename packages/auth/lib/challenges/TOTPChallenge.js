@@ -3,21 +3,26 @@ const OTP = require('otp')
 const MIN_IN_MS = 1000 * 60
 
 module.exports = {
+  generateSharedSecret: async ({ pgdb, user }) => {
+    const otp = OTP()
+    return otp.secret
+  },
+  validateSharedSecret: async ({ pgdb, token, user }) => {
+    if (!user.tempTwoFactorSecret) return false
+    const otp = OTP({ secret: user.tempTwoFactorSecret })
+    return (otp.totp() === token.payload)
+  },
   generateNewToken: async ({ pgdb, session, type, user }) => {
     const payload = user.id
     const expiresAt = new Date(new Date().getTime() + (30 * MIN_IN_MS))
-    return pgdb.public.tokens.insertAndGet({
-      sessionId: session.id,
-      payload,
-      expiresAt,
-      type
-    })
+    return { payload, expiresAt }
   },
   startChallenge: async (options) => {
     // time based!
     return true
   },
   validateChallenge: async ({ pgdb, token, user }) => {
+    if (!user.twoFactorSecret) return false
     const otp = OTP({ secret: user.twoFactorSecret })
     return (otp.totp() === token.payload)
   }

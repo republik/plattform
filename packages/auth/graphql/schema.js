@@ -46,5 +46,11 @@ type mutations {
   # if userId is null, the logged in user's sessions get cleared
   # required role to clear other's session: supporter
   clearSessions(userId: ID): Boolean!
+
+  # generate a new sharedSecret
+  initSharedSecret(type: SignInTokenType = TOTP): SharedSecretResponse!
+  validateSharedSecret(type: SignInTokenType = TOTP, payload: String): Boolean!
+  enableTwoFactorAuthentication: Boolean!
+  disableTwoFactorAuthentication: Boolean!
 }
 `

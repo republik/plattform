@@ -110,7 +110,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   const sessions = []
   for (const tokenChallenge of tokens) {
     const session = await sessionByToken({ pgdb, token: tokenChallenge, email: emailFromQuery })
-    const validated = await validateChallenge({ pgdb, session, user: existingUser, ...tokenChallenge })
+    const validated = await validateChallenge({ pgdb, user: existingUser, ...tokenChallenge })
     if (!validated) {
       console.error('invalid challenge ', tokenChallenge)
       throw new Error('one of the challenges failed')

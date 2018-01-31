@@ -31,6 +31,12 @@ type SignInResponse {
   phrase: String!
 }
 
+type SharedSecretResponse {
+  secret: String!
+  otpAuthUrl: String!
+  svg(ecLevel: String = "M"): String!
+}
+
 enum SignInTokenType {
   EMAIL_TOKEN
   TOTP

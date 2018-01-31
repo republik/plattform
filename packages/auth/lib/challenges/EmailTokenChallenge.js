@@ -27,12 +27,7 @@ module.exports = {
   generateNewToken: async ({ pgdb, session, type }) => {
     const payload = uuid()
     const expiresAt = new Date(new Date().getTime() + DAY_IN_MS)
-    return pgdb.public.tokens.insertAndGet({
-      sessionId: session.id,
-      payload,
-      expiresAt,
-      type
-    })
+    return { payload, expiresAt }
   },
   startChallenge: async ({ email, context, token, country, phrase }) => {
     const geoString = (country === 'Schweiz')

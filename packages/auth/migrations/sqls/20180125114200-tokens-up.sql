@@ -11,6 +11,7 @@ CREATE TABLE "tokens" (
 );
 
 ALTER TABLE users
-  ADD COLUMN "isTwoFactorEnabled" boolean not null default false,
-  ADD COLUMN "twoFactorSecret"    text
+  ADD COLUMN "isTwoFactorEnabled"   boolean not null default false,
+  ADD COLUMN "twoFactorSecret"      text,
+  ADD COLUMN "tempTwoFactorSecret"  text
 ;
