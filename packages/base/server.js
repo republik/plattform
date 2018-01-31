@@ -4,6 +4,7 @@ const cors = require('cors')
 const { createServer } = require('http')
 const { Engine } = require('apollo-engine')
 const checkEnv = require('check-env')
+const timeout = require('connect-timeout')
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
@@ -19,7 +20,8 @@ const {
   COOKIE_DOMAIN,
   COOKIE_NAME,
   ENGINE_API_KEY,
-  IGNORE_SSL_HOSTNAME
+  IGNORE_SSL_HOSTNAME,
+  REQ_TIMEOUT
 } = process.env
 
 // middlewares
@@ -77,6 +79,19 @@ module.exports.run = (executableSchema, middlewares, t, createGraphqlContext) =>
     })
 
     server.use(requestLog)
+
+    // monitor timeouts
+    if (REQ_TIMEOUT) {
+      server.use(
+        timeout(REQ_TIMEOUT, { respond: false }),
+        (req, res, next) => {
+          req.on('timeout', () => {
+            console.log('request timedout:', req._log())
+          })
+          next()
+        }
+      )
+    }
 
     // Once DB is available, setup sessions and routes for authentication
     auth.configure({
