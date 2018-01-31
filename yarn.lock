@@ -226,13 +226,25 @@ apollo-engine-binary-darwin@0.2017.12-45-g12ba029f9:
   version "0.2017.12-45-g12ba029f9"
   resolved "https://registry.yarnpkg.com/apollo-engine-binary-darwin/-/apollo-engine-binary-darwin-0.2017.12-45-g12ba029f9.tgz#a1c646179337fa58093decc4fd278b6518d2734a"
 
+apollo-engine-binary-darwin@0.2018.01-17-g9c203510f:
+  version "0.2018.1-17-g9c203510f"
+  resolved "https://registry.yarnpkg.com/apollo-engine-binary-darwin/-/apollo-engine-binary-darwin-0.2018.1-17-g9c203510f.tgz#0a920de1af104a02a3d095baa49c01c2d18f60e4"
+
 apollo-engine-binary-linux@0.2017.12-45-g12ba029f9:
   version "0.2017.12-45-g12ba029f9"
   resolved "https://registry.yarnpkg.com/apollo-engine-binary-linux/-/apollo-engine-binary-linux-0.2017.12-45-g12ba029f9.tgz#4a3948fb887a16f302ed9eb8466df7bf70c23e80"
 
+apollo-engine-binary-linux@0.2018.01-17-g9c203510f:
+  version "0.2018.1-17-g9c203510f"
+  resolved "https://registry.yarnpkg.com/apollo-engine-binary-linux/-/apollo-engine-binary-linux-0.2018.1-17-g9c203510f.tgz#745b29887904f1a5e28cf68606817d8d723eac27"
+
 apollo-engine-binary-windows@0.2017.12-45-g12ba029f9:
   version "0.2017.12-45-g12ba029f9"
   resolved "https://registry.yarnpkg.com/apollo-engine-binary-windows/-/apollo-engine-binary-windows-0.2017.12-45-g12ba029f9.tgz#4a8985ae2e024e6b0c4b229f5fb6cf4b0baacf69"
+
+apollo-engine-binary-windows@0.2018.01-17-g9c203510f:
+  version "0.2018.1-17-g9c203510f"
+  resolved "https://registry.yarnpkg.com/apollo-engine-binary-windows/-/apollo-engine-binary-windows-0.2018.1-17-g9c203510f.tgz#89cde03a7d714c6f283310853b8bd2b81733ce0a"
 
 apollo-engine@^0.8.1:
   version "0.8.1"
@@ -244,6 +256,17 @@ apollo-engine@^0.8.1:
     apollo-engine-binary-darwin "0.2017.12-45-g12ba029f9"
     apollo-engine-binary-linux "0.2017.12-45-g12ba029f9"
     apollo-engine-binary-windows "0.2017.12-45-g12ba029f9"
+
+apollo-engine@^0.8.5:
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/apollo-engine/-/apollo-engine-0.8.5.tgz#d5ac00cef4018d754969581dd2998b5ce173713f"
+  dependencies:
+    request "^2.81.0"
+    stream-json "^0.5.2"
+  optionalDependencies:
+    apollo-engine-binary-darwin "0.2018.01-17-g9c203510f"
+    apollo-engine-binary-linux "0.2018.01-17-g9c203510f"
+    apollo-engine-binary-windows "0.2018.01-17-g9c203510f"
 
 apollo-fetch@^0.7.0:
   version "0.7.0"
@@ -5561,6 +5584,19 @@ subscriptions-transport-ws@^0.9.4:
     backo2 "^1.0.2"
     eventemitter3 "^2.0.3"
     is-promise "^2.1.0"
+    iterall "^1.1.1"
+    lodash.assign "^4.2.0"
+    lodash.isobject "^3.0.2"
+    lodash.isstring "^4.0.1"
+    symbol-observable "^1.0.4"
+    ws "^3.0.0"
+
+subscriptions-transport-ws@^0.9.5:
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/subscriptions-transport-ws/-/subscriptions-transport-ws-0.9.5.tgz#faa9eb1230d5f2efe355368cd973b867e4483c53"
+  dependencies:
+    backo2 "^1.0.2"
+    eventemitter3 "^2.0.3"
     iterall "^1.1.1"
     lodash.assign "^4.2.0"
     lodash.isobject "^3.0.2"
