@@ -40,17 +40,19 @@
     useragent "^2.2.1"
     uuid "^3.1.0"
 
-"@orbiting/backend-modules-base@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-1.2.1.tgz#bc11eb379a7ebb8410be58e6e6987e63b225fe5f"
+"@orbiting/backend-modules-base@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-1.4.0.tgz#fbe7865f45dceb42f0575ca010f443065efafd78"
   dependencies:
     "@orbiting/backend-modules-auth" "^3.0.9"
-    apollo-engine "^0.8.1"
+    apollo-engine "^0.8.5"
     apollo-modules-node "^0.1.4"
     apollo-server-express "^1.3.2"
     bluebird "^3.5.1"
     body-parser "^1.18.2"
     check-env "^1.3.0"
+    compression "^1.7.1"
+    connect-timeout "^1.9.0"
     cookie "^0.3.1"
     cookie-parser "^1.4.3"
     cors "^2.8.4"
@@ -61,14 +63,14 @@
     graphql-subscriptions "^0.5.6"
     pogi "^2.5.5"
     redis "^2.8.0"
-    subscriptions-transport-ws "^0.9.4"
+    subscriptions-transport-ws "^0.9.5"
 
-"@orbiting/backend-modules-documents@^2.11.1":
-  version "2.11.1"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.11.1.tgz#5fe9d04844d46e93ccfebf150556494aeef91f62"
+"@orbiting/backend-modules-documents@^2.12.0":
+  version "2.12.0"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-documents/-/backend-modules-documents-2.12.0.tgz#7b912d4aaf1c5727ea395f1f4b10d2df1d759ee9"
   dependencies:
     "@orbiting/backend-modules-auth" "^3.0.9"
-    "@project-r/styleguide" "^5.37.1"
+    "@project-r/styleguide" "^5.50.6"
     "@project-r/template-newsletter" "^1.5.0"
     apollo-modules-node "^0.1.4"
     check-env "^1.3.0"
@@ -146,9 +148,9 @@
     stringify-entities "^1.3.1"
     unified "^6.1.5"
 
-"@project-r/styleguide@^5.37.1":
-  version "5.41.0"
-  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.41.0.tgz#ab646388ea0bb6229daab57355d3b20af9d88026"
+"@project-r/styleguide@^5.50.6":
+  version "5.50.7"
+  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.50.7.tgz#c8ff84ee13d7c39a24868d1eed7bca49b3eec847"
   dependencies:
     react-icons "^2.2.7"
 
@@ -280,28 +282,28 @@ apollo-cache-control@^0.0.x:
   dependencies:
     graphql-extensions "^0.0.x"
 
-apollo-engine-binary-darwin@0.2018.01-1-gc024df504:
-  version "0.2018.1-1-gc024df504"
-  resolved "https://registry.yarnpkg.com/apollo-engine-binary-darwin/-/apollo-engine-binary-darwin-0.2018.1-1-gc024df504.tgz#e19859a082bcff80fd8671ca1cb752c22bdb3619"
+apollo-engine-binary-darwin@0.2018.01-17-g9c203510f:
+  version "0.2018.1-17-g9c203510f"
+  resolved "https://registry.yarnpkg.com/apollo-engine-binary-darwin/-/apollo-engine-binary-darwin-0.2018.1-17-g9c203510f.tgz#0a920de1af104a02a3d095baa49c01c2d18f60e4"
 
-apollo-engine-binary-linux@0.2018.01-1-gc024df504:
-  version "0.2018.1-1-gc024df504"
-  resolved "https://registry.yarnpkg.com/apollo-engine-binary-linux/-/apollo-engine-binary-linux-0.2018.1-1-gc024df504.tgz#42a95d32ee495003e621c2355cdbe0de9cdf8457"
+apollo-engine-binary-linux@0.2018.01-17-g9c203510f:
+  version "0.2018.1-17-g9c203510f"
+  resolved "https://registry.yarnpkg.com/apollo-engine-binary-linux/-/apollo-engine-binary-linux-0.2018.1-17-g9c203510f.tgz#745b29887904f1a5e28cf68606817d8d723eac27"
 
-apollo-engine-binary-windows@0.2018.01-1-gc024df504:
-  version "0.2018.1-1-gc024df504"
-  resolved "https://registry.yarnpkg.com/apollo-engine-binary-windows/-/apollo-engine-binary-windows-0.2018.1-1-gc024df504.tgz#b09200fa7ae46e86df7567a7a8afd1a985db1c4b"
+apollo-engine-binary-windows@0.2018.01-17-g9c203510f:
+  version "0.2018.1-17-g9c203510f"
+  resolved "https://registry.yarnpkg.com/apollo-engine-binary-windows/-/apollo-engine-binary-windows-0.2018.1-17-g9c203510f.tgz#89cde03a7d714c6f283310853b8bd2b81733ce0a"
 
-apollo-engine@^0.8.1:
-  version "0.8.3"
-  resolved "https://registry.yarnpkg.com/apollo-engine/-/apollo-engine-0.8.3.tgz#394e87488d0e9d997e35e73276d70432f15ba202"
+apollo-engine@^0.8.5:
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/apollo-engine/-/apollo-engine-0.8.5.tgz#d5ac00cef4018d754969581dd2998b5ce173713f"
   dependencies:
     request "^2.81.0"
     stream-json "^0.5.2"
   optionalDependencies:
-    apollo-engine-binary-darwin "0.2018.01-1-gc024df504"
-    apollo-engine-binary-linux "0.2018.01-1-gc024df504"
-    apollo-engine-binary-windows "0.2018.01-1-gc024df504"
+    apollo-engine-binary-darwin "0.2018.01-17-g9c203510f"
+    apollo-engine-binary-linux "0.2018.01-17-g9c203510f"
+    apollo-engine-binary-windows "0.2018.01-17-g9c203510f"
 
 apollo-fetch@^0.7.0:
   version "0.7.0"
@@ -928,6 +930,24 @@ component-emitter@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/component-emitter/-/component-emitter-1.2.1.tgz#137918d6d78283f7df7a6b7c5a63e140e69425e6"
 
+compressible@~2.0.11:
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/compressible/-/compressible-2.0.12.tgz#c59a5c99db76767e9876500e271ef63b3493bd66"
+  dependencies:
+    mime-db ">= 1.30.0 < 2"
+
+compression@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/compression/-/compression-1.7.1.tgz#eff2603efc2e22cf86f35d2eb93589f9875373db"
+  dependencies:
+    accepts "~1.3.4"
+    bytes "3.0.0"
+    compressible "~2.0.11"
+    debug "2.6.9"
+    on-headers "~1.0.1"
+    safe-buffer "5.1.1"
+    vary "~1.1.2"
+
 concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
@@ -963,6 +983,15 @@ connect-pg-simple@^3.1.2:
   resolved "https://registry.yarnpkg.com/connect-pg-simple/-/connect-pg-simple-3.1.2.tgz#d11fb3755b5b535c1915be2b87fcd4fdd3e10950"
   dependencies:
     pg ">=2.7.0-0 <5.0.0-0"
+
+connect-timeout@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/connect-timeout/-/connect-timeout-1.9.0.tgz#bc27326b122103714bebfa0d958bab33f6522e3a"
+  dependencies:
+    http-errors "~1.6.1"
+    ms "2.0.0"
+    on-finished "~2.3.0"
+    on-headers "~1.0.1"
 
 console-control-strings@^1.0.0, console-control-strings@~1.1.0:
   version "1.1.0"
@@ -2409,7 +2438,7 @@ hosted-git-info@^2.1.4:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/hosted-git-info/-/hosted-git-info-2.5.0.tgz#6d60e34b3abbc8313062c3b798ef8d901a07af3c"
 
-http-errors@1.6.2, http-errors@~1.6.2:
+http-errors@1.6.2, http-errors@~1.6.1, http-errors@~1.6.2:
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/http-errors/-/http-errors-1.6.2.tgz#0a002cc85707192a7e7946ceedc11155f60ec736"
   dependencies:
@@ -3460,6 +3489,10 @@ micromatch@^3.1.4:
     regex-not "^1.0.0"
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
+
+"mime-db@>= 1.30.0 < 2":
+  version "1.32.0"
+  resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.32.0.tgz#485b3848b01a3cda5f968b4882c0771e58e09414"
 
 mime-db@~1.30.0:
   version "1.30.0"
@@ -5106,7 +5139,7 @@ strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
 
-subscriptions-transport-ws@^0.9.4:
+subscriptions-transport-ws@^0.9.5:
   version "0.9.5"
   resolved "https://registry.yarnpkg.com/subscriptions-transport-ws/-/subscriptions-transport-ws-0.9.5.tgz#faa9eb1230d5f2efe355368cd973b867e4483c53"
   dependencies:
