@@ -40,14 +40,17 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/preview/mail/404'))
   }
   // resolve Document
-  const urlPrefix = FRONTEND_BASE_URL
-  const searchString = '?' + querystring.stringify({
-    'utm_source': 'newsletter',
-    'utm_medium': 'email',
-    'utm_campaign': PREVIEW_MAIL_REPO_ID
-  })
-  doc.content = DocResolver.content(doc, { urlPrefix, searchString }, context)
-  doc.meta = DocResolver.meta(doc, { urlPrefix, searchString }, context)
+  const docResolverArgs = {
+    urlPrefix: FRONTEND_BASE_URL,
+    searchString: '?' + querystring.stringify({
+      'utm_source': 'newsletter',
+      'utm_medium': 'email',
+      'utm_campaign': PREVIEW_MAIL_REPO_ID
+    }),
+    webp: false
+  }
+  doc.content = DocResolver.content(doc, docResolverArgs, context)
+  doc.meta = DocResolver.meta(doc, docResolverArgs, context)
   const html = getHTML(doc)
 
   await sendMail({
