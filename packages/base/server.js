@@ -56,11 +56,6 @@ module.exports.run = (executableSchema, middlewares, t, createGraphqlContext) =>
     server = express()
     httpServer = createServer(server)
 
-    // apollo engine middleware
-    if (engine) {
-      server.use(engine.expressMiddleware())
-    }
-
     // redirect to https
     if (!DEV) {
       server.use(compression())
@@ -93,6 +88,11 @@ module.exports.run = (executableSchema, middlewares, t, createGraphqlContext) =>
           next()
         }
       )
+    }
+
+    // apollo engine middleware
+    if (engine) {
+      server.use(engine.expressMiddleware())
     }
 
     // Once DB is available, setup sessions and routes for authentication
