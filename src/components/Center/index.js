@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import PropTypes from 'prop-types'
 
 
-export const PADDING = 20
+export const PADDING = 15
 
 export const MAX_WIDTH = 665
 // iPhone Plus, for max image sizes
