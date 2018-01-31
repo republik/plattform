@@ -10,17 +10,17 @@ import colors from '../../theme/colors'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
 
-const SPACING = 22
+const WIDTH = 22
+const MARGIN = 8
 
 const styles = {
   list: css({
     marginLeft: 0,
     paddingLeft: 0,
     listStyle: 'none',
-    counterReset: 'item',
     'li &': {
       [mUp]: {
-        marginLeft: `${SPACING}px`
+        marginLeft: `${WIDTH}px`
       }
     }
   }),
@@ -30,24 +30,26 @@ const styles = {
       position: 'absolute',
       left: 0,
       [mUp]: {
-        left: `-${SPACING}px`
+        left: `-${WIDTH}px`
       }
     }
   }),
   orderedBefore: css({
     '& > li:before': {
-      content: 'counter(item) ". "',
-      counterIncrement: 'item',
+      content: 'counter(start) ". "',
+      counterIncrement: 'start',
       position: 'absolute',
       left: 0,
       [mUp]: {
-        left: `-${SPACING}px`
+        left: `-${WIDTH + MARGIN}px`,
+        width: `${WIDTH}px`,
+        textAlign: 'right'
       }
     }
   }),
   li: css({
     color: colors.text,
-    paddingLeft: `${SPACING}px`,
+    paddingLeft: `${WIDTH}px`,
     position: 'relative',
     ...serifRegular16,
     [mUp]: {
@@ -65,6 +67,12 @@ const styles = {
       [mUp]: {
         ...serifRegular17,
         margin: '14px 0'
+      }
+    },
+    'ol > &': {
+      paddingLeft: `${WIDTH + MARGIN}px`,
+      [mUp]: {
+        paddingLeft: 0
       }
     }
   })
@@ -101,7 +109,11 @@ export const OrderedList = ({ children, attributes, start, compact }) => {
     <ol
       start={start}
       {...attributes}
-      {...css(compact ? styles.listCompact : styles.list, styles.orderedBefore)}
+      {...css(
+        compact ? styles.listCompact : styles.list,
+        styles.orderedBefore,
+        { counterReset: `start ${start}` }
+      )}
     >
       {children}
     </ol>
@@ -111,7 +123,12 @@ export const OrderedList = ({ children, attributes, start, compact }) => {
 OrderedList.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
+  start: PropTypes.number,
   compact: PropTypes.bool
+}
+
+OrderedList.defaultProps = {
+  start: 0
 }
 
 export const ListItem = ({ children, attributes = {} }) => (
