@@ -58,9 +58,9 @@
     check-env "^1.3.0"
     export-files "^2.1.1"
 
-"@project-r/styleguide@^5.37.1":
-  version "5.37.1"
-  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.37.1.tgz#d16a4c36dab2dcb72bd8c3d33a4c328300b1894e"
+"@project-r/styleguide@^5.50.6":
+  version "5.50.6"
+  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.50.6.tgz#15d4e488aa49ebf30640d8151dcacaf3d2cd68a0"
   dependencies:
     react-icons "^2.2.7"
 
