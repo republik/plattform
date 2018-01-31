@@ -8,7 +8,8 @@ const footerLinkStyle = {
   ...linkStyle,
   color: colors.text,
   fontFamily: fontFamilies.sansSerifRegular,
-  fontSize: '15px'
+  fontSize: '15px',
+  lineHeight: '30px'
 }
 
 export default ({ children, meta }) => {
@@ -72,12 +73,19 @@ export default ({ children, meta }) => {
                   >
                     Im Web lesen
                   </a>
-                  {' · '}
+                  <br />
+                  <a
+                    href="https://www.republik.ch/konto#newsletter"
+                    style={footerLinkStyle}
+                  >
+                    Vom Newsletter abmelden
+                  </a>
+                  <br />
                   <a
                     href="*|UNSUB|*"
                     style={footerLinkStyle}
                   >
-                    Vom Newsletter abmelden
+                    Abmelden
                   </a>
                 </p>
               </td>
