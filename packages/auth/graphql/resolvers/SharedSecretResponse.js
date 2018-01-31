@@ -8,12 +8,12 @@ const buildOTPUrl = (email, code) =>
   `otpauth://totp/${ISSUER}:${email}?secret=${code}&issuer=${ISSUER}`
 
 const Response = {
-  otpAuthUrl ({ rawCode }, args, { pgdb, user }) {
-    return buildOTPUrl(user.email, rawCode)
+  otpAuthUrl ({ secret }, args, { pgdb, user }) {
+    return buildOTPUrl(user.email, secret)
   },
-  svg ({ rawCode }, args, { pgdb, user }) {
+  svg ({ secret }, args, { pgdb, user }) {
     const { ecLevel } = args
-    const url = buildOTPUrl(user.email, rawCode)
+    const url = buildOTPUrl(user.email, secret)
     const qr = require('qr-image')
     return qr.imageSync(url, {
       ec_level: ecLevel,

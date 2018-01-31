@@ -50,7 +50,7 @@ const ChallengeHandlerProxy = ({ type, ...options }) => {
         ...options
       })
 
-      if (!validated) throw new Error('shared secret not validated', { type, options })
+      if (!validated) throw new Error('shared secret validation failed', { type, options })
       const { pgdb, user } = options
       return pgdb.public.users.updateAndGetOne(
         {

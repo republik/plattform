@@ -7,10 +7,10 @@ module.exports = {
     const otp = OTP()
     return otp.secret
   },
-  validateSharedSecret: async ({ pgdb, token, user }) => {
+  validateSharedSecret: async ({ pgdb, payload, user }) => {
     if (!user.tempTwoFactorSecret) return false
     const otp = OTP({ secret: user.tempTwoFactorSecret })
-    return (otp.totp() === token.payload)
+    return (otp.totp() === payload)
   },
   generateNewToken: async ({ pgdb, session, type, user }) => {
     const payload = user.id
