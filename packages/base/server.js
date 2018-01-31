@@ -4,6 +4,7 @@ const cors = require('cors')
 const { createServer } = require('http')
 const { Engine } = require('apollo-engine')
 const checkEnv = require('check-env')
+const compression = require('compression')
 const timeout = require('connect-timeout')
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
@@ -62,6 +63,7 @@ module.exports.run = (executableSchema, middlewares, t, createGraphqlContext) =>
 
     // redirect to https
     if (!DEV) {
+      server.use(compression())
       server.enable('trust proxy')
       server.use( (req, res, next) => {
         if (!req.secure && (!IGNORE_SSL_HOSTNAME || req.hostname !== IGNORE_SSL_HOSTNAME)) {
