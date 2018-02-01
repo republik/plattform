@@ -136,6 +136,10 @@ class EditorPage extends Component {
       this.documentChangeHandler.bind(this),
       500
     )
+    this.uiChangeHandler = change => {
+      this.changeHandler(change)
+      this.documentChangeHandler(null, change)
+    }
     this.revertHandler = this.revertHandler.bind(this)
 
     this.editorRef = ref => {
@@ -519,7 +523,7 @@ class EditorPage extends Component {
                 <Sidebar.Tab tabId='edit' label='Editieren'>
                   {!!this.editor && <EditorUI
                     editorRef={this.editor}
-                    onChange={this.changeHandler}
+                    onChange={this.uiChangeHandler}
                     value={editorState}
                   />}
                 </Sidebar.Tab>
