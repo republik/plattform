@@ -1,5 +1,5 @@
 {
-  "updated": "2018-02-01T19:11:17.097Z",
+  "updated": "2018-02-01T19:56:33.474Z",
   "title": "live",
   "data": [
     {
@@ -517,6 +517,18 @@
     {
       "key": "publish/commit/change",
       "value": "Version ändern"
+    },
+    {
+      "key": "publish/meta/date/label",
+      "value": "Publikationsdatum"
+    },
+    {
+      "key": "publish/meta/path/label",
+      "value": "URL"
+    },
+    {
+      "key": "publish/meta/path/value",
+      "value": "republik.ch{path}"
     },
     {
       "key": "publish/trigger",
