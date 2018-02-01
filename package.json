@@ -18,7 +18,7 @@
     "@orbiting/backend-modules-scalars": "^0.0.6",
     "@orbiting/backend-modules-scripts": "^1.0.1",
     "@orbiting/backend-modules-translate": "^0.0.0",
-    "@orbiting/remark-preset": "^1.2.2",
+    "@orbiting/remark-preset": "^1.2.3",
     "apollo-fetch": "^0.7.0",
     "apollo-modules-node": "^0.1.4",
     "autolinker": "^1.6.0",
