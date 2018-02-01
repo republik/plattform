@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-20T22:12:01.520Z",
+  "updated": "2018-02-01T19:11:17.097Z",
   "title": "live",
   "data": [
     {
@@ -309,6 +309,10 @@
     {
       "key": "metaData/field/slug",
       "value": "Web-Slug"
+    },
+    {
+      "key": "metaData/field/slug/note",
+      "value": "Ergibt folgende URL: republik.ch{path}"
     },
     {
       "key": "metaData/field/src",

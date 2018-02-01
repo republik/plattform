@@ -68,6 +68,9 @@ const fragments = {
   repo: gql`
     fragment EditPageRepo on Repo {
       id
+      meta {
+        publishDate
+      }
     }
   `
 }
@@ -515,6 +518,7 @@ class EditorPage extends Component {
               <Editor
                 ref={this.editorRef}
                 schema={schema}
+                meta={repo ? repo.meta : {}}
                 value={editorState}
                 onChange={this.changeHandler}
                 onDocumentChange={this.documentChangeHandler}
