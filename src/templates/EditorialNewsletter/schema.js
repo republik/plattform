@@ -128,7 +128,11 @@ const createNewsletterSchema = ({
     editorModule: 'figure',
     editorOptions: {
       pixelNote: 'Auflösung: min. 1200x (proportionaler Schnitt)',
-      insertButtonText: 'Bild'
+      insertButtonText: 'Bild',
+      insertTypes: [
+        'PARAGRAPH'
+      ],
+      type: 'CENTERFIGURE'
     },
     rules: [
       {
