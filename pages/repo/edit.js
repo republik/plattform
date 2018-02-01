@@ -140,6 +140,9 @@ class EditorPage extends Component {
 
     this.editorRef = ref => {
       this.editor = ref
+      if (ref) {
+        this.forceUpdate()
+      }
     }
 
     this.state = {
@@ -514,11 +517,11 @@ class EditorPage extends Component {
               />
               <Sidebar selectedTabId='edit' isOpen={showSidebar}>
                 <Sidebar.Tab tabId='edit' label='Editieren'>
-                  <EditorUI
-                    schema={schema}
+                  {!!this.editor && <EditorUI
+                    editorRef={this.editor}
                     onChange={this.changeHandler}
                     value={editorState}
-                  />
+                  />}
                 </Sidebar.Tab>
                 <Sidebar.Tab tabId='workflow' label='Workflow'>
                   <VersionControl

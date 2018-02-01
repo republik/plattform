@@ -64,7 +64,7 @@ const moduleCreators = {
   teasergroup: createTeaserGroupModule,
   html: createHtmlModule
 }
-export const initModule = rule => {
+const initModule = (rule, context = {}) => {
   const { editorModule, editorOptions = {} } = rule
   if (editorModule) {
     const create = moduleCreators[editorModule]
@@ -73,12 +73,13 @@ export const initModule = rule => {
     }
     const TYPE = (editorOptions.type || editorModule).toUpperCase()
     const subModules = (rule.rules || [])
-      .map(initModule)
+      .map(r => initModule(r, context))
       .filter(Boolean)
     const module = create({
       TYPE,
       rule,
-      subModules: subModules
+      subModules: subModules,
+      context
     })
 
     module.TYPE = TYPE
@@ -88,7 +89,7 @@ export const initModule = rule => {
     return module
   }
 }
-export const getAllModules = module => [module].concat(
+const getAllModules = module => [module].concat(
   (module.subModules || []).reduce(
     (collector, subModule) => collector.concat(
       getAllModules(subModule)
@@ -138,7 +139,9 @@ class Editor extends Component {
       throw new Error('missing schema prop')
     }
     const rootRule = schema.rules[0]
-    const rootModule = initModule(rootRule)
+    const rootModule = initModule(rootRule, {
+      mdastSchema: schema
+    })
 
     this.serializer = rootModule.helpers.serializer
     this.newDocument = rootModule.helpers.newDocument
@@ -146,6 +149,7 @@ class Editor extends Component {
     const allModules = getAllModules(rootModule)
     const uniqModules = allModules.filter((m, i, a) => a.findIndex(mm => mm.TYPE === m.TYPE) === i)
 
+    this.uniqModules = uniqModules
     this.plugins = [
       ...getFromModules(uniqModules, m => m.plugins)
     ]
