@@ -40,9 +40,9 @@
     useragent "^2.2.1"
     uuid "^3.1.0"
 
-"@orbiting/backend-modules-base@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-1.4.1.tgz#afed5cb24694583d75fc0adb1308fbf384fa48ae"
+"@orbiting/backend-modules-base@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@orbiting/backend-modules-base/-/backend-modules-base-1.4.2.tgz#d7c9b17f05a1ef6ecee5fbf8cc4ce7decc3e3573"
   dependencies:
     "@orbiting/backend-modules-auth" "^3.0.9"
     apollo-engine "^0.8.5"
