@@ -36,6 +36,8 @@ let subscriptionServer
 
 module.exports.run = (executableSchema, middlewares, t, createGraphqlContext) => {
   // init apollo engine
+  // https://github.com/apollographql/apollo-engine-js#middleware-configuration
+  // https://www.apollographql.com/docs/engine/proto-doc.html
   const engine = ENGINE_API_KEY
     ? new Engine({
       engineConfig: {
@@ -43,6 +45,9 @@ module.exports.run = (executableSchema, middlewares, t, createGraphqlContext) =>
         logging: {
           level: 'INFO'   // Engine Proxy logging level. DEBUG, INFO, WARN or ERROR
         }
+      },
+      origin: {
+        requestTimeout: "60m"
       },
       graphqlPort: PORT
     })
