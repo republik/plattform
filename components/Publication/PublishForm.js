@@ -39,6 +39,16 @@ const query = gql`
   query repoWithCommit($repoId: ID!, $commitId: ID!) {
     repo(id: $repoId) {
       id
+      meta {
+        publishDate
+      }
+      latestPublications {
+        date
+        name
+        live
+        prepublication
+        scheduledAt
+      }
       commit(id: $commitId) {
         id
         message
@@ -53,7 +63,6 @@ const query = gql`
           meta {
             slug
             emailSubject
-            publishDate
             template
             format {
               meta {
@@ -136,17 +145,9 @@ class PublishForm extends Component {
   constructor (...args) {
     super(...args)
 
-    const nextMorning = new Date()
-    if (nextMorning.getHours() > 5) {
-      nextMorning.setDate(nextMorning.getDate() + 1)
-    }
-    nextMorning.setHours(7)
-    nextMorning.setMinutes(0)
-
     this.state = {
       prepublication: true,
       scheduled: false,
-      scheduledAt: scheduledAtFormater(nextMorning),
       updateMailchimp: false,
       size: PREVIEW_SIZES[0]
     }
@@ -158,9 +159,6 @@ class PublishForm extends Component {
       publishing
     } = this.state
     const { loading, error, repo } = data
-
-    const scheduledAtDate = scheduledAtParser(scheduledAt)
-    const scheduledAtError = scheduledAtDate === null && t('publish/label/scheduledAt')
 
     return (
       <div>
@@ -178,6 +176,13 @@ class PublishForm extends Component {
           const {
             size
           } = this.state
+
+          const scheduledAtDate = scheduledAtParser(scheduledAt)
+          const scheduledAtError = scheduledAtDate === null && t('publish/label/scheduledAt')
+
+          const designatedPublishDate = repo.meta.publishDate
+            ? new Date(repo.meta.publishDate)
+            : scheduled ? scheduledAtDate : new Date()
 
           return (
             <div>
@@ -202,6 +207,28 @@ class PublishForm extends Component {
                     </a>
                   </Link>
                 </Label>
+              </Interaction.P>
+
+              <br /><br />
+
+              <Label>
+                {t('publish/meta/date/label')}
+              </Label>
+              <Interaction.P>
+                {timeFormat(designatedPublishDate)}
+              </Interaction.P>
+              <Label>
+                {t('publish/meta/path/label')}
+              </Label>
+              <Interaction.P>
+                {t('publish/meta/path/value', {
+                  path: schema.getPath
+                    ? schema.getPath({
+                      ...meta,
+                      publishDate: designatedPublishDate
+                    })
+                    : `/${meta.slug}`
+                })}
               </Interaction.P>
 
               <br /><br />
@@ -245,6 +272,22 @@ class PublishForm extends Component {
                 <br />
               </div>)}
               <Checkbox checked={scheduled} onChange={(_, value) => {
+                if (value && !scheduledAt) {
+                  const now = new Date()
+                  let nextDate
+                  if (repo.meta.publishDate && new Date(repo.meta.publishDate) > now) {
+                    nextDate = new Date(repo.meta.publishDate)
+                  } else {
+                    nextDate = now
+                    if (nextDate.getHours() > 4) {
+                      nextDate.setDate(nextDate.getDate() + 1)
+                    }
+                    nextDate.setHours(5)
+                    nextDate.setMinutes(0)
+                  }
+                  this.setState({scheduledAt: scheduledAtFormater(nextDate)})
+                }
+
                 this.setState({
                   scheduled: value
                 })

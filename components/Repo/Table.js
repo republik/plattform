@@ -390,6 +390,7 @@ query repos($after: String, $search: String, $orderBy: RepoOrderBy) {
         live
         scheduledAt
         document {
+          id
           meta {
             path
             slug

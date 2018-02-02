@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import { initModule, getAllModules, getFromModules } from './'
+import { getFromModules } from './'
 import { Interaction, Label, colors } from '@project-r/styleguide'
+import PropTypes from 'prop-types'
 
 const Sidebar = ({
   textFormatButtons,
@@ -60,15 +61,11 @@ const Sidebar = ({
   </div>
 )
 
-export default class extends Component {
+class UISidebar extends Component {
   constructor (props, ...args) {
     super(props, ...args)
 
-    const rootRule = props.schema.rules[0]
-    const rootModule = initModule(rootRule)
-
-    const allModules = getAllModules(rootModule)
-    const uniqModules = allModules.filter((m, i, a) => a.findIndex(mm => mm.TYPE === m.TYPE) === i)
+    const { uniqModules } = props.editorRef
 
     this.textFormatButtons = getFromModules(
       uniqModules,
@@ -106,3 +103,14 @@ export default class extends Component {
     )
   }
 }
+
+UISidebar.propTypes = {
+  editorRef: PropTypes.shape({
+    uniqModules: PropTypes.array.isRequired,
+    slate: PropTypes.shape({
+      change: PropTypes.func.isRequired
+    }).isRequired
+  }).isRequired
+}
+
+export default UISidebar

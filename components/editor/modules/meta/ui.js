@@ -5,6 +5,8 @@ import { Map, Set } from 'immutable'
 import { Interaction, Dropdown, Field, Label, colors } from '@project-r/styleguide'
 
 import withT from '../../../../lib/withT'
+import slugify from '../../../../lib/utils/slug'
+
 import MetaForm from '../../utils/MetaForm'
 import SlugField from '../../utils/SlugField'
 import FBPreview from './FBPreview'
@@ -27,7 +29,7 @@ const styles = {
 
 const getWidth = key => key.match(/title|feed|emailSubject/i) ? '100%' : ''
 
-const MetaData = ({value, editor, series, additionalFields = [], customFields = [], teaser: Teaser, t}) => {
+const MetaData = ({value, editor, mdastSchema, contextMeta, series, additionalFields = [], customFields = [], teaser: Teaser, t}) => {
   const node = value.document
 
   const genericKeys = Set([
@@ -76,6 +78,9 @@ const MetaData = ({value, editor, series, additionalFields = [], customFields = 
         })
     })
   }
+
+  const dataAsJs = node.data.toJS()
+
   return (
     <div {...styles.container}>
       <div {...styles.center}>
@@ -89,6 +94,16 @@ const MetaData = ({value, editor, series, additionalFields = [], customFields = 
           value={node.data.get('slug')}
           onChange={onInputChange('slug')}
         />
+        {mdastSchema && mdastSchema.getPath &&
+          <Label>{t('metaData/field/slug/note', {
+            path: mdastSchema.getPath({
+              ...dataAsJs,
+              publishDate: contextMeta.publishDate
+                ? new Date(contextMeta.publishDate)
+                : new Date(),
+              slug: slugify(dataAsJs.slug || '')
+            })
+          })}<br /><br /></Label>}
         <MetaForm data={genericData} onInputChange={onInputChange} black getWidth={getWidth} />
         <UIForm getWidth={() => '50%'}>
           {customFields.map(customField => {
@@ -145,7 +160,7 @@ const MetaData = ({value, editor, series, additionalFields = [], customFields = 
         {!!series && <SeriesForm editor={editor} node={node} />}
         {!!Teaser && (<div>
           <Label>{t('metaData/preview')}</Label><br />
-          <Teaser {...node.data.toJS()} />
+          <Teaser {...dataAsJs} />
         </div>)}
         <br /><br /><br />
         <MetaForm data={fbData} onInputChange={onInputChange} black getWidth={getWidth} />
