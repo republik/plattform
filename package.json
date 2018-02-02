@@ -15,7 +15,8 @@
     "test": "cross-env NODE_ENV=test babel-tape-runner \"?(lib|pages|components)/**/*.test.js\" | faucet",
     "standardize": "standard --fix",
     "precommit": "npm test && lint-staged",
-    "translations": "gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json"
+    "translations": "gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json",
+    "link:sg": "rm -rf .next && npm link @project-r/styleguide && rm -rf node_modules/glamor && ln -s @project-r/styleguide/node_modules/glamor node_modules/glamor && echo '\n⚠️  Make sure to restart the next.js server\n'"
   },
   "repository": {
     "type": "git",

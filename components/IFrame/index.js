@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import { styleSheet } from 'glamor'
 import Frame from 'react-frame-component'
 import PropTypes from 'prop-types'
+import createDebug from 'debug'
+
+const debug = createDebug('publikator:iframe')
 
 class IFrame extends Component {
   constructor (...args) {
@@ -28,9 +31,13 @@ class IFrame extends Component {
     window.removeEventListener('resize', this.measure)
   }
   transferCSS () {
-    this.setState({
-      css: styleSheet.rules().map(r => r.cssText).join('')
-    })
+    const css = styleSheet.rules().map(r => r.cssText).join('')
+    if (css !== this.state.css) {
+      debug('transfer css', {css})
+      this.setState({
+        css
+      })
+    }
   }
   render () {
     const {
@@ -58,6 +65,7 @@ class IFrame extends Component {
           <Frame
             frameBorder='0'
             contentDidMount={() => this.transferCSS()}
+            contentDidUpdate={() => this.transferCSS()}
             head={[
               <style key='glamor'>{css}</style>
             ]}
