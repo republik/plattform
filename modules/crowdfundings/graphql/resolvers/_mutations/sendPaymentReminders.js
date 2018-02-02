@@ -8,7 +8,8 @@ module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate}}) => {
 
   const {
     paymentIds,
-    emailSubject
+    emailSubject,
+    isLast
   } = args
   if (!paymentIds.length) {
     return 0
@@ -48,7 +49,9 @@ module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate}}) => {
         to: payment.email,
         fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
         subject: emailSubject || t('api/email/payment/reminder/subject'),
-        templateName: 'cf_payment_reminder',
+        templateName: isLast
+          ? 'cf_payment_reminder_last'
+          : 'cf_payment_reminder',
         globalMergeVars: [
           { name: 'TOTAL',
             content: formatPrice(payment.total)
