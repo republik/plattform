@@ -1,0 +1,34 @@
+{
+  "name": "@orbiting/backends",
+  "description": "Backends used to power Republik",
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
+  "license": "AGPL-3.0",
+  "version": "0.0.0-development",
+  "private": true,
+  "main": "index.js",
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "workspaces": [
+    "packages/*",
+    "servers/*"
+  ],
+  "lint-staged": {
+    "*.js": [
+      "standard --fix",
+      "git add"
+    ]
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "commitizen": "^2.9.5",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.3.0",
+    "standard": "^10.0.3"
+  }
+}
