@@ -1,0 +1,22 @@
+{
+  "name": "@orbiting/backend-modules-translate",
+  "version": "0.0.0",
+  "description": "basic message formatting",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backend-modules.git"
+  },
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backend-modules/issues"
+  },
+  "homepage": "https://github.com/orbiting/backend-modules#readme",
+  "scripts": {
+    "link": "yarn link"
+  }
+}

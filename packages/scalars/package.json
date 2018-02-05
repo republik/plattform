@@ -1,0 +1,33 @@
+{
+  "name": "@orbiting/backend-modules-scalars",
+  "version": "0.0.6",
+  "description": "common graphql scalars: JSON, Date, DateTime",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backend-modules.git"
+  },
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backend-modules/issues"
+  },
+  "homepage": "https://github.com/orbiting/backend-modules#readme",
+  "scripts": {
+    "link": "yarn link"
+  },
+  "devDependencies": {
+    "graphql": "^0.12.3"
+  },
+  "dependencies": {
+    "graphql-type-json": "^0.1.4",
+    "apollo-modules-node": "^0.1.4",
+    "@orbiting/backend-modules-formats": "^0.1.4"
+  },
+  "peerDependencies": {
+    "graphql": "^0.12.3"
+  }
+}

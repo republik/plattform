@@ -1,0 +1,56 @@
+{
+  "name": "@orbiting/backend-modules-auth",
+  "version": "3.0.9",
+  "description": "auth migrations, seeds, middleware, graphql schema and resolvers",
+  "main": "index.js",
+  "scripts": {
+    "link": "yarn link",
+    "translations": "gsheets --key=1mgLz3k2rQ_qcB2ZpmJRZbGLAX5vGcr0P9I2jbWaIgog --title=live --pretty --out lib/translations.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backend-modules.git"
+  },
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backend-modules/issues"
+  },
+  "homepage": "https://github.com/orbiting/backend-modules#readme",
+  "devDependencies": {
+    "db-migrate": "^0.10.2",
+    "dotenv": "^4.0.0",
+    "gsheets": "^2.0.0",
+    "isomorphic-unfetch": "^2.0.0"
+  },
+  "dependencies": {
+    "@orbiting/backend-modules-mail": "^2.0.0",
+    "@orbiting/backend-modules-translate": "^0.0.0",
+    "apollo-modules-node": "^0.1.4",
+    "check-env": "^1.3.0",
+    "connect-pg-simple": "^3.1.2",
+    "country-emoji": "^1.2.0",
+    "debug": "^3.1.0",
+    "email-validator": "^1.1.1",
+    "export-files": "^2.1.1",
+    "express-session": "^1.15.6",
+    "geoip-database": "^1.0.11",
+    "is-uuid": "^1.0.2",
+    "kraut": "^0.1.1",
+    "maxmind": "^2.4.0",
+    "passport": "^0.4.0",
+    "pogi": "^2.5.5",
+    "querystring": "^0.2.0",
+    "rw": "^1.3.3",
+    "useragent": "^2.2.1",
+    "uuid": "^3.1.0"
+  },
+  "peerDependencies": {
+    "d3-array": "^1.2.1",
+    "dotenv": "^4.0.0",
+    "isomorphic-unfetch": "^2.0.0"
+  }
+}

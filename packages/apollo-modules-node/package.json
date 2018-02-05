@@ -1,0 +1,28 @@
+{
+  "name": "apollo-modules-node",
+  "version": "0.1.4",
+  "description": "bundles in(ter)dependent graphql schemas and resolvers from directories by convention",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backend-modules.git"
+  },
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "link": "yarn link"
+  },
+  "devDependencies": {
+    "graphql": "^0.12.3"
+  },
+  "peerDependencies": {
+    "graphql": "^0.12.3"
+  },
+  "dependencies": {
+    "lodash.merge": "^4.6.0",
+    "lodash.pickby": "^4.6.0"
+  }
+}

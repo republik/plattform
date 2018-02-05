@@ -1,0 +1,26 @@
+{
+  "name": "@orbiting/backend-modules-formats",
+  "version": "0.1.4",
+  "description": "basic time formatting",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backend-modules.git"
+  },
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backend-modules/issues"
+  },
+  "homepage": "https://github.com/orbiting/backend-modules#readme",
+  "scripts": {
+    "link": "yarn link"
+  },
+  "dependencies": {
+    "apollo-modules-node": "^0.1.4",
+    "d3-time-format": "^2.1.1"
+  }
+}

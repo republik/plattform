@@ -1,0 +1,62 @@
+{
+  "updated": "2018-01-22T15:26:03.897Z",
+  "title": "live",
+  "data": [
+    {
+      "key": "api/signIn",
+      "value": "Sie müssen sich zuerst anmelden."
+    },
+    {
+      "key": "api/unauthorized",
+      "value": "Nicht genehmigt. Sie müssen die Rolle «{role}» besitzen um die gwünschte Aktion auszuführen."
+    },
+    {
+      "key": "api/unauthorized/1",
+      "value": "Nicht genehmigt. Sie müssen die Rolle {role} besitzen um die gwünschte Aktion auszuführen."
+    },
+    {
+      "key": "api/unauthorized/other",
+      "value": "Nicht genehmigt. Sie müssen mindestens eine der folgenden Rollen {role} besitzen um die gwünschte Aktion auszuführen."
+    },
+    {
+      "key": "api/email/invalid",
+      "value": "E-Mail ungültig"
+    },
+    {
+      "key": "api/auth/errorSavingSession",
+      "value": "Ups, da ist was schiefgelaufen. Sorry!"
+    },
+    {
+      "key": "api/auth/errorDestroyingSession",
+      "value": "Ups, da ist was schiefgelaufen. Sorry!"
+    },
+    {
+      "key": "api/signin/mail/subject",
+      "value": "E-Mail-Adresse bestätigen (für die Republik)"
+    },
+    {
+      "key": "api/token/invalid",
+      "value": "Token ungültig!"
+    },
+    {
+      "key": "api/checkUsername/min",
+      "value": "Benutzername, minimal {count} Zeichen"
+    },
+    {
+      "key": "api/checkUsername/max",
+      "value": "Benutzername, maximal {count} Zeichen"
+    },
+    {
+      "key": "api/checkUsername/invalid",
+      "value": "Benutzername, nur a-z, 0-9 und . erlaubt"
+    },
+    {
+      "key": "api/checkUsername/taken",
+      "value": "Benutzername, nicht mehr verfügbar"
+    },
+    {
+      "key": "api/users/404",
+      "value": "Der User konnte leider nicht gefunden werden."
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@orbiting/backend-modules-redirections",
+  "version": "1.0.1",
+  "description": "store redirections and query them from graphql",
+  "main": "index.js",
+  "scripts": {
+    "link": "yarn link"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backend-modules.git"
+  },
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backend-modules/issues"
+  },
+  "homepage": "https://github.com/orbiting/backend-modules#readme",
+  "devDependencies": {
+    "db-migrate": "^0.10.2",
+    "dotenv": "^4.0.0",
+    "@orbiting/backend-modules-base": "^0.3.3"
+  },
+  "dependencies": {
+    "apollo-modules-node": "^0.1.4"
+  }
+}
