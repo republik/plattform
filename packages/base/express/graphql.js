@@ -17,7 +17,8 @@ const {
   PUBLIC_WS_URL_BASE,
   PUBLIC_WS_URL_PATH,
   NODE_ENV,
-  ENGINE_API_KEY
+  ENGINE_API_KEY,
+  WS_KEEPALIVE_INTERVAL
 } = process.env
 
 module.exports = (
@@ -61,7 +62,7 @@ module.exports = (
         }
         return createContext()
       },
-      keepAlive: 40000
+      keepAlive: WS_KEEPALIVE_INTERVAL || 40000
     },
     {
       server: httpServer,

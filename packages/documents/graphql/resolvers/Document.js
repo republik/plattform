@@ -13,8 +13,15 @@ const { lib: { webp: {
   addSuffix: addWebpSuffix
 } } } = require('@orbiting/backend-modules-assets')
 
+const shouldDeliverWebP = (argument = 'auto', req) => {
+  if (argument === 'auto') {
+    return req.get('Accept').indexOf('image/webp') > -1
+  }
+  return !!argument
+}
+
 module.exports = {
-  content (doc, { urlPrefix, searchString }, context, info) {
+  content (doc, { urlPrefix, searchString, webp }, context, info) {
     // we only do auto slugging when in a published documents context
     // - this is easiest dedectable by _all being present from documents resolver
     // - alt check info.path for documents / document being the root
@@ -22,22 +29,19 @@ module.exports = {
     if (doc._all) {
       contentUrlResolver(doc, doc._all, doc._usernames, undefined, urlPrefix, searchString)
 
-      const webp = context.req.get('Accept').indexOf('image/webp') > -1
-      if(webp) {
+      if (shouldDeliverWebP(webp, context.req)) {
         processRepoImageUrlsInContent(doc.content, addWebpSuffix)
         processImageUrlsInContent(doc.content, addWebpSuffix)
       }
-
     }
     return doc.content
   },
-  meta (doc, { urlPrefix, searchString }, context, info) {
+  meta (doc, { urlPrefix, searchString, webp }, context, info) {
     const meta = getMeta(doc)
     if (doc._all) {
       metaUrlResolver(meta, doc._all, doc._usernames, undefined, urlPrefix, searchString)
 
-      const webp = context.req.get('Accept').indexOf('image/webp') > -1
-      if(webp) {
+      if (shouldDeliverWebP(webp, context.req)) {
         processRepoImageUrlsInMeta(doc.content, addWebpSuffix)
       }
     }
