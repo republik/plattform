@@ -1,42 +1,12 @@
 const kraut = require('kraut')
 const geoForIP = require('./geoForIP')
-const AuthError = require('./AuthError')
+const { newAuthError } = require('./AuthError')
 
-const ERROR_QUERY_EMAIL_MISMATCH = 'query-email-mismatch'
-const ERROR_NO_SESSION = 'no-session'
-const ERROR_SESSION_DESTROY_FAILED = 'session-destroy-failed'
-const ERROR_SESSION_INIT_FAILED = 'session-init-failed'
-const ERROR_TOKEN_EXPIRED = 'token-expired'
-
-class DestroySessionError extends AuthError {
-  constructor (meta) {
-    super(ERROR_SESSION_DESTROY_FAILED, meta)
-  }
-}
-
-class InitiateSessionError extends AuthError {
-  constructor (meta) {
-    super(ERROR_SESSION_INIT_FAILED, meta)
-  }
-}
-
-class QueryEmailMismatchError extends AuthError {
-  constructor (meta) {
-    super(ERROR_QUERY_EMAIL_MISMATCH, meta)
-  }
-}
-
-class NoSessionError extends AuthError {
-  constructor (meta) {
-    super(ERROR_NO_SESSION, meta)
-  }
-}
-
-class TokenExpiredError extends AuthError {
-  constructor (meta) {
-    super(ERROR_TOKEN_EXPIRED, meta)
-  }
-}
+const DestroySessionError = newAuthError('session-destroy-failed', 'api/auth/errorDestroyingSession')
+const InitiateSessionError = newAuthError('session-init-failed')
+const QueryEmailMismatchError = newAuthError('query-email-mismatch')
+const NoSessionError = newAuthError('no-session', 'api/token/invalid')
+const TokenExpiredError = newAuthError('token-expired')
 
 const destroySession = async (req) => {
   return new Promise((resolve, reject) => {

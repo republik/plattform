@@ -2,11 +2,9 @@ const EmailTokenChallenge = require('./EmailTokenChallenge')
 const TOTPChallenge = require('./TOTPChallenge')
 const AuthError = require('../AuthError')
 
-const ERROR_TOKEN_TYPE_UNKNOWN = 'token-type-unknown'
-
 class TokenTypeUnknownError extends AuthError {
   constructor (meta) {
-    super(ERROR_TOKEN_TYPE_UNKNOWN, meta)
+    super('token-type-unknown', meta)
   }
 }
 

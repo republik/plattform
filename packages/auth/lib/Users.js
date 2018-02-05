@@ -18,25 +18,45 @@ const {
   TokenTypes
 } = require('./challenges')
 
-const ERROR_EMAIL_INVALID = 'email-invalid'
-const ERROR_SESSION_INITIALIZATION_FAILED = 'session-initialization-failed'
-const ERROR_AUTHORIZATION_FAILED = 'authorization-failed'
-
 class EmailInvalidError extends AuthError {
   constructor (meta) {
-    super(ERROR_EMAIL_INVALID, meta)
+    super('email-invalid', meta)
+  }
+  translatedMessage () {
+    return t('api/email/invalid')
+  }
+}
+
+class EmailAlreadyAssignedError extends AuthError {
+  constructor (meta) {
+    super('email-already-assigned', meta)
+  }
+  translatedMessage () {
+    return t('api/email/change/exists')
   }
 }
 
 class SessionInitializationFailedError extends AuthError {
   constructor (meta) {
-    super(ERROR_SESSION_INITIALIZATION_FAILED, meta)
+    super('session-initialization-failed', meta)
+  }
+  translatedMessage () {
+    return t('api/auth/errorSavingSession')
+  }
+}
+
+class UserNotFoundError extends AuthError {
+  constructor (meta) {
+    super('user-not-found', meta)
+  }
+  translatedMessage () {
+    return t('api/users/404')
   }
 }
 
 class AuthorizationFailedError extends AuthError {
   constructor (meta) {
-    super(ERROR_AUTHORIZATION_FAILED, meta)
+    super('authorization-failed', meta)
   }
 }
 
@@ -142,7 +162,7 @@ const shouldAutoLogin = ({ email }) => {
   return false
 }
 
-const denySession = async ({ pgdb, tokenChallenge, email: emailFromQuery, signInHooks = [] }) => {
+const denySession = async ({ pgdb, tokenChallenge, email: emailFromQuery }) => {
   // check if authorized to deny the challenge
   const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
   const session = await sessionByToken({ pgdb, token: tokenChallenge, email: emailFromQuery })
@@ -389,5 +409,7 @@ module.exports = {
   updateUserEmail,
   updateUserTwoFactorAuthentication,
   EmailInvalidError,
+  EmailAlreadyAssignedError,
+  UserNotFoundError,
   SessionInitializationFailedError
 }
