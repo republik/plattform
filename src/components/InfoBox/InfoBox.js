@@ -18,10 +18,9 @@ const textSelector = '[data-infobox-text]'
 const figureChildStyles = Object.keys(IMAGE_SIZES).reduce((styles, key) => {
   const size = IMAGE_SIZES[key]
   styles[key] = css({
-    [mUp]: {
-      '& figure': {
-        width: size
-      }
+    '& figure': {
+      width: size,
+      maxWidth: '100%'
     }
   })
   return styles
