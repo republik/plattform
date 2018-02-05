@@ -142,6 +142,46 @@ const shouldAutoLogin = ({ email }) => {
   return false
 }
 
+const denySession = async ({ pgdb, tokenChallenge, email: emailFromQuery, signInHooks = [] }) => {
+  // check if authorized to deny the challenge
+  const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
+  const session = await sessionByToken({ pgdb, token: tokenChallenge, email: emailFromQuery })
+  const validated = await validateChallenge({ pgdb, user: existingUser, ...tokenChallenge })
+  if (!validated) {
+    console.error('invalid challenge ', tokenChallenge)
+    throw new Error('one of the challenges failed')
+  }
+
+  const transaction = await pgdb.transactionBegin()
+  try {
+    // log in the session and delete token
+    await transaction.public.sessions.updateOne({
+      id: session.id
+    }, {
+      sess: {
+        ...session.sess,
+        passport: {
+          user: null
+        },
+        expire: (new Date()).getTime()
+      }
+    })
+
+    // let the tokens expire
+    await transaction.public.tokens.update({
+      sessionId: session.id
+    }, {
+      updatedAt: new Date(),
+      expiresAt: new Date()
+    })
+    transaction.transactionCommit()
+  } catch (error) {
+    transaction.transactionRollback()
+    console.error('something failed badly during denial')
+    throw new AuthorizationFailedError({ session })
+  }
+}
+
 const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [] }) => {
   // validate the challenges
   const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
@@ -343,6 +383,7 @@ const updateUserEmail = async ({ pgdb, userId, oldEmail, newEmail }) => {
 
 module.exports = {
   signIn,
+  denySession,
   authorizeSession,
   resolveUser,
   updateUserEmail,
