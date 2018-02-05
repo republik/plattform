@@ -60,6 +60,6 @@ typings/
 
 .DS_Store
 
-seeds/seeds.json
-seeds/comments.json
-local/
+servers/republik/seeds/seeds.json
+servers/republik/seeds/comments.json
+servers/republik/local/
