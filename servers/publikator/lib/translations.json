@@ -1,0 +1,62 @@
+{
+  "updated": "2018-01-14T06:10:43.911Z",
+  "title": "live",
+  "data": [
+    {
+      "key": "api/signIn",
+      "value": "Sie müssen sich zuerst anmelden."
+    },
+    {
+      "key": "api/unauthorized",
+      "value": "Nicht genehmigt. Sie müssen die Rolle «{role}» besitzen um die gwünschte Aktion auszuführen."
+    },
+    {
+      "key": "api/email/invalid",
+      "value": "E-Mail ungültig"
+    },
+    {
+      "key": "api/auth/errorSavingSession",
+      "value": "Ups, da ist was schiefgelaufen. Sorry!"
+    },
+    {
+      "key": "api/auth/errorDestroyingSession",
+      "value": "Ups, da ist was schiefgelaufen. Sorry!"
+    },
+    {
+      "key": "api/commit/parentId/required",
+      "value": "Please provide a parentId to commit to the existing repo \"{repoId}\"."
+    },
+    {
+      "key": "api/commit/parentId/notAllowed",
+      "value": "You must not provide a parentId to init the not existing repo \"{repoId}\"."
+    },
+    {
+      "key": "api/github/yaml/warning",
+      "value": "✋ The message contains yaml values used by Project R's CMS. Changing the values here is not supported (yet) and might result in unexpected consequences."
+    },
+    {
+      "key": "api/publish/scheduledAt/tooFarInTheFuture",
+      "value": "Sorry, the latest possible scheduling date is {days} into the future. "
+    },
+    {
+      "key": "api/publish/document/slug/404",
+      "value": "The slug is missing."
+    },
+    {
+      "key": "api/publish/document/slug/redirectsExist",
+      "value": "Der Slug ({path}) muss geändert werden da dieser bereits von einer Umleitung verwendet wird."
+    },
+    {
+      "key": "api/publish/document/slug/docExists",
+      "value": "Der Slug ({path}) muss geändert werden da dieser bereits von einem Artikel verwendet wird."
+    },
+    {
+      "key": "api/twitter/morephotos/other",
+      "value": "{count} weitere Fotos"
+    },
+    {
+      "key": "api/twitter/morephotos/1",
+      "value": "1 weiteres Foto"
+    }
+  ]
+}
