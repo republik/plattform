@@ -1,5 +1,6 @@
 const ensureSignedIn = require('../../../lib/ensureSignedIn')
 const { generateSharedSecret } = require('../../../lib/challenges')
+const { TwoFactorHasToBeDisabled } = require('../../../lib/Users')
 
 module.exports = async (_, args, { pgdb, user, req, ...rest }) => {
   ensureSignedIn(req)
@@ -16,7 +17,7 @@ module.exports = async (_, args, { pgdb, user, req, ...rest }) => {
   }
 
   if (userWith2FA.isTwoFactorEnabled) {
-    throw new Error('you have to first deactivate 2FA to re-init your shared secret')
+    throw new TwoFactorHasToBeDisabled({ userId: user.id })
   }
   const { tempTwoFactorSecret } = await generateSharedSecret({
     type,

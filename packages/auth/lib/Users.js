@@ -4,12 +4,11 @@ const isUUID = require('is-uuid')
 const debug = require('debug')('auth')
 const { sendMailTemplate, moveNewsletterSubscriptions } = require('@orbiting/backend-modules-mail')
 const t = require('./t')
-const AuthError = require('./AuthError')
+const { newAuthError } = require('./AuthError')
 
 const {
   initiateSession,
-  sessionByToken,
-  NoSessionError
+  sessionByToken
 } = require('./Sessions')
 const {
   generateNewToken,
@@ -18,47 +17,16 @@ const {
   TokenTypes
 } = require('./challenges')
 
-class EmailInvalidError extends AuthError {
-  constructor (meta) {
-    super('email-invalid', meta)
-  }
-  translatedMessage () {
-    return t('api/email/invalid')
-  }
-}
-
-class EmailAlreadyAssignedError extends AuthError {
-  constructor (meta) {
-    super('email-already-assigned', meta)
-  }
-  translatedMessage () {
-    return t('api/email/change/exists')
-  }
-}
-
-class SessionInitializationFailedError extends AuthError {
-  constructor (meta) {
-    super('session-initialization-failed', meta)
-  }
-  translatedMessage () {
-    return t('api/auth/errorSavingSession')
-  }
-}
-
-class UserNotFoundError extends AuthError {
-  constructor (meta) {
-    super('user-not-found', meta)
-  }
-  translatedMessage () {
-    return t('api/users/404')
-  }
-}
-
-class AuthorizationFailedError extends AuthError {
-  constructor (meta) {
-    super('authorization-failed', meta)
-  }
-}
+const EmailInvalidError = newAuthError('email-invalid', 'api/email/invalid')
+const EmailAlreadyAssignedError = newAuthError('email-already-assigned', 'api/email/change/exists')
+const SessionInitializationFailedError = newAuthError('session-initialization-failed', 'api/auth/errorSavingSession')
+const UserNotFoundError = newAuthError('user-not-found', 'api/users/404')
+const AuthorizationFailedError = newAuthError('authorization-failed')
+const TwoFactorAlreadyDisabledError = newAuthError('2fa-already-disabled')
+const TwoFactorAlreadyEnabledError = newAuthError('2fa-already-enabled')
+const SecondFactorNotReadyError = newAuthError('2f-not-ready')
+const TwoFactorHasToBeDisabled = newAuthError('2fa-has-to-be-disabled')
+const SessionTokenValidationFailed = newAuthError('token-validation-failed', 'api/token/invalid')
 
 const {
   AUTO_LOGIN,
@@ -168,8 +136,7 @@ const denySession = async ({ pgdb, tokenChallenge, email: emailFromQuery }) => {
   const session = await sessionByToken({ pgdb, token: tokenChallenge, email: emailFromQuery })
   const validated = await validateChallenge({ pgdb, user: existingUser, ...tokenChallenge })
   if (!validated) {
-    console.error('invalid challenge ', tokenChallenge)
-    throw new Error('one of the challenges failed')
+    throw new SessionTokenValidationFailed(tokenChallenge)
   }
 
   const transaction = await pgdb.transactionBegin()
@@ -197,7 +164,6 @@ const denySession = async ({ pgdb, tokenChallenge, email: emailFromQuery }) => {
     transaction.transactionCommit()
   } catch (error) {
     transaction.transactionRollback()
-    console.error('something failed badly during denial')
     throw new AuthorizationFailedError({ session })
   }
 }
@@ -210,13 +176,13 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   for (const tokenChallenge of tokens) {
     if (tokenTypes.indexOf(tokenChallenge.type) !== -1) {
       console.error('invalid challenge types ', tokenTypes.concat([tokenChallenge.type]))
-      throw new Error('same challenge type used multiple times?!')
+      throw new SessionTokenValidationFailed({ email: emailFromQuery, ...tokenChallenge })
     }
     const session = await sessionByToken({ pgdb, token: tokenChallenge, email: emailFromQuery })
     const validated = await validateChallenge({ pgdb, user: existingUser, ...tokenChallenge })
     if (!validated) {
-      console.error('invalid challenge ', tokenChallenge)
-      throw new Error('one of the challenges failed')
+      console.error('wrong token')
+      throw new SessionTokenValidationFailed({ email: emailFromQuery, ...tokenChallenge })
     }
     tokenTypes.push(tokenChallenge.type)
     sessions.push(session)
@@ -225,11 +191,11 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   // security net
   if ([...(new Set(sessions))].length !== 1) {
     console.error('somebody tries to authorize multiple sessions')
-    throw new NoSessionError({ email: emailFromQuery })
+    throw new SessionTokenValidationFailed({ email: emailFromQuery })
   }
   if (sessions.length < 2 && (existingUser && existingUser.isTwoFactorEnabled)) {
     console.error('two factor is enabled but less than 2 challenges provided')
-    throw new NoSessionError({ email: emailFromQuery })
+    throw new SessionTokenValidationFailed({ email: emailFromQuery })
   }
   const session = sessions[0]
 
@@ -263,7 +229,6 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
     transaction.transactionCommit()
   } catch (error) {
     transaction.transactionRollback()
-    console.error('something failed badly during authorization')
     throw new AuthorizationFailedError({ session })
   }
 
@@ -307,7 +272,6 @@ const upsertUserVerified = async({ pgdb, email }) => {
     }
   } catch (error) {
     await transaction.transactionRollback()
-    console.error('something bad happened during user verification')
     throw error
   }
 }
@@ -411,5 +375,9 @@ module.exports = {
   EmailInvalidError,
   EmailAlreadyAssignedError,
   UserNotFoundError,
-  SessionInitializationFailedError
+  SessionInitializationFailedError,
+  TwoFactorHasToBeDisabled,
+  TwoFactorAlreadyDisabledError,
+  TwoFactorAlreadyEnabledError,
+  SecondFactorNotReadyError
 }

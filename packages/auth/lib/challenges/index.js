@@ -1,12 +1,11 @@
 const EmailTokenChallenge = require('./EmailTokenChallenge')
 const TOTPChallenge = require('./TOTPChallenge')
-const AuthError = require('../AuthError')
+const { newAuthError } = require('../AuthError')
 
-class TokenTypeUnknownError extends AuthError {
-  constructor (meta) {
-    super('token-type-unknown', meta)
-  }
-}
+const TokenTypeUnknownError = newAuthError('token-type-unknown')
+const SharedSecretNotSupported = newAuthError('shared-secret-not-supported')
+const SharedSecretGenerationFailed = newAuthError('shared-secret-generation-failed')
+const SharedSecretValidationFailed = newAuthError('shared-secret-validation-failed')
 
 const TokenTypes = {
   EMAIL_TOKEN: 'EMAIL_TOKEN',
@@ -23,13 +22,13 @@ const ChallengeHandlerProxy = ({ type, ...options }) => {
   if (!handler) throw new TokenTypeUnknownError({ type })
   return {
     generateSharedSecret: async () => {
-      if (!handler.generateSharedSecret) throw new Error('shared secret not supported', { type, options })
+      if (!handler.generateSharedSecret) throw new SharedSecretNotSupported({ type, options })
 
       const secret = await handler.generateSharedSecret({
         type,
         ...options
       })
-      if (!secret) throw new Error('could not generate shared secret', { type, options })
+      if (!secret) throw new SharedSecretGenerationFailed({ type, options })
 
       const { pgdb, user } = options
       return pgdb.public.users.updateAndGetOne(
@@ -42,13 +41,14 @@ const ChallengeHandlerProxy = ({ type, ...options }) => {
       )
     },
     validateSharedSecret: async () => {
-      if (!handler.validateSharedSecret) throw new Error('shared secret validation not supported', { type, options })
+      if (!handler.validateSharedSecret) throw new SharedSecretNotSupported({ type, options })
+
       const validated = await handler.validateSharedSecret({
         type,
         ...options
       })
 
-      if (!validated) throw new Error('shared secret validation failed', { type, options })
+      if (!validated) throw new SharedSecretValidationFailed({ type, options })
       const { pgdb, user } = options
       return pgdb.public.users.updateAndGetOne(
         {
@@ -90,6 +90,9 @@ const ChallengeHandlerProxy = ({ type, ...options }) => {
 module.exports = {
   TokenTypes,
   TokenTypeUnknownError,
+  SharedSecretNotSupported,
+  SharedSecretGenerationFailed,
+  SharedSecretValidationFailed,
   validateChallenge: (options) => ChallengeHandlerProxy(options).validateChallenge(),
   generateNewToken: (options) => ChallengeHandlerProxy(options).generateNewToken(),
   startChallenge: (options) => ChallengeHandlerProxy(options).startChallenge(),
