@@ -30,5 +30,8 @@
     "husky": "^0.14.3",
     "lint-staged": "^4.3.0",
     "standard": "^10.0.3"
+  },
+  "scripts": {
+    "start": "cd $APP_DIR && yarn run start"
   }
 }
