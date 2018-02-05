@@ -60,4 +60,4 @@ typings/
 
 .DS_Store
 
-seeds/seeds.json
+servers/publikator/seeds/seeds.json
