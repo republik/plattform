@@ -146,10 +146,11 @@ export const Emphasis = ({ children, attributes, ...props }) => (
 )
 
 export const link = css({
-  ...underline,
-  color: colors.text,
+  color: colors.primary,
+  textDecoration: 'none',
   ':hover': {
-    color: colors.lightText
+    ...underline,
+    color: colors.primary
   }
 })
 export const A = ({ children, attributes, ...props }) => (
@@ -160,10 +161,10 @@ export const A = ({ children, attributes, ...props }) => (
 
 const note = css({
   ...styles.sansSerifRegular12,
-  margin: '36px 0',
+  margin: '22px 0',
   [mUp]: {
     ...styles.sansSerifRegular15,
-    margin: '40px 0'
+    margin: '30px 0'
   }
 })
 
