@@ -216,6 +216,24 @@ const resolveUser = async ({ slug, pgdb, fallback }) => {
   return user || fallback
 }
 
+const updateUserTwoFactorAuthentication = async ({ pgdb, userId: id, enabled: isTwoFactorEnabled }) => {
+  const transaction = await pgdb.transactionBegin()
+  try {
+    const user = await transaction.public.users.updateAndGetOne(
+      {
+        id
+      }, {
+        isTwoFactorEnabled
+      }
+    )
+    await transaction.transactionCommit()
+    return user
+  } catch (e) {
+    await transaction.transactionRollback()
+    throw e
+  }
+}
+
 const updateUserEmail = async ({ pgdb, userId, oldEmail, newEmail }) => {
   const transaction = await pgdb.transactionBegin()
   try {
@@ -284,6 +302,7 @@ module.exports = {
   authorizeSession,
   resolveUser,
   updateUserEmail,
+  updateUserTwoFactorAuthentication,
   EmailInvalidError,
   SessionInitializationFailedError
 }

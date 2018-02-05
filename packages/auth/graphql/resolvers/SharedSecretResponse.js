@@ -1,6 +1,3 @@
-// const Roles = require('../../lib/Roles')
-// const userAccessRoles = ['admin', 'supporter']
-// const { findAllUserSessions } = require('../../lib/Sessions')
 const ISSUER = 'Republik'
 
 // https://github.com/google/google-authenticator/wiki/Key-Uri-Format

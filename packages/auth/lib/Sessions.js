@@ -5,7 +5,6 @@ const AuthError = require('./AuthError')
 const ERROR_QUERY_EMAIL_MISMATCH = 'query-email-mismatch'
 const ERROR_NO_SESSION = 'no-session'
 const ERROR_SESSION_DESTROY_FAILED = 'session-destroy-failed'
-const ERROR_TIME_BASED_PASSWORD_MISMATCH = 'time-based-password-mismatch'
 const ERROR_SESSION_INIT_FAILED = 'session-init-failed'
 const ERROR_TOKEN_EXPIRED = 'token-expired'
 
@@ -30,12 +29,6 @@ class QueryEmailMismatchError extends AuthError {
 class NoSessionError extends AuthError {
   constructor (meta) {
     super(ERROR_NO_SESSION, meta)
-  }
-}
-
-class TimeBasedPasswordMismatchError extends AuthError {
-  constructor (meta) {
-    super(ERROR_TIME_BASED_PASSWORD_MISMATCH, meta)
   }
 }
 
@@ -171,6 +164,5 @@ module.exports = {
   NoSessionError,
   DestroySessionError,
   InitiateSessionError,
-  TimeBasedPasswordMismatchError,
   TokenExpiredError
 }

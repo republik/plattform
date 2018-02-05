@@ -50,7 +50,6 @@ type mutations {
   # generate a new sharedSecret
   initSharedSecret(type: SignInTokenType = TOTP): SharedSecretResponse!
   validateSharedSecret(type: SignInTokenType = TOTP, payload: String): Boolean!
-  enableTwoFactorAuthentication: Boolean!
-  disableTwoFactorAuthentication: Boolean!
+  updateTwoFactorAuthentication(enabled: Boolean!): Boolean!
 }
 `
