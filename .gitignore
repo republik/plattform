@@ -59,7 +59,3 @@ typings/
 .test.env
 
 .DS_Store
-
-seeds/seeds.json
-seeds/comments.json
-local/
