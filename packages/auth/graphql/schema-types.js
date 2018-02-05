@@ -10,6 +10,7 @@ type Session {
   countryFlag: String
   city: String
   isCurrent: Boolean!
+  tokenTypes: [SignInTokenType]!
 }
 
 type User {
@@ -29,6 +30,7 @@ type User {
 
 type SignInResponse {
   phrase: String!
+  tokenTypes: [SignInTokenType]!
 }
 
 type SharedSecretResponse {

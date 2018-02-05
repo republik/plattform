@@ -47,7 +47,7 @@ const {
 
 const signIn = async (_email, context, pgdb, req) => {
   if (req.user) {
-    return {phrase: ''}
+    return { phrase: '', tokenTypes: [] }
   }
 
   if (!isEmail(_email)) {
@@ -59,9 +59,11 @@ const signIn = async (_email, context, pgdb, req) => {
   }
 
   // find existing email with different cases
-  const email = (await pgdb.public.users.findOneFieldOnly({
+  const user = await pgdb.public.users.findOne({
     email: _email
-  }, 'email')) || _email
+  })
+
+  const { email, isTwoFactorEnabled } = user
 
   try {
     const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress
@@ -71,7 +73,13 @@ const signIn = async (_email, context, pgdb, req) => {
     const { country, phrase, session } = init
 
     const type = TokenTypes.EMAIL_TOKEN
-    const token = await generateNewToken({ pgdb, type, session })
+    const tokenTypes = [type]
+    const token = await generateNewToken({
+      pgdb,
+      type,
+      session,
+      email
+    })
     if (shouldAutoLogin({ email })) {
       setTimeout(async () => {
         console.log('AUTO_LOGIN!')
@@ -82,9 +90,39 @@ const signIn = async (_email, context, pgdb, req) => {
         })
       }, 2000)
     } else {
-      await startChallenge({ pgdb, email, type, token, context, country, phrase })
+      await startChallenge({
+        pgdb,
+        email,
+        type,
+        token,
+        context,
+        country,
+        phrase
+      })
+
+      if (isTwoFactorEnabled) {
+        const secondFactorType = TokenTypes.TOTP
+        tokenTypes.push(secondFactorType)
+        const secondFactor = await generateNewToken({
+          pgdb,
+          type: secondFactorType,
+          session,
+          email,
+          user
+        })
+        await startChallenge({
+          pgdb,
+          email,
+          type: secondFactorType,
+          token: secondFactor,
+          context,
+          country,
+          phrase
+        })
+      }
     }
-    return { phrase }
+
+    return { phrase, tokenTypes }
   } catch (error) {
     throw new SessionInitializationFailedError({ error })
   }
@@ -107,14 +145,20 @@ const shouldAutoLogin = ({ email }) => {
 const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [] }) => {
   // validate the challenges
   const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
+  const tokenTypes = []
   const sessions = []
   for (const tokenChallenge of tokens) {
+    if (tokenTypes.indexOf(tokenChallenge.type) !== -1) {
+      console.error('invalid challenge types ', tokenTypes.concat([tokenChallenge.type]))
+      throw new Error('same challenge type used multiple times?!')
+    }
     const session = await sessionByToken({ pgdb, token: tokenChallenge, email: emailFromQuery })
     const validated = await validateChallenge({ pgdb, user: existingUser, ...tokenChallenge })
     if (!validated) {
       console.error('invalid challenge ', tokenChallenge)
       throw new Error('one of the challenges failed')
     }
+    tokenTypes.push(tokenChallenge.type)
     sessions.push(session)
   }
 
@@ -150,7 +194,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
     })
 
     // let the tokens expire
-    await transaction.public.tokens.delete({
+    await transaction.public.tokens.update({
       sessionId: session.id
     }, {
       updatedAt: new Date(),

@@ -66,9 +66,10 @@ const ChallengeHandlerProxy = ({ type, ...options }) => {
         type,
         ...options
       })
-      const { pgdb, session } = options
+      const { pgdb, session, email } = options
       return pgdb.public.tokens.insertAndGet({
         sessionId: session.id,
+        email,
         type,
         ...tokenData
       })

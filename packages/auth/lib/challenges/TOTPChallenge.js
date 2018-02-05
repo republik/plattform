@@ -13,12 +13,12 @@ module.exports = {
     return (otp.totp() === payload)
   },
   generateNewToken: async ({ pgdb, session, type, user }) => {
-    const payload = user.id
+    const payload = '' // no payload needed, time-based
     const expiresAt = new Date(new Date().getTime() + (30 * MIN_IN_MS))
     return { payload, expiresAt }
   },
   startChallenge: async (options) => {
-    // time based!
+    // no challenge transport needed, time based
     return true
   },
   validateChallenge: async ({ pgdb, token, user }) => {
