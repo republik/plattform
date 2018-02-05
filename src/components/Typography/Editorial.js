@@ -157,3 +157,18 @@ export const A = ({ children, attributes, ...props }) => (
     {children}
   </a>
 )
+
+const note = css({
+  ...styles.sansSerifRegular12,
+  margin: '36px 0',
+  [mUp]: {
+    ...styles.sansSerifRegular15,
+    margin: '40px 0'
+  }
+})
+
+export const Note = ({ children, attributes, ...props }) => (
+  <p {...attributes} {...props} {...note}>
+    {children}
+  </p>
+)
