@@ -264,5 +264,74 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 
 <hr /></section>
 
+<section><h6>TEASERGROUP</h6>
+
+\`\`\`
+{
+  "columns": 2
+}
+\`\`\`
+
+<section><h6>TEASER</h6>
+
+\`\`\`
+{
+  "bgColor": "#fff",
+  "center": false,
+  "color": "#000",
+  "kind": "editorial",
+  "portrait": true,
+  "reverse": false,
+  "teaserType": "frontTile",
+  "textPosition": "topleft",
+  "titleSize": "standard",
+  "url": "https://www.republik.ch/updates/portraets"
+}
+\`\`\`
+
+![](https://assets.republik.ch/images/pierre_rom.jpeg?size=853x853)
+
+###### Echte Republikaner
+
+# Pierre
+
+#### Republik-Verleger, 93 Jahre
+
+Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
+
+<hr /></section>
+
+<section><h6>TEASER</h6>
+
+\`\`\`
+{
+  "bgColor": "#000",
+  "center": false,
+  "color": "#000",
+  "kind": "editorial",
+  "portrait": true,
+  "reverse": false,
+  "teaserType": "frontTile",
+  "textPosition": "topleft",
+  "titleSize": "standard",
+  "url": "https://www.republik.ch/updates/portraets",
+  "imageOnly": true
+}
+\`\`\`
+
+![](/static/video.jpg?size=4332x2437)
+
+###### Echte Republikaner
+
+# Mavie
+
+#### Republik-Verlegerin, 8 Monate
+
+Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
+
+<hr /></section>
+
+<hr /></section>
+
 `}</Markdown>
 ```

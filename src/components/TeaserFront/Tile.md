@@ -5,6 +5,7 @@ Supported props:
 - `color`: The text color.
 - `bgColor`: The background color to use in stacked mode.
 - `align`: `middle` (default), `top` or `bottom`.
+- `imageOnly`: Whether to render only the image (full width or height).
 
 A `<TeaserFrontTileHeadline />` should be used.
 
@@ -143,6 +144,46 @@ Supported props:
     <TeaserFrontCredit>
       An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
+  </TeaserFrontTile>
+</TeaserFrontTileRow>
+```
+
+### Image only
+
+```react
+<TeaserFrontTileRow columns={2}>
+  <TeaserFrontTile imageOnly image='/static/dada.jpg' bgColor='#fff'>
+    <TeaserFrontTileHeadline.Editorial>Unrendered headline</TeaserFrontTileHeadline.Editorial>
+  </TeaserFrontTile>
+  <TeaserFrontTile image='/static/rothaus_landscape.jpg'
+    color='#fff' bgColor='#000'>
+    <TeaserFrontTileHeadline.Editorial>Headline</TeaserFrontTileHeadline.Editorial>
+    <TeaserFrontCredit>
+      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+</TeaserFrontTileRow>
+```
+
+```react
+<TeaserFrontTileRow columns={2}>
+  <TeaserFrontTile imageOnly image='/static/video.jpg' bgColor='#000'>
+    <TeaserFrontTileHeadline.Editorial>Unrendered headline</TeaserFrontTileHeadline.Editorial>
+  </TeaserFrontTile>
+  <TeaserFrontTile image='/static/rothaus_portrait.jpg'
+    color='#000' bgColor='#fff'>
+    <TeaserFrontTileHeadline.Editorial>Headline</TeaserFrontTileHeadline.Editorial>
+    <TeaserFrontCredit>
+      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+</TeaserFrontTileRow>
+```
+
+```react
+<TeaserFrontTileRow>
+  <TeaserFrontTile imageOnly image='/static/video.jpg'>
+    <TeaserFrontTileHeadline.Editorial>Unrendered headline</TeaserFrontTileHeadline.Editorial>
   </TeaserFrontTile>
 </TeaserFrontTileRow>
 ```

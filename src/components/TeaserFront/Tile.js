@@ -65,6 +65,10 @@ const styles = {
       margin: '0 auto 60px auto'
     }
   }),
+  imageOnlyContainer: css({
+    margin: '0 auto',
+    fontSize: 0
+  }),
   image: css({
     minWidth: '100px',
     ...sizeSmall,
@@ -153,7 +157,18 @@ TeaserFrontTileRow.defaultProps = {
   columns: 1
 }
 
-const Tile = ({ children, attributes, image, alt, onClick, color, bgColor, align, aboveTheFold }) => {
+const Tile = ({
+  children,
+  attributes,
+  image,
+  alt,
+  onClick,
+  color,
+  bgColor,
+  align,
+  aboveTheFold,
+  imageOnly
+}) => {
   const background = bgColor || ''
   const justifyContent =
     align === 'top' ? 'flex-start' : align === 'bottom' ? 'flex-end' : ''
@@ -162,32 +177,40 @@ const Tile = ({ children, attributes, image, alt, onClick, color, bgColor, align
     IMAGE_SIZE.large,
     false
   )
+  let containerStyle = {
+    background,
+    cursor: onClick ? 'pointer' : 'default',
+    justifyContent
+  }
+  if (imageOnly) {
+    containerStyle = {
+      ...containerStyle,
+      padding: 0
+    }
+  }
+  const imageStyle = imageOnly ? {maxHeight: '100%', maxWidth: '100%'} : {}
 
   return (
     <div
       {...attributes}
       {...styles.container}
       onClick={onClick}
-      style={{
-        background,
-        cursor: onClick ? 'pointer' : 'default',
-        justifyContent
-      }}
+      style={containerStyle}
       className='tile'
     >
       {imageProps && (
-        <div {...styles.imageContainer}>
+        <div {...(imageOnly ? styles.imageOnlyContainer : styles.imageContainer)}>
           <LazyLoad visible={aboveTheFold}>
             <img src={imageProps.src} srcSet={imageProps.srcSet} alt={alt}
-              {...styles.image} />
+              {...styles.image} style={imageStyle}/>
           </LazyLoad>
         </div>
       )}
-      <div {...styles.textContainer}>
+      {!imageOnly && <div {...styles.textContainer}>
         <Text color={color} maxWidth={'600px'} margin={'0 auto'}>
           {children}
         </Text>
-      </div>
+      </div>}
     </div>
   )
 }
@@ -203,7 +226,9 @@ Tile.propTypes = {
     'top',
     'middle',
     'bottom'
-  ])
+  ]),
+  aboveTheFold: PropTypes.bool,
+  imageOnly: PropTypes.bool
 }
 
 Tile.defaultProps = {
