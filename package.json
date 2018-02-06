@@ -36,6 +36,7 @@
   "devDependencies": {
     "commitizen": "^2.9.5",
     "cz-conventional-changelog": "^2.1.0",
+    "foreman": "^2.0.0",
     "husky": "^0.14.3",
     "lint-staged": "^4.3.0",
     "standard": "^10.0.3",
@@ -43,6 +44,7 @@
   },
   "scripts": {
     "start": "cd $APP_DIR && yarn run start",
+    "dev": "nf --procfile Procfile-dev start",
     "precommit": "lint-staged",
     "commit": "git-cz",
     "commitmsg": "validate-commit-msg"
