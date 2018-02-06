@@ -43,7 +43,7 @@
     "validate-commit-msg": "^2.11.1"
   },
   "scripts": {
-    "start": "cd $APP_DIR && yarn run start",
+    "start": "if [ -z \"$SERVER\" ]; then >&2 echo \"Missing ENV var: SERVER. Possible values are: republik, publikator, assets.\" && exit 1; else cd servers/$SERVER && yarn run start; fi",
     "dev": "nf --procfile Procfile-dev start",
     "precommit": "lint-staged",
     "commit": "git-cz",
