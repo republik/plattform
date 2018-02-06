@@ -9,7 +9,7 @@ const { Redirections: {
 const { publishMonitor } = require('../../../../../lib/slack')
 
 module.exports = async (_, args, context) => {
-  const {pgdb, req, t, mail: { unsubscribeEmail, enforceSubscriptions }} = context
+  const {pgdb, req, t, mail: { moveNewsletterSubscriptions }} = context
   Roles.ensureUserHasRole(req.user, 'admin')
 
   const {targetUserId, sourceUserId} = args
@@ -139,13 +139,7 @@ module.exports = async (_, args, context) => {
     await transaction.transactionCommit()
 
     try {
-      await unsubscribeEmail({ email: sourceUser.email })
-      await enforceSubscriptions({
-        pgdb,
-        userId: targetUserId,
-        isNew: true,
-        subscribeToEditorialNewsletters: true
-      })
+      await moveNewsletterSubscriptions({ user: sourceUser, newEmail: targetUser.email })
     } catch (_e) {
       logger.error('newsletter subscription changes failed in mergeUsers!', _e)
     }

@@ -74,10 +74,6 @@ type mutations {
   # required role: supporter
   updateUser(firstName: String, lastName: String, birthday: Date, phoneNumber: String, address: AddressInput, userId: ID!): User!
 
-  # if userId is null, the logged in user's email is changed
-  # required role to change other's email: supporter
-  updateEmail(userId: ID, email: String!): User!
-
   # merges the belongings from source to target
   # required role: admin
   mergeUsers(targetUserId: ID!, sourceUserId: ID!): User!
