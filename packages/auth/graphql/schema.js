@@ -38,6 +38,7 @@ type mutations {
 
   # authorize a token sent by mail to convert a login request to a valid user session
   authorizeSession(email: String!, tokenChallenge: SignInTokenChallenge!, secondFactor: SignInTokenChallenge): Boolean!
+
   # deny a session via token challenge
   denySession(email: String!, tokenChallenge: SignInTokenChallenge!): Boolean!
 
@@ -51,8 +52,10 @@ type mutations {
 
   # generate a new sharedSecret
   initSharedSecret(type: SignInTokenType = TOTP): SharedSecretResponse!
+
   # validate the sharedSecret for the first time via token payload
   validateSharedSecret(type: SignInTokenType = TOTP, payload: String): Boolean!
+
   # Activate or deactivate 2FA
   updateTwoFactorAuthentication(enabled: Boolean!): Boolean!
 }

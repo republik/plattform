@@ -4,13 +4,14 @@ const LOGIN_USER_MUTATION = `
   mutation signIn($email: String!, $context: String) {
     signIn(email: $email, context: $context) {
       phrase
+      tokenTypes
     }
   }
 `
 
 const AUTHORIZE_SESSION_MUTATION = `
-  mutation authorizeSession($email: String!, $token: String!) {
-    authorizeSession(email: $email, token: $token)
+  mutation authorizeSession($email: String!, $token: String!, $type: SignInTokenType!) {
+    authorizeSession(email: $email, tokenChallenge: { type: $type, payload: $token })
   }
 `
 
@@ -23,7 +24,7 @@ const LOGOUT_USER_MUTATION = `
 const signIn = async ({ user, context }) => {
   const { email } = user
   if (!email) return null
-  await pgDatabase().public.sessions.truncate()
+  await pgDatabase().public.sessions.truncate({ cascade: true })
   try {
     await pgDatabase().public.users.insert(user)
   } catch (e) {
@@ -39,14 +40,15 @@ const signIn = async ({ user, context }) => {
       context
     }
   })
-  const { sess: { token } } = await pgDatabase().public.sessions.findOne({
-    'sess @>': { email: email }
+  const { payload: token } = await pgDatabase().public.tokens.findOne({
+    email: email
   })
 
   // authorize session by token
   await apolloFetch({
     query: AUTHORIZE_SESSION_MUTATION,
     variables: {
+      type: 'EMAIL_TOKEN',
       email,
       token
     }
@@ -61,7 +63,7 @@ const signOut = async () => {
   await apolloFetch({
     query: LOGOUT_USER_MUTATION
   })
-  await pgDatabase().public.sessions.truncate()
+  await pgDatabase().public.sessions.truncate({ cascade: true })
   return true
 }
 

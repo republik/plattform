@@ -52,7 +52,7 @@ const signIn = async (_email, context, pgdb, req) => {
     email: _email
   })
 
-  const { email, isTwoFactorEnabled } = user
+  const { email, isTwoFactorEnabled } = (user || { email: _email })
 
   try {
     const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress
@@ -154,7 +154,7 @@ const denySession = async ({ pgdb, tokenChallenge, email: emailFromQuery }) => {
         passport: {
           user: null
         },
-        expire: (new Date()).getTime()
+        expire: new Date()
       }
     })
 

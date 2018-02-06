@@ -55,13 +55,13 @@ test('addPaymentSource: adding a 3d secure card', async (t) => {
   t.end()
 })
 
-test('addPaymentSource: adding an expired card', async (t) => {
+test.only('addPaymentSource: adding an expired card', async (t) => {
   await prepare()
   const { userId } = await signIn({ user: Users.Member })
   const source = await createSource({ card: Cards.Expired, userId })
   const result = await addPaymentSource({ sourceId: source.id, pspPayload: {} })
   t.equal(result.errors[0].message, 'Your card has expired.', 'mutation fails because card is expired')
-  await signOut()
+  // await signOut()
   t.end()
 })
 

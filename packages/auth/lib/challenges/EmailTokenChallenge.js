@@ -82,6 +82,6 @@ module.exports = {
       type,
       payload
     })
-    return foundToken.sessionId
+    return foundToken.id
   }
 }

@@ -8,8 +8,8 @@ require('../lib/env')
 const { dbMigrateAll } = require('@orbiting/backend-modules-scripts')
 
 const migrationDirs = [
-  'node_modules/@orbiting/backend-modules-redirections/migrations',
-  'node_modules/@orbiting/backend-modules-auth/migrations',
+  '../../packages/redirection/migrations',
+  '../../packages/auth/migrations',
   'migrations/crowdfunding',
   'migrations'
 ]
