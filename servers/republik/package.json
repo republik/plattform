@@ -2,7 +2,7 @@
   "name": "republik-backend",
   "version": "0.0.1",
   "engines": {
-    "node": "8.9.3",
+    "node": "8.9.4",
     "yarn": "1.3.2"
   },
   "private": true,
