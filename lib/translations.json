@@ -1,5 +1,5 @@
 {
-  "updated": "2018-02-01T19:56:33.474Z",
+  "updated": "2018-02-06T19:57:04.987Z",
   "title": "live",
   "data": [
     {
@@ -112,7 +112,11 @@
     },
     {
       "key": "repo/phase/draft",
-      "value": "Briefing/Entwurf"
+      "value": "Entwurf"
+    },
+    {
+      "key": "repo/phase/conception",
+      "value": "Konzeption"
     },
     {
       "key": "repo/phase/creation",
@@ -221,6 +225,10 @@
     {
       "key": "checklist/approvedFor",
       "value": "{name} für"
+    },
+    {
+      "key": "checklist/labels/startConception",
+      "value": "Go Konzeption"
     },
     {
       "key": "checklist/labels/startCreation",
