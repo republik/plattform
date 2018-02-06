@@ -26,7 +26,7 @@ module.exports = (
   pgdb,
   httpServer,
   executableSchema,
-  externalCreateGraphQLContext = a => a,
+  externalCreateGraphQLContext = a => a
 ) => {
   const createContext = ({user, ...additional} = {}) => externalCreateGraphQLContext({
     ...additional,
@@ -73,8 +73,11 @@ module.exports = (
   const graphqlMiddleware = graphqlExpress((req) => {
     return {
       debug: false,
-      formatError: (error) => {
-        console.error('error in graphql', error)
+      formatError (error) {
+        console.log(
+          `graphql error in ${this.operationName} (${JSON.stringify(this.variables)}):`,
+          error
+        )
         return error
       },
       schema: executableSchema,

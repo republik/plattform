@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-22T15:26:03.897Z",
+  "updated": "2018-01-14T06:10:14.941Z",
   "title": "live",
   "data": [
     {
@@ -57,6 +57,62 @@
     {
       "key": "api/users/404",
       "value": "Der User konnte leider nicht gefunden werden."
+    },
+    {
+      "key": "api/email/change/confirmation/subject",
+      "value": "Ihre E-Mail-Adresse wurde geändert"
+    },
+    {
+      "key": "api/email/change/exists",
+      "value": "Es existiert bereits jemand mit der gewünschten E-Mail-Adresse."
+    },
+    {
+      "key": "api/auth/token-type-unknown",
+      "value": "TODO: Token Challenge Typ existiert nicht"
+    },
+    {
+      "key": "api/auth/shared-secret-not-supported",
+      "value": "TODO: Der angegebene Token Challenge unterstützt keine Shared Secrets"
+    },
+    {
+      "key": "api/auth/shared-secret-generation-failed",
+      "value": "TODO: Shared Secret konnte nicht erzeugt werden"
+    },
+    {
+      "key": "api/auth/shared-secret-validation-failed",
+      "value": "TODO: Shared Secret Verifizierung fehlgeschlagen"
+    },
+    {
+      "key": "api/auth/session-init-failed",
+      "value": "TODO: Session konnte aus einem unbekannten Grund nicht initialisiert werden"
+    },
+    {
+      "key": "api/auth/query-email-mismatch",
+      "value": "TODO: E-Mail stimmt nicht überein (Request-Email != Session-Email)"
+    },
+    {
+      "key": "api/auth/token-expired",
+      "value": "TODO: Token ist nicht mehr gültig"
+    },
+    {
+      "key": "api/auth/authorization-failed",
+      "value": "TODO: Session konnte aus einem ubekannten Grund nicht authorisiert werden"
+    },
+    {
+      "key": "api/auth/2fa-already-disabled",
+      "value": "TODO: Zwei-Faktor-Authentifizierung ist bereits deaktiviert"
+    },
+    {
+      "key": "api/auth/2fa-already-enabled",
+      "value": "TODO: Die Zwei-Faktor-Authentifizierung ist bereits aktiviert"
+    },
+    {
+      "key": "api/auth/2f-not-ready",
+      "value": "TODO: Die Zwei-Faktor-Authentifierung kann erst aktiviert werden, wenn TOTP oder SMS Authentifierung eingerichtet wurde"
+    },
+    {
+      "key": "api/auth/2fa-has-to-be-disabled",
+      "value": "TODO: Die Zwei-Faktor-Authentifierung muss zuerst deaktiviert werden"
     }
   ]
 }

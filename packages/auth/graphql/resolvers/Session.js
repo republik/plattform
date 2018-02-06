@@ -33,5 +33,11 @@ module.exports = {
   },
   isCurrent (session, args, { req }) {
     return session.sid === req.sessionID
+  },
+  async tokenTypes (session, args, { pgdb }) {
+    const tokens = await pgdb.public.tokens.find({
+      sessionId: session.id
+    })
+    return [...new Set(tokens.map(({ type }) => type))]
   }
 }

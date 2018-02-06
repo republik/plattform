@@ -10,6 +10,7 @@ type Session {
   countryFlag: String
   city: String
   isCurrent: Boolean!
+  tokenTypes: [SignInTokenType]!
 }
 
 type User {
@@ -29,6 +30,23 @@ type User {
 
 type SignInResponse {
   phrase: String!
+  tokenTypes: [SignInTokenType]!
+}
+
+type SharedSecretResponse {
+  secret: String!
+  otpAuthUrl: String!
+  svg(ecLevel: String = "M"): String!
+}
+
+enum SignInTokenType {
+  EMAIL_TOKEN
+  TOTP
+}
+
+input SignInTokenChallenge {
+  type: SignInTokenType!
+  payload: String!
 }
 
 type RequestInfo {
