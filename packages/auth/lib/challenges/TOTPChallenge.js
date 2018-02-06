@@ -21,9 +21,12 @@ module.exports = {
     // no challenge transport needed, time based
     return true
   },
-  validateChallenge: async ({ pgdb, token, user }) => {
+  validateChallenge: async ({ pgdb, payload, user }) => {
     if (!user.twoFactorSecret) return false
     const otp = OTP({ secret: user.twoFactorSecret })
-    return (otp.totp() === token.payload)
+    console.log(otp)
+    const comparablePayload = await otp.totp()
+    console.log(`testing: ${comparablePayload} === ${payload}`)
+    return (comparablePayload === payload)
   }
 }

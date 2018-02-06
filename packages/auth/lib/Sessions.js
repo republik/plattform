@@ -3,10 +3,8 @@ const geoForIP = require('./geoForIP')
 const { newAuthError } = require('./AuthError')
 
 const DestroySessionError = newAuthError('session-destroy-failed', 'api/auth/errorDestroyingSession')
-const InitiateSessionError = newAuthError('session-init-failed')
-const QueryEmailMismatchError = newAuthError('query-email-mismatch')
+const InitiateSessionError = newAuthError('session-init-failed', 'api/auth/session-init-failed')
 const NoSessionError = newAuthError('no-session', 'api/token/invalid')
-const TokenExpiredError = newAuthError('token-expired')
 
 const destroySession = async (req) => {
   return new Promise((resolve, reject) => {
@@ -49,8 +47,6 @@ const initiateSession = async ({ req, pgdb, ipAddress, userAgent, email }) => {
 }
 
 const sessionByToken = async ({ pgdb, token, email: emailFromQuery, ...meta }) => {
-  if (!token || !token.payload) throw new NoSessionError({ emailFromQuery, ...meta })
-
   const sessions = await pgdb.query(`
     SELECT DISTINCT
       s.*,
@@ -62,23 +58,13 @@ const sessionByToken = async ({ pgdb, token, email: emailFromQuery, ...meta }) =
       ON t."sessionId" = s.id
     WHERE
       t.payload = :payload AND
-      t.type = :type
+      t.type = :type AND
+      t."expiresAt" > now()
     `, token)
 
-  if (!sessions || sessions.length !== 1) {
-    if (sessions.length > 1) console.error('wtf why?', sessions)
-    throw new NoSessionError({ token, emailFromQuery, ...meta })
+  if (sessions && sessions.length > 0) {
+    return sessions[0]
   }
-  const session = sessions[0]
-  const { tokenExpiresAt, id } = session
-  if (tokenExpiresAt.getTime() < (new Date()).getTime() || !id) {
-    throw new TokenExpiredError({ token, tokenExpiresAt, sessionId: session.id })
-  }
-  const { email } = session.sess
-  if (emailFromQuery && email !== emailFromQuery) { // emailFromQuery might be null for old links
-    throw new QueryEmailMismatchError({ token, email, emailFromQuery })
-  }
-  return session
 }
 
 const findAllUserSessions = async ({ pgdb, userId }) => {
@@ -130,9 +116,7 @@ module.exports = {
   clearUserSession,
   clearAllUserSessions,
   destroySession,
-  QueryEmailMismatchError,
   NoSessionError,
   DestroySessionError,
-  InitiateSessionError,
-  TokenExpiredError
+  InitiateSessionError
 }
