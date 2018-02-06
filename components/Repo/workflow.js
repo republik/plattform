@@ -6,6 +6,11 @@ export const phases = [
     milestones: []
   },
   {
+    key: 'conception',
+    color: 'Orange',
+    milestones: ['startConception']
+  },
+  {
     key: 'creation',
     color: 'Gold',
     milestones: ['startCreation']
