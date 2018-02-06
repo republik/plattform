@@ -22,7 +22,7 @@
   "devDependencies": {
     "db-migrate": "^0.10.2",
     "dotenv": "^4.0.0",
-    "@orbiting/backend-modules-base": "^0.3.3"
+    "@orbiting/backend-modules-base": "link:../base"
   },
   "dependencies": {
     "apollo-modules-node": "^0.1.4"
