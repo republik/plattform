@@ -65,7 +65,7 @@ const styles = {
       margin: '0 auto 60px auto'
     }
   }),
-  imageOnlyContainer: css({
+  onlyImageContainer: css({
     margin: '0 auto',
     fontSize: 0
   }),
@@ -78,6 +78,11 @@ const styles = {
     [tUp]: {
       ...sizeLarge
     }
+  }),
+  onlyImage: css({
+    minWidth: '100px',
+    maxHeight: '100% !important',
+    maxWidth: '100% !important'
   }),
   row: css({
     margin: 0,
@@ -167,7 +172,7 @@ const Tile = ({
   bgColor,
   align,
   aboveTheFold,
-  imageOnly
+  onlyImage
 }) => {
   const background = bgColor || ''
   const justifyContent =
@@ -182,13 +187,9 @@ const Tile = ({
     cursor: onClick ? 'pointer' : 'default',
     justifyContent
   }
-  if (imageOnly) {
-    containerStyle = {
-      ...containerStyle,
-      padding: 0
-    }
+  if (onlyImage) {
+    containerStyle.padding = 0
   }
-  const imageStyle = imageOnly ? {maxHeight: '100%', maxWidth: '100%'} : {}
 
   return (
     <div
@@ -199,14 +200,14 @@ const Tile = ({
       className='tile'
     >
       {imageProps && (
-        <div {...(imageOnly ? styles.imageOnlyContainer : styles.imageContainer)}>
+        <div {...(onlyImage ? styles.onlyImageContainer : styles.imageContainer)}>
           <LazyLoad visible={aboveTheFold}>
             <img src={imageProps.src} srcSet={imageProps.srcSet} alt={alt}
-              {...styles.image} style={imageStyle}/>
+              {...(onlyImage ? styles.onlyImage : styles.image)} />
           </LazyLoad>
         </div>
       )}
-      {!imageOnly && <div {...styles.textContainer}>
+      {!onlyImage && <div {...styles.textContainer}>
         <Text color={color} maxWidth={'600px'} margin={'0 auto'}>
           {children}
         </Text>
@@ -228,7 +229,7 @@ Tile.propTypes = {
     'bottom'
   ]),
   aboveTheFold: PropTypes.bool,
-  imageOnly: PropTypes.bool
+  onlyImage: PropTypes.bool
 }
 
 Tile.defaultProps = {
