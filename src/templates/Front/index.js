@@ -349,6 +349,7 @@ const createSchema = ({
         'bgColor',
         'center',
         'showImage',
+        'onlyImage',
         'image',
         'kind'
       ]
