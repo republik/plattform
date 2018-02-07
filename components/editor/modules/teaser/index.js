@@ -28,6 +28,7 @@ export const getData = data => ({
   reverse: false,
   portrait: true,
   showImage: true,
+  onlyImage: false,
   ...data || {}
 })
 
