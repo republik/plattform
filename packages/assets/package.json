@@ -23,6 +23,7 @@
     "isomorphic-unfetch": "^2.0.0"
   },
   "dependencies": {
+    "@orbiting/backend-modules-env": "link:../env",
     "@orbiting/backend-modules-github": "link:../github",
     "aws-sdk": "^2.185.0",
     "check-env": "^1.3.0",

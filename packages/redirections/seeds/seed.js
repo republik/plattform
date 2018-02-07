@@ -6,7 +6,7 @@
 // cat seeds/seeds.json | node seeds/seed.js [--truncate]
 //
 
-require('dotenv').config()
+require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const rw = require('rw')
 const { upsert: upsertRedirection } = require('../lib/Redirections')

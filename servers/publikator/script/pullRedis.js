@@ -5,7 +5,7 @@
 // node script/pullRedis.js --flush
 //
 
-require('dotenv').config()
+require('@orbiting/backend-modules-env').config()
 
 const redis = require('@orbiting/backend-modules-base/lib/redis')
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')

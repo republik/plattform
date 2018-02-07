@@ -13,66 +13,6 @@ Depends on modules from: [backend-modules](https://github.com/orbiting/backend-m
 You need to have node (8.3.0+) installed, postgres and redis running somewhere.
 
 Boostrap your .env file.
-```
-PORT=3004
-PUBLIC_URL=http://localhost:3004
-
-SESSION_SECRET=replaceMe
-
-# your URL of publikator-frontend
-CORS_WHITELIST_URL=http://localhost:3005
-
-DATABASE_URL=postgres://postgres@localhost:5432/publikator
-
-# leave blank for default: 127.0.0.1:6379
-REDIS_URL=
-
-SEND_MAILS=true  # or false if you don't have mandrill, prints mails to console
-MANDRILL_API_KEY=replaceMe
-DEFAULT_MAIL_FROM_NAME='publikator'
-DEFAULT_MAIL_FROM_ADDRESS='publikator@project-r.construction'
-
-AUTH_MAIL_FROM_ADDRESS=
-
-# The github user/organization under which all repos are held
-GITHUB_LOGIN=orbiting
-
-# Follow the "Auth - Github" section below to get these
-GITHUB_APP_ID=
-GITHUB_INSTALLATION_ID=
-GITHUB_APP_KEY=
-
-
-# Auth keys for the embedding endpoint.
-
-# Twitter App Stuff
-TWITTER_APP_KEY=
-TWITTER_APP_SECRET=
-
-# Vimeo App Stuff
-VIMEO_APP_ACCESS_TOKEN=
-VIMEO_APP_KEY=
-VIMEO_APP_SECRET=
-
-# Youtube App Stuff
-YOUTUBE_APP_KEY=
-
-# optional: filter for the repos query (repo name must contain term)
-REPOS_NAME_FILTER=article-
-
-
-# start the asset server locally, handy for development
-# provide the value of PUBLIC_URL to ASSETS_SERVER_BASE_URL
-# check the README of assets-backend for which env vars you need to add to run
-# the assets server locally.
-LOCAL_ASSETS_SERVER=true
-# base url of the asssets server. Set to local if you use LOCAL_ASSETS_SERVER
-ASSETS_SERVER_BASE_URL=http://localhost:3020
-# min 32bit key to authenticate the public the access the asset proxy
-# you need to provide this regardless of LOCAL_ASSETS_SERVER
-ASSETS_HMAC_KEY=
-
-```
 
 Install dependencies.
 ```

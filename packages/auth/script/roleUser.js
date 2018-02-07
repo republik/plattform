@@ -9,7 +9,7 @@
 const { PgDb } = require('pogi')
 const Roles = require('../lib/Roles')
 
-require('dotenv').config()
+require('@orbiting/backend-modules-env').config()
 
 const {
   DATABASE_URL

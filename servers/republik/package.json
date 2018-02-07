@@ -25,7 +25,6 @@
     "db-migrate": "^0.10.2",
     "db-migrate-pg": "^0.2.5",
     "debug": "^3.1.0",
-    "dotenv": "^4.0.0",
     "dynamic-dedupe": "^0.3.0",
     "emojione_minimal": "^2.1.2",
     "graphql": "^0.12.3",
@@ -44,7 +43,7 @@
     "uuid": "^3.1.0"
   },
   "scripts": {
-    "dev": "NODE_ENV=development nodemon -w ../../packages -w express -w graphql -w lib -w modules -w .env -w package.json -w server.js -w index.js index.js",
+    "dev": "NODE_ENV=development nodemon -w ../../packages -w express -w graphql -w lib -w modules -w .env -w package.json -w ../yarn.lock -w server.js -w index.js index.js",
     "debug": "DEBUG=crowdfundings:*,republik:* yarn run dev",
     "inspect": "NODE_ENV=development node --inspect index.js",
     "start": "node index.js",
@@ -78,6 +77,7 @@
     ]
   },
   "devDependencies": {
+    "@orbiting/backend-modules-env": "link:../../packages/env",
     "apollo-fetch": "^0.7.0",
     "child-process-promise": "^2.2.1",
     "coveralls": "^3.0.0",

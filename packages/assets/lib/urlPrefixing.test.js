@@ -1,4 +1,4 @@
-require('dotenv').config({ path: '.test.env' })
+require('@orbiting/backend-modules-env').config({testing: true})
 
 const test = require('tape-async')
 const { createPrefixUrl, unprefixUrl } = require('./index')

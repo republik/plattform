@@ -11,62 +11,6 @@ Depends on modules from: [backend-modules](https://github.com/orbiting/backend-m
 You need to have node (8.3.0+) installed, postgres and redis running somewhere.
 
 Boostrap your .env file.
-```
-PORT=3020
-PUBLIC_URL=http://localhost:3020
-
-# websocket URL and path
-PUBLIC_WS_URL_BASE=ws://localhost:3020
-PUBLIC_WS_URL_PATH=/graphql
-
-SESSION_SECRET=replaceMe
-
-# your frontend
-CORS_WHITELIST_URL=http://localhost:3005
-FRONTEND_BASE_URL=http://localhost:3005
-
-# don't use the crowdfunding-backend DB directly! (read below)
-DATABASE_URL=postgres://postgres@localhost:5432/republik
-
-SEND_MAILS=true  # or false if you don't have mandrill at hand
-MANDRILL_API_KEY=replaceMe
-DEFAULT_MAIL_FROM_NAME='discussion'
-DEFAULT_MAIL_FROM_ADDRESS='discussion@project-r.construction'
-QUESTIONS_MAIL_FROM_ADDRESS=
-AUTH_MAIL_FROM_ADDRESS=service@project-r.construction
-DISPLAY_AUTHOR_SECRET=replaceMe
-
-# leave blank for default: 127.0.0.1:6379
-REDIS_URL=
-
-# start the asset server locally, handy for development
-# provide the value of PUBLIC_URL to ASSETS_SERVER_BASE_URL
-# check the README of assets-backend for which env vars you need to add to run
-# the assets server locally.
-LOCAL_ASSETS_SERVER=true
-# base url of the asssets server. Set to local if you use LOCAL_ASSETS_SERVER
-ASSETS_SERVER_BASE_URL=http://localhost:3020
-# min 32bit key to authenticate the public the access the asset proxy
-# you need to provide this regardless of LOCAL_ASSETS_SERVER
-ASSETS_HMAC_KEY=
-# url of where the assets uploaded to S3 will be avilable publictly
-# NOTE: this going to be obsolete soon, when the assets server if going
-# to serve resized images from S3
-#ASSETS_BASE_URL=https://assets.staging.republik.ch
-
-# despite using a local or remote assets server, this backend still uploads images
-# to S3 directly, so you need this keys
-AWS_REGION=eu-central-1
-AWS_S3_BUCKET=republik-assets-staging
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
-
-# Sheet IDs for gsheets powered pages
-GSHEETS={"someSheetId": "faqs","someSheetId": "updates","someSheetId": "events"}
-
-# repoId for the preview mail (must be published)
-PREVIEW_MAIL_REPO_ID=republik/newsletter-preview
-```
 
 Install dependencies.
 ```

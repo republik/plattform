@@ -10,12 +10,11 @@
   "dependencies": {
     "@orbiting/backend-modules-assets": "link:../../packages/assets",
     "cors": "^2.8.4",
-    "dotenv": "^4.0.0",
     "express": "^4.16.2",
     "isomorphic-unfetch": "^2.0.0"
   },
   "scripts": {
-    "dev": "NODE_ENV=development nodemon -w ../../packages -w .env -w package.json -w server.js -w index.js index.js",
+    "dev": "NODE_ENV=development nodemon -w ../../packages -w .env -w package.jsoan -w ../yarn.lock -w server.js -w index.js index.js",
     "start": "node index.js",
     "precommit": "lint-staged",
     "standardize": "standard --fix"
@@ -27,6 +26,7 @@
     ]
   },
   "devDependencies": {
+    "@orbiting/backend-modules-env": "link:../../packages/env",
     "husky": "^0.14.3",
     "lint-staged": "^6.0.0",
     "nodemon": "^1.14.6",

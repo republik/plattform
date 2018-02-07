@@ -82,6 +82,11 @@
     react-dom "^16.2.0"
     unist-util-visit "^1.3.0"
 
+"@orbiting/backend-modules-env@link:packages/env":
+  version "0.0.1"
+  dependencies:
+    dotenv "^4.0.0"
+
 "@orbiting/backend-modules-formats@link:packages/formats":
   version "0.1.4"
   dependencies:

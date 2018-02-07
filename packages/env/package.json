@@ -1,0 +1,23 @@
+{
+  "name": "@orbiting/backend-modules-env",
+  "version": "0.0.1",
+  "private": true,
+  "description": "unified envs for monorepo",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "dependencies": {
+    "dotenv": "^4.0.0"
+  }
+}

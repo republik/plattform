@@ -4,7 +4,7 @@
  * Usage:
  * node script/launch/createStripeCustomers.js [--test]
  */
-require('../../lib/env')
+require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const createCustomer = require('../../modules/crowdfundings/lib/payments/stripe/createCustomer')
 const addSource = require('../../modules/crowdfundings/lib/payments/stripe/addSource')

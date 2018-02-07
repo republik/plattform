@@ -1,6 +1,4 @@
-require('dotenv').config({ path: '.test.env' })
-const dedupe = require('dynamic-dedupe')
-dedupe.activate()
+require('@orbiting/backend-modules-env').config({testing: true})
 
 const {
   createGithubClients

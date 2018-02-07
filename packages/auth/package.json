@@ -27,6 +27,7 @@
     "isomorphic-unfetch": "^2.0.0"
   },
   "dependencies": {
+    "@orbiting/backend-modules-env": "link:../env",
     "@orbiting/backend-modules-mail": "link:../mail",
     "@orbiting/backend-modules-translate": "link:../translate",
     "apollo-modules-node": "^0.1.4",

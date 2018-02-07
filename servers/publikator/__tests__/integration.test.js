@@ -9,7 +9,7 @@ require('leaked-handles').set({
 
 const test = require('tape-async')
 
-require('dotenv').config({ path: '.test.env' })
+require('@orbiting/backend-modules-env').config({testing: true})
 const dedupe = require('dynamic-dedupe')
 dedupe.activate()
 
