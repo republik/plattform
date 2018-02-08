@@ -44,7 +44,6 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon -w ../../packages -w express -w graphql -w lib -w modules -w .env -w package.json -w ../yarn.lock -w server.js -w index.js index.js",
-    "debug": "DEBUG=crowdfundings:*,republik:* yarn run dev",
     "inspect": "NODE_ENV=development node --inspect index.js",
     "start": "node index.js",
     "db:migrate:up": "node script/db-migrate-all.js up",
@@ -59,8 +58,6 @@
     "translations:local": "gsheets --key=1NE1igcbxtTrVd5P72Ubqmgv4yKYh0LRGa0EuYSEQKxE --title=live --pretty --out lib/translations.json",
     "launch": "yarn run db:migrate:up && node script/launch/activateMemberships.js && node script/launch/add_launch_data.js",
     "launch:local": "sh script/launch/launch_local.sh",
-    "roleUser": "node node_modules/@orbiting/backend-modules-auth/script/roleUser",
-    "roleUsers": "node node_modules/@orbiting/backend-modules-auth/script/roleUsers",
     "test:prepare": "dropdb --if-exists republik-test && createdb republik-test && NODE_ENV=development OVERWRITE_ENV=.test.env yarn run db:reset:seed",
     "test:travis": "yarn run test:prepare && FORCE_TEST_END=true istanbul cover tape \"__tests__/**/*.test.js\" --report lcovonly && cat ./coverage/lcov.info | coveralls",
     "test:watch": "yarn run test:prepare && NODE_ENV=development OVERWRITE_ENV=.test.env nodemon --exec 'tape \"__tests__/**/*.test.js\"' | tap-diff",

@@ -47,6 +47,8 @@
     "dev": "nf --procfile Procfile-dev start",
     "precommit": "lint-staged",
     "commit": "git-cz",
-    "commitmsg": "validate-commit-msg"
+    "commitmsg": "validate-commit-msg",
+    "roleUser": "node packages/auth/script/roleUser",
+    "roleUsers": "node packages/auth/script/roleUsers"
   }
 }

@@ -55,7 +55,6 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon -w ../../packages -w graphql -w lib -w .env -w package.json ../yarn.lock -w server.js -w index.js index.js",
-    "debug": "DEBUG=publikator:* yarn run dev",
     "start": "node index.js",
     "db:migrate:up": "node script/db-migrate-all.js up",
     "db:migrate:down": "node script/db-migrate-all.js down",
@@ -66,8 +65,6 @@
     "test:travis": "istanbul cover tape \"?(__tests__|lib|graphql)/**/*.test.js\" --report lcovonly && cat ./coverage/lcov.info | coveralls",
     "test": "export DATABASE_URL=postgres://localhost:5432/publikator-test && echo $DATABASE_URL && dropdb --if-exists publikator-test && createdb publikator-test && yarn run db:reset:noseeds && NODE_ENV=testing istanbul cover tape \"?(__tests__|lib|graphql)/**/*.test.js\"",
     "pull:redis": "node script/pullRedis.js",
-    "roleUser": "node node_modules/@orbiting/backend-modules-auth/script/roleUser",
-    "roleUsers": "node node_modules/@orbiting/backend-modules-auth/script/roleUsers"
   },
   "devDependencies": {
     "@orbiting/backend-modules-env": "link:../../packages/env",
