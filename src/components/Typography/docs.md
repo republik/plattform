@@ -1,7 +1,8 @@
 ## Webfonts
 
-We have four font cuts:
+We have five font cuts:
 
+- `serifTitle`
 - `serifRegular`
 - `serifBold`
 - `sansSerifRegular`
