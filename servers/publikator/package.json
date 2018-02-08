@@ -57,8 +57,6 @@
     "dev": "NODE_ENV=development nodemon -w ../../packages -w graphql -w lib -w .env -w package.json ../yarn.lock -w server.js -w index.js index.js",
     "debug": "DEBUG=publikator:* yarn run dev",
     "start": "node index.js",
-    "precommit": "lint-staged",
-    "standardize": "standard --fix",
     "db:migrate:up": "node script/db-migrate-all.js up",
     "db:migrate:down": "node script/db-migrate-all.js down",
     "db:seed": "cat seeds/seeds.json | node node_modules/@orbiting/backend-modules-auth/seeds/seed.js --truncate",
@@ -73,21 +71,12 @@
     "roleUser": "node node_modules/@orbiting/backend-modules-auth/script/roleUser",
     "roleUsers": "node node_modules/@orbiting/backend-modules-auth/script/roleUsers"
   },
-  "lint-staged": {
-    "*.js": [
-      "standard --fix",
-      "git add"
-    ]
-  },
   "devDependencies": {
     "@orbiting/backend-modules-env": "link:../../packages/env",
     "coveralls": "^3.0.0",
     "gsheets": "^2.0.0",
-    "husky": "^0.14.3",
     "istanbul": "^0.4.5",
-    "lint-staged": "^6.0.0",
     "nodemon": "^1.14.6",
-    "standard": "^10.0.3",
     "tape-async": "^2.3.0",
     "ws": "^3.3.3"
   }

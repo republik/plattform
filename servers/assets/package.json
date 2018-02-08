@@ -15,22 +15,10 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon -w ../../packages -w .env -w package.jsoan -w ../yarn.lock -w server.js -w index.js index.js",
-    "start": "node index.js",
-    "precommit": "lint-staged",
-    "standardize": "standard --fix"
-  },
-  "lint-staged": {
-    "*.js": [
-      "standard --fix",
-      "git add"
-    ]
+    "start": "node index.js"
   },
   "devDependencies": {
     "@orbiting/backend-modules-env": "link:../../packages/env",
-    "husky": "^0.14.3",
-    "lint-staged": "^6.0.0",
-    "nodemon": "^1.14.6",
-    "snoowrap": "^1.15.1",
-    "standard": "^10.0.3"
+    "nodemon": "^1.14.6"
   }
 }

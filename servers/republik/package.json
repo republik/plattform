@@ -47,8 +47,6 @@
     "debug": "DEBUG=crowdfundings:*,republik:* yarn run dev",
     "inspect": "NODE_ENV=development node --inspect index.js",
     "start": "node index.js",
-    "precommit": "lint-staged",
-    "standardize": "standard --fix",
     "db:migrate:up": "node script/db-migrate-all.js up",
     "db:migrate:down": "node script/db-migrate-all.js down",
     "db:seed:redirections": "cat node_modules/@orbiting/backend-modules-redirections/seeds/seeds.example.json | node node_modules/@orbiting/backend-modules-redirections/seeds/seed.js",
@@ -70,23 +68,14 @@
     "test:watch": "yarn run test:prepare && NODE_ENV=development OVERWRITE_ENV=.test.env nodemon --exec 'tape \"__tests__/**/*.test.js\"' | tap-diff",
     "test": "yarn run test:prepare && NODE_ENV=development OVERWRITE_ENV=.test.env FORCE_TEST_END=true istanbul cover tape \"__tests__/**/*.test.js\" | tap-diff"
   },
-  "lint-staged": {
-    "*.js": [
-      "standard --fix",
-      "git add"
-    ]
-  },
   "devDependencies": {
     "@orbiting/backend-modules-env": "link:../../packages/env",
     "apollo-fetch": "^0.7.0",
     "child-process-promise": "^2.2.1",
     "coveralls": "^3.0.0",
-    "husky": "^0.14.3",
     "istanbul": "^1.1.0-alpha.1",
-    "lint-staged": "^6.0.0",
     "nodemon": "^1.14.6",
     "snoowrap": "^1.15.1",
-    "standard": "^10.0.3",
     "tap-diff": "^0.1.1",
     "tape-async": "^2.3.0",
     "zero-fill": "^2.2.3"
