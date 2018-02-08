@@ -2,17 +2,12 @@ const DEV = process.env.NODE_ENV
   ? process.env.NODE_ENV !== 'production'
   : true
 
-const config = (options) => {
+const config = () => {
   if (DEV) {
     const dotenv = require('dotenv')
     dotenv.config({path: process.env.OVERWRITE_ENV})
-    if (options && options.testing) {
-      dotenv.config({path: './.test.env'})
-      dotenv.config({path: '../../.test.env'})
-    } else {
-      dotenv.config()
-      dotenv.config({path: '../../.env'})
-    }
+    dotenv.config()
+    dotenv.config({path: '../../.env'})
   }
 }
 

@@ -48,8 +48,8 @@
     "start": "node index.js",
     "db:migrate:up": "node script/db-migrate-all.js up",
     "db:migrate:down": "node script/db-migrate-all.js down",
-    "db:seed:redirections": "cat node_modules/@orbiting/backend-modules-redirections/seeds/seeds.example.json | node node_modules/@orbiting/backend-modules-redirections/seeds/seed.js",
-    "db:seed:users": "cat node_modules/@orbiting/backend-modules-auth/seeds/seeds.example.json | node node_modules/@orbiting/backend-modules-auth/seeds/seed.js --truncate",
+    "db:seed:redirections": "cat ../../packages/redirections/seeds/seeds.example.json | node ../../packages/redirections/seeds/seed.js",
+    "db:seed:users": "cat ../../packages/auth/seeds/seeds.example.json | node ../../packages/auth/seeds/seed.js --truncate",
     "db:seed:crowdfundings": "node seeds/seedCrowdfundings.js",
     "db:reset:seed": "yarn run db:reset && yarn run db:seed:users && yarn run db:seed:crowdfundings",
     "db:reset": "node script/db-migrate-all.js reset && node script/db-migrate-all.js up",
@@ -58,10 +58,10 @@
     "translations:local": "gsheets --key=1NE1igcbxtTrVd5P72Ubqmgv4yKYh0LRGa0EuYSEQKxE --title=live --pretty --out lib/translations.json",
     "launch": "yarn run db:migrate:up && node script/launch/activateMemberships.js && node script/launch/add_launch_data.js",
     "launch:local": "sh script/launch/launch_local.sh",
-    "test:prepare": "dropdb --if-exists republik-test && createdb republik-test && NODE_ENV=development OVERWRITE_ENV=.test.env yarn run db:reset:seed",
-    "test:travis": "yarn run test:prepare && FORCE_TEST_END=true istanbul cover tape \"__tests__/**/*.test.js\" --report lcovonly && cat ./coverage/lcov.info | coveralls",
+    "test:prepare": "rm -rf node_modules/.bin && ln -s ../../../node_modules/.bin node_modules/ && dropdb --if-exists republik-test && createdb republik-test && NODE_ENV=development OVERWRITE_ENV=.test.env yarn run db:reset:seed",
+    "test:travis": "yarn run test:prepare && istanbul cover tape \"__tests__/**/*.test.js\" --report lcovonly && cat ./coverage/lcov.info | coveralls",
     "test:watch": "yarn run test:prepare && NODE_ENV=development OVERWRITE_ENV=.test.env nodemon --exec 'tape \"__tests__/**/*.test.js\"' | tap-diff",
-    "test": "yarn run test:prepare && NODE_ENV=development OVERWRITE_ENV=.test.env FORCE_TEST_END=true istanbul cover tape \"__tests__/**/*.test.js\" | tap-diff"
+    "test": "yarn run test:prepare && NODE_ENV=development OVERWRITE_ENV=.test.env istanbul cover tape \"__tests__/**/*.test.js\" | tap-diff"
   },
   "devDependencies": {
     "@orbiting/backend-modules-env": "link:../../packages/env",

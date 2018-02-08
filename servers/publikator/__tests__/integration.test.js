@@ -9,7 +9,7 @@ require('leaked-handles').set({
 
 const test = require('tape-async')
 
-require('@orbiting/backend-modules-env').config({testing: true})
+require('@orbiting/backend-modules-env').config()
 const dedupe = require('dynamic-dedupe')
 dedupe.activate()
 
@@ -240,7 +240,7 @@ test('signIn', async (t) => {
       }
     `
   })
-  await sleep(4000)
+  await sleep(3500)
   t.ok(result.data.signIn.phrase)
   t.ok(result.data.signIn.phrase.length > 0)
   t.end()

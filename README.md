@@ -31,5 +31,9 @@ At the moment many ENV variables are required for the servers to just run. We ar
 
 The last command kicks on [foreman](https://github.com/strongloop/node-foreman) which then launches all the servers locally.
 
+## Caveats
+
+Due to the this [bug](https://github.com/yarnpkg/yarn/issues/4964) running bin scripts from the server subfolders doesn't work. Currently the following workaround is in place: `test:prepare` of republik and publikator first does: `rm -rf node_modules/.bin && ln -s ../../../node_modules/.bin node_modules/`.
+
 ## Licensing
 The source code and it's documentation is licensed under [GNU AGPLv3](LICENSE)+.

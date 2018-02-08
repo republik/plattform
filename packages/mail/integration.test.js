@@ -1,4 +1,4 @@
-require('@orbiting/backend-modules-env').config({testing: true})
+require('@orbiting/backend-modules-env').config()
 const test = require('tape-async')
 const { createMail } = require('./lib')
 const MailchimpInterface = require('./MailchimpInterface')
