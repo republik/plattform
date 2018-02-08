@@ -41,6 +41,7 @@ const DefaultLink = ({ children, path }) => children
 export const TeaserFeed = ({
   kind: metaKind,
   color: metaColor,
+  template,
   format,
   path,
   title,
@@ -52,7 +53,8 @@ export const TeaserFeed = ({
   const formatMeta = (format && format.meta) || {}
   const Headline = (
     formatMeta.kind === 'meta' ||
-    metaKind === 'meta'
+    metaKind === 'meta' ||
+    template === 'format'
   )
     ? Headlines.Interaction
     : Headlines.Editorial
