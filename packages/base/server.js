@@ -47,7 +47,7 @@ module.exports.run = (executableSchema, middlewares, t, createGraphqlContext) =>
         }
       },
       origin: {
-        requestTimeout: "60m"
+        requestTimeout: '60m'
       },
       graphqlPort: PORT
     })
@@ -61,25 +61,28 @@ module.exports.run = (executableSchema, middlewares, t, createGraphqlContext) =>
     server = express()
     httpServer = createServer(server)
 
-    // redirect to https
+    // prod only
     if (!DEV) {
+      // enable compression
       server.use(compression())
+      // trust first proxy
       server.enable('trust proxy')
-      server.use( (req, res, next) => {
+      // redirect to https
+      server.use((req, res, next) => {
         if (!req.secure && (!IGNORE_SSL_HOSTNAME || req.hostname !== IGNORE_SSL_HOSTNAME)) {
           res.redirect(`https://${req.hostname}${req.url}`)
         }
         return next()
       })
+      // clear obsolete cf cookie
+      // this code was added 2018.01.19 - remove it after 2018.03.02
+      server.use((req, res, next) => {
+        res.clearCookie('__cfduid', { path: '/', httpOnly: true, domain: '.republik.ch' })
+        next()
+      })
     }
 
-    // clear obsolete cf cookie
-    // this code was added 2018.01.19 - remove it after 2018.02.02
-    server.use((req, res, next) => {
-      res.clearCookie('__cfduid', { path: '/', httpOnly: true, domain: '.republik.ch' })
-      next()
-    })
-
+    // add req._log()
     server.use(requestLog)
 
     // monitor timeouts
