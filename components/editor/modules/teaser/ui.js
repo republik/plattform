@@ -286,6 +286,15 @@ const Form = withT(({ node, onChange, options, t }) => {
         Bild anzeigen
       </Checkbox>
     }
+    {
+      options.includes('onlyImage') &&
+      <Checkbox
+        checked={node.data.get('onlyImage')}
+        onChange={onChange('onlyImage')}
+      >
+        Nur Bild
+      </Checkbox>
+    }
   </UIForm>
 })
 
