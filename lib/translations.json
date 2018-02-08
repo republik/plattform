@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-20T22:12:01.520Z",
+  "updated": "2018-02-06T19:57:04.987Z",
   "title": "live",
   "data": [
     {
@@ -112,7 +112,11 @@
     },
     {
       "key": "repo/phase/draft",
-      "value": "Briefing/Entwurf"
+      "value": "Entwurf"
+    },
+    {
+      "key": "repo/phase/conception",
+      "value": "Konzeption"
     },
     {
       "key": "repo/phase/creation",
@@ -223,6 +227,10 @@
       "value": "{name} für"
     },
     {
+      "key": "checklist/labels/startConception",
+      "value": "Go Konzeption"
+    },
+    {
       "key": "checklist/labels/startCreation",
       "value": "Go Kreation"
     },
@@ -309,6 +317,10 @@
     {
       "key": "metaData/field/slug",
       "value": "Web-Slug"
+    },
+    {
+      "key": "metaData/field/slug/note",
+      "value": "Ergibt folgende URL: republik.ch{path}"
     },
     {
       "key": "metaData/field/src",
@@ -513,6 +525,18 @@
     {
       "key": "publish/commit/change",
       "value": "Version ändern"
+    },
+    {
+      "key": "publish/meta/date/label",
+      "value": "Publikationsdatum"
+    },
+    {
+      "key": "publish/meta/path/label",
+      "value": "URL"
+    },
+    {
+      "key": "publish/meta/path/value",
+      "value": "republik.ch{path}"
     },
     {
       "key": "publish/trigger",

@@ -68,6 +68,9 @@ const fragments = {
   repo: gql`
     fragment EditPageRepo on Repo {
       id
+      meta {
+        publishDate
+      }
     }
   `
 }
@@ -136,10 +139,17 @@ class EditorPage extends Component {
       this.documentChangeHandler.bind(this),
       500
     )
+    this.uiChangeHandler = change => {
+      this.changeHandler(change)
+      this.documentChangeHandler(null, change)
+    }
     this.revertHandler = this.revertHandler.bind(this)
 
     this.editorRef = ref => {
       this.editor = ref
+      if (ref) {
+        this.forceUpdate()
+      }
     }
 
     this.state = {
@@ -508,17 +518,18 @@ class EditorPage extends Component {
               <Editor
                 ref={this.editorRef}
                 schema={schema}
+                meta={repo ? repo.meta : {}}
                 value={editorState}
                 onChange={this.changeHandler}
                 onDocumentChange={this.documentChangeHandler}
               />
               <Sidebar selectedTabId='edit' isOpen={showSidebar}>
                 <Sidebar.Tab tabId='edit' label='Editieren'>
-                  <EditorUI
-                    schema={schema}
-                    onChange={this.changeHandler}
+                  {!!this.editor && <EditorUI
+                    editorRef={this.editor}
+                    onChange={this.uiChangeHandler}
                     value={editorState}
-                  />
+                  />}
                 </Sidebar.Tab>
                 <Sidebar.Tab tabId='workflow' label='Workflow'>
                   <VersionControl
