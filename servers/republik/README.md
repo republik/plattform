@@ -11,6 +11,7 @@ Depends on modules from: [backend-modules](https://github.com/orbiting/backend-m
 You need to have node (8.3.0+) installed, postgres and redis running somewhere.
 
 Boostrap your .env file.
+Boostrap your .env file (see [.env.example](.env.example)).
 
 Install dependencies.
 ```
@@ -64,9 +65,6 @@ If you just want to start redis & postgres for local development:
   docker-compose up -d redis postgres
   yarn run dev
 ```
-
-### backend-modules
-To develop [backend-modules](https://github.com/orbiting/backend-modules) first run `yarn run link` inside a local copy of the backend-modules repo then execute `yarn run link:backend-modules` here. The backend-modules are now symlinked inside node_modules and development should work seamlessly.
 
 ## Seed: crowdfunding
 

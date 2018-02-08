@@ -41,4 +41,4 @@ AUTO_LOGIN=1
 This package comes with it's own messages. You may want run `yarn run translations` to refresh it from the gsheet configured in [package.json](package.json) or change it manually in [translations.js](/lib/translations.json).
 
 ## Caveats
-At the moment this module expects a `_log() ` function to be present on express's request which can be used to sanitize the req before logging it in debug or error cases. If you use this module without [backend-modules-base](https://github.com/orbiting/backend-modules/tree/master/packages/base) you can still use the function from [there](https://github.com/orbiting/backend-modules/blob/master/packages/base/express/requestLog.js).
+At the moment this module expects a `_log() ` function to be present on express's request which can be used to sanitize the req before logging it in debug or error cases. If you use this module without [backend-modules-base](https://github.com/orbiting/backends/tree/master/packages/base) you can still use the function from [there](https://github.com/orbiting/backends/blob/master/packages/base/express/requestLog.js).

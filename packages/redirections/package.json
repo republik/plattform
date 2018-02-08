@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/orbiting/backend-modules.git"
+    "url": "git+https://github.com/orbiting/backends.git"
   },
   "author": "Patrick Recher <patrick.recher@republik.ch>",
   "license": "AGPL-3.0",
@@ -16,9 +16,9 @@
     "access": "public"
   },
   "bugs": {
-    "url": "https://github.com/orbiting/backend-modules/issues"
+    "url": "https://github.com/orbiting/backends/issues"
   },
-  "homepage": "https://github.com/orbiting/backend-modules#readme",
+  "homepage": "https://github.com/orbiting/backends#readme",
   "devDependencies": {
     "db-migrate": "^0.10.2",
     "dotenv": "^4.0.0",

@@ -12,7 +12,7 @@ Depends on modules from: [backend-modules](https://github.com/orbiting/backend-m
 ### Quick start
 You need to have node (8.3.0+) installed, postgres and redis running somewhere.
 
-Boostrap your .env file.
+Boostrap your .env file (see [.env.example](.env.example)).
 
 Install dependencies.
 ```
@@ -36,9 +36,6 @@ yarn run dev
 Checkout the API: `http://localhost:3004/graphiql`
 - [signin](http://localhost:3004/graphiql?query=mutation%20%7BsignIn(email%3A%20%22patrick.recher%40project-r.construction%22)%20%7B%0A%20%20phrase%0A%7D%7D)
 - [me](http://localhost:3004/graphiql?query=query%20%7Bme%20%7B%0A%20%20id%0A%20%20email%0A%7D%7D)
-
-### backend-modules
-To develop [backend-modules](https://github.com/orbiting/backend-modules) first run `yarn run link` inside a local copy of the backend-modules repo then execute `yarn run link:backend-modules` here. The backend-modules are now symlinked inside node_modules and development should work seamlessly.
 
 
 ## Auth
