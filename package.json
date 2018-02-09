@@ -49,6 +49,7 @@
     "commit": "git-cz",
     "commitmsg": "validate-commit-msg",
     "roleUser": "node packages/auth/script/roleUser",
-    "roleUsers": "node packages/auth/script/roleUsers"
+    "roleUsers": "node packages/auth/script/roleUsers",
+    "pull:redis": "node servers/publikator/script/pullRedis.js"
   }
 }
