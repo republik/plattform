@@ -146,11 +146,10 @@ export const Emphasis = ({ children, attributes, ...props }) => (
 )
 
 export const link = css({
-  color: colors.primary,
-  textDecoration: 'none',
+  ...underline,
+  color: colors.text,
   ':hover': {
-    ...underline,
-    color: colors.primary
+    color: colors.lightText
   }
 })
 export const A = ({ children, attributes, ...props }) => (
