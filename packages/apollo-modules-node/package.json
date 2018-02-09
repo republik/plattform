@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/orbiting/backend-modules.git"
+    "url": "git+https://github.com/orbiting/backends.git"
   },
   "author": "Patrick Recher <patrick.recher@republik.ch>",
   "license": "AGPL-3.0",

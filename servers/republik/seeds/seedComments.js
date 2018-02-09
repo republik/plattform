@@ -1,4 +1,4 @@
-require('../lib/env')
+require('@orbiting/backend-modules-env').config()
 
 /* download comments from reddit
  * https://github.com/not-an-aardvark/snoowrap

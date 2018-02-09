@@ -1,4 +1,4 @@
-require('../lib/env')
+require('@orbiting/backend-modules-env').config()
 const Server = require('../server')
 const sleep = require('await-sleep')
 const { lib: { redis } } = require('@orbiting/backend-modules-base')

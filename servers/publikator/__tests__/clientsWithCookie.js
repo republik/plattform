@@ -7,12 +7,12 @@ let cookie
 module.exports = {
   createApolloFetch: (uri) => createApolloFetch({uri})
     .useAfter(({ response }, next) => {
-      let setCookie
+      let setCookies
       try {
-        setCookie = response.headers._headers['set-cookie'][0]
+        setCookies = response.headers._headers['set-cookie']
       } catch (e) {}
-      if (setCookie) {
-        cookie = setCookie.split(';')[0]
+      if (setCookies && setCookies.length > 0) {
+        cookie = setCookies.map(c => c.split(';')[0]).join('; ')
       }
       next()
     })
@@ -30,9 +30,7 @@ module.exports = {
     return new SubscriptionClient(uri,
       {
         connectionParams: {
-          cookies: cookie
-            ? cookie
-            : null
+          cookies: cookie || null
         },
         ...options
       },

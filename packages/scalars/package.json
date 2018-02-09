@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/orbiting/backend-modules.git"
+    "url": "git+https://github.com/orbiting/backends.git"
   },
   "author": "Patrick Recher <patrick.recher@republik.ch>",
   "license": "AGPL-3.0",
@@ -13,9 +13,9 @@
     "access": "public"
   },
   "bugs": {
-    "url": "https://github.com/orbiting/backend-modules/issues"
+    "url": "https://github.com/orbiting/backends/issues"
   },
-  "homepage": "https://github.com/orbiting/backend-modules#readme",
+  "homepage": "https://github.com/orbiting/backends#readme",
   "scripts": {
     "link": "yarn link"
   },
@@ -25,7 +25,7 @@
   "dependencies": {
     "graphql-type-json": "^0.1.4",
     "apollo-modules-node": "^0.1.4",
-    "@orbiting/backend-modules-formats": "^0.1.4"
+    "@orbiting/backend-modules-formats": "link:../formats"
   },
   "peerDependencies": {
     "graphql": "^0.12.3"

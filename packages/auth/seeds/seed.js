@@ -10,7 +10,7 @@
 // cat seeds/seeds.json | node seeds/seed.js [--truncate]
 //
 
-require('dotenv').config()
+require('@orbiting/backend-modules-env').config()
 const { lib: { pgdb: PgDb } } = require('@orbiting/backend-modules-base')
 const rw = require('rw')
 

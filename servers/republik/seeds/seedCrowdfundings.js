@@ -1,4 +1,4 @@
-require('../lib/env')
+require('@orbiting/backend-modules-env').config()
 
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const seed = require('./crowdfundings.json')
