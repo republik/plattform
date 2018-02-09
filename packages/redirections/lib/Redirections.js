@@ -7,12 +7,13 @@ const upsert = async (
     redirection.source === null || redirection.source === undefined ||
     redirection.target === null || redirection.target === undefined
   ) {
-      throw new Error('neither redirection source nor target must be null')
+    throw new Error('neither redirection source nor target must be null')
   }
   // in case of A -> B -> A remove A -> B and only keep B -> A
   await pgdb.public.redirections.update({
     target: redirection.source,
-    source: redirection.target
+    source: redirection.target,
+    deletedAt: null
   }, {
     deletedAt: now
   })
@@ -30,7 +31,7 @@ const upsert = async (
     source: redirection.source,
     deletedAt: null
   })
-  if(existingRedir) {
+  if (existingRedir) {
     return pgdb.public.redirections.update({
       source: redirection.source
     }, {
@@ -41,7 +42,7 @@ const upsert = async (
     return pgdb.public.redirections.insert({
       ...redirection,
       updatedAt: now,
-      createdAt: now,
+      createdAt: now
     })
   }
 }
