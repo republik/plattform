@@ -2,7 +2,7 @@
   "name": "publikator-backend",
   "version": "0.0.1",
   "engines": {
-    "node": "8.9.4",
+    "node": "8.9.x",
     "yarn": "1.3.2"
   },
   "private": true,
