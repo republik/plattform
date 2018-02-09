@@ -9,10 +9,14 @@ import { textAttributes } from './InfoBox'
 const styles = {
   text: css({
     ...sansSerifRegular15,
+    lineHeight: '24px',
     [mUp]: {
       ...sansSerifRegular18
     },
-    color: colors.text
+    color: colors.text,
+    ':nth-of-type(2)': {
+      marginTop: 0
+    }
   })
 }
 

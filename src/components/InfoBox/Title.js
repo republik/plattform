@@ -8,11 +8,12 @@ import { textAttributes } from './InfoBox'
 
 const styles = {
   text: css({
-    marginTop: 0,
+    margin: '0 0 8px 0',
     borderTop: `1px solid ${colors.text}`,
     ...sansSerifMedium16,
     [mUp]: {
-      ...sansSerifMedium19
+      ...sansSerifMedium19,
+      margin: '0 0 12px 0'
     },
     color: colors.text
   })
