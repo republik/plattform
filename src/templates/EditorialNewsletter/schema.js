@@ -1,4 +1,4 @@
-import Paragraph, { Strong, Em, Link, Br } from './email/Paragraph'
+import Paragraph, { Emphasis, Cursive, Link, Br } from './email/Paragraph'
 import { H2 } from './email/Headlines'
 import Blockquote, { BlockquoteText, BlockquoteSource } from './email/Blockquote'
 import List, { ListItem } from './email/List'
@@ -43,14 +43,6 @@ const createNewsletterSchema = ({
       isVoid: true
     },
     {
-      matchMdast: matchType('strong'),
-      component: Strong,
-      editorModule: 'mark',
-      editorOptions: {
-        type: 'strong'
-      }
-    },
-    {
       matchMdast: matchType('sub'),
       component: Sub,
       editorModule: 'mark',
@@ -89,11 +81,21 @@ const createNewsletterSchema = ({
       ...globalInlines,
       link,
       {
-        matchMdast: matchType('emphasis'),
-        component: Em,
+        matchMdast: matchType('strong'),
+        component: Emphasis,
         editorModule: 'mark',
         editorOptions: {
-          type: 'emphasis'
+          type: 'STRONG',
+          mdastType: 'strong'
+        }
+      },
+      {
+        matchMdast: matchType('emphasis'),
+        component: Cursive,
+        editorModule: 'mark',
+        editorOptions: {
+          type: 'EMPHASIS',
+          mdastType: 'emphasis'
         }
       }
     ]
@@ -115,7 +117,7 @@ const createNewsletterSchema = ({
         component: Byline,
         editorModule: 'paragraph',
         editorOptions: {
-          type: 'EMPHASIS',
+          type: 'BYLINE',
           placeholder: 'Credit'
         }
       },

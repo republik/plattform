@@ -85,3 +85,11 @@ const emphasis = css({
 export const Emphasis = ({children, attributes, ...props}) => (
   <strong {...props} {...attributes} {...emphasis}>{children}</strong>
 )
+
+const cursive = css({
+  fontWeight: 'normal',
+  fontFamily: fontFamilies.sansSerifItalic
+})
+export const Cursive = ({children, attributes, ...props}) => (
+  <em {...props} {...attributes} {...cursive}>{children}</em>
+)

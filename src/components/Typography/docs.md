@@ -1,11 +1,13 @@
 ## Webfonts
 
-We have five font cuts:
+We have seven font cuts:
 
 - `serifTitle`
 - `serifRegular`
+- `serifItalic`
 - `serifBold`
 - `sansSerifRegular`
+- `sansSerifItalic`
 - `sansSerifMedium`
 
 Full font family definitions are available as `fontFamilies` export from the style guide.
@@ -264,6 +266,16 @@ We use `text-decoration-skip: ink` to avoid `g`-conflicts.
 </Editorial.P>
 ```
 
+### Cursive
+
+```react
+<Editorial.P>
+  Let's go!
+  {' '}
+  <Editorial.Cursive>Clara</Editorial.Cursive>
+</Editorial.P>
+```
+
 ### Note
 
 ```react
@@ -318,6 +330,26 @@ UI elements and structured information uses the sans serif cuts. Without margins
 <Interaction.P>
   Code, den wir schon veröffentlicht haben, findest du hier:
   {' '}<A href='https://github.com/orbiting'>github.com/orbiting</A>
+</Interaction.P>
+```
+
+### Emphasis
+
+```react
+<Interaction.P>
+  Ladies and Gentlemen,
+  {' '}
+  <Interaction.Emphasis>es ist Zeit.</Interaction.Emphasis>
+</Interaction.P>
+```
+
+### Cursive
+
+```react
+<Interaction.P>
+  Let's go!
+  {' '}
+  <Interaction.Cursive>Clara</Interaction.Cursive>
 </Interaction.P>
 ```
 

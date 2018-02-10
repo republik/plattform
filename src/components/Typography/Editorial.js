@@ -145,6 +145,16 @@ export const Emphasis = ({ children, attributes, ...props }) => (
   </strong>
 )
 
+const cursive = css({
+  fontWeight: 'normal',
+  fontFamily: fontFamilies.serifItalic
+})
+export const Cursive = ({ children, attributes, ...props }) => (
+  <em {...attributes} {...props} {...cursive}>
+    {children}
+  </em>
+)
+
 export const link = css({
   ...underline,
   color: colors.text,

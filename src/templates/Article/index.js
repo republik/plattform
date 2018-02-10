@@ -81,7 +81,17 @@ const paragraph = {
       component: Editorial.Emphasis,
       editorModule: 'mark',
       editorOptions: {
-        type: 'strong'
+        type: 'STRONG',
+        mdastType: 'strong'
+      }
+    },
+    {
+      matchMdast: matchType('emphasis'),
+      component: Editorial.Cursive,
+      editorModule: 'mark',
+      editorOptions: {
+        type: 'EMPHASIS',
+        mdastType: 'emphasis'
       }
     },
     link
@@ -112,7 +122,7 @@ const figureByLine = {
   component: FigureByline,
   editorModule: 'paragraph',
   editorOptions: {
-    type: 'EMPHASIS',
+    type: 'BYLINE',
     placeholder: 'Credit'
   }
 }
@@ -191,7 +201,7 @@ const centerFigureCaption = {
       ...figureByLine,
       editorOptions: {
         ...figureByLine.editorOptions,
-        type: 'CENTEREMPHASIS'
+        type: 'CENTERBYLINE'
       }
     },
     link,
@@ -276,7 +286,28 @@ const infoBox = {
         afterType: 'PARAGRAPH',
         insertAfterType: 'CENTER'
       },
-      rules: paragraph.rules
+      rules: [
+        ...globalInlines,
+        {
+          matchMdast: matchType('strong'),
+          component: Interaction.Emphasis,
+          editorModule: 'mark',
+          editorOptions: {
+            type: 'STRONG', // ToDo: Change to INTERACTIONSTRONG (pending contextual editor UI)
+            mdastType: 'strong'
+          }
+        },
+        {
+          matchMdast: matchType('emphasis'),
+          component: Interaction.Cursive,
+          editorModule: 'mark',
+          editorOptions: {
+            type: 'EMPHASIS', // ToDo: Change to INTERACTIONEMPHASIS (pending contextual editor UI)
+            mdastType: 'emphasis'
+          }
+        },
+        link
+      ]
     }
   ]
 }

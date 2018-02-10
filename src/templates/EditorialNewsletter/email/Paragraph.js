@@ -15,17 +15,21 @@ export const linkStyle = {
   textDecorationSkip: 'ink'
 }
 
-const strongStyle = {
+const emphasisStyle = {
   color: colors.text,
   fontFamily: fontFamilies.serifBold,
   fontWeight: 'normal'
 }
+const cursiveStyle = {
+  fontFamily: fontFamilies.serifItalic,
+  fontWeight: 'normal'
+}
 
 export const Br = () => <br />
-export const Strong = ({ children }) => (
-  <strong style={strongStyle}>{children}</strong>
+export const Emphasis = ({ children }) => (
+  <strong style={emphasisStyle}>{children}</strong>
 )
-export const Em = ({ children }) => <em>{children}</em>
+export const Cursive = ({ children }) => <em style={cursiveStyle}>{children}</em>
 export const Link = ({ children, href, title }) => (
   <a href={href} title={title} style={linkStyle}>
     {children}
