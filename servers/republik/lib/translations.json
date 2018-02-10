@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-16T16:54:19.823Z",
+  "updated": "2018-02-10T09:15:36.718Z",
   "title": "live",
   "data": [
     {
@@ -37,6 +37,10 @@
     {
       "key": "api/comment/tooLong",
       "value": "Ihr Beitrag darf höchstens {maxLength} Zeichen lang sein."
+    },
+    {
+      "key": "api/comment/empty",
+      "value": "Ihr Beitrag ist leer."
     },
     {
       "key": "api/discussion/anonymity/forbidden",
