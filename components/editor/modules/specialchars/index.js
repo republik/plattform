@@ -42,22 +42,50 @@ const SingleGuillemetButton = ({ value, onChange }) => {
   </span>
 }
 
+const ensureSpace = char => char && char.text.match(/\s/)
+  ? ''
+  : ' '
+
 const longDashClickHandler = (value, onChange) => event => {
   event.preventDefault()
 
+  const before = ensureSpace(
+    value.startText.characters
+      .get(value.selection.startOffset - 1)
+  )
+
+  const after = ensureSpace(
+    value.endText.characters
+      .get(value.selection.endOffset)
+  )
+
+  if (value.isCollapsed) {
+    return onChange(
+      value
+        .change()
+        .insertText(`${before}–${after}`)
+    )
+  }
+
+  const innerBefore = ensureSpace(
+    value.startText.characters
+      .get(value.selection.startOffset)
+  )
+
+  const innerAfter = ensureSpace(
+    value.endText.characters
+      .get(value.selection.endOffset - 1)
+  )
+
   return onChange(
-    !value.isCollapsed
-      ? value
-          .change()
-          .wrapText(' – ', ' – ')
-      : value
-          .change()
-          .insertText(' – ')
-        )
+    value
+      .change()
+      .wrapText(`${before}–${innerBefore}`, `${innerAfter}–${after}`)
+  )
 }
 
 const LongDashButton = ({ value, onChange }) => {
-  const disabled = value.isBlurred || value.isCollapsed
+  const disabled = value.isBlurred
   return <span
     {...buttonStyles.insert}
     data-disabled={disabled}
