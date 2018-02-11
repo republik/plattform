@@ -1,5 +1,6 @@
 import Paragraph, { Emphasis, Cursive, Link, Br } from './email/Paragraph'
 import { H2 } from './email/Headlines'
+import HR from './email/HR'
 import Blockquote, { BlockquoteText, BlockquoteSource } from './email/Blockquote'
 import List, { ListItem } from './email/List'
 
@@ -16,11 +17,10 @@ import {
 } from '../../components/Figure'
 
 import {
+  getDatePath,
   matchFigure,
   extractImage
 } from '../Article/utils'
-
-import { getDatePath } from '../Article/utils'
 
 const matchLast = (node, index, parent) => index === parent.children.length - 1
 
@@ -300,6 +300,18 @@ const createNewsletterSchema = ({
                     rules: [paragraph]
                   }
                 ]
+              },
+              {
+                matchMdast: matchType('thematicBreak'),
+                component: HR,
+                editorModule: 'line',
+                editorOptions: {
+                  insertButtonText: 'Trennlinie',
+                  insertTypes: [
+                    'PARAGRAPH'
+                  ]
+                },
+                isVoid: true
               }
             ]
           },

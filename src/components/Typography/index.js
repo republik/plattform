@@ -62,6 +62,10 @@ export const Sub = ({children, attributes}) =>
 export const Sup = ({children, attributes}) =>
   <sup {...attributes} {...subSupStyles.base} {...subSupStyles.sup}>{children}</sup>
 
+const hrRule = css(styles.hr)
+export const HR = ({attributes}) =>
+  <hr {...attributes} {...hrRule} />
+
 const quoteRule = css(styles.quote)
 const quoteTextRule = css(styles.quoteText)
 

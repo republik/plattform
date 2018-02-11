@@ -364,6 +364,16 @@ UI elements and structured information uses the sans serif cuts. Without margins
 </div>
 ```
 
+### Horizontal Rule
+
+```react
+<div style={{background: '#fff'}}>
+  <Interaction.P>Part One</Interaction.P>
+  <HR />
+  <Editorial.P>Part Two</Editorial.P>
+</div>
+```
+
 ## Legacy Editorial Content Styles
 
 Used for the [crowdfunding](https://github.com/orbiting/crowdfunding-frontend). Might be deprecated and removed soon.

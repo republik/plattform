@@ -1,6 +1,7 @@
 import React from 'react'
 import { fontFamilies } from '../../../theme/fonts'
 import { paragraphStyle, linkStyle } from './Paragraph'
+import HR from './HR'
 import { Mso } from 'mdast-react-render/lib/email'
 import colors from '../../../theme/colors'
 
@@ -65,7 +66,7 @@ export default ({ children, meta }) => {
                   Sihlhallenstrasse 1<br />
                   8004 Zürich
                 </p>
-                <hr />
+                <HR />
                 <p>
                   <a
                     href={`https://www.republik.ch${path ? path : `/${slug}`}`}

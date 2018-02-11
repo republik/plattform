@@ -122,5 +122,6 @@ export {
   Quote,
   Interaction,
   Editorial,
-  Sub, Sup
+  Sub, Sup,
+  HR
 } from './components/Typography'

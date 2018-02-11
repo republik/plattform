@@ -3,6 +3,7 @@ import React from 'react'
 import Container from './Container'
 import Center from '../../components/Center'
 import TitleBlock from '../../components/TitleBlock'
+import { HR } from '../../components/Typography'
 import * as Editorial from '../../components/Typography/Editorial'
 import * as Interaction from '../../components/Typography/Interaction'
 import { TeaserFeed } from '../../components/TeaserFeed'
@@ -682,6 +683,18 @@ const createSchema = ({
                     rules: [paragraph]
                   }
                 ]
+              },
+              {
+                matchMdast: matchType('thematicBreak'),
+                component: HR,
+                editorModule: 'line',
+                editorOptions: {
+                  insertButtonText: 'Trennlinie',
+                  insertTypes: [
+                    'PARAGRAPH'
+                  ]
+                },
+                isVoid: true
               },
               {
                 matchMdast: matchZone('EMBEDTWITTER'),
