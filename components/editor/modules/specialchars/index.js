@@ -68,6 +68,28 @@ const LongDashButton = ({ value, onChange }) => {
   </span>
 }
 
+const nbspClickHandler = (value, onChange) => event => {
+  event.preventDefault()
+
+  return onChange(
+    value
+      .change()
+      .insertText('\u00a0')
+  )
+}
+
+const NBSPDashButton = ({ value, onChange }) => {
+  const disabled = value.isBlurred
+  return <span
+    {...buttonStyles.insert}
+    data-disabled={disabled}
+    data-visible
+    onMouseDown={nbspClickHandler(value, onChange)}
+      >
+    Dauerleerzeichen
+  </span>
+}
+
 export default ({ TYPE }) => ({
   TYPE,
   helpers: {
@@ -78,7 +100,8 @@ export default ({ TYPE }) => ({
     insertButtons: [
       DoubleGuillemetButton,
       SingleGuillemetButton,
-      LongDashButton
+      LongDashButton,
+      NBSPDashButton
     ]
   }
 })
