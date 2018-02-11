@@ -34,6 +34,7 @@ import createTitleModule from './modules/title'
 import createInfoBoxModule from './modules/infobox'
 import createQuoteModule from './modules/quote'
 import createHtmlModule from './modules/html'
+import createLineModule from './modules/line'
 
 const moduleCreators = {
   embedVideo: createEmbedVideoModule,
@@ -62,7 +63,8 @@ const moduleCreators = {
   front: createFrontModule,
   teaser: createTeaserModule,
   teasergroup: createTeaserGroupModule,
-  html: createHtmlModule
+  html: createHtmlModule,
+  line: createLineModule
 }
 const initModule = (rule, context = {}) => {
   const { editorModule, editorOptions = {} } = rule
