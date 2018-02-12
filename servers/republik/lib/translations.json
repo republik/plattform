@@ -1,5 +1,5 @@
 {
-  "updated": "2018-02-10T09:15:36.718Z",
+  "updated": "2018-02-12T12:01:05.233Z",
   "title": "live",
   "data": [
     {
@@ -129,6 +129,10 @@
     {
       "key": "profile/notEligible",
       "value": "Nur Verlegerinnen und Abonnenten können ein Profil veröffentlichen."
+    },
+    {
+      "key": "api/faq/mail/subject",
+      "value": "Danke für Ihre Frage"
     },
     {
       "key": "api/preview/mail/404",
