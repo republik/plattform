@@ -11,7 +11,7 @@ import createCoverModule from './modules/cover'
 import createCenterModule from './modules/center'
 import createHeadlineModule from './modules/headline'
 import createParagraphModule from './modules/paragraph'
-import createBlockquoteModule from './modules/blockquote'
+import createBlockTextModule from './modules/blocktext'
 import createLinkModule from './modules/link'
 import createMarkModule from './modules/mark'
 import createListModule from './modules/list'
@@ -47,7 +47,10 @@ const moduleCreators = {
   paragraph: createParagraphModule,
   link: createLinkModule,
   mark: createMarkModule,
-  blockquote: createBlockquoteModule,
+  // for @project-r/template-newsletter compat
+  // - change when updating project r
+  blockquote: createBlockTextModule,
+  blocktext: createBlockTextModule,
   list: createListModule,
   listItem: createListItemModule,
   figure: createFigureModule,
