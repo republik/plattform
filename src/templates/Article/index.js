@@ -778,6 +778,32 @@ const createSchema = ({
               infoBox,
               pullQuote,
               paragraph,
+              {
+                matchMdast: matchZone('NOTE'),
+                component: ({ children }) => children,
+                editorModule: 'blocktext',
+                editorOptions: {
+                  mdastType: 'zone',
+                  identifier: 'NOTE',
+                  formatButtonText: 'Notiz',
+                  isStatic: true
+                },
+                rules: [
+                  {
+                    matchMdast: matchParagraph,
+                    component: Editorial.Note,
+                    editorModule: 'paragraph',
+                    editorOptions: {
+                      type: 'NOTEP',
+                      placeholder: 'Anmerkung',
+                      isStatic: true,
+                      afterType: 'PARAGRAPH',
+                      insertAfterType: 'CENTER'
+                    },
+                    rules: paragraph.rules
+                  }
+                ]
+              },
               centerFigure,
               teasers.articleCollection,
               {
