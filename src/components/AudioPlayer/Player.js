@@ -190,7 +190,11 @@ class AudioPlayer extends Component {
         loading: false
       }))
     }
-    this.onLoadedMetaData = () => {}
+    this.onLoadedMetaData = () => {
+      this.setState(() => ({
+        loading: false
+      }))
+    }
     this.scrubRef = ref => {
       this.scrubber = ref
     }
@@ -312,6 +316,7 @@ class AudioPlayer extends Component {
           {...styles.audio}
           {...attributes}
           ref={this.ref}
+          onLoadedMetadata={this.onLoadedMetaData}
           crossOrigin="anonymous"
         >
           {src.mp3 && <source src={src.mp3} type="audio/mpeg" />}
@@ -322,6 +327,7 @@ class AudioPlayer extends Component {
           {...styles.audio}
           {...attributes}
           ref={this.ref}
+          onLoadedMetadata={this.onLoadedMetaData}
           crossOrigin="anonymous"
           playsInline
         >
