@@ -2,6 +2,7 @@ import React from 'react'
 
 import { matchBlock, createBlockButton, buttonStyles } from '../../utils'
 import MarkdownSerializer from 'slate-mdast-serializer'
+import { createStaticKeyHandler } from '../../utils/keyHandlers'
 
 export default ({rule, subModules, TYPE}) => {
   const paragraphModule = subModules.find(m => m.name === 'paragraph')
@@ -10,7 +11,14 @@ export default ({rule, subModules, TYPE}) => {
   }
   const paragraphSerializer = paragraphModule.helpers.serializer
 
-  const blockquote = {
+  const {
+    mdastType = 'blockquote',
+    formatButtonText,
+    identifier,
+    isStatic
+  } = rule.editorOptions || {}
+
+  const schemaRule = {
     match: matchBlock(TYPE),
     matchMdast: rule.matchMdast,
     fromMdast: (node, index, parent, rest) => ({
@@ -20,7 +28,8 @@ export default ({rule, subModules, TYPE}) => {
       nodes: paragraphSerializer.fromMdast(node.children, 0, node, rest)
     }),
     toMdast: (object, index, parent, rest) => ({
-      type: 'blockquote',
+      type: mdastType,
+      identifier,
       data: object.data,
       children: paragraphSerializer.toMdast(object.nodes, 0, object, rest)
     })
@@ -28,11 +37,13 @@ export default ({rule, subModules, TYPE}) => {
 
   const serializer = new MarkdownSerializer({
     rules: [
-      blockquote
+      schemaRule
     ]
   })
 
-  const Blockquote = rule.component
+  const Component = rule.component
+
+  const staticHandler = isStatic && createStaticKeyHandler({ TYPE, rule: rule || {} })
 
   return {
     TYPE,
@@ -42,7 +53,7 @@ export default ({rule, subModules, TYPE}) => {
     changes: {},
     ui: {
       blockFormatButtons: [
-        createBlockButton({
+        formatButtonText && createBlockButton({
           type: TYPE
         })(
           ({ active, disabled, visible, ...props }) =>
@@ -53,7 +64,7 @@ export default ({rule, subModules, TYPE}) => {
               data-disabled={disabled}
               data-visible={visible}
               >
-              Zitat
+              {formatButtonText}
             </span>
         )
       ]
@@ -61,36 +72,43 @@ export default ({rule, subModules, TYPE}) => {
     plugins: [
       {
         renderNode ({node, children, attributes}) {
-          if (!blockquote.match(node)) return
+          if (!schemaRule.match(node)) return
 
           return (
-            <Blockquote attributes={attributes}>
+            <Component attributes={attributes}>
               {children}
-            </Blockquote>
+            </Component>
           )
         },
-        onKeyDown (event, change) {
+        onKeyDown (...args) {
+          const [ event, change ] = args
+
           const isBackspace = event.key === 'Backspace'
-          if (event.key !== 'Enter' && !isBackspace) return
+          const isEnter = event.key === 'Enter'
+          if (!isEnter && !isBackspace) return
 
           const { value } = change
-          const inBlockquote = value.document.getClosest(
+          const inBlock = value.document.getClosest(
             value.startBlock.key,
             matchBlock(TYPE)
           )
-          if (!inBlockquote) return
+          if (!inBlock) return
 
           event.preventDefault()
 
           const isEmpty = !value.startBlock.text
 
-          if (isEmpty && (!isBackspace || inBlockquote.nodes.size === 1)) {
+          if (isEmpty && (!isBackspace || inBlock.nodes.size === 1)) {
             return change
               .unwrapBlock()
           }
 
           if (isBackspace) {
             return change.deleteBackward()
+          }
+
+          if (staticHandler) {
+            return staticHandler(...args)
           }
 
           return change

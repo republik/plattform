@@ -11,7 +11,7 @@ import createCoverModule from './modules/cover'
 import createCenterModule from './modules/center'
 import createHeadlineModule from './modules/headline'
 import createParagraphModule from './modules/paragraph'
-import createBlockquoteModule from './modules/blockquote'
+import createBlockTextModule from './modules/blocktext'
 import createLinkModule from './modules/link'
 import createMarkModule from './modules/mark'
 import createListModule from './modules/list'
@@ -34,6 +34,7 @@ import createTitleModule from './modules/title'
 import createInfoBoxModule from './modules/infobox'
 import createQuoteModule from './modules/quote'
 import createHtmlModule from './modules/html'
+import createLineModule from './modules/line'
 
 const moduleCreators = {
   embedVideo: createEmbedVideoModule,
@@ -46,7 +47,10 @@ const moduleCreators = {
   paragraph: createParagraphModule,
   link: createLinkModule,
   mark: createMarkModule,
-  blockquote: createBlockquoteModule,
+  // for @project-r/template-newsletter compat
+  // - change when updating project r
+  blockquote: createBlockTextModule,
+  blocktext: createBlockTextModule,
   list: createListModule,
   listItem: createListItemModule,
   figure: createFigureModule,
@@ -62,7 +66,8 @@ const moduleCreators = {
   front: createFrontModule,
   teaser: createTeaserModule,
   teasergroup: createTeaserGroupModule,
-  html: createHtmlModule
+  html: createHtmlModule,
+  line: createLineModule
 }
 const initModule = (rule, context = {}) => {
   const { editorModule, editorOptions = {} } = rule
