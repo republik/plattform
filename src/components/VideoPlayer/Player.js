@@ -8,6 +8,9 @@ import Play from './Icons/Play'
 import Volume from './Icons/Volume'
 import Subtitles from './Icons/Subtitles'
 
+import Fullscreen from 'react-icons/lib/md/fullscreen'
+import FullscreenExit from 'react-icons/lib/md/fullscreen-exit'
+
 const ZINDEX_VIDEOPLAYER_ICONS = 6
 const ZINDEX_VIDEOPLAYER_SCRUB = 3
 const PROGRESS_HEIGHT = 4
@@ -92,7 +95,8 @@ class VideoPlayer extends Component {
       progress: 0,
       muted: globalState.muted,
       subtitles: props.subtitles || globalState.subtitles,
-      loading: false
+      loading: false,
+      fullscreen: false
     }
 
     this.updateProgress = () => {
@@ -270,7 +274,9 @@ class VideoPlayer extends Component {
   }
   render() {
     const { src, showPlay, size, forceMuted, autoPlay, loop, attributes = {} } = this.props
-    const { playing, progress, muted, subtitles, loading } = this.state
+    const { playing, progress, muted, subtitles, loading, fullscreen } = this.state
+
+    console.log(document)
 
     return (
       <div {...merge(styles.wrapper, breakoutStyles[size])}>
@@ -349,6 +355,20 @@ class VideoPlayer extends Component {
             >
               <Volume off={muted} />
             </span>}
+            <span
+              role="button"
+              title={`Untertitel ${subtitles ? 'an' : 'aus'}`}
+              onClick={e => {
+                e.preventDefault()
+                e.stopPropagation()
+                this.setState(() => ({
+                  fullscreen: !fullscreen
+                }))
+              }}
+            >
+              {!fullscreen && <Fullscreen size={24} height={24} fill='#fff' style={{verticalAlign: 'inherit'}} />}
+              {fullscreen && <FullscreenExit size={24} height={24} fill="#fff" style={{verticalAlign: 'inherit'}} />}
+            </span>
           </div>
         </div>
         <div {...styles.progress} style={{ width: `${progress * 100}%` }} />
