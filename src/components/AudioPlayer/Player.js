@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
@@ -6,7 +6,6 @@ import { css, merge } from 'glamor'
 import { timeFormat } from '../../lib/timeFormat'
 import { breakoutStyles } from '../Center'
 import { InlineSpinner } from '../Spinner'
-import Volume from '../VideoPlayer/Icons/Volume'
 import Play from 'react-icons/lib/md/play-arrow'
 import Pause from 'react-icons/lib/md/pause'
 
@@ -62,13 +61,6 @@ const styles = {
     marginTop: -15,
     textAlign: 'center'
   }),
-  mute: css({
-    position: 'absolute',
-    top: '50%',
-    left: 40,
-    marginTop: -12,
-    textAlign: 'center'
-  }),
   progress: css({
     position: 'absolute',
     zIndex: ZINDEX_AUDIOPLAYER_PROGRESS,
@@ -116,7 +108,6 @@ const styles = {
 
 let globalState = {
   playingRef: undefined,
-  muted: false,
   instances: []
 }
 
@@ -142,7 +133,6 @@ class AudioPlayer extends Component {
     this.state = {
       playing: false,
       progress: 0,
-      muted: globalState.muted,
       loading: false,
       buffered: null
     }
@@ -273,9 +263,6 @@ class AudioPlayer extends Component {
       return
     }
     this.formattedDuration = getFormattedTime(this.audio.duration)
-    if (!this.formattedCurrentTime) {
-      this.formattedCurrentTime = getFormattedTime(0)
-    }
   }
   componentDidMount() {
     globalState.instances.push(this.setInstanceState)
@@ -316,7 +303,7 @@ class AudioPlayer extends Component {
   }
   render() {
     const { src, size, attributes = {} } = this.props
-    const { playing, progress, muted, loading, buffered } = this.state
+    const { playing, progress, loading, buffered } = this.state
     const isVideo = src.mp4 || src.hls
 
     return (
@@ -324,7 +311,6 @@ class AudioPlayer extends Component {
         {!isVideo && <audio
           {...styles.audio}
           {...attributes}
-          muted={muted}
           ref={this.ref}
           crossOrigin="anonymous"
         >
@@ -335,7 +321,6 @@ class AudioPlayer extends Component {
         {isVideo && <video
           {...styles.audio}
           {...attributes}
-          muted={muted}
           ref={this.ref}
           crossOrigin="anonymous"
           playsInline
@@ -348,35 +333,11 @@ class AudioPlayer extends Component {
             {!playing && <Play size={30} fill='#000' />}
             {playing && <Pause size={30} fill="#000" />}
           </div>
-          <div {...styles.mute}>
-            <span
-              role="button"
-              title={`Stummschaltung ${muted ? 'an' : 'aus'}`}
-              onClick={e => {
-                e.preventDefault()
-                e.stopPropagation()
-                const next = {
-                  muted: !muted
-                }
-                globalState.muted = next.muted
-                globalState.instances.forEach(setter => {
-                  setter(next)
-                })
-              }}
-            >
-              <Volume off={muted} fill="#000" />
-            </span>
-          </div>
           <div {...styles.time}>
             {loading && <InlineSpinner size={25} />}
-            {this.formattedCurrentTime &&
-            this.formattedDuration && (
-              <Fragment>
-                {this.formattedCurrentTime}
-                {' / '}
-                {this.formattedDuration}
-              </Fragment>
-            )}
+            {this.formattedCurrentTime && this.formattedCurrentTime}
+            {this.formattedCurrentTime && this.formattedDuration && ' / '}
+            {this.formattedDuration && this.formattedDuration}
           </div>
         </div>
         <div {...styles.progress} style={{ width: `${progress * 100}%` }} />
