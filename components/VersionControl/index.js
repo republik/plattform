@@ -108,7 +108,6 @@ class EditSidebar extends Component {
       t,
       commit,
       uncommittedChanges,
-      warnings,
       isNew,
       data = {}
     } = this.props
@@ -124,11 +123,6 @@ class EditSidebar extends Component {
         error={error}
         render={() => (
           <div {...styles.container}>
-            {warnings.map((message, i) => (
-              <div key={i} {...css(styles.danger)}>
-                {message}
-              </div>
-            ))}
             {!!repo && (
               <BaseCommit
                 repoId={repo.id}

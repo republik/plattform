@@ -164,6 +164,7 @@ class EditorPage extends Component {
 
   warn (message) {
     this.setState(state => ({
+      showSidebar: true,
       warnings: [
         message,
         ...state.warnings
@@ -523,7 +524,7 @@ class EditorPage extends Component {
                 onChange={this.changeHandler}
                 onDocumentChange={this.documentChangeHandler}
               />
-              <Sidebar selectedTabId='edit' isOpen={showSidebar}>
+              <Sidebar warnings={warnings} selectedTabId='edit' isOpen={showSidebar}>
                 <Sidebar.Tab tabId='edit' label='Editieren'>
                   {!!this.editor && <EditorUI
                     editorRef={this.editor}
@@ -537,7 +538,6 @@ class EditorPage extends Component {
                     commit={repo && (repo.commit || repo.latestCommit)}
                     isNew={isNew}
                     uncommittedChanges={uncommittedChanges}
-                    warnings={warnings}
                     commitHandler={this.commitHandler}
                     revertHandler={this.revertHandler}
                     width={sidebarWidth}
