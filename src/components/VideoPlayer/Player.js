@@ -4,12 +4,12 @@ import colors from '../../theme/colors'
 import { css, merge } from 'glamor'
 import { breakoutStyles } from '../Center'
 import { InlineSpinner } from '../Spinner'
+
+import Fullscreen from './Fullscreen'
+import FullscreenIcon from './Icons/Fullscreen'
 import Play from './Icons/Play'
 import Volume from './Icons/Volume'
 import Subtitles from './Icons/Subtitles'
-
-import Fullscreen from 'react-icons/lib/md/fullscreen'
-import FullscreenExit from 'react-icons/lib/md/fullscreen-exit'
 
 const ZINDEX_VIDEOPLAYER_ICONS = 6
 const ZINDEX_VIDEOPLAYER_SCRUB = 3
@@ -32,6 +32,17 @@ const styles = {
       display: 'none !important'
     },
     '::-webkit-media-controls-start-playback-button': {
+      display: 'none !important'
+    }
+  }),
+  videoFullscreen: css({
+    width: '100%',
+    height: 'auto',
+    transition: 'height 200ms',
+    '::-webkit-media-controls-volume-slider': {
+      display: 'none !important'
+    },
+    '::-webkit-media-controls-download-button': {
       display: 'none !important'
     }
   }),
@@ -96,7 +107,7 @@ class VideoPlayer extends Component {
       muted: globalState.muted,
       subtitles: props.subtitles || globalState.subtitles,
       loading: false,
-      fullscreen: false
+      isFullscreen: false
     }
 
     this.updateProgress = () => {
@@ -204,7 +215,37 @@ class VideoPlayer extends Component {
     this.setInstanceState = state => {
       this.setState(state)
     }
+    this.setFullscreenState = (isFullscreen) => {
+      this.setState(() => ({
+        isFullscreen: isFullscreen
+      }))
+    }
+    this.fullscreen = Fullscreen()
+
+    if (this.fullscreen) {
+      this.onFullScreenChange = this.onFullScreenChange.bind(this)
+      this.onFullScreenError = this.onFullScreenError.bind(this)
+      this.fullscreen.addChangeListener(this.onFullScreenChange)
+      this.fullscreen.addErrorListener(this.onFullScreenError)
+      this.requestFullscreen = () => {
+        this.video && this.fullscreen.request(this.video)
+      }
+    }
   }
+
+  onFullScreenChange(e) {
+    const isFullscreen = this.fullscreen.isFullscreen()
+    this.setState(() => ({
+      isFullscreen: isFullscreen
+    }))
+  }
+
+  onFullScreenError(e) {
+    this.setState(() => ({
+      isFullscreen: false
+    }))
+  }
+
   toggle() {
     const { video } = this
     if (video) {
@@ -271,17 +312,24 @@ class VideoPlayer extends Component {
     this.video.removeEventListener('canplay', this.onCanPlay)
     this.video.removeEventListener('canplaythrough', this.onCanPlay)
     this.video.removeEventListener('loadedmetadata', this.onLoadedMetaData)
+
+    if (this.fullscreen) {
+      this.fullscreen.removeChangeListener(this.onFullScreenChange)
+      this.fullscreen.removeErrorListener(this.onFullScreenError)
+    }
   }
   render() {
     const { src, showPlay, size, forceMuted, autoPlay, loop, attributes = {} } = this.props
-    const { playing, progress, muted, subtitles, loading, fullscreen } = this.state
-
-    console.log(document)
+    const { playing, progress, muted, subtitles, loading, isFullscreen } = this.state
+    if (isFullscreen) {
+      attributes['controls'] = true
+      attributes['controlsList'] = 'nodownload'
+    }
 
     return (
       <div {...merge(styles.wrapper, breakoutStyles[size])}>
         <video
-          {...styles.video}
+          {...(isFullscreen ? styles.videoFullscreen : styles.video)}
           {...attributes}
           style={this.props.style}
           autoPlay={autoPlay}
@@ -355,20 +403,19 @@ class VideoPlayer extends Component {
             >
               <Volume off={muted} />
             </span>}
-            <span
-              role="button"
-              title={`Untertitel ${subtitles ? 'an' : 'aus'}`}
-              onClick={e => {
-                e.preventDefault()
-                e.stopPropagation()
-                this.setState(() => ({
-                  fullscreen: !fullscreen
-                }))
-              }}
-            >
-              {!fullscreen && <Fullscreen size={24} height={24} fill='#fff' style={{verticalAlign: 'inherit'}} />}
-              {fullscreen && <FullscreenExit size={24} height={24} fill="#fff" style={{verticalAlign: 'inherit'}} />}
-            </span>
+            {this.fullscreen && (
+              <span
+                role="button"
+                title="Vollbild"
+                onClick={e => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  this.requestFullscreen()
+                }}
+              >
+                <FullscreenIcon />
+              </span>
+            )}
           </div>
         </div>
         <div {...styles.progress} style={{ width: `${progress * 100}%` }} />
