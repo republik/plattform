@@ -44,7 +44,7 @@ const apiSurfaces = [
   ]
 ]
 
-const fullscreenFunction = () => {
+const getFullscreenApi = () => {
   for (let i = 0; i < apiSurfaces.length; i++) {
     let apiSurface = apiSurfaces[i]
     if (!!document[apiSurface[1]]) {
@@ -59,29 +59,29 @@ const fullscreenFunction = () => {
 }
 
 const Fullscreen = () => {
-  const fn = fullscreenFunction()
-  if (!fn) {
+  const api = getFullscreenApi()
+  if (!api) {
     return null
   }
 
   return {
     request: elem => {
       elem = elem || document.documentElement
-      elem[fn.requestFullscreen]()
+      elem[api.requestFullscreen]()
     },
     addChangeListener: callback => {
-      document.addEventListener(fn.fullscreenchange, callback, false)
+      document.addEventListener(api.fullscreenchange, callback, false)
     },
     addErrorListener: callback => {
-      document.addEventListener(fn.fullscreenerror, callback, false)
+      document.addEventListener(api.fullscreenerror, callback, false)
     },
     removeChangeListener: callback => {
-      document.removeEventListener(fn.fullscreenchange, callback, false)
+      document.removeEventListener(api.fullscreenchange, callback, false)
     },
     removeErrorListener: callback => {
-      document.removeEventListener(fn.fullscreenerror, callback, false)
+      document.removeEventListener(api.fullscreenerror, callback, false)
     },
-    isFullscreen: () => !!document[fn.fullscreenElement]
+    isFullscreen: () => !!document[api.fullscreenElement]
   }
 }
 
