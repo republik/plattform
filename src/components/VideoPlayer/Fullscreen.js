@@ -1,4 +1,5 @@
 const apiSurfaces = [
+  // Canonical non-prefixed API
   [
     'requestFullscreen',
     'exitFullscreen',
@@ -7,6 +8,7 @@ const apiSurfaces = [
     'fullscreenchange',
     'fullscreenerror'
   ],
+  // contemporary webkit
   [
     'webkitRequestFullscreen',
     'webkitExitFullscreen',
@@ -18,7 +20,7 @@ const apiSurfaces = [
   // legacy webkit (Safari 5.1)
   [
     'webkitRequestFullScreen',
-    'webkitCancelFullScreen',
+    'webkitCancelFullScreen',  // That's why we check apiSurface[1] for feature detection below.
     'webkitCurrentFullScreenElement',
     'webkitCancelFullScreen',
     'webkitfullscreenchange',
