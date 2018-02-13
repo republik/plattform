@@ -148,6 +148,9 @@ class VideoPlayer extends Component {
     }
     this.onLoadedMetaData = () => {
       this.setTextTracksMode()
+      this.setState(() => ({
+        loading: false
+      }))
     }
     this.scrubRef = ref => {
       this.scrubber = ref
@@ -279,6 +282,7 @@ class VideoPlayer extends Component {
           muted={forceMuted !== undefined ? forceMuted : muted}
           loop={loop}
           ref={this.ref}
+          onLoadedMetadata={this.onLoadedMetaData}
           crossOrigin="anonymous"
           poster={src.thumbnail}
         >
