@@ -1,4 +1,4 @@
-const functionSets = [
+const apiSurfaces = [
   [
     'requestFullscreen',
     'exitFullscreen',
@@ -45,14 +45,14 @@ const functionSets = [
 ]
 
 const fullscreenFunction = () => {
-  for (let i = 0; i < functionSets.length; i++) {
-    let functionSet = functionSets[i]
-    if (!!document[functionSet[1]]) {
-      let functionMap = {}
-      for (let j = 0; j < functionSet.length; j++) {
-        functionMap[functionSets[0][j]] = functionSet[j]
+  for (let i = 0; i < apiSurfaces.length; i++) {
+    let apiSurface = apiSurfaces[i]
+    if (!!document[apiSurface[1]]) {
+      let api = {}
+      for (let j = 0; j < apiSurface.length; j++) {
+        api[apiSurfaces[0][j]] = apiSurface[j]
       }
-      return functionMap
+      return api
     }
   }
   return null
