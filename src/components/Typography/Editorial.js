@@ -101,8 +101,7 @@ const paragraph = css({
   ...styles.serifRegular16,
   [mUp]: {
     ...styles.serifRegular19,
-    margin: '30px 0 30px 0',
-    lineHeight: '30px'
+    margin: '30px 0 30px 0'
   },
   ':first-child': {
     marginTop: 0

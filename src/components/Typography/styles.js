@@ -76,7 +76,7 @@ export const serifRegular21 = {
 export const serifRegular19 = {
   fontFamily: fontFamilies.serifRegular,
   fontSize: 19,
-  lineHeight: '24px'
+  lineHeight: '30px'
 }
 export const serifRegular18 = {
   fontFamily: fontFamilies.serifRegular,

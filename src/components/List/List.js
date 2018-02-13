@@ -54,8 +54,7 @@ const styles = {
     ...serifRegular16,
     [mUp]: {
       ...serifRegular19,
-      paddingLeft: 0,
-      lineHeight: '30px'
+      paddingLeft: 0
     },
     '& p:last-child': {
       marginBottom: 0
