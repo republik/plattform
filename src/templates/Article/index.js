@@ -837,8 +837,7 @@ const createSchema = ({
               }
             ]
           },
-          cover,
-          figure,
+          centerFigure,
           {
             matchMdast: () => false,
             editorModule: 'specialchars'
