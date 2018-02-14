@@ -24,9 +24,8 @@ module.exports = {
   validateChallenge: async ({ pgdb, payload, user }) => {
     if (!user.twoFactorSecret) return false
     const otp = OTP({ secret: user.twoFactorSecret })
-    console.log(otp)
     const comparablePayload = await otp.totp()
-    console.log(`testing: ${comparablePayload} === ${payload}`)
+    console.log(`Validate TOTP challenge for ${user.id}: ${comparablePayload} (server) ==? ${payload} (client)`)
     return (comparablePayload === payload)
   }
 }

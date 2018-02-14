@@ -77,7 +77,8 @@ module.exports = {
   `
     })
   },
-  validateChallenge: async ({ pgdb, payload, type }) => {
+  validateChallenge: async ({ pgdb, payload, type, user }) => {
+    console.log(`Validate E-Mail Token challenge for ${user.id}: ${payload} (client)`)
     const foundToken = await pgdb.public.tokens.findOne({
       type,
       payload

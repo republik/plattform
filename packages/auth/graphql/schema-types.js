@@ -42,6 +42,7 @@ type SharedSecretResponse {
 enum SignInTokenType {
   EMAIL_TOKEN
   TOTP
+  SMS
 }
 
 input SignInTokenChallenge {

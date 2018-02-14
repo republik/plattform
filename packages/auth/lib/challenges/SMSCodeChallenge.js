@@ -1,31 +1,68 @@
-const uuid = require('uuid/v4')
-
 const {
   sendTextMessage
 } = require('@orbiting/backend-modules-sms')
+const { parse, format } = require('libphonenumber-js')
 
 const MIN_IN_MS = 1000 * 60
-const HOUR_IN_MS = MIN_IN_MS * 60
-const DAY_IN_MS = HOUR_IN_MS * 24
+
+function generateSMSTokenCode () {
+  // 2’176’782’336 possibilities, assuming 30 ms takes
+  // 700 days to bruteforce the code through the API
+  let text = ''
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+  for (var i = 0; i < 6; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length))
+  }
+  return text
+}
+
+async function getUserPhoneNumber (pgdb, email) {
+  const user = await pgdb.public.users.findOne({ email })
+  try {
+    const parsedPhoneNumber = parse(user.phoneNumber || '', 'CH') // it could be any arbitrary string
+    return format(parsedPhoneNumber.phone, parsedPhoneNumber.country, 'E.164')
+  } catch (e) {
+    throw new Error('Phone number not valid for Text Messaging')
+  }
+}
 
 module.exports = {
-  generateNewToken: async ({ pgdb, session, type }) => {
-    const payload = uuid()
-    const expiresAt = new Date(new Date().getTime() + DAY_IN_MS)
+  generateSharedSecret: async ({ pgdb, user, email }) => {
+    const sharedCode = generateSMSTokenCode()
+    const phoneNumber = await getUserPhoneNumber(pgdb, email)
+    await sendTextMessage({
+      text: `SMS Login Authorisierung: ${sharedCode}`,
+      phoneNumber
+    })
+    return sharedCode
+  },
+  validateSharedSecret: async ({ pgdb, payload, user }) => {
+    return (user.tempTwoFactorSecret === payload)
+  },
+  generateNewToken: async ({ pgdb, session, type, email }) => {
+    await getUserPhoneNumber(pgdb, email) // just check the phone number is valid
+    const payload = generateSMSTokenCode()
+
+    // as the code is exxtremely insecure,
+    // we have to limit the time slot so there is only a very small chance to find
+    // the code in 15 minutes
+    const expiresAt = new Date(new Date().getTime() + (15 * MIN_IN_MS))
     return { payload, expiresAt }
   },
-  startChallenge: async ({ context, token, country, phrase, ...rest }) => {
-    console.log(context, rest)
+  startChallenge: async ({ email, context, token, country, phrase, pgdb }) => {
+    const phoneNumber = await getUserPhoneNumber(pgdb, email)
     await sendTextMessage({
-      text: 'hello',
-      phoneNumber: '+41797340361'
+      text: `Dein Code: ${token.payload}`,
+      phoneNumber
     })
   },
-  validateChallenge: async ({ pgdb, payload, type }) => {
+  validateChallenge: async ({ pgdb, payload, type, user }) => {
+    console.log(`Validate SMS Code challenge for ${user.id}: ${payload} (client)`)
     const foundToken = await pgdb.public.tokens.findOne({
       type,
-      payload
+      payload: payload.toUpperCase()
     })
+
     return foundToken.id
   }
 }

@@ -61,7 +61,7 @@ const signIn = async (_email, context, pgdb, req) => {
     const init = await initiateSession({ req, pgdb, ipAddress, userAgent, email })
     const { country, phrase, session } = init
 
-    const type = TokenTypes.EMAIL_TOKEN
+    const type = TokenTypes.SMS
     const tokenTypes = [type]
     const token = await generateNewToken({
       pgdb,
@@ -113,6 +113,7 @@ const signIn = async (_email, context, pgdb, req) => {
 
     return { phrase, tokenTypes }
   } catch (error) {
+    console.error(error)
     throw new SessionInitializationFailedError({ error })
   }
 }
