@@ -60,6 +60,8 @@ class Overlay extends PureComponent {
     document.documentElement.style.position = 'relative'
     document.body.style.overflow = 'hidden'
     document.body.style.position = 'fixed'
+    document.body.style.left = '0'
+    document.body.style.right = '0'
   }
 
   componentWillUnmount () {
@@ -70,6 +72,8 @@ class Overlay extends PureComponent {
     document.documentElement.style.position = ''
     document.body.style.overflow = ''
     document.body.style.position = ''
+    document.body.style.left = ''
+    document.body.style.right = ''
     window.scrollTo(0, this.pageYOffset)
   }
 
