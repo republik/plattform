@@ -486,6 +486,33 @@ ReactDOM.render(
         ]
       },
       {
+        title: 'Charts',
+        pages: [
+          {
+            path: '/charts/bars',
+            title: 'Bars',
+            imports: {
+              ...require('d3-dsv'),
+              ...require('./components/Typography'),
+              t,
+              Chart: require('./components/Chart')
+            },
+            src: require('./components/Chart/Bars.docs.md')
+          },
+          {
+            path: '/charts/lollipops',
+            title: 'Lollipops',
+            imports: {
+              ...require('d3-dsv'),
+              ...require('./components/Typography'),
+              t,
+              Chart: require('./components/Chart')
+            },
+            src: require('./components/Chart/Lollipops.docs.md')
+          }
+        ]
+      },
+      {
         title: 'Development',
         pages: [
           {

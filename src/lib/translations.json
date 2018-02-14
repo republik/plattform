@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-14T07:30:35.630Z",
+  "updated": "2018-02-14T01:59:24.419Z",
   "title": "live",
   "data": [
     {
@@ -78,6 +78,10 @@
     {
       "key": "styleguide/video/dnt/player/vimeo",
       "value": "Vimeo"
+    },
+    {
+      "key": "styleguide/charts/confidence95-legend",
+      "value": "95-Prozent-Konfidenzintervall"
     }
   ]
 }

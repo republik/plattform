@@ -5,8 +5,11 @@
     "node": "8.9.x"
   },
   "peerDependencies": {
-    "d3-color": "^1.0.3",
-    "d3-time-format": "^2.1.1",
+    "d3-array": "1.x",
+    "d3-color": "1.x",
+    "d3-format": "1.x",
+    "d3-scale": "2.x",
+    "d3-time-format": "2.x",
     "glamor": "^2.20.40",
     "mdast-react-render": ">=1.1",
     "react": ">=16.2",
@@ -25,7 +28,11 @@
     "commitizen": "^2.9.6",
     "core-js": "^2.4.1",
     "cz-conventional-changelog": "^2.0.0",
+    "d3-array": "^1.2.1",
     "d3-color": "^1.0.3",
+    "d3-dsv": "^1.0.8",
+    "d3-format": "^1.2.2",
+    "d3-scale": "^2.0.0",
     "d3-time-format": "^2.1.1",
     "downshift": "^1.16.1",
     "faucet": "0.0.1",
@@ -79,6 +86,7 @@
     }
   },
   "dependencies": {
-    "react-icons": "^2.2.7"
+    "react-icons": "^2.2.7",
+    "vega-expression": "^1.2.0"
   }
 }

@@ -253,6 +253,12 @@ export const sansSerifMedium14 = {
   fontWeight: 'normal',
   lineHeight: '17px',
 }
+export const sansSerifMedium12 = {
+  fontFamily: fontFamilies.sansSerifMedium,
+  fontSize: 12,
+  fontWeight: 'normal',
+  lineHeight: '15px'
+}
 
 
 export const h1 = {
