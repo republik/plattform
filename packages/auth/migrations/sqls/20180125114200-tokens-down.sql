@@ -1,7 +1,9 @@
 drop table if exists "tokens";
 
 ALTER TABLE users
-  DROP COLUMN "isTwoFactorEnabled",
-  DROP COLUMN "twoFactorSecret",
-  DROP COLUMN "tempTwoFactorSecret"
+  DROP COLUMN "isTwoFactorEnabled"
+  DROP COLUMN "TOTPChallengeSecret"
+  DROP COLUMN "isTOTPChallengeSecretVerified"
+  DROP COLUMN "smsChallengeSecret"
+  DROP COLUMN "isSMSChallengeSecretVerified" 
 ;

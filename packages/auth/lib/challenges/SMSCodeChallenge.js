@@ -34,10 +34,27 @@ module.exports = {
       text: `SMS Login Authorisierung: ${sharedCode}`,
       phoneNumber
     })
+    await pgdb.public.users.updateAndGetOne(
+      {
+        id: user.id
+      }, {
+        isSMSChallengeSecretVerified: false,
+        smsChallengeSecret: sharedCode
+      }
+    )
     return sharedCode
   },
   validateSharedSecret: async ({ pgdb, payload, user }) => {
-    return (user.tempTwoFactorSecret === payload)
+    const isMatch = (user.smsChallengeSecret === payload)
+    if (!isMatch) return false
+    await pgdb.public.users.updateAndGetOne(
+      {
+        id: user.id
+      }, {
+        isSMSChallengeSecretVerified: true
+      }
+    )
+    return true
   },
   generateNewToken: async ({ pgdb, session, type, email }) => {
     await getUserPhoneNumber(pgdb, email) // just check the phone number is valid

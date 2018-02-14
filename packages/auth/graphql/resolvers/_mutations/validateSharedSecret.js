@@ -13,14 +13,14 @@ module.exports = async (_, args, { pgdb, user, req, ...rest }) => {
   const userWith2FA = {
     ...user,
     isTwoFactorEnabled: user._raw.isTwoFactorEnabled,
-    tempTwoFactorSecret: user._raw.tempTwoFactorSecret,
-    twoFactorSecret: user._raw.twoFactorSecret
+    TOTPChallengeSecret: user._raw.TOTPChallengeSecret,
+    isTOTPChallengeSecretVerified: user._raw.isTOTPChallengeSecretVerified
   }
 
   if (userWith2FA.isTwoFactorEnabled) {
     throw new TwoFactorHasToBeDisabledError({ userId: user.id })
   }
-  if (userWith2FA.twoFactorSecret && !userWith2FA.tempTwoFactorSecret) {
+  if (userWith2FA.isTOTPChallengeSecretVerified) {
     // already validated, that's fine
     return true
   }

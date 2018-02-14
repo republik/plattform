@@ -5,12 +5,29 @@ const MIN_IN_MS = 1000 * 60
 module.exports = {
   generateSharedSecret: async ({ pgdb, user }) => {
     const otp = OTP()
+    if (!otp.secret) return false
+    await pgdb.public.users.updateAndGetOne(
+      {
+        id: user.id
+      }, {
+        TOTPChallengeSecret: otp.secret,
+        isTOTPChallengeSecretVerified: false
+      }
+    )
     return otp.secret
   },
   validateSharedSecret: async ({ pgdb, payload, user }) => {
-    if (!user.tempTwoFactorSecret) return false
-    const otp = OTP({ secret: user.tempTwoFactorSecret })
-    return (otp.totp() === payload)
+    if (!user.TOTPChallengeSecret) return false
+    const otp = OTP({ secret: user.TOTPChallengeSecret })
+    if (otp.totp() !== payload) return false
+    await pgdb.public.users.updateAndGetOne(
+      {
+        id: user.id
+      }, {
+        isTOTPChallengeSecretVerified: true
+      }
+    )
+    return true
   },
   generateNewToken: async ({ pgdb, session, type, user }) => {
     const payload = '' // no payload needed, time-based
@@ -22,8 +39,8 @@ module.exports = {
     return true
   },
   validateChallenge: async ({ pgdb, payload, user }) => {
-    if (!user.twoFactorSecret) return false
-    const otp = OTP({ secret: user.twoFactorSecret })
+    if (!user.isTOTPChallengeSecretVerified) return false
+    const otp = OTP({ secret: user.TOTPChallengeSecret })
     const comparablePayload = await otp.totp()
     console.log(`Validate TOTP challenge for ${user.id}: ${comparablePayload} (server) ==? ${payload} (client)`)
     return (comparablePayload === payload)

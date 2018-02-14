@@ -35,16 +35,6 @@ const ChallengeHandlerProxy = ({ type, ...options }) => {
         ...options
       })
       if (!secret) throw new SharedSecretGenerationFailed({ type, user: options.user })
-
-      const { pgdb, user } = options
-      return pgdb.public.users.updateAndGetOne(
-        {
-          id: user.id
-        }, {
-          tempTwoFactorSecret: secret,
-          twoFactorSecret: null
-        }
-      )
     },
     validateSharedSecret: async () => {
       if (!handler.validateSharedSecret) throw new SharedSecretNotSupported({ type, user: options.user })
@@ -55,15 +45,6 @@ const ChallengeHandlerProxy = ({ type, ...options }) => {
       })
 
       if (!validated) throw new SharedSecretValidationFailed({ type, user: options.user })
-      const { pgdb, user } = options
-      return pgdb.public.users.updateAndGetOne(
-        {
-          id: user.id
-        }, {
-          tempTwoFactorSecret: null,
-          twoFactorSecret: user.tempTwoFactorSecret
-        }
-      )
     },
     generateNewToken: async () => {
       const tokenData = await handler.generateNewToken({

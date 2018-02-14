@@ -13,7 +13,7 @@ module.exports = async (_, args = {}, { pgdb, user, req, ...rest }) => {
   } = args
 
   if (enabled) {
-    if (!user._raw.tempTwoFactorSecret && !user._raw.twoFactorSecret) {
+    if (!user._raw.isTOTPChallengeSecretVerified && !user._raw.isSMSChallengeSecretVerified) {
       throw new SecondFactorNotReadyError({ userId: user.id })
     } else if (user._raw.isTwoFactorEnabled) {
       throw new TwoFactorAlreadyEnabledError({ userId: user.id })

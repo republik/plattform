@@ -12,17 +12,19 @@ module.exports = async (_, args, { pgdb, user, req, ...rest }) => {
   const userWith2FA = {
     ...user,
     isTwoFactorEnabled: user._raw.isTwoFactorEnabled,
-    tempTwoFactorSecret: user._raw.tempTwoFactorSecret,
-    twoFactorSecret: user._raw.twoFactorSecret
+    TOTPChallengeSecret: user._raw.TOTPChallengeSecret,
+    isTOTPChallengeSecretVerified: user._raw.isTOTPChallengeSecretVerified,
+    isSMSChallengeSecretVerified: user._raw.isSMSChallengeSecretVerified,
+    smsChallengeSecret: user._raw.smsChallengeSecret
   }
 
   if (userWith2FA.isTwoFactorEnabled) {
     throw new TwoFactorHasToBeDisabledError({ userId: user.id })
   }
-  const { tempTwoFactorSecret } = await generateSharedSecret({
+  const secret = await generateSharedSecret({
     type,
     pgdb,
     user: userWith2FA
   })
-  return { secret: tempTwoFactorSecret }
+  return { secret }
 }
