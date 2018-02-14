@@ -255,6 +255,106 @@ Was für eine Erleichterung. Standards sparen Zeit bei den Entwicklungskosten un
 `}</Markdown>
 ```
 
+## Charts
+
+```react|noSource
+<Markdown schema={schema}>{`
+
+<section><h6>CENTER</h6>
+
+Zwei flinke Boxer jagen die quirlige Eva und ihren Mops durch Sylt. Franz jagt im komplett verwahrlosten Taxi quer durch Bayern.
+
+<section><h6>CHART</h6>
+
+\`\`\`
+{
+  "type": "Bar",
+  "numberFormat": ".0%",
+  "y": "country",
+  "category": "datum.country == 'Schweiz' ? '1' : '0'"
+}
+\`\`\`
+
+### Abgabenquote im internationalen Vergleich
+
+in Prozent des BIP 2015
+
+\`\`\`csv
+country,value
+Frankreich,0.455
+Österreich,0.435
+Italien,0.433
+Deutschland,0.369
+Schweiz,0.279
+USA,0.264
+Irland,0.236
+\`\`\`
+
+Quelle: OECD 2015. Revenue Statistics 1965-2014. Bundesministerium der Finanzen 2016. Die wichtigsten Steuern im internationalen Vergleich 2015.
+
+<hr /></section>
+
+Zwölf Boxkämpfer jagen Viktor quer über den großen Sylter Deich. Vogel Quax zwickt Johnys Pferd Bim.
+
+<hr /></section>
+
+`}</Markdown>
+```
+
+### `size`
+
+Values: `undefined` (default), `breakout`, `narrow`, `float`
+
+```react|noSource
+<Markdown schema={schema}>{`
+
+<section><h6>CENTER</h6>
+
+Zwei flinke Boxer jagen die quirlige Eva und ihren Mops durch Sylt. Franz jagt im komplett verwahrlosten Taxi quer durch Bayern.
+
+<section><h6>CHART</h6>
+
+\`\`\`
+{
+  "type": "Bar",
+  "size": "float",
+  "numberFormat": "%",
+  "y": "category",
+  "color": "concern",
+  "colorRange": "diverging2",
+  "colorLegend": true,
+  "domain": [0, 1],
+  "sort": "none",
+  "colorSort": "none",
+  "highlight": "datum.category == 'Allgemein'"
+}
+\`\`\`
+
+### Kriminalitätsfurcht 2012
+
+\`\`\`csv
+category,concern,value
+Allgemein,gar nicht,0.416
+Allgemein,etwas,0.413
+Allgemein,ziemlich,0.124
+Allgemein,sehr stark,0.047
+\`\`\`
+
+Quelle: Deutscher Viktimisierungssurvey 2012.
+
+<hr /></section>
+
+Zwölf Boxkämpfer jagen Viktor quer über den großen Sylter Deich. Vogel Quax zwickt Johnys Pferd Bim.
+
+Sylvia wagt quick den Jux bei Pforzheim. Polyfon zwitschernd aßen Mäxchens Vögel Rüben, Joghurt und Quark. "Fix, Schwyz! " quäkt Jürgen blöd vom Paß. Victor jagt zwölf Boxkämpfer quer über den großen Sylter Deich.
+
+Falsches Üben von Xylophonmusik quält jeden größeren Zwerg. Heizölrückstoßabdämpfung. Zwei flinke Boxer jagen die quirlige Eva und ihren Mops durch Sylt. Franz jagt im komplett verwahrlosten Taxi quer durch Bayern.
+
+<hr /></section>
+
+`}</Markdown>
+```
+
 ## Pull Quote
 
 ```react|noSource

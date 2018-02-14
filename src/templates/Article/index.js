@@ -8,6 +8,7 @@ import * as Editorial from '../../components/Typography/Editorial'
 import * as Interaction from '../../components/Typography/Interaction'
 import { TeaserFeed } from '../../components/TeaserFeed'
 import IllustrationHtml from '../../components/IllustrationHtml'
+import CsvChart from '../../components/Chart/Csv'
 
 import {
   Figure,
@@ -796,6 +797,74 @@ const createSchema = ({
                     editorOptions: {
                       type: 'NOTEP',
                       placeholder: 'Anmerkung',
+                      isStatic: true,
+                      afterType: 'PARAGRAPH',
+                      insertAfterType: 'CENTER'
+                    },
+                    rules: paragraph.rules
+                  }
+                ]
+              },
+              {
+                matchMdast: matchZone('CHART'),
+                component: Figure,
+                props: node => ({
+                  size: node.data.size
+                }),
+                editorModule: 'chart',
+                rules: [
+                  {
+                    matchMdast: matchHeading(3),
+                    component: Interaction.H2,
+                    editorModule: 'headline',
+                    editorOptions: {
+                      type: 'CHARTTITLE',
+                      placeholder: 'Titel',
+                      depth: 3,
+                      isStatic: true
+                    }
+                  },
+                  {
+                    matchMdast: (node, index, parent) => {
+                      matchParagraph(node) && console.log({
+                        l: matchLast(node, index, parent),
+                        node, index, parent
+                      })
+                      return matchParagraph(node) && !matchLast(node, index, parent)
+                    },
+                    component: Interaction.P,
+                    editorModule: 'paragraph',
+                    editorOptions: {
+                      type: 'CHARTLEAD',
+                      placeholder: 'Lead',
+                      isStatic: true
+                    }
+                  },
+                  {
+                    matchMdast: matchType('code'),
+                    component: CsvChart,
+                    props: (node, index, parent, { ancestors }) => {
+                      const zone = ancestors.find(matchZone('CHART'))
+
+                      return {
+                        t,
+                        config: zone.data,
+                        values: node.value
+                      }
+                    },
+                    editorModule: 'paragraph'
+                  },
+                  {
+                    matchMdast: (node, index, parent) =>
+                      matchParagraph(node) && matchLast(node, index, parent),
+                    component: Editorial.Note,
+                    props: () => ({
+                      style: {marginTop: 10}
+                    }),
+                    editorModule: 'paragraph',
+                    editorOptions: {
+                      type: 'CHARTNOTE',
+                      placeholder: 'Quelle',
                       isStatic: true,
                       afterType: 'PARAGRAPH',
                       insertAfterType: 'CENTER'

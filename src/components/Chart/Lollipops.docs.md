@@ -4,8 +4,8 @@ Lollipop charts are just lighter bar charts. The circle at the end makes it idea
 <div>
   <Interaction.H2>Armutsrisikoquote nach Altersgruppen 2014</Interaction.H2>
   <CsvChart t={t}
-    type='Lollipop'
     config={{
+      type: 'Lollipop',
       numberFormat: '%',
       y: 'facet_value',
       sort: 'none'

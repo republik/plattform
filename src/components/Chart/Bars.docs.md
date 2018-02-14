@@ -3,8 +3,8 @@
   <Interaction.H2>Abgabenquote im internationalen Vergleich</Interaction.H2>
   <Interaction.P>in Prozent des BIP 2015</Interaction.P>
   <CsvChart t={t}
-    type='Bar'
     config={{
+      type: 'Bar',
       numberFormat: '.0%',
       y: 'country',
       category: "datum.country == 'Schweiz' ? '1' : '0'"
@@ -30,8 +30,8 @@ Irland,0.236
   <Interaction.H2>Themenstruktur der verschiedenen Formen der Weiterbildung 2014</Interaction.H2>
   <Interaction.P>in Prozent</Interaction.P>
   <CsvChart t={t}
-    type='Bar'
     config={{
+      type: 'Bar',
       color: 'type',
       colorSort: 'none',
       numberFormat: '%',
@@ -72,8 +72,8 @@ nicht oder nur einstellig klassifizierbar,Betriebliche Weiterbildung,0.04
 <div>
   <Interaction.H2>Kriminalitätsfurcht 2012</Interaction.H2>
   <CsvChart t={t}
-    type='Bar'
     config={{
+      type: 'Bar',
       numberFormat: "%",
       color: "concern",
       colorRange: "diverging2",

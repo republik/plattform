@@ -30,14 +30,13 @@ class Chart extends Component {
     })
   }
   render() {
-    const {description, type, config, t} = this.props
+    const {width: fixedWidth, config, t} = this.props
 
-    const width = config.width || this.state.width
-
-    const ReactChart = ReactCharts[type]
+    const width = fixedWidth || this.state.width
+    const ReactChart = ReactCharts[config.type]
 
     return (
-      <div ref={config.width ? undefined : this.measure} style={{
+      <div ref={fixedWidth ? undefined : this.measure} style={{
         marginTop: config.chromeless ? 0 : 15,
         maxWidth: config.maxWidth
       }}>
@@ -47,7 +46,7 @@ class Chart extends Component {
             colorSchemes={colorSchemes}
             width={width}
             values={this.props.values}
-            description={description} />
+            description={config.description} />
         )}
       </div>
     )
@@ -55,14 +54,15 @@ class Chart extends Component {
 }
 
 Chart.propTypes = {
-  type: PropTypes.oneOf(Object.keys(ReactCharts)).isRequired,
   values: PropTypes.array.isRequired,
-  config: PropTypes.object.isRequired,
-  description: PropTypes.string,
+  config: PropTypes.shape({
+    type: PropTypes.oneOf(Object.keys(ReactCharts)).isRequired,
+    description: PropTypes.string,
+    maxWidth: PropTypes.number,
+    chromeless: PropTypes.bool
+  }).isRequired,
+  width: PropTypes.number,
   t: PropTypes.func.isRequired
-}
-Chart.defaultProps = {
-  config: {}
 }
 
 export default Chart
