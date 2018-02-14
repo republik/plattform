@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import Fullscreen from 'react-icons/lib/md/fullscreen'
 import FullscreenExit from 'react-icons/lib/md/fullscreen-exit'
 
