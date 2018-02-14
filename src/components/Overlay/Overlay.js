@@ -109,10 +109,10 @@ export class OverlayRenderer extends PureComponent {
   }
 
   render () {
-    const {isVisible, children} = this.props
+    const {isVisible, maxWidth, children} = this.props
     return (
       <div {...styles.root} style={{opacity: isVisible ? 1 : 0}} onClick={this.close}>
-        <div {...styles.inner}>
+        <div {...styles.inner} style={{maxWidth}}>
           {children}
         </div>
       </div>
@@ -121,6 +121,7 @@ export class OverlayRenderer extends PureComponent {
 }
 
 OverlayRenderer.propTypes = {
+  maxWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   children: PropTypes.node.isRequired,
   isVisible: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
