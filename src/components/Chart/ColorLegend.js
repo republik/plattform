@@ -42,7 +42,6 @@ const styles = {
 }
 
 const ColorLegend = ({title, shape, values, maxWidth, inline}) => {
-  console.log({values, title})
   if (!values.length && !title) {
     return null
   }

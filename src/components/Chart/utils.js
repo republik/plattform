@@ -1,4 +1,5 @@
 import { formatLocale, formatSpecifier, precisionFixed } from 'd3-format'
+import { ascending, descending } from 'd3-array'
 
 export const groupBy = (array, key) => {
   const object = array.reduce(
@@ -15,6 +16,13 @@ export const groupBy = (array, key) => {
     key: k,
     values: object[k]
   }))
+}
+
+export const runSort = (cmd, array, accessor = d => d) => {
+  if (cmd !== 'none') {
+    const compare = cmd === 'descending' ? descending : ascending
+    array.sort((a, b) => compare(accessor(a), accessor(b)))
+  }
 }
 
 export const measure = onMeasure => {

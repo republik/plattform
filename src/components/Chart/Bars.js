@@ -10,7 +10,7 @@ import vgExpr from 'vega-expression'
 import { sansSerifRegular12, sansSerifMedium14 } from '../Typography/styles'
 import colors from '../../theme/colors'
 
-import { calculateAxis, groupBy } from './utils'
+import { calculateAxis, groupBy, runSort } from './utils'
 import ColorLegend from './ColorLegend'
 
 const lollipopFill = '#fff'
@@ -101,7 +101,6 @@ const styles = {
     display: 'inline-block',
     width: 24,
     height: 8,
-    // marginBottom: -1,
     backgroundColor: colors.divider,
     borderRadius: '4px'
   })
@@ -138,10 +137,7 @@ const BarChart = (props) => {
       d.category = categorize(d.datum)
     })
   }
-  if (props.sort !== 'none') {
-    const compare = props.sort === 'descending' ? descending : ascending
-    data.sort((a, b) => compare(a.value, b.value))
-  }
+  runSort(props.sort, data, d => d.value)
 
   let groupedData
   if (props.columnFilter) {
@@ -157,17 +153,13 @@ const BarChart = (props) => {
     groupedData = groupBy(data, d => d.datum[props.column])
   }
 
-  if (props.columnSort !== 'none') {
-    groupedData.sort((a, b) => ascending(a.key, b.key))
-  }
+  runSort(props.columnSort, groupedData, d => d.key)
 
   const colorAccessor = props.color ? d => d.datum[props.color] : d => d.category
   let colorValues = data.map(colorAccessor)
     .filter(Boolean)
     .filter((d, i, all) => all.indexOf(d) === i)
-  if (props.colorSort !== 'none') {
-    colorValues = colorValues.sort(ascending)
-  }
+  runSort(props.colorSort, colorValues)
   let colorRange = props.colorSchemes[props.colorRange] || props.colorRange
   if (!colorRange) {
     colorRange = colorValues.length > 3 ? props.colorSchemes.category24 : props.colorSchemes.dimension3
@@ -204,9 +196,7 @@ const BarChart = (props) => {
       marginBottom = style.marginBottom
 
       let barSegments = segments
-      if (props.colorSort !== 'none') {
-        barSegments.sort((a, b) => ascending(colorAccessor(a), colorAccessor(b)))
-      }
+      runSort(props.colorSort, barSegments, colorAccessor)
 
       return {
         labelY,
@@ -358,6 +348,8 @@ const BarChart = (props) => {
   )
 }
 
+const sortProp = PropTypes.oneOf(['none', 'ascending', 'descending'])
+
 BarChart.propTypes = {
   children: PropTypes.node,
   values: PropTypes.array.isRequired,
@@ -367,9 +359,9 @@ BarChart.propTypes = {
   y: PropTypes.string.isRequired,
   barStyle: PropTypes.oneOf(Object.keys(BAR_STYLES)),
   confidence: PropTypes.oneOf([95]),
-  sort: PropTypes.oneOf(['none', 'descending']),
+  sort: sortProp,
   column: PropTypes.string,
-  columnSort: PropTypes.oneOf(['none']),
+  columnSort: sortProp,
   columnFilter: PropTypes.arrayOf(PropTypes.shape({
     title: PropTypes.string.isRequired,
     test: PropTypes.string.isRequired
@@ -378,7 +370,7 @@ BarChart.propTypes = {
   stroke: PropTypes.string,
   color: PropTypes.string,
   colorRange: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-  colorSort: PropTypes.oneOf(['none']),
+  colorSort: sortProp,
   colorLegend: PropTypes.bool,
   colorSchemes: PropTypes.shape({
     dimension3: PropTypes.array.isRequired,

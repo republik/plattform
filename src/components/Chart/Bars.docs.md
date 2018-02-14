@@ -43,19 +43,19 @@ Irland,0.236
     }}
     values={`
 category,type,value
-"Sprachen, Kultur, Poltik",Nicht-berufsbezogene Weiterbildung,0.32
+"Sprachen, Kultur, Politik",Nicht-berufsbezogene Weiterbildung,0.32
 Pädagogik und Sozialkompetenz,Nicht-berufsbezogene Weiterbildung,0.07
 Gesundheit und Sport,Nicht-berufsbezogene Weiterbildung,0.26
 "Wirtschaft, Arbeit, Recht",Nicht-berufsbezogene Weiterbildung,0.12
 "Natur, Technik, Computer",Nicht-berufsbezogene Weiterbildung,0.23
 nicht oder nur einstellig klassifizierbar,Nicht-berufsbezogene Weiterbildung,0.01
-"Sprachen, Kultur, Poltik",Individuelle berufsbezogene Weiterbildung,0.15
+"Sprachen, Kultur, Politik",Individuelle berufsbezogene Weiterbildung,0.15
 Pädagogik und Sozialkompetenz,Individuelle berufsbezogene Weiterbildung,0.17
 Gesundheit und Sport,Individuelle berufsbezogene Weiterbildung,0.21
 "Wirtschaft, Arbeit, Recht",Individuelle berufsbezogene Weiterbildung,0.26
 "Natur, Technik, Computer",Individuelle berufsbezogene Weiterbildung,0.17
 nicht oder nur einstellig klassifizierbar,Individuelle berufsbezogene Weiterbildung,0.04
-"Sprachen, Kultur, Poltik",Betriebliche Weiterbildung,0.05
+"Sprachen, Kultur, Politik",Betriebliche Weiterbildung,0.05
 Pädagogik und Sozialkompetenz,Betriebliche Weiterbildung,0.07
 Gesundheit und Sport,Betriebliche Weiterbildung,0.19
 "Wirtschaft, Arbeit, Recht",Betriebliche Weiterbildung,0.41
