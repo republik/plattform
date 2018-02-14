@@ -495,7 +495,8 @@ ReactDOM.render(
               ...require('d3-dsv'),
               ...require('./components/Typography'),
               t,
-              Chart: require('./components/Chart')
+              Chart: require('./components/Chart'),
+              CsvChart: require('./components/Chart/Csv')
             },
             src: require('./components/Chart/Bars.docs.md')
           },
@@ -506,7 +507,8 @@ ReactDOM.render(
               ...require('d3-dsv'),
               ...require('./components/Typography'),
               t,
-              Chart: require('./components/Chart')
+              Chart: require('./components/Chart'),
+              CsvChart: require('./components/Chart/Csv')
             },
             src: require('./components/Chart/Lollipops.docs.md')
           }

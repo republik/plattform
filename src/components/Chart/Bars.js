@@ -65,10 +65,10 @@ const BAR_STYLES = {
       marginBottom: 16
     }
   }
-};
+}
 
-const datumExpr = vgExpr.compiler(['datum']);
-const last = (array, index) => array.length - 1 === index;
+const datumExpr = vgExpr.compiler(['datum'])
+const last = (array, index) => array.length - 1 === index
 
 const styles = {
   groupTitle: css({
@@ -116,37 +116,37 @@ const BarChart = (props) => {
     t,
     description,
     confidence
-  } = props;
+  } = props
 
-  const possibleColumns = Math.floor(width / (props.minInnerWidth + COLUMN_PADDING));
-  const columns = possibleColumns >= props.columns ? props.columns : Math.max(possibleColumns, 1);
-  const columnWidth = Math.floor((width - (COLUMN_PADDING * (columns - 1))) / columns) - 1;
+  const possibleColumns = Math.floor(width / (props.minInnerWidth + COLUMN_PADDING))
+  const columns = possibleColumns >= props.columns ? props.columns : Math.max(possibleColumns, 1)
+  const columnWidth = Math.floor((width - (COLUMN_PADDING * (columns - 1))) / columns) - 1
 
   let data = values
   if (props.filter) {
-    const filter = datumExpr(props.filter);
-    data = data.filter(filter.fn);
+    const filter = datumExpr(props.filter)
+    data = data.filter(filter.fn)
   }
   data = data.filter(d => d.value && d.value.length > 0).map(d => ({
     datum: d,
     label: d[props.y],
     value: +d.value
-  }));
+  }))
   if (props.category) {
-    const categorize = datumExpr(props.category).fn;
+    const categorize = datumExpr(props.category).fn
     data.forEach(d => {
-      d.category = categorize(d.datum);
-    });
+      d.category = categorize(d.datum)
+    })
   }
   if (props.sort !== 'none') {
     const compare = props.sort === 'descending' ? descending : ascending
     data.sort((a, b) => compare(a.value, b.value))
   }
 
-  let groupedData;
+  let groupedData
   if (props.columnFilter) {
     groupedData = props.columnFilter.map(({test, title}) => {
-      const filter = datumExpr(test).fn;
+      const filter = datumExpr(test).fn
       return {
         key: title,
         values: data.filter(d => filter(d.datum))
@@ -161,51 +161,51 @@ const BarChart = (props) => {
     groupedData.sort((a, b) => ascending(a.key, b.key))
   }
 
-  const colorAccessor = props.color ? d => d.datum[props.color] : d => d.category;
+  const colorAccessor = props.color ? d => d.datum[props.color] : d => d.category
   let colorValues = data.map(colorAccessor)
     .filter(Boolean)
     .filter((d, i, all) => all.indexOf(d) === i)
   if (props.colorSort !== 'none') {
     colorValues = colorValues.sort(ascending)
   }
-  let colorRange = props.colorSchemes[props.colorRange] || props.colorRange;
+  let colorRange = props.colorSchemes[props.colorRange] || props.colorRange
   if (!colorRange) {
-    colorRange = colorValues.length > 3 ? props.colorSchemes.category24 : props.colorSchemes.dimension3;
+    colorRange = colorValues.length > 3 ? props.colorSchemes.category24 : props.colorSchemes.dimension3
   }
-  const color = scaleOrdinal(colorRange).domain(colorValues);
+  const color = scaleOrdinal(colorRange).domain(colorValues)
 
-  const highlight = props.highlight ? datumExpr(props.highlight).fn : () => false;
+  const highlight = props.highlight ? datumExpr(props.highlight).fn : () => false
 
-  const barStyle = BAR_STYLES[props.barStyle];
+  const barStyle = BAR_STYLES[props.barStyle]
   groupedData = groupedData.map(({values: groupData, key: title}) => {
-    let gY = 0;
+    let gY = 0
     if (title) {
-      gY += COLUMN_TITLE_HEIGHT;
+      gY += COLUMN_TITLE_HEIGHT
     }
 
-    let firstBarY;
-    let stackedBars = groupBy(groupData, d => d.label);
-    let marginBottom = 0;
+    let firstBarY
+    let stackedBars = groupBy(groupData, d => d.label)
+    let marginBottom = 0
     const bars = stackedBars.map(({values: segments}) => {
-      const first = segments[0];
-      const highlighted = highlight(first.datum);
-      const style = barStyle[highlighted ? 'highlighted' : 'normal'];
+      const first = segments[0]
+      const highlighted = highlight(first.datum)
+      const style = barStyle[highlighted ? 'highlighted' : 'normal']
 
-      gY += marginBottom;
-      let labelY = gY;
-      gY += BAR_LABEL_HEIGHT;
-      gY += style.marginTop;
-      let y = gY;
+      gY += marginBottom
+      let labelY = gY
+      gY += BAR_LABEL_HEIGHT
+      gY += style.marginTop
+      let y = gY
       if (firstBarY === undefined) {
-        firstBarY = gY;
+        firstBarY = gY
       }
 
-      gY += style.height;
-      marginBottom = style.marginBottom;
+      gY += style.height
+      marginBottom = style.marginBottom
 
-      let barSegments = segments;
+      let barSegments = segments
       if (props.colorSort !== 'none') {
-        barSegments.sort((a, b) => ascending(colorAccessor(a), colorAccessor(b)));
+        barSegments.sort((a, b) => ascending(colorAccessor(a), colorAccessor(b)))
       }
 
       return {
@@ -218,8 +218,8 @@ const BarChart = (props) => {
           (sum, segment) => sum + segment.value,
           0
         )
-      };
-    });
+      }
+    })
 
     return {
       title,
@@ -227,45 +227,45 @@ const BarChart = (props) => {
       max: max(bars.map(bar => bar.sum)),
       height: gY,
       firstBarY
-    };
-  });
+    }
+  })
 
   const x = scaleLinear()
     .domain(props.domain || [0, max(groupedData.map(d => d.max))])
-    .range([0, columnWidth]);
+    .range([0, columnWidth])
   if (!props.domain) {
-    x.nice(3);
+    x.nice(3)
   }
-  const xAxis = calculateAxis(props.numberFormat, t, x.domain());
+  const xAxis = calculateAxis(props.numberFormat, t, x.domain())
 
   groupedData.forEach(group => {
     group.bars.forEach(bar => {
-      let xPos = 0;
+      let xPos = 0
       bar.segments.forEach(d => {
-        d.color = color(colorAccessor(d));
-        d.x = Math.floor(xPos);
-        const size = x(d.value);
-        d.width = Math.ceil(size) + 1;
-        xPos += size;
-      });
-    });
-  });
+        d.color = color(colorAccessor(d))
+        d.x = Math.floor(xPos)
+        const size = x(d.value)
+        d.width = Math.ceil(size) + 1
+        xPos += size
+      })
+    })
+  })
 
   // rows and columns
-  let yPos = 0;
+  let yPos = 0
   groupBy(groupedData, (d, i) => Math.floor(i / columns)).forEach(({values: groups}) => {
-    const height = max(groups.map(d => d.height));
+    const height = max(groups.map(d => d.height))
 
     groups.forEach((group, column) => {
-      group.groupHeight = height;
-      group.y = yPos;
-      group.x = column * (columnWidth + COLUMN_PADDING);
-    });
+      group.groupHeight = height
+      group.y = yPos
+      group.x = column * (columnWidth + COLUMN_PADDING)
+    })
 
-    yPos += height + AXIS_BOTTOM_HEIGHT;
-  });
+    yPos += height + AXIS_BOTTOM_HEIGHT
+  })
 
-  const isLollipop = props.barStyle === 'lollipop';
+  const isLollipop = props.barStyle === 'lollipop'
 
   return (
     <div>
@@ -312,13 +312,13 @@ const BarChart = (props) => {
                     <line {...styles.axisXLine} x2={columnWidth} />}
                   {
                     xAxis.ticks.map((tick, i) => {
-                      let textAnchor = 'middle';
-                      const isLast = last(xAxis.ticks, i);
+                      let textAnchor = 'middle'
+                      const isLast = last(xAxis.ticks, i)
                       if (isLast) {
-                        textAnchor = 'end';
+                        textAnchor = 'end'
                       }
                       if (i === 0) {
-                        textAnchor = 'start';
+                        textAnchor = 'start'
                       }
                       return (
                         <g key={tick} transform={`translate(${x(tick)},0)`}>
@@ -329,12 +329,12 @@ const BarChart = (props) => {
                             {xAxis.axisFormat(tick, isLast)}
                           </text>
                         </g>
-                      );
+                      )
                     })
                   }
                 </g>
               </g>
-            );
+            )
           })
         }
       </svg>
@@ -355,8 +355,8 @@ const BarChart = (props) => {
         {children}
       </div>
     </div>
-  );
-};
+  )
+}
 
 BarChart.propTypes = {
   children: PropTypes.node,
@@ -391,7 +391,7 @@ BarChart.propTypes = {
   columns: PropTypes.number.isRequired,
   t: PropTypes.func.isRequired,
   description: PropTypes.string
-};
+}
 
 BarChart.defaultProps = {
   columns: 1,

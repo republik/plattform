@@ -2,14 +2,14 @@
 <div>
   <Interaction.H2>Abgabenquote im internationalen Vergleich</Interaction.H2>
   <Interaction.P>in Prozent des BIP 2015</Interaction.P>
-  <Chart t={t}
+  <CsvChart t={t}
     type='Bar'
     config={{
       numberFormat: '.0%',
       y: 'country',
       category: "datum.country == 'Schweiz' ? '1' : '0'"
     }}
-    values={csvParse(`
+    values={`
 country,value
 Frankreich,0.455
 Österreich,0.435
@@ -18,7 +18,7 @@ Deutschland,0.369
 Schweiz,0.279
 USA,0.264
 Irland,0.236
-    `.trim())} />
+    `.trim()} />
   <Editorial.Note>Quelle: OECD 2015. Revenue Statistics 1965-2014. Bundesministerium der Finanzen 2016. Die wichtigsten Steuern im internationalen Vergleich 2015.</Editorial.Note>
 </div>
 ```
@@ -29,7 +29,7 @@ Irland,0.236
 <div>
   <Interaction.H2>Themenstruktur der verschiedenen Formen der Weiterbildung 2014</Interaction.H2>
   <Interaction.P>in Prozent</Interaction.P>
-  <Chart t={t}
+  <CsvChart t={t}
     type='Bar'
     config={{
       color: 'type',
@@ -41,7 +41,7 @@ Irland,0.236
       columns: 3,
       minInnerWidth: 250
     }}
-    values={csvParse(`
+    values={`
 category,type,value
 "Sprachen, Kultur, Poltik",Nicht-berufsbezogene Weiterbildung,0.32
 Pädagogik und Sozialkompetenz,Nicht-berufsbezogene Weiterbildung,0.07
@@ -61,7 +61,7 @@ Gesundheit und Sport,Betriebliche Weiterbildung,0.19
 "Wirtschaft, Arbeit, Recht",Betriebliche Weiterbildung,0.41
 "Natur, Technik, Computer",Betriebliche Weiterbildung,0.24
 nicht oder nur einstellig klassifizierbar,Betriebliche Weiterbildung,0.04
-    `.trim())} />
+    `.trim()} />
   <Editorial.Note>Quelle: Adult Education Survey 2014.</Editorial.Note>
 </div>
 ```
@@ -71,7 +71,7 @@ nicht oder nur einstellig klassifizierbar,Betriebliche Weiterbildung,0.04
 ```react
 <div>
   <Interaction.H2>Kriminalitätsfurcht 2012</Interaction.H2>
-  <Chart t={t}
+  <CsvChart t={t}
     type='Bar'
     config={{
       numberFormat: "%",
@@ -84,7 +84,7 @@ nicht oder nur einstellig klassifizierbar,Betriebliche Weiterbildung,0.04
       colorSort: "none",
       highlight: "datum.category == 'Allgemein'"
     }}
-    values={csvParse(`
+    values={`
 category,concern,value
 Allgemein,gar nicht,0.416
 Allgemein,etwas,0.413
@@ -106,7 +106,7 @@ Sexuelle Belästigung,gar nicht,0.692
 Sexuelle Belästigung,etwas,0.167
 Sexuelle Belästigung,ziemlich,0.047
 Sexuelle Belästigung,sehr stark,0.093
-    `.trim())} />
+    `.trim()} />
   <Editorial.Note>Quelle: Deutscher Viktimisierungssurvey 2012.</Editorial.Note>
 </div>
 ```
