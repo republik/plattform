@@ -20,7 +20,7 @@ const apiSurfaces = [
   // legacy webkit (Safari 5.1)
   [
     'webkitRequestFullScreen',
-    'webkitCancelFullScreen',  // That's why we check apiSurface[1] for feature detection below.
+    'webkitCancelFullScreen', // That's why we check apiSurface[1] for feature detection below.
     'webkitCurrentFullScreenElement',
     'webkitCancelFullScreen',
     'webkitfullscreenchange',
@@ -47,44 +47,37 @@ const apiSurfaces = [
 ]
 
 const getFullscreenApi = () => {
-  for (let i = 0; i < apiSurfaces.length; i++) {
-    let apiSurface = apiSurfaces[i]
-    if (!!document[apiSurface[1]]) {
-      let api = {}
-      for (let j = 0; j < apiSurface.length; j++) {
-        api[apiSurfaces[0][j]] = apiSurface[j]
-      }
-      return api
+  let api = {}
+  const canonicalSurface = apiSurfaces[0]
+  apiSurfaces.forEach(apiSurface => {
+    if (!document[apiSurface[1]]) {
+      return
     }
-  }
-  return null
+    apiSurface.forEach((method, index) => {
+      api[canonicalSurface[index]] = apiSurface[index]
+    })
+  })
+  return api.requestFullscreen ? api : null
 }
 
-const Fullscreen = () => {
+export const setupFullscreen = ({ onChange }) => {
   const api = getFullscreenApi()
   if (!api) {
-    return null
+    return
   }
+
+  document.addEventListener(api.fullscreenchange, onChange, false)
 
   return {
-    request: elem => {
-      elem = elem || document.documentElement
-      elem[api.requestFullscreen]()
+    request(elem) {
+      const subject = elem || document.documentElement
+      subject[api.requestFullscreen]()
     },
-    addChangeListener: callback => {
-      document.addEventListener(api.fullscreenchange, callback, false)
+    element() {
+      return document[api.fullscreenElement]
     },
-    addErrorListener: callback => {
-      document.addEventListener(api.fullscreenerror, callback, false)
-    },
-    removeChangeListener: callback => {
-      document.removeEventListener(api.fullscreenchange, callback, false)
-    },
-    removeErrorListener: callback => {
-      document.removeEventListener(api.fullscreenerror, callback, false)
-    },
-    isFullscreen: () => !!document[api.fullscreenElement]
+    dispose() {
+      document.removeEventListener(api.fullscreenchange, onChange, false)
+    }
   }
 }
-
-export default Fullscreen

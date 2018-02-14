@@ -5,8 +5,8 @@ import { css, merge } from 'glamor'
 import { breakoutStyles } from '../Center'
 import { InlineSpinner } from '../Spinner'
 
-import Fullscreen from './Fullscreen'
-import FullscreenIcon from './Icons/Fullscreen'
+import { setupFullscreen } from './fullscreen'
+import Fullscreen from './Icons/Fullscreen'
 import Play from './Icons/Play'
 import Volume from './Icons/Volume'
 import Subtitles from './Icons/Subtitles'
@@ -215,34 +215,14 @@ class VideoPlayer extends Component {
     this.setInstanceState = state => {
       this.setState(state)
     }
-    this.setFullscreenState = (isFullscreen) => {
-      this.setState(() => ({
-        isFullscreen: isFullscreen
-      }))
-    }
-    this.fullscreen = Fullscreen()
-
-    if (this.fullscreen) {
-      this.onFullScreenChange = this.onFullScreenChange.bind(this)
-      this.onFullScreenError = this.onFullScreenError.bind(this)
-      this.fullscreen.addChangeListener(this.onFullScreenChange)
-      this.fullscreen.addErrorListener(this.onFullScreenError)
-      this.requestFullscreen = () => {
-        this.video && this.fullscreen.request(this.video)
-      }
-    }
+    this.fullscreen = setupFullscreen({
+      onChange: this.onFullScreenChange.bind(this)
+    })
   }
 
-  onFullScreenChange(e) {
-    const isFullscreen = this.fullscreen.isFullscreen()
+  onFullScreenChange() {
     this.setState(() => ({
-      isFullscreen: isFullscreen
-    }))
-  }
-
-  onFullScreenError(e) {
-    this.setState(() => ({
-      isFullscreen: false
+      isFullscreen: this.fullscreen.element() === this.video
     }))
   }
 
@@ -313,18 +293,11 @@ class VideoPlayer extends Component {
     this.video.removeEventListener('canplaythrough', this.onCanPlay)
     this.video.removeEventListener('loadedmetadata', this.onLoadedMetaData)
 
-    if (this.fullscreen) {
-      this.fullscreen.removeChangeListener(this.onFullScreenChange)
-      this.fullscreen.removeErrorListener(this.onFullScreenError)
-    }
+    this.fullscreen && this.fullscreen.dispose()
   }
   render() {
     const { src, showPlay, size, forceMuted, autoPlay, loop, attributes = {} } = this.props
     const { playing, progress, muted, subtitles, loading, isFullscreen } = this.state
-    if (isFullscreen) {
-      attributes['controls'] = true
-      attributes['controlsList'] = 'nodownload'
-    }
 
     return (
       <div {...merge(styles.wrapper, breakoutStyles[size])}>
@@ -336,6 +309,8 @@ class VideoPlayer extends Component {
           muted={forceMuted !== undefined ? forceMuted : muted}
           loop={loop}
           ref={this.ref}
+          controls={isFullscreen}
+          controlsList={isFullscreen ? 'nodownload' : undefined}
           onLoadedMetadata={this.onLoadedMetaData}
           crossOrigin="anonymous"
           poster={src.thumbnail}
@@ -410,10 +385,10 @@ class VideoPlayer extends Component {
                 onClick={e => {
                   e.preventDefault()
                   e.stopPropagation()
-                  this.requestFullscreen()
+                  this.fullscreen.request(this.video)
                 }}
               >
-                <FullscreenIcon />
+                <Fullscreen />
               </span>
             )}
           </div>
