@@ -1,5 +1,7 @@
 const EmailTokenChallenge = require('./EmailTokenChallenge')
 const TOTPChallenge = require('./TOTPChallenge')
+const SMSCodeChallenge = require('./SMSCodeChallenge')
+
 const { newAuthError } = require('../AuthError')
 
 const TokenTypeUnknownError = newAuthError('token-type-unknown', 'api/auth/token-type-unknown')
@@ -11,12 +13,14 @@ const QueryEmailMismatchError = newAuthError('query-email-mismatch', 'api/auth/q
 
 const TokenTypes = {
   EMAIL_TOKEN: 'EMAIL_TOKEN',
-  TOTP: 'TOTP'
+  TOTP: 'TOTP',
+  SMS: 'SMS'
 }
 
 const TokenTypeMap = {
   [TokenTypes.EMAIL_TOKEN]: EmailTokenChallenge,
-  [TokenTypes.TOTP]: TOTPChallenge
+  [TokenTypes.TOTP]: TOTPChallenge,
+  [TokenTypes.SMS]: SMSCodeChallenge
 }
 
 const ChallengeHandlerProxy = ({ type, ...options }) => {

@@ -29,6 +29,7 @@
   "dependencies": {
     "@orbiting/backend-modules-env": "link:../env",
     "@orbiting/backend-modules-mail": "link:../mail",
+    "@orbiting/backend-modules-sms": "link:../sms",
     "@orbiting/backend-modules-translate": "link:../translate",
     "apollo-modules-node": "^0.1.4",
     "check-env": "^1.3.0",
