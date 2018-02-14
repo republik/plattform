@@ -61,7 +61,7 @@ const signIn = async (_email, context, pgdb, req) => {
     const init = await initiateSession({ req, pgdb, ipAddress, userAgent, email })
     const { country, phrase, session } = init
 
-    const type = TokenTypes.SMS
+    const type = TokenTypes.EMAIL_TOKEN
     const tokenTypes = [type]
     const token = await generateNewToken({
       pgdb,
