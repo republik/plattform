@@ -1,4 +1,3 @@
-require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const { express: middlewares } = require('@orbiting/backend-modules-assets')

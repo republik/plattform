@@ -1,4 +1,4 @@
-require('dotenv').config({ path: '../../.test.env' })
+require('@orbiting/backend-modules-env').config()
 const test = require('tape-async')
 const { createMail } = require('./lib')
 const MailchimpInterface = require('./MailchimpInterface')

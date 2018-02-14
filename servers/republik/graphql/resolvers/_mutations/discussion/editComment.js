@@ -9,6 +9,10 @@ module.exports = async (_, args, { pgdb, user, req, t, pubsub }) => {
     content
   } = args
 
+  if (!content || !content.trim().length) {
+    throw new Error(t('api/comment/empty'))
+  }
+
   const transaction = await pgdb.transactionBegin()
   try {
     // ensure comment exists and belongs to user

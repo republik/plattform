@@ -42,7 +42,8 @@ module.exports = (
       execute,
       subscribe,
       onConnect: async (connectionParams, websocket) => {
-        const cookiesRaw = (NODE_ENV === 'testing')
+        // apollo-fetch used in tests sends cookie on the connectionParams
+        const cookiesRaw = (NODE_ENV === 'development' && connectionParams.cookies)
           ? connectionParams.cookies
           : websocket.upgradeReq.headers.cookie
         if (!cookiesRaw) {

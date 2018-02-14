@@ -1,0 +1,50 @@
+language: node_js
+node_js:
+  - '8.9.4'
+cache:
+  directories:
+    - node_modules
+  yarn: true
+notifications:
+  email: false
+addons:
+  postgresql: "9.6"
+services:
+  - postgresql
+  - redis-server
+branches:
+  only:
+  - master
+matrix:
+  include:
+    - env:
+      - TEST_DIR=servers/republik
+      - DATABASE_URL=postgres://postgres@localhost:5432/republik-test
+    - env:
+      - TEST_DIR=servers/publikator
+      - DATABASE_URL=postgres://postgres@localhost:5432/publikator-test
+env:
+  global:
+    - NODE_ENV=development
+    - PORT=6000
+    - PUBLIC_WS_URL_BASE=ws://localhost:6000
+    - PUBLIC_WS_URL_PATH=/graphql
+    - SEND_MAILS=false
+    - FORCE_TEST_END=true
+    - AUTO_LOGIN=true
+    - SESSION_SECRET=testtest
+    - DEFAULT_MAIL_FROM_NAME='travis'
+    - DEFAULT_MAIL_FROM_ADDRESS='travis@test.project-r.construction'
+    - AUTH_MAIL_FROM_ADDRESS='travis@test.project-r.construction'
+    - FRONTEND_BASE_URL=http://localhost:6000
+    - LOCAL_ASSETS_SERVER=true
+    - ASSETS_SERVER_BASE_URL=http://localhost:6000
+    - ASSETS_HMAC_KEY=testtest
+    - PARKING_PLEDGE_ID=00000000-1234-0000-0000-000000000001
+    - PARKING_USER_ID=00000000-4321-0000-0000-000000000001
+    - DISPLAY_AUTHOR_SECRET=testtest
+before_install:
+  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.3.2
+  - export PATH=$HOME/.yarn/bin:$PATH
+script:
+  - cd $TEST_DIR && yarn run test:travis

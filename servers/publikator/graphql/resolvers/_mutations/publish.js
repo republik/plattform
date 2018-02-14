@@ -98,7 +98,7 @@ module.exports = async (
   let unresolvedRepoIds = []
   const docsConnection = await getPublishedDocuments(null, { scheduledAt }, context)
 
-  // see https://github.com/orbiting/backend-modules/blob/c25cf33336729590b114e5113e464be6bf1185e0/packages/documents/graphql/resolvers/_queries/documents.js#L107
+  // see https://github.com/orbiting/backends/blob/c25cf33336729590b114e5113e464be6bf1185e0/packages/documents/graphql/resolvers/_queries/documents.js#L107
   // - the documents resolver exposes those two properties on individual docs for resolving
   // - we steal them here for our new doc
   const firstDoc = docsConnection.nodes[0] || {} // in case no docs are published

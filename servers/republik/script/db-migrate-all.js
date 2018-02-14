@@ -4,11 +4,11 @@
 // usage
 // node script/db-migrate-all.js [db-migrate args]
 //
-require('../lib/env')
+require('@orbiting/backend-modules-env').config()
 const { dbMigrateAll } = require('@orbiting/backend-modules-scripts')
 
 const migrationDirs = [
-  '../../packages/redirection/migrations',
+  '../../packages/redirections/migrations',
   '../../packages/auth/migrations',
   'migrations/crowdfunding',
   'migrations'

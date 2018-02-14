@@ -9,7 +9,7 @@
  * https://stripe.com/docs/connect/standard-accounts
  */
 
-require('../lib/env')
+require('@orbiting/backend-modules-env').config()
 const fetch = require('isomorphic-unfetch')
 const querystring = require('querystring')
 const {

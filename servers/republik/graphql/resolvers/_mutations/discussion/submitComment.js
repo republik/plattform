@@ -16,6 +16,10 @@ module.exports = async (_, args, { pgdb, user, t, pubsub }) => {
     discussionPreferences
   } = args
 
+  if (!content || !content.trim().length) {
+    throw new Error(t('api/comment/empty'))
+  }
+
   const transaction = await pgdb.transactionBegin()
   try {
     const discussion = await transaction.public.discussions.findOne({

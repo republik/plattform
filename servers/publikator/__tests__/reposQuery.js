@@ -187,7 +187,8 @@ module.exports = async (t, apolloFetch, githubRest) => {
           orderBy: {
             field: PUSHED_AT
             direction: ASC
-          }
+          },
+          first: 100
         ) {
           nodes {
             id
@@ -200,6 +201,7 @@ module.exports = async (t, apolloFetch, githubRest) => {
   {
     // TODO remove filter when tests run in an isolated github org
     const _repos = result.data.repos.nodes.filter(repo => repos.find(r => r.id === repo.id))
+    t.equals(_repos.length, 3, 'returned repos length')
     t.equals(_repos[0].id, repos[0].id)
     t.equals(_repos[1].id, repos[1].id)
     t.equals(_repos[2].id, repos[2].id)
@@ -213,7 +215,8 @@ module.exports = async (t, apolloFetch, githubRest) => {
           orderBy: {
             field: PUSHED_AT
             direction: DESC
-          }
+          },
+          first: 100
         ) {
           nodes {
             id
@@ -225,6 +228,7 @@ module.exports = async (t, apolloFetch, githubRest) => {
   t.ok(result.data)
   {
     const _repos = result.data.repos.nodes.filter(repo => repos.find(r => r.id === repo.id))
+    t.equals(_repos.length, 3, 'returned repos length')
     t.equals(_repos[0].id, repos[2].id)
     t.equals(_repos[1].id, repos[1].id)
     t.equals(_repos[2].id, repos[0].id)

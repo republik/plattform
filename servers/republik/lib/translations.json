@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-16T16:54:19.823Z",
+  "updated": "2018-02-12T12:01:05.233Z",
   "title": "live",
   "data": [
     {
@@ -37,6 +37,10 @@
     {
       "key": "api/comment/tooLong",
       "value": "Ihr Beitrag darf höchstens {maxLength} Zeichen lang sein."
+    },
+    {
+      "key": "api/comment/empty",
+      "value": "Ihr Beitrag ist leer."
     },
     {
       "key": "api/discussion/anonymity/forbidden",
@@ -125,6 +129,10 @@
     {
       "key": "profile/notEligible",
       "value": "Nur Verlegerinnen und Abonnenten können ein Profil veröffentlichen."
+    },
+    {
+      "key": "api/faq/mail/subject",
+      "value": "Danke für Ihre Frage"
     },
     {
       "key": "api/preview/mail/404",
