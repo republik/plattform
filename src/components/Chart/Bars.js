@@ -121,6 +121,7 @@ const BarChart = (props) => {
   const columns = possibleColumns >= props.columns ? props.columns : Math.max(possibleColumns, 1)
   const columnWidth = Math.floor((width - (COLUMN_PADDING * (columns - 1))) / columns) - 1
 
+  // filter and map data to clean objects 
   let data = values
   if (props.filter) {
     const filter = datumExpr(props.filter)
@@ -131,14 +132,17 @@ const BarChart = (props) => {
     label: d[props.y],
     value: +d.value
   }))
+  // compute category
   if (props.category) {
     const categorize = datumExpr(props.category).fn
     data.forEach(d => {
       d.category = categorize(d.datum)
     })
   }
+  // sort by value (default lowest on top)
   runSort(props.sort, data, d => d.value)
 
+  // group data into columns
   let groupedData
   if (props.columnFilter) {
     groupedData = props.columnFilter.map(({test, title}) => {
@@ -152,10 +156,12 @@ const BarChart = (props) => {
   } else {
     groupedData = groupBy(data, d => d.datum[props.column])
   }
-
   runSort(props.columnSort, groupedData, d => d.key)
 
-  const colorAccessor = props.color ? d => d.datum[props.color] : d => d.category
+  // compute colors
+  const colorAccessor = props.color
+    ? d => d.datum[props.color]
+    : d => d.category
   let colorValues = data.map(colorAccessor)
     .filter(Boolean)
     .filter((d, i, all) => all.indexOf(d) === i)
@@ -166,8 +172,11 @@ const BarChart = (props) => {
   }
   const color = scaleOrdinal(colorRange).domain(colorValues)
 
-  const highlight = props.highlight ? datumExpr(props.highlight).fn : () => false
+  const highlight = props.highlight
+    ? datumExpr(props.highlight).fn
+    : () => false
 
+  // first layout run, set y position
   const barStyle = BAR_STYLES[props.barStyle]
   groupedData = groupedData.map(({values: groupData, key: title}) => {
     let gY = 0
@@ -220,6 +229,7 @@ const BarChart = (props) => {
     }
   })
 
+  // setup x scale
   const x = scaleLinear()
     .domain(props.domain || [0, max(groupedData.map(d => d.max))])
     .range([0, columnWidth])
@@ -228,6 +238,7 @@ const BarChart = (props) => {
   }
   const xAxis = calculateAxis(props.numberFormat, t, x.domain())
 
+  // stack bars
   groupedData.forEach(group => {
     group.bars.forEach(bar => {
       let xPos = 0
