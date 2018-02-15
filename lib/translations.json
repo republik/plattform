@@ -1,5 +1,5 @@
 {
-  "updated": "2018-02-15T16:39:41.336Z",
+  "updated": "2018-02-15T18:27:54.086Z",
   "title": "live",
   "data": [
     {
@@ -661,6 +661,10 @@
     {
       "key": "styleguide/charts/y-cut",
       "value": "Achse gekürzt"
+    },
+    {
+      "key": "styleguide/charts/error",
+      "value": "Diese Visualisierung ist kaputt. Die Ursache könnte eine falsche Konfiguration oder fehlenden und oder falsch formatierte Daten sein."
     }
   ]
 }

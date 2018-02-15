@@ -2,7 +2,7 @@ import React from 'react'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { Block } from 'slate'
 
-import createUi, { EditButton, EditModal } from './ui'
+import createUi from './ui'
 import { matchBlock } from '../../utils'
 import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
 
@@ -56,11 +56,11 @@ export default ({rule, subModules, TYPE}) => {
 
   const newBlock = () => Block.create({
     type: TYPE,
-    data: {
-      isEditing: true
-    },
     nodes: subModules.map(m => Block.create({
-      type: m.TYPE
+      type: m.TYPE,
+      data: m.TYPE === CANVAS_TYPE
+        ? {isEditing: true}
+        : undefined
     }))
   })
 
@@ -89,39 +89,10 @@ export default ({rule, subModules, TYPE}) => {
             matchBlock(CANVAS_TYPE)
           )
 
-          const startEditing = () => {
-            editor.change(change => {
-              change.setNodeByKey(node.key, {
-                data: node.data.set('isEditing', true)
-              })
-            })
-          }
-
           return (
             <Container
               size={canvas.data.get('size')}
-              attributes={{
-                ...attributes,
-                onDoubleClick: startEditing
-              }}>
-              <EditButton onClick={startEditing} />
-              {!!node.data.get('isEditing') && (
-                <EditModal data={canvas.data}
-                  onChange={(data) => {
-                    editor.change(change => {
-                      change.setNodeByKey(canvas.key, {
-                        data: node.data.merge(data)
-                      })
-                    })
-                  }}
-                  onClose={() => {
-                    editor.change(change => {
-                      change.setNodeByKey(node.key, {
-                        data: node.data.delete('isEditing')
-                      })
-                    })
-                  }} />
-              )}
+              attributes={attributes}>
               {children}
             </Container>
           )

@@ -94,9 +94,9 @@ class JSONField extends Component {
 export const EditModal = ({data, onChange, onClose}) => {
   const config = data.get('config') || {}
   return (
-    <div contentEditable={false}
-      onKeyDown={e => { e.stopPropagation() }}
-      onKeyUp={e => { e.stopPropagation() }}>
+    <div onClick={e => {
+      e.stopPropagation()
+    }}>
       <Overlay onClose={onClose} mUpStyle={{maxWidth: '80vw', marginTop: '5vh'}}>
         <OverlayToolbar>
           <OverlayToolbarClose onClick={onClose} />
@@ -162,8 +162,7 @@ export default ({TYPE, CANVAS_TYPE, newBlock, editorOptions}) => {
     }
   }
   const InsertButton = ({ value, onChange }) => {
-    const disabled = value.isBlurred ||
-    !value.blocks.every(
+    const disabled = value.isBlurred || !value.blocks.every(
       n => insertTypes.includes(n.type)
     )
 
