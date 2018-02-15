@@ -1,5 +1,5 @@
 {
-  "updated": "2018-02-14T01:59:24.419Z",
+  "updated": "2018-02-15T16:38:51.006Z",
   "title": "live",
   "data": [
     {
@@ -82,6 +82,10 @@
     {
       "key": "styleguide/charts/confidence95-legend",
       "value": "95-Prozent-Konfidenzintervall"
+    },
+    {
+      "key": "styleguide/charts/y-cut",
+      "value": "Achse gekürzt"
     }
   ]
 }

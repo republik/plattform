@@ -1,5 +1,7 @@
 import { formatLocale, formatSpecifier, precisionFixed } from 'd3-format'
 import { ascending, descending } from 'd3-array'
+import { createElement } from 'react'
+import PropTypes from 'prop-types'
 
 export const groupBy = (array, key) => {
   const object = array.reduce(
@@ -18,12 +20,17 @@ export const groupBy = (array, key) => {
   }))
 }
 
+export const sortPropType = PropTypes.oneOf(['none', 'ascending', 'descending'])
+
 export const runSort = (cmd, array, accessor = d => d) => {
   if (cmd !== 'none') {
     const compare = cmd === 'descending' ? descending : ascending
     array.sort((a, b) => compare(accessor(a), accessor(b)))
   }
 }
+
+export const sortBy = (array, accessor) =>
+  [].concat(array).sort((a, b) => ascending(accessor(a), accessor(b)))
 
 export const measure = onMeasure => {
   let ref
@@ -133,3 +140,41 @@ export const calculateAxis = (numberFormat, t, domain, unit = '') => {
     axisFormat
   }
 }
+
+const subSupSplitter = (createTag) => {
+  return input => {
+    if (!input) {
+      return input
+    }
+    return input.split(/(<sub>|<sup>)([^<]+)<\/su[bp]>/g).reduce(
+      (elements, text, i) => {
+        if (text === '<sub>' || text === '<sup>') {
+          elements.nextElement = text.replace('<', '').replace('>', '')
+        } else {
+          if (elements.nextElement) {
+            elements.push(createTag(elements.nextElement, elements.nextElement + i, text))
+            elements.nextElement = null
+          } else {
+            elements.push(text)
+          }
+        }
+        return elements
+      },
+      []
+    )
+  }
+}
+
+export const subsup = subSupSplitter((tag, key, text) => createElement(tag, {key}, text))
+subsup.svg = subSupSplitter((tag, key, text) => {
+  return createElement('tspan', {
+    key,
+    fontSize: '75%',
+    dy: tag === 'sub' ? '0.25em' : '-0.5em'
+  }, text)
+})
+
+export const transparentAxisStroke = 'rgba(0,0,0,0.17)'
+export const circleFill = '#fff'
+
+export const deduplicate = (d, i, all) => all.indexOf(d) === i

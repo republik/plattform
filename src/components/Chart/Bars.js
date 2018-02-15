@@ -8,11 +8,14 @@ import { max } from 'd3-array'
 import { sansSerifRegular12, sansSerifMedium14 } from '../Typography/styles'
 import colors from '../../theme/colors'
 
-import { calculateAxis, groupBy, runSort } from './utils'
+import {
+  calculateAxis, groupBy,
+  runSort, sortPropType,
+  transparentAxisStroke,
+  circleFill,
+  deduplicate
+} from './utils'
 import ColorLegend from './ColorLegend'
-
-const lollipopFill = '#fff'
-const transparentAxisStroke = 'rgba(0,0,0,0.17)'
 
 const COLUMN_PADDING = 20
 const COLUMN_TITLE_HEIGHT = 30
@@ -167,7 +170,7 @@ const BarChart = (props) => {
     : d => d.category
   let colorValues = data.map(colorAccessor)
     .filter(Boolean)
-    .filter((d, i, all) => all.indexOf(d) === i)
+    .filter(deduplicate)
   runSort(props.colorSort, colorValues)
   let colorRange = props.colorRanges[props.colorRange] || props.colorRange
   if (!colorRange) {
@@ -302,7 +305,7 @@ const BarChart = (props) => {
                               cx={segment.x + segment.width}
                               cy={bar.height / 2}
                               r={Math.floor(bar.style.popHeight - (bar.style.stroke / 2)) / 2}
-                              fill={lollipopFill}
+                              fill={circleFill}
                               stroke={segment.color}
                               strokeWidth={bar.style.stroke} />}
                             {showBarValues && (<text
@@ -370,8 +373,6 @@ const BarChart = (props) => {
   )
 }
 
-const sortProp = PropTypes.oneOf(['none', 'ascending', 'descending'])
-
 BarChart.propTypes = {
   children: PropTypes.node,
   values: PropTypes.array.isRequired,
@@ -381,9 +382,9 @@ BarChart.propTypes = {
   y: PropTypes.string.isRequired,
   barStyle: PropTypes.oneOf(Object.keys(BAR_STYLES)),
   confidence: PropTypes.oneOf([95]),
-  sort: sortProp,
+  sort: sortPropType,
   column: PropTypes.string,
-  columnSort: sortProp,
+  columnSort: sortPropType,
   columnFilter: PropTypes.arrayOf(PropTypes.shape({
     title: PropTypes.string.isRequired,
     test: PropTypes.string.isRequired
@@ -392,7 +393,7 @@ BarChart.propTypes = {
   stroke: PropTypes.string,
   color: PropTypes.string,
   colorRange: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
-  colorSort: sortProp,
+  colorSort: sortPropType,
   colorLegend: PropTypes.bool,
   colorRanges: PropTypes.shape({
     diverging2: PropTypes.array.isRequired,

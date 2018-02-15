@@ -492,7 +492,6 @@ ReactDOM.render(
             path: '/charts/bars',
             title: 'Bars',
             imports: {
-              ...require('d3-dsv'),
               ...require('./components/Typography'),
               t,
               Chart: require('./components/Chart'),
@@ -504,13 +503,34 @@ ReactDOM.render(
             path: '/charts/lollipops',
             title: 'Lollipops',
             imports: {
-              ...require('d3-dsv'),
               ...require('./components/Typography'),
               t,
               Chart: require('./components/Chart'),
               CsvChart: require('./components/Chart/Csv')
             },
             src: require('./components/Chart/Lollipops.docs.md')
+          },
+          {
+            path: '/charts/lines',
+            title: 'Lines',
+            imports: {
+              ...require('./components/Typography'),
+              t,
+              Chart: require('./components/Chart'),
+              CsvChart: require('./components/Chart/Csv')
+            },
+            src: require('./components/Chart/Lines.docs.md')
+          },
+          {
+            path: '/charts/slopes',
+            title: 'Slopes',
+            imports: {
+              ...require('./components/Typography'),
+              t,
+              Chart: require('./components/Chart'),
+              CsvChart: require('./components/Chart/Csv')
+            },
+            src: require('./components/Chart/Slopes.docs.md')
           }
         ]
       },

@@ -3,11 +3,14 @@ import React, { Component } from 'react'
 
 import { measure } from './utils'
 import Bar, { Lollipop } from './Bars'
+import { Line, Slope } from './Lines';
 import colors from '../../theme/colors'
 
 const ReactCharts = {
   Bar,
-  Lollipop
+  Lollipop,
+  Line,
+  Slope
 }
 
 const createRanges = ({neutral, sequential3, opposite3, discrete}) => {
