@@ -66,7 +66,7 @@ const BAR_STYLES = {
 }
 
 // This is unsafe
-// - all props that are passed to datumFn should not be used defined
+// - all props that are passed to datumFn should not be user defined
 //   currently: filter, columnFilter.test, category, highlight
 // eslint-disable-next-line no-new-func
 const datumFn = code => new Function('datum', `return ${code}`)
@@ -116,7 +116,8 @@ const BarChart = (props) => {
     children,
     t,
     description,
-    confidence
+    confidence,
+    showBarValues
   } = props
 
   const possibleColumns = Math.floor(width / (props.minInnerWidth + COLUMN_PADDING))
@@ -304,6 +305,14 @@ const BarChart = (props) => {
                               fill={lollipopFill}
                               stroke={segment.color}
                               strokeWidth={bar.style.stroke} />}
+                            {showBarValues && (<text
+                              {...styles.barLabel}
+                              x={segment.x + segment.width + 4}
+                              y={bar.height / 2}
+                              dy={'.35em'}
+                            >
+                             {xAxis.format(segment.value)}
+                            </text>)}
                           </g>
                         ))
                       }
@@ -396,7 +405,8 @@ BarChart.propTypes = {
   minInnerWidth: PropTypes.number.isRequired,
   columns: PropTypes.number.isRequired,
   t: PropTypes.func.isRequired,
-  description: PropTypes.string
+  description: PropTypes.string,
+  showBarValues: PropTypes.bool
 }
 
 BarChart.defaultProps = {

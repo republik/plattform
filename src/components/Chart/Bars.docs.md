@@ -7,7 +7,8 @@
       type: 'Bar',
       numberFormat: '.0%',
       y: 'country',
-      category: "datum.country == 'Schweiz' ? '1' : '0'"
+      category: "datum.country == 'Schweiz' ? '1' : '0'",
+      showBarValues: true
     }}
     values={`
 country,value
