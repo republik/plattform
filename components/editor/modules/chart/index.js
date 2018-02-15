@@ -137,7 +137,14 @@ export default ({rule, subModules, TYPE}) => {
                 max: 1
               })),
               normalize: (change, reason, {node, index, child}) => {
-                if (reason === 'child_required') {
+                if (
+                  reason === 'child_required' ||
+                  (
+                    reason === 'child_type_invalid' &&
+                    subModules.find(m => m.TYPE === child.type) &&
+                    node.nodes.filter(matchBlock(child.type)).size === 1
+                  )
+                ) {
                   change.insertNodeByKey(
                     node.key,
                     index,
