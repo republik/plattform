@@ -5,7 +5,7 @@ import { mUp, tUp } from './mediaQueries'
 import Text from './Text'
 import colors from '../../theme/colors'
 
-import { FigureImage } from '../Figure'
+import { FigureImage, FigureByline } from '../Figure'
 import LazyLoad from '../LazyLoad'
 
 const IMAGE_SIZE = {
@@ -166,6 +166,7 @@ const Tile = ({
   children,
   attributes,
   image,
+  byline,
   alt,
   onClick,
   color,
@@ -201,9 +202,10 @@ const Tile = ({
     >
       {imageProps && (
         <div {...(onlyImage ? styles.onlyImageContainer : styles.imageContainer)}>
-          <LazyLoad visible={aboveTheFold}>
+          <LazyLoad visible={aboveTheFold} style={{position: 'relative', fontSize: 0}}>
             <img src={imageProps.src} srcSet={imageProps.srcSet} alt={alt}
               {...(onlyImage ? styles.onlyImage : styles.image)} />
+            {byline && <FigureByline position='rightCompact' style={{color}}>{byline}</FigureByline>}
           </LazyLoad>
         </div>
       )}
@@ -220,6 +222,7 @@ Tile.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
   image: PropTypes.string,
+  byline: PropTypes.string,
   alt: PropTypes.string,
   color: PropTypes.string,
   bgColor: PropTypes.string,

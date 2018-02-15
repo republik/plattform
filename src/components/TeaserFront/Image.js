@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp, tUp } from './mediaQueries'
-import { FigureImage } from '../Figure'
+import { FigureImage, FigureByline } from '../Figure'
 import Text from './Text'
 
 const styles = {
@@ -29,6 +29,7 @@ const ImageBlock = ({
   children,
   attributes,
   image,
+  byline,
   alt,
   onClick,
   color,
@@ -43,7 +44,10 @@ const ImageBlock = ({
       background,
       cursor: onClick ? 'pointer' : 'default'
     }}>
-      <FigureImage aboveTheFold={aboveTheFold} {...FigureImage.utils.getResizedSrcs(image, 1500, false)} alt={alt} />
+      <div style={{position: 'relative', fontSize: 0}}>
+        <FigureImage aboveTheFold={aboveTheFold} {...FigureImage.utils.getResizedSrcs(image, 1500, false)} alt={alt} />
+        {byline && <FigureByline position='leftInside' style={{color}}>{byline}</FigureByline>}
+      </div>
       <div {...styles.textContainer}>
         <Text position={textPosition} color={color} center={center}>
           {children}
@@ -57,6 +61,7 @@ ImageBlock.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
   image: PropTypes.string.isRequired,
+  byline: PropTypes.string,
   alt: PropTypes.string,
   color: PropTypes.string,
   bgColor: PropTypes.string,

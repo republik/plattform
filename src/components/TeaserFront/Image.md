@@ -14,7 +14,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 
 ```react
 <TeaserFrontImage
-  image='/static/desert.jpg?size=4323x2962'
+  image='/static/desert.jpg?size=4323x2962' byline='Foto: Bildagentur'
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
   <TeaserFrontImageHeadline.Editorial small>The sand is near</TeaserFrontImageHeadline.Editorial>
@@ -28,7 +28,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 ```
 
 ```react
-<TeaserFrontImage image='/static/desert.jpg'
+<TeaserFrontImage image='/static/desert.jpg' byline='Foto: Bildagentur'
   textPosition='topright'
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
@@ -43,7 +43,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 ```
 
 ```react
-<TeaserFrontImage image='/static/desert.jpg'
+<TeaserFrontImage image='/static/desert.jpg' byline='Foto: Bildagentur'
   textPosition='bottomleft'
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
@@ -58,7 +58,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 ```
 
 ```react
-<TeaserFrontImage image='/static/desert.jpg'
+<TeaserFrontImage image='/static/desert.jpg' byline='Foto: Bildagentur'
   textPosition='bottomright'
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
@@ -73,7 +73,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 ```
 
 ```react
-<TeaserFrontImage image='/static/desert.jpg'
+<TeaserFrontImage image='/static/desert.jpg' byline='Foto: Bildagentur'
   center
   textPosition='topright' 
   color='#fff' bgColor='#000'>
@@ -89,7 +89,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 ```
 
 ```react
-<TeaserFrontImage image='/static/desert.jpg'
+<TeaserFrontImage image='/static/desert.jpg' byline='Foto: Bildagentur'
   textPosition='topright'
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
@@ -104,7 +104,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 ```
 
 ```react
-<TeaserFrontImage image='/static/desert.jpg'
+<TeaserFrontImage image='/static/desert.jpg' byline='Foto: Bildagentur'
   center
   textPosition='top'
   color='#fff' bgColor='#000'>
@@ -120,7 +120,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 ```
 
 ```react
-<TeaserFrontImage image='/static/desert.jpg'
+<TeaserFrontImage image='/static/desert.jpg' byline='Foto: Bildagentur'
   center
   textPosition='middle'
   color='#fff' bgColor='#000'>
@@ -136,7 +136,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 ```
 
 ```react
-<TeaserFrontImage image='/static/desert.jpg'
+<TeaserFrontImage image='/static/desert.jpg' byline='Foto: Bildagentur'
   center
   textPosition='bottom'
   color='#fff' bgColor='#000'>
@@ -152,7 +152,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 ```
 
 ```react
-<TeaserFrontImage image='/static/desert.jpg'
+<TeaserFrontImage image='/static/desert.jpg' byline='Foto: Bildagentur'
   center
   textPosition='middle'
   color='#fff' bgColor='#000'>
@@ -168,7 +168,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 ```
 
 ```react
-<TeaserFrontImage image='/static/desert.jpg'
+<TeaserFrontImage image='/static/desert.jpg' byline='Foto: Bildagentur'
   center
   textPosition='middle'
   color='#fff' bgColor='#000'>

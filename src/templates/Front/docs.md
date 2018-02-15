@@ -26,6 +26,7 @@ This will be wrapped around and links (headlines and credits) and the whole teas
 \`\`\`
 {
   "bgColor": "SandyBrown",
+  "byline": "Foto: Bildagentur",
   "center": false,
   "color": "#fff",
   "kind": "editorial",
@@ -63,6 +64,7 @@ Foto: [Thomas Vuillemin on Unsplash](https://unsplash.com/photos/c1_K8Qfd_iQ)
 \`\`\`
 {
   "bgColor": "#000",
+  "byline": "Foto: Bildagentur",
   "center": false,
   "color": "#fff",
   "kind": "editorial",
@@ -92,6 +94,7 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 \`\`\`
 {
   "bgColor": "#ffffff",
+  "byline": "Foto: Bildagentur",
   "center": false,
   "color": "#000000",
   "kind": "editorial",
@@ -123,6 +126,7 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 \`\`\`
 {
   "bgColor": "#da4343",
+  "byline": "Foto: Bildagentur",
   "center": false,
   "color": "#fff",
   "kind": "editorial",
@@ -150,10 +154,11 @@ Von Sonderkorrespondent [Lukas Bünger](<>)
 \`\`\`
 {
   "bgColor": "#000",
+  "byline": "Foto: Bildagentur",
   "center": false,
   "color": "#fff",
   "kind": "editorial",
-  "portrait": true,
+  "portrait": false,
   "reverse": false,
   "teaserType": "frontSplit",
   "textPosition": "topleft",
@@ -201,6 +206,7 @@ Von [Christof Moser](/~6556e282-4ac4-4129-8f8f-d20f28170c39 "Christof Moser")
 
 \`\`\`
 {
+  "byline": "Foto: Bildagentur",
   "kind": "editorial",
   "teaserType": "articleTile",
   "url": "https://www.republik.ch/updates/portraets"
@@ -240,6 +246,7 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 
 \`\`\`
 {
+  "byline": "Foto: Bildagentur",
   "kind": "editorial",
   "teaserType": "articleTile",
   "url": "https://www.republik.ch/updates/portraets"
@@ -277,6 +284,7 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 \`\`\`
 {
   "bgColor": "#fff",
+  "byline": "Foto: Bildagentur",
   "center": false,
   "color": "#000",
   "kind": "editorial",

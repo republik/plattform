@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp, dUp } from './mediaQueries'
-import { FigureImage } from '../Figure'
+import { FigureImage, FigureByline } from '../Figure'
 import Text from './Text'
 
 const styles = {
@@ -44,6 +44,7 @@ const styles = {
     }
   }),
   imageContainer: css({
+    position: 'relative',
     [mUp]: {
       flexShrink: 0,
       fontSize: 0, // Removes the small flexbox space.
@@ -67,6 +68,7 @@ const Split = ({
   children,
   attributes,
   image,
+  byline,
   alt,
   onClick,
   color,
@@ -78,6 +80,7 @@ const Split = ({
 }) => {
   const background = bgColor || ''
   const flexDirection = reverse ? 'row-reverse' : ''
+  const bylinePosition = portrait ? reverse ? 'left' : 'right' : 'below'
   return (
     <div
       {...attributes}
@@ -96,6 +99,7 @@ const Split = ({
         )}
       >
         <FigureImage aboveTheFold={aboveTheFold} {...FigureImage.utils.getResizedSrcs(image, 750)} alt={alt} />
+        {byline && <FigureByline position={bylinePosition} style={{color}}>{byline}</FigureByline>}
       </div>
       <div
         {...css(
@@ -117,6 +121,7 @@ Split.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
   image: PropTypes.string.isRequired,
+  byline: PropTypes.string,
   alt: PropTypes.string,
   color: PropTypes.string,
   bgColor: PropTypes.string,

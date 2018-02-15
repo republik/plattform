@@ -12,6 +12,7 @@ const styles = {
   }),
   maxWidth: css({
     display: 'block',
+    position: 'relative'
   })
 }
 
