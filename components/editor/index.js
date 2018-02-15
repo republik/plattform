@@ -35,6 +35,8 @@ import createInfoBoxModule from './modules/infobox'
 import createQuoteModule from './modules/quote'
 import createHtmlModule from './modules/html'
 import createLineModule from './modules/line'
+import createChartModule from './modules/chart'
+import createChartCanvasModule from './modules/chart/canvas'
 
 const moduleCreators = {
   embedVideo: createEmbedVideoModule,
@@ -67,7 +69,9 @@ const moduleCreators = {
   teaser: createTeaserModule,
   teasergroup: createTeaserGroupModule,
   html: createHtmlModule,
-  line: createLineModule
+  line: createLineModule,
+  chart: createChartModule,
+  chartCanvas: createChartCanvasModule
 }
 const initModule = (rule, context = {}) => {
   const { editorModule, editorOptions = {} } = rule

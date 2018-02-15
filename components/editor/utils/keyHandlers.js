@@ -13,7 +13,7 @@ const focusNext = change => {
   return true
 }
 
-const focusPrevious = change => {
+export const focusPrevious = change => {
   const { value } = change
   const nextBlock = value.document.getPreviousBlock(
     value.endBlock.key
