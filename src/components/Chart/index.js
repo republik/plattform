@@ -3,20 +3,23 @@ import React, { Component } from 'react'
 
 import { measure } from './utils'
 import Bar, { Lollipop } from './Bars'
+import colors from '../../theme/colors'
 
 const ReactCharts = {
   Bar,
   Lollipop
 }
 
-const colorRanges = {
-  diverging1: ['#004f80','#a0002d'],
-  diverging1n: ['#004f80','#bbbbbb','#a0002d'],
-  diverging2: ['#004f80','#467aaf','#df2f5a','#a0002d'],
-  diverging3: ['#004f80','#467aaf','#7fafe7','#ff6e8b','#df2f5a','#a0002d'],
-  sequential3: ['#004f80','#467aaf','#7fafe7'],
-  discrete: ['#004f80','#6394cb','#0778a5','#80cfff','#006b84','#2aaec9','#00857c','#71d7cc','#1f6e00','#74b917','#4d7a3b','#a4d38e','#23614e','#79b8a1','#987200','#f2bf18','#a04200','#f28502','#c40046','#ff6e8b','#890d48','#c44d79','#8c1478','#da66c0']
-}
+const createRanges = ({neutral, sequential3, opposite3, discrete}) => ({
+  diverging1: [sequential3[0], opposite3[0]],
+  diverging1n: [sequential3[0], neutral, opposite3[0]],
+  diverging2: [...sequential3.slice(0, 2), ...opposite3.slice(0, 2)],
+  diverging3: [...sequential3, ...opposite3],
+  sequential3,
+  discrete
+})
+
+const colorRanges = createRanges(colors)
 
 class Chart extends Component {
   constructor(props) {
