@@ -13,7 +13,7 @@ A `<TeaserFrontSplitHeadline />` should be used.
 <TeaserFrontSplit
   image='/static/rothaus_portrait.jpg?size=945x1331'
   portrait
-  byline='Foto: Bildagentur'
+  byline='Foto: Laurent Burst'
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
   <TeaserFrontSplitHeadline.Editorial>Headline</TeaserFrontSplitHeadline.Editorial>
@@ -30,7 +30,7 @@ A `<TeaserFrontSplitHeadline />` should be used.
 <TeaserFrontSplit
   image='/static/rothaus_portrait.jpg'
   portrait reverse
-  byline='Foto: Bildagentur'
+  byline='Foto: Laurent Burst'
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
   <TeaserFrontSplitHeadline.Editorial>Headline</TeaserFrontSplitHeadline.Editorial>
@@ -46,7 +46,7 @@ A `<TeaserFrontSplitHeadline />` should be used.
 ```react
 <TeaserFrontSplit
   image='/static/rothaus_landscape.jpg'
-  byline='Foto: Bildagentur'
+  byline='Foto: Laurent Burst'
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
   <TeaserFrontSplitHeadline.Editorial>Headline</TeaserFrontSplitHeadline.Editorial>
@@ -63,7 +63,7 @@ A `<TeaserFrontSplitHeadline />` should be used.
 <TeaserFrontSplit
   image='/static/rothaus_landscape.jpg'
   reverse
-  byline='Foto: Bildagentur'
+  byline='Foto: Laurent Burst'
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
   <TeaserFrontSplitHeadline.Editorial>Headline</TeaserFrontSplitHeadline.Editorial>

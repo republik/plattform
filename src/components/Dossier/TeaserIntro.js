@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 import { mUp, tUp } from '../TeaserFront/mediaQueries'
-import { FigureImage } from '../Figure'
+import { FigureImage, FigureByline } from '../Figure'
 
 const styles = {
   container: css({
@@ -38,6 +38,7 @@ const styles = {
     }
   }),
   imageContainer: css({
+    position: 'relative',
     [mUp]: {
       flexShrink: 0,
       fontSize: 0, // Removes the small flexbox space.
@@ -51,7 +52,7 @@ const styles = {
   })
 }
 
-const TeaserIntro = ({ children, attributes, image, alt, onClick, t }) => {
+const TeaserIntro = ({ children, attributes, image, alt, onClick, byline, t }) => {
   return (
     <div
       {...attributes}
@@ -67,6 +68,7 @@ const TeaserIntro = ({ children, attributes, image, alt, onClick, t }) => {
             {...FigureImage.utils.getResizedSrcs(image, 750)}
             alt={alt}
           />
+          {byline && <FigureByline position='rightCompact'>{byline}</FigureByline>}
         </div>
       )}
       <div {...merge(styles.content, image ? styles.contentWithImage : {})}>
@@ -79,6 +81,7 @@ TeaserIntro.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
   image: PropTypes.string,
+  byline: PropTypes.string,
   alt: PropTypes.string,
   onClick: PropTypes.func
 }

@@ -15,7 +15,7 @@ Props:
     </TeaserFrontDossierLead>
   </TeaserFrontDossierIntro>
   <TeaserFrontTileRow columns={3}>
-    <TeaserFrontTile image='/static/rothaus_landscape.jpg'>
+    <TeaserFrontTile image='/static/rothaus_landscape.jpg' byline='Foto: Laurent Burst'>
       <DossierTileHeadline.Editorial>The quick brown fox</DossierTileHeadline.Editorial>
       <DossierTileLead>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
@@ -31,7 +31,7 @@ Props:
         <TeaserFrontCreditLink href='#'>Constantin Seibt</TeaserFrontCreditLink> fragt nach<br />31. December 2017
       </TeaserFrontCredit>
     </TeaserFrontTile>
-    <TeaserFrontTile image='/static/rothaus_portrait.jpg'>
+    <TeaserFrontTile image='/static/rothaus_portrait.jpg' byline='Foto: Laurent Burst'>
       <DossierTileHeadline.Editorial>The fox</DossierTileHeadline.Editorial>
       <DossierTileLead>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
@@ -47,7 +47,7 @@ Props:
 
 ```react
 <TeaserFrontDossier>
-  <TeaserFrontDossierIntro image='/static/desert.jpg?size=4323x2962'>
+  <TeaserFrontDossierIntro image='/static/desert.jpg?size=4323x2962' byline='Foto: Thomas Vuillemin'>
     <DossierTag>Dossier</DossierTag>
     <TeaserFrontDossierHeadline>Dossiertitel</TeaserFrontDossierHeadline>
     <TeaserFrontDossierLead>
@@ -55,7 +55,7 @@ Props:
     </TeaserFrontDossierLead>
   </TeaserFrontDossierIntro>
   <TeaserFrontTileRow columns={3}>
-    <TeaserFrontTile image='/static/rothaus_landscape.jpg'>
+    <TeaserFrontTile image='/static/rothaus_landscape.jpg' byline='Foto: Laurent Burst'>
       <DossierTileHeadline.Editorial>The quick brown fox</DossierTileHeadline.Editorial>
       <DossierTileLead>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
@@ -71,7 +71,7 @@ Props:
         <TeaserFrontCreditLink href='#'>Constantin Seibt</TeaserFrontCreditLink> fragt nach<br />31. December 2017
       </TeaserFrontCredit>
     </TeaserFrontTile>
-    <TeaserFrontTile image='/static/rothaus_portrait.jpg'>
+    <TeaserFrontTile image='/static/rothaus_portrait.jpg' byline='Foto: Laurent Burst'>
       <DossierTileHeadline.Editorial>The fox</DossierTileHeadline.Editorial>
       <DossierTileLead>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
@@ -88,7 +88,7 @@ Props:
 
 ```react
 <TeaserFrontDossier>
-  <TeaserFrontDossierIntro image='/static/rothaus_portrait.jpg'>
+  <TeaserFrontDossierIntro image='/static/rothaus_portrait.jpg' byline='Foto: Laurent Burst'>
     <DossierTag>Dossier</DossierTag>
     <TeaserFrontDossierHeadline>Dossiertitel</TeaserFrontDossierHeadline>
     <TeaserFrontDossierLead>
@@ -96,7 +96,7 @@ Props:
     </TeaserFrontDossierLead>
   </TeaserFrontDossierIntro>
   <TeaserFrontTileRow columns={3}>
-    <TeaserFrontTile image='/static/rothaus_landscape.jpg'>
+    <TeaserFrontTile image='/static/rothaus_landscape.jpg' byline='Foto: Laurent Burst'>
       <DossierTileHeadline.Editorial>The quick brown fox</DossierTileHeadline.Editorial>
       <DossierTileLead>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
@@ -112,7 +112,7 @@ Props:
         <TeaserFrontCreditLink href='#'>Constantin Seibt</TeaserFrontCreditLink> fragt nach<br />31. December 2017
       </TeaserFrontCredit>
     </TeaserFrontTile>
-    <TeaserFrontTile image='/static/rothaus_portrait.jpg'>
+    <TeaserFrontTile image='/static/rothaus_portrait.jpg' byline='Foto: Laurent Burst'>
       <DossierTileHeadline.Editorial>The fox</DossierTileHeadline.Editorial>
       <DossierTileLead>
         Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
