@@ -9,6 +9,7 @@ import * as Interaction from '../../components/Typography/Interaction'
 import { TeaserFeed } from '../../components/TeaserFeed'
 import IllustrationHtml from '../../components/IllustrationHtml'
 import CsvChart from '../../components/Chart/Csv'
+import ErrorBoundary from '../../components/ErrorBoundary'
 
 import {
   Figure,
@@ -843,7 +844,13 @@ const createSchema = ({
                   },
                   {
                     matchMdast: matchType('code'),
-                    component: CsvChart,
+                    component: ({showException, ...props}) => (
+                      <ErrorBoundary
+                        showException={showException}
+                        failureMessage={t('styleguide/charts/error')}>
+                        <CsvChart {...props} />
+                      </ErrorBoundary>
+                    ),
                     props: (node, index, parent, { ancestors }) => {
                       const zone = ancestors.find(matchZone('CHART'))
 

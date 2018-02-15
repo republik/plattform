@@ -5,7 +5,6 @@ import { measure } from './utils'
 import Bar, { Lollipop } from './Bars'
 import { Line, Slope } from './Lines';
 import colors from '../../theme/colors'
-import { P } from '../Typography/Interaction'
 
 const ReactCharts = {
   Bar,
@@ -41,21 +40,8 @@ class Chart extends Component {
       }
     })
   }
-  componentDidCatch(error, info) {
-    this.setState({ hasError: true })
-    if (typeof console !== 'undefined' && console.error) {
-      console.error(error, info)
-    }
-  }
   render() {
     const {width: fixedWidth, config, t} = this.props
-    if (this.state.hasError) {
-      return (
-        <P style={{color: colors.error, margin: '20px 0'}}>
-          {t('styleguide/charts/error')}
-        </P>
-      )
-    }
 
     const width = fixedWidth || this.state.width
     const ReactChart = ReactCharts[config.type]
