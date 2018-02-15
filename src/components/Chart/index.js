@@ -10,14 +10,17 @@ const ReactCharts = {
   Lollipop
 }
 
-const createRanges = ({neutral, sequential3, opposite3, discrete}) => ({
-  diverging1: [sequential3[0], opposite3[0]],
-  diverging1n: [sequential3[0], neutral, opposite3[0]],
-  diverging2: [...sequential3.slice(0, 2), ...opposite3.slice(0, 2)],
-  diverging3: [...sequential3, ...opposite3],
-  sequential3,
-  discrete
-})
+const createRanges = ({neutral, sequential3, opposite3, discrete}) => {
+  const oppositeReversed = [].concat(opposite3).reverse()
+  return {
+    diverging1: [sequential3[0], opposite3[0]],
+    diverging1n: [sequential3[0], neutral, opposite3[0]],
+    diverging2: [...sequential3.slice(0, 2), ...oppositeReversed.slice(0, 2)],
+    diverging3: [...sequential3, ...oppositeReversed],
+    sequential3,
+    discrete
+  }
+}
 
 const colorRanges = createRanges(colors)
 
