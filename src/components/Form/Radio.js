@@ -35,8 +35,8 @@ const Radio = ({checked}) => (
   </svg>
 )
 
-export default ({children, name, value, checked, onChange}) => (
-  <label {...styles.label}>
+export default ({children, style, name, value, checked, onChange}) => (
+  <label {...styles.label} style={style}>
     <span {...styles.box}>
       <Radio checked={checked} />
     </span>
