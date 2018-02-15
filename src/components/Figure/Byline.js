@@ -94,7 +94,11 @@ Byline.propTypes = {
   children: PropTypes.node.isRequired,
   attributes: PropTypes.object,
   position: PropTypes.oneOf([
-    'below', 'right', 'rightImportant', 'left', 'leftInside'
+    'below',
+    'right',
+    'rightCompact',
+    'left',
+    'leftInside'
   ])
 }
 
