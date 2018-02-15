@@ -3,9 +3,7 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
 import { scaleLinear, scaleOrdinal } from 'd3-scale'
-import { ascending, descending, max } from 'd3-array'
-
-import vgExpr from 'vega-expression'
+import { max } from 'd3-array'
 
 import { sansSerifRegular12, sansSerifMedium14 } from '../Typography/styles'
 import colors from '../../theme/colors'
@@ -67,7 +65,8 @@ const BAR_STYLES = {
   }
 }
 
-const datumExpr = vgExpr.compiler(['datum'])
+// eslint-disable-next-line no-new-func
+const datumFn = code => new Function('datum', `return ${code}`)
 const last = (array, index) => array.length - 1 === index
 
 const styles = {
@@ -124,8 +123,8 @@ const BarChart = (props) => {
   // filter and map data to clean objects 
   let data = values
   if (props.filter) {
-    const filter = datumExpr(props.filter)
-    data = data.filter(filter.fn)
+    const filter = datumFn(props.filter)
+    data = data.filter(filter)
   }
   data = data.filter(d => d.value && d.value.length > 0).map(d => ({
     datum: d,
@@ -134,7 +133,7 @@ const BarChart = (props) => {
   }))
   // compute category
   if (props.category) {
-    const categorize = datumExpr(props.category).fn
+    const categorize = datumFn(props.category)
     data.forEach(d => {
       d.category = categorize(d.datum)
     })
@@ -146,7 +145,7 @@ const BarChart = (props) => {
   let groupedData
   if (props.columnFilter) {
     groupedData = props.columnFilter.map(({test, title}) => {
-      const filter = datumExpr(test).fn
+      const filter = datumFn(test)
       return {
         key: title,
         values: data.filter(d => filter(d.datum))
@@ -166,14 +165,14 @@ const BarChart = (props) => {
     .filter(Boolean)
     .filter((d, i, all) => all.indexOf(d) === i)
   runSort(props.colorSort, colorValues)
-  let colorRange = props.colorSchemes[props.colorRange] || props.colorRange
+  let colorRange = props.colorRanges[props.colorRange] || props.colorRange
   if (!colorRange) {
-    colorRange = colorValues.length > 3 ? props.colorSchemes.category24 : props.colorSchemes.dimension3
+    colorRange = colorValues.length > 3 ? props.colorRanges.discrete : props.colorRanges.sequential3
   }
   const color = scaleOrdinal(colorRange).domain(colorValues)
 
   const highlight = props.highlight
-    ? datumExpr(props.highlight).fn
+    ? datumFn(props.highlight)
     : () => false
 
   // first layout run, set y position
@@ -383,9 +382,10 @@ BarChart.propTypes = {
   colorRange: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   colorSort: sortProp,
   colorLegend: PropTypes.bool,
-  colorSchemes: PropTypes.shape({
-    dimension3: PropTypes.array.isRequired,
-    category24: PropTypes.array.isRequired
+  colorRanges: PropTypes.shape({
+    diverging2: PropTypes.array.isRequired,
+    sequential3: PropTypes.array.isRequired,
+    discrete: PropTypes.array.isRequired
   }).isRequired,
   category: PropTypes.string,
   numberFormat: PropTypes.string.isRequired,

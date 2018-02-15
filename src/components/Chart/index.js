@@ -9,20 +9,22 @@ const ReactCharts = {
   Lollipop
 }
 
-const colorSchemes = {
+const colorRanges = {
   diverging1: ['#004f80','#a0002d'],
   diverging1n: ['#004f80','#bbbbbb','#a0002d'],
   diverging2: ['#004f80','#467aaf','#df2f5a','#a0002d'],
   diverging3: ['#004f80','#467aaf','#7fafe7','#ff6e8b','#df2f5a','#a0002d'],
-  dimension3: ['#004f80','#467aaf','#7fafe7'],
-  category24: ['#004f80','#6394cb','#0778a5','#80cfff','#006b84','#2aaec9','#00857c','#71d7cc','#1f6e00','#74b917','#4d7a3b','#a4d38e','#23614e','#79b8a1','#987200','#f2bf18','#a04200','#f28502','#c40046','#ff6e8b','#890d48','#c44d79','#8c1478','#da66c0']
+  sequential3: ['#004f80','#467aaf','#7fafe7'],
+  discrete: ['#004f80','#6394cb','#0778a5','#80cfff','#006b84','#2aaec9','#00857c','#71d7cc','#1f6e00','#74b917','#4d7a3b','#a4d38e','#23614e','#79b8a1','#987200','#f2bf18','#a04200','#f28502','#c40046','#ff6e8b','#890d48','#c44d79','#8c1478','#da66c0']
 }
 
 class Chart extends Component {
   constructor(props) {
     super(props)
 
-    this.state = {}
+    this.state = {
+      width: 290
+    }
     this.measure = measure((ref, {width}) => {
       if (width !== this.state.width) {
         this.setState({width})
@@ -43,7 +45,7 @@ class Chart extends Component {
         {!!width && (
           <ReactChart {...config}
             t={t}
-            colorSchemes={colorSchemes}
+            colorRanges={colorRanges}
             width={width}
             values={this.props.values}
             description={config.description} />

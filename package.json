@@ -87,7 +87,6 @@
     }
   },
   "dependencies": {
-    "react-icons": "^2.2.7",
-    "vega-expression": "^1.2.0"
+    "react-icons": "^2.2.7"
   }
 }
