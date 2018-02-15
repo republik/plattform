@@ -812,6 +812,12 @@ const createSchema = ({
                   size: node.data.size
                 }),
                 editorModule: 'chart',
+                editorOptions: {
+                  insertButtonText: 'Chart',
+                  insertTypes: [
+                    'PARAGRAPH'
+                  ]
+                },
                 rules: [
                   {
                     matchMdast: matchHeading(3),
@@ -825,13 +831,8 @@ const createSchema = ({
                     }
                   },
                   {
-                    matchMdast: (node, index, parent) => {
-                      matchParagraph(node) && console.log({
-                        l: matchLast(node, index, parent),
-                        node, index, parent
-                      })
-                      return matchParagraph(node) && !matchLast(node, index, parent)
-                    },
+                    matchMdast: (node, index, parent) =>
+                      matchParagraph(node) && !matchLast(node, index, parent),
                     component: Interaction.P,
                     editorModule: 'paragraph',
                     editorOptions: {
@@ -852,7 +853,7 @@ const createSchema = ({
                         values: node.value
                       }
                     },
-                    editorModule: 'paragraph'
+                    editorModule: 'chartCanvas'
                   },
                   {
                     matchMdast: (node, index, parent) =>
