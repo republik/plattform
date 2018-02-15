@@ -413,7 +413,7 @@ const LineChart = (props) => {
               .concat(!mini && confidence && {label: (
                 <span {...styles.confidenceLegend}>
                   <span {...styles.confidenceBar} />
-                  {` ${t(`charts/confidence${confidence}-legend`)}`}
+                  {` ${t(`styleguide/charts/confidence${confidence}-legend`)}`}
                 </span>
               )})
               .filter(Boolean)
