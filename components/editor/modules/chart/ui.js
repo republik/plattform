@@ -21,10 +21,11 @@ import { css } from 'glamor'
 
 const styles = {
   editButton: css({
-    float: 'right',
-    fontSize: 24,
-    position: 'relative',
+    position: 'absolute',
+    left: -40,
+    top: 0,
     zIndex: 1,
+    fontSize: 24,
     ':hover': {
       cursor: 'pointer'
     }
@@ -42,7 +43,6 @@ const styles = {
 export const EditButton = ({onClick}) => (
   <div {...styles.editButton}
     role='button'
-    contentEditable={false}
     onClick={onClick}>
     <MdEdit />
   </div>

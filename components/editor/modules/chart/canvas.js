@@ -61,7 +61,8 @@ export default ({rule, subModules, TYPE}) => {
           const config = node.data.get('config') || {}
           const values = node.data.get('values')
 
-          const startEditing = () => {
+          const startEditing = (e) => {
+            e.stopPropagation()
             editor.change(change => {
               change.setNodeByKey(node.key, {
                 data: node.data.set('isEditing', true)
@@ -69,7 +70,8 @@ export default ({rule, subModules, TYPE}) => {
             })
           }
           return (
-            <div {...attributes} onDoubleClick={startEditing}>
+            <div {...attributes} style={{position: 'relative'}}
+              onDoubleClick={startEditing}>
               <EditButton onClick={startEditing} />
               {!!node.data.get('isEditing') && (
                 <EditModal data={node.data}
