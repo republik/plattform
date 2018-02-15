@@ -97,7 +97,7 @@ export const EditModal = ({data, onChange, onClose}) => {
     <div contentEditable={false}
       onKeyDown={e => { e.stopPropagation() }}
       onKeyUp={e => { e.stopPropagation() }}>
-      <Overlay onClose={onClose} maxWidth='80vw'>
+      <Overlay onClose={onClose} mUpStyle={{maxWidth: '80vw', marginTop: '5vh'}}>
         <OverlayToolbar>
           <OverlayToolbarClose onClick={onClose} />
         </OverlayToolbar>
@@ -105,7 +105,7 @@ export const EditModal = ({data, onChange, onClose}) => {
         <OverlayBody>
           <Interaction.P>
             <Label>Typ</Label><br />
-            {['Bar', 'Lollipop'].map(type => {
+            {['Bar', 'Lollipop', 'Line', 'Slope'].map(type => {
               const checked = config.type === type
               return (
                 <Radio key={type} checked={checked} onChange={() => {
