@@ -50,7 +50,7 @@ const positionStyle = {
     ...positionBaseStyle,
     ...sansSerifRegular10,
     left: '100%',
-    marginLeft: '15px',
+    marginLeft: '14px',
     [mUpFront]: {
       ...sansSerifRegular10
     }
@@ -83,7 +83,7 @@ export const Byline = ({ children, attributes, style, position }) => {
     <span
       {...attributes}
       style={style}
-      {...merge(styles.byline, positionStyle[position])}
+      {...merge(styles.byline, position && positionStyle[position])}
     >
       {children}
     </span>
