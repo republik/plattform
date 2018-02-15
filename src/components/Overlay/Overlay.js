@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react'
 import PropTypes from 'prop-types'
-import {css} from 'glamor'
+import {css, merge} from 'glamor'
 import zIndex from '../../theme/zIndex'
 import {mUp} from '../../theme/mediaQueries'
 
@@ -109,10 +109,10 @@ export class OverlayRenderer extends PureComponent {
   }
 
   render () {
-    const {isVisible, maxWidth, children} = this.props
+    const {isVisible, mUpStyle, children} = this.props
     return (
       <div {...styles.root} style={{opacity: isVisible ? 1 : 0}} onClick={this.close}>
-        <div {...styles.inner} style={{maxWidth}}>
+        <div {...merge(styles.inner, mUpStyle && {[mUp]: mUpStyle})}>
           {children}
         </div>
       </div>
@@ -121,7 +121,11 @@ export class OverlayRenderer extends PureComponent {
 }
 
 OverlayRenderer.propTypes = {
-  maxWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  mUpStyle: PropTypes.shape({
+    maxWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    marginTop: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    marginBottom: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+  }),
   children: PropTypes.node.isRequired,
   isVisible: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
