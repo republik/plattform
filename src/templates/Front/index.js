@@ -193,7 +193,8 @@ const createSchema = ({
         'bgColor',
         'center',
         'titleSize',
-        'image'
+        'image',
+        'byline'
       ]
     },
     rules: [
@@ -244,6 +245,7 @@ const createSchema = ({
         'bgColor',
         'center',
         'image',
+        'byline',
         'kind',
         'titleSize',
         'reverse',
@@ -352,6 +354,7 @@ const createSchema = ({
         // TODO: Enable once tiles can be selected by clicking the image.
         // 'onlyImage',
         'image',
+        'byline',
         'kind'
       ]
     },
@@ -430,6 +433,7 @@ const createSchema = ({
       dnd: false,
       formOptions: [
         'image',
+        'byline',
         'kind'
       ]
     },
