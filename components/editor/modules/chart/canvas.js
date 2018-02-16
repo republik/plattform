@@ -5,6 +5,8 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 import withT from '../../../../lib/withT'
 import { focusPrevious } from '../../utils/keyHandlers'
 
+import { EditButton, EditModal } from './ui'
+
 export default ({rule, subModules, TYPE}) => {
   const CsvChart = withT(rule.component)
 
@@ -53,17 +55,56 @@ export default ({rule, subModules, TYPE}) => {
           }
         },
         renderNode (props) {
-          const { node, attributes } = props
+          const { editor, node, attributes } = props
           if (node.type !== TYPE) return
 
           const config = node.data.get('config') || {}
           const values = node.data.get('values')
 
+          const startEditing = (e) => {
+            e.stopPropagation()
+            editor.change(change => {
+              change.setNodeByKey(node.key, {
+                data: node.data.set('isEditing', true)
+              })
+            })
+          }
           return (
-            <div {...attributes}>
-              {config.type && values && <CsvChart
+            <div {...attributes} style={{position: 'relative'}}
+              onDoubleClick={startEditing}>
+              <EditButton onClick={startEditing} />
+              {!!node.data.get('isEditing') && (
+                <EditModal data={node.data}
+                  onChange={(data) => {
+                    editor.change(change => {
+                      const size = data.get('config', {}).size
+                      const parent = change.value.document.getParent(node.key)
+                      if (size !== parent.data.get('size')) {
+                        change.setNodeByKey(parent.key, {
+                          data: parent.data.set('size', size)
+                        })
+                      }
+                      change.setNodeByKey(node.key, {
+                        data
+                      })
+                    })
+                  }}
+                  onClose={() => {
+                    editor.change(change => {
+                      change.setNodeByKey(node.key, {
+                        data: node.data.delete('isEditing')
+                      })
+                    })
+                  }} />
+              )}
+              <CsvChart
+                key={JSON.stringify({
+                  values,
+                  config
+                })}
+                showException
                 values={values}
-                config={config} />}
+                config={config} />
             </div>
           )
         },

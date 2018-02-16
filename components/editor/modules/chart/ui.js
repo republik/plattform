@@ -21,10 +21,11 @@ import { css } from 'glamor'
 
 const styles = {
   editButton: css({
-    float: 'right',
-    fontSize: 24,
-    position: 'relative',
+    position: 'absolute',
+    left: -40,
+    top: 0,
     zIndex: 1,
+    fontSize: 24,
     ':hover': {
       cursor: 'pointer'
     }
@@ -42,7 +43,6 @@ const styles = {
 export const EditButton = ({onClick}) => (
   <div {...styles.editButton}
     role='button'
-    contentEditable={false}
     onClick={onClick}>
     <MdEdit />
   </div>
@@ -94,18 +94,38 @@ class JSONField extends Component {
 export const EditModal = ({data, onChange, onClose}) => {
   const config = data.get('config') || {}
   return (
-    <div contentEditable={false}
-      onKeyDown={e => { e.stopPropagation() }}
-      onKeyUp={e => { e.stopPropagation() }}>
-      <Overlay onClose={onClose} maxWidth='80vw'>
+    <div onClick={e => {
+      e.stopPropagation()
+    }}>
+      <Overlay onClose={onClose} mUpStyle={{maxWidth: '80vw', marginTop: '5vh'}}>
         <OverlayToolbar>
           <OverlayToolbarClose onClick={onClose} />
         </OverlayToolbar>
 
         <OverlayBody>
           <Interaction.P>
+            <Label>Size</Label><br />
+            {[
+              {label: 'Normal', size: undefined},
+              {label: 'Klein', size: 'narrow'},
+              {label: 'Gross', size: 'breakout'},
+              {label: 'Links', size: 'float'}
+            ].map(({label, size}) => {
+              const checked = config.size === size
+              return (
+                <Radio key={size} checked={checked} onChange={() => {
+                  if (!checked) {
+                    onChange(data.set('config', {...config, size}))
+                  }
+                }} style={{marginRight: 15}}>
+                  {label || size}
+                </Radio>
+              )
+            })}
+          </Interaction.P>
+          <Interaction.P>
             <Label>Typ</Label><br />
-            {['Bar', 'Lollipop'].map(type => {
+            {['Bar', 'Lollipop', 'Line', 'Slope'].map(type => {
               const checked = config.type === type
               return (
                 <Radio key={type} checked={checked} onChange={() => {
@@ -162,8 +182,7 @@ export default ({TYPE, CANVAS_TYPE, newBlock, editorOptions}) => {
     }
   }
   const InsertButton = ({ value, onChange }) => {
-    const disabled = value.isBlurred ||
-    !value.blocks.every(
+    const disabled = value.isBlurred || !value.blocks.every(
       n => insertTypes.includes(n.type)
     )
 
