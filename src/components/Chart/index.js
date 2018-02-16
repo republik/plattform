@@ -1,10 +1,14 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
+import { css } from 'glamor'
 
 import { measure } from './utils'
 import Bar, { Lollipop } from './Bars'
 import { Line, Slope } from './Lines';
 import colors from '../../theme/colors'
+
+import { mUp } from '../../theme/mediaQueries'
+import { sansSerifMedium19, sansSerifMedium22, sansSerifRegular16, sansSerifRegular19 } from '../Typography/styles'
 
 const ReactCharts = {
   Bar,
@@ -27,6 +31,39 @@ const createRanges = ({neutral, sequential3, opposite3, discrete}) => {
 
 const colorRanges = createRanges(colors)
 
+const styles = {
+  h: css({
+    ...sansSerifMedium19,
+    lineHeight: '25px',
+    [mUp]: {
+      ...sansSerifMedium22
+    },
+    color: colors.text,
+    margin: 0,
+    marginBottom: 15,
+    '& + p': {
+      marginTop: -15
+    }
+  }),
+  p: css({
+    color: colors.text,
+    ...sansSerifRegular16,
+    [mUp]: {
+      ...sansSerifRegular19
+    },
+    margin: 0,
+    marginBottom: 15
+  })
+}
+
+export const ChartTitle = ({children, ...props}) => (
+  <h3 {...props} {...styles.h}>{children}</h3>
+)
+
+export const ChartLead = ({children, ...props}) => (
+  <p {...props} {...styles.p}>{children}</p>
+)
+
 class Chart extends Component {
   constructor(props) {
     super(props)
@@ -48,7 +85,6 @@ class Chart extends Component {
 
     return (
       <div ref={fixedWidth ? undefined : this.measure} style={{
-        marginTop: config.chromeless ? 0 : 15,
         maxWidth: config.maxWidth
       }}>
         {!!width && (
@@ -69,8 +105,7 @@ Chart.propTypes = {
   config: PropTypes.shape({
     type: PropTypes.oneOf(Object.keys(ReactCharts)).isRequired,
     description: PropTypes.string,
-    maxWidth: PropTypes.number,
-    chromeless: PropTypes.bool
+    maxWidth: PropTypes.number
   }).isRequired,
   width: PropTypes.number,
   t: PropTypes.func.isRequired

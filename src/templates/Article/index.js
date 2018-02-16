@@ -9,6 +9,7 @@ import * as Interaction from '../../components/Typography/Interaction'
 import { TeaserFeed } from '../../components/TeaserFeed'
 import IllustrationHtml from '../../components/IllustrationHtml'
 import CsvChart from '../../components/Chart/Csv'
+import { ChartTitle, ChartLead } from '../../components/Chart'
 import ErrorBoundary from '../../components/ErrorBoundary'
 
 import {
@@ -822,7 +823,7 @@ const createSchema = ({
                 rules: [
                   {
                     matchMdast: matchHeading(3),
-                    component: Interaction.H2,
+                    component: ChartTitle,
                     editorModule: 'headline',
                     editorOptions: {
                       type: 'CHARTTITLE',
@@ -834,7 +835,7 @@ const createSchema = ({
                   {
                     matchMdast: (node, index, parent) =>
                       matchParagraph(node) && !matchLast(node, index, parent),
-                    component: Interaction.P,
+                    component: ChartLead,
                     editorModule: 'paragraph',
                     editorOptions: {
                       type: 'CHARTLEAD',
