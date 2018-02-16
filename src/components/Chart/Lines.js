@@ -350,7 +350,6 @@ const LineChart = (props) => {
   } else {
     let domain = xValues.filter(deduplicate)
     x = scalePoint().domain(domain)
-    xTicks = domain
     if (domain.length > 5) {
       let maxIndex = domain.length - 1
       xTicks = [
@@ -395,7 +394,7 @@ const LineChart = (props) => {
                   xAccessor={xAccessor}
                   xFormat={xFormat}
                   y={y}
-                  yTicks={yAxis.ticks}
+                  yTicks={props.yTicks || yAxis.ticks}
                   yAxisFormat={yAxis.axisFormat}
                   confidence={confidence}
                   yCut={yCut}
@@ -468,6 +467,8 @@ LineChart.propTypes = {
   columns: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
   unit: PropTypes.string,
+  yNice: PropTypes.number,
+  yTicks: PropTypes.arrayOf(PropTypes.number),
   yAnnotations: PropTypes.arrayOf(PropTypes.shape({
     value: PropTypes.number.isRequired,
     label: PropTypes.string.isRequired,
@@ -494,7 +495,8 @@ Line.defaultProps = {
   minInnerWidth: 110,
   columns: 1,
   height: 240,
-  colorLegend: true
+  colorLegend: true,
+  yNice: 3
 }
 
 export const Slope = props => <LineChart {...props} />
@@ -513,5 +515,6 @@ Slope.defaultProps = {
   minInnerWidth: 90,
   columns: 2,
   height: 240,
-  colorLegend: true
+  colorLegend: true,
+  yNice: 3
 }

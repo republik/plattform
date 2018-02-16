@@ -98,7 +98,7 @@ export default (props) => {
       props.zero ? 0 : min(yValues),
       max(yValues)
     ])
-    .nice(3)
+    .nice(props.yNice)
     .range([innerHeight + paddingTop, paddingTop])
   const colorAccessor = props.color ? d => d.datum[props.color] : d => d.category
   const colorValues = data.map(colorAccessor).filter(deduplicate).filter(Boolean)
