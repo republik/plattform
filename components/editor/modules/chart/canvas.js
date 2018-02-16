@@ -77,6 +77,13 @@ export default ({rule, subModules, TYPE}) => {
                 <EditModal data={node.data}
                   onChange={(data) => {
                     editor.change(change => {
+                      const size = data.get('config', {}).size
+                      const parent = change.value.document.getParent(node.key)
+                      if (size !== parent.data.get('size')) {
+                        change.setNodeByKey(parent.key, {
+                          data: parent.data.set('size', size)
+                        })
+                      }
                       change.setNodeByKey(node.key, {
                         data
                       })

@@ -104,6 +104,26 @@ export const EditModal = ({data, onChange, onClose}) => {
 
         <OverlayBody>
           <Interaction.P>
+            <Label>Size</Label><br />
+            {[
+              {label: 'Normal', size: undefined},
+              {label: 'Klein', size: 'narrow'},
+              {label: 'Gross', size: 'breakout'},
+              {label: 'Links', size: 'float'}
+            ].map(({label, size}) => {
+              const checked = config.size === size
+              return (
+                <Radio key={size} checked={checked} onChange={() => {
+                  if (!checked) {
+                    onChange(data.set('config', {...config, size}))
+                  }
+                }} style={{marginRight: 15}}>
+                  {label || size}
+                </Radio>
+              )
+            })}
+          </Interaction.P>
+          <Interaction.P>
             <Label>Typ</Label><br />
             {['Bar', 'Lollipop', 'Line', 'Slope'].map(type => {
               const checked = config.type === type

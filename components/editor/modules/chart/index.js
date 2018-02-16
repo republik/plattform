@@ -84,14 +84,9 @@ export default ({rule, subModules, TYPE}) => {
       {
         renderNode ({ editor, node, children, attributes }) {
           if (!serializerRule.match(node)) return
-
-          const canvas = node.nodes.find(
-            matchBlock(CANVAS_TYPE)
-          )
-
           return (
             <Container
-              size={canvas.data.get('size')}
+              size={node.data.get('size')}
               attributes={attributes}>
               {children}
             </Container>
