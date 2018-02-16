@@ -101,7 +101,8 @@ export default (props) => {
     .nice(3)
     .range([innerHeight + paddingTop, paddingTop])
   const colorAccessor = props.color ? d => d.datum[props.color] : d => d.category
-  const colorValues = data.map(colorAccessor).filter(deduplicate).filter(Boolean).sort()
+  const colorValues = data.map(colorAccessor).filter(deduplicate).filter(Boolean)
+  runSort(props.colorSort, colorValues)
 
   let colorRange = props.colorRanges[props.colorRange] || props.colorRange
   if (!colorRange) {

@@ -29,6 +29,8 @@ import {
 } from './utils'
 import ColorLegend from './ColorLegend'
 
+const baseLineColor = colors.text
+
 const styles = {
   columnTitle: css({
     ...sansSerifMedium14,
@@ -44,7 +46,7 @@ const styles = {
     shapeRendering: 'crispEdges'
   }),
   axisXLine: css({
-    stroke: colors.text,
+    stroke: baseLineColor,
     strokeWidth: '1px',
     shapeRendering: 'crispEdges'
   }),
@@ -233,7 +235,8 @@ const LineGroup = (props) => {
         yTicks.map((tick, i) => (
           <g key={tick} transform={`translate(0,${y(tick)})`}>
             <line {...styles.axisYLine} x2={width} style={{
-              stroke: tick === 0 ? colors.divider : undefined
+              stroke: tick === 0
+                ? baseLineColor : undefined
             }} />
             <text {...styles.axisLabel} dy='-3px'>
               {yAxisFormat(tick, last(yTicks, i))}
@@ -446,6 +449,7 @@ LineChart.propTypes = {
   stroke: PropTypes.string,
   labelFilter: PropTypes.string,
   color: PropTypes.string,
+  colorSort: sortPropType,
   colorRange: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   colorRanges: PropTypes.shape({
     sequential3: PropTypes.array.isRequired,
