@@ -141,7 +141,7 @@ const LineGroup = (props) => {
       ...line,
       startX: x(xAccessor(line.start)),
       // we always render at end label outside of the chart area
-      // even if the line end in the middle of the graph
+      // even if the line ends in the middle of the graph
       endX: width,
       startY: y(line.start.value),
       endY: y(line.end.value),
