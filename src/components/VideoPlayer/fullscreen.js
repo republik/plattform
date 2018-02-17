@@ -61,6 +61,9 @@ const getFullscreenApi = () => {
 }
 
 export const setupFullscreen = ({ onChange }) => {
+  if (typeof document === 'undefined') {
+    return
+  }
   const api = getFullscreenApi()
   if (!api) {
     return

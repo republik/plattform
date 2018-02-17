@@ -215,15 +215,6 @@ class VideoPlayer extends Component {
     this.setInstanceState = state => {
       this.setState(state)
     }
-    this.fullscreen = setupFullscreen({
-      onChange: this.onFullScreenChange.bind(this)
-    })
-  }
-
-  onFullScreenChange() {
-    this.setState(() => ({
-      isFullscreen: this.fullscreen.element() === this.video
-    }))
   }
 
   toggle() {
@@ -257,6 +248,16 @@ class VideoPlayer extends Component {
     }
   }
   componentDidMount() {
+    this.setState({
+      fullscreen: setupFullscreen({
+        onChange: () => {
+          this.setState(() => ({
+            isFullscreen: this.state.fullscreen.element() === this.video
+          }))
+        }
+      })
+    })
+
     globalState.instances.push(this.setInstanceState)
     if (!this.video) {
       return
@@ -293,11 +294,11 @@ class VideoPlayer extends Component {
     this.video.removeEventListener('canplaythrough', this.onCanPlay)
     this.video.removeEventListener('loadedmetadata', this.onLoadedMetaData)
 
-    this.fullscreen && this.fullscreen.dispose()
+    this.state.fullscreen && this.state.fullscreen.dispose()
   }
   render() {
     const { src, showPlay, size, forceMuted, autoPlay, loop, attributes = {} } = this.props
-    const { playing, progress, muted, subtitles, loading, isFullscreen } = this.state
+    const { playing, progress, muted, subtitles, loading, fullscreen, isFullscreen } = this.state
 
     return (
       <div {...merge(styles.wrapper, breakoutStyles[size])}>
@@ -378,14 +379,14 @@ class VideoPlayer extends Component {
             >
               <Volume off={muted} />
             </span>}
-            {this.fullscreen && (
+            {fullscreen && (
               <span
                 role="button"
                 title="Vollbild"
                 onClick={e => {
                   e.preventDefault()
                   e.stopPropagation()
-                  this.fullscreen.request(this.video)
+                  fullscreen.request(this.video)
                 }}
               >
                 <Fullscreen />
