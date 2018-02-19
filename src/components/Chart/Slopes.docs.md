@@ -40,6 +40,7 @@ year,gender,at_age,value
         "#2ca02c"
       ],
       "column": "country",
+      "columns": 4,
       "columnSort": "none",
       "numberFormat": ".0%",
       "type": "Slope"

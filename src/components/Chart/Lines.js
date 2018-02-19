@@ -95,6 +95,7 @@ const styles = {
 
 const X_TICK_HEIGHT = 4
 const Y_LABEL_HEIGHT = 12
+const Y_GROUP_MARGIN = 20
 
 const last = (array, index) => array.length - 1 === index
 
@@ -167,7 +168,7 @@ const LineGroup = (props) => {
             textAnchor = 'start'
           }
           return (
-            <g key={tick} transform={`translate(${x(tick)},${xAxisY})`}>
+            <g key={`x${tick}`} transform={`translate(${x(tick)},${xAxisY})`}>
               <line {...styles.axisXLine} y2={X_TICK_HEIGHT} />
               <text {...styles.axisLabel} y={X_TICK_HEIGHT + 5} dy='0.6em' textAnchor={textAnchor}>
                 {xFormat(tick)}
@@ -179,7 +180,7 @@ const LineGroup = (props) => {
       {
         linesWithLayout.map(({line, startValue, endValue, endLabel, highlighted, stroked, start, startX, startY, startLabelY, end, endX, endY, endLabelY, lineColor}, i) => {
           return (
-            <g key={i}>
+            <g key={`line${endLabel}${i}`}>
               {startValue && (startValue !== endValue) && (
                 <g>
                   <line
@@ -233,7 +234,7 @@ const LineGroup = (props) => {
       }
       {
         yTicks.map((tick, i) => (
-          <g key={tick} transform={`translate(0,${y(tick)})`}>
+          <g key={`y${tick}`} transform={`translate(0,${y(tick)})`}>
             <line {...styles.axisYLine} x2={width} style={{
               stroke: tick === 0
                 ? baseLineColor : undefined
@@ -321,7 +322,16 @@ const LineChart = (props) => {
   } = layout(props)
 
   const possibleColumns = Math.floor(width / (props.minInnerWidth + paddingLeft + paddingRight))
-  const columns = possibleColumns >= props.columns ? props.columns : Math.max(possibleColumns, 1)
+  let columns = props.columns 
+  if (possibleColumns < props.columns) {
+    columns = Math.max(possibleColumns, 1)
+    // decrease columns if it does not lead to new rows
+    // e.g. four items, 4 desired columns, 3 possible => go with 2 columns
+    if (Math.ceil(groupedData.length / columns) === Math.ceil(groupedData.length / (columns - 1))) {
+      columns -= 1
+    }
+  }
+
 
   const columnWidth = Math.floor(width / columns) - 1
   const innerWidth = columnWidth - paddingLeft - paddingRight
@@ -373,13 +383,25 @@ const LineChart = (props) => {
   let groups = groupedData.map(g => g.key)
   runSort(props.columnSort, groups)
 
-  const gx = scaleOrdinal().domain(groups).range(range(columns).map(d => d * columnWidth))
-  const gy = scaleOrdinal().domain(groups).range(range(groups.length).map(d => Math.floor(d / columns) * columnHeight))
   const rows = Math.ceil(groups.length / columns)
+  const gx = scaleOrdinal()
+    .domain(groups)
+    .range(
+      range(columns).map(d => d * columnWidth)
+    )
+  const gy = scaleOrdinal()
+    .domain(groups)
+    .range(
+      range(groups.length)
+        .map(d => {
+          const row = Math.floor(d / columns)
+          return row * columnHeight + row * Y_GROUP_MARGIN
+        })
+    )
 
   return (
     <div>
-      <svg width={width} height={rows * columnHeight}>
+      <svg width={width} height={rows * columnHeight + (rows - 1) * Y_GROUP_MARGIN}>
         <desc>{description}</desc>
         {
           groupedData.map(({values: lines, key}) => {
