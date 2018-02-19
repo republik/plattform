@@ -34,7 +34,10 @@ module.exports = async ({
     }
 
     existingSource = stripeCustomer.sources.data.find(s =>
-      s.card && s.card.fingerprint === source.card.fingerprint
+      s.card &&
+      s.card.fingerprint === source.card.fingerprint &&
+      s.card.exp_month === source.card.exp_month &&
+      s.card.exp_year === source.card.exp_year
     )
     if (existingSource && makeDefault === false) {
       return existingSource.id
