@@ -173,6 +173,7 @@ ReactDOM.render(
             path: '/audioplayer',
             title: 'AudioPlayer',
             imports: {
+              t,
               css,
               ...require('./components/Typography'),
               ...require('./components/AudioPlayer'),

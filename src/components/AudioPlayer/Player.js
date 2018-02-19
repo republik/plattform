@@ -3,9 +3,11 @@ import PropTypes from 'prop-types'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { css, merge } from 'glamor'
+import { ellipsize } from '../../lib/styleMixins'
 import { timeFormat } from '../../lib/timeFormat'
 import { breakoutStyles } from '../Center'
 import { InlineSpinner } from '../Spinner'
+import { link, sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import Play from 'react-icons/lib/md/play-arrow'
 import Pause from 'react-icons/lib/md/pause'
 
@@ -103,6 +105,26 @@ const styles = {
     backgroundColor: '#bebdcb',
     position: 'absolute',
     height: PROGRESS_HEIGHT
+  }),
+  sourceError: css({
+    position: 'absolute',
+    zIndex: ZINDEX_AUDIOPLAYER_ICONS,
+    top: 10,
+    right: 0,
+    maxWidth: 'calc(100% - 40px)',
+    color: colors.disabled,
+    height: '25px',
+    ...ellipsize,
+    ...sansSerifRegular12,
+    lineHeight: '25px',
+    [mUp]: {
+      ...sansSerifRegular15,
+      lineHeight: '25px',
+    }
+  }),
+  retry: css({
+    ...link,
+    cursor: 'pointer'
   })
 }
 
@@ -131,10 +153,12 @@ class AudioPlayer extends Component {
     super(props)
 
     this.state = {
+      playEnabled: false,
       playing: false,
       progress: 0,
       loading: false,
-      buffered: null
+      buffered: null,
+      sourceError: false
     }
 
     this.updateProgress = () => {
@@ -187,11 +211,21 @@ class AudioPlayer extends Component {
     }
     this.onCanPlay = () => {
       this.setState(() => ({
-        loading: false
+        playEnabled: true,
+        loading: false,
+        sourceError: false
       }))
     }
     this.onLoadedMetaData = () => {
       this.setState(() => ({
+        playEnabled: true,  // iOS won't fire canPlay, so rely on meta data.
+        loading: false,
+        sourceError: false
+      }))
+    }
+    this.onSourceError = () => {
+      this.setState(() => ({
+        sourceError: true,
         loading: false
       }))
     }
@@ -262,6 +296,15 @@ class AudioPlayer extends Component {
     const { audio } = this
     audio && audio.pause()
   }
+  reload() {
+    const { audio } = this
+    if (audio) {
+      this.setState(() => ({
+        loading: true
+      }))
+      audio.load()
+    }
+  }
   setFormattedTimes() {
     if (!this.audio || !this.audio.duration) {
       return
@@ -306,8 +349,8 @@ class AudioPlayer extends Component {
     this.audio.removeEventListener('loadedmetadata', this.onLoadedMetaData)
   }
   render() {
-    const { src, size, attributes = {} } = this.props
-    const { playing, progress, loading, buffered } = this.state
+    const { src, size, attributes = {}, t } = this.props
+    const { playEnabled, playing, progress, loading, buffered, sourceError } = this.state
     const isVideo = src.mp4 || src.hls
 
     return (
@@ -319,9 +362,9 @@ class AudioPlayer extends Component {
           onLoadedMetadata={this.onLoadedMetaData}
           crossOrigin="anonymous"
         >
-          {src.mp3 && <source src={src.mp3} type="audio/mpeg" />}
-          {src.aac && <source src={src.aac} type="audio/mp4" />}
-          {src.ogg && <source src={src.ogg} type="audio/ogg" />}
+          {src.mp3 && <source src={src.mp3} type="audio/mpeg" onError={(e) => this.onSourceError(e)} />}
+          {src.aac && <source src={src.aac} type="audio/mp4" onError={(e) => this.onSourceError(e)} />}
+          {src.ogg && <source src={src.ogg} type="audio/ogg" onError={(e) => this.onSourceError(e)} />}
         </audio>}
         {isVideo && <video
           {...styles.audio}
@@ -331,12 +374,12 @@ class AudioPlayer extends Component {
           crossOrigin="anonymous"
           playsInline
         >
-          {src.hls && <source src={src.hls} type="application/x-mpegURL" />}
-          {src.mp4 && <source src={src.mp4} type="video/mp4" />}
+          {src.hls && <source src={src.hls} type="application/x-mpegURL" onError={(e) => this.onSourceError(e)} />}
+          {src.mp4 && <source src={src.mp4} type="video/mp4" onError={(e) => this.onSourceError(e)} />}
         </video>}
         <div {...styles.controls}>
-          <div {...styles.play} onClick={() => this.toggle()}>
-            {!playing && <Play size={30} fill='#000' />}
+          <div {...styles.play} onClick={playEnabled ? () => this.toggle() : null}>
+            {!playing && <Play size={30} fill={playEnabled ? '#000' : colors.disabled} />}
             {playing && <Pause size={30} fill="#000" />}
           </div>
           <div {...styles.time}>
@@ -355,6 +398,12 @@ class AudioPlayer extends Component {
           onTouchEnd={this.scrubEnd}
           onMouseDown={this.scrubStart}
         />
+        {sourceError && !loading && <div {...styles.sourceError}>
+          {t('styleguide/AudioPlayer/sourceError')}{' '}
+          <span onClick={() => this.reload()} {...styles.retry}>
+            {t('styleguide/AudioPlayer/sourceErrorTryAgain')}
+          </span>
+        </div>}
         <div {...styles.buffer}>
           {this.audio &&
             buffered &&
