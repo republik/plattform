@@ -145,7 +145,7 @@ export const getSerializer = options =>
   new MarkdownSerializer({
     rules: [
       {
-        match: matchBlock(options.TYPE),
+        match: node => matchBlock(options.TYPE)(node) || matchBlock(`${options.TYPE}_VOID`)(node),
         matchMdast:
           options.rule.matchMdast,
         fromMdast: fromMdast(options),
