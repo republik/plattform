@@ -330,7 +330,7 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
   "textPosition": "topleft",
   "titleSize": "standard",
   "url": "https://www.republik.ch/updates/portraets",
-  "imageOnly": true
+  "onlyImage": true
 }
 \`\`\`
 

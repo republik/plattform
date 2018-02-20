@@ -351,8 +351,7 @@ const createSchema = ({
         'bgColor',
         'center',
         'showImage',
-        // TODO: Enable once tiles can be selected by clicking the image.
-        // 'onlyImage',
+        'onlyImage',
         'image',
         'byline',
         'kind'
