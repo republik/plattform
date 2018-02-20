@@ -277,14 +277,14 @@ class AudioPlayer extends Component {
     this.setInstanceState = state => {
       this.setState(state)
     }
-  }
-  toggle() {
-    const { audio } = this
-    if (audio) {
-      if (audio.paused || audio.ended) {
-        this.play()
-      } else {
-        this.pause()
+    this.toggle = () => {
+      const { audio } = this
+      if (audio) {
+        if (audio.paused || audio.ended) {
+          this.play()
+        } else {
+          this.pause()
+        }
       }
     }
   }
@@ -362,9 +362,9 @@ class AudioPlayer extends Component {
           onLoadedMetadata={this.onLoadedMetaData}
           crossOrigin="anonymous"
         >
-          {src.mp3 && <source src={src.mp3} type="audio/mpeg" onError={(e) => this.onSourceError(e)} />}
-          {src.aac && <source src={src.aac} type="audio/mp4" onError={(e) => this.onSourceError(e)} />}
-          {src.ogg && <source src={src.ogg} type="audio/ogg" onError={(e) => this.onSourceError(e)} />}
+          {src.mp3 && <source src={src.mp3} type="audio/mpeg" onError={this.onSourceError} />}
+          {src.aac && <source src={src.aac} type="audio/mp4" onError={this.onSourceError} />}
+          {src.ogg && <source src={src.ogg} type="audio/ogg" onError={this.onSourceError} />}
         </audio>}
         {isVideo && <video
           {...styles.audio}
@@ -374,11 +374,11 @@ class AudioPlayer extends Component {
           crossOrigin="anonymous"
           playsInline
         >
-          {src.hls && <source src={src.hls} type="application/x-mpegURL" onError={(e) => this.onSourceError(e)} />}
-          {src.mp4 && <source src={src.mp4} type="video/mp4" onError={(e) => this.onSourceError(e)} />}
+          {src.hls && <source src={src.hls} type="application/x-mpegURL" onError={this.onSourceError} />}
+          {src.mp4 && <source src={src.mp4} type="video/mp4" onError={this.onSourceError} />}
         </video>}
         <div {...styles.controls}>
-          <div {...styles.play} onClick={playEnabled ? () => this.toggle() : null}>
+          <div {...styles.play} onClick={playEnabled ? this.toggle : null}>
             {!playing && <Play size={30} fill={playEnabled ? '#000' : colors.disabled} />}
             {playing && <Pause size={30} fill="#000" />}
           </div>
