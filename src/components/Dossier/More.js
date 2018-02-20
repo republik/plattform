@@ -1,15 +1,23 @@
 import React from 'react'
 import { css } from 'glamor'
 import { link } from '../Typography/Editorial'
+import { mUp } from '../TeaserFront/mediaQueries'
+import { sansSerifRegular15, sansSerifRegular21 } from '../Typography/styles'
 
 const styles = {
   more: css({
-    textAlign: 'center'
+    ...sansSerifRegular15,
+    display: 'block',
+    minHeight: '15px',
+    textAlign: 'center',
+    [mUp]: {
+      ...sansSerifRegular21,
+    }
   })
 }
 
 const More = ({ children }) => {
-  return <div {...styles.more} {...link}>{children}</div>
+  return <span {...styles.more} {...link}>{children}</span>
 }
 
 export default More
