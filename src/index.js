@@ -566,6 +566,11 @@ ReactDOM.render(
             }
           },
           {
+            path: '/dev/slug',
+            title: 'Slug',
+            src: require('./lib/slug.docs.md')
+          },
+          {
             path: '/z-index',
             title: 'z-index',
             src: require('./theme/zIndex.docs.md')
