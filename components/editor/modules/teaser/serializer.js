@@ -87,7 +87,7 @@ export const fromMdast = ({
 
   const result = {
     kind: 'block',
-    type: TYPE,
+    type: data.onlyImage ? `${TYPE}_VOID` : TYPE,
     data: {
       ...data,
       module: 'teaser'
