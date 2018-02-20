@@ -35,6 +35,11 @@ import createInfoBoxModule from './modules/infobox'
 import createQuoteModule from './modules/quote'
 import createHtmlModule from './modules/html'
 import createLineModule from './modules/line'
+import createArticleDossier from './modules/dossier/article'
+import createFrontDossier from './modules/dossier/front'
+import createDossierIntro from './modules/dossier/intro'
+import createArticleCollection from './modules/articlecollection'
+import createMoreLink from './modules/dossier/moreLink'
 
 const moduleCreators = {
   embedVideo: createEmbedVideoModule,
@@ -67,7 +72,12 @@ const moduleCreators = {
   teaser: createTeaserModule,
   teasergroup: createTeaserGroupModule,
   html: createHtmlModule,
-  line: createLineModule
+  line: createLineModule,
+  articleDossier: createArticleDossier,
+  frontDossier: createFrontDossier,
+  dossierIntro: createDossierIntro,
+  dossierMore: createMoreLink,
+  articleCollection: createArticleCollection
 }
 const initModule = (rule, context = {}) => {
   const { editorModule, editorOptions = {} } = rule

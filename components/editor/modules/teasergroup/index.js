@@ -36,8 +36,8 @@ export const getNewBlock = options => () => {
       module: 'teasergroup'
     },
     nodes: [
-      teaserModule.helpers.newBlock(),
-      teaserModule.helpers.newBlock()
+      teaserModule.helpers.newItem(),
+      teaserModule.helpers.newItem()
     ]
   })
 }
@@ -111,6 +111,7 @@ const teaserGroupPlugin = options => {
       if (!matchBlock(TYPE)(node)) {
         return
       }
+      console.log('hello')
       const UI = TeaserInlineUI(options)
 
       const teaser = editor.value.blocks.reduce(
@@ -152,7 +153,7 @@ const teaserGroupPlugin = options => {
         return change => change.removeNodeByKey(keyToRemove)
       } else {
         const keyToInsertAt = node.key
-        return change => change.insertNodeByKey(keyToInsertAt, 1, teaserModule.helpers.newBlock())
+        return change => change.insertNodeByKey(keyToInsertAt, 1, teaserModule.helpers.newItem())
       }
     },
     schema: {
@@ -169,8 +170,8 @@ const teaserGroupPlugin = options => {
   }
 }
 
-const getSerializer = options =>
-  new MarkdownSerializer({
+const getSerializer = options => {
+  return new MarkdownSerializer({
     rules: [
       {
         match: matchBlock(options.TYPE),
@@ -181,12 +182,14 @@ const getSerializer = options =>
       }
     ]
   })
+}
 
 export default options => ({
   helpers: {
     serializer: getSerializer(options),
-    newBlock: getNewBlock(options)
+    newItem: getNewBlock(options)
   },
+  rule: getSerializer(options).rules[0],
   plugins: [
     teaserGroupPlugin(options)
   ],

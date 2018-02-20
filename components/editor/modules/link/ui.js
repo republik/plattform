@@ -1,5 +1,4 @@
 import { Text } from 'slate'
-import { compose } from 'redux'
 import React, { Component} from 'react'
 import { gql, graphql } from 'react-apollo'
 import { Label, Field, Autocomplete } from '@project-r/styleguide'
@@ -13,7 +12,6 @@ import withT from '../../../../lib/withT'
 import {
   createInlineButton,
   matchInline,
-  createPropertyForm,
   buttonStyles
 } from '../../utils'
 
@@ -83,9 +81,83 @@ const SearchUserForm = withT(class extends Component {
   }
 })
 
-export default ({TYPE}) => {
-  const LinkButton = createInlineButton({
-    type: TYPE
+const Form = options => ({ value, onChange, t }) => {
+  const { TYPE } = options
+
+  if (!value.inlines.some(matchInline(TYPE))) {
+    return null
+  }
+  const handlerFactory = createOnFieldChange(onChange, value)
+  const authorChange = (onChange, value, node) => author => {
+    onChange(
+      value.change().replaceNodeByKey(
+        node.key,
+        {
+          type: TYPE,
+          kind: 'inline',
+          data: node.data.merge({
+            title: author.text,
+            href: `/~${author.value}`
+          }),
+          nodes: [
+            Text.create(author.text)
+          ]
+        }
+      )
+    )
+  }
+  const repoChange = (onChange, value, node) => repo => {
+    onChange(
+      value.change().setNodeByKey(
+        node.key,
+        {
+          data: node.data.merge({
+            title: repo.text,
+            href: `https://github.com/${repo.value.id}?autoSlug`
+          })
+        }
+      )
+    )
+  }
+  return <div>
+    <Label>Links</Label>
+    {
+      value.inlines
+        .filter(matchInline(TYPE))
+        .map((node, i) => {
+          const onInputChange = handlerFactory(node)
+          return (
+            <UIForm key={`link-form-${i}`}>
+              <Field
+                label={t(`metaData/field/href`, undefined, 'href')}
+                value={node.data.get('href')}
+                onChange={onInputChange('href')}
+              />
+              <AutoSlugLinkInfo
+                value={node.data.get('href')}
+                label={t('metaData/field/href/document')} />
+              <Field
+                label={t(`metaData/field/title`, undefined, 'title')}
+                value={node.data.get('title')}
+                onChange={onInputChange('title')}
+              />
+              <SearchUserForm onChange={authorChange(onChange, value, node)} />
+              <RepoSearch
+                label={t('link/repo/search')}
+                onChange={repoChange(onChange, value, node)}
+               />
+            </UIForm>
+          )
+        })
+    }
+  </div>
+}
+
+export const LinkForm = options => withT(Form(options))
+
+export const LinkButton = options =>
+  createInlineButton({
+    type: options.TYPE
   })(
     ({ active, disabled, visible, ...props }) =>
       <span
@@ -99,87 +171,9 @@ export default ({TYPE}) => {
       </span>
   )
 
-  const Form = ({ disabled, value, onChange, t }) => {
-    if (disabled) {
-      return null
-    }
-    const handlerFactory = createOnFieldChange(onChange, value)
-    const authorChange = (onChange, value, node) => author => {
-      onChange(
-        value.change().replaceNodeByKey(
-          node.key,
-          {
-            type: TYPE,
-            kind: 'inline',
-            data: node.data.merge({
-              title: author.text,
-              href: `/~${author.value}`
-            }),
-            nodes: [
-              Text.create(author.text)
-            ]
-          }
-        )
-      )
-    }
-    const repoChange = (onChange, value, node) => repo => {
-      onChange(
-        value.change().setNodeByKey(
-          node.key,
-          {
-            data: node.data.merge({
-              title: repo.text,
-              href: `https://github.com/${repo.value.id}?autoSlug`
-            })
-          }
-        )
-      )
-    }
-    return <div>
-      <Label>Links</Label>
-      {
-        value.inlines
-          .filter(matchInline(TYPE))
-          .map((node, i) => {
-            const onInputChange = handlerFactory(node)
-            return (
-              <UIForm key={`link-form-${i}`}>
-                <Field
-                  label={t(`metaData/field/href`, undefined, 'href')}
-                  value={node.data.get('href')}
-                  onChange={onInputChange('href')}
-                />
-                <AutoSlugLinkInfo
-                  value={node.data.get('href')}
-                  label={t('metaData/field/href/document')} />
-                <Field
-                  label={t(`metaData/field/title`, undefined, 'title')}
-                  value={node.data.get('title')}
-                  onChange={onInputChange('title')}
-                />
-                <SearchUserForm onChange={authorChange(onChange, value, node)} />
-                <RepoSearch
-                  label={t('link/repo/search')}
-                  onChange={repoChange(onChange, value, node)}
-                 />
-              </UIForm>
-            )
-          })
-      }
-    </div>
-  }
-
-  const LinkForm = compose(
-    createPropertyForm({
-      isDisabled: ({ value }) => {
-        return !value.inlines.some(matchInline(TYPE))
-      }
-    }),
-    withT
-  )(Form)
-
+export default options => {
   return {
-    forms: [LinkForm],
-    textFormatButtons: [LinkButton]
+    forms: [LinkForm(options)],
+    textFormatButtons: [LinkButton(options)]
   }
 }

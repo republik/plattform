@@ -18,8 +18,8 @@ import { TeaserButton, TeaserInlineUI, TeaserForm } from './ui'
 export const getData = data => ({
   url: null,
   textPosition: 'topleft',
-  color: '#fff',
-  bgColor: '#000',
+  color: '#000',
+  bgColor: '#fff',
   center: false,
   image: null,
   kind: 'editorial',
@@ -123,7 +123,7 @@ const teaserPlugin = options => {
           moveDown={moveDown(editor)}
           insert={insert(editor)}
           remove={remove(editor)}
-      />,
+            />,
         <Teaser key='teaser' {...node.data.toJS()} image={image} attributes={attributes}>
           {children}
         </Teaser>
@@ -208,7 +208,7 @@ const teaserPlugin = options => {
 export default options => ({
   helpers: {
     serializer: getSerializer(options),
-    newBlock: getNewBlock(options)
+    newItem: getNewBlock(options)
   },
   plugins: [
     teaserPlugin(options)
