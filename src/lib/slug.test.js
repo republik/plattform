@@ -1,5 +1,5 @@
 import test from 'tape'
-import slug from './slug'
+import { slug } from './slug'
 
 test('lib.utils.slug', assert => {
   assert.equal(
