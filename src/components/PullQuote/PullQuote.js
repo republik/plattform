@@ -22,13 +22,15 @@ const styles = {
     }
   }),
   figure: css({
+    '& figure': {
+      width: IMAGE_SIZE,
+    },
     [mUp]: {
       paddingLeft: 170,
       '& figure': {
         marginLeft: -170,
         marginRight: 15,
-        float: 'left',
-        width: IMAGE_SIZE
+        float: 'left'
       }
     }
   }),
