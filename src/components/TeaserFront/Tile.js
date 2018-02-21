@@ -67,7 +67,9 @@ const styles = {
   }),
   onlyImageContainer: css({
     margin: '0 auto',
-    fontSize: 0
+    fontSize: 0,
+    minHeight: '100px',  // IE11
+    width: '100%'  // IE11
   }),
   image: css({
     minWidth: '100px',
