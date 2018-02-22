@@ -139,7 +139,7 @@ Von [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 }
 \`\`\`
 
-###### 
+######
 
 # Das schwere Los mit Eltern
 
@@ -173,7 +173,7 @@ Von Sonderkorrespondent [Lukas Bünger](<>)
 
 # «With rebellion, awareness is born.»
 
-#### 
+####
 
 Von [Christof Moser](/~6556e282-4ac4-4129-8f8f-d20f28170c39 "Christof Moser")
 
@@ -183,17 +183,16 @@ Von [Christof Moser](/~6556e282-4ac4-4129-8f8f-d20f28170c39 "Christof Moser")
 
 \`\`\`
 {
-  "byline": "Foto: Laurent Burst",
-  "teaserType": "frontArticleCollection",
-  "url": "https://www.republik.ch/updates/wer-sind-sie"
+  "teaserType": "frontArticleCollection"
 }
 \`\`\`
 
-<section><h6>ARTICLECOLLECTIONINTRO</h6>
+<section><h6>TEASER</h6>
 
 \`\`\`
 {
-  "byline": "Foto: Laurent Burst"
+  "byline": "Foto: Laurent Burst",
+  "teaserType": "dossierIntro"
 }
 \`\`\`
 
@@ -274,7 +273,7 @@ Von [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 
 <hr /></section>
 
-[Mehr zum Thema](https://www.republik.ch/updates/wer-sind-sie)
+Mehr [zum Thema](https://www.republik.ch/updates/wer-sind-sie)
 
 <hr /></section>
 

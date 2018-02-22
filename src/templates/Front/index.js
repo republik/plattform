@@ -424,7 +424,7 @@ const createSchema = ({
       ...node.data
     }),
     // TMP: Disabled until editor integration
-    // editorModule: 'teaser',
+    editorModule: 'teaser',
     editorOptions: {
       type: 'ARTICLETILE',
       teaserType: 'articleTile',
@@ -465,7 +465,7 @@ const createSchema = ({
       </TeaserFrontTileRow>
     },
     // TMP: Disabled until editor integration
-    // editorModule: 'teasergroup',
+    editorModule: 'articleCollection',
     editorOptions: {
       type: 'ARTICLETILEROW'
     },
@@ -476,7 +476,7 @@ const createSchema = ({
 
   const articleCollectionIntro = {
     matchMdast: node => {
-      return matchZone('ARTICLECOLLECTIONINTRO')(node)
+      return matchTeaserType('dossierIntro')(node)
     },
     props: node => ({
       image: extractImage(node.children[0]),
@@ -487,7 +487,7 @@ const createSchema = ({
         {children}
       </TeaserFrontDossierIntro>
     },
-    editorModule: 'teaser',
+    editorModule: 'dossierIntro',
     editorOptions: {
       type: 'ARTICLECOLLECTIONINTRO'
     },
@@ -504,7 +504,7 @@ const createSchema = ({
         editorOptions: {
           type: 'DOSSIERTAG',
           placeholder: 'Dossier',
-          depth: 1
+          depth: 6
         }
       },
       title(
@@ -529,37 +529,42 @@ const createSchema = ({
       </TeaserFrontDossier>
     },
     // TMP: Disabled until editor integration
-    // editorModule: 'teaser',
+    editorModule: 'frontDossier',
     editorOptions: {
       type: 'FRONTARTICLECOLLECTION',
-      insertButton: 'Artikelsammlung / Dossier'
+      insertButtonText: 'Artikelsammlung / Dossier'
     },
     rules: [
       articleCollectionIntro,
       articleTileRow,
       {
         matchMdast: matchParagraph,
-        component: ({ children }) => children,
-        editorModule: 'paragraph',
+        component: TeaserFrontDossierMore,
+        //editorModule: 'dossierMore',
+        editorOptions: {
+          isStatic: true,
+          placeholder: 'Mehr zum Thema-Link'
+        },
         rules: [
+          ...globalInlines,
           {
             matchMdast: matchType('link'),
-            props: node => ({
-              title: node.title,
-              href: node.url
-            }),
-            component: ({ children, attributes, ...props }) => {
-              return (
-                <Link href={props.href} passHref>
-                  <a href={props.href}>
-                    <TeaserFrontDossierMore attributes={attributes}>
-                      {children}
-                    </TeaserFrontDossierMore>
-                  </a>
-                </Link>
-              )
+            props: (node) => {
+              return {
+                title: node.title,
+                href: node.url
+              }
             },
-            editorModule: 'link'
+            component: ({ children, data, ...props }) =>
+              <Link href={props.href} passHref>
+                <a {...props}>
+                  {children}
+                </a>
+              </Link>,
+            editorModule: 'link',
+            editorOptions: {
+              type: 'FRONTLINK'
+            }
           }
         ]
       }

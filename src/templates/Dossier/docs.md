@@ -40,7 +40,7 @@ Und es war ihnen wie eine Bestätigung ihrer neuen Träume und guten Absichten, 
 \`\`\`
 {
   "kind": "meta",
-  "teaserType": "articleCollection"
+  "teaserType": "articleDossier"
 }
 \`\`\`
 

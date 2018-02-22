@@ -20,7 +20,7 @@ import {
   TeaserFrontCredit,
   TeaserFrontCreditLink,
   TeaserFrontTile,
-  TeaserFrontTileRow,
+  TeaserFrontTileRow
 } from '../../components/TeaserFront'
 
 import {
@@ -58,6 +58,7 @@ const createTeasers = ({
     editorOptions: {
       type,
       placeholder: 'Titel',
+      isStatic: true,
       depth: 1
     },
     rules: globalInlines
@@ -73,6 +74,7 @@ const createTeasers = ({
     editorOptions: {
       type: 'ARTICLETILELEAD',
       placeholder: 'Lead',
+      isStatic: true,
       depth: 4,
       optional: true
     },
@@ -89,6 +91,7 @@ const createTeasers = ({
     editorOptions: {
       type: 'FRONTFORMAT',
       placeholder: 'Format',
+      isStatic: true,
       depth: 6,
       optional: true
     },
@@ -104,7 +107,8 @@ const createTeasers = ({
     editorModule: 'paragraph',
     editorOptions: {
       type: 'FRONTCREDIT',
-      placeholder: 'Credit'
+      placeholder: 'Credit',
+      isStatic: true
     },
     rules: [
       ...globalInlines,
@@ -143,13 +147,12 @@ const createTeasers = ({
       image: extractImage(node.children[0]),
       ...node.data
     }),
-    // TMP: Disabled until editor integration
-    // editorModule: 'teaser',
+    editorModule: 'teaser',
     editorOptions: {
       type: 'ARTICLETILE',
       teaserType: 'articleTile',
       insertButton: 'Artikel Tile',
-      dnd: false,
+      dnd: true,
       formOptions: [
         'showImage',
         'image',
@@ -186,11 +189,9 @@ const createTeasers = ({
         {children}
       </TeaserFrontTileRow>
     },
-    // TMP: Disabled until editor integration
-    // editorModule: 'teasergroup',
+    editorModule: 'articleCollection',
     editorOptions: {
-      type: 'ARTICLETILEROW',
-      dnd: false
+      type: 'ARTICLETILEROW'
     },
     rules: [
       articleTile
@@ -199,19 +200,18 @@ const createTeasers = ({
 
   return {
     articleCollection: {
-      matchMdast: matchTeaserType('articleCollection'),
+      matchMdast: matchTeaserType('articleDossier'),
       component: ({ children, attributes, ...props }) => (
         <Breakout size='breakout' attributes={attributes}>
           {children}
         </Breakout>
       ),
       props: node => node.data,
-      // TMP: Disabled until editor integration
-      // editorModule: 'teaser',
+      editorModule: 'articleDossier',
       editorOptions: {
-        type: 'ARTICLECOLLECTION',
-        teaserType: 'articleCollection',
-        insertButton: 'Artikelsammlung',
+        type: 'ARTICLEDOSSIER',
+        insertButtonText: 'Dossier',
+        insertTypes: ['PARAGRAPH'],
         formOptions: []
       },
       rules: [
@@ -226,7 +226,8 @@ const createTeasers = ({
           editorOptions: {
             type: 'ARTICLECOLLECTIONSUBHEADER',
             placeholder: 'Artikelsammlung',
-            depth: 2
+            depth: 2,
+            isStatic: true
           }
         },
         articleTileRow
