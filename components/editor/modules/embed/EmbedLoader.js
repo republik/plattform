@@ -2,6 +2,9 @@ import React from 'react'
 import Loader from '../../../Loader'
 import { colors } from '@project-r/styleguide'
 import { css } from 'glamor'
+// TMP: work around for missing t
+// - rm all t code here after styelguide 5.62.1
+import withT from '../../../../lib/withT'
 
 const styles = {
   border: css({
@@ -16,7 +19,7 @@ const styles = {
   })
 }
 
-export default (query, Component) =>
+export default (query, Component) => {
   class EmbedLoader extends React.Component {
     constructor (props, ...args) {
       super(props, ...args)
@@ -59,7 +62,7 @@ export default (query, Component) =>
 
     render () {
       const { loading, error } = this.state
-      const { client, ...props } = this.props
+      const { client, t, ...props } = this.props
       const { node, editor } = props
       const active = editor.value.blocks.some(block => block.key === node.key)
 
@@ -75,7 +78,7 @@ export default (query, Component) =>
                 data-active={active}
                 contentEditable={false}
               >
-                <Component data={node.data.toJS()} />
+                <Component data={node.data.set('t', t).toJS()} />
               </div>
             )
           }}
@@ -83,3 +86,6 @@ export default (query, Component) =>
       )
     }
   }
+
+  return withT(EmbedLoader)
+}
