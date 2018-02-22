@@ -25,7 +25,10 @@ const getNewBlock = options => {
     nodes: [
       introTeaserModule.helpers.newItem(),
       articleCollectionModule.helpers.newItem(),
-      outroTextModule.helpers.newItem()
+      {
+        kind: 'block',
+        type: outroTextModule.TYPE
+      }
     ]
   })
 }

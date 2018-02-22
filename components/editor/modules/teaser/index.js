@@ -1,5 +1,6 @@
 import React from 'react'
 import { matchBlock } from '../../utils'
+import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
 import { Block } from 'slate'
 
 import { getSerializer, getSubmodules } from './serializer'
@@ -127,6 +128,10 @@ const teaserPlugin = options => {
         compiledTeaser
       ])
     },
+    onKeyDown: createRemoveEmptyKeyHandler({
+      TYPE,
+      isEmpty: node => !node.text.trim() && !node.data.get('image')
+    }),
     schema: {
       blocks: {
         [`${TYPE}_VOID`]: {

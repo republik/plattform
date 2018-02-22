@@ -111,7 +111,6 @@ const teaserGroupPlugin = options => {
       if (!matchBlock(TYPE)(node)) {
         return
       }
-      console.log('hello')
       const UI = TeaserInlineUI(options)
 
       const teaser = editor.value.blocks.reduce(

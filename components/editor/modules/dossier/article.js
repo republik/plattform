@@ -2,15 +2,9 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 import { Block } from 'slate'
 
 import { buttonStyles, matchBlock } from '../../utils'
+import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
 
 import injectBlock from '../../utils/injectBlock'
-
-const isEmpty = options => {
-  const { headerModule, articleCollectionModule } = getSubmodules(options)
-  return node =>
-    headerModule.helpers.isEmpty(node.nodes.first()) &&
-    articleCollectionModule.helpers.isEmpty(node.nodes.last())
-}
 
 const getNewBlock = options => {
   const { headerModule, articleCollectionModule } = getSubmodules(options)
@@ -20,6 +14,9 @@ const getNewBlock = options => {
     nodes: [
       Block.create({
         kind: 'block',
+        data: {
+          teaserType: 'articleDossier'
+        },
         type: headerModule.TYPE
       }),
       articleCollectionModule.helpers.newItem()
@@ -58,8 +55,11 @@ export const toMdast = options => {
 
   return (node, index, parent, rest) => ({
     type: 'zone',
-    identifier: 'TEASERGROUP',
-    data: node.data,
+    identifier: 'TEASER',
+    data: {
+      teaserType: 'articleDossier',
+      ...node.data
+    },
     children: [
       headerModule.helpers.serializer.toMdast(node.nodes[0], 0, node, rest),
       articleCollectionModule.helpers.serializer.toMdast(node.nodes[1], 1, node, rest)
@@ -75,7 +75,13 @@ export const ArticleDossierPlugin = options => {
       if (matchBlock(options.TYPE)(node)) {
         return <ArticleDossier attributes={attributes}>{children}</ArticleDossier>
       }
-    }
+    },
+    onKeyDown: createRemoveEmptyKeyHandler({
+      TYPE: options.TYPE,
+      isEmpty: node =>
+        !node.text.trim()
+
+    })
   }
 }
 
@@ -126,8 +132,8 @@ export const getSerializer = options => {
 export default options => ({
   helpers: {
     serializer: getSerializer(options),
-    newBlock: getNewBlock(options),
-    isEmpty: isEmpty(options)
+    newBlock: getNewBlock(options)
+    // isEmpty: isEmpty(options)
   },
   plugins: [
     ArticleDossierPlugin(options)
