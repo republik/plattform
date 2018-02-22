@@ -751,6 +751,7 @@ const createSchema = ({
                 props: node => ({
                   data: {
                     ...node.data,
+                    t,
                     url: node.children[0].children[0].url
                   }
                 }),
