@@ -728,6 +728,7 @@ const createSchema = ({
                       <AudioPlayer
                         attributes={attributes}
                         {...data}
+                        t={t}
                       />
                     )
                   }
@@ -736,6 +737,7 @@ const createSchema = ({
                       <VideoPlayer
                         attributes={attributes}
                         {...data}
+                        t={t}
                       />
                     )
                   }
@@ -751,7 +753,6 @@ const createSchema = ({
                 props: node => ({
                   data: {
                     ...node.data,
-                    t,
                     url: node.children[0].children[0].url
                   }
                 }),
