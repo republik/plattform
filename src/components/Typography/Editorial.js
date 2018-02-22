@@ -35,10 +35,10 @@ export const Headline = ({ children, attributes, ...props }) => (
 
 const subhead = css({
   ...styles.serifBold19,
-  margin: '36px 0 -14px 0',
+  margin: '36px 0 8px 0',
   [mUp]: {
     ...styles.serifBold24,
-    margin: '46px 0 -18px 0'
+    margin: '46px 0 12px 0'
   },
   color: colors.text
 })
@@ -108,6 +108,9 @@ const paragraph = css({
   },
   ':last-child': {
     marginBottom: 0
+  },
+  'h2 + &': {
+    marginTop: 0
   }
 })
 export const P = ({ children, attributes, ...props }) => (

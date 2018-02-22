@@ -71,6 +71,16 @@ Thomas Jefferson
 
 <hr /></section>
 
+## Wie ein Hund!
+
+<section><h6>FIGURE</h6>
+
+![](/static/landscape.jpg?size=2000x1411)
+
+Etwas Böses _Foto: Laurent Burst_
+
+<hr /></section>
+
 <hr /></section>
 
 `}</Markdown>
