@@ -87,7 +87,7 @@ export const fromMdast = ({
 
   const result = {
     kind: 'block',
-    type: TYPE,
+    type: data.onlyImage ? `${TYPE}_VOID` : TYPE,
     data: {
       ...data,
       module: 'teaser'
@@ -145,7 +145,7 @@ export const getSerializer = options =>
   new MarkdownSerializer({
     rules: [
       {
-        match: matchBlock(options.TYPE),
+        match: node => matchBlock(options.TYPE)(node) || matchBlock(`${options.TYPE}_VOID`)(node),
         matchMdast:
           options.rule.matchMdast,
         fromMdast: fromMdast(options),

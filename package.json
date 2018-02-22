@@ -16,7 +16,8 @@
     "standardize": "standard --fix",
     "precommit": "npm test && lint-staged",
     "translations": "gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json",
-    "link:sg": "rm -rf .next && npm link @project-r/styleguide && rm -rf node_modules/glamor && ln -s @project-r/styleguide/node_modules/glamor node_modules/glamor && echo '\n⚠️  Make sure to restart the next.js server\n'"
+    "preinstall": "rm -rf .next && rm -rf node_modules/glamor && rm -rf node_modules/@project-r/styleguide",
+    "link:sg": "rm -rf .next && npm link @project-r/styleguide && rm -rf node_modules/glamor && ln -s @project-r/styleguide/node_modules/glamor node_modules/glamor && echo '\n⚠️  Make sure to restart the next.js server. To unlink simply run npm install.\n'"
   },
   "repository": {
     "type": "git",
@@ -55,12 +56,14 @@
   },
   "dependencies": {
     "@orbiting/remark-preset": "^1.2.1",
-    "@project-r/styleguide": "^5.55.1",
+    "@project-r/styleguide": "^5.61.1",
     "@project-r/template-newsletter": "^1.5.0",
-    "d3-array": "^1.2.0",
+    "d3-array": "^1.2.1",
     "d3-color": "^1.0.3",
-    "d3-format": "^1.2.1",
-    "d3-scale": "^1.0.6",
+    "d3-dsv": "^1.0.8",
+    "d3-format": "^1.2.2",
+    "d3-scale": "^1.0.7",
+    "d3-shape": "^1.2.0",
     "d3-time": "^1.0.7",
     "d3-time-format": "^2.1.1",
     "debug": "^2.6.9",

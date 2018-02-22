@@ -175,7 +175,7 @@ export const TeaserButton = options => {
   }
 }
 
-const Form = withT(({ node, onChange, options, t }) => {
+const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
   return <UIForm>
     <Field
       label='URL'
@@ -290,7 +290,7 @@ const Form = withT(({ node, onChange, options, t }) => {
       options.includes('onlyImage') &&
       <Checkbox
         checked={node.data.get('onlyImage')}
-        onChange={onChange('onlyImage')}
+        onChange={onTypeChange}
       >
         Nur Bild
       </Checkbox>
@@ -313,11 +313,15 @@ export const TeaserForm = options => {
 
   return createPropertyForm({
     isDisabled: ({ value }) => {
+      if (matchBlock(`${TYPE}_VOID`)(value.startBlock)) {
+        return false
+      }
+
       const teaser = value.blocks.reduce(
-      (memo, node) =>
-        memo || value.document.getFurthest(node.key, matchBlock(TYPE)),
-      undefined
-    )
+        (memo, node) =>
+          memo || value.document.getFurthest(node.key, matchBlock(TYPE)),
+        undefined
+      )
 
       return !teaser
     }
@@ -327,11 +331,13 @@ export const TeaserForm = options => {
         return null
       }
 
-      const teaser = value.blocks.reduce(
-        (memo, node) =>
-          memo || value.document.getFurthest(node.key, matchBlock(TYPE)),
-        undefined
-      )
+      const teaser = matchBlock(`${TYPE}_VOID`)(value.startBlock)
+        ? value.startBlock
+        : value.blocks.reduce(
+            (memo, node) =>
+              memo || value.document.getFurthest(node.key, matchBlock(TYPE)),
+            undefined
+          )
 
       const handlerFactory = createOnFieldChange(change => {
         const newTeaser = change.value.document.getDescendant(teaser.key)
@@ -372,6 +378,23 @@ export const TeaserForm = options => {
         )
       }
 
+      const handleTypeChange = () => {
+        return onChange(
+          value.change().replaceNodeByKey(
+            teaser.key,
+            Block.create({
+              data: teaser.data.set('onlyImage', !teaser.data.get('onlyImage')),
+              type: !teaser.data.get('onlyImage')
+                ? `${TYPE}_VOID`
+                : TYPE,
+              nodes: !teaser.data.get('onlyImage')
+                ? []
+                : getNewBlock(options)().nodes
+            })
+          )
+        )
+      }
+
       return <div>
         <Label>Teaser</Label>
         <RepoSearch
@@ -379,7 +402,7 @@ export const TeaserForm = options => {
           label='Von Artikel übernehmen'
           onChange={handleRepo}
         />
-        <Form node={teaser} onChange={handlerFactory} options={options.rule.editorOptions.formOptions} />
+        <Form node={teaser} onChange={handlerFactory} onTypeChange={handleTypeChange} options={options.rule.editorOptions.formOptions} />
       </div>
     }
   )

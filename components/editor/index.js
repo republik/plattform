@@ -40,6 +40,8 @@ import createFrontDossier from './modules/dossier/front'
 import createDossierIntro from './modules/dossier/intro'
 import createArticleCollection from './modules/articlecollection'
 import createMoreLink from './modules/dossier/moreLink'
+import createChartModule from './modules/chart'
+import createChartCanvasModule from './modules/chart/canvas'
 
 const moduleCreators = {
   embedVideo: createEmbedVideoModule,
@@ -77,7 +79,9 @@ const moduleCreators = {
   frontDossier: createFrontDossier,
   dossierIntro: createDossierIntro,
   dossierMore: createMoreLink,
-  articleCollection: createArticleCollection
+  articleCollection: createArticleCollection,
+  chart: createChartModule,
+  chartCanvas: createChartCanvasModule
 }
 const initModule = (rule, context = {}) => {
   const { editorModule, editorOptions = {} } = rule
