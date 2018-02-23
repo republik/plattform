@@ -62,7 +62,7 @@ export const toMdast = options => {
     type: 'zone',
     identifier: 'ARTICLECOLLECTION',
     data: {
-      ...node.data
+      ...getData(node.data)
     },
     children: [
       headerModule.helpers.serializer.toMdast(node.nodes[0], 0, node, rest),
@@ -147,18 +147,29 @@ export const articleCollectionForm = options => {
       <Label>Artikelsammlung</Label>
       <Checkbox
         checked={articleCollection.data.get('membersOnly')}
-        onChange={(_, checked) => onChange(
-          value.change().setNodeByKey(articleCollection.key, { data: { membersOnly: checked } })
-        )}
+        onChange={(_, checked) => {
+          onChange(
+            value.change().setNodeByKey(
+              articleCollection.key,
+              { data: articleCollection.data.set('membersOnly', checked) }
+            )
+          )
+        }
+      }
     >
       Nur für Members sichtbar?
     </Checkbox>
       <Field
         label='Nachricht für Nicht-Members'
-        value={articleCollection.data.get('unauthorizedText')}
-        onChange={(_, text) => onChange(
-          value.change().setNodeByKey(articleCollection.key, { data: { unauthorizedText: text } })
-        )} />
+        value={articleCollection.data.get('unauthorizedText') || ''}
+        onChange={(_, text) => {
+          onChange(
+            value.change().setNodeByKey(
+              articleCollection.key,
+              { data: articleCollection.data.set('unauthorizedText', text) }
+            )
+          )
+        }} />
     </UIForm>
   }
 }

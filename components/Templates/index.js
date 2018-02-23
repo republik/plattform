@@ -6,6 +6,7 @@ import createArticleSchema from '@project-r/styleguide/lib/templates/Article'
 import createFrontSchema from '@project-r/styleguide/lib/templates/Front'
 import createFormatSchema from '@project-r/styleguide/lib/templates/Format'
 import createDiscussionSchema from '@project-r/styleguide/lib/templates/Discussion'
+import createDossierSchema from '@project-r/styleguide/lib/templates/Dossier'
 
 import { t } from '../../lib/withT'
 
@@ -18,7 +19,8 @@ const schemas = {
   article: createArticleSchema({t}),
   front: createFrontSchema({t}),
   format: createFormatSchema({t}),
-  discussion: createDiscussionSchema({t})
+  discussion: createDiscussionSchema({t}),
+  dossier: createDossierSchema({t})
 }
 
 export const getSchema = template => {
