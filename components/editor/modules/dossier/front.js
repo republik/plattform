@@ -59,8 +59,8 @@ export const getSubmodules = options => {
 export const getData = data => ({
   url: null,
   textPosition: 'topleft',
-  color: '#000',
-  bgColor: '#fff',
+  color: '',
+  bgColor: '',
   center: false,
   image: null,
   kind: 'editorial',
@@ -134,7 +134,7 @@ export const FrontDossierPlugin = options => {
             insert={insert(editor)}
             remove={remove(editor)}
             />,
-          <Group key='content' attributes={attributes}>{children}</Group>
+          <Group {...node.data.toJS()} key='content' attributes={attributes}>{children}</Group>
         ]
       }
     }
