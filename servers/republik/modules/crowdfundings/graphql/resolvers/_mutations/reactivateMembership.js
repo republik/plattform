@@ -3,7 +3,7 @@ const getSubscription = require('../../../lib/payments/stripe/getSubscription')
 const createSubscription = require('../../../lib/payments/stripe/createSubscription')
 const reactivateSubscription = require('../../../lib/payments/stripe/reactivateSubscription')
 
-module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate}}) => {
+module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate, enforceSubscriptions}}) => {
   const transaction = await pgdb.transactionBegin()
   try {
     const {
@@ -110,6 +110,8 @@ module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate}}) => {
     }
 
     await transaction.transactionCommit()
+
+    enforceSubscriptions({ pgdb, userId: membership.userId })
 
     return newMembership
   } catch (e) {
