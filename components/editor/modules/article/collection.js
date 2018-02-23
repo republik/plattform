@@ -1,5 +1,5 @@
 import MarkdownSerializer from 'slate-mdast-serializer'
-import { Checkbox } from '@project-r/styleguide'
+import { Label, Field, Checkbox } from '@project-r/styleguide'
 import { Block } from 'slate'
 
 import { buttonStyles, matchBlock } from '../../utils'
@@ -25,6 +25,7 @@ const getNewBlock = options => {
 
 export const getData = data => ({
   membersOnly: true,
+  unauthorizedText: '',
   ...(data || {})
 })
 
@@ -143,6 +144,7 @@ export const articleCollectionForm = options => {
       return null
     }
     return <UIForm>
+      <Label>Artikelsammlung</Label>
       <Checkbox
         checked={articleCollection.data.get('membersOnly')}
         onChange={(_, checked) => onChange(
@@ -151,6 +153,12 @@ export const articleCollectionForm = options => {
     >
       Nur für Members sichtbar?
     </Checkbox>
+      <Field
+        label='Nachricht für Nicht-Members'
+        value={articleCollection.data.get('unauthorizedText')}
+        onChange={(_, text) => onChange(
+          value.change().setNodeByKey(articleCollection.key, { data: { unauthorizedText: text } })
+        )} />
     </UIForm>
   }
 }
