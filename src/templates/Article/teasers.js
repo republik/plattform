@@ -151,8 +151,6 @@ const createTeasers = ({
     editorOptions: {
       type: 'ARTICLETILE',
       teaserType: 'articleTile',
-      insertButton: 'Artikel Tile',
-      dnd: true,
       formOptions: [
         'showImage',
         'image',

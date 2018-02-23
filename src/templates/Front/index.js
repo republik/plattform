@@ -133,7 +133,6 @@ const createSchema = ({
       type: 'FRONTLEAD',
       placeholder: 'Lead',
       depth: 4,
-      optional: true,
       isStatic: true
     },
     rules: globalInlines
@@ -162,7 +161,6 @@ const createSchema = ({
       type: 'FRONTFORMAT',
       placeholder: 'Format',
       depth: 6,
-      optional: true,
       isStatic: true
     },
     rules: globalInlines
@@ -186,7 +184,7 @@ const createSchema = ({
     editorOptions: {
       type: 'FRONTIMAGE',
       teaserType: 'frontImage',
-      insertButton: 'Front Image',
+      insertButtonText: 'Front Image',
       formOptions: [
         'textPosition',
         'color',
@@ -239,7 +237,7 @@ const createSchema = ({
     editorOptions: {
       type: 'FRONTSPLIT',
       teaserType: 'frontSplit',
-      insertButton: 'Front Split',
+      insertButtonText: 'Front Split',
       formOptions: [
         'color',
         'bgColor',
@@ -291,7 +289,7 @@ const createSchema = ({
     editorOptions: {
       type: 'FRONTTYPO',
       teaserType: 'frontTypo',
-      insertButton: 'Front Typo',
+      insertButtonText: 'Front Typo',
       formOptions: [
         'color',
         'bgColor',
@@ -344,8 +342,7 @@ const createSchema = ({
     editorOptions: {
       type: 'FRONTTILE',
       teaserType: 'frontTile',
-      insertButton: 'Front Tile',
-      dnd: false,
+      showUI: false,
       formOptions: [
         'color',
         'bgColor',
@@ -389,6 +386,7 @@ const createSchema = ({
       type: 'ARTICLECOLLECTIONLEAD',
       placeholder: 'Lead',
       depth: 4,
+      isStatic: true,
       optional: true
     },
     rules: globalInlines
@@ -404,6 +402,7 @@ const createSchema = ({
     editorOptions: {
       type: 'ARTICLETILELEAD',
       placeholder: 'Lead',
+      isStatic: true,
       depth: 4,
       optional: true
     },
@@ -427,9 +426,8 @@ const createSchema = ({
     editorModule: 'teaser',
     editorOptions: {
       type: 'ARTICLETILE',
+      showUI: false,
       teaserType: 'articleTile',
-      insertButton: 'Artikel Tile',
-      dnd: false,
       formOptions: [
         'image',
         'byline',
@@ -489,7 +487,12 @@ const createSchema = ({
     },
     editorModule: 'dossierIntro',
     editorOptions: {
-      type: 'ARTICLECOLLECTIONINTRO'
+      type: 'ARTICLECOLLECTIONINTRO',
+      formOptions: [
+        'image',
+        'byline',
+        'kind'
+      ]
     },
     rules: [
       image,
@@ -504,6 +507,7 @@ const createSchema = ({
         editorOptions: {
           type: 'DOSSIERTAG',
           placeholder: 'Dossier',
+          isStatic: true,
           depth: 6
         }
       },
@@ -540,7 +544,7 @@ const createSchema = ({
       {
         matchMdast: matchParagraph,
         component: TeaserFrontDossierMore,
-        //editorModule: 'dossierMore',
+        editorModule: 'paragraph',
         editorOptions: {
           isStatic: true,
           placeholder: 'Mehr zum Thema-Link'
