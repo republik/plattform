@@ -498,6 +498,7 @@ const createSchema = ({
   t = () => ''
 } = {}) => {
   const teasers = createTeasers({
+    t,
     Link
   })
 

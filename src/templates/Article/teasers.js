@@ -1,5 +1,8 @@
 import React from 'react'
 
+import * as Interaction from '../../components/Typography/Interaction'
+import colors from '../../theme/colors'
+
 import {
   matchType,
   matchZone,
@@ -34,6 +37,7 @@ import { Breakout } from '../../components/Center'
 import * as Editorial from '../../components/Typography/Editorial'
 
 const createTeasers = ({
+  t,
   Link
 }) => {
   const teaserTitle = (type, Headline) => ({
@@ -200,12 +204,17 @@ const createTeasers = ({
   return {
     articleCollection: {
       matchMdast: matchZone('ARTICLECOLLECTION'),
-      component: ({ children, attributes, ...props }) => (
-        <Breakout size='breakout' attributes={attributes}>
-          {children}
-        </Breakout>
-      ),
-      props: node => node.data,
+      component: ({ children, attributes, unauthorized, unauthorizedText }) => unauthorized
+      ? <Interaction.P style={{backgroundColor: colors.primaryBg, padding: '10px 20px'}}>
+        {unauthorizedText || t('styleguide/templates/unauthorizedZone')}
+      </Interaction.P>
+      : <Breakout size='breakout' attributes={attributes}>
+        {children}
+      </Breakout>,
+      props: node => ({
+        unauthorized: node.data.membersOnly && !node.children.length,
+        unauthorizedText: node.data.unauthorizedText
+      }),
       editorModule: 'articleCollection',
       editorOptions: {
         type: 'ARTICLECOLLECTION',
