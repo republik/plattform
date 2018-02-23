@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-22T15:25:59.333Z",
+  "updated": "2018-02-23T13:07:07.469Z",
   "title": "live",
   "data": [
     {
@@ -33,6 +33,10 @@
     {
       "key": "api/membership/monthly/reactivate",
       "value": "Sie können nicht noch einmal ein Monats-Abonnement kaufen. Bitte verlängern sie Ihr Abonnement stattdessen in Ihrem Konto (www.republik.ch/konto)."
+    },
+    {
+      "key": "api/membership/reactivate/otherActive",
+      "value": "Sie haben bereits eine andere, aktive Mitgliedschaft."
     },
     {
       "key": "api/membership/cancel/isInactive",

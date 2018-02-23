@@ -29,6 +29,14 @@ module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate, enforce
     const user = await transaction.public.users.findOne({ id: membership.userId })
     Roles.ensureUserIsMeOrInRoles(user, req.user, ['supporter'])
 
+    const activeMemberships = await transaction.public.memberships.find({
+      userId: user.id,
+      active: true
+    })
+    if (activeMemberships.length && !activeMemberships.find(m => m.id === membershipId)) {
+      throw new Error(t('api/membership/reactivate/otherActive'))
+    }
+
     const membershipType = await transaction.public.membershipTypes.findOne({
       id: membership.membershipTypeId
     })
