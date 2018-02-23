@@ -75,7 +75,6 @@ export const getNewBlock = options => () => {
 
 const teaserPlugin = options => {
   const { TYPE, rule } = options
-
   const {
     titleModule,
     leadModule,
@@ -99,7 +98,7 @@ const teaserPlugin = options => {
         {children}
       </Teaser>
 
-      if (options.rule.editorOptions.dnd === false) {
+      if (options.rule.editorOptions.showUI === false) {
         return compiledTeaser
       }
 
@@ -211,20 +210,22 @@ const teaserPlugin = options => {
   }
 }
 
-export default options => ({
-  helpers: {
-    serializer: getSerializer(options),
-    newItem: getNewBlock(options)
-  },
-  plugins: [
-    teaserPlugin(options)
-  ],
-  ui: {
-    insertButtons: options.rule.editorOptions.dnd !== false ? [
-      TeaserButton(options)
-    ] : [],
-    forms: [
-      TeaserForm(options)
-    ]
-  }
-})
+export default options => {
+  return ({
+    helpers: {
+      serializer: getSerializer(options),
+      newItem: getNewBlock(options)
+    },
+    plugins: [
+      teaserPlugin(options)
+    ],
+    ui: {
+      insertButtons: options.rule.editorOptions.insertButtonText ? [
+        TeaserButton(options)
+      ] : [],
+      forms: [
+        TeaserForm(options)
+      ]
+    }
+  })
+}

@@ -5,6 +5,16 @@ import { allBlocks, parent, childIndex, depth } from '../../utils/selection'
 
 import { buttonStyles, matchBlock } from '../../utils'
 
+import { TeaserInlineUI } from '../teaser/ui'
+import {
+  getIndex,
+  getParent,
+  insert,
+  moveUp,
+  moveDown,
+  remove
+} from '../teaser/actions'
+
 const isEmpty = options => {
   const { introTeaserModule, articleCollectionModule, outroTextModule } = getSubmodules(options)
   return node =>
@@ -46,6 +56,22 @@ export const getSubmodules = options => {
   }
 }
 
+export const getData = data => ({
+  url: null,
+  textPosition: 'topleft',
+  color: '#000',
+  bgColor: '#fff',
+  center: false,
+  image: null,
+  kind: 'editorial',
+  titleSize: 'standard',
+  teaserType: 'frontImage',
+  reverse: false,
+  portrait: true,
+  showImage: true,
+  onlyImage: false,
+  ...data || {}
+})
 export const fromMdast = options => {
   const { TYPE } = options
   const { introTeaserModule, articleCollectionModule, outroTextModule } = getSubmodules(options)
@@ -54,7 +80,7 @@ export const fromMdast = options => {
     return ({
       kind: 'block',
       type: TYPE,
-      data: node.data,
+      data: getData(node.data),
       nodes: [
         introTeaserModule.helpers.serializer.fromMdast(node.children[0], 0, node, rest),
         articleCollectionModule.helpers.serializer.fromMdast(node.children[1], 1, node, rest),
@@ -83,12 +109,33 @@ export const toMdast = options => {
 
 export const FrontDossierPlugin = options => {
   const Group = options.rule.component
-  // const Intro = introTeaserModule.component
+  const UI = TeaserInlineUI(options)
 
   return {
-    renderNode ({ node, children, attributes }) {
+    renderNode ({ node, children, attributes, editor }) {
+      const teaser = editor.value.blocks.reduce(
+        (memo, node) =>
+          memo || editor.value.document.getFurthest(node.key, matchBlock(options.TYPE)),
+        undefined
+      )
+
+      const isSelected = teaser === node && !editor.value.isBlurred
+
       if (matchBlock(options.TYPE)(node)) {
-        return <Group attributes={attributes}>{children}</Group>
+        return [
+          <UI
+            key='ui'
+            isSelected={isSelected}
+            nodeKey={node.key}
+            getIndex={getIndex(editor)}
+            getParent={getParent(editor)}
+            moveUp={moveUp(editor)}
+            moveDown={moveDown(editor)}
+            insert={insert(editor)}
+            remove={remove(editor)}
+            />,
+          <Group key='content' attributes={attributes}>{children}</Group>
+        ]
       }
     }
   }
@@ -113,10 +160,15 @@ export const FrontDossierButton = options => {
   }
 
   return ({ value, onChange }) => {
+    const disabled = (
+      value.isBlurred ||
+      value.isExpanded
+    )
     return (
       <span
         {...buttonStyles.insert}
         data-visible
+        data-disabled={disabled}
         onMouseDown={articleDossierButtonClickHandler(value, onChange)}
       >
         {options.rule.editorOptions.insertButtonText}

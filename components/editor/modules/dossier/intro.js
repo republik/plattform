@@ -5,6 +5,8 @@ import { Block } from 'slate'
 import MarkdownSerializer from 'slate-mdast-serializer'
 import { matchImageParagraph } from 'mdast-react-render/lib/utils'
 
+import { TeaserForm } from '../teaser/ui'
+
 export const getSubmodules = ({ subModules }) => {
   const [formatModule, titleModule, leadModule] = subModules
 
@@ -223,7 +225,7 @@ export default options => ({
   ui: {
     insertButtons: [],
     forms: [
-      // TeaserForm(options)
+      TeaserForm({ subModuleResolver: getSubmodules, ...options })
     ]
   }
 })

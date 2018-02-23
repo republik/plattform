@@ -39,7 +39,6 @@ import createArticleDossier from './modules/dossier/article'
 import createFrontDossier from './modules/dossier/front'
 import createDossierIntro from './modules/dossier/intro'
 import createArticleCollection from './modules/articlecollection'
-import createMoreLink from './modules/dossier/moreLink'
 import createChartModule from './modules/chart'
 import createChartCanvasModule from './modules/chart/canvas'
 
@@ -78,7 +77,6 @@ const moduleCreators = {
   articleDossier: createArticleDossier,
   frontDossier: createFrontDossier,
   dossierIntro: createDossierIntro,
-  dossierMore: createMoreLink,
   articleCollection: createArticleCollection,
   chart: createChartModule,
   chartCanvas: createChartCanvasModule
