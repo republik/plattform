@@ -463,7 +463,7 @@ const createSchema = ({
       </TeaserFrontTileRow>
     },
     // TMP: Disabled until editor integration
-    editorModule: 'articleCollection',
+    editorModule: 'articleGroup',
     editorOptions: {
       type: 'ARTICLETILEROW'
     },

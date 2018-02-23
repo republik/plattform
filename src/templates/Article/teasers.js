@@ -151,6 +151,7 @@ const createTeasers = ({
     editorOptions: {
       type: 'ARTICLETILE',
       teaserType: 'articleTile',
+      showUI: false,
       formOptions: [
         'showImage',
         'image',
@@ -187,7 +188,7 @@ const createTeasers = ({
         {children}
       </TeaserFrontTileRow>
     },
-    editorModule: 'articleCollection',
+    editorModule: 'articleGroup',
     editorOptions: {
       type: 'ARTICLETILEROW'
     },
@@ -198,17 +199,17 @@ const createTeasers = ({
 
   return {
     articleCollection: {
-      matchMdast: matchTeaserType('articleDossier'),
+      matchMdast: matchZone('ARTICLECOLLECTION'),
       component: ({ children, attributes, ...props }) => (
         <Breakout size='breakout' attributes={attributes}>
           {children}
         </Breakout>
       ),
       props: node => node.data,
-      editorModule: 'articleDossier',
+      editorModule: 'articleCollection',
       editorOptions: {
-        type: 'ARTICLEDOSSIER',
-        insertButtonText: 'Dossier',
+        type: 'ARTICLECOLLECTION',
+        insertButtonText: 'Artikelsammlung',
         insertTypes: ['PARAGRAPH'],
         formOptions: []
       },
