@@ -1,79 +1,82 @@
 import MarkdownSerializer from 'slate-mdast-serializer'
+import { Checkbox } from '@project-r/styleguide'
 import { Block } from 'slate'
 
 import { buttonStyles, matchBlock } from '../../utils'
 import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
 
 import injectBlock from '../../utils/injectBlock'
+import UIForm from '../../UIForm'
 
 const getNewBlock = options => {
-  const { headerModule, articleCollectionModule } = getSubmodules(options)
+  const { headerModule, articleGroupModule } = getSubmodules(options)
   return () => Block.create({
     kind: 'block',
     type: options.TYPE,
     nodes: [
       Block.create({
         kind: 'block',
-        data: {
-          teaserType: 'articleDossier'
-        },
         type: headerModule.TYPE
       }),
-      articleCollectionModule.helpers.newItem()
+      articleGroupModule.helpers.newItem()
     ]
   })
 }
 
+export const getData = data => ({
+  membersOnly: true,
+  ...(data || {})
+})
+
 export const getSubmodules = options => {
   const [
     headerModule,
-    articleCollectionModule
+    articleGroupModule
   ] = options.subModules
   return {
     headerModule,
-    articleCollectionModule
+    articleGroupModule
   }
 }
 
 export const fromMdast = options => {
   const { TYPE } = options
-  const { headerModule, articleCollectionModule } = getSubmodules(options)
+  const { headerModule, articleGroupModule } = getSubmodules(options)
 
   return (node, index, parent, rest) => ({
     kind: 'block',
     type: TYPE,
-    data: node.data,
+    data: getData(node.data),
     nodes: [
       headerModule.helpers.serializer.fromMdast(node.children[0], 0, node, rest),
-      articleCollectionModule.helpers.serializer.fromMdast(node.children[1], 1, node, rest)
+      articleGroupModule.helpers.serializer.fromMdast(node.children[1], 1, node, rest)
     ]
   })
 }
 
 export const toMdast = options => {
-  const { headerModule, articleCollectionModule } = getSubmodules(options)
+  const { headerModule, articleGroupModule } = getSubmodules(options)
 
   return (node, index, parent, rest) => ({
     type: 'zone',
-    identifier: 'TEASER',
+    identifier: 'ARTICLECOLLECTION',
     data: {
-      teaserType: 'articleDossier',
       ...node.data
     },
     children: [
       headerModule.helpers.serializer.toMdast(node.nodes[0], 0, node, rest),
-      articleCollectionModule.helpers.serializer.toMdast(node.nodes[1], 1, node, rest)
+      articleGroupModule.helpers.serializer.toMdast(node.nodes[1], 1, node, rest)
     ]
   })
 }
 
-export const ArticleDossierPlugin = options => {
-  const ArticleDossier = options.rule.component
+export const articleCollectionPlugin = options => {
+  const ArticleCollection = options.rule.component
 
   return {
     renderNode ({ node, children, attributes }) {
       if (matchBlock(options.TYPE)(node)) {
-        return <ArticleDossier attributes={attributes}>{children}</ArticleDossier>
+        return <ArticleCollection attributes={attributes}>{children}</ArticleCollection>
       }
     },
     onKeyDown: createRemoveEmptyKeyHandler({
@@ -85,8 +88,8 @@ export const ArticleDossierPlugin = options => {
   }
 }
 
-export const ArticleDossierButton = options => {
-  const articleDossierButtonClickHandler = (disabled, value, onChange) => event => {
+export const articleCollectionButton = options => {
+  const articleCollectionButtonClickHandler = (disabled, value, onChange) => event => {
     event.preventDefault()
     if (!disabled) {
       onChange(value
@@ -110,7 +113,7 @@ export const ArticleDossierButton = options => {
         {...buttonStyles.insert}
         data-disabled={disabled}
         data-visible
-        onMouseDown={articleDossierButtonClickHandler(disabled, value, onChange)}
+        onMouseDown={articleCollectionButtonClickHandler(disabled, value, onChange)}
       >
         {options.rule.editorOptions.insertButtonText}
       </span>
@@ -129,6 +132,29 @@ export const getSerializer = options => {
   ]})
 }
 
+export const articleCollectionForm = options => {
+  return ({ value, onChange }) => {
+    const articleCollection = value.blocks.reduce(
+      (memo, node) =>
+      memo || value.document.getFurthest(node.key, matchBlock(options.TYPE)),
+      undefined
+    )
+    if (!articleCollection) {
+      return null
+    }
+    return <UIForm>
+      <Checkbox
+        checked={articleCollection.data.get('membersOnly')}
+        onChange={(_, checked) => onChange(
+          value.change().setNodeByKey(articleCollection.key, { data: { membersOnly: checked } })
+        )}
+    >
+      Nur für Members sichtbar?
+    </Checkbox>
+    </UIForm>
+  }
+}
+
 export default options => ({
   helpers: {
     serializer: getSerializer(options),
@@ -136,11 +162,14 @@ export default options => ({
     // isEmpty: isEmpty(options)
   },
   plugins: [
-    ArticleDossierPlugin(options)
+    articleCollectionPlugin(options)
   ],
   ui: {
     insertButtons: [
-      ArticleDossierButton(options)
+      articleCollectionButton(options)
+    ],
+    forms: [
+      articleCollectionForm(options)
     ]
   }
 })

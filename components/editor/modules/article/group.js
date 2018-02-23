@@ -61,7 +61,7 @@ export const toMdast = ({
   })
 }
 
-const ArticleCollectionPlugin = options => {
+const AricleGroupPlugin = options => {
   const { TYPE, rule } = options
   const TeaserGroup = rule.component
 
@@ -72,7 +72,10 @@ const ArticleCollectionPlugin = options => {
       }
 
       return ([
-        <TeaserGroup key='teaser' {...node.data.toJS()} attributes={attributes}>
+        <TeaserGroup key='teaser' {...node.data.toJS()} attributes={{
+          ...attributes,
+          style: { position: 'relative' }
+        }}>
           {children}
         </TeaserGroup>
       ])
@@ -105,7 +108,7 @@ const getSerializer = options => {
   })
 }
 
-const ArticleCollectionForm = options => {
+const AricleGroupForm = options => {
   const { TYPE } = options
 
   const [
@@ -155,14 +158,14 @@ export default options => ({
   },
   rule: getSerializer(options).rules[0],
   plugins: [
-    ArticleCollectionPlugin(options)
+    AricleGroupPlugin(options)
   ],
   ui: {
     insertButtons: [
       // TeaserGroupButton(options)
     ],
     forms: [
-      ArticleCollectionForm(options)
+      AricleGroupForm(options)
     ]
   }
 })
