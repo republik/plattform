@@ -4,11 +4,11 @@
   <ChartLead>in Prozent des BIP 2015</ChartLead>
   <CsvChart t={t}
     config={{
-      type: 'Bar',
-      numberFormat: '.0%',
-      y: 'country',
-      category: "datum.country == 'Schweiz' ? '1' : '0'",
-      showBarValues: true
+      "type": "Bar",
+      "numberFormat": ".0%",
+      "y": "country",
+      "category": "datum.country == 'Schweiz' ? '1' : '0'",
+      "showBarValues": true
     }}
     values={`
 country,value
@@ -32,15 +32,15 @@ Irland,0.236
   <ChartLead>in Prozent</ChartLead>
   <CsvChart t={t}
     config={{
-      type: 'Bar',
-      color: 'type',
-      colorSort: 'none',
-      numberFormat: '%',
-      sort: 'none',
-      column: 'type',
-      y: 'category',
-      columns: 3,
-      minInnerWidth: 250
+      "type": "Bar",
+      "color": "type",
+      "colorSort": "none",
+      "numberFormat": "%",
+      "sort": "none",
+      "column": "type",
+      "y": "category",
+      "columns": 3,
+      "minInnerWidth": 250
     }}
     values={`
 category,type,value
@@ -74,16 +74,16 @@ nicht oder nur einstellig klassifizierbar,Betriebliche Weiterbildung,0.04
   <ChartTitle>Kriminalitätsfurcht 2012</ChartTitle>
   <CsvChart t={t}
     config={{
-      type: 'Bar',
-      numberFormat: "%",
-      color: "concern",
-      colorRange: "diverging2",
-      colorLegend: true,
-      y: "category",
-      domain: [0, 1],
-      sort: "none",
-      colorSort: "none",
-      highlight: "datum.category == 'Allgemein'"
+      "type": "Bar",
+      "numberFormat": "%",
+      "color": "concern",
+      "colorRange": "diverging2",
+      "colorLegend": true,
+      "y": "category",
+      "domain": [0, 1],
+      "sort": "none",
+      "colorSort": "none",
+      "highlight": "datum.category == 'Allgemein'"
     }}
     values={`
 category,concern,value

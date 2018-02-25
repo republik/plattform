@@ -5,10 +5,10 @@ Lollipop charts are just lighter bar charts. The circle at the end makes it idea
   <ChartTitle>Armutsrisikoquote nach Altersgruppen 2014</ChartTitle>
   <CsvChart t={t}
     config={{
-      type: 'Lollipop',
-      numberFormat: '%',
-      y: 'facet_value',
-      sort: 'none'
+      "type": "Lollipop",
+      "numberFormat": "%",
+      "y": "facet_value",
+      "sort": "none"
     }}
     values={`
 facet,facet_value,year,value,confidence95_lower,confidence95_upper
