@@ -1,7 +1,7 @@
 ```react
 <div>
-  <Interaction.H2>Lebenserwartung bei Geburt</Interaction.H2>
-  <Interaction.P>Ein Vergleich zwischen 1990 und 2015.</Interaction.P>
+  <ChartTitle>Lebenserwartung bei Geburt</ChartTitle>
+  <ChartLead>Ein Vergleich zwischen 1990 und 2015.</ChartLead>
   <CsvChart t={t}
     config={{
       "type": "Slope",

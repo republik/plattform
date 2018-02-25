@@ -2,7 +2,7 @@ Lollipop charts are just lighter bar charts. The circle at the end makes it idea
 
 ```react
 <div>
-  <Interaction.H2>Armutsrisikoquote nach Altersgruppen 2014</Interaction.H2>
+  <ChartTitle>Armutsrisikoquote nach Altersgruppen 2014</ChartTitle>
   <CsvChart t={t}
     config={{
       type: 'Lollipop',

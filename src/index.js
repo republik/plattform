@@ -494,9 +494,10 @@ ReactDOM.render(
             title: 'Bars',
             imports: {
               ...require('./components/Typography'),
-              t,
-              Chart: require('./components/Chart'),
-              CsvChart: require('./components/Chart/Csv')
+              ChartTitle: require('./components/Chart').ChartTitle,
+              ChartLead: require('./components/Chart').ChartLead,
+              CsvChart: require('./components/Chart/Csv'),
+              t
             },
             src: require('./components/Chart/Bars.docs.md')
           },
@@ -505,9 +506,10 @@ ReactDOM.render(
             title: 'Lollipops',
             imports: {
               ...require('./components/Typography'),
-              t,
-              Chart: require('./components/Chart'),
-              CsvChart: require('./components/Chart/Csv')
+              ChartTitle: require('./components/Chart').ChartTitle,
+              ChartLead: require('./components/Chart').ChartLead,
+              CsvChart: require('./components/Chart/Csv'),
+              t
             },
             src: require('./components/Chart/Lollipops.docs.md')
           },
@@ -516,9 +518,10 @@ ReactDOM.render(
             title: 'Lines',
             imports: {
               ...require('./components/Typography'),
-              t,
-              Chart: require('./components/Chart'),
-              CsvChart: require('./components/Chart/Csv')
+              ChartTitle: require('./components/Chart').ChartTitle,
+              ChartLead: require('./components/Chart').ChartLead,
+              CsvChart: require('./components/Chart/Csv'),
+              t
             },
             src: require('./components/Chart/Lines.docs.md')
           },
@@ -527,9 +530,10 @@ ReactDOM.render(
             title: 'Slopes',
             imports: {
               ...require('./components/Typography'),
-              t,
-              Chart: require('./components/Chart'),
-              CsvChart: require('./components/Chart/Csv')
+              ChartTitle: require('./components/Chart').ChartTitle,
+              ChartLead: require('./components/Chart').ChartLead,
+              CsvChart: require('./components/Chart/Csv'),
+              t
             },
             src: require('./components/Chart/Slopes.docs.md')
           }

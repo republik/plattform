@@ -1,7 +1,7 @@
 ```react
 <div>
-  <Interaction.H2>Abgabenquote im internationalen Vergleich</Interaction.H2>
-  <Interaction.P>in Prozent des BIP 2015</Interaction.P>
+  <ChartTitle>Abgabenquote im internationalen Vergleich</ChartTitle>
+  <ChartLead>in Prozent des BIP 2015</ChartLead>
   <CsvChart t={t}
     config={{
       type: 'Bar',
@@ -28,8 +28,8 @@ Irland,0.236
 
 ```react
 <div>
-  <Interaction.H2>Themenstruktur der verschiedenen Formen der Weiterbildung 2014</Interaction.H2>
-  <Interaction.P>in Prozent</Interaction.P>
+  <ChartTitle>Themenstruktur der verschiedenen Formen der Weiterbildung 2014</ChartTitle>
+  <ChartLead>in Prozent</ChartLead>
   <CsvChart t={t}
     config={{
       type: 'Bar',
@@ -71,7 +71,7 @@ nicht oder nur einstellig klassifizierbar,Betriebliche Weiterbildung,0.04
 
 ```react
 <div>
-  <Interaction.H2>Kriminalitätsfurcht 2012</Interaction.H2>
+  <ChartTitle>Kriminalitätsfurcht 2012</ChartTitle>
   <CsvChart t={t}
     config={{
       type: 'Bar',
