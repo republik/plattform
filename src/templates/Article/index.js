@@ -229,6 +229,29 @@ const centerFigure = {
   ]
 }
 
+const interactionParagraphRules = [
+  ...globalInlines,
+  {
+    matchMdast: matchType('strong'),
+    component: Interaction.Emphasis,
+    editorModule: 'mark',
+    editorOptions: {
+      type: 'STRONG', // ToDo: Change to INTERACTIONSTRONG (pending contextual editor UI)
+      mdastType: 'strong'
+    }
+  },
+  {
+    matchMdast: matchType('emphasis'),
+    component: Interaction.Cursive,
+    editorModule: 'mark',
+    editorOptions: {
+      type: 'EMPHASIS', // ToDo: Change to INTERACTIONEMPHASIS (pending contextual editor UI)
+      mdastType: 'emphasis'
+    }
+  },
+  link
+]
+
 const infoBox = {
   matchMdast: matchInfoBox,
   component: InfoBox,
@@ -290,28 +313,7 @@ const infoBox = {
         afterType: 'PARAGRAPH',
         insertAfterType: 'CENTER'
       },
-      rules: [
-        ...globalInlines,
-        {
-          matchMdast: matchType('strong'),
-          component: Interaction.Emphasis,
-          editorModule: 'mark',
-          editorOptions: {
-            type: 'STRONG', // ToDo: Change to INTERACTIONSTRONG (pending contextual editor UI)
-            mdastType: 'strong'
-          }
-        },
-        {
-          matchMdast: matchType('emphasis'),
-          component: Interaction.Cursive,
-          editorModule: 'mark',
-          editorOptions: {
-            type: 'EMPHASIS', // ToDo: Change to INTERACTIONEMPHASIS (pending contextual editor UI)
-            mdastType: 'emphasis'
-          }
-        },
-        link
-      ]
+      rules: interactionParagraphRules
     }
   ]
 }
@@ -650,7 +652,8 @@ const createSchema = ({
                   type: 'H2',
                   depth: 2,
                   formatButtonText: 'Zwischentitel'
-                }
+                },
+                rules: globalInlines
               },
               {
                 matchMdast: matchZone('FIGUREGROUP'),
@@ -806,7 +809,7 @@ const createSchema = ({
                       afterType: 'PARAGRAPH',
                       insertAfterType: 'CENTER'
                     },
-                    rules: paragraph.rules
+                    rules: interactionParagraphRules
                   }
                 ]
               },
@@ -833,7 +836,8 @@ const createSchema = ({
                       placeholder: 'Titel',
                       depth: 3,
                       isStatic: true
-                    }
+                    },
+                    rules: globalInlines
                   },
                   {
                     matchMdast: (node, index, parent) =>
@@ -844,7 +848,8 @@ const createSchema = ({
                       type: 'CHARTLEAD',
                       placeholder: 'Lead',
                       isStatic: true
-                    }
+                    },
+                    rules: interactionParagraphRules
                   },
                   {
                     matchMdast: matchType('code'),
@@ -881,7 +886,7 @@ const createSchema = ({
                       afterType: 'PARAGRAPH',
                       insertAfterType: 'CENTER'
                     },
-                    rules: paragraph.rules
+                    rules: interactionParagraphRules
                   }
                 ]
               },
