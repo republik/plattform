@@ -69,10 +69,10 @@ const formatPow = (t, baseValue) => {
   let suffix = ''
   if (n.length > 9) {
     scale = value => value / Math.pow(10, 9)
-    suffix = ' Mio.'
+    suffix = ' Mrd.'
   } else if (n.length > 6) {
     scale = value => value / Math.pow(10, 6)
-    suffix = ' Mrd.'
+    suffix = ' Mio.'
   }
   return {
     scale,
@@ -81,9 +81,23 @@ const formatPow = (t, baseValue) => {
 }
 
 const sFormat = (t, precision = 4, pow, type = 'r') => {
-  const numberFormat = swissNumbers.format(',d')
+  const numberFormat4 = swissNumbers.format('d')
+  const numberFormat5 = swissNumbers.format(',d')
+  const numberFormat = value => {
+    if (String(Math.round(value)).length > 4) {
+      return numberFormat5(value)
+    }
+    return numberFormat4(value)
+  }
   // we only round suffixed values to precision
-  const numberFormatWithSuffix = swissNumbers.format(`,.${precision}${type}`)
+  const numberFormatWithSuffix4 = swissNumbers.format(`.${precision}${type}`)
+  const numberFormatWithSuffix5 = swissNumbers.format(`,.${precision}${type}`)
+  const numberFormatWithSuffix = value => {
+    if (String(Math.round(value)).length > 4) {
+      return numberFormatWithSuffix5(value)
+    }
+    return numberFormatWithSuffix4(value)
+  }
   return value => {
     let fPow = pow || formatPow(t, value)
     if (fPow.suffix) {
