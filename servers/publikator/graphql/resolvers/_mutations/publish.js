@@ -354,7 +354,7 @@ module.exports = async (
         bots: 1,
         action_name: `Email: ${doc.content.meta.emailSubject}`,
         ...utmParams
-      })}`
+      })}&uid=*|URL:EMAIL|*`
       html = html.replace(
         '</body>',
         `<img src="${openBeacon}" height="1" width="1"></body>`
