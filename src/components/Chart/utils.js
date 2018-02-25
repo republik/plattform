@@ -203,3 +203,10 @@ export const transparentAxisStroke = 'rgba(0,0,0,0.17)'
 export const circleFill = '#fff'
 
 export const deduplicate = (d, i, all) => all.indexOf(d) === i
+
+
+// This is unsafe
+// - all props that are passed to datumFn should not be user defined
+//   currently: filter, columnFilter.test, category, highlight
+// eslint-disable-next-line no-new-func
+export const datumFn = code => new Function('datum', `return ${code}`)

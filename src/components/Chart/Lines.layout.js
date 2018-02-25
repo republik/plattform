@@ -9,7 +9,8 @@ import {
   subsup,
   runSort,
   groupBy,
-  deduplicate
+  deduplicate,
+  datumFn
 } from './utils'
 
 import {
@@ -32,12 +33,6 @@ const Y_END_LABEL_SPACE = 3 // width of space between label and value
 
 const valueGauger = createTextGauger(VALUE_FONT, {dimension: 'width', html: true})
 const labelGauger = createTextGauger(LABEL_FONT, {dimension: 'width', html: true})
-
-// This is unsafe
-// - all props that are passed to datumFn should not be user defined
-//   currently: filter, category, columnFilter.test, highlight, stroke, labelFilter
-// eslint-disable-next-line no-new-func
-const datumFn = code => new Function('datum', `return ${code}`)
 
 export default (props) => {
   const {

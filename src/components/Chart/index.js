@@ -4,6 +4,7 @@ import { css } from 'glamor'
 
 import { measure } from './utils'
 import Bar, { Lollipop } from './Bars'
+import TimeBar from './TimeBars'
 import { Line, Slope } from './Lines';
 import colors from '../../theme/colors'
 
@@ -12,6 +13,7 @@ import { sansSerifMedium19, sansSerifMedium22, sansSerifRegular16, sansSerifRegu
 
 const ReactCharts = {
   Bar,
+  TimeBar,
   Lollipop,
   Line,
   Slope
@@ -64,6 +66,8 @@ export const ChartLead = ({children, ...props}) => (
   <p {...props} {...styles.p}>{children}</p>
 )
 
+const tLabel = identity => identity
+
 class Chart extends Component {
   constructor(props) {
     super(props)
@@ -90,6 +94,7 @@ class Chart extends Component {
         {!!width && (
           <ReactChart {...config}
             t={t}
+            tLabel={tLabel}
             colorRanges={colorRanges}
             width={width}
             values={this.props.values}

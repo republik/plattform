@@ -13,7 +13,8 @@ import {
   runSort, sortPropType,
   transparentAxisStroke,
   circleFill,
-  deduplicate
+  deduplicate,
+  datumFn
 } from './utils'
 import ColorLegend from './ColorLegend'
 
@@ -68,11 +69,6 @@ const BAR_STYLES = {
   }
 }
 
-// This is unsafe
-// - all props that are passed to datumFn should not be user defined
-//   currently: filter, columnFilter.test, category, highlight
-// eslint-disable-next-line no-new-func
-const datumFn = code => new Function('datum', `return ${code}`)
 const last = (array, index) => array.length - 1 === index
 
 const styles = {
