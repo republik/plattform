@@ -220,3 +220,55 @@ Stickstofftrifluorid,2016,12000.0000
   </Editorial.Note>
 </div>
 ```
+
+## Diverging
+
+```react
+<div>
+  <ChartTitle>Ordentliches Finanzierungsergebnis des Bundes</ChartTitle>
+  <ChartLead>in Milliarden CHF</ChartLead>
+  <CsvChart t={t}
+    config={{
+      "type": "TimeBar",
+      "color": "type",
+      "colorRange": ["#90AA00", "#542785"],
+      "xTicks": [1990, 2000, 2010, 2016],
+      "numberFormat": ".3s"
+    }}
+    values={`
+year,value,type
+1990,1057658360.08,Überschuss
+1991,-2011523534.73,Defizit
+1992,-2863480070.89,Defizit
+1993,-7818499172.36,Defizit
+1994,-5102405964.07,Defizit
+1995,-3262732301.78,Defizit
+1996,-3743144543.84,Defizit
+1997,-5269452952.95,Defizit
+1998,-857851361.56,Defizit
+1999,-2351879865.72,Defizit
+2000,3969594868.51,Überschuss
+2001,-224765129.41,Defizit
+2002,-2628735642.11,Defizit
+2003,-2800591858.81,Defizit
+2004,-1655861976.03,Defizit
+2005,-121162004.28,Defizit
+2006,2534297019.44,Überschuss
+2007,4126837070.11,Überschuss
+2008,7296651427.23,Überschuss
+2009,2721390296.13,Überschuss
+2010,3567528923.07,Überschuss
+2011,1912378916.33,Überschuss
+2012,1261617831.17,Überschuss
+2013,1331670681.45,Überschuss
+2014,-123948563.32,Defizit
+2015,2337300888.72,Überschuss
+2016,751559663.61,Überschuss
+    `.trim()} />
+  <Editorial.Note style={{marginTop: 10}}>
+    Quelle: <Editorial.A href='https://www.efv.admin.ch/efv/de/home/finanzberichterstattung/bundeshaushalt_ueb/stat_kennz_bundeshh.html'>Eidgenössische Finanzverwaltung</Editorial.A>
+  </Editorial.Note>
+
+</div>
+```
+

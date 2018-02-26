@@ -1,5 +1,5 @@
 import { formatLocale, formatSpecifier, precisionFixed } from 'd3-format'
-import { ascending, descending } from 'd3-array'
+import { ascending, descending, max as d3Max } from 'd3-array'
 import { createElement } from 'react'
 import PropTypes from 'prop-types'
 
@@ -130,7 +130,7 @@ export const getFormat = (numberFormat, t) => {
 export const calculateAxis = (numberFormat, t, domain, unit = '') => {
   const [min, max] = domain
   const step = (max - min) / 2
-  const ticks = [min, min + step, max]
+  const ticks = [min, min >= 0 ? min + step : 0, max]
   const format = swissNumbers.format
 
   const specifier = formatSpecifier(numberFormat)
@@ -146,7 +146,8 @@ export const calculateAxis = (numberFormat, t, domain, unit = '') => {
     const regularFormatInner = format(specifier.toString())
     regularFormat = (value) => regularFormatInner(value * 100)
   } else if (specifier.type === 's') {
-    let pow = formatPow(t, min + step)
+    const magnitude = d3Max([max - (min > 0 ? min : 0), min].map(Math.abs))
+    let pow = formatPow(t, Math.max(0, min) + magnitude / 2)
     let scaledStep = pow.scale(step)
     let scaledMax = pow.scale(max)
     specifier.precision = precisionFixed((scaledStep - Math.floor(scaledStep)) || (scaledMax - Math.floor(scaledMax)))

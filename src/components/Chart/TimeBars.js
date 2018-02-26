@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import { css } from 'glamor'
 
-import { max, ascending } from 'd3-array'
+import { max, min, ascending } from 'd3-array'
 import { scaleLinear, scaleOrdinal, scaleBand } from 'd3-scale'
 
 import { sansSerifRegular12, sansSerifMedium12 } from '../Typography/styles'
@@ -125,7 +125,7 @@ const TimeBarChart = (props) => {
   const innerHeight = props.height - (mini ? paddingTop + AXIS_BOTTOM_HEIGHT : 0)
   const y = scaleLinear()
     .domain(props.domain ? props.domain : [
-      0,
+      Math.min(0, min(bars, d => d.sum)),
       max(bars, d => d.sum)
     ])
     .range([innerHeight, 0])
@@ -136,19 +136,26 @@ const TimeBarChart = (props) => {
 
   bars.forEach(group => {
     let stackValue = 0
-    let yPos = y.range()[0]
+    let yPos = y(0)
     group.segments.forEach(segment => {
       let y0 = y(stackValue)
       let y1 = y(stackValue + segment.value)
-      const size = y0 - y1
-      yPos -= size
+      const positiv = y1 <= y0
+      const size = Math.abs(y0 - y1)
+      if (positiv) {
+        yPos -= size
+      }
       segment.y = yPos
       segment.height = size
+      if (!positiv) {
+        yPos += size
+      }
       stackValue += segment.value
     })
   })
 
   const yAxis = calculateAxis(props.numberFormat, t, y.domain(), tLabel(props.unit))
+  const yTicks = props.yTicks || yAxis.ticks
 
   const xYears = data
     .map(d => d.year)
@@ -197,15 +204,17 @@ const TimeBarChart = (props) => {
   const barStep = x.step()
   const barPadding = barStep - barWidth
 
-  let xTicks
-  if (barStep >= 50) {
-    xTicks = xYears
-  } else {
-    xTicks = xYears.filter(year =>
-      // edge years
-      xYears.indexOf(year + 1) === -1 ||
-      xYears.indexOf(year - 1) === -1
-    ).filter(deduplicate)
+  let xTicks = props.xTicks
+  if (!xTicks) {
+    if (barStep >= 50) {
+      xTicks = xYears
+    } else {
+      xTicks = xYears.filter(year =>
+        // edge years
+        xYears.indexOf(year + 1) === -1 ||
+        xYears.indexOf(year - 1) === -1
+      ).filter(deduplicate)
+    }
   }
 
   const xDomainLast = xDomain[xDomain.length - 1]
@@ -287,11 +296,11 @@ const TimeBarChart = (props) => {
             })
           }
           {
-            yAxis.ticks.map((tick, i) => (
+            yTicks.map((tick, i) => (
               <g key={tick} transform={`translate(0,${y(tick)})`}>
-                {tick > 0 && <line {...styles.axisYLine} x2={width}/>}
+                {i > 0 && <line {...styles.axisYLine} x2={width}/>}
                 <text {...styles.axisLabel} dy='-3px'>
-                  {yAxis.axisFormat(tick, last(yAxis.ticks, i))}
+                  {yAxis.axisFormat(tick, last(yTicks, i))}
                 </text>
               </g>
             ))
@@ -364,12 +373,14 @@ TimeBarChart.propTypes = {
     discrete: PropTypes.array.isRequired
   }).isRequired,
   domain: PropTypes.arrayOf(PropTypes.number),
+  yTicks: PropTypes.arrayOf(PropTypes.number),
   yAnnotations: PropTypes.arrayOf(PropTypes.shape({
     value: PropTypes.number.isRequired,
     label: PropTypes.string.isRequired,
     x: PropTypes.string,
     dy: PropTypes.string
   })).isRequired,
+  xTicks: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number])),
   xAnnotations: PropTypes.arrayOf(PropTypes.shape({
     value: PropTypes.number.isRequired,
     label: PropTypes.string,
