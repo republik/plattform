@@ -14,7 +14,7 @@ import {
   transparentAxisStroke,
   circleFill,
   deduplicate,
-  datumFn
+  unsafeDatumFn
 } from './utils'
 import ColorLegend from './ColorLegend'
 
@@ -126,7 +126,7 @@ const BarChart = (props) => {
   // filter and map data to clean objects 
   let data = values
   if (props.filter) {
-    const filter = datumFn(props.filter)
+    const filter = unsafeDatumFn(props.filter)
     data = data.filter(filter)
   }
   data = data.filter(d => d.value && d.value.length > 0).map(d => ({
@@ -136,7 +136,7 @@ const BarChart = (props) => {
   }))
   // compute category
   if (props.category) {
-    const categorize = datumFn(props.category)
+    const categorize = unsafeDatumFn(props.category)
     data.forEach(d => {
       d.category = categorize(d.datum)
     })
@@ -148,7 +148,7 @@ const BarChart = (props) => {
   let groupedData
   if (props.columnFilter) {
     groupedData = props.columnFilter.map(({test, title}) => {
-      const filter = datumFn(test)
+      const filter = unsafeDatumFn(test)
       return {
         key: title,
         values: data.filter(d => filter(d.datum))
@@ -175,7 +175,7 @@ const BarChart = (props) => {
   const color = scaleOrdinal(colorRange).domain(colorValues)
 
   const highlight = props.highlight
-    ? datumFn(props.highlight)
+    ? unsafeDatumFn(props.highlight)
     : () => false
 
   // first layout run, set y position

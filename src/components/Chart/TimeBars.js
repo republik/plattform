@@ -15,7 +15,7 @@ import {
   deduplicate,
   transparentAxisStroke,
   circleFill,
-  datumFn
+  unsafeDatumFn
 } from './utils'
 
 import ColorLegend from './ColorLegend'
@@ -84,7 +84,7 @@ const TimeBarChart = (props) => {
 
   let data = values
   if (props.filter) {
-    const filter = datumFn(props.filter)
+    const filter = unsafeDatumFn(props.filter)
     data = data.filter(filter)
   }
   data = data.filter(d => d.value && d.value.length > 0).map(d => {

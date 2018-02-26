@@ -10,7 +10,7 @@ import {
   runSort,
   groupBy,
   deduplicate,
-  datumFn
+  unsafeDatumFn
 } from './utils'
 
 import {
@@ -42,7 +42,7 @@ export default (props) => {
   } = props
   let data = values
   if (props.filter) {
-    const filter = datumFn(props.filter)
+    const filter = unsafeDatumFn(props.filter)
     data = data.filter(filter)
   }
   let xParser = x => x
@@ -55,7 +55,7 @@ export default (props) => {
     value: +d.value
   }))
   if (props.category) {
-    const categorize = datumFn(props.category)
+    const categorize = unsafeDatumFn(props.category)
     data.forEach(d => {
       d.category = categorize(d.datum)
     })
@@ -66,7 +66,7 @@ export default (props) => {
   let groupedData
   if (props.columnFilter) {
     groupedData = props.columnFilter.map(({test, title}) => {
-      const filter = datumFn(test)
+      const filter = unsafeDatumFn(test)
       return {
         key: title,
         values: data.filter(d => filter(d.datum))
@@ -120,9 +120,9 @@ export default (props) => {
   let endValueSizes = []
   let endLabelSizes = []
 
-  const highlight = props.highlight ? datumFn(props.highlight) : () => false
-  const stroke = props.stroke ? datumFn(props.stroke) : () => false
-  const labelFilter = props.labelFilter ? datumFn(props.labelFilter) : () => true
+  const highlight = props.highlight ? unsafeDatumFn(props.highlight) : () => false
+  const stroke = props.stroke ? unsafeDatumFn(props.stroke) : () => false
+  const labelFilter = props.labelFilter ? unsafeDatumFn(props.labelFilter) : () => true
   groupedData = groupedData
     .map(({values, key}) => ({
       key,
