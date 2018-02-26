@@ -356,7 +356,6 @@ TimeBarChart.propTypes = {
   width: PropTypes.number.isRequired,
   mini: PropTypes.bool,
   height: PropTypes.number.isRequired,
-  sort: PropTypes.oneOf(['none', 'descending']),
   color: PropTypes.string,
   colorRange: PropTypes.array,
   colorLegend: PropTypes.bool,
