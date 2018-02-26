@@ -107,7 +107,7 @@ export default ({rule, subModules, TYPE}) => {
                     })
                   }} />
               )}
-              {!node.data.get('isEditing') && chart}
+              {chart}
             </div>
           )
         },

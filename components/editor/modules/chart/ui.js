@@ -64,11 +64,16 @@ export const EditButton = ({onClick}) => (
   </div>
 )
 
-const renderAutoSize = ({ref, ...inputProps}) => (
-  <AutosizeInput {...styles.autoSize}
-    {...inputProps}
-    inputRef={ref} />
-)
+const renderAutoSize = ({onBlur} = {}) =>
+  ({ref, onBlur: fieldOnBlur, ...inputProps}) => (
+    <AutosizeInput {...styles.autoSize}
+      {...inputProps}
+      onBlur={(e) => {
+        onBlur && onBlur(e)
+        fieldOnBlur && fieldOnBlur(e)
+      }}
+      inputRef={ref} />
+  )
 
 class JSONField extends Component {
   constructor (...args) {
@@ -76,6 +81,22 @@ class JSONField extends Component {
     this.state = {
       value: undefined
     }
+    this.renderInput = renderAutoSize({
+      onBlur: () => {
+        if (!this.state.value) {
+          return
+        }
+        let data
+        try {
+          data = JSON.parse(this.state.value)
+        } catch (e) {}
+        if (data) {
+          this.setState({
+            value: undefined
+          })
+        }
+      }
+    })
   }
   render () {
     const { label, value, onChange } = this.props
@@ -86,7 +107,7 @@ class JSONField extends Component {
         value={stateValue === undefined
           ? JSON.stringify(value, null, 2)
           : stateValue}
-        renderInput={renderAutoSize}
+        renderInput={this.renderInput}
         onChange={(_, value) => {
           this.setState({
             value
@@ -97,9 +118,6 @@ class JSONField extends Component {
             } catch (e) {}
             if (data) {
               onChange(data)
-              this.setState({
-                value: undefined
-              })
             }
           })
         }} />
@@ -173,7 +191,7 @@ export const EditModal = ({data, onChange, onClose, chart}) => {
                 label='CSV Data'
                 name='values'
                 value={data.get('values')}
-                renderInput={renderAutoSize}
+                renderInput={renderAutoSize()}
                 onChange={(_, value) => {
                   onChange(data.set('values', value))
                 }} />
