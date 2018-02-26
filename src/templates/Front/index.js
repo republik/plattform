@@ -411,13 +411,15 @@ const createSchema = ({
 
   const articleTile = {
     matchMdast: matchTeaserType('articleTile'),
-    component: ({ children, attributes, ...props }) => (
-      <Link href={props.url}>
-        <TeaserFrontTile attributes={attributes} {...props}>
-          {children}
-        </TeaserFrontTile>
-      </Link>
-    ),
+    component: ({ children, attributes, bgColor, ...props }) => {
+      return (
+        <Link href={props.url}>
+          <TeaserFrontTile attributes={attributes} {...props}>
+            {children}
+          </TeaserFrontTile>
+        </Link>
+      )
+    },
     props: node => ({
       image: extractImage(node.children[0]),
       ...node.data
@@ -431,7 +433,8 @@ const createSchema = ({
       formOptions: [
         'image',
         'byline',
-        'kind'
+        'kind',
+        'showImage'
       ]
     },
     rules: [
@@ -462,7 +465,6 @@ const createSchema = ({
         {children}
       </TeaserFrontTileRow>
     },
-    // TMP: Disabled until editor integration
     editorModule: 'articleGroup',
     editorOptions: {
       type: 'ARTICLETILEROW'
@@ -477,8 +479,8 @@ const createSchema = ({
       return matchTeaserType('dossierIntro')(node)
     },
     props: node => ({
-      image: extractImage(node.children[0]),
-      ...node.data
+      ...node.data,
+      image: extractImage(node.children[0])
     }),
     component: ({ children, attributes, ...props }) => {
       return <TeaserFrontDossierIntro attributes={attributes} {...props}>
