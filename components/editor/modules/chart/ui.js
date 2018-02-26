@@ -94,7 +94,9 @@ class JSONField extends Component {
 export const EditModal = ({data, onChange, onClose}) => {
   const config = data.get('config') || {}
   return (
-    <div onClick={e => {
+    <div onDragStart={e => {
+      e.stopPropagation()
+    }} onClick={e => {
       e.stopPropagation()
     }}>
       <Overlay onClose={onClose} mUpStyle={{maxWidth: '80vw', marginTop: '5vh'}}>
@@ -125,7 +127,7 @@ export const EditModal = ({data, onChange, onClose}) => {
           </Interaction.P>
           <Interaction.P>
             <Label>Typ</Label><br />
-            {['Bar', 'Lollipop', 'Line', 'Slope'].map(type => {
+            {['Bar', 'TimeBar', 'Lollipop', 'Line', 'Slope'].map(type => {
               const checked = config.type === type
               return (
                 <Radio key={type} checked={checked} onChange={() => {
