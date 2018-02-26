@@ -159,6 +159,7 @@ export const Cursive = ({ children, attributes, ...props }) => (
 
 export const link = css({
   ...underline,
+  cursor: 'pointer',
   color: colors.text,
   ':hover': {
     color: colors.lightText
