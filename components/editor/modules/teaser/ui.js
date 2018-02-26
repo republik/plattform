@@ -278,6 +278,13 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
       />
     }
     {
+      options.includes('byline') &&
+      <Field
+        label='Bildcredit'
+        value={node.data.get('byline')}
+        onChange={onChange('byline')} />
+    }
+    {
       options.includes('showImage') &&
       <Checkbox
         checked={node.data.get('showImage')}

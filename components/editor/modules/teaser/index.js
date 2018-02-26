@@ -22,6 +22,7 @@ export const getData = data => ({
   bgColor: '#000',
   center: false,
   image: null,
+  byline: null,
   kind: 'editorial',
   titleSize: 'standard',
   teaserType: 'frontImage',
