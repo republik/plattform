@@ -1,4 +1,13 @@
 const visit = require('unist-util-visit')
+const {
+  Roles: {
+    userIsInRoles
+  }
+} = require('@orbiting/backend-modules-auth')
+
+const {
+  DOCUMENTS_RESTRICT_TO_ROLES
+} = process.env
 
 const processRepoImageUrlsInContent = (mdast, fn) => {
   visit(mdast, 'image', node => {
@@ -39,7 +48,23 @@ const processImageUrlsInContent = (mdast, fn) => {
   })
 }
 
+const processMembersOnlyZonesInContent = (mdast, user) => {
+  if (!DOCUMENTS_RESTRICT_TO_ROLES) {
+    return
+  }
+  visit(mdast, 'zone', node => {
+    if (node.data && node.data.membersOnly) {
+      const roles = DOCUMENTS_RESTRICT_TO_ROLES.split(',')
+
+      if (!userIsInRoles(user, roles)) {
+        node.children = []
+      }
+    }
+  })
+}
+
 module.exports = {
+  processMembersOnlyZonesInContent,
   processRepoImageUrlsInContent,
   processRepoImageUrlsInMeta,
   processImageUrlsInContent

@@ -1,4 +1,5 @@
-const { sendMailTemplate } = require('../../../Mail')
+const { sendMailTemplate, enforceSubscriptions } = require('../../../Mail')
+const activateYearlyMembership = require('../../../activateYearlyMembership')
 
 module.exports = {
   eventTypes: ['customer.subscription.updated', 'customer.subscription.deleted'],
@@ -58,11 +59,18 @@ module.exports = {
             updatedAt: new Date()
           })
 
-          const user = await transaction.public.users.findOne({
-            id: pledge.userId
-          })
+          const nextMembership = await activateYearlyMembership(
+            await transaction.public.memberships.find({
+              userId: existingMembership.userId
+            }),
+            transaction
+          )
 
-          if (existingMembership.active) {
+          if (existingMembership.active && !nextMembership) {
+            const user = await transaction.public.users.findOne({
+              id: pledge.userId
+            })
+
             await sendMailTemplate({
               to: user.email,
               subject: t('api/email/subscription/deactivated/subject'),
@@ -79,6 +87,8 @@ module.exports = {
         }
       }
       await transaction.transactionCommit()
+
+      enforceSubscriptions({ pgdb, userId: pledge.userId })
     } catch (e) {
       await transaction.transactionRollback()
       console.info('transaction rollback', { error: e })

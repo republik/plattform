@@ -250,7 +250,7 @@ module.exports = {
     return null
   },
   newsletterSettings (user, args, { user: me, t, mail: { getNewsletterSettings }, ...context }) {
-    Roles.ensureUserIsMeOrInRoles(user, me, ['supporter, admin'])
+    Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
     try {
       return getNewsletterSettings({ user })
     } catch (error) {

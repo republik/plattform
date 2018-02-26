@@ -3,7 +3,7 @@ const getSubscription = require('../../../lib/payments/stripe/getSubscription')
 const createSubscription = require('../../../lib/payments/stripe/createSubscription')
 const reactivateSubscription = require('../../../lib/payments/stripe/reactivateSubscription')
 
-module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate}}) => {
+module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate, enforceSubscriptions}}) => {
   const transaction = await pgdb.transactionBegin()
   try {
     const {
@@ -28,6 +28,14 @@ module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate}}) => {
 
     const user = await transaction.public.users.findOne({ id: membership.userId })
     Roles.ensureUserIsMeOrInRoles(user, req.user, ['supporter'])
+
+    const activeMemberships = await transaction.public.memberships.find({
+      userId: user.id,
+      active: true
+    })
+    if (activeMemberships.length && !activeMemberships.find(m => m.id === membershipId)) {
+      throw new Error(t('api/membership/reactivate/otherActive'))
+    }
 
     const membershipType = await transaction.public.membershipTypes.findOne({
       id: membership.membershipTypeId
@@ -110,6 +118,8 @@ module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate}}) => {
     }
 
     await transaction.transactionCommit()
+
+    enforceSubscriptions({ pgdb, userId: membership.userId })
 
     return newMembership
   } catch (e) {
