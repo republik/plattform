@@ -1,6 +1,6 @@
 Vertical bars are a nice line chart alternative for change over time of one (stacked) series.
 
-Currently only support years on the x-axis. If you need a different time unit you have to use the line chart for now.
+Currently only supports years on the x-axis. If you need a different time unit you have to use the line chart for now.
 
 ```react
 <div>
