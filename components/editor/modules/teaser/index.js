@@ -94,11 +94,7 @@ const teaserPlugin = options => {
         ? node.data.get('image') || '/static/placeholder.png'
         : null
 
-      const data = (
-        node.data.get('teaserType') === 'articleTile'
-        ? node.data.remove('bgColor')
-        : node.data
-      ).toJS()
+      const data = node.data.toJS()
 
       const compiledTeaser = <Teaser key='teaser' {...data} image={image} attributes={attributes}>
         {children}

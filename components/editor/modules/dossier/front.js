@@ -84,7 +84,9 @@ export const fromMdast = options => {
       nodes: [
         introTeaserModule.helpers.serializer.fromMdast(node.children[0], 0, node, rest),
         articleCollectionModule.helpers.serializer.fromMdast(node.children[1], 1, node, rest),
-        outroTextModule.helpers.serializer.fromMdast(node.children[2], 2, node, rest)
+        outroTextModule.helpers.serializer.fromMdast(
+          node.children[2] || { type: 'paragraph', children: [{ type: 'text', value: '' }] },
+          2, node, rest)
       ]
     })
   }
