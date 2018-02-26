@@ -38,20 +38,20 @@ module.exports = {
       {
         id: user.id
       }, {
-        isSMSChallengeSecretVerified: false,
-        smsChallengeSecret: sharedCode
+        isPhoneNumberVerified: false,
+        phoneNumberVerificationCode: sharedCode
       }
     )
     return sharedCode
   },
   validateSharedSecret: async ({ pgdb, payload, user }) => {
-    const isMatch = (user.smsChallengeSecret === payload)
+    const isMatch = (user.phoneNumberVerificationCode === payload)
     if (!isMatch) return false
     await pgdb.public.users.updateAndGetOne(
       {
         id: user.id
       }, {
-        isSMSChallengeSecretVerified: true
+        isPhoneNumberVerified: true
       }
     )
     return true

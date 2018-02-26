@@ -52,7 +52,7 @@ const signIn = async (_email, context, pgdb, req) => {
     email: _email
   })
 
-  const { email, isTwoFactorEnabled } = (user || { email: _email })
+  const { email } = (user || { email: _email })
 
   try {
     const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress
@@ -88,27 +88,6 @@ const signIn = async (_email, context, pgdb, req) => {
         country,
         phrase
       })
-
-      if (isTwoFactorEnabled) {
-        const secondFactorType = TokenTypes.TOTP
-        tokenTypes.push(secondFactorType)
-        const secondFactor = await generateNewToken({
-          pgdb,
-          type: secondFactorType,
-          session,
-          email,
-          user
-        })
-        await startChallenge({
-          pgdb,
-          email,
-          type: secondFactorType,
-          token: secondFactor,
-          context,
-          country,
-          phrase
-        })
-      }
     }
 
     return { phrase, tokenTypes }
@@ -184,6 +163,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
       throw new SessionTokenValidationFailed({ email: emailFromQuery, ...tokenChallenge })
     }
     const curSession = await sessionByToken({ pgdb, token: tokenChallenge, email: emailFromQuery })
+    console.log('session', curSession, emailFromQuery)
     if (curSession) {
       if (session && session.id !== curSession.id) {
         console.error('multiple different session?!')

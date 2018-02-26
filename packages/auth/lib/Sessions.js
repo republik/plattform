@@ -63,6 +63,9 @@ const sessionByToken = async ({ pgdb, token, email: emailFromQuery, ...meta }) =
     `, token)
 
   if (sessions && sessions.length > 0) {
+    if (sessions[0].sess.email !== emailFromQuery) {
+      throw new NoSessionError({ emailFromQuery, email: sessions[0].sess.email })
+    }
     return sessions[0]
   }
 }

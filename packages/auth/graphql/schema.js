@@ -50,13 +50,19 @@ type mutations {
   # required role to clear other's session: supporter
   clearSessions(userId: ID): Boolean!
 
-  # generate a new sharedSecret
-  initSharedSecret(type: SignInTokenType = TOTP): SharedSecretResponse!
+  # Generate a new sharedSecret for TOTP
+  initTOTPSharedSecret: SharedSecretResponse!
 
-  # validate the sharedSecret for the first time via token payload
-  validateSharedSecret(type: SignInTokenType = TOTP, payload: String): Boolean!
+  # Validate the sharedSecret for the first time via token payload
+  validateTOTPSharedSecret(totp: String): Boolean!
 
   # Activate or deactivate 2FA
   updateTwoFactorAuthentication(enabled: Boolean!): Boolean!
+
+  # Resend Verification Code to confirm a phone number
+  resendPhoneNumberVerificationCode: Boolean!
+
+  # Verify a phone number
+  verifyPhoneNumber(verificationCode: String): Boolean!
 }
 `

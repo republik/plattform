@@ -16,6 +16,6 @@ ALTER TABLE users
   ADD COLUMN "isTwoFactorEnabled"             boolean not null default false,
   ADD COLUMN "TOTPChallengeSecret"            text,
   ADD COLUMN "isTOTPChallengeSecretVerified"  boolean not null default false,
-  ADD COLUMN "smsChallengeSecret"             text,
-  ADD COLUMN "isSMSChallengeSecretVerified"   boolean not null default false
+  ADD COLUMN "phoneNumberVerificationCode"    text,
+  ADD COLUMN "isPhoneNumberVerified"          boolean not null default false
 ;
