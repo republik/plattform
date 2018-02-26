@@ -31,7 +31,7 @@ const styles = {
   contentWithImage: css({
     paddingTop: '15px',
     [mUp]: {
-      padding: '0 0 0 5%',
+      padding: '0 5% 0 5%',
       width: '60%'
     },
     [tUp]: {
