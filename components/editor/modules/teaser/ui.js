@@ -169,7 +169,7 @@ export const TeaserButton = options => {
         data-visible
         onMouseDown={mouseDownHandler(disabled, value, onChange)}
           >
-        {options.rule.editorOptions.insertButton}
+        {options.rule.editorOptions.insertButtonText}
       </span>
     )
   }
@@ -305,10 +305,12 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
   </UIForm>
 })
 
-export const TeaserForm = options => {
+export const TeaserForm = ({ subModuleResolver, ...options }) => {
   const { TYPE } = options
 
-  const subModules = getSubmodules(options)
+  const subModules = subModuleResolver
+    ? subModuleResolver(options)
+    : getSubmodules(options)
 
   const {
     linkModule
@@ -354,7 +356,7 @@ export const TeaserForm = options => {
         )
         const newChange = dataRecipients.reduce(
           (t, node) => {
-            if (node.type === linkModule.TYPE) {
+            if (linkModule && node.type === linkModule.TYPE) {
               return t.setNodeByKey(
                 node.key,
                 {
@@ -451,12 +453,14 @@ export const TeaserInlineUI = options =>
 
   return (
     <div contentEditable={false} {...styles.uiContainer}>
-      <div {...uiStyles}>
-        <P {...styles.uiInlineRow}>
-          {!isOnlyChild && <RemoveButton onMouseDown={removeHandler} />}
-          {!isFirstChild && <MoveUpButton onMouseDown={moveUpHandler} />}
-          {!isLastChild && <MoveDownButton onMouseDown={moveDownHandler} />}
-        </P>
+      <div contentEditable={false} {...uiStyles}>
+        <div>
+          <P {...styles.uiInlineRow}>
+            {!isOnlyChild && <RemoveButton onMouseDown={removeHandler} />}
+            {!isFirstChild && <MoveUpButton onMouseDown={moveUpHandler} />}
+            {!isLastChild && <MoveDownButton onMouseDown={moveDownHandler} />}
+          </P>
+        </div>
       </div>
     </div>
   )

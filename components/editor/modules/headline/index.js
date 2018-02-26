@@ -56,6 +56,7 @@ export default ({ rule, subModules, TYPE }) => {
       serializer
     },
     changes: {},
+    rule: title,
     ui: {
       blockFormatButtons: [
         formatButtonText &&

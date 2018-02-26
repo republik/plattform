@@ -35,6 +35,10 @@ import createInfoBoxModule from './modules/infobox'
 import createQuoteModule from './modules/quote'
 import createHtmlModule from './modules/html'
 import createLineModule from './modules/line'
+import createFrontDossier from './modules/dossier/front'
+import createDossierIntro from './modules/dossier/intro'
+import createArticleCollection from './modules/article/collection'
+import createArticleGroup from './modules/article/group'
 import createChartModule from './modules/chart'
 import createChartCanvasModule from './modules/chart/canvas'
 
@@ -70,6 +74,10 @@ const moduleCreators = {
   teasergroup: createTeaserGroupModule,
   html: createHtmlModule,
   line: createLineModule,
+  articleGroup: createArticleGroup,
+  frontDossier: createFrontDossier,
+  dossierIntro: createDossierIntro,
+  articleCollection: createArticleCollection,
   chart: createChartModule,
   chartCanvas: createChartCanvasModule
 }

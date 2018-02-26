@@ -1,5 +1,6 @@
 import React from 'react'
 import { matchBlock } from '../../utils'
+import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
 import { Block } from 'slate'
 
 import { getSerializer, getSubmodules } from './serializer'
@@ -18,8 +19,8 @@ import { TeaserButton, TeaserInlineUI, TeaserForm } from './ui'
 export const getData = data => ({
   url: null,
   textPosition: 'topleft',
-  color: '#fff',
-  bgColor: '#000',
+  color: '#000',
+  bgColor: '#fff',
   center: false,
   image: null,
   byline: null,
@@ -75,7 +76,6 @@ export const getNewBlock = options => () => {
 
 const teaserPlugin = options => {
   const { TYPE, rule } = options
-
   const {
     titleModule,
     leadModule,
@@ -95,11 +95,13 @@ const teaserPlugin = options => {
         ? node.data.get('image') || '/static/placeholder.png'
         : null
 
-      const compiledTeaser = <Teaser key='teaser' {...node.data.toJS()} image={image} attributes={attributes}>
+      const data = node.data.toJS()
+
+      const compiledTeaser = <Teaser key='teaser' {...data} image={image} attributes={attributes}>
         {children}
       </Teaser>
 
-      if (options.rule.editorOptions.dnd === false) {
+      if (options.rule.editorOptions.showUI === false) {
         return compiledTeaser
       }
 
@@ -128,6 +130,10 @@ const teaserPlugin = options => {
         compiledTeaser
       ])
     },
+    onKeyDown: createRemoveEmptyKeyHandler({
+      TYPE,
+      isEmpty: node => !node.text.trim() && !node.data.get('image')
+    }),
     schema: {
       blocks: {
         [`${TYPE}_VOID`]: {
@@ -207,20 +213,22 @@ const teaserPlugin = options => {
   }
 }
 
-export default options => ({
-  helpers: {
-    serializer: getSerializer(options),
-    newBlock: getNewBlock(options)
-  },
-  plugins: [
-    teaserPlugin(options)
-  ],
-  ui: {
-    insertButtons: options.rule.editorOptions.dnd !== false ? [
-      TeaserButton(options)
-    ] : [],
-    forms: [
-      TeaserForm(options)
-    ]
-  }
-})
+export default options => {
+  return ({
+    helpers: {
+      serializer: getSerializer(options),
+      newItem: getNewBlock(options)
+    },
+    plugins: [
+      teaserPlugin(options)
+    ],
+    ui: {
+      insertButtons: options.rule.editorOptions.insertButtonText ? [
+        TeaserButton(options)
+      ] : [],
+      forms: [
+        TeaserForm(options)
+      ]
+    }
+  })
+}

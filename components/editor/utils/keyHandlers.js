@@ -132,13 +132,15 @@ export const createStaticKeyHandler = ({ TYPE, rule }) => {
       event.preventDefault()
       if (
         matchBlock(TYPE)(previousBlock) &&
-        value.startBlock.text === ''
+        value.startBlock.text === '' && afterType
       ) {
-        return focusPrevious(change).removeNodeByKey(
+        focusPrevious(change).removeNodeByKey(
           value.startBlock.key
         )
+        return true
       } else {
-        return focusPrevious(change)
+        focusPrevious(change)
+        return true
       }
     }
   }
