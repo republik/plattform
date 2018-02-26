@@ -4,17 +4,21 @@ import { createElement } from 'react'
 import PropTypes from 'prop-types'
 
 export const groupBy = (array, key) => {
+  const keys = []
   const object = array.reduce(
     (o, item, index) => {
       const k = key(item, index) || ''
-      o[k] = o[k] || []
+      if (!o[k]) {
+        o[k] = []
+        keys.push(k)
+      }
       o[k].push(item)
       return o
     },
     {}
   )
 
-  return Object.keys(object).map(k => ({
+  return keys.map(k => ({
     key: k,
     values: object[k]
   }))
@@ -25,12 +29,19 @@ export const sortPropType = PropTypes.oneOf(['none', 'ascending', 'descending'])
 export const runSort = (cmd, array, accessor = d => d) => {
   if (cmd !== 'none') {
     const compare = cmd === 'descending' ? descending : ascending
-    array.sort((a, b) => compare(accessor(a), accessor(b)))
+    array.sort((a, b) =>
+      compare(accessor(a), accessor(b)) ||
+      ascending(array.indexOf(a), array.indexOf(b)) // stable sort
+    )
   }
 }
 
 export const sortBy = (array, accessor) =>
-  [].concat(array).sort((a, b) => ascending(accessor(a), accessor(b)))
+  [].concat(array)
+    .sort((a, b) =>
+      ascending(accessor(a), accessor(b)) ||
+      ascending(array.indexOf(a), array.indexOf(b)) // stable sort
+    )
 
 export const measure = onMeasure => {
   let ref
