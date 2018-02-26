@@ -19,8 +19,9 @@ const styles = {
     }
   }),
   content: css({
-    paddingBottom: '15px',
+    padding: '0 0 15px 0',
     [mUp]: {
+      padding: '0 0 15px 5%',
       width: '67%'
     },
     [tUp]: {
