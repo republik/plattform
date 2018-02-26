@@ -87,7 +87,7 @@ const teaserPlugin = options => {
 
   return {
     renderNode ({ editor, node, attributes, children }) {
-      if (!matchBlock(TYPE)(node)) {
+      if (!matchBlock(TYPE)(node) && !matchBlock(`${TYPE}_VOID`)(node)) {
         return
       }
 
@@ -95,12 +95,12 @@ const teaserPlugin = options => {
         ? node.data.get('image') || '/static/placeholder.png'
         : null
 
+      const compiledTeaser = <Teaser key='teaser' {...node.data.toJS()} image={image} attributes={attributes}>
+        {children}
+      </Teaser>
+
       if (options.rule.editorOptions.dnd === false) {
-        return (
-          <Teaser key='teaser' {...node.data.toJS()} image={image} attributes={attributes}>
-            {children}
-          </Teaser>
-        )
+        return compiledTeaser
       }
 
       const UI = TeaserInlineUI(options)
@@ -125,13 +125,14 @@ const teaserPlugin = options => {
           insert={insert(editor)}
           remove={remove(editor)}
       />,
-        <Teaser key='teaser' {...node.data.toJS()} image={image} attributes={attributes}>
-          {children}
-        </Teaser>
+        compiledTeaser
       ])
     },
     schema: {
       blocks: {
+        [`${TYPE}_VOID`]: {
+          isVoid: true
+        },
         [TYPE]: {
           nodes: [
             {

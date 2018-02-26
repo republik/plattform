@@ -1,5 +1,5 @@
 {
-  "updated": "2018-02-06T19:57:04.987Z",
+  "updated": "2018-02-15T18:27:54.086Z",
   "title": "live",
   "data": [
     {
@@ -653,6 +653,18 @@
     {
       "key": "image/upload/notImage",
       "value": "Dies ist kein Bild."
+    },
+    {
+      "key": "styleguide/charts/confidence95-legend",
+      "value": "95-Prozent-Konfidenzintervall"
+    },
+    {
+      "key": "styleguide/charts/y-cut",
+      "value": "Achse gekürzt"
+    },
+    {
+      "key": "styleguide/charts/error",
+      "value": "Diese Visualisierung ist kaputt. Die Ursache könnte eine falsche Konfiguration oder fehlenden und oder falsch formatierte Daten sein."
     }
   ]
 }
