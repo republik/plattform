@@ -22,7 +22,7 @@ import { tsvParse, csvFormat } from 'd3-dsv'
 
 import { css } from 'glamor'
 
-const previewWidth = 280
+const previewWidth = 290
 
 const styles = {
   editButton: css({
