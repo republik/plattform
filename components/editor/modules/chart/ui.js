@@ -13,6 +13,7 @@ import {
 } from '@project-r/styleguide'
 import AutosizeInput from 'react-textarea-autosize'
 
+import { gray2x1 } from '../../utils/placeholder'
 import injectBlock from '../../utils/injectBlock'
 import {
   buttonStyles
@@ -143,7 +144,12 @@ export const EditModal = ({data, onChange, onClose, chart}) => {
 
         <OverlayBody>
           <div {...styles.preview}>
-            {chart}
+            {
+              (data.get('values') || '').length &&
+              Object.keys(config).length
+                ? chart
+                : <img src={gray2x1} width='100%' />
+            }
           </div>
           <div {...styles.edit}>
             <Interaction.P>
