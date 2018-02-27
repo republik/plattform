@@ -3,33 +3,61 @@ import { css } from 'glamor'
 import { mUp, tUp, dUp } from './mediaQueries'
 import { serifTitle20, sansSerifMedium20 } from '../Typography/styles'
 
+const size = {
+  s: {
+    fontSize: '38px',
+    lineHeight: '43px'
+  },
+  m: {
+    fontSize: '60px',
+    lineHeight: '70px'
+  },
+  l: {
+    fontSize: '80px',
+    lineHeight: '90px'
+  },
+  xl: {
+    fontSize: '100px',
+    lineHeight: '110px'
+  },
+  xxl: {
+    fontSize: '125px',
+    lineHeight: '135px'
+  }
+}
+
 const sizes = {
   large: css({
+    ...size.s,
+    [mUp]: {
+      ...size.l
+    },
     [tUp]: {
-      fontSize: '100px',
-      lineHeight: '110px'
+      ...size.xl
     },
     [dUp]: {
-      fontSize: '125px',
-      lineHeight: '135px'
+      ...size.xxl
     }
   }),
   medium: css({
+    ...size.s,
+    [mUp]: {
+      ...size.m
+    },
     [tUp]: {
-      fontSize: '100px',
-      lineHeight: '110px'
+      ...size.l
+    },
+    [dUp]: {
+      ...size.xl
     }
   }),
   default: css({
-    fontSize: '38px',
-    lineHeight: '43px',
-    [mUp]: {
-      fontSize: '60px',
-      lineHeight: '70px'
-    },
+    ...size.s,
     [tUp]: {
-      fontSize: '80px',
-      lineHeight: '90px'
+      ...size.m
+    },
+    [dUp]: {
+      ...size.l
     }
   })
 }
@@ -52,8 +80,7 @@ const styles = {
 export const Editorial = ({ children, large, medium }) => {
   const sizedStyle = css(
     styles.editorial,
-    sizes.default,
-    (large && sizes.large) || (medium && sizes.medium) || {}
+    (large && sizes.large) || (medium && sizes.medium) || sizes.default
   )
   return (
     <h1 {...styles.base} {...sizedStyle}>
@@ -65,8 +92,7 @@ export const Editorial = ({ children, large, medium }) => {
 export const Interaction = ({ children, large, medium }) => {
   const sizedStyle = css(
     styles.interaction,
-    sizes.default,
-    (large && sizes.large) || (medium && sizes.medium) || {}
+    (large && sizes.large) || (medium && sizes.medium) || sizes.default
   )
   return (
     <h1 {...styles.base} {...sizedStyle}>
