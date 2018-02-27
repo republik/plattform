@@ -17,6 +17,7 @@ import injectBlock from '../../utils/injectBlock'
 import {
   buttonStyles
 } from '../../utils'
+import { tsvParse, csvFormat } from 'd3-dsv'
 
 import { css } from 'glamor'
 
@@ -64,7 +65,7 @@ export const EditButton = ({onClick}) => (
   </div>
 )
 
-const renderAutoSize = ({onBlur} = {}) =>
+const renderAutoSize = ({onBlur, onPaste} = {}) =>
   ({ref, onBlur: fieldOnBlur, ...inputProps}) => (
     <AutosizeInput {...styles.autoSize}
       {...inputProps}
@@ -72,6 +73,7 @@ const renderAutoSize = ({onBlur} = {}) =>
         onBlur && onBlur(e)
         fieldOnBlur && fieldOnBlur(e)
       }}
+      onPaste={onPaste}
       inputRef={ref} />
   )
 
@@ -153,7 +155,7 @@ export const EditModal = ({data, onChange, onClose, chart}) => {
               ].map(({label, size}) => {
                 const checked = config.size === size
                 return (
-                  <Radio key={size} checked={checked} onChange={() => {
+                  <Radio key={size || label} checked={checked} onChange={() => {
                     if (!checked) {
                       onChange(data.set('config', {...config, size}))
                     }
@@ -191,7 +193,19 @@ export const EditModal = ({data, onChange, onClose, chart}) => {
                 label='CSV Data'
                 name='values'
                 value={data.get('values')}
-                renderInput={renderAutoSize()}
+                renderInput={renderAutoSize({
+                  onPaste: (e) => {
+                    const clipboardData = e.clipboardData || window.clipboardData
+                    let parsedTsv
+                    try {
+                      parsedTsv = tsvParse(clipboardData.getData('Text'))
+                    } catch (e) {}
+                    if (parsedTsv && parsedTsv.columns.length > 1) {
+                      e.preventDefault()
+                      onChange(data.set('values', csvFormat(parsedTsv)))
+                    }
+                  }
+                })}
                 onChange={(_, value) => {
                   onChange(data.set('values', value))
                 }} />
