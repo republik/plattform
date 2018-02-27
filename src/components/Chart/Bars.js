@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
 import { scaleLinear, scaleOrdinal } from 'd3-scale'
-import { max } from 'd3-array'
+import { max, min } from 'd3-array'
 
 import { sansSerifRegular12, sansSerifMedium14 } from '../Typography/styles'
 import colors from '../../theme/colors'
@@ -226,14 +226,20 @@ const BarChart = (props) => {
       title,
       bars,
       max: max(bars.map(bar => bar.sum)),
+      min: min(bars.map(bar => bar.sum)),
       height: gY,
       firstBarY
     }
   })
 
   // setup x scale
+  const xDomain = props.domain ||
+    [
+      0,
+      max(groupedData.map(d => d.max))
+    ]
   const x = scaleLinear()
-    .domain(props.domain || [0, max(groupedData.map(d => d.max))])
+    .domain(xDomain)
     .range([0, columnWidth])
   if (!props.domain) {
     x.nice(3)
@@ -244,11 +250,11 @@ const BarChart = (props) => {
   groupedData.forEach(group => {
     group.bars.forEach(bar => {
       let xPos = 0
-      bar.segments.forEach(d => {
+      bar.segments.forEach((d, i) => {
         d.color = color(colorAccessor(d))
         d.x = Math.floor(xPos)
-        const size = x(d.value)
-        d.width = Math.ceil(size) + 1
+        const size = x(Math.max(d.value, xDomain[0]))
+        d.width = Math.ceil(size) + (size && last(bar.segments, i) ? 1 : 0)
         xPos += size
       })
     })
@@ -269,6 +275,8 @@ const BarChart = (props) => {
   })
 
   const isLollipop = props.barStyle === 'lollipop'
+
+  const xTicks = props.xTicks || xAxis.ticks
 
   return (
     <div>
@@ -322,9 +330,9 @@ const BarChart = (props) => {
                   {X_TICK_HEIGHT > 0 && 
                     <line {...styles.axisXLine} x2={columnWidth} />}
                   {
-                    xAxis.ticks.map((tick, i) => {
+                    xTicks.map((tick, i) => {
                       let textAnchor = 'middle'
-                      const isLast = last(xAxis.ticks, i)
+                      const isLast = last(xTicks, i)
                       if (isLast) {
                         textAnchor = 'end'
                       }
@@ -376,6 +384,7 @@ BarChart.propTypes = {
   mini: PropTypes.bool,
   domain: PropTypes.array,
   y: PropTypes.string.isRequired,
+  xTicks: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number])),
   barStyle: PropTypes.oneOf(Object.keys(BAR_STYLES)),
   confidence: PropTypes.oneOf([95]),
   sort: sortPropType,
