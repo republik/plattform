@@ -84,13 +84,14 @@ class JSONField extends Component {
       value: undefined
     }
     this.renderInput = renderAutoSize({
-      onBlur: () => {
-        if (!this.state.value) {
+      onBlur: (e) => {
+        const value = e.target.value
+        if (!value) {
           return
         }
         let data
         try {
-          data = JSON.parse(this.state.value)
+          data = JSON.parse(value)
         } catch (e) {}
         if (data) {
           this.setState({
@@ -111,17 +112,17 @@ class JSONField extends Component {
           : stateValue}
         renderInput={this.renderInput}
         onChange={(_, value) => {
-          this.setState({
-            value
-          }, () => {
-            let data
-            try {
-              data = JSON.parse(value)
-            } catch (e) {}
-            if (data) {
-              onChange(data)
-            }
-          })
+          let data
+          try {
+            data = JSON.parse(value)
+          } catch (e) {}
+          if (data) {
+            onChange(data)
+          }
+
+          if (this.state.value !== value) {
+            this.setState({value})
+          }
         }} />
     )
   }
