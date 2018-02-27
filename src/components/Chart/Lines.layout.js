@@ -88,9 +88,13 @@ export default (props) => {
   if (yAnnotations) {
     yValues = yValues.concat(yAnnotations.map(d => d.value))
   }
+  if (props.yTicks) {
+    yValues = yValues.concat(props.yTicks)
+  }
+  const minValue = min(yValues)
   const y = scaleLinear()
     .domain([
-      props.zero ? 0 : min(yValues),
+      props.zero ? Math.min(0, minValue) : minValue,
       max(yValues)
     ])
     .nice(props.yNice)
@@ -189,7 +193,7 @@ export default (props) => {
     }
     if (endLabel) {
       const endLabelSize = Math.ceil(max(endLabelSizes))
-      if (startValueSize + endValueSize + endLabelSize > props.width / 2) {
+      if (startValueSize + endValueSize + endLabelSize > props.width - props.minInnerWidth) {
         colorLegend = true
         groupedData.forEach(({values: lines}) => {
           lines.forEach(line => {
@@ -205,8 +209,15 @@ export default (props) => {
     }
   }
 
-  // translate all color values (always display on small screens) and group titles
-  const colorLegendValues = colorValues.map(value => ({
+  // transform all color values (always visible on small screens) and group titles for display
+  const colorValuesForLegend = data
+    .filter(d => labelFilter(d.datum))
+    .map(colorAccessor)
+    .filter(deduplicate)
+    .filter(Boolean)
+  runSort(props.colorSort, colorValuesForLegend)
+
+  const colorLegendValues = colorValuesForLegend.map(value => ({
     color: color(value),
     label: subsup(value)
   }))
