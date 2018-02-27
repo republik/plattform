@@ -15,6 +15,7 @@
     "glamor": "^2.20.40",
     "mdast-react-render": ">=1.1",
     "react": ">=16.2",
+    "react-maskedinput": ">=4.0.1",
     "prop-types": ">=15.5",
     "react-textarea-autosize": "^5.1.0",
     "downshift": "^1.16.1"
@@ -48,7 +49,7 @@
     "react": "^16.2.0",
     "react-autocomplete": "^1.4.1",
     "react-dom": "^16.2.0",
-    "react-maskedinput": "^4.0.0",
+    "react-maskedinput": "^4.0.1",
     "react-scripts": "1.0.10",
     "react-textarea-autosize": "^5.1.0",
     "rimraf": "^2.6.1",
