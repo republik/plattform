@@ -22,6 +22,11 @@ module.exports = async ({ title, subject }) => {
         content_type: 'html',
         from_name: MAILCHIMP_FROM_NAME,
         reply_to: MAILCHIMP_REPLY_TO
+      },
+      tracking: {
+        opens: false,
+        html_clicks: false,
+        text_clicks: false
       }
     })
   })

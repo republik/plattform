@@ -57,6 +57,17 @@ Setup (for dev environment):
 - On the page of your new GitHub-App you also find the **ID**. This values needs to be provided as `GITHUB_APP_ID` env var.
 - [Install the GitHub-App](https://help.github.com/articles/installing-an-app-in-your-organization/) in your organization. On the page of the installation (settings -> Installed GitHub Apps -> App) copy the last part of the URL (e.g `41809`), it needs to be provided as `GITHUB_INSTALLATION_ID` env var.
 
+## Email Tracking
+
+You can add our own open beacon to newsletters by setting following environment variables:
+
+```
+PIWIK_URL_BASE=https://piwik.example.com
+PIWIK_SITE_ID=1
+```
+
+_MailChimp tracking is automatically disabled when creating a new campaign._
+
 ## Embeds
 
 The `embed` root query depends on 3rd party API calls and in order for them to work, you have to create apps on the respective platforms and put your credentials into your `.env` file.
