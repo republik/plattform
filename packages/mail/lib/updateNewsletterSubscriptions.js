@@ -25,6 +25,7 @@ module.exports = async ({
 
   await mailchimp.updateMember(email, body)
 
-  return Object.keys(interests)
+  // user might be null if using with just {email, roles}
+  return user && user.id && Object.keys(interests)
     .map(interestId => NewsletterSubscription.buildSubscription(user.id, interestId, interests[interestId], roles))
 }
