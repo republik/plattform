@@ -1,5 +1,5 @@
 {
-  "updated": "2018-02-19T15:08:08.334Z",
+  "updated": "2018-03-01T14:13:35.485Z",
   "title": "live",
   "data": [
     {
@@ -68,6 +68,10 @@
       "value": "Leider mussen wir Ihren Beitrag unveröffentlichen. Wenden sie sich an kontakt@republik.ch."
     },
     {
+      "key": "styleguide/AudioPlayer/download",
+      "value": "Herunterladen"
+    },
+    {
       "key": "styleguide/AudioPlayer/sourceError",
       "value": "Audio konnte nicht geladen werden."
     },
@@ -98,6 +102,10 @@
     {
       "key": "styleguide/charts/error",
       "value": "Diese Visualisierung ist kaputt."
+    },
+    {
+      "key": "styleguide/templates/unauthorizedZone",
+      "value": "Inhalt nur für Mitglieder."
     }
   ]
 }

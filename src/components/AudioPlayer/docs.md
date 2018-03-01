@@ -101,6 +101,7 @@ Props:
     mp3: '/static/non-existing-sample.mp3'
   }}
   t={t}
+  download
   scrubberPosition='bottom'
 />
 ```

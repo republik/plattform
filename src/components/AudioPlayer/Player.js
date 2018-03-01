@@ -409,9 +409,14 @@ class AudioPlayer extends Component {
           </div>
           {download && (
             <div {...styles.download}>
-              <a href={src.mp3 || src.aac || src.mp4} download title={t('styleguide/AudioPlayer/sourceErrorTryAgain§')}>
-                <Download size={SIZE.download} fill="#000" />
-              </a>
+              {playEnabled && (
+                <a href={src.mp3 || src.aac || src.mp4} download title={t('styleguide/AudioPlayer/download')}>
+                  <Download size={SIZE.download} fill={'#000'} />
+                </a>
+              )}
+              {!playEnabled && (
+                <Download size={SIZE.download} fill={colors.disabled} />
+              )}
             </div>
           )}
           <div {...styles.time} style={uiTextPosition}>
