@@ -10,6 +10,7 @@ import { InlineSpinner } from '../Spinner'
 import { link, sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import Play from 'react-icons/lib/md/play-arrow'
 import Pause from 'react-icons/lib/md/pause'
+import Download from 'react-icons/lib/md/file-download'
 
 const ZINDEX_AUDIOPLAYER_ICONS = 6
 const ZINDEX_AUDIOPLAYER_SCRUB = 3
@@ -21,10 +22,17 @@ const PROGRESS_HEIGHT = 4
 const hoursDurationFormat = timeFormat('%-H:%M:%S')
 const minutesDurationFormat = timeFormat('%-M:%S')
 
+const PLAYER_HEIGHT = 44
+const ICON_SPACING = 4
+
+const SIZE = {
+  play: 30,
+  download: 22
+}
+
 const barStyle = {
   position: 'absolute',
   height: PROGRESS_HEIGHT,
-  top: -PROGRESS_HEIGHT,
   left: 0,
   right: 0
 }
@@ -32,7 +40,7 @@ const barStyle = {
 const styles = {
   wrapper: css({
     position: 'relative',
-    height: '40px',
+    height: `${PLAYER_HEIGHT}px`,
     lineHeight: 0
   }),
   audio: css({
@@ -63,18 +71,31 @@ const styles = {
     marginTop: -15,
     textAlign: 'center'
   }),
+  download: css({
+    position: 'absolute',
+    top: '50%',
+    left: SIZE.play + ICON_SPACING,
+    marginTop: -10,
+    textAlign: 'center'
+  }),
+  scrubberTop: css({
+    ...barStyle,
+    top: -PROGRESS_HEIGHT
+  }),
+  scrubberBottom: css({
+    ...barStyle,
+    bottom: -PROGRESS_HEIGHT
+  }),
   progress: css({
     position: 'absolute',
     zIndex: ZINDEX_AUDIOPLAYER_PROGRESS,
     backgroundColor: colors.primary,
-    top: -PROGRESS_HEIGHT,
     left: 0,
     height: PROGRESS_HEIGHT
   }),
   time: css({
     position: 'absolute',
     zIndex: ZINDEX_AUDIOPLAYER_ICONS,
-    right: 10,
     cursor: 'pointer',
     fontSize: '16px',
     lineHeight: '25px',
@@ -109,9 +130,9 @@ const styles = {
   sourceError: css({
     position: 'absolute',
     zIndex: ZINDEX_AUDIOPLAYER_ICONS,
-    top: 10,
+    top: 0,
     right: 0,
-    maxWidth: 'calc(100% - 40px)',
+    maxWidth: `calc(100% - ${PLAYER_HEIGHT}px)`,
     color: colors.disabled,
     height: '25px',
     ...ellipsize,
@@ -349,9 +370,13 @@ class AudioPlayer extends Component {
     this.audio.removeEventListener('loadedmetadata', this.onLoadedMetaData)
   }
   render() {
-    const { src, size, attributes = {}, t } = this.props
+    const { src, size, attributes = {}, t, download, scrubberPosition, timePosition } = this.props
     const { playEnabled, playing, progress, loading, buffered, sourceError } = this.state
     const isVideo = src.mp4 || src.hls
+    const uiTextPosition =
+      timePosition === 'left'
+        ? { left: SIZE.play + (download ? SIZE.download + ICON_SPACING : 0) + 10 }
+        : { right: 10 }
 
     return (
       <div {...merge(styles.wrapper, breakoutStyles[size])}>
@@ -379,49 +404,58 @@ class AudioPlayer extends Component {
         </video>}
         <div {...styles.controls}>
           <div {...styles.play} onClick={playEnabled ? this.toggle : null}>
-            {!playing && <Play size={30} fill={playEnabled ? '#000' : colors.disabled} />}
-            {playing && <Pause size={30} fill="#000" />}
+            {!playing && <Play size={SIZE.play} fill={playEnabled ? '#000' : colors.disabled} />}
+            {playing && <Pause size={SIZE.play} fill="#000" />}
           </div>
-          <div {...styles.time}>
+          {download && (
+            <div {...styles.download}>
+              <a href={src.mp3 || src.aac || src.mp4} download title={t('styleguide/AudioPlayer/sourceErrorTryAgain§')}>
+                <Download size={SIZE.download} fill="#000" />
+              </a>
+            </div>
+          )}
+          <div {...styles.time} style={uiTextPosition}>
             {loading && <InlineSpinner size={25} />}
             {this.formattedCurrentTime && this.formattedCurrentTime}
             {this.formattedCurrentTime && this.formattedDuration && ' / '}
             {this.formattedDuration && this.formattedDuration}
           </div>
-        </div>
-        <div {...styles.progress} style={{ width: `${progress * 100}%` }} />
-        <div
-          {...styles.scrub}
-          ref={this.scrubRef}
-          onTouchStart={this.scrubStart}
-          onTouchMove={this.scrub}
-          onTouchEnd={this.scrubEnd}
-          onMouseDown={this.scrubStart}
-        />
-        {sourceError && !loading && <div {...styles.sourceError}>
+          {sourceError && !loading && <div {...styles.sourceError} style={uiTextPosition}>
           {t('styleguide/AudioPlayer/sourceError')}{' '}
-          <span onClick={() => this.reload()} {...styles.retry}>
-            {t('styleguide/AudioPlayer/sourceErrorTryAgain')}
-          </span>
-        </div>}
-        <div {...styles.buffer}>
-          {this.audio &&
-            buffered &&
-            !!buffered.length &&
-            Array.from(Array(buffered.length).keys()).map(index => (
-              <span
-                key={index}
-                {...styles.timeRange}
-                style={{
-                  left: `${buffered.start(index) / this.audio.duration * 100}%`,
-                  width: `${(buffered.end(index) - buffered.start(index)) /
-                    this.audio.duration *
-                    100}%`
-                }}
-              />
-            ))}
+            <span onClick={() => this.reload()} {...styles.retry}>
+              {t('styleguide/AudioPlayer/sourceErrorTryAgain')}
+            </span>
+          </div>}
         </div>
-        <div {...styles.totalDuration} />
+        <div {...(scrubberPosition === 'bottom' ? styles.scrubberBottom : styles.scrubberTop)}>
+          <div {...styles.progress} style={{ width: `${progress * 100}%` }} />
+          <div
+            {...styles.scrub}
+            ref={this.scrubRef}
+            onTouchStart={this.scrubStart}
+            onTouchMove={this.scrub}
+            onTouchEnd={this.scrubEnd}
+            onMouseDown={this.scrubStart}
+          />
+          <div {...styles.buffer}>
+            {this.audio &&
+              buffered &&
+              !!buffered.length &&
+              Array.from(Array(buffered.length).keys()).map(index => (
+                <span
+                  key={index}
+                  {...styles.timeRange}
+                  style={{
+                    left: `${buffered.start(index) / this.audio.duration * 100}%`,
+                    width: `${(buffered.end(index) - buffered.start(index)) /
+                      this.audio.duration *
+                      100}%`
+                  }}
+                />
+              ))}
+          </div>
+          <div {...styles.totalDuration} />
+        </div>
       </div>
     )
   }
@@ -436,11 +470,17 @@ AudioPlayer.propTypes = {
     mp4: PropTypes.string
   }),
   size: PropTypes.oneOf(Object.keys(breakoutStyles)),
-  attributes: PropTypes.object
+  attributes: PropTypes.object,
+  download: PropTypes.bool,
+  scrubberPosition: PropTypes.oneOf(['top', 'bottom']),
+  timePosition: PropTypes.oneOf(['left', 'right'])
 }
 
 AudioPlayer.defaultProps = {
-  size: undefined
+  size: undefined,
+  download: false,
+  scrubberPosition: 'top',
+  timePosition: 'right'
 }
 
 export default AudioPlayer

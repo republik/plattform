@@ -9,6 +9,9 @@ Props:
 -- `mp4`: The mp4 source URL (when using a video).
 - `size`: optional, `narrow` or `tiny`.
 - `attributes`: Object, arbitrary attributes mapped to the audio tag.
+- `download`: Whether to display a download icon.
+- `scrubberPosition`: `top` (default) or `bottom`.
+- `timePosition`: `right` (default) or `left`.
 
 
 ```react
@@ -16,6 +19,39 @@ Props:
   src={{
     mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
+  t={t}
+/>
+```
+
+```react
+<AudioPlayer
+  src={{
+    mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
+  }}
+  timePosition='left'
+  t={t}
+/>
+```
+
+```react
+<AudioPlayer
+  src={{
+    mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
+  }}
+  download
+  scrubberPosition='bottom'
+  t={t}
+/>
+```
+
+```react
+<AudioPlayer
+  src={{
+    mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
+  }}
+  download
+  scrubberPosition='bottom'
+  timePosition='left'
   t={t}
 />
 ```
@@ -46,6 +82,26 @@ Props:
     mp3: '/static/non-existing-sample.mp3'
   }}
   t={t}
+/>
+```
+
+```react
+<AudioPlayer
+  src={{
+    mp3: '/static/non-existing-sample.mp3'
+  }}
+  t={t}
+  timePosition='left'
+/>
+```
+
+```react
+<AudioPlayer
+  src={{
+    mp3: '/static/non-existing-sample.mp3'
+  }}
+  t={t}
+  scrubberPosition='bottom'
 />
 ```
 
