@@ -14,7 +14,7 @@ Props:
 ```react
 <AudioPlayer
   src={{
-    mp3: '/static/sample.mp3'
+    mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
   t={t}
 />
@@ -23,7 +23,7 @@ Props:
 ```react
 <AudioPlayer
   src={{
-    mp3: '/static/sample.mp3'
+    mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
   size='narrow'
   t={t}
@@ -33,7 +33,7 @@ Props:
 ```react
 <AudioPlayer
   src={{
-    mp3: '/static/sample.mp3'
+    mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
   size='tiny'
   t={t}
@@ -56,6 +56,24 @@ The `<AudioPlayer />` may also be used to play from video sources when visual co
   src={{
     hls: 'https://player.vimeo.com/external/213080233.m3u8?s=40bdb9917fa47b39119a9fe34b9d0fb13a10a92e',
     mp4: 'https://player.vimeo.com/external/213080233.hd.mp4?s=ab84df0ac9134c86bb68bd9ea7ac6b9df0c35774&profile_id=175',
+  }}
+  t={t}
+/>
+```
+
+```react
+<AudioPlayer
+  src={{
+    hls: 'https://player.vimeo.com/external/213080233.m3u8?s=40bdb9917fa47b39119a9fe34b9d0fb13a10a92e'
+  }}
+  t={t}
+/>
+```
+
+```react
+<AudioPlayer
+  src={{
+    mp4: 'https://player.vimeo.com/external/213080233.hd.mp4?s=ab84df0ac9134c86bb68bd9ea7ac6b9df0c35774&profile_id=175'
   }}
   t={t}
 />
