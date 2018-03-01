@@ -42,11 +42,11 @@ PgDb.connect().then(async pgdb => {
   // console.log(missingMembers.length)
   // console.log(`${mailchimpSubscribedEmails.size} - ${members.size} = ${notMembers.length}`)
 
+  console.log(`updating ${notMembers.length} emails...`)
   let count = 0
   for (let email of notMembers) {
-    count += 1
-    if (!restartCount || count > restartCount) {
-      console.log(email)
+    if (!restartCount || count >= restartCount) {
+      console.log(`${count}/${notMembers.length} ${email}`)
       const user = await pgdb.public.users.findOne({email})
       await enforceSubscriptions({
         pgdb,
@@ -54,6 +54,7 @@ PgDb.connect().then(async pgdb => {
         email
       })
     }
+    count += 1
   }
 }).then(() => {
   process.exit()
