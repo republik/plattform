@@ -12,6 +12,7 @@ Props:
 - `download`: Whether to display a download icon.
 - `scrubberPosition`: `top` (default) or `bottom`.
 - `timePosition`: `right` (default) or `left`.
+- `controlsPadding`: The horizontal padding between controls and container, defaults to 0
 
 
 ```react
@@ -51,7 +52,39 @@ Props:
   }}
   download
   scrubberPosition='bottom'
+  height={100}
+  controlsPadding={50}
+  style={{backgroundColor: '#fff', borderTop: '1px solid #eee'}}
+  t={t}
+/>
+```
+
+```react
+<AudioPlayer
+  src={{
+    mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
+  }}
+  download
+  scrubberPosition='bottom'
   timePosition='left'
+  height={100}
+  controlsPadding={50}
+  style={{backgroundColor: '#fff', borderTop: '1px solid #eee'}}
+  t={t}
+/>
+```
+
+```react
+<AudioPlayer
+  src={{
+    mp3: '/static/non-existing-sample.mp3'
+  }}
+  download
+  scrubberPosition='bottom'
+  timePosition='left'
+  height={100}
+  controlsPadding={50}
+  style={{backgroundColor: '#fff', borderTop: '1px solid #eee'}}
   t={t}
 />
 ```

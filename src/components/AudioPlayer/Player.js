@@ -22,7 +22,7 @@ const PROGRESS_HEIGHT = 4
 const hoursDurationFormat = timeFormat('%-H:%M:%S')
 const minutesDurationFormat = timeFormat('%-M:%S')
 
-const PLAYER_HEIGHT = 44
+const CONTROLS_HEIGHT = 25
 const ICON_SPACING = 4
 
 const SIZE = {
@@ -40,7 +40,6 @@ const barStyle = {
 const styles = {
   wrapper: css({
     position: 'relative',
-    height: `${PLAYER_HEIGHT}px`,
     lineHeight: 0
   }),
   audio: css({
@@ -58,11 +57,8 @@ const styles = {
   }),
   controls: css({
     position: 'absolute',
-    top: 10,
-    left: 0,
-    right: 0,
     cursor: 'pointer',
-    height: '25px'
+    height: `${CONTROLS_HEIGHT}px`
   }),
   play: css({
     position: 'absolute',
@@ -132,7 +128,6 @@ const styles = {
     zIndex: ZINDEX_AUDIOPLAYER_ICONS,
     top: 0,
     right: 0,
-    maxWidth: `calc(100% - ${PLAYER_HEIGHT}px)`,
     color: colors.disabled,
     height: '25px',
     ...ellipsize,
@@ -370,16 +365,28 @@ class AudioPlayer extends Component {
     this.audio.removeEventListener('loadedmetadata', this.onLoadedMetaData)
   }
   render() {
-    const { src, size, attributes = {}, t, download, scrubberPosition, timePosition } = this.props
+    const {
+      src,
+      size,
+      attributes = {},
+      style,
+      t,
+      height,
+      download,
+      scrubberPosition,
+      timePosition,
+      controlsPadding
+    } = this.props
     const { playEnabled, playing, progress, loading, buffered, sourceError } = this.state
     const isVideo = src.mp4 || src.hls
+    const iconsWidth = SIZE.play + (download ? SIZE.download + ICON_SPACING : 0)
     const uiTextPosition =
       timePosition === 'left'
-        ? { left: SIZE.play + (download ? SIZE.download + ICON_SPACING : 0) + 10 }
+        ? { left: iconsWidth + 10 }
         : { right: 10 }
 
     return (
-      <div {...merge(styles.wrapper, breakoutStyles[size])}>
+      <div {...merge(styles.wrapper, breakoutStyles[size])} style={{...style, height: `${height}px`}}>
         {!isVideo && <audio
           {...styles.audio}
           {...attributes}
@@ -402,7 +409,9 @@ class AudioPlayer extends Component {
           {src.hls && <source src={src.hls} type="application/x-mpegURL" onError={this.onSourceError} />}
           {src.mp4 && <source src={src.mp4} type="video/mp4" onError={this.onSourceError} />}
         </video>}
-        <div {...styles.controls}>
+        <div {...styles.controls} style={
+          {top: Math.ceil((height - CONTROLS_HEIGHT) / 2), left: controlsPadding, right: controlsPadding}
+        }>
           <div {...styles.play} onClick={playEnabled ? this.toggle : null}>
             {!playing && <Play size={SIZE.play} fill={playEnabled ? '#000' : colors.disabled} />}
             {playing && <Pause size={SIZE.play} fill="#000" />}
@@ -425,12 +434,20 @@ class AudioPlayer extends Component {
             {this.formattedCurrentTime && this.formattedDuration && ' / '}
             {this.formattedDuration && this.formattedDuration}
           </div>
-          {sourceError && !loading && <div {...styles.sourceError} style={uiTextPosition}>
-          {t('styleguide/AudioPlayer/sourceError')}{' '}
-            <span onClick={() => this.reload()} {...styles.retry}>
-              {t('styleguide/AudioPlayer/sourceErrorTryAgain')}
-            </span>
-          </div>}
+          {sourceError && !loading && (
+            <div
+              {...styles.sourceError}
+              style={{
+                ...uiTextPosition,
+                maxWidth: `calc(100% - ${iconsWidth + 20}px)`
+              }}
+            >
+              {t('styleguide/AudioPlayer/sourceError')}{' '}
+              <span onClick={() => this.reload()} {...styles.retry}>
+                {t('styleguide/AudioPlayer/sourceErrorTryAgain')}
+              </span>
+            </div>
+          )}
         </div>
         <div {...(scrubberPosition === 'bottom' ? styles.scrubberBottom : styles.scrubberTop)}>
           <div {...styles.progress} style={{ width: `${progress * 100}%` }} />
@@ -476,16 +493,22 @@ AudioPlayer.propTypes = {
   }),
   size: PropTypes.oneOf(Object.keys(breakoutStyles)),
   attributes: PropTypes.object,
+  height: PropTypes.number,
+  style: PropTypes.object,
   download: PropTypes.bool,
   scrubberPosition: PropTypes.oneOf(['top', 'bottom']),
-  timePosition: PropTypes.oneOf(['left', 'right'])
+  timePosition: PropTypes.oneOf(['left', 'right']),
+  controlsPadding: PropTypes.number
 }
 
 AudioPlayer.defaultProps = {
   size: undefined,
+  height: 44,
+  style: {},
   download: false,
   scrubberPosition: 'top',
-  timePosition: 'right'
+  timePosition: 'right',
+  controlsPadding: 0
 }
 
 export default AudioPlayer
