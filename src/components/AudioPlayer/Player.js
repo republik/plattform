@@ -24,11 +24,11 @@ const hoursDurationFormat = timeFormat('%-H:%M:%S')
 const minutesDurationFormat = timeFormat('%-M:%S')
 
 const CONTROLS_HEIGHT = 25
-const ICON_SPACING = 4
+const ICON_SPACING = 8
 
 const SIZE = {
   play: 30,
-  close: 30,
+  close: 25,
   download: 22
 }
 
@@ -88,8 +88,7 @@ const styles = {
     ...buttonStyle,
     position: 'absolute',
     top: '50%',
-    right: 0,
-    marginTop: -18,
+    marginTop: -12,
     textAlign: 'center'
   }),
   scrubberTop: css({
@@ -110,13 +109,15 @@ const styles = {
   uiText: css({
     position: 'absolute',
     zIndex: ZINDEX_AUDIOPLAYER_ICONS,
+    top: 2,
     cursor: 'pointer',
     fontSize: '16px',
     lineHeight: '25px',
     height: '30px',
     color: colors.text,
     [mUp]: {
-      fontSize: '19px'
+      fontSize: '19px',
+      top: 1
     }
   }),
   time: css({
@@ -397,13 +398,16 @@ class AudioPlayer extends Component {
     } = this.props
     const { playEnabled, playing, progress, loading, buffered, sourceError } = this.state
     const isVideo = src.mp4 || src.hls
-    const iconsWidth = SIZE.play + (download ? SIZE.download + ICON_SPACING : 0)
+    const iconsWidth =
+      SIZE.play +
+      (download ? SIZE.download + ICON_SPACING : 0) +
+      (closeHandler ? SIZE.close + ICON_SPACING : 0)
     const uiTextStyle = {
-      paddingRight: closeHandler ? `${SIZE.close + 10}px` : 0,
       maxWidth: `calc(100% - ${iconsWidth + 20}px)`,
       left: timePosition === 'left' ? iconsWidth + 10 : 'auto',
       right: timePosition === 'right' ? 10 : 'auto'
     }
+    const closeStyle = {left: SIZE.play + ICON_SPACING + (download ? SIZE.download + ICON_SPACING : 0)}
 
     return (
       <div {...merge(styles.wrapper, breakoutStyles[size])} style={{...style, height: `${height}px`}}>
@@ -452,6 +456,11 @@ class AudioPlayer extends Component {
               )}
             </div>
           )}
+          {closeHandler && (
+            <button title={t('styleguide/AudioPlayer/close')} {...styles.close} style={closeStyle} onClick={closeHandler}>
+              <Close size={SIZE.close} fill={'#000'} />
+            </button>
+          )}
           <div {...styles.uiText} style={uiTextStyle}>
             {loading && <InlineSpinner size={25} title={t('styleguide/AudioPlayer/loading')} />}
             <div {...styles.time}>
@@ -466,11 +475,6 @@ class AudioPlayer extends Component {
                   {t('styleguide/AudioPlayer/sourceErrorTryAgain')}
                 </span>
               </div>
-            )}
-            {closeHandler && (
-              <button title={t('styleguide/AudioPlayer/close')} {...styles.close} onClick={closeHandler}>
-                <Close size={SIZE.close} fill={'#000'} />
-              </button>
             )}
           </div>
         </div>

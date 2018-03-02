@@ -151,6 +151,7 @@ Props:
     mp3: '/static/non-existing-sample.mp3'
   }}
   t={t}
+  closeHandler={() => {console.log('Close button clicked')}}
   download
   scrubberPosition='bottom'
 />
