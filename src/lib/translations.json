@@ -1,5 +1,5 @@
 {
-  "updated": "2018-03-01T14:13:35.485Z",
+  "updated": "2018-03-02T15:14:43.456Z",
   "title": "live",
   "data": [
     {
@@ -68,8 +68,24 @@
       "value": "Leider mussen wir Ihren Beitrag unveröffentlichen. Wenden sie sich an kontakt@republik.ch."
     },
     {
+      "key": "styleguide/AudioPlayer/play",
+      "value": "Abspielen"
+    },
+    {
+      "key": "styleguide/AudioPlayer/pause",
+      "value": "Anhalten"
+    },
+    {
       "key": "styleguide/AudioPlayer/download",
       "value": "Herunterladen"
+    },
+    {
+      "key": "styleguide/AudioPlayer/close",
+      "value": "Schliessen"
+    },
+    {
+      "key": "styleguide/AudioPlayer/loading",
+      "value": "Wird geladen …"
     },
     {
       "key": "styleguide/AudioPlayer/sourceError",

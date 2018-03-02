@@ -9,10 +9,12 @@ Props:
 -- `mp4`: The mp4 source URL (when using a video).
 - `size`: optional, `narrow` or `tiny`.
 - `attributes`: Object, arbitrary attributes mapped to the audio tag.
+- `closeHandler`: Function; If provided, a close icon is displayed that calls the handler on click.
 - `download`: Whether to display a download icon.
 - `scrubberPosition`: `top` (default) or `bottom`.
 - `timePosition`: `right` (default) or `left`.
-- `controlsPadding`: The horizontal padding between controls and container, defaults to 0
+- `height`: number; The player height in pixels.
+- `controlsPadding`: number; The horizontal padding between controls and container, defaults to 0.
 
 
 ```react
@@ -50,6 +52,19 @@ Props:
   src={{
     mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
+  closeHandler={() => {console.log('Close button clicked')}}
+  download
+  scrubberPosition='bottom'
+  t={t}
+/>
+```
+
+```react
+<AudioPlayer
+  src={{
+    mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
+  }}
+  closeHandler={() => {console.log('Close button clicked')}}
   download
   scrubberPosition='bottom'
   height={100}
@@ -64,6 +79,7 @@ Props:
   src={{
     mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
+  closeHandler={() => {console.log('Close button clicked')}}
   download
   scrubberPosition='bottom'
   timePosition='left'
@@ -80,6 +96,7 @@ Props:
     mp3: '/static/non-existing-sample.mp3'
   }}
   download
+  closeHandler={() => {console.log('Close button clicked')}}
   scrubberPosition='bottom'
   timePosition='left'
   height={100}

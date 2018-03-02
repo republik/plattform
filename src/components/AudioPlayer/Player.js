@@ -10,6 +10,7 @@ import { InlineSpinner } from '../Spinner'
 import { link, sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import Play from 'react-icons/lib/md/play-arrow'
 import Pause from 'react-icons/lib/md/pause'
+import Close from 'react-icons/lib/md/close'
 import Download from 'react-icons/lib/md/file-download'
 
 const ZINDEX_AUDIOPLAYER_ICONS = 6
@@ -27,6 +28,7 @@ const ICON_SPACING = 4
 
 const SIZE = {
   play: 30,
+  close: 30,
   download: 22
 }
 
@@ -35,6 +37,14 @@ const barStyle = {
   height: PROGRESS_HEIGHT,
   left: 0,
   right: 0
+}
+
+const buttonStyle = {
+  background: 'none',
+  border: 'none',
+  cursor: 'pointer',
+  outline: 'none',
+  padding: 0
 }
 
 const styles = {
@@ -74,6 +84,14 @@ const styles = {
     marginTop: -10,
     textAlign: 'center'
   }),
+  close: css({
+    ...buttonStyle,
+    position: 'absolute',
+    top: '50%',
+    right: 0,
+    marginTop: -18,
+    textAlign: 'center'
+  }),
   scrubberTop: css({
     ...barStyle,
     top: -PROGRESS_HEIGHT
@@ -89,7 +107,7 @@ const styles = {
     left: 0,
     height: PROGRESS_HEIGHT
   }),
-  time: css({
+  uiText: css({
     position: 'absolute',
     zIndex: ZINDEX_AUDIOPLAYER_ICONS,
     cursor: 'pointer',
@@ -100,6 +118,9 @@ const styles = {
     [mUp]: {
       fontSize: '19px'
     }
+  }),
+  time: css({
+    ...ellipsize
   }),
   scrub: css({
     ...barStyle,
@@ -124,10 +145,6 @@ const styles = {
     height: PROGRESS_HEIGHT
   }),
   sourceError: css({
-    position: 'absolute',
-    zIndex: ZINDEX_AUDIOPLAYER_ICONS,
-    top: 0,
-    right: 0,
     color: colors.disabled,
     height: '25px',
     ...ellipsize,
@@ -372,6 +389,7 @@ class AudioPlayer extends Component {
       style,
       t,
       height,
+      closeHandler,
       download,
       scrubberPosition,
       timePosition,
@@ -380,10 +398,12 @@ class AudioPlayer extends Component {
     const { playEnabled, playing, progress, loading, buffered, sourceError } = this.state
     const isVideo = src.mp4 || src.hls
     const iconsWidth = SIZE.play + (download ? SIZE.download + ICON_SPACING : 0)
-    const uiTextPosition =
-      timePosition === 'left'
-        ? { left: iconsWidth + 10 }
-        : { right: 10 }
+    const uiTextStyle = {
+      paddingRight: closeHandler ? `${SIZE.close + 10}px` : 0,
+      maxWidth: `calc(100% - ${iconsWidth + 20}px)`,
+      left: timePosition === 'left' ? iconsWidth + 10 : 'auto',
+      right: timePosition === 'right' ? 10 : 'auto'
+    }
 
     return (
       <div {...merge(styles.wrapper, breakoutStyles[size])} style={{...style, height: `${height}px`}}>
@@ -412,7 +432,11 @@ class AudioPlayer extends Component {
         <div {...styles.controls} style={
           {top: Math.ceil((height - CONTROLS_HEIGHT) / 2), left: controlsPadding, right: controlsPadding}
         }>
-          <div {...styles.play} onClick={playEnabled ? this.toggle : null}>
+          <div
+            {...styles.play}
+            onClick={playEnabled ? this.toggle : null}
+            title={t(`styleguide/AudioPlayer/${playing ? 'pause' : 'play'}`)}
+          >
             {!playing && <Play size={SIZE.play} fill={playEnabled ? '#000' : colors.disabled} />}
             {playing && <Pause size={SIZE.play} fill="#000" />}
           </div>
@@ -428,26 +452,27 @@ class AudioPlayer extends Component {
               )}
             </div>
           )}
-          <div {...styles.time} style={uiTextPosition}>
-            {loading && <InlineSpinner size={25} />}
-            {this.formattedCurrentTime && this.formattedCurrentTime}
-            {this.formattedCurrentTime && this.formattedDuration && ' / '}
-            {this.formattedDuration && this.formattedDuration}
-          </div>
-          {sourceError && !loading && (
-            <div
-              {...styles.sourceError}
-              style={{
-                ...uiTextPosition,
-                maxWidth: `calc(100% - ${iconsWidth + 20}px)`
-              }}
-            >
-              {t('styleguide/AudioPlayer/sourceError')}{' '}
-              <span onClick={() => this.reload()} {...styles.retry}>
-                {t('styleguide/AudioPlayer/sourceErrorTryAgain')}
-              </span>
+          <div {...styles.uiText} style={uiTextStyle}>
+            {loading && <InlineSpinner size={25} title={t('styleguide/AudioPlayer/loading')} />}
+            <div {...styles.time}>
+              {this.formattedCurrentTime && this.formattedCurrentTime}
+              {this.formattedCurrentTime && this.formattedDuration && ' / '}
+              {this.formattedDuration && this.formattedDuration}
             </div>
-          )}
+            {sourceError && !loading && (
+              <div {...styles.sourceError}>
+                {t('styleguide/AudioPlayer/sourceError')}{' '}
+                <span onClick={() => this.reload()} {...styles.retry}>
+                  {t('styleguide/AudioPlayer/sourceErrorTryAgain')}
+                </span>
+              </div>
+            )}
+            {closeHandler && (
+              <button title={t('styleguide/AudioPlayer/close')} {...styles.close} onClick={closeHandler}>
+                <Close size={SIZE.close} fill={'#000'} />
+              </button>
+            )}
+          </div>
         </div>
         <div {...(scrubberPosition === 'bottom' ? styles.scrubberBottom : styles.scrubberTop)}>
           <div {...styles.progress} style={{ width: `${progress * 100}%` }} />
@@ -495,6 +520,7 @@ AudioPlayer.propTypes = {
   attributes: PropTypes.object,
   height: PropTypes.number,
   style: PropTypes.object,
+  closeHandler: PropTypes.func,
   download: PropTypes.bool,
   scrubberPosition: PropTypes.oneOf(['top', 'bottom']),
   timePosition: PropTypes.oneOf(['left', 'right']),
