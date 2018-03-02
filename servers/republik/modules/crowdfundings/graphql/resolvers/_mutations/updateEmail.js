@@ -1,4 +1,4 @@
-const isEmail = require('email-validator').validate
+const isEmail = require('isemail').validate
 const { Roles, ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const updateUserEmail = require('../../../lib/updateUserEmail')
 
