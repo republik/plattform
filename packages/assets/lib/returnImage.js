@@ -3,7 +3,6 @@ const getWidthHeight = require('./getWidthHeight')
 const fileTypeStream = require('file-type-stream').default
 const { PassThrough } = require('stream')
 const toArray = require('stream-to-array')
-const util = require('util')
 
 const pipeHeaders = [
   'Content-Type',
@@ -13,7 +12,7 @@ const pipeHeaders = [
   'Access-Control-Allow-Credentials',
   'Access-Control-Allow-Headers',
   'Access-Control-Allow-Methods',
-  'Access-Control-Allow-Origin',
+  'Access-Control-Allow-Origin'
 ]
 
 module.exports = async ({
@@ -22,11 +21,12 @@ module.exports = async ({
   headers,
   options = {}
 }) => {
-  const { resize, bw, webp } = options
+  const { resize, bw } = options
+  const webp = false
   let width, height
   if (resize) {
     try {
-      ({ width, height} = getWidthHeight(resize))
+      ({ width, height } = getWidthHeight(resize))
     } catch (e) {
       res.status(400).end(e.message)
     }
@@ -34,7 +34,7 @@ module.exports = async ({
 
   // forward filtered headers
   if (headers) {
-    for(let key of pipeHeaders) {
+    for (let key of pipeHeaders) {
       const value = headers.get(key)
       if (value) {
         res.set(key, value)
@@ -49,15 +49,15 @@ module.exports = async ({
     ({ mime } = await new Promise(resolve => {
       stream.pipe(fileTypeStream(resolve)).pipe(passThrough)
     }))
-  } catch(e) { }
+  } catch (e) { }
   const isJPEG = mime === 'image/jpeg'
 
   // convert stream to buffer, because our cdn doesn't cache if
   // content-length is missing
   const buffer = await toArray(passThrough)
-    .then( parts => {
+    .then(parts => {
       const buffers = parts
-        .map(part => util.isBuffer(part) ? part : Buffer.from(part))
+        .map(part => Buffer.isBuffer(part) ? part : Buffer.from(part))
       return Buffer.concat(buffers)
     })
 
@@ -93,5 +93,4 @@ module.exports = async ({
     }
     return res.end(await pipeline.toBuffer())
   }
-
 }
