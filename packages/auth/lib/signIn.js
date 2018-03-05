@@ -1,6 +1,6 @@
 const uuid = require('uuid/v4')
 const querystring = require('querystring')
-const isEmail = require('email-validator').validate
+const isEmail = require('isemail').validate
 const kraut = require('kraut')
 const geoForIP = require('./geoForIP')
 const checkEnv = require('check-env')
