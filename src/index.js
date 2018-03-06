@@ -165,7 +165,7 @@ ReactDOM.render(
               css,
               ...require('./components/Typography'),
               ...require('./components/VideoPlayer'),
-              Center: require('./components/Center'),
+              Center: require('./components/Center')
             },
             src: require('./components/VideoPlayer/docs.md')
           },
@@ -177,7 +177,7 @@ ReactDOM.render(
               css,
               ...require('./components/Typography'),
               ...require('./components/AudioPlayer'),
-              Center: require('./components/Center'),
+              Center: require('./components/Center')
             },
             src: require('./components/AudioPlayer/docs.md')
           },
@@ -242,7 +242,7 @@ ReactDOM.render(
             title: 'Center',
             imports: {
               Center: require('./components/Center'),
-              Breakout: require('./components/Center').Breakout,
+              Breakout: require('./components/Center').Breakout
             },
             src: require('./components/Center/docs.md')
           },
@@ -255,6 +255,17 @@ ReactDOM.render(
               TitleBlock: require('./components/TitleBlock')
             },
             src: require('./components/TitleBlock/docs.md')
+          },
+          {
+            path: '/blockquote',
+            title: 'BlockQuote',
+            imports: {
+              css,
+              ...require('./components/BlockQuote'),
+              ...require('./components/Typography'),
+              ...require('./components/Figure')
+            },
+            src: require('./components/BlockQuote/docs.md')
           },
           {
             path: '/pullquote',
@@ -287,7 +298,7 @@ ReactDOM.render(
               css,
               ...require('./components/Typography'),
               Tweet: require('./components/Social/Tweet'),
-              Center: require('./components/Center'),
+              Center: require('./components/Center')
             },
             src: require('./components/Social/docs.md')
           },
@@ -299,7 +310,7 @@ ReactDOM.render(
               css,
               ...require('./components/Typography'),
               ...require('./components/Video'),
-              Center: require('./components/Center'),
+              Center: require('./components/Center')
             },
             src: require('./components/Video/docs.md')
           },
@@ -334,7 +345,7 @@ ReactDOM.render(
               ...require('./components/Typography'),
               ...require('./components/Dossier'),
               ...require('./components/TeaserFront'),
-              ...require('./components/Figure'),
+              ...require('./components/Figure')
             },
             src: require('./components/Dossier/docs.md')
           },
@@ -369,7 +380,7 @@ ReactDOM.render(
               css,
               ...require('./components/Typography'),
               ...require('./components/TeaserFront'),
-              Image: require('./components/Figure/Image'),
+              Image: require('./components/Figure/Image')
             },
             src: require('./components/TeaserFront/Image.md')
           },
@@ -390,7 +401,7 @@ ReactDOM.render(
               css,
               ...require('./components/Typography'),
               ...require('./components/TeaserFront'),
-              Image: require('./components/Figure/Image'),
+              Image: require('./components/Figure/Image')
             },
             src: require('./components/TeaserFront/Split.md')
           },
@@ -401,7 +412,7 @@ ReactDOM.render(
               css,
               ...require('./components/Typography'),
               ...require('./components/TeaserFront'),
-              Image: require('./components/Figure/Image'),
+              Image: require('./components/Figure/Image')
             },
             src: require('./components/TeaserFront/Tile.md')
           },
@@ -414,10 +425,10 @@ ReactDOM.render(
               ...require('./components/Typography'),
               ...require('./components/Dossier'),
               ...require('./components/TeaserFront'),
-              ...require('./components/Figure'),
+              ...require('./components/Figure')
             },
             src: require('./components/Dossier/Teaser.md')
-          },
+          }
         ]
       },
       {
@@ -483,7 +494,7 @@ ReactDOM.render(
               renderMdast: require('mdast-react-render').renderMdast
             },
             src: require('./templates/EditorialNewsletter/docs.md')
-          },
+          }
         ]
       },
       {
