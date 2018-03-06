@@ -1,4 +1,4 @@
-const isEmail = require('isemail').validate
+const validator = require('validator')
 const { Roles, ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const updateUserEmail = require('../../../lib/updateUserEmail')
 
@@ -10,7 +10,7 @@ module.exports = async (_, args, { pgdb, user: me, req, t }) => {
     email
   } = args
 
-  if (!isEmail(email)) {
+  if (!validator.isEmail(email)) {
     console.info('invalid email', { req: req._log(), email })
     throw new Error(t('api/email/invalid'))
   }
