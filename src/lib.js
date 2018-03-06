@@ -23,8 +23,8 @@ export {default as Dropdown} from './components/Form/Dropdown'
 export {default as Autocomplete} from './components/Form/Autocomplete'
 export {default as TitleBlock} from './components/TitleBlock'
 export {default as Center, Breakout} from './components/Center'
-export { AudioPlayer} from './components/AudioPlayer'
-export { VideoPlayer} from './components/VideoPlayer'
+export { AudioPlayer } from './components/AudioPlayer'
+export { VideoPlayer } from './components/VideoPlayer'
 export { LazyLoad } from './components/LazyLoad'
 export { LazyImage } from './components/LazyLoad/Image'
 export {
@@ -38,6 +38,10 @@ export {
   PullQuoteSource,
   PullQuoteText
 } from './components/PullQuote'
+export {
+  BlockQuote,
+  BlockQuoteContent
+} from './components/BlockQuote'
 export {
   Figure,
   FigureCover,
