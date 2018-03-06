@@ -192,7 +192,8 @@ const createSchema = ({
         'center',
         'titleSize',
         'image',
-        'byline'
+        'byline',
+        'onlyImage'
       ]
     },
     rules: [

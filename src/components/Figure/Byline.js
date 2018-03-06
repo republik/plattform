@@ -75,6 +75,19 @@ const positionStyle = {
       marginTop: 0,
       marginLeft: '18px'
     }
+  }),
+  // left inside relative container on desktop and mobile.
+  leftInsideOnlyImage: css({
+    ...positionBaseStyle,
+    ...sansSerifRegular10,
+    left: 0,
+    marginTop: 0,
+    marginLeft: '15px',
+    paddingLeft: '15px',
+    [mUpFront]: {
+      ...sansSerifRegular12,
+      marginLeft: '18px'
+    }
   })
 }
 
@@ -98,7 +111,8 @@ Byline.propTypes = {
     'right',
     'rightCompact',
     'left',
-    'leftInside'
+    'leftInside',
+    'leftInsideOnlyImage'
   ])
 }
 

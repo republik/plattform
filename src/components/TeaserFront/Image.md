@@ -6,8 +6,9 @@ Supported props:
 - `color`: The text color.
 - `bgColor`: The background color to use in stacked mode.
 - `center`: Whether the text should be center aligned.
+- `onlyImage`: Whether to render only the image (without the text block).
 
-A `<TeaserFrontImageHeadline />` should be used. The default font size can be changed with either of these props:
+A `<TeaserFrontImageHeadline />` should be used. The default font size can be changed with either of these props:d
 - `medium`: Whether the font size shoud be increased to medium.
 - `large`: Whether the font size shoud be increased to large.
 - `small`: Whether the font size should be decreased to small.
@@ -174,6 +175,23 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
   <TeaserFrontImageHeadline.Editorial large>The sand is near</TeaserFrontImageHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontImage>
+```
+
+```react
+<TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
+  center
+  onlyImage
+  textPosition='topright' 
+  color='#fff' bgColor='#000'>
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <TeaserFrontImageHeadline.Editorial small>The sand is near</TeaserFrontImageHeadline.Editorial>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>

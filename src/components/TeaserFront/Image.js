@@ -36,7 +36,8 @@ const ImageBlock = ({
   bgColor,
   textPosition,
   center,
-  aboveTheFold
+  aboveTheFold,
+  onlyImage
 }) => {
   const background = bgColor || ''
   return (
@@ -46,13 +47,15 @@ const ImageBlock = ({
     }}>
       <div style={{position: 'relative', fontSize: 0}}>
         <FigureImage aboveTheFold={aboveTheFold} {...FigureImage.utils.getResizedSrcs(image, 1500, false)} alt={alt} />
-        {byline && <FigureByline position='leftInside' style={{color}}>{byline}</FigureByline>}
+        {byline && <FigureByline position={onlyImage ? 'leftInsideOnlyImage' : 'leftInside'} style={{color}}>
+          {byline}
+        </FigureByline>}
       </div>
-      <div {...styles.textContainer}>
+      {!onlyImage && <div {...styles.textContainer}>
         <Text position={textPosition} color={color} center={center}>
           {children}
         </Text>
-      </div>
+      </div>}
     </div>
   )
 }
@@ -74,12 +77,14 @@ ImageBlock.propTypes = {
     'top',
     'middle',
     'bottom'
-  ])
+  ]),
+  onlyImage: PropTypes.bool
 }
 
 ImageBlock.defaultProps = {
   textPosition: 'topleft',
-  alt: ''
+  alt: '',
+  onlyImage: false
 }
 
 export default ImageBlock
