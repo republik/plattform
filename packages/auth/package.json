@@ -38,7 +38,6 @@
     "export-files": "^2.1.1",
     "express-session": "^1.15.6",
     "geoip-database": "^1.0.11",
-    "isemail": "^3.1.1",
     "is-uuid": "^1.0.2",
     "kraut": "^0.1.1",
     "maxmind": "^2.4.0",
@@ -47,7 +46,8 @@
     "querystring": "^0.2.0",
     "rw": "^1.3.3",
     "useragent": "^2.2.1",
-    "uuid": "^3.1.0"
+    "uuid": "^3.1.0",
+    "validator": "^9.4.1"
   },
   "peerDependencies": {
     "d3-array": "^1.2.1",

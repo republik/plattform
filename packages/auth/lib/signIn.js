@@ -1,6 +1,6 @@
 const uuid = require('uuid/v4')
 const querystring = require('querystring')
-const isEmail = require('isemail').validate
+const validator = require('validator')
 const kraut = require('kraut')
 const geoForIP = require('./geoForIP')
 const checkEnv = require('check-env')
@@ -29,7 +29,7 @@ module.exports = async (_email, context, pgdb, req) => {
     return {phrase: ''}
   }
 
-  if (!isEmail(_email)) {
+  if (!validator.isEmail(_email)) {
     debug('invalid email: %O', {
       req: req._log(),
       _email
