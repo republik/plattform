@@ -257,5 +257,17 @@ module.exports = {
       console.error('getNewsletterProfile failed', { error })
       throw new Error(t('api/newsletters/get/failed'))
     }
+  },
+  defaultDiscussionNotificationOption (user, args, { user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return user._raw.defaultDiscussionNotificationOption
+    }
+    return null
+  },
+  discussionNotificationChannels (user, args, { user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return user._raw.discussionNotificationChannels
+    }
+    return []
   }
 }

@@ -58,6 +58,11 @@ type mutations {
     publicUrl: String
   ): User!
 
+  updateNotificationSettings(
+    defaultDiscussionNotificationOption: DiscussionNotificationOption
+    discussionNotificationChannels: [DiscussionNotificationChannel!]
+  ): User!
+
   publishCredential(
     description: String
   ): Credential

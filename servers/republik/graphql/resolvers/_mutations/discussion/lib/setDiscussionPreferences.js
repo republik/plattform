@@ -49,17 +49,24 @@ module.exports = async ({
     userId,
     discussionId: discussion.id
   }
+  const existingDP = await transaction.public.discussionPreferences.findOne(findQuery)
+  const user = await transaction.public.users.findOne({ id: userId })
+
   const updateQuery = {
     userId,
     discussionId: discussion.id,
     anonymous: anonymity,
-    credentialId
+    credentialId,
+    notificationOption:
+      discussionPreferences.notifications ||
+      (existingDP && existingDP.notificationOption) ||
+      user.defaultDiscussionNotificationOption
   }
   const options = {
     skipUndefined: true
   }
-  const dpExists = await transaction.public.discussionPreferences.findFirst(findQuery)
-  if (dpExists) {
+
+  if (existingDP) {
     await transaction.public.discussionPreferences.updateOne(findQuery, updateQuery, options)
   } else {
     await transaction.public.discussionPreferences.insert(updateQuery, options)

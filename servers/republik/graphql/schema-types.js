@@ -71,6 +71,9 @@ extend type User {
   sequenceNumber: Int
 
   newsletterSettings: NewsletterSettings!
+
+  defaultDiscussionNotificationOption: DiscussionNotificationOption
+  discussionNotificationChannels: [DiscussionNotificationChannel!]!
 }
 
 type NewsletterSettings {
@@ -164,6 +167,16 @@ enum Permission {
   FORBIDDEN
 }
 
+enum DiscussionNotificationOption {
+  MY_CHILDREN
+  ALL
+  NONE
+}
+enum DiscussionNotificationChannel {
+  WEB
+  EMAIL
+}
+
 type DiscussionRules {
   # max length of a comments content
   maxLength: Int
@@ -175,10 +188,12 @@ type DiscussionRules {
 type DiscussionPreferences {
   anonymity: Boolean!
   credential: Credential
+  notifications: DiscussionNotificationOption
 }
 input DiscussionPreferencesInput {
   anonymity: Boolean!
   credential: String
+  notifications: DiscussionNotificationOption
 }
 
 enum DiscussionOrder {

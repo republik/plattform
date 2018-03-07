@@ -18,6 +18,7 @@ module.exports = async ({ id }, _, { pgdb, user }) => {
     : null
   return {
     anonymity: dp.anonymous || false, // this is bogous!
-    credential
+    credential,
+    notifications: dp.notificationOption
   }
 }
