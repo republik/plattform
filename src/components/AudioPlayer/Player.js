@@ -28,7 +28,7 @@ const ICON_SPACING = 8
 
 const SIZE = {
   play: 30,
-  close: 25,
+  close: 30,
   download: 22
 }
 
@@ -87,8 +87,9 @@ const styles = {
   close: css({
     ...buttonStyle,
     position: 'absolute',
+    right: 0,
     top: '50%',
-    marginTop: -12,
+    marginTop: -14,
     textAlign: 'center'
   }),
   scrubberTop: css({
@@ -109,7 +110,7 @@ const styles = {
   uiText: css({
     position: 'absolute',
     zIndex: ZINDEX_AUDIOPLAYER_ICONS,
-    top: 2,
+    top: 1,
     cursor: 'pointer',
     fontSize: '16px',
     lineHeight: '25px',
@@ -117,11 +118,11 @@ const styles = {
     color: colors.text,
     [mUp]: {
       fontSize: '19px',
-      top: 1
     }
   }),
   time: css({
-    ...ellipsize
+    ...ellipsize,
+    fontSize: '19px'
   }),
   scrub: css({
     ...barStyle,
@@ -398,16 +399,15 @@ class AudioPlayer extends Component {
     } = this.props
     const { playEnabled, playing, progress, loading, buffered, sourceError } = this.state
     const isVideo = src.mp4 || src.hls
-    const iconsWidth =
+    const leftIconsWidth =
       SIZE.play +
-      (download ? SIZE.download + ICON_SPACING : 0) +
-      (closeHandler ? SIZE.close + ICON_SPACING : 0)
+      (download ? SIZE.download + ICON_SPACING : 0)
+    const rightIconsWidth = closeHandler ? SIZE.close : 0
     const uiTextStyle = {
-      maxWidth: `calc(100% - ${iconsWidth + 20}px)`,
-      left: timePosition === 'left' ? iconsWidth + 10 : 'auto',
-      right: timePosition === 'right' ? 10 : 'auto'
+      maxWidth: `calc(100% - ${leftIconsWidth + rightIconsWidth + 20}px)`,
+      left: timePosition === 'left' ? leftIconsWidth + 10 : 'auto',
+      right: timePosition === 'right' ? rightIconsWidth + 10 : 'auto'
     }
-    const closeStyle = {left: SIZE.play + ICON_SPACING + (download ? SIZE.download + ICON_SPACING : 0)}
 
     return (
       <div {...merge(styles.wrapper, breakoutStyles[size])} style={{...style, height: `${height}px`}}>
@@ -457,7 +457,7 @@ class AudioPlayer extends Component {
             </div>
           )}
           {closeHandler && (
-            <button title={t('styleguide/AudioPlayer/close')} {...styles.close} style={closeStyle} onClick={closeHandler}>
+            <button title={t('styleguide/AudioPlayer/close')} {...styles.close} onClick={closeHandler}>
               <Close size={SIZE.close} fill={'#000'} />
             </button>
           )}
