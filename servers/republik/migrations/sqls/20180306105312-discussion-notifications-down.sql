@@ -10,4 +10,3 @@ ALTER TABLE "discussionPreferences"
 ;
 
 DROP TYPE IF EXISTS "discussionNotificationOption";
-DROP TYPE IF EXISTS "notificationChannel";
