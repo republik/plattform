@@ -16,6 +16,17 @@ type Episode {
   document: Document
 }
 
+enum AudioSourceType {
+  mp3
+  aac
+  ogg
+}
+
+type AudioSource {
+  type: AudioSourceType!
+  url: String!
+}
+
 type Meta {
   title: String
   slug: String
@@ -42,6 +53,7 @@ type Meta {
   # the id of the discussion itself
   discussionId: ID
   credits: JSON
+  audioSources: [AudioSource]
 }
 
 # implements FileInterface
