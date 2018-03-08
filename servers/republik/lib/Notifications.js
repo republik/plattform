@@ -76,60 +76,63 @@ const submitComment = async (comment, discussion, context) => {
 
     const discussionUrl = `${FRONTEND_BASE_URL}${discussion.documentPath}`
 
-    await Promise.all([
+    const webUserIds = notifyUsers
+      .filter(u => u.discussionNotificationChannels.indexOf('WEB') > -1)
+      .map(u => u.id)
+
+    if (webUserIds.length > 0) {
       pubsub.publish('webNotification', { webNotification: {
         title: t('api/comment/notification/new/web/subject', { discussionName: discussion.title }),
         body: `${displayAuthor.name}: ${shortBody}`,
         icon: t('api/comment/notification/new/web/icon'),
-        userIds: notifyUsers
-          .filter(u => u.discussionNotificationChannels.indexOf('WEB') > -1)
-          .map(u => u.id)
-      }}),
-      ...notifyUsers
-        .filter(u => u.discussionNotificationChannels.indexOf('EMAIL') > -1)
-        .map(u => {
-          const user = transformUser(u)
-          return sendMailTemplate({
-            to: u.email,
-            fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
-            subject: t('api/comment/notification/new/email/subject', { discussionName: discussion.title }),
-            templateName: 'cf_comment_notification_new',
-            globalMergeVars: [
-              { name: 'NAME',
-                content: user.name
-              },
-              { name: 'COMMENTER_NAME',
-                content: displayAuthor.name
-              },
-              { name: 'DISCUSSION_TITLE',
-                content: discussion.title
-              },
-              { name: 'DISCUSSION_URL',
-                content: discussionUrl
-              },
-              { name: 'DISCUSSION_MUTE_URL',
-                content: `${discussionUrl}?mute=1`
-              },
-              { name: 'CONTENT',
-                content: comment.content
-              },
-              { name: 'URL',
-                content: `${discussionUrl}?focus=${comment.id}`
-              },
-              ...displayAuthor.credential
-                ? [
-                  { name: 'CREDENTIAL_DESCRIPTION',
-                    content: displayAuthor.credential.description
-                  },
-                  { name: 'CREDENTIAL_VERIFIED',
-                    content: displayAuthor.credential.verified
-                  }
-                ]
-                : []
-            ]
-          })
+        userIds: webUserIds
+      }})
+    }
+
+    notifyUsers
+      .filter(u => u.discussionNotificationChannels.indexOf('EMAIL') > -1)
+      .map(u => {
+        const user = transformUser(u)
+        return sendMailTemplate({
+          to: u.email,
+          fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
+          subject: t('api/comment/notification/new/email/subject', { discussionName: discussion.title }),
+          templateName: 'cf_comment_notification_new',
+          globalMergeVars: [
+            { name: 'NAME',
+              content: user.name
+            },
+            { name: 'COMMENTER_NAME',
+              content: displayAuthor.name
+            },
+            { name: 'DISCUSSION_TITLE',
+              content: discussion.title
+            },
+            { name: 'DISCUSSION_URL',
+              content: discussionUrl
+            },
+            { name: 'DISCUSSION_MUTE_URL',
+              content: `${discussionUrl}?mute=1`
+            },
+            { name: 'CONTENT',
+              content: comment.content
+            },
+            { name: 'URL',
+              content: `${discussionUrl}?focus=${comment.id}`
+            },
+            ...displayAuthor.credential
+              ? [
+                { name: 'CREDENTIAL_DESCRIPTION',
+                  content: displayAuthor.credential.description
+                },
+                { name: 'CREDENTIAL_VERIFIED',
+                  content: displayAuthor.credential.verified
+                }
+              ]
+              : []
+          ]
         })
-    ])
+      })
   }
 }
 
