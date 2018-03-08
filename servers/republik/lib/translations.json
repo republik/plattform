@@ -1,5 +1,5 @@
 {
-  "updated": "2018-02-12T12:01:05.233Z",
+  "updated": "2018-03-07T23:48:45.946Z",
   "title": "live",
   "data": [
     {
@@ -73,6 +73,10 @@
     {
       "key": "api/comment/id/duplicate",
       "value": "Diese ID existiert bereits."
+    },
+    {
+      "key": "api/comment/notification/new/email/subject",
+      "value": "Neuer Kommentar auf republik.ch"
     },
     {
       "key": "api/greeting",
