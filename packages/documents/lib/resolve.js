@@ -181,8 +181,7 @@ const metaFieldResolver = (meta, allDocuments = [], errors) => {
     series,
     dossier: resolver(meta.dossier),
     format: resolver(meta.format),
-    discussion: resolver(meta.discussion),
-    audioSources: meta.audioSources
+    discussion: resolver(meta.discussion)
   }
 }
 
