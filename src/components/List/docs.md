@@ -45,7 +45,7 @@ Props:
 
 Props:
 - `compact`: Whether the vertical list item margins should be compact.
-- `start`: The start index of the first list item (zero-based, defaults to 0).
+- `start`: The start index of the first list item (defaults to 1).
 
 ```react
 <Center>

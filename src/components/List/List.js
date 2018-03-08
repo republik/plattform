@@ -111,7 +111,7 @@ export const OrderedList = ({ children, attributes, start, compact }) => {
       {...css(
         compact ? styles.listCompact : styles.list,
         styles.orderedBefore,
-        { counterReset: `start ${start}` }
+        { counterReset: `start ${start - 1}` }
       )}
     >
       {children}
@@ -127,7 +127,7 @@ OrderedList.propTypes = {
 }
 
 OrderedList.defaultProps = {
-  start: 0
+  start: 1
 }
 
 export const ListItem = ({ children, attributes = {} }) => (
