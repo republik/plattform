@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS "notifications";
+--DROP TABLE IF EXISTS "notifications";
 
 ALTER TABLE "users"
   DROP COLUMN IF EXISTS "defaultDiscussionNotificationOption",
