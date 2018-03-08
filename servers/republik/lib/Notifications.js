@@ -1,4 +1,5 @@
 const { displayAuthor: getDisplayAuthor } = require('../graphql/resolvers/Comment')
+const { transformUser } = require('@orbiting/backend-modules-auth')
 
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
@@ -73,6 +74,8 @@ const submitComment = async (comment, discussion, context) => {
       ? `${comment.content.substring(0, 128)}...`
       : comment.content
 
+    const discussionUrl = `${FRONTEND_BASE_URL}${discussion.documentPath}`
+
     await Promise.all([
       pubsub.publish('webNotification', { webNotification: {
         title: t('api/comment/notification/new/web/subject', { discussionName: discussion.title }),
@@ -85,23 +88,33 @@ const submitComment = async (comment, discussion, context) => {
       ...notifyUsers
         .filter(u => u.discussionNotificationChannels.indexOf('EMAIL') > -1)
         .map(u => {
+          const user = transformUser(u)
           return sendMailTemplate({
             to: u.email,
             fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
             subject: t('api/comment/notification/new/email/subject', { discussionName: discussion.title }),
             templateName: 'cf_comment_notification_new',
             globalMergeVars: [
-              { name: 'LINK',
-                content: `${FRONTEND_BASE_URL}${discussion.documentPath}?focus=${comment.id}`
+              { name: 'NAME',
+                content: user.name
+              },
+              { name: 'COMMENTER_NAME',
+                content: displayAuthor.name
               },
               { name: 'DISCUSSION_TITLE',
                 content: discussion.title
               },
+              { name: 'DISCUSSION_URL',
+                content: discussionUrl
+              },
+              { name: 'DISCUSSION_MUTE_URL',
+                content: `${discussionUrl}?mute=1`
+              },
               { name: 'CONTENT',
                 content: comment.content
               },
-              { name: 'NAME',
-                content: displayAuthor.name
+              { name: 'URL',
+                content: `${discussionUrl}?focus=${comment.id}`
               },
               ...displayAuthor.credential
                 ? [
