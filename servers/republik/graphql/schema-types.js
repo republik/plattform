@@ -92,6 +92,7 @@ type WebNotification {
   title: String!
   body: String!
   icon: String!
+  url: String!
 }
 
 type UserConnection {

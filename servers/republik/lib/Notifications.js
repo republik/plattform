@@ -75,6 +75,7 @@ const submitComment = async (comment, discussion, context) => {
       : comment.content
 
     const discussionUrl = `${FRONTEND_BASE_URL}${discussion.documentPath}`
+    const commentUrl = `${discussionUrl}?focus=${comment.id}`
 
     const webUserIds = notifyUsers
       .filter(u => u.discussionNotificationChannels.indexOf('WEB') > -1)
@@ -85,6 +86,7 @@ const submitComment = async (comment, discussion, context) => {
         title: t('api/comment/notification/new/web/subject', { discussionName: discussion.title }),
         body: `${displayAuthor.name}: ${shortBody}`,
         icon: t('api/comment/notification/new/web/icon'),
+        url: commentUrl,
         userIds: webUserIds
       }})
     }
@@ -118,7 +120,7 @@ const submitComment = async (comment, discussion, context) => {
               content: comment.content
             },
             { name: 'URL',
-              content: `${discussionUrl}?focus=${comment.id}`
+              content: commentUrl
             },
             ...displayAuthor.credential
               ? [
