@@ -88,6 +88,12 @@ type NewsletterSubscription {
   isEligible: Boolean!
 }
 
+type WebNotification {
+  title: String!
+  body: String!
+  icon: String!
+}
+
 type UserConnection {
   totalCount: Int!
   pageInfo: PageInfo

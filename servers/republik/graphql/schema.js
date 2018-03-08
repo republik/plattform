@@ -120,5 +120,6 @@ type subscriptions {
   # create, update, unpublish, vote
   comment(discussionId: ID!): CommentUpdate!
   greeting: Greeting!
+  webNotification: WebNotification!
 }
 `

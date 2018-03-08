@@ -1,5 +1,5 @@
 {
-  "updated": "2018-03-07T23:48:45.946Z",
+  "updated": "2018-03-08T10:42:48.880Z",
   "title": "live",
   "data": [
     {
@@ -76,7 +76,15 @@
     },
     {
       "key": "api/comment/notification/new/email/subject",
-      "value": "Neuer Kommentar auf republik.ch"
+      "value": "Neuer Beitrag in {discussionName}"
+    },
+    {
+      "key": "api/comment/notification/new/web/subject",
+      "value": "Neuer Beitrag in {discussionName}"
+    },
+    {
+      "key": "api/comment/notification/new/web/icon",
+      "value": "https://cdn.republik.space/frontend/static/apple-touch-icon.png"
     },
     {
       "key": "api/greeting",
