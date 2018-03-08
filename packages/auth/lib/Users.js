@@ -1,5 +1,5 @@
 const querystring = require('querystring')
-const isEmail = require('email-validator').validate
+const validator = require('validator')
 const isUUID = require('is-uuid')
 const debug = require('debug')('auth')
 const { sendMailTemplate, moveNewsletterSubscriptions } = require('@orbiting/backend-modules-mail')
@@ -39,7 +39,7 @@ const signIn = async (_email, context, pgdb, req) => {
     return { phrase: '', tokenTypes: [] }
   }
 
-  if (!isEmail(_email)) {
+  if (!validator.isEmail(_email)) {
     debug('invalid email: %O', {
       req: req._log(),
       _email

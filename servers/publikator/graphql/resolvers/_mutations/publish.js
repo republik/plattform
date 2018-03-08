@@ -47,7 +47,11 @@ const { lib: {
 } } = require('@orbiting/backend-modules-assets')
 const uniq = require('lodash/uniq')
 
-const { FRONTEND_BASE_URL } = process.env
+const {
+  FRONTEND_BASE_URL,
+  PIWIK_URL_BASE,
+  PIWIK_SITE_ID
+} = process.env
 
 module.exports = async (
   _,
@@ -106,11 +110,12 @@ module.exports = async (
   const allUsernames = firstDoc._usernames
 
   const resolvedDoc = JSON.parse(JSON.stringify(doc))
-  const searchString = '?' + querystring.stringify({
+  const utmParams = {
     'utm_source': 'newsletter',
     'utm_medium': 'email',
     'utm_campaign': repoId
-  })
+  }
+  const searchString = '?' + querystring.stringify(utmParams)
   contentUrlResolver(resolvedDoc, allDocs, allUsernames, unresolvedRepoIds, FRONTEND_BASE_URL, searchString)
   metaUrlResolver(resolvedDoc.content.meta, allDocs, allUsernames, unresolvedRepoIds, FRONTEND_BASE_URL, searchString)
   metaFieldResolver(resolvedDoc.content.meta, allDocs, unresolvedRepoIds)
@@ -339,7 +344,22 @@ module.exports = async (
 
   // do the mailchimp update
   if (campaignId) {
-    const html = getHTML(resolvedDoc)
+    let html = getHTML(resolvedDoc)
+
+    if (PIWIK_URL_BASE && PIWIK_SITE_ID) {
+      const openBeacon = `${PIWIK_URL_BASE}/piwik.php?${querystring.stringify({
+        idsite: PIWIK_SITE_ID,
+        url: FRONTEND_BASE_URL + doc.content.meta.path,
+        rec: 1,
+        bots: 1,
+        action_name: `Email: ${doc.content.meta.emailSubject}`,
+        ...utmParams
+      })}&_id=*|DATE:ymd|**|UNIQID|*`
+      html = html.replace(
+        '</body>',
+        `<img src="${openBeacon}" height="1" width="1"></body>`
+      )
+    }
 
     const updateResponse = await updateCampaignContent({
       campaignId,

@@ -1,5 +1,4 @@
 const { createMail } = require('@orbiting/backend-modules-mail')
-const logger = console
 const {
   MAILCHIMP_INTEREST_PLEDGE,
   MAILCHIMP_INTEREST_MEMBER,
@@ -17,25 +16,21 @@ const mail = createMail([
 
 mail.enforceSubscriptions = async ({
   userId,
+  email,
   subscribeToEditorialNewsletters,
   isNew,
   pgdb,
   ...rest
 }) => {
-  const user = await pgdb.public.users.findOne({id: userId})
-  if (!user) {
-    logger.error('user not found in enforceSubscriptions', { userId })
-    return
-  }
+  const user = userId && await pgdb.public.users.findOne({id: userId})
 
-  const pledges = await pgdb.public.pledges.find({
+  const pledges = !!user && await pgdb.public.pledges.find({
     userId: user.id,
     status: 'SUCCESSFUL'
   })
-
   const hasPledge = (!!pledges && pledges.length > 0)
 
-  const hasMembership = !!(await pgdb.public.memberships.findFirst({
+  const hasMembership = !!user && !!(await pgdb.public.memberships.findFirst({
     userId: user.id,
     active: true
   }))
@@ -43,8 +38,7 @@ mail.enforceSubscriptions = async ({
   const membershipTypeBenefactor = await pgdb.public.membershipTypes.findOne({
     name: 'BENEFACTOR_ABO'
   })
-
-  const isBenefactor = membershipTypeBenefactor ? !!(await pgdb.public.memberships.findFirst({
+  const isBenefactor = !!user && membershipTypeBenefactor ? !!(await pgdb.public.memberships.findFirst({
     userId: user.id,
     membershipTypeId: membershipTypeBenefactor.id
   })) : false
@@ -68,7 +62,8 @@ mail.enforceSubscriptions = async ({
     interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] = hasMembership
   }
 
-  return mail.updateNewsletterSubscriptions({ user, interests, ...rest })
+  const sanitizedUser = user || { email, roles: [] }
+  return mail.updateNewsletterSubscriptions({ user: sanitizedUser, interests, ...rest })
 }
 
 module.exports = mail

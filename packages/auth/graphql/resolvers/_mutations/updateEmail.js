@@ -1,4 +1,4 @@
-const isEmail = require('email-validator').validate
+const validator = require('validator')
 const Roles = require('../../../lib/Roles')
 const ensureSignedIn = require('../../../lib/ensureSignedIn')
 const {
@@ -17,7 +17,7 @@ module.exports = async (_, args, { pgdb, user: me, req }) => {
     email
   } = args
 
-  if (!isEmail(email)) {
+  if (!validator.isEmail(email)) {
     throw new EmailInvalidError({ email })
   }
   if (await pgdb.public.users.findFirst({ email })) {

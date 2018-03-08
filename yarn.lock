@@ -27,7 +27,6 @@
     connect-pg-simple "^3.1.2"
     country-emoji "^1.2.0"
     debug "^3.1.0"
-    email-validator "^1.1.1"
     export-files "^2.1.1"
     express-session "^1.15.6"
     geoip-database "^1.0.11"
@@ -42,6 +41,7 @@
     rw "^1.3.3"
     useragent "^2.2.1"
     uuid "^3.1.0"
+    validator "^9.4.1"
 
 "@orbiting/backend-modules-base@link:packages/base":
   version "1.4.2"
@@ -1671,10 +1671,6 @@ ee-first@1.1.1:
 elegant-spinner@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/elegant-spinner/-/elegant-spinner-1.0.1.tgz#db043521c95d7e303fd8f345bedc3349cfb0729e"
-
-email-validator@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/email-validator/-/email-validator-1.1.1.tgz#b07f3be7bac1dc099bc43e75f6ae399f552d5a80"
 
 emojione_minimal@^2.1.2:
   version "2.1.2"
@@ -6561,6 +6557,10 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "~1.0.0"
     spdx-expression-parse "~1.0.0"
+
+validator@^9.4.1:
+  version "9.4.1"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-9.4.1.tgz#abf466d398b561cd243050112c6ff1de6cc12663"
 
 vary@^1, vary@~1.1.2:
   version "1.1.2"
