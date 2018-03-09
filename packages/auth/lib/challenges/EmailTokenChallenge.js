@@ -29,6 +29,9 @@ module.exports = {
     const expiresAt = new Date(new Date().getTime() + DAY_IN_MS)
     return { payload, expiresAt }
   },
+  isStartable: async () => {
+    return true
+  },
   startChallenge: async ({ email, context, token, country, phrase }) => {
     const geoString = (country === 'Schweiz')
       ? `der Schweiz`

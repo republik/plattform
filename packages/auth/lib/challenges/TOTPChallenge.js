@@ -34,6 +34,9 @@ module.exports = {
     const expiresAt = new Date(new Date().getTime() + (30 * MIN_IN_MS))
     return { payload, expiresAt }
   },
+  isStartable: async ({ pgdb, email, user }) => {
+    return !!user.isTOTPChallengeSecretVerified
+  },
   startChallenge: async (options) => {
     // no challenge transport needed, time based
     return true

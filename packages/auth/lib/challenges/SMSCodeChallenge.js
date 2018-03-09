@@ -66,12 +66,16 @@ module.exports = {
     const expiresAt = new Date(new Date().getTime() + (15 * MIN_IN_MS))
     return { payload, expiresAt }
   },
-  startChallenge: async ({ email, context, token, country, phrase, pgdb }) => {
+  isStartable: async ({ pgdb, email, user }) => {
+    return !!user.isPhoneNumberVerified
+  },
+  startChallenge: async ({ email, token, pgdb }) => {
     const phoneNumber = await getUserPhoneNumber(pgdb, email)
     await sendTextMessage({
       text: `Dein Code: ${token.payload}`,
       phoneNumber
     })
+    return true
   },
   validateChallenge: async ({ pgdb, payload, type, user }) => {
     console.log(`Validate SMS Code challenge for ${user.id}: ${payload} (client)`)

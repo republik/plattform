@@ -59,6 +59,12 @@ const ChallengeHandlerProxy = ({ type, ...options }) => {
         ...tokenData
       })
     },
+    isStartable: async () => {
+      return handler.isStartable({
+        type,
+        ...options
+      })
+    },
     startChallenge: async () => {
       return handler.startChallenge({
         type,
@@ -93,6 +99,7 @@ module.exports = {
   SharedSecretValidationFailed,
   validateChallenge: (options) => ChallengeHandlerProxy(options).validateChallenge(),
   generateNewToken: (options) => ChallengeHandlerProxy(options).generateNewToken(),
+  isStartable: (options) => ChallengeHandlerProxy(options).isStartable(),
   startChallenge: (options) => ChallengeHandlerProxy(options).startChallenge(),
   generateSharedSecret: (options) => ChallengeHandlerProxy(options).generateSharedSecret(),
   validateSharedSecret: (options) => ChallengeHandlerProxy(options).validateSharedSecret()

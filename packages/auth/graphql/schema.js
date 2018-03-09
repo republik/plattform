@@ -36,6 +36,9 @@ type mutations {
   # required role to change other's email: supporter
   updateEmail(userId: ID, email: String!): User!
 
+  # start a second factor challenge
+  startChallenge(sessionId: ID!, type: SignInTokenType!): Boolean!
+
   # authorize a token sent by mail to convert a login request to a valid user session
   authorizeSession(email: String!, tokenChallenge: SignInTokenChallenge!, secondFactor: SignInTokenChallenge): Boolean!
 

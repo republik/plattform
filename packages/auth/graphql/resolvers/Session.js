@@ -1,5 +1,9 @@
 const { flag, code } = require('country-emoji')
 const useragent = require('useragent')
+const {
+  isStartable,
+  TokenTypes
+} = require('../../lib/challenges')
 
 module.exports = {
   id (session, args) {
@@ -35,9 +39,12 @@ module.exports = {
     return session.sid === req.sessionID
   },
   async tokenTypes (session, args, { pgdb }) {
-    const tokens = await pgdb.public.tokens.find({
-      sessionId: session.id
+    const user = await pgdb.public.users.findOne({
+      email: session.sess.email
     })
-    return [...new Set(tokens.map(({ type }) => type))]
+    const types = await Promise.all(Object.keys(TokenTypes).filter((type) =>
+      isStartable({ type: TokenTypes[type], session, pgdb, user })
+    ))
+    return [...new Set(types)]
   }
 }
