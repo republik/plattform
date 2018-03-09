@@ -7,6 +7,7 @@ Props:
 -- `ogg`: The ogg source URL of the audio.
 -- `hls`: The hls source URL (when using a video).
 -- `mp4`: The mp4 source URL (when using a video).
+- `autoPlay`: Boolean, mapped to the audio tag.
 - `size`: optional, `narrow` or `tiny`.
 - `attributes`: Object, arbitrary attributes mapped to the audio tag.
 - `closeHandler`: Function; If provided, a close icon is displayed that calls the handler on click.

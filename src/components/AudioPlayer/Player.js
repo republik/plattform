@@ -388,6 +388,7 @@ class AudioPlayer extends Component {
       src,
       size,
       attributes = {},
+      autoPlay,
       style,
       t,
       height,
@@ -415,6 +416,7 @@ class AudioPlayer extends Component {
           {...styles.audio}
           {...attributes}
           ref={this.ref}
+          autoPlay={autoPlay}
           onLoadedMetadata={this.onLoadedMetaData}
           crossOrigin="anonymous"
         >
@@ -426,6 +428,7 @@ class AudioPlayer extends Component {
           {...styles.audio}
           {...attributes}
           ref={this.ref}
+          autoPlay={autoPlay}
           onLoadedMetadata={this.onLoadedMetaData}
           crossOrigin="anonymous"
           playsInline
