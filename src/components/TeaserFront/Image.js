@@ -15,7 +15,7 @@ const styles = {
     }
   }),
   textContainer: css({
-    padding: '15px 15px 30px 15px',
+    padding: '15px 15px 40px 15px',
     [mUp]: {
       padding: '40px 15% 70px 15%'
     },

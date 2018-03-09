@@ -39,7 +39,7 @@ const styles = {
   container: css({
     margin: '0 auto',
     textAlign: 'center',
-    padding: '30px 15px',
+    padding: '30px 15px 40px 15px',
     width: '100%',
     [mUp]: {
       display: 'flex',

@@ -22,7 +22,7 @@ const styles = {
     }
   }),
   content: css({
-    padding: '15px 15px 45px 15px',
+    padding: '15px 15px 40px 15px',
     [mUp]: {
       padding: '0 0 0 5%',
       width: '50%'
@@ -34,7 +34,7 @@ const styles = {
     }
   }),
   contentPortrait: css({
-    padding: '15px 15px 45px 15px',
+    padding: '15px 15px 40px 15px',
     [mUp]: {
       padding: '40px 5%',
       width: '60%',
