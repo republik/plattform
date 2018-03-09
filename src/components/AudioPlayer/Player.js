@@ -523,6 +523,7 @@ AudioPlayer.propTypes = {
     hls: PropTypes.string,
     mp4: PropTypes.string
   }),
+  autoPlay: PropTypes.bool,
   size: PropTypes.oneOf(Object.keys(breakoutStyles)),
   attributes: PropTypes.object,
   height: PropTypes.number,
@@ -535,6 +536,7 @@ AudioPlayer.propTypes = {
 }
 
 AudioPlayer.defaultProps = {
+  autoPlay: false,
   size: undefined,
   height: 44,
   style: {},
