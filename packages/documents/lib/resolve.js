@@ -177,11 +177,19 @@ const metaFieldResolver = (meta, allDocuments = [], errors) => {
     }
   }
 
+  const { audioSourceMp3, audioSourceAac, audioSourceOgg } = meta
+  const audioSource = audioSourceMp3 || audioSourceAac || audioSourceOgg ? {
+    mp3: audioSourceMp3,
+    aac: audioSourceAac,
+    ogg: audioSourceOgg
+  } : null
+
   return {
     series,
     dossier: resolver(meta.dossier),
     format: resolver(meta.format),
-    discussion: resolver(meta.discussion)
+    discussion: resolver(meta.discussion),
+    audioSource
   }
 }
 
