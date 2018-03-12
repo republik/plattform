@@ -29,9 +29,10 @@ export const sortPropType = PropTypes.oneOf(['none', 'ascending', 'descending'])
 export const runSort = (cmd, array, accessor = d => d) => {
   if (cmd !== 'none') {
     const compare = cmd === 'descending' ? descending : ascending
-    array.sort((a, b) =>
+    const original = [].concat(array)
+    array.sort((a, b) => 
       compare(accessor(a), accessor(b)) ||
-      ascending(array.indexOf(a), array.indexOf(b)) // stable sort
+      ascending(original.indexOf(a), original.indexOf(b)) // stable sort
     )
   }
 }
