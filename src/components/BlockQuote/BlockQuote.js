@@ -21,6 +21,7 @@ const BlockQuote = ({ children, attributes }) => {
   return (
     <div
       {...styles.container}
+      {...attributes}
     >
       {children}
     </div>

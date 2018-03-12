@@ -2,6 +2,10 @@ import React from 'react'
 
 import Container from './Container'
 import Center from '../../components/Center'
+import {
+  BlockQuote,
+  BlockQuoteParagraph
+} from '../../components/BlockQuote'
 import TitleBlock from '../../components/TitleBlock'
 import { HR } from '../../components/Typography'
 import * as Editorial from '../../components/Typography/Editorial'
@@ -315,6 +319,29 @@ const infoBox = {
       },
       rules: interactionParagraphRules
     }
+  ]
+}
+
+const blockQuote = {
+  matchMdast: matchZone('BLOCKQUOTE'),
+  component: ({ node, children, attributes }) => (
+    <BlockQuote attributes={attributes}>{children}</BlockQuote>
+  ),
+  editorModule: 'blockquote',
+  editorOptions: {
+    insertButtonText: 'Block-Zitat'
+  },
+  rules: [
+    {
+      matchMdast: matchParagraph,
+      component: BlockQuoteParagraph,
+      editorModule: 'paragraph',
+      editorOptions: {
+        type: 'BLOCKQUOTEPARAGRAPH',
+        placeholder: 'Zitat-Absatz'
+      }
+    },
+    figureCaption
   ]
 }
 
@@ -892,6 +919,7 @@ const createSchema = ({
               },
               centerFigure,
               teasers.articleCollection,
+              blockQuote,
               {
                 matchMdast: matchZone('HTML'),
                 component: IllustrationHtml,

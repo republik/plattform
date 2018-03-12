@@ -1,4 +1,4 @@
 export {
   default as BlockQuote
 } from './BlockQuote'
-export { default as BlockQuoteContent } from './BlockQuoteContent'
+export { default as BlockQuoteParagraph } from './BlockQuoteParagraph'
