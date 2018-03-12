@@ -18,7 +18,9 @@ const styles = {
 
 export default ({src, srcSet, sizes, alt, aspectRatio, attributes, visible, offset}) => (
   <LazyLoad attributes={{...styles.container, ...attributes}} offset={offset} visible={visible} style={{
-    paddingBottom: `${100 / aspectRatio}%`,
+    // We always subtract 1px to prevent against rounding issues that can lead
+    // to the background color shining through at the bottom of the image.
+    paddingBottom: `calc(${100 / aspectRatio}% - 1px)`,
     backgroundColor: src.match(/\.png(\.webp)?(\?|$)/)
       ? 'transparent'
       : undefined
