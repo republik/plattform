@@ -71,6 +71,7 @@ const styles = {
     height: `${CONTROLS_HEIGHT}px`
   }),
   play: css({
+    ...buttonStyle,
     position: 'absolute',
     top: '50%',
     left: 0,
@@ -439,14 +440,15 @@ class AudioPlayer extends Component {
         <div {...styles.controls} style={
           {top: Math.ceil((height - CONTROLS_HEIGHT) / 2), left: controlsPadding, right: controlsPadding}
         }>
-          <div
+          <button
             {...styles.play}
             onClick={playEnabled ? this.toggle : null}
             title={t(`styleguide/AudioPlayer/${playing ? 'pause' : 'play'}`)}
+            aria-live='assertive'
           >
             {!playing && <Play size={SIZE.play} fill={playEnabled ? '#000' : colors.disabled} />}
             {playing && <Pause size={SIZE.play} fill="#000" />}
-          </div>
+          </button>
           {download && (
             <div {...styles.download}>
               {playEnabled && (
