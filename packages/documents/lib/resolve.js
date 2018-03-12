@@ -23,7 +23,7 @@ const getRepoId = (url, requireQuery) => {
     pathname,
     query
   } = parse(String(url))
-  if (!pathname) { //empty for mailto
+  if (!pathname) { // empty for mailto
     return
   }
   const pathSegments = pathname.split('/').filter(Boolean)
@@ -97,7 +97,7 @@ const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPr
   const linkedDoc = allDocuments
     .find(d => d.repoId === repoId)
   if (linkedDoc) {
-    return urlPrefix+linkedDoc.content.meta.path+searchString
+    return urlPrefix + linkedDoc.content.meta.path + searchString
   } else {
     errors.push(repoId)
   }
@@ -177,19 +177,11 @@ const metaFieldResolver = (meta, allDocuments = [], errors) => {
     }
   }
 
-  const { audioSourceMp3, audioSourceAac, audioSourceOgg } = meta
-  const audioSource = audioSourceMp3 || audioSourceAac || audioSourceOgg ? {
-    mp3: audioSourceMp3,
-    aac: audioSourceAac,
-    ogg: audioSourceOgg
-  } : null
-
   return {
     series,
     dossier: resolver(meta.dossier),
     format: resolver(meta.format),
-    discussion: resolver(meta.discussion),
-    audioSource
+    discussion: resolver(meta.discussion)
   }
 }
 
