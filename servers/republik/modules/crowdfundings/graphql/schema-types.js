@@ -97,6 +97,7 @@ type Membership {
   renew: Boolean!
   periods: [MembershipPeriod]!
   overdue: Boolean!
+  cancelReasons: [String!]
   createdAt: DateTime!
   updatedAt: DateTime!
 }
