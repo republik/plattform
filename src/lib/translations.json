@@ -1,5 +1,5 @@
 {
-  "updated": "2018-03-02T15:14:43.456Z",
+  "updated": "2018-03-12T16:48:14.357Z",
   "title": "live",
   "data": [
     {
@@ -66,6 +66,10 @@
     {
       "key": "styleguide/comment/adminUnpublished",
       "value": "Leider mussen wir Ihren Beitrag unveröffentlichen. Wenden sie sich an kontakt@republik.ch."
+    },
+    {
+      "key": "styleguide/AudioPlayer/aria",
+      "value": "Audio-Player"
     },
     {
       "key": "styleguide/AudioPlayer/play",

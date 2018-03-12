@@ -218,6 +218,9 @@ class AudioPlayer extends Component {
         this.syncProgress()
       }, 16)
     }
+    this.containerRef = ref => {
+      this.container = ref
+    }
     this.ref = ref => {
       this.audio = ref
     }
@@ -364,6 +367,8 @@ class AudioPlayer extends Component {
     if (this.audio && !this.audio.paused) {
       this.onPlay()
     }
+    const { autoPlay } = this.props
+    autoPlay && this.container && this.container.focus()
   }
   componentDidUpdate() {
     this.setFormattedTimes()
@@ -412,7 +417,12 @@ class AudioPlayer extends Component {
     }
 
     return (
-      <div {...merge(styles.wrapper, breakoutStyles[size])} style={{...style, height: `${height}px`}}>
+      <div {...merge(styles.wrapper, breakoutStyles[size])}
+        ref={this.containerRef}
+        style={{...style, height: `${height}px`}}
+        tabIndex='0'
+        role='region'
+        aria-label={t('styleguide/AudioPlayer/aria')}>
         {!isVideo && <audio
           {...styles.audio}
           {...attributes}
@@ -468,7 +478,7 @@ class AudioPlayer extends Component {
           )}
           <div {...styles.uiText} style={uiTextStyle}>
             {loading && <InlineSpinner size={25} title={t('styleguide/AudioPlayer/loading')} />}
-            <div {...styles.time}>
+            <div {...styles.time} tabIndex='0'>
               {this.formattedCurrentTime && this.formattedCurrentTime}
               {this.formattedCurrentTime && this.formattedDuration && ' / '}
               {this.formattedDuration && this.formattedDuration}
