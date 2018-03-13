@@ -365,6 +365,24 @@ Falsches Üben von Xylophonmusik quält jeden größeren Zwerg. Heizölrücksto�
 `}</Markdown>
 ```
 
+## Block Quote
+
+```react|noSource
+<Markdown schema={schema}>{`
+<section><h6>CENTER</h6>
+
+<section><h6>BLOCKQUOTE</h6>
+
+> «\\[...] er kam mir nach und sagte: ‹Was guckst du mich denn so entgeistert an, mein Blümelein -- ich schlage vor, daß wir jetzt erst einmal bumsen.› Nun, inzwischen war ich bei meiner Handtasche, und er ging mir an die Kledage, und ich dachte: ‹Bumsen, meinetwegen›, und ich hab' die Pistole rausgenommen und sofort auf ihn geschossen \\[...] und ich dachte: Gut, jetzt bumst's. \\[...] Ohne Reue, ohne Bedauern. Er wollte doch bumsen, und ich habe gebumst, oder?»
+
+Heinrich Böll *«Die verlorene Ehre der Katharina Blum», Schlusskapitel 58. Vorabdruck im [SPIEGEL 19. August 1974](http://www.spiegel.de/spiegel/print/d-41651533.html)*
+
+<hr /></section>
+
+<hr /></section>
+`}</Markdown>
+```
+
 ## Pull Quote
 
 ```react|noSource

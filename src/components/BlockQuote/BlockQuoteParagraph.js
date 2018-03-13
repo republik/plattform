@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
 import { mUp } from '../../theme/mediaQueries'
-import { fontFamilies } from '../../theme/fonts'
+import { sansSerifRegular15, sansSerifRegular18 } from '../Typography/styles'
 
 const styles = {
   quote: css({
@@ -11,11 +11,9 @@ const styles = {
     margin: 0,
     padding: '0 15px 12px 15px',
     fontSize: '15px',
-    lineHeight: '24px',
-    fontFamily: fontFamilies.sansSerifRegular,
+    ...sansSerifRegular15,
     [mUp]: {
-      lineHeight: '30px',
-      fontSize: '18px',
+      ...sansSerifRegular18,
       padding: '0 25px 20px 25px',
       '&:first-child': {
         paddingTop: '20px'

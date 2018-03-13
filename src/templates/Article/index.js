@@ -333,7 +333,7 @@ const blockQuote = {
   },
   rules: [
     {
-      matchMdast: matchParagraph,
+      matchMdast: matchType('blockquote'),
       component: BlockQuoteParagraph,
       editorModule: 'paragraph',
       editorOptions: {
