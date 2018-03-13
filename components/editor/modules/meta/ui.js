@@ -67,6 +67,16 @@ const MetaData = ({value, editor, mdastSchema, contextMeta, series, additionalFi
     node.data.filter((_, key) => twitterKeys.has(key))
   )
 
+  const audioKeys = Set([
+    'audioSourceMp3',
+    'audioSourceAac',
+    'audioSourceOgg'
+  ])
+  const audioDefaultValues = Map(audioKeys.map(key => [key, '']))
+  const audioData = audioDefaultValues.merge(
+    node.data.filter((_, key) => audioKeys.has(key))
+  )
+
   const onInputChange = key => (_, inputValue) => {
     const newData = node.data.remove('auto')
     editor.change(change => {
@@ -170,6 +180,9 @@ const MetaData = ({value, editor, mdastSchema, contextMeta, series, additionalFi
         <MetaForm data={twitterData} onInputChange={onInputChange} black getWidth={getWidth} />
         <Label>{t('metaData/preview')}</Label><br />
         <TwitterPreview data={node.data} />
+        <br /><br /><br />
+        <Label>{t('metaData/audio')}</Label><br />
+        <MetaForm data={audioData} onInputChange={onInputChange} black getWidth={getWidth} />
       </div>
     </div>
   )
