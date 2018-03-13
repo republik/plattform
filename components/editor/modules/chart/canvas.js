@@ -69,12 +69,22 @@ export default ({rule, subModules, TYPE}) => {
               })
             })
           }
+
+          const chart = <CsvChart
+            key={JSON.stringify({
+              values,
+              config
+            })}
+            showException
+            values={values}
+            config={config} />
+
           return (
             <div {...attributes} style={{position: 'relative'}}
               onDoubleClick={startEditing}>
               <EditButton onClick={startEditing} />
               {!!node.data.get('isEditing') && (
-                <EditModal data={node.data}
+                <EditModal data={node.data} chart={chart}
                   onChange={(data) => {
                     editor.change(change => {
                       const size = data.get('config', {}).size
@@ -97,14 +107,7 @@ export default ({rule, subModules, TYPE}) => {
                     })
                   }} />
               )}
-              <CsvChart
-                key={JSON.stringify({
-                  values,
-                  config
-                })}
-                showException
-                values={values}
-                config={config} />
+              {chart}
             </div>
           )
         },

@@ -1,5 +1,5 @@
 {
-  "updated": "2018-02-15T18:27:54.086Z",
+  "updated": "2018-03-09T09:17:57.572Z",
   "title": "live",
   "data": [
     {
@@ -381,6 +381,22 @@
     {
       "key": "metaData/field/figureFloat",
       "value": "Für Text optimieren (Desktop Float)"
+    },
+    {
+      "key": "metaData/audio",
+      "value": "Audio-Version"
+    },
+    {
+      "key": "metaData/field/audioSourceMp3",
+      "value": ".mp3 URL (empfohlen)"
+    },
+    {
+      "key": "metaData/field/audioSourceAac",
+      "value": ".aac URL"
+    },
+    {
+      "key": "metaData/field/audioSourceOgg",
+      "value": ".ogg URL"
     },
     {
       "key": "metaData/series/label",
