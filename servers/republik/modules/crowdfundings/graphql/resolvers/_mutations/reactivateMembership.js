@@ -2,6 +2,7 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const getSubscription = require('../../../lib/payments/stripe/getSubscription')
 const createSubscription = require('../../../lib/payments/stripe/createSubscription')
 const reactivateSubscription = require('../../../lib/payments/stripe/reactivateSubscription')
+const slack = require('../../../../../lib/slack')
 
 module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate, enforceSubscriptions}}) => {
   const transaction = await pgdb.transactionBegin()
@@ -120,6 +121,12 @@ module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate, enforce
     await transaction.transactionCommit()
 
     enforceSubscriptions({ pgdb, userId: membership.userId })
+
+    await slack.publishMembership(
+      user,
+      membershipType.name,
+      'reactivateMembership'
+    )
 
     return newMembership
   } catch (e) {
