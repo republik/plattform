@@ -30,27 +30,19 @@ export const getSubmodules = options => {
 
 export const fromMdast = options => {
   const { paragraphModule, captionModule } = getSubmodules(options)
-
   return (node, index, parent, rest) => {
     const caption = node.children.slice(-1)
-    const paragraphs = node.children.slice(0, -1)
-    console.log({
-      kind: 'block',
-      type: options.TYPE,
-      data: node.data,
-      nodes: [
-
-        ...paragraphModule.helpers.serializer.fromMdast(paragraphs),
-        ...captionModule.helpers.serializer.fromMdast(caption)
-      ]
-    })
-
+    const paragraphs = node.children
+      .slice(0, -1)
+      .map(n => ({
+        ...n,
+        children: n.children[0].children
+      }))
     return {
       kind: 'block',
       type: options.TYPE,
       data: node.data,
       nodes: [
-
         ...paragraphModule.helpers.serializer.fromMdast(paragraphs),
         ...captionModule.helpers.serializer.fromMdast(caption)
       ]
@@ -62,15 +54,16 @@ export const toMdast = options => {
   const { paragraphModule, captionModule } = getSubmodules(options)
 
   return (node, index, parent, rest) => {
-    const caption = node.children.slice(-1)
-    const paragraphs = node.children.slice(0, -1)
+    const caption = node.nodes.slice(-1)
+    const paragraphs = node.nodes.slice(0, -1)
     return {
       type: 'zone',
       identifier: 'BLOCKQUOTE',
       children: [
-
-        ...paragraphModule.helpers.serializer.toMdast(paragraphs),
-        captionModule.helpers.serializer.toMdast(caption)
+        ...paragraphModule.helpers.serializer
+          .toMdast(paragraphs)
+          .map(n => ({ type: 'blockquote', children: [n] })),
+        ...captionModule.helpers.serializer.toMdast(caption)
       ]
     }
   }
