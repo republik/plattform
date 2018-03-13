@@ -112,5 +112,9 @@ type mutations {
 
   # required role: supporter
   manuallyMatchPostfinancePayment(id: ID!): PostfinancePayment!
+
+  # Moves the pledge and accompanying (unclaimed) memberships from one user to another
+  # required role: supporter
+  movePledge(pledgeId: ID!, userId: ID!): Pledge!
 }
 `
