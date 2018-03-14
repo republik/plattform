@@ -116,5 +116,10 @@ type mutations {
   # Moves the pledge and accompanying (unclaimed) memberships from one user to another
   # required role: supporter
   movePledge(pledgeId: ID!, userId: ID!): Pledge!
+
+  # Moves a memberships from one user to another, like it was claimed
+  # except it doesn't get activated if it isn't
+  # required role: supporter
+  moveMembership(membershipId: ID!, userId: ID!): Membership!
 }
 `
