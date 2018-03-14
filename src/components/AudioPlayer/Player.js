@@ -50,7 +50,10 @@ const buttonStyle = {
 const styles = {
   wrapper: css({
     position: 'relative',
-    lineHeight: 0
+    lineHeight: 0,
+    ':focus': {
+      outline: 'none'
+    }
   }),
   audio: css({
     height: 0,
