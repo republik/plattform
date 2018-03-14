@@ -21,8 +21,7 @@ module.exports = async ({
   headers,
   options = {}
 }) => {
-  const { resize, bw } = options
-  const webp = false
+  const { resize, bw, webp } = options
   let width, height
   if (resize) {
     try {

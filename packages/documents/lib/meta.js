@@ -22,10 +22,18 @@ const getMeta = doc => {
     }
   })
 
+  const { audioSourceMp3, audioSourceAac, audioSourceOgg } = doc.content.meta
+  const audioSource = audioSourceMp3 || audioSourceAac || audioSourceOgg ? {
+    mp3: audioSourceMp3,
+    aac: audioSourceAac,
+    ogg: audioSourceOgg
+  } : null
+
   doc._meta = {
     ...doc.content.meta,
     credits,
-    ...resolvedFields
+    ...resolvedFields,
+    audioSource
   }
   return doc._meta
 }
