@@ -27,6 +27,7 @@ import {
   createEmbedVideoModule,
   createEmbedTwitterModule
 } from './modules/embed'
+import createBlockQuoteModule from './modules/blockquote'
 import createSpecialModule from './modules/special'
 import createMetaModule from './modules/meta'
 import createSpecialCharsModule from './modules/specialchars'
@@ -55,7 +56,7 @@ const moduleCreators = {
   mark: createMarkModule,
   // for @project-r/template-newsletter compat
   // - change when updating project r
-  blockquote: createBlockTextModule,
+  blockquote: createBlockQuoteModule,
   blocktext: createBlockTextModule,
   list: createListModule,
   listItem: createListItemModule,
