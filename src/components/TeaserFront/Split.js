@@ -8,6 +8,7 @@ import Text from './Text'
 const styles = {
   container: css({
     margin: 0,
+    overflow: 'hidden',
     [mUp]: {
       display: 'flex',
       alignItems: 'center',
