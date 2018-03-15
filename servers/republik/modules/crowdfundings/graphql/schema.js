@@ -66,7 +66,7 @@ type mutations {
   # MONTHLY_ABO: if cancelled immediately a new subscription is created
   # if canceled !immediately and subscription is still running, it is
   # reactivated.
-  # YEARLYs are just marked as renew = true
+  # YEARLYs are activated and a new membershipPeriod is inserted
   reactivateMembership(
     id: ID!
   ): Membership!

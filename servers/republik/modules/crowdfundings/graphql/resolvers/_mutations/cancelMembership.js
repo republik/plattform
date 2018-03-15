@@ -40,6 +40,10 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       id: membership.membershipTypeId
     })
 
+    if (membershipType.name !== 'MONTHLY_ABO') {
+      throw new Error(t('api/membership/cancel/unsupported'))
+    }
+
     if (membershipType.name === 'MONTHLY_ABO' && !membership.subscriptionId) {
       throw new Error(t('api/membership/pleaseWait'))
     }

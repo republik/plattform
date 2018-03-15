@@ -1,5 +1,5 @@
 {
-  "updated": "2018-02-23T13:07:07.469Z",
+  "updated": "2018-03-15T19:16:05.686Z",
   "title": "live",
   "data": [
     {
@@ -47,6 +47,10 @@
       "value": "Das Abonnement ist bereits gekündigt."
     },
     {
+      "key": "api/membership/cancel/unsupported",
+      "value": "Im Moment können nur Monats-Abonnements gestoppt werden."
+    },
+    {
       "key": "api/membership/pleaseWait",
       "value": "Das Abonnement wird von unserem System noch bearbeitet, bitte versuchen Sie es später nochmals."
     },
@@ -57,6 +61,10 @@
     {
       "key": "api/membershipType/404",
       "value": "Der Mitgliedschafts-Typ konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/membership/move/otherActive",
+      "value": "Der Ziel User hat bereits eine aktive Mitgliedschaft."
     },
     {
       "key": "api/pledge/alreadyPaid",
