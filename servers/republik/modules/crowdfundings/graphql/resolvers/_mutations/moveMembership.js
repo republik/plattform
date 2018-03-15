@@ -11,15 +11,13 @@ module.exports = async (_, args, { pgdb, req, user: me, t, mail: { enforceSubscr
   const transaction = await pgdb.transactionBegin()
   const now = new Date()
   try {
-    const membership = await pgdb.public.memberships.findOne({ id: membershipId })
+    const membership = await transaction.public.memberships.findOne({ id: membershipId })
     if (!membership) {
-      console.error('membership not found', { req: req._log() })
       throw new Error(t('api/membership/404'))
     }
 
-    const user = await pgdb.public.users.findOne({ id: userId })
+    const user = await transaction.public.users.findOne({ id: userId })
     if (!user) {
-      console.error('user not found', { req: req._log() })
       throw new Error(t('api/users/404'))
     }
 
@@ -29,7 +27,17 @@ module.exports = async (_, args, { pgdb, req, user: me, t, mail: { enforceSubscr
       return membership
     }
 
-    const newMembership = await pgdb.public.memberships.updateAndGetOne(
+    if (membership.active) {
+      const userHasActiveMembership = !!await transaction.public.memberships.findFirst({
+        userId: user.id,
+        active: true
+      })
+      if (userHasActiveMembership) {
+        throw new Error(t('api/membership/move/otherActive'))
+      }
+    }
+
+    const newMembership = await transaction.public.memberships.updateAndGetOne(
       { id: membership.id },
       {
         userId: user.id,
@@ -51,7 +59,7 @@ module.exports = async (_, args, { pgdb, req, user: me, t, mail: { enforceSubscr
 
     return newMembership
   } catch (e) {
-    console.error('moveMembership', e)
+    console.error('movePledge', e, { req: req._log() })
     await transaction.transactionRollback()
     throw e
   }

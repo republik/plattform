@@ -11,15 +11,13 @@ module.exports = async (_, args, { pgdb, req, user: me, t, mail: { enforceSubscr
   const transaction = await pgdb.transactionBegin()
   const now = new Date()
   try {
-    const pledge = await pgdb.public.pledges.findOne({ id: pledgeId })
+    const pledge = await transaction.public.pledges.findOne({ id: pledgeId })
     if (!pledge) {
-      console.error('pledge not found', { req: req._log() })
       throw new Error(t('api/pledge/404'))
     }
 
-    const user = await pgdb.public.users.findOne({ id: userId })
+    const user = await transaction.public.users.findOne({ id: userId })
     if (!user) {
-      console.error('user not found', { req: req._log() })
       throw new Error(t('api/users/404'))
     }
 
@@ -29,20 +27,30 @@ module.exports = async (_, args, { pgdb, req, user: me, t, mail: { enforceSubscr
       return pledge
     }
 
-    const newPledge = await pgdb.public.pledges.updateAndGetOne(
+    // only move unclaimed memberships with the pledge
+    const membershipsFind = {
+      pledgeId: pledge.id,
+      userId: pledge.userId
+    }
+    const memberships = await transaction.public.memberships.find(membershipsFind)
+    // avoid multiple active memberships for one user
+    const userHasActiveMembership = !!await transaction.public.memberships.findFirst({
+      userId: user.id,
+      active: true
+    })
+    if (userHasActiveMembership && memberships.filter(m => m.active).length > 0) {
+      throw new Error(t('api/membership/move/otherActive'))
+    }
+
+    // update
+    const newPledge = await transaction.public.pledges.updateAndGetOne(
       { id: pledge.id },
       {
         userId: user.id,
         updatedAt: now
       }
     )
-
-    // only move unclaimed memberships with the pledge
-    await pgdb.public.memberships.update(
-      {
-        pledgeId: pledge.id,
-        userId: pledge.userId
-      },
+    await transaction.public.memberships.update(membershipsFind,
       {
         userId: user.id,
         updatedAt: now
@@ -61,7 +69,7 @@ module.exports = async (_, args, { pgdb, req, user: me, t, mail: { enforceSubscr
 
     return newPledge
   } catch (e) {
-    console.error('movePledge', e)
+    console.error('movePledge', e, { req: req._log() })
     await transaction.transactionRollback()
     throw e
   }
