@@ -325,10 +325,12 @@ const infoBox = {
 
 const blockQuote = {
   matchMdast: matchZone('BLOCKQUOTE'),
-  props: node => ({
-    isEmpty: node.children &&
+  props: node => {
+    return ({
+      isEmpty: node.children &&
       node.children.length === 1 && !node.children[0].children
-  }),
+    })
+  },
   component: ({ isEmpty, node, children, attributes }) => (
     isEmpty ? null : <BlockQuote attributes={attributes}>{children}</BlockQuote>
   ),
@@ -344,7 +346,13 @@ const blockQuote = {
       editorOptions: {
         type: 'BLOCKQUOTEPARAGRAPH',
         placeholder: 'Zitat-Absatz'
-      }
+      },
+      rules: [
+        {
+          matchMdast: matchParagraph,
+          component: ({ children }) => children
+        }
+      ]
     },
     figureCaption
   ]
