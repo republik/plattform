@@ -273,6 +273,7 @@ const captionPlugin = ({TYPE, rule, subModules}) => {
 
 export default options => ({
   TYPE: options.TYPE,
+  rule: options.rule,
   helpers: {
     serializer: getSerializer(options),
     newBlock: () => Block.create(options.TYPE)
