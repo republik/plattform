@@ -45,12 +45,18 @@ export const fromMdast = options => {
       })))
       : [{ kind: 'block', type: paragraphModule.TYPE }]
 
-    const serializedCaption = caption.length
-      ? captionModule.helpers.serializer.fromMdast(caption)
-      : [{
-        kind: 'block',
-        type: captionModule.TYPE
-      }]
+    const serializedCaption = captionModule.helpers.serializer.fromMdast(caption.length ? caption : ([{
+      type: 'paragraph',
+      children: [
+        { type: 'text', value: '' },
+        {
+          type: 'emphasis',
+          children: [
+            { type: 'text', value: '' }
+          ]
+        }
+      ]
+    }]))
 
     return {
       kind: 'block',
