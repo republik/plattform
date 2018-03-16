@@ -324,8 +324,12 @@ const infoBox = {
 
 const blockQuote = {
   matchMdast: matchZone('BLOCKQUOTE'),
-  component: ({ node, children, attributes }) => (
-    <BlockQuote attributes={attributes}>{children}</BlockQuote>
+  props: node => ({
+    isEmpty: node.children &&
+      node.children.length === 1 && !node.children[0].children
+  }),
+  component: ({ isEmpty, node, children, attributes }) => (
+    isEmpty ? null : <BlockQuote attributes={attributes}>{children}</BlockQuote>
   ),
   editorModule: 'blockquote',
   editorOptions: {
