@@ -67,6 +67,7 @@ import createTeasers from './teasers'
 
 const link = {
   matchMdast: matchType('link'),
+
   props: node => ({
     title: node.title,
     href: node.url
