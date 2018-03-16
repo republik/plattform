@@ -31,20 +31,34 @@ export const getSubmodules = options => {
 export const fromMdast = options => {
   const { paragraphModule, captionModule } = getSubmodules(options)
   return (node, index, parent, rest) => {
-    const caption = node.children.slice(-1)
-    const paragraphs = node.children
-      .slice(0, -1)
-      .map(n => ({
+    const caption = node.children.filter(captionModule.rule.matchMdast)
+    const blockquotes = node.children.filter(paragraphModule.rule.matchMdast)
+    const serializedBlockQuotes = blockquotes.length
+      ? paragraphModule.helpers.serializer.fromMdast(blockquotes.map(n => ({
         ...n,
-        children: n.children[0].children
-      }))
+        children: n.children && n.children.length
+          ? n.children[0].children
+          : [{
+            type: 'text',
+            value: ''
+          }]
+      })))
+      : [{ kind: 'block', type: paragraphModule.TYPE }]
+
+    const serializedCaption = caption.length
+      ? captionModule.helpers.serializer.fromMdast(caption)
+      : [{
+        kind: 'block',
+        type: captionModule.TYPE
+      }]
+
     return {
       kind: 'block',
       type: options.TYPE,
       data: node.data,
       nodes: [
-        ...paragraphModule.helpers.serializer.fromMdast(paragraphs),
-        ...captionModule.helpers.serializer.fromMdast(caption)
+        ...serializedBlockQuotes,
+        ...serializedCaption
       ]
     }
   }
@@ -56,6 +70,7 @@ export const toMdast = options => {
   return (node, index, parent, rest) => {
     const caption = node.nodes.slice(-1)
     const paragraphs = node.nodes.slice(0, -1)
+
     return {
       type: 'zone',
       identifier: 'BLOCKQUOTE',
@@ -83,8 +98,8 @@ export const getSerializer = options => {
 }
 
 export const blockQuotePlugin = options => {
+  const { paragraphModule, captionModule } = getSubmodules(options)
   const BlockQuote = options.rule.component
-
   return {
     renderNode: ({ node, children, attributes }) => {
       if (!matchBlock(options.TYPE)(node)) {
@@ -93,6 +108,20 @@ export const blockQuotePlugin = options => {
       return <BlockQuote attributes={attributes}>
         {children}
       </BlockQuote>
+    },
+    schema: {
+      blocks: {
+        [options.TYPE]: {
+          nodes: [
+            {
+              types: [paragraphModule.TYPE], min: 1
+            },
+            {
+              types: [captionModule.TYPE], min: 1, max: 1
+            }
+          ]
+        }
+      }
     }
   }
 }
