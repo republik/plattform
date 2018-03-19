@@ -121,5 +121,9 @@ type mutations {
   # except it doesn't get activated if it isn't
   # required role: supporter
   moveMembership(membershipId: ID!, userId: ID!): Membership!
+
+  # updates notes to a user
+  # required role: supporter
+  updateAdminNotes(userId: ID!, notes: String): User!
 }
 `

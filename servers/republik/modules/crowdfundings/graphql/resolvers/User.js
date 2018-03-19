@@ -39,5 +39,9 @@ module.exports = {
       }))
     }
     return []
+  },
+  async adminNotes (user, args, { pgdb, user: me }) {
+    Roles.ensureUserHasRole(me, 'supporter')
+    return user.adminNotes || user._raw.adminNotes
   }
 }

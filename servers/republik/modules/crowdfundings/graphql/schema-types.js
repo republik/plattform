@@ -7,6 +7,10 @@ extend type User {
   pledges: [Pledge!]!
   memberships: [Membership!]!
   paymentSources: [PaymentSource!]!
+
+  # notes by the support team
+  # required role: supporter
+  adminNotes: String
 }
 
 type Crowdfunding {
