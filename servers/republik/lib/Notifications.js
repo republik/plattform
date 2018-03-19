@@ -3,6 +3,7 @@ const { transformUser } = require('@orbiting/backend-modules-auth')
 
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
+  DEFAULT_MAIL_FROM_NAME,
   FRONTEND_BASE_URL
 } = process.env
 
@@ -98,6 +99,7 @@ const submitComment = async (comment, discussion, context) => {
         return sendMailTemplate({
           to: u.email,
           fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
+          fromName: DEFAULT_MAIL_FROM_NAME,
           subject: t('api/comment/notification/new/email/subject', { discussionName: discussion.title }),
           templateName: 'cf_comment_notification_new',
           globalMergeVars: [
