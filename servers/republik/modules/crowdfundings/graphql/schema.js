@@ -125,5 +125,10 @@ type mutations {
   # updates notes to a user
   # required role: supporter
   updateAdminNotes(userId: ID!, notes: String): User!
+
+  # generates a pledge (payment method: PAYMENTSLIP) with one membership (type: ABO)
+  # for the specified user.
+  # required role: supporter
+  generateMembership(userId: ID!): Membership!
 }
 `
