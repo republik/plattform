@@ -65,11 +65,15 @@ module.exports = async ({
   try {
     let mime
     try {
-      ({ mime } = await new Promise(resolve => {
-        stream.pipe(fileTypeStream(resolve)).pipe(passThrough)
-      }))
+      const fileTypeResult = await new Promise( (resolve, reject) => {
+        stream
+          .pipe(fileTypeStream(resolve))
+          .pipe(passThrough)
+          .on('finish', reject.bind(null, 'Could not read enough of file to get mimetype'))
+      })
+      mime = fileTypeResult && fileTypeResult.mime
     } catch (e2) {
-      console.error(e2)
+      debug('detecting mime failed: ', e2)
     }
     const isJPEG = mime === 'image/jpeg'
 
