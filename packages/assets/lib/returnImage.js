@@ -15,6 +15,15 @@ const pipeHeaders = [
   'Access-Control-Allow-Origin'
 ]
 
+const toBuffer = async (stream) => {
+  return toArray(stream)
+    .then(parts => {
+      const buffers = parts
+        .map(part => Buffer.isBuffer(part) ? part : Buffer.from(part))
+      return Buffer.concat(buffers)
+    })
+}
+
 module.exports = async ({
   response: res,
   stream,
@@ -43,53 +52,58 @@ module.exports = async ({
 
   // detect mime
   const passThrough = new PassThrough()
-  let mime
   try {
-    ({ mime } = await new Promise(resolve => {
-      stream.pipe(fileTypeStream(resolve)).pipe(passThrough)
-    }))
-  } catch (e) { }
-  const isJPEG = mime === 'image/jpeg'
-
-  // convert stream to buffer, because our cdn doesn't cache if
-  // content-length is missing
-  const buffer = await toArray(passThrough)
-    .then(parts => {
-      const buffers = parts
-        .map(part => Buffer.isBuffer(part) ? part : Buffer.from(part))
-      return Buffer.concat(buffers)
-    })
-
-  // return unknown mime types, non images, and gifs without manipulation
-  if (
-    (!mime || mime.indexOf('image') !== 0 || mime === 'image/gif') ||
-    !(width || height || bw || webp || isJPEG)
-  ) {
-    return res.end(buffer)
-  } else {
-    // update 'Content-Type'
-    res.set('Content-Type', webp
-      ? 'image/webp'
-      : mime
-    )
-
-    const pipeline = sharp(buffer)
-    if (width || height) {
-      pipeline.resize(width, height)
+    let mime
+    try {
+      ({ mime } = await new Promise(resolve => {
+        stream.pipe(fileTypeStream(resolve)).pipe(passThrough)
+      }))
+    } catch (e2) {
+      console.error(e2)
     }
-    if (bw) {
-      pipeline.greyscale()
+    const isJPEG = mime === 'image/jpeg'
+
+    let pipeline
+    if (
+      (mime && mime.indexOf('image') === 0 && mime !== 'image/gif') &&
+      (!!width || !!height || !!bw || !!webp || !!isJPEG)
+    ) {
+      pipeline = sharp()
+      if (width || height) {
+        pipeline.resize(width, height)
+      }
+      if (bw) {
+        pipeline.greyscale()
+      }
+      if (webp) {
+        pipeline.toFormat('webp', {
+          quality: 80
+        })
+      } else if (isJPEG) {
+        pipeline.jpeg({
+          progressive: true,
+          quality: 80
+        })
+      }
+
+      // update 'Content-Type'
+      res.set('Content-Type', webp
+        ? 'image/webp'
+        : mime
+      )
     }
-    if (webp) {
-      pipeline.toFormat('webp', {
-        quality: 80
-      })
-    } else if (isJPEG) {
-      pipeline.jpeg({
-        progressive: true,
-        quality: 80
-      })
-    }
-    return res.end(await pipeline.toBuffer())
+
+    // convert stream to buffer, because our cdn doesn't cache if content-length is missing
+    const buffer = pipeline
+      ? await toBuffer(passThrough.pipe(pipeline))
+      : await toBuffer(passThrough)
+
+    res.end(buffer)
+  } catch (e) {
+    console.error(e)
+    res.end(500)
+  } finally {
+    stream.destroy()
+    passThrough.destroy()
   }
 }
