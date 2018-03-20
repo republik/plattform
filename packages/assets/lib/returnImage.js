@@ -108,7 +108,7 @@ module.exports = async ({
       )
     }
 
-    if (!pipeline && headers.get('Content-Length')) { // shortcut
+    if (!pipeline && headers && headers.get('Content-Length')) { // shortcut
       res.set('Content-Length', headers.get('Content-Length'))
       passThrough.pipe(res)
     } else {
