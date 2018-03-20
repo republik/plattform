@@ -3,6 +3,16 @@ const getWidthHeight = require('./getWidthHeight')
 const fileTypeStream = require('file-type-stream').default
 const { PassThrough } = require('stream')
 const toArray = require('stream-to-array')
+const debug = require('debug')('assets:returnImage')
+
+const {
+  SHARP_NO_CACHE
+} = process.env
+
+if (SHARP_NO_CACHE) {
+  console.info('sharp cache disabled! (SHARP_NO_CACHE)')
+  sharp.cache(false)
+}
 
 const pipeHeaders = [
   'Content-Type',
@@ -69,6 +79,7 @@ module.exports = async ({
       (!!width || !!height || !!bw || !!webp || !!isJPEG)
     ) {
       pipeline = sharp()
+
       if (width || height) {
         pipeline.resize(width, height)
       }
@@ -106,4 +117,5 @@ module.exports = async ({
     stream.destroy()
     passThrough.destroy()
   }
+  debug('sharp stats: %o', sharp.cache())
 }
