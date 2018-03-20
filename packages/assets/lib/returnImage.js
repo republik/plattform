@@ -65,7 +65,7 @@ module.exports = async ({
   try {
     let mime
     try {
-      const fileTypeResult = await new Promise( (resolve, reject) => {
+      const fileTypeResult = await new Promise((resolve, reject) => {
         stream
           .pipe(fileTypeStream(resolve))
           .pipe(passThrough)
@@ -108,18 +108,24 @@ module.exports = async ({
       )
     }
 
-    // convert stream to buffer, because our cdn doesn't cache if content-length is missing
-    const buffer = pipeline
-      ? await toBuffer(passThrough.pipe(pipeline))
-      : await toBuffer(passThrough)
-
-    res.end(buffer)
+    if (!pipeline && headers.get('Content-Length')) { // shortcut
+      res.set('Content-Length', headers.get('Content-Length'))
+      passThrough.pipe(res)
+    } else {
+      // convert stream to buffer, because our cdn doesn't cache if content-length is missing
+      res.end(
+        pipeline
+          ? await toBuffer(passThrough.pipe(pipeline))
+          : await toBuffer(passThrough)
+      )
+      stream.destroy()
+      passThrough.destroy()
+    }
   } catch (e) {
-    console.error(e)
     res.end(500)
-  } finally {
-    stream.destroy()
-    passThrough.destroy()
+    console.error(e)
+    stream && stream.destroy()
+    passThrough && passThrough.destroy()
   }
   debug('sharp stats: %o', sharp.cache())
 }
