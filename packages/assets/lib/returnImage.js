@@ -122,8 +122,8 @@ module.exports = async ({
       passThrough.destroy()
     }
   } catch (e) {
-    res.end(500)
     console.error(e)
+    res.status(500).end()
     stream && stream.destroy()
     passThrough && passThrough.destroy()
   }
