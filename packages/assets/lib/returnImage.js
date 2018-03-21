@@ -77,6 +77,11 @@ module.exports = async ({
     }
     const isJPEG = mime === 'image/jpeg'
 
+    // requests to github always return Content-Type: text/plain, let's fix that
+    if (mime) {
+      res.set('Content-Type', mime)
+    }
+
     let pipeline
     if (
       (mime && mime.indexOf('image') === 0 && mime !== 'image/gif') &&
