@@ -419,6 +419,13 @@ class AudioPlayer extends Component {
       right: timePosition === 'right' ? rightIconsWidth + 10 : 'auto'
     }
 
+    let timeRanges = []
+    if (buffered && !!buffered.length) {
+      for (let i = 0; i < buffered.length; i++) {
+        timeRanges.push({start: buffered.start(i), end: buffered.end(i)})
+      }
+    }
+
     return (
       <div {...merge(styles.wrapper, breakoutStyles[size])}
         ref={this.containerRef}
@@ -508,15 +515,13 @@ class AudioPlayer extends Component {
           />
           <div {...styles.buffer}>
             {this.audio &&
-              buffered &&
-              !!buffered.length &&
-              Array.from(Array(buffered.length).keys()).map(index => (
+              timeRanges.map(({start, end}, index) => (
                 <span
                   key={index}
                   {...styles.timeRange}
                   style={{
-                    left: `${buffered.start(index) / this.audio.duration * 100}%`,
-                    width: `${(buffered.end(index) - buffered.start(index)) /
+                    left: `${start / this.audio.duration * 100}%`,
+                    width: `${(end - start) /
                       this.audio.duration *
                       100}%`
                   }}
