@@ -68,7 +68,7 @@
   version "2.12.0"
   dependencies:
     "@orbiting/backend-modules-auth" "link:packages/auth"
-    "@project-r/styleguide" "^5.50.6"
+    "@project-r/styleguide" "^5.71.5"
     "@project-r/template-newsletter" "^1.5.0"
     apollo-modules-node "^0.1.4"
     check-env "^1.3.0"
@@ -144,9 +144,9 @@
     stringify-entities "^1.3.1"
     unified "^6.1.5"
 
-"@project-r/styleguide@^5.50.6":
-  version "5.52.1"
-  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.52.1.tgz#83879a3e260880e398402ede53070d64fb39966c"
+"@project-r/styleguide@^5.71.5":
+  version "5.71.5"
+  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.71.5.tgz#c83796ae58aabaecbaaed824b545045745bda56c"
   dependencies:
     react-icons "^2.2.7"
 
