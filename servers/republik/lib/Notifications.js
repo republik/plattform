@@ -94,7 +94,7 @@ const submitComment = async (comment, discussion, context) => {
           ? t('api/comment/notification/new/web/subject', subjectParams)
           : t('api/comment/notification/answer/web/subject', subjectParams),
         body: `${displayAuthor.name}: ${shortBody}`,
-        icon: t('api/comment/notification/new/web/icon'),
+        icon: displayAuthor.profilePicture || t('api/comment/notification/new/web/icon'),
         url: commentUrl,
         userIds: webUserIds
       }})
