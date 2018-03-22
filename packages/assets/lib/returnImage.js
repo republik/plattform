@@ -3,6 +3,16 @@ const getWidthHeight = require('./getWidthHeight')
 const fileTypeStream = require('file-type-stream').default
 const { PassThrough } = require('stream')
 const toArray = require('stream-to-array')
+const debug = require('debug')('assets:returnImage')
+
+const {
+  SHARP_NO_CACHE
+} = process.env
+
+if (SHARP_NO_CACHE) {
+  console.info('sharp cache disabled! (SHARP_NO_CACHE)')
+  sharp.cache(false)
+}
 
 const pipeHeaders = [
   'Content-Type',
@@ -14,6 +24,15 @@ const pipeHeaders = [
   'Access-Control-Allow-Methods',
   'Access-Control-Allow-Origin'
 ]
+
+const toBuffer = async (stream) => {
+  return toArray(stream)
+    .then(parts => {
+      const buffers = parts
+        .map(part => Buffer.isBuffer(part) ? part : Buffer.from(part))
+      return Buffer.concat(buffers)
+    })
+}
 
 module.exports = async ({
   response: res,
@@ -43,53 +62,75 @@ module.exports = async ({
 
   // detect mime
   const passThrough = new PassThrough()
-  let mime
   try {
-    ({ mime } = await new Promise(resolve => {
-      stream.pipe(fileTypeStream(resolve)).pipe(passThrough)
-    }))
-  } catch (e) { }
-  const isJPEG = mime === 'image/jpeg'
-
-  // convert stream to buffer, because our cdn doesn't cache if
-  // content-length is missing
-  const buffer = await toArray(passThrough)
-    .then(parts => {
-      const buffers = parts
-        .map(part => Buffer.isBuffer(part) ? part : Buffer.from(part))
-      return Buffer.concat(buffers)
-    })
-
-  // return unknown mime types, non images, and gifs without manipulation
-  if (
-    (!mime || mime.indexOf('image') !== 0 || mime === 'image/gif') ||
-    !(width || height || bw || webp || isJPEG)
-  ) {
-    return res.end(buffer)
-  } else {
-    // update 'Content-Type'
-    res.set('Content-Type', webp
-      ? 'image/webp'
-      : mime
-    )
-
-    const pipeline = sharp(buffer)
-    if (width || height) {
-      pipeline.resize(width, height)
-    }
-    if (bw) {
-      pipeline.greyscale()
-    }
-    if (webp) {
-      pipeline.toFormat('webp', {
-        quality: 80
+    let mime
+    try {
+      const fileTypeResult = await new Promise((resolve, reject) => {
+        stream
+          .pipe(fileTypeStream(resolve))
+          .pipe(passThrough)
+          .on('finish', reject.bind(null, 'Could not read enough of file to get mimetype'))
       })
-    } else if (isJPEG) {
-      pipeline.jpeg({
-        progressive: true,
-        quality: 80
-      })
+      mime = fileTypeResult && fileTypeResult.mime
+    } catch (e2) {
+      debug('detecting mime failed: ', e2)
     }
-    return res.end(await pipeline.toBuffer())
+    const isJPEG = mime === 'image/jpeg'
+
+    // requests to github always return Content-Type: text/plain, let's fix that
+    if (mime) {
+      res.set('Content-Type', mime)
+    }
+
+    let pipeline
+    if (
+      (mime && mime.indexOf('image') === 0 && mime !== 'image/gif') &&
+      (!!width || !!height || !!bw || !!webp || !!isJPEG)
+    ) {
+      pipeline = sharp()
+
+      if (width || height) {
+        pipeline.resize(width, height)
+      }
+      if (bw) {
+        pipeline.greyscale()
+      }
+      if (webp) {
+        pipeline.toFormat('webp', {
+          quality: 80
+        })
+      } else if (isJPEG) {
+        pipeline.jpeg({
+          progressive: true,
+          quality: 80
+        })
+      }
+
+      // update 'Content-Type'
+      res.set('Content-Type', webp
+        ? 'image/webp'
+        : mime
+      )
+    }
+
+    if (!pipeline && headers && headers.get('Content-Length')) { // shortcut
+      res.set('Content-Length', headers.get('Content-Length'))
+      passThrough.pipe(res)
+    } else {
+      // convert stream to buffer, because our cdn doesn't cache if content-length is missing
+      res.end(
+        pipeline
+          ? await toBuffer(passThrough.pipe(pipeline))
+          : await toBuffer(passThrough)
+      )
+      stream.destroy()
+      passThrough.destroy()
+    }
+  } catch (e) {
+    console.error(e)
+    res.status(500).end()
+    stream && stream.destroy()
+    passThrough && passThrough.destroy()
   }
+  debug('sharp stats: %o', sharp.cache())
 }
