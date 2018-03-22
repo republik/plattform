@@ -16,7 +16,7 @@
   "scripts": {
     "dev": "NODE_ENV=development nodemon -w ../../packages -w .env -w package.jsoan -w ../yarn.lock -w server.js -w index.js index.js",
     "inspect": "NODE_ENV=development DEBUG=assets:* nodemon -w ../../packages -w .env -w package.jsoan -w ../yarn.lock -w server.js -w index.js --inspect index.js",
-    "start": "node --optimize_for_size --max_old_space_size=920 --gc_interval=100 index.js"
+    "start": "node --optimize_for_size --max_old_space_size=800 --gc_interval=100 index.js"
   },
   "devDependencies": {
     "@orbiting/backend-modules-env": "link:../../packages/env",
