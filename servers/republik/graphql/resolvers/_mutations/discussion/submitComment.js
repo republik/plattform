@@ -94,7 +94,7 @@ module.exports = async (_, args, context) => {
       skipUndefined: true
     })
 
-    await notify(comment, discussion, context)
+    notify(comment, discussion, context)
 
     await transaction.transactionCommit()
 
@@ -103,7 +103,7 @@ module.exports = async (_, args, context) => {
       node: comment
     }})
 
-    await slack.publishComment(user, comment, discussion)
+    slack.publishComment(user, comment, discussion)
 
     return comment
   } catch (e) {

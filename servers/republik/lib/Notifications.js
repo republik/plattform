@@ -89,7 +89,7 @@ const submitComment = async (comment, discussion, context) => {
       .map(u => u.id)
 
     if (webUserIds.length > 0) {
-      pubsub.publish('webNotification', { webNotification: {
+      await pubsub.publish('webNotification', { webNotification: {
         title: isTopLevelComment
           ? t('api/comment/notification/new/web/subject', subjectParams)
           : t('api/comment/notification/answer/web/subject', subjectParams),
@@ -100,7 +100,7 @@ const submitComment = async (comment, discussion, context) => {
       }})
     }
 
-    notifyUsers
+    await Promise.all(notifyUsers
       .filter(u => u.discussionNotificationChannels.indexOf('EMAIL') > -1)
       .map(u => {
         const user = transformUser(u)
@@ -147,6 +147,7 @@ const submitComment = async (comment, discussion, context) => {
           ]
         })
       })
+    )
   }
 }
 
