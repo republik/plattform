@@ -420,7 +420,7 @@ class AudioPlayer extends Component {
     }
 
     let timeRanges = []
-    if (buffered && !!buffered.length) {
+    if (buffered && buffered.length) {
       for (let i = 0; i < buffered.length; i++) {
         timeRanges.push({start: buffered.start(i), end: buffered.end(i)})
       }
