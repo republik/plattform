@@ -1,5 +1,5 @@
 {
-  "updated": "2018-03-08T10:42:48.880Z",
+  "updated": "2018-03-22T12:21:18.588Z",
   "title": "live",
   "data": [
     {
@@ -76,11 +76,19 @@
     },
     {
       "key": "api/comment/notification/new/email/subject",
-      "value": "Neuer Beitrag in {discussionName}"
+      "value": "Neuer Beitrag von {authorName} in {discussionName}"
+    },
+    {
+      "key": "api/comment/notification/answer/email/subject",
+      "value": "Neue Antwort von {authorName} in {discussionName}"
     },
     {
       "key": "api/comment/notification/new/web/subject",
       "value": "Neuer Beitrag in {discussionName}"
+    },
+    {
+      "key": "api/comment/notification/answer/web/subject",
+      "value": "Neue Antwort in {discussionName}"
     },
     {
       "key": "api/comment/notification/new/web/icon",

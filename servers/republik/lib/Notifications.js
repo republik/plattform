@@ -78,13 +78,21 @@ const submitComment = async (comment, discussion, context) => {
     const discussionUrl = `${FRONTEND_BASE_URL}${discussion.documentPath}`
     const commentUrl = `${discussionUrl}?focus=${comment.id}`
 
+    const subjectParams = {
+      authorName: displayAuthor.name,
+      discussionName: discussion.title
+    }
+    const isTopLevelComment = !comment.parentIds || comment.parentIds.length === 0
+
     const webUserIds = notifyUsers
       .filter(u => u.discussionNotificationChannels.indexOf('WEB') > -1)
       .map(u => u.id)
 
     if (webUserIds.length > 0) {
       pubsub.publish('webNotification', { webNotification: {
-        title: t('api/comment/notification/new/web/subject', { discussionName: discussion.title }),
+        title: isTopLevelComment
+          ? t('api/comment/notification/new/web/subject', subjectParams)
+          : t('api/comment/notification/answer/web/subject', subjectParams),
         body: `${displayAuthor.name}: ${shortBody}`,
         icon: t('api/comment/notification/new/web/icon'),
         url: commentUrl,
@@ -100,7 +108,9 @@ const submitComment = async (comment, discussion, context) => {
           to: u.email,
           fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
           fromName: DEFAULT_MAIL_FROM_NAME,
-          subject: t('api/comment/notification/new/email/subject', { discussionName: discussion.title }),
+          subject: isTopLevelComment
+            ? t('api/comment/notification/new/email/subject', subjectParams)
+            : t('api/comment/notification/answer/email/subject', subjectParams),
           templateName: 'cf_comment_notification_new',
           globalMergeVars: [
             { name: 'NAME',
