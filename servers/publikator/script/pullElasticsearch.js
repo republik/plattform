@@ -13,8 +13,8 @@ const { graphql: { resolvers: {
 } } } = require('@orbiting/backend-modules-documents')
 
 const elastic = new elasticsearch.Client({
-  host: 'localhost:9200',
-  log: 'trace'
+  host: 'localhost:9200'
+  // log: 'trace'
 })
 
 PgDb.connect().then(async pgdb => {
@@ -44,32 +44,33 @@ PgDb.connect().then(async pgdb => {
     .then(docs => docs.nodes
       .map(d => {
         const content = Document.content(d, {}, context)
+        delete content.meta.series
         const meta = Document.meta(d, {}, context)
         return {
           id: d.id,
-          content,
-          contentString: mdastToString(content),
-          meta: {
-            ...meta,
-            dossier: null,
-            authors: meta.credits
-              .filter(c => c.type === 'link')
-              .map(a => a.children[0].value)
+          body: {
+            meta: {
+              ...meta,
+              dossier: null, // TODO
+              series: null, // TODO
+              authors: meta.credits
+                .filter(c => c.type === 'link')
+                .map(a => a.children[0].value)
+            },
+            content,
+            contentString: mdastToString(content)
           }
         }
       })
     )
 
   for (let doc of documents) {
-    console.log(doc.meta.title)
+    console.log(doc.body.meta.title)
     await elastic.create({
       index: 'documents',
       id: doc.id,
       type: 'document',
-      body: {
-        meta: doc.meta,
-        content: doc.content
-      }
+      body: doc.body
     })
   }
 }
