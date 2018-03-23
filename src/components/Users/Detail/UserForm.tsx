@@ -142,7 +142,6 @@ export default class UserForm extends React.Component<
 
     return (
       <form onSubmit={this.submitHandler}>
-        <Interaction.H3>Personalien</Interaction.H3>
         <ParticularsFieldSet
           onChange={this.userChangeHandler}
           {...this.state.user}

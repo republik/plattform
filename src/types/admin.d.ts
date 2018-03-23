@@ -23,6 +23,7 @@ export interface User {
   id: string
   name: string
   email: string
+  username: string
   firstName: string
   lastName: string
   address?: Address
@@ -120,6 +121,13 @@ export interface PledgePayment {
   updatedAt: string
 }
 
+export interface MembershipPeriod {
+  beginDate: string
+  endDate: string
+  createdAt: string
+  updatedAt: string
+}
+
 export interface MembershipType {
   id: string
   name: string
@@ -133,12 +141,15 @@ export interface Membership {
   type: MembershipType
   startDate: string
   pledge: any
+  cancelReasons: string[]
+  renew: Boolean
   voucherCode: string
   reducedPrice: boolean
   claimerName: string
   sequenceNumber: number
   createdAt: string
   updatedAt: string
+  periods: MembershipPeriod[]
 }
 
 export interface PostfinancePayment {

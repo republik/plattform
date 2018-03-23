@@ -83,7 +83,6 @@ export default class EmailForm extends React.Component<
 
     return (
       <form onSubmit={this.submitHandler(onSubmit)}>
-        <Interaction.H3>E-Mail-Adresse</Interaction.H3>
         <Field
           error={this.state.error}
           value={email}

@@ -64,7 +64,10 @@ const updatePaymentStatusHandler = (
   if (handler && pledge.payments.length > 0) {
     const payment = pledge.payments[0]
     if (payment.status === 'WAITING_FOR_REFUND') {
-      handler({ paymentId: payment.id, status: 'REFUNDED' })
+      handler({
+        paymentId: payment.id,
+        status: 'REFUNDED'
+      })
     } else if (payment.status === 'WAITING') {
       const reason = prompt('Reason')
       handler({
@@ -76,7 +79,10 @@ const updatePaymentStatusHandler = (
   }
 }
 
-const PaymentStatusButton = ({ pledge, ...props }: any) => {
+const PaymentStatusButton = ({
+  pledge,
+  ...props
+}: any) => {
   if (pledge.payments.length <= 0) {
     return null
   } else {
@@ -89,11 +95,7 @@ const PaymentStatusButton = ({ pledge, ...props }: any) => {
         status === 'WAITING'
           ? 'Set to paid'
           : 'Set to refunded'
-      return (
-        <Button {...props}>
-          {label}
-        </Button>
-      )
+      return <Button {...props}>{label}</Button>
     } else {
       return null
     }
@@ -117,20 +119,30 @@ const PledgeOverview = ({
 }) => {
   const options = pledge.options.filter(
     option =>
-      option.amount && option.minAmount !== option.maxAmount
+      option.amount &&
+      option.minAmount !== option.maxAmount
   )
 
   return (
     <div>
       <Interaction.H3>
-        {pledge.package.name} –{' '}
-        {dateTimeFormat(new Date(pledge.createdAt))} -{' '}
-        {pledge.status}
+        {pledge.package.name.split('_').join(' ')}{' '}
+        –{' '}
+        {dateTimeFormat(
+          new Date(pledge.createdAt)
+        )}{' '}
+        – {pledge.status}
         <br />
         <Label>
+          Created:{' '}
+          {dateTimeFormat(
+            new Date(pledge.createdAt)
+          )}
+          {' – '}
           Updated:{' '}
-          {dateTimeFormat(new Date(pledge.updatedAt))}
-          {/* – ID: {pledge.id} */}
+          {dateTimeFormat(
+            new Date(pledge.updatedAt)
+          )}
         </Label>
       </Interaction.H3>
       <Interaction.P>
@@ -143,36 +155,43 @@ const PledgeOverview = ({
         <br />
         {chfFormat(pledge.donation / 100)}
       </Interaction.P>
-      {!!pledge.reason &&
+      {!!pledge.reason && (
         <P>
-          <Label>Reason</Label>
+          <Label>Reduced price requested</Label>
           <br />
           {pledge.reason}
-        </P>}
+        </P>
+      )}
       <List>
         {!!options.length &&
-          options.map((option, i) =>
+          options.map((option, i) => (
             <Item key={`option-${i}`}>
               <Label>Option</Label>
               <br />
               {option.amount} x{' '}
-              {option.reward ? option.reward.name : ''} a{' '}
-              {chfFormat(option.price / 100)}
+              {option.reward
+                ? option.reward.name
+                : ''}{' '}
+              a {chfFormat(option.price / 100)}
             </Item>
-          )}
-        {pledge.payments.map((payment, i) =>
+          ))}
+        {pledge.payments.map((payment, i) => (
           <Item key={`payment-${i}`}>
             <Label>Payment</Label>
             <br />
-            {payment.method === 'STRIPE' &&
+            {payment.method === 'STRIPE' && (
               <a
                 className={`${link}`}
-                href={`https://dashboard.stripe.com/payments/${payment.pspId}`}
+                href={`https://dashboard.stripe.com/payments/${
+                  payment.pspId
+                }`}
                 target="_blank"
               >
                 STRIPE
-              </a>}
-            {payment.method !== 'STRIPE' && payment.method}
+              </a>
+            )}
+            {payment.method !== 'STRIPE' &&
+              payment.method}
             {' - '} {payment.status}
             <br />
             <Interaction.P>
@@ -185,108 +204,130 @@ const PledgeOverview = ({
               <br />
               {payment.hrid}
             </Interaction.P>
-            {!!payment.dueDate &&
+            {!!payment.dueDate && (
               <Interaction.P>
                 <Label>Due Date</Label>
                 <br />
-                {dateFormat(new Date(payment.dueDate))}
-              </Interaction.P>}
-            {payment.method === 'PAYMENTSLIP' &&
+                {dateFormat(
+                  new Date(payment.dueDate)
+                )}
+              </Interaction.P>
+            )}
+            {payment.method === 'PAYMENTSLIP' && (
               <Interaction.P>
                 <Label>Paper Invoice</Label>
                 <br />
-                {payment.paperInvoice ? 'YES' : 'NO'}
-              </Interaction.P>}
+                {payment.paperInvoice
+                  ? 'YES'
+                  : 'NO'}
+              </Interaction.P>
+            )}
             {new Date(payment.dueDate as string) <
               new Date() &&
               payment.remindersSentAt &&
-              payment.remindersSentAt.length > 0 &&
-              <Interaction.P>
-                <Label>Sent reminders</Label>
-                <br />
-                {payment.remindersSentAt.map((date: any) =>
-                  <Label
-                    key={`reminder-${date}`}
-                    style={{ display: 'block' }}
-                  >
-                    {' - '}
-                    {dateTimeFormat(new Date(date))}
-                  </Label>
-                )}
-              </Interaction.P>}
+              payment.remindersSentAt.length >
+                0 && (
+                <Interaction.P>
+                  <Label>Sent reminders</Label>
+                  <br />
+                  {payment.remindersSentAt.map(
+                    (date: any) => (
+                      <Label
+                        key={`reminder-${date}`}
+                        style={{
+                          display: 'block'
+                        }}
+                      >
+                        {' - '}
+                        {dateTimeFormat(
+                          new Date(date)
+                        )}
+                      </Label>
+                    )
+                  )}
+                </Interaction.P>
+              )}
             <Label>
               Created:{' '}
-              {dateTimeFormat(new Date(payment.createdAt))}
+              {dateTimeFormat(
+                new Date(payment.createdAt)
+              )}
               {' – '}
               Updated:{' '}
-              {dateTimeFormat(new Date(payment.updatedAt))}
+              {dateTimeFormat(
+                new Date(payment.updatedAt)
+              )}
             </Label>
           </Item>
-        )}
-        {pledge.memberships.map((membership, i) =>
-          <Item key={`membership-${i}`}>
-            <Label>Membership</Label>
-            <br />
-            #{membership.sequenceNumber}
-            <br />
-            {!!membership.voucherCode &&
-              <Interaction.P>
-                <Label>Voucher Code</Label>
-                <br />
-                {membership.voucherCode}
-              </Interaction.P>}
-            {!!membership.claimerName &&
-              <Interaction.P>
-                <Label>Claimer Name</Label>
-                <br />
-                {membership.claimerName}
-              </Interaction.P>}
-            <Interaction.P>
-              <Label>Reduced Price</Label>
+        ))}
+        {pledge.memberships.map(
+          (membership, i) => (
+            <Item key={`membership-${i}`}>
+              <Label>Membership</Label>
               <br />
-              {membership.reducedPrice ? 'YES' : 'NO'}
-            </Interaction.P>
-            <Label>
-              Created:{' '}
-              {dateTimeFormat(
-                new Date(membership.createdAt)
+              #{membership.sequenceNumber}
+              <br />
+              {!!membership.voucherCode && (
+                <Interaction.P>
+                  <Label>Voucher Code</Label>
+                  <br />
+                  {membership.voucherCode}
+                </Interaction.P>
               )}
-              {' – '}
-              Updated:{' '}
-              {dateTimeFormat(
-                new Date(membership.updatedAt)
+              {!!membership.claimerName && (
+                <Interaction.P>
+                  <Label>Claimer Name</Label>
+                  <br />
+                  {membership.claimerName}
+                </Interaction.P>
               )}
-            </Label>
-          </Item>
+              <Interaction.P>
+                <Label>Reduced Price</Label>
+                <br />
+                {membership.reducedPrice
+                  ? 'YES'
+                  : 'NO'}
+              </Interaction.P>
+            </Item>
+          )
         )}
       </List>
       {pledge.payments &&
         pledge.payments.length > 0 &&
-        pledge.payments[0].status === 'WAITING' &&
-        <Button
-          onClick={() =>
-            onRemindPayment(pledge.payments[0].id)}
-        >
-          Send Reminder Mail
-        </Button>}
-      {pledge.status !== 'CANCELLED' &&
+        pledge.payments[0].status ===
+          'WAITING' && (
+          <Button
+            onClick={() =>
+              onRemindPayment(
+                pledge.payments[0].id
+              )
+            }
+          >
+            Send Reminder Mail
+          </Button>
+        )}
+      {pledge.status !== 'CANCELLED' && (
         <Button
           onClick={cancelPledgeHandler(
             onCancelPledge,
             pledge
           )}
         >
-          {' '}Cancel pledge
-        </Button>}
-      {pledge.status === 'PAID_INVESTIGATE' &&
+          {' '}
+          Cancel pledge
+        </Button>
+      )}
+      {pledge.status === 'PAID_INVESTIGATE' && (
         <Button
           onClick={resolvePledgeToPaymentHandler(
             onResolvePledge,
             pledge
           )}
         >
-          {' '}Resolve Pledge
-        </Button>}
+          {' '}
+          Resolve Pledge
+        </Button>
+      )}
       <PaymentStatusButton
         pledge={pledge}
         onClick={updatePaymentStatusHandler(
