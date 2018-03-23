@@ -24,7 +24,8 @@ PgDb.connect().then(async pgdb => {
   })
 
   await elastic.indices.delete({
-    index: 'documents'
+    index: 'documents',
+    ignoreUnavailable: true
   })
 
   const context = {
