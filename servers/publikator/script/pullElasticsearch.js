@@ -44,11 +44,18 @@ PgDb.connect().then(async pgdb => {
     .then(docs => docs.nodes
       .map(d => {
         const content = Document.content(d, {}, context)
+        const meta = Document.meta(d, {}, context)
         return {
           id: d.id,
-          meta: Document.meta(d, {}, context),
           content,
-          contentString: mdastToString(content)
+          contentString: mdastToString(content),
+          meta: {
+            ...meta,
+            dossier: null,
+            authors: meta.credits
+              .filter(c => c.type === 'link')
+              .map(a => a.children[0].value)
+          }
         }
       })
     )
