@@ -18,5 +18,9 @@ type queries {
   ): DocumentConnection!
   # (pre)published document
   document(path: String!): Document
+
+  documentsSearch(
+    search: String!
+  ): [Document!]!
 }
 `
