@@ -198,7 +198,7 @@ type DiscussionPreferences {
   notifications: DiscussionNotificationOption
 }
 input DiscussionPreferencesInput {
-  anonymity: Boolean!
+  anonymity: Boolean
   credential: String
   notifications: DiscussionNotificationOption
 }

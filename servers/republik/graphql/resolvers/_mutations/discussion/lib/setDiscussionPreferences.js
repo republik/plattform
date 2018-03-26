@@ -9,9 +9,16 @@ module.exports = async ({
   t
 }) => {
   const {
-    anonymity,
     credential: credentialDescription
   } = discussionPreferences
+
+  // default anonymity
+  let anonymity
+  if (discussionPreferences.anonymity === undefined) {
+    anonymity = discussion.anonymity === 'ENFORCED'
+  } else {
+    anonymity = discussionPreferences.anonymity
+  }
 
   if (anonymity && discussion.anonymity === 'FORBIDDEN') {
     throw new Error(t('api/discussion/anonymity/forbidden'))
@@ -43,6 +50,8 @@ module.exports = async ({
       })
       credentialId = newCredential.id
     }
+  } else if (credentialDescription === null) {
+    credentialId = null
   }
 
   const findQuery = {
@@ -56,7 +65,9 @@ module.exports = async ({
     userId,
     discussionId: discussion.id,
     anonymous: anonymity,
-    credentialId,
+    ...credentialId !== undefined
+      ? { credentialId }
+      : { },
     notificationOption:
       discussionPreferences.notifications ||
       (existingDP && existingDP.notificationOption) ||
