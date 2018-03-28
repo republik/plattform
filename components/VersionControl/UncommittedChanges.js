@@ -13,7 +13,6 @@ import { compose } from 'redux'
 import { getInitials } from '../../lib/utils/name'
 import Loader from '../../components/Loader'
 import withT from '../../lib/withT'
-import withMe from '../../lib/withMe'
 
 const styles = {
   container: css({
@@ -132,15 +131,25 @@ class UncommittedChanges extends Component {
   }
 
   refreshOverlay () {
-    const { data: { repo }, me } = this.props
+    const { data: { repo }, uncommittedChanges: editorHasUncomittedChanges } = this.props
     const { isOpen, suppress } = this.state
 
+    // reset suppress
+    if (
+      suppress && (
+        !editorHasUncomittedChanges ||
+        (repo && repo.uncommittedChanges.length <= 1)
+      )
+    ) {
+      this.setState({ suppress: false })
+      return
+    }
+
     if (repo) {
-      const iHaveUncommitedChanges = repo.uncommittedChanges.find(u => u.id === me.id)
       if (
         !isOpen &&
         !suppress &&
-        iHaveUncommitedChanges &&
+        editorHasUncomittedChanges &&
         repo.uncommittedChanges.length > 1
       ) {
         this.setState({ isOpen: true })
@@ -150,9 +159,6 @@ class UncommittedChanges extends Component {
         )
       ) {
         this.setState({ isOpen: false })
-      }
-      if (suppress && repo.uncommittedChanges.length <= 1) {
-        this.setState({ suppress: false })
       }
     }
   }
@@ -202,7 +208,6 @@ class UncommittedChanges extends Component {
 
 export default compose(
   withT,
-  withMe,
   graphql(query, {
     props: props => {
       return {

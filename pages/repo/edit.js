@@ -516,6 +516,7 @@ class EditorPage extends Component {
                 key='uncommittedChanges'
                 repoId={repo.id}
                 onRevert={this.revertHandler}
+                uncommittedChanges={uncommittedChanges}
               />
             ])}
           </Frame.Header.Section>
