@@ -91,20 +91,6 @@ export default class MovePledge extends Component {
                 value={user}
                 onChange={this.userChangeHandler}
               />
-              <Interaction.P style={{ minHeight: '40px' }}>
-                {user && (
-                  <Label>
-                    {user.email}
-                    {user.username && ` | ${user.username}`}
-                    {user.address &&
-                      user.address.postalCode &&
-                      ` | ${user.address.postalCode}`}
-                    {user.address &&
-                      user.address.city &&
-                      ` ${user.address.city}`}
-                  </Label>
-                )}
-              </Interaction.P>
               <Button
                 primary
                 disabled={!user}

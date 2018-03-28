@@ -5,8 +5,7 @@ import {
   OverlayBody,
   OverlayToolbar,
   OverlayToolbarClose,
-  Interaction,
-  Label
+  Interaction
 } from '@project-r/styleguide'
 import SearchUser from '../../Form/SearchUser'
 import { swissTime } from '../../../lib/utils/formats'
@@ -90,20 +89,6 @@ export default class MoveMembership extends Component {
                 value={user}
                 onChange={this.userChangeHandler}
               />
-              <Interaction.P style={{ minHeight: '40px' }}>
-                {user && (
-                  <Label>
-                    {user.email}
-                    {user.username && ` | ${user.username}`}
-                    {user.address &&
-                      user.address.postalCode &&
-                      ` | ${user.address.postalCode}`}
-                    {user.address &&
-                      user.address.city &&
-                      ` ${user.address.city}`}
-                  </Label>
-                )}
-              </Interaction.P>
               <Button
                 primary
                 disabled={!user}

@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
-import { Autocomplete } from '@project-r/styleguide'
+import {
+  Autocomplete,
+  Interaction,
+  Label
+} from '@project-r/styleguide'
 
 import withT from '../../lib/withT'
 
@@ -64,15 +68,32 @@ export class SearchUser extends Component {
 
   render() {
     const { filter, value } = this.state
+    const user = value && value.value
     return (
-      <ConnectedAutoComplete
-        label={this.props.label}
-        filter={filter}
-        value={value}
-        items={[]}
-        onChange={this.changeHandler}
-        onFilterChange={this.filterChangeHandler}
-      />
+      <div>
+        <ConnectedAutoComplete
+          label={this.props.label}
+          filter={filter}
+          value={value}
+          items={[]}
+          onChange={this.changeHandler}
+          onFilterChange={this.filterChangeHandler}
+        />
+        <Interaction.P style={{ minHeight: '40px' }}>
+          {user && (
+            <Label>
+              {user.email}
+              {user.username && ` | ${user.username}`}
+              {user.address &&
+                user.address.postalCode &&
+                ` | ${user.address.postalCode}`}
+              {user.address &&
+                user.address.city &&
+                ` ${user.address.city}`}
+            </Label>
+          )}
+        </Interaction.P>
+      </div>
     )
   }
 }

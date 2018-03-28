@@ -10,6 +10,8 @@ import {
   Label
 } from '@project-r/styleguide'
 import ErrorMessage from '../../ErrorMessage'
+import SearchUser from '../../Form/SearchUser'
+import ErrorModal from '../../Form/ErrorModal'
 
 import { validate as isEmail } from 'email-validator'
 import routes from '../../../server/routes'
@@ -30,23 +32,8 @@ const link = css({
   }
 })
 
-const findUserQuery = gql`
-  query users($email: String!) {
-    users: adminUsers(limit: 1, search: $email) {
-      items {
-        id
-        email
-        name
-      }
-    }
-  }
-`
-
 const mergeUsersMutation = gql`
-  mutation mergeUsers(
-    $sourceId: ID!
-    $targetId: ID!
-  ) {
+  mutation mergeUsers($sourceId: ID!, $targetId: ID!) {
     mergeUsers(
       sourceUserId: $sourceId
       targetUserId: $targetId
@@ -77,39 +64,10 @@ class MergeUsers extends Component {
     this.state = { errors: null }
   }
 
-  handleUserResponse = userType => response => {
-    if (response.data.users.items.length === 1) {
-      this.setState(() => ({
-        [`${userType}User`]: response.data.users
-          .items[0]
-      }))
-    }
-  }
-
-  findUser = (userType: string) => (
-    e,
-    value: string
-  ) => {
+  handleUserResponse = userType => ({ value }) => {
     this.setState(() => ({
-      [`${userType}Email`]: value
+      [`${userType}User`]: value
     }))
-
-    if (isEmail(value)) {
-      const { client } = this.context
-      if (client) {
-        client
-          .query({
-            query: findUserQuery,
-            variables: { email: value }
-          })
-          .then(this.handleUserResponse(userType))
-          .catch(error =>
-            this.setState({
-              errors: error
-            })
-          )
-      }
-    }
   }
 
   handleMergeResponse = response => {
@@ -159,8 +117,6 @@ class MergeUsers extends Component {
       errors,
       sourceUser,
       targetUser,
-      sourceEmail,
-      targetEmail,
       mergedUser
     } = this.state
 
@@ -169,9 +125,7 @@ class MergeUsers extends Component {
         <Interaction.H3>
           Users zusammenführen
         </Interaction.H3>
-        {errors && (
-          <ErrorMessage error={errors} />
-        )}
+        {errors && <ErrorMessage error={errors} />}
         <div
           style={{
             display: 'flex',
@@ -186,20 +140,13 @@ class MergeUsers extends Component {
                 width: '90%'
               }}
             >
-              <Field
-                label="Email Quelle"
-                value={sourceEmail}
-                onChange={this.findUser('source')}
+              <SearchUser
+                label="User Quelle"
+                value={sourceUser}
+                onChange={this.handleUserResponse('source')}
               />
             </div>
             {sourceUser && <CheckIcon />}
-            <br />
-            {sourceUser && (
-              <Label>
-                {sourceUser.name},{' '}
-                {sourceUser.email}
-              </Label>
-            )}
           </div>
           <div style={{ flex: '50%' }}>
             <div
@@ -208,20 +155,13 @@ class MergeUsers extends Component {
                 width: '90%'
               }}
             >
-              <Field
-                label="Email Ziel"
-                value={targetEmail}
-                onChange={this.findUser('target')}
+              <SearchUser
+                label="User Ziel"
+                value={targetUser}
+                onChange={this.handleUserResponse('target')}
               />
             </div>
             {targetUser && <CheckIcon />}
-            <br />
-            {targetUser && (
-              <Label>
-                {targetUser.name},{' '}
-                {targetUser.email}
-              </Label>
-            )}
           </div>
         </div>
         <Button
@@ -233,8 +173,8 @@ class MergeUsers extends Component {
         </Button>
         {mergedUser && (
           <div style={{ marginTop: '30px' }}>
-            Prima! Die Accounts wurden zusammen
-            geführt. <br />
+            Prima! Die Accounts wurden zusammen geführt.{' '}
+            <br />
             <Link
               route="user"
               params={{ userId: mergedUser.id }}
