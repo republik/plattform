@@ -3,6 +3,7 @@ const Redlock = require('redlock')
 const redis = require('@orbiting/backend-modules-base/lib/redis')
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const { handleRedirection } = require('./Document')
+const zipArray = require('./zipArray')
 const {
   upsertRef,
   deleteRef
@@ -13,17 +14,6 @@ const ttl = 2000
 const channelKey = 'scheduling'
 let subClient
 let nextJob
-
-const compactArray = (array) => {
-  let newArray = []
-  for (let i = 0; i < array.length; i += 2) {
-    newArray.push({
-      value: array[i],
-      score: parseInt(array[i + 1])
-    })
-  }
-  return newArray
-}
 
 const redlock = () => {
   return new Redlock(
@@ -70,7 +60,7 @@ const run = async (_lock) => {
   const lock = _lock || await redlock().lock(lockKey, ttl)
 
   const nextPublication = await redis.zrangeAsync('repos:scheduledIds', 0, 1, 'WITHSCORES')
-    .then(objs => compactArray(objs).shift())
+    .then(objs => zipArray(objs).shift())
 
   if (nextPublication) {
     const now = new Date().getTime()
@@ -132,7 +122,7 @@ const refresh = async (_lock) => {
   const lock = _lock || await redlock().lock(lockKey, ttl)
 
   const nextPublication = await redis.zrangeAsync('repos:scheduledIds', 0, 1, 'WITHSCORES')
-    .then(objs => compactArray(objs).shift())
+    .then(objs => zipArray(objs).shift())
 
   if (nextPublication) {
     const now = new Date().getTime()
