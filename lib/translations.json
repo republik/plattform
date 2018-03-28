@@ -1,5 +1,5 @@
 {
-  "updated": "2018-03-28T11:08:13.716Z",
+  "updated": "2018-03-28T15:27:25.930Z",
   "title": "live",
   "data": [
     {
@@ -469,6 +469,10 @@
     {
       "key": "uncommittedChanges/revert",
       "value": "Meine Änderungen verwerfen"
+    },
+    {
+      "key": "uncommittedChanges/revert/confirm",
+      "value": "Sind sie sicher, dass Sie alle bestehenden Änderungen verwerfen möchten?"
     },
     {
       "key": "commitHistory/title",

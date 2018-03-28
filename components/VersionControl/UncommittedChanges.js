@@ -108,6 +108,7 @@ class UncommittedChanges extends Component {
   constructor (...args) {
     super(...args)
     this.state = {}
+    this.revertHandler = this.revertHandler.bind(this)
   }
 
   componentDidMount () {
@@ -156,8 +157,15 @@ class UncommittedChanges extends Component {
     }
   }
 
+  revertHandler (e) {
+    const { t, onRevert } = this.props
+    if (window.confirm(t('uncommittedChanges/revert/confirm'))) {
+      onRevert(e)
+    }
+  }
+
   render () {
-    const { data: { loading, error, repo }, t, onRevert } = this.props
+    const { data: { loading, error, repo }, t } = this.props
 
     return (
       <Loader loading={loading} error={error} render={() => (
@@ -175,7 +183,7 @@ class UncommittedChanges extends Component {
                 </Button>
               </p>
               <p>
-                <Button block onClick={onRevert}>
+                <Button block onClick={this.revertHandler}>
                   {t('uncommittedChanges/revert')}
                 </Button>
               </p>
