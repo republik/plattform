@@ -16,6 +16,7 @@ import { Tile } from '../../Layout/Grid'
 
 import UserForm from './UserForm'
 import EmailForm from './EmailForm'
+import NewsletterForm from './NewsletterForm'
 import PledgeOverview from './PledgeOverview'
 import MembershipOverview from './MembershipOverview'
 import EventLog from './EventLog'
@@ -210,6 +211,10 @@ class Detail extends Component {
                         <P>«{props.data.user.statement}»</P>
                       </div>
                     )}
+                    <NewsletterForm
+                      user={props.data.user}
+                      onChange={() => {}}
+                    />
                   </div>
                 </div>
               </Tab>
