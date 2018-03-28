@@ -2,7 +2,8 @@ import React from 'react'
 import {
   Interaction,
   Label,
-  P
+  P,
+  Button
 } from '@project-r/styleguide'
 
 import withT from '../../../lib/withT'

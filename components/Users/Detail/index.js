@@ -294,7 +294,7 @@ const moveMembershipMutation = gql`
 
 const reactivateMembershipMutation = gql`
   mutation reactivateMembership($id: ID!) {
-    reactivateMembership(id: $id, userId: $userId) {
+    reactivateMembership(id: $id) {
       id
     }
   }
