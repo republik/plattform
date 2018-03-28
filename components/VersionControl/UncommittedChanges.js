@@ -72,7 +72,7 @@ const uncommittedChangesSubscription = gql`
   }
 `
 
-export const TagsCompact = ({repo, t}) => (
+const TagsCompact = ({repo, t}) => (
   <div {...styles.container}>
     {repo.uncommittedChanges.length
       ? repo.uncommittedChanges.map(user =>
@@ -88,11 +88,11 @@ export const TagsCompact = ({repo, t}) => (
   </div>
 )
 
-export const Tags = ({repo}) => (
+const Tags = ({repo}) => (
   <div {...styles.container}>
     {repo.uncommittedChanges.map(user =>
       <div style={{marginRight: 4, textAlign: 'center'}}>
-        <div key={user.id} {...merge(css(styles.initials), {display: 'inline-block'})} title={user.email}>
+        <div key={user.id} {...css(styles.initials)} style={{display: 'inline-block'}} title={user.email}>
           {getInitials(user)}
         </div><br />
         <Label>
@@ -112,10 +112,12 @@ class UncommittedChanges extends Component {
 
   componentDidMount () {
     this.subscribe()
+    this.refreshOverlay()
   }
 
   componentDidUpdate () {
     this.subscribe()
+    this.refreshOverlay()
   }
 
   subscribe () {
@@ -128,53 +130,55 @@ class UncommittedChanges extends Component {
     this.unsubscribe && this.unsubscribe()
   }
 
-  render () {
-    const { data: { loading, error, repo }, t, me, onRevert } = this.props
-
-    const state = this.state
+  refreshOverlay () {
+    const { data: { repo }, me } = this.props
+    const { isOpen, suppress } = this.state
 
     if (repo) {
       const iHaveUncommitedChanges = repo.uncommittedChanges.find(u => u.id === me.id)
       if (
-        !state.isOpen &&
+        !isOpen &&
+        !suppress &&
         iHaveUncommitedChanges &&
-        repo.uncommittedChanges.length > 1 &&
-        !state.suppress
+        repo.uncommittedChanges.length > 1
       ) {
         this.setState({ isOpen: true })
       } else if (
-        state.isOpen && (
-          state.suppress ||
-          (repo.uncommittedChanges.length <= 1 && state.isOpen)
+        isOpen && (
+          suppress || repo.uncommittedChanges.length <= 1
         )
       ) {
         this.setState({ isOpen: false })
       }
-      if (state.suppress && repo.uncommittedChanges.length <= 1) {
+      if (suppress && repo.uncommittedChanges.length <= 1) {
         this.setState({ suppress: false })
       }
     }
+  }
+
+  render () {
+    const { data: { loading, error, repo }, t, onRevert } = this.props
 
     return (
       <Loader loading={loading} error={error} render={() => (
         <div>
-          {state.isOpen && (
-          <Overlay onClose={() => { this.setState({isOpen: false}) }}>
+          {this.state.isOpen && (
+          <Overlay onClose={() => { this.setState({suppress: true}) }}>
             <OverlayBody>
-              <Interaction.P style={{height: '100vh'}}>
+              <Interaction.P style={{textAlign: 'center'}}>
                 <p>{t('uncommittedChanges/warning')}</p>
-                <Tags repo={repo} />
-                <p>
-                  <Button primary block onClick={() => { this.setState({suppress: true}) }}>
-                    {t('uncommittedChanges/ignore')}
-                  </Button>
-                </p>
-                <p>
-                  <Button block onClick={onRevert}>
-                    {t('uncommittedChanges/revert')}
-                  </Button>
-                </p>
               </Interaction.P>
+              <Tags repo={repo} />
+              <p>
+                <Button primary block onClick={() => { this.setState({suppress: true}) }}>
+                  {t('uncommittedChanges/ignore')}
+                </Button>
+              </p>
+              <p>
+                <Button block onClick={onRevert}>
+                  {t('uncommittedChanges/revert')}
+                </Button>
+              </p>
             </OverlayBody>
           </Overlay>
             )}
