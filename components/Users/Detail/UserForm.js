@@ -1,25 +1,18 @@
 import React, { Component } from 'react'
-import {
-  Button,
-  Interaction
-} from '@project-r/styleguide'
+import { Button } from '@project-r/styleguide'
 import AddressFieldSet from './AddressFieldSet'
 import ParticularsFieldSet from './ParticularsFieldSet'
 
 const hasErrors = state =>
   Object.keys(state.errors).some(
     fieldName =>
-      !state.errors
-        ? false
-        : !!state.errors[fieldName]
+      !state.errors ? false : !!state.errors[fieldName]
   )
 
 const isDirty = state =>
   Object.keys(state.dirty).some(
     fieldName =>
-      !state.dirty
-        ? false
-        : !!state.dirty[fieldName]
+      !state.dirty ? false : !!state.dirty[fieldName]
   )
 
 const cleanAddress = ({
@@ -44,7 +37,7 @@ const cleanUser = ({
   firstName,
   lastName,
   phoneNumber,
-  birthDate,
+  birthday,
   address
 }) => ({
   id,
@@ -52,7 +45,7 @@ const cleanUser = ({
   firstName,
   lastName,
   phoneNumber,
-  birthDate,
+  birthday,
   address
 })
 
@@ -94,10 +87,7 @@ export default class UserForm extends Component {
     this.setState(() => ({
       ...this.state,
       ...{
-        user: mergeStates(
-          this.state.user,
-          userFieldState
-        )
+        user: mergeStates(this.state.user, userFieldState)
       }
     }))
   }
@@ -120,18 +110,14 @@ export default class UserForm extends Component {
       this.props.onSubmit({
         ...cleanUser(this.state.user.values),
         ...{
-          address: cleanAddress(
-            this.state.address.values
-          )
+          address: cleanAddress(this.state.address.values)
         }
       })
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState(() =>
-      getInitialState(nextProps)
-    )
+    this.setState(() => getInitialState(nextProps))
   }
 
   render() {
@@ -149,7 +135,6 @@ export default class UserForm extends Component {
           onChange={this.userChangeHandler}
           {...this.state.user}
         />
-        <Interaction.H3>Adresse</Interaction.H3>
         <AddressFieldSet
           onChange={this.addressChangeHandler}
           {...this.state.address}

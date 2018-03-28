@@ -4,9 +4,7 @@ import { swissTime } from '../../../lib/utils/formats'
 import FieldSet from '../../Form/FieldSet'
 
 const birthdayFormat = '%d.%m.%Y'
-const birthdayParse = swissTime.parse(
-  birthdayFormat
-)
+const birthdayParse = swissTime.parse(birthdayFormat)
 
 const fields = t => [
   {
@@ -34,29 +32,21 @@ const fields = t => [
     maskChar: '_',
     validator: value => {
       const parsedDate = birthdayParse(value)
+
       return (
         (value.trim().length <= 0 &&
-          t(
-            'merci/updateMe/birthday/error/empty'
-          )) ||
-        ((parsedDate === null ||
-          parsedDate > new Date() ||
-          parsedDate < new Date(1798, 3, 12)) &&
-          t(
-            'merci/updateMe/birthday/error/invalid'
-          ))
+          t('merci/updateMe/birthday/error/empty')) ||
+        parsedDate === null ||
+        (parsedDate > new Date() &&
+          t('merci/updateMe/birthday/error/invalid')) ||
+        (parsedDate < new Date(1798, 3, 12) &&
+          t('merci/updateMe/birthday/error/invalid'))
       )
     }
   }
 ]
 
-const Form = ({
-  t,
-  values,
-  errors,
-  dirty,
-  onChange
-}) => (
+const Form = ({ t, values, errors, dirty, onChange }) => (
   <FieldSet
     values={values}
     errors={errors}

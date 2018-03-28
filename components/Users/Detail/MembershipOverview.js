@@ -17,27 +17,16 @@ const MembershipOverview = ({ membership }) => {
   return (
     <div>
       <Interaction.H3>
-        {membership.type.name
-          .split('_')
-          .join(' ')}{' '}
-        –{' '}
-        {dateTimeFormat(
-          new Date(membership.createdAt)
-        )}{' '}
-        –{' '}
-        {(!!membership.renew && 'ACTIVE') ||
-          'INACTIVE'}
+        {membership.type.name.split('_').join(' ')} –{' '}
+        {dateTimeFormat(new Date(membership.createdAt))} –{' '}
+        {(!!membership.renew && 'ACTIVE') || 'INACTIVE'}
         <br />
         <Label>
           Created:{' '}
-          {dateTimeFormat(
-            new Date(membership.createdAt)
-          )}
+          {dateTimeFormat(new Date(membership.createdAt))}
           {' – '}
           Updated:{' '}
-          {dateTimeFormat(
-            new Date(membership.updatedAt)
-          )}
+          {dateTimeFormat(new Date(membership.updatedAt))}
         </Label>
       </Interaction.H3>
       {!membership.renew && (
@@ -72,38 +61,30 @@ const MembershipOverview = ({ membership }) => {
           <Interaction.P>
             <Label>Reduced Price</Label>
             <br />
-            {membership.reducedPrice
-              ? 'YES'
-              : 'NO'}
+            {membership.reducedPrice ? 'YES' : 'NO'}
           </Interaction.P>
           <Interaction.P>
             <Label>Periods</Label>
             <br />
-            {membership.periods.map(
-              (period, i) => (
-                <span key={`period-${i}`}>
+            {membership.periods.map((period, i) => (
+              <span key={`period-${i}`}>
+                {dateTimeFormat(new Date(period.beginDate))}
+                {' - '}
+                {dateTimeFormat(new Date(period.endDate))}
+                <br />
+                <Label>
+                  Created:{' '}
                   {dateTimeFormat(
-                    new Date(period.beginDate)
+                    new Date(period.createdAt)
                   )}
-                  {' - '}
+                  {' – '}
+                  Updated:{' '}
                   {dateTimeFormat(
-                    new Date(period.endDate)
+                    new Date(period.updatedAt)
                   )}
-                  <br />
-                  <Label>
-                    Created:{' '}
-                    {dateTimeFormat(
-                      new Date(period.createdAt)
-                    )}
-                    {' – '}
-                    Updated:{' '}
-                    {dateTimeFormat(
-                      new Date(period.updatedAt)
-                    )}
-                  </Label>
-                </span>
-              )
-            )}
+                </Label>
+              </span>
+            ))}
           </Interaction.P>
         </Item>
       </List>

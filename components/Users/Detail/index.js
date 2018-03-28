@@ -15,6 +15,7 @@ import UserForm from './UserForm'
 import EmailForm from './EmailForm'
 import PledgeOverview from './PledgeOverview'
 import MembershipOverview from './MembershipOverview'
+import MoveMembership from './MoveMembership'
 import EventLog from './EventLog'
 
 const GUTTER = 60
@@ -97,6 +98,32 @@ class Detail extends Component {
     })
   }
 
+  moveMembership = ({ membershipId, userId }) => {
+    this.props
+      .moveMembership({ membershipId, userId })
+      .catch(e => {
+        this.setState(() => ({
+          errors: {
+            ...this.state.errors,
+            user: e
+          }
+        }))
+      })
+  }
+
+  movePledge = ({ pledgeId, userId }) => {
+    this.props
+      .moveMembership({ pledgeId, userId })
+      .catch(e => {
+        this.setState(() => ({
+          errors: {
+            ...this.state.errors,
+            user: e
+          }
+        }))
+      })
+  }
+
   updateEmail = user => {
     this.props.updateEmail(user).catch(e => {
       this.setState(() => ({
@@ -138,6 +165,7 @@ class Detail extends Component {
 
   render() {
     const props = this.props
+    console.log(props, this.state)
     if (props.data.error) {
       return <ErrorMessage error={props.data.error} />
     } else if (props.data.loading) {
@@ -257,6 +285,10 @@ class Detail extends Component {
                 <MembershipOverview
                   membership={membership}
                 />
+                <MoveMembership
+                  membership={membership}
+                  onSubmit={this.moveMembership}
+                />
               </div>
             ))}
           </div>
@@ -275,6 +307,28 @@ class Detail extends Component {
 const sendPaymentRemindersMutation = gql`
   mutation sendPaymentReminders($paymentIds: [ID!]!) {
     sendPaymentReminders(paymentIds: $paymentIds)
+  }
+`
+
+const movePledgeMutation = gql`
+  mutation movePledge($pledgeId: ID!, $userId: ID!) {
+    movePledge(pledgeId: $pledgeId, userId: $userId) {
+      id
+    }
+  }
+`
+
+const moveMembershipMutation = gql`
+  mutation moveMembership(
+    $membershipId: ID!
+    $userId: ID!
+  ) {
+    moveMembership(
+      membershipId: $membershipId
+      userId: $userId
+    ) {
+      id
+    }
   }
 `
 
@@ -355,6 +409,7 @@ const userQuery = gql`
       firstName
       lastName
       username
+      birthday
       address {
         name
         line1
@@ -459,6 +514,53 @@ const WrappedUser = compose(
                 query: userQuery,
                 variables: {
                   id
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
+  }),
+  graphql(movePledgeMutation, {
+    props: ({
+      mutate,
+      ownProps: { params: { userId } }
+    }) => ({
+      movePledge: ({ pledgeId, userId: newUserId }) => {
+        if (mutate) {
+          return mutate({
+            variables: { pledgeId, userId: newUserId },
+            refetchQueries: [
+              {
+                query: userQuery,
+                variables: {
+                  userId
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
+  }),
+  graphql(moveMembershipMutation, {
+    props: ({
+      mutate,
+      ownProps: { params: { userId } }
+    }) => ({
+      moveMembership: ({
+        membershipId,
+        userId: newUserId
+      }) => {
+        if (mutate) {
+          return mutate({
+            variables: { membershipId, userId: newUserId },
+            refetchQueries: [
+              {
+                query: userQuery,
+                variables: {
+                  userId
                 }
               }
             ]
