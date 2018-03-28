@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { compose } from 'redux'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
+import { css } from 'glamor'
 import {
   Interaction,
   P,
@@ -10,13 +11,15 @@ import {
 } from '@project-r/styleguide'
 import ErrorMessage from '../../ErrorMessage'
 import ErrorModal from '../../Form/ErrorModal'
+import { Table, Row, Cell } from '../../Layout/Table'
+import { Tile } from '../../Layout/Grid'
 
-import { css } from 'glamor'
 import UserForm from './UserForm'
 import EmailForm from './EmailForm'
 import PledgeOverview from './PledgeOverview'
 import MembershipOverview from './MembershipOverview'
 import EventLog from './EventLog'
+import Notepad from './Notepad'
 
 const GUTTER = 60
 const styles = {
@@ -117,149 +120,180 @@ class Detail extends Component {
       return <div>Loading ...</div>
     }
     return (
-      <div style={{ overflow: 'hidden' }}>
-        <Interaction.H1>
-          {props.data.user.name}
-        </Interaction.H1>
-        <Label>
-          {props.data.user.email}
-          {props.data.user.username &&
-            ` | ${props.data.user.username}`}
-        </Label>
-        <ErrorModal
-          error={this.state.mutationError}
-          onClose={() =>
-            this.setState({
-              mutationError: null
-            })
-          }
-        />
-        <div {...styles.tabNav}>
-          <TabLink
-            name="details"
-            onClick={this.tabLinkHandler('details')}
-            current={this.state.selectedTab}
-          >
-            Personalien
-          </TabLink>
-          <TabLink
-            name="memberships"
-            current={this.state.selectedTab}
-            onClick={this.tabLinkHandler('memberships')}
-          >
-            Pledges {'&'} Memberships
-          </TabLink>
-          <TabLink
-            name="eventLog"
-            onClick={this.tabLinkHandler('eventLog')}
-            current={this.state.selectedTab}
-          >
-            Event Log
-          </TabLink>
-        </div>
-        <Tab
-          name="details"
-          current={this.state.selectedTab}
-        >
-          <div {...styles.grid}>
-            <div {...styles.span}>
-              <UserForm
-                user={props.data.user}
-                onSubmit={this.safe(props.updateUser)}
+      <Table>
+        <Row>
+          <Cell flex="1 0">
+            <div style={{ overflow: 'hidden' }}>
+              <Interaction.H1>
+                {props.data.user.name}
+              </Interaction.H1>
+              <Label>
+                {props.data.user.email}
+                {props.data.user.username &&
+                  ` | ${props.data.user.username}`}
+              </Label>
+              <ErrorModal
+                error={this.state.mutationError}
+                onClose={() =>
+                  this.setState({
+                    mutationError: null
+                  })
+                }
               />
-            </div>
-            <div {...styles.span}>
-              <EmailForm
-                error={this.state.errors.email}
-                user={props.data.user}
-                onSubmit={this.safe(props.updateEmail)}
-              />
-              <br />
-              <br />
-              {!!props.data.user.portrait && (
-                <div>
-                  <Interaction.H3>Portrait</Interaction.H3>
-                  <br />
-                  <img
-                    style={{
-                      width: '100%',
-                      maxWidth: '200px'
-                    }}
-                    src={props.data.user.portrait}
-                  />
-                </div>
-              )}
-              {!!props.data.user.statement && (
-                <div>
-                  <Interaction.H3>Statement</Interaction.H3>
-                  <br />
-                  <P>«{props.data.user.statement}»</P>
-                </div>
-              )}
-            </div>
-          </div>
-        </Tab>
-        <Tab
-          name="memberships"
-          current={this.state.selectedTab}
-        >
-          <Interaction.H2>Pledges</Interaction.H2>
-          <div {...styles.pledges}>
-            {props.data.user.pledges
-              .filter(p => p.status !== 'DRAFT')
-              .map(pledge => (
-                <div
-                  {...styles.pledge}
-                  key={`pledge-${pledge.id}`}
+              <div {...styles.tabNav}>
+                <TabLink
+                  name="details"
+                  onClick={this.tabLinkHandler('details')}
+                  current={this.state.selectedTab}
                 >
-                  <PledgeOverview
-                    pledge={pledge}
-                    onResolvePledge={this.safe(
-                      props.resolvePledgeToPayment
-                    )}
-                    onCancelPledge={this.safe(
-                      props.cancelPledge
-                    )}
-                    onUpdatePaymentStatus={this.safe(
-                      props.updatePayment
-                    )}
-                    onRemindPayment={this.safe(
-                      props.sendPaymentReminders
-                    )}
-                    onMovePledge={this.safe(
-                      props.movePledge
-                    )}
-                  />
-                </div>
-              ))}
-          </div>
-          <Interaction.H2>Memberships</Interaction.H2>
-          <div {...styles.pledges}>
-            {props.data.user.memberships.map(membership => (
-              <div
-                {...styles.pledge}
-                key={`pledge-${membership.id}`}
-              >
-                <MembershipOverview
-                  membership={membership}
-                  onMoveMembership={this.safe(
-                    props.moveMembership
+                  Personalien
+                </TabLink>
+                <TabLink
+                  name="memberships"
+                  current={this.state.selectedTab}
+                  onClick={this.tabLinkHandler(
+                    'memberships'
                   )}
-                  onReactivateMembership={this.safe(
-                    props.reactivateMembership
-                  )}
-                />
+                >
+                  Pledges {'&'} Memberships
+                </TabLink>
+                <TabLink
+                  name="eventLog"
+                  onClick={this.tabLinkHandler('eventLog')}
+                  current={this.state.selectedTab}
+                >
+                  Event Log
+                </TabLink>
               </div>
-            ))}
-          </div>
-        </Tab>
-        <Tab
-          name="eventLog"
-          current={this.state.selectedTab}
-        >
-          <EventLog items={props.data.user.eventLog} />
-        </Tab>
-      </div>
+              <Tab
+                name="details"
+                current={this.state.selectedTab}
+              >
+                <div {...styles.grid}>
+                  <div {...styles.span}>
+                    <UserForm
+                      user={props.data.user}
+                      onSubmit={this.safe(props.updateUser)}
+                    />
+                  </div>
+                  <div {...styles.span}>
+                    <EmailForm
+                      error={this.state.errors.email}
+                      user={props.data.user}
+                      onSubmit={this.safe(
+                        props.updateEmail
+                      )}
+                    />
+                    <br />
+                    <br />
+                    {!!props.data.user.portrait && (
+                      <div>
+                        <Interaction.H3>
+                          Portrait
+                        </Interaction.H3>
+                        <br />
+                        <img
+                          style={{
+                            width: '100%',
+                            maxWidth: '200px'
+                          }}
+                          src={props.data.user.portrait}
+                        />
+                      </div>
+                    )}
+                    {!!props.data.user.statement && (
+                      <div>
+                        <Interaction.H3>
+                          Statement
+                        </Interaction.H3>
+                        <br />
+                        <P>«{props.data.user.statement}»</P>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </Tab>
+              <Tab
+                name="memberships"
+                current={this.state.selectedTab}
+              >
+                <Interaction.H2>Pledges</Interaction.H2>
+                <div {...styles.pledges}>
+                  {props.data.user.pledges
+                    .filter(p => p.status !== 'DRAFT')
+                    .map(pledge => (
+                      <div
+                        {...styles.pledge}
+                        key={`pledge-${pledge.id}`}
+                      >
+                        <PledgeOverview
+                          pledge={pledge}
+                          onResolvePledge={this.safe(
+                            props.resolvePledgeToPayment
+                          )}
+                          onCancelPledge={this.safe(
+                            props.cancelPledge
+                          )}
+                          onUpdatePaymentStatus={this.safe(
+                            props.updatePayment
+                          )}
+                          onRemindPayment={this.safe(
+                            props.sendPaymentReminders
+                          )}
+                          onMovePledge={this.safe(
+                            props.movePledge
+                          )}
+                        />
+                      </div>
+                    ))}
+                </div>
+                <Interaction.H2>Memberships</Interaction.H2>
+                <div {...styles.pledges}>
+                  {props.data.user.memberships.map(
+                    membership => (
+                      <div
+                        {...styles.pledge}
+                        key={`pledge-${membership.id}`}
+                      >
+                        <MembershipOverview
+                          membership={membership}
+                          onMoveMembership={this.safe(
+                            props.moveMembership
+                          )}
+                          onReactivateMembership={this.safe(
+                            props.reactivateMembership
+                          )}
+                        />
+                      </div>
+                    )
+                  )}
+                </div>
+              </Tab>
+              <Tab
+                name="eventLog"
+                current={this.state.selectedTab}
+              >
+                <EventLog
+                  items={props.data.user.eventLog}
+                />
+              </Tab>
+            </div>
+          </Cell>
+          <Tile
+            flex="0 0 200px"
+            style={{
+              backgroundColor: colors.secondaryBg,
+              padding: '20px',
+              marginLeft: '10px'
+            }}
+          >
+            <Notepad
+              value={props.data.user.adminNotes || ''}
+              onSubmit={this.safe(props.updateAdminNotes)}
+            />
+          </Tile>
+        </Row>
+      </Table>
     )
   }
 }
@@ -287,6 +321,14 @@ const moveMembershipMutation = gql`
       membershipId: $membershipId
       userId: $userId
     ) {
+      id
+    }
+  }
+`
+
+const updateAdminNotesMutation = gql`
+  mutation updateAdminNotes($notes: String, $userId: ID!) {
+    updateAdminNotes(notes: $notes, userId: $userId) {
       id
     }
   }
@@ -403,6 +445,7 @@ const userQuery = gql`
           isCurrent
         }
       }
+      adminNotes
       memberships {
         id
         type {
@@ -499,6 +542,28 @@ const WrappedUser = compose(
         if (mutate) {
           return mutate({
             variables: { pledgeId, userId: newUserId },
+            refetchQueries: [
+              {
+                query: userQuery,
+                variables: {
+                  userId
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
+  }),
+  graphql(updateAdminNotesMutation, {
+    props: ({
+      mutate,
+      ownProps: { params: { userId } }
+    }) => ({
+      updateAdminNotes: ({ notes }) => {
+        if (mutate) {
+          return mutate({
+            variables: { notes, userId },
             refetchQueries: [
               {
                 query: userQuery,

@@ -1,5 +1,5 @@
 import React from 'react'
-import { css, StyleAttribute } from 'glamor'
+import { css } from 'glamor'
 import mergeClassNames from '../../lib/mergeClassNames'
 
 const containerStyles = ({
@@ -7,7 +7,7 @@ const containerStyles = ({
   direction = 'column',
   wrap = 'wrap',
   justifyContent = 'start'
-}): StyleAttribute =>
+}) =>
   css({
     display,
     flexDirection: direction,
@@ -15,17 +15,12 @@ const containerStyles = ({
     justifyContent
   })
 
-const tileStyles = ({
-  flex = '1 1 auto'
-}): StyleAttribute =>
+const tileStyles = ({ flex = '1 1 auto' }) =>
   css({
     flex
   })
 
-const getRef = (
-  Component,
-  domRef?: (ref: Element) => void
-) => {
+const getRef = (Component, domRef) => {
   if (!domRef) {
     return {}
   } else if (typeof Component === 'string') {

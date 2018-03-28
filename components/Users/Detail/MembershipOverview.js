@@ -7,10 +7,10 @@ import {
 } from '@project-r/styleguide'
 
 import withT from '../../../lib/withT'
-import { swissTime } from '../../../lib/utils/formats'
 import List, { Item } from '../../List'
 import MoveMembership from './MoveMembership'
 
+import { swissTime } from '../../../lib/utils/formats'
 const dateTimeFormat = swissTime.format(
   '%e. %B %Y %H.%M Uhr'
 )
