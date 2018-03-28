@@ -163,7 +163,7 @@ class UncommittedChanges extends Component {
       <Loader loading={loading} error={error} render={() => (
         <div>
           {this.state.isOpen && (
-          <Overlay onClose={() => { this.setState({suppress: true}) }}>
+          <Overlay>
             <OverlayBody>
               <Interaction.P style={{textAlign: 'center'}}>
                 <p>{t('uncommittedChanges/warning')}</p>
