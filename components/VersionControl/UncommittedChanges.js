@@ -133,24 +133,26 @@ class UncommittedChanges extends Component {
 
     const state = this.state
 
-    const iHaveUncommitedChanges = repo.uncommittedChanges.find(u => u.id === me.id)
-    if (
-      !state.isOpen &&
-      iHaveUncommitedChanges &&
-      repo.uncommittedChanges.length > 1 &&
-      !state.suppress
-    ) {
-      this.setState({ isOpen: true })
-    } else if (
-      state.isOpen && (
-        state.suppress ||
-        (repo.uncommittedChanges.length <= 1 && state.isOpen)
-      )
-    ) {
-      this.setState({ isOpen: false })
-    }
-    if (state.suppress && repo.uncommittedChanges.length <= 1) {
-      this.setState({ suppress: false })
+    if (repo) {
+      const iHaveUncommitedChanges = repo.uncommittedChanges.find(u => u.id === me.id)
+      if (
+        !state.isOpen &&
+        iHaveUncommitedChanges &&
+        repo.uncommittedChanges.length > 1 &&
+        !state.suppress
+      ) {
+        this.setState({ isOpen: true })
+      } else if (
+        state.isOpen && (
+          state.suppress ||
+          (repo.uncommittedChanges.length <= 1 && state.isOpen)
+        )
+      ) {
+        this.setState({ isOpen: false })
+      }
+      if (state.suppress && repo.uncommittedChanges.length <= 1) {
+        this.setState({ suppress: false })
+      }
     }
 
     return (
@@ -161,7 +163,7 @@ class UncommittedChanges extends Component {
             <OverlayBody>
               <Interaction.P style={{height: '100vh'}}>
                 <p>{t('uncommittedChanges/warning')}</p>
-                <Tags repo={repo} t={t} />
+                <Tags repo={repo} />
                 <p>
                   <Button primary block onClick={() => { this.setState({suppress: true}) }}>
                     {t('uncommittedChanges/ignore')}
@@ -179,7 +181,7 @@ class UncommittedChanges extends Component {
           <div style={{ textAlign: 'center', fontSize: '14px', marginTop: 7 }}>
             <Label key='label'>{t('uncommittedChanges/title')}</Label>
           </div>
-          <TagsCompact repo={repo} />
+          <TagsCompact repo={repo} t={t} />
         </div>
       )} />
     )
