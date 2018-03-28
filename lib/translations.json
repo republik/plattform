@@ -1,5 +1,5 @@
 {
-  "updated": "2018-03-09T09:17:57.572Z",
+  "updated": "2018-03-28T11:08:13.716Z",
   "title": "live",
   "data": [
     {
@@ -457,6 +457,18 @@
     {
       "key": "uncommittedChanges/empty",
       "value": "Niemand"
+    },
+    {
+      "key": "uncommittedChanges/warning",
+      "value": "Achtung: Mehrere Personen sind auf dieser Version aktiv!"
+    },
+    {
+      "key": "uncommittedChanges/ignore",
+      "value": "Lass mich, ich bin dran!"
+    },
+    {
+      "key": "uncommittedChanges/revert",
+      "value": "Meine Änderungen verwerfen"
     },
     {
       "key": "commitHistory/title",

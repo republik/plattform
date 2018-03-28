@@ -17,6 +17,7 @@ import EditorUI from '../../components/editor/UI'
 
 import VersionControl from '../../components/VersionControl'
 import CommitButton from '../../components/VersionControl/CommitButton'
+import UncommittedChanges from '../../components/VersionControl/UncommittedChanges'
 import Sidebar from '../../components/Sidebar'
 
 import Loader from '../../components/Loader'
@@ -508,6 +509,15 @@ class EditorPage extends Component {
               onCommit={this.commitHandler}
               onRevert={this.revertHandler}
               />
+          </Frame.Header.Section>
+          <Frame.Header.Section align='right'>
+            {!!repo && ([
+              <UncommittedChanges
+                key='uncommittedChanges'
+                repoId={repo.id}
+                onRevert={this.revertHandler}
+              />
+            ])}
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
             <Frame.Me />

@@ -9,7 +9,6 @@ import withT from '../../lib/withT'
 import BaseCommit from './BaseCommit'
 import Checklist from './Checklist'
 import CommitHistory from './CommitHistory'
-import UncommittedChanges from './UncommittedChanges'
 
 const styles = {
   container: css({
@@ -146,10 +145,6 @@ class EditSidebar extends Component {
                 />
               </div>
             )}
-            {!!repo && ([
-              <Label key='label'>{t('uncommittedChanges/title')}</Label>,
-              <UncommittedChanges key='uncommittedChanges' repoId={repo.id} />
-            ])}
           </div>
         )}
       />
