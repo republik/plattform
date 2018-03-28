@@ -5,11 +5,12 @@
     "node": "8.9.3"
   },
   "scripts": {
-    "dev": "next",
+    "dev": "NODE_ENV=development node server/server.js",
     "build": "next build dist",
     "heroku-postbuild": "npm run build",
-    "start": "node dist/server.js",
-    "prettier": "prettier --single-quote --print-width 60 --no-semi --write \"{pages,lib,server,components}/**/*.{js,json}\""
+    "start": "node server/server.js",
+    "prettier":
+      "prettier --single-quote --print-width 60 --no-semi --write \"{pages,lib,server,components}/**/*.{js,json}\""
   },
   "dependencies": {
     "@project-r/styleguide": "^5.71.6",

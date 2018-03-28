@@ -20,9 +20,7 @@ app.prepare().then(() => {
   if (!DEV) {
     server.enable('trust proxy')
     server.use((req, res, cb) => {
-      const url = `${req.protocol}://${req.get(
-        'Host'
-      )}`
+      const url = `${req.protocol}://${req.get('Host')}`
 
       if (url !== process.env.PUBLIC_BASE_URL) {
         return res.redirect(
