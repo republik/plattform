@@ -4,16 +4,12 @@ import PropTypes from 'prop-types'
 import gql from 'graphql-tag'
 import {
   colors,
-  Field,
   Interaction,
-  Button,
-  Label
+  Button
 } from '@project-r/styleguide'
 import ErrorMessage from '../../ErrorMessage'
 import SearchUser from '../../Form/SearchUser'
-import ErrorModal from '../../Form/ErrorModal'
 
-import { validate as isEmail } from 'email-validator'
 import routes from '../../../server/routes'
 const { Link } = routes
 
