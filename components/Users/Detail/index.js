@@ -64,22 +64,10 @@ const styles = {
   })
 }
 
-const Tab = ({
-  name,
-  current,
-  children,
-  ...props
-}) =>
-  name === current && (
-    <div {...props}>{children}</div>
-  )
+const Tab = ({ name, current, children, ...props }) =>
+  name === current && <div {...props}>{children}</div>
 
-const TabLink = ({
-  name,
-  current,
-  children,
-  ...props
-}) => (
+const TabLink = ({ name, current, children, ...props }) => (
   <a
     {...props}
     {...styles.tabLink}
@@ -151,9 +139,7 @@ class Detail extends Component {
   render() {
     const props = this.props
     if (props.data.error) {
-      return (
-        <ErrorMessage error={props.data.error} />
-      )
+      return <ErrorMessage error={props.data.error} />
     } else if (props.data.loading) {
       return <div>Loading ...</div>
     }
@@ -170,9 +156,7 @@ class Detail extends Component {
         <div {...styles.tabNav}>
           <TabLink
             name="details"
-            onClick={this.tabLinkHandler(
-              'details'
-            )}
+            onClick={this.tabLinkHandler('details')}
             current={this.state.selectedTab}
           >
             Personalien
@@ -180,17 +164,13 @@ class Detail extends Component {
           <TabLink
             name="memberships"
             current={this.state.selectedTab}
-            onClick={this.tabLinkHandler(
-              'memberships'
-            )}
+            onClick={this.tabLinkHandler('memberships')}
           >
             Pledges {'&'} Memberships
           </TabLink>
           <TabLink
             name="eventLog"
-            onClick={this.tabLinkHandler(
-              'eventLog'
-            )}
+            onClick={this.tabLinkHandler('eventLog')}
             current={this.state.selectedTab}
           >
             Event Log
@@ -217,9 +197,7 @@ class Detail extends Component {
               <br />
               {!!props.data.user.portrait && (
                 <div>
-                  <Interaction.H3>
-                    Portrait
-                  </Interaction.H3>
+                  <Interaction.H3>Portrait</Interaction.H3>
                   <br />
                   <img
                     style={{
@@ -232,13 +210,9 @@ class Detail extends Component {
               )}
               {!!props.data.user.statement && (
                 <div>
-                  <Interaction.H3>
-                    Statement
-                  </Interaction.H3>
+                  <Interaction.H3>Statement</Interaction.H3>
                   <br />
-                  <P>
-                    «{props.data.user.statement}»
-                  </P>
+                  <P>«{props.data.user.statement}»</P>
                 </div>
               )}
             </div>
@@ -262,9 +236,7 @@ class Detail extends Component {
                     onResolvePledge={
                       props.resolvePledgeToPayment
                     }
-                    onCancelPledge={
-                      props.cancelPledge
-                    }
+                    onCancelPledge={props.cancelPledge}
                     onUpdatePaymentStatus={
                       props.updatePayment
                     }
@@ -275,33 +247,25 @@ class Detail extends Component {
                 </div>
               ))}
           </div>
-          <Interaction.H2>
-            Memberships
-          </Interaction.H2>
+          <Interaction.H2>Memberships</Interaction.H2>
           <div {...styles.pledges}>
-            {props.data.user.memberships.map(
-              membership => (
-                <div
-                  {...styles.pledge}
-                  key={`pledge-${membership.id}`}
-                >
-                  <MembershipOverview
-                    membership={membership}
-                  />
-                </div>
-              )
-            )}
+            {props.data.user.memberships.map(membership => (
+              <div
+                {...styles.pledge}
+                key={`pledge-${membership.id}`}
+              >
+                <MembershipOverview
+                  membership={membership}
+                />
+              </div>
+            ))}
           </div>
         </Tab>
         <Tab
           name="eventLog"
           current={this.state.selectedTab}
         >
-          <EventLog
-            entries={
-              this.props.data.user.eventLog
-            }
-          />
+          <EventLog items={this.props.data.user.eventLog} />
         </Tab>
       </div>
     )
@@ -309,9 +273,7 @@ class Detail extends Component {
 }
 
 const sendPaymentRemindersMutation = gql`
-  mutation sendPaymentReminders(
-    $paymentIds: [ID!]!
-  ) {
+  mutation sendPaymentReminders($paymentIds: [ID!]!) {
     sendPaymentReminders(paymentIds: $paymentIds)
   }
 `
@@ -377,10 +339,7 @@ const userMutation = gql`
 `
 
 const emailMutation = gql`
-  mutation updateEmail(
-    $id: ID!
-    $email: String!
-  ) {
+  mutation updateEmail($id: ID!, $email: String!) {
     updateEmail(userId: $id, email: $email) {
       id
     }
