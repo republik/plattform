@@ -20,7 +20,7 @@ const styles = {
     display: 'flex',
     flexFlow: 'row wrap',
     fontSize: '11px',
-    padding: '5px 0',
+    padding: '3px 0',
     justifyContent: 'space-around'
   }),
   initials: {
