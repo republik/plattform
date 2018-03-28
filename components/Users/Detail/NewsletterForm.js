@@ -68,15 +68,7 @@ class NewsletterSubscriptions extends Component {
     )
     return (
       <Fragment>
-        {status !== 'subscribed' && (
-          <Box style={{ margin: '10px 0', padding: 15 }}>
-            <P>
-              {t(
-                'account/newsletterSubscriptions/unsubscribed'
-              )}
-            </P>
-          </Box>
-        )}
+        <Interaction.H3>Newsletter</Interaction.H3>
         {hasNonEligibleSubscription && (
           <Box style={{ margin: '10px 0', padding: 15 }}>
             <P>

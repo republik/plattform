@@ -207,8 +207,8 @@ class Detail extends Component {
                         <Interaction.H3>
                           Statement
                         </Interaction.H3>
-                        <br />
                         <P>«{props.data.user.statement}»</P>
+                        <br />
                       </div>
                     )}
                     <NewsletterForm

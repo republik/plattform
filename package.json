@@ -6,7 +6,7 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development node server/server.js",
-    "build": "next build dist",
+    "build": "next build",
     "heroku-postbuild": "npm run build",
     "start": "node server/server.js",
     "prettier":

@@ -1,6 +1,10 @@
 import React from 'react'
 import { Table, Row, Cell } from '../../Layout/Table'
 import { colors, Label } from '@project-r/styleguide'
+import { swissTime } from '../../../lib/utils/formats'
+const dateTimeFormat = swissTime.format(
+  '%e. %B %Y %H.%M Uhr'
+)
 
 const rowStyles = index => ({
   maxHeight: '40px',
@@ -14,25 +18,19 @@ const headStyles = {
   borderBottom: `1px solid ${colors.divider}`
 }
 
-const displayDate = rawDate => {
-  const date = new Date(rawDate)
-  return `${date.getDate()}.${date.getMonth() +
-    1}.${date.getFullYear()}`
-}
-
 export default ({ items, ...props }) => (
   <Table {...props}>
     <Row style={headStyles}>
       <Cell flex="0 0 15%">
         <Label>Action</Label>
       </Cell>
-      <Cell flex="0 0 15%">
+      <Cell flex="0 0 20%">
         <Label>Date</Label>
       </Cell>
       <Cell flex="0 0 20%">
         <Label>E-Mail</Label>
       </Cell>
-      <Cell flex="0 0 40%">
+      <Cell flex="0 0 35%">
         <Label>User Agent</Label>
       </Cell>
       <Cell flex="0 0 10%">
@@ -44,13 +42,13 @@ export default ({ items, ...props }) => (
         <Cell flex="0 0 15%">
           {entry.type.split('_').join(' ')}
         </Cell>
-        <Cell flex="0 0 15%">
-          {displayDate(entry.createdAt)}
+        <Cell flex="0 0 20%">
+          {dateTimeFormat(new Date(entry.createdAt))}
         </Cell>
         <Cell flex="0 0 20%">
           {entry.archivedSession.email}
         </Cell>
-        <Cell flex="0 0 40%">
+        <Cell flex="0 0 35%">
           {entry.archivedSession.userAgent}
         </Cell>
         <Cell flex="0 0 10%">

@@ -61,9 +61,9 @@ export default class Notepad extends Component {
       notes: `
   ###### ${dateTimeFormat(new Date())}
 
-  ${this.state.message}
-
   ${this.state.notes}
+
+  ${this.state.message}
 
   `
     }
