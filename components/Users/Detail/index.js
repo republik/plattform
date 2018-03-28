@@ -9,13 +9,13 @@ import {
   colors
 } from '@project-r/styleguide'
 import ErrorMessage from '../../ErrorMessage'
+import ErrorModal from '../../Form/ErrorModal'
 
 import { css } from 'glamor'
 import UserForm from './UserForm'
 import EmailForm from './EmailForm'
 import PledgeOverview from './PledgeOverview'
 import MembershipOverview from './MembershipOverview'
-import MoveMembership from './MoveMembership'
 import EventLog from './EventLog'
 
 const GUTTER = 60
@@ -87,67 +87,12 @@ class Detail extends Component {
     }
   }
 
-  updateUser = user => {
-    this.props.updateUser(user).catch(e => {
-      this.setState(() => ({
-        errors: {
-          ...this.state.errors,
-          user: e
-        }
-      }))
+  safe = mutation => variables => {
+    mutation(variables).catch(e => {
+      this.setState({
+        mutationError: e
+      })
     })
-  }
-
-  moveMembership = ({ membershipId, userId }) => {
-    this.props
-      .moveMembership({ membershipId, userId })
-      .catch(e => {
-        this.setState(() => ({
-          errors: {
-            ...this.state.errors,
-            user: e
-          }
-        }))
-      })
-  }
-
-  movePledge = ({ pledgeId, userId }) => {
-    this.props
-      .moveMembership({ pledgeId, userId })
-      .catch(e => {
-        this.setState(() => ({
-          errors: {
-            ...this.state.errors,
-            user: e
-          }
-        }))
-      })
-  }
-
-  updateEmail = user => {
-    this.props.updateEmail(user).catch(e => {
-      this.setState(() => ({
-        errors: {
-          ...this.state.errors,
-          email: e
-        }
-      }))
-    })
-  }
-
-  sendPaymentReminders = (paymentId: string) => {
-    this.props
-      .sendPaymentReminders({
-        paymentIds: [paymentId]
-      })
-      .catch(e => {
-        this.setState(() => ({
-          errors: {
-            ...this.state.errors,
-            email: e
-          }
-        }))
-      })
   }
 
   tabLinkHandler = name => () => {
@@ -165,7 +110,7 @@ class Detail extends Component {
 
   render() {
     const props = this.props
-    console.log(props, this.state)
+
     if (props.data.error) {
       return <ErrorMessage error={props.data.error} />
     } else if (props.data.loading) {
@@ -181,6 +126,14 @@ class Detail extends Component {
           {props.data.user.username &&
             ` | ${props.data.user.username}`}
         </Label>
+        <ErrorModal
+          error={this.state.mutationError}
+          onClose={() =>
+            this.setState({
+              mutationError: null
+            })
+          }
+        />
         <div {...styles.tabNav}>
           <TabLink
             name="details"
@@ -212,14 +165,14 @@ class Detail extends Component {
             <div {...styles.span}>
               <UserForm
                 user={props.data.user}
-                onSubmit={this.updateUser}
+                onSubmit={this.safe(props.updateUser)}
               />
             </div>
             <div {...styles.span}>
               <EmailForm
                 error={this.state.errors.email}
                 user={props.data.user}
-                onSubmit={this.updateEmail}
+                onSubmit={this.safe(props.updateEmail)}
               />
               <br />
               <br />
@@ -261,16 +214,21 @@ class Detail extends Component {
                 >
                   <PledgeOverview
                     pledge={pledge}
-                    onResolvePledge={
+                    onResolvePledge={this.safe(
                       props.resolvePledgeToPayment
-                    }
-                    onCancelPledge={props.cancelPledge}
-                    onUpdatePaymentStatus={
+                    )}
+                    onCancelPledge={this.safe(
+                      props.cancelPledge
+                    )}
+                    onUpdatePaymentStatus={this.safe(
                       props.updatePayment
-                    }
-                    onRemindPayment={
-                      this.sendPaymentReminders
-                    }
+                    )}
+                    onRemindPayment={this.safe(
+                      props.sendPaymentReminders
+                    )}
+                    onMovePledge={this.safe(
+                      props.movePledge
+                    )}
                   />
                 </div>
               ))}
@@ -284,10 +242,12 @@ class Detail extends Component {
               >
                 <MembershipOverview
                   membership={membership}
-                />
-                <MoveMembership
-                  membership={membership}
-                  onSubmit={this.moveMembership}
+                  onMoveMembership={this.safe(
+                    props.moveMembership
+                  )}
+                  onReactivateMembership={this.safe(
+                    props.reactivateMembership
+                  )}
                 />
               </div>
             ))}
@@ -297,7 +257,7 @@ class Detail extends Component {
           name="eventLog"
           current={this.state.selectedTab}
         >
-          <EventLog items={this.props.data.user.eventLog} />
+          <EventLog items={props.data.user.eventLog} />
         </Tab>
       </div>
     )
@@ -327,6 +287,14 @@ const moveMembershipMutation = gql`
       membershipId: $membershipId
       userId: $userId
     ) {
+      id
+    }
+  }
+`
+
+const reactivateMembershipMutation = gql`
+  mutation reactivateMembership($id: ID!) {
+    reactivateMembership(id: $id, userId: $userId) {
       id
     }
   }
@@ -556,6 +524,28 @@ const WrappedUser = compose(
         if (mutate) {
           return mutate({
             variables: { membershipId, userId: newUserId },
+            refetchQueries: [
+              {
+                query: userQuery,
+                variables: {
+                  userId
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
+  }),
+  graphql(reactivateMembershipMutation, {
+    props: ({
+      mutate,
+      ownProps: { params: { userId } }
+    }) => ({
+      reactivateMembership: ({ id }) => {
+        if (mutate) {
+          return mutate({
+            variables: { id },
             refetchQueries: [
               {
                 query: userQuery,

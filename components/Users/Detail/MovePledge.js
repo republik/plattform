@@ -15,7 +15,7 @@ const dateTimeFormat = swissTime.format(
   '%e. %B %Y %H.%M Uhr'
 )
 
-export default class MoveMembership extends Component {
+export default class MovePledge extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -34,7 +34,7 @@ export default class MoveMembership extends Component {
     this.submitHandler = () => {
       this.setState(() => ({ user: null, isOpen: false }))
       this.props.onSubmit({
-        membershipId: this.props.membership.id,
+        pledgeId: this.props.pledge.id,
         userId: this.state.user.id
       })
     }
@@ -42,15 +42,19 @@ export default class MoveMembership extends Component {
 
   render() {
     const { isOpen, user } = this.state
-    const { membership } = this.props
+    const { pledge } = this.props
     return (
-      <div style={{ display: 'inline-block' }}>
+      <div
+        style={{
+          display: 'inline-block'
+        }}
+      >
         <Button
           onClick={() => {
             this.setState({ isOpen: true })
           }}
         >
-          Move membership
+          Move pledge
         </Button>
 
         {isOpen && (
@@ -62,29 +66,26 @@ export default class MoveMembership extends Component {
             </OverlayToolbar>
             <OverlayBody>
               <Interaction.H2>
-                Membership verschieben
+                Pledge verschieben
               </Interaction.H2>
               <br />
-              <Interaction.P>
-                #{membership.sequenceNumber} –{' '}
-                {membership.type.name.split('_').join(' ')}{' '}
-                –{' '}
-                {dateTimeFormat(
-                  new Date(membership.createdAt)
-                )}{' '}
-                –{' '}
-                {(!!membership.renew && 'ACTIVE') ||
-                  'INACTIVE'}
-              </Interaction.P>
-              {membership.periods.map((period, i) => (
-                <span key={`period-${i}`}>
+              <Interaction.H3>
+                {pledge.package.name.split('_').join(' ')} –{' '}
+                {dateTimeFormat(new Date(pledge.createdAt))}{' '}
+                – {pledge.status}
+                <br />
+                <Label>
+                  Created:{' '}
                   {dateTimeFormat(
-                    new Date(period.beginDate)
+                    new Date(pledge.createdAt)
                   )}
-                  {' - '}
-                  {dateTimeFormat(new Date(period.endDate))}
-                </span>
-              ))}
+                  {' – '}
+                  Updated:{' '}
+                  {dateTimeFormat(
+                    new Date(pledge.updatedAt)
+                  )}
+                </Label>
+              </Interaction.H3>
               <SearchUser
                 label="User auswählen"
                 value={user}

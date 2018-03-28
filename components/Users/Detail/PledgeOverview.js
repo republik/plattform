@@ -13,6 +13,7 @@ import {
   chfFormat
 } from '../../../lib/utils/formats'
 import List, { Item } from '../../List'
+import MovePledge from './MovePledge'
 
 const link = css({
   textDecoration: 'none',
@@ -93,6 +94,7 @@ const PaymentStatusButton = ({ pledge, ...props }) => {
 const PledgeOverview = ({
   pledge,
   onUpdatePaymentStatus,
+  onMovePledge,
   onResolvePledge,
   onCancelPledge,
   onRemindPayment
@@ -283,6 +285,7 @@ const PledgeOverview = ({
           pledge
         )}
       />
+      <MovePledge pledge={pledge} onSubmit={onMovePledge} />
     </div>
   )
 }

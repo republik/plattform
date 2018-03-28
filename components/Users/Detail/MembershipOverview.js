@@ -8,12 +8,17 @@ import {
 import withT from '../../../lib/withT'
 import { swissTime } from '../../../lib/utils/formats'
 import List, { Item } from '../../List'
+import MoveMembership from './MoveMembership'
 
 const dateTimeFormat = swissTime.format(
   '%e. %B %Y %H.%M Uhr'
 )
 
-const MembershipOverview = ({ membership }) => {
+const MembershipOverview = ({
+  membership,
+  onMoveMembership,
+  onReactivateMembership
+}) => {
   return (
     <div>
       <Interaction.H3>
@@ -88,6 +93,19 @@ const MembershipOverview = ({ membership }) => {
           </Interaction.P>
         </Item>
       </List>
+      <MoveMembership
+        membership={membership}
+        onSubmit={onMoveMembership}
+      />
+      {!membership.active && (
+        <Button
+          onClick={() => onReactivateMembership(membership)}
+          membership={membership}
+          onSubmit={onMoveMembership}
+        >
+          Reactivate
+        </Button>
+      )}
     </div>
   )
 }
