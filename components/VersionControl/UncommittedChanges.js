@@ -90,8 +90,8 @@ const TagsCompact = ({repo, t}) => (
 const Tags = ({repo}) => (
   <div {...styles.container}>
     {repo.uncommittedChanges.map(user =>
-      <div style={{marginRight: 4, textAlign: 'center'}}>
-        <div key={user.id} {...css(styles.initials)} style={{display: 'inline-block'}} title={user.email}>
+      <div key={user.id} style={{marginRight: 4, textAlign: 'center'}}>
+        <div {...css(styles.initials)} style={{display: 'inline-block'}} title={user.email}>
           {getInitials(user)}
         </div><br />
         <Label>
@@ -180,8 +180,8 @@ class UncommittedChanges extends Component {
           <Overlay>
             <OverlayBody>
               <Interaction.P style={{textAlign: 'center'}}>
-                <p>{t('uncommittedChanges/warning')}</p>
-              </Interaction.P>
+                {t('uncommittedChanges/warning')}
+              </Interaction.P><br />
               <Tags repo={repo} />
               <p>
                 <Button primary block onClick={() => { this.setState({suppress: true}) }}>
