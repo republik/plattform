@@ -10,20 +10,18 @@ import {
 import withT from '../../lib/withT'
 
 const usersQuery = gql`
-query users(
-  $search: String
-) {
-  users: adminUsers(
-    limit: 5
-    search: $search
-  ) {
-    count
-    items {
-      id
-      name
-      email
-      firstName
-      lastName
+  query users($search: String) {
+    users: adminUsers(limit: 5, search: $search) {
+      count
+      items {
+        id
+        name
+        email
+        firstName
+        lastName
+      }
+    }
+  }
 `
 const ConnectedAutoComplete = graphql(usersQuery, {
   skip: props => !props.filter,
