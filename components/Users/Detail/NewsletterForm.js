@@ -106,7 +106,9 @@ class NewsletterSubscriptions extends Component {
                     name,
                     subscribed: checked,
                     status
-                  }).then(finish)
+                  })
+                    .then(finish)
+                    .catch(e => console.log(e))
                 }}
               >
                 {t(

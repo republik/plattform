@@ -2016,9 +2016,17 @@
       "value": "Kein Member, deshalb keine Newsletter."
     },
     {
+      "key": "account/newsletterSubscriptions/DAILY/label",
+      "value": "Republik – Das tägliche Update"
+    },
+    {
+      "key": "account/newsletterSubscriptions/WEEKLY/label",
+      "value": "Republik – Der Wochenüberblick"
+    },
+    {
       "key":
         "account/newsletterSubscriptions/PROJECTR/label",
-      "value": "Project R Testnewsletter"
+      "value": "Project R – Wichtige Updates"
     }
   ]
 }
