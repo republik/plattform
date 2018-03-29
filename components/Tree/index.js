@@ -217,6 +217,12 @@ class Tree extends Component {
     return (
       <div
         {...styles.container}
+        style={{
+          maxWidth: Math.max(
+            CONTAINER_MAX_WIDTH,
+            CONTAINER_MAX_WIDTH / 2 + paddingLeft
+          )
+        }}
         ref={ref => {
           this.containerRef = ref
         }}
@@ -244,14 +250,18 @@ class Tree extends Component {
                 key={commit.id}
                 ref={commit.setListItemRef}
                 style={{
-                  backgroundColor: hightlight ? commit.backgroundColor : undefined,
+                  backgroundColor: hightlight
+                    ? commit.highlightColor
+                    : undefined,
                   paddingLeft
                 }}
                 {...styles.listItem}
               >
                 <div style={{
                   padding: 5,
-                  backgroundColor: hightlight ? undefined : commit.backgroundColor
+                  backgroundColor: !hightlight
+                    ? commit.backgroundColor
+                    : undefined
                 }}>
                   <Interaction.P>
                     <Link
