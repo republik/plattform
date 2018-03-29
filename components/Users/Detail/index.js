@@ -11,7 +11,7 @@ import {
 } from '@project-r/styleguide'
 import ErrorMessage from '../../ErrorMessage'
 import ErrorModal from '../../Form/ErrorModal'
-import { Table, Row, Cell } from '../../Layout/Table'
+import { Table, Row } from '../../Layout/Table'
 import { Tile } from '../../Layout/Grid'
 
 import UserForm from './UserForm'
@@ -123,8 +123,8 @@ class Detail extends Component {
     return (
       <Table>
         <Row>
-          <Cell flex="1 0">
-            <div style={{ overflow: 'hidden' }}>
+          <Tile flex="1 0">
+            <div>
               <Interaction.H1>
                 {props.data.user.name}
               </Interaction.H1>
@@ -283,7 +283,7 @@ class Detail extends Component {
                 />
               </Tab>
             </div>
-          </Cell>
+          </Tile>
           <Tile
             flex="0 0 200px"
             style={{

@@ -27,13 +27,13 @@ export default ({ items, ...props }) => (
       <Cell flex="0 0 20%">
         <Label>Date</Label>
       </Cell>
-      <Cell flex="0 0 20%">
+      <Cell flex="0 0 30%">
         <Label>E-Mail</Label>
       </Cell>
-      <Cell flex="0 0 35%">
+      <Cell flex="0 0 25%">
         <Label>User Agent</Label>
       </Cell>
-      <Cell flex="0 0 10%">
+      <Cell flex="0 0 9%">
         <Label>Current session</Label>
       </Cell>
     </Row>
@@ -45,13 +45,13 @@ export default ({ items, ...props }) => (
         <Cell flex="0 0 20%">
           {dateTimeFormat(new Date(entry.createdAt))}
         </Cell>
-        <Cell flex="0 0 20%">
+        <Cell flex="0 0 30%">
           {entry.archivedSession.email}
         </Cell>
-        <Cell flex="0 0 35%">
+        <Cell flex="0 0 25%">
           {entry.archivedSession.userAgent}
         </Cell>
-        <Cell flex="0 0 10%">
+        <Cell flex="0 0 9%">
           {' '}
           {entry.activeSession &&
           entry.activeSession.isCurrent
