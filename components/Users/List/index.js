@@ -144,7 +144,8 @@ export default graphql(usersQuery, {
             ...previousResult,
             ...{
               users: {
-                count: fetchMoreResult.users.count,
+                ...previousResult.users,
+                ...fetchMoreResult.users,
                 items: [
                   ...previousResult.users.items,
                   ...fetchMoreResult.users.items

@@ -282,7 +282,7 @@ export default compose(
                 ...{
                   postfinancePayments: {
                     ...previousResult.postfinancePayments,
-                    ...fetchMoreResult,
+                    ...fetchMoreResult.postfinancePayments,
                     items: [
                       ...previousResult.postfinancePayments
                         .items,
