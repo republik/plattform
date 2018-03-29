@@ -617,7 +617,6 @@ const WrappedUser = compose(
           return mutate({
             variables: { id },
             refetchQueries: () => {
-              console.log(arguments)
               return [
                 {
                   query: userQuery,

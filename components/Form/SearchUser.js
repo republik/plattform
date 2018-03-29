@@ -32,13 +32,9 @@ const ConnectedAutoComplete = graphql(usersQuery, {
     data: { users: { items } = { items: [] } }
   }) => {
     return {
-      items: items.slice(0, 5).map(v => ({
+      items: items.map(v => ({
         value: v,
-        text:
-          (v.firstName &&
-            v.lastName &&
-            `${v.firstName} ${v.lastName}`) ||
-          v.email
+        text: v.email
       }))
     }
   }
@@ -89,7 +85,8 @@ export class SearchUser extends Component {
         <Interaction.P style={{ minHeight: '40px' }}>
           {user && (
             <Label>
-              {user.email}
+              {user.firstName && user.firstName}
+              {user.lastName && ` ${user.lastName}`}
               {user.username && ` | ${user.username}`}
               {user.address &&
                 user.address.postalCode &&
