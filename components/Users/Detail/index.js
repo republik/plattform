@@ -551,7 +551,7 @@ const WrappedUser = compose(
               {
                 query: userQuery,
                 variables: {
-                  userId
+                  id: userId
                 }
               }
             ]
@@ -573,7 +573,7 @@ const WrappedUser = compose(
               {
                 query: userQuery,
                 variables: {
-                  userId
+                  id: userId
                 }
               }
             ]
@@ -598,7 +598,7 @@ const WrappedUser = compose(
               {
                 query: userQuery,
                 variables: {
-                  userId
+                  id: userId
                 }
               }
             ]
@@ -622,7 +622,7 @@ const WrappedUser = compose(
                 {
                   query: userQuery,
                   variables: {
-                    userId
+                    id: userId
                   }
                 }
               ]
