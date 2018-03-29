@@ -616,14 +616,17 @@ const WrappedUser = compose(
         if (mutate) {
           return mutate({
             variables: { id },
-            refetchQueries: [
-              {
-                query: userQuery,
-                variables: {
-                  userId
+            refetchQueries: () => {
+              console.log(arguments)
+              return [
+                {
+                  query: userQuery,
+                  variables: {
+                    userId
+                  }
                 }
-              }
-            ]
+              ]
+            }
           })
         }
       }

@@ -28,16 +28,20 @@ const ConnectedAutoComplete = graphql(usersQuery, {
   options: ({ filter }) => ({
     variables: { search: filter }
   }),
-  props: ({ data: { users: items = [] } }) => ({
-    items: items.slice(0, 5).map(v => ({
-      value: v,
-      text:
-        (v.firstName &&
-          v.lastName &&
-          `${v.firstName} ${v.lastName}`) ||
-        v.email
-    }))
-  })
+  props: ({
+    data: { users: { items } = { items: [] } }
+  }) => {
+    return {
+      items: items.slice(0, 5).map(v => ({
+        value: v,
+        text:
+          (v.firstName &&
+            v.lastName &&
+            `${v.firstName} ${v.lastName}`) ||
+          v.email
+      }))
+    }
+  }
 })(Autocomplete)
 
 export class SearchUser extends Component {
