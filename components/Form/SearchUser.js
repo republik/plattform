@@ -32,7 +32,11 @@ const ConnectedAutoComplete = graphql(usersQuery, {
   props: ({ data: { users = [] } }) => ({
     items: users.slice(0, 5).map(v => ({
       value: v,
-      text: `${v.firstName} ${v.lastName}`
+      text:
+        (v.firstName &&
+          v.lastName &&
+          `${v.firstName} ${v.lastName}`) ||
+        v.email
     }))
   })
 })(Autocomplete)
