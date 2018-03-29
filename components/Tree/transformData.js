@@ -1,8 +1,22 @@
-import { ascending, descending } from 'd3-array'
+import { ascending, descending, max } from 'd3-array'
+import { scaleOrdinal, schemeCategory10 } from 'd3-scale'
+import { color as d3Color } from 'd3-color'
 
 export const transformData = props => {
+  const colors = scaleOrdinal(schemeCategory10)
+    .domain(
+      []
+        .concat(props.commits)
+        .reverse()
+        .map(c => c.author.email)
+    )
+
   let commits = props.commits
     .map(commit => {
+      const color = colors(commit.author.email)
+      let backgroundColor = d3Color(color)
+      backgroundColor.opacity = 0.2
+
       return {
         id: commit.id,
         date: commit.date,
@@ -11,7 +25,9 @@ export const transformData = props => {
         parentIds: commit.parentIds,
         milestones: props.milestones.filter(o => {
           return o.commit.id === commit.id
-        })
+        }),
+        color,
+        backgroundColor: backgroundColor.toString()
       }
     })
     .sort(function (a, b) {
@@ -62,6 +78,7 @@ export const transformData = props => {
 
   return {
     commits: commits,
+    numSlots: max(commits, commit => commit.data.slotIndex + 1),
     links: links,
     parentNodes: parentNodes
   }
