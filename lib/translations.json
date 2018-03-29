@@ -1,5 +1,5 @@
 {
-  "updated": "2018-03-28T15:27:25.930Z",
+  "updated": "2018-03-29T22:27:54.445Z",
   "title": "live",
   "data": [
     {
@@ -265,6 +265,10 @@
     {
       "key": "checklist/labels/chiefEditor",
       "value": "CR OK"
+    },
+    {
+      "key": "tree/commit/localVersion",
+      "value": "Nicht committete Änderungen"
     },
     {
       "key": "tree/commit/publish",

@@ -1,17 +1,17 @@
 import React, { Component } from 'react'
 import { Link } from '../../lib/routes'
 import { css } from 'glamor'
+import LocalIcon from 'react-icons/lib/md/lock-open'
 import CheckIcon from 'react-icons/lib/md/check'
 import TagIcon from 'react-icons/lib/md/grade'
 import { transformData } from './transformData'
 import withT from '../../lib/withT'
 import { swissTime } from '../../lib/utils/format'
-import { linkRule, Interaction, Label } from '@project-r/styleguide'
+import { Interaction, Label } from '@project-r/styleguide'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
 const CONTAINER_MAX_WIDTH = 800
-const MIN_PADDING = 10
 const NODE_SIZE = 12
 const NODE_SIZE_HOVER = 16
 const LIST_MIN_WIDTH = 250
@@ -21,7 +21,7 @@ const styles = {
   container: css({
     maxWidth: `${CONTAINER_MAX_WIDTH}px`,
     margin: '0 auto',
-    padding: `0 ${MIN_PADDING}px`,
+    padding: '0 10px',
     overflow: 'hidden',
     position: 'relative',
     paddingTop: 20
@@ -70,16 +70,19 @@ const styles = {
     backgroundColor: '#fff',
     margin: `0 5px 1px -${MILESTONEICON_SIZE + 6}px`
   },
-  milestoneInfo: css({
-    display: 'block',
-    marginBottom: '5px'
-  }),
   milestoneLabel: css({
     fontWeight: 'bold'
   }),
   milestone: css({
     display: 'block',
     paddingLeft: `${MILESTONEICON_SIZE + 6}px`
+  }),
+  link: css({
+    color: 'inherit',
+    textDecoration: 'none',
+    ':hover': {
+      color: '#000'
+    }
   })
 }
 
@@ -201,7 +204,7 @@ class Tree extends Component {
   }
 
   render () {
-    const { repoId, t } = this.props
+    const { repoId, t, localStorageCommitIds = [] } = this.props
     const {
       width, height, slotWidth,
       commits, links, numSlots
@@ -233,23 +236,22 @@ class Tree extends Component {
 
         {commits &&
           <ul {...styles.list}>
-            {commits.map(commit =>
-              <li
+            {commits.map(commit => {
+              const hasLocalVersion = localStorageCommitIds
+                .indexOf(commit.id) !== -1
+              const hightlight = hasLocalVersion || commit.milestones.length
+              return <li
                 key={commit.id}
                 ref={commit.setListItemRef}
                 style={{
-                  backgroundColor: commit.milestones.length
-                    ? '#ddd'
-                    : undefined,
+                  backgroundColor: hightlight ? commit.backgroundColor : undefined,
                   paddingLeft
                 }}
                 {...styles.listItem}
               >
                 <div style={{
                   padding: 5,
-                  backgroundColor: commit.milestones.length
-                    ? undefined
-                    : commit.backgroundColor
+                  backgroundColor: hightlight ? undefined : commit.backgroundColor
                 }}>
                   <Interaction.P>
                     <Link
@@ -259,7 +261,7 @@ class Tree extends Component {
                         commitId: commit.id
                       }}
                     >
-                      <a {...linkRule}>
+                      <a {...styles.link}>
                         {commit.message}
                       </a>
                     </Link>
@@ -271,28 +273,32 @@ class Tree extends Component {
                   </Label>
                   <br />
                   <br />
-                  {commit.milestones.length > 0 &&
-                  <span>
-                    <span {...styles.milestoneInfo}>
-                      {commit.milestones.map((milestone, i) =>
-                        <span {...styles.milestone} key={i}>
-                          {milestone.immutable
-                            ? <TagIcon
-                              color='#000'
-                              size={MILESTONEICON_SIZE}
-                              style={styles.checkIcon} />
-                            : <CheckIcon
-                              color='#000'
-                              size={MILESTONEICON_SIZE}
-                              style={styles.checkIcon} />}
-                          <span {...styles.milestoneLabel}>
-                            {t(`checklist/labels/${milestone.name}`, undefined, milestone.name)}{' '}
-                          </span>
-                          {milestone.author.name}
-                        </span>
-                        )}
+                  {hasLocalVersion && <span {...styles.milestone}>
+                    <LocalIcon
+                      color='#000'
+                      size={MILESTONEICON_SIZE}
+                      style={styles.checkIcon} />
+                    <span {...styles.milestoneLabel}>
+                      {t('tree/commit/localVersion')}
                     </span>
                   </span>}
+                  {commit.milestones.map((milestone, i) =>
+                    <span {...styles.milestone} key={i}>
+                      {milestone.immutable
+                        ? <TagIcon
+                          color='#000'
+                          size={MILESTONEICON_SIZE}
+                          style={styles.checkIcon} />
+                        : <CheckIcon
+                          color='#000'
+                          size={MILESTONEICON_SIZE}
+                          style={styles.checkIcon} />}
+                      <span {...styles.milestoneLabel}>
+                        {t(`checklist/labels/${milestone.name}`, undefined, milestone.name)}{' '}
+                      </span>
+                      {milestone.author.name}
+                    </span>
+                  )}
                   <Interaction.P>
                     <Label>
                       <Link
@@ -302,7 +308,7 @@ class Tree extends Component {
                           commitId: commit.id
                         }}
                       >
-                        <a {...linkRule}>
+                        <a {...styles.link}>
                           {t('tree/commit/publish')}
                         </a>
                       </Link>
@@ -310,7 +316,7 @@ class Tree extends Component {
                   </Interaction.P>
                 </div>
               </li>
-            )}
+            })}
           </ul>}
 
         {width &&

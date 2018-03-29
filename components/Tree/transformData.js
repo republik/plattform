@@ -1,9 +1,12 @@
 import { ascending, descending, max } from 'd3-array'
-import { scaleOrdinal, schemeCategory10 } from 'd3-scale'
+import { scaleOrdinal } from 'd3-scale'
 import { color as d3Color } from 'd3-color'
 
 export const transformData = props => {
-  const colors = scaleOrdinal(schemeCategory10)
+  const colors = scaleOrdinal([
+    '#D0A2CA', '#9383BD', '#AD5676', '#EA8B64', '#C9B71D', '#90AA00',
+    '#8A786A', '#6DBF9B', '#159B73', '#4772BA', '#006B95', '#229EDC'
+  ])
     .domain(
       []
         .concat(props.commits)
@@ -24,7 +27,7 @@ export const transformData = props => {
         message: commit.message,
         parentIds: commit.parentIds,
         milestones: props.milestones.filter(o => {
-          return o.commit.id === commit.id
+          return o.commit.id === commit.id && o.name !== 'meta'
         }),
         color,
         backgroundColor: backgroundColor.toString()
