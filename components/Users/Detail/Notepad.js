@@ -59,9 +59,10 @@ export default class Notepad extends Component {
   submitHandler = () => {
     const res = {
       notes: `
-  ###### ${dateTimeFormat(new Date())}
 
   ${this.state.notes}
+
+  ###### ${dateTimeFormat(new Date())}
 
   ${this.state.message}
 
