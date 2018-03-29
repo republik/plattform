@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { gql, graphql } from 'react-apollo'
 import { css, merge } from 'glamor'
 import {
@@ -175,32 +175,34 @@ class UncommittedChanges extends Component {
 
     return (
       <Loader loading={loading} error={error} render={() => (
-        <div>
+        <Fragment>
           {this.state.isOpen && (
-          <Overlay onClose={() => {}}>
-            <OverlayBody>
-              <Interaction.P style={{textAlign: 'center'}}>
-                {t('uncommittedChanges/warning')}
-              </Interaction.P><br />
-              <Tags repo={repo} />
-              <p>
-                <Button primary block onClick={() => { this.setState({suppress: true}) }}>
-                  {t('uncommittedChanges/ignore')}
-                </Button>
-              </p>
-              <p>
-                <Button block onClick={this.revertHandler}>
-                  {t('uncommittedChanges/revert')}
-                </Button>
-              </p>
-            </OverlayBody>
-          </Overlay>
-            )}
-          <div style={{ textAlign: 'center', fontSize: '14px', marginTop: 7 }}>
-            <Label key='label'>{t('uncommittedChanges/title')}</Label>
-          </div>
-          <TagsCompact repo={repo} t={t} />
-        </div>
+            <Overlay onClose={() => {}}>
+              <OverlayBody>
+                <Interaction.P style={{textAlign: 'center'}}>
+                  {t('uncommittedChanges/warning')}
+                </Interaction.P><br />
+                <Tags repo={repo} />
+                <p>
+                  <Button primary block onClick={() => { this.setState({suppress: true}) }}>
+                    {t('uncommittedChanges/ignore')}
+                  </Button>
+                </p>
+                <p>
+                  <Button block onClick={this.revertHandler}>
+                    {t('uncommittedChanges/revert')}
+                  </Button>
+                </p>
+              </OverlayBody>
+            </Overlay>
+          )}
+          {!!repo.uncommittedChanges.length && <Fragment>
+            <div style={{ textAlign: 'center', fontSize: '14px', marginTop: 7 }}>
+              <Label key='label'>{t('uncommittedChanges/title')}</Label>
+            </div>
+            <TagsCompact repo={repo} t={t} />
+          </Fragment>}
+        </Fragment>
       )} />
     )
   }

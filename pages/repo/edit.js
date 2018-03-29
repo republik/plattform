@@ -511,14 +511,13 @@ class EditorPage extends Component {
               />
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
-            {!!repo && ([
+            {!!repo &&
               <UncommittedChanges
-                key='uncommittedChanges'
                 repoId={repo.id}
                 onRevert={this.revertHandler}
                 uncommittedChanges={uncommittedChanges}
               />
-            ])}
+            }
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
             <Frame.Me />
