@@ -73,7 +73,10 @@ const MembershipOverview = ({
             <Label>Periods</Label>
             <br />
             {membership.periods.map((period, i) => (
-              <span key={`period-${i}`}>
+              <span
+                style={{ display: 'inline-block' }}
+                key={`period-${i}`}
+              >
                 {dateTimeFormat(new Date(period.beginDate))}
                 {' - '}
                 {dateTimeFormat(new Date(period.endDate))}
