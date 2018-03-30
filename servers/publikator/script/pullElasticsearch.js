@@ -120,7 +120,8 @@ const documentIndex = {
       dynamic: false,
       properties: {
         contentString: {
-          type: 'text'
+          type: 'text',
+          analyzer: 'german'
         },
         content: {
           type: 'object',
@@ -130,10 +131,12 @@ const documentIndex = {
         meta: {
           properties: {
             title: {
-              type: 'text'
+              type: 'text',
+              analyzer: 'german'
             },
             description: {
-              type: 'text'
+              type: 'text',
+              analyzer: 'german'
             },
             publishDate: {
               type: 'date'
@@ -143,7 +146,8 @@ const documentIndex = {
             },
             slug: {
               type: 'text',
-              ...keywordPartial
+              ...keywordPartial,
+              analyzer: 'german'
             },
             path: {
               type: 'text',
@@ -154,7 +158,8 @@ const documentIndex = {
             },
             authors: {
               type: 'text',
-              ...keywordPartial
+              ...keywordPartial,
+              analyzer: 'german'
             },
             dossier: {
               type: 'keyword'
