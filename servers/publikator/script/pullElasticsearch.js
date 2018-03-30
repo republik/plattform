@@ -17,7 +17,6 @@ const util = require('util')
 
 const elastic = new elasticsearch.Client({
   host: 'localhost:9200'
-  // log: 'trace'
 })
 
 const INDEX = 'documents'
@@ -50,11 +49,6 @@ PgDb.connect().then(async pgdb => {
   const documents = await getDocuments(null, {}, context)
     .then(docs => docs.nodes
       .map(d => {
-        /* if(d.content.meta.path !== '/2018/01/19/daniels-testserien-master') {
-          return null
-        }
-        */
-        const content = d.content
         const meta = {
           ...d.content.meta,
           ...getStaticMeta(d)
@@ -79,19 +73,18 @@ PgDb.connect().then(async pgdb => {
           body: {
             meta: {
               ...meta,
-              repoId: `https://github.com/${d.repoId}`,
               series,
               seriesMaster,
               authors: meta.credits && meta.credits
                 .filter(c => c.type === 'link')
                 .map(a => a.children[0].value)
             },
-            contentString: mdastToString(content),
-            content
+            repoId: d.repoId,
+            contentString: mdastToString(d.content),
+            content: d.content
           }
         }
       })
-      .filter(d => d !== null)
     )
 
   for (let doc of documents) {
