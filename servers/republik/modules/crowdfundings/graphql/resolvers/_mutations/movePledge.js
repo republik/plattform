@@ -33,6 +33,15 @@ module.exports = async (_, args, { pgdb, req, user: me, t, mail: { enforceSubscr
       userId: pledge.userId
     }
     const memberships = await transaction.public.memberships.find(membershipsFind)
+    if (memberships.length > 0) {
+      const membershipType = await transaction.public.membershipTypes.findOne({
+        id: memberships[0].membershipTypeId
+      })
+      if (membershipType.name === 'MONTHLY_ABO') {
+        throw new Error(t('api/membership/move/monthlyDenied'))
+      }
+    }
+
     // avoid multiple active memberships for one user
     const userHasActiveMembership = !!await transaction.public.memberships.findFirst({
       userId: user.id,

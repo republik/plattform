@@ -1,5 +1,5 @@
 {
-  "updated": "2018-03-19T17:29:58.883Z",
+  "updated": "2018-03-30T14:10:48.048Z",
   "title": "live",
   "data": [
     {
@@ -65,6 +65,10 @@
     {
       "key": "api/membership/move/otherActive",
       "value": "Der Ziel User hat bereits eine aktive Mitgliedschaft."
+    },
+    {
+      "key": "api/membership/move/monthlyDenied",
+      "value": "Monats-Abos können nicht verschoben werden."
     },
     {
       "key": "api/pledge/alreadyPaid",

@@ -15,6 +15,12 @@ module.exports = async (_, args, { pgdb, req, user: me, t, mail: { enforceSubscr
     if (!membership) {
       throw new Error(t('api/membership/404'))
     }
+    const membershipType = await transaction.public.membershipTypes.findOne({
+      id: membership.membershipTypeId
+    })
+    if (membershipType.name === 'MONTHLY_ABO') {
+      throw new Error(t('api/membership/move/monthlyDenied'))
+    }
 
     const user = await transaction.public.users.findOne({ id: userId })
     if (!user) {
