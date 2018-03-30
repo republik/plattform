@@ -7,8 +7,8 @@ import {
 import withMe from '../../../lib/withMe'
 
 const RolesForm = ({ me, user, onAdd, onRemove }) => {
-  if (me.roles.indexOf('admin') < 0) {
-    return
+  if (me && me.roles.indexOf('admin') < 0) {
+    return null
   }
   return (
     <div>

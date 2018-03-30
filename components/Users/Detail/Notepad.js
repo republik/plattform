@@ -12,11 +12,12 @@ import remarkReactRenderer from 'remark-react'
 import TextareaAutosize from 'react-autosize-textarea'
 
 import { swissTime } from '../../../lib/utils/formats'
+import withMe from '../../../lib/withMe'
 const dateTimeFormat = swissTime.format(
   '%e. %B %Y %H.%M Uhr'
 )
 
-export default class Notepad extends Component {
+class Notepad extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -60,13 +61,15 @@ export default class Notepad extends Component {
     const res = {
       notes: `
 
-  ${this.state.notes}
+###### ${this.props.me.name} am ${dateTimeFormat(
+        new Date()
+      )}
 
-  ###### ${dateTimeFormat(new Date())}
+${this.state.message}
 
-  ${this.state.message}
+${this.state.notes}
 
-  `
+`
     }
     this.setState({ ...res, message: null })
     this.props.onSubmit(res)
@@ -99,3 +102,5 @@ export default class Notepad extends Component {
     )
   }
 }
+
+export default withMe(Notepad)
