@@ -57,6 +57,11 @@ input DocumentInput {
   content: JSON!
 }
 
+input DateRange {
+  from: Date
+  to: Date
+}
+
 interface FileInterface {
   content: JSON!
   meta: Meta!
@@ -67,6 +72,35 @@ type Document implements FileInterface {
   # AST of /article.md
   content: JSON!
   meta: Meta!
+}
+
+type DocumentSearchNode {
+  document: Document!
+  highlights: [String!]!
+  score: Float!
+}
+
+type SearchAggregation {
+  buckets: [Bucket!]!
+}
+
+type Bucket {
+  key: String!
+  count: Int!
+}
+
+type DocumentSearchStats {
+  authors: SearchAggregation!
+  podcasts: Int!
+  dossiers: SearchAggregation!
+  formats: SearchAggregation!
+  seriesMasters: SearchAggregation!
+  discussions: Int!
+}
+
+type DocumentSearchConnection {
+  nodes: [DocumentSearchNode!]!
+  stats: DocumentSearchStats!
 }
 
 type DocumentPageInfo {
