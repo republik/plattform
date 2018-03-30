@@ -124,6 +124,7 @@ const documentIndex = {
   aliases: {},
   mappings: {
     document: {
+      dynamic: false,
       properties: {
         contentString: {
           type: 'text'
