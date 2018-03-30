@@ -1,35 +1,125 @@
-module.exports = async (_, { search }, { user, elastic }) => {
+class TermCriteria {
+  constructor (fieldName) {
+    this.fieldName = fieldName
+  }
+
+  create (value) {
+    return {
+      clause: 'must',
+      filter: {
+        term: { [this.fieldName]: value }
+      }
+    }
+  }
+}
+
+class HasCriteria {
+  constructor (fieldName) {
+    this.fieldName = fieldName
+  }
+
+  create (value) {
+    return {
+      clause: value ? 'must' : 'must_not',
+      filter: {
+        exists: {
+          field: this.fieldName
+        }
+      }
+    }
+  }
+}
+
+class DateRangeCriteria {
+  constructor (fieldName) {
+    this.fieldName = fieldName
+  }
+
+  create (range) {
+    return {
+      clause: 'must',
+      filter: {
+        range: {
+          [this.fieldName]: {
+            gte: range.from,
+            lte: range.to
+          }
+        }
+      }
+    }
+  }
+}
+
+class BoolFilterBuilder {
+  constructor (filterCriterias) {
+    this.filterCriterias = filterCriterias
+  }
+
+  createFilter (filter) {
+    if (!filter) {
+      return {}
+    }
+
+    return Object.keys(filter).reduce((boolFilter, searchFilterFieldName) => {
+      const filterValue = filter[searchFilterFieldName]
+      const criteria = this.filterCriterias[searchFilterFieldName]
+      if (!criteria) {
+        throw new Error(`Missing filter criteria for filter field ${searchFilterFieldName}`)
+      }
+
+      const created = criteria.create(filterValue)
+      boolFilter[created.clause] = [...(boolFilter[created.clause] || []), created.filter]
+      return boolFilter
+    }, {})
+  }
+}
+
+const PAGE_SIZE = 10
+const boolFilterBuilder = new BoolFilterBuilder({
+  author: new TermCriteria('meta.authors.keyword'),
+  dossier: new TermCriteria('meta.dossier'),
+  format: new TermCriteria('meta.format'),
+  seriesMaster: new TermCriteria('meta.seriesMaster'),
+  audio: new HasCriteria('audio', 'meta.audioSource.mp3'),
+  discussion: new HasCriteria('meta.discussionId'),
+  published: new DateRangeCriteria('meta.publishedDate')
+})
+
+module.exports = async (_, { search, page, filter }, { user, elastic }) => {
   const result = await elastic.search({
     index: 'documents',
     type: 'document',
-    body: createQuery(search)
+    from: (page - 1) * PAGE_SIZE,
+    size: PAGE_SIZE,
+    body: createQuery(search, filter)
   })
 
-  const mapped = mapSearchResult(result)
-  console.log(result)
-  console.log(mapped)
-  return mapped
-}
-
-function mapSearchResult (result) {
   return {
     nodes: result.hits.hits.map(mapDocumentHit),
-    stats: mapStats(result.aggregations)
+    stats: mapStats(result),
+    pageInfo: {
+      startCursor: '1',
+      hasPreviousPage: page > 1,
+      hasNextPage: result.hits.total - page * PAGE_SIZE > 0,
+      endCursor: Math.ceil(result.hits.total / PAGE_SIZE)
+    }
   }
 }
 
 function mapDocumentHit (hit) {
   return {
     document: hit._source,
-    highlights: hit.highlight.contentString || [],
+    highlights: (hit.highlight || {}).contentString || [],
     score: hit._score
   }
 }
 
-function mapStats (aggregations) {
+function mapStats (result) {
+  const aggregations = result.aggregations
   return {
+    total: result.hits.total,
     formats: mapAggregation(aggregations.formats),
-    podcasts: aggregations.podcasts.value,
+    audios: aggregations.audios.value,
     dossiers: mapAggregation(aggregations.dossiers),
     discussions: aggregations.discussions.value,
     seriesMasters: mapAggregation(aggregations.seriesMasters),
@@ -50,35 +140,26 @@ function mapBucket (bucket) {
   }
 }
 
-function createQuery (searchTerm) {
+function createQuery (searchTerm, filter) {
   return {
     _source: ['meta.*', 'content'],
     query: {
       bool: {
-        must: {
-          multi_match: {
-            query: searchTerm,
-            fields: [
-              'meta.title^3',
-              'meta.description^2',
-              'meta.authors^2',
-              'contentString'
-            ]
+        must: searchTerm
+          ? {
+            multi_match: {
+              query: searchTerm,
+              fields: [
+                'meta.title^3',
+                'meta.description^2',
+                'meta.authors^2',
+                'contentString'
+              ]
+            }
           }
-        },
+          : { match_all: {} },
         filter: {
-          bool: {
-            must: [
-              {
-                range: {
-                  'meta.publishDate': {
-                    gte: '2018-01-01',
-                    lte: '2018-02-03'
-                  }
-                }
-              }
-            ]
-          }
+          bool: boolFilterBuilder.createFilter(filter)
         }
       }
     },
@@ -93,7 +174,7 @@ function createQuery (searchTerm) {
           field: 'meta.authors.keyword'
         }
       },
-      podcasts: {
+      audios: {
         value_count: {
           field: 'meta.audioSource.mp3'
         }

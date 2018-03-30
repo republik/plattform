@@ -21,7 +21,8 @@ type queries {
 
   documentsSearch(
     search: String!
-    dateRange: DateRange
+    page: Int
+    filter: DocumentSearchFilters
   ): DocumentSearchConnection!
 }
 `
