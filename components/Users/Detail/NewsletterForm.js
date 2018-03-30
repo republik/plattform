@@ -103,6 +103,7 @@ class NewsletterSubscriptions extends Component {
                     }))
                   }
                   updateNewsletterSubscription({
+                    userId: user.id,
                     name,
                     subscribed: checked,
                     status
@@ -130,11 +131,13 @@ class NewsletterSubscriptions extends Component {
 
 const mutation = gql`
   mutation updateNewsletterSubscription(
+    $userId: ID!
     $name: NewsletterName!
     $subscribed: Boolean!
     $status: String!
   ) {
     updateNewsletterSubscription(
+      userId: $userId
       name: $name
       subscribed: $subscribed
       status: $status
@@ -170,10 +173,12 @@ export default compose(
       updateNewsletterSubscription: ({
         name,
         subscribed,
-        status
+        status,
+        userId
       }) =>
         mutate({
           variables: {
+            userId,
             name,
             subscribed,
             status
