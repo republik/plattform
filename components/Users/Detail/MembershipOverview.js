@@ -107,7 +107,7 @@ const MembershipOverview = ({
           membership={membership}
           onSubmit={onMoveMembership}
         >
-          Reactivate
+          (Re)Activate membership
         </Button>
       )}
     </div>
