@@ -82,7 +82,7 @@ const boolFilterBuilder = new BoolFilterBuilder({
   seriesMaster: new TermCriteria('meta.seriesMaster'),
   audio: new HasCriteria('audio', 'meta.audioSource.mp3'),
   discussion: new HasCriteria('meta.discussionId'),
-  published: new DateRangeCriteria('meta.publishedDate')
+  published: new DateRangeCriteria('meta.publishDate')
 })
 
 module.exports = async (_, { search, page, filter }, { user, elastic }) => {
