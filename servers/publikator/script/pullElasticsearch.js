@@ -62,16 +62,19 @@ PgDb.connect().then(async pgdb => {
         // const content = Document.content(d, {}, context)
         // delete content.meta.series
         // const meta = Document.meta(d, {}, context)
+        const seriesMaster = typeof meta.series === 'string'
+          ? meta.series
+          : null
         const series = typeof meta.series === 'object'
-          ? meta.series.episodes.forEach(e => {
+          ? meta.series
+          : null
+        if (series) {
+          meta.series.episodes.forEach(e => {
             if (e.publishDate === '') {
               e.publishDate = null
             }
           })
-          : null
-        const seriesMaster = typeof meta.series === 'string'
-          ? meta.series
-          : null
+        }
         return {
           id: d.id,
           body: {
