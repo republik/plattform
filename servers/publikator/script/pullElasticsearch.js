@@ -60,7 +60,6 @@ PgDb.connect().then(async pgdb => {
           ...getStaticMeta(d)
         }
         // const content = Document.content(d, {}, context)
-        // delete content.meta.series
         // const meta = Document.meta(d, {}, context)
         const seriesMaster = typeof meta.series === 'string'
           ? meta.series
@@ -69,7 +68,7 @@ PgDb.connect().then(async pgdb => {
           ? meta.series
           : null
         if (series) {
-          meta.series.episodes.forEach(e => {
+          series.episodes.forEach(e => {
             if (e.publishDate === '') {
               e.publishDate = null
             }
@@ -87,7 +86,8 @@ PgDb.connect().then(async pgdb => {
                 .filter(c => c.type === 'link')
                 .map(a => a.children[0].value)
             },
-            contentString: mdastToString(content)
+            contentString: mdastToString(content),
+            content
           }
         }
       })
@@ -128,33 +128,24 @@ const documentIndex = {
         contentString: {
           type: 'text'
         },
+        content: {
+          type: 'object',
+          dynamic: false,
+          enabled: false
+        },
         meta: {
           properties: {
             title: {
-              type: 'text',
-              ...keywordPartial
+              type: 'text'
             },
             description: {
               type: 'text'
             },
-            feed: {
-              type: 'boolean'
+            publishDate: {
+              type: 'date'
             },
-            authors: {
-              type: 'text',
-              ...keywordPartial
-            },
-            dossier: {
-              type: 'text',
-              ...keywordPartial
-            },
-            format: {
-              type: 'text',
-              ...keywordPartial
-            },
-            kind: {
-              type: 'text',
-              ...keywordPartial
+            repoId: {
+              type: 'keyword'
             },
             slug: {
               type: 'text',
@@ -164,36 +155,40 @@ const documentIndex = {
               type: 'text',
               ...keywordPartial
             },
-            publishDate: {
-              type: 'date'
+            feed: {
+              type: 'boolean'
             },
-            repoId: {
+            authors: {
               type: 'text',
               ...keywordPartial
+            },
+            dossier: {
+              type: 'keyword'
+            },
+            format: {
+              type: 'keyword'
+            },
+            kind: {
+              type: 'keyword'
             },
             template: {
-              type: 'text',
-              ...keywordPartial
+              type: 'keyword'
             },
             discussionId: {
-              type: 'text',
-              ...keywordPartial
+              type: 'keyword'
             },
             seriesMaster: {
-              type: 'text',
-              ...keywordPartial
+              type: 'keyword'
             },
             series: {
               properties: {
                 episodes: {
                   properties: {
                     document: {
-                      type: 'text',
-                      ...keywordPartial
+                      type: 'keyword'
                     },
                     image: {
-                      type: 'text',
-                      ...keywordPartial
+                      type: 'keyword'
                     },
                     label: {
                       type: 'text',
@@ -217,88 +212,19 @@ const documentIndex = {
             audioSource: {
               properties: {
                 mp3: {
-                  type: 'text',
-                  ...keywordPartial
+                  type: 'keyword'
                 },
                 aac: {
-                  type: 'text',
-                  ...keywordPartial
+                  type: 'keyword'
                 },
                 ogg: {
-                  type: 'text',
-                  ...keywordPartial
+                  type: 'keyword'
                 }
               }
             },
             color: {
-              type: 'text',
-              ...keywordPartial
+              type: 'keyword'
             }
-                   /*
-            discussionAnonymity: {
-              type: 'text',
-              fields: {
-                keyword: {
-                  type: 'keyword',
-                  ignore_above: 256
-                }
-              }
-            },
-            emailSubject: {
-              type: 'text',
-              fields: {
-                keyword: {
-                  type: 'keyword',
-                  ignore_above: 256
-                }
-              }
-            },
-            facebookDescription: {
-              type: 'text',
-              fields: {
-                keyword: {
-                  type: 'keyword',
-                  ignore_above: 256
-                }
-              }
-            },
-            facebookTitle: {
-              type: 'text',
-              fields: {
-                keyword: {
-                  type: 'keyword',
-                  ignore_above: 256
-                }
-              }
-            },
-            image: {
-              type: 'text',
-              fields: {
-                keyword: {
-                  type: 'keyword',
-                  ignore_above: 256
-                }
-              }
-            },
-            twitterDescription: {
-              type: 'text',
-              fields: {
-                keyword: {
-                  type: 'keyword',
-                  ignore_above: 256
-                }
-              }
-            },
-            twitterTitle: {
-              type: 'text',
-              fields: {
-                keyword: {
-                  type: 'keyword',
-                  ignore_above: 256
-                }
-              }
-            }
-            */
           }
         }
       }
