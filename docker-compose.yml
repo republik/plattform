@@ -1,31 +1,26 @@
 # in order to get elastic to work, see https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html#docker-cli-run-prod-mode
 elastic:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.3
-    container_name: elasticsearch
-    environment:
-      - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    volumes:
-      - ./docker-data/elastic:/usr/share/elasticsearch/data
-    ports:
-      - 9200:9200
-# kibana:
-#     image: docker.elastic.co/kibana/kibana:6.2.3
-#     environment:
-#         ELASTICSEARCH_URL: http://localhost:9200
+  image: docker.elastic.co/elasticsearch/elasticsearch:6.2.3
+  container_name: elasticsearch
+  environment:
+    - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
+  ulimits:
+    memlock:
+      soft: -1
+      hard: -1
+  volumes:
+    - ./docker-data/elastic:/usr/share/elasticsearch/data
+  ports:
+    - 9200:9200
 redis:
-    image: redis:alpine
-    ports:
-        - 6379:6379
-    volumes:
-      - ./docker-data/redis:/data
-    ports:
+  image: redis:alpine
+  ports:
+    - 6379:6379
+  volumes:
+    - ./docker-data/redis:/data
 postgres:
-    image: postgres:10
-    volumes:
-      - ./pgdata:/var/lib/postgresql/data
-    ports:
-        - 5432:5432
+  image: postgres:10
+  volumes:
+    - ./docker-data/postgres:/var/lib/postgresql/data
+  ports:
+    - 5432:5432
