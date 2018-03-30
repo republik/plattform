@@ -17,6 +17,7 @@ import { Tile } from '../../Layout/Grid'
 import UserForm from './UserForm'
 import EmailForm from './EmailForm'
 import NewsletterForm from './NewsletterForm'
+import RolesForm from './RolesForm'
 import PledgeOverview from './PledgeOverview'
 import MembershipOverview from './MembershipOverview'
 import EventLog from './EventLog'
@@ -213,7 +214,13 @@ class Detail extends Component {
                     )}
                     <NewsletterForm
                       user={props.data.user}
-                      onChange={() => {}}
+                    />
+                    <RolesForm
+                      user={props.data.user}
+                      onAdd={this.safe(props.addUserToRole)}
+                      onRemove={this.safe(
+                        props.removeUserFromRole
+                      )}
                     />
                   </div>
                 </div>
@@ -306,6 +313,25 @@ class Detail extends Component {
 const sendPaymentRemindersMutation = gql`
   mutation sendPaymentReminders($paymentIds: [ID!]!) {
     sendPaymentReminders(paymentIds: $paymentIds)
+  }
+`
+
+const removeUserFromRoleMutation = gql`
+  mutation removeUserFromRole(
+    $userId: ID!
+    $role: String!
+  ) {
+    removeUserFromRole(userId: $userId, role: $role) {
+      id
+    }
+  }
+`
+
+const addUserToRoleMutation = gql`
+  mutation addUserToRole($userId: ID!, $role: String!) {
+    addUserToRole(userId: $userId, role: $role) {
+      id
+    }
   }
 `
 
@@ -547,6 +573,50 @@ const WrappedUser = compose(
         if (mutate) {
           return mutate({
             variables: { pledgeId, userId: newUserId },
+            refetchQueries: [
+              {
+                query: userQuery,
+                variables: {
+                  id: userId
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
+  }),
+  graphql(addUserToRoleMutation, {
+    props: ({
+      mutate,
+      ownProps: { params: { userId } }
+    }) => ({
+      addUserToRole: ({ role }) => {
+        if (mutate) {
+          return mutate({
+            variables: { role, userId },
+            refetchQueries: [
+              {
+                query: userQuery,
+                variables: {
+                  id: userId
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
+  }),
+  graphql(removeUserFromRoleMutation, {
+    props: ({
+      mutate,
+      ownProps: { params: { userId } }
+    }) => ({
+      removeUserFromRole: ({ role }) => {
+        if (mutate) {
+          return mutate({
+            variables: { role, userId },
             refetchQueries: [
               {
                 query: userQuery,
