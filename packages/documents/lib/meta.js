@@ -1,16 +1,7 @@
 const visit = require('unist-util-visit')
 const { metaFieldResolver } = require('./resolve')
 
-const getMeta = doc => {
-  if (doc._meta) {
-    return doc._meta
-  }
-
-  // see _all note in Document.content resolver
-  const resolvedFields = doc._all
-    ? metaFieldResolver(doc.content.meta, doc._all)
-    : { }
-
+const getStaticMeta = doc => {
   let credits = []
   visit(doc.content, 'zone', node => {
     if (node.identifier === 'TITLE') {
@@ -29,15 +20,31 @@ const getMeta = doc => {
     ogg: audioSourceOgg
   } : null
 
+  return {
+    credits,
+    audioSource
+  }
+}
+
+const getMeta = doc => {
+  if (doc._meta) {
+    return doc._meta
+  }
+
+  // see _all note in Document.content resolver
+  const resolvedFields = doc._all
+    ? metaFieldResolver(doc.content.meta, doc._all)
+    : { }
+
   doc._meta = {
     ...doc.content.meta,
-    credits,
-    ...resolvedFields,
-    audioSource
+    ...getStaticMeta(doc),
+    ...resolvedFields
   }
   return doc._meta
 }
 
 module.exports = {
-  getMeta
+  getMeta,
+  getStaticMeta
 }
