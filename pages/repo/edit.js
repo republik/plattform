@@ -157,9 +157,10 @@ class EditorPage extends Component {
       committing: false,
       editorState: null,
       repo: null,
-      uncommittedChanges: null,
+      hasUncommittedChanges: null,
       warnings: [],
-      showSidebar: true
+      showSidebar: true,
+      readOnly: true
     }
   }
 
@@ -175,10 +176,11 @@ class EditorPage extends Component {
     }))
   }
 
-  beginChanges (repoId) {
+  beginChanges (repoId, hasUncommittedChanges = true) {
     const { t } = this.props
     this.setState({
-      uncommittedChanges: true
+      hasUncommittedChanges,
+      readOnly: false
     })
     this.props.uncommittedChangesMutation({
       repoId: repoId,
@@ -192,7 +194,7 @@ class EditorPage extends Component {
   concludeChanges (repoId) {
     const { t } = this.props
     this.setState({
-      uncommittedChanges: false
+      hasUncommittedChanges: false
     })
     this.props.uncommittedChangesMutation({
       repoId: repoId,
@@ -372,7 +374,7 @@ class EditorPage extends Component {
 
   documentChangeHandler (_, {value: newEditorState}) {
     const { url: { query: { repoId } } } = this.props
-    const { committedRawDocString, uncommittedChanges } = this.state
+    const { committedRawDocString, hasUncommittedChanges } = this.state
 
     if (
       JSON.stringify(newEditorState.document.toJSON()) !== committedRawDocString
@@ -390,12 +392,12 @@ class EditorPage extends Component {
         )
       }
 
-      if (!uncommittedChanges) {
+      if (!hasUncommittedChanges) {
         this.beginChanges(repoId)
       }
     } else {
       debug('loadState', 'documentChangeHandler', 'committed document')
-      if (uncommittedChanges) {
+      if (hasUncommittedChanges) {
         this.store.clear()
         this.concludeChanges(repoId)
       }
@@ -467,9 +469,10 @@ class EditorPage extends Component {
       schema,
       editorState,
       committing,
-      uncommittedChanges,
+      hasUncommittedChanges,
       warnings,
-      showSidebar
+      showSidebar,
+      readOnly
     } = this.state
     const sidebarWidth = 200
 
@@ -483,7 +486,11 @@ class EditorPage extends Component {
 
     return (
       <Frame url={url} raw nav={nav}>
-        <Frame.Header>
+        <Frame.Header barStyle={{
+          borderBottom: readOnly
+            ? `3px solid ${colors.error}`
+            : undefined
+        }}>
           <Frame.Header.Section align='left'>
             <Frame.Nav url={url}>
               <RepoNav route='repo/edit' url={url} isNew={isNew} />
@@ -505,17 +512,19 @@ class EditorPage extends Component {
           <Frame.Header.Section align='right'>
             <CommitButton
               isNew={isNew}
-              uncommittedChanges={uncommittedChanges}
+              readOnly={readOnly}
+              onBeginChanges={() => this.beginChanges(repoId, false)}
+              hasUncommittedChanges={hasUncommittedChanges}
               onCommit={this.commitHandler}
               onRevert={this.revertHandler}
-              />
+            />
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
             {!!repo &&
               <UncommittedChanges
                 repoId={repo.id}
                 onRevert={this.revertHandler}
-                uncommittedChanges={uncommittedChanges}
+                uncommittedChanges={hasUncommittedChanges}
               />
             }
           </Frame.Header.Section>
@@ -533,21 +542,24 @@ class EditorPage extends Component {
                 value={editorState}
                 onChange={this.changeHandler}
                 onDocumentChange={this.documentChangeHandler}
+                readOnly={readOnly}
               />
-              <Sidebar warnings={warnings} selectedTabId='edit' isOpen={showSidebar}>
-                <Sidebar.Tab tabId='edit' label='Editieren'>
+              <Sidebar warnings={warnings}
+                selectedTabId={readOnly ? 'workflow' : 'edit'}
+                isOpen={showSidebar}>
+                {!readOnly && <Sidebar.Tab tabId='edit' label='Editieren'>
                   {!!this.editor && <EditorUI
                     editorRef={this.editor}
                     onChange={this.uiChangeHandler}
                     value={editorState}
                   />}
-                </Sidebar.Tab>
+                </Sidebar.Tab>}
                 <Sidebar.Tab tabId='workflow' label='Workflow'>
                   <VersionControl
                     repoId={repoId}
                     commit={repo && (repo.commit || repo.latestCommit)}
                     isNew={isNew}
-                    uncommittedChanges={uncommittedChanges}
+                    uncommittedChanges={hasUncommittedChanges}
                     commitHandler={this.commitHandler}
                     revertHandler={this.revertHandler}
                     width={sidebarWidth}

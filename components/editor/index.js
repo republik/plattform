@@ -183,7 +183,7 @@ class Editor extends Component {
     }
   }
   render () {
-    const { value } = this.props
+    const { value, readOnly } = this.props
     return (
       <Container>
         <Loader loading={!value} render={() =>
@@ -192,7 +192,8 @@ class Editor extends Component {
               ref={this.slateRef}
               value={value}
               onChange={this.onChange}
-              plugins={this.plugins} />
+              plugins={this.plugins}
+              readOnly={readOnly} />
           </Document>
           } />
         { /* A full slate instance to normalize
@@ -202,7 +203,8 @@ class Editor extends Component {
         <SlateEditor
           ref={this.slateRef}
           value={this.newDocument({title: 'Loading...'})}
-          plugins={this.plugins} />
+          plugins={this.plugins}
+          readOnly />
           )}
       </Container>
     )
@@ -211,6 +213,7 @@ class Editor extends Component {
 
 Editor.propTypes = {
   value: PropTypes.object,
+  readOnly: PropTypes.boolean,
   onChange: PropTypes.func,
   onDocumentChange: PropTypes.func
 }

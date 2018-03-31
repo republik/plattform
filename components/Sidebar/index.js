@@ -91,9 +91,9 @@ export default class Sidebar extends Component {
     const { children, isOpen, warnings } = this.props
     const { selectedTabId } = this.state
 
-    const tabProperties = children.map(
-      child => child.props
-    )
+    const tabProperties = React.Children.toArray(children)
+      .filter(Boolean)
+      .map(child => child.props)
 
     const tabButtons = tabProperties.map(
       ({ tabId, label }) => (
@@ -108,7 +108,7 @@ export default class Sidebar extends Component {
       )
     )
 
-    const activeTab = children.find(
+    const activeTab = React.Children.toArray(children).find(
       child => child.props.tabId === selectedTabId
     )
 
