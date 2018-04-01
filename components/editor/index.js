@@ -134,8 +134,13 @@ const Container = ({ children }) => (
   <div {...styles.container}>{ children }</div>
 )
 
-const Document = ({ children }) => (
-  <div {...styles.document}>{ children }</div>
+const Document = ({ children, readOnly }) => (
+  <div {...styles.document} style={readOnly ? {
+    pointerEvents: 'none',
+    opacity: 0.6
+  } : {}}>
+    { children }
+  </div>
 )
 
 class Editor extends Component {
@@ -187,7 +192,7 @@ class Editor extends Component {
     return (
       <Container>
         <Loader loading={!value} render={() =>
-          <Document key='document'>
+          <Document readOnly={readOnly}>
             <SlateEditor
               ref={this.slateRef}
               value={value}

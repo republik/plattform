@@ -29,7 +29,7 @@ const styles = {
 
 const getWidth = key => key.match(/title|feed|emailSubject/i) ? '100%' : ''
 
-const MetaData = ({value, readOnly, editor, mdastSchema, contextMeta, series, additionalFields = [], customFields = [], teaser: Teaser, t}) => {
+const MetaData = ({value, editor, mdastSchema, contextMeta, series, additionalFields = [], customFields = [], teaser: Teaser, t}) => {
   const node = value.document
 
   const genericKeys = Set([
@@ -93,10 +93,7 @@ const MetaData = ({value, readOnly, editor, mdastSchema, contextMeta, series, ad
 
   return (
     <div {...styles.container}>
-      <div {...styles.center} style={readOnly ? {
-        pointerEvents: 'none',
-        opacity: 0.6
-      } : {}}>
+      <div {...styles.center}>
         <Interaction.H2>
           {t('metaData/title')}
         </Interaction.H2>

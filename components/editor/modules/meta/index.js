@@ -11,11 +11,11 @@ export default ({rule, TYPE, context = {}}) => {
     changes: {},
     plugins: [
       {
-        renderEditor ({value, readOnly, children}, editor) {
+        renderEditor ({value, children}, editor) {
           return (
             <div>
               {children}
-              <MetaData value={value} readOnly={readOnly} editor={editor}
+              <MetaData value={value} editor={editor}
                 {...options}
                 mdastSchema={context.mdastSchema}
                 contextMeta={context.meta} />
