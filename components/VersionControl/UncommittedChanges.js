@@ -71,10 +71,91 @@ const uncommittedChangesSubscription = gql`
   }
 `
 
-const TagsCompact = ({repo, t}) => (
+export const withUncommitedChanges = (WrappedComponent) => {
+  class UncommittedChanges extends Component {
+    componentDidMount () {
+      this.subscribe()
+    }
+    componentDidUpdate () {
+      this.subscribe()
+    }
+    subscribe () {
+      if (!this.unsubscribe && this.props.ucData.repo) {
+        this.unsubscribe = this.props.ucSubscribe()
+      }
+    }
+    componentWillUnmount () {
+      this.unsubscribe && this.unsubscribe()
+    }
+    render () {
+      const {
+        ucSubscribe, // ignore
+        ucData: { loading, error, repo }, // extract
+        ...rest // forward
+      } = this.props
+
+      return (
+        <Loader loading={loading} error={error} render={() => (
+          <WrappedComponent
+            uncommittedChanges={repo.uncommittedChanges}
+            {...rest} />
+        )} />
+      )
+    }
+  }
+
+  return compose(
+    graphql(query, {
+      props: ({ data }) => {
+        return {
+          ucData: data,
+          ucSubscribe: params => {
+            return data.subscribeToMore({
+              document: uncommittedChangesSubscription,
+              variables: {
+                repoId: data.repo.id
+              },
+              updateQuery: (prev, { subscriptionData }) => {
+                if (!subscriptionData.data) {
+                  console.warn('empty subscription data')
+                  return prev
+                }
+                let uncommittedChanges = prev.repo.uncommittedChanges
+                const action = subscriptionData.data.uncommittedChanges.action
+                if (action === 'create') {
+                  const newUser = subscriptionData.data.uncommittedChanges.user
+                  if (!uncommittedChanges.find(user => user.id === newUser.id)) {
+                    uncommittedChanges = uncommittedChanges.concat(
+                      newUser
+                    )
+                  }
+                } else if (action === 'delete') {
+                  uncommittedChanges = uncommittedChanges.filter(
+                    change =>
+                      change.id !==
+                      subscriptionData.data.uncommittedChanges.user.id
+                  )
+                }
+                return {
+                  ...prev,
+                  repo: {
+                    ...prev.repo,
+                    uncommittedChanges
+                  }
+                }
+              }
+            })
+          }
+        }
+      }
+    })
+  )(UncommittedChanges)
+}
+
+const TagsCompact = ({uncommittedChanges, t}) => (
   <div {...styles.container}>
-    {repo.uncommittedChanges.length
-      ? repo.uncommittedChanges.map(user =>
+    {uncommittedChanges.length
+      ? uncommittedChanges.map(user =>
         <span key={user.id} {...css(styles.initials)} title={user.email}>
           {getInitials(user)}
         </span>
@@ -87,9 +168,9 @@ const TagsCompact = ({repo, t}) => (
   </div>
 )
 
-const Tags = ({repo}) => (
+const Tags = ({uncommittedChanges}) => (
   <div {...styles.container}>
-    {repo.uncommittedChanges.map(user =>
+    {uncommittedChanges.map(user =>
       <div key={user.id} style={{marginRight: 4, textAlign: 'center'}}>
         <div {...css(styles.initials)} style={{display: 'inline-block'}} title={user.email}>
           {getInitials(user)}
@@ -103,155 +184,91 @@ const Tags = ({repo}) => (
   </div>
 )
 
-class UncommittedChanges extends Component {
+class Manager extends Component {
   constructor (...args) {
     super(...args)
     this.state = {}
     this.revertHandler = this.revertHandler.bind(this)
   }
-
   componentDidMount () {
-    this.subscribe()
     this.refreshOverlay()
   }
-
   componentDidUpdate () {
-    this.subscribe()
     this.refreshOverlay()
   }
-
-  subscribe () {
-    if (!this.unsubscribe && this.props.data.repo) {
-      this.unsubscribe = this.props.subscribeToNewChanges()
-    }
-  }
-
-  componentWillUnmount () {
-    this.unsubscribe && this.unsubscribe()
-  }
-
   refreshOverlay () {
-    const { data: { repo }, uncommittedChanges: editorHasUncomittedChanges } = this.props
+    const { uncommittedChanges, hasUncommittedChanges } = this.props
     const { isOpen, suppress } = this.state
 
     // reset suppress
     if (
       suppress && (
-        !editorHasUncomittedChanges ||
-        (repo && repo.uncommittedChanges.length <= 1)
+        !hasUncommittedChanges ||
+        uncommittedChanges.length <= 1
       )
     ) {
       this.setState({ suppress: false })
       return
     }
 
-    if (repo) {
-      if (
-        !isOpen &&
-        !suppress &&
-        editorHasUncomittedChanges &&
-        repo.uncommittedChanges.length > 1
-      ) {
-        this.setState({ isOpen: true })
-      } else if (
-        isOpen && (
-          suppress || repo.uncommittedChanges.length <= 1
-        )
-      ) {
-        this.setState({ isOpen: false })
-      }
+    if (
+      !isOpen &&
+      !suppress &&
+      hasUncommittedChanges &&
+      uncommittedChanges.length > 1
+    ) {
+      this.setState({ isOpen: true })
+    } else if (
+      isOpen && (
+        suppress || uncommittedChanges.length <= 1
+      )
+    ) {
+      this.setState({ isOpen: false })
     }
   }
-
   revertHandler (e) {
     const { t, onRevert } = this.props
     if (window.confirm(t('uncommittedChanges/revert/confirm'))) {
       onRevert(e)
     }
   }
-
   render () {
-    const { data: { loading, error, repo }, t } = this.props
+    const { uncommittedChanges, t } = this.props
 
     return (
-      <Loader loading={loading} error={error} render={() => (
-        <Fragment>
-          {this.state.isOpen && (
-            <Overlay onClose={() => {}}>
-              <OverlayBody>
-                <Interaction.P style={{textAlign: 'center'}}>
-                  {t('uncommittedChanges/warning')}
-                </Interaction.P><br />
-                <Tags repo={repo} />
-                <p>
-                  <Button primary block onClick={() => { this.setState({suppress: true}) }}>
-                    {t('uncommittedChanges/ignore')}
-                  </Button>
-                </p>
-                <p>
-                  <Button block onClick={this.revertHandler}>
-                    {t('uncommittedChanges/revert')}
-                  </Button>
-                </p>
-              </OverlayBody>
-            </Overlay>
-          )}
-          {!!repo.uncommittedChanges.length && <Fragment>
-            <div style={{ textAlign: 'center', fontSize: '14px', marginTop: 7 }}>
-              <Label key='label'>{t('uncommittedChanges/title')}</Label>
-            </div>
-            <TagsCompact repo={repo} t={t} />
-          </Fragment>}
-        </Fragment>
-      )} />
+      <Fragment>
+        {this.state.isOpen && (
+          <Overlay onClose={() => {}}>
+            <OverlayBody>
+              <Interaction.P style={{textAlign: 'center'}}>
+                {t('uncommittedChanges/warning')}
+              </Interaction.P><br />
+              <Tags uncommittedChanges={uncommittedChanges} />
+              <p>
+                <Button primary block onClick={() => { this.setState({suppress: true}) }}>
+                  {t('uncommittedChanges/ignore')}
+                </Button>
+              </p>
+              <p>
+                <Button block onClick={this.revertHandler}>
+                  {t('uncommittedChanges/revert')}
+                </Button>
+              </p>
+            </OverlayBody>
+          </Overlay>
+        )}
+        {!!uncommittedChanges.length && <Fragment>
+          <div style={{ textAlign: 'center', fontSize: '14px', marginTop: 7 }}>
+            <Label key='label'>{t('uncommittedChanges/title')}</Label>
+          </div>
+          <TagsCompact uncommittedChanges={uncommittedChanges} t={t} />
+        </Fragment>}
+      </Fragment>
     )
   }
 }
 
 export default compose(
   withT,
-  graphql(query, {
-    props: props => {
-      return {
-        ...props,
-        subscribeToNewChanges: params => {
-          return props.data.subscribeToMore({
-            document: uncommittedChangesSubscription,
-            variables: {
-              repoId: props.data.repo.id
-            },
-            updateQuery: (prev, { subscriptionData }) => {
-              if (!subscriptionData.data) {
-                console.warn('empty subscription data')
-                return prev
-              }
-              let uncommittedChanges = prev.repo.uncommittedChanges
-              const action = subscriptionData.data.uncommittedChanges.action
-              if (action === 'create') {
-                const newUser = subscriptionData.data.uncommittedChanges.user
-                if (!uncommittedChanges.find(user => user.id === newUser.id)) {
-                  uncommittedChanges = uncommittedChanges.concat(
-                    newUser
-                  )
-                }
-              } else if (action === 'delete') {
-                uncommittedChanges = uncommittedChanges.filter(
-                  change =>
-                    change.id !==
-                    subscriptionData.data.uncommittedChanges.user.id
-                )
-              }
-              return {
-                ...prev,
-                repo: {
-                  ...prev.repo,
-                  uncommittedChanges
-                }
-              }
-            }
-          })
-        }
-      }
-    }
-  })
-)(UncommittedChanges)
+  withUncommitedChanges
+)(Manager)
