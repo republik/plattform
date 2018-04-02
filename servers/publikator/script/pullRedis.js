@@ -25,7 +25,16 @@ const { lib: {
   Repo: { uploadImages }
 } } = require('@orbiting/backend-modules-assets')
 
+const {
+  AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY
+} = process.env
+
 PgDb.connect().then(async pgdb => {
+  if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY) {
+    console.warn('missing AWS_ACCESS_KEY_ID and/or AWS_SECRET_ACCESS_KEY skipping image uploads!')
+  }
+
   const flush = process.argv[2] === '--flush'
   if (flush) {
     console.warn('Flushing redis...')
@@ -86,7 +95,9 @@ PgDb.connect().then(async pgdb => {
         )
 
         // upload images to S3
-        await uploadImages(repo.id, doc.repoImagePaths)
+        if (AWS_ACCESS_KEY_ID && AWS_SECRET_ACCESS_KEY) {
+          await uploadImages(repo.id, doc.repoImagePaths)
+        }
 
         // prepareMetaForPublish creates missing discussions as a side-effect
         doc.content.meta = await prepareMetaForPublish(

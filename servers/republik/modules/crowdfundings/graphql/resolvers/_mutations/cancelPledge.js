@@ -3,20 +3,23 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const cancelMembership = require('./cancelMembership')
 
 const moment = require('moment')
-const checkEnv = require('check-env')
 const { publishMonitor } = require('../../../../../lib/slack')
-
-checkEnv([
-  'PARKING_PLEDGE_ID',
-  'PARKING_USER_ID'
-])
 
 const {
   PARKING_PLEDGE_ID,
   PARKING_USER_ID
 } = process.env
 
+if (!PARKING_PLEDGE_ID || !PARKING_USER_ID) {
+  console.warn('missing env PARKING_PLEDGE_ID and/or PARKING_USER_ID, cancelPledge will not work.')
+}
+
 module.exports = async (_, args, {pgdb, req, t, mail: { enforceSubscriptions }}) => {
+  if (!PARKING_PLEDGE_ID || !PARKING_USER_ID) {
+    console.error('cancelPledge: missing PARKING_PLEDGE_ID and/or PARKING_USER_ID')
+    throw new Error(t('api/unexpected'))
+  }
+
   Roles.ensureUserHasRole(req.user, 'supporter')
   const { pledgeId } = args
   const now = new Date()

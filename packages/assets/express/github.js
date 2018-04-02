@@ -1,7 +1,9 @@
-const { lib: { clients: createGithubClients } } = require('@orbiting/backend-modules-github')
-const { Readable } = require('stream')
+const fetch = require('isomorphic-unfetch')
+const { lib: { appAuth: { getInstallationToken } } } = require('@orbiting/backend-modules-github')
 const { returnImage } = require('../lib')
 const debug = require('debug')('assets:github')
+
+let installationToken
 
 module.exports = (server) => {
   // images out of repos
@@ -14,7 +16,11 @@ module.exports = (server) => {
   // https://developer.github.com/v3/repos/contents/#get-contents
   // https://developer.github.com/v3/git/blobs/#get-a-blob
   server.get('/github/:login/:repoName/:path(*)', async (req, res) => {
-    const { githubRest } = await createGithubClients()
+    const nearFuture = new Date()
+    nearFuture.setMinutes(nearFuture.getMinutes() + 15)
+    if (!installationToken || installationToken.expiresAt < nearFuture) {
+      installationToken = await getInstallationToken()
+    }
 
     const {
       login,
@@ -31,10 +37,13 @@ module.exports = (server) => {
       .pop()
       .split('.')[0]
 
-    const result = await githubRest.gitdata.getBlob({
-      owner: login,
-      repo: repoName,
-      sha: blobSha
+    const result = await fetch(`https://api.github.com/repos/${login}/${repoName}/git/blobs/${blobSha}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${installationToken.token}`,
+        // https://developer.github.com/v3/media/#git-blob-properties
+        'Accept': 'application/vnd.github.v3.raw'
+      }
     })
       .catch(error => {
         if (error.code === 404) {
@@ -44,19 +53,11 @@ module.exports = (server) => {
           res.status(500).end()
         }
       })
-    if (!result || !result.data) {
-      return res.status(404).end()
-    }
-
-    const { data: { content, size } } = result
-    const stream = new Readable()
-    stream._read = function () {} // _read is required but you can noop it
-    stream.push(content, 'base64')
-    stream.push(null)
 
     return returnImage({
       response: res,
-      stream,
+      stream: result.body,
+      headers: result.headers,
       options: {
         ...req.query,
         webp

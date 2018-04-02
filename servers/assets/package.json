@@ -10,15 +10,16 @@
   "dependencies": {
     "@orbiting/backend-modules-assets": "link:../../packages/assets",
     "cors": "^2.8.4",
-    "express": "^4.16.2",
+    "express": "^4.16.3",
     "isomorphic-unfetch": "^2.0.0"
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon -w ../../packages -w .env -w package.jsoan -w ../yarn.lock -w server.js -w index.js index.js",
-    "start": "node index.js"
+    "inspect": "NODE_ENV=development DEBUG=assets:* nodemon -w ../../packages -w .env -w package.jsoan -w ../yarn.lock -w server.js -w index.js --inspect index.js",
+    "start": "node --optimize_for_size --max_old_space_size=512 --max_semi_space_size=8 --gc_interval=100 index.js"
   },
   "devDependencies": {
     "@orbiting/backend-modules-env": "link:../../packages/env",
-    "nodemon": "^1.14.6"
+    "nodemon": "^1.17.2"
   }
 }
