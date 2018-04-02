@@ -1,5 +1,5 @@
 {
-  "updated": "2018-03-31T21:28:03.251Z",
+  "updated": "2018-04-02T23:23:14.686Z",
   "title": "live",
   "data": [
     {
@@ -503,6 +503,10 @@
       "value": "Verwerfen"
     },
     {
+      "key": "commit/lock",
+      "value": "Abbrechen"
+    },
+    {
       "key": "commit/promtMessage",
       "value": "Commit-Message:"
     },
@@ -525,6 +529,10 @@
     {
       "key": "commit/status/uncommitted",
       "value": "Änderungen committen?"
+    },
+    {
+      "key": "commit/warn/canNotLock",
+      "value": "Aufgrund von lokalen Änderungen, konnte das Dokument nicht gesperrt werden."
     },
     {
       "key": "commit/warn/noStorage",

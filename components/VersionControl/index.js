@@ -14,10 +14,6 @@ const styles = {
   container: css({
     backgroundColor: '#fff'
   }),
-  uncommittedChanges: {
-    fontSize: '13px',
-    margin: '0 0 20px'
-  },
   button: {
     height: 40,
     fontSize: '16px'
@@ -106,7 +102,7 @@ class EditSidebar extends Component {
     const {
       t,
       commit,
-      uncommittedChanges,
+      hasUncommittedChanges,
       isNew,
       data = {}
     } = this.props
@@ -133,7 +129,7 @@ class EditSidebar extends Component {
               <div>
                 <Label>{t('checklist/title')}</Label>
                 <Checklist
-                  disabled={!!uncommittedChanges}
+                  disabled={!!hasUncommittedChanges}
                   repoId={repo.id}
                   commitId={commit.id}
                 />

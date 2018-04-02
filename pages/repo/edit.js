@@ -162,6 +162,18 @@ class EditorPage extends Component {
       showSidebar: true,
       readOnly: true
     }
+
+    this.lockHandler = () => {
+      const { url: { query: { repoId } }, t } = this.props
+      if (this.state.hasUncommittedChanges) {
+        this.warn(t('commit/warn/canNotLock'))
+        return
+      }
+      this.setState({
+        readOnly: true
+      })
+      this.concludeChanges(repoId)
+    }
   }
 
   warn (message) {
@@ -474,7 +486,6 @@ class EditorPage extends Component {
       showSidebar,
       readOnly
     } = this.state
-    const sidebarWidth = 200
 
     const isNew = commitId === 'new'
     const error = data.error || this.state.error
@@ -513,8 +524,9 @@ class EditorPage extends Component {
             <CommitButton
               isNew={isNew}
               readOnly={readOnly}
-              onBeginChanges={() => this.beginChanges(repoId, false)}
               hasUncommittedChanges={hasUncommittedChanges}
+              onBeginChanges={() => this.beginChanges(repoId, false)}
+              onLock={this.lockHandler}
               onCommit={this.commitHandler}
               onRevert={this.revertHandler}
             />
@@ -523,6 +535,8 @@ class EditorPage extends Component {
             {!!repo &&
               <UncommittedChanges
                 repoId={repo.id}
+                readOnly={readOnly}
+                onLock={this.lockHandler}
                 onRevert={this.revertHandler}
                 hasUncommittedChanges={hasUncommittedChanges}
               />
@@ -559,10 +573,7 @@ class EditorPage extends Component {
                     repoId={repoId}
                     commit={repo && (repo.commit || repo.latestCommit)}
                     isNew={isNew}
-                    uncommittedChanges={hasUncommittedChanges}
-                    commitHandler={this.commitHandler}
-                    revertHandler={this.revertHandler}
-                    width={sidebarWidth}
+                    hasUncommittedChanges={hasUncommittedChanges}
                   />
                 </Sidebar.Tab>
               </Sidebar>

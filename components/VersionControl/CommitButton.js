@@ -2,14 +2,18 @@ import React from 'react'
 import withT from '../../lib/withT'
 import { Button, A, colors } from '@project-r/styleguide'
 
-const CommitButton = ({ t, hasUncommittedChanges, isNew, readOnly, onCommit, onRevert, onBeginChanges }) => (
+const CommitButton = ({ t, hasUncommittedChanges, isNew, readOnly, onCommit, onRevert, onLock, onBeginChanges }) => (
   <div>
     <div style={{ textAlign: 'center', fontSize: '14px', marginTop: 7 }}>
       {!isNew && hasUncommittedChanges
           ? <A href='#' onClick={onRevert}>
             {t('commit/revert')}
           </A>
-          : <span>{t(
+          : !isNew && !readOnly
+            ? <A href='#' onClick={onLock}>
+              {t('commit/lock')}
+            </A>
+            : <span>{t(
               isNew
                 ? 'commit/status/new/short'
                 : readOnly
