@@ -85,7 +85,7 @@ const boolFilterBuilder = new BoolFilterBuilder({
   published: new DateRangeCriteria('meta.publishDate')
 })
 
-module.exports = async (_, { search, page, filter }, { user, elastic }) => {
+module.exports = async (_, { search, page = 1, filter }, { user, elastic }) => {
   const result = await elastic.search({
     index: 'documents',
     type: 'document',
