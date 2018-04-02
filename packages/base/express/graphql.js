@@ -8,7 +8,7 @@ const cookieParser = require('cookie-parser')
 const checkEnv = require('check-env')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const redis = require('../lib/redis')
-const elasticsearch = require('elasticsearch')
+const elasticsearch = require('../lib/elastic')
 
 checkEnv([
   'PUBLIC_WS_URL_BASE',
@@ -35,9 +35,7 @@ module.exports = (
     user,
     pubsub,
     redis,
-    elastic: new elasticsearch.Client({
-      host: 'localhost:9200'
-    })
+    elastic: elasticsearch.client()
   })
 
   const subscriptionServer = SubscriptionServer.create(

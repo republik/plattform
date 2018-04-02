@@ -1684,9 +1684,9 @@ ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
 
-elasticsearch@^14.2.1:
-  version "14.2.1"
-  resolved "https://registry.yarnpkg.com/elasticsearch/-/elasticsearch-14.2.1.tgz#d10cb0b9562ca6614d178c30a112b93f6e8570d1"
+elasticsearch@^14.2.2:
+  version "14.2.2"
+  resolved "https://registry.yarnpkg.com/elasticsearch/-/elasticsearch-14.2.2.tgz#6bbb63b19b17fa97211b22eeacb0f91197f4d6b6"
   dependencies:
     agentkeepalive "^3.4.1"
     chalk "^1.0.0"

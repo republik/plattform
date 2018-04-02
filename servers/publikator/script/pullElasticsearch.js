@@ -1,8 +1,8 @@
 require('@orbiting/backend-modules-env').config()
 
+const elasticsearch = require('@orbiting/backend-modules-base/lib/elastic')
 const redis = require('@orbiting/backend-modules-base/lib/redis')
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
-const elasticsearch = require('elasticsearch')
 
 const mdastToString = require('mdast-util-to-string')
 const {
@@ -15,9 +15,7 @@ const {
 } = require('@orbiting/backend-modules-documents')
 const util = require('util')
 
-const elastic = new elasticsearch.Client({
-  host: 'localhost:9200'
-})
+const elastic = elasticsearch.client()
 
 const INDEX = 'documents'
 

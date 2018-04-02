@@ -37,6 +37,7 @@
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
     "d3-time-format": "^2.1.1",
+    "elasticsearch": "^14.2.2",
     "export-files": "^2.1.1",
     "express": "^4.16.2",
     "graphql-redis-subscriptions": "^1.4.0",
