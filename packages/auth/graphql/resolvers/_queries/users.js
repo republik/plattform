@@ -8,6 +8,12 @@ module.exports = async (
 ) => {
   Roles.ensureUserHasRole(user, 'editor')
 
+  const whereClause = role
+    ? `WHERE
+      roles @> :role
+`
+    : ''
+
   const users = await pgdb.query(`
     SELECT
       u.*,
@@ -23,14 +29,15 @@ module.exports = async (
       ) <-> :search AS dist
     FROM
       users u
-    WHERE
-      roles @> :role
+    ${whereClause}
     ORDER BY
       word_sim, dist
     LIMIT :limit
   `, {
     search: search.trim(),
-    role: JSON.stringify([role]),
+    role: role
+      ? JSON.stringify([role])
+      : null,
     limit: 30
   })
 
