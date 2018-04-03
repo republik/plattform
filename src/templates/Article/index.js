@@ -313,10 +313,7 @@ const infoBox = {
       editorModule: 'paragraph',
       editorOptions: {
         type: 'INFOP',
-        placeholder: 'Infotext',
-        isStatic: true,
-        afterType: 'PARAGRAPH',
-        insertAfterType: 'CENTER'
+        placeholder: 'Infotext'
       },
       rules: interactionParagraphRules
     }
