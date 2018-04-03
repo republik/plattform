@@ -17,9 +17,10 @@ import {
 
 const usersQuery = gql`
 query users($search: String!) {
-  users(search: $search, role: "editor") {
+  users(search: $search) {
     firstName
     lastName
+    email
     id
   }
 }
@@ -29,8 +30,8 @@ const ConnectedAutoComplete = graphql(usersQuery, {
   options: ({ filter }) => ({ variables: { search: filter } }),
   props: ({ data: { users = [] } }) => ({
     items: users.slice(0, 5).map(v => ({
-      value: v.id,
-      text: `${v.firstName} ${v.lastName}`
+      value: v,
+      text: v.email
     }))
   })
 })(Autocomplete)
@@ -96,11 +97,11 @@ const Form = options => ({ value, onChange, t }) => {
           type: TYPE,
           kind: 'inline',
           data: node.data.merge({
-            title: author.text,
-            href: `/~${author.value}`
+            title: `${author.value.firstName} ${author.value.lastName}`,
+            href: `/~${author.value.id}`
           }),
           nodes: [
-            Text.create(author.text)
+            Text.create(`${author.value.firstName} ${author.value.lastName}`)
           ]
         }
       )
