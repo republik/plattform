@@ -30,7 +30,6 @@ type User {
 
 type SignInResponse {
   phrase: String!
-  tokenTypes: [SignInTokenType]!
 }
 
 type SharedSecretResponse {

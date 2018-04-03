@@ -62,7 +62,6 @@ const signIn = async (_email, context, pgdb, req) => {
     const { country, phrase, session } = init
 
     const type = TokenTypes.EMAIL_TOKEN
-    const tokenTypes = [type]
     const token = await generateNewToken({
       pgdb,
       type,
@@ -90,7 +89,7 @@ const signIn = async (_email, context, pgdb, req) => {
       })
     }
 
-    return { phrase, tokenTypes }
+    return { phrase }
   } catch (error) {
     console.error(error)
     throw new SessionInitializationFailedError({ error })
@@ -159,7 +158,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   let session = null
   for (const tokenChallenge of tokens) {
     if (tokenTypes.indexOf(tokenChallenge.type) !== -1) {
-      console.error('invalid challenge types ', tokenTypes.concat([tokenChallenge.type]))
+      console.error('invalid challenge, somebody uses the same type twice trying to circumvent 2fa', tokenTypes.concat([tokenChallenge.type]))
       throw new SessionTokenValidationFailed({ email: emailFromQuery, ...tokenChallenge })
     }
     const curSession = await sessionByToken({ pgdb, token: tokenChallenge, email: emailFromQuery })

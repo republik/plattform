@@ -21,7 +21,7 @@ type queries {
   users(search: String!, role: String!): [User]!
 
   # search for an unverified session by token
-  unauthorizedSession(email: String!, token: SignInTokenChallenge!): Session
+  unauthorizedSession(email: String!, tokenChallenge: SignInTokenChallenge!): Session
 
   # the requesting userAgent
   echo: RequestInfo!
