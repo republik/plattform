@@ -59,7 +59,7 @@ const SearchUserForm = withT(class extends Component {
   changeHandler (value) {
     this.setState(
         state => ({
-          ...this.state,
+          filter: null,
           value: null
         }),
         () => this.props.onChange(value)
