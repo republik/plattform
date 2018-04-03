@@ -55,5 +55,11 @@ Run it.
 yarn run dev
 ```
 
+## Production
+
+What about the peculiar start script in `package.json`?
+
+Node (V8) uses a lazy and greedy garbage collector, with its default limit of about 1.5 GB. The options provided in start, try to keep the node process within 1GB of RAM. See https://blog.heroku.com/node-habits-2016#7-avoid-garbage
+
 ## Licensing
 The source code and it's documentation is licensed under [GNU AGPLv3](LICENSE)+.
