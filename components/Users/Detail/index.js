@@ -7,6 +7,7 @@ import {
   Interaction,
   P,
   Label,
+  Button,
   colors
 } from '@project-r/styleguide'
 import ErrorMessage from '../../ErrorMessage'
@@ -70,10 +71,22 @@ const styles = {
   })
 }
 
-const Tab = ({ name, current, children, ...props }) =>
-  name === current && <div {...props}>{children}</div>
+const Tab = ({
+  name,
+  current,
+  children,
+  ...props
+}) =>
+  name === current && (
+    <div {...props}>{children}</div>
+  )
 
-const TabLink = ({ name, current, children, ...props }) => (
+const TabLink = ({
+  name,
+  current,
+  children,
+  ...props
+}) => (
   <a
     {...props}
     {...styles.tabLink}
@@ -117,7 +130,9 @@ class Detail extends Component {
     const props = this.props
 
     if (props.data.error) {
-      return <ErrorMessage error={props.data.error} />
+      return (
+        <ErrorMessage error={props.data.error} />
+      )
     } else if (props.data.loading) {
       return <div>Loading ...</div>
     }
@@ -132,7 +147,9 @@ class Detail extends Component {
               <Label>
                 {props.data.user.email}
                 {props.data.user.username &&
-                  ` | ${props.data.user.username}`}
+                  ` | ${
+                    props.data.user.username
+                  }`}
               </Label>
               <ErrorModal
                 error={this.state.mutationError}
@@ -145,7 +162,9 @@ class Detail extends Component {
               <div {...styles.tabNav}>
                 <TabLink
                   name="details"
-                  onClick={this.tabLinkHandler('details')}
+                  onClick={this.tabLinkHandler(
+                    'details'
+                  )}
                   current={this.state.selectedTab}
                 >
                   Personalien
@@ -161,7 +180,9 @@ class Detail extends Component {
                 </TabLink>
                 <TabLink
                   name="eventLog"
-                  onClick={this.tabLinkHandler('eventLog')}
+                  onClick={this.tabLinkHandler(
+                    'eventLog'
+                  )}
                   current={this.state.selectedTab}
                 >
                   Event Log
@@ -175,12 +196,16 @@ class Detail extends Component {
                   <div {...styles.span}>
                     <UserForm
                       user={props.data.user}
-                      onSubmit={this.safe(props.updateUser)}
+                      onSubmit={this.safe(
+                        props.updateUser
+                      )}
                     />
                   </div>
                   <div {...styles.span}>
                     <EmailForm
-                      error={this.state.errors.email}
+                      error={
+                        this.state.errors.email
+                      }
                       user={props.data.user}
                       onSubmit={this.safe(
                         props.updateEmail
@@ -188,7 +213,8 @@ class Detail extends Component {
                     />
                     <br />
                     <br />
-                    {!!props.data.user.portrait && (
+                    {!!props.data.user
+                      .portrait && (
                       <div>
                         <Interaction.H3>
                           Portrait
@@ -199,16 +225,25 @@ class Detail extends Component {
                             width: '100%',
                             maxWidth: '200px'
                           }}
-                          src={props.data.user.portrait}
+                          src={
+                            props.data.user
+                              .portrait
+                          }
                         />
                       </div>
                     )}
-                    {!!props.data.user.statement && (
+                    {!!props.data.user
+                      .statement && (
                       <div>
                         <Interaction.H3>
                           Statement
                         </Interaction.H3>
-                        <P>«{props.data.user.statement}»</P>
+                        <P>
+                          «{
+                            props.data.user
+                              .statement
+                          }»
+                        </P>
                         <br />
                       </div>
                     )}
@@ -217,7 +252,9 @@ class Detail extends Component {
                     />
                     <RolesForm
                       user={props.data.user}
-                      onAdd={this.safe(props.addUserToRole)}
+                      onAdd={this.safe(
+                        props.addUserToRole
+                      )}
                       onRemove={this.safe(
                         props.removeUserFromRole
                       )}
@@ -229,14 +266,20 @@ class Detail extends Component {
                 name="memberships"
                 current={this.state.selectedTab}
               >
-                <Interaction.H2>Pledges</Interaction.H2>
+                <Interaction.H2>
+                  Pledges
+                </Interaction.H2>
                 <div {...styles.pledges}>
                   {props.data.user.pledges
-                    .filter(p => p.status !== 'DRAFT')
+                    .filter(
+                      p => p.status !== 'DRAFT'
+                    )
                     .map(pledge => (
                       <div
                         {...styles.pledge}
-                        key={`pledge-${pledge.id}`}
+                        key={`pledge-${
+                          pledge.id
+                        }`}
                       >
                         <PledgeOverview
                           pledge={pledge}
@@ -259,13 +302,17 @@ class Detail extends Component {
                       </div>
                     ))}
                 </div>
-                <Interaction.H2>Memberships</Interaction.H2>
+                <Interaction.H2>
+                  Memberships
+                </Interaction.H2>
                 <div {...styles.pledges}>
                   {props.data.user.memberships.map(
                     membership => (
                       <div
                         {...styles.pledge}
-                        key={`pledge-${membership.id}`}
+                        key={`pledge-${
+                          membership.id
+                        }`}
                       >
                         <MembershipOverview
                           membership={membership}
@@ -280,6 +327,13 @@ class Detail extends Component {
                     )
                   )}
                 </div>
+                <Button
+                  onClick={this.safe(
+                    props.reactivateMembership
+                  )}
+                >
+                  Generate yearly membership
+                </Button>
               </Tab>
               <Tab
                 name="eventLog"
@@ -300,8 +354,12 @@ class Detail extends Component {
             }}
           >
             <Notepad
-              value={props.data.user.adminNotes || ''}
-              onSubmit={this.safe(props.updateAdminNotes)}
+              value={
+                props.data.user.adminNotes || ''
+              }
+              onSubmit={this.safe(
+                props.updateAdminNotes
+              )}
             />
           </Tile>
         </Row>
@@ -311,7 +369,9 @@ class Detail extends Component {
 }
 
 const sendPaymentRemindersMutation = gql`
-  mutation sendPaymentReminders($paymentIds: [ID!]!) {
+  mutation sendPaymentReminders(
+    $paymentIds: [ID!]!
+  ) {
     sendPaymentReminders(paymentIds: $paymentIds)
   }
 `
@@ -321,14 +381,20 @@ const removeUserFromRoleMutation = gql`
     $userId: ID!
     $role: String!
   ) {
-    removeUserFromRole(userId: $userId, role: $role) {
+    removeUserFromRole(
+      userId: $userId
+      role: $role
+    ) {
       id
     }
   }
 `
 
 const addUserToRoleMutation = gql`
-  mutation addUserToRole($userId: ID!, $role: String!) {
+  mutation addUserToRole(
+    $userId: ID!
+    $role: String!
+  ) {
     addUserToRole(userId: $userId, role: $role) {
       id
     }
@@ -336,8 +402,14 @@ const addUserToRoleMutation = gql`
 `
 
 const movePledgeMutation = gql`
-  mutation movePledge($pledgeId: ID!, $userId: ID!) {
-    movePledge(pledgeId: $pledgeId, userId: $userId) {
+  mutation movePledge(
+    $pledgeId: ID!
+    $userId: ID!
+  ) {
+    movePledge(
+      pledgeId: $pledgeId
+      userId: $userId
+    ) {
       id
     }
   }
@@ -357,9 +429,23 @@ const moveMembershipMutation = gql`
   }
 `
 
+const generateMembershipMutation = gql`
+  mutation generateMembership($userId: ID!) {
+    generateMembership(userId: $userId) {
+      id
+    }
+  }
+`
+
 const updateAdminNotesMutation = gql`
-  mutation updateAdminNotes($notes: String, $userId: ID!) {
-    updateAdminNotes(notes: $notes, userId: $userId) {
+  mutation updateAdminNotes(
+    $notes: String
+    $userId: ID!
+  ) {
+    updateAdminNotes(
+      notes: $notes
+      userId: $userId
+    ) {
       id
     }
   }
@@ -434,7 +520,10 @@ const userMutation = gql`
 `
 
 const emailMutation = gql`
-  mutation updateEmail($id: ID!, $email: String!) {
+  mutation updateEmail(
+    $id: ID!
+    $email: String!
+  ) {
     updateEmail(userId: $id, email: $email) {
       id
     }
@@ -569,10 +658,16 @@ const WrappedUser = compose(
       mutate,
       ownProps: { params: { userId } }
     }) => ({
-      movePledge: ({ pledgeId, userId: newUserId }) => {
+      movePledge: ({
+        pledgeId,
+        userId: newUserId
+      }) => {
         if (mutate) {
           return mutate({
-            variables: { pledgeId, userId: newUserId },
+            variables: {
+              pledgeId,
+              userId: newUserId
+            },
             refetchQueries: [
               {
                 query: userQuery,
@@ -663,7 +758,10 @@ const WrappedUser = compose(
       }) => {
         if (mutate) {
           return mutate({
-            variables: { membershipId, userId: newUserId },
+            variables: {
+              membershipId,
+              userId: newUserId
+            },
             refetchQueries: [
               {
                 query: userQuery,
@@ -686,6 +784,30 @@ const WrappedUser = compose(
         if (mutate) {
           return mutate({
             variables: { id },
+            refetchQueries: () => {
+              return [
+                {
+                  query: userQuery,
+                  variables: {
+                    id: userId
+                  }
+                }
+              ]
+            }
+          })
+        }
+      }
+    })
+  }),
+  graphql(generateMembershipMutation, {
+    props: ({
+      mutate,
+      ownProps: { params: { userId } }
+    }) => ({
+      generateMembership: () => {
+        if (mutate) {
+          return mutate({
+            variables: { userId },
             refetchQueries: () => {
               return [
                 {
