@@ -11,6 +11,9 @@ if (!DISPLAY_AUTHOR_SECRET) {
 }
 
 module.exports = {
+  discussion: ({ discussionId }, args, { pgdb }) =>
+    pgdb.public.discussions.findOne({ id: discussionId }),
+
   published: ({ published, adminUnpublished }) =>
     published && !adminUnpublished,
 
