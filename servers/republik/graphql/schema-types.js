@@ -197,7 +197,7 @@ type DiscussionRules {
 type DiscussionPreferences {
   anonymity: Boolean!
   credential: Credential
-  notifications: DiscussionNotificationOption
+  notifications: DiscussionNotificationOption!
 }
 input DiscussionPreferencesInput {
   anonymity: Boolean
@@ -279,6 +279,7 @@ type Discussion {
     flatDepth: Int
   ): CommentConnection!
   rules: DiscussionRules!
+  # only null for guests (not signedIn)
   userPreference: DiscussionPreferences
   displayAuthor: DisplayUser
   # date the user is allowed to submit new comments
