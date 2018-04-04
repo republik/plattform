@@ -1,0 +1,18 @@
+{
+  "env": {
+    "node": true,
+    "es6": true,
+    "browser": true
+  },
+  "parser": "babel-eslint",
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "no-unused-vars": "warn",
+    "no-undef": "error",
+    "no-shadow": "error",
+    "react/jsx-uses-react": "error",
+    "react/jsx-uses-vars": "error",
+  }
+}
