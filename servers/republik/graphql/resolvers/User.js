@@ -107,7 +107,9 @@ module.exports = {
         resize,
         bw
       })
-      const webp = req.get('Accept').indexOf('image/webp') > -1
+      const webp = args && args.webp !== undefined
+        ? args.webp
+        : req.get('Accept').indexOf('image/webp') > -1
       return `${url}${webp ? '.webp' : ''}?${newQuery}`
     }
     return null

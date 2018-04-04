@@ -117,7 +117,7 @@ module.exports = {
       }
     }
 
-    const profilePicture = getPortrait(commenter, null, context)
+    const profilePicture = getPortrait(commenter, (args && args.portrait), context)
 
     const id = crypto
       .createHmac('sha256', DISPLAY_AUTHOR_SECRET)

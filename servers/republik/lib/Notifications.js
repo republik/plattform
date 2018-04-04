@@ -69,7 +69,15 @@ const submitComment = async (comment, discussion, context) => {
   })
 
   if (notifyUsers.length > 0) {
-    const displayAuthor = await getDisplayAuthor(comment, null, context)
+    const displayAuthor = await getDisplayAuthor(
+      comment,
+      {
+        portrait: {
+          webp: false
+        }
+      },
+      context
+    )
 
     const shortBody = comment.content.length > 128
       ? `${comment.content.substring(0, 128)}...`
