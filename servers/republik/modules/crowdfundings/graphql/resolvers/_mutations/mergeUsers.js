@@ -10,7 +10,7 @@ const { publishMonitor } = require('../../../../../lib/slack')
 
 module.exports = async (_, args, context) => {
   const {pgdb, req, t, mail: { unsubscribeEmail, enforceSubscriptions }} = context
-  Roles.ensureUserHasRole(req.user, 'admin')
+  Roles.ensureUserHasRole(req.user, 'supporter')
 
   const {targetUserId, sourceUserId} = args
 
