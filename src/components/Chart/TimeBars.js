@@ -10,7 +10,6 @@ import colors from '../../theme/colors'
 
 import {
   calculateAxis,
-  sortBy,
   groupBy,
   deduplicate,
   transparentAxisStroke,
@@ -94,7 +93,6 @@ const TimeBarChart = (props) => {
       value: +d.value
     }
   })
-  data = sortBy(data, d => d.value).reverse()
 
   const colorAccessor = d => d.datum[props.color]
   const colorValues = data.map(colorAccessor)
