@@ -1,5 +1,8 @@
 const { sendMailTemplate } = require('./Mail')
 const { timeFormat } = require('@orbiting/backend-modules-formats')
+const {
+  checkMembershipSubscriptions: getCheckMembershipSubscriptions
+} = require('../graphql/resolvers/User')
 
 const dateFormat = timeFormat('%x') // %x - the locale’s date
 
@@ -12,6 +15,8 @@ module.exports = async (userId, pgdb, t) => {
   })
 
   if (!pledges.length) { return }
+
+  const checkMembershipSubscriptions = await getCheckMembershipSubscriptions(user, null, { pgdb, user })
 
   const address = await pgdb.public.addresses.findOne({id: user.addressId})
 
@@ -98,6 +103,9 @@ ${address.line2 ? address.line2 + '<br/>' : ''}
 ${address.postalCode} ${address.city}<br/>
 ${address.country}</span>`
             : null
+        },
+        { name: 'CHECK_MEMBERSHIP_SUBSCRIPTIONS',
+          content: checkMembershipSubscriptions
         }
       ]
     })

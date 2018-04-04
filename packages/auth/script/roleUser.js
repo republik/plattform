@@ -33,7 +33,7 @@ PgDb.connect({connectionString: DATABASE_URL}).then(async (pgdb) => {
 
   let newUser
   if (process.argv[4]) {
-    newUser = await Roles.removeUserFromRoll(user.id, role, pgdb)
+    newUser = await Roles.removeUserFromRole(user.id, role, pgdb)
   } else {
     newUser = await Roles.addUserToRole(user.id, role, pgdb)
   }

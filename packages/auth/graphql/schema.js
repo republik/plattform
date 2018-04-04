@@ -41,5 +41,11 @@ type mutations {
   # if userId is null, the logged in user's sessions get cleared
   # required role to clear other's session: supporter
   clearSessions(userId: ID): Boolean!
+
+  # Add a user to a given role
+  addUserToRole(userId: ID!, role: String!): User!
+
+  # Remove a user from a given role
+  removeUserFromRole(userId: ID!, role: String!): User!
 }
 `

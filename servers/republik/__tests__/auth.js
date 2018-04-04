@@ -92,6 +92,15 @@ const Supporter = {
   verified: true
 }
 
+const Admin = {
+  id: 'a0000000-0000-0000-0001-000000000004',
+  firstName: 'willhelm tell',
+  lastName: 'admin',
+  email: 'willhelmtell_admin@project-r.construction',
+  roles: ['admin'],
+  verified: true
+}
+
 const Anonymous = {
   firstName: null,
   lastName: null,
@@ -105,6 +114,7 @@ module.exports = {
     Supporter,
     Unverified,
     Anonymous,
-    Member
+    Member,
+    Admin
   }
 }
