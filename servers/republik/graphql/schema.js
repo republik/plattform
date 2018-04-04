@@ -58,6 +58,11 @@ type mutations {
     publicUrl: String
   ): User!
 
+  updateNotificationSettings(
+    defaultDiscussionNotificationOption: DiscussionNotificationOption
+    discussionNotificationChannels: [DiscussionNotificationChannel!]
+  ): User!
+
   publishCredential(
     description: String
   ): Credential
@@ -118,5 +123,6 @@ type subscriptions {
   # create, update, unpublish, vote
   comment(discussionId: ID!): CommentUpdate!
   greeting: Greeting!
+  webNotification: WebNotification!
 }
 `

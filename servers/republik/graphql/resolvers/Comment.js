@@ -11,6 +11,9 @@ if (!DISPLAY_AUTHOR_SECRET) {
 }
 
 module.exports = {
+  discussion: ({ discussionId }, args, { pgdb }) =>
+    pgdb.public.discussions.findOne({ id: discussionId }),
+
   published: ({ published, adminUnpublished }) =>
     published && !adminUnpublished,
 
@@ -114,7 +117,7 @@ module.exports = {
       }
     }
 
-    const profilePicture = getPortrait(commenter, null, context)
+    const profilePicture = getPortrait(commenter, (args && args.portrait), context)
 
     const id = crypto
       .createHmac('sha256', DISPLAY_AUTHOR_SECRET)
