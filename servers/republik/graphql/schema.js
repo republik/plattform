@@ -103,7 +103,10 @@ type mutations {
     discussionPreferences: DiscussionPreferencesInput!
   ): Discussion!
 
+  # if userId is null, the logged in user's subscription is changed
+  # required role to change other users: supporter
   updateNewsletterSubscription(
+    userId: ID,
     name: NewsletterName!
     subscribed: Boolean!
     status: String!

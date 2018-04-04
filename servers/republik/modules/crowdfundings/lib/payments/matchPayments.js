@@ -1,5 +1,6 @@
 const generateMemberships = require('../generateMemberships')
 const sendPaymentSuccessful = require('./sendPaymentSuccessful')
+const slack = require('../../../../lib/slack')
 
 module.exports = async (transaction, t) => {
   // load
@@ -39,14 +40,18 @@ module.exports = async (transaction, t) => {
     const pledgePayments = await transaction.public.pledgePayments.find({
       paymentId: updatedPayments.map(p => p.id)
     })
-    const pledges = await transaction.public.pledges.find({
+    const pledges = pledgePayments.length && await transaction.public.pledges.find({
       id: pledgePayments.map(p => p.pledgeId)
+    })
+    const users = pledges && await transaction.public.users.find({
+      id: pledges.map(p => p.userId)
     })
 
     for (let payment of updatedPayments) {
       const pledgePayment = pledgePayments.find(p => p.paymentId === payment.id)
       const pledge = pledges.find(p => p.id === pledgePayment.pledgeId)
-      if (!pledgePayment || !pledge) { throw new Error('could not find pledge for payment') }
+      const user = users.find(u => u.id === pledge.userId)
+      if (!pledgePayment || !pledge || !user) { throw new Error('could not find pledge for payment or user') }
 
       let newStatus
       if (payment.total >= pledge.total) {
@@ -62,6 +67,13 @@ module.exports = async (transaction, t) => {
         await transaction.public.pledges.update({id: pledge.id}, {
           status: newStatus
         })
+        if (newStatus === 'PAID_INVESTIGATE') {
+          await slack.publishPledge(
+            user,
+            pledge,
+            'PAID_INVESTIGATE'
+          )
+        }
         numUpdatedPledges += 1
       }
 

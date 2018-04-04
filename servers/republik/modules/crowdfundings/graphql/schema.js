@@ -66,7 +66,7 @@ type mutations {
   # MONTHLY_ABO: if cancelled immediately a new subscription is created
   # if canceled !immediately and subscription is still running, it is
   # reactivated.
-  # YEARLYs are just marked as renew = true
+  # YEARLYs are activated and a new membershipPeriod is inserted
   reactivateMembership(
     id: ID!
   ): Membership!
@@ -112,5 +112,23 @@ type mutations {
 
   # required role: supporter
   manuallyMatchPostfinancePayment(id: ID!): PostfinancePayment!
+
+  # Moves the pledge and accompanying (unclaimed) memberships from one user to another
+  # required role: supporter
+  movePledge(pledgeId: ID!, userId: ID!): Pledge!
+
+  # Moves a memberships from one user to another, like it was claimed
+  # except it doesn't get activated if it isn't
+  # required role: supporter
+  moveMembership(membershipId: ID!, userId: ID!): Membership!
+
+  # updates notes to a user
+  # required role: supporter
+  updateAdminNotes(userId: ID!, notes: String): User!
+
+  # generates a pledge (payment method: PAYMENTSLIP) with one membership (type: ABO)
+  # for the specified user.
+  # required role: supporter
+  generateMembership(userId: ID!): Membership!
 }
 `

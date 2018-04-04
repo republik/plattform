@@ -65,7 +65,7 @@ PgDb.connect({connectionString: DATABASE_URL}).then(async (pgdb) => {
             )
           } else {
             promises.push(
-              Roles.removeUserFromRoll(existingUser.id, role, transaction)
+              Roles.removeUserFromRole(existingUser.id, role, transaction)
             )
           }
         }
