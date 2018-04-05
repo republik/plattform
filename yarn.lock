@@ -15,135 +15,6 @@
     node-fetch "^2.1.1"
     url-template "^2.0.8"
 
-"@orbiting/backend-modules-assets@link:packages/assets":
-  version "2.1.1"
-  dependencies:
-    "@orbiting/backend-modules-env" "link:packages/env"
-    "@orbiting/backend-modules-github" "link:packages/github"
-    aws-sdk "^2.221.1"
-    check-env "^1.3.0"
-    debug "^3.1.0"
-    export-files "^2.1.1"
-    file-type-stream "^1.0.0"
-    sharp "^0.20.1"
-    stream-to-array "^2.3.0"
-
-"@orbiting/backend-modules-auth@link:packages/auth":
-  version "3.0.9"
-  dependencies:
-    "@orbiting/backend-modules-env" "link:packages/env"
-    "@orbiting/backend-modules-mail" "link:packages/mail"
-    "@orbiting/backend-modules-translate" "link:packages/translate"
-    apollo-modules-node "^0.1.4"
-    check-env "^1.3.0"
-    connect-pg-simple "^3.1.2"
-    country-emoji "^1.2.0"
-    debug "^3.1.0"
-    export-files "^2.1.1"
-    express-session "^1.15.6"
-    geoip-database "^1.0.16"
-    is-uuid "^1.0.2"
-    kraut "^0.1.1"
-    maxmind "^2.5.0"
-    passport "^0.4.0"
-    pogi "^2.5.8"
-    querystring "^0.2.0"
-    rw "^1.3.3"
-    useragent "^2.3.0"
-    uuid "^3.2.1"
-    validator "^9.4.1"
-
-"@orbiting/backend-modules-base@link:packages/base":
-  version "1.4.2"
-  dependencies:
-    "@orbiting/backend-modules-auth" "link:packages/auth"
-    apollo-engine "^1.0.4"
-    apollo-modules-node "^0.1.4"
-    apollo-server-express "^1.3.4"
-    bluebird "^3.5.1"
-    body-parser "^1.18.2"
-    check-env "^1.3.0"
-    compression "^1.7.2"
-    connect-timeout "^1.9.0"
-    cookie "^0.3.1"
-    cookie-parser "^1.4.3"
-    cors "^2.8.4"
-    d3-time-format "^2.1.1"
-    export-files "^2.1.1"
-    express "^4.16.3"
-    graphql-redis-subscriptions "^1.4.0"
-    graphql-subscriptions "^0.5.8"
-    pogi "^2.5.8"
-    redis "^2.8.0"
-    subscriptions-transport-ws "^0.9.7"
-
-"@orbiting/backend-modules-documents@link:packages/documents":
-  version "2.12.0"
-  dependencies:
-    "@orbiting/backend-modules-auth" "link:packages/auth"
-    "@project-r/styleguide" "^5.71.7"
-    "@project-r/template-newsletter" "^1.5.0"
-    apollo-modules-node "^0.1.4"
-    check-env "^1.3.0"
-    d3-array "^1.2.1"
-    d3-color "^1.0.3"
-    d3-format "^1.2.2"
-    d3-time-format "^2.1.1"
-    export-files "^2.1.1"
-    glamor "^2.20.40"
-    mdast-react-render "^1.2.0"
-    prop-types "^15.6.1"
-    react "^16.3.1"
-    react-dom "^16.3.1"
-    unist-util-visit "^1.3.0"
-
-"@orbiting/backend-modules-env@link:packages/env":
-  version "0.0.1"
-  dependencies:
-    dotenv "^5.0.1"
-
-"@orbiting/backend-modules-formats@link:packages/formats":
-  version "0.1.4"
-  dependencies:
-    apollo-modules-node "^0.1.4"
-    d3-time-format "^2.1.1"
-
-"@orbiting/backend-modules-github@link:packages/github":
-  version "1.0.0"
-  dependencies:
-    apollo-fetch "^0.7.0"
-    await-sleep "^0.0.1"
-    check-env "^1.3.0"
-    export-files "^2.1.1"
-    jsonwebtoken "^8.2.1"
-
-"@orbiting/backend-modules-mail@link:packages/mail":
-  version "2.0.0"
-  dependencies:
-    await-sleep "^0.0.1"
-    check-env "^1.3.0"
-    export-files "^2.1.1"
-
-"@orbiting/backend-modules-redirections@link:packages/redirections":
-  version "1.0.1"
-  dependencies:
-    apollo-modules-node "^0.1.4"
-
-"@orbiting/backend-modules-scalars@link:packages/scalars":
-  version "0.0.6"
-  dependencies:
-    "@orbiting/backend-modules-formats" "link:packages/formats"
-    apollo-modules-node "^0.1.4"
-    graphql-type-json "^0.1.4"
-
-"@orbiting/backend-modules-scripts@link:packages/scripts":
-  version "1.0.1"
-  dependencies:
-    child-process-promise "^2.2.1"
-
-"@orbiting/backend-modules-translate@link:packages/translate":
-  version "0.0.0"
-
 "@orbiting/remark-preset@^1.2.3":
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/@orbiting/remark-preset/-/remark-preset-1.2.3.tgz#e0d778a5d04b8fff300a7dcf13d4eabc81a7c331"
@@ -3038,15 +2909,9 @@ graphql-tools@^2.23.1:
     iterall "^1.1.3"
     uuid "^3.1.0"
 
-graphql-type-json@^0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/graphql-type-json/-/graphql-type-json-0.1.4.tgz#89f13f5d32ce08c9a76c79fdf9c1968384d81a4e"
-
-graphql@^0.12.3:
-  version "0.12.3"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-0.12.3.tgz#11668458bbe28261c0dcb6e265f515ba79f6ce07"
-  dependencies:
-    iterall "1.1.3"
+graphql-type-json@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/graphql-type-json/-/graphql-type-json-0.2.0.tgz#34c1a5fc2b7707a367c436482b253dbeebf1130e"
 
 graphql@^0.13.2:
   version "0.13.2"
@@ -3882,10 +3747,6 @@ isurl@^1.0.0-alpha5:
     has-to-string-tag-x "^1.2.0"
     is-object "^1.0.1"
 
-iterall@1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.1.3.tgz#1cbbff96204056dde6656e2ed2e2226d0e6d72c9"
-
 iterall@^1.1.3:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/iterall/-/iterall-1.1.4.tgz#0db40d38fdcf53ae14dc8ec674e62ab190d52cfc"
@@ -4270,7 +4131,7 @@ lodash.map@^4.5.1:
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/lodash.map/-/lodash.map-4.6.0.tgz#771ec7839e3473d9c4cde28b19394c3562f4f6d3"
 
-lodash.merge@^4.6.0:
+lodash.merge@^4.6.1:
   version "4.6.1"
   resolved "https://registry.yarnpkg.com/lodash.merge/-/lodash.merge-4.6.1.tgz#adc25d9cb99b9391c59624f379fbba60d7111d54"
 

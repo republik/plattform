@@ -8,15 +8,6 @@
   "private": true,
   "license": "AGPL-3.0",
   "dependencies": {
-    "@orbiting/backend-modules-assets": "link:../../packages/assets",
-    "@orbiting/backend-modules-auth": "link:../../packages/auth",
-    "@orbiting/backend-modules-base": "link:../../packages/base",
-    "@orbiting/backend-modules-documents": "link:../../packages/documents",
-    "@orbiting/backend-modules-mail": "link:../../packages/mail",
-    "@orbiting/backend-modules-redirections": "link:../../packages/redirections",
-    "@orbiting/backend-modules-scalars": "link:../../packages/scalars",
-    "@orbiting/backend-modules-scripts": "link:../../packages/scripts",
-    "@orbiting/backend-modules-translate": "link:../../packages/translate",
     "@slack/client": "^4.1.0",
     "apollo-modules-node": "^0.1.4",
     "d3-array": "^1.2.1",
@@ -63,7 +54,6 @@
     "test": "yarn run test:prepare && NODE_ENV=development OVERWRITE_ENV=.test.env istanbul cover tape \"__tests__/**/*.test.js\" | tap-diff"
   },
   "devDependencies": {
-    "@orbiting/backend-modules-env": "link:../../packages/env",
     "apollo-fetch": "^0.7.0",
     "child-process-promise": "^2.2.1",
     "coveralls": "^3.0.0",
