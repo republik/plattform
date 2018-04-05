@@ -1,5 +1,5 @@
 const { createApolloFetch } = require('apollo-fetch')
-const GitHubApi = require('@octokit/rest')()
+const GitHubApi = require('@octokit/rest')
 const appAuth = require('./appAuth')
 
 const {
