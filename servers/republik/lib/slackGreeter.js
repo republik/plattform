@@ -10,9 +10,7 @@ const {
 } = require('@orbiting/backend-modules-base')
 
 const {
-  RtmClient: RTM,
-  CLIENT_EVENTS,
-  RTM_EVENTS
+  RTMClient
 } = require('@slack/client')
 
 const {
@@ -21,9 +19,9 @@ const {
 } = process.env
 
 if (SLACK_API_TOKEN) {
-  const rtm = new RTM(SLACK_API_TOKEN)
+  const rtm = new RTMClient(SLACK_API_TOKEN)
 
-  rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, (payload) => {
+  rtm.on('authenticated', (payload) => {
     const {
       self,
       team
@@ -31,7 +29,7 @@ if (SLACK_API_TOKEN) {
     debug(`Slack: logged in as ${self.name} of team ${team.name}`)
   })
 
-  rtm.on(RTM_EVENTS.MESSAGE, async (message) => {
+  rtm.on('message', async (message) => {
     if (message.channel === SLACK_CHANNEL_GREETING && (!message.subtype || message.subtype === 'message_changed')) {
       debug('new message from slack: %O', message)
       let text = message.text
