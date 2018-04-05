@@ -20,6 +20,6 @@
   },
   "devDependencies": {
     "@orbiting/backend-modules-env": "link:../../packages/env",
-    "nodemon": "^1.17.2"
+    "nodemon": "^1.17.3"
   }
 }
