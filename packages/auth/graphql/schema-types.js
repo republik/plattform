@@ -42,6 +42,7 @@ type RequestInfo {
 
 enum EventLogType {
   TOKEN_REQUEST
+  TOKEN_RE_REQUEST
   ROLL_SESSION
   AUTHORIZE_SESSION
   DENY_SESSION
