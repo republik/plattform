@@ -13,6 +13,7 @@
     "heroku-postbuild": "npm run build",
     "tape": "cross-env NODE_ENV=test babel-tape-runner",
     "test": "cross-env NODE_ENV=test babel-tape-runner \"?(lib|pages|components)/**/*.test.js\" | faucet",
+    "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l",
     "standardize": "standard --fix",
     "precommit": "npm test && lint-staged",
     "translations": "gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json",
