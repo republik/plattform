@@ -14,7 +14,6 @@ const {
 } = process.env
 
 module.exports.run = () => {
-  require('./lib/slackGreeter')
   const localModule = require('./graphql')
   const executableSchema = makeExecutableSchema(merge(localModule, [documents, redirections]))
 
@@ -47,6 +46,9 @@ module.exports.run = () => {
   })
 
   return server.run(executableSchema, middlewares, t, createGraphQLContext)
+    .then(() => {
+      return require('./lib/slackGreeter').connect()
+    })
 }
 
 module.exports.close = () => {

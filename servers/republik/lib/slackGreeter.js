@@ -18,16 +18,15 @@ const {
   SLACK_CHANNEL_GREETING
 } = process.env
 
-if (SLACK_API_TOKEN) {
-  const rtm = new RTMClient(SLACK_API_TOKEN)
+if (!SLACK_API_TOKEN) {
+  console.warn('Listening to messages from slack disabled: missing SLACK_API_TOKEN')
+}
 
-  rtm.on('authenticated', (payload) => {
-    const {
-      self,
-      team
-    } = payload
-    debug(`Slack: logged in as ${self.name} of team ${team.name}`)
-  })
+module.exports.connect = async () => {
+  if (!SLACK_API_TOKEN) {
+    return
+  }
+  const rtm = new RTMClient(SLACK_API_TOKEN)
 
   rtm.on('message', async (message) => {
     if (message.channel === SLACK_CHANNEL_GREETING && (!message.subtype || message.subtype === 'message_changed')) {
@@ -64,5 +63,23 @@ if (SLACK_API_TOKEN) {
       }
     }
   })
-  rtm.start()
+
+  rtm.on('authenticated', (payload) => {
+    const {
+      self,
+      team
+    } = payload
+    debug(`logged in as ${self.name} of team ${team.name}`)
+  })
+
+  await new Promise((resolve, reject) => {
+    rtm.on('hello', resolve)
+    rtm.on('unable_to_rtm_start', reject)
+    rtm.start()
+  })
+    .catch((e) => {
+      console.error('slackGreeter: error connecting to slack RTM. Listing to messages disabled!', e)
+    })
+
+  debug(`RTM connected`)
 }
