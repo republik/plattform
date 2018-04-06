@@ -118,7 +118,8 @@ export default class RepoSearch extends Component {
   changeHandler (value) {
     this.setState(
         state => ({
-          value
+          value: null,
+          filter: null
         }),
         () => this.props.onChange(value)
       )
