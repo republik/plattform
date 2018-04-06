@@ -1,5 +1,5 @@
 {
-  "updated": "2018-04-06T01:27:30.535Z",
+  "updated": "2018-04-06T01:44:56.207Z",
   "title": "live",
   "data": [
     {
@@ -456,11 +456,11 @@
     },
     {
       "key": "uncommittedChanges/unlock/confirm/1",
-      "value": "Durch paralleles arbeiten, entstehen zwei Versionen. Falls Sie das nicht wollen, sprechen Sie miteinander.\n\nWenn Sie das Dokument jetzt bearbeiten? {activeUsers} wird gestört und darüber informiert."
+      "value": "Durch paralleles arbeiten, entstehen zwei Versionen. Falls Sie das nicht wollen, sprechen Sie miteinander.\n\nWollen Sie das Dokument jetzt bearbeiten? {activeUsers} wird gestört und darüber informiert."
     },
     {
       "key": "uncommittedChanges/unlock/confirm/other",
-      "value": "Durch paralleles arbeiten, entstehen zwei Versionen. Falls Sie das nicht wollen, sprechen Sie miteinander.\n\nWenn Sie das Dokument jetzt bearbeiten? {activeUsers} werden gestört und darüber informiert."
+      "value": "Durch paralleles arbeiten, entstehen zwei Versionen. Falls Sie das nicht wollen, sprechen Sie miteinander.\n\nWollen Sie das Dokument jetzt bearbeiten? {activeUsers} werden gestört und darüber informiert."
     },
     {
       "key": "uncommittedChanges/users/separator/last",
@@ -492,7 +492,7 @@
     },
     {
       "key": "uncommittedChanges/interruption/note",
-      "value": "Wenn Sie parallel arbeiten entstehen zwei Versionen, die später wieder zusammen geführt werden müssen. Falls Sie das nicht wollen, sprechen Sie miteinander."
+      "value": "Wenn Sie parallel arbeiten entstehen zwei Versionen, die später wieder zusammengeführt werden müssen. Falls Sie das nicht wollen, sprechen Sie miteinander."
     },
     {
       "key": "uncommittedChanges/acknowledged",
