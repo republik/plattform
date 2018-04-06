@@ -1,5 +1,5 @@
 {
-  "updated": "2018-04-02T23:23:14.686Z",
+  "updated": "2018-04-06T01:27:30.535Z",
   "title": "live",
   "data": [
     {
@@ -455,6 +455,26 @@
       "value": "Schriftgrösse"
     },
     {
+      "key": "uncommittedChanges/unlock/confirm/1",
+      "value": "Durch paralleles arbeiten, entstehen zwei Versionen. Falls Sie das nicht wollen, sprechen Sie miteinander.\n\nWenn Sie das Dokument jetzt bearbeiten? {activeUsers} wird gestört und darüber informiert."
+    },
+    {
+      "key": "uncommittedChanges/unlock/confirm/other",
+      "value": "Durch paralleles arbeiten, entstehen zwei Versionen. Falls Sie das nicht wollen, sprechen Sie miteinander.\n\nWenn Sie das Dokument jetzt bearbeiten? {activeUsers} werden gestört und darüber informiert."
+    },
+    {
+      "key": "uncommittedChanges/users/separator/last",
+      "value": " und "
+    },
+    {
+      "key": "uncommittedChanges/users/separator/other",
+      "value": ", "
+    },
+    {
+      "key": "uncommittedChanges/unlock/close",
+      "value": "Sie haben das Dokument bearbeiten wollen, Andere gestört, es aber dann nicht getan. Dies ist nicht nett."
+    },
+    {
       "key": "uncommittedChanges/title",
       "value": "Aktiv"
     },
@@ -463,20 +483,28 @@
       "value": "Niemand"
     },
     {
-      "key": "uncommittedChanges/warning",
-      "value": "Achtung: Mehrere Personen sind auf dieser Version aktiv!"
+      "key": "uncommittedChanges/interruption/text/1",
+      "value": "{interruptingUsers} ist dazu gestossen und bearbeitet das Dokument jetzt auch."
     },
     {
-      "key": "uncommittedChanges/ignore",
-      "value": "Lass mich, ich bin dran!"
+      "key": "uncommittedChanges/interruption/text/other",
+      "value": "{interruptingUsers} sind dazu gestossen und bearbeitet das Dokument jetzt auch."
+    },
+    {
+      "key": "uncommittedChanges/interruption/note",
+      "value": "Wenn Sie parallel arbeiten entstehen zwei Versionen, die später wieder zusammen geführt werden müssen. Falls Sie das nicht wollen, sprechen Sie miteinander."
+    },
+    {
+      "key": "uncommittedChanges/acknowledged",
+      "value": "Verstanden"
     },
     {
       "key": "uncommittedChanges/revert",
       "value": "Meine Änderungen verwerfen"
     },
     {
-      "key": "uncommittedChanges/revert/confirm",
-      "value": "Sind sie sicher, dass Sie alle bestehenden Änderungen verwerfen möchten?"
+      "key": "revert/confirm",
+      "value": "Sind Sie sicher, dass Sie alle bestehenden Änderungen verwerfen möchten?"
     },
     {
       "key": "commitHistory/title",
@@ -495,12 +523,12 @@
       "value": "Commit"
     },
     {
-      "key": "commit/begin",
-      "value": "Bearbeiten"
-    },
-    {
       "key": "commit/revert",
       "value": "Verwerfen"
+    },
+    {
+      "key": "commit/unlock",
+      "value": "Bearbeiten"
     },
     {
       "key": "commit/lock",

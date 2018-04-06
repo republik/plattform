@@ -7,12 +7,14 @@ import {
   Overlay,
   OverlayBody,
   Interaction,
-  Button
+  Button,
+  A
 } from '@project-r/styleguide'
 import { compose } from 'redux'
 import { getInitials } from '../../lib/utils/name'
-import Loader from '../../components/Loader'
 import withT from '../../lib/withT'
+
+export const warningColor = '#E9A733'
 
 const styles = {
   container: css({
@@ -71,7 +73,7 @@ const uncommittedChangesSubscription = gql`
   }
 `
 
-export const withUncommitedChanges = (WrappedComponent) => {
+export const withUncommitedChanges = ({ options } = {}) => (WrappedComponent) => {
   class UncommittedChanges extends Component {
     componentDidMount () {
       this.subscribe()
@@ -80,8 +82,8 @@ export const withUncommitedChanges = (WrappedComponent) => {
       this.subscribe()
     }
     subscribe () {
-      if (!this.unsubscribe && this.props.ucData.repo) {
-        this.unsubscribe = this.props.ucSubscribe()
+      if (!this.unsubscribe && this.props.data.repo) {
+        this.unsubscribe = this.props.subscribe()
       }
     }
     componentWillUnmount () {
@@ -89,27 +91,30 @@ export const withUncommitedChanges = (WrappedComponent) => {
     }
     render () {
       const {
-        ucSubscribe, // ignore
-        ucData: { loading, error, repo }, // extract
-        ...rest // forward
+        data: { loading, error, repo },
+        ownProps
       } = this.props
 
       return (
-        <Loader loading={loading} error={error} render={() => (
-          <WrappedComponent
-            uncommittedChanges={repo.uncommittedChanges}
-            {...rest} />
-        )} />
+        <WrappedComponent
+          uncommittedChanges={{
+            loading,
+            error,
+            users: (repo && repo.uncommittedChanges) || []
+          }}
+          {...ownProps} />
       )
     }
   }
 
   return compose(
     graphql(query, {
-      props: ({ data }) => {
+      options,
+      props: ({ data, ownProps }) => {
         return {
-          ucData: data,
-          ucSubscribe: params => {
+          ownProps,
+          data: data,
+          subscribe: params => {
             return data.subscribeToMore({
               document: uncommittedChangesSubscription,
               variables: {
@@ -152,10 +157,10 @@ export const withUncommitedChanges = (WrappedComponent) => {
   )(UncommittedChanges)
 }
 
-const TagsCompact = ({uncommittedChanges, t}) => (
+const Initials = ({uncommittedChanges, t}) => (
   <div {...styles.container}>
-    {uncommittedChanges.length
-      ? uncommittedChanges.map(user =>
+    {uncommittedChanges.users.length
+      ? uncommittedChanges.users.map(user =>
         <span key={user.id} {...css(styles.initials)} title={user.email}>
           {getInitials(user)}
         </span>
@@ -169,8 +174,8 @@ const TagsCompact = ({uncommittedChanges, t}) => (
 )
 
 const Tags = ({uncommittedChanges}) => (
-  <div {...styles.container}>
-    {uncommittedChanges.map(user =>
+  <div {...styles.container} style={{margin: '40px 0'}}>
+    {uncommittedChanges.users.map(user =>
       <div key={user.id} style={{marginRight: 4, textAlign: 'center'}}>
         <div {...css(styles.initials)} style={{display: 'inline-block'}} title={user.email}>
           {getInitials(user)}
@@ -184,91 +189,61 @@ const Tags = ({uncommittedChanges}) => (
   </div>
 )
 
-class Manager extends Component {
-  constructor (...args) {
-    super(...args)
-    this.state = {}
-    this.revertHandler = this.revertHandler.bind(this)
-  }
-  componentDidMount () {
-    this.refreshOverlay()
-  }
-  componentDidUpdate () {
-    this.refreshOverlay()
-  }
-  refreshOverlay () {
-    const { uncommittedChanges, hasUncommittedChanges } = this.props
-    const { isOpen, suppress } = this.state
-
-    // reset suppress
-    if (
-      suppress && (
-        !hasUncommittedChanges ||
-        uncommittedChanges.length <= 1
-      )
-    ) {
-      this.setState({ suppress: false })
-      return
-    }
-
-    if (
-      !isOpen &&
-      !suppress &&
-      hasUncommittedChanges &&
-      uncommittedChanges.length > 1
-    ) {
-      this.setState({ isOpen: true })
-    } else if (
-      isOpen && (
-        suppress || uncommittedChanges.length <= 1
-      )
-    ) {
-      this.setState({ isOpen: false })
-    }
-  }
-  revertHandler (e) {
-    const { t, onRevert } = this.props
-    if (window.confirm(t('uncommittedChanges/revert/confirm'))) {
-      onRevert(e)
-    }
-  }
-  render () {
-    const { uncommittedChanges, t } = this.props
-
-    return (
-      <Fragment>
-        {this.state.isOpen && (
-          <Overlay onClose={() => {}}>
-            <OverlayBody>
-              <Interaction.P style={{textAlign: 'center'}}>
-                {t('uncommittedChanges/warning')}
-              </Interaction.P><br />
-              <Tags uncommittedChanges={uncommittedChanges} />
-              <p>
-                <Button primary block onClick={() => { this.setState({suppress: true}) }}>
-                  {t('uncommittedChanges/ignore')}
-                </Button>
-              </p>
-              <p>
-                <Button block onClick={this.revertHandler}>
-                  {t('uncommittedChanges/revert')}
-                </Button>
-              </p>
-            </OverlayBody>
-          </Overlay>
-        )}
-        {!!uncommittedChanges.length && <Fragment>
-          <div style={{ textAlign: 'center', fontSize: '14px', marginTop: 7 }}>
-            <Label key='label'>{t('uncommittedChanges/title')}</Label>
-          </div>
-          <TagsCompact uncommittedChanges={uncommittedChanges} t={t} />
-        </Fragment>}
-      </Fragment>
+export const joinUsers = (users, t) => users.map(user => user.name)
+  .reduce((string, name, index, array) => [string, name].join(
+    t(
+      `uncommittedChanges/users/separator/${
+        index === array.length - 1 ? 'last' : 'other'
+      }`
     )
-  }
-}
+  ))
+
+export const ActiveInterruptionOverlay = withT(({
+  uncommittedChanges,
+  interruptingUsers,
+  onRevert,
+  onAcknowledged,
+  t
+}) =>
+  <Overlay onClose={() => {}} mUpStyle={{minHeight: 0}}>
+    <OverlayBody style={{padding: 20}}>
+      <Interaction.P>
+        {t.pluralize('uncommittedChanges/interruption/text', {
+          count: interruptingUsers.length,
+          interruptingUsers: joinUsers(interruptingUsers, t)
+        })}
+      </Interaction.P>
+      <Tags uncommittedChanges={uncommittedChanges} />
+      <Interaction.P>
+        {t('uncommittedChanges/interruption/note')}
+      </Interaction.P>
+      <p>
+        <Button primary block onClick={onAcknowledged} style={{
+          backgroundColor: warningColor,
+          borderColor: warningColor
+        }}>
+          {t('uncommittedChanges/acknowledged')}
+        </Button>
+      </p>
+      <p>
+        <A href='#' style={{display: 'block', textAlign: 'center'}} onClick={onRevert}>
+          {t('uncommittedChanges/revert')}
+        </A>
+      </p>
+    </OverlayBody>
+  </Overlay>
+)
+
+export const UncommittedChanges = ({ uncommittedChanges, t }) => (
+  !!uncommittedChanges.users.length && <Fragment>
+    <div style={{ textAlign: 'center', fontSize: '14px', marginTop: 7 }}>
+      <Label key='label'>{t('uncommittedChanges/title')}</Label>
+    </div>
+    <Initials uncommittedChanges={uncommittedChanges} t={t} />
+  </Fragment>
+)
 
 export default compose(
   withT,
-  withUncommitedChanges
-)(Manager)
+  withUncommitedChanges()
+)(UncommittedChanges)

@@ -218,7 +218,7 @@ class Editor extends Component {
 
 Editor.propTypes = {
   value: PropTypes.object,
-  readOnly: PropTypes.boolean,
+  readOnly: PropTypes.bool,
   onChange: PropTypes.func,
   onDocumentChange: PropTypes.func
 }
