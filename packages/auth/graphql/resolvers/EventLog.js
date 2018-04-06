@@ -13,6 +13,17 @@ module.exports = {
       eventLog.action === 'UPDATE' &&
       eventLog.oldData &&
       eventLog.newData &&
+      eventLog.oldData.sess.token &&
+      eventLog.newData.sess.token &&
+      eventLog.oldData.sess.token !== eventLog.newData.sess.token &&
+      eventLog.oldData.sess.ip === eventLog.newData.sess.ip
+    ) {
+      return 'TOKEN_RE_REQUEST'
+    }
+    if (
+      eventLog.action === 'UPDATE' &&
+      eventLog.oldData &&
+      eventLog.newData &&
       eventLog.oldData.sess.cookie.expires !==
         eventLog.newData.sess.cookie.expires
     ) {

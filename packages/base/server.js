@@ -2,7 +2,7 @@ const PgDb = require('./lib/pgdb')
 const express = require('express')
 const cors = require('cors')
 const { createServer } = require('http')
-const { Engine } = require('apollo-engine')
+const { ApolloEngine } = require('apollo-engine')
 const checkEnv = require('check-env')
 const compression = require('compression')
 const timeout = require('connect-timeout')
@@ -39,22 +39,14 @@ module.exports.run = (executableSchema, middlewares, t, createGraphqlContext) =>
   // https://github.com/apollographql/apollo-engine-js#middleware-configuration
   // https://www.apollographql.com/docs/engine/proto-doc.html
   const engine = ENGINE_API_KEY
-    ? new Engine({
-      engineConfig: {
-        apiKey: ENGINE_API_KEY,
-        logging: {
-          level: 'INFO'   // Engine Proxy logging level. DEBUG, INFO, WARN or ERROR
-        }
+    ? new ApolloEngine({
+      apiKey: ENGINE_API_KEY,
+      logging: {
+        level: 'INFO'
       },
-      origin: {
-        requestTimeout: '60m'
-      },
-      graphqlPort: PORT
+      origins: [{requestTimeout: '60m'}]
     })
     : null
-  if (engine) {
-    engine.start()
-  }
 
   return PgDb.connect().then(async (_pgdb) => {
     pgdb = _pgdb
@@ -98,11 +90,6 @@ module.exports.run = (executableSchema, middlewares, t, createGraphqlContext) =>
       )
     }
 
-    // apollo engine middleware
-    if (engine) {
-      server.use(engine.expressMiddleware())
-    }
-
     // Once DB is available, setup sessions and routes for authentication
     auth.configure({
       server: server,
@@ -132,9 +119,22 @@ module.exports.run = (executableSchema, middlewares, t, createGraphqlContext) =>
     }
 
     // start the server
-    httpServer.listen(PORT, () => {
-      console.info('server is running on http://localhost:' + PORT)
-    })
+    if (engine) {
+      engine.listen({
+        port: PORT,
+        httpServer,
+        graphqlPaths: ['/graphql'],
+        launcherOptions: {
+          startupTimeout: 3000
+        }
+      }, () => {
+        console.info('server is running on http://localhost:' + PORT)
+      })
+    } else {
+      httpServer.listen(PORT, () => {
+        console.info('server is running on http://localhost:' + PORT)
+      })
+    }
 
     return { pgdb }
   })

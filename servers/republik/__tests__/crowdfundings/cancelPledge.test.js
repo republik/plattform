@@ -29,22 +29,22 @@ module.exports = { cancelPledge }
 
 const prepareParkingUserAndPledge = async () => {
   try {
+    await pgDatabase().public.users.insert({
+      id: process.env.PARKING_USER_ID,
+      email: 'parking@test.project-r.construction',
+      firstName: 'parking',
+      lastName: 'parker'
+    })
+  } catch (e) {
+    console.log(e)
+  }
+  try {
     await pgDatabase().public.pledges.insert({
       id: process.env.PARKING_PLEDGE_ID,
       userId: process.env.PARKING_USER_ID,
       packageId: '00000000-0000-0000-0007-000000000001',
       total: 0,
       donation: 0
-    })
-  } catch (e) {
-    console.log(e)
-  }
-  try {
-    await pgDatabase().public.users.insert({
-      id: process.env.PARKING_USER_ID,
-      email: 'parking@test.project-r.construction',
-      firstName: 'parking',
-      lastName: 'parker'
     })
   } catch (e) {
     console.log(e)
