@@ -10,8 +10,7 @@ module.exports = async (
 
   const whereClause = role
     ? `WHERE
-      roles @> :role
-`
+      roles @> :role`
     : ''
 
   const users = await pgdb.query(`
