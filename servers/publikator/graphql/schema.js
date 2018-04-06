@@ -60,7 +60,7 @@ type mutations {
     repoId: ID!
   ): Boolean!
 
-  # Inform about my uncommited changes in the repo
+  # Inform about my uncommitted changes in the repo
   uncommittedChanges(
     repoId: ID!
     action: Action!
@@ -77,7 +77,7 @@ type mutations {
 
 type subscriptions {
   # Provides updates to the list of users
-  # with uncommited changes in the repo
+  # with uncommitted changes in the repo
   uncommittedChanges(
     repoId: ID!
   ): UncommittedChangeUpdate!
