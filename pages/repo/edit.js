@@ -34,6 +34,7 @@ import { errorToString } from '../../lib/utils/errors'
 import initLocalStore from '../../lib/utils/localStorage'
 
 import { getSchema } from '../../components/Templates'
+import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
 
 import { colors } from '@project-r/styleguide'
 import SettingsIcon from 'react-icons/lib/fa/cogs'
@@ -252,12 +253,24 @@ class EditorPage extends Component {
       this.setState(this.unlock)
     }
     this.beforeunload = event => {
+      const { url: { query: { repoId } } } = this.props
       const {
         hasUncommittedChanges,
         didUnlock
       } = this.state
       if (!hasUncommittedChanges && didUnlock) {
         this.notifyChanges('delete')
+        if (event) {
+          try {
+            navigator.sendBeacon(
+              API_UNCOMMITTED_CHANGES_URL,
+              JSON.stringify({
+                repoId,
+                action: 'delete'
+              })
+            )
+          } catch (e) {}
+        }
       }
     }
   }
