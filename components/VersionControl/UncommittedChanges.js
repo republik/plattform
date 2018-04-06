@@ -109,7 +109,14 @@ export const withUncommitedChanges = ({ options } = {}) => (WrappedComponent) =>
 
   return compose(
     graphql(query, {
-      options,
+      options: (props) => ({
+        fetchPolicy: 'network-only',
+        variables: props,
+        ...(typeof options === 'function'
+          ? options(props)
+          : options
+        )
+      }),
       props: ({ data, ownProps }) => {
         return {
           ownProps,

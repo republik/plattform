@@ -257,14 +257,7 @@ class EditorPage extends Component {
         didUnlock
       } = this.state
       if (!hasUncommittedChanges && didUnlock) {
-        if (event) {
-          this.lockHandler()
-          const message = this.props.t('uncommittedChanges/unlockedUnchangedClose')
-          event.returnValue = message
-          return message
-        } else {
-          this.notifyChanges('delete')
-        }
+        this.notifyChanges('delete')
       }
     }
   }
@@ -627,7 +620,6 @@ class EditorPage extends Component {
     const showLoading = (
       committing ||
       loading ||
-      uncommittedChanges.loading ||
       (!schema && !error)
     )
 
