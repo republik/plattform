@@ -17,7 +17,7 @@ type queries {
   user(slug: String): User
   # search for users
   # required role: editor
-  users(search: String!, role: String!): [User]!
+  users(search: String!, role: String): [User]!
 
   # search for an unverified session by token
   unauthorizedSession(email: String!, token: String!): Session
