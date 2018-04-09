@@ -1,5 +1,5 @@
 {
-  "updated": "2018-03-12T16:48:14.357Z",
+  "updated": "2018-04-09T14:36:02.841Z",
   "title": "live",
   "data": [
     {
@@ -9,6 +9,14 @@
     {
       "key": "styleguide/CommentComposer/answer",
       "value": "antworten"
+    },
+    {
+      "key": "styleguide/CommentComposer/cancel",
+      "value": "abbrechen"
+    },
+    {
+      "key": "styleguide/CommentComposer/etiquette",
+      "value": "Etikette"
     },
     {
       "key": "styleguide/CommentActions/answer",

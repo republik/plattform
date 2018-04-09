@@ -4,10 +4,22 @@ import {css} from 'glamor'
 import Textarea from 'react-textarea-autosize';
 import colors from '../../theme/colors'
 import {serifRegular16, sansSerifRegular16} from '../Typography/styles'
-import MdClose from 'react-icons/lib/md/close'
 
 import CommentComposerHeader from './CommentComposerHeader'
 import CommentComposerError from './CommentComposerError'
+
+const actionButtonStyle = {
+  ...sansSerifRegular16,
+  outline: 'none',
+  WebkitAppearance: 'none',
+  background: 'transparent',
+  border: 'none',
+  padding: '0 12px',
+  cursor: 'pointer',
+  alignSelf: 'stretch',
+  display: 'flex',
+  alignItems: 'center'
+}
 
 const styles = {
   form: css({
@@ -35,39 +47,33 @@ const styles = {
   }),
   actions: css({
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: '40px'
+  }),
+  mainActions: css({
+    display: 'flex',
     alignItems: 'center',
     height: '40px'
   }),
   cancelButton: css({
-    outline: 'none',
-    WebkitAppearance: 'none',
-    background: 'transparent',
-    border: 'none',
-    padding: '0 6px',
-    cursor: 'pointer',
-
-    alignSelf: 'stretch',
-    display: 'flex',
-    alignItems: 'center',
-    fontSize: '20px'
+    ...actionButtonStyle,
+    color: colors.text
   }),
   commitButton: css({
-    outline: 'none',
-    WebkitAppearance: 'none',
-    background: 'transparent',
-    border: 'none',
-    padding: '0 12px 0 6px',
-    cursor: 'pointer',
-
+    ...actionButtonStyle,
+    color: colors.primary,
+  }),
+  etiquette: css({
     ...sansSerifRegular16,
     color: colors.primary,
-
-    alignSelf: 'stretch',
-    display: 'flex',
-    alignItems: 'center'
+    cursor: 'pointer',
+    padding: '0 12px',
+    textDecoration: 'none'
   })
 }
+
+const DefaultLink = ({ children }) => children
 
 class CommentComposer extends PureComponent {
   constructor (props) {
@@ -98,7 +104,17 @@ class CommentComposer extends PureComponent {
   }
 
   render () {
-    const {t, displayAuthor, error, onEditPreferences, onCancel, submitLabel} = this.props
+    const {
+      t,
+      displayAuthor,
+      error,
+      onEditPreferences,
+      onCancel,
+      submitLabel,
+      cancelLabel,
+      etiquetteLabel,
+      EtiquetteLink = DefaultLink
+    } = this.props
     const {text} = this.state
 
     return (
@@ -120,12 +136,19 @@ class CommentComposer extends PureComponent {
           />
 
           <div {...styles.actions}>
-            <button {...styles.cancelButton} onClick={onCancel}>
-              <MdClose />
-            </button>
-            <button {...styles.commitButton} onClick={this.onSubmit}>
-              {submitLabel || t('styleguide/CommentComposer/answer')}
-            </button>
+            <EtiquetteLink passHref>
+              <a {...styles.etiquette}>
+                {etiquetteLabel || t('styleguide/CommentComposer/etiquette')}
+              </a>
+            </EtiquetteLink>
+            <div {...styles.mainActions}>
+              <button {...styles.cancelButton} onClick={onCancel}>
+                {cancelLabel || t('styleguide/CommentComposer/cancel')}
+              </button>
+              <button {...styles.commitButton} onClick={this.onSubmit}>
+                {submitLabel || t('styleguide/CommentComposer/answer')}
+              </button>
+            </div>
           </div>
         </div>
         {error && <CommentComposerError>{error}</CommentComposerError>}
@@ -141,7 +164,9 @@ CommentComposer.propTypes = {
   onEditPreferences: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
   submitComment: PropTypes.func.isRequired,
-  submitLabel: PropTypes.string
+  submitLabel: PropTypes.string,
+  cancelLabel: PropTypes.string,
+  etiquetteLabel: PropTypes.string
 }
 
 export default CommentComposer
