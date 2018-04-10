@@ -57,7 +57,7 @@
   onEditPreferences={() => {}}
   onCancel={() => {}}
   submitComment={t => {alert(t)}}
-  limit={100}
+  maxLength={100}
 />
 ```
 
@@ -73,7 +73,7 @@
   onEditPreferences={() => {}}
   onCancel={() => {}}
   submitComment={t => {alert(t)}}
-  limit={100}
+  maxLength={100}
 />
 ```
 
@@ -89,7 +89,7 @@
   onEditPreferences={() => {}}
   onCancel={() => {}}
   submitComment={t => {alert(t)}}
-  limit={100}
+  maxLength={100}
 />
 ```
 

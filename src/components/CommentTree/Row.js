@@ -17,7 +17,7 @@ const styles = {
   }),
 }
 
-const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onEditPreferences, onAnswer, edit, onUnpublish, onUpvote, onDownvote, dismissComposer, submitComment, highlighted, timeago, Link}) => {
+const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onEditPreferences, onAnswer, edit, onUnpublish, onUpvote, onDownvote, dismissComposer, submitComment, highlighted, timeago, maxLength, Link, EtiquetteLink}) => {
   const isEditing = edit && edit.isEditing
   const { score } = comment
 
@@ -45,6 +45,8 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
               onCancel={edit.cancel}
               submitComment={edit.submit}
               submitLabel={t('styleguide/comment/edit/submit')}
+              maxLength={maxLength}
+              EtiquetteLink={EtiquetteLink}
             />
           </div>
         )}
@@ -68,6 +70,8 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
               onEditPreferences={onEditPreferences}
               onCancel={dismissComposer}
               submitComment={submitComment}
+              maxLength={maxLength}
+              EtiquetteLink={EtiquetteLink}
             />
           }
         </div>
@@ -93,6 +97,7 @@ Row.propTypes = {
   dismissComposer: PropTypes.func.isRequired,
   submitComment: PropTypes.func.isRequired,
   timeago: PropTypes.func.isRequired,
+  maxLength: PropTypes.number
 }
 
 class Composer extends PureComponent {
@@ -105,7 +110,7 @@ class Composer extends PureComponent {
   }
 
   render () {
-    const {t, displayAuthor, error, onEditPreferences, onCancel, submitComment} = this.props
+    const {t, displayAuthor, error, onEditPreferences, onCancel, submitComment, maxLength, EtiquetteLink} = this.props
     const {isVisible} = this.state
 
     return (
@@ -117,6 +122,8 @@ class Composer extends PureComponent {
           onEditPreferences={onEditPreferences}
           onCancel={onCancel}
           submitComment={submitComment}
+          maxLength={maxLength}
+          EtiquetteLink={EtiquetteLink}
         />
       </div>
     )
@@ -129,6 +136,7 @@ Composer.propTypes = {
   error: PropTypes.string,
   onCancel: PropTypes.func.isRequired,
   submitComment: PropTypes.func.isRequired,
+  maxLength: PropTypes.number
 }
 
 class RowState extends PureComponent {
@@ -189,7 +197,9 @@ class RowState extends PureComponent {
       displayAuthor,
       onEditPreferences,
       isAdmin,
-      Link
+      maxLength,
+      Link,
+      EtiquetteLink
     } = this.props
     const {composerState, composerError} = this.state
     const {userVote} = comment
@@ -244,7 +254,9 @@ class RowState extends PureComponent {
         submitComment={this.submitComment}
         edit={edit}
         timeago={timeago}
+        maxLength={maxLength}
         Link={Link}
+        EtiquetteLink={EtiquetteLink}
       />
     )
   }

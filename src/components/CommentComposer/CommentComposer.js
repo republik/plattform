@@ -46,7 +46,7 @@ const styles = {
       color: colors.lightText
     }
   }),
-  limit: css({
+  maxLength: css({
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'flex-end',
@@ -102,7 +102,7 @@ class CommentComposer extends PureComponent {
 
     this.onChange = ev => {
       this.setState({text: ev.target.value})
-      this.updateLimit()
+      this.updatemaxLength()
     }
 
     this.onSubmit = () => {
@@ -119,17 +119,17 @@ class CommentComposer extends PureComponent {
     )
   }
 
-  updateLimit () {
-    if (this.props.limit) {
+  updatemaxLength () {
+    if (this.props.maxLength) {
       this.setState({count: this.getCount()})
-      this.setState({progress: this.getCount() / this.props.limit * 100})
+      this.setState({progress: this.getCount() / this.props.maxLength * 100})
     }
   }
 
   componentDidMount () {
     if (this.textarea) {
       this.textarea.focus()
-      this.updateLimit()
+      this.updatemaxLength()
     }
   }
 
@@ -144,13 +144,13 @@ class CommentComposer extends PureComponent {
       cancelLabel,
       etiquetteLabel,
       EtiquetteLink = DefaultLink,
-      limit
+      maxLength
     } = this.props
     const {text, count, progress} = this.state
 
-    const limitExceeded = limit && count > limit
-    const showCount = limit && limit - count < 21
-    const progressColor = limit && progress > 100 ? colors.error : colors.text
+    const maxLengthExceeded = maxLength && count > maxLength
+    const showCount = maxLength && maxLength - count < 21
+    const progressColor = maxLength && progress > 100 ? colors.error : colors.text
 
     return (
       <div>
@@ -169,9 +169,9 @@ class CommentComposer extends PureComponent {
             rows='1'
             onChange={this.onChange}
           />
-          {limit && <div {...styles.limit}>
+          {maxLength && <div {...styles.maxLength}>
             {showCount && <span {...styles.remaining} style={{color: progressColor}}>
-              {limit - count}
+              {maxLength - count}
             </span>}
             <CommentComposerProgress
               stroke={progressColor}
@@ -191,7 +191,7 @@ class CommentComposer extends PureComponent {
               <button {...styles.cancelButton} onClick={onCancel}>
                 {cancelLabel || t('styleguide/CommentComposer/cancel')}
               </button>
-              <button {...styles.commitButton} onClick={this.onSubmit} disabled={limitExceeded}>
+              <button {...styles.commitButton} onClick={this.onSubmit} disabled={maxLengthExceeded}>
                 {submitLabel || t('styleguide/CommentComposer/answer')}
               </button>
             </div>
@@ -214,7 +214,7 @@ CommentComposer.propTypes = {
   cancelLabel: PropTypes.string,
   etiquetteLabel: PropTypes.string,
   EtiquetteLink: PropTypes.func,
-  limit: PropTypes.number
+  maxLength: PropTypes.number
 }
 
 export default CommentComposer
