@@ -13,6 +13,11 @@ import {
 import { compose } from 'redux'
 import { getInitials } from '../../lib/utils/name'
 import withT from '../../lib/withT'
+import { UNCOMMITTED_CHANGES_POLL_INTERVAL_MS } from '../../lib/settings'
+
+import createDebug from 'debug'
+
+const debug = createDebug('publikator:uncommittedChanges')
 
 export const warningColor = '#E9A733'
 
@@ -75,6 +80,10 @@ const uncommittedChangesSubscription = gql`
 
 export const withUncommitedChanges = ({ options } = {}) => (WrappedComponent) => {
   class UncommittedChanges extends Component {
+    constructor (...args) {
+      super(...args)
+      this.state = {}
+    }
     componentDidMount () {
       this.subscribe()
     }
@@ -83,7 +92,14 @@ export const withUncommitedChanges = ({ options } = {}) => (WrappedComponent) =>
     }
     subscribe () {
       if (!this.unsubscribe && this.props.data.repo) {
-        this.unsubscribe = this.props.subscribe()
+        this.unsubscribe = this.props.subscribe({
+          onError: error => {
+            debug('subscription', 'error', error)
+            this.setState({
+              subscriptionError: error
+            })
+          }
+        })
       }
     }
     componentWillUnmount () {
@@ -99,7 +115,7 @@ export const withUncommitedChanges = ({ options } = {}) => (WrappedComponent) =>
         <WrappedComponent
           uncommittedChanges={{
             loading,
-            error,
+            error: this.state.subscriptionError || error,
             users: (repo && repo.uncommittedChanges) || []
           }}
           {...ownProps} />
@@ -111,6 +127,7 @@ export const withUncommitedChanges = ({ options } = {}) => (WrappedComponent) =>
     graphql(query, {
       options: (props) => ({
         fetchPolicy: 'network-only',
+        pollInterval: UNCOMMITTED_CHANGES_POLL_INTERVAL_MS,
         variables: props,
         ...(typeof options === 'function'
           ? options(props)
@@ -121,13 +138,15 @@ export const withUncommitedChanges = ({ options } = {}) => (WrappedComponent) =>
         return {
           ownProps,
           data: data,
-          subscribe: params => {
+          subscribe: ({ onError }) => {
             return data.subscribeToMore({
               document: uncommittedChangesSubscription,
               variables: {
                 repoId: data.repo.id
               },
+              onError,
               updateQuery: (prev, { subscriptionData }) => {
+                debug('subscription', 'update', subscriptionData)
                 if (!subscriptionData.data) {
                   console.warn('empty subscription data')
                   return prev
