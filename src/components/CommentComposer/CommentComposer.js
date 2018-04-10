@@ -3,10 +3,11 @@ import PropTypes from 'prop-types'
 import {css} from 'glamor'
 import Textarea from 'react-textarea-autosize';
 import colors from '../../theme/colors'
-import {serifRegular16, sansSerifRegular16} from '../Typography/styles'
+import {serifRegular16, sansSerifRegular14, sansSerifRegular16} from '../Typography/styles'
 
 import CommentComposerHeader from './CommentComposerHeader'
 import CommentComposerError from './CommentComposerError'
+import CommentComposerProgress from './CommentComposerProgress'
 
 const actionButtonStyle = {
   ...sansSerifRegular16,
@@ -45,6 +46,17 @@ const styles = {
       color: colors.lightText
     }
   }),
+  limit: css({
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    padding: '0 12px'
+  }),
+  remaining: css({
+    ...sansSerifRegular14,
+    lineHeight: '20px',
+    padding: '0 3px'
+  }),
   actions: css({
     display: 'flex',
     justifyContent: 'space-between',
@@ -63,6 +75,9 @@ const styles = {
   commitButton: css({
     ...actionButtonStyle,
     color: colors.primary,
+    '&[disabled]': {
+      color: colors.disabled
+    }
   }),
   etiquette: css({
     ...sansSerifRegular16,
@@ -80,11 +95,14 @@ class CommentComposer extends PureComponent {
     super(props)
 
     this.state = {
-      text: props.initialText || ''
+      text: props.initialText || '',
+      count: 0,
+      progress: 0
     }
 
     this.onChange = ev => {
       this.setState({text: ev.target.value})
+      this.updateLimit()
     }
 
     this.onSubmit = () => {
@@ -95,11 +113,23 @@ class CommentComposer extends PureComponent {
     this.textareaRef = (ref) => {
       this.textarea = ref
     }
+
+    this.getCount = () => (
+      (this.textarea && this.textarea.value.length) || 0
+    )
+  }
+
+  updateLimit () {
+    if (this.props.limit) {
+      this.setState({count: this.getCount()})
+      this.setState({progress: this.getCount() / this.props.limit * 100})
+    }
   }
 
   componentDidMount () {
     if (this.textarea) {
       this.textarea.focus()
+      this.updateLimit()
     }
   }
 
@@ -113,9 +143,14 @@ class CommentComposer extends PureComponent {
       submitLabel,
       cancelLabel,
       etiquetteLabel,
-      EtiquetteLink = DefaultLink
+      EtiquetteLink = DefaultLink,
+      limit
     } = this.props
-    const {text} = this.state
+    const {text, count, progress} = this.state
+
+    const limitExceeded = limit && count > limit
+    const showCount = limit && limit - count < 21
+    const progressColor = limit && progress > 100 ? colors.error : colors.text
 
     return (
       <div>
@@ -134,6 +169,17 @@ class CommentComposer extends PureComponent {
             rows='1'
             onChange={this.onChange}
           />
+          {limit && <div {...styles.limit}>
+            {showCount && <span {...styles.remaining} style={{color: progressColor}}>
+              {limit - count}
+            </span>}
+            <CommentComposerProgress
+              stroke={progressColor}
+              radius={12}
+              strokeWidth={2}
+              progress={Math.min(progress, 100)}
+            />
+          </div>}
 
           <div {...styles.actions}>
             <EtiquetteLink passHref>
@@ -145,7 +191,7 @@ class CommentComposer extends PureComponent {
               <button {...styles.cancelButton} onClick={onCancel}>
                 {cancelLabel || t('styleguide/CommentComposer/cancel')}
               </button>
-              <button {...styles.commitButton} onClick={this.onSubmit}>
+              <button {...styles.commitButton} onClick={this.onSubmit} disabled={limitExceeded}>
                 {submitLabel || t('styleguide/CommentComposer/answer')}
               </button>
             </div>
@@ -166,7 +212,9 @@ CommentComposer.propTypes = {
   submitComment: PropTypes.func.isRequired,
   submitLabel: PropTypes.string,
   cancelLabel: PropTypes.string,
-  etiquetteLabel: PropTypes.string
+  etiquetteLabel: PropTypes.string,
+  EtiquetteLink: PropTypes.func,
+  limit: PropTypes.number
 }
 
 export default CommentComposer
