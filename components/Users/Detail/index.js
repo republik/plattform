@@ -23,6 +23,7 @@ import PledgeOverview from './PledgeOverview'
 import MembershipOverview from './MembershipOverview'
 import EventLog from './EventLog'
 import Notepad from './Notepad'
+import SessionOverview from './SessionOverview'
 
 const GUTTER = 60
 const styles = {
@@ -187,6 +188,15 @@ class Detail extends Component {
                 >
                   Event Log
                 </TabLink>
+                <TabLink
+                  name="sessions"
+                  onClick={this.tabLinkHandler(
+                    'sessions'
+                  )}
+                  current={this.state.selectedTab}
+                >
+                  Sessions
+                </TabLink>
               </div>
               <Tab
                 name="details"
@@ -341,6 +351,14 @@ class Detail extends Component {
               >
                 <EventLog
                   items={props.data.user.eventLog}
+                />
+              </Tab>
+              <Tab
+                name="sessions"
+                current={this.state.selectedTab}
+              >
+                <SessionOverview
+                  user={props.data.user}
                 />
               </Tab>
             </div>
