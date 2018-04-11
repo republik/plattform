@@ -136,6 +136,28 @@ class CommentComposer extends PureComponent {
     }
   }
 
+  renderProgress () {
+    const {maxLength} = this.props
+    if (!maxLength) return null
+
+    const {count, progress} = this.state
+    const remaining = maxLength - count < 21 && maxLength - count
+    const progressColor = progress > 100 ? colors.error : colors.text
+    return (
+      <div {...styles.maxLength}>
+        {isFinite(remaining) && <span {...styles.remaining} style={{color: progressColor}}>
+          {remaining}
+        </span>}
+        <CommentComposerProgress
+          stroke={progressColor}
+          radius={9}
+          strokeWidth={2}
+          progress={Math.min(progress, 100)}
+        />
+      </div>
+    )
+  }
+
   render () {
     const {
       t,
@@ -149,11 +171,8 @@ class CommentComposer extends PureComponent {
       EtiquetteLink = DefaultLink,
       maxLength
     } = this.props
-    const {text, count, progress} = this.state
-
-    const remaining = maxLength && maxLength - count < 21 && maxLength - count
+    const {text, count} = this.state
     const maxLengthExceeded = maxLength && count > maxLength
-    const progressColor = maxLength && progress > 100 ? colors.error : colors.text
 
     return (
       <div>
@@ -172,18 +191,7 @@ class CommentComposer extends PureComponent {
             rows='1'
             onChange={this.onChange}
           />
-          {maxLength && <div {...styles.maxLength}>
-            {isFinite(remaining) && <span {...styles.remaining} style={{color: progressColor}}>
-              {remaining}
-            </span>}
-            <CommentComposerProgress
-              stroke={progressColor}
-              radius={9}
-              strokeWidth={2}
-              progress={Math.min(progress, 100)}
-            />
-          </div>}
-
+          {this.renderProgress()}
           <div {...styles.actions}>
             <EtiquetteLink passHref>
               <a {...styles.etiquette}>
