@@ -2,6 +2,7 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const crypto = require('crypto')
 const { portrait: getPortrait } = require('./User')
+const remark = require('../../lib/remark')
 
 const {
   DISPLAY_AUTHOR_SECRET
@@ -9,6 +10,11 @@ const {
 if (!DISPLAY_AUTHOR_SECRET) {
   throw new Error('missing required DISPLAY_AUTHOR_SECRET')
 }
+
+const textForComment = ({ userId, content, published, adminUnpublished }, user) =>
+  (!published || adminUnpublished) && (!user || userId !== user.id)
+    ? null
+    : content
 
 module.exports = {
   discussion: ({ discussionId }, args, { pgdb }) =>
@@ -22,10 +28,16 @@ module.exports = {
       ? adminUnpublished
       : null,
 
-  content: ({ userId, content, published, adminUnpublished }, args, { user, t }) =>
-    (!published || adminUnpublished) && (!user || userId !== user.id)
-      ? null
-      : content,
+  content: (comment, args, { user }) => {
+    const text = textForComment(comment, user)
+    if (!text) {
+      return text
+    }
+    return remark.parse(text)
+  },
+
+  text: (comment, args, { user }) =>
+    textForComment(comment, user),
 
   score: comment =>
     comment.upVotes - comment.downVotes,
