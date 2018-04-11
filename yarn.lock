@@ -801,10 +801,6 @@ body-parser@1.18.2, body-parser@^1.18.2:
     raw-body "2.3.2"
     type-is "~1.6.15"
 
-boolbase@~1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
-
 boom@2.x.x:
   version "2.10.1"
   resolved "https://registry.yarnpkg.com/boom/-/boom-2.10.1.tgz#39c8918ceff5799f83f9492a848f625add0c766f"
@@ -1445,10 +1441,6 @@ css-in-js-utils@^2.0.0:
   resolved "https://registry.yarnpkg.com/css-in-js-utils/-/css-in-js-utils-2.0.0.tgz#5af1dd70f4b06b331f48d22a3d86e0786c0b9435"
   dependencies:
     hyphenate-style-name "^1.0.2"
-
-css-selector-parser@^1.1.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/css-selector-parser/-/css-selector-parser-1.3.0.tgz#5f1ad43e2d8eefbfdc304fcd39a521664943e3eb"
 
 currently-unhandled@^0.4.1:
   version "0.4.1"
@@ -4668,12 +4660,6 @@ npmlog@^4.0.1, npmlog@^4.0.2, npmlog@^4.1.2:
     gauge "~2.7.3"
     set-blocking "~2.0.0"
 
-nth-check@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/nth-check/-/nth-check-1.0.1.tgz#9929acdf628fc2c41098deab82ac580cf149aae4"
-  dependencies:
-    boolbase "~1.0.0"
-
 number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
@@ -5667,10 +5653,6 @@ remark-stringify@^4.0.0:
     stringify-entities "^1.0.1"
     unherit "^1.0.4"
     xtend "^4.0.1"
-
-remark-strip-html@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/remark-strip-html/-/remark-strip-html-1.0.0.tgz#32d6394157291afebc93268e97d8cf3b690d4746"
 
 remove-trailing-separator@^1.0.1:
   version "1.1.0"
@@ -6843,14 +6825,6 @@ unist-util-remove-position@^1.0.0:
   resolved "https://registry.yarnpkg.com/unist-util-remove-position/-/unist-util-remove-position-1.1.1.tgz#5a85c1555fc1ba0c101b86707d15e50fa4c871bb"
   dependencies:
     unist-util-visit "^1.1.0"
-
-unist-util-select@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/unist-util-select/-/unist-util-select-1.5.0.tgz#a93c2be8c0f653827803b81331adec2aa24cd933"
-  dependencies:
-    css-selector-parser "^1.1.0"
-    debug "^2.2.0"
-    nth-check "^1.0.1"
 
 unist-util-stringify-position@^1.0.0, unist-util-stringify-position@^1.1.1:
   version "1.1.1"
