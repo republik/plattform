@@ -17,7 +17,7 @@ const styles = {
   }),
 }
 
-const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onEditPreferences, onAnswer, edit, onUnpublish, onUpvote, onDownvote, dismissComposer, submitComment, highlighted, timeago, maxLength, Link, EtiquetteLink}) => {
+const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onEditPreferences, onAnswer, edit, onUnpublish, onUpvote, onDownvote, dismissComposer, submitComment, highlighted, timeago, maxLength, replyBlockedMsg, Link, EtiquetteLink}) => {
   const isEditing = edit && edit.isEditing
   const { score } = comment
 
@@ -60,6 +60,7 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
             onUnpublish={onUnpublish}
             onUpvote={onUpvote}
             onDownvote={onDownvote}
+            replyBlockedMsg={replyBlockedMsg}
           />
 
           {(displayAuthor && showComposer) &&
@@ -97,7 +98,8 @@ Row.propTypes = {
   dismissComposer: PropTypes.func.isRequired,
   submitComment: PropTypes.func.isRequired,
   timeago: PropTypes.func.isRequired,
-  maxLength: PropTypes.number
+  maxLength: PropTypes.number,
+  replyBlockedMsg: PropTypes.string
 }
 
 class Composer extends PureComponent {
@@ -198,6 +200,7 @@ class RowState extends PureComponent {
       onEditPreferences,
       isAdmin,
       maxLength,
+      replyBlockedMsg,
       Link,
       EtiquetteLink
     } = this.props
@@ -255,6 +258,7 @@ class RowState extends PureComponent {
         edit={edit}
         timeago={timeago}
         maxLength={maxLength}
+        replyBlockedMsg={replyBlockedMsg}
         Link={Link}
         EtiquetteLink={EtiquetteLink}
       />

@@ -67,11 +67,11 @@ const styles = {
   })
 }
 
-export const CommentActions = ({t, score, onAnswer, onEdit, onUnpublish, onUpvote, onDownvote}) => (
+export const CommentActions = ({t, score, onAnswer, onEdit, onUnpublish, onUpvote, onDownvote, replyBlockedMsg}) => (
   <div {...styles.root}>
-    {onAnswer && <IconButton type='left' onClick={onAnswer}
-      title={t('styleguide/CommentActions/answer')}>
-      <ReplyIcon />
+    {onAnswer && <IconButton type='left' onClick={replyBlockedMsg ? null : onAnswer}
+      title={replyBlockedMsg || t('styleguide/CommentActions/answer')}>
+      <ReplyIcon fill={replyBlockedMsg ? colors.disabled : colors.text} />
     </IconButton>}
     {onEdit && <IconButton type='left' onClick={onEdit}
       title={t('styleguide/CommentActions/edit')}>
