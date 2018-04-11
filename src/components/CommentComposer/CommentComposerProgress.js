@@ -16,7 +16,7 @@ class CommentComposerProgress extends Component {
     
     const { radius, strokeWidth } = this.props
     
-    this.normalizedRadius = radius - strokeWidth * 2
+    this.normalizedRadius = radius - strokeWidth / 2
     this.circumference = this.normalizedRadius * 2 * Math.PI
   }
   

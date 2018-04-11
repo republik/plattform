@@ -50,12 +50,13 @@ const styles = {
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'flex-end',
+    marginBottom: '-10px',
     padding: '0 12px'
   }),
   remaining: css({
     ...sansSerifRegular14,
     lineHeight: '20px',
-    padding: '0 3px'
+    padding: '0 5px'
   }),
   actions: css({
     display: 'flex',
@@ -102,7 +103,7 @@ class CommentComposer extends PureComponent {
 
     this.onChange = ev => {
       this.setState({text: ev.target.value})
-      this.updatemaxLength()
+      this.updateMaxLength()
     }
 
     this.onSubmit = () => {
@@ -119,17 +120,19 @@ class CommentComposer extends PureComponent {
     )
   }
 
-  updatemaxLength () {
+  updateMaxLength () {
     if (this.props.maxLength) {
-      this.setState({count: this.getCount()})
-      this.setState({progress: this.getCount() / this.props.maxLength * 100})
+      this.setState({
+        count: this.getCount(),
+        progress: this.getCount() / this.props.maxLength * 100
+      })
     }
   }
 
   componentDidMount () {
     if (this.textarea) {
       this.textarea.focus()
-      this.updatemaxLength()
+      this.updateMaxLength()
     }
   }
 
@@ -148,8 +151,8 @@ class CommentComposer extends PureComponent {
     } = this.props
     const {text, count, progress} = this.state
 
+    const remaining = maxLength && maxLength - count < 21 && maxLength - count
     const maxLengthExceeded = maxLength && count > maxLength
-    const showCount = maxLength && maxLength - count < 21
     const progressColor = maxLength && progress > 100 ? colors.error : colors.text
 
     return (
@@ -170,12 +173,12 @@ class CommentComposer extends PureComponent {
             onChange={this.onChange}
           />
           {maxLength && <div {...styles.maxLength}>
-            {showCount && <span {...styles.remaining} style={{color: progressColor}}>
-              {maxLength - count}
+            {isFinite(remaining) && <span {...styles.remaining} style={{color: progressColor}}>
+              {remaining}
             </span>}
             <CommentComposerProgress
               stroke={progressColor}
-              radius={12}
+              radius={9}
               strokeWidth={2}
               progress={Math.min(progress, 100)}
             />
