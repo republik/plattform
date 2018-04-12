@@ -10,7 +10,11 @@ type Session {
   countryFlag: String
   city: String
   isCurrent: Boolean!
-  tokenTypes: [SignInTokenType]!
+}
+
+type UnauthorizedSession {
+  session: Session!
+  availableSecondFactorTokenTypes: [SignInTokenType]!
 }
 
 type User {
@@ -26,6 +30,7 @@ type User {
   createdAt: DateTime!
   updatedAt: DateTime!
   sessions: [Session!]
+  enabledSecondFactorTokenTypes: [SignInTokenType]!
 }
 
 type SignInResponse {
@@ -44,7 +49,7 @@ enum SignInTokenType {
   SMS
 }
 
-input SignInTokenChallenge {
+input SignInToken {
   type: SignInTokenType!
   payload: String!
 }

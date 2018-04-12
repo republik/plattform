@@ -3,13 +3,13 @@ const {
 
 module.exports = async (_, args, { pgdb, req, signInHooks }) => {
   const {
-    tokenChallenge,
+    token,
     email
   } = args
 
   const user = await denySession({
     pgdb,
-    tokenChallenge,
+    token,
     email
   })
 

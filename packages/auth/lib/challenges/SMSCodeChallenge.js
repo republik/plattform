@@ -66,9 +66,6 @@ module.exports = {
     const expiresAt = new Date(new Date().getTime() + (15 * MIN_IN_MS))
     return { payload, expiresAt }
   },
-  isStartable: async ({ pgdb, email, user }) => {
-    return !!user.isPhoneNumberVerified
-  },
   startChallenge: async ({ email, token, pgdb }) => {
     const phoneNumber = await getUserPhoneNumber(pgdb, email)
     await sendTextMessage({

@@ -35,5 +35,8 @@ module.exports = {
   },
   updatedAt (user, args, { user: me }) {
     return user._raw.updatedAt
+  },
+  enabledSecondFactorTokenTypes (user, args, { pgdb }) {
+    return [...new Set(user.enabledSecondFactorTokenTypes)]
   }
 }

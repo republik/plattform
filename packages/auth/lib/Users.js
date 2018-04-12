@@ -110,16 +110,16 @@ const shouldAutoLogin = ({ email }) => {
   return false
 }
 
-const denySession = async ({ pgdb, tokenChallenge, email: emailFromQuery }) => {
+const denySession = async ({ pgdb, token, email: emailFromQuery }) => {
   // check if authorized to deny the challenge
   const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
-  const session = await sessionByToken({ pgdb, token: tokenChallenge, email: emailFromQuery })
+  const session = await sessionByToken({ pgdb, token, email: emailFromQuery })
   if (!session) {
-    throw new NoSessionError({ email: emailFromQuery, token: tokenChallenge })
+    throw new NoSessionError({ email: emailFromQuery, token })
   }
-  const validated = await validateChallenge({ pgdb, user: existingUser, session, ...tokenChallenge })
+  const validated = await validateChallenge({ pgdb, user: existingUser, session, ...token })
   if (!validated) {
-    throw new SessionTokenValidationFailed(tokenChallenge)
+    throw new SessionTokenValidationFailed(token)
   }
 
   const transaction = await pgdb.transactionBegin()
@@ -156,12 +156,12 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
   const tokenTypes = []
   let session = null
-  for (const tokenChallenge of tokens) {
-    if (tokenTypes.indexOf(tokenChallenge.type) !== -1) {
-      console.error('invalid challenge, somebody uses the same type twice trying to circumvent 2fa', tokenTypes.concat([tokenChallenge.type]))
-      throw new SessionTokenValidationFailed({ email: emailFromQuery, ...tokenChallenge })
+  for (const token of tokens) {
+    if (tokenTypes.indexOf(token.type) !== -1) {
+      console.error('invalid challenge, somebody uses the same type twice trying to circumvent 2fa', tokenTypes.concat([token.type]))
+      throw new SessionTokenValidationFailed({ email: emailFromQuery, ...token })
     }
-    const curSession = await sessionByToken({ pgdb, token: tokenChallenge, email: emailFromQuery })
+    const curSession = await sessionByToken({ pgdb, token, email: emailFromQuery })
     console.log('session', curSession, emailFromQuery)
     if (curSession) {
       if (session && session.id !== curSession.id) {
@@ -174,12 +174,12 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
       throw new SessionTokenValidationFailed({ email: emailFromQuery })
     }
 
-    const validated = await validateChallenge({ pgdb, session, user: existingUser, ...tokenChallenge })
+    const validated = await validateChallenge({ pgdb, session, user: existingUser, ...token })
     if (!validated) {
       console.error('wrong token')
-      throw new SessionTokenValidationFailed({ email: emailFromQuery, ...tokenChallenge })
+      throw new SessionTokenValidationFailed({ email: emailFromQuery, ...token })
     }
-    tokenTypes.push(tokenChallenge.type)
+    tokenTypes.push(token.type)
   }
 
   // security net

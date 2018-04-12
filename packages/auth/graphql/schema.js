@@ -21,7 +21,7 @@ type queries {
   users(search: String!, role: String!): [User]!
 
   # search for an unverified session by token
-  unauthorizedSession(email: String!, tokenChallenge: SignInTokenChallenge!): Session
+  unauthorizedSession(email: String!, token: SignInToken!): UnauthorizedSession
 
   # the requesting userAgent
   echo: RequestInfo!
@@ -36,14 +36,18 @@ type mutations {
   # required role to change other's email: supporter
   updateEmail(userId: ID, email: String!): User!
 
+  # if userId is null, the logged in user's phone is changed
+  # required role to change other's phone number: supporter
+  updatePhoneNumber(userId: ID, phoneNumber: String!): User!
+
   # start a second factor challenge
   startChallenge(sessionId: ID!, type: SignInTokenType!): Boolean!
 
   # authorize a token sent by mail to convert a login request to a valid user session
-  authorizeSession(email: String!, tokenChallenge: SignInTokenChallenge!, secondFactor: SignInTokenChallenge): Boolean!
+  authorizeSession(email: String!, tokens: [SignInToken!]!): Boolean!
 
   # deny a session via token challenge
-  denySession(email: String!, tokenChallenge: SignInTokenChallenge!): Boolean!
+  denySession(email: String!, token: SignInToken!): Boolean!
 
   # if userId is null, this operation will be scoped to the logged in user
   # required role to clear other's session: supporter
