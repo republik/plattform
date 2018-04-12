@@ -141,11 +141,11 @@ class CommentComposer extends PureComponent {
     if (!maxLength) return null
 
     const {count, progress} = this.state
-    const remaining = maxLength - count < 21 && maxLength - count
+    const remaining = maxLength - count
     const progressColor = progress > 100 ? colors.error : colors.text
     return (
       <div {...styles.maxLength}>
-        {isFinite(remaining) && <span {...styles.remaining} style={{color: progressColor}}>
+        {remaining < 21 && <span {...styles.remaining} style={{color: progressColor}}>
           {remaining}
         </span>}
         <CommentComposerProgress
