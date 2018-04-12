@@ -9,8 +9,11 @@ import Loader from '../../components/Loader'
 import Tree from '../../components/Tree'
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
-import CurrentPublications from '../../components/Publication/Current'
 import { NarrowContainer } from '@project-r/styleguide'
+import { getKeys as getLocalStorageKeys } from '../../lib/utils/localStorage'
+
+import CurrentPublications from '../../components/Publication/Current'
+import UncommittedChanges from '../../components/VersionControl/UncommittedChanges'
 
 const fragments = {
   commit: gql`
@@ -123,6 +126,10 @@ class EditorPage extends Component {
     const { loading, error, repo } = this.props.data
     const { repoId } = url.query
 
+    const localStorageCommitIds = getLocalStorageKeys()
+      .filter(key => key.startsWith(repoId))
+      .map(key => key.split('/').pop())
+
     return (
       <Frame>
         <Frame.Header>
@@ -130,6 +137,13 @@ class EditorPage extends Component {
             <Frame.Nav url={url}>
               <RepoNav route='repo/tree' url={url} />
             </Frame.Nav>
+          </Frame.Header.Section>
+          <Frame.Header.Section align='right'>
+            {!!repo &&
+              <div style={{marginRight: 10}}>
+                <UncommittedChanges repoId={repo.id} />
+              </div>
+            }
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
             <Frame.Me />
@@ -144,9 +158,10 @@ class EditorPage extends Component {
               </NarrowContainer>
               <Tree
                 commits={repo.commits}
+                localStorageCommitIds={localStorageCommitIds}
                 milestones={repo.milestones}
                 repoId={repoId}
-          />
+              />
             </div>
         )} />
         </Frame.Body>

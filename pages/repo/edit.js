@@ -17,6 +17,13 @@ import EditorUI from '../../components/editor/UI'
 
 import VersionControl from '../../components/VersionControl'
 import CommitButton from '../../components/VersionControl/CommitButton'
+import {
+  UncommittedChanges,
+  withUncommitedChanges,
+  ActiveInterruptionOverlay,
+  warningColor,
+  joinUsers
+} from '../../components/VersionControl/UncommittedChanges'
 import Sidebar from '../../components/Sidebar'
 
 import Loader from '../../components/Loader'
@@ -27,6 +34,7 @@ import { errorToString } from '../../lib/utils/errors'
 import initLocalStore from '../../lib/utils/localStorage'
 
 import { getSchema } from '../../components/Templates'
+import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
 
 import { colors } from '@project-r/styleguide'
 import SettingsIcon from 'react-icons/lib/fa/cogs'
@@ -34,6 +42,7 @@ import SettingsIcon from 'react-icons/lib/fa/cogs'
 import createDebug from 'debug'
 
 const debug = createDebug('publikator:pages:edit')
+const TEST = process.env.NODE_ENV === 'test'
 
 const fragments = {
   commit: gql`
@@ -128,11 +137,31 @@ const uncommittedChangesMutation = gql`
   }
 `
 
-class EditorPage extends Component {
+const addWarning = message => state => ({
+  showSidebar: true,
+  warnings: [
+    message,
+    ...state.warnings
+  ].filter( // de-dup
+    (message, i, all) => all.indexOf(message) === i
+  )
+})
+
+const rmWarning = message => state => ({
+  warnings: state.warnings
+    .filter(warning => warning !== message)
+})
+
+export class EditorPage extends Component {
   constructor (...args) {
     super(...args)
 
-    this.toggleSidebarHandler = this.toggleSidebarHandler.bind(this)
+    this.toggleSidebarHandler = event => {
+      event.preventDefault()
+      this.setState(state => ({
+        showSidebar: !state.showSidebar
+      }))
+    }
     this.changeHandler = this.changeHandler.bind(this)
     this.commitHandler = this.commitHandler.bind(this)
     this.documentChangeHandler = debounce(
@@ -143,7 +172,19 @@ class EditorPage extends Component {
       this.changeHandler(change)
       this.documentChangeHandler(null, change)
     }
-    this.revertHandler = this.revertHandler.bind(this)
+    this.revertHandler = (e) => {
+      e.preventDefault()
+      const { t } = this.props
+      if (!window.confirm(t('revert/confirm'))) {
+        return
+      }
+      this.setState({
+        didUnlock: false,
+        acknowledgedUsers: []
+      })
+      this.store.clear()
+      this.loadState(this.props)
+    }
 
     this.editorRef = ref => {
       this.editor = ref
@@ -156,50 +197,126 @@ class EditorPage extends Component {
       committing: false,
       editorState: null,
       repo: null,
-      uncommittedChanges: null,
+      hasUncommittedChanges: null,
       warnings: [],
-      showSidebar: true
+      acknowledgedUsers: [],
+      activeUsers: [],
+      showSidebar: true,
+      readOnly: true
+    }
+
+    this.lock = (state) => {
+      const { t } = this.props
+      const warning = t('commit/warn/canNotLock')
+      if (state.hasUncommittedChanges) {
+        return addWarning(warning)(state)
+      }
+
+      return {
+        readOnly: true,
+        ...rmWarning(warning)(state)
+      }
+    }
+    this.unlock = state => {
+      return {
+        readOnly: false
+      }
+    }
+    this.lockHandler = event => {
+      event && event.preventDefault()
+      this.setState({
+        didUnlock: false
+      })
+      if (this.state.hasUncommittedChanges) {
+        console.warn('lockHandler should not be called when user has uncommitted changes')
+        return
+      }
+      this.notifyChanges('delete')
+      this.setState(this.lock)
+    }
+    this.unlockHandler = event => {
+      event && event.preventDefault()
+      const { t } = this.props
+
+      const {
+        activeUsers
+      } = this.state
+
+      if (!window.confirm(t.pluralize('uncommittedChanges/unlock/confirm', {
+        count: activeUsers.length,
+        activeUsers: joinUsers(activeUsers, t)
+      }))) {
+        return
+      }
+
+      this.setState({
+        didUnlock: true,
+        acknowledgedUsers: this.state.activeUsers,
+        readOnly: false
+      }, () => {
+        this.notifyChanges('create')
+      })
+      this.setState(this.unlock)
+    }
+    this.beforeunload = event => {
+      const { url: { query: { repoId } } } = this.props
+      const {
+        hasUncommittedChanges,
+        didUnlock
+      } = this.state
+      if (!hasUncommittedChanges && didUnlock) {
+        this.notifyChanges('delete')
+        if (event) {
+          try {
+            navigator.sendBeacon(
+              API_UNCOMMITTED_CHANGES_URL,
+              JSON.stringify({
+                repoId,
+                action: 'delete'
+              })
+            )
+          } catch (e) {}
+        }
+      }
     }
   }
 
-  warn (message) {
-    this.setState(state => ({
-      showSidebar: true,
-      warnings: [
-        message,
-        ...state.warnings
-      ].filter( // de-dup
-        (message, i, all) => all.indexOf(message) === i
-      )
-    }))
+  notifyChanges (action) {
+    debug('notifyChanges', action)
+    const { url: { query: { repoId } }, t } = this.props
+
+    const warning = t('commit/warn/uncommittedChangesError')
+    this.props.uncommittedChangesMutation({
+      repoId,
+      action
+    })
+      .then(() => {
+        this.setState(rmWarning(warning))
+      })
+      .catch(error => {
+        console.error(error)
+        this.setState(addWarning(warning))
+      })
   }
 
-  beginChanges (repoId) {
-    const { t } = this.props
+  beginChanges () {
     this.setState({
-      uncommittedChanges: true
+      hasUncommittedChanges: true,
+      beginChanges: new Date(),
+      readOnly: false
     })
-    this.props.uncommittedChangesMutation({
-      repoId: repoId,
-      action: 'create'
-    }).catch(error => {
-      console.error(error)
-      this.warn(t('commit/warn/uncommittedChangesError'))
-    })
+
+    this.notifyChanges('create')
   }
 
-  concludeChanges (repoId) {
-    const { t } = this.props
+  concludeChanges (notify = true) {
     this.setState({
-      uncommittedChanges: false
+      hasUncommittedChanges: false
     })
-    this.props.uncommittedChangesMutation({
-      repoId: repoId,
-      action: 'delete'
-    }).catch(error => {
-      console.error(error)
-      this.warn(t('commit/warn/uncommittedChangesError'))
-    })
+
+    if (notify) {
+      this.notifyChanges('delete')
+    }
   }
 
   componentWillReceiveProps (nextProps) {
@@ -213,7 +330,59 @@ class EditorPage extends Component {
     debug('componentWillReceiveProps', 'shouldLoad', shouldLoad)
     if (shouldLoad) {
       this.loadState(nextProps)
+    } else {
+      const { uncommittedChanges } = this.props
+      const { uncommittedChanges: nextUncommittedChanges } = nextProps
+      const shouldUpdateActiveUsers = uncommittedChanges.users !== nextUncommittedChanges.users
+      debug('componentWillReceiveProps', 'shouldUpdateActiveUsers', shouldUpdateActiveUsers)
+      if (shouldUpdateActiveUsers) {
+        this.updateActiveUsers(nextProps)
+      }
     }
+  }
+
+  updateActiveUsers (props) {
+    const {
+      uncommittedChanges: {
+        users
+      },
+      me
+    } = props
+
+    this.setState(state => {
+      const activeUsers = users.filter(user => user.id !== me.id)
+      const acknowledgedUsers = state.acknowledgedUsers
+
+      let addToState = {}
+      const newUsers = activeUsers
+        .filter(user => !acknowledgedUsers.find(ack => ack.id === user.id))
+      if (newUsers.length) {
+        if (state.hasUncommittedChanges || state.didUnlock) {
+          addToState = {
+            interruptingUsers: newUsers
+          }
+        } else {
+          addToState = this.lock(state)
+        }
+      } else {
+        if (state.readOnly && !activeUsers.length) {
+          addToState = this.unlock(state)
+        }
+      }
+      if (!addToState.interruptingUsers && state.interruptingUsers) {
+        addToState = {
+          ...addToState,
+          interruptingUsers: undefined
+        }
+      }
+
+      debug('updateActiveUsers', addToState, {activeUsers, acknowledgedUsers})
+      return {
+        ...addToState,
+        activeUsers,
+        acknowledgedUsers
+      }
+    })
   }
 
   checkLocalStorageSupport () {
@@ -223,18 +392,17 @@ class EditorPage extends Component {
       this.store &&
       !this.store.supported
     ) {
-      this.warn(t('commit/warn/noStorage'))
+      this.setState(addWarning(t('commit/warn/noStorage')))
     }
   }
   componentDidMount () {
     resetKeyGenerator()
     this.loadState(this.props)
+    window.addEventListener('beforeunload', this.beforeunload)
   }
-
-  revertHandler (e) {
-    e.preventDefault()
-    this.store.clear()
-    this.loadState(this.props)
+  componentWillUnmount () {
+    this.beforeunload()
+    window.removeEventListener('beforeunload', this.beforeunload)
   }
 
   loadState (props) {
@@ -244,7 +412,7 @@ class EditorPage extends Component {
       url
     } = props
 
-    if (!process.browser) {
+    if (!process.browser && !TEST) {
       // running without local storage doesn't make sense
       // - we always want to render the correct version
       // - flash of an outdated version could confuse an user
@@ -348,7 +516,7 @@ class EditorPage extends Component {
         }
       } catch (e) {
         console.error(e)
-        this.warn(t('commit/warn/localParseError'))
+        this.setState(addWarning(t('commit/warn/localParseError')))
       }
     }
 
@@ -356,13 +524,15 @@ class EditorPage extends Component {
       committedRawDocString
     }
     if (localEditorState) {
-      this.beginChanges(repoId)
+      this.beginChanges()
       nextState.editorState = localEditorState
     } else {
-      this.concludeChanges(repoId)
+      this.concludeChanges()
       nextState.editorState = committedEditorState
     }
-    this.setState(nextState)
+    this.setState(nextState, () => {
+      this.updateActiveUsers(this.props)
+    })
   }
 
   changeHandler ({value}) {
@@ -370,8 +540,7 @@ class EditorPage extends Component {
   }
 
   documentChangeHandler (_, {value: newEditorState}) {
-    const { url: { query: { repoId } } } = this.props
-    const { committedRawDocString, uncommittedChanges } = this.state
+    const { committedRawDocString, hasUncommittedChanges } = this.state
 
     if (
       JSON.stringify(newEditorState.document.toJSON()) !== committedRawDocString
@@ -389,14 +558,26 @@ class EditorPage extends Component {
         )
       }
 
-      if (!uncommittedChanges) {
-        this.beginChanges(repoId)
+      const msSinceBegin = (
+        this.state.beginChanges &&
+        (new Date()).getTime() - this.state.beginChanges.getTime()
+      )
+      const { uncommittedChanges, me } = this.props
+      if (
+        !hasUncommittedChanges ||
+        msSinceBegin > 1000 * 60 * 5 ||
+        (
+          !uncommittedChanges.users.find(user => user.id === me.id) &&
+          (!msSinceBegin || msSinceBegin > 1000)
+        )
+      ) {
+        this.beginChanges()
       }
     } else {
       debug('loadState', 'documentChangeHandler', 'committed document')
-      if (uncommittedChanges) {
+      if (hasUncommittedChanges) {
         this.store.clear()
-        this.concludeChanges(repoId)
+        this.concludeChanges(!this.state.didUnlock)
       }
     }
   }
@@ -429,7 +610,7 @@ class EditorPage extends Component {
     })
       .then(({data}) => {
         this.store.clear()
-        this.concludeChanges(repoId)
+        this.concludeChanges()
 
         this.setState({
           committing: false
@@ -441,40 +622,39 @@ class EditorPage extends Component {
       })
       .catch(e => {
         console.error(e)
-        this.setState({
-          committing: false
-        })
-        this.warn(t('commit/warn/failed', {
-          error: errorToString(e)
+        this.setState(state => ({
+          committing: false,
+          ...addWarning(t('commit/warn/failed', {
+            error: errorToString(e)
+          }))(state)
         }))
       })
   }
 
-  toggleSidebarHandler (event) {
-    event.preventDefault()
-    this.setState(state => ({
-      ...state,
-      showSidebar: !state.showSidebar
-    }))
-  }
-
   render () {
-    const { url, data = {} } = this.props
+    const { url, data = {}, uncommittedChanges, t } = this.props
     const { repoId, commitId } = url.query
     const { loading, repo } = data
     const {
       schema,
       editorState,
       committing,
-      uncommittedChanges,
+      hasUncommittedChanges,
       warnings,
-      showSidebar
+      showSidebar,
+      readOnly,
+      activeUsers,
+      interruptingUsers,
+      didUnlock
     } = this.state
-    const sidebarWidth = 200
 
     const isNew = commitId === 'new'
     const error = data.error || this.state.error
-    const showLoading = committing || loading || (!schema && !error)
+    const showLoading = (
+      committing ||
+      loading ||
+      (!schema && !error)
+    )
 
     const nav = [
       <RepoNav key='repo-nav' route='repo/edit' url={url} isNew={isNew} />
@@ -482,7 +662,11 @@ class EditorPage extends Component {
 
     return (
       <Frame url={url} raw nav={nav}>
-        <Frame.Header>
+        <Frame.Header barStyle={{
+          borderBottom: activeUsers.length
+            ? `3px solid ${readOnly ? colors.error : warningColor}`
+            : undefined
+        }}>
           <Frame.Header.Section align='left'>
             <Frame.Nav url={url}>
               <RepoNav route='repo/edit' url={url} isNew={isNew} />
@@ -504,10 +688,19 @@ class EditorPage extends Component {
           <Frame.Header.Section align='right'>
             <CommitButton
               isNew={isNew}
-              uncommittedChanges={uncommittedChanges}
+              readOnly={!showLoading && readOnly}
+              didUnlock={didUnlock}
+              hasUncommittedChanges={!showLoading && hasUncommittedChanges}
+              onUnlock={this.unlockHandler}
+              onLock={this.lockHandler}
               onCommit={this.commitHandler}
               onRevert={this.revertHandler}
-              />
+            />
+          </Frame.Header.Section>
+          <Frame.Header.Section align='right'>
+            {!!repo &&
+              <UncommittedChanges uncommittedChanges={uncommittedChanges} t={t} />
+            }
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
             <Frame.Me />
@@ -516,6 +709,15 @@ class EditorPage extends Component {
         <Frame.Body raw>
           <Loader loading={showLoading} error={error} render={() => (
             <div>
+              {interruptingUsers && <ActiveInterruptionOverlay
+                uncommittedChanges={uncommittedChanges}
+                interruptingUsers={interruptingUsers}
+                onRevert={this.revertHandler}
+                onAcknowledged={() => this.setState({
+                  acknowledgedUsers: this.state.activeUsers,
+                  interruptingUsers: undefined
+                })}
+               />}
               <Editor
                 ref={this.editorRef}
                 schema={schema}
@@ -523,24 +725,24 @@ class EditorPage extends Component {
                 value={editorState}
                 onChange={this.changeHandler}
                 onDocumentChange={this.documentChangeHandler}
+                readOnly={readOnly}
               />
-              <Sidebar warnings={warnings} selectedTabId='edit' isOpen={showSidebar}>
-                <Sidebar.Tab tabId='edit' label='Editieren'>
+              <Sidebar warnings={warnings}
+                selectedTabId={readOnly ? 'workflow' : 'edit'}
+                isOpen={showSidebar}>
+                {!readOnly && <Sidebar.Tab tabId='edit' label='Editieren'>
                   {!!this.editor && <EditorUI
                     editorRef={this.editor}
                     onChange={this.uiChangeHandler}
                     value={editorState}
                   />}
-                </Sidebar.Tab>
+                </Sidebar.Tab>}
                 <Sidebar.Tab tabId='workflow' label='Workflow'>
                   <VersionControl
                     repoId={repoId}
                     commit={repo && (repo.commit || repo.latestCommit)}
                     isNew={isNew}
-                    uncommittedChanges={uncommittedChanges}
-                    commitHandler={this.commitHandler}
-                    revertHandler={this.revertHandler}
-                    width={sidebarWidth}
+                    hasUncommittedChanges={hasUncommittedChanges}
                   />
                 </Sidebar.Tab>
               </Sidebar>
@@ -590,6 +792,13 @@ export default compose(
         data
       }
     }
+  }),
+  withUncommitedChanges({
+    options: ({ url }) => ({
+      variables: {
+        repoId: url.query.repoId
+      }
+    })
   }),
   graphql(commitMutation, {
     props: ({ mutate, ownProps: { url } }) => ({

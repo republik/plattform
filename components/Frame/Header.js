@@ -41,9 +41,9 @@ export const Section = ({ align, children }) => (
   </div>
 )
 
-export const Header = ({ children }) => (
+export const Header = ({ children, barStyle }) => (
   <div {...styles.header}>
-    <div {...styles.bar}>
+    <div {...styles.bar} style={barStyle}>
       {children}
     </div>
     <LoadingBar />

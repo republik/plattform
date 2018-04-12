@@ -134,8 +134,13 @@ const Container = ({ children }) => (
   <div {...styles.container}>{ children }</div>
 )
 
-const Document = ({ children }) => (
-  <div {...styles.document}>{ children }</div>
+const Document = ({ children, readOnly }) => (
+  <div {...styles.document} style={readOnly ? {
+    pointerEvents: 'none',
+    opacity: 0.6
+  } : {}}>
+    { children }
+  </div>
 )
 
 class Editor extends Component {
@@ -183,16 +188,17 @@ class Editor extends Component {
     }
   }
   render () {
-    const { value } = this.props
+    const { value, readOnly } = this.props
     return (
       <Container>
         <Loader loading={!value} render={() =>
-          <Document key='document'>
+          <Document readOnly={readOnly}>
             <SlateEditor
               ref={this.slateRef}
               value={value}
               onChange={this.onChange}
-              plugins={this.plugins} />
+              plugins={this.plugins}
+              readOnly={readOnly} />
           </Document>
           } />
         { /* A full slate instance to normalize
@@ -202,7 +208,8 @@ class Editor extends Component {
         <SlateEditor
           ref={this.slateRef}
           value={this.newDocument({title: 'Loading...'})}
-          plugins={this.plugins} />
+          plugins={this.plugins}
+          readOnly />
           )}
       </Container>
     )
@@ -211,6 +218,7 @@ class Editor extends Component {
 
 Editor.propTypes = {
   value: PropTypes.object,
+  readOnly: PropTypes.bool,
   onChange: PropTypes.func,
   onDocumentChange: PropTypes.func
 }

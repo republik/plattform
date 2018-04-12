@@ -1,7 +1,7 @@
 import React from 'react'
 import test from 'tape'
 import spy from 'spy'
-import { shallow } from './enzyme'
+import { shallow } from '../../../test/utils/enzyme'
 import createInlineButton from './createInlineButton'
 import { Value } from 'slate'
 

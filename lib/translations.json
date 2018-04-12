@@ -1,5 +1,5 @@
 {
-  "updated": "2018-03-09T09:17:57.572Z",
+  "updated": "2018-04-06T01:44:56.207Z",
   "title": "live",
   "data": [
     {
@@ -267,6 +267,10 @@
       "value": "CR OK"
     },
     {
+      "key": "tree/commit/localVersion",
+      "value": "Nicht committete Änderungen"
+    },
+    {
       "key": "tree/commit/publish",
       "value": "Vorschau und Veröffentlichung"
     },
@@ -451,12 +455,56 @@
       "value": "Schriftgrösse"
     },
     {
+      "key": "uncommittedChanges/unlock/confirm/1",
+      "value": "Durch paralleles arbeiten, entstehen zwei Versionen. Falls Sie das nicht wollen, sprechen Sie miteinander.\n\nWollen Sie das Dokument jetzt bearbeiten? {activeUsers} wird gestört und darüber informiert."
+    },
+    {
+      "key": "uncommittedChanges/unlock/confirm/other",
+      "value": "Durch paralleles arbeiten, entstehen zwei Versionen. Falls Sie das nicht wollen, sprechen Sie miteinander.\n\nWollen Sie das Dokument jetzt bearbeiten? {activeUsers} werden gestört und darüber informiert."
+    },
+    {
+      "key": "uncommittedChanges/users/separator/last",
+      "value": " und "
+    },
+    {
+      "key": "uncommittedChanges/users/separator/other",
+      "value": ", "
+    },
+    {
+      "key": "uncommittedChanges/unlock/close",
+      "value": "Sie haben das Dokument bearbeiten wollen, Andere gestört, es aber dann nicht getan. Dies ist nicht nett."
+    },
+    {
       "key": "uncommittedChanges/title",
       "value": "Aktiv"
     },
     {
       "key": "uncommittedChanges/empty",
       "value": "Niemand"
+    },
+    {
+      "key": "uncommittedChanges/interruption/text/1",
+      "value": "{interruptingUsers} ist dazu gestossen und bearbeitet das Dokument jetzt auch."
+    },
+    {
+      "key": "uncommittedChanges/interruption/text/other",
+      "value": "{interruptingUsers} sind dazu gestossen und bearbeitet das Dokument jetzt auch."
+    },
+    {
+      "key": "uncommittedChanges/interruption/note",
+      "value": "Wenn Sie parallel arbeiten entstehen zwei Versionen, die später wieder zusammengeführt werden müssen. Falls Sie das nicht wollen, sprechen Sie miteinander."
+    },
+    {
+      "key": "uncommittedChanges/acknowledged",
+      "value": "Verstanden"
+    },
+    {
+      "key": "uncommittedChanges/revert",
+      "value": "Meine Änderungen verwerfen"
+    },
+    {
+      "key": "revert/confirm",
+      "value": "Sind Sie sicher, dass Sie alle bestehenden Änderungen verwerfen möchten?"
     },
     {
       "key": "commitHistory/title",
@@ -479,6 +527,14 @@
       "value": "Verwerfen"
     },
     {
+      "key": "commit/unlock",
+      "value": "Bearbeiten"
+    },
+    {
+      "key": "commit/lock",
+      "value": "Abbrechen"
+    },
+    {
       "key": "commit/promtMessage",
       "value": "Commit-Message:"
     },
@@ -495,8 +551,16 @@
       "value": "Keine Änderungen"
     },
     {
+      "key": "commit/status/readOnly",
+      "value": "Lesemodus"
+    },
+    {
       "key": "commit/status/uncommitted",
       "value": "Änderungen committen?"
+    },
+    {
+      "key": "commit/warn/canNotLock",
+      "value": "Aufgrund von lokalen Änderungen, konnte das Dokument nicht gesperrt werden."
     },
     {
       "key": "commit/warn/noStorage",

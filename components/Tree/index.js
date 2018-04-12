@@ -1,20 +1,17 @@
 import React, { Component } from 'react'
 import { Link } from '../../lib/routes'
 import { css } from 'glamor'
-import { max } from 'd3-array'
-import { scaleOrdinal, schemeCategory10 } from 'd3-scale'
-import { color as d3Color } from 'd3-color'
+import LocalIcon from 'react-icons/lib/md/lock-open'
 import CheckIcon from 'react-icons/lib/md/check'
 import TagIcon from 'react-icons/lib/md/grade'
 import { transformData } from './transformData'
 import withT from '../../lib/withT'
 import { swissTime } from '../../lib/utils/format'
-import { linkRule, Interaction, Label } from '@project-r/styleguide'
+import { Interaction, Label } from '@project-r/styleguide'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
 const CONTAINER_MAX_WIDTH = 800
-const MIN_PADDING = 10
 const NODE_SIZE = 12
 const NODE_SIZE_HOVER = 16
 const LIST_MIN_WIDTH = 250
@@ -23,6 +20,8 @@ const MILESTONEICON_SIZE = 16
 const styles = {
   container: css({
     maxWidth: `${CONTAINER_MAX_WIDTH}px`,
+    margin: '0 auto',
+    padding: '0 10px',
     overflow: 'hidden',
     position: 'relative',
     paddingTop: 20
@@ -34,6 +33,7 @@ const styles = {
     display: 'block',
     height: `${NODE_SIZE}px`,
     position: 'absolute',
+    zIndex: 2,
     width: `${NODE_SIZE}px`,
     ':hover': {
       margin: `-${(NODE_SIZE_HOVER - NODE_SIZE) / 2}px 0 0 -${(NODE_SIZE_HOVER -
@@ -59,36 +59,30 @@ const styles = {
   listItem: css({
     fontSize: '13px',
     marginBottom: '5px',
-    padding: '5px',
     position: 'relative'
   }),
   svg: css({
     position: 'absolute',
     top: 0,
-    zIndex: -1
+    zIndex: 1
   }),
   checkIcon: {
     backgroundColor: '#fff',
     margin: `0 5px 1px -${MILESTONEICON_SIZE + 6}px`
   },
-  milestoneBar: css({
-    backgroundColor: '#ddd',
-    height: '100%',
-    position: 'absolute',
-    right: 0,
-    top: 0,
-    zIndex: '-2'
-  }),
-  milestoneInfo: css({
-    display: 'block',
-    marginBottom: '5px'
-  }),
   milestoneLabel: css({
     fontWeight: 'bold'
   }),
   milestone: css({
     display: 'block',
     paddingLeft: `${MILESTONEICON_SIZE + 6}px`
+  }),
+  link: css({
+    color: 'inherit',
+    textDecoration: 'none',
+    ':hover': {
+      color: '#000'
+    }
   })
 }
 
@@ -126,15 +120,12 @@ class Tree extends Component {
   }
 
   measure () {
-    const { commits } = this.state
+    const { commits, numSlots } = this.state
 
     if (!commits || !this.containerRef) return
     const containerRect = this.containerRef.getBoundingClientRect()
 
     commits.forEach(({ data, listItemRef }) => {
-      listItemRef.style.removeProperty('position')
-      listItemRef.style.removeProperty('left')
-      listItemRef.style.removeProperty('top')
       const rect = listItemRef.getBoundingClientRect()
       data.measurements = {
         width: Math.ceil(rect.width),
@@ -146,22 +137,13 @@ class Tree extends Component {
 
     const width = containerRect.width
     const height = containerRect.height
-    const windowWidth = window.innerWidth
     if (width !== this.state.width) {
       this.setState({ width: width })
     }
     if (height !== this.state.height) {
       this.setState({ height: height })
     }
-    if (windowWidth !== this.state.windowWidth) {
-      this.setState({ windowWidth: windowWidth })
-    }
-  }
 
-  layout () {
-    const { windowWidth, width } = this.state
-
-    const numSlots = max(this.state.commits, o => o.data.slotIndex + 1)
     const slotWidth = Math.max(
       NODE_SIZE / 2 + 2,
       Math.min(
@@ -169,51 +151,19 @@ class Tree extends Component {
         Math.floor((width - Math.max(width / 2, LIST_MIN_WIDTH)) / numSlots)
       )
     )
-    const svgWidth = numSlots * slotWidth
-
-    this.svgRef.style.height = `${this.state.height}px`
-    this.svgRef.style.width = `${svgWidth}px`
-    this.svgRef.style.left = `${slotWidth / 2}px`
-
-    const listMarginLeft = this.listRef.style.marginLeft
-    this.listRef.style.marginLeft = `${svgWidth + NODE_SIZE}px`
-
-    // We may have just initially changed the margin of the list which might affect
-    // text wrapping and height, so let's measure once again.
-    if (!listMarginLeft) {
-      this.measure()
+    if (slotWidth !== this.state.slotWidth) {
+      this.setState({ slotWidth })
     }
+  }
 
-    this.containerRef.style.margin =
-      windowWidth < CONTAINER_MAX_WIDTH + 2 * MIN_PADDING
-        ? `0 ${MIN_PADDING}px`
-        : '0 auto 0'
-
-    let colors = scaleOrdinal(schemeCategory10)
-    let authorColor = {}
+  layout () {
+    const { slotWidth } = this.state
 
     this.state.commits.forEach(
-      ({ data, author, nodeRef, listItemRef, milestoneBarRef, milestones }, i) => {
-        if (!authorColor[author.email]) {
-          let color = colors(i)
-          let lightColor = d3Color(color)
-          lightColor.opacity = 0.2
-          authorColor[author.email] = {
-            dark: color,
-            light: lightColor.toString()
-          }
-        }
+      ({ data, author, nodeRef, milestones }, i) => {
         nodeRef.style.left = `${data.slotIndex * slotWidth + slotWidth / 2}px`
         nodeRef.style.top = `${data.measurements.top +
           Math.floor(data.measurements.height / 2)}px`
-        nodeRef.style.backgroundColor = authorColor[author.email].dark
-        if (!milestoneBarRef) {
-          listItemRef.style.backgroundColor = authorColor[author.email].light
-        }
-        if (milestoneBarRef) {
-          milestoneBarRef.style.width = `${Math.max(width, LIST_MIN_WIDTH)}px`
-          listItemRef.style.backgroundColor = ''
-        }
       }
     )
 
@@ -254,105 +204,129 @@ class Tree extends Component {
   }
 
   render () {
-    const { repoId, t } = this.props
-    const { width, commits, links } = this.state
+    const { repoId, t, localStorageCommitIds = [] } = this.props
+    const {
+      width, height, slotWidth,
+      commits, links, numSlots
+    } = this.state
+
+    const paddingLeft = slotWidth
+      ? numSlots * slotWidth + NODE_SIZE
+      : 0
 
     return (
       <div
         {...styles.container}
+        style={{
+          maxWidth: Math.max(
+            CONTAINER_MAX_WIDTH,
+            CONTAINER_MAX_WIDTH / 2 + paddingLeft
+          )
+        }}
         ref={ref => {
           this.containerRef = ref
         }}
       >
-        <svg
-          ref={ref => {
-            this.svgRef = ref
+        {slotWidth && <svg
+          style={{
+            height,
+            width: numSlots * slotWidth,
+            left: slotWidth / 2
           }}
           {...styles.svg}
         >
-          {width &&
-            links &&
-            links.map((path, i) =>
-              <path key={i} strokeWidth='1' stroke='#000' ref={path.setRef} />
-            )}
-        </svg>
+          {links && links.map((path, i) =>
+            <path key={i} strokeWidth='1' stroke='#000' ref={path.setRef} />
+          )}
+        </svg>}
 
         {commits &&
-          <ul
-            {...styles.list}
-            ref={ref => {
-              this.listRef = ref
-            }}
-          >
-            {commits.map(commit =>
-              <li
+          <ul {...styles.list}>
+            {commits.map(commit => {
+              const hasLocalVersion = localStorageCommitIds
+                .indexOf(commit.id) !== -1
+              const hightlight = hasLocalVersion || commit.milestones.length
+              return <li
                 key={commit.id}
                 ref={commit.setListItemRef}
+                style={{
+                  backgroundColor: hightlight
+                    ? commit.highlightColor
+                    : undefined,
+                  paddingLeft
+                }}
                 {...styles.listItem}
               >
-                <Interaction.P>
-                  <Link
-                    route='repo/edit'
-                    params={{
-                      repoId: repoId.split('/'),
-                      commitId: commit.id
-                    }}
-                  >
-                    <a {...linkRule}>
-                      {commit.message}
-                    </a>
-                  </Link>
-                </Interaction.P>
-                <Label>
-                  {commit.author.name}
-                  <br />
-                  {timeFormat(new Date(commit.date))}
-                </Label>
-                <br />
-                <br />
-                {!!commit.milestones && commit.milestones.length > 0 &&
-                <span>
-                  <span {...styles.milestoneInfo}>
-                    {commit.milestones.map((milestone, i) =>
-                      <span {...styles.milestone} key={i}>
-                        {milestone.immutable
-                          ? <TagIcon
-                            color='#000'
-                            size={MILESTONEICON_SIZE}
-                            style={styles.checkIcon} />
-                          : <CheckIcon
-                            color='#000'
-                            size={MILESTONEICON_SIZE}
-                            style={styles.checkIcon} />}
-                        <span {...styles.milestoneLabel}>
-                          {t(`checklist/labels/${milestone.name}`, undefined, milestone.name)}{' '}
-                        </span>
-                        {milestone.author.name}
-                      </span>
-                      )}
-                  </span>
-                  <span
-                    {...styles.milestoneBar}
-                    ref={commit.setMilestoneBarRef}
-                    />
-                </span>}
-                <Interaction.P>
-                  <Label>
+                <div style={{
+                  padding: 5,
+                  backgroundColor: !hightlight
+                    ? commit.backgroundColor
+                    : undefined
+                }}>
+                  <Interaction.P>
                     <Link
-                      route='repo/publish'
+                      route='repo/edit'
                       params={{
                         repoId: repoId.split('/'),
                         commitId: commit.id
                       }}
                     >
-                      <a {...linkRule}>
-                        {t('tree/commit/publish')}
+                      <a {...styles.link}>
+                        {commit.message}
                       </a>
                     </Link>
+                  </Interaction.P>
+                  <Label>
+                    {commit.author.name}
+                    <br />
+                    {timeFormat(new Date(commit.date))}
                   </Label>
-                </Interaction.P>
+                  <br />
+                  <br />
+                  {hasLocalVersion && <span {...styles.milestone}>
+                    <LocalIcon
+                      color='#000'
+                      size={MILESTONEICON_SIZE}
+                      style={styles.checkIcon} />
+                    <span {...styles.milestoneLabel}>
+                      {t('tree/commit/localVersion')}
+                    </span>
+                  </span>}
+                  {commit.milestones.map((milestone, i) =>
+                    <span {...styles.milestone} key={i}>
+                      {milestone.immutable
+                        ? <TagIcon
+                          color='#000'
+                          size={MILESTONEICON_SIZE}
+                          style={styles.checkIcon} />
+                        : <CheckIcon
+                          color='#000'
+                          size={MILESTONEICON_SIZE}
+                          style={styles.checkIcon} />}
+                      <span {...styles.milestoneLabel}>
+                        {t(`checklist/labels/${milestone.name}`, undefined, milestone.name)}{' '}
+                      </span>
+                      {milestone.author.name}
+                    </span>
+                  )}
+                  <Interaction.P>
+                    <Label>
+                      <Link
+                        route='repo/publish'
+                        params={{
+                          repoId: repoId.split('/'),
+                          commitId: commit.id
+                        }}
+                      >
+                        <a {...styles.link}>
+                          {t('tree/commit/publish')}
+                        </a>
+                      </Link>
+                    </Label>
+                  </Interaction.P>
+                </div>
               </li>
-            )}
+            })}
           </ul>}
 
         {width &&
@@ -361,6 +335,9 @@ class Tree extends Component {
             <span
               key={commit.id}
               ref={commit.setNodeRef}
+              style={{
+                backgroundColor: commit.color
+              }}
               {...styles.commitNode}
             >
               <Link
