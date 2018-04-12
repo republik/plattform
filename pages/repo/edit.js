@@ -211,7 +211,6 @@ export class EditorPage extends Component {
       if (state.hasUncommittedChanges) {
         return addWarning(warning)(state)
       }
-      this.notifyChanges('delete')
 
       return {
         readOnly: true,
@@ -228,6 +227,11 @@ export class EditorPage extends Component {
       this.setState({
         didUnlock: false
       })
+      if (this.state.hasUncommittedChanges) {
+        console.warn('lockHandler should not be called when user has uncommitted changes')
+        return
+      }
+      this.notifyChanges('delete')
       this.setState(this.lock)
     }
     this.unlockHandler = event => {
@@ -247,9 +251,10 @@ export class EditorPage extends Component {
 
       this.setState({
         didUnlock: true,
-        acknowledgedUsers: this.state.activeUsers
+        acknowledgedUsers: this.state.activeUsers,
+        readOnly: false
       }, () => {
-        this.beginChanges(false)
+        this.notifyChanges('create')
       })
       this.setState(this.unlock)
     }
@@ -293,9 +298,9 @@ export class EditorPage extends Component {
       })
   }
 
-  beginChanges (hasUncommittedChanges = true) {
+  beginChanges () {
     this.setState({
-      hasUncommittedChanges,
+      hasUncommittedChanges: true,
       readOnly: false
     })
 
