@@ -7,6 +7,14 @@ extend type User {
   pledges: [Pledge!]!
   memberships: [Membership!]!
   paymentSources: [PaymentSource!]!
+
+  # if true the user should check his/her memberships subscriptions
+  # most propably she has a running monthly- and yealy-membership simultaneously
+  checkMembershipSubscriptions: Boolean!
+
+  # notes by the support team
+  # required role: supporter
+  adminNotes: String
 }
 
 type Crowdfunding {
@@ -97,6 +105,7 @@ type Membership {
   renew: Boolean!
   periods: [MembershipPeriod]!
   overdue: Boolean!
+  cancelReasons: [String!]
   createdAt: DateTime!
   updatedAt: DateTime!
 }

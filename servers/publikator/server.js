@@ -6,6 +6,8 @@ const t = require('./lib/t')
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: auth } = require('@orbiting/backend-modules-auth')
 
+const uncommittedChangesMiddleware = require('./express/uncommittedChanges')
+
 const {
   LOCAL_ASSETS_SERVER
 } = process.env
@@ -19,7 +21,9 @@ module.exports.run = () => {
     t
   })
 
-  const middlewares = []
+  const middlewares = [
+    uncommittedChangesMiddleware
+  ]
 
   if (LOCAL_ASSETS_SERVER) {
     const { express } = require('@orbiting/backend-modules-assets')

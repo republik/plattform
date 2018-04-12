@@ -18,7 +18,7 @@ type queries {
 
   # search for users
   # required role: editor
-  users(search: String!, role: String!): [User]!
+  users(search: String!, role: String): [User]!
 
   # search for an unverified session by token
   unauthorizedSession(email: String!, token: SignInToken!): UnauthorizedSession
@@ -71,5 +71,11 @@ type mutations {
 
   # Verify a phone number
   verifyPhoneNumber(verificationCode: String): Boolean!
+
+  # Add a user to a given role
+  addUserToRole(userId: ID!, role: String!): User!
+
+  # Remove a user from a given role
+  removeUserFromRole(userId: ID!, role: String!): User!
 }
 `

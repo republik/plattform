@@ -21,16 +21,12 @@
   },
   "homepage": "https://github.com/orbiting/backends#readme",
   "devDependencies": {
-    "db-migrate": "^0.10.2",
-    "dotenv": "^4.0.0",
+    "db-migrate": "^0.10.7",
+    "dotenv": "^5.0.1",
     "gsheets": "^2.0.0",
     "isomorphic-unfetch": "^2.0.0"
   },
   "dependencies": {
-    "@orbiting/backend-modules-env": "link:../env",
-    "@orbiting/backend-modules-mail": "link:../mail",
-    "@orbiting/backend-modules-sms": "link:../sms",
-    "@orbiting/backend-modules-translate": "link:../translate",
     "apollo-modules-node": "^0.1.4",
     "check-env": "^1.3.0",
     "connect-pg-simple": "^3.1.2",
@@ -38,23 +34,23 @@
     "debug": "^3.1.0",
     "export-files": "^2.1.1",
     "express-session": "^1.15.6",
-    "geoip-database": "^1.0.11",
+    "geoip-database": "^1.0.16",
     "is-uuid": "^1.0.2",
     "kraut": "^0.1.1",
-    "maxmind": "^2.4.0",
+    "maxmind": "^2.5.0",
     "otp": "^0.1.3",
     "passport": "^0.4.0",
-    "pogi": "^2.5.5",
+    "pogi": "^2.5.8",
     "qr-image": "^3.2.0",
     "querystring": "^0.2.0",
     "rw": "^1.3.3",
-    "useragent": "^2.2.1",
-    "uuid": "^3.1.0",
+    "useragent": "^2.3.0",
+    "uuid": "^3.2.1",
     "validator": "^9.4.1"
   },
   "peerDependencies": {
     "d3-array": "^1.2.1",
-    "dotenv": "^4.0.0",
+    "dotenv": "^5.0.1",
     "isomorphic-unfetch": "^2.0.0"
   }
 }

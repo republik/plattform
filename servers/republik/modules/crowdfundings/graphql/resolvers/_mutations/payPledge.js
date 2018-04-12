@@ -5,6 +5,7 @@ const payPledgePaymentslip = require('../../../lib/payments/paymentslip/payPledg
 const payPledgePaypal = require('../../../lib/payments/paypal/payPledge')
 const payPledgePostfinance = require('../../../lib/payments/postfinance/payPledge')
 const payPledgeStripe = require('../../../lib/payments/stripe/payPledge')
+const slack = require('../../../../../lib/slack')
 
 module.exports = async (_, args, {pgdb, req, t}) => {
   const transaction = await pgdb.transactionBegin()
@@ -133,6 +134,14 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       }, {
         status: pledgeStatus
       })
+
+      if (pledgeStatus === 'PAID_INVESTIGATE') {
+        await slack.publishPledge(
+          user,
+          pledge,
+          'PAID_INVESTIGATE'
+        )
+      }
     }
 
     // send a confirmation email for this pledge

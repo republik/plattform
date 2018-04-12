@@ -1,6 +1,7 @@
 const { descending } = require('d3-array')
 const uniqBy = require('lodash/uniqBy')
 const yaml = require('../../lib/yaml')
+const zipArray = require('../../lib/zipArray')
 const {
   createGithubClients,
   commitNormalizer,
@@ -11,6 +12,8 @@ const {
 } = require('../../lib/github')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const debug = require('debug')('publikator:repo')
+
+const UNCOMMITTED_CHANGES_TTL = 7 * 24 * 60 * 60 * 1000 // 1 week in ms
 
 module.exports = {
   commits: async (repo, { page }) => {
@@ -61,7 +64,21 @@ module.exports = {
     args,
     { redis, pgdb }
   ) => {
-    const userIds = await redis.zrangeAsync(repoId, 0, -1)
+    const minScore = new Date().getTime() - UNCOMMITTED_CHANGES_TTL
+    const result = await redis.zrangeAsync(repoId, 0, -1, 'WITHSCORES')
+      .then(objs => zipArray(objs))
+    let userIds = []
+    let expiredUserIds = []
+    for (let r of result) {
+      if (r.score > minScore) {
+        userIds.push(r.value)
+      } else {
+        expiredUserIds.push(r.value)
+      }
+    }
+    for (let expiredKey of expiredUserIds) {
+      await redis.zremAsync(repoId, expiredKey)
+    }
     return userIds.length
       ? pgdb.public.users.find({ id: userIds })
           .then(users => users.map(transformUser))

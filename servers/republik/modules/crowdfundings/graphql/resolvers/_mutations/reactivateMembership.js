@@ -2,9 +2,12 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const getSubscription = require('../../../lib/payments/stripe/getSubscription')
 const createSubscription = require('../../../lib/payments/stripe/createSubscription')
 const reactivateSubscription = require('../../../lib/payments/stripe/reactivateSubscription')
+const slack = require('../../../../../lib/slack')
+const moment = require('moment')
 
-module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate, enforceSubscriptions}}) => {
+module.exports = async (_, args, {pgdb, req, user: me, t, mail: {sendMailTemplate, enforceSubscriptions}}) => {
   const transaction = await pgdb.transactionBegin()
+  const now = new Date()
   try {
     const {
       id: membershipId
@@ -27,13 +30,14 @@ module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate, enforce
     }
 
     const user = await transaction.public.users.findOne({ id: membership.userId })
-    Roles.ensureUserIsMeOrInRoles(user, req.user, ['supporter'])
+    Roles.ensureUserIsMeOrInRoles(user, me, ['supporter'])
 
-    const activeMemberships = await transaction.public.memberships.find({
+    const activeMembership = await transaction.public.memberships.findFirst({
+      'id !=': membershipId,
       userId: user.id,
       active: true
     })
-    if (activeMemberships.length && !activeMemberships.find(m => m.id === membershipId)) {
+    if (activeMembership) {
       throw new Error(t('api/membership/reactivate/otherActive'))
     }
 
@@ -79,10 +83,6 @@ module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate, enforce
 
         // this could go to the webhookHandler if we would not preactivate
         // the membership below
-        const user = await transaction.public.users.findOne({
-          id: membership.userId
-        })
-
         try {
           await sendMailTemplate({
             to: user.email,
@@ -96,8 +96,8 @@ module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate, enforce
               }
             ]
           })
-        } catch (e) {
-          console.warn(e)
+        } catch (e2) {
+          console.warn(e2)
         }
       }
 
@@ -107,19 +107,45 @@ module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate, enforce
       }, {
         active: true,
         renew: true,
-        subscriptionId: newSubscription.id
+        subscriptionId: newSubscription.id,
+        updatedAt: now
       })
-    } else {
+    } else if (membershipType.name === 'ABO' || membershipType.name === 'BENEFACTOR_ABO') {
+      if (membership.active) {
+        console.info('reactivateMembership: membership is already active')
+        await transaction.transactionCommit()
+        return membership
+      }
       newMembership = await transaction.public.memberships.updateAndGetOne({
         id: membershipId
       }, {
-        renew: true
+        renew: true,
+        active: true,
+        updatedAt: now
       })
+      const beginDate = moment(now)
+      const endDate = moment(beginDate).add(membershipType.intervalCount, membershipType.interval)
+      await transaction.public.membershipPeriods.insert({
+        membershipId: newMembership.id,
+        beginDate,
+        endDate
+      })
+    } else {
+      console.error(`reactivateMembership: membershipType "${membershipType.name}" not supported`)
+      throw new Error(t('api/unexpected'))
     }
 
     await transaction.transactionCommit()
 
     enforceSubscriptions({ pgdb, userId: membership.userId })
+
+    await slack.publishMembership(
+      user,
+      membershipType.name,
+      user.id === me.id
+        ? 'reactivateMembership'
+        : 'reactivateMembership (support)'
+    )
 
     return newMembership
   } catch (e) {

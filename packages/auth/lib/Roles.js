@@ -61,7 +61,7 @@ const addUserToRole = async (userId, role, pgdb) => {
   return pgdb.public.users.findOne({id: userId})
 }
 
-const removeUserFromRoll = async (userId, role, pgdb) => {
+const removeUserFromRole = async (userId, role, pgdb) => {
   await pgdb.query(`
     UPDATE
       users
@@ -106,5 +106,5 @@ module.exports = {
   userIsMeOrHasProfile,
   ensureUserIsInRoles,
   addUserToRole,
-  removeUserFromRoll
+  removeUserFromRole
 }

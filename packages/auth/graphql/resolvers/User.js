@@ -38,5 +38,34 @@ module.exports = {
   },
   enabledSecondFactorTokenTypes (user, args, { pgdb }) {
     return [...new Set(user.enabledSecondFactorTokenTypes)]
+  },
+  async eventLog (user, args, { pgdb, user: me }) {
+    Roles.ensureUserIsMeOrInRoles(user, me, userAccessRoles)
+    return pgdb.query(`
+      SELECT
+        e.*,
+        to_json(s.*) as "activeSession"
+      FROM
+        "eventLog" e
+      LEFT JOIN
+        sessions s
+          ON e."newData" #>> '{sid}' = s.sid
+      WHERE
+        e."newData" #>> '{sess,email}' = :email OR
+        e."oldData" #>> '{sess,email}' = :email OR
+        e."newData" #>> '{sess,passport,user}' = :userId OR
+        e."oldData" #>> '{sess,passport,user}' = :userId
+      ORDER BY
+        e."createdAt" DESC
+    `, {
+      email: user.email,
+      userId: user.userId
+    })
+      .then(result => result
+        .map(e => ({
+          ...e,
+          archivedSession: e.newData || e.oldData
+        }))
+      )
   }
 }

@@ -9,9 +9,16 @@ module.exports = async ({
   t
 }) => {
   const {
-    anonymity,
     credential: credentialDescription
   } = discussionPreferences
+
+  // default anonymity
+  let anonymity
+  if (discussionPreferences.anonymity === undefined) {
+    anonymity = discussion.anonymity === 'ENFORCED'
+  } else {
+    anonymity = discussionPreferences.anonymity
+  }
 
   if (anonymity && discussion.anonymity === 'FORBIDDEN') {
     throw new Error(t('api/discussion/anonymity/forbidden'))
@@ -43,23 +50,34 @@ module.exports = async ({
       })
       credentialId = newCredential.id
     }
+  } else if (credentialDescription === null) {
+    credentialId = null
   }
 
   const findQuery = {
     userId,
     discussionId: discussion.id
   }
+  const existingDP = await transaction.public.discussionPreferences.findOne(findQuery)
+  const user = await transaction.public.users.findOne({ id: userId })
+
   const updateQuery = {
     userId,
     discussionId: discussion.id,
     anonymous: anonymity,
-    credentialId
+    ...credentialId !== undefined
+      ? { credentialId }
+      : { },
+    notificationOption:
+      discussionPreferences.notifications ||
+      (existingDP && existingDP.notificationOption) ||
+      user.defaultDiscussionNotificationOption
   }
   const options = {
     skipUndefined: true
   }
-  const dpExists = await transaction.public.discussionPreferences.findFirst(findQuery)
-  if (dpExists) {
+
+  if (existingDP) {
     await transaction.public.discussionPreferences.updateOne(findQuery, updateQuery, options)
   } else {
     await transaction.public.discussionPreferences.insert(updateQuery, options)

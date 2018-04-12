@@ -1,11 +1,34 @@
-const { ensureSignedIn, Roles } = require('@orbiting/backend-modules-auth')
+const { Roles } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, args, context) => {
-  const { req, user, user: me, t, mail } = context
-  const { updateNewsletterSubscription, errors } = mail
-  ensureSignedIn(req)
-  const { name, subscribed, status } = args
-  Roles.ensureUserIsMeOrInRoles(user, me, ['supporter, admin'])
+  const {
+    userId,
+    name,
+    subscribed,
+    status
+  } = args
+
+  const {
+    user: me,
+    pgdb,
+    req,
+    t,
+    mail: {
+      updateNewsletterSubscription,
+      errors
+    }
+  } = context
+
+  const user = userId
+    ? await pgdb.public.users.findOne({ id: userId })
+    : me
+
+  if (!user) {
+    console.error('user not found', { req: req._log() })
+    throw new Error(t('api/users/404'))
+  }
+
+  Roles.ensureUserIsMeOrInRoles(user, me, ['supporter'])
 
   try {
     return updateNewsletterSubscription(

@@ -21,8 +21,7 @@
   "homepage": "https://github.com/orbiting/backends#readme",
   "devDependencies": {
     "db-migrate": "^0.10.2",
-    "dotenv": "^4.0.0",
-    "@orbiting/backend-modules-base": "link:../base"
+    "dotenv": "^4.0.0"
   },
   "dependencies": {
     "apollo-modules-node": "^0.1.4"

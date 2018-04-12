@@ -20,33 +20,32 @@
     "link": "yarn link"
   },
   "devDependencies": {
-    "graphql": "^0.12.3",
+    "graphql": "^0.13.2",
     "isomorphic-unfetch": "^2.0.0"
   },
   "dependencies": {
-    "@orbiting/backend-modules-auth": "link:../auth",
-    "apollo-engine": "^0.8.5",
+    "apollo-engine": "^1.0.4",
     "apollo-modules-node": "^0.1.4",
-    "apollo-server-express": "^1.3.2",
+    "apollo-server-express": "^1.3.4",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
     "check-env": "^1.3.0",
-    "compression": "^1.7.1",
+    "compression": "^1.7.2",
     "connect-timeout": "^1.9.0",
     "cookie": "^0.3.1",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
     "d3-time-format": "^2.1.1",
     "export-files": "^2.1.1",
-    "express": "^4.16.2",
+    "express": "^4.16.3",
     "graphql-redis-subscriptions": "^1.4.0",
-    "graphql-subscriptions": "^0.5.6",
-    "pogi": "^2.5.5",
+    "graphql-subscriptions": "^0.5.8",
+    "pogi": "^2.5.8",
     "redis": "^2.8.0",
-    "subscriptions-transport-ws": "^0.9.5"
+    "subscriptions-transport-ws": "^0.9.7"
   },
   "peerDependencies": {
-    "graphql": "^0.12.3",
+    "graphql": "^0.13.2",
     "isomorphic-unfetch": "^2.0.0"
   }
 }

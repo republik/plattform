@@ -4,10 +4,19 @@ const setDiscussionPreferences = require('./lib/setDiscussionPreferences')
 const userWaitUntil = require('../../Discussion/userWaitUntil')
 const slack = require('../../../../lib/slack')
 
-module.exports = async (_, args, { pgdb, user, t, pubsub }) => {
+const { submitComment: notify } = require('../../../../lib/Notifications')
+
+module.exports = async (_, args, context) => {
+  const {
+    pgdb,
+    user,
+    t,
+    pubsub
+  } = context
+  const userId = user.id
+
   Roles.ensureUserHasRole(user, 'member')
 
-  const userId = user.id
   const {
     id,
     discussionId,
@@ -85,6 +94,8 @@ module.exports = async (_, args, { pgdb, user, t, pubsub }) => {
       skipUndefined: true
     })
 
+    notify(comment, discussion, context)
+
     await transaction.transactionCommit()
 
     await pubsub.publish('comment', { comment: {
@@ -92,7 +103,7 @@ module.exports = async (_, args, { pgdb, user, t, pubsub }) => {
       node: comment
     }})
 
-    await slack.publishComment(user, comment, discussion)
+    slack.publishComment(user, comment, discussion)
 
     return comment
   } catch (e) {

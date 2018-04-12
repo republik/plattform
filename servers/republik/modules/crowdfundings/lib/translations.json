@@ -1,5 +1,5 @@
 {
-  "updated": "2018-02-23T13:07:07.469Z",
+  "updated": "2018-03-30T14:10:48.048Z",
   "title": "live",
   "data": [
     {
@@ -47,6 +47,10 @@
       "value": "Das Abonnement ist bereits gekündigt."
     },
     {
+      "key": "api/membership/cancel/unsupported",
+      "value": "Im Moment können nur Monats-Abonnements gestoppt werden."
+    },
+    {
       "key": "api/membership/pleaseWait",
       "value": "Das Abonnement wird von unserem System noch bearbeitet, bitte versuchen Sie es später nochmals."
     },
@@ -57,6 +61,14 @@
     {
       "key": "api/membershipType/404",
       "value": "Der Mitgliedschafts-Typ konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/membership/move/otherActive",
+      "value": "Der Ziel User hat bereits eine aktive Mitgliedschaft."
+    },
+    {
+      "key": "api/membership/move/monthlyDenied",
+      "value": "Monats-Abos können nicht verschoben werden."
     },
     {
       "key": "api/pledge/alreadyPaid",
@@ -169,6 +181,10 @@
     {
       "key": "api/users/merge/sourceAndTargetIdentical",
       "value": "Bei Quelle und Ziel darf es sich nicht um denselben User handeln."
+    },
+    {
+      "key": "api/pledge/generate/missingAddress",
+      "value": "Bitte zuerst eine Adresse für den betreffenden User erfassen."
     },
     {
       "key": "api/email/change/confirmation/subject",
