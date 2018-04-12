@@ -23,6 +23,7 @@ import PledgeOverview from './PledgeOverview'
 import MembershipOverview from './MembershipOverview'
 import EventLog from './EventLog'
 import Notepad from './Notepad'
+import SessionOverview from './SessionOverview'
 
 const GUTTER = 60
 const styles = {
@@ -187,6 +188,15 @@ class Detail extends Component {
                 >
                   Event Log
                 </TabLink>
+                <TabLink
+                  name="sessions"
+                  onClick={this.tabLinkHandler(
+                    'sessions'
+                  )}
+                  current={this.state.selectedTab}
+                >
+                  Sessions
+                </TabLink>
               </div>
               <Tab
                 name="details"
@@ -322,6 +332,9 @@ class Detail extends Component {
                           onReactivateMembership={this.safe(
                             props.reactivateMembership
                           )}
+                          onCancelMembership={this.safe(
+                            props.cancelMembership
+                          )}
                         />
                       </div>
                     )
@@ -329,7 +342,7 @@ class Detail extends Component {
                 </div>
                 <Button
                   onClick={this.safe(
-                    props.reactivateMembership
+                    props.generateMembership
                   )}
                 >
                   Generate yearly membership
@@ -341,6 +354,14 @@ class Detail extends Component {
               >
                 <EventLog
                   items={props.data.user.eventLog}
+                />
+              </Tab>
+              <Tab
+                name="sessions"
+                current={this.state.selectedTab}
+              >
+                <SessionOverview
+                  user={props.data.user}
                 />
               </Tab>
             </div>
@@ -454,6 +475,22 @@ const updateAdminNotesMutation = gql`
 const reactivateMembershipMutation = gql`
   mutation reactivateMembership($id: ID!) {
     reactivateMembership(id: $id) {
+      id
+    }
+  }
+`
+
+const cancelMembershipMutation = gql`
+  mutation cancelMembership(
+    $id: ID!
+    $immediately: Boolean
+    $reason: String
+  ) {
+    cancelMembership(
+      id: $id
+      immediately: $immediately
+      reason: $reason
+    ) {
       id
     }
   }
@@ -761,6 +798,36 @@ const WrappedUser = compose(
             variables: {
               membershipId,
               userId: newUserId
+            },
+            refetchQueries: [
+              {
+                query: userQuery,
+                variables: {
+                  id: userId
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
+  }),
+  graphql(cancelMembershipMutation, {
+    props: ({
+      mutate,
+      ownProps: { params: { userId } }
+    }) => ({
+      cancelMembership: ({
+        membershipId,
+        reason,
+        immediately
+      }) => {
+        if (mutate) {
+          return mutate({
+            variables: {
+              id: membershipId,
+              reason,
+              immediately
             },
             refetchQueries: [
               {
