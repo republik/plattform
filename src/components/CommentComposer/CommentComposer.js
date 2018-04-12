@@ -188,7 +188,7 @@ class CommentComposer extends PureComponent {
           <div {...styles.actions}>
             {etiquetteLink && (
               <span {...styles.etiquette}>
-                {etiquetteLink()}
+                {etiquetteLink}
               </span>
             )}
             <div {...styles.mainActions}>
@@ -216,7 +216,7 @@ CommentComposer.propTypes = {
   submitComment: PropTypes.func.isRequired,
   submitLabel: PropTypes.string,
   cancelLabel: PropTypes.string,
-  etiquetteLink: PropTypes.func,
+  etiquetteLink: PropTypes.object,
   maxLength: PropTypes.number
 }
 
