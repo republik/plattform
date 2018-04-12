@@ -81,15 +81,9 @@ const styles = {
     }
   }),
   etiquette: css({
-    ...sansSerifRegular16,
-    color: colors.primary,
-    cursor: 'pointer',
-    padding: '0 12px',
-    textDecoration: 'none'
+    padding: '0 12px'
   })
 }
-
-const DefaultLink = ({ children }) => children
 
 class CommentComposer extends PureComponent {
   constructor (props) {
@@ -167,8 +161,7 @@ class CommentComposer extends PureComponent {
       onCancel,
       submitLabel,
       cancelLabel,
-      etiquetteLabel,
-      EtiquetteLink = DefaultLink,
+      etiquetteLink,
       maxLength
     } = this.props
     const {text, count} = this.state
@@ -193,11 +186,11 @@ class CommentComposer extends PureComponent {
           />
           {this.renderProgress()}
           <div {...styles.actions}>
-            <EtiquetteLink passHref>
-              <a {...styles.etiquette}>
-                {etiquetteLabel || t('styleguide/CommentComposer/etiquette')}
-              </a>
-            </EtiquetteLink>
+            {etiquetteLink && (
+              <span {...styles.etiquette}>
+                {etiquetteLink()}
+              </span>
+            )}
             <div {...styles.mainActions}>
               <button {...styles.cancelButton} onClick={onCancel}>
                 {cancelLabel || t('styleguide/CommentComposer/cancel')}
@@ -223,8 +216,7 @@ CommentComposer.propTypes = {
   submitComment: PropTypes.func.isRequired,
   submitLabel: PropTypes.string,
   cancelLabel: PropTypes.string,
-  etiquetteLabel: PropTypes.string,
-  EtiquetteLink: PropTypes.func,
+  etiquetteLink: PropTypes.func,
   maxLength: PropTypes.number
 }
 

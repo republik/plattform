@@ -17,7 +17,7 @@ const styles = {
   }),
 }
 
-const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onEditPreferences, onAnswer, edit, onUnpublish, onUpvote, onDownvote, dismissComposer, submitComment, highlighted, timeago, maxLength, replyBlockedMsg, Link, EtiquetteLink}) => {
+const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onEditPreferences, onAnswer, edit, onUnpublish, onUpvote, onDownvote, dismissComposer, submitComment, highlighted, timeago, maxLength, replyBlockedMsg, Link, etiquetteLink}) => {
   const isEditing = edit && edit.isEditing
   const { score } = comment
 
@@ -46,7 +46,7 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
               submitComment={edit.submit}
               submitLabel={t('styleguide/comment/edit/submit')}
               maxLength={maxLength}
-              EtiquetteLink={EtiquetteLink}
+              etiquetteLink={etiquetteLink}
             />
           </div>
         )}
@@ -72,7 +72,7 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
               onCancel={dismissComposer}
               submitComment={submitComment}
               maxLength={maxLength}
-              EtiquetteLink={EtiquetteLink}
+              etiquetteLink={etiquetteLink}
             />
           }
         </div>
@@ -112,7 +112,7 @@ class Composer extends PureComponent {
   }
 
   render () {
-    const {t, displayAuthor, error, onEditPreferences, onCancel, submitComment, maxLength, EtiquetteLink} = this.props
+    const {t, displayAuthor, error, onEditPreferences, onCancel, submitComment, maxLength, etiquetteLink} = this.props
     const {isVisible} = this.state
 
     return (
@@ -125,7 +125,7 @@ class Composer extends PureComponent {
           onCancel={onCancel}
           submitComment={submitComment}
           maxLength={maxLength}
-          EtiquetteLink={EtiquetteLink}
+          etiquetteLink={etiquetteLink}
         />
       </div>
     )
@@ -202,7 +202,7 @@ class RowState extends PureComponent {
       maxLength,
       replyBlockedMsg,
       Link,
-      EtiquetteLink
+      etiquetteLink
     } = this.props
     const {composerState, composerError} = this.state
     const {userVote} = comment
@@ -260,7 +260,7 @@ class RowState extends PureComponent {
         maxLength={maxLength}
         replyBlockedMsg={replyBlockedMsg}
         Link={Link}
-        EtiquetteLink={EtiquetteLink}
+        etiquetteLink={etiquetteLink}
       />
     )
   }
