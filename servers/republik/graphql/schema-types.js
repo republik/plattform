@@ -346,5 +346,14 @@ type MutationResult {
 
 type MembershipStats {
   count: Int!
+  monthlys: [MonthlyMembershipStat!]!
+}
+
+type MonthlyMembershipStat {
+  day: Date!
+  newCount: Int!
+  renewableCount: Int!
+  renewedCount: Int!
+  renewedRatio: Float!
 }
 `
