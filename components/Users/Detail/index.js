@@ -332,6 +332,9 @@ class Detail extends Component {
                           onReactivateMembership={this.safe(
                             props.reactivateMembership
                           )}
+                          onCancelMembership={this.safe(
+                            props.cancelMembership
+                          )}
                         />
                       </div>
                     )
@@ -339,7 +342,7 @@ class Detail extends Component {
                 </div>
                 <Button
                   onClick={this.safe(
-                    props.reactivateMembership
+                    props.generateMembership
                   )}
                 >
                   Generate yearly membership
@@ -472,6 +475,22 @@ const updateAdminNotesMutation = gql`
 const reactivateMembershipMutation = gql`
   mutation reactivateMembership($id: ID!) {
     reactivateMembership(id: $id) {
+      id
+    }
+  }
+`
+
+const cancelMembershipMutation = gql`
+  mutation cancelMembership(
+    $id: ID!
+    $immediately: Boolean
+    $reason: String
+  ) {
+    cancelMembership(
+      id: $id
+      immediately: $immediately
+      reason: $reason
+    ) {
       id
     }
   }
@@ -779,6 +798,36 @@ const WrappedUser = compose(
             variables: {
               membershipId,
               userId: newUserId
+            },
+            refetchQueries: [
+              {
+                query: userQuery,
+                variables: {
+                  id: userId
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
+  }),
+  graphql(cancelMembershipMutation, {
+    props: ({
+      mutate,
+      ownProps: { params: { userId } }
+    }) => ({
+      cancelMembership: ({
+        membershipId,
+        reason,
+        immediately
+      }) => {
+        if (mutate) {
+          return mutate({
+            variables: {
+              id: membershipId,
+              reason,
+              immediately
             },
             refetchQueries: [
               {

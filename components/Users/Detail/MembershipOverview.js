@@ -9,6 +9,7 @@ import {
 import withT from '../../../lib/withT'
 import List, { Item } from '../../List'
 import MoveMembership from './MoveMembership'
+import CancelMembership from './CancelMembership'
 
 import { swissTime } from '../../../lib/utils/formats'
 const dateTimeFormat = swissTime.format(
@@ -18,7 +19,8 @@ const dateTimeFormat = swissTime.format(
 const MembershipOverview = ({
   membership,
   onMoveMembership,
-  onReactivateMembership
+  onReactivateMembership,
+  onCancelMembership
 }) => {
   return (
     <div>
@@ -101,6 +103,10 @@ const MembershipOverview = ({
         membership={membership}
         onSubmit={onMoveMembership}
       />
+      {membership.type.name === 'MONTHLY_ABO' && !!membership.renew && <CancelMembership
+        membership={membership}
+        onSubmit={onCancelMembership}
+      />}
       {!membership.active && (
         <Button
           onClick={() => onReactivateMembership(membership)}
