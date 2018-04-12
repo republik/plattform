@@ -1,6 +1,6 @@
 import React from 'react'
 import test from 'tape'
-import { shallow } from './enzyme'
+import { shallow } from '../../../lib/utils/enzyme'
 import createPropertyForm from './createPropertyForm'
 
 test('utils.createPropertyForm', assert => {

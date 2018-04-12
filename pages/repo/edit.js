@@ -42,6 +42,7 @@ import SettingsIcon from 'react-icons/lib/fa/cogs'
 import createDebug from 'debug'
 
 const debug = createDebug('publikator:pages:edit')
+const TEST = process.env.NODE_ENV === 'test'
 
 const fragments = {
   commit: gql`
@@ -151,7 +152,7 @@ const rmWarning = message => state => ({
     .filter(warning => warning !== message)
 })
 
-class EditorPage extends Component {
+export class EditorPage extends Component {
   constructor (...args) {
     super(...args)
 
@@ -404,7 +405,7 @@ class EditorPage extends Component {
       url
     } = props
 
-    if (!process.browser) {
+    if (!process.browser && !TEST) {
       // running without local storage doesn't make sense
       // - we always want to render the correct version
       // - flash of an outdated version could confuse an user
