@@ -282,6 +282,7 @@ export class EditorPage extends Component {
   }
 
   notifyChanges (action) {
+    debug('notifyChanges', action)
     const { url: { query: { repoId } }, t } = this.props
 
     const warning = t('commit/warn/uncommittedChangesError')
@@ -301,6 +302,7 @@ export class EditorPage extends Component {
   beginChanges () {
     this.setState({
       hasUncommittedChanges: true,
+      beginChanges: new Date(),
       readOnly: false
     })
 
@@ -556,7 +558,19 @@ export class EditorPage extends Component {
         )
       }
 
-      if (!hasUncommittedChanges) {
+      const msSinceBegin = (
+        this.state.beginChanges &&
+        (new Date()).getTime() - this.state.beginChanges.getTime()
+      )
+      const { uncommittedChanges, me } = this.props
+      if (
+        !hasUncommittedChanges ||
+        msSinceBegin > 1000 * 60 * 5 ||
+        (
+          !uncommittedChanges.users.find(user => user.id === me.id) &&
+          (!msSinceBegin || msSinceBegin > 1000)
+        )
+      ) {
         this.beginChanges()
       }
     } else {
