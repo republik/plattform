@@ -1,5 +1,5 @@
 import { ApolloProvider } from 'react-apollo'
-import initApollo from './initApollo'
+import initApollo from '../../lib/apollo/initApollo'
 
 export default (initialState) => {
   const client = initApollo(initialState, {}, {

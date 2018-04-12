@@ -1,13 +1,12 @@
 import React from 'react'
 import test from 'tape'
-import setupTestData from '../../lib/apollo/setupTestData'
-import { mount } from '../../lib/utils/enzyme'
-import '../../lib/utils/jsdom'
+import setupData from '../../../utils/setupData'
+import { mount } from '../../../utils/enzyme'
 
-import { t } from '../../lib/withT'
+import { t } from '../../../../lib/withT'
 import { parse } from '@orbiting/remark-preset'
 
-import { EditorPage } from './edit'
+import { EditorPage } from '../../../../pages/repo/edit'
 
 const me = {
   __typename: 'User',
@@ -19,7 +18,7 @@ const me = {
   roles: ['editor']
 }
 
-const testData = setupTestData({
+const testData = setupData({
   apollo: {
     data: {
       ROOT_QUERY: {
