@@ -69,8 +69,7 @@ class SessionOverview extends Component {
                 {session.id} {session.expiresAt}
               </Label>
               <Interaction.P>
-                {session.city} {session.country}{' '}
-                {session.countryFlag}
+                {session.city} {session.country}
               </Interaction.P>
               <Interaction.P>
                 {session.ipAddress} /{' '}
