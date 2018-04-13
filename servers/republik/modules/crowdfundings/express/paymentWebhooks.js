@@ -1,5 +1,6 @@
 const bodyParser = require('body-parser')
 const logger = console
+const payPledgePF = require('../lib/payments/postfinance/payPledge')
 const payPledgePaypal = require('../lib/payments/paypal/payPledge')
 const generateMemberships = require('../lib/generateMemberships')
 const sendPendingPledgeConfirmations = require('../lib/sendPendingPledgeConfirmations')
@@ -59,11 +60,81 @@ module.exports = async (server, pgdb, t) => {
 
   // https://e-payment-postfinance.v-psp.com/de/guides/integration%20guides/e-commerce/transaction-feedback#servertoserver-feedback
   server.get('/payments/pf', async (req, res) => {
+    const { query: body } = req
     await pgdb.public.paymentsLog.insert({
       method: 'POSTFINANCECARD',
-      pspPayload: req.query
+      pspPayload: body
     })
-    return res.sendStatus(200)
+
+    // end connection
+    res.sendStatus(200)
+
+    // payPledge in case that didn't happen already:
+    // in case users close the paypal tab before being redirected back to us,
+    // we only get notified about the payment via this webhook.
+    // accepted status see: servers/republik/modules/crowdfundings/lib/payments/postfinance/payPledge.js
+    const status = parseInt(body.STATUS)
+    if (status !== 9 && status !== 91) {
+      return
+    }
+
+    const pledgeId = body.orderID
+
+    const transaction = await pgdb.transactionBegin()
+    let userId
+    try {
+      // load pledge
+      // FOR UPDATE to wait on other transactions
+      const pledge = (await transaction.query(`
+        SELECT *
+        FROM pledges
+        WHERE id = :pledgeId
+        FOR UPDATE
+      `, {
+        pledgeId
+      }))[0]
+
+      if (pledge && pledge.status !== 'SUCCESSFUL') {
+        userId = pledge.userId
+
+        const pspPayload = {
+          ...body
+        }
+        const pledgeStatus = await payPledgePF({
+          pledgeId: pledge.id,
+          total: pledge.total,
+          pspPayload,
+          userId,
+          transaction,
+          t,
+          logger
+        })
+        if (pledge.status !== pledgeStatus) {
+          // generate Memberships
+          if (pledgeStatus === 'SUCCESSFUL') {
+            await generateMemberships(pledge.id, transaction, t, logger)
+          }
+
+          // update pledge status
+          await transaction.public.pledges.updateOne({
+            id: pledge.id
+          }, {
+            status: pledgeStatus,
+            sendConfirmMail: true
+          })
+        }
+      }
+      await transaction.transactionCommit()
+    } catch (e) {
+      await transaction.transactionRollback()
+      logger.info('transaction rollback', { req: req._log(), error: e })
+      throw e
+    }
+
+    if (userId) {
+      // send mail immediately
+      await sendPendingPledgeConfirmations(userId, pgdb, t)
+    }
   })
 
   // https://developer.paypal.com/docs/integration/direct/webhooks/rest-webhooks/
