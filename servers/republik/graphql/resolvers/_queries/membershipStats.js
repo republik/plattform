@@ -1,11 +1,26 @@
 const moment = require('moment')
 
+const { PARKING_USER_ID } = process.env
+
 module.exports = (_, args, { pgdb }) => ({
   count: async () => {
-    const { PARKING_USER_ID } = process.env
-    return pgdb.public.memberships.count({
-      'userId !=': PARKING_USER_ID,
-      active: true
+    return pgdb.queryOneField(`
+      SELECT
+        count(*)
+      FROM
+        memberships m
+      JOIN
+        "membershipTypes" mt
+        ON m."membershipTypeId" = mt.id
+      WHERE
+        m."userId" != :excludeUserId AND
+        (
+          mt.name != 'MONTHLY_ABO' OR (
+            mt.name = 'MONTHLY_ABO' and m.active = true
+          )
+        )
+    `, {
+      excludeUserId: PARKING_USER_ID
     })
   },
   monthlys: async () => {
