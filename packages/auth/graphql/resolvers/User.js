@@ -36,8 +36,8 @@ module.exports = {
   updatedAt (user, args, { user: me }) {
     return user._raw.updatedAt
   },
-  enabledSecondFactorTokenTypes (user, args, { pgdb }) {
-    return [...new Set(user.enabledSecondFactorTokenTypes)]
+  enabledSecondFactors (user, args, { pgdb }) {
+    return [...new Set(user.enabledSecondFactors)]
   },
   async eventLog (user, args, { pgdb, user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, userAccessRoles)

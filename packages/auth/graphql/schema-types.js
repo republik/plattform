@@ -14,7 +14,7 @@ type Session {
 
 type UnauthorizedSession {
   session: Session!
-  availableSecondFactorTokenTypes: [SignInTokenType]!
+  requiredSecondFactors: [SignInTokenType]!
 }
 
 type User {
@@ -30,7 +30,7 @@ type User {
   createdAt: DateTime!
   updatedAt: DateTime!
   sessions: [Session!]
-  enabledSecondFactorTokenTypes: [SignInTokenType]!
+  enabledSecondFactors: [SignInTokenType]!
   eventLog: [EventLog!]!
 }
 

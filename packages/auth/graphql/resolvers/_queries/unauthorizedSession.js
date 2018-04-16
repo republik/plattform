@@ -9,6 +9,6 @@ module.exports = async (_, args, { pgdb, user: me, req }) => {
   }
   return {
     session,
-    availableSecondFactorTokenTypes: [...new Set(me.enabledSecondFactorTokenTypes)]
+    requiredSecondFactors: [...new Set(me.enabledSecondFactors)]
   }
 }
