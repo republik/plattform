@@ -9,11 +9,11 @@ const Response = {
     return buildOTPUrl(user.email, secret)
   },
   svg ({ secret }, args, { pgdb, user }) {
-    const { ecLevel } = args
+    const { errorCorrectionLevel } = args
     const url = buildOTPUrl(user.email, secret)
     const qr = require('qr-image')
     return qr.imageSync(url, {
-      ec_level: ecLevel,
+      ec_level: errorCorrectionLevel,
       type: 'svg'
     })
   }

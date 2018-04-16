@@ -75,7 +75,6 @@ module.exports = {
     return true
   },
   validateChallenge: async ({ pgdb, payload, type, user }) => {
-    console.log(`Validate SMS Code challenge for ${user.id}: ${payload} (client)`)
     const foundToken = await pgdb.public.tokens.findOne({
       type,
       payload: payload.toUpperCase()

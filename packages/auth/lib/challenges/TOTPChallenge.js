@@ -42,7 +42,6 @@ module.exports = {
     if (!user.isTOTPChallengeSecretVerified) return false
     const otp = OTP({ secret: user.TOTPChallengeSecret })
     const comparablePayload = await otp.totp()
-    console.log(`Validate TOTP challenge for ${user.id}: ${comparablePayload} (server) ==? ${payload} (client)`)
     return (comparablePayload === payload)
   }
 }
