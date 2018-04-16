@@ -97,6 +97,7 @@ module.exports = async (server, pgdb, t) => {
       }))[0]
 
       if (pledge && pledge.status !== 'SUCCESSFUL') {
+        debug('pf run payPledgePF via webhook')
         userId = pledge.userId
 
         const pspPayload = {
