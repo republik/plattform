@@ -72,7 +72,6 @@ class SessionOverview extends Component {
                 {session.city} {session.country}
               </Interaction.P>
               <Interaction.P>
-                {session.ipAddress} /{' '}
                 {session.userAgent}
               </Interaction.P>
               <Button
