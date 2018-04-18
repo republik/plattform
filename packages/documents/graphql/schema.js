@@ -20,7 +20,7 @@ type queries {
   document(path: String!): Document
 
   documentsSearch(
-    search: String!
+    search: String
     filter: DocumentSearchFiltersInput
     first: Int
     after: String

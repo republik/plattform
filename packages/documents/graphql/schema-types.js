@@ -92,10 +92,13 @@ input DateRangeInput {
 }
 
 input DocumentSearchFiltersInput {
-  published: DateRangeInput
-  author: String
+  feed: Boolean
   dossier: String
   format: String
+  template: String
+  userId: ID
+  publishedAt: DateRangeInput
+  author: String
   seriesMaster: String
   discussion: Boolean
   audio: Boolean

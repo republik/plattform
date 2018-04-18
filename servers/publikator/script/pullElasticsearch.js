@@ -72,13 +72,13 @@ PgDb.connect().then(async pgdb => {
           body: {
             meta: {
               ...meta,
+              repoId: d.repoId,
               series,
               seriesMaster,
               authors: meta.credits && meta.credits
                 .filter(c => c.type === 'link')
                 .map(a => a.children[0].value)
             },
-            repoId: d.repoId,
             contentString: mdastToString(d.content),
             content: d.content
           }

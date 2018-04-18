@@ -7,6 +7,23 @@ const keywordPartial = {
   }
 }
 
+const mdastPartial = {
+  properties: {
+    type: {
+      type: 'keyword'
+    },
+    value: {
+      type: 'keyword'
+    },
+    url: {
+      type: 'keyword'
+    },
+    children: { // is actually mdast again
+      type: 'object'
+    }
+  }
+}
+
 module.exports = {
   aliases: {},
   mappings: {
@@ -24,6 +41,9 @@ module.exports = {
         },
         meta: {
           properties: {
+            repoId: {
+              type: 'keyword'
+            },
             title: {
               type: 'text',
               analyzer: 'german'
@@ -34,9 +54,6 @@ module.exports = {
             },
             publishDate: {
               type: 'date'
-            },
-            repoId: {
-              type: 'keyword'
             },
             slug: {
               type: 'text',
@@ -49,6 +66,9 @@ module.exports = {
             },
             feed: {
               type: 'boolean'
+            },
+            credits: {
+              ...mdastPartial
             },
             authors: {
               type: 'text',

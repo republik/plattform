@@ -1,3 +1,5 @@
+const debug = require('debug')('search:documents')
+
 const termCriteriaBuilder = (fieldName) => (value) => ({
   clause: 'must',
   filter: {
@@ -26,12 +28,21 @@ const dateRangeCriteriaBuilder = (fieldName) => (range) => ({
   }
 })
 
-const filterBuilder = (filterCriterias) => (filter) => {
-  if (!filter) {
-    return {}
+/*
+const dateCriteriaBuilder = (fieldName, operator) => (date) => ({
+  clause: 'must',
+  filter: {
+    range: {
+      [fieldName]: {
+        [operator]: date
+      }
+    }
   }
+})
+*/
 
-  return Object.keys(filter).reduce((boolFilter, searchFilterFieldName) => {
+const filterBuilder = (filterCriterias) => (filter) =>
+  Object.keys(filter).reduce((boolFilter, searchFilterFieldName) => {
     const filterValue = filter[searchFilterFieldName]
     const criteria = filterCriterias[searchFilterFieldName]
     if (!criteria) {
@@ -42,16 +53,28 @@ const filterBuilder = (filterCriterias) => (filter) => {
     boolFilter[created.clause] = [...(boolFilter[created.clause] || []), created.filter]
     return boolFilter
   }, {})
-}
 
 const createFilter = filterBuilder({
-  author: termCriteriaBuilder('meta.authors.keyword'),
+  // scheduledAt: dateCriteriaBuilder('scheduledAt', 'gte'),
+  feed: hasCriteriaBuilder('meta.feed'),
   dossier: termCriteriaBuilder('meta.dossier'),
   format: termCriteriaBuilder('meta.format'),
+  template: termCriteriaBuilder('meta.template'),
+  userId: termCriteriaBuilder('meta.credits.url'),
+  path: termCriteriaBuilder('meta.path'),
+  repoId: termCriteriaBuilder('meta.repoId'),
+  publishedAt: dateRangeCriteriaBuilder('meta.publishDate'),
+  author: termCriteriaBuilder('meta.authors.keyword'),
   seriesMaster: termCriteriaBuilder('meta.seriesMaster'),
   audio: hasCriteriaBuilder('audio', 'meta.audioSource.mp3'),
-  discussion: hasCriteriaBuilder('meta.discussionId'),
-  published: dateRangeCriteriaBuilder('meta.publishDate')
+  discussion: hasCriteriaBuilder('meta.discussionId')
+})
+
+const sanitizeFilter = (filter) => ({
+  ...filter,
+  ...filter.userId
+    ? { userId: `/~${filter.userId}` }
+    : { }
 })
 
 const createQuery = (searchTerm, filter) => ({
@@ -72,7 +95,7 @@ const createQuery = (searchTerm, filter) => ({
         }
         : { match_all: {} },
       filter: {
-        bool: createFilter(filter)
+        bool: createFilter(sanitizeFilter(filter))
       }
     }
   },
@@ -180,18 +203,20 @@ module.exports = async (
 
   const {
     search,
-    filter,
+    filter = {},
     first = 40,
     from = 0
   } = options
 
-  const result = await elastic.search({
+  const query = {
     index: 'documents',
     type: 'document',
     from,
     size: first,
     body: createQuery(search, filter)
-  })
+  }
+  debug('query: %O', query)
+  const result = await elastic.search(query)
 
   const hasNextPage = result.hits.total > from + first
   const hasPreviousPage = from > 0
