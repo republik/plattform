@@ -86,7 +86,19 @@ const sanitizeFilter = (filter) => ({
     : { }
 })
 
-const createQuery = (searchTerm, filter) => ({
+const sortKeyMapping = {
+  relevance: '_score',
+  publishedAt: 'meta.publishDate',
+  mostRead: 'stats.views', // TODO
+  mostDebated: 'stats.comments' // TODO
+}
+const sanitizeSort = (sort) => ([
+  {
+    [sortKeyMapping[sort.key]]: sort.direction
+  }
+])
+
+const createQuery = (searchTerm, filter, sort) => ({
   _source: ['meta.*', 'content'],
   query: {
     bool: {
@@ -108,6 +120,7 @@ const createQuery = (searchTerm, filter) => ({
       }
     }
   },
+  sort: sanitizeSort(sort),
   highlight: {
     fields: {
       contentString: {}
@@ -230,6 +243,10 @@ module.exports = async (
   const {
     search,
     filter = {},
+    sort = {
+      key: 'relevance',
+      direction: 'DESC'
+    },
     first: _first = 40,
     from = 0
   } = options
@@ -241,7 +258,7 @@ module.exports = async (
     type: 'document',
     from,
     size: first,
-    body: createQuery(search, filter)
+    body: createQuery(search, filter, sort)
   }
   debug('query: %O', query)
   const result = await elastic.search(query)

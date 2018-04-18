@@ -22,6 +22,7 @@ type queries {
   documentsSearch(
     search: String
     filter: DocumentSearchFiltersInput
+    sort: DocumentsSortInput
     first: Int
     after: String
     before: String

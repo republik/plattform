@@ -85,6 +85,24 @@ extend type User {
   ): DocumentConnection!
 }
 
+enum OrderDirection {
+  ASC
+  DESC
+}
+
+enum DocumentsSortKey {
+  relevance
+  publishedAt
+  # TODO
+  mostRead
+  # TODO
+  mostDebated
+}
+
+input DocumentsSortInput {
+  key: DocumentsSortKey!
+  direction: OrderDirection
+}
 
 input DateRangeInput {
   from: Date

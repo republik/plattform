@@ -211,11 +211,6 @@ enum DiscussionOrder {
   HOT
 }
 
-enum OrderDirection {
-  ASC
-  DESC
-}
-
 type PageInfo {
   # If endCursor is null and hasNextPage is true
   # this node would have child nodes.

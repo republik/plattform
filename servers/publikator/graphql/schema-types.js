@@ -59,11 +59,6 @@ enum RepoOrderField {
   STARGAZERS
 }
 
-enum OrderDirection {
-  ASC
-  DESC
-}
-
 interface MilestoneInterface {
   name: String!
   commit: Commit!
