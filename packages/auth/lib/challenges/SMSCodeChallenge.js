@@ -80,6 +80,6 @@ module.exports = {
       payload: payload.toUpperCase()
     })
 
-    return foundToken.id
+    return foundToken && foundToken.id
   }
 }
