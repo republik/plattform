@@ -21,8 +21,10 @@ type queries {
 
   documentsSearch(
     search: String!
-    page: Int
     filter: DocumentSearchFiltersInput
+    first: Int
+    after: String
+    before: String
   ): DocumentSearchConnection!
 }
 `

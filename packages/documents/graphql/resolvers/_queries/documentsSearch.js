@@ -145,24 +145,74 @@ const mapAggregation = (aggregation) => {
   }
 }
 
-const PAGE_SIZE = 10
-module.exports = async (_, { search, page = 1, filter }, { user, elastic }) => {
+const cleanOptions = (options) => ({
+  ...options,
+  after: undefined,
+  before: undefined
+})
+
+const stringifyOptions = (options) =>
+  Buffer.from(JSON.stringify(cleanOptions(options))).toString('base64')
+
+const parseOptions = (options) => {
+  try {
+    return JSON.parse(Buffer.from(options, 'base64').toString())
+  } catch (e) {
+    console.info('failed to parse options:', options, e)
+  }
+  return {}
+}
+
+module.exports = async (
+  _,
+  args,
+  {
+    user,
+    elastic
+  }
+) => {
+  const { after, before } = args
+  const options = after
+    ? { ...args, ...parseOptions(after) }
+    : before
+      ? { ...args, ...parseOptions(before) }
+      : args
+
+  const {
+    search,
+    filter,
+    first = 40,
+    from = 0
+  } = options
+
   const result = await elastic.search({
     index: 'documents',
     type: 'document',
-    from: (page - 1) * PAGE_SIZE,
-    size: PAGE_SIZE,
+    from,
+    size: first,
     body: createQuery(search, filter)
   })
 
+  const hasNextPage = result.hits.total > from + first
+  const hasPreviousPage = from > 0
   return {
     nodes: result.hits.hits.map(mapDocumentHit),
     stats: mapStats(result),
     pageInfo: {
-      startCursor: '1',
-      hasPreviousPage: page > 1,
-      hasNextPage: result.hits.total - page * PAGE_SIZE > 0,
-      endCursor: Math.ceil(result.hits.total / PAGE_SIZE)
+      hasNextPage,
+      endCursor: hasNextPage
+        ? stringifyOptions({
+          ...options,
+          from: from + first
+        })
+        : null,
+      hasPreviousPage,
+      startCursor: hasPreviousPage
+        ? stringifyOptions({
+          ...options,
+          from: from - first
+        })
+        : null
     }
   }
 }
