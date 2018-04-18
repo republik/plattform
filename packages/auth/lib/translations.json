@@ -113,6 +113,18 @@
     {
       "key": "api/auth/2fa-has-to-be-disabled",
       "value": "TODO: Die Zwei-Faktor-Authentifierung muss zuerst deaktiviert werden"
+    },
+    {
+      "key": "api/auth/sms/shared-secret",
+      "value": "TODO: SMS Login Authorisierung: {sharedSecret}"
+    },
+    {
+      "key": "api/auth/sms/your-code",
+      "value": "TODO: Dein Code: {code}"
+    },
+    {
+      "key": "api/auth/sms/phone-number-not-valid",
+      "value": "TODO: Phone number not valid for Text Messaging"
     }
   ]
 }

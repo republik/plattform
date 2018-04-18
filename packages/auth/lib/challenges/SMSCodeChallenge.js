@@ -2,6 +2,7 @@ const {
   sendTextMessage
 } = require('@orbiting/backend-modules-sms')
 const { parse, format } = require('libphonenumber-js')
+const t = require('../t')
 
 const MIN_IN_MS = 1000 * 60
 
@@ -22,16 +23,16 @@ async function getUserPhoneNumber (pgdb, email) {
     const parsedPhoneNumber = parse(user.phoneNumber || '', 'CH') // it could be any arbitrary string
     return format(parsedPhoneNumber.phone, parsedPhoneNumber.country, 'E.164')
   } catch (e) {
-    throw new Error('Phone number not valid for Text Messaging')
+    throw new Error(t('api/auth/sms/phone-number-not-valid'))
   }
 }
 
 module.exports = {
   generateSharedSecret: async ({ pgdb, user, email }) => {
-    const sharedCode = generateSMSTokenCode()
+    const sharedSecret = generateSMSTokenCode()
     const phoneNumber = await getUserPhoneNumber(pgdb, user.email)
     await sendTextMessage({
-      text: `SMS Login Authorisierung: ${sharedCode}`,
+      text: t('api/auth/sms/shared-secret', { sharedSecret }),
       phoneNumber
     })
     await pgdb.public.users.updateAndGetOne(
@@ -39,10 +40,10 @@ module.exports = {
         id: user.id
       }, {
         isPhoneNumberVerified: false,
-        phoneNumberVerificationCode: sharedCode
+        phoneNumberVerificationCode: sharedSecret
       }
     )
-    return sharedCode
+    return sharedSecret
   },
   validateSharedSecret: async ({ pgdb, payload, user }) => {
     const isMatch = (user.phoneNumberVerificationCode === payload)
@@ -69,7 +70,7 @@ module.exports = {
   startChallenge: async ({ email, token, pgdb }) => {
     const phoneNumber = await getUserPhoneNumber(pgdb, email)
     await sendTextMessage({
-      text: `Dein Code: ${token.payload}`,
+      text: t('api/auth/sms/your-code', { code: token.payload }),
       phoneNumber
     })
     return true
