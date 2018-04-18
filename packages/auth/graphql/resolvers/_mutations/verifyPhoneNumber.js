@@ -1,6 +1,6 @@
 const ensureSignedIn = require('../../../lib/ensureSignedIn')
 const { TokenTypes, validateSharedSecret } = require('../../../lib/challenges')
-const { TwoFactorHasToBeDisabledError, SessionTokenValidationFailed } = require('../../../lib/Users')
+const { SecondFactorHasToBeDisabledError, SessionTokenValidationFailed } = require('../../../lib/Users')
 
 module.exports = async (_, args, { pgdb, user, req, ...rest }) => {
   ensureSignedIn(req)
@@ -11,13 +11,13 @@ module.exports = async (_, args, { pgdb, user, req, ...rest }) => {
 
   const userWith2FA = {
     ...user,
-    isTwoFactorEnabled: user._raw.isTwoFactorEnabled,
+    enabledSecondFactors: user._raw.enabledSecondFactors || [],
     isPhoneNumberVerified: user._raw.isPhoneNumberVerified,
     phoneNumberVerificationCode: user._raw.phoneNumberVerificationCode
   }
 
-  if (userWith2FA.isTwoFactorEnabled) {
-    throw new TwoFactorHasToBeDisabledError({ userId: user.id })
+  if (userWith2FA.enabledSecondFactors.indexOf(TokenTypes.SMS) !== -1) {
+    throw new SecondFactorHasToBeDisabledError({ userId: user.id })
   }
   if (userWith2FA.phoneNumberVerificationCode) {
     // already validated, that's fine

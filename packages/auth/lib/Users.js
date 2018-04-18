@@ -26,7 +26,7 @@ const AuthorizationFailedError = newAuthError('authorization-failed', 'api/auth/
 const TwoFactorAlreadyDisabledError = newAuthError('2fa-already-disabled', 'api/auth/2fa-already-disabled')
 const TwoFactorAlreadyEnabledError = newAuthError('2fa-already-enabled', 'api/auth/2fa-already-enabled')
 const SecondFactorNotReadyError = newAuthError('2f-not-ready', 'api/auth/2f-not-ready')
-const TwoFactorHasToBeDisabledError = newAuthError('2fa-has-to-be-disabled', 'api/auth/2fa-has-to-be-disabled')
+const SecondFactorHasToBeDisabledError = newAuthError('second-factor-has-to-be-disabled', 'api/auth/second-factor-has-to-be-disabled')
 const SessionTokenValidationFailed = newAuthError('token-validation-failed', 'api/token/invalid')
 
 const {
@@ -183,7 +183,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   }
 
   // security net
-  if (tokenTypes.length < 2 && (existingUser && existingUser.isTwoFactorEnabled)) {
+  if (tokenTypes.length < 2 && (existingUser && existingUser.enabledSecondFactors && existingUser.enabledSecondFactors.length > 0)) {
     console.error('two factor is enabled but less than 2 challenges provided')
     throw new SessionTokenValidationFailed({ email: emailFromQuery })
   }
@@ -273,14 +273,14 @@ const resolveUser = async ({ slug, pgdb, fallback }) => {
   return user || fallback
 }
 
-const updateUserTwoFactorAuthentication = async ({ pgdb, userId: id, enabled: isTwoFactorEnabled }) => {
+const updateUserTwoFactorAuthentication = async ({ pgdb, userId: id, enabledSecondFactors }) => {
   const transaction = await pgdb.transactionBegin()
   try {
     const user = await transaction.public.users.updateAndGetOne(
       {
         id
       }, {
-        isTwoFactorEnabled
+        enabledSecondFactors
       }
     )
     await transaction.transactionCommit()
@@ -365,7 +365,7 @@ module.exports = {
   EmailAlreadyAssignedError,
   UserNotFoundError,
   SessionInitializationFailedError,
-  TwoFactorHasToBeDisabledError,
+  SecondFactorHasToBeDisabledError,
   TwoFactorAlreadyDisabledError,
   TwoFactorAlreadyEnabledError,
   SecondFactorNotReadyError

@@ -1,6 +1,6 @@
 const ensureSignedIn = require('../../../lib/ensureSignedIn')
 const { TokenTypes, validateSharedSecret } = require('../../../lib/challenges')
-const { TwoFactorHasToBeDisabledError, SessionTokenValidationFailed } = require('../../../lib/Users')
+const { SecondFactorHasToBeDisabledError, SessionTokenValidationFailed } = require('../../../lib/Users')
 
 module.exports = async (_, args, { pgdb, user, req, ...rest }) => {
   ensureSignedIn(req)
@@ -11,13 +11,13 @@ module.exports = async (_, args, { pgdb, user, req, ...rest }) => {
 
   const userWith2FA = {
     ...user,
-    isTwoFactorEnabled: user._raw.isTwoFactorEnabled,
+    enabledSecondFactors: user._raw.enabledSecondFactors || [],
     TOTPChallengeSecret: user._raw.TOTPChallengeSecret,
     isTOTPChallengeSecretVerified: user._raw.isTOTPChallengeSecretVerified
   }
 
-  if (userWith2FA.isTwoFactorEnabled) {
-    throw new TwoFactorHasToBeDisabledError({ userId: user.id })
+  if (userWith2FA.enabledSecondFactors.indexOf(TokenTypes.TOTP) !== -1) {
+    throw new SecondFactorHasToBeDisabledError({ userId: user.id })
   }
   if (userWith2FA.isTOTPChallengeSecretVerified) {
     // already validated, that's fine
