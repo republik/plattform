@@ -141,9 +141,9 @@ const denySession = async ({ pgdb, token, email: emailFromQuery }) => {
       updatedAt: new Date(),
       expiresAt: new Date()
     })
-    transaction.transactionCommit()
+    await transaction.transactionCommit()
   } catch (error) {
-    transaction.transactionRollback()
+    await transaction.transactionRollback()
     throw new AuthorizationFailedError({ session })
   }
 }
