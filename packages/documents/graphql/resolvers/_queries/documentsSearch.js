@@ -1,151 +1,119 @@
-class TermCriteria {
-  constructor (fieldName) {
-    this.fieldName = fieldName
+const termCriteriaBuilder = (fieldName) => (value) => ({
+  clause: 'must',
+  filter: {
+    term: { [fieldName]: value }
   }
-
-  create (value) {
-    return {
-      clause: 'must',
-      filter: {
-        term: { [this.fieldName]: value }
-      }
-    }
-  }
-}
-
-class HasCriteria {
-  constructor (fieldName) {
-    this.fieldName = fieldName
-  }
-
-  create (value) {
-    return {
-      clause: value ? 'must' : 'must_not',
-      filter: {
-        exists: {
-          field: this.fieldName
-        }
-      }
-    }
-  }
-}
-
-class DateRangeCriteria {
-  constructor (fieldName) {
-    this.fieldName = fieldName
-  }
-
-  create (range) {
-    return {
-      clause: 'must',
-      filter: {
-        range: {
-          [this.fieldName]: {
-            gte: range.from,
-            lte: range.to
-          }
-        }
-      }
-    }
-  }
-}
-
-class BoolFilterBuilder {
-  constructor (filterCriterias) {
-    this.filterCriterias = filterCriterias
-  }
-
-  createFilter (filter) {
-    if (!filter) {
-      return {}
-    }
-
-    return Object.keys(filter).reduce((boolFilter, searchFilterFieldName) => {
-      const filterValue = filter[searchFilterFieldName]
-      const criteria = this.filterCriterias[searchFilterFieldName]
-      if (!criteria) {
-        throw new Error(`Missing filter criteria for filter field ${searchFilterFieldName}`)
-      }
-
-      const created = criteria.create(filterValue)
-      boolFilter[created.clause] = [...(boolFilter[created.clause] || []), created.filter]
-      return boolFilter
-    }, {})
-  }
-}
-
-const boolFilterBuilder = new BoolFilterBuilder({
-  author: new TermCriteria('meta.authors.keyword'),
-  dossier: new TermCriteria('meta.dossier'),
-  format: new TermCriteria('meta.format'),
-  seriesMaster: new TermCriteria('meta.seriesMaster'),
-  audio: new HasCriteria('audio', 'meta.audioSource.mp3'),
-  discussion: new HasCriteria('meta.discussionId'),
-  published: new DateRangeCriteria('meta.publishDate')
 })
 
-const createQuery = (searchTerm, filter) => {
-  return {
-    _source: ['meta.*', 'content'],
-    query: {
-      bool: {
-        must: searchTerm
-          ? {
-            multi_match: {
-              query: searchTerm,
-              fields: [
-                'meta.title^3',
-                'meta.description^2',
-                'meta.authors^2',
-                'contentString'
-              ]
-            }
-          }
-          : { match_all: {} },
-        filter: {
-          bool: boolFilterBuilder.createFilter(filter)
-        }
-      }
-    },
-    highlight: {
-      fields: {
-        contentString: {}
-      }
-    },
-    aggs: {
-      authors: {
-        terms: {
-          field: 'meta.authors.keyword'
-        }
-      },
-      dossiers: {
-        terms: {
-          field: 'meta.dossier'
-        }
-      },
-      formats: {
-        terms: {
-          field: 'meta.format'
-        }
-      },
-      seriesMasters: {
-        terms: {
-          field: 'meta.seriesMaster'
-        }
-      },
-      discussions: {
-        value_count: {
-          field: 'meta.discussionId'
-        }
-      },
-      audios: {
-        value_count: {
-          field: 'meta.audioSource.mp3'
-        }
+const hasCriteriaBuilder = (fieldName) => (value) => ({
+  clause: value ? 'must' : 'must_not',
+  filter: {
+    exists: {
+      field: fieldName
+    }
+  }
+})
+
+const dateRangeCriteriaBuilder = (fieldName) => (range) => ({
+  clause: 'must',
+  filter: {
+    range: {
+      [fieldName]: {
+        gte: range.from,
+        lte: range.to
       }
     }
   }
+})
+
+const filterBuilder = (filterCriterias) => (filter) => {
+  if (!filter) {
+    return {}
+  }
+
+  return Object.keys(filter).reduce((boolFilter, searchFilterFieldName) => {
+    const filterValue = filter[searchFilterFieldName]
+    const criteria = filterCriterias[searchFilterFieldName]
+    if (!criteria) {
+      throw new Error(`Missing filter criteria for filter field ${searchFilterFieldName}`)
+    }
+
+    const created = criteria(filterValue)
+    boolFilter[created.clause] = [...(boolFilter[created.clause] || []), created.filter]
+    return boolFilter
+  }, {})
 }
+
+const createFilter = filterBuilder({
+  author: termCriteriaBuilder('meta.authors.keyword'),
+  dossier: termCriteriaBuilder('meta.dossier'),
+  format: termCriteriaBuilder('meta.format'),
+  seriesMaster: termCriteriaBuilder('meta.seriesMaster'),
+  audio: hasCriteriaBuilder('audio', 'meta.audioSource.mp3'),
+  discussion: hasCriteriaBuilder('meta.discussionId'),
+  published: dateRangeCriteriaBuilder('meta.publishDate')
+})
+
+const createQuery = (searchTerm, filter) => ({
+  _source: ['meta.*', 'content'],
+  query: {
+    bool: {
+      must: searchTerm
+        ? {
+          multi_match: {
+            query: searchTerm,
+            fields: [
+              'meta.title^3',
+              'meta.description^2',
+              'meta.authors^2',
+              'contentString'
+            ]
+          }
+        }
+        : { match_all: {} },
+      filter: {
+        bool: createFilter(filter)
+      }
+    }
+  },
+  highlight: {
+    fields: {
+      contentString: {}
+    }
+  },
+  aggs: {
+    authors: {
+      terms: {
+        field: 'meta.authors.keyword'
+      }
+    },
+    dossiers: {
+      terms: {
+        field: 'meta.dossier'
+      }
+    },
+    formats: {
+      terms: {
+        field: 'meta.format'
+      }
+    },
+    seriesMasters: {
+      terms: {
+        field: 'meta.seriesMaster'
+      }
+    },
+    discussions: {
+      value_count: {
+        field: 'meta.discussionId'
+      }
+    },
+    audios: {
+      value_count: {
+        field: 'meta.audioSource.mp3'
+      }
+    }
+  }
+})
 
 const mapDocumentHit = (hit) => {
   return {
@@ -170,14 +138,10 @@ const mapStats = (result) => {
 
 const mapAggregation = (aggregation) => {
   return {
-    buckets: aggregation.buckets.map(mapBucket)
-  }
-}
-
-const mapBucket = (bucket) => {
-  return {
-    key: bucket.key,
-    count: bucket.doc_count
+    buckets: aggregation.buckets.map((bucket) => ({
+      key: bucket.key,
+      count: bucket.doc_count
+    }))
   }
 }
 
