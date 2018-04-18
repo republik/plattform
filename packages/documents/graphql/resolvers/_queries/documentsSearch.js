@@ -74,7 +74,6 @@ class BoolFilterBuilder {
   }
 }
 
-const PAGE_SIZE = 10
 const boolFilterBuilder = new BoolFilterBuilder({
   author: new TermCriteria('meta.authors.keyword'),
   dossier: new TermCriteria('meta.dossier'),
@@ -85,62 +84,7 @@ const boolFilterBuilder = new BoolFilterBuilder({
   published: new DateRangeCriteria('meta.publishDate')
 })
 
-module.exports = async (_, { search, page = 1, filter }, { user, elastic }) => {
-  const result = await elastic.search({
-    index: 'documents',
-    type: 'document',
-    from: (page - 1) * PAGE_SIZE,
-    size: PAGE_SIZE,
-    body: createQuery(search, filter)
-  })
-
-  return {
-    nodes: result.hits.hits.map(mapDocumentHit),
-    stats: mapStats(result),
-    pageInfo: {
-      startCursor: '1',
-      hasPreviousPage: page > 1,
-      hasNextPage: result.hits.total - page * PAGE_SIZE > 0,
-      endCursor: Math.ceil(result.hits.total / PAGE_SIZE)
-    }
-  }
-}
-
-function mapDocumentHit (hit) {
-  return {
-    document: hit._source,
-    highlights: (hit.highlight || {}).contentString || [],
-    score: hit._score
-  }
-}
-
-function mapStats (result) {
-  const aggregations = result.aggregations
-  return {
-    total: result.hits.total,
-    formats: mapAggregation(aggregations.formats),
-    audios: aggregations.audios.value,
-    dossiers: mapAggregation(aggregations.dossiers),
-    discussions: aggregations.discussions.value,
-    seriesMasters: mapAggregation(aggregations.seriesMasters),
-    authors: mapAggregation(aggregations.authors)
-  }
-}
-
-function mapAggregation (aggregation) {
-  return {
-    buckets: aggregation.buckets.map(mapBucket)
-  }
-}
-
-function mapBucket (bucket) {
-  return {
-    key: bucket.key,
-    count: bucket.doc_count
-  }
-}
-
-function createQuery (searchTerm, filter) {
+const createQuery = (searchTerm, filter) => {
   return {
     _source: ['meta.*', 'content'],
     query: {
@@ -174,11 +118,6 @@ function createQuery (searchTerm, filter) {
           field: 'meta.authors.keyword'
         }
       },
-      audios: {
-        value_count: {
-          field: 'meta.audioSource.mp3'
-        }
-      },
       dossiers: {
         terms: {
           field: 'meta.dossier'
@@ -198,7 +137,68 @@ function createQuery (searchTerm, filter) {
         value_count: {
           field: 'meta.discussionId'
         }
+      },
+      audios: {
+        value_count: {
+          field: 'meta.audioSource.mp3'
+        }
       }
+    }
+  }
+}
+
+const mapDocumentHit = (hit) => {
+  return {
+    document: hit._source,
+    highlights: (hit.highlight || {}).contentString || [],
+    score: hit._score
+  }
+}
+
+const mapStats = (result) => {
+  const aggregations = result.aggregations
+  return {
+    total: result.hits.total,
+    formats: mapAggregation(aggregations.formats),
+    audios: aggregations.audios.value,
+    dossiers: mapAggregation(aggregations.dossiers),
+    discussions: aggregations.discussions.value,
+    seriesMasters: mapAggregation(aggregations.seriesMasters),
+    authors: mapAggregation(aggregations.authors)
+  }
+}
+
+const mapAggregation = (aggregation) => {
+  return {
+    buckets: aggregation.buckets.map(mapBucket)
+  }
+}
+
+const mapBucket = (bucket) => {
+  return {
+    key: bucket.key,
+    count: bucket.doc_count
+  }
+}
+
+const PAGE_SIZE = 10
+module.exports = async (_, { search, page = 1, filter }, { user, elastic }) => {
+  const result = await elastic.search({
+    index: 'documents',
+    type: 'document',
+    from: (page - 1) * PAGE_SIZE,
+    size: PAGE_SIZE,
+    body: createQuery(search, filter)
+  })
+
+  return {
+    nodes: result.hits.hits.map(mapDocumentHit),
+    stats: mapStats(result),
+    pageInfo: {
+      startCursor: '1',
+      hasPreviousPage: page > 1,
+      hasNextPage: result.hits.total - page * PAGE_SIZE > 0,
+      endCursor: Math.ceil(result.hits.total / PAGE_SIZE)
     }
   }
 }

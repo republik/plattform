@@ -22,7 +22,7 @@ type queries {
   documentsSearch(
     search: String!
     page: Int
-    filter: DocumentSearchFilters
+    filter: DocumentSearchFiltersInput
   ): DocumentSearchConnection!
 }
 `

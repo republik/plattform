@@ -69,59 +69,6 @@ type Document implements FileInterface {
   meta: Meta!
 }
 
-input DateRangeInput {
-  from: Date
-  to: Date
-}
-
-input DocumentSearchFilters {
-  published: DateRangeInput
-  author: String
-  dossier: String
-  format: String
-  seriesMaster: String
-  discussion: Boolean
-  audio: Boolean
-}
-
-type DocumentSearchNode {
-  document: Document!
-  highlights: [String!]!
-  score: Float!
-}
-
-type SearchAggregation {
-  buckets: [Bucket!]!
-}
-
-type Bucket {
-  key: String!
-  count: Int!
-}
-
-type DocumentSearchStats {
-  total: Int!
-  authors: SearchAggregation!
-  audios: Int!
-  dossiers: SearchAggregation!
-  formats: SearchAggregation!
-  seriesMasters: SearchAggregation!
-  discussions: Int!
-}
-
-type DocumentSearchConnection {
-  nodes: [DocumentSearchNode!]!
-  stats: DocumentSearchStats!
-  pageInfo: DocumentPageInfo!
-}
-
-type DocumentPageInfo {
-  endCursor: String
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
-}
-
 type DocumentConnection {
   nodes: [Document!]!
   pageInfo: DocumentPageInfo!
@@ -136,5 +83,59 @@ extend type User {
     before: String
     after: String
   ): DocumentConnection!
+}
+
+
+input DateRangeInput {
+  from: Date
+  to: Date
+}
+
+input DocumentSearchFiltersInput {
+  published: DateRangeInput
+  author: String
+  dossier: String
+  format: String
+  seriesMaster: String
+  discussion: Boolean
+  audio: Boolean
+}
+
+type DocumentSearchConnection {
+  nodes: [DocumentSearchNode!]!
+  stats: DocumentSearchStats!
+  pageInfo: DocumentPageInfo!
+}
+
+type DocumentSearchNode {
+  document: Document!
+  highlights: [String!]!
+  score: Float!
+}
+
+type DocumentSearchStats {
+  total: Int!
+  authors: SearchAggregation!
+  audios: Int!
+  dossiers: SearchAggregation!
+  formats: SearchAggregation!
+  seriesMasters: SearchAggregation!
+  discussions: Int!
+}
+
+type DocumentPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type SearchAggregation {
+  buckets: [Bucket!]!
+}
+
+type Bucket {
+  key: String!
+  count: Int!
 }
 `
