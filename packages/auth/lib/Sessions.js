@@ -17,7 +17,9 @@ const destroySession = async (req) => {
   })
 }
 
-const initiateSession = async ({ req, pgdb, ipAddress, userAgent, email }) => {
+const initiateSession = async ({ req, pgdb, email }) => {
+  const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+  const userAgent = req.headers['user-agent']
   const phrase = `${kraut.adjectives.random()} ${kraut.verbs.random()} ${kraut.nouns.random()}`
   const { country, city } = geoForIP(ipAddress)
   req.session.email = email
@@ -27,6 +29,7 @@ const initiateSession = async ({ req, pgdb, ipAddress, userAgent, email }) => {
     req.session.geo = { country, city }
   }
   await new Promise(function (resolve, reject) {
+    //
     req.session.save(function (error, data) {
       if (error) {
         return reject(new InitiateSessionError({ headers: req.headers, error }))
@@ -34,10 +37,9 @@ const initiateSession = async ({ req, pgdb, ipAddress, userAgent, email }) => {
       return resolve(data)
     })
   })
+  if (!req.sessionID) throw new NoSessionError({ email })
   const session = await pgdb.public.sessions.findOne({ sid: req.sessionID })
-  if (!session) {
-    throw new NoSessionError({ email })
-  }
+  if (!session) throw new NoSessionError({ email })
   return {
     session,
     country,
@@ -59,7 +61,7 @@ const sessionByToken = async ({ pgdb, token, email: emailFromQuery, ...meta }) =
     WHERE
       t.payload = :payload AND
       t.type = :type AND
-      t."expiresAt" > now()
+      t."expiresAt" >= now()
     `, token)
 
   if (sessions && sessions.length > 0) {

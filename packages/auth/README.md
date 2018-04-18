@@ -28,7 +28,7 @@ TOTP:
 2. validateTOTPSharedSecret will succeed if the client was able to generate the correct TOTP for the current time and shared secret and tag the shared secret as verified.
 
 Activate 2FA:
-- updateTwoFactorAuthentication enabled=true will activate 2FA, the call will fail if there is no verified TOTP shared secret and no verified phone number stored in the database at that point.
+- updateTwoFactorAuthentication enabled=true will activate 2FA for a specific type of challenge if prerequisits are met, the call will fail if there is no verified TOTP shared secret and no verified phone number stored in the database at that point.
 
 Login with 2FA:
 - signIn starts the login process with the email authentication provider in place which in turn sends a token via e-mail to the user.

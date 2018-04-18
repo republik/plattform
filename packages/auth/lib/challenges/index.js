@@ -35,6 +35,7 @@ const ChallengeHandlerProxy = ({ type, ...options }) => {
         ...options
       })
       if (!secret) throw new SharedSecretGenerationFailed({ type, user: options.user })
+      return secret
     },
     validateSharedSecret: async () => {
       if (!handler.validateSharedSecret) throw new SharedSecretNotSupported({ type, user: options.user })
@@ -45,6 +46,7 @@ const ChallengeHandlerProxy = ({ type, ...options }) => {
       })
 
       if (!validated) throw new SharedSecretValidationFailed({ type, user: options.user })
+      return validated
     },
     generateNewToken: async () => {
       const tokenData = await handler.generateNewToken({

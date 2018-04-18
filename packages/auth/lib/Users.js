@@ -55,10 +55,7 @@ const signIn = async (_email, context, pgdb, req) => {
   const { email } = (user || { email: _email })
 
   try {
-    const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress
-    const userAgent = req.headers['user-agent']
-
-    const init = await initiateSession({ req, pgdb, ipAddress, userAgent, email })
+    const init = await initiateSession({ req, pgdb, email })
     const { country, phrase, session } = init
 
     const type = TokenTypes.EMAIL_TOKEN
@@ -215,9 +212,9 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
       updatedAt: new Date(),
       expiresAt: new Date()
     })
-    transaction.transactionCommit()
+    await transaction.transactionCommit()
   } catch (error) {
-    transaction.transactionRollback()
+    await transaction.transactionRollback()
     throw new AuthorizationFailedError({ session: session })
   }
 

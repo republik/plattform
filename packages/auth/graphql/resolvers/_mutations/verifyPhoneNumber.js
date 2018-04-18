@@ -34,5 +34,5 @@ module.exports = async (_, args, { pgdb, user, req, ...rest }) => {
     throw new SessionTokenValidationFailed({ type, user, payload: verificationCode })
   }
 
-  return validated
+  return !!validated
 }
