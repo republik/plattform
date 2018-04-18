@@ -36,7 +36,7 @@ const {
 
 const signIn = async (_email, context, pgdb, req) => {
   if (req.user) {
-    return { phrase: '', tokenTypes: [] }
+    return { phrase: '' }
   }
 
   if (!validator.isEmail(_email)) {
@@ -365,6 +365,7 @@ module.exports = {
   EmailAlreadyAssignedError,
   UserNotFoundError,
   SessionInitializationFailedError,
+  SessionTokenValidationFailed,
   SecondFactorHasToBeDisabledError,
   TwoFactorAlreadyDisabledError,
   TwoFactorAlreadyEnabledError,

@@ -16,10 +16,10 @@ module.exports = async (_, args, { pgdb, user, req, ...rest }) => {
     throw new SecondFactorHasToBeDisabledError({ userId: user.id })
   }
   const type = TokenTypes.SMS
-  const secret = await generateSharedSecret({
+  await generateSharedSecret({
     type,
     pgdb,
     user: userWith2FA
   })
-  return { secret }
+  return true
 }

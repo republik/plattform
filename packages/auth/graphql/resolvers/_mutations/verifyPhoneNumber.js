@@ -19,7 +19,7 @@ module.exports = async (_, args, { pgdb, user, req, ...rest }) => {
   if (userWith2FA.enabledSecondFactors.indexOf(TokenTypes.SMS) !== -1) {
     throw new SecondFactorHasToBeDisabledError({ userId: user.id })
   }
-  if (userWith2FA.phoneNumberVerificationCode) {
+  if (userWith2FA.isPhoneNumberVerified) {
     // already validated, that's fine
     return true
   }

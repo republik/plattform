@@ -64,7 +64,7 @@ type mutations {
   validateTOTPSharedSecret(totp: String): Boolean!
 
   # Activate or deactivate 2FA
-  updateTwoFactorAuthentication(enabled: Boolean!): Boolean!
+  updateTwoFactorAuthentication(enabled: Boolean!, type: SignInTokenType!): Boolean!
 
   # Resend Verification Code to confirm a phone number
   sendPhoneNumberVerificationCode: Boolean!

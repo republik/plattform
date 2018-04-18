@@ -11,27 +11,27 @@ module.exports = async (_, args = { }, { pgdb, user, req, ...rest }) => {
 
   const {
     enabled,
-    tokenType
+    type
   } = args
 
   const enabledSecondFactors = (user._raw.enabledSecondFactors || [])
-  const isTokenTypeAlreadyEnabled = enabledSecondFactors.indexOf(tokenType) !== -1
+  const isSecondFactorEnabled = enabledSecondFactors.indexOf(type) !== -1
 
   if (enabled) {
-    if (isTokenTypeAlreadyEnabled) {
+    if (isSecondFactorEnabled) {
       throw new TwoFactorAlreadyEnabledError({ userId: user.id })
-    } else if (tokenType === TokenTypes.TOTP && !user._raw.isTOTPChallengeSecretVerified) {
-      throw new SecondFactorNotReadyError({ userId: user.id, tokenType })
-    } else if (tokenType === TokenTypes.SMS && !user._raw.isPhoneNumberVerified) {
-      throw new SecondFactorNotReadyError({ userId: user.id, tokenType })
+    } else if (type === TokenTypes.TOTP && !user._raw.isTOTPChallengeSecretVerified) {
+      throw new SecondFactorNotReadyError({ userId: user.id, type })
+    } else if (type === TokenTypes.SMS && !user._raw.isPhoneNumberVerified) {
+      throw new SecondFactorNotReadyError({ userId: user.id, type })
     }
-  } else if (!isTokenTypeAlreadyEnabled) {
+  } else if (!isSecondFactorEnabled) {
     throw new TwoFactorAlreadyDisabledError()
   }
 
   const updatedEnabledSecondFactors = enabled
-    ? [...new Set(enabledSecondFactors).add(tokenType)]
-    : [...new Set(enabledSecondFactors).delete(tokenType)]
+    ? [...new Set(enabledSecondFactors).add(type)]
+    : [...new Set(enabledSecondFactors).delete(type)]
 
   const updatedUser = await updateUserTwoFactorAuthentication({
     pgdb,

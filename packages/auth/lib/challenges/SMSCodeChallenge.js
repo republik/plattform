@@ -29,7 +29,7 @@ async function getUserPhoneNumber (pgdb, email) {
 module.exports = {
   generateSharedSecret: async ({ pgdb, user, email }) => {
     const sharedCode = generateSMSTokenCode()
-    const phoneNumber = await getUserPhoneNumber(pgdb, email)
+    const phoneNumber = await getUserPhoneNumber(pgdb, user.email)
     await sendTextMessage({
       text: `SMS Login Authorisierung: ${sharedCode}`,
       phoneNumber

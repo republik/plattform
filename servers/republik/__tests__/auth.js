@@ -11,7 +11,7 @@ const LOGIN_USER_MUTATION = `
 
 const AUTHORIZE_SESSION_MUTATION = `
   mutation authorizeSession($email: String!, $token: String!, $type: SignInTokenType!) {
-    authorizeSession(email: $email, tokenChallenge: { type: $type, payload: $token })
+    authorizeSession(email: $email, tokens: [{ type: $type, payload: $token }])
   }
 `
 
