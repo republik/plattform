@@ -1,4 +1,13 @@
 const debug = require('debug')('search:documents')
+const {
+  Roles: {
+    userIsInRoles
+  }
+} = require('@orbiting/backend-modules-auth')
+
+const {
+  DOCUMENTS_RESTRICT_TO_ROLES
+} = process.env
 
 const termCriteriaBuilder = (fieldName) => (value) => ({
   clause: 'must',
@@ -186,6 +195,23 @@ const parseOptions = (options) => {
   return {}
 }
 
+const MAX_NODES = 500
+const getFirst = (first, filter, user) => {
+  // we only restrict the nodes array
+  // making totalCount always available
+  // - querying a single document by path is always allowed
+  if (DOCUMENTS_RESTRICT_TO_ROLES && !filter.path && !filter.repoId) {
+    const roles = DOCUMENTS_RESTRICT_TO_ROLES.split(',')
+    if (!userIsInRoles(user, roles)) {
+      return 0
+    }
+  }
+  if (first > MAX_NODES) {
+    return MAX_NODES
+  }
+  return first
+}
+
 module.exports = async (
   _,
   args,
@@ -204,9 +230,11 @@ module.exports = async (
   const {
     search,
     filter = {},
-    first = 40,
+    first: _first = 40,
     from = 0
   } = options
+
+  const first = getFirst(_first, filter, user)
 
   const query = {
     index: 'documents',
@@ -218,7 +246,7 @@ module.exports = async (
   debug('query: %O', query)
   const result = await elastic.search(query)
 
-  const hasNextPage = result.hits.total > from + first
+  const hasNextPage = first > 0 && result.hits.total > from + first
   const hasPreviousPage = from > 0
   return {
     nodes: result.hits.hits.map(mapDocumentHit),
@@ -228,6 +256,7 @@ module.exports = async (
       endCursor: hasNextPage
         ? stringifyOptions({
           ...options,
+          first,
           from: from + first
         })
         : null,
@@ -235,6 +264,7 @@ module.exports = async (
       startCursor: hasPreviousPage
         ? stringifyOptions({
           ...options,
+          first,
           from: from - first
         })
         : null
