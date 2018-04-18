@@ -75,7 +75,7 @@ const ChallengeHandlerProxy = ({ type, ...options }) => {
         throw new TokenExpiredError({ type, payload, expiredAt: tokenExpiresAt, sessionId: session.id })
       }
       const { email } = session.sess
-      if (emailFromQuery && email !== emailFromQuery) { // emailFromQuery might be null for old links
+      if (email !== emailFromQuery) {
         throw new QueryEmailMismatchError({ type, payload, email, emailFromQuery })
       }
 
