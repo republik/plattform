@@ -25,6 +25,7 @@ type User {
   createdAt: DateTime!
   updatedAt: DateTime!
   sessions: [Session!]
+  eventLog: [EventLog!]!
 }
 
 type SignInResponse {
@@ -37,5 +38,22 @@ type RequestInfo {
   country: String
   countryFlag: String
   city: String
+}
+
+enum EventLogType {
+  TOKEN_REQUEST
+  TOKEN_RE_REQUEST
+  ROLL_SESSION
+  AUTHORIZE_SESSION
+  DENY_SESSION
+  SIGNOUT_TIMEOUT
+  UNKNOWN
+}
+
+type EventLog {
+  type: EventLogType
+  archivedSession: Session
+  activeSession: Session
+  createdAt: DateTime!
 }
 `

@@ -18,6 +18,6 @@
   },
   "homepage": "https://github.com/orbiting/backends#readme",
   "dependencies": {
-    "dotenv": "^4.0.0"
+    "dotenv": "^5.0.1"
   }
 }

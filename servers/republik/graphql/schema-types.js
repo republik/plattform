@@ -71,6 +71,9 @@ extend type User {
   sequenceNumber: Int
 
   newsletterSettings: NewsletterSettings!
+
+  defaultDiscussionNotificationOption: DiscussionNotificationOption
+  discussionNotificationChannels: [DiscussionNotificationChannel!]!
 }
 
 type NewsletterSettings {
@@ -83,6 +86,15 @@ type NewsletterSubscription {
   name: String!
   subscribed: Boolean!
   isEligible: Boolean!
+}
+
+type WebNotification {
+  title: String!
+  body: String!
+  icon: String!
+  url: String!
+  # see https://developer.mozilla.org/en-US/docs/Web/API/Notification/tag
+  tag: String!
 }
 
 type UserConnection {
@@ -164,6 +176,16 @@ enum Permission {
   FORBIDDEN
 }
 
+enum DiscussionNotificationOption {
+  MY_CHILDREN
+  ALL
+  NONE
+}
+enum DiscussionNotificationChannel {
+  WEB
+  EMAIL
+}
+
 type DiscussionRules {
   # max length of a comments content
   maxLength: Int
@@ -175,10 +197,12 @@ type DiscussionRules {
 type DiscussionPreferences {
   anonymity: Boolean!
   credential: Credential
+  notifications: DiscussionNotificationOption!
 }
 input DiscussionPreferencesInput {
-  anonymity: Boolean!
+  anonymity: Boolean
   credential: String
+  notifications: DiscussionNotificationOption
 }
 
 enum DiscussionOrder {
@@ -222,11 +246,6 @@ type CommentConnection {
 
 type Discussion {
   id: ID!
-  # _id is a hash of id and the arguments of comments() selection
-  # in UUID format.
-  # _id is stable: for the same discussion and the same selection
-  # args, the same _id is returned.
-  _id: ID!
   title: String
   documentPath: String
   closed: Boolean!
@@ -255,6 +274,7 @@ type Discussion {
     flatDepth: Int
   ): CommentConnection!
   rules: DiscussionRules!
+  # only null for guests (not signedIn)
   userPreference: DiscussionPreferences
   displayAuthor: DisplayUser
   # date the user is allowed to submit new comments

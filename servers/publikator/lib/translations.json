@@ -8,7 +8,7 @@
     },
     {
       "key": "api/unauthorized",
-      "value": "Nicht genehmigt. Sie müssen die Rolle «{role}» besitzen um die gwünschte Aktion auszuführen."
+      "value": "Nicht genehmigt. Sie müssen die Rolle «{role}» besitzen, um die gewünschte Aktion auszuführen."
     },
     {
       "key": "api/email/invalid",

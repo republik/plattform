@@ -107,7 +107,9 @@ module.exports = {
         resize,
         bw
       })
-      const webp = req.get('Accept').indexOf('image/webp') > -1
+      const webp = args && args.webp !== undefined
+        ? args.webp
+        : req.get('Accept').indexOf('image/webp') > -1
       return `${url}${webp ? '.webp' : ''}?${newQuery}`
     }
     return null
@@ -257,5 +259,17 @@ module.exports = {
       console.error('getNewsletterProfile failed', { error })
       throw new Error(t('api/newsletters/get/failed'))
     }
+  },
+  defaultDiscussionNotificationOption (user, args, { user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return user._raw.defaultDiscussionNotificationOption
+    }
+    return null
+  },
+  discussionNotificationChannels (user, args, { user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return user._raw.discussionNotificationChannels
+    }
+    return []
   }
 }

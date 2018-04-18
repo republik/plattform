@@ -32,6 +32,7 @@ module.exports = async ({
   }
 
   // https://e-payment-postfinance.v-psp.com/de/guides/user%20guides/statuses-and-errors
+  // see: servers/republik/modules/crowdfundings/express/paymentWebhooks.js
   const status = parseInt(STATUS)
   if (status !== 9 && status !== 91) {
     logger.error('STATUS not successfull', { pledgeId, shasum, SHASIGN, status, pspPayload })

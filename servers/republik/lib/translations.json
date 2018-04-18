@@ -1,5 +1,5 @@
 {
-  "updated": "2018-02-12T12:01:05.233Z",
+  "updated": "2018-04-04T16:09:02.071Z",
   "title": "live",
   "data": [
     {
@@ -73,6 +73,26 @@
     {
       "key": "api/comment/id/duplicate",
       "value": "Diese ID existiert bereits."
+    },
+    {
+      "key": "api/comment/notification/new/email/subject",
+      "value": "Neuer Beitrag von {authorName} in «{discussionName}»"
+    },
+    {
+      "key": "api/comment/notification/answer/email/subject",
+      "value": "Neue Antwort von {authorName} in «{discussionName}»"
+    },
+    {
+      "key": "api/comment/notification/new/web/subject",
+      "value": "Neuer Beitrag in «{discussionName}»"
+    },
+    {
+      "key": "api/comment/notification/answer/web/subject",
+      "value": "Neue Antwort in «{discussionName}»"
+    },
+    {
+      "key": "api/comment/notification/new/web/icon",
+      "value": "https://cdn.republik.space/frontend/static/apple-touch-icon.png"
     },
     {
       "key": "api/greeting",

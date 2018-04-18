@@ -17,7 +17,7 @@ type queries {
   user(slug: String): User
   # search for users
   # required role: editor
-  users(search: String!, role: String!): [User]!
+  users(search: String!, role: String): [User]!
 
   # search for an unverified session by token
   unauthorizedSession(email: String!, token: String!): Session
@@ -41,5 +41,11 @@ type mutations {
   # if userId is null, the logged in user's sessions get cleared
   # required role to clear other's session: supporter
   clearSessions(userId: ID): Boolean!
+
+  # Add a user to a given role
+  addUserToRole(userId: ID!, role: String!): User!
+
+  # Remove a user from a given role
+  removeUserFromRole(userId: ID!, role: String!): User!
 }
 `
