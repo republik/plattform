@@ -19,8 +19,9 @@ used by:
 Before 2FA can be enabled on a user, at least one of the SMS or TOTP providers need to get setup.
 
 SMS:
-1. updatePhoneNumber to store the user's phone number in the database, the phone number will get tagged as unverified and a code to verify the phone number is sent as short message to the new phone number.
-2. verifyPhoneNumber to verify the phone number through the code that got sent by short message, will tag the user's phone number as verified
+1. updateMe (not part of the auth package) to store the user's phone number in the database, the phone number will get tagged as unverified and a code to verify the phone number is sent as short message to the new phone number.
+2. sendPhoneNumberVerificationCode to have Twilio send a code to the number stored on the user.
+3. verifyPhoneNumber to verify the phone number through the code that got sent by short message, will tag the user's phone number as verified
 
 TOTP:
 1. initTOTPSharedSecret will generate a new random shared secret, store it in the database and return it via mutation response

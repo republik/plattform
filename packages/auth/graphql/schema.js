@@ -67,7 +67,7 @@ type mutations {
   updateTwoFactorAuthentication(enabled: Boolean!): Boolean!
 
   # Resend Verification Code to confirm a phone number
-  resendPhoneNumberVerificationCode: Boolean!
+  sendPhoneNumberVerificationCode: Boolean!
 
   # Verify a phone number
   verifyPhoneNumber(verificationCode: String): Boolean!
