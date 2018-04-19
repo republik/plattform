@@ -52,8 +52,6 @@ PgDb.connect().then(async pgdb => {
           ...d.content.meta,
           ...getStaticMeta(d)
         }
-        // const content = Document.content(d, {}, context)
-        // const meta = Document.meta(d, {}, context)
         const seriesMaster = typeof meta.series === 'string'
           ? meta.series
           : null
@@ -70,17 +68,15 @@ PgDb.connect().then(async pgdb => {
         return {
           id: d.id,
           body: {
+            repoId: d.repoId,
+            content: d.content,
+            contentString: mdastToString(d.content),
             meta: {
               ...meta,
               repoId: d.repoId,
               series,
-              seriesMaster,
-              authors: meta.credits && meta.credits
-                .filter(c => c.type === 'link')
-                .map(a => a.children[0].value)
-            },
-            contentString: mdastToString(d.content),
-            content: d.content
+              seriesMaster
+            }
           }
         }
       })

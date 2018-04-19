@@ -47,6 +47,9 @@ const { lib: {
 } } = require('@orbiting/backend-modules-assets')
 const uniq = require('lodash/uniq')
 
+const elastic = require('@orbiting/backend-modules-base/lib/elastic').client()
+const mdastToString = require('mdast-util-to-string')
+
 const {
   FRONTEND_BASE_URL,
   PIWIK_URL_BASE,
@@ -328,6 +331,25 @@ module.exports = async (
     .catch((err) => {
       console.error(err)
     })
+
+  // cache in elastic
+  await elastic.create({
+    index: 'documents',
+    type: 'document',
+    id: doc.id,
+    body: {
+      repoId: doc.repoId,
+      content: doc.content,
+      contentString: mdastToString(doc.content),
+      meta: {
+        ...doc.meta,
+        repoId: doc.repoId,
+        ...scheduledAt
+          ? { scheduledAt }
+          : { }
+      }
+    }
+  })
 
   // release for nice view on github
   // this is optional, the release is not read back again

@@ -20,9 +20,16 @@ const getStaticMeta = doc => {
     ogg: audioSourceOgg
   } : null
 
+  // added for elastic
+  const authors = credits
+    .filter(c => c.type === 'link')
+    .map(a => a.children[0].value)
+  // TODO series
+
   return {
     credits,
-    audioSource
+    audioSource,
+    authors
   }
 }
 
