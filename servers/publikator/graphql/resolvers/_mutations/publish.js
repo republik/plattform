@@ -342,7 +342,7 @@ module.exports = async (
       content: doc.content,
       contentString: mdastToString(doc.content),
       meta: {
-        ...doc.meta,
+        ...doc.content.meta,
         repoId: doc.repoId,
         ...scheduledAt
           ? { scheduledAt }

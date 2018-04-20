@@ -1,10 +1,6 @@
-require('@orbiting/backend-modules-env').config()
-
-const elasticsearch = require('@orbiting/backend-modules-base/lib/elastic')
 const redis = require('@orbiting/backend-modules-base/lib/redis')
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
-
 const mdastToString = require('mdast-util-to-string')
+
 const {
   graphql: { resolvers: {
     queries: {
@@ -13,28 +9,8 @@ const {
   }},
   lib: { meta: { getStaticMeta } }
 } = require('@orbiting/backend-modules-documents')
-const util = require('util')
 
-const elastic = elasticsearch.client()
-
-const INDEX = 'documents'
-const documentIndex = require('../../../db/elastic/indices/documents')
-
-PgDb.connect().then(async pgdb => {
-  await elastic.ping({
-    requestTimeout: 1000
-  })
-
-  await elastic.indices.delete({
-    index: INDEX,
-    ignoreUnavailable: true
-  })
-
-  await elastic.indices.create({
-    index: INDEX,
-    body: documentIndex
-  })
-
+module.exports = async ({indexName, elastic, pgdb}) => {
   const context = {
     redis,
     pgdb,
@@ -83,19 +59,14 @@ PgDb.connect().then(async pgdb => {
     )
 
   for (let doc of documents) {
+    const util = require('util')
     console.log(doc.body.meta.path, doc.body.meta.title)
     console.log(util.inspect(doc.body.meta, {depth: null}))
     console.log('--------------------------------')
     await elastic.create({
-      index: INDEX,
+      index: indexName,
       type: 'document',
       ...doc
     })
   }
 }
-).then(() => {
-  process.exit()
-}).catch(e => {
-  console.log(e)
-  process.exit(1)
-})
