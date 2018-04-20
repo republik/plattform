@@ -65,7 +65,7 @@ module.exports = async ({indexName, elastic, pgdb}) => {
     console.log('--------------------------------')
     await elastic.create({
       index: indexName,
-      type: 'document',
+      type: 'documents',
       ...doc
     })
   }

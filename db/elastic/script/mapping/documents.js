@@ -25,7 +25,7 @@ const mdastPartial = {
 }
 
 module.exports = {
-  document: {
+  documents: {
     dynamic: false,
     properties: {
       contentString: {
