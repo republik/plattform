@@ -1,10 +1,16 @@
 import React from 'react'
 import { merge } from 'glamor'
+import { renderMdast } from 'mdast-react-render'
+
 import colors from '../../theme/colors'
 import { serifRegular14 } from '../Typography/styles'
 import CommentHeader from '../Comment/CommentHeader'
 import CommentTeaserHeader from './CommentTeaserHeader'
 import CommentTeaserFooter from './CommentTeaserFooter'
+
+import createCommentSchema from '../../templates/Comment'
+
+const schema = createCommentSchema()
 
 const styles = {
   root: {
@@ -55,7 +61,7 @@ export const CommentTeaser = ({
         lineClamp ? merge(styles.clamp, { WebkitLineClamp: lineClamp }) : {}
       )}
     >
-      {content}
+      {renderMdast(content, schema)}
     </div>
     <CommentTeaserFooter commentUrl={commentUrl} timeago={timeago} t={t} />
   </div>

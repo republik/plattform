@@ -38,7 +38,7 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
           <div style={{marginBottom: 20}}>
             <CommentComposer
               t={t}
-              initialText={comment.content}
+              initialText={comment.text}
               displayAuthor={displayAuthor}
               error={edit.error}
               onEditPreferences={onEditPreferences}

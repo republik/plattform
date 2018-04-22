@@ -1,13 +1,18 @@
 import React from 'react'
 import { css } from 'glamor'
+import { renderMdast } from 'mdast-react-render'
+
 import { serifRegular14, serifRegular16 } from '../Typography/styles'
-import CommentHeader, { profilePictureSize, profilePictureMargin } from './CommentHeader'
 import { Label } from '../Typography'
+
 import { mUp } from '../../theme/mediaQueries'
 import colors from '../../theme/colors'
 
-import { intersperse } from '../../lib/helpers'
+import createCommentSchema from '../../templates/Comment'
 
+import CommentHeader, { profilePictureSize, profilePictureMargin } from './CommentHeader'
+
+const schema = createCommentSchema()
 const highlightPadding = 7
 
 const styles = {
@@ -55,16 +60,7 @@ export const Comment = ({t, id, timeago, createdAt, updatedAt, published = true,
       {t('styleguide/comment/unpublished')}
     </div>}
     <div {...styles.body} style={{opacity: published ? 1 : 0.5}}>
-      {intersperse(
-        (content || '').trim().split('\n')
-          .map(text => text.trim())
-          .filter((text, index, all) => {
-            // prevent more than two brs in a row
-            return text || all[index - 1]
-          })
-        ,
-        (_, i) => <br key={i} />
-      )}
+      {renderMdast(content, schema)}
     </div>
 
     {adminUnpublished && userCanEdit && <div {...styles.body}>

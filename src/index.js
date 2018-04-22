@@ -455,6 +455,16 @@ ReactDOM.render(
             src: require('./templates/Discussion/docs.md')
           },
           {
+            path: '/templates/comment',
+            title: 'Comment',
+            imports: {
+              schema: require('./templates/Comment').default(),
+              ...require('./templates/docs'),
+              renderMdast: require('mdast-react-render').renderMdast
+            },
+            src: require('./templates/Comment/docs.md')
+          },
+          {
             path: '/templates/format',
             title: 'Format',
             imports: {
