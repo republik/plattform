@@ -7,11 +7,11 @@ schema {
 type queries {
   search(
     search: String
-    filter: DocumentSearchFiltersInput
-    sort: DocumentsSortInput
+    filter: SearchFiltersInput
+    sort: SearchSortInput
     first: Int
     after: String
     before: String
-  ): DocumentSearchConnection!
+  ): SearchConnection!
 }
 `

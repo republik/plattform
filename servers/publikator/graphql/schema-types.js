@@ -189,4 +189,9 @@ type VimeoEmbed implements Embed {
 extend type Document {
   repoId: String
 }
+
+enum OrderDirection {
+  ASC
+  DESC
+}
 `

@@ -1,14 +1,13 @@
 module.exports = `
 
-scalar DateTime
-scalar JSON
+scalar Date
 
 enum OrderDirection {
   ASC
   DESC
 }
 
-enum DocumentsSortKey {
+enum SearchSortKey {
   relevance
   publishedAt
   # TODO
@@ -17,8 +16,8 @@ enum DocumentsSortKey {
   mostDebated
 }
 
-input DocumentsSortInput {
-  key: DocumentsSortKey!
+input SearchSortInput {
+  key: SearchSortKey!
   direction: OrderDirection
 }
 
@@ -27,7 +26,7 @@ input DateRangeInput {
   to: Date
 }
 
-input DocumentSearchFiltersInput {
+input SearchFiltersInput {
   feed: Boolean
   dossier: String
   format: String
@@ -40,28 +39,36 @@ input DocumentSearchFiltersInput {
   audio: Boolean
 }
 
-type DocumentSearchConnection {
-  nodes: [DocumentSearchNode!]!
-  stats: DocumentSearchStats!
-  pageInfo: DocumentPageInfo!
+type SearchConnection {
+  nodes: [SearchNode!]!
+  stats: SearchStats!
+  pageInfo: SearchPageInfo!
 }
 
-type DocumentSearchNode {
-  document: Document!
+type SearchPageInfo {
+  hasNextPage: Boolean!
+  endCursor: String
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type SearchNode {
+  node: SearchNode!
   highlights: [String!]!
   score: Float!
 }
 
-type DocumentSearchStats {
+union SearchNode = Document | Comment
+
+type SearchStats {
   total: Int!
   authors: SearchAggregation!
-  audios: Int!
+  audio: Int!
   dossiers: SearchAggregation!
   formats: SearchAggregation!
   seriesMasters: SearchAggregation!
   discussions: Int!
 }
-
 
 type SearchAggregation {
   buckets: [Bucket!]!
