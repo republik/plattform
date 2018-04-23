@@ -22,7 +22,8 @@ const pipeHeaders = [
   'Access-Control-Allow-Credentials',
   'Access-Control-Allow-Headers',
   'Access-Control-Allow-Methods',
-  'Access-Control-Allow-Origin'
+  'Access-Control-Allow-Origin',
+  'Link'
 ]
 
 const supportedFormats = ['jpeg', 'png']

@@ -1,8 +1,9 @@
 const fetch = require('isomorphic-unfetch')
-const debug = require('debug')('assets:frontend')
 const { returnImage } = require('../lib')
 const {
-  FRONTEND_BASE_URL
+  FRONTEND_BASE_URL,
+  BASIC_AUTH_USER,
+  BASIC_AUTH_PASS
 } = process.env
 
 if (!FRONTEND_BASE_URL) {
@@ -20,10 +21,17 @@ module.exports = (server) => {
       return res.status(403).end()
     }
 
+    // eslint-disable-next-line no-unused-vars
     const [_, sanitizedPath, webp] = new RegExp(/(.*?)(\.webp)?$/, 'g').exec(path)
 
-    const result = await fetch(`${FRONTEND_BASE_URL}/${sanitizedPath}`, {
-      method: 'GET'
+    const frontendUrl = `${FRONTEND_BASE_URL}/${sanitizedPath}`
+    const result = await fetch(frontendUrl, {
+      method: 'GET',
+      headers: {
+        Authorization: BASIC_AUTH_USER && BASIC_AUTH_PASS
+          ? Buffer.from(`${BASIC_AUTH_USER}:${BASIC_AUTH_PASS}`).toString('base64')
+          : undefined
+      }
     })
       .catch(error => {
         console.error('frontend fetch failed', { error })
@@ -33,6 +41,7 @@ module.exports = (server) => {
       console.error('frontend fetch failed', result.url, result.status)
       return res.status(result.status).end()
     }
+    result.headers.set('Link', `<${frontendUrl}>; rel="canonical"`)
 
     return returnImage({
       response: res,
