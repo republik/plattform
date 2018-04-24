@@ -43,7 +43,7 @@ module.exports = async ({
   headers,
   options = {}
 }) => {
-  const { resize, bw, webp, format } = options
+  const { resize, bw, webp, format, cacheTags = [] } = options
   let width, height
   if (resize) {
     try {
@@ -84,6 +84,12 @@ module.exports = async ({
     if (mime) {
       res.set('Content-Type', mime)
     }
+    res.set('Cache-Tag',
+      cacheTags
+        .concat(mime && mime.split('/'))
+        .filter(Boolean)
+        .join(' ')
+    )
 
     const forceFormat = supportedFormats.indexOf(format) !== -1
 

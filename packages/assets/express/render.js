@@ -35,7 +35,10 @@ module.exports = (server) => {
       response: res,
       stream: result.body,
       headers: result.headers,
-      options: req.query
+      options: {
+        ...req.query,
+        cacheTags: ['render']
+      }
     })
   })
 }
