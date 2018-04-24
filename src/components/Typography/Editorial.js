@@ -157,6 +157,15 @@ export const Cursive = ({ children, attributes, ...props }) => (
   </em>
 )
 
+const strikeThrough = css({
+  textDecoration: 'line-through'
+})
+export const StrikeThrough = ({ children, attributes, ...props }) => (
+  <span {...attributes} {...props} {...strikeThrough}>
+    {children}
+  </span>
+)
+
 export const link = css({
   ...underline,
   cursor: 'pointer',

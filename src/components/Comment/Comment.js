@@ -43,6 +43,12 @@ const styles = {
   })
 }
 
+export const CommentBody = ({children, style}) => (
+  <div {...styles.body} style={style}>
+    {children}
+  </div>
+)
+
 export const Comment = ({t, id, timeago, createdAt, updatedAt, published = true, userCanEdit, adminUnpublished, displayAuthor, content, highlighted, Link}) => (
   <div data-comment-id={id} {...styles.container} {...(highlighted ? styles.highlight: {})}>
     <CommentHeader
@@ -56,16 +62,16 @@ export const Comment = ({t, id, timeago, createdAt, updatedAt, published = true,
       timeago={timeago}
     />
 
-    {!published && <div {...styles.body}>
+    {!published && <CommentBody>
       {t('styleguide/comment/unpublished')}
-    </div>}
-    <div {...styles.body} style={{opacity: published ? 1 : 0.5}}>
+    </CommentBody>}
+    <CommentBody style={{opacity: published ? 1 : 0.5}}>
       {renderMdast(content, schema)}
-    </div>
+    </CommentBody>
 
-    {adminUnpublished && userCanEdit && <div {...styles.body}>
+    {adminUnpublished && userCanEdit && <CommentBody>
       {t('styleguide/comment/adminUnpublished')}
-    </div>}
+    </CommentBody>}
     {!adminUnpublished && !published && userCanEdit && <Label {...styles.margin}>
       {t('styleguide/comment/unpublished/userCanEdit')}
     </Label>}

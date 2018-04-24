@@ -130,15 +130,16 @@ OrderedList.defaultProps = {
   start: 1
 }
 
-export const ListItem = ({ children, attributes = {} }) => (
-  <li {...styles.li} {...attributes}>
+export const ListItem = ({ children, attributes = {}, style={} }) => (
+  <li {...styles.li} {...attributes} style={style}>
     {children}
   </li>
 )
 
 ListItem.propTypes = {
   children: PropTypes.node.isRequired,
-  attributes: PropTypes.object
+  attributes: PropTypes.object,
+  style: PropTypes.object
 }
 
 export const List = ({ children, data, attributes = {} }) => data.ordered

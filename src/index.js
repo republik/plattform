@@ -460,7 +460,8 @@ ReactDOM.render(
             imports: {
               schema: require('./templates/Comment').default(),
               ...require('./templates/docs'),
-              renderMdast: require('mdast-react-render').renderMdast
+              renderMdast: require('mdast-react-render').renderMdast,
+              CommentBody: require('./components/Comment/Comment').CommentBody
             },
             src: require('./templates/Comment/docs.md')
           },
