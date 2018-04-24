@@ -41,6 +41,7 @@ module.exports = (server) => {
       console.error('frontend fetch failed', result.url, result.status)
       return res.status(result.status).end()
     }
+    // add Link header, to be copied to final response
     result.headers.set('Link', `<${frontendUrl}>; rel="canonical"`)
 
     return returnImage({
