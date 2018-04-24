@@ -22,8 +22,11 @@ const pipeHeaders = [
   'Access-Control-Allow-Credentials',
   'Access-Control-Allow-Headers',
   'Access-Control-Allow-Methods',
-  'Access-Control-Allow-Origin'
+  'Access-Control-Allow-Origin',
+  'Link'
 ]
+
+const supportedFormats = ['jpeg', 'png']
 
 const toBuffer = async (stream) => {
   return toArray(stream)
@@ -40,7 +43,7 @@ module.exports = async ({
   headers,
   options = {}
 }) => {
-  const { resize, bw, webp } = options
+  const { resize, bw, webp, format } = options
   let width, height
   if (resize) {
     try {
@@ -82,10 +85,12 @@ module.exports = async ({
       res.set('Content-Type', mime)
     }
 
+    const forceFormat = supportedFormats.indexOf(format) !== -1
+
     let pipeline
     if (
-      (mime && mime.indexOf('image') === 0 && mime !== 'image/gif') &&
-      (!!width || !!height || !!bw || !!webp || !!isJPEG)
+      (mime && mime.indexOf('image') === 0 && (mime !== 'image/gif' || forceFormat)) &&
+      (width || height || bw || webp || isJPEG || forceFormat)
     ) {
       pipeline = sharp()
 
@@ -95,7 +100,16 @@ module.exports = async ({
       if (bw) {
         pipeline.greyscale()
       }
-      if (webp) {
+      if (forceFormat) {
+        res.set('Content-Type', `image/${format}`)
+        pipeline.toFormat(format, {
+          // avoid interlaced pngs
+          // - not supported in pdfkit
+          progressive: format === 'jpeg',
+          quality: 80
+        })
+      } else if (webp) {
+        res.set('Content-Type', 'image/webp')
         pipeline.toFormat('webp', {
           quality: 80
         })
@@ -105,12 +119,6 @@ module.exports = async ({
           quality: 80
         })
       }
-
-      // update 'Content-Type'
-      res.set('Content-Type', webp
-        ? 'image/webp'
-        : mime
-      )
     }
 
     if (!pipeline && headers && headers.get('Content-Length')) { // shortcut
