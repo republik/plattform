@@ -29,7 +29,7 @@ module.exports = (server) => {
       method: 'GET',
       headers: {
         Authorization: BASIC_AUTH_USER && BASIC_AUTH_PASS
-          ? Buffer.from(`${BASIC_AUTH_USER}:${BASIC_AUTH_PASS}`).toString('base64')
+          ? `Basic ${Buffer.from(`${BASIC_AUTH_USER}:${BASIC_AUTH_PASS}`).toString('base64')}`
           : undefined
       }
     })
@@ -50,7 +50,8 @@ module.exports = (server) => {
       headers: result.headers,
       options: {
         ...req.query,
-        webp: !!webp
+        webp: !!webp,
+        cacheTags: ['frontend']
       }
     })
   })
