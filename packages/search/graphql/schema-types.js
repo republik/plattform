@@ -26,56 +26,86 @@ input DateRangeInput {
   to: Date
 }
 
-input SearchFiltersInput {
+enum SearchTypes {
+  Document
+  Comment
+  User
+}
+
+enum DocumentTextLengths {
+  SHORT
+  MIDDLE
+  LONG
+}
+
+input SearchFilterInput {
   feed: Boolean
+  # repoId
   dossier: String
+  # repoId
   format: String
   template: String
-  userId: ID
   publishedAt: DateRangeInput
+  # check if username was supported before
+  userId: ID
   author: String
+
   seriesMaster: String
   discussion: Boolean
   audio: Boolean
+  video: Boolean
+  type: SearchTypes
+  textLength: DocumentTextLengths
+}
+
+input SearchGenericFilterInput {
+  key: String!
+  # value as string, get's parsed to the appropriate type
+  value: String!
 }
 
 type SearchConnection {
   nodes: [SearchNode!]!
-  stats: SearchStats!
+  aggregations: [SearchAggregation!]!
   pageInfo: SearchPageInfo!
+  totalCount: Int!
 }
+
+type SearchNode {
+  entity: SearchEntity!
+  highlights: [String!]!
+  score: Float!
+}
+
+union SearchEntity = Document | Comment | User
+
+type SearchAggregation {
+  key: String!
+  count: Int
+  buckets: [Bucket!]
+}
+
+type Bucket {
+  value: String!
+  count: Int!
+}
+
+#union Bucket = SearchAggregationBucketString | SearchAggregationBucketBoolean
+
+type SearchAggregationBucketString {
+  value: String!
+  count: Int!
+}
+type SearchAggregationBucketBoolean {
+  value: Boolean!
+  count: Int!
+}
+
 
 type SearchPageInfo {
   hasNextPage: Boolean!
   endCursor: String
   hasPreviousPage: Boolean!
   startCursor: String
-}
-
-type SearchNode {
-  node: SearchNode!
-  highlights: [String!]!
-  score: Float!
-}
-
-union SearchNode = Document | Comment
-
-type SearchStats {
-  total: Int!
-  authors: SearchAggregation!
-  audio: Int!
-  dossiers: SearchAggregation!
-  formats: SearchAggregation!
-  seriesMasters: SearchAggregation!
-  discussions: Int!
-}
-
-type SearchAggregation {
-  buckets: [Bucket!]!
-}
-
-type Bucket {
-  key: String!
-  count: Int!
 }
 `

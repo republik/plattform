@@ -8,6 +8,7 @@ type queries {
   # (pre)published documents
   documents(
     feed: Boolean
+    # not used
     dossier: String
     format: String
     template: String

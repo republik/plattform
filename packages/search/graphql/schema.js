@@ -7,7 +7,12 @@ schema {
 type queries {
   search(
     search: String
-    filter: SearchFiltersInput
+    # specify specific filters
+    # mixed with filters, SearchFilterInput takes precedence
+    filter: SearchFilterInput
+    # specify filters as array
+    # mixed with filter, SearchFilterInput takes precedence
+    filters: [SearchGenericFilterInput!]
     sort: SearchSortInput
     first: Int
     after: String

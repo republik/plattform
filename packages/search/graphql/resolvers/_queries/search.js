@@ -6,91 +6,19 @@ const {
 } = require('@orbiting/backend-modules-auth')
 
 const {
+  createElasticFilter,
+  reduceFilters
+} = require('../../../lib/filters')
+
+const {
   DOCUMENTS_RESTRICT_TO_ROLES
 } = process.env
-
-const termCriteriaBuilder = (fieldName) => (value) => ({
-  clause: 'must',
-  filter: {
-    term: { [fieldName]: value }
-  }
-})
-
-const hasCriteriaBuilder = (fieldName) => (value) => ({
-  clause: value ? 'must' : 'must_not',
-  filter: {
-    exists: {
-      field: fieldName
-    }
-  }
-})
-
-const dateRangeCriteriaBuilder = (fieldName) => (range) => ({
-  clause: 'must',
-  filter: {
-    range: {
-      [fieldName]: {
-        gte: range.from,
-        lte: range.to
-      }
-    }
-  }
-})
-
-/*
-const dateCriteriaBuilder = (fieldName, operator) => (date) => ({
-  clause: 'must',
-  filter: {
-    range: {
-      [fieldName]: {
-        [operator]: date
-      }
-    }
-  }
-})
-*/
-
-const filterBuilder = (filterCriterias) => (filter) =>
-  Object.keys(filter).reduce((boolFilter, searchFilterFieldName) => {
-    const filterValue = filter[searchFilterFieldName]
-    const criteria = filterCriterias[searchFilterFieldName]
-    if (!criteria) {
-      throw new Error(`Missing filter criteria for filter field ${searchFilterFieldName}`)
-    }
-
-    const created = criteria(filterValue)
-    boolFilter[created.clause] = [...(boolFilter[created.clause] || []), created.filter]
-    return boolFilter
-  }, {})
-
-const createFilter = filterBuilder({
-  // scheduledAt: dateCriteriaBuilder('scheduledAt', 'gte'),
-  feed: hasCriteriaBuilder('meta.feed'),
-  dossier: termCriteriaBuilder('meta.dossier'),
-  format: termCriteriaBuilder('meta.format'),
-  template: termCriteriaBuilder('meta.template'),
-  userId: termCriteriaBuilder('meta.credits.url'),
-  path: termCriteriaBuilder('meta.path'),
-  repoId: termCriteriaBuilder('meta.repoId'),
-  publishedAt: dateRangeCriteriaBuilder('meta.publishDate'),
-  author: termCriteriaBuilder('meta.authors.keyword'),
-  seriesMaster: termCriteriaBuilder('meta.seriesMaster'),
-  audio: hasCriteriaBuilder('audio', 'meta.audioSource.mp3'),
-  discussion: hasCriteriaBuilder('meta.discussionId')
-})
-
-const sanitizeFilter = (filter) => ({
-  ...filter,
-  ...filter.userId
-    ? { userId: `/~${filter.userId}` }
-    : { }
-})
 
 const sortKeyMapping = {
   relevance: '_score',
   publishedAt: 'meta.publishDate',
-  mostRead: 'stats.views', // TODO
-  mostDebated: 'stats.comments' // TODO
+  mostRead: 'agg.views', // TODO
+  mostDebated: 'agg.comments' // TODO
 }
 const sanitizeSort = (sort) => ([
   {
@@ -99,7 +27,7 @@ const sanitizeSort = (sort) => ([
 ])
 
 const createQuery = (searchTerm, filter, sort) => ({
-  _source: ['meta.*', 'content'],
+  // _source: ['meta.*', 'content'],
   query: {
     bool: {
       must: searchTerm
@@ -110,13 +38,14 @@ const createQuery = (searchTerm, filter, sort) => ({
               'meta.title^3',
               'meta.description^2',
               'meta.authors^2',
-              'contentString'
+              'contentString',
+              'content'
             ]
           }
         }
         : { match_all: {} },
       filter: {
-        bool: createFilter(sanitizeFilter(filter))
+        bool: createElasticFilter(filter)
       }
     }
   },
@@ -127,32 +56,42 @@ const createQuery = (searchTerm, filter, sort) => ({
     }
   },
   aggs: {
-    authors: {
+    feed: {
+      value_count: {
+        field: 'meta.feed'
+      }
+    },
+    author: {
       terms: {
         field: 'meta.authors.keyword'
       }
     },
-    dossiers: {
+    userId: {
+      terms: {
+        field: 'meta.credits.url'
+      }
+    },
+    dossier: {
       terms: {
         field: 'meta.dossier'
       }
     },
-    formats: {
+    format: {
       terms: {
         field: 'meta.format'
       }
     },
-    seriesMasters: {
+    seriesMaster: {
       terms: {
         field: 'meta.seriesMaster'
       }
     },
-    discussions: {
+    discussion: {
       value_count: {
         field: 'meta.discussionId'
       }
     },
-    audios: {
+    audio: {
       value_count: {
         field: 'meta.audioSource.mp3'
       }
@@ -162,38 +101,38 @@ const createQuery = (searchTerm, filter, sort) => ({
 
 const mapDocumentHit = (hit) => {
   return {
-    document: hit._source,
+    entity: hit._source,
     highlights: (hit.highlight || {}).contentString || [],
     score: hit._score
   }
 }
 
-const mapStats = (result) => {
+const mapAggregations = (result) => {
   const aggregations = result.aggregations
-  return {
-    total: result.hits.total,
-    formats: mapAggregation(aggregations.formats),
-    audios: aggregations.audios.value,
-    dossiers: mapAggregation(aggregations.dossiers),
-    discussions: aggregations.discussions.value,
-    seriesMasters: mapAggregation(aggregations.seriesMasters),
-    authors: mapAggregation(aggregations.authors)
-  }
-}
-
-const mapAggregation = (aggregation) => {
-  return {
-    buckets: aggregation.buckets.map((bucket) => ({
-      key: bucket.key,
-      count: bucket.doc_count
-    }))
-  }
+  return Object.keys(aggregations).map(key => {
+    const agg = aggregations[key]
+    if (agg.value !== undefined) { // value_count agg
+      return {
+        key,
+        count: agg.value
+      }
+    }
+    // terms agg
+    return {
+      key,
+      buckets: agg.buckets.map(bucket => ({
+        value: bucket.key,
+        count: bucket.doc_count
+      }))
+    }
+  })
 }
 
 const cleanOptions = (options) => ({
   ...options,
   after: undefined,
-  before: undefined
+  before: undefined,
+  filters: undefined
 })
 
 const stringifyOptions = (options) =>
@@ -242,7 +181,8 @@ module.exports = async (
 
   const {
     search,
-    filter = {},
+    filter: _filter = { },
+    filters,
     sort = {
       key: 'relevance',
       direction: 'DESC'
@@ -251,28 +191,37 @@ module.exports = async (
     from = 0
   } = options
 
+  const filter = filters
+    ? {
+      ...reduceFilters(filters),
+      ..._filter
+    }
+    : _filter
+
   const first = getFirst(_first, filter, user)
 
   const query = {
-    index: 'documents',
-    type: 'document',
+    index: 'republik-*',
     from,
     size: first,
     body: createQuery(search, filter, sort)
   }
   debug('query: %O', query)
   const result = await elastic.search(query)
+  debug('result: %O', result)
 
   const hasNextPage = first > 0 && result.hits.total > from + first
   const hasPreviousPage = from > 0
   return {
     nodes: result.hits.hits.map(mapDocumentHit),
-    stats: mapStats(result),
+    aggregations: mapAggregations(result),
+    totalCount: result.hits.total,
     pageInfo: {
       hasNextPage,
       endCursor: hasNextPage
         ? stringifyOptions({
           ...options,
+          filter,
           first,
           from: from + first
         })
@@ -281,6 +230,7 @@ module.exports = async (
       startCursor: hasPreviousPage
         ? stringifyOptions({
           ...options,
+          filter,
           first,
           from: from - first
         })

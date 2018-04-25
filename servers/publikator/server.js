@@ -5,7 +5,7 @@ const t = require('./lib/t')
 
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: auth } = require('@orbiting/backend-modules-auth')
-const { graphql: search } = require('@orbiting/backend-modules-search')
+// const { graphql: search } = require('@orbiting/backend-modules-search')
 
 const uncommittedChangesMiddleware = require('./express/uncommittedChanges')
 
@@ -15,7 +15,7 @@ const {
 
 module.exports.run = () => {
   const localModule = require('./graphql')
-  const executableSchema = makeExecutableSchema(merge(localModule, [documents, search, auth]))
+  const executableSchema = makeExecutableSchema(merge(localModule, [documents, auth]))
 
   const createGraphQLContext = (defaultContext) => ({
     ...defaultContext,
