@@ -10,16 +10,15 @@ if (!PDF_BASE_URL) {
 
 module.exports = (server) => {
   server.get('/pdf/:path(*)', async (req, res) => {
-    const {
-      path
-    } = req.params
-
     if (!PDF_BASE_URL) {
       console.warn('PDF_BASE_URL not set unable to handle request')
       return res.status(403).end()
     }
 
-    const result = await fetch(`${PDF_BASE_URL}/${path}`, {
+    // path with query
+    const path = req.originalUrl.replace(/^\/pdf/, '')
+
+    const result = await fetch(`${PDF_BASE_URL}${path}`, {
       method: 'GET'
     })
       .catch(error => {
