@@ -28,8 +28,8 @@ module.exports = {
       ? adminUnpublished
       : null,
 
-  content: (comment, args, { user }) => {
-    const text = textForComment(comment, user)
+  content: (comment, args, context) => {
+    const text = textForComment(comment, context && context.user)
     if (!text) {
       return text
     }

@@ -1,5 +1,11 @@
-const { displayAuthor: getDisplayAuthor } = require('../graphql/resolvers/Comment')
+const {
+  displayAuthor: getDisplayAuthor,
+  content: getContent
+} = require('../graphql/resolvers/Comment')
 const { transformUser } = require('@orbiting/backend-modules-auth')
+
+const commentSchema = require('@project-r/styleguide/lib/templates/Comment/email').default()
+const { renderEmail } = require('mdast-react-render/lib/email')
 
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
@@ -79,6 +85,9 @@ const submitComment = async (comment, discussion, context) => {
       context
     )
 
+    const contentMdast = getContent(comment)
+    const htmlContent = renderEmail(contentMdast, commentSchema, { doctype: '' })
+
     const shortBody = comment.content.length > 128
       ? `${comment.content.substring(0, 128)}...`
       : comment.content
@@ -120,7 +129,7 @@ const submitComment = async (comment, discussion, context) => {
           subject: isTopLevelComment
             ? t('api/comment/notification/new/email/subject', subjectParams)
             : t('api/comment/notification/answer/email/subject', subjectParams),
-          templateName: 'cf_comment_notification_new',
+          templateName: 'cf_comment_notification_new_mdast',
           globalMergeVars: [
             { name: 'NAME',
               content: user.name
@@ -138,7 +147,7 @@ const submitComment = async (comment, discussion, context) => {
               content: `${discussionUrl}?mute=1`
             },
             { name: 'CONTENT',
-              content: comment.content
+              content: htmlContent
             },
             { name: 'URL',
               content: commentUrl
