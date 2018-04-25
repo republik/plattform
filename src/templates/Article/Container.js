@@ -4,6 +4,7 @@ import { css } from 'glamor'
 
 const styles = {
   container: css({
+    display: 'block',
     backgroundColor: '#fff'
   })
 }
@@ -44,9 +45,9 @@ class DocumentContainer extends Component {
   }
   render () {
     const { children } = this.props
-    return <div {...styles.container}>
+    return <article {...styles.container}>
       {children}
-    </div>
+    </article>
   }
 }
 
