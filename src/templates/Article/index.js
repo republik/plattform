@@ -347,7 +347,8 @@ const blockQuote = {
       rules: [
         {
           matchMdast: matchParagraph,
-          component: ({ children }) => children
+          component: ({ children }) => children,
+          rules: interactionParagraphRules
         }
       ]
     },
