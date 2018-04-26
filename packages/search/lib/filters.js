@@ -59,21 +59,24 @@ const filterReducer = (schema) => (filters) =>
   )
 
 // converts a filter obj to elastic syntax
-const elasticFilterBuilder = (schema) => (filter) =>
-  Object.keys(filter).reduce(
+const elasticFilterBuilder = (schema) => (filterInput) =>
+  Object.keys(filterInput).reduce(
     (boolFilter, key) => {
       const schemaEntry = schema[key]
       if (!schemaEntry) {
-        throw new Error(`Missing filter schemaEntry for filter: ${key}`)
+        throw new Error(`Missing schemaEntry for filter: ${key}`)
       }
       const criteria = schemaEntry.criteria
       if (!criteria) {
-        throw new Error(`Missing filter criteria for filter: ${key}`)
+        throw new Error(`Missing criteria for filter: ${key}`)
       }
 
-      const value = filter[key]
+      const value = filterInput[key]
       const created = criteria(value)
-      boolFilter[created.clause] = [...(boolFilter[created.clause] || []), created.filter]
+      boolFilter[created.clause] = [
+        ...(boolFilter[created.clause] || []),
+        created.filter
+      ]
       return boolFilter
     },
     {}

@@ -1,27 +1,27 @@
-const buildSchema = (schema) => {
-  return Object.keys(schema).reduce(
-    (newSchema, schemaKey) => {
-      const schemaEntry = schema[schemaKey]
-      if (!schemaEntry.fieldPath) {
-        throw new Error(`Invalid schema. Missing fieldPath for key: ${schemaKey}`)
-      }
-      return {
-        ...newSchema,
-        [schemaKey]: {
-          ...schemaEntry,
-          criteria:
-            schemaEntry.criteria ||
-              (schemaEntry.criteriaBuilder && schemaEntry.criteriaBuilder(schemaEntry.fieldPath)),
-          agg:
-            schemaEntry.agg ||
-              (schemaEntry.aggBuilder && schemaEntry.aggBuilder(schemaEntry.fieldPath)(schemaKey))
-        }
-      }
-    },
-    {}
-  )
-}
+const {
+  hasCriteriaBuilder,
+  termCriteriaBuilder
+} = require('./filters')
+
+const {
+  termAggBuilder,
+  valueCountAggBuilder
+} = require('./aggregations')
+
+// eslint-disable-next-line eqeqeq
+const boolParser = (value) => value == true
+
+const createEntry = (criteriaBuilder, aggBuilder, additionals) => (fieldPath) => ({
+  criteria: criteriaBuilder(fieldPath),
+  agg: aggBuilder(fieldPath),
+  ...additionals
+})
+
+const termEntry = createEntry(termCriteriaBuilder, termAggBuilder)
+const countEntry = createEntry(hasCriteriaBuilder, valueCountAggBuilder, { parser: boolParser })
 
 module.exports = {
-  buildSchema
+  createEntry,
+  termEntry,
+  countEntry
 }

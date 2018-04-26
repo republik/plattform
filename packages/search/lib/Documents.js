@@ -1,37 +1,20 @@
 const {
-  hasCriteriaBuilder,
-  termCriteriaBuilder,
+  termEntry,
+  countEntry
+} = require('./schema')
+
+const {
   dateRangeCriteriaBuilder
 } = require('./filters')
-const {
-  termAggBuilder,
-  valueCountAggBuilder
-} = require('./aggregations')
-const { buildSchema } = require('./schema')
-
-// eslint-disable-next-line eqeqeq
-const boolParser = (value) => value == true
 
 const schema = {
-  dossier: {
-    fieldPath: 'meta.dossier',
-    criteriaBuilder: termCriteriaBuilder,
-    aggBuilder: termAggBuilder
-  },
-  format: {
-    fieldPath: 'meta.format',
-    criteriaBuilder: termCriteriaBuilder,
-    aggBuilder: termAggBuilder
-  },
-  template: {
-    fieldPath: 'meta.template',
-    criteriaBuilder: termCriteriaBuilder,
-    aggBuilder: termAggBuilder
-  },
+  dossier: termEntry('meta.dossier'),
+  format: termEntry('meta.format'),
+  template: termEntry('meta.template'),
+  repoId: termEntry('meta.repoId'),
+  seriesMaster: termEntry('meta.seriesMaster'),
   userId: {
-    fieldPath: 'meta.credits.url',
-    criteriaBuilder: termCriteriaBuilder,
-    aggBuilder: termAggBuilder,
+    ...termEntry('meta.credits.url'),
     parser: (value) => `/~${value}`
   },
   // path: {
@@ -39,14 +22,8 @@ const schema = {
   //  criteriaBuilder: termCriteriaBuilder,
   //  aggBuilder: termAggBuilder
   // },
-  repoId: {
-    fieldPath: 'meta.repoId',
-    criteriaBuilder: termCriteriaBuilder,
-    aggBuilder: termAggBuilder
-  },
   publishedAt: {
-    fieldPath: 'meta.publishDate',
-    criteriaBuilder: dateRangeCriteriaBuilder,
+    criteria: dateRangeCriteriaBuilder('meta.publishDate'),
     parser: (value) => {
       const [from, to] = value.split(',')
       return {
@@ -55,31 +32,11 @@ const schema = {
       }
     }
   },
-  seriesMaster: {
-    fieldPath: 'meta.seriesMaster',
-    criteriaBuilder: termCriteriaBuilder,
-    aggBuilder: termAggBuilder
-  },
-  discussion: {
-    fieldPath: 'meta.discussion',
-    criteriaBuilder: hasCriteriaBuilder,
-    aggBuilder: valueCountAggBuilder,
-    parser: boolParser
-  },
-  feed: {
-    fieldPath: 'meta.feed',
-    criteriaBuilder: hasCriteriaBuilder,
-    aggBuilder: valueCountAggBuilder,
-    parser: boolParser
-  },
-  audio: {
-    fieldPath: 'meta.audioSource.mp3',
-    criteria: hasCriteriaBuilder('meta.audioSource.mp3'),
-    aggBuilder: valueCountAggBuilder,
-    parser: boolParser
-  }
+  discussion: countEntry('meta.discussion'),
+  feed: countEntry('meta.feed'),
+  audio: countEntry('meta.audioSource.mp3')
 }
 
 module.exports = {
-  schema: buildSchema(schema)
+  schema
 }

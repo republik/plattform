@@ -5,13 +5,15 @@ const {
   }
 } = require('@orbiting/backend-modules-auth')
 
-const { schema: documentSchema } = require('../../../lib/Documents')
 const {
-  elasticFilterBuilder,
-  filterReducer
+  schema: documentSchema
+} = require('../../../lib/Documents')
+const {
+  filterReducer,
+  elasticFilterBuilder
 } = require('../../../lib/filters')
 const {
-  createElasticAggs
+  extractAggs
 } = require('../../../lib/aggregations')
 
 const reduceFilters = filterReducer(documentSchema)
@@ -62,7 +64,7 @@ const createQuery = (searchTerm, filter, sort) => ({
       contentString: {}
     }
   },
-  aggs: createElasticAggs(documentSchema)
+  aggs: extractAggs(documentSchema)
 })
 
 const mapDocumentHit = (hit) => {

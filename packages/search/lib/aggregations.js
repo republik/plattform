@@ -14,17 +14,14 @@ const valueCountAggBuilder = (fieldPath) => (key) => ({
   }
 })
 
-const createElasticAggs = (schema) =>
+const extractAggs = (schema) =>
   Object.keys(schema).reduce(
     (aggs, key) => {
       const schemaEntry = schema[key]
-      if (!schemaEntry) {
-        throw new Error(`Missing filter schemaEntry for agg: ${key}`)
-      }
       if (schemaEntry.agg) {
         return {
           ...aggs,
-          ...schemaEntry.agg
+          ...schemaEntry.agg(key)
         }
       }
       return aggs
@@ -35,5 +32,5 @@ const createElasticAggs = (schema) =>
 module.exports = {
   termAggBuilder,
   valueCountAggBuilder,
-  createElasticAggs
+  extractAggs
 }
