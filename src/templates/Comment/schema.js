@@ -154,18 +154,18 @@ const createCommentSchema = ({
 
   return {
     rules: [
-    {
-      matchMdast: matchType('root'),
-      component: ({ children }) => children,
-      rules: [
-        heading,
-        paragraph,
-        blockQuote,
-        list,
-        thematicBreak,
-        blockLevelHtml
-      ]
-    }
+      {
+        matchMdast: matchType('root'),
+        component: ({ children }) => children,
+        rules: [
+          heading,
+          paragraph,
+          blockQuote,
+          list,
+          thematicBreak,
+          blockLevelHtml
+        ]
+      }
     ]
   }
 }
