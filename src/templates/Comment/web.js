@@ -1,4 +1,4 @@
-import createCommentSchema from '../schema'
+import createCommentSchema from './schema'
 
 import {
   CommentBodyBlockQuote,
@@ -7,8 +7,8 @@ import {
   CommentBodyList,
   CommentBodyListItem,
   CommentBodyParagraph
-} from '../../../components/CommentBody/web'
-import * as Editorial from '../../../components/Typography/Editorial'
+} from '../../components/CommentBody/web'
+import * as Editorial from '../../components/Typography/Editorial'
 
 const createSchema = ({ ...args } = {}) => {
   return createCommentSchema({

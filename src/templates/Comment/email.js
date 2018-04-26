@@ -1,4 +1,4 @@
-import createCommentSchema from '../schema'
+import createCommentSchema from './schema'
 
 import {
   BlockQuote,
@@ -11,7 +11,7 @@ import {
   ListItem,
   Paragraph,
   StrikeThrough
-} from '../../../components/CommentBody/email'
+} from '../../components/CommentBody/email'
 
 const createSchema = ({ ...args } = {}) => {
   return createCommentSchema({
