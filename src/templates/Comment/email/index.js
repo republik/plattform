@@ -1,5 +1,32 @@
-import schema from '../web'
+import createCommentSchema from '../schema'
 
-export default schema
+import {
+  BlockQuote,
+  Code,
+  Cursive,
+  Emphasis,
+  Heading,
+  Link,
+  List,
+  ListItem,
+  Paragraph,
+  StrikeThrough
+} from '../../../components/CommentBody/email'
 
-// TODO: Implement email-styled components here.
+const createSchema = ({ ...args } = {}) => {
+  return createCommentSchema({
+    BlockQuote,
+    Code,
+    Cursive,
+    Emphasis,
+    Heading,
+    Link,
+    List,
+    ListItem,
+    Paragraph,
+    StrikeThrough,
+    ...args
+  })
+}
+
+export default createSchema

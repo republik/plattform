@@ -6,19 +6,20 @@ import {
   matchImage
 } from 'mdast-react-render/lib/utils'
 
+import { HR } from '../../components/Typography'
+
 
 const createCommentSchema = ({
+  BlockQuote,
+  Code,
   Cursive,
   Emphasis,
-  StrikeThrough,
+  Heading,
   Link,
   List,
   ListItem,
-  P,
-  BlockQuote,
-  Heading,
-  HR,
-  Code
+  Paragraph,
+  StrikeThrough
 } = {}) => {
   
 
@@ -100,7 +101,7 @@ const createCommentSchema = ({
 
   const paragraph = {
     matchMdast: matchParagraph,
-    component: ({ children }) => <P>{children}</P>,
+    component: ({ children }) => <Paragraph>{children}</Paragraph>,
     rules: [
       ...globalInlines,
 
@@ -148,7 +149,7 @@ const createCommentSchema = ({
     props: node => ({
         value: node.value
       }),
-      component: ({value}) => <P>{value}</P>
+      component: ({value}) => <Paragraph>{value}</Paragraph>
   }
 
   return {

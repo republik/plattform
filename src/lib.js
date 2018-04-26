@@ -94,6 +94,14 @@ export {
   CommentActions
 } from './components/Comment'
 export {
+  CommentBodyBlockQuote,
+  CommentBodyCode,
+  CommentBodyHeading,
+  CommentBodyList,
+  CommentBodyListItem,
+  CommentBodyParagraph
+} from './components/CommentBody/web'
+export {
   CommentComposer,
   CommentComposerHeader,
   CommentComposerPlaceholder,
@@ -130,3 +138,4 @@ export {
   Sub, Sup,
   HR
 } from './components/Typography'
+

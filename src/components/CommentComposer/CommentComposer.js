@@ -80,7 +80,7 @@ const styles = {
       color: colors.disabled
     }
   }),
-  etiquette: css({
+  secondaryActions: css({
     padding: '0 12px'
   })
 }
@@ -161,7 +161,7 @@ class CommentComposer extends PureComponent {
       onCancel,
       submitLabel,
       cancelLabel,
-      etiquetteLink,
+      secondaryActions,
       maxLength
     } = this.props
     const {text, count} = this.state
@@ -186,10 +186,10 @@ class CommentComposer extends PureComponent {
           />
           {this.renderProgress()}
           <div {...styles.actions}>
-            {etiquetteLink && (
-              <span {...styles.etiquette}>
-                {etiquetteLink}
-              </span>
+            {secondaryActions && (
+              <div {...styles.secondaryActions}>
+                {secondaryActions}
+              </div>
             )}
             <div {...styles.mainActions}>
               <button {...styles.cancelButton} onClick={onCancel}>
@@ -216,7 +216,7 @@ CommentComposer.propTypes = {
   submitComment: PropTypes.func.isRequired,
   submitLabel: PropTypes.string,
   cancelLabel: PropTypes.string,
-  etiquetteLink: PropTypes.object,
+  secondaryActions: PropTypes.object,
   maxLength: PropTypes.number
 }
 
