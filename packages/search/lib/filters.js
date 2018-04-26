@@ -39,59 +39,6 @@ const dateCriteriaBuilder = (fieldName, operator) => (date) => ({
 })
 */
 
-// eslint-disable-next-line eqeqeq
-const boolParser = (value) => value == true
-
-const filterSchema = {
-  dossier: {
-    criteria: termCriteriaBuilder('meta.dossier')
-  },
-  format: {
-    criteria: termCriteriaBuilder('meta.format')
-  },
-  template: {
-    criteria: termCriteriaBuilder('meta.template')
-  },
-  userId: {
-    parse: (value) => `/~${value}`,
-    criteria: termCriteriaBuilder('meta.credits.url')
-  },
-  path: {
-    criteria: termCriteriaBuilder('meta.path')
-  },
-  repoId: {
-    criteria: termCriteriaBuilder('meta.repoId')
-  },
-  publishedAt: {
-    parse: (value) => {
-      const [from, to] = value.split(',')
-      return {
-        from: new Date(from),
-        to: new Date(to)
-      }
-    },
-    criteria: dateRangeCriteriaBuilder('meta.publishDate')
-  },
-  author: {
-    criteria: termCriteriaBuilder('meta.author.keyword')
-  },
-  seriesMaster: {
-    criteria: termCriteriaBuilder('meta.seriesMaster')
-  },
-  discussion: {
-    parse: boolParser,
-    criteria: hasCriteriaBuilder('meta.discussion')
-  },
-  feed: {
-    parse: boolParser,
-    criteria: hasCriteriaBuilder('meta.feed')
-  },
-  audio: {
-    parse: boolParser,
-    criteria: hasCriteriaBuilder('meta.audioSource.mp3')
-  }
-}
-
 // converts a filter array (with generic value as string) to a (typed) filter obj
 const filterReducer = (schema) => (filters) =>
   filters.reduce(
@@ -103,8 +50,8 @@ const filterReducer = (schema) => (filters) =>
       }
       return {
         ...filterObj,
-        [key]: schemaEntry.parse
-          ? schemaEntry.parse(value)
+        [key]: schemaEntry.parser
+          ? schemaEntry.parser(value)
           : value
       }
     },
@@ -133,6 +80,9 @@ const elasticFilterBuilder = (schema) => (filter) =>
   )
 
 module.exports = {
-  reduceFilters: filterReducer(filterSchema),
-  createElasticFilter: elasticFilterBuilder(filterSchema)
+  termCriteriaBuilder,
+  hasCriteriaBuilder,
+  dateRangeCriteriaBuilder,
+  filterReducer,
+  elasticFilterBuilder
 }

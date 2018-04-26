@@ -5,10 +5,17 @@ const {
   }
 } = require('@orbiting/backend-modules-auth')
 
+const { schema: documentSchema } = require('../../../lib/Documents')
 const {
-  createElasticFilter,
-  reduceFilters
+  elasticFilterBuilder,
+  filterReducer
 } = require('../../../lib/filters')
+const {
+  createElasticAggs
+} = require('../../../lib/aggregations')
+
+const reduceFilters = filterReducer(documentSchema)
+const createElasticFilter = elasticFilterBuilder(documentSchema)
 
 const {
   DOCUMENTS_RESTRICT_TO_ROLES
@@ -55,48 +62,7 @@ const createQuery = (searchTerm, filter, sort) => ({
       contentString: {}
     }
   },
-  aggs: {
-    feed: {
-      value_count: {
-        field: 'meta.feed'
-      }
-    },
-    author: {
-      terms: {
-        field: 'meta.authors.keyword'
-      }
-    },
-    userId: {
-      terms: {
-        field: 'meta.credits.url'
-      }
-    },
-    dossier: {
-      terms: {
-        field: 'meta.dossier'
-      }
-    },
-    format: {
-      terms: {
-        field: 'meta.format'
-      }
-    },
-    seriesMaster: {
-      terms: {
-        field: 'meta.seriesMaster'
-      }
-    },
-    discussion: {
-      value_count: {
-        field: 'meta.discussionId'
-      }
-    },
-    audio: {
-      value_count: {
-        field: 'meta.audioSource.mp3'
-      }
-    }
-  }
+  aggs: createElasticAggs(documentSchema)
 })
 
 const mapDocumentHit = (hit) => {
@@ -208,7 +174,7 @@ module.exports = async (
   }
   debug('query: %O', query)
   const result = await elastic.search(query)
-  debug('result: %O', result)
+  // debug('result: %O', result)
 
   const hasNextPage = first > 0 && result.hits.total > from + first
   const hasPreviousPage = from > 0
