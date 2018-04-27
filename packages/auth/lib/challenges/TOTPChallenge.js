@@ -16,7 +16,7 @@ module.exports = {
     )
     return otp.secret
   },
-  validateSharedSecret: async ({ pgdb, payload, user }) => {
+  validateSharedSecret: async ({ pgdb, user }, { payload }) => {
     if (!user.TOTPChallengeSecret) return false
     const otp = OTP({ secret: user.TOTPChallengeSecret })
     if (otp.totp() !== payload) return false
@@ -38,7 +38,7 @@ module.exports = {
     // no challenge transport needed, time based
     return true
   },
-  validateChallenge: async ({ pgdb, payload, user }) => {
+  validateChallenge: async ({ pgdb, user }, { payload }) => {
     if (!user.isTOTPChallengeSecretVerified) return false
     const otp = OTP({ secret: user.TOTPChallengeSecret })
     const comparablePayload = await otp.totp()

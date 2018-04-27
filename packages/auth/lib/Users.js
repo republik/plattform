@@ -114,7 +114,7 @@ const denySession = async ({ pgdb, token, email: emailFromQuery }) => {
   if (!session) {
     throw new NoSessionError({ email: emailFromQuery, token })
   }
-  const validated = await validateChallenge({ pgdb, user: existingUser, session, ...token })
+  const validated = await validateChallenge({ pgdb, user: existingUser, session }, token)
   if (!validated) {
     throw new SessionTokenValidationFailed(token)
   }
@@ -171,7 +171,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
       throw new SessionTokenValidationFailed({ email: emailFromQuery })
     }
 
-    const validated = await validateChallenge({ pgdb, session, user: existingUser, ...token })
+    const validated = await validateChallenge({ pgdb, session, user: existingUser }, token)
     if (!validated) {
       console.error('wrong token')
       throw new SessionTokenValidationFailed({ email: emailFromQuery, ...token })

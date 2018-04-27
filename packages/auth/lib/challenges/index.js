@@ -37,13 +37,13 @@ const ChallengeHandlerProxy = ({ type, ...options }) => {
       if (!secret) throw new SharedSecretGenerationFailed({ type, user: options.user })
       return secret
     },
-    validateSharedSecret: async () => {
+    validateSharedSecret: async (sharedSecret) => {
       if (!handler.validateSharedSecret) throw new SharedSecretNotSupported({ type, user: options.user })
 
       const validated = await handler.validateSharedSecret({
         type,
         ...options
-      })
+      }, sharedSecret)
 
       if (!validated) throw new SharedSecretValidationFailed({ type, user: options.user })
       return validated
@@ -67,9 +67,9 @@ const ChallengeHandlerProxy = ({ type, ...options }) => {
         ...options
       })
     },
-    validateChallenge: async () => {
-      const { payload, session, email: emailFromQuery } = options
-
+    validateChallenge: async (token) => {
+      const { payload } = token
+      const { session, email: emailFromQuery } = options
       const { tokenExpiresAt, id } = session
       if (tokenExpiresAt.getTime() < (new Date()).getTime() || !id) {
         throw new TokenExpiredError({ type, payload, expiredAt: tokenExpiresAt, sessionId: session.id })
@@ -82,7 +82,7 @@ const ChallengeHandlerProxy = ({ type, ...options }) => {
       return handler.validateChallenge({
         type,
         ...options
-      })
+      }, token)
     }
   }
 }
@@ -93,9 +93,9 @@ module.exports = {
   SharedSecretNotSupported,
   SharedSecretGenerationFailed,
   SharedSecretValidationFailed,
-  validateChallenge: (options) => ChallengeHandlerProxy(options).validateChallenge(),
+  validateChallenge: (options, token) => ChallengeHandlerProxy(options).validateChallenge(token),
   generateNewToken: (options) => ChallengeHandlerProxy(options).generateNewToken(),
   startChallenge: (options) => ChallengeHandlerProxy(options).startChallenge(),
   generateSharedSecret: (options) => ChallengeHandlerProxy(options).generateSharedSecret(),
-  validateSharedSecret: (options) => ChallengeHandlerProxy(options).validateSharedSecret()
+  validateSharedSecret: (options, sharedSecret) => ChallengeHandlerProxy(options).validateSharedSecret(sharedSecret)
 }

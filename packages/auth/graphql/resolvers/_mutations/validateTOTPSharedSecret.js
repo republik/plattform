@@ -27,9 +27,8 @@ module.exports = async (_, args, { pgdb, user, req, ...rest }) => {
   const validated = await validateSharedSecret({
     pgdb,
     type,
-    user: userWith2FA,
-    payload: totp
-  })
+    user: userWith2FA
+  }, { payload: totp })
   if (!validated) {
     throw new SessionTokenValidationFailed({ type, user, payload: totp })
   }

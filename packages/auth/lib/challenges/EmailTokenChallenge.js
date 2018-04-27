@@ -77,7 +77,7 @@ module.exports = {
   `
     })
   },
-  validateChallenge: async ({ pgdb, payload, type, user }) => {
+  validateChallenge: async ({ pgdb, type, user }, { payload }) => {
     const foundToken = await pgdb.public.tokens.findOne({
       type,
       payload

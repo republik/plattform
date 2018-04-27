@@ -44,7 +44,7 @@ module.exports = {
     )
     return sharedCode
   },
-  validateSharedSecret: async ({ pgdb, payload, user }) => {
+  validateSharedSecret: async ({ pgdb, user }, { payload }) => {
     const isMatch = (user.phoneNumberVerificationCode === payload)
     if (!isMatch) return false
     await pgdb.public.users.updateAndGetOne(
@@ -74,7 +74,7 @@ module.exports = {
     })
     return true
   },
-  validateChallenge: async ({ pgdb, payload, type, user }) => {
+  validateChallenge: async ({ pgdb, type, user }, { payload }) => {
     const foundToken = await pgdb.public.tokens.findOne({
       type,
       payload: payload.toUpperCase()
