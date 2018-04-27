@@ -186,12 +186,13 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   }
 
   // verify and/or create the user
+  const transaction = await pgdb.transactionBegin()
+
   const { user, isVerificationUpdated } = await upsertUserVerified({
-    pgdb,
+    pgdb: transaction,
     email: session.sess.email
   })
 
-  const transaction = await pgdb.transactionBegin()
   try {
     // log in the session and delete token
     await transaction.public.sessions.updateOne({
@@ -236,29 +237,22 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
 }
 
 const upsertUserVerified = async({ pgdb, email }) => {
-  const transaction = await pgdb.transactionBegin()
-  try {
-    const existingUser = await transaction.public.users.findOne({ email })
-    const user = existingUser ||
-      await transaction.public.users.insertAndGet({
-        email,
-        verified: true
-      })
-    if (!user.verified) {
-      await transaction.public.users.updateOne({
-        id: user.id
-      }, {
-        verified: true
-      })
-    }
-    await transaction.transactionCommit()
-    return {
-      user,
-      isVerificationUpdated: (!existingUser || !existingUser.verified)
-    }
-  } catch (error) {
-    await transaction.transactionRollback()
-    throw error
+  const existingUser = await pgdb.public.users.findOne({ email })
+  const user = existingUser ||
+    await pgdb.public.users.insertAndGet({
+      email,
+      verified: true
+    })
+  if (!user.verified) {
+    await pgdb.public.users.updateOne({
+      id: user.id
+    }, {
+      verified: true
+    })
+  }
+  return {
+    user,
+    isVerificationUpdated: (!existingUser || !existingUser.verified)
   }
 }
 
