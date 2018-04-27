@@ -27,6 +27,7 @@ import {
 import Sidebar from '../../components/Sidebar'
 
 import Loader from '../../components/Loader'
+import CharCount from '../../components/CharCount'
 import withT from '../../lib/withT'
 import withMe from '../../lib/withMe'
 
@@ -706,6 +707,7 @@ export class EditorPage extends Component {
             <Frame.Me />
           </Frame.Header.Section>
         </Frame.Header>
+        <CharCount value={editorState} />
         <Frame.Body raw>
           <Loader loading={showLoading} error={error} render={() => (
             <div>
