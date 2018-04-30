@@ -1,5 +1,5 @@
 {
-  "updated": "2018-04-06T01:44:56.207Z",
+  "updated": "2018-04-30T15:54:35.427Z",
   "title": "live",
   "data": [
     {
@@ -471,10 +471,6 @@
       "value": ", "
     },
     {
-      "key": "uncommittedChanges/unlock/close",
-      "value": "Sie haben das Dokument bearbeiten wollen, Andere gestört, es aber dann nicht getan. Dies ist nicht nett."
-    },
-    {
       "key": "uncommittedChanges/title",
       "value": "Aktiv"
     },
@@ -745,6 +741,10 @@
     {
       "key": "styleguide/charts/error",
       "value": "Diese Visualisierung ist kaputt. Die Ursache könnte eine falsche Konfiguration oder fehlenden und oder falsch formatierte Daten sein."
+    },
+    {
+      "key": "ui/sidebar/info/numCharacters",
+      "value": "Anzahl Zeichen"
     }
   ]
 }

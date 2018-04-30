@@ -3,6 +3,7 @@ import React from 'react'
 import { Label, Interaction } from '@project-r/styleguide'
 
 import { countFormat } from '../lib/utils/format'
+import withT from '../lib/withT'
 
 const safeTextLength = value =>
   value &&
@@ -10,12 +11,12 @@ const safeTextLength = value =>
   value.document.text &&
   value.document.text.length
 
-export default ({ value }) => (
+export default withT(({ value, t }) => (
   <Interaction.P>
-    <Label>Anzahl Zeichen</Label>
+    <Label>{t('ui/sidebar/info/numCharacters')}</Label>
     <br />
     {
       countFormat(safeTextLength(value) || 0)
     }
   </Interaction.P>
-)
+))
