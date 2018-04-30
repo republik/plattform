@@ -707,7 +707,6 @@ export class EditorPage extends Component {
             <Frame.Me />
           </Frame.Header.Section>
         </Frame.Header>
-        <CharCount value={editorState} />
         <Frame.Body raw>
           <Loader loading={showLoading} error={error} render={() => (
             <div>
@@ -746,6 +745,9 @@ export class EditorPage extends Component {
                     isNew={isNew}
                     hasUncommittedChanges={hasUncommittedChanges}
                   />
+                </Sidebar.Tab>
+                <Sidebar.Tab tabId='analytics' label='Info'>
+                  <CharCount value={editorState} />
                 </Sidebar.Tab>
               </Sidebar>
             </div>
