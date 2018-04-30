@@ -12,7 +12,6 @@ const styles = {
     backgroundColor: '#f7f7f7',
     margin: 0,
     padding: '0 15px 12px 15px',
-    fontSize: '15px',
     ...serifRegular14,
     [mUp]: {
       ...serifRegular16,

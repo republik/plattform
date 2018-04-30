@@ -2,7 +2,6 @@ import React from 'react'
 import { css } from 'glamor'
 import { renderMdast } from 'mdast-react-render'
 
-import { serifRegular14, serifRegular16 } from '../Typography/styles'
 import { Label } from '../Typography'
 
 import { mUp } from '../../theme/mediaQueries'
@@ -35,11 +34,7 @@ const styles = {
     marginTop: 12
   }),
   body: css({
-    margin: `12px 0 12px ${profilePictureSize + profilePictureMargin}px`,
-    ...serifRegular14,
-    [mUp]: {
-      ...serifRegular16
-    }
+    margin: `12px 0 12px ${profilePictureSize + profilePictureMargin}px`
   })
 }
 
