@@ -1,5 +1,6 @@
 export {
-  default as BlockQuote
+  default as BlockQuote,
+  BlockQuoteParagraph
 } from './Blockquote'
 
 export {

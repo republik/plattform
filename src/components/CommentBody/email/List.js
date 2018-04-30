@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { fontFamilies } from '../../../theme/fonts'
 import { paragraphStyle } from './Paragraph'
 
 const listStyle = {

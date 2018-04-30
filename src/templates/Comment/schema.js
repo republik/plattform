@@ -11,6 +11,7 @@ import { HR } from '../../components/Typography'
 
 const createCommentSchema = ({
   BlockQuote,
+  BlockQuoteParagraph,
   Code,
   Cursive,
   Emphasis,
@@ -101,10 +102,17 @@ const createCommentSchema = ({
 
   const paragraph = {
     matchMdast: matchParagraph,
-    component: ({ children }) => <Paragraph>{children}</Paragraph>,
+    component: Paragraph,
     rules: [
-      ...globalInlines,
+      ...globalInlines
+    ]
+  }
 
+  const blockquoteParagraph = {
+    matchMdast: matchParagraph,
+    component: BlockQuoteParagraph,
+    rules: [
+      ...globalInlines
     ]
   }
 
@@ -112,11 +120,7 @@ const createCommentSchema = ({
     matchMdast: matchType('blockquote'),
     component: BlockQuote,
     rules: [
-      ...globalInlines,
-      {
-        matchMdast: matchParagraph,
-        component: ({ children }) => children
-      }
+      blockquoteParagraph
     ]
   }
 
@@ -149,7 +153,7 @@ const createCommentSchema = ({
     props: node => ({
         value: node.value
       }),
-      component: ({value}) => <Paragraph>{value}</Paragraph>
+    component: ({value}) => <Paragraph>{value}</Paragraph>
   }
 
   return {

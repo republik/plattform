@@ -17,12 +17,11 @@ const styles = {
   })
 }
 
-const BlockQuote = ({ children, attributes, style }) => {
+const BlockQuote = ({ children, attributes }) => {
   return (
     <div
       {...styles.container}
       {...attributes}
-      style={style}
     >
       {children}
     </div>
@@ -31,8 +30,7 @@ const BlockQuote = ({ children, attributes, style }) => {
 
 BlockQuote.propTypes = {
   children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  style: PropTypes.object
+  attributes: PropTypes.object
 }
 
 export default BlockQuote

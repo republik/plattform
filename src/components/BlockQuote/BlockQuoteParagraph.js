@@ -25,12 +25,11 @@ const styles = {
   })
 }
 
-const BlockQuoteParagraph = ({ children, attributes, style }) => {
+const BlockQuoteParagraph = ({ children, attributes }) => {
   return (
     <p
       {...styles.quote}
       {...attributes}
-      style={style}
     >
       {children}
     </p>
@@ -39,8 +38,7 @@ const BlockQuoteParagraph = ({ children, attributes, style }) => {
 
 BlockQuoteParagraph.propTypes = {
   children: PropTypes.node.isRequired,
-  attributes: PropTypes.object,
-  style: PropTypes.object
+  attributes: PropTypes.object
 }
 
 export default BlockQuoteParagraph

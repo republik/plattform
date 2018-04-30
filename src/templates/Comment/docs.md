@@ -3,16 +3,15 @@
 ```code|lang-jsx
 import createCommentSchema from '@project-r/styleguide/lib/templates/Comment/web'
 
-const schema = createCommentSchema()
+const webSchema = createCommentSchema()
 ```
 
 
 ```react|noSource
-<CommentBody>
+<Markdown schema={webSchema}>{`
 
-<Markdown schema={schema}>{`
-
-A comment with [a link](https://example.com/ "Mit Titel"), an autolinked URL https://www.republik.ch and ![an image](/static/landscape.jpg?size=2000x1411 "Mit Bildtitel").
+A comment with [a link](https://example.com/ "Mit Titel"), an autolinked URL https://www.republik.ch, ![an image](/static/landscape.jpg?size=2000x1411 "Mit Bildtitel") and
+a line-break.
 
 Emphasis (italic) with *asterisks* or _underscores_.
 
@@ -43,8 +42,10 @@ All headings are mapped to bold:
 
 Someone said:
 
-> This is a **blockquote**.
-> This line is part of the *same quote*.
+> **Blockquote** paragraph one
+> on *two lines*
+>
+> Paragraph two on another line
 
 Inline \`code\` uses \`back-ticks\`.
 
@@ -53,8 +54,6 @@ Inline \`code\` uses \`back-ticks\`.
 Inline HTML tags like <sub>subscript</sub> and <sup>superscript</sup> are not supported.
 
 `}</Markdown>
-
-</CommentBody>
 ```
 
 
@@ -63,14 +62,12 @@ Inline HTML tags like <sub>subscript</sub> and <sup>superscript</sup> are not su
 ```code|lang-jsx
 import createCommentSchema from '@project-r/styleguide/lib/templates/Comment/email'
 
-const schema = createCommentSchema()
+const emailSchema = createCommentSchema()
 ```
 
 
 ```react|noSource
-<CommentBody>
-
-<Markdown schema={schema}>{`
+<Markdown schema={emailSchema}>{`
 
 A comment with [a link](https://example.com/ "Mit Titel"), an autolinked URL https://www.republik.ch and ![an image](/static/landscape.jpg?size=2000x1411 "Mit Bildtitel").
 
@@ -103,8 +100,10 @@ All headings are mapped to bold:
 
 Someone said:
 
-> This is a **blockquote**.
-> This line is part of the *same quote*.
+> Blockquote paragraph **one**
+> on *two lines*
+>
+> Paragraph two on another line
 
 Inline \`code\` uses \`back-ticks\`.
 
@@ -113,6 +112,4 @@ Inline \`code\` uses \`back-ticks\`.
 Inline HTML tags like <sub>subscript</sub> and <sup>superscript</sup> are not supported.
 
 `}</Markdown>
-
-</CommentBody>
 ```

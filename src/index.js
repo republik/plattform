@@ -458,7 +458,8 @@ ReactDOM.render(
             path: '/templates/comment',
             title: 'Comment',
             imports: {
-              schema: require('./templates/Comment').default(),
+              webSchema: require('./templates/Comment/web').default(),
+              emailSchema: require('./templates/Comment/email').default(),
               ...require('./templates/docs'),
               renderMdast: require('mdast-react-render').renderMdast,
               CommentBody: require('./components/Comment/Comment').CommentBody
