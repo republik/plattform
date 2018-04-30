@@ -13,6 +13,7 @@ const createCommentSchema = ({
   BlockQuote,
   BlockQuoteParagraph,
   Code,
+  Container,
   Cursive,
   Emphasis,
   Heading,
@@ -66,6 +67,11 @@ const createCommentSchema = ({
         href: node.url
       }),
       component: SafeA
+    },
+    // Make sure text like [...] is preserved.
+    {
+      matchMdast: matchType('linkReference'),
+      component: ({ children }) => <span>[{children}]</span>
     },
     {
       matchMdast: matchType('emphasis'),
@@ -160,7 +166,7 @@ const createCommentSchema = ({
     rules: [
       {
         matchMdast: matchType('root'),
-        component: ({ children }) => children,
+        component: Container,
         rules: [
           heading,
           paragraph,

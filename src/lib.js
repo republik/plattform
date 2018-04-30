@@ -95,6 +95,7 @@ export {
 } from './components/Comment'
 export {
   CommentBodyBlockQuote,
+  CommentBodyBlockQuoteParagraph,
   CommentBodyCode,
   CommentBodyHeading,
   CommentBodyList,

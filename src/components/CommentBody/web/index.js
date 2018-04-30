@@ -4,6 +4,10 @@ export {
 } from './Blockquote'
 
 export {
+  default as CommentBodyContainer
+} from './Container'
+
+export {
   default as CommentBodyList,
   ListItem as CommentBodyListItem
 } from './List'
