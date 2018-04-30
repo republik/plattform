@@ -729,7 +729,7 @@ export class EditorPage extends Component {
                 readOnly={readOnly}
               />
               <Sidebar warnings={warnings}
-                selectedTabId={readOnly ? 'workflow' : 'edit'}
+                selectedTabId={(readOnly && 'workflow') || undefined}
                 isOpen={showSidebar}>
                 {!readOnly && <Sidebar.Tab tabId='edit' label='Editieren'>
                   {!!this.editor && <EditorUI
