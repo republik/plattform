@@ -13,8 +13,16 @@ const elastic = elasticsearch.client()
 
 const flush = process.argv[2] === '--flush'
 
+// format: '2018-05-01T13-43-07'
+const dateString = new Date()
+  .toISOString()
+  .replace(/:/g, '-')
+  .split('.')
+  .shift()
+  .toLowerCase()
+
 const getAliasName = (type) => `republik-${type}`
-const getIndexName = (alias) => `${alias}-${new Date().getTime()}`
+const getIndexName = (alias) => `${alias}-${dateString}`
 
 PgDb.connect().then(async pgdb => {
   if (flush) {

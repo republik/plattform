@@ -11,6 +11,12 @@ const {
 } = require('@orbiting/backend-modules-documents')
 
 module.exports = async ({indexName, elastic, pgdb}) => {
+  const stats = { documents: { added: 0, total: 0 } }
+  const statsInterval = setInterval(
+    () => { console.log(indexName, stats) },
+    1 * 1000
+  )
+
   const context = {
     redis,
     pgdb,
@@ -58,15 +64,21 @@ module.exports = async ({indexName, elastic, pgdb}) => {
       })
     )
 
+  stats.documents.total = documents.length
   for (let doc of documents) {
-    const util = require('util')
-    console.log(doc.body.meta.path, doc.body.meta.title)
-    console.log(util.inspect(doc.body.meta, {depth: null}))
-    console.log('--------------------------------')
+    // const util = require('util')
+    // console.log(doc.body.meta.path, doc.body.meta.title)
+    // console.log(util.inspect(doc.body.meta, {depth: null}))
+    // console.log('--------------------------------')
     await elastic.create({
       index: indexName,
       type: 'documents',
       ...doc
     })
+    stats.documents.added++
   }
+
+  clearInterval(statsInterval)
+
+  console.log(indexName, stats)
 }
