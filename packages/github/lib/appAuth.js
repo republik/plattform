@@ -2,12 +2,6 @@ const jwt = require('jsonwebtoken')
 const fetch = require('isomorphic-unfetch')
 const checkEnv = require('check-env')
 
-checkEnv([
-  'GITHUB_APP_ID',
-  'GITHUB_APP_KEY',
-  'GITHUB_INSTALLATION_ID'
-])
-
 const {
   GITHUB_APP_ID,
   GITHUB_APP_KEY,
@@ -43,6 +37,12 @@ const getAppJWT = () => {
 }
 
 const getInstallationToken = async () => {
+  checkEnv([
+    'GITHUB_APP_ID',
+    'GITHUB_APP_KEY',
+    'GITHUB_INSTALLATION_ID'
+  ])
+
   const response = await fetch(
     `https://api.github.com/installations/${GITHUB_INSTALLATION_ID}/access_tokens`,
     {
