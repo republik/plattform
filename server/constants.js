@@ -3,12 +3,11 @@ const ENV =
     ? window.__NEXT_DATA__.env
     : process.env
 
+// public/client exposed env
+
 module.exports = {}
 
-module.exports.LOCALE = ENV.LOCALE
-module.exports.API_AUTHORIZATION_HEADER =
-  ENV.API_AUTHORIZATION_HEADER
-module.exports.API_BASE_URL = ENV.API_BASE_URL
+module.exports.API_URL = ENV.API_URL
 
 module.exports.SG_COLORS = ENV.SG_COLORS
 module.exports.SG_FONT_FAMILIES =

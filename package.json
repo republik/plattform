@@ -9,8 +9,7 @@
     "build": "next build",
     "heroku-postbuild": "npm run build",
     "start": "node server/server.js",
-    "prettier":
-      "prettier --single-quote --print-width 60 --no-semi --write \"{pages,lib,server,components}/**/*.{js,json}\""
+    "prettier": "prettier --single-quote --print-width 60 --no-semi --write \"{pages,lib,server,components}/**/*.{js,json}\""
   },
   "dependencies": {
     "@project-r/styleguide": "^5.71.6",
