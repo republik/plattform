@@ -27,6 +27,7 @@ import {
 import Sidebar from '../../components/Sidebar'
 
 import Loader from '../../components/Loader'
+import CharCount from '../../components/CharCount'
 import withT from '../../lib/withT'
 import withMe from '../../lib/withMe'
 
@@ -728,7 +729,7 @@ export class EditorPage extends Component {
                 readOnly={readOnly}
               />
               <Sidebar warnings={warnings}
-                selectedTabId={readOnly ? 'workflow' : 'edit'}
+                selectedTabId={(readOnly && 'workflow') || undefined}
                 isOpen={showSidebar}>
                 {!readOnly && <Sidebar.Tab tabId='edit' label='Editieren'>
                   {!!this.editor && <EditorUI
@@ -744,6 +745,9 @@ export class EditorPage extends Component {
                     isNew={isNew}
                     hasUncommittedChanges={hasUncommittedChanges}
                   />
+                </Sidebar.Tab>
+                <Sidebar.Tab tabId='analytics' label='Info'>
+                  <CharCount value={editorState} />
                 </Sidebar.Tab>
               </Sidebar>
             </div>
