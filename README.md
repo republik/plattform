@@ -18,16 +18,15 @@ npm run dev
 
 ### Environment
 
-You can use a git-excluded `.env` file in development:
+You can use a git-excluded `.env` file in development.
+
+Bootstrap your .env file:
 
 ```
-PORT=3005
-
-API_BASE_URL=http://localhost:3004/graphql
-API_WS_BASE_URL=ws://localhost:3004/graphql
-FRONTEND_BASE_URL=http://localhost:3010
-GITHUB_ORG=orbiting
+cp .env.example .env
 ```
+
+Make sure to adapt `GITHUB_ORG` to the `GITHUB_LOGIN` used in the backend env.
 
 ### Piwik
 
