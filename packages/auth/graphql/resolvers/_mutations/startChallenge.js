@@ -8,16 +8,14 @@ module.exports = async (_, args, { pgdb, req }) => {
 
   const session = await pgdb.public.sessions.findOne({ id: sessionId })
   const email = session.sess.email
-  const token = await generateNewToken({
+  const token = await generateNewToken(type, {
     pgdb,
-    type,
     session,
     email
   })
-  return startChallenge({
+  return startChallenge(type, {
     pgdb,
     email,
-    token,
-    type
+    token
   })
 }

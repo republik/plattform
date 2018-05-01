@@ -23,36 +23,24 @@ const TokenTypeMap = {
   [TokenTypes.SMS]: SMSCodeChallenge
 }
 
-const ChallengeHandlerProxy = ({ type, ...options }) => {
+const ChallengeHandlerProxy = (type, options) => {
   const handler = TokenTypeMap[type]
   if (!handler) throw new TokenTypeUnknownError({ type })
   return {
     generateSharedSecret: async () => {
       if (!handler.generateSharedSecret) throw new SharedSecretNotSupported({ type, user: options.user })
-
-      const secret = await handler.generateSharedSecret({
-        type,
-        ...options
-      })
+      const secret = await handler.generateSharedSecret(options)
       if (!secret) throw new SharedSecretGenerationFailed({ type, user: options.user })
       return secret
     },
     validateSharedSecret: async (sharedSecret) => {
       if (!handler.validateSharedSecret) throw new SharedSecretNotSupported({ type, user: options.user })
-
-      const validated = await handler.validateSharedSecret({
-        type,
-        ...options
-      }, sharedSecret)
-
+      const validated = await handler.validateSharedSecret(options, sharedSecret)
       if (!validated) throw new SharedSecretValidationFailed({ type, user: options.user })
       return validated
     },
     generateNewToken: async () => {
-      const tokenData = await handler.generateNewToken({
-        type,
-        ...options
-      })
+      const tokenData = await handler.generateNewToken(options)
       const { pgdb, session, email } = options
       return pgdb.public.tokens.insertAndGet({
         sessionId: session.id,
@@ -62,10 +50,7 @@ const ChallengeHandlerProxy = ({ type, ...options }) => {
       })
     },
     startChallenge: async () => {
-      return handler.startChallenge({
-        type,
-        ...options
-      })
+      return handler.startChallenge(options)
     },
     validateChallenge: async (token) => {
       const { payload } = token
@@ -79,10 +64,7 @@ const ChallengeHandlerProxy = ({ type, ...options }) => {
         throw new QueryEmailMismatchError({ type, payload, email, emailFromQuery })
       }
 
-      return handler.validateChallenge({
-        type,
-        ...options
-      }, token)
+      return handler.validateChallenge(options, token)
     }
   }
 }
@@ -93,9 +75,9 @@ module.exports = {
   SharedSecretNotSupported,
   SharedSecretGenerationFailed,
   SharedSecretValidationFailed,
-  validateChallenge: (options, token) => ChallengeHandlerProxy(options).validateChallenge(token),
-  generateNewToken: (options) => ChallengeHandlerProxy(options).generateNewToken(),
-  startChallenge: (options) => ChallengeHandlerProxy(options).startChallenge(),
-  generateSharedSecret: (options) => ChallengeHandlerProxy(options).generateSharedSecret(),
-  validateSharedSecret: (options, sharedSecret) => ChallengeHandlerProxy(options).validateSharedSecret(sharedSecret)
+  validateChallenge: (type, options, token) => ChallengeHandlerProxy(type, options).validateChallenge(token),
+  generateNewToken: (type, options) => ChallengeHandlerProxy(type, options).generateNewToken(),
+  startChallenge: (type, options) => ChallengeHandlerProxy(type, options).startChallenge(),
+  generateSharedSecret: (type, options) => ChallengeHandlerProxy(type, options).generateSharedSecret(),
+  validateSharedSecret: (type, options, sharedSecret) => ChallengeHandlerProxy(type, options).validateSharedSecret(sharedSecret)
 }

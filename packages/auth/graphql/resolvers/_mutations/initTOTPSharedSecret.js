@@ -15,9 +15,7 @@ module.exports = async (_, args, { pgdb, user, req, ...rest }) => {
   if (userWith2FA.enabledSecondFactors.indexOf(TokenTypes.TOTP) !== -1) {
     throw new SecondFactorHasToBeDisabledError({ userId: user.id })
   }
-  const type = TokenTypes.TOTP
-  const secret = await generateSharedSecret({
-    type,
+  const secret = await generateSharedSecret(TokenTypes.TOTP, {
     pgdb,
     user: userWith2FA
   })

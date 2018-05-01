@@ -1,5 +1,6 @@
 const querystring = require('querystring')
 const validator = require('validator')
+const { parse, format } = require('libphonenumber-js')
 const isUUID = require('is-uuid')
 const debug = require('debug')('auth')
 const { sendMailTemplate, moveNewsletterSubscriptions } = require('@orbiting/backend-modules-mail')
@@ -59,9 +60,8 @@ const signIn = async (_email, context, pgdb, req) => {
     const { country, phrase, session } = init
 
     const type = TokenTypes.EMAIL_TOKEN
-    const token = await generateNewToken({
+    const token = await generateNewToken(type, {
       pgdb,
-      type,
       session,
       email
     })
@@ -75,10 +75,9 @@ const signIn = async (_email, context, pgdb, req) => {
         })
       }, 2000)
     } else {
-      await startChallenge({
+      await startChallenge(type, {
         pgdb,
         email,
-        type,
         token,
         context,
         country,
@@ -114,7 +113,7 @@ const denySession = async ({ pgdb, token, email: emailFromQuery }) => {
   if (!session) {
     throw new NoSessionError({ email: emailFromQuery, token })
   }
-  const validated = await validateChallenge({ pgdb, user: existingUser, session }, token)
+  const validated = await validateChallenge(token.type, { pgdb, user: existingUser, session }, token)
   if (!validated) {
     throw new SessionTokenValidationFailed(token)
   }
@@ -171,7 +170,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
       throw new SessionTokenValidationFailed({ email: emailFromQuery })
     }
 
-    const validated = await validateChallenge({ pgdb, session, user: existingUser }, token)
+    const validated = await validateChallenge(token.type, { pgdb, session, user: existingUser }, token)
     if (!validated) {
       console.error('wrong token')
       throw new SessionTokenValidationFailed({ email: emailFromQuery, ...token })
@@ -282,20 +281,30 @@ const updateUserTwoFactorAuthentication = async ({ pgdb, userId: id, enabledSeco
   }
 }
 
-const updateUserEmail = async ({ pgdb, userId, oldEmail, newEmail }) => {
+const updateUserEmail = async ({ pgdb, user, email }) => {
+  if (user.enabledSecondFactors && user.enabledSecondFactors.indexOf(TokenTypes.EMAIL) !== -1) {
+    throw new SecondFactorHasToBeDisabledError({ type: TokenTypes.EMAIL })
+  }
+  if (!validator.isEmail(email)) {
+    throw new EmailInvalidError({ email })
+  }
+  if (await pgdb.public.users.count({ email })) {
+    throw new EmailAlreadyAssignedError({ email })
+  }
+
   const transaction = await pgdb.transactionBegin()
   try {
     await transaction.public.sessions.delete(
       {
         'sess @>': {
-          passport: {user: userId}
+          passport: {user: user.id}
         }
       })
-    await transaction.public.users.updateAndGetOne(
+    await transaction.public.users.updateOne(
       {
-        id: userId
+        id: user.id
       }, {
-        email: newEmail,
+        email,
         verified: false
       }
     )
@@ -306,43 +315,69 @@ const updateUserEmail = async ({ pgdb, userId, oldEmail, newEmail }) => {
   }
 
   await sendMailTemplate({
-    to: oldEmail,
+    to: user.email,
     fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
     subject: t('api/email/change/confirmation/subject'),
     templateName: 'cf_email_change_old_address',
     globalMergeVars: [
       { name: 'EMAIL',
-        content: newEmail
+        content: email
       }
     ]
   })
 
   await sendMailTemplate({
-    to: newEmail,
+    to: email,
     fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
     subject: t('api/email/change/confirmation/subject'),
     templateName: 'cf_email_change_new_address',
     globalMergeVars: [
       { name: 'LOGIN_LINK',
-        content: `${FRONTEND_BASE_URL}/konto?${querystring.stringify({ email: newEmail })}`
+        content: `${FRONTEND_BASE_URL}/konto?${querystring.stringify({ email })}`
       }
     ]
   })
 
-  const user = pgdb.public.users.findOne({ email: newEmail })
-
   try {
     await moveNewsletterSubscriptions({
-      user: {
-        email: oldEmail
-      },
-      newEmail
+      user,
+      newEmail: email
     })
   } catch (e) {
     console.error(e)
   }
 
-  return user
+  // now refresh the user object and return that
+  return pgdb.public.users.findOne({ email })
+}
+
+const updateUserPhoneNumber = async ({ pgdb, user, phoneNumber }) => {
+  if (user.enabledSecondFactors && user.enabledSecondFactors.indexOf(TokenTypes.SMS) !== -1) {
+    throw new SecondFactorHasToBeDisabledError({ type: TokenTypes.SMS })
+  }
+
+  try {
+    const parsedPhoneNumber = parse(phoneNumber || '', 'CH') // it could be any arbitrary string
+    format(parsedPhoneNumber.phone, parsedPhoneNumber.country, 'E.164')
+  } catch (e) {
+    throw new Error(t('api/auth/sms/phone-number-not-valid'))
+  }
+
+  try {
+    await pgdb.public.users.updateOne(
+      {
+        id: user.id
+      }, {
+        phoneNumber,
+        isPhoneNumberVerified: false
+      }
+    )
+  } catch (e) {
+    throw e
+  }
+
+  // now refresh the user object and return that
+  return pgdb.public.users.findOne({ id: user.id })
 }
 
 module.exports = {
@@ -351,6 +386,7 @@ module.exports = {
   authorizeSession,
   resolveUser,
   updateUserEmail,
+  updateUserPhoneNumber,
   updateUserTwoFactorAuthentication,
   EmailInvalidError,
   EmailAlreadyAssignedError,

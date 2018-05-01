@@ -24,9 +24,8 @@ module.exports = async (_, args, { pgdb, user, req, ...rest }) => {
     return true
   }
   const type = TokenTypes.TOTP
-  const validated = await validateSharedSecret({
+  const validated = await validateSharedSecret(type, {
     pgdb,
-    type,
     user: userWith2FA
   }, { payload: totp })
   if (!validated) {

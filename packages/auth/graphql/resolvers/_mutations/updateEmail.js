@@ -1,11 +1,8 @@
-const validator = require('validator')
 const Roles = require('../../../lib/Roles')
 const ensureSignedIn = require('../../../lib/ensureSignedIn')
 const {
   updateUserEmail,
   resolveUser,
-  EmailInvalidError,
-  EmailAlreadyAssignedError,
   UserNotFoundError
 } = require('../../../lib/Users')
 
@@ -14,15 +11,10 @@ module.exports = async (_, args, { pgdb, user: me, req }) => {
 
   const {
     userId: foreignUserId,
-    email
+    email: rawEmail
   } = args
 
-  if (!validator.isEmail(email)) {
-    throw new EmailInvalidError({ email })
-  }
-  if (await pgdb.public.users.findFirst({ email })) {
-    throw new EmailAlreadyAssignedError({ email })
-  }
+  const email = rawEmail.toLowerCase() // security, only process lower case emails
 
   const user = await resolveUser({ slug: foreignUserId, pgdb, fallback: me })
   Roles.ensureUserIsMeOrInRoles(user, me, ['supporter', 'admin'])
@@ -35,8 +27,7 @@ module.exports = async (_, args, { pgdb, user: me, req }) => {
 
   return updateUserEmail({
     pgdb,
-    userId: user.id,
-    oldEmail: user.email,
-    newEmail: email
+    user: user,
+    email: email
   })
 }
