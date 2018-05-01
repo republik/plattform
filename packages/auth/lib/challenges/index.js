@@ -11,17 +11,18 @@ const SharedSecretValidationFailed = newAuthError('shared-secret-validation-fail
 const TokenExpiredError = newAuthError('token-expired', 'api/auth/token-expired')
 const QueryEmailMismatchError = newAuthError('query-email-mismatch', 'api/auth/query-email-mismatch')
 
-const TokenTypes = {
-  EMAIL_TOKEN: 'EMAIL_TOKEN',
-  TOTP: 'TOTP',
-  SMS: 'SMS'
+const TokenTypeMap = {
+  [EmailTokenChallenge.Type]: EmailTokenChallenge,
+  [TOTPChallenge.Type]: TOTPChallenge,
+  [SMSCodeChallenge.Type]: SMSCodeChallenge
 }
 
-const TokenTypeMap = {
-  [TokenTypes.EMAIL_TOKEN]: EmailTokenChallenge,
-  [TokenTypes.TOTP]: TOTPChallenge,
-  [TokenTypes.SMS]: SMSCodeChallenge
-}
+const TokenTypes = Object
+  .keys(TokenTypeMap)
+  .reduce((accumulator, tokenType) => ({
+    ...accumulator,
+    [tokenType]: tokenType
+  }), {})
 
 const ChallengeHandlerProxy = (type, options) => {
   const handler = TokenTypeMap[type]

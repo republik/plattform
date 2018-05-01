@@ -22,9 +22,11 @@ const {
 const MIN_IN_MS = 1000 * 60
 const HOUR_IN_MS = MIN_IN_MS * 60
 const DAY_IN_MS = HOUR_IN_MS * 24
+const Type = 'EMAIL_TOKEN'
 
 module.exports = {
-  generateNewToken: async ({ pgdb, session, type }) => {
+  Type,
+  generateNewToken: async ({ pgdb, session }) => {
     const payload = uuid()
     const expiresAt = new Date(new Date().getTime() + DAY_IN_MS)
     return { payload, expiresAt }
@@ -77,9 +79,9 @@ module.exports = {
   `
     })
   },
-  validateChallenge: async ({ pgdb, type, user }, { payload }) => {
+  validateChallenge: async ({ pgdb, user }, { payload }) => {
     const foundToken = await pgdb.public.tokens.findOne({
-      type,
+      type: Type,
       payload
     })
     return foundToken.id

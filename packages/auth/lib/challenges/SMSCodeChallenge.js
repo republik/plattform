@@ -5,6 +5,7 @@ const { parse, format } = require('libphonenumber-js')
 const t = require('../t')
 
 const MIN_IN_MS = 1000 * 60
+const Type = 'SMS'
 
 function generateSMSTokenCode () {
   // 2’176’782’336 possibilities, assuming 30 ms takes
@@ -28,6 +29,7 @@ async function getUserPhoneNumber (pgdb, email) {
 }
 
 module.exports = {
+  Type,
   generateSharedSecret: async ({ pgdb, user, email }) => {
     const sharedSecret = generateSMSTokenCode()
     const phoneNumber = await getUserPhoneNumber(pgdb, user.email)
@@ -57,7 +59,7 @@ module.exports = {
     )
     return true
   },
-  generateNewToken: async ({ pgdb, session, type, email }) => {
+  generateNewToken: async ({ pgdb, session, email }) => {
     await getUserPhoneNumber(pgdb, email) // just check the phone number is valid
     const payload = generateSMSTokenCode()
 
@@ -75,9 +77,9 @@ module.exports = {
     })
     return true
   },
-  validateChallenge: async ({ pgdb, type, user }, { payload }) => {
+  validateChallenge: async ({ pgdb, user }, { payload }) => {
     const foundToken = await pgdb.public.tokens.findOne({
-      type,
+      type: Type,
       payload: payload.toUpperCase()
     })
 
