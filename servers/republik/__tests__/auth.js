@@ -20,7 +20,17 @@ const LOGOUT_USER_MUTATION = `
   }
 `
 
-const signIn = async ({ user, context }) => {
+const authorizeSession = async ({ email, tokens }) => {
+  return apolloFetch({
+    query: AUTHORIZE_SESSION_MUTATION,
+    variables: {
+      email,
+      tokens
+    }
+  })
+}
+
+const signIn = async ({ user, context, skipAuthorization = false }) => {
   const { email } = user
   if (!email) return null
   await pgDatabase().public.sessions.truncate({ cascade: true })
@@ -39,23 +49,25 @@ const signIn = async ({ user, context }) => {
       context
     }
   })
-  const { payload: token } = await pgDatabase().public.tokens.findOne({
+  const { payload } = await pgDatabase().public.tokens.findOne({
     email: email
   })
 
   // authorize session by token
-  await apolloFetch({
-    query: AUTHORIZE_SESSION_MUTATION,
-    variables: {
-      type: 'EMAIL_TOKEN',
+  if (!skipAuthorization) {
+    await authorizeSession({
       email,
-      token
-    }
-  })
+      tokens: [{ type: 'EMAIL_TOKEN', payload }]
+    })
+  }
 
   // resolve userId
-  const { id: userId } = await pgDatabase().public.users.findOne({ email })
-  return { userId }
+  const userObject = await pgDatabase().public.users.findOne({ email })
+  return {
+    userId: userObject && userObject.id,
+    payload,
+    email
+  }
 }
 
 const signOut = async () => {
@@ -111,6 +123,7 @@ const Anonymous = {
 module.exports = {
   signIn,
   signOut,
+  authorizeSession,
   Users: {
     Supporter,
     Unverified,
