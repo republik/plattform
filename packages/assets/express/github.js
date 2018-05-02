@@ -60,7 +60,8 @@ module.exports = (server) => {
       headers: result.headers,
       options: {
         ...req.query,
-        webp
+        webp,
+        cacheTags: ['github']
       }
     })
   })

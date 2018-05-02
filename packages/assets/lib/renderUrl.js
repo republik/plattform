@@ -6,7 +6,7 @@ const {
   PHANTOM_COOKIE
 } = process.env
 
-module.exports = async (url, width, height) => {
+module.exports = async (url, width, height, zoomFactor) => {
   let body = {
     url,
     content: null,
@@ -30,6 +30,9 @@ module.exports = async (url, width, height) => {
   }
   if (width && height) {
     body.renderSettings.viewport = { width, height }
+  }
+  if (zoomFactor) {
+    body.renderSettings.zoomFactor = zoomFactor
   }
   if (PHANTOM_COOKIE) {
     body.requestSettings.customHeaders = {
