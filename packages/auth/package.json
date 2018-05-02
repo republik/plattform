@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "link": "yarn link",
-    "translations": "gsheets --key=1mgLz3k2rQ_qcB2ZpmJRZbGLAX5vGcr0P9I2jbWaIgog --title=live --pretty --out lib/translations.json"
+    "translations": "gsheets --key=1mgLz3k2rQ_qcB2ZpmJRZbGLAX5vGcr0P9I2jbWaIgog --title=live --pretty --out lib/translations.json",
+    "test": "NODE_ENV=development tape \"**/*.test.js\""
   },
   "repository": {
     "type": "git",
@@ -24,7 +25,8 @@
     "db-migrate": "^0.10.7",
     "dotenv": "^5.0.1",
     "gsheets": "^2.0.0",
-    "isomorphic-unfetch": "^2.0.0"
+    "isomorphic-unfetch": "^2.0.0",
+    "tape-async": "^2.3.0"
   },
   "dependencies": {
     "apollo-modules-node": "^0.1.4",
