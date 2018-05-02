@@ -4,7 +4,6 @@ const LOGIN_USER_MUTATION = `
   mutation signIn($email: String!, $context: String) {
     signIn(email: $email, context: $context) {
       phrase
-      tokenTypes
     }
   }
 `

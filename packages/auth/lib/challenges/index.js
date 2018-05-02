@@ -9,7 +9,6 @@ const SharedSecretNotSupported = newAuthError('shared-secret-not-supported', 'ap
 const SharedSecretGenerationFailed = newAuthError('shared-secret-generation-failed', 'api/auth/shared-secret-generation-failed')
 const SharedSecretValidationFailed = newAuthError('shared-secret-validation-failed', 'api/auth/shared-secret-validation-failed')
 const TokenExpiredError = newAuthError('token-expired', 'api/auth/token-expired')
-const QueryEmailMismatchError = newAuthError('query-email-mismatch', 'api/auth/query-email-mismatch')
 
 const TokenTypeMap = {
   [EmailTokenChallenge.Type]: EmailTokenChallenge,
@@ -55,14 +54,10 @@ const ChallengeHandlerProxy = (type, options) => {
     },
     validateChallenge: async (token) => {
       const { payload } = token
-      const { session, email: emailFromQuery } = options
+      const { session } = options
       const { tokenExpiresAt, id } = session
       if (tokenExpiresAt.getTime() < (new Date()).getTime() || !id) {
         throw new TokenExpiredError({ type, payload, expiredAt: tokenExpiresAt, sessionId: session.id })
-      }
-      const { email } = session.sess
-      if (email !== emailFromQuery) {
-        throw new QueryEmailMismatchError({ type, payload, email, emailFromQuery })
       }
 
       return handler.validateChallenge(options, token)

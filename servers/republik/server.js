@@ -46,8 +46,9 @@ module.exports.run = () => {
   })
 
   return server.run(executableSchema, middlewares, t, createGraphQLContext)
-    .then(() => {
-      return require('./lib/slackGreeter').connect()
+    .then((obj) => {
+      require('./lib/slackGreeter').connect()
+      return obj
     })
 }
 
