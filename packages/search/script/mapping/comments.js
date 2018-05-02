@@ -1,5 +1,5 @@
 module.exports = {
-  comment: {
+  Comment: {
     dynamic: false,
     properties: {
       type: {

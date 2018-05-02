@@ -21,7 +21,7 @@ const dateString = new Date()
   .shift()
   .toLowerCase()
 
-const getAliasName = (type) => `republik-${type}`
+const getAliasName = (type) => `republik-${type.toLowerCase()}`
 const getIndexName = (alias) => `${alias}-${dateString}`
 
 PgDb.connect().then(async pgdb => {
