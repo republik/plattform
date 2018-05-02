@@ -27,9 +27,9 @@ input DateRangeInput {
 }
 
 enum SearchTypes {
-  Document
-  Comment
-  User
+  document
+  comment
+  user
 }
 
 enum DocumentTextLengths {

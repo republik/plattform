@@ -1,7 +1,10 @@
 module.exports = {
-  comments: {
+  comment: {
     dynamic: false,
     properties: {
+      type: {
+        type: 'keyword'
+      },
       discussionId: {
         type: 'keyword'
       },

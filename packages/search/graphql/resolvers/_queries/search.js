@@ -77,6 +77,9 @@ const mapDocumentHit = (hit) => {
 
 const mapAggregations = (result) => {
   const aggregations = result.aggregations
+  if (!aggregations) {
+    return []
+  }
   return Object.keys(aggregations).map(key => {
     const agg = aggregations[key]
     if (agg.value !== undefined) { // value_count agg

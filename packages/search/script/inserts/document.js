@@ -10,8 +10,8 @@ const {
   lib: { meta: { getStaticMeta } }
 } = require('@orbiting/backend-modules-documents')
 
-module.exports = async ({indexName, elastic, pgdb}) => {
-  const stats = { documents: { added: 0, total: 0 } }
+module.exports = async ({indexName, type, elastic, pgdb}) => {
+  const stats = { [type]: { added: 0, total: 0 } }
   const statsInterval = setInterval(
     () => { console.log(indexName, stats) },
     1 * 1000
@@ -50,6 +50,7 @@ module.exports = async ({indexName, elastic, pgdb}) => {
         return {
           id: d.id,
           body: {
+            type,
             repoId: d.repoId,
             content: d.content,
             contentString: mdastToString(d.content),
@@ -64,18 +65,18 @@ module.exports = async ({indexName, elastic, pgdb}) => {
       })
     )
 
-  stats.documents.total = documents.length
+  stats[type].total = documents.length
   for (let doc of documents) {
     // const util = require('util')
     // console.log(doc.body.meta.path, doc.body.meta.title)
     // console.log(util.inspect(doc.body.meta, {depth: null}))
     // console.log('--------------------------------')
     await elastic.create({
+      ...doc,
       index: indexName,
-      type: 'documents',
-      ...doc
+      type
     })
-    stats.documents.added++
+    stats[type].added++
   }
 
   clearInterval(statsInterval)

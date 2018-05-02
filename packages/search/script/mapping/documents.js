@@ -25,9 +25,12 @@ const mdastPartial = {
 }
 
 module.exports = {
-  documents: {
+  document: {
     dynamic: false,
     properties: {
+      type: {
+        type: 'keyword'
+      },
       contentString: {
         type: 'text',
         analyzer: 'german'
