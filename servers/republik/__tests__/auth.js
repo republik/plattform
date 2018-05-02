@@ -70,6 +70,30 @@ const signIn = async ({ user, context, skipAuthorization = false }) => {
   }
 }
 
+const unauthorizedSession = async ({ user, type, payload }) => {
+  const result = await apolloFetch({
+    query: `
+      query unauthorizedSession($email: String!, $type: SignInTokenType!, $payload: String!) {
+        unauthorizedSession(email: $email, token: { type: $type, payload: $payload }) {
+          session {
+            id
+            email
+            ipAddress
+            isCurrent
+          }
+          enabledSecondFactors
+        }
+      }
+    `,
+    variables: {
+      email: user.email,
+      type,
+      payload
+    }
+  })
+  return (result && result.data && result.data.unauthorizedSession) || {}
+}
+
 const signOut = async () => {
   await apolloFetch({
     query: LOGOUT_USER_MUTATION
@@ -123,6 +147,7 @@ const Anonymous = {
 module.exports = {
   signIn,
   signOut,
+  unauthorizedSession,
   authorizeSession,
   Users: {
     Supporter,

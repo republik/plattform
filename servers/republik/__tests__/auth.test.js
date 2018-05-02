@@ -1,27 +1,32 @@
 const test = require('tape-async')
 const { connectIfNeeded } = require('./helpers.js')
-const { signIn, signOut, Users } = require('./auth.js')
+const { signIn, signOut, unauthorizedSession, Users } = require('./auth.js')
 
 const prepare = async (options) => {
   await connectIfNeeded()
 }
 
-test.only('start sign in request', async (t) => {
+test('sign in', async (t) => {
   await prepare()
-  await signOut()
   const result = await signIn({ user: Users.Unverified, skipAuthorization: true })
-  console.log(result)
-  t.ok(true)
+  t.ok(result && result.userId, 'started sign in request as unverified user')
   t.end()
 })
 
 test('sign out', async (t) => {
-  t.ok(true)
+  await prepare()
+  await signIn({ user: Users.Unverified, skipAuthorization: true })
+  const result = await signOut()
+  t.ok(result, 'sign out successful')
   t.end()
 })
 
-test('get session data via email token', async (t) => {
-  t.ok(true)
+test.only('get session data via email token', async (t) => {
+  await prepare()
+  const { payload } = await signIn({ user: Users.Unverified, skipAuthorization: true })
+  const result = await unauthorizedSession({ user: Users.Unverified, type: 'EMAIL_TOKEN', payload })
+  t.ok(result.session)
+  t.equal(result.enabledSecondFactors.length, 0)
   t.end()
 })
 
