@@ -22,6 +22,7 @@ const emphasisStyle = {
 }
 const cursiveStyle = {
   fontFamily: fontFamilies.serifItalic,
+  fontStyle: 'normal',
   fontWeight: 'normal'
 }
 
