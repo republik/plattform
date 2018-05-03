@@ -129,7 +129,7 @@ const submitComment = async (comment, discussion, context) => {
           subject: isTopLevelComment
             ? t('api/comment/notification/new/email/subject', subjectParams)
             : t('api/comment/notification/answer/email/subject', subjectParams),
-          templateName: 'cf_comment_notification_new_mdast',
+          templateName: 'cf_comment_notification_new',
           globalMergeVars: [
             { name: 'NAME',
               content: user.name
