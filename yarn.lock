@@ -33,6 +33,12 @@
   dependencies:
     react-icons "^2.2.7"
 
+"@project-r/styleguide@^5.75.0":
+  version "5.75.0"
+  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.75.0.tgz#ebe3307233d5117b0471337b6cb2646cf6e3eccb"
+  dependencies:
+    react-icons "^2.2.7"
+
 "@project-r/template-newsletter@^1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@project-r/template-newsletter/-/template-newsletter-1.5.0.tgz#93d124500aba1d134c00799d2d662dc83446e4ce"
