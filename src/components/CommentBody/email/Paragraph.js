@@ -41,6 +41,12 @@ const codeStyle = {
   padding: '0 5px'
 }
 
+const definitionStyle = {
+  fontFamily: fontFamilies.sansSerifRegular,
+  fontSize: '15px',
+  margin: '10px 0'
+}
+
 export const Emphasis = ({ children }) => (
   <strong style={emphasisStyle}>{children}</strong>
 )
@@ -61,6 +67,10 @@ export const StrikeThrough = ({ children }) => (
 
 export const Code = ({ children }) => (
   <code style={codeStyle}>{children}</code>
+)
+
+export const Definition = ({ children }) => (
+  <p style={definitionStyle}>{children}</p>
 )
 
 export const Paragraph = ({ children }) => (

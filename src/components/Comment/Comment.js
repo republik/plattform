@@ -4,7 +4,6 @@ import { renderMdast } from 'mdast-react-render'
 
 import { Label } from '../Typography'
 
-import { mUp } from '../../theme/mediaQueries'
 import colors from '../../theme/colors'
 
 import createCommentSchema from '../../templates/Comment'
@@ -38,6 +37,20 @@ const styles = {
   })
 }
 
+const MissingNode = ({node, children}) => {
+  return (
+    <span style={{
+        textDecoration: `underline wavy ${colors.divider}`,
+        display: 'inline-block',
+        margin: 4
+      }}
+      title={`Markdown element "${node.type}" wird nicht unterstützt.`}
+    >
+      {children || node.value || node.identifier || '[…]'}
+    </span>
+  )
+}
+
 export const Comment = ({t, id, timeago, createdAt, updatedAt, published = true, userCanEdit, adminUnpublished, displayAuthor, content, highlighted, Link}) => (
   <div data-comment-id={id} {...styles.container} {...(highlighted ? styles.highlight: {})}>
     <CommentHeader
@@ -55,7 +68,7 @@ export const Comment = ({t, id, timeago, createdAt, updatedAt, published = true,
       {t('styleguide/comment/unpublished')}
     </div>}
     <div {...styles.body} style={{opacity: published ? 1 : 0.5}}>
-      {!!content && renderMdast(content, schema)}
+      {!!content && renderMdast(content, schema, { MissingNode })}
     </div>
 
     {adminUnpublished && userCanEdit && <div {...styles.body}>

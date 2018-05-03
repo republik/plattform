@@ -10,7 +10,7 @@ const webSchema = createCommentSchema()
 ```react|noSource
 <Markdown schema={webSchema}>{`
 
-A comment with [a link](https://example.com/ "Mit Titel"), an autolinked URL https://www.republik.ch, ![an image](/static/landscape.jpg?size=2000x1411 "Mit Bildtitel") and [...] an ellipsis.
+A comment with [a link](https://example.com/ "Mit Titel"), an autolinked URL https://www.republik.ch, a long autolinked URL https://www.republik.ch/01234567890123456789012345678901234567890123456789.png, ![an image](/static/landscape.jpg?size=2000x1411 "Mit Bildtitel") and [...] an ellipsis.
 
 Emphasis (italic) with *asterisks* or _underscores_.
 
@@ -48,9 +48,22 @@ Someone said:
 
 Inline \`code\` uses \`back-ticks\`.
 
+\`\`\`
+A code block
+second line
+
+third line
+\`\`\`
+
 <h1>Block-level HTML tags aren't supported.</h1>
 
 Inline HTML tags like <sub>subscript</sub> and <sup>superscript</sup> are not supported.
+
+[Some link reference][1]
+[Some labelled reference][label]
+
+[1]: https://republik.ch
+[label]: https://project-r.construction
 
 `}</Markdown>
 ```
@@ -68,7 +81,7 @@ const emailSchema = createCommentSchema()
 ```react|noSource
 <Markdown schema={emailSchema}>{`
 
-A comment with [a link](https://example.com/ "Mit Titel"), an autolinked URL https://www.republik.ch, ![an image](/static/landscape.jpg?size=2000x1411 "Mit Bildtitel") and [...] an ellipsis.
+A comment with [a link](https://example.com/ "Mit Titel"), an autolinked URL https://www.republik.ch, a long autolinked URL https://www.republik.ch/01234567890123456789012345678901234567890123456789.png, ![an image](/static/landscape.jpg?size=2000x1411 "Mit Bildtitel") and [...] an ellipsis.
 
 Emphasis (italic) with *asterisks* or _underscores_.
 
@@ -106,9 +119,22 @@ Someone said:
 
 Inline \`code\` uses \`back-ticks\`.
 
+\`\`\`
+A code block
+second line
+
+third line
+\`\`\`
+
 <h1>Block-level HTML tags aren't supported.</h1>
 
 Inline HTML tags like <sub>subscript</sub> and <sup>superscript</sup> are not supported.
+
+[Some link reference][1]
+[Some labelled reference][label]
+
+[1]: https://republik.ch
+[label]: https://project-r.construction
 
 `}</Markdown>
 ```

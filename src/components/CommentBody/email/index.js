@@ -1,4 +1,8 @@
 export {
+  default as BlockCode
+} from './BlockCode'
+
+export {
   default as BlockQuote,
   BlockQuoteParagraph
 } from './Blockquote'
@@ -16,6 +20,7 @@ export {
   Paragraph,
   Code,
   Cursive,
+  Definition,
   Emphasis,
   Heading,
   Link,

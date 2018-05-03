@@ -3,7 +3,12 @@ import { css } from 'glamor'
 
 import * as Editorial from '../../Typography/Editorial'
 import { mUp } from '../../../theme/mediaQueries'
-import { serifRegular14, serifRegular16 } from '../../Typography/styles'
+import {
+  sansSerifRegular12,
+  sansSerifRegular15,
+  serifRegular14,
+  serifRegular16
+} from '../../Typography/styles'
 
 const styles = {
   p: css({
@@ -25,6 +30,16 @@ const styles = {
     display: 'inline-block',
     fontSize: '90%',
     padding: '0 5px'
+  }),
+  definition: css({
+    ...sansSerifRegular12,
+    margin: '10px 0',
+    [mUp]: {
+      ...sansSerifRegular15,
+    },
+    '& ~ &': {
+      marginTop: -5
+    }
   })
 }
 
@@ -34,6 +49,10 @@ const Paragraph = ({ children }) => (
 
 export const Heading = ({ children }) => (
   <Paragraph><Editorial.Emphasis>{children}</Editorial.Emphasis></Paragraph>
+)
+
+export const Definition = ({ children }) => (
+  <p {...styles.definition}>{children}</p>
 )
 
 export const Code = ({ children }) => (

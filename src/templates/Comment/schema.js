@@ -1,4 +1,5 @@
-import React from 'react'
+
+import React, { Fragment } from 'react'
 
 import {
   matchType,
@@ -10,11 +11,13 @@ import { HR } from '../../components/Typography'
 
 
 const createCommentSchema = ({
+  BlockCode,
   BlockQuote,
   BlockQuoteParagraph,
   Code,
   Container,
   Cursive,
+  Definition,
   Emphasis,
   Heading,
   Link,
@@ -23,7 +26,13 @@ const createCommentSchema = ({
   Paragraph,
   StrikeThrough
 } = {}) => {
-  
+
+  const ellipsizeHref = (href = '') => {
+    if (href.length > 50) {
+      return href.substr(0, 35) + '…' + href.substr(href.length - 10, href.length);
+    }
+    return href
+  }
 
   const screenHref = href => {
     if (href.match(/^(https?:|\/|#)/)) {
@@ -32,16 +41,17 @@ const createCommentSchema = ({
       }
     }
     return {
-      unkown: href
+      unknown: href
     }
   }
 
   const SafeA = ({ children, text, href, ...props }) => {
     const screenedHref = screenHref(href)
+    const ellipsizedHref = children && children[0] === href && ellipsizeHref(screenedHref.safe)
     return (
       <Link {...props} href={screenedHref.safe}>
-        {text || children}
-        {screenedHref.unkown && ` [${screenedHref.unkown}]`}
+        {text || ellipsizedHref || children}
+        {screenedHref.unknown && ` [${screenedHref.unknown}]`}
       </Link>
     )
   }
@@ -71,7 +81,18 @@ const createCommentSchema = ({
     // Make sure text like [...] is preserved.
     {
       matchMdast: matchType('linkReference'),
-      component: ({ children }) => <span>[{children}]</span>
+      props: node => ({
+        identifier: node.identifier,
+        url: node.url,
+        referenceType: node.referenceType
+      }),
+      component: ({children, identifier, url, referenceType}) => {
+        if (referenceType === 'shortcut') {
+          return <span>[{identifier}]</span>
+        } else {
+          return <span>{children} [{identifier}]</span>
+        }
+      }
     },
     {
       matchMdast: matchType('emphasis'),
@@ -130,6 +151,14 @@ const createCommentSchema = ({
     ]
   }
 
+  const blockCode = {
+    matchMdast: matchType('code'),
+    props: node => ({
+      value: node.value
+    }),
+    component: ({value}) => <BlockCode>{value}</BlockCode>
+  }
+
   const list = {
     matchMdast: matchType('list'),
     component: List,
@@ -162,6 +191,17 @@ const createCommentSchema = ({
     component: ({value}) => <Paragraph>{value}</Paragraph>
   }
 
+  const definition = {
+    matchMdast: matchType('definition'),
+    props: node => ({
+      identifier: node.identifier,
+      url: node.url
+    }),
+    component: ({identifier, url}) => (
+      <Definition>[{identifier}] <SafeA href={url}>{url}</SafeA></Definition>
+    )
+  }
+
   return {
     rules: [
       {
@@ -171,9 +211,11 @@ const createCommentSchema = ({
           heading,
           paragraph,
           blockQuote,
+          blockCode,
           list,
           thematicBreak,
-          blockLevelHtml
+          blockLevelHtml,
+          definition
         ]
       }
     ]
