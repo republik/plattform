@@ -5,7 +5,8 @@ import { mUp } from '../../../theme/mediaQueries'
 
 const styles = {
   pre: css({
-    margin: '20px auto'
+    margin: '20px auto',
+    whiteSpace: 'pre-wrap'
   }),
   code: css({
     backgroundColor: '#f7f7f7',
