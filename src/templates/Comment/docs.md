@@ -61,9 +61,12 @@ Inline HTML tags like <sub>subscript</sub> and <sup>superscript</sup> are not su
 
 [Some link reference][1]
 [Some labelled reference][label]
+![Some image reference alt text][imageIdentifier]
+
 
 [1]: https://republik.ch
 [label]: https://project-r.construction
+[imageIdentifier]: /static/landscape.jpg
 
 `}</Markdown>
 ```

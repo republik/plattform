@@ -1,5 +1,5 @@
 
-import React, { Fragment } from 'react'
+import React from 'react'
 
 import {
   matchType,
@@ -93,6 +93,16 @@ const createCommentSchema = ({
           return <span>{children} [{identifier}]</span>
         }
       }
+    },
+    {
+      matchMdast: matchType('imageReference'),
+      props: node => ({
+        identifier: node.identifier,
+        alt: node.alt
+      }),
+      component: ({identifier, alt}) => (
+        <span>{alt} [{identifier}]</span>
+      )
     },
     {
       matchMdast: matchType('emphasis'),
