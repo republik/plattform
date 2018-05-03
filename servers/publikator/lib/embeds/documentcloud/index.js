@@ -43,7 +43,8 @@ const getDocumentCloudDocById = async (id, t) => {
     updatedAt: new Date(document.updated_at),
     retrievedAt: new Date(),
     contributorUrl: document.contributor_documents_url,
-    contributorName: document.contributor
+    contributorName: document.contributor,
+    url: document.canonical_url
   }
 }
 
