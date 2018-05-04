@@ -44,6 +44,12 @@ Check [assets-backend](https://github.com/orbiting/assets-backend) for a deploya
 
   ENVs: `PDF_BASE_URL`
 
+- `/purgeTags?psk=psk&tags=tag1,tag2`
+
+  purges tags on keyCDN :path from `PDF_BASE_URL`
+
+  ENVs: `PURGE_PSK`
+
 ### Query params
 
 If not specified otherwise all endpoints honour the following query params:
