@@ -9,7 +9,7 @@ module.exports = (server) => {
   server.get('/proxy(.:webp)?', async (req, res) => {
     const {
       originalURL: url,
-      mac,
+      mac
     } = req.query
 
     if (!url) {
@@ -40,7 +40,8 @@ module.exports = (server) => {
       headers: result.headers,
       options: {
         ...req.query,
-        webp: !!req.params.webp
+        webp: !!req.params.webp,
+        cacheTags: ['proxy']
       }
     })
   })
