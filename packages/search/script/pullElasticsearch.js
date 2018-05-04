@@ -51,7 +51,7 @@ PgDb.connect().then(async pgdb => {
     })
 
     console.log('populating index', { alias, index })
-    await inserts[type]({indexName: index, type, elastic, pgdb})
+    await inserts[type.toLowerCase()]({ indexName: index, type, elastic, pgdb })
   }))
 
   // TODO when to remove old/previous index?
