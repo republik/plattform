@@ -46,12 +46,23 @@ PgDb.connect().then(async pgdb => {
         },
         mappings: {
           ...mapping
+        },
+        settings: {
+          // Disable refresh_interval to allow speedier bulk operations
+          refresh_interval: -1
         }
       }
     })
 
     console.log('populating index', { alias, index })
-    await inserts[type.toLowerCase()]({ indexName: index, type, elastic, pgdb })
+    await inserts[type.toLowerCase()]({indexName: index, type, elastic, pgdb})
+
+    await elastic.indices.putSettings({
+      index,
+      body: {
+        refresh_interval: null // Reset refresh_interval to default
+      }
+    })
   }))
 
   // TODO when to remove old/previous index?
