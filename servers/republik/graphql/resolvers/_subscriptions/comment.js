@@ -7,6 +7,8 @@ module.exports = {
     return filtered(
       pubsub.asyncIterator('comment'),
       (update) =>
+        update &&
+        update.comment &&
         update.comment.node.discussionId === args.discussionId
     )()
   }
