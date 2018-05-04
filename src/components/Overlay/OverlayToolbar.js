@@ -94,6 +94,6 @@ export const OverlayToolbarConfirm = ({label, onClick}) => (
   </button>
 )
 OverlayToolbarConfirm.propTypes = {
-  label: PropTypes.string.isRequired,
+  label: PropTypes.node.isRequired,
   onClick: PropTypes.func.isRequired
 }
