@@ -5,8 +5,10 @@ const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 
 const inserts = require('./inserts')
 const mappings = [
+  require('./mapping/comments'),
+  require('./mapping/credentials'),
   require('./mapping/documents'),
-  require('./mapping/comments')
+  require('./mapping/users')
 ]
 
 const elastic = elasticsearch.client()
