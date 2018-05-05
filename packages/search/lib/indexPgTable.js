@@ -47,7 +47,7 @@ const index = async ({ indexName, type, elastic, resource }) => {
  * @return {Promise}
  */
 const bulk = async ({ indexName, type, elastic, rows }) => {
-  const bulk = {
+  const payload = {
     body: [
       // <n+0> Destination of document: Index, type and id
       // <n+1> Document source
@@ -57,7 +57,7 @@ const bulk = async ({ indexName, type, elastic, rows }) => {
 
   rows.forEach(row => {
     // <n+0>
-    bulk.body.push({
+    payload.body.push({
       update: {
         _index: indexName,
         _type: type,
@@ -66,10 +66,10 @@ const bulk = async ({ indexName, type, elastic, rows }) => {
       }
     })
     // <n+1>
-    bulk.body.push({ doc: row, doc_as_upsert: true })
+    payload.body.push({ doc: row, doc_as_upsert: true })
   })
 
-  const resp = await elastic.bulk(bulk)
+  const resp = await elastic.bulk(payload)
 
   if (resp.errors) throw Error('Unable to submit all rows.')
 }
