@@ -54,12 +54,17 @@ export default ({rule, subModules, TYPE}) => {
     ]
   })
 
+  const random = () => Math.round(Math.random() * 10) / 10
   const newBlock = () => Block.create({
     type: TYPE,
     nodes: subModules.map(m => Block.create({
       type: m.TYPE,
       data: m.TYPE === CANVAS_TYPE
-        ? {isEditing: true}
+        ? {
+          isNew: true,
+          config: {type: 'Bar', y: 'label'},
+          values: `label,value\nA,${random()}\nB,${random()}`
+        }
         : undefined
     }))
   })
