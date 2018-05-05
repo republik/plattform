@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { css } from 'glamor'
+import { timeParse, timeFormat } from 'd3-time-format'
 
 import { max, min, ascending } from 'd3-array'
 import { scaleLinear, scaleOrdinal, scaleBand } from 'd3-scale'
+import * as d3Intervals from 'd3-time'
 
 import { sansSerifRegular12, sansSerifMedium12 } from '../Typography/styles'
 import colors from '../../theme/colors'
@@ -18,6 +20,16 @@ import {
 } from './utils'
 
 import ColorLegend from './ColorLegend'
+
+const intervals = Object.keys(d3Intervals)
+  .filter(key => key.match(/^time/) && key !== 'timeInterval')
+  .reduce(
+    (all, key) => {
+      all[key.replace(/^time/, '').toLowerCase()] = d3Intervals[key]
+      return all
+    },
+    {}
+  )
 
 const last = (array, index) => array.length - 1 === index
 
@@ -86,10 +98,13 @@ const TimeBarChart = (props) => {
     const filter = unsafeDatumFn(props.filter)
     data = data.filter(filter)
   }
+  const xParser = timeParse(props.timeParse)
+  const xParserFormat = timeFormat(props.timeParse)
+  const xNormalizer = d => xParserFormat(xParser(d))
   data = data.filter(d => d.value && d.value.length > 0).map(d => {
     return {
       datum: d,
-      year: +d.year,
+      x: xNormalizer(d[props.x]),
       value: +d.value
     }
   })
@@ -107,22 +122,18 @@ const TimeBarChart = (props) => {
   }
   const color = scaleOrdinal(colorRange).domain(colorValues)
 
-  const bars = groupBy(data, d => d.year).map(({values: group, key: year}) => {
-    const segments = group
-
-    return {
-      segments,
-      up: segments.filter(segment => segment.value > 0).reduce(
-        (sum, segment) => sum + segment.value,
-        0
-      ),
-      down: segments.filter(segment => segment.value < 0).reduce(
-        (sum, segment) => sum + segment.value,
-        0
-      ),
-      year
-    }
-  })
+  const bars = groupBy(data, d => d.x).map(({values: segments, key: x}) => ({
+    segments,
+    up: segments.filter(segment => segment.value > 0).reduce(
+      (sum, segment) => sum + segment.value,
+      0
+    ),
+    down: segments.filter(segment => segment.value < 0).reduce(
+      (sum, segment) => sum + segment.value,
+      0
+    ),
+    x
+  }))
 
   const innerHeight = props.height - (mini ? paddingTop + AXIS_BOTTOM_HEIGHT : 0)
   const y = scaleLinear()
@@ -162,8 +173,8 @@ const TimeBarChart = (props) => {
   const yAxis = calculateAxis(props.numberFormat, t, y.domain(), tLabel(props.unit))
   const yTicks = props.yTicks || yAxis.ticks
 
-  const xYears = data
-    .map(d => d.year)
+  const xValues = data
+    .map(d => d.x)
     .concat(
       xAnnotations
         .reduce(
@@ -173,62 +184,80 @@ const TimeBarChart = (props) => {
           []
         )
         .filter(Boolean)
-        .map(d => +d)
+        .map(d => xNormalizer(d)) // ensure format
     )
     .filter(deduplicate)
+    .map(xParser)
     .sort(ascending)
+    .map(xParserFormat)
 
   const xPadding = props.padding
   const x = scaleBand()
-    .domain(xYears)
+    .domain(xValues)
     .range([xPadding, width - xPadding])
-    .padding(0.25)
+    .padding(props.xBandPadding)
     .round(true)
 
-  const gapsNeeded = Math.ceil(Math.max(26 / x.bandwidth(), 2))
-
-  const xDomain = xYears.reduce(
-    (years, year) => {
-      years.push(year)
-      if (
-        xYears.indexOf(year + 1) === -1 &&
-        year !== xYears[xYears.length - 1]
-      ) {
-        for (let i = 0; i < gapsNeeded; i++) {
-          years.push(`G${i} ${year}`)
-        }
-      }
-      return years
-    },
-    []
+  let xDomain = xValues
+  const interval = intervals[props.xInterval] || (
+    props.x === 'year' &&
+    props.timeParse === '%Y' &&
+    intervals.year
   )
+  if (interval) {
+    const gapsNeeded = Math.max(
+      Math.ceil(
+        // at least 26 px
+        26 / Math.max(x.bandwidth(), 1)
+      ),
+      2 // at least 2 bars
+    )
+    xDomain = xValues.reduce(
+      (values, value, index, all) => {
+        values.push(value)
+        const next = interval.offset(xParser(value), 1)
+        if (
+          all.indexOf(xParserFormat(next)) === -1 &&
+          index !== all.length - 1
+        ) {
+          for (let i = 0; i < gapsNeeded; i++) {
+            values.push(`GAP|${value}|${i}`)
+          }
+        }
+        return values
+      },
+      []
+    )
 
-  x.domain(xDomain).round(true)
+    x.domain(xDomain).round(true)
+  }
 
   const barWidth = x.bandwidth()
   const barStep = x.step()
   const barPadding = barStep - barWidth
 
-  let xTicks = props.xTicks
-  if (!xTicks) {
-    if (barStep >= 50) {
-      xTicks = xYears
+  let xTicks
+  if (props.xTicks) {
+    xTicks = props.xTicks.map(xNormalizer)
+  } else {
+    // 12px a average number width
+    if (barStep >= xValues[0].length * 12) {
+      xTicks = xValues
     } else {
-      xTicks = xYears.filter(year =>
-        // edge years
-        xYears.indexOf(year + 1) === -1 ||
-        xYears.indexOf(year - 1) === -1
-      ).filter(deduplicate)
+      xTicks = [
+        xValues[0],
+        xValues[xValues.length - 1]
+      ].filter(deduplicate)
     }
   }
 
   const xDomainLast = xDomain[xDomain.length - 1]
   const baseLines = xDomain.reduce(
-    (lines, year) => {
+    (lines, xValue) => {
       let previousLine = lines[lines.length - 1]
       let x1 = previousLine ? previousLine.x2 : 0
-      let x2 = year === xDomainLast ? width : x(year) + barStep
-      const gap = year[0] === 'G'
+      let x2 = xValue === xDomainLast ? width : x(xValue) + barStep
+      const gap = xValue.split('|')[0] === 'GAP'
       if (gap) {
         x2 -= barPadding
       }
@@ -247,6 +276,8 @@ const TimeBarChart = (props) => {
     []
   )
 
+  const xFormat = timeFormat(props.timeFormat || props.timeParse)
+
   return (
     <div>
       <svg width={width} height={innerHeight + paddingTop + AXIS_BOTTOM_HEIGHT}>
@@ -264,7 +295,7 @@ const TimeBarChart = (props) => {
                   <g key={tick} transform={`translate(${x(tick) + Math.round(barWidth / 2)},0)`}>
                     <line {...styles.axisXLine} y2={X_TICK_HEIGHT} />
                     <text {...styles.axisLabel} y={X_TICK_HEIGHT + 5} dy='0.6em' textAnchor='middle'>
-                      {tick}
+                      {xFormat(xParser(tick))}
                     </text>
                   </g>
                 )
@@ -274,7 +305,7 @@ const TimeBarChart = (props) => {
           {
             xAnnotations.filter(annotation => annotation.ghost).map((annotation, i) => (
               <rect key={`ghost-${i}`}
-                x={x(+annotation.x)}
+                x={x(xNormalizer(annotation.x))}
                 y={y(annotation.value)}
                 width={barWidth}
                 height={y(0) - y(annotation.value)}
@@ -285,7 +316,7 @@ const TimeBarChart = (props) => {
           {
             bars.map(bar => {
               return (
-                <g key={bar.year} transform={`translate(${x(bar.year)},0)`}>
+                <g key={bar.x} transform={`translate(${x(bar.x)},0)`}>
                   {
                     bar.segments.map((segment, i) => (
                       <rect key={i}
@@ -314,7 +345,7 @@ const TimeBarChart = (props) => {
             yAnnotations.map((annotation, i) => (
               <g key={`y-annotation-${i}`} transform={`translate(0,${y(annotation.value)})`}>
                 <line x1={0} x2={width} {...styles.annotationLine} />
-                <circle r='3.5' cx={annotation.x ? x(+annotation.x) : 4} {...styles.annotationCircle} />
+                <circle r='3.5' cx={annotation.x ? x(xNormalizer(annotation.x)) : 4} {...styles.annotationCircle} />
                 <text x={width} textAnchor='end' dy={annotation.dy || '-0.4em'} {...styles.annotationText}>{tLabel(annotation.label)} {yAxis.format(annotation.value)}</text>
               </g>
             ))
@@ -322,8 +353,12 @@ const TimeBarChart = (props) => {
           {
             xAnnotations.map((annotation, i) => {
               const range = annotation.x1 !== undefined && annotation.x2 !== undefined
-              const x1 = range ? x(+annotation.x1) : x(+annotation.x)
-              const x2 = range ? x(+annotation.x2) + barWidth : x1 + Math.max(barWidth, 8)
+              const x1 = range
+                ? x(xNormalizer(annotation.x1))
+                : x(xNormalizer(annotation.x))
+              const x2 = range
+                ? x(xNormalizer(annotation.x2)) + barWidth
+                : x1 + Math.max(barWidth, 8)
               const compact = width < 500
               let tx = x1
               if (compact) {
@@ -385,7 +420,12 @@ TimeBarChart.propTypes = {
     x: PropTypes.string,
     dy: PropTypes.string
   })).isRequired,
-  xTicks: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number])),
+  timeParse: PropTypes.string.isRequired,
+  timeFormat: PropTypes.string,
+  xBandPadding: PropTypes.number.isRequired,
+  x: PropTypes.string.isRequired,
+  xInterval: PropTypes.oneOf(Object.keys(intervals)),
+  xTicks: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
   xAnnotations: PropTypes.arrayOf(PropTypes.shape({
     value: PropTypes.number.isRequired,
     label: PropTypes.string,
@@ -400,6 +440,9 @@ TimeBarChart.propTypes = {
 }
 
 TimeBarChart.defaultProps = {
+  x: 'year',
+  xBandPadding: 0.25,
+  timeParse: '%Y',
   numberFormat: 's',
   height: 240,
   padding: 50,

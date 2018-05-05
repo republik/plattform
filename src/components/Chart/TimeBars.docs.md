@@ -1,7 +1,5 @@
 Vertical bars are a nice line chart alternative for change over time of one (stacked) series.
 
-Currently only supports years on the x-axis. If you need a different time unit you have to use the line chart for now.
-
 ```react
 <div>
   <ChartTitle>Entwicklung der Treibhausgas-Emissionen in Deutschland</ChartTitle>
@@ -220,6 +218,250 @@ Stickstofftrifluorid,2016,12000.0000
   </Editorial.Note>
 </div>
 ```
+
+## Custom Time Format
+
+By default a four digit year column is expected. Use `x`, `timeParse` and `timeFormat` to customize.
+
+```react
+<div>
+  <ChartTitle>Devisenanlagen der SNB</ChartTitle>
+  <CsvChart t={t}
+    config={{
+      "type": "TimeBar",
+      "color": "bilanzposition",
+      "numberFormat": ".3s",
+      "unit": "",
+      "x": "date",
+      "xTicks": ["2001-01", "2007-01", "2012-01", "2018-01"],
+      "xBandPadding": 0,
+      "timeParse": "%Y-%m",
+      "timeFormat": "%Y",
+      "padding": 0
+    }}
+    values={`
+date,bilanzposition,value
+2000-06,Devisenanlagen,47874000000
+2000-07,Devisenanlagen,46470000000
+2000-08,Devisenanlagen,47759000000
+2000-09,Devisenanlagen,48323000000
+2000-10,Devisenanlagen,49783000000
+2000-11,Devisenanlagen,50382000000
+2000-12,Devisenanlagen,50926000000
+2001-01,Devisenanlagen,50453000000
+2001-02,Devisenanlagen,47352000000
+2001-03,Devisenanlagen,49032000000
+2001-04,Devisenanlagen,49456000000
+2001-05,Devisenanlagen,51073000000
+2001-06,Devisenanlagen,50968000000
+2001-07,Devisenanlagen,50674000000
+2001-08,Devisenanlagen,50591000000
+2001-09,Devisenanlagen,51849000000
+2001-10,Devisenanlagen,49403000000
+2001-11,Devisenanlagen,49717000000
+2001-12,Devisenanlagen,49751000000
+2002-01,Devisenanlagen,50581000000
+2002-02,Devisenanlagen,50729000000
+2002-03,Devisenanlagen,50575000000
+2002-04,Devisenanlagen,51131000000
+2002-05,Devisenanlagen,48403000000
+2002-06,Devisenanlagen,49941000000
+2002-07,Devisenanlagen,49409000000
+2002-08,Devisenanlagen,50973000000
+2002-09,Devisenanlagen,49969000000
+2002-10,Devisenanlagen,52867000000
+2002-11,Devisenanlagen,53991000000
+2002-12,Devisenanlagen,54414000000
+2003-01,Devisenanlagen,52941000000
+2003-02,Devisenanlagen,54014000000
+2003-03,Devisenanlagen,53271000000
+2003-04,Devisenanlagen,53578000000
+2003-05,Devisenanlagen,52860000000
+2003-06,Devisenanlagen,52869000000
+2003-07,Devisenanlagen,56198000000
+2003-08,Devisenanlagen,59287000000
+2003-09,Devisenanlagen,58415000000
+2003-10,Devisenanlagen,56167000000
+2003-11,Devisenanlagen,56778000000
+2003-12,Devisenanlagen,58225000000
+2004-01,Devisenanlagen,56312000000
+2004-02,Devisenanlagen,58662000000
+2004-03,Devisenanlagen,58004000000
+2004-04,Devisenanlagen,60402000000
+2004-05,Devisenanlagen,60521000000
+2004-06,Devisenanlagen,59985000000
+2004-07,Devisenanlagen,57275000000
+2004-08,Devisenanlagen,57173000000
+2004-09,Devisenanlagen,58155000000
+2004-10,Devisenanlagen,60798000000
+2004-11,Devisenanlagen,60467000000
+2004-12,Devisenanlagen,61766000000
+2005-01,Devisenanlagen,60708000000
+2005-02,Devisenanlagen,60454000000
+2005-03,Devisenanlagen,61716000000
+2005-04,Devisenanlagen,63786000000
+2005-05,Devisenanlagen,62371000000
+2005-06,Devisenanlagen,56530000000
+2005-07,Devisenanlagen,48794000000
+2005-08,Devisenanlagen,44452000000
+2005-09,Devisenanlagen,44983000000
+2005-10,Devisenanlagen,45584000000
+2005-11,Devisenanlagen,45048000000
+2005-12,Devisenanlagen,45429000000
+2006-01,Devisenanlagen,46585000000
+2006-02,Devisenanlagen,46068000000
+2006-03,Devisenanlagen,45666000000
+2006-04,Devisenanlagen,45553000000
+2006-05,Devisenanlagen,44756000000
+2006-06,Devisenanlagen,44539000000
+2006-07,Devisenanlagen,43785000000
+2006-08,Devisenanlagen,43614000000
+2006-09,Devisenanlagen,43671000000
+2006-10,Devisenanlagen,45400000000
+2006-11,Devisenanlagen,45309000000
+2006-12,Devisenanlagen,45558000000
+2007-01,Devisenanlagen,45592000000
+2007-02,Devisenanlagen,45285000000
+2007-03,Devisenanlagen,44976000000
+2007-04,Devisenanlagen,45398000000
+2007-05,Devisenanlagen,44733000000
+2007-06,Devisenanlagen,44909000000
+2007-07,Devisenanlagen,46274000000
+2007-08,Devisenanlagen,47095000000
+2007-09,Devisenanlagen,48125000000
+2007-10,Devisenanlagen,49487000000
+2007-11,Devisenanlagen,49623000000
+2007-12,Devisenanlagen,49202000000
+2008-01,Devisenanlagen,50586000000
+2008-02,Devisenanlagen,49729000000
+2008-03,Devisenanlagen,49810000000
+2008-04,Devisenanlagen,47296000000
+2008-05,Devisenanlagen,46843000000
+2008-06,Devisenanlagen,47495000000
+2008-07,Devisenanlagen,47779000000
+2008-08,Devisenanlagen,46725000000
+2008-09,Devisenanlagen,47867000000
+2008-10,Devisenanlagen,49665000000
+2008-11,Devisenanlagen,49247000000
+2008-12,Devisenanlagen,47939000000
+2009-01,Devisenanlagen,47429000000
+2009-02,Devisenanlagen,46452000000
+2009-03,Devisenanlagen,46470000000
+2009-04,Devisenanlagen,55846000000
+2009-05,Devisenanlagen,55764000000
+2009-06,Devisenanlagen,57285000000
+2009-07,Devisenanlagen,81706000000
+2009-08,Devisenanlagen,81485000000
+2009-09,Devisenanlagen,81706000000
+2009-10,Devisenanlagen,82105000000
+2009-11,Devisenanlagen,90061000000
+2009-12,Devisenanlagen,95203000000
+2010-01,Devisenanlagen,94680000000
+2010-02,Devisenanlagen,93895000000
+2010-03,Devisenanlagen,108930000000
+2010-04,Devisenanlagen,125089000000
+2010-05,Devisenanlagen,153582000000
+2010-06,Devisenanlagen,238786000000
+2010-07,Devisenanlagen,226658000000
+2010-08,Devisenanlagen,221375000000
+2010-09,Devisenanlagen,219300000000
+2010-10,Devisenanlagen,216823000000
+2010-11,Devisenanlagen,213725000000
+2010-12,Devisenanlagen,213775000000
+2011-01,Devisenanlagen,203810000000
+2011-02,Devisenanlagen,209903000000
+2011-03,Devisenanlagen,208326000000
+2011-04,Devisenanlagen,211918000000
+2011-05,Devisenanlagen,208396000000
+2011-06,Devisenanlagen,203385000000
+2011-07,Devisenanlagen,196849000000
+2011-08,Devisenanlagen,188735000000
+2011-09,Devisenanlagen,280982000000
+2011-10,Devisenanlagen,305281000000
+2011-11,Devisenanlagen,261815000000
+2011-12,Devisenanlagen,261950000000
+2012-01,Devisenanlagen,257504000000
+2012-02,Devisenanlagen,247484000000
+2012-03,Devisenanlagen,241237000000
+2012-04,Devisenanlagen,245499000000
+2012-05,Devisenanlagen,247218000000
+2012-06,Devisenanlagen,306148000000
+2012-07,Devisenanlagen,365056000000
+2012-08,Devisenanlagen,409189000000
+2012-09,Devisenanlagen,421573000000
+2012-10,Devisenanlagen,429918000000
+2012-11,Devisenanlagen,426769000000
+2012-12,Devisenanlagen,428253000000
+2013-01,Devisenanlagen,432209000000
+2013-02,Devisenanlagen,435883000000
+2013-03,Devisenanlagen,439066000000
+2013-04,Devisenanlagen,445585000000
+2013-05,Devisenanlagen,444255000000
+2013-06,Devisenanlagen,448349000000
+2013-07,Devisenanlagen,438177000000
+2013-08,Devisenanlagen,444349000000
+2013-09,Devisenanlagen,443419000000
+2013-10,Devisenanlagen,443071000000
+2013-11,Devisenanlagen,446798000000
+2013-12,Devisenanlagen,446420000000
+2014-01,Devisenanlagen,443275000000
+2014-02,Devisenanlagen,447978000000
+2014-03,Devisenanlagen,442151000000
+2014-04,Devisenanlagen,445480000000
+2014-05,Devisenanlagen,447445000000
+2014-06,Devisenanlagen,451952000000
+2014-07,Devisenanlagen,457216000000
+2014-08,Devisenanlagen,466618000000
+2014-09,Devisenanlagen,471385000000
+2014-10,Devisenanlagen,471452000000
+2014-11,Devisenanlagen,475586000000
+2014-12,Devisenanlagen,475728000000
+2015-01,Devisenanlagen,510062000000
+2015-02,Devisenanlagen,507856000000
+2015-03,Devisenanlagen,519330000000
+2015-04,Devisenanlagen,531911000000
+2015-05,Devisenanlagen,536364000000
+2015-06,Devisenanlagen,525479000000
+2015-07,Devisenanlagen,529521000000
+2015-08,Devisenanlagen,550670000000
+2015-09,Devisenanlagen,557884000000
+2015-10,Devisenanlagen,566182000000
+2015-11,Devisenanlagen,571929000000
+2015-12,Devisenanlagen,586971000000
+2016-01,Devisenanlagen,593234000000
+2016-02,Devisenanlagen,599759000000
+2016-03,Devisenanlagen,589813000000
+2016-04,Devisenanlagen,595375000000
+2016-05,Devisenanlagen,616130000000
+2016-06,Devisenanlagen,624227000000
+2016-07,Devisenanlagen,635270000000
+2016-08,Devisenanlagen,641050000000
+2016-09,Devisenanlagen,656555000000
+2016-10,Devisenanlagen,666228000000
+2016-11,Devisenanlagen,664465000000
+2016-12,Devisenanlagen,683306000000
+2017-01,Devisenanlagen,696104000000
+2017-02,Devisenanlagen,674520000000
+2017-03,Devisenanlagen,702517000000
+2017-04,Devisenanlagen,710532000000
+2017-05,Devisenanlagen,730114000000
+2017-06,Devisenanlagen,727977000000
+2017-07,Devisenanlagen,724361000000
+2017-08,Devisenanlagen,745274000000
+2017-09,Devisenanlagen,747030000000
+2017-10,Devisenanlagen,760966000000
+2017-11,Devisenanlagen,782818000000
+2017-12,Devisenanlagen,784239000000
+2018-01,Devisenanlagen,790125000000
+2018-02,Devisenanlagen,759715000000
+    `.trim()} />
+  <Editorial.Note style={{marginTop: 10}}>
+    Quelle: SNB
+  </Editorial.Note>
+</div>
+```
+
+Note: You should specify the `xInterval` prop when you have gaps in your data. All [`d3-time`](https://github.com/d3/d3-time) intervals (year, month, weeks, days etc.) are supported.
 
 ## Diverging
 
