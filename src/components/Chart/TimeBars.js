@@ -112,7 +112,11 @@ const TimeBarChart = (props) => {
 
     return {
       segments,
-      sum: segments.reduce(
+      up: segments.filter(segment => segment.value > 0).reduce(
+        (sum, segment) => sum + segment.value,
+        0
+      ),
+      down: segments.filter(segment => segment.value < 0).reduce(
         (sum, segment) => sum + segment.value,
         0
       ),
@@ -123,8 +127,8 @@ const TimeBarChart = (props) => {
   const innerHeight = props.height - (mini ? paddingTop + AXIS_BOTTOM_HEIGHT : 0)
   const y = scaleLinear()
     .domain(props.domain ? props.domain : [
-      Math.min(0, min(bars, d => d.sum)),
-      max(bars, d => d.sum)
+      Math.min(0, min(bars, d => d.down)),
+      max(bars, d => d.up)
     ])
     .range([innerHeight, 0])
 
@@ -133,22 +137,25 @@ const TimeBarChart = (props) => {
   }
 
   bars.forEach(group => {
-    let stackValue = 0
-    let yPos = y(0)
+    let upValue = 0
+    let upPos = y(0)
+    let downValue = 0
+    let downPos = y(0)
     group.segments.forEach(segment => {
-      let y0 = y(stackValue)
-      let y1 = y(stackValue + segment.value)
-      const positiv = y1 <= y0
-      const size = Math.abs(y0 - y1)
-      if (positiv) {
-        yPos -= size
+      const isPositive = segment.value > 0
+      const baseValue = isPositive ? upValue : downValue
+      const y0 = y(baseValue)
+      const y1 = y(baseValue + segment.value)
+      const size = segment.height = Math.abs(y0 - y1)
+      if (isPositive) {
+        upPos -= size
+        segment.y = upPos
+        upValue += segment.value
+      } else {
+        segment.y = downPos
+        downPos += size
+        downValue += segment.value
       }
-      segment.y = yPos
-      segment.height = size
-      if (!positiv) {
-        yPos += size
-      }
-      stackValue += segment.value
     })
   })
 
