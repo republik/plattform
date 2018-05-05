@@ -158,7 +158,7 @@ export const EditModal = ({data, onChange, onClose, chart}) => {
                 {label: 'Normal', size: undefined},
                 {label: 'Klein', size: 'narrow'},
                 {label: 'Gross', size: 'breakout'},
-                {label: 'Links', size: 'float'}
+                {label: 'Links', size: 'floatTiny'}
               ].map(({label, size}) => {
                 const checked = config.size === size
                 return (
