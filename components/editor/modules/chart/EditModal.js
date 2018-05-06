@@ -11,19 +11,13 @@ import {
   Label,
   Field,
   Radio,
-  A,
   mediaQueries
 } from '@project-r/styleguide'
 
 import { gray2x1 } from '../../utils/placeholder'
 
 import JSONField, { renderAutoSize } from './JSONField'
-import {
-  downloadOnClick,
-  getSvgNode,
-  getAbstractSvg,
-  createSvgBackgrounder
-} from './utils'
+import Export from './Export'
 
 const previewWidth = 290
 
@@ -75,30 +69,7 @@ const EditModal = ({data, onChange, onClose, chart}) => {
                 : <img src={gray2x1} width='100%' />
             }
             <br />
-            <A href='#' download='chart.svg' onClick={downloadOnClick(() => {
-              return new window.Blob([
-                getSvgNode(chart).outerHTML
-              ], {type: 'text/svg'})
-            })}>
-              SVG
-            </A><br /><br />
-            <Label>Abstract Teaser</Label><br />
-            <A href='#' download='teaser.svg' onClick={downloadOnClick(() => {
-              return new window.Blob([
-                getAbstractSvg(chart).svg.outerHTML
-              ], {type: 'text/svg'})
-            })}>
-              SVG
-            </A>
-            <br />
-            <Label>Mit Hintergrund</Label><br />
-            <A href='#' download='sm.svg' onClick={downloadOnClick(() => {
-              return new window.Blob([
-                createSvgBackgrounder()(getAbstractSvg(chart)).svg.outerHTML
-              ], {type: 'text/svg'})
-            })}>
-              SVG
-            </A>
+            <Export chart={chart} />
           </div>
           <div {...styles.edit}>
             <Interaction.P>

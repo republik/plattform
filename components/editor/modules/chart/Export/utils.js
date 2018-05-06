@@ -19,7 +19,7 @@ export const getSvgNode = (chartElement, width = 660) => {
   return svg
 }
 
-export const downloadOnClick = (getObject) => {
+export const downloadBlobOnClick = (getObject) => {
   return (e) => {
     const a = e.currentTarget
     const url = a.href = window.URL.createObjectURL(
@@ -28,6 +28,39 @@ export const downloadOnClick = (getObject) => {
     setTimeout(() => {
       window.URL.revokeObjectURL(url)
     }, 50)
+  }
+}
+
+export const downloadPngOnClick = (getObject, scale = 2.5) => {
+  return (e) => {
+    e.preventDefault()
+    const canvas = document.createElement('canvas')
+    const context = canvas.getContext('2d')
+    const {
+      svg,
+      width,
+      height
+    } = getObject()
+
+    canvas.width = width * scale
+    canvas.height = height * scale
+    context.scale(scale, scale)
+
+    const filename = e.currentTarget.getAttribute('download')
+
+    const image = new window.Image()
+    image.src = `data:image/svg+xml,${encodeURIComponent(svg.outerHTML)}`
+    image.onload = () => {
+      context.drawImage(image, 0, 0)
+
+      const a = document.createElement('a')
+      a.download = filename || 'image.png'
+      a.href = canvas.toDataURL('image/png')
+      a.click()
+      setTimeout(() => {
+        a.href = '#'
+      }, 50)
+    }
   }
 }
 
@@ -61,8 +94,10 @@ const fitTransform = ({
   ].join(' ')}) scale(${scale})`
 }
 
+export const DEFAULT_BG = '#F6F8F7'
+
 export const createSvgBackgrounder = ({
-  color = '#F6F8F7',
+  color = DEFAULT_BG,
   width: bgWidth = 665,
   height: bgHeight = 347,
   padding = 20
@@ -80,8 +115,8 @@ export const createSvgBackgrounder = ({
   })
 
   g.setAttribute('transform', fitTransform({
-    innerWidth: width,
-    innerHeight: height,
+    innerWidth: Math.abs(extent[2] - extent[0]),
+    innerHeight: Math.abs(extent[3] - extent[1]),
     outerWidth: bgWidth - 2 * padding,
     outerHeight: bgHeight - 2 * padding,
     offset: padding
@@ -140,16 +175,19 @@ export const getAbstractSvg = chartElement => {
       ]
     }, [Infinity, Infinity, 0, 0])
 
-  const width = Math.abs(extent[2] - extent[0])
-  const height = Math.abs(extent[3] - extent[1])
+  let width = Math.abs(extent[2] - extent[0])
+  let height = Math.abs(extent[3] - extent[1])
   if (width && height) {
-    svg.setAttribute('width', width + 10)
-    svg.setAttribute('height', height + 10)
+    const padding = 5
+    width += padding * 2
+    height += padding * 2
+    svg.setAttribute('width', width)
+    svg.setAttribute('height', height)
     svg.setAttribute('viewBox', [
-      extent[0] - 5,
-      extent[1] - 5,
-      width + 10,
-      height + 10
+      extent[0] - padding,
+      extent[1] - padding,
+      width,
+      height
     ].join(' '))
   }
   document.body.removeChild(svg)
