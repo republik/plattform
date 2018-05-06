@@ -50,7 +50,7 @@ const runOnce = () => {
 }
 
 const start = () => {
-  start()
+  run()
   runOnce()
 }
 
