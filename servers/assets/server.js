@@ -9,9 +9,15 @@ const {
   CORS_WHITELIST_URL
 } = process.env
 
-let server
-module.exports.run = () => {
-  server = express()
+let additionalMiddlewares = []
+let httpServer
+
+const addMiddleware = (middleware) => {
+  additionalMiddlewares.push(middleware)
+}
+
+const start = () => {
+  const server = express()
 
   // redirect to https
   if (!DEV) {
@@ -33,16 +39,32 @@ module.exports.run = () => {
     server.use('*', cors(corsOptions))
   }
 
+  // special middlewares
+  for (let middleware of additionalMiddlewares) {
+    middleware(server)
+  }
+
   // middlewares
   for (let key of Object.keys(middlewares)) {
     middlewares[key](server)
   }
 
-  server.listen(PORT, () => {
+  httpServer = server.listen(PORT, () => {
     console.info('server is running on http://localhost:' + PORT)
   })
+  return httpServer
 }
 
-module.exports.close = () => {
-  server.close()
+const close = () => {
+  httpServer.close()
 }
+
+module.exports = {
+  start,
+  close,
+  addMiddleware
+}
+
+process.on('SIGTERM', () => {
+  close()
+})
