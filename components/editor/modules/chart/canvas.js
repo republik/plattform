@@ -5,7 +5,7 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 import withT from '../../../../lib/withT'
 import { focusPrevious } from '../../utils/keyHandlers'
 
-import { ChartManager } from './ui'
+import EditManager from './EditManager'
 
 export default ({rule, subModules, TYPE}) => {
   const CsvChart = withT(rule.component)
@@ -71,7 +71,7 @@ export default ({rule, subModules, TYPE}) => {
             config={config} />
 
           return (
-            <ChartManager
+            <EditManager
               {...props}
               chart={chart} />
           )
