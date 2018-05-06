@@ -13,7 +13,7 @@ const {
   LOCAL_ASSETS_SERVER
 } = process.env
 
-module.exports.run = () => {
+const run = () => {
   const localModule = require('./graphql')
   const executableSchema = makeExecutableSchema(merge(localModule, [documents, redirections]))
 
@@ -45,12 +45,34 @@ module.exports.run = () => {
     mail
   })
 
-  return server.run(executableSchema, middlewares, t, createGraphQLContext)
-    .then(() => {
-      return require('./lib/slackGreeter').connect()
-    })
+  return server.start(
+    executableSchema,
+    middlewares,
+    t,
+    createGraphQLContext
+  )
 }
 
-module.exports.close = () => {
+const runOnce = () => {
+  return require('./lib/slackGreeter').connect()
+}
+
+const start = () => {
+  start()
+  runOnce()
+}
+
+const close = () => {
   server.close()
 }
+
+module.exports = {
+  start,
+  run,
+  runOnce,
+  close
+}
+
+process.on('SIGTERM', () => {
+  close()
+})

@@ -35,6 +35,7 @@ const fetch = require('isomorphic-unfetch')
 const omit = require('lodash/omit')
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { lib: { redis } } = require('@orbiting/backend-modules-base')
+const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const moment = require('moment')
 const { timeFormat } = require('@orbiting/backend-modules-formats')
 
@@ -72,8 +73,8 @@ let lastCommitId
 test('setup', async (t) => {
   await redis.flushdbAsync()
   await sleep(1000)
-  const server = await Server.run()
-  pgdb = server.pgdb
+  await Server.start()
+  pgdb = await PgDb.connect()
 
   const clients = await createGithubClients()
   githubRest = clients.githubRest
