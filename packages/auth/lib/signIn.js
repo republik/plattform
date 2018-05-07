@@ -2,6 +2,7 @@ const uuid = require('uuid/v4')
 const querystring = require('querystring')
 const validator = require('validator')
 const kraut = require('kraut')
+const urlsafeBase64 = require('urlsafe-base64')
 const geoForIP = require('./geoForIP')
 const checkEnv = require('check-env')
 const t = require('./t')
@@ -75,7 +76,7 @@ module.exports = async (_email, context, pgdb, req) => {
     `${FRONTEND_BASE_URL}/mitteilung?` +
     querystring.stringify({
       type: 'token-authorization',
-      email,
+      email: urlsafeBase64.encode(Buffer.from(email)),
       context,
       token
     })
