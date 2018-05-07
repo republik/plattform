@@ -42,7 +42,7 @@ const run = (workerId) => {
 }
 
 const runOnce = () => {
-  server.runBefore()
+  server.runOnce()
   const scheduler = require('./lib/publicationScheduler')
   scheduler.init()
     .catch(error => {
@@ -52,8 +52,9 @@ const runOnce = () => {
 }
 
 const start = async () => {
+  const httpServer = await run()
   runOnce()
-  return run()
+  return httpServer
 }
 
 const close = () => {

@@ -43,7 +43,9 @@ const getWorkersPort = () => {
   return PORT
 }
 
-const runBefore = () => {
+// it's best to run this after start(), otherwise you might see connection error logs
+// from the engine trying to connect to workers, which are not there yet
+const runOnce = () => {
   // init apollo engine
   // https://www.apollographql.com/docs/engine/setup-standalone.html#apollo-engine-launcher
   // https://github.com/apollographql/apollo-engine-js#middleware-configuration
@@ -186,7 +188,7 @@ const close = () => {
 }
 
 module.exports = {
-  runBefore,
+  runOnce,
   start,
   close
 }
