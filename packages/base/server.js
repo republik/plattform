@@ -43,8 +43,8 @@ const getWorkersPort = () => {
   return PORT
 }
 
-// it's best to run this after start(), otherwise you might see connection error logs
-// from the engine trying to connect to workers, which are not there yet
+// it's best to run this after start(), otherwise you might see connection error logs from
+// the engine trying to connect to workers, which are not there yet (see startupTimeout below)
 const runOnce = () => {
   // init apollo engine
   // https://www.apollographql.com/docs/engine/setup-standalone.html#apollo-engine-launcher
@@ -73,7 +73,9 @@ const runOnce = () => {
     })
 
     // Start the Proxy; crash on errors.
-    engineLauncher.start()
+    engineLauncher.start({
+      startupTimeout: 20 * 1000 // give the worker(s) 20s to start up
+    })
       .then(() => {
         console.log(`apollo-engine is running on http://localhost:${PORT}`)
       })
