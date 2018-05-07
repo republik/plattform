@@ -98,11 +98,6 @@ const runOnce = async (args) => {
   if (clusterMode) {
     let engineStarted = false
     cluster.on('message', (worker, message, handle) => {
-      if (arguments.length === 2) {
-        handle = message
-        message = worker
-        worker = undefined
-      }
       if (!engineStarted && message === CLUSTER_LISTEN_MESSAGE) {
         engineStarted = true
         startEngine()
