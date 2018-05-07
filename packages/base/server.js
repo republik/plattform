@@ -185,6 +185,7 @@ const start = async (
 
   return new Promise((resolve) => {
     const port = getWorkersPort()
+    let listener
     const callback = () => {
       if (workerId) {
         console.info(`server (${workerId}) is running on http://localhost:${port}`)
@@ -195,10 +196,10 @@ const start = async (
       if (process.send) {
         process.send(CLUSTER_LISTEN_MESSAGE)
       }
-      resolve()
+      resolve(listener)
     }
 
-    httpServer.listen(port, callback)
+    listener = httpServer.listen(port, callback)
   })
 }
 

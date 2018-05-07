@@ -20,7 +20,7 @@ const start = async () => {
 }
 
 // in cluster mode, this runs after runOnce otherwise before
-const run = (workerId) => {
+const run = async (workerId) => {
   const localModule = require('./graphql')
   const executableSchema = makeExecutableSchema(merge(localModule, [documents, auth]))
 
