@@ -63,7 +63,7 @@ const start = (workerId) => {
 }
 
 const close = () => {
-  httpServer.close()
+  httpServer && httpServer.close()
 }
 
 module.exports = {
