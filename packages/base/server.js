@@ -192,7 +192,9 @@ const start = async (
         console.info(`server is running on http://localhost:${port}`)
       }
       // notify cluster master
-      process.send(CLUSTER_LISTEN_MESSAGE)
+      if (process.send) {
+        process.send(CLUSTER_LISTEN_MESSAGE)
+      }
       resolve()
     }
 
