@@ -15,7 +15,8 @@ about: If something isn't working as expected 🤔.
 
 <!--
 For example add a
-- [Graph*i*Ql link](https://api.republik.ch/graphiql?query=$YOURQUERY)
+- Graph*i*Ql link
+  - auth scope used: [signed in state including me.roles](https://api.republik.ch/graphiql?query=%7B%0A%20%20me%20%7B%0A%20%20%20%20roles%0A%20%20%7D%0A%7D)
 - a json snippet
 - stack trace
 - error message
@@ -37,8 +38,10 @@ For example add a
 - Node/yarn version: [e.g. Node 8.11/yarn 1.5]
 - OS: [e.g. OSX 10.13.4, Windows 10]
 
-**Possible Solution**
+**Possible Solutions**
 
 <!-- only if you have suggestions on a fix for the bug -->
 
 <!-- please add the bug label -->
+
+<!-- thank you -->
