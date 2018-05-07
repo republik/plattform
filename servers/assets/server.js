@@ -16,7 +16,7 @@ const addMiddleware = (middleware) => {
   additionalMiddlewares.push(middleware)
 }
 
-const start = () => {
+const start = (workerId) => {
   const server = express()
 
   // redirect to https
@@ -50,9 +50,15 @@ const start = () => {
     middlewares[key](server)
   }
 
-  httpServer = server.listen(PORT, () => {
-    console.info('server is running on http://localhost:' + PORT)
-  })
+  const callback = () => {
+    if (workerId) {
+      console.info(`server (${workerId}) is running on http://localhost:${PORT}`)
+    } else {
+      console.info(`server is running on http://localhost:${PORT}`)
+    }
+  }
+  httpServer = server.listen(PORT, callback)
+
   return httpServer
 }
 

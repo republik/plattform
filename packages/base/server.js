@@ -34,7 +34,7 @@ let server
 let httpServer
 let subscriptionServer
 
-const start = async (executableSchema, middlewares, t, createGraphqlContext) => {
+const start = async (executableSchema, middlewares, t, createGraphqlContext, workerId) => {
   // init apollo engine
   // https://github.com/apollographql/apollo-engine-js#middleware-configuration
   // https://www.apollographql.com/docs/engine/proto-doc.html
@@ -115,7 +115,11 @@ const start = async (executableSchema, middlewares, t, createGraphqlContext) => 
   }
 
   const callback = () => {
-    console.info('server is running on http://localhost:' + PORT)
+    if (workerId) {
+      console.info(`server (${workerId}) is running on http://localhost:${PORT}`)
+    } else {
+      console.info(`server is running on http://localhost:${PORT}`)
+    }
   }
 
   if (engine) {

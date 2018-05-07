@@ -13,7 +13,7 @@ const {
   LOCAL_ASSETS_SERVER
 } = process.env
 
-const run = () => {
+const run = (workerId) => {
   const localModule = require('./graphql')
   const executableSchema = makeExecutableSchema(merge(localModule, [documents, redirections]))
 
@@ -49,7 +49,8 @@ const run = () => {
     executableSchema,
     middlewares,
     t,
-    createGraphQLContext
+    createGraphQLContext,
+    workerId
   )
 }
 
