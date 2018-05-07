@@ -8,11 +8,19 @@ const { graphql: redirections } = require('@orbiting/backend-modules-redirection
 
 const sendPendingPledgeConfirmations = require('./modules/crowdfundings/lib/sendPendingPledgeConfirmations')
 const mail = require('./modules/crowdfundings/lib/Mail')
+const cluster = require('cluster')
 
 const {
   LOCAL_ASSETS_SERVER
 } = process.env
 
+const start = async () => {
+  const httpServer = await run()
+  await runOnce({ clusterMode: false })
+  return httpServer
+}
+
+// in cluster mode, this runs after runOnce otherwise before
 const run = (workerId) => {
   const localModule = require('./graphql')
   const executableSchema = makeExecutableSchema(merge(localModule, [documents, redirections]))
@@ -54,15 +62,13 @@ const run = (workerId) => {
   )
 }
 
-const runOnce = () => {
-  server.runOnce()
+// in cluster mode, this runs before run otherwise after
+const runOnce = (...args) => {
+  if (cluster.isWorker) {
+    throw new Error('runOnce must only be called on cluster.isMaster')
+  }
+  server.runOnce(...args)
   return require('./lib/slackGreeter').connect()
-}
-
-const start = async () => {
-  const httpServer = await run()
-  runOnce()
-  return httpServer
 }
 
 const close = () => {

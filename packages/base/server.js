@@ -5,6 +5,7 @@ const { createServer } = require('http')
 const checkEnv = require('check-env')
 const compression = require('compression')
 const timeout = require('connect-timeout')
+const cluster = require('cluster')
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
@@ -28,6 +29,8 @@ const {
 const { express: { auth } } = require('@orbiting/backend-modules-auth')
 const requestLog = require('./express/requestLog')
 
+const CLUSTER_LISTEN_MESSAGE = 'http-server-listening'
+
 let pgdb
 let server
 let httpServer
@@ -43,48 +46,75 @@ const getWorkersPort = () => {
   return PORT
 }
 
-// it's best to run this after start(), otherwise you might see connection error logs from
-// the engine trying to connect to workers, which are not there yet (see startupTimeout below)
-const runOnce = () => {
+const startEngine = () => {
+  if (!ENGINE_API_KEY) {
+    return
+  }
+  if (engineLauncher) {
+    throw new Error('apollo engine must only be started once!!')
+  }
+  const { ApolloEngineLauncher } = require('apollo-engine')
   // init apollo engine
   // https://www.apollographql.com/docs/engine/setup-standalone.html#apollo-engine-launcher
   // https://github.com/apollographql/apollo-engine-js#middleware-configuration
   // https://www.apollographql.com/docs/engine/proto-doc.html
-  if (ENGINE_API_KEY) {
-    const { ApolloEngineLauncher } = require('apollo-engine')
-    engineLauncher = new ApolloEngineLauncher({
-      apiKey: ENGINE_API_KEY,
-      origins: [{
-        requestTimeout: '60m',
-        http: {
-          // The URL that the Proxy should use to connect to your GraphQL server.
-          url: `http://localhost:${getWorkersPort()}/graphql`
-        }
-      }],
-      // Tell the Proxy on what port to listen, and which paths should
-      // be treated as GraphQL instead of transparently proxied as raw HTTP.
-      frontends: [{
-        port: parseInt(PORT),
-        endpoints: ['/graphql']
-      }],
-      logging: {
-        level: 'INFO'
+  engineLauncher = new ApolloEngineLauncher({
+    apiKey: ENGINE_API_KEY,
+    origins: [{
+      requestTimeout: '60m',
+      http: {
+        // The URL that the Proxy should use to connect to your GraphQL server.
+        url: `http://localhost:${getWorkersPort()}/graphql`
+      }
+    }],
+    // Tell the Proxy on what port to listen, and which paths should
+    // be treated as GraphQL instead of transparently proxied as raw HTTP.
+    frontends: [{
+      port: parseInt(PORT),
+      endpoints: ['/graphql']
+    }],
+    logging: {
+      level: 'INFO'
+    }
+  })
+
+  // Start the Proxy; crash on errors.
+  return engineLauncher.start({
+    startupTimeout: 20 * 1000 // give the worker(s) 20s to start up
+  })
+    .then(() => {
+      console.log(`apollo-engine is running on http://localhost:${PORT}`)
+    })
+    .catch(err => {
+      throw err
+    })
+}
+
+// this function runs before start in cluster mode, otherwise after
+// args.cluster: if undefined/true, this method waits for a worker to emmit CLUSTER_LISTEN_MESSAGE
+// before starting engine, otherwise engine is started immediately
+const runOnce = async (args) => {
+  const clusterMode = args === undefined || args.clusterMode
+  if (clusterMode) {
+    let engineStarted = false
+    cluster.on('message', (worker, message, handle) => {
+      if (arguments.length === 2) {
+        handle = message
+        message = worker
+        worker = undefined
+      }
+      if (!engineStarted && message === CLUSTER_LISTEN_MESSAGE) {
+        engineStarted = true
+        startEngine()
       }
     })
-
-    // Start the Proxy; crash on errors.
-    engineLauncher.start({
-      startupTimeout: 20 * 1000 // give the worker(s) 20s to start up
-    })
-      .then(() => {
-        console.log(`apollo-engine is running on http://localhost:${PORT}`)
-      })
-      .catch(err => {
-        throw err
-      })
+  } else {
+    return startEngine()
   }
 }
 
+// init httpServer and express and start listening
+// if you need apollo-engine make sure to call runOnce after start
 const start = async (
   executableSchema,
   middlewares,
@@ -158,15 +188,21 @@ const start = async (
     await middleware(server, pgdb, t)
   }
 
-  const port = getWorkersPort()
-  const callback = () => {
-    if (workerId) {
-      console.info(`server (${workerId}) is running on http://localhost:${port}`)
-    } else {
-      console.info(`server is running on http://localhost:${port}`)
+  return new Promise((resolve) => {
+    const port = getWorkersPort()
+    const callback = () => {
+      if (workerId) {
+        console.info(`server (${workerId}) is running on http://localhost:${port}`)
+      } else {
+        console.info(`server is running on http://localhost:${port}`)
+      }
+      // notify cluster master
+      process.send(CLUSTER_LISTEN_MESSAGE)
+      resolve()
     }
-  }
-  return httpServer.listen(port, callback)
+
+    httpServer.listen(port, callback)
+  })
 }
 
 const close = () => {
@@ -175,7 +211,9 @@ const close = () => {
   pubsub.getPublisher().quit()
   subscriptionServer && subscriptionServer.close()
   httpServer && httpServer.close()
-  engineLauncher && engineLauncher.stop()
+  try {
+    engineLauncher && engineLauncher.stop()
+  } catch (e) {}
   pgdb && pgdb.close()
   require('./lib/redis').quit()
   pgdb = null

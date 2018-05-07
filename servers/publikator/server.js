@@ -7,11 +7,19 @@ const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: auth } = require('@orbiting/backend-modules-auth')
 
 const uncommittedChangesMiddleware = require('./express/uncommittedChanges')
+const cluster = require('cluster')
 
 const {
   LOCAL_ASSETS_SERVER
 } = process.env
 
+const start = async () => {
+  const httpServer = await run()
+  await runOnce({ clusterMode: false })
+  return httpServer
+}
+
+// in cluster mode, this runs after runOnce otherwise before
 const run = (workerId) => {
   const localModule = require('./graphql')
   const executableSchema = makeExecutableSchema(merge(localModule, [documents, auth]))
@@ -41,20 +49,18 @@ const run = (workerId) => {
   )
 }
 
-const runOnce = () => {
-  server.runOnce()
+// in cluster mode, this runs before run otherwise after
+const runOnce = (...args) => {
+  if (cluster.isWorker) {
+    throw new Error('runOnce must only be called on cluster.isMaster')
+  }
+  server.runOnce(...args)
   const scheduler = require('./lib/publicationScheduler')
   scheduler.init()
     .catch(error => {
       console.log(error)
       return error
     })
-}
-
-const start = async () => {
-  const httpServer = await run()
-  runOnce()
-  return httpServer
 }
 
 const close = () => {
