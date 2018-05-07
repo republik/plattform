@@ -64,8 +64,9 @@ const start = async (executableSchema, middlewares, t, createGraphqlContext) => 
     server.use((req, res, next) => {
       if (!req.secure && (!IGNORE_SSL_HOSTNAME || req.hostname !== IGNORE_SSL_HOSTNAME)) {
         res.redirect(`https://${req.hostname}${req.url}`)
+      } else {
+        next()
       }
-      return next()
     })
   }
 

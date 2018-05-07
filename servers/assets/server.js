@@ -25,8 +25,9 @@ const start = () => {
     server.use((req, res, next) => {
       if (!req.secure) {
         res.redirect(`https://${req.hostname}${req.url}`)
+      } else {
+        next()
       }
-      return next()
     })
   }
 
