@@ -1,4 +1,5 @@
 const { NoSessionError, QueryEmailMismatchError, DestroySessionError } = require('./errors')
+const urlsafeBase64 = require('urlsafe-base64')
 
 const destroySession = async (req) => {
   return new Promise((resolve, reject) => {
@@ -16,6 +17,12 @@ const sessionByToken = async ({ pgdb, token, email: emailFromQuery, ...meta }) =
   const session = await Sessions.findOne({
     'sess @>': { token }
   })
+
+  if (urlsafeBase64.validate(emailFromQuery)) {
+    emailFromQuery =
+      urlsafeBase64.decode(Buffer.from(emailFromQuery)).toString()
+  }
+
   if (!session) {
     throw new NoSessionError({ token, emailFromQuery, ...meta })
   }
