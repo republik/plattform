@@ -17,7 +17,7 @@ if (CLUSTER) {
     server.start,
     {
       numWorkers: WEB_CONCURRENCY,
-      deadline: 30000
+      deadline: 30 * 1000
     }
   )
 } else {

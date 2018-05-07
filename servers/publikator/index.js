@@ -10,7 +10,7 @@ const {
 if (CLUSTER) {
   throng({
     workers: WEB_CONCURRENCY,
-    grace: 30000,
+    grace: 30 * 1000,
     start: server.run,
     master: server.runOnce
   })
