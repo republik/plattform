@@ -16,7 +16,7 @@ Supported props:
   credits={[
     {type: 'text', value: 'An article by '},
     {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
-    {type: 'text', value: ', 31 December 2017'},
+    {type: 'text', value: ', 31.12.2017'},
   ]} />
 ```
 
@@ -27,7 +27,7 @@ Supported props:
   credits={[
     {type: 'text', value: 'An article by '},
     {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
-    {type: 'text', value: ', 31 December 2017'},
+    {type: 'text', value: ', 31.12.2017'},
   ]} />
 ```
 
@@ -35,11 +35,7 @@ Supported props:
 <TeaserFeed kind='editorial' format={{meta: {title: 'Format'}}}
   title='The quick brown fox jumps over the lazy dog'
   description='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
-  credits={[
-    {type: 'text', value: 'An article by '},
-    {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
-    {type: 'text', value: ', 31 December 2017'},
-  ]} />
+  publishDate='2017-12-31T11:34:00.000Z' />
 ```
 
 
@@ -50,7 +46,7 @@ Supported props:
   credits={[
     {type: 'text', value: 'An article by '},
     {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
-    {type: 'text', value: ', 31 December 2017'},
+    {type: 'text', value: ', 31.12.2017'},
   ]} />
 ```
 
@@ -61,6 +57,6 @@ Supported props:
   credits={[
     {type: 'text', value: 'An article by '},
     {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
-    {type: 'text', value: ', 31 December 2017'},
+    {type: 'text', value: ', 31.12.2017'},
   ]} />
 ```

@@ -10,7 +10,7 @@ import { Editorial } from '../Typography'
 
 import { matchType } from 'mdast-react-render/lib/utils'
 
-const dateFormat = timeFormat('%d. %B %Y')
+const dateFormat = timeFormat('%d.%m.%Y')
 
 const styles = {
   link: css({
@@ -76,7 +76,7 @@ export const TeaserFeed = ({
         {credits && credits.length > 0 ? (
           renderMdast(credits, creditSchema)
         ) : (
-          !!publishDate && dateFormat(Date.parse(publishDate))
+          !!publishDate && dateFormat(new Date(publishDate))
         )}
       </Credit>
     </Container>
