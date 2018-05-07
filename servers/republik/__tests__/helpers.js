@@ -55,7 +55,7 @@ const throwOnOpenTransaction = async () => {
     'state': 'idle in transaction'
   })
   if (locksEnd && locksEnd[0] && locksEnd[0].count > 0) {
-    const locks = await pgDatabase.query('SELECT * FROM pg_stat_activity WHERE state = :state', {
+    const locks = await pgDatabase().query('SELECT * FROM pg_stat_activity WHERE state = :state', {
       'state': 'idle in transaction'
     })
     console.warn(JSON.stringify(locks))
