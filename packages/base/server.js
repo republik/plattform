@@ -49,9 +49,8 @@ const start = async (executableSchema, middlewares, t, createGraphqlContext) => 
     : null
 
   // connect to db
-  const _pgdb = await PgDb.connect()
+  pgdb = await PgDb.connect()
 
-  pgdb = _pgdb
   server = express()
   httpServer = createServer(server)
 
