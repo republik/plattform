@@ -67,12 +67,6 @@ const start = async (executableSchema, middlewares, t, createGraphqlContext) => 
       }
       return next()
     })
-    // clear obsolete cf cookie
-    // this code was added 2018.01.19 - remove it after 2018.03.02
-    server.use((req, res, next) => {
-      res.clearCookie('__cfduid', { path: '/', httpOnly: true, domain: '.republik.ch' })
-      next()
-    })
   }
 
   // add req._log()
