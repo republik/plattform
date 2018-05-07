@@ -9,6 +9,7 @@ const { createApolloFetch } = require('apollo-fetch')
 // shared
 var server = null
 var cookie = null
+var pgdb = null
 
 const createLocalApolloFetch = () => {
   const GRAPHQL_URI = `http://localhost:${process.env.PORT}/graphql`
@@ -34,7 +35,6 @@ const createLocalApolloFetch = () => {
     })
 }
 
-let pgdb
 const connectIfNeeded = async function () {
   if (server) return server
   await redis.flushdbAsync()

@@ -49,9 +49,10 @@ const runOnce = () => {
     })
 }
 
-const start = () => {
-  run()
+const start = async () => {
+  const httpServer = await run()
   runOnce()
+  return httpServer
 }
 
 const close = () => {

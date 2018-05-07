@@ -57,9 +57,10 @@ const runOnce = () => {
   return require('./lib/slackGreeter').connect()
 }
 
-const start = () => {
-  run()
+const start = async () => {
+  const httpServer = await run()
   runOnce()
+  return httpServer
 }
 
 const close = () => {
