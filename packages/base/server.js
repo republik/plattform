@@ -2,7 +2,6 @@ const PgDb = require('./lib/pgdb')
 const express = require('express')
 const cors = require('cors')
 const { createServer } = require('http')
-const { ApolloEngine } = require('apollo-engine')
 const checkEnv = require('check-env')
 const compression = require('compression')
 const timeout = require('connect-timeout')
@@ -33,21 +32,62 @@ let pgdb
 let server
 let httpServer
 let subscriptionServer
+let engineLauncher
 
-const start = async (executableSchema, middlewares, t, createGraphqlContext, workerId) => {
+// if engine is part of the game, it will listen on PORT
+// (clustered) workers thus must listen on another port (PORT-1).
+const getWorkersPort = () => {
+  if (ENGINE_API_KEY) {
+    return PORT - 1
+  }
+  return PORT
+}
+
+const runBefore = () => {
   // init apollo engine
+  // https://www.apollographql.com/docs/engine/setup-standalone.html#apollo-engine-launcher
   // https://github.com/apollographql/apollo-engine-js#middleware-configuration
   // https://www.apollographql.com/docs/engine/proto-doc.html
-  const engine = ENGINE_API_KEY
-    ? new ApolloEngine({
+  if (ENGINE_API_KEY) {
+    const { ApolloEngineLauncher } = require('apollo-engine')
+    engineLauncher = new ApolloEngineLauncher({
       apiKey: ENGINE_API_KEY,
+      origins: [{
+        requestTimeout: '60m',
+        http: {
+          // The URL that the Proxy should use to connect to your GraphQL server.
+          url: `http://localhost:${getWorkersPort()}/graphql`
+        }
+      }],
+      // Tell the Proxy on what port to listen, and which paths should
+      // be treated as GraphQL instead of transparently proxied as raw HTTP.
+      frontends: [{
+        port: parseInt(PORT),
+        endpoints: ['/graphql']
+      }],
       logging: {
         level: 'INFO'
-      },
-      origins: [{requestTimeout: '60m'}]
+      }
     })
-    : null
 
+    // Start the Proxy; crash on errors.
+    engineLauncher.start()
+      .then(() => {
+        console.log(`apollo-engine is running on http://localhost:${PORT}`)
+      })
+      .catch(err => {
+        throw err
+      })
+  }
+}
+
+const start = async (
+  executableSchema,
+  middlewares,
+  t,
+  createGraphqlContext,
+  workerId
+) => {
   // connect to db
   pgdb = await PgDb.connect()
 
@@ -114,26 +154,15 @@ const start = async (executableSchema, middlewares, t, createGraphqlContext, wor
     await middleware(server, pgdb, t)
   }
 
+  const port = getWorkersPort()
   const callback = () => {
     if (workerId) {
-      console.info(`server (${workerId}) is running on http://localhost:${PORT}`)
+      console.info(`server (${workerId}) is running on http://localhost:${port}`)
     } else {
-      console.info(`server is running on http://localhost:${PORT}`)
+      console.info(`server is running on http://localhost:${port}`)
     }
   }
-
-  if (engine) {
-    return engine.listen({
-      port: PORT,
-      httpServer,
-      graphqlPaths: ['/graphql'],
-      launcherOptions: {
-        startupTimeout: 3000
-      }
-    }, callback)
-  } else {
-    return httpServer.listen(PORT, callback)
-  }
+  return httpServer.listen(port, callback)
 }
 
 const close = () => {
@@ -142,6 +171,7 @@ const close = () => {
   pubsub.getPublisher().quit()
   subscriptionServer && subscriptionServer.close()
   httpServer && httpServer.close()
+  engineLauncher && engineLauncher.stop()
   pgdb && pgdb.close()
   require('./lib/redis').quit()
   pgdb = null
@@ -156,6 +186,7 @@ const close = () => {
 }
 
 module.exports = {
+  runBefore,
   start,
   close
 }

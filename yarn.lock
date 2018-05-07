@@ -371,21 +371,21 @@ apollo-cache-control@^0.1.0:
   dependencies:
     graphql-extensions "^0.0.x"
 
-apollo-engine-binary-darwin@0.2018.2-197-g8bb3880fd:
-  version "0.2018.2-197-g8bb3880fd"
-  resolved "https://registry.yarnpkg.com/apollo-engine-binary-darwin/-/apollo-engine-binary-darwin-0.2018.2-197-g8bb3880fd.tgz#ad90f90e4b0f83b03c8941941c59c05ce13fcb5e"
+apollo-engine-binary-darwin@0.2018.4-20-g7a8822c14:
+  version "0.2018.4-20-g7a8822c14"
+  resolved "https://registry.yarnpkg.com/apollo-engine-binary-darwin/-/apollo-engine-binary-darwin-0.2018.4-20-g7a8822c14.tgz#d3aad6b4aceb6063d51ca56324e1b9c4004cc72c"
 
-apollo-engine-binary-linux@0.2018.2-197-g8bb3880fd:
-  version "0.2018.2-197-g8bb3880fd"
-  resolved "https://registry.yarnpkg.com/apollo-engine-binary-linux/-/apollo-engine-binary-linux-0.2018.2-197-g8bb3880fd.tgz#1c65445f8cd503be532732198674a3b41fa62856"
+apollo-engine-binary-linux@0.2018.4-20-g7a8822c14:
+  version "0.2018.4-20-g7a8822c14"
+  resolved "https://registry.yarnpkg.com/apollo-engine-binary-linux/-/apollo-engine-binary-linux-0.2018.4-20-g7a8822c14.tgz#6da7e5773206962bc28620ca3feb02d523268629"
 
-apollo-engine-binary-windows@0.2018.2-197-g8bb3880fd:
-  version "0.2018.2-197-g8bb3880fd"
-  resolved "https://registry.yarnpkg.com/apollo-engine-binary-windows/-/apollo-engine-binary-windows-0.2018.2-197-g8bb3880fd.tgz#5a27920fec209cd66533033b55e3419535448e90"
+apollo-engine-binary-windows@0.2018.4-20-g7a8822c14:
+  version "0.2018.4-20-g7a8822c14"
+  resolved "https://registry.yarnpkg.com/apollo-engine-binary-windows/-/apollo-engine-binary-windows-0.2018.4-20-g7a8822c14.tgz#7a1ee3ef3db923f65d172c37864dd4d5867a93ce"
 
-apollo-engine@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/apollo-engine/-/apollo-engine-1.0.4.tgz#3bfb5d1b5a4b9703324dc1d5e7394e573c0b836a"
+apollo-engine@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/apollo-engine/-/apollo-engine-1.1.0.tgz#6d21b7136b35c2eb4fc4bc51d99c21a536fc8b14"
   dependencies:
     "@types/connect" "^3.4.31"
     "@types/express" "^4.0.36"
@@ -394,9 +394,9 @@ apollo-engine@^1.0.4:
     "@types/koa-router" "^7.0.27"
     "@types/restify" "^5.0.7"
   optionalDependencies:
-    apollo-engine-binary-darwin "0.2018.2-197-g8bb3880fd"
-    apollo-engine-binary-linux "0.2018.2-197-g8bb3880fd"
-    apollo-engine-binary-windows "0.2018.2-197-g8bb3880fd"
+    apollo-engine-binary-darwin "0.2018.4-20-g7a8822c14"
+    apollo-engine-binary-linux "0.2018.4-20-g7a8822c14"
+    apollo-engine-binary-windows "0.2018.4-20-g7a8822c14"
 
 apollo-fetch@^0.7.0:
   version "0.7.0"

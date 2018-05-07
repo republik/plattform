@@ -55,13 +55,13 @@ const run = (workerId) => {
 }
 
 const runOnce = () => {
+  server.runBefore()
   return require('./lib/slackGreeter').connect()
 }
 
 const start = async () => {
-  const httpServer = await run()
   runOnce()
-  return httpServer
+  return run()
 }
 
 const close = () => {
