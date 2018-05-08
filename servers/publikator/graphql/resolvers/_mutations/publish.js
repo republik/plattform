@@ -49,6 +49,7 @@ const uniq = require('lodash/uniq')
 
 const elastic = require('@orbiting/backend-modules-base/lib/elastic').client()
 const mdastToString = require('mdast-util-to-string')
+const { purgeUrls } = require('@orbiting/backend-modules-keyCDN')
 
 const {
   FRONTEND_BASE_URL,
@@ -397,6 +398,16 @@ module.exports = async (
       id: repoId
     }
   })
+
+  // purge pdfs in CDN
+  const purgeQueries = [
+    '',
+    '?download=1',
+    '?images=0',
+    '?images=0&download=1',
+    '?download=1&images=0'
+  ]
+  purgeUrls(purgeQueries.map(q => `/pdf${newPath}.pdf${q}`))
 
   return {
     unresolvedRepoIds,
