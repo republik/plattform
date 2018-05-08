@@ -5,6 +5,9 @@ import colors from '../../theme/colors'
 import {fontFamilies} from '../../theme/fonts'
 import {mUp} from '../../theme/mediaQueries'
 
+import Close from 'react-icons/lib/md/close'
+import Search from 'react-icons/lib/md/search'
+
 const xPadding = 0
 const yPadding = 9 // (40 - 22) / 2
 const borderWidth = 1
@@ -48,6 +51,9 @@ const fieldIncStyle = css({
   '::-webkit-outer-spin-button': {
     appearance: 'none'
   }
+})
+const fieldSearchStyle = css({
+  paddingRight: fieldHeight
 })
 
 const containerStyle = css({
@@ -111,6 +117,12 @@ const arrowDownStyle = css({
   top: lineHeight + fieldHeight / 2 - 3,
   cursor: 'pointer'
 })
+const searchIconStyle = css({
+  position: 'absolute',
+  right: 3,
+  top: fieldHeight - (fieldHeight * .75 / 2),
+  cursor: 'pointer'
+})
 
 const ArrowUp = ({size, fill, ...props}) => (
   <svg {...props} fill={fill} {...arrowUpStyle} width={size} height={size} viewBox='0 0 24 24'>
@@ -132,7 +144,8 @@ class Field extends Component {
       isFocused: false,
       isValidating: false,
       isDirty: false,
-      value: ''
+      value: '',
+      resetActive: false
     }
     this.inputRef = ref => this.input = ref
   }
@@ -145,6 +158,8 @@ class Field extends Component {
       renderInput,
       onInc,
       onDec,
+      onSearch,
+      onReset,
       isFocused: isFocusedFromProps
     } = this.props
 
@@ -158,9 +173,12 @@ class Field extends Component {
       isFocused = isFocusedFromProps
     }
 
-    const {isValidating, isDirty} = this.state
+    const {isValidating, isDirty, resetActive} = this.state
 
     const value = this.props.value || this.state.value
+
+    const hasSearch = !!onSearch
+    const showReset = !!onReset && !!value && (resetActive || !hasSearch)
 
     let colorStyle
     if (this.props.black) {
@@ -182,9 +200,10 @@ class Field extends Component {
         )
       : merge(labelTextStyle, colorStyle)
     const incStyle = hasIncrease ? fieldIncStyle : undefined
+    const searchStyle = hasSearch || !!onReset ? fieldSearchStyle : undefined
     const fStyle = hasError
-      ? merge(fieldStyle, fieldErrorStyle, incStyle, colorStyle)
-      : merge(fieldStyle, incStyle, colorStyle)
+      ? merge(fieldStyle, fieldErrorStyle, incStyle, colorStyle, searchStyle)
+      : merge(fieldStyle, incStyle, colorStyle, searchStyle)
 
     return (
       <label {...containerStyle}>
@@ -197,9 +216,9 @@ class Field extends Component {
             let v = event.target.value
             if (onChange) {
               onChange(event, v, isValidating)
-              this.setState(() => ({isDirty: true}))
+              this.setState(() => ({isDirty: true, resetActive: false}))
             } else {
-              this.setState(() => ({isDirty: true, value: v}))
+              this.setState(() => ({isDirty: true, resetActive: false, value: v}))
             }
           },
           value,
@@ -246,6 +265,37 @@ class Field extends Component {
               }
             }} />
         )}
+        {hasSearch && !showReset &&(
+          <Search
+            {...searchIconStyle}
+            fill={isFocused && !!value ? colors.text : colors.disabled}
+            size={fieldHeight * .75}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              if (this.input) {
+                this.input.focus()
+              }
+              if (!value) return
+              onSearch()
+              this.setState(() => ({resetActive: true}))
+            }} />
+        )}
+        {showReset && (
+          <Close
+            {...searchIconStyle}
+            fill={colors.text}
+            size={fieldHeight * .75}
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              if (this.input) {
+                this.input.focus()
+              }
+              this.setState(() => ({resetActive: false, value: ''}))
+              onReset()
+            }} />
+        )}
       </label>
     )
   }
@@ -254,7 +304,9 @@ class Field extends Component {
 Field.propTypes = {
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   renderInput: PropTypes.func.isRequired,
-  isFocused: PropTypes.bool
+  isFocused: PropTypes.bool,
+  onSearch: PropTypes.func,
+  onReset: PropTypes.func
 }
 
 Field.defaultProps = {
