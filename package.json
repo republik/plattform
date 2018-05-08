@@ -50,6 +50,7 @@
     "start": "if [ -z \"$SERVER\" ]; then >&2 echo \"Missing ENV var: SERVER. Possible values are: republik, publikator, assets.\" && exit 1; else cd servers/$SERVER && yarn run start; fi",
     "dev": "nf --procfile Procfile-dev start",
     "precommit": "lint-staged",
+    "cloc": "find . -name '*.js' -not -path \"*/node_modules*\" -not -path \"./node_modules*\" | xargs wc -l",
     "commit": "git-cz",
     "commitmsg": "validate-commit-msg",
     "roleUser": "node packages/auth/script/roleUser",

@@ -9,10 +9,13 @@ const {
 module.exports = async (pgdb) => {
   const accountNames = [
     STRIPE_PLATFORM,
-    ...STRIPE_CONNECTED_ACCOUNTS
-      ? STRIPE_CONNECTED_ACCOUNTS.split(',')
-      : { }
-  ]
+    ...(STRIPE_CONNECTED_ACCOUNTS || '').split(',')
+  ].filter(Boolean)
+
+  if (!accountNames.length) {
+    console.warn('missing env STRIPE_PLATFORM and/or STRIPE_CONNECTED_ACCOUNTS, stripe integration will not work')
+    return {}
+  }
 
   const companies = await pgdb.public.companies.find({
     name: accountNames

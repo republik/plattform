@@ -8,6 +8,7 @@
   "private": true,
   "license": "AGPL-3.0",
   "dependencies": {
+    "@project-r/styleguide": "^5.75.0",
     "@slack/client": "^4.1.0",
     "apollo-modules-node": "^0.1.4",
     "d3-array": "^1.2.1",
@@ -27,9 +28,13 @@
     "lodash": "^4.17.5",
     "moment": "^2.22.0",
     "openpgp": "^3.0.3",
+    "remark-breaks": "^1.0.0",
+    "remark-parse": "^5.0.0",
     "sharp": "^0.20.1",
     "slugify": "^1.2.9",
     "stripe": "^5.8.0",
+    "throng": "^4.0.0",
+    "unified": "^6.1.6",
     "uuid": "^3.2.1"
   },
   "scripts": {

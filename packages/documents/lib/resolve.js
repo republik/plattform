@@ -3,7 +3,6 @@ const { parse } = require('url')
 const visit = require('unist-util-visit')
 
 checkEnv([
-  'GITHUB_LOGIN',
   'FRONTEND_BASE_URL'
 ])
 
@@ -15,6 +14,10 @@ const {
 const PUBLIC_HOSTNAME = parse(FRONTEND_BASE_URL).hostname
 
 const getRepoId = (url, requireQuery) => {
+  checkEnv([
+    'GITHUB_LOGIN'
+  ])
+
   if (!url) {
     return
   }

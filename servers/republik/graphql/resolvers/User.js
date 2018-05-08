@@ -109,7 +109,7 @@ module.exports = {
       })
       const webp = args && args.webp !== undefined
         ? args.webp
-        : req.get('Accept').indexOf('image/webp') > -1
+        : req && req.get('Accept').indexOf('image/webp') > -1
       return `${url}${webp ? '.webp' : ''}?${newQuery}`
     }
     return null

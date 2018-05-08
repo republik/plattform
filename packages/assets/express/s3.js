@@ -1,5 +1,4 @@
 const fetch = require('isomorphic-unfetch')
-const debug = require('debug')('assets:s3')
 const { returnImage } = require('../lib')
 const {
   AWS_BUCKET_WHITELIST
@@ -20,7 +19,6 @@ if (!AWS_BUCKET_WHITELIST) {
     )
 }
 
-
 module.exports = (server) => {
   server.get('/s3/:bucket/:path(*)', async (req, res) => {
     const {
@@ -33,6 +31,7 @@ module.exports = (server) => {
       return res.status(403).end()
     }
 
+    // eslint-disable-next-line no-unused-vars
     const [_, sanitizedPath, webp] = new RegExp(/(.*?)(\.webp)?$/, 'g').exec(path)
 
     const region = buckets[bucket]
@@ -54,7 +53,8 @@ module.exports = (server) => {
       headers: result.headers,
       options: {
         ...req.query,
-        webp: !!webp
+        webp: !!webp,
+        cacheTags: ['s3']
       }
     })
   })

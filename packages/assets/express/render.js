@@ -13,7 +13,7 @@ const whitelistedUrls = RENDER_URL_WHITELIST && RENDER_URL_WHITELIST.split(',')
 
 module.exports = (server) => {
   server.get('/render', async function (req, res) {
-    const { url, width, height } = req.query
+    const { url, width, height, zoomFactor } = req.query
 
     const allowed =
       whitelistedUrls &&
@@ -25,7 +25,7 @@ module.exports = (server) => {
     }
     debug('GET %s', url)
 
-    const result = await renderUrl(url, width || 1200, height || 628)
+    const result = await renderUrl(url, width || 1200, height || 628, zoomFactor)
     if (!result.ok) {
       console.error('render failed', result.url, result.status)
       return res.status(result.status).end()
@@ -35,7 +35,10 @@ module.exports = (server) => {
       response: res,
       stream: result.body,
       headers: result.headers,
-      options: req.query
+      options: {
+        ...req.query,
+        cacheTags: ['render']
+      }
     })
   })
 }
