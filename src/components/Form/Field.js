@@ -268,7 +268,7 @@ class Field extends Component {
         {hasSearch && !showReset &&(
           <Search
             {...searchIconStyle}
-            fill={isFocused && !!value ? colors.text : colors.disabled}
+            fill={isFocused && !!value ? colors.primary : colors.disabled}
             size={fieldHeight * .75}
             onClick={(e) => {
               e.preventDefault()
@@ -284,7 +284,7 @@ class Field extends Component {
         {showReset && (
           <Close
             {...searchIconStyle}
-            fill={colors.text}
+            fill={colors.primary}
             size={fieldHeight * .75}
             onClick={(e) => {
               e.preventDefault()
