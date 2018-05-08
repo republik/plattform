@@ -35,7 +35,7 @@ Use the `onReset` property to enable a reset button while the input isn't empty.
 
 ### Search
 
-Use the `onSearch` property to enable a search button. You may combine `onSearch` and `onReset`. The reset button will appear when the user clicks the search button, and disappear when the user carries on refining the search query.
+Use the `onSearch` property to enable a search button. You may combine `onSearch` and `onReset`. The reset button will appear when the user clicks the search button, and disappears when the user carries on refining the search query.
 
 ```react|span-3
 <Field
