@@ -18,6 +18,7 @@ Promise.resolve().then(async () => {
     .map(r => r.name)
 
   for (let repoName of testRepoNames) {
+    console.log(`deleting ${repoName}...`)
     await githubRest.repos.delete({
       owner: 'orbiting-test',
       repo: repoName
