@@ -1,0 +1,248 @@
+{
+  "name": "republik-backends",
+  "description": "test app.json (no addons, no seeds, too many required ENVs)",
+  "env": {
+    "ASSETS_BASE_URL": {
+      "required": true
+    },
+    "ASSETS_HMAC_KEY": {
+      "generator": "secret"
+    },
+    "ASSETS_SERVER_BASE_URL": {
+      "required": true
+    },
+    "AUTH_MAIL_FROM_ADDRESS": {
+      "required": true
+    },
+    "AUTH_MAIL_TEMPLATE_NAME": {
+      "required": true
+    },
+    "AWS_ACCESS_KEY_ID": "",
+    "AWS_REGION": "",
+    "AWS_S3_BUCKET": "",
+    "AWS_S3_BUCKET_PROD": "",
+    "AWS_SECRET_ACCESS_KEY": "",
+    "BASIC_AUTH_PASS": {
+      "generator": "secret"
+    },
+    "BASIC_AUTH_USER": "itisfun",
+    "CLUSTER": {
+      "required": true
+    },
+    "CORS_WHITELIST_URL": {
+      "required": true
+    },
+    "DEBUG": "*",
+    "DEBUG_DEPTH": "null",
+    "DEFAULT_MAIL_FROM_ADDRESS": {
+      "required": true
+    },
+    "DEFAULT_MAIL_FROM_NAME": {
+      "required": true
+    },
+    "DISPLAY_AUTHOR_SECRET": {
+      "required": true
+    },
+    "DOCUMENTS_RESTRICT_TO_ROLES": {
+      "required": true
+    },
+    "ENGINE_API_KEY": "",
+    "ERROR_PAGE_URL": {
+      "required": true
+    },
+    "EXO_KEY": "",
+    "EXO_SECRET": "",
+    "FOUNDELASTICSEARCH_URL": {
+      "required": true
+    },
+    "FRONTEND_BASE_URL": {
+      "required": true
+    },
+    "GITHUB_APP_ID": {
+      "required": true
+    },
+    "GITHUB_APP_KEY": {
+      "required": true
+    },
+    "GITHUB_INSTALLATION_ID": {
+      "required": true
+    },
+    "GITHUB_LOGIN": {
+      "required": true
+    },
+    "GSHEETS": "",
+    "HEROKU_POSTGRESQL_ORANGE_URL": {
+      "required": true
+    },
+    "LOGDNA_KEY": "",
+    "MAILCHIMP_API_KEY": "",
+    "MAILCHIMP_FROM_NAME": {
+      "required": true
+    },
+    "MAILCHIMP_INTEREST_MEMBER": {
+      "required": true
+    },
+    "MAILCHIMP_INTEREST_MEMBER_BENEFACTOR": {
+      "required": true
+    },
+    "MAILCHIMP_INTEREST_NEWSLETTER_DAILY": {
+      "required": true
+    },
+    "MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR": {
+      "required": true
+    },
+    "MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY": {
+      "required": true
+    },
+    "MAILCHIMP_INTEREST_PLEDGE": {
+      "required": true
+    },
+    "MAILCHIMP_MAIN_LIST_ID": {
+      "required": true
+    },
+    "MAILCHIMP_REPLY_TO": {
+      "required": true
+    },
+    "MAILCHIMP_URL": {
+      "required": true
+    },
+    "MAINTENANCE_PAGE_URL": {
+      "required": true
+    },
+    "MANDRILL_API_KEY": {
+      "required": true
+    },
+    "NODE_ENV": {
+      "required": true
+    },
+    "NODE_MODULES_CACHE": {
+      "required": true
+    },
+    "PARKING_PLEDGE_ID": {
+      "required": true
+    },
+    "PARKING_USER_ID": {
+      "required": true
+    },
+    "PF_PSPID": {
+      "required": true
+    },
+    "PF_SHA_IN_SECRET": {
+      "required": true
+    },
+    "PF_SHA_OUT_SECRET": {
+      "required": true
+    },
+    "PHANTOM_COOKIE": {
+      "required": true
+    },
+    "PHANTOMJSCLOUD_API_KEY": {
+      "required": true
+    },
+    "PREVIEW_MAIL_REPO_ID": "",
+    "PUBLIC_ASSETS_HOSTNAME": {
+      "required": true
+    },
+    "PUBLIC_URL": {
+      "required": true
+    },
+    "PUBLIC_WS_URL_BASE": {
+      "required": true
+    },
+    "PUBLIC_WS_URL_PATH": {
+      "required": true
+    },
+    "QUESTIONS_MAIL_FROM_ADDRESS": {
+      "required": true
+    },
+    "REDIS_URL": {
+      "required": true
+    },
+    "RENDER_URL_WHITELIST": {
+      "required": true
+    },
+    "REQ_TIMEOUT": {
+      "required": true
+    },
+    "S3BUCKET": {
+      "required": true
+    },
+    "SEND_MAILS": "false",
+    "SEND_MAILS_DOMAIN_FILTER": {
+      "required": true
+    },
+    "SERVER": {
+      "required": true
+    },
+    "SESSION_SECRET": {
+      "generator": "secret"
+    },
+    "SG_BRAND_MARK_PATH": {
+      "required": true
+    },
+    "SG_BRAND_MARK_VIEWBOX": {
+      "required": true
+    },
+    "SG_COLORS": {
+      "required": true
+    },
+    "SG_FONT_FACES": {
+      "required": true
+    },
+    "SG_FONT_FAMILIES": {
+      "required": true
+    },
+    "SG_LOGO_PATH": {
+      "required": true
+    },
+    "SG_LOGO_VIEWBOX": {
+      "required": true
+    },
+    "SLACK_API_TOKEN": "",
+    "SLACK_CHANNEL_COMMENTS": "",
+    "SLACK_CHANNEL_GREETING": "",
+    "STRIPE_ACCOUNT_ID_PROJECT_R": {
+      "required": true
+    },
+    "STRIPE_ACCOUNT_ID_REPUBLIK": {
+      "required": true
+    },
+    "STRIPE_CONNECTED_ACCOUNTS": {
+      "required": true
+    },
+    "STRIPE_CONNECTED_ENDPOINT_SECRET": {
+      "required": true
+    },
+    "STRIPE_PLATFORM": {
+      "required": true
+    },
+    "STRIPE_PLATFORM_ENDPOINT_SECRET": {
+      "required": true
+    },
+    "STRIPE_SECRET_KEY_PROJECT_R": {
+      "required": true
+    },
+    "STRIPE_SECRET_KEY_REPUBLIK": {
+      "required": true
+    },
+    "STRIPE_TEST_MODE": {
+      "required": true
+    },
+    "WS_KEEPALIVE_INTERVAL": {
+      "required": true
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "addons": [
+    "logdna"
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    }
+  ]
+}
