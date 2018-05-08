@@ -303,8 +303,9 @@ type Comment {
   parent: Comment
   parentIds: [ID!]!
   comments: CommentConnection!
-  # maybe becomes mdast/JSON later
-  content: String
+  # mdast
+  content: JSON
+  text: String
   published: Boolean!
   adminUnpublished: Boolean
   upVotes: Int!

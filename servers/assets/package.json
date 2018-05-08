@@ -10,12 +10,13 @@
   "dependencies": {
     "cors": "^2.8.4",
     "express": "^4.16.3",
-    "isomorphic-unfetch": "^2.0.0"
+    "isomorphic-unfetch": "^2.0.0",
+    "regiment": "https://github.com/orbiting/regiment"
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon -w ../../packages -w .env -w package.jsoan -w ../yarn.lock -w server.js -w index.js index.js",
     "inspect": "NODE_ENV=development DEBUG=assets:* nodemon -w ../../packages -w .env -w package.jsoan -w ../yarn.lock -w server.js -w index.js --inspect index.js",
-    "start": "node --optimize_for_size --max_old_space_size=512 --gc_interval=100 index.js"
+    "start": "node index.js"
   },
   "devDependencies": {
     "nodemon": "^1.17.3"

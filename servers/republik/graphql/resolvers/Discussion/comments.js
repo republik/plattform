@@ -11,7 +11,6 @@ const _ = {
 const {
   published: getPublished,
   adminUnpublished: getAdminUnpublished,
-  content: getContent,
   author: getAuthor,
   displayAuthor: getDisplayAuthor
 } = require('../Comment')
@@ -62,11 +61,12 @@ const measureTree = comment => {
 // recursively sort tree
 // each node with children gets a topValue based on
 // node[sortKey] || topChild[topValue] || topChild[sortKey]
-// thus topValue bubbles up the tree, ensuring consistent sorting.
-const deepSortTree = (comment, ascDesc, sortKey, topValue, topIds) => {
+// thus topValue bubbles up the tree
+// this behaviour can be disabled with the last param set to false
+const deepSortTree = (comment, ascDesc, sortKey, topValue, topIds, bubbleSort = true) => {
   const { comments } = comment
   if (comments.nodes.length > 0) {
-    comments.nodes.forEach(c => deepSortTree(c, ascDesc, sortKey, topValue, topIds))
+    comments.nodes.forEach(c => deepSortTree(c, ascDesc, sortKey, topValue, topIds, bubbleSort))
     comment.comments = {
       ...comments,
       nodes: comments.nodes.sort(
@@ -78,10 +78,12 @@ const deepSortTree = (comment, ascDesc, sortKey, topValue, topIds) => {
       const firstChild = comment.comments.nodes[0]
       comment.topValue = topIds && topIds.includes(comment.id)
         ? topValue
-        : [
-          comment[sortKey],
-          firstChild.topValue || firstChild[sortKey]
-        ].sort((a, b) => ascDesc(a, b))[0]
+        : bubbleSort
+          ? [
+            comment[sortKey],
+            firstChild.topValue || firstChild[sortKey]
+          ].sort((a, b) => ascDesc(a, b))[0]
+          : null
     }
   }
   return comment
@@ -181,7 +183,6 @@ const decorateTree = async (_comment, coveredComments, discussion, context) => {
           ...c,
           published: getPublished(c, {}, context),
           adminUnpublished: getAdminUnpublished(c, {}, context),
-          content: getContent(c, {}, context),
           author: getAuthor(c, {}, preResolvedContext),
           displayAuthor: getDisplayAuthor(c, {}, preResolvedContext)
         }
@@ -296,6 +297,8 @@ module.exports = async (discussion, args, context, info) => {
     'HOT': 'hotness'
   }
   const sortKey = sortKeyMap[orderBy]
+  const bubbleSort = sortKey !== 'createdAt' // bubbling values for sort is disabled for createdAt
+
   const compare =
     (a, b) => // topValue set  by deepSortTree // index for stable sort
       ascDesc(a.topValue || a[sortKey], b.topValue || b[sortKey]) || ascending(a.index, b.index)
@@ -318,7 +321,8 @@ module.exports = async (discussion, args, context, info) => {
     topValue,
     focusComment && focusComment.parentIds
       ? [...focusComment.parentIds, focusComment.id]
-      : null
+      : null,
+    bubbleSort
   )
 
   if (exceptIds) { // exceptIds are always on first level
