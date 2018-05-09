@@ -5,9 +5,6 @@ import colors from '../../theme/colors'
 import {fontFamilies} from '../../theme/fonts'
 import {mUp} from '../../theme/mediaQueries'
 
-import Close from 'react-icons/lib/md/close'
-import Search from 'react-icons/lib/md/search'
-
 const xPadding = 0
 const yPadding = 9 // (40 - 22) / 2
 const borderWidth = 1
@@ -52,7 +49,7 @@ const fieldIncStyle = css({
     appearance: 'none'
   }
 })
-const fieldSearchStyle = css({
+const fieldIconStyle = css({
   paddingRight: fieldHeight
 })
 
@@ -117,7 +114,7 @@ const arrowDownStyle = css({
   top: lineHeight + fieldHeight / 2 - 3,
   cursor: 'pointer'
 })
-const searchIconStyle = css({
+const iconWrapperStyle = css({
   position: 'absolute',
   right: 3,
   top: fieldHeight - (fieldHeight * .75 / 2),
@@ -144,8 +141,7 @@ class Field extends Component {
       isFocused: false,
       isValidating: false,
       isDirty: false,
-      value: '',
-      resetActive: false
+      value: ''
     }
     this.inputRef = ref => this.input = ref
   }
@@ -158,9 +154,8 @@ class Field extends Component {
       renderInput,
       onInc,
       onDec,
-      onSearch,
-      onReset,
-      isFocused: isFocusedFromProps
+      isFocused: isFocusedFromProps,
+      icon
     } = this.props
 
     let simulationClassName
@@ -173,12 +168,9 @@ class Field extends Component {
       isFocused = isFocusedFromProps
     }
 
-    const {isValidating, isDirty, resetActive} = this.state
+    const {isValidating, isDirty} = this.state
 
     const value = this.props.value || this.state.value
-
-    const hasSearch = !!onSearch
-    const showReset = !!onReset && !!value && (resetActive || !hasSearch)
 
     let colorStyle
     if (this.props.black) {
@@ -200,10 +192,10 @@ class Field extends Component {
         )
       : merge(labelTextStyle, colorStyle)
     const incStyle = hasIncrease ? fieldIncStyle : undefined
-    const searchStyle = hasSearch || !!onReset ? fieldSearchStyle : undefined
+    const iconStyle = icon ? fieldIconStyle : undefined
     const fStyle = hasError
-      ? merge(fieldStyle, fieldErrorStyle, incStyle, colorStyle, searchStyle)
-      : merge(fieldStyle, incStyle, colorStyle, searchStyle)
+      ? merge(fieldStyle, fieldErrorStyle, incStyle, colorStyle, iconStyle)
+      : merge(fieldStyle, incStyle, colorStyle, iconStyle)
 
     return (
       <label {...containerStyle}>
@@ -216,9 +208,9 @@ class Field extends Component {
             let v = event.target.value
             if (onChange) {
               onChange(event, v, isValidating)
-              this.setState(() => ({isDirty: true, resetActive: false}))
+              this.setState(() => ({isDirty: true}))
             } else {
-              this.setState(() => ({isDirty: true, resetActive: false, value: v}))
+              this.setState(() => ({isDirty: true, value: v}))
             }
           },
           value,
@@ -265,36 +257,8 @@ class Field extends Component {
               }
             }} />
         )}
-        {hasSearch && !showReset &&(
-          <Search
-            {...searchIconStyle}
-            fill={isFocused && !!value ? colors.primary : colors.disabled}
-            size={fieldHeight * .75}
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              if (this.input) {
-                this.input.focus()
-              }
-              if (!value) return
-              onSearch()
-              this.setState(() => ({resetActive: true}))
-            }} />
-        )}
-        {showReset && (
-          <Close
-            {...searchIconStyle}
-            fill={colors.primary}
-            size={fieldHeight * .75}
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              if (this.input) {
-                this.input.focus()
-              }
-              this.setState(() => ({resetActive: false, value: ''}))
-              onReset()
-            }} />
+        {icon && (
+          <span {...iconWrapperStyle}>{icon}</span>
         )}
       </label>
     )
@@ -305,8 +269,7 @@ Field.propTypes = {
   error: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   renderInput: PropTypes.func.isRequired,
   isFocused: PropTypes.bool,
-  onSearch: PropTypes.func,
-  onReset: PropTypes.func
+  icon: PropTypes.node
 }
 
 Field.defaultProps = {

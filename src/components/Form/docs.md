@@ -23,45 +23,17 @@ Pass css pseudo states as `simulate` property to test or display behavior. Pleas
 <Field label='Label' simulate='focus' />
 ```
 
-### Reset
-
-Use the `onReset` property to enable a reset button while the input isn't empty.
-
-```react|span-3
-<Field label='Label' onReset={() => {
-  console.log('reset')
-}} />
-```
-
-### Search
-
-Use the `onSearch` property to enable a search button. You may combine `onSearch` and `onReset`. The reset button will appear when the user clicks the search button, and disappears when the user carries on refining the search query.
-
 ```react|span-3
 <Field
   label='Label'
-  onSearch={() => {
-    console.log('search')
-  }} />
-```
-
-```react|span-3
-state: {
-  value: '',
-  resetFunc: null
-}
----
-<Field
-  label='Label'
-  value={state.value}
-  onChange={(_, value) => setState({value})}
-  onReset={() => {
-    console.log('reset')
-    setState({value: ''})
-  }}
-  onSearch={() => {
-    console.log('search')
-  }} />
+  icon={
+    <SearchIcon
+      size={30}
+      onClick={() => {
+        console.log('search')
+      }}
+    />
+  } />
 ```
 
 ### Increase and Decrease

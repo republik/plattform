@@ -139,7 +139,8 @@ ReactDOM.render(
                 Items: require('./components/Form/VirtualDropdown.js').Items,
                 ItemsContainer: require('./components/Form/VirtualDropdown.js').ItemsContainer,
                 Inner: require('./components/Form/VirtualDropdown.js').Inner
-              }
+              },
+              SearchIcon: require('react-icons/lib/md/search')
             },
             src: require('./components/Form/docs.md')
           },
