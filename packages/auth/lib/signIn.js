@@ -11,6 +11,7 @@ const {
   sendMail,
   sendMailTemplate
 } = require('@orbiting/backend-modules-mail')
+const { encode } = require('@orbiting/backend-modules-base64u')
 
 checkEnv([
   'FRONTEND_BASE_URL',
@@ -75,7 +76,7 @@ module.exports = async (_email, context, pgdb, req) => {
     `${FRONTEND_BASE_URL}/mitteilung?` +
     querystring.stringify({
       type: 'token-authorization',
-      email,
+      email: encode(email),
       context,
       token
     })
