@@ -28,7 +28,7 @@ module.exports = {
   Document: {
     dynamic: false,
     properties: {
-      type: {
+      __type: {
         type: 'keyword'
       },
       contentString: {

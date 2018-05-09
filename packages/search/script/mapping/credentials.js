@@ -2,6 +2,9 @@ module.exports = {
   Credential: {
     dynamic: false,
     properties: {
+      __type: {
+        type: 'keyword'
+      },
       createdAt: {
         type: 'date'
       },

@@ -66,7 +66,13 @@ const bulk = async ({ indexName, type, elastic, rows }) => {
       }
     })
     // <n+1>
-    payload.body.push({ doc: row, doc_as_upsert: true })
+    payload.body.push({
+      doc: {
+        ...row,
+        __type: type
+      },
+      doc_as_upsert: true
+    })
   })
 
   const resp = await elastic.bulk(payload)

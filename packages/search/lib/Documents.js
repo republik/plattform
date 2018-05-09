@@ -8,7 +8,7 @@ const {
 } = require('./filters')
 
 const schema = {
-  type: termEntry('type'),
+  type: termEntry('__type'),
   dossier: termEntry('meta.dossier'),
   format: termEntry('meta.format'),
   template: termEntry('meta.template'),

@@ -42,7 +42,7 @@ const sanitizeCommitDoc = (d, indexType = 'Document') => {
   }
   return {
     id: d.id, // Buffer.from(`repo:${repoId}:${commitId}`).toString('base64')
-    type: indexType,
+    __type: indexType,
 
     content: d.content,
     contentString: mdastToString(d.content),

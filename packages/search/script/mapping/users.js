@@ -2,6 +2,9 @@ module.exports = {
   User: {
     dynamic: false,
     properties: {
+      __type: {
+        type: 'keyword'
+      },
       addressId: {
         type: 'keyword'
       },
