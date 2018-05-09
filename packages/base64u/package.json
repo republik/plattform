@@ -15,10 +15,9 @@
   "homepage": "https://github.com/orbiting/backends#readme",
   "devDependencies": {
     "abab": "^2.0.0",
-    "faucet": "^0.0.1",
     "tape": "^4.9.0"
   },
   "scripts": {
-    "test": "NODE_ENV=development tape \"**/*.test.js\" | faucet"
+    "test": "NODE_ENV=development tape \"**/*.test.js\""
   }
 }
