@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 import { css } from 'glamor'
 import { tsvParse, csvFormat } from 'd3-dsv'
 
@@ -47,14 +48,17 @@ const styles = {
   })
 }
 
-const EditModal = ({data, onChange, onClose, chart}) => {
-  const config = data.get('config') || {}
-  return (
-    <div onDragStart={e => {
-      e.stopPropagation()
-    }} onClick={e => {
-      e.stopPropagation()
-    }}>
+class EditModal extends Component {
+  constructor (...args) {
+    super(...args)
+    this.rootDiv = document.createElement('div')
+    document.body.appendChild(this.rootDiv)
+  }
+  render () {
+    const { data, onChange, onClose, chart } = this.props
+    const config = data.get('config') || {}
+
+    return ReactDOM.createPortal(
       <Overlay onClose={onClose} mUpStyle={{maxWidth: '80vw', marginTop: '5vh'}}>
         <OverlayToolbar>
           <OverlayToolbarClose onClick={onClose} />
@@ -140,9 +144,10 @@ const EditModal = ({data, onChange, onClose, chart}) => {
           </div>
           <br style={{clear: 'both'}} />
         </OverlayBody>
-      </Overlay>
-    </div>
-  )
+      </Overlay>,
+      this.rootDiv
+    )
+  }
 }
 
 export default EditModal
