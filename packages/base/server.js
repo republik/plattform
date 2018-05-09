@@ -155,6 +155,15 @@ const start = async (
     )
   }
 
+  if (CORS_WHITELIST_URL) {
+    const corsOptions = {
+      origin: CORS_WHITELIST_URL.split(','),
+      credentials: true,
+      optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+    }
+    server.use('*', cors(corsOptions))
+  }
+
   // Once DB is available, setup sessions and routes for authentication
   auth.configure({
     server: server,
@@ -164,15 +173,6 @@ const start = async (
     dev: DEV,
     pgdb: pgdb
   })
-
-  if (CORS_WHITELIST_URL) {
-    const corsOptions = {
-      origin: CORS_WHITELIST_URL.split(','),
-      credentials: true,
-      optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-    }
-    server.use('*', cors(corsOptions))
-  }
 
   if (executableSchema) {
     const graphql = require('./express/graphql')
