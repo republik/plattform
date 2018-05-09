@@ -117,8 +117,7 @@ const arrowDownStyle = css({
 const iconWrapperStyle = css({
   position: 'absolute',
   right: 3,
-  top: fieldHeight - (fieldHeight * .75 / 2),
-  cursor: 'pointer'
+  top: lineHeight + 5
 })
 
 const ArrowUp = ({size, fill, ...props}) => (
