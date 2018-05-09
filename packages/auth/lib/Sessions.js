@@ -1,5 +1,5 @@
 const { NoSessionError, QueryEmailMismatchError, DestroySessionError } = require('./errors')
-const urlsafeBase64 = require('urlsafe-base64')
+const { decode, match } = require('@orbiting/backend-modules-base64u')
 
 const destroySession = async (req) => {
   return new Promise((resolve, reject) => {
@@ -18,10 +18,8 @@ const sessionByToken = async ({ pgdb, token, email: emailFromQuery, ...meta }) =
     'sess @>': { token }
   })
 
-  if (urlsafeBase64.validate(emailFromQuery)) {
-    emailFromQuery =
-      urlsafeBase64.decode(Buffer.from(emailFromQuery)).toString()
-  }
+  // Recognize and decode urlsafe base64 encoded email address.
+  if (match(emailFromQuery)) emailFromQuery = decode(emailFromQuery)
 
   if (!session) {
     throw new NoSessionError({ token, emailFromQuery, ...meta })

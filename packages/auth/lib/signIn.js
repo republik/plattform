@@ -2,7 +2,6 @@ const uuid = require('uuid/v4')
 const querystring = require('querystring')
 const validator = require('validator')
 const kraut = require('kraut')
-const urlsafeBase64 = require('urlsafe-base64')
 const geoForIP = require('./geoForIP')
 const checkEnv = require('check-env')
 const t = require('./t')
@@ -12,6 +11,7 @@ const {
   sendMail,
   sendMailTemplate
 } = require('@orbiting/backend-modules-mail')
+const { encode } = require('@orbiting/backend-modules-base64u')
 
 checkEnv([
   'FRONTEND_BASE_URL',
@@ -76,7 +76,7 @@ module.exports = async (_email, context, pgdb, req) => {
     `${FRONTEND_BASE_URL}/mitteilung?` +
     querystring.stringify({
       type: 'token-authorization',
-      email: urlsafeBase64.encode(Buffer.from(email)),
+      email: encode(email),
       context,
       token
     })
