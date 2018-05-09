@@ -25,26 +25,22 @@ const getDocumentCloudDocById = async (id, t) => {
     )
   }
 
-  const document = response.document
+  const doc = response.document
 
-  // find the thumbnail, but do not fail if we can't find it
-  let thumbnail
-  try {
-    thumbnail = document.resources.page.image.replace('{page}', '1').replace('{size}', 'normal')
-  } catch (e) {
-    // we can't find a thumbnail, but this is not critical, so just move on
-  }
+  // the thumbnail is mission critical, if it fails it break and alert us to fix it (we even have test coverage now)
+  const thumbnail = doc.resources.page.image
+    .replace('{page}', '1').replace('{size}', 'normal')
 
   return {
     id: id,
-    title: document.title,
+    title: doc.title,
     thumbnail: thumbnail,
-    createdAt: new Date(document.created_at),
-    updatedAt: new Date(document.updated_at),
+    createdAt: new Date(doc.created_at),
+    updatedAt: new Date(doc.updated_at),
     retrievedAt: new Date(),
-    contributorUrl: document.contributor_documents_url,
-    contributorName: document.contributor,
-    url: document.canonical_url
+    contributorUrl: doc.contributor_documents_url,
+    contributorName: doc.contributor,
+    url: doc.canonical_url
   }
 }
 
