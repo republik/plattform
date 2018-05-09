@@ -44,11 +44,16 @@ const createQuery = (searchTerm, filter, sort) => ({
           multi_match: {
             query: searchTerm,
             fields: [
+              // Document
               'meta.title^3',
               'meta.description^2',
               'meta.authors^2',
               'contentString',
-              'content'
+              'content',
+              // User
+              'username',
+              'firstName',
+              'lastName'
             ]
           }
         }
