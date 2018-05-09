@@ -15,6 +15,10 @@ const {
 const {
   extractAggs
 } = require('../../../lib/aggregations')
+const {
+  __resolveType: resolveHitType
+} = require('../SearchEntity')
+const { transformUser } = require('@orbiting/backend-modules-auth')
 
 const reduceFilters = filterReducer(documentSchema)
 const createElasticFilter = elasticFilterBuilder(documentSchema)
@@ -72,9 +76,13 @@ const createQuery = (searchTerm, filter, sort) => ({
   aggs: extractAggs(documentSchema)
 })
 
-const mapDocumentHit = (hit) => {
+const mapHit = (hit) => {
+  const type = resolveHitType(hit._source)
+  const entity = type === 'User'
+    ? transformUser(hit._source)
+    : hit._source
   return {
-    entity: hit._source,
+    entity,
     highlights: (hit.highlight || {}).contentString || [],
     score: hit._score
   }
@@ -189,7 +197,7 @@ module.exports = async (
   const hasNextPage = first > 0 && result.hits.total > from + first
   const hasPreviousPage = from > 0
   return {
-    nodes: result.hits.hits.map(mapDocumentHit),
+    nodes: result.hits.hits.map(mapHit),
     aggregations: mapAggregations(result),
     totalCount: result.hits.total,
     pageInfo: {
