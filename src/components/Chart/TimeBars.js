@@ -172,6 +172,9 @@ const TimeBarChart = (props) => {
 
   const yAxis = calculateAxis(props.numberFormat, t, y.domain(), tLabel(props.unit))
   const yTicks = props.yTicks || yAxis.ticks
+  // ensure highest value is last
+  // - the last value is labled with the unit
+  yTicks.sort(ascending)
 
   const xValues = data
     .map(d => d.x)
@@ -252,6 +255,7 @@ const TimeBarChart = (props) => {
   }
 
   const xDomainLast = xDomain[xDomain.length - 1]
+  const baseTick = y.domain()[0]
   const baseLines = xDomain.reduce(
     (lines, xValue) => {
       let previousLine = lines[lines.length - 1]
@@ -334,7 +338,7 @@ const TimeBarChart = (props) => {
           {
             yTicks.map((tick, i) => (
               <g key={tick} transform={`translate(0,${y(tick)})`}>
-                {i > 0 && <line {...styles.axisYLine} x2={width}/>}
+                {tick !== baseTick && <line {...styles.axisYLine} x2={width}/>}
                 <text {...styles.axisLabel} dy='-3px'>
                   {yAxis.axisFormat(tick, last(yTicks, i))}
                 </text>
