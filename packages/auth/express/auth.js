@@ -7,6 +7,7 @@ const debug = require('debug')('auth')
 const { QueryEmailMismatchError, NoSessionError } = require('../lib/errors')
 const transformUser = require('../lib/transformUser')
 const { authorizeSession } = require('../lib/Sessions')
+const basicAuthMiddleware = require('./basicAuth')
 
 checkEnv([
   'FRONTEND_BASE_URL'
@@ -46,6 +47,8 @@ exports.configure = ({
     tableName: 'sessions'
   })
   const Users = pgdb.public.users
+
+  basicAuthMiddleware(server)
 
   // Configure sessions
   server.use(session({

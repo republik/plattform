@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const { express: middlewares } = require('@orbiting/backend-modules-assets')
+const { express: { basicAuth: basicAuthMiddleware } } = require('@orbiting/backend-modules-auth')
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
@@ -39,6 +40,8 @@ const start = (workerId) => {
     }
     server.use('*', cors(corsOptions))
   }
+
+  basicAuthMiddleware(server)
 
   // special middlewares
   for (let middleware of additionalMiddlewares) {
