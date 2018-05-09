@@ -1,20 +1,8 @@
 const session = require('express-session')
 const PgSession = require('connect-pg-simple')(session)
 const passport = require('passport')
-const checkEnv = require('check-env')
-const querystring = require('querystring')
-const debug = require('debug')('auth')
-const { QueryEmailMismatchError, NoSessionError } = require('../lib/errors')
 const transformUser = require('../lib/transformUser')
-const { authorizeSession } = require('../lib/Sessions')
-
-checkEnv([
-  'FRONTEND_BASE_URL'
-])
-
-const {
-  FRONTEND_BASE_URL
-} = process.env
+const basicAuthMiddleware = require('./basicAuth')
 
 exports.configure = ({
   server = null, // Express Server
@@ -30,7 +18,7 @@ exports.configure = ({
   // be reset every time a user visits the site again before it expires.
   maxAge = 60000 * 60 * 24 * 7 * 2,
   // is the server running in development
-  dev = false,
+  dev = false
 } = {}) => {
   if (server === null) {
     throw new Error('server option must be an express server instance')
@@ -46,6 +34,8 @@ exports.configure = ({
     tableName: 'sessions'
   })
   const Users = pgdb.public.users
+
+  basicAuthMiddleware(server)
 
   // Configure sessions
   server.use(session({
