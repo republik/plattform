@@ -13,6 +13,7 @@ const {
 } = require('@orbiting/backend-modules-mail')
 
 checkEnv([
+  'FRONTEND_BASE_URL',
   'AUTH_MAIL_FROM_ADDRESS'
 ])
 
