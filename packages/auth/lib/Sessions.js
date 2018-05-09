@@ -19,7 +19,9 @@ const sessionByToken = async ({ pgdb, token, email: emailFromQuery, ...meta }) =
   })
 
   // Recognize and decode urlsafe base64 encoded email address.
-  if (match(emailFromQuery)) emailFromQuery = decode(emailFromQuery)
+  if (match(emailFromQuery)) {
+    emailFromQuery = decode(emailFromQuery)
+  }
 
   if (!session) {
     throw new NoSessionError({ token, emailFromQuery, ...meta })
