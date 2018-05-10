@@ -36,10 +36,6 @@ type mutations {
   # required role to change other's email: supporter
   updateEmail(userId: ID, email: String!): User!
 
-  # if userId is null, the logged in user's phone is changed
-  # required role to change other's phone number: supporter
-  updatePhoneNumber(userId: ID, phoneNumber: String!): User!
-
   # start a second factor challenge
   startChallenge(sessionId: ID!, type: SignInTokenType!): Boolean!
 

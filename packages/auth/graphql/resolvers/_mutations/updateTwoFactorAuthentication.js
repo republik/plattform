@@ -29,14 +29,14 @@ module.exports = async (_, args = { }, { pgdb, user, req, ...rest }) => {
     throw new TwoFactorAlreadyDisabledError()
   }
 
-  const updatedEnabledSecondFactors = enabled
-    ? [...new Set(enabledSecondFactors).add(type)]
-    : [...new Set(enabledSecondFactors).delete(type)]
+  const updatedEnabledSecondFactors = new Set(enabledSecondFactors)
+  enabled ? updatedEnabledSecondFactors.add(type) : updatedEnabledSecondFactors.delete(type)
 
+  console.log(updatedEnabledSecondFactors)
   const updatedUser = await updateUserTwoFactorAuthentication({
     pgdb,
     userId: user.id,
-    enabledSecondFactors: updatedEnabledSecondFactors
+    enabledSecondFactors: [...updatedEnabledSecondFactors]
   })
   return !!updatedUser
 }
