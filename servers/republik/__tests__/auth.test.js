@@ -1,4 +1,5 @@
 const test = require('tape-async')
+const OTP = require('otp')
 const { connectIfNeeded, pgDatabase } = require('./helpers.js')
 const { signIn,
    signOut,
@@ -6,6 +7,8 @@ const { signIn,
    denySession,
    sendPhoneNumberVerificationCode,
    verifyPhoneNumber,
+   initTOTPSharedSecret,
+   validateTOTPSharedSecret,
    Users } = require('./auth.js')
 
 const prepare = async () => {
@@ -83,7 +86,7 @@ test('deny a session', async (t) => {
   t.end()
 })
 
-test.only('setup SMS based authentication', async (t2) => {
+test('verify phoneNumber', async (t2) => {
   await prepare()
 
   t2.test('without phoneNumber', async (t) => {
@@ -131,15 +134,41 @@ test.only('setup SMS based authentication', async (t2) => {
   t2.end()
 })
 
-test('setup Time-based-one-time-password authentication (TOTP)', async (t) => {
-  t.ok(true)
+test.only('setup Time-based-one-time-password authentication (TOTP)', async (t2) => {
+  await prepare()
 
-  // initTOTP...
-  // validateSharedSecret...
+  t2.test('with TOTP 2FA enabled', async (t) => {
+    await signIn({
+      user: {
+        ...Users.TwoFactorMember,
+        enabledSecondFactors: ['TOTP']
+      },
+      simulate2FAAuth: true
+    })
+    const a = await initTOTPSharedSecret()
+    t.notOk(a.secret, 'we cannot init TOTP if 2fa is enabled for TOTP token type')
+    await signOut()
+    t.end()
+  })
 
-  // not allowed when 2fa activated for TOTP
+  t2.test('with unverified phoneNumber', async (t) => {
+    await signIn({ user: Users.Member })
+    const a = await initTOTPSharedSecret()
+    t.ok(a.secret, 'totp secret received')
+    const b = await validateTOTPSharedSecret({ totp: 'WRONG' })
+    t.notOk(b, 'TOTP shared secret reported as unverified')
+    t.notOk((await pgDatabase().public.users.findOne({ 'id': Users.Member.id })).isTOTPChallengeSecretVerified, 'is unverified')
 
-  t.end()
+    const otp = OTP({ secret: a.secret })
+    const totp = otp.totp()
+    const c = await validateTOTPSharedSecret({ totp })
+    t.ok(c, 'TOTP shared secret reported as verified')
+    t.ok((await pgDatabase().public.users.findOne({ 'id': Users.Member.id })).isTOTPChallengeSecretVerified, 'is verified')
+    await signOut()
+    t.end()
+  })
+
+  t2.end()
 })
 
 test('authorize a session', async (t) => {

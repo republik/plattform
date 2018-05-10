@@ -177,6 +177,33 @@ const signOut = async (options) => {
   return true
 }
 
+const initTOTPSharedSecret = async () => {
+  const result = await apolloFetch({
+    query: `
+      mutation initTOTPSharedSecret {
+        initTOTPSharedSecret {
+          secret
+        }
+      }
+    `
+  })
+  return (result && result.data && result.data.initTOTPSharedSecret) || {}
+}
+
+const validateTOTPSharedSecret = async ({ totp }) => {
+  const result = await apolloFetch({
+    query: `
+      mutation validateTOTPSharedSecret($totp: String!) {
+        validateTOTPSharedSecret(totp: $totp)
+      }
+    `,
+    variables: {
+      totp
+    }
+  })
+  return result && result.data && result.data.validateTOTPSharedSecret
+}
+
 const Unverified = {
   id: 'a0000000-0000-0000-0001-000000000001',
   firstName: 'willhelm tell',
@@ -244,6 +271,8 @@ module.exports = {
   updateTwoFactorAuthentication,
   sendPhoneNumberVerificationCode,
   verifyPhoneNumber,
+  initTOTPSharedSecret,
+  validateTOTPSharedSecret,
   Users: {
     Supporter,
     Unverified,
