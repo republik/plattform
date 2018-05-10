@@ -2,6 +2,7 @@ const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth
 const { getTweetById } = require('../../../lib/embeds/twitter')
 const { getYoutubeVideoById } = require('../../../lib/embeds/youtube')
 const { getVimeoVideoById } = require('../../../lib/embeds/vimeo')
+const { getDocumentCloudDocById } = require('../../../lib/embeds/documentcloud')
 
 // // One capturing group at match[1] that catches the status
 // const TWITTER_REGEX = /^https?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)$/
@@ -41,6 +42,16 @@ module.exports = async (_, args, { user, t }) => {
       embedType,
       id,
       ...vimeoData
+    }
+  }
+
+  if (embedType === 'DocumentCloudEmbed') {
+    const documentCloudData = await getDocumentCloudDocById(id)
+
+    return {
+      embedType,
+      id,
+      ...documentCloudData
     }
   }
 

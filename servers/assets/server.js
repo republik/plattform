@@ -1,6 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const { express: middlewares } = require('@orbiting/backend-modules-assets')
+const { express: { basicAuth: basicAuthMiddleware } } = require('@orbiting/backend-modules-auth')
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
@@ -9,9 +10,15 @@ const {
   CORS_WHITELIST_URL
 } = process.env
 
-let server
-module.exports.run = () => {
-  server = express()
+let additionalMiddlewares = []
+let httpServer
+
+const addMiddleware = (middleware) => {
+  additionalMiddlewares.push(middleware)
+}
+
+const start = (workerId) => {
+  const server = express()
 
   // redirect to https
   if (!DEV) {
@@ -19,8 +26,9 @@ module.exports.run = () => {
     server.use((req, res, next) => {
       if (!req.secure) {
         res.redirect(`https://${req.hostname}${req.url}`)
+      } else {
+        next()
       }
-      return next()
     })
   }
 
@@ -33,16 +41,40 @@ module.exports.run = () => {
     server.use('*', cors(corsOptions))
   }
 
+  basicAuthMiddleware(server)
+
+  // special middlewares
+  for (let middleware of additionalMiddlewares) {
+    middleware(server)
+  }
+
   // middlewares
   for (let key of Object.keys(middlewares)) {
     middlewares[key](server)
   }
 
-  server.listen(PORT, () => {
-    console.info('server is running on http://localhost:' + PORT)
-  })
+  const callback = () => {
+    if (workerId) {
+      console.info(`server (${workerId}) is running on http://localhost:${PORT}`)
+    } else {
+      console.info(`server is running on http://localhost:${PORT}`)
+    }
+  }
+  httpServer = server.listen(PORT, callback)
+
+  return httpServer
 }
 
-module.exports.close = () => {
-  server.close()
+const close = () => {
+  httpServer && httpServer.close()
 }
+
+module.exports = {
+  start,
+  close,
+  addMiddleware
+}
+
+process.on('SIGTERM', () => {
+  close()
+})

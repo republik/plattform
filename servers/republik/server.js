@@ -8,12 +8,20 @@ const { graphql: redirections } = require('@orbiting/backend-modules-redirection
 
 const sendPendingPledgeConfirmations = require('./modules/crowdfundings/lib/sendPendingPledgeConfirmations')
 const mail = require('./modules/crowdfundings/lib/Mail')
+const cluster = require('cluster')
 
 const {
   LOCAL_ASSETS_SERVER
 } = process.env
 
-module.exports.run = () => {
+const start = async () => {
+  const httpServer = await run()
+  await runOnce({ clusterMode: false })
+  return httpServer
+}
+
+// in cluster mode, this runs after runOnce otherwise before
+const run = async (workerId) => {
   const localModule = require('./graphql')
   const executableSchema = makeExecutableSchema(merge(localModule, [documents, redirections]))
 
@@ -45,13 +53,34 @@ module.exports.run = () => {
     mail
   })
 
-  return server.run(executableSchema, middlewares, t, createGraphQLContext)
-    .then((obj) => {
-      require('./lib/slackGreeter').connect()
-      return obj
-    })
+  return server.start(
+    executableSchema,
+    middlewares,
+    t,
+    createGraphQLContext,
+    workerId
+  )
 }
 
-module.exports.close = () => {
+// in cluster mode, this runs before run otherwise after
+const runOnce = (...args) => {
+  if (cluster.isWorker) {
+    throw new Error('runOnce must only be called on cluster.isMaster')
+  }
+  server.runOnce(...args)
+  return require('./lib/slackGreeter').connect()
+}
+
+const close = () => {
   server.close()
 }
+module.exports = {
+  start,
+  run,
+  runOnce,
+  close
+}
+
+process.on('SIGTERM', () => {
+  close()
+})

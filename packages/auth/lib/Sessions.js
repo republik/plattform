@@ -37,6 +37,7 @@ const initiateSession = async ({ req, pgdb, email }) => {
       return resolve(data)
     })
   })
+
   if (!req.sessionID) throw new NoSessionError({ email })
   const session = await pgdb.public.sessions.findOne({ sid: req.sessionID })
   if (!session) throw new NoSessionError({ email })

@@ -137,6 +137,7 @@ enum EmbedType {
   YoutubeEmbed
   VimeoEmbed
   TwitterEmbed
+  DocumentCloudEmbed
 }
 
 interface Embed {
@@ -189,6 +190,18 @@ type VimeoEmbed implements Embed {
   userProfileImageUrl: String
   aspectRatio: Float,
   src: VimeoSrc
+}
+
+type DocumentCloudEmbed implements Embed {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  retrievedAt: DateTime!
+  contributorUrl: String
+  contributorName: String
+  thumbnail: String!
+  title: String!
+  url: String!
 }
 
 extend type Document {

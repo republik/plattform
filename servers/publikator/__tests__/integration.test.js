@@ -35,6 +35,7 @@ const fetch = require('isomorphic-unfetch')
 const omit = require('lodash/omit')
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { lib: { redis } } = require('@orbiting/backend-modules-base')
+const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const moment = require('moment')
 const { timeFormat } = require('@orbiting/backend-modules-formats')
 
@@ -72,8 +73,8 @@ let lastCommitId
 test('setup', async (t) => {
   await redis.flushdbAsync()
   await sleep(1000)
-  const server = await Server.run()
-  pgdb = server.pgdb
+  await Server.start()
+  pgdb = await PgDb.connect()
 
   const clients = await createGithubClients()
   githubRest = clients.githubRest
@@ -218,6 +219,29 @@ test('fetch twitter data with unathorized user', async (t) => {
             id
             text
             userName
+          }
+        }
+      }
+    `
+  })
+  t.equal(
+    result.errors[0].message,
+    tr('api/signIn')
+  )
+  t.end()
+})
+
+test('fetch documentcloud data with unathorized user', async (t) => {
+  const result = await apolloFetch({
+    query: `
+      {
+        embed(id: "325931", embedType: DocumentCloudEmbed) {
+          __typename
+          ... on DocumentCloudEmbed {
+            id
+            title
+            thumbnail
+            contributorName
           }
         }
       }
@@ -2194,6 +2218,30 @@ test('fetch twitter data with invalid id', async (t) => {
     result.errors[0].message,
     'Twitter API Errors: 144: No status found with that ID.'
   )
+  t.end()
+})
+
+test('fetch documentcloud data', async (t) => {
+  const result = await apolloFetch({
+    query: `
+      {
+        embed(id: "325931", embedType: DocumentCloudEmbed) {
+          __typename
+          ... on DocumentCloudEmbed {
+            id
+            title
+            thumbnail
+            contributorName
+          }
+        }
+      }
+    `
+  })
+  t.equal(result.data.embed.__typename, 'DocumentCloudEmbed')
+  t.equal(result.data.embed.id, '325931')
+  t.ok(result.data.embed.title)
+  t.ok(result.data.embed.thumbnail)
+  t.ok(result.data.embed.contributorName)
   t.end()
 })
 

@@ -1,12 +1,8 @@
 const session = require('express-session')
 const PgSession = require('connect-pg-simple')(session)
 const passport = require('passport')
-const checkEnv = require('check-env')
 const transformUser = require('../lib/transformUser')
-
-checkEnv([
-  'FRONTEND_BASE_URL'
-])
+const basicAuthMiddleware = require('./basicAuth')
 
 exports.configure = ({
   server = null, // Express Server
@@ -38,6 +34,8 @@ exports.configure = ({
     tableName: 'sessions'
   })
   const Users = pgdb.public.users
+
+  basicAuthMiddleware(server)
 
   // Configure sessions
   server.use(session({
