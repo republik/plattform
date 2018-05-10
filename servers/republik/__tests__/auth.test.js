@@ -4,6 +4,7 @@ const { connectIfNeeded, pgDatabase } = require('./helpers.js')
 const { signIn,
    signOut,
    unauthorizedSession,
+   authorizeSession,
    denySession,
    sendPhoneNumberVerificationCode,
    verifyPhoneNumber,
@@ -160,25 +161,6 @@ test('setup Time-based-one-time-password authentication (TOTP)', async (t) => {
   t.end()
 })
 
-test('authorize a session', async (t) => {
-  t.ok(true)
-  // via email token -> success
-  // via email + sms -> success
-  // via email + totp -> success
-  // via sms + totp -> fail
-
-  // test('start TOTP challenge', async (t) => {
-  //   t.ok(true)
-  //   t.end()
-  // })
-  //
-  // test('start SMS challenge', async (t) => {
-  //   t.ok(true)
-  //   t.end()
-  // })
-  t.end()
-})
-
 test('enable 2 factor authentication', async (t) => {
   await prepare()
   await signIn({
@@ -242,5 +224,47 @@ test('update phone number', async (t) => {
   await prepare()
   // TODO: Test updateMe
   t.ok(true)
+  t.end()
+})
+
+test('authorize a session', async (t) => {
+  await prepare()
+  // TODO: Test authorizeSession
+  // You only need to write tests for the 2FA cases, the 1FA case
+  // gets already tested in various places
+
+  const { payload, email } = await signIn({
+    user: {
+      ...Users.TwoFactorMember,
+      enabledSecondFactors: ['SMS']
+    },
+    skipAuthorization: true
+  })
+
+  await authorizeSession({
+    email,
+    tokens: [
+      { type: 'EMAIL_TOKEN', payload },
+      { type: 'SMS', payload: '' }
+    ]
+  })
+
+  t.ok(true)
+
+  // via tokens: email + sms -> success
+  // via tokens: email + totp -> success
+  // via tokens: sms + totp -> fail
+
+  // test('start TOTP challenge', async (t) => {
+  //   t.ok(true)
+  //   t.end()
+  // ... go through all cases ...
+  // })
+  //
+  // test('start SMS challenge', async (t) => {
+  //   t.ok(true)
+  //   t.end()
+  // ... go through all cases ...
+  // })
   t.end()
 })
