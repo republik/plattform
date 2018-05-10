@@ -255,12 +255,13 @@ const upsertUserVerified = async({ pgdb, email }) => {
   }
 }
 
-const resolveUser = async ({ slug, pgdb, fallback }) => {
+const resolveUser = async ({ slug, pgdb, userId }) => {
+  const idOrSlug = slug || userId
   const user = await pgdb.public.users.findOne(
-  isUUID.v4(slug)
-    ? {id: slug}
-    : {username: slug})
-  return user || fallback
+  isUUID.v4(idOrSlug)
+    ? {id: idOrSlug}
+    : {username: idOrSlug})
+  return user || pgdb.public.users.findOne({ id: userId })
 }
 
 const updateUserTwoFactorAuthentication = async ({ pgdb, userId: id, enabledSecondFactors }) => {
@@ -282,8 +283,8 @@ const updateUserTwoFactorAuthentication = async ({ pgdb, userId: id, enabledSeco
 }
 
 const updateUserEmail = async ({ pgdb, user, email }) => {
-  if (user.enabledSecondFactors && user.enabledSecondFactors.indexOf(TokenTypes.EMAIL) !== -1) {
-    throw new SecondFactorHasToBeDisabledError({ type: TokenTypes.EMAIL })
+  if (user.enabledSecondFactors && user.enabledSecondFactors.length > 0) {
+    throw new SecondFactorHasToBeDisabledError({ type: user.enabledSecondFactors[0] })
   }
   if (!validator.isEmail(email)) {
     throw new EmailInvalidError({ email })
@@ -351,7 +352,9 @@ const updateUserEmail = async ({ pgdb, user, email }) => {
   return pgdb.public.users.findOne({ email })
 }
 
-const updateUserPhoneNumber = async ({ pgdb, user, phoneNumber }) => {
+const updateUserPhoneNumber = async ({ pgdb, userId, phoneNumber }) => {
+  const user = pgdb.public.users.findOne({ id: userId })
+
   if (user.enabledSecondFactors && user.enabledSecondFactors.indexOf(TokenTypes.SMS) !== -1) {
     throw new SecondFactorHasToBeDisabledError({ type: TokenTypes.SMS })
   }
@@ -364,9 +367,9 @@ const updateUserPhoneNumber = async ({ pgdb, user, phoneNumber }) => {
   }
 
   try {
-    await pgdb.public.users.updateOne(
+    return pgdb.public.users.updateAndGetOne(
       {
-        id: user.id
+        id: userId
       }, {
         phoneNumber,
         isPhoneNumberVerified: false
@@ -375,9 +378,6 @@ const updateUserPhoneNumber = async ({ pgdb, user, phoneNumber }) => {
   } catch (e) {
     throw e
   }
-
-  // now refresh the user object and return that
-  return pgdb.public.users.findOne({ id: user.id })
 }
 
 module.exports = {

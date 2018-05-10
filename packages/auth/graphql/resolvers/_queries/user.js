@@ -7,7 +7,7 @@ module.exports = async (_, args, { pgdb, user: me }) => {
   if (!slug) {
     return null
   }
-  const user = await resolveUser({ slug, pgdb, fallback: me })
+  const user = await resolveUser({ slug, pgdb, userId: me.id })
   if (
     user &&
     (user.hasPublicProfile || Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter']))

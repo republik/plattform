@@ -1,12 +1,14 @@
 const Roles = require('../../../lib/Roles')
 const ensureSignedIn = require('../../../lib/ensureSignedIn')
+const transformUser = require('../../../lib/transformUser')
+
 const {
   updateUserEmail,
   resolveUser,
   UserNotFoundError
 } = require('../../../lib/Users')
 
-module.exports = async (_, args, { pgdb, user: me, req }) => {
+module.exports = async (_, args = {}, { pgdb, user: me, req }) => {
   ensureSignedIn(req)
 
   const {
@@ -15,19 +17,20 @@ module.exports = async (_, args, { pgdb, user: me, req }) => {
   } = args
 
   const email = rawEmail.toLowerCase() // security, only process lower case emails
-
-  const user = await resolveUser({ slug: foreignUserId, pgdb, fallback: me })
+  const user = await resolveUser({ slug: foreignUserId, pgdb, userId: me.id })
   Roles.ensureUserIsMeOrInRoles(user, me, ['supporter', 'admin'])
   if (!user) {
     throw new UserNotFoundError({ foreignUserId })
   }
   if (user.email === email) {
-    return user
+    return transformUser(user)
   }
 
-  return updateUserEmail({
+  const newUser = await updateUserEmail({
     pgdb,
     user: user,
     email: email
   })
+
+  return transformUser(newUser)
 }

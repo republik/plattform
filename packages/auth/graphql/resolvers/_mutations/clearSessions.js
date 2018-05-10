@@ -11,7 +11,7 @@ module.exports = async (_, args, { pgdb, user: me, req }) => {
     userId: foreignUserId
   } = args
 
-  const user = await resolveUser({ slug: foreignUserId, pgdb, fallback: me })
+  const user = await resolveUser({ slug: foreignUserId, pgdb, userId: me.id })
 
   let isSessionsCleared = false
   if (me.id === user.id) {
