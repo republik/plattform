@@ -4,9 +4,11 @@ const { signIn,
    signOut,
    unauthorizedSession,
    denySession,
+   sendPhoneNumberVerificationCode,
+   verifyPhoneNumber,
    Users } = require('./auth.js')
 
-const prepare = async (options) => {
+const prepare = async () => {
   await connectIfNeeded()
 }
 
@@ -81,13 +83,52 @@ test('deny a session', async (t) => {
   t.end()
 })
 
-test.only('setup SMS based authentication', async (t) => {
-  // sendPhoneNumberVerification
-  // validatePhoneNumber...
+test.only('setup SMS based authentication', async (t2) => {
+  await prepare()
 
-  // not allowed when 2fa activated for SMS
+  t2.test('without phoneNumber', async (t) => {
+    await signIn({
+      user: {
+        ...Users.Member,
+        phoneNumber: null
+      }
+    })
+    const a = await sendPhoneNumberVerificationCode()
+    t.notOk(a, 'we cannot send an sms if phone number incorrect format or not set')
+    await signOut()
+    t.end()
+  })
 
-  t.end()
+  t2.test('with SMS 2FA enabled', async (t) => {
+    await signIn({
+      user: {
+        ...Users.TwoFactorMember,
+        enabledSecondFactors: ['SMS']
+      },
+      simulate2FAAuth: true
+    })
+    const a = await sendPhoneNumberVerificationCode()
+    t.notOk(a, 'we cannot send an sms if 2fa is enabled for SMS token type')
+    await signOut()
+    t.end()
+  })
+
+  t2.test('with unverified phoneNumber', async (t) => {
+    await signIn({ user: Users.Member })
+    const a = await sendPhoneNumberVerificationCode()
+    t.ok(a, 'sms with verification code has been reported as successfully sent')
+    const verificationCode = (await pgDatabase().public.users.findOne({ 'id': Users.Member.id })).phoneNumberVerificationCode
+    const b = await verifyPhoneNumber({ verificationCode: 'WRONG' })
+    t.notOk(b, 'phoneNumber reported as un-verified')
+    t.notOk((await pgDatabase().public.users.findOne({ 'id': Users.Member.id })).isPhoneNumberVerified, 'unverified')
+    const c = await verifyPhoneNumber({ verificationCode })
+    t.ok(c, 'phoneNumber reported as verified')
+    t.ok((await pgDatabase().public.users.findOne({ 'id': Users.Member.id })).isPhoneNumberVerified, 'verified')
+    await signOut()
+    t.end()
+  })
+
+  t2.end()
 })
 
 test('setup Time-based-one-time-password authentication (TOTP)', async (t) => {

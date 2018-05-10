@@ -159,7 +159,6 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
       throw new SessionTokenValidationFailed({ email: emailFromQuery, ...token })
     }
     const curSession = await sessionByToken({ pgdb, token, email: emailFromQuery })
-    console.log('session', curSession, emailFromQuery)
     if (curSession) {
       if (session && session.id !== curSession.id) {
         console.error('multiple different session?!')

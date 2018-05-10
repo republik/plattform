@@ -9,8 +9,8 @@ const LOGIN_USER_MUTATION = `
 `
 
 const AUTHORIZE_SESSION_MUTATION = `
-  mutation authorizeSession($email: String!, $token: String!, $type: SignInTokenType!) {
-    authorizeSession(email: $email, tokens: [{ type: $type, payload: $token }])
+  mutation authorizeSession($email: String!, $tokens: [SignInToken!]!) {
+    authorizeSession(email: $email, tokens: $tokens)
   }
 `
 
@@ -30,7 +30,7 @@ const authorizeSession = async ({ email, tokens }) => {
   })
 }
 
-const signIn = async ({ user, context, skipAuthorization = false }) => {
+const signIn = async ({ user, context, skipAuthorization = false, simulate2FAAuth = false }) => {
   const { email } = user
   if (!email) return null
   await pgDatabase().public.sessions.truncate({ cascade: true })
@@ -49,16 +49,32 @@ const signIn = async ({ user, context, skipAuthorization = false }) => {
       context
     }
   })
-  const { payload } = await pgDatabase().public.tokens.findOne({
+  const { payload, sessionId } = await pgDatabase().public.tokens.findOne({
     email: email
   })
 
-  // authorize session by token
-  if (!skipAuthorization) {
-    await authorizeSession({
-      email,
-      tokens: [{ type: 'EMAIL_TOKEN', payload }]
+  if (simulate2FAAuth) {
+    const session = await pgDatabase().public.sessions.findOne({
+      id: sessionId
     })
+    await pgDatabase().public.sessions.updateOne({
+      id: sessionId
+    }, {
+      'sess': {
+        ...session.sess,
+        passport: {
+          user: user.id
+        }
+      }
+    })
+  } else {
+    // authorize session by token
+    if (!skipAuthorization) {
+      await authorizeSession({
+        email,
+        tokens: [{ type: 'EMAIL_TOKEN', payload }]
+      })
+    }
   }
 
   // resolve userId
@@ -125,7 +141,33 @@ const updateTwoFactorAuthentication = async ({ enabled, type }) => {
   return result && result.data && result.data.updateTwoFactorAuthentication
 }
 
-const signOut = async ({ skipTruncation = false }) => {
+const sendPhoneNumberVerificationCode = async () => {
+  const result = await apolloFetch({
+    query: `
+      mutation sendPhoneNumberVerificationCode {
+        sendPhoneNumberVerificationCode
+      }
+    `
+  })
+  return result && result.data && result.data.sendPhoneNumberVerificationCode
+}
+
+const verifyPhoneNumber = async ({ verificationCode }) => {
+  const result = await apolloFetch({
+    query: `
+      mutation verifyPhoneNumber($verificationCode: String!) {
+        verifyPhoneNumber(verificationCode: $verificationCode)
+      }
+    `,
+    variables: {
+      verificationCode
+    }
+  })
+  return result && result.data && result.data.verifyPhoneNumber
+}
+
+const signOut = async (options) => {
+  const { skipTruncation = false } = options || {}
   await apolloFetch({
     query: LOGOUT_USER_MUTATION
   })
@@ -149,6 +191,7 @@ const Member = {
   firstName: 'willhelm tell',
   lastName: 'member',
   email: 'willhelmtell_member@project-r.construction',
+  phoneNumber: '+41770000000',
   roles: ['member'],
   verified: true
 }
@@ -199,6 +242,8 @@ module.exports = {
   denySession,
   authorizeSession,
   updateTwoFactorAuthentication,
+  sendPhoneNumberVerificationCode,
+  verifyPhoneNumber,
   Users: {
     Supporter,
     Unverified,

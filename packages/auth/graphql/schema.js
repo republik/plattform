@@ -70,7 +70,7 @@ type mutations {
   sendPhoneNumberVerificationCode: Boolean!
 
   # Verify a phone number
-  verifyPhoneNumber(verificationCode: String): Boolean!
+  verifyPhoneNumber(verificationCode: String!): Boolean!
 
   # Add a user to a given role
   addUserToRole(userId: ID!, role: String!): User!
