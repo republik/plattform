@@ -21,6 +21,6 @@ module.exports = async (_, args, { pgdb, req, signInHooks }) => {
     throw new Error(t('api/users/404'))
   }
 
-  const returnedUser = userHasRole(user, role) ? user : (await removeUserFromRole(userId, role, pgdb))
+  const returnedUser = !userHasRole(user, role) ? user : (await removeUserFromRole(userId, role, pgdb))
   return transformUser(returnedUser)
 }

@@ -204,12 +204,34 @@ const validateTOTPSharedSecret = async ({ totp }) => {
   return result && result.data && result.data.validateTOTPSharedSecret
 }
 
+const updateEmail = async ({ email }) => {
+  const result = await apolloFetch({
+    query: `
+      mutation updateEmail($email: String!) {
+        updateEmail(email: $email) {
+          email
+        }
+      }
+    `,
+    variables: {
+      email
+    }
+  })
+  return (result && result.data && result.data.updateEmail) || {}
+}
+
 const Unverified = {
   id: 'a0000000-0000-0000-0001-000000000001',
   firstName: 'willhelm tell',
   lastName: 'unverified',
   email: 'willhelmtell@project-r.construction',
   roles: ['member'],
+  phoneNumber: null,
+  phoneNumberVerificationCode: null,
+  isPhoneNumberVerified: false,
+  TOTPChallengeSecret: null,
+  isTOTPChallengeSecretVerified: false,
+  enabledSecondFactors: [],
   verified: false
 }
 
@@ -218,8 +240,13 @@ const Member = {
   firstName: 'willhelm tell',
   lastName: 'member',
   email: 'willhelmtell_member@project-r.construction',
-  phoneNumber: '+41770000000',
   roles: ['member'],
+  phoneNumber: '+41770000000',
+  phoneNumberVerificationCode: null,
+  isPhoneNumberVerified: false,
+  TOTPChallengeSecret: null,
+  isTOTPChallengeSecretVerified: false,
+  enabledSecondFactors: [],
   verified: true
 }
 
@@ -229,6 +256,12 @@ const Supporter = {
   lastName: 'supporter',
   email: 'willhelmtell_supporter@project-r.construction',
   roles: ['supporter'],
+  phoneNumber: '+41770000000',
+  phoneNumberVerificationCode: null,
+  isPhoneNumberVerified: false,
+  TOTPChallengeSecret: null,
+  isTOTPChallengeSecretVerified: false,
+  enabledSecondFactors: [],
   verified: true
 }
 
@@ -238,6 +271,12 @@ const Admin = {
   lastName: 'admin',
   email: 'willhelmtell_admin@project-r.construction',
   roles: ['admin'],
+  phoneNumber: '+41770000000',
+  phoneNumberVerificationCode: null,
+  isPhoneNumberVerified: false,
+  TOTPChallengeSecret: null,
+  isTOTPChallengeSecretVerified: false,
+  enabledSecondFactors: [],
   verified: true
 }
 
@@ -249,11 +288,11 @@ const TwoFactorMember = {
   roles: ['member'],
   phoneNumber: '+41770000000',
   phoneNumberVerificationCode: 'GUGUS',
-  isPhoneNumberVerified: false,
+  isPhoneNumberVerified: true,
   TOTPChallengeSecret: 'JVJTCLCFOQTDMZBSHQSHQ3B2MESXOO2WPF2HCYJEJB5TCRRMII7A',
-  isTOTPChallengeSecretVerified: false,
-  verified: true,
-  enabledSecondFactors: []
+  isTOTPChallengeSecretVerified: true,
+  enabledSecondFactors: [],
+  verified: true
 }
 
 const Anonymous = {
@@ -273,6 +312,7 @@ module.exports = {
   verifyPhoneNumber,
   initTOTPSharedSecret,
   validateTOTPSharedSecret,
+  updateEmail,
   Users: {
     Supporter,
     Unverified,

@@ -25,7 +25,7 @@ const prepare = async (options) => {
   await pgDatabase().public.users.truncate({ cascade: true })
 }
 
-test('removeUserFromRole: Users.Admin removes role from Users.Supporter', async (t) => {
+test.only('removeUserFromRole: Users.Admin removes role from Users.Supporter', async (t) => {
   await prepare()
   await pgDatabase().public.users.insert(Users.Supporter)
   await signIn({ user: Users.Admin })
