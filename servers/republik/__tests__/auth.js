@@ -37,8 +37,8 @@ const signIn = async ({ user, context, skipAuthorization = false }) => {
   try {
     await pgDatabase().public.users.insert(user)
   } catch (e) {
-    console.warn(e)
-    // ignore
+    const { id, ...userData } = user
+    await pgDatabase().public.users.updateOne({ id }, userData)
   }
 
   // start login process
@@ -94,11 +94,44 @@ const unauthorizedSession = async ({ user, type, payload }) => {
   return (result && result.data && result.data.unauthorizedSession) || {}
 }
 
-const signOut = async () => {
+const denySession = async ({ user, type, payload }) => {
+  const result = await apolloFetch({
+    query: `
+      mutation denySession($email: String!, $type: SignInTokenType!, $payload: String!) {
+        denySession(email: $email, token: { type: $type, payload: $payload })
+      }
+    `,
+    variables: {
+      email: user.email,
+      type,
+      payload
+    }
+  })
+  return result && result.data && result.data.denySession
+}
+
+const updateTwoFactorAuthentication = async ({ enabled, type }) => {
+  const result = await apolloFetch({
+    query: `
+      mutation updateTwoFactorAuthentication($enabled: Boolean!, $type: SignInTokenType!) {
+        updateTwoFactorAuthentication(enabled: $enabled, type: $type)
+      }
+    `,
+    variables: {
+      enabled,
+      type
+    }
+  })
+  return result && result.data && result.data.updateTwoFactorAuthentication
+}
+
+const signOut = async ({ skipTruncation = false }) => {
   await apolloFetch({
     query: LOGOUT_USER_MUTATION
   })
-  await pgDatabase().public.sessions.truncate({ cascade: true })
+  if (!skipTruncation) {
+    await pgDatabase().public.sessions.truncate({ cascade: true })
+  }
   return true
 }
 
@@ -138,6 +171,21 @@ const Admin = {
   verified: true
 }
 
+const TwoFactorMember = {
+  id: 'a0000000-0000-0000-0001-000000000005',
+  firstName: 'willhelm tell with 2fa',
+  lastName: 'member',
+  email: 'willhelmtell_2fa_member@project-r.construction',
+  roles: ['member'],
+  phoneNumber: '+41770000000',
+  phoneNumberVerificationCode: 'GUGUS',
+  isPhoneNumberVerified: false,
+  TOTPChallengeSecret: 'JVJTCLCFOQTDMZBSHQSHQ3B2MESXOO2WPF2HCYJEJB5TCRRMII7A',
+  isTOTPChallengeSecretVerified: false,
+  verified: true,
+  enabledSecondFactors: []
+}
+
 const Anonymous = {
   firstName: null,
   lastName: null,
@@ -148,12 +196,15 @@ module.exports = {
   signIn,
   signOut,
   unauthorizedSession,
+  denySession,
   authorizeSession,
+  updateTwoFactorAuthentication,
   Users: {
     Supporter,
     Unverified,
     Anonymous,
     Member,
+    TwoFactorMember,
     Admin
   }
 }

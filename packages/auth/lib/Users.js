@@ -108,12 +108,12 @@ const shouldAutoLogin = ({ email }) => {
 
 const denySession = async ({ pgdb, token, email: emailFromQuery }) => {
   // check if authorized to deny the challenge
-  const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
+  const user = await pgdb.public.users.findOne({ email: emailFromQuery })
   const session = await sessionByToken({ pgdb, token, email: emailFromQuery })
   if (!session) {
     throw new NoSessionError({ email: emailFromQuery, token })
   }
-  const validated = await validateChallenge(token.type, { pgdb, user: existingUser, session }, token)
+  const validated = await validateChallenge(token.type, { pgdb, user, session }, token)
   if (!validated) {
     throw new SessionTokenValidationFailed(token)
   }
@@ -145,6 +145,7 @@ const denySession = async ({ pgdb, token, email: emailFromQuery }) => {
     await transaction.transactionRollback()
     throw new AuthorizationFailedError({ session })
   }
+  return user
 }
 
 const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [] }) => {
