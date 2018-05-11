@@ -4,6 +4,20 @@ const BULK_SIZE = 10000
 // Interval in seconds stats about bulk progress is printed.
 const STATS_INTERVAL_SECS = 2
 
+/**
+ * Indexes a <resource> in ElasticSearch.
+ *
+ * @param  {String}   indexName
+ * @param  {String}   type
+ * @param  {Object}   elastic
+ * @param  {Object}   resource
+ * @param  {PgTable}  resource.table
+ * @param  {Object}   [resource.where]     PgTable where stmt
+ * @param  {Function} [resource.transform] A function applied to each result row
+ * @param  {Number}   [resource.bulkSize]  Amount of docs to insert at once
+ * @param  {String[]} [resource.delete]    List of IDs to delete
+ * @return {Promise}
+ */
 const index = async ({ indexName, type, elastic, resource }) => {
   const stats = { [type]: { added: 0 } }
   const statsInterval = setInterval(() => {
@@ -15,7 +29,7 @@ const index = async ({ indexName, type, elastic, resource }) => {
 
   do {
     rows = await resource.table.find(
-      {},
+      resource.where || {},
       {
         orderBy: { id: 'asc' },
         limit: resource.bulkSize || BULK_SIZE,
@@ -25,7 +39,13 @@ const index = async ({ indexName, type, elastic, resource }) => {
 
     if (resource.transform) rows = rows.map(resource.transform)
 
-    await bulk({ indexName, type, elastic, rows })
+    await bulk({
+      indexName,
+      type,
+      elastic,
+      upsertDocs: rows,
+      deleteDocs: resource.delete || []
+    })
 
     stats[type].added += rows.length
     offset += BULK_SIZE
@@ -37,16 +57,22 @@ const index = async ({ indexName, type, elastic, resource }) => {
 }
 
 /**
- * Prepares ElasticSearch-compatible documents of passed <rows> and does submit
- * documents in "bulk" to ElasticSearch.
- *
- * @param  {String}  indexName
- * @param  {String}  type
- * @param  {Object}  elastic
- * @param  {Array}   rows
+ * Prepares ElasticSearch-compatible documents of passed <upsertDocs> and does
+ * submit documents in "bulk" to ElasticSearch.
+ * @param  {String}     indexName
+ * @param  {String}     type
+ * @param  {Object}     elastic
+ * @param  {Object[]}   [upsertDocs=[]] Fully qualified objects to upsert
+ * @param  {String[]}   [deleteDocs=[]] IDs of documents to delete
  * @return {Promise}
  */
-const bulk = async ({ indexName, type, elastic, rows }) => {
+const bulk = async ({
+  indexName,
+  type,
+  elastic,
+  upsertDocs = [],
+  deleteDocs = []
+}) => {
   const payload = {
     body: [
       // <n+0> Destination of document: Index, type and id
@@ -55,23 +81,34 @@ const bulk = async ({ indexName, type, elastic, rows }) => {
     ]
   }
 
-  rows.forEach(row => {
+  upsertDocs.forEach(doc => {
     // <n+0>
     payload.body.push({
       update: {
         _index: indexName,
         _type: type,
-        _id: row.id,
+        _id: doc.id,
         retry_on_conflict: 3
       }
     })
     // <n+1>
     payload.body.push({
       doc: {
-        ...row,
+        ...doc,
         __type: type
       },
       doc_as_upsert: true
+    })
+  })
+
+  deleteDocs.forEach(id => {
+    // <n+0>
+    payload.body.push({
+      delete: {
+        _index: indexName,
+        _type: type,
+        _id: id
+      }
     })
   })
 
