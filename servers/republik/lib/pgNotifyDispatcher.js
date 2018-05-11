@@ -7,6 +7,7 @@ const { Client } = require('pg')
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const elasticsearch = require('@orbiting/backend-modules-base/lib/elastic')
 const { index } = require('@orbiting/backend-modules-search/lib/indexPgTable')
+const mappings = require('@orbiting/backend-modules-search/script/mapping')
 
 const esClient = elasticsearch.client()
 const pgClient = new Client({
@@ -48,9 +49,11 @@ const notificationHandler = async function (pogiClient, {
       .filter(row => row.op === 'DELETE')
       .map(row => row.id)
 
+    const type = Object.keys(mappings.dict[table]).shift()
+
     await index({
-      indexName: `republik-${table}`,
-      type: table,
+      indexName: `republik-${type.toLowerCase()}`,
+      type,
       elastic: esClient,
       resource: {
         table: tx.public[table],
