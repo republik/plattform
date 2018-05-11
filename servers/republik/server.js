@@ -69,7 +69,8 @@ const runOnce = (...args) => {
     throw new Error('runOnce must only be called on cluster.isMaster')
   }
   server.runOnce(...args)
-  return require('./lib/slackGreeter').connect()
+  require('./lib/slackGreeter').connect()
+  require('./lib/pgNotifyDispatcher').run()
 }
 
 const close = () => {
