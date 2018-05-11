@@ -70,7 +70,7 @@ const runOnce = (...args) => {
   }
   server.runOnce(...args)
   require('./lib/slackGreeter').connect()
-  require('./lib/pgNotifyDispatcher').run()
+  require('@orbiting/backend-modules-search').notifyListener.run()
 }
 
 const close = () => {

@@ -1,3 +1,4 @@
 module.exports = {
-  graphql: require('./graphql')
+  graphql: require('./graphql'),
+  notifyListener: require('./lib/notifyListener')
 }
