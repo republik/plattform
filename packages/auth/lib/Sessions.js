@@ -16,6 +16,7 @@ const sessionByToken = async ({ pgdb, token, email: emailFromQuery, ...meta }) =
   const session = await Sessions.findOne({
     'sess @>': { token }
   })
+
   if (!session) {
     throw new NoSessionError({ token, emailFromQuery, ...meta })
   }
