@@ -4,12 +4,7 @@ const elasticsearch = require('@orbiting/backend-modules-base/lib/elastic')
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 
 const inserts = require('./inserts')
-const mappings = [
-  require('./mapping/comments'),
-  require('./mapping/credentials'),
-  require('./mapping/documents'),
-  require('./mapping/users')
-]
+const mappings = require('./mapping')
 
 const elastic = elasticsearch.client()
 
@@ -34,7 +29,7 @@ PgDb.connect().then(async pgdb => {
     })
   }
 
-  await Promise.all(mappings.map(async mapping => {
+  await Promise.all(mappings.list.map(async mapping => {
     const type = Object.keys(mapping).shift()
     const alias = getAliasName(type)
     const index = getIndexName(alias)
@@ -56,8 +51,15 @@ PgDb.connect().then(async pgdb => {
       }
     })
 
+    if (type === 'Document') return
+
     console.log('populating index', { alias, index })
-    await inserts[type.toLowerCase()]({indexName: index, type, elastic, pgdb})
+    await inserts.dict[type.toLowerCase()]({
+      indexName: index,
+      type,
+      elastic,
+      pgdb
+    })
 
     await elastic.indices.putSettings({
       index,
