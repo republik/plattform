@@ -16,6 +16,9 @@ const {
   extractAggs
 } = require('../../../lib/aggregations')
 const {
+  createSort
+} = require('../../../lib/sort')
+const {
   __resolveType: resolveHitType
 } = require('../SearchEntity')
 const { transformUser } = require('@orbiting/backend-modules-auth')
@@ -26,21 +29,6 @@ const createElasticFilter = elasticFilterBuilder(documentSchema)
 const {
   DOCUMENTS_RESTRICT_TO_ROLES
 } = process.env
-
-const sortKeyMapping = {
-  relevance: '_score',
-  publishedAt: 'meta.publishDate',
-  mostRead: 'agg.views', // TODO
-  mostDebated: 'agg.comments' // TODO
-}
-const sanitizeSort = (sort) => ([
-  {
-    [sortKeyMapping[sort.key]]: {
-      order: sort.direction,
-      unmapped_type: 'long'
-    }
-  }
-])
 
 const createQuery = (searchTerm, filter, sort) => ({
   // _source: ['meta.*', 'content'],
@@ -70,7 +58,7 @@ const createQuery = (searchTerm, filter, sort) => ({
       }
     }
   },
-  sort: sanitizeSort(sort),
+  sort: createSort(sort),
   highlight: {
     fields: {
       contentString: {}
