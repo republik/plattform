@@ -51,8 +51,6 @@ PgDb.connect().then(async pgdb => {
       }
     })
 
-    if (type === 'Document') return
-
     console.log('populating index', { alias, index })
     await inserts.dict[type.toLowerCase()]({
       indexName: index,
