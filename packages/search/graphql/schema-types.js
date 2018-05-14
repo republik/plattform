@@ -74,7 +74,7 @@ type SearchConnection {
 type SearchNode {
   entity: SearchEntity!
   highlights: [String!]!
-  score: Float!
+  score: Float
 }
 
 union SearchEntity = Document | Comment | User
