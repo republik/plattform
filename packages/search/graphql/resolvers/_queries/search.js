@@ -37,7 +37,7 @@ const sanitizeSort = (sort) => ([
   {
     [sortKeyMapping[sort.key]]: {
       order: sort.direction,
-      unmapped_value: 'long'
+      unmapped_type: 'long'
     }
   }
 ])
