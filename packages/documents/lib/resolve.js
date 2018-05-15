@@ -8,6 +8,7 @@ checkEnv([
 
 const {
   GITHUB_LOGIN,
+  GITHUB_ORGS = GITHUB_LOGIN,
   FRONTEND_BASE_URL
 } = process.env
 
@@ -33,13 +34,14 @@ const getRepoId = (url, requireQuery) => {
   if (
     hostname !== 'github.com' ||
     pathSegments.length !== 2 ||
-    pathSegments[0] !== GITHUB_LOGIN
+    !GITHUB_ORGS.split(',').includes(pathSegments[0])
   ) {
     return
   }
   if (requireQuery && query !== requireQuery) {
     return
   }
+  pathSegments[0] = GITHUB_LOGIN
   return pathSegments.join('/')
 }
 
