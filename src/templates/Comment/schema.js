@@ -13,6 +13,7 @@ import { HR } from '../../components/Typography'
 const createCommentSchema = ({
   BlockCode,
   BlockQuote,
+  BlockQuoteNested,
   BlockQuoteParagraph,
   Code,
   Container,
@@ -145,22 +146,6 @@ const createCommentSchema = ({
     ]
   }
 
-  const blockquoteParagraph = {
-    matchMdast: matchParagraph,
-    component: BlockQuoteParagraph,
-    rules: [
-      ...globalInlines
-    ]
-  }
-
-  const blockQuote = {
-    matchMdast: matchType('blockquote'),
-    component: BlockQuote,
-    rules: [
-      blockquoteParagraph
-    ]
-  }
-
   const blockCode = {
     matchMdast: matchType('code'),
     props: node => ({
@@ -210,6 +195,51 @@ const createCommentSchema = ({
     component: ({identifier, url}) => (
       <Definition>[{identifier}] <SafeA href={url}>{url}</SafeA></Definition>
     )
+  }
+
+  const blockquoteParagraph = {
+    matchMdast: matchParagraph,
+    component: BlockQuoteParagraph,
+    rules: [
+      ...globalInlines
+    ]
+  }
+
+  const getNestedRule = (levels, rule) => {
+    if (levels === 0) {
+      return rule
+    }
+    rule.rules.push(rule)
+    return getNestedRule(levels - 1, rule)
+  }
+
+  const blockQuoteNested = {
+    matchMdast: matchType('blockquote'),
+    component: BlockQuoteNested,
+    rules: [
+      heading,
+      blockquoteParagraph,
+      blockCode,
+      list,
+      thematicBreak,
+      blockLevelHtml,
+      definition
+    ]
+  }
+
+  const blockQuote = {
+    matchMdast: matchType('blockquote'),
+    component: BlockQuote,
+    rules: [
+      blockquoteParagraph,
+      heading,
+      getNestedRule(3, blockQuoteNested),
+      blockCode,
+      list,
+      thematicBreak,
+      blockLevelHtml,
+      definition
+    ]
   }
 
   return {

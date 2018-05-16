@@ -4,6 +4,7 @@ export {
 
 export {
   default as BlockQuote,
+  BlockQuoteNested,
   BlockQuoteParagraph
 } from './Blockquote'
 

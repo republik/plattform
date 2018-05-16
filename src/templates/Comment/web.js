@@ -3,6 +3,7 @@ import createCommentSchema from './schema'
 import {
   CommentBodyBlockCode,
   CommentBodyBlockQuote,
+  CommentBodyBlockQuoteNested,
   CommentBodyBlockQuoteParagraph,
   CommentBodyCode,
   CommentBodyDefinition,
@@ -18,6 +19,7 @@ const createSchema = ({ ...args } = {}) => {
   return createCommentSchema({
     BlockCode: CommentBodyBlockCode,
     BlockQuote: CommentBodyBlockQuote,
+    BlockQuoteNested: CommentBodyBlockQuoteNested,
     BlockQuoteParagraph: CommentBodyBlockQuoteParagraph,
     Code: CommentBodyCode,
     Container: CommentBodyContainer,

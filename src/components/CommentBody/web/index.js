@@ -4,6 +4,7 @@ export {
 
 export {
   default as CommentBodyBlockQuote,
+  BlockQuoteNested as CommentBodyBlockQuoteNested,
   BlockQuoteParagraph as CommentBodyBlockQuoteParagraph
 } from './Blockquote'
 
