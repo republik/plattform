@@ -15,6 +15,7 @@ type Session {
 type UnauthorizedSession {
   session: Session!
   enabledSecondFactors: [SignInTokenType]!
+  requiredConsents: [String]!
 }
 
 type User {

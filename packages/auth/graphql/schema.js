@@ -40,7 +40,7 @@ type mutations {
   startChallenge(sessionId: ID!, type: SignInTokenType!): Boolean!
 
   # authorize a token sent by mail to convert a login request to a valid user session
-  authorizeSession(email: String!, tokens: [SignInToken!]!): Boolean!
+  authorizeSession(email: String!, tokens: [SignInToken!]!, consents: [String]): Boolean!
 
   # deny a session via token challenge
   denySession(email: String!, token: SignInToken!): Boolean!

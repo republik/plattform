@@ -29,6 +29,7 @@ const TwoFactorAlreadyEnabledError = newAuthError('2fa-already-enabled', 'api/au
 const SecondFactorNotReadyError = newAuthError('2f-not-ready', 'api/auth/2f-not-ready')
 const SecondFactorHasToBeDisabledError = newAuthError('second-factor-has-to-be-disabled', 'api/auth/second-factor-has-to-be-disabled')
 const SessionTokenValidationFailed = newAuthError('token-validation-failed', 'api/token/invalid')
+const MissingPolicyConsentsError = newAuthError('missing-policy-consents', 'api/consents/missing')
 
 const {
   AUTO_LOGIN,
@@ -148,7 +149,7 @@ const denySession = async ({ pgdb, token, email: emailFromQuery }) => {
   return user
 }
 
-const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [] }) => {
+const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [], consents = [] }) => {
   // validate the challenges
   const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
   const tokenTypes = []
@@ -184,13 +185,20 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
     throw new SessionTokenValidationFailed({ email: emailFromQuery })
   }
 
-  // verify and/or create the user
   const transaction = await pgdb.transactionBegin()
 
-  const { user, isVerificationUpdated } = await upsertUserVerified({
-    pgdb: transaction,
-    email: session.sess.email
-  })
+  // verify and/or create the user (checks consents)
+  let user, isVerificationUpdated
+  try {
+    ({ user, isVerificationUpdated } = await upsertUserVerified({
+      pgdb: transaction,
+      email: session.sess.email,
+      consents
+    }))
+  } catch (error) {
+    await transaction.transactionRollback()
+    throw error
+  }
 
   try {
     // log in the session and delete token
@@ -215,6 +223,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
     await transaction.transactionCommit()
   } catch (error) {
     await transaction.transactionRollback()
+    console.error(error)
     throw new AuthorizationFailedError({ session: session })
   }
 
@@ -235,8 +244,22 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   return user
 }
 
-const upsertUserVerified = async({ pgdb, email }) => {
+const upsertUserVerified = async({ pgdb, email, consents }) => {
   const existingUser = await pgdb.public.users.findOne({ email })
+
+  // check required consents
+  const missingConsents = await missingPolicyConsents({
+    pgdb,
+    userId: existingUser && existingUser.id
+  })
+    .then(result => result
+      .filter(policy => consents.indexOf(policy) === -1)
+    )
+  if (missingConsents.length > 0) {
+    throw new MissingPolicyConsentsError({ policies: missingPolicyConsents })
+  }
+  // TODO save to consents table
+
   const user = existingUser ||
     await pgdb.public.users.insertAndGet({
       email,
@@ -380,6 +403,28 @@ const updateUserPhoneNumber = async ({ pgdb, userId, phoneNumber }) => {
   }
 }
 
+const missingPolicyConsents = async ({ pgdb, userId }) => {
+  const {
+    ENFORCE_POLICIES = ''
+  } = process.env
+
+  if (ENFORCE_POLICIES) {
+    const consentedPolicies = userId
+      ? await pgdb.public.consents.find({ userId })
+        .then(result => result
+          .map(consent => consent.policy)
+        )
+      : []
+
+    return ENFORCE_POLICIES
+      .split(',')
+      .filter(policy =>
+        consentedPolicies.indexOf(policy) === -1
+      )
+  }
+  return []
+}
+
 module.exports = {
   signIn,
   denySession,
@@ -388,6 +433,7 @@ module.exports = {
   updateUserEmail,
   updateUserPhoneNumber,
   updateUserTwoFactorAuthentication,
+  missingPolicyConsents,
   EmailInvalidError,
   EmailAlreadyAssignedError,
   UserNotFoundError,
