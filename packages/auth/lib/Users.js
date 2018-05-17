@@ -445,6 +445,7 @@ module.exports = {
   updateUserEmail,
   updateUserPhoneNumber,
   updateUserTwoFactorAuthentication,
+  upsertUserAndConsents,
   requiredConsents,
   EmailInvalidError,
   EmailAlreadyAssignedError,
