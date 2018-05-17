@@ -110,7 +110,6 @@ type mutations {
     userId: ID,
     name: NewsletterName!
     subscribed: Boolean!
-    status: String!
     email: String,
     mac: String,
     consents: [String]!

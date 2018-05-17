@@ -11,7 +11,6 @@ module.exports = async (_, args, context) => {
     userId,
     name,
     subscribed,
-    status,
     email,
     mac,
     consents
@@ -60,8 +59,7 @@ module.exports = async (_, args, context) => {
       {
         user,
         name,
-        subscribed,
-        status
+        subscribed
       },
       context
     )
