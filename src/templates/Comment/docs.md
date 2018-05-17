@@ -48,7 +48,7 @@ A small blockquote:
 
 A large blockquote:
 
-> ## Nested Blockquote level 0
+> ## Blockquote level 0
 > 
 > **Blockquote** paragraph one
 > on *two lines*
@@ -157,7 +157,7 @@ A small blockquote:
 
 A large blockquote:
 
-> ## Nested Blockquote level 0
+> ## Blockquote level 0
 > 
 > **Blockquote** paragraph one
 > on *two lines*
