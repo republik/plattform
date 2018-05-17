@@ -112,7 +112,7 @@ type mutations {
     subscribed: Boolean!
     email: String,
     mac: String,
-    consents: [String]!
+    consents: [String!]
   ): NewsletterSubscription!
 
   submitQuestion(question: String!): MutationResult

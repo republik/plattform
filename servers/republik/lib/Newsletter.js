@@ -8,7 +8,7 @@ if (!NEWSLETTER_HMAC_KEY) {
   console.warn('missing env NEWSLETTER_HMAC_KEY, the updateNewsletterSubscription mutation will not work with email and mac')
 }
 
-const authenticate = (email, name, subscribed, consents, t) => {
+const authenticate = (email, name, subscribed, consents = [], t) => {
   if (!NEWSLETTER_HMAC_KEY) {
     console.error('missing NEWSLETTER_HMAC_KEY')
     throw new Error(t('api/newsletters/update/failed'))
