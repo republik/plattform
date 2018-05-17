@@ -18,7 +18,6 @@ mail.enforceSubscriptions = async ({
   userId,
   email,
   subscribeToEditorialNewsletters,
-  isNew,
   pgdb,
   ...rest
 }) => {
@@ -50,16 +49,11 @@ mail.enforceSubscriptions = async ({
     [MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: isBenefactor
   }
 
-  if (isNew) {
-    // New User automatically gets the project r newsletters
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] = true
-  }
-
-  if (subscribeToEditorialNewsletters || !hasMembership) {
+  if (subscribeToEditorialNewsletters && hasMembership) {
     // Autosubscribe all newsletters when new user just paid the membersh.
-    // Or revoke paid newsletters when membership is inactive
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = hasMembership
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] = hasMembership
+    interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = true
+    interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] = true
+    interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] = true
   }
 
   const sanitizedUser = user || { email, roles: [] }
