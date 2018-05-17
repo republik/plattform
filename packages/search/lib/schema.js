@@ -8,8 +8,14 @@ const {
   valueCountAggBuilder
 } = require('./aggregations')
 
-// eslint-disable-next-line eqeqeq
-const boolParser = (value) => value == true
+const boolParser = (value) => {
+  if (typeof value === 'string') {
+    return value.toString() === 'true'
+  }
+
+  // eslint-disable-next-line eqeqeq
+  return value == true
+}
 
 const createEntry = (criteriaBuilder, aggBuilder, additionals) => (fieldPath) => ({
   criteria: criteriaBuilder(fieldPath),
