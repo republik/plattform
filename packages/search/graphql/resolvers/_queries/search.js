@@ -60,8 +60,18 @@ const createQuery = (searchTerm, filter, sort) => ({
   },
   sort: createSort(sort),
   highlight: {
+    // TODO: Redundant w/ multi_match.fields; remove redundancy
     fields: {
-      contentString: {}
+      // Document
+      'meta.title': {},
+      'meta.description': {},
+      'meta.authors': {},
+      'contentString': {},
+      'content': {},
+      // User
+      'username': {},
+      'firstName': {},
+      'lastName': {}
     }
   },
   aggs: extractAggs(documentSchema)
@@ -72,9 +82,16 @@ const mapHit = (hit) => {
   const entity = type === 'User'
     ? transformUser(hit._source)
     : hit._source
+
+  const highlights = []
+
+  Object.keys(hit.highlight || {}).forEach(path => {
+    highlights.push({ path, fragments: hit.highlight[path] })
+  })
+
   return {
     entity,
-    highlights: (hit.highlight || {}).contentString || [],
+    highlights,
     score: hit._score
   }
 }
@@ -166,12 +183,16 @@ module.exports = async (
     from = 0
   } = options
 
+  debug('options', JSON.stringify(options))
+
   const filter = filters
     ? {
       ...reduceFilters(filters),
       ..._filter
     }
     : _filter
+
+  debug('filter', JSON.stringify(filter))
 
   const first = getFirst(_first, filter, user)
 
@@ -181,7 +202,8 @@ module.exports = async (
     size: first,
     body: createQuery(search, filter, sort)
   }
-  debug('query: %O', query)
+
+  debug('ES query', JSON.stringify(query))
   const result = await elastic.search(query)
   // debug('result: %O', result)
 

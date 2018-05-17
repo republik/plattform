@@ -73,11 +73,16 @@ type SearchConnection {
 
 type SearchNode {
   entity: SearchEntity!
-  highlights: [String!]!
+  highlights: [SearchHighlight!]!
   score: Float
 }
 
 union SearchEntity = Document | Comment | User
+
+type SearchHighlight {
+  path: String!
+  fragments: [String!]!
+}
 
 type SearchAggregation {
   key: String!
@@ -100,7 +105,6 @@ type SearchAggregationBucketBoolean {
   value: Boolean!
   count: Int!
 }
-
 
 type SearchPageInfo {
   hasNextPage: Boolean!
