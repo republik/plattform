@@ -8,15 +8,20 @@ module.exports = async (_, args, { pgdb, req }) => {
   if (!session) {
     throw new NoSessionError({ email, token })
   }
+
   const user = await pgdb.public.users.findOne({
     email
   })
 
-  const requiredConsents = await getRequiredConsents({ pgdb, userId: user.id })
+  const requiredConsents = await getRequiredConsents({
+    pgdb,
+    userId: user && user.id
+  })
 
   return {
     session,
     enabledSecondFactors: (user && user.enabledSecondFactors) || [],
-    requiredConsents
+    requiredConsents,
+    newUser: !user
   }
 }
