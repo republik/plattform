@@ -41,7 +41,7 @@ module.exports = {
         type: 'keyword'
       },
       firstName: {
-        type: 'keyword'
+        type: 'text'
       },
       hasPublicProfile: {
         type: 'boolean'
@@ -56,7 +56,7 @@ module.exports = {
         type: 'boolean'
       },
       lastName: {
-        type: 'keyword'
+        type: 'text'
       },
       pgpPublicKey: {
         type: 'text'
@@ -97,7 +97,7 @@ module.exports = {
         type: 'date'
       },
       username: {
-        type: 'keyword'
+        type: 'text'
       },
       verified: {
         type: 'boolean'
