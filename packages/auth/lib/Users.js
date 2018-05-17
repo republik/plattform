@@ -29,7 +29,7 @@ const TwoFactorAlreadyEnabledError = newAuthError('2fa-already-enabled', 'api/au
 const SecondFactorNotReadyError = newAuthError('2f-not-ready', 'api/auth/2f-not-ready')
 const SecondFactorHasToBeDisabledError = newAuthError('second-factor-has-to-be-disabled', 'api/auth/second-factor-has-to-be-disabled')
 const SessionTokenValidationFailed = newAuthError('token-validation-failed', 'api/token/invalid')
-const MissingPolicyConsentsError = newAuthError('missing-policy-consents', 'api/consents/missing')
+const MissingConsentsError = newAuthError('missing-consents', 'api/consents/missing')
 
 const {
   AUTO_LOGIN,
@@ -149,7 +149,7 @@ const denySession = async ({ pgdb, token, email: emailFromQuery }) => {
   return user
 }
 
-const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [], consents = [] }) => {
+const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [], consents = [], req }) => {
   // validate the challenges
   const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
   const tokenTypes = []
@@ -190,10 +190,11 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   // verify and/or create the user (checks consents)
   let user, isVerificationUpdated
   try {
-    ({ user, isVerificationUpdated } = await upsertUserVerified({
+    ({ user, isVerificationUpdated } = await upsertUserAndConsents({
       pgdb: transaction,
       email: session.sess.email,
-      consents
+      consents,
+      req
     }))
   } catch (error) {
     await transaction.transactionRollback()
@@ -244,21 +245,20 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   return user
 }
 
-const upsertUserVerified = async({ pgdb, email, consents }) => {
+const upsertUserAndConsents = async({ pgdb, email, consents, req }) => {
   const existingUser = await pgdb.public.users.findOne({ email })
 
   // check required consents
-  const missingConsents = await missingPolicyConsents({
+  const missingConsents = await requiredConsents({
     pgdb,
     userId: existingUser && existingUser.id
   })
     .then(result => result
-      .filter(policy => consents.indexOf(policy) === -1)
+      .filter(consent => consents.indexOf(consent) === -1)
     )
   if (missingConsents.length > 0) {
-    throw new MissingPolicyConsentsError({ policies: missingPolicyConsents })
+    throw new MissingConsentsError(missingConsents, { consents: missingConsents.join(', ') })
   }
-  // TODO save to consents table
 
   const user = existingUser ||
     await pgdb.public.users.insertAndGet({
@@ -272,6 +272,18 @@ const upsertUserVerified = async({ pgdb, email, consents }) => {
       verified: true
     })
   }
+
+  // save consents
+  if (consents.length > 0) {
+    await Promise.all(consents.map(consent =>
+      pgdb.public.consents.insert({
+        userId: user.id,
+        policy: consent,
+        ip: req.ip
+      })
+    ))
+  }
+
   return {
     user,
     isVerificationUpdated: (!existingUser || !existingUser.verified)
@@ -403,23 +415,23 @@ const updateUserPhoneNumber = async ({ pgdb, userId, phoneNumber }) => {
   }
 }
 
-const missingPolicyConsents = async ({ pgdb, userId }) => {
+const requiredConsents = async ({ pgdb, userId }) => {
   const {
-    ENFORCE_POLICIES = ''
+    ENFORCE_CONSENTS = ''
   } = process.env
 
-  if (ENFORCE_POLICIES) {
-    const consentedPolicies = userId
+  if (ENFORCE_CONSENTS) {
+    const consented = userId
       ? await pgdb.public.consents.find({ userId })
         .then(result => result
           .map(consent => consent.policy)
         )
       : []
 
-    return ENFORCE_POLICIES
+    return ENFORCE_CONSENTS
       .split(',')
-      .filter(policy =>
-        consentedPolicies.indexOf(policy) === -1
+      .filter(consent =>
+        consented.indexOf(consent) === -1
       )
   }
   return []
@@ -433,7 +445,7 @@ module.exports = {
   updateUserEmail,
   updateUserPhoneNumber,
   updateUserTwoFactorAuthentication,
-  missingPolicyConsents,
+  requiredConsents,
   EmailInvalidError,
   EmailAlreadyAssignedError,
   UserNotFoundError,

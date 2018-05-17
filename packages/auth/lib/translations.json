@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-14T06:10:14.941Z",
+  "updated": "2018-05-17T11:18:28.323Z",
   "title": "live",
   "data": [
     {
@@ -125,6 +125,10 @@
     {
       "key": "api/auth/sms/phone-number-not-valid",
       "value": "TODO: Phone number not valid for Text Messaging"
+    },
+    {
+      "key": "api/consents/missing",
+      "value": "Sie müssen folgenden Policies zustimmen um sich anmelden zu können: {consents}."
     }
   ]
 }

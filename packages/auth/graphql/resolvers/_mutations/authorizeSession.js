@@ -12,7 +12,8 @@ module.exports = async (_, args, { pgdb, req, signInHooks }) => {
     tokens,
     email,
     signInHooks,
-    consents
+    consents,
+    req
   })
 
   return !!user
