@@ -24,7 +24,7 @@ const tagNormalizer = (tag, repoId, refName) => ({
   }
 })
 
-const commitNormalizer = ({
+const commitFromRest = ({
   sha,
   commit: {
     message,
@@ -43,13 +43,25 @@ const commitNormalizer = ({
   repo
 })
 
+const commitFromGQL = (repo, commit) => Object.assign(
+  {},
+  commit,
+  {
+    id: commit.oid,
+    date: commit.committedDate,
+    parentIds: commit.parents.nodes.map(v => v.oid),
+    repo
+  }
+)
+
 module.exports = {
   gitAuthor,
   getRepos,
   publicationVersionRegex,
   createGithubClients,
   tagNormalizer,
-  commitNormalizer,
+  commitFromGQL,
+  commitNormalizer: commitFromRest,
   getRepo: async (repoId) => {
     const { githubApolloFetch } = await createGithubClients()
     const [login, repoName] = repoId.split('/')
@@ -177,15 +189,7 @@ module.exports = {
         sha
       }
     })
-    const commit = Object.assign(
-      {
-        id: rawCommit.oid,
-        date: rawCommit.committedDate,
-        parentIds: rawCommit.parents.nodes.map(v => v.oid),
-        repo
-      },
-      rawCommit
-    )
+    const commit = commitFromGQL(repo, rawCommit)
     await redis.setAsync(redisKey, JSON.stringify(commit))
     return commit
   },
@@ -262,16 +266,9 @@ module.exports = {
       .map(({ name, target }) =>
         target.history.nodes
           .map(
-            c => Object.assign(
-              {
-                id: c.oid,
-                date: c.committedDate,
-                parentIds: c.parents.nodes.map(v => v.oid),
-                headName: name,
-                headSha: target.oid,
-                repo
-              },
-              c
+            commit => Object.assign(
+              commitFromGQL(repo, commit),
+              { headName: name, headSha: target.oid }
             )
           )
       )
