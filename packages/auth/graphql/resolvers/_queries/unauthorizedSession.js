@@ -1,5 +1,5 @@
 const { sessionByToken, NoSessionError } = require('../../../lib/Sessions')
-const { requiredConsents: getRequiredConsents } = require('../../../lib/Consents')
+const { missingConsents } = require('../../../lib/Consents')
 
 module.exports = async (_, args, { pgdb, req }) => {
   const { email, token } = args
@@ -13,9 +13,10 @@ module.exports = async (_, args, { pgdb, req }) => {
     email
   })
 
-  const requiredConsents = await getRequiredConsents({
+  const requiredConsents = await missingConsents({
     userId: user && user.id,
-    pgdb
+    pgdb,
+    consents: session.sess.consents
   })
 
   return {

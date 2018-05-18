@@ -39,7 +39,7 @@ const {
   FRONTEND_BASE_URL
 } = process.env
 
-const signIn = async (_email, context, pgdb, req) => {
+const signIn = async (_email, context, pgdb, req, consents) => {
   if (req.user) {
     return { phrase: '' }
   }
@@ -60,7 +60,7 @@ const signIn = async (_email, context, pgdb, req) => {
   const { email } = (user || { email: _email })
 
   try {
-    const init = await initiateSession({ req, pgdb, email })
+    const init = await initiateSession({ req, pgdb, email, consents })
     const { country, phrase, session } = init
 
     const type = TokenTypes.EMAIL_TOKEN
@@ -186,6 +186,11 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   if (tokenTypes.length < 2 && (existingUser && existingUser.enabledSecondFactors && existingUser.enabledSecondFactors.length > 0)) {
     console.error('two factor is enabled but less than 2 challenges provided')
     throw new SessionTokenValidationFailed({ email: emailFromQuery })
+  }
+
+  // merge consents given to authorizeSession and signIn
+  if (session.sess.consents) {
+    consents = [...new Set(consents.concat(session.sess.consents))]
   }
 
   const transaction = await pgdb.transactionBegin()

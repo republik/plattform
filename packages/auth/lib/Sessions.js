@@ -17,7 +17,7 @@ const destroySession = async (req) => {
   })
 }
 
-const initiateSession = async ({ req, pgdb, email }) => {
+const initiateSession = async ({ req, pgdb, email, consents }) => {
   const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress
   const userAgent = req.headers['user-agent']
   const phrase = `${kraut.adjectives.random()} ${kraut.verbs.random()} ${kraut.nouns.random()}`
@@ -28,6 +28,9 @@ const initiateSession = async ({ req, pgdb, email }) => {
   req.session.phrase = phrase
   if (country || city) {
     req.session.geo = { country, city }
+  }
+  if (consents) {
+    req.session.consents = consents
   }
   await new Promise(function (resolve, reject) {
     req.session.save(function (error, data) {

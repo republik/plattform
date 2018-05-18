@@ -29,7 +29,7 @@ type queries {
 
 type mutations {
   # signIn with an email address
-  signIn(email: String!, context: String): SignInResponse!
+  signIn(email: String!, context: String, consents: [String!]): SignInResponse!
   signOut: Boolean!
 
   # if userId is null, the logged in user's email is changed
