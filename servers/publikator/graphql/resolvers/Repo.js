@@ -6,6 +6,7 @@ const {
   createGithubClients,
   commitNormalizer,
   getHeads,
+  getTree,
   getCommit,
   getAnnotatedTags,
   getAnnotatedTag
@@ -58,6 +59,7 @@ module.exports = {
         getCommit(repo, { id: sha }, context)
       )
   },
+  tree: getTree,
   commit: getCommit,
   uncommittedChanges: async (
     { id: repoId },

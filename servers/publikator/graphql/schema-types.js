@@ -9,7 +9,7 @@ type Repo {
   commit(id: ID!): Commit!
   uncommittedChanges: [User!]!
   milestones: [Milestone!]!
-
+  tree(maxCommits: Int!, commitsSince: Date, commitsUntil: Date): [Commit!]!
   # nothing or latest prepublication and/or latest publication
   # nothing if repo is unpublished
   latestPublications: [Publication]!
@@ -103,7 +103,6 @@ type Milestone implements MilestoneInterface {
   immutable: Boolean!
 }
 
-
 type Commit {
   id: ID!
   parentIds: [ID!]!
@@ -112,9 +111,10 @@ type Commit {
   date: DateTime!
   document: Document!
   repo: Repo!
+  headName: String
+  headSha: ID!
 # files: [File]!
 }
-
 
 type Author {
   name: String!

@@ -1,3 +1,4 @@
+const { descending } = require('d3-array')
 const { lib: {
   clients: createGithubClients,
   utils: { gitAuthor }
@@ -148,6 +149,98 @@ module.exports = {
       await redis.setAsync(redisKey, JSON.stringify(commit))
       return commit
     })
+  },
+  getTree: async (repo, { maxCommits, commitsSince, commitsUntil }) => {
+    const { githubApolloFetch } = await createGithubClients()
+    const [login, repoName] = repo.id.split('/')
+    const {
+      data: {
+        repository: {
+          refs: {
+            nodes: heads
+          }
+        }
+      }
+    } = await githubApolloFetch({
+      query: `
+        query repository(
+          $login: String!,
+          $repoName: String!,
+          $maxRefs: Int
+          $maxCommits: Int,
+          $commitsSince: GitTimestamp,
+          $commitsUntil: GitTimestamp
+        ) {
+          repository(
+            owner: $login
+            name: $repoName
+          ) {
+            refs(refPrefix: "refs/heads/", first: $maxRefs) {
+              nodes {
+                name
+                target {
+                  ... on Commit {
+                    oid
+                    author {
+                      date
+                    },
+                    history(first: $maxCommits, until: $commitsUntil, since: $commitsSince) {
+                      nodes {
+                        ... on Commit {
+                          oid
+                          author {
+                            email
+                            name
+                          }
+                          parents (first: 100){
+                            nodes {
+                              oid
+                            }
+                          }
+                          message
+                          committedDate
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        login,
+        repoName,
+        maxRefs: 100,
+        maxCommits,
+        commitsSince,
+        commitsUntil
+      }
+    })
+
+    return heads
+      .map(({ name, target }) =>
+        target.history.nodes
+          .map(
+            c => Object.assign(
+              {
+                id: c.oid,
+                date: c.committedDate,
+                parentIds: c.parents.nodes.map(v => v.oid),
+                headName: name,
+                headSha: target.oid,
+                repo
+              },
+              c
+            )
+          )
+      )
+      .reduce(
+        (acc, v) => acc.concat(v), []
+      )
+      .sort((a, b) => descending(a.date, b.date))
+      .slice(0, maxCommits)
   },
   getAnnotatedTags: async (repoId, first = 100) => {
     const { githubApolloFetch } = await createGithubClients()
