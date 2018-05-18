@@ -122,13 +122,13 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     await ensureAllRequiredConsents({
       userId: user.id,
       consents,
-      pgdb
+      pgdb: transaction
     })
     await saveConsents({
       userId: user.id,
       consents,
       req,
-      pgdb
+      pgdb: transaction
     })
 
     // if we didn't load a alias, generate one
