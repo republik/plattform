@@ -150,7 +150,7 @@ module.exports = {
       return commit
     })
   },
-  getTree: async (repo, { maxCommits, commitsSince, commitsUntil }) => {
+  getCommits: async (repo, { maxCommits = 15, commitsSince, commitsUntil }) => {
     const { githubApolloFetch } = await createGithubClients()
     const [login, repoName] = repo.id.split('/')
     const {

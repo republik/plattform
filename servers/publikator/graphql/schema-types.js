@@ -4,12 +4,11 @@ scalar JSON
 
 type Repo {
   id: ID!
-  commits(page: Int): [Commit!]!
+  commits(maxCommits: Int, commitsSince: Date, commitsUntil: Date): [Commit!]!
   latestCommit: Commit!
   commit(id: ID!): Commit!
   uncommittedChanges: [User!]!
   milestones: [Milestone!]!
-  tree(maxCommits: Int!, commitsSince: Date, commitsUntil: Date): [Commit!]!
   # nothing or latest prepublication and/or latest publication
   # nothing if repo is unpublished
   latestPublications: [Publication]!

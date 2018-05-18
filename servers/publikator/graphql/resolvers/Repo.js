@@ -1,12 +1,8 @@
-const { descending } = require('d3-array')
 const uniqBy = require('lodash/uniqBy')
 const yaml = require('../../lib/yaml')
 const zipArray = require('../../lib/zipArray')
 const {
-  createGithubClients,
-  commitNormalizer,
-  getHeads,
-  getTree,
+  getCommits,
   getCommit,
   getAnnotatedTags,
   getAnnotatedTag
@@ -17,49 +13,10 @@ const debug = require('debug')('publikator:repo')
 const UNCOMMITTED_CHANGES_TTL = 7 * 24 * 60 * 60 * 1000 // 1 week in ms
 
 module.exports = {
-  commits: async (repo, { page }) => {
-    const { githubRest } = await createGithubClients()
-    const refs = await getHeads(repo.id)
-
-    const [login, repoName] = repo.id.split('/')
-    return Promise.all(
-      refs.map(({ target: { oid } }) => {
-        return githubRest
-          .repos.getCommits({
-            owner: login,
-            repo: repoName,
-            sha: oid,
-            per_page: 100,
-            page: page || 1
-          })
-          .then(response => response ? response.data : response)
-          .then(commits => commits
-            .map(commit => commitNormalizer({
-              ...commit,
-              repo
-            }))
-          )
-      })
-    )
-      .then(commits => [].concat.apply([], commits))
-      .then(commits => uniqBy(commits, 'id'))
-      .then(commits => commits.sort((a, b) => descending(a.date, b.date)))
-  },
+  commits: getCommits,
   latestCommit: async (repo, args, context) => {
-    if (repo.latestCommit) {
-      return repo.latestCommit
-    }
-    return getHeads(repo.id)
-      .then(refs => refs
-        .map(ref => ref.target)
-        .sort((a, b) => descending(a.author.date, b.author.date))
-        .shift()
-      )
-      .then(({ oid: sha }) =>
-        getCommit(repo, { id: sha }, context)
-      )
+    return getCommits(repo, { maxCommits: 1 }, context).then(commits => commits.shift())
   },
-  tree: getTree,
   commit: getCommit,
   uncommittedChanges: async (
     { id: repoId },
