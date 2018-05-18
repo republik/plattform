@@ -274,6 +274,57 @@ test('authorize a session via 2fa: email, sms', async (t) => {
   t.end()
 })
 
+test('authorize a session 2fa (multiple challenges): email, sms', async (t) => {
+  await prepare()
+
+  const { payload: emailToken, email } = await signIn({
+    user: {
+      ...Users.TwoFactorMember,
+      enabledSecondFactors: ['SMS']
+    },
+    simulate2FAAuth: true
+  })
+
+  const { session: { id: sessionId } } = await unauthorizedSession({
+    user: Users.TwoFactorMember,
+    type: 'EMAIL_TOKEN',
+    payload: emailToken
+  })
+
+  const tokens = await pgDatabase().public
+    .tokens.find({ sessionId, type: 'EMAIL_TOKEN' })
+  t.equal(tokens.length, 1, 'an email token found')
+
+  await startChallenge({ sessionId, type: 'SMS' })
+  await startChallenge({ sessionId, type: 'SMS' })
+  await startChallenge({ sessionId, type: 'SMS' })
+
+  const smsTokens = await pgDatabase().public
+    .tokens.find(
+      { sessionId, type: 'SMS' },
+      { orderBy: { createdAt: 'desc' } }
+    )
+
+  const { payload: smsCode } = smsTokens.shift()
+
+  console.log(smsCode)
+
+  const { data } = await authorizeSession({
+    email,
+    tokens: [
+      { type: 'EMAIL_TOKEN', payload: emailToken },
+      { type: 'SMS', payload: smsCode }
+    ]
+  })
+  t.ok(data.authorizeSession, 'authorize session returns true')
+
+  const expiredTokens = await pgDatabase().public
+    .tokens.find({ email, 'expiresAt <': new Date().toISOString() })
+  t.equal(expiredTokens.length, 4, '4 expired tokens found')
+
+  t.end()
+})
+
 test('authorize a session via 2fa: email, totp', async (t) => {
   await prepare()
 
@@ -301,9 +352,8 @@ test('authorize a session via 2fa: email, totp', async (t) => {
     .tokens.find({ sessionId, type: 'TOTP' })
   t.equal(totpToken.length, 1, 'a totp token found')
 
-  const totpCode = OTP({
-    secret: Users.TwoFactorMember.TOTPChallengeSecret
-  }).totp()
+  const secret = Users.TwoFactorMember.TOTPChallengeSecret
+  const totpCode = OTP({ secret }).totp()
   t.ok(totpCode, 'totp pin generated')
 
   const { data: fail } = await authorizeSession({
@@ -321,7 +371,6 @@ test('authorize a session via 2fa: email, totp', async (t) => {
       { type: 'TOTP', payload: totpCode }
     ]
   })
-  t.comment(JSON.stringify(data))
   t.ok(data.authorizeSession, 'authorize session returns true')
 
   const { data: gone } = await authorizeSession({
