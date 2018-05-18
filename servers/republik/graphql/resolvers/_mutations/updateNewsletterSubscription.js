@@ -2,11 +2,18 @@ const {
   Roles,
   Users: {
     upsertUserAndConsents
+  },
+  Consents: {
+    saveConsents,
+    revokeConsent
   }
 } = require('@orbiting/backend-modules-auth')
 const { authenticate } = require('../../../lib/Newsletter')
 const base64u = require('@orbiting/backend-modules-base64u')
 
+// this endpoint is called for two distinct situations
+// first: from the frontend and admin via userId, name, subscribed
+// second: from as a newsletter subscription confirmation with email, mac, consents
 module.exports = async (_, args, context) => {
   const {
     userId,
@@ -14,7 +21,7 @@ module.exports = async (_, args, context) => {
     subscribed,
     email: _email,
     mac,
-    consents: _consents
+    consents: _consents = []
   } = args
 
   // email might be base64u
@@ -23,7 +30,8 @@ module.exports = async (_, args, context) => {
     : _email
 
   // only allow PRIVACY consent via this endpint
-  const consents = _consents && _consents.filter(c => c === 'PRIVACY')
+  const consents = _consents
+    .filter(c => c === 'PRIVACY')
 
   const {
     user: me,
@@ -61,6 +69,25 @@ module.exports = async (_, args, context) => {
     }
 
     Roles.ensureUserIsMeOrInRoles(user, me, ['supporter'])
+  }
+
+  // calling this endpoint is an explicit consent
+  // to get the desired newsletter
+  const consentName = `NEWSLETTER_${name}`
+  if (subscribed) {
+    await saveConsents({
+      userId: user.id,
+      consents: [ consentName ],
+      req,
+      pgdb
+    })
+  } else {
+    await revokeConsent({
+      userId: user.id,
+      consent: consentName,
+      req,
+      pgdb
+    })
   }
 
   try {

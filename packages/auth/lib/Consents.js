@@ -1,11 +1,32 @@
 const { newAuthError } = require('./AuthError')
 const MissingConsentsError = newAuthError('missing-consents', 'api/consents/missing')
 
+/*
+const POLICIES = [
+  'PRIVACY',
+  'TOS',
+  'STATUTE',
+  'NEWSLETTER_PROJECTR',
+  'NEWSLETTER_DAILY',
+  'NEWSLETTER_WEEKLY'
+]
+*/
+
 const consentsOfUser = async ({ userId, pgdb }) => {
-  return pgdb.public.consents.find({ userId })
-    .then(result => result
-      .map(consent => consent.policy)
-    )
+  const consents = await pgdb.public.consents.find({
+    userId
+  }, {orderBy: ['createdAt asc']})
+
+  let grantedPolicies = {}
+  for (let consent of consents) {
+    if (consent.record === 'GRANT') {
+      grantedPolicies[consent.policy] = true
+    } else {
+      delete grantedPolicies[consent.policy]
+    }
+  }
+
+  return Object.keys(grantedPolicies)
 }
 
 const requiredConsents = async ({ userId, pgdb }) => {
@@ -63,9 +84,19 @@ const saveConsents = async ({ userId, consents = [], req, pgdb }) => {
   )
 }
 
+const revokeConsent = async ({ userId, consent, req, pgdb }) => {
+  await pgdb.public.consents.insert({
+    userId,
+    policy: consent,
+    ip: req.ip,
+    record: 'REVOKE'
+  })
+}
+
 module.exports = {
   requiredConsents,
   missingConsents,
   ensureAllRequiredConsents,
-  saveConsents
+  saveConsents,
+  revokeConsent
 }
