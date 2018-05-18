@@ -27,7 +27,10 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     }
     if (pledgeUser.verified) {
       logger.error('cannot claim pledges of verified users', { req: req._log(), args, pledge })
-      throw new Error(t('api/unexpected'))
+      throw new Error(t('api/reclaim/verified', {
+        pledgeEmail: pledgeUser.email,
+        targetEmail: req.user.email
+      }))
     }
 
     // transfer belongings to signedin user
