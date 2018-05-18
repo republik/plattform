@@ -231,7 +231,7 @@ test('update phone number', async (t) => {
 test('authorize a session via 2fa: email, sms', async (t) => {
   await prepare()
 
-  const { payload: emailPayload, email } = await signIn({
+  const { payload: emailToken, email } = await signIn({
     user: {
       ...Users.TwoFactorMember,
       enabledSecondFactors: ['SMS']
@@ -242,28 +242,85 @@ test('authorize a session via 2fa: email, sms', async (t) => {
   const { session: { id: sessionId } } = await unauthorizedSession({
     user: Users.TwoFactorMember,
     type: 'EMAIL_TOKEN',
-    payload: emailPayload
+    payload: emailToken
   })
 
-  const emailToken = await pgDatabase().public
+  const tokens = await pgDatabase().public
     .tokens.find({ sessionId, type: 'EMAIL_TOKEN' })
-  t.equal(emailToken.length, 1, 'an email token found')
+  t.equal(tokens.length, 1, 'an email token found')
 
   await startChallenge({ sessionId, type: 'SMS' })
 
-  const { payload: smsPayload } = await pgDatabase().public
+  const { payload: smsCode } = await pgDatabase().public
     .tokens.findOne({ sessionId, type: 'SMS' })
+
+  const { data: fail } = await authorizeSession({
+    email,
+    tokens: [
+      { type: 'SMS', payload: smsCode }
+    ]
+  })
+  t.notOk(fail, 'requires 2 tokens to authorize')
 
   const { data } = await authorizeSession({
     email,
     tokens: [
-      { type: 'EMAIL_TOKEN', payload: emailPayload },
-      { type: 'SMS', payload: smsPayload }
+      { type: 'EMAIL_TOKEN', payload: emailToken },
+      { type: 'SMS', payload: smsCode }
     ]
   })
   t.ok(data.authorizeSession, 'authorize session returns true')
 
-  await signOut()
+  t.end()
+})
+
+test('authorize a session 2fa (multiple challenges): email, sms', async (t) => {
+  await prepare()
+
+  const { payload: emailToken, email } = await signIn({
+    user: {
+      ...Users.TwoFactorMember,
+      enabledSecondFactors: ['SMS']
+    },
+    simulate2FAAuth: true
+  })
+
+  const { session: { id: sessionId } } = await unauthorizedSession({
+    user: Users.TwoFactorMember,
+    type: 'EMAIL_TOKEN',
+    payload: emailToken
+  })
+
+  const tokens = await pgDatabase().public
+    .tokens.find({ sessionId, type: 'EMAIL_TOKEN' })
+  t.equal(tokens.length, 1, 'an email token found')
+
+  await startChallenge({ sessionId, type: 'SMS' })
+  await startChallenge({ sessionId, type: 'SMS' })
+  await startChallenge({ sessionId, type: 'SMS' })
+
+  const smsTokens = await pgDatabase().public
+    .tokens.find(
+      { sessionId, type: 'SMS' },
+      { orderBy: { createdAt: 'desc' } }
+    )
+
+  const { payload: smsCode } = smsTokens.shift()
+
+  console.log(smsCode)
+
+  const { data } = await authorizeSession({
+    email,
+    tokens: [
+      { type: 'EMAIL_TOKEN', payload: emailToken },
+      { type: 'SMS', payload: smsCode }
+    ]
+  })
+  t.ok(data.authorizeSession, 'authorize session returns true')
+
+  const expiredTokens = await pgDatabase().public
+    .tokens.find({ email, 'expiresAt <': new Date().toISOString() })
+  t.equal(expiredTokens.length, 4, '4 expired tokens found')
 
   t.end()
 })
@@ -271,7 +328,7 @@ test('authorize a session via 2fa: email, sms', async (t) => {
 test('authorize a session via 2fa: email, totp', async (t) => {
   await prepare()
 
-  const { payload: emailPayload, email } = await signIn({
+  const { payload: emailToken, email } = await signIn({
     user: {
       ...Users.TwoFactorMember,
       enabledSecondFactors: ['TOTP']
@@ -282,12 +339,12 @@ test('authorize a session via 2fa: email, totp', async (t) => {
   const { session: { id: sessionId } } = await unauthorizedSession({
     user: Users.TwoFactorMember,
     type: 'EMAIL_TOKEN',
-    payload: emailPayload
+    payload: emailToken
   })
 
-  const emailToken = await pgDatabase().public
+  const tokens = await pgDatabase().public
     .tokens.find({ sessionId, type: 'EMAIL_TOKEN' })
-  t.equal(emailToken.length, 1, 'an email token found')
+  t.equal(tokens.length, 1, 'an email token found')
 
   await startChallenge({ sessionId, type: 'TOTP' })
 
@@ -295,42 +352,75 @@ test('authorize a session via 2fa: email, totp', async (t) => {
     .tokens.find({ sessionId, type: 'TOTP' })
   t.equal(totpToken.length, 1, 'a totp token found')
 
-  const totpPayload = OTP({
-    secret: Users.TwoFactorMember.TOTPChallengeSecret
-  }).totp()
-  t.ok(totpPayload, 'totp pin generated')
+  const secret = Users.TwoFactorMember.TOTPChallengeSecret
+  const totpCode = OTP({ secret }).totp()
+  t.ok(totpCode, 'totp pin generated')
+
+  const { data: fail } = await authorizeSession({
+    email,
+    tokens: [
+      { type: 'TOTP', payload: totpCode }
+    ]
+  })
+  t.notOk(fail, 'requires 2 tokens to authorize')
 
   const { data } = await authorizeSession({
     email,
     tokens: [
-      { type: 'EMAIL_TOKEN', payload: emailPayload },
-      { type: 'TOTP', payload: totpPayload }
+      { type: 'EMAIL_TOKEN', payload: emailToken },
+      { type: 'TOTP', payload: totpCode }
     ]
   })
-  t.comment(JSON.stringify(data))
   t.ok(data.authorizeSession, 'authorize session returns true')
 
-  await signOut()
+  const { data: gone } = await authorizeSession({
+    email,
+    tokens: [
+      { type: 'EMAIL_TOKEN', payload: emailToken },
+      { type: 'TOTP', payload: totpCode }
+    ]
+  })
+  t.notOk(gone, 'can not authorize twice')
 
   t.end()
 })
 
-// t.comment(JSON.stringify({ debugContainer }))
+test('authorize older sign in attempt', async (t) => {
+  await prepare()
 
-// t.ok(true)
+  // 1st signIn attempt
+  const { payload, email } = await signIn({
+    user: { ...Users.Member },
+    skipAuthorization: true
+  })
 
-// via tokens: email + sms -> success OK
-// via tokens: email + totp -> success OK
-// via tokens: sms + totp -> fail
+  // Other signIn attempts
+  await signIn({
+    user: { ...Users.Member },
+    skipTruncate: true,
+    skipAuthorization: true
+  })
+  await signIn({
+    user: { ...Users.Member },
+    skipTruncate: true,
+    skipAuthorization: true
+  })
 
-// test('start TOTP challenge', async (t) => {
-//   t.ok(true)
-//   t.end()
-// ... go through all cases ...
-// })
-//
-// test('start SMS challenge', async (t) => {
-//   t.ok(true)
-//   t.end()
-// ... go through all cases ...
-// })
+  const { data } = await authorizeSession({
+    email,
+    tokens: [{ type: 'EMAIL_TOKEN', payload }]
+  })
+  t.ok(data.authorizeSession, 'sign in attempt successful')
+
+  const expiredTokens = await pgDatabase().public
+    .tokens.find({ email, 'expiresAt <': new Date().toISOString() })
+  t.equal(expiredTokens.length, 3, '3 expired tokens found')
+
+  const { data: gone } = await authorizeSession({
+    email,
+    tokens: [{ type: 'EMAIL_TOKEN', payload }]
+  })
+  t.notOk(gone, 'can not authorize twice')
+
+  t.end()
+})
