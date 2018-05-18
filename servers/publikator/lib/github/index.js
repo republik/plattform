@@ -124,7 +124,7 @@ module.exports = {
     })
     return heads
   },
-  getCommit: async (repo, { id: sha }, { redis }) => {
+  getCommit: async(repo, { id: sha }, { redis }) => {
     const redisKey = `repos:${repo.id}/commits/${sha}`
     const redisCommit = await redis.getAsync(redisKey)
     if (redisCommit) {
@@ -133,22 +133,61 @@ module.exports = {
     }
     debug('commit: redis MISS (%s)', redisKey)
 
-    const { githubRest } = await createGithubClients()
+    const { githubApolloFetch } = await createGithubClients()
     const [login, repoName] = repo.id.split('/')
-    return githubRest.repos.getCommit({
-      owner: login,
-      repo: repoName,
-      sha
+    const {
+      data: {
+        repository: {
+          object: rawCommit
+        }
+      }
+    } = await githubApolloFetch({
+      query: `
+        query repository(
+          $login: String!,
+          $repoName: String!,
+          $sha: GitObjectID!
+        ) {
+          repository(
+            owner: $login
+            name: $repoName
+          ) {
+            object(oid: $sha) {
+              ... on Commit {
+                oid
+                author {
+                  email
+                  name
+                }
+                parents (first: 100){
+                  nodes {
+                    oid
+                  }
+                }
+                message
+                committedDate
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        login,
+        repoName,
+        sha
+      }
     })
-    .then(response => response ? response.data : response)
-    .then(commit => commitNormalizer({
-      ...commit,
-      repo
-    }))
-    .then(async (commit) => {
-      await redis.setAsync(redisKey, JSON.stringify(commit))
-      return commit
-    })
+    const commit = Object.assign(
+      {
+        id: rawCommit.oid,
+        date: rawCommit.committedDate,
+        parentIds: rawCommit.parents.nodes.map(v => v.oid),
+        repo
+      },
+      rawCommit
+    )
+    await redis.setAsync(redisKey, JSON.stringify(commit))
+    return commit
   },
   getCommits: async (repo, { maxCommits = 15, commitsSince, commitsUntil }) => {
     const { githubApolloFetch } = await createGithubClients()
