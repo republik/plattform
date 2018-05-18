@@ -58,18 +58,18 @@ test('get unauthorized session data via email token', async (t) => {
   await signOut()
 
   // as TwoFactor User
-  const { payload2 } = await signIn({
+  const { payload: payload2f } = await signIn({
     user: {
       ...Users.TwoFactorMember,
       enabledSecondFactors: ['SMS', 'TOTP']
     },
     skipAuthorization: true
   })
-  const aa = await unauthorizedSession({ user: Users.Member, type: 'EMAIL_TOKEN', payload })
+  const aa = await unauthorizedSession({ user: Users.Member, type: 'EMAIL_TOKEN', payload: payload2f })
   t.notOk(aa.session, 'wrong e-mail address is used in combination with correct token')
-  const bb = await unauthorizedSession({ user: Users.TwoFactorMember, type: 'EMAIL_TOKEN', payload: payload2 + '01' })
+  const bb = await unauthorizedSession({ user: Users.TwoFactorMember, type: 'EMAIL_TOKEN', payload: payload2f + '01' })
   t.notOk(bb.session, 'correct e-mail address is used in combination with wrong token')
-  const cc = await unauthorizedSession({ user: Users.TwoFactorMember, type: 'EMAIL_TOKEN', payload })
+  const cc = await unauthorizedSession({ user: Users.TwoFactorMember, type: 'EMAIL_TOKEN', payload: payload2f })
   t.ok(cc.session, 'e-mail and token are correct')
   t.equal(cc.enabledSecondFactors.length, 2, 'should return SMS + TOTP')
   await signOut()
