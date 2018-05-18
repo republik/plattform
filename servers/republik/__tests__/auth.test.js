@@ -231,7 +231,7 @@ test('update phone number', async (t) => {
 test('authorize a session via 2fa: email, sms', async (t) => {
   await prepare()
 
-  const { payload: emailPayload, email } = await signIn({
+  const { payload: emailToken, email } = await signIn({
     user: {
       ...Users.TwoFactorMember,
       enabledSecondFactors: ['SMS']
@@ -242,22 +242,22 @@ test('authorize a session via 2fa: email, sms', async (t) => {
   const { session: { id: sessionId } } = await unauthorizedSession({
     user: Users.TwoFactorMember,
     type: 'EMAIL_TOKEN',
-    payload: emailPayload
+    payload: emailToken
   })
 
-  const emailToken = await pgDatabase().public
+  const tokens = await pgDatabase().public
     .tokens.find({ sessionId, type: 'EMAIL_TOKEN' })
-  t.equal(emailToken.length, 1, 'an email token found')
+  t.equal(tokens.length, 1, 'an email token found')
 
   await startChallenge({ sessionId, type: 'SMS' })
 
-  const { payload: smsPayload } = await pgDatabase().public
+  const { payload: smsCode } = await pgDatabase().public
     .tokens.findOne({ sessionId, type: 'SMS' })
 
   const { data: fail } = await authorizeSession({
     email,
     tokens: [
-      { type: 'SMS', payload: smsPayload }
+      { type: 'SMS', payload: smsCode }
     ]
   })
   t.notOk(fail, 'requires 2 tokens to authorize')
@@ -265,13 +265,11 @@ test('authorize a session via 2fa: email, sms', async (t) => {
   const { data } = await authorizeSession({
     email,
     tokens: [
-      { type: 'EMAIL_TOKEN', payload: emailPayload },
-      { type: 'SMS', payload: smsPayload }
+      { type: 'EMAIL_TOKEN', payload: emailToken },
+      { type: 'SMS', payload: smsCode }
     ]
   })
   t.ok(data.authorizeSession, 'authorize session returns true')
-
-  await signOut()
 
   t.end()
 })
@@ -279,7 +277,7 @@ test('authorize a session via 2fa: email, sms', async (t) => {
 test('authorize a session via 2fa: email, totp', async (t) => {
   await prepare()
 
-  const { payload: emailPayload, email } = await signIn({
+  const { payload: emailToken, email } = await signIn({
     user: {
       ...Users.TwoFactorMember,
       enabledSecondFactors: ['TOTP']
@@ -290,12 +288,12 @@ test('authorize a session via 2fa: email, totp', async (t) => {
   const { session: { id: sessionId } } = await unauthorizedSession({
     user: Users.TwoFactorMember,
     type: 'EMAIL_TOKEN',
-    payload: emailPayload
+    payload: emailToken
   })
 
-  const emailToken = await pgDatabase().public
+  const tokens = await pgDatabase().public
     .tokens.find({ sessionId, type: 'EMAIL_TOKEN' })
-  t.equal(emailToken.length, 1, 'an email token found')
+  t.equal(tokens.length, 1, 'an email token found')
 
   await startChallenge({ sessionId, type: 'TOTP' })
 
@@ -303,15 +301,15 @@ test('authorize a session via 2fa: email, totp', async (t) => {
     .tokens.find({ sessionId, type: 'TOTP' })
   t.equal(totpToken.length, 1, 'a totp token found')
 
-  const totpPayload = OTP({
+  const totpCode = OTP({
     secret: Users.TwoFactorMember.TOTPChallengeSecret
   }).totp()
-  t.ok(totpPayload, 'totp pin generated')
+  t.ok(totpCode, 'totp pin generated')
 
   const { data: fail } = await authorizeSession({
     email,
     tokens: [
-      { type: 'TOTP', payload: totpPayload }
+      { type: 'TOTP', payload: totpCode }
     ]
   })
   t.notOk(fail, 'requires 2 tokens to authorize')
@@ -319,8 +317,8 @@ test('authorize a session via 2fa: email, totp', async (t) => {
   const { data } = await authorizeSession({
     email,
     tokens: [
-      { type: 'EMAIL_TOKEN', payload: emailPayload },
-      { type: 'TOTP', payload: totpPayload }
+      { type: 'EMAIL_TOKEN', payload: emailToken },
+      { type: 'TOTP', payload: totpCode }
     ]
   })
   t.comment(JSON.stringify(data))
@@ -329,13 +327,11 @@ test('authorize a session via 2fa: email, totp', async (t) => {
   const { data: gone } = await authorizeSession({
     email,
     tokens: [
-      { type: 'EMAIL_TOKEN', payload: emailPayload },
-      { type: 'TOTP', payload: totpPayload }
+      { type: 'EMAIL_TOKEN', payload: emailToken },
+      { type: 'TOTP', payload: totpCode }
     ]
   })
   t.notOk(gone, 'can not authorize twice')
-
-  await signOut()
 
   t.end()
 })
@@ -379,23 +375,3 @@ test('authorize older sign in attempt', async (t) => {
 
   t.end()
 })
-
-// t.comment(JSON.stringify({ debugContainer }))
-
-// t.ok(true)
-
-// via tokens: email + sms -> success OK
-// via tokens: email + totp -> success OK
-// via tokens: sms + totp -> fail
-
-// test('start TOTP challenge', async (t) => {
-//   t.ok(true)
-//   t.end()
-// ... go through all cases ...
-// })
-//
-// test('start SMS challenge', async (t) => {
-//   t.ok(true)
-//   t.end()
-// ... go through all cases ...
-// })
