@@ -9,7 +9,6 @@ const {
   }
 } = require('@orbiting/backend-modules-auth')
 const { authenticate } = require('../../../lib/Newsletter')
-const base64u = require('@orbiting/backend-modules-base64u')
 
 // this endpoint is called for two distinct situations
 // first: from the frontend and admin via userId, name, subscribed
@@ -19,15 +18,10 @@ module.exports = async (_, args, context) => {
     userId,
     name,
     subscribed,
-    email: _email,
+    email,
     mac,
     consents: _consents = []
   } = args
-
-  // email might be base64u
-  const email = _email && base64u.match(_email)
-    ? base64u.decode(_email)
-    : _email
 
   // only allow PRIVACY consent via this endpint
   const consents = _consents
@@ -47,7 +41,7 @@ module.exports = async (_, args, context) => {
   // if userId is null, the logged in user's subscription is changed
   // if email and mac is set and correct, the user is upserted (used for newsletter signup)
   let user
-  if (_email) {
+  if (email) {
     if (mac && mac === authenticate(email, name, subscribed, t)) {
       ({ user } = await upsertUserAndConsents({
         pgdb,
