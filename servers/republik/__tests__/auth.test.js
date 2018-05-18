@@ -271,6 +271,8 @@ test('authorize a session via 2fa: email, sms', async (t) => {
   })
   t.ok(data.authorizeSession, 'authorize session returns true')
 
+  await signOut()
+
   t.end()
 })
 
@@ -321,6 +323,8 @@ test('authorize a session 2fa (multiple challenges): email, sms', async (t) => {
   const expiredTokens = await pgDatabase().public
     .tokens.find({ email, 'expiresAt <': new Date().toISOString() })
   t.equal(expiredTokens.length, 4, '4 expired tokens found')
+
+  await signOut()
 
   t.end()
 })
@@ -382,6 +386,8 @@ test('authorize a session via 2fa: email, totp', async (t) => {
   })
   t.notOk(gone, 'can not authorize twice')
 
+  await signOut()
+
   t.end()
 })
 
@@ -421,6 +427,8 @@ test('authorize older sign in attempt', async (t) => {
     tokens: [{ type: 'EMAIL_TOKEN', payload }]
   })
   t.notOk(gone, 'can not authorize twice')
+
+  await signOut()
 
   t.end()
 })
