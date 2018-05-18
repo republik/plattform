@@ -48,7 +48,7 @@ export const query = gql`
   query repoWithHistory($repoId: ID!) {
     repo(id: $repoId) {
       id
-      commits(page: 1) {
+      commits(maxCommits: 10) {
         ...TreeCommit
       }
       milestones {

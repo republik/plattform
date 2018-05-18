@@ -37,7 +37,7 @@ const getCommits = gql`
   query getCommits($repoId: ID!) {
     repo(id: $repoId) {
       id
-      commits {
+      commits(maxCommits: 3) {
         ...SidebarCommit
       }
     }
