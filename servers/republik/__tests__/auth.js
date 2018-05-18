@@ -82,24 +82,19 @@ const signIn = async ({
         }
       }
     })
-  } else {
-    // authorize session by token
-    if (!skipAuthorization) {
-      await authorizeSession({
-        email,
-        tokens: [{ type: 'EMAIL_TOKEN', payload }]
-      })
-    }
+  } else if (!skipAuthorization) {
+    await authorizeSession({
+      email,
+      tokens: [{ type: 'EMAIL_TOKEN', payload }]
+    })
   }
 
   // resolve userId
   const users = await pgDatabase().public
     .users.find({ email }, { limit: 1 })
 
-  const userObj = users.shift()
-
   return {
-    userId: userObj && userObj.id,
+    userId: users.length > 0 && users[0].id,
     payload,
     email
   }
