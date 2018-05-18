@@ -7,6 +7,7 @@ const {
   sendMail,
   sendMailTemplate
 } = require('@orbiting/backend-modules-mail')
+const { encode } = require('@orbiting/backend-modules-base64u')
 
 checkEnv([
   'AUTH_MAIL_FROM_ADDRESS'
@@ -40,7 +41,7 @@ module.exports = {
       `${FRONTEND_BASE_URL}/mitteilung?` +
       querystring.stringify({
         type: 'token-authorization',
-        email,
+        email: encode(email),
         context,
         token: token.payload
       })
