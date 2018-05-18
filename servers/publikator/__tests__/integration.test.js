@@ -109,7 +109,7 @@ test('unauthorized repos query', async (t) => {
         repos {
           nodes {
             id
-            commits(page: 0) {
+            commits {
               id
             }
           }
@@ -534,17 +534,15 @@ test('uncommitedChanges (with subscription)', (t) => {
 
 test('repo latestCommit, commits-length and -content', async (t) => {
   const variables = {
-    repoId: testRepoId,
-    page: 0
+    repoId: testRepoId
   }
   const result = await apolloFetch({
     query: `
       query repo(
         $repoId: ID!
-        $page: Int
       ){
         repo(id: $repoId) {
-          commits(page: $page) {
+          commits {
             id
             document {
               content
@@ -720,10 +718,9 @@ test('check image URLs and asset server', async (t) => {
     query: `
       query repo(
         $repoId: ID!
-        $page: Int
       ){
         repo(id: $repoId) {
-          commits(page: $page) {
+          commits {
             document {
               content
             }
@@ -732,8 +729,7 @@ test('check image URLs and asset server', async (t) => {
       }
     `,
     variables: {
-      repoId: testRepoId,
-      page: 0
+      repoId: testRepoId
     }
   })
   t.ok(result.data.repo.commits)
@@ -804,10 +800,9 @@ test('check recommit content and latestCommit', async (t) => {
     query: `
       query repo(
         $repoId: ID!
-        $page: Int
       ){
         repo(id: $repoId) {
-          commits(page: $page) {
+          commits {
             id
             document {
               content
@@ -817,8 +812,7 @@ test('check recommit content and latestCommit', async (t) => {
       }
     `,
     variables: {
-      repoId: testRepoId,
-      page: 0
+      repoId: testRepoId
     }
   })
   t.ok(result0.data.repo.commits)
@@ -859,10 +853,9 @@ test('check recommit content and latestCommit', async (t) => {
     query: `
       query repo(
         $repoId: ID!
-        $page: Int
       ){
         repo(id: $repoId) {
-          commits(page: $page) {
+          commits {
             id
             document {
               content
@@ -875,8 +868,7 @@ test('check recommit content and latestCommit', async (t) => {
       }
     `,
     variables: {
-      repoId: testRepoId,
-      page: 0
+      repoId: testRepoId
     }
   })
   t.ok(result2.data.repo.commits)
@@ -2276,7 +2268,7 @@ test('unauthorized repos query', async (t) => {
         repos {
           nodes {
             id
-            commits(page: 0) {
+            commits {
               id
             }
           }
