@@ -50,7 +50,7 @@ type queries {
 }
 
 type mutations {
-  submitPledge(pledge: PledgeInput): PledgeResponse!
+  submitPledge(pledge: PledgeInput, consents: [String!]): PledgeResponse!
   payPledge(pledgePayment: PledgePaymentInput): PledgeResponse!
   reclaimPledge(pledgeId: ID!): Boolean!
   claimMembership(voucherCode: String!): Boolean!

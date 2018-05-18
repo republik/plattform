@@ -6,6 +6,10 @@ const debug = require('debug')('auth')
 const { sendMailTemplate, moveNewsletterSubscriptions } = require('@orbiting/backend-modules-mail')
 const t = require('./t')
 const { newAuthError } = require('./AuthError')
+const {
+  ensureAllRequiredConsents,
+  saveConsents
+} = require('./Consents')
 
 const {
   initiateSession,
@@ -29,7 +33,6 @@ const TwoFactorAlreadyEnabledError = newAuthError('2fa-already-enabled', 'api/au
 const SecondFactorNotReadyError = newAuthError('2f-not-ready', 'api/auth/2f-not-ready')
 const SecondFactorHasToBeDisabledError = newAuthError('second-factor-has-to-be-disabled', 'api/auth/second-factor-has-to-be-disabled')
 const SessionTokenValidationFailed = newAuthError('token-validation-failed', 'api/token/invalid')
-const MissingConsentsError = newAuthError('missing-consents', 'api/consents/missing')
 
 const {
   AUTO_LOGIN,
@@ -249,16 +252,11 @@ const upsertUserAndConsents = async({ pgdb, email, consents, req }) => {
   const existingUser = await pgdb.public.users.findOne({ email })
 
   // check required consents
-  const missingConsents = await requiredConsents({
+  await ensureAllRequiredConsents({
     pgdb,
-    userId: existingUser && existingUser.id
+    userId: existingUser && existingUser.id,
+    consents
   })
-    .then(result => result
-      .filter(consent => consents.indexOf(consent) === -1)
-    )
-  if (missingConsents.length > 0) {
-    throw new MissingConsentsError(missingConsents, { consents: missingConsents.join(', ') })
-  }
 
   const user = existingUser ||
     await pgdb.public.users.insertAndGet({
@@ -275,13 +273,12 @@ const upsertUserAndConsents = async({ pgdb, email, consents, req }) => {
 
   // save consents
   if (consents.length > 0) {
-    await Promise.all(consents.map(consent =>
-      pgdb.public.consents.insert({
-        userId: user.id,
-        policy: consent,
-        ip: req.ip
-      })
-    ))
+    await saveConsents({
+      userId: user.id,
+      consents,
+      req,
+      pgdb
+    })
   }
 
   return {
@@ -415,28 +412,6 @@ const updateUserPhoneNumber = async ({ pgdb, userId, phoneNumber }) => {
   }
 }
 
-const requiredConsents = async ({ pgdb, userId }) => {
-  const {
-    ENFORCE_CONSENTS = ''
-  } = process.env
-
-  if (ENFORCE_CONSENTS) {
-    const consented = userId
-      ? await pgdb.public.consents.find({ userId })
-        .then(result => result
-          .map(consent => consent.policy)
-        )
-      : []
-
-    return ENFORCE_CONSENTS
-      .split(',')
-      .filter(consent =>
-        consented.indexOf(consent) === -1
-      )
-  }
-  return []
-}
-
 module.exports = {
   signIn,
   denySession,
@@ -446,7 +421,6 @@ module.exports = {
   updateUserPhoneNumber,
   updateUserTwoFactorAuthentication,
   upsertUserAndConsents,
-  requiredConsents,
   EmailInvalidError,
   EmailAlreadyAssignedError,
   UserNotFoundError,

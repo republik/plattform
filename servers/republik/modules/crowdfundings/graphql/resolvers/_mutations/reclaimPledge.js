@@ -31,11 +31,13 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     }
 
     // transfer belongings to signedin user
+    // TODO: add missing belongings, see mergeUsers
     const newUser = req.user
     const promises = [
       transaction.public.pledges.updateOne({id: pledge.id}, {userId: newUser.id}),
       transaction.public.memberships.update({userId: pledgeUser.id}, {userId: newUser.id}),
       transaction.public.paymentSources.update({userId: pledgeUser.id}, {userId: newUser.id}),
+      transaction.public.consents.update({userId: pledgeUser.id}, {userId: newUser.id}),
       transaction.public.users.updateOne({id: newUser.id}, {
         firstName: newUser.firstName || pledgeUser.firstName,
         lastName: newUser.lastName || pledgeUser.lastName,
