@@ -18,8 +18,7 @@ const sleep = require('await-sleep')
 const {
   MAILCHIMP_API_KEY,
   MAILCHIMP_URL,
-  MAILCHIMP_MAIN_LIST_ID,
-  ENFORCE_CONSENTS
+  MAILCHIMP_MAIN_LIST_ID
 } = process.env
 
 const hash = (email) =>
@@ -74,8 +73,7 @@ PgDb.connect().then(async pgdb => {
   let operations = []
 
   const newsletterName = 'PROJECTR'
-  const consents = ENFORCE_CONSENTS.split(',')
-  const subscribed = true
+  const subscribed = 1
 
   for (let email of mailchimpEmails) {
     const user = users.find(u => u.email === email)
@@ -83,8 +81,8 @@ PgDb.connect().then(async pgdb => {
       userId: !!user && user.id,
       pgdb
     })
+    const mac = authenticate(email, newsletterName, subscribed)
     const base64uMail = base64u.encode(email)
-    const mac = authenticate(base64uMail, newsletterName, subscribed, consents)
     const subscribeUrl = `https://www.republik.ch/mitteilung?type=newsletter-subscription&name=${newsletterName}&subscribed=${subscribed}&email=${base64uMail}&mac=${mac}`
     operations.push({
       method: 'PUT',

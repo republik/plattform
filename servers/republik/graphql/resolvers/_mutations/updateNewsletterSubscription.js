@@ -5,16 +5,21 @@ const {
   }
 } = require('@orbiting/backend-modules-auth')
 const { authenticate } = require('../../../lib/Newsletter')
+const base64u = require('@orbiting/backend-modules-base64u')
 
 module.exports = async (_, args, context) => {
   const {
     userId,
     name,
     subscribed,
-    email,
+    email: _email,
     mac,
     consents
   } = args
+
+  const email = base64u.match(_email)
+    ? base64u.decode(_email)
+    : _email
 
   const {
     user: me,
@@ -31,7 +36,7 @@ module.exports = async (_, args, context) => {
   // if email and hmac is set, the user is upserted (used for newsletter signup)
   let user
   if (email) {
-    if (mac === authenticate(email, name, subscribed, consents, t)) {
+    if (mac && mac === authenticate(email, name, subscribed, t)) {
       ({ user } = await upsertUserAndConsents({
         pgdb,
         email,
@@ -45,14 +50,14 @@ module.exports = async (_, args, context) => {
     user = userId
       ? await pgdb.public.users.findOne({ id: userId })
       : me
-  }
 
-  if (!user) {
-    console.error('user not found', { req: req._log() })
-    throw new Error(t('api/users/404'))
-  }
+    if (!user) {
+      console.error('user not found', { req: req._log() })
+      throw new Error(t('api/users/404'))
+    }
 
-  Roles.ensureUserIsMeOrInRoles(user, me, ['supporter'])
+    Roles.ensureUserIsMeOrInRoles(user, me, ['supporter'])
+  }
 
   try {
     return updateNewsletterSubscription(
