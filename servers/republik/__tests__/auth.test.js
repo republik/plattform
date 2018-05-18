@@ -254,6 +254,14 @@ test('authorize a session via 2fa: email, sms', async (t) => {
   const { payload: smsPayload } = await pgDatabase().public
     .tokens.findOne({ sessionId, type: 'SMS' })
 
+  const { data: fail } = await authorizeSession({
+    email,
+    tokens: [
+      { type: 'SMS', payload: smsPayload }
+    ]
+  })
+  t.notOk(fail, 'requires 2 tokens to authorize')
+
   const { data } = await authorizeSession({
     email,
     tokens: [
@@ -300,6 +308,14 @@ test('authorize a session via 2fa: email, totp', async (t) => {
   }).totp()
   t.ok(totpPayload, 'totp pin generated')
 
+  const { data: fail } = await authorizeSession({
+    email,
+    tokens: [
+      { type: 'TOTP', payload: totpPayload }
+    ]
+  })
+  t.notOk(fail, 'requires 2 tokens to authorize')
+
   const { data } = await authorizeSession({
     email,
     tokens: [
@@ -309,6 +325,15 @@ test('authorize a session via 2fa: email, totp', async (t) => {
   })
   t.comment(JSON.stringify(data))
   t.ok(data.authorizeSession, 'authorize session returns true')
+
+  const { data: gone } = await authorizeSession({
+    email,
+    tokens: [
+      { type: 'EMAIL_TOKEN', payload: emailPayload },
+      { type: 'TOTP', payload: totpPayload }
+    ]
+  })
+  t.notOk(gone, 'can not authorize twice')
 
   await signOut()
 
@@ -345,6 +370,12 @@ test('authorize older sign in attempt', async (t) => {
   const expiredTokens = await pgDatabase().public
     .tokens.find({ email, 'expiresAt <': new Date().toISOString() })
   t.equal(expiredTokens.length, 3, '3 expired tokens found')
+
+  const { data: gone } = await authorizeSession({
+    email,
+    tokens: [{ type: 'EMAIL_TOKEN', payload }]
+  })
+  t.notOk(gone, 'can not authorize twice')
 
   t.end()
 })
