@@ -14,12 +14,16 @@ module.exports = async (_, args, context) => {
     subscribed,
     email: _email,
     mac,
-    consents
+    consents: _consents
   } = args
 
-  const email = base64u.match(_email)
+  // email might be base64u
+  const email = _email && base64u.match(_email)
     ? base64u.decode(_email)
     : _email
+
+  // only allow PRIVACY consent via this endpint
+  const consents = _consents && _consents.filter(c => c === 'PRIVACY')
 
   const {
     user: me,
@@ -33,9 +37,9 @@ module.exports = async (_, args, context) => {
   } = context
 
   // if userId is null, the logged in user's subscription is changed
-  // if email and hmac is set, the user is upserted (used for newsletter signup)
+  // if email and mac is set and correct, the user is upserted (used for newsletter signup)
   let user
-  if (email) {
+  if (_email) {
     if (mac && mac === authenticate(email, name, subscribed, t)) {
       ({ user } = await upsertUserAndConsents({
         pgdb,
