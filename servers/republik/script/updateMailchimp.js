@@ -11,11 +11,15 @@ const fetch = require('isomorphic-unfetch')
 const { getInterestsForUser } = require('../modules/crowdfundings/lib/Mail.js')
 const util = require('util')
 const crypto = require('crypto')
+const base64u = require('@orbiting/backend-modules-base64u')
+const { authenticate } = require('../lib/Newsletter')
+const sleep = require('await-sleep')
 
 const {
   MAILCHIMP_API_KEY,
   MAILCHIMP_URL,
-  MAILCHIMP_MAIN_LIST_ID
+  MAILCHIMP_MAIN_LIST_ID,
+  ENFORCE_CONSENTS
 } = process.env
 
 const hash = (email) =>
@@ -69,20 +73,30 @@ PgDb.connect().then(async pgdb => {
 
   let operations = []
 
+  const newsletterName = 'PROJECTR'
+  const consents = ENFORCE_CONSENTS.split(',')
+  const subscribed = true
+
   for (let email of mailchimpEmails) {
     const user = users.find(u => u.email === email)
     const interests = await getInterestsForUser({
       userId: !!user && user.id,
       pgdb
     })
+    const base64uMail = base64u.encode(email)
+    const mac = authenticate(base64uMail, newsletterName, subscribed, consents)
+    const subscribeUrl = `https://www.republik.ch/mitteilung?type=newsletter-subscription&name=${newsletterName}&subscribed=${subscribed}&email=${base64uMail}&mac=${mac}`
     operations.push({
       method: 'PUT',
       path: `/lists/${MAILCHIMP_MAIN_LIST_ID}/members/${hash(email)}`,
       body: JSON.stringify({
+        // body <- don't touch, don't change subscription status
         email_address: email,
         status_if_new: 'subscribed',
-        interests
-        // body <- don't touch, don't change subscription status
+        interests,
+        'merge_fields': {
+          'SUB_URL': subscribeUrl
+        }
       })
     })
   }
@@ -106,6 +120,7 @@ PgDb.connect().then(async pgdb => {
       console.log('status changed: ', statusResult)
     }
     lastStatus = newStatus
+    await sleep(1000)
   } while (!statusResult || statusResult.status !== 'finished')
 
   /* result is tar :(
