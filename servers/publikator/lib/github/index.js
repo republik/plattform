@@ -189,6 +189,10 @@ module.exports = {
         sha
       }
     })
+
+    if (!rawCommit) {
+      return null
+    }
     const commit = commitFromGQL(repo, rawCommit)
     await redis.setAsync(redisKey, JSON.stringify(commit))
     return commit
