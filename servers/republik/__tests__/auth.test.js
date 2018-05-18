@@ -315,6 +315,40 @@ test('authorize a session via 2fa: email, totp', async (t) => {
   t.end()
 })
 
+test('authorize older sign in attempt', async (t) => {
+  await prepare()
+
+  // 1st signIn attempt
+  const { payload, email } = await signIn({
+    user: { ...Users.Member },
+    skipAuthorization: true
+  })
+
+  // Other signIn attempts
+  await signIn({
+    user: { ...Users.Member },
+    skipTruncate: true,
+    skipAuthorization: true
+  })
+  await signIn({
+    user: { ...Users.Member },
+    skipTruncate: true,
+    skipAuthorization: true
+  })
+
+  const { data } = await authorizeSession({
+    email,
+    tokens: [{ type: 'EMAIL_TOKEN', payload }]
+  })
+  t.ok(data.authorizeSession, 'sign in attempt successful')
+
+  const expiredTokens = await pgDatabase().public
+    .tokens.find({ email, 'expiresAt <': new Date().toISOString() })
+  t.equal(expiredTokens.length, 3, '3 expired tokens found')
+
+  t.end()
+})
+
 // t.comment(JSON.stringify({ debugContainer }))
 
 // t.ok(true)

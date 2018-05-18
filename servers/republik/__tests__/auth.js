@@ -30,10 +30,23 @@ const authorizeSession = async ({ email, tokens }) => {
   })
 }
 
-const signIn = async ({ user, context, skipAuthorization = false, simulate2FAAuth = false }) => {
+const signIn = async ({
+  user,
+  context,
+  skipAuthorization = false,
+  simulate2FAAuth = false,
+  skipTruncate = false
+}) => {
   const { email } = user
-  if (!email) return null
-  await pgDatabase().public.sessions.truncate({ cascade: true })
+
+  if (!email) {
+    return null
+  }
+
+  if (!skipTruncate) {
+    await pgDatabase().public.sessions.truncate({ cascade: true })
+  }
+
   try {
     await pgDatabase().public.users.insert(user)
   } catch (e) {
@@ -49,9 +62,11 @@ const signIn = async ({ user, context, skipAuthorization = false, simulate2FAAut
       context
     }
   })
-  const { payload, sessionId } = await pgDatabase().public.tokens.findOne({
-    email: email
-  })
+
+  const tokens = await pgDatabase().public
+    .tokens.find({ email: email }, { limit: 1 })
+
+  const { payload, sessionId } = tokens.shift()
 
   if (simulate2FAAuth) {
     const session = await pgDatabase().public.sessions.findOne({
@@ -78,9 +93,13 @@ const signIn = async ({ user, context, skipAuthorization = false, simulate2FAAut
   }
 
   // resolve userId
-  const userObject = await pgDatabase().public.users.findOne({ email })
+  const users = await pgDatabase().public
+    .users.find({ email }, { limit: 1 })
+
+  const userObj = users.shift()
+
   return {
-    userId: userObject && userObject.id,
+    userId: userObj && userObj.id,
     payload,
     email
   }
