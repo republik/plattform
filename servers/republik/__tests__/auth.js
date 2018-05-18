@@ -220,6 +220,21 @@ const updateEmail = async ({ email }) => {
   return (result && result.data && result.data.updateEmail) || {}
 }
 
+const startChallenge = async ({ sessionId, type }) => {
+  const result = await apolloFetch({
+    query: `
+      mutation startChallenge($sessionId: ID!, $type: SignInTokenType!) {
+        startChallenge(sessionId: $sessionId, type: $type)
+      }
+    `,
+    variables: {
+      sessionId,
+      type
+    }
+  })
+  return (result && result.data && result.data.updateEmail) || {}
+}
+
 const Unverified = {
   id: 'a0000000-0000-0000-0001-000000000001',
   firstName: 'willhelm tell',
@@ -313,6 +328,7 @@ module.exports = {
   initTOTPSharedSecret,
   validateTOTPSharedSecret,
   updateEmail,
+  startChallenge,
   Users: {
     Supporter,
     Unverified,
