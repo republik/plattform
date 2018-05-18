@@ -10,6 +10,7 @@ type Session {
   countryFlag: String
   city: String
   isCurrent: Boolean!
+  phrase: String
 }
 
 type UnauthorizedSession {
