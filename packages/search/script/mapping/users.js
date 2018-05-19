@@ -17,7 +17,13 @@ module.exports = {
       },
       biography: {
         type: 'text',
-        analyzer: 'german'
+        analyzer: 'german',
+        fields: {
+          keyword: {
+            type: 'keyword',
+            ignore_above: 256
+          }
+        }
       },
       birthday: {
         type: 'date'

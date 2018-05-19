@@ -31,15 +31,28 @@ module.exports = {
       __type: {
         type: 'keyword'
       },
+
       contentString: {
         type: 'text',
-        analyzer: 'german'
+        analyzer: 'german',
+        fielddata: true,
+        fields: {
+          count: {
+            type: 'token_count',
+            analyzer: 'standard'
+          },
+          keyword: {
+            type: 'keyword',
+            ignore_above: 256
+          }
+        }
       },
       content: {
         type: 'object',
         dynamic: false,
         enabled: false
       },
+
       meta: {
         properties: {
           repoId: {

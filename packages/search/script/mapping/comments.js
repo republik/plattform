@@ -14,11 +14,21 @@ module.exports = {
       userId: {
         type: 'keyword'
       },
-
       content: {
         type: 'text',
-        analyzer: 'german'
+        analyzer: 'german',
+        fields: {
+          count: {
+            type: 'token_count',
+            analyzer: 'standard'
+          },
+          keyword: {
+            type: 'keyword',
+            ignore_above: 256
+          }
+        }
       },
+
       upVotes: {
         type: 'integer'
       },
