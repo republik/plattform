@@ -9,7 +9,7 @@ const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const rw = require('rw')
 const fetch = require('isomorphic-unfetch')
 const { getInterestsForUser } = require('../modules/crowdfundings/lib/Mail.js')
-const util = require('util')
+// const util = require('util')
 const crypto = require('crypto')
 const base64u = require('@orbiting/backend-modules-base64u')
 const { authenticate } = require('../lib/Newsletter')
@@ -20,6 +20,9 @@ const {
   MAILCHIMP_URL,
   MAILCHIMP_MAIN_LIST_ID
 } = process.env
+
+// Interval in seconds stats about bulk progress is printed.
+const STATS_INTERVAL_SECS = 2
 
 const hash = (email) =>
   crypto
@@ -61,10 +64,10 @@ const userHasPledgeOrMembership = async ({userId, pgdb}) => {
 
 console.log('running updateMailchimp.js...')
 PgDb.connect().then(async pgdb => {
-  const restartCount = process.argv[2] && parseInt(process.argv[2])
-  if (restartCount) {
-    console.log(`restartCount: ${restartCount}`)
-  }
+  const stats = { progress: 0, total: 0 }
+  const statsInterval = setInterval(() => {
+    console.log(stats)
+  }, STATS_INTERVAL_SECS * 1000)
 
   const input = rw.readFileSync('/dev/stdin', 'utf8')
   if (!input || input.length < 4) {
@@ -81,6 +84,7 @@ PgDb.connect().then(async pgdb => {
   )]
     .filter(Boolean)
   console.log(`#mailchimpEmails: ${mailchimpEmails.length}`)
+  stats.total = mailchimpEmails.length
 
   const users = await pgdb.public.users.find({
     email: mailchimpEmails
@@ -92,7 +96,7 @@ PgDb.connect().then(async pgdb => {
   const newsletterName = 'PROJECTR'
   const subscribed = 1
 
-  for (let email of mailchimpEmails) {
+  await Promise.all(mailchimpEmails.map(async (email) => {
     const user = users.find(u => u.email === email)
     const interests = await getInterestsForUser({
       userId: !!user && user.id,
@@ -100,7 +104,7 @@ PgDb.connect().then(async pgdb => {
     })
     const mac = authenticate(email, newsletterName, subscribed)
     const base64uMail = base64u.encode(email)
-    const subscribeUrl = user && userHasPledgeOrMembership({ userId: user.id, pgdb })
+    const subscribeUrl = user && await userHasPledgeOrMembership({ userId: user.id, pgdb })
       ? ''
       : `https://www.republik.ch/mitteilung?type=newsletter-subscription&name=${newsletterName}&subscribed=${subscribed}&context=gdpr&email=${base64uMail}&mac=${mac}`
     operations.push({
@@ -116,8 +120,10 @@ PgDb.connect().then(async pgdb => {
         }
       })
     })
-  }
-  console.log(util.inspect(operations, {depth: null}))
+    stats.progress += 1
+  }))
+  // console.log(util.inspect(operations, {depth: null}))
+  console.log(`#operations: ${operations.length}`)
 
   const batchesUrl = `${MAILCHIMP_URL}/3.0/batches`
 
@@ -147,6 +153,7 @@ PgDb.connect().then(async pgdb => {
     console.log(summary)
   }
   */
+  clearInterval(statsInterval)
 }).then(() => {
   process.exit()
 }).catch(e => {
