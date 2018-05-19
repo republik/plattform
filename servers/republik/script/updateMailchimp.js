@@ -132,6 +132,7 @@ PgDb.connect().then(async pgdb => {
     stats.progress += 1
   }))
   // console.log(util.inspect(operations, {depth: null}))
+  clearInterval(statsInterval)
   console.log(`#operations: ${operations.length}`)
 
   const batchesUrl = `${MAILCHIMP_URL}/3.0/batches`
@@ -162,7 +163,6 @@ PgDb.connect().then(async pgdb => {
     console.log(summary)
   }
   */
-  clearInterval(statsInterval)
 }).then(() => {
   process.exit()
 }).catch(e => {
