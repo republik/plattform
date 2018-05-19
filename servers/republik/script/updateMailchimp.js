@@ -65,6 +65,11 @@ const userHasPledgeOrMembership = async ({userId, pgdb}) => {
 
 console.log('running updateMailchimp.js...')
 PgDb.connect().then(async pgdb => {
+  const dryRun = process.argv[2] === '--dry'
+  if (dryRun) {
+    console.log("dry run: this won't change anything on mailchimp")
+  }
+
   const stats = { progress: 0, total: 0 }
   const statsInterval = setInterval(() => {
     console.log(stats)
@@ -72,7 +77,7 @@ PgDb.connect().then(async pgdb => {
 
   let input
   if (MAILCHIMP_EXPORT_DOWNLOAD_URL) {
-    console.log('downloading MAILCHIMP_EXPORT_DOWNLOAD_URL')
+    console.log('downloading MAILCHIMP_EXPORT_DOWNLOAD_URL...')
     input = await fetch(MAILCHIMP_EXPORT_DOWNLOAD_URL, { method: 'GET' })
       .then(r => r.text())
   } else {
@@ -104,6 +109,7 @@ PgDb.connect().then(async pgdb => {
 
   const newsletterName = 'PROJECTR'
   const subscribed = 1
+  let numSubscribeUrls = 0
 
   await Promise.all(mailchimpEmails.map(async (email) => {
     const user = users.find(u => u.email === email)
@@ -129,40 +135,46 @@ PgDb.connect().then(async pgdb => {
         }
       })
     })
+    if (subscribeUrl && subscribeUrl.length > 1) {
+      numSubscribeUrls += 1
+    }
     stats.progress += 1
   }))
   // console.log(util.inspect(operations, {depth: null}))
   clearInterval(statsInterval)
   console.log(`#operations: ${operations.length}`)
+  console.log(`#subscribeUrls: ${numSubscribeUrls}`)
 
-  const batchesUrl = `${MAILCHIMP_URL}/3.0/batches`
+  if (!dryRun) {
+    const batchesUrl = `${MAILCHIMP_URL}/3.0/batches`
 
-  const result = await fetchAuthenticated('POST', batchesUrl, {
-    body: JSON.stringify({
-      operations
+    const result = await fetchAuthenticated('POST', batchesUrl, {
+      body: JSON.stringify({
+        operations
+      })
     })
-  })
-  console.log('started:', result)
+    console.log('started:', result)
 
-  let statusResult
-  let lastStatus
-  do {
-    statusResult = await fetchAuthenticated('GET', `${batchesUrl}/${result.id}`)
-    const newStatus = statusResult && statusResult.status
-    if (lastStatus && lastStatus !== newStatus) {
-      console.log('status changed: ', statusResult)
+    let statusResult
+    let lastStatus
+    do {
+      statusResult = await fetchAuthenticated('GET', `${batchesUrl}/${result.id}`)
+      const newStatus = statusResult && statusResult.status
+      if (lastStatus && lastStatus !== newStatus) {
+        console.log('status changed: ', statusResult)
+      }
+      lastStatus = newStatus
+      await sleep(1000)
+    } while (!statusResult || statusResult.status !== 'finished')
+
+    /* result is tar :(
+    if(lastStatus === 'finished') {
+      const summary = await fetch(statusResult.response_body_url, { method: 'GET' })
+        .then( r => r.raw() )
+      console.log(summary)
     }
-    lastStatus = newStatus
-    await sleep(1000)
-  } while (!statusResult || statusResult.status !== 'finished')
-
-  /* result is tar :(
-  if(lastStatus === 'finished') {
-    const summary = await fetch(statusResult.response_body_url, { method: 'GET' })
-      .then( r => r.raw() )
-    console.log(summary)
+    */
   }
-  */
 }).then(() => {
   process.exit()
 }).catch(e => {
