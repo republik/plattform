@@ -1,3 +1,5 @@
+const debug = require('debug')('search:lib:filters')
+
 const termCriteriaBuilder = (fieldName) => (value) => ({
   clause: 'must',
   filter: {
@@ -26,6 +28,24 @@ const dateRangeCriteriaBuilder = (fieldName) => (range) => ({
   }
 })
 
+const rangeCriteriaBuilder = (fieldName) => (value, { ranges }) => {
+  debug('rangeCriteriaBuilder', fieldName, value, ranges)
+  const range = ranges.find(range => range.key === value)
+  debug('rangeCriteriaBuilder', range)
+
+  return {
+    clause: 'must',
+    filter: {
+      range: {
+        [fieldName]: {
+          gte: range.from || undefined,
+          lte: range.to || undefined
+        }
+      }
+    }
+  }
+}
+
 /*
 const dateCriteriaBuilder = (fieldName, operator) => (date) => ({
   clause: 'must',
@@ -43,11 +63,16 @@ const dateCriteriaBuilder = (fieldName, operator) => (date) => ({
 const filterReducer = (schema) => (filters) =>
   filters.reduce(
     (filterObj, { key, value }) => {
+      debug('filterReducer', { key, value })
       const schemaEntry = schema[key]
+      debug('schemaEntry', schema[key])
       if (!schemaEntry) {
         console.warn('missing schemaEntry for filter:', { key, value })
         return filterObj
       }
+
+      // debug('schemaEntry.parser', schemaEntry.parser(value))
+
       return {
         ...filterObj,
         [key]: schemaEntry.parser
@@ -72,7 +97,7 @@ const elasticFilterBuilder = (schema) => (filterInput) =>
       }
 
       const value = filterInput[key]
-      const created = criteria(value)
+      const created = criteria(value, schemaEntry.options || null)
       boolFilter[created.clause] = [
         ...(boolFilter[created.clause] || []),
         created.filter
@@ -86,6 +111,7 @@ module.exports = {
   termCriteriaBuilder,
   hasCriteriaBuilder,
   dateRangeCriteriaBuilder,
+  rangeCriteriaBuilder,
   filterReducer,
   elasticFilterBuilder
 }

@@ -14,6 +14,15 @@ const valueCountAggBuilder = (fieldPath) => (key) => ({
   }
 })
 
+const rangeAggBuilder = (fieldPath) => (key, { ranges }) => ({
+  [key]: {
+    range: {
+      field: fieldPath,
+      ranges
+    }
+  }
+})
+
 const extractAggs = (schema) =>
   Object.keys(schema).reduce(
     (aggs, key) => {
@@ -21,7 +30,7 @@ const extractAggs = (schema) =>
       if (schemaEntry.agg) {
         return {
           ...aggs,
-          ...schemaEntry.agg(key)
+          ...schemaEntry.agg(key, schemaEntry.options || null)
         }
       }
       return aggs
@@ -32,5 +41,6 @@ const extractAggs = (schema) =>
 module.exports = {
   termAggBuilder,
   valueCountAggBuilder,
+  rangeAggBuilder,
   extractAggs
 }
