@@ -30,7 +30,7 @@ const dateRangeCriteriaBuilder = (fieldName) => (range) => ({
 
 const rangeCriteriaBuilder = (fieldName) => (value, { ranges }) => {
   debug('rangeCriteriaBuilder', fieldName, value, ranges)
-  const range = ranges.find(range => range.key === value)
+  const range = ranges.find(range => range.key === value.toLowerCase())
   debug('rangeCriteriaBuilder', range)
 
   return {

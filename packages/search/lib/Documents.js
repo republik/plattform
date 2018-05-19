@@ -55,13 +55,13 @@ const schema = {
       ranges: [
         { key: 'short',
           to: WORDS_PER_MIN * SHORT_DURATION_MINS },
-        { key: 'middle',
+        { key: 'medium',
           from: WORDS_PER_MIN * SHORT_DURATION_MINS,
           to: WORDS_PER_MIN * MIDDLE_DURATION_MINS },
         { key: 'long',
           from: WORDS_PER_MIN * MIDDLE_DURATION_MINS,
           to: WORDS_PER_MIN * LONG_DURATION_MINS },
-        { key: 'epic length',
+        { key: 'epic',
           from: WORDS_PER_MIN * LONG_DURATION_MINS }
       ]
     }

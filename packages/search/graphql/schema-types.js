@@ -34,7 +34,7 @@ enum SearchTypes {
 
 enum DocumentTextLengths {
   SHORT
-  MIDDLE
+  MEDIUM
   LONG
 }
 
