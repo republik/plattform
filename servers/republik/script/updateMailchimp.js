@@ -14,6 +14,7 @@ const crypto = require('crypto')
 const base64u = require('@orbiting/backend-modules-base64u')
 const { authenticate } = require('../lib/Newsletter')
 const sleep = require('await-sleep')
+const fs = require('fs')
 
 const {
   MAILCHIMP_API_KEY,
@@ -31,6 +32,18 @@ const hash = (email) =>
     .update(email)
     .digest('hex')
     .toLowerCase()
+
+const getEmailsFromCSV = (input) =>
+   [...new Set(
+    input
+    .split('\n')
+    .slice(1) // remove header
+    .map(x => x
+      .split(',') // divide columns
+      .shift()  // keep only email
+    )
+  )]
+    .filter(Boolean)
 
 const fetchAuthenticated = (method, url, request = {}) => {
   const options = {
@@ -87,19 +100,21 @@ PgDb.connect().then(async pgdb => {
   if (!input || input.length < 4) {
     throw new Error('You need to provide mailchimp emails as input on stdin')
   }
-  const mailchimpEmails = [...new Set(
-    input
-    .split('\n')
-    .slice(1) // remove header
-    .map(x => x
-      .split(',') // divide columns
-      .shift()  // keep only email
-    )
-  )]
-    .filter(Boolean)
+
+  const mailchimpEmails = getEmailsFromCSV(input)
   console.log(`#mailchimpEmails: ${mailchimpEmails.length}`)
   stats.total = mailchimpEmails.length
 
+  let diffInput
+  // diff which need a subscribe URL to a csv
+  // only reading of stdin supported yet, so use MAILCHIMP_EXPORT_DOWNLOAD_URL
+  // if you need a diff
+  if (dryRun && process.argv[3] === '--diff') {
+    diffInput = getEmailsFromCSV(rw.readFileSync('/dev/stdin', 'utf8'))
+    console.log(`#diffInput: ${diffInput.length}`)
+  }
+
+  // load users
   const users = await pgdb.public.users.find({
     email: mailchimpEmails
   })
@@ -110,6 +125,7 @@ PgDb.connect().then(async pgdb => {
   const newsletterName = 'PROJECTR'
   const subscribed = 1
   let numSubscribeUrls = 0
+  let emailsWithSubscribeUrl = []
 
   await Promise.all(mailchimpEmails.map(async (email) => {
     const user = users.find(u => u.email === email)
@@ -126,7 +142,7 @@ PgDb.connect().then(async pgdb => {
       method: 'PUT',
       path: `/lists/${MAILCHIMP_MAIN_LIST_ID}/members/${hash(email)}`,
       body: JSON.stringify({
-        // body <- don't touch, don't change subscription status
+        // body <- don't touch, would change subscription status
         email_address: email,
         status_if_new: 'subscribed',
         interests,
@@ -137,6 +153,7 @@ PgDb.connect().then(async pgdb => {
     })
     if (subscribeUrl && subscribeUrl.length > 1) {
       numSubscribeUrls += 1
+      emailsWithSubscribeUrl.push(email)
     }
     stats.progress += 1
   }))
@@ -144,6 +161,15 @@ PgDb.connect().then(async pgdb => {
   clearInterval(statsInterval)
   console.log(`#operations: ${operations.length}`)
   console.log(`#subscribeUrls: ${numSubscribeUrls}`)
+
+  if (diffInput) {
+    const missingInDiffInput = emailsWithSubscribeUrl.filter(
+      email => diffInput.indexOf(email) === -1
+    )
+    console.log(`#diff emailsWithSubscribeUrl <> diffInput: ${emailsWithSubscribeUrl.length - diffInput.length}`)
+    // console.log(util.inspect(missingInDiffInput, {depth: null}))
+    fs.writeFileSync(__dirname + '/diff.csv', missingInDiffInput.join('\n'))
+  }
 
   if (!dryRun) {
     const batchesUrl = `${MAILCHIMP_URL}/3.0/batches`
