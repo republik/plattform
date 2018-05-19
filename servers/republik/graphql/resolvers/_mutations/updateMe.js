@@ -1,5 +1,5 @@
 const {
-  ensureSignedIn, checkUsername, transformUser
+  ensureSignedIn, checkUsername, transformUser, Users
 } = require('@orbiting/backend-modules-auth')
 const {
   getKeyId,
@@ -47,6 +47,7 @@ module.exports = async (_, args, context) => {
   ensureSignedIn(req)
 
   const {
+    phoneNumber,
     username,
     address,
     pgpPublicKey,
@@ -73,7 +74,6 @@ module.exports = async (_, args, context) => {
     'lastName',
     'birthday',
     'ageAccessRole',
-    'phoneNumber',
     'phoneNumberNote',
     'phoneNumberAccessRole',
     'facebookId',
@@ -198,6 +198,9 @@ module.exports = async (_, args, context) => {
           { addressId: userAddress.id, updatedAt: now }
         )
       }
+    }
+    if (phoneNumber) {
+      await Users.updateUserPhoneNumber({ pgdb: transaction, user: me, phoneNumber })
     }
     await transaction.transactionCommit()
     const updatedUser = await pgdb.public.users.findOne({ id: me.id })

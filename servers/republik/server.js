@@ -42,9 +42,7 @@ const run = async (workerId) => {
   // signin hooks
   const signInHooks = [
     async (userId, isNew, pgdb) =>
-      sendPendingPledgeConfirmations(userId, pgdb, t),
-    async (userId, isNew, pgdb) =>
-      isNew && mail.enforceSubscriptions({ pgdb, userId, isNew })
+      sendPendingPledgeConfirmations(userId, pgdb, t)
   ]
 
   const createGraphQLContext = (defaultContext) => ({
@@ -76,7 +74,6 @@ const runOnce = (...args) => {
 const close = () => {
   server.close()
 }
-
 module.exports = {
   start,
   run,

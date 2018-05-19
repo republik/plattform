@@ -1,37 +1,83 @@
-const { NoSessionError, QueryEmailMismatchError, DestroySessionError } = require('./errors')
+const kraut = require('kraut')
+const geoForIP = require('./geoForIP')
+const { newAuthError } = require('./AuthError')
+
+const DestroySessionError = newAuthError('session-destroy-failed', 'api/auth/errorDestroyingSession')
+const InitiateSessionError = newAuthError('session-init-failed', 'api/auth/session-init-failed')
+const NoSessionError = newAuthError('no-session', 'api/token/invalid')
 
 const destroySession = async (req) => {
   return new Promise((resolve, reject) => {
     req.session.destroy(error => {
       if (error) {
-        return reject(new DestroySessionError({ req, error }))
+        return reject(new DestroySessionError({ headers: req.headers, error }))
       }
       return resolve()
     })
   })
 }
 
-const sessionByToken = async ({ pgdb, token, email: emailFromQuery, ...meta }) => {
-  const Sessions = pgdb.public.sessions
-  const session = await Sessions.findOne({
-    'sess @>': { token }
+const initiateSession = async ({ req, pgdb, email, consents }) => {
+  const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+  const userAgent = req.headers['user-agent']
+  const phrase = `${kraut.adjectives.random()} ${kraut.verbs.random()} ${kraut.nouns.random()}`
+  const { country, city } = geoForIP(ipAddress)
+  req.session.email = email
+  req.session.ip = ipAddress
+  req.session.ua = userAgent
+  req.session.phrase = phrase
+  if (country || city) {
+    req.session.geo = { country, city }
+  }
+  if (consents) {
+    req.session.consents = consents
+  }
+  await new Promise(function (resolve, reject) {
+    req.session.save(function (error, data) {
+      if (error) {
+        return reject(new InitiateSessionError({ headers: req.headers, error }))
+      }
+      return resolve(data)
+    })
   })
 
-  if (!session) {
-    throw new NoSessionError({ token, emailFromQuery, ...meta })
+  if (!req.sessionID) throw new NoSessionError({ email })
+  const session = await pgdb.public.sessions.findOne({ sid: req.sessionID })
+  if (!session) throw new NoSessionError({ email })
+  return {
+    session,
+    country,
+    city,
+    phrase
   }
+}
 
-  const { email } = session.sess
-  if (emailFromQuery && email !== emailFromQuery) { // emailFromQuery might be null for old links
-    throw new QueryEmailMismatchError({ token, email, emailFromQuery })
+const sessionByToken = async ({ pgdb, token, email: emailFromQuery, ...meta }) => {
+  const sessions = await pgdb.query(`
+    SELECT DISTINCT
+      s.*,
+      t."expiresAt" as "tokenExpiresAt"
+    FROM
+      sessions s
+    RIGHT OUTER JOIN
+      tokens t
+      ON t."sessionId" = s.id
+    WHERE
+      t.payload = :payload AND
+      t.type = :type AND
+      t."expiresAt" >= now()
+    `, token)
+
+  if (sessions && sessions.length > 0) {
+    if (sessions[0].sess.email !== emailFromQuery) {
+      throw new NoSessionError({ emailFromQuery, email: sessions[0].sess.email })
+    }
+    return sessions[0]
   }
-
-  return session
 }
 
 const findAllUserSessions = async ({ pgdb, userId }) => {
-  const Sessions = pgdb.public.sessions
-  const sessions = await Sessions.find({
+  const sessions = await pgdb.public.sessions.find({
     'sess @>': { passport: { user: userId } }
   })
   return sessions || []
@@ -55,7 +101,7 @@ const clearAllUserSessions = async ({ pgdb, userId }) => {
 const clearUserSession = async ({ pgdb, userId, sessionId }) => {
   const transaction = await pgdb.transactionBegin()
   try {
-    const email = await transaction.public.users.findOne({ id: userId }, 'email')
+    const email = await transaction.public.users.findOneFieldOnly({ id: userId }, 'email')
     const sessions = await findAllUserSessions({ pgdb: transaction, userId })
     const matchingSessions = sessions
       .filter((session) => (session.id === sessionId))
@@ -72,66 +118,14 @@ const clearUserSession = async ({ pgdb, userId, sessionId }) => {
   }
 }
 
-const authorizeSession = async ({ pgdb, token, emailFromQuery, signInHooks = [] }) => {
-  const Users = pgdb.public.users
-  const Sessions = pgdb.public.sessions
-
-  const session = await sessionByToken({ pgdb, token, email: emailFromQuery })
-  const { email } = session.sess
-
-  // verify and/or create the user
-  const existingUser = await Users.findOne({
-    email
-  })
-  const user = existingUser ||
-    await Users.insertAndGet({
-      email,
-      verified: true
-    })
-  if (!user.verified) {
-    await Users.updateOne({
-      id: user.id
-    }, {
-      verified: true
-    })
-  }
-
-  // log in the session and delete token
-  await Sessions.updateOne({
-    id: session.id
-  }, {
-    sess: {
-      ...session.sess,
-      token: null,
-      passport: {
-        user: user.id
-      }
-    }
-  })
-
-  // call signIn hooks
-  try {
-    await Promise.all(
-      signInHooks.map(hook =>
-        hook(
-          user.id,
-          (!existingUser || !existingUser.verified),
-          pgdb
-        )
-      )
-    )
-  } catch (e) {
-    console.warn(`sign in hook failed in authorizeSession`, e)
-  }
-
-  return user
-}
-
 module.exports = {
+  initiateSession,
   sessionByToken,
   findAllUserSessions,
-  authorizeSession,
   clearUserSession,
   clearAllUserSessions,
-  destroySession
+  destroySession,
+  NoSessionError,
+  DestroySessionError,
+  InitiateSessionError
 }
