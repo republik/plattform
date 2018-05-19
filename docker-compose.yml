@@ -1,0 +1,50 @@
+version: "3.4"
+services:
+  republik-backend:
+    build:
+      context: ./servers/republik
+    image: republik-backend:latest
+    links:
+      - redis
+      - postgres
+    environment:
+      - DATABASE_URL=postgres://postgres@postgres:5432/republik
+      - REDIS_URL=redis:6379
+      - PUBLIC_URL=http://localhost:8080
+      - PUBLIC_WS_URL_BASE=ws://localhost:8080
+      - FRONTEND_BASE_URL
+      - PUBLIC_WS_URL_PATH
+      - SESSION_SECRET
+      - CORS_WHITELIST_URL
+      - SEND_MAILS
+      - MANDRILL_API_KEY
+      - DEFAULT_MAIL_FROM_NAME
+      - DEFAULT_MAIL_FROM_ADDRESS
+      - AUTH_MAIL_FROM_ADDRESS
+      - DISPLAY_AUTHOR_SECRET
+      - EXO_KEY
+      - EXO_SECRET
+      - S3BUCKET
+      - ASSETS_BASE_URL
+      - KEYCDN_API_KEY
+      - KEYCDN_ZONE_ID
+      - KEYCDN_ZONE_URL
+      - PHANTOMJSCLOUD_API_KEY
+    ports:
+        - 8080:3020
+
+  redis:
+    image: redis:4-alpine
+    ports:
+        - 6379:6379
+
+  postgres:
+    image: postgres:10-alpine
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    ports:
+        - 5432:5432
+
+
+volumes:
+  postgres-data:
