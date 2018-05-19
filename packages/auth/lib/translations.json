@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-14T06:10:14.941Z",
+  "updated": "2018-05-18T21:29:44.749Z",
   "title": "live",
   "data": [
     {
@@ -36,7 +36,7 @@
     },
     {
       "key": "api/token/invalid",
-      "value": "Token ungültig!"
+      "value": "Token ungültig. Links zur Anmeldung sind nur einmal gültig."
     },
     {
       "key": "api/checkUsername/min",
@@ -68,63 +68,63 @@
     },
     {
       "key": "api/auth/token-type-unknown",
-      "value": "TODO: Token Challenge Typ existiert nicht"
+      "value": "Token Challenge Typ existiert nicht."
     },
     {
       "key": "api/auth/shared-secret-not-supported",
-      "value": "TODO: Der angegebene Token Challenge unterstützt keine Shared Secrets"
+      "value": "Der angegebene Token Challenge unterstützt keine Shared Secrets."
     },
     {
       "key": "api/auth/shared-secret-generation-failed",
-      "value": "TODO: Shared Secret konnte nicht erzeugt werden"
+      "value": "Shared Secret konnte nicht erzeugt werden."
     },
     {
       "key": "api/auth/shared-secret-validation-failed",
-      "value": "TODO: Shared Secret Verifizierung fehlgeschlagen"
+      "value": "Shared Secret Verifizierung fehlgeschlagen."
     },
     {
       "key": "api/auth/session-init-failed",
-      "value": "TODO: Session konnte aus einem unbekannten Grund nicht initialisiert werden"
-    },
-    {
-      "key": "api/auth/query-email-mismatch",
-      "value": "TODO: E-Mail stimmt nicht überein (Request-Email != Session-Email)"
+      "value": "Die Session konnte aus einem unbekannten Grund nicht initialisiert werden."
     },
     {
       "key": "api/auth/token-expired",
-      "value": "TODO: Token ist nicht mehr gültig"
+      "value": "Der Token ist abgelaufen. Bitte melden Sie sich erneut an."
     },
     {
       "key": "api/auth/authorization-failed",
-      "value": "TODO: Session konnte aus einem ubekannten Grund nicht authorisiert werden"
+      "value": "Die Session konnte aus einem ubekannten Grund nicht authorisiert werden. Bitte versuchen Sie es noch einmal."
     },
     {
       "key": "api/auth/2fa-already-disabled",
-      "value": "TODO: Zwei-Faktor-Authentifizierung ist bereits deaktiviert"
+      "value": "Zwei-Faktor-Authentifizierung ist bereits deaktiviert."
     },
     {
       "key": "api/auth/2fa-already-enabled",
-      "value": "TODO: Die Zwei-Faktor-Authentifizierung ist bereits aktiviert"
+      "value": "Die Zwei-Faktor-Authentifizierung ist bereits aktiviert."
     },
     {
       "key": "api/auth/2f-not-ready",
-      "value": "TODO: Die Zwei-Faktor-Authentifierung kann erst aktiviert werden, wenn TOTP oder SMS Authentifierung eingerichtet wurde"
+      "value": "Die Zwei-Faktor-Authentifierung kann erst aktiviert werden, wenn TOTP oder SMS Authentifierung eingerichtet wurde."
     },
     {
       "key": "api/auth/2fa-has-to-be-disabled",
-      "value": "TODO: Die Zwei-Faktor-Authentifierung muss zuerst deaktiviert werden"
+      "value": "Bitte deaktivieren Sie zuerst die Zwei-Faktor-Authentifierung."
     },
     {
       "key": "api/auth/sms/shared-secret",
-      "value": "TODO: SMS Login Authorisierung: {sharedSecret}"
+      "value": "SMS Login Authorisierung: {sharedSecret}"
     },
     {
       "key": "api/auth/sms/your-code",
-      "value": "TODO: Dein Code: {code}"
+      "value": "Ihr Code: {code}"
     },
     {
       "key": "api/auth/sms/phone-number-not-valid",
-      "value": "TODO: Phone number not valid for Text Messaging"
+      "value": "Telefon-Nummer ungültig."
+    },
+    {
+      "key": "api/consents/missing",
+      "value": "Sie müssen folgenden Policies zustimmen um sich anmelden zu können: {consents}."
     }
   ]
 }

@@ -1,7 +1,7 @@
 const logger = console
 const sendPendingPledgeConfirmations = require('../../../lib/sendPendingPledgeConfirmations')
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
   // check user
   if (!req.user) {
     logger.error('unauthorized reclaimPledge', { req: req._log(), args })
@@ -27,15 +27,20 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     }
     if (pledgeUser.verified) {
       logger.error('cannot claim pledges of verified users', { req: req._log(), args, pledge })
-      throw new Error(t('api/unexpected'))
+      throw new Error(t('api/reclaim/verified', {
+        pledgeEmail: pledgeUser.email,
+        targetEmail: req.user.email
+      }))
     }
 
     // transfer belongings to signedin user
+    // TODO: add missing belongings, see mergeUsers
     const newUser = req.user
     const promises = [
       transaction.public.pledges.updateOne({id: pledge.id}, {userId: newUser.id}),
       transaction.public.memberships.update({userId: pledgeUser.id}, {userId: newUser.id}),
       transaction.public.paymentSources.update({userId: pledgeUser.id}, {userId: newUser.id}),
+      transaction.public.consents.update({userId: pledgeUser.id}, {userId: newUser.id}),
       transaction.public.users.updateOne({id: newUser.id}, {
         firstName: newUser.firstName || pledgeUser.firstName,
         lastName: newUser.lastName || pledgeUser.lastName,
@@ -53,6 +58,18 @@ module.exports = async (_, args, {pgdb, req, t}) => {
 
     // commit transaction
     await transaction.transactionCommit()
+
+    try {
+      await enforceSubscriptions({ pgdb, userId: pledgeUser.id })
+      await enforceSubscriptions({
+        pgdb,
+        userId: req.user.id,
+        subscribeToEditorialNewsletters: true
+      })
+    } catch (e) {
+      // ignore issues with newsletter subscriptions
+      logger.error('newsletter subscription changes failed', { req: req._log(), args, error: e })
+    }
 
     return true
   } catch (e) {

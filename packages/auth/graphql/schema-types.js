@@ -10,11 +10,14 @@ type Session {
   countryFlag: String
   city: String
   isCurrent: Boolean!
+  phrase: String
 }
 
 type UnauthorizedSession {
   session: Session!
   enabledSecondFactors: [SignInTokenType]!
+  requiredConsents: [String!]!
+  newUser: Boolean
 }
 
 type User {

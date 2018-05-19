@@ -6,6 +6,10 @@ const debug = require('debug')('auth')
 const { sendMailTemplate, moveNewsletterSubscriptions } = require('@orbiting/backend-modules-mail')
 const t = require('./t')
 const { newAuthError } = require('./AuthError')
+const {
+  ensureAllRequiredConsents,
+  saveConsents
+} = require('./Consents')
 
 const {
   initiateSession,
@@ -35,7 +39,7 @@ const {
   FRONTEND_BASE_URL
 } = process.env
 
-const signIn = async (_email, context, pgdb, req) => {
+const signIn = async (_email, context, pgdb, req, consents) => {
   if (req.user) {
     return { phrase: '' }
   }
@@ -56,7 +60,7 @@ const signIn = async (_email, context, pgdb, req) => {
   const { email } = (user || { email: _email })
 
   try {
-    const init = await initiateSession({ req, pgdb, email })
+    const init = await initiateSession({ req, pgdb, email, consents })
     const { country, phrase, session } = init
 
     const type = TokenTypes.EMAIL_TOKEN
@@ -148,7 +152,7 @@ const denySession = async ({ pgdb, token, email: emailFromQuery }) => {
   return user
 }
 
-const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [] }) => {
+const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [], consents = [], req }) => {
   // validate the challenges
   const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
   const tokenTypes = []
@@ -184,13 +188,26 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
     throw new SessionTokenValidationFailed({ email: emailFromQuery })
   }
 
-  // verify and/or create the user
+  // merge consents given to authorizeSession and signIn
+  if (session.sess.consents) {
+    consents = [...new Set(consents.concat(session.sess.consents))]
+  }
+
   const transaction = await pgdb.transactionBegin()
 
-  const { user, isVerificationUpdated } = await upsertUserVerified({
-    pgdb: transaction,
-    email: session.sess.email
-  })
+  // verify and/or create the user (checks consents)
+  let user, isVerificationUpdated
+  try {
+    ({ user, isVerificationUpdated } = await upsertUserAndConsents({
+      pgdb: transaction,
+      email: session.sess.email,
+      consents,
+      req
+    }))
+  } catch (error) {
+    await transaction.transactionRollback()
+    throw error
+  }
 
   try {
     // log in the session and delete token
@@ -215,6 +232,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
     await transaction.transactionCommit()
   } catch (error) {
     await transaction.transactionRollback()
+    console.error(error)
     throw new AuthorizationFailedError({ session: session })
   }
 
@@ -235,8 +253,16 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   return user
 }
 
-const upsertUserVerified = async({ pgdb, email }) => {
+const upsertUserAndConsents = async({ pgdb, email, consents, req }) => {
   const existingUser = await pgdb.public.users.findOne({ email })
+
+  // check required consents
+  await ensureAllRequiredConsents({
+    pgdb,
+    userId: existingUser && existingUser.id,
+    consents
+  })
+
   const user = existingUser ||
     await pgdb.public.users.insertAndGet({
       email,
@@ -249,6 +275,17 @@ const upsertUserVerified = async({ pgdb, email }) => {
       verified: true
     })
   }
+
+  // save consents
+  if (consents.length > 0) {
+    await saveConsents({
+      userId: user.id,
+      consents,
+      req,
+      pgdb
+    })
+  }
+
   return {
     user,
     isVerificationUpdated: (!existingUser || !existingUser.verified)
@@ -388,6 +425,7 @@ module.exports = {
   updateUserEmail,
   updateUserPhoneNumber,
   updateUserTwoFactorAuthentication,
+  upsertUserAndConsents,
   EmailInvalidError,
   EmailAlreadyAssignedError,
   UserNotFoundError,

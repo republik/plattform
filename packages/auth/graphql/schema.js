@@ -29,7 +29,7 @@ type queries {
 
 type mutations {
   # signIn with an email address
-  signIn(email: String!, context: String): SignInResponse!
+  signIn(email: String!, context: String, consents: [String!]): SignInResponse!
   signOut: Boolean!
 
   # if userId is null, the logged in user's email is changed
@@ -40,7 +40,7 @@ type mutations {
   startChallenge(sessionId: ID!, type: SignInTokenType!): Boolean!
 
   # authorize a token sent by mail to convert a login request to a valid user session
-  authorizeSession(email: String!, tokens: [SignInToken!]!): Boolean!
+  authorizeSession(email: String!, tokens: [SignInToken!]!, consents: [String!]): Boolean!
 
   # deny a session via token challenge
   denySession(email: String!, token: SignInToken!): Boolean!

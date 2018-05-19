@@ -30,10 +30,23 @@ const authorizeSession = async ({ email, tokens }) => {
   })
 }
 
-const signIn = async ({ user, context, skipAuthorization = false, simulate2FAAuth = false }) => {
+const signIn = async ({
+  user,
+  context,
+  skipAuthorization = false,
+  simulate2FAAuth = false,
+  skipTruncate = false
+}) => {
   const { email } = user
-  if (!email) return null
-  await pgDatabase().public.sessions.truncate({ cascade: true })
+
+  if (!email) {
+    return null
+  }
+
+  if (!skipTruncate) {
+    await pgDatabase().public.sessions.truncate({ cascade: true })
+  }
+
   try {
     await pgDatabase().public.users.insert(user)
   } catch (e) {
@@ -49,9 +62,11 @@ const signIn = async ({ user, context, skipAuthorization = false, simulate2FAAut
       context
     }
   })
-  const { payload, sessionId } = await pgDatabase().public.tokens.findOne({
-    email: email
-  })
+
+  const tokens = await pgDatabase().public
+    .tokens.find({ email: email }, { limit: 1 })
+
+  const { payload, sessionId } = tokens.shift()
 
   if (simulate2FAAuth) {
     const session = await pgDatabase().public.sessions.findOne({
@@ -67,20 +82,19 @@ const signIn = async ({ user, context, skipAuthorization = false, simulate2FAAut
         }
       }
     })
-  } else {
-    // authorize session by token
-    if (!skipAuthorization) {
-      await authorizeSession({
-        email,
-        tokens: [{ type: 'EMAIL_TOKEN', payload }]
-      })
-    }
+  } else if (!skipAuthorization) {
+    await authorizeSession({
+      email,
+      tokens: [{ type: 'EMAIL_TOKEN', payload }]
+    })
   }
 
   // resolve userId
-  const userObject = await pgDatabase().public.users.findOne({ email })
+  const users = await pgDatabase().public
+    .users.find({ email }, { limit: 1 })
+
   return {
-    userId: userObject && userObject.id,
+    userId: users.length > 0 && users[0].id,
     payload,
     email
   }
@@ -220,6 +234,21 @@ const updateEmail = async ({ email }) => {
   return (result && result.data && result.data.updateEmail) || {}
 }
 
+const startChallenge = async ({ sessionId, type }) => {
+  const result = await apolloFetch({
+    query: `
+      mutation startChallenge($sessionId: ID!, $type: SignInTokenType!) {
+        startChallenge(sessionId: $sessionId, type: $type)
+      }
+    `,
+    variables: {
+      sessionId,
+      type
+    }
+  })
+  return (result && result.data && result.data.updateEmail) || {}
+}
+
 const Unverified = {
   id: 'a0000000-0000-0000-0001-000000000001',
   firstName: 'willhelm tell',
@@ -313,6 +342,7 @@ module.exports = {
   initTOTPSharedSecret,
   validateTOTPSharedSecret,
   updateEmail,
+  startChallenge,
   Users: {
     Supporter,
     Unverified,
