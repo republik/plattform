@@ -128,7 +128,7 @@ PgDb.connect().then(async pgdb => {
   let emailsWithSubscribeUrl = []
 
   await Promise.all(mailchimpEmails.map(async (email) => {
-    const user = users.find(u => u.email === email)
+    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase())
     const interests = await getInterestsForUser({
       userId: !!user && user.id,
       pgdb
