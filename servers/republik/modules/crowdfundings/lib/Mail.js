@@ -66,7 +66,7 @@ mail.enforceSubscriptions = async ({
 }) => {
   const user = !!userId && await pgdb.public.users.findOne({id: userId})
 
-  const interests = getInterestsForUser({
+  const interests = await getInterestsForUser({
     userId: !!user && user.id,
     subscribeToEditorialNewsletters,
     pgdb
