@@ -23,6 +23,6 @@ module.exports = async (_, args, { pgdb, req }) => {
     session,
     enabledSecondFactors: (user && user.enabledSecondFactors) || [],
     requiredConsents,
-    newUser: !user
+    newUser: !user || !user.verified
   }
 }
