@@ -1,7 +1,7 @@
 const logger = console
 const sendPendingPledgeConfirmations = require('../../../lib/sendPendingPledgeConfirmations')
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
   // check user
   if (!req.user) {
     logger.error('unauthorized reclaimPledge', { req: req._log(), args })
@@ -58,6 +58,18 @@ module.exports = async (_, args, {pgdb, req, t}) => {
 
     // commit transaction
     await transaction.transactionCommit()
+
+    try {
+      await enforceSubscriptions({ pgdb, userId: pledgeUser.id })
+      await enforceSubscriptions({
+        pgdb,
+        userId: req.user.id,
+        subscribeToEditorialNewsletters: true
+      })
+    } catch (e) {
+      // ignore issues with newsletter subscriptions
+      logger.error('newsletter subscription changes failed', { req: req._log(), args, error: e })
+    }
 
     return true
   } catch (e) {
