@@ -42,6 +42,23 @@ const fetchAuthenticated = (method, url, request = {}) => {
     .then(r => r.json())
 }
 
+const userHasPledgeOrMembership = async ({userId, pgdb}) => {
+  if (!userId) {
+    return false
+  }
+  const hasPledge = !!(await pgdb.public.pledges.findFirst({
+    userId,
+    'status !=': 'DRAFT'
+  }))
+  if (hasPledge) {
+    return hasPledge
+  }
+  const hasMembership = !!(await pgdb.public.memberships.findFirst({
+    userId
+  }))
+  return hasMembership
+}
+
 console.log('running updateMailchimp.js...')
 PgDb.connect().then(async pgdb => {
   const restartCount = process.argv[2] && parseInt(process.argv[2])
@@ -83,7 +100,9 @@ PgDb.connect().then(async pgdb => {
     })
     const mac = authenticate(email, newsletterName, subscribed)
     const base64uMail = base64u.encode(email)
-    const subscribeUrl = `https://www.republik.ch/mitteilung?type=newsletter-subscription&name=${newsletterName}&subscribed=${subscribed}&email=${base64uMail}&mac=${mac}`
+    const subscribeUrl = user && userHasPledgeOrMembership({ userId: user.id, pgdb })
+      ? ''
+      : `https://www.republik.ch/mitteilung?type=newsletter-subscription&name=${newsletterName}&subscribed=${subscribed}&context=gdpr&email=${base64uMail}&mac=${mac}`
     operations.push({
       method: 'PUT',
       path: `/lists/${MAILCHIMP_MAIN_LIST_ID}/members/${hash(email)}`,

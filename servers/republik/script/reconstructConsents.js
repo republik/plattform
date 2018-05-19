@@ -47,7 +47,7 @@ WITH mts_projectr AS (
     pledges p
     ON
       u.id=p."userId" AND
-      p.status = 'SUCCESSFUL'
+      p.status != 'DRAFT'
   WHERE
     u.id != :excludeUserId
   GROUP BY
