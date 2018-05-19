@@ -18,7 +18,8 @@ const sleep = require('await-sleep')
 const {
   MAILCHIMP_API_KEY,
   MAILCHIMP_URL,
-  MAILCHIMP_MAIN_LIST_ID
+  MAILCHIMP_MAIN_LIST_ID,
+  MAILCHIMP_EXPORT_DOWNLOAD_URL
 } = process.env
 
 // Interval in seconds stats about bulk progress is printed.
@@ -69,7 +70,15 @@ PgDb.connect().then(async pgdb => {
     console.log(stats)
   }, STATS_INTERVAL_SECS * 1000)
 
-  const input = rw.readFileSync('/dev/stdin', 'utf8')
+  let input
+  if (MAILCHIMP_EXPORT_DOWNLOAD_URL) {
+    console.log('downloading MAILCHIMP_EXPORT_DOWNLOAD_URL')
+    input = await fetch(MAILCHIMP_EXPORT_DOWNLOAD_URL, { method: 'GET' })
+      .then(r => r.text())
+  } else {
+    console.log('reading stdin MAILCHIMP_EXPORT_DOWNLOAD_URL')
+    input = rw.readFileSync('/dev/stdin', 'utf8')
+  }
   if (!input || input.length < 4) {
     throw new Error('You need to provide mailchimp emails as input on stdin')
   }
