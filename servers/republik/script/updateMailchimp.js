@@ -29,9 +29,8 @@ const STATS_INTERVAL_SECS = 2
 const hash = (email) =>
   crypto
     .createHash('md5')
-    .update(email)
+    .update(email.toLowerCase())
     .digest('hex')
-    .toLowerCase()
 
 const getEmailsFromCSV = (input) =>
    [...new Set(
@@ -163,8 +162,9 @@ PgDb.connect().then(async pgdb => {
   console.log(`#subscribeUrls: ${numSubscribeUrls}`)
 
   if (diffInput) {
+    diffInput = diffInput.map(email => email.toLowerCase())
     const missingInDiffInput = emailsWithSubscribeUrl.filter(
-      email => diffInput.indexOf(email) === -1
+      email => diffInput.indexOf(email.toLowerCase()) === -1
     )
     console.log(`#diff emailsWithSubscribeUrl <> diffInput: ${emailsWithSubscribeUrl.length - diffInput.length}`)
     // console.log(util.inspect(missingInDiffInput, {depth: null}))
