@@ -23,6 +23,10 @@ const {
 } = require('../SearchEntity')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 
+const _ = require('lodash')
+
+const indices = require('../../../lib/indices')
+
 const reduceFilters = filterReducer(documentSchema)
 const createElasticFilter = elasticFilterBuilder(documentSchema)
 
@@ -30,32 +34,60 @@ const {
   DOCUMENTS_RESTRICT_TO_ROLES
 } = process.env
 
+const deepMergeArrays = function (objValue, srcValue) {
+  if (_.isArray(objValue)) {
+    return objValue.concat(srcValue)
+  }
+}
+
+const createShould = function (searchTerm, searchFilter) {
+  const queries = []
+
+  // A query for each ES index
+  indices.list.forEach(({ index, search }) => {
+    let must = {
+      match_all: {}
+    }
+
+    if (searchTerm) {
+      must = {
+        multi_match: {
+          query: searchTerm,
+          fields: Object.keys(search.termFields)
+        }
+      }
+    }
+
+    debug('must', JSON.stringify(must))
+
+    const filter = _.mergeWith(
+      {},
+      search.filter,
+      createElasticFilter(searchFilter),
+      deepMergeArrays
+    )
+
+    debug('search.filter', search.filter)
+    debug('searchFilter', searchFilter)
+    debug('elasticFilter', createElasticFilter(searchFilter))
+
+    debug('filter', JSON.stringify(filter))
+
+    queries.push({
+      bool: {
+        must,
+        filter
+      }
+    })
+  })
+
+  return queries
+}
+
 const createQuery = (searchTerm, filter, sort) => ({
-  // _source: ['meta.*', 'content'],
   query: {
     bool: {
-      must: searchTerm
-        ? {
-          multi_match: {
-            query: searchTerm,
-            fields: [
-              // Document
-              'meta.title^3',
-              'meta.description^2',
-              'meta.authors^2',
-              'contentString',
-              'content',
-              // User
-              'username',
-              'firstName',
-              'lastName'
-            ]
-          }
-        }
-        : { match_all: {} },
-      filter: {
-        bool: createElasticFilter(filter)
-      }
+      should: createShould(searchTerm, filter)
     }
   },
   sort: createSort(sort),

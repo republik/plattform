@@ -1,6 +1,29 @@
+const type = 'Comment'
+
 module.exports = {
+  type,
+  index: type.toLowerCase(),
+  search: {
+    termFields: {
+      content: {}
+    },
+    filter: {
+      bool: {
+        must: [
+          { term: { __type: type } },
+          { term: { published: true } },
+          { term: { adminUnpublished: false } }
+        ],
+        must_not: [
+          { terms: { discussionId: [
+            '3c625fe4-788f-44d5-ad5e-ac93bd9a6292' // Crowdfunding discussions
+          ] } }
+        ]
+      }
+    }
+  },
   mapping: {
-    Comment: {
+    [type]: {
       dynamic: false,
       properties: {
         __type: {

@@ -1,6 +1,30 @@
+const type = 'User'
+
 module.exports = {
+  type,
+  index: type.toLowerCase(),
+  search: {
+    termFields: {
+      firstName: {},
+      lastName: {},
+      username: {},
+      biography: {},
+      statement: {},
+      twitterHandle: {},
+      facebookId: {}
+    },
+    filter: {
+      bool: {
+        must: [
+          { term: { __type: type } },
+          { term: { hasPublicProfile: true } },
+          { term: { verified: true } }
+        ]
+      }
+    }
+  },
   mapping: {
-    User: {
+    [type]: {
       dynamic: false,
       properties: {
         __type: {

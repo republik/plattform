@@ -1,6 +1,23 @@
+const type = 'Credential'
+
 module.exports = {
+  type,
+  index: type.toLowerCase(),
+  search: {
+    termFields: {
+      description: {}
+    },
+    filter: {
+      bool: {
+        must: [
+          { term: { __type: type } },
+          { term: { isListed: true } }
+        ]
+      }
+    }
+  },
   mapping: {
-    Credential: {
+    [type]: {
       dynamic: false,
       properties: {
         __type: {

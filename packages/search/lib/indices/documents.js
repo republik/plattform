@@ -24,9 +24,29 @@ const mdastPartial = {
   }
 }
 
+const type = 'Document'
+
 module.exports = {
+  type,
+  index: type.toLowerCase(),
+  search: {
+    termFields: {
+      'meta.title': {},
+      'meta.description': {},
+      'meta.authors': {},
+      contentString: {},
+      content: {}
+    },
+    filter: {
+      bool: {
+        must: [
+          { term: { __type: type } }
+        ]
+      }
+    }
+  },
   mapping: {
-    Document: {
+    [type]: {
       dynamic: false,
       properties: {
         __type: {

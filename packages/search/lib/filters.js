@@ -100,8 +100,7 @@ const filterReducer = (schema) => (filters) =>
 
 // converts a filter obj to elastic syntax
 const elasticFilterBuilder = (schema) => (filterInput) => {
-  debug('elasticFilterBuilder', filterInput)
-  return Object.keys(filterInput).reduce(
+  return { bool: Object.keys(filterInput).reduce(
     (boolFilter, hash) => {
       const { key, value, options } = filterInput[hash]
 
@@ -132,7 +131,7 @@ const elasticFilterBuilder = (schema) => (filterInput) => {
       return boolFilter
     },
     {}
-  )
+  ) }
 }
 
 module.exports = {
