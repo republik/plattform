@@ -205,26 +205,9 @@ const createCommentSchema = ({
     ]
   }
 
-  const getNestedRule = (levels, rule) => {
-    if (levels === 0) {
-      return rule
-    }
-    rule.rules.push(rule)
-    return getNestedRule(levels - 1, rule)
-  }
-
   const blockQuoteNested = {
     matchMdast: matchType('blockquote'),
-    component: BlockQuoteNested,
-    rules: [
-      heading,
-      blockquoteParagraph,
-      blockCode,
-      list,
-      thematicBreak,
-      blockLevelHtml,
-      definition
-    ]
+    component: BlockQuoteNested
   }
 
   const blockQuote = {
@@ -233,7 +216,7 @@ const createCommentSchema = ({
     rules: [
       blockquoteParagraph,
       heading,
-      getNestedRule(3, blockQuoteNested),
+      blockQuoteNested,
       blockCode,
       list,
       thematicBreak,
