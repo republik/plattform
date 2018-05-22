@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "engines": {
     "node": "10.x",
-    "yarn": "1.5.x"
+    "yarn": "1.6.x"
   },
   "private": true,
   "license": "AGPL-3.0",

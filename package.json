@@ -6,7 +6,7 @@
   "version": "0.0.0-development",
   "engines": {
     "node": "10.x",
-    "yarn": "1.5.x"
+    "yarn": "1.6.x"
   },
   "private": true,
   "main": "index.js",
