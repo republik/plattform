@@ -15,6 +15,8 @@ const { lib: {
   Repo: { uploadImages }
 } } = require('@orbiting/backend-modules-assets')
 
+const { mdastFilter } = require('../../lib/utils.js')
+
 const uuid = require('uuid/v4')
 
 const {
@@ -45,7 +47,12 @@ const sanitizeCommitDoc = (d, indexType = 'Document') => {
     __type: indexType,
 
     content: d.content,
-    contentString: mdastToString(d.content),
+    contentString: mdastToString(
+      mdastFilter(
+        d.content,
+        node => node.type === 'code'
+      )
+    ),
     meta: {
       ...meta,
       repoId: d.repoId,
