@@ -49,7 +49,9 @@ const notificationHandler = async function (pogiClient, {
       .filter(row => row.op === 'DELETE')
       .map(row => row.id)
 
-    const type = Object.keys(mappings.dict[table]).shift()
+    const type = Object.keys(mappings.dict[table].mapping).shift()
+
+    console.log('type', type)
 
     await index({
       indexName: `republik-${type.toLowerCase()}`,

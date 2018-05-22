@@ -29,7 +29,7 @@ PgDb.connect().then(async pgdb => {
     })
   }
 
-  await Promise.all(mappings.list.map(async mapping => {
+  await Promise.all(mappings.list.map(async ({ mapping }) => {
     const type = Object.keys(mapping).shift()
     const alias = getAliasName(type)
     const index = getIndexName(alias)
