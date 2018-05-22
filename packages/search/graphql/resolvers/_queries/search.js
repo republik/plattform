@@ -1,4 +1,4 @@
-const debug = require('debug')('search:documents')
+const debug = require('debug')('search:graphql:resolvers:_queries:search')
 const {
   Roles: {
     userIsInRoles
@@ -174,7 +174,7 @@ module.exports = async (
   const {
     search,
     filter: _filter = { },
-    filters,
+    filters = [],
     sort = {
       key: 'relevance',
       direction: 'DESC'
@@ -185,12 +185,14 @@ module.exports = async (
 
   debug('options', JSON.stringify(options))
 
-  const filter = filters
-    ? {
-      ...reduceFilters(filters),
-      ..._filter
-    }
-    : _filter
+  Object.keys(_filter).forEach(key => {
+    filters.push({
+      key,
+      value: _filter[key]
+    })
+  })
+
+  const filter = reduceFilters(filters)
 
   debug('filter', JSON.stringify(filter))
 

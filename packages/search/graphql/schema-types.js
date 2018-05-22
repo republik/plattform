@@ -62,6 +62,7 @@ input SearchGenericFilterInput {
   key: String!
   # value as string, get's parsed to the appropriate type
   value: String!
+  not: Boolean
 }
 
 type SearchConnection {
