@@ -53,15 +53,16 @@
     "translations:local": "gsheets --key=1NE1igcbxtTrVd5P72Ubqmgv4yKYh0LRGa0EuYSEQKxE --title=live --pretty --out lib/translations.json",
     "launch": "yarn run db:migrate:up && node script/launch/activateMemberships.js && node script/launch/add_launch_data.js",
     "launch:local": "sh script/launch/launch_local.sh",
+    "roleUser": "node ../../packages/auth/script/roleUser",
+    "roleUsers": "node ../../packages/auth/script/roleUsers",
     "test:prepare": "rm -rf node_modules/.bin && ln -s ../../../node_modules/.bin node_modules/ && dropdb --if-exists republik-test && createdb republik-test && NODE_ENV=development OVERWRITE_ENV=.test.env yarn run db:reset:seed",
-    "test:travis": "yarn run test:prepare && istanbul cover tape \"__tests__/**/*.test.js\" --report lcovonly && cat ./coverage/lcov.info | coveralls",
+    "test:travis": "yarn run test:prepare && istanbul cover tape \"__tests__/**/*.test.js\" --report lcovonly",
     "test:watch": "yarn run test:prepare && NODE_ENV=development OVERWRITE_ENV=.test.env nodemon --exec 'tape \"__tests__/**/*.test.js\"' | tap-diff",
     "test": "yarn run test:prepare && NODE_ENV=development OVERWRITE_ENV=.test.env istanbul cover tape \"__tests__/**/*.test.js\" | tap-diff"
   },
   "devDependencies": {
     "apollo-fetch": "^0.7.0",
     "child-process-promise": "^2.2.1",
-    "coveralls": "^3.0.0",
     "istanbul": "^1.1.0-alpha.1",
     "nodemon": "^1.17.3",
     "snoowrap": "^1.15.2",

@@ -15,6 +15,7 @@ services:
 branches:
   only:
   - master
+  - gdpr
 matrix:
   include:
     - env:

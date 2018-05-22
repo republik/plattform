@@ -1,0 +1,23 @@
+{
+  "name": "@orbiting/backend-modules-base64u",
+  "version": "1.0.0",
+  "description": "Encode and decode strings to base64 in an urlsafe manner",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Patrick Venetz <patrick.venetz@republik.ch>",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "devDependencies": {
+    "abab": "^2.0.0",
+    "tape": "^4.9.0"
+  },
+  "scripts": {
+    "test": "NODE_ENV=development tape \"**/*.test.js\""
+  }
+}

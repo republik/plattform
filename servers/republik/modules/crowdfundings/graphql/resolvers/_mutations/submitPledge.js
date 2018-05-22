@@ -3,11 +3,17 @@ const postfinanceSHA = require('../../../lib/payments/postfinance/sha')
 const uuid = require('uuid/v4')
 const { minTotal, regularTotal, getPledgeOptionsTree } = require('../../../lib/Pledge')
 const debug = require('debug')('crowdfundings:pledge')
+const {
+  Consents: {
+    ensureAllRequiredConsents,
+    saveConsents
+  }
+} = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, args, {pgdb, req, t}) => {
   const transaction = await pgdb.transactionBegin()
   try {
-    const { pledge } = args
+    const { pledge, consents } = args
     const pledgeOptions = pledge.options
     debug('submitPledge %O', pledge)
 
@@ -111,6 +117,20 @@ module.exports = async (_, args, {pgdb, req, t}) => {
         phoneNumber: pledge.user.phoneNumber
       })
     }
+
+    // consents
+    await ensureAllRequiredConsents({
+      userId: user.id,
+      consents,
+      pgdb: transaction
+    })
+    await saveConsents({
+      userId: user.id,
+      consents,
+      req,
+      pgdb: transaction
+    })
+
     // if we didn't load a alias, generate one
     if (!pfAliasId) {
       pfAliasId = uuid()

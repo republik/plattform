@@ -1,0 +1,37 @@
+{
+  "name": "@orbiting/backend-modules-sms",
+  "version": "0.1.0",
+  "description": "Text Messaging with Twilio",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Pascal Kaufmann <pascal@fivelines.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "scripts": {
+    "link": "yarn link",
+    "test": "NODE_ENV=development tape \"**/*.test.js\""
+  },
+  "devDependencies": {
+    "isomorphic-unfetch": "^2.0.0",
+    "tape-async": "^2.3.0"
+  },
+  "dependencies": {
+    "await-sleep": "^0.0.1",
+    "check-env": "^1.3.0",
+    "export-files": "^2.1.1",
+    "libphonenumber-js": "^1.0.24",
+    "twilio": "^3.11.3"
+  },
+  "peerDependencies": {
+    "isomorphic-unfetch": "^2.0.0"
+  }
+}

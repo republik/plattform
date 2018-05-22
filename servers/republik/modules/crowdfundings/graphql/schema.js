@@ -50,7 +50,7 @@ type queries {
 }
 
 type mutations {
-  submitPledge(pledge: PledgeInput): PledgeResponse!
+  submitPledge(pledge: PledgeInput, consents: [String!]): PledgeResponse!
   payPledge(pledgePayment: PledgePaymentInput): PledgeResponse!
   reclaimPledge(pledgeId: ID!): Boolean!
   claimMembership(voucherCode: String!): Boolean!
@@ -73,10 +73,6 @@ type mutations {
 
   # required role: supporter
   updateUser(firstName: String, lastName: String, birthday: Date, phoneNumber: String, address: AddressInput, userId: ID!): User!
-
-  # if userId is null, the logged in user's email is changed
-  # required role to change other's email: supporter
-  updateEmail(userId: ID, email: String!): User!
 
   # merges the belongings from source to target
   # required role: admin

@@ -56,11 +56,10 @@
     "db:reset": "yarn run db:reset:noseeds && yarn run db:seed",
     "translations": "gsheets --key=1_1g3sW8u1aD9xGRfS479s0Pjwx0LxYRUEhETGkKlwLE --title=live --pretty --out lib/translations.json",
     "test:prepare": "rm -rf node_modules/.bin && ln -s ../../../node_modules/.bin node_modules/ && dropdb --if-exists publikator-test && createdb publikator-test && NODE_ENV=development OVERWRITE_ENV=.test.env yarn run db:reset:noseeds",
-    "test:travis": "yarn run test:prepare && istanbul cover tape \"?(__tests__|lib|graphql)/**/*.test.js\" --report lcovonly && cat ./coverage/lcov.info | coveralls",
+    "test:travis": "yarn run test:prepare && istanbul cover tape \"?(__tests__|lib|graphql)/**/*.test.js\" --report lcovonly",
     "test": "yarn run test:prepare && NODE_ENV=development OVERWRITE_ENV=.test.env istanbul cover tape \"?(__tests__|lib|graphql)/**/*.test.js\""
   },
   "devDependencies": {
-    "coveralls": "^3.0.0",
     "gsheets": "^2.0.0",
     "nodemon": "^1.17.3",
     "tape-async": "^2.3.0",

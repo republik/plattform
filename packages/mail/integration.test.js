@@ -135,9 +135,31 @@ test('resubscribe after unsubscription', async (t) => {
   t.end()
 })
 
-test('delete the member after all this shit', async (t) => {
+test('move subscriptions from one to another email address', async (t) => {
+  const { moveNewsletterSubscriptions, getNewsletterSettings } = prepare()
+  const oldEmail = user().email
+  const newEmail = `new_${oldEmail}`
+  await moveNewsletterSubscriptions({
+    user: user(),
+    newEmail
+  })
+
+  const oldMember = await getNewsletterSettings({ user: user() })
+  const newMember = await getNewsletterSettings({ user: { ...user(), email: newEmail } })
+
+  t.equal(oldMember.status, 'unsubscribed')
+  t.equal(newMember.status, 'subscribed')
+
+  const subscribedSubscriptions = newMember.subscriptions
+    .filter(({ subscribed }) => subscribed)
+  t.equal(subscribedSubscriptions.length, 2)
+
+  t.end()
+})
+
+test('delete the e-mails after all this shit', async (t) => {
   const mailchimp = MailchimpInterface({ logger: console })
-  const result = await mailchimp.deleteMember(user().email)
-  console.log(result)
+  await mailchimp.deleteMember(user().email)
+  await mailchimp.deleteMember(`new_${user().email}`)
   t.end()
 })
