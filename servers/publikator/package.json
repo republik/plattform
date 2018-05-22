@@ -19,7 +19,7 @@
     "d3-array": "^1.2.1",
     "d3-time-format": "^2.1.1",
     "data-uri-to-buffer": "^2.0.0",
-    "db-migrate": "^0.10.7",
+    "db-migrate": "^0.11.1",
     "db-migrate-pg": "^0.4.0",
     "debug": "^3.1.0",
     "deep-diff": "^0.3.8",
@@ -28,7 +28,7 @@
     "file-type": "^7.6.0",
     "github": "^14.0.0",
     "graphql": "^0.13.2",
-    "graphql-tools": "^2.23.1",
+    "graphql-tools": "^3.0.2",
     "isomorphic-unfetch": "^2.0.0",
     "istanbul": "1.1.0-alpha.1",
     "js-yaml": "^3.11.0",
@@ -63,6 +63,6 @@
     "gsheets": "^2.0.0",
     "nodemon": "^1.17.3",
     "tape-async": "^2.3.0",
-    "ws": "^5.1.1"
+    "ws": "^5.2.0"
   }
 }

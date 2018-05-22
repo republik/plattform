@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/orbiting/backends#readme",
   "devDependencies": {
-    "db-migrate": "^0.10.7",
+    "db-migrate": "^0.11.1",
     "dotenv": "^5.0.1",
     "gsheets": "^2.0.0",
     "isomorphic-unfetch": "^2.0.0"
