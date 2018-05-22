@@ -1,8 +1,9 @@
 const moment = require('moment')
+const { Roles: { ensureUserIsInRoles } } = require('@orbiting/backend-modules-auth')
 
 const { PARKING_USER_ID } = process.env
 
-module.exports = (_, args, { pgdb }) => ({
+module.exports = (_, args, { pgdb, user: me }) => ({
   count: async () => {
     return pgdb.queryOneField(`
       SELECT
@@ -24,6 +25,7 @@ module.exports = (_, args, { pgdb }) => ({
     })
   },
   monthlys: async () => {
+    ensureUserIsInRoles(me, ['editor', 'admin', 'supporter'])
     // this generates a sorted day-series from
     // min(beginDate) to max(beginDate)
     const dayFormat = 'YYYY-MM-DD'
