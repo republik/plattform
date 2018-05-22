@@ -4,7 +4,7 @@ const elasticsearch = require('@orbiting/backend-modules-base/lib/elastic')
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 
 const inserts = require('./inserts')
-const mappings = require('./mapping')
+const mappings = require('../lib/indices')
 
 const elastic = elasticsearch.client()
 

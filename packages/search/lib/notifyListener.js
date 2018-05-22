@@ -7,7 +7,7 @@ const { Client } = require('pg')
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const elasticsearch = require('@orbiting/backend-modules-base/lib/elastic')
 const { index } = require('@orbiting/backend-modules-search/lib/indexPgTable')
-const mappings = require('@orbiting/backend-modules-search/script/mapping')
+const mappings = require('@orbiting/backend-modules-search/lib/indices')
 
 const esClient = elasticsearch.client()
 const pgClient = new Client({
