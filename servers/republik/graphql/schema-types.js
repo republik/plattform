@@ -349,6 +349,9 @@ type MembershipStats {
   count: Int!
   monthlys: [MonthlyMembershipStat!]!
 }
+type MemberStats {
+  count: Int!
+}
 
 type MonthlyMembershipStat {
   day: Date!
