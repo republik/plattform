@@ -47,6 +47,14 @@ module.exports = {
         __type: {
           type: 'keyword'
         },
+        __sort: {
+          properties: {
+            date: {
+              type: 'date'
+            }
+          }
+        },
+
         addressId: {
           type: 'keyword'
         },

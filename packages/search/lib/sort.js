@@ -3,11 +3,7 @@ const sortBuilder = {
     '_score': sort.direction
   }),
   publishedAt: (sort) => ({
-    'meta.publishDate': {
-      order: sort.direction || 'desc',
-      unmapped_type: 'long'
-    },
-    'createdAt': {
+    '__sort.date': {
       order: sort.direction || 'desc',
       unmapped_type: 'long'
     }

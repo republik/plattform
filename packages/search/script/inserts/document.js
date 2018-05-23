@@ -42,9 +42,13 @@ const sanitizeCommitDoc = (d, indexType = 'Document') => {
       }
     })
   }
+
   return {
     id: d.id, // Buffer.from(`repo:${repoId}:${commitId}`).toString('base64')
     __type: indexType,
+    __sort: {
+      date: meta.publishDate
+    },
 
     content: d.content,
     contentString: mdastToString(

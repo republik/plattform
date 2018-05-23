@@ -5,7 +5,10 @@ module.exports = async ({ pgdb, ...rest }) => {
     table: pgdb.public.users,
     transform: row => ({
       ...row,
-      name: `${row.firstName} ${row.lastName}`
+      name: `${row.firstName} ${row.lastName}`,
+      __sort: {
+        date: row.createdAt
+      }
     })
   }
 

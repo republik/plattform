@@ -6,17 +6,18 @@ const transform = function (row) {
   const user = _.find(this.payload.users, { id: row.userId })
 
   if (user) {
-    return {
-      ...row,
-      user: {
-        facebookId: user.facebookId,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        name: `${user.firstName} ${user.lastName}`,
-        twitterHandle: user.twitterHandle,
-        username: user.username
-      }
+    row.user = {
+      facebookId: user.facebookId,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      name: `${user.firstName} ${user.lastName}`,
+      twitterHandle: user.twitterHandle,
+      username: user.username
     }
+  }
+
+  row.__sort = {
+    date: row.createdAt
   }
 
   return row
