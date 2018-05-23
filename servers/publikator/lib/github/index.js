@@ -34,8 +34,8 @@ const commitNormalizer = ({
 }) => ({
   id: sha,
   parentIds: parents
-  ? parents.map(parent => parent.sha)
-  : [],
+    ? parents.map(parent => parent.sha)
+    : [],
   message: message,
   author: author,
   date: new Date(author.date),
@@ -137,17 +137,17 @@ module.exports = {
     return githubRest.repos.getCommit({
       owner: login,
       repo: repoName,
-      sha
+      commit_sha: sha
     })
-    .then(response => response ? response.data : response)
-    .then(commit => commitNormalizer({
-      ...commit,
-      repo
-    }))
-    .then(async (commit) => {
-      await redis.setAsync(redisKey, JSON.stringify(commit))
-      return commit
-    })
+      .then(response => response ? response.data : response)
+      .then(commit => commitNormalizer({
+        ...commit,
+        repo
+      }))
+      .then(async (commit) => {
+        await redis.setAsync(redisKey, JSON.stringify(commit))
+        return commit
+      })
   },
   getAnnotatedTags: async (repoId, first = 100) => {
     const { githubApolloFetch } = await createGithubClients()
