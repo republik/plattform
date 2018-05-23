@@ -680,6 +680,9 @@ const createSchema = ({
           {
             matchMdast: matchZone('CENTER'),
             component: Center,
+            // prevent empty data object forward to component
+            // - Center spreads all props onto its div
+            props: () => ({}),
             editorModule: 'center',
             rules: [
               {
