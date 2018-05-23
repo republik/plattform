@@ -88,12 +88,14 @@ type SearchHighlight {
 type SearchAggregation {
   key: String!
   count: Int
+  label: String!
   buckets: [Bucket!]
 }
 
 type Bucket {
   value: String!
   count: Int!
+  label: String!
 }
 
 #union Bucket = SearchAggregationBucketString | SearchAggregationBucketBoolean

@@ -34,6 +34,8 @@ const {
   DOCUMENTS_RESTRICT_TO_ROLES
 } = process.env
 
+const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
+
 const deepMergeArrays = function (objValue, srcValue) {
   if (_.isArray(objValue)) {
     return objValue.concat(srcValue)
@@ -128,7 +130,7 @@ const mapHit = (hit) => {
   }
 }
 
-const mapAggregations = (result) => {
+const mapAggregations = (result, t) => {
   const aggregations = result.aggregations
   if (!aggregations) {
     return []
@@ -138,13 +140,28 @@ const mapAggregations = (result) => {
     if (agg.value !== undefined) { // value_count agg
       return {
         key,
+        label: t(
+          `api/search/aggs/${key}`,
+          { key },
+          !DEV ? key : undefined
+        ),
         count: agg.value
       }
     }
     // terms agg
     return {
       key,
+      label: t(
+        `api/search/aggs/${key}`,
+        { key },
+        !DEV ? key : undefined
+      ),
       buckets: agg.buckets.map(bucket => ({
+        label: t(
+          `api/search/aggs/${key}/${bucket.key}`,
+          { key, value: bucket.key, count: bucket.doc_count },
+          !DEV ? bucket.key : undefined
+        ),
         value: bucket.key,
         count: bucket.doc_count
       }))
@@ -193,7 +210,8 @@ module.exports = async (
   args,
   {
     user,
-    elastic
+    elastic,
+    t
   }
 ) => {
   const { after, before } = args
@@ -245,7 +263,7 @@ module.exports = async (
   const hasPreviousPage = from > 0
   return {
     nodes: result.hits.hits.map(mapHit),
-    aggregations: mapAggregations(result),
+    aggregations: mapAggregations(result, t),
     totalCount: result.hits.total,
     pageInfo: {
       hasNextPage,

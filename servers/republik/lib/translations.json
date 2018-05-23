@@ -1,5 +1,5 @@
 {
-  "updated": "2018-05-17T18:30:27.776Z",
+  "updated": "2018-05-23T08:57:07.508Z",
   "title": "live",
   "data": [
     {
@@ -221,6 +221,98 @@
     {
       "key": "profile/credential/label",
       "value": "Bezeichnung"
+    },
+    {
+      "key": "api/search/aggs/audio",
+      "value": "hörbare Artikel"
+    },
+    {
+      "key": "api/search/aggs/discussion",
+      "value": "Debatten"
+    },
+    {
+      "key": "api/search/aggs/dossier",
+      "value": "Dossiers"
+    },
+    {
+      "key": "api/search/aggs/feed",
+      "value": "Feed"
+    },
+    {
+      "key": "api/search/aggs/format",
+      "value": "Formate"
+    },
+    {
+      "key": "api/search/aggs/repoId",
+      "value": "Repository ID"
+    },
+    {
+      "key": "api/search/aggs/seriesMaster",
+      "value": "Serien"
+    },
+    {
+      "key": "api/search/aggs/template",
+      "value": "Vorlage"
+    },
+    {
+      "key": "api/search/aggs/template/article",
+      "value": "Artikel"
+    },
+    {
+      "key": "api/search/aggs/template/discussion",
+      "value": "Debatten"
+    },
+    {
+      "key": "api/search/aggs/template/editorialNewsletter",
+      "value": "redaktionelle Newsletter"
+    },
+    {
+      "key": "api/search/aggs/template/format",
+      "value": "Formate"
+    },
+    {
+      "key": "api/search/aggs/template/front",
+      "value": "Front"
+    },
+    {
+      "key": "api/search/aggs/textLength",
+      "value": "Textlänge"
+    },
+    {
+      "key": "api/search/aggs/textLength/epic",
+      "value": "Texte von epischer Länge"
+    },
+    {
+      "key": "api/search/aggs/textLength/long",
+      "value": "lange Texte"
+    },
+    {
+      "key": "api/search/aggs/textLength/medium",
+      "value": "mittellange Texte"
+    },
+    {
+      "key": "api/search/aggs/textLength/short",
+      "value": "kurze Texte"
+    },
+    {
+      "key": "api/search/aggs/type",
+      "value": "Informationsarten"
+    },
+    {
+      "key": "api/search/aggs/type/Comment",
+      "value": "Debattenbeiträge"
+    },
+    {
+      "key": "api/search/aggs/type/Document",
+      "value": "Artikel"
+    },
+    {
+      "key": "api/search/aggs/type/User",
+      "value": "User"
+    },
+    {
+      "key": "api/search/aggs/userId",
+      "value": "User"
     }
   ]
 }
