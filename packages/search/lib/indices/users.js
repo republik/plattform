@@ -7,6 +7,7 @@ module.exports = {
     termFields: {
       firstName: {},
       lastName: {},
+      name: {},
       username: {},
       biography: {},
       statement: {},
@@ -87,6 +88,9 @@ module.exports = {
           type: 'boolean'
         },
         lastName: {
+          type: 'text'
+        },
+        name: {
           type: 'text'
         },
         pgpPublicKey: {
