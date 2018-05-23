@@ -37,7 +37,9 @@ const index = async ({ indexName, type, elastic, resource }) => {
       }
     )
 
-    if (resource.transform) rows = rows.map(resource.transform)
+    if (resource.transform) {
+      rows = rows.map(resource.transform, resource)
+    }
 
     await bulk({
       indexName,

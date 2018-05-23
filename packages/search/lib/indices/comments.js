@@ -5,7 +5,13 @@ module.exports = {
   index: type.toLowerCase(),
   search: {
     termFields: {
-      content: {}
+      content: {},
+      'user.firstName': {},
+      'user.lastName': {},
+      'user.name': {},
+      'user.username': {},
+      'user.twitterHandle': {},
+      'user.facebookId': {}
     },
     filter: {
       bool: {
@@ -88,6 +94,29 @@ module.exports = {
         },
         updatedAt: {
           type: 'date'
+        },
+
+        user: {
+          properties: {
+            facebookId: {
+              type: 'keyword'
+            },
+            firstName: {
+              type: 'text'
+            },
+            lastName: {
+              type: 'text'
+            },
+            name: {
+              type: 'text'
+            },
+            twitterHandle: {
+              type: 'keyword'
+            },
+            username: {
+              type: 'keyword'
+            }
+          }
         }
       }
     }
