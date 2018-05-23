@@ -116,6 +116,7 @@ module.exports = async (_, args, context) => {
     await transaction.public.discussionPreferences.update(from, to)
     await transaction.public.comments.update(from, to)
     await transaction.public.credentials.update(from, to)
+    await transaction.public.consents.update(from, to)
 
     let sessions = await transaction.public.sessions.find({'sess @>': {passport: {user: sourceUser.id}}})
     for (let session of sessions) {
