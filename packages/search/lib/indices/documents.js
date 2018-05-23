@@ -32,16 +32,29 @@ module.exports = {
   search: {
     termFields: {
       'meta.title': {
-        boost: 1
+        boost: 2,
+        highlight: {
+          number_of_fragments: 0
+        }
       },
       'meta.description': {
-        boost: 1
+        boost: 2,
+        highlight: {
+          number_of_fragments: 0
+        }
       },
       'meta.authors': {
-        boost: 2
+        boost: 2,
+        highlight: {
+          number_of_fragments: 0
+        }
       },
-      contentString: {},
-      content: {}
+      contentString: {
+        highlight: {}
+      },
+      content: {
+        highlight: {}
+      }
     },
     filter: {
       bool: {

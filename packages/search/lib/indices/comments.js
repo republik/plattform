@@ -5,7 +5,9 @@ module.exports = {
   index: type.toLowerCase(),
   search: {
     termFields: {
-      content: {},
+      content: {
+        highlight: {}
+      },
       'user.firstName': {},
       'user.lastName': {},
       'user.name': {},

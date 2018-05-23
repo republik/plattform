@@ -81,10 +81,6 @@ const createShould = function (searchTerm, searchFilter) {
       deepMergeArrays
     )
 
-    debug('search.filter', search.filter)
-    debug('searchFilter', searchFilter)
-    debug('elasticFilter', createElasticFilter(searchFilter))
-
     debug('filter', JSON.stringify(filter))
 
     queries.push({
@@ -98,6 +94,21 @@ const createShould = function (searchTerm, searchFilter) {
   return queries
 }
 
+const createHighlight = () => {
+  const fields = {}
+
+  // A query for each ES index
+  indices.list.forEach(({ search }) => {
+    Object.keys(search.termFields).forEach((field) => {
+      if (search.termFields[field].highlight) {
+        fields[field] = search.termFields[field].highlight
+      }
+    })
+  })
+
+  return { fields }
+}
+
 const createQuery = (searchTerm, filter, sort) => ({
   query: {
     bool: {
@@ -105,21 +116,7 @@ const createQuery = (searchTerm, filter, sort) => ({
     }
   },
   sort: createSort(sort),
-  highlight: {
-    // TODO: Redundant w/ multi_match.fields; remove redundancy
-    fields: {
-      // Document
-      'meta.title': {},
-      'meta.description': {},
-      'meta.authors': {},
-      'contentString': {},
-      'content': {},
-      // User
-      'username': {},
-      'firstName': {},
-      'lastName': {}
-    }
-  },
+  highlight: createHighlight(),
   aggs: extractAggs(documentSchema)
 })
 

@@ -5,14 +5,30 @@ module.exports = {
   index: type.toLowerCase(),
   search: {
     termFields: {
-      firstName: {},
-      lastName: {},
-      name: {},
-      username: {},
-      biography: {},
-      statement: {},
-      twitterHandle: {},
-      facebookId: {}
+      firstName: {
+        highlight: {}
+      },
+      lastName: {
+        highlight: {}
+      },
+      name: {
+        highlight: {}
+      },
+      username: {
+        highlight: {}
+      },
+      biography: {
+        highlight: {}
+      },
+      statement: {
+        highlight: {}
+      },
+      twitterHandle: {
+        highlight: {}
+      },
+      facebookId: {
+        highlight: {}
+      }
     },
     filter: {
       bool: {
