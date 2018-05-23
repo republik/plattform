@@ -1,4 +1,5 @@
 const isUUID = require('is-uuid')
+const { ascending } = require('d3-array')
 const {
   transformUser
 } = require('@orbiting/backend-modules-auth')
@@ -48,6 +49,14 @@ module.exports = async (_, args, { pgdb, t }) => {
       WHERE
         ARRAY[u.id] && :ids;
     `, {ids: nodeIds})
+
+    // obey order!
+    // - this ensures firstId comes first
+    // - and that the random order isn't overwritten by the db internal order
+    users.sort((a, b) => ascending(
+      nodeIds.indexOf(a.id),
+      nodeIds.indexOf(b.id)
+    ))
 
     const endId = nodeIds[nodeIds.length - 1]
     const startId = nodeIds[0]
