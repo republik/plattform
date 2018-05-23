@@ -20,21 +20,21 @@ module.exports = async () => {
   const githubApolloFetch = createApolloFetch({
     uri: 'https://api.github.com/graphql'
   })
-  .use(({ options }, next) => {
-    if (!options.headers) {
-      options.headers = {}
-    }
-    options.headers['Authorization'] = `Bearer ${installationToken.token}`
-    options.headers['Accept'] = 'application/vnd.github.machine-man-preview+json'
-    next()
-  })
-  .useAfter(({ response }, next) => {
-    if (response && response.parsed && response.parsed.errors) {
-      const errors = response.parsed.errors
-      throw new Error(JSON.stringify(errors))
-    }
-    next()
-  })
+    .use(({ options }, next) => {
+      if (!options.headers) {
+        options.headers = {}
+      }
+      options.headers['Authorization'] = `Bearer ${installationToken.token}`
+      options.headers['Accept'] = 'application/vnd.github.machine-man-preview+json'
+      next()
+    })
+    .useAfter(({ response }, next) => {
+      if (response && response.parsed && response.parsed.errors) {
+        const errors = response.parsed.errors
+        throw new Error(JSON.stringify(errors))
+      }
+      next()
+    })
 
   const githubRest = new GitHubApi({
     headers: {
@@ -42,7 +42,7 @@ module.exports = async () => {
     }
   })
   githubRest.authenticate({
-    type: 'integration',
+    type: 'app',
     token: installationToken.token
   })
 
