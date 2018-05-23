@@ -51,11 +51,23 @@ const createShould = function (searchTerm, searchFilter) {
       match_all: {}
     }
 
+    let fields = Object.keys(search.termFields)
+
+    // Append boost if available, annotation "<field name>^<boost>"
+    fields = fields.map(field => {
+      const boost = search.termFields[field].boost
+      if (boost) {
+        return `${field}^${boost}`
+      }
+
+      return field
+    })
+
     if (searchTerm) {
       must = {
         multi_match: {
           query: searchTerm,
-          fields: Object.keys(search.termFields)
+          fields
         }
       }
     }

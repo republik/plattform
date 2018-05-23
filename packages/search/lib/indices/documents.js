@@ -31,9 +31,15 @@ module.exports = {
   index: type.toLowerCase(),
   search: {
     termFields: {
-      'meta.title': {},
-      'meta.description': {},
-      'meta.authors': {},
+      'meta.title': {
+        boost: 1
+      },
+      'meta.description': {
+        boost: 1
+      },
+      'meta.authors': {
+        boost: 2
+      },
       contentString: {},
       content: {}
     },
