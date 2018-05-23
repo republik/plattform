@@ -6,6 +6,10 @@ const sortBuilder = {
     'meta.publishDate': {
       order: sort.direction || 'desc',
       unmapped_type: 'long'
+    },
+    'createdAt': {
+      order: sort.direction || 'desc',
+      unmapped_type: 'long'
     }
   }),
   mostRead: () => 'agg.views', // TODO
