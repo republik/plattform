@@ -27,9 +27,9 @@
     stringify-entities "^1.3.1"
     unified "^6.1.5"
 
-"@project-r/styleguide@^5.75.0":
-  version "5.77.1"
-  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.77.1.tgz#7c6517d3cb72d882044b89450fd4b3bbc68582a0"
+"@project-r/styleguide@^5.77.2":
+  version "5.77.2"
+  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.77.2.tgz#a457da15ec50c5108e0b55121298e349c8e34cfa"
   dependencies:
     react-icons "^2.2.7"
 

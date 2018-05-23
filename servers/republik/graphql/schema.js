@@ -27,6 +27,7 @@ type queries {
   events: [Event!]!
   updates: [Update!]!
   membershipStats: MembershipStats!
+  memberStats: MemberStats!
 }
 
 type mutations {

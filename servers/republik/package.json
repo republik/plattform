@@ -8,7 +8,7 @@
   "private": true,
   "license": "AGPL-3.0",
   "dependencies": {
-    "@project-r/styleguide": "^5.75.0",
+    "@project-r/styleguide": "^5.77.2",
     "@slack/client": "^4.1.0",
     "apollo-modules-node": "^0.1.4",
     "d3-array": "^1.2.1",
