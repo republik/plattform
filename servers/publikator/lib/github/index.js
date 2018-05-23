@@ -279,6 +279,7 @@ module.exports = {
       .reduce(
         (acc, v) => acc.concat(v), []
       )
+      .filter((v, i, arr) => arr.map(mapObj => mapObj.id).indexOf(v.id) === i)
       .sort((a, b) => descending(a.date, b.date))
       .slice(0, maxCommits)
   },
