@@ -137,7 +137,7 @@ module.exports = {
     return githubRest.repos.getCommit({
       owner: login,
       repo: repoName,
-      commit_sha: sha
+      sha
     })
       .then(response => response ? response.data : response)
       .then(commit => commitNormalizer({
