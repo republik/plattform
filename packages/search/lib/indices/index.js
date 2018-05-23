@@ -1,6 +1,6 @@
 const dict = {
   comments: require('./comments'),
-  credentials: require('./credentials'),
+  // credentials: require('./credentials'),
   documents: require('./documents'),
   users: require('./users')
 }
