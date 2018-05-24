@@ -404,19 +404,18 @@ const updateUserPhoneNumber = async ({ pgdb, userId, phoneNumber }) => {
   } catch (e) {
     throw new TranslatedError(t('api/auth/sms/phone-number-not-valid'))
   }
-
-  try {
-    return pgdb.public.users.updateAndGetOne(
-      {
-        id: userId
-      }, {
-        phoneNumber: formattedPhoneNumber,
-        isPhoneNumberVerified: false
-      }
-    )
-  } catch (e) {
-    throw e
+  if (!formattedPhoneNumber) {
+    throw new TranslatedError(t('api/auth/sms/phone-number-not-valid'))
   }
+
+  return pgdb.public.users.updateAndGetOne(
+    {
+      id: userId
+    }, {
+      phoneNumber: formattedPhoneNumber,
+      isPhoneNumberVerified: false
+    }
+  )
 }
 
 module.exports = {
