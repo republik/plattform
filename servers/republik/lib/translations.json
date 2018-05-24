@@ -1,5 +1,5 @@
 {
-  "updated": "2018-05-24T19:20:18.549Z",
+  "updated": "2018-05-24T20:53:22.045Z",
   "title": "live",
   "data": [
     {
@@ -268,7 +268,7 @@
     },
     {
       "key": "api/search/aggs/template/format",
-      "value": "Formate"
+      "value": "Rubriken"
     },
     {
       "key": "api/search/aggs/template/front",
@@ -279,12 +279,16 @@
       "value": "Länge"
     },
     {
+      "key": "api/search/aggs/textLength/epic",
+      "value": "von epischer Länge"
+    },
+    {
       "key": "api/search/aggs/textLength/long",
-      "value": "lang"
+      "value": "ausführlich"
     },
     {
       "key": "api/search/aggs/textLength/medium",
-      "value": "mittel"
+      "value": "mittellang"
     },
     {
       "key": "api/search/aggs/textLength/short",
