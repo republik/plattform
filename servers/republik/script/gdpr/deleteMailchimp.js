@@ -92,6 +92,7 @@ PgDb.connect().then(async pgdb => {
     WHERE
       u.id IN (
         -- have privacy consent
+        -- this is only correct as long as PRIVACY is not REVOKEable
         SELECT DISTINCT(c."userId") AS id
         FROM consents c
         WHERE c.policy = 'PRIVACY' AND c.record = 'GRANT'

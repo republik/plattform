@@ -19,48 +19,63 @@ PgDb.connect().then(async pgdb => {
     console.log(`#users: ${await transaction.public.users.count()}`)
 
     // this is only correct as long as PRIVACY is not REVOKEable
-    const numDeletes = await transaction.queryOneField(`
-      WITH delete_user_ids AS (
-        SELECT
-          DISTINCT(u.id) AS id
-        FROM
-          users u
-        WHERE
-          u.id NOT IN (
-            -- have privacy consent
-            SELECT DISTINCT(c."userId") AS id
-            FROM consents c
-            WHERE c.policy = 'PRIVACY' AND c.record = 'GRANT'
-          ) AND
-          u.id NOT IN (
-            -- have stripe customer
-            SELECT DISTINCT(sc."userId") AS id
-            FROM "stripeCustomers" sc
-          ) AND
-          u.email NOT LIKE '%project-r.construction' AND
-          u.email NOT LIKE '%republik.ch'
-      )
+    const deleteUserIds = await transaction.queryOneColumn(`
+      SELECT
+        DISTINCT(u.id) AS id
+      FROM
+        users u
+      WHERE
+        u.id NOT IN (
+          -- have privacy consent
+          -- this is only correct as long as PRIVACY is not REVOKEable
+          SELECT DISTINCT(c."userId") AS id
+          FROM consents c
+          WHERE c.policy = 'PRIVACY' AND c.record = 'GRANT'
+        ) AND
+        u.id NOT IN (
+          -- have stripe customer
+          SELECT DISTINCT(sc."userId") AS id
+          FROM "stripeCustomers" sc
+        ) AND
+        u.email NOT LIKE '%project-r.construction' AND
+        u.email NOT LIKE '%republik.ch'
+    `)
+    console.log(`#userIds to delete: ${deleteUserIds.length}`)
+
+    const options = { deleteUserIds }
+
+    const numDeleteSessions = await transaction.queryOneField(`
       DELETE
         FROM sessions s
       WHERE
-        (s.sess #>> '{passport, user}')::uuid IN (SELECT id FROM delete_user_ids)
-      ;
+        ARRAY[(s.sess #>> '{passport, user}')::uuid] && :deleteUserIds
+    `, options)
+    console.log(`#numDeleteSessions: ${numDeleteSessions}`)
+
+    const numDeleteEventLog = await transaction.queryOneField(`
       DELETE
         FROM "eventLog" e
       WHERE
-        e."userId" IN (SELECT id FROM delete_user_ids)
-      ;
+        ARRAY[e."userId"] && :deleteUserIds
+    `, options)
+    console.log(`#numDeleteEventLog: ${numDeleteEventLog}`)
+
+    const numDeleteCredentials = await transaction.queryOneField(`
       DELETE
         FROM "credentials" c
       WHERE
-        c."userId" IN (SELECT id FROM delete_user_ids)
-      ;
+        ARRAY[c."userId"] && :deleteUserIds
+    `, options)
+    console.log(`#numDeleteCredentials: ${numDeleteCredentials}`)
+
+    const numDeleteUsers = await transaction.queryOneField(`
       DELETE
         FROM users u
       WHERE
-        u.id IN (SELECT id FROM delete_user_ids)
-    `)
-    console.log(`#deletes: ${numDeletes}`)
+        ARRAY[u.id] && :deleteUserIds
+    `, options)
+    console.log(`#numDeleteUsers: ${numDeleteUsers}`)
+
     console.log(`#users: ${await transaction.public.users.count()}`)
 
     if (dryRun) {
