@@ -9,6 +9,8 @@ const elasticsearch = require('@orbiting/backend-modules-base/lib/elastic')
 const { index } = require('@orbiting/backend-modules-search/lib/indexPgTable')
 const mappings = require('@orbiting/backend-modules-search/lib/indices')
 
+const { getIndexAlias } = require('./utils')
+
 const esClient = elasticsearch.client()
 const pgClient = new Client({
   connectionString: process.env.DATABASE_URL
@@ -49,13 +51,9 @@ const notificationHandler = async function (pogiClient, {
       .filter(row => row.op === 'DELETE')
       .map(row => row.id)
 
-    const type = Object.keys(mappings.dict[table].mapping).shift()
-
-    console.log('type', type)
-
     await index({
-      indexName: `republik-${type.toLowerCase()}`,
-      type,
+      indexName: getIndexAlias(mappings.dict[table].name, 'write'),
+      type: mappings.dict[table].type,
       elastic: esClient,
       resource: {
         table: tx.public[table],

@@ -2,7 +2,7 @@ const type = 'Credential'
 
 module.exports = {
   type,
-  index: type.toLowerCase(),
+  name: type.toLowerCase(),
   search: {
     termFields: {
       description: {}

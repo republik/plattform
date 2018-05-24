@@ -2,7 +2,7 @@ const type = 'User'
 
 module.exports = {
   type,
-  index: type.toLowerCase(),
+  name: type.toLowerCase(),
   search: {
     termFields: {
       firstName: {

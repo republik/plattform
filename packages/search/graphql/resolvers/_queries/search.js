@@ -26,6 +26,7 @@ const { transformUser } = require('@orbiting/backend-modules-auth')
 const _ = require('lodash')
 
 const indices = require('../../../lib/indices')
+const { getIndexAlias } = require('../../../lib/utils')
 
 const reduceFilters = filterReducer(documentSchema)
 const createElasticFilter = elasticFilterBuilder(documentSchema)
@@ -215,7 +216,7 @@ const getFirst = (first, filter, user) => {
 }
 
 module.exports = async (
-  _,
+  __,
   args,
   {
     user,
@@ -258,7 +259,7 @@ module.exports = async (
   const first = getFirst(_first, filter, user)
 
   const query = {
-    index: 'republik-*',
+    index: indices.list.map(({ name }) => getIndexAlias(name, 'read')),
     from,
     size: first,
     body: createQuery(search, filter, sort)
@@ -270,7 +271,8 @@ module.exports = async (
 
   const hasNextPage = first > 0 && result.hits.total > from + first
   const hasPreviousPage = from > 0
-  return {
+
+  const response = {
     nodes: result.hits.hits.map(mapHit),
     aggregations: mapAggregations(result, t),
     totalCount: result.hits.total,
@@ -295,4 +297,6 @@ module.exports = async (
         : null
     }
   }
+
+  return response
 }

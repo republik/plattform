@@ -28,7 +28,7 @@ const type = 'Document'
 
 module.exports = {
   type,
-  index: type.toLowerCase(),
+  name: type.toLowerCase(),
   search: {
     termFields: {
       'meta.title': {
