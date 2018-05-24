@@ -32,7 +32,8 @@ const reduceFilters = filterReducer(documentSchema)
 const createElasticFilter = elasticFilterBuilder(documentSchema)
 
 const {
-  DOCUMENTS_RESTRICT_TO_ROLES
+  DOCUMENTS_RESTRICT_TO_ROLES,
+  SEARCH_TRACK = false
 } = process.env
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
@@ -295,6 +296,43 @@ module.exports = async (
           from: from - first
         })
         : null
+    }
+  }
+
+  if (SEARCH_TRACK) {
+    try {
+      const sanitizedResponse = Object.assign({}, response)
+
+      sanitizedResponse.nodes = sanitizedResponse
+        .nodes
+        .map(node => _.omit(node, ['entity.content', 'entity.contentString']))
+        .map(node =>
+            _.get(node, 'entity._raw.__type') === 'User'
+              ? _.omit(node, ['entity._raw'])
+              : node
+        )
+        .map(node =>
+            _.get(node, 'entity.__type') === 'Comment'
+              ? _.omit(node, ['entity.votes'])
+              : node
+        )
+
+      await elastic.index({
+        index: getIndexAlias('searches'),
+        type: 'Search',
+        body: {
+          user: {
+            id: user.id
+          },
+          options,
+          query,
+          response: sanitizedResponse,
+          date: new Date()
+        }
+      })
+    } catch (err) {
+      // Log but do not fail
+      console.error(err)
     }
   }
 
