@@ -72,7 +72,7 @@ PgDb.connect().then(async pgdb => {
     input = await fetch(MAILCHIMP_EXPORT_DOWNLOAD_URL, { method: 'GET' })
       .then(r => r.text())
   } else {
-    console.log('reading stdin MAILCHIMP_EXPORT_DOWNLOAD_URL')
+    console.log('reading stdin...')
     input = rw.readFileSync('/dev/stdin', 'utf8')
   }
   if (!input || input.length < 4) {
