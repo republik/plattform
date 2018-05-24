@@ -1,5 +1,5 @@
 {
-  "updated": "2018-05-23T08:57:07.508Z",
+  "updated": "2018-05-24T19:20:18.549Z",
   "title": "live",
   "data": [
     {
@@ -224,7 +224,7 @@
     },
     {
       "key": "api/search/aggs/audio",
-      "value": "hörbare Artikel"
+      "value": "hörbar"
     },
     {
       "key": "api/search/aggs/discussion",
@@ -264,7 +264,7 @@
     },
     {
       "key": "api/search/aggs/template/editorialNewsletter",
-      "value": "redaktionelle Newsletter"
+      "value": "Newsletter"
     },
     {
       "key": "api/search/aggs/template/format",
@@ -276,23 +276,19 @@
     },
     {
       "key": "api/search/aggs/textLength",
-      "value": "Textlänge"
-    },
-    {
-      "key": "api/search/aggs/textLength/epic",
-      "value": "Texte von epischer Länge"
+      "value": "Länge"
     },
     {
       "key": "api/search/aggs/textLength/long",
-      "value": "lange Texte"
+      "value": "lang"
     },
     {
       "key": "api/search/aggs/textLength/medium",
-      "value": "mittellange Texte"
+      "value": "mittel"
     },
     {
       "key": "api/search/aggs/textLength/short",
-      "value": "kurze Texte"
+      "value": "kurz"
     },
     {
       "key": "api/search/aggs/type",

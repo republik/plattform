@@ -15,9 +15,8 @@ const {
 // mean German, see http://iovs.arvojournals.org/article.aspx?articleid=2166061
 const WORDS_PER_MIN = 180
 
-const SHORT_DURATION_MINS = 5
-const MIDDLE_DURATION_MINS = 15
-const LONG_DURATION_MINS = 30
+const SHORT_DURATION_MINS = 7
+const MIDDLE_DURATION_MINS = 21
 
 const schema = {
   type: termEntry('__type'),
@@ -59,10 +58,7 @@ const schema = {
           from: WORDS_PER_MIN * SHORT_DURATION_MINS,
           to: WORDS_PER_MIN * MIDDLE_DURATION_MINS },
         { key: 'long',
-          from: WORDS_PER_MIN * MIDDLE_DURATION_MINS,
-          to: WORDS_PER_MIN * LONG_DURATION_MINS },
-        { key: 'epic',
-          from: WORDS_PER_MIN * LONG_DURATION_MINS }
+          from: WORDS_PER_MIN * MIDDLE_DURATION_MINS }
       ]
     }
   }
