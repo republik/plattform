@@ -6,6 +6,12 @@ services:
     container_name: elasticsearch
     environment:
       - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
+      - xpack.graph.enabled=false
+      - xpack.ml.enabled=false
+      - xpack.monitoring.enabled=false
+      - xpack.reporting.enabled=false
+      - xpack.security.enabled=false
+      - xpack.watcher.enabled=false
     ulimits:
       memlock:
         soft: -1
