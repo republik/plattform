@@ -250,7 +250,7 @@ const startChallenge = async ({ sessionId, type }) => {
 }
 
 const Unverified = {
-  id: 'a0000000-0000-0000-0001-000000000001',
+  id: 'a0000000-0000-4000-8001-000000000001',
   firstName: 'willhelm tell',
   lastName: 'unverified',
   email: 'willhelmtell@project-r.construction',
@@ -265,7 +265,7 @@ const Unverified = {
 }
 
 const Member = {
-  id: 'a0000000-0000-0000-0001-000000000002',
+  id: 'a0000000-0000-4000-9001-000000000002',
   firstName: 'willhelm tell',
   lastName: 'member',
   email: 'willhelmtell_member@project-r.construction',
@@ -280,7 +280,7 @@ const Member = {
 }
 
 const Supporter = {
-  id: 'a0000000-0000-0000-0001-000000000003',
+  id: 'a0000000-0000-4000-a001-000000000003',
   firstName: 'willhelm tell',
   lastName: 'supporter',
   email: 'willhelmtell_supporter@project-r.construction',
@@ -295,7 +295,7 @@ const Supporter = {
 }
 
 const Admin = {
-  id: 'a0000000-0000-0000-0001-000000000004',
+  id: 'a0000000-0000-4000-b001-000000000004',
   firstName: 'willhelm tell',
   lastName: 'admin',
   email: 'willhelmtell_admin@project-r.construction',
@@ -310,7 +310,7 @@ const Admin = {
 }
 
 const TwoFactorMember = {
-  id: 'a0000000-0000-0000-0001-000000000005',
+  id: 'a0000000-0000-4000-8001-000000000005',
   firstName: 'willhelm tell with 2fa',
   lastName: 'member',
   email: 'willhelmtell_2fa_member@project-r.construction',
