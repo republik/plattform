@@ -4,6 +4,7 @@ class TranslatedError extends Error {
     if (this.translatedMessage) {
       this.message = this.translatedMessage(message, replacements)
     }
+    this.translated = true
   }
 }
 
