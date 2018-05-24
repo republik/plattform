@@ -321,6 +321,7 @@ module.exports = async (
         index: getIndexAlias('searches'),
         type: 'Search',
         body: {
+          took: result.took,
           user: {
             id: user.id
           },
