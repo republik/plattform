@@ -44,36 +44,28 @@ PgDb.connect().then(async pgdb => {
 
     const options = { deleteUserIds }
 
-    const numDeleteSessions = await transaction.queryOneField(`
+    // didn't find a way to get the num deleted back with query
+    await transaction.query(`
       DELETE
         FROM sessions s
       WHERE
         ARRAY[(s.sess #>> '{passport, user}')::uuid] && :deleteUserIds
     `, options)
-    console.log(`#numDeleteSessions: ${numDeleteSessions}`)
+    console.log('deleted sessions')
 
-    const numDeleteEventLog = await transaction.queryOneField(`
-      DELETE
-        FROM "eventLog" e
-      WHERE
-        ARRAY[e."userId"] && :deleteUserIds
-    `, options)
+    const numDeleteEventLog = await transaction.public.eventLog.delete({
+      userId: deleteUserIds
+    })
     console.log(`#numDeleteEventLog: ${numDeleteEventLog}`)
 
-    const numDeleteCredentials = await transaction.queryOneField(`
-      DELETE
-        FROM "credentials" c
-      WHERE
-        ARRAY[c."userId"] && :deleteUserIds
-    `, options)
+    const numDeleteCredentials = await transaction.public.credentials.delete({
+      userId: deleteUserIds
+    })
     console.log(`#numDeleteCredentials: ${numDeleteCredentials}`)
 
-    const numDeleteUsers = await transaction.queryOneField(`
-      DELETE
-        FROM users u
-      WHERE
-        ARRAY[u.id] && :deleteUserIds
-    `, options)
+    const numDeleteUsers = await transaction.public.users.delete({
+      id: deleteUserIds
+    })
     console.log(`#numDeleteUsers: ${numDeleteUsers}`)
 
     console.log(`#users: ${await transaction.public.users.count()}`)
@@ -86,6 +78,7 @@ PgDb.connect().then(async pgdb => {
       await transaction.transactionCommit()
     }
   } catch (e) {
+    console.log('rolling back transaction...')
     console.log(e)
     await transaction.transactionRollback()
     throw e
