@@ -16,10 +16,10 @@ PgDb.connect().then(async pgdb => {
 
   const transaction = await pgdb.transactionBegin()
   try {
-    await pgdb.query('ALTER TABLE sessions DISABLE TRIGGER trigger_sessions')
+    console.log(`#users: ${await transaction.public.users.count()}`)
 
     // this is only correct as long as PRIVACY is not REVOKEable
-    const numDeletes = await pgdb.queryOneField(`
+    const numDeletes = await transaction.queryOneField(`
       WITH delete_user_ids AS (
         SELECT
           DISTINCT(u.id) AS id
@@ -39,30 +39,29 @@ PgDb.connect().then(async pgdb => {
           ) AND
           u.email NOT LIKE '%project-r.construction' AND
           u.email NOT LIKE '%republik.ch'
-      ), delete_sessions AS (
-        DELETE
-          FROM sessions s
-        WHERE
-          (s.sess #>> '{passport, user}')::uuid IN (SELECT id FROM delete_user_ids)
-      ), delete_event_log AS (
-        DELETE
-          FROM "eventLog" e
-        WHERE
-          e."userId" IN (SELECT id FROM delete_user_ids)
-      ), delete_credentials AS (
-        DELETE
-          FROM "credentials" c
-        WHERE
-          c."userId" IN (SELECT id FROM delete_user_ids)
       )
+      DELETE
+        FROM sessions s
+      WHERE
+        (s.sess #>> '{passport, user}')::uuid IN (SELECT id FROM delete_user_ids)
+      ;
+      DELETE
+        FROM "eventLog" e
+      WHERE
+        e."userId" IN (SELECT id FROM delete_user_ids)
+      ;
+      DELETE
+        FROM "credentials" c
+      WHERE
+        c."userId" IN (SELECT id FROM delete_user_ids)
+      ;
       DELETE
         FROM users u
       WHERE
         u.id IN (SELECT id FROM delete_user_ids)
     `)
     console.log(`#deletes: ${numDeletes}`)
-
-    await pgdb.query('ALTER TABLE sessions ENABLE TRIGGER trigger_sessions')
+    console.log(`#users: ${await transaction.public.users.count()}`)
 
     if (dryRun) {
       console.log('rolling back transaction (dryMode)...')
@@ -77,8 +76,7 @@ PgDb.connect().then(async pgdb => {
     throw e
   }
 
-  // just to be sure
-  await pgdb.query('ALTER TABLE sessions ENABLE TRIGGER trigger_sessions')
+  console.log(`#users (after transaction): ${await pgdb.public.users.count()}`)
 }).then(() => {
   process.exit()
 }).catch(e => {
