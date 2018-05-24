@@ -293,19 +293,12 @@ const upsertUserAndConsents = async({ pgdb, email, consents, req }) => {
 }
 
 const resolveUser = async ({ slug, pgdb, userId }) => {
-  let where = false
+  const slugOrId = slug || userId
+  const where = isUUID.v4(slugOrId)
+    ? { id: slugOrId }
+    : { username: slugOrId }
 
-  if (slug) {
-    // If slug is recognized as UUID, query on user.id, otherwise user.username
-    where = isUUID.v4(slug)
-      ? { id: slug }
-      : { username: slug }
-  } else if (!slug && userId && isUUID.v4(userId)) {
-    // If slug is falsy but userId set, query for that
-    where = { id: userId }
-  }
-
-  return where && pgdb.public.users.findOne(where)
+  return pgdb.public.users.findOne(where)
 }
 
 const updateUserTwoFactorAuthentication = async ({ pgdb, userId: id, enabledSecondFactors }) => {
