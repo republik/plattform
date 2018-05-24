@@ -15,6 +15,13 @@ const base64u = require('@orbiting/backend-modules-base64u')
 const { authenticate } = require('../lib/Newsletter')
 const sleep = require('await-sleep')
 const fs = require('fs')
+/*
+const {
+  Consents: {
+    consentsOfUser: getConsentsOfUser,
+  }
+} = require('@orbiting/backend-modules-auth')
+*/
 
 const {
   MAILCHIMP_API_KEY,
@@ -56,23 +63,6 @@ const fetchAuthenticated = (method, url, request = {}) => {
   }
   return fetch(url, options)
     .then(r => r.json())
-}
-
-const userHasPledgeOrMembership = async ({userId, pgdb}) => {
-  if (!userId) {
-    return false
-  }
-  const hasPledge = !!(await pgdb.public.pledges.findFirst({
-    userId,
-    'status !=': 'DRAFT'
-  }))
-  if (hasPledge) {
-    return hasPledge
-  }
-  const hasMembership = !!(await pgdb.public.memberships.findFirst({
-    userId
-  }))
-  return hasMembership
 }
 
 console.log('running updateMailchimp.js...')
@@ -124,19 +114,33 @@ PgDb.connect().then(async pgdb => {
   const newsletterName = 'PROJECTR'
   const subscribed = 1
   let numSubscribeUrls = 0
-  let emailsWithSubscribeUrl = []
+  let emailsWithSubscribeUrl = diffInput && []
+
+  // this is only correct as long as PRIVACY is not REVOKEable
+  const privacyConsentsUserIds = await pgdb.queryOneColumn(`
+    SELECT DISTINCT("userId")
+    FROM consents c
+    WHERE c.policy = 'PRIVACY' AND c.record = 'GRANT'
+  `)
+  console.log(`#privacyConsents: ${privacyConsentsUserIds.length}`)
+
+  const missingConsent = (userId) => {
+    return privacyConsentsUserIds.indexOf(userId) === -1
+  }
 
   await Promise.all(mailchimpEmails.map(async (email) => {
+  // mailchimpEmails.forEach( email => {
     const user = users.find(u => u.email.toLowerCase() === email.toLowerCase())
     const interests = await getInterestsForUser({
       userId: !!user && user.id,
       pgdb
     })
-    const mac = authenticate(email, newsletterName, subscribed)
-    const base64uMail = base64u.encode(email)
-    const subscribeUrl = user && await userHasPledgeOrMembership({ userId: user.id, pgdb })
-      ? ''
-      : `https://www.republik.ch/mitteilung?type=newsletter-subscription&name=${newsletterName}&subscribed=${subscribed}&context=gdpr&email=${base64uMail}&mac=${mac}`
+    let subscribeUrl = ''
+    if (!user || missingConsent(user.id)) {
+      const mac = authenticate(email, newsletterName, subscribed)
+      const base64uMail = base64u.encode(email)
+      subscribeUrl = `https://www.republik.ch/mitteilung?type=newsletter-subscription&name=${newsletterName}&subscribed=${subscribed}&context=gdpr&email=${base64uMail}&mac=${mac}`
+    }
     operations.push({
       method: 'PUT',
       path: `/lists/${MAILCHIMP_MAIN_LIST_ID}/members/${hash(email)}`,
@@ -150,13 +154,17 @@ PgDb.connect().then(async pgdb => {
         }
       })
     })
-    if (subscribeUrl && subscribeUrl.length > 1) {
+    if (subscribeUrl && subscribeUrl.length > 2) {
       numSubscribeUrls += 1
-      emailsWithSubscribeUrl.push(email)
+      if (emailsWithSubscribeUrl) {
+        emailsWithSubscribeUrl.push(email)
+      }
     }
     stats.progress += 1
   }))
+  // })
   // console.log(util.inspect(operations, {depth: null}))
+  console.log(stats)
   clearInterval(statsInterval)
   console.log(`#operations: ${operations.length}`)
   console.log(`#subscribeUrls: ${numSubscribeUrls}`)
