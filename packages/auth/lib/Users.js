@@ -293,12 +293,12 @@ const upsertUserAndConsents = async({ pgdb, email, consents, req }) => {
 }
 
 const resolveUser = async ({ slug, pgdb, userId }) => {
-  const idOrSlug = slug || userId
-  const user = await pgdb.public.users.findOne(
-  isUUID.v4(idOrSlug)
-    ? {id: idOrSlug}
-    : {username: idOrSlug})
-  return user || pgdb.public.users.findOne({ id: userId })
+  const slugOrId = slug || userId
+  const where = isUUID.v4(slugOrId)
+    ? { id: slugOrId }
+    : { username: slugOrId }
+
+  return pgdb.public.users.findOne(where)
 }
 
 const updateUserTwoFactorAuthentication = async ({ pgdb, userId: id, enabledSecondFactors }) => {

@@ -17,7 +17,7 @@ module.exports = async (_, args = {}, { pgdb, user: me, req }) => {
   } = args
 
   const email = rawEmail.toLowerCase() // security, only process lower case emails
-  const user = await resolveUser({ slug: foreignUserId, pgdb, userId: me.id })
+  const user = await resolveUser({ userId: foreignUserId || me.id, pgdb })
   Roles.ensureUserIsMeOrInRoles(user, me, ['supporter', 'admin'])
   if (!user) {
     throw new UserNotFoundError({ foreignUserId })
