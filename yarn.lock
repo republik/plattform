@@ -16,9 +16,9 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-"@octokit/rest@^15.6.2":
-  version "15.6.2"
-  resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-15.6.2.tgz#e5f6836f6100098244921cf29bed322fc7d607c2"
+"@octokit/rest@^15.7.0":
+  version "15.7.0"
+  resolved "https://registry.yarnpkg.com/@octokit/rest/-/rest-15.7.0.tgz#55bed4865f9c41da02fc625d53100849f8e06d66"
   dependencies:
     before-after-hook "^1.1.0"
     btoa-lite "^1.0.0"
@@ -41,9 +41,9 @@
     stringify-entities "^1.3.1"
     unified "^6.1.5"
 
-"@project-r/styleguide@^5.77.2":
-  version "5.77.2"
-  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.77.2.tgz#a457da15ec50c5108e0b55121298e349c8e34cfa"
+"@project-r/styleguide@^5.77.3":
+  version "5.77.3"
+  resolved "https://registry.yarnpkg.com/@project-r/styleguide/-/styleguide-5.77.3.tgz#0658b87784187b51ee0f525f770f1ff62efbcd19"
   dependencies:
     react-icons "^2.2.7"
 
@@ -655,9 +655,9 @@ await-sleep@0.0.1, await-sleep@^0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/await-sleep/-/await-sleep-0.0.1.tgz#044532e49f1f4219d2030d79f517d64569a27d50"
 
-aws-sdk@^2.245.1:
-  version "2.245.1"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.245.1.tgz#756b3b7a5314651920fdbce032d4730f516ef360"
+aws-sdk@^2.246.1:
+  version "2.246.1"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.246.1.tgz#da24e62e69a4aaf8c5a98ac1ebbac9d24e601bc9"
   dependencies:
     buffer "4.9.1"
     events "1.1.1"
@@ -703,6 +703,14 @@ babel-messages@^6.23.0:
   resolved "https://registry.yarnpkg.com/babel-messages/-/babel-messages-6.23.0.tgz#f3cdf4703858035b2a2951c6ec5edf6c62f2630e"
   dependencies:
     babel-runtime "^6.22.0"
+
+babel-polyfill@6.23.0:
+  version "6.23.0"
+  resolved "https://registry.yarnpkg.com/babel-polyfill/-/babel-polyfill-6.23.0.tgz#8364ca62df8eafb830499f699177466c3b03499d"
+  dependencies:
+    babel-runtime "^6.22.0"
+    core-js "^2.4.0"
+    regenerator-runtime "^0.10.0"
 
 babel-runtime@^6.22.0, babel-runtime@^6.26.0:
   version "6.26.0"
@@ -1276,13 +1284,13 @@ commander@~2.8.1:
   dependencies:
     graceful-readlink ">= 1.0.0"
 
-commitizen@^2.9.5:
-  version "2.9.6"
-  resolved "https://registry.yarnpkg.com/commitizen/-/commitizen-2.9.6.tgz#c0d00535ef264da7f63737edfda4228983fa2291"
+commitizen@^2.10.1:
+  version "2.10.1"
+  resolved "https://registry.yarnpkg.com/commitizen/-/commitizen-2.10.1.tgz#8c395def34a895f4e94952c2efc3c9eb4c3683bd"
   dependencies:
     cachedir "^1.1.0"
     chalk "1.1.3"
-    cz-conventional-changelog "1.2.0"
+    cz-conventional-changelog "2.0.0"
     dedent "0.6.0"
     detect-indent "4.0.0"
     find-node-modules "1.0.4"
@@ -1290,8 +1298,9 @@ commitizen@^2.9.5:
     fs-extra "^1.0.0"
     glob "7.1.1"
     inquirer "1.2.3"
-    lodash "4.17.2"
+    lodash "4.17.5"
     minimist "1.2.0"
+    opencollective "1.0.3"
     path-exists "2.1.0"
     shelljs "0.7.6"
     strip-json-comments "2.0.1"
@@ -1522,9 +1531,9 @@ cycle@1.0.x:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/cycle/-/cycle-1.0.3.tgz#21e80b2be8580f98b468f379430662b046c34ad2"
 
-cz-conventional-changelog@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/cz-conventional-changelog/-/cz-conventional-changelog-1.2.0.tgz#2bca04964c8919b23f3fd6a89ef5e6008b31b3f8"
+cz-conventional-changelog@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/cz-conventional-changelog/-/cz-conventional-changelog-2.0.0.tgz#55a979afdfe95e7024879d2a0f5924630170b533"
   dependencies:
     conventional-commit-types "^2.0.0"
     lodash.map "^4.5.1"
@@ -2319,7 +2328,7 @@ external-editor@^1.1.0:
     spawn-sync "^1.0.15"
     tmp "^0.0.29"
 
-external-editor@^2.0.4:
+external-editor@^2.0.1, external-editor@^2.0.4:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/external-editor/-/external-editor-2.2.0.tgz#045511cfd8d133f3846673d1047c154e214ad3d5"
   dependencies:
@@ -3200,6 +3209,24 @@ inquirer@1.2.3:
     run-async "^2.2.0"
     rx "^4.1.0"
     string-width "^1.0.1"
+    strip-ansi "^3.0.0"
+    through "^2.3.6"
+
+inquirer@3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/inquirer/-/inquirer-3.0.6.tgz#e04aaa9d05b7a3cb9b0f407d04375f0447190347"
+  dependencies:
+    ansi-escapes "^1.1.0"
+    chalk "^1.0.0"
+    cli-cursor "^2.1.0"
+    cli-width "^2.0.0"
+    external-editor "^2.0.1"
+    figures "^2.0.0"
+    lodash "^4.3.0"
+    mute-stream "0.0.7"
+    run-async "^2.2.0"
+    rx "^4.1.0"
+    string-width "^2.0.0"
     strip-ansi "^3.0.0"
     through "^2.3.6"
 
@@ -4289,9 +4316,9 @@ lodash@4, lodash@^4.0.0, lodash@^4.13.1, lodash@^4.14.0, lodash@^4.17.10, lodash
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
 
-lodash@4.17.2:
-  version "4.17.2"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.2.tgz#34a3055babe04ce42467b607d700072c7ff6bf42"
+lodash@4.17.5:
+  version "4.17.5"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.5.tgz#99a92d65c0272debe8c96b6057bc8fbfa3bed511"
 
 log-symbols@^1.0.2:
   version "1.0.2"
@@ -4632,6 +4659,13 @@ node-abi@^2.2.0:
   dependencies:
     semver "^5.4.1"
 
+node-fetch@1.6.3:
+  version "1.6.3"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-1.6.3.tgz#dc234edd6489982d58e8f0db4f695029abcd8c04"
+  dependencies:
+    encoding "^0.1.11"
+    is-stream "^1.0.1"
+
 node-fetch@1.7.3, node-fetch@^1.0.1, node-fetch@^1.7.1, node-fetch@^1.7.3:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-1.7.3.tgz#980f6f72d85211a5347c6b2bc18c5b84c3eb47ef"
@@ -4879,6 +4913,17 @@ onetime@^2.0.0:
   dependencies:
     mimic-fn "^1.0.0"
 
+opencollective@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/opencollective/-/opencollective-1.0.3.tgz#aee6372bc28144583690c3ca8daecfc120dd0ef1"
+  dependencies:
+    babel-polyfill "6.23.0"
+    chalk "1.1.3"
+    inquirer "3.0.6"
+    minimist "1.2.0"
+    node-fetch "1.6.3"
+    opn "4.0.2"
+
 openpgp@^3.0.11:
   version "3.0.11"
   resolved "https://registry.yarnpkg.com/openpgp/-/openpgp-3.0.11.tgz#1c10e9446dd92ccff5ec76b870c06b6c3ddc9dc5"
@@ -4895,6 +4940,13 @@ openpgp@^3.0.11:
     node-localstorage "~1.3.0"
     pako "^1.0.6"
     rusha "^0.8.12"
+
+opn@4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/opn/-/opn-4.0.2.tgz#7abc22e644dff63b0a96d5ab7f2790c0f01abc95"
+  dependencies:
+    object-assign "^4.0.1"
+    pinkie-promise "^2.0.0"
 
 optimist@^0.6.1, optimist@~0.6.1:
   version "0.6.1"
@@ -5582,9 +5634,9 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-dom@^16.3.1:
-  version "16.3.2"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.3.2.tgz#cb90f107e09536d683d84ed5d4888e9640e0e4df"
+react-dom@^16.4.0:
+  version "16.4.0"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.4.0.tgz#099f067dd5827ce36a29eaf9a6cdc7cbf6216b1e"
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"
@@ -5601,9 +5653,9 @@ react-icons@^2.2.7:
   dependencies:
     react-icon-base "2.1.0"
 
-react@^16.3.1:
-  version "16.3.2"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.3.2.tgz#fdc8420398533a1e58872f59091b272ce2f91ea9"
+react@^16.4.0:
+  version "16.4.0"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.4.0.tgz#402c2db83335336fba1962c08b98c6272617d585"
   dependencies:
     fbjs "^0.8.16"
     loose-envify "^1.1.0"
@@ -5701,6 +5753,10 @@ redlock@^3.1.2:
   resolved "https://registry.yarnpkg.com/redlock/-/redlock-3.1.2.tgz#27c82534da8548027aa8d61084a08078ae74ed36"
   dependencies:
     bluebird "^3.3.3"
+
+regenerator-runtime@^0.10.0:
+  version "0.10.5"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.10.5.tgz#336c3efc1220adcedda2c9fab67b5a7955a33658"
 
 regenerator-runtime@^0.11.0:
   version "0.11.1"
