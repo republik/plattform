@@ -10,6 +10,7 @@ const {
   ensureAllRequiredConsents,
   saveConsents
 } = require('./Consents')
+const { TranslatedError } = require('@orbiting/backend-modules-translate')
 
 const {
   initiateSession,
@@ -253,7 +254,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   return user
 }
 
-const upsertUserAndConsents = async({ pgdb, email, consents, req }) => {
+const upsertUserAndConsents = async ({ pgdb, email, consents, req }) => {
   const existingUser = await pgdb.public.users.findOne({ email })
 
   // check required consents
@@ -293,12 +294,12 @@ const upsertUserAndConsents = async({ pgdb, email, consents, req }) => {
 }
 
 const resolveUser = async ({ slug, pgdb, userId }) => {
-  const idOrSlug = slug || userId
-  const user = await pgdb.public.users.findOne(
-  isUUID.v4(idOrSlug)
-    ? {id: idOrSlug}
-    : {username: idOrSlug})
-  return user || pgdb.public.users.findOne({ id: userId })
+  const slugOrId = slug || userId
+  const where = isUUID.v4(slugOrId)
+    ? { id: slugOrId }
+    : { username: slugOrId }
+
+  return pgdb.public.users.findOne(where)
 }
 
 const updateUserTwoFactorAuthentication = async ({ pgdb, userId: id, enabledSecondFactors }) => {
@@ -390,7 +391,7 @@ const updateUserEmail = async ({ pgdb, user, email }) => {
 }
 
 const updateUserPhoneNumber = async ({ pgdb, userId, phoneNumber }) => {
-  const user = pgdb.public.users.findOne({ id: userId })
+  const user = await pgdb.public.users.findOne({ id: userId })
 
   if (user.enabledSecondFactors && user.enabledSecondFactors.indexOf(TokenTypes.SMS) !== -1) {
     throw new SecondFactorHasToBeDisabledError({ type: TokenTypes.SMS })
@@ -400,21 +401,17 @@ const updateUserPhoneNumber = async ({ pgdb, userId, phoneNumber }) => {
     const parsedPhoneNumber = parse(phoneNumber || '', 'CH') // it could be any arbitrary string
     format(parsedPhoneNumber.phone, parsedPhoneNumber.country, 'E.164')
   } catch (e) {
-    throw new Error(t('api/auth/sms/phone-number-not-valid'))
+    throw new TranslatedError(t('api/auth/sms/phone-number-not-valid'))
   }
 
-  try {
-    return pgdb.public.users.updateAndGetOne(
-      {
-        id: userId
-      }, {
-        phoneNumber,
-        isPhoneNumberVerified: false
-      }
-    )
-  } catch (e) {
-    throw e
-  }
+  return pgdb.public.users.updateAndGetOne(
+    {
+      id: userId
+    }, {
+      phoneNumber, // save un-normalized phone number
+      isPhoneNumberVerified: false
+    }
+  )
 }
 
 module.exports = {

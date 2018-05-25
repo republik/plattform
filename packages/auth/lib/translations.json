@@ -1,5 +1,5 @@
 {
-  "updated": "2018-05-18T21:29:44.749Z",
+  "updated": "2018-05-24T15:29:47.378Z",
   "title": "live",
   "data": [
     {
@@ -120,7 +120,7 @@
     },
     {
       "key": "api/auth/sms/phone-number-not-valid",
-      "value": "Telefon-Nummer ungültig."
+      "value": "Bitte geben Sie eine gültige Telefonnummer an (Format: +41 79 123 45 67)."
     },
     {
       "key": "api/consents/missing",
