@@ -178,6 +178,7 @@ module.exports = async (_, args, context) => {
         }, context, now)
       }
     }
+
     if (address) {
       if (me._raw.addressId) {
         // update address of user
@@ -199,15 +200,20 @@ module.exports = async (_, args, context) => {
         )
       }
     }
+
     if (phoneNumber) {
-      await Users.updateUserPhoneNumber({ pgdb: transaction, user: me, phoneNumber })
+      await Users.updateUserPhoneNumber({ pgdb: transaction, userId: me.id, phoneNumber })
     }
+
     await transaction.transactionCommit()
     const updatedUser = await pgdb.public.users.findOne({ id: me.id })
     return transformUser(updatedUser)
   } catch (e) {
-    console.error('updateMe', e)
     await transaction.transactionRollback()
+    console.log('updateMe', e)
+    if (e.translated) {
+      throw e
+    }
     throw new Error(t('api/unexpected'))
   }
 }
