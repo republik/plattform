@@ -5719,9 +5719,9 @@ regex-not@^1.0.0, regex-not@^1.0.2:
     extend-shallow "^3.0.2"
     safe-regex "^1.1.0"
 
-"regiment@https://github.com/orbiting/regiment":
-  version "0.0.4"
-  resolved "https://github.com/orbiting/regiment#dfdbe1a73866a7c20fe741a17d89ba27cc9c095e"
+regiment@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/regiment/-/regiment-0.0.5.tgz#0e97c6aeafd88249ef784889a4933748aa13976a"
 
 registry-auth-token@^3.0.1:
   version "3.3.2"
