@@ -2,8 +2,8 @@ const fetch = require('isomorphic-unfetch')
 const { returnImage } = require('../lib')
 const {
   FRONTEND_BASE_URL,
-  BASIC_AUTH_USER,
-  BASIC_AUTH_PASS
+  FRONTEND_BASIC_AUTH_USER,
+  FRONTEND_BASIC_AUTH_PASS
 } = process.env
 
 if (!FRONTEND_BASE_URL) {
@@ -28,8 +28,8 @@ module.exports = (server) => {
     const result = await fetch(frontendUrl, {
       method: 'GET',
       headers: {
-        Authorization: BASIC_AUTH_USER && BASIC_AUTH_PASS
-          ? `Basic ${Buffer.from(`${BASIC_AUTH_USER}:${BASIC_AUTH_PASS}`).toString('base64')}`
+        Authorization: FRONTEND_BASIC_AUTH_USER && FRONTEND_BASIC_AUTH_PASS
+          ? `Basic ${Buffer.from(`${FRONTEND_BASIC_AUTH_USER}:${FRONTEND_BASIC_AUTH_PASS}`).toString('base64')}`
           : undefined
       }
     })
