@@ -12,6 +12,7 @@ module.exports = {
         highlight: {}
       },
       name: {
+        boost: 2,
         highlight: {}
       },
       username: {

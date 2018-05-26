@@ -10,7 +10,9 @@ module.exports = {
       },
       'user.firstName': {},
       'user.lastName': {},
-      'user.name': {},
+      'user.name': {
+        boost: 1.5
+      },
       'user.username': {},
       'user.twitterHandle': {},
       'user.facebookId': {}

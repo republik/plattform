@@ -32,7 +32,7 @@ module.exports = {
   search: {
     termFields: {
       'meta.title': {
-        boost: 2,
+        boost: 3,
         highlight: {
           number_of_fragments: 0
         }
@@ -54,7 +54,11 @@ module.exports = {
       },
       content: {
         highlight: {}
-      }
+      },
+      '__format.title.keyword': {
+        boost: 6
+      },
+      '__format.description': {}
     },
     filter: {
       bool: {
@@ -75,6 +79,24 @@ module.exports = {
           properties: {
             date: {
               type: 'date'
+            }
+          }
+        },
+        __format: {
+          properties: {
+            title: {
+              type: 'text',
+              analyzer: 'german',
+              fields: {
+                keyword: {
+                  type: 'keyword',
+                  ignore_above: 256
+                }
+              }
+            },
+            description: {
+              type: 'text',
+              analyzer: 'german'
             }
           }
         },
