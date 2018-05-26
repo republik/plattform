@@ -8,6 +8,8 @@ const inserts = require('./inserts')
 const mappings = require('../lib/indices')
 const { getIndexAlias, getIndexDated } = require('../lib/utils')
 
+const timeout = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 const elastic = elasticsearch.client()
 
 const flush = process.argv[2] === '--flush'
@@ -50,8 +52,18 @@ PgDb.connect().then(async pgdb => {
       }
     })
 
+    if (inserts.dict[name].before) {
+      debug('before populating index...', { writeAlias, index })
+      await inserts.dict[name].before({
+        indexName: index,
+        type,
+        elastic,
+        pgdb
+      })
+    }
+
     debug('populating index', { writeAlias, index })
-    await inserts.dict[name]({
+    await inserts.dict[name].insert({
       indexName: index,
       type,
       elastic,
@@ -65,6 +77,22 @@ PgDb.connect().then(async pgdb => {
         refresh_interval: null // Reset refresh_interval to default
       }
     })
+
+    debug('waiting grace period', { writeAlias, index })
+    await timeout(1000 * 5)
+
+    if (inserts.dict[name].after) {
+      debug('after populating index...', { writeAlias, index })
+      await inserts.dict[name].after({
+        indexName: index,
+        type,
+        elastic,
+        pgdb
+      })
+    }
+
+    debug('waiting grace period', { writeAlias, index })
+    await timeout(1000 * 5)
 
     debug('updating read alias', { readAlias, index })
     await elastic.indices.updateAliases({

@@ -17,12 +17,73 @@ const { lib: {
 
 const { mdastFilter } = require('../../lib/utils.js')
 
+const _ = require('lodash')
+
 const uuid = require('uuid/v4')
 
 const {
   AWS_ACCESS_KEY_ID,
   AWS_SECRET_ACCESS_KEY
 } = process.env
+
+const after = async ({indexName, type: indexType, elastic, pgdb}) => {
+  const query = {
+    index: indexName,
+    size: 10000,
+    body: {
+      query: {
+        bool: {
+          must: {
+            match_all: {}
+          },
+          filter: {
+            term: {
+              'meta.template': 'format'
+            }
+          }
+        }
+      }
+    }
+  }
+
+  const result = await elastic.search(query)
+
+  const formats = result.hits.hits
+    .map(doc => _.pick(
+      doc._source.meta,
+      ['repoId', 'title', 'description']
+    ))
+
+  await Promise.all(formats.map(async (format) => {
+    const result = await elastic.updateByQuery({
+      index: indexName,
+      conflicts: 'proceed',
+      refresh: true,
+      body: {
+        script: {
+          lang: 'painless',
+          source: 'ctx._source.__format=params.format',
+          params: {
+            format
+          }
+        },
+        query: {
+          bool: {
+            filter: {
+              wildcard: {
+                'meta.format': `*${format.repoId.split('/').pop()}`
+              }
+            }
+          }
+        }
+      }
+    })
+
+    if (result.failures.length > 0) {
+      console.error(format.repoId, result.failures)
+    }
+  }))
+}
 
 const sanitizeCommitDoc = (d, indexType = 'Document') => {
   const meta = {
@@ -92,80 +153,85 @@ const iterateRepos = async (context, callback) => {
   } while (pageInfo && pageInfo.hasNextPage)
 }
 
-module.exports = async ({indexName, type: indexType, elastic, pgdb}) => {
-  if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY) {
-    console.warn('missing AWS_ACCESS_KEY_ID and/or AWS_SECRET_ACCESS_KEY skipping image uploads!')
-  }
-
-  const stats = { [indexType]: { added: 0, total: 0 } }
-  const statsInterval = setInterval(
-    () => { console.log(indexName, stats) },
-    1 * 1000
-  )
-
-  const now = new Date()
-  const context = {
-    redis,
-    pgdb,
-    user: {
-      name: 'publikator-pullelasticsearch',
-      email: 'ruggedly@republik.ch',
-      roles: [ 'editor' ]
+module.exports = {
+  before: () => {},
+  insert: async ({indexName, type: indexType, elastic, pgdb}) => {
+    if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY) {
+      console.warn('missing AWS_ACCESS_KEY_ID and/or AWS_SECRET_ACCESS_KEY skipping image uploads!')
     }
-  }
 
-  await iterateRepos(context, async (repo, repoMeta, publications) => {
-    // TODO where to save repo global stuff in elastic
-    /*
-    if (repoMeta && repoMeta.mailchimpCampaignId) {
-      redisOps.push(
-        redis.setAsync(`repos:${repo.id}/mailchimp/campaignId`, repoMeta.mailchimpCampaignId)
-      )
-    }
-    */
-    stats[indexType].total += publications.length
-    for (let publication of publications) {
-      const { commit, meta: { scheduledAt: _scheduledAt } } = publication
-      const scheduledAt = _scheduledAt && _scheduledAt > now
-        ? _scheduledAt
-        : null
+    const stats = { [indexType]: { added: 0, total: 0 } }
+    const statsInterval = setInterval(
+      () => { console.log(indexName, stats) },
+      1 * 1000
+    )
 
-      const doc = await getDocument(
-        { id: commit.id, repo },
-        { publicAssets: true },
-        context
-      )
-
-      // upload images to S3
-      if (AWS_ACCESS_KEY_ID && AWS_SECRET_ACCESS_KEY) {
-        await uploadImages(repo.id, doc.repoImagePaths)
+    const now = new Date()
+    const context = {
+      redis,
+      pgdb,
+      user: {
+        name: 'publikator-pullelasticsearch',
+        email: 'ruggedly@republik.ch',
+        roles: [ 'editor' ]
       }
-
-      // prepareMetaForPublish creates missing discussions as a side-effect
-      doc.content.meta = await prepareMetaForPublish(
-        repo.id,
-        doc.content.meta,
-        repoMeta,
-        scheduledAt,
-        now,
-        context
-      )
-      // TODO how to indicate publication type?
-      doc.content.meta.prepublication = publication.name.indexOf('prepublication') > -1
-
-      await elastic.create({
-        id: uuid(),
-        index: indexName,
-        type: indexType,
-        body: {
-          ...sanitizeCommitDoc(doc, indexType)
-        }
-      })
-      stats[indexType].added++
     }
-  })
 
-  clearInterval(statsInterval)
+    await iterateRepos(context, async (repo, repoMeta, publications) => {
+      // TODO where to save repo global stuff in elastic
+      /*
+      if (repoMeta && repoMeta.mailchimpCampaignId) {
+        redisOps.push(
+          redis.setAsync(`repos:${repo.id}/mailchimp/campaignId`, repoMeta.mailchimpCampaignId)
+        )
+      }
+      */
+      stats[indexType].total += publications.length
+      for (let publication of publications) {
+        const { commit, meta: { scheduledAt: _scheduledAt } } = publication
+        const scheduledAt = _scheduledAt && _scheduledAt > now
+          ? _scheduledAt
+          : null
 
-  console.log(indexName, stats)
+        const doc = await getDocument(
+          { id: commit.id, repo },
+          { publicAssets: true },
+          context
+        )
+
+        // upload images to S3
+        if (AWS_ACCESS_KEY_ID && AWS_SECRET_ACCESS_KEY) {
+          await uploadImages(repo.id, doc.repoImagePaths)
+        }
+
+        // prepareMetaForPublish creates missing discussions as a side-effect
+        doc.content.meta = await prepareMetaForPublish(
+          repo.id,
+          doc.content.meta,
+          repoMeta,
+          scheduledAt,
+          now,
+          context
+        )
+
+        // TODO how to indicate publication type?
+        doc.content.meta.prepublication = publication.name.indexOf('prepublication') > -1
+
+        await elastic.create({
+          id: uuid(),
+          index: indexName,
+          type: indexType,
+          body: {
+            ...sanitizeCommitDoc(doc, indexType)
+          }
+        })
+        stats[indexType].added++
+      }
+    })
+
+    clearInterval(statsInterval)
+
+    console.log(indexName, stats)
+  },
+  after
 }

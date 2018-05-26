@@ -23,25 +23,29 @@ const transform = function (row) {
   return row
 }
 
-module.exports = async ({ pgdb, ...rest }) => {
-  const resource = {
-    table: pgdb.public.comments,
-    payload: {
-      users: await pgdb.public.users.find(
-        {},
-        {
-          fields: [
-            'id',
-            'firstName',
-            'lastName',
-            'username',
-            'twitterHandle',
-            'facebookId'
-          ]
-        }
-      )
-    },
-    transform
-  }
-  return bulk.index({ resource, ...rest })
+module.exports = {
+  before: () => {},
+  insert: async ({ pgdb, ...rest }) => {
+    const resource = {
+      table: pgdb.public.comments,
+      payload: {
+        users: await pgdb.public.users.find(
+          {},
+          {
+            fields: [
+              'id',
+              'firstName',
+              'lastName',
+              'username',
+              'twitterHandle',
+              'facebookId'
+            ]
+          }
+        )
+      },
+      transform
+    }
+    return bulk.index({ resource, ...rest })
+  },
+  after: () => {}
 }
