@@ -11,6 +11,9 @@ services:
       - xpack.monitoring.enabled=false
       - xpack.security.enabled=false
       - xpack.watcher.enabled=false
+      - ELASTIC_PASSWORD=elastic
+      - "discovery.type=single-node"
+      - TAKE_FILE_OWNERSHIP=true
     ulimits:
       memlock:
         soft: -1
