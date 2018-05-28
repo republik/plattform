@@ -1,5 +1,6 @@
 const editRepoMeta = require('../graphql/resolvers/_mutations/editRepoMeta')
 const { upsert: upsertDiscussion } = require('./Discussion')
+const visit = require('unist-util-visit')
 
 const { timeFormat } = require('@orbiting/backend-modules-formats')
 const slugDateFormat = timeFormat('%Y/%m/%d')
@@ -23,7 +24,18 @@ const getPath = (docMeta) => {
   }
 }
 
-const prepareMetaForPublish = async (repoId, docMeta, repoMeta, scheduledAt, now = new Date(), context) => {
+// TODO this can move to packages/search as soon as redis is out
+const prepareMetaForPublish = async ({
+  repoId,
+  repoMeta,
+  scheduledAt,
+  prepublication,
+  doc,
+  now = new Date(),
+  context
+}) => {
+  const docMeta = doc.content.meta
+
   let publishDate = repoMeta.publishDate
     ? new Date(repoMeta.publishDate)
     : null
@@ -57,12 +69,56 @@ const prepareMetaForPublish = async (repoId, docMeta, repoMeta, scheduledAt, now
     }, context)
   }
 
+  let credits = []
+  visit(doc.content, 'zone', node => {
+    if (node.identifier === 'TITLE') {
+      const paragraphs = node.children
+        .filter(child => child.type === 'paragraph')
+      if (paragraphs.length >= 2) {
+        credits = paragraphs[paragraphs.length - 1].children
+      }
+    }
+  })
+
+  const { audioSourceMp3, audioSourceAac, audioSourceOgg } = doc.content.meta
+  const audioSource = audioSourceMp3 || audioSourceAac || audioSourceOgg ? {
+    mp3: audioSourceMp3,
+    aac: audioSourceAac,
+    ogg: audioSourceOgg
+  } : null
+
+  const authors = credits
+    .filter(c => c.type === 'link')
+    .map(a => a.children[0].value)
+
+  const isSeriesMaster = typeof docMeta.series === 'object'
+  const isSeriesEpisode = typeof docMeta.series === 'string'
+  // map series episodes to the key seriesEpisodes to have consistent types
+  // and not having to touch the series key
+  let seriesEpisodes
+  if (typeof docMeta.series === 'object') {
+    seriesEpisodes = docMeta.series.episodes.map(e => {
+      if (e.publishDate === '') {
+        e.publishDate = null
+      }
+    })
+  }
+
   // transform docMeta
   return {
     ...docMeta,
+    repoId,
     path,
     publishDate,
-    discussionId
+    prepublication,
+    scheduledAt,
+    discussionId,
+    credits,
+    audioSource,
+    authors,
+    isSeriesMaster,
+    isSeriesEpisode,
+    seriesEpisodes
   }
 }
 

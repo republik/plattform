@@ -9,11 +9,13 @@ const {
   upsertRef,
   deleteRef
 } = require('../../../lib/github')
+/* TODO remove
 const {
   redlock,
   lockKey,
   refresh: refreshScheduling
 } = require('../../../lib/publicationScheduler')
+*/
 const {
   createCampaign,
   updateCampaignContent,
@@ -130,14 +132,15 @@ module.exports = async (
   }
 
   // prepareMetaForPublish creates missing discussions as a side-effect
-  doc.content.meta = await prepareMetaForPublish(
+  doc.content.meta = await prepareMetaForPublish({
     repoId,
-    doc.content.meta,
     repoMeta,
     scheduledAt,
+    prepublication,
+    doc,
     now,
     context
-  )
+  })
 
   // add fileds from prepareMetaForPublish to resolvedDoc
   resolvedDoc.content.meta = {
@@ -294,6 +297,7 @@ module.exports = async (
   await Promise.all(gitOps)
 
   // cache in redis
+  /* TODO remove
   const payload = JSON.stringify({
     doc,
     sha: milestone.sha,
@@ -331,6 +335,7 @@ module.exports = async (
     .catch((err) => {
       console.error(err)
     })
+  */
 
   const {
     lib: {
@@ -345,12 +350,9 @@ module.exports = async (
   const writeAlias = getIndexAlias(indexName, 'write')
   await elastic.index({
     ...getElasticDoc({
-      repoId,
-      doc,
-      versionNumber,
-      prepublication,
       indexName: writeAlias,
-      indexType
+      indexType,
+      doc
     })
   })
 

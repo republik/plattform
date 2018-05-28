@@ -173,10 +173,14 @@ module.exports = {
             discussionId: {
               type: 'keyword'
             },
-            seriesMaster: {
+            // series <- not indexed, inconsistent types
+            isSeriesMaster: {
               type: 'keyword'
             },
-            series: {
+            isSeriesEpisode: {
+              type: 'keyword'
+            },
+            seriesEpisodes: {
               properties: {
                 episodes: {
                   properties: {

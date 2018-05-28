@@ -9,7 +9,6 @@ const {
 } = require('../../../../servers/publikator/graphql/resolvers/Repo')
 const { document: getDocument } = require('../../../../servers/publikator/graphql/resolvers/Commit')
 const { prepareMetaForPublish } = require('../../../../servers/publikator/lib/Document')
-const { publicationVersionRegex } = require('../../../../servers/publikator/lib/github')
 const { lib: {
   Repo: { uploadImages }
 } } = require('@orbiting/backend-modules-assets')
@@ -141,7 +140,7 @@ module.exports = {
       */
       stats[indexType].total += publications.length
       for (let publication of publications) {
-        const { commit, meta: { scheduledAt }, refName, name } = publication
+        const { commit, meta: { scheduledAt }, refName } = publication
         const prepublication = refName.indexOf('prepublication') > -1
 
         const doc = await getDocument(
@@ -156,28 +155,23 @@ module.exports = {
         }
 
         // prepareMetaForPublish creates missing discussions as a side-effect
-        doc.content.meta = await prepareMetaForPublish(
-          repo.id,
-          doc.content.meta,
+        doc.content.meta = await prepareMetaForPublish({
+          repoId: repo.id,
           repoMeta,
           scheduledAt,
+          prepublication,
+          doc,
           now,
           context
-        )
+        })
 
-        // TODO how to indicate publication type?
-        // doc.content.meta.prepublication = publication.name.indexOf('prepublication') > -1
-        const versionNumber = parseInt(publicationVersionRegex.exec(name)[1])
         console.log(publication, { meta: doc.content.meta })
 
         await elastic.index({
           ...getElasticDoc({
-            repoId: repo.id,
-            doc,
-            versionNumber,
-            prepublication,
             indexName,
-            indexType
+            indexType,
+            doc
           })
         })
         stats[indexType].added++
