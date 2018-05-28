@@ -67,13 +67,19 @@ const fragments = {
 export const query = gql`
   query repoWithHistory(
     $repoId: ID!
-    $maxCommits: Int!
-    $commitsUntil: String
+    $first: Int!
+    $after: String
   ) {
     repo(id: $repoId) {
       id
-      commits(maxCommits: $maxCommits, commitsUntil: $commitsUntil) {
-        ...TreeCommit
+      commits(first: $first, after: $after) {
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+        nodes {
+          ...TreeCommit
+        }
       }
       milestones {
         ...TreeMilestone
@@ -102,11 +108,11 @@ const repoSubscription = gql`
 
 class EditorPage extends Component {
   componentDidMount () {
-    this.subscribe()
+    // this.subscribe()
   }
 
   componentDidUpdate () {
-    this.subscribe()
+    // this.subscribe()
   }
 
   subscribe () {
@@ -146,7 +152,7 @@ class EditorPage extends Component {
   }
 
   render () {
-    const { url, fetchMore } = this.props
+    const { url, commits, hasMore, fetchMore } = this.props
     const { loading, error, repo } = this.props.data
     const { repoId } = url.query
 
@@ -181,23 +187,27 @@ class EditorPage extends Component {
                 <CurrentPublications repoId={repoId} />
               </NarrowContainer>
               <Tree
-                commits={repo.commits}
+                commits={commits}
                 localStorageCommitIds={localStorageCommitIds}
                 milestones={repo.milestones}
                 repoId={repoId}
-              />
+                />
             </div>
-        )} />
-          <div {...styles.loadMoreContainer}>
-            <div {...styles.loadMore}>
-              {loading && <InlineSpinner size={60} />}
-              {!loading && <A
-                {...styles.loadMoreButton}
-                onClick={() => fetchMore()}
+          )} />
+          {
+            /* Load more commits */
+            hasMore &&
+            <div {...styles.loadMoreContainer}>
+              <div {...styles.loadMore}>
+                {loading && <InlineSpinner size={60} />}
+                {!loading && <A
+                  {...styles.loadMoreButton}
+                  onClick={() => fetchMore()}
               >Ältere laden</A>
             }
+              </div>
             </div>
-          </div>
+          }
         </Frame.Body>
       </Frame>
     )
@@ -211,34 +221,37 @@ export default compose(
     options: ({ url }) => ({
       variables: {
         repoId: url.query.repoId,
-        maxCommits: 10
+        first: 10
       },
       fetchPolicy: 'cache-and-network'
     }),
     props: ({data, ownProps}) => ({
       data,
+      commits: data.repo.commits.nodes,
+      hasMore: data.repo.commits.pageInfo.hasNextPage,
       fetchMore: () => {
         return data.fetchMore({
           variables: {
             repoId: data.repo.id,
-            maxCommits: 20,
-            commitsUntil: (
-            data.repo.commits && data.repo.commits.length &&
-            data.repo.commits.slice(-1)[0].date
-          ) || null
+            first: 20,
+            after: data.repo.commits.pageInfo.endCursor
           },
           updateQuery: (previousResult, { fetchMoreResult }) => {
             return {
               repo: {
                 ...previousResult.repo,
                 ...fetchMoreResult.repo,
-                commits: [
+                commits: {
                   ...previousResult.repo.commits,
-                  ...fetchMoreResult.repo.commits
-                ].filter(({id}, i, all) =>
-                // deduplicate by id
-                i === all.findIndex(repo => repo.id === id)
-              )
+                  ...fetchMoreResult.repo.commits,
+                  nodes: [
+                    ...previousResult.repo.commits.nodes,
+                    ...fetchMoreResult.repo.commits.nodes
+                  ].filter(({id}, i, all) =>
+                    // deduplicate by id
+                    i === all.findIndex(repo => repo.id === id)
+                  )
+                }
               }
             }
           }
