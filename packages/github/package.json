@@ -23,7 +23,7 @@
     "isomorphic-unfetch": "^2.0.0"
   },
   "dependencies": {
-    "@octokit/rest": "^15.2.6",
+    "@octokit/rest": "^15.7.0",
     "apollo-fetch": "^0.7.0",
     "await-sleep": "^0.0.1",
     "check-env": "^1.3.0",

@@ -2,8 +2,8 @@
   "name": "assets-backend",
   "version": "0.0.1",
   "engines": {
-    "node": "8.11.x",
-    "yarn": "1.5.x"
+    "node": "10.x",
+    "yarn": "1.7.x"
   },
   "private": true,
   "license": "AGPL-3.0",
@@ -11,7 +11,7 @@
     "cors": "^2.8.4",
     "express": "^4.16.3",
     "isomorphic-unfetch": "^2.0.0",
-    "regiment": "https://github.com/orbiting/regiment"
+    "regiment": "^0.0.5"
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon -w ../../packages -w .env -w package.jsoan -w ../yarn.lock -w server.js -w index.js index.js",
@@ -19,6 +19,6 @@
     "start": "node index.js"
   },
   "devDependencies": {
-    "nodemon": "^1.17.3"
+    "nodemon": "^1.17.5"
   }
 }
