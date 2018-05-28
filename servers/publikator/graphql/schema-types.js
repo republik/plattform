@@ -4,7 +4,7 @@ scalar JSON
 
 type Repo {
   id: ID!
-  commits(maxCommits: Int, commitsSince: Date, commitsUntil: Date): [Commit!]!
+  commits(first: Int, before: String, after: String): CommitConnection!
   latestCommit: Commit!
   commit(id: ID!): Commit!
   uncommittedChanges: [User!]!
@@ -113,6 +113,12 @@ type Commit {
   headName: String
   headSha: ID!
 # files: [File]!
+}
+
+type CommitConnection {
+  nodes: [Commit]
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 type Author {

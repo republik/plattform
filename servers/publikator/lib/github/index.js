@@ -197,7 +197,7 @@ module.exports = {
     await redis.setAsync(redisKey, JSON.stringify(commit))
     return commit
   },
-  getCommits: async (repo, { maxCommits = 15, commitsSince, commitsUntil }) => {
+  getCommits: async (repo, { first = 15, after, before }) => {
     const { githubApolloFetch } = await createGithubClients()
     const [login, repoName] = repo.id.split('/')
     const {
@@ -232,6 +232,10 @@ module.exports = {
                       date
                     },
                     history(first: $maxCommits, until: $commitsUntil, since: $commitsSince) {
+                      pageInfo {
+                        hasNextPage
+                      }
+                      totalCount
                       nodes {
                         ... on Commit {
                           oid
@@ -260,13 +264,15 @@ module.exports = {
         login,
         repoName,
         maxRefs: 100,
-        maxCommits,
-        commitsSince,
-        commitsUntil
+        maxCommits: first,
+        commitsSince: before,
+        commitsUntil: after
       }
     })
+    const hasNextPage = heads.some(({target}) => target.history.pageInfo.hasNextPage)
+    const totalCount = heads.reduce((total, {target}) => total + target.history.totalCount, 0)
 
-    return heads
+    const commits = heads
       .map(({ name, target }) =>
         target.history.nodes
           .map(
@@ -281,7 +287,17 @@ module.exports = {
       )
       .filter((v, i, arr) => arr.map(mapObj => mapObj.id).indexOf(v.id) === i)
       .sort((a, b) => descending(a.date, b.date))
-      .slice(0, maxCommits)
+      .slice(0, first)
+
+    return {
+      pageInfo: {
+        endCursor: (commits.length && commits.slice(-1)[0].date) || null,
+        startCursor: (commits.length && commits[0].date) || null,
+        hasNextPage
+      },
+      totalCount,
+      nodes: commits
+    }
   },
   getAnnotatedTags: async (repoId, first = 100) => {
     const { githubApolloFetch } = await createGithubClients()
