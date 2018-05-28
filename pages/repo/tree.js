@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { css } from 'glamor'
 import { compose } from 'redux'
 import { gql, graphql } from 'react-apollo'
 
@@ -9,11 +10,16 @@ import Loader from '../../components/Loader'
 import Tree from '../../components/Tree'
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
-import { NarrowContainer } from '@project-r/styleguide'
+import { NarrowContainer, A } from '@project-r/styleguide'
 import { getKeys as getLocalStorageKeys } from '../../lib/utils/localStorage'
 
 import CurrentPublications from '../../components/Publication/Current'
 import UncommittedChanges from '../../components/VersionControl/UncommittedChanges'
+
+const styles = {
+  loadMoreButton: css({}),
+  loadMoreContainer: css({})
+}
 
 const fragments = {
   commit: gql`
@@ -45,10 +51,14 @@ const fragments = {
 }
 
 export const query = gql`
-  query repoWithHistory($repoId: ID!) {
+  query repoWithHistory(
+    $repoId: ID!
+    $maxCommits: Int!
+    $commitsUntil: String
+  ) {
     repo(id: $repoId) {
       id
-      commits(maxCommits: 10) {
+      commits(maxCommits: $maxCommits, commitsUntil: $commitsUntil) {
         ...TreeCommit
       }
       milestones {
@@ -122,7 +132,7 @@ class EditorPage extends Component {
   }
 
   render () {
-    const { url } = this.props
+    const { url, fetchMore } = this.props
     const { loading, error, repo } = this.props.data
     const { repoId } = url.query
 
@@ -150,7 +160,7 @@ class EditorPage extends Component {
           </Frame.Header.Section>
         </Frame.Header>
         <Frame.Body raw>
-          <Loader loading={loading} error={error} render={() => (
+          <Loader loading={loading && !repo} error={error} render={() => (
             <div>
               <br />
               <NarrowContainer>
@@ -164,6 +174,12 @@ class EditorPage extends Component {
               />
             </div>
         )} />
+          <div {...styles.loadMoreContainer}>
+            <A
+              {...styles.loadMoreButton}
+              onClick={() => fetchMore()}
+            >Ältere laden</A>
+          </div>
         </Frame.Body>
       </Frame>
     )
@@ -176,9 +192,40 @@ export default compose(
   graphql(query, {
     options: ({ url }) => ({
       variables: {
-        repoId: url.query.repoId
+        repoId: url.query.repoId,
+        maxCommits: 10
       },
       fetchPolicy: 'cache-and-network'
+    }),
+    props: ({data, ownProps}) => ({
+      data,
+      fetchMore: () => {
+        return data.fetchMore({
+          variables: {
+            repoId: data.repo.id,
+            maxCommits: 20,
+            commitsUntil: (
+            data.repo.commits && data.repo.commits.length &&
+            data.repo.commits.slice(-1)[0].date
+          ) || null
+          },
+          updateQuery: (previousResult, { fetchMoreResult }) => {
+            return {
+              repo: {
+                ...previousResult.repo,
+                ...fetchMoreResult.repo,
+                commits: [
+                  ...previousResult.repo.commits,
+                  ...fetchMoreResult.repo.commits
+                ].filter(({id}, i, all) =>
+                // deduplicate by id
+                i === all.findIndex(repo => repo.id === id)
+              )
+              }
+            }
+          }
+        })
+      }
     })
   })
 )(EditorPage)
