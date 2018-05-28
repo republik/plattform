@@ -48,7 +48,6 @@ const { lib: {
 const uniq = require('lodash/uniq')
 
 const elastic = require('@orbiting/backend-modules-base/lib/elastic').client()
-const mdastToString = require('mdast-util-to-string')
 const { purgeUrls } = require('@orbiting/backend-modules-keyCDN')
 
 const {
@@ -333,23 +332,26 @@ module.exports = async (
       console.error(err)
     })
 
-  // cache in elastic
-  await elastic.create({
-    index: 'documents',
-    type: 'document',
-    id: doc.id,
-    body: {
-      repoId: doc.repoId,
-      content: doc.content,
-      contentString: mdastToString(doc.content),
-      meta: {
-        ...doc.content.meta,
-        repoId: doc.repoId,
-        ...scheduledAt
-          ? { scheduledAt }
-          : { }
-      }
+  const {
+    lib: {
+      utils: { getIndexAlias },
+      Documents: { getElasticDoc }
     }
+  } = require('@orbiting/backend-modules-search')
+
+  // cache in elastic
+  const indexType = 'Document'
+  const indexName = indexType.toLowerCase()
+  const writeAlias = getIndexAlias(indexName, 'write')
+  await elastic.index({
+    ...getElasticDoc({
+      repoId,
+      doc,
+      versionNumber,
+      prepublication,
+      indexName: writeAlias,
+      indexType
+    })
   })
 
   // release for nice view on github

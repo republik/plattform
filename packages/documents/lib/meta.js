@@ -1,6 +1,7 @@
 const visit = require('unist-util-visit')
 const { metaFieldResolver } = require('./resolve')
 
+// TODO rename: getContentRelatedMeta
 const getStaticMeta = doc => {
   let credits = []
   visit(doc.content, 'zone', node => {
@@ -33,6 +34,7 @@ const getStaticMeta = doc => {
   }
 }
 
+// TODO rename: getResolvedMeta
 const getMeta = doc => {
   if (doc._meta) {
     return doc._meta

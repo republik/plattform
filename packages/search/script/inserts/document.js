@@ -1,9 +1,7 @@
 const redis = require('@orbiting/backend-modules-base/lib/redis')
-const mdastToString = require('mdast-util-to-string')
+const _ = require('lodash')
 
-const {
-  lib: { meta: { getStaticMeta } }
-} = require('@orbiting/backend-modules-documents')
+// TODO require from servers is not the idea in packages
 const getRepos = require('../../../../servers/publikator/graphql/resolvers/_queries/repos')
 const {
   latestPublications: getLatestPublications,
@@ -11,15 +9,12 @@ const {
 } = require('../../../../servers/publikator/graphql/resolvers/Repo')
 const { document: getDocument } = require('../../../../servers/publikator/graphql/resolvers/Commit')
 const { prepareMetaForPublish } = require('../../../../servers/publikator/lib/Document')
+const { publicationVersionRegex } = require('../../../../servers/publikator/lib/github')
 const { lib: {
   Repo: { uploadImages }
 } } = require('@orbiting/backend-modules-assets')
 
-const { mdastFilter } = require('../../lib/utils.js')
-
-const _ = require('lodash')
-
-const uuid = require('uuid/v4')
+const { getElasticDoc } = require('../../lib/Documents')
 
 const {
   AWS_ACCESS_KEY_ID,
@@ -85,48 +80,6 @@ const after = async ({indexName, type: indexType, elastic, pgdb}) => {
   }))
 }
 
-const sanitizeCommitDoc = (d, indexType = 'Document') => {
-  const meta = {
-    ...d.content.meta,
-    ...getStaticMeta(d)
-  }
-  const seriesMaster = typeof meta.series === 'string'
-    ? meta.series
-    : null
-  const series = typeof meta.series === 'object'
-    ? meta.series
-    : null
-  if (series) {
-    series.episodes.forEach(e => {
-      if (e.publishDate === '') {
-        e.publishDate = null
-      }
-    })
-  }
-
-  return {
-    id: d.id, // Buffer.from(`repo:${repoId}:${commitId}`).toString('base64')
-    __type: indexType,
-    __sort: {
-      date: meta.publishDate
-    },
-
-    content: d.content,
-    contentString: mdastToString(
-      mdastFilter(
-        d.content,
-        node => node.type === 'code'
-      )
-    ),
-    meta: {
-      ...meta,
-      repoId: d.repoId,
-      series,
-      seriesMaster
-    }
-  }
-}
-
 const iterateRepos = async (context, callback) => {
   let pageInfo
   let pageCounter = 1
@@ -188,10 +141,8 @@ module.exports = {
       */
       stats[indexType].total += publications.length
       for (let publication of publications) {
-        const { commit, meta: { scheduledAt: _scheduledAt } } = publication
-        const scheduledAt = _scheduledAt && _scheduledAt > now
-          ? _scheduledAt
-          : null
+        const { commit, meta: { scheduledAt }, refName, name } = publication
+        const prepublication = refName.indexOf('prepublication') > -1
 
         const doc = await getDocument(
           { id: commit.id, repo },
@@ -215,15 +166,19 @@ module.exports = {
         )
 
         // TODO how to indicate publication type?
-        doc.content.meta.prepublication = publication.name.indexOf('prepublication') > -1
+        // doc.content.meta.prepublication = publication.name.indexOf('prepublication') > -1
+        const versionNumber = parseInt(publicationVersionRegex.exec(name)[1])
+        console.log(publication, { meta: doc.content.meta })
 
-        await elastic.create({
-          id: uuid(),
-          index: indexName,
-          type: indexType,
-          body: {
-            ...sanitizeCommitDoc(doc, indexType)
-          }
+        await elastic.index({
+          ...getElasticDoc({
+            repoId: repo.id,
+            doc,
+            versionNumber,
+            prepublication,
+            indexName,
+            indexType
+          })
         })
         stats[indexType].added++
       }

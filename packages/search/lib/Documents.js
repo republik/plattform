@@ -68,6 +68,75 @@ const schema = {
   }
 }
 
+const {
+  lib: { meta: { getStaticMeta } }
+} = require('@orbiting/backend-modules-documents')
+const mdastToString = require('mdast-util-to-string')
+const { mdastFilter } = require('./utils.js')
+
+const getElasticDoc = ({repoId, doc, versionNumber, prepublication, indexName, indexType}) => {
+  const publicationType = prepublication
+    ? 'prepublication'
+    : 'publication'
+  const scheduledAt = doc.content.meta.scheduledAt
+    ? `/${doc.content.meta.scheduledAt.toISOString()}`
+    : ''
+
+  return {
+    id: `${repoId}/${publicationType}${scheduledAt}`,
+    index: indexName,
+    type: indexType,
+    version_type: 'external',
+    version: versionNumber,
+    body: {
+      ...sanitizeCommitDocument(doc, indexType)
+    }
+  }
+}
+
+const sanitizeCommitDocument = (doc, indexType = 'Document') => {
+  const meta = {
+    ...doc.content.meta,
+    ...getStaticMeta(doc)
+  }
+  const seriesMaster = typeof meta.series === 'string'
+    ? meta.series
+    : null
+  const series = typeof meta.series === 'object'
+    ? meta.series
+    : null
+  if (series) {
+    series.episodes.forEach(e => {
+      if (e.publishDate === '') {
+        e.publishDate = null
+      }
+    })
+  }
+
+  return {
+    // id: doc.id, // Buffer.from(`repo:${repoId}:${commitId}`).toString('base64')
+    __type: indexType,
+    __sort: {
+      date: meta.publishDate
+    },
+
+    content: doc.content,
+    contentString: mdastToString(
+      mdastFilter(
+        doc.content,
+        node => node.type === 'code'
+      )
+    ),
+    meta: {
+      ...meta,
+      repoId: doc.repoId,
+      series,
+      seriesMaster
+    }
+  }
+}
+
 module.exports = {
-  schema
+  schema,
+  getElasticDoc
 }
