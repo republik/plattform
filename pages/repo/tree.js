@@ -10,15 +10,29 @@ import Loader from '../../components/Loader'
 import Tree from '../../components/Tree'
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
-import { NarrowContainer, A } from '@project-r/styleguide'
+import { NarrowContainer, A, InlineSpinner } from '@project-r/styleguide'
 import { getKeys as getLocalStorageKeys } from '../../lib/utils/localStorage'
 
 import CurrentPublications from '../../components/Publication/Current'
 import UncommittedChanges from '../../components/VersionControl/UncommittedChanges'
 
 const styles = {
-  loadMoreButton: css({}),
-  loadMoreContainer: css({})
+  loadMoreButton: css({
+    cursor: 'pointer'
+  }),
+  loadMoreContainer: css({
+    positon: 'relative',
+    height: '80px',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
+  }),
+  loadMore: css({
+    display: 'flex',
+    width: '100%',
+    flexDirection: 'column',
+    alignItems: 'center'
+  })
 }
 
 const fragments = {
@@ -175,10 +189,14 @@ class EditorPage extends Component {
             </div>
         )} />
           <div {...styles.loadMoreContainer}>
-            <A
-              {...styles.loadMoreButton}
-              onClick={() => fetchMore()}
-            >Ältere laden</A>
+            <div {...styles.loadMore}>
+              {loading && <InlineSpinner size={60} />}
+              {!loading && <A
+                {...styles.loadMoreButton}
+                onClick={() => fetchMore()}
+              >Ältere laden</A>
+            }
+            </div>
           </div>
         </Frame.Body>
       </Frame>
