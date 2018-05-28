@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
-import { Link } from '../../lib/routes'
 import { css } from 'glamor'
 import LocalIcon from 'react-icons/lib/md/lock-open'
 import CheckIcon from 'react-icons/lib/md/check'
 import TagIcon from 'react-icons/lib/md/grade'
-import { transformData } from './transformData'
+import { Interaction, Label } from '@project-r/styleguide'
+import { lab } from 'd3-color'
+import { Link } from '../../lib/routes'
 import withT from '../../lib/withT'
 import { swissTime } from '../../lib/utils/format'
-import { Interaction, Label } from '@project-r/styleguide'
+import { transformData } from './transformData'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
@@ -89,6 +90,7 @@ const styles = {
 class Tree extends Component {
   constructor (props) {
     super(props)
+    this.colors = new Map()
     this.state = {
       commits: null,
       links: null,
@@ -154,6 +156,23 @@ class Tree extends Component {
     if (slotWidth !== this.state.slotWidth) {
       this.setState({ slotWidth })
     }
+  }
+
+  getColor (hash) {
+    if (this.colors.has(hash)) {
+      return this.colors.get(hash)
+    }
+    const { colors } = this.state
+    const color = colors(hash)
+    let backgroundColor = lab(color)
+    backgroundColor.opacity = 0.2
+    backgroundColor = backgroundColor.toString()
+    let highlightColor = lab(color)
+    highlightColor.opacity = 0.3
+    highlightColor = highlightColor.toString()
+    const res = { color, backgroundColor, highlightColor }
+    this.colors.set(hash, res)
+    return res
   }
 
   layout () {
@@ -243,6 +262,7 @@ class Tree extends Component {
         {commits &&
           <ul {...styles.list}>
             {commits.map(commit => {
+              const colors = this.getColor(commit.author.email)
               const hasLocalVersion = localStorageCommitIds
                 .indexOf(commit.id) !== -1
               const hightlight = hasLocalVersion || commit.milestones.length
@@ -251,7 +271,7 @@ class Tree extends Component {
                 ref={commit.setListItemRef}
                 style={{
                   backgroundColor: hightlight
-                    ? commit.highlightColor
+                    ? colors.highlightColor
                     : undefined,
                   paddingLeft
                 }}
@@ -260,7 +280,7 @@ class Tree extends Component {
                 <div style={{
                   padding: 5,
                   backgroundColor: !hightlight
-                    ? commit.backgroundColor
+                    ? colors.backgroundColor
                     : undefined
                 }}>
                   <Interaction.P>
@@ -331,12 +351,13 @@ class Tree extends Component {
 
         {width &&
           commits &&
-          commits.map(commit =>
-            <span
+          commits.map(commit => {
+            const colors = this.getColor(commit.author.email)
+            return <span
               key={commit.id}
               ref={commit.setNodeRef}
               style={{
-                backgroundColor: commit.color
+                backgroundColor: colors.color
               }}
               {...styles.commitNode}
             >
@@ -350,7 +371,7 @@ class Tree extends Component {
                 <a {...css(styles.nodeLink)} />
               </Link>
             </span>
-          )}
+          })}
       </div>
     )
   }
