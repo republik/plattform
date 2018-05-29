@@ -76,6 +76,10 @@ const filterReducer = (schema) => (filters) =>
 
       const filterValue = schemaEntry.parser ? schemaEntry.parser(value) : value
 
+      if (filterValue === undefined) {
+        return filterObj
+      }
+
       if (!filterValue) {
         not = true
       }
