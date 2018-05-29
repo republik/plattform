@@ -44,11 +44,11 @@ const deepMergeArrays = function (objValue, srcValue) {
   }
 }
 
-const createShould = function (searchTerm, searchFilter) {
+const createShould = function (searchTerm, searchFilter, indicesList) {
   const queries = []
 
   // A query for each ES index
-  indices.list.forEach(({ index, search }) => {
+  indicesList.forEach(({ index, search }) => {
     let must = {
       match_all: {}
     }
@@ -96,11 +96,11 @@ const createShould = function (searchTerm, searchFilter) {
   return queries
 }
 
-const createHighlight = () => {
+const createHighlight = (indicesList) => {
   const fields = {}
 
   // A query for each ES index
-  indices.list.forEach(({ search }) => {
+  indicesList.forEach(({ search }) => {
     Object.keys(search.termFields).forEach((field) => {
       if (search.termFields[field].highlight) {
         fields[field] = search.termFields[field].highlight
@@ -111,14 +111,14 @@ const createHighlight = () => {
   return { fields }
 }
 
-const createQuery = (searchTerm, filter, sort) => ({
+const createQuery = (searchTerm, filter, sort, indicesList) => ({
   query: {
     bool: {
-      should: createShould(searchTerm, filter)
+      should: createShould(searchTerm, filter, indicesList)
     }
   },
   sort: createSort(sort),
-  highlight: createHighlight(),
+  highlight: createHighlight(indicesList),
   aggs: extractAggs(documentSchema)
 })
 
@@ -216,6 +216,22 @@ const getFirst = (first, filter, user) => {
   return first
 }
 
+const getIndicesList = (filter) => {
+  let limitType
+  filter && Object.keys(filter)
+    .forEach(fKey => {
+      const filterEntry = filter[fKey]
+      if (filterEntry.key === 'type') {
+        limitType = filterEntry.value
+      }
+    })
+  const indicesFilter = limitType
+    ? ({type}) => type === limitType
+    : Boolean
+
+  return indices.list.filter(indicesFilter)
+}
+
 module.exports = async (
   __,
   args,
@@ -259,11 +275,12 @@ module.exports = async (
 
   const first = getFirst(_first, filter, user)
 
+  const indicesList = getIndicesList(filter)
   const query = {
-    index: indices.list.map(({ name }) => getIndexAlias(name, 'read')),
+    index: indicesList.map(({ name }) => getIndexAlias(name, 'read')),
     from,
     size: first,
-    body: createQuery(search, filter, sort)
+    body: createQuery(search, filter, sort, indicesList)
   }
 
   debug('ES query', JSON.stringify(query))
@@ -307,14 +324,14 @@ module.exports = async (
         .nodes
         .map(node => _.omit(node, ['entity.content', 'entity.contentString']))
         .map(node =>
-            _.get(node, 'entity._raw.__type') === 'User'
-              ? _.omit(node, ['entity._raw'])
-              : node
+          _.get(node, 'entity._raw.__type') === 'User'
+            ? _.omit(node, ['entity._raw'])
+            : node
         )
         .map(node =>
-            _.get(node, 'entity.__type') === 'Comment'
-              ? _.omit(node, ['entity.votes'])
-              : node
+          _.get(node, 'entity.__type') === 'Comment'
+            ? _.omit(node, ['entity.votes'])
+            : node
         )
 
       await elastic.index({
