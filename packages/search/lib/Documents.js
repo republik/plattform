@@ -25,16 +25,12 @@ const schema = {
   format: termEntry('meta.format'),
   template: termEntry('meta.template'),
   repoId: termEntry('meta.repoId'),
+  path: termEntry('meta.path.keyword'),
   seriesMaster: termEntry('meta.seriesMaster'),
   userId: {
     ...termEntry('meta.credits.url'),
     parser: (value) => `/~${value}`
   },
-  // path: {
-  //  fieldPath: 'meta.path',
-  //  criteriaBuilder: termCriteriaBuilder,
-  //  aggBuilder: termAggBuilder
-  // },
   publishedAt: {
     criteria: dateRangeCriteriaBuilder('meta.publishDate'),
     parser: (value) => {
