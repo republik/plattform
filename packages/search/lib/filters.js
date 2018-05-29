@@ -1,10 +1,13 @@
 const debug = require('debug')('search:lib:filters')
 const crypto = require('crypto')
+const _ = require('lodash')
 
 const termCriteriaBuilder = (fieldName) => (value, options) => ({
   clause: options && options.not ? 'must_not' : 'must',
   filter: {
-    term: { [fieldName]: value }
+    ..._.isArray(value)
+      ? { terms: { [fieldName]: value } }
+      : { term: { [fieldName]: value } }
   }
 })
 
