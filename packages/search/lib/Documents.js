@@ -1,6 +1,7 @@
 const {
   termEntry,
-  countEntry
+  countEntry,
+  dateRangeParser
 } = require('./schema')
 
 const {
@@ -19,10 +20,42 @@ const SHORT_DURATION_MINS = 5
 const MIDDLE_DURATION_MINS = 15
 const LONG_DURATION_MINS = 30
 
+const getDocumentId = ({repoId, commitId, versionName}) =>
+  Buffer.from(`${repoId}/${commitId}/${versionName}`).toString('base64')
+
+const getRepoIdFromDocumentId = id => {
+  const repoIdRegex = new RegExp(/^(.+?\/.+?)(\/.*)?$/g)
+  const matches = repoIdRegex.exec(Buffer.from(id, 'base64').toString('utf8'))
+  return matches && matches[1]
+}
+
+const documentIdParser = value => {
+  const parsedRepoId = getRepoIdFromDocumentId(value)
+  const githubUrl = 'https://github.com'
+  if (parsedRepoId) {
+    return [
+      `${githubUrl}/${parsedRepoId}`,
+      parsedRepoId,
+      value
+    ]
+  } else {
+    return [
+      `${githubUrl}/${value}`,
+      value
+    ]
+  }
+}
+
 const schema = {
   type: termEntry('__type'),
-  dossier: termEntry('meta.dossier'),
-  format: termEntry('meta.format'),
+  dossier: {
+    ...termEntry('meta.dossier'),
+    parser: documentIdParser
+  },
+  format: {
+    ...termEntry('meta.format'),
+    parser: documentIdParser
+  },
   template: termEntry('meta.template'),
   repoId: termEntry('meta.repoId'),
   path: termEntry('meta.path.keyword'),
@@ -33,13 +66,11 @@ const schema = {
   },
   publishedAt: {
     criteria: dateRangeCriteriaBuilder('meta.publishDate'),
-    parser: (value) => {
-      const [from, to] = value.split(',')
-      return {
-        from: new Date(from),
-        to: new Date(to)
-      }
-    }
+    parser: dateRangeParser
+  },
+  scheduledAt: {
+    criteria: dateRangeCriteriaBuilder('meta.scheduledAt'),
+    parser: dateRangeParser
   },
   discussion: countEntry('meta.discussion'),
   feed: countEntry('meta.feed'),
@@ -66,12 +97,12 @@ const schema = {
 
 const mdastToString = require('mdast-util-to-string')
 const { mdastFilter } = require('./utils.js')
-const uuid = require('uuid/v4')
 
-const getElasticDoc = ({ indexName, indexType, doc }) => {
+const getElasticDoc = ({ indexName, indexType, doc, commitId, versionName }) => {
   const meta = doc.content.meta
+  const id = getDocumentId({repoId: meta.repoId, commitId, versionName})
   return {
-    id: `${meta.repoId}/${uuid()}`,
+    id,
     index: indexName,
     type: indexType,
     body: {
@@ -79,7 +110,8 @@ const getElasticDoc = ({ indexName, indexType, doc }) => {
       __sort: {
         date: meta.publishDate
       },
-      id: doc.id, // is: Buffer.from(`repo:${repoId}:${commitId}`).toString('base64')
+      id,
+      // repoId, is in meta now
       meta,
       content: doc.content,
       contentString: mdastToString(
@@ -94,5 +126,6 @@ const getElasticDoc = ({ indexName, indexType, doc }) => {
 
 module.exports = {
   schema,
-  getElasticDoc
+  getElasticDoc,
+  getRepoIdFromDocumentId
 }

@@ -107,6 +107,7 @@ const prepareMetaForPublish = async ({
   // transform docMeta
   return {
     ...docMeta,
+    feed: docMeta.feed || (docMeta.feed === undefined && docMeta.template === 'article'),
     repoId,
     path,
     publishDate,

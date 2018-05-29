@@ -25,8 +25,8 @@ const dateRangeCriteriaBuilder = (fieldName) => (range, options) => ({
   filter: {
     range: {
       [fieldName]: {
-        gte: range.from,
-        lte: range.to
+        ...range.from ? { gte: range.from } : {},
+        ...range.to ? { lte: range.to } : {}
       }
     }
   }

@@ -140,7 +140,7 @@ module.exports = {
       */
       stats[indexType].total += publications.length
       for (let publication of publications) {
-        const { commit, meta: { scheduledAt }, refName } = publication
+        const { commit, meta: { scheduledAt }, refName, name: versionName } = publication
         const prepublication = refName.indexOf('prepublication') > -1
 
         const doc = await getDocument(
@@ -165,13 +165,13 @@ module.exports = {
           context
         })
 
-        console.log(publication, { meta: doc.content.meta })
-
         await elastic.index({
           ...getElasticDoc({
             indexName,
             indexType,
-            doc
+            doc,
+            commitId: commit.id,
+            versionName
           })
         })
         stats[indexType].added++

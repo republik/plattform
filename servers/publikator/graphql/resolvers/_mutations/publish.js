@@ -352,7 +352,9 @@ module.exports = async (
     ...getElasticDoc({
       indexName: writeAlias,
       indexType,
-      doc
+      doc,
+      commitId,
+      versionName
     })
   })
 

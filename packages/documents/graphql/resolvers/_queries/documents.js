@@ -8,23 +8,27 @@ const {
     userIsInRoles
   }
 } = require('@orbiting/backend-modules-auth')
+const search = require('@orbiting/backend-modules-search/graphql/resolvers/_queries/search')
 
 const {
   getMeta
 } = require('../../../lib/meta')
 const {
-  extractUserUrl
+  extractUserUrl,
+  getRepoId
 } = require('../../../lib/resolve')
 
 const {
   DOCUMENTS_RESTRICT_TO_ROLES
 } = process.env
 
-module.exports = async (_, args, { user, redis, pgdb }) => {
+module.exports = async (_, args, context) => {
+  const { user, redis, pgdb } = context
   const ref = userHasRole(user, 'editor')
     ? 'prepublication'
     : 'publication'
 
+  /*
   const {
     feed,
     userId,
@@ -75,22 +79,33 @@ module.exports = async (_, args, { user, redis, pgdb }) => {
       }
     })
   )
-
-  const allDocuments = docs.filter(Boolean)
-  const userIds = []
-  allDocuments.forEach(doc => {
-    visit(doc.content, 'link', node => {
-      const info = extractUserUrl(node.url)
-      if (info) {
-        node.url = info.path
-        if(isUUID.v4(info.id)) {
-          userIds.push(info.id)
-        } else {
-          debug('documents found nonUUID %s in repo %s', info.id, doc.repoId)
-        }
-      }
+  const docs = await search(null, {
+    filter: {
+      type: 'Document'
+    },
+  }, context)
+    .then( result => {
+      return [...result.nodes.map(node => node.entity)]
     })
-  })
+  */
+
+  const getDocsForConnection = (connection) =>
+    [...connection.nodes.map(node => node.entity)]
+
+  const docsConnection = await search(null, {
+    filter: {
+      ...args,
+      type: 'Document'
+    },
+    sort: {
+      key: 'publishedAt',
+      direction: 'DESC'
+    }
+  }, context)
+  const docs = getDocsForConnection(docsConnection)
+
+  // extract and load users
+  const userIds = []
   const usernames = userIds.length
     ? await pgdb.public.users.find(
       {
@@ -103,30 +118,81 @@ module.exports = async (_, args, { user, redis, pgdb }) => {
       }
     )
     : []
-  allDocuments.forEach(doc => {
+
+  // extract related repoIds (from content and meta) and load
+  const repoIds = []
+  docs.forEach(doc => {
+    // content
+    visit(doc.content, 'link', node => {
+      const info = extractUserUrl(node.url)
+      if (info) {
+        node.url = info.path
+        if (isUUID.v4(info.id)) {
+          userIds.push(info.id)
+        } else {
+          debug('documents found nonUUID %s in repo %s', info.id, doc.repoId)
+        }
+      }
+      const repoId = getRepoId(node.url, 'autoSlug')
+      if (repoId) {
+        repoIds.push(repoId)
+      }
+    })
+    // meta
+    const meta = doc.content.meta
+    // TODO get keys from packages/documents/lib/resolve.js
+    repoIds.push(meta.dossier)
+    repoIds.push(meta.format)
+    repoIds.push(meta.discussion)
+    if (meta.series) {
+      if (typeof meta.series === 'string') {
+        repoIds.push(meta.series)
+      } else {
+        meta.series.episodes && meta.series.episodes.forEach(episode => {
+          repoIds.push(episode.document)
+        })
+      }
+    }
+  })
+  // some repoIds are prefixed, some not 🤯
+  // this could go to prepareMetaForPublish
+  const sanitizedRepoIds = repoIds
+    .filter(Boolean)
+    .map(repoId => repoId.replace('https://github.com/', ''))
+  const relatedDocs = await search(null, {
+    filter: {
+      repoId: sanitizedRepoIds,
+      type: 'Document'
+    }
+  }, context)
+    .then(getDocsForConnection)
+
+  console.log({
+    numDocs: docs.length,
+    numUserIds: userIds.length,
+    numRepoIds: repoIds.length,
+    numRelatedDocs: relatedDocs.length
+  })
+
+  docs.forEach(doc => {
     // expose all documents to each document
     // for link resolving in lib/resolve
     // - including the usernames
-    doc._all = allDocuments
+    doc._all = [
+      ...relatedDocs,
+      ...docs
+    ]
     doc._usernames = usernames
   })
 
+  // transform SearchConnection to DocumentConnection
+  return {
+    ...docsConnection,
+    nodes: docs
+  }
+
+  /*
   let documents = allDocuments
-  if (feed) {
-    documents = documents.filter(d => (
-      d.content.meta.feed ||
-      (d.content.meta.feed === undefined && d.content.meta.template === 'article')
-    ))
-  }
-  if (userId) {
-    documents = documents.filter(d => {
-      const userIds = (getMeta(d).credits || [])
-        .filter(c => c.type === 'link')
-        .map(c => c.url.split('~')[1])
-        .filter(Boolean)
-      return userIds.includes(userId)
-    })
-  }
   if (dossierId) {
     documents = documents.filter(d => {
       const dossier = getMeta(d).dossier
@@ -209,4 +275,5 @@ module.exports = async (_, args, { user, redis, pgdb }) => {
         : undefined
     }
   }
+  */
 }

@@ -17,6 +17,16 @@ const boolParser = (value) => {
   return value == true
 }
 
+const dateRangeParser = (value) => {
+  const [from, to] = value.indexOf(',') > -1
+    ? value.split(',')
+    : [undefined, value]
+  return {
+    from: from && new Date(from),
+    to: to && new Date(to)
+  }
+}
+
 const createEntry = (criteriaBuilder, aggBuilder, additionals) => (fieldPath) => ({
   criteria: criteriaBuilder(fieldPath),
   agg: aggBuilder(fieldPath),
@@ -29,5 +39,7 @@ const countEntry = createEntry(hasCriteriaBuilder, valueCountAggBuilder, { parse
 module.exports = {
   createEntry,
   termEntry,
-  countEntry
+  countEntry,
+  boolParser,
+  dateRangeParser
 }

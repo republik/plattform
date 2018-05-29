@@ -83,7 +83,7 @@ const createShould = function (searchTerm, searchFilter, indicesList) {
       deepMergeArrays
     )
 
-    debug('filter', JSON.stringify(filter))
+    debug('filter', JSON.stringify(filter, null, 2))
 
     queries.push({
       bool: {
