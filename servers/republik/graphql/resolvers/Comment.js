@@ -16,6 +16,52 @@ const textForComment = ({ userId, content, published, adminUnpublished }, user) 
     ? null
     : content
 
+/**
+ * @typedef {Object} Preview
+ * @property {String}  string Preview string
+ * @property {Boolean} more   If transformUser string was shortened
+ * @property {Boolean} done   If true, char limit (<length>) has was reached
+ */
+
+/**
+ * Stringifies an mdast tree into a single, plain string in a human readable
+ * manner.
+ *
+ * @param  {Object}  node         mdast Object
+ * @param  {Number}  [length=500] Maximum chars string should contain
+ * @param  {String}  [string='']  Initial string
+ * @param  {Boolean} [done=false] If true, char limit (<length>) has was reached
+ * @return {Preview}
+ */
+const mdastToHumanString = (node, length = 500, string = '', done = false) => {
+  if (node.children) {
+    node.children.forEach(child => {
+      if (!done && child.value) {
+        const parts = child.value.split(/\s/)
+
+        parts.forEach(part => {
+          if (string.length + part.length <= length) {
+            string += part.trim() + ' '
+          } else {
+            done = true
+          }
+        })
+      }
+
+      if (!done && child.children && string.length <= length) {
+        const result = mdastToHumanString(child, length, string, done)
+        string = result.string + ' '
+        done = result.done
+      }
+    })
+  }
+
+  // Sanitize string to make it human readable
+  string = string.replace(/\s([.,])/g, '$1').replace(/\s\s/g, ' ').trim()
+
+  return { string, more: !!done, done }
+}
+
 module.exports = {
   discussion: ({ discussionId }, args, { pgdb }) =>
     pgdb.public.discussions.findOne({ id: discussionId }),
@@ -38,6 +84,17 @@ module.exports = {
 
   text: (comment, args, { user }) =>
     textForComment(comment, user),
+
+  preview: (comment, { length = 500 }, context) => {
+    const text = textForComment(comment, context && context.user)
+    if (!text) {
+      return {
+        string: text,
+        more: false
+      }
+    }
+    return mdastToHumanString(remark.parse(text), length)
+  },
 
   score: comment =>
     comment.upVotes - comment.downVotes,
