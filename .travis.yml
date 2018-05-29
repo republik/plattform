@@ -1,6 +1,4 @@
 language: node_js
-node_js:
-  - '10.2.1'
 cache:
   directories:
     - node_modules
@@ -10,6 +8,7 @@ notifications:
 addons:
   postgresql: "9.6"
 services:
+  - elasticsearch
   - postgresql
   - redis-server
 branches:
@@ -47,5 +46,10 @@ env:
 before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.7.0
   - export PATH=$HOME/.yarn/bin:$PATH
+before_script:
+  # ElasticSearch takes few seconds to start, to make sure it is available
+  # when the build script runs add a small delay to your build script
+  # see https://docs.travis-ci.com/user/database-setup/#ElasticSearch
+  - sleep 10
 script:
   - cd $TEST_DIR && yarn run test:travis
