@@ -13,7 +13,7 @@ const cluster = require('cluster')
 
 const {
   LOCAL_ASSETS_SERVER,
-  NOTIFY_LISTENER = false
+  SEARCH_PG_NOTIFY_LISTENER = false
 } = process.env
 
 const start = async () => {
@@ -70,7 +70,7 @@ const runOnce = (...args) => {
   server.runOnce(...args)
   require('./lib/slackGreeter').connect()
 
-  if (NOTIFY_LISTENER) {
+  if (SEARCH_PG_NOTIFY_LISTENER) {
     require('@orbiting/backend-modules-search').notifyListener.run()
   }
 }
