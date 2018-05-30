@@ -14,6 +14,26 @@ const valueCountAggBuilder = (fieldPath) => (key) => ({
   }
 })
 
+const trueCountAggBuilder = (fieldPath) => (key) => ({
+  [key]: {
+    filter: {
+      term: {
+        [fieldPath]: true
+      }
+    }
+  }
+})
+
+const existsCountAggBuilder = (fieldPath) => (key) => ({
+  [key]: {
+    filter: {
+      exists: {
+        field: fieldPath
+      }
+    }
+  }
+})
+
 const rangeAggBuilder = (fieldPath) => (key, { ranges }) => ({
   [key]: {
     range: {
@@ -41,6 +61,8 @@ const extractAggs = (schema) =>
 module.exports = {
   termAggBuilder,
   valueCountAggBuilder,
+  trueCountAggBuilder,
+  existsCountAggBuilder,
   rangeAggBuilder,
   extractAggs
 }

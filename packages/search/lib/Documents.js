@@ -7,7 +7,8 @@ const {
 
 const {
   rangeAggBuilder,
-  valueCountAggBuilder
+  valueCountAggBuilder,
+  existsCountAggBuilder
 } = require('./aggregations')
 
 const {
@@ -88,7 +89,7 @@ const schema = {
   },
   audioSource: {
     criteria: hasCriteriaBuilder('meta.audioSource'),
-    agg: valueCountAggBuilder('meta.audioSource')
+    agg: existsCountAggBuilder('meta.audioSource')
   },
   hasAudio: countEntry('meta.hasAudio'),
   hasVideo: countEntry('meta.hasVideo'),

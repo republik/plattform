@@ -160,6 +160,19 @@ const mapAggregations = (result, t) => {
         count: agg.value
       }
     }
+
+    if (!agg.buckets) { // filter agg
+      return {
+        key,
+        label: t(
+          `api/search/aggs/${key}`,
+          { key },
+          !DEV ? key : undefined
+        ),
+        count: agg.doc_count
+      }
+    }
+
     // terms agg
     return {
       key,
@@ -232,7 +245,6 @@ const getIndicesList = (filter) => {
 
   return indices.list.filter(indicesFilter)
 }
-
 
 const search = async (__, args, context) => {
   const { user, elastic, t } = context
@@ -315,7 +327,7 @@ const search = async (__, args, context) => {
   if (!skipLoadRelatedDocs && (!filter.type || filter.type === 'Document')) {
     await addRelatedDocs({
       connection: response,
-      context,
+      context
     })
   }
 

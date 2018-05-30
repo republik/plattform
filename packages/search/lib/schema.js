@@ -4,7 +4,7 @@ const {
 
 const {
   termAggBuilder,
-  valueCountAggBuilder
+  trueCountAggBuilder
 } = require('./aggregations')
 
 const boolParser = (value) => {
@@ -33,7 +33,7 @@ const createEntry = (criteriaBuilder, aggBuilder, additionals) => (fieldPath) =>
 })
 
 const termEntry = createEntry(termCriteriaBuilder, termAggBuilder)
-const countEntry = createEntry(termCriteriaBuilder, valueCountAggBuilder, { parser: boolParser })
+const countEntry = createEntry(termCriteriaBuilder, trueCountAggBuilder, { parser: boolParser })
 
 module.exports = {
   createEntry,
