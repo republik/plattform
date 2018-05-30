@@ -98,18 +98,6 @@ const prepareMetaForPublish = async ({
       } else {
         hasVideo = true
       }
-      /*
-      const payload = node.children
-        .find(child => child.type === 'code')
-      try {
-        const parsedPayload = JSON.parse(payload)
-        if (parsedPayload.forceAudio) {
-          hasAudio = true
-        } else {
-          hasVideo = true
-        }
-      } catch { }
-      */
     }
   })
 
