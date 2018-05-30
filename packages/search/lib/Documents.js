@@ -59,7 +59,6 @@ const schema = {
   template: termEntry('meta.template'),
   repoId: termEntry('meta.repoId'),
   path: termEntry('meta.path.keyword'),
-  seriesMaster: termEntry('meta.seriesMaster'),
   userId: {
     ...termEntry('meta.credits.url'),
     parser: (value) => `/~${value}`
@@ -74,7 +73,10 @@ const schema = {
   },
   discussion: countEntry('meta.discussion'),
   feed: countEntry('meta.feed'),
-  audio: countEntry('meta.audioSource.mp3'),
+  hasAudio: countEntry('meta.hasAudio'),
+  hasVideo: countEntry('meta.hasVideo'),
+  isSeriesMaster: countEntry('meta.isSeriesMaster'),
+  isSeriesEpisode: countEntry('meta.isSeriesEpisode'),
   textLength: {
     criteria: rangeCriteriaBuilder('contentString.count'),
     agg: rangeAggBuilder('contentString.count'),

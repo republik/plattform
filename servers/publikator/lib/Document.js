@@ -87,6 +87,32 @@ const prepareMetaForPublish = async ({
     ogg: audioSourceOgg
   } : null
 
+  // hasAudio: either audioSource or audio-only-video in content
+  // hasVideo: at least one non audio-only-video in content
+  let hasAudio = !!audioSource
+  let hasVideo = false
+  visit(doc.content, 'zone', node => {
+    if (node.data && node.identifier === 'EMBEDVIDEO') {
+      if (node.data.forceAudio) {
+        hasAudio = true
+      } else {
+        hasVideo = true
+      }
+      /*
+      const payload = node.children
+        .find(child => child.type === 'code')
+      try {
+        const parsedPayload = JSON.parse(payload)
+        if (parsedPayload.forceAudio) {
+          hasAudio = true
+        } else {
+          hasVideo = true
+        }
+      } catch { }
+      */
+    }
+  })
+
   const authors = credits
     .filter(c => c.type === 'link')
     .map(a => a.children[0].value)
@@ -119,7 +145,9 @@ const prepareMetaForPublish = async ({
     authors,
     isSeriesMaster,
     isSeriesEpisode,
-    seriesEpisodes
+    seriesEpisodes,
+    hasAudio,
+    hasVideo
   }
 }
 
