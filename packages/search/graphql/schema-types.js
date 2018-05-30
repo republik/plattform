@@ -39,6 +39,7 @@ enum DocumentTextLengths {
 }
 
 input SearchFilterInput {
+  type: SearchTypes
   feed: Boolean
   # repoId
   dossier: String
@@ -46,15 +47,14 @@ input SearchFilterInput {
   format: String
   template: String
   publishedAt: DateRangeInput
-  # check if username was supported before
   userId: ID
   author: String
 
-  seriesMaster: String
   discussion: Boolean
-  audio: Boolean
-  video: Boolean
-  type: SearchTypes
+  isSeriesMaster: Boolean
+  isSeriesEpisode: Boolean
+  hasAudio: Boolean
+  hasVideo: Boolean
   textLength: DocumentTextLengths
 }
 

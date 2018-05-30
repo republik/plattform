@@ -186,10 +186,10 @@ module.exports = {
             },
             // series <- not indexed, inconsistent types
             isSeriesMaster: {
-              type: 'keyword'
+              type: 'boolean'
             },
             isSeriesEpisode: {
-              type: 'keyword'
+              type: 'boolean'
             },
             seriesEpisodes: {
               properties: {
@@ -219,6 +219,12 @@ module.exports = {
                   ...keywordPartial
                 }
               }
+            },
+            hasAudio: {
+              type: 'boolean'
+            },
+            hasVideo: {
+              type: 'boolean'
             },
             audioSource: {
               properties: {
