@@ -220,10 +220,13 @@ const addRelatedDocs = async ({ connection, context }) => {
     )
     : []
 
+  const sanitizedRepoIds = [...new Set(repoIds.filter(Boolean))]
+
   const relatedDocs = await search(null, {
     skipLoadRelatedDocs: true,
+    first: sanitizedRepoIds.length,
     filter: {
-      repoId: [...new Set(repoIds.filter(Boolean))],
+      repoId: sanitizedRepoIds,
       type: 'Document'
     }
   }, context)
