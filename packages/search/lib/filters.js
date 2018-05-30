@@ -12,7 +12,7 @@ const termCriteriaBuilder = (fieldName) => (value, options) => ({
 })
 
 const hasCriteriaBuilder = (fieldName) => (value, options) => ({
-  clause: options && options.not ? 'must_not' : 'must',
+  clause: (options && options.not) || (!value) ? 'must_not' : 'must',
   filter: {
     exists: {
       field: fieldName
@@ -78,10 +78,6 @@ const filterReducer = (schema) => (filters) =>
 
       if (filterValue === undefined) {
         return filterObj
-      }
-
-      if (!filterValue) {
-        not = true
       }
 
       const filterData = {

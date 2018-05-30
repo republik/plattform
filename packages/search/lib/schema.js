@@ -1,5 +1,4 @@
 const {
-  hasCriteriaBuilder,
   termCriteriaBuilder
 } = require('./filters')
 
@@ -34,7 +33,7 @@ const createEntry = (criteriaBuilder, aggBuilder, additionals) => (fieldPath) =>
 })
 
 const termEntry = createEntry(termCriteriaBuilder, termAggBuilder)
-const countEntry = createEntry(hasCriteriaBuilder, valueCountAggBuilder, { parser: boolParser })
+const countEntry = createEntry(termCriteriaBuilder, valueCountAggBuilder, { parser: boolParser })
 
 module.exports = {
   createEntry,

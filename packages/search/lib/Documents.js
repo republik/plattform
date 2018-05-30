@@ -6,12 +6,15 @@ const {
 } = require('./schema')
 
 const {
-  rangeAggBuilder
+  rangeAggBuilder,
+  valueCountAggBuilder
 } = require('./aggregations')
 
 const {
   dateRangeCriteriaBuilder,
-  rangeCriteriaBuilder
+  rangeCriteriaBuilder,
+  hasCriteriaBuilder,
+  termCriteriaBuilder
 } = require('./filters')
 
 // mean German, see http://iovs.arvojournals.org/article.aspx?articleid=2166061
@@ -49,17 +52,23 @@ const documentIdParser = value => {
 
 const schema = {
   type: termEntry('__type'),
+  template: termEntry('meta.template'),
   dossier: {
-    ...termEntry('meta.dossier'),
+    criteria: termCriteriaBuilder('meta.dossier'),
+    agg: valueCountAggBuilder('meta.dossier'),
     parser: documentIdParser
   },
   format: {
-    ...termEntry('meta.format'),
+    criteria: termCriteriaBuilder('meta.format'),
+    agg: valueCountAggBuilder('meta.format'),
     parser: documentIdParser
   },
-  template: termEntry('meta.template'),
-  repoId: termEntry('meta.repoId'),
-  path: termEntry('meta.path.keyword'),
+  repoId: {
+    criteria: termCriteriaBuilder('meta.repoId')
+  },
+  path: {
+    criteria: termCriteriaBuilder('meta.path.keyword')
+  },
   userId: {
     ...termEntry('meta.credits.url'),
     parser: (value) => `/~${value}`
@@ -72,9 +81,15 @@ const schema = {
     criteria: dateRangeCriteriaBuilder('meta.scheduledAt'),
     parser: dateRangeParser
   },
-  discussion: countEntry('meta.discussion'),
   feed: countEntry('meta.feed'),
-  audioSource: countEntry('meta.audioSource'),
+  discussion: {
+    criteria: hasCriteriaBuilder('meta.discussionId'),
+    agg: valueCountAggBuilder('meta.discussionId')
+  },
+  audioSource: {
+    criteria: hasCriteriaBuilder('meta.audioSource'),
+    agg: valueCountAggBuilder('meta.audioSource')
+  },
   hasAudio: countEntry('meta.hasAudio'),
   hasVideo: countEntry('meta.hasVideo'),
   isSeriesMaster: countEntry('meta.isSeriesMaster'),
