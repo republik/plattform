@@ -1,5 +1,5 @@
 {
-  "updated": "2018-05-30T18:23:49.553Z",
+  "updated": "2018-05-30T18:52:33.801Z",
   "title": "live",
   "data": [
     {
@@ -223,12 +223,8 @@
       "value": "Bezeichnung"
     },
     {
-      "key": "api/search/aggs/hasAudio",
-      "value": "zum hören"
-    },
-    {
-      "key": "api/search/aggs/hasVideo",
-      "value": "TV"
+      "key": "api/search/aggs/audioSource",
+      "value": "vorgelesene Artikel"
     },
     {
       "key": "api/search/aggs/discussion",
@@ -247,8 +243,20 @@
       "value": "Rubriken & Kolumnen"
     },
     {
-      "key": "api/search/aggs/repoId",
-      "value": "Repository ID"
+      "key": "api/search/aggs/hasAudio",
+      "value": "zum hören"
+    },
+    {
+      "key": "api/search/aggs/hasVideo",
+      "value": "TV"
+    },
+    {
+      "key": "api/search/aggs/isSeriesEpisode",
+      "value": "Episode"
+    },
+    {
+      "key": "api/search/aggs/isSeriesMaster",
+      "value": "Serie"
     },
     {
       "key": "api/search/aggs/seriesMaster",
@@ -263,12 +271,12 @@
       "value": "Artikel"
     },
     {
-      "key": "api/search/aggs/template/dossier",
-      "value": "Dossiers"
-    },
-    {
       "key": "api/search/aggs/template/discussion",
       "value": "Debatten"
+    },
+    {
+      "key": "api/search/aggs/template/dossier",
+      "value": "Dossiers"
     },
     {
       "key": "api/search/aggs/template/editorialNewsletter",
