@@ -1,5 +1,5 @@
 {
-  "updated": "2018-05-24T20:53:22.045Z",
+  "updated": "2018-05-30T18:23:49.553Z",
   "title": "live",
   "data": [
     {
@@ -223,8 +223,12 @@
       "value": "Bezeichnung"
     },
     {
-      "key": "api/search/aggs/audio",
-      "value": "hörbar"
+      "key": "api/search/aggs/hasAudio",
+      "value": "zum hören"
+    },
+    {
+      "key": "api/search/aggs/hasVideo",
+      "value": "TV"
     },
     {
       "key": "api/search/aggs/discussion",
@@ -240,7 +244,7 @@
     },
     {
       "key": "api/search/aggs/format",
-      "value": "Formate"
+      "value": "Rubriken & Kolumnen"
     },
     {
       "key": "api/search/aggs/repoId",
@@ -259,6 +263,10 @@
       "value": "Artikel"
     },
     {
+      "key": "api/search/aggs/template/dossier",
+      "value": "Dossiers"
+    },
+    {
       "key": "api/search/aggs/template/discussion",
       "value": "Debatten"
     },
@@ -268,7 +276,7 @@
     },
     {
       "key": "api/search/aggs/template/format",
-      "value": "Rubriken"
+      "value": "Rubriken & Kolumnen"
     },
     {
       "key": "api/search/aggs/template/front",
@@ -280,11 +288,11 @@
     },
     {
       "key": "api/search/aggs/textLength/epic",
-      "value": "von epischer Länge"
+      "value": "halbes Buch"
     },
     {
       "key": "api/search/aggs/textLength/long",
-      "value": "ausführlich"
+      "value": "erfreulich lang"
     },
     {
       "key": "api/search/aggs/textLength/medium",
@@ -308,11 +316,11 @@
     },
     {
       "key": "api/search/aggs/type/User",
-      "value": "User"
+      "value": "Profile"
     },
     {
       "key": "api/search/aggs/userId",
-      "value": "User"
+      "value": "Profile"
     }
   ]
 }
