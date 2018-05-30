@@ -6,7 +6,8 @@ const {
 } = require('@orbiting/backend-modules-auth')
 
 const {
-  schema: documentSchema
+  schema: documentSchema,
+  addRelatedDocs
 } = require('../../../lib/Documents')
 const {
   filterReducer,
@@ -129,7 +130,6 @@ const mapHit = (hit) => {
     : hit._source
 
   const highlights = []
-
   Object.keys(hit.highlight || {}).forEach(path => {
     highlights.push({ path, fragments: hit.highlight[path] })
   })
@@ -137,7 +137,8 @@ const mapHit = (hit) => {
   return {
     entity,
     highlights,
-    score: hit._score
+    score: hit._score,
+    type
   }
 }
 
@@ -232,16 +233,10 @@ const getIndicesList = (filter) => {
   return indices.list.filter(indicesFilter)
 }
 
-module.exports = async (
-  __,
-  args,
-  {
-    user,
-    elastic,
-    t
-  }
-) => {
-  const { after, before } = args
+
+const search = async (__, args, context) => {
+  const { user, elastic, t } = context
+  const { after, before, skipLoadRelatedDocs = false } = args
   const options = after
     ? { ...args, ...parseOptions(after) }
     : before
@@ -279,6 +274,7 @@ module.exports = async (
   const query = {
     index: indicesList.map(({ name }) => getIndexAlias(name, 'read')),
     from,
+
     size: first,
     body: createQuery(search, filter, sort, indicesList)
   }
@@ -314,6 +310,13 @@ module.exports = async (
         })
         : null
     }
+  }
+
+  if (!skipLoadRelatedDocs && (!filter.type || filter.type === 'Document')) {
+    await addRelatedDocs({
+      connection: response,
+      context,
+    })
   }
 
   if (SEARCH_TRACK) {
@@ -356,3 +359,5 @@ module.exports = async (
 
   return response
 }
+
+module.exports = search

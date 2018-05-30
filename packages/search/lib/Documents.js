@@ -1,3 +1,4 @@
+const debug = require('debug')('search:lib:Documents')
 const {
   termEntry,
   countEntry,
@@ -126,8 +127,124 @@ const getElasticDoc = ({ indexName, indexType, doc, commitId, versionName }) => 
   }
 }
 
+
+const {
+  extractUserUrl,
+  getRepoId
+} = require('@orbiting/backend-modules-documents/lib/resolve')
+const visit = require('unist-util-visit')
+const isUUID = require('is-uuid')
+
+const addRelatedDocs = async ({ connection, context }) => {
+  const search = require('../graphql/resolvers/_queries/search')
+  const { pgdb } = context
+
+  const getDocsForConnection = (connection) =>
+    [
+      ...connection.nodes
+        .filter(node => node.type === 'Document')
+        .map(node => node.entity)
+    ]
+
+  const docs = getDocsForConnection(connection)
+
+  // extract users and related repoIds (from content and meta)
+  const userIds = []
+  const repoIds = []
+  docs.forEach(doc => {
+    // from content
+    visit(doc.content, 'link', node => {
+      const info = extractUserUrl(node.url)
+      if (info) {
+        node.url = info.path
+        if (isUUID.v4(info.id)) {
+          userIds.push(info.id)
+        } else {
+          debug(
+            'addRelatedDocs found nonUUID %s in repo %s',
+            info.id,
+            doc.repoId
+          )
+        }
+      }
+      const repoId = getRepoId(node.url, 'autoSlug')
+      if (repoId) {
+        repoIds.push(repoId)
+      }
+    })
+    // from meta
+    const meta = doc.content.meta
+    // TODO get keys from packages/documents/lib/resolve.js
+    repoIds.push(meta.dossier)
+    repoIds.push(meta.format)
+    repoIds.push(meta.discussion)
+    if (meta.series) {
+      if (typeof meta.series === 'string') {
+        repoIds.push(meta.series)
+      } else {
+        meta.series.episodes && meta.series.episodes.forEach(episode => {
+          repoIds.push(episode.document)
+        })
+      }
+    }
+  })
+
+  // load users
+  const usernames = userIds.length
+    ? await pgdb.public.users.find(
+      {
+        id: userIds,
+        hasPublicProfile: true,
+        'username !=': null
+      },
+      {
+        fields: ['id', 'username']
+      }
+    )
+    : []
+
+  // load related docs
+  // some repoIds are prefixed, some not 🤯
+  // this could go to prepareMetaForPublish
+  const sanitizedRepoIds = repoIds
+    .filter(Boolean)
+    .map(repoId => repoId.replace('https://github.com/', ''))
+
+  const relatedDocs = await search(null, {
+    skipLoadRelatedDocs: true,
+    filter: {
+      repoId: [...new Set(sanitizedRepoIds)],
+      type: 'Document'
+    }
+  }, context)
+    .then(getDocsForConnection)
+
+  // TODO remove
+  console.log('------------------------------------------------------')
+  console.log({
+    numDocs: docs.length,
+    numUserIds: userIds.length,
+    numRepoIds: repoIds.length,
+    numRelatedDocs: relatedDocs.length
+  })
+  console.log('------------------------------------------------------')
+
+  // mutate docs
+  docs.forEach(doc => {
+    // expose all documents to each document
+    // for link resolving in lib/resolve
+    // - including the usernames
+    doc._all = [
+      ...relatedDocs,
+      ...docs
+    ]
+    doc._usernames = usernames
+  })
+}
+
 module.exports = {
   schema,
   getElasticDoc,
-  getRepoIdFromDocumentId
+  getRepoIdFromDocumentId,
+  addRelatedDocs
 }
