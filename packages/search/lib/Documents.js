@@ -74,6 +74,7 @@ const schema = {
   },
   discussion: countEntry('meta.discussion'),
   feed: countEntry('meta.feed'),
+  audioSource: countEntry('meta.audioSource'),
   hasAudio: countEntry('meta.hasAudio'),
   hasVideo: countEntry('meta.hasVideo'),
   isSeriesMaster: countEntry('meta.isSeriesMaster'),
@@ -126,7 +127,6 @@ const getElasticDoc = ({ indexName, indexType, doc, commitId, versionName }) => 
     }
   }
 }
-
 
 const {
   extractUserUrl,
