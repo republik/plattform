@@ -132,6 +132,7 @@ const {
   extractUserUrl,
   getRepoId
 } = require('@orbiting/backend-modules-documents/lib/resolve')
+
 const visit = require('unist-util-visit')
 const isUUID = require('is-uuid')
 
@@ -175,15 +176,15 @@ const addRelatedDocs = async ({ connection, context }) => {
     // from meta
     const meta = doc.content.meta
     // TODO get keys from packages/documents/lib/resolve.js
-    repoIds.push(meta.dossier)
-    repoIds.push(meta.format)
-    repoIds.push(meta.discussion)
+    repoIds.push(getRepoId(meta.dossier))
+    repoIds.push(getRepoId(meta.format))
+    repoIds.push(getRepoId(meta.discussion))
     if (meta.series) {
       if (typeof meta.series === 'string') {
-        repoIds.push(meta.series)
+        repoIds.push(getRepoId(meta.series))
       } else {
         meta.series.episodes && meta.series.episodes.forEach(episode => {
-          repoIds.push(episode.document)
+          repoIds.push(getRepoId(episode.document))
         })
       }
     }
@@ -203,17 +204,10 @@ const addRelatedDocs = async ({ connection, context }) => {
     )
     : []
 
-  // load related docs
-  // some repoIds are prefixed, some not 🤯
-  // this could go to prepareMetaForPublish
-  const sanitizedRepoIds = repoIds
-    .filter(Boolean)
-    .map(repoId => repoId.replace('https://github.com/', ''))
-
   const relatedDocs = await search(null, {
     skipLoadRelatedDocs: true,
     filter: {
-      repoId: [...new Set(sanitizedRepoIds)],
+      repoId: [...new Set(repoIds.filter(Boolean))],
       type: 'Document'
     }
   }, context)
