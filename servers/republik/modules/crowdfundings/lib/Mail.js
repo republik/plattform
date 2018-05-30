@@ -14,32 +14,27 @@ const mail = createMail([
   { name: 'PROJECTR', interestId: MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR, roles: [] }
 ])
 
-mail.enforceSubscriptions = async ({
+const getInterestsForUser = async ({
   userId,
-  email,
   subscribeToEditorialNewsletters,
-  isNew,
-  pgdb,
-  ...rest
+  pgdb
 }) => {
-  const user = userId && await pgdb.public.users.findOne({id: userId})
-
-  const pledges = !!user && await pgdb.public.pledges.find({
-    userId: user.id,
+  const pledges = !!userId && await pgdb.public.pledges.find({
+    userId,
     status: 'SUCCESSFUL'
   })
   const hasPledge = (!!pledges && pledges.length > 0)
 
-  const hasMembership = !!user && !!(await pgdb.public.memberships.findFirst({
-    userId: user.id,
+  const hasMembership = !!userId && !!(await pgdb.public.memberships.findFirst({
+    userId,
     active: true
   }))
 
   const membershipTypeBenefactor = await pgdb.public.membershipTypes.findOne({
     name: 'BENEFACTOR_ABO'
   })
-  const isBenefactor = !!user && membershipTypeBenefactor ? !!(await pgdb.public.memberships.findFirst({
-    userId: user.id,
+  const isBenefactor = !!userId && membershipTypeBenefactor ? !!(await pgdb.public.memberships.findFirst({
+    userId,
     membershipTypeId: membershipTypeBenefactor.id
   })) : false
 
@@ -50,17 +45,32 @@ mail.enforceSubscriptions = async ({
     [MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: isBenefactor
   }
 
-  if (isNew) {
-    // New User automatically gets the project r newsletters
+  if (subscribeToEditorialNewsletters && hasMembership) {
+    // Autosubscribe all newsletters when new user just paid the membersh.
+    interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = true
+    interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] = true
     interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] = true
   }
 
-  if (subscribeToEditorialNewsletters || !hasMembership) {
-    // Autosubscribe all newsletters when new user just paid the membersh.
-    // Or revoke paid newsletters when membership is inactive
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = hasMembership
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] = hasMembership
-  }
+  return interests
+}
+
+mail.getInterestsForUser = getInterestsForUser
+
+mail.enforceSubscriptions = async ({
+  userId,
+  email,
+  subscribeToEditorialNewsletters,
+  pgdb,
+  ...rest
+}) => {
+  const user = !!userId && await pgdb.public.users.findOne({id: userId})
+
+  const interests = await getInterestsForUser({
+    userId: !!user && user.id,
+    subscribeToEditorialNewsletters,
+    pgdb
+  })
 
   const sanitizedUser = user || { email, roles: [] }
   return mail.updateNewsletterSubscriptions({ user: sanitizedUser, interests, ...rest })

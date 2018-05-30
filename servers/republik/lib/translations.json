@@ -1,5 +1,5 @@
 {
-  "updated": "2018-04-04T16:09:02.071Z",
+  "updated": "2018-05-17T18:30:27.776Z",
   "title": "live",
   "data": [
     {
@@ -125,6 +125,10 @@
     {
       "key": "api/newsletters/update/failed",
       "value": "Ihre Newsletter-Einstellunge konnten nicht aktualisiert werden, bitte versuchen Sie es später noch einmal."
+    },
+    {
+      "key": "api/newsletters/update/token/invalid",
+      "value": "Ihre Newsletter-Einstellunge konnten nicht aktualisiert werden, bitte melden Sie sich bei kontakt@republik.ch."
     },
     {
       "key": "api/newsletters/update/interestIdNotSupported",

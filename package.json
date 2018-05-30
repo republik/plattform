@@ -5,8 +5,8 @@
   "license": "AGPL-3.0",
   "version": "0.0.0-development",
   "engines": {
-    "node": "8.11.x",
-    "yarn": "1.5.x"
+    "node": "10.x",
+    "yarn": "1.7.x"
   },
   "private": true,
   "main": "index.js",
@@ -38,12 +38,12 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "commitizen": "^2.9.5",
+    "commitizen": "^2.10.1",
     "cz-conventional-changelog": "^2.1.0",
-    "foreman": "^2.0.0",
+    "foreman": "^3.0.0",
     "husky": "^0.14.3",
-    "lint-staged": "^4.3.0",
-    "standard": "^10.0.3",
+    "lint-staged": "^7.1.2",
+    "standard": "^11.0.1",
     "validate-commit-msg": "^2.11.1"
   },
   "scripts": {

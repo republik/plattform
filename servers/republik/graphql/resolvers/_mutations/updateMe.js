@@ -1,5 +1,5 @@
 const {
-  ensureSignedIn, checkUsername, transformUser
+  ensureSignedIn, checkUsername, transformUser, Users
 } = require('@orbiting/backend-modules-auth')
 const {
   getKeyId,
@@ -47,6 +47,7 @@ module.exports = async (_, args, context) => {
   ensureSignedIn(req)
 
   const {
+    phoneNumber,
     username,
     address,
     pgpPublicKey,
@@ -73,7 +74,6 @@ module.exports = async (_, args, context) => {
     'lastName',
     'birthday',
     'ageAccessRole',
-    'phoneNumber',
     'phoneNumberNote',
     'phoneNumberAccessRole',
     'facebookId',
@@ -178,6 +178,7 @@ module.exports = async (_, args, context) => {
         }, context, now)
       }
     }
+
     if (address) {
       if (me._raw.addressId) {
         // update address of user
@@ -199,12 +200,20 @@ module.exports = async (_, args, context) => {
         )
       }
     }
+
+    if (phoneNumber) {
+      await Users.updateUserPhoneNumber({ pgdb: transaction, userId: me.id, phoneNumber })
+    }
+
     await transaction.transactionCommit()
     const updatedUser = await pgdb.public.users.findOne({ id: me.id })
     return transformUser(updatedUser)
   } catch (e) {
-    console.error('updateMe', e)
     await transaction.transactionRollback()
+    console.log('updateMe', e)
+    if (e.translated) {
+      throw e
+    }
     throw new Error(t('api/unexpected'))
   }
 }

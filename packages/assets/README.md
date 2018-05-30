@@ -24,7 +24,7 @@ Check [assets-backend](https://github.com/orbiting/assets-backend) for a deploya
 
   renders :url with a viewport of :width x :hight to a png. webp conversion not supported.
 
-  ENVs: `PHANTOMJSCLOUD_API_KEY`, `RENDER_URL_WHITELIST`: comma separated, accept: :url.indexOf(whiteUrl) === 0, `BASIC_AUTH_USER`, `BASIC_AUTH_PASS`
+  ENVs: `PHANTOMJSCLOUD_API_KEY`, `RENDER_URL_WHITELIST`: comma separated, accept: :url.indexOf(whiteUrl) === 0, `FRONTEND_BASIC_AUTH_USER`, `FRONTEND_BASIC_AUTH_PASS`
 
 - `/s3/:bucket/:path*(.webp)`
 
@@ -36,7 +36,7 @@ Check [assets-backend](https://github.com/orbiting/assets-backend) for a deploya
 
   fetches :path from `FRONTEND_BASE_URL`
 
-  ENVs: `FRONTEND_BASE_URL`, `BASIC_AUTH_USER`, `BASIC_AUTH_PASS`
+  ENVs: `FRONTEND_BASE_URL`, `FRONTEND_BASIC_AUTH_USER`, `FRONTEND_BASIC_AUTH_PASS`
 
 - `/pdf/:path*`
 

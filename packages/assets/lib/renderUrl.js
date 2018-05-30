@@ -1,8 +1,8 @@
 const fetch = require('isomorphic-unfetch')
 const {
   PHANTOMJSCLOUD_API_KEY,
-  BASIC_AUTH_USER,
-  BASIC_AUTH_PASS,
+  FRONTEND_BASIC_AUTH_USER,
+  FRONTEND_BASIC_AUTH_PASS,
   PHANTOM_COOKIE
 } = process.env
 
@@ -39,10 +39,10 @@ module.exports = async (url, width, height, zoomFactor) => {
       'cookie': PHANTOM_COOKIE
     }
   }
-  if (BASIC_AUTH_USER) {
+  if (FRONTEND_BASIC_AUTH_USER) {
     body.requestSettings.authentication = {
-      userName: BASIC_AUTH_USER,
-      password: BASIC_AUTH_PASS
+      userName: FRONTEND_BASIC_AUTH_USER,
+      password: FRONTEND_BASIC_AUTH_PASS
     }
   }
 

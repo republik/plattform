@@ -1,22 +1,23 @@
 const transformUser = require('../../../lib/transformUser')
+const { resolveUser } = require('../../../lib/Users')
 const Roles = require('../../../lib/Roles')
-const isUUID = require('is-uuid')
 
-module.exports = async (_, args, { pgdb, user: me }) => {
-  const { slug } = args
+module.exports = async (_, { slug }, { user: me, pgdb }) => {
   if (!slug) {
     return null
   }
-  const user = await pgdb.public.users.findOne(
-    isUUID.v4(slug)
-      ? {id: slug}
-      : {username: slug}
-  )
+
+  const user = await resolveUser({ slug, pgdb })
+
   if (
     user &&
-    (user.hasPublicProfile || Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter']))
+    (
+      user.hasPublicProfile ||
+      Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])
+    )
   ) {
     return transformUser(user)
   }
+
   return null
 }

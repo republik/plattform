@@ -27,6 +27,7 @@ type queries {
   events: [Event!]!
   updates: [Update!]!
   membershipStats: MembershipStats!
+  memberStats: MemberStats!
 }
 
 type mutations {
@@ -105,11 +106,14 @@ type mutations {
 
   # if userId is null, the logged in user's subscription is changed
   # required role to change other users: supporter
+  # if email and hmac is set, the user is upserted (used for newsletter signup)
   updateNewsletterSubscription(
     userId: ID,
     name: NewsletterName!
     subscribed: Boolean!
-    status: String!
+    email: String,
+    mac: String,
+    consents: [String!]
   ): NewsletterSubscription!
 
   submitQuestion(question: String!): MutationResult

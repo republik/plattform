@@ -166,7 +166,7 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
     parentCommit = await githubRest.gitdata.getCommit({
       owner: login,
       repo: repoName,
-      sha: parentId
+      commit_sha: parentId
     })
       .then(result => result.data)
   }
@@ -210,8 +210,8 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
   // pick master for new repos initated by github
   const headParent = parentId
     ? heads.find(ref =>
-        ref.target.oid === parentId
-      )
+      ref.target.oid === parentId
+    )
     : { name: 'master' }
 
   let branch

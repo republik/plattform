@@ -10,6 +10,14 @@ type Session {
   countryFlag: String
   city: String
   isCurrent: Boolean!
+  phrase: String
+}
+
+type UnauthorizedSession {
+  session: Session!
+  enabledSecondFactors: [SignInTokenType]!
+  requiredConsents: [String!]!
+  newUser: Boolean
 }
 
 type User {
@@ -25,11 +33,38 @@ type User {
   createdAt: DateTime!
   updatedAt: DateTime!
   sessions: [Session!]
+  enabledSecondFactors: [SignInTokenType]!
   eventLog: [EventLog!]!
 }
 
 type SignInResponse {
   phrase: String!
+}
+
+type SharedSecretResponse {
+  secret: String!
+  otpAuthUrl: String!
+  svg(errorCorrectionLevel: QRCodeErrorCorrectionLevel = M): String!
+}
+
+# Error Correction Level for QR Images
+# http://qrcode.meetheed.com/question17.php
+enum QRCodeErrorCorrectionLevel {
+  L
+  M
+  Q
+  H
+}
+
+enum SignInTokenType {
+  EMAIL_TOKEN
+  TOTP
+  SMS
+}
+
+input SignInToken {
+  type: SignInTokenType!
+  payload: String!
 }
 
 type RequestInfo {

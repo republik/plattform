@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const { express: middlewares } = require('@orbiting/backend-modules-assets')
-const { express: { basicAuth: basicAuthMiddleware } } = require('@orbiting/backend-modules-auth')
+const basicAuthMiddleware = require('@orbiting/backend-modules-auth/express/basicAuth')
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 

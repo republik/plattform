@@ -35,8 +35,8 @@ const commitFromRest = ({
 }) => ({
   id: sha,
   parentIds: parents
-  ? parents.map(parent => parent.sha)
-  : [],
+    ? parents.map(parent => parent.sha)
+    : [],
   message: message,
   author: author,
   date: new Date(author.date),
@@ -136,7 +136,7 @@ module.exports = {
     })
     return heads
   },
-  getCommit: async(repo, { id: sha }, { redis }) => {
+  getCommit: async (repo, { id: sha }, { redis }) => {
     const redisKey = `repos:${repo.id}/commits/${sha}`
     const redisCommit = await redis.getAsync(redisKey)
     if (redisCommit) {

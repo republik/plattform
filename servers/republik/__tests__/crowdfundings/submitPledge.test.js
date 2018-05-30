@@ -20,11 +20,17 @@ const prepare = async () => {
 }
 
 const submitPledge = async ({ user: userObject, ...variables }) => {
-  const { id, roles, verified, ...user } = (userObject || Users.Unverified)
+  const { email, firstName, lastName, birthday, phoneNumber } = (userObject || Users.Unverified)
   return apolloFetch({
     query: SUBMIT_PLEDGE_MUTATION,
     variables: {
-      user,
+      user: {
+        email,
+        firstName,
+        lastName,
+        birthday,
+        phoneNumber
+      },
       ...variables
     }
   })

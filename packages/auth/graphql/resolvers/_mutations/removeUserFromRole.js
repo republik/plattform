@@ -1,4 +1,6 @@
 const t = require('../../../lib/t')
+const transformUser = require('../../../lib/transformUser')
+
 const {
   ensureUserHasRole,
   userHasRole,
@@ -19,9 +21,6 @@ module.exports = async (_, args, { pgdb, req, signInHooks }) => {
     throw new Error(t('api/users/404'))
   }
 
-  if (!userHasRole(user, role)) {
-    return user
-  } else {
-    return removeUserFromRole(userId, role, pgdb)
-  }
+  const returnedUser = !userHasRole(user, role) ? user : (await removeUserFromRole(userId, role, pgdb))
+  return transformUser(returnedUser)
 }

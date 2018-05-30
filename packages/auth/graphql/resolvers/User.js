@@ -33,8 +33,16 @@ module.exports = {
     Roles.ensureUserIsMeOrInRoles(user, me, userAccessRoles)
     return user._raw.createdAt
   },
-  updatedAt (user, args, { user: me }) {
+  updatedAt (user) {
     return user._raw.updatedAt
+  },
+  enabledSecondFactors (user, args, { user: me }) {
+    if (
+      Roles.userIsMeOrInRoles(user, me, ['supporter'])
+    ) {
+      return user._raw.enabledSecondFactors
+    }
+    return []
   },
   async eventLog (user, args, { pgdb, user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, userAccessRoles)

@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-22T15:26:03.897Z",
+  "updated": "2018-05-24T15:29:47.378Z",
   "title": "live",
   "data": [
     {
@@ -36,7 +36,7 @@
     },
     {
       "key": "api/token/invalid",
-      "value": "Token ungültig!"
+      "value": "Token ungültig. Links zur Anmeldung sind nur einmal gültig."
     },
     {
       "key": "api/checkUsername/min",
@@ -57,6 +57,74 @@
     {
       "key": "api/users/404",
       "value": "Der User konnte leider nicht gefunden werden."
+    },
+    {
+      "key": "api/email/change/confirmation/subject",
+      "value": "Ihre E-Mail-Adresse wurde geändert"
+    },
+    {
+      "key": "api/email/change/exists",
+      "value": "Es existiert bereits jemand mit der gewünschten E-Mail-Adresse."
+    },
+    {
+      "key": "api/auth/token-type-unknown",
+      "value": "Token Challenge Typ existiert nicht."
+    },
+    {
+      "key": "api/auth/shared-secret-not-supported",
+      "value": "Der angegebene Token Challenge unterstützt keine Shared Secrets."
+    },
+    {
+      "key": "api/auth/shared-secret-generation-failed",
+      "value": "Shared Secret konnte nicht erzeugt werden."
+    },
+    {
+      "key": "api/auth/shared-secret-validation-failed",
+      "value": "Shared Secret Verifizierung fehlgeschlagen."
+    },
+    {
+      "key": "api/auth/session-init-failed",
+      "value": "Die Session konnte aus einem unbekannten Grund nicht initialisiert werden."
+    },
+    {
+      "key": "api/auth/token-expired",
+      "value": "Der Token ist abgelaufen. Bitte melden Sie sich erneut an."
+    },
+    {
+      "key": "api/auth/authorization-failed",
+      "value": "Die Session konnte aus einem ubekannten Grund nicht authorisiert werden. Bitte versuchen Sie es noch einmal."
+    },
+    {
+      "key": "api/auth/2fa-already-disabled",
+      "value": "Zwei-Faktor-Authentifizierung ist bereits deaktiviert."
+    },
+    {
+      "key": "api/auth/2fa-already-enabled",
+      "value": "Die Zwei-Faktor-Authentifizierung ist bereits aktiviert."
+    },
+    {
+      "key": "api/auth/2f-not-ready",
+      "value": "Die Zwei-Faktor-Authentifierung kann erst aktiviert werden, wenn TOTP oder SMS Authentifierung eingerichtet wurde."
+    },
+    {
+      "key": "api/auth/2fa-has-to-be-disabled",
+      "value": "Bitte deaktivieren Sie zuerst die Zwei-Faktor-Authentifierung."
+    },
+    {
+      "key": "api/auth/sms/shared-secret",
+      "value": "SMS Login Authorisierung: {sharedSecret}"
+    },
+    {
+      "key": "api/auth/sms/your-code",
+      "value": "Ihr Code: {code}"
+    },
+    {
+      "key": "api/auth/sms/phone-number-not-valid",
+      "value": "Bitte geben Sie eine gültige Telefonnummer an (Format: +41 79 123 45 67)."
+    },
+    {
+      "key": "api/consents/missing",
+      "value": "Sie müssen folgenden Policies zustimmen um sich anmelden zu können: {consents}."
     }
   ]
 }

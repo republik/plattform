@@ -1,21 +1,28 @@
-const { NoSessionError, QueryEmailMismatchError } = require('../../../lib/errors')
-const t = require('../../../lib/t')
-const { sessionByToken } = require('../../../lib/Sessions')
+const { sessionByToken, NoSessionError } = require('../../../lib/Sessions')
+const { missingConsents } = require('../../../lib/Consents')
 
-module.exports = async (_, args, { pgdb, user: me, req }) => {
+module.exports = async (_, args, { pgdb, req }) => {
   const { email, token } = args
+  const session = await sessionByToken({ pgdb, token, email })
 
-  try {
-    return await sessionByToken({ pgdb, token, email })
-  } catch (e) {
-    if (e instanceof QueryEmailMismatchError) {
-      console.info("unauthorizedSession: session.email and query.email don't match: %O", { req: req._log(), ...e.meta })
-    } else if (e instanceof NoSessionError) {
-      console.info('unauthorizedSession: no session %O', { req: req._log(), ...e.meta })
-    } else {
-      const util = require('util')
-      console.info('unauthorizedSession:: exception', util.inspect({ req: req._log(), emailFromQuery: email, e }, {depth: null}))
-    }
-    throw new Error(t('api/token/invalid'))
+  if (!session) {
+    throw new NoSessionError({ email, token })
+  }
+
+  const user = await pgdb.public.users.findOne({
+    email
+  })
+
+  const requiredConsents = await missingConsents({
+    userId: user && user.id,
+    pgdb,
+    consents: session.sess.consents
+  })
+
+  return {
+    session,
+    enabledSecondFactors: (user && user.enabledSecondFactors) || [],
+    requiredConsents,
+    newUser: !user || !user.verified
   }
 }
