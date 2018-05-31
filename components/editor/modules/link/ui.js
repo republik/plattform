@@ -1,6 +1,6 @@
 import { Text } from 'slate'
 import React, { Component} from 'react'
-import { gql, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
 import { Label, Field, Autocomplete } from '@project-r/styleguide'
 import LinkIcon from 'react-icons/lib/fa/chain'
 import UIForm from '../../UIForm'
@@ -8,6 +8,7 @@ import createOnFieldChange from '../../utils/createOnFieldChange'
 import RepoSearch from '../../utils/RepoSearch'
 import { AutoSlugLinkInfo } from '../../utils/github'
 import withT from '../../../../lib/withT'
+import * as queries from '../../../../lib/graphql/queries'
 
 import {
   createInlineButton,
@@ -15,17 +16,7 @@ import {
   buttonStyles
 } from '../../utils'
 
-const usersQuery = gql`
-query users($search: String!) {
-  users(search: $search) {
-    firstName
-    lastName
-    email
-    id
-  }
-}
-`
-const ConnectedAutoComplete = graphql(usersQuery, {
+const ConnectedAutoComplete = graphql(queries.getUsers, {
   skip: props => !props.filter,
   options: ({ filter }) => ({ variables: { search: filter } }),
   props: ({ data: { users = [] } }) => ({

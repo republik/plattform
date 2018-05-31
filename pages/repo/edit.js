@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { compose } from 'redux'
 import { Router } from '../../lib/routes'
-import { gql, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
 import { Value, resetKeyGenerator } from 'slate'
 import debounce from 'lodash.debounce'
 
@@ -36,6 +36,11 @@ import initLocalStore from '../../lib/utils/localStorage'
 
 import { getSchema } from '../../components/Templates'
 import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
+import { getCommitById, getLatestCommit } from '../../lib/graphql/queries'
+import {
+  commit as commitMutation,
+  hasUncommitedChanges as uncommittedChangesMutation
+} from '../../lib/graphql/mutations'
 
 import { colors } from '@project-r/styleguide'
 import SettingsIcon from 'react-icons/lib/fa/cogs'
@@ -44,99 +49,6 @@ import createDebug from 'debug'
 
 const debug = createDebug('publikator:pages:edit')
 const TEST = process.env.NODE_ENV === 'test'
-
-const fragments = {
-  commit: gql`
-    fragment EditPageCommit on Commit {
-      id
-      message
-      parentIds
-      date
-      author {
-        email
-        name
-      }
-      document {
-        id
-        content
-        meta {
-          title
-          template
-          kind
-          color
-          format {
-            meta {
-              title
-              color
-              kind
-            }
-          }
-        }
-      }
-    }
-  `,
-  repo: gql`
-    fragment EditPageRepo on Repo {
-      id
-      meta {
-        publishDate
-      }
-    }
-  `
-}
-
-const getCommitById = gql`
-  query getCommitById($repoId: ID!, $commitId: ID!) {
-    repo(id: $repoId) {
-      ...EditPageRepo
-      commit(id: $commitId) {
-        ...EditPageCommit
-      }
-    }
-  }
-  ${fragments.repo}
-  ${fragments.commit}
-`
-
-const getLatestCommit = gql`
-  query getLatestCommit($repoId: ID!) {
-    repo(id: $repoId) {
-      id
-      latestCommit {
-        id
-      }
-    }
-  }
-`
-
-const commitMutation = gql`
-  mutation commit(
-    $repoId: ID!
-    $parentId: ID
-    $message: String!
-    $document: DocumentInput!
-  ) {
-    commit(
-      repoId: $repoId
-      parentId: $parentId
-      message: $message
-      document: $document
-    ) {
-      ...EditPageCommit
-      repo {
-        ...EditPageRepo
-      }
-    }
-  }
-  ${fragments.commit}
-  ${fragments.repo}
-`
-
-const uncommittedChangesMutation = gql`
-  mutation uncommittedChanges($repoId: ID!, $action: Action!) {
-    uncommittedChanges(repoId: $repoId, action: $action)
-  }
-`
 
 const addWarning = message => state => ({
   showSidebar: true,
@@ -287,7 +199,7 @@ export class EditorPage extends Component {
     const { url: { query: { repoId } }, t } = this.props
 
     const warning = t('commit/warn/uncommittedChangesError')
-    this.props.uncommittedChangesMutation({
+    this.props.hasUncommitedChanges({
       repoId,
       action
     })
@@ -728,30 +640,39 @@ export class EditorPage extends Component {
                 onDocumentChange={this.documentChangeHandler}
                 readOnly={readOnly}
               />
-              <Sidebar warnings={warnings}
-                selectedTabId={(readOnly && 'workflow') || undefined}
-                isOpen={showSidebar}>
-                {!readOnly && <Sidebar.Tab tabId='edit' label='Editieren'>
-                  {!!this.editor && <EditorUI
+            </div>
+        )} />
+          <Sidebar warnings={warnings}
+            isDisabled={Boolean(showLoading || error)}
+            selectedTabId={(readOnly && 'workflow') || undefined}
+            isOpen={showSidebar}
+          >
+
+            {
+              !readOnly &&
+              <Sidebar.Tab tabId='edit' label='Editieren'>
+                {
+                  !!this.editor &&
+                  <EditorUI
                     editorRef={this.editor}
                     onChange={this.uiChangeHandler}
                     value={editorState}
-                  />}
-                </Sidebar.Tab>}
-                <Sidebar.Tab tabId='workflow' label='Workflow'>
-                  <VersionControl
-                    repoId={repoId}
-                    commit={repo && (repo.commit || repo.latestCommit)}
-                    isNew={isNew}
-                    hasUncommittedChanges={hasUncommittedChanges}
                   />
-                </Sidebar.Tab>
-                <Sidebar.Tab tabId='analytics' label='Info'>
-                  <CharCount value={editorState} />
-                </Sidebar.Tab>
-              </Sidebar>
-            </div>
-        )} />
+                }
+              </Sidebar.Tab>
+            }
+            <Sidebar.Tab tabId='workflow' label='Workflow'>
+              <VersionControl
+                repoId={repoId}
+                commit={repo && (repo.commit || repo.latestCommit)}
+                isNew={isNew}
+                hasUncommittedChanges={hasUncommittedChanges}
+                />
+            </Sidebar.Tab>
+            <Sidebar.Tab tabId='analytics' label='Info'>
+              <CharCount value={editorState} />
+            </Sidebar.Tab>
+          </Sidebar>
         </Frame.Body>
       </Frame>
     )
@@ -849,7 +770,7 @@ export default compose(
   }),
   graphql(uncommittedChangesMutation, {
     props: ({ mutate }) => ({
-      uncommittedChangesMutation: variables =>
+      hasUncommitedChanges: variables =>
         mutate({
           variables
         })

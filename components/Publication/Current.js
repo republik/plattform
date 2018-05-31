@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import { gql, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
 import { compose } from 'redux'
 
 import withT from '../../lib/withT'
+import { getRepoWithPublications } from '../../lib/graphql/queries'
+import { unpublish } from '../../lib/graphql/mutations'
 import { getName } from '../../lib/utils/name'
 import Loader from '../Loader'
 import List, { Item, Highlight } from '../List'
@@ -15,34 +17,6 @@ import ErrorMessage from '../ErrorMessage'
 import { query as treeQuery } from '../../pages/repo/tree'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
-
-export const query = gql`
-  query repoWithPublications($repoId: ID!) {
-    repo(id: $repoId) {
-      id
-      latestPublications {
-        name
-        prepublication
-        live
-        scheduledAt
-        updateMailchimp
-        date
-        author {
-          name
-          email
-        }
-      }
-    }
-  }
-`
-
-const mutation = gql`
-mutation unpublish(
-  $repoId: ID!
-) {
-  unpublish(repoId: $repoId)
-}
-`
 
 class CurrentPublications extends Component {
   constructor (...args) {
@@ -115,7 +89,7 @@ class CurrentPublications extends Component {
 
 export default compose(
   withT,
-  graphql(mutation, {
+  graphql(unpublish, {
     props: ({mutate, ownProps}) => ({
       unpublish: () => mutate({
         variables: {
@@ -123,7 +97,7 @@ export default compose(
         },
         refetchQueries: [
           {
-            query,
+            getRepoWithPublications,
             variables: {
               repoId: ownProps.repoId
             }
@@ -138,5 +112,5 @@ export default compose(
       })
     })
   }),
-  graphql(query)
+  graphql(getRepoWithPublications)
 )(CurrentPublications)

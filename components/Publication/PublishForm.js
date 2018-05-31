@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { gql, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
 import { compose } from 'redux'
 import { css } from 'glamor'
 
@@ -11,6 +11,8 @@ import { intersperse } from '../../lib/utils/helpers'
 import withT from '../../lib/withT'
 import { Link, Router } from '../../lib/routes'
 import { swissTime } from '../../lib/utils/format'
+import { getRepoWithCommit } from '../../lib/graphql/queries'
+import { publish } from '../../lib/graphql/mutations'
 import {
   Loader,
   InlineSpinner,
@@ -35,50 +37,6 @@ import { getSchema } from '../../components/Templates'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
-const query = gql`
-  query repoWithCommit($repoId: ID!, $commitId: ID!) {
-    repo(id: $repoId) {
-      id
-      meta {
-        publishDate
-      }
-      latestPublications {
-        date
-        name
-        live
-        prepublication
-        scheduledAt
-      }
-      commit(id: $commitId) {
-        id
-        message
-        date
-        author {
-          email
-          name
-        }
-        document {
-          id
-          content
-          meta {
-            slug
-            emailSubject
-            template
-            format {
-              meta {
-                path
-                title
-                color
-                kind
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`
-
 const styles = {
   mask: css({
     '::placeholder': {
@@ -95,30 +53,6 @@ const styles = {
 const scheduledAtFormat = '%d.%m.%Y %H:%M'
 const scheduledAtParser = swissTime.parse(scheduledAtFormat)
 const scheduledAtFormater = swissTime.format(scheduledAtFormat)
-
-const mutation = gql`
-mutation publish(
-  $repoId: ID!,
-  $commitId: ID!,
-  $prepublication: Boolean!,
-  $scheduledAt: DateTime,
-  $updateMailchimp: Boolean!,
-  $ignoreUnresolvedRepoIds: Boolean
-) {
-  publish(
-    repoId: $repoId,
-    commitId: $commitId,
-    prepublication: $prepublication,
-    scheduledAt: $scheduledAt,
-    updateMailchimp: $updateMailchimp,
-    ignoreUnresolvedRepoIds: $ignoreUnresolvedRepoIds) {
-    unresolvedRepoIds
-    publication {
-      name
-    }
-  }
-}
-`
 
 const PADDING_X = 5
 
@@ -448,7 +382,7 @@ class PublishForm extends Component {
 
 export default compose(
   withT,
-  graphql(mutation, {
+  graphql(publish, {
     props: ({mutate, ownProps}) => ({
       publish: variables => mutate({
         variables,
@@ -469,5 +403,5 @@ export default compose(
       })
     })
   }),
-  graphql(query)
+  graphql(getRepoWithCommit)
 )(PublishForm)

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { gql, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
 import { css, merge } from 'glamor'
 import {
   colors,
@@ -16,6 +16,8 @@ import { getInitials } from '../../lib/utils/name'
 import withT from '../../lib/withT'
 import { errorToString } from '../../lib/utils/errors'
 import { UNCOMMITTED_CHANGES_POLL_INTERVAL_MS } from '../../lib/settings'
+import { getUncommittedChanges } from '../../lib/graphql/queries'
+import { uncommittedChangesSubscription } from '../../lib/graphql/subscriptions'
 import OfflineIcon from 'react-icons/lib/md/signal-wifi-off' // portable-wifi-off
 
 import createDebug from 'debug'
@@ -54,37 +56,6 @@ styles.emptyBox = merge(styles.box, {
   backgroundColor: '#fff',
   border: `1px solid ${colors.divider}`
 })
-
-const query = gql`
-  query repoUncommitted($repoId: ID!) {
-    repo(id: $repoId) {
-      id
-      uncommittedChanges {
-        id
-        email
-        name
-      }
-    }
-  }
-`
-
-const uncommittedChangesSubscription = gql`
-  subscription onUncommitedChange(
-    $repoId: ID!
-  ) {
-    uncommittedChanges(
-      repoId: $repoId
-    ) {
-      repoId
-      action
-      user {
-        id
-        email
-        name
-      }
-    }
-  }
-`
 
 export const withUncommitedChanges = ({ options } = {}) => (WrappedComponent) => {
   class UncommittedChanges extends Component {
@@ -137,7 +108,7 @@ export const withUncommitedChanges = ({ options } = {}) => (WrappedComponent) =>
   }
 
   return compose(
-    graphql(query, {
+    graphql(getUncommittedChanges, {
       options: (props) => ({
         fetchPolicy: 'network-only',
         pollInterval: process.browser && UNCOMMITTED_CHANGES_POLL_INTERVAL_MS,

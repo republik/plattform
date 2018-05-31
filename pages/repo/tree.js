@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { css } from 'glamor'
 import { compose } from 'redux'
-import { gql, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
 
 import withData from '../../lib/apollo/withData'
 import withAuthorization from '../../components/Auth/withAuthorization'
@@ -12,6 +12,8 @@ import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
 import { NarrowContainer, A, InlineSpinner, Interaction } from '@project-r/styleguide'
 import { getKeys as getLocalStorageKeys } from '../../lib/utils/localStorage'
+import { getRepoHistory } from '../../lib/graphql/queries'
+import { treeRepoSubscription } from '../../lib/graphql/subscriptions'
 
 import CurrentPublications from '../../components/Publication/Current'
 import UncommittedChanges from '../../components/VersionControl/UncommittedChanges'
@@ -29,77 +31,6 @@ const styles = {
   })
 }
 
-const fragments = {
-  commit: gql`
-    fragment TreeCommit on Commit {
-      id
-      message
-      parentIds
-      date
-      author {
-        email
-        name
-      }
-    }
-  `,
-  milestone: gql`
-    fragment TreeMilestone on Milestone {
-      name
-      message
-      immutable
-      commit {
-        id
-      }
-      author {
-        email
-        name
-      }
-    }
-  `
-}
-
-export const query = gql`
-  query repoWithHistory(
-    $repoId: ID!
-    $first: Int!
-    $after: String
-  ) {
-    repo(id: $repoId) {
-      id
-      commits(first: $first, after: $after) {
-        pageInfo {
-          hasNextPage
-          endCursor
-        }
-        nodes {
-          ...TreeCommit
-        }
-      }
-      milestones {
-        ...TreeMilestone
-      }
-    }
-  }
-  ${fragments.commit}
-  ${fragments.milestone}
-`
-
-const repoSubscription = gql`
-  subscription repoUpdate($repoId: ID!) {
-    repoUpdate(repoId: $repoId) {
-      id
-      latestCommit {
-        ...TreeCommit
-      }
-      milestones {
-        ...TreeMilestone
-      }
-    }
-  }
-  ${fragments.commit}
-  ${fragments.milestone}
-`
-
 class EditorPage extends Component {
   componentDidMount () {
     this.subscribe()
@@ -112,12 +43,11 @@ class EditorPage extends Component {
   subscribe () {
     if (!this.unsubscribe && this.props.data.repo) {
       this.unsubscribe = this.props.data.subscribeToMore({
-        document: repoSubscription,
+        document: treeRepoSubscription,
         variables: {
           repoId: this.props.url.query.repoId
         },
         updateQuery: (prev, { subscriptionData }) => {
-          console.log(prev, subscriptionData)
           if (!subscriptionData.data) {
             return prev
           }
@@ -212,7 +142,7 @@ class EditorPage extends Component {
 export default compose(
   withData,
   withAuthorization(['editor']),
-  graphql(query, {
+  graphql(getRepoHistory, {
     options: ({ url }) => {
       return ({
         variables: {

@@ -1,6 +1,6 @@
 import React from 'react'
 import MarkdownSerializer from 'slate-mdast-serializer'
-import { gql, withApollo } from 'react-apollo'
+import { withApollo } from 'react-apollo'
 
 import { matchBlock } from '../../utils'
 import { findOrCreate } from '../../utils/serialization'
@@ -9,66 +9,7 @@ import createUi from './ui'
 import embedFromUrlPlugin from './embedFromUrlPlugin'
 import EmbedLoader from './EmbedLoader'
 
-const videoQuery = gql`
-query getVideoEmbed($id: ID!, $embedType: EmbedType!) {
-  embed(id: $id, embedType: $embedType) {
-    __typename
-    ... on YoutubeEmbed {
-      platform
-      id
-      createdAt
-      retrievedAt
-      userName
-      userUrl
-      thumbnail
-      title
-      userName
-      userProfileImageUrl
-      aspectRatio
-    }
-    ... on VimeoEmbed {
-      platform
-      id
-      createdAt
-      retrievedAt
-      userName
-      userUrl
-      thumbnail
-      title
-      userName
-      userProfileImageUrl
-      aspectRatio
-      src {
-        mp4
-        hls
-        thumbnail
-      }
-    }
-  }
-}
-`
-
-const twitterQuery = gql`
-query getTwitterEmbed($id: ID!, $embedType: EmbedType!) {
-  embed(id: $id, embedType: $embedType) {
-    __typename
-    ... on TwitterEmbed {
-      id
-      createdAt
-      retrievedAt
-      text
-      html
-      userId
-      userName
-      userScreenName
-      userProfileImageUrl
-      image
-      more
-      playable
-    }
-  }
-}
-`
+import * as queries from '../../../../lib/graphql/queries'
 
 const fromMdast = ({ TYPE }) => (
   node
@@ -232,11 +173,11 @@ const getTwitterQueryParams = url => {
 export const createEmbedVideoModule = moduleFactory({
   matchUrl: matchVideoUrl,
   getQueryParams: getVideoQueryParams,
-  query: videoQuery
+  query: queries.getVideoEmbed
 })
 
 export const createEmbedTwitterModule = moduleFactory({
   matchUrl: matchTwitterUrl,
   getQueryParams: getTwitterQueryParams,
-  query: twitterQuery
+  query: queries.getTwitterEmbed
 })

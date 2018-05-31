@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
-import { gql, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
 import { css } from 'glamor'
 import { compose } from 'redux'
 import { Label } from '@project-r/styleguide'
 import Loader from '../Loader'
 import withT from '../../lib/withT'
+import { getCommits } from '../../lib/graphql/queries'
+import { repoSubscription } from '../../lib/graphql/subscriptions'
 
 import BaseCommit from './BaseCommit'
 import Checklist from './Checklist'
@@ -19,52 +21,6 @@ const styles = {
     fontSize: '16px'
   }
 }
-
-const fragments = {
-  commit: gql`
-    fragment SidebarCommit on Commit {
-      id
-      date
-      message
-      author {
-        name
-      }
-    }
-  `
-}
-
-const getCommits = gql`
-  query getCommits($repoId: ID!, $after: String) {
-    repo(id: $repoId) {
-      id
-      commits(first: 3, after: $after) {
-        pageInfo {
-          endCursor
-          hasNextPage
-        }
-        totalCount
-        nodes {
-          ...SidebarCommit
-        }
-      }
-    }
-  }
-  ${fragments.commit}
-`
-
-const repoSubscription = gql`
-  subscription repoUpdate($repoId: ID!) {
-    repoUpdate(repoId: $repoId) {
-      id
-      commits {
-        nodes {
-          ...SidebarCommit
-        }
-      }
-    }
-  }
-  ${fragments.commit}
-`
 
 class EditSidebar extends Component {
   componentDidMount () {
@@ -87,12 +43,18 @@ class EditSidebar extends Component {
             return prev
           }
           const { commits } = subscriptionData.data.repoUpdate
-          if (commits && commits.length) {
+          if (commits && commits.nodes.length) {
             return {
               ...prev,
               repo: {
                 ...prev.repo,
-                commits: [...commits]
+                commits: {
+                  ...prev.repo.commits,
+                  nodes: [
+                    ...commits.nodes,
+                    ...prev.repo.commits.nodes
+                  ]
+                }
               }
             }
           } else {
@@ -123,7 +85,7 @@ class EditSidebar extends Component {
 
     return (
       <Loader
-        loading={loading && !repo}
+        loading={(loading && !repo) || !repo || !commit}
         error={error}
         render={() => (
           <div {...styles.container}>

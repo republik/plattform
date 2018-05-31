@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { compose } from 'redux'
 import { css } from 'glamor'
-import { gql, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
 import { descending, ascending } from 'd3-array'
 
 import withT from '../../lib/withT'
@@ -25,6 +25,8 @@ import { Table, Tr, Th, ThOrder, Td, TdNum } from '../Table'
 import Loader from '../Loader'
 
 import { GITHUB_ORG, REPO_PREFIX, FRONTEND_BASE_URL } from '../../lib/settings'
+import { filterAndOrderRepos } from '../../lib/graphql/queries'
+import { editRepoMeta } from '../../lib/graphql/mutations'
 
 import {
   matchType
@@ -346,79 +348,9 @@ class RepoList extends Component {
   }
 }
 
-const query = gql`
-query repos($after: String, $search: String, $orderBy: RepoOrderBy) {
-  repos(
-    first: 100,
-    after: $after,
-    search: $search,
-    orderBy: $orderBy
-  ) {
-    totalCount
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-    nodes {
-      id
-      meta {
-        creationDeadline
-        productionDeadline
-        publishDate
-        briefingUrl
-      }
-      latestCommit {
-        id
-        date
-        message
-        document {
-          id
-          meta {
-            template
-            title
-            credits
-          }
-        }
-      }
-      milestones {
-        name
-        immutable
-      }
-      latestPublications {
-        name
-        prepublication
-        live
-        scheduledAt
-        document {
-          id
-          meta {
-            path
-            slug
-          }
-        }
-      }
-    }
-  }
-}
-`
-
-const mutation = gql`
-mutation editRepoMeta($repoId: ID!, $creationDeadline: DateTime, $productionDeadline: DateTime, $publishDate: DateTime, $briefingUrl: String) {
-  editRepoMeta(repoId: $repoId, creationDeadline: $creationDeadline, productionDeadline: $productionDeadline, publishDate: $publishDate, briefingUrl: $briefingUrl) {
-    id
-    meta {
-      creationDeadline
-      productionDeadline
-      publishDate
-      briefingUrl
-    }
-  }
-}
-`
-
 const RepoListWithQuery = compose(
   withT,
-  graphql(query, {
+  graphql(filterAndOrderRepos, {
     options: ({ search }) => ({
       notifyOnNetworkStatusChange: true,
       variables: {
@@ -460,7 +392,7 @@ const RepoListWithQuery = compose(
       })
     })
   }),
-  graphql(mutation, {
+  graphql(editRepoMeta, {
     props: ({mutate}) => ({
       editRepoMeta: (variables) =>
         mutate({variables})

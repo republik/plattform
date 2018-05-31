@@ -4,12 +4,14 @@ import { css } from 'glamor'
 import { Checkbox, colors, linkRule } from '@project-r/styleguide'
 import { getName } from '../../lib/utils/name'
 import { swissTime } from '../../lib/utils/format'
-import { gql, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
 import { compose } from 'redux'
 import { Link } from '../../lib/routes'
 import Loader from '../Loader'
 import withT from '../../lib/withT'
 import { ascending } from 'd3-array'
+import { getMilestones } from '../../lib/graphql/queries'
+import { placeMilestone, removeMilestone } from '../../lib/graphql/mutations'
 
 import { milestoneNames } from '../Repo/workflow'
 
@@ -139,64 +141,9 @@ Checklist.propTypes = {
   commitId: PropTypes.string.isRequired
 }
 
-const fragments = {
-  milestone: gql`
-    fragment ChecklistMilestone on Milestone {
-      name
-      message
-      immutable
-      commit {
-        id
-        date
-        author {
-          name
-        }
-        message
-      }
-      author {
-        name
-      }
-    }
-  `
-}
-
-const query = gql`
-query repoMilestones($repoId: ID!) {
-  repo(id: $repoId) {
-    id
-    milestones {
-      ...ChecklistMilestone
-    }
-  }
-}
-${fragments.milestone}
-`
-
-const placeMilestone = gql`
-mutation placeMilestone(
-  $repoId: ID!
-  $commitId: ID!
-  $name: String!
-  $message: String!
-) {
-  placeMilestone(repoId: $repoId, commitId: $commitId, name: $name, message: $message) {
-    ...ChecklistMilestone
-  }
-}
-${fragments.milestone}
-`
-const removeMilestone = gql`
-mutation removeMilestone(
-  $repoId: ID!
-  $name: String!
-) {
-  removeMilestone(repoId: $repoId, name: $name)
-}
-`
-
 export default compose(
   withT,
-  graphql(query, {
+  graphql(getMilestones, {
     props: ({data, ownProps: {name}}) => ({
       loading: data.loading,
       error: data.error,
@@ -218,12 +165,12 @@ export default compose(
               repoId
             }
             const data = proxy.readQuery({
-              query,
+              getMilestones,
               variables
             })
             data.repo.milestones.push(placeMilestone)
             proxy.writeQuery({
-              query: query,
+              query: getMilestones,
               variables,
               data
             })
@@ -244,7 +191,7 @@ export default compose(
               repoId
             }
             const data = proxy.readQuery({
-              query,
+              getMilestones,
               variables
             })
             if (removeMilestone) {
@@ -252,13 +199,13 @@ export default compose(
                 .filter(milestone => milestone.name !== name)
             }
             proxy.writeQuery({
-              query: query,
+              query: getMilestones,
               variables,
               data
             })
           },
           refetchQueries: [{
-            query,
+            getMilestones,
             variables: {
               repoId
             }
