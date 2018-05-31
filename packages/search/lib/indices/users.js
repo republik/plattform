@@ -29,7 +29,8 @@ module.exports = {
       },
       facebookId: {
         highlight: {}
-      }
+      },
+      'resolved.credential': {}
     },
     filter: {
       bool: {
@@ -52,6 +53,14 @@ module.exports = {
           properties: {
             date: {
               type: 'date'
+            }
+          }
+        },
+        resolved: {
+          properties: {
+            credential: {
+              type: 'text',
+              analyzer: 'german'
             }
           }
         },
