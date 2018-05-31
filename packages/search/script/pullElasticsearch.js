@@ -15,7 +15,7 @@ const elastic = elasticsearch.client()
 const flush = process.argv[2] === '--flush'
 
 PgDb.connect().then(async pgdb => {
-  await Promise.all(mappings.list.map(async ({ type, name, mapping }) => {
+  await Promise.all(mappings.list.map(async ({ type, name, analysis, mapping }) => {
     const readAlias = getIndexAlias(name, 'read')
     const writeAlias = getIndexAlias(name, 'write')
     const index = getIndexDated(name)
@@ -46,6 +46,7 @@ PgDb.connect().then(async pgdb => {
           ...mapping
         },
         settings: {
+          analysis,
           // Disable refresh_interval to allow speedier bulk operations
           refresh_interval: -1
         }

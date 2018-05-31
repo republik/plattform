@@ -44,8 +44,14 @@ const after = async ({indexName, type: indexType, elastic, pgdb}) => {
 
   const formats = result.hits.hits
     .map(doc => _.pick(
-      doc._source.meta,
-      ['repoId', 'title', 'description']
+      doc._source,
+      [
+        'meta.repoId',
+        'meta.title',
+        'meta.description',
+        'meta.kind',
+        'meta.template'
+      ]
     ))
 
   await Promise.all(formats.map(async (format) => {
@@ -56,7 +62,16 @@ const after = async ({indexName, type: indexType, elastic, pgdb}) => {
       body: {
         script: {
           lang: 'painless',
-          source: 'ctx._source.__format=params.format',
+          source:
+            `if (!ctx._source.containsKey("resolved")) {
+              ctx._source.resolved = new HashMap()
+            }
+
+            if (!ctx._source.resolved.containsKey("meta")) {
+              ctx._source.resolved.meta = new HashMap()
+            }
+
+            ctx._source.resolved.meta.format = params.format`,
           params: {
             format
           }
@@ -65,7 +80,7 @@ const after = async ({indexName, type: indexType, elastic, pgdb}) => {
           bool: {
             filter: {
               wildcard: {
-                'meta.format': `*${format.repoId.split('/').pop()}`
+                'meta.format': `*${format.meta.repoId.split('/').pop()}`
               }
             }
           }

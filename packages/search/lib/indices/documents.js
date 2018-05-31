@@ -55,10 +55,10 @@ module.exports = {
       content: {
         highlight: {}
       },
-      '__format.title.keyword': {
+      'resolved.meta.format.meta.title.keyword': {
         boost: 6
       },
-      '__format.description': {}
+      'resolved.meta.format.meta.description': {}
     },
     filter: {
       bool: {
@@ -79,6 +79,18 @@ module.exports = {
       }
     }
   },
+  analysis: {
+    normalizer: {
+      republik_strict: {
+        type: 'custom',
+        filter: [
+          'german_normalization',
+          'lowercase',
+          'asciifolding'
+        ]
+      }
+    }
+  },
   mapping: {
     [type]: {
       dynamic: false,
@@ -93,21 +105,40 @@ module.exports = {
             }
           }
         },
-        __format: {
+        resolved: {
           properties: {
-            title: {
-              type: 'text',
-              analyzer: 'german',
-              fields: {
-                keyword: {
-                  type: 'keyword',
-                  ignore_above: 256
+            meta: {
+              properties: {
+                format: {
+                  properties: {
+                    meta: {
+                      properties: {
+                        title: {
+                          type: 'text',
+                          analyzer: 'german',
+                          fields: {
+                            keyword: {
+                              type: 'keyword',
+                              normalizer: 'republik_strict',
+                              ignore_above: 256
+                            }
+                          }
+                        },
+                        description: {
+                          type: 'text',
+                          analyzer: 'german'
+                        },
+                        kind: {
+                          type: 'keyword'
+                        },
+                        template: {
+                          type: 'keyword'
+                        }
+                      }
+                    }
+                  }
                 }
               }
-            },
-            description: {
-              type: 'text',
-              analyzer: 'german'
             }
           }
         },
