@@ -50,7 +50,7 @@ class Checklist extends Component {
       mutating
     } = this.state
     return (
-      <Loader loading={loading} error={error} render={() => {
+      <Loader loading={loading && !milestones} error={error} render={() => {
         const allMilestones = milestones
           .filter(m => !m.immutable && m.name !== 'meta')
           .concat(

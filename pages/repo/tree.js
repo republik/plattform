@@ -10,7 +10,7 @@ import Loader from '../../components/Loader'
 import Tree from '../../components/Tree'
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
-import { NarrowContainer, A, InlineSpinner } from '@project-r/styleguide'
+import { NarrowContainer, A, InlineSpinner, Interaction } from '@project-r/styleguide'
 import { getKeys as getLocalStorageKeys } from '../../lib/utils/localStorage'
 
 import CurrentPublications from '../../components/Publication/Current'
@@ -20,18 +20,12 @@ const styles = {
   loadMoreButton: css({
     cursor: 'pointer'
   }),
-  loadMoreContainer: css({
-    positon: 'relative',
-    height: '80px',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center'
-  }),
   loadMore: css({
-    display: 'flex',
+    positon: 'relative',
+    textAlign: 'center',
     width: '100%',
-    flexDirection: 'column',
-    alignItems: 'center'
+    marginTop: '24px',
+    height: '64px'
   })
 }
 
@@ -108,11 +102,11 @@ const repoSubscription = gql`
 
 class EditorPage extends Component {
   componentDidMount () {
-    // this.subscribe()
+    this.subscribe()
   }
 
   componentDidUpdate () {
-    // this.subscribe()
+    this.subscribe()
   }
 
   subscribe () {
@@ -123,19 +117,23 @@ class EditorPage extends Component {
           repoId: this.props.url.query.repoId
         },
         updateQuery: (prev, { subscriptionData }) => {
+          console.log(prev, subscriptionData)
           if (!subscriptionData.data) {
             return prev
           }
           const { latestCommit, milestones } = subscriptionData.data.repoUpdate
           if (
-            !prev.repo.commits.find(commit => commit.id === latestCommit.id)
+            !prev.repo.commits.nodes.find(commit => commit.id === latestCommit.id)
           ) {
-            const commits = prev.repo.commits.concat(latestCommit)
+            const commits = prev.repo.commits.nodes.concat(latestCommit)
             return {
               ...prev,
               repo: {
                 ...prev.repo,
-                commits,
+                commits: {
+                  ...prev.repo.commits,
+                  nodes: commits
+                },
                 milestones
               }
             }
@@ -192,22 +190,19 @@ class EditorPage extends Component {
                 milestones={repo.milestones}
                 repoId={repoId}
                 />
+              {/* Load more commits */
+                hasMore &&
+                <Interaction.P {...styles.loadMore}>
+                  {loading && <InlineSpinner size={40} />}
+                  {!loading && <A
+                    {...styles.loadMoreButton}
+                    onClick={() => fetchMore()}
+                  >Ältere laden</A>
+                }
+                </Interaction.P>
+              }
             </div>
           )} />
-          {
-            /* Load more commits */
-            hasMore &&
-            <div {...styles.loadMoreContainer}>
-              <div {...styles.loadMore}>
-                {loading && <InlineSpinner size={60} />}
-                {!loading && <A
-                  {...styles.loadMoreButton}
-                  onClick={() => fetchMore()}
-              >Ältere laden</A>
-            }
-              </div>
-            </div>
-          }
         </Frame.Body>
       </Frame>
     )
@@ -218,45 +213,51 @@ export default compose(
   withData,
   withAuthorization(['editor']),
   graphql(query, {
-    options: ({ url }) => ({
-      variables: {
-        repoId: url.query.repoId,
-        first: 10
-      },
-      fetchPolicy: 'cache-and-network'
-    }),
-    props: ({data, ownProps}) => ({
-      data,
-      commits: data.repo.commits.nodes,
-      hasMore: data.repo.commits.pageInfo.hasNextPage,
-      fetchMore: () => {
-        return data.fetchMore({
-          variables: {
-            repoId: data.repo.id,
-            first: 20,
-            after: data.repo.commits.pageInfo.endCursor
-          },
-          updateQuery: (previousResult, { fetchMoreResult }) => {
-            return {
-              repo: {
-                ...previousResult.repo,
-                ...fetchMoreResult.repo,
-                commits: {
-                  ...previousResult.repo.commits,
-                  ...fetchMoreResult.repo.commits,
-                  nodes: [
-                    ...previousResult.repo.commits.nodes,
-                    ...fetchMoreResult.repo.commits.nodes
-                  ].filter(({id}, i, all) =>
+    options: ({ url }) => {
+      return ({
+        variables: {
+          after: null,
+          repoId: url.query.repoId,
+          first: 10
+        },
+        notifyOnNetworkStatusChange: true,
+        fetchPolicy: 'cache-first'
+      })
+    },
+    props: ({data, ownProps}) => {
+      return ({
+        data,
+        commits: (data.repo && data.repo.commits && data.repo.commits.nodes) || {},
+        hasMore: (data.repo && data.repo.commits && data.repo.commits.pageInfo.hasNextPage),
+        fetchMore: () => {
+          return data.fetchMore({
+            variables: {
+              repoId: data.repo.id,
+              first: 20,
+              after: data.repo.commits.pageInfo.endCursor
+            },
+            updateQuery: (previousResult, { fetchMoreResult }) => {
+              return {
+                repo: {
+                  ...previousResult.repo,
+                  ...fetchMoreResult.repo,
+                  commits: {
+                    ...previousResult.repo.commits,
+                    ...fetchMoreResult.repo.commits,
+                    nodes: [
+                      ...previousResult.repo.commits.nodes,
+                      ...fetchMoreResult.repo.commits.nodes
+                    ].filter(({id}, i, all) =>
                     // deduplicate by id
                     i === all.findIndex(repo => repo.id === id)
                   )
+                  }
                 }
               }
             }
-          }
-        })
-      }
-    })
+          })
+        }
+      })
+    }
   })
 )(EditorPage)

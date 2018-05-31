@@ -34,11 +34,18 @@ const fragments = {
 }
 
 const getCommits = gql`
-  query getCommits($repoId: ID!) {
+  query getCommits($repoId: ID!, $after: String) {
     repo(id: $repoId) {
       id
-      commits(maxCommits: 3) {
-        ...SidebarCommit
+      commits(first: 3, after: $after) {
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        totalCount
+        nodes {
+          ...SidebarCommit
+        }
       }
     }
   }
@@ -50,7 +57,9 @@ const repoSubscription = gql`
     repoUpdate(repoId: $repoId) {
       id
       commits {
-        ...SidebarCommit
+        nodes {
+          ...SidebarCommit
+        }
       }
     }
   }
@@ -114,7 +123,7 @@ class EditSidebar extends Component {
 
     return (
       <Loader
-        loading={loading}
+        loading={loading && !repo}
         error={error}
         render={() => (
           <div {...styles.container}>
@@ -122,7 +131,7 @@ class EditSidebar extends Component {
               <BaseCommit
                 repoId={repo.id}
                 commit={commit}
-                commits={repo.commits}
+                commits={repo.commits.nodes}
               />
             )}
             {!!repo && (
@@ -137,7 +146,7 @@ class EditSidebar extends Component {
                 <CommitHistory
                   repoId={repo.id}
                   commitId={commit.id}
-                  commits={repo.commits}
+                  commits={repo.commits.nodes}
                 />
               </div>
             )}
@@ -156,7 +165,7 @@ export default compose(
       variables: {
         repoId: props.repoId
       },
-      fetchPolicy: 'network-only'
+      fetchPolicy: 'cache-first'
     })
   })
 )(EditSidebar)
