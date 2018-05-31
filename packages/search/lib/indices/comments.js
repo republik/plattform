@@ -8,14 +8,15 @@ module.exports = {
       content: {
         highlight: {}
       },
-      'user.firstName': {},
-      'user.lastName': {},
-      'user.name': {
+      'resolved.user.firstName': {},
+      'resolved.user.lastName': {},
+      'resolved.user.name': {
         boost: 1.5
       },
-      'user.username': {},
-      'user.twitterHandle': {},
-      'user.facebookId': {}
+      'resolved.user.credential': {},
+      'resolved.user.username': {},
+      'resolved.user.twitterHandle': {},
+      'resolved.user.facebookId': {}
     },
     filter: {
       bool: {
@@ -43,6 +44,38 @@ module.exports = {
           properties: {
             date: {
               type: 'date'
+            }
+          }
+        },
+        resolved: {
+          properties: {
+            user: {
+              properties: {
+                isAnonymous: {
+                  type: 'boolean'
+                },
+                facebookId: {
+                  type: 'keyword'
+                },
+                firstName: {
+                  type: 'text'
+                },
+                lastName: {
+                  type: 'text'
+                },
+                name: {
+                  type: 'text'
+                },
+                credential: {
+                  type: 'text'
+                },
+                twitterHandle: {
+                  type: 'keyword'
+                },
+                username: {
+                  type: 'keyword'
+                }
+              }
             }
           }
         },
@@ -105,29 +138,6 @@ module.exports = {
         },
         updatedAt: {
           type: 'date'
-        },
-
-        user: {
-          properties: {
-            facebookId: {
-              type: 'keyword'
-            },
-            firstName: {
-              type: 'text'
-            },
-            lastName: {
-              type: 'text'
-            },
-            name: {
-              type: 'text'
-            },
-            twitterHandle: {
-              type: 'keyword'
-            },
-            username: {
-              type: 'keyword'
-            }
-          }
         }
       }
     }
