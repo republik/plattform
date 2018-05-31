@@ -75,7 +75,7 @@ const styles = {
 const Embed = ({ id, platform, aspectRatio, title }) => {
   let src = ''
   if (platform === 'youtube') {
-    src = `https://www.youtube.com/embed/${id}?autoplay=true&showinfo=0&rel=0`
+    src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=true&showinfo=0&rel=0`
   }
   if (platform === 'vimeo') {
     src = `https://player.vimeo.com/video/${id}?autoplay=1`
