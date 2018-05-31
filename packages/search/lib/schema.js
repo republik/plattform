@@ -3,7 +3,7 @@ const {
 } = require('./filters')
 
 const {
-  termAggBuilder,
+  termsAggBuilder,
   trueCountAggBuilder
 } = require('./aggregations')
 
@@ -32,7 +32,7 @@ const createEntry = (criteriaBuilder, aggBuilder, additionals) => (fieldPath) =>
   ...additionals
 })
 
-const termEntry = createEntry(termCriteriaBuilder, termAggBuilder)
+const termEntry = createEntry(termCriteriaBuilder, termsAggBuilder)
 const countEntry = createEntry(termCriteriaBuilder, trueCountAggBuilder, { parser: boolParser })
 
 module.exports = {

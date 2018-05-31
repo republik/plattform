@@ -11,55 +11,48 @@ const termCriteriaBuilder = (fieldName) => (value, options) => ({
   }
 })
 
-const hasCriteriaBuilder = (fieldName) => (value, options) => ({
-  clause: (options && options.not) || (!value) ? 'must_not' : 'must',
-  filter: {
-    exists: {
-      field: fieldName
-    }
-  }
-})
+const hasCriteriaBuilder = (fieldName) =>
+  (value, { filter, not = false }) => ({
+    clause: not || (!value) ? 'must_not' : 'must',
+    filter: [
+      filter || { match_all: {} },
+      { exists: {
+        field: fieldName
+      } }
+    ]
+  })
 
-const dateRangeCriteriaBuilder = (fieldName) => (range, options) => ({
-  clause: options && options.not ? 'must_not' : 'must',
-  filter: {
-    range: {
-      [fieldName]: {
-        ...range.from ? { gte: range.from } : {},
-        ...range.to ? { lte: range.to } : {}
-      }
-    }
-  }
-})
-
-const rangeCriteriaBuilder = (fieldName) => (value, { ranges }) => {
-  const range = ranges.find(range => range.key === value.toLowerCase())
-
-  return {
-    clause: 'must',
-    filter: {
-      range: {
+const dateRangeCriteriaBuilder = (fieldName) =>
+  (range, { filter, not = false }) => ({
+    clause: not ? 'must_not' : 'must',
+    filter: [
+      filter || { match_all: {} },
+      { range: {
         [fieldName]: {
-          gte: range.from || undefined,
-          lte: range.to || undefined
+          ...range.from ? { gte: range.from } : {},
+          ...range.to ? { lte: range.to } : {}
         }
-      }
-    }
-  }
-}
+      } }
+    ]
+  })
 
-/*
-const dateCriteriaBuilder = (fieldName, operator) => (date) => ({
-  clause: 'must',
-  filter: {
-    range: {
-      [fieldName]: {
-        [operator]: date
-      }
+const rangeCriteriaBuilder = (fieldName) =>
+  (value, { filter, ranges }) => {
+    const range = ranges.find(range => range.key === value.toLowerCase())
+
+    return {
+      clause: 'must',
+      filter: [
+        filter || { match_all: {} },
+        { range: {
+          [fieldName]: {
+            gte: range.from || undefined,
+            lte: range.to || undefined
+          }
+        } }
+      ]
     }
   }
-})
-*/
 
 // converts a filter array (with generic value as string) to a (typed) filter obj
 const filterReducer = (schema) => (filters) =>

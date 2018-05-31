@@ -99,6 +99,16 @@ const schema = {
     criteria: rangeCriteriaBuilder('contentString.count'),
     agg: rangeAggBuilder('contentString.count'),
     options: {
+      filter: {
+        bool: {
+          must: { exists: {
+            field: 'contentString.count'
+          } },
+          must_not: { terms: {
+            'meta.template': ['format', 'discussion']
+          } }
+        }
+      },
       ranges: [
         { key: 'short',
           to: WORDS_PER_MIN * SHORT_DURATION_MINS },

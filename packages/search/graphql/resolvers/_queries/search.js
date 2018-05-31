@@ -142,54 +142,76 @@ const mapHit = (hit) => {
   }
 }
 
+const transformTermsAgg = (key, agg, t) => ({
+  key,
+  label: t(
+    `api/search/aggs/${key}`,
+    { key },
+    !DEV ? key : undefined
+  ),
+  buckets: agg.terms.buckets.map(bucket => ({
+    label: t(
+      `api/search/aggs/${key}/${bucket.key}`,
+      { key, value: bucket.key, count: bucket.doc_count },
+      !DEV ? bucket.key : undefined
+    ),
+    value: bucket.key,
+    count: bucket.doc_count
+  }))
+})
+
+const transformCountAgg = (key, agg, t) => ({
+  key,
+  label: t(
+    `api/search/aggs/${key}`,
+    { key },
+    !DEV ? key : undefined
+  ),
+  count: agg.count ? agg.count.value : agg.doc_count
+})
+
+const transformRangeAgg = (key, agg, t) => ({
+  key,
+  label: t(
+    `api/search/aggs/${key}`,
+    { key },
+    !DEV ? key : undefined
+  ),
+  count: agg.doc_count,
+  buckets: agg.ranges.buckets.map(bucket => ({
+    label: t(
+      `api/search/aggs/${key}/${bucket.key}`,
+      { key, value: bucket.key, count: bucket.doc_count },
+      !DEV ? bucket.key : undefined
+    ),
+    value: bucket.key,
+    count: bucket.doc_count
+  }))
+})
+
 const mapAggregations = (result, t) => {
   const aggregations = result.aggregations
   if (!aggregations) {
     return []
   }
-  return Object.keys(aggregations).map(key => {
-    const agg = aggregations[key]
-    if (agg.value !== undefined) { // value_count agg
-      return {
-        key,
-        label: t(
-          `api/search/aggs/${key}`,
-          { key },
-          !DEV ? key : undefined
-        ),
-        count: agg.value
-      }
-    }
+  return Object.keys(aggregations).map(name => {
+    const parts = name.match(/(.*?)\/(.*)/)
+    const type = parts[1]
+    const key = parts[2]
 
-    if (!agg.buckets) { // filter agg
-      return {
-        key,
-        label: t(
-          `api/search/aggs/${key}`,
-          { key },
-          !DEV ? key : undefined
-        ),
-        count: agg.doc_count
-      }
-    }
+    const agg = aggregations[name]
 
-    // terms agg
-    return {
-      key,
-      label: t(
-        `api/search/aggs/${key}`,
-        { key },
-        !DEV ? key : undefined
-      ),
-      buckets: agg.buckets.map(bucket => ({
-        label: t(
-          `api/search/aggs/${key}/${bucket.key}`,
-          { key, value: bucket.key, count: bucket.doc_count },
-          !DEV ? bucket.key : undefined
-        ),
-        value: bucket.key,
-        count: bucket.doc_count
-      }))
+    switch (type) {
+      case 'terms':
+        return transformTermsAgg(key, agg, t)
+      case 'valueCount':
+      case 'trueCount':
+      case 'existsCount':
+        return transformCountAgg(key, agg, t)
+      case 'range':
+        return transformRangeAgg(key, agg, t)
+      default:
+        throw Error(`Unable to transform aggregation type "${type}"`)
     }
   })
 }
@@ -359,7 +381,7 @@ const search = async (__, args, context) => {
           },
           options,
           query,
-          response: sanitizedResponse,
+          // response: sanitizedResponse, -> unable to stringify circular
           date: new Date()
         }
       })
