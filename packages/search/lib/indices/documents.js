@@ -142,6 +142,9 @@ module.exports = {
             }
           }
         },
+        visibility: {
+          type: 'keyword'
+        },
 
         contentString: {
           type: 'text',

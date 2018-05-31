@@ -105,7 +105,15 @@ module.exports = async (
   // for front: warn if related document cannot be resolved
   // for newsletter, preview email: stop publication
   let unresolvedRepoIds = []
-  const docsConnection = await getPublishedDocuments(null, { scheduledAt }, context)
+  const docsConnection = await getPublishedDocuments(
+    null,
+    {
+      ...scheduledAt
+        ? { scheduledAt }
+        : { }
+    },
+    context
+  )
 
   // see https://github.com/orbiting/backends/blob/c25cf33336729590b114e5113e464be6bf1185e0/packages/documents/graphql/resolvers/_queries/documents.js#L107
   // - the documents resolver exposes those two properties on individual docs for resolving
@@ -296,67 +304,32 @@ module.exports = async (
   }
   await Promise.all(gitOps)
 
-  // cache in redis
-  /* TODO remove
-  const payload = JSON.stringify({
-    doc,
-    sha: milestone.sha,
-    repoId: repoId
-  })
-  const key = `repos:${repoId}/${ref}`
-  let redisOps = [
-    redis.setAsync(key, payload),
-    redis.saddAsync('repos:ids', repoId)
-  ]
-  if (scheduledAt) {
-    redisOps.push(redis.zaddAsync(`repos:scheduledIds`, scheduledAt.getTime(), key))
-  } else {
-    if (ref === 'publication') {
-      redisOps = redisOps.concat([
-        // prepublication moves along with publication
-        redis.setAsync(`repos:${repoId}/prepublication`, payload),
-        // remove previous scheduling
-        redis.delAsync(`repos:${repoId}/scheduled-publication`),
-        redis.zremAsync(`repos:scheduledIds`, `repos:${repoId}/scheduled-publication`)
-      ])
-    } else {
-      redisOps = redisOps.concat([
-        // remove previous scheduling
-        redis.delAsync(`repos:${repoId}/scheduled-prepublication`),
-        redis.zremAsync(`repos:scheduledIds`, `repos:${repoId}/scheduled-prepublication`)
-      ])
-    }
-  }
-
-  const lock = await redlock().lock(lockKey, 200)
-  await Promise.all(redisOps)
-  await refreshScheduling(lock)
-  await lock.unlock()
-    .catch((err) => {
-      console.error(err)
-    })
-  */
-
   const {
     lib: {
-      utils: { getIndexAlias },
-      Documents: { getElasticDoc }
+      Documents,
+      utils: { getIndexAlias }
     }
   } = require('@orbiting/backend-modules-search')
 
-  // cache in elastic
   const indexType = 'Document'
-  const indexName = indexType.toLowerCase()
-  const writeAlias = getIndexAlias(indexName, 'write')
-  await elastic.index({
-    ...getElasticDoc({
-      indexName: writeAlias,
-      indexType,
-      doc,
-      commitId,
-      versionName
-    })
+  const elasticDoc = Documents.getElasticDoc({
+    indexName: getIndexAlias(indexType.toLowerCase(), 'write'),
+    indexType: indexType,
+    doc,
+    commitId,
+    versionName
   })
+
+  let func = prepublication
+    ? scheduledAt
+      ? Documents.prepublishScheduledAt
+      : Documents.prepublish
+    : scheduledAt
+      ? Documents.publishScheduled
+      : Documents.publish
+
+  await func(elastic, elasticDoc).insert()
+  await func(elastic, elasticDoc).after()
 
   // release for nice view on github
   // this is optional, the release is not read back again

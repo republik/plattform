@@ -265,9 +265,202 @@ const addRelatedDocs = async ({ connection, context }) => {
   })
 }
 
+const { getIndexAlias } = require('./utils')
+const indexType = 'Document'
+const indexRef = {
+  index: getIndexAlias(indexType.toLowerCase(), 'write'),
+  type: indexType
+}
+
+const logQuery = (name, query) =>
+  console.log(`${name}\n`, JSON.stringify(query, null, 2))
+
+const del = async (filter, elastic) => {
+  if (
+    !filter || !filter.bool || !filter.bool.must ||
+    !filter.bool.must.find(m => m.term && m.term['meta.repoId'])
+  ) {
+    logQuery('delete missing repoId!', filter)
+    throw new Error('delete missing repoId!')
+  }
+  const query = {
+    ...indexRef,
+    body: {
+      query: filter
+    }
+  }
+  logQuery('deleteByQuery', query)
+  return elastic.deleteByQuery(query)
+}
+const removeVisibility = async (filter, visibility, elastic) => {
+  const query = {
+    ...indexRef,
+    conflicts: 'proceed',
+    body: {
+      query: filter,
+      script: {
+        source: `if (ctx._source.containsKey('visibility') && !ctx._source.visibility.empty) { ctx._source.visibility.remove(ctx._source.visibility.indexOf("${visibility}")); }`,
+        lang: 'painless'
+      }
+    }
+  }
+  logQuery('updateByQuery', query)
+  return elastic.updateByQuery(query)
+}
+const removeScheduledAt = async (filter, elastic) => {
+  const query = {
+    ...indexRef,
+    body: {
+      query: filter,
+      script: `ctx.remove("visibility");`
+    }
+  }
+  logQuery('updateByQuery', query)
+  return elastic.updateByQuery(query)
+}
+const getFilter = (visibilities, scheduledAt, repoId, id, notId) => {
+  const filter = {
+    bool: {
+      must: [
+        ...visibilities !== undefined && visibilities !== null
+          ? [{
+            script: {
+              script: {
+                source: "if (doc.containsKey('visibility') && params.visibilities.containsAll(doc['visibility'].values)) { return true; }",
+                lang: 'painless',
+                params: { visibilities }
+              }
+            }
+          }]
+          : [],
+        ...repoId !== undefined && repoId !== null
+          ? [ { term: { 'meta.repoId': repoId } } ]
+          : [ ]
+      ]
+    }
+  }
+  if (scheduledAt !== undefined && scheduledAt !== null) {
+    const scheduledAtClause = scheduledAt ? 'must' : 'must_not'
+    filter.bool[scheduledAtClause] = [
+      ...(filter.bool[scheduledAtClause] || []),
+      { exists: { field: 'meta.scheduledAt' } }
+    ]
+  }
+  if (id !== undefined && id !== null) {
+    const idClause = notId ? 'must_not' : 'must'
+    filter.bool[idClause] = [
+      ...(filter.bool[idClause] || []),
+      { term: { id } }
+    ]
+  }
+  return filter
+}
+const publish = (elastic, elasticDoc) => ({
+  insert: async () => {
+    const query = {
+      ...elasticDoc,
+      body: {
+        ...elasticDoc.body,
+        visibility: ['internal', 'external']
+      }
+    }
+    logQuery('index', query)
+    return elastic.index(query)
+  },
+  after: async () => {
+    const repoId = elasticDoc.body.meta.repoId
+    await del(getFilter(['internal', 'external'], null, repoId, elasticDoc.id, true), elastic)
+    await del(getFilter(['internal'], false, repoId, elasticDoc.id, true), elastic)
+    await del(getFilter(['external'], false, repoId, elasticDoc.id, true), elastic)
+  }
+})
+const prepublish = (elastic, elasticDoc) => ({
+  insert: async () => {
+    const query = {
+      ...elasticDoc,
+      body: {
+        ...elasticDoc.body,
+        visibility: ['internal']
+      }
+    }
+    logQuery('index', query)
+    return elastic.index(query)
+  },
+  after: async () => {
+    const repoId = elasticDoc.body.meta.repoId
+    await del(getFilter(['internal'], null, repoId, elasticDoc.id, true), elastic)
+    await removeVisibility(
+      getFilter(['internal', 'external'], false, repoId),
+      'internal',
+      elastic
+    )
+  }
+})
+
+const publishScheduled = (elastic, elasticDoc) => ({
+  insert: async () => {
+    if (!elasticDoc.body.meta.scheduledAt) {
+      throw new Error('missing body.meta.scheduledAt')
+    }
+    const query = {
+      ...elasticDoc,
+      body: {
+        ...elasticDoc.body,
+        visibility: ['internal', 'external']
+      }
+    }
+    logQuery('index', query)
+    return elastic.index(query)
+  },
+  after: async () => {
+    const repoId = elasticDoc.body.meta.repoId
+    await del(getFilter(['internal', 'external'], true, repoId), elastic)
+    await del(getFilter(['internal'], true, repoId), elastic)
+    await del(getFilter(['external'], true, repoId), elastic)
+  },
+  afterScheduled: async () => {
+    await removeScheduledAt(
+      getFilter(null, null, null, elasticDoc.id),
+      elastic
+    )
+    await publish(elastic, elasticDoc).after()
+  }
+})
+const prepublishScheduledAt = (elastic, elasticDoc) => ({
+  insert: async () => {
+    if (!elasticDoc.body.meta.scheduledAt) {
+      throw new Error('missing body.meta.scheduledAt')
+    }
+    const query = {
+      ...elasticDoc,
+      body: {
+        ...elasticDoc.body,
+        visibility: ['internal']
+      }
+    }
+    logQuery('index', query)
+    return elastic.index(query)
+  },
+  after: async () => {
+    const repoId = elasticDoc.body.meta.repoId
+    await del(getFilter(['external'], true, repoId), elastic)
+  },
+  afterScheduled: async () => {
+    await removeScheduledAt(
+      getFilter(null, null, null, elasticDoc.id),
+      elastic
+    )
+    await prepublish(elastic, elasticDoc).after()
+  }
+})
+
 module.exports = {
   schema,
   getElasticDoc,
   getRepoIdFromDocumentId,
-  addRelatedDocs
+  addRelatedDocs,
+  publish,
+  prepublish,
+  publishScheduled,
+  prepublishScheduledAt
 }
