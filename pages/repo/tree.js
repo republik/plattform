@@ -3,6 +3,8 @@ import { css } from 'glamor'
 import { compose } from 'redux'
 import { graphql } from 'react-apollo'
 
+import { path } from 'ramda'
+
 import withData from '../../lib/apollo/withData'
 import withAuthorization from '../../components/Auth/withAuthorization'
 
@@ -51,18 +53,29 @@ class EditorPage extends Component {
           if (!subscriptionData.data) {
             return prev
           }
-          const { latestCommit, milestones } = subscriptionData.data.repoUpdate
+          const newLatestCommit = path(
+            ['commits', 'nodes', 0],
+            subscriptionData.data.repoUpdate
+          )
+          const currentLatestCommit = path(
+            ['repo', 'commits', 'nodes', 0],
+            prev
+          )
+
+          const { milestones } = subscriptionData.data.repoUpdate
           if (
-            !prev.repo.commits.nodes.find(commit => commit.id === latestCommit.id)
+            newLatestCommit !== currentLatestCommit
           ) {
-            const commits = prev.repo.commits.nodes.concat(latestCommit)
             return {
               ...prev,
               repo: {
                 ...prev.repo,
                 commits: {
                   ...prev.repo.commits,
-                  nodes: commits
+                  nodes: [
+                    newLatestCommit,
+                    ...prev.repo.commits.nodes
+                  ]
                 },
                 milestones
               }
