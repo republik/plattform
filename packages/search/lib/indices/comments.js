@@ -67,7 +67,8 @@ module.exports = {
                   type: 'text'
                 },
                 credential: {
-                  type: 'text'
+                  type: 'text',
+                  analyzer: 'german'
                 },
                 twitterHandle: {
                   type: 'keyword'
