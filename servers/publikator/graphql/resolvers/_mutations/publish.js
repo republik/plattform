@@ -304,32 +304,28 @@ module.exports = async (
   }
   await Promise.all(gitOps)
 
+  // publish to elasticsearch
+  // TODO investigate why this fires
+  // Error: queries.search defined in resolvers, but not in schema
+  // if it's put at root level
   const {
     lib: {
-      Documents,
+      Documents: { createPublish, getElasticDoc },
       utils: { getIndexAlias }
     }
   } = require('@orbiting/backend-modules-search')
 
   const indexType = 'Document'
-  const elasticDoc = Documents.getElasticDoc({
+  const elasticDoc = getElasticDoc({
     indexName: getIndexAlias(indexType.toLowerCase(), 'write'),
     indexType: indexType,
     doc,
     commitId,
     versionName
   })
-
-  let func = prepublication
-    ? scheduledAt
-      ? Documents.prepublishScheduledAt
-      : Documents.prepublish
-    : scheduledAt
-      ? Documents.publishScheduled
-      : Documents.publish
-
-  await func(elastic, elasticDoc).insert()
-  await func(elastic, elasticDoc).after()
+  const publish = createPublish({prepublication, scheduledAt, elastic, elasticDoc})
+  await publish.insert()
+  await publish.after()
 
   // release for nice view on github
   // this is optional, the release is not read back again

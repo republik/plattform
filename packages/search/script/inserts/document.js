@@ -13,7 +13,7 @@ const { lib: {
   Repo: { uploadImages }
 } } = require('@orbiting/backend-modules-assets')
 
-const { getElasticDoc } = require('../../lib/Documents')
+const { getElasticDoc, createPublish } = require('../../lib/Documents')
 
 const {
   AWS_ACCESS_KEY_ID,
@@ -180,15 +180,17 @@ module.exports = {
           context
         })
 
-        await elastic.index({
-          ...getElasticDoc({
-            indexName,
-            indexType,
-            doc,
-            commitId: commit.id,
-            versionName
-          })
+        const elasticDoc = getElasticDoc({
+          indexName,
+          indexType,
+          doc,
+          commitId: commit.id,
+          versionName
         })
+
+        const publish = createPublish({prepublication, scheduledAt, elastic, elasticDoc})
+        await publish.insert()
+
         stats[indexType].added++
       }
     })

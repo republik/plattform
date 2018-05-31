@@ -355,6 +355,7 @@ const getFilter = (visibilities, scheduledAt, repoId, id, notId) => {
   }
   return filter
 }
+
 const publish = (elastic, elasticDoc) => ({
   insert: async () => {
     const query = {
@@ -364,7 +365,7 @@ const publish = (elastic, elasticDoc) => ({
         visibility: ['internal', 'external']
       }
     }
-    logQuery('index', query)
+    // logQuery('index', query)
     return elastic.index(query)
   },
   after: async () => {
@@ -383,7 +384,7 @@ const prepublish = (elastic, elasticDoc) => ({
         visibility: ['internal']
       }
     }
-    logQuery('index', query)
+    // logQuery('index', query)
     return elastic.index(query)
   },
   after: async () => {
@@ -409,7 +410,7 @@ const publishScheduled = (elastic, elasticDoc) => ({
         visibility: ['internal', 'external']
       }
     }
-    logQuery('index', query)
+    // logQuery('index', query)
     return elastic.index(query)
   },
   after: async () => {
@@ -438,7 +439,7 @@ const prepublishScheduledAt = (elastic, elasticDoc) => ({
         visibility: ['internal']
       }
     }
-    logQuery('index', query)
+    // logQuery('index', query)
     return elastic.index(query)
   },
   after: async () => {
@@ -454,6 +455,17 @@ const prepublishScheduledAt = (elastic, elasticDoc) => ({
   }
 })
 
+const createPublish = ({prepublication, scheduledAt, elastic, elasticDoc}) => {
+  const func = prepublication
+    ? scheduledAt
+      ? prepublishScheduledAt
+      : prepublish
+    : scheduledAt
+      ? publishScheduled
+      : publish
+  return func(elastic, elasticDoc)
+}
+
 module.exports = {
   schema,
   getElasticDoc,
@@ -462,5 +474,6 @@ module.exports = {
   publish,
   prepublish,
   publishScheduled,
-  prepublishScheduledAt
+  prepublishScheduledAt,
+  createPublish
 }
