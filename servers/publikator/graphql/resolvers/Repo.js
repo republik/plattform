@@ -41,7 +41,7 @@ module.exports = {
     }
     return userIds.length
       ? pgdb.public.users.find({ id: userIds })
-          .then(users => users.map(transformUser))
+        .then(users => users.map(transformUser))
       : []
   },
   milestones: (repo) => {

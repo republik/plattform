@@ -273,13 +273,10 @@ module.exports = {
     const totalCount = heads.reduce((total, {target}) => total + target.history.totalCount, 0)
 
     const commits = heads
-      .map(({ name, target }) =>
+      .map(({ target }) =>
         target.history.nodes
           .map(
-            commit => Object.assign(
-              commitFromGQL(repo, commit),
-              { headName: name, headSha: target.oid }
-            )
+            commit => commitFromGQL(repo, commit)
           )
       )
       .reduce(

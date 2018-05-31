@@ -110,8 +110,7 @@ type Commit {
   date: DateTime!
   document: Document!
   repo: Repo!
-  headName: String
-  headSha: ID!
+  
 # files: [File]!
 }
 
