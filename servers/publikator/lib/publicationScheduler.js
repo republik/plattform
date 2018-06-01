@@ -9,23 +9,8 @@ const {
   deleteRef
 } = require('./github')
 
-const lockKey = 'locks:scheduling'
-const ttl = 2000
-const channelKey = 'scheduling'
 let subClient
 let nextJob
-
-const redlock = () => {
-  return new Redlock(
-    [redis],
-    {
-      driftFactor: 0.01, // time in ms
-      retryCount: 10,
-      retryDelay: 600,
-      retryJitter: 200
-    }
-  )
-}
 
 const init = async () => {
   if (subClient) {
@@ -54,40 +39,70 @@ const quit = async () => {
   }
 }
 
+const maxQuery = {
+  size: 1,
+  body: {
+    query: {
+      bool: {
+        must: [
+          {
+            term: {
+              __type: "Document"
+            }
+          }
+        ]
+      }
+    },
+    aggs: {
+      scheduledAt: {
+        max: {
+          field: "meta.scheduledAt"
+        }
+      }
+    }
+  }
+}
+
 const run = async (_lock) => {
   const pgdb = await PgDb.connect()
 
-  const lock = _lock || await redlock().lock(lockKey, ttl)
-
-  const nextPublication = await redis.zrangeAsync('repos:scheduledIds', 0, 1, 'WITHSCORES')
-    .then(objs => zipArray(objs).shift())
+  const nextPublication = await elastic.search(maxQuery)
 
   if (nextPublication) {
     const now = new Date().getTime()
-    const timeDiff = nextPublication.score - now
+    const timeDiff = new Date(nextPublication.meta.scheduledAt) - now
     if (timeDiff < 10000) { // max 10sec early
-      const key = nextPublication.value
-      const repoId = key.split(':').pop().split('/').slice(0, 2).join('/')
-      const ref = key.split('/').pop()
-      console.log(`scheduler: publishing ${key}`)
+      // repos:republik/article-briefing-aus-bern-14/scheduled-publication
+      const repoId = nextPublication.meta.repoId
+      const ref = `scheduled-${nextPublication.meta.prepublication ? 'prepublication' : 'publication'}`
+      console.log(`scheduler: publishing ${repoId}`)
 
       const newRef = ref.replace('scheduled-', '')
-      const newKeys = [ `repos:${repoId}/${newRef}` ]
       const newRefs = [ newRef ]
-      if (newRef === 'publication') { // prepublication moves along with publication
-        newKeys.push(`repos:${repoId}/prepublication`)
-        newRefs.push(`prepublication`)
-      }
+      ///////////////////////////////
+      const {
+        lib: {
+          Documents: { createPublish, getElasticDoc },
+          utils: { getIndexAlias }
+        }
+      } = require('@orbiting/backend-modules-search')
 
-      const payload = await redis.getAsync(key)
-      const { sha, doc } = JSON.parse(payload)
+      const indexType = 'Document'
+      const elasticDoc = getElasticDoc({
+        indexName: getIndexAlias(indexType.toLowerCase(), 'write'),
+        indexType: indexType,
+        doc,
+        commitId,
+        versionName
+      })
+      const publish = createPublish({prepublication, scheduledAt, elastic, elasticDoc})
+      //////////////////////////////
+
       if (newRef === 'publication') {
         await handleRedirection(repoId, doc.content.meta, { redis, pgdb })
       }
       await Promise.all([
-        ...newKeys.map(_key => redis.setAsync(_key, payload)),
-        redis.delAsync(key),
-        redis.zremAsync('repos:scheduledIds', key), // remove from queue
+        publish.afterScheduled()
         ...newRefs.map(_ref =>
           upsertRef(
             repoId,
