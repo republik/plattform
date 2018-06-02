@@ -355,34 +355,22 @@ const search = async (__, args, context) => {
 
   if (SEARCH_TRACK) {
     try {
-      const sanitizedResponse = Object.assign({}, response)
-
-      sanitizedResponse.nodes = sanitizedResponse
-        .nodes
-        .map(node => _.omit(node, ['entity.content', 'entity.contentString']))
-        .map(node =>
-          _.get(node, 'entity._raw.__type') === 'User'
-            ? _.omit(node, ['entity._raw'])
-            : node
-        )
-        .map(node =>
-          _.get(node, 'entity.__type') === 'Comment'
-            ? _.omit(node, ['entity.votes'])
-            : node
-        )
+      const took = result.took
+      const hits = result.hits.hits
+        .map(hit => _.omit(hit, '_source'))
 
       await elastic.index({
         index: getIndexAlias('searches'),
         type: 'Search',
         body: {
-          took: result.took,
-          user: {
-            id: user.id
-          },
+          took,
           options,
           query,
-          // response: sanitizedResponse, -> unable to stringify circular
-          date: new Date()
+          hits,
+          date: new Date(),
+          user: {
+            id: user.id
+          }
         }
       })
     } catch (err) {
