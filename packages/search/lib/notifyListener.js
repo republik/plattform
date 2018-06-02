@@ -1,15 +1,16 @@
 require('@orbiting/backend-modules-env').config()
 
-const BULK_SIZE = 100000
-
+const debug = require('debug')('search:lib:notifyListener')
 const { Client } = require('pg')
 
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const elasticsearch = require('@orbiting/backend-modules-base/lib/elastic')
-const { index } = require('@orbiting/backend-modules-search/lib/indexPgTable')
-const mappings = require('@orbiting/backend-modules-search/lib/indices')
 
+const mappings = require('./indices')
+const inserts = require('../script/inserts')
 const { getIndexAlias } = require('./utils')
+
+const BULK_SIZE = 100000
 
 const esClient = elasticsearch.client()
 const pgClient = new Client({
@@ -22,11 +23,14 @@ const notificationHandler = async function (pogiClient, {
 }) {
   const notificationHandleId = ++stats.notifications
 
+  const tx = await pogiClient.transactionBegin()
+
   try {
     const { table } = JSON.parse(originalPayload)
-    console.log('pgNotifyDispatcher notification received', { table, notificationHandleId })
-
-    const tx = await pogiClient.transactionBegin()
+    debug(
+      'notification received',
+      { table, notificationHandleId }
+    )
 
     const rows = await tx.public.notifyTableChangeQueue.query(
       'SELECT * FROM "notifyTableChangeQueue" WHERE "table" = :table LIMIT :limit FOR UPDATE SKIP LOCKED',
@@ -34,12 +38,15 @@ const notificationHandler = async function (pogiClient, {
     )
 
     if (rows.length === 0) {
-      console.log('pgNotifyDispatcher queue noop', { table, notificationHandleId })
+      debug(
+        'queue noop',
+        { table, notificationHandleId }
+      )
       return tx.transactionCommit()
     }
 
-    console.log(
-      'pgNotifyDispatcher queue skimmed',
+    debug(
+      'queue skimmed',
       { table, notificationHandleId },
       { rows: rows.length }
     )
@@ -51,9 +58,13 @@ const notificationHandler = async function (pogiClient, {
       .filter(row => row.op === 'DELETE')
       .map(row => row.id)
 
-    await index({
-      indexName: getIndexAlias(mappings.dict[table].name, 'write'),
-      type: mappings.dict[table].type,
+    const { type, name } = mappings.dict[table]
+    const { insert } = inserts.dict[name]
+
+    await insert({
+      indexName: getIndexAlias(name, 'write'),
+      type,
+      pgdb: pogiClient,
       elastic: esClient,
       resource: {
         table: tx.public[table],
@@ -65,12 +76,12 @@ const notificationHandler = async function (pogiClient, {
     await tx.public.notifyTableChangeQueue
       .delete({ id: rows.map(row => row.id) })
 
-    // Do transactions
-    tx.transactionCommit()
+    debug('queue done', { table, notificationHandleId })
 
-    console.log('pgNotifyDispatcher queue done', { table, notificationHandleId })
+    tx.transactionCommit()
   } catch (err) {
-    console.log(err)
+    console.error(err)
+    tx.transactionRollback()
   }
 }
 
@@ -89,7 +100,7 @@ const run = async function () {
   // Listen to a specific channel
   await pgClient.query('LISTEN change')
 
-  console.log('pgNotifyDispatcher ready')
+  debug('ready and listening')
 }
 
 module.exports = {

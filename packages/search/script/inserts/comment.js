@@ -62,59 +62,67 @@ const transform = function (row) {
   return row
 }
 
+const getDefaultResource = async ({ pgdb }) => {
+  return {
+    table: pgdb.public.comments,
+    payload: {
+      users: await pgdb.public.users.find(
+        {},
+        {
+          fields: [
+            'id',
+            'firstName',
+            'lastName',
+            'username',
+            'twitterHandle',
+            'facebookId'
+          ]
+        }
+      ),
+      discussions: await pgdb.public.discussions.find(
+        {},
+        {
+          fields: [
+            'id',
+            'anonymity'
+          ]
+        }
+      ),
+      discussionPreferences: await pgdb.public.discussionPreferences.find(
+        {},
+        {
+          fields: [
+            'userId',
+            'discussionId',
+            'anonymous',
+            'credentialId'
+          ]
+        }
+      ),
+      credentials: await pgdb.public.credentials.find(
+        {},
+        {
+          fields: [
+            'id',
+            'userId',
+            'description',
+            'isListed'
+          ]
+        }
+      )
+    },
+    transform
+  }
+}
+
 module.exports = {
   before: () => {},
-  insert: async ({ pgdb, ...rest }) => {
-    const resource = {
-      table: pgdb.public.comments,
-      payload: {
-        users: await pgdb.public.users.find(
-          {},
-          {
-            fields: [
-              'id',
-              'firstName',
-              'lastName',
-              'username',
-              'twitterHandle',
-              'facebookId'
-            ]
-          }
-        ),
-        discussions: await pgdb.public.discussions.find(
-          {},
-          {
-            fields: [
-              'id',
-              'anonymity'
-            ]
-          }
-        ),
-        discussionPreferences: await pgdb.public.discussionPreferences.find(
-          {},
-          {
-            fields: [
-              'userId',
-              'discussionId',
-              'anonymous',
-              'credentialId'
-            ]
-          }
-        ),
-        credentials: await pgdb.public.credentials.find(
-          {},
-          {
-            fields: [
-              'id',
-              'userId',
-              'description',
-              'isListed'
-            ]
-          }
-        )
-      },
-      transform
-    }
+  insert: async ({ resource, ...rest }) => {
+    resource = Object.assign(
+      await getDefaultResource({ resource, ...rest }),
+      resource
+    )
+
     return bulk.index({ resource, ...rest })
   },
   after: () => {}
