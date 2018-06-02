@@ -61,3 +61,14 @@ CREATE TRIGGER trigger_credentials_notify_change
 CREATE TRIGGER trigger_comments_notify_change
   AFTER INSERT OR UPDATE OR DELETE ON comments
   FOR EACH ROW EXECUTE PROCEDURE notify_table_change();
+
+-- notify_table_change() executed on INSERT, UPDATE, CHANGE of "discussions"
+CREATE TRIGGER trigger_discussions_notify_change
+  AFTER INSERT OR UPDATE OR DELETE ON discussions
+  FOR EACH ROW EXECUTE PROCEDURE notify_table_change();
+
+-- notify_table_change() executed on INSERT, UPDATE, CHANGE of
+-- "discussionPreferences"
+CREATE TRIGGER trigger_discussionPreferences_notify_change
+  AFTER INSERT OR UPDATE OR DELETE ON "discussionPreferences"
+  FOR EACH ROW EXECUTE PROCEDURE notify_table_change();

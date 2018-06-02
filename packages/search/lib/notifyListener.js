@@ -17,10 +17,66 @@ const pgClient = new Client({
   connectionString: process.env.DATABASE_URL
 })
 
-const notificationHandler = async function (pogiClient, {
-  payload: originalPayload,
-  ...rest
-}) {
+const cascadeUpdateConfig = {
+  credentials: [
+    {
+      table: 'users', // update all users
+      via: 'userId', // via credentials.userId
+      where: 'id' // where user.id === <via>
+    },
+    {
+      table: 'comments', // update all comments
+      via: 'userId', // via credentials.userId
+      where: 'userId' // where comments.userid === <via>
+    }
+  ],
+  discussions: [
+    {
+      table: 'comments', // ipdate all comment
+      via: 'id', // via discussions.id
+      where: 'discussionId' // where comments.discussionId === <via>
+    }
+  ]
+}
+
+const updateCascade = async function (
+  pogiClient,
+  { table, rows }
+) {
+  if (cascadeUpdateConfig[table]) {
+    debug('found cascade configuration')
+
+    return Promise.all(
+      cascadeUpdateConfig[table].map(async function (config) {
+        const sources =
+          config.via === 'id'
+            ? rows.map(row => ({ id: row.id }))
+            : await pogiClient.public[table].find({ id: rows.map(row => row.id) })
+
+        const sourceIds = sources.map(source => source[config.via])
+
+        const updateRows = await pogiClient.public[config.table]
+          .find(
+            { [config.where]: sourceIds },
+            { fields: ['id'] }
+          )
+
+        return notificationHandler(
+          pogiClient,
+          {
+            rows: updateRows,
+            payload: JSON.stringify({ table: config.table })
+          }
+        )
+      })
+    )
+  }
+}
+
+const notificationHandler = async function (
+  pogiClient,
+  { rows = false, payload: originalPayload }
+) {
   const notificationHandleId = ++stats.notifications
 
   const tx = await pogiClient.transactionBegin()
@@ -32,10 +88,12 @@ const notificationHandler = async function (pogiClient, {
       { table, notificationHandleId }
     )
 
-    const rows = await tx.public.notifyTableChangeQueue.query(
-      'SELECT * FROM "notifyTableChangeQueue" WHERE "table" = :table LIMIT :limit FOR UPDATE SKIP LOCKED',
-      { table, limit: BULK_SIZE }
-    )
+    if (!rows) {
+      rows = await tx.public.notifyTableChangeQueue.query(
+        'SELECT * FROM "notifyTableChangeQueue" WHERE "table" = :table LIMIT :limit FOR UPDATE SKIP LOCKED',
+        { table, limit: BULK_SIZE }
+      )
+    }
 
     if (rows.length === 0) {
       debug(
@@ -51,28 +109,35 @@ const notificationHandler = async function (pogiClient, {
       { rows: rows.length }
     )
 
-    const updateIds = rows
-      .filter(row => row.op !== 'DELETE')
-      .map(row => row.id)
-    const deleteIds = rows
-      .filter(row => row.op === 'DELETE')
-      .map(row => row.id)
+    if (mappings.dict[table]) {
+      const { type, name } = mappings.dict[table]
+      const { insert } = inserts.dict[name]
 
-    const { type, name } = mappings.dict[table]
-    const { insert } = inserts.dict[name]
+      const updateIds = rows
+        .filter(row => row.op !== 'DELETE')
+        .map(row => row.id)
+      const deleteIds = rows
+        .filter(row => row.op === 'DELETE')
+        .map(row => row.id)
 
-    await insert({
-      indexName: getIndexAlias(name, 'write'),
-      type,
-      pgdb: pogiClient,
-      elastic: esClient,
-      resource: {
-        table: tx.public[table],
-        where: { id: updateIds },
-        delete: deleteIds
-      }
-    })
+      debug(table, { updateIds, deleteIds })
 
+      await insert({
+        indexName: getIndexAlias(name, 'write'),
+        type,
+        pgdb: pogiClient,
+        elastic: esClient,
+        resource: {
+          table: tx.public[table],
+          where: { id: updateIds },
+          delete: deleteIds
+        }
+      })
+    }
+
+    await updateCascade(pogiClient, { table, rows })
+
+    // No delete if rows are provided from outside
     await tx.public.notifyTableChangeQueue
       .delete({ id: rows.map(row => row.id) })
 
@@ -100,7 +165,7 @@ const run = async function () {
   // Listen to a specific channel
   await pgClient.query('LISTEN change')
 
-  debug('ready and listening')
+  debug('listening')
 }
 
 module.exports = {
