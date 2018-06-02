@@ -8,7 +8,7 @@ const transform = function (row) {
   }
 
   row.resolved = {
-    credential: ''
+    credential: null
   }
 
   const credential = _.find(
@@ -16,34 +16,30 @@ const transform = function (row) {
     { userId: row.id, isListed: true }
   )
 
-  if (credential) {
+  if (credential && credential.description.length > 0) {
     row.resolved.credential = credential.description.trim()
   }
 
-  row.name = `${row.firstName} ${row.lastName}`.trim()
+  row.name = `${row.firstName || ''} ${row.lastName || ''}`.trim()
 
   return row
 }
 
 const getDefaultResource = async ({ pgdb }) => {
   return {
-    table: pgdb.public.comments,
+    table: pgdb.public.users,
     payload: {
-      table: pgdb.public.users,
-      payload: {
-        credentials: await pgdb.public.credentials.find(
-          {},
-          {
-            fields: [
-              'id',
-              'userId',
-              'description',
-              'isListed'
-            ]
-          }
-        )
-      },
-      transform
+      credentials: await pgdb.public.credentials.find(
+        {},
+        {
+          fields: [
+            'id',
+            'userId',
+            'description',
+            'isListed'
+          ]
+        }
+      )
     },
     transform
   }
