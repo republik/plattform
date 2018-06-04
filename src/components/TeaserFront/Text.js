@@ -7,7 +7,7 @@ import colors from '../../theme/colors'
 const TEXT_PADDING = 50
 
 const positionHalfWidth = {
-  height: `calc(50% - ${TEXT_PADDING}px)`,
+  position: 'absolute',
   width: `calc(50% - ${TEXT_PADDING}px)`
 }
 
@@ -54,15 +54,16 @@ const styles = {
   bottomleft: css({
     [tUp]: {
       ...positionHalfWidth,
-      left: `${TEXT_PADDING}px`,
-      top: '50%'
+      bottom: `${TEXT_PADDING}px`,
+      left: `${TEXT_PADDING}px`
+      
     }
   }),
   bottomright: css({
     [tUp]: {
       ...positionHalfWidth,
-      left: '50%',
-      top: '50%'
+      bottom: `${TEXT_PADDING}px`,
+      left: '50%'
     }
   }),
   top: css({
