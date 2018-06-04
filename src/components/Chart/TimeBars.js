@@ -410,7 +410,7 @@ TimeBarChart.propTypes = {
   mini: PropTypes.bool,
   height: PropTypes.number.isRequired,
   color: PropTypes.string,
-  colorRange: PropTypes.array,
+  colorRange: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   colorLegend: PropTypes.bool,
   colorRanges: PropTypes.shape({
     sequential3: PropTypes.array.isRequired,

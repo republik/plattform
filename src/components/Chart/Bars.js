@@ -429,4 +429,7 @@ Lollipop.defaultProps = {
   confidence: 95
 }
 
+// Lollipop has additional default props
+Lollipop.wrap = 'Bar'
+
 export default BarChart

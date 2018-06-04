@@ -11,10 +11,10 @@ import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 import { sansSerifMedium19, sansSerifMedium22, sansSerifRegular16, sansSerifRegular19 } from '../Typography/styles'
 
-const ReactCharts = {
+export const ReactCharts = {
   Bar,
-  TimeBar,
   Lollipop,
+  TimeBar,
   Line,
   Slope
 }

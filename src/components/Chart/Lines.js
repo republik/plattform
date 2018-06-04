@@ -540,3 +540,9 @@ Slope.defaultProps = {
   colorLegend: true,
   yNice: 3
 }
+
+// Additional Info for Docs
+// - Line is the master chart and «owns» the prop types
+Line.propTypes = LineChart.propTypes
+// - Slope just has different default props
+Slope.base = 'Line'

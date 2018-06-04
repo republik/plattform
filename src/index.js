@@ -514,6 +514,11 @@ ReactDOM.render(
         title: 'Charts',
         pages: [
           {
+            path: '/charts',
+            title: 'Overview',
+            component: require('./components/Chart/docs.js').default
+          },
+          {
             path: '/charts/bars',
             title: 'Bars',
             imports: {
