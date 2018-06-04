@@ -110,12 +110,12 @@ type Commit {
   date: DateTime!
   document: Document!
   repo: Repo!
-  
+
 # files: [File]!
 }
 
 type CommitConnection {
-  nodes: [Commit]
+  nodes: [Commit!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }

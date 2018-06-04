@@ -24,7 +24,7 @@ const tagNormalizer = (tag, repoId, refName) => ({
   }
 })
 
-const commitFromRest = ({
+const normalizeRestCommit = ({
   sha,
   commit: {
     message,
@@ -43,16 +43,13 @@ const commitFromRest = ({
   repo
 })
 
-const commitFromGQL = (repo, commit) => Object.assign(
-  {},
-  commit,
-  {
-    id: commit.oid,
-    date: commit.committedDate,
-    parentIds: commit.parents.nodes.map(v => v.oid),
-    repo
-  }
-)
+const normalizeGQLCommit = (repo, commit) => ({
+  ...commit,
+  id: commit.oid,
+  date: commit.committedDate,
+  parentIds: commit.parents.nodes.map(v => v.oid),
+  repo
+})
 
 module.exports = {
   gitAuthor,
@@ -60,8 +57,8 @@ module.exports = {
   publicationVersionRegex,
   createGithubClients,
   tagNormalizer,
-  commitFromGQL,
-  commitNormalizer: commitFromRest,
+  normalizeGQLCommit,
+  commitNormalizer: normalizeRestCommit,
   getRepo: async (repoId) => {
     const { githubApolloFetch } = await createGithubClients()
     const [login, repoName] = repoId.split('/')
@@ -193,7 +190,7 @@ module.exports = {
     if (!rawCommit) {
       return null
     }
-    const commit = commitFromGQL(repo, rawCommit)
+    const commit = normalizeGQLCommit(repo, rawCommit)
     await redis.setAsync(redisKey, JSON.stringify(commit))
     return commit
   },
@@ -276,13 +273,13 @@ module.exports = {
       .map(({ target }) =>
         target.history.nodes
           .map(
-            commit => commitFromGQL(repo, commit)
+            commit => normalizeGQLCommit(repo, commit)
           )
       )
       .reduce(
         (acc, v) => acc.concat(v), []
       )
-      .filter((v, i, arr) => arr.map(mapObj => mapObj.id).indexOf(v.id) === i)
+      .filter((v, i, arr) => arr.findIndex(mapObj => mapObj.id === v.id) === i)
       .sort((a, b) => descending(a.date, b.date))
       .slice(0, first)
 
@@ -290,7 +287,7 @@ module.exports = {
       pageInfo: {
         endCursor: (commits.length && commits.slice(-1)[0].date) || null,
         startCursor: (commits.length && commits[0].date) || null,
-        hasNextPage
+        hasNextPage: hasNextPage || commits.length > first
       },
       totalCount,
       nodes: commits

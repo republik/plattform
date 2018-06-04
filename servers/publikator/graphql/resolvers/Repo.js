@@ -16,7 +16,7 @@ module.exports = {
   commits: getCommits,
   latestCommit: async (repo, args, context) => {
     return getCommits(repo, { first: 1 }, context)
-      .then(commitConnection => commitConnection.nodes.shift())
+      .then(commitConnection => commitConnection.nodes[0])
   },
   commit: getCommit,
   uncommittedChanges: async (
