@@ -1,5 +1,5 @@
 const geoForIP = require('../../../lib/geoForIP')
-const useragent = require('useragent')
+const useragent = require('../../../lib/useragent')
 const { flag, code } = require('country-emoji')
 
 module.exports = async (_, args, { req }) => {
@@ -10,7 +10,7 @@ module.exports = async (_, args, { req }) => {
 
   return {
     ipAddress: ip,
-    userAgent: ua && useragent.parse(ua).toString(),
+    userAgent: useragent.detect(ua),
     country,
     countryFlag: countryCode ? flag(countryCode) : '🏴',
     city
