@@ -49,5 +49,55 @@ module.exports = {
       }
     }
     return meta
+  },
+  children (doc, { first, last, before, after }, context, info) {
+    if (!doc || !doc.content || !doc.content.children) {
+      return {
+        pageInfo: {
+          endCursor: null,
+          startCursor: null,
+          hasNextPage: false,
+          hasPreviousPage: false
+        },
+        totalCount: 0,
+        nodes: []
+      }
+    }
+    const children = (doc.content.children.length && doc.content.children) || []
+    const totalCount = children.length
+    const firstIndex = 0
+    const lastIndex = totalCount
+    const startOffset = after
+      ? children.findIndex(v => v.data.id === after) + 1
+      : firstIndex
+    const endOffset = before
+      ? children.findIndex(v => v.data.id === before)
+      : lastIndex
+
+    const isLast = last && !first
+    const childrenSubset = children.slice(startOffset, endOffset)
+    const nodes = isLast
+      ? childrenSubset.slice(-1 * last)
+      : childrenSubset.slice(0, first)
+    const startCursor = nodes.length && nodes[0].data.id
+    const endCursor = nodes.length && nodes.slice(-1)[0].data.id
+
+    const hasNextPage = !!endCursor &&
+      children.some((v, i) => v.data.id === endCursor && i < lastIndex)
+    const hasPreviousPage = !!startCursor &&
+      children.some((v, i) => v.data.id === startCursor && i > firstIndex)
+
+    console.log(first, nodes.length)
+
+    return {
+      pageInfo: {
+        startCursor,
+        endCursor,
+        hasNextPage,
+        hasPreviousPage
+      },
+      totalCount,
+      nodes
+    }
   }
 }
