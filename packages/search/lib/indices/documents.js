@@ -183,6 +183,9 @@ module.exports = {
             publishDate: {
               type: 'date'
             },
+            scheduledAt: {
+              type: 'date'
+            },
             slug: {
               type: 'text',
               ...keywordPartial,
