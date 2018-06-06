@@ -22,8 +22,8 @@ input SearchSortInput {
 }
 
 input DateRangeInput {
-  from: Date
-  to: Date
+  from: DateTime
+  to: DateTime
 }
 
 enum SearchTypes {

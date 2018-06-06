@@ -359,12 +359,22 @@ const search = async (__, args, context) => {
       const hits = result.hits.hits
         .map(hit => _.omit(hit, '_source'))
 
+      const filters = options.filters
+        ? options.filters.map(filter => {
+          if (typeof filter.value !== 'string') {
+            filter.value = JSON.stringify(filter.value)
+          }
+
+          return filter
+        })
+        : []
+
       await elastic.index({
         index: getIndexAlias('searches'),
         type: 'Search',
         body: {
           took,
-          options,
+          options: Object.assign({}, options, { filters }),
           query,
           hits,
           date: new Date(),

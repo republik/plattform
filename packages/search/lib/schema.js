@@ -17,9 +17,19 @@ const boolParser = (value) => {
 }
 
 const dateRangeParser = (value) => {
+  // An object value = { from: "", to: "" }
+  if (value.from || value.to) {
+    return {
+      from: value.from && new Date(value.from),
+      to: value.to && new Date(value.to)
+    }
+  }
+
+  // A string, maybe separated by comma
   const [from, to] = value.indexOf(',') > -1
     ? value.split(',')
     : [undefined, value]
+
   return {
     from: from && new Date(from),
     to: to && new Date(to)
