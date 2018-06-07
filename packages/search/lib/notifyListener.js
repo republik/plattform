@@ -143,10 +143,10 @@ const notificationHandler = async function (
 
     debug('queue done', { table, notificationHandleId })
 
-    tx.transactionCommit()
+    await tx.transactionCommit()
   } catch (err) {
     console.error(err)
-    tx.transactionRollback()
+    await tx.transactionRollback()
   }
 }
 
