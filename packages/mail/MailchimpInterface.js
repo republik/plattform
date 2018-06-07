@@ -24,7 +24,7 @@ const MailchimpInterface = ({ logger }) => {
     buildMembersApiUrl (email) {
       const hash = crypto
         .createHash('md5')
-        .update(email)
+        .update(email.toLowerCase())
         .digest('hex')
         .toLowerCase()
 
