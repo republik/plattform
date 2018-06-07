@@ -128,29 +128,24 @@ const schema = {
 const mdastToString = require('mdast-util-to-string')
 const { mdastFilter } = require('./utils.js')
 
-const getElasticDoc = ({ indexName, indexType, doc, commitId, versionName }) => {
+const getElasticDoc = ({ doc, commitId, versionName }) => {
   const meta = doc.content.meta
   const id = getDocumentId({repoId: meta.repoId, commitId, versionName})
   return {
+    __type: indexType,
+    __sort: {
+      date: meta.publishDate
+    },
     id,
-    index: indexName,
-    type: indexType,
-    body: {
-      __type: indexType,
-      __sort: {
-        date: meta.publishDate
-      },
-      id,
-      // repoId, is in meta now
-      meta,
-      content: doc.content,
-      contentString: mdastToString(
-        mdastFilter(
-          doc.content,
-          node => node.type === 'code'
-        )
+    // repoId, is in meta now
+    meta,
+    content: doc.content,
+    contentString: mdastToString(
+      mdastFilter(
+        doc.content,
+        node => node.type === 'code'
       )
-    }
+    )
   }
 }
 
@@ -273,7 +268,7 @@ const indexRef = {
 }
 
 const logQuery = (name, query) =>
-  console.log(`${name}\n`, JSON.stringify(query, null, 2))
+  console.log(name, JSON.stringify(query))
 
 const del = async (filter, elastic) => {
   if (
@@ -356,12 +351,27 @@ const getFilter = (visibilities, scheduledAt, repoId, id, notId) => {
   return filter
 }
 
+const unpublish = async (elastic, repoId) => {
+  return elastic.deleteByQuery({
+    index: indexRef.index,
+    conflicts: 'proceed',
+    body: {
+      query: {
+        term: {
+          'meta.repoId': repoId
+        }
+      }
+    }
+  })
+}
+
 const publish = (elastic, elasticDoc) => ({
   insert: async () => {
     const query = {
-      ...elasticDoc,
+      ...indexRef,
+      id: elasticDoc.id,
       body: {
-        ...elasticDoc.body,
+        ...elasticDoc,
         visibility: ['internal', 'external']
       }
     }
@@ -369,18 +379,20 @@ const publish = (elastic, elasticDoc) => ({
     return elastic.index(query)
   },
   after: async () => {
-    const repoId = elasticDoc.body.meta.repoId
+    const repoId = elasticDoc.meta.repoId
     await del(getFilter(['internal', 'external'], null, repoId, elasticDoc.id, true), elastic)
     await del(getFilter(['internal'], false, repoId, elasticDoc.id, true), elastic)
     await del(getFilter(['external'], false, repoId, elasticDoc.id, true), elastic)
   }
 })
+
 const prepublish = (elastic, elasticDoc) => ({
   insert: async () => {
     const query = {
-      ...elasticDoc,
+      ...indexRef,
+      id: elasticDoc.id,
       body: {
-        ...elasticDoc.body,
+        ...elasticDoc,
         visibility: ['internal']
       }
     }
@@ -388,7 +400,7 @@ const prepublish = (elastic, elasticDoc) => ({
     return elastic.index(query)
   },
   after: async () => {
-    const repoId = elasticDoc.body.meta.repoId
+    const repoId = elasticDoc.meta.repoId
     await del(getFilter(['internal'], null, repoId, elasticDoc.id, true), elastic)
     await removeVisibility(
       getFilter(['internal', 'external'], false, repoId),
@@ -400,13 +412,15 @@ const prepublish = (elastic, elasticDoc) => ({
 
 const publishScheduled = (elastic, elasticDoc) => ({
   insert: async () => {
-    if (!elasticDoc.body.meta.scheduledAt) {
+    elasticDoc.meta.publishDate = undefined
+    if (!elasticDoc.meta.scheduledAt) {
       throw new Error('missing body.meta.scheduledAt')
     }
     const query = {
-      ...elasticDoc,
+      ...indexRef,
+      id: elasticDoc.id,
       body: {
-        ...elasticDoc.body,
+        ...elasticDoc,
         visibility: ['internal', 'external']
       }
     }
@@ -414,7 +428,7 @@ const publishScheduled = (elastic, elasticDoc) => ({
     return elastic.index(query)
   },
   after: async () => {
-    const repoId = elasticDoc.body.meta.repoId
+    const repoId = elasticDoc.meta.repoId
     await del(getFilter(['internal', 'external'], true, repoId), elastic)
     await del(getFilter(['internal'], true, repoId), elastic)
     await del(getFilter(['external'], true, repoId), elastic)
@@ -427,15 +441,18 @@ const publishScheduled = (elastic, elasticDoc) => ({
     await publish(elastic, elasticDoc).after()
   }
 })
+
 const prepublishScheduledAt = (elastic, elasticDoc) => ({
   insert: async () => {
-    if (!elasticDoc.body.meta.scheduledAt) {
+    elasticDoc.meta.publishDate = undefined
+    if (!elasticDoc.meta.scheduledAt) {
       throw new Error('missing body.meta.scheduledAt')
     }
     const query = {
-      ...elasticDoc,
+      ...indexRef,
+      id: elasticDoc.id,
       body: {
-        ...elasticDoc.body,
+        ...elasticDoc,
         visibility: ['internal']
       }
     }
@@ -443,7 +460,7 @@ const prepublishScheduledAt = (elastic, elasticDoc) => ({
     return elastic.index(query)
   },
   after: async () => {
-    const repoId = elasticDoc.body.meta.repoId
+    const repoId = elasticDoc.meta.repoId
     await del(getFilter(['external'], true, repoId), elastic)
   },
   afterScheduled: async () => {
@@ -456,6 +473,12 @@ const prepublishScheduledAt = (elastic, elasticDoc) => ({
 })
 
 const createPublish = ({prepublication, scheduledAt, elastic, elasticDoc}) => {
+  // If scheduled is before now, it is safe to assume that a scheduled
+  // document has been published already and does not need to be scheduled
+  if (scheduledAt < new Date()) {
+    scheduledAt = false
+  }
+
   const func = prepublication
     ? scheduledAt
       ? prepublishScheduledAt
@@ -471,6 +494,7 @@ module.exports = {
   getElasticDoc,
   getRepoIdFromDocumentId,
   addRelatedDocs,
+  unpublish,
   publish,
   prepublish,
   publishScheduled,
