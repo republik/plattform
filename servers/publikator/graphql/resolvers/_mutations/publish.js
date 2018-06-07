@@ -107,11 +107,7 @@ module.exports = async (
   let unresolvedRepoIds = []
   const docsConnection = await getPublishedDocuments(
     null,
-    {
-      ...scheduledAt
-        ? { scheduledAt }
-        : { }
-    },
+    {}, // TODO: Include scheduledAt, publishDate schmuh
     context
   )
 
