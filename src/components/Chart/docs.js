@@ -49,15 +49,37 @@ const propByName = groupBy(props, d => d.key)
   .filter(group => IGNORE_KEYS.indexOf(group.key) === -1)
   .sort((a, b) => descending(a.values.length, b.values.length) || ascending(a.key, b.key))
 
+const examples = {
+  color: '`"category"`',
+  colorLegend: '`true`',
+  colorRange: '`["#d62728", "#9467bd"]`',
+  numberFormat: '`".2%"`',
+  xTicks: '`[2005, 2010, 2015]`',
+  colorSort: '`"none"`',
+  category: '`"datum.country === \'CH\' ? \'CH\' : \'andere\'"`',
+  column: '`"category"`',
+  columnSort: '`"none"`',
+  columnFilter: '`[{"title": "CH", "test": "datum.country === \'CH\'"}, {"title": "Andere", "test": "datum.country !== \'CH\'"}]`',
+  columns: '`3`',
+  confidence: '`95`',
+  domain: '`[2005, 2015]`',
+  height: '`300`'
+}
 const comments = {
   color: 'column name',
-  colorSort: '`"none"`, `"ascending"`, `"descending"`',
-  columnSort: '`"none"`, `"ascending"`, `"descending"`',
+  colorSort: 'see `"sort"`',
+  columnSort: '`see `"sort"`',
   sort: '`"none"`, `"ascending"`, `"descending"`',
-  colorRange: 'custom `["#d62728", "#9467bd"]`\nand named `"discrete"`, `"sequential3"`, `"diverging1"`, `"diverging1n"`, `"diverging2"`, `"diverging3"`',
-  timeParse: 'see [d3-time-format](https://github.com/d3/d3-time-format)',
-  timeFormat: 'see [d3-time-format](https://github.com/d3/d3-time-format)',
-  xTicks: 'e.g. `[2005, 2010, 2015]`'
+  colorRange: 'or presets: `"discrete"`, `"sequential3"`, `"diverging1"`, `"diverging1n"`, `"diverging2"`, `"diverging3"`',
+  colorLegend: 'force (`true`) or suppress (`false`) color legend, auto if not set',
+  timeParse: 'see [d3-time-format](https://github.com/d3/d3-time-format#locale_format)',
+  timeFormat: 'see [d3-time-format](https://github.com/d3/d3-time-format#locale_format)',
+  numberFormat: 'see [d3-format](https://github.com/d3/d3-format#locale_format)',
+  xTicks: 'same format as your x data',
+  category: 'js expression, data row available as `datum`',
+  columns: 'number of columns, normally 1 up to 4',
+  domain: 'same format as your data',
+  height: 'higher than 320 is usually bad on mobile'
 }
 const manualType = {
   colorRange: 'array, string',
@@ -65,11 +87,18 @@ const manualType = {
 }
 
 const options = propByName.map(({ key, values }) => ({
-  Name: key,
+  Name: `\`"${key}":\``,
+  Example: examples[key],
   Type: values.map(d => d.type).filter(Boolean).filter(deduplicate).join(', ') || manualType[key],
   Charts: values.map(d => d.chart).join(', '),
   Comment: comments[key]
 }))
+
+if (process.env.NODE_ENV === 'production') {
+  options.forEach(option => {
+    delete option.Type
+  })
+}
 
 const chartPages = charts.map(key => {
   const { base, wrap, defaultProps } = ReactCharts[key]
