@@ -1,7 +1,8 @@
 module.exports = {
   id (docNode) {
     if (!docNode.data.id) {
-      return Date.now()
+      console.error('No id found for node', docNode)
+      return null
     }
     return docNode.data.id
   },

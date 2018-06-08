@@ -87,8 +87,6 @@ module.exports = {
     const hasPreviousPage = !!startCursor &&
       children.some((v, i) => v.data.id === startCursor && i > firstIndex)
 
-    console.log(first, nodes.length)
-
     return {
       pageInfo: {
         startCursor,
