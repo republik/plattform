@@ -1,10 +1,10 @@
 const debug = require('debug')('search:graphql:resolvers:_queries:search')
 const {
   Roles: {
+    userHasRole,
     userIsInRoles
   }
 } = require('@orbiting/backend-modules-auth')
-
 const {
   schema: documentSchema,
   addRelatedDocs
@@ -296,6 +296,17 @@ const search = async (__, args, context) => {
       key,
       value: _filter[key]
     })
+  })
+
+  const states = ['published'] // Default states to deliver.
+
+  if (userHasRole(user, 'editor')) {
+    states.push('prepublished')
+  }
+
+  filters.push({
+    key: 'state',
+    value: states
   })
 
   const filter = reduceFilters(filters)

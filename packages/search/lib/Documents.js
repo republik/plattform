@@ -54,6 +54,7 @@ const documentIdParser = value => {
 
 const schema = {
   type: termEntry('__type'),
+  state: termEntry('__state'),
   template: termEntry('meta.template'),
   dossier: {
     criteria: termCriteriaBuilder('meta.dossier'),
