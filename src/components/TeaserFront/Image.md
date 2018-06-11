@@ -201,4 +201,19 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 </TeaserFrontImage>
 ```
 
+```react
+<TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
+  textPosition='bottomright'
+  color='#fff' bgColor='#000'>
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <TeaserFrontImageHeadline.Editorial small>LongWordOverflowingLongWordOverflowing</TeaserFrontImageHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontImage>
+```
+
 Photo by Thomas Vuillemin on [Unsplash](https://unsplash.com/photos/c1_K8Qfd_iQ)
