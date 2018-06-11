@@ -51,5 +51,7 @@ before_script:
   # when the build script runs add a small delay to your build script
   # see https://docs.travis-ci.com/user/database-setup/#ElasticSearch
   - sleep 10
+  # Setup alias, mappings
+  - yarn pull:elasticsearch --no-inserts
 script:
   - cd $TEST_DIR && yarn run test:travis
