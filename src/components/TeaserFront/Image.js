@@ -15,6 +15,7 @@ const styles = {
     }
   }),
   textContainer: css({
+    overflow: 'hidden',
     padding: '15px 15px 40px 15px',
     [mUp]: {
       padding: '40px 15% 70px 15%'
