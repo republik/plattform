@@ -317,7 +317,8 @@ module.exports = async (
     indexType: indexType,
     doc,
     commitId,
-    versionName
+    versionName,
+    milestoneCommitId: milestone.sha
   })
   const publish = createPublish({prepublication, scheduledAt, elastic, elasticDoc})
   await publish.insert()

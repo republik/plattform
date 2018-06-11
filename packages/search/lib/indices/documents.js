@@ -104,6 +104,9 @@ module.exports = {
         __type: {
           type: 'keyword'
         },
+        __state: {
+          type: 'keyword'
+        },
         __sort: {
           properties: {
             date: {
@@ -147,9 +150,6 @@ module.exports = {
               }
             }
           }
-        },
-        visibility: {
-          type: 'keyword'
         },
 
         contentString: {

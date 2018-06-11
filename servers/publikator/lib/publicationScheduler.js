@@ -1,16 +1,37 @@
 const CronJob = require('cron').CronJob
 const Redlock = require('redlock')
+const debug = require('debug')('publikator:lib:publicationScheduler')
 const redis = require('@orbiting/backend-modules-base/lib/redis')
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const Elastic = require('@orbiting/backend-modules-base/lib/elastic')
+const indices = require('@orbiting/backend-modules-search/lib/indices')
+const { getIndexAlias } = require('@orbiting/backend-modules-search/lib/utils')
 const { handleRedirection } = require('./Document')
-const zipArray = require('./zipArray')
 const {
   upsertRef,
   deleteRef
 } = require('./github')
 
+const elastic = Elastic.client()
+
+const lockKey = 'locks:scheduling'
+const ttl = 2000
+const channelKey = 'scheduling'
+
 let subClient
 let nextJob
+
+const redlock = () => {
+  return new Redlock(
+    [redis],
+    {
+      driftFactor: 0.01, // time in ms
+      retryCount: 10,
+      retryDelay: 600,
+      retryJitter: 200
+    }
+  )
+}
 
 const init = async () => {
   if (subClient) {
@@ -39,75 +60,75 @@ const quit = async () => {
   }
 }
 
-const maxQuery = {
-  size: 1,
-  body: {
-    query: {
-      bool: {
-        must: [
-          {
-            term: {
-              __type: "Document"
-            }
-          }
-        ]
-      }
-    },
-    aggs: {
-      scheduledAt: {
-        max: {
-          field: "meta.scheduledAt"
+const index = indices.dict.documents
+
+const getSchedulableDocuments = async () => {
+  const response = await elastic.search({
+    index: getIndexAlias(index.name, 'read'),
+    size: 1,
+    body: {
+      sort: { 'meta.scheduledAt': 'asc' },
+      query: {
+        bool: {
+          must: [
+            { term: { __type: 'Document' } },
+            { exists: { field: 'meta.scheduledAt' } }
+          ]
         }
       }
     }
-  }
+  })
+
+  return response.hits.hits.map(hit => hit._source)
 }
 
 const run = async (_lock) => {
+  const lock = _lock || await redlock().lock(lockKey, ttl)
+
   const pgdb = await PgDb.connect()
 
-  const nextPublication = await elastic.search(maxQuery)
+  const docs = await getSchedulableDocuments()
 
-  if (nextPublication) {
-    const now = new Date().getTime()
-    const timeDiff = new Date(nextPublication.meta.scheduledAt) - now
-    if (timeDiff < 10000) { // max 10sec early
+  if (docs.length > 0) {
+    const doc = docs.shift()
+
+    const delta = new Date(doc.meta.scheduledAt) - new Date()
+
+    if (delta < 10 * 1000) { // max 10sec early
       // repos:republik/article-briefing-aus-bern-14/scheduled-publication
-      const repoId = nextPublication.meta.repoId
-      const ref = `scheduled-${nextPublication.meta.prepublication ? 'prepublication' : 'publication'}`
+      const repoId = doc.meta.repoId
+      const prepublication = doc.meta.prepublication
+      const scheduledAt = doc.meta.scheduledAt
+
+      const ref = `scheduled-${prepublication ? 'prepublication' : 'publication'}`
       console.log(`scheduler: publishing ${repoId}`)
 
       const newRef = ref.replace('scheduled-', '')
       const newRefs = [ newRef ]
-      ///////////////////////////////
-      const {
-        lib: {
-          Documents: { createPublish, getElasticDoc },
-          utils: { getIndexAlias }
-        }
-      } = require('@orbiting/backend-modules-search')
 
-      const indexType = 'Document'
-      const elasticDoc = getElasticDoc({
-        indexName: getIndexAlias(indexType.toLowerCase(), 'write'),
-        indexType: indexType,
-        doc,
-        commitId,
-        versionName
+      debug({ ref, newRefs, sha: doc.milestoneCommitId })
+
+      const { lib: { Documents: { createPublish } } } =
+        require('@orbiting/backend-modules-search')
+
+      const publish = createPublish({
+        prepublication,
+        scheduledAt,
+        elastic,
+        elasticDoc: doc
       })
-      const publish = createPublish({prepublication, scheduledAt, elastic, elasticDoc})
-      //////////////////////////////
 
       if (newRef === 'publication') {
         await handleRedirection(repoId, doc.content.meta, { redis, pgdb })
       }
+
       await Promise.all([
-        publish.afterScheduled()
+        publish.afterScheduled(),
         ...newRefs.map(_ref =>
           upsertRef(
             repoId,
             `tags/${_ref}`,
-            sha
+            doc.milestoneCommitId
           )
         ),
         deleteRef(
@@ -126,7 +147,7 @@ const run = async (_lock) => {
   }
 
   nextJob = null
-  refresh(lock)
+  await refresh(lock)
 
   if (!_lock) {
     await lock.unlock().catch((err) => { console.error(err) })
@@ -135,22 +156,31 @@ const run = async (_lock) => {
 
 const refresh = async (_lock) => {
   const lock = _lock || await redlock().lock(lockKey, ttl)
+  const docs = await getSchedulableDocuments()
 
-  const nextPublication = await redis.zrangeAsync('repos:scheduledIds', 0, 1, 'WITHSCORES')
-    .then(objs => zipArray(objs).shift())
+  if (docs.length > 0) {
+    const doc = docs.shift()
+    const delta = new Date(doc.meta.scheduledAt) - new Date()
 
-  if (nextPublication) {
-    const now = new Date().getTime()
-    const timeDiff = nextPublication.score - now
-    if (timeDiff < 10000) { // max 10sec early
-      console.log('Found scheduled publication in the past. Publishing now...')
-      await run(lock)
+    if (delta < 10 * 1000) { // max 10sec early
+      debug('Document found was to be published earlier. Publishing now...')
+      console.log('Document found was to be published earlier. Publishing now...')
+      await run()
     } else {
-      const nextScheduledAt = new Date(nextPublication.score)
+      debug('Document found is to be published soon. Scheduling...')
+      debug(
+        'Document scheduled', {
+          repoId: doc.meta.repoId,
+          scheduledAt: doc.meta.scheduledAt
+        }
+      )
+
+      const nextScheduledAt = new Date(doc.meta.scheduledAt)
       if (nextJob && nextJob.nextDate() > nextScheduledAt) {
         nextJob.stop()
         nextJob = null
       }
+
       if (!nextJob) {
         nextJob = new CronJob(
           nextScheduledAt,
