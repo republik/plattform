@@ -1,6 +1,6 @@
 /* const { descending } = require('d3-array')
 const isUUID = require('is-uuid')
-const _ = require('lodash')
+
 const debug = require('debug')('documents')
 const {
   Roles: {
@@ -22,9 +22,10 @@ const {
 } = process.env
 */
 
+const _ = require('lodash')
 const search = require('@orbiting/backend-modules-search/graphql/resolvers/_queries/search')
 
-module.exports = async (_, args, context) => {
+module.exports = async (__, args, context) => {
   // const { user, redis, pgdb } = context
   /*
   const {
