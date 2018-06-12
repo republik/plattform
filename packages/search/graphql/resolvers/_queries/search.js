@@ -236,6 +236,7 @@ const parseOptions = (options) => {
 }
 
 const MAX_NODES = 500
+
 const getFirst = (first, filter, user) => {
   // we only restrict the nodes array
   // making totalCount always available
@@ -246,9 +247,11 @@ const getFirst = (first, filter, user) => {
       return 0
     }
   }
+
   if (first > MAX_NODES) {
     return MAX_NODES
   }
+
   return first
 }
 
@@ -319,7 +322,6 @@ const search = async (__, args, context) => {
   const query = {
     index: indicesList.map(({ name }) => getIndexAlias(name, 'read')),
     from,
-
     size: first,
     body: createQuery(search, filter, sort, indicesList)
   }
@@ -367,6 +369,7 @@ const search = async (__, args, context) => {
   if (SEARCH_TRACK) {
     try {
       const took = result.took
+      const total = result.hits.total
       const hits = result.hits.hits
         .map(hit => _.omit(hit, '_source'))
 
@@ -387,6 +390,7 @@ const search = async (__, args, context) => {
           took,
           options: Object.assign({}, options, { filters }),
           query,
+          total,
           hits,
           date: new Date(),
           user: {
@@ -396,7 +400,7 @@ const search = async (__, args, context) => {
       })
     } catch (err) {
       // Log but do not fail
-      console.error(err)
+      console.error('search, tracking', err)
     }
   }
 
