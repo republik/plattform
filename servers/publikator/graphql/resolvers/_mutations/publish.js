@@ -52,6 +52,8 @@ const uniq = require('lodash/uniq')
 const elastic = require('@orbiting/backend-modules-base/lib/elastic').client()
 const { purgeUrls } = require('@orbiting/backend-modules-keyCDN')
 
+const timeout = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 const {
   FRONTEND_BASE_URL,
   PIWIK_URL_BASE,
@@ -323,6 +325,7 @@ module.exports = async (
   const publish = createPublish({prepublication, scheduledAt, elastic, elasticDoc})
   await publish.insert()
   await publish.after()
+  await timeout(2 * 1000) // Allow for refresh
 
   // release for nice view on github
   // this is optional, the release is not read back again
