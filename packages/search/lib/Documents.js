@@ -368,14 +368,14 @@ const publishScheduled = (elastic, elasticDoc) => ({
   },
   after: async () => true,
   afterScheduled: async () => {
-    debug('afterScheduled called', elasticDoc.id)
+    debug('publishScheduled.afterScheduled', elasticDoc.id)
     await elastic.update({
       ...indexRef,
       id: elasticDoc.id,
       body: {
         doc: {
           meta: { scheduledAt: null },
-          __state: 'prepublished'
+          __state: 'published'
         }
       }
     })
@@ -389,7 +389,7 @@ const publishScheduled = (elastic, elasticDoc) => ({
   }
 })
 
-const prepublishScheduledAt = (elastic, elasticDoc) => ({
+const prepublishScheduled = (elastic, elasticDoc) => ({
   insert: async () => {
     if (!elasticDoc.meta.scheduledAt) {
       throw new Error('missing body.meta.scheduledAt')
@@ -406,6 +406,7 @@ const prepublishScheduledAt = (elastic, elasticDoc) => ({
   },
   after: async () => true, // noop
   afterScheduled: async () => {
+    debug('prepublishScheduled.afterScheduled', elasticDoc.id)
     await elastic.update({
       ...indexRef,
       id: elasticDoc.id,
@@ -426,16 +427,20 @@ const prepublishScheduledAt = (elastic, elasticDoc) => ({
   }
 })
 
-const createPublish = ({prepublication, scheduledAt, elastic, elasticDoc}) => {
-  // If scheduled is before now, it is safe to assume that a scheduled
-  // document has been published already and does not need to be scheduled
-  if (scheduledAt < new Date()) {
-    scheduledAt = false
-  }
-
+const createPublish = ({
+  prepublication,
+  scheduledAt,
+  elastic,
+  elasticDoc
+}) => {
+  debug('createPublish', elasticDoc.meta.repoId, {
+    prepublication,
+    scheduledAt,
+    elastic
+  })
   const func = prepublication
     ? scheduledAt
-      ? prepublishScheduledAt
+      ? prepublishScheduled
       : prepublish
     : scheduledAt
       ? publishScheduled
@@ -452,6 +457,6 @@ module.exports = {
   publish,
   prepublish,
   publishScheduled,
-  prepublishScheduledAt,
+  prepublishScheduled,
   createPublish
 }
