@@ -155,8 +155,15 @@ module.exports = {
       */
       stats[indexType].total += publications.length
       for (let publication of publications) {
-        const { commit, meta: { scheduledAt }, refName, name: versionName } = publication
-        const prepublication = refName.indexOf('prepublication') > -1
+        const {
+          commit,
+          meta: { scheduledAt },
+          refName,
+          name: versionName
+        } = publication
+
+        const isPrepublication = refName.indexOf('prepublication') > -1
+        const isScheduled = refName.indexOf('scheduled') > -1
 
         const doc = await getDocument(
           { id: commit.id, repo },
@@ -174,7 +181,7 @@ module.exports = {
           repoId: repo.id,
           repoMeta,
           scheduledAt,
-          prepublication,
+          prepublication: isPrepublication,
           doc,
           now,
           context
@@ -185,10 +192,17 @@ module.exports = {
           indexType,
           doc,
           commitId: commit.id,
-          versionName
+          versionName,
+          milestoneCommitId: publication.sha
         })
 
-        const publish = createPublish({prepublication, scheduledAt, elastic, elasticDoc})
+        const publish = createPublish({
+          prepublication: isPrepublication,
+          scheduledAt: isScheduled ? scheduledAt : undefined,
+          elastic,
+          elasticDoc
+        })
+
         await publish.insert()
 
         stats[indexType].added++
