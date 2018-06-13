@@ -63,10 +63,7 @@ module.exports = {
     filter: {
       bool: {
         must: [
-          { term: { __type: type } },
-          { range: { 'meta.publishDate': { lte: new Date() } } }
-          // TODO: Find better spot for publishDate query, potentially
-          // harmful when publishing scheduled articles.
+          { term: { __type: type } }
         ],
         // return all editorialNewsletters with feed:true or everything
         // that is not editorialNewsletters. Brainfuck.
