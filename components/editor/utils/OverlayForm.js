@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
+import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
 import {
@@ -68,6 +69,13 @@ class OverlayForm extends Component {
       this.rootDiv
     )
   }
+}
+
+OverlayForm.propTypes = {
+  preview: PropTypes.node,
+  extra: PropTypes.node,
+  children: PropTypes.node,
+  onClose: PropTypes.func.isRequired
 }
 
 export default OverlayForm

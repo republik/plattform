@@ -57,25 +57,24 @@ export default ({rule, subModules, TYPE}) => {
 
   const DynamicComponent = rule.component
 
-  const newBlock = () => Block.fromJSON(
-    mdastRule.fromMdast({
-      children: [],
-      data: {
-        src: (SG_DYNAMIC_COMPONENT_BASE_URLS || '').split(',')[0]
-      }
-    })
-  )
+  const newItem = () => Block.create({
+    type: TYPE,
+    isVoid: true,
+    data: {
+      src: (SG_DYNAMIC_COMPONENT_BASE_URLS || '').split(',')[0]
+    }
+  })
 
   return {
     TYPE,
     helpers: {
       serializer,
-      newBlock
+      newItem
     },
     changes: {},
     ui: createUi({
       TYPE,
-      newBlock,
+      newItem,
       editorOptions: rule.editorOptions
     }),
     plugins: [

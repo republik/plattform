@@ -5,7 +5,7 @@ import {
 } from '../../utils'
 import injectBlock from '../../utils/injectBlock'
 
-export default ({TYPE, newBlock, editorOptions}) => {
+export default ({TYPE, newItem, editorOptions}) => {
   const {
     insertButtonText,
     insertTypes = []
@@ -19,7 +19,7 @@ export default ({TYPE, newBlock, editorOptions}) => {
           .change()
           .call(
             injectBlock,
-            newBlock()
+            newItem()
           )
       )
     }

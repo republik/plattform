@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { css } from 'glamor'
+import PropTypes from 'prop-types'
 
 import AutosizeInput from 'react-textarea-autosize'
 
@@ -79,6 +80,12 @@ class JSONField extends Component {
         }} />
     )
   }
+}
+
+JSONField.propTypes = {
+  label: PropTypes.string.isRequired,
+  value: PropTypes.object,
+  onChange: PropTypes.func.isRequired
 }
 
 export default JSONField
