@@ -357,6 +357,14 @@ ReactDOM.render(
               IllustrationHtml: require('./components/IllustrationHtml')
             },
             src: require('./components/IllustrationHtml/docs.md')
+          },
+          {
+            path: '/dynamic-component',
+            title: 'DynamicComponent',
+            imports: {
+              DynamicComponent: require('./components/DynamicComponent')
+            },
+            src: require('./components/DynamicComponent/docs.md')
           }
         ]
       },

@@ -17,6 +17,7 @@ const schema = createArticleSchema({
 - `titleBlockRule`, overwrite the whole title block, prepend and append are no longer applied
 - `getPath`, the function to transform meta data to a path, default `/YYYY/MM/DD/:slug`
 - `t`, optional translation function, used for e.g. DNT notes
+- `dynamicComponentRequire`, optional custom require function for dynamic components
 - `Link`, a Next.js like `<Link />` component
   This will be wrapped around links. You should attach an `onClick` handler within, if you wish to do client side routing and or prefetching. The component recieves following props:
   - `href` String, target url or path
@@ -759,6 +760,34 @@ Zweitens: ich habe erklärt mit diese zwei Spieler: nach Dortmund brauchen viell
 \`\`\`
 
 <https://vimeo.com/214306312>
+
+<hr /></section>
+
+<hr /></section>
+`}</Markdown>
+```
+
+## Dynamic Components
+
+```react|noSource
+<Markdown schema={schema}>{`
+<section><h6>CENTER</h6>
+
+<section><h6>DYNAMIC_COMPONENT</h6>
+
+\`\`\`
+{
+  "size": "breakout",
+  "src": "/static/dynamic_hello.js",
+  "props": {
+    "text": "This is it."
+  }
+}
+\`\`\`
+
+\`\`\`html
+<div>Optional static SSR version and placeholder while loading. Default is a loader.</div>
+\`\`\`
 
 <hr /></section>
 

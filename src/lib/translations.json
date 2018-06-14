@@ -1,5 +1,5 @@
 {
-  "updated": "2018-04-09T14:36:02.841Z",
+  "updated": "2018-06-13T22:14:01.275Z",
   "title": "live",
   "data": [
     {
@@ -134,6 +134,10 @@
     {
       "key": "styleguide/templates/unauthorizedZone",
       "value": "Inhalt nur für Mitglieder."
+    },
+    {
+      "key": "styleguide/DynamicComponent/error",
+      "value": "Diese Komponente ist kaputt."
     }
   ]
 }
