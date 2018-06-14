@@ -9,13 +9,7 @@ const {
   upsertRef,
   deleteRef
 } = require('../../../lib/github')
-/* TODO remove
-const {
-  redlock,
-  lockKey,
-  refresh: refreshScheduling
-} = require('../../../lib/publicationScheduler')
-*/
+const { channelKey } = require('../../../lib/publicationScheduler')
 const {
   createCampaign,
   updateCampaignContent,
@@ -161,6 +155,7 @@ module.exports = async (
 
   // check if slug is taken
   const newPath = doc.content.meta.path
+
   // deny if present redirect to other article / sth. else
   const existingRedirects = await getRedirections(
     newPath,
@@ -326,6 +321,10 @@ module.exports = async (
   await publish.insert()
   await publish.after()
   await timeout(2 * 1000) // Allow for refresh
+
+  if (scheduledAt) {
+    await redis.publishAsync(channelKey, 'refresh')
+  }
 
   // release for nice view on github
   // this is optional, the release is not read back again
