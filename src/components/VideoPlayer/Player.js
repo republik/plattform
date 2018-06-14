@@ -254,7 +254,8 @@ class VideoPlayer extends Component {
           this.setState(() => ({
             isFullscreen: this.state.fullscreen.element() === this.video
           }))
-        }
+        },
+        video: this.video
       })
     })
 

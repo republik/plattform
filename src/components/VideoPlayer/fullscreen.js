@@ -60,12 +60,24 @@ const getFullscreenApi = () => {
   return api.requestFullscreen ? api : null
 }
 
-export const setupFullscreen = ({ onChange }) => {
+export const setupFullscreen = ({ onChange, video }) => {
   if (typeof document === 'undefined') {
     return
   }
   const api = getFullscreenApi()
   if (!api) {
+    if (video && video.webkitEnterFullscreen) {
+      // iOS provides fullscreen on video element directly instead of document.
+      return {
+        request(video) {
+          video.webkitEnterFullscreen()
+        },
+        element() {
+          return video
+        },
+        dispose() {}
+      }
+    }
     return
   }
 
