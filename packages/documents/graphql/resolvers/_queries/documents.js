@@ -34,9 +34,9 @@ module.exports = async (__, args, context) => {
     dossier: dossierId, -> untested
     template, -> OK
     format: formatId, -> OK (ORGA-Problem)
-    after, -> UNKLAR
+    after, -> Okish
     first, -> Okish
-    before, -> UNKLAR
+    before, -> Okish
     last, -> UNKLAR
     path, ->
     repoId, ->
@@ -46,8 +46,10 @@ module.exports = async (__, args, context) => {
 
   const docsConnection = await search(null, {
     first: args.first || 1000,
+    after: args.after || undefined,
+    before: args.before || undefined,
     filter: {
-      ..._.omit(args, ['first']),
+      ..._.omit(args, ['first', 'after', 'before']),
       type: 'Document'
     },
     sort: {
