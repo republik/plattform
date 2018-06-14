@@ -45,11 +45,11 @@ const deepMergeArrays = function (objValue, srcValue) {
   }
 }
 
-const createShould = function (searchTerm, searchFilter, indicesList) {
+const createShould = function (searchTerm, searchFilter, indicesList, user) {
   const queries = []
 
   // A query for each ES index
-  indicesList.forEach(({ index, search }) => {
+  indicesList.forEach(({ type, index, search }) => {
     let must = {
       match_all: {}
     }
@@ -75,12 +75,25 @@ const createShould = function (searchTerm, searchFilter, indicesList) {
       }
     }
 
-    debug('must', JSON.stringify(must))
+    const rolebasedFilterDefault = _.get(search, 'rolebasedFilter.default', {})
+    const rolebasedFilter = Object.assign({}, rolebasedFilterDefault)
+
+    if (userHasRole(user, 'editor')) {
+      Object.assign(
+        rolebasedFilter,
+        _.get(
+          search,
+          'rolebasedFilter.editor',
+          rolebasedFilterDefault
+        )
+      )
+    }
 
     const filter = _.mergeWith(
       {},
       search.filter,
       createElasticFilter(searchFilter),
+      rolebasedFilter,
       deepMergeArrays
     )
 
@@ -112,10 +125,10 @@ const createHighlight = (indicesList) => {
   return { fields }
 }
 
-const createQuery = (searchTerm, filter, sort, indicesList) => ({
+const createQuery = (searchTerm, filter, sort, indicesList, user) => ({
   query: {
     bool: {
-      should: createShould(searchTerm, filter, indicesList)
+      should: createShould(searchTerm, filter, indicesList, user)
     }
   },
   sort: createSort(sort),
@@ -301,17 +314,6 @@ const search = async (__, args, context) => {
     })
   })
 
-  const states = ['published'] // Default states to deliver.
-
-  if (userHasRole(user, 'editor')) {
-    states.push('prepublished')
-  }
-
-  filters.push({
-    key: 'state',
-    value: states
-  })
-
   const filter = reduceFilters(filters)
 
   debug('filter', JSON.stringify(filter))
@@ -323,7 +325,7 @@ const search = async (__, args, context) => {
     index: indicesList.map(({ name }) => getIndexAlias(name, 'read')),
     from,
     size: first,
-    body: createQuery(search, filter, sort, indicesList)
+    body: createQuery(search, filter, sort, indicesList, user)
   }
 
   debug('ES query', JSON.stringify(query))
@@ -394,7 +396,7 @@ const search = async (__, args, context) => {
           hits,
           date: new Date(),
           user: {
-            id: user.id
+            id: (user && user.id) || 'anon'
           }
         }
       })
