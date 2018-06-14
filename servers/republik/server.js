@@ -12,7 +12,8 @@ const mail = require('./modules/crowdfundings/lib/Mail')
 const cluster = require('cluster')
 
 const {
-  LOCAL_ASSETS_SERVER
+  LOCAL_ASSETS_SERVER,
+  SEARCH_PG_LISTENER
 } = process.env
 
 const start = async () => {
@@ -68,7 +69,9 @@ const runOnce = (...args) => {
   }
   server.runOnce(...args)
   require('./lib/slackGreeter').connect()
-  require('@orbiting/backend-modules-search').notifyListener.run()
+  if (SEARCH_PG_LISTENER) {
+    require('@orbiting/backend-modules-search').notifyListener.run()
+  }
 }
 
 const close = () => {
