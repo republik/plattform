@@ -36,7 +36,7 @@ import initLocalStore from '../../lib/utils/localStorage'
 
 import { getSchema } from '../../components/Templates'
 import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
-import { getCommitById, getLatestCommit } from '../../lib/graphql/queries'
+import { getCommitById, getLatestCommit, getRepoHistory } from '../../lib/graphql/queries'
 import {
   commit as commitMutation,
   hasUncommitedChanges as uncommittedChangesMutation
@@ -630,7 +630,7 @@ export class EditorPage extends Component {
                   acknowledgedUsers: this.state.activeUsers,
                   interruptingUsers: undefined
                 })}
-               />}
+              />}
               <Editor
                 ref={this.editorRef}
                 schema={schema}
@@ -641,7 +641,7 @@ export class EditorPage extends Component {
                 readOnly={readOnly}
               />
             </div>
-        )} />
+          )} />
           <Sidebar warnings={warnings}
             isDisabled={Boolean(showLoading || error)}
             selectedTabId={(readOnly && 'workflow') || undefined}
@@ -667,7 +667,7 @@ export class EditorPage extends Component {
                 commit={repo && (repo.commit || repo.latestCommit)}
                 isNew={isNew}
                 hasUncommittedChanges={hasUncommittedChanges}
-                />
+              />
             </Sidebar.Tab>
             <Sidebar.Tab tabId='analytics' label='Info'>
               <CharCount value={editorState} />
@@ -764,7 +764,16 @@ export default compose(
               },
               data
             })
-          }
+          },
+          refetchQueries: [
+            {
+              query: getRepoHistory,
+              variables: {
+                repoId: url.query.repoId,
+                first: 10
+              }
+            }
+          ]
         })
     })
   }),

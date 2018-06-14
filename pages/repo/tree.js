@@ -132,7 +132,7 @@ class EditorPage extends Component {
                 localStorageCommitIds={localStorageCommitIds}
                 milestones={repo.milestones}
                 repoId={repoId}
-                />
+              />
               {/* Load more commits */
                 hasMore &&
                 <Interaction.P {...styles.loadMore}>
@@ -141,7 +141,7 @@ class EditorPage extends Component {
                     {...styles.loadMoreButton}
                     onClick={() => fetchMore()}
                   >Ältere laden</A>
-                }
+                  }
                 </Interaction.P>
               }
             </div>
@@ -161,10 +161,10 @@ export default compose(
         variables: {
           after: null,
           repoId: url.query.repoId,
-          first: 10
+          first: 20
         },
         notifyOnNetworkStatusChange: true,
-        fetchPolicy: 'cache-first'
+        fetchPolicy: 'cache-and-network'
       })
     },
     props: ({data, ownProps}) => {
@@ -192,8 +192,8 @@ export default compose(
                       ...fetchMoreResult.repo.commits.nodes
                     ].filter(({id}, i, all) =>
                     // deduplicate by id
-                    i === all.findIndex(repo => repo.id === id)
-                  )
+                      i === all.findIndex(repo => repo.id === id)
+                    )
                   }
                 }
               }
