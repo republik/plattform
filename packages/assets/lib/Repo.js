@@ -42,7 +42,7 @@ const uploadImages = async (repoId, paths) => {
         result = await githubRest.gitdata.getBlob({
           owner,
           repo,
-          sha: blobSha
+          file_sha: blobSha
         })
       } catch (e) {
         error = e
