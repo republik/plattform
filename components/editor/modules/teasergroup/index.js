@@ -2,6 +2,7 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 import { Block } from 'slate'
 import React from 'react'
 import { matchBlock } from '../../utils'
+import shortId from 'shortid'
 
 import {
   getIndex,
@@ -17,6 +18,7 @@ import { TeaserGroupButton, TeaserGroupForm } from './ui'
 
 export const getData = data => ({
   columns: 2,
+  id: (data && data.id) || shortId(),
   ...data || {}
 })
 
@@ -132,7 +134,7 @@ const teaserGroupPlugin = options => {
           moveDown={moveDown(editor)}
           insert={insert(editor)}
           remove={remove(editor)}
-      />,
+        />,
         <TeaserGroup key='teaser' {...node.data.toJS()} attributes={attributes}>
           {children}
         </TeaserGroup>
