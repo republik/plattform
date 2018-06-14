@@ -34,6 +34,8 @@ const redlock = () => {
 }
 
 const init = async () => {
+  debug('init')
+
   if (subClient) {
     throw new Error('publicationScheduler must not be initiated twice!')
   }
@@ -42,6 +44,7 @@ const init = async () => {
 
   subClient = redis.duplicate()
   subClient.on('message', async (channel, message) => {
+    debug('incoming', { channel, message })
     if (message === 'refresh') {
       await refresh()
     }
@@ -94,6 +97,15 @@ const run = async (_lock) => {
 
     const delta = new Date(doc.meta.scheduledAt) - new Date()
 
+    debug(
+      'publishing...', {
+        repoId: doc.meta.repoId,
+        versionName: doc.versionName,
+        scheduledAt: doc.meta.scheduledAt,
+        delta
+      }
+    )
+
     if (delta < 10 * 1000) { // max 10sec early
       // repos:republik/article-briefing-aus-bern-14/scheduled-publication
       const repoId = doc.meta.repoId
@@ -141,6 +153,14 @@ const run = async (_lock) => {
           console.error('Error: one or more promises failed:')
           console.error(e)
         })
+
+      debug(
+        'published', {
+          repoId: doc.meta.repoId,
+          versionName: doc.versionName,
+          scheduledAt: doc.meta.scheduledAt
+        }
+      )
     } else {
       console.error('Error: publicationScheduler was timed wrong.')
     }
@@ -163,14 +183,13 @@ const refresh = async (_lock) => {
     const delta = new Date(doc.meta.scheduledAt) - new Date()
 
     if (delta < 10 * 1000) { // max 10sec early
-      debug('Document found was to be published earlier. Publishing now...')
-      console.log('Document found was to be published earlier. Publishing now...')
+      console.log('unpublished documents found. catching up...')
       await run()
     } else {
-      debug('Document found is to be published soon. Scheduling...')
       debug(
-        'Document scheduled', {
+        'scheduled', {
           repoId: doc.meta.repoId,
+          versionName: doc.versionName,
           scheduledAt: doc.meta.scheduledAt
         }
       )
