@@ -77,6 +77,25 @@ module.exports = {
           ] } }
         ]
       }
+    },
+    rolebasedFilter: {
+      // Default filter
+      default: { bool: { must: [
+        { term: { '__state.published': true } }
+      ] } },
+      // Adopted filter when role "editor" is present
+      editor: { bool: { must: [
+        { bool: { should: [
+          { bool: { must: [
+            { term: { '__state.published': false } },
+            { term: { '__state.prepublished': true } }
+          ] } },
+          { bool: { must: [
+            { term: { '__state.published': true } },
+            { term: { '__state.prepublished': true } }
+          ] } }
+        ] } }
+      ] } }
     }
   },
   analysis: {
@@ -99,7 +118,14 @@ module.exports = {
           type: 'keyword'
         },
         __state: {
-          type: 'keyword'
+          properties: {
+            published: {
+              type: 'boolean'
+            },
+            prepublished: {
+              type: 'boolean'
+            }
+          }
         },
         __sort: {
           properties: {
@@ -185,6 +211,9 @@ module.exports = {
             },
             scheduledAt: {
               type: 'date'
+            },
+            prepublication: {
+              type: 'boolean'
             },
             slug: {
               type: 'text',

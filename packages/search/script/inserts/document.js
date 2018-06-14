@@ -154,6 +154,12 @@ module.exports = {
       }
       */
       stats[indexType].total += publications.length
+
+      const hasPrepublication = !!_.find(
+        publications,
+        { refName: 'prepublication' }
+      )
+
       for (let publication of publications) {
         const {
           commit,
@@ -199,6 +205,7 @@ module.exports = {
         const publish = createPublish({
           prepublication: isPrepublication,
           scheduledAt: isScheduled ? scheduledAt : undefined,
+          hasPrepublication,
           elastic,
           elasticDoc
         })

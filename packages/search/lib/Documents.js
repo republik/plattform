@@ -271,27 +271,75 @@ const indexRef = {
   type: indexType
 }
 
-const update = async function (elastic, states, repoId, docId) {
+const switchState = async function (elastic, state, repoId, docId) {
+  debug('switchState', { state, repoId, docId })
+  const queries = []
+  const painless = []
+
+  if (state.published === true || state.published === false) {
+    queries.push({ term: { '__state.published': state.published } })
+    painless.push(
+      'ctx._source.__state.published = params.state.published'
+    )
+  }
+
+  if (state.prepublished === true || state.prepublished === false) {
+    queries.push({ term: { '__state.prepublished': state.prepublished } })
+    painless.push(
+      'ctx._source.__state.prepublished = params.state.prepublished'
+    )
+  }
+
   return elastic.updateByQuery({
     ...indexRef,
     body: {
       query: {
         bool: {
           must: [
-            { terms: { __state: states } },
             { term: { 'meta.repoId': repoId } }
           ],
+          should: queries,
           must_not: [
-            { term: { id: docId } }
+            { term: { '_id': docId } }
           ]
         }
       },
       script: {
         lang: 'painless',
-        source: 'ctx._source.__state = params.state',
+        source: painless.join(';'),
         params: {
-          state: null
+          state: {
+            published: !state.published,
+            prepublished: !state.prepublished
+          }
         }
+      }
+    }
+  })
+}
+
+const resetScheduledAt = async function (
+  elastic, isPrepublication, repoId, docId
+) {
+  debug('resetScheduledAt', { isPrepublication, repoId, docId })
+
+  return elastic.updateByQuery({
+    ...indexRef,
+    body: {
+      query: {
+        bool: {
+          must: [
+            { term: { 'meta.repoId': repoId } },
+            { term: { 'meta.prepublication': isPrepublication } }
+          ],
+          must_not: [
+            { term: { '_id': docId } }
+          ]
+        }
+      },
+      script: {
+        lang: 'painless',
+        source: 'ctx._source.meta.scheduledAt = null'
       }
     }
   })
@@ -311,7 +359,7 @@ const unpublish = async (elastic, repoId) => {
   })
 }
 
-const publish = (elastic, elasticDoc) => ({
+const publish = (elastic, elasticDoc, hasPrepublication) => ({
   insert: async () => {
     elasticDoc.meta.scheduledAt = undefined
     return elastic.index({
@@ -319,13 +367,16 @@ const publish = (elastic, elasticDoc) => ({
       id: elasticDoc.id,
       body: {
         ...elasticDoc,
-        __state: 'published'
+        __state: {
+          published: true,
+          prepublished: !hasPrepublication
+        }
       }
     })
   },
-  after: async () => update(
+  after: async () => switchState(
     elastic,
-    ['published', 'prepublished'],
+    { published: true, prepublished: true },
     elasticDoc.meta.repoId,
     elasticDoc.id
   )
@@ -339,13 +390,16 @@ const prepublish = (elastic, elasticDoc) => ({
       id: elasticDoc.id,
       body: {
         ...elasticDoc,
-        __state: 'prepublished'
+        __state: {
+          published: false,
+          prepublished: true
+        }
       }
     })
   },
-  after: async () => update(
+  after: async () => switchState(
     elastic,
-    ['prepublished'],
+    { prepublished: true },
     elasticDoc.meta.repoId,
     elasticDoc.id
   )
@@ -362,27 +416,41 @@ const publishScheduled = (elastic, elasticDoc) => ({
       id: elasticDoc.id,
       body: {
         ...elasticDoc,
-        __state: null
+        __state: {
+          published: false,
+          prepublished: false
+        }
       }
     })
   },
-  after: async () => true,
+  after: async () => {
+    await resetScheduledAt(
+      elastic,
+      false,
+      elasticDoc.meta.repoId,
+      elasticDoc.id
+    )
+  },
   afterScheduled: async () => {
     debug('publishScheduled.afterScheduled', elasticDoc.id)
     await elastic.update({
       ...indexRef,
       id: elasticDoc.id,
+      refresh: true,
       body: {
         doc: {
           meta: { scheduledAt: null },
-          __state: 'published'
+          __state: {
+            published: true,
+            prepublished: true
+          }
         }
       }
     })
 
-    await update(
+    await switchState(
       elastic,
-      ['published', 'prepublished'],
+      { published: true, prepublished: true },
       elasticDoc.meta.repoId,
       elasticDoc.id
     )
@@ -400,27 +468,41 @@ const prepublishScheduled = (elastic, elasticDoc) => ({
       id: elasticDoc.id,
       body: {
         ...elasticDoc,
-        __state: null
+        __state: {
+          published: false,
+          prepublished: false
+        }
       }
     })
   },
-  after: async () => true, // noop
+  after: async () => {
+    await resetScheduledAt(
+      elastic,
+      true,
+      elasticDoc.meta.repoId,
+      elasticDoc.id
+    )
+  },
   afterScheduled: async () => {
     debug('prepublishScheduled.afterScheduled', elasticDoc.id)
     await elastic.update({
       ...indexRef,
       id: elasticDoc.id,
+      refresh: true,
       body: {
         doc: {
           meta: { scheduledAt: null },
-          __state: 'prepublished'
+          __state: {
+            published: false,
+            prepublished: true
+          }
         }
       }
     })
 
-    await update(
+    await switchState(
       elastic,
-      ['prepublished'],
+      { prepublished: true },
       elasticDoc.meta.repoId,
       elasticDoc.id
     )
@@ -430,13 +512,14 @@ const prepublishScheduled = (elastic, elasticDoc) => ({
 const createPublish = ({
   prepublication,
   scheduledAt,
+  hasPrepublication,
   elastic,
   elasticDoc
 }) => {
   debug('createPublish', elasticDoc.meta.repoId, {
     prepublication,
     scheduledAt,
-    elastic
+    hasPrepublication
   })
   const func = prepublication
     ? scheduledAt
@@ -445,7 +528,7 @@ const createPublish = ({
     : scheduledAt
       ? publishScheduled
       : publish
-  return func(elastic, elasticDoc)
+  return func(elastic, elasticDoc, hasPrepublication)
 }
 
 module.exports = {
