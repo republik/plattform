@@ -3,7 +3,7 @@ import { css } from 'glamor'
 
 import MdEdit from 'react-icons/lib/md/edit'
 
-import EditModal from './EditModal'
+import OverlayForm from './OverlayForm'
 
 const styles = {
   editButton: css({
@@ -26,7 +26,7 @@ const EditButton = ({onClick}) => (
   </div>
 )
 
-class EditManager extends Component {
+class OverlayFormManager extends Component {
   constructor (...args) {
     super(...args)
     this.state = {
@@ -34,7 +34,7 @@ class EditManager extends Component {
     }
   }
   render () {
-    const { node, attributes, chart, editor } = this.props
+    const { node, attributes, onChange, preview, extra, editor, children } = this.props
     const startEditing = () => {
       this.setState({showModal: true})
     }
@@ -44,21 +44,9 @@ class EditManager extends Component {
       onDoubleClick={startEditing}>
       <EditButton onClick={startEditing} />
       {showModal && (
-        <EditModal data={node.data} chart={chart}
-          onChange={(data) => {
-            editor.change(change => {
-              const size = data.get('config', {}).size
-              const parent = change.value.document.getParent(node.key)
-              if (size !== parent.data.get('size')) {
-                change.setNodeByKey(parent.key, {
-                  data: parent.data.set('size', size)
-                })
-              }
-              change.setNodeByKey(node.key, {
-                data
-              })
-            })
-          }}
+        <OverlayForm
+          preview={preview}
+          extra={extra}
           onClose={() => {
             this.setState({showModal: false})
             node.data.get('isNew') && editor.change(change => {
@@ -66,11 +54,13 @@ class EditManager extends Component {
                 data: node.data.delete('isNew')
               })
             })
-          }} />
+          }}>
+          {children({data: node.data, onChange})}
+        </OverlayForm>
       )}
-      {chart}
+      {preview}
     </div>
   }
 }
 
-export default EditManager
+export default OverlayFormManager
