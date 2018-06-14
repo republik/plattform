@@ -344,7 +344,7 @@ const search = async (__, args, context) => {
       endCursor: hasNextPage
         ? stringifyOptions({
           ...options,
-          filter,
+          filter: _filter,
           first,
           from: from + first
         })
@@ -353,7 +353,7 @@ const search = async (__, args, context) => {
       startCursor: hasPreviousPage
         ? stringifyOptions({
           ...options,
-          filter,
+          filter: _filter,
           first,
           from: from - first
         })
