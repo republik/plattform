@@ -8,7 +8,9 @@ import Loader from '../Loader'
 
 import SG from '../../theme/env'
 
-const DEFAULT_WHITELIST = (SG.DYNAMIC_COMPONENT_BASE_URLS || '').split(',')
+const DEFAULT_WHITELIST = (SG.DYNAMIC_COMPONENT_BASE_URLS || '')
+  .split(',')
+  .filter(Boolean)
 
 export const createRequire = (whitelist = DEFAULT_WHITELIST) => {
   const whitelisted = ['/', './'].concat(whitelist)
