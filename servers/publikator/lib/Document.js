@@ -1,8 +1,12 @@
 const editRepoMeta = require('../graphql/resolvers/_mutations/editRepoMeta')
 const { upsert: upsertDiscussion } = require('./Discussion')
 const visit = require('unist-util-visit')
+const debug = require('debug')('publikator:lib:Document')
 
 const { timeFormat } = require('@orbiting/backend-modules-formats')
+const {
+  Redirections: { upsert: upsertRedirection }
+} = require('@orbiting/backend-modules-redirections')
 const slugDateFormat = timeFormat('%Y/%m/%d')
 
 const getPath = (docMeta) => {
@@ -139,11 +143,6 @@ const prepareMetaForPublish = async ({
   }
 }
 
-const {
-  Redirections: { upsert: upsertRedirection }
-} = require('@orbiting/backend-modules-redirections')
-const { document: getPublishedDocument } = require('../graphql/resolvers/Publication')
-
 // if the requirements for context change you need to
 // adapt lib/publicationScheduler
 const handleRedirection = async (
@@ -151,24 +150,23 @@ const handleRedirection = async (
   newDocMeta,
   context
 ) => {
-  const publishedDoc = await getPublishedDocument({
-    repo: { id: repoId },
-    refName: 'publication'
-  }, null, context)
-  const scheduledDoc = await getPublishedDocument({
-    repo: { id: repoId },
-    refName: 'scheduled-publication'
-  }, null, context)
-  const docs = [publishedDoc, scheduledDoc].filter(Boolean)
-  for (let doc of docs) {
-    if (doc.content.meta.path !== newDocMeta.path) {
-      await upsertRedirection({
-        source: doc.content.meta.path,
-        target: newDocMeta.path,
+  const { lib: { Documents: { findPublished } } } = require('@orbiting/backend-modules-search')
+
+  const newPath = newDocMeta.path
+  const { elastic } = context
+
+  const docs = await findPublished(elastic, repoId)
+
+  await Promise.all(docs.map(async doc => {
+    if (doc.meta.path !== newPath) {
+      debug('upsertRedirection', { source: doc.meta.path, target: newPath })
+      return upsertRedirection({
+        source: doc.meta.path,
+        target: newPath,
         resource: { repo: { id: repoId } }
       }, context)
     }
-  }
+  }))
 }
 
 module.exports = {

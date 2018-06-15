@@ -131,7 +131,7 @@ const run = async (_lock) => {
       })
 
       if (newRef === 'publication') {
-        await handleRedirection(repoId, doc.content.meta, { redis, pgdb })
+        await handleRedirection(repoId, doc.content.meta, { elastic, pgdb })
       }
 
       await Promise.all([

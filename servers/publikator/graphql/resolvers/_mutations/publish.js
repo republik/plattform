@@ -173,7 +173,10 @@ module.exports = async (
     context
   )
   if (existingRedirects.length) {
-    throw new Error(t('api/publish/document/slug/redirectsExist', { path: newPath }))
+    throw new Error(t(
+      'api/publish/document/slug/redirectsExist',
+      { path: newPath }
+    ))
   }
 
   if (await isPathUsed(elastic, newPath, repoId)) {
