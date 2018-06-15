@@ -560,12 +560,14 @@ const findPublished = async function (elastic, repoId) {
     body: {
       query: {
         bool: {
-          must: { term: { 'meta.repoId': repoId } },
-          should: [
-            { term: { '__state.published': true } },
-            { bool: { must: [
-              { term: { 'meta.prepublication': false } },
-              { exists: { field: 'meta.scheduledAt' } }
+          must: [
+            { term: { 'meta.repoId': repoId } },
+            { bool: { should: [
+              { term: { '__state.published': true } },
+              { bool: { must: [
+                { term: { 'meta.prepublication': false } },
+                { exists: { field: 'meta.scheduledAt' } }
+              ] } }
             ] } }
           ]
         }
