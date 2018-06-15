@@ -554,6 +554,28 @@ const isPathUsed = async function (elastic, path, repoId) {
   return !!response.hits.total
 }
 
+const findPublished = async function (elastic, repoId) {
+  const response = await elastic.search({
+    ...indexRef,
+    body: {
+      query: {
+        bool: {
+          must: { term: { 'meta.repoId': repoId } },
+          should: [
+            { term: { '__state.published': true } },
+            { bool: { must: [
+              { term: { 'meta.prepublication': false } },
+              { exists: { field: 'meta.scheduledAt' } }
+            ] } }
+          ]
+        }
+      }
+    }
+  })
+
+  return response.hits.hits.map(hit => hit._source)
+}
+
 module.exports = {
   schema,
   getElasticDoc,
@@ -565,5 +587,6 @@ module.exports = {
   publishScheduled,
   prepublishScheduled,
   createPublish,
-  isPathUsed
+  isPathUsed,
+  findPublished
 }
