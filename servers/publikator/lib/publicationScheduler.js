@@ -132,6 +132,7 @@ const run = async (_lock) => {
 
       if (newRef === 'publication') {
         await handleRedirection(repoId, doc.content.meta, { elastic, pgdb })
+        newRefs.push('prepublication')
       }
 
       await Promise.all([
@@ -158,7 +159,8 @@ const run = async (_lock) => {
         'published', {
           repoId: doc.meta.repoId,
           versionName: doc.versionName,
-          scheduledAt: doc.meta.scheduledAt
+          scheduledAt: doc.meta.scheduledAt,
+          refs: newRefs
         }
       )
     } else {
