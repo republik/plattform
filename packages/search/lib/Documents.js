@@ -531,6 +531,29 @@ const createPublish = ({
   return func(elastic, elasticDoc, hasPrepublication)
 }
 
+const isPathUsed = async function (elastic, path, repoId) {
+  const response = await elastic.search({
+    ...indexRef,
+    body: {
+      query: {
+        bool: {
+          must: { term: { 'meta.path.keyword': path } },
+          should: [
+            { term: { '__state.published': true } },
+            { term: { '__state.prepublished': true } },
+            { exists: { field: 'meta.scheduledAt' } }
+          ],
+          must_not: { term: { 'meta.repoId': repoId } }
+        }
+      }
+    }
+  })
+
+  debug('findUsedPath', { path, repoId, total: response.hits.total })
+
+  return !!response.hits.total
+}
+
 module.exports = {
   schema,
   getElasticDoc,
@@ -541,5 +564,6 @@ module.exports = {
   prepublish,
   publishScheduled,
   prepublishScheduled,
-  createPublish
+  createPublish,
+  isPathUsed
 }

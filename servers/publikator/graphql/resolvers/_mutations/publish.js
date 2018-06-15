@@ -71,6 +71,16 @@ module.exports = async (
   const { githubRest } = await createGithubClients()
   const now = new Date()
 
+  // TODO investigate why this fires
+  // Error: queries.search defined in resolvers, but not in schema
+  // if it's put at root level
+  const {
+    lib: {
+      Documents: { createPublish, getElasticDoc, isPathUsed },
+      utils: { getIndexAlias }
+    }
+  } = require('@orbiting/backend-modules-search')
+
   // check max scheduledAt
   let scheduledAt
   if (_scheduledAt) {
@@ -165,22 +175,9 @@ module.exports = async (
   if (existingRedirects.length) {
     throw new Error(t('api/publish/document/slug/redirectsExist', { path: newPath }))
   }
-  // deny if published or scheduled-published slug exists for another repo
-  const repoIds = await redis.smembersAsync('repos:ids')
-  const publishedRepos = await Promise.all([
-    ...repoIds.map(id => redis.getAsync(`repos:${id}/publication`)),
-    ...repoIds.map(id => redis.getAsync(`repos:${id}/scheduled-publication`))
-  ])
-    .then(repos => repos
-      .filter(Boolean)
-      .map(repo => JSON.parse(repo))
-    )
-  for (let pubRepo of publishedRepos) {
-    const existingPath = pubRepo.doc && pubRepo.doc.content &&
-      pubRepo.doc.content.meta && pubRepo.doc.content.meta.path
-    if (existingPath && existingPath === newPath && repoId !== pubRepo.repoId) {
-      throw new Error(t('api/publish/document/slug/docExists', { path: newPath }))
-    }
+
+  if (await isPathUsed(elastic, newPath, repoId)) {
+    throw new Error(t('api/publish/document/slug/docExists', { path: newPath }))
   }
 
   // remember if slug changed
@@ -298,16 +295,6 @@ module.exports = async (
   await Promise.all(gitOps)
 
   // publish to elasticsearch
-  // TODO investigate why this fires
-  // Error: queries.search defined in resolvers, but not in schema
-  // if it's put at root level
-  const {
-    lib: {
-      Documents: { createPublish, getElasticDoc },
-      utils: { getIndexAlias }
-    }
-  } = require('@orbiting/backend-modules-search')
-
   const indexType = 'Document'
   const elasticDoc = getElasticDoc({
     indexName: getIndexAlias(indexType.toLowerCase(), 'write'),
