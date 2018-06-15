@@ -90,7 +90,7 @@ test('setup', async (t) => {
       }
     `
   })
-  t.ok(result.data.__schema)
+  t.ok(result.data.__schema, '__schema returned data.__schema prop')
 
   const { firstName, lastName, email } = testUser
   const user = await pgdb.public.users.insert({
@@ -98,7 +98,7 @@ test('setup', async (t) => {
     lastName,
     email
   })
-  t.ok(user)
+  t.ok(user, 'test user added')
   t.end()
 })
 
@@ -117,9 +117,13 @@ test('unauthorized repos query', async (t) => {
       }
     `
   })
-  t.equals(result.data, null)
-  t.equals(result.errors.length, 1)
-  t.equals(result.errors[0].message, tr('api/signIn'))
+  t.equals(result.data, null, 'repos did not return data prop')
+  t.equals(result.errors.length, 1, 'a single error found')
+  t.equals(
+    result.errors[0].message,
+    tr('api/signIn'),
+    'error message as expected'
+  )
   t.end()
 })
 
@@ -151,16 +155,20 @@ test('unauthorized subscription', (t) => {
     // or some versions, we accept both ways now
     next: (result) => {
       const { errors } = result
-      t.ok(errors)
-      t.equals(errors.length, 1)
+      t.ok(errors, 'errors prop found')
+      t.equals(errors.length, 1, 'a single error present')
       const error = errors[0]
-      t.equals(error.message, tr('api/signIn'))
+      t.equals(error.message, tr('api/signIn'), 'error message as expected')
       client.close()
       t.end()
     },
     error: (errors) => {
       // t.equals(errors, null)
-      t.equals(errors.message, 'Subscription must return Async Iterable. Received: [object Object]')
+      t.equals(
+        errors.message,
+        'Subscription must return Async Iterable. Received: [object Object]',
+        'error message as expected'
+      )
       t.end()
     }
   })
@@ -183,7 +191,8 @@ test('fetch youtube data with unathorized user', async (t) => {
   })
   t.equal(
     result.errors[0].message,
-    tr('api/signIn')
+    tr('api/signIn'),
+    'error message as expected'
   )
   t.end()
 })
@@ -204,7 +213,8 @@ test('fetch vimeo data with unathorized user', async (t) => {
   })
   t.equal(
     result.errors[0].message,
-    tr('api/signIn')
+    tr('api/signIn'),
+    'error message as expected'
   )
   t.end()
 })
@@ -226,7 +236,8 @@ test('fetch twitter data with unathorized user', async (t) => {
   })
   t.equal(
     result.errors[0].message,
-    tr('api/signIn')
+    tr('api/signIn'),
+    'error message as expected'
   )
   t.end()
 })
@@ -249,7 +260,8 @@ test('fetch documentcloud data with unathorized user', async (t) => {
   })
   t.equal(
     result.errors[0].message,
-    tr('api/signIn')
+    tr('api/signIn'),
+    'error message as expected'
   )
   t.end()
 })
@@ -265,8 +277,10 @@ test('signIn', async (t) => {
     `
   })
   await sleep(3500)
-  t.ok(result.data.signIn.phrase)
-  t.ok(result.data.signIn.phrase.length > 0)
+  t.ok(result.data.signIn.phrase, 'data.signIn.phrase prop present')
+  t.ok(
+    result.data.signIn.phrase.length > 0,
+    'data.signIn.phrase has at least one element')
   t.end()
 })
 
@@ -282,9 +296,13 @@ test('repos (signed in, without role)', async (t) => {
       }
     `
   })
-  t.equals(result.data, null)
-  t.equals(result.errors.length, 1)
-  t.equals(result.errors[0].message, tr('api/unauthorized', { role: 'editor' }))
+  t.equals(result.data, null, 'repos did not return data prop')
+  t.equals(result.errors.length, 1, 'a single error found')
+  t.equals(
+    result.errors[0].message,
+    tr('api/unauthorized', { role: 'editor' }),
+    'error message as expected'
+  )
   t.end()
 })
 
@@ -316,16 +334,24 @@ test('subscription (signed in, without role)', (t) => {
     // or some versions, we accept both ways now
     next: (result) => {
       const { errors } = result
-      t.ok(errors)
-      t.equals(errors.length, 1)
+      t.ok(errors, 'errors prop found')
+      t.equals(errors.length, 1, 'a single error present')
       const error = errors[0]
-      t.equals(error.message, tr('api/unauthorized', { role: 'editor' }))
+      t.equals(
+        error.message,
+        tr('api/unauthorized', { role: 'editor' }),
+        'error message as expected'
+      )
       client.close()
       t.end()
     },
     error: (errors) => {
       // t.equals(errors, null)
-      t.equals(errors.message, 'Subscription must return Async Iterable. Received: [object Object]')
+      t.equals(
+        errors.message,
+        'Subscription must return Async Iterable. Received: [object Object]',
+        'error message as expected'
+      )
       t.end()
     }
   })
@@ -354,14 +380,14 @@ test('me', async (t) => {
       }
     `
   })
-  t.ok(result.data)
-  t.ok(result.data.me)
+  t.ok(result.data, 'me returned data prop')
+  t.ok(result.data.me, 'data.me present')
   const { data: { me: { firstName, lastName, name, email, roles } } } = result
-  t.equals(firstName, testUser.firstName)
-  t.equals(lastName, testUser.lastName)
-  t.equals(name, testUser.name)
-  t.equals(email, testUser.email)
-  t.deepLooseEqual(roles, ['editor'])
+  t.equals(firstName, testUser.firstName, 'firstName as expected')
+  t.equals(lastName, testUser.lastName, 'lastName as expected')
+  t.equals(name, testUser.name, 'name as expected')
+  t.equals(email, testUser.email, 'email as expected')
+  t.deepLooseEqual(roles, ['editor'], 'roles as expected')
   t.end()
 })
 
@@ -377,9 +403,9 @@ test('repos (signed in)', async (t) => {
       }
     `
   })
-  t.ok(result.data)
-  t.false(result.errors)
-  t.ok(result.data.repos)
+  t.ok(result.data, 'repos returned data prop')
+  t.false(result.errors, 'repos did not return errors prop')
+  t.ok(result.data.repos, 'data.repos is present')
   t.end()
 })
 
@@ -1343,15 +1369,23 @@ test('publish', async (t) => {
       checkDocuments(fetchDocumentsUnauth.data.documents.nodes, _unauthorizedDocuments, repoMetaPublishDate)
     }
 
-    // console.log('redirections')
+    // console.log('## redirections')
     const redirections = await pgdb.public.redirections.find()
     // console.log(redirections)
     if (_redirections) {
       for (let _redirection of _redirections) {
         const redir = redirections.find(r => r.source === _redirection.source)
-        t.ok(redir, 'redirection preset')
-        t.equals(redir.target, _redirection.target, 'target matches')
-        t.deepLooseEqual(redir.resource, _redirection.resource, 'resource matches')
+        t.ok(redir, `redirection for "${_redirection.source}" present`)
+        t.equals(
+          redir.target,
+          _redirection.target,
+          `target "${_redirection.target}" matches`
+        )
+        t.deepLooseEqual(
+          redir.resource,
+          _redirection.resource,
+          `resource on target "${redir.target}" matches`
+        )
       }
     }
 
@@ -1447,8 +1481,6 @@ test('publish', async (t) => {
   })
 
   // test slug duplicates
-  // TODO Fails miserably. Should not fail miserably.
-  /*
   {
     const testRepo = testRepos[0]
     const mutation = await apolloFetch({
@@ -1463,7 +1495,6 @@ test('publish', async (t) => {
     t.equals(mutation.data, null, 'dup slug, not data')
     t.equals(mutation.errors.length, 1, 'dup slug errors present')
   }
-  */
 
   await test({
     variables: {
