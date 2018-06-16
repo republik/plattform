@@ -76,7 +76,7 @@ module.exports = async (
   // if it's put at root level
   const {
     lib: {
-      Documents: { createPublish, getElasticDoc, isPathUsed },
+      Documents: { createPublish, getElasticDoc, isPathUsed, findTemplates },
       utils: { getIndexAlias }
     }
   } = require('@orbiting/backend-modules-search')
@@ -158,6 +158,28 @@ module.exports = async (
     path: doc.content.meta.path,
     publishDate: doc.content.meta.publishDate,
     discussionId: doc.content.meta.discussionId
+  }
+
+  resolvedDoc.resolved = {}
+
+  if (doc.content.meta.dossier) {
+    const dossiers = await findTemplates(
+      elastic,
+      'dossier',
+      doc.content.meta.dossier
+    )
+
+    resolvedDoc.resolved.dossier = dossiers.pop()
+  }
+
+  if (doc.content.meta.format) {
+    const formats = await findTemplates(
+      elastic,
+      'format',
+      doc.content.meta.format
+    )
+
+    resolvedDoc.resolved.format = formats.pop()
   }
 
   // upload images to S3
