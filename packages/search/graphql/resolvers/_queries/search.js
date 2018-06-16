@@ -318,7 +318,7 @@ const search = async (__, args, context) => {
 
   debug('filter', JSON.stringify(filter))
 
-  const first = getFirst(_first, filter, user)
+  const first = getFirst(_first, _filter, user)
 
   const indicesList = getIndicesList(filter)
   const query = {
