@@ -31,12 +31,6 @@ const { GITHUB_LOGIN, GITHUB_ORGS } = process.env
 const getDocumentId = ({repoId, commitId, versionName}) =>
   Buffer.from(`${repoId}/${commitId}/${versionName}`).toString('base64')
 
-const getRepoIdFromDocumentId = id => {
-  const repoIdRegex = new RegExp(/^(.+?\/.+?)(\/.*)?$/g)
-  const matches = repoIdRegex.exec(Buffer.from(id, 'base64').toString('utf8'))
-  return matches && matches[1]
-}
-
 const documentIdParser = value => {
   const decoded = Buffer.from(value, 'base64').toString('utf8')
 
@@ -638,7 +632,6 @@ const findTemplates = async function (elastic, template, repoId) {
 module.exports = {
   schema,
   getElasticDoc,
-  getRepoIdFromDocumentId,
   addRelatedDocs,
   unpublish,
   publish,
