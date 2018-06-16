@@ -43,11 +43,10 @@ module.exports = async (__, args, context) => {
     scheduledAt ->
   } = args
   */
-
   const docsConnection = await search(null, {
-    first: args.first || 1000,
-    after: args.after || undefined,
-    before: args.before || undefined,
+    first: args.first,
+    after: args.after,
+    before: args.before,
     filter: {
       ..._.omit(args, ['first', 'after', 'before']),
       type: 'Document'
