@@ -26,6 +26,8 @@ const SHORT_DURATION_MINS = 5
 const MIDDLE_DURATION_MINS = 15
 const LONG_DURATION_MINS = 30
 
+const { GITHUB_LOGIN, GITHUB_ORGS } = process.env
+
 const getDocumentId = ({repoId, commitId, versionName}) =>
   Buffer.from(`${repoId}/${commitId}/${versionName}`).toString('base64')
 
@@ -36,20 +38,16 @@ const getRepoIdFromDocumentId = id => {
 }
 
 const documentIdParser = value => {
-  const parsedRepoId = getRepoIdFromDocumentId(value)
-  const githubUrl = 'https://github.com'
-  if (parsedRepoId) {
-    return [
-      `${githubUrl}/${parsedRepoId}`,
-      parsedRepoId,
-      value
-    ]
-  } else {
-    return [
-      `${githubUrl}/${value}`,
-      value
-    ]
-  }
+  const decoded = Buffer.from(value, 'base64').toString('utf8')
+
+  // decoded = <org>/<repoName>/<commitId>/<versionName>
+  //                 ^^^^^^^^^^
+  const repoName = decoded.split('/').slice(1, 2)
+
+  const orgs = GITHUB_ORGS ? GITHUB_ORGS.split(',') : []
+  orgs.push(GITHUB_LOGIN)
+
+  return orgs.map(org => `https://github.com/${org}/${repoName}`)
 }
 
 const schema = {
@@ -602,6 +600,41 @@ const findPublished = async function (elastic, repoId) {
   return response.hits.hits.map(hit => hit._source)
 }
 
+const findTemplates = async function (elastic, template, repoId) {
+  const filter = repoId
+    ? { term: { 'meta.repoId': repoId.split('/').slice(-2).join('/') } }
+    : { term: { 'meta.template': template } }
+
+  const response = await elastic.search({
+    ...indexRef,
+    size: 10000,
+    body: {
+      _source: [
+        'meta.repoId',
+        'meta.title',
+        'meta.description',
+        'meta.kind',
+        'meta.template'
+      ],
+      query: {
+        bool: {
+          must: {
+            match_all: {}
+          },
+          filter
+        }
+      }
+    }
+  })
+
+  debug(
+    'findTemplates',
+    { template, repoId, filter, total: response.hits.total }
+  )
+
+  return response.hits.hits.map(hit => hit._source)
+}
+
 module.exports = {
   schema,
   getElasticDoc,
@@ -614,5 +647,6 @@ module.exports = {
   prepublishScheduled,
   createPublish,
   isPathUsed,
-  findPublished
+  findPublished,
+  findTemplates
 }
