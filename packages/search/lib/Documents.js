@@ -292,6 +292,7 @@ const switchState = async function (elastic, state, repoId, docId) {
 
   return elastic.updateByQuery({
     ...indexRef,
+    refresh: true,
     body: {
       query: {
         bool: {
@@ -325,6 +326,7 @@ const resetScheduledAt = async function (
 
   return elastic.updateByQuery({
     ...indexRef,
+    refresh: true,
     body: {
       query: {
         bool: {
@@ -374,12 +376,21 @@ const publish = (elastic, elasticDoc, hasPrepublication) => ({
       }
     })
   },
-  after: async () => switchState(
-    elastic,
-    { published: true, prepublished: true },
-    elasticDoc.meta.repoId,
-    elasticDoc.id
-  )
+  after: async () => {
+    await switchState(
+      elastic,
+      { published: true, prepublished: true },
+      elasticDoc.meta.repoId,
+      elasticDoc.id
+    )
+
+    await resetScheduledAt(
+      elastic,
+      false,
+      elasticDoc.meta.repoId,
+      elasticDoc.id
+    )
+  }
 })
 
 const prepublish = (elastic, elasticDoc) => ({
@@ -397,12 +408,21 @@ const prepublish = (elastic, elasticDoc) => ({
       }
     })
   },
-  after: async () => switchState(
-    elastic,
-    { prepublished: true },
-    elasticDoc.meta.repoId,
-    elasticDoc.id
-  )
+  after: async () => {
+    await switchState(
+      elastic,
+      { prepublished: true },
+      elasticDoc.meta.repoId,
+      elasticDoc.id
+    )
+
+    await resetScheduledAt(
+      elastic,
+      true,
+      elasticDoc.meta.repoId,
+      elasticDoc.id
+    )
+  }
 })
 
 const publishScheduled = (elastic, elasticDoc) => ({
@@ -432,7 +452,6 @@ const publishScheduled = (elastic, elasticDoc) => ({
     )
   },
   afterScheduled: async () => {
-    debug('publishScheduled.afterScheduled', elasticDoc.id)
     await elastic.update({
       ...indexRef,
       id: elasticDoc.id,
@@ -484,7 +503,6 @@ const prepublishScheduled = (elastic, elasticDoc) => ({
     )
   },
   afterScheduled: async () => {
-    debug('prepublishScheduled.afterScheduled', elasticDoc.id)
     await elastic.update({
       ...indexRef,
       id: elasticDoc.id,
