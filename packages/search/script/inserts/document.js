@@ -13,7 +13,7 @@ const { lib: {
   Repo: { uploadImages }
 } } = require('@orbiting/backend-modules-assets')
 
-const { getElasticDoc, createPublish } = require('../../lib/Documents')
+const { getElasticDoc, createPublish, findTemplates } = require('../../lib/Documents')
 
 const {
   AWS_ACCESS_KEY_ID,
@@ -21,38 +21,7 @@ const {
 } = process.env
 
 const after = async ({indexName, type: indexType, elastic, pgdb}) => {
-  const query = {
-    index: indexName,
-    size: 10000,
-    body: {
-      query: {
-        bool: {
-          must: {
-            match_all: {}
-          },
-          filter: {
-            term: {
-              'meta.template': 'format'
-            }
-          }
-        }
-      }
-    }
-  }
-
-  const result = await elastic.search(query)
-
-  const formats = result.hits.hits
-    .map(doc => _.pick(
-      doc._source,
-      [
-        'meta.repoId',
-        'meta.title',
-        'meta.description',
-        'meta.kind',
-        'meta.template'
-      ]
-    ))
+  const formats = await findTemplates(elastic, 'format')
 
   await Promise.all(formats.map(async (format) => {
     const result = await elastic.updateByQuery({
