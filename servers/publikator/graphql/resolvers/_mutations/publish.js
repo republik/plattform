@@ -312,9 +312,7 @@ module.exports = async (
   await publish.after()
   await timeout(2 * 1000) // Allow for refresh
 
-  if (scheduledAt) {
-    await redis.publishAsync(channelKey, 'refresh')
-  }
+  await redis.publishAsync(channelKey, 'refresh')
 
   // release for nice view on github
   // this is optional, the release is not read back again

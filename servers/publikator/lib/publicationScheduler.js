@@ -118,8 +118,6 @@ const run = async (_lock) => {
       const newRef = ref.replace('scheduled-', '')
       const newRefs = [ newRef ]
 
-      debug({ ref, newRefs, sha: doc.milestoneCommitId })
-
       const { lib: { Documents: { createPublish } } } =
         require('@orbiting/backend-modules-search')
 
@@ -185,7 +183,7 @@ const refresh = async (_lock) => {
     const delta = new Date(doc.meta.scheduledAt) - new Date()
 
     if (delta < 10 * 1000) { // max 10sec early
-      console.log('unpublished documents found. catching up...')
+      console.log('scheduler: unpublished documents found. catching up...')
       await run()
     } else {
       debug(
@@ -211,6 +209,13 @@ const refresh = async (_lock) => {
         )
       }
     }
+  } else if (nextJob) {
+    debug('no more scheduled documents found. removing scheduled job')
+
+    nextJob.stop()
+    nextJob = null
+  } else {
+    debug('no scheduled documents found')
   }
 
   if (!_lock) {
