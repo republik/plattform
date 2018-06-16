@@ -179,6 +179,12 @@ const addRelatedDocs = async ({ connection, context }) => {
   const repoIds = []
   docs.forEach(doc => {
     // from content
+    visit(doc.content, 'zone', node => {
+      if (node.data) {
+        repoIds.push(getRepoId(node.data.url))
+        repoIds.push(getRepoId(node.data.formatUrl))
+      }
+    })
     visit(doc.content, 'link', node => {
       const info = extractUserUrl(node.url)
       if (info) {
