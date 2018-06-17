@@ -1,4 +1,5 @@
 const MilestoneInterface = require('./MilestoneInterface')
+const debug = require('debug')('publikator:graphql:resolvers:Publication')
 
 module.exports = {
   ...MilestoneInterface,
@@ -17,8 +18,14 @@ module.exports = {
     refName
   }, args, { redis }) => {
     if (doc) { // publish mutation
+      debug({ repoId, refName, doc })
       return doc
     }
+    /*
+     @TODO This is broken. We do not add information Redis anymore. Can
+     maybe be retrieved from ElasticSearhc, but "refName" is not available
+     there, would have to be deduced. (pae)
+    */
     return redis.getAsync(`repos:${repoId}/${refName}`)
       .then(publication => {
         const json = JSON.parse(publication)
