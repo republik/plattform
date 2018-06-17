@@ -113,7 +113,7 @@ module.exports = async (
   let unresolvedRepoIds = []
   const docsConnection = await getPublishedDocuments(
     null,
-    {}, // TODO: Include scheduledAt, publishDate schmuh
+    { first: 10000 },
     context
   )
 
@@ -131,11 +131,40 @@ module.exports = async (
     'utm_campaign': repoId
   }
   const searchString = '?' + querystring.stringify(utmParams)
-  contentUrlResolver(resolvedDoc, allDocs, allUsernames, unresolvedRepoIds, FRONTEND_BASE_URL, searchString)
-  metaUrlResolver(resolvedDoc.content.meta, allDocs, allUsernames, unresolvedRepoIds, FRONTEND_BASE_URL, searchString)
-  metaFieldResolver(resolvedDoc.content.meta, allDocs, unresolvedRepoIds)
+
+  contentUrlResolver(
+    resolvedDoc,
+    allDocs,
+    allUsernames,
+    unresolvedRepoIds,
+    FRONTEND_BASE_URL,
+    searchString
+  )
+
+  metaUrlResolver(
+    resolvedDoc.content.meta,
+    allDocs,
+    allUsernames,
+    unresolvedRepoIds,
+    FRONTEND_BASE_URL,
+    searchString
+  )
+
+  metaFieldResolver(
+    resolvedDoc.content.meta,
+    allDocs,
+    unresolvedRepoIds
+  )
+
   unresolvedRepoIds = uniq(unresolvedRepoIds)
-  if (unresolvedRepoIds.length && (!ignoreUnresolvedRepoIds || doc.content.meta.template === 'editorialNewsletter' || updateMailchimp)) {
+  if (
+    unresolvedRepoIds.length &&
+    (
+      !ignoreUnresolvedRepoIds ||
+      doc.content.meta.template === 'editorialNewsletter' ||
+      updateMailchimp
+    )
+  ) {
     return {
       unresolvedRepoIds
     }
