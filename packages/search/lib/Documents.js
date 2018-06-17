@@ -38,6 +38,10 @@ const documentIdParser = value => {
   //                 ^^^^^^^^^^
   const repoName = decoded.split('/').slice(1, 2)
 
+  return getResourceUrls(repoName)
+}
+
+const getResourceUrls = repoName => {
   const orgs = GITHUB_ORGS ? GITHUB_ORGS.split(',') : []
   orgs.push(GITHUB_LOGIN)
 
@@ -122,7 +126,9 @@ const schema = {
 const mdastToString = require('mdast-util-to-string')
 const { mdastFilter } = require('./utils.js')
 
-const getElasticDoc = ({ doc, commitId, versionName, milestoneCommitId }) => {
+const getElasticDoc = (
+  { doc, commitId, versionName, milestoneCommitId, resolved }
+) => {
   const meta = doc.content.meta
   const id = getDocumentId({repoId: meta.repoId, commitId, versionName})
   return {
@@ -130,6 +136,7 @@ const getElasticDoc = ({ doc, commitId, versionName, milestoneCommitId }) => {
     __sort: {
       date: meta.publishDate
     },
+    resolved,
     id,
     commitId,
     versionName,
@@ -641,5 +648,6 @@ module.exports = {
   createPublish,
   isPathUsed,
   findPublished,
-  findTemplates
+  findTemplates,
+  getResourceUrls
 }
