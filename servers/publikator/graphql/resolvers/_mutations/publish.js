@@ -160,28 +160,6 @@ module.exports = async (
     discussionId: doc.content.meta.discussionId
   }
 
-  resolvedDoc.resolved = {}
-
-  if (doc.content.meta.dossier) {
-    const dossiers = await findTemplates(
-      elastic,
-      'dossier',
-      doc.content.meta.dossier
-    )
-
-    resolvedDoc.resolved.dossier = dossiers.pop()
-  }
-
-  if (doc.content.meta.format) {
-    const formats = await findTemplates(
-      elastic,
-      'format',
-      doc.content.meta.format
-    )
-
-    resolvedDoc.resolved.format = formats.pop()
-  }
-
   // upload images to S3
   await uploadImages(repoId, doc.repoImagePaths)
 
@@ -319,6 +297,28 @@ module.exports = async (
   }
   await Promise.all(gitOps)
 
+  const resolved = {}
+
+  if (doc.content.meta.dossier) {
+    const dossiers = await findTemplates(
+      elastic,
+      'dossier',
+      doc.content.meta.dossier
+    )
+
+    resolved.dossier = dossiers.pop()
+  }
+
+  if (doc.content.meta.format) {
+    const formats = await findTemplates(
+      elastic,
+      'format',
+      doc.content.meta.format
+    )
+
+    resolved.format = formats.pop()
+  }
+
   // publish to elasticsearch
   const indexType = 'Document'
   const elasticDoc = getElasticDoc({
@@ -327,7 +327,8 @@ module.exports = async (
     doc,
     commitId,
     versionName,
-    milestoneCommitId: milestone.sha
+    milestoneCommitId: milestone.sha,
+    resolved
   })
   const publish = createPublish({prepublication, scheduledAt, elastic, elasticDoc})
   await publish.insert()
