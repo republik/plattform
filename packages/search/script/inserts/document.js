@@ -127,14 +127,13 @@ module.exports = {
     }
 
     await iterateRepos(context, async (repo, repoMeta, publications) => {
-      // TODO where to save repo global stuff in elastic
-      /*
       if (repoMeta && repoMeta.mailchimpCampaignId) {
-        redisOps.push(
-          redis.setAsync(`repos:${repo.id}/mailchimp/campaignId`, repoMeta.mailchimpCampaignId)
+        await redis.setAsync(
+          `repos:${repo.id}/mailchimp/campaignId`,
+          repoMeta.mailchimpCampaignId
         )
       }
-      */
+
       stats[indexType].total += publications.length
 
       const hasPrepublication = !!_.find(
