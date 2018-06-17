@@ -6,13 +6,7 @@ const {
   deleteRef
 } = require('../../../lib/github')
 
-/* TODO
-const {
-  redlock,
-  lockKey,
-  refresh: refreshScheduling
-} = require('../../../lib/publicationScheduler')
-*/
+const { channelKey } = require('../../../lib/publicationScheduler')
 
 module.exports = async (
   _,
@@ -42,16 +36,13 @@ module.exports = async (
       console.error(e)
     })
 
-  const { lib: { Documents: { unpublish } } } = require('@orbiting/backend-modules-search')
+  const { lib: { Documents: { unpublish } } } =
+    require('@orbiting/backend-modules-search')
 
   await unpublish(elastic, repoId)
 
-  /* await refreshScheduling(lock)
-  await lock.unlock()
-    .catch((err) => {
-      console.error(err)
-    })
-  */
+  await redis.publishAsync(channelKey, 'refresh')
+
   await pubsub.publish('repoUpdate', {
     repoUpdate: {
       id: repoId
