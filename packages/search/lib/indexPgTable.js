@@ -1,8 +1,10 @@
+const debug = require('debug')('search:lib:indexPgTable')
+
 // Amount of rows, documents in a single bulk request.
 const BULK_SIZE = 10000
 
 // Interval in seconds stats about bulk progress is printed.
-const STATS_INTERVAL_SECS = 2
+const STATS_INTERVAL_SECS = 5
 
 /**
  * Indexes a <resource> in ElasticSearch.
@@ -21,7 +23,7 @@ const STATS_INTERVAL_SECS = 2
 const index = async ({ indexName, type, elastic, resource }) => {
   const stats = { [type]: { added: 0 } }
   const statsInterval = setInterval(() => {
-    console.log(indexName, stats)
+    debug(indexName, stats)
   }, STATS_INTERVAL_SECS * 1000)
 
   let offset = 0
@@ -55,7 +57,7 @@ const index = async ({ indexName, type, elastic, resource }) => {
 
   clearInterval(statsInterval)
 
-  console.log(indexName, Object.assign(stats, { done: true }))
+  debug(indexName, Object.assign(stats, { done: true }))
 }
 
 /**

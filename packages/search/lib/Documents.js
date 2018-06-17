@@ -247,14 +247,12 @@ const addRelatedDocs = async ({ connection, context }) => {
     .then(getDocsForConnection)
 
   // TODO remove
-  console.log('------------------------------------------------------')
-  console.log({
+  debug({
     numDocs: docs.length,
     numUserIds: userIds.length,
     numRepoIds: repoIds.length,
     numRelatedDocs: relatedDocs.length
   })
-  console.log('------------------------------------------------------')
 
   // mutate docs
   docs.forEach(doc => {
