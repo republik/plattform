@@ -368,7 +368,7 @@ const search = async (__, args, context) => {
     })
   }
 
-  if (SEARCH_TRACK) {
+  if (!skipLoadRelatedDocs && SEARCH_TRACK) {
     try {
       const took = result.took
       const total = result.hits.total
