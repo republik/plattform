@@ -13,20 +13,21 @@ const { lib: {
   Repo: { uploadImages }
 } } = require('@orbiting/backend-modules-assets')
 
-const { getElasticDoc, createPublish, findTemplates } = require('../../lib/Documents')
+const { getElasticDoc, createPublish, findTemplates, getResourceUrls } = require('../../lib/Documents')
 
 const {
   AWS_ACCESS_KEY_ID,
   AWS_SECRET_ACCESS_KEY
 } = process.env
 
-const after = async ({indexName, type: indexType, elastic, pgdb}) => {
-  const formats = await findTemplates(elastic, 'format')
+const upsertResolvedMeta = (
+  { indexName, entities, type, elastic }
+) => {
+  return Promise.all(entities.map(async (entity) => {
+    const repoName = entity.meta.repoId.split('/').slice(-1)
 
-  await Promise.all(formats.map(async (format) => {
     const result = await elastic.updateByQuery({
       index: indexName,
-      conflicts: 'proceed',
       refresh: true,
       body: {
         script: {
@@ -40,16 +41,16 @@ const after = async ({indexName, type: indexType, elastic, pgdb}) => {
               ctx._source.resolved.meta = new HashMap()
             }
 
-            ctx._source.resolved.meta.format = params.format`,
+            ctx._source.resolved.meta.${type} = params.entity`,
           params: {
-            format
+            entity
           }
         },
         query: {
           bool: {
             filter: {
-              wildcard: {
-                'meta.format': `*${format.meta.repoId.split('/').pop()}`
+              terms: {
+                [`meta.${type}`]: getResourceUrls(repoName)
               }
             }
           }
@@ -58,9 +59,21 @@ const after = async ({indexName, type: indexType, elastic, pgdb}) => {
     })
 
     if (result.failures.length > 0) {
-      console.error(format.repoId, result.failures)
+      console.error(entity.repoId, result.failures)
     }
   }))
+}
+
+const after = async ({indexName, type: indexType, elastic, pgdb}) => {
+  const dossiers = await findTemplates(elastic, 'dossier')
+  await upsertResolvedMeta(
+    { indexName, entities: dossiers, type: 'dossier', elastic }
+  )
+
+  const formats = await findTemplates(elastic, 'format')
+  await upsertResolvedMeta(
+    { indexName, entities: formats, type: 'format', elastic }
+  )
 }
 
 const iterateRepos = async (context, callback) => {

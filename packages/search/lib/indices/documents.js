@@ -166,6 +166,35 @@ module.exports = {
                       }
                     }
                   }
+                },
+                dossier: {
+                  properties: {
+                    meta: {
+                      properties: {
+                        title: {
+                          type: 'text',
+                          analyzer: 'german',
+                          fields: {
+                            keyword: {
+                              type: 'keyword',
+                              normalizer: 'republik_strict',
+                              ignore_above: 256
+                            }
+                          }
+                        },
+                        description: {
+                          type: 'text',
+                          analyzer: 'german'
+                        },
+                        kind: {
+                          type: 'keyword'
+                        },
+                        template: {
+                          type: 'keyword'
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
