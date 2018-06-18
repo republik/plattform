@@ -160,7 +160,7 @@ const {
 const visit = require('unist-util-visit')
 const isUUID = require('is-uuid')
 
-const addRelatedDocs = async ({ connection, context }) => {
+const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
   const search = require('../graphql/resolvers/_queries/search')
   const { pgdb } = context
 
@@ -238,6 +238,7 @@ const addRelatedDocs = async ({ connection, context }) => {
 
   const relatedDocs = await search(null, {
     skipLoadRelatedDocs: true,
+    scheduledAt,
     first: sanitizedRepoIds.length,
     filter: {
       repoId: sanitizedRepoIds,
@@ -246,7 +247,6 @@ const addRelatedDocs = async ({ connection, context }) => {
   }, context)
     .then(getDocsForConnection)
 
-  // TODO remove
   debug({
     numDocs: docs.length,
     numUserIds: userIds.length,

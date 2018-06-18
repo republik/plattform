@@ -45,7 +45,9 @@ const deepMergeArrays = function (objValue, srcValue) {
   }
 }
 
-const createShould = function (searchTerm, searchFilter, indicesList, user) {
+const createShould = function (
+  searchTerm, searchFilter, indicesList, user, scheduledAt
+) {
   const queries = []
 
   // A query for each ES index
@@ -75,7 +77,8 @@ const createShould = function (searchTerm, searchFilter, indicesList, user) {
       }
     }
 
-    const rolebasedFilterDefault = _.get(search, 'rolebasedFilter.default', {})
+    const rolebasedFilterDefault =
+      _.get(search, 'rolebasedFilter.default', {})()
     const rolebasedFilter = Object.assign({}, rolebasedFilterDefault)
 
     if (userHasRole(user, 'editor')) {
@@ -85,7 +88,7 @@ const createShould = function (searchTerm, searchFilter, indicesList, user) {
           search,
           'rolebasedFilter.editor',
           rolebasedFilterDefault
-        )
+        )({ scheduledAt })
       )
     }
 
@@ -125,10 +128,12 @@ const createHighlight = (indicesList) => {
   return { fields }
 }
 
-const createQuery = (searchTerm, filter, sort, indicesList, user) => ({
+const createQuery = (
+  searchTerm, filter, sort, indicesList, user, scheduledAt
+) => ({
   query: {
     bool: {
-      should: createShould(searchTerm, filter, indicesList, user)
+      should: createShould(searchTerm, filter, indicesList, user, scheduledAt)
     }
   },
   sort: createSort(sort),
@@ -286,7 +291,10 @@ const getIndicesList = (filter) => {
 
 const search = async (__, args, context) => {
   const { user, elastic, t } = context
-  const { after, before, skipLoadRelatedDocs = false } = args
+  const {
+    after, before, skipLoadRelatedDocs = false, scheduledAt
+  } = args
+
   const options = after
     ? { ...args, ...parseOptions(after) }
     : before
@@ -325,7 +333,7 @@ const search = async (__, args, context) => {
     index: indicesList.map(({ name }) => getIndexAlias(name, 'read')),
     from,
     size: first,
-    body: createQuery(search, filter, sort, indicesList, user)
+    body: createQuery(search, filter, sort, indicesList, user, scheduledAt)
   }
 
   debug('ES query', JSON.stringify(query))
