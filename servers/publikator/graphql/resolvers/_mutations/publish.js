@@ -26,9 +26,6 @@ const {
   handleRedirection
 } = require('../../../lib/Document')
 const {
-  graphql: {
-    resolvers: { queries: { documents: getPublishedDocuments } }
-  },
   lib: {
     html: { get: getHTML },
     resolve: {
@@ -76,7 +73,13 @@ module.exports = async (
   // if it's put at root level
   const {
     lib: {
-      Documents: { createPublish, getElasticDoc, isPathUsed, findTemplates },
+      Documents: {
+        createPublish,
+        getElasticDoc,
+        isPathUsed,
+        findTemplates,
+        addRelatedDocs
+      },
       utils: { getIndexAlias }
     }
   } = require('@orbiting/backend-modules-search')
@@ -107,35 +110,44 @@ module.exports = async (
   }
   const repoMeta = await getRepoMeta({ id: repoId })
 
-  // check if all references (link, format, dossiert, etc.) in the document can be resolved
+  const indexType = 'Document'
+
+  // check if all references (link, format, dossiert, etc.) in the document
+  // can be resolved
   // for front: warn if related document cannot be resolved
   // for newsletter, preview email: stop publication
   let unresolvedRepoIds = []
-  const docsConnection = await getPublishedDocuments(
-    null,
-    { first: 10000 },
-    context
-  )
 
-  // see https://github.com/orbiting/backends/blob/c25cf33336729590b114e5113e464be6bf1185e0/packages/documents/graphql/resolvers/_queries/documents.js#L107
-  // - the documents resolver exposes those two properties on individual docs for resolving
-  // - we steal them here for our new doc
-  const firstDoc = docsConnection.nodes[0] || {} // in case no docs are published
-  const allDocs = firstDoc._all
-  const allUsernames = firstDoc._usernames
+  const connection = Object.assign({}, {
+    nodes: [
+      {
+        type: indexType,
+        entity: getElasticDoc({
+          indexType: indexType,
+          doc
+        })
+      }
+    ]
+  })
+
+  await addRelatedDocs({ connection, scheduledAt, context })
+
+  const { _all, _usernames } = connection.nodes[0].entity
 
   const resolvedDoc = JSON.parse(JSON.stringify(doc))
+
   const utmParams = {
     'utm_source': 'newsletter',
     'utm_medium': 'email',
     'utm_campaign': repoId
   }
+
   const searchString = '?' + querystring.stringify(utmParams)
 
   contentUrlResolver(
     resolvedDoc,
-    allDocs,
-    allUsernames,
+    _all,
+    _usernames,
     unresolvedRepoIds,
     FRONTEND_BASE_URL,
     searchString
@@ -143,8 +155,8 @@ module.exports = async (
 
   metaUrlResolver(
     resolvedDoc.content.meta,
-    allDocs,
-    allUsernames,
+    _all,
+    _usernames,
     unresolvedRepoIds,
     FRONTEND_BASE_URL,
     searchString
@@ -152,11 +164,12 @@ module.exports = async (
 
   metaFieldResolver(
     resolvedDoc.content.meta,
-    allDocs,
+    _all,
     unresolvedRepoIds
   )
 
   unresolvedRepoIds = uniq(unresolvedRepoIds)
+
   if (
     unresolvedRepoIds.length &&
     (
@@ -349,7 +362,6 @@ module.exports = async (
   }
 
   // publish to elasticsearch
-  const indexType = 'Document'
   const elasticDoc = getElasticDoc({
     indexName: getIndexAlias(indexType.toLowerCase(), 'write'),
     indexType: indexType,
