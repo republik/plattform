@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import SlatePropTypes from 'slate-prop-types'
 import { css } from 'glamor'
 
 import MdEdit from 'react-icons/lib/md/edit'
@@ -78,7 +79,12 @@ OverlayFormManager.propTypes = {
   children: PropTypes.func.isRequired,
   component: PropTypes.node,
   preview: PropTypes.node,
-  extra: PropTypes.node
+  extra: PropTypes.node,
+  attributes: PropTypes.object,
+  editor: PropTypes.shape({
+    change: PropTypes.func.isRequired
+  }).isRequired,
+  node: SlatePropTypes.node.isRequired
 }
 
 export default OverlayFormManager
