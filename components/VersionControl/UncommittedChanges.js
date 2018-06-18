@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 import { css, merge } from 'glamor'
 import {
   colors,
@@ -16,13 +17,42 @@ import { getInitials } from '../../lib/utils/name'
 import withT from '../../lib/withT'
 import { errorToString } from '../../lib/utils/errors'
 import { UNCOMMITTED_CHANGES_POLL_INTERVAL_MS } from '../../lib/settings'
-import { getUncommittedChanges } from '../../lib/graphql/queries'
-import { uncommittedChangesSubscription } from '../../lib/graphql/subscriptions'
 import OfflineIcon from 'react-icons/lib/md/signal-wifi-off' // portable-wifi-off
 
 import createDebug from 'debug'
 
 const debug = createDebug('publikator:uncommittedChanges')
+
+export const getUncommittedChanges = gql`
+  query getUncommittedChanges($repoId: ID!) {
+    repo(id: $repoId) {
+      id
+      uncommittedChanges {
+        id
+        email
+        name
+      }
+    }
+  }
+`
+
+export const uncommittedChangesSubscription = gql`
+  subscription onUncommitedChange(
+    $repoId: ID!
+  ) {
+    uncommittedChanges(
+      repoId: $repoId
+    ) {
+      repoId
+      action
+      user {
+        id
+        email
+        name
+      }
+    }
+  }
+`
 
 export const warningColor = '#E9A733'
 

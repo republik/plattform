@@ -1,10 +1,48 @@
 import React, { Component } from 'react'
 import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 import { Autocomplete, InlineSpinner } from '@project-r/styleguide'
 import debounce from 'lodash.debounce'
 
 import { GITHUB_ORG, REPO_PREFIX } from '../../../lib/settings'
-import { filterRepos } from '../../../lib/graphql/queries'
+
+export const filterRepos = gql`
+query searchRepo($after: String, $search: String) {
+  repos(first: 10, after: $after, search: $search) {
+    totalCount
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+    nodes {
+      id
+      latestCommit {
+        id
+        document {
+          id
+          meta {
+            title
+            image
+            description
+            credits
+            kind
+            color
+            format {
+              id
+              repoId
+              meta {
+                title
+                color
+                kind
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`
 
 const ConnectedAutoComplete = graphql(filterRepos, {
   skip: props => !props.filter,

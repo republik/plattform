@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 import { compose } from 'redux'
 
 import withT from '../../lib/withT'
-import { getRepoWithPublications } from '../../lib/graphql/queries'
-import { unpublish } from '../../lib/graphql/mutations'
 import { getName } from '../../lib/utils/name'
 import Loader from '../Loader'
 import List, { Item, Highlight } from '../List'
@@ -17,6 +16,34 @@ import ErrorMessage from '../ErrorMessage'
 import { query as treeQuery } from '../../pages/repo/tree'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
+
+export const unpublish = gql`
+mutation unpublish(
+  $repoId: ID!
+) {
+  unpublish(repoId: $repoId)
+}
+`
+
+export const getRepoWithPublications = gql`
+  query repoWithPublications($repoId: ID!) {
+    repo(id: $repoId) {
+      id
+      latestPublications {
+        name
+        prepublication
+        live
+        scheduledAt
+        updateMailchimp
+        date
+        author {
+          name
+          email
+        }
+      }
+    }
+  }
+`
 
 class CurrentPublications extends Component {
   constructor (...args) {

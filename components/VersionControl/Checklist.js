@@ -5,17 +5,59 @@ import { Checkbox, colors, linkRule } from '@project-r/styleguide'
 import { getName } from '../../lib/utils/name'
 import { swissTime } from '../../lib/utils/format'
 import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 import { compose } from 'redux'
 import { Link } from '../../lib/routes'
 import Loader from '../Loader'
 import withT from '../../lib/withT'
 import { ascending } from 'd3-array'
-import { getMilestones } from '../../lib/graphql/queries'
-import { placeMilestone, removeMilestone } from '../../lib/graphql/mutations'
-
+import * as fragments from '../../lib/graphql/fragments'
 import { milestoneNames } from '../Repo/workflow'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
+
+export const placeMilestone = gql`
+mutation placeMilestone(
+  $repoId: ID!
+  $commitId: ID!
+  $name: String!
+  $message: String!
+) {
+  placeMilestone(
+    repoId: $repoId
+    commitId: $commitId
+    name: $name
+    message: $message
+  ) {
+    ...MilestoneWithCommit
+  }
+}
+${fragments.MilestoneWithCommit}
+`
+
+export const removeMilestone = gql`
+  mutation removeMilestone(
+    $repoId: ID!
+    $name: String!
+  ) {
+    removeMilestone(
+      repoId: $repoId
+      name: $name
+    )
+  }
+`
+
+export const getMilestones = gql`
+  query repoMilestones($repoId: ID!) {
+    repo(id: $repoId) {
+      id
+      milestones {
+        ...MilestoneWithCommit
+      }
+    }
+  }
+  ${fragments.MilestoneWithCommit}
+  `
 
 const styles = {
   approvedBy: css({

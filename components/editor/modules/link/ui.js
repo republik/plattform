@@ -8,7 +8,7 @@ import createOnFieldChange from '../../utils/createOnFieldChange'
 import RepoSearch from '../../utils/RepoSearch'
 import { AutoSlugLinkInfo } from '../../utils/github'
 import withT from '../../../../lib/withT'
-import * as queries from '../../../../lib/graphql/queries'
+import gql from 'graphql-tag'
 
 import {
   createInlineButton,
@@ -16,7 +16,18 @@ import {
   buttonStyles
 } from '../../utils'
 
-const ConnectedAutoComplete = graphql(queries.getUsers, {
+export const getUsers = gql`
+query getUsers($search: String!) {
+  users(search: $search) {
+    firstName
+    lastName
+    email
+    id
+  }
+}
+`
+
+const ConnectedAutoComplete = graphql(getUsers, {
   skip: props => !props.filter,
   options: ({ filter }) => ({ variables: { search: filter } }),
   props: ({ data: { users = [] } }) => ({

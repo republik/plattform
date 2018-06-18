@@ -9,7 +9,68 @@ import createUi from './ui'
 import embedFromUrlPlugin from './embedFromUrlPlugin'
 import EmbedLoader from './EmbedLoader'
 
-import * as queries from '../../../../lib/graphql/queries'
+import gql from 'graphql-tag'
+
+export const getVideoEmbed = gql`
+query getVideoEmbed($id: ID!, $embedType: EmbedType!) {
+  embed(id: $id, embedType: $embedType) {
+    __typename
+    ... on YoutubeEmbed {
+      platform
+      id
+      createdAt
+      retrievedAt
+      userName
+      userUrl
+      thumbnail
+      title
+      userName
+      userProfileImageUrl
+      aspectRatio
+    }
+    ... on VimeoEmbed {
+      platform
+      id
+      createdAt
+      retrievedAt
+      userName
+      userUrl
+      thumbnail
+      title
+      userName
+      userProfileImageUrl
+      aspectRatio
+      src {
+        mp4
+        hls
+        thumbnail
+      }
+    }
+  }
+}
+`
+
+export const getTwitterEmbed = gql`
+query getTwitterEmbed($id: ID!, $embedType: EmbedType!) {
+  embed(id: $id, embedType: $embedType) {
+    __typename
+    ... on TwitterEmbed {
+      id
+      createdAt
+      retrievedAt
+      text
+      html
+      userId
+      userName
+      userScreenName
+      userProfileImageUrl
+      image
+      more
+      playable
+    }
+  }
+}
+`
 
 const fromMdast = ({ TYPE }) => (
   node
@@ -173,11 +234,11 @@ const getTwitterQueryParams = url => {
 export const createEmbedVideoModule = moduleFactory({
   matchUrl: matchVideoUrl,
   getQueryParams: getVideoQueryParams,
-  query: queries.getVideoEmbed
+  query: getVideoEmbed
 })
 
 export const createEmbedTwitterModule = moduleFactory({
   matchUrl: matchTwitterUrl,
   getQueryParams: getTwitterQueryParams,
-  query: queries.getTwitterEmbed
+  query: getTwitterEmbed
 })

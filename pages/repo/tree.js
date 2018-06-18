@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { css } from 'glamor'
 import { compose } from 'redux'
 import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 
 import { path } from 'ramda'
 
@@ -14,11 +15,54 @@ import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
 import { NarrowContainer, A, InlineSpinner, Interaction } from '@project-r/styleguide'
 import { getKeys as getLocalStorageKeys } from '../../lib/utils/localStorage'
-import { getRepoHistory } from '../../lib/graphql/queries'
-import { treeRepoSubscription } from '../../lib/graphql/subscriptions'
+import * as fragments from '../../lib/graphql/fragments'
 
 import CurrentPublications from '../../components/Publication/Current'
 import UncommittedChanges from '../../components/VersionControl/UncommittedChanges'
+
+export const getRepoHistory = gql`
+  query repoWithHistory(
+    $repoId: ID!
+    $first: Int!
+    $after: String
+  ) {
+    repo(id: $repoId) {
+      id
+      commits(first: $first, after: $after) {
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+        nodes {
+          ...SimpleCommit
+        }
+      }
+      milestones {
+        ...SimpleMilestone
+      }
+    }
+  }
+  ${fragments.SimpleMilestone}
+  ${fragments.SimpleCommit}
+`
+
+export const treeRepoSubscription = gql`
+  subscription onRepoUpdate($repoId: ID!) {
+    repoUpdate(repoId: $repoId) {
+      id
+      commits (first: 1){
+        nodes {
+          ...SimpleCommit
+        }
+      }
+      milestones {
+        ...SimpleMilestone
+      }
+    }
+  }
+  ${fragments.SimpleCommit}
+  ${fragments.SimpleMilestone}
+`
 
 const styles = {
   loadMoreButton: css({

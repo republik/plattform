@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { compose } from 'redux'
 import { Router } from '../../lib/routes'
 import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 import { Value, resetKeyGenerator } from 'slate'
 import debounce from 'lodash.debounce'
 
@@ -36,16 +37,92 @@ import initLocalStore from '../../lib/utils/localStorage'
 
 import { getSchema } from '../../components/Templates'
 import { API_UNCOMMITTED_CHANGES_URL } from '../../lib/settings'
-import { getCommitById, getLatestCommit, getRepoHistory } from '../../lib/graphql/queries'
-import {
-  commit as commitMutation,
-  hasUncommitedChanges as uncommittedChangesMutation
-} from '../../lib/graphql/mutations'
+import * as fragments from '../../lib/graphql/fragments'
 
 import { colors } from '@project-r/styleguide'
 import SettingsIcon from 'react-icons/lib/fa/cogs'
 
 import createDebug from 'debug'
+
+export const commitMutation = gql`
+  mutation commit(
+    $repoId: ID!
+    $parentId: ID
+    $message: String!
+    $document: DocumentInput!
+  ) {
+    commit(
+      repoId: $repoId
+      parentId: $parentId
+      message: $message
+      document: $document
+    ) {
+      ...CommitWithDocument
+      repo {
+        ...EditPageRepo
+      }
+    }
+  }
+  ${fragments.CommitWithDocument}
+  ${fragments.EditPageRepo}
+`
+
+export const uncommittedChangesMutation = gql`
+  mutation uncommittedChanges($repoId: ID!, $action: Action!) {
+    uncommittedChanges(repoId: $repoId, action: $action)
+  }
+`
+
+export const getCommitById = gql`
+    query getCommitById($repoId: ID!, $commitId: ID!) {
+      repo(id: $repoId) {
+        ...EditPageRepo
+        commit(id: $commitId) {
+          ...CommitWithDocument
+        }
+      }
+    }
+    ${fragments.EditPageRepo}
+    ${fragments.CommitWithDocument}
+  `
+
+export const getLatestCommit = gql`
+  query getLatestCommit($repoId: ID!) {
+    repo(id: $repoId) {
+      id
+      latestCommit {
+        ...SimpleCommit
+      }
+    }
+  }
+  ${fragments.SimpleCommit}
+`
+
+export const getRepoHistory = gql`
+  query repoWithHistory(
+    $repoId: ID!
+    $first: Int!
+    $after: String
+  ) {
+    repo(id: $repoId) {
+      id
+      commits(first: $first, after: $after) {
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+        nodes {
+          ...SimpleCommit
+        }
+      }
+      milestones {
+        ...SimpleMilestone
+      }
+    }
+  }
+  ${fragments.SimpleMilestone}
+  ${fragments.SimpleCommit}
+`
 
 const debug = createDebug('publikator:pages:edit')
 const TEST = process.env.NODE_ENV === 'test'

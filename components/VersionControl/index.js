@@ -1,16 +1,49 @@
 import React, { Component } from 'react'
 import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 import { css } from 'glamor'
 import { compose } from 'redux'
 import { Label } from '@project-r/styleguide'
 import Loader from '../Loader'
 import withT from '../../lib/withT'
-import { getCommits } from '../../lib/graphql/queries'
-import { repoSubscription } from '../../lib/graphql/subscriptions'
+import * as fragments from '../../lib/graphql/fragments'
 
 import BaseCommit from './BaseCommit'
 import Checklist from './Checklist'
 import CommitHistory from './CommitHistory'
+
+export const getCommits = gql`
+  query getCommits($repoId: ID!, $after: String) {
+    repo(id: $repoId) {
+      id
+      commits(first: 3, after: $after) {
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        totalCount
+        nodes {
+          ...SimpleCommit
+        }
+      }
+    }
+  }
+  ${fragments.SimpleCommit}
+`
+
+export const repoSubscription = gql`
+  subscription onRepoUpdate($repoId: ID!) {
+    repoUpdate(repoId: $repoId) {
+      id
+      commits {
+        nodes {
+          ...SimpleCommit
+        }
+      }
+    }
+  }
+  ${fragments.SimpleCommit}
+`
 
 const styles = {
   container: css({

@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 import { compose } from 'redux'
 import { css } from 'glamor'
 
@@ -11,8 +12,6 @@ import { intersperse } from '../../lib/utils/helpers'
 import withT from '../../lib/withT'
 import { Link, Router } from '../../lib/routes'
 import { swissTime } from '../../lib/utils/format'
-import { getRepoWithCommit } from '../../lib/graphql/queries'
-import { publish } from '../../lib/graphql/mutations'
 import {
   Loader,
   InlineSpinner,
@@ -35,7 +34,75 @@ import { renderMdast } from 'mdast-react-render'
 
 import { getSchema } from '../../components/Templates'
 
+export const publish = gql`
+mutation publish(
+  $repoId: ID!,
+  $commitId: ID!,
+  $prepublication: Boolean!,
+  $scheduledAt: DateTime,
+  $updateMailchimp: Boolean!,
+  $ignoreUnresolvedRepoIds: Boolean
+) {
+  publish(
+    repoId: $repoId,
+    commitId: $commitId,
+    prepublication: $prepublication,
+    scheduledAt: $scheduledAt,
+    updateMailchimp: $updateMailchimp,
+    ignoreUnresolvedRepoIds: $ignoreUnresolvedRepoIds) {
+    unresolvedRepoIds
+    publication {
+      name
+    }
+  }
+}
+`
+
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
+
+export const getRepoWithCommit = gql`
+  query repoWithCommit($repoId: ID!, $commitId: ID!) {
+    repo(id: $repoId) {
+      id
+      meta {
+        publishDate
+      }
+      latestPublications {
+        date
+        name
+        live
+        prepublication
+        scheduledAt
+      }
+      commit(id: $commitId) {
+        id
+        message
+        date
+        author {
+          email
+          name
+        }
+        document {
+          id
+          content
+          meta {
+            slug
+            emailSubject
+            template
+            format {
+              meta {
+                path
+                title
+                color
+                kind
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
 
 const styles = {
   mask: css({
