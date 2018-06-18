@@ -162,7 +162,11 @@ class Form extends Component {
             value={html}
             renderInput={renderAutoSize()}
             onChange={(_, value) => {
-              onChange(data.set('html', value).set('autoHtml', false))
+              let newData = data.set('html', value)
+              if (newData.get('autoHtml')) {
+                newData = newData.set('autoHtml', false)
+              }
+              onChange(newData)
             }} />
         </Interaction.P>
         {!!this.state.autoHtml && <div>
