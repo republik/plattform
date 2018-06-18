@@ -96,7 +96,7 @@ Text
         error: undefined,
         users: []
       }}
-      uncommittedChangesMutation={() => {
+      hasUncommitedChanges={() => {
         return Promise.resolve({
           data: {
             uncommittedChanges: true

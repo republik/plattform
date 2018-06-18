@@ -3,7 +3,7 @@ import initApollo from '../../lib/apollo/initApollo'
 
 export default (initialState) => {
   const client = initApollo(initialState, {}, {
-    API_BASE_URL: 'http://127.0.0.1/graphql'
+    API_URL: 'http://localhost/graphql'
   })
   const withData = ComposedComponent => (props) => (
     <ApolloProvider client={client}>
