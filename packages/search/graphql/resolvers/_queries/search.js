@@ -78,7 +78,8 @@ const createShould = function (
     }
 
     const rolebasedFilterDefault =
-      _.get(search, 'rolebasedFilter.default', {})()
+      _.get(search, 'rolebasedFilter.default', () => ({}))({ scheduledAt })
+
     const rolebasedFilter = Object.assign({}, rolebasedFilterDefault)
 
     if (userHasRole(user, 'editor')) {
@@ -87,7 +88,7 @@ const createShould = function (
         _.get(
           search,
           'rolebasedFilter.editor',
-          rolebasedFilterDefault
+          () => rolebasedFilterDefault
         )({ scheduledAt })
       )
     }
