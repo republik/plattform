@@ -40,11 +40,11 @@ export default ({rule, subModules, TYPE}) => {
         type: 'zone',
         identifier,
         data,
-        children: [{
+        children: html ? [{
           type: 'code',
           lang: 'html',
           value: html
-        }]
+        }] : []
       }
     }
   }
