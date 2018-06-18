@@ -56,6 +56,8 @@ const createShould = function (
       match_all: {}
     }
 
+    let should = []
+
     let fields = Object.keys(search.termFields)
 
     // Append boost if available, annotation "<field name>^<boost>"
@@ -69,12 +71,26 @@ const createShould = function (
     })
 
     if (searchTerm) {
-      must = {
-        multi_match: {
+      must = [
+        { multi_match: {
           query: searchTerm,
+          type: 'best_fields',
           fields
-        }
-      }
+        } }
+      ]
+
+      should = [
+        { multi_match: {
+          query: searchTerm,
+          type: 'phrase',
+          fields
+        } },
+        { multi_match: {
+          query: searchTerm,
+          type: 'cross_fields',
+          fields
+        } }
+      ]
     }
 
     const rolebasedFilterDefault =
@@ -106,6 +122,7 @@ const createShould = function (
     queries.push({
       bool: {
         must,
+        should,
         filter
       }
     })
