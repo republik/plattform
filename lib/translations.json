@@ -1,5 +1,5 @@
 {
-  "updated": "2018-04-30T15:54:35.427Z",
+  "updated": "2018-06-13T23:32:09.307Z",
   "title": "live",
   "data": [
     {
@@ -745,6 +745,10 @@
     {
       "key": "ui/sidebar/info/numCharacters",
       "value": "Anzahl Zeichen"
+    },
+    {
+      "key": "styleguide/DynamicComponent/error",
+      "value": "Diese Komponente ist kaputt. Die Ursache könnte eine nicht erlaubte Grund-URL, eine falsche Konfiguration oder ein kaputtes Modul sein."
     }
   ]
 }
