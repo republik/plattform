@@ -12,7 +12,6 @@ import * as Editorial from '../../components/Typography/Editorial'
 import * as Interaction from '../../components/Typography/Interaction'
 import { TeaserFeed } from '../../components/TeaserFeed'
 import IllustrationHtml from '../../components/IllustrationHtml'
-import DynamicComponent from '../../components/DynamicComponent'
 import CsvChart from '../../components/Chart/Csv'
 import { ChartTitle, ChartLead } from '../../components/Chart'
 import ErrorBoundary from '../../components/ErrorBoundary'
@@ -65,6 +64,7 @@ import {
 } from './utils'
 
 import createTeasers from './teasers'
+import createDynamicComponent from './dynamicComponent'
 
 const link = {
   matchMdast: matchType('link'),
@@ -965,40 +965,18 @@ const createSchema = ({
                 },
                 isVoid: true
               },
-              {
-                matchMdast: matchZone('DYNAMIC_COMPONENT'),
-                component: ({showException, size, ...props}) => (
-                  <Figure size={size}>
-                    <ErrorBoundary
-                      showException={showException}
-                      failureMessage={t('styleguide/DynamicComponent/error')}>
-                      <DynamicComponent {...props} />
-                    </ErrorBoundary>
-                  </Figure>
-                ),
-                props: node => {
-                  const html = node.children.find(c => c.type === 'code' && c.lang === 'html')
-                  return {
-                    size: node.data.size,
-                    src: node.data.src,
-                    html: html && html.value,
-                    props: node.data.props,
-                    loader: node.data.loader,
-                    require: dynamicComponentRequire
-                  }
-                },
-                editorModule: 'dynamiccomponent',
-                editorOptions: {
-                  insertTypes: [
-                    'PARAGRAPH'
-                  ],
-                  insertButtonText: 'Dynamic Component'
-                },
-                isVoid: true
-              }
+              createDynamicComponent({
+                t,
+                dynamicComponentRequire,
+                insertButtonText: 'Dynamic Component'
+              })
             ]
           },
           centerFigure,
+          createDynamicComponent({
+            t,
+            dynamicComponentRequire
+          }),
           {
             matchMdast: () => false,
             editorModule: 'specialchars'

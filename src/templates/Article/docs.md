@@ -769,18 +769,26 @@ Zweitens: ich habe erklärt mit diese zwei Spieler: nach Dortmund brauchen viell
 
 ## Dynamic Components
 
+By default dynamic components are wrapped in figures to support all center sizes. Set `raw` to `true` to disable figure wrapping, `size` will have no effect in raw mode.
+
+### `size`
+
+Values: `undefined` (default), `breakout`, `narrow`, `floatTiny`
+
 ```react|noSource
 <Markdown schema={schema}>{`
 <section><h6>CENTER</h6>
+
+Genau zu diesem Zwecke erschaffen, immer im Schatten meines großen Bruders «Lorem Ipsum», freue ich mich jedes Mal, wenn Sie ein paar Zeilen lesen.
 
 <section><h6>DYNAMIC_COMPONENT</h6>
 
 \`\`\`
 {
-  "size": "breakout",
+  "size": "narrow",
   "src": "/static/dynamic_hello.js",
   "props": {
-    "text": "This is it."
+    "text": "This is narrow."
   }
 }
 \`\`\`
@@ -791,6 +799,47 @@ Zweitens: ich habe erklärt mit diese zwei Spieler: nach Dortmund brauchen viell
 
 <hr /></section>
 
+Denn esse est percipi - Sein ist wahrgenommen werden.
+
 <hr /></section>
+`}</Markdown>
+```
+
+### Edge-to-Edge
+
+Simpy unwrap from center
+
+```react|noSource
+<Markdown schema={schema}>{`
+
+<section><h6>CENTER</h6>
+
+Überall dieselbe alte Leier. Das Layout ist fertig, der Text lässt auf sich warten.
+
+<hr /></section>
+
+<section><h6>DYNAMIC_COMPONENT</h6>
+
+\`\`\`
+{
+  "src": "/static/dynamic_hello.js",
+  "props": {
+    "text": "Edge-To-Edge"
+  }
+}
+\`\`\`
+
+\`\`\`html
+<div>Optional static SSR version and placeholder while loading. Default is a loader.</div>
+\`\`\`
+
+<hr /></section>
+
+<section><h6>CENTER</h6>
+
+Damit das Layout nun nicht nackt im Raume steht und sich klein und leer vorkommt, springe ich ein: der Blindtext.
+
+<hr /></section>
+
 `}</Markdown>
 ```
