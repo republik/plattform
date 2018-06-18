@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
 import MdEdit from 'react-icons/lib/md/edit'
@@ -18,7 +19,7 @@ const styles = {
   })
 }
 
-const EditButton = ({onClick}) => (
+const EditButton = ({ onClick }) => (
   <div {...styles.editButton}
     role='button'
     onClick={onClick}>
@@ -34,7 +35,11 @@ class OverlayFormManager extends Component {
     }
   }
   render () {
-    const { node, attributes, onChange, preview, extra, editor, children } = this.props
+    const {
+      editor, node, attributes,
+      onChange, showEditButton,
+      component, preview, extra, children
+    } = this.props
     const startEditing = () => {
       this.setState({showModal: true})
     }
@@ -42,7 +47,7 @@ class OverlayFormManager extends Component {
 
     return <div {...attributes} style={{position: 'relative'}}
       onDoubleClick={startEditing}>
-      <EditButton onClick={startEditing} />
+      {showEditButton && <EditButton onClick={startEditing} />}
       {showModal && (
         <OverlayForm
           preview={preview}
@@ -58,9 +63,22 @@ class OverlayFormManager extends Component {
           {children({data: node.data, onChange})}
         </OverlayForm>
       )}
-      {preview}
+      {component || preview}
     </div>
   }
+}
+
+OverlayFormManager.defaultProps = {
+  showEditButton: true
+}
+
+OverlayFormManager.propTypes = {
+  showEditButton: PropTypes.bool.isRequired,
+  onChange: PropTypes.func.isRequired,
+  children: PropTypes.func.isRequired,
+  component: PropTypes.node,
+  preview: PropTypes.node,
+  extra: PropTypes.node
 }
 
 export default OverlayFormManager

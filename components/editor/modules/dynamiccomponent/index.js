@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { cloneElement } from 'react'
 import { Block } from 'slate'
 
 import { matchBlock } from '../../utils'
@@ -83,14 +83,18 @@ export default ({rule, subModules, TYPE}) => {
           const { node } = props
           if (node.type !== TYPE) return
           const data = node.data.toJS()
-          const preview = <DynamicComponent
+          const component = <DynamicComponent
             showException
             key={JSON.stringify(data)}
             {...data} />
+          const preview = cloneElement(component, {
+            raw: true
+          })
 
           return (
             <EditOverlay
               {...props}
+              component={component}
               preview={preview} />
           )
         },
