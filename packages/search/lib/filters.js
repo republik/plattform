@@ -94,6 +94,31 @@ const filterReducer = (schema) => (filters) =>
     {}
   )
 
+// converts the filter (from filterReducer) into an object without the md5 hashes
+const getFilterObj = (filter) => {
+  const obj = {}
+  filter && Object.keys(filter)
+    .forEach(fKey => {
+      const filterEntry = filter[fKey]
+      obj[filterEntry.key] = filterEntry.value
+    })
+  return obj
+}
+
+// get a value from the filter (from filterReducer)
+const getFilterValue = (filter, key) => {
+  let value
+  filter && Object.keys(filter)
+    .some(fKey => {
+      const filterEntry = filter[fKey]
+      if (filterEntry.key === key) {
+        value = filterEntry.value
+      }
+      return !!value
+    })
+  return value
+}
+
 // converts a filter obj to elastic syntax
 const elasticFilterBuilder = (schema) => (filterInput) => {
   return { bool: Object.keys(filterInput).reduce(
@@ -136,5 +161,7 @@ module.exports = {
   dateRangeCriteriaBuilder,
   rangeCriteriaBuilder,
   filterReducer,
+  getFilterValue,
+  getFilterObj,
   elasticFilterBuilder
 }

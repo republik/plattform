@@ -11,6 +11,8 @@ const {
 } = require('../../../lib/Documents')
 const {
   filterReducer,
+  getFilterValue,
+  getFilterObj,
   elasticFilterBuilder
 } = require('../../../lib/filters')
 const {
@@ -46,7 +48,7 @@ const deepMergeArrays = function (objValue, srcValue) {
 }
 
 const createShould = function (
-  searchTerm, searchFilter, _filter, indicesList, user, scheduledAt
+  searchTerm, searchFilter, indicesList, user, scheduledAt
 ) {
   const queries = []
 
@@ -96,7 +98,7 @@ const createShould = function (
     const rolbasedFilterArgs = Object.assign(
       {},
       { scheduledAt },
-      _filter
+      getFilterObj(searchFilter)
     )
 
     const rolebasedFilterDefault =
@@ -153,12 +155,12 @@ const createHighlight = (indicesList) => {
 }
 
 const createQuery = (
-  searchTerm, filter, _filter, sort, indicesList, user, scheduledAt
+  searchTerm, filter, sort, indicesList, user, scheduledAt
 ) => ({
   query: {
     bool: {
       should: createShould(
-        searchTerm, filter, _filter, indicesList, user, scheduledAt
+        searchTerm, filter, indicesList, user, scheduledAt
       )
     }
   },
@@ -264,11 +266,11 @@ const cleanOptions = (options) => ({
   ...options,
   after: undefined,
   before: undefined,
-  filters: undefined
+  filter: undefined
 })
 
 const stringifyOptions = (options) =>
-  Buffer.from(JSON.stringify(cleanOptions(options))).toString('base64')
+  Buffer.from(JSON.stringify(options)).toString('base64')
 
 const parseOptions = (options) => {
   try {
@@ -285,7 +287,10 @@ const getFirst = (first, filter, user) => {
   // we only restrict the nodes array
   // making totalCount always available
   // - querying a single document by path is always allowed
-  if (DOCUMENTS_RESTRICT_TO_ROLES && !filter.path && !filter.repoId) {
+  const path = getFilterValue(filter, 'path')
+  const repoId = getFilterValue(filter, 'repoId')
+  const oneRepoId = repoId && (!Array.isArray(repoId) || repoId.length === 1)
+  if (DOCUMENTS_RESTRICT_TO_ROLES && !path && !oneRepoId) {
     const roles = DOCUMENTS_RESTRICT_TO_ROLES.split(',')
     if (!userIsInRoles(user, roles)) {
       return 0
@@ -300,14 +305,7 @@ const getFirst = (first, filter, user) => {
 }
 
 const getIndicesList = (filter) => {
-  let limitType
-  filter && Object.keys(filter)
-    .forEach(fKey => {
-      const filterEntry = filter[fKey]
-      if (filterEntry.key === 'type') {
-        limitType = filterEntry.value
-      }
-    })
+  const limitType = getFilterValue(filter, 'type')
   const indicesFilter = limitType
     ? ({type}) => type === limitType
     : Boolean
@@ -329,8 +327,8 @@ const search = async (__, args, context) => {
 
   const {
     search,
-    filter: _filter = { },
-    filters = [],
+    filter: filterObj = { },
+    filters: filterArray = [],
     sort = {
       key: 'relevance',
       direction: 'DESC'
@@ -341,25 +339,25 @@ const search = async (__, args, context) => {
 
   debug('options', JSON.stringify(options))
 
-  Object.keys(_filter).forEach(key => {
-    filters.push({
+  Object.keys(filterObj).forEach(key => {
+    filterArray.push({
       key,
-      value: _filter[key]
+      value: filterObj[key]
     })
   })
 
-  const filter = reduceFilters(filters)
+  const filter = reduceFilters(filterArray)
 
   debug('filter', JSON.stringify(filter))
 
-  const first = getFirst(_first, _filter, user)
+  const first = getFirst(_first, filter, user)
 
   const indicesList = getIndicesList(filter)
   const query = {
     index: indicesList.map(({ name }) => getIndexAlias(name, 'read')),
     from,
     size: first,
-    body: createQuery(search, filter, _filter, sort, indicesList, user, scheduledAt)
+    body: createQuery(search, filter, sort, indicesList, user, scheduledAt)
   }
 
   debug('ES query', JSON.stringify(query))
@@ -376,21 +374,21 @@ const search = async (__, args, context) => {
     pageInfo: {
       hasNextPage,
       endCursor: hasNextPage
-        ? stringifyOptions({
+        ? stringifyOptions(cleanOptions({
           ...options,
-          filter: _filter,
+          filters: filterArray,
           first,
           from: from + first
-        })
+        }))
         : null,
       hasPreviousPage,
       startCursor: hasPreviousPage
-        ? stringifyOptions({
+        ? stringifyOptions(cleanOptions({
           ...options,
-          filter: _filter,
+          filters: filterArray,
           first,
           from: from - first
-        })
+        }))
         : null
     }
   }
