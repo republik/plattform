@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { cloneElement } from 'react'
 import { Block } from 'slate'
 
 import { matchBlock } from '../../utils'
@@ -40,11 +40,11 @@ export default ({rule, subModules, TYPE}) => {
         type: 'zone',
         identifier,
         data,
-        children: [{
+        children: html ? [{
           type: 'code',
           lang: 'html',
           value: html
-        }]
+        }] : []
       }
     }
   }
@@ -61,7 +61,8 @@ export default ({rule, subModules, TYPE}) => {
     type: TYPE,
     isVoid: true,
     data: {
-      src: (SG_DYNAMIC_COMPONENT_BASE_URLS || '').split(',')[0]
+      src: (SG_DYNAMIC_COMPONENT_BASE_URLS || '').split(',')[0],
+      autoHtml: true
     }
   })
 
@@ -83,14 +84,18 @@ export default ({rule, subModules, TYPE}) => {
           const { node } = props
           if (node.type !== TYPE) return
           const data = node.data.toJS()
-          const preview = <DynamicComponent
+          const component = <DynamicComponent
             showException
             key={JSON.stringify(data)}
             {...data} />
+          const preview = cloneElement(component, {
+            raw: true
+          })
 
           return (
             <EditOverlay
               {...props}
+              component={component}
               preview={preview} />
           )
         },
