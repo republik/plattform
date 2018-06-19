@@ -1,5 +1,7 @@
+const { graphql: { resolvers: { queries: { document: getDocument } } } } =
+  require('@orbiting/backend-modules-documents')
+
 const MilestoneInterface = require('./MilestoneInterface')
-const debug = require('debug')('publikator:graphql:resolvers:Publication')
 
 module.exports = {
   ...MilestoneInterface,
@@ -10,29 +12,20 @@ module.exports = {
   scheduledAt: ({ meta: { scheduledAt } }) => scheduledAt,
   updateMailchimp: ({ meta: { updateMailchimp } }) => updateMailchimp,
 
-  document: ({
-    document: doc,
-    repo: {
-      id: repoId
-    },
-    refName
-  }, args, { redis }) => {
+  // Retrieve documents attached to a publication
+  document: async (__, args, context) => {
+    const {
+      name: versionName,
+      document: doc,
+      repo: {
+        id: repoId
+      }
+    } = __
+
     if (doc) { // publish mutation
-      debug({ repoId, refName, doc })
       return doc
     }
-    /*
-     @TODO This is broken. We do not add information Redis anymore. Can
-     maybe be retrieved from ElasticSearhc, but "refName" is not available
-     there, would have to be deduced. (pae)
-    */
-    return redis.getAsync(`repos:${repoId}/${refName}`)
-      .then(publication => {
-        const json = JSON.parse(publication)
-        if (!json) {
-          return null
-        }
-        return json.doc
-      })
+
+    return getDocument(__, { repoId, versionName }, context)
   }
 }
