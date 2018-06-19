@@ -109,8 +109,10 @@ test('unauthorized repos query', async (t) => {
         repos {
           nodes {
             id
-            commits {
-              id
+            commits(first: 1) {
+              nodes {
+                id
+              }
             }
           }
         }
@@ -542,10 +544,12 @@ test('repo latestCommit, commits-length and -content', async (t) => {
         $repoId: ID!
       ){
         repo(id: $repoId) {
-          commits {
-            id
-            document {
-              content
+          commits(first: 1) {
+            nodes {
+              id
+              document {
+                content
+              }
             }
           }
           latestCommit {
@@ -564,8 +568,9 @@ test('repo latestCommit, commits-length and -content', async (t) => {
   t.ok(result.data.repo)
   const { repo } = result.data
   t.ok(repo.commits)
-  t.equals(repo.commits.length, 1)
-  t.equals(repo.commits[0].id, repo.latestCommit.id)
+  t.ok(repo.commits.nodes)
+  t.equals(repo.commits.nodes.length, 1)
+  t.equals(repo.commits.nodes[0].id, repo.latestCommit.id)
   t.equals(repo.latestCommit.id, initialCommitId)
   // TODO discuss why this isnt equivalent
   // const commit = repo.commits[0]
@@ -720,9 +725,11 @@ test('check image URLs and asset server', async (t) => {
         $repoId: ID!
       ){
         repo(id: $repoId) {
-          commits {
-            document {
-              content
+          commits(first: 1) {
+            nodes {
+              document {
+                content
+              }
             }
           }
         }
@@ -733,7 +740,8 @@ test('check image URLs and asset server', async (t) => {
     }
   })
   t.ok(result.data.repo.commits)
-  const articleMdast = result.data.repo.commits[0].document.content
+  t.ok(result.data.repo.commits.nodes)
+  const articleMdast = result.data.repo.commits.nodes[0].document.content
 
   // extract imageUrls
   let imageUrls = []
@@ -749,8 +757,8 @@ test('check image URLs and asset server', async (t) => {
   // download images via asset server
   const imageBuffersFromServer = await Promise.all(
     imageUrls.map(imageUrl =>
-        fetch(imageUrl)
-          .then(response => response.buffer())
+      fetch(imageUrl)
+        .then(response => response.buffer())
     )
   )
   t.equals(imageBuffersFromServer.length, imageUrls.length)
@@ -802,10 +810,12 @@ test('check recommit content and latestCommit', async (t) => {
         $repoId: ID!
       ){
         repo(id: $repoId) {
-          commits {
-            id
-            document {
-              content
+          commits(first: 1) {
+            nodes {
+              id
+              document {
+                content
+              }
             }
           }
         }
@@ -816,7 +826,8 @@ test('check recommit content and latestCommit', async (t) => {
     }
   })
   t.ok(result0.data.repo.commits)
-  const originalCommit = result0.data.repo.commits[0]
+  t.ok(result0.data.repo.commits.nodes)
+  const originalCommit = result0.data.repo.commits.nodes[0]
   const originalContent = originalCommit.document.content
   t.ok(originalContent)
 
@@ -855,10 +866,12 @@ test('check recommit content and latestCommit', async (t) => {
         $repoId: ID!
       ){
         repo(id: $repoId) {
-          commits {
-            id
-            document {
-              content
+          commits(first: 1) {
+            nodes {
+              id
+              document {
+                content
+              }
             }
           }
           latestCommit {
@@ -872,7 +885,8 @@ test('check recommit content and latestCommit', async (t) => {
     }
   })
   t.ok(result2.data.repo.commits)
-  const newCommit = result2.data.repo.commits[0]
+  t.ok(result2.data.repo.commits.nodes)
+  const newCommit = result2.data.repo.commits.nodes[0]
   const newContent = newCommit.document.content
 
   t.notEquals(originalCommit.id, newCommit.id)
@@ -2268,8 +2282,10 @@ test('unauthorized repos query', async (t) => {
         repos {
           nodes {
             id
-            commits {
-              id
+            commits(first: 1) {
+              nodes {
+                id
+              }
             }
           }
         }
