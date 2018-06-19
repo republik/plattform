@@ -146,7 +146,7 @@ Etwas Böses _Foto: Laurent Burst_
 
 ### Edge-to-Edge
 
-Simpy unwrap from center
+Simply unwrap from center
 
 ```react|noSource
 <Markdown schema={schema}>{`
@@ -807,7 +807,7 @@ Denn esse est percipi - Sein ist wahrgenommen werden.
 
 ### Edge-to-Edge
 
-Simpy unwrap from center
+Simply unwrap from center
 
 ```react|noSource
 <Markdown schema={schema}>{`
