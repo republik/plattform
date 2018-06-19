@@ -118,11 +118,11 @@ class EditSidebar extends Component {
 
     return (
       <Loader
-        loading={(loading && !repo) || !repo || !commit}
+        loading={(loading && !repo) || !repo || !commit || !repo.commits}
         error={error}
         render={() => (
           <div {...styles.container}>
-            {!!repo && (
+            {!!repo && !!repo.commits && !!repo.commits.nodes && (
               <BaseCommit
                 repoId={repo.id}
                 commit={commit}
