@@ -68,6 +68,15 @@ const schema = {
   path: {
     criteria: termCriteriaBuilder('meta.path.keyword')
   },
+  commitId: {
+    criteria: termCriteriaBuilder('commitId')
+  },
+  versionName: {
+    criteria: termCriteriaBuilder('versionName')
+  },
+  milestoneCommitId: {
+    criteria: termCriteriaBuilder('milestoneCommitId')
+  },
   userId: {
     ...termEntry('meta.credits.url'),
     parser: (value) => `/~${value}`
@@ -236,16 +245,20 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
 
   const sanitizedRepoIds = [...new Set(repoIds.filter(Boolean))]
 
-  const relatedDocs = await search(null, {
-    skipLoadRelatedDocs: true,
-    scheduledAt,
-    first: sanitizedRepoIds.length,
-    filter: {
-      repoId: sanitizedRepoIds,
-      type: 'Document'
-    }
-  }, context)
-    .then(getDocsForConnection)
+  let relatedDocs = []
+
+  if (sanitizedRepoIds.length > 0) {
+    relatedDocs = await search(null, {
+      skipLoadRelatedDocs: true,
+      scheduledAt,
+      first: sanitizedRepoIds.length,
+      filter: {
+        repoId: sanitizedRepoIds,
+        type: 'Document'
+      }
+    }, context)
+      .then(getDocsForConnection)
+  }
 
   debug({
     numDocs: docs.length,
