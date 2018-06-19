@@ -603,6 +603,7 @@ test('repo specific commit', async (t) => {
   t.ok(result.data)
   t.ok(result.data.repo)
   t.equals(result.data.repo.commit.id, initialCommitId)
+  t.end()
 })
 
 test('repo specific commit', async (t) => {
@@ -627,7 +628,7 @@ test('repo specific commit', async (t) => {
   })
   t.equals(result.data, null)
   t.ok(result.errors)
-  t.ok(result.errors[0].message.indexOf('Not Found') > -1)
+  t.ok(result.errors[0].message.indexOf('No commit found for SHA') > -1)
   t.end()
 })
 
