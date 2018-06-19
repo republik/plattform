@@ -46,7 +46,7 @@ const deepMergeArrays = function (objValue, srcValue) {
 }
 
 const createShould = function (
-  searchTerm, searchFilter, indicesList, user, scheduledAt
+  searchTerm, searchFilter, _filter, indicesList, user, scheduledAt
 ) {
   const queries = []
 
@@ -93,8 +93,14 @@ const createShould = function (
       ]
     }
 
+    const rolbasedFilterArgs = Object.assign(
+      {},
+      { scheduledAt },
+      _filter
+    )
+
     const rolebasedFilterDefault =
-      _.get(search, 'rolebasedFilter.default', () => ({}))({ scheduledAt })
+      _.get(search, 'rolebasedFilter.default', () => ({}))(rolbasedFilterArgs)
 
     const rolebasedFilter = Object.assign({}, rolebasedFilterDefault)
 
@@ -105,7 +111,7 @@ const createShould = function (
           search,
           'rolebasedFilter.editor',
           () => rolebasedFilterDefault
-        )({ scheduledAt })
+        )(rolbasedFilterArgs)
       )
     }
 
@@ -147,11 +153,13 @@ const createHighlight = (indicesList) => {
 }
 
 const createQuery = (
-  searchTerm, filter, sort, indicesList, user, scheduledAt
+  searchTerm, filter, _filter, sort, indicesList, user, scheduledAt
 ) => ({
   query: {
     bool: {
-      should: createShould(searchTerm, filter, indicesList, user, scheduledAt)
+      should: createShould(
+        searchTerm, filter, _filter, indicesList, user, scheduledAt
+      )
     }
   },
   sort: createSort(sort),
@@ -351,7 +359,7 @@ const search = async (__, args, context) => {
     index: indicesList.map(({ name }) => getIndexAlias(name, 'read')),
     from,
     size: first,
-    body: createQuery(search, filter, sort, indicesList, user, scheduledAt)
+    body: createQuery(search, filter, _filter, sort, indicesList, user, scheduledAt)
   }
 
   debug('ES query', JSON.stringify(query))
