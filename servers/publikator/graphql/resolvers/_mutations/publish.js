@@ -1,6 +1,7 @@
 const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
 const { descending } = require('d3-array')
 const querystring = require('querystring')
+const sleep = require('await-sleep')
 const yaml = require('../../../lib/yaml')
 const {
   createGithubClients,
@@ -375,6 +376,7 @@ module.exports = async (
   )
   await insert()
   await after()
+  await sleep(2 * 1000)
 
   await redis.publishAsync(channelKey, 'refresh')
 
