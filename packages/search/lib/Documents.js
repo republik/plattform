@@ -259,7 +259,8 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
       filter: {
         repoId: sanitizedRepoIds,
         type: 'Document'
-      }
+      },
+      withoutContent: true
     }, context)
       .then(getDocsForConnection)
   }

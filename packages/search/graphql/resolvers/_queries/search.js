@@ -156,7 +156,7 @@ const createHighlight = (indicesList) => {
 }
 
 const createQuery = (
-  searchTerm, filter, sort, indicesList, user, scheduledAt
+  searchTerm, filter, sort, indicesList, user, scheduledAt, withoutContent
 ) => ({
   query: {
     bool: {
@@ -167,7 +167,13 @@ const createQuery = (
   },
   sort: createSort(sort),
   highlight: createHighlight(indicesList),
-  aggs: extractAggs(documentSchema)
+  aggs: extractAggs(documentSchema),
+  ...withoutContent
+    ? { _source: {
+      'exclude': [ 'content', 'contentString', 'resolved' ],
+      'include': [ 'content.meta*' ]
+    } }
+    : { }
 })
 
 const mapHit = (hit) => {
@@ -322,7 +328,8 @@ const search = async (__, args, context) => {
     before,
     skipLoadRelatedDocs = false,
     scheduledAt,
-    trackingId = uuid()
+    trackingId = uuid(),
+    withoutContent = false
   } = args
 
   const options = after
@@ -363,7 +370,7 @@ const search = async (__, args, context) => {
     index: indicesList.map(({ name }) => getIndexAlias(name, 'read')),
     from,
     size: first,
-    body: createQuery(search, filter, sort, indicesList, user, scheduledAt)
+    body: createQuery(search, filter, sort, indicesList, user, scheduledAt, withoutContent)
   }
 
   debug('ES query', JSON.stringify(query))
