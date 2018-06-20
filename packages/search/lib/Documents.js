@@ -49,6 +49,9 @@ const getResourceUrls = repoName => {
 }
 
 const schema = {
+  id: {
+    criteria: termCriteriaBuilder('_id')
+  },
   type: termEntry('__type'),
   state: termEntry('__state'),
   template: termEntry('meta.template'),
@@ -661,5 +664,6 @@ module.exports = {
   isPathUsed,
   findPublished,
   findTemplates,
-  getResourceUrls
+  getResourceUrls,
+  getDocumentId
 }
