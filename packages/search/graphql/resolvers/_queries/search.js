@@ -321,7 +321,7 @@ const search = async (__, args, context) => {
     before,
     skipLoadRelatedDocs = false,
     scheduledAt,
-    sessionId = uuid()
+    trackingId = uuid()
   } = args
 
   const options = after
@@ -396,7 +396,7 @@ const search = async (__, args, context) => {
         }))
         : null
     },
-    sessionId
+    trackingId
   }
 
   if (!skipLoadRelatedDocs && (!filter.type || filter.type === 'Document')) {
@@ -433,7 +433,7 @@ const search = async (__, args, context) => {
           total,
           hits,
           date: new Date(),
-          sessionId
+          trackingId
         }
       })
     } catch (err) {

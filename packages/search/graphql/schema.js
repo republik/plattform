@@ -17,7 +17,9 @@ type queries {
     first: Int
     after: String
     before: String,
-    sessionId: ID
+    # used to (anonymously) track subsequent searches
+    # provide the ID from the previous SearchConnection
+    trackingId: ID
   ): SearchConnection!
 }
 `
