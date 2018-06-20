@@ -55,6 +55,9 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
+# Mapped Docker Volumes
+docker-data/
+
 # dotenv environment variables file
 .env
 .test.env

@@ -1,6 +1,7 @@
 const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
 const { descending } = require('d3-array')
 const querystring = require('querystring')
+const sleep = require('await-sleep')
 const yaml = require('../../../lib/yaml')
 const {
   createGithubClients,
@@ -9,11 +10,7 @@ const {
   upsertRef,
   deleteRef
 } = require('../../../lib/github')
-const {
-  redlock,
-  lockKey,
-  refresh: refreshScheduling
-} = require('../../../lib/publicationScheduler')
+const { channelKey } = require('../../../lib/publicationScheduler')
 const {
   createCampaign,
   updateCampaignContent,
@@ -30,9 +27,6 @@ const {
   handleRedirection
 } = require('../../../lib/Document')
 const {
-  graphql: {
-    resolvers: { queries: { documents: getPublishedDocuments } }
-  },
   lib: {
     html: { get: getHTML },
     resolve: {
@@ -47,12 +41,14 @@ const { lib: {
 } } = require('@orbiting/backend-modules-assets')
 const uniq = require('lodash/uniq')
 
+const elastic = require('@orbiting/backend-modules-base/lib/elastic').client()
 const { purgeUrls } = require('@orbiting/backend-modules-keyCDN')
 
 const {
   FRONTEND_BASE_URL,
   PIWIK_URL_BASE,
-  PIWIK_SITE_ID
+  PIWIK_SITE_ID,
+  DISABLE_PUBLISH
 } = process.env
 
 module.exports = async (
@@ -69,8 +65,29 @@ module.exports = async (
 ) => {
   const { user, t, redis, pubsub } = context
   ensureUserHasRole(user, 'editor')
+
+  if (DISABLE_PUBLISH) {
+    throw new Error(t('api/publish/disabled'))
+  }
+
   const { githubRest } = await createGithubClients()
   const now = new Date()
+
+  // TODO investigate why this fires
+  // Error: queries.search defined in resolvers, but not in schema
+  // if it's put at root level
+  const {
+    lib: {
+      Documents: {
+        createPublish,
+        getElasticDoc,
+        isPathUsed,
+        findTemplates,
+        addRelatedDocs
+      },
+      utils: { getIndexAlias }
+    }
+  } = require('@orbiting/backend-modules-search')
 
   // check max scheduledAt
   let scheduledAt
@@ -98,45 +115,89 @@ module.exports = async (
   }
   const repoMeta = await getRepoMeta({ id: repoId })
 
-  // check if all references (link, format, dossiert, etc.) in the document can be resolved
+  const indexType = 'Document'
+
+  // check if all references (link, format, dossiert, etc.) in the document
+  // can be resolved
   // for front: warn if related document cannot be resolved
   // for newsletter, preview email: stop publication
   let unresolvedRepoIds = []
-  const docsConnection = await getPublishedDocuments(null, { scheduledAt }, context)
 
-  // see https://github.com/orbiting/backends/blob/c25cf33336729590b114e5113e464be6bf1185e0/packages/documents/graphql/resolvers/_queries/documents.js#L107
-  // - the documents resolver exposes those two properties on individual docs for resolving
-  // - we steal them here for our new doc
-  const firstDoc = docsConnection.nodes[0] || {} // in case no docs are published
-  const allDocs = firstDoc._all
-  const allUsernames = firstDoc._usernames
+  const connection = Object.assign({}, {
+    nodes: [
+      {
+        type: indexType,
+        entity: getElasticDoc({
+          indexType: indexType,
+          doc
+        })
+      }
+    ]
+  })
+
+  await addRelatedDocs({ connection, scheduledAt, context })
+
+  const { _all, _usernames } = connection.nodes[0].entity
 
   const resolvedDoc = JSON.parse(JSON.stringify(doc))
+
   const utmParams = {
     'utm_source': 'newsletter',
     'utm_medium': 'email',
     'utm_campaign': repoId
   }
+
   const searchString = '?' + querystring.stringify(utmParams)
-  contentUrlResolver(resolvedDoc, allDocs, allUsernames, unresolvedRepoIds, FRONTEND_BASE_URL, searchString)
-  metaUrlResolver(resolvedDoc.content.meta, allDocs, allUsernames, unresolvedRepoIds, FRONTEND_BASE_URL, searchString)
-  metaFieldResolver(resolvedDoc.content.meta, allDocs, unresolvedRepoIds)
+
+  contentUrlResolver(
+    resolvedDoc,
+    _all,
+    _usernames,
+    unresolvedRepoIds,
+    FRONTEND_BASE_URL,
+    searchString
+  )
+
+  metaUrlResolver(
+    resolvedDoc.content.meta,
+    _all,
+    _usernames,
+    unresolvedRepoIds,
+    FRONTEND_BASE_URL,
+    searchString
+  )
+
+  metaFieldResolver(
+    resolvedDoc.content.meta,
+    _all,
+    unresolvedRepoIds
+  )
+
   unresolvedRepoIds = uniq(unresolvedRepoIds)
-  if (unresolvedRepoIds.length && (!ignoreUnresolvedRepoIds || doc.content.meta.template === 'editorialNewsletter' || updateMailchimp)) {
+
+  if (
+    unresolvedRepoIds.length &&
+    (
+      !ignoreUnresolvedRepoIds ||
+      doc.content.meta.template === 'editorialNewsletter' ||
+      updateMailchimp
+    )
+  ) {
     return {
       unresolvedRepoIds
     }
   }
 
   // prepareMetaForPublish creates missing discussions as a side-effect
-  doc.content.meta = await prepareMetaForPublish(
+  doc.content.meta = await prepareMetaForPublish({
     repoId,
-    doc.content.meta,
     repoMeta,
     scheduledAt,
+    prepublication,
+    doc,
     now,
     context
-  )
+  })
 
   // add fileds from prepareMetaForPublish to resolvedDoc
   resolvedDoc.content.meta = {
@@ -151,6 +212,7 @@ module.exports = async (
 
   // check if slug is taken
   const newPath = doc.content.meta.path
+
   // deny if present redirect to other article / sth. else
   const existingRedirects = await getRedirections(
     newPath,
@@ -158,24 +220,14 @@ module.exports = async (
     context
   )
   if (existingRedirects.length) {
-    throw new Error(t('api/publish/document/slug/redirectsExist', { path: newPath }))
+    throw new Error(t(
+      'api/publish/document/slug/redirectsExist',
+      { path: newPath }
+    ))
   }
-  // deny if published or scheduled-published slug exists for another repo
-  const repoIds = await redis.smembersAsync('repos:ids')
-  const publishedRepos = await Promise.all([
-    ...repoIds.map(id => redis.getAsync(`repos:${id}/publication`)),
-    ...repoIds.map(id => redis.getAsync(`repos:${id}/scheduled-publication`))
-  ])
-    .then(repos => repos
-      .filter(Boolean)
-      .map(repo => JSON.parse(repo))
-    )
-  for (let pubRepo of publishedRepos) {
-    const existingPath = pubRepo.doc && pubRepo.doc.content &&
-      pubRepo.doc.content.meta && pubRepo.doc.content.meta.path
-    if (existingPath && existingPath === newPath && repoId !== pubRepo.repoId) {
-      throw new Error(t('api/publish/document/slug/docExists', { path: newPath }))
-    }
+
+  if (await isPathUsed(elastic, newPath, repoId)) {
+    throw new Error(t('api/publish/document/slug/docExists', { path: newPath }))
   }
 
   // remember if slug changed
@@ -292,44 +344,47 @@ module.exports = async (
   }
   await Promise.all(gitOps)
 
-  // cache in redis
-  const payload = JSON.stringify({
-    doc,
-    sha: milestone.sha,
-    repoId: repoId
-  })
-  const key = `repos:${repoId}/${ref}`
-  let redisOps = [
-    redis.setAsync(key, payload),
-    redis.saddAsync('repos:ids', repoId)
-  ]
-  if (scheduledAt) {
-    redisOps.push(redis.zaddAsync(`repos:scheduledIds`, scheduledAt.getTime(), key))
-  } else {
-    if (ref === 'publication') {
-      redisOps = redisOps.concat([
-        // prepublication moves along with publication
-        redis.setAsync(`repos:${repoId}/prepublication`, payload),
-        // remove previous scheduling
-        redis.delAsync(`repos:${repoId}/scheduled-publication`),
-        redis.zremAsync(`repos:scheduledIds`, `repos:${repoId}/scheduled-publication`)
-      ])
-    } else {
-      redisOps = redisOps.concat([
-        // remove previous scheduling
-        redis.delAsync(`repos:${repoId}/scheduled-prepublication`),
-        redis.zremAsync(`repos:scheduledIds`, `repos:${repoId}/scheduled-prepublication`)
-      ])
-    }
+  const resolved = {}
+
+  if (doc.content.meta.dossier) {
+    const dossiers = await findTemplates(
+      elastic,
+      'dossier',
+      doc.content.meta.dossier
+    )
+
+    resolved.dossier = dossiers.pop()
   }
 
-  const lock = await redlock().lock(lockKey, 200)
-  await Promise.all(redisOps)
-  await refreshScheduling(lock)
-  await lock.unlock()
-    .catch((err) => {
-      console.error(err)
-    })
+  if (doc.content.meta.format) {
+    const formats = await findTemplates(
+      elastic,
+      'format',
+      doc.content.meta.format
+    )
+
+    resolved.format = formats.pop()
+  }
+
+  // publish to elasticsearch
+  const elasticDoc = getElasticDoc({
+    indexName: getIndexAlias(indexType.toLowerCase(), 'write'),
+    indexType: indexType,
+    doc,
+    commitId,
+    versionName,
+    milestoneCommitId: milestone.sha,
+    resolved
+  })
+
+  const { insert, after } = createPublish(
+    { prepublication, scheduledAt, elastic, elasticDoc }
+  )
+  await insert()
+  await after()
+  await sleep(2 * 1000)
+
+  await redis.publishAsync(channelKey, 'refresh')
 
   // release for nice view on github
   // this is optional, the release is not read back again

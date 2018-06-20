@@ -1,5 +1,5 @@
 {
-  "updated": "2018-01-14T06:10:43.911Z",
+  "updated": "2018-06-20T13:53:37.056Z",
   "title": "live",
   "data": [
     {
@@ -8,7 +8,7 @@
     },
     {
       "key": "api/unauthorized",
-      "value": "Nicht genehmigt. Sie müssen die Rolle «{role}» besitzen, um die gewünschte Aktion auszuführen."
+      "value": "Nicht genehmigt. Sie müssen die Rolle «{role}» besitzen um die gwünschte Aktion auszuführen."
     },
     {
       "key": "api/email/invalid",
@@ -57,6 +57,10 @@
     {
       "key": "api/twitter/morephotos/1",
       "value": "1 weiteres Foto"
+    },
+    {
+      "key": "api/publish/disabled",
+      "value": "Artikel können im Moment weder veröffentlicht noch zurückgezogen werden. Bitte versuche es in ein paar Minuten noch einmal, ansonsten kontaktiere bitte die IT."
     }
   ]
 }

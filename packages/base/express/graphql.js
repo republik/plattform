@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser')
 const checkEnv = require('check-env')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const redis = require('../lib/redis')
+const elasticsearch = require('../lib/elastic')
 
 checkEnv([
   'PUBLIC_WS_URL_BASE',
@@ -33,7 +34,8 @@ module.exports = (
     pgdb,
     user,
     pubsub,
-    redis
+    redis,
+    elastic: elasticsearch.client()
   })
 
   const subscriptionServer = SubscriptionServer.create(

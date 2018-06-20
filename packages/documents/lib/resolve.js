@@ -8,6 +8,7 @@ checkEnv([
 
 const {
   GITHUB_LOGIN,
+  GITHUB_ORGS = GITHUB_LOGIN,
   FRONTEND_BASE_URL
 } = process.env
 
@@ -33,13 +34,14 @@ const getRepoId = (url, requireQuery) => {
   if (
     hostname !== 'github.com' ||
     pathSegments.length !== 2 ||
-    pathSegments[0] !== GITHUB_LOGIN
+    !GITHUB_ORGS.split(',').includes(pathSegments[0])
   ) {
     return
   }
   if (requireQuery && query !== requireQuery) {
     return
   }
+  pathSegments[0] = GITHUB_LOGIN
   return pathSegments.join('/')
 }
 
@@ -85,8 +87,8 @@ const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPr
       return [
         urlPrefix,
         userInfo.path.replace(
-         user.id,
-         user.username
+          user.id,
+          user.username
         ),
         searchString
       ].join('')
@@ -98,7 +100,7 @@ const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPr
     return url
   }
   const linkedDoc = allDocuments
-    .find(d => d.repoId === repoId)
+    .find(d => d.meta.repoId === repoId)
   if (linkedDoc) {
     return urlPrefix + linkedDoc.content.meta.path + searchString
   } else {
@@ -115,7 +117,7 @@ const createResolver = (allDocuments, errors = []) => url => {
     return null
   }
   const linkedDoc = allDocuments
-    .find(d => d.repoId === repoId)
+    .find(d => d.meta.repoId === repoId)
   if (linkedDoc) {
     return linkedDoc
   } else {

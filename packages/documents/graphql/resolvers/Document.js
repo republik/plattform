@@ -16,7 +16,7 @@ const { lib: { webp: {
 
 const shouldDeliverWebP = (argument = 'auto', req) => {
   if (argument === 'auto') {
-    return req.get('Accept').indexOf('image/webp') > -1
+    return req && req.get('Accept').indexOf('image/webp') > -1
   }
   return !!argument
 }

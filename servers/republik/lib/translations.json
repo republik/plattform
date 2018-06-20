@@ -1,5 +1,5 @@
 {
-  "updated": "2018-05-17T18:30:27.776Z",
+  "updated": "2018-06-20T12:13:22.619Z",
   "title": "live",
   "data": [
     {
@@ -221,6 +221,126 @@
     {
       "key": "profile/credential/label",
       "value": "Bezeichnung"
+    },
+    {
+      "key": "api/search/aggs/audioSource",
+      "value": "vorgelesene Artikel"
+    },
+    {
+      "key": "api/search/aggs/discussion",
+      "value": "Debatten"
+    },
+    {
+      "key": "api/search/aggs/dossier",
+      "value": "Dossiers"
+    },
+    {
+      "key": "api/search/aggs/feed",
+      "value": "Feed"
+    },
+    {
+      "key": "api/search/aggs/format",
+      "value": "Rubriken & Kolumnen"
+    },
+    {
+      "key": "api/search/aggs/hasAudio",
+      "value": "zum Hören"
+    },
+    {
+      "key": "api/search/aggs/hasVideo",
+      "value": "TV"
+    },
+    {
+      "key": "api/search/aggs/isSeriesEpisode",
+      "value": "Episode"
+    },
+    {
+      "key": "api/search/aggs/isSeriesMaster",
+      "value": "Serie"
+    },
+    {
+      "key": "api/search/aggs/seriesMaster",
+      "value": "Serien"
+    },
+    {
+      "key": "api/search/aggs/template",
+      "value": "Vorlage"
+    },
+    {
+      "key": "api/search/aggs/template/article",
+      "value": "Artikel"
+    },
+    {
+      "key": "api/search/aggs/template/discussion",
+      "value": "Debatten"
+    },
+    {
+      "key": "api/search/aggs/template/dossier",
+      "value": "Dossiers"
+    },
+    {
+      "key": "api/search/aggs/template/editorialNewsletter",
+      "value": "Newsletter"
+    },
+    {
+      "key": "api/search/aggs/template/format",
+      "value": "Rubriken & Kolumnen"
+    },
+    {
+      "key": "api/search/aggs/template/front",
+      "value": "Front"
+    },
+    {
+      "key": "api/search/aggs/textLength",
+      "value": "Länge"
+    },
+    {
+      "key": "api/search/aggs/textLength/epic",
+      "value": "halbes Buch"
+    },
+    {
+      "key": "api/search/aggs/textLength/long",
+      "value": "erfreulich lang"
+    },
+    {
+      "key": "api/search/aggs/textLength/medium",
+      "value": "mittellang"
+    },
+    {
+      "key": "api/search/aggs/textLength/short",
+      "value": "kurz"
+    },
+    {
+      "key": "api/search/aggs/type",
+      "value": "Informationsarten"
+    },
+    {
+      "key": "api/search/aggs/type/Comment",
+      "value": "Debattenbeiträge"
+    },
+    {
+      "key": "api/search/aggs/type/Document",
+      "value": "Artikel"
+    },
+    {
+      "key": "api/search/aggs/type/User",
+      "value": "Profile"
+    },
+    {
+      "key": "api/search/aggs/userId",
+      "value": "Profile"
+    },
+    {
+      "key": "api/search/aggs/kind",
+      "value": "Ebene"
+    },
+    {
+      "key": "api/search/aggs/kind/editorial",
+      "value": "Editorial"
+    },
+    {
+      "key": "api/search/aggs/kind/meta",
+      "value": "wir über uns"
     }
   ]
 }
