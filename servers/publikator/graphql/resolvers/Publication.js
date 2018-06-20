@@ -17,7 +17,7 @@ module.exports = {
   scheduledAt: ({ meta: { scheduledAt } }) => scheduledAt,
   updateMailchimp: ({ meta: { updateMailchimp } }) => updateMailchimp,
 
-  document: async (_, args, context) => {
+  document: async (publication, args, context) => {
     const {
       document: doc,
       repo: {
@@ -27,7 +27,7 @@ module.exports = {
         id: commitId
       },
       name: versionName
-    } = _
+    } = publication
 
     if (doc) {
       return doc
@@ -39,7 +39,7 @@ module.exports = {
     )
 
     return getDocument(
-      _,
+      null,
       { id: getDocumentId({ repoId, commitId, versionName }) },
       context
     )
