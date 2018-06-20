@@ -47,7 +47,8 @@ const { purgeUrls } = require('@orbiting/backend-modules-keyCDN')
 const {
   FRONTEND_BASE_URL,
   PIWIK_URL_BASE,
-  PIWIK_SITE_ID
+  PIWIK_SITE_ID,
+  DISABLE_PUBLISH
 } = process.env
 
 module.exports = async (
@@ -64,6 +65,11 @@ module.exports = async (
 ) => {
   const { user, t, redis, pubsub } = context
   ensureUserHasRole(user, 'editor')
+
+  if (DISABLE_PUBLISH) {
+    throw new Error(t('api/publish/disabled'))
+  }
+
   const { githubRest } = await createGithubClients()
   const now = new Date()
 

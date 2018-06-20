@@ -8,12 +8,18 @@ const {
 
 const { channelKey } = require('../../../lib/publicationScheduler')
 
+const { DISABLE_PUBLISH } = process.env
+
 module.exports = async (
   _,
   { repoId },
   { user, t, redis, pubsub }
 ) => {
   ensureUserHasRole(user, 'editor')
+
+  if (DISABLE_PUBLISH) {
+    throw new Error(t('api/publish/disabled'))
+  }
 
   const scheduledRefs = [
     'scheduled-publication',
