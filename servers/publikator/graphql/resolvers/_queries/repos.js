@@ -97,7 +97,7 @@ module.exports = async (__, args, context, info) => {
       })
   )
 
-  if (hasFieldRequested('document', info)) {
+  if (info && hasFieldRequested('document', info)) {
     // Find all documents reference in latestPublications
     const publicationDocumentsConnection =
       await getDocuments(
