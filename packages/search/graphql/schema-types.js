@@ -70,6 +70,9 @@ type SearchConnection {
   aggregations: [SearchAggregation!]!
   pageInfo: SearchPageInfo!
   totalCount: Int!
+  # for anonymous tracking of consequent searches
+  # provide this id to following search queries
+  sessionId: ID
 }
 
 type SearchNode {

@@ -27,6 +27,7 @@ const {
 const { transformUser } = require('@orbiting/backend-modules-auth')
 
 const _ = require('lodash')
+const uuid = require('uuid/v4')
 
 const indices = require('../../../lib/indices')
 const { getIndexAlias } = require('../../../lib/utils')
@@ -316,7 +317,11 @@ const getIndicesList = (filter) => {
 const search = async (__, args, context) => {
   const { user, elastic, t } = context
   const {
-    after, before, skipLoadRelatedDocs = false, scheduledAt
+    after,
+    before,
+    skipLoadRelatedDocs = false,
+    scheduledAt,
+    sessionId = uuid()
   } = args
 
   const options = after
@@ -390,7 +395,8 @@ const search = async (__, args, context) => {
           from: from - first
         }))
         : null
-    }
+    },
+    sessionId
   }
 
   if (!skipLoadRelatedDocs && (!filter.type || filter.type === 'Document')) {
@@ -427,9 +433,7 @@ const search = async (__, args, context) => {
           total,
           hits,
           date: new Date(),
-          user: {
-            id: (user && user.id) || 'anon'
-          }
+          sessionId
         }
       })
     } catch (err) {

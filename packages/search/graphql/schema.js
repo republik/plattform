@@ -16,7 +16,8 @@ type queries {
     sort: SearchSortInput
     first: Int
     after: String
-    before: String
+    before: String,
+    sessionId: ID
   ): SearchConnection!
 }
 `
