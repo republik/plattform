@@ -81,7 +81,7 @@ module.exports = {
     }
     return userIds.length
       ? pgdb.public.users.find({ id: userIds })
-          .then(users => users.map(transformUser))
+        .then(users => users.map(transformUser))
       : []
   },
   milestones: (repo) => {
@@ -92,14 +92,14 @@ module.exports = {
     return getAnnotatedTags(repo.id)
   },
   latestPublications: async (repo) => {
-    const {
-      id: repoId
-    } = repo
+    const { id: repoId } = repo
+
     const publicationMetaDecorator = (publication) => {
       const {
         scheduledAt = undefined,
         updateMailchimp = false
       } = yaml.parse(publication.message)
+
       return {
         ...publication,
         meta: {
@@ -142,10 +142,7 @@ module.exports = {
         })
         )
       )
-      .then(tags => uniqBy(tags, 'name'))
-      .then(tags => tags
-        .map(tag => publicationMetaDecorator(tag))
-      )
+      .then(tags => uniqBy(tags, 'name').map(publicationMetaDecorator))
   },
   meta: async (repo) => {
     let message
