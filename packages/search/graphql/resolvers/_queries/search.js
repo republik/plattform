@@ -267,7 +267,8 @@ const cleanOptions = (options) => ({
   ...options,
   after: undefined,
   before: undefined,
-  filter: undefined
+  filter: undefined,
+  trackingId: undefined
 })
 
 const stringifyOptions = (options) =>
