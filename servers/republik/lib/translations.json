@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-20T10:10:07.003Z",
+  "updated": "2018-06-20T12:13:22.619Z",
   "title": "live",
   "data": [
     {
@@ -340,7 +340,7 @@
     },
     {
       "key": "api/search/aggs/kind/meta",
-      "value": "Wir über uns"
+      "value": "wir über uns"
     }
   ]
 }
