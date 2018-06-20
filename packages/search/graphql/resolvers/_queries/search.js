@@ -170,8 +170,7 @@ const createQuery = (
   aggs: extractAggs(documentSchema),
   ...withoutContent
     ? { _source: {
-      'exclude': [ 'content', 'contentString', 'resolved' ],
-      'include': [ 'content.meta*' ]
+      'exclude': [ 'content.children', 'contentString', 'resolved' ]
     } }
     : { }
 })

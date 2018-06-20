@@ -254,13 +254,13 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
   if (sanitizedRepoIds.length > 0) {
     relatedDocs = await search(null, {
       skipLoadRelatedDocs: true,
+      withoutContent: true,
       scheduledAt,
       first: sanitizedRepoIds.length,
       filter: {
         repoId: sanitizedRepoIds,
         type: 'Document'
-      },
-      withoutContent: true
+      }
     }, context)
       .then(getDocsForConnection)
   }
