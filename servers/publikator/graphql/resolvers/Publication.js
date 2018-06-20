@@ -29,7 +29,7 @@ module.exports = {
       name: versionName
     } = _
 
-    if (!doc) {
+    if (doc) {
       return doc
     }
 
