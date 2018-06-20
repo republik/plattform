@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-20T13:26:59.559Z",
+  "updated": "2018-06-20T13:53:37.056Z",
   "title": "live",
   "data": [
     {
@@ -60,11 +60,7 @@
     },
     {
       "key": "api/publish/disabled",
-      "value": "Artikel können im Moment nicht veröffentlicht werden."
-    },
-    {
-      "key": "api/unpublish/disabled",
-      "value": "Artikel können im Moment nicht zurückgezogen werden."
+      "value": "Artikel können im Moment weder veröffentlicht noch zurückgezogen werden. Bitte versuche es in ein paar Minuten noch einmal, ansonsten kontaktiere bitte die IT."
     }
   ]
 }

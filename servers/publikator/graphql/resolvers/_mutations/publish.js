@@ -48,7 +48,7 @@ const {
   FRONTEND_BASE_URL,
   PIWIK_URL_BASE,
   PIWIK_SITE_ID,
-  PUBLIKATOR_PUBLISH_DISABLE
+  DISABLE_PUBLISH
 } = process.env
 
 module.exports = async (
@@ -66,7 +66,7 @@ module.exports = async (
   const { user, t, redis, pubsub } = context
   ensureUserHasRole(user, 'editor')
 
-  if (PUBLIKATOR_PUBLISH_DISABLE) {
+  if (DISABLE_PUBLISH) {
     throw new Error(t('api/publish/disabled'))
   }
 
