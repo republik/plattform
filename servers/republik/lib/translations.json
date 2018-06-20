@@ -1,5 +1,5 @@
 {
-  "updated": "2018-05-31T11:07:52.002Z",
+  "updated": "2018-06-20T10:10:07.003Z",
   "title": "live",
   "data": [
     {
@@ -329,6 +329,18 @@
     {
       "key": "api/search/aggs/userId",
       "value": "Profile"
+    },
+    {
+      "key": "api/search/aggs/kind",
+      "value": "Ebene"
+    },
+    {
+      "key": "api/search/aggs/kind/editorial",
+      "value": "Editorial"
+    },
+    {
+      "key": "api/search/aggs/kind/meta",
+      "value": "Wir über uns"
     }
   ]
 }

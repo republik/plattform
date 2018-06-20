@@ -62,6 +62,7 @@ const schema = {
     agg: valueCountAggBuilder('meta.format'),
     parser: documentIdParser
   },
+  kind: termEntry('resolved.meta.format.meta.kind'),
   repoId: {
     criteria: termCriteriaBuilder('meta.repoId')
   },
