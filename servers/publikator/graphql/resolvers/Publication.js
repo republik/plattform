@@ -1,3 +1,11 @@
+const debug = require('debug')('publikator:publication')
+
+const { graphql: { resolvers: { queries: { document: getDocument } } } } =
+  require('@orbiting/backend-modules-documents')
+
+const { getDocumentId } =
+  require('@orbiting/backend-modules-search/lib/Documents')
+
 const MilestoneInterface = require('./MilestoneInterface')
 
 module.exports = {
@@ -7,5 +15,33 @@ module.exports = {
 
   // default values in meta are set in resolvers
   scheduledAt: ({ meta: { scheduledAt } }) => scheduledAt,
-  updateMailchimp: ({ meta: { updateMailchimp } }) => updateMailchimp
+  updateMailchimp: ({ meta: { updateMailchimp } }) => updateMailchimp,
+
+  document: async (_, args, context) => {
+    const {
+      document: doc,
+      repo: {
+        id: repoId
+      },
+      commit: {
+        id: commitId
+      },
+      name: versionName
+    } = _
+
+    if (!doc) {
+      return doc
+    }
+
+    debug(
+      'necessary to fetch Document',
+      { repoId, commitId, versionName }
+    )
+
+    return getDocument(
+      _,
+      { id: getDocumentId({ repoId, commitId, versionName }) },
+      context
+    )
+  }
 }
