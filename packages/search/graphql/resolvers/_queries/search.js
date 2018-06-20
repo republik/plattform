@@ -281,7 +281,7 @@ const parseOptions = (options) => {
   return {}
 }
 
-const MAX_NODES = 500
+const MAX_NODES = 10000 // Limit, but exceedingly high
 
 const getFirst = (first, filter, user) => {
   // we only restrict the nodes array
