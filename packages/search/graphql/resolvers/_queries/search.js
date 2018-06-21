@@ -290,14 +290,14 @@ const parseOptions = (options) => {
 
 const MAX_NODES = 10000 // Limit, but exceedingly high
 
-const getFirst = (first, filter, user) => {
+const getFirst = (first, filter, user, recursive) => {
   // we only restrict the nodes array
   // making totalCount always available
-  // - querying a single document by path is always allowed
+  // querying a single document by path is always allowed
   const path = getFilterValue(filter, 'path')
   const repoId = getFilterValue(filter, 'repoId')
   const oneRepoId = repoId && (!Array.isArray(repoId) || repoId.length === 1)
-  if (DOCUMENTS_RESTRICT_TO_ROLES && !path && !oneRepoId) {
+  if (DOCUMENTS_RESTRICT_TO_ROLES && !recursive && !path && !oneRepoId) {
     const roles = DOCUMENTS_RESTRICT_TO_ROLES.split(',')
     if (!userIsInRoles(user, roles)) {
       return 0
@@ -325,7 +325,7 @@ const search = async (__, args, context) => {
   const {
     after,
     before,
-    skipLoadRelatedDocs = false,
+    recursive = false,
     scheduledAt,
     trackingId = uuid(),
     withoutContent = false
@@ -362,7 +362,7 @@ const search = async (__, args, context) => {
 
   debug('filter', JSON.stringify(filter))
 
-  const first = getFirst(_first, filter, user)
+  const first = getFirst(_first, filter, user, recursive)
 
   const indicesList = getIndicesList(filter)
   const query = {
@@ -406,14 +406,14 @@ const search = async (__, args, context) => {
     trackingId
   }
 
-  if (!skipLoadRelatedDocs && (!filter.type || filter.type === 'Document')) {
+  if (!recursive && (!filter.type || filter.type === 'Document')) {
     await addRelatedDocs({
       connection: response,
       context
     })
   }
 
-  if (!skipLoadRelatedDocs && SEARCH_TRACK) {
+  if (!recursive && SEARCH_TRACK) {
     try {
       const took = result.took
       const total = result.hits.total

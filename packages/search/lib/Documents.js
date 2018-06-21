@@ -254,7 +254,7 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
   // documents and push series episodes onto the related docs stack
   if (seriesRepoIds.length > 0) {
     const seriesRelatedDocs = await search(null, {
-      skipLoadRelatedDocs: true,
+      recursive: true,
       withoutContent: true,
       scheduledAt,
       first: seriesRepoIds.length,
@@ -280,7 +280,7 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
 
   if (sanitizedRepoIds.length > 0) {
     relatedDocs = await search(null, {
-      skipLoadRelatedDocs: true,
+      recursive: true,
       withoutContent: true,
       scheduledAt,
       first: sanitizedRepoIds.length,
