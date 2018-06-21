@@ -27,8 +27,8 @@ import {
 
 import MaskedInput from 'react-maskedinput'
 
-import { query as treeQuery } from '../../pages/repo/tree'
-import { query as publicationQuery } from './Current'
+import { getRepoHistory } from '../../pages/repo/tree'
+import { getRepoWithPublications } from './Current'
 
 import { renderMdast } from 'mdast-react-render'
 
@@ -455,13 +455,14 @@ export default compose(
         variables,
         refetchQueries: [
           {
-            query: publicationQuery,
+            query: getRepoHistory,
             variables: {
-              repoId: ownProps.repoId
+              repoId: ownProps.repoId,
+              first: 20
             }
           },
           {
-            query: treeQuery,
+            query: getRepoWithPublications,
             variables: {
               repoId: ownProps.repoId
             }

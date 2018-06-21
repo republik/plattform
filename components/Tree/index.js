@@ -225,7 +225,7 @@ class Tree extends Component {
   render () {
     const { repoId, t, localStorageCommitIds = [] } = this.props
     const {
-      width, height, slotWidth = 761,
+      width, height, slotWidth,
       commits, links, numSlots
     } = this.state
 
