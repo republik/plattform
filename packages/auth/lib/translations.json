@@ -1,5 +1,5 @@
 {
-  "updated": "2018-05-24T15:29:47.378Z",
+  "updated": "2018-06-20T17:12:53.662Z",
   "title": "live",
   "data": [
     {
@@ -8,11 +8,11 @@
     },
     {
       "key": "api/unauthorized",
-      "value": "Nicht genehmigt. Sie müssen die Rolle «{role}» besitzen, um die gewünschte Aktion auszuführen."
+      "value": "Nicht genehmigt. Sie müssen die Rolle «{role}» besitzen um die gewünschte Aktion auszuführen."
     },
     {
       "key": "api/unauthorized/1",
-      "value": "Nicht genehmigt. Sie müssen die Rolle {role} besitzen, um die gewünschte Aktion auszuführen."
+      "value": "Nicht genehmigt. Sie müssen die Rolle {role} besitzen um die gewünschte Aktion auszuführen."
     },
     {
       "key": "api/unauthorized/other",

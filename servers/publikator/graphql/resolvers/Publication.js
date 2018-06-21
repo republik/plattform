@@ -1,3 +1,11 @@
+const debug = require('debug')('publikator:publication')
+
+const { graphql: { resolvers: { queries: { document: getDocument } } } } =
+  require('@orbiting/backend-modules-documents')
+
+const { getDocumentId } =
+  require('@orbiting/backend-modules-search/lib/Documents')
+
 const MilestoneInterface = require('./MilestoneInterface')
 
 module.exports = {
@@ -9,23 +17,31 @@ module.exports = {
   scheduledAt: ({ meta: { scheduledAt } }) => scheduledAt,
   updateMailchimp: ({ meta: { updateMailchimp } }) => updateMailchimp,
 
-  document: ({
-    document: doc,
-    repo: {
-      id: repoId
-    },
-    refName
-  }, args, { redis }) => {
-    if (doc) { // publish mutation
+  document: async (publication, args, context) => {
+    const {
+      document: doc,
+      repo: {
+        id: repoId
+      },
+      commit: {
+        id: commitId
+      },
+      name: versionName
+    } = publication
+
+    if (doc) {
       return doc
     }
-    return redis.getAsync(`repos:${repoId}/${refName}`)
-      .then(publication => {
-        const json = JSON.parse(publication)
-        if (!json) {
-          return null
-        }
-        return json.doc
-      })
+
+    debug(
+      'necessary to fetch Document',
+      { repoId, commitId, versionName }
+    )
+
+    return getDocument(
+      null,
+      { id: getDocumentId({ repoId, commitId, versionName }) },
+      context
+    )
   }
 }

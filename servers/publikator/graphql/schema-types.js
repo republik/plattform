@@ -58,11 +58,6 @@ enum RepoOrderField {
   STARGAZERS
 }
 
-enum OrderDirection {
-  ASC
-  DESC
-}
-
 interface MilestoneInterface {
   name: String!
   commit: Commit!
@@ -210,5 +205,10 @@ type DocumentCloudEmbed implements Embed {
 
 extend type Document {
   repoId: String
+}
+
+enum OrderDirection {
+  ASC
+  DESC
 }
 `

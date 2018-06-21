@@ -211,11 +211,6 @@ enum DiscussionOrder {
   HOT
 }
 
-enum OrderDirection {
-  ASC
-  DESC
-}
-
 type PageInfo {
   # If endCursor is null and hasNextPage is true
   # this node would have child nodes.
@@ -292,6 +287,11 @@ type DisplayUser {
   username: String
 }
 
+type Preview {
+  string: String!
+  more: Boolean!
+}
+
 enum CommentVote {
   UP
   DOWN
@@ -306,6 +306,10 @@ type Comment {
   # mdast
   content: JSON
   text: String
+  preview(
+    # How many chars a preview string should contain at the most
+    length: Int
+  ): Preview
   published: Boolean!
   adminUnpublished: Boolean
   upVotes: Int!

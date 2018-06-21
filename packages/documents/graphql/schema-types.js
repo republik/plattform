@@ -93,13 +93,6 @@ type DocumentNodeConnection {
   totalCount: Int!
 }
 
-type DocumentPageInfo {
-  endCursor: String
-  hasNextPage: Boolean!
-  hasPreviousPage: Boolean!
-  startCursor: String
-}
-
 type DocumentConnection {
   nodes: [Document!]!
   pageInfo: DocumentPageInfo!
@@ -114,5 +107,12 @@ extend type User {
     before: String
     after: String
   ): DocumentConnection!
+}
+
+type DocumentPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
 }
 `
