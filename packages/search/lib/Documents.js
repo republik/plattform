@@ -189,6 +189,7 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
   // extract users and related repoIds (from content and meta)
   const userIds = []
   const repoIds = []
+  const seriesRepoIds = []
   docs.forEach(doc => {
     // from content
     visit(doc.content, 'zone', node => {
@@ -223,7 +224,9 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
     repoIds.push(getRepoId(meta.format))
     repoIds.push(getRepoId(meta.discussion))
     if (meta.series) {
+      // If a string, probably a series master (tbc.)
       if (typeof meta.series === 'string') {
+        seriesRepoIds.push(getRepoId(meta.series))
         repoIds.push(getRepoId(meta.series))
       } else {
         meta.series.episodes && meta.series.episodes.forEach(episode => {
@@ -246,6 +249,30 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
       }
     )
     : []
+
+  // If there are any series master repositories, fetch these series master
+  // documents and push series episodes onto the related docs stack
+  if (seriesRepoIds.length > 0) {
+    const seriesRelatedDocs = await search(null, {
+      skipLoadRelatedDocs: true,
+      withoutContent: true,
+      scheduledAt,
+      first: seriesRepoIds.length,
+      filter: {
+        repoId: seriesRepoIds,
+        type: 'Document'
+      }
+    }, context)
+      .then(getDocsForConnection)
+
+    seriesRelatedDocs.forEach(doc => {
+      const meta = doc.content.meta
+      meta.series.episodes && meta.series.episodes.forEach(episode => {
+        debug(getRepoId(episode.document))
+        repoIds.push(getRepoId(episode.document))
+      })
+    })
+  }
 
   const sanitizedRepoIds = [...new Set(repoIds.filter(Boolean))]
 
