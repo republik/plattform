@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-20T17:12:19.830Z",
+  "updated": "2018-06-21T13:24:00.285Z",
   "title": "live",
   "data": [
     {
@@ -248,15 +248,15 @@
     },
     {
       "key": "api/search/aggs/hasVideo",
-      "value": "TV"
+      "value": "Video"
     },
     {
       "key": "api/search/aggs/isSeriesEpisode",
-      "value": "Episode"
+      "value": "Episoden"
     },
     {
       "key": "api/search/aggs/isSeriesMaster",
-      "value": "Serie"
+      "value": "Serien"
     },
     {
       "key": "api/search/aggs/seriesMaster",
