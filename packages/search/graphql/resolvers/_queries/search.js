@@ -35,6 +35,8 @@ const { getIndexAlias } = require('../../../lib/utils')
 const reduceFilters = filterReducer(documentSchema)
 const createElasticFilter = elasticFilterBuilder(documentSchema)
 
+const getFieldList = require('graphql-list-fields')
+
 const {
   DOCUMENTS_RESTRICT_TO_ROLES,
   SEARCH_TRACK = false
@@ -120,7 +122,7 @@ const createShould = function (
 
     const filter = _.mergeWith(
       {},
-      search.filter,
+      search.filter.default(searchFilter),
       createElasticFilter(searchFilter),
       rolebasedFilter,
       deepMergeArrays
@@ -170,7 +172,7 @@ const createQuery = (
   aggs: extractAggs(documentSchema),
   ...withoutContent
     ? { _source: {
-      'exclude': [ 'content.children', 'contentString', 'resolved' ]
+      'excludes': [ 'content.children', 'contentString', 'resolved' ]
     } }
     : { }
 })
@@ -320,7 +322,12 @@ const getIndicesList = (filter) => {
   return indices.list.filter(indicesFilter)
 }
 
-const search = async (__, args, context) => {
+const hasFieldRequested = (fieldName, GraphQLResolveInfo) => {
+  const fields = getFieldList(GraphQLResolveInfo, true)
+  return !!fields.find(field => field.indexOf(`.${fieldName}`) > -1)
+}
+
+const search = async (__, args, context, info) => {
   const { user, elastic, t } = context
   const {
     after,
@@ -328,8 +335,17 @@ const search = async (__, args, context) => {
     recursive = false,
     scheduledAt,
     trackingId = uuid(),
-    withoutContent = false
+    withoutContent: _withoutContent
   } = args
+
+  // detect if Document.content is requested
+  let withoutContent
+  if (info) {
+    withoutContent = _withoutContent !== undefined ||
+      !hasFieldRequested('Document.content', info)
+  } else {
+    withoutContent = _withoutContent || false
+  }
 
   const options = after
     ? { ...args, ...parseOptions(after) }
