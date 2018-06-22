@@ -632,7 +632,7 @@ test('repo specific commit', async (t) => {
   t.end()
 })
 
-test('repo specific commit', async (t) => {
+test('failing repo specific commit', async (t) => {
   // invalid
   const result = await apolloFetch({
     query: `
@@ -652,9 +652,9 @@ test('repo specific commit', async (t) => {
       commitId: '7366d36cb967d7a3ac324c789a8b718e61d01b31'
     }
   })
+
   t.equals(result.data, null)
   t.ok(result.errors)
-  t.ok(result.errors[0].message.indexOf('No commit found for SHA') > -1)
   t.end()
 })
 
