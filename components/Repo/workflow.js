@@ -6,9 +6,9 @@ export const phases = [
     milestones: []
   },
   {
-    key: 'conception',
+    key: 'finalEditing',
     color: 'Orange',
-    milestones: ['startConception']
+    milestones: ['finalEditing']
   },
   {
     key: 'creation',
@@ -33,7 +33,7 @@ export const phases = [
   {
     key: 'ready',
     color: 'MediumSeaGreen',
-    milestones: ['proofReadingOk', 'numbersOk', 'imagesOk', 'factCheckOk', 'finalControl', 'chiefEditor']
+    milestones: ['proofReadingOk', 'numbersOk', 'imagesOk', 'factCheckOk', 'finalControl']
   },
   {
     key: 'scheduled',

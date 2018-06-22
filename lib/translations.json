@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-13T23:32:09.307Z",
+  "updated": "2018-06-22T09:25:14.628Z",
   "title": "live",
   "data": [
     {
@@ -119,6 +119,10 @@
       "value": "Konzeption"
     },
     {
+      "key": "repo/phase/finalEditing",
+      "value": "Abschlussredaktion"
+    },
+    {
       "key": "repo/phase/creation",
       "value": "Kreation"
     },
@@ -225,6 +229,10 @@
     {
       "key": "checklist/approvedFor",
       "value": "{name} für"
+    },
+    {
+      "key": "checklist/labels/finalEditing",
+      "value": "Go Abschlussredaktion"
     },
     {
       "key": "checklist/labels/startConception",
@@ -749,6 +757,14 @@
     {
       "key": "styleguide/DynamicComponent/error",
       "value": "Diese Komponente ist kaputt. Die Ursache könnte eine nicht erlaubte Grund-URL, eine falsche Konfiguration oder ein kaputtes Modul sein."
+    },
+    {
+      "key": "api/publish/disabled",
+      "value": "Artikel können derzeit nicht veröffentlicht werden."
+    },
+    {
+      "key": "api/unpublish/disabled",
+      "value": "Artikel können derzeit nicht zurückgezogen werden."
     }
   ]
 }
