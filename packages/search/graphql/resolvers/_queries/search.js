@@ -120,7 +120,7 @@ const createShould = function (
 
     const filter = _.mergeWith(
       {},
-      search.filter,
+      search.filter.default(searchFilter),
       createElasticFilter(searchFilter),
       rolebasedFilter,
       deepMergeArrays

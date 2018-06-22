@@ -33,13 +33,15 @@ module.exports = {
       'resolved.credential': {}
     },
     filter: {
-      bool: {
-        must: [
-          { term: { __type: type } },
-          { term: { hasPublicProfile: true } },
-          { term: { verified: true } }
-        ]
-      }
+      default: () => ({
+        bool: {
+          must: [
+            { term: { __type: type } },
+            { term: { hasPublicProfile: true } },
+            { term: { verified: true } }
+          ]
+        }
+      })
     }
   },
   mapping: {
