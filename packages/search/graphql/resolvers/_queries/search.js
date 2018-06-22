@@ -37,6 +37,8 @@ const createElasticFilter = elasticFilterBuilder(documentSchema)
 
 const getFieldList = require('graphql-list-fields')
 
+const createCache = require('../../../lib/cache')
+
 const {
   DOCUMENTS_RESTRICT_TO_ROLES,
   SEARCH_TRACK = false
@@ -328,7 +330,9 @@ const hasFieldRequested = (fieldName, GraphQLResolveInfo) => {
 }
 
 const search = async (__, args, context, info) => {
-  const { user, elastic, t } = context
+  const { user, elastic, t, redis } = context
+  const cache = createCache(redis)
+
   const {
     after,
     before,
@@ -387,10 +391,14 @@ const search = async (__, args, context, info) => {
     size: first,
     body: createQuery(search, filter, sort, indicesList, user, scheduledAt, withoutContent)
   }
-
   debug('ES query', JSON.stringify(query))
-  const result = await elastic.search(query)
-  // debug('result: %O', result)
+
+  let result = await cache.get(query)
+  let cacheHIT = !!result
+  if (!result) {
+    result = await elastic.search(query)
+    await cache.set(options, filter, query, result)
+  }
 
   const hasNextPage = first > 0 && result.hits.total > from + first
   const hasPreviousPage = from > 0
@@ -431,7 +439,7 @@ const search = async (__, args, context, info) => {
 
   if (!recursive && SEARCH_TRACK) {
     try {
-      const took = result.took
+      const took = cacheHIT ? 0 : result.took
       const total = result.hits.total
       const hits = result.hits.hits
         .map(hit => _.omit(hit, '_source'))
@@ -451,6 +459,7 @@ const search = async (__, args, context, info) => {
         type: 'Search',
         body: {
           took,
+          cache: cacheHIT ? 'HIT' : 'MISS',
           options: Object.assign({}, options, { filters }),
           query,
           total,

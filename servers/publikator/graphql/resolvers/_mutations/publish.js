@@ -378,7 +378,7 @@ module.exports = async (
   })
 
   const { insert, after } = createPublish(
-    { prepublication, scheduledAt, elastic, elasticDoc }
+    { prepublication, scheduledAt, elasticDoc, elastic, redis }
   )
   await insert()
   await after()

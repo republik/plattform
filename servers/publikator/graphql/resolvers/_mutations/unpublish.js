@@ -45,7 +45,7 @@ module.exports = async (
   const { lib: { Documents: { unpublish } } } =
     require('@orbiting/backend-modules-search')
 
-  await unpublish(elastic, repoId)
+  await unpublish(elastic, redis, repoId)
 
   await redis.publishAsync(channelKey, 'refresh')
 

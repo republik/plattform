@@ -19,6 +19,8 @@ const {
   termCriteriaBuilder
 } = require('./filters')
 
+const createCache = require('./cache')
+
 // mean German, see http://iovs.arvojournals.org/article.aspx?articleid=2166061
 const WORDS_PER_MIN = 180
 
@@ -395,8 +397,8 @@ const resetScheduledAt = async function (
   })
 }
 
-const unpublish = async (elastic, repoId) => {
-  return elastic.deleteByQuery({
+const unpublish = async (elastic, redis, repoId) => {
+  const result = await elastic.deleteByQuery({
     index: indexRef.index,
     conflicts: 'proceed',
     body: {
@@ -407,9 +409,11 @@ const unpublish = async (elastic, repoId) => {
       }
     }
   })
+  await createCache(redis).invalidate()
+  return result
 }
 
-const publish = (elastic, elasticDoc, hasPrepublication) => ({
+const publish = (elastic, redis, elasticDoc, hasPrepublication) => ({
   insert: async () => {
     elasticDoc.meta.scheduledAt = undefined
     return elastic.index({
@@ -438,10 +442,12 @@ const publish = (elastic, elasticDoc, hasPrepublication) => ({
       elasticDoc.meta.repoId,
       elasticDoc.id
     )
+
+    await createCache(redis).invalidate()
   }
 })
 
-const prepublish = (elastic, elasticDoc) => ({
+const prepublish = (elastic, redis, elasticDoc) => ({
   insert: async () => {
     elasticDoc.meta.scheduledAt = undefined
     return elastic.index({
@@ -470,10 +476,12 @@ const prepublish = (elastic, elasticDoc) => ({
       elasticDoc.meta.repoId,
       elasticDoc.id
     )
+
+    await createCache(redis).invalidate()
   }
 })
 
-const publishScheduled = (elastic, elasticDoc) => ({
+const publishScheduled = (elastic, redis, elasticDoc) => ({
   insert: async () => {
     if (!elasticDoc.meta.scheduledAt) {
       throw new Error('missing body.meta.scheduledAt')
@@ -521,10 +529,12 @@ const publishScheduled = (elastic, elasticDoc) => ({
       elasticDoc.meta.repoId,
       elasticDoc.id
     )
+
+    await createCache(redis).invalidate()
   }
 })
 
-const prepublishScheduled = (elastic, elasticDoc) => ({
+const prepublishScheduled = (elastic, redis, elasticDoc) => ({
   insert: async () => {
     if (!elasticDoc.meta.scheduledAt) {
       throw new Error('missing body.meta.scheduledAt')
@@ -572,6 +582,8 @@ const prepublishScheduled = (elastic, elasticDoc) => ({
       elasticDoc.meta.repoId,
       elasticDoc.id
     )
+
+    await createCache(redis).invalidate()
   }
 })
 
@@ -579,8 +591,9 @@ const createPublish = ({
   prepublication,
   scheduledAt,
   hasPrepublication,
+  elasticDoc,
   elastic,
-  elasticDoc
+  redis
 }) => {
   debug('createPublish', elasticDoc.meta.repoId, {
     prepublication,
@@ -594,7 +607,7 @@ const createPublish = ({
     : scheduledAt
       ? publishScheduled
       : publish
-  return func(elastic, elasticDoc, hasPrepublication)
+  return func(elastic, redis, elasticDoc, hasPrepublication)
 }
 
 const isPathUsed = async function (elastic, path, repoId) {
