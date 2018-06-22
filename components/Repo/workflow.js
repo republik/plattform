@@ -6,14 +6,14 @@ export const phases = [
     milestones: []
   },
   {
-    key: 'finalEditing',
-    color: 'Orange',
-    milestones: ['finalEditing']
-  },
-  {
     key: 'creation',
     color: 'Gold',
     milestones: ['startCreation']
+  },
+  {
+    key: 'finalEditing',
+    color: 'Orange',
+    milestones: ['finalEditing']
   },
   {
     key: 'production',
