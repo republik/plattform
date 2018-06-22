@@ -5,6 +5,7 @@ const { lib: { html: { get: getHTML } } } = require('@orbiting/backend-modules-d
 const { descending } = require('d3-array')
 const moment = require('moment')
 const querystring = require('querystring')
+const debug = require('debug')('republik:graphql:_mutations:requestPreview')
 
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
@@ -28,6 +29,8 @@ module.exports = async (_, args, context) => {
     }
   }
 
+  debug('PREVIEW_MAIL_REPO_ID', { PREVIEW_MAIL_REPO_ID })
+
   if (!PREVIEW_MAIL_REPO_ID) {
     throw new Error('api/preview/mail/404')
   }
@@ -36,9 +39,13 @@ module.exports = async (_, args, context) => {
     { repoId: PREVIEW_MAIL_REPO_ID },
     context
   )
+
+  debug('doc', { PREVIEW_MAIL_REPO_ID, found: !!doc.length })
+
   if (!doc) {
     throw new Error(t('api/preview/mail/404'))
   }
+
   // resolve Document
   const docResolverArgs = {
     urlPrefix: FRONTEND_BASE_URL,
