@@ -2904,9 +2904,9 @@ graphql-fields@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/graphql-fields/-/graphql-fields-1.0.2.tgz#099ee1d4445b42d0f47e06d622acebb33abc6cce"
 
-graphql-list-fields@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/graphql-list-fields/-/graphql-list-fields-2.0.2.tgz#a4ade3cfa2028a2ac32d3f2870f5f8c5b5d5b466"
+"graphql-list-fields@https://github.com/orbiting/graphql-list-fields#named-inline-fragments":
+  version "2.0.1"
+  resolved "https://github.com/orbiting/graphql-list-fields#e96ee15199283acb43ced006e777c985c910ed4c"
 
 graphql-redis-subscriptions@^1.4.0:
   version "1.5.0"
