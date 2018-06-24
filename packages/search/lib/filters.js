@@ -6,7 +6,7 @@ const termCriteriaBuilder = (fieldName) => (value, options) => ({
   clause: options && options.not ? 'must_not' : 'must',
   filter: {
     ..._.isArray(value)
-      ? { terms: { [fieldName]: value } }
+      ? { terms: { [fieldName]: [...new Set(value)] } }
       : { term: { [fieldName]: value } }
   }
 })
@@ -55,8 +55,28 @@ const rangeCriteriaBuilder = (fieldName) =>
   }
 
 // converts a filter array (with generic value as string) to a (typed) filter obj
-const filterReducer = (schema) => (filters) =>
-  filters.reduce(
+// adds a type filter if the schema implies it and no type filter
+// is explicitly added
+const filterReducer = (schema) => (filters) => {
+  const getFilter = (key, value, not) => {
+    const filterData = {
+      key,
+      value,
+      options: { not }
+    }
+    debug('filterData', filterData)
+    const filterHash = key + crypto
+      .createHash('md5')
+      .update(JSON.stringify(filterData))
+      .digest('hex')
+    return {
+      [filterHash]: filterData
+    }
+  }
+
+  let impliedType
+  const typeFilter = filters.find(f => f.key === 'type')
+  let filter = filters.reduce(
     (filterObj, { key, value, not }) => {
       debug('filterReducer', { key, value, not })
 
@@ -73,26 +93,32 @@ const filterReducer = (schema) => (filters) =>
         return filterObj
       }
 
-      const filterData = {
-        key,
-        value: filterValue,
-        options: { not }
+      if (key !== 'type' &&
+        !typeFilter &&
+        (not === undefined || !not) &&
+        !schemaEntry.noIndexTypeImplication
+      ) {
+        if (impliedType && impliedType !== schema.__type) {
+          throw new Error('filterReducer: filter imply contradiction types', filters, schema)
+        }
+        impliedType = schema.__type
       }
-
-      debug('filterData', filterData)
-
-      const filterHash = key + crypto
-        .createHash('md5')
-        .update(JSON.stringify(filterData))
-        .digest('hex')
 
       return {
         ...filterObj,
-        [filterHash]: filterData
+        ...getFilter(key, value, not)
       }
     },
     {}
   )
+  if (impliedType) {
+    filter = {
+      ...filter,
+      ...getFilter('type', impliedType)
+    }
+  }
+  return filter
+}
 
 // converts the filter (from filterReducer) into an object without the md5 hashes
 const getFilterObj = (filter) => {

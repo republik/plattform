@@ -30,6 +30,8 @@ const LONG_DURATION_MINS = 30
 
 const { GITHUB_LOGIN, GITHUB_ORGS } = process.env
 
+const indexType = 'Document'
+
 const getDocumentId = ({repoId, commitId, versionName}) =>
   Buffer.from(`${repoId}/${commitId}/${versionName}`).toString('base64')
 
@@ -51,6 +53,8 @@ const getResourceUrls = repoName => {
 }
 
 const schema = {
+  // special value to indicate this schemas index type
+  __type: indexType,
   id: {
     criteria: termCriteriaBuilder('_id')
   },
@@ -85,7 +89,8 @@ const schema = {
   },
   userId: {
     ...termEntry('meta.credits.url'),
-    parser: (value) => `/~${value}`
+    parser: (value) => `/~${value}`,
+    noIndexTypeImplication: true
   },
   publishedAt: {
     criteria: dateRangeCriteriaBuilder('meta.publishDate'),
@@ -98,7 +103,8 @@ const schema = {
   feed: countEntry('meta.feed'),
   discussion: {
     criteria: hasCriteriaBuilder('meta.discussionId'),
-    agg: valueCountAggBuilder('meta.discussionId')
+    agg: valueCountAggBuilder('meta.discussionId'),
+    noIndexTypeImplication: true
   },
   audioSource: {
     criteria: hasCriteriaBuilder('meta.audioSource'),
@@ -315,7 +321,6 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
 }
 
 const { getIndexAlias } = require('./utils')
-const indexType = 'Document'
 const indexRef = {
   index: getIndexAlias(indexType.toLowerCase(), 'write'),
   type: indexType
