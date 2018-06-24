@@ -159,6 +159,7 @@ const createHighlight = (indicesList) => {
   return { fields }
 }
 
+const defaultExcludes = [ 'contentString', 'resolved' ]
 const createQuery = (
   searchTerm, filter, sort, indicesList, user, scheduledAt, withoutContent
 ) => ({
@@ -172,11 +173,14 @@ const createQuery = (
   sort: createSort(sort),
   highlight: createHighlight(indicesList),
   aggs: extractAggs(documentSchema),
-  ...withoutContent
-    ? { _source: {
-      'excludes': [ 'content.children', 'contentString', 'resolved' ]
-    } }
-    : { }
+  _source: {
+    'excludes': [
+      ...defaultExcludes,
+      ...withoutContent
+        ? [ 'content.children' ]
+        : [ ]
+    ]
+  }
 })
 
 const mapHit = (hit) => {
