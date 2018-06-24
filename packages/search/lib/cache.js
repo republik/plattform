@@ -1,8 +1,6 @@
 const crypto = require('crypto')
-const debug = require('debug')('search:cache')
-const {
-  getFilterObj
-} = require('./filters')
+const debug = require('debug')
+const { getIndexAlias } = require('./utils')
 
 const keyPrefix = 'search:cache:'
 
@@ -17,21 +15,25 @@ const hashQuery = (query) =>
 
 const createGet = (redis) => async (query) => {
   const payload = await redis.getAsync(getRedisKey(query))
-  debug(`${payload ? 'HIT' : 'MISS'} %O`, query)
+  debug('search:cache:get')(`${payload ? 'HIT' : 'MISS'} %O`, query)
   return payload
     ? JSON.parse(payload)
     : payload
 }
 
-const isElegitable = (options, filter) => {
-  const filterObj = getFilterObj(filter)
-  if (!options.search && (filterObj.path || filterObj.repoId)) {
+const isEligible = (query) => {
+  if (
+    query.index &&
+    query.index.length === 1 &&
+    query.index[0] === getIndexAlias('document', 'read')
+  ) {
     return true
   }
+  return false
 }
 
-const createSet = (redis) => async (options, filter, query, payload) => {
-  if (isElegitable(options, filter)) {
+const createSet = (redis) => async (query, payload) => {
+  if (isEligible(query)) {
     let payloadString
     try {
       payloadString = JSON.stringify(payload)
@@ -39,15 +41,15 @@ const createSet = (redis) => async (options, filter, query, payload) => {
       console.info(e, query)
     }
     if (payloadString) {
-      debug('PUT')// %o', query)
+      debug('search:cache:set')('PUT %O', query)
       return redis.setAsync(getRedisKey(query), payloadString)
     }
   }
-  debug('SKIP')// %o', query)
+  debug('search:cache:set')('SKIP %O', query)
 }
 
 const createInvalidate = (redis) => async () => {
-  debug('INVALIDATE')
+  debug('search:cache')('INVALIDATE')
   await redis.evalAsync(`return redis.call('del', unpack(redis.call('keys', ARGV[1])))`, 0, `${keyPrefix}*`)
     .catch(() => {})// fails if no keys are matched
 }

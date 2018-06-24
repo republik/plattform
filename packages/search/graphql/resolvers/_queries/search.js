@@ -401,7 +401,7 @@ const search = async (__, args, context, info) => {
   let cacheHIT = !!result
   if (!result) {
     result = await elastic.search(query)
-    await cache.set(options, filter, query, result)
+    await cache.set(query, result)
   }
 
   const hasNextPage = first > 0 && result.hits.total > from + first
