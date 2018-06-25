@@ -109,8 +109,10 @@ test('unauthorized repos query', async (t) => {
         repos {
           nodes {
             id
-            commits(page: 0) {
-              id
+            commits(first: 1) {
+              nodes {
+                id
+              }
             }
           }
         }
@@ -560,20 +562,20 @@ test('uncommitedChanges (with subscription)', (t) => {
 
 test('repo latestCommit, commits-length and -content', async (t) => {
   const variables = {
-    repoId: testRepoId,
-    page: 0
+    repoId: testRepoId
   }
   const result = await apolloFetch({
     query: `
       query repo(
         $repoId: ID!
-        $page: Int
       ){
         repo(id: $repoId) {
-          commits(page: $page) {
-            id
-            document {
-              content
+          commits(first: 1) {
+            nodes {
+              id
+              document {
+                content
+              }
             }
           }
           latestCommit {
@@ -592,8 +594,9 @@ test('repo latestCommit, commits-length and -content', async (t) => {
   t.ok(result.data.repo)
   const { repo } = result.data
   t.ok(repo.commits)
-  t.equals(repo.commits.length, 1)
-  t.equals(repo.commits[0].id, repo.latestCommit.id)
+  t.ok(repo.commits.nodes)
+  t.equals(repo.commits.nodes.length, 1)
+  t.equals(repo.commits.nodes[0].id, repo.latestCommit.id)
   t.equals(repo.latestCommit.id, initialCommitId)
   // TODO discuss why this isnt equivalent
   // const commit = repo.commits[0]
@@ -629,7 +632,7 @@ test('repo specific commit', async (t) => {
   t.end()
 })
 
-test('repo specific commit', async (t) => {
+test('failing repo specific commit', async (t) => {
   // invalid
   const result = await apolloFetch({
     query: `
@@ -649,9 +652,9 @@ test('repo specific commit', async (t) => {
       commitId: '7366d36cb967d7a3ac324c789a8b718e61d01b31'
     }
   })
+
   t.equals(result.data, null)
   t.ok(result.errors)
-  t.ok(result.errors[0].message.indexOf('No commit found for SHA') > -1)
   t.end()
 })
 
@@ -747,24 +750,25 @@ test('check image URLs and asset server', async (t) => {
     query: `
       query repo(
         $repoId: ID!
-        $page: Int
       ){
         repo(id: $repoId) {
-          commits(page: $page) {
-            document {
-              content
+          commits(first: 1) {
+            nodes {
+              document {
+                content
+              }
             }
           }
         }
       }
     `,
     variables: {
-      repoId: testRepoId,
-      page: 0
+      repoId: testRepoId
     }
   })
   t.ok(result.data.repo.commits)
-  const articleMdast = result.data.repo.commits[0].document.content
+  t.ok(result.data.repo.commits.nodes)
+  const articleMdast = result.data.repo.commits.nodes[0].document.content
 
   // extract imageUrls
   let imageUrls = []
@@ -831,25 +835,26 @@ test('check recommit content and latestCommit', async (t) => {
     query: `
       query repo(
         $repoId: ID!
-        $page: Int
       ){
         repo(id: $repoId) {
-          commits(page: $page) {
-            id
-            document {
-              content
+          commits(first: 1) {
+            nodes {
+              id
+              document {
+                content
+              }
             }
           }
         }
       }
     `,
     variables: {
-      repoId: testRepoId,
-      page: 0
+      repoId: testRepoId
     }
   })
   t.ok(result0.data.repo.commits)
-  const originalCommit = result0.data.repo.commits[0]
+  t.ok(result0.data.repo.commits.nodes)
+  const originalCommit = result0.data.repo.commits.nodes[0]
   const originalContent = originalCommit.document.content
   t.ok(originalContent)
 
@@ -886,13 +891,14 @@ test('check recommit content and latestCommit', async (t) => {
     query: `
       query repo(
         $repoId: ID!
-        $page: Int
       ){
         repo(id: $repoId) {
-          commits(page: $page) {
-            id
-            document {
-              content
+          commits(first: 1) {
+            nodes {
+              id
+              document {
+                content
+              }
             }
           }
           latestCommit {
@@ -902,12 +908,12 @@ test('check recommit content and latestCommit', async (t) => {
       }
     `,
     variables: {
-      repoId: testRepoId,
-      page: 0
+      repoId: testRepoId
     }
   })
   t.ok(result2.data.repo.commits)
-  const newCommit = result2.data.repo.commits[0]
+  t.ok(result2.data.repo.commits.nodes)
+  const newCommit = result2.data.repo.commits.nodes[0]
   const newContent = newCommit.document.content
 
   t.notEquals(originalCommit.id, newCommit.id)
@@ -2325,8 +2331,10 @@ test('unauthorized repos query', async (t) => {
         repos {
           nodes {
             id
-            commits(page: 0) {
-              id
+            commits(first: 1) {
+              nodes {
+                id
+              }
             }
           }
         }

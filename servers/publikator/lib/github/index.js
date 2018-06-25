@@ -1,3 +1,4 @@
+const { descending } = require('d3-array')
 const { lib: {
   clients: createGithubClients,
   utils: { gitAuthor }
@@ -23,7 +24,7 @@ const tagNormalizer = (tag, repoId, refName) => ({
   }
 })
 
-const commitNormalizer = ({
+const normalizeRestCommit = ({
   sha,
   commit: {
     message,
@@ -42,13 +43,22 @@ const commitNormalizer = ({
   repo
 })
 
+const normalizeGQLCommit = (repo, commit) => ({
+  ...commit,
+  id: commit.oid,
+  date: commit.committedDate,
+  parentIds: commit.parents.nodes.map(v => v.oid),
+  repo
+})
+
 module.exports = {
   gitAuthor,
   getRepos,
   publicationVersionRegex,
   createGithubClients,
   tagNormalizer,
-  commitNormalizer,
+  normalizeGQLCommit,
+  commitNormalizer: normalizeRestCommit,
   getRepo: async (repoId) => {
     const { githubApolloFetch } = await createGithubClients()
     const [login, repoName] = repoId.split('/')
@@ -132,22 +142,156 @@ module.exports = {
     }
     debug('commit: redis MISS (%s)', redisKey)
 
-    const { githubRest } = await createGithubClients()
+    const { githubApolloFetch } = await createGithubClients()
     const [login, repoName] = repo.id.split('/')
-    return githubRest.repos.getCommit({
-      owner: login,
-      repo: repoName,
-      sha
+    const {
+      data: {
+        repository: {
+          object: rawCommit
+        }
+      }
+    } = await githubApolloFetch({
+      query: `
+        query repository(
+          $login: String!,
+          $repoName: String!,
+          $sha: GitObjectID!
+        ) {
+          repository(
+            owner: $login
+            name: $repoName
+          ) {
+            object(oid: $sha) {
+              ... on Commit {
+                oid
+                author {
+                  email
+                  name
+                }
+                parents (first: 5){
+                  nodes {
+                    oid
+                  }
+                }
+                message
+                committedDate
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        login,
+        repoName,
+        sha
+      }
     })
-      .then(response => response ? response.data : response)
-      .then(commit => commitNormalizer({
-        ...commit,
-        repo
-      }))
-      .then(async (commit) => {
-        await redis.setAsync(redisKey, JSON.stringify(commit))
-        return commit
-      })
+
+    if (!rawCommit) {
+      return null
+    }
+    const commit = normalizeGQLCommit(repo, rawCommit)
+    await redis.setAsync(redisKey, JSON.stringify(commit))
+    return commit
+  },
+  getCommits: async (repo, { first = 15, after, before }) => {
+    const { githubApolloFetch } = await createGithubClients()
+    const [login, repoName] = repo.id.split('/')
+    const {
+      data: {
+        repository: {
+          refs: {
+            nodes: heads
+          }
+        }
+      }
+    } = await githubApolloFetch({
+      query: `
+        query repository(
+          $login: String!,
+          $repoName: String!,
+          $maxRefs: Int
+          $maxCommits: Int,
+          $commitsSince: GitTimestamp,
+          $commitsUntil: GitTimestamp
+        ) {
+          repository(
+            owner: $login
+            name: $repoName
+          ) {
+            refs(refPrefix: "refs/heads/", first: $maxRefs) {
+              nodes {
+                name
+                target {
+                  ... on Commit {
+                    oid
+                    author {
+                      date
+                    },
+                    history(first: $maxCommits, until: $commitsUntil, since: $commitsSince) {
+                      pageInfo {
+                        hasNextPage
+                      }
+                      totalCount
+                      nodes {
+                        ... on Commit {
+                          oid
+                          author {
+                            email
+                            name
+                          }
+                          parents (first: 5){
+                            nodes {
+                              oid
+                            }
+                          }
+                          message
+                          committedDate
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      `,
+      variables: {
+        login,
+        repoName,
+        maxRefs: 100,
+        maxCommits: first,
+        commitsSince: before,
+        commitsUntil: after
+      }
+    })
+    const hasNextPage = heads.some(({target}) => target.history.pageInfo.hasNextPage)
+    const totalCount = heads.reduce((total, {target}) => total + target.history.totalCount, 0)
+
+    const commits = heads
+      .map(({ target }) =>
+        target.history.nodes
+          .map(
+            commit => normalizeGQLCommit(repo, commit)
+          )
+      )
+      .reduce(
+        (acc, v) => acc.concat(v), []
+      )
+      .filter((v, i, arr) => arr.findIndex(mapObj => mapObj.id === v.id) === i)
+      .sort((a, b) => descending(a.date, b.date))
+      .slice(0, first)
+
+    return {
+      pageInfo: {
+        endCursor: (commits.length && commits.slice(-1)[0].date) || null,
+        startCursor: (commits.length && commits[0].date) || null,
+        hasNextPage: hasNextPage || commits.length > first
+      },
+      totalCount,
+      nodes: commits
+    }
   },
   getAnnotatedTags: async (repoId, first = 100) => {
     const { githubApolloFetch } = await createGithubClients()
