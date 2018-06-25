@@ -1,9 +1,11 @@
 const uniqBy = require('lodash/uniqBy')
 const yaml = require('../../lib/yaml')
+const { descending } = require('d3-array')
 const zipArray = require('../../lib/zipArray')
 const {
   getCommits,
   getCommit,
+  getHeads,
   getAnnotatedTags,
   getAnnotatedTag
 } = require('../../lib/github')
@@ -15,8 +17,18 @@ const UNCOMMITTED_CHANGES_TTL = 7 * 24 * 60 * 60 * 1000 // 1 week in ms
 module.exports = {
   commits: getCommits,
   latestCommit: async (repo, args, context) => {
-    return getCommits(repo, { first: 1 }, context)
-      .then(commitConnection => commitConnection.nodes[0])
+    if (repo.latestCommit) {
+      return repo.latestCommit
+    }
+    return getHeads(repo.id)
+      .then(refs => refs
+        .map(ref => ref.target)
+        .sort((a, b) => descending(a.author.date, b.author.date))
+        .shift()
+      )
+      .then(({ oid: sha }) =>
+        getCommit(repo, { id: sha }, context)
+      )
   },
   commit: getCommit,
   uncommittedChanges: async (
