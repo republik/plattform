@@ -1,7 +1,7 @@
 const MailchimpInterface = require('../MailchimpInterface')
 const {
   EmailRequiredMailError
- } = require('../errors')
+} = require('../errors')
 const logger = console
 
 module.exports = async ({
