@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
-import { gql, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 import { compose } from 'redux'
 import { css } from 'glamor'
 
@@ -26,16 +27,40 @@ import {
 
 import MaskedInput from 'react-maskedinput'
 
-import { query as treeQuery } from '../../pages/repo/tree'
-import { query as publicationQuery } from './Current'
+import { getRepoHistory } from '../../pages/repo/tree'
+import { getRepoWithPublications } from './Current'
 
 import { renderMdast } from 'mdast-react-render'
 
 import { getSchema } from '../../components/Templates'
 
+export const publish = gql`
+mutation publish(
+  $repoId: ID!,
+  $commitId: ID!,
+  $prepublication: Boolean!,
+  $scheduledAt: DateTime,
+  $updateMailchimp: Boolean!,
+  $ignoreUnresolvedRepoIds: Boolean
+) {
+  publish(
+    repoId: $repoId,
+    commitId: $commitId,
+    prepublication: $prepublication,
+    scheduledAt: $scheduledAt,
+    updateMailchimp: $updateMailchimp,
+    ignoreUnresolvedRepoIds: $ignoreUnresolvedRepoIds) {
+    unresolvedRepoIds
+    publication {
+      name
+    }
+  }
+}
+`
+
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
-const query = gql`
+export const getRepoWithCommit = gql`
   query repoWithCommit($repoId: ID!, $commitId: ID!) {
     repo(id: $repoId) {
       id
@@ -95,30 +120,6 @@ const styles = {
 const scheduledAtFormat = '%d.%m.%Y %H:%M'
 const scheduledAtParser = swissTime.parse(scheduledAtFormat)
 const scheduledAtFormater = swissTime.format(scheduledAtFormat)
-
-const mutation = gql`
-mutation publish(
-  $repoId: ID!,
-  $commitId: ID!,
-  $prepublication: Boolean!,
-  $scheduledAt: DateTime,
-  $updateMailchimp: Boolean!,
-  $ignoreUnresolvedRepoIds: Boolean
-) {
-  publish(
-    repoId: $repoId,
-    commitId: $commitId,
-    prepublication: $prepublication,
-    scheduledAt: $scheduledAt,
-    updateMailchimp: $updateMailchimp,
-    ignoreUnresolvedRepoIds: $ignoreUnresolvedRepoIds) {
-    unresolvedRepoIds
-    publication {
-      name
-    }
-  }
-}
-`
 
 const PADDING_X = 5
 
@@ -448,19 +449,20 @@ class PublishForm extends Component {
 
 export default compose(
   withT,
-  graphql(mutation, {
+  graphql(publish, {
     props: ({mutate, ownProps}) => ({
       publish: variables => mutate({
         variables,
         refetchQueries: [
           {
-            query: publicationQuery,
+            query: getRepoHistory,
             variables: {
-              repoId: ownProps.repoId
+              repoId: ownProps.repoId,
+              first: 20
             }
           },
           {
-            query: treeQuery,
+            query: getRepoWithPublications,
             variables: {
               repoId: ownProps.repoId
             }
@@ -469,5 +471,5 @@ export default compose(
       })
     })
   }),
-  graphql(query)
+  graphql(getRepoWithCommit)
 )(PublishForm)

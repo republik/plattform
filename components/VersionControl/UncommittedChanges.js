@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
-import { gql, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 import { css, merge } from 'glamor'
 import {
   colors,
@@ -21,6 +22,37 @@ import OfflineIcon from 'react-icons/lib/md/signal-wifi-off' // portable-wifi-of
 import createDebug from 'debug'
 
 const debug = createDebug('publikator:uncommittedChanges')
+
+export const getUncommittedChanges = gql`
+  query getUncommittedChanges($repoId: ID!) {
+    repo(id: $repoId) {
+      id
+      uncommittedChanges {
+        id
+        email
+        name
+      }
+    }
+  }
+`
+
+export const uncommittedChangesSubscription = gql`
+  subscription onUncommitedChange(
+    $repoId: ID!
+  ) {
+    uncommittedChanges(
+      repoId: $repoId
+    ) {
+      repoId
+      action
+      user {
+        id
+        email
+        name
+      }
+    }
+  }
+`
 
 export const warningColor = '#E9A733'
 
@@ -54,37 +86,6 @@ styles.emptyBox = merge(styles.box, {
   backgroundColor: '#fff',
   border: `1px solid ${colors.divider}`
 })
-
-const query = gql`
-  query repoUncommitted($repoId: ID!) {
-    repo(id: $repoId) {
-      id
-      uncommittedChanges {
-        id
-        email
-        name
-      }
-    }
-  }
-`
-
-const uncommittedChangesSubscription = gql`
-  subscription onUncommitedChange(
-    $repoId: ID!
-  ) {
-    uncommittedChanges(
-      repoId: $repoId
-    ) {
-      repoId
-      action
-      user {
-        id
-        email
-        name
-      }
-    }
-  }
-`
 
 export const withUncommitedChanges = ({ options } = {}) => (WrappedComponent) => {
   class UncommittedChanges extends Component {
@@ -137,7 +138,7 @@ export const withUncommitedChanges = ({ options } = {}) => (WrappedComponent) =>
   }
 
   return compose(
-    graphql(query, {
+    graphql(getUncommittedChanges, {
       options: (props) => ({
         fetchPolicy: 'network-only',
         pollInterval: process.browser && UNCOMMITTED_CHANGES_POLL_INTERVAL_MS,

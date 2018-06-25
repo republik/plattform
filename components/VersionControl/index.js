@@ -1,14 +1,49 @@
 import React, { Component } from 'react'
-import { gql, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 import { css } from 'glamor'
 import { compose } from 'redux'
 import { Label } from '@project-r/styleguide'
 import Loader from '../Loader'
 import withT from '../../lib/withT'
+import * as fragments from '../../lib/graphql/fragments'
 
 import BaseCommit from './BaseCommit'
 import Checklist from './Checklist'
 import CommitHistory from './CommitHistory'
+
+export const getCommits = gql`
+  query getCommits($repoId: ID!, $after: String) {
+    repo(id: $repoId) {
+      id
+      commits(first: 3, after: $after) {
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        totalCount
+        nodes {
+          ...SimpleCommit
+        }
+      }
+    }
+  }
+  ${fragments.SimpleCommit}
+`
+
+export const repoSubscription = gql`
+  subscription onRepoUpdate($repoId: ID!) {
+    repoUpdate(repoId: $repoId) {
+      id
+      commits {
+        nodes {
+          ...SimpleCommit
+        }
+      }
+    }
+  }
+  ${fragments.SimpleCommit}
+`
 
 const styles = {
   container: css({
@@ -19,43 +54,6 @@ const styles = {
     fontSize: '16px'
   }
 }
-
-const fragments = {
-  commit: gql`
-    fragment SidebarCommit on Commit {
-      id
-      date
-      message
-      author {
-        name
-      }
-    }
-  `
-}
-
-const getCommits = gql`
-  query getCommits($repoId: ID!) {
-    repo(id: $repoId) {
-      id
-      commits {
-        ...SidebarCommit
-      }
-    }
-  }
-  ${fragments.commit}
-`
-
-const repoSubscription = gql`
-  subscription repoUpdate($repoId: ID!) {
-    repoUpdate(repoId: $repoId) {
-      id
-      commits {
-        ...SidebarCommit
-      }
-    }
-  }
-  ${fragments.commit}
-`
 
 class EditSidebar extends Component {
   componentDidMount () {
@@ -78,12 +76,18 @@ class EditSidebar extends Component {
             return prev
           }
           const { commits } = subscriptionData.data.repoUpdate
-          if (commits && commits.length) {
+          if (commits && commits.nodes.length) {
             return {
               ...prev,
               repo: {
                 ...prev.repo,
-                commits: [...commits]
+                commits: {
+                  ...prev.repo.commits,
+                  nodes: [
+                    ...commits.nodes,
+                    ...prev.repo.commits.nodes
+                  ]
+                }
               }
             }
           } else {
@@ -114,15 +118,15 @@ class EditSidebar extends Component {
 
     return (
       <Loader
-        loading={loading}
+        loading={(loading && !repo) || !repo || !commit || !repo.commits}
         error={error}
         render={() => (
           <div {...styles.container}>
-            {!!repo && (
+            {!!repo && !!repo.commits && !!repo.commits.nodes && (
               <BaseCommit
                 repoId={repo.id}
                 commit={commit}
-                commits={repo.commits}
+                commits={repo.commits.nodes}
               />
             )}
             {!!repo && (
@@ -137,7 +141,7 @@ class EditSidebar extends Component {
                 <CommitHistory
                   repoId={repo.id}
                   commitId={commit.id}
-                  commits={repo.commits}
+                  commits={repo.commits.nodes}
                 />
               </div>
             )}
@@ -156,7 +160,7 @@ export default compose(
       variables: {
         repoId: props.repoId
       },
-      fetchPolicy: 'network-only'
+      fetchPolicy: 'cache-first'
     })
   })
 )(EditSidebar)

@@ -14,7 +14,7 @@ const styles = {
 
 export const Me = ({ me }) => (
   <div {...styles.container}>
-    {me.name || me.email}
+    {me && (me.name || me.email)}
     <br />
     <SignOut />
   </div>

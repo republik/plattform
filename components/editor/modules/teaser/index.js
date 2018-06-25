@@ -3,6 +3,8 @@ import { matchBlock } from '../../utils'
 import { createRemoveEmptyKeyHandler } from '../../utils/keyHandlers'
 import { Block } from 'slate'
 
+import shortId from 'shortid'
+
 import { getSerializer, getSubmodules } from './serializer'
 
 import {
@@ -31,6 +33,7 @@ export const getData = data => ({
   portrait: true,
   showImage: true,
   onlyImage: false,
+  id: (data && data.id) || shortId(),
   ...data || {}
 })
 
@@ -126,7 +129,7 @@ const teaserPlugin = options => {
           moveDown={moveDown(editor)}
           insert={insert(editor)}
           remove={remove(editor)}
-      />,
+        />,
         compiledTeaser
       ])
     },

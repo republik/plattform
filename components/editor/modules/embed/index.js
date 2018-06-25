@@ -1,6 +1,6 @@
 import React from 'react'
 import MarkdownSerializer from 'slate-mdast-serializer'
-import { gql, withApollo } from 'react-apollo'
+import { withApollo } from 'react-apollo'
 
 import { matchBlock } from '../../utils'
 import { findOrCreate } from '../../utils/serialization'
@@ -9,7 +9,9 @@ import createUi from './ui'
 import embedFromUrlPlugin from './embedFromUrlPlugin'
 import EmbedLoader from './EmbedLoader'
 
-const videoQuery = gql`
+import gql from 'graphql-tag'
+
+export const getVideoEmbed = gql`
 query getVideoEmbed($id: ID!, $embedType: EmbedType!) {
   embed(id: $id, embedType: $embedType) {
     __typename
@@ -48,7 +50,7 @@ query getVideoEmbed($id: ID!, $embedType: EmbedType!) {
 }
 `
 
-const twitterQuery = gql`
+export const getTwitterEmbed = gql`
 query getTwitterEmbed($id: ID!, $embedType: EmbedType!) {
   embed(id: $id, embedType: $embedType) {
     __typename
@@ -232,11 +234,11 @@ const getTwitterQueryParams = url => {
 export const createEmbedVideoModule = moduleFactory({
   matchUrl: matchVideoUrl,
   getQueryParams: getVideoQueryParams,
-  query: videoQuery
+  query: getVideoEmbed
 })
 
 export const createEmbedTwitterModule = moduleFactory({
   matchUrl: matchTwitterUrl,
   getQueryParams: getTwitterQueryParams,
-  query: twitterQuery
+  query: getTwitterEmbed
 })

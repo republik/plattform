@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { compose } from 'redux'
 import { css } from 'glamor'
-import { gql, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 import { descending, ascending } from 'd3-array'
 
 import withT from '../../lib/withT'
@@ -36,6 +37,88 @@ import Briefing from './Briefing'
 import EditMetaDate from './EditMetaDate'
 import { phases } from './workflow'
 import RepoAdd from './Add'
+
+export const editRepoMeta = gql`
+mutation editRepoMeta(
+  $repoId: ID!
+  $creationDeadline: DateTime
+  $productionDeadline: DateTime
+  $publishDate: DateTime
+  $briefingUrl: String
+) {
+  editRepoMeta(
+    repoId: $repoId
+    creationDeadline: $creationDeadline
+    productionDeadline: $productionDeadline
+    publishDate: $publishDate
+    briefingUrl: $briefingUrl
+  ) {
+    id
+    meta {
+      creationDeadline
+      productionDeadline
+      publishDate
+      briefingUrl
+    }
+  }
+}
+`
+
+export const filterAndOrderRepos = gql`
+query repoListSearch($after: String, $search: String, $orderBy: RepoOrderBy) {
+  repos(
+    first: 100,
+    after: $after,
+    search: $search,
+    orderBy: $orderBy
+  ) {
+    totalCount
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+    nodes {
+      id
+      meta {
+        creationDeadline
+        productionDeadline
+        publishDate
+        briefingUrl
+      }
+      latestCommit {
+        id
+        date
+        message
+        document {
+          id
+          meta {
+            template
+            title
+            credits
+          }
+        }
+      }
+      milestones {
+        name
+        immutable
+      }
+      latestPublications {
+        name
+        prepublication
+        live
+        scheduledAt
+        document {
+          id
+          meta {
+            path
+            slug
+          }
+        }
+      }
+    }
+  }
+}
+`
 
 const dateTimeFormat = '%d.%m %H:%M'
 const formatDateTime = swissTime.format(dateTimeFormat)
@@ -346,79 +429,9 @@ class RepoList extends Component {
   }
 }
 
-const query = gql`
-query repos($after: String, $search: String, $orderBy: RepoOrderBy) {
-  repos(
-    first: 100,
-    after: $after,
-    search: $search,
-    orderBy: $orderBy
-  ) {
-    totalCount
-    pageInfo {
-      endCursor
-      hasNextPage
-    }
-    nodes {
-      id
-      meta {
-        creationDeadline
-        productionDeadline
-        publishDate
-        briefingUrl
-      }
-      latestCommit {
-        id
-        date
-        message
-        document {
-          id
-          meta {
-            template
-            title
-            credits
-          }
-        }
-      }
-      milestones {
-        name
-        immutable
-      }
-      latestPublications {
-        name
-        prepublication
-        live
-        scheduledAt
-        document {
-          id
-          meta {
-            path
-            slug
-          }
-        }
-      }
-    }
-  }
-}
-`
-
-const mutation = gql`
-mutation editRepoMeta($repoId: ID!, $creationDeadline: DateTime, $productionDeadline: DateTime, $publishDate: DateTime, $briefingUrl: String) {
-  editRepoMeta(repoId: $repoId, creationDeadline: $creationDeadline, productionDeadline: $productionDeadline, publishDate: $publishDate, briefingUrl: $briefingUrl) {
-    id
-    meta {
-      creationDeadline
-      productionDeadline
-      publishDate
-      briefingUrl
-    }
-  }
-}
-`
-
 const RepoListWithQuery = compose(
   withT,
-  graphql(query, {
+  graphql(filterAndOrderRepos, {
     options: ({ search }) => ({
       notifyOnNetworkStatusChange: true,
       variables: {
@@ -460,7 +473,7 @@ const RepoListWithQuery = compose(
       })
     })
   }),
-  graphql(mutation, {
+  graphql(editRepoMeta, {
     props: ({mutate}) => ({
       editRepoMeta: (variables) =>
         mutate({variables})

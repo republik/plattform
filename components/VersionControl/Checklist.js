@@ -4,16 +4,60 @@ import { css } from 'glamor'
 import { Checkbox, colors, linkRule } from '@project-r/styleguide'
 import { getName } from '../../lib/utils/name'
 import { swissTime } from '../../lib/utils/format'
-import { gql, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 import { compose } from 'redux'
 import { Link } from '../../lib/routes'
 import Loader from '../Loader'
 import withT from '../../lib/withT'
 import { ascending } from 'd3-array'
-
+import * as fragments from '../../lib/graphql/fragments'
 import { milestoneNames } from '../Repo/workflow'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
+
+export const placeMilestone = gql`
+mutation placeMilestone(
+  $repoId: ID!
+  $commitId: ID!
+  $name: String!
+  $message: String!
+) {
+  placeMilestone(
+    repoId: $repoId
+    commitId: $commitId
+    name: $name
+    message: $message
+  ) {
+    ...MilestoneWithCommit
+  }
+}
+${fragments.MilestoneWithCommit}
+`
+
+export const removeMilestone = gql`
+  mutation removeMilestone(
+    $repoId: ID!
+    $name: String!
+  ) {
+    removeMilestone(
+      repoId: $repoId
+      name: $name
+    )
+  }
+`
+
+export const getMilestones = gql`
+  query repoMilestones($repoId: ID!) {
+    repo(id: $repoId) {
+      id
+      milestones {
+        ...MilestoneWithCommit
+      }
+    }
+  }
+  ${fragments.MilestoneWithCommit}
+  `
 
 const styles = {
   approvedBy: css({
@@ -50,7 +94,7 @@ class Checklist extends Component {
       mutating
     } = this.state
     return (
-      <Loader loading={loading} error={error} render={() => {
+      <Loader loading={loading && !milestones} error={error} render={() => {
         const allMilestones = milestones
           .filter(m => !m.immutable && m.name !== 'meta')
           .concat(
@@ -139,64 +183,9 @@ Checklist.propTypes = {
   commitId: PropTypes.string.isRequired
 }
 
-const fragments = {
-  milestone: gql`
-    fragment ChecklistMilestone on Milestone {
-      name
-      message
-      immutable
-      commit {
-        id
-        date
-        author {
-          name
-        }
-        message
-      }
-      author {
-        name
-      }
-    }
-  `
-}
-
-const query = gql`
-query repoMilestones($repoId: ID!) {
-  repo(id: $repoId) {
-    id
-    milestones {
-      ...ChecklistMilestone
-    }
-  }
-}
-${fragments.milestone}
-`
-
-const placeMilestone = gql`
-mutation placeMilestone(
-  $repoId: ID!
-  $commitId: ID!
-  $name: String!
-  $message: String!
-) {
-  placeMilestone(repoId: $repoId, commitId: $commitId, name: $name, message: $message) {
-    ...ChecklistMilestone
-  }
-}
-${fragments.milestone}
-`
-const removeMilestone = gql`
-mutation removeMilestone(
-  $repoId: ID!
-  $name: String!
-) {
-  removeMilestone(repoId: $repoId, name: $name)
-}
-`
-
 export default compose(
   withT,
-  graphql(query, {
+  graphql(getMilestones, {
     props: ({data, ownProps: {name}}) => ({
       loading: data.loading,
       error: data.error,
@@ -218,12 +207,12 @@ export default compose(
               repoId
             }
             const data = proxy.readQuery({
-              query,
+              getMilestones,
               variables
             })
             data.repo.milestones.push(placeMilestone)
             proxy.writeQuery({
-              query: query,
+              query: getMilestones,
               variables,
               data
             })
@@ -244,7 +233,7 @@ export default compose(
               repoId
             }
             const data = proxy.readQuery({
-              query,
+              getMilestones,
               variables
             })
             if (removeMilestone) {
@@ -252,13 +241,13 @@ export default compose(
                 .filter(milestone => milestone.name !== name)
             }
             proxy.writeQuery({
-              query: query,
+              query: getMilestones,
               variables,
               data
             })
           },
           refetchQueries: [{
-            query,
+            getMilestones,
             variables: {
               repoId
             }

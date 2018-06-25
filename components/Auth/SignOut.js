@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import {gql, graphql} from 'react-apollo'
+import {graphql} from 'react-apollo'
+import gql from 'graphql-tag'
 import {compose} from 'redux'
 import withT from '../../lib/withT'
 import {errorToString} from '../../lib/utils/errors'

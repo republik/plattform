@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
+import { css } from 'glamor'
 import { compose } from 'redux'
-import { gql, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
+
+import { path } from 'ramda'
 
 import withData from '../../lib/apollo/withData'
 import withAuthorization from '../../components/Auth/withAuthorization'
@@ -9,72 +13,69 @@ import Loader from '../../components/Loader'
 import Tree from '../../components/Tree'
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
-import { NarrowContainer } from '@project-r/styleguide'
+import { NarrowContainer, A, InlineSpinner, Interaction } from '@project-r/styleguide'
 import { getKeys as getLocalStorageKeys } from '../../lib/utils/localStorage'
+import * as fragments from '../../lib/graphql/fragments'
 
 import CurrentPublications from '../../components/Publication/Current'
 import UncommittedChanges from '../../components/VersionControl/UncommittedChanges'
 
-const fragments = {
-  commit: gql`
-    fragment TreeCommit on Commit {
-      id
-      message
-      parentIds
-      date
-      author {
-        email
-        name
-      }
-    }
-  `,
-  milestone: gql`
-    fragment TreeMilestone on Milestone {
-      name
-      message
-      immutable
-      commit {
-        id
-      }
-      author {
-        email
-        name
-      }
-    }
-  `
-}
-
-export const query = gql`
-  query repoWithHistory($repoId: ID!) {
+export const getRepoHistory = gql`
+  query repoWithHistory(
+    $repoId: ID!
+    $first: Int!
+    $after: String
+  ) {
     repo(id: $repoId) {
       id
-      commits(page: 1) {
-        ...TreeCommit
+      commits(first: $first, after: $after) {
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+        nodes {
+          ...SimpleCommit
+        }
       }
       milestones {
-        ...TreeMilestone
+        ...SimpleMilestone
       }
     }
   }
-  ${fragments.commit}
-  ${fragments.milestone}
+  ${fragments.SimpleMilestone}
+  ${fragments.SimpleCommit}
 `
 
-const repoSubscription = gql`
-  subscription repoUpdate($repoId: ID!) {
+export const treeRepoSubscription = gql`
+  subscription onRepoUpdate($repoId: ID!) {
     repoUpdate(repoId: $repoId) {
       id
-      latestCommit {
-        ...TreeCommit
+      commits (first: 1){
+        nodes {
+          ...SimpleCommit
+        }
       }
       milestones {
-        ...TreeMilestone
+        ...SimpleMilestone
       }
     }
   }
-  ${fragments.commit}
-  ${fragments.milestone}
+  ${fragments.SimpleCommit}
+  ${fragments.SimpleMilestone}
 `
+
+const styles = {
+  loadMoreButton: css({
+    cursor: 'pointer'
+  }),
+  loadMore: css({
+    positon: 'relative',
+    textAlign: 'center',
+    width: '100%',
+    marginTop: '24px',
+    height: '64px'
+  })
+}
 
 class EditorPage extends Component {
   componentDidMount () {
@@ -88,7 +89,7 @@ class EditorPage extends Component {
   subscribe () {
     if (!this.unsubscribe && this.props.data.repo) {
       this.unsubscribe = this.props.data.subscribeToMore({
-        document: repoSubscription,
+        document: treeRepoSubscription,
         variables: {
           repoId: this.props.url.query.repoId
         },
@@ -96,16 +97,30 @@ class EditorPage extends Component {
           if (!subscriptionData.data) {
             return prev
           }
-          const { latestCommit, milestones } = subscriptionData.data.repoUpdate
+          const newLatestCommit = path(
+            ['commits', 'nodes', 0],
+            subscriptionData.data.repoUpdate
+          )
+          const currentLatestCommit = path(
+            ['repo', 'commits', 'nodes', 0],
+            prev
+          )
+
+          const { milestones } = subscriptionData.data.repoUpdate
           if (
-            !prev.repo.commits.find(commit => commit.id === latestCommit.id)
+            newLatestCommit !== currentLatestCommit
           ) {
-            const commits = prev.repo.commits.concat(latestCommit)
             return {
               ...prev,
               repo: {
                 ...prev.repo,
-                commits,
+                commits: {
+                  ...prev.repo.commits,
+                  nodes: [
+                    newLatestCommit,
+                    ...prev.repo.commits.nodes
+                  ]
+                },
                 milestones
               }
             }
@@ -122,7 +137,7 @@ class EditorPage extends Component {
   }
 
   render () {
-    const { url } = this.props
+    const { url, commits, hasMore, fetchMore } = this.props
     const { loading, error, repo } = this.props.data
     const { repoId } = url.query
 
@@ -150,20 +165,31 @@ class EditorPage extends Component {
           </Frame.Header.Section>
         </Frame.Header>
         <Frame.Body raw>
-          <Loader loading={loading} error={error} render={() => (
+          <Loader loading={loading && !repo} error={error} render={() => (
             <div>
               <br />
               <NarrowContainer>
                 <CurrentPublications repoId={repoId} />
               </NarrowContainer>
               <Tree
-                commits={repo.commits}
+                commits={commits}
                 localStorageCommitIds={localStorageCommitIds}
                 milestones={repo.milestones}
                 repoId={repoId}
               />
+              {/* Load more commits */
+                hasMore &&
+                <Interaction.P {...styles.loadMore}>
+                  {loading && <InlineSpinner size={40} />}
+                  {!loading && <A
+                    {...styles.loadMoreButton}
+                    onClick={() => fetchMore()}
+                  >Ältere laden</A>
+                  }
+                </Interaction.P>
+              }
             </div>
-        )} />
+          )} />
         </Frame.Body>
       </Frame>
     )
@@ -173,12 +199,52 @@ class EditorPage extends Component {
 export default compose(
   withData,
   withAuthorization(['editor']),
-  graphql(query, {
-    options: ({ url }) => ({
-      variables: {
-        repoId: url.query.repoId
-      },
-      fetchPolicy: 'cache-and-network'
-    })
+  graphql(getRepoHistory, {
+    options: ({ url }) => {
+      return ({
+        variables: {
+          after: null,
+          repoId: url.query.repoId,
+          first: 20
+        },
+        notifyOnNetworkStatusChange: true,
+        fetchPolicy: 'cache-and-network'
+      })
+    },
+    props: ({data, ownProps}) => {
+      return ({
+        data,
+        commits: (data.repo && data.repo.commits && data.repo.commits.nodes) || [],
+        hasMore: (data.repo && data.repo.commits && data.repo.commits.pageInfo.hasNextPage),
+        fetchMore: () => {
+          return data.fetchMore({
+            variables: {
+              repoId: data.repo.id,
+              first: 20,
+              after: data.repo.commits.pageInfo.endCursor
+            },
+            updateQuery: (previousResult, { fetchMoreResult }) => {
+              return {
+                repo: {
+                  ...previousResult.repo,
+                  ...fetchMoreResult.repo,
+                  commits: {
+                    ...previousResult.repo.commits,
+                    ...fetchMoreResult.repo.commits,
+                    nodes: [
+                      ...previousResult.repo.commits.nodes,
+                      ...fetchMoreResult.repo.commits.nodes
+                    ].filter(({id}, i, all) =>
+                    // deduplicate by id
+                      i === all.findIndex(repo => repo.id === id)
+                    )
+                  }
+                }
+              }
+            }
+          })
+        }
+      })
+    }
   })
 )(EditorPage)

@@ -21,6 +21,16 @@ const styles = {
       right: 0
     }
   }),
+  overlay: css({
+    opacity: '0.5',
+    pointer: 'arrow',
+    position: 'absolute',
+    backgroundColor: '#fff',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0
+  }),
   tabButtonContainer: css({
     borderBottom: `1px solid ${colors.divider}`,
     paddingBottom: '10px',
@@ -71,6 +81,7 @@ export default class Sidebar extends Component {
     }
 
     this.tabClickHandler = this.tabClickHandler.bind(this)
+    this.mouseDownHandler = this.mouseDownHandler.bind(this)
   }
 
   tabClickHandler (id) {
@@ -87,13 +98,21 @@ export default class Sidebar extends Component {
     }
   }
 
+  mouseDownHandler (event) {
+    if (this.props.isDisabled) {
+      event.stopPropagation()
+      event.preventDefault()
+    }
+  }
+
   render () {
-    const { children, isOpen, warnings } = this.props
+    const { children, isOpen, warnings, isDisabled } = this.props
     const { selectedTabId } = this.state
 
-    const tabProperties = React.Children.toArray(children)
+    const cleanChildren = React.Children.toArray(children)
       .filter(Boolean)
-      .map(child => child.props)
+      .filter(c => Boolean(c.props))
+    const tabProperties = cleanChildren.map(child => child.props)
 
     const tabButtons = tabProperties.map(
       ({ tabId, label }) => (
@@ -108,12 +127,18 @@ export default class Sidebar extends Component {
       )
     )
 
-    const activeTab = React.Children.toArray(children).find(
-      child => child.props.tabId === selectedTabId
-    )
+    const activeTab = cleanChildren
+      .filter(Boolean)
+      .find(
+        child => child.props.tabId === selectedTabId
+      )
 
     return (
-      <div {...styles.container} className={isOpen ? 'open' : ''}>
+      <div {...styles.container} className={(isOpen && 'open') || ''}>
+        {
+          isDisabled &&
+          <div {...styles.overlay} onMouseDown={e => e.preventDefault()} />
+        }
         {warnings.length > 0 && <div {...styles.warnings}>
           {warnings.map((message, i) => (
             <div key={i} {...styles.warning}>

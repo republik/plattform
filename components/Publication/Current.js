@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { gql, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 import { compose } from 'redux'
 
 import withT from '../../lib/withT'
@@ -16,7 +17,15 @@ import { query as treeQuery } from '../../pages/repo/tree'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
-export const query = gql`
+export const unpublish = gql`
+mutation unpublish(
+  $repoId: ID!
+) {
+  unpublish(repoId: $repoId)
+}
+`
+
+export const getRepoWithPublications = gql`
   query repoWithPublications($repoId: ID!) {
     repo(id: $repoId) {
       id
@@ -34,14 +43,6 @@ export const query = gql`
       }
     }
   }
-`
-
-const mutation = gql`
-mutation unpublish(
-  $repoId: ID!
-) {
-  unpublish(repoId: $repoId)
-}
 `
 
 class CurrentPublications extends Component {
@@ -115,7 +116,7 @@ class CurrentPublications extends Component {
 
 export default compose(
   withT,
-  graphql(mutation, {
+  graphql(unpublish, {
     props: ({mutate, ownProps}) => ({
       unpublish: () => mutate({
         variables: {
@@ -123,7 +124,7 @@ export default compose(
         },
         refetchQueries: [
           {
-            query,
+            getRepoWithPublications,
             variables: {
               repoId: ownProps.repoId
             }
@@ -138,5 +139,5 @@ export default compose(
       })
     })
   }),
-  graphql(query)
+  graphql(getRepoWithPublications)
 )(CurrentPublications)
