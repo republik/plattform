@@ -126,6 +126,7 @@ module.exports = {
   getCommit: async (repo, { id: sha }, { redis }) => {
     const redisKey = `repos:${repo.id}/commits/${sha}`
     const redisCommit = await redis.getAsync(redisKey)
+    redis.expireAsync(redisKey, redis.__defaultExpire)
     if (redisCommit) {
       debug('commit: redis HIT (%s)', redisKey)
       return JSON.parse(redisCommit)
@@ -145,7 +146,7 @@ module.exports = {
         repo
       }))
       .then(async (commit) => {
-        await redis.setAsync(redisKey, JSON.stringify(commit))
+        await redis.setAsync(redisKey, JSON.stringify(commit), 'EX', redis.__defaultExpire)
         return commit
       })
   },

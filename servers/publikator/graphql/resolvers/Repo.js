@@ -67,6 +67,7 @@ module.exports = {
     const minScore = new Date().getTime() - UNCOMMITTED_CHANGES_TTL
     const result = await redis.zrangeAsync(repoId, 0, -1, 'WITHSCORES')
       .then(objs => zipArray(objs))
+    redis.expireAsync(repoId, redis.__defaultExpire)
     let userIds = []
     let expiredUserIds = []
     for (let r of result) {
@@ -76,9 +77,9 @@ module.exports = {
         expiredUserIds.push(r.value)
       }
     }
-    for (let expiredKey of expiredUserIds) {
-      await redis.zremAsync(repoId, expiredKey)
-    }
+    await Promise.all(expiredUserIds.map(expiredKey =>
+      redis.zremAsync(repoId, expiredKey)
+    ))
     return userIds.length
       ? pgdb.public.users.find({ id: userIds })
         .then(users => users.map(transformUser))

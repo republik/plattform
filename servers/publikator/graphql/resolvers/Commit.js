@@ -29,6 +29,7 @@ module.exports = {
 
     const redisKey = `repos:${repoId}/commits/${commitId}/document/mdast`
     const redisMdast = await redis.getAsync(redisKey)
+    redis.expireAsync(redisKey, redis.__defaultExpire)
     if (redisMdast) {
       debug('document: redis HIT (%s)', redisKey)
       mdast = JSON.parse(redisMdast)
@@ -78,7 +79,7 @@ module.exports = {
         console.error(e)
       }
       if (mdast) {
-        await redis.setAsync(redisKey, JSON.stringify(mdast))
+        await redis.setAsync(redisKey, JSON.stringify(mdast), 'EX', redis.__defaultExpire)
       } else {
         mdast = MDAST.parse('Dokument fehlerhaft. Reden Sie mit der IT.')
       }

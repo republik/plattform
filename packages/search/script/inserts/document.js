@@ -130,7 +130,8 @@ module.exports = {
       if (repoMeta && repoMeta.mailchimpCampaignId) {
         await redis.setAsync(
           `repos:${repo.id}/mailchimp/campaignId`,
-          repoMeta.mailchimpCampaignId
+          repoMeta.mailchimpCampaignId,
+          'EX', redis.__defaultExpire
         )
       }
 

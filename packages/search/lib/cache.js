@@ -14,7 +14,9 @@ const hashQuery = (query) =>
     .digest('hex')
 
 const createGet = (redis) => async (query) => {
-  const payload = await redis.getAsync(getRedisKey(query))
+  const redisKey = getRedisKey(query)
+  const payload = await redis.getAsync(redisKey)
+  redis.expireAsync(redisKey, redis.__shortExpire)
   debug('search:cache:get')(`${payload ? 'HIT' : 'MISS'} %O`, query)
   return payload
     ? JSON.parse(payload)
@@ -42,7 +44,11 @@ const createSet = (redis) => async (query, payload) => {
     }
     if (payloadString) {
       debug('search:cache:set')('PUT %O', query)
-      return redis.setAsync(getRedisKey(query), payloadString)
+      return redis.setAsync(
+        getRedisKey(query),
+        payloadString,
+        'EX', redis.__shortExpire
+      )
     }
   }
   debug('search:cache:set')('SKIP %O', query)
