@@ -16,7 +16,7 @@ module.exports = async (
     result = await redis.zremAsync(repoId, user.id)
   }
   if (result) {
-    redis.expireAsync(repoId, redis.__defaultExpire)
+    redis.expireAsync(repoId, redis.__defaultExpireSeconds)
     await pubsub.publish(
       'uncommittedChanges',
       {

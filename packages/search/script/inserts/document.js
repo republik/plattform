@@ -131,7 +131,7 @@ module.exports = {
         await redis.setAsync(
           `repos:${repo.id}/mailchimp/campaignId`,
           repoMeta.mailchimpCampaignId,
-          'EX', redis.__defaultExpire
+          'EX', redis.__defaultExpireSeconds
         )
       }
 

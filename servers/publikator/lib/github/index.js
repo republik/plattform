@@ -136,7 +136,7 @@ module.exports = {
   getCommit: async (repo, { id: sha }, { redis }) => {
     const redisKey = `repos:${repo.id}/commits/${sha}`
     const redisCommit = await redis.getAsync(redisKey)
-    redis.expireAsync(redisKey, redis.__defaultExpire)
+    redis.expireAsync(redisKey, redis.__defaultExpireSeconds)
     if (redisCommit) {
       debug('commit: redis HIT (%s)', redisKey)
       return JSON.parse(redisCommit)
@@ -191,7 +191,7 @@ module.exports = {
       return null
     }
     const commit = normalizeGQLCommit(repo, rawCommit)
-    await redis.setAsync(redisKey, JSON.stringify(commit), 'EX', redis.__defaultExpire)
+    await redis.setAsync(redisKey, JSON.stringify(commit), 'EX', redis.__defaultExpireSeconds)
     return commit
   },
   getCommits: async (repo, { first = 15, after, before }) => {

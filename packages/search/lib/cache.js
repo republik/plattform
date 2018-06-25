@@ -16,7 +16,7 @@ const hashQuery = (query) =>
 const createGet = (redis) => async (query) => {
   const redisKey = getRedisKey(query)
   const payload = await redis.getAsync(redisKey)
-  redis.expireAsync(redisKey, redis.__shortExpire)
+  redis.expireAsync(redisKey, redis.__shortExpireSeconds)
   debug('search:cache:get')(`${payload ? 'HIT' : 'MISS'} %O`, query)
   return payload
     ? JSON.parse(payload)
@@ -47,7 +47,7 @@ const createSet = (redis) => async (query, payload) => {
       return redis.setAsync(
         getRedisKey(query),
         payloadString,
-        'EX', redis.__shortExpire
+        'EX', redis.__shortExpireSeconds
       )
     }
   }
