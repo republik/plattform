@@ -99,7 +99,7 @@ const filterReducer = (schema) => (filters) => {
         !schemaEntry.noIndexTypeImplication
       ) {
         if (impliedType && impliedType !== schema.__type) {
-          throw new Error('filterReducer: filter imply contradiction types', filters, schema)
+          throw new Error('filterReducer: filter imply contradicting types', filters, schema)
         }
         impliedType = schema.__type
       }

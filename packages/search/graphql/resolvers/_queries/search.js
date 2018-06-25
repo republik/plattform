@@ -463,7 +463,7 @@ const search = async (__, args, context, info) => {
         type: 'Search',
         body: {
           took,
-          cache: cacheHIT ? 'HIT' : 'MISS',
+          cache: cacheHIT,
           options: Object.assign({}, options, { filters }),
           query,
           total,
