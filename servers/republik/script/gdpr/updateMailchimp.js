@@ -40,14 +40,14 @@ const hash = (email) =>
     .digest('hex')
 
 const getEmailsFromCSV = (input) =>
-   [...new Set(
+  [...new Set(
     input
-    .split('\n')
-    .slice(1) // remove header
-    .map(x => x
-      .split(',') // divide columns
-      .shift()  // keep only email
-    )
+      .split('\n')
+      .slice(1) // remove header
+      .map(x => x
+        .split(',') // divide columns
+        .shift() // keep only email
+      )
   )]
     .filter(Boolean)
 
@@ -176,7 +176,7 @@ PgDb.connect().then(async pgdb => {
     )
     console.log(`#diff emailsWithSubscribeUrl <> diffInput: ${emailsWithSubscribeUrl.length - diffInput.length}`)
     // console.log(util.inspect(missingInDiffInput, {depth: null}))
-    fs.writeFileSync(__dirname + '/diff.csv', missingInDiffInput.join('\n'))
+    fs.writeFileSync(__dirname.concat('/diff.csv'), missingInDiffInput.join('\n'))
   }
 
   if (!dryRun) {

@@ -22,9 +22,9 @@ exports.up = function (db) {
       resolve(data)
     })
   })
-  .then(function (data) {
-    return db.runSql(data)
-  })
+    .then(function (data) {
+      return db.runSql(data)
+    })
 }
 
 exports.down = function (db) {
@@ -37,9 +37,9 @@ exports.down = function (db) {
       resolve(data)
     })
   })
-  .then(function (data) {
-    return db.runSql(data)
-  })
+    .then(function (data) {
+      return db.runSql(data)
+    })
 }
 
 exports._meta = {
