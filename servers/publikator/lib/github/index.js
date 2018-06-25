@@ -168,7 +168,7 @@ module.exports = {
                   email
                   name
                 }
-                parents (first: 100){
+                parents (first: 5){
                   nodes {
                     oid
                   }
@@ -240,7 +240,7 @@ module.exports = {
                             email
                             name
                           }
-                          parents (first: 100){
+                          parents (first: 5){
                             nodes {
                               oid
                             }
