@@ -214,7 +214,7 @@ export default compose(
     props: ({data, ownProps}) => {
       return ({
         data,
-        commits: (data.repo && data.repo.commits && data.repo.commits.nodes) || {},
+        commits: (data.repo && data.repo.commits && data.repo.commits.nodes) || [],
         hasMore: (data.repo && data.repo.commits && data.repo.commits.pageInfo.hasNextPage),
         fetchMore: () => {
           return data.fetchMore({

@@ -847,7 +847,7 @@ export default compose(
               query: getRepoHistory,
               variables: {
                 repoId: url.query.repoId,
-                first: 10
+                first: 20
               }
             }
           ]

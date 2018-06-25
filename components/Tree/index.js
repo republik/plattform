@@ -352,12 +352,11 @@ class Tree extends Component {
         {width &&
           commits &&
           commits.map(commit => {
-            const colors = this.getColor(commit.author.email)
             return <span
               key={commit.id}
               ref={commit.setNodeRef}
               style={{
-                backgroundColor: colors.color
+                backgroundColor: this.getColor(commit.author.email).color
               }}
               {...styles.commitNode}
             >
