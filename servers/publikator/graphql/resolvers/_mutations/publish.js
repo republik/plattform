@@ -245,6 +245,7 @@ module.exports = async (
     }
     const campaignKey = `repos:${repoId}/mailchimp/campaignId`
     campaignId = await redis.getAsync(campaignKey)
+    redis.expireAsync(repoId, redis.__defaultExpireSeconds)
     if (!campaignId) {
       if (repoMeta && repoMeta.mailchimpCampaignId) {
         campaignId = repoMeta.mailchimpCampaignId
@@ -263,7 +264,7 @@ module.exports = async (
         throw new Error('Mailchimp: could not create campaign', createResponse)
       }
       campaignId = id
-      await redis.setAsync(campaignKey, campaignId)
+      await redis.setAsync(campaignKey, campaignId, 'EX', redis.__defaultExpireSeconds)
       await editRepoMeta(null, {
         repoId,
         mailchimpCampaignId: campaignId
@@ -378,7 +379,7 @@ module.exports = async (
   })
 
   const { insert, after } = createPublish(
-    { prepublication, scheduledAt, elastic, elasticDoc }
+    { prepublication, scheduledAt, elasticDoc, elastic, redis }
   )
   await insert()
   await after()

@@ -124,8 +124,9 @@ const run = async (_lock) => {
       const publish = createPublish({
         prepublication,
         scheduledAt,
+        elasticDoc: doc,
         elastic,
-        elasticDoc: doc
+        redis
       })
 
       if (newRef === 'publication') {
