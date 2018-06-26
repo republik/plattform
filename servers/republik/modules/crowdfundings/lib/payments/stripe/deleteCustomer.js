@@ -10,6 +10,10 @@ module.exports = async ({
     userId
   })
 
+  if (!customers.length) {
+    return
+  }
+
   return Promise.all(
     customers.map(customer => {
       const account = accounts.find(a => a.company.id === customer.companyId)

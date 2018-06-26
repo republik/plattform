@@ -14,16 +14,25 @@ if (!PARKING_PLEDGE_ID || !PARKING_USER_ID) {
   console.warn('missing env PARKING_PLEDGE_ID and/or PARKING_USER_ID, cancelPledge will not work.')
 }
 
-module.exports = async (_, args, {pgdb, req, t, mail: { enforceSubscriptions }}) => {
+module.exports = async (_, args, {
+  pgdb,
+  req,
+  t,
+  mail: { enforceSubscriptions }
+}) => {
   if (!PARKING_PLEDGE_ID || !PARKING_USER_ID) {
     console.error('cancelPledge: missing PARKING_PLEDGE_ID and/or PARKING_USER_ID')
     throw new Error(t('api/unexpected'))
   }
 
   Roles.ensureUserHasRole(req.user, 'supporter')
-  const { pledgeId } = args
+  const {
+    pledgeId,
+    skipEnforceSubscriptions = false,
+    transaction: externalTransaction
+  } = args
   const now = new Date()
-  const transaction = await pgdb.transactionBegin()
+  const transaction = externalTransaction || await pgdb.transactionBegin()
   try {
     const pledge = await transaction.public.pledges.findOne({id: pledgeId})
     if (!pledge) {
@@ -110,9 +119,13 @@ module.exports = async (_, args, {pgdb, req, t, mail: { enforceSubscriptions }})
       updatedAt: now
     })
 
-    await transaction.transactionCommit()
+    if (!externalTransaction) {
+      await transaction.transactionCommit()
+    }
 
-    enforceSubscriptions({ pgdb, userId: pledge.userId })
+    if (!skipEnforceSubscriptions) {
+      enforceSubscriptions({ pgdb, userId: pledge.userId })
+    }
 
     await publishMonitor(
       req.user,
