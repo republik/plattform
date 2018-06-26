@@ -67,13 +67,30 @@ type Document implements FileInterface {
   # AST of /article.md
   content: JSON!
   meta: Meta!
+  children(
+    first: Int
+    last: Int
+    before: ID
+    after: ID
+  ): DocumentNodeConnection!
 }
 
-type DocumentPageInfo {
+type DocumentNode {
+  id: ID!
+  body: JSON!
+}
+
+type DocumentNodePageInfo {
   endCursor: String
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
+}
+
+type DocumentNodeConnection {
+  nodes: [DocumentNode!]!
+  pageInfo: DocumentNodePageInfo!
+  totalCount: Int!
 }
 
 type DocumentConnection {
@@ -90,5 +107,12 @@ extend type User {
     before: String
     after: String
   ): DocumentConnection!
+}
+
+type DocumentPageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
 }
 `

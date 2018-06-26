@@ -5,6 +5,7 @@ const t = require('./lib/t')
 
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: auth } = require('@orbiting/backend-modules-auth')
+// const { graphql: search } = require('@orbiting/backend-modules-search')
 
 const uncommittedChangesMiddleware = require('./express/uncommittedChanges')
 const cluster = require('cluster')

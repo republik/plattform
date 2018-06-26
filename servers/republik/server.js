@@ -5,13 +5,15 @@ const t = require('./lib/t')
 
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: redirections } = require('@orbiting/backend-modules-redirections')
+const { graphql: search } = require('@orbiting/backend-modules-search')
 
 const sendPendingPledgeConfirmations = require('./modules/crowdfundings/lib/sendPendingPledgeConfirmations')
 const mail = require('./modules/crowdfundings/lib/Mail')
 const cluster = require('cluster')
 
 const {
-  LOCAL_ASSETS_SERVER
+  LOCAL_ASSETS_SERVER,
+  SEARCH_PG_LISTENER
 } = process.env
 
 const start = async () => {
@@ -23,7 +25,7 @@ const start = async () => {
 // in cluster mode, this runs after runOnce otherwise before
 const run = async (workerId) => {
   const localModule = require('./graphql')
-  const executableSchema = makeExecutableSchema(merge(localModule, [documents, redirections]))
+  const executableSchema = makeExecutableSchema(merge(localModule, [documents, search, redirections]))
 
   // middlewares
   const middlewares = [
@@ -66,7 +68,10 @@ const runOnce = (...args) => {
     throw new Error('runOnce must only be called on cluster.isMaster')
   }
   server.runOnce(...args)
-  return require('./lib/slackGreeter').connect()
+  require('./lib/slackGreeter').connect()
+  if (SEARCH_PG_LISTENER) {
+    require('@orbiting/backend-modules-search').notifyListener.run()
+  }
 }
 
 const close = () => {

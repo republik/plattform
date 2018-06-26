@@ -1,50 +1,46 @@
 version: "3.4"
 services:
-  republik-backend:
-    build:
-      context: ./servers/republik
-    image: republik-backend:latest
-    links:
-      - redis
-      - postgres
+  elastic:
+    # in order to get elastic to work, see https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html#docker-cli-run-prod-mode
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.0
+    container_name: elasticsearch
     environment:
-      - DATABASE_URL=postgres://postgres@postgres:5432/republik
-      - REDIS_URL=redis:6379
-      - PUBLIC_URL=http://localhost:8080
-      - PUBLIC_WS_URL_BASE=ws://localhost:8080
-      - FRONTEND_BASE_URL
-      - PUBLIC_WS_URL_PATH
-      - SESSION_SECRET
-      - CORS_WHITELIST_URL
-      - SEND_MAILS
-      - MANDRILL_API_KEY
-      - DEFAULT_MAIL_FROM_NAME
-      - DEFAULT_MAIL_FROM_ADDRESS
-      - AUTH_MAIL_FROM_ADDRESS
-      - DISPLAY_AUTHOR_SECRET
-      - EXO_KEY
-      - EXO_SECRET
-      - S3BUCKET
-      - ASSETS_BASE_URL
-      - KEYCDN_API_KEY
-      - KEYCDN_ZONE_ID
-      - KEYCDN_ZONE_URL
-      - PHANTOMJSCLOUD_API_KEY
+      - "ES_JAVA_OPTS=-Xms1024m -Xmx1024m"
+      - xpack.graph.enabled=false
+      - xpack.ml.enabled=false
+      - xpack.monitoring.enabled=false
+      - xpack.security.enabled=false
+      - xpack.watcher.enabled=false
+      - ELASTIC_PASSWORD=elastic
+      - "discovery.type=single-node"
+      - TAKE_FILE_OWNERSHIP=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./docker-data/elastic:/usr/share/elasticsearch/data
     ports:
-        - 8080:3020
+      - 9200:9200
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.3.0
+    container_name: kibana
+    ports:
+      - 5601:5601
+    depends_on:
+      -  elastic
 
   redis:
-    image: redis:4-alpine
+    image: redis:alpine
     ports:
-        - 6379:6379
+      - 6379:6379
+    volumes:
+      - ./docker-data/redis:/data
 
   postgres:
-    image: postgres:10-alpine
+    image: postgres:10
     volumes:
-      - postgres-data:/var/lib/postgresql
+      - ./docker-data/postgres:/var/lib/postgresql/data
     ports:
-        - 5432:5432
-
-
-volumes:
-  postgres-data:
+      - 5432:5432

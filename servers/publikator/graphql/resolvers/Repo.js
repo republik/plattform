@@ -1,12 +1,11 @@
-const { descending } = require('d3-array')
 const uniqBy = require('lodash/uniqBy')
 const yaml = require('../../lib/yaml')
+const { descending } = require('d3-array')
 const zipArray = require('../../lib/zipArray')
 const {
-  createGithubClients,
-  commitNormalizer,
-  getHeads,
+  getCommits,
   getCommit,
+  getHeads,
   getAnnotatedTags,
   getAnnotatedTag
 } = require('../../lib/github')
@@ -16,34 +15,7 @@ const debug = require('debug')('publikator:repo')
 const UNCOMMITTED_CHANGES_TTL = 7 * 24 * 60 * 60 * 1000 // 1 week in ms
 
 module.exports = {
-  commits: async (repo, { page }) => {
-    const { githubRest } = await createGithubClients()
-    const refs = await getHeads(repo.id)
-
-    const [login, repoName] = repo.id.split('/')
-    return Promise.all(
-      refs.map(({ target: { oid } }) => {
-        return githubRest
-          .repos.getCommits({
-            owner: login,
-            repo: repoName,
-            sha: oid,
-            per_page: 100,
-            page: page || 1
-          })
-          .then(response => response ? response.data : response)
-          .then(commits => commits
-            .map(commit => commitNormalizer({
-              ...commit,
-              repo
-            }))
-          )
-      })
-    )
-      .then(commits => [].concat.apply([], commits))
-      .then(commits => uniqBy(commits, 'id'))
-      .then(commits => commits.sort((a, b) => descending(a.date, b.date)))
-  },
+  commits: getCommits,
   latestCommit: async (repo, args, context) => {
     if (repo.latestCommit) {
       return repo.latestCommit
@@ -67,6 +39,7 @@ module.exports = {
     const minScore = new Date().getTime() - UNCOMMITTED_CHANGES_TTL
     const result = await redis.zrangeAsync(repoId, 0, -1, 'WITHSCORES')
       .then(objs => zipArray(objs))
+    redis.expireAsync(repoId, redis.__defaultExpireSeconds)
     let userIds = []
     let expiredUserIds = []
     for (let r of result) {
@@ -76,12 +49,12 @@ module.exports = {
         expiredUserIds.push(r.value)
       }
     }
-    for (let expiredKey of expiredUserIds) {
-      await redis.zremAsync(repoId, expiredKey)
-    }
+    await Promise.all(expiredUserIds.map(expiredKey =>
+      redis.zremAsync(repoId, expiredKey)
+    ))
     return userIds.length
       ? pgdb.public.users.find({ id: userIds })
-          .then(users => users.map(transformUser))
+        .then(users => users.map(transformUser))
       : []
   },
   milestones: (repo) => {
@@ -92,14 +65,14 @@ module.exports = {
     return getAnnotatedTags(repo.id)
   },
   latestPublications: async (repo) => {
-    const {
-      id: repoId
-    } = repo
+    const { id: repoId } = repo
+
     const publicationMetaDecorator = (publication) => {
       const {
         scheduledAt = undefined,
         updateMailchimp = false
       } = yaml.parse(publication.message)
+
       return {
         ...publication,
         meta: {
@@ -142,10 +115,7 @@ module.exports = {
         })
         )
       )
-      .then(tags => uniqBy(tags, 'name'))
-      .then(tags => tags
-        .map(tag => publicationMetaDecorator(tag))
-      )
+      .then(tags => uniqBy(tags, 'name').map(publicationMetaDecorator))
   },
   meta: async (repo) => {
     let message

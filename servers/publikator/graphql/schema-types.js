@@ -4,12 +4,11 @@ scalar JSON
 
 type Repo {
   id: ID!
-  commits(page: Int): [Commit!]!
+  commits(first: Int, before: String, after: String): CommitConnection!
   latestCommit: Commit!
   commit(id: ID!): Commit!
   uncommittedChanges: [User!]!
   milestones: [Milestone!]!
-
   # nothing or latest prepublication and/or latest publication
   # nothing if repo is unpublished
   latestPublications: [Publication]!
@@ -59,11 +58,6 @@ enum RepoOrderField {
   STARGAZERS
 }
 
-enum OrderDirection {
-  ASC
-  DESC
-}
-
 interface MilestoneInterface {
   name: String!
   commit: Commit!
@@ -103,7 +97,6 @@ type Milestone implements MilestoneInterface {
   immutable: Boolean!
 }
 
-
 type Commit {
   id: ID!
   parentIds: [ID!]!
@@ -112,9 +105,15 @@ type Commit {
   date: DateTime!
   document: Document!
   repo: Repo!
+
 # files: [File]!
 }
 
+type CommitConnection {
+  nodes: [Commit!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
 
 type Author {
   name: String!
@@ -206,5 +205,10 @@ type DocumentCloudEmbed implements Embed {
 
 extend type Document {
   repoId: String
+}
+
+enum OrderDirection {
+  ASC
+  DESC
 }
 `

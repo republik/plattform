@@ -1,4 +1,5 @@
 const visit = require('unist-util-visit')
+
 const { metaFieldResolver } = require('./resolve')
 
 const getMeta = doc => {
@@ -32,8 +33,8 @@ const getMeta = doc => {
   doc._meta = {
     ...doc.content.meta,
     credits,
-    ...resolvedFields,
-    audioSource
+    audioSource,
+    ...resolvedFields
   }
   return doc._meta
 }

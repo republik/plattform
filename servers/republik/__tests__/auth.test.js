@@ -2,19 +2,19 @@ const test = require('tape-async')
 const OTP = require('otp')
 const { connectIfNeeded, pgDatabase } = require('./helpers.js')
 const { signIn,
-   signOut,
-   unauthorizedSession,
-   authorizeSession,
-   denySession,
-   sendPhoneNumberVerificationCode,
-   verifyPhoneNumber,
-   initTOTPSharedSecret,
-   validateTOTPSharedSecret,
-   updateTwoFactorAuthentication,
-   updateEmail,
-   startChallenge,
-   Users
- } = require('./auth.js')
+  signOut,
+  unauthorizedSession,
+  authorizeSession,
+  denySession,
+  sendPhoneNumberVerificationCode,
+  verifyPhoneNumber,
+  initTOTPSharedSecret,
+  validateTOTPSharedSecret,
+  updateTwoFactorAuthentication,
+  updateEmail,
+  startChallenge,
+  Users
+} = require('./auth.js')
 
 const prepare = async () => {
   await connectIfNeeded()

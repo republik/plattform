@@ -2,6 +2,9 @@ module.exports = async ({ minInterval, id }, _, { pgdb, user }) => {
   if (!minInterval) {
     return null
   }
+  if (!user) {
+    return null
+  }
   const now = new Date().getTime()
   const lastCommentByUser = await pgdb.public.comments.findFirst({
     userId: user.id,

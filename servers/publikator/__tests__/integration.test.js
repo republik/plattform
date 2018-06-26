@@ -55,7 +55,7 @@ const {
 } = require('../lib/github')
 
 const getNewRepoId = () =>
-  `test-${supervillains.random()}`.replace(/\s/g, '-')
+  `test-${Date.now()}-a-${supervillains.random()}`.replace(/\s/g, '-')
 
 // shared
 let pgdb
@@ -90,7 +90,7 @@ test('setup', async (t) => {
       }
     `
   })
-  t.ok(result.data.__schema)
+  t.ok(result.data.__schema, '__schema returned data.__schema prop')
 
   const { firstName, lastName, email } = testUser
   const user = await pgdb.public.users.insert({
@@ -98,7 +98,7 @@ test('setup', async (t) => {
     lastName,
     email
   })
-  t.ok(user)
+  t.ok(user, 'test user added')
   t.end()
 })
 
@@ -109,17 +109,23 @@ test('unauthorized repos query', async (t) => {
         repos {
           nodes {
             id
-            commits(page: 0) {
-              id
+            commits(first: 1) {
+              nodes {
+                id
+              }
             }
           }
         }
       }
     `
   })
-  t.equals(result.data, null)
-  t.equals(result.errors.length, 1)
-  t.equals(result.errors[0].message, tr('api/signIn'))
+  t.equals(result.data, null, 'repos did not return data prop')
+  t.equals(result.errors.length, 1, 'a single error found')
+  t.equals(
+    result.errors[0].message,
+    tr('api/signIn'),
+    'error message as expected'
+  )
   t.end()
 })
 
@@ -151,16 +157,20 @@ test('unauthorized subscription', (t) => {
     // or some versions, we accept both ways now
     next: (result) => {
       const { errors } = result
-      t.ok(errors)
-      t.equals(errors.length, 1)
+      t.ok(errors, 'errors prop found')
+      t.equals(errors.length, 1, 'a single error present')
       const error = errors[0]
-      t.equals(error.message, tr('api/signIn'))
+      t.equals(error.message, tr('api/signIn'), 'error message as expected')
       client.close()
       t.end()
     },
     error: (errors) => {
       // t.equals(errors, null)
-      t.equals(errors.message, 'Subscription must return Async Iterable. Received: [object Object]')
+      t.equals(
+        errors.message,
+        'Subscription must return Async Iterable. Received: [object Object]',
+        'error message as expected'
+      )
       t.end()
     }
   })
@@ -183,7 +193,8 @@ test('fetch youtube data with unathorized user', async (t) => {
   })
   t.equal(
     result.errors[0].message,
-    tr('api/signIn')
+    tr('api/signIn'),
+    'error message as expected'
   )
   t.end()
 })
@@ -204,7 +215,8 @@ test('fetch vimeo data with unathorized user', async (t) => {
   })
   t.equal(
     result.errors[0].message,
-    tr('api/signIn')
+    tr('api/signIn'),
+    'error message as expected'
   )
   t.end()
 })
@@ -226,7 +238,8 @@ test('fetch twitter data with unathorized user', async (t) => {
   })
   t.equal(
     result.errors[0].message,
-    tr('api/signIn')
+    tr('api/signIn'),
+    'error message as expected'
   )
   t.end()
 })
@@ -249,7 +262,8 @@ test('fetch documentcloud data with unathorized user', async (t) => {
   })
   t.equal(
     result.errors[0].message,
-    tr('api/signIn')
+    tr('api/signIn'),
+    'error message as expected'
   )
   t.end()
 })
@@ -265,8 +279,10 @@ test('signIn', async (t) => {
     `
   })
   await sleep(3500)
-  t.ok(result.data.signIn.phrase)
-  t.ok(result.data.signIn.phrase.length > 0)
+  t.ok(result.data.signIn.phrase, 'data.signIn.phrase prop present')
+  t.ok(
+    result.data.signIn.phrase.length > 0,
+    'data.signIn.phrase has at least one element')
   t.end()
 })
 
@@ -282,9 +298,13 @@ test('repos (signed in, without role)', async (t) => {
       }
     `
   })
-  t.equals(result.data, null)
-  t.equals(result.errors.length, 1)
-  t.equals(result.errors[0].message, tr('api/unauthorized', { role: 'editor' }))
+  t.equals(result.data, null, 'repos did not return data prop')
+  t.equals(result.errors.length, 1, 'a single error found')
+  t.equals(
+    result.errors[0].message,
+    tr('api/unauthorized', { role: 'editor' }),
+    'error message as expected'
+  )
   t.end()
 })
 
@@ -316,16 +336,24 @@ test('subscription (signed in, without role)', (t) => {
     // or some versions, we accept both ways now
     next: (result) => {
       const { errors } = result
-      t.ok(errors)
-      t.equals(errors.length, 1)
+      t.ok(errors, 'errors prop found')
+      t.equals(errors.length, 1, 'a single error present')
       const error = errors[0]
-      t.equals(error.message, tr('api/unauthorized', { role: 'editor' }))
+      t.equals(
+        error.message,
+        tr('api/unauthorized', { role: 'editor' }),
+        'error message as expected'
+      )
       client.close()
       t.end()
     },
     error: (errors) => {
       // t.equals(errors, null)
-      t.equals(errors.message, 'Subscription must return Async Iterable. Received: [object Object]')
+      t.equals(
+        errors.message,
+        'Subscription must return Async Iterable. Received: [object Object]',
+        'error message as expected'
+      )
       t.end()
     }
   })
@@ -354,14 +382,14 @@ test('me', async (t) => {
       }
     `
   })
-  t.ok(result.data)
-  t.ok(result.data.me)
+  t.ok(result.data, 'me returned data prop')
+  t.ok(result.data.me, 'data.me present')
   const { data: { me: { firstName, lastName, name, email, roles } } } = result
-  t.equals(firstName, testUser.firstName)
-  t.equals(lastName, testUser.lastName)
-  t.equals(name, testUser.name)
-  t.equals(email, testUser.email)
-  t.deepLooseEqual(roles, ['editor'])
+  t.equals(firstName, testUser.firstName, 'firstName as expected')
+  t.equals(lastName, testUser.lastName, 'lastName as expected')
+  t.equals(name, testUser.name, 'name as expected')
+  t.equals(email, testUser.email, 'email as expected')
+  t.deepLooseEqual(roles, ['editor'], 'roles as expected')
   t.end()
 })
 
@@ -377,9 +405,9 @@ test('repos (signed in)', async (t) => {
       }
     `
   })
-  t.ok(result.data)
-  t.false(result.errors)
-  t.ok(result.data.repos)
+  t.ok(result.data, 'repos returned data prop')
+  t.false(result.errors, 'repos did not return errors prop')
+  t.ok(result.data.repos, 'data.repos is present')
   t.end()
 })
 
@@ -534,20 +562,20 @@ test('uncommitedChanges (with subscription)', (t) => {
 
 test('repo latestCommit, commits-length and -content', async (t) => {
   const variables = {
-    repoId: testRepoId,
-    page: 0
+    repoId: testRepoId
   }
   const result = await apolloFetch({
     query: `
       query repo(
         $repoId: ID!
-        $page: Int
       ){
         repo(id: $repoId) {
-          commits(page: $page) {
-            id
-            document {
-              content
+          commits(first: 1) {
+            nodes {
+              id
+              document {
+                content
+              }
             }
           }
           latestCommit {
@@ -566,8 +594,9 @@ test('repo latestCommit, commits-length and -content', async (t) => {
   t.ok(result.data.repo)
   const { repo } = result.data
   t.ok(repo.commits)
-  t.equals(repo.commits.length, 1)
-  t.equals(repo.commits[0].id, repo.latestCommit.id)
+  t.ok(repo.commits.nodes)
+  t.equals(repo.commits.nodes.length, 1)
+  t.equals(repo.commits.nodes[0].id, repo.latestCommit.id)
   t.equals(repo.latestCommit.id, initialCommitId)
   // TODO discuss why this isnt equivalent
   // const commit = repo.commits[0]
@@ -600,9 +629,10 @@ test('repo specific commit', async (t) => {
   t.ok(result.data)
   t.ok(result.data.repo)
   t.equals(result.data.repo.commit.id, initialCommitId)
+  t.end()
 })
 
-test('repo specific commit', async (t) => {
+test('failing repo specific commit', async (t) => {
   // invalid
   const result = await apolloFetch({
     query: `
@@ -622,9 +652,9 @@ test('repo specific commit', async (t) => {
       commitId: '7366d36cb967d7a3ac324c789a8b718e61d01b31'
     }
   })
+
   t.equals(result.data, null)
   t.ok(result.errors)
-  t.ok(result.errors[0].message.indexOf('Not Found') > -1)
   t.end()
 })
 
@@ -720,24 +750,25 @@ test('check image URLs and asset server', async (t) => {
     query: `
       query repo(
         $repoId: ID!
-        $page: Int
       ){
         repo(id: $repoId) {
-          commits(page: $page) {
-            document {
-              content
+          commits(first: 1) {
+            nodes {
+              document {
+                content
+              }
             }
           }
         }
       }
     `,
     variables: {
-      repoId: testRepoId,
-      page: 0
+      repoId: testRepoId
     }
   })
   t.ok(result.data.repo.commits)
-  const articleMdast = result.data.repo.commits[0].document.content
+  t.ok(result.data.repo.commits.nodes)
+  const articleMdast = result.data.repo.commits.nodes[0].document.content
 
   // extract imageUrls
   let imageUrls = []
@@ -753,8 +784,8 @@ test('check image URLs and asset server', async (t) => {
   // download images via asset server
   const imageBuffersFromServer = await Promise.all(
     imageUrls.map(imageUrl =>
-        fetch(imageUrl)
-          .then(response => response.buffer())
+      fetch(imageUrl)
+        .then(response => response.buffer())
     )
   )
   t.equals(imageBuffersFromServer.length, imageUrls.length)
@@ -804,25 +835,26 @@ test('check recommit content and latestCommit', async (t) => {
     query: `
       query repo(
         $repoId: ID!
-        $page: Int
       ){
         repo(id: $repoId) {
-          commits(page: $page) {
-            id
-            document {
-              content
+          commits(first: 1) {
+            nodes {
+              id
+              document {
+                content
+              }
             }
           }
         }
       }
     `,
     variables: {
-      repoId: testRepoId,
-      page: 0
+      repoId: testRepoId
     }
   })
   t.ok(result0.data.repo.commits)
-  const originalCommit = result0.data.repo.commits[0]
+  t.ok(result0.data.repo.commits.nodes)
+  const originalCommit = result0.data.repo.commits.nodes[0]
   const originalContent = originalCommit.document.content
   t.ok(originalContent)
 
@@ -859,13 +891,14 @@ test('check recommit content and latestCommit', async (t) => {
     query: `
       query repo(
         $repoId: ID!
-        $page: Int
       ){
         repo(id: $repoId) {
-          commits(page: $page) {
-            id
-            document {
-              content
+          commits(first: 1) {
+            nodes {
+              id
+              document {
+                content
+              }
             }
           }
           latestCommit {
@@ -875,12 +908,12 @@ test('check recommit content and latestCommit', async (t) => {
       }
     `,
     variables: {
-      repoId: testRepoId,
-      page: 0
+      repoId: testRepoId
     }
   })
   t.ok(result2.data.repo.commits)
-  const newCommit = result2.data.repo.commits[0]
+  t.ok(result2.data.repo.commits.nodes)
+  const newCommit = result2.data.repo.commits.nodes[0]
   const newContent = newCommit.document.content
 
   t.notEquals(originalCommit.id, newCommit.id)
@@ -1242,7 +1275,11 @@ test('publish', async (t) => {
   }
 
   const checkDocuments = (documents, _documents, publishDate) => {
-    t.equals(documents.length, _documents.length)
+    t.equals(
+      documents.length,
+      _documents.length,
+      'checkDocuments, documents.length'
+    )
     // console.log('documents', documents)
     // console.log('_documents', _documents)
     for (let _doc of _documents) {
@@ -1280,7 +1317,7 @@ test('publish', async (t) => {
         query: publishMutation,
         variables
       })
-      t.ok(mutation.data)
+      t.ok(mutation.data, 'publishMutation returned data prop')
       testPublication(mutation.data.publish && mutation.data.publish.publication, publications[0])
       activeMilestone = mutation.data.publish && mutation.data.publish.publication
     }
@@ -1319,7 +1356,10 @@ test('publish', async (t) => {
       const fetchDocuments = await apolloFetch({
         query: documentsQuery
       })
-      t.ok(fetchDocuments.data.documents.nodes)
+      t.ok(
+        fetchDocuments.data.documents.nodes,
+        'query returns data.documents.nodes prop found (authorized)'
+      )
       // console.log('authenticated')
       checkDocuments(fetchDocuments.data.documents.nodes, _documents, repoMetaPublishDate)
     }
@@ -1328,20 +1368,31 @@ test('publish', async (t) => {
       const fetchDocumentsUnauth = await apolloFetchUnauthorized({
         query: documentsQuery
       })
-      t.ok(fetchDocumentsUnauth.data.documents.nodes)
+      t.ok(
+        fetchDocumentsUnauth.data.documents.nodes,
+        'query returns nodes prop found (unauthorized)'
+      )
       // console.log('not authenticated')
       checkDocuments(fetchDocumentsUnauth.data.documents.nodes, _unauthorizedDocuments, repoMetaPublishDate)
     }
 
-    // console.log('redirections')
+    // console.log('## redirections')
     const redirections = await pgdb.public.redirections.find()
     // console.log(redirections)
     if (_redirections) {
       for (let _redirection of _redirections) {
         const redir = redirections.find(r => r.source === _redirection.source)
-        t.ok(redir, 'redirection preset')
-        t.equals(redir.target, _redirection.target, 'target matches')
-        t.deepLooseEqual(redir.resource, _redirection.resource, 'resource matches')
+        t.ok(redir, `redirection for "${_redirection.source}" present`)
+        t.equals(
+          redir.target,
+          _redirection.target,
+          `target "${_redirection.target}" matches`
+        )
+        t.deepLooseEqual(
+          redir.resource,
+          _redirection.resource,
+          `resource on target "${redir.target}" matches`
+        )
       }
     }
 
@@ -1375,11 +1426,15 @@ test('publish', async (t) => {
     t.equals(activeRefs.length, _refs.length)
     for (let _ref of _refs) {
       const activeRef = activeRefs.find(r => r.ref === `refs/tags/${_ref.name}`)
-      t.ok(activeRef, 'expected ref present')
+      t.ok(activeRef, `expected ref "${activeRef.ref}" present`)
       if (_ref.sha) {
-        t.equals(activeRef.object.sha, _ref.sha)
+        t.equals(activeRef.object.sha, _ref.sha, 'ref sha matches')
       } else {
-        t.equals(activeRef.object.sha, activeMilestone.sha)
+        t.equals(
+          activeRef.object.sha,
+          activeMilestone.sha,
+          'ref matches milestone sha'
+        )
       }
     }
 
@@ -2276,8 +2331,10 @@ test('unauthorized repos query', async (t) => {
         repos {
           nodes {
             id
-            commits(page: 0) {
-              id
+            commits(first: 1) {
+              nodes {
+                id
+              }
             }
           }
         }

@@ -1,17 +1,23 @@
 const CronJob = require('cron').CronJob
 const Redlock = require('redlock')
+const debug = require('debug')('publikator:lib:publicationScheduler')
 const redis = require('@orbiting/backend-modules-base/lib/redis')
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const Elastic = require('@orbiting/backend-modules-base/lib/elastic')
+const indices = require('@orbiting/backend-modules-search/lib/indices')
+const { getIndexAlias } = require('@orbiting/backend-modules-search/lib/utils')
 const { handleRedirection } = require('./Document')
-const zipArray = require('./zipArray')
 const {
   upsertRef,
   deleteRef
 } = require('./github')
 
+const elastic = Elastic.client()
+
 const lockKey = 'locks:scheduling'
 const ttl = 2000
 const channelKey = 'scheduling'
+
 let subClient
 let nextJob
 
@@ -28,6 +34,8 @@ const redlock = () => {
 }
 
 const init = async () => {
+  debug('init')
+
   if (subClient) {
     throw new Error('publicationScheduler must not be initiated twice!')
   }
@@ -36,6 +44,7 @@ const init = async () => {
 
   subClient = redis.duplicate()
   subClient.on('message', async (channel, message) => {
+    debug('incoming', { channel, message })
     if (message === 'refresh') {
       await refresh()
     }
@@ -54,45 +63,84 @@ const quit = async () => {
   }
 }
 
-const run = async (_lock) => {
-  const pgdb = await PgDb.connect()
+const index = indices.dict.documents
 
+const getSchedulableDocuments = async () => {
+  const response = await elastic.search({
+    index: getIndexAlias(index.name, 'read'),
+    size: 1,
+    body: {
+      sort: { 'meta.scheduledAt': 'asc' },
+      query: {
+        bool: {
+          must: [
+            { term: { __type: 'Document' } },
+            { exists: { field: 'meta.scheduledAt' } }
+          ]
+        }
+      }
+    }
+  })
+
+  return response.hits.hits.map(hit => hit._source)
+}
+
+const run = async (_lock) => {
   const lock = _lock || await redlock().lock(lockKey, ttl)
 
-  const nextPublication = await redis.zrangeAsync('repos:scheduledIds', 0, 1, 'WITHSCORES')
-    .then(objs => zipArray(objs).shift())
+  const pgdb = await PgDb.connect()
 
-  if (nextPublication) {
-    const now = new Date().getTime()
-    const timeDiff = nextPublication.score - now
-    if (timeDiff < 10000) { // max 10sec early
-      const key = nextPublication.value
-      const repoId = key.split(':').pop().split('/').slice(0, 2).join('/')
-      const ref = key.split('/').pop()
-      console.log(`scheduler: publishing ${key}`)
+  const docs = await getSchedulableDocuments()
+
+  if (docs.length > 0) {
+    const doc = docs.shift()
+
+    const delta = new Date(doc.meta.scheduledAt) - new Date()
+
+    debug(
+      'publishing...', {
+        repoId: doc.meta.repoId,
+        versionName: doc.versionName,
+        scheduledAt: doc.meta.scheduledAt,
+        delta
+      }
+    )
+
+    if (delta < 10 * 1000) { // max 10sec early
+      // repos:republik/article-briefing-aus-bern-14/scheduled-publication
+      const repoId = doc.meta.repoId
+      const prepublication = doc.meta.prepublication
+      const scheduledAt = doc.meta.scheduledAt
+
+      const ref = `scheduled-${prepublication ? 'prepublication' : 'publication'}`
+      console.log(`scheduler: publishing ${repoId}`)
 
       const newRef = ref.replace('scheduled-', '')
-      const newKeys = [ `repos:${repoId}/${newRef}` ]
       const newRefs = [ newRef ]
-      if (newRef === 'publication') { // prepublication moves along with publication
-        newKeys.push(`repos:${repoId}/prepublication`)
-        newRefs.push(`prepublication`)
+
+      const { lib: { Documents: { createPublish } } } =
+        require('@orbiting/backend-modules-search')
+
+      const publish = createPublish({
+        prepublication,
+        scheduledAt,
+        elasticDoc: doc,
+        elastic,
+        redis
+      })
+
+      if (newRef === 'publication') {
+        await handleRedirection(repoId, doc.content.meta, { elastic, pgdb })
+        newRefs.push('prepublication')
       }
 
-      const payload = await redis.getAsync(key)
-      const { sha, doc } = JSON.parse(payload)
-      if (newRef === 'publication') {
-        await handleRedirection(repoId, doc.content.meta, { redis, pgdb })
-      }
       await Promise.all([
-        ...newKeys.map(_key => redis.setAsync(_key, payload)),
-        redis.delAsync(key),
-        redis.zremAsync('repos:scheduledIds', key), // remove from queue
+        publish.afterScheduled(),
         ...newRefs.map(_ref =>
           upsertRef(
             repoId,
             `tags/${_ref}`,
-            sha
+            doc.milestoneCommitId
           )
         ),
         deleteRef(
@@ -105,13 +153,22 @@ const run = async (_lock) => {
           console.error('Error: one or more promises failed:')
           console.error(e)
         })
+
+      debug(
+        'published', {
+          repoId: doc.meta.repoId,
+          versionName: doc.versionName,
+          scheduledAt: doc.meta.scheduledAt,
+          refs: newRefs
+        }
+      )
     } else {
       console.error('Error: publicationScheduler was timed wrong.')
     }
   }
 
   nextJob = null
-  refresh(lock)
+  await refresh(lock)
 
   if (!_lock) {
     await lock.unlock().catch((err) => { console.error(err) })
@@ -120,22 +177,30 @@ const run = async (_lock) => {
 
 const refresh = async (_lock) => {
   const lock = _lock || await redlock().lock(lockKey, ttl)
+  const docs = await getSchedulableDocuments()
 
-  const nextPublication = await redis.zrangeAsync('repos:scheduledIds', 0, 1, 'WITHSCORES')
-    .then(objs => zipArray(objs).shift())
+  if (docs.length > 0) {
+    const doc = docs.shift()
+    const delta = new Date(doc.meta.scheduledAt) - new Date()
 
-  if (nextPublication) {
-    const now = new Date().getTime()
-    const timeDiff = nextPublication.score - now
-    if (timeDiff < 10000) { // max 10sec early
-      console.log('Found scheduled publication in the past. Publishing now...')
-      await run(lock)
+    if (delta < 10 * 1000) { // max 10sec early
+      console.log('scheduler: unpublished documents found. catching up...')
+      await run()
     } else {
-      const nextScheduledAt = new Date(nextPublication.score)
+      debug(
+        'scheduled', {
+          repoId: doc.meta.repoId,
+          versionName: doc.versionName,
+          scheduledAt: doc.meta.scheduledAt
+        }
+      )
+
+      const nextScheduledAt = new Date(doc.meta.scheduledAt)
       if (nextJob && nextJob.nextDate() > nextScheduledAt) {
         nextJob.stop()
         nextJob = null
       }
+
       if (!nextJob) {
         nextJob = new CronJob(
           nextScheduledAt,
@@ -145,6 +210,13 @@ const refresh = async (_lock) => {
         )
       }
     }
+  } else if (nextJob) {
+    debug('no more scheduled documents found. removing scheduled job')
+
+    nextJob.stop()
+    nextJob = null
+  } else {
+    debug('no scheduled documents found')
   }
 
   if (!_lock) {

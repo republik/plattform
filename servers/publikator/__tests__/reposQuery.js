@@ -1,11 +1,9 @@
 const supervillains = require('supervillains')
 
 const getNewRepoId = () =>
-  `test-${supervillains.random()}`.replace(/\s/g, '-')
+  `test-${Date.now()}-${supervillains.random()}`.replace(/\s/g, '-')
 
-const {
-    GITHUB_LOGIN
-  } = process.env
+const { GITHUB_LOGIN } = process.env
 
 const repos = [
   {
@@ -101,8 +99,15 @@ module.exports = async (t, apolloFetch, githubRest) => {
       `,
       variables
     })
-    t.ok(resultCommit.data)
-    t.equals(resultCommit.data.commit.repo.id, variables.repoId)
+    t.ok(
+      resultCommit.data,
+      `commit mutation returned data prop ("${repo.id}")`
+    )
+    t.equals(
+      resultCommit.data.commit.repo.id,
+      variables.repoId,
+      `data.commit.repo.id equals intended id ("${repo.id}")`
+    )
     const commitId = resultCommit.data.commit.id
     repo._commitId = commitId
 
@@ -133,8 +138,15 @@ module.exports = async (t, apolloFetch, githubRest) => {
           `,
         variables: milestoneVariables
       })
-      t.ok(resultMilestone.data)
-      t.equals(resultMilestone.data.placeMilestone.name, milestoneVariables.name)
+      t.ok(
+        resultMilestone.data,
+        `placeMilestone mutation returned data prop ("${milestoneName}")`
+      )
+      t.equals(
+        resultMilestone.data.placeMilestone.name,
+        milestoneVariables.name,
+        `data.placeMilestone.name equals intended name ("${milestoneName}")`
+      )
     }
 
     if (repo.repoMeta) {
@@ -160,7 +172,10 @@ module.exports = async (t, apolloFetch, githubRest) => {
           `,
         variables: metaVariables
       })
-      t.ok(resultMeta.data)
+      t.ok(
+        resultMeta.data,
+        `editRepoMeta mutation returned data prop ("${repo.id}")`
+      )
     }
   }
 
