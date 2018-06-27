@@ -32,8 +32,15 @@ const cascadeUpdateConfig = {
   ],
   discussions: [
     {
-      table: 'comments', // ipdate all comment
+      table: 'comments', // update all comments
       via: 'id', // via discussions.id
+      where: 'discussionId' // where comments.discussionId === <via>
+    }
+  ],
+  discussionPreferences: [
+    {
+      table: 'comments', // update all comments
+      via: 'discussionId', // via discussionPreferences.discussionId
       where: 'discussionId' // where comments.discussionId === <via>
     }
   ]

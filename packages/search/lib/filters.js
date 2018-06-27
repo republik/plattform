@@ -87,7 +87,9 @@ const filterReducer = (schema) => (filters) => {
         return filterObj
       }
 
-      const filterValue = schemaEntry.parser ? schemaEntry.parser(value) : value
+      const filterValue = schemaEntry.parser
+        ? schemaEntry.parser(value)
+        : value
 
       if (filterValue === undefined) {
         return filterObj
@@ -106,7 +108,7 @@ const filterReducer = (schema) => (filters) => {
 
       return {
         ...filterObj,
-        ...getFilter(key, value, not)
+        ...getFilter(key, filterValue, not)
       }
     },
     {}
