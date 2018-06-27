@@ -120,9 +120,12 @@ module.exports = async (_, args, context) => {
     }
 
     // delete from mailchimp
-    await deleteFromMailchimp({
+    const mailchimpResult = await deleteFromMailchimp({
       email: user.email
     })
+    if (!mailchimpResult) {
+      console.warn(`deleteUser: could not delete ${user.email} from mailchimp.`)
+    }
 
     await deleteRelatedData(userId, transaction)
 
