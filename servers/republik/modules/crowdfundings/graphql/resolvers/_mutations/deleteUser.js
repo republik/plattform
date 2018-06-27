@@ -1,6 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { publishMonitor } = require('../../../../../lib/slack')
 
+const { transformUser } = require('@orbiting/backend-modules-auth')
 const cancelPledge = require('./cancelPledge')
 const deleteStripeCustomer = require('../../../lib/payments/stripe/deleteCustomer')
 
@@ -175,9 +176,11 @@ module.exports = async (_, args, context) => {
     )
 
     return hasPledges
-      ? pgdb.public.users.findOne({
-        id: userId
-      })
+      ? transformUser(
+        await pgdb.public.users.findOne({
+          id: userId
+        })
+      )
       : null
   } catch (e) {
     await transaction.transactionRollback()
