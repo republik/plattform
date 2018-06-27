@@ -98,6 +98,7 @@ module.exports = async (_, args, context) => {
     const pledges = await transaction.public.pledges.find({
       userId
     })
+    const hasPledges = pledges.length > 0
     const memberships = await transaction.query(`
       SELECT
         m.*,
@@ -131,8 +132,7 @@ module.exports = async (_, args, context) => {
 
     // if the user had pledges we can delete everything,
     // otherwise we need to keep (firstName, lastName, address) for bookkeeping
-    const deleteCompletely = pledges.length === 0
-    if (deleteCompletely) {
+    if (!hasPledges) {
       // delete stripe data
       await deleteStripeCustomer({ userId, pgdb: transaction })
 
@@ -174,11 +174,11 @@ module.exports = async (_, args, context) => {
       `deleteUser *${user.firstName} ${user.lastName} - ${user.email}*`
     )
 
-    return deleteCompletely
-      ? null
-      : pgdb.public.users.findOne({
+    return hasPledges
+      ? pgdb.public.users.findOne({
         id: userId
       })
+      : null
   } catch (e) {
     await transaction.transactionRollback()
     console.info('transaction rollback', { req: req._log(), args, error: e })
