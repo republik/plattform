@@ -44,7 +44,7 @@ Promise.resolve().then(async () => {
   }
   console.log(message)
 
-  firebase.messaging().send(message)
+  await firebase.messaging().send(message)
     .then((response) => {
       console.log('Successfully sent message:', response)
     })
