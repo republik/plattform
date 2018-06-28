@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp, tUp } from './mediaQueries'
+import zIndex from '../../theme/zIndex'
 import { FigureImage, FigureByline } from '../Figure'
 import Text from './Text'
 
@@ -10,6 +11,7 @@ const styles = {
     position: 'relative',
     lineHeight: 0,
     margin: 0,
+    zIndex: zIndex.frontImage,
     [tUp]: {
       background: 'none'
     }
