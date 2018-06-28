@@ -79,14 +79,14 @@ export default ({ children, meta }) => {
                     href="https://www.republik.ch/konto#newsletter"
                     style={footerLinkStyle}
                   >
-                    Vom Newsletter abmelden
+                    Newsletter-Einstellungen anpassen
                   </a>
                   <br />
                   <a
                     href="*|UNSUB|*"
                     style={footerLinkStyle}
                   >
-                    Abmelden
+                    Von allen Newslettern abmelden
                   </a>
                 </p>
               </td>
