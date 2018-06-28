@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-20T17:15:19.476Z",
+  "updated": "2018-06-26T12:11:42.419Z",
   "title": "live",
   "data": [
     {
@@ -249,6 +249,10 @@
     {
       "key": "api/email/invalid",
       "value": "E-Mail ungültig"
+    },
+    {
+      "key": "api/users/delete/claimedMembershipsNotSupported",
+      "value": "User, welche eine Membership eingelöst habe können zurzeit nicht gelöscht werden. Bitte wenden Sie sich an die IT."
     }
   ]
 }
