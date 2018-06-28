@@ -45,6 +45,28 @@ const deleteRelatedData = async (userId, pgdb) => {
     `, {
       userIds: [ userId ]
     }),
+    // pull user from comments.votes, leaving upVotes, downVotes untouched
+    pgdb.query(`
+      UPDATE comments
+        SET votes = COALESCE(NULLIF(sub.votes,'[{}]'::jsonb), '[]'::jsonb) -- remove empty objects {}
+        FROM (
+          SELECT id, jsonb_agg(v) AS votes
+          FROM   (SELECT id, votes FROM comments WHERE votes::text LIKE :userIdPattern) c,
+                 jsonb_array_elements(
+                   CASE
+                     WHEN jsonb_array_length(votes) = 1 -- if the id is the only entry in the array, add an empty object
+                     THEN votes || '{}'::jsonb
+                     ELSE votes
+                   END
+                 ) AS v -- LATERAL JOIN
+          WHERE  v->>'userId' <> :userId OR v = '{}'
+          GROUP  BY 1
+        ) sub
+      WHERE comments.id = sub.id
+    `, {
+      userIdPattern: `%${userId}%`,
+      userId
+    }),
     ...relations.map(rel =>
       pgdb[rel.schema][rel.table].delete({
         userId // assume the foreign column is always called userId
