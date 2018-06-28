@@ -76,7 +76,7 @@ const deleteRelatedData = async (userId, pgdb) => {
 }
 
 const getNulledColumnsForUsers = async (pgdb) => {
-  const keepColumns = [ 'firstName', 'lastName', 'addressId', 'createdAt', 'updatedAt' ]
+  const keepColumns = [ 'firstName', 'lastName', 'addressId', 'createdAt', 'updatedAt', 'deletedAt' ]
   return pgdb.queryOneColumn(`
     SELECT
       column_name
@@ -185,6 +185,7 @@ module.exports = async (_, args, context) => {
           isAdminUnlisted: true,
           isPhoneNumberVerified: false,
           isTOTPChallengeSecretVerified: false,
+          deletedAt: new Date(),
           ...nulledColumns
         }
       )
