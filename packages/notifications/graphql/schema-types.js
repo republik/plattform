@@ -5,7 +5,14 @@ enum OSType {
   android
 }
 
-input DeviceInformation {
+input DeviceInformationInput {
+  appVersion: String!,
+  os: OSType!,
+  osVersion: String!,
+  model: String!
+}
+
+type DeviceInformation {
   appVersion: String!,
   os: OSType!,
   osVersion: String!,
@@ -15,13 +22,17 @@ input DeviceInformation {
 type Device {
   id: ID!
   user: User!
-  description: String!
+  information: DeviceInformation!
   lastSeen: DateTime!
   createdAt: DateTime!
 }
 
 extend type User {
   devices: [Device!]!
+}
+
+extend type Session {
+  device: Device
 }
 
 `

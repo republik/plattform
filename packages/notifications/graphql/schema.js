@@ -4,7 +4,7 @@ schema {
 }
 
 type mutations {
-  upsertDevice(token: ID!, information: DeviceInformation!): Device!
+  upsertDevice(token: ID!, information: DeviceInformationInput!): Device!
   rollDeviceToken(oldToken: String!, newToken: String!): Device!
 
   # user's can remove their devices
