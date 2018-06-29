@@ -1,7 +1,7 @@
 module.exports = {
   device (session, args, { pgdb }) {
-    return pgdb.public.devices.find({
-      sessionId: session.sessionID
+    return pgdb.public.devices.findOne({
+      sessionId: session.sid
     })
   }
 }

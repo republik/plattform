@@ -8,7 +8,9 @@ module.exports = async (_, { oldToken, newToken }, { pgdb, req, user: me, t }) =
     const now = new Date()
 
     // ensure device exists and belongs to user
-    const existingDevice = await transaction.public.devices.findOne({ token: oldToken })
+    const existingDevice = await transaction.public.devices.findOne({
+      token: oldToken
+    })
     if (!existingDevice) {
       throw new Error(t('api/devices/404'))
     }
