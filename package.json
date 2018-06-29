@@ -56,6 +56,7 @@
     "roleUser": "node packages/auth/script/roleUser",
     "roleUsers": "node packages/auth/script/roleUsers",
     "pull:redis": "node servers/publikator/script/pullRedis.js",
-    "pull:elasticsearch": "node packages/search/script/pullElasticsearch.js"
+    "pull:elasticsearch": "node packages/search/script/pullElasticsearch.js",
+    "sendNotification": "cd servers/republik && node ../../packages/notifications/script/sendNotification.js"
   }
 }
