@@ -1,7 +1,7 @@
 module.exports = `
 
 enum OSType {
-  iOS,
+  ios,
   android
 }
 
