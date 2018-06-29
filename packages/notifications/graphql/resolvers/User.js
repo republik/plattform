@@ -5,7 +5,7 @@ module.exports = {
   async devices (user, args, { pgdb, user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, userAccessRoles)
     return pgdb.public.devices.find({
-      userId: me.userId
+      userId: me.id
     })
   }
 }
