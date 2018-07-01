@@ -12,6 +12,8 @@ admin.initializeApp({
     projectId: FIREBASE_PROJECT_ID,
     clientEmail: FIREBASE_CLIENT_EMAIL,
     privateKey: FIREBASE_PRIVATE_KEY
+      .replace(/@/g, '\n')
+      .replace(/\\\s/g, ' ')
   }),
   databaseURL: FIREBASE_DATABASE_URL
 })
