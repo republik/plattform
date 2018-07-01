@@ -7,6 +7,7 @@
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const firebase = require('../lib/firebase')
+const util = require('util')
 
 const _registrationToken = process.argv[2]
 if (!_registrationToken) {
@@ -16,31 +17,17 @@ const body = process.argv[3]
 if (!body) {
   throw new Error('please provide the message as the second argument')
 }
+const dryRun = process.argv[4] === 'dry'
 
 const getMessage = () => {
-  const title = process.argv[4] || 'Republik [TEST]'
   return {
-    android: {
-      ttl: 3600 * 1000, // 1 hour in milliseconds
-      priority: 'normal',
-      notification: {
-        title,
-        body,
-        icon: 'stock_ticker_update',
-        color: '#f45342'
-      }
+    notification: {
+      body,
+      title: 'Republik [Test]'
     },
-    apns: {
-      payload: {
-        aps: {
-          alert: {
-            title,
-            body
-          }
-        }
-      }
+    data: {
+      url: 'https://www.republik.ch'
     }
-    // token: registrationToken
   }
 }
 
@@ -57,20 +44,19 @@ PgDb.connect().then(async pgdb => {
   const message = getMessage()
   console.log({tokens, message})
 
-  await Promise.all(
-    tokens.map(token => {
-      return firebase.messaging().send({
-        ...message,
-        token
-      })
-        .then((response) => {
-          console.log('Successfully sent message:', response)
-        })
-        .catch((error) => {
-          console.log('Error sending message:', error)
-        })
-    })
+  await firebase.messaging().sendToDevice(
+    tokens,
+    getMessage(),
+    {
+      dryRun
+    }
   )
+    .then((response) => {
+      console.log('Successfully sent message:', util.inspect(response, 2, {depth: null}))
+    })
+    .catch((error) => {
+      console.log('Error sending message:', util.inspect(error, 2, {depth: null}))
+    })
 }).then(() => {
   process.exit()
 }).catch(e => {
