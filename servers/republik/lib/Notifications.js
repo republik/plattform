@@ -6,6 +6,7 @@ const { transformUser } = require('@orbiting/backend-modules-auth')
 
 const commentSchema = require('@project-r/styleguide/lib/templates/Comment/email').default()
 const { renderEmail } = require('mdast-react-render/lib/email')
+const appNotifications = require('@orbiting/backend-modules-notifications/lib/app')
 
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
@@ -101,6 +102,7 @@ const submitComment = async (comment, discussion, context) => {
     }
     const isTopLevelComment = !comment.parentIds || comment.parentIds.length === 0
 
+    // notify WEB
     const webUserIds = notifyUsers
       .filter(u => u.discussionNotificationChannels.indexOf('WEB') > -1)
       .map(u => u.id)
@@ -118,6 +120,25 @@ const submitComment = async (comment, discussion, context) => {
       }})
     }
 
+    // notify APP
+    const appUserIds = notifyUsers
+      .filter(u => u.discussionNotificationChannels.indexOf('APP') > -1)
+      .map(u => u.id)
+
+    if (appUserIds.length > 0) {
+      await appNotifications.publish({
+        userIds: appUserIds,
+        title: isTopLevelComment
+          ? t('api/comment/notification/new/app/subject', subjectParams)
+          : t('api/comment/notification/answer/app/subject', subjectParams),
+        body: `${displayAuthor.name}: ${shortBody}`,
+        url: commentUrl
+      }, {
+        pgdb
+      })
+    }
+
+    // notify EMAIL
     await Promise.all(notifyUsers
       .filter(u => u.discussionNotificationChannels.indexOf('EMAIL') > -1)
       .map(u => {
