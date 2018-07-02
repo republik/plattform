@@ -58,6 +58,9 @@ const schema = {
   id: {
     criteria: termCriteriaBuilder('_id')
   },
+  ids: {
+    criteria: termCriteriaBuilder('_id')
+  },
   type: termEntry('__type'),
   state: termEntry('__state'),
   template: termEntry('meta.template'),
