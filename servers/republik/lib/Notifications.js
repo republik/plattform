@@ -101,6 +101,7 @@ const submitComment = async (comment, discussion, context) => {
       discussionName: discussion.title
     }
     const isTopLevelComment = !comment.parentIds || comment.parentIds.length === 0
+    const icon = displayAuthor.profilePicture || t('api/comment/notification/new/web/icon')
 
     // notify WEB
     const webUserIds = notifyUsers
@@ -113,7 +114,7 @@ const submitComment = async (comment, discussion, context) => {
           ? t('api/comment/notification/new/web/subject', subjectParams)
           : t('api/comment/notification/answer/web/subject', subjectParams),
         body: `${displayAuthor.name}: ${shortBody}`,
-        icon: displayAuthor.profilePicture || t('api/comment/notification/new/web/icon'),
+        icon,
         url: commentUrl,
         userIds: webUserIds,
         tag: comment.id
@@ -132,7 +133,9 @@ const submitComment = async (comment, discussion, context) => {
           ? t('api/comment/notification/new/app/subject', subjectParams)
           : t('api/comment/notification/answer/app/subject', subjectParams),
         body: `${displayAuthor.name}: ${shortBody}`,
-        url: commentUrl
+        url: commentUrl,
+        icon,
+        type: 'discussion'
       }, {
         pgdb
       })

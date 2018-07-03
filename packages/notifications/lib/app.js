@@ -1,7 +1,7 @@
 const firebase = require('./firebase')
 
 module.exports = {
-  async publish ({ userIds, title, body, url }, { pgdb }) {
+  async publish ({ userIds, title, body, url, icon, type }, { pgdb }) {
     const deviceTokens = await pgdb.public.devices.findOneFieldOnly(
       { userId: userIds },
       'token'
@@ -16,7 +16,9 @@ module.exports = {
             body
           },
           data: {
-            url
+            url,
+            icon,
+            type
           }
         }
       )
