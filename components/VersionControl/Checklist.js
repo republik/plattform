@@ -207,7 +207,7 @@ export default compose(
               repoId
             }
             const data = proxy.readQuery({
-              getMilestones,
+              query: getMilestones,
               variables
             })
             data.repo.milestones.push(placeMilestone)
@@ -233,7 +233,7 @@ export default compose(
               repoId
             }
             const data = proxy.readQuery({
-              getMilestones,
+              query: getMilestones,
               variables
             })
             if (removeMilestone) {
