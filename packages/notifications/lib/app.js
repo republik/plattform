@@ -5,10 +5,12 @@ module.exports = {
   async publish (args, { pgdb }) {
     const { userIds, title, body, url, icon, type } = args
 
-    const deviceTokens = await pgdb.public.devices.findOneFieldOnly(
+    const deviceTokens = await pgdb.public.devices.find(
       { userId: userIds },
-      'token'
     )
+      .then( devices => devices
+        .map( d => d.token )
+      )
 
     if (deviceTokens.length > 0) {
       const message = {
@@ -22,11 +24,11 @@ module.exports = {
           type
         }
       }
-      debug('#recipients %d, message: %O', deviceTokens.length, message)
-      await firebase.messaging().sendToDevice(
+      const result = await firebase.messaging().sendToDevice(
         deviceTokens,
         message
       )
+      debug('#recipients %d, message: %O, result: %O', deviceTokens.length, message, result)
     } else {
       debug('no receipients found for publish: %O', args)
     }
