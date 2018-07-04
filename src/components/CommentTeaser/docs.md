@@ -1,7 +1,5 @@
 Provides a preview of a comment, featuring either a title/subtitle or a displayAuthor.
 
-
-
 ```react|noSource,span-3
 <CommentTeaser
   title='@Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie'
