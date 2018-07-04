@@ -315,6 +315,10 @@
       "value": "Publikationsdatum"
     },
     {
+      "key": "metaData/field/gallery",
+      "value": "Bilder als Galerie"
+    },
+    {
       "key": "metaData/field/feed",
       "value": "Erscheint im Feed"
     },
