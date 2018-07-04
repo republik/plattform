@@ -47,6 +47,24 @@ module.exports = async (_, { token, information }, { pgdb, user: me, req }) => {
       })
     }
 
+    // remember enrollment, update notificationChannels
+    if (!me._raw.hadDevice) {
+      await transaction.query(`
+        UPDATE
+          users
+        SET
+          "hadDevice" = true
+          ${me._raw.discussionNotificationChannels.indexOf('APP') === -1 // avoid duplicates
+    ? ', "discussionNotificationChannels" = "discussionNotificationChannels" || \'["APP"]\''
+    : ''
+}
+        WHERE
+          id = :userId
+      `, {
+        userId: me.id
+      })
+    }
+
     await transaction.transactionCommit()
     return device
   } catch (e) {

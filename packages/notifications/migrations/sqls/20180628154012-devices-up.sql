@@ -7,3 +7,7 @@ CREATE TABLE "devices" (
   "createdAt"     timestamptz default now(),
   "updatedAt"     timestamptz default now()
 );
+
+ALTER TABLE "users"
+  ADD COLUMN  "hadDevice" boolean not null default false
+;
