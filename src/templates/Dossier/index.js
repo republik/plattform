@@ -5,7 +5,6 @@ import {
 } from '../../components/Dossier'
 
 import createArticleSchema from '../Article'
-import { styles } from '../Article/utils'
 
 const DefaultLink = ({ children }) => children
 
@@ -24,13 +23,9 @@ const createSchema = ({
     getPath,
     titleBlockPrepend: [
       titleBlockPrepend,
-      <Link key='dossierLink' href={dossierHref} passHref>
-        <a {...styles.link} href={dossierHref}>
-          <DossierTag attributes={{contentEditable: false}}>
-            {dossierLabel}
-          </DossierTag>
-        </a>
-      </Link>
+      <DossierTag attributes={{contentEditable: false}}>
+        {dossierLabel}
+      </DossierTag>
     ],
     customMetaFields: [
       {
