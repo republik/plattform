@@ -48,7 +48,6 @@ module.exports = async (_, { token, information }, { pgdb, user: me, req }) => {
     }
 
     await transaction.transactionCommit()
-    console.log(device)
     return device
   } catch (e) {
     await transaction.transactionRollback()
