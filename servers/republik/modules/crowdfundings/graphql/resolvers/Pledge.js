@@ -12,6 +12,7 @@ module.exports = {
       pko.amount = plo.amount
       pko.templateId = plo.templateId
       pko.price = plo.price
+      pko.vat = plo.vat
       pko.createdAt = plo.createdAt
       pko.updatedAt = plo.updatedAt
       return pko

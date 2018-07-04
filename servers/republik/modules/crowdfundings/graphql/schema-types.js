@@ -57,6 +57,7 @@ type PackageOption {
   maxAmount: Int
   defaultAmount: Int!
   price: Int!
+  vat: Int!
   minUserPrice: Int!
   userPrice: Boolean!
   createdAt: DateTime!
