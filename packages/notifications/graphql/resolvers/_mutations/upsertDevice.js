@@ -1,12 +1,18 @@
-const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
+const { ensureSignedIn, Sessions: { sessionBySId } } = require('@orbiting/backend-modules-auth')
 const debug = require('debug')('notifications:devices:upsertDevice')
+
+const getSessionId = async (req, pgdb) => {
+  const session = await sessionBySId({
+    pgdb,
+    sid: req.sessionID
+  })
+  return session.id
+}
 
 module.exports = async (_, { token, information }, { pgdb, user: me, req }) => {
   ensureSignedIn(req)
-  const {
-    sessionID: sessionId
-  } = req
 
+  const sessionId = await getSessionId(req, pgdb)
   const transaction = await pgdb.transactionBegin()
   try {
     let device
@@ -23,7 +29,7 @@ module.exports = async (_, { token, information }, { pgdb, user: me, req }) => {
         debug('changing ownership of existing device. oldUser: %s newUser: %s', existingDevice.userId, me.id)
         update.userId = me.id
       }
-      if (existingDevice.session !== sessionId) {
+      if (existingDevice.sessionId !== sessionId) {
         debug('changing sessing of existing device')
         update.sessionId = sessionId
       }

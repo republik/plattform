@@ -76,6 +76,12 @@ const sessionByToken = async ({ pgdb, token, email: emailFromQuery, ...meta }) =
   }
 }
 
+const sessionBySId = async ({ pgdb, sid }) => {
+  return pgdb.public.sessions.findOne({
+    sid
+  })
+}
+
 const findAllUserSessions = async ({ pgdb, userId }) => {
   const sessions = await pgdb.public.sessions.find({
     'sess @>': { passport: { user: userId } }
@@ -121,6 +127,7 @@ const clearUserSession = async ({ pgdb, userId, sessionId }) => {
 module.exports = {
   initiateSession,
   sessionByToken,
+  sessionBySId,
   findAllUserSessions,
   clearUserSession,
   clearAllUserSessions,
