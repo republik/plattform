@@ -224,7 +224,11 @@ ReactDOM.render(
           {
             path: '/components/commentteaser',
             title: 'Teaser',
-            imports: {t, ...require('./components/CommentTeaser/docs.imports')},
+            imports: {
+              t,
+              exampleMdast: require('./components/CommentTeaser/exampleMdast').exampleMdast,
+              ...require('./components/CommentTeaser/docs.imports')
+            },
             src: require('./components/CommentTeaser/docs.md')
           },
           {
