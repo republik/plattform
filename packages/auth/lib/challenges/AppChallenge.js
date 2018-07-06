@@ -42,7 +42,7 @@ module.exports = {
       title: t('api/signin/app/title'),
       body: t('api/signin/app/body'),
       url: verificationUrl,
-      type: 'discussion'// 'signIn'
+      type: 'discussion'// TODO change to 'authorization'
     }, { pgdb })
   },
   validateChallenge: async ({ pgdb, user }, { payload }) => {
