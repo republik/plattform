@@ -1,0 +1,30 @@
+[file]
+
+defaultEntryPoints = ["http"]
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+
+[backends]
+  [backends.republik_api]
+    [backends.republik_api.servers.server1]
+    url = "http://localhost:5000"
+  [backends.republik_frontend]
+    [backends.republik_frontend.servers.server1]
+    url = "http://localhost:3010"
+
+[frontends]
+  [frontends.republik_api]
+  backend = "republik_api"
+    [frontends.republik_api.routes.default]
+    rule = "Host:api.dev.localdomain"
+  [frontends.republik_frontend]
+  backend = "republik_frontend"
+    [frontends.republik_frontend.routes.default]
+    rule = "Host:dev.localdomain"
+
+[api]
+  entryPoint = "traefik"
+  dashboard = true
+  debug = true
+
