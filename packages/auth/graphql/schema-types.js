@@ -60,6 +60,7 @@ enum SignInTokenType {
   EMAIL_TOKEN
   TOTP
   SMS
+  APP
 }
 
 input SignInToken {

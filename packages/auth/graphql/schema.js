@@ -20,6 +20,9 @@ type queries {
   # required role: editor
   users(search: String!, role: String): [User]!
 
+  # query for enabled factors available to signIn
+  enabledFirstFactors(email: ID!): [SignInTokenType!]!
+
   # search for an unverified session by token
   unauthorizedSession(email: String!, token: SignInToken!): UnauthorizedSession
 
