@@ -1,7 +1,7 @@
 const {
   denySession } = require('../../../lib/Users')
 
-module.exports = async (_, args, { pgdb, req, signInHooks }) => {
+module.exports = async (_, args, { pgdb, req, signInHooks, user: me }) => {
   const {
     token,
     email
@@ -10,7 +10,8 @@ module.exports = async (_, args, { pgdb, req, signInHooks }) => {
   const user = await denySession({
     pgdb,
     token,
-    email
+    email,
+    me
   })
 
   return !!user

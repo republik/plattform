@@ -1,13 +1,9 @@
-const { sessionByToken, NoSessionError } = require('../../../lib/Sessions')
+const { unauthorizedSession } = require('../../../lib/Users')
 const { missingConsents } = require('../../../lib/Consents')
 
-module.exports = async (_, args, { pgdb, req }) => {
+module.exports = async (_, args, { pgdb, req, user: me }) => {
   const { email, token } = args
-  const session = await sessionByToken({ pgdb, token, email })
-
-  if (!session) {
-    throw new NoSessionError({ email, token })
-  }
+  const session = await unauthorizedSession({ pgdb, token, email, me })
 
   const user = await pgdb.public.users.findOne({
     email

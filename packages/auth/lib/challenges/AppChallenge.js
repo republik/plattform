@@ -45,7 +45,12 @@ module.exports = {
       type: 'discussion'// TODO change to 'authorization'
     }, { pgdb })
   },
-  validateChallenge: async ({ pgdb, user }, { payload }) => {
+  validateChallenge: async ({ pgdb, user, me }, { payload }) => {
+    // app tokens must only be validated if the request is
+    // authorized by the user herself.
+    if (!me || !user || me.id !== user.id) {
+      return null
+    }
     const foundToken = await pgdb.public.tokens.findOne({
       type: Type,
       payload

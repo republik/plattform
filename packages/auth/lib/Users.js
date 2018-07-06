@@ -149,17 +149,22 @@ const shouldAutoLogin = ({ email }) => {
   return false
 }
 
-const denySession = async ({ pgdb, token, email: emailFromQuery }) => {
-  // check if authorized to deny the challenge
+const unauthorizedSession = async ({ pgdb, token, email: emailFromQuery, me }) => {
   const user = await pgdb.public.users.findOne({ email: emailFromQuery })
   const session = await sessionByToken({ pgdb, token, email: emailFromQuery })
   if (!session) {
     throw new NoSessionError({ email: emailFromQuery, token })
   }
-  const validated = await validateChallenge(token.type, { pgdb, user, session }, token)
-  if (!validated) {
+  const valitadable = await validateChallenge(token.type, { pgdb, user, session, me }, token)
+  if (!valitadable) {
     throw new SessionTokenValidationFailed(token)
   }
+  return session
+}
+
+const denySession = async ({ pgdb, token, email: emailFromQuery, me }) => {
+  // check if authorized to deny the challenge
+  const session = await unauthorizedSession({ pgdb, token, email: emailFromQuery, me })
 
   const transaction = await pgdb.transactionBegin()
   try {
@@ -188,10 +193,10 @@ const denySession = async ({ pgdb, token, email: emailFromQuery }) => {
     await transaction.transactionRollback()
     throw new AuthorizationFailedError({ session })
   }
-  return user
+  return true
 }
 
-const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [], consents = [], req }) => {
+const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [], consents = [], req, me }) => {
   // validate the challenges
   const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
   const tokenTypes = []
@@ -213,7 +218,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
       throw new SessionTokenValidationFailed({ email: emailFromQuery })
     }
 
-    const validated = await validateChallenge(token.type, { pgdb, session, user: existingUser }, token)
+    const validated = await validateChallenge(token.type, { pgdb, session, user: existingUser, me }, token)
     if (!validated) {
       console.error('wrong token')
       throw new SessionTokenValidationFailed({ email: emailFromQuery, ...token })
@@ -455,6 +460,7 @@ const updateUserPhoneNumber = async ({ pgdb, userId, phoneNumber }) => {
 module.exports = {
   enabledFirstFactors,
   signIn,
+  unauthorizedSession,
   denySession,
   authorizeSession,
   resolveUser,
