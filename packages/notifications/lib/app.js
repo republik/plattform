@@ -19,7 +19,9 @@ module.exports = {
         },
         data: {
           url,
-          icon,
+          ...icon
+            ? { icon }
+            : { },
           type
         }
       }
