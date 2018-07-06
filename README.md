@@ -88,10 +88,20 @@ You should be able to access [http://api.dev.localdomain/graphiql](http://api.de
 192.168.1.88	dev.localdomain api.dev.localdomain
 ```
 
-2. Test
+2. Adapt hostnames in the environment variables (in `app/.env.dev`):
+```
+API_URL=http://api.dev.localdomain/graphql
+API_WS_URL=ws://api.dev.localdomain/graphql
+FRONTEND_BASE_URL=http://dev.localdomain
+```
+
+3. Test
+
 You should be able to access [http://api.dev.localdomain/graphiql](http://api.dev.localdomain/graphiql) and [http://dev.localdomain](http://dev.localdomain)
 
-3. Setup emulator
+
+4. Setup emulator
+
 Unfortunately the android emulator doesn't use the hosts dns resolver, so we must add our hostname to the emulator aswel:
 - make sure you use a "Google API" system image not an "Google Play" one on your emulator.
 - run the emulator with a writable filesystem:
@@ -105,11 +115,13 @@ adb remount
 adb shell
 > echo '192.168.1.88 api.dev.localdomain dev.localdomain' >> /etc/hosts
 > exit
-````
+```
 - run the app as usual (in `app/`)
 ```
 yarn run run-android
 ```
+
+5. The app should now run fine, accessing the resources on machine A.
 
 ## Caveats
 
