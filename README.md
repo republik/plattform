@@ -85,7 +85,7 @@ You should be able to access [http://api.dev.localdomain/graphiql](http://api.de
 - Find the IP of Machine A, let's say its `192.168.1.88`
 - add the following line to `/etc/hosts`:
 ```
-192.168.1.8	dev.localdomain api.dev.localdomain
+192.168.1.88	dev.localdomain api.dev.localdomain
 ```
 
 2. Test
