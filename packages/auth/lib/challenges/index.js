@@ -1,6 +1,7 @@
 const EmailTokenChallenge = require('./EmailTokenChallenge')
 const TOTPChallenge = require('./TOTPChallenge')
 const SMSCodeChallenge = require('./SMSCodeChallenge')
+const AppChallenge = require('./AppChallenge')
 
 const { newAuthError } = require('../AuthError')
 
@@ -13,7 +14,8 @@ const TokenExpiredError = newAuthError('token-expired', 'api/auth/token-expired'
 const TokenTypeMap = {
   [EmailTokenChallenge.Type]: EmailTokenChallenge,
   [TOTPChallenge.Type]: TOTPChallenge,
-  [SMSCodeChallenge.Type]: SMSCodeChallenge
+  [SMSCodeChallenge.Type]: SMSCodeChallenge,
+  [AppChallenge.Type]: AppChallenge
 }
 
 const TokenTypes = Object

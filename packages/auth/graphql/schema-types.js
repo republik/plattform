@@ -39,6 +39,7 @@ type User {
 
 type SignInResponse {
   phrase: String!
+  tokenType: SignInTokenType!
 }
 
 type SharedSecretResponse {

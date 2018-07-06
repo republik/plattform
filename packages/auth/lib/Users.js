@@ -26,6 +26,7 @@ const {
 
 const EmailInvalidError = newAuthError('email-invalid', 'api/email/invalid')
 const EmailAlreadyAssignedError = newAuthError('email-already-assigned', 'api/email/change/exists')
+const TokenTypeNotEnabledError = newAuthError('token-type-not-enabled', 'api/tokenType/notEnabled')
 const SessionInitializationFailedError = newAuthError('session-initialization-failed', 'api/auth/errorSavingSession')
 const UserNotFoundError = newAuthError('user-not-found', 'api/users/404')
 const AuthorizationFailedError = newAuthError('authorization-failed', 'api/auth/authorization-failed')
@@ -40,7 +41,32 @@ const {
   FRONTEND_BASE_URL
 } = process.env
 
-const signIn = async (_email, context, pgdb, req, consents) => {
+const enabledFirstFactors = async (email, pgdb) => {
+  const userWithDevices = await pgdb.query(`
+    SELECT
+      u.*,
+      jsonb_agg(d.*) as devices
+    FROM
+      users u
+    JOIN
+      devices d
+      ON u.id = d."userId"
+    WHERE
+      u.email = :email
+    GROUP BY
+      u.id
+  `, {
+    email
+  })
+    .then(result => result[0])
+
+  if (userWithDevices && userWithDevices.devices.length > 0) {
+    return [TokenTypes.EMAIL_TOKEN, TokenTypes.APP]
+  }
+  return [TokenTypes.EMAIL_TOKEN]
+}
+
+const signIn = async (_email, context, pgdb, req, consents, tokenType = TokenTypes.EMAIL_TOKEN) => {
   if (req.user) {
     return { phrase: '' }
   }
@@ -60,12 +86,20 @@ const signIn = async (_email, context, pgdb, req, consents) => {
 
   const { email } = (user || { email: _email })
 
+  // check if tokenType is enabled as firstFactor
+  // email is always enabled
+  if (tokenType !== TokenTypes.EMAIL_TOKEN) {
+    const enabledTokenTypes = await enabledFirstFactors(email, pgdb)
+    if (enabledTokenTypes.indexOf(tokenType) === -1) {
+      throw new TokenTypeNotEnabledError({ tokenType })
+    }
+  }
+
   try {
     const init = await initiateSession({ req, pgdb, email, consents })
     const { country, phrase, session } = init
 
-    const type = TokenTypes.EMAIL_TOKEN
-    const token = await generateNewToken(type, {
+    const token = await generateNewToken(tokenType, {
       pgdb,
       session,
       email
@@ -80,17 +114,21 @@ const signIn = async (_email, context, pgdb, req, consents) => {
         })
       }, 2000)
     } else {
-      await startChallenge(type, {
+      await startChallenge(tokenType, {
         pgdb,
         email,
         token,
         context,
         country,
-        phrase
+        phrase,
+        user
       })
     }
 
-    return { phrase }
+    return {
+      tokenType,
+      phrase
+    }
   } catch (error) {
     console.error(error)
     throw new SessionInitializationFailedError({ error })
@@ -415,6 +453,7 @@ const updateUserPhoneNumber = async ({ pgdb, userId, phoneNumber }) => {
 }
 
 module.exports = {
+  enabledFirstFactors,
   signIn,
   denySession,
   authorizeSession,

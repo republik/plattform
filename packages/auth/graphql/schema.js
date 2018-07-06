@@ -31,8 +31,9 @@ type queries {
 }
 
 type mutations {
-  # signIn with an email address
-  signIn(email: String!, context: String, consents: [String!]): SignInResponse!
+  # signIn
+  # default tokenType: EMAIL_TOKEN
+  signIn(email: String!, context: String, consents: [String!], tokenType: SignInTokenType): SignInResponse!
   signOut: Boolean!
 
   # if userId is null, the logged in user's email is changed

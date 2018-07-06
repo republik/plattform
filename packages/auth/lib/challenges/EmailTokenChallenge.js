@@ -40,10 +40,11 @@ module.exports = {
     const verificationUrl =
       `${FRONTEND_BASE_URL}/mitteilung?` +
       querystring.stringify({
+        context,
         type: 'token-authorization',
         email: encode(email),
-        context,
-        token: token.payload
+        token: token.payload,
+        tokenType: Type
       })
 
     if (AUTH_MAIL_TEMPLATE_NAME) {
