@@ -294,7 +294,7 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
       recursive: true,
       withoutContent: true,
       scheduledAt,
-      first: sanitizedRepoIds.length,
+      first: sanitizedRepoIds.length * 2,
       filter: {
         repoId: sanitizedRepoIds,
         type: 'Document'
