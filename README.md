@@ -91,6 +91,26 @@ You should be able to access [http://api.dev.localdomain/graphiql](http://api.de
 2. Test
 You should be able to access [http://api.dev.localdomain/graphiql](http://api.dev.localdomain/graphiql) and [http://dev.localdomain](http://dev.localdomain)
 
+3. Setup emulator
+Unfortunately the android emulator doesn't use the hosts dns resolver, so we must add our hostname to the emulator aswel:
+- make sure you use a "Google API" system image not an "Google Play" one on your emulator.
+- run the emulator with a writable filesystem:
+```
+~/Library/Android/sdk/emulator/emulator -avd NAME -writable-system
+```
+- add the host entry:
+```
+adb root
+adb remount
+adb shell
+> echo '192.168.1.88 api.dev.localdomain dev.localdomain' >> /etc/hosts
+> exit
+````
+- run the app as usual (in `app/`)
+```
+yarn run run-android
+```
+
 ## Caveats
 
 Due to the this [bug](https://github.com/yarnpkg/yarn/issues/4964) running bin scripts from the server subfolders doesn't work. Currently the following workaround is in place: `test:prepare` of republik and publikator first does: `rm -rf node_modules/.bin && ln -s ../../../node_modules/.bin node_modules/`.
