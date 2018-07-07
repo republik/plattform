@@ -13,13 +13,14 @@ const {
 } = process.env
 
 const MIN_IN_MS = 1000 * 60
+const TTL = 10 * MIN_IN_MS
 const Type = 'APP'
 
 module.exports = {
   Type,
   generateNewToken: async ({ pgdb, session }) => {
     const payload = uuid()
-    const expiresAt = new Date(new Date().getTime() + 10 * MIN_IN_MS)
+    const expiresAt = new Date(new Date().getTime() + TTL)
     return { payload, expiresAt }
   },
   startChallenge: async ({ email, context, token, user, pgdb }) => {
@@ -42,7 +43,9 @@ module.exports = {
       title: t('api/signin/app/title'),
       body: t('api/signin/app/body'),
       url: verificationUrl,
-      type: 'discussion'// TODO change to 'authorization'
+      type: 'discussion', // TODO change to 'authorization'
+      ttl: TTL,
+      priority: 'high'
     }, { pgdb })
   },
   validateChallenge: async ({ pgdb, user, me }, { payload }) => {
