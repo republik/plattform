@@ -7,6 +7,7 @@ const { app } = require('@orbiting/backend-modules-notifications/lib')
 const { encode } = require('@orbiting/backend-modules-base64u')
 
 const UserMissingError = newAuthError('app-challenge-user-missing', 'api/users/404')
+const AppTokenRequiresMeError = newAuthError('app-token-requires-me', 'api/signIn/app/requiresMe')
 
 const {
   FRONTEND_BASE_URL
@@ -52,7 +53,7 @@ module.exports = {
     // app tokens must only be validated if the request is
     // authorized by the user herself.
     if (!me || !user || me.id !== user.id) {
-      return null
+      throw new AppTokenRequiresMeError()
     }
     const foundToken = await pgdb.public.tokens.findOne({
       type: Type,

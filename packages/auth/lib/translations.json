@@ -1,5 +1,5 @@
 {
-  "updated": "2018-07-06T22:33:20.249Z",
+  "updated": "2018-07-07T00:28:20.114Z",
   "title": "live",
   "data": [
     {
@@ -41,6 +41,10 @@
     {
       "key": "api/signin/app/body",
       "value": "Wollen Sie sich gerade auf einem neuen Gerät anmelden?"
+    },
+    {
+      "key": "api/signIn/app/requiresMe",
+      "value": "Anmeldungen per App können nur von der Benutzerin selbst zugelassen werden."
     },
     {
       "key": "api/token/invalid",
