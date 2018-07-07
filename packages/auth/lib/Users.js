@@ -68,7 +68,7 @@ const enabledFirstFactors = async (email, pgdb) => {
 
 const signIn = async (_email, context, pgdb, req, consents, tokenType = TokenTypes.EMAIL_TOKEN) => {
   if (req.user) {
-    return { phrase: '' }
+    return { phrase: '', tokenType: 'EMAIL_TOKEN' }
   }
 
   if (!validator.isEmail(_email)) {
