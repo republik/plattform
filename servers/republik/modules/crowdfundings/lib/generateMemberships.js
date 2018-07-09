@@ -3,7 +3,7 @@ const { getPledgeOptionsTree } = require('./Pledge')
 const debug = require('debug')('crowdfundings:memberships')
 const { enforceSubscriptions } = require('./Mail')
 
-module.exports = async (pledgeId, pgdb, t, logger = console) => {
+module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
   const pledge = await pgdb.public.pledges.findOne({id: pledgeId})
   const user = await pgdb.public.users.findOne({id: pledge.userId})
 
