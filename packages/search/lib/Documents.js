@@ -514,6 +514,8 @@ const publishScheduled = (elastic, redis, elasticDoc) => ({
       elasticDoc.meta.repoId,
       elasticDoc.id
     )
+
+    await createCache(redis).invalidate()
   },
   afterScheduled: async () => {
     await elastic.update({
@@ -567,6 +569,8 @@ const prepublishScheduled = (elastic, redis, elasticDoc) => ({
       elasticDoc.meta.repoId,
       elasticDoc.id
     )
+
+    await createCache(redis).invalidate()
   },
   afterScheduled: async () => {
     await elastic.update({
