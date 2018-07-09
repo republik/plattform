@@ -61,7 +61,11 @@ export const CommentTeaser = ({
         lineClamp ? merge(styles.clamp, { WebkitLineClamp: lineClamp }) : {}
       )}
     >
-      {renderMdast(content, schema)}
+      {renderMdast(
+        content,
+        schema,
+        { MissingNode: ({ children }) => <span>{children}</span> }
+      )}
     </div>
     <CommentTeaserFooter commentUrl={commentUrl} timeago={timeago} t={t} />
   </div>
