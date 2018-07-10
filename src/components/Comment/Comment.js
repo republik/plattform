@@ -37,7 +37,7 @@ const styles = {
   })
 }
 
-const MissingNode = ({node, children}) => {
+export const MissingNode = ({node, children}) => {
   return (
     <span style={{
         textDecoration: `underline wavy ${colors.divider}`,

@@ -7,6 +7,7 @@ import { serifRegular14 } from '../Typography/styles'
 import CommentHeader from '../Comment/CommentHeader'
 import CommentTeaserHeader from './CommentTeaserHeader'
 import CommentTeaserFooter from './CommentTeaserFooter'
+import { MissingNode } from '../Comment/Comment'
 
 import createCommentSchema from '../../templates/Comment'
 
@@ -64,7 +65,7 @@ export const CommentTeaser = ({
       {renderMdast(
         content,
         schema,
-        { MissingNode: ({ children }) => <span>{children}</span> }
+        { MissingNode }
       )}
     </div>
     <CommentTeaserFooter commentUrl={commentUrl} timeago={timeago} t={t} />
