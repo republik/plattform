@@ -1,13 +1,11 @@
 const graphqlFields = require('graphql-fields')
+const _ = require('lodash')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const {
   ascending,
   descending
 } = require('d3-array')
-const _ = {
-  remove: require('lodash/remove'),
-  uniq: require('lodash/uniq')
-}
+
 const {
   published: getPublished,
   adminUnpublished: getAdminUnpublished,
@@ -147,7 +145,7 @@ const decorateTree = async (_comment, coveredComments, discussion, context) => {
   )
   const users = userIds.length
     ? await pgdb.public.users.find({ id: userIds })
-        .then(users => users.map(u => transformUser(u)))
+      .then(users => users.map(u => transformUser(u)))
     : []
   const discussionPreferences = userIds.length
     ? await pgdb.public.discussionPreferences.find({
@@ -304,12 +302,20 @@ module.exports = async (discussion, args, context, info) => {
       ascDesc(a.topValue || a[sortKey], b.topValue || b[sortKey]) || ascending(a.index, b.index)
 
   let focusComment
+  let topIds
   if (focusId) {
     focusComment = comments.find(c => c.id === focusId)
     // topValue used for sorting
     // we assign it here, because focusComment might be a node without
     // children, which deepSortTree doesn't calculate a topValue for
     focusComment.topValue = topValue
+
+    // Set comment (and its parents as topIds), used later for sorting tree and
+    // ensuring comment-tree bubbles to the very top.
+    topIds = _([focusComment.id])
+      .concat(focusComment.parentIds)
+      .compact()
+      .value()
   }
 
   assembleTree(tree, comments)
@@ -319,9 +325,7 @@ module.exports = async (discussion, args, context, info) => {
     ascDesc,
     sortKey,
     topValue,
-    focusComment && focusComment.parentIds
-      ? [...focusComment.parentIds, focusComment.id]
-      : null,
+    topIds,
     bubbleSort
   )
 
