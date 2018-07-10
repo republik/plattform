@@ -173,9 +173,9 @@ type Update {
 type Employee {
   group: String
   subgroup: String
-  userId: String
   name: String
   title: String
+  user: User
 }
 
 enum Permission {
