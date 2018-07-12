@@ -19,6 +19,7 @@ module.exports = async ({ pgdb, t }) => {
   }) => {
     // check event
     let event
+    debug('handle stripe')
     try {
       // all events for connected accounts share the same secret
       const account = connected
@@ -30,6 +31,7 @@ module.exports = async ({ pgdb, t }) => {
         req.headers['stripe-signature'],
         account.endpointSecret
       )
+      debug('%O', event)
     } catch (e) {
       console.error(e)
       return 400

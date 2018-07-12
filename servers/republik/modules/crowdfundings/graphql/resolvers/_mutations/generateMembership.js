@@ -56,7 +56,7 @@ module.exports = async (_, { userId }, { pgdb, req, t, user: me, mail: { enforce
       t
     })
 
-    await generateMemberships(pledge.id, transaction, t)
+    await generateMemberships(pledge.id, transaction, t, req)
 
     const newMembership = await transaction.public.memberships.findOne({
       pledgeId: pledge.id

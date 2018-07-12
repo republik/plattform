@@ -1,5 +1,6 @@
 const moment = require('moment')
 const { getPledgeOptionsTree } = require('./Pledge')
+const cancelMembership = require('../graphql/resolvers/_mutations/cancelMembership')
 const debug = require('debug')('crowdfundings:memberships')
 const { enforceSubscriptions } = require('./Mail')
 
@@ -42,8 +43,15 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
     active: true
   })
 
+  const activeMembershipType = (
+    userHasActiveMembership &&
+    await pgdb.public.membershipTypes.findOne({
+      id: userHasActiveMembership.membershipTypeId
+    })) || {}
+
   const memberships = []
   let membershipPeriod
+  let isUpgrade = false
   const now = new Date()
   pledgeOptions.forEach((plo) => {
     if (plo.packageOption.reward.type === 'MembershipType') {
@@ -68,6 +76,12 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
             membership
           }
         } else {
+          if (
+            ['ABO_BENEFACTOR', 'ABO', 'ABO_REDUCED'].includes(membershipType.name) &&
+            activeMembershipType.name === 'MONTHLY_ABO'
+          ) {
+            isUpgrade = true
+          }
           memberships.push(membership)
         }
       }
@@ -77,6 +91,22 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
   debug('generateMemberships memberships %O', memberships)
 
   await pgdb.public.memberships.insert(memberships)
+
+  if (isUpgrade && req) {
+    await cancelMembership(
+      null,
+      {
+        id: userHasActiveMembership.id,
+        reason: 'Upgraded to yearly abo'
+      },
+      {
+        req,
+        t,
+        pgdb,
+        transaction: pgdb
+      }
+    )
+  }
 
   if (membershipPeriod) {
     const membership = await pgdb.public.memberships.insertAndGet({

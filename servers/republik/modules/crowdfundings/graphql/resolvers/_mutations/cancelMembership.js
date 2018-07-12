@@ -2,8 +2,16 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const cancelSubscription = require('../../../lib/payments/stripe/cancelSubscription')
 const slack = require('../../../../../lib/slack')
 
-module.exports = async (_, args, {pgdb, req, t}) => {
-  const transaction = await pgdb.transactionBegin()
+module.exports = async (
+  _,
+  args,
+  {
+    pgdb,
+    transaction: pgdbTransaction,
+    req,
+    t
+  }) => {
+  const transaction = await pgdbTransaction || pgdb.transactionBegin()
   try {
     const {
       id: membershipId,
@@ -76,7 +84,9 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       })
     }
 
-    await transaction.transactionCommit()
+    if (pgdbTransaction) {
+      await transaction.transactionCommit()
+    }
 
     await slack.publishMembership(
       user,
