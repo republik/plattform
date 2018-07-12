@@ -41,6 +41,7 @@ const {
   FRONTEND_BASE_URL
 } = process.env
 
+// in order of preference
 const enabledFirstFactors = async (email, pgdb) => {
   const userWithDevices = await pgdb.query(`
     SELECT
@@ -48,7 +49,7 @@ const enabledFirstFactors = async (email, pgdb) => {
       jsonb_agg(d.*) as devices
     FROM
       users u
-    JOIN
+    LEFT JOIN
       devices d
       ON u.id = d."userId"
     WHERE
@@ -58,16 +59,65 @@ const enabledFirstFactors = async (email, pgdb) => {
   `, {
     email
   })
-    .then(result => result[0])
+    .then(result => {
+      const user = result[0]
+      if (!user) {
+        return user
+      }
+      return {
+        ...user,
+        devices: user.devices
+          .filter(Boolean)
+      }
+    })
 
+  const { APP, EMAIL_TOKEN } = TokenTypes
+
+  const enabledTokenTypes = [EMAIL_TOKEN]
   if (userWithDevices && userWithDevices.devices.length > 0) {
-    return [TokenTypes.EMAIL_TOKEN, TokenTypes.APP]
+    enabledTokenTypes.push(APP)
   }
-  return [TokenTypes.EMAIL_TOKEN]
+
+  const { preferedFirstFactor } = userWithDevices || {}
+  return enabledTokenTypes
+    .sort((a, b) => {
+      if (a === b) {
+        return 0
+      }
+      if (a === preferedFirstFactor) { // prefered always wins
+        return -1
+      }
+      if (b === preferedFirstFactor) {
+        return 1
+      }
+      if (a !== EMAIL_TOKEN && b === EMAIL_TOKEN) { // EMAIL_TOKEN always last
+        return -1
+      }
+      if (a === EMAIL_TOKEN && b !== EMAIL_TOKEN) {
+        return 1
+      }
+      return 0 // undefined order for places [1...n-1]
+    })
 }
 
-const signIn = async (_email, context, pgdb, req, consents, tokenType = TokenTypes.EMAIL_TOKEN) => {
+const setPreferedFirstFactor = async (user, tokenType = null, pgdb) => {
+  const enabledTokenTypes = await enabledFirstFactors(user._raw.email, pgdb)
+  if (tokenType && enabledTokenTypes.indexOf(tokenType) === -1) {
+    throw new TokenTypeNotEnabledError({ tokenType })
+  }
+  return pgdb.public.users.updateAndGetOne(
+    {
+      id: user.id
+    }, {
+      preferedFirstFactor: tokenType
+    }
+  )
+}
+
+const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
   if (req.user) {
+    // TODO: How can we make it explizit that a user is logged in,
+    // an exception seems a little harsh
     return { phrase: '', tokenType: 'EMAIL_TOKEN' }
   }
 
@@ -86,11 +136,15 @@ const signIn = async (_email, context, pgdb, req, consents, tokenType = TokenTyp
 
   const { email } = (user || { email: _email })
 
+  const { EMAIL_TOKEN } = TokenTypes
   // check if tokenType is enabled as firstFactor
   // email is always enabled
-  if (tokenType !== TokenTypes.EMAIL_TOKEN) {
+  let tokenType = _tokenType
+  if (!tokenType || tokenType !== EMAIL_TOKEN) {
     const enabledTokenTypes = await enabledFirstFactors(email, pgdb)
-    if (enabledTokenTypes.indexOf(tokenType) === -1) {
+    if (!tokenType) {
+      tokenType = enabledTokenTypes[0]
+    } else if (enabledTokenTypes.indexOf(tokenType) === -1) {
       throw new TokenTypeNotEnabledError({ tokenType })
     }
   }
@@ -459,6 +513,7 @@ const updateUserPhoneNumber = async ({ pgdb, userId, phoneNumber }) => {
 
 module.exports = {
   enabledFirstFactors,
+  setPreferedFirstFactor,
   signIn,
   unauthorizedSession,
   denySession,

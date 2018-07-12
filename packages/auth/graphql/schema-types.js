@@ -33,7 +33,10 @@ type User {
   createdAt: DateTime!
   updatedAt: DateTime!
   sessions: [Session!]
-  enabledSecondFactors: [SignInTokenType]!
+  enabledFirstFactors: [SignInTokenType!]!
+  # in order of preference
+  preferedFirstFactor: SignInTokenType
+  enabledSecondFactors: [SignInTokenType!]!
   eventLog: [EventLog!]!
 }
 

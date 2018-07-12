@@ -1,6 +1,7 @@
 const Roles = require('../../lib/Roles')
 const userAccessRoles = ['admin', 'supporter']
 const { findAllUserSessions } = require('../../lib/Sessions')
+const { enabledFirstFactors } = require('../../lib/Users')
 
 module.exports = {
   email (user, args, { pgdb, user: me }) {
@@ -72,5 +73,14 @@ module.exports = {
           archivedSession: e.newData || e.oldData
         }))
       )
+  },
+  async enabledFirstFactors (user, args, { pgdb, user: me }) {
+    Roles.ensureUserIsMeOrInRoles(user, me, userAccessRoles)
+    console.log(user)
+    return enabledFirstFactors(user._raw.email, pgdb)
+  },
+  preferedFirstFactor (user, args, { user: me }) {
+    Roles.ensureUserIsMeOrInRoles(user, me, userAccessRoles)
+    return user._raw.preferedFirstFactor
   }
 }
