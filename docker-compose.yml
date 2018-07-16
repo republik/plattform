@@ -44,12 +44,3 @@ services:
       - ./docker-data/postgres:/var/lib/postgresql/data
     ports:
       - 5432:5432
-
-  traefik:
-    image: traefik
-    network_mode: "host"
-    ports:
-      - "80:80"     # The HTTP port
-      - "8080:8080" # The Web UI
-    volumes:
-      - ./.docker-config/traefik/traefik.toml:/etc/traefik/traefik.toml

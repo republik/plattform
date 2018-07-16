@@ -36,92 +36,92 @@ The last command kicks on [foreman](https://github.com/strongloop/node-foreman) 
 The following setup enables to start the servers (backends and republik-frontend) on one machine (A) and access it from another (B). This can come handy if you want to develop the backend on A and the app on B.
 
 #### Machine A (servers)
-1. To resolve the hostnames add the following line to `/etc/hosts`:
+1. Get the IP of your machine in the local network, use it in the next step as `LOCAL_IP`
 ```
-127.0.1.1	dev.localdomain api.dev.localdomain
+# linux
+ip addr
+
+# macOS
+ifconfig
 ```
 
 2. Adapt hostnames in the environment variables:
 - in `backends/.env`
 ```
-FRONTEND_BASE_URL=http://dev.localdomain
+FRONTEND_BASE_URL=http://republik.test
+
+LOCAL_IP=192.168.1.88
 ```
 - in `backends/servers/republik/.env`
 ```
-CORS_WHITELIST_URL=http://dev.localdomain
-COOKIE_DOMAIN=dev.localdomain
-PUBLIC_WS_URL_BASE=ws://api.dev.localdomain
+CORS_WHITELIST_URL=http://republik.test
+COOKIE_DOMAIN=.republik.test
+PUBLIC_WS_URL_BASE=ws://api.republik.test
 ```
 - in `republik-frontend/.env`
 ```
-API_URL=http://api.dev.localdomain/graphql
-API_WS_URL=ws://api.dev.localdomain/graphql
-API_ASSETS_BASE_URL=http://dev.localdomain
-PUBLIC_BASE_URL=http://dev.localdomain
+API_URL=http://api.republik.test/graphql
+API_WS_URL=ws://api.republik.test/graphql
+API_ASSETS_BASE_URL=http://republik.test
+PUBLIC_BASE_URL=http://republik.test
 ```
 
-3. Run backend services with docker (in `backends/`):
+
+3. Start the DNS-Server and reverse proxy:
 ```
-docker-compose up
+docker-compose -f docker-compose-test-network.yml up [-d]
 ```
-Despite postgres, elastic, etc. this starts a traefik load balancer, that forwards traffik from `http://dev.localdomain` to `127.0.0.1:3000` (check: [traefik.toml](.docker-config/traefik/traefik.toml))
+- bind: You now have a DNS server running locally. It resolves all requests of `*.republik.test` to `LOCAL_IP`.
+- traefik: routes requests based on SNI (check: [traefik.toml](.docker-config/traefik/traefik.toml))
+  - `http://republik.test` -> `http://localhost:3010`
+  - `http://api.republik.test` -> `http://localhost:5000`
 
 
-4. Run the backend servers (in `backends/`):
+4. Run backend services with docker (in `backends/`):
+```
+docker-compose up [-d]
+```
+
+5. Run the backend servers (in `backends/`):
 ```
 yarn run dev
 ```
 
-5. Run the frontend server (in `republik-frontend/`):
+6. Run the frontend server (in `republik-frontend/`):
 ```
 npm run dev
 ```
 
-6. Test
-You should be able to access [http://api.dev.localdomain/graphiql](http://api.dev.localdomain/graphiql) and [http://dev.localdomain](http://dev.localdomain)
+7. Test
+You should be able to access [http://api.republik.test/graphiql](http://api.republik.test/graphiql) and [http://republik.test](http://republik.test)
 
 #### Machine B (app)
 1. To resolve the hostnames:
 - Find the IP of Machine A, let's say its `192.168.1.88`
-- add the following line to `/etc/hosts`:
-```
-192.168.1.88	dev.localdomain api.dev.localdomain
-```
+- change your network config to use this IP as your DNS resolver.
 
 2. Adapt hostnames in the environment variables (in `app/.env.dev`):
 ```
-API_URL=http://api.dev.localdomain/graphql
-API_WS_URL=ws://api.dev.localdomain/graphql
-FRONTEND_BASE_URL=http://dev.localdomain
+API_URL=http://api.republik.test/graphql
+API_WS_URL=ws://api.republik.test/graphql
+FRONTEND_BASE_URL=http://republik.test
 ```
 
 3. Test
 
-You should be able to access [http://api.dev.localdomain/graphiql](http://api.dev.localdomain/graphiql) and [http://dev.localdomain](http://dev.localdomain)
+You should be able to access [http://api.republik.test/graphiql](http://api.republik.test/graphiql) and [http://republik.test](http://republik.test)
 
 
-4. Setup emulator
+4. Setup simulators/emulators
 
-Unfortunately the android emulator doesn't use the hosts dns resolver, so we must add our hostname to the emulator aswel:
-- make sure you use a "Google API" system image not an "Google Play" one on your emulator.
-- run the emulator with a writable filesystem:
-```
-~/Library/Android/sdk/emulator/emulator -avd NAME -writable-system
-```
-- add the host entry:
-```
-adb root
-adb remount
-adb shell
-> echo '192.168.1.88 api.dev.localdomain dev.localdomain' >> /etc/hosts
-> exit
-```
+At least the android emulator doesn't use the hosts dns resolver
+- configure the DNS resolver manually (see step 1) inside the simulator
+- test in the webbrowser that [http://republik.test](http://republik.test) is accessible.
 - run the app as usual (in `app/`)
 ```
 yarn run run-android
 ```
 
-5. The app should now run fine, accessing the resources on machine A.
 
 ## Caveats
 
