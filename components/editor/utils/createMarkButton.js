@@ -18,7 +18,6 @@ const reducer = markType =>
     event => {
       const { onChange, value } = props
       event.preventDefault()
-
       if (value.isEmpty) {
         const key = value.startKey
         const offset = value.startOffset
@@ -49,8 +48,15 @@ const reducer = markType =>
           )
         )
       } else {
+        let change = value.change()
+        if (value.characters.first().text === ' ') {
+          change = change.moveStart(1)
+        }
+        if (value.characters.last().text === ' ') {
+          change = change.moveEnd(-1)
+        }
         return onChange(
-          value.change().toggleMark(markType)
+          change.toggleMark(markType)
         )
       }
     }
