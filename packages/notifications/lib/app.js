@@ -1,35 +1,27 @@
-const firebase = require('./firebase')
+const { publish: publishFirebase } = require('./firebase')
+const { publish: publishiOS } = require('./apn')
 const debug = require('debug')('notifications:publish')
 
-module.exports = {
-  async publish (args, { pgdb }) {
-    const { userIds, title, body, url, icon, type } = args
+const publish = async (userIds, args, { pgdb }) => {
+  const devices = await pgdb.public.devices.find(
+    { userId: userIds }
+  )
 
-    const deviceTokens = await pgdb.public.devices.find(
-      { userId: userIds }
-    )
-      .then(devices => devices
-        .map(d => d.token)
-      )
-    if (deviceTokens.length > 0) {
-      const message = {
-        notification: {
-          title,
-          body
-        },
-        data: {
-          url,
-          icon,
-          type
-        }
-      }
-      const result = await firebase.messaging().sendToDevice(
-        deviceTokens,
-        message
-      )
-      debug('#recipients %d, message: %O, result: %O', deviceTokens.length, message, result)
-    } else {
-      debug('no receipients found for publish: %O', args)
-    }
-  }
+  const iosTokens = devices
+    .filter(d => d.information.os === 'ios')
+    .map(d => d.token)
+
+  const androidTokens = devices
+    .filter(d => d.information.os === 'android')
+    .map(d => d.token)
+
+  debug('sending notifications (apn: %d, firebase: %d)...', iosTokens.length, androidTokens.length)
+  return Promise.all([
+    publishiOS({ tokens: iosTokens, ...args }),
+    publishFirebase({ tokens: androidTokens, ...args })
+  ])
+}
+
+module.exports = {
+  publish
 }

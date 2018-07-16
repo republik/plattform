@@ -127,8 +127,7 @@ const submitComment = async (comment, discussion, context) => {
       .map(u => u.id)
 
     if (appUserIds.length > 0) {
-      await appNotifications.publish({
-        userIds: appUserIds,
+      await appNotifications.publish(appUserIds, {
         title: isTopLevelComment
           ? t('api/comment/notification/new/app/subject', subjectParams)
           : t('api/comment/notification/answer/app/subject', subjectParams),
