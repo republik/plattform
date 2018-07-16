@@ -50,7 +50,7 @@ module.exports = {
     }
     return meta
   },
-  children (doc, { first, last, before, after }, context, info) {
+  children (doc, { first, last, before, after, urlPrefix, searchString, webp }, context, info) {
     if (!doc || !doc.content || !doc.content.children) {
       return {
         pageInfo: {
@@ -63,6 +63,17 @@ module.exports = {
         nodes: []
       }
     }
+    if (doc._all) {
+      contentUrlResolver(doc, doc._all, doc._usernames, undefined, urlPrefix, searchString)
+
+      if (shouldDeliverWebP(webp, context.req)) {
+        processRepoImageUrlsInContent(doc.content, addWebpSuffix)
+        processImageUrlsInContent(doc.content, addWebpSuffix)
+      }
+
+      processMembersOnlyZonesInContent(doc.content, context.user)
+    }
+
     const children = (doc.content.children.length && doc.content.children) || []
     const totalCount = children.length
     const firstIndex = 0

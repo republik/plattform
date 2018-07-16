@@ -185,6 +185,8 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     // insert pledgeOptions
     const newPledgeOptions = await Promise.all(pledge.options.map((plo) => {
       plo.pledgeId = newPledge.id
+      const pko = packageOptions.find((pko) => pko.id === plo.templateId)
+      plo.vat = pko.vat
       return transaction.public.pledgeOptions.insertAndGet(plo)
     }))
     newPledge.packageOptions = newPledgeOptions

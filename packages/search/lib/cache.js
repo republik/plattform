@@ -23,8 +23,9 @@ const createGet = (redis) => async (query) => {
     : payload
 }
 
-const isEligible = (query) => {
+const isEligible = (query, options) => {
   if (
+    !options.scheduledAt &&
     query.index &&
     query.index.length === 1 &&
     query.index[0] === getIndexAlias('document', 'read')
@@ -34,8 +35,8 @@ const isEligible = (query) => {
   return false
 }
 
-const createSet = (redis) => async (query, payload) => {
-  if (isEligible(query)) {
+const createSet = (redis) => async (query, payload, options = {}) => {
+  if (isEligible(query, options)) {
     let payloadString
     try {
       payloadString = JSON.stringify(payload)

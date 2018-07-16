@@ -44,20 +44,26 @@ module.exports = async (_, args, {
       logger.error(message, { req: req._log(), pledge })
       throw new Error(message)
     }
-
-    // MONTHLY can only be cancelled 14 days max after pledge
-    const maxDays = 14
     const pkg = await transaction.public.packages.findOne({
       id: pledge.packageId
     })
-    if (pkg.name === 'MONTHLY_ABO' && moment().diff(moment(pledge.createdAt), 'days') > maxDays) {
-      throw new Error(t('api/pledge/cancel/tooLate', { maxDays }))
-    }
 
-    await transaction.public.pledges.updateOne({id: pledgeId}, {
-      status: 'CANCELLED',
-      updatedAt: now
-    })
+    if (pledge.status === 'DRAFT') {
+      await transaction.public.pledges.deleteOne({
+        id: pledgeId
+      })
+    } else {
+      // MONTHLY can only be cancelled 14 days max after pledge
+      const maxDays = 14
+      if (pkg.name === 'MONTHLY_ABO' && moment().diff(moment(pledge.createdAt), 'days') > maxDays) {
+        throw new Error(t('api/pledge/cancel/tooLate', { maxDays }))
+      }
+
+      await transaction.public.pledges.updateOne({id: pledgeId}, {
+        status: 'CANCELLED',
+        updatedAt: now
+      })
+    }
 
     const payments = await transaction.query(`
       SELECT
@@ -102,14 +108,16 @@ module.exports = async (_, args, {
       const memberships = await transaction.public.memberships.find({
         pledgeId
       })
-      await cancelMembership(
-        null,
-        {
-          id: memberships[0].id,
-          immediately: true
-        },
-        { pgdb: transaction, req, t }
-      )
+      if (memberships.length) { // 0 for draft pledges
+        await cancelMembership(
+          null,
+          {
+            id: memberships[0].id,
+            immediately: true
+          },
+          { pgdb: transaction, req, t }
+        )
+      }
     }
     await transaction.public.memberships.update({
       pledgeId: pledgeId
