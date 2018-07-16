@@ -45,7 +45,7 @@ module.exports = {
         title: t('api/signin/app/title'),
         body: t('api/signin/app/body'),
         url: verificationUrl,
-        type: 'discussion', // TODO change to 'authorization'
+        type: 'authorization',
         ttl: TTL,
         priority: 'high'
       }, {
