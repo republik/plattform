@@ -43,6 +43,7 @@ module.exports = async (_, { userId }, { pgdb, req, t, user: me, mail: { enforce
       pledgeId: pledge.id,
       amount: 1,
       price: total,
+      vat: pkgOption.vat,
       createdAt: now,
       updatedAt: now
     })

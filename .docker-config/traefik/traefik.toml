@@ -17,11 +17,11 @@ defaultEntryPoints = ["http"]
   [frontends.republik_api]
   backend = "republik_api"
     [frontends.republik_api.routes.default]
-    rule = "Host:api.dev.localdomain"
+    rule = "Host:api.republik.test"
   [frontends.republik_frontend]
   backend = "republik_frontend"
     [frontends.republik_frontend.routes.default]
-    rule = "Host:dev.localdomain"
+    rule = "Host:republik.test"
 
 [api]
   entryPoint = "traefik"

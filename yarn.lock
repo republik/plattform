@@ -633,6 +633,16 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
+apn@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/apn/-/apn-2.2.0.tgz#211ae4adf31b115a033342376b7ce23a5d18c393"
+  dependencies:
+    debug "^3.1.0"
+    http2 "https://github.com/node-apn/node-http2/archive/apn-2.1.4.tar.gz"
+    jsonwebtoken "^8.1.0"
+    node-forge "^0.7.1"
+    verror "^1.10.0"
+
 apollo-cache-control@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/apollo-cache-control/-/apollo-cache-control-0.1.1.tgz#173d14ceb3eb9e7cb53de7eb8b61bee6159d4171"
@@ -3623,6 +3633,10 @@ http-signature@~1.2.0:
     jsprim "^1.2.2"
     sshpk "^1.7.0"
 
+"http2@https://github.com/node-apn/node-http2/archive/apn-2.1.4.tar.gz":
+  version "3.3.6"
+  resolved "https://github.com/node-apn/node-http2/archive/apn-2.1.4.tar.gz#8333dee2d6e0089152cefad30f41ced502f9c366"
+
 https-proxy-agent@^2.2.0:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-2.2.1.tgz#51552970fa04d723e04c56d04178c3f92592bbc0"
@@ -5318,7 +5332,7 @@ node-forge@0.7.4:
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.7.4.tgz#8e6e9f563a1e32213aa7508cded22aa791dbf986"
 
-node-forge@^0.7.4:
+node-forge@^0.7.1, node-forge@^0.7.4:
   version "0.7.5"
   resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.7.5.tgz#6c152c345ce11c52f465c2abd957e8639cd674df"
 
@@ -8149,7 +8163,7 @@ vary@^1, vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
 
-verror@1.10.0:
+verror@1.10.0, verror@^1.10.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/verror/-/verror-1.10.0.tgz#3a105ca17053af55d6e270c1f8288682e18da400"
   dependencies:

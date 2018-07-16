@@ -39,15 +39,19 @@ module.exports = {
         tokenType: Type
       })
 
-    return app.publish({
-      userIds: [user.id],
-      title: t('api/signin/app/title'),
-      body: t('api/signin/app/body'),
-      url: verificationUrl,
-      type: 'discussion', // TODO change to 'authorization'
-      ttl: TTL,
-      priority: 'high'
-    }, { pgdb })
+    return app.publish(
+      [user.id],
+      {
+        title: t('api/signin/app/title'),
+        body: t('api/signin/app/body'),
+        url: verificationUrl,
+        type: 'discussion', // TODO change to 'authorization'
+        ttl: TTL,
+        priority: 'high'
+      }, {
+        pgdb
+      }
+    )
   },
   validateChallenge: async ({ pgdb, user, me }, { payload }) => {
     // app tokens must only be validated if the request is

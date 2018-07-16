@@ -170,6 +170,14 @@ type Update {
   socialMediaImage: String
 }
 
+type Employee {
+  group: String
+  subgroup: String
+  userId: String
+  name: String
+  title: String
+}
+
 enum Permission {
   ALLOWED
   ENFORCED

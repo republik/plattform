@@ -23,6 +23,7 @@
     "dotenv": "^5.0.1"
   },
   "dependencies": {
+    "apn": "^2.2.0",
     "firebase-admin": "^5.12.1"
   }
 }

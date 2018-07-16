@@ -58,6 +58,9 @@ const schema = {
   id: {
     criteria: termCriteriaBuilder('_id')
   },
+  ids: {
+    criteria: termCriteriaBuilder('_id')
+  },
   type: termEntry('__type'),
   state: termEntry('__state'),
   template: termEntry('meta.template'),
@@ -265,7 +268,7 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
       recursive: true,
       withoutContent: true,
       scheduledAt,
-      first: seriesRepoIds.length,
+      first: seriesRepoIds.length * 2,
       filter: {
         repoId: seriesRepoIds,
         type: 'Document'
@@ -291,7 +294,7 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
       recursive: true,
       withoutContent: true,
       scheduledAt,
-      first: sanitizedRepoIds.length,
+      first: sanitizedRepoIds.length * 2,
       filter: {
         repoId: sanitizedRepoIds,
         type: 'Document'
