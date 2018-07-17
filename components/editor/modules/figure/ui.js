@@ -45,7 +45,6 @@ function createUI ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions,
             const imageBlock = block.nodes.find(n => n.type === FIGURE_IMAGE)
             const captionBlock = block.nodes.find(n => n.type === FIGURE_CAPTION)
             const onInputChange = subject => key => (_, val) => {
-              console.log('subject.key', subject.key, subject.toJS(), key, val)
               onChange(
                 value
                   .change()
@@ -133,14 +132,16 @@ function createUI ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions,
                     ]
                   })}
                 </p>}
-                <p>
-                  <Checkbox
-                    checked={block.data.get('excludeFromGallery') === true}
-                    onChange={onInputChange(block)('excludeFromGallery')
-                  }>
-                    {t('metaData/field/excludeFromGallery')}
-                  </Checkbox>
-                </p>
+                { value.document.data.get('gallery') === true &&
+                  <p>
+                    <Checkbox
+                      checked={block.data.get('excludeFromGallery') === true}
+                      onChange={onInputChange(block)('excludeFromGallery')
+                    }>
+                      {t('metaData/field/excludeFromGallery')}
+                    </Checkbox>
+                  </p>
+                }
                 {pixelNote && [
                   <Label key='pixelNote'>{pixelNote}</Label>,
                   <br key='pixelNoteBr' />
