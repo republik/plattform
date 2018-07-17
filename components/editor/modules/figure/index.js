@@ -66,7 +66,8 @@ export default options => {
         type: TYPE,
         data: {
           float: node.data.float,
-          size: node.data.size
+          size: node.data.size,
+          excludeFromGallery: node.data.excludeFromGallery === true
         },
         nodes: [
           imageSerializer.fromMdast(image, 0, node, rest),

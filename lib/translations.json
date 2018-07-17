@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-22T09:25:14.628Z",
+  "updated": "2018-07-17T10:13:16.747Z",
   "title": "live",
   "data": [
     {
@@ -315,10 +315,6 @@
       "value": "Publikationsdatum"
     },
     {
-      "key": "metaData/field/gallery",
-      "value": "Bilder als Galerie"
-    },
-    {
       "key": "metaData/field/feed",
       "value": "Erscheint im Feed"
     },
@@ -465,6 +461,14 @@
     {
       "key": "metaData/series/coverText/fontSize",
       "value": "Schriftgrösse"
+    },
+    {
+      "key": "metaData/field/excludeFromGallery",
+      "value": "Von Galerie ausschliessen"
+    },
+    {
+      "key": "metaData/field/gallery",
+      "value": "Bilder als Galerie"
     },
     {
       "key": "uncommittedChanges/unlock/confirm/1",

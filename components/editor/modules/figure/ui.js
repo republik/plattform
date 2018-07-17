@@ -1,6 +1,7 @@
 import React from 'react'
 import { Map } from 'immutable'
-import { Radio, Label } from '@project-r/styleguide'
+import { Radio, Label, Checkbox } from '@project-r/styleguide'
+import withT from '../../../../lib/withT'
 
 import {
   createPropertyForm,
@@ -9,7 +10,7 @@ import {
 import injectBlock from '../../utils/injectBlock'
 import MetaForm from '../../utils/MetaForm'
 
-export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions}) => {
+function createUI ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions, t}) {
   const isFigureBlock = block => block.type === FIGURE_IMAGE || block.type === FIGURE_CAPTION
 
   const {
@@ -25,7 +26,7 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions}) =
         !value.blocks.some(isFigureBlock)
       )
     }
-  })(({ disabled, value, onChange }) => {
+  })(withT(({ disabled, value, onChange, t }) => {
     if (disabled) {
       return null
     }
@@ -44,6 +45,7 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions}) =
             const imageBlock = block.nodes.find(n => n.type === FIGURE_IMAGE)
             const captionBlock = block.nodes.find(n => n.type === FIGURE_CAPTION)
             const onInputChange = subject => key => (_, val) => {
+              console.log('subject.key', subject.key, subject.toJS(), key, val)
               onChange(
                 value
                   .change()
@@ -80,11 +82,6 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions}) =
                   }).merge(imageBlock.data)}
                   onInputChange={onInputChange(imageBlock)}
                 />
-                {pixelNote && [
-                  <Label key='pixelNote'>{pixelNote}</Label>,
-                  <br key='pixelNoteBr' />
-                ]}
-                <br />
                 {captionRight && <MetaForm
                   data={Map({
                     captionRight: captionBlock.data.get('captionRight') || false
@@ -136,12 +133,25 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions}) =
                     ]
                   })}
                 </p>}
+                <p>
+                  <Checkbox
+                    checked={block.data.get('excludeFromGallery') === true}
+                    onChange={onInputChange(block)('excludeFromGallery')
+                  }>
+                    {t('metaData/field/excludeFromGallery')}
+                  </Checkbox>
+                </p>
+                {pixelNote && [
+                  <Label key='pixelNote'>{pixelNote}</Label>,
+                  <br key='pixelNoteBr' />
+                ]}
+                <br />
               </div>
             )
           })
       }
     </div>
-  })
+  }))
 
   const figureButtonClickHandler = (disabled, value, onChange) => event => {
     event.preventDefault()
@@ -181,3 +191,5 @@ export default ({TYPE, FIGURE_IMAGE, FIGURE_CAPTION, newBlock, editorOptions}) =
     insertButtons: [insertButtonText && FigureButton]
   }
 }
+
+export default createUI

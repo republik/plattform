@@ -57,6 +57,12 @@ const serializer = figureModule.helpers.serializer
 test('figure serialization', assert => {
   const md = `<section><h6>${TYPE}</h6>
 
+\`\`\`
+{
+  "excludeFromGallery": false
+}
+\`\`\`
+
 ![Alt](example.com/img.jpg)
 
 Caption_Byline_
@@ -64,6 +70,7 @@ Caption_Byline_
 <hr /></section>`
   const value = serializer.deserialize(parse(md))
   const node = value.document.nodes.first()
+  assert.equal(node.getIn(['data', 'excludeFromGallery']), false)
 
   const image = node.nodes.first()
   assert.equal(image.kind, 'block')
