@@ -1,8 +1,13 @@
 const session = require('express-session')
-const PgSession = require('connect-pg-simple')(session)
 const passport = require('passport')
+const PgSession = require('connect-pg-simple')(session)
+
 const transformUser = require('../lib/transformUser')
 const basicAuthMiddleware = require('./basicAuth')
+const { specialRoles, userIsInRoles } = require('../lib/Roles')
+
+const DEFAULT_MAX_AGE_IN_MS = 60000 * 60 * 24 * 365 // 1 year
+const SHORT_MAX_AGE_IN_MS = 60000 * 60 * 24 * 1 // 1 week
 
 exports.configure = ({
   server = null, // Express Server
@@ -13,10 +18,10 @@ exports.configure = ({
   domain = undefined,
   // name of the session ID cookie to set in the response (and read from request)
   cookieName = 'connect.sid',
-  // Max session age in ms (default is 2 weeks)
+  // Max session age in ms
   // NB: With 'rolling: true' passed to session() the session expiry time will
   // be reset every time a user visits the site again before it expires.
-  maxAge = 60000 * 60 * 24 * 7 * 2,
+  maxAge = DEFAULT_MAX_AGE_IN_MS, // 1 year
   // is the server running in development
   dev = false
 } = {}) => {
@@ -67,13 +72,26 @@ exports.configure = ({
     const user = transformUser(
       await Users.findOne({id})
     )
+
     if (!user) {
       return next('user not found!')
     }
+
     next(null, user)
   })
 
   // Initialise Passport
   server.use(passport.initialize())
   server.use(passport.session())
+
+  server.use(function (req, res, next) {
+    // Check if a user has more than one and let session expire after a shorter period of time
+    if (req.user && userIsInRoles(req.user, specialRoles)) {
+      req.session.cookie.expires =
+        new Date(Date.now() + SHORT_MAX_AGE_IN_MS)
+      req.session.cookie.maxAge = SHORT_MAX_AGE_IN_MS
+    }
+
+    return next()
+  })
 }
