@@ -14,6 +14,7 @@ services:
 branches:
   only:
   - master
+  - app
   - app-authenticator
 matrix:
   include:
