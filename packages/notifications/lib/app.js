@@ -2,7 +2,13 @@ const { publish: publishFirebase } = require('./firebase')
 const { publish: publishiOS } = require('./apn')
 const debug = require('debug')('notifications:publish')
 
+const defaultTTL = 4 * 7 * 24 * 60 * 60 * 1000 // 4 weeks in ms, firebase default
+
 const publish = async (userIds, args, { pgdb }) => {
+  if (!args.ttl) {
+    args.ttl = defaultTTL
+  }
+
   const devices = await pgdb.public.devices.find(
     { userId: userIds }
   )
