@@ -2,7 +2,7 @@ const { apolloFetch, pgDatabase } = require('./helpers')
 
 const LOGIN_USER_MUTATION = `
   mutation signIn($email: String!, $context: String) {
-    signIn(email: $email, context: $context) {
+    signIn(email: $email, context: $context, consents: ["PRIVACY"]) {
       phrase
     }
   }

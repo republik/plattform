@@ -82,9 +82,7 @@ test('cancelPledge: Unpaid (DRAFT) ABO with PAYMENTSLIP', async (t) => {
     pledgeId
   })
   t.notOk(result.errors, 'graphql query successful')
-  t.deepEqual(result.data, {
-    cancelPledge: { status: 'CANCELLED', memberships: [] }
-  }, 'pledgestatus is CANCELLED now and no memberships generated at all')
+  t.deepEqual(result.data, {cancelPledge: null}, 'pledge is deleted')
   // check that payment is CANCELLED as well!
   const pledgePayment = await pgDatabase().public.pledgePayments.findOne({ pledgeId })
   t.notOk(pledgePayment, 'no payment, cancelled before payment')
