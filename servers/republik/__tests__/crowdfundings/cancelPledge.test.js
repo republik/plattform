@@ -75,7 +75,7 @@ const prepare = async (options) => {
   return { ...newPledge }
 }
 
-test('cancelPledge: Unpaid ABO with PAYMENTSLIP', async (t) => {
+test('cancelPledge: Unpaid (DRAFT) ABO with PAYMENTSLIP', async (t) => {
   const { pledgeId } = await prepare()
   await signIn({ user: Users.Supporter })
   const result = await cancelPledge({
