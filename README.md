@@ -33,16 +33,14 @@ The last command kicks on [foreman](https://github.com/strongloop/node-foreman) 
 
 
 ### Special setup: develop on two hosts
-The following setup enables to start the servers (backends and republik-frontend) on one machine (A) and access it from another (B). This can come handy if you want to develop the backend on A and the app on B.
+The following setup enables to start the servers (backends and republik-frontend) on one machine (A) and access it from another (B). This can come handy if you want to develop the backend on A and the app on B (where B can be a physical device).
+
+Please not that due to how "Docker for Mac" works (docker is run in a hidden VM), it's not possible to bind containers to the host's network-interface, therefor this setup only works on linux.
 
 #### Machine A (servers)
 1. Get the IP of your machine in the local network, use it in the next step as `LOCAL_IP`
 ```
-# linux
 ip addr
-
-# macOS
-ifconfig
 ```
 
 2. Adapt hostnames in the environment variables:
