@@ -14,7 +14,7 @@ services:
 branches:
   only:
   - master
-  - gdpr
+  - app-authenticator
 matrix:
   include:
     - env:
