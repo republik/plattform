@@ -8,20 +8,28 @@ const {
   APN_BUNDLE_ID
 } = process.env
 
-const options = {
-  token: {
-    keyId: APN_KEY_ID,
-    teamId: APN_TEAM_ID,
-    key: APN_KEY
-      .replace(/@/g, '\n')
-      .replace(/\\\s/g, ' ')
+// singleton
+let provider
+if (!APN_KEY || !APN_KEY_ID || !APN_TEAM_ID || !APN_BUNDLE_ID) {
+  console.warn('missing env APN_*, sending push notifications via apn will not work')
+} else {
+  const options = {
+    token: {
+      keyId: APN_KEY_ID,
+      teamId: APN_TEAM_ID,
+      key: APN_KEY
+        .replace(/@/g, '\n')
+        .replace(/\\\s/g, ' ')
+    }
   }
+  provider = new apn.Provider(options)
 }
 
-// singleton
-const provider = new apn.Provider(options)
-
 const publish = async (args) => {
+  if (!provider) {
+    throw new Error(`mssing env APN_*, can't publish`)
+  }
+
   const { tokens, title, body, url, icon, type, ttl } = args
   const now = new Date()
 
