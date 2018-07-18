@@ -79,7 +79,9 @@ type mutations {
   mergeUsers(targetUserId: ID!, sourceUserId: ID!): User!
 
   # required role: supporter
-  cancelPledge(pledgeId: ID!): Pledge!
+  # only in case of status === 'DRAFT' the pledge is deleted
+  # and nothing is returned
+  cancelPledge(pledgeId: ID!): Pledge
 
   # Tries to resolve the amount of a pledge to the total of it's PAID payment.
   # This comes handy if e.g. the payment is off by some cents (foreign wire transfer)
