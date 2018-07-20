@@ -4,7 +4,7 @@ const { Users } = require('../auth.js')
 
 const SUBMIT_PLEDGE_MUTATION = `
   mutation submitPledge($total: Int!, $options: [PackageOptionInput!]!, $user: UserInput!, $reason: String) {
-    submitPledge(pledge: {total: $total, options: $options, user: $user, reason: $reason}) {
+    submitPledge(pledge: {total: $total, options: $options, user: $user, reason: $reason}, consents: ["PRIVACY"]) {
       pledgeId
       userId
       emailVerify

@@ -24,12 +24,31 @@ At the moment many ENV variables are required for the servers to just run. We ar
 
 ### Quick start
 
-- You must have node (8.3.0+) installed, postgres and redis running somewhere.
-- Copy the `.env.example` files to `.env` (root and server) and adapt them to your needs.
+- You must have node (8.3.0+) and docker installed.
+- Copy the `.env.example` files to `.env` (in root and server/\*/) and adapt them to your needs.
 - Install dependencies with `yarn install`
-- Run it: `yarn run dev`
+- Run services (postgresql, redis, elasticsearch): `docker-compose up`
+- Run node servers: `yarn run dev`
 
 The last command kicks on [foreman](https://github.com/strongloop/node-foreman) which then launches all the servers locally.
+
+### Docker
+The included [docker-compose.yml](docker-compose.yml) starts all services we depend upon. Currently thats postgresql, redis, elasticsearch (and kibana).
+Just run `docker-compose up [-d]` to start up everything. The data are persisted in `./docker-data/`
+
+#### Postgresql in docker
+We recommend you install the postgresql client tools on your machine to interact with the database. The tests scripts also depend on the clients being installed.
+```
+# linux
+sudo apt install postgresql-client-10
+```
+
+When postgresql in running in docker client tools like `psql` or `createdb`/`dropdb` don't automatically connect to it. They try to access postgresql via a local socket, when instead you want them to connect via network to localhost. To make your life easier, you can add the following environment variables to `~/.bashrc` / `~/.zshrc` so the client tools connect to localhost per default.
+```
+export PGHOST=127.0.0.1
+export PGUSER=postgres
+```
+
 
 ## Caveats
 
