@@ -18,6 +18,7 @@ const { signIn,
 
 const prepare = async () => {
   await connectIfNeeded()
+  await pgDatabase().public.users.truncate({ cascade: true })
 }
 
 test('sign in', async (t) => {
