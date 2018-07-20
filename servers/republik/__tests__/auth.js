@@ -1,9 +1,10 @@
 const { apolloFetch, pgDatabase } = require('./helpers')
 
 const LOGIN_USER_MUTATION = `
-  mutation signIn($email: String!, $context: String) {
-    signIn(email: $email, context: $context, consents: ["PRIVACY"]) {
+  mutation signIn($email: String!, $context: String, $tokenType: SignInTokenType) {
+    signIn(email: $email, context: $context, consents: ["PRIVACY"], tokenType: $tokenType) {
       phrase
+      tokenType
     }
   }
 `
@@ -35,7 +36,8 @@ const signIn = async ({
   context,
   skipAuthorization = false,
   simulate2FAAuth = false,
-  skipTruncate = false
+  skipTruncate = false,
+  tokenType = null
 }) => {
   const { email } = user
 
@@ -55,11 +57,12 @@ const signIn = async ({
   }
 
   // start login process
-  await apolloFetch({
+  const signInResult = await apolloFetch({
     query: LOGIN_USER_MUTATION,
     variables: {
       email,
-      context
+      context,
+      tokenType
     }
   })
 
@@ -96,7 +99,8 @@ const signIn = async ({
   return {
     userId: users.length > 0 && users[0].id,
     payload,
-    email
+    email,
+    signInResult
   }
 }
 

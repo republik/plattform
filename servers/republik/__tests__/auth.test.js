@@ -25,6 +25,7 @@ test('sign in', async (t) => {
   await prepare()
   const result = await signIn({ user: Users.Unverified, skipAuthorization: true })
   t.ok(result && result.userId, 'reportedly started sign in request as unverified user')
+  t.equal(result.signInResult.data.signIn.tokenType, 'EMAIL_TOKEN', 'EMAIL_TOKEN is the default tokenType')
   const tokens = await pgDatabase().public.tokens.find({ 'expiresAt >': new Date(), 'email': Users.Unverified.email })
   const sessions = await pgDatabase().public.sessions.find({'sess @>': { 'email': Users.Unverified.email }})
   t.equal(tokens.length, 1, 'created a new token for mail')
