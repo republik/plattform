@@ -7,7 +7,7 @@ const basicAuthMiddleware = require('./basicAuth')
 const { specialRoles, userIsInRoles } = require('../lib/Roles')
 
 const DEFAULT_MAX_AGE_IN_MS = 60000 * 60 * 24 * 365 // 1 year
-const SHORT_MAX_AGE_IN_MS = 60000 * 60 * 24 * 1 // 1 week
+const SHORT_MAX_AGE_IN_MS = 60000 * 60 * 24 * 7 // 1 week
 
 exports.configure = ({
   server = null, // Express Server
@@ -85,10 +85,9 @@ exports.configure = ({
   server.use(passport.session())
 
   server.use(function (req, res, next) {
-    // Check if a user has more than one and let session expire after a shorter period of time
+    // Check if a user has more than one role and let session expire after a
+    // shorter period of time
     if (req.user && userIsInRoles(req.user, specialRoles)) {
-      req.session.cookie.expires =
-        new Date(Date.now() + SHORT_MAX_AGE_IN_MS)
       req.session.cookie.maxAge = SHORT_MAX_AGE_IN_MS
     }
 
