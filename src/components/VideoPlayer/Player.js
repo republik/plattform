@@ -92,6 +92,7 @@ const styles = {
 
 let globalState = {
   playingRef: undefined,
+  focusRef: undefined,
   muted: false,
   subtitles: false,
   instances: []
@@ -250,7 +251,7 @@ class VideoPlayer extends Component {
     }
   }
   handleKeyPress(event) {
-    if (this === globalState.focus) {
+    if (this.video === globalState.focusRef) {
       if(event.key === 'k' || event.keyCode === 32) { // 32: spacebar
         this.toggle()
       }
@@ -259,7 +260,7 @@ class VideoPlayer extends Component {
     }
   }
   captureFocus(event) {
-    globalState.focus = this
+    globalState.focusRef = this.video
   }
   componentDidMount() {
     this.setState({
@@ -280,7 +281,6 @@ class VideoPlayer extends Component {
 
     const handleInteraction = (next) => (event) => {
       this.captureFocus()
-      globalState.focus = this
       next(event)
     }
     this.video.addEventListener('play', handleInteraction(this.onPlay))
@@ -306,6 +306,9 @@ class VideoPlayer extends Component {
     )
     if (globalState.playingRef === this.video) {
       globalState.playingRef = undefined
+    }
+    if (globalState.focusRef === this.video) {
+      globalState.focusRef = undefined
     }
 
     this.video.removeEventListener('play', this.onPlay)
