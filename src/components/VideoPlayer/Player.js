@@ -94,7 +94,7 @@ let globalState = {
   playingRef: undefined,
   muted: false,
   subtitles: false,
-  instances: [],
+  instances: []
 }
 
 class VideoPlayer extends Component {
