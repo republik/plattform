@@ -92,10 +92,9 @@ const styles = {
 
 let globalState = {
   playingRef: undefined,
-  focusRef: undefined,
   muted: false,
   subtitles: false,
-  instances: []
+  instances: [],
 }
 
 class VideoPlayer extends Component {
@@ -250,17 +249,18 @@ class VideoPlayer extends Component {
       this._textTrackMode = subtitles
     }
   }
-  handleKeyPress(event) {
-    if (this.video === globalState.focusRef) {
-      if(event.key === 'k' || event.keyCode === 32) { // 32: spacebar
-        this.toggle()
-      }
+  handleKeyDown(event) {
+    if(
+      event.key === 'k' ||
+      (!this.state.isFullscreen && event.keyCode === 32) // 32: spacebar
+    ) {
       event.preventDefault()
       event.stopPropagation()
+      this.toggle()
     }
   }
   captureFocus(event) {
-    globalState.focusRef = this.video
+    this.video.focus()
   }
   componentDidMount() {
     this.setState({
@@ -289,7 +289,6 @@ class VideoPlayer extends Component {
     this.video.addEventListener('canplay', this.onCanPlay)
     this.video.addEventListener('canplaythrough', this.onCanPlay)
     this.video.addEventListener('loadedmetadata', this.onLoadedMetaData)
-    window.addEventListener('keydown', this.handleKeyPress.bind(this))
 
     this.setTextTracksMode()
 
@@ -307,9 +306,6 @@ class VideoPlayer extends Component {
     if (globalState.playingRef === this.video) {
       globalState.playingRef = undefined
     }
-    if (globalState.focusRef === this.video) {
-      globalState.focusRef = undefined
-    }
 
     this.video.removeEventListener('play', this.onPlay)
     this.video.removeEventListener('pause', this.onPause)
@@ -318,7 +314,6 @@ class VideoPlayer extends Component {
     this.video.removeEventListener('canplay', this.onCanPlay)
     this.video.removeEventListener('canplaythrough', this.onCanPlay)
     this.video.removeEventListener('loadedmetadata', this.onLoadedMetaData)
-    window.remove('keydown', this.handleKeyPress)
 
     this.state.fullscreen && this.state.fullscreen.dispose()
   }
@@ -327,7 +322,9 @@ class VideoPlayer extends Component {
     const { playing, progress, muted, subtitles, loading, fullscreen, isFullscreen } = this.state
 
     return (
-      <div {...merge(styles.wrapper, breakoutStyles[size])} onClick={this.captureFocus.bind(this)}>
+      <div {...merge(styles.wrapper, breakoutStyles[size])}
+        onClick={this.captureFocus.bind(this)}
+      >
         <video
           {...(isFullscreen ? styles.videoFullscreen : styles.video)}
           {...attributes}
@@ -341,6 +338,8 @@ class VideoPlayer extends Component {
           onLoadedMetadata={this.onLoadedMetaData}
           crossOrigin="anonymous"
           poster={src.thumbnail}
+          tabIndex="0"
+          onKeyDown={this.handleKeyDown.bind(this)}
         >
           <source src={src.hls} type="application/x-mpegURL" />
           <source src={src.mp4} type="video/mp4" />
