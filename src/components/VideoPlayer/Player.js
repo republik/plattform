@@ -167,6 +167,11 @@ class VideoPlayer extends Component {
         loading: false
       }))
     }
+    this.onVolumeChange = () => {
+      if(globalState.muted !== this.video.muted) {
+        this.setMuted(this.video.muted)
+      }
+    }
     this.scrubRef = ref => {
       this.scrubber = ref
     }
@@ -249,6 +254,15 @@ class VideoPlayer extends Component {
       this._textTrackMode = subtitles
     }
   }
+  setMuted(muted) {
+    const next = {
+      muted
+    }
+    globalState.muted = next.muted
+    globalState.instances.forEach(setter => {
+      setter(next)
+    })
+  }
   handleKeyDown(event) {
     if(
       event.key === 'k' ||
@@ -289,6 +303,7 @@ class VideoPlayer extends Component {
     this.video.addEventListener('canplay', this.onCanPlay)
     this.video.addEventListener('canplaythrough', this.onCanPlay)
     this.video.addEventListener('loadedmetadata', this.onLoadedMetaData)
+    this.video.addEventListener('volumechange', this.onVolumeChange)
 
     this.setTextTracksMode()
 
@@ -394,13 +409,7 @@ class VideoPlayer extends Component {
               onClick={e => {
                 e.preventDefault()
                 e.stopPropagation()
-                const next = {
-                  muted: !muted
-                }
-                globalState.muted = next.muted
-                globalState.instances.forEach(setter => {
-                  setter(next)
-                })
+                this.setMuted(!muted)
                 this.captureFocus()
               }}
             >
