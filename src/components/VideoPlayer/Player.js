@@ -33,6 +33,9 @@ const styles = {
     },
     '::-webkit-media-controls-start-playback-button': {
       display: 'none !important'
+    },
+    ':focus': {
+      outline: 'none'
     }
   }),
   videoFullscreen: css({
