@@ -223,6 +223,19 @@ class VideoPlayer extends Component {
     this.setInstanceState = state => {
       this.setState(state)
     }
+    this.handleKeyDown = (event) => {
+      if (
+        event.key === 'k' ||
+        (!this.state.isFullscreen && event.keyCode === 32) // 32: spacebar
+      ) {
+        event.preventDefault()
+        event.stopPropagation()
+        this.toggle()
+      }
+    }
+    this.captureFocus = () => {
+      this.video.focus()
+    }
   }
 
   toggle() {
@@ -263,19 +276,6 @@ class VideoPlayer extends Component {
     globalState.instances.forEach(setter => {
       setter(next)
     })
-  }
-  handleKeyDown(event) {
-    if (
-      event.key === 'k' ||
-      (!this.state.isFullscreen && event.keyCode === 32) // 32: spacebar
-    ) {
-      event.preventDefault()
-      event.stopPropagation()
-      this.toggle()
-    }
-  }
-  captureFocus() {
-    this.video.focus()
   }
   componentDidMount() {
     this.setState({
@@ -339,7 +339,7 @@ class VideoPlayer extends Component {
 
     return (
       <div {...merge(styles.wrapper, breakoutStyles[size])}
-        onClick={() => {this.captureFocus()}}
+        onClick={this.captureFocus}
       >
         <video
           {...(isFullscreen ? styles.videoFullscreen : styles.video)}
@@ -355,7 +355,7 @@ class VideoPlayer extends Component {
           crossOrigin="anonymous"
           poster={src.thumbnail}
           tabIndex="0"
-          onKeyDown={(event) => {this.handleKeyDown(event)}}
+          onKeyDown={this.handleKeyDown}
         >
           <source src={src.hls} type="application/x-mpegURL" />
           <source src={src.mp4} type="video/mp4" />
