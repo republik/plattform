@@ -271,7 +271,7 @@ class VideoPlayer extends Component {
       this.toggle()
     }
   }
-  captureFocus(event) {
+  captureFocus() {
     this.video.focus()
   }
   componentDidMount() {
@@ -336,7 +336,7 @@ class VideoPlayer extends Component {
 
     return (
       <div {...merge(styles.wrapper, breakoutStyles[size])}
-        onClick={this.captureFocus.bind(this)}
+        onClick={() => {this.captureFocus()}}
       >
         <video
           {...(isFullscreen ? styles.videoFullscreen : styles.video)}
@@ -352,7 +352,7 @@ class VideoPlayer extends Component {
           crossOrigin="anonymous"
           poster={src.thumbnail}
           tabIndex="0"
-          onKeyDown={this.handleKeyDown.bind(this)}
+          onKeyDown={(event) => {this.handleKeyDown(event)}}
         >
           <source src={src.hls} type="application/x-mpegURL" />
           <source src={src.mp4} type="video/mp4" />
