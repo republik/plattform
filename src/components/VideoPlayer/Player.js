@@ -294,12 +294,8 @@ class VideoPlayer extends Component {
       return
     }
 
-    const handleInteraction = (next) => (event) => {
-      this.captureFocus()
-      next(event)
-    }
-    this.video.addEventListener('play', handleInteraction(this.onPlay))
-    this.video.addEventListener('pause', handleInteraction(this.onPause))
+    this.video.addEventListener('play', this.onPlay)
+    this.video.addEventListener('pause', this.onPause)
     this.video.addEventListener('loadstart', this.onLoadStart)
     this.video.addEventListener('canplay', this.onCanPlay)
     this.video.addEventListener('canplaythrough', this.onCanPlay)
