@@ -201,8 +201,6 @@ class VideoPlayer extends Component {
       }
     }
     this.scrubStart = event => {
-      this.captureFocus()
-
       this.scrubbing = true
       if (event.type === 'mousedown') {
         const up = e => {
@@ -397,7 +395,6 @@ class VideoPlayer extends Component {
                   globalState.instances.forEach(setter => {
                     setter(next)
                   })
-                  this.captureFocus()
                 }}
               >
                 <Subtitles off={!subtitles} />
@@ -410,7 +407,6 @@ class VideoPlayer extends Component {
                 e.preventDefault()
                 e.stopPropagation()
                 this.setMuted(!muted)
-                this.captureFocus()
               }}
             >
               <Volume off={muted} />
