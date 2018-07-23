@@ -168,7 +168,7 @@ class VideoPlayer extends Component {
       }))
     }
     this.onVolumeChange = () => {
-      if(globalState.muted !== this.video.muted) {
+      if (globalState.muted !== this.video.muted) {
         this.setMuted(this.video.muted)
       }
     }
@@ -264,7 +264,7 @@ class VideoPlayer extends Component {
     })
   }
   handleKeyDown(event) {
-    if(
+    if (
       event.key === 'k' ||
       (!this.state.isFullscreen && event.keyCode === 32) // 32: spacebar
     ) {
