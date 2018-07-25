@@ -181,7 +181,8 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
 
     return {
       tokenType,
-      phrase
+      phrase,
+      expiresAt: token.expiresAt
     }
   } catch (error) {
     console.error(error)

@@ -43,6 +43,7 @@ type User {
 type SignInResponse {
   phrase: String!
   tokenType: SignInTokenType!
+  expiresAt: DateTime!
 }
 
 type SharedSecretResponse {
