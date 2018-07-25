@@ -66,6 +66,7 @@ ip addr
 - in `backends/.env`
 ```
 FRONTEND_BASE_URL=http://republik.test
+ASSETS_SERVER_BASE_URL=http://assets.republik.test
 
 LOCAL_IP=192.168.1.88
 ```
@@ -99,17 +100,24 @@ docker-compose -f docker-compose-test-network.yml up [-d]
 docker-compose up [-d]
 ```
 
-5. Run the backend servers (in `backends/`):
+5. Refresh published articles, due to changed `ASSETS_SERVER_BASE_URL` (in `backends/`):
+```
+yarn run pull:elasticsearch
+redis-cli
+> FLUSHALL
+```
+
+6. Run the backend servers (in `backends/`):
 ```
 yarn run dev
 ```
 
-6. Run the frontend server (in `republik-frontend/`):
+7. Run the frontend server (in `republik-frontend/`):
 ```
 npm run dev
 ```
 
-7. Test
+8. Test
 You should be able to access [http://api.republik.test/graphiql](http://api.republik.test/graphiql) and [http://republik.test](http://republik.test)
 
 #### Machine B (app)

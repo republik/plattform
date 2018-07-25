@@ -9,6 +9,9 @@ defaultEntryPoints = ["http"]
   [backends.republik_api]
     [backends.republik_api.servers.server1]
     url = "http://localhost:5000"
+  [backends.republik_assets_api]
+    [backends.republik_assets_api.servers.server1]
+    url = "http://localhost:5020"
   [backends.republik_frontend]
     [backends.republik_frontend.servers.server1]
     url = "http://localhost:3010"
@@ -18,6 +21,10 @@ defaultEntryPoints = ["http"]
   backend = "republik_api"
     [frontends.republik_api.routes.default]
     rule = "Host:api.republik.test"
+  [frontends.republik_assets_api]
+  backend = "republik_assets_api"
+    [frontends.republik_assets_api.routes.default]
+    rule = "Host:assets.republik.test"
   [frontends.republik_frontend]
   backend = "republik_frontend"
     [frontends.republik_frontend.routes.default]
