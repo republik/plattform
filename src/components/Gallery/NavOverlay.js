@@ -50,7 +50,7 @@ const styles = {
     color: '#fff',
     display: 'none',
     [lUp]: {
-      display: 'block',
+      display: 'block'
     }
   }),
 }
