@@ -57,7 +57,9 @@ export const TeaserFeed = ({
     template === 'format'
   )
     ? Headlines.Interaction
-    : Headlines.Editorial
+    : formatMeta.kind === 'shortie' || metaKind === 'shortie'
+      ? Headlines.Shortie
+      : Headlines.Editorial
 
   return (
     <Container format={format} color={formatMeta.color || metaColor} Link={Link}>

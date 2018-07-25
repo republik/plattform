@@ -42,3 +42,16 @@ Supported props:
   </Editorial.Credit>
 </TitleBlock>
 ```
+
+```react
+<TitleBlock center>
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <Shortie.Headline>The quick brown fox jumps over the lazy dog</Shortie.Headline>
+  <Editorial.Lead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.
+  </Editorial.Lead>
+  <Editorial.Credit>
+    An article by <Editorial.A href='#'>Christof Moser</Editorial.A>, 31 December 2017
+  </Editorial.Credit>
+</TitleBlock>
+```

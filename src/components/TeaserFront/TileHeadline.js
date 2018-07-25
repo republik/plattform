@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'glamor'
 import { mUp } from './mediaQueries'
-import { serifTitle20, sansSerifMedium20 } from '../Typography/styles'
+import { serifTitle20, sansSerifMedium20, fantasyTitle20 } from '../Typography/styles'
 
 const smallSize = {
   fontSize: '26px',
@@ -36,6 +36,13 @@ const styles = {
     [mUp]: {
       ...mediumSize
     }
+  }),
+  shortie: css({
+    ...fantasyTitle20,
+    ...smallSize,
+    [mUp]: {
+      ...mediumSize
+    }
   })
 }
 
@@ -50,6 +57,14 @@ export const Editorial = ({ children }) => {
 export const Interaction = ({ children }) => {
   return (
     <h1 {...styles.base} {...styles.interaction}>
+      {children}
+    </h1>
+  )
+}
+
+export const Shortie = ({ children }) => {
+  return (
+    <h1 {...styles.base} {...styles.shortie}>
       {children}
     </h1>
   )

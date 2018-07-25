@@ -9,6 +9,7 @@ export const fontFamilies = {
   sansSerifItalic: 'Helvetica-Neue-Italic, Helvetica Neue, Helvetica, sans-serif',
   sansSerifMedium: 'Helvetica-Neue-Medium, Helvetica-Bold, sans-serif',
   monospaceRegular: 'Menlo, Courier, monospace',
+  fantasyTitle: 'fantasy', //Helvetica-Neue-Medium, Helvetica-Bold, sans-serif',
   ...getJson('FONT_FAMILIES')
 }
 

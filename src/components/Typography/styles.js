@@ -265,6 +265,32 @@ export const sansSerifMedium12 = {
   lineHeight: '15px'
 }
 
+// fantasyTitle
+export const fantasyTitle58 = {
+  fontFamily: fontFamilies.fantasyTitle,
+  fontSize: 58,
+  fontWeight: 'normal',
+  lineHeight: '60px'
+}
+export const fantasyTitle30 = {
+  fontFamily: fontFamilies.fantasyTitle,
+  fontSize: 30,
+  fontWeight: 'normal',
+  lineHeight: '34px'
+}
+export const fantasyTitle22 = {
+  fontFamily: fontFamilies.fantasyTitle,
+  fontSize: 22,
+  fontWeight: 'normal',
+  lineHeight: '24px'
+}
+export const fantasyTitle20 = {
+  fontFamily: fontFamilies.fantasyTitle,
+  fontSize: 20,
+  fontWeight: 'normal',
+  lineHeight: '22px'
+}
+
 
 export const h1 = {
   ...serifBold36,

@@ -32,7 +32,8 @@ const createSchema = ({
         key: 'kind',
         items: [
           {value: 'editorial', text: 'Editorial'},
-          {value: 'meta', text: 'Meta'}
+          {value: 'meta', text: 'Meta'},
+          {value: 'shortie', text: 'Ameise'}
         ]
       },
       {

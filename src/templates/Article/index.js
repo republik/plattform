@@ -10,6 +10,7 @@ import TitleBlock from '../../components/TitleBlock'
 import { HR } from '../../components/Typography'
 import * as Editorial from '../../components/Typography/Editorial'
 import * as Interaction from '../../components/Typography/Interaction'
+import * as Shortie from '../../components/Typography/Shortie'
 import { TeaserFeed } from '../../components/TeaserFeed'
 import IllustrationHtml from '../../components/IllustrationHtml'
 import CsvChart from '../../components/Chart/Csv'
@@ -655,7 +656,9 @@ const createSchema = ({
                     format && format.meta && format.meta.kind === 'meta'
                   )
                     ? Interaction.Headline
-                    : Editorial.Headline
+                    : format && format.meta && format.meta.kind === 'shortie'
+                      ? Shortie.Headline
+                      : Editorial.Headline
 
                   const element = <Headline attributes={attributes}>{children}</Headline>
 

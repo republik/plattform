@@ -66,6 +66,34 @@ Supported props:
 ```
 
 ```react
+<TeaserFrontTileRow columns={3}>
+  <TeaserFrontTile
+    color='#fff' bgColor='#000'>
+    <Editorial.Format>Staatentheorie</Editorial.Format>
+    <TeaserFrontTileHeadline.Shortie>Ist der Ameisenstaat eine Republik?</TeaserFrontTileHeadline.Shortie>
+    <TeaserFrontCredit>
+      <TeaserFrontCreditLink href='#'>Daniel Binswanger</TeaserFrontCreditLink>, 30.&nbsp;August&nbsp;2018
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+  <TeaserFrontTile color='#000' bgColor='#fff'>
+    <Editorial.Format>Die aktuelle Verkehrslage</Editorial.Format>
+    <TeaserFrontTileHeadline.Shortie>An der Brücke entspringt eine Ameisenstrasse</TeaserFrontTileHeadline.Shortie>
+    <TeaserFrontCredit>
+      <TeaserFrontCreditLink href='#'>Constantin Seibt</TeaserFrontCreditLink>, 31.&nbsp;August&nbsp;2018
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+  <TeaserFrontTile
+    color='#fff' bgColor='#000'>
+    <Editorial.Format>Im Gleichmarsch</Editorial.Format>
+    <TeaserFrontTileHeadline.Shortie>Links, zwo, drei, vier!</TeaserFrontTileHeadline.Shortie>
+    <TeaserFrontCredit>
+      <TeaserFrontCreditLink href='#'>Constantin Seibt</TeaserFrontCreditLink>, 1.&nbsp;September&nbsp;2018
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+</TeaserFrontTileRow>
+```
+
+```react
 <TeaserFrontTileRow>
   <TeaserFrontTile image='/static/rothaus_portrait.jpg' byline='Foto: Laurent Burst' color='#fff' bgColor='#000'>
     <TeaserFrontTileHeadline.Editorial>The quick brown fox</TeaserFrontTileHeadline.Editorial>

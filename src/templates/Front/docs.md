@@ -347,5 +347,90 @@ Foto: [Laurent Burst](/~349ef65b-119a-4d3e-9176-26517855d342 "Laurent Burst")
 
 <hr /></section>
 
+<section><h6>TEASERGROUP</h6>
+
+\`\`\`
+{
+  "columns": 3
+}
+\`\`\`
+
+<section><h6>TEASER</h6>
+
+\`\`\`
+{
+  "bgColor": "#eee",
+  "center": false,
+  "color": "#000",
+  "kind": "shortie",
+  "portrait": true,
+  "reverse": false,
+  "teaserType": "frontTile",
+  "textPosition": "topleft",
+  "titleSize": "standard",
+  "url": "https://www.republik.ch/updates/portraets"
+}
+\`\`\`
+
+###### Staatentheorie
+
+# Ist der Ameisenstaat eine Republik?
+
+[Daniel Binswanger](/~dbinswanger "Constantin Seibt"), 30. August 2018
+
+<hr /></section>
+
+<section><h6>TEASER</h6>
+
+\`\`\`
+{
+  "bgColor": "#fff",
+  "center": false,
+  "color": "#000",
+  "kind": "shortie",
+  "portrait": true,
+  "reverse": false,
+  "teaserType": "frontTile",
+  "textPosition": "topleft",
+  "titleSize": "standard",
+  "url": "https://www.republik.ch/updates/portraets"
+}
+\`\`\`
+
+###### Die aktuelle Verkehrslage
+
+# An der Brücke entspringt eine Ameisenstrasse
+
+[Constantin Seibt](/~cseibt "Constantin Seibt"), 31. August 2018
+
+<hr /></section>
+
+<section><h6>TEASER</h6>
+
+\`\`\`
+{
+  "bgColor": "#eee",
+  "center": false,
+  "color": "#000",
+  "kind": "shortie",
+  "portrait": true,
+  "reverse": false,
+  "teaserType": "frontTile",
+  "textPosition": "topleft",
+  "titleSize": "standard",
+  "url": "https://www.republik.ch/updates/portraets"
+}
+\`\`\`
+
+###### Im Gleichmarsch
+
+# Links, zwo, drei, vier!
+
+[Constantin Seibt](/~cseibt "Constantin Seibt"), 1. September 2018
+
+<hr /></section>
+
+<hr /></section>
+
 `}</Markdown>
 ```
