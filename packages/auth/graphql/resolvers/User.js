@@ -76,7 +76,6 @@ module.exports = {
   },
   async enabledFirstFactors (user, args, { pgdb, user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, userAccessRoles)
-    console.log(user)
     return enabledFirstFactors(user._raw.email, pgdb)
   },
   preferedFirstFactor (user, args, { user: me }) {
