@@ -9,6 +9,6 @@ ALTER TABLE tokens
 ;
 
 ALTER TABLE users
-  ADD COLUMN "preferedFirstFactor" token_type
+  ADD COLUMN "preferredFirstFactor" token_type
 ;
 

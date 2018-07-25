@@ -35,7 +35,7 @@ type User {
   sessions: [Session!]
   # in order of preference
   enabledFirstFactors: [SignInTokenType!]!
-  preferedFirstFactor: SignInTokenType
+  preferredFirstFactor: SignInTokenType
   enabledSecondFactors: [SignInTokenType!]!
   eventLog: [EventLog!]!
 }

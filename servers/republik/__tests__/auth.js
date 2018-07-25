@@ -16,10 +16,10 @@ const AUTHORIZE_SESSION_MUTATION = `
 `
 
 const PREFERED_FIRST_FACTOR_MUTATION = `
-  mutation preferedFirstFactor($tokenType: SignInTokenType!) {
-    preferedFirstFactor(tokenType: $tokenType) {
+  mutation preferredFirstFactor($tokenType: SignInTokenType!) {
+    preferredFirstFactor(tokenType: $tokenType) {
       id
-      preferedFirstFactor
+      preferredFirstFactor
     }
   }
 `
@@ -40,7 +40,7 @@ const authorizeSession = async ({ email, tokens, apolloFetch: localApolloFetch =
   })
 }
 
-const preferedFirstFactor = async ({ tokenType, apolloFetch: localApolloFetch = apolloFetch }) => {
+const preferredFirstFactor = async ({ tokenType, apolloFetch: localApolloFetch = apolloFetch }) => {
   return localApolloFetch({
     query: PREFERED_FIRST_FACTOR_MUTATION,
     variables: {
@@ -392,7 +392,7 @@ module.exports = {
   updateEmail,
   startChallenge,
   me,
-  preferedFirstFactor,
+  preferredFirstFactor,
   Users: {
     Supporter,
     Unverified,

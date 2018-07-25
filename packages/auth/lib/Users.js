@@ -78,16 +78,16 @@ const enabledFirstFactors = async (email, pgdb) => {
     enabledTokenTypes.push(APP)
   }
 
-  const { preferedFirstFactor } = userWithDevices || {}
+  const { preferredFirstFactor } = userWithDevices || {}
   return enabledTokenTypes
     .sort((a, b) => {
       if (a === b) {
         return 0
       }
-      if (a === preferedFirstFactor) { // prefered always wins
+      if (a === preferredFirstFactor) { // preferred always wins
         return -1
       }
-      if (b === preferedFirstFactor) {
+      if (b === preferredFirstFactor) {
         return 1
       }
       if (a !== EMAIL_TOKEN && b === EMAIL_TOKEN) { // EMAIL_TOKEN always last
@@ -100,7 +100,7 @@ const enabledFirstFactors = async (email, pgdb) => {
     })
 }
 
-const setPreferedFirstFactor = async (user, tokenType = null, pgdb) => {
+const setPreferredFirstFactor = async (user, tokenType = null, pgdb) => {
   const enabledTokenTypes = await enabledFirstFactors(user._raw.email, pgdb)
   if (tokenType && enabledTokenTypes.indexOf(tokenType) === -1) {
     throw new TokenTypeNotEnabledError({ tokenType })
@@ -109,7 +109,7 @@ const setPreferedFirstFactor = async (user, tokenType = null, pgdb) => {
     {
       id: user.id
     }, {
-      preferedFirstFactor: tokenType
+      preferredFirstFactor: tokenType
     }
   )
 }
@@ -514,7 +514,7 @@ const updateUserPhoneNumber = async ({ pgdb, userId, phoneNumber }) => {
 
 module.exports = {
   enabledFirstFactors,
-  setPreferedFirstFactor,
+  setPreferredFirstFactor,
   signIn,
   unauthorizedSession,
   denySession,

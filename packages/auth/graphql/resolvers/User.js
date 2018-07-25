@@ -78,8 +78,8 @@ module.exports = {
     Roles.ensureUserIsMeOrInRoles(user, me, userAccessRoles)
     return enabledFirstFactors(user._raw.email, pgdb)
   },
-  preferedFirstFactor (user, args, { user: me }) {
+  preferredFirstFactor (user, args, { user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, userAccessRoles)
-    return user._raw.preferedFirstFactor
+    return user._raw.preferredFirstFactor
   }
 }

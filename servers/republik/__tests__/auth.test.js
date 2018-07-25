@@ -15,7 +15,7 @@ const { signIn,
   startChallenge,
   Users,
   me: meQuery,
-  preferedFirstFactor
+  preferredFirstFactor
 } = require('./auth.js')
 
 const prepare = async () => {
@@ -191,10 +191,10 @@ test('sign in with tokenType APP default tokenType', async (t) => {
   t.equals(resultSession1.signInResult.data.signIn.tokenType, 'APP', 'APP is the default tokenType without settings')
 
   // change default tokenType
-  const resultPreferedFirstFactor = await preferedFirstFactor({tokenType: 'EMAIL_TOKEN', apolloFetch: resultDevice.apolloFetch})
-  t.ok(resultPreferedFirstFactor && resultPreferedFirstFactor.data, 'changed preferedFirstFactor')
-  t.notOk(resultPreferedFirstFactor.errors, 'change preferedFirstFactor no errors')
-  t.equals(resultPreferedFirstFactor.data.preferedFirstFactor.preferedFirstFactor, 'EMAIL_TOKEN', 'change preferedFirstFactor reported EMAIL_TOKEN')
+  const resultPreferredFirstFactor = await preferredFirstFactor({tokenType: 'EMAIL_TOKEN', apolloFetch: resultDevice.apolloFetch})
+  t.ok(resultPreferredFirstFactor && resultPreferredFirstFactor.data, 'changed preferredFirstFactor')
+  t.notOk(resultPreferredFirstFactor.errors, 'change preferredFirstFactor no errors')
+  t.equals(resultPreferredFirstFactor.data.preferredFirstFactor.preferredFirstFactor, 'EMAIL_TOKEN', 'change preferredFirstFactor reported EMAIL_TOKEN')
 
   // in separate session
   const resultSession2 = await signIn({ user: Users.Unverified, skipAuthorization: true, newCookieStore: true, skipTruncate: true })

@@ -4,7 +4,7 @@ ALTER TABLE tokens
 ;
 
 ALTER TABLE  users
- DROP COLUMN "preferedFirstFactor"
+ DROP COLUMN "preferredFirstFactor"
 ;
 
 DROP DOMAIN token_Type;
