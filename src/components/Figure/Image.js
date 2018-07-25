@@ -25,8 +25,11 @@ class Image extends Component {
       attributes = {},
       maxWidth,
       size: sizeProp,
-      aboveTheFold
+      aboveTheFold,
+      enableGallery
     } = this.props
+
+    const onClick = (enableGallery && this.context.toggleGallery) ? this.context.toggleGallery : () => {}
 
     const size = sizeProp || (sizeProp === undefined && imageSizeInfo(src))
     const aspectRatio = size ? size.width / size.height : undefined
@@ -34,9 +37,9 @@ class Image extends Component {
     const image = isFinite(aspectRatio)
       ? <LazyImage attributes={attributes} visible={aboveTheFold}
           aspectRatio={aspectRatio}
-          src={src} srcSet={srcSet} alt={alt} />
+          src={src} srcSet={srcSet} alt={alt} onClick={() => onClick(src)} />
       : <img {...attributes} {...styles.image}
-          src={src} srcSet={srcSet} alt={alt} />
+          src={src} srcSet={srcSet} alt={alt} onClick={() => onClick(src)} />
 
     if (maxWidth) {
       return (
@@ -59,6 +62,10 @@ Image.propTypes = {
   }),
   maxWidth: PropTypes.number,
   aboveTheFold: PropTypes.bool
+}
+
+Image.contextTypes = {
+  toggleGallery: PropTypes.func
 }
 
 Image.utils = {

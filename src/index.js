@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {Catalog} from 'catalog'
-import {simulations, speedy, css} from 'glamor'
+import { Catalog } from 'catalog'
+import { simulations, speedy, css } from 'glamor'
 import theme from './catalogTheme'
 import './global.css'
 import './catalogTheme.css'
@@ -11,8 +11,8 @@ import 'core-js/fn/array/from'
 import 'core-js/fn/array/find'
 import 'core-js/es6'
 
-import {fontFaces} from './theme/fonts'
-import {createFormatter} from './lib/translate'
+import { fontFaces } from './theme/fonts'
+import { createFormatter } from './lib/translate'
 
 simulations(true)
 // prevent speedy in catalog
@@ -36,9 +36,9 @@ ReactDOM.render(
     theme={theme}
     useBrowserHistory
     responsiveSizes={[
-      {name: 'Desktop large', width: 1095, height: 800},
-      {name: 'Desktop small', width: 800, height: 600},
-      {name: 'Mobile', width: 320, height: 480}
+      { name: 'Desktop large', width: 1095, height: 800 },
+      { name: 'Desktop small', width: 800, height: 600 },
+      { name: 'Mobile', width: 320, height: 480 }
     ]}
     pages={[
       {
@@ -147,7 +147,7 @@ ReactDOM.render(
           {
             path: '/components/overlay',
             title: 'Overlay',
-            imports: {t, ...require('./components/Overlay/docs.imports')},
+            imports: { t, ...require('./components/Overlay/docs.imports') },
             src: require('./components/Overlay/docs.md')
           },
           {
@@ -191,6 +191,16 @@ ReactDOM.render(
               LazyImage: require('./components/LazyLoad/Image')
             },
             src: require('./components/LazyLoad/docs.md')
+          },
+          {
+            path: '/gallery',
+            title: 'Gallery',
+            imports: {
+              css,
+              ...require('./components/Gallery'),
+              ...require('./components/Figure'),
+            },
+            src: require('./components/Gallery/docs.md')
           }
         ]
       },
@@ -234,7 +244,7 @@ ReactDOM.render(
           {
             path: '/components/commenttree',
             title: 'Tree',
-            imports: {t, ...require('./components/CommentTree/docs.imports')},
+            imports: { t, ...require('./components/CommentTree/docs.imports') },
             src: require('./components/CommentTree/docs.md')
           }
         ]
@@ -608,16 +618,16 @@ ReactDOM.render(
               Field: require('./components/Form/Field.js'),
               ...require('./components/Typography'),
               t: createFormatter([
-                {key: 'styleguide/Hello/generic', value: 'Hallo!'},
-                {key: 'styleguide/Hello/greetings', value: 'Hallo {name}'},
-                {key: 'styleguide/Hello/greetings/Thomas', value: 'Hoi Thomas'},
-                {key: 'styleguide/Hello/message/0', value: 'Sie waren noch nie hier'},
-                {key: 'styleguide/Hello/message/1', value: 'Willkommen an Bord {name}!'},
-                {key: 'styleguide/Hello/message/2', value: 'Schön Sie wieder zu sehen!'},
-                {key: 'styleguide/Hello/message/other', value: 'Willkommen zum {count}. Mal {name}!'},
-                {key: 'styleguide/Hello/label/visits', value: 'Anzahl Besuche'},
-                {key: 'styleguide/Hello/label/name', value: 'Name'},
-                {key: 'styleguide/Hello/html', value: 'Hallo<br />{link}'}
+                { key: 'styleguide/Hello/generic', value: 'Hallo!' },
+                { key: 'styleguide/Hello/greetings', value: 'Hallo {name}' },
+                { key: 'styleguide/Hello/greetings/Thomas', value: 'Hoi Thomas' },
+                { key: 'styleguide/Hello/message/0', value: 'Sie waren noch nie hier' },
+                { key: 'styleguide/Hello/message/1', value: 'Willkommen an Bord {name}!' },
+                { key: 'styleguide/Hello/message/2', value: 'Schön Sie wieder zu sehen!' },
+                { key: 'styleguide/Hello/message/other', value: 'Willkommen zum {count}. Mal {name}!' },
+                { key: 'styleguide/Hello/label/visits', value: 'Anzahl Besuche' },
+                { key: 'styleguide/Hello/label/name', value: 'Name' },
+                { key: 'styleguide/Hello/html', value: 'Hallo<br />{link}' }
               ]),
               RawHtml: require('./components/RawHtml')
             }

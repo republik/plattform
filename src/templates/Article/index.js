@@ -114,13 +114,14 @@ const figureImage = {
   props: (node, index, parent, { ancestors }) => {
     const src = extractImage(node)
     const displayWidth = getDisplayWidth(ancestors)
-
+    const enableGallery = parent.data ? !parent.data.excludeFromGallery : false
     return {
       ...FigureImage.utils.getResizedSrcs(
         src,
-        displayWidth
+        displayWidth,
       ),
-      alt: node.children[0].alt
+      alt: node.children[0].alt,
+      enableGallery
     }
   },
   editorModule: 'figureImage',
@@ -461,6 +462,7 @@ const cover = {
   editorModule: 'figure',
   editorOptions: {
     type: COVER_TYPE,
+    gallery: false,
     afterType: 'PARAGRAPH',
     insertAfterType: 'CENTER',
     pixelNote:
@@ -513,6 +515,11 @@ const DefaultLink = ({ children }) => children
 const createSchema = ({
   documentEditorOptions = {},
   customMetaFields = [
+    {
+      label: 'Bildergalerie',
+      key: 'gallery',
+      ref: 'bool'
+    },
     {
       label: 'Format',
       key: 'format',

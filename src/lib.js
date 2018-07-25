@@ -23,6 +23,7 @@ export {default as Dropdown} from './components/Form/Dropdown'
 export {default as Autocomplete} from './components/Form/Autocomplete'
 export {default as TitleBlock} from './components/TitleBlock'
 export {default as Center, Breakout} from './components/Center'
+export { default as Gallery } from './components/Gallery'
 export { AudioPlayer } from './components/AudioPlayer'
 export { VideoPlayer } from './components/VideoPlayer'
 export { LazyLoad } from './components/LazyLoad'
@@ -139,4 +140,3 @@ export {
   Sub, Sup,
   HR
 } from './components/Typography'
-
