@@ -1,8 +1,7 @@
 const t = require('./t')
 
-const roles = [
-  'editor'
-]
+const roles = ['editor']
+const specialRoles = ['accountant', 'admin', 'editor', 'supporter']
 
 const userHasRole = (user, role) => {
   return user && user.roles && user.roles.indexOf(role) > -1
@@ -97,6 +96,7 @@ const userIsMeOrHasProfile = (user, me) => (
 
 module.exports = {
   roles,
+  specialRoles,
   userHasRole,
   ensureUserHasRole,
   userIsInRoles,
