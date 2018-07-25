@@ -13,7 +13,9 @@ const { signIn,
   updateTwoFactorAuthentication,
   updateEmail,
   startChallenge,
-  Users
+  Users,
+  me: meQuery,
+  preferedFirstFactor
 } = require('./auth.js')
 
 const prepare = async () => {
@@ -89,6 +91,117 @@ test('deny a session', async (t) => {
   const sessions = await pgDatabase().public.sessions.find({'sess @>': { 'expire >': new Date() }})
   t.equal(tokens.length, 0, 'all tokens expired')
   t.equal(sessions.length, 0, 'all sessions expired')
+  t.end()
+})
+
+test('sign in with tokenType APP without devices', async (t) => {
+  await prepare()
+  const result = await signIn({ user: Users.Unverified, skipAuthorization: true, tokenType: 'APP' })
+  t.notOk(result.signInResult.data, 'no data from signIn')
+  console.log(result.signInResult.errors)
+  t.ok(result.signInResult.errors, 'error thrown tokenType not available')
+  t.end()
+})
+
+test('sign in with tokenType APP', async (t) => {
+  await prepare()
+  // sign in device
+  const resultDevice = await signIn({ user: Users.Unverified, skipAuthorization: false, tokenType: 'EMAIL_TOKEN' })
+  t.ok(resultDevice && resultDevice.userId, 'started signIn request')
+  const meDevice = await meQuery()
+  t.ok(meDevice && meDevice.data && meDevice.data.me, 'me query on device')
+  t.equals(meDevice.data.me.id, Users.Unverified.id, 'me query on device returned current user')
+
+  let sessions = await pgDatabase().public.sessions.find({'sess @>': { 'email': Users.Unverified.email }})
+  t.equal(sessions.length, 1, 'created new session')
+  await pgDatabase().public.devices.insert({
+    userId: Users.Unverified.id,
+    sessionId: sessions[0].id,
+    token: 'testtoken',
+    information: { os: 'ios', test: true }
+  })
+
+  const meDevice2 = await meQuery()
+  t.ok(meDevice2 && meDevice2.data && meDevice2.data.me, 'me query on device with device added')
+  t.ok(meDevice2.data.me.sessions.find(s => s.isCurrent && s.device), 'current session has device')
+
+  // in separate session
+  const resultBrowser = await signIn({ user: Users.Unverified, skipAuthorization: true, tokenType: 'APP', newCookieStore: true, skipTruncate: true })
+  t.ok(resultBrowser.signInResult.data && resultBrowser.signInResult.data.signIn.phrase, 'signIn with APP initiated')
+  t.notOk(resultBrowser.signInResult.errors, 'no errors thrown')
+
+  sessions = await pgDatabase().public.sessions.find({'sess @>': { 'email': Users.Unverified.email }})
+  t.equal(sessions.length, 2, 'two sessions present')
+
+  const tokens = await pgDatabase().public.tokens.find({ email: Users.Unverified.email, type: 'APP' }, { limit: 1 })
+  const { payload } = tokens.shift() || {}
+  t.ok(payload, 'APP token is present')
+
+  // authorize APP token in non authorized session must fail
+  const resultBrowserAuthorize = await authorizeSession({
+    email: Users.Unverified.email,
+    tokens: [{ type: 'APP', payload }],
+    apolloFetch: resultBrowser.apolloFetch
+  })
+  t.ok(resultBrowserAuthorize && resultBrowserAuthorize.errors, 'authorize APP token in unauthorized session fails')
+  t.notOk(resultBrowserAuthorize.data, 'authorize APP token in unauthorized session fails')
+
+  // back in device's session
+  const resultDeviceAuthorize = await authorizeSession({
+    email: Users.Unverified.email,
+    tokens: [{ type: 'APP', payload }]
+  })
+  t.ok(resultDeviceAuthorize && resultDeviceAuthorize.data, 'authorize on device successfull')
+  t.notOk(resultDeviceAuthorize.errors, 'authorize on device no errors')
+
+  const meBrowser = await meQuery({apolloFetch: resultBrowser.apolloFetch})
+  t.ok(meBrowser && meBrowser.data && meBrowser.data.me, 'me query in browser')
+  t.equals(meBrowser.data.me.id, Users.Unverified.id, 'me query in browser returned current user')
+  t.equals(meBrowser.data.me.sessions.length, 2, 'me has two sessions')
+
+  t.end()
+})
+
+test('sign in with tokenType APP default tokenType', async (t) => {
+  await prepare()
+  // sign in device
+  const resultDevice = await signIn({ user: Users.Unverified, skipAuthorization: false, tokenType: 'EMAIL_TOKEN' })
+  t.ok(resultDevice && resultDevice.userId, 'started signIn request')
+  const meDevice = await meQuery()
+  t.ok(meDevice && meDevice.data && meDevice.data.me, 'me query on device')
+  t.equals(meDevice.data.me.id, Users.Unverified.id, 'me query on device returned current user')
+
+  let sessions = await pgDatabase().public.sessions.find({'sess @>': { 'email': Users.Unverified.email }})
+  t.equal(sessions.length, 1, 'created new session')
+  await pgDatabase().public.devices.insert({
+    userId: Users.Unverified.id,
+    sessionId: sessions[0].id,
+    token: 'testtoken',
+    information: { os: 'ios', test: true }
+  })
+
+  const meDevice2 = await meQuery()
+  t.ok(meDevice2 && meDevice2.data && meDevice2.data.me, 'me query on device with device added')
+  t.ok(meDevice2.data.me.sessions.find(s => s.isCurrent && s.device), 'current session has device')
+
+  // in separate session
+  const resultSession1 = await signIn({ user: Users.Unverified, skipAuthorization: true, newCookieStore: true, skipTruncate: true })
+  t.ok(resultSession1.signInResult.data && resultSession1.signInResult.data.signIn.phrase, 'signIn initiated')
+  t.notOk(resultSession1.signInResult.errors, 'no errors thrown')
+  t.equals(resultSession1.signInResult.data.signIn.tokenType, 'APP', 'APP is the default tokenType without settings')
+
+  // change default tokenType
+  const resultPreferedFirstFactor = await preferedFirstFactor({tokenType: 'EMAIL_TOKEN', apolloFetch: resultDevice.apolloFetch})
+  t.ok(resultPreferedFirstFactor && resultPreferedFirstFactor.data, 'changed preferedFirstFactor')
+  t.notOk(resultPreferedFirstFactor.errors, 'change preferedFirstFactor no errors')
+  t.equals(resultPreferedFirstFactor.data.preferedFirstFactor.preferedFirstFactor, 'EMAIL_TOKEN', 'change preferedFirstFactor reported EMAIL_TOKEN')
+
+  // in separate session
+  const resultSession2 = await signIn({ user: Users.Unverified, skipAuthorization: true, newCookieStore: true, skipTruncate: true })
+  t.ok(resultSession2.signInResult.data && resultSession2.signInResult.data.signIn.phrase, 'signIn initiated')
+  t.notOk(resultSession2.signInResult.errors, 'no errors thrown')
+  t.equals(resultSession2.signInResult.data.signIn.tokenType, 'EMAIL_TOKEN', 'EMAIL_TOKEN is the default tokenType')
+
   t.end()
 })
 

@@ -8,11 +8,12 @@ const { createApolloFetch } = require('apollo-fetch')
 
 // shared
 var server = null
-var cookie = null
+var _cookie = null
 var pgdb = null
 
-const createLocalApolloFetch = () => {
+const createLocalApolloFetch = (separateCookies = false) => {
   const GRAPHQL_URI = `http://localhost:${process.env.PORT}/graphql`
+  let cookie = separateCookies ? null : _cookie
   return createApolloFetch({ uri: GRAPHQL_URI })
     .useAfter(({ response }, next) => {
       let setCookie
@@ -66,6 +67,7 @@ const throwOnOpenTransaction = async () => {
 
 module.exports = {
   apolloFetch: createLocalApolloFetch(),
+  createApolloFetch: createLocalApolloFetch,
   throwOnOpenTransaction,
   connectIfNeeded,
   pgDatabase,

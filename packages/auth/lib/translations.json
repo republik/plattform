@@ -1,5 +1,5 @@
 {
-  "updated": "2018-07-07T00:28:20.114Z",
+  "updated": "2018-07-20T11:38:20.792Z",
   "title": "live",
   "data": [
     {
@@ -79,8 +79,12 @@
       "value": "Es existiert bereits jemand mit der gewünschten E-Mail-Adresse."
     },
     {
-      "key": "api/auth/token-type-unknown",
+      "key": "api/auth/tokenType/404",
       "value": "Token Challenge Typ existiert nicht."
+    },
+    {
+      "key": "api/auth/tokenType/notEnabled",
+      "value": "Der gewählte Token-Typ steht nicht zur Verfügung. Bitte versuchen Sie sich mittels eines anderen Verfahrens anzumelden."
     },
     {
       "key": "api/auth/shared-secret-not-supported",

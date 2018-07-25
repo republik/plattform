@@ -26,7 +26,7 @@ const {
 
 const EmailInvalidError = newAuthError('email-invalid', 'api/email/invalid')
 const EmailAlreadyAssignedError = newAuthError('email-already-assigned', 'api/email/change/exists')
-const TokenTypeNotEnabledError = newAuthError('token-type-not-enabled', 'api/tokenType/notEnabled')
+const TokenTypeNotEnabledError = newAuthError('token-type-not-enabled', 'api/auth/tokenType/notEnabled')
 const SessionInitializationFailedError = newAuthError('session-initialization-failed', 'api/auth/errorSavingSession')
 const UserNotFoundError = newAuthError('user-not-found', 'api/users/404')
 const AuthorizationFailedError = newAuthError('authorization-failed', 'api/auth/authorization-failed')
