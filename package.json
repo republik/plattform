@@ -47,6 +47,7 @@
     "gsheets": "^2.0.0",
     "husky": "^0.14.3",
     "immutable": "^3.8.2",
+    "lodash.debounce": "^4.0.8",
     "mdast-react-render": "^1.1.0",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
