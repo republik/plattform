@@ -177,9 +177,17 @@ state: {value: 'yes'}
   <br />
   <Radio
     value='maybe'
-    checked={state.value === 'maybe'}
+    disabled={true}
     onChange={(event) => setState({value: event.target.value})}>
     Vielleicht
+  </Radio>
+  <br />
+  <Radio
+    value='never'
+    checked={true}
+    disabled={true}
+    onChange={(event) => setState({value: event.target.value})}>
+    Niemals
   </Radio>
 </P>
 ```
