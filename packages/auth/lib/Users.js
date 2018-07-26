@@ -210,8 +210,8 @@ const unauthorizedSession = async ({ pgdb, token, email: emailFromQuery, me }) =
   if (!session) {
     throw new NoSessionError({ email: emailFromQuery, token })
   }
-  const valitadable = await validateChallenge(token.type, { pgdb, user, session, me }, token)
-  if (!valitadable) {
+  const validatable = await validateChallenge(token.type, { pgdb, user, session, me }, token)
+  if (!validatable) {
     throw new SessionTokenValidationFailed(token)
   }
   return session

@@ -54,7 +54,7 @@ type mutations {
   # required role to clear other's session: supporter
   clearSessions(userId: ID): Boolean!
 
-  # only allowd by the user herself
+  # only allowed by the user herself
   preferredFirstFactor(tokenType: SignInTokenType): User!
 
   # Generate a new sharedSecret for TOTP

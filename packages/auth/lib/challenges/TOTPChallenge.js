@@ -1,6 +1,6 @@
 const OTP = require('otp')
 
-const TTL = 30 * 1000
+const TTL = 1000 * 30 // 30s
 const Type = 'TOTP'
 
 module.exports = {
