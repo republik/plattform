@@ -29,7 +29,7 @@ const Radio = ({checked, disabled}) => (
     {checked && (
       <circle fill={disabled ? colors.disabled : colors.primary} cx='12' cy='12' r='6' />
     )}
-    <circle fill='none' stroke={disabled ? colors.disabled : checked ? colors.primary : colors.divider}
+    <circle fill='none' stroke={checked && !disabled ? colors.primary : colors.divider}
       cx='12' cy='12' r='11.5' />
   </svg>
 )
