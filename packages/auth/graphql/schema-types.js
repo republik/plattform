@@ -44,6 +44,7 @@ type SignInResponse {
   phrase: String!
   tokenType: SignInTokenType!
   expiresAt: DateTime!
+  alternativeFirstFactors: [SignInTokenType!]!
 }
 
 type SharedSecretResponse {

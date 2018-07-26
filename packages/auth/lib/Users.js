@@ -139,9 +139,9 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
   const { EMAIL_TOKEN } = TokenTypes
   // check if tokenType is enabled as firstFactor
   // email is always enabled
+  const enabledTokenTypes = await enabledFirstFactors(email, pgdb)
   let tokenType = _tokenType
   if (!tokenType || tokenType !== EMAIL_TOKEN) {
-    const enabledTokenTypes = await enabledFirstFactors(email, pgdb)
     if (!tokenType) {
       tokenType = enabledTokenTypes[0]
     } else if (enabledTokenTypes.indexOf(tokenType) === -1) {
@@ -182,7 +182,8 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
     return {
       tokenType,
       phrase,
-      expiresAt: token.expiresAt
+      expiresAt: token.expiresAt,
+      alternativeFirstFactors: enabledTokenTypes.filter(tt => tt !== tokenType)
     }
   } catch (error) {
     console.error(error)
