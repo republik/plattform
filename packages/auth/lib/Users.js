@@ -84,19 +84,22 @@ const enabledFirstFactors = async (email, pgdb) => {
       if (a === b) {
         return 0
       }
-      if (a === preferredFirstFactor) { // preferred always wins
+      // preferred always wins
+      if (a === preferredFirstFactor) {
         return -1
       }
       if (b === preferredFirstFactor) {
         return 1
       }
-      if (a !== EMAIL_TOKEN && b === EMAIL_TOKEN) { // EMAIL_TOKEN always last
+      // others are always before EMAIL_TOKEN
+      if (b === EMAIL_TOKEN) {
         return -1
       }
-      if (a === EMAIL_TOKEN && b !== EMAIL_TOKEN) {
+      if (a === EMAIL_TOKEN) {
         return 1
       }
-      return 0 // undefined order for places [1...n-1]
+      // undefined order for others
+      return 0
     })
 }
 
