@@ -119,9 +119,12 @@ const setPreferredFirstFactor = async (user, tokenType = null, pgdb) => {
 
 const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
   if (req.user) {
-    // TODO: How can we make it explizit that a user is logged in,
-    // an exception seems a little harsh
-    return { phrase: '', tokenType: 'EMAIL_TOKEN' }
+    // req is authenticated
+    return {
+      phrase: '',
+      tokenType: 'EMAIL_TOKEN',
+      alternativeFirstFactors: []
+    }
   }
 
   if (!validator.isEmail(_email)) {
