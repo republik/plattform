@@ -1,9 +1,10 @@
-const { apolloFetch, pgDatabase } = require('./helpers')
+const { apolloFetch, pgDatabase, createApolloFetch } = require('./helpers')
 
 const LOGIN_USER_MUTATION = `
-  mutation signIn($email: String!, $context: String) {
-    signIn(email: $email, context: $context, consents: ["PRIVACY"]) {
+  mutation signIn($email: String!, $context: String, $tokenType: SignInTokenType) {
+    signIn(email: $email, context: $context, consents: ["PRIVACY"], tokenType: $tokenType) {
       phrase
+      tokenType
     }
   }
 `
@@ -14,18 +15,36 @@ const AUTHORIZE_SESSION_MUTATION = `
   }
 `
 
+const PREFERED_FIRST_FACTOR_MUTATION = `
+  mutation preferredFirstFactor($tokenType: SignInTokenType!) {
+    preferredFirstFactor(tokenType: $tokenType) {
+      id
+      preferredFirstFactor
+    }
+  }
+`
+
 const LOGOUT_USER_MUTATION = `
   mutation signOut {
     signOut
   }
 `
 
-const authorizeSession = async ({ email, tokens }) => {
-  return apolloFetch({
+const authorizeSession = async ({ email, tokens, apolloFetch: localApolloFetch = apolloFetch }) => {
+  return localApolloFetch({
     query: AUTHORIZE_SESSION_MUTATION,
     variables: {
       email,
       tokens
+    }
+  })
+}
+
+const preferredFirstFactor = async ({ tokenType, apolloFetch: localApolloFetch = apolloFetch }) => {
+  return localApolloFetch({
+    query: PREFERED_FIRST_FACTOR_MUTATION,
+    variables: {
+      tokenType
     }
   })
 }
@@ -35,15 +54,21 @@ const signIn = async ({
   context,
   skipAuthorization = false,
   simulate2FAAuth = false,
-  skipTruncate = false
+  skipTruncate = false,
+  tokenType = null,
+  newCookieStore = false
 }) => {
   const { email } = user
-
   if (!email) {
     return null
   }
 
+  const _apolloFetch = newCookieStore
+    ? createApolloFetch(true)
+    : apolloFetch
+
   if (!skipTruncate) {
+    // this also deletes devices
     await pgDatabase().public.sessions.truncate({ cascade: true })
   }
 
@@ -55,18 +80,19 @@ const signIn = async ({
   }
 
   // start login process
-  await apolloFetch({
+  const signInResult = await _apolloFetch({
     query: LOGIN_USER_MUTATION,
     variables: {
       email,
-      context
+      context,
+      tokenType
     }
   })
 
   const tokens = await pgDatabase().public
     .tokens.find({ email: email }, { limit: 1 })
 
-  const { payload, sessionId } = tokens.shift()
+  const { payload, sessionId, type: tokenTypeResult } = tokens.shift() || {}
 
   if (simulate2FAAuth) {
     const session = await pgDatabase().public.sessions.findOne({
@@ -85,7 +111,7 @@ const signIn = async ({
   } else if (!skipAuthorization) {
     await authorizeSession({
       email,
-      tokens: [{ type: 'EMAIL_TOKEN', payload }]
+      tokens: [{ type: tokenTypeResult, payload }]
     })
   }
 
@@ -96,7 +122,9 @@ const signIn = async ({
   return {
     userId: users.length > 0 && users[0].id,
     payload,
-    email
+    email,
+    signInResult,
+    apolloFetch: _apolloFetch
   }
 }
 
@@ -249,6 +277,26 @@ const startChallenge = async ({ sessionId, type }) => {
   return (result && result.data && result.data.updateEmail) || {}
 }
 
+const me = async ({apolloFetch: localApolloFetch = apolloFetch} = {}) => {
+  return localApolloFetch({
+    query: `
+      query me {
+        me {
+          id
+          email
+          sessions {
+            id
+            isCurrent
+            device {
+              id
+            }
+          }
+        }
+      }
+    `
+  })
+}
+
 const Unverified = {
   id: 'a0000000-0000-4000-8001-000000000001',
   firstName: 'willhelm tell',
@@ -343,6 +391,8 @@ module.exports = {
   validateTOTPSharedSecret,
   updateEmail,
   startChallenge,
+  me,
+  preferredFirstFactor,
   Users: {
     Supporter,
     Unverified,

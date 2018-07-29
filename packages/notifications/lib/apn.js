@@ -2,11 +2,14 @@ const apn = require('apn')
 const debug = require('debug')('notifications:publish:apn')
 
 const {
+  SEND_NOTIFICATIONS,
   APN_KEY,
   APN_KEY_ID,
   APN_TEAM_ID,
   APN_BUNDLE_ID
 } = process.env
+
+const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
 // singleton
 let provider
@@ -26,6 +29,10 @@ if (!APN_KEY || !APN_KEY_ID || !APN_TEAM_ID || !APN_BUNDLE_ID) {
 }
 
 const publish = async (args) => {
+  if (SEND_NOTIFICATIONS === 'false' || (DEV && SEND_NOTIFICATIONS !== 'true')) {
+    console.log('\n\nSEND_NOTIFICATIONS prevented notification from being sent\n(SEND_NOTIFICATIONS == false or NODE_ENV != production and SEND_NOTIFICATIONS != true)\n', args)
+    return
+  }
   if (!provider) {
     throw new Error(`mssing env APN_*, can't publish`)
   }

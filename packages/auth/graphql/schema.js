@@ -28,8 +28,9 @@ type queries {
 }
 
 type mutations {
-  # signIn with an email address
-  signIn(email: String!, context: String, consents: [String!]): SignInResponse!
+  # signIn
+  # default tokenType: EMAIL_TOKEN
+  signIn(email: String!, context: String, consents: [String!], tokenType: SignInTokenType): SignInResponse!
   signOut: Boolean!
 
   # if userId is null, the logged in user's email is changed
@@ -52,6 +53,10 @@ type mutations {
   # if userId is null, the logged in user's sessions get cleared
   # required role to clear other's session: supporter
   clearSessions(userId: ID): Boolean!
+
+  # if userId is null, the logged in user is changed
+  # required role to change others: supporter
+  preferredFirstFactor(userId: ID, tokenType: SignInTokenType): User!
 
   # Generate a new sharedSecret for TOTP
   initTOTPSharedSecret: SharedSecretResponse!

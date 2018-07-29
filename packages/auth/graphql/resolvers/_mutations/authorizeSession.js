@@ -1,6 +1,6 @@
 const { authorizeSession } = require('../../../lib/Users')
 
-module.exports = async (_, args, { pgdb, req, signInHooks }) => {
+module.exports = async (_, args, { pgdb, req, user: me, signInHooks }) => {
   const {
     email,
     tokens = [],
@@ -13,7 +13,8 @@ module.exports = async (_, args, { pgdb, req, signInHooks }) => {
     email,
     signInHooks,
     consents,
-    req
+    req,
+    me
   })
 
   return !!user

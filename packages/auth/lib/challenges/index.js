@@ -1,10 +1,11 @@
 const EmailTokenChallenge = require('./EmailTokenChallenge')
 const TOTPChallenge = require('./TOTPChallenge')
 const SMSCodeChallenge = require('./SMSCodeChallenge')
+const AppChallenge = require('./AppChallenge')
 
 const { newAuthError } = require('../AuthError')
 
-const TokenTypeUnknownError = newAuthError('token-type-unknown', 'api/auth/token-type-unknown')
+const TokenTypeUnknownError = newAuthError('token-type-unknown', 'api/auth/tokenType/404')
 const SharedSecretNotSupported = newAuthError('shared-secret-not-supported', 'api/auth/shared-secret-not-supported')
 const SharedSecretGenerationFailed = newAuthError('shared-secret-generation-failed', 'api/auth/shared-secret-generation-failed')
 const SharedSecretValidationFailed = newAuthError('shared-secret-validation-failed', 'api/auth/shared-secret-validation-failed')
@@ -13,7 +14,8 @@ const TokenExpiredError = newAuthError('token-expired', 'api/auth/token-expired'
 const TokenTypeMap = {
   [EmailTokenChallenge.Type]: EmailTokenChallenge,
   [TOTPChallenge.Type]: TOTPChallenge,
-  [SMSCodeChallenge.Type]: SMSCodeChallenge
+  [SMSCodeChallenge.Type]: SMSCodeChallenge,
+  [AppChallenge.Type]: AppChallenge
 }
 
 const TokenTypes = Object

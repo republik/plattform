@@ -4,8 +4,9 @@ module.exports = async (_, args, { pgdb, req }) => {
   const {
     email,
     context,
-    consents
+    consents,
+    tokenType
   } = args
 
-  return signIn(email, context, pgdb, req, consents)
+  return signIn(email, context, pgdb, req, consents, tokenType)
 }

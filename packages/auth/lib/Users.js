@@ -26,6 +26,7 @@ const {
 
 const EmailInvalidError = newAuthError('email-invalid', 'api/email/invalid')
 const EmailAlreadyAssignedError = newAuthError('email-already-assigned', 'api/email/change/exists')
+const TokenTypeNotEnabledError = newAuthError('token-type-not-enabled', 'api/auth/tokenType/notEnabled')
 const SessionInitializationFailedError = newAuthError('session-initialization-failed', 'api/auth/errorSavingSession')
 const UserNotFoundError = newAuthError('user-not-found', 'api/users/404')
 const AuthorizationFailedError = newAuthError('authorization-failed', 'api/auth/authorization-failed')
@@ -40,9 +41,90 @@ const {
   FRONTEND_BASE_URL
 } = process.env
 
-const signIn = async (_email, context, pgdb, req, consents) => {
+// in order of preference
+const enabledFirstFactors = async (email, pgdb) => {
+  const userWithDevices = await pgdb.query(`
+    SELECT
+      u.*,
+      jsonb_agg(d.*) as devices
+    FROM
+      users u
+    LEFT JOIN
+      devices d
+      ON u.id = d."userId"
+    WHERE
+      u.email = :email
+    GROUP BY
+      u.id
+  `, {
+    email
+  })
+    .then(result => {
+      const user = result[0]
+      if (!user) {
+        return user
+      }
+      return {
+        ...user,
+        devices: user.devices
+          .filter(Boolean)
+      }
+    })
+
+  const { APP, EMAIL_TOKEN } = TokenTypes
+
+  const enabledTokenTypes = [EMAIL_TOKEN]
+  if (userWithDevices && userWithDevices.devices.length > 0) {
+    enabledTokenTypes.push(APP)
+  }
+
+  const { preferredFirstFactor } = userWithDevices || {}
+  return enabledTokenTypes
+    .sort((a, b) => {
+      if (a === b) {
+        return 0
+      }
+      // preferred always wins
+      if (a === preferredFirstFactor) {
+        return -1
+      }
+      if (b === preferredFirstFactor) {
+        return 1
+      }
+      // others are always before EMAIL_TOKEN
+      if (b === EMAIL_TOKEN) {
+        return -1
+      }
+      if (a === EMAIL_TOKEN) {
+        return 1
+      }
+      // undefined order for others
+      return 0
+    })
+}
+
+const setPreferredFirstFactor = async (user, tokenType = null, pgdb) => {
+  const enabledTokenTypes = await enabledFirstFactors(user._raw.email, pgdb)
+  if (tokenType && enabledTokenTypes.indexOf(tokenType) === -1) {
+    throw new TokenTypeNotEnabledError({ tokenType })
+  }
+  return pgdb.public.users.updateAndGetOne(
+    {
+      id: user.id
+    }, {
+      preferredFirstFactor: tokenType
+    }
+  )
+}
+
+const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
   if (req.user) {
-    return { phrase: '' }
+    // req is authenticated
+    return {
+      phrase: '',
+      tokenType: 'EMAIL_TOKEN',
+      alternativeFirstFactors: []
+    }
   }
 
   if (!validator.isEmail(_email)) {
@@ -60,12 +142,24 @@ const signIn = async (_email, context, pgdb, req, consents) => {
 
   const { email } = (user || { email: _email })
 
+  const { EMAIL_TOKEN } = TokenTypes
+  // check if tokenType is enabled as firstFactor
+  // email is always enabled
+  const enabledTokenTypes = await enabledFirstFactors(email, pgdb)
+  let tokenType = _tokenType
+  if (!tokenType || tokenType !== EMAIL_TOKEN) {
+    if (!tokenType) {
+      tokenType = enabledTokenTypes[0]
+    } else if (enabledTokenTypes.indexOf(tokenType) === -1) {
+      throw new TokenTypeNotEnabledError({ tokenType })
+    }
+  }
+
   try {
     const init = await initiateSession({ req, pgdb, email, consents })
     const { country, phrase, session } = init
 
-    const type = TokenTypes.EMAIL_TOKEN
-    const token = await generateNewToken(type, {
+    const token = await generateNewToken(tokenType, {
       pgdb,
       session,
       email
@@ -80,17 +174,23 @@ const signIn = async (_email, context, pgdb, req, consents) => {
         })
       }, 2000)
     } else {
-      await startChallenge(type, {
+      await startChallenge(tokenType, {
         pgdb,
         email,
         token,
         context,
         country,
-        phrase
+        phrase,
+        user
       })
     }
 
-    return { phrase }
+    return {
+      tokenType,
+      phrase,
+      expiresAt: token.expiresAt,
+      alternativeFirstFactors: enabledTokenTypes.filter(tt => tt !== tokenType)
+    }
   } catch (error) {
     console.error(error)
     throw new SessionInitializationFailedError({ error })
@@ -111,17 +211,22 @@ const shouldAutoLogin = ({ email }) => {
   return false
 }
 
-const denySession = async ({ pgdb, token, email: emailFromQuery }) => {
-  // check if authorized to deny the challenge
+const unauthorizedSession = async ({ pgdb, token, email: emailFromQuery, me }) => {
   const user = await pgdb.public.users.findOne({ email: emailFromQuery })
   const session = await sessionByToken({ pgdb, token, email: emailFromQuery })
   if (!session) {
     throw new NoSessionError({ email: emailFromQuery, token })
   }
-  const validated = await validateChallenge(token.type, { pgdb, user, session }, token)
-  if (!validated) {
+  const validatable = await validateChallenge(token.type, { pgdb, user, session, me }, token)
+  if (!validatable) {
     throw new SessionTokenValidationFailed(token)
   }
+  return session
+}
+
+const denySession = async ({ pgdb, token, email: emailFromQuery, me }) => {
+  // check if authorized to deny the challenge
+  const session = await unauthorizedSession({ pgdb, token, email: emailFromQuery, me })
 
   const transaction = await pgdb.transactionBegin()
   try {
@@ -150,10 +255,10 @@ const denySession = async ({ pgdb, token, email: emailFromQuery }) => {
     await transaction.transactionRollback()
     throw new AuthorizationFailedError({ session })
   }
-  return user
+  return true
 }
 
-const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [], consents = [], req }) => {
+const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [], consents = [], req, me }) => {
   // validate the challenges
   const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
   const tokenTypes = []
@@ -175,7 +280,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
       throw new SessionTokenValidationFailed({ email: emailFromQuery })
     }
 
-    const validated = await validateChallenge(token.type, { pgdb, session, user: existingUser }, token)
+    const validated = await validateChallenge(token.type, { pgdb, session, user: existingUser, me }, token)
     if (!validated) {
       console.error('wrong token')
       throw new SessionTokenValidationFailed({ email: emailFromQuery, ...token })
@@ -415,7 +520,10 @@ const updateUserPhoneNumber = async ({ pgdb, userId, phoneNumber }) => {
 }
 
 module.exports = {
+  enabledFirstFactors,
+  setPreferredFirstFactor,
   signIn,
+  unauthorizedSession,
   denySession,
   authorizeSession,
   resolveUser,

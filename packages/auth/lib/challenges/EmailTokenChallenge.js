@@ -22,14 +22,14 @@ const {
 
 const MIN_IN_MS = 1000 * 60
 const HOUR_IN_MS = MIN_IN_MS * 60
-const DAY_IN_MS = HOUR_IN_MS * 24
+const TTL = HOUR_IN_MS
 const Type = 'EMAIL_TOKEN'
 
 module.exports = {
   Type,
   generateNewToken: async ({ pgdb, session }) => {
     const payload = uuid()
-    const expiresAt = new Date(new Date().getTime() + DAY_IN_MS)
+    const expiresAt = new Date(new Date().getTime() + TTL)
     return { payload, expiresAt }
   },
   startChallenge: async ({ email, context, token, country, phrase }) => {
@@ -40,10 +40,11 @@ module.exports = {
     const verificationUrl =
       `${FRONTEND_BASE_URL}/mitteilung?` +
       querystring.stringify({
+        context,
         type: 'token-authorization',
         email: encode(email),
-        context,
-        token: token.payload
+        token: token.payload,
+        tokenType: Type
       })
 
     if (AUTH_MAIL_TEMPLATE_NAME) {

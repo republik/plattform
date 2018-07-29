@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-20T17:12:53.662Z",
+  "updated": "2018-07-20T11:38:20.792Z",
   "title": "live",
   "data": [
     {
@@ -16,7 +16,7 @@
     },
     {
       "key": "api/unauthorized/other",
-      "value": "Nicht genehmigt. Sie müssen mindestens eine der folgenden Rollen {role} besitzen, um die gewünschte Aktion auszuführen."
+      "value": "Nicht genehmigt. Sie müssen mindestens eine der folgenden Rollen {role} besitzen um die gewünschte Aktion auszuführen."
     },
     {
       "key": "api/email/invalid",
@@ -33,6 +33,18 @@
     {
       "key": "api/signin/mail/subject",
       "value": "E-Mail-Adresse bestätigen (für die Republik)"
+    },
+    {
+      "key": "api/signin/app/title",
+      "value": "Republik 🔒"
+    },
+    {
+      "key": "api/signin/app/body",
+      "value": "Wollen Sie sich gerade auf einem neuen Gerät anmelden?"
+    },
+    {
+      "key": "api/signIn/app/requiresMe",
+      "value": "Anmeldungen per App können nur von der Benutzerin selbst zugelassen werden."
     },
     {
       "key": "api/token/invalid",
@@ -67,8 +79,12 @@
       "value": "Es existiert bereits jemand mit der gewünschten E-Mail-Adresse."
     },
     {
-      "key": "api/auth/token-type-unknown",
+      "key": "api/auth/tokenType/404",
       "value": "Token Challenge Typ existiert nicht."
+    },
+    {
+      "key": "api/auth/tokenType/notEnabled",
+      "value": "Der gewählte Token-Typ steht nicht zur Verfügung. Bitte versuchen Sie sich mittels eines anderen Verfahrens anzumelden."
     },
     {
       "key": "api/auth/shared-secret-not-supported",

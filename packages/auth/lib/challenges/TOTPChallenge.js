@@ -1,6 +1,6 @@
 const OTP = require('otp')
 
-const MIN_IN_MS = 1000 * 60
+const TTL = 1000 * 30 // 30s
 const Type = 'TOTP'
 
 module.exports = {
@@ -33,7 +33,7 @@ module.exports = {
   },
   generateNewToken: async ({ pgdb, session, user }) => {
     const payload = '' // no payload needed, time-based
-    const expiresAt = new Date(new Date().getTime() + (30 * MIN_IN_MS))
+    const expiresAt = new Date(new Date().getTime() + TTL)
     return { payload, expiresAt }
   },
   startChallenge: async (options) => {

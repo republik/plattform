@@ -52,7 +52,7 @@ const initiateSession = async ({ req, pgdb, email, consents }) => {
   }
 }
 
-const sessionByToken = async ({ pgdb, token, email: emailFromQuery, ...meta }) => {
+const sessionByToken = async ({ pgdb, token, email: emailFromQuery }) => {
   const sessions = await pgdb.query(`
     SELECT DISTINCT
       s.*,
