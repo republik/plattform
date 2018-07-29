@@ -1,6 +1,6 @@
 const useragent = require('useragent')
 
-const appRegex = /RepublikApp\/(.*)/
+const appRegex = /RepublikApp\/(\S+)/
 
 module.exports.detect = (ua) => {
   if (!ua) {
