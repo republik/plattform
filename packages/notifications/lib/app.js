@@ -1,5 +1,5 @@
 const { publish: publishFirebase } = require('./firebase')
-const { publish: publishiOS } = require('./apn')
+const { publish: publishApn } = require('./apn')
 const debug = require('debug')('notifications:publish')
 
 const defaultTTL = 4 * 7 * 24 * 60 * 60 * 1000 // 4 weeks in ms, firebase default
@@ -23,7 +23,7 @@ const publish = async (userIds, args, { pgdb }) => {
 
   debug('sending notifications (apn: %d, firebase: %d)...', iosTokens.length, androidTokens.length)
   return Promise.all([
-    publishiOS({ tokens: iosTokens, ...args }),
+    publishApn({ tokens: iosTokens, ...args }),
     publishFirebase({ tokens: androidTokens, ...args })
   ])
 }
