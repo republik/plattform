@@ -53,7 +53,7 @@ const publish = async (args) => {
       },
       topic: APN_BUNDLE_ID,
       ...ttl // A UNIX epoch date expressed in seconds (UTC).
-        ? { expiry: parseInt(new Date(now.getTime() + now.getTimezoneOffset() + ttl).getTime() / 1000.0) }
+        ? { expiry: parseInt(new Date(now.getTime() + now.getTimezoneOffset() + ttl).getTime() / 1000) }
         : { }
     })
     debug('sending %d notifications...', tokens.length)

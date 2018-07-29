@@ -59,7 +59,7 @@ const publish = async (args) => {
       }
     }
     const options = {
-      ...ttl ? { timeToLive: parseInt(ttl / 1000.0) } : {},
+      ...ttl ? { timeToLive: parseInt(ttl / 1000) } : {},
       ...priority ? { priority } : {}
     }
     const result = await firebase.messaging().sendToDevice(
