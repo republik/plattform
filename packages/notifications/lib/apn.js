@@ -1,3 +1,5 @@
+// https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/CommunicatingwithAPNs.html
+
 const apn = require('apn')
 const debug = require('debug')('notifications:publish:apn')
 

@@ -1,6 +1,5 @@
 // https://firebase.google.com/docs/cloud-messaging/admin/legacy-fcm?authuser=1
 // https://firebase.google.com/docs/cloud-messaging/admin/send-messages?authuser=1#defining_the_message
-// https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/CommunicatingwithAPNs.html
 
 const firebase = require('firebase-admin')
 const debug = require('debug')('notifications:publish:firebase')
