@@ -1,5 +1,5 @@
 {
-  "updated": "2018-07-20T11:38:20.792Z",
+  "updated": "2018-07-27T16:22:14.702Z",
   "title": "live",
   "data": [
     {
@@ -36,7 +36,7 @@
     },
     {
       "key": "api/signin/app/title",
-      "value": "Republik 🔒"
+      "value": "Republik"
     },
     {
       "key": "api/signin/app/body",
@@ -44,7 +44,7 @@
     },
     {
       "key": "api/signIn/app/requiresMe",
-      "value": "Anmeldungen per App können nur von der Benutzerin selbst zugelassen werden."
+      "value": "Anmeldungen mit der App können nur von der Benutzerin selbst zugelassen werden."
     },
     {
       "key": "api/token/invalid",
