@@ -54,8 +54,9 @@ type mutations {
   # required role to clear other's session: supporter
   clearSessions(userId: ID): Boolean!
 
-  # only allowed by the user herself
-  preferredFirstFactor(tokenType: SignInTokenType): User!
+  # if userId is null, the logged in user is changed
+  # required role to change others: supporter
+  preferredFirstFactor(userId: ID, tokenType: SignInTokenType): User!
 
   # Generate a new sharedSecret for TOTP
   initTOTPSharedSecret: SharedSecretResponse!
