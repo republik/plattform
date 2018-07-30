@@ -26,7 +26,7 @@ class Image extends Component {
       maxWidth,
       size: sizeProp,
       aboveTheFold,
-      enableGallery
+      enableGallery = true
     } = this.props
 
     const onClick = (enableGallery && this.context.toggleGallery) ? this.context.toggleGallery : () => {}

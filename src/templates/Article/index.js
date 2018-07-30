@@ -114,7 +114,7 @@ const figureImage = {
   props: (node, index, parent, { ancestors }) => {
     const src = extractImage(node)
     const displayWidth = getDisplayWidth(ancestors)
-    const enableGallery = parent.data ? !parent.data.excludeFromGallery : false
+    const enableGallery = parent.data ? !parent.data.excludeFromGallery : true
     return {
       ...FigureImage.utils.getResizedSrcs(
         src,

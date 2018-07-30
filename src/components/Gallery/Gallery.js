@@ -175,9 +175,9 @@ class Gallery extends Component {
   render() {
     const { index, exitLeft, exitRight, closing, focus } = this.state
     const { onClose, items } = this.props
-    const { src, caption, credit, alt } = items[index]
+    const { caption, credit } = items[index]
     const total = this.props.items.length
-    const srcs = FigureImage.utils.getResizedSrcs(src, window.innerWidth)
+    
     return (
       <div {...styles.wrapper}>
         <Swipeable
@@ -211,7 +211,20 @@ class Gallery extends Component {
                 {...(closing && styles.closing)}
               >
                 <Spinner />
-                <img key={src} alt={alt} {...styles.mediaItemImage} {...srcs} />
+                {
+                  items.map((item, i) => {
+                    const srcs = FigureImage.utils.getResizedSrcs(item.src, window.innerWidth)
+                    return (
+                      <img 
+                        key={item.src} 
+                        alt={item.alt} 
+                        {...styles.mediaItemImage} 
+                        {...srcs} 
+                        style={{ display: i===index ? 'block' : 'none' }} 
+                      />
+                    )
+                  })
+                }
               </div>
             </div>
             <div {...styles.caption} style={{ opacity: focus ? 0 : 1 }}>
