@@ -175,7 +175,7 @@ class Gallery extends Component {
   render() {
     const { index, exitLeft, exitRight, closing, focus } = this.state
     const { onClose, items } = this.props
-    const { caption, credit } = items[index]
+    const { src, caption, credit } = items[index]
     const total = this.props.items.length
     const orderedItems = items.slice(index).concat(items.slice(0,index))
 
@@ -221,7 +221,7 @@ class Gallery extends Component {
                         alt={item.alt} 
                         {...styles.mediaItemImage} 
                         {...srcs} 
-                        style={{ display: i===index ? 'block' : 'none' }} 
+                        style={{ display: src===item.src ? 'block' : 'none' }} 
                       />
                     )
                   })
