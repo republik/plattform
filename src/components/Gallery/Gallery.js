@@ -177,7 +177,8 @@ class Gallery extends Component {
     const { onClose, items } = this.props
     const { caption, credit } = items[index]
     const total = this.props.items.length
-    
+    const orderedItems = items.slice(index).concat(items.slice(0,index))
+
     return (
       <div {...styles.wrapper}>
         <Swipeable
@@ -212,7 +213,7 @@ class Gallery extends Component {
               >
                 <Spinner />
                 {
-                  items.map((item, i) => {
+                  orderedItems.map((item, i) => {
                     const srcs = FigureImage.utils.getResizedSrcs(item.src, window.innerWidth)
                     return (
                       <img 
