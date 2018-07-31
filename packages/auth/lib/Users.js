@@ -243,16 +243,26 @@ const denySession = async ({ pgdb, token, email: emailFromQuery, me }) => {
       }
     })
 
-    // let the tokens expire
-    await transaction.public.tokens.update({
-      sessionId: session.id
-    }, {
-      updatedAt: new Date(),
-      expiresAt: new Date()
-    })
+    await Promise.all([
+      // let all tokens related to this session expire
+      transaction.public.tokens.update({
+        sessionId: session.id
+      }, {
+        updatedAt: new Date(),
+        expiresAt: new Date()
+      }),
+      // mark this token as denied
+      transaction.public.tokens.updateOne({
+        ...token
+      }, {
+        expireAction: 'deny'
+      })
+    ])
+
     await transaction.transactionCommit()
   } catch (error) {
     await transaction.transactionRollback()
+    console.error(error)
     throw new AuthorizationFailedError({ session })
   }
   return true
@@ -328,13 +338,23 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
       }
     })
 
-    // let the tokens expire
-    await transaction.public.tokens.update({
-      sessionId: session.id
-    }, {
-      updatedAt: new Date(),
-      expiresAt: new Date()
-    })
+    await Promise.all([
+      // let all tokens related to this session expire
+      transaction.public.tokens.update({
+        sessionId: session.id
+      }, {
+        updatedAt: new Date(),
+        expiresAt: new Date()
+      }),
+      // mark this tokens as authorized
+      ...tokens.map(token =>
+        transaction.public.tokens.updateOne({
+          ...token
+        }, {
+          expireAction: 'authorize'
+        })
+      )
+    ])
     await transaction.transactionCommit()
   } catch (error) {
     await transaction.transactionRollback()
