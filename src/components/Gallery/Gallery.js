@@ -175,7 +175,7 @@ class Gallery extends Component {
   render() {
     const { index, exitLeft, exitRight, closing, focus } = this.state
     const { onClose, items } = this.props
-    const { src, caption, credit } = items[index]
+    const currentItem = items[index]
     const total = this.props.items.length
     const reorderedItems = items.slice(index).concat(items.slice(0,index))
     const preloadItems = reorderedItems.slice(0,3).concat(reorderedItems.slice(-2))
@@ -222,7 +222,7 @@ class Gallery extends Component {
                         alt={item.alt} 
                         {...styles.mediaItemImage} 
                         {...srcs} 
-                        style={{ display: src===item.src ? 'block' : 'none' }} 
+                        style={{ display: currentItem.src===item.src ? 'block' : 'none' }} 
                       />
                     )
                   })
@@ -231,8 +231,8 @@ class Gallery extends Component {
             </div>
             <div {...styles.caption} style={{ opacity: focus ? 0 : 1 }}>
               <FigureCaption>
-                { `${caption} ` }
-                { credit && <FigureByline>{ credit }</FigureByline> }
+                { `${currentItem.caption} ` }
+                { currentItem.credit && <FigureByline>{ currentItem.credit }</FigureByline> }
               </FigureCaption>
             </div>
           </div>
