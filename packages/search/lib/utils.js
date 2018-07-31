@@ -6,8 +6,15 @@ const ES_INDEX_PREFIX = 'republik' // TODO: Put into config
  * @example "2018-05-24-17-05-23"
  * @return {String} [description]
  */
-const sanitizedDate =
+const getDateTime =
   () => new Date().toISOString().slice(0, -5).replace(/[^\d]/g, '-')
+
+/**
+ * @example "2018-05-24"
+ * @return {String} [description]
+ */
+const getDate =
+  () => new Date().toISOString().slice(0, -14).replace(/[^\d]/g, '-')
 
 /**
  * @param  {String} name An index name without prefix
@@ -21,8 +28,15 @@ const getIndexAlias =
  * @param  {String} name An index name without prefix
  * @return {String}      An index name with a date timestamp
  */
-const getIndexDated =
-  (name) => [ES_INDEX_PREFIX, name, sanitizedDate()].filter(Boolean).join('-')
+const getDatetimeIndex =
+  (name) => [ES_INDEX_PREFIX, name, getDateTime()].filter(Boolean).join('-')
+
+/**
+ * @param  {String} name An index name without prefix
+ * @return {String}      An index name with a date
+ */
+const getDatedIndex =
+  (name) => [ES_INDEX_PREFIX, name, getDate()].filter(Boolean).join('-')
 
 /**
  * A filter to remove nodes from an mdast with a predicate. Will remove a node
@@ -54,6 +68,7 @@ const mdastFilter = function (node, predicate = () => false) {
 
 module.exports = {
   getIndexAlias,
-  getIndexDated,
+  getDatetimeIndex,
+  getDatedIndex,
   mdastFilter
 }
