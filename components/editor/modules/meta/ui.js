@@ -3,8 +3,7 @@ import { css } from 'glamor'
 import { Map, Set } from 'immutable'
 import { nest } from 'd3-collection'
 
-
-import { Interaction, Checkbox, Dropdown, Field, Label, colors } from '@project-r/styleguide'
+import { Interaction, Checkbox, Label, colors } from '@project-r/styleguide'
 
 import withT from '../../../../lib/withT'
 import slugify from '../../../../lib/utils/slug'
@@ -92,7 +91,7 @@ const MetaData = ({value, editor, mdastSchema, contextMeta, series, additionalFi
   }
 
   const dataAsJs = node.data.toJS()
-  const customFieldsByRef = nest().key(d => d && d.ref || 'field').object(customFields)
+  const customFieldsByRef = nest().key(d => d ? d.ref : 'field').object(customFields)
 
   return (
     <div {...styles.container}>
@@ -118,20 +117,20 @@ const MetaData = ({value, editor, mdastSchema, contextMeta, series, additionalFi
             })
           })}<br /><br /></Label>}
         <MetaForm data={genericData} onInputChange={onInputChange} black getWidth={getWidth} />
-          {
-            (customFieldsByRef['bool'] || [] ).map(customField => {
+        {
+            (customFieldsByRef['bool'] || []).map(customField => {
               return (
                 <div>
-                  <Checkbox checked={node.data.get(customField.key)} onChange={onInputChange(customField.key)}>
+                  <Checkbox checked={node.data.get(customField.key) || true} onChange={onInputChange(customField.key)}>
                     {customField.label}
-                  </Checkbox>          
-                </div>  
+                  </Checkbox>
+                </div>
               )
             })
           }
         <UIForm getWidth={() => '50%'}>
           {
-            (customFieldsByRef['repo'] || [] ).map(customField => {
+            (customFieldsByRef['repo'] || []).map(customField => {
               const label = customField.label || t(`metaData/field/${customField.key}`, undefined, customField.key)
               const value = node.data.get(customField.key)
               const onChange = onInputChange(customField.key)
@@ -165,10 +164,9 @@ const MetaData = ({value, editor, mdastSchema, contextMeta, series, additionalFi
                         }
                       })
                     }
-                    : onChange} 
+                    : onChange}
                 />
               )
-
             })
           }
         </UIForm>
