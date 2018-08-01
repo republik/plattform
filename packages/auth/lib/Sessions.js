@@ -1,5 +1,6 @@
 const kraut = require('kraut')
 const geoForIP = require('./geoForIP')
+const emoji = require('node-emoji')
 const { newAuthError } = require('./AuthError')
 
 const DestroySessionError = newAuthError('session-destroy-failed', 'api/auth/errorDestroyingSession')
@@ -21,11 +22,13 @@ const initiateSession = async ({ req, pgdb, email, consents }) => {
   const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress
   const userAgent = req.headers['user-agent']
   const phrase = `${kraut.adjectives.random()} ${kraut.verbs.random()} ${kraut.nouns.random()}`
+  const emojis = `${emoji.random().emoji} ${emoji.random().emoji}`
   const { country, city } = geoForIP(ipAddress)
   req.session.email = email
   req.session.ip = ipAddress
   req.session.ua = userAgent
   req.session.phrase = phrase
+  req.session.emojis = emojis
   if (country || city) {
     req.session.geo = { country, city }
   }
@@ -48,7 +51,8 @@ const initiateSession = async ({ req, pgdb, email, consents }) => {
     session,
     country,
     city,
-    phrase
+    phrase,
+    emojis
   }
 }
 

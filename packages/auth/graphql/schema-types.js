@@ -11,6 +11,7 @@ type Session {
   city: String
   isCurrent: Boolean!
   phrase: String
+  emojis: String
 }
 
 type UnauthorizedSession {
@@ -42,6 +43,7 @@ type User {
 
 type SignInResponse {
   phrase: String!
+  emojis: String!
   tokenType: SignInTokenType!
   expiresAt: DateTime!
   alternativeFirstFactors: [SignInTokenType!]!

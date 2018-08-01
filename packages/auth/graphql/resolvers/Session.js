@@ -35,5 +35,8 @@ module.exports = {
   },
   phrase (session) {
     return session.sess.phrase
+  },
+  emojis (session) {
+    return session.sess.emojis
   }
 }
