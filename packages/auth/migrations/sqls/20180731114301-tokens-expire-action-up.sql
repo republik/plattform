@@ -4,5 +4,6 @@ CHECK(
 );
 
 ALTER TABLE tokens
-  ADD COLUMN "expireAction" token_expire_action
+  ADD COLUMN "expireAction" token_expire_action,
+  ADD COLUMN "context" text
 ;

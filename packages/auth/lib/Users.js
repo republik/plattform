@@ -123,7 +123,8 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
     return {
       phrase: '',
       tokenType: 'EMAIL_TOKEN',
-      alternativeFirstFactors: []
+      alternativeFirstFactors: [],
+      expiresAt: new Date()
     }
   }
 
@@ -162,7 +163,8 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
     const token = await generateNewToken(tokenType, {
       pgdb,
       session,
-      email
+      email,
+      context
     })
     if (shouldAutoLogin({ email })) {
       setTimeout(async () => {

@@ -98,4 +98,11 @@ type EventLog {
   activeSession: Session
   createdAt: DateTime!
 }
+
+type SignInNotification {
+  title: String!
+  body: String!
+  verificationUrl: String!
+  expiresAt: DateTime!
+}
 `

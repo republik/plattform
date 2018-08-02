@@ -43,12 +43,13 @@ const ChallengeHandlerProxy = (type, options) => {
     },
     generateNewToken: async () => {
       const tokenData = await handler.generateNewToken(options)
-      const { pgdb, session, email } = options
+      const { pgdb, session, email, context } = options
       return pgdb.public.tokens.insertAndGet({
         sessionId: session.id,
         email,
         type,
-        ...tokenData
+        ...tokenData,
+        context
       })
     },
     startChallenge: async () => {

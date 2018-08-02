@@ -23,6 +23,9 @@ type queries {
   # search for an unverified session by token
   unauthorizedSession(email: String!, token: SignInToken!): UnauthorizedSession
 
+  # your latest, pending signIn notification
+  pendingAppSignIn: SignInNotification
+
   # the requesting userAgent
   echo: RequestInfo!
 }

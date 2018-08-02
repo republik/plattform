@@ -22,6 +22,28 @@ const MIN_IN_MS = 1000 * 60
 const TTL = 10 * MIN_IN_MS
 const Type = 'APP'
 
+const getNotification = ({ email, token, context }) => {
+  const verificationUrl =
+    `${FRONTEND_BASE_URL}/mitteilung?` +
+    querystring.stringify({
+      context: context || token.context,
+      type: 'token-authorization',
+      email: encode(email),
+      token: token.payload,
+      tokenType: Type
+    })
+
+  return {
+    title: t('api/signin/app/title'),
+    body: t('api/signin/app/body'),
+    url: verificationUrl,
+    type: 'authorization',
+    ttl: TTL,
+    expiresAt: token.expiresAt,
+    priority: 'high'
+  }
+}
+
 module.exports = {
   Type,
   generateNewToken: async ({ pgdb, session }) => {
@@ -49,28 +71,10 @@ module.exports = {
       })
     }
 
-    const verificationUrl =
-      `${FRONTEND_BASE_URL}/mitteilung?` +
-      querystring.stringify({
-        context,
-        type: 'token-authorization',
-        email: encode(email),
-        token: token.payload,
-        tokenType: Type
-      })
-
     return app.publish(
       [user.id],
-      {
-        title: t('api/signin/app/title'),
-        body: t('api/signin/app/body'),
-        url: verificationUrl,
-        type: 'authorization',
-        ttl: TTL,
-        priority: 'high'
-      }, {
-        pgdb
-      }
+      getNotification({ context, email, token }),
+      { pgdb }
     )
   },
   validateChallenge: async ({ pgdb, user, me }, { payload }) => {
@@ -84,5 +88,6 @@ module.exports = {
       payload
     })
     return foundToken.id
-  }
+  },
+  getNotification
 }
