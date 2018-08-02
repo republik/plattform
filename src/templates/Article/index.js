@@ -509,6 +509,43 @@ const cover = {
   ]
 }
 
+const logbook = {
+  matchMdast: matchZone('LOGBOOK'),
+  component: ({ children }) => <div>{children}</div>,
+  editorModule: 'logbook',
+  editorOptions: {
+    insertButtonText: 'Logbuch'
+  },
+  rules: [
+    {
+      matchMdast: matchHeading(2),
+      component: Editorial.Subhead,
+      editorModule: 'headline',
+      editorOptions: {
+        placeholder: 'Titel',
+        type: 'LOGBOOK_TITLE',
+        depth: 2,
+        isStatic: true
+      },
+      rules: globalInlines
+    },
+    {
+      matchMdast: matchParagraph,
+      component: Editorial.Credit,
+      editorModule: 'paragraph',
+      editorOptions: {
+        type: 'LOGBOOK_CREDIT',
+        placeholder: 'Autoren, Datum',
+        isStatic: true,
+        afterType: 'PARAGRAPH',
+        insertAfterType: 'CENTER'
+      },
+      rules: [...globalInlines, link]
+    }
+  ]
+
+}
+
 const mdastPlaceholder = '\u2063'
 const DefaultLink = ({ children }) => children
 
@@ -774,6 +811,7 @@ const createSchema = ({
                 },
                 isVoid: true
               },
+              logbook,
               {
                 matchMdast: matchZone('EMBEDVIDEO'),
                 component: ({ attributes, data, url }) => {
