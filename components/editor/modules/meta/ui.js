@@ -1,8 +1,9 @@
 import React from 'react'
 import { css } from 'glamor'
 import { Map, Set } from 'immutable'
+import { nest } from 'd3-collection'
 
-import { Interaction, Dropdown, Field, Label, colors } from '@project-r/styleguide'
+import { Interaction, Checkbox, Label, colors } from '@project-r/styleguide'
 
 import withT from '../../../../lib/withT'
 import slugify from '../../../../lib/utils/slug'
@@ -90,6 +91,7 @@ const MetaData = ({value, editor, mdastSchema, contextMeta, series, additionalFi
   }
 
   const dataAsJs = node.data.toJS()
+  const customFieldsByRef = nest().key(d => d ? d.ref : 'field').object(customFields)
 
   return (
     <div {...styles.container}>
@@ -115,57 +117,58 @@ const MetaData = ({value, editor, mdastSchema, contextMeta, series, additionalFi
             })
           })}<br /><br /></Label>}
         <MetaForm data={genericData} onInputChange={onInputChange} black getWidth={getWidth} />
+        {
+            (customFieldsByRef['bool'] || []).map(customField => {
+              return (
+                <div>
+                  <Checkbox checked={node.data.get(customField.key) || true} onChange={onInputChange(customField.key)}>
+                    {customField.label}
+                  </Checkbox>
+                </div>
+              )
+            })
+          }
         <UIForm getWidth={() => '50%'}>
-          {customFields.map(customField => {
-            const label = customField.label || t(`metaData/field/${customField.key}`, undefined, customField.key)
-            const value = node.data.get(customField.key)
-            const onChange = onInputChange(customField.key)
-            if (customField.items) {
-              return <Dropdown key={customField.key}
-                black
-                items={customField.items}
-                label={label}
-                value={value}
-                onChange={item => onChange(undefined, item.value)} />
-            }
-            if (customField.ref === 'repo') {
-              return <RepoSelect key={customField.key}
-                label={label}
-                value={value}
-                onChange={customField.key === 'format'
-                  ? (_, __, item) => {
-                    editor.change(change => {
-                      change
-                        .setNodeByKey(node.key, {
-                          data: item
-                            ? node.data.set('format', `https://github.com/${item.value.id}`)
-                            : node.data.remove('format')
-                        })
-                      let titleNode = change.value.document
-                        .findDescendant(node => node.type === 'TITLE')
-                      if (titleNode) {
-                        const format = item
-                          ? item.value.latestCommit.document
-                          : undefined
-                        change.setNodeByKey(titleNode.key, {
-                          data: {format}
-                        })
-                        titleNode.nodes.forEach(node => {
-                          change.setNodeByKey(node.key, {
+          {
+            (customFieldsByRef['repo'] || []).map(customField => {
+              const label = customField.label || t(`metaData/field/${customField.key}`, undefined, customField.key)
+              const value = node.data.get(customField.key)
+              const onChange = onInputChange(customField.key)
+              return (
+                <RepoSelect key={customField.key}
+                  label={label}
+                  value={value}
+                  onChange={customField.key === 'format'
+                    ? (_, __, item) => {
+                      editor.change(change => {
+                        change
+                          .setNodeByKey(node.key, {
+                            data: item
+                              ? node.data.set('format', `https://github.com/${item.value.id}`)
+                              : node.data.remove('format')
+                          })
+                        let titleNode = change.value.document
+                          .findDescendant(node => node.type === 'TITLE')
+                        if (titleNode) {
+                          const format = item
+                            ? item.value.latestCommit.document
+                            : undefined
+                          change.setNodeByKey(titleNode.key, {
                             data: {format}
                           })
-                        })
-                      }
-                    })
-                  }
-                  : onChange} />
-            }
-            return <Field key={customField.key}
-              black
-              label={label}
-              value={value}
-              onChange={onChange} />
-          })}
+                          titleNode.nodes.forEach(node => {
+                            change.setNodeByKey(node.key, {
+                              data: {format}
+                            })
+                          })
+                        }
+                      })
+                    }
+                    : onChange}
+                />
+              )
+            })
+          }
         </UIForm>
         {!!series && <SeriesForm editor={editor} node={node} />}
         {!!Teaser && (<div>
