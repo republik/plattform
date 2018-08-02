@@ -24,7 +24,7 @@ module.exports = {
     const expiresAt = new Date(new Date().getTime() + TTL)
     return { payload, expiresAt }
   },
-  startChallenge: async ({ email, context, token, emojis, user, pgdb }) => {
+  startChallenge: async ({ email, context, token, user, pgdb }) => {
     if (!user) {
       throw new UserMissingError({ email })
     }
@@ -42,7 +42,7 @@ module.exports = {
     return app.publish(
       [user.id],
       {
-        title: `${t('api/signin/app/title')} ${emojis}`,
+        title: t('api/signin/app/title'),
         body: t('api/signin/app/body'),
         url: verificationUrl,
         type: 'authorization',

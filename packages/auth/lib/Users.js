@@ -157,7 +157,7 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
 
   try {
     const init = await initiateSession({ req, pgdb, email, consents })
-    const { country, phrase, session, emojis } = init
+    const { country, phrase, session } = init
 
     const token = await generateNewToken(tokenType, {
       pgdb,
@@ -181,7 +181,6 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
         context,
         country,
         phrase,
-        emojis,
         user
       })
     }
@@ -189,7 +188,6 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
     return {
       tokenType,
       phrase,
-      emojis,
       expiresAt: token.expiresAt,
       alternativeFirstFactors: enabledTokenTypes.filter(tt => tt !== tokenType)
     }
