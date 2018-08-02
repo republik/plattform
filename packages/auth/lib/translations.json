@@ -1,5 +1,5 @@
 {
-  "updated": "2018-07-27T16:22:14.702Z",
+  "updated": "2018-08-02T13:17:06.310Z",
   "title": "live",
   "data": [
     {
@@ -33,6 +33,10 @@
     {
       "key": "api/signin/mail/subject",
       "value": "E-Mail-Adresse bestätigen (für die Republik)"
+    },
+    {
+      "key": "api/signin/mail/appNotice/subject",
+      "value": "Anmelden per App"
     },
     {
       "key": "api/signin/app/title",

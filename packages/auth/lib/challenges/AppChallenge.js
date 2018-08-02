@@ -10,8 +10,13 @@ const UserMissingError = newAuthError('app-challenge-user-missing', 'api/users/4
 const AppTokenRequiresMeError = newAuthError('app-token-requires-me', 'api/signIn/app/requiresMe')
 
 const {
-  FRONTEND_BASE_URL
+  FRONTEND_BASE_URL,
+  AUTH_MAIL_FROM_ADDRESS
 } = process.env
+
+const {
+  sendMailTemplate
+} = require('@orbiting/backend-modules-mail')
 
 const MIN_IN_MS = 1000 * 60
 const TTL = 10 * MIN_IN_MS
@@ -27,6 +32,21 @@ module.exports = {
   startChallenge: async ({ email, context, token, user, pgdb }) => {
     if (!user) {
       throw new UserMissingError({ email })
+    }
+
+    // send notice mail if first time
+    const hasAppTokens = await pgdb.public.tokens.findFirst({
+      email,
+      type: Type,
+      'payload !=': token.payload
+    })
+    if (!hasAppTokens) {
+      sendMailTemplate({
+        to: email,
+        fromEmail: AUTH_MAIL_FROM_ADDRESS,
+        subject: t('api/signin/mail/appNotice/subject'),
+        templateName: 'signin_app_notice'
+      })
     }
 
     const verificationUrl =
