@@ -28,6 +28,7 @@ import {
   createEmbedTwitterModule
 } from './modules/embed'
 import createBlockQuoteModule from './modules/blockquote'
+import createLogbookModule from './modules/logbook'
 import createSpecialModule from './modules/special'
 import createMetaModule from './modules/meta'
 import createSpecialCharsModule from './modules/specialchars'
@@ -66,6 +67,7 @@ const moduleCreators = {
   figureCaption: createFigureCaptionModule,
   figuregroup: createFigureGroupModule,
   special: createSpecialModule,
+  logbook: createLogbookModule,
   meta: createMetaModule,
   specialchars: createSpecialCharsModule,
   title: createTitleModule,
