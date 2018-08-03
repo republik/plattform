@@ -181,7 +181,8 @@ class Gallery extends Component {
     const preloadItems = total >= 5 
       ? reorderedItems.slice(0,3).concat(reorderedItems.slice(-2))
       : reorderedItems
-      
+    const resizeStep = Math.ceil(window.innerWidth/500)*500
+
     return (
       <div {...styles.wrapper}>
         <Swipeable
@@ -217,7 +218,7 @@ class Gallery extends Component {
                 <Spinner />
                 {
                   preloadItems.map((item, i) => {
-                    const srcs = FigureImage.utils.getResizedSrcs(item.src, window.innerWidth)
+                    const srcs = FigureImage.utils.getResizedSrcs(item.src, resizeStep)
                     return (
                       <img 
                         key={item.src} 
