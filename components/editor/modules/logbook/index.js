@@ -102,6 +102,23 @@ export const logbookPlugin = options => {
         {children}
       </Logbook>
     },
+    onKeyDown (event, change) {
+      const isBackspace = event.key === 'Backspace'
+      if (!isBackspace) return
+
+      const { value } = change
+      const logBook = value.document.getClosest(value.startBlock.key, matchBlock(options.TYPE))
+      if (!logBook) return
+
+      const isEmpty = !logBook.text
+
+      if (isBackspace) {
+        event.preventDefault()
+        if (isEmpty) {
+          return change.removeNodeByKey(logBook.key)
+        }
+      }
+    },
     schema: {
       blocks: {
         [options.TYPE]: {
