@@ -177,8 +177,11 @@ class Gallery extends Component {
     const { onClose, items } = this.props
     const currentItem = items[index]
     const total = this.props.items.length
-    const preloadItems = items.slice(index).concat(items.slice(0,index))
-
+    const reorderedItems = items.slice(index).concat(items.slice(0,index))
+    const preloadItems = total >= 5 
+      ? reorderedItems.slice(0,3).concat(reorderedItems.slice(-2))
+      : reorderedItems
+      
     return (
       <div {...styles.wrapper}>
         <Swipeable
