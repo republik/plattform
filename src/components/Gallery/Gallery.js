@@ -177,8 +177,7 @@ class Gallery extends Component {
     const { onClose, items } = this.props
     const currentItem = items[index]
     const total = this.props.items.length
-    const reorderedItems = items.slice(index).concat(items.slice(0,index))
-    const preloadItems = reorderedItems.slice(0,3).concat(reorderedItems.slice(-2))
+    const preloadItems = items.slice(index).concat(items.slice(0,index))
 
     return (
       <div {...styles.wrapper}>
