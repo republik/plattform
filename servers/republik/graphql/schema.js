@@ -105,6 +105,8 @@ type mutations {
     discussionPreferences: DiscussionPreferencesInput!
   ): Discussion!
 
+  updateDiscussion(id: ID!, closed: Boolean): Discussion!
+
   # if userId is null, the logged in user's subscription is changed
   # required role to change other users: supporter
   # if email and hmac is set, the user is upserted (used for newsletter signup)
