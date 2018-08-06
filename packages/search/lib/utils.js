@@ -28,14 +28,14 @@ const getIndexAlias =
  * @param  {String} name An index name without prefix
  * @return {String}      An index name with a date timestamp
  */
-const getDatetimeIndex =
+const getDateTimeIndex =
   (name) => [ES_INDEX_PREFIX, name, getDateTime()].filter(Boolean).join('-')
 
 /**
  * @param  {String} name An index name without prefix
  * @return {String}      An index name with a date
  */
-const getDatedIndex =
+const getDateIndex =
   (name) => [ES_INDEX_PREFIX, name, getDate()].filter(Boolean).join('-')
 
 /**
@@ -68,7 +68,7 @@ const mdastFilter = function (node, predicate = () => false) {
 
 module.exports = {
   getIndexAlias,
-  getDatetimeIndex,
-  getDatedIndex,
+  getDateTimeIndex,
+  getDateIndex,
   mdastFilter
 }

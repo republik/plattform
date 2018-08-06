@@ -30,7 +30,7 @@ const _ = require('lodash')
 const uuid = require('uuid/v4')
 
 const indices = require('../../../lib/indices')
-const { getIndexAlias, getDatedIndex } = require('../../../lib/utils')
+const { getIndexAlias, getDateIndex } = require('../../../lib/utils')
 
 const reduceFilters = filterReducer(documentSchema)
 const createElasticFilter = elasticFilterBuilder(documentSchema)
@@ -460,7 +460,7 @@ const search = async (__, args, context, info) => {
         : []
 
       await elastic.index({
-        index: getDatedIndex('searches'),
+        index: getDateIndex('searches'),
         type: 'Search',
         body: {
           date: new Date(),
