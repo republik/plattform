@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import { Map, Set } from 'immutable'
 import { nest } from 'd3-collection'
 
-import { Interaction, Checkbox, Label, colors } from '@project-r/styleguide'
+import { Interaction, Dropdown, Field, Checkbox, Label, colors } from '@project-r/styleguide'
 
 import withT from '../../../../lib/withT'
 import slugify from '../../../../lib/utils/slug'
@@ -169,6 +169,25 @@ const MetaData = ({value, editor, mdastSchema, contextMeta, series, additionalFi
               )
             })
           }
+          {customFields.map(customField => {
+            const label = customField.label || t(`metaData/field/${customField.key}`, undefined, customField.key)
+            const value = node.data.get(customField.key)
+            const onChange = onInputChange(customField.key)
+            if (customField.items) {
+              return <Dropdown key={customField.key}
+                black
+                items={customField.items}
+                label={label}
+                value={value}
+                onChange={item => onChange(undefined, item.value)} />
+            }
+
+            return <Field key={customField.key}
+              black
+              label={label}
+              value={value}
+              onChange={onChange} />
+          })}
         </UIForm>
         {!!series && <SeriesForm editor={editor} node={node} />}
         {!!Teaser && (<div>
