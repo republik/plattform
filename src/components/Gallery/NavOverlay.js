@@ -86,7 +86,6 @@ class NavOverlay extends React.Component {
       handleClickRight, 
       onClose, 
       handleClick, 
-      enableNavigation = true 
     } = this.props
     return (
       <div
@@ -95,7 +94,7 @@ class NavOverlay extends React.Component {
         onKeyUp={this.handleKeyUp}
         tabIndex={-1}
       >
-        { enableNavigation &&
+        { handleClickLeft &&
           <div {...styles.navArea} className='left' onClick={handleClickLeft}>
             <div {...styles.navButton}>
               <ChevronLeft size={48} />
@@ -103,7 +102,7 @@ class NavOverlay extends React.Component {
           </div>
         }
         <div {...styles.navArea} onClick={handleClick}></div>
-        { enableNavigation &&
+        { handleClickRight &&
           <div {...styles.navArea} className='right' onClick={handleClickRight}>
             <div {...styles.navButton}>
               <ChevronRight size={48} />
@@ -117,7 +116,6 @@ class NavOverlay extends React.Component {
 }
 
 NavOverlay.propTypes = {
-  enableNavigation: PropTypes.bool,
   handleClickLeft: PropTypes.func,
   handleClickRight: PropTypes.func,
   onClose: PropTypes.func.isRequired,

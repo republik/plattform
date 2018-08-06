@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { onlyS } from '../../theme/mediaQueries'
+import { onlyS, lUp } from '../../theme/mediaQueries'
 import debounce from 'lodash.debounce'
 import Spinner from '../Spinner'
 import zIndex from '../../theme/zIndex'
@@ -104,7 +104,9 @@ const styles = {
     maxWidth: '100%',
     maxHeight: '100%',
     margin: 'auto',
-    animation: `${fadeIn} ${fadeInDurationMs}ms ease-out`,
+    [lUp]: {
+      animation: `${fadeIn} ${fadeInDurationMs}ms ease-out`,
+    }
   }),
   closing: css({
     animation: swipeAnimation('top'),
@@ -128,6 +130,9 @@ class Gallery extends Component {
     this.state = {
       index: startItemIndex > -1 ? startItemIndex : 0,
       focus: false,
+      exitLeft: false,
+      exitRight: false,
+      closing: false,
     }
 
     this.handleClickLeft = () => {
@@ -188,16 +193,15 @@ class Gallery extends Component {
       <div {...styles.wrapper}>
         <Swipeable
           onSwipedDown={this.handleSwipeDown}
-          onSwipedLeft={this.handleSwipeLeft}
-          onSwipedRight={this.handleSwipeRight}
+          onSwipedLeft={enableNavigation && this.handleSwipeLeft}
+          onSwipedRight={enableNavigation && this.handleSwipeRight}
           delta={10}
           preventDefaultTouchmoveEvent={true}
           stopPropagation={true}
         >
           <NavOverlay
-            enableNavigation={enableNavigation}
-            handleClickLeft={this.handleClickLeft}
-            handleClickRight={this.handleClickRight}
+            handleClickLeft={enableNavigation && this.handleClickLeft}
+            handleClickRight={enableNavigation && this.handleClickRight}
             handleClick={this.toggleFocus}
             onClose={onClose}
           />
@@ -219,7 +223,9 @@ class Gallery extends Component {
                 {...(exitRight && styles.exitRight)}
                 {...(closing && styles.closing)}
               >
-                <Spinner />
+                { [exitLeft, exitRight, closing].some(Boolean) ||
+                  <Spinner />
+                }
                 {
                   preloadItems.map((item, i) => {
                     const srcs = FigureImage.utils.getResizedSrcs(item.src, resizeStep)
