@@ -36,7 +36,7 @@ const styles = {
   navArea: css({
     display: 'flex',
     alignItems: 'center',
-    width: '33.333%',
+    width: '100%',
     height: '100vh',
     padding: '0 30px',
     opacity: 0,
@@ -81,7 +81,13 @@ class NavOverlay extends React.Component {
     this.ref && this.ref.focus()
   }
   render() {
-    const { handleClickLeft, handleClickRight, onClose, handleClick } = this.props
+    const { 
+      handleClickLeft, 
+      handleClickRight, 
+      onClose, 
+      handleClick, 
+      enableNavigation = true 
+    } = this.props
     return (
       <div
         ref={this.setRef}
@@ -89,17 +95,21 @@ class NavOverlay extends React.Component {
         onKeyUp={this.handleKeyUp}
         tabIndex={-1}
       >
-        <div {...styles.navArea} className='left' onClick={handleClickLeft}>
-          <div {...styles.navButton}>
-            <ChevronLeft size={48} />
+        { enableNavigation &&
+          <div {...styles.navArea} className='left' onClick={handleClickLeft}>
+            <div {...styles.navButton}>
+              <ChevronLeft size={48} />
+            </div>
           </div>
-        </div>
+        }
         <div {...styles.navArea} onClick={handleClick}></div>
-        <div {...styles.navArea} className='right' onClick={handleClickRight}>
-          <div {...styles.navButton}>
-            <ChevronRight size={48} />
+        { enableNavigation &&
+          <div {...styles.navArea} className='right' onClick={handleClickRight}>
+            <div {...styles.navButton}>
+              <ChevronRight size={48} />
+            </div>
           </div>
-        </div>
+        }
         <div {...styles.navClose} onClick={onClose} />
       </div>
     )
@@ -107,8 +117,9 @@ class NavOverlay extends React.Component {
 }
 
 NavOverlay.propTypes = {
-  handleClickLeft: PropTypes.func.isRequired,
-  handleClickRight: PropTypes.func.isRequired,
+  enableNavigation: PropTypes.bool,
+  handleClickLeft: PropTypes.func,
+  handleClickRight: PropTypes.func,
   onClose: PropTypes.func.isRequired,
 }
 

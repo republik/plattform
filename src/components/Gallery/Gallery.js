@@ -182,6 +182,7 @@ class Gallery extends Component {
       ? reorderedItems.slice(0,3).concat(reorderedItems.slice(-2))
       : reorderedItems
     const resizeStep = Math.ceil(window.innerWidth/500)*500
+    const enableNavigation = total > 1
 
     return (
       <div {...styles.wrapper}>
@@ -194,6 +195,7 @@ class Gallery extends Component {
           stopPropagation={true}
         >
           <NavOverlay
+            enableNavigation={enableNavigation}
             handleClickLeft={this.handleClickLeft}
             handleClickRight={this.handleClickRight}
             handleClick={this.toggleFocus}
@@ -201,9 +203,11 @@ class Gallery extends Component {
           />
           <div {...styles.gallery}>
             <div {...styles.header} style={{ opacity: focus ? 0 : 1 }}>
-              <div {...styles.counter}>
-                {index+1}/{total}
-              </div>
+              { enableNavigation &&
+                <div {...styles.counter}>
+                  {index+1}/{total}
+                </div>
+              }
               <div {...styles.close} onClick={onClose}>
                 <Close size={24} />
               </div>
