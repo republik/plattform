@@ -182,11 +182,13 @@ const MetaData = ({value, editor, mdastSchema, contextMeta, series, additionalFi
                 onChange={item => onChange(undefined, item.value)} />
             }
 
-            return <Field key={customField.key}
-              black
-              label={label}
-              value={value}
-              onChange={onChange} />
+            if (!customField.ref) {
+              return <Field key={customField.key}
+                black
+                label={label}
+                value={value}
+                onChange={onChange} />
+            }
           })}
         </UIForm>
         {!!series && <SeriesForm editor={editor} node={node} />}
