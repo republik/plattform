@@ -1,5 +1,8 @@
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const { formatPrice } = require('@orbiting/backend-modules-formats')
+const {
+  displayAuthor: getDisplayAuthor
+} = require('../graphql/resolvers/Comment')
 
 const {
   SLACK_API_TOKEN,
@@ -37,20 +40,34 @@ const getCommentLink = (comment, discussion) => discussion.documentPath
   ? `${FRONTEND_BASE_URL}${discussion.documentPath}?focus=${comment.id}`
   : comment.id
 
-exports.publishComment = async (user, comment, discussion) => {
-  const content = `*${user.name}* wrote: ${getCommentLink(comment, discussion)}\n${comment.content}`
+const getProfileLInk = (author) => author.username
+  ? `<${FRONTEND_BASE_URL}/~${author.username}|${author.name}>`
+  : author.name
+
+exports.publishComment = async (comment, discussion, context) => {
+  const author = await getDisplayAuthor(comment, {}, context)
+  const content = `:love_letter: *${getProfileLInk(author)}* wrote in <${getCommentLink(comment, discussion)}|${discussion.title}>:\n${comment.content}`
   return publish(SLACK_CHANNEL_COMMENTS, content)
 }
 
-exports.publishCommentUpdate = async (user, comment, oldComment, discussion) => {
-  const content = `*${user.name}* edited: ${getCommentLink(comment, discussion)}\n*old:*\n${oldComment.content}\n*new:*\n${comment.content}`
-  return publish(SLACK_CHANNEL_COMMENTS, content)
-}
+exports.publishCommentUpdate =
+  async (comment, oldComment, discussion, context) => {
+    const author = await getDisplayAuthor(comment, {}, context)
+    const content = `:pencil2: *${getProfileLInk(author)}* edited in <${getCommentLink(comment, discussion)}|${discussion.title}>:\n*old:*\n${oldComment.content}\n*new:*\n${comment.content}`
+    return publish(SLACK_CHANNEL_COMMENTS, content)
+  }
 
-exports.publishCommentUnpublish = async (user, comment, discussion) => {
-  const content = `*${user.name}* unpublished: ${getCommentLink(comment, discussion)}\n${comment.content}`
-  return publish(SLACK_CHANNEL_COMMENTS, content)
-}
+exports.publishCommentUnpublish =
+  async (user, update, comment, discussion, context) => {
+    const author = await getDisplayAuthor(comment, {}, context)
+
+    const action = update.adminUnpublished
+      ? `:point_up: *${user.name}* unupblished comment by *${getProfileLInk(author)}*`
+      : `:put_litter_in_its_place: *${getProfileLInk(author)}* unpublished`
+
+    const content = `${action} in <${getCommentLink(comment, discussion)}|${discussion.title}>:\n${comment.content}`
+    return publish(SLACK_CHANNEL_COMMENTS, content)
+  }
 
 exports.publishMonitor = async (_user, message) => {
   const user = transformUser(_user)

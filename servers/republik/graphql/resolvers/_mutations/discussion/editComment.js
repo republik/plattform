@@ -1,13 +1,11 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const slack = require('../../../../lib/slack')
 
-module.exports = async (_, args, { pgdb, user, req, t, pubsub }) => {
-  Roles.ensureUserHasRole(user, 'member')
+module.exports = async (_, args, context) => {
+  const { id, content } = args
+  const { pgdb, user, t, pubsub } = context
 
-  const {
-    id,
-    content
-  } = args
+  Roles.ensureUserHasRole(user, 'member')
 
   if (!content || !content.trim().length) {
     throw new Error(t('api/comment/empty'))
@@ -51,7 +49,7 @@ module.exports = async (_, args, { pgdb, user, req, t, pubsub }) => {
       node: newComment
     }})
 
-    await slack.publishCommentUpdate(user, newComment, comment, discussion)
+    await slack.publishCommentUpdate(newComment, comment, discussion, context)
 
     return newComment
   } catch (e) {

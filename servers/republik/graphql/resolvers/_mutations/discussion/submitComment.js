@@ -103,7 +103,7 @@ module.exports = async (_, args, context) => {
       node: comment
     }})
 
-    slack.publishComment(user, comment, discussion)
+    slack.publishComment(comment, discussion, context)
 
     return comment
   } catch (e) {
