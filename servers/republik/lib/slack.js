@@ -40,20 +40,20 @@ const getCommentLink = (comment, discussion) => discussion.documentPath
   ? `${FRONTEND_BASE_URL}${discussion.documentPath}?focus=${comment.id}`
   : comment.id
 
-const getProfileLInk = (author) => author.username
+const getProfileLink = (author) => author.username
   ? `<${FRONTEND_BASE_URL}/~${author.username}|${author.name}>`
   : author.name
 
 exports.publishComment = async (comment, discussion, context) => {
   const author = await getDisplayAuthor(comment, {}, context)
-  const content = `:love_letter: *${getProfileLInk(author)}* wrote in <${getCommentLink(comment, discussion)}|${discussion.title}>:\n${comment.content}`
+  const content = `:love_letter: *${getProfileLink(author)}* wrote in <${getCommentLink(comment, discussion)}|${discussion.title}>:\n${comment.content}`
   return publish(SLACK_CHANNEL_COMMENTS, content)
 }
 
 exports.publishCommentUpdate =
   async (comment, oldComment, discussion, context) => {
     const author = await getDisplayAuthor(comment, {}, context)
-    const content = `:pencil2: *${getProfileLInk(author)}* edited in <${getCommentLink(comment, discussion)}|${discussion.title}>:\n*old:*\n${oldComment.content}\n*new:*\n${comment.content}`
+    const content = `:pencil2: *${getProfileLink(author)}* edited in <${getCommentLink(comment, discussion)}|${discussion.title}>:\n*old:*\n${oldComment.content}\n*new:*\n${comment.content}`
     return publish(SLACK_CHANNEL_COMMENTS, content)
   }
 
@@ -62,8 +62,8 @@ exports.publishCommentUnpublish =
     const author = await getDisplayAuthor(comment, {}, context)
 
     const action = update.adminUnpublished
-      ? `:point_up: *${user.name}* unupblished comment by *${getProfileLInk(author)}*`
-      : `:put_litter_in_its_place: *${getProfileLInk(author)}* unpublished`
+      ? `:point_up: *${user.name}* unupblished comment by *${getProfileLink(author)}*`
+      : `:put_litter_in_its_place: *${getProfileLink(author)}* unpublished`
 
     const content = `${action} in <${getCommentLink(comment, discussion)}|${discussion.title}>:\n${comment.content}`
     return publish(SLACK_CHANNEL_COMMENTS, content)
