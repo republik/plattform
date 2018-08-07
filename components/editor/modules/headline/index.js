@@ -20,6 +20,24 @@ export default ({ rule, subModules, TYPE }) => {
   } =
     rule.editorOptions || {}
 
+  const inlineSerializer = new MarkdownSerializer({
+    rules: subModules
+      .reduce(
+        (a, m) => a.concat(
+          m.helpers && m.helpers.serializer &&
+          m.helpers.serializer.rules
+        ),
+        []
+      ).filter(Boolean)
+      // .concat({
+      //   matchMdast: (node) => node.type === 'break',
+      //   fromMdast: () => ({
+      //     kind: 'text',
+      //     leaves: [{kind: 'leaf', text: '\n', marks: []}]
+      //   })
+      // })
+  })
+
   const title = {
     match: matchBlock(TYPE),
     matchMdast: node =>
@@ -28,22 +46,31 @@ export default ({ rule, subModules, TYPE }) => {
       node,
       index,
       parent,
-      { visitChildren }
-    ) => ({
-      kind: 'block',
-      type: TYPE,
-      nodes: visitChildren(node)
-    }),
+      rest
+    ) => {
+      return ({
+        kind: 'block',
+        type: TYPE,
+        nodes: inlineSerializer.fromMdast(node.children, 0, node, rest)
+      })
+    },
     toMdast: (
       object,
       index,
       parent,
-      { visitChildren }
-    ) => ({
-      type: 'heading',
-      depth,
-      children: visitChildren(object)
-    })
+      rest
+    ) => {
+      return ({
+        type: 'heading',
+        depth,
+        children: inlineSerializer.toMdast(
+          object.nodes,
+          0,
+          object,
+          rest
+        )
+      })
+    }
   }
 
   const serializer = new MarkdownSerializer({
