@@ -29,13 +29,6 @@ export default ({ rule, subModules, TYPE }) => {
         ),
         []
       ).filter(Boolean)
-      // .concat({
-      //   matchMdast: (node) => node.type === 'break',
-      //   fromMdast: () => ({
-      //     kind: 'text',
-      //     leaves: [{kind: 'leaf', text: '\n', marks: []}]
-      //   })
-      // })
   })
 
   const title = {
