@@ -10,6 +10,7 @@ input DeviceInformationInput {
   os: OSType!,
   osVersion: String!,
   model: String!
+  userAgent: String
 }
 
 type DeviceInformation {
