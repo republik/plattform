@@ -120,7 +120,7 @@ const MetaData = ({value, editor, mdastSchema, contextMeta, series, additionalFi
         {
             (customFieldsByRef['bool'] || []).map(customField => {
               return (
-                <div>
+                <div key={customField.key}>
                   <Checkbox checked={node.data.get(customField.key)} onChange={onInputChange(customField.key)}>
                     {customField.label}
                   </Checkbox>
