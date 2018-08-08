@@ -289,7 +289,8 @@ const infoBox = {
         depth: 3,
         placeholder: 'Title',
         isStatic: true
-      }
+      },
+      rules: globalInlines
     },
     {
       ...figure,
@@ -671,6 +672,7 @@ const createSchema = ({
                     coverText: rootNode.meta.coverText
                   }
                 },
+                rules: globalInlines,
                 editorModule: 'headline',
                 editorOptions: {
                   type: 'H1',
