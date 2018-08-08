@@ -171,7 +171,7 @@ class VideoPlayer extends Component {
       }))
     }
     this.onVolumeChange = () => {
-      if (globalState.muted !== this.video.muted) {
+      if (!this.props.forceMuted && globalState.muted !== this.video.muted) {
         this.setMuted(this.video.muted)
       }
     }
@@ -322,10 +322,10 @@ class VideoPlayer extends Component {
     this.video.removeEventListener('play', this.onPlay)
     this.video.removeEventListener('pause', this.onPause)
     this.video.removeEventListener('loadstart', this.onLoadStart)
-    this.video.removeEventListener('progress', this.onProgress)
     this.video.removeEventListener('canplay', this.onCanPlay)
     this.video.removeEventListener('canplaythrough', this.onCanPlay)
     this.video.removeEventListener('loadedmetadata', this.onLoadedMetaData)
+    this.video.removeEventListener('volumechange', this.onVolumeChange)
 
     this.state.fullscreen && this.state.fullscreen.dispose()
   }
