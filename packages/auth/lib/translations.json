@@ -1,5 +1,5 @@
 {
-  "updated": "2018-08-02T13:17:06.310Z",
+  "updated": "2018-08-09T10:10:06.343Z",
   "title": "live",
   "data": [
     {
@@ -20,7 +20,7 @@
     },
     {
       "key": "api/email/invalid",
-      "value": "E-Mail ungültig"
+      "value": "E-Mail-Adresse ungültig"
     },
     {
       "key": "api/auth/errorSavingSession",
@@ -32,11 +32,11 @@
     },
     {
       "key": "api/signin/mail/subject",
-      "value": "E-Mail-Adresse bestätigen (für die Republik)"
+      "value": "Zugriff bestätigen"
     },
     {
       "key": "api/signin/mail/appNotice/subject",
-      "value": "Anmelden per App"
+      "value": "Anmelden via App"
     },
     {
       "key": "api/signin/app/title",
