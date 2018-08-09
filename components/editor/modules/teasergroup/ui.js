@@ -17,7 +17,13 @@ import { getNewBlock } from './'
 const Form = ({ node, onChange }) => {
   return (
     <UIForm>
-
+      <Radio
+        value={3}
+        checked={node.data.get('columns') === 3}
+        onChange={event => onChange('columns', null, Number(event.target.value))}>
+    3 Teaser
+    </Radio>
+      <br />
       <Radio
         value={2}
         checked={node.data.get('columns') === 2}

@@ -81,6 +81,7 @@ const styles = {
 const cloneWithRepoData = options => (node, repoData) => {
   const {
     titleModule,
+    subjectModule,
     leadModule,
     formatModule,
     paragraphModule,
@@ -123,6 +124,13 @@ const cloneWithRepoData = options => (node, repoData) => {
         type: titleModule.TYPE,
         data,
         nodes: [Text.create(meta.title)]
+      }),
+      Block.create({
+        type: subjectModule.TYPE,
+        data,
+        nodes: meta.description
+          ? [Text.create(meta.description)]
+          : []
       }),
       Block.create({
         type: leadModule.TYPE,
@@ -300,6 +308,15 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
         onChange={onTypeChange}
       >
         Nur Bild
+      </Checkbox>
+    }
+    {
+      options.includes('framed') &&
+      <Checkbox
+        checked={node.data.get('framed')}
+        onChange={onChange('framed')}
+      >
+        Rahmen (Feuilleton)
       </Checkbox>
     }
   </UIForm>

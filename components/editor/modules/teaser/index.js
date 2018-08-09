@@ -40,6 +40,7 @@ export const getData = data => ({
 export const getNewBlock = options => () => {
   const {
     titleModule,
+    subjectModule,
     leadModule,
     formatModule,
     paragraphModule
@@ -65,6 +66,10 @@ export const getNewBlock = options => () => {
         data
       }),
       Block.create({
+        type: subjectModule.TYPE,
+        data
+      }),
+      Block.create({
         type: leadModule.TYPE,
         data
       }),
@@ -81,12 +86,20 @@ const teaserPlugin = options => {
   const { TYPE, rule } = options
   const {
     titleModule,
+    subjectModule,
     leadModule,
     formatModule,
     paragraphModule
   } = getSubmodules(options)
 
   const Teaser = rule.component
+  console.log(
+    titleModule,
+    subjectModule,
+    leadModule,
+    formatModule,
+    paragraphModule
+  )
 
   return {
     renderNode ({ editor, node, attributes, children }) {
@@ -136,8 +149,9 @@ const teaserPlugin = options => {
     onKeyDown: createRemoveEmptyKeyHandler({
       TYPE,
       isEmpty: node => !node.text.trim() && !node.data.get('image')
-    }),
-    schema: {
+    })
+    // Can't get this working with subject, even with adjusted indeces in normalize().
+    /* schema: {
       blocks: {
         [`${TYPE}_VOID`]: {
           isVoid: true
@@ -155,6 +169,11 @@ const teaserPlugin = options => {
               max: 1
             },
             {
+              types: [subjectModule.TYPE],
+              min: 1,
+              max: 1
+            },
+            {
               types: [leadModule.TYPE],
               min: 1,
               max: 1
@@ -166,6 +185,7 @@ const teaserPlugin = options => {
             }
           ],
           normalize: (change, reason, context) => {
+            return null
             const {
               index,
               node
@@ -212,7 +232,7 @@ const teaserPlugin = options => {
           }
         }
       }
-    }
+    } */
   }
 }
 
