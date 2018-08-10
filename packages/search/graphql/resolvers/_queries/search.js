@@ -465,7 +465,7 @@ const search = async (__, args, context, info) => {
         body: {
           date: new Date(),
           trackingId,
-          roles: user.roles,
+          roles: user && user.roles,
           took,
           cache: cacheHIT,
           options: Object.assign({}, options, { filters }),
