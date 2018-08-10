@@ -103,9 +103,11 @@ const enabledFirstFactors = async (email, pgdb) => {
     })
 }
 
+// not restricted to enabledTokenTypes
 const setPreferredFirstFactor = async (user, tokenType = null, pgdb) => {
-  const enabledTokenTypes = await enabledFirstFactors(user._raw.email, pgdb)
-  if (tokenType && enabledTokenTypes.indexOf(tokenType) === -1) {
+  const { APP, EMAIL_TOKEN } = TokenTypes
+  const availableTokenTypes = [ APP, EMAIL_TOKEN ]
+  if (tokenType && availableTokenTypes.indexOf(tokenType) === -1) {
     throw new TokenTypeNotEnabledError({ tokenType })
   }
   return pgdb.public.users.updateAndGetOne(
