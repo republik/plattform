@@ -52,7 +52,7 @@ const initiateSession = async ({ req, pgdb, email, consents }) => {
   }
 }
 
-const sessionByToken = async ({ pgdb, token, email: emailFromQuery, ...meta }) => {
+const sessionByToken = async ({ pgdb, token, email: emailFromQuery }) => {
   const sessions = await pgdb.query(`
     SELECT DISTINCT
       s.*,
@@ -74,6 +74,12 @@ const sessionByToken = async ({ pgdb, token, email: emailFromQuery, ...meta }) =
     }
     return sessions[0]
   }
+}
+
+const sessionBySId = async ({ pgdb, sid }) => {
+  return pgdb.public.sessions.findOne({
+    sid
+  })
 }
 
 const findAllUserSessions = async ({ pgdb, userId }) => {
@@ -121,6 +127,7 @@ const clearUserSession = async ({ pgdb, userId, sessionId }) => {
 module.exports = {
   initiateSession,
   sessionByToken,
+  sessionBySId,
   findAllUserSessions,
   clearUserSession,
   clearAllUserSessions,

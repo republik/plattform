@@ -5,6 +5,7 @@ const { parse, format } = require('libphonenumber-js')
 const t = require('../t')
 
 const MIN_IN_MS = 1000 * 60
+const TTL = 15 * MIN_IN_MS
 const Type = 'SMS'
 
 function generateSMSTokenCode () {
@@ -66,7 +67,7 @@ module.exports = {
     // as the code is exxtremely insecure,
     // we have to limit the time slot so there is only a very small chance to find
     // the code in 15 minutes
-    const expiresAt = new Date(new Date().getTime() + (15 * MIN_IN_MS))
+    const expiresAt = new Date(new Date().getTime() + TTL)
     return { payload, expiresAt }
   },
   startChallenge: async ({ email, token, pgdb }) => {

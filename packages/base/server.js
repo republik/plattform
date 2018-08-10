@@ -16,6 +16,7 @@ checkEnv([
 
 const {
   PORT,
+  HOST = '::',
   CORS_WHITELIST_URL,
   SESSION_SECRET,
   COOKIE_DOMAIN,
@@ -188,9 +189,9 @@ const start = async (
     let listener
     const callback = () => {
       if (workerId) {
-        console.info(`server (${workerId}) is running on http://localhost:${port}`)
+        console.info(`server (${workerId}) is running on http://${HOST}:${port}`)
       } else {
-        console.info(`server is running on http://localhost:${port}`)
+        console.info(`server is running on http://${HOST}:${port}`)
       }
       // notify cluster master
       if (process.send) {
@@ -199,7 +200,7 @@ const start = async (
       resolve(listener)
     }
 
-    listener = httpServer.listen(port, callback)
+    listener = httpServer.listen(port, HOST, callback)
   })
 }
 

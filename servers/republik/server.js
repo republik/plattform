@@ -6,6 +6,7 @@ const t = require('./lib/t')
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: redirections } = require('@orbiting/backend-modules-redirections')
 const { graphql: search } = require('@orbiting/backend-modules-search')
+const { graphql: notifications } = require('@orbiting/backend-modules-notifications')
 
 const sendPendingPledgeConfirmations = require('./modules/crowdfundings/lib/sendPendingPledgeConfirmations')
 const mail = require('./modules/crowdfundings/lib/Mail')
@@ -25,7 +26,7 @@ const start = async () => {
 // in cluster mode, this runs after runOnce otherwise before
 const run = async (workerId) => {
   const localModule = require('./graphql')
-  const executableSchema = makeExecutableSchema(merge(localModule, [documents, search, redirections]))
+  const executableSchema = makeExecutableSchema(merge(localModule, [documents, search, redirections, notifications]))
 
   // middlewares
   const middlewares = [

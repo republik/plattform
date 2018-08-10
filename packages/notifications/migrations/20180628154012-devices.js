@@ -13,7 +13,7 @@ exports.setup = function (options, seedLink) {
 }
 
 exports.up = function (db) {
-  var filePath = path.join(__dirname, 'sqls', '20180306105312-discussion-notifications-up.sql')
+  var filePath = path.join(__dirname, 'sqls', '20180628154012-devices-up.sql')
   return new Promise(function (resolve, reject) {
     fs.readFile(filePath, {encoding: 'utf-8'}, function (err, data) {
       if (err) return reject(err)
@@ -22,13 +22,13 @@ exports.up = function (db) {
       resolve(data)
     })
   })
-  .then(function (data) {
-    return db.runSql(data)
-  })
+    .then(function (data) {
+      return db.runSql(data)
+    })
 }
 
 exports.down = function (db) {
-  var filePath = path.join(__dirname, 'sqls', '20180306105312-discussion-notifications-down.sql')
+  var filePath = path.join(__dirname, 'sqls', '20180628154012-devices-down.sql')
   return new Promise(function (resolve, reject) {
     fs.readFile(filePath, {encoding: 'utf-8'}, function (err, data) {
       if (err) return reject(err)
@@ -37,9 +37,9 @@ exports.down = function (db) {
       resolve(data)
     })
   })
-  .then(function (data) {
-    return db.runSql(data)
-  })
+    .then(function (data) {
+      return db.runSql(data)
+    })
 }
 
 exports._meta = {

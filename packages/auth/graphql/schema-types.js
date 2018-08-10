@@ -33,12 +33,18 @@ type User {
   createdAt: DateTime!
   updatedAt: DateTime!
   sessions: [Session!]
-  enabledSecondFactors: [SignInTokenType]!
+  # in order of preference
+  enabledFirstFactors: [SignInTokenType!]!
+  preferredFirstFactor: SignInTokenType
+  enabledSecondFactors: [SignInTokenType!]!
   eventLog: [EventLog!]!
 }
 
 type SignInResponse {
   phrase: String!
+  tokenType: SignInTokenType!
+  expiresAt: DateTime!
+  alternativeFirstFactors: [SignInTokenType!]!
 }
 
 type SharedSecretResponse {
@@ -60,6 +66,7 @@ enum SignInTokenType {
   EMAIL_TOKEN
   TOTP
   SMS
+  APP
 }
 
 input SignInToken {
@@ -90,5 +97,12 @@ type EventLog {
   archivedSession: Session
   activeSession: Session
   createdAt: DateTime!
+}
+
+type SignInNotification {
+  title: String!
+  body: String!
+  verificationUrl: String!
+  expiresAt: DateTime!
 }
 `

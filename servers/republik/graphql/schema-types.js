@@ -192,6 +192,7 @@ enum DiscussionNotificationOption {
 enum DiscussionNotificationChannel {
   WEB
   EMAIL
+  APP
 }
 
 type DiscussionRules {

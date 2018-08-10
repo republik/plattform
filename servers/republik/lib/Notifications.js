@@ -6,6 +6,7 @@ const { transformUser } = require('@orbiting/backend-modules-auth')
 
 const commentSchema = require('@project-r/styleguide/lib/templates/Comment/email').default()
 const { renderEmail } = require('mdast-react-render/lib/email')
+const appNotifications = require('@orbiting/backend-modules-notifications/lib/app')
 
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
@@ -100,7 +101,9 @@ const submitComment = async (comment, discussion, context) => {
       discussionName: discussion.title
     }
     const isTopLevelComment = !comment.parentIds || comment.parentIds.length === 0
+    const icon = displayAuthor.profilePicture || t('api/comment/notification/new/web/icon')
 
+    // notify WEB
     const webUserIds = notifyUsers
       .filter(u => u.discussionNotificationChannels.indexOf('WEB') > -1)
       .map(u => u.id)
@@ -111,13 +114,33 @@ const submitComment = async (comment, discussion, context) => {
           ? t('api/comment/notification/new/web/subject', subjectParams)
           : t('api/comment/notification/answer/web/subject', subjectParams),
         body: `${displayAuthor.name}: ${shortBody}`,
-        icon: displayAuthor.profilePicture || t('api/comment/notification/new/web/icon'),
+        icon,
         url: commentUrl,
         userIds: webUserIds,
         tag: comment.id
       }})
     }
 
+    // notify APP
+    const appUserIds = notifyUsers
+      .filter(u => u.discussionNotificationChannels.indexOf('APP') > -1)
+      .map(u => u.id)
+
+    if (appUserIds.length > 0) {
+      await appNotifications.publish(appUserIds, {
+        title: isTopLevelComment
+          ? t('api/comment/notification/new/app/subject', subjectParams)
+          : t('api/comment/notification/answer/app/subject', subjectParams),
+        body: `${displayAuthor.name}: ${shortBody}`,
+        url: commentUrl,
+        icon,
+        type: 'discussion'
+      }, {
+        pgdb
+      })
+    }
+
+    // notify EMAIL
     await Promise.all(notifyUsers
       .filter(u => u.discussionNotificationChannels.indexOf('EMAIL') > -1)
       .map(u => {
