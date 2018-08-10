@@ -8,7 +8,7 @@ const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 
 const inserts = require('./inserts')
 const mappings = require('../lib/indices')
-const { getIndexAlias, getIndexDated } = require('../lib/utils')
+const { getIndexAlias, getDateTimeIndex } = require('../lib/utils')
 
 const timeout = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -44,7 +44,7 @@ PgDb.connect().then(async pgdb => {
   await Promise.all(indices.map(async ({ type, name, analysis, mapping }) => {
     const readAlias = getIndexAlias(name, 'read')
     const writeAlias = getIndexAlias(name, 'write')
-    const index = getIndexDated(name)
+    const index = getDateTimeIndex(name)
 
     if (argv.switch) {
       debug('remove write alias', { writeAlias, index })

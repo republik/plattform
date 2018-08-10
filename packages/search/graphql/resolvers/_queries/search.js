@@ -30,7 +30,7 @@ const _ = require('lodash')
 const uuid = require('uuid/v4')
 
 const indices = require('../../../lib/indices')
-const { getIndexAlias } = require('../../../lib/utils')
+const { getIndexAlias, getDateIndex } = require('../../../lib/utils')
 
 const reduceFilters = filterReducer(documentSchema)
 const createElasticFilter = elasticFilterBuilder(documentSchema)
@@ -447,6 +447,7 @@ const search = async (__, args, context, info) => {
       const total = result.hits.total
       const hits = result.hits.hits
         .map(hit => _.omit(hit, '_source'))
+      const aggs = result.aggregations
 
       const filters = options.filters
         ? options.filters.map(filter => {
@@ -459,17 +460,19 @@ const search = async (__, args, context, info) => {
         : []
 
       await elastic.index({
-        index: getIndexAlias('searches'),
+        index: getDateIndex('searches'),
         type: 'Search',
         body: {
+          date: new Date(),
+          trackingId,
+          roles: user.roles,
           took,
           cache: cacheHIT,
           options: Object.assign({}, options, { filters }),
           query,
           total,
           hits,
-          date: new Date(),
-          trackingId
+          aggs
         }
       })
     } catch (err) {
