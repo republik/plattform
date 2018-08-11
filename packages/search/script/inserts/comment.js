@@ -9,7 +9,7 @@ const transform = function (row) {
     this.payload.discussions,
     { id: row.discussionId }
   )
-  const isAnonymityAllowed = discussion.anonymity === 'ALLOWED'
+  const isAnonymityEnforced = discussion.anonymity === 'ENFORCED'
 
   const discussionPreferences = _.find(
     this.payload.discussionPreferences,
@@ -23,7 +23,8 @@ const transform = function (row) {
 
   if (
     user &&
-    ((isAnonymityAllowed && !isAnonymous) || !isAnonymityAllowed)
+    !isAnonymityEnforced &&
+    !isAnonymous
   ) {
     let credential = false
 
