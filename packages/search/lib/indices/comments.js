@@ -53,9 +53,6 @@ module.exports = {
           properties: {
             user: {
               properties: {
-                isAnonymous: {
-                  type: 'boolean'
-                },
                 facebookId: {
                   type: 'keyword'
                 },

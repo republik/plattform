@@ -18,7 +18,7 @@ const transform = function (row) {
   const isAnonymous = discussionPreferences && discussionPreferences.anonymous
 
   row.resolved = {
-    user: {}
+    user: null
   }
 
   if (
@@ -53,8 +53,6 @@ const transform = function (row) {
       username: user.username
     }
   }
-
-  row.resolved.user.isAnonymous = !!isAnonymous
 
   row.__sort = {
     date: row.createdAt
