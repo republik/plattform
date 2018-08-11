@@ -177,6 +177,7 @@ module.exports = {
           dp."userId" = :userId
       WHERE
         c."userId" = :userId AND
+        d.anonymity != 'ENFORCED' AND
         (dp IS NULL OR dp.anonymous = false)
       ORDER BY
         c."createdAt" DESC
