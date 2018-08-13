@@ -47,7 +47,7 @@ const titleSizes = [
 const kinds = [
   { value: 'editorial', text: 'Editorial' },
   { value: 'meta', text: 'Meta' },
-  { value: 'shortie', text: 'Ameise' }
+  { value: 'scribble', text: 'Ameise' }
 ]
 
 const styles = {
