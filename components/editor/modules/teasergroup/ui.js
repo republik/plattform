@@ -17,20 +17,26 @@ import { getNewBlock } from './'
 const Form = ({ node, onChange }) => {
   return (
     <UIForm>
-
+      <Radio
+        value={3}
+        checked={node.data.get('columns') === 3}
+        onChange={event => onChange('columns', null, Number(event.target.value))}>
+        3 Teaser
+      </Radio>
+      <br />
       <Radio
         value={2}
         checked={node.data.get('columns') === 2}
         onChange={event => onChange('columns', null, Number(event.target.value))}>
-    2 Teaser
-    </Radio>
+        2 Teaser
+      </Radio>
       <br />
       <Radio
         value={1}
         checked={node.data.get('columns') === 1}
         onChange={event => onChange('columns', null, Number(event.target.value))}>
-    1 Teaser
-    </Radio>
+        1 Teaser
+      </Radio>
     </UIForm>
   )
 }
