@@ -170,12 +170,12 @@ import {colors: {text}, fontStyles: {serifRegular21}} from '@project-r/styleguid
 <div {...css(styles.sansSerifRegular10)}>The quick brown fox jumps over the lazy dog</div>
 ```
 
-#### `fantasyTitle{58,30}`
+#### `cursiveTitle{58,30}`
 ```react|noSource,plain
-<div {...css(styles.fantasyTitle58)}>The quick brown fox jumps over</div>
+<div {...css(styles.cursiveTitle58)}>The quick brown fox jumps over</div>
 ```
 ```react|noSource,plain
-<div {...css(styles.fantasyTitle30)}>The quick brown fox jumps over the lazy dog</div>
+<div {...css(styles.cursiveTitle30)}>The quick brown fox jumps over the lazy dog</div>
 ```
 
 

@@ -7,8 +7,8 @@ import {
   serifTitle22,
   sansSerifMedium20,
   sansSerifMedium22,
-  fantasyTitle20,
-  fantasyTitle22
+  cursiveTitle20,
+  cursiveTitle22
 } from '../Typography/styles'
 
 const styles = {
@@ -33,10 +33,10 @@ const styles = {
       lineHeight: '24px'
     }
   }),
-  shortie: css({
-    ...fantasyTitle20,
+  scribble: css({
+    ...cursiveTitle20,
     [mUp]: {
-      ...fantasyTitle22,
+      ...cursiveTitle22,
     }
   })
 }
@@ -47,5 +47,5 @@ export const Editorial = ({ children, style }) =>
 export const Interaction = ({ children, style }) => 
   <h1 {...styles.base} {...styles.interaction} style={style}>{children}</h1>
 
-export const Shortie = ({ children, style }) => 
-  <h1 {...styles.base} {...styles.shortie} style={style}>{children}</h1>
+export const Scribble = ({ children, style }) => 
+  <h1 {...styles.base} {...styles.scribble} style={style}>{children}</h1>

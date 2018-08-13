@@ -362,8 +362,8 @@ const createSchema = ({
         ({ children, attributes, kind }) => {
           const Component = kind === 'editorial'
           ? TeaserFrontTileHeadline.Editorial
-          : kind === 'shortie'
-            ? TeaserFrontTileHeadline.Shortie
+          : kind === 'scribble'
+            ? TeaserFrontTileHeadline.Scribble
             : TeaserFrontTileHeadline.Interaction
           return (
             <Component attributes={attributes}>

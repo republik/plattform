@@ -265,27 +265,27 @@ export const sansSerifMedium12 = {
   lineHeight: '15px'
 }
 
-// fantasyTitle
-export const fantasyTitle58 = {
-  fontFamily: fontFamilies.fantasyTitle,
+// cursiveTitle
+export const cursiveTitle58 = {
+  fontFamily: fontFamilies.cursiveTitle,
   fontSize: 58,
   fontWeight: 'normal',
   lineHeight: '60px'
 }
-export const fantasyTitle30 = {
-  fontFamily: fontFamilies.fantasyTitle,
+export const cursiveTitle30 = {
+  fontFamily: fontFamilies.cursiveTitle,
   fontSize: 30,
   fontWeight: 'normal',
   lineHeight: '34px'
 }
-export const fantasyTitle22 = {
-  fontFamily: fontFamilies.fantasyTitle,
+export const cursiveTitle22 = {
+  fontFamily: fontFamilies.cursiveTitle,
   fontSize: 22,
   fontWeight: 'normal',
   lineHeight: '24px'
 }
-export const fantasyTitle20 = {
-  fontFamily: fontFamilies.fantasyTitle,
+export const cursiveTitle20 = {
+  fontFamily: fontFamilies.cursiveTitle,
   fontSize: 20,
   fontWeight: 'normal',
   lineHeight: '22px'

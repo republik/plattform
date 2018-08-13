@@ -57,8 +57,8 @@ export const TeaserFeed = ({
     template === 'format'
   )
     ? Headlines.Interaction
-    : formatMeta.kind === 'shortie' || metaKind === 'shortie'
-      ? Headlines.Shortie
+    : formatMeta.kind === 'scribble' || metaKind === 'scribble'
+      ? Headlines.Scribble
       : Headlines.Editorial
 
   return (

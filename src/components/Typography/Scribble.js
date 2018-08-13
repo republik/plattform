@@ -7,10 +7,10 @@ import colors from '../../theme/colors'
 export { List, UnorderedList as UL, OrderedList as OL, ListItem as LI } from '../List'
 
 const headline = css({
-  ...styles.fantasyTitle30,
+  ...styles.cursiveTitle30,
   margin: '0 0 12px 0',
   [mUp]: {
-    ...styles.fantasyTitle58,
+    ...styles.cursiveTitle58,
     margin: '0 0 12px 0'
   },
   color: colors.text,

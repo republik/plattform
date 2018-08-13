@@ -70,14 +70,14 @@ Supported props:
   <TeaserFrontTile
     color='#fff' bgColor='#000'>
     <Editorial.Format>Staatentheorie</Editorial.Format>
-    <TeaserFrontTileHeadline.Shortie>Ist der Ameisenstaat eine Republik?</TeaserFrontTileHeadline.Shortie>
+    <TeaserFrontTileHeadline.Scribble>Ist der Ameisenstaat eine Republik?</TeaserFrontTileHeadline.Scribble>
     <TeaserFrontCredit>
       <TeaserFrontCreditLink href='#'>Daniel Binswanger</TeaserFrontCreditLink>, 30.&nbsp;August&nbsp;2018
     </TeaserFrontCredit>
   </TeaserFrontTile>
   <TeaserFrontTile color='#000' bgColor='#fff'>
     <Editorial.Format>Die aktuelle Verkehrslage</Editorial.Format>
-    <TeaserFrontTileHeadline.Shortie>An der Brücke entspringt eine Ameisenstrasse</TeaserFrontTileHeadline.Shortie>
+    <TeaserFrontTileHeadline.Scribble>An der Brücke entspringt eine Ameisenstrasse</TeaserFrontTileHeadline.Scribble>
     <TeaserFrontCredit>
       <TeaserFrontCreditLink href='#'>Constantin Seibt</TeaserFrontCreditLink>, 31.&nbsp;August&nbsp;2018
     </TeaserFrontCredit>
@@ -85,7 +85,7 @@ Supported props:
   <TeaserFrontTile
     color='#fff' bgColor='#000'>
     <Editorial.Format>Im Gleichmarsch</Editorial.Format>
-    <TeaserFrontTileHeadline.Shortie>Links, zwo, drei, vier!</TeaserFrontTileHeadline.Shortie>
+    <TeaserFrontTileHeadline.Scribble>Links, zwo, drei, vier!</TeaserFrontTileHeadline.Scribble>
     <TeaserFrontCredit>
       <TeaserFrontCreditLink href='#'>Constantin Seibt</TeaserFrontCreditLink>, 1.&nbsp;September&nbsp;2018
     </TeaserFrontCredit>

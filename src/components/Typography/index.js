@@ -2,13 +2,13 @@ import React from 'react'
 import * as styles from './styles'
 import * as _Editorial from './Editorial'
 import * as _Interaction from './Interaction'
-import * as _Shortie from './Shortie'
+import * as _Scribble from './Scribble'
 import {css} from 'glamor'
 
 // Namespaced exports.
 export const Editorial = {..._Editorial}
 export const Interaction = {..._Interaction}
-export const Shortie = {..._Shortie}
+export const Scribble = {..._Scribble}
 
 // Direct exports.
 export const fontStyles = styles

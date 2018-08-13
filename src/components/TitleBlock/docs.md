@@ -46,7 +46,7 @@ Supported props:
 ```react
 <TitleBlock center>
   <Editorial.Format>Neutrum</Editorial.Format>
-  <Shortie.Headline>The quick brown fox jumps over the lazy dog</Shortie.Headline>
+  <Scribble.Headline>The quick brown fox jumps over the lazy dog</Scribble.Headline>
   <Editorial.Lead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.
   </Editorial.Lead>

@@ -62,7 +62,7 @@ Supported props:
 ```
 
 ```react
-<TeaserFeed kind='shortie'
+<TeaserFeed kind='scribble'
   title='The quick brown fox jumps over the lazy dog'
   description='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
   credits={[
@@ -73,7 +73,7 @@ Supported props:
 ```
 
 ```react
-<TeaserFeed format={{meta: {title: 'Format', kind: 'shortie'}}}
+<TeaserFeed format={{meta: {title: 'Format', kind: 'scribble'}}}
   title='The quick brown fox jumps over the lazy dog'
   description='Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores.'
   credits={[
