@@ -6,7 +6,6 @@ import { getData } from './'
 
 export const getSubmodules = ({ subModules }) => {
   const [titleModule, subjectModule, leadModule, formatModule, paragraphModule] = subModules
-  console.log(subModules)
 
   if (!titleModule) {
     throw new Error('Missing headline submodule')
@@ -25,7 +24,7 @@ export const getSubmodules = ({ subModules }) => {
   }
 
   if (!paragraphModule) {
-    throw new Error('Missing paragraph submodule 11')
+    throw new Error('Missing paragraph submodule')
   }
 
   const linkModule = paragraphModule.subModules.find(

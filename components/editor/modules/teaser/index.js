@@ -93,6 +93,7 @@ const teaserPlugin = options => {
   } = getSubmodules(options)
 
   const Teaser = rule.component
+  // To be removed, once normalize() is fixed.
   console.log(
     titleModule,
     subjectModule,
