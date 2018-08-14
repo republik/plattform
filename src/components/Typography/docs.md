@@ -9,6 +9,7 @@ We have seven font cuts:
 - `sansSerifRegular`
 - `sansSerifItalic`
 - `sansSerifMedium`
+- `cursiveTitle`
 
 Full font family definitions are available as `fontFamilies` export from the style guide.
 
