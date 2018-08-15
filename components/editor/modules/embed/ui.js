@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { Checkbox, Radio, Label } from '@project-r/styleguide'
 import { createPropertyForm } from '../../utils'
 
@@ -53,18 +53,47 @@ export default ({ TYPE, editorOptions }) => {
                     ]
                   })}
                   <br />
-                  {!!src && src.hls && <Checkbox
-                    checked={block.data.get('forceAudio')}
-                    onChange={event => {
-                      const checked = block.data.get('forceAudio')
-                      let change = value.change().setNodeByKey(block.key, {
-                        data: block.data.merge({forceAudio: !checked})
-                      })
-                      onChange(change)
-                    }}
-                  >
-                    nur Audio
-                  </Checkbox>}
+                  {!!src && src.hls && <Fragment>
+                    <div style={{ margin: '10px 0' }}>
+                      <Checkbox
+                        checked={block.data.get('forceAudio')}
+                        onChange={event => {
+                          const checked = block.data.get('forceAudio')
+                          let change = value.change().setNodeByKey(block.key, {
+                            data: block.data.merge({forceAudio: !checked})
+                          })
+                          onChange(change)
+                        }}>
+                        nur Audio
+                      </Checkbox>
+                    </div>
+                    <div style={{ margin: '10px 0' }}>
+                      <Checkbox
+                        checked={block.data.get('autoPlay')}
+                        onChange={event => {
+                          const checked = block.data.get('autoPlay')
+                          let change = value.change().setNodeByKey(block.key, {
+                            data: block.data.merge({autoPlay: !checked})
+                          })
+                          onChange(change)
+                        }}>
+                        Autoplay
+                      </Checkbox>
+                    </div>
+                    <div style={{ margin: '10px 0' }}>
+                      <Checkbox
+                        checked={block.data.get('loop')}
+                        onChange={event => {
+                          const checked = block.data.get('loop')
+                          let change = value.change().setNodeByKey(block.key, {
+                            data: block.data.merge({loop: !checked})
+                          })
+                          onChange(change)
+                        }}>
+                        Loop
+                      </Checkbox>
+                    </div>
+                  </Fragment>}
                 </p>
               )}
             </div>
