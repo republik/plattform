@@ -311,10 +311,10 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
       </Checkbox>
     }
     {
-      options.includes('framed') &&
+      options.includes('frame') &&
       <Checkbox
-        checked={node.data.get('framed')}
-        onChange={onChange('framed')}
+        checked={node.data.get('frame')}
+        onChange={onChange('frame')}
       >
         Rahmen (Feuilleton)
       </Checkbox>
