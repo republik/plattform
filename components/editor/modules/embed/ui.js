@@ -90,7 +90,7 @@ export default ({ TYPE, editorOptions }) => {
                           })
                           onChange(change)
                         }}>
-                        Autoplay
+                        Loop
                       </Checkbox>
                     </div>
                   </Fragment>}
