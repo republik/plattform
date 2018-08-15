@@ -80,6 +80,19 @@ export default ({ TYPE, editorOptions }) => {
                         Autoplay
                       </Checkbox>
                     </div>
+                    <div style={{ margin: '10px 0' }}>
+                      <Checkbox
+                        checked={block.data.get('loop')}
+                        onChange={event => {
+                          const checked = block.data.get('loop')
+                          let change = value.change().setNodeByKey(block.key, {
+                            data: block.data.merge({loop: !checked})
+                          })
+                          onChange(change)
+                        }}>
+                        Autoplay
+                      </Checkbox>
+                    </div>
                   </Fragment>}
                 </p>
               )}
