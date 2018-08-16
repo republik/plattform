@@ -171,7 +171,11 @@ class VideoPlayer extends Component {
       }))
     }
     this.onVolumeChange = () => {
-      if (!this.props.forceMuted && globalState.muted !== this.video.muted) {
+      if (
+        !this.props.forceMuted &&
+        !this.props.cinemagraph &&
+        globalState.muted !== this.video.muted
+      ) {
         this.setMuted(this.video.muted)
       }
     }
@@ -330,10 +334,10 @@ class VideoPlayer extends Component {
     this.state.fullscreen && this.state.fullscreen.dispose()
   }
   render() {
-    const { src, showPlay, size, forceMuted, autoPlay, loop, isCinemagraph, attributes = {} } = this.props
+    const { src, showPlay, size, forceMuted, autoPlay, loop, cinemagraph, attributes = {} } = this.props
     const { playing, progress, muted, subtitles, loading, fullscreen, isFullscreen } = this.state
 
-    const cinemagraphAttributes = isCinemagraph ? {
+    const cinemagraphAttributes = cinemagraph ? {
       loop: true,
       muted: true,
       autoPlay: true,
@@ -408,7 +412,7 @@ class VideoPlayer extends Component {
                 <Subtitles off={!subtitles} />
               </span>
             )}{' '}
-            {forceMuted === undefined && !isCinemagraph && <span
+            {forceMuted === undefined && !cinemagraph && <span
               role="button"
               title={`Audio ${muted ? 'aus' : 'an'}`}
               onClick={e => {
@@ -435,7 +439,7 @@ class VideoPlayer extends Component {
             )}
           </div>
         </div>
-        {!isCinemagraph && <Fragment>
+        {!cinemagraph && <Fragment>
           <div {...styles.progress} style={{ width: `${progress * 100}%` }} />
           <div
             {...styles.scrub}
@@ -472,6 +476,7 @@ CrossOrigin subtitles do not work in older browsers.'`
   loop: PropTypes.bool,
   // ignores global muted state and sets muted
   forceMuted: PropTypes.bool,
+  cinemagraph: PropTypes.bool,
   // arbitrary attributes like playsinline, specific ones win
   attributes: PropTypes.object
 }

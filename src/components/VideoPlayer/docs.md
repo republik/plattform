@@ -11,7 +11,7 @@ Props:
 - `autoPlay`: Boolean, mapped to the video tag
 - `loop`: Boolean, mapped to the video tag
 - `forceMuted`: Boolean, mutes the player and hides the mute interfaces.
-- `isCinemagraph`: Boolean, whether the video is a cinemagraph. Forces `loop`, `muted`, `autoPlay` and `playsInline`.
+- `cinemagraph`: Boolean, whether the video is a cinemagraph. Forces `loop`, `muted`, `autoPlay` and `playsInline`.
 - `attributes`: Object, arbitrary attributes mapped to the video tag like playsinline, specific ones win
 
 
@@ -40,7 +40,7 @@ Props:
 />
 ```
 
-#### isCinemagraph
+#### cinemagraph
 
 Cinemagraphs are still video clips in which minor movement occurs. `isCinemagraph` activates `autoPlay`, `loop`, `playsInline` and `mute` properties and hides the progress bar.
 
@@ -51,7 +51,7 @@ Cinemagraphs are still video clips in which minor movement occurs. `isCinemagrap
     mp4: 'https://player.vimeo.com/external/284964492.hd.mp4?s=3fe867442c31bbcce20a5b7f68f2e3e2f4f69f11&profile_id=175',
     thumbnail: `/static/video.jpg`
   }}
-  isCinemagraph
+  cinemagraph
 />
 ```
 
