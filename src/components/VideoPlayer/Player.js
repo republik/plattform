@@ -333,13 +333,20 @@ class VideoPlayer extends Component {
     const { src, showPlay, size, forceMuted, autoPlay, loop, attributes = {} } = this.props
     const { playing, progress, muted, subtitles, loading, fullscreen, isFullscreen } = this.state
 
+    // iOS autoplay fix.
+    const patchedAttributes = autoPlay ? {
+      ...attributes,
+      playsInline: true,
+      'webkit-playsinline': ''
+    } : attributes
+
     return (
       <div {...merge(styles.wrapper, breakoutStyles[size])}
         onClick={this.captureFocus}
       >
         <video
           {...(isFullscreen ? styles.videoFullscreen : styles.video)}
-          {...attributes}
+          {...patchedAttributes}
           style={this.props.style}
           autoPlay={autoPlay}
           muted={forceMuted !== undefined ? forceMuted : muted}
