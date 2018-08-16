@@ -216,4 +216,22 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 </TeaserFrontImage>
 ```
 
+### `frame`: Horizontal `frame` margins and regular text color in stacked mode
+
+```react
+<TeaserFrontImage
+  frame
+  image='/static/desert.jpg?size=4323x2962' byline='Foto: Thomas Vuillemin'
+  color='#fff' collapsedColor='#000' bgColor='#fff'>
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <TeaserFrontImageHeadline.Editorial small>The sand is near</TeaserFrontImageHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontImage>
+```
+
 Photo by Thomas Vuillemin on [Unsplash](https://unsplash.com/photos/c1_K8Qfd_iQ)

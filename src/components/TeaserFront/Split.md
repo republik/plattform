@@ -6,8 +6,44 @@ Supported props:
 - `bgColor`: The background color to use in stacked mode.
 - `portrait`: Whether to use the portrait layout.
 - `reverse`: Whether the layout should be reversed (i.e. the image appears to the right).
+- `frame`: Whether to use the canonical frame margins.
 
 A `<TeaserFrontSplitHeadline />` should be used.
+
+```react
+<TeaserFrontSplit
+  even
+  image='/static/rothaus_portrait.jpg'
+  byline='Foto: Laurent Burst'
+  color='#fff' bgColor='#000'>
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <TeaserFrontSplitHeadline.Editorial>Es ist kalt in Österreich</TeaserFrontSplitHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#fba'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontSplit>
+```
+
+```react
+<TeaserFrontSplit
+  even
+  image='/static/rothaus_portrait.jpg'
+  reverse
+  byline='Foto: Laurent Burst'
+  color='#fff' bgColor='#000'>
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <TeaserFrontSplitHeadline.Editorial>Es ist kalt in Österreich</TeaserFrontSplitHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#fba'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontSplit>
+```
 
 ```react
 <TeaserFrontSplit
@@ -105,6 +141,43 @@ A `<TeaserFrontSplitHeadline />` should be used.
   color='#fff' bgColor='#000'>
   <Editorial.Format>Neutrum</Editorial.Format>
   <TeaserFrontSplitHeadline.Editorial large>Es ist kalt</TeaserFrontSplitHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#fba'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontSplit>
+```
+
+### Frame
+
+```react
+<TeaserFrontSplit
+  frame
+  image='/static/rothaus_portrait.jpg'
+  byline='Foto: Laurent Burst'
+  color='#fff' bgColor='#000'>
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <TeaserFrontSplitHeadline.Editorial>Es ist kalt in Österreich</TeaserFrontSplitHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#fba'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontSplit>
+```
+
+```react
+<TeaserFrontSplit
+  frame
+  image='/static/rothaus_landscape.jpg'
+  reverse
+  byline='Foto: Laurent Burst'
+  color='#fff' bgColor='#000'>
+  <Editorial.Format>Neutrum</Editorial.Format>
+  <TeaserFrontSplitHeadline.Editorial>Es ist kalt in Österreich</TeaserFrontSplitHeadline.Editorial>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>

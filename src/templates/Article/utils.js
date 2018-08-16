@@ -27,6 +27,7 @@ export const matchFigure = matchZone('FIGURE')
 
 export const matchLast = (node, index, parent) => index === parent.children.length - 1
 export const matchTeaser = matchZone('TEASER')
+export const matchTeaserGroup = matchZone('TEASERGROUP')
 export const matchTeaserType = teaserType =>
   node => matchTeaser(node) && node.data.teaserType === teaserType
 export const extractImage = node => matchImageParagraph(node)

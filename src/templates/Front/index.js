@@ -23,7 +23,8 @@ import {
   TeaserFrontTileRow,
   TeaserFrontLead,
   TeaserFrontCredit,
-  TeaserFrontCreditLink
+  TeaserFrontCreditLink,
+  TeaserFrontSubject
 } from '../../components/TeaserFront'
 
 import {
@@ -39,6 +40,7 @@ import {
 
 import {
   matchTeaser,
+  matchTeaserGroup,
   matchTeaserType,
   extractImage,
   globalInlines,
@@ -49,6 +51,31 @@ const image = {
   matchMdast: matchImageParagraph,
   component: () => null,
   isVoid: true
+}
+
+export const subject = {
+  matchMdast: matchHeading(3),
+  component: ({ children, attributes, ...props }) =>
+    <TeaserFrontSubject attributes={attributes} {...props}>
+      {children}
+    </TeaserFrontSubject>,
+  props: (node, index, parent, { ancestors }) => {
+    const teaserGroup = ancestors.find(matchTeaserGroup)
+    const teaser = ancestors.find(matchTeaser)
+    return {
+      color: teaser && teaser.data.color,
+      collapsedColor: teaser && teaser.data.frame && '#000',
+      columns:  teaserGroup ? teaserGroup.data.columns : undefined
+    }
+  },
+  editorModule: 'headline',
+  editorOptions: {
+    type: 'FRONTSUBJECT',
+    placeholder: 'Subject',
+    depth: 3,
+    isStatic: true
+  },
+  rules: globalInlines
 }
 
 const DefaultLink = ({ children }) => children
@@ -104,11 +131,15 @@ const createSchema = ({
       </Link>,
     props (node, index, parent, { ancestors }) {
       const teaser = ancestors.find(matchTeaser)
+      const teaserGroup = ancestors.find(matchTeaserGroup)
       return {
         kind: parent.data.kind,
         titleSize: parent.data.titleSize,
         href: teaser
           ? teaser.data.url
+          : undefined,
+        columns: teaserGroup
+          ? teaserGroup.data.columns
           : undefined
       }
     },
@@ -124,10 +155,16 @@ const createSchema = ({
 
   const lead = {
     matchMdast: matchHeading(4),
-    component: ({ children, attributes }) =>
-      <TeaserFrontLead attributes={attributes}>
+    component: ({ children, attributes, ...props }) =>
+      <TeaserFrontLead attributes={attributes} {...props}>
         {children}
       </TeaserFrontLead>,
+    props: (node, index, parent, { ancestors }) => {
+      const teaserGroup = ancestors.find(matchTeaserGroup)
+      return {
+        columns:  teaserGroup ? teaserGroup.data.columns : undefined
+      }
+    },
     editorModule: 'headline',
     editorOptions: {
       type: 'FRONTLEAD',
@@ -193,7 +230,8 @@ const createSchema = ({
         'titleSize',
         'image',
         'byline',
-        'onlyImage'
+        'onlyImage',
+        'frame'
       ]
     },
     rules: [
@@ -214,6 +252,7 @@ const createSchema = ({
           </Component>
         }
       ),
+      subject,
       lead,
       format,
       credit
@@ -248,7 +287,8 @@ const createSchema = ({
         'kind',
         'titleSize',
         'reverse',
-        'portrait'
+        'portrait',
+        'frame'
       ]
     },
     rules: [
@@ -268,6 +308,7 @@ const createSchema = ({
           </Component>
         }
       ),
+      subject,
       lead,
       format,
       credit
@@ -316,6 +357,7 @@ const createSchema = ({
           </Component>
         }
       ),
+      subject,
       lead,
       format,
       credit
@@ -359,19 +401,20 @@ const createSchema = ({
       image,
       title(
         'FRONTTILETITLE',
-        ({ children, attributes, kind }) => {
+        ({ children, attributes, kind, columns }) => {
           const Component = kind === 'editorial'
           ? TeaserFrontTileHeadline.Editorial
           : kind === 'scribble'
             ? TeaserFrontTileHeadline.Scribble
             : TeaserFrontTileHeadline.Interaction
           return (
-            <Component attributes={attributes}>
+            <Component attributes={attributes} columns={columns}>
               {children}
             </Component>
           )
         }
       ),
+      subject,
       lead,
       format,
       credit
@@ -455,6 +498,7 @@ const createSchema = ({
           )
         }
       ),
+      subject,
       articleTileLead,
       format,
       credit

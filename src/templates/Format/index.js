@@ -33,7 +33,8 @@ const createSchema = ({
         items: [
           {value: 'editorial', text: 'Editorial'},
           {value: 'meta', text: 'Meta'},
-          {value: 'scribble', text: 'Ameise'}
+          {value: 'scribble', text: 'Ameise'},
+          {value: 'feuilleton', text: 'Feuilleton'}
         ]
       },
       {

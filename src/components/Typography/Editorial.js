@@ -66,10 +66,11 @@ export const Lead = ({ children, attributes, ...props }) => (
 )
 
 const credit = css({
-  margin: 0,
+  margin: '10px 0 0 0',
   ...styles.sansSerifRegular14,
   [mUp]: {
-    ...styles.sansSerifRegular15
+    ...styles.sansSerifRegular15,
+    margin: '20px 0 0 0'
   },
   color: colors.text
 })

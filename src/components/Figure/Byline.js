@@ -36,6 +36,14 @@ const positionStyle = {
       paddingLeft: 0
     }
   }),
+  belowFrame: css({
+    display: 'block',
+    marginTop: '5px',
+    paddingLeft: 0,
+    [mUpFront]: {
+      ...sansSerifRegular12
+    }
+  }),
   // right of relative container on desktop, below on mobile.
   right: css({
     paddingLeft: '15px',
@@ -108,6 +116,7 @@ Byline.propTypes = {
   attributes: PropTypes.object,
   position: PropTypes.oneOf([
     'below',
+    'belowFrame',
     'right',
     'rightCompact',
     'left',

@@ -32,6 +32,8 @@ import {
   DossierTileLead
 } from '../../components/Dossier'
 
+import { subject } from '../Front'
+
 import { Breakout } from '../../components/Center'
 
 import * as Editorial from '../../components/Typography/Editorial'
@@ -178,6 +180,7 @@ const createTeasers = ({
           )
         }
       ),
+      subject,
       articleTileLead,
       teaserFormat,
       teaserCredit

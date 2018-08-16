@@ -1,17 +1,23 @@
 import React from 'react'
 import { css } from 'glamor'
-import { mUp } from './mediaQueries'
+import { mUp, tUp } from './mediaQueries'
 import { serifTitle20, sansSerifMedium20, cursiveTitle20 } from '../Typography/styles'
 
 const smallSize = {
   fontSize: '26px',
-  lineHeight: '28px',
+  lineHeight: '32px',
   marginBottom: '16px'
 }
 
 const mediumSize = {
   fontSize: '32px',
-  lineHeight: '34px',
+  lineHeight: '37px',
+  marginBottom: '25px'
+}
+
+const defaultSize = {
+  fontSize: '48px',
+  lineHeight: '54px',
   marginBottom: '25px'
 }
 
@@ -23,14 +29,34 @@ const styles = {
       marginBottom: 8
     }
   }),
-  editorial: css({
+  editorialCol2: css({
+    ...serifTitle20,
+    ...smallSize,
+    [mUp]: {
+      ...mediumSize
+    },
+    [tUp]: {
+      ...defaultSize
+    }
+  }),
+  editorialCol3: css({
     ...serifTitle20,
     ...smallSize,
     [mUp]: {
       ...mediumSize
     }
   }),
-  interaction: css({
+  interactionCol2: css({
+    ...sansSerifMedium20,
+    ...smallSize,
+    [mUp]: {
+      ...mediumSize
+    },
+    [tUp]: {
+      ...defaultSize
+    }
+  }),
+  interactionCol3: css({
     ...sansSerifMedium20,
     ...smallSize,
     [mUp]: {
@@ -46,17 +72,19 @@ const styles = {
   })
 }
 
-export const Editorial = ({ children }) => {
+export const Editorial = ({ children, columns }) => {
+  const style = columns === 3 ? styles.editorialCol3 : styles.editorialCol2
   return (
-    <h1 {...styles.base} {...styles.editorial}>
+    <h1 {...styles.base} {...style}>
       {children}
     </h1>
   )
 }
 
-export const Interaction = ({ children }) => {
+export const Interaction = ({ children, columns }) => {
+  const style = columns === 3 ? styles.interactionCol3 : styles.interactionCol2
   return (
-    <h1 {...styles.base} {...styles.interaction}>
+    <h1 {...styles.base} {...style}>
       {children}
     </h1>
   )

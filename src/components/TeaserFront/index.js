@@ -14,5 +14,6 @@ export { default as TeaserFrontSplit } from './Split'
 export { default as TeaserFrontTile, TeaserFrontTileRow } from './Tile'
 
 export { default as TeaserFrontLead } from './Lead'
+export { default as TeaserFrontSubject } from './Subject'
 export { default as TeaserFrontCredit } from './Credit'
 export { default as TeaserFrontCreditLink } from './CreditLink'
