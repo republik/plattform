@@ -69,15 +69,15 @@ export default ({ TYPE, editorOptions }) => {
                     </div>
                     <div style={{ margin: '10px 0' }}>
                       <Checkbox
-                        checked={block.data.get('isCinemagraph')}
+                        checked={block.data.get('cinemagraph')}
                         onChange={event => {
-                          const checked = block.data.get('isCinemagraph')
+                          const checked = block.data.get('cinemagraph')
                           let change = value.change().setNodeByKey(block.key, {
-                            data: block.data.merge({isCinemagraph: !checked})
+                            data: block.data.merge({cinemagraph: !checked})
                           })
                           onChange(change)
                         }}>
-                        Autoplay
+                        Cinemagraph
                       </Checkbox>
                     </div>
                   </Fragment>}
