@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import colors from '../../theme/colors'
 import { css, merge } from 'glamor'
@@ -330,15 +330,16 @@ class VideoPlayer extends Component {
     this.state.fullscreen && this.state.fullscreen.dispose()
   }
   render() {
-    const { src, showPlay, size, forceMuted, autoPlay, loop, attributes = {} } = this.props
+    const { src, showPlay, size, forceMuted, autoPlay, loop, isCinemagraph, attributes = {} } = this.props
     const { playing, progress, muted, subtitles, loading, fullscreen, isFullscreen } = this.state
 
-    // iOS autoplay fix.
-    const patchedAttributes = autoPlay ? {
-      ...attributes,
+    const cinemagraphAttributes = isCinemagraph ? {
+      loop: true,
+      muted: true,
+      autoPlay: true,
       playsInline: true,
       'webkit-playsinline': ''
-    } : attributes
+    } : {}
 
     return (
       <div {...merge(styles.wrapper, breakoutStyles[size])}
@@ -346,11 +347,12 @@ class VideoPlayer extends Component {
       >
         <video
           {...(isFullscreen ? styles.videoFullscreen : styles.video)}
-          {...patchedAttributes}
+          {...attributes}
           style={this.props.style}
           autoPlay={autoPlay}
           muted={forceMuted !== undefined ? forceMuted : muted}
           loop={loop}
+          {...cinemagraphAttributes}
           ref={this.ref}
           controls={isFullscreen}
           controlsList={isFullscreen ? 'nodownload' : undefined}
@@ -406,7 +408,7 @@ class VideoPlayer extends Component {
                 <Subtitles off={!subtitles} />
               </span>
             )}{' '}
-            {forceMuted === undefined && <span
+            {forceMuted === undefined && !isCinemagraph && <span
               role="button"
               title={`Audio ${muted ? 'aus' : 'an'}`}
               onClick={e => {
@@ -433,15 +435,17 @@ class VideoPlayer extends Component {
             )}
           </div>
         </div>
-        <div {...styles.progress} style={{ width: `${progress * 100}%` }} />
-        <div
-          {...styles.scrub}
-          ref={this.scrubRef}
-          onTouchStart={this.scrubStart}
-          onTouchMove={this.scrub}
-          onTouchEnd={this.scrubEnd}
-          onMouseDown={this.scrubStart}
-        />
+        {!isCinemagraph && <Fragment>
+          <div {...styles.progress} style={{ width: `${progress * 100}%` }} />
+          <div
+            {...styles.scrub}
+            ref={this.scrubRef}
+            onTouchStart={this.scrubStart}
+            onTouchMove={this.scrub}
+            onTouchEnd={this.scrubEnd}
+            onMouseDown={this.scrubStart}
+          />
+        </Fragment>}
       </div>
     )
   }
