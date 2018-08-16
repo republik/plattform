@@ -84,23 +84,7 @@ export const getNewBlock = options => () => {
 
 const teaserPlugin = options => {
   const { TYPE, rule } = options
-  const {
-    titleModule,
-    subjectModule,
-    leadModule,
-    formatModule,
-    paragraphModule
-  } = getSubmodules(options)
-
   const Teaser = rule.component
-  // To be removed, once normalize() is fixed.
-  console.log(
-    titleModule,
-    subjectModule,
-    leadModule,
-    formatModule,
-    paragraphModule
-  )
 
   return {
     renderNode ({ editor, node, attributes, children }) {
@@ -151,89 +135,6 @@ const teaserPlugin = options => {
       TYPE,
       isEmpty: node => !node.text.trim() && !node.data.get('image')
     })
-    // Can't get this working with subject, even with adjusted indeces in normalize().
-    /* schema: {
-      blocks: {
-        [`${TYPE}_VOID`]: {
-          isVoid: true
-        },
-        [TYPE]: {
-          nodes: [
-            {
-              types: [formatModule.TYPE],
-              min: 1,
-              max: 1
-            },
-            {
-              types: [titleModule.TYPE],
-              min: 1,
-              max: 1
-            },
-            {
-              types: [subjectModule.TYPE],
-              min: 1,
-              max: 1
-            },
-            {
-              types: [leadModule.TYPE],
-              min: 1,
-              max: 1
-            },
-            {
-              types: [paragraphModule.TYPE],
-              min: 1,
-              max: 1
-            }
-          ],
-          normalize: (change, reason, context) => {
-            return null
-            const {
-              index,
-              node
-            } = context
-            switch (reason) {
-              case 'child_type_invalid':
-                if (index === 0) {
-                  return change.insertNodeByKey(
-                    node.key,
-                    0,
-                    {
-                      kind: 'block',
-                      type: formatModule.TYPE
-                    }
-                  )
-                }
-                if (index === 2) {
-                  if (context.child.type === paragraphModule.TYPE) {
-                    const t = change.insertNodeByKey(
-                      node.key,
-                      2,
-                      {
-                        kind: 'block',
-                        type: leadModule.TYPE
-                      }
-                    )
-                    return t
-                  }
-                }
-                break
-              case 'child_required':
-                if (index === 3) {
-                  return change.insertNodeByKey(
-                    node.key,
-                    3,
-                    {
-                      kind: 'block',
-                      type: paragraphModule.TYPE
-                    }
-                  )
-                }
-            }
-            console.error({ reason, context })
-          }
-        }
-      }
-    } */
   }
 }
 
