@@ -57,5 +57,6 @@ const Logo = (props) => {
 Logo.defaultProps = {
   fill: '#000'
 }
+Logo.ratio = ratio
 
 export default Logo
