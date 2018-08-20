@@ -32,8 +32,8 @@ const leadSmall = css({
   }
 })
 
-const Lead = ({ children, columns, attributes, ...props }) => (
-  <span {...attributes} {...props} {...(columns === 3 ? leadSmall : lead)} style={{color: 'inherit'}}>
+const Lead = ({ children, columns, attributes }) => (
+  <span {...attributes} {...(columns === 3 ? leadSmall : lead)} style={{color: 'inherit'}}>
     {children}
   </span>
 )
