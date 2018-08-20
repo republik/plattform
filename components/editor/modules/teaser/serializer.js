@@ -5,9 +5,13 @@ import { matchImageParagraph } from 'mdast-react-render/lib/utils'
 import { getData } from './'
 
 export const getSubmodules = ({ subModules }) => {
-  const [titleModule, leadModule, formatModule, paragraphModule] = subModules
+  const [titleModule, subjectModule, leadModule, formatModule, paragraphModule] = subModules
 
   if (!titleModule) {
+    throw new Error('Missing headline submodule')
+  }
+
+  if (!subjectModule) {
     throw new Error('Missing headline submodule')
   }
 
@@ -35,6 +39,7 @@ export const getSubmodules = ({ subModules }) => {
 
   return {
     titleModule,
+    subjectModule,
     leadModule,
     formatModule,
     paragraphModule,
