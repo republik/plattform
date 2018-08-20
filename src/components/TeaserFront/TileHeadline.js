@@ -34,9 +34,6 @@ const styles = {
     ...smallSize,
     [mUp]: {
       ...mediumSize
-    },
-    [tUp]: {
-      ...defaultSize
     }
   }),
   editorialCol3: css({
@@ -51,9 +48,6 @@ const styles = {
     ...smallSize,
     [mUp]: {
       ...mediumSize
-    },
-    [tUp]: {
-      ...defaultSize
     }
   }),
   interactionCol3: css({
