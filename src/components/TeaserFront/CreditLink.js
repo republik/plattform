@@ -8,7 +8,7 @@ import { tUp } from './mediaQueries'
 
 const CreditLink = ({ children, color, collapsedColor, ...props }) => {
   const labColor = lab(color)
-  const labCompactColor = collapsedColor && lab(collapsedColor)
+  const labCollapsedColor = collapsedColor && lab(collapsedColor)
 
   const baseColorStyle = {
     color,
@@ -17,10 +17,10 @@ const CreditLink = ({ children, color, collapsedColor, ...props }) => {
     }
   }
 
-  const colorStyle = labCompactColor ? {
+  const colorStyle = labCollapsedColor ? {
     color: collapsedColor,
     ':hover': {
-      color: labCompactColor.b > 0.5 ? labCompactColor.darker(0.6) : labCompactColor.brighter(0.6)
+      color: labCollapsedColor.b > 0.5 ? labCollapsedColor.darker(0.6) : labCollapsedColor.brighter(0.6)
     },
     [tUp]: {
       ...baseColorStyle
