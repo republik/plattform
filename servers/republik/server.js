@@ -7,6 +7,7 @@ const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: redirections } = require('@orbiting/backend-modules-redirections')
 const { graphql: search } = require('@orbiting/backend-modules-search')
 const { graphql: notifications } = require('@orbiting/backend-modules-notifications')
+const { graphql: access } = require('@orbiting/backend-modules-access')
 
 const sendPendingPledgeConfirmations = require('./modules/crowdfundings/lib/sendPendingPledgeConfirmations')
 const mail = require('./modules/crowdfundings/lib/Mail')
@@ -26,7 +27,18 @@ const start = async () => {
 // in cluster mode, this runs after runOnce otherwise before
 const run = async (workerId) => {
   const localModule = require('./graphql')
-  const executableSchema = makeExecutableSchema(merge(localModule, [documents, search, redirections, notifications]))
+  const executableSchema = makeExecutableSchema(
+    merge(
+      localModule,
+      [
+        documents,
+        search,
+        redirections,
+        notifications,
+        access
+      ]
+    )
+  )
 
   // middlewares
   const middlewares = [
@@ -73,6 +85,7 @@ const runOnce = (...args) => {
   if (SEARCH_PG_LISTENER) {
     require('@orbiting/backend-modules-search').notifyListener.run()
   }
+  // require('@orbiting/backend-modules-access').accessScheduler.init()
 }
 
 const close = () => {
