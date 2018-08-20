@@ -104,7 +104,10 @@ const createSchema = ({
             href: node.url,
             color: teaser
               ? teaser.data.color
-              : colors.primary
+              : colors.primary,
+            collapsedColor: teaser && teaser.data.frame
+              ? '#000'
+              : undefined
           }
         },
         component: ({ children, data, ...props }) =>

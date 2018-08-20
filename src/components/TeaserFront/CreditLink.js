@@ -4,15 +4,32 @@ import { Editorial } from '../Typography'
 import { lab } from 'd3-color'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
+import { tUp } from './mediaQueries'
 
-const CreditLink = ({ children, color, ...props }) => {
+const CreditLink = ({ children, color, collapsedColor, ...props }) => {
   const labColor = lab(color)
-  const style = css({
+  const labCompactColor = lab(collapsedColor || color)
+
+  const baseColorStyle = {
     color,
-    cursor: 'pointer',
     ':hover': {
       color: labColor.b > 0.5 ? labColor.darker(0.6) : labColor.brighter(0.6)
     }
+  }
+
+  const colorStyle = collapsedColor ? {
+    color: collapsedColor,
+    ':hover': {
+      color: labCompactColor.b > 0.5 ? labCompactColor.darker(0.6) : labCompactColor.brighter(0.6)
+    },
+    [tUp]: {
+      ...baseColorStyle
+    }
+  } : baseColorStyle
+
+  const style = css({
+    ...colorStyle,
+    cursor: 'pointer'
   })
   return (
     <Editorial.A {...props} {...style}>
