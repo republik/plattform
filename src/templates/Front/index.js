@@ -396,6 +396,7 @@ const createSchema = ({
         'color',
         'bgColor',
         'center',
+        'titleSize',
         'showImage',
         'onlyImage',
         'image',
@@ -408,14 +409,17 @@ const createSchema = ({
       image,
       title(
         'FRONTTILETITLE',
-        ({ children, attributes, kind, columns }) => {
+        ({ children, attributes, kind, titleSize, columns }) => {
           const Component = kind === 'editorial'
           ? TeaserFrontTileHeadline.Editorial
           : kind === 'scribble'
             ? TeaserFrontTileHeadline.Scribble
             : TeaserFrontTileHeadline.Interaction
+          const sizes = {
+            medium: titleSize === 'medium'
+          }
           return (
-            <Component attributes={attributes} columns={columns}>
+            <Component attributes={attributes} columns={columns} {...sizes}>
               {children}
             </Component>
           )
