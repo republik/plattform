@@ -69,28 +69,15 @@ export default ({ TYPE, editorOptions }) => {
                     </div>
                     <div style={{ margin: '10px 0' }}>
                       <Checkbox
-                        checked={block.data.get('autoPlay')}
+                        checked={block.data.get('cinemagraph')}
                         onChange={event => {
-                          const checked = block.data.get('autoPlay')
+                          const checked = block.data.get('cinemagraph')
                           let change = value.change().setNodeByKey(block.key, {
-                            data: block.data.merge({autoPlay: !checked})
+                            data: block.data.merge({cinemagraph: !checked})
                           })
                           onChange(change)
                         }}>
-                        Autoplay
-                      </Checkbox>
-                    </div>
-                    <div style={{ margin: '10px 0' }}>
-                      <Checkbox
-                        checked={block.data.get('loop')}
-                        onChange={event => {
-                          const checked = block.data.get('loop')
-                          let change = value.change().setNodeByKey(block.key, {
-                            data: block.data.merge({loop: !checked})
-                          })
-                          onChange(change)
-                        }}>
-                        Loop
+                        Cinemagraph
                       </Checkbox>
                     </div>
                   </Fragment>}
