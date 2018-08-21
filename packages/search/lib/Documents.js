@@ -1,4 +1,5 @@
 const debug = require('debug')('search:lib:Documents')
+const _ = require('lodash')
 
 const {
   termEntry,
@@ -160,12 +161,12 @@ const getElasticDoc = (
     __sort: {
       date: meta.publishDate
     },
-    resolved,
     id,
     commitId,
     versionName,
     milestoneCommitId,
     meta,
+    resolved: !_.isEmpty(resolved) ? resolved : undefined,
     content: doc.content,
     contentString: mdastToString(
       mdastFilter(
