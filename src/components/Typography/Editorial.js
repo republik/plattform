@@ -51,6 +51,7 @@ export const Subhead = ({ children, attributes, ...props }) => (
 
 const lead = css({
   ...styles.serifRegular19,
+  display: 'inline',
   margin: '0 0 10px 0',
   [mUp]: {
     ...styles.serifRegular23,
@@ -64,6 +65,26 @@ export const Lead = ({ children, attributes, ...props }) => (
     {children}
   </p>
 )
+
+const subject = css({
+  color: '#8c8c8c',
+  display: 'inline',
+  margin: 0,
+  ...styles.sansSerifRegular19,
+  lineHeight: '27px',
+  [mUp]: {
+    ...styles.sansSerifRegular23,
+  }
+})
+
+export const Subject = ({ children, attributes, ...props }) => {
+  const style = { paddingRight: (children && children.length > 0 ? '.5em': undefined)}
+  return (
+    <h2 {...attributes} {...props} {...subject} style={style}>
+      {children}
+    </h2>
+  )
+}
 
 const credit = css({
   margin: '10px 0 0 0',

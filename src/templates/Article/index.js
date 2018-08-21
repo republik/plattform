@@ -685,6 +685,21 @@ const createSchema = ({
                 }
               },
               {
+                matchMdast: matchHeading(2),
+                component: ({ children, attributes, ...props }) =>
+                  <Editorial.Subject attributes={attributes} {...props}>
+                    {children}
+                  </Editorial.Subject>,
+                editorModule: 'headline',
+                editorOptions: {
+                  type: 'SUBJECT',
+                  placeholder: 'Subject',
+                  depth: 2,
+                  isStatic: true
+                },
+                rules: globalInlines
+              },
+              {
                 matchMdast: (node, index, parent) => {
                   const numHeadings = parent.children.filter(
                     child => child.type === 'heading'

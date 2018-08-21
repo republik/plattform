@@ -54,7 +54,7 @@ const image = {
 }
 
 export const subject = {
-  matchMdast: matchHeading(3),
+  matchMdast: matchHeading(2),
   component: ({ children, attributes, ...props }) =>
     <TeaserFrontSubject attributes={attributes} {...props}>
       {children}
@@ -72,7 +72,7 @@ export const subject = {
   editorOptions: {
     type: 'FRONTSUBJECT',
     placeholder: 'Subject',
-    depth: 3,
+    depth: 2,
     isStatic: true
   },
   rules: globalInlines

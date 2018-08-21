@@ -103,6 +103,22 @@ Von [Franz Kafka](<>) (Text) und [Everett Collection](<>) (Bilder), 13. Juli 201
 `}</Markdown>
 ```
 
+```react|noSource
+<Markdown schema={schema}>{`
+<section><h6>TITLE</h6>
+
+# Gregor Samsa eines Morgens aus unruhigen Träumen
+
+## Kafkas «Verwandlung»
+
+Jemand musste Josef K. verleumdet haben, denn ohne dass er etwas Böses getan hätte, wurde er eines Morgens verhaftet. «Wie ein Hund!» sagte er, es war, als sollte die Scham ihn überleben.
+
+Von [Franz Kafka](<>) (Text) und [Everett Collection](<>) (Bilder), 13. Juli 2017
+
+<hr /></section>
+`}</Markdown>
+```
+
 ### `center`
 
 Values: `falsy` (default), `true`
