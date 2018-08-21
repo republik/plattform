@@ -128,10 +128,7 @@ const cloneWithRepoData = options => (node, repoData) => {
       }),
       Block.create({
         type: subjectModule.TYPE,
-        data,
-        nodes: meta.description
-          ? [Text.create(meta.description)]
-          : []
+        data
       }),
       Block.create({
         type: leadModule.TYPE,
@@ -312,12 +309,12 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
       </Checkbox>
     }
     {
-      options.includes('frame') &&
+      options.includes('feuilleton') &&
       <Checkbox
-        checked={node.data.get('frame')}
-        onChange={onChange('frame')}
+        checked={node.data.get('feuilleton')}
+        onChange={onChange('feuilleton')}
       >
-        Rahmen (Feuilleton)
+        Feuilleton
       </Checkbox>
     }
   </UIForm>
