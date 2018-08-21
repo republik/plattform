@@ -216,11 +216,11 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 </TeaserFrontImage>
 ```
 
-### `frame`: Horizontal `frame` margins and regular text color in stacked mode
+### `feuilleton`: Horizontal `feuilleton` margins and regular text color in stacked mode
 
 ```react
 <TeaserFrontImage
-  frame
+  feuilleton
   image='/static/desert.jpg?size=4323x2962' byline='Foto: Thomas Vuillemin'
   color='#fff' collapsedColor='#000' bgColor='#fff'>
   <Editorial.Format>Neutrum</Editorial.Format>

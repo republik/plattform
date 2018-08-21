@@ -13,6 +13,7 @@ export { default as TeaserFrontTypo } from './Typo'
 export { default as TeaserFrontSplit } from './Split'
 export { default as TeaserFrontTile, TeaserFrontTileRow } from './Tile'
 
+export { default as TeaserFrontFormat } from './Format'
 export { default as TeaserFrontLead } from './Lead'
 export { default as TeaserFrontSubject } from './Subject'
 export { default as TeaserFrontCredit } from './Credit'

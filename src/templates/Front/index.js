@@ -9,7 +9,6 @@ import {
 } from 'mdast-react-render/lib/utils'
 
 import colors from '../../theme/colors'
-import * as Editorial from '../../components/Typography/Editorial'
 
 import {
   TeaserFrontImage,
@@ -21,6 +20,7 @@ import {
   TeaserFrontTile,
   TeaserFrontTileHeadline,
   TeaserFrontTileRow,
+  TeaserFrontFormat,
   TeaserFrontLead,
   TeaserFrontCredit,
   TeaserFrontCreditLink,
@@ -64,7 +64,7 @@ export const subject = {
     const teaser = ancestors.find(matchTeaser)
     return {
       color: teaser && teaser.data.color,
-      collapsedColor: teaser && teaser.data.frame && '#000',
+      collapsedColor: teaser && teaser.data.feuilleton && '#000',
       columns:  teaserGroup ? teaserGroup.data.columns : undefined
     }
   },
@@ -105,7 +105,7 @@ const createSchema = ({
             color: teaser
               ? teaser.data.color
               : colors.primary,
-            collapsedColor: teaser && teaser.data.frame
+            collapsedColor: teaser && teaser.data.feuilleton
               ? '#000'
               : undefined
           }
@@ -180,20 +180,22 @@ const createSchema = ({
 
   const format = {
     matchMdast: matchHeading(6),
-    component: ({ children, attributes, href }) =>
-      <Editorial.Format attributes={attributes}>
+    component: ({ children, attributes, href, color, collapsedColor }) =>
+      <TeaserFrontFormat color={color} collapsedColor={collapsedColor}>
         <Link href={href} passHref>
           <a href={href} {...styles.link}>
             {children}
           </a>
         </Link>
-      </Editorial.Format>,
+      </TeaserFrontFormat>,
     props (node, index, parent, { ancestors }) {
       const teaser = ancestors.find(matchTeaser)
       return {
         href: teaser
           ? teaser.data.formatUrl
-          : undefined
+          : undefined,
+        color: teaser && teaser.data.feuilleton && teaser.data.color,
+        collapsedColor: teaser && teaser.data.feuilleton && '#000'
       }
     },
     editorModule: 'headline',
@@ -234,7 +236,7 @@ const createSchema = ({
         'image',
         'byline',
         'onlyImage',
-        'frame'
+        'feuilleton'
       ]
     },
     rules: [
@@ -291,7 +293,7 @@ const createSchema = ({
         'titleSize',
         'reverse',
         'portrait',
-        'frame'
+        'feuilleton'
       ]
     },
     rules: [
@@ -339,7 +341,8 @@ const createSchema = ({
         'color',
         'bgColor',
         'kind',
-        'titleSize'
+        'titleSize',
+        'feuilleton'
       ]
     },
     rules: [
@@ -397,7 +400,8 @@ const createSchema = ({
         'onlyImage',
         'image',
         'byline',
-        'kind'
+        'kind',
+        'feuilleton'
       ]
     },
     rules: [

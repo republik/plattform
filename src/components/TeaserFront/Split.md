@@ -6,7 +6,7 @@ Supported props:
 - `bgColor`: The background color to use in stacked mode.
 - `portrait`: Whether to use the portrait layout.
 - `reverse`: Whether the layout should be reversed (i.e. the image appears to the right).
-- `frame`: Whether to use the canonical frame margins.
+- `feuilleton`: Whether to use the canonical feuilleton margins.
 
 A `<TeaserFrontSplitHeadline />` should be used.
 
@@ -150,11 +150,11 @@ A `<TeaserFrontSplitHeadline />` should be used.
 </TeaserFrontSplit>
 ```
 
-### Frame
+### Feuilleton
 
 ```react
 <TeaserFrontSplit
-  frame
+  feuilleton
   image='/static/rothaus_portrait.jpg'
   byline='Foto: Laurent Burst'
   color='#fff' bgColor='#000'>
@@ -171,7 +171,7 @@ A `<TeaserFrontSplitHeadline />` should be used.
 
 ```react
 <TeaserFrontSplit
-  frame
+  feuilleton
   image='/static/rothaus_landscape.jpg'
   reverse
   byline='Foto: Laurent Burst'

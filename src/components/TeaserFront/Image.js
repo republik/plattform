@@ -32,7 +32,7 @@ const styles = {
   container: css({
     ...containerStyle
   }),
-  containerFrame: css({
+  containerFeuilleton: css({
     ...containerStyle,
     margin: '15px',
     [mUp]: {
@@ -43,7 +43,7 @@ const styles = {
   textContainer: css({
     ...textContainerStyle
   }),
-  textContainerFrame: css({
+  textContainerFeuilleton: css({
     ...textContainerStyle,
     padding: '15px 0 40px 0',
     [mUp]: {
@@ -68,11 +68,11 @@ const ImageBlock = ({
   center,
   aboveTheFold,
   onlyImage,
-  frame
+  feuilleton
 }) => {
   const background = bgColor || ''
   return (
-    <div {...attributes} {...(frame ? styles.containerFrame : styles.container)} onClick={onClick} style={{
+    <div {...attributes} {...(feuilleton ? styles.containerFeuilleton : styles.container)} onClick={onClick} style={{
       background,
       cursor: onClick ? 'pointer' : 'default'
     }}>
@@ -82,8 +82,8 @@ const ImageBlock = ({
           {byline}
         </FigureByline>}
       </div>
-      {!onlyImage && <div {...(frame ? styles.textContainerFrame : styles.textContainer)}>
-        <Text position={textPosition} color={color} collapsedColor={frame && colors.text} center={center}>
+      {!onlyImage && <div {...(feuilleton ? styles.textContainerFeuilleton : styles.textContainer)}>
+        <Text position={textPosition} color={color} collapsedColor={feuilleton && colors.text} center={center}>
           {children}
         </Text>
       </div>}
@@ -110,7 +110,7 @@ ImageBlock.propTypes = {
     'bottom'
   ]),
   onlyImage: PropTypes.bool,
-  frame: PropTypes.bool
+  feuilleton: PropTypes.bool
 }
 
 ImageBlock.defaultProps = {
