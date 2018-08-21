@@ -10,6 +10,8 @@ const { dbMigrateAll } = require('@orbiting/backend-modules-scripts')
 const migrationDirs = [
   '../../packages/redirections/migrations',
   '../../packages/auth/migrations',
+  '../republik/migrations/crowdfunding',
+  '../republik/migrations',
   '../../packages/notifications/migrations'
 ]
 

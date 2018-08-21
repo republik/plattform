@@ -354,7 +354,8 @@ module.exports = async (
       doc.content.meta.dossier
     )
 
-    resolved.dossier = dossiers.pop()
+    if (!resolved.meta) resolved.meta = {}
+    resolved.meta.dossier = dossiers.pop()
   }
 
   if (doc.content.meta.format) {
@@ -364,7 +365,8 @@ module.exports = async (
       doc.content.meta.format
     )
 
-    resolved.format = formats.pop()
+    if (!resolved.meta) resolved.meta = {}
+    resolved.meta.format = formats.pop()
   }
 
   // publish to elasticsearch
