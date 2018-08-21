@@ -128,10 +128,7 @@ const cloneWithRepoData = options => (node, repoData) => {
       }),
       Block.create({
         type: subjectModule.TYPE,
-        data,
-        nodes: meta.description
-          ? [Text.create(meta.description)]
-          : []
+        data
       }),
       Block.create({
         type: leadModule.TYPE,
