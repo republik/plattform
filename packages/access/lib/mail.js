@@ -23,8 +23,8 @@ const getGlobalMergeVars = (grantee, campaign, grant) => {
     { name: 'RECIPIENT_EMAIL',
       content: grant.email
     },
-    { name: 'CAMPAIGN_NAME',
-      content: campaign.name
+    { name: 'CAMPAIGN_TITLE',
+      content: campaign.title
     },
     { name: 'CAMPAIGN_END',
       content: dateFormat(campaign.endAt)
