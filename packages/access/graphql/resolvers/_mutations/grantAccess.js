@@ -11,7 +11,7 @@ module.exports = async (_, args, { req, t, pgdb }) => {
   const transaction = await pgdb.transactionBegin()
 
   try {
-    const result = await grantsLib.grant(user, campaignId, email, t, pgdb)
+    const result = await grantsLib.grant(user, campaignId, email, t, transaction)
     await transaction.transactionCommit()
 
     debug('commit', { campaignId, email, user: user.id })

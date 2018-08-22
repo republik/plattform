@@ -5,7 +5,9 @@ const Promise = require('bluebird')
 
 const campaignsLib = require('./campaigns')
 const constraints = require('./constraints')
+const eventsLib = require('./events')
 const mailLib = require('./mail')
+const membershipsLib = require('./memberships')
 
 const isGrantable = async (grantee, campaign, email, pgdb) => {
   let granted = true
@@ -70,33 +72,43 @@ const grant = async (grantee, campaignId, email, t, pgdb) => {
     endAt
   })
 
+  eventsLib.log(grant, 'grant', pgdb)
+
   debug('grant, row inserted', { grant })
 
   await Promise.all([
-    mailLib.sendRecipientOnboarding(grantee, campaign, grant, t),
-    mailLib.sendGranteeConfirmation(grantee, campaign, grant, t)
+    mailLib.sendRecipientOnboarding(grantee, campaign, grant, t, pgdb),
+    mailLib.sendGranteeConfirmation(grantee, campaign, grant, t, pgdb)
   ])
 
   return grant
 }
 
 const revoke = async (id, grantee, t, pgdb) => {
-  const rowsAffected = await pgdb.public.accessGrants.update(
-    { id, revokedAt: null },
-    { revokedAt: moment(), updatedAt: moment() }
-  )
+  const grant = await pgdb.public.accessGrants.findOne({ id })
+  const isInvalidated = await renderInvalid(grant, pgdb)
 
-  if (rowsAffected > 0) {
-    const grant = await pgdb.public.accessGrants.findOne({ id })
+  if (isInvalidated) {
     const campaign = await campaignsLib.findByGrant(grant, pgdb)
 
+    eventsLib.log(grant, 'revoke', pgdb)
+
+    if (grant.recipientUserId) {
+      const user =
+        await pgdb.public.users.findOne({ id: grant.recipientUserId })
+
+      if (user) {
+        await membershipsLib.removeMemberRole(grant, user, pgdb)
+      }
+    }
+
     await Promise.all([
-      mailLib.sendRecipientRevoked(grantee, campaign, grant, t),
-      mailLib.sendGranteeRevoked(grantee, campaign, grant, t)
+      mailLib.sendRecipientRevoked(grantee, campaign, grant, t, pgdb),
+      mailLib.sendGranteeRevoked(grantee, campaign, grant, t, pgdb)
     ])
   }
 
-  return rowsAffected > 0
+  return isInvalidated
 }
 
 const findByGrantee = async (grantee, campaign, pgdb) => {
@@ -104,9 +116,9 @@ const findByGrantee = async (grantee, campaign, pgdb) => {
     await pgdb.public.accessGrants.find({
       granteeUserId: grantee.id,
       accessCampaignId: campaign.id,
-      revokedAt: null,
       'beginAt <=': moment(),
-      'endAt >': moment()
+      'endAt >': moment(),
+      invalidatedAt: null
     })
 
   return grants
@@ -116,9 +128,9 @@ const findByRecipient = async (recipient, pgdb) => {
   const grants =
     await pgdb.public.accessGrants.find({
       recipientUserId: recipient.id,
-      revokedAt: null,
       'beginAt <=': moment(),
-      'endAt >': moment()
+      'endAt >': moment(),
+      invalidatedAt: null
     })
 
   return grants
@@ -127,40 +139,13 @@ const findByRecipient = async (recipient, pgdb) => {
 const findUnassigned = async (pgdb) => pgdb.public.accessGrants.find({
   recipientUserId: null,
   'beginAt <=': moment(),
-  'endAt >': moment()
-})
-
-const findCurrent = async (pgdb) => pgdb.public.accessGrants.find({
-  'recipientUserId !=': null,
-  'beginAt <=': moment(),
   'endAt >': moment(),
-  and: {
-    or: [
-      { revokedAt: null },
-      { 'revokedAt >': moment() }
-    ]
-  }
-}, { orderBy: 'createdAt' })
-
-const findInvalid = async (pgdb) => pgdb.public.accessGrants.find({
-  'recipientUserId !=': null,
-  and: {
-    or: [
-      { 'beginAt >': moment() },
-      { 'endAt <': moment() },
-      { 'revokedAt <': moment() }
-    ]
-  }
-})
-
-const findRevoked = async (pgdb) => pgdb.public.accessGrants.find({
-  'recipientUserId !=': null,
-  'revokedAt <': moment()
+  invalidatedAt: null
 })
 
 const findExpired = async (pgdb) => pgdb.public.accessGrants.find({
-  'recipientUserId !=': null,
-  'endAt <': moment()
+  'endAt <': moment(),
+  invalidatedAt: null
 })
 
 const setRecipient = async (grant, recipient, pgdb) => {
@@ -179,16 +164,33 @@ const setRecipient = async (grant, recipient, pgdb) => {
   return result > 0
 }
 
+const renderInvalid = async (grant, pgdb) => {
+  const result = await pgdb.public.accessGrants.update(
+    { id: grant.id, invalidatedAt: null },
+    { invalidatedAt: moment(), updatedAt: moment() }
+  )
+
+  debug('renderInvalid', {
+    id: grant.id,
+    invalidatedAt: moment(),
+    updatedAt: moment(),
+    result
+  })
+
+  return result > 0
+}
+
 module.exports = {
   isGrantable,
   grant,
   revoke,
+
   findByGrantee,
   findByRecipient,
+
   findUnassigned,
-  findInvalid,
-  findRevoked,
   findExpired,
-  findCurrent,
-  setRecipient
+
+  setRecipient,
+  renderInvalid
 }

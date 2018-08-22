@@ -11,7 +11,7 @@ module.exports = async (_, args, { req, pgdb, t }) => {
   const transaction = await pgdb.transactionBegin()
 
   try {
-    const result = await grantsLib.revoke(id, user, t, pgdb)
+    const result = await grantsLib.revoke(id, user, t, transaction)
     await transaction.transactionCommit()
 
     debug('commit', { id, user: user.id })

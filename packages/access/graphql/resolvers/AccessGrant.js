@@ -20,7 +20,7 @@ module.exports = {
   },
   beginAt: (grant) => grant.beginAt,
   endAt: (grant) => grant.endAt,
-  revokedAt: (grant, args, context) => grant.revokedAt,
+  invalidatedAt: (grant) => grant.invalidatedAt,
   createdAt: (grant) => grant.createdAt,
   updatedAt: (grant) => grant.updatedAt
 }

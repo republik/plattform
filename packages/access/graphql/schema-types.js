@@ -44,10 +44,9 @@ type AccessGrant {
   "Ending of sharing period"
   endAt: DateTime!
   """
-  Date when grant was revoked.
-  Set if grant was revoked prematurly.
+  Date when grant was rendered invalid.
   """
-  revokedAt: DateTime
+  invalidatedAt: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
 }

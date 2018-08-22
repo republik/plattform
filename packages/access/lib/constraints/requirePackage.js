@@ -1,5 +1,4 @@
-const debug =
-  require('debug')('access:lib:constraints:requirePackage')
+const debug = require('debug')('access:lib:constraints:requirePackage')
 
 const hasValidMembership = async ({ grantee, settings }, { pgdb }) => {
   const packages = settings.packages.map(pkg => `'${pkg}'`).join(', ')
@@ -31,18 +30,18 @@ const isGrantable = async (args, context) => {
   const { grantee, settings } = args
   const { pgdb } = context
 
-  const valid = await hasValidMembership({ grantee, settings }, { pgdb })
+  const isGrantable = await hasValidMembership({ grantee, settings }, { pgdb })
 
   debug(
     'isGrantable',
     {
       grantee: grantee.id,
       settings,
-      valid
+      isGrantable
     }
   )
 
-  return valid
+  return isGrantable
 }
 
 const getMeta = async (args, context) => {
