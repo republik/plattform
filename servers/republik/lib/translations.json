@@ -1,5 +1,5 @@
 {
-  "updated": "2018-07-02T16:28:09.978Z",
+  "updated": "2018-08-22T15:35:55.027Z",
   "title": "live",
   "data": [
     {
@@ -349,6 +349,10 @@
     {
       "key": "api/search/aggs/kind/meta",
       "value": "wir über uns"
+    },
+    {
+      "key": "api/search/aggs/kind/scribble",
+      "value": "Ameisen"
     }
   ]
 }
