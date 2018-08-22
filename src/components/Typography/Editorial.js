@@ -71,9 +71,9 @@ const subject = css({
   display: 'inline',
   margin: 0,
   ...styles.sansSerifRegular19,
-  lineHeight: '27px',
   [mUp]: {
     ...styles.sansSerifRegular23,
+    lineHeight: '27px'
   }
 })
 
