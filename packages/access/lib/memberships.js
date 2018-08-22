@@ -34,9 +34,6 @@ const addMemberRole = async (grant, user, pgdb) => {
 
   const hasMembership = await hasUserActiveMembership(user, pgdb)
 
-  // const hasUserValidGrants =
-  // await membershipsLib.hasUserValidGrants(user, pgdb)
-
   if (
     !hasMembership &&
     !Roles.userHasRole(user, 'member')
@@ -50,16 +47,18 @@ const addMemberRole = async (grant, user, pgdb) => {
   }
 }
 
-const removeMemberRole = async (grant, user, pgdb) => {
+const removeMemberRole = async (grant, user, findFn, pgdb) => {
   debug('removeMemberRole')
 
   const hasMembership = await hasUserActiveMembership(user, pgdb)
 
-  // const hasUserValidGrants =
-  // await membershipsLib.hasUserValidGrants(user, pgdb)
+  const allRecipientGrants = await findFn(user, pgdb)
+  const allOtherRecipientGrants =
+    allRecipientGrants.filter(otherGrant => otherGrant.id !== grant.id)
 
   if (
     !hasMembership &&
+    allOtherRecipientGrants.length < 1 &&
     Roles.userHasRole(user, 'member')
   ) {
     await Roles.removeUserFromRole(user.id, 'member', pgdb)

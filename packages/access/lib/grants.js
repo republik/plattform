@@ -98,7 +98,12 @@ const revoke = async (id, grantee, t, pgdb) => {
         await pgdb.public.users.findOne({ id: grant.recipientUserId })
 
       if (user) {
-        await membershipsLib.removeMemberRole(grant, user, pgdb)
+        await membershipsLib.removeMemberRole(
+          grant,
+          user,
+          findByRecipient,
+          pgdb
+        )
       }
     }
 
