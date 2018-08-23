@@ -29,6 +29,7 @@ type Meta {
   image: String
   emailSubject: String
   description: String
+  subject: String
   facebookTitle: String
   facebookImage: String
   facebookDescription: String
