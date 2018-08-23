@@ -24,6 +24,7 @@ query searchRepo($after: String, $search: String) {
             title
             image
             description
+            subject
             credits
             kind
             color
