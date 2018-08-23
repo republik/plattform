@@ -1,0 +1,29 @@
+{
+  "name": "@orbiting/voting",
+  "version": "0.0.0",
+  "description": "store votings and query them from graphql",
+  "main": "index.js",
+  "scripts": {
+    "link": "yarn link"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Andreas Moor <andreas.moor@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "devDependencies": {
+    "db-migrate": "^0.11.1",
+    "dotenv": "^5.0.1"
+  },
+  "dependencies": {
+    "apollo-modules-node": "^0.1.4"
+  }
+}
