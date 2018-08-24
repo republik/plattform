@@ -134,13 +134,11 @@ const mutation = gql`
     $userId: ID!
     $name: NewsletterName!
     $subscribed: Boolean!
-    $status: String!
   ) {
     updateNewsletterSubscription(
       userId: $userId
       name: $name
       subscribed: $subscribed
-      status: $status
     ) {
       id
       name
