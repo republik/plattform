@@ -94,6 +94,9 @@
     "MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY": {
       "required": true
     },
+    "MAILCHIMP_INTEREST_NEWSLETTER_FEUILLETON": {
+      "required": true
+    },
     "MAILCHIMP_INTEREST_PLEDGE": {
       "required": true
     },
