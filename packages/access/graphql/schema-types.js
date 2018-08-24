@@ -4,12 +4,12 @@ extend type User {
   """
   List of memberships a User was granted
   """
-  accessGrants: [AccessGrant]!
+  accessGrants: [AccessGrant]
 
   """
   List of granted memberships by User
   """
-  accessCampaigns: [AccessCampaign]!
+  accessCampaigns: [AccessCampaign]
 }
 
 """
