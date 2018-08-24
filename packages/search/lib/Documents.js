@@ -70,10 +70,18 @@ const schema = {
     agg: valueCountAggBuilder('meta.dossier'),
     parser: documentIdParser
   },
+  hasDossier: {
+    criteria: hasCriteriaBuilder('meta.dossier'),
+    agg: existsCountAggBuilder('meta.dossier')
+  },
   format: {
     criteria: termCriteriaBuilder('meta.format'),
     agg: valueCountAggBuilder('meta.format'),
     parser: documentIdParser
+  },
+  hasFormat: {
+    criteria: hasCriteriaBuilder('meta.format'),
+    agg: existsCountAggBuilder('meta.format')
   },
   kind: termEntry('resolved.meta.format.meta.kind'),
   repoId: {
