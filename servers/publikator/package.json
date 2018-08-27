@@ -2,8 +2,7 @@
   "name": "publikator-backend",
   "version": "0.0.1",
   "engines": {
-    "node": "10.x",
-    "yarn": "1.7.x"
+    "node": "10.x"
   },
   "private": true,
   "license": "AGPL-3.0",

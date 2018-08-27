@@ -5,8 +5,7 @@
   "license": "AGPL-3.0",
   "version": "0.0.0-development",
   "engines": {
-    "node": "10.x",
-    "yarn": "1.7.x"
+    "node": "10.x"
   },
   "private": true,
   "main": "index.js",
