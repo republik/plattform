@@ -19,10 +19,13 @@ export default () => (
 
     <ColorSpecimen span={1} name='error' value={colors.error} />
     <ColorSpecimen span={1} name='online' value={colors.online} />
-
-    <ColorSpecimen span={1} name='editorial' value={colors.editorial} />
-    <ColorSpecimen span={1} name='meta' value={colors.meta} />
     <ColorSpecimen span={1} name='social' value={colors.social} />
+
+    <h2>Formats</h2>
+    <ColorSpecimen span={1} name='editorial' value={colors.editorial} />
+    <ColorSpecimen span={1} name='feuilleton' value={colors.feuilleton} />
+    <ColorSpecimen span={1} name='scribble' value={colors.scribble} />
+    <ColorSpecimen span={1} name='meta' value={colors.meta} />
 
     <h2>Charts</h2>
     <p>Most charts will use sequential colors, e.g. bars all in the frist sequential color and one highlight in the second. Opposite colors are used for diverging ranges, with an optional neutral color in the middle.</p>

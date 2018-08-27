@@ -4,6 +4,7 @@ import * as Headlines from './Headline'
 import Lead from './Lead'
 import Credit from './Credit'
 import { css } from 'glamor'
+import colors from '../../theme/colors'
 import { renderMdast } from 'mdast-react-render'
 import { timeFormat } from '../../lib/timeFormat'
 import { Editorial } from '../Typography'
@@ -42,6 +43,7 @@ export const TeaserFeed = ({
   kind: metaKind,
   color: metaColor,
   template,
+  formatColor,
   format,
   path,
   title,
@@ -62,7 +64,7 @@ export const TeaserFeed = ({
       : Headlines.Editorial
 
   return (
-    <Container format={format} color={formatMeta.color || metaColor} Link={Link}>
+    <Container format={format} color={formatColor || formatMeta.color || colors[formatMeta.kind]} Link={Link}>
       <Headline style={{color: metaColor}}>
         <Link href={path} passHref>
           <a {...styles.link} href={path}>{title}</a>

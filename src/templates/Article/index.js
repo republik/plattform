@@ -64,6 +64,7 @@ import {
   getDatePath
 } from './utils'
 
+import colors from '../../theme/colors'
 import createTeasers from './teasers'
 import createDynamicComponent from './dynamicComponent'
 
@@ -628,7 +629,7 @@ const createSchema = ({
               <TitleBlock {...props} format={format} Link={Link}>
                 {titleBlockPrepend}
                 {format && format.meta && (
-                  <Editorial.Format color={format.meta.color} contentEditable={false}>
+                  <Editorial.Format color={format.meta.color || colors[format.meta.kind]} contentEditable={false}>
                     <Link href={format.meta.path} passHref>
                       <a {...styles.link} href={format.meta.path}>
                         {format.meta.title}

@@ -150,51 +150,67 @@ export const sansSerifRegular30 = {
 }
 export const sansSerifRegular23 = {
   fontFamily: fontFamilies.sansSerifRegular,
+  fontWeight: 'normal',
   fontSize: 23,
   lineHeight: '30px'
 }
 export const sansSerifRegular21 = {
   fontFamily: fontFamilies.sansSerifRegular,
+  fontWeight: 'normal',
   fontSize: 21,
   lineHeight: '32px'
 }
 export const sansSerifRegular19 = {
   fontFamily: fontFamilies.sansSerifRegular,
+  fontWeight: 'normal',
   fontSize: 19,
   lineHeight: '30px',
 }
 export const sansSerifRegular18 = {
   fontFamily: fontFamilies.sansSerifRegular,
+  fontWeight: 'normal',
   fontSize: 18,
   lineHeight: '30px',
 }
 export const sansSerifRegular16 = {
   fontFamily: fontFamilies.sansSerifRegular,
+  fontWeight: 'normal',
   fontSize: 16,
   lineHeight: '25px',
 }
 export const sansSerifRegular15 = {
   fontFamily: fontFamilies.sansSerifRegular,
+  fontWeight: 'normal',
   fontSize: 15,
   lineHeight: '21px'
 }
 export const sansSerifRegular14 = {
   fontFamily: fontFamilies.sansSerifRegular,
+  fontWeight: 'normal',
   fontSize: 14,
   lineHeight: '17px'
 }
+export const sansSerifRegular13 = {
+  fontFamily: fontFamilies.sansSerifRegular,
+  fontWeight: 'normal',
+  fontSize: 13,
+  lineHeight: '16px'
+}
 export const sansSerifRegular12 = {
   fontFamily: fontFamilies.sansSerifRegular,
+  fontWeight: 'normal',
   fontSize: 12,
   lineHeight: '15px'
 }
 export const sansSerifRegular11 = {
   fontFamily: fontFamilies.sansSerifRegular,
+  fontWeight: 'normal',
   fontSize: 11,
   lineHeight: '12px'
 }
 export const sansSerifRegular10 = {
   fontFamily: fontFamilies.sansSerifRegular,
+  fontWeight: 'normal',
   fontSize: 10,
   lineHeight: '12px'
 }
