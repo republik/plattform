@@ -52,6 +52,11 @@ type Meta {
   audioSource: AudioSource
 }
 
+input DocumentInput {
+  # AST of /article.md
+  content: JSON!
+}
+
 type Document {
   id: ID!
   # AST of /article.md
