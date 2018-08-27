@@ -45,14 +45,13 @@ input SearchFilterInput {
   feed: Boolean
   # repoId
   dossier: String
-  hasDossier: Boolean
   # repoId
   format: String
-  hasFormat: Boolean
   template: String
   publishedAt: DateRangeInput
   userId: ID
   author: String
+
   discussion: Boolean
   isSeriesMaster: Boolean
   isSeriesEpisode: Boolean

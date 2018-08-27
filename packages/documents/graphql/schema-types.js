@@ -52,12 +52,18 @@ type Meta {
   audioSource: AudioSource
 }
 
+# implements FileInterface
 input DocumentInput {
   # AST of /article.md
   content: JSON!
 }
 
-type Document {
+interface FileInterface {
+  content: JSON!
+  meta: Meta!
+}
+
+type Document implements FileInterface {
   id: ID!
   # AST of /article.md
   content: JSON!
@@ -67,7 +73,25 @@ type Document {
     last: Int
     before: ID
     after: ID
-  ): DocumentConnection!
+  ): DocumentNodeConnection!
+}
+
+type DocumentNode {
+  id: ID!
+  body: JSON!
+}
+
+type DocumentNodePageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type DocumentNodeConnection {
+  nodes: [DocumentNode!]!
+  pageInfo: DocumentNodePageInfo!
+  totalCount: Int!
 }
 
 type DocumentConnection {
