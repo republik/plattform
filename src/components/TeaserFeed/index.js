@@ -43,7 +43,6 @@ export const TeaserFeed = ({
   kind: metaKind,
   color: metaColor,
   template,
-  formatColor,
   format,
   path,
   title,
@@ -64,7 +63,7 @@ export const TeaserFeed = ({
       : Headlines.Editorial
 
   return (
-    <Container format={format} color={formatColor || formatMeta.color || colors[formatMeta.kind]} Link={Link}>
+    <Container format={format} color={(formatMeta.title ? (formatMeta.color || colors[formatMeta.kind]) : undefined)} Link={Link}>
       <Headline style={{color: metaColor}}>
         <Link href={path} passHref>
           <a {...styles.link} href={path}>{title}</a>
