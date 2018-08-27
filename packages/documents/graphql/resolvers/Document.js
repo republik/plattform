@@ -10,6 +10,8 @@ const {
 } = require('../../lib/process')
 const { getMeta } = require('../../lib/meta')
 
+const getDocuments = require('./_queries/documents')
+
 const { lib: { webp: {
   addSuffix: addWebpSuffix
 } } } = require('@orbiting/backend-modules-assets')
@@ -108,5 +110,37 @@ module.exports = {
       totalCount,
       nodes
     }
+  },
+  linkedDocuments (doc, args, context, info) {
+    const hasDossierRepoId =
+      doc.meta.template === 'dossier' &&
+      doc.meta.repoId
+
+    const hasFormatRepoId =
+      doc.meta.template === 'format' &&
+      doc.meta.repoId
+
+    if (!hasDossierRepoId && !hasFormatRepoId) {
+      return {
+        pageInfo: {
+          endCursor: null,
+          startCursor: null,
+          hasNextPage: false,
+          hasPreviousPage: false
+        },
+        totalCount: 0,
+        nodes: []
+      }
+    }
+
+    if (hasDossierRepoId) {
+      args.dossier = doc.id
+    }
+
+    if (hasFormatRepoId) {
+      args.format = doc.id
+    }
+
+    return getDocuments(doc, args, context, info)
   }
 }
