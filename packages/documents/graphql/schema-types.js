@@ -36,6 +36,7 @@ type Meta {
   twitterTitle: String
   twitterImage: String
   twitterDescription: String
+  prepublication: Boolean
   publishDate: DateTime
   template: String
   feed: Boolean
