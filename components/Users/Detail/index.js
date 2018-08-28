@@ -22,6 +22,7 @@ import RolesForm from './RolesForm'
 import PledgeOverview from './PledgeOverview'
 import MembershipOverview from './MembershipOverview'
 import EventLog from './EventLog'
+import Access from './Access'
 import Notepad from './Notepad'
 import SessionOverview from './SessionOverview'
 
@@ -189,6 +190,15 @@ class Detail extends Component {
                   Event Log
                 </TabLink>
                 <TabLink
+                  name="access"
+                  onClick={this.tabLinkHandler(
+                    'access'
+                  )}
+                  current={this.state.selectedTab}
+                >
+                  Access Grants
+                </TabLink>
+                <TabLink
                   name="sessions"
                   onClick={this.tabLinkHandler(
                     'sessions'
@@ -354,6 +364,15 @@ class Detail extends Component {
               >
                 <EventLog
                   items={props.data.user.eventLog}
+                />
+              </Tab>
+              <Tab
+                name="access"
+                current={this.state.selectedTab}
+              >
+                <Access
+                  grants={props.data.user.accessGrants}
+                  campaigns={props.data.user.accessCampaigns}
                 />
               </Tab>
               <Tab
@@ -620,6 +639,52 @@ const userQuery = gql`
         renew
         createdAt
         updatedAt
+      }
+      accessGrants {
+        id
+        createdAt
+        beginAt
+        endAt
+        isValid
+        grantee {
+          id
+          email
+          name
+        }
+        campaign {
+          id
+          title
+        }
+        events {
+          createdAt
+          event
+        }
+      }
+      accessCampaigns {
+        id
+        title
+        slots {
+          total
+          free
+          used
+        }
+        grants {
+          id
+          createdAt
+          beginAt
+          endAt
+          isValid
+          email
+          recipient {
+            id
+            email
+            name
+          }
+          events {
+            createdAt
+            event
+          }
+        }
       }
       pledges {
         id
