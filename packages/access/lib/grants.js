@@ -89,8 +89,6 @@ const revoke = async (id, grantee, t, pgdb) => {
   const isInvalidated = await renderInvalid(grant, pgdb)
 
   if (isInvalidated) {
-    const campaign = await campaignsLib.findByGrant(grant, pgdb)
-
     eventsLib.log(grant, 'revoke', pgdb)
 
     if (grant.recipientUserId) {
@@ -106,11 +104,6 @@ const revoke = async (id, grantee, t, pgdb) => {
         )
       }
     }
-
-    await Promise.all([
-      mailLib.sendRecipientRevoked(grantee, campaign, grant, t, pgdb),
-      mailLib.sendGranteeRevoked(grantee, campaign, grant, t, pgdb)
-    ])
   }
 
   return isInvalidated

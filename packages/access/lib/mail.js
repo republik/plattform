@@ -57,12 +57,12 @@ const sendGranteeConfirmation = async (grantee, campaign, grant, t, pgdb) => {
   const mail = await sendMailTemplate({
     to: grantee.email,
     fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-    subject: t('api/email/access/grantee/onboarding/subject'),
-    templateName: 'access_grantee_onboarding',
+    subject: t('api/email/access/grantee/confirmation/subject'),
+    templateName: 'access_grantee_confirmation',
     globalMergeVars: getGlobalMergeVars(grantee, campaign, grant)
   })
 
-  await eventsLib.log(grant, 'email.grantee.onboarding', pgdb)
+  await eventsLib.log(grant, 'email.grantee.confirmation', pgdb)
 
   return mail
 }
@@ -79,38 +79,6 @@ const sendRecipientExpirationNotice = async (grantee, campaign, grant, t, pgdb) 
   })
 
   await eventsLib.log(grant, 'email.recipient.expirationNotice', pgdb)
-
-  return mail
-}
-
-const sendRecipientRevoked = async (grantee, campaign, grant, t, pgdb) => {
-  debug('sendRecipientRevoked')
-
-  const mail = await sendMailTemplate({
-    to: grant.email,
-    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-    subject: t('api/email/access/recipient/revoked/subject'),
-    templateName: 'access_recipient_revoked',
-    globalMergeVars: getGlobalMergeVars(grantee, campaign, grant)
-  })
-
-  await eventsLib.log(grant, 'email.recipient.revoked', pgdb)
-
-  return mail
-}
-
-const sendGranteeRevoked = async (grantee, campaign, grant, t, pgdb) => {
-  debug('sendGranteeRevoked')
-
-  const mail = await sendMailTemplate({
-    to: grant.email,
-    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-    subject: t('api/email/access/grantee/revoked/subject'),
-    templateName: 'access_grantee_revoked',
-    globalMergeVars: getGlobalMergeVars(grantee, campaign, grant)
-  })
-
-  await eventsLib.log(grant, 'email.grantee.revoked', pgdb)
 
   return mail
 }
@@ -170,10 +138,6 @@ module.exports = {
 
   // Expiration Notice
   sendRecipientExpirationNotice,
-
-  // Offboarding when access expired
-  sendRecipientRevoked,
-  sendGranteeRevoked,
 
   // Offboarding when access expired
   sendRecipientExpired,
