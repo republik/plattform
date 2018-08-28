@@ -1,4 +1,5 @@
 const campaignsLib = require('../../lib/campaigns')
+const eventsLib = require('../../lib/events')
 
 module.exports = {
   id: (grant) => grant.id,
@@ -22,5 +23,9 @@ module.exports = {
   endAt: (grant) => grant.endAt,
   invalidatedAt: (grant) => grant.invalidatedAt,
   createdAt: (grant) => grant.createdAt,
-  updatedAt: (grant) => grant.updatedAt
+  updatedAt: (grant) => grant.updatedAt,
+
+  isValid: (grant) => grant.invalidated !== null,
+
+  events: (grant, args, { pgdb }) => eventsLib.findByGrant(grant, pgdb)
 }

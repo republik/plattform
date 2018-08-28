@@ -11,6 +11,15 @@ const log = async (grant, event, pgdb) => {
   return eventAdded
 }
 
+const findByGrant = (grant, pgdb) => {
+  debug('findByGrant')
+  return pgdb.public.accessEvents.find(
+    { accessGrantId: grant.id },
+    { orderBy: { createdAt: 'desc' } }
+  )
+}
+
 module.exports = {
-  log
+  log,
+  findByGrant
 }

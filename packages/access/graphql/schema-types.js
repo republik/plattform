@@ -49,8 +49,24 @@ type AccessGrant {
   invalidatedAt: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
+
+  isValid: Boolean!
+
+  events: [AccessEvent]
 }
 
+"""
+Entity describing an event that occured, linked to an AccessGrant
+"""
+type AccessEvent {
+  id: ID!
+  event: String!
+  createdAt: DateTime!
+}
+
+"""
+Entity describing state of slots: total, used and free
+"""
 type AccessCampaignSlots {
   total: Int!
   free: Int!
@@ -60,6 +76,7 @@ type AccessCampaignSlots {
 # Subject to change
 # Potential leak of sensitive information
 type AccessGrantGrantee {
+  id: String!
   name: String!
   email: String!
 }
@@ -67,6 +84,7 @@ type AccessGrantGrantee {
 # Subject to change
 # Potential leak of sensitive information
 type AccessGrantRecipient {
+  id: String!
   name: String!
   email: String!
 }
