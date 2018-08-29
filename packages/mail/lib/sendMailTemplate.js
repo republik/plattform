@@ -13,7 +13,8 @@ const {
   DEFAULT_MAIL_FROM_NAME,
   NODE_ENV,
   SEND_MAILS,
-  SEND_MAILS_DOMAIN_FILTER
+  SEND_MAILS_DOMAIN_FILTER,
+  SEND_MAILS_REGEX_FILTERS
 } = process.env
 
 // usage
@@ -42,6 +43,7 @@ module.exports = async (mail) => {
   // don't send in dev, expect SEND_MAILS is true
   // don't send mails if SEND_MAILS is false
   const DEV = NODE_ENV && NODE_ENV !== 'production'
+
   if (SEND_MAILS === 'false' || (DEV && SEND_MAILS !== 'true')) {
     logger.log('\n\nSEND_MAIL prevented mail from being sent\n(SEND_MAIL == false or NODE_ENV != production and SEND_MAIL != true):\n', mail)
     return sleep(2000)
@@ -51,6 +53,20 @@ module.exports = async (mail) => {
     const domain = mail.to.split('@')[1]
     if (domain !== SEND_MAILS_DOMAIN_FILTER) {
       logger.log(`\n\nSEND_MAILS_DOMAIN_FILTER (${SEND_MAILS_DOMAIN_FILTER}) prevented mail from being sent:\n`, mail)
+      return sleep(2000)
+    }
+  }
+
+  if (SEND_MAILS_REGEX_FILTERS) {
+    const filters = SEND_MAILS_REGEX_FILTERS.split(';')
+
+    const hasMatchedFilter = filters.some(filter => {
+      const pattern = new RegExp(`${filter}`)
+      return pattern.test(mail.to)
+    })
+
+    if (!hasMatchedFilter) {
+      logger.log(`\n\nSEND_MAILS_REGEX_FILTERS prevented mail from being sent:\n`, mail)
       return sleep(2000)
     }
   }
