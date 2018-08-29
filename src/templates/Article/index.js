@@ -617,7 +617,10 @@ const createSchema = ({
                     padding: '30px 30px 1px'
                   }}
                 >
-                  <TeaserFeed {...props} />
+                  <TeaserFeed
+                    {...props}
+                    color={props.color ? props.color : props.kind ? colors[props.kind] : undefined}
+                  />
                 </div>
               )
             }
