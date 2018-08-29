@@ -66,7 +66,7 @@ export const Lead = ({ children, attributes, ...props }) => (
   </p>
 )
 
-const subject = css({
+const subjectStyle = {
   color: '#8c8c8c',
   display: 'inline',
   margin: 0,
@@ -74,13 +74,28 @@ const subject = css({
   [mUp]: {
     ...styles.sansSerifRegular23,
     lineHeight: '27px'
+  },
+  '&::after': {
+    content: " "
+  }
+}
+
+const subject = css({
+  ...subjectStyle
+})
+
+const subjectWithChildren = css({
+  ...subjectStyle,
+  paddingRight: '.2em',
+  '&::after': {
+    content: " "
   }
 })
 
 export const Subject = ({ children, attributes, ...props }) => {
-  const style = { paddingRight: (children && children.length > 0 ? '.5em': undefined)}
+  const style = children && children.length > 0 ? subjectWithChildren : subject
   return (
-    <h2 {...attributes} {...props} {...subject} style={style}>
+    <h2 {...attributes} {...props} {...style}>
       {children}
     </h2>
   )
