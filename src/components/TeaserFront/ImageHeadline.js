@@ -14,7 +14,10 @@ const baseSize = {
 
 const styles = {
   base: css({
-    margin: '0 0 30px 0'
+    margin: '0 0 15px 0',
+    [mUp]: {
+      marginBottom: '30px'
+    }
   }),
   editorial: css({
     ...serifTitle58
