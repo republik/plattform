@@ -1,5 +1,7 @@
 import React from 'react'
 
+import colors from '../../theme/colors'
+import { FormatTag } from '../../components/Format'
 import TitleBlock from '../../components/TitleBlock'
 import * as Interaction from '../../components/Typography/Interaction'
 
@@ -88,6 +90,20 @@ const createSchema = ({
         }
       ]
     },
+    previewTeaser: props => (
+      <div
+        style={{
+          backgroundColor: '#fff',
+          padding: '30px'
+        }}
+      >
+        <FormatTag
+          label={props.title}
+          count={17}
+          color={props.color ? props.color : props.kind ? colors[props.kind] : undefined}
+        />
+      </div>
+    ),
     ...args
   })
 }

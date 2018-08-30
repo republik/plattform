@@ -75,6 +75,9 @@ export {
   TeaserFrontCreditLink
 } from './components/TeaserFront'
 export {
+  FormatTag
+} from './components/Format'
+export {
   TeaserFrontDossier,
   TeaserFrontDossierIntro,
   TeaserFrontDossierHeadline,

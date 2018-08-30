@@ -114,6 +114,14 @@ ReactDOM.render(
             src: require('./components/Button/docs.md')
           },
           {
+            path: '/format',
+            title: 'FormatTag',
+            imports: {
+              ...require('./components/Format')
+            },
+            src: require('./components/Format/docs.md')
+          },
+          {
             path: '/forms',
             title: 'Forms',
             imports: {

@@ -584,7 +584,8 @@ const createSchema = ({
   Link = DefaultLink,
   getPath = getDatePath,
   t = () => '',
-  dynamicComponentRequire
+  dynamicComponentRequire,
+  previewTeaser
 } = {}) => {
   const teasers = createTeasers({
     t,
@@ -610,19 +611,16 @@ const createSchema = ({
             editorOptions: {
               series,
               customFields: customMetaFields,
-              teaser: props => (
+              teaser: previewTeaser || (props => (
                 <div
                   style={{
                     backgroundColor: '#fff',
                     padding: '30px 30px 1px'
                   }}
                 >
-                  <TeaserFeed
-                    {...props}
-                    color={props.color ? props.color : props.kind ? colors[props.kind] : undefined}
-                  />
+                  <TeaserFeed {...props} />
                 </div>
-              )
+              ))
             }
           },
           cover,
