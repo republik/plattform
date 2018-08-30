@@ -85,7 +85,10 @@ const runOnce = (...args) => {
   if (SEARCH_PG_LISTENER) {
     require('@orbiting/backend-modules-search').notifyListener.run()
   }
-  require('@orbiting/backend-modules-access').accessScheduler.init()
+
+  require('@orbiting/backend-modules-access')
+    .accessScheduler
+    .init({ mail })
 }
 
 const close = () => {

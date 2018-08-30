@@ -2,7 +2,7 @@ const debug = require('debug')('access:mutation:revokeAccess')
 
 const grantsLib = require('../../../lib/grants')
 
-module.exports = async (_, args, { req, pgdb, t }) => {
+module.exports = async (_, args, { req, pgdb, t, mail }) => {
   const { id } = args
   const { user } = req
 
@@ -11,7 +11,7 @@ module.exports = async (_, args, { req, pgdb, t }) => {
   const transaction = await pgdb.transactionBegin()
 
   try {
-    const result = await grantsLib.revoke(id, user, t, transaction)
+    const result = await grantsLib.revoke(id, user, t, transaction, mail)
     await transaction.transactionCommit()
 
     debug('commit', { id, user: user.id })

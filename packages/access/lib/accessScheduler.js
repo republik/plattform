@@ -7,19 +7,27 @@ const eventsLib = require('./events')
 const grantsLib = require('./grants')
 const membershipsLib = require('./memberships')
 
-const matchGrants = async (pgdb) => {
+const matchGrants = async (pgdb, mail) => {
   for (const grant of await grantsLib.findUnassigned(pgdb)) {
     const user = await pgdb.public.users.findOne({ email: grant.email })
 
     if (user) {
       await grantsLib.setRecipient(grant, user, pgdb)
       await eventsLib.log(grant, 'matched', pgdb)
-      await membershipsLib.addMemberRole(grant, user, pgdb)
+      const hasRoleChanged =
+        await membershipsLib.addMemberRole(grant, user, pgdb)
+
+      if (hasRoleChanged) {
+        await mail.enforceSubscriptions({
+          userId: user.id,
+          pgdb
+        })
+      }
     }
   }
 }
 
-const expireGrants = async (pgdb) => {
+const expireGrants = async (pgdb, mail) => {
   for (const grant of await grantsLib.findExpired(pgdb)) {
     await grantsLib.renderInvalid(grant, pgdb)
     await eventsLib.log(grant, 'expired', pgdb)
@@ -29,13 +37,25 @@ const expireGrants = async (pgdb) => {
         await pgdb.public.users.findOne({ id: grant.recipientUserId })
 
       if (user) {
-        await membershipsLib.removeMemberRole(grant, user, pgdb)
+        const hasRoleChanged = await membershipsLib.removeMemberRole(
+          grant,
+          user,
+          grantsLib.findByRecipient,
+          pgdb
+        )
+
+        if (hasRoleChanged) {
+          await mail.enforceSubscriptions({
+            userId: user.id,
+            pgdb
+          })
+        }
       }
     }
   }
 }
 
-const init = async () => {
+const init = async ({ mail }) => {
   debug('init')
 
   const pgdb = await PgDb.connect()
@@ -43,8 +63,8 @@ const init = async () => {
   const run = async () => {
     debug('run')
 
-    await matchGrants(pgdb)
-    await expireGrants(pgdb)
+    await matchGrants(pgdb, mail)
+    await expireGrants(pgdb, mail)
   }
 
   const job = new cron.CronJob({

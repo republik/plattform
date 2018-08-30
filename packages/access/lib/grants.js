@@ -84,7 +84,7 @@ const grant = async (grantee, campaignId, email, t, pgdb) => {
   return grant
 }
 
-const revoke = async (id, grantee, t, pgdb) => {
+const revoke = async (id, grantee, t, pgdb, mail) => {
   const grant = await pgdb.public.accessGrants.findOne({ id })
   const isInvalidated = await renderInvalid(grant, pgdb)
 
@@ -96,12 +96,19 @@ const revoke = async (id, grantee, t, pgdb) => {
         await pgdb.public.users.findOne({ id: grant.recipientUserId })
 
       if (user) {
-        await membershipsLib.removeMemberRole(
+        const hasRoleChanged = await membershipsLib.removeMemberRole(
           grant,
           user,
           findByRecipient,
           pgdb
         )
+
+        if (hasRoleChanged) {
+          await mail.enforceSubscriptions({
+            userId: user.id,
+            pgdb
+          })
+        }
       }
     }
   }

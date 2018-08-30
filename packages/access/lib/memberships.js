@@ -42,9 +42,13 @@ const addMemberRole = async (grant, user, pgdb) => {
     await eventsLib.log(grant, 'role.add', pgdb)
 
     debug('role "member" was missing, added', user.id)
+
+    return true
   } else {
     await eventsLib.log(grant, 'role.present', pgdb)
   }
+
+  return false
 }
 
 const removeMemberRole = async (grant, user, findFn, pgdb) => {
@@ -65,9 +69,13 @@ const removeMemberRole = async (grant, user, findFn, pgdb) => {
     await eventsLib.log(grant, 'role.remove', pgdb)
 
     debug('role "member" unwarranted, removing', user.id)
+
+    return true
   } else {
     await eventsLib.log(grant, 'role.keep', pgdb)
   }
+
+  return false
 }
 
 module.exports = {
