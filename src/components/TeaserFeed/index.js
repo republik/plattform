@@ -61,10 +61,20 @@ export const TeaserFeed = ({
     : formatMeta.kind === 'scribble' || metaKind === 'scribble'
       ? Headlines.Scribble
       : Headlines.Editorial
+  const borderColor = formatMeta.title
+    ? (formatMeta.color || colors[formatMeta.kind])
+    : template === 'format'
+      ? (metaColor || colors[metaKind])
+      : undefined
+  const titleColor = metaColor
+    ? metaColor
+    : template === 'format'
+      ? borderColor
+      : undefined
 
   return (
-    <Container format={format} color={(formatMeta.title ? (formatMeta.color || colors[formatMeta.kind]) : undefined)} Link={Link}>
-      <Headline style={{color: metaColor}}>
+    <Container format={format} color={borderColor} Link={Link}>
+      <Headline style={{color: titleColor}}>
         <Link href={path} passHref>
           <a {...styles.link} href={path}>{title}</a>
         </Link>
