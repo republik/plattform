@@ -1,8 +1,12 @@
+const debug = require('debug')('crowdfundings:lib:Mail')
+
+const { grants } = require('@orbiting/backend-modules-access')
 const { createMail } = require('@orbiting/backend-modules-mail')
 const {
   MAILCHIMP_INTEREST_PLEDGE,
   MAILCHIMP_INTEREST_MEMBER,
   MAILCHIMP_INTEREST_MEMBER_BENEFACTOR,
+  MAILCHIMP_INTEREST_GRANTED_ACCESS,
   MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
   MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
   MAILCHIMP_INTEREST_NEWSLETTER_FEUILLETON,
@@ -56,14 +60,29 @@ const getInterestsForUser = async ({
     membershipTypeId: membershipTypeBenefactor.id
   })) : false
 
+  const user = !!userId && await pgdb.public.users.findOne({ id: userId })
+  const accessGrants = !!user && await grants.findByRecipient(user, pgdb)
+  const hasGrantedAccess = !!user && !!accessGrants && accessGrants.length > 0
+
+  debug({
+    hasPledge,
+    hasMembership,
+    isBenefactor,
+    hasGrantedAccess
+  })
+
   // Update the membership type interests on mailchimp
   const interests = {
     [MAILCHIMP_INTEREST_PLEDGE]: hasPledge,
     [MAILCHIMP_INTEREST_MEMBER]: hasMembership,
-    [MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: isBenefactor
+    [MAILCHIMP_INTEREST_MEMBER_BENEFACTOR]: isBenefactor,
+    [MAILCHIMP_INTEREST_GRANTED_ACCESS]: hasGrantedAccess
   }
 
-  if (subscribeToEditorialNewsletters && hasMembership) {
+  if (
+    subscribeToEditorialNewsletters &&
+    (hasMembership || hasGrantedAccess)
+  ) {
     // Autosubscribe all newsletters when new user just paid the membersh.
     interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = true
     interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] = true
