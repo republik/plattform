@@ -42,29 +42,7 @@ const matchGrants = async (pgdb, mail) => {
 
 const expireGrants = async (pgdb, mail) => {
   for (const grant of await grantsLib.findExpired(pgdb)) {
-    await grantsLib.renderInvalid(grant, pgdb)
-    await eventsLib.log(grant, 'expired', pgdb)
-
-    if (grant.recipientUserId) {
-      const user =
-        await pgdb.public.users.findOne({ id: grant.recipientUserId })
-
-      if (user) {
-        const hasRoleChanged = await membershipsLib.removeMemberRole(
-          grant,
-          user,
-          grantsLib.findByRecipient,
-          pgdb
-        )
-
-        if (hasRoleChanged) {
-          await mail.enforceSubscriptions({
-            userId: user.id,
-            pgdb
-          })
-        }
-      }
-    }
+    await grantsLib.renderInvalid(grant, 'expired', pgdb, mail)
   }
 }
 

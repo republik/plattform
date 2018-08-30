@@ -86,34 +86,8 @@ const grant = async (grantee, campaignId, email, t, pgdb) => {
 
 const revoke = async (id, grantee, t, pgdb, mail) => {
   const grant = await pgdb.public.accessGrants.findOne({ id })
-  const isInvalidated = await renderInvalid(grant, pgdb)
 
-  if (isInvalidated) {
-    eventsLib.log(grant, 'revoke', pgdb)
-
-    if (grant.recipientUserId) {
-      const user =
-        await pgdb.public.users.findOne({ id: grant.recipientUserId })
-
-      if (user) {
-        const hasRoleChanged = await membershipsLib.removeMemberRole(
-          grant,
-          user,
-          findByRecipient,
-          pgdb
-        )
-
-        if (hasRoleChanged) {
-          await mail.enforceSubscriptions({
-            userId: user.id,
-            pgdb
-          })
-        }
-      }
-    }
-  }
-
-  return isInvalidated
+  return renderInvalid(grant, 'revoked', pgdb, mail)
 }
 
 const findByGrantee = async (grantee, campaign, pgdb) => {
@@ -169,14 +143,41 @@ const setRecipient = async (grant, recipient, pgdb) => {
   return result > 0
 }
 
-const renderInvalid = async (grant, pgdb) => {
+const renderInvalid = async (grant, reason, pgdb, mail) => {
   const result = await pgdb.public.accessGrants.update(
     { id: grant.id, invalidatedAt: null },
     { invalidatedAt: moment(), updatedAt: moment() }
   )
 
+  await eventsLib.log(grant, `invalidated.${reason}`, pgdb)
+
+  if (grant.recipientUserId) {
+    const user =
+      await pgdb.public.users.findOne({ id: grant.recipientUserId })
+
+    if (user) {
+      console.log(findByRecipient)
+
+      const hasRoleChanged = await membershipsLib.removeMemberRole(
+        grant,
+        user,
+        findByRecipient,
+        pgdb
+      )
+
+      if (hasRoleChanged) {
+        await mail.enforceSubscriptions({
+          userId: user.id,
+          pgdb
+        })
+      }
+    }
+  }
+
   debug('renderInvalid', {
     id: grant.id,
+    reason,
+    hasRecipient: !!grant.recipientUserId,
     invalidatedAt: moment(),
     updatedAt: moment(),
     result
