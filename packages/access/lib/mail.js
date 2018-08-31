@@ -51,22 +51,6 @@ const sendRecipientOnboarding = async (grantee, campaign, grant, t, pgdb) => {
   return mail
 }
 
-const sendGranteeConfirmation = async (grantee, campaign, grant, t, pgdb) => {
-  debug('sendGranteeConfirmation')
-
-  const mail = await sendMailTemplate({
-    to: grantee.email,
-    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-    subject: t('api/email/access/grantee/confirmation/subject'),
-    templateName: 'access_grantee_confirmation',
-    globalMergeVars: getGlobalMergeVars(grantee, campaign, grant)
-  })
-
-  await eventsLib.log(grant, 'email.grantee.confirmation', pgdb)
-
-  return mail
-}
-
 const sendRecipientExpirationNotice = async (grantee, campaign, grant, t, pgdb) => {
   debug('sendRecipientExpirationNotice')
 
@@ -99,22 +83,6 @@ const sendRecipientExpired = async (grantee, campaign, grant, t, pgdb) => {
   return mail
 }
 
-const sendGranteeExpired = async (grantee, campaign, grant, t, pgdb) => {
-  debug('sendGranteeExpired')
-
-  const mail = await sendMailTemplate({
-    to: grant.email,
-    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-    subject: t('api/email/access/grantee/expired/subject'),
-    templateName: 'access_grantee_expired',
-    globalMergeVars: getGlobalMergeVars(grantee, campaign, grant)
-  })
-
-  await eventsLib.log(grant, 'email.grantee.expired', pgdb)
-
-  return mail
-}
-
 const sendRecipientFollowup = async (grantee, campaign, grant, t, pgdb) => {
   debug('sendRecipientFollowup')
 
@@ -134,14 +102,12 @@ const sendRecipientFollowup = async (grantee, campaign, grant, t, pgdb) => {
 module.exports = {
   // Onboarding
   sendRecipientOnboarding,
-  sendGranteeConfirmation,
 
   // Expiration Notice
   sendRecipientExpirationNotice,
 
   // Offboarding when access expired
   sendRecipientExpired,
-  sendGranteeExpired,
 
   // Followup after access expired
   sendRecipientFollowup

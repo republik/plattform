@@ -1,7 +1,6 @@
 const debug = require('debug')('access:lib:grants')
 const moment = require('moment')
 const validator = require('validator')
-const Promise = require('bluebird')
 
 const campaignsLib = require('./campaigns')
 const constraints = require('./constraints')
@@ -76,10 +75,7 @@ const grant = async (grantee, campaignId, email, t, pgdb) => {
 
   debug('grant, row inserted', { grant })
 
-  await Promise.all([
-    mailLib.sendRecipientOnboarding(grantee, campaign, grant, t, pgdb),
-    mailLib.sendGranteeConfirmation(grantee, campaign, grant, t, pgdb)
-  ])
+  await mailLib.sendRecipientOnboarding(grantee, campaign, grant, t, pgdb)
 
   return grant
 }
