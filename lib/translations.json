@@ -2020,6 +2020,10 @@
       "value": "Republik – Das tägliche Update"
     },
     {
+      "key": "account/newsletterSubscriptions/FEUILLETON/label",
+      "value": "Republik – Das Feuilleton"
+    },
+    {
       "key": "account/newsletterSubscriptions/WEEKLY/label",
       "value": "Republik – Der Wochenüberblick"
     },
