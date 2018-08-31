@@ -131,6 +131,7 @@ enum Badge {
 enum NewsletterName {
   DAILY
   WEEKLY
+  FEUILLETON
   PROJECTR
 }
 
