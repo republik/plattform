@@ -1,3 +1,4 @@
+const debug = require('debug')('mail:lib:sendMailTemplate')
 const sleep = require('await-sleep')
 const checkEnv = require('check-env')
 const MandrillInterface = require('../MandrillInterface')
@@ -12,9 +13,11 @@ const {
   DEFAULT_MAIL_FROM_ADDRESS,
   DEFAULT_MAIL_FROM_NAME,
   NODE_ENV,
+  SEND_MAILS_TAGS,
   SEND_MAILS,
   SEND_MAILS_DOMAIN_FILTER,
-  SEND_MAILS_REGEX_FILTERS
+  SEND_MAILS_REGEX_FILTERS,
+  SEND_MAILS_CATCHALL
 } = process.env
 
 // usage
@@ -37,7 +40,8 @@ module.exports = async (mail) => {
     from_email: mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS,
     from_name: mail.fromName || DEFAULT_MAIL_FROM_NAME,
     global_merge_vars: mail.globalMergeVars,
-    auto_text: true
+    auto_text: true,
+    tags: SEND_MAILS_TAGS.split(',')
   }
 
   // don't send in dev, expect SEND_MAILS is true
@@ -71,6 +75,14 @@ module.exports = async (mail) => {
     }
   }
 
+  if (SEND_MAILS_CATCHALL) {
+    message.to = [{email: SEND_MAILS_CATCHALL, name: mail.to}]
+  }
+
+  debug(message)
+
   const mandrill = MandrillInterface({ logger })
-  return mandrill.send(message, mail.templateName, [])
+  const mandrillSend = await mandrill.send(message, mail.templateName, [])
+  console.log(mandrillSend)
+  return mandrillSend
 }
