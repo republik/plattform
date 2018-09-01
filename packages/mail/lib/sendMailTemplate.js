@@ -34,6 +34,12 @@ const {
 // })
 module.exports = async (mail) => {
   // sanitize
+  const tags = []
+
+  if (SEND_MAILS_TAGS) {
+    tags.concat(SEND_MAILS_TAGS.split(','))
+  }
+
   const message = {
     to: [{email: mail.to}],
     subject: mail.subject,
@@ -41,7 +47,7 @@ module.exports = async (mail) => {
     from_name: mail.fromName || DEFAULT_MAIL_FROM_NAME,
     global_merge_vars: mail.globalMergeVars,
     auto_text: true,
-    tags: SEND_MAILS_TAGS.split(',')
+    tags
   }
 
   // don't send in dev, expect SEND_MAILS is true
@@ -82,7 +88,5 @@ module.exports = async (mail) => {
   debug(message)
 
   const mandrill = MandrillInterface({ logger })
-  const mandrillSend = await mandrill.send(message, mail.templateName, [])
-  console.log(mandrillSend)
-  return mandrillSend
+  return mandrill.send(message, mail.templateName, [])
 }
