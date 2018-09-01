@@ -7,7 +7,7 @@ const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: redirections } = require('@orbiting/backend-modules-redirections')
 const { graphql: search } = require('@orbiting/backend-modules-search')
 const { graphql: notifications } = require('@orbiting/backend-modules-notifications')
-const { graphql: access } = require('@orbiting/backend-modules-access')
+const { accessScheduler, graphql: access } = require('@orbiting/backend-modules-access')
 
 const sendPendingPledgeConfirmations = require('./modules/crowdfundings/lib/sendPendingPledgeConfirmations')
 const mail = require('./modules/crowdfundings/lib/Mail')
@@ -56,7 +56,9 @@ const run = async (workerId) => {
   // signin hooks
   const signInHooks = [
     async (userId, isNew, pgdb) =>
-      sendPendingPledgeConfirmations(userId, pgdb, t)
+      sendPendingPledgeConfirmations(userId, pgdb, t),
+    (userId, isNew, pgdb) =>
+      accessScheduler.signInHook(userId, isNew, pgdb, mail)
   ]
 
   const createGraphQLContext = (defaultContext) => ({
@@ -85,10 +87,7 @@ const runOnce = (...args) => {
   if (SEARCH_PG_LISTENER) {
     require('@orbiting/backend-modules-search').notifyListener.run()
   }
-
-  require('@orbiting/backend-modules-access')
-    .accessScheduler
-    .init({ mail })
+  accessScheduler.init({ mail })
 }
 
 const close = () => {

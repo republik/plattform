@@ -118,6 +118,15 @@ const findUnassigned = async (pgdb) => pgdb.public.accessGrants.find({
   invalidatedAt: null
 })
 
+const findUnassignedByEmail = async (email, pgdb) =>
+  pgdb.public.accessGrants.find({
+    email,
+    recipientUserId: null,
+    'beginAt <=': moment(),
+    'endAt >': moment(),
+    invalidatedAt: null
+  })
+
 const findExpired = async (pgdb) => pgdb.public.accessGrants.find({
   'endAt <': moment(),
   invalidatedAt: null
@@ -191,6 +200,7 @@ module.exports = {
   findByRecipient,
 
   findUnassigned,
+  findUnassignedByEmail,
   findExpired,
 
   setRecipient,
