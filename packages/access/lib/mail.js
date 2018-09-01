@@ -1,102 +1,109 @@
 const debug = require('debug')('access:lib:mail')
-const moment = require('moment')
 
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { timeFormat } = require('@orbiting/backend-modules-formats')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 
+const campaignsLib = require('./campaigns')
+const membershipsLib = require('./memberships')
 const eventsLib = require('./events')
 
 const dateFormat = timeFormat('%x')
 
-const getGlobalMergeVars = (grantee, campaign, grant) => {
-  return [
-    { name: 'GRANT_END',
-      content: dateFormat(grant.endAt)
-    },
-    { name: 'GRANTEE_NAME',
-      content: transformUser(grantee).name
-    },
-    { name: 'GRANTEE_EMAIL',
-      content: transformUser(grantee).email
-    },
-    { name: 'RECIPIENT_EMAIL',
-      content: grant.email
-    },
-    { name: 'CAMPAIGN_TITLE',
-      content: campaign.title
-    },
-    { name: 'CAMPAIGN_END',
-      content: dateFormat(campaign.endAt)
-    },
-    { name: 'HAS_CAMPAIGN_ENDED',
-      content: grant.endAt < moment()
-    }
-  ]
-}
+const { FRONTEND_BASE_URL } = process.env
 
 const sendRecipientOnboarding = async (grantee, campaign, grant, t, pgdb) => {
   debug('sendRecipientOnboarding')
 
-  const mail = await sendMailTemplate({
-    to: grant.email,
-    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-    subject: t('api/email/access/recpient/onboarding/subject'),
-    templateName: 'access_recipient_onboarding',
-    globalMergeVars: getGlobalMergeVars(grantee, campaign, grant)
-  })
+  const recipient = await pgdb.public.users.findOne({ email: grant.email })
 
-  await eventsLib.log(grant, 'email.recipient.onboarding', pgdb)
-
-  return mail
+  return sendMail(
+    grant.email,
+    'recipient',
+    'onboarding',
+    {
+      grantee,
+      recipient,
+      campaign,
+      grant,
+      t,
+      pgdb
+    }
+  )
 }
 
-const sendRecipientExpirationNotice = async (grantee, campaign, grant, t, pgdb) => {
+const sendRecipientExpirationNotice = async (
+  grantee, campaign, grant, t, pgdb
+) => {
   debug('sendRecipientExpirationNotice')
 
-  const mail = await sendMailTemplate({
-    to: grant.email,
-    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-    subject: t('api/email/access/recipient/expirationNotice/subject'),
-    templateName: 'access_recipient_expiration_notice',
-    globalMergeVars: getGlobalMergeVars(grantee, campaign, grant)
-  })
+  const recipient = await pgdb.public.users.findOne({ email: grant.email })
 
-  await eventsLib.log(grant, 'email.recipient.expirationNotice', pgdb)
+  if (recipient) {
+    return sendMail(
+      recipient.email,
+      'recipient',
+      'expiration_notice',
+      {
+        grantee,
+        recipient,
+        campaign,
+        grant,
+        t,
+        pgdb
+      }
+    )
+  }
 
-  return mail
+  return false
 }
 
 const sendRecipientExpired = async (grantee, campaign, grant, t, pgdb) => {
   debug('sendRecipientExpired')
 
-  const mail = sendMailTemplate({
-    to: grant.email,
-    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-    subject: t('api/email/access/recipient/expired/subject'),
-    templateName: 'access_recipient_expired',
-    globalMergeVars: getGlobalMergeVars(grantee, campaign, grant)
-  })
+  const recipient = await pgdb.public.users.findOne({ email: grant.email })
 
-  await eventsLib.log(grant, 'email.recipient.expired', pgdb)
+  if (recipient) {
+    return sendMail(
+      recipient.email,
+      'recipient',
+      'expired',
+      {
+        grantee,
+        recipient,
+        campaign,
+        grant,
+        t,
+        pgdb
+      }
+    )
+  }
 
-  return mail
+  return false
 }
 
 const sendRecipientFollowup = async (grantee, campaign, grant, t, pgdb) => {
   debug('sendRecipientFollowup')
 
-  const mail = await sendMailTemplate({
-    to: grant.email,
-    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
-    subject: t('api/email/access/recipient/followup/subject'),
-    templateName: 'access_recipient_followup',
-    globalMergeVars: getGlobalMergeVars(grantee, campaign, grant)
-  })
+  const recipient = await pgdb.public.users.findOne({ email: grant.email })
 
-  await eventsLib.log(grant, 'email.recipient.followup', pgdb)
+  if (recipient) {
+    return sendMail(
+      recipient.email,
+      'recipient',
+      'followup',
+      {
+        grantee,
+        recipient,
+        campaign,
+        grant,
+        t,
+        pgdb
+      }
+    )
+  }
 
-  return mail
+  return false
 }
 
 module.exports = {
@@ -111,4 +118,124 @@ module.exports = {
 
   // Followup after access expired
   sendRecipientFollowup
+}
+
+const sendMail = async (
+  to,
+  party,
+  template,
+  {
+    grantee,
+    recipient,
+    campaign,
+    grant,
+    t,
+    pgdb
+  }
+) => {
+  const mail = await sendMailTemplate({
+    to,
+    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+    subject: t(
+      `api/access/email/${party}/${template}/subject`,
+      getTranslationVars(grantee)
+    ),
+    templateName: `access_${party}_${template}`,
+    globalMergeVars: await getGlobalMergeVars(
+      grantee,
+      recipient,
+      campaign,
+      grant,
+      t,
+      pgdb
+    )
+  })
+
+  await eventsLib.log(grant, `email.${party}.${template}`, pgdb)
+
+  return mail
+}
+
+const getHumanInterval = (interval, t) =>
+  Object
+    .keys(interval)
+    .map(unit => {
+      return t.pluralize(
+        `api/access/period/${unit}`,
+        { count: interval[unit] }
+      )
+    })
+    .join(` ${t('api/access/period/join')} `)
+    .trim()
+
+const getTranslationVars = (grantee) => {
+  const safeGrantee = transformUser(grantee)
+
+  return {
+    granteeName: safeGrantee.name || safeGrantee.email
+  }
+}
+
+const getGlobalMergeVars = async (
+  grantee, recipient, campaign, grant, t, pgdb
+) => {
+  const safeGrantee = transformUser(grantee)
+  const recipientCampaigns =
+    !!recipient && await campaignsLib.findForGrantee(recipient, pgdb)
+  const recipientHasMemberships =
+    !!recipient && await membershipsLib.hasUserActiveMembership(recipient, pgdb)
+
+  return [
+    // Grant
+    { name: 'GRANT_BEGIN',
+      content: dateFormat(grant.beginAt)
+    },
+    { name: 'GRANT_END',
+      content: dateFormat(grant.endAt)
+    },
+
+    // Grantee
+    { name: 'GRANTEE_NAME',
+      content: safeGrantee.name || safeGrantee.email
+    },
+    { name: 'GRANTEE_EMAIL',
+      content: safeGrantee.email
+    },
+
+    // Recipient
+    { name: 'RECIPIENT_EMAIL',
+      content: grant.email
+    },
+    { name: 'RECIPIENT_HAS_MEMBERSHIPS',
+      content: !!recipient && recipientHasMemberships
+    },
+    { name: 'RECIPIENT_HAS_CAMPAIGNS',
+      content:
+        !!recipient &&
+        !!recipientCampaigns &&
+        recipientCampaigns.length > 0
+    },
+
+    // Campaign
+    { name: 'CAMPAIGN_TITLE',
+      content: campaign.title
+    },
+    { name: 'CAMPAIGN_BEGIN',
+      content: dateFormat(campaign.beginAt)
+    },
+    { name: 'CAMPAIGN_END',
+      content: dateFormat(campaign.endAt)
+    },
+    { name: 'CAMPAIGN_PERIOD',
+      content: getHumanInterval(campaign.periodInterval, t)
+    },
+
+    // Links
+    { name: 'LINK_SIGNIN',
+      content: `${FRONTEND_BASE_URL}/anmelden`
+    },
+    { name: 'LINK_ACCOUNT_SHARE',
+      content: `${FRONTEND_BASE_URL}/konto#teilen`
+    }
+  ]
 }
