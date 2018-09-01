@@ -1,5 +1,5 @@
 {
-  "updated": "2018-08-22T15:35:55.027Z",
+  "updated": "2018-09-01T17:36:52.546Z",
   "title": "live",
   "data": [
     {
@@ -353,6 +353,82 @@
     {
       "key": "api/search/aggs/kind/scribble",
       "value": "Ameisen"
+    },
+    {
+      "key": "api/access/period/seconds/1",
+      "value": "eine Sekunde"
+    },
+    {
+      "key": "api/access/period/seconds/other",
+      "value": "{count} Sekunden"
+    },
+    {
+      "key": "api/access/period/minutes/1",
+      "value": "eine Minute"
+    },
+    {
+      "key": "api/access/period/minutes/other",
+      "value": "{count} Minuten"
+    },
+    {
+      "key": "api/access/period/hours/1",
+      "value": "eine Stunde"
+    },
+    {
+      "key": "api/access/period/hours/other",
+      "value": "{count} Stunden"
+    },
+    {
+      "key": "api/access/period/days/1",
+      "value": "einen Tag"
+    },
+    {
+      "key": "api/access/period/days/other",
+      "value": "{count} Tage"
+    },
+    {
+      "key": "api/access/period/weeks/1",
+      "value": "eine Woche"
+    },
+    {
+      "key": "api/access/period/weeks/other",
+      "value": "{count} Wochen"
+    },
+    {
+      "key": "api/access/period/months/1",
+      "value": "eine Woche"
+    },
+    {
+      "key": "api/access/period/months/other",
+      "value": "{count} Wochen"
+    },
+    {
+      "key": "api/access/period/years/1",
+      "value": "ein Jahr"
+    },
+    {
+      "key": "api/access/period/years/other",
+      "value": "{count} Jahre"
+    },
+    {
+      "key": "api/access/period/join",
+      "value": "und"
+    },
+    {
+      "key": "api/access/email/recipient/onboarding/subject",
+      "value": "Einladung zur Expedition von {granteeName}"
+    },
+    {
+      "key": "api/access/email/recipient/expiration_notice/subject",
+      "value": "Zugriff läuft bald ab"
+    },
+    {
+      "key": "api/access/email/recipient/expired/subject",
+      "value": "Zugriff abgelaufen"
+    },
+    {
+      "key": "api/access/email/recipient/followup/subject",
+      "value": "Zugriff gefiel?"
     }
   ]
 }
