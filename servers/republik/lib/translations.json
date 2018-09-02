@@ -1,5 +1,5 @@
 {
-  "updated": "2018-09-02T09:31:49.396Z",
+  "updated": "2018-09-02T12:01:08.181Z",
   "title": "live",
   "data": [
     {
@@ -416,7 +416,7 @@
     },
     {
       "key": "api/access/email/recipient/onboarding/subject",
-      "value": "Einladung zur Expedition von {granteeName}"
+      "value": "Einladung von {granteeName}"
     },
     {
       "key": "api/access/email/recipient/expiration_notice/subject",
