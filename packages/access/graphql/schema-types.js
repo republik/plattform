@@ -4,12 +4,12 @@ extend type User {
   """
   List of memberships a User was granted
   """
-  accessGrants: [AccessGrant]
+  accessGrants: [AccessGrant!]
 
   """
   List of granted memberships by User
   """
-  accessCampaigns: [AccessCampaign]
+  accessCampaigns: [AccessCampaign!]
 }
 
 """
@@ -17,9 +17,9 @@ Entity describing ability and terms of granting a membership
 """
 type AccessCampaign {
   id: ID!
-  title: String!,
-  description: String,
-  grants: [AccessGrant]!
+  title: String!
+  description: String
+  grants: [AccessGrant!]!
   slots: AccessCampaignSlots
 }
 
@@ -31,14 +31,16 @@ type AccessGrant {
   "Campaign this membership grant belongs to"
   campaign: AccessCampaign!
   "Entity who granted membership"
-  grantee: AccessGrantGrantee!
+  grantee: User
+  "Name or email address of entity who granted membership"
+  granteeName: String!
   """
   Original recipient email address of grant.
   Is eventually matched to a User (see recipient).
   """
   email: String!
   "Entity who received granted membership"
-  recipient: AccessGrantRecipient
+  recipient: User
   "Beginning of sharing period"
   beginAt: DateTime!
   "Ending of sharing period"
@@ -49,9 +51,7 @@ type AccessGrant {
   invalidatedAt: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
-
   isValid: Boolean!
-
   events: [AccessEvent]
 }
 
@@ -72,21 +72,4 @@ type AccessCampaignSlots {
   free: Int!
   used: Int!
 }
-
-# Subject to change
-# Potential leak of sensitive information
-type AccessGrantGrantee {
-  id: String!
-  name: String!
-  email: String!
-}
-
-# Subject to change
-# Potential leak of sensitive information
-type AccessGrantRecipient {
-  id: String!
-  name: String!
-  email: String!
-}
-
 `

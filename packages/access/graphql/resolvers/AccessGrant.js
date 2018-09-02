@@ -1,31 +1,40 @@
 const campaignsLib = require('../../lib/campaigns')
 const eventsLib = require('../../lib/events')
 
+const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
+
 module.exports = {
-  id: (grant) => grant.id,
   campaign: (grant, args, { pgdb }) => campaignsLib.findByGrant(grant, pgdb),
   grantee: async (grant, args, { user: me, pgdb }) => {
-    const user =
+    const grantee =
       await pgdb.public.users.findOne({ id: grant.granteeUserId })
 
-    return user
+    if (!Roles.userIsMeOrInRoles(grantee, me, ['admin', 'supporter'])) {
+      return null
+    }
+
+    return transformUser(grantee)
   },
-  email: (grant) => grant.email,
+  granteeName: async (grant, args, { user: me, pgdb }) => {
+    const grantee =
+      await pgdb.public.users.findOne({ id: grant.granteeUserId })
+
+    const safeUser = transformUser(grantee)
+
+    return safeUser.name || safeUser.email
+  },
   recipient: async (grant, args, { user: me, pgdb }) => {
     if (!grant.recipientUserId) return null
 
-    const user =
+    const recipient =
       await pgdb.public.users.findOne({ id: grant.recipientUserId })
 
-    return user
+    if (!Roles.userIsMeOrInRoles(recipient, me, ['admin', 'supporter'])) {
+      return null
+    }
+
+    return transformUser(recipient)
   },
-  beginAt: (grant) => grant.beginAt,
-  endAt: (grant) => grant.endAt,
-  invalidatedAt: (grant) => grant.invalidatedAt,
-  createdAt: (grant) => grant.createdAt,
-  updatedAt: (grant) => grant.updatedAt,
-
   isValid: (grant) => grant.invalidated !== null,
-
   events: (grant, args, { pgdb }) => eventsLib.findByGrant(grant, pgdb)
 }

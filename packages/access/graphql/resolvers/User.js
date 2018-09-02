@@ -1,6 +1,6 @@
 const debug = require('debug')('access:resolvers:User')
 
-const { Roles } = require('@orbiting/backend-modules-auth')
+const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
 
 const grantsLib = require('../../lib/grants')
 const campaignsLib = require('../../lib/campaigns')
@@ -17,15 +17,17 @@ module.exports = {
       .concat(grants.map(grant => grant.recipientUserId))
 
     const users =
-      grants.length > 0
+      userIds.length > 0
         ? await pgdb.public.users.find({ id: userIds })
         : []
 
     debug('accessGrants', { user: user.id, grants: grants.length, userIds })
 
-    return grants.map(grant => ({...grant, users}))
+    return grants.map(grant => ({
+      ...grant,
+      users: users.map(transformUser)
+    }))
   },
-
   accessCampaigns: async (user, args, { user: me, pgdb }) => {
     if (!Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return null
@@ -35,8 +37,9 @@ module.exports = {
 
     debug('accessCampaigns', { user: user.id, campaigns: campaigns.length })
 
-    return campaigns.map(campaign => {
-      return {...campaign, user}
-    })
+    return campaigns.map(campaign => ({
+      ...campaign,
+      user: transformUser(user)
+    }))
   }
 }
