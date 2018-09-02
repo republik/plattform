@@ -44,7 +44,6 @@ class Events extends Component {
       isExpanded: false
     }
 
-
     this.toggle = (e) => {
       e.preventDefault()
       this.setState({
@@ -58,15 +57,18 @@ class Events extends Component {
     const { isExpanded } = this.state
 
     return (
-      <List>
-        {isExpanded && events.map((event, i) => (
-          <Item key={i}>{getHumanDate(event.createdAt)} {event.event}</Item>
-        ))}
+      <Fragment>
+        <List>
+          {isExpanded && events.map((event, i) => (
+            <Item key={i}>{getHumanDate(event.createdAt)} {event.event}</Item>
+          ))}
+        </List>
         {isExpanded
           ? <A href='#' onClick={this.toggle}>Events ausblenden</A>
           : <A href='#' onClick={this.toggle}>Events anzeigen</A>
         }
-      </List>
+        <br />
+      </Fragment>
     )
   }
 }
@@ -77,7 +79,8 @@ class Grant extends Component {
     this.state = {
       isMutating: false,
       hasMutated: false,
-      mutationError: null
+      mutationError: null,
+      isExpanded: false
     }
 
     this.hasMutated = () => {
@@ -108,22 +111,18 @@ class Grant extends Component {
         .then(this.hasMutated)
         .catch(this.catchMutationError)
     }
+
+    this.toggle = (e) => {
+      e.preventDefault()
+      this.setState({
+        isExpanded: !this.state.isExpanded
+      })
+    }
   }
 
   render() {
-    const { grant, revokeAccess } = this.props
-    const { isMutating, hasMutated, mutationError } = this.state
-
-    if (!mutationError && (isMutating || hasMutated)) {
-      return (
-        <div {...styles.grant}>
-          <Interaction.P>
-            Einen Augenblick. Daten werden aktualisiert...
-          </Interaction.P>
-          <InlineSpinner size={36} />
-        </div>
-      )
-    }
+    const { grant } = this.props
+    const { isMutating, mutationError, isExpanded } = this.state
 
     return (
       <div {...styles.grant}>
@@ -158,28 +157,35 @@ class Grant extends Component {
           </Interaction.P>
         }
 
+        <Interaction.P>
+          <Label>Status</Label>
+          <br />
+          {grant.status}
+        </Interaction.P>
+
         {!grant.recipient && !!grant.email &&
           <Interaction.P>
-            <Label>Empfänger (nicht verknüpft)</Label>
+            <Label>Empfänger (kein Konto gefunden)</Label>
             <br />
             {grant.email}
           </Interaction.P>
         }
 
-        <Interaction.P>
-          <Label>Beginn</Label>
-          <br />
-          {getHumanDate(grant.beginAt)}
-        </Interaction.P>
+        {isExpanded &&
+          <Interaction.P>
+            <Label>Beginn</Label>
+            <br />
+            {getHumanDate(grant.beginAt)}
+          </Interaction.P>
+        }
 
         <Interaction.P>
           <Label>Ende</Label>
           <br />
           {getHumanDate(grant.endAt)}<br />
-          ({getDays(grant.beginAt, grant.endAt)} Tage)
         </Interaction.P>
 
-        {new Date(grant.endAt) > new Date() &&
+        {isExpanded && new Date(grant.endAt) > new Date() &&
           <Interaction.P>
             <Label>verbleibend</Label>
             <br />
@@ -187,7 +193,31 @@ class Grant extends Component {
           </Interaction.P>
         }
 
-        {grant.campaign &&
+        {isExpanded &&
+          <Interaction.P>
+            <Label>erstellt am</Label>
+            <br />
+            {getHumanDate(grant.createdAt)}
+          </Interaction.P>
+        }
+
+        {isExpanded && grant.revokedAt &&
+          <Interaction.P>
+            <Label>zurückgezogen am</Label>
+            <br />
+            {getHumanDate(grant.revokedAt)}
+          </Interaction.P>
+        }
+
+        {isExpanded && grant.invalidatedAt &&
+          <Interaction.P>
+            <Label>für ungültig erklärt am</Label>
+            <br />
+            {getHumanDate(grant.invalidatedAt)}
+          </Interaction.P>
+        }
+
+        {isExpanded && grant.campaign &&
           <Interaction.P>
             <Label>Kampagne</Label>
             <br />
@@ -195,19 +225,21 @@ class Grant extends Component {
           </Interaction.P>
         }
 
-        <Interaction.P>
-          <Label>erstellt am</Label>
-          <br />
-          {getHumanDate(grant.createdAt)}
-        </Interaction.P>
+        {isExpanded
+          ? <A href='#' onClick={this.toggle}>Details ausblenden</A>
+          : <A href='#' onClick={this.toggle}>Details anzeigen</A>
+        }
 
         <Events events={grant.events} />
         <Label>Grant ID: {grant.id}</Label>
 
-        {revokeAccess && grant.isValid &&
+        {!grant.revokedAt && !grant.invalidatedAt &&
           <Fragment>
             <HR />
-            <Button onClick={this.onClick}>Entziehen</Button>
+            {isMutating
+              ? <InlineSpinner />
+              : <Button onClick={this.onClick}>Zurückziehen</Button>
+            }
           </Fragment>
         }
       </div>
@@ -217,9 +249,11 @@ class Grant extends Component {
 
 const Slots = ({ slots }) => {
   return (
-    <Interaction.P>
-      Total: {slots.total}, Vergeben: {slots.used}, Frei: {slots.free}
-    </Interaction.P>
+    <List>
+      <Item>{slots.free} freie Plätze</Item>
+      <Item>{slots.used} vergebene Plätze</Item>
+      <Item>{slots.total} Plätze insgesamt</Item>
+    </List>
   )
 }
 

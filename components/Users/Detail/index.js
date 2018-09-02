@@ -651,10 +651,12 @@ const userQuery = gql`
       }
       accessGrants {
         id
+        status
         createdAt
         beginAt
         endAt
-        isValid
+        revokedAt
+        invalidatedAt
         grantee {
           id
           email
@@ -677,12 +679,14 @@ const userQuery = gql`
           free
           used
         }
-        grants {
+        grants(withRevoked: true) {
           id
+          status
           createdAt
           beginAt
           endAt
-          isValid
+          revokedAt
+          invalidatedAt
           email
           recipient {
             id
