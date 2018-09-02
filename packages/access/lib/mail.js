@@ -236,6 +236,12 @@ const getGlobalMergeVars = async (
     },
     { name: 'LINK_ACCOUNT_SHARE',
       content: `${FRONTEND_BASE_URL}/konto#teilen`
+    },
+    { name: 'LINK_OFFERS',
+      content: `${FRONTEND_BASE_URL}/angebote?package=ABO`
+    },
+    { name: 'LINK_PROJECTR',
+      content: 'https://project-r.construction/'
     }
   ]
 }
