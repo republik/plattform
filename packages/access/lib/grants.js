@@ -2,6 +2,8 @@ const debug = require('debug')('access:lib:grants')
 const moment = require('moment')
 const validator = require('validator')
 
+const { Roles } = require('@orbiting/backend-modules-auth')
+
 const campaignsLib = require('./campaigns')
 const constraints = require('./constraints')
 const eventsLib = require('./events')
@@ -92,10 +94,20 @@ const grant = async (grantee, campaignId, email, t, pgdb) => {
   return grant
 }
 
-const revoke = async (id, grantee, t, pgdb, mail) => {
+const revoke = async (id, user, t, pgdb, mail) => {
   const grant = await pgdb.public.accessGrants.findOne({ id })
+  const grantee = await pgdb.public.users.findOne({ id: grant.granteeUserId })
 
-  return invalidate(grant, 'revoked', pgdb, mail)
+  if (!Roles.userIsMeOrInRoles(grantee, user, ['admin', 'supporter'])) {
+    throw new Error(t('api/access/revoke/role/error'))
+  }
+
+  return invalidate(
+    grant,
+    grantee.id !== user.id ? 'revoke.admin' : 'revoke.user',
+    pgdb,
+    mail
+  )
 }
 
 const invalidate = async (grant, reason, pgdb, mail) => {

@@ -1,5 +1,5 @@
 {
-  "updated": "2018-09-02T08:25:58.213Z",
+  "updated": "2018-09-02T09:31:49.396Z",
   "title": "live",
   "data": [
     {
@@ -437,6 +437,10 @@
     {
       "key": "api/access/grant/campaign/error",
       "value": "Kampagne «{campaignId}» nicht gefunden."
+    },
+    {
+      "key": "api/access/revoke/role/error",
+      "value": "Sie besitzen nicht die erforderliche Berechtigung."
     },
     {
       "key": "api/access/constraint/limitSlots/error",

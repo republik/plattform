@@ -2,16 +2,14 @@ const debug = require('debug')('access:mutation:grantAccess')
 
 const grantsLib = require('../../../lib/grants')
 
-module.exports = async (_, args, { req, t, pgdb }) => {
-  const { campaignId, email } = args
-  const { user } = req
-
+module.exports = async (_, { campaignId, email }, { user, t, pgdb }) => {
   debug('begin', { campaignId, email, user: user.id })
 
   const transaction = await pgdb.transactionBegin()
 
   try {
-    const result = await grantsLib.grant(user, campaignId, email, t, transaction)
+    const result =
+      await grantsLib.grant(user, campaignId, email, t, transaction)
     await transaction.transactionCommit()
 
     debug('commit', { campaignId, email, user: user.id })
