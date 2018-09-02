@@ -36,6 +36,16 @@ module.exports = {
 
     return transformUser(recipient)
   },
-  isValid: (grant) => grant.invalidated !== null,
+  status: (grant, args, { t }) => {
+    if (grant.invalidatedAt) {
+      return t('api/access/resolvers/AccessGrant/status/invalidated')
+    }
+
+    if (grant.revokedAt) {
+      return t('api/access/resolvers/AccessGrant/status/revoked')
+    }
+
+    return t('api/access/resolvers/AccessGrant/status/valid')
+  },
   events: (grant, args, { pgdb }) => eventsLib.findByGrant(grant, pgdb)
 }

@@ -116,7 +116,7 @@ const match = async (grant, pgdb, mail) => {
   }
 }
 
-const revoke = async (id, user, t, pgdb, mail) => {
+const revoke = async (id, user, t, pgdb) => {
   const grant = await pgdb.public.accessGrants.findOne({ id })
   const grantee = await pgdb.public.users.findOne({ id: grant.granteeUserId })
 
@@ -124,12 +124,20 @@ const revoke = async (id, user, t, pgdb, mail) => {
     throw new Error(t('api/access/revoke/role/error'))
   }
 
-  return invalidate(
-    grant,
-    grantee.id !== user.id ? 'revoke.admin' : 'revoke.user',
-    pgdb,
-    mail
+  const result = await pgdb.public.accessGrants.update(
+    { id: grant.id, revokedAt: null, invalidatedAt: null },
+    { revokedAt: moment(), updatedAt: moment() }
   )
+
+  await eventsLib.log(
+    grant,
+    grantee.id !== user.id ? 'revoked.admin' : 'revoked.user',
+    pgdb
+  )
+
+  debug('revoke', { grant })
+
+  return result
 }
 
 const invalidate = async (grant, reason, pgdb, mail) => {
@@ -175,17 +183,41 @@ const invalidate = async (grant, reason, pgdb, mail) => {
   return result > 0
 }
 
-const findByGrantee = async (grantee, campaign, pgdb) => {
-  const grants =
-    await pgdb.public.accessGrants.find({
-      granteeUserId: grantee.id,
-      accessCampaignId: campaign.id,
-      'beginAt <=': moment(),
-      'endAt >': moment(),
-      invalidatedAt: null
-    })
+const findByGrantee = async (
+  grantee,
+  campaign,
+  withRevoked,
+  withInvalidated,
+  pgdb
+) => {
+  const query = {
+    granteeUserId: grantee.id,
+    accessCampaignId: campaign.id,
+    'beginAt <=': moment(),
+    'endAt >': moment(),
+    revokedAt: null,
+    invalidatedAt: null
+  }
 
-  return grants
+  if (withRevoked) {
+    query['beginAt <='] = undefined
+    query['endAt >'] = undefined
+    query.revokedAt = undefined
+  }
+
+  if (withInvalidated) {
+    query['beginAt <='] = undefined
+    query['endAt >'] = undefined
+    query.invalidatedAt = undefined
+  }
+
+  return pgdb.public.accessGrants.find(
+    query,
+    {
+      orderBy: { createdAt: 'asc' },
+      skipUndefined: true
+    }
+  )
 }
 
 const findByRecipient = async (recipient, pgdb) => {

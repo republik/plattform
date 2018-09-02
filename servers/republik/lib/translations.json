@@ -1,5 +1,5 @@
 {
-  "updated": "2018-09-02T15:54:06.501Z",
+  "updated": "2018-09-02T18:21:39.699Z",
   "title": "live",
   "data": [
     {
@@ -451,6 +451,10 @@
       "value": "Sie können keine weiteren Plätze vergeben."
     },
     {
+      "key": "api/access/constraint/limitRevokedSlots/error",
+      "value": "Sie können derzeit keine mehr Plätze vergeben."
+    },
+    {
       "key": "api/access/constraint/notGrantable/error",
       "value": "Sie können derzeit keinen Zugriff teilen."
     },
@@ -477,6 +481,18 @@
     {
       "key": "api/access/constraint/granteeBlacklist/error",
       "value": "Sie können derzeit keinen Zugriff teilen, da Ihr Konto auf einer schwarzen Liste aufgeführt ist."
+    },
+    {
+      "key": "api/access/resolvers/AccessGrant/status/invalidated",
+      "value": "nicht mehr gültig"
+    },
+    {
+      "key": "api/access/resolvers/AccessGrant/status/revoked",
+      "value": "gültig, aber zurückgezogen"
+    },
+    {
+      "key": "api/access/resolvers/AccessGrant/status/valid",
+      "value": "gültig"
     },
     {
       "key": "api/access/resolvers/AccessGrant/tallDarkStranger",

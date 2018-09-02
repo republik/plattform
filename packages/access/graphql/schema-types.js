@@ -19,7 +19,12 @@ type AccessCampaign {
   id: ID!
   title: String!
   description: String
-  grants: [AccessGrant!]!
+  grants(
+    "Include grants with were revoked (admin only)"
+    withRevoked: Boolean
+    "Include grants with were invalidated (admin only)"
+    withInvalidated: Boolean
+  ): [AccessGrant!]!
   slots: AccessCampaignSlots
 }
 
@@ -46,12 +51,16 @@ type AccessGrant {
   "Ending of sharing period"
   endAt: DateTime!
   """
-  Date when grant was rendered invalid.
+  Date when grant was revoked
+  """
+  revokedAt: DateTime
+  """
+  Date when grant was rendered invalid
   """
   invalidatedAt: DateTime
+  status: String!
   createdAt: DateTime!
   updatedAt: DateTime!
-  isValid: Boolean!
   events: [AccessEvent]
 }
 

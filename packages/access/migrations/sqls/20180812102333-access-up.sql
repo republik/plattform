@@ -21,6 +21,7 @@ CREATE TABLE "accessGrants" (
     "recipientUserId" uuid REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     "beginAt" timestamp with time zone NOT NULL,
     "endAt" timestamp with time zone NOT NULL,
+    "revokedAt" timestamp with time zone,
     "invalidatedAt" timestamp with time zone,
     "createdAt" timestamp with time zone NOT NULL DEFAULT now(),
     "updatedAt" timestamp with time zone NOT NULL DEFAULT now(),

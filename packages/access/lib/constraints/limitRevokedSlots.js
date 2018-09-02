@@ -1,12 +1,12 @@
-const debug = require('debug')('access:lib:constraints:limitSlots')
+const debug = require('debug')('access:lib:constraints:limitRevokedSlots')
 
 /**
- * Constraint limits available slots. If all slots are used, contraint will
- * fail.
+ * Constraint limits revoked slots. If all slots are used, contraint will fail.
  *
- * Story: There is only a limited amount of slots that can be shared.
+ * Story: There is only a limited amount of slots can be revoked to prevent
+ * "infitiy and beyond" usage
  *
- * @example: {"limitSlots": {"slots": 2}}
+ * @example: {"limitRevokedSlots": {"slots": 4}}
  */
 
 const getSlots = async (
@@ -24,7 +24,7 @@ const getSlots = async (
       "accessGrants"."accessCampaignId" = '${campaign.id}'
       AND "accessGrants"."granteeUserId" = '${grantee.id}'
       AND "accessGrants"."endAt" >= NOW()
-      AND "accessGrants"."revokedAt" IS NULL
+      AND "accessGrants"."revokedAt" IS NOT NULL
       AND "accessGrants"."invalidatedAt" IS NULL
   `)
 
@@ -53,17 +53,11 @@ const isGrantable = async (args, context) => {
   return slots.free > 0
 }
 
-const getMeta = async (args, context) => {
-  const slots = await getSlots(args, context)
-
-  return {
-    visible: true,
-    grantable: await isGrantable(args, context),
-    payload: {
-      slots
-    }
-  }
-}
+const getMeta = async (args, context) => ({
+  visible: true,
+  grantable: await isGrantable(args, context),
+  payload: {}
+})
 
 module.exports = {
   isGrantable,
