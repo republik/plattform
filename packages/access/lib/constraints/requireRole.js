@@ -2,6 +2,15 @@ const debug = require('debug')('access:lib:constraints:requireRole')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
 
+/**
+ * Checks if user has role set in settings.role. If not, contraint will fail.
+ * Constraint will hinder display of campaign.
+ *
+ * Story: Only users with a certain role should be able to grant access.
+ *
+ * @example: {"requireRole": {"role": "editor"}}
+ */
+
 const isGrantable = async (args, context) => {
   const { grantee, settings } = args
 

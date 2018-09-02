@@ -1,5 +1,16 @@
 const debug = require('debug')('access:lib:constraints:requirePackage')
 
+/**
+ * Constraint checks if grantee has an active package which resulted in a
+ * membership. If not contraint will fail. Contraint will hinder display of
+ * campaign.
+ *
+ * Story: Only users which bought a certain, stil active package can grant
+ * access to others.
+ *
+ * @example: {"requirePackage": {"packages": ["ABO", "BENEFACTOR"]}}
+ */
+
 const hasValidMembership = async ({ grantee, settings }, { pgdb }) => {
   const packages = settings.packages.map(pkg => `'${pkg}'`).join(', ')
 

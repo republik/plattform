@@ -1,3 +1,9 @@
+/**
+ * Dummy constraint. Contraint always fail.
+ *
+ * @example: {"notGrantable": {}}
+ */
+
 const isGrantable = () => false
 
 const getMeta = () => ({

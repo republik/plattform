@@ -1,5 +1,14 @@
 const debug = require('debug')('access:lib:constraints:limitSlots')
 
+/**
+ * Constraint limits available slots. If all slots are used, contraint will
+ * fail.
+ *
+ * Story: There is only a limited amount of slots that can be shared.
+ *
+ * @example: {"limitSlots": {"slots": 2}}
+ */
+
 const getSlots = async (
   { settings, grantee, campaign },
   { pgdb }

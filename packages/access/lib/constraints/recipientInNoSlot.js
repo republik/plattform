@@ -1,5 +1,15 @@
 const debug = require('debug')('access:lib:constraints:recipientInNoSlot')
 
+/**
+ * Contraint checks if recipient's email address is in a slot already. If so,
+ * contraint will fail.
+ *
+ * Story: An access grant recipient's email address should be unique per
+ * campaign.
+ *
+ * @example: {"recipientNotInSlot": {}}
+ */
+
 const isGrantable = async (args, context) => {
   const { email, grantee, campaign } = args
   const { pgdb } = context
