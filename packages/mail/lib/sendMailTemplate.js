@@ -66,7 +66,7 @@ module.exports = async (mail) => {
   }
 
   if (SEND_MAILS_REGEX_FILTERS) {
-    const filters = SEND_MAILS_REGEX_FILTERS.split(';')
+    const filters = SEND_MAILS_REGEX_FILTERS.split(';').filter(Boolean)
 
     const hasMatchedFilter = filters.some(filter => {
       const pattern = new RegExp(`${filter}`)
