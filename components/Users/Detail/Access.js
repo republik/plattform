@@ -67,10 +67,10 @@ class Events extends Component {
         </List>
         {isExpanded
           ? <A href='#' onClick={this.toggle}>
-            {t('account/access/Events/details/show')}
+            {t('account/access/Events/details/hide')}
           </A>
           : <A href='#' onClick={this.toggle}>
-            {t('account/access/Events/details/hide')}
+            {t('account/access/Events/details/show')}
           </A>
         }
         <br />
@@ -241,10 +241,10 @@ class Grant extends Component {
 
         {isExpanded
           ? <A href='#' onClick={this.toggle}>
-            {t('account/access/Grant/details/show')}
+            {t('account/access/Grant/details/hide')}
           </A>
           : <A href='#' onClick={this.toggle}>
-            {t('account/access/Grant/details/hide')}
+            {t('account/access/Grant/details/show')}
           </A>
         }
 
