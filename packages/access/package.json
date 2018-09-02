@@ -1,0 +1,28 @@
+{
+  "name": "@orbiting/backend-modules-access",
+  "version": "0.0.1",
+  "description": "Handles ability to share memberships with others",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Patrick Venetz <patrick.venetz@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "scripts": {
+    "link": "yarn link"
+  },
+  "dependencies": {
+    "debug": "^3.1.0",
+    "export-files": "^2.1.1",
+    "moment": "^2.22.2",
+    "redlock": "^3.1.2"
+  }
+}

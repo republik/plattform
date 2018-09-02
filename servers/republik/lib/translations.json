@@ -1,5 +1,5 @@
 {
-  "updated": "2018-08-22T15:35:55.027Z",
+  "updated": "2018-09-02T18:21:39.699Z",
   "title": "live",
   "data": [
     {
@@ -353,6 +353,150 @@
     {
       "key": "api/search/aggs/kind/scribble",
       "value": "Ameisen"
+    },
+    {
+      "key": "api/access/period/seconds/1",
+      "value": "eine Sekunde"
+    },
+    {
+      "key": "api/access/period/seconds/other",
+      "value": "{count} Sekunden"
+    },
+    {
+      "key": "api/access/period/minutes/1",
+      "value": "eine Minute"
+    },
+    {
+      "key": "api/access/period/minutes/other",
+      "value": "{count} Minuten"
+    },
+    {
+      "key": "api/access/period/hours/1",
+      "value": "eine Stunde"
+    },
+    {
+      "key": "api/access/period/hours/other",
+      "value": "{count} Stunden"
+    },
+    {
+      "key": "api/access/period/days/1",
+      "value": "einen Tag"
+    },
+    {
+      "key": "api/access/period/days/other",
+      "value": "{count} Tage"
+    },
+    {
+      "key": "api/access/period/weeks/1",
+      "value": "eine Woche"
+    },
+    {
+      "key": "api/access/period/weeks/other",
+      "value": "{count} Wochen"
+    },
+    {
+      "key": "api/access/period/months/1",
+      "value": "eine Woche"
+    },
+    {
+      "key": "api/access/period/months/other",
+      "value": "{count} Wochen"
+    },
+    {
+      "key": "api/access/period/years/1",
+      "value": "ein Jahr"
+    },
+    {
+      "key": "api/access/period/years/other",
+      "value": "{count} Jahre"
+    },
+    {
+      "key": "api/access/period/join",
+      "value": "und"
+    },
+    {
+      "key": "api/access/email/recipient/tallDarkStranger",
+      "value": "Unbekannt"
+    },
+    {
+      "key": "api/access/email/recipient/onboarding/subject",
+      "value": "Einladung von {granteeName}"
+    },
+    {
+      "key": "api/access/email/recipient/expiration_notice/subject",
+      "value": "Zugriff läuft bald ab"
+    },
+    {
+      "key": "api/access/email/recipient/expired/subject",
+      "value": "Zugriff abgelaufen"
+    },
+    {
+      "key": "api/access/email/recipient/followup/subject",
+      "value": "Zugriff gefiel?"
+    },
+    {
+      "key": "api/access/grant/email/error",
+      "value": "Wir konnten «{email}» nicht als keine gültige E-Mail-Adresse erkennen."
+    },
+    {
+      "key": "api/access/grant/campaign/error",
+      "value": "Kampagne «{campaignId}» nicht gefunden."
+    },
+    {
+      "key": "api/access/revoke/role/error",
+      "value": "Sie besitzen nicht die erforderliche Berechtigung."
+    },
+    {
+      "key": "api/access/constraint/limitSlots/error",
+      "value": "Sie können keine weiteren Plätze vergeben."
+    },
+    {
+      "key": "api/access/constraint/limitRevokedSlots/error",
+      "value": "Sie können derzeit keine mehr Plätze vergeben."
+    },
+    {
+      "key": "api/access/constraint/notGrantable/error",
+      "value": "Sie können derzeit keinen Zugriff teilen."
+    },
+    {
+      "key": "api/access/constraint/recipientInNoSlot/error",
+      "value": "«{email}» erhielt bereits einen Zugriff."
+    },
+    {
+      "key": "api/access/constraint/recipientNotGrantee/error",
+      "value": "Sie können sich selbst keinen Zugriff teilen."
+    },
+    {
+      "key": "api/access/constraint/requirePackage/error",
+      "value": "Sie benötigen ein bestimmtes Abonnement oder Mitgliedschaft um den Zugriff zu teilen."
+    },
+    {
+      "key": "api/access/constraint/requireRole/error",
+      "value": "Sie benötigen die Rolle «{role}» um den Zugriff zu teilen."
+    },
+    {
+      "key": "api/access/constraint/recipientBlacklist/error",
+      "value": "Sie können «{email}» keinen Zugriff teilen, da die E-Mail-Adresse auf einer schwarzen Liste aufgeführt ist."
+    },
+    {
+      "key": "api/access/constraint/granteeBlacklist/error",
+      "value": "Sie können derzeit keinen Zugriff teilen, da Ihr Konto auf einer schwarzen Liste aufgeführt ist."
+    },
+    {
+      "key": "api/access/resolvers/AccessGrant/status/invalidated",
+      "value": "nicht mehr gültig"
+    },
+    {
+      "key": "api/access/resolvers/AccessGrant/status/revoked",
+      "value": "gültig, aber zurückgezogen"
+    },
+    {
+      "key": "api/access/resolvers/AccessGrant/status/valid",
+      "value": "gültig"
+    },
+    {
+      "key": "api/access/resolvers/AccessGrant/tallDarkStranger",
+      "value": "Unbekannt"
     }
   ]
 }

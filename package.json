@@ -3,10 +3,9 @@
   "description": "Backends used to power Republik",
   "author": "Patrick Recher <patrick.recher@republik.ch>",
   "license": "AGPL-3.0",
-  "version": "0.0.0-development",
+  "version": "1.0.0",
   "engines": {
-    "node": "10.x",
-    "yarn": "1.7.x"
+    "node": "10.x"
   },
   "private": true,
   "main": "index.js",

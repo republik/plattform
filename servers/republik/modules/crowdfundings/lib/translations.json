@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-26T12:11:42.419Z",
+  "updated": "2018-08-09T10:04:28.835Z",
   "title": "live",
   "data": [
     {
@@ -248,11 +248,51 @@
     },
     {
       "key": "api/email/invalid",
-      "value": "E-Mail ungültig"
+      "value": "E-Mail-Adresse ungültig"
     },
     {
       "key": "api/users/delete/claimedMembershipsNotSupported",
       "value": "User, welche eine Membership eingelöst habe können zurzeit nicht gelöscht werden. Bitte wenden Sie sich an die IT."
+    },
+    {
+      "key": "api/payment/invoice/vat",
+      "value": "inkl. MWST-Satz {value}%"
+    },
+    {
+      "key": "api/payment/invoice/item/package/MONTHLY_ABO",
+      "value": "Monats-Abonnement"
+    },
+    {
+      "key": "api/payment/invoice/item/package/BENEFACTOR",
+      "value": "Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "api/payment/invoice/item/package/ABO",
+      "value": "Abo und Mitgliedschaft für ein Jahr"
+    },
+    {
+      "key": "api/payment/invoice/item/package/ABO_GIVE",
+      "value": "Verschenken \"Abo und Mitgliedschaft für ein Jahr\""
+    },
+    {
+      "key": "api/payment/invoice/item/package/DONATE",
+      "value": "Spende"
+    },
+    {
+      "key": "api/payment/invoice/item/goodie/NOTEBOOK",
+      "value": "Notizbuch"
+    },
+    {
+      "key": "api/payment/invoice/item/goodie/TOTEBAG",
+      "value": "Tasche"
+    },
+    {
+      "key": "api/payment/invoice/item/donation",
+      "value": "Spende"
+    },
+    {
+      "key": "api/payment/invoice/item/discount",
+      "value": "Ermässigung"
     }
   ]
 }
