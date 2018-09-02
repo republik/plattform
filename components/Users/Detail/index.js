@@ -373,6 +373,7 @@ class Detail extends Component {
                 <Access
                   grants={props.data.user.accessGrants}
                   campaigns={props.data.user.accessCampaigns}
+                  revokeAccess={props.revokeAccess}
                 />
               </Tab>
               <Tab
@@ -583,6 +584,14 @@ const emailMutation = gql`
     updateEmail(userId: $id, email: $email) {
       id
     }
+  }
+`
+
+const revokeAccessMutation = gql`
+  mutation revokeAccess(
+    $id: ID!
+  ) {
+    revokeAccess(id: $id)
   }
 `
 
@@ -1046,6 +1055,28 @@ const WrappedUser = compose(
       ownProps: { params: { userId } }
     }) => ({
       cancelPledge: variables => {
+        if (mutate) {
+          return mutate({
+            variables,
+            refetchQueries: [
+              {
+                query: userQuery,
+                variables: {
+                  id: userId
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
+  }),
+  graphql(revokeAccessMutation, {
+    props: ({
+      mutate,
+      ownProps: { params: { userId } }
+    }) => ({
+      revokeAccess: variables => {
         if (mutate) {
           return mutate({
             variables,

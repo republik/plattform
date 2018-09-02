@@ -8,11 +8,13 @@ import {
   colors,
   Button,
   Interaction,
+  InlineSpinner,
   Label,
   HR,
   A
 } from '@project-r/styleguide'
 
+import ErrorMessage from '../../ErrorMessage'
 import List, { Item } from '../../List'
 import routes from '../../../server/routes'
 
@@ -69,87 +71,145 @@ class Events extends Component {
   }
 }
 
-const Grant = ({ grant }) => (
-  <div {...styles.grant}>
-    {grant.grantee &&
-      <Interaction.P>
-        <Label>Spender</Label>
-        <br />
-        <Link
-          route='user'
-          params={{userId: grant.grantee.id}}>
-          {`${grant.grantee.name} (${grant.grantee.email})`}
-        </Link>
-      </Interaction.P>
+class Grant extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      isMutating: false,
+      hasMutated: false,
+      mutationError: null
     }
 
-    {grant.recipient &&
-      <Interaction.P>
-        <Label>Empfänger</Label>
-        <br />
-        <Link
-          route='user'
-          params={{userId: grant.recipient.id}}>
-          {`${grant.recipient.name} (${grant.recipient.email})`}
-        </Link>
-      </Interaction.P>
+    this.hasMutated = () => {
+      this.setState({
+        isMutating: false,
+        hasMutated: true
+      })
     }
 
-    {!grant.recipient && !!grant.email &&
-      <Interaction.P>
-        <Label>Empfänger (nicht verknüpft)</Label>
-        <br />
-        {grant.email}
-      </Interaction.P>
+    this.catchMutationError = error => {
+      this.setState({
+        isMutating: false,
+        mutationError: error
+      })
     }
 
-    <Interaction.P>
-      <Label>Beginn</Label>
-      <br />
-      {getHumanDate(grant.beginAt)}
-    </Interaction.P>
+    this.onClick = (e) => {
+      e.preventDefault()
 
-    <Interaction.P>
-      <Label>Ende</Label>
-      <br />
-      {getHumanDate(grant.endAt)}<br />
-      ({getDays(grant.beginAt, grant.endAt)} Tage)
-    </Interaction.P>
+      this.setState({
+        isMutating: true,
+        mutationError: null
+      })
 
-    {new Date(grant.endAt) > new Date() &&
-      <Interaction.P>
-        <Label>verbleibend</Label>
-        <br />
-        {getDays(new Date(), grant.endAt)} Tage
-      </Interaction.P>
+      return this.props.revokeAccess({
+        id: this.props.grant.id
+      })
+        .then(this.hasMutated)
+        .catch(this.catchMutationError)
+    }
+  }
+
+  render() {
+    const { grant, revokeAccess } = this.props
+    const { isMutating, hasMutated, mutationError } = this.state
+
+    if (!mutationError && (isMutating || hasMutated)) {
+      return (
+        <div {...styles.grant}>
+          <Interaction.P>
+            Einen Augenblick. Daten werden aktualisiert...
+          </Interaction.P>
+          <InlineSpinner size={36} />
+        </div>
+      )
     }
 
-    {grant.campaign &&
-      <Interaction.P>
-        <Label>Kampagne</Label>
-        <br />
-        {grant.campaign.title}
-      </Interaction.P>
-    }
+    return (
+      <div {...styles.grant}>
+        {mutationError &&
+          <ErrorMessage error={mutationError} />
+        }
+        {grant.grantee &&
+          <Interaction.P>
+            <Label>Spender</Label>
+            <br />
+            <Link
+              route='user'
+              params={{userId: grant.grantee.id}}>
+              {`${grant.grantee.name} (${grant.grantee.email})`}
+            </Link>
+          </Interaction.P>
+        }
 
-    <Interaction.P>
-      <Label>erstellt am</Label>
-      <br />
-      {getHumanDate(grant.createdAt)}
-    </Interaction.P>
+        {grant.recipient &&
+          <Interaction.P>
+            <Label>Empfänger</Label>
+            <br />
+            <Link
+              route='user'
+              params={{userId: grant.recipient.id}}>
+              {`${grant.recipient.name} (${grant.recipient.email})`}
+            </Link>
+          </Interaction.P>
+        }
 
-    <Events events={grant.events} />
-    <Label>Grant ID: {grant.id}</Label>
+        {!grant.recipient && !!grant.email &&
+          <Interaction.P>
+            <Label>Empfänger (nicht verknüpft)</Label>
+            <br />
+            {grant.email}
+          </Interaction.P>
+        }
 
-    {grant.isValid &&
-      <Fragment>
-        <HR />
-        <Button disabled>Entziehen</Button>
-      </Fragment>
-    }
+        <Interaction.P>
+          <Label>Beginn</Label>
+          <br />
+          {getHumanDate(grant.beginAt)}
+        </Interaction.P>
 
-  </div>
-)
+        <Interaction.P>
+          <Label>Ende</Label>
+          <br />
+          {getHumanDate(grant.endAt)}<br />
+          ({getDays(grant.beginAt, grant.endAt)} Tage)
+        </Interaction.P>
+
+        {new Date(grant.endAt) > new Date() &&
+          <Interaction.P>
+            <Label>verbleibend</Label>
+            <br />
+            {getDays(new Date(), grant.endAt)} Tage
+          </Interaction.P>
+        }
+
+        {grant.campaign &&
+          <Interaction.P>
+            <Label>Kampagne</Label>
+            <br />
+            {grant.campaign.title}
+          </Interaction.P>
+        }
+
+        <Interaction.P>
+          <Label>erstellt am</Label>
+          <br />
+          {getHumanDate(grant.createdAt)}
+        </Interaction.P>
+
+        <Events events={grant.events} />
+        <Label>Grant ID: {grant.id}</Label>
+
+        {revokeAccess && grant.isValid &&
+          <Fragment>
+            <HR />
+            <Button onClick={this.onClick}>Entziehen</Button>
+          </Fragment>
+        }
+      </div>
+    )
+  }
+}
 
 const Slots = ({ slots }) => {
   return (
@@ -160,31 +220,41 @@ const Slots = ({ slots }) => {
 }
 
 
-const Grants = ({ grants }) => (
+const Grants = ({ grants, revokeAccess }) => (
   <Fragment>
     <Interaction.H2 {...styles.heading}>
       Erhaltene Zugriffe
     </Interaction.H2>
     <div {...styles.grants}>
       {grants.length > 0
-        ? grants.map(grant => (<Grant grant={grant} />))
+        ? grants.map(grant => (
+          <Grant
+            key={`grants-${grant.id}`}
+            grant={grant}
+            revokeAccess={revokeAccess} />
+        ))
         : <Interaction.P>keine Zugriffe erhalten</Interaction.P>
       }
     </div>
   </Fragment>
 )
 
-const Campaigns = ({ campaigns }) => (
+const Campaigns = ({ campaigns, revokeAccess }) => (
   <Fragment>
     <Interaction.H2 {...styles.heading}>
       Vergebene Zugriffe
     </Interaction.H2>
     {campaigns.length > 0 && campaigns.map(campaign => (
-      <Fragment>
+      <Fragment key={`camp-${campaign.id}`}>
         <Interaction.H3>Kampagne «{campaign.title}»</Interaction.H3>
         {campaign.slots && <Slots slots={campaign.slots} />}
         <div {...styles.grants}>
-          {campaign.grants.map(grant => (<Grant grant={grant} />))}
+          {campaign.grants.map(grant => (
+            <Grant
+              key={`camp-grants-${grant.id}`}
+              grant={grant}
+              revokeAccess={revokeAccess} />
+          ))}
         </div>
       </Fragment>
     ))}
@@ -194,11 +264,11 @@ const Campaigns = ({ campaigns }) => (
   </Fragment>
 )
 
-const Access = ({ grants, campaigns }) => {
+const Access = ({ grants, campaigns, revokeAccess }) => {
   return (
     <Fragment>
-      <Grants grants={grants} />
-      <Campaigns campaigns={campaigns} />
+      <Grants grants={grants} revokeAccess={revokeAccess} />
+      <Campaigns campaigns={campaigns} revokeAccess={revokeAccess} />
     </Fragment>
   )
 }
