@@ -137,7 +137,9 @@ class Grant extends Component {
             <Link
               route='user'
               params={{userId: grant.grantee.id}}>
-              {`${grant.grantee.name} (${grant.grantee.email})`}
+              <a>
+                {`${grant.grantee.name} (${grant.grantee.email})`}
+              </a>
             </Link>
           </Interaction.P>
         }
@@ -149,7 +151,9 @@ class Grant extends Component {
             <Link
               route='user'
               params={{userId: grant.recipient.id}}>
-              {`${grant.recipient.name} (${grant.recipient.email})`}
+              <a>
+                {`${grant.recipient.name} (${grant.recipient.email})`}
+              </a>
             </Link>
           </Interaction.P>
         }
