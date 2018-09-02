@@ -114,6 +114,6 @@ const matchGrants = async (pgdb, mail) => {
  */
 const expireGrants = async (pgdb, mail) => {
   for (const grant of await grantsLib.findExpired(pgdb)) {
-    await grantsLib.renderInvalid(grant, 'expired', pgdb, mail)
+    await grantsLib.invalidate(grant, 'expired', pgdb, mail)
   }
 }
