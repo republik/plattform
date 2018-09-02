@@ -4,9 +4,7 @@ const debug = require('debug')('access:lib:accessScheduler')
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const redis = require('@orbiting/backend-modules-base/lib/redis')
 
-const eventsLib = require('./events')
 const grantsLib = require('./grants')
-const membershipsLib = require('./memberships')
 
 // Interval in which scheduler runs
 const intervalSecs = 60
@@ -68,7 +66,7 @@ const signInHook = async (userId, isNew, pgdb, mail) => {
   }
 
   for (const grant of grants) {
-    await matchGrant(grant, pgdb, mail)
+    await grantsLib.match(grant, pgdb, mail)
   }
 }
 
@@ -80,32 +78,11 @@ module.exports = {
 const schedulerLock = () => new Redlock([redis])
 
 /**
- * Matches a grant email addresses to a User.
- */
-const matchGrant = async (grant, pgdb, mail) => {
-  const user = await pgdb.public.users.findOne({ email: grant.email })
-
-  if (user) {
-    await grantsLib.setRecipient(grant, user, pgdb)
-    await eventsLib.log(grant, 'matched', pgdb)
-    const hasRoleChanged =
-      await membershipsLib.addMemberRole(grant, user, pgdb)
-
-    if (hasRoleChanged) {
-      await mail.enforceSubscriptions({
-        userId: user.id,
-        pgdb
-      })
-    }
-  }
-}
-
-/**
  * Matches unassignedGrants
  */
 const matchGrants = async (pgdb, mail) => {
   for (const grant of await grantsLib.findUnassigned(pgdb)) {
-    await matchGrant(grant, pgdb, mail)
+    await grantsLib.match(grant, pgdb, mail)
   }
 }
 

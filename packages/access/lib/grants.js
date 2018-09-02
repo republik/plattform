@@ -46,7 +46,7 @@ const evaluateConstraints = async (grantee, campaign, email, t, pgdb) => {
   return { errors }
 }
 
-const grant = async (grantee, campaignId, email, t, pgdb) => {
+const grant = async (grantee, campaignId, email, t, pgdb, mail) => {
   if (!validator.isEmail(email)) {
     throw new Error(t(
       'api/access/grant/email/error',
@@ -91,7 +91,29 @@ const grant = async (grantee, campaignId, email, t, pgdb) => {
 
   await mailLib.sendRecipientOnboarding(grantee, campaign, grant, t, pgdb)
 
+  await match(grant, pgdb, mail)
+
   return grant
+}
+
+const match = async (grant, pgdb, mail) => {
+  const user = await pgdb.public.users.findOne({ email: grant.email })
+
+  if (user) {
+    await setRecipient(grant, user, pgdb)
+    await eventsLib.log(grant, 'match', pgdb)
+    const hasRoleChanged =
+      await membershipsLib.addMemberRole(grant, user, pgdb)
+
+    if (hasRoleChanged) {
+      await mail.enforceSubscriptions({
+        userId: user.id,
+        pgdb
+      })
+    }
+
+    debug('match', { grant })
+  }
 }
 
 const revoke = async (id, user, t, pgdb, mail) => {
@@ -217,6 +239,7 @@ const setRecipient = async (grant, recipient, pgdb) => {
 
 module.exports = {
   grant,
+  match,
   revoke,
   invalidate,
 
