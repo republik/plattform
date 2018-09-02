@@ -8,8 +8,8 @@ const eventsLib = require('./events')
 const mailLib = require('./mail')
 const membershipsLib = require('./memberships')
 
-const isGrantable = async (grantee, campaign, email, pgdb) => {
-  let granted = true
+const evaluateConstraints = async (grantee, campaign, email, t, pgdb) => {
+  const errors = []
 
   for (const constraint of campaign.constraints) {
     const name = Object.keys(constraint).shift()
@@ -19,42 +19,52 @@ const isGrantable = async (grantee, campaign, email, pgdb) => {
       throw new Error(`Unable to evalute contraint "${name}"`)
     }
 
-    const result = await constraints[name].isGrantable(
+    const valid = await constraints[name].isGrantable(
       { settings, grantee, email, campaign },
       { pgdb }
     )
 
-    debug('isGrantable', {
+    debug('evaluateConstraints', {
       name: campaign.name,
       constraint: name,
       settings,
-      result
+      valid
     })
 
-    if (!result) {
-      granted = false
-      break
+    if (!valid) {
+      errors.push(t(
+        `api/access/constraint/${name}/error`,
+        { ...settings, email }
+      ))
     }
   }
 
-  debug('granted', granted)
+  debug({ errors })
 
-  return granted
+  return { errors }
 }
 
 const grant = async (grantee, campaignId, email, t, pgdb) => {
   if (!validator.isEmail(email)) {
-    throw new Error(`Email address "${email}" is invalid`)
+    throw new Error(t(
+      'api/access/grant/email/error',
+      { email }
+    ))
   }
 
   const campaign = await campaignsLib.findOne(campaignId, pgdb)
 
   if (campaign === undefined) {
-    throw new Error(`campaign "${campaignId}" not found`)
+    throw new Error(t(
+      'api/access/grant/campaign/error',
+      { campaignId }
+    ))
   }
 
-  if (!await isGrantable(grantee, campaign, email, pgdb)) {
-    throw new Error('Unable to grant membership')
+  const result = await evaluateConstraints(grantee, campaign, email, t, pgdb)
+
+  if (result.errors.length > 0) {
+    throw new Error(result.errors.shift())
   }
 
   const endAt = moment()
@@ -62,6 +72,8 @@ const grant = async (grantee, campaignId, email, t, pgdb) => {
   Object.keys(campaign.periodInterval).forEach(key => {
     endAt.add(campaign.periodInterval[key], key)
   })
+
+  // throw new Error('Breakpoint')
 
   const grant = await pgdb.public.accessGrants.insertAndGet({
     granteeUserId: grantee.id,
@@ -192,7 +204,6 @@ const setRecipient = async (grant, recipient, pgdb) => {
 }
 
 module.exports = {
-  isGrantable,
   grant,
   revoke,
   invalidate,

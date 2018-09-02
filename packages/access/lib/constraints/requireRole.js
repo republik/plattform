@@ -28,8 +28,6 @@ const getMeta = async (args, context) => {
     payload: {}
   }
 
-  debug('getMeta', args.campaign.name, meta)
-
   return meta
 }
 

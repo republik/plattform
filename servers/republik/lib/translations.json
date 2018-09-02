@@ -1,5 +1,5 @@
 {
-  "updated": "2018-09-01T17:36:52.546Z",
+  "updated": "2018-09-02T08:25:58.213Z",
   "title": "live",
   "data": [
     {
@@ -429,6 +429,46 @@
     {
       "key": "api/access/email/recipient/followup/subject",
       "value": "Zugriff gefiel?"
+    },
+    {
+      "key": "api/access/grant/email/error",
+      "value": "Wir konnten «{email}» nicht als keine gültige E-Mail-Adresse erkennen."
+    },
+    {
+      "key": "api/access/grant/campaign/error",
+      "value": "Kampagne «{campaignId}» nicht gefunden."
+    },
+    {
+      "key": "api/access/constraint/limitSlots/error",
+      "value": "Sie können keine weiteren Plätze vergeben."
+    },
+    {
+      "key": "api/access/constraint/notGrantable/error",
+      "value": "Sie können derzeit keinen Zugriff teilen."
+    },
+    {
+      "key": "api/access/constraint/recipientInNoSlot/error",
+      "value": "«{email}» erhielt bereits einen Zugriff."
+    },
+    {
+      "key": "api/access/constraint/recipientNotGrantee/error",
+      "value": "Sie können sich selbst keinen Zugriff teilen."
+    },
+    {
+      "key": "api/access/constraint/requirePackage/error",
+      "value": "Sie benötigen ein bestimmtes Abonnement oder Mitgliedschaft um den Zugriff zu teilen."
+    },
+    {
+      "key": "api/access/constraint/requireRole/error",
+      "value": "Sie benötigen die Rolle «{role}» um den Zugriff zu teilen."
+    },
+    {
+      "key": "api/access/constraint/recipientBlacklist/error",
+      "value": "Sie können «{email}» keinen Zugriff teilen, da die E-Mail-Adresse auf einer schwarzen Liste aufgeführt ist."
+    },
+    {
+      "key": "api/access/constraint/granteeBlacklist/error",
+      "value": "Sie können derzeit keinen Zugriff teilen, da Ihr Konto auf einer schwarzen Liste aufgeführt ist."
     }
   ]
 }
