@@ -15,13 +15,14 @@ module.exports = {
 
     return transformUser(grantee)
   },
-  granteeName: async (grant, args, { user: me, pgdb }) => {
+  granteeName: async (grant, args, { user: me, t, pgdb }) => {
     const grantee =
       await pgdb.public.users.findOne({ id: grant.granteeUserId })
 
     const safeUser = transformUser(grantee)
 
-    return safeUser.name || safeUser.email
+    return safeUser.name ||
+      t('api/access/resolvers/AccessGrant/tallDarkStranger')
   },
   recipient: async (grant, args, { user: me, pgdb }) => {
     if (!grant.recipientUserId) return null

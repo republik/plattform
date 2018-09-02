@@ -196,10 +196,8 @@ const getGlobalMergeVars = async (
 
     // Grantee
     { name: 'GRANTEE_NAME',
-      content: safeGrantee.name || safeGrantee.email
-    },
-    { name: 'GRANTEE_EMAIL',
-      content: safeGrantee.email
+      content: safeGrantee.name ||
+        t('api/access/email/recipient/tallDarkStranger')
     },
 
     // Recipient
