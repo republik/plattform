@@ -34,11 +34,9 @@ const {
 // })
 module.exports = async (mail) => {
   // sanitize
-  const tags = []
-
-  if (SEND_MAILS_TAGS) {
-    tags.concat(SEND_MAILS_TAGS.split(','))
-  }
+  const tags = [].concat(
+    SEND_MAILS_TAGS && SEND_MAILS_TAGS.split(',')
+  ).filter(Boolean)
 
   const message = {
     to: [{email: mail.to}],
