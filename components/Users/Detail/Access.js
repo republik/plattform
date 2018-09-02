@@ -27,6 +27,7 @@ const GUTTER = 30
 
 const styles = {
   heading: css({
+    marginTop: 20,
     marginBottom: 20
   }),
   grant: css({
