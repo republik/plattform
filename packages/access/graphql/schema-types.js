@@ -30,7 +30,7 @@ type AccessGrant {
   id: ID!
   "Campaign this membership grant belongs to"
   campaign: AccessCampaign!
-  "Entity who granted membership"
+  "Entity who granted membership (Admin only)"
   grantee: User
   "Name or email address of entity who granted membership"
   granteeName: String!
@@ -39,7 +39,7 @@ type AccessGrant {
   Is eventually matched to a User (see recipient).
   """
   email: String!
-  "Entity who received granted membership"
+  "Entity who received granted membership (Admin only)"
   recipient: User
   "Beginning of sharing period"
   beginAt: DateTime!
