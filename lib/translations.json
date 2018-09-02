@@ -2031,6 +2031,106 @@
       "key":
         "account/newsletterSubscriptions/PROJECTR/label",
       "value": "Project R – Wichtige Updates"
+    },
+    {
+      "key": "account/access/Slots/free",
+      "value": "{count} freie Plätze"
+    },
+    {
+      "key": "account/access/Slots/used",
+      "value": "{count} vergebene Plätze"
+    },
+    {
+      "key": "account/access/Slots/total",
+      "value": "{count} Plätze insgesamt"
+    },
+    {
+      "key": "account/access/Campaigns/title",
+      "value": "Geteilte Zugriffe"
+    },
+    {
+      "key": "account/access/Campaigns/noCampaigns",
+      "value": "keine Kampagnen verfügbar"
+    },
+    {
+      "key": "account/access/Campaigns/campaign/title",
+      "value": "Kampagne «{title}»"
+    },
+    {
+      "key": "account/access/Grants/title",
+      "value": "Erhaltene Zugriffe"
+    },
+    {
+      "key": "account/access/Grants/noGrants",
+      "value": "keine Zugriff erhalten"
+    },
+    {
+      "key": "account/access/Grant/grantee/label",
+      "value": "Spender"
+    },
+    {
+      "key": "account/access/Grant/recipient/label",
+      "value": "Empfänger"
+    },
+    {
+      "key": "account/access/Grant/recipient/unlinked/label",
+      "value": "Empfänger (mit keinem Konto verknüpft)"
+    },
+    {
+      "key": "account/access/Grant/status/label",
+      "value": "Status"
+    },
+    {
+      "key": "account/access/Grant/beginAt/label",
+      "value": "Beginn"
+    },
+    {
+      "key": "account/access/Grant/endAt/label",
+      "value": "Ende"
+    },
+    {
+      "key": "account/access/Grant/remaining/label",
+      "value": "verbleibend"
+    },
+    {
+      "key": "account/access/Grant/createdAt/label",
+      "value": "erstellt am"
+    },
+    {
+      "key": "account/access/Grant/revokedAt/label",
+      "value": "zurückgezogen am"
+    },
+    {
+      "key": "account/access/Grant/invalidatedAt/label",
+      "value": "ungültig seit"
+    },
+    {
+      "key": "account/access/Grant/campaign/label",
+      "value": "Kampagne"
+    },
+    {
+      "key": "account/access/Grant/details/hide",
+      "value": "Details verstecken"
+    },
+    {
+      "key": "account/access/Grant/details/show",
+      "value": "Details anzeigen"
+    },
+    {
+      "key": "account/access/Grant/id/label",
+      "value": "Grant ID"
+    },
+    {
+      "key": "account/access/Grant/button/revoke",
+      "value": "Zurückziehen"
+    },
+    {
+      "key": "account/access/Events/details/hide",
+      "value": "Events verstecken"
+    },
+    {
+      "key": "account/access/Events/details/show",
+      "value": "Events anzeigen"
     }
   ]
 }

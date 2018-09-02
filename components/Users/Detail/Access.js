@@ -1,8 +1,9 @@
 import { Component, Fragment } from 'react'
-
-// import React, { Component } from 'react'
+import { compose } from 'react-apollo'
 import { css } from 'glamor'
 import moment from 'moment'
+
+import withT from '../../../lib/withT'
 
 import {
   colors,
@@ -54,7 +55,7 @@ class Events extends Component {
   }
 
   render() {
-    const { events } = this.props
+    const { events, t } = this.props
     const { isExpanded } = this.state
 
     return (
@@ -65,8 +66,12 @@ class Events extends Component {
           ))}
         </List>
         {isExpanded
-          ? <A href='#' onClick={this.toggle}>Events ausblenden</A>
-          : <A href='#' onClick={this.toggle}>Events anzeigen</A>
+          ? <A href='#' onClick={this.toggle}>
+            {t('account/access/Events/details/show')}
+          </A>
+          : <A href='#' onClick={this.toggle}>
+            {t('account/access/Events/details/hide')}
+          </A>
         }
         <br />
       </Fragment>
@@ -122,8 +127,8 @@ class Grant extends Component {
   }
 
   render() {
-    const { grant } = this.props
-    const { isMutating, mutationError, isExpanded } = this.state
+    const { grant, t } = this.props
+    const { isMutating, hasMutated, mutationError, isExpanded } = this.state
 
     return (
       <div {...styles.grant}>
@@ -132,7 +137,7 @@ class Grant extends Component {
         }
         {grant.grantee &&
           <Interaction.P>
-            <Label>Spender</Label>
+            <Label>{t('account/access/Grant/grantee/label')}</Label>
             <br />
             <Link
               route='user'
@@ -146,7 +151,7 @@ class Grant extends Component {
 
         {grant.recipient &&
           <Interaction.P>
-            <Label>Empfänger</Label>
+            <Label>{t('account/access/Grant/recipient/label')}</Label>
             <br />
             <Link
               route='user'
@@ -158,37 +163,37 @@ class Grant extends Component {
           </Interaction.P>
         }
 
-        <Interaction.P>
-          <Label>Status</Label>
-          <br />
-          {grant.status}
-        </Interaction.P>
-
         {!grant.recipient && !!grant.email &&
           <Interaction.P>
-            <Label>Empfänger (kein Konto gefunden)</Label>
+            <Label>{t('account/access/Grant/recipient/unlinked/label')}</Label>
             <br />
             {grant.email}
           </Interaction.P>
         }
 
+        <Interaction.P>
+          <Label>{t('account/access/Grant/status/label')}</Label>
+          <br />
+          {grant.status}
+        </Interaction.P>
+
         {isExpanded &&
           <Interaction.P>
-            <Label>Beginn</Label>
+            <Label>{t('account/access/Grant/beginAt/label')}</Label>
             <br />
             {getHumanDate(grant.beginAt)}
           </Interaction.P>
         }
 
         <Interaction.P>
-          <Label>Ende</Label>
+          <Label>{t('account/access/Grant/endAt/label')}</Label>
           <br />
           {getHumanDate(grant.endAt)}<br />
         </Interaction.P>
 
         {isExpanded && new Date(grant.endAt) > new Date() &&
           <Interaction.P>
-            <Label>verbleibend</Label>
+            <Label>{t('account/access/Grant/remaining/label')}</Label>
             <br />
             {getDays(new Date(), grant.endAt)} Tage
           </Interaction.P>
@@ -196,7 +201,7 @@ class Grant extends Component {
 
         {isExpanded &&
           <Interaction.P>
-            <Label>erstellt am</Label>
+            <Label>{t('account/access/Grant/createdAt/label')}</Label>
             <br />
             {getHumanDate(grant.createdAt)}
           </Interaction.P>
@@ -204,7 +209,7 @@ class Grant extends Component {
 
         {isExpanded && grant.revokedAt &&
           <Interaction.P>
-            <Label>zurückgezogen am</Label>
+            <Label>{t('account/access/Grant/revokedAt/label')}</Label>
             <br />
             {getHumanDate(grant.revokedAt)}
           </Interaction.P>
@@ -212,7 +217,7 @@ class Grant extends Component {
 
         {isExpanded && grant.invalidatedAt &&
           <Interaction.P>
-            <Label>für ungültig erklärt am</Label>
+            <Label>{t('account/access/Grant/invalidatedAt/label')}</Label>
             <br />
             {getHumanDate(grant.invalidatedAt)}
           </Interaction.P>
@@ -220,26 +225,39 @@ class Grant extends Component {
 
         {isExpanded && grant.campaign &&
           <Interaction.P>
-            <Label>Kampagne</Label>
+            <Label>{t('account/access/Grant/campaign/label')}</Label>
             <br />
             {grant.campaign.title}
           </Interaction.P>
         }
 
-        {isExpanded
-          ? <A href='#' onClick={this.toggle}>Details ausblenden</A>
-          : <A href='#' onClick={this.toggle}>Details anzeigen</A>
+        {isExpanded &&
+          <Interaction.P>
+            <Label>{t('account/access/Grant/id/label')}</Label>
+            <br />
+            {grant.id}
+          </Interaction.P>
         }
 
-        <Events events={grant.events} />
-        <Label>Grant ID: {grant.id}</Label>
+        {isExpanded
+          ? <A href='#' onClick={this.toggle}>
+            {t('account/access/Grant/details/show')}
+          </A>
+          : <A href='#' onClick={this.toggle}>
+            {t('account/access/Grant/details/hide')}
+          </A>
+        }
+
+        <Events events={grant.events} t={t} />
 
         {!grant.revokedAt && !grant.invalidatedAt &&
           <Fragment>
             <HR />
-            {isMutating
+            {isMutating || hasMutated
               ? <InlineSpinner />
-              : <Button onClick={this.onClick}>Zurückziehen</Button>
+              : <Button onClick={this.onClick}>
+                {t('account/access/Grant/button/revoke')}
+              </Button>
             }
           </Fragment>
         }
@@ -248,21 +266,21 @@ class Grant extends Component {
   }
 }
 
-const Slots = ({ slots }) => {
+const Slots = ({ slots, t }) => {
   return (
     <List>
-      <Item>{slots.free} freie Plätze</Item>
-      <Item>{slots.used} vergebene Plätze</Item>
-      <Item>{slots.total} Plätze insgesamt</Item>
+      <Item>{t('account/access/Slots/free', { count: slots.free })}</Item>
+      <Item>{t('account/access/Slots/used', { count: slots.used })}</Item>
+      <Item>{t('account/access/Slots/total', { count: slots.total })}</Item>
     </List>
   )
 }
 
 
-const Grants = ({ grants, revokeAccess }) => (
+const Grants = ({ grants, revokeAccess, t }) => (
   <Fragment>
     <Interaction.H2 {...styles.heading}>
-      Erhaltene Zugriffe
+      {t('account/access/Grants/title')}
     </Interaction.H2>
     <div {...styles.grants}>
       {grants.length > 0
@@ -270,46 +288,57 @@ const Grants = ({ grants, revokeAccess }) => (
           <Grant
             key={`grants-${grant.id}`}
             grant={grant}
-            revokeAccess={revokeAccess} />
+            revokeAccess={revokeAccess}
+            t={t} />
         ))
-        : <Interaction.P>keine Zugriffe erhalten</Interaction.P>
+        : <Interaction.P>
+          {t('account/access/Grants/noGrants')}
+        </Interaction.P>
       }
     </div>
   </Fragment>
 )
 
-const Campaigns = ({ campaigns, revokeAccess }) => (
+const Campaigns = ({ campaigns, revokeAccess, t }) => (
   <Fragment>
     <Interaction.H2 {...styles.heading}>
-      Vergebene Zugriffe
+      {t('account/access/Campaigns/title')}
     </Interaction.H2>
     {campaigns.length > 0 && campaigns.map(campaign => (
       <Fragment key={`camp-${campaign.id}`}>
-        <Interaction.H3>Kampagne «{campaign.title}»</Interaction.H3>
-        {campaign.slots && <Slots slots={campaign.slots} />}
+        <Interaction.H3>
+          {t(
+            'account/access/Campaigns/campaign/title',
+            { title: campaign.title }
+          )}
+        </Interaction.H3>
+        {campaign.slots && <Slots slots={campaign.slots} t={t} />}
         <div {...styles.grants}>
           {campaign.grants.map(grant => (
             <Grant
               key={`camp-grants-${grant.id}`}
               grant={grant}
-              revokeAccess={revokeAccess} />
+              revokeAccess={revokeAccess}
+              t={t} />
           ))}
         </div>
       </Fragment>
     ))}
     {campaigns.length === 0 &&
-      <Interaction.P>keine Kampagnen verfügbar</Interaction.P>
+      <Interaction.P>
+        {t('account/access/Campaigns/noCampaigns')}
+      </Interaction.P>
     }
   </Fragment>
 )
 
-const Access = ({ grants, campaigns, revokeAccess }) => {
+const Access = ({ grants, campaigns, revokeAccess, t }) => {
   return (
     <Fragment>
-      <Grants grants={grants} revokeAccess={revokeAccess} />
-      <Campaigns campaigns={campaigns} revokeAccess={revokeAccess} />
+      <Grants grants={grants} revokeAccess={revokeAccess} t={t} />
+      <Campaigns campaigns={campaigns} revokeAccess={revokeAccess} t={t} />
     </Fragment>
   )
 }
 
-export default Access
+export default compose(withT)(Access)
