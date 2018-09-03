@@ -453,6 +453,7 @@ class AudioPlayer extends Component {
           onLoadedMetadata={this.onLoadedMetaData}
           crossOrigin="anonymous"
           playsInline
+          webkit-playsinline=""
         >
           {src.hls && <source src={src.hls} type="application/x-mpegURL" onError={this.onSourceError} />}
           {src.mp4 && <source src={src.mp4} type="video/mp4" onError={this.onSourceError} />}
