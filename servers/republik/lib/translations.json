@@ -1,5 +1,5 @@
 {
-  "updated": "2018-09-02T18:21:39.699Z",
+  "updated": "2018-09-03T05:09:34.876Z",
   "title": "live",
   "data": [
     {
@@ -396,11 +396,11 @@
     },
     {
       "key": "api/access/period/months/1",
-      "value": "eine Woche"
+      "value": "einen Monat"
     },
     {
       "key": "api/access/period/months/other",
-      "value": "{count} Wochen"
+      "value": "{count} Monate"
     },
     {
       "key": "api/access/period/years/1",
