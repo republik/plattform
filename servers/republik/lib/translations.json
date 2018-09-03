@@ -1,5 +1,5 @@
 {
-  "updated": "2018-09-03T05:09:34.876Z",
+  "updated": "2018-09-03T05:18:54.744Z",
   "title": "live",
   "data": [
     {
@@ -436,7 +436,7 @@
     },
     {
       "key": "api/access/grant/email/error",
-      "value": "Wir konnten «{email}» nicht als keine gültige E-Mail-Adresse erkennen."
+      "value": "Wir konnten «{email}» nicht als gültige E-Mail-Adresse erkennen."
     },
     {
       "key": "api/access/grant/campaign/error",
@@ -452,7 +452,7 @@
     },
     {
       "key": "api/access/constraint/limitRevokedSlots/error",
-      "value": "Sie können derzeit keine mehr Plätze vergeben."
+      "value": "Sie können derzeit keine Plätze mehr ergeben."
     },
     {
       "key": "api/access/constraint/notGrantable/error",
