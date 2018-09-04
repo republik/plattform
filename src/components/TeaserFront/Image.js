@@ -83,7 +83,12 @@ const ImageBlock = ({
         </FigureByline>}
       </div>
       {!onlyImage && <div {...(feuilleton ? styles.textContainerFeuilleton : styles.textContainer)}>
-        <Text position={textPosition} color={color} collapsedColor={feuilleton && colors.text} center={center} feuilleton={feuilleton}>
+        <Text
+          position={textPosition}
+          color={color}
+          collapsedColor={feuilleton && colors.text}
+          center={center}
+          feuilleton={feuilleton}>
           {children}
         </Text>
       </div>}
