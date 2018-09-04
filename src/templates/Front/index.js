@@ -234,6 +234,7 @@ const createSchema = ({
         'color',
         'bgColor',
         'center',
+        'kind',
         'titleSize',
         'image',
         'byline',
