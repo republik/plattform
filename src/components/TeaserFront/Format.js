@@ -20,7 +20,7 @@ const format = css({
 const Format = ({ children, color, collapsedColor }) => {
   const labColor = lab(color)
   const labCollapsedColor = lab(collapsedColor || color)
-  const colorStyle = color && css({
+  const mixColorStyle = collapsedColor && css({
     color: labCollapsedColor.l > 50
       ? labCollapsedColor.darker(0.6)
       : labCollapsedColor.brighter(3.0),
@@ -30,7 +30,7 @@ const Format = ({ children, color, collapsedColor }) => {
   })
 
   return (
-    <p {...format} {...(colorStyle ? colorStyle : undefined)}>
+    <p {...format} {...(mixColorStyle ? mixColorStyle : undefined)} style={!mixColorStyle ? {color} : undefined}>
       {children}
     </p>
   )
