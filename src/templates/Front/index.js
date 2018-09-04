@@ -194,8 +194,8 @@ const createSchema = ({
         href: teaser
           ? teaser.data.formatUrl
           : undefined,
-        color: teaser && teaser.data.feuilleton && teaser.data.color,
-        collapsedColor: teaser && teaser.data.feuilleton && '#000'
+        color: teaser && teaser.data.feuilleton ? (teaser.data.color || colors.feuilleton) : undefined,
+        collapsedColor: teaser && teaser.data.feuilleton ? '#000' : undefined
       }
     },
     editorModule: 'headline',
