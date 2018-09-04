@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
-import { tUp } from './mediaQueries'
+import { mUp, tUp } from './mediaQueries'
 import colors from '../../theme/colors'
 
 const TEXT_PADDING = 50
@@ -83,6 +83,15 @@ const styles = {
       ...positionFullWidth,
       bottom: `${TEXT_PADDING}px`
     }
+  }),
+  center: css({
+    textAlign: 'center'
+  }),
+  centerMobileOnly: css({
+    textAlign: 'center',
+    [mUp]: {
+      textAlign: 'inherit'
+    }
   })
 }
 
@@ -94,9 +103,12 @@ const Text = ({
   color,
   collapsedColor,
   maxWidth,
-  margin
+  margin,
+  feuilleton
 }) => {
-  const textAlign = center ? 'center' : undefined
+  const textAlignStyle = feuilleton && !center
+    ? styles.centerMobileOnly
+    : center ? styles.center : undefined
   const rootStyles = position ? styles.rootPosition : {}
   const middleStyles = position === 'middle' ? styles.rootMiddle : {}
 
@@ -112,8 +124,9 @@ const Text = ({
       <div
         {...attributes}
         {...colorStyle}
+        {...textAlignStyle}
         {...css(styles.positioned, position ? styles[position] : {})}
-        style={{ color: !collapsedColor ? color : undefined, textAlign, maxWidth, margin }}
+        style={{ color: !collapsedColor ? color : undefined, maxWidth, margin }}
       >
         {children}
       </div>
@@ -133,10 +146,12 @@ Text.propTypes = {
     'middle',
     'bottom'
   ]),
+  center: PropTypes.bool,
   color: PropTypes.string,
   collapsedColor: PropTypes.string,
   maxWidth: PropTypes.string,
-  margin: PropTypes.string
+  margin: PropTypes.string,
+  feuilleton: PropTypes.bool
 }
 
 Text.defaultProps = {

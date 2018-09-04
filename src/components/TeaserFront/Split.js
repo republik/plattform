@@ -132,7 +132,7 @@ const Split = ({
             : reverse ? styles.contentReverse : {}
         )}
       >
-        <Text color={color} center={center}>
+        <Text color={color} center={center} feuilleton={feuilleton}>
           {children}
         </Text>
       </div>
