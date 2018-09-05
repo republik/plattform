@@ -368,18 +368,31 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
 
   // call signIn hooks
   try {
+    // token context hooks
+    const tokensUsed =
+      await transaction.public.tokens.find(
+        {
+          payload: tokens.map(token => token.payload),
+          expireAction: 'authorize',
+          'context !=': null
+        },
+        { fields: ['context'] }
+      )
+
     await Promise.all(
       signInHooks.map(hook =>
-        hook(
-          user.id,
-          isVerificationUpdated,
+        hook({
+          userId: user.id,
+          isNew: isVerificationUpdated,
+          contexts: tokensUsed.map(context => context.context),
           pgdb
-        )
+        })
       )
     )
   } catch (e) {
     console.warn(`sign in hook failed in authorizeSession`, e)
   }
+
   return user
 }
 
