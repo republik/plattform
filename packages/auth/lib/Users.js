@@ -10,6 +10,9 @@ const {
   ensureAllRequiredConsents,
   saveConsents
 } = require('./Consents')
+const {
+  ensureRequiredFields
+} = require('./Fields')
 const { TranslatedError } = require('@orbiting/backend-modules-translate')
 
 const {
@@ -272,7 +275,7 @@ const denySession = async ({ pgdb, token, email: emailFromQuery, me }) => {
   return true
 }
 
-const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [], consents = [], req, me }) => {
+const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [], consents = [], fields = [], req, me }) => {
   // validate the challenges
   const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
   const tokenTypes = []
@@ -322,12 +325,15 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
       pgdb: transaction,
       email: session.sess.email,
       consents,
+      fields,
       req
     }))
   } catch (error) {
     await transaction.transactionRollback()
     throw error
   }
+
+  // throw new Error('Breakpoint')
 
   try {
     // log in the session and delete token
@@ -396,7 +402,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   return user
 }
 
-const upsertUserAndConsents = async ({ pgdb, email, consents, req }) => {
+const upsertUserAndConsents = async ({ pgdb, email, consents, fields, req }) => {
   const existingUser = await pgdb.public.users.findOne({ email })
 
   // check required consents
@@ -406,18 +412,23 @@ const upsertUserAndConsents = async ({ pgdb, email, consents, req }) => {
     consents
   })
 
-  const user = existingUser ||
-    await pgdb.public.users.insertAndGet({
+  const userFields = await ensureRequiredFields({
+    user: existingUser,
+    email,
+    providedFields: fields,
+    pgdb
+  })
+
+  const user = !existingUser
+    ? await pgdb.public.users.insertAndGet({
+      ...userFields,
       email,
       verified: true
     })
-  if (!user.verified) {
-    await pgdb.public.users.updateOne({
-      id: user.id
-    }, {
+    : await pgdb.public.users.updateAndGetOne({ id: existingUser.id }, {
+      ...userFields,
       verified: true
     })
-  }
 
   // save consents
   if (consents.length > 0) {
