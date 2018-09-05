@@ -5,23 +5,20 @@ const { transformUser } = require('@orbiting/backend-modules-auth')
 
 const { FRONTEND_BASE_URL } = process.env
 
-const sendPreviewOnboarding = async ({ userId, contexts, pgdb, t }) => {
-  debug('sendPreviewOnboarding', { userId, contexts })
+const sendOnboarding = async ({ user, request, pgdb, t }) => {
+  debug('sendPreviewOnboarding')
 
-  if (!contexts || !contexts.includes('preview')) {
-    return
-  }
+  await pgdb.public.previewEvents.insert({
+    previewRequestId: request.id,
+    event: 'email.onboarding'
+  })
 
-  const user = await pgdb.public.users.findOne({ id: userId })
-
-  if (user) {
-    return sendMail(user.email, 'onboarding', { user, t })
-  }
+  return sendMail(user.email, 'onboarding', { user, t })
 }
 
 module.exports = {
   // Onboarding
-  sendPreviewOnboarding
+  sendOnboarding
 }
 
 const sendMail = async (to, template, { user, t }) => {
