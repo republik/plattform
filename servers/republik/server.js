@@ -8,7 +8,7 @@ const { graphql: redirections } = require('@orbiting/backend-modules-redirection
 const { graphql: search } = require('@orbiting/backend-modules-search')
 const { graphql: notifications } = require('@orbiting/backend-modules-notifications')
 const { accessScheduler, graphql: access } = require('@orbiting/backend-modules-access')
-const { previewScheduler, mail: previewMail } = require('@orbiting/backend-modules-preview')
+const { previewScheduler, preview: previewLib } = require('@orbiting/backend-modules-preview')
 
 const sendPendingPledgeConfirmations = require('./modules/crowdfundings/lib/sendPendingPledgeConfirmations')
 const mail = require('./modules/crowdfundings/lib/Mail')
@@ -61,7 +61,7 @@ const run = async (workerId) => {
     ({ userId, isNew, pgdb }) =>
       accessScheduler.signInHook(userId, isNew, pgdb, mail),
     ({ userId, isNew, contexts, pgdb }) =>
-      previewMail.sendPreviewOnboarding({ userId, contexts, pgdb, t })
+      previewLib.begin({ userId, contexts, pgdb, t })
   ]
 
   const createGraphQLContext = (defaultContext) => ({
