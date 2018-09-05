@@ -48,7 +48,7 @@ type mutations {
     email: String!
     tokens: [SignInToken!]!
     consents: [String!]
-    fields: UserInput
+    fields: RequiredUserFields
   ): Boolean!
 
   # deny a session via token challenge

@@ -75,6 +75,11 @@ input SignInToken {
   payload: String!
 }
 
+input RequiredUserFields {
+  firstName: String!
+  lastName: String!
+}
+
 type RequestInfo {
   ipAddress: String!
   userAgent: String
