@@ -204,7 +204,7 @@ module.exports = {
       }
       : {
         id,
-        name: commenter.name,
+        name: commenter.name || t('api/noname'),
         profilePicture: profilePicture,
         credential,
         anonymity: false,
