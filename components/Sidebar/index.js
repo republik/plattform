@@ -3,23 +3,33 @@ import { css } from 'glamor'
 import { HEADER_HEIGHT, ZINDEX_SIDEBAR } from '../Frame/constants'
 import { colors, Label } from '@project-r/styleguide'
 
+const SIDEBAR_WIDTH_SMALL = 270
+const SIDEBAR_WIDTH_LARGE = 340
+
 const styles = {
   container: css({
     position: 'fixed',
     top: HEADER_HEIGHT,
-    right: -340,
+    width: SIDEBAR_WIDTH_SMALL,
+    right: -SIDEBAR_WIDTH_SMALL,
+    transition: 'right 0.2s ease',
+    '&.open': {
+      right: 0
+    },
+    '@media only screen and (min-width: 1400px)': {
+      width: SIDEBAR_WIDTH_LARGE,
+      right: -SIDEBAR_WIDTH_LARGE,
+      '&.open': {
+        right: 0
+      }
+    },
     bottom: 0,
-    width: 340,
     overflow: 'auto',
     backgroundColor: '#fff',
     borderLeft: `1px solid ${colors.divider}`,
     opacity: 1,
     zIndex: ZINDEX_SIDEBAR,
-    padding: 10,
-    transition: 'right 0.2s ease',
-    '&.open': {
-      right: 0
-    }
+    padding: 10
   }),
   overlay: css({
     opacity: '0.5',
