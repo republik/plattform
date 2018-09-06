@@ -74,9 +74,6 @@ const subjectStyle = {
   [mUp]: {
     ...styles.sansSerifRegular23,
     lineHeight: '27px'
-  },
-  '&::after': {
-    content: " "
   }
 }
 
