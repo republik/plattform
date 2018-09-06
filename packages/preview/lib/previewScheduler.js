@@ -6,8 +6,8 @@ const redis = require('@orbiting/backend-modules-base/lib/redis')
 
 const previewLib = require('./preview')
 
-const intervalSecs = 60 * 60
-const lockTtlSecs = 60 * 2
+const intervalSecs = 60 * 5
+const lockTtlSecs = 60 * 4
 
 /**
  * Function to initialize scheduler. Provides scheduling.
