@@ -29,7 +29,8 @@ const styles = {
     borderLeft: `1px solid ${colors.divider}`,
     opacity: 1,
     zIndex: ZINDEX_SIDEBAR,
-    padding: 10
+    // ensure 10px white space for <UIForm>s negative magins
+    padding: 10 + 1 * 2 // 1px border
   }),
   overlay: css({
     opacity: '0.5',
