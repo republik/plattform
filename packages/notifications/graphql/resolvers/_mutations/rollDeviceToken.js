@@ -18,7 +18,7 @@ module.exports = async (_, { oldToken, newToken }, { pgdb, req, user: me, t }) =
       throw new Error(t('api/device/notYours'))
     }
 
-    const newDevice = await transaction.public.devices.updateAndGet(
+    const newDevice = await transaction.public.devices.updateAndGetOne(
       {
         id: existingDevice.id
       },
