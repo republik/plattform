@@ -1,21 +1,18 @@
-const CronJob = require('cron').CronJob
 const debug = require('debug')('preview:lib:previewSchedulder')
 const Redlock = require('redlock')
-const Promise = require('bluebird')
 
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const redis = require('@orbiting/backend-modules-base/lib/redis')
 
 const previewLib = require('./preview')
 
-const cronRange = '*/10 * * * * *'
-const cronTimezone = 'Europe/Berlin'
-const lockTtlSecs = 5
+const intervalSecs = 60 * 60
+const lockTtlSecs = 60 * 2
 
 /**
  * Function to initialize scheduler. Provides scheduling.
  */
-const init = async () => {
+const init = async ({ mail }) => {
   debug('init')
 
   const pgdb = await PgDb.connect()
@@ -32,22 +29,32 @@ const init = async () => {
         await schedulerLock()
           .lock('locks:preview-scheduler', 1000 * lockTtlSecs)
 
-      const requests = await previewLib.findPending(pgdb)
+      const unscheduledRequests = await previewLib.findUnscheduled(pgdb)
 
-      debug('requests', requests.length)
+      debug('unscheduled requests', unscheduledRequests.length)
 
-      if (requests.length > 0) {
+      if (unscheduledRequests.length > 0) {
         const users = await pgdb.public.users.find({
-          id: requests.map(request => request.userId)
+          id: unscheduledRequests.map(request => request.userId)
         })
 
         debug('users', users.length)
 
-        await Promise.map(
-          requests,
-          (request) => previewLib.sendNewsletter(request, users, pgdb),
-          { concurrency: 5 }
-        )
+        await previewLib.schedule(unscheduledRequests, users, pgdb, mail)
+      }
+
+      const voidableRequests = await previewLib.findVoidable(pgdb)
+
+      debug('voidable requests', voidableRequests.length)
+
+      if (voidableRequests.length > 0) {
+        const users = await pgdb.public.users.find({
+          id: voidableRequests.map(request => request.userId)
+        })
+
+        debug('users', users.length)
+
+        await previewLib.expire(voidableRequests, users, pgdb, mail)
       }
 
       // Extend lock for a fraction of usual interval to prevent runner to
@@ -62,18 +69,13 @@ const init = async () => {
       } else {
         throw e
       }
+    } finally {
+      // Set timeout slightly off to usual interval
+      setTimeout(run, 1000 * (intervalSecs + 1)).unref()
     }
   }
 
-  const job = new CronJob(
-    cronRange,
-    run,
-    null,
-    false,
-    cronTimezone
-  )
-
-  job.start()
+  await run()
 }
 
 module.exports = {
