@@ -11,6 +11,7 @@ import withData from '../../lib/apollo/withData'
 import withAuthorization from '../../components/Auth/withAuthorization'
 
 import Frame from '../../components/Frame'
+import { HEADER_HEIGHT } from '../../components/Frame/constants'
 import RepoNav from '../../components/Repo/Nav'
 
 import Editor from '../../components/editor'
@@ -141,6 +142,8 @@ const rmWarning = message => state => ({
   warnings: state.warnings
     .filter(warning => warning !== message)
 })
+
+const SIDEBAR_ICON_SIZE = 30
 
 export class EditorPage extends Component {
   constructor (...args) {
@@ -667,12 +670,15 @@ export class EditorPage extends Component {
               style={{
                 padding: 25,
                 paddingTop: 30,
+                paddingBottom: (
+                  HEADER_HEIGHT - SIDEBAR_ICON_SIZE - 30 - 1 // 1 px header border
+                ),
                 cursor: 'pointer',
                 color: showSidebar ? colors.primary : undefined
               }}
               onMouseDown={this.toggleSidebarHandler}
             >
-              <SettingsIcon size='30' />
+              <SettingsIcon size={SIDEBAR_ICON_SIZE} />
             </div>
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
