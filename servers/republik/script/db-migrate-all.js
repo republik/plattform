@@ -13,7 +13,8 @@ const migrationDirs = [
   './migrations/crowdfunding',
   './migrations',
   '../../packages/notifications/migrations',
-  '../../packages/access/migrations'
+  '../../packages/access/migrations',
+  '../../packages/preview/migrations'
 ]
 
 dbMigrateAll(migrationDirs)
