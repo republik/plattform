@@ -56,7 +56,7 @@ const run = async (workerId) => {
 
   // signin hooks
   const signInHooks = [
-    async ({ userId, pgdb }) =>
+    ({ userId, pgdb }) =>
       sendPendingPledgeConfirmations(userId, pgdb, t),
     ({ userId, isNew, pgdb }) =>
       accessScheduler.signInHook(userId, isNew, pgdb, mail),
