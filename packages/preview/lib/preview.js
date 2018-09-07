@@ -26,14 +26,14 @@ const md5 = (email) =>
 const begin = async ({ userId, contexts, pgdb, t }) => {
   debug('beginPreview')
 
+  if (!contexts || !contexts.includes('preview')) {
+    debug('no "preview" in contexts found')
+    return
+  }
+
   const transaction = await pgdb.transactionBegin()
 
   try {
-    if (!contexts || !contexts.includes('preview')) {
-      debug('no "preview" in contexts found')
-      return
-    }
-
     const user = await transaction.public.users.findOne({ id: userId })
 
     const otherRequests = await findValidByUser(user, pgdb)
