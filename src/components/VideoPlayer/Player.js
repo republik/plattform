@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import colors from '../../theme/colors'
+import zIndex from '../../theme/zIndex'
 import { css, merge } from 'glamor'
 import { breakoutStyles } from '../Center'
 import { InlineSpinner } from '../Spinner'
@@ -16,6 +17,18 @@ const ZINDEX_VIDEOPLAYER_SCRUB = 3
 const PROGRESS_HEIGHT = 4
 
 const styles = {
+  fullWindow: css({
+    position: 'fixed',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,  
+    zIndex: zIndex.foreground,
+    backgroundColor: '#000',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }),
   wrapper: css({
     position: 'relative',
     lineHeight: 0,
@@ -25,6 +38,7 @@ const styles = {
     width: '100%',
     height: 'auto',
     transition: 'height 200ms',
+    outline: 'none',
     '::-webkit-media-controls-panel': {
       display: 'none !important'
     },
@@ -41,6 +55,7 @@ const styles = {
   videoFullscreen: css({
     width: '100%',
     height: 'auto',
+    outline: 'none',
     transition: 'height 200ms',
     '::-webkit-media-controls-volume-slider': {
       display: 'none !important'
@@ -73,7 +88,8 @@ const styles = {
     backgroundColor: colors.primary,
     bottom: -PROGRESS_HEIGHT,
     left: 0,
-    height: PROGRESS_HEIGHT
+    height: PROGRESS_HEIGHT,
+    transition: 'bottom 200ms'
   }),
   icons: css({
     position: 'absolute',
@@ -110,7 +126,7 @@ class VideoPlayer extends Component {
       muted: globalState.muted,
       subtitles: props.subtitles || globalState.subtitles,
       loading: false,
-      isFullscreen: false
+      isFull: false
     }
 
     this.updateProgress = () => {
@@ -230,7 +246,7 @@ class VideoPlayer extends Component {
     this.handleKeyDown = (event) => {
       if (
         event.key === 'k' ||
-        (!this.state.isFullscreen && event.keyCode === 32) // 32: spacebar
+        (!this.state.isFull && event.keyCode === 32) // 32: spacebar
       ) {
         event.preventDefault()
         event.stopPropagation()
@@ -285,9 +301,10 @@ class VideoPlayer extends Component {
     this.setState({
       fullscreen: setupFullscreen({
         onChange: () => {
-          this.setState(() => ({
-            isFullscreen: this.state.fullscreen.element() === this.video
-          }))
+          const { onFull } = this.props
+          const shouldBeFull = this.state.fullscreen.element() === this.video
+          this.setState({ isFull: shouldBeFull })
+          onFull && onFull(shouldBeFull, true)
         },
         video: this.video
       })
@@ -335,7 +352,7 @@ class VideoPlayer extends Component {
   }
   render() {
     const { src, showPlay, size, forceMuted, autoPlay, loop, cinemagraph, attributes = {} } = this.props
-    const { playing, progress, muted, subtitles, loading, fullscreen, isFullscreen } = this.state
+    const { playing, progress, muted, subtitles, loading, fullscreen, isFull } = this.state
 
     const cinemagraphAttributes = cinemagraph ? {
       loop: true,
@@ -345,12 +362,18 @@ class VideoPlayer extends Component {
       'webkit-playsinline': ''
     } : {}
 
+    const fullWindow = this.props.fullWindow || !fullscreen
+
     return (
-      <div {...merge(styles.wrapper, breakoutStyles[size])}
+      <div {...(
+        fullWindow && isFull
+          ? styles.fullWindow
+          : merge(styles.wrapper, breakoutStyles[size])
+      )}
         onClick={this.captureFocus}
       >
         <video
-          {...(isFullscreen ? styles.videoFullscreen : styles.video)}
+          {...(isFull ? styles.videoFullscreen : styles.video)}
           {...attributes}
           style={this.props.style}
           autoPlay={autoPlay}
@@ -358,8 +381,8 @@ class VideoPlayer extends Component {
           loop={loop}
           {...cinemagraphAttributes}
           ref={this.ref}
-          controls={isFullscreen}
-          controlsList={isFullscreen ? 'nodownload' : undefined}
+          controls={isFull && !fullWindow}
+          controlsList={isFull ? 'nodownload' : undefined}
           onLoadedMetadata={this.onLoadedMetaData}
           crossOrigin="anonymous"
           poster={src.thumbnail}
@@ -423,24 +446,32 @@ class VideoPlayer extends Component {
             >
               <Volume off={muted} />
             </span>}
-            {fullscreen && (
-              <span
-                role="button"
-                title="Vollbild"
-                onClick={e => {
-                  e.preventDefault()
-                  e.stopPropagation()
+            <span
+              role="button"
+              title="Vollbild"
+              onClick={e => {
+                e.preventDefault()
+                e.stopPropagation()
+                if (fullWindow) {
+                  const { onFull } = this.props
+                  const shouldBeFull = !isFull
+                  this.setState({ isFull: shouldBeFull })
+                  onFull && onFull(shouldBeFull, false)
+                } else {
                   fullscreen.request(this.video)
-                  this.captureFocus()
-                }}
-              >
-                <Fullscreen />
-              </span>
-            )}
+                }
+                this.captureFocus()
+              }}
+            >
+              <Fullscreen off={!isFull} />
+            </span>
           </div>
         </div>
         {!cinemagraph && <Fragment>
-          <div {...styles.progress} style={{ width: `${progress * 100}%` }} />
+          <div {...styles.progress} style={{
+            width: `${progress * 100}%`,
+            bottom: fullWindow && !playing ? 0 : undefined
+          }} />
           <div
             {...styles.scrub}
             ref={this.scrubRef}
@@ -478,7 +509,10 @@ CrossOrigin subtitles do not work in older browsers.'`
   forceMuted: PropTypes.bool,
   cinemagraph: PropTypes.bool,
   // arbitrary attributes like playsinline, specific ones win
-  attributes: PropTypes.object
+  attributes: PropTypes.object,
+  // mandate full window instead of fullscreen API
+  fullWindow: PropTypes.bool,
+  onFull: PropTypes.func
 }
 
 VideoPlayer.defaultProps = {

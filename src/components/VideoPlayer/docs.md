@@ -40,6 +40,29 @@ Props:
 />
 ```
 
+#### fullWindow
+
+Force the usage of the full window mode even when fullscreen API is available. This can for example be used when the fullscreen API does not work in a Android web view.
+
+```react|responsive
+<Center>
+  <VideoPlayer
+    src={{
+      hls: 'https://player.vimeo.com/external/213080233.m3u8?s=40bdb9917fa47b39119a9fe34b9d0fb13a10a92e',
+      mp4: 'https://player.vimeo.com/external/213080233.hd.mp4?s=ab84df0ac9134c86bb68bd9ea7ac6b9df0c35774&profile_id=175',
+      thumbnail: `/static/video.jpg`,
+      subtitles: '/static/main.vtt'
+    }}
+    fullWindow
+    onFull={(isFull, isFullscreen) => {
+      console.log('isFull', isFull, isFullscreen)
+    }}
+  />
+</Center>
+```
+
+_`onFull` is fired in the full window and fullscreen case._
+
 #### cinemagraph
 
 Cinemagraphs are still video clips in which minor movement occurs. `isCinemagraph` activates `autoPlay`, `loop`, `playsInline` and `mute` properties and hides the progress bar.
