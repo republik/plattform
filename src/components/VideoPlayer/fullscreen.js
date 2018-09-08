@@ -49,13 +49,14 @@ const apiSurfaces = [
 const getFullscreenApi = () => {
   let api = {}
   const canonicalSurface = apiSurfaces[0]
-  apiSurfaces.forEach(apiSurface => {
+  apiSurfaces.some(apiSurface => {
     if (!document[apiSurface[1]]) {
-      return
+      return false
     }
     apiSurface.forEach((method, index) => {
       api[canonicalSurface[index]] = apiSurface[index]
     })
+    return true
   })
   return api.requestFullscreen ? api : null
 }
