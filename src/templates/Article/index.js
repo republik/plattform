@@ -585,7 +585,8 @@ const createSchema = ({
   getPath = getDatePath,
   t = () => '',
   dynamicComponentRequire,
-  previewTeaser
+  previewTeaser,
+  getVideoPlayerProps = props => props
 } = {}) => {
   const teasers = createTeasers({
     t,
@@ -850,7 +851,7 @@ const createSchema = ({
                     return (
                       <VideoPlayer
                         attributes={attributes}
-                        {...data}
+                        {...getVideoPlayerProps(data)}
                         t={t}
                       />
                     )
