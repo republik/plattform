@@ -18,9 +18,18 @@ const getMissingFields = async ({ user, email, pgdb }) => {
     invalidatedAt: null
   })
 
+  const isMember = !!user && Roles.userHasRole(user, 'member')
+  const hasNames = !!user && (
+    user.firstName &&
+    user.firstName.trim().length > 1 &&
+    user.lastName &&
+    user.lastName.trim().length > 1
+  )
+  const hasGrants = unassignedGrants.length > 0
+
   if (
-    Roles.userHasRole(user, 'member') ||
-    (!user && unassignedGrants.length > 0)
+    (user && isMember && !hasNames) ||
+    (!user && hasGrants)
   ) {
     missingFields.push('firstName')
     missingFields.push('lastName')
