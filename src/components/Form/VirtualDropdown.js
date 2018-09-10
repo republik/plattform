@@ -107,11 +107,11 @@ export class VirtualDropdown extends PureComponent {
 
 export default VirtualDropdown
 
-const renderDropdown = ({label, focus, white, black, items, onFocus, onBlur}) => ({getButtonProps, getItemProps, isOpen, inputValue, selectedItem, highlightedIndex}) => (
+const renderDropdown = ({label, focus, white, black, items, onFocus, onBlur}) => ({getToggleButtonProps, getItemProps, isOpen, inputValue, selectedItem, highlightedIndex}) => (
   <div {...styles.root}>
     <Inner isOpen={isOpen}>
       <Label top={!!selectedItem} focus={isOpen || focus} text={label} white={white && !isOpen} black={black || (white && isOpen)}>
-        <LButton {...getButtonProps()} onFocus={onFocus} onBlur={onBlur} white={white && !isOpen} black={black || (white && isOpen)}>
+        <LButton {...getToggleButtonProps()} onFocus={onFocus} onBlur={onBlur} white={white && !isOpen} black={black || (white && isOpen)}>
           {selectedItem ? selectedItem.text : ''}
         </LButton>
         <ArrowDown
