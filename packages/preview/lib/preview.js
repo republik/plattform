@@ -134,7 +134,7 @@ const findValidByUser = (user, pgdb) => {
 const setScheduled = async (request, user, pgdb) => {
   await Promise.all([
     pgdb.public.previewRequests.update(
-      { userId: user.id },
+      { userId: user.id, scheduledAt: null },
       { scheduledAt: moment(), updatedAt: moment() }
     ),
     pgdb.public.previewEvents.insertAndGet({
