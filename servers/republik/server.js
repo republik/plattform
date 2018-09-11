@@ -7,6 +7,8 @@ const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: redirections } = require('@orbiting/backend-modules-redirections')
 const { graphql: search } = require('@orbiting/backend-modules-search')
 const { graphql: notifications } = require('@orbiting/backend-modules-notifications')
+const { graphql: voting } = require('@orbiting/voting')
+
 const { accessScheduler, graphql: access } = require('@orbiting/backend-modules-access')
 const { previewScheduler, preview: previewLib } = require('@orbiting/backend-modules-preview')
 
@@ -36,7 +38,8 @@ const run = async (workerId) => {
         search,
         redirections,
         notifications,
-        access
+        access,
+        voting
       ]
     )
   )
