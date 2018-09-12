@@ -1,5 +1,5 @@
 {
-  "name": "@orbiting/voting",
+  "name": "@orbiting/backend-modules-voting",
   "version": "0.0.0",
   "description": "store votings and query them from graphql",
   "main": "index.js",

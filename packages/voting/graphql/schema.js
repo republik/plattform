@@ -6,7 +6,7 @@ schema {
 
 type queries {
   votings: [Voting!]!
-  voting(name: String!): Voting!
+  voting(slug: String!): Voting!
 }
 
 type mutations {

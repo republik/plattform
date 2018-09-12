@@ -24,7 +24,6 @@ type VoteOption {
   description: String
 }
 type VoteOptionResult {
-  id: ID!
   option: VoteOption!
   count: Int!
   winner: Boolean
