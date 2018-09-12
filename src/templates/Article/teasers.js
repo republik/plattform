@@ -209,9 +209,11 @@ const createTeasers = ({
     articleCollection: {
       matchMdast: matchZone('ARTICLECOLLECTION'),
       component: ({ children, attributes, unauthorized, unauthorizedText }) => unauthorized
-      ? <Interaction.P style={{backgroundColor: colors.primaryBg, padding: '10px 20px'}}>
-        {unauthorizedText || t('styleguide/templates/unauthorizedZone')}
-      </Interaction.P>
+      ? unauthorizedText
+        ? <Interaction.P style={{backgroundColor: colors.primaryBg, padding: '10px 20px'}}>
+          {unauthorizedText}
+        </Interaction.P>
+        : null
       : <Breakout size='breakout' attributes={attributes}>
         {children}
       </Breakout>,
