@@ -1,11 +1,11 @@
 module.exports = `
 type Voting {
   id: ID!
-  name: String!
+  slug: String!
   beginDate: DateTime!
   endDate: DateTime!
   options: [VoteOption!]!
-  turnout: VoteTurnout!
+  turnout: VoteTurnout
   result: VoteResult
   # current user (me) is eligible to submit a ballot
   userIsEligible: Boolean
