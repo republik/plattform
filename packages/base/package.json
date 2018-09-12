@@ -41,6 +41,7 @@
     "express": "^4.16.3",
     "graphql-redis-subscriptions": "^1.4.0",
     "graphql-subscriptions": "^0.5.8",
+    "helmet": "^3.13.0",
     "pogi": "^2.5.8",
     "redis": "^2.8.0",
     "subscriptions-transport-ws": "^0.9.7"
