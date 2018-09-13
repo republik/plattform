@@ -1,5 +1,5 @@
 {
-  "updated": "2018-09-05T14:36:35.513Z",
+  "updated": "2018-09-13T12:28:47.688Z",
   "title": "live",
   "data": [
     {
@@ -189,6 +189,10 @@
     {
       "key": "profile/statement/label",
       "value": "Statement"
+    },
+    {
+      "key": "profile/disclosures/label",
+      "value": "Interessenbindungen"
     },
     {
       "key": "profile/biography/label",

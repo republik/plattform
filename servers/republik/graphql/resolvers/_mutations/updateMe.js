@@ -16,6 +16,7 @@ const ensureStringLength = require('../../../lib/ensureStringLength')
 
 const MAX_STATEMENT_LENGTH = 140
 const MAX_BIOGRAPHY_LENGTH = 2000
+const MAX_DISCLOSURES_LENGTH = 140
 
 // a resonable 4k key is around 3k to 10k chars (radix64 data + armour)
 // - however key file can contain meta data
@@ -67,6 +68,7 @@ module.exports = async (_, args, context) => {
   ensureStringLengthForProfile('phoneNumber', 'profile/contact/phoneNumber/label', MAX_PHONE_NUMBER_LENGTH)
   ensureStringLengthForProfile('firstName', 'pledge/contact/firstName/label', MAX_FIRSTNAME_LENGTH, 1)
   ensureStringLengthForProfile('lastName', 'pledge/contact/lastName/label', MAX_LASTNAME_LENGTH, 1)
+  ensureStringLengthForProfile('disclosures', 'profile/disclosures/label', MAX_DISCLOSURES_LENGTH)
 
   const updateFields = [
     'username',
@@ -84,7 +86,8 @@ module.exports = async (_, args, context) => {
     'hasPublicProfile',
     'biography',
     'isListed',
-    'statement'
+    'statement',
+    'disclosures'
   ]
 
   if (

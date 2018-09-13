@@ -64,6 +64,7 @@ extend type User {
   facebookId: String
   twitterHandle: String
   publicUrl: String
+  disclosures: String
 
   statement: String
   isListed: Boolean!

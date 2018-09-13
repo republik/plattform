@@ -7,7 +7,7 @@ create table "elections" (
   "beginDate"   timestamptz not null,
   "endDate"     timestamptz not null,
   "numSeats"    integer not null,
-  "result"       jsonb,
+  "result"      jsonb,
   "createdAt"   timestamptz default now(),
   "updatedAt"   timestamptz default now(),
   unique("id", "slug")
