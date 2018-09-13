@@ -1,0 +1,3 @@
+DROP TABLE IF EXISTS "elections" CASCADE;
+DROP TABLE IF EXISTS "electionCandidacies" CASCADE;
+DROP TABLE IF EXISTS "electionBallots";
