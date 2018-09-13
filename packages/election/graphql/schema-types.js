@@ -27,7 +27,7 @@ type ElectionTurnout {
 type Candidate {
   id: ID!
   user: User!
-  debate: Comment!
+  debate: Comment
   recommendation: String
 }
 

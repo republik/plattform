@@ -11,5 +11,6 @@ type queries {
 
 type mutations {
   submitElectionBallot(electionId: ID!, candidateIds: [ID!]!): Election!
+  submitCandidacy(electionId: ID!): Candidate!
 }
 `
