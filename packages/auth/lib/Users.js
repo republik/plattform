@@ -2,7 +2,7 @@ const querystring = require('querystring')
 const validator = require('validator')
 const { parse, format } = require('libphonenumber-js')
 const isUUID = require('is-uuid')
-const debug = require('debug')('auth')
+const debug = require('debug')('auth:lib:Users')
 const { sendMailTemplate, moveNewsletterSubscriptions } = require('@orbiting/backend-modules-mail')
 const t = require('./t')
 const { newAuthError } = require('./AuthError')
@@ -10,6 +10,9 @@ const {
   ensureAllRequiredConsents,
   saveConsents
 } = require('./Consents')
+const {
+  ensureRequiredFields
+} = require('./Fields')
 const { TranslatedError } = require('@orbiting/backend-modules-translate')
 
 const {
@@ -272,7 +275,7 @@ const denySession = async ({ pgdb, token, email: emailFromQuery, me }) => {
   return true
 }
 
-const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [], consents = [], req, me }) => {
+const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [], consents = [], requiredFields = [], req, me }) => {
   // validate the challenges
   const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
   const tokenTypes = []
@@ -322,6 +325,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
       pgdb: transaction,
       email: session.sess.email,
       consents,
+      requiredFields,
       req
     }))
   } catch (error) {
@@ -396,26 +400,42 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   return user
 }
 
-const upsertUserAndConsents = async ({ pgdb, email, consents, req }) => {
+const upsertUserAndConsents = async ({ pgdb, email, consents, requiredFields, req }) => {
   const existingUser = await pgdb.public.users.findOne({ email })
+  let user = existingUser
 
   // check required consents
   await ensureAllRequiredConsents({
     pgdb,
-    userId: existingUser && existingUser.id,
+    userId: user && user.id,
     consents
   })
 
-  const user = existingUser ||
-    await pgdb.public.users.insertAndGet({
-      email,
-      verified: true
+  const userFields = await ensureRequiredFields({
+    user,
+    email,
+    providedFields: requiredFields,
+    pgdb
+  })
+
+  const updatedData = {
+    ...userFields,
+    ...!user || !user.verified ? { verified: true } : undefined
+  }
+
+  debug('upsertUserAndConsents', { updatedData })
+
+  if (user && Object.keys(updatedData).length > 0) {
+    debug('upsertUserAndConsents, updateAndGetOne')
+    user = await pgdb.public.users.updateAndGetOne({ id: user.id }, {
+      ...updatedData,
+      updatedAt: new Date()
     })
-  if (!user.verified) {
-    await pgdb.public.users.updateOne({
-      id: user.id
-    }, {
-      verified: true
+  } else if (!user) {
+    debug('upsertUserAndConsents, insertAndGet')
+    user = await pgdb.public.users.insertAndGet({
+      ...updatedData,
+      email
     })
   }
 

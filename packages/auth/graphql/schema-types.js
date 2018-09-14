@@ -17,6 +17,7 @@ type UnauthorizedSession {
   session: Session!
   enabledSecondFactors: [SignInTokenType]!
   requiredConsents: [String!]!
+  requiredFields: [String!]!
   newUser: Boolean
 }
 
@@ -72,6 +73,11 @@ enum SignInTokenType {
 input SignInToken {
   type: SignInTokenType!
   payload: String!
+}
+
+input RequiredUserFields {
+  firstName: String!
+  lastName: String!
 }
 
 type RequestInfo {
