@@ -47,7 +47,7 @@ const getMissingFields = async ({ user, email, pgdb }) => {
 
 const ensureRequiredFields = async ({ user, email, providedFields, pgdb }) => {
   const missingFields = []
-  const fields = {}
+  const requiredFields = {}
 
   const expectedFields = await getMissingFields({ user, email, pgdb })
 
@@ -58,7 +58,7 @@ const ensureRequiredFields = async ({ user, email, providedFields, pgdb }) => {
         return false
       }
 
-      fields[expectedField] = providedFields[expectedField]
+      requiredFields[expectedField] = providedFields[expectedField]
     })
 
   if (missingFields.length > 0) {
@@ -68,7 +68,7 @@ const ensureRequiredFields = async ({ user, email, providedFields, pgdb }) => {
     )
   }
 
-  return fields
+  return requiredFields
 }
 
 module.exports = {

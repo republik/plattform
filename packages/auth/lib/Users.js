@@ -275,7 +275,7 @@ const denySession = async ({ pgdb, token, email: emailFromQuery, me }) => {
   return true
 }
 
-const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [], consents = [], fields = [], req, me }) => {
+const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHooks = [], consents = [], requiredFields = [], req, me }) => {
   // validate the challenges
   const existingUser = await pgdb.public.users.findOne({ email: emailFromQuery })
   const tokenTypes = []
@@ -325,7 +325,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
       pgdb: transaction,
       email: session.sess.email,
       consents,
-      fields,
+      requiredFields,
       req
     }))
   } catch (error) {
@@ -400,7 +400,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
   return user
 }
 
-const upsertUserAndConsents = async ({ pgdb, email, consents, fields, req }) => {
+const upsertUserAndConsents = async ({ pgdb, email, consents, requiredFields, req }) => {
   const existingUser = await pgdb.public.users.findOne({ email })
   let user = existingUser
 
@@ -414,7 +414,7 @@ const upsertUserAndConsents = async ({ pgdb, email, consents, fields, req }) => 
   const userFields = await ensureRequiredFields({
     user,
     email,
-    providedFields: fields,
+    providedFields: requiredFields,
     pgdb
   })
 

@@ -5,7 +5,7 @@ module.exports = async (_, args, { pgdb, req, user: me, signInHooks }) => {
     email,
     tokens = [],
     consents,
-    fields
+    requiredFields
   } = args
 
   const user = await authorizeSession({
@@ -14,7 +14,7 @@ module.exports = async (_, args, { pgdb, req, user: me, signInHooks }) => {
     email,
     signInHooks,
     consents,
-    fields,
+    requiredFields,
     req,
     me
   })
