@@ -333,8 +333,6 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
     throw error
   }
 
-  // throw new Error('Breakpoint')
-
   try {
     // log in the session and delete token
     await transaction.public.sessions.updateOne({
