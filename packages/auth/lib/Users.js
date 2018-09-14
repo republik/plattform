@@ -2,7 +2,7 @@ const querystring = require('querystring')
 const validator = require('validator')
 const { parse, format } = require('libphonenumber-js')
 const isUUID = require('is-uuid')
-const debug = require('debug')('auth')
+const debug = require('debug')('auth:lib:Users')
 const { sendMailTemplate, moveNewsletterSubscriptions } = require('@orbiting/backend-modules-mail')
 const t = require('./t')
 const { newAuthError } = require('./AuthError')
@@ -402,31 +402,42 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
 
 const upsertUserAndConsents = async ({ pgdb, email, consents, fields, req }) => {
   const existingUser = await pgdb.public.users.findOne({ email })
+  let user = existingUser
 
   // check required consents
   await ensureAllRequiredConsents({
     pgdb,
-    userId: existingUser && existingUser.id,
+    userId: user && user.id,
     consents
   })
 
   const userFields = await ensureRequiredFields({
-    user: existingUser,
+    user,
     email,
     providedFields: fields,
     pgdb
   })
 
-  const user = !existingUser
-    ? await pgdb.public.users.insertAndGet({
-      ...userFields,
-      email,
-      verified: true
+  const updatedData = {
+    ...userFields,
+    ...!user || !user.verified ? { verified: true } : undefined
+  }
+
+  debug('upsertUserAndConsents', { updatedData })
+
+  if (user && Object.keys(updatedData).length > 0) {
+    debug('upsertUserAndConsents, updateAndGetOne')
+    user = await pgdb.public.users.updateAndGetOne({ id: user.id }, {
+      ...updatedData,
+      updatedAt: new Date()
     })
-    : await pgdb.public.users.updateAndGetOne({ id: existingUser.id }, {
-      ...userFields,
-      verified: true
+  } else if (!user) {
+    debug('upsertUserAndConsents, insertAndGet')
+    user = await pgdb.public.users.insertAndGet({
+      ...updatedData,
+      email
     })
+  }
 
   // save consents
   if (consents.length > 0) {
