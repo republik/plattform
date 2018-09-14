@@ -1,3 +1,4 @@
+const debug = require('debug')('auth:lib:Fields')
 const moment = require('moment')
 
 const { newAuthError } = require('./AuthError')
@@ -8,8 +9,7 @@ const MissingFieldsError = newAuthError(
   'api/fields/missing'
 )
 
-const getMissingFields = async ({ user, email, pgdb }) => {
-  const missingFields = []
+const hasGrants = async ({ user, email, pgdb }) => {
   const unassignedGrants = await pgdb.public.accessGrants.find({
     email,
     recipientUserId: null,
@@ -18,6 +18,14 @@ const getMissingFields = async ({ user, email, pgdb }) => {
     invalidatedAt: null
   })
 
+  debug('hasGrants', unassignedGrants.length > 0)
+
+  return unassignedGrants.length > 0
+}
+
+const getMissingFields = async ({ user, email, pgdb }) => {
+  const missingFields = []
+
   const isMember = !!user && Roles.userHasRole(user, 'member')
   const hasNames = !!user && (
     user.firstName &&
@@ -25,11 +33,10 @@ const getMissingFields = async ({ user, email, pgdb }) => {
     user.lastName &&
     user.lastName.trim().length > 1
   )
-  const hasGrants = unassignedGrants.length > 0
 
   if (
     (user && isMember && !hasNames) ||
-    (!user && hasGrants)
+    (!user && await hasGrants({ user, email, pgdb }))
   ) {
     missingFields.push('firstName')
     missingFields.push('lastName')
