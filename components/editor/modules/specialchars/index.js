@@ -107,7 +107,7 @@ const nbspClickHandler = (value, onChange) => event => {
   )
 }
 
-const NBSPDashButton = ({ value, onChange }) => {
+const NBSPButton = ({ value, onChange }) => {
   const disabled = value.isBlurred
   return <span
     {...buttonStyles.insert}
@@ -115,7 +115,29 @@ const NBSPDashButton = ({ value, onChange }) => {
     data-visible
     onMouseDown={nbspClickHandler(value, onChange)}
       >
-    Dauerleerzeichen
+    Dauerleerzeichen (␣)
+  </span>
+}
+
+const softHypenClickHandler = (value, onChange) => event => {
+  event.preventDefault()
+
+  return onChange(
+    value
+      .change()
+      .insertText('\u00ad')
+  )
+}
+
+const SoftHypenButton = ({ value, onChange }) => {
+  const disabled = value.isBlurred
+  return <span
+    {...buttonStyles.insert}
+    data-disabled={disabled}
+    data-visible
+    onMouseDown={softHypenClickHandler(value, onChange)}
+      >
+    Silbentrennung (‧)
   </span>
 }
 
@@ -132,7 +154,8 @@ export default ({ TYPE }) => ({
       DoubleGuillemetButton,
       SingleGuillemetButton,
       LongDashButton,
-      NBSPDashButton
+      NBSPButton,
+      SoftHypenButton
     ]
   }
 })
