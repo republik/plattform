@@ -1,4 +1,5 @@
 import { buttonStyles } from '../../utils'
+import invisibleDecoratorPlugin from './invisibleDecoratorPlugin'
 
 const doubleGuillemetClickHandler = (value, onChange) => event => {
   event.preventDefault()
@@ -123,7 +124,9 @@ export default ({ TYPE }) => ({
   helpers: {
   },
   changes: {},
-  plugins: [],
+  plugins: [
+    invisibleDecoratorPlugin()
+  ],
   ui: {
     insertButtons: [
       DoubleGuillemetButton,
