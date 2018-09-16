@@ -1,5 +1,5 @@
 const bodyParser = require('body-parser')
-const { graphqlExpress, graphiqlExpress } = require('apollo-server-express')
+const { graphiqlExpress } = require('apollo-server-express')
 const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { execute, subscribe } = require('graphql')
 const { pubsub } = require('../lib/RedisPubSub')
@@ -9,6 +9,7 @@ const checkEnv = require('check-env')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const redis = require('../lib/redis')
 const elasticsearch = require('../lib/elastic')
+const { runHttpQuery } = require('apollo-server-core')
 
 checkEnv([
   'PUBLIC_WS_URL_BASE',
@@ -21,6 +22,57 @@ const {
   ENGINE_API_KEY,
   WS_KEEPALIVE_INTERVAL
 } = process.env
+
+// Custom Request Handler for clean way to intercept and modify response
+// Original: https://github.com/apollographql/apollo-server/blob/b32e89c06008719d2fb45e5e22a767625ea13c0a/packages/apollo-server-express/src/expressApollo.ts#L25
+// Modifications
+// - strips problematic character (\u2028) for requests from our iOS app
+//   see https://github.com/orbiting/app/issues/159
+function graphqlExpress (options) {
+  const graphqlHandler = (req, res, next) => {
+    runHttpQuery([req, res], {
+      method: req.method,
+      options: options,
+      query: req.method === 'POST' ? req.body : req.query
+    }).then(
+      originalGQLResponse => {
+        let gqlResponse = originalGQLResponse
+        const ua = req.headers['user-agent']
+
+        if (ua && ua.includes('RepublikApp') && (
+          ua.includes('iPhone') || ua.includes('iPad') || ua.includes('iPod')
+        )) {
+          gqlResponse = gqlResponse.replace(/\u2028/g, '')
+        }
+
+        res.setHeader('Content-Type', 'application/json')
+        res.setHeader(
+          'Content-Length',
+          Buffer.byteLength(gqlResponse, 'utf8').toString()
+        )
+        res.write(gqlResponse)
+        res.end()
+      },
+      error => {
+        if (error.name !== 'HttpQueryError') {
+          return next(error)
+        }
+
+        if (error.headers) {
+          Object.keys(error.headers).forEach(header => {
+            res.setHeader(header, error.headers[header])
+          })
+        }
+
+        res.statusCode = error.statusCode
+        res.write(error.message)
+        res.end()
+      }
+    )
+  }
+
+  return graphqlHandler
+}
 
 module.exports = (
   server,
