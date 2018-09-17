@@ -2,14 +2,7 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const cancelSubscription = require('../../../lib/payments/stripe/cancelSubscription')
 const slack = require('../../../../../lib/slack')
 
-module.exports = async (
-  _,
-  args,
-  {
-    pgdb,
-    req,
-    t
-  }) => {
+module.exports = async (_, args, { pgdb, req, t }) => {
   const transaction = pgdb.isTransactionActive()
     ? await pgdb
     : await pgdb.transactionBegin()
