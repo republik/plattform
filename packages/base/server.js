@@ -127,9 +127,8 @@ const start = async (
 
   server.use(helmet({
     hsts: {
-      maxAge: 60 * 60 * 24, // one day for initial testing
-      // maxAge: 31536000, // 1 year to get preload approval
-      // preload: true,
+      maxAge: 60 * 60 * 24 * 365, // 1 year to get preload approval
+      preload: true,
       includeSubDomains: true
     },
     referrerPolicy: {
