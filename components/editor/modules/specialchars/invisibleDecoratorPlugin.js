@@ -2,12 +2,12 @@ import React from 'react'
 import { css } from 'glamor'
 
 const INVALID_TYPE = 'SPECIALCHARS_INVALID'
-const HYPEN_TYPE = 'SPECIALCHARS_HYPEN'
+const HYPHEN_TYPE = 'SPECIALCHARS_HYPHEN'
 const NBSP_TYPE = 'SPECIALCHARS_NBSP'
 
 const CHARS = [
   ['\u2028', INVALID_TYPE],
-  ['\u00ad', HYPEN_TYPE],
+  ['\u00ad', HYPHEN_TYPE],
   ['\u00a0', NBSP_TYPE]
 ]
 
@@ -18,7 +18,7 @@ const styles = {
       content: '•' // BULLET \u2022
     }
   }),
-  [HYPEN_TYPE]: css({
+  [HYPHEN_TYPE]: css({
     ':before': {
       content: '‧' // HYPHENATION POINT \u2027
     }

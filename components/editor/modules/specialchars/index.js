@@ -119,7 +119,7 @@ const NBSPButton = ({ value, onChange }) => {
   </span>
 }
 
-const softHypenClickHandler = (value, onChange) => event => {
+const softHyphenClickHandler = (value, onChange) => event => {
   event.preventDefault()
 
   return onChange(
@@ -129,13 +129,13 @@ const softHypenClickHandler = (value, onChange) => event => {
   )
 }
 
-const SoftHypenButton = ({ value, onChange }) => {
+const SoftHyphenButton = ({ value, onChange }) => {
   const disabled = value.isBlurred
   return <span
     {...buttonStyles.insert}
     data-disabled={disabled}
     data-visible
-    onMouseDown={softHypenClickHandler(value, onChange)}
+    onMouseDown={softHyphenClickHandler(value, onChange)}
       >
     Silbentrennung (‧)
   </span>
@@ -155,7 +155,7 @@ export default ({ TYPE }) => ({
       SingleGuillemetButton,
       LongDashButton,
       NBSPButton,
-      SoftHypenButton
+      SoftHyphenButton
     ]
   }
 })
