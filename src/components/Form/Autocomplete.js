@@ -44,9 +44,8 @@ const Autocomplete = ({
           <div {...styles.root}>
             <Inner isOpen={isOpen}>
               <Field
-                isFocused={isOpen || !!value}
                 label={label}
-                value={filter}
+                value={isOpen ? filter : value.text}
                 renderInput={fieldProps => (
                   <input
                     {...getInputProps({
