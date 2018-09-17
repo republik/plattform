@@ -69,19 +69,22 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
           updatedAt: now
         }
 
-        if (c === 0 && !membershipPeriod && !userHasActiveMembership && pkg.isAutoActivateUserMembership) {
+        if (
+          c === 0 &&
+          !membershipPeriod &&
+          !userHasActiveMembership &&
+          pkg.isAutoActivateUserMembership
+        ) {
           membershipPeriod = {
             beginDate: now,
             endDate: moment(now).add(membershipType.intervalCount, membershipType.interval),
             membership
           }
         } else {
-          if (
-            ['ABO_BENEFACTOR', 'ABO', 'ABO_REDUCED'].includes(membershipType.name) &&
+          isUpgrade =
+            ['ABO', 'BENEFACTOR_ABO'].includes(membershipType.name) &&
             activeMembershipType.name === 'MONTHLY_ABO'
-          ) {
-            isUpgrade = true
-          }
+
           memberships.push(membership)
         }
       }
@@ -93,18 +96,14 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
   await pgdb.public.memberships.insert(memberships)
 
   if (isUpgrade && req) {
+    debug('cancel membership, is an upgrade')
     await cancelMembership(
       null,
       {
         id: userHasActiveMembership.id,
-        reason: 'Upgraded to yearly abo'
+        reason: 'Auto cancellation due to upgrade'
       },
-      {
-        req,
-        t,
-        pgdb,
-        transaction: pgdb
-      }
+      { req, t, pgdb }
     )
   }
 

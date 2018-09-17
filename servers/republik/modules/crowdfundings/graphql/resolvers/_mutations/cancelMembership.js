@@ -7,11 +7,13 @@ module.exports = async (
   args,
   {
     pgdb,
-    transaction: pgdbTransaction,
     req,
     t
   }) => {
-  const transaction = await pgdbTransaction || pgdb.transactionBegin()
+  const transaction = pgdb.isTransactionActive()
+    ? await pgdb
+    : await pgdb.transactionBegin()
+
   try {
     const {
       id: membershipId,
@@ -84,7 +86,7 @@ module.exports = async (
       })
     }
 
-    if (pgdbTransaction) {
+    if (!pgdb.isTransactionActive()) {
       await transaction.transactionCommit()
     }
 
@@ -97,8 +99,11 @@ module.exports = async (
 
     return newMembership
   } catch (e) {
-    await transaction.transactionRollback()
-    console.info('transaction rollback', { req: req._log(), args, error: e })
+    if (!pgdb.isTransactionActive()) {
+      await transaction.transactionRollback()
+      console.info('transaction rollback', { req: req._log(), args, error: e })
+    }
+
     throw e
   }
 }
