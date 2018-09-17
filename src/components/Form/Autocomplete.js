@@ -45,7 +45,7 @@ const Autocomplete = ({
             <Inner isOpen={isOpen}>
               <Field
                 label={label}
-                value={isOpen ? filter : value.text}
+                value={isOpen ? filter : (value && value.text) || ''}
                 renderInput={fieldProps => (
                   <input
                     {...getInputProps({
