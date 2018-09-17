@@ -3,6 +3,7 @@ const { getPledgeOptionsTree } = require('./Pledge')
 const cancelMembership = require('../graphql/resolvers/_mutations/cancelMembership')
 const debug = require('debug')('crowdfundings:memberships')
 const { enforceSubscriptions } = require('./Mail')
+const Promise = require('bluebird')
 
 module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
   const pledge = await pgdb.public.pledges.findOne({id: pledgeId})
@@ -38,20 +39,26 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
   // voucherCodes get generated inside the db, but not for reducedPrice
   const reducedPrice = pledge.donation < 0
 
-  const userHasActiveMembership = await pgdb.public.memberships.findFirst({
-    userId: user.id,
-    active: true
-  })
+  const activeMemberships = await pgdb.public.query(`
+    SELECT
+      "memberships".*,
+      "membershipTypes"."name"
 
-  const activeMembershipType = (
-    userHasActiveMembership &&
-    await pgdb.public.membershipTypes.findOne({
-      id: userHasActiveMembership.membershipTypeId
-    })) || {}
+    FROM "memberships"
+
+    INNER JOIN "membershipTypes"
+      ON "memberships"."membershipTypeId" = "membershipTypes"."id"
+
+    WHERE
+      "memberships"."userId" = '${user.id}'
+      AND "memberships"."active" = true
+  `)
+
+  const userHasActiveMembership = activeMemberships.length > 0
 
   const memberships = []
+  let cancelableMemberships = []
   let membershipPeriod
-  let isUpgrade = false
   const now = new Date()
   pledgeOptions.forEach((plo) => {
     if (plo.packageOption.reward.type === 'MembershipType') {
@@ -81,9 +88,15 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
             membership
           }
         } else {
-          isUpgrade =
-            ['ABO', 'BENEFACTOR_ABO'].includes(membershipType.name) &&
-            activeMembershipType.name === 'MONTHLY_ABO'
+          // Cancel active memberships because bought package (option) contains
+          // a better abo.
+          if (['ABO', 'BENEFACTOR_ABO'].includes(membershipType.name)) {
+            cancelableMemberships =
+              activeMemberships
+                .filter(m => (m.name === 'MONTHLY_ABO' && m.renew === true))
+          }
+
+          debug({ activeMemberships, cancelableMemberships })
 
           memberships.push(membership)
         }
@@ -95,16 +108,17 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
 
   await pgdb.public.memberships.insert(memberships)
 
-  if (isUpgrade && req) {
-    debug('cancel membership, is an upgrade')
-    await cancelMembership(
-      null,
-      {
-        id: userHasActiveMembership.id,
-        reason: 'Auto cancellation due to upgrade'
-      },
-      { req, t, pgdb }
+  if (cancelableMemberships.length > 0 && req) {
+    debug(
+      'cancel memberships, is an upgrade',
+      { ids: cancelableMemberships.map(m => m.id) }
     )
+
+    await Promise.map(cancelableMemberships, m => cancelMembership(
+      null,
+      { id: m.id, reason: 'Auto cancellation due to upgrade' },
+      { req, t, pgdb }
+    ))
   }
 
   if (membershipPeriod) {
