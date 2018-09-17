@@ -29,6 +29,7 @@
     "glamor": "^2.20.40",
     "graphql": "^0.13.2",
     "graphql-tag": "^2.8.0",
+    "helmet": "^3.13.0",
     "isomorphic-unfetch": "^2.0.0",
     "mdast-react-render": "^1.2.0",
     "moment": "^2.21.0",
