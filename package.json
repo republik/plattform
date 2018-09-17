@@ -84,6 +84,7 @@
     "express-basic-auth": "^1.1.1",
     "glamor": "^2.20.39",
     "graphql-tag": "^2.9.2",
+    "helmet": "^3.13.0",
     "immutable": "^3.8.1",
     "immutable-treeutils": "^1.1.0",
     "is-url": "^1.2.2",

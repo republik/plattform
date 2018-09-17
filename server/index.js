@@ -2,6 +2,7 @@ const express = require('express')
 const basicAuth = require('express-basic-auth')
 const dotenv = require('dotenv')
 const next = require('next')
+const helmet = require('helmet')
 const routes = require('../lib/routes')
 
 const DEV = process.env.NODE_ENV
@@ -19,6 +20,17 @@ const handler = routes.getRequestHandler(app)
 
 app.prepare().then(() => {
   const server = express()
+
+  server.use(helmet({
+    hsts: {
+      maxAge: 60 * 60 * 24 * 365, // 1 year to get preload approval
+      preload: true,
+      includeSubDomains: true
+    },
+    referrerPolicy: {
+      policy: 'no-referrer'
+    }
+  }))
 
   if (!DEV) {
     server.enable('trust proxy')
