@@ -1,4 +1,5 @@
 import { buttonStyles } from '../../utils'
+import invisibleDecoratorPlugin from './invisibleDecoratorPlugin'
 
 const doubleGuillemetClickHandler = (value, onChange) => event => {
   event.preventDefault()
@@ -106,7 +107,7 @@ const nbspClickHandler = (value, onChange) => event => {
   )
 }
 
-const NBSPDashButton = ({ value, onChange }) => {
+const NBSPButton = ({ value, onChange }) => {
   const disabled = value.isBlurred
   return <span
     {...buttonStyles.insert}
@@ -114,7 +115,29 @@ const NBSPDashButton = ({ value, onChange }) => {
     data-visible
     onMouseDown={nbspClickHandler(value, onChange)}
       >
-    Dauerleerzeichen
+    Dauerleerzeichen (␣)
+  </span>
+}
+
+const softHyphenClickHandler = (value, onChange) => event => {
+  event.preventDefault()
+
+  return onChange(
+    value
+      .change()
+      .insertText('\u00ad')
+  )
+}
+
+const SoftHyphenButton = ({ value, onChange }) => {
+  const disabled = value.isBlurred
+  return <span
+    {...buttonStyles.insert}
+    data-disabled={disabled}
+    data-visible
+    onMouseDown={softHyphenClickHandler(value, onChange)}
+      >
+    Silbentrennung (‧)
   </span>
 }
 
@@ -123,13 +146,16 @@ export default ({ TYPE }) => ({
   helpers: {
   },
   changes: {},
-  plugins: [],
+  plugins: [
+    invisibleDecoratorPlugin()
+  ],
   ui: {
     insertButtons: [
       DoubleGuillemetButton,
       SingleGuillemetButton,
       LongDashButton,
-      NBSPDashButton
+      NBSPButton,
+      SoftHyphenButton
     ]
   }
 })
