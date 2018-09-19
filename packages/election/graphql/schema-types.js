@@ -9,6 +9,7 @@ type Election {
 
   numSeats: Int!
   candidates: [Candidate!]!
+  discussion: Discussion!
 
   turnout: ElectionTurnout
   result: ElectionResult
@@ -19,6 +20,14 @@ type Election {
   userSubmitDate: DateTime
 }
 
+input ElectionInput {
+  slug: String!
+  description: String!
+  beginDate: DateTime!
+  endDate: DateTime!
+  numSeats: Int!
+}
+
 type ElectionTurnout {
   eligible: Int!
   submitted: Int!
@@ -27,7 +36,9 @@ type ElectionTurnout {
 type Candidate {
   id: ID!
   user: User!
-  debate: Comment
+  yearOfBirth: Int!
+  city: String!
+  discussion: Comment!
   recommendation: String
 }
 

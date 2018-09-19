@@ -1,24 +1,49 @@
+const { upsert } = require('../../../lib/db')
+
 const {
   Roles,
   ensureSignedIn,
-  transformUser,
-  Users: {
-    resolveUser,
-    UserNotFoundError
-  }
+  transformUser
 } = require('@orbiting/backend-modules-auth')
 
-module.exports = async (_, args = {}, { pgdb, user: me, req }) => {
+module.exports = async (_, { slug }, { pgdb, user: me, req }) => {
   ensureSignedIn(req)
+  Roles.ensureUserIsInRoles(me, ['admin', 'associate'])
 
-  const user = await resolveUser({ userId: me.id, pgdb })
-  Roles.ensureUserIsMeOrInRoles(user, me, ['supporter', 'admin'])
-  if (!user) {
-    throw new UserNotFoundError({ userId: me.id })
+  const election = (await pgdb.public.elections.find({slug}))[0]
+
+  if (!election) {
+    throw new Error(`No election for slug ${slug}`)
   }
-  return {
-    id: 'e90bfc90-b754-11e8-a4ac-784f4383ef45',
-    user: transformUser(user)
 
+  const discussion = await pgdb.public.discussions.findOne({id: election.discussionId})
+
+  const comment = await upsert(
+    pgdb.public.comments,
+    {
+      userId: me.id,
+      discussionId: discussion.id,
+      content: me.statement,
+      hotness: 0.0
+    },
+    {userId: me.id, discussionId: discussion.id}
+  )
+
+  const rawCandidate = await upsert(
+    pgdb.public.electionCandidacies,
+    {
+      userId: me.id,
+      electionId: election.id,
+      commentId: comment.id
+    },
+    {commentId: comment.id}
+  )
+
+  return {
+    id: rawCandidate.id,
+    user: transformUser(me),
+    discussion: {
+      comment
+    }
   }
 }

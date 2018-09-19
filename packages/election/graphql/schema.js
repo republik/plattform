@@ -10,7 +10,8 @@ type queries {
 }
 
 type mutations {
-  submitElectionBallot(electionId: ID!, candidateIds: [ID!]!): Election!
-  submitCandidacy(electionId: ID!): Candidate!
+  createElection(electionInput: ElectionInput!): Election!
+  submitElectionBallot(slug: String!, candidateIds: [ID!]!): Election!
+  submitCandidacy(slug: String!): Candidate!
 }
 `
