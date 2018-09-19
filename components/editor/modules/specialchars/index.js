@@ -137,7 +137,7 @@ const SoftHyphenButton = ({ value, onChange }) => {
     data-visible
     onMouseDown={softHyphenClickHandler(value, onChange)}
       >
-    Silbentrennung (‧)
+    Weiches Trennzeichen (‧)
   </span>
 }
 
