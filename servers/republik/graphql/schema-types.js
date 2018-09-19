@@ -360,6 +360,7 @@ type MutationResult {
 }
 
 type MembershipStats {
+  # number of distinct users with an active memberships
   count: Int!
   monthlys: [MonthlyMembershipStat!]!
 }

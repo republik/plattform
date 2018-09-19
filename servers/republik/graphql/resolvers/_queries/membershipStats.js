@@ -7,19 +7,12 @@ module.exports = (_, args, { pgdb, user: me }) => ({
   count: async () => {
     return pgdb.queryOneField(`
       SELECT
-        count(*)
+        count(DISTINCT m."userId")
       FROM
         memberships m
-      JOIN
-        "membershipTypes" mt
-        ON m."membershipTypeId" = mt.id
       WHERE
         m."userId" != :excludeUserId AND
-        (
-          mt.name != 'MONTHLY_ABO' OR (
-            mt.name = 'MONTHLY_ABO' and m.active = true
-          )
-        )
+        m.active = true
     `, {
       excludeUserId: PARKING_USER_ID
     })
