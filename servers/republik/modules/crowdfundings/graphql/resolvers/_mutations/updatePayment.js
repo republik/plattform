@@ -81,7 +81,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       }
 
       if (pledge.total > 100000) {
-        await generateMemberships(pledge.id, transaction, t)
+        await generateMemberships(pledge.id, transaction, t, req)
       }
 
       await sendPaymentSuccessful(pledge.id, transaction, t)
