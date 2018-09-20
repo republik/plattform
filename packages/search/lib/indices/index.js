@@ -1,7 +1,8 @@
 const dict = {
   comments: require('./comments'),
   documents: require('./documents'),
-  users: require('./users')
+  users: require('./users'),
+  repos: require('./repos')
 }
 
 const list = []
