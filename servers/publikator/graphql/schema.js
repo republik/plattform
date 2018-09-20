@@ -17,6 +17,16 @@ type queries {
   ): RepoConnection!
   repo(id: ID!): Repo!
   embed(id: ID!, embedType: EmbedType!): Embed!
+
+  search(
+    first: Int
+    last: Int
+    before: String
+    after: String
+    # can not be combined with orderBy
+    search: String
+    orderBy: RepoOrderBy
+  ): SearchConnection!
 }
 
 type mutations {
