@@ -11,25 +11,26 @@ const { upsert: repoCacheUpsert } = require('../../../../servers/publikator/lib/
 const iterateRepos = async (context, callback) => {
   let pageInfo
   let pageCounter = 1
+
   do {
     console.info(`requesting repos (page ${pageCounter}) ...`)
     pageCounter += 1
+
     const repos = await getRepos(null, {
       first: 20,
       ...(pageInfo && pageInfo.hasNextPage)
         ? { after: pageInfo.endCursor }
         : { }
     }, context)
-    pageInfo = repos.pageInfo
-    const allLatestPublications = await Promise.all(
-      repos.nodes.map(repo => getLatestPublications(repo))
-    )
-      .then(arr => arr.filter(arr2 => arr2.length > 0))
 
-    for (let publications of allLatestPublications) {
-      const repo = repos.nodes.find(r => r.id === publications[0].repo.id)
-      const repoMeta = await getRepoMeta(repo)
-      await callback(repo, repoMeta, publications)
+    pageInfo = repos.pageInfo
+
+    for (let repo of repos.nodes) {
+      await callback(
+        repo,
+        await getRepoMeta(repo),
+        await getLatestPublications(repo)
+      )
     }
   } while (pageInfo && pageInfo.hasNextPage)
 }
