@@ -72,13 +72,15 @@ module.exports = async (__, args, context) => {
   const documentIds = []
 
   data.nodes.forEach(r => {
-    r.latestPublications.forEach(p => {
-      documentIds.push(getDocumentId({
-        repoId: p.repo.id,
-        commitId: p.commit.id,
-        versionName: p.name
-      }))
-    })
+    if (r.latestPublications) {
+      r.latestPublications.forEach(p => {
+        documentIds.push(getDocumentId({
+          repoId: p.repo.id,
+          commitId: p.commit.id,
+          versionName: p.name
+        }))
+      })
+    }
   })
 
   const publicationsDocuments = await getDocuments(
@@ -88,13 +90,15 @@ module.exports = async (__, args, context) => {
   )
 
   data.nodes = data.nodes.map(r => {
-    r.latestPublications = r.latestPublications.map(p => {
-      p.document = publicationsDocuments.nodes.find(d => {
-        return d.commitId === p.commit.id
-      })
+    if (r.latestPublications) {
+      r.latestPublications = r.latestPublications.map(p => {
+        p.document = publicationsDocuments.nodes.find(d => {
+          return d.commitId === p.commit.id
+        })
 
-      return p
-    })
+        return p
+      })
+    }
 
     return r
   })
