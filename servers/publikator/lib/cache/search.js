@@ -1,4 +1,4 @@
-const debug = require('debug')('publikator:elastic:search')
+const debug = require('debug')('publikator:cache:search')
 const elasticsearch = require('@orbiting/backend-modules-base/lib/elastic')
 const utils = require('@orbiting/backend-modules-search/lib/utils')
 

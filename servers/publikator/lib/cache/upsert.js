@@ -1,4 +1,4 @@
-const debug = require('debug')('publikator:elastic:upsert')
+const debug = require('debug')('publikator:cache:upsert')
 const elasticsearch = require('@orbiting/backend-modules-base/lib/elastic')
 const utils = require('@orbiting/backend-modules-search/lib/utils')
 const mdastToString = require('mdast-util-to-string')
