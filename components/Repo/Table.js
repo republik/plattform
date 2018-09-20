@@ -4,6 +4,7 @@ import { css } from 'glamor'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import { descending, ascending } from 'd3-array'
+import debounce from 'lodash.debounce'
 
 import withT from '../../lib/withT'
 import { Link, Router } from '../../lib/routes'
@@ -66,7 +67,7 @@ mutation editRepoMeta(
 
 export const filterAndOrderRepos = gql`
 query repoListSearch($after: String, $search: String, $orderBy: RepoOrderBy) {
-  repos(
+  repos: search(
     first: 100,
     after: $after,
     search: $search,
@@ -211,6 +212,18 @@ const Phase = ({phase, onClick, disabled, t}) =>
 const SEARCH_MIN_LENGTH = 3
 
 class RepoList extends Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      search: this.props.search
+    }
+
+    this.debouncedRouting = debounce(params => {
+      Router.replaceRoute('index', params)
+    }, 500)
+  }
+
   render () {
     const {
       t,
@@ -218,10 +231,13 @@ class RepoList extends Component {
       orderField,
       orderDirection,
       phase: filterPhase,
-      search,
       editRepoMeta,
       fetchMore
     } = this.props
+
+    const {
+      search
+    } = this.state
 
     const getParams = ({field = orderField, phase = filterPhase, q = search, order = false}) => {
       const params = {
@@ -240,6 +256,20 @@ class RepoList extends Component {
       }
 
       return params
+    }
+
+    const onChangeSearch = (_, value) => {
+      if (
+        this.debouncedRouting &&
+        this.debouncedRouting.cancel
+      ) {
+        this.debouncedRouting.cancel()
+      }
+
+      this.setState(
+        { search: value },
+        this.debouncedRouting.bind(this, getParams({q: value}))
+      )
     }
 
     const orderCompare = orderDirection === 'DESC'
@@ -264,12 +294,7 @@ class RepoList extends Component {
             'repo/search/field/minLength',
             {count: SEARCH_MIN_LENGTH}
           )}
-          onChange={(_, value) => {
-            Router.replaceRoute(
-              'index',
-              getParams({q: value})
-            )
-          }} />
+          onChange={onChangeSearch} />
 
         <div {...styles.filterBar}>
           {phases.map(phase => {
