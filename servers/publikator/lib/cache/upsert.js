@@ -59,8 +59,8 @@ const getLatestCommit = commit => {
 
   return {
     latestCommit: {
-      id: commit.id,
-      date: commit.date,
+      id: commit.id || commit.sha,
+      date: commit.date || commit.author.date,
       author: commit.author,
       message: commit.message
     }
