@@ -1,8 +1,10 @@
+const debug = require('debug')('publikator:mutation:placeMilestone')
 const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
 const {
   createGithubClients,
   gitAuthor
 } = require('../../../lib/github')
+const { upsert: repoCacheUpsert } = require('../../../lib/cache/upsert')
 
 module.exports = async (
   _,
@@ -13,6 +15,8 @@ module.exports = async (
   const { githubRest } = await createGithubClients()
 
   const name = _name.replace(/\s/g, '-')
+
+  debug({ repoId, commitId, name, message })
 
   const [login, repoName] = repoId.split('/')
   const tag = await githubRest.gitdata.createTag({
@@ -31,6 +35,14 @@ module.exports = async (
     repo: repoName,
     ref: `refs/tags/${name}`,
     sha: tag.sha
+  })
+
+  repoCacheUpsert({
+    id: repoId,
+    tag: {
+      action: 'add',
+      name
+    }
   })
 
   await pubsub.publish('repoUpdate', {

@@ -1,4 +1,6 @@
+const debug = require('debug')('publikator:mutation:commit')
 const { hashObject } = require('../../../lib/git')
+const { upsert: repoCacheUpsert } = require('../../../lib/cache/upsert')
 const visit = require('unist-util-visit')
 const dataUriToBuffer = require('data-uri-to-buffer')
 const MDAST = require('@orbiting/remark-preset')
@@ -58,7 +60,10 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
     }
   } = args
 
+  debug({ repoId, message })
+
   const [login, repoName] = repoId.split('/')
+  const originalMdast = JSON.parse(JSON.stringify(mdast))
 
   // get / create repo
   let repo = await getRepo(repoId)
@@ -202,6 +207,12 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
     author: gitAuthor(user)
   })
     .then(result => result.data)
+
+  await repoCacheUpsert({
+    id: repoId,
+    content: originalMdast,
+    commit
+  })
 
   // load heads
   const heads = await getHeads(repoId)
