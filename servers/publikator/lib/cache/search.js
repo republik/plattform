@@ -8,13 +8,18 @@ const find = async (args) => {
   debug(args)
 
   const fields = {
-    'repoId': {},
-    'contentString': {},
-    'contentMeta.slug': {},
-    'contentMeta.title': {},
     'contentMeta.description': {},
-    'latestCommit.author.name': {},
-    'latestCommit.author.email': {}
+    'contentMeta.facebookDescription': {},
+    'contentMeta.facebookTitle': {},
+    'contentMeta.format': {},
+    'contentMeta.slug': {},
+    'contentMeta.subject': {},
+    'contentMeta.template': {},
+    'contentMeta.title': {},
+    'contentMeta.twitterDescription': {},
+    'contentMeta.twitterTitle': {},
+    'contentString': {},
+    'repoId': {}
   }
 
   const query = {
@@ -26,7 +31,6 @@ const find = async (args) => {
       must: {
         multi_match: {
           query: args.search,
-          type: 'best_fields',
           fields: Object.keys(fields)
         }
       }
