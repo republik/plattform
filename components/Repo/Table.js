@@ -90,6 +90,9 @@ query repoListSearch($after: String, $search: String, $orderBy: RepoOrderBy) {
         id
         date
         message
+        author {
+          name
+        }
         document {
           id
           meta {
@@ -376,8 +379,17 @@ class RepoList extends Component {
               .map(({repo, phase}) => {
                 const {
                   id,
-                  meta: {creationDeadline, productionDeadline, publishDate, briefingUrl},
-                  latestCommit: {date, document: {meta}}
+                  meta: {
+                    creationDeadline,
+                    productionDeadline,
+                    publishDate,
+                    briefingUrl
+                  },
+                  latestCommit: {
+                    date,
+                    author: { name: authorName },
+                    document: { meta }
+                  }
                 } = repo
 
                 return (
@@ -395,7 +407,10 @@ class RepoList extends Component {
                       renderMdast(meta.credits.filter(link.matchMdast), creditSchema),
                       () => ', '
                     )}</Td>
-                    <TdNum>{displayDateTime(date)}</TdNum>
+                    <TdNum>
+                      <Label>{authorName}</Label><br />
+                      {displayDateTime(date)}
+                    </TdNum>
                     <TdNum>
                       <EditMetaDate
                         value={creationDeadline}
