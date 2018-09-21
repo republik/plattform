@@ -99,6 +99,12 @@ const alterRepoTag = (tag, doc) => {
     return
   }
 
+  if (!doc._source.tags) {
+    doc._source.tags = {
+      nodes: []
+    }
+  }
+
   // Remove provided tag from nodes
   const nodes = doc._source.tags.nodes.filter(n => n.name !== tag.name)
 
