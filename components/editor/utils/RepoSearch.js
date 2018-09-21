@@ -7,8 +7,8 @@ import debounce from 'lodash.debounce'
 import { GITHUB_ORG, REPO_PREFIX } from '../../../lib/settings'
 
 export const filterRepos = gql`
-query searchRepo($after: String, $search: String) {
-  repos: search(first: 10, after: $after, search: $search) {
+query searchRepo($after: String, $search: String, $template: String) {
+  repos: search(first: 10, after: $after, search: $search, template: $template) {
     totalCount
     pageInfo {
       endCursor
@@ -47,7 +47,9 @@ query searchRepo($after: String, $search: String) {
 
 const ConnectedAutoComplete = graphql(filterRepos, {
   skip: props => !props.filter,
-  options: ({ search }) => ({ variables: { search: search } }),
+  options: ({ search, template }) => ({
+    variables: { search: search, template: template }
+  }),
   props: (props) => {
     if (props.data.loading) return { data: props.data, items: [] }
     const { data: { repos: { nodes = [] } = {} } } = props
@@ -136,6 +138,7 @@ export default class RepoSearch extends Component {
         filter={filter}
         value={value}
         search={search}
+        template={this.props.template}
         items={[]}
         onChange={this.changeHandler}
         onFilterChange={this.filterChangeHandler}
