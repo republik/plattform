@@ -66,9 +66,34 @@ const mdastFilter = function (node, predicate = () => false) {
   }
 }
 
+/**
+ * Converts an mdast tree into a plain text string. It is based on
+ * https://github.com/syntax-tree/mdast-util-to-string but glues strings with
+ * a space instead of nothing.
+ *
+ * @param  {Object}   node        mdast Object
+ * @return {String}               Plain text
+ */
+const mdastPlain = function (node) {
+  const valueOf =
+    node &&
+    node.value
+      ? node.value
+      : node.alt
+        ? node.alt
+        : node.title
+
+  return (
+    valueOf ||
+    (node.children && node.children.map(mdastPlain).join(' ')) ||
+    ''
+  ).trim()
+}
+
 module.exports = {
   getIndexAlias,
   getDateTimeIndex,
   getDateIndex,
-  mdastFilter
+  mdastFilter,
+  mdastPlain
 }
