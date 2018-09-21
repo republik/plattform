@@ -138,6 +138,7 @@ const MetaData = ({value, editor, mdastSchema, contextMeta, series, additionalFi
                 <RepoSelect key={customField.key}
                   label={label}
                   value={value}
+                  template={customField.key}
                   onChange={customField.key === 'format'
                     ? (_, __, item) => {
                       editor.change(change => {

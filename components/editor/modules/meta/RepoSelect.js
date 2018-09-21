@@ -30,7 +30,7 @@ const styles = {
   })
 }
 
-export default ({ label, value, onChange }) => {
+export default ({ label, template, value, onChange }) => {
   const onRefChange = item => {
     onChange(
       undefined,
@@ -58,8 +58,10 @@ export default ({ label, value, onChange }) => {
       </div>
     )
   }
+
   return <RepoSearch
     label={label}
+    template={template}
     onChange={onRefChange}
   />
 }
