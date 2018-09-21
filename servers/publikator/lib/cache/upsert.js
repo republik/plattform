@@ -1,7 +1,6 @@
 const debug = require('debug')('publikator:cache:upsert')
 const elasticsearch = require('@orbiting/backend-modules-base/lib/elastic')
 const utils = require('@orbiting/backend-modules-search/lib/utils')
-const mdastToString = require('mdast-util-to-string')
 
 const client = elasticsearch.client()
 
@@ -12,7 +11,7 @@ const getPath = (id) => ({
 })
 
 const getContentString = (mdast) => {
-  const contentString = mdast && mdastToString(
+  const contentString = mdast && utils.mdastPlain(
     utils.mdastFilter(
       mdast,
       node => node.type === 'code'
