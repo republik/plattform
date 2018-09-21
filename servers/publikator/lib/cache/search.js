@@ -27,17 +27,14 @@ const find = async (args) => {
   }
 
   if (args.search) {
-    query.bool = {
-      must: {
-        multi_match: {
-          query: args.search,
-          fields: Object.keys(fields)
-        }
-      }
+    query.simple_query_string = {
+      query: args.search,
+      fields: Object.keys(fields),
+      default_operator: 'AND'
     }
   }
 
-  if (query.bool) {
+  if (Object.keys(query).length > 1) {
     delete query.match_all
   }
 
