@@ -26,7 +26,7 @@ module.exports = async (
     }
   })
 
-  repoCacheUpsert({
+  await repoCacheUpsert({
     id: repoId,
     tag: {
       action: 'remove',

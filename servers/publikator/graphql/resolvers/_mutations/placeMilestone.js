@@ -37,7 +37,7 @@ module.exports = async (
     sha: tag.sha
   })
 
-  repoCacheUpsert({
+  await repoCacheUpsert({
     id: repoId,
     tag: {
       action: 'add',
