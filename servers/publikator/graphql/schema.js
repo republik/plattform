@@ -25,6 +25,7 @@ type queries {
     after: String
     # can not be combined with orderBy
     search: String
+    template: String
     orderBy: RepoOrderBy
   ): SearchConnection!
 }

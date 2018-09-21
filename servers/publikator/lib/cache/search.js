@@ -23,19 +23,28 @@ const find = async (args) => {
   }
 
   const query = {
-    match_all: {}
+    bool: { must: [] }
   }
 
   if (args.search) {
-    query.simple_query_string = {
-      query: args.search,
-      fields: Object.keys(fields),
-      default_operator: 'AND'
-    }
+    query.bool.must.push(
+      { simple_query_string: {
+        query: args.search,
+        fields: Object.keys(fields),
+        default_operator: 'AND'
+      } }
+    )
   }
 
-  if (Object.keys(query).length > 1) {
-    delete query.match_all
+  if (args.template) {
+    query.bool.must.push(
+      { term: { 'contentMeta.template': args.template } }
+    )
+  }
+
+  if (Object.keys(query.bool.must).length < 1) {
+    delete query.bool
+    query.match_all = {}
   }
 
   debug({ query })

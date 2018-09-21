@@ -32,6 +32,7 @@ module.exports = async (__, args, context) => {
     last,
     from = 0,
     search,
+    template,
     orderBy
   } = args
 
@@ -40,6 +41,7 @@ module.exports = async (__, args, context) => {
     last,
     from,
     search,
+    template,
     orderBy
   })
 
@@ -55,7 +57,8 @@ module.exports = async (__, args, context) => {
         ? JSON.stringify({
           first,
           from: from + first,
-          search: search
+          search,
+          template
         })
         : null,
       hasPreviousPage,
@@ -63,7 +66,8 @@ module.exports = async (__, args, context) => {
         ? JSON.stringify({
           first,
           from: from - first,
-          search: search
+          search,
+          template
         })
         : null
     }
