@@ -19,7 +19,7 @@ const find = async (args) => {
     'contentMeta.twitterDescription': {},
     'contentMeta.twitterTitle': {},
     'contentString': {},
-    'repoId': {}
+    'id': {}
   }
 
   const query = {
