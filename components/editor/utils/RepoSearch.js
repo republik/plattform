@@ -48,6 +48,7 @@ query searchRepo($after: String, $search: String, $template: String) {
 const ConnectedAutoComplete = graphql(filterRepos, {
   skip: props => !props.filter,
   options: ({ search, template }) => ({
+    fetchPolicy: 'network-only',
     variables: { search: search, template: template }
   }),
   props: (props) => {
