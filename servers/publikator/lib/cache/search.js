@@ -44,6 +44,25 @@ const getSort = (args) => {
 }
 
 /**
+ * Fields ElasticSearch shall return. Excludes contentString, contentMeta and
+ * other fields as they are not used to created a resolved document but for mere
+ * index, query and search purposes.
+ *
+ * @return {Object} {_source} object for ElasticSearch client body.
+ */
+const getSourceFilter = () => ({
+  _source: {
+    excludes: [
+      'contentMeta',
+      'contentString',
+      'createdAt',
+      'name',
+      'updatedAt'
+    ]
+  }
+})
+
+/**
  * Finds data in ElasticSearch index using passed arguments. Includes
  * pagination and sorting.
  *
@@ -101,6 +120,7 @@ const find = async (args) => {
     size: args.first,
     body: {
       ...getSort(args),
+      ...getSourceFilter(),
       query
     }
   })
