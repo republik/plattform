@@ -18,6 +18,10 @@ type queries {
   repo(id: ID!): Repo!
   embed(id: ID!, embedType: EmbedType!): Embed!
 
+  """
+  This query is a cached version of repos query. It uses cached information
+  about repositories.
+  """
   search(
     first: Int
     last: Int

@@ -2,16 +2,6 @@ module.exports = `
 scalar DateTime
 scalar JSON
 
-type Search {
-  id: ID!
-}
-
-type SearchConnection {
-  nodes: [Repo]
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
 type Repo {
   id: ID!
   commits(first: Int, before: String, after: String): CommitConnection!
@@ -34,6 +24,16 @@ type RepoConnection {
   pageInfo: PageInfo!
   totalCount: Int!
   totalDiskUsage: Int
+}
+
+"""
+When using search query, this connection is returend. It contains a list of
+repositories search API deemed to be a match.
+"""
+type SearchConnection {
+  nodes: [Repo]
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 type PageInfo {
