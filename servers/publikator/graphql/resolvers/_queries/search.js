@@ -16,29 +16,46 @@ const mapHit = ({ _source }) => {
   return _source
 }
 
+const encodeCursor = (payload) => {
+  return Buffer.from(JSON.stringify(payload)).toString('base64')
+}
+
+const decodeCursor = (cursor) => {
+  return JSON.parse(Buffer.from(cursor, 'base64').toString())
+}
+
 module.exports = async (__, args, context) => {
   ensureUserHasRole(context.user, 'editor')
 
   debug({ args })
 
-  const after = args.after ? JSON.parse(args.after) : {}
+  if (args.last) {
+    throw new Error('"last" argument is not implemented')
+  }
 
+  // This overwrites parameters passed via "before" cursor
+  const before = args.before ? decodeCursor(args.before) : {}
+  Object.keys(before).forEach(key => {
+    args[key] = before[key]
+  })
+
+  // This overwrites parameters passed via "after" cursor
+  const after = args.after ? decodeCursor(args.after) : {}
   Object.keys(after).forEach(key => {
     args[key] = after[key]
   })
 
   const {
     first = 10,
-    last,
     from = 0,
     search,
     template,
     orderBy
+    // last - "last" parameter is not implemented in search API
   } = args
 
   const result = await client.find({
     first,
-    last,
     from,
     search,
     template,
@@ -54,57 +71,65 @@ module.exports = async (__, args, context) => {
     pageInfo: {
       hasNextPage,
       endCursor: hasNextPage
-        ? JSON.stringify({
+        ? encodeCursor({
           first,
           from: from + first,
           search,
-          template
+          template,
+          orderBy
         })
         : null,
       hasPreviousPage,
       startCursor: hasPreviousPage
-        ? JSON.stringify({
+        ? encodeCursor({
           first,
           from: from - first,
           search,
-          template
+          template,
+          orderBy
         })
         : null
     }
   }
 
-  const documentIds = []
+  // The following secion will find all retrieved document IDs in publications,
+  // fetch documents and merge it corresponding documents to each publication.
+  // A publication will hold only one document.
+  //
+  // Albeit document resolver could a similar job, performing a "collected"
+  // query here cost one query to ElasticSearch while leaving it to document
+  // resolvers would each fire a query.
+  const docIds = []
 
-  data.nodes.forEach(r => {
-    if (r.latestPublications) {
-      r.latestPublications.forEach(p => {
-        documentIds.push(getDocumentId({
-          repoId: p.repo.id,
-          commitId: p.commit.id,
-          versionName: p.name
+  data.nodes.forEach(repo => {
+    if (repo.latestPublications) {
+      repo.latestPublications.forEach(pub => {
+        docIds.push(getDocumentId({
+          repoId: pub.repo.id,
+          commitId: pub.commit.id,
+          versionName: pub.name
         }))
       })
     }
   })
 
-  const publicationsDocuments = await getDocuments(
+  const pubDocs = await getDocuments(
     null,
-    { ids: documentIds, first: documentIds.length * 2 },
+    { ids: docIds, first: docIds.length * 2 },
     context
   )
 
-  data.nodes = data.nodes.map(r => {
-    if (r.latestPublications) {
-      r.latestPublications = r.latestPublications.map(p => {
-        p.document = publicationsDocuments.nodes.find(d => {
-          return d.commitId === p.commit.id
-        })
-
-        return p
-      })
+  data.nodes = data.nodes.map(repo => {
+    if (repo.latestPublications) {
+      repo.latestPublications = repo.latestPublications.map(pub =>
+        Object.assign(
+          pub,
+          { document: pubDocs.nodes.find(d => d.commitId === pub.commit.id) }
+        )
+      )
     }
 
-    return r
+    return repo
   })
 
   return data
