@@ -63,7 +63,10 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
   debug({ repoId, message })
 
   const [login, repoName] = repoId.split('/')
-  const originalMdast = JSON.parse(JSON.stringify(mdast))
+  const cacheUpsert = {
+    id: repoId,
+    content: JSON.parse(JSON.stringify(mdast))
+  }
 
   // get / create repo
   let repo = await getRepo(repoId)
@@ -83,6 +86,17 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
       private: true,
       auto_init: true
     })
+
+    Object.assign(
+      cacheUpsert,
+      {
+        createdAt: repo.data.created_at,
+        meta: {},
+        name: repoName,
+        publications: [],
+        tags: { nodes: [] }
+      }
+    )
   }
 
   // reverse asset url prefixing
@@ -208,11 +222,9 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
   })
     .then(result => result.data)
 
-  await repoCacheUpsert({
-    id: repoId,
-    content: originalMdast,
-    commit
-  })
+  Object.assign(cacheUpsert, { commit })
+
+  await repoCacheUpsert(cacheUpsert)
 
   // load heads
   const heads = await getHeads(repoId)

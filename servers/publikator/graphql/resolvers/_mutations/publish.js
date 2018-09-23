@@ -20,7 +20,10 @@ const {
 const placeMilestone = require('./placeMilestone')
 const { document: getDocument } = require('../Commit')
 const editRepoMeta = require('./editRepoMeta')
-const { meta: getRepoMeta } = require('../Repo')
+const {
+  latestPublications: getLatestPublications,
+  meta: getRepoMeta
+} = require('../Repo')
 const { Redirections: { get: getRedirections } } = require('@orbiting/backend-modules-redirections')
 const {
   prepareMetaForPublish,
@@ -40,6 +43,7 @@ const { lib: {
   Repo: { uploadImages }
 } } = require('@orbiting/backend-modules-assets')
 const uniq = require('lodash/uniq')
+const { upsert: repoCacheUpsert } = require('../../../lib/cache/upsert')
 
 const elastic = require('@orbiting/backend-modules-base/lib/elastic').client()
 const { purgeUrls } = require('@orbiting/backend-modules-keyCDN')
@@ -429,6 +433,13 @@ module.exports = async (
       throw new Error('Mailchimp: could not update campaign', updateResponse)
     }
   }
+
+  console.log(latestPublicationVersion)
+
+  await repoCacheUpsert({
+    id: repoId,
+    publications: await getLatestPublications({ id: repoId })
+  })
 
   await pubsub.publish('repoUpdate', {
     repoUpdate: {
