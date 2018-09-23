@@ -4,6 +4,13 @@ const utils = require('@orbiting/backend-modules-search/lib/utils')
 
 const client = elasticsearch.client()
 
+/**
+ * Builds ElasticSearch routing object, to find documents in an {index} of a
+ * certain {type}.
+ *
+ * @param  {String} id A repository ID
+ * @return {Object}    Routing object to pass ElacsticSearch client
+ */
 const getPath = (id) => ({
   index: utils.getIndexAlias('repo', 'write'),
   type: 'Repo',
@@ -22,9 +29,7 @@ const getContentString = (mdast) => {
     return
   }
 
-  return {
-    contentString
-  }
+  return { contentString }
 }
 
 const getContentMeta = ({ meta = false } = {}) => {
@@ -46,9 +51,7 @@ const getContentMeta = ({ meta = false } = {}) => {
     delete meta.series
   }
 
-  return {
-    contentMeta: meta
-  }
+  return { contentMeta: meta }
 }
 
 const getLatestCommit = commit => {
@@ -71,9 +74,7 @@ const getLatestPublications = publications => {
     return
   }
 
-  return {
-    latestPublications: publications
-  }
+  return { latestPublications: publications }
 }
 
 const getRepoMeta = meta => {
@@ -81,9 +82,7 @@ const getRepoMeta = meta => {
     return
   }
 
-  return {
-    meta
-  }
+  return { meta }
 }
 
 const getRepoTags = tags => {
@@ -113,31 +112,43 @@ const alterRepoTag = (tag, doc) => {
     nodes.push({ name: tag.name })
   }
 
-  return {
-    tags: { nodes }
-  }
+  return { tags: { nodes } }
 }
 
 const upsert = async ({
   commit,
   content,
+  createdAt,
   id,
   meta,
-  publications,
+  name,
   publication,
+  publications,
+  tag,
   tags,
-  tag
+  updatedAt
 }) => {
   let doc = {}
 
-  const hasDoc = await client.exists(getPath(id))
+  // Only check and fetch an existing document if {tag} is required to be
+  // altered.
+  if (tag) {
+    const hasDoc = await client.exists(getPath(id))
 
-  if (hasDoc) {
-    doc = await client.get(getPath(id))
+    if (hasDoc) {
+      doc = await client.get(getPath(id))
+    }
   }
 
-  const partials = {
+  if (!updatedAt) {
+    updatedAt = new Date()
+  }
+
+  const partialDoc = {
     id,
+    name,
+    createdAt,
+    updatedAt,
     ...getContentString(content),
     ...getContentMeta(content),
     ...getLatestCommit(commit),
@@ -154,7 +165,7 @@ const upsert = async ({
     version: doc._version,
     body: {
       doc_as_upsert: true,
-      doc: partials
+      doc: partialDoc
     }
   })
 }

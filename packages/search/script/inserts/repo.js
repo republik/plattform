@@ -1,6 +1,4 @@
 const redis = require('@orbiting/backend-modules-base/lib/redis')
-
-// TODO require from servers is not the idea in packages
 const getRepos = require('../../../../servers/publikator/graphql/resolvers/_queries/repos')
 const {
   latestPublications: getLatestPublications,
@@ -10,14 +8,17 @@ const { upsert: repoCacheUpsert } = require('../../../../servers/publikator/lib/
 
 const iterateRepos = async (context, callback) => {
   let pageInfo
-  let pageCounter = 1
+  let pageCounter = 0
 
   do {
-    console.info(`requesting repos (page ${pageCounter}) ...`)
-    pageCounter += 1
+    console.info(`requesting repos (page ${pageCounter++}) ...`)
 
     const repos = await getRepos(null, {
       first: 20,
+      orderBy: {
+        field: 'PUSHED_AT',
+        direction: 'DESC'
+      },
       ...(pageInfo && pageInfo.hasNextPage)
         ? { after: pageInfo.endCursor }
         : { }
@@ -55,24 +56,19 @@ module.exports = {
     }
 
     await iterateRepos(context, async (repo, repoMeta, publications) => {
-      if (repoMeta && repoMeta.mailchimpCampaignId) {
-        await redis.setAsync(
-          `repos:${repo.id}/mailchimp/campaignId`,
-          repoMeta.mailchimpCampaignId,
-          'EX', redis.__defaultExpireSeconds
-        )
-      }
-
       stats[indexType].total++
       stats[indexType].added++
 
       await repoCacheUpsert({
         commit: repo.latestCommit,
         content: repo.latestCommit.document.content,
+        createdAt: repo.createdAt,
         id: repo.id,
         meta: repo.meta,
+        name: repo.id.split('/')[1],
         publications,
-        tags: repo.tags
+        tags: repo.tags,
+        updatedAt: repo.updatedAt
       })
     })
 
