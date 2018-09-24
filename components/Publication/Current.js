@@ -100,7 +100,6 @@ class CurrentPublications extends Component {
                       error: error
                     }))
                   })
-                  this.props.unpublish()
                 }
               }}>
                 {t('publication/current/unpublish/action')}
@@ -122,7 +121,7 @@ export default compose(
         },
         refetchQueries: [
           {
-            getRepoWithPublications,
+            query: getRepoWithPublications,
             variables: {
               repoId: ownProps.repoId
             }
@@ -130,7 +129,8 @@ export default compose(
           {
             query: ownProps.refetchAfterUnpublish,
             variables: {
-              repoId: ownProps.repoId
+              repoId: ownProps.repoId,
+              first: 20
             }
           }
         ]
