@@ -13,8 +13,6 @@ import {
 import { swissTime } from '../../lib/utils/format'
 import ErrorMessage from '../ErrorMessage'
 
-import { query as treeQuery } from '../../pages/repo/tree'
-
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
 export const unpublish = gql`
@@ -93,9 +91,9 @@ class CurrentPublications extends Component {
               : <A href='#' onClick={e => {
                 e.preventDefault()
                 if (window.confirm(t('publication/current/unpublish/confirmAll'))) {
-                  this.setState({unpublishing: true})
+                  this.setState({ unpublishing: true })
                   this.props.unpublish().then(() => {
-                    this.setState({unpublishing: false})
+                    this.setState({ unpublishing: false })
                   }).catch((error) => {
                     this.setState(() => ({
                       unpublishing: false,
@@ -117,7 +115,7 @@ class CurrentPublications extends Component {
 export default compose(
   withT,
   graphql(unpublish, {
-    props: ({mutate, ownProps}) => ({
+    props: ({ mutate, ownProps }) => ({
       unpublish: () => mutate({
         variables: {
           repoId: ownProps.repoId
@@ -130,7 +128,7 @@ export default compose(
             }
           },
           {
-            query: treeQuery,
+            query: ownProps.refetchAfterUnpublish,
             variables: {
               repoId: ownProps.repoId
             }
