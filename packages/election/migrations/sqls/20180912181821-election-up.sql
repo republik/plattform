@@ -8,7 +8,7 @@ create table if not exists "elections" (
   "endDate"      timestamptz      not null,
   "numSeats"     integer          not null,
   "discussionId" uuid             not null references "discussions",
-  "active"       boolean          not null default false,
+  "active"       boolean          not null default true,
   "result"       jsonb,
   "createdAt"    timestamptz               default now(),
   "updatedAt"    timestamptz               default now(),
@@ -85,6 +85,6 @@ CREATE TRIGGER trigger_associate_role
 EXECUTE PROCEDURE refresh_associate_role_trigger_function();
 
 
-# Run once for all users
+--Run once for all users
 SELECT refresh_associate_role(id) FROM users;
 
