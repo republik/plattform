@@ -97,7 +97,7 @@ module.exports = {
         { term: { '__state.published': true } }
       ] } }),
       // Adopted filter when role "editor" is present
-      editor: ({ scheduledAt, id } = {}) => {
+      editor: ({ scheduledAt, id, ids } = {}) => {
         const should = [
           { bool: { must: [
             { term: { '__state.published': false } },
@@ -118,8 +118,13 @@ module.exports = {
 
         if (id) {
           should.push({ bool: { must: [
-            // { term|terms: { _id: <String|Array>}}
-            { [Array.isArray(id) ? 'terms' : 'term']: { '_id': id } }
+            { term: { _id: id } }
+          ] } })
+        }
+
+        if (ids) {
+          should.push({ bool: { must: [
+            { terms: { _id: ids } }
           ] } })
         }
 
