@@ -1,13 +1,13 @@
 import React from 'react'
+import {withRouter} from 'next/router'
 import {compose} from 'redux'
 
-import withData from '../lib/apollo/withData'
 import withAuthorization from '../components/Auth/withAuthorization'
 
 import Frame from '../components/Frame'
 import RepoTable from '../components/Repo/Table'
 
-const Index = ({ url }) => {
+const Index = ({ router: url }) => {
   const [orderField, orderDirection] = (url.query.orderBy || '')
     .split('-')
     .filter(Boolean)
@@ -33,6 +33,6 @@ const Index = ({ url }) => {
 }
 
 export default compose(
-  withData,
+  withRouter,
   withAuthorization(['editor'])
 )(Index)

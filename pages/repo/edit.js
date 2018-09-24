@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {withRouter} from 'next/router'
 
 import { compose } from 'redux'
 import { Router } from '../../lib/routes'
@@ -7,7 +8,6 @@ import gql from 'graphql-tag'
 import { Value, resetKeyGenerator } from 'slate'
 import debounce from 'lodash.debounce'
 
-import withData from '../../lib/apollo/withData'
 import withAuthorization from '../../components/Auth/withAuthorization'
 
 import Frame from '../../components/Frame'
@@ -252,7 +252,7 @@ export class EditorPage extends Component {
       this.setState(this.unlock)
     }
     this.beforeunload = event => {
-      const { url: { query: { repoId } } } = this.props
+      const { router: { query: { repoId } } } = this.props
       const {
         hasUncommittedChanges,
         didUnlock
@@ -276,7 +276,7 @@ export class EditorPage extends Component {
 
   notifyChanges (action) {
     debug('notifyChanges', action)
-    const { url: { query: { repoId } }, t } = this.props
+    const { router: { query: { repoId } }, t } = this.props
 
     const warning = t('commit/warn/uncommittedChangesError')
     this.props.hasUncommitedChanges({
@@ -402,7 +402,7 @@ export class EditorPage extends Component {
     const {
       t,
       data: { loading, error, repo } = {},
-      url
+      router
     } = props
 
     if (!process.browser && !TEST) {
@@ -418,8 +418,8 @@ export class EditorPage extends Component {
       debug('loadState', 'isLoading', loading, 'hasError', error)
       return
     }
-    const repoId = url.query.repoId
-    const commitId = url.query.commitId
+    const repoId = router.query.repoId
+    const commitId = router.query.commitId
     if (!commitId && repo && repo.latestCommit) {
       debug('loadState', 'redirect', repo.latestCommit)
       Router.replaceRoute('repo/edit', {
@@ -435,7 +435,7 @@ export class EditorPage extends Component {
 
       const template = (
         (commit && commit.document.meta.template) ||
-        url.query.template
+        router.query.template
       )
       debug('loadState', 'loadSchema', template)
       this.setState({
@@ -453,7 +453,7 @@ export class EditorPage extends Component {
     const isNew = commitId === 'new'
     let committedEditorState
     if (isNew) {
-      committedEditorState = this.editor.newDocument(url.query, this.props.me)
+      committedEditorState = this.editor.newDocument(router.query, this.props.me)
       debug('loadState', 'new document', committedEditorState)
     } else {
       const commit = repo.commit
@@ -577,7 +577,7 @@ export class EditorPage extends Component {
 
   commitHandler () {
     const {
-      url: { query: { repoId, commitId } },
+      router: { query: { repoId, commitId } },
       commitMutation,
       t
     } = this.props
@@ -625,8 +625,8 @@ export class EditorPage extends Component {
   }
 
   render () {
-    const { url, data = {}, uncommittedChanges, t } = this.props
-    const { repoId, commitId } = url.query
+    const { router, data = {}, uncommittedChanges, t } = this.props
+    const { repoId, commitId } = router.query
     const { loading, repo } = data
     const {
       schema,
@@ -650,19 +650,19 @@ export class EditorPage extends Component {
     )
 
     const nav = [
-      <RepoNav key='repo-nav' route='repo/edit' url={url} isNew={isNew} />
+      <RepoNav key='repo-nav' route='repo/edit' url={router} isNew={isNew} />
     ]
 
     return (
-      <Frame url={url} raw nav={nav}>
+      <Frame url={router} raw nav={nav}>
         <Frame.Header barStyle={{
           borderBottom: activeUsers.length
             ? `3px solid ${readOnly ? colors.error : warningColor}`
             : undefined
         }}>
           <Frame.Header.Section align='left'>
-            <Frame.Nav url={url}>
-              <RepoNav route='repo/edit' url={url} isNew={isNew} />
+            <Frame.Nav url={router}>
+              <RepoNav route='repo/edit' url={router} isNew={isNew} />
             </Frame.Nav>
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
@@ -763,30 +763,30 @@ export class EditorPage extends Component {
 }
 
 export default compose(
-  withData,
+  withRouter,
   withT,
   withAuthorization(['editor']),
   withMe,
   graphql(getCommitById, {
-    skip: ({ url }) => url.query.commitId === 'new' || !url.query.commitId,
-    options: ({ url }) => ({
+    skip: ({ router }) => router.query.commitId === 'new' || !router.query.commitId,
+    options: ({ router }) => ({
       variables: {
-        repoId: url.query.repoId,
-        commitId: url.query.commitId
+        repoId: router.query.repoId,
+        commitId: router.query.commitId
       }
     })
   }),
   graphql(getLatestCommit, {
-    skip: ({ url }) => !!url.query.commitId && url.query.commitId !== 'new',
-    options: ({ url }) => ({
+    skip: ({ router }) => !!router.query.commitId && router.query.commitId !== 'new',
+    options: ({ router }) => ({
       // always the latest
       fetchPolicy: 'network-only',
       variables: {
-        repoId: url.query.repoId
+        repoId: router.query.repoId
       }
     }),
-    props: ({ data, ownProps: { url, t } }) => {
-      if (url.query.commitId === 'new') {
+    props: ({ data, ownProps: { router, t } }) => {
+      if (router.query.commitId === 'new') {
         if (data.repo && data.repo.latestCommit) {
           return {
             data: {
@@ -802,14 +802,14 @@ export default compose(
     }
   }),
   withUncommitedChanges({
-    options: ({ url }) => ({
+    options: ({ router }) => ({
       variables: {
-        repoId: url.query.repoId
+        repoId: router.query.repoId
       }
     })
   }),
   graphql(commitMutation, {
-    props: ({ mutate, ownProps: { url } }) => ({
+    props: ({ mutate, ownProps: { router } }) => ({
       commitMutation: variables =>
         mutate({
           variables,
@@ -852,7 +852,7 @@ export default compose(
             {
               query: getRepoHistory,
               variables: {
-                repoId: url.query.repoId,
+                repoId: router.query.repoId,
                 first: 20
               }
             }

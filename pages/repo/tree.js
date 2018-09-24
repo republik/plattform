@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {withRouter} from 'next/router'
 import { css } from 'glamor'
 import { compose } from 'redux'
 import { graphql } from 'react-apollo'
@@ -6,7 +7,6 @@ import gql from 'graphql-tag'
 
 import { path } from 'ramda'
 
-import withData from '../../lib/apollo/withData'
 import withAuthorization from '../../components/Auth/withAuthorization'
 
 import Loader from '../../components/Loader'
@@ -91,7 +91,7 @@ class EditorPage extends Component {
       this.unsubscribe = this.props.data.subscribeToMore({
         document: treeRepoSubscription,
         variables: {
-          repoId: this.props.url.query.repoId
+          repoId: this.props.router.query.repoId
         },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) {
@@ -137,9 +137,9 @@ class EditorPage extends Component {
   }
 
   render () {
-    const { url, commits, hasMore, fetchMore } = this.props
+    const { router, commits, hasMore, fetchMore } = this.props
     const { loading, error, repo } = this.props.data
-    const { repoId } = url.query
+    const { repoId } = router.query
 
     const localStorageCommitIds = getLocalStorageKeys()
       .filter(key => key.startsWith(repoId))
@@ -149,8 +149,8 @@ class EditorPage extends Component {
       <Frame>
         <Frame.Header>
           <Frame.Header.Section align='left'>
-            <Frame.Nav url={url}>
-              <RepoNav route='repo/tree' url={url} />
+            <Frame.Nav url={router}>
+              <RepoNav route='repo/tree' url={router} />
             </Frame.Nav>
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
@@ -169,7 +169,10 @@ class EditorPage extends Component {
             <div>
               <br />
               <NarrowContainer>
-                <CurrentPublications repoId={repoId} />
+                <CurrentPublications
+                  repoId={repoId}
+                  refetchAfterUnpublish={getRepoHistory}
+                />
               </NarrowContainer>
               <Tree
                 commits={commits}
@@ -197,14 +200,14 @@ class EditorPage extends Component {
 }
 
 export default compose(
-  withData,
+  withRouter,
   withAuthorization(['editor']),
   graphql(getRepoHistory, {
-    options: ({ url }) => {
+    options: ({ router }) => {
       return ({
         variables: {
           after: null,
-          repoId: url.query.repoId,
+          repoId: router.query.repoId,
           first: 20
         },
         notifyOnNetworkStatusChange: true,
