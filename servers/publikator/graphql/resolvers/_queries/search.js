@@ -24,6 +24,53 @@ const decodeCursor = (cursor) => {
   return JSON.parse(Buffer.from(cursor, 'base64').toString())
 }
 
+/**
+ * Wanders through an array of repos, and generates document IDs for all
+ * available (latestest) publications. Can be used to later link.
+ *
+ * @param  {Array} repos
+ * @return {Array}        Document IDs
+ */
+const getPublicationDocumentIds = (repos) => {
+  const ids = []
+
+  repos.forEach(repo => {
+    if (repo.latestPublications) {
+      repo.latestPublications.forEach(publication => {
+        ids.push(
+          getDocumentId(
+            {
+              repoId: publication.repo.id,
+              commitId: publication.commit.id,
+              versionName: publication.name
+            }
+          )
+        )
+      })
+    }
+  })
+
+  return ids
+}
+
+const mapDocuments = (documents, publication) =>
+  Object.assign(
+    publication,
+    {
+      document: documents.nodes.find(findDocumentId.bind(this, publication))
+    }
+  )
+
+const findDocumentId = (publication, document) => {
+  const documentId = getDocumentId({
+    repoId: publication.repo.id,
+    commitId: publication.commit.id,
+    versionName: publication.name
+  })
+
+  return document.id === documentId
+}
+
 module.exports = async (__, args, context) => {
   ensureUserHasRole(context.user, 'editor')
 
@@ -99,42 +146,19 @@ module.exports = async (__, args, context) => {
   // Albeit document resolver could a similar job, performing a "collected"
   // query here cost one query to ElasticSearch while leaving it to document
   // resolvers would each fire a query.
-  const docIds = []
+  const documentIds = getPublicationDocumentIds(data.nodes)
 
-  data.nodes.forEach(repo => {
-    if (repo.latestPublications) {
-      repo.latestPublications.forEach(pub => {
-        docIds.push(getDocumentId({
-          repoId: pub.repo.id,
-          commitId: pub.commit.id,
-          versionName: pub.name
-        }))
-      })
-    }
-  })
-
-  const pubDocs = await getDocuments(
+  const documents = await getDocuments(
     null,
-    { ids: docIds, first: docIds.length * 2 },
+    { ids: documentIds, first: documentIds.length },
     context
   )
 
+  // Append documents to publications
   data.nodes = data.nodes.map(repo => {
     if (repo.latestPublications) {
-      repo.latestPublications = repo.latestPublications.map(pub =>
-        Object.assign(
-          pub,
-          { document: pubDocs.nodes.find(d => {
-            const documentId = getDocumentId({
-              repoId: pub.repo.id,
-              commitId: pub.commit.id,
-              versionName: pub.name
-            })
-
-            return d.id === documentId
-          }) }
-        )
-      )
+      repo.latestPublications =
+        repo.latestPublications.map(mapDocuments.bind(this, documents))
     }
 
     return repo
