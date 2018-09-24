@@ -42,7 +42,7 @@ test('EditorPage is write-able', assert => {
     <EditorPageWithTestData
       t={t}
       me={me}
-      url={{
+      router={{
         query: {
           repoId: 'orbiting/test',
           commitId: '1'
