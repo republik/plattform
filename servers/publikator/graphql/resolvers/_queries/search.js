@@ -124,7 +124,15 @@ module.exports = async (__, args, context) => {
       repo.latestPublications = repo.latestPublications.map(pub =>
         Object.assign(
           pub,
-          { document: pubDocs.nodes.find(d => d.commitId === pub.commit.id) }
+          { document: pubDocs.nodes.find(d => {
+            const documentId = getDocumentId({
+              repoId: pub.repo.id,
+              commitId: pub.commit.id,
+              versionName: pub.name
+            })
+
+            return d.id === documentId
+          }) }
         )
       )
     }
