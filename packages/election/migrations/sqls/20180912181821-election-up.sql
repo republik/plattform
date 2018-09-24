@@ -7,29 +7,32 @@ create table if not exists "elections" (
   "beginDate"    timestamptz      not null,
   "endDate"      timestamptz      not null,
   "numSeats"     integer          not null,
-  "discussionId" uuid             not null references "discussions", -- no cascade to preserve voting record
+  "discussionId" uuid             not null references "discussions",
+  "active"       boolean          not null default false,
   "result"       jsonb,
   "createdAt"    timestamptz               default now(),
   "updatedAt"    timestamptz               default now(),
-  unique ("id", "slug")
+  unique ("slug")
 );
 
 create table if not exists "electionCandidacies" (
   "id"             uuid primary key not null default uuid_generate_v4(),
-  "userId"         uuid             not null references "users", -- no cascade to preserve voting record
+  "userId"         uuid             not null references "users"  on update cascade on delete cascade,
   "electionId"     uuid             not null references "elections" on update cascade on delete cascade,
-  "commentId"      uuid             not null references "comments",
+  "commentId"      uuid             references "comments",
   "recommendation" varchar,
   "createdAt"      timestamptz               default now(),
-  "updatedAt"      timestamptz               default now()
+  "updatedAt"      timestamptz               default now(),
+  unique ("userId", "electionId")
 );
 
 create table if not exists "electionBallots" (
   "id"          uuid primary key not null default uuid_generate_v4(),
-  "userId"      uuid             not null references "users", -- no cascade to preserve voting record
-  "candidacyId" uuid             not null references "electionCandidacies", -- no cascade to preserve voting record
+  "userId"      uuid             not null references "users" on update cascade on delete cascade,
+  "candidacyId" uuid             not null references "electionCandidacies"  on update cascade on delete cascade,
   "createdAt"   timestamptz               default now(),
-  "updatedAt"   timestamptz               default now()
+  "updatedAt"   timestamptz               default now(),
+  unique ("userId", "candidacyId")
 );
 
 CREATE OR REPLACE FUNCTION refresh_associate_role(user_id uuid)

@@ -35,6 +35,7 @@ type ElectionTurnout {
 
 type Candidate {
   id: ID!
+  electionId: ID!
   user: User!
   yearOfBirth: Int!
   city: String!

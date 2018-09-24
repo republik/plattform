@@ -33,6 +33,7 @@ const getElections = async (pgdb, where) => {
           const user = transformUser(u)
           return {
             id: candidacies[u.id].id,
+            electionId: candidacies[u.id].electionId,
             recommendation: candidacies[u.id].recommendation,
             yearOfBirth: user._raw.birthday ? new Date(user._raw.birthday).getFullYear() : 0,
             city: (await pgdb.public.addresses.findOne({id: user._raw.addressId})).city,
