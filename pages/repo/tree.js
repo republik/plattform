@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {withRouter} from 'next/router'
+import { withRouter } from 'next/router'
 import { css } from 'glamor'
 import { compose } from 'redux'
 import { graphql } from 'react-apollo'
@@ -110,16 +110,19 @@ class EditorPage extends Component {
           if (
             newLatestCommit !== currentLatestCommit
           ) {
+            const nextNodes = [
+              newLatestCommit,
+              ...prev.repo.commits.nodes
+            ].filter((value, index, self) => {
+              return self.findIndex(v => v.id === value.id) === index
+            })
             return {
               ...prev,
               repo: {
                 ...prev.repo,
                 commits: {
                   ...prev.repo.commits,
-                  nodes: [
-                    newLatestCommit,
-                    ...prev.repo.commits.nodes
-                  ]
+                  nodes: nextNodes
                 },
                 milestones
               }
@@ -144,7 +147,6 @@ class EditorPage extends Component {
     const localStorageCommitIds = getLocalStorageKeys()
       .filter(key => key.startsWith(repoId))
       .map(key => key.split('/').pop())
-
     return (
       <Frame>
         <Frame.Header>
@@ -155,7 +157,7 @@ class EditorPage extends Component {
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
             {!!repo &&
-              <div style={{marginRight: 10}}>
+              <div style={{ marginRight: 10 }}>
                 <UncommittedChanges repoId={repo.id} />
               </div>
             }
@@ -210,11 +212,11 @@ export default compose(
           repoId: router.query.repoId,
           first: 20
         },
-        notifyOnNetworkStatusChange: true,
+        // notifyOnNetworkStatusChange: true,
         fetchPolicy: 'cache-and-network'
       })
     },
-    props: ({data, ownProps}) => {
+    props: ({ data, ownProps }) => {
       return ({
         data,
         commits: (data.repo && data.repo.commits && data.repo.commits.nodes) || [],
@@ -237,7 +239,7 @@ export default compose(
                     nodes: [
                       ...previousResult.repo.commits.nodes,
                       ...fetchMoreResult.repo.commits.nodes
-                    ].filter(({id}, i, all) =>
+                    ].filter(({ id }, i, all) =>
                     // deduplicate by id
                       i === all.findIndex(repo => repo.id === id)
                     )
