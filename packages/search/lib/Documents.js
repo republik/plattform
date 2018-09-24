@@ -63,7 +63,6 @@ const schema = {
     criteria: termCriteriaBuilder('_id')
   },
   type: termEntry('__type'),
-  state: termEntry('__state'),
   template: termEntry('meta.template'),
   dossier: {
     criteria: termCriteriaBuilder('meta.dossier'),
