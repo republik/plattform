@@ -230,7 +230,7 @@ class RepoList extends Component {
   render () {
     const {
       t,
-      data,
+      data = {},
       orderField,
       orderDirection,
       phase: filterPhase,
@@ -353,7 +353,9 @@ class RepoList extends Component {
           </thead>
           <tbody>
             {
-              !(data.loading || data.error) && data.repos.nodes.length === 0 && (
+              !(data.loading || data.error) &&
+              data.repos &&
+              data.repos.nodes.length === 0 && (
                 <Tr>
                   <Td colSpan='8'>
                     {t('repo/search/noResults')}
@@ -369,7 +371,7 @@ class RepoList extends Component {
                   </td>
                 </tr>
               )
-              : data.repos.nodes
+              : data.repos && data.repos.nodes
               .map(repo => ({
                 phase: phaseForRepo(repo),
                 repo
@@ -474,6 +476,7 @@ const RepoListWithQuery = compose(
   graphql(filterAndOrderRepos, {
     options: ({ search }) => ({
       fetchPolicy: 'cache-and-network',
+      skip: !process.browser,
       notifyOnNetworkStatusChange: true,
       variables: {
         search: search && search.length >= SEARCH_MIN_LENGTH
