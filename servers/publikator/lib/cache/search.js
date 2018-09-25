@@ -13,7 +13,7 @@ const client = elasticsearch.client()
 const getSort = (args) => {
   // Default sorting
   if (!args.orderBy) {
-    return { sort: { 'latestCommit.date': 'desc' } }
+    return
   }
 
   // see https://developer.github.com/v4/enum/repositoryorderfield/
