@@ -26,16 +26,6 @@ type RepoConnection {
   totalDiskUsage: Int
 }
 
-"""
-When using search query, this connection is returend. It contains a list of
-repositories search API deemed to be a match.
-"""
-type SearchConnection {
-  nodes: [Repo]
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
 type PageInfo {
   endCursor: String
   hasNextPage: Boolean!

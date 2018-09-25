@@ -31,7 +31,7 @@ type queries {
     search: String
     template: String
     orderBy: RepoOrderBy
-  ): SearchConnection!
+  ): RepoConnection!
 }
 
 type mutations {
