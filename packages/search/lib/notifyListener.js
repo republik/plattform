@@ -62,6 +62,10 @@ const updateCascade = async function (
 
         const sourceIds = sources.map(source => source[config.via])
 
+        if (sourceIds.length < 1) {
+          return
+        }
+
         const updateRows = await pogiClient.public[config.table]
           .find(
             { [config.where]: sourceIds },
