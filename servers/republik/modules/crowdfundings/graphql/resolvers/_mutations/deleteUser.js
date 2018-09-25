@@ -5,7 +5,7 @@ const { publishMonitor } = require('../../../../../lib/slack')
 const cancelPledge = require('./cancelPledge')
 const deleteStripeCustomer = require('../../../lib/payments/stripe/deleteCustomer')
 
-const deleteRelatedData = async ({ id: userId, email }, pgdb) => {
+const deleteRelatedData = async ({ id: userId }, pgdb) => {
   // get all related tables
   // https://stackoverflow.com/questions/5347050/sql-to-list-all-the-tables-that-reference-a-particular-column-in-a-table
   const keepRelations = [
