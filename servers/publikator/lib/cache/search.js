@@ -84,7 +84,7 @@ const find = async (args) => {
     'contentMeta.slug',
     'contentMeta.subject',
     'contentMeta.template',
-    'contentMeta.title',
+    'contentMeta.title^2',
     'contentMeta.twitterDescription',
     'contentMeta.twitterTitle',
     'contentString',
