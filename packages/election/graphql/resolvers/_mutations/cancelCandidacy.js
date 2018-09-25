@@ -2,18 +2,14 @@ const getElections = require('../../../lib/getElections')
 
 const {
   Roles,
-  ensureSignedIn,
-  transformUser
+  ensureSignedIn
 } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, { slug }, { pgdb, user: me, req }) => {
   ensureSignedIn(req)
-  Roles.ensureUserIsInRoles(me, ['admin', 'associate'])
+  Roles.ensureUserIsInRoles(me, ['admin'])
 
-  const changed = await pgdb.public.electionCandidacies.deleteOne({userId: me.id})
-
+  await pgdb.public.electionCandidacies.deleteOne({userId: me.id})
   const elections = await getElections(pgdb, {slug})
-
   return elections[0]
-
 }
