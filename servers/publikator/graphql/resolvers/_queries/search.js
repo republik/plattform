@@ -150,7 +150,7 @@ module.exports = async (__, args, context) => {
 
   const documents = await getDocuments(
     null,
-    { ids: documentIds, first: documentIds.length },
+    { first: documentIds.length, ids: documentIds },
     context
   )
 
