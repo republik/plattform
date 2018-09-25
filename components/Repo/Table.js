@@ -34,7 +34,6 @@ import {
 
 import { renderMdast } from 'mdast-react-render'
 
-import Briefing from './Briefing'
 import EditMetaDate from './EditMetaDate'
 import { phases } from './workflow'
 import RepoAdd from './Add'
@@ -42,24 +41,15 @@ import RepoAdd from './Add'
 export const editRepoMeta = gql`
 mutation editRepoMeta(
   $repoId: ID!
-  $creationDeadline: DateTime
-  $productionDeadline: DateTime
   $publishDate: DateTime
-  $briefingUrl: String
 ) {
   editRepoMeta(
     repoId: $repoId
-    creationDeadline: $creationDeadline
-    productionDeadline: $productionDeadline
     publishDate: $publishDate
-    briefingUrl: $briefingUrl
   ) {
     id
     meta {
-      creationDeadline
-      productionDeadline
       publishDate
-      briefingUrl
     }
   }
 }
@@ -81,10 +71,7 @@ query repoListSearch($after: String, $search: String, $orderBy: RepoOrderBy) {
     nodes {
       id
       meta {
-        creationDeadline
-        productionDeadline
         publishDate
-        briefingUrl
       }
       latestCommit {
         id
@@ -184,22 +171,12 @@ const phaseForRepo = repo => {
 const orderFields = [
   {
     field: 'pushed',
-    label: 'Letzte Änderung',
+    width: '28%',
     accessor: repo => new Date(repo.latestCommit.date)
   },
   {
-    field: 'creationDeadline',
-    label: 'Creation-Deadline',
-    accessor: repo => new Date(repo.meta.creationDeadline)
-  },
-  {
-    field: 'productionDeadline',
-    label: 'Produktions-Deadline',
-    accessor: repo => new Date(repo.meta.productionDeadline)
-  },
-  {
     field: 'published',
-    label: 'Publikationsdatum',
+    width: '10%',
     accessor: repo => new Date(repo.meta.publishDate)
   }
 ]
@@ -335,15 +312,15 @@ class RepoList extends Component {
           <thead>
             <Tr>
               <Th style={{width: '28%'}}>{t('repo/table/col/title')}</Th>
-              <Th style={{width: '15%'}}>{t('repo/table/col/credits')}</Th>
-              {orderFields.map(({field}) => (
+              <Th style={{width: '20%'}}>{t('repo/table/col/credits')}</Th>
+              {orderFields.map(({field, width}) => (
                 <ThOrder key={field}
                   route='index'
                   params={getParams({field, order: true})}
                   activeDirection={orderDirection}
                   activeField={orderField}
                   field={field}
-                  style={{width: '10%'}}>
+                  style={{width}}>
                   {t(`repo/table/col/${field}`, undefined, field)}
                 </ThOrder>
               ))}
@@ -382,14 +359,12 @@ class RepoList extends Component {
                 const {
                   id,
                   meta: {
-                    creationDeadline,
-                    productionDeadline,
-                    publishDate,
-                    briefingUrl
+                    publishDate
                   },
                   latestCommit: {
                     date,
                     author: { name: authorName },
+                    message,
                     document: { meta }
                   }
                 } = repo
@@ -410,22 +385,8 @@ class RepoList extends Component {
                       () => ', '
                     )}</Td>
                     <TdNum>
-                      <Label>{authorName}</Label><br />
-                      {displayDateTime(date)}
-                    </TdNum>
-                    <TdNum>
-                      <EditMetaDate
-                        value={creationDeadline}
-                        onChange={(value) => editRepoMeta(
-                          {repoId: id, creationDeadline: value}
-                        )} />
-                    </TdNum>
-                    <TdNum>
-                      <EditMetaDate
-                        value={productionDeadline}
-                        onChange={(value) => editRepoMeta(
-                          {repoId: id, productionDeadline: value}
-                        )} />
+                      {displayDateTime(date)}<br />
+                      <Label>{authorName}: «{message}»</Label>
                     </TdNum>
                     <TdNum>
                       <EditMetaDate
@@ -438,10 +399,6 @@ class RepoList extends Component {
                       <Phase t={t} phase={phase} />
                     </Td>
                     <Td style={{textAlign: 'right'}}>
-                      <Briefing value={briefingUrl} onChange={value => editRepoMeta(
-                        {repoId: id, briefingUrl: value}
-                      )} />
-                      {' '}
                       {repo.latestPublications
                         .filter(publication => publication.document && publication.prepublication)
                         .map(({name, document: {meta: {path, slug}}}) => (
