@@ -22,7 +22,7 @@ type queries {
   This query is a cached version of repos query. It uses cached information
   about repositories.
   """
-  search(
+  reposSearch(
     first: Int
     last: Int
     before: String
