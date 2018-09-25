@@ -71,10 +71,11 @@ const mdastFilter = function (node, predicate = () => false) {
  * https://github.com/syntax-tree/mdast-util-to-string but glues strings with
  * a space instead of nothing.
  *
- * @param  {Object}   node        mdast Object
- * @return {String}               Plain text
+ * @param  {Object} node                  mdast Object
+ * @param  {String} [parentSeparator=' '] String to glue paragraphs with
+ * @return {String}                       Plain text
  */
-const mdastPlain = function (node) {
+const mdastPlain = function (node, parentSeparator = ' ') {
   const valueOf =
     node &&
     node.value
@@ -83,11 +84,19 @@ const mdastPlain = function (node) {
         ? node.alt
         : node.title
 
+  const separator = node && node.type === 'paragraph'
+    ? ''
+    : parentSeparator
+
   return (
     valueOf ||
-    (node.children && node.children.map(mdastPlain).join(' ')) ||
+    (node.children &&
+      node.children
+        .map(child => mdastPlain(child, separator))
+        .join(separator)
+        .trim()) ||
     ''
-  ).trim()
+  )
 }
 
 module.exports = {
