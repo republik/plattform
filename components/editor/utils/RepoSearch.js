@@ -8,7 +8,7 @@ import { GITHUB_ORG, REPO_PREFIX } from '../../../lib/settings'
 
 export const filterRepos = gql`
 query searchRepo($after: String, $search: String, $template: String) {
-  repos: search(first: 10, after: $after, search: $search, template: $template) {
+  repos: reposSearch(first: 10, after: $after, search: $search, template: $template) {
     totalCount
     pageInfo {
       endCursor

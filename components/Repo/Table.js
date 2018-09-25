@@ -67,7 +67,7 @@ mutation editRepoMeta(
 
 export const filterAndOrderRepos = gql`
 query repoListSearch($after: String, $search: String, $orderBy: RepoOrderBy) {
-  repos: search(
+  repos: reposSearch(
     first: 50,
     after: $after,
     search: $search,
