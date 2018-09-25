@@ -434,8 +434,6 @@ module.exports = async (
     }
   }
 
-  console.log(latestPublicationVersion)
-
   await repoCacheUpsert({
     id: repoId,
     publications: await getLatestPublications({ id: repoId })
