@@ -9,9 +9,15 @@ const transformElection = (election) =>
   pick(election, ['id', 'slug', 'description', 'beginDate', 'endDate', 'numSeats'])
 
 const getElections = async (pgdb, where) => {
+
+  const condition = {
+    active: true,
+    'endDate >': Date.now()
+  }
+
   const elections = where
-    ? await pgdb.public.elections.find(where)
-    : await pgdb.public.elections.findAll()
+    ? await pgdb.public.elections.find({...where, ...condition})
+    : await pgdb.public.elections.find(condition)
 
   return Promise.all(
     elections.map(async election => {
