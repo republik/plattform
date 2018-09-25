@@ -35,7 +35,8 @@ const index = async ({ indexName, type, elastic, resource }) => {
       {
         orderBy: { id: 'asc' },
         limit: resource.bulkSize || BULK_SIZE,
-        offset
+        offset,
+        skipUndefined: true
       }
     )
 
