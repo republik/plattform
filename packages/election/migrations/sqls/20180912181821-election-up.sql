@@ -8,6 +8,7 @@ create table if not exists "elections" (
   "endDate"      timestamptz      not null,
   "numSeats"     integer          not null,
   "discussionId" uuid             not null references "discussions" on update cascade on delete cascade,
+  "shortSlug"    varchar,
   "active"       boolean          not null default true,
   "result"       jsonb,
   "createdAt"    timestamptz               default now(),
@@ -87,4 +88,3 @@ EXECUTE PROCEDURE refresh_associate_role_trigger_function();
 
 --Run once for all users
 SELECT refresh_associate_role(id) FROM users;
-

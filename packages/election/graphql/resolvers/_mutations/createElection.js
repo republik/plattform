@@ -18,7 +18,7 @@ module.exports = async (_, { electionInput }, { pgdb, user: me, req }) => {
   } = electionInput
 
   const start = moment(beginDate)
-  const rawDiscussion = await upsert(pgdb.public.discussions,
+  const { entity: rawDiscussion } = await upsert(pgdb.public.discussions,
     {
       title: description,
       documentPath: `${start.format('/YYYY/MM/DD')}/${slug}`
@@ -26,7 +26,7 @@ module.exports = async (_, { electionInput }, { pgdb, user: me, req }) => {
     { title: description }
   )
 
-  const rawElection = await upsert(pgdb.public.elections, {
+  const { entity: rawElection } = await upsert(pgdb.public.elections, {
     ...electionInput,
     discussionId: rawDiscussion.id
   },

@@ -11,6 +11,8 @@ type Election {
   candidates: [Candidate!]!
   discussion: Discussion!
 
+  shortSlug: String
+
   turnout: ElectionTurnout
   result: ElectionResult
   # current user (me) is eligible to submit a ballot
@@ -26,6 +28,7 @@ input ElectionInput {
   beginDate: DateTime!
   endDate: DateTime!
   numSeats: Int!
+  shortSlug: String
 }
 
 type ElectionTurnout {
