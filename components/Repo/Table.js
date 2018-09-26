@@ -4,6 +4,7 @@ import { css } from 'glamor'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import { descending, ascending } from 'd3-array'
+import debounce from 'lodash.debounce'
 
 import withT from '../../lib/withT'
 import { Link, Router } from '../../lib/routes'
@@ -33,7 +34,6 @@ import {
 
 import { renderMdast } from 'mdast-react-render'
 
-import Briefing from './Briefing'
 import EditMetaDate from './EditMetaDate'
 import { phases } from './workflow'
 import RepoAdd from './Add'
@@ -41,24 +41,15 @@ import RepoAdd from './Add'
 export const editRepoMeta = gql`
 mutation editRepoMeta(
   $repoId: ID!
-  $creationDeadline: DateTime
-  $productionDeadline: DateTime
   $publishDate: DateTime
-  $briefingUrl: String
 ) {
   editRepoMeta(
     repoId: $repoId
-    creationDeadline: $creationDeadline
-    productionDeadline: $productionDeadline
     publishDate: $publishDate
-    briefingUrl: $briefingUrl
   ) {
     id
     meta {
-      creationDeadline
-      productionDeadline
       publishDate
-      briefingUrl
     }
   }
 }
@@ -66,8 +57,8 @@ mutation editRepoMeta(
 
 export const filterAndOrderRepos = gql`
 query repoListSearch($after: String, $search: String, $orderBy: RepoOrderBy) {
-  repos(
-    first: 100,
+  repos: reposSearch(
+    first: 50,
     after: $after,
     search: $search,
     orderBy: $orderBy
@@ -80,15 +71,15 @@ query repoListSearch($after: String, $search: String, $orderBy: RepoOrderBy) {
     nodes {
       id
       meta {
-        creationDeadline
-        productionDeadline
         publishDate
-        briefingUrl
       }
       latestCommit {
         id
         date
         message
+        author {
+          name
+        }
         document {
           id
           meta {
@@ -180,22 +171,12 @@ const phaseForRepo = repo => {
 const orderFields = [
   {
     field: 'pushed',
-    label: 'Letzte Änderung',
+    width: '28%',
     accessor: repo => new Date(repo.latestCommit.date)
   },
   {
-    field: 'creationDeadline',
-    label: 'Creation-Deadline',
-    accessor: repo => new Date(repo.meta.creationDeadline)
-  },
-  {
-    field: 'productionDeadline',
-    label: 'Produktions-Deadline',
-    accessor: repo => new Date(repo.meta.productionDeadline)
-  },
-  {
     field: 'published',
-    label: 'Publikationsdatum',
+    width: '10%',
     accessor: repo => new Date(repo.meta.publishDate)
   }
 ]
@@ -211,17 +192,41 @@ const Phase = ({phase, onClick, disabled, t}) =>
 const SEARCH_MIN_LENGTH = 3
 
 class RepoList extends Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      search: this.props.search
+    }
+
+    this.debouncedRouting = debounce(params => {
+      Router.replaceRoute('index', params)
+    }, 500)
+  }
+
+  componentWillUnmount () {
+    if (
+      this.debouncedRouting &&
+      this.debouncedRouting.cancel
+    ) {
+      this.debouncedRouting.cancel()
+    }
+  }
+
   render () {
     const {
       t,
-      data,
+      data = {},
       orderField,
       orderDirection,
       phase: filterPhase,
-      search,
       editRepoMeta,
       fetchMore
     } = this.props
+
+    const {
+      search
+    } = this.state
 
     const getParams = ({field = orderField, phase = filterPhase, q = search, order = false}) => {
       const params = {
@@ -240,6 +245,20 @@ class RepoList extends Component {
       }
 
       return params
+    }
+
+    const onChangeSearch = (_, value) => {
+      if (
+        this.debouncedRouting &&
+        this.debouncedRouting.cancel
+      ) {
+        this.debouncedRouting.cancel()
+      }
+
+      this.setState(
+        { search: value },
+        this.debouncedRouting.bind(this, getParams({q: value}))
+      )
     }
 
     const orderCompare = orderDirection === 'DESC'
@@ -264,12 +283,7 @@ class RepoList extends Component {
             'repo/search/field/minLength',
             {count: SEARCH_MIN_LENGTH}
           )}
-          onChange={(_, value) => {
-            Router.replaceRoute(
-              'index',
-              getParams({q: value})
-            )
-          }} />
+          onChange={onChangeSearch} />
 
         <div {...styles.filterBar}>
           {phases.map(phase => {
@@ -307,15 +321,15 @@ class RepoList extends Component {
           <thead>
             <Tr>
               <Th style={{width: '28%'}}>{t('repo/table/col/title')}</Th>
-              <Th style={{width: '15%'}}>{t('repo/table/col/credits')}</Th>
-              {orderFields.map(({field}) => (
+              <Th style={{width: '20%'}}>{t('repo/table/col/credits')}</Th>
+              {orderFields.map(({field, width}) => (
                 <ThOrder key={field}
                   route='index'
                   params={getParams({field, order: true})}
                   activeDirection={orderDirection}
                   activeField={orderField}
                   field={field}
-                  style={{width: '10%'}}>
+                  style={{width}}>
                   {t(`repo/table/col/${field}`, undefined, field)}
                 </ThOrder>
               ))}
@@ -325,7 +339,9 @@ class RepoList extends Component {
           </thead>
           <tbody>
             {
-              !(data.loading || data.error) && data.repos.nodes.length === 0 && (
+              !(data.loading || data.error) &&
+              data.repos &&
+              data.repos.nodes.length === 0 && (
                 <Tr>
                   <Td colSpan='8'>
                     {t('repo/search/noResults')}
@@ -341,7 +357,7 @@ class RepoList extends Component {
                   </td>
                 </tr>
               )
-              : data.repos.nodes
+              : data.repos && data.repos.nodes
               .map(repo => ({
                 phase: phaseForRepo(repo),
                 repo
@@ -351,8 +367,15 @@ class RepoList extends Component {
               .map(({repo, phase}) => {
                 const {
                   id,
-                  meta: {creationDeadline, productionDeadline, publishDate, briefingUrl},
-                  latestCommit: {date, document: {meta}}
+                  meta: {
+                    publishDate
+                  },
+                  latestCommit: {
+                    date,
+                    author: { name: authorName },
+                    message,
+                    document: { meta }
+                  }
                 } = repo
 
                 return (
@@ -370,20 +393,9 @@ class RepoList extends Component {
                       renderMdast(meta.credits.filter(link.matchMdast), creditSchema),
                       () => ', '
                     )}</Td>
-                    <TdNum>{displayDateTime(date)}</TdNum>
                     <TdNum>
-                      <EditMetaDate
-                        value={creationDeadline}
-                        onChange={(value) => editRepoMeta(
-                          {repoId: id, creationDeadline: value}
-                        )} />
-                    </TdNum>
-                    <TdNum>
-                      <EditMetaDate
-                        value={productionDeadline}
-                        onChange={(value) => editRepoMeta(
-                          {repoId: id, productionDeadline: value}
-                        )} />
+                      {displayDateTime(date)}<br />
+                      <Label>{authorName}: «{message}»</Label>
                     </TdNum>
                     <TdNum>
                       <EditMetaDate
@@ -396,10 +408,6 @@ class RepoList extends Component {
                       <Phase t={t} phase={phase} />
                     </Td>
                     <Td style={{textAlign: 'right'}}>
-                      <Briefing value={briefingUrl} onChange={value => editRepoMeta(
-                        {repoId: id, briefingUrl: value}
-                      )} />
-                      {' '}
                       {repo.latestPublications
                         .filter(publication => publication.document && publication.prepublication)
                         .map(({name, document: {meta: {path, slug}}}) => (
@@ -433,6 +441,8 @@ const RepoListWithQuery = compose(
   withT,
   graphql(filterAndOrderRepos, {
     options: ({ search }) => ({
+      fetchPolicy: 'cache-and-network',
+      skip: !process.browser,
       notifyOnNetworkStatusChange: true,
       variables: {
         search: search && search.length >= SEARCH_MIN_LENGTH
