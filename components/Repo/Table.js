@@ -204,6 +204,15 @@ class RepoList extends Component {
     }, 500)
   }
 
+  componentWillUnmount () {
+    if (
+      this.debouncedRouting &&
+      this.debouncedRouting.cancel
+    ) {
+      this.debouncedRouting.cancel()
+    }
+  }
+
   render () {
     const {
       t,
