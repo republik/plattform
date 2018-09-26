@@ -27,6 +27,8 @@ fragment LatestPublicationProbs on Ref {
 }
 fragment Repo on Repository {
   name
+  createdAt
+  updatedAt
   defaultBranchRef {
     target {
       ... on Commit {

@@ -17,6 +17,21 @@ type queries {
   ): RepoConnection!
   repo(id: ID!): Repo!
   embed(id: ID!, embedType: EmbedType!): Embed!
+
+  """
+  This query is a cached version of repos query. It uses cached information
+  about repositories.
+  """
+  reposSearch(
+    first: Int
+    last: Int
+    before: String
+    after: String
+    # can not be combined with orderBy
+    search: String
+    template: String
+    orderBy: RepoOrderBy
+  ): RepoConnection!
 }
 
 type mutations {

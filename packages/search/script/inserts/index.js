@@ -1,6 +1,7 @@
 const dict = {
   comment: require('./comment'),
   document: require('./document'),
+  repo: require('./repo'),
   user: require('./user')
 }
 

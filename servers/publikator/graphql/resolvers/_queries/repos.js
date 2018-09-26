@@ -102,7 +102,7 @@ module.exports = async (__, args, context, info) => {
     const publicationDocumentsConnection =
       await getDocuments(
         __,
-        { first: documentIds.length, id: documentIds },
+        { first: documentIds.length, ids: documentIds },
         context
       )
 

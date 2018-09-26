@@ -6,6 +6,7 @@ const {
   gitAuthor
 } = require('../../../lib/github')
 const yaml = require('../../../lib/yaml')
+const { upsert: repoCacheUpsert } = require('../../../lib/cache/upsert')
 
 const { latestCommit: getLatestCommit } = require('../Repo')
 
@@ -67,6 +68,11 @@ module.exports = async (_, args, context) => {
     `tags/${TAG_NAME}`,
     newTag.sha
   )
+
+  await repoCacheUpsert({
+    id: repoId,
+    meta
+  })
 
   // pubsub not available if called by pullRedis
   if (pubsub) {

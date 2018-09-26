@@ -321,11 +321,12 @@ const getFirst = (first, filter, user, recursive) => {
 
 const getIndicesList = (filter) => {
   const limitType = getFilterValue(filter, 'type')
-  const indicesFilter = limitType
+  const typeFilter = limitType
     ? ({type}) => type === limitType
     : Boolean
+  const searchableFilter = ({ searchable = true }) => searchable
 
-  return indices.list.filter(indicesFilter)
+  return indices.list.filter(typeFilter).filter(searchableFilter)
 }
 
 const hasFieldRequested = (fieldName, GraphQLResolveInfo) => {
