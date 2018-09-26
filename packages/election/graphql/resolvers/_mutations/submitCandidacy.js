@@ -22,7 +22,7 @@ module.exports = async (_, { slug }, { pgdb, user: me, req }) => {
     {
       userId: me.id,
       discussionId: election.discussion.id,
-      content: me.statement,
+      content: me._raw.statement,
       hotness: 0.0
     },
     {userId: me.id, discussionId: election.discussion.id}
