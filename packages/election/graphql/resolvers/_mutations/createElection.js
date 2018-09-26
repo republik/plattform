@@ -9,7 +9,7 @@ const { upsert } = require('../../../lib/db')
 
 module.exports = async (_, { electionInput }, { pgdb, user: me, req }) => {
   ensureSignedIn(req)
-  Roles.ensureUserIsInRoles(me, ['admin', 'support'])
+  Roles.ensureUserIsInRoles(me, ['admin', 'supporter'])
 
   const {
     slug,
