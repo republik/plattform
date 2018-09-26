@@ -9,5 +9,5 @@ module.exports = async (_, args, { pgdb, user: me, req }) => {
   ensureSignedIn(req)
   Roles.ensureUserIsInRoles(me, ['admin', 'supporter', 'associate'])
 
-  return getElections(pgdb)
+  return getElections(pgdb, me)
 }

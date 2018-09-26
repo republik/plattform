@@ -10,6 +10,6 @@ module.exports = async (_, { slug }, { pgdb, user: me, req }) => {
   Roles.ensureUserIsInRoles(me, ['admin'])
 
   await pgdb.public.electionCandidacies.deleteOne({userId: me.id})
-  const elections = await getElections(pgdb, {slug})
+  const elections = await getElections(pgdb, me, {slug})
   return elections[0]
 }

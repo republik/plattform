@@ -4,7 +4,7 @@ const resolveCandidate = require('../lib/resolveCandidate')
 const transformElection = (election) =>
   pick(election, ['id', 'slug', 'description', 'beginDate', 'endDate', 'numSeats'])
 
-const getElections = async (pgdb, where) => {
+const getElections = async (pgdb, me, where) => {
   const condition = {
     active: true,
     'endDate >': Date.now()
@@ -20,8 +20,9 @@ const getElections = async (pgdb, where) => {
       const candidacies = await pgdb.public.electionCandidacies.find({electionId: election.id})
       return {
         ...transformElection(election),
+        candidates: Promise.all(candidacies.map(c => resolveCandidate(pgdb, c))),
         discussion,
-        candidates: Promise.all(candidacies.map(c => resolveCandidate(pgdb, c)))
+        userIsEligible: me.roles.some(r => r === 'associate')
       }
     })
   )

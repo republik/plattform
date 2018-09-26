@@ -14,7 +14,7 @@ type Election {
   turnout: ElectionTurnout
   result: ElectionResult
   # current user (me) is eligible to submit a ballot
-  userIsEligible: Boolean
+  userIsEligible: Boolean!
   # current user (me) has submitted a ballot
   userHasSubmitted: Boolean
   userSubmitDate: DateTime
