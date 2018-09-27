@@ -1,5 +1,5 @@
 {
-  "updated": "2018-09-27T14:30:41.980Z",
+  "updated": "2018-09-27T14:41:30.781Z",
   "title": "live",
   "data": [
     {
@@ -523,7 +523,7 @@
       "value": "Problelesen der Republik"
     },
     {
-      "key": "api/preview/email/onboarding/subject",
+      "key": "api/election/email/election_candidacy_confirmation_gen18m/subject",
       "value": "Vielen Dank für Ihre Kandidatur"
     }
   ]
