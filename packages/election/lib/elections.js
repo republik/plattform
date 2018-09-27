@@ -17,15 +17,13 @@ const findBySlug = async (slug, election, pgdb) => {
   const candidacies =
     await pgdb.public.electionCandidacies.find({ electionId: election.id })
 
-  const users =
-    await pgdb.public.users.find({
-      id: candidacies.map(candidate => candidate.userId)
-    })
+  const users = candidacies.length > 0
+    ? await pgdb.public.users.find({id: candidacies.map(candidate => candidate.userId)})
+    : []
 
-  const addresses =
-    await pgdb.public.addresses.find({
-      id: users.map(user => user.addressId)
-    })
+  const addresses = users.length > 0
+    ? await pgdb.public.addresses.find({id: users.map(user => user.addressId)})
+    : []
 
   const usersWithAddresses = users.map(user => ({
     ...user,
@@ -34,6 +32,11 @@ const findBySlug = async (slug, election, pgdb) => {
 
   const comments =
     await pgdb.public.comments.find({ discussionId: election.discussionId })
+
+  const discussion =
+    await pgdb.public.discussions.findOne({id: election.discussionId})
+
+  election.discussion = discussion
 
   election.candidacies = candidacies.map(candidacy => ({
     ...candidacy,

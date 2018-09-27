@@ -2,13 +2,13 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 
 const { upsert } = require('../../../lib/db')
 const { findBySlug } = require('../../../lib/elections')
-const { findByUser } = require('../../../lib/candidacies')
+const {findOneById} = require('../../../lib/candidacies')
 const mailLib = require('../../../lib/mail')
 
 module.exports = async (_, { slug }, { pgdb, user: me, t }) => {
   Roles.ensureUserIsInRoles(me, ['admin', 'associate'])
 
-  const election = findBySlug(slug, null, pgdb)
+  const election = await findBySlug(slug, null, pgdb)
 
   if (!election) {
     throw new Error(`No election for slug ${slug}`)
@@ -25,7 +25,7 @@ module.exports = async (_, { slug }, { pgdb, user: me, t }) => {
     { userId: me.id, discussionId: election.discussion.id }
   )
 
-  const { isNew } = await upsert(
+  const {entity, isNew} = await upsert(
     pgdb.public.electionCandidacies,
     {
       userId: me.id,
@@ -44,5 +44,5 @@ module.exports = async (_, { slug }, { pgdb, user: me, t }) => {
     })
   }
 
-  return findByUser(me, pgdb)
+  return findOneById(entity.id, pgdb)
 }

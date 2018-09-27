@@ -29,6 +29,36 @@ const findByUser = async (user, pgdb) => {
   }))
 }
 
+const findOneById = async (id, pgdb) => {
+  const candidacy =
+    await pgdb.public.electionCandidacies.findOne({id})
+
+  const user = await pgdb.public.users.findOne({id: candidacy.userId})
+
+  const address =
+    await pgdb.public.addresses.findOne({
+      id: user.addressId
+    })
+
+  const comment =
+    await pgdb.public.comments.findOne({
+      id: candidacy.commentId
+    })
+
+  const election =
+    await pgdb.public.elections.findOne({
+      id: candidacy.electionId
+    })
+
+  return {
+    ...candidacy,
+    user: Object.assign(user, {address}),
+    election,
+    comment
+  }
+}
+
 module.exports = {
-  findByUser
+  findByUser,
+  findOneById
 }
