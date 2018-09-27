@@ -4,7 +4,7 @@ module.exports = {
   user: (candidacy, args, { user: me }) => transformUser(candidacy.user),
   yearOfBirth: (candidacy, args, { user: me }) => {
     if (!Roles.userIsInRoles(me, ['admin', 'supporter', 'associate'])) {
-      return ''
+      return
     }
 
     if (!candidacy.user.birthday) {
@@ -15,7 +15,7 @@ module.exports = {
   },
   city: (candidacy, args, { user: me }) => {
     if (!Roles.userIsInRoles(me, ['admin', 'supporter', 'associate'])) {
-      return ''
+      return
     }
 
     if (!candidacy.user.address.city) {
