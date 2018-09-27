@@ -8,13 +8,13 @@ const { FRONTEND_BASE_URL } = process.env
 const sendCandidacyConfirmation = async ({ user, election, pgdb, t }) => {
   debug('sendCandidacyConfirmation')
 
-  const { shortSlug } = election
+  const { slug } = election
 
   return sendMail(
     user.email,
     // either "election_candidacy_confirmation"
     // or "election_candidacy_confirmation_slugsomething"
-    ['election_candidacy_confirmation', shortSlug].filter(Boolean).join('_'),
+    ['election_candidacy_confirmation', slug].filter(Boolean).join('_'),
     { user, t }
   )
 }
