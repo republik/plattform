@@ -5,7 +5,7 @@ const {
   getKeyId,
   containsPrivateKey
 } = require('../../../lib/pgp')
-const { isEligible } = require('../../../lib/profile')
+const { isEligible, isInCandidacy } = require('../../../lib/profile')
 const { Redirections: {
   upsert: upsertRedirection,
   delete: deleteRedirection
@@ -97,6 +97,21 @@ module.exports = async (_, args, context) => {
     const check = await isEligible(me.id, pgdb)
     if (!check) {
       throw new Error(t('profile/notEligible'))
+    }
+  }
+
+  const user = await pgdb.public.users.findOne({ id: me.id })
+
+  if (await isInCandidacy(user, pgdb)) {
+    if (args.hasPublicProfile === false) {
+      throw new Error(t('profile/inCandidacy/notUnpublishable'))
+    }
+
+    if (
+      'birthday' in args &&
+      (args.birthday === null || args.birthday.length < 10)
+    ) {
+      throw new Error(t('profile/inCandidacy/birthdayNotOptional'))
     }
   }
 
