@@ -1,12 +1,9 @@
-const { Roles, ensureSignedIn } = require('@orbiting/backend-modules-auth')
+const { Roles } = require('@orbiting/backend-modules-auth')
 
-const getElections = require('../../../lib/getElections')
+const { findBySlug } = require('../../../lib/elections')
 
-module.exports = async (_, { slug }, { pgdb, user: me, req }) => {
-  ensureSignedIn(req)
+module.exports = async (_, { slug }, { pgdb, user: me }) => {
   Roles.ensureUserIsInRoles(me, ['admin', 'supporter', 'associate'])
 
-  const elections = await getElections(pgdb, me, { slug })
-
-  return elections[0]
+  return findBySlug(slug, null, pgdb)
 }

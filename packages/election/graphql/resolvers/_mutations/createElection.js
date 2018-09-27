@@ -1,14 +1,14 @@
 const moment = require('moment')
 
-const { Roles, ensureSignedIn } = require('@orbiting/backend-modules-auth')
+const { Roles } = require('@orbiting/backend-modules-auth')
 
 const { upsert } = require('../../../lib/db')
+const { findBySlug } = require('../../../lib/elections')
 
 /**
  * Allows admin or support to create a new election.
  */
-module.exports = async (_, { electionInput }, { pgdb, user: me, req }) => {
-  ensureSignedIn(req)
+module.exports = async (_, { electionInput }, { pgdb, user: me }) => {
   Roles.ensureUserIsInRoles(me, ['admin', 'supporter'])
 
   const {
@@ -26,7 +26,7 @@ module.exports = async (_, { electionInput }, { pgdb, user: me, req }) => {
     { title: description }
   )
 
-  const { entity: rawElection } = await upsert(
+  await upsert(
     pgdb.public.elections,
     {
       ...electionInput,
@@ -35,8 +35,5 @@ module.exports = async (_, { electionInput }, { pgdb, user: me, req }) => {
     { slug }
   )
 
-  return {
-    ...rawElection,
-    discussion: rawDiscussion
-  }
+  return findBySlug(slug, null, pgdb)
 }

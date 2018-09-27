@@ -1,15 +1,14 @@
-const { Roles, ensureSignedIn } = require('@orbiting/backend-modules-auth')
+const { Roles } = require('@orbiting/backend-modules-auth')
 
-const getElections = require('../../../lib/getElections')
+const electionsLib = require('../../../lib/elections')
 
 /**
  * Allows candidates with admin role to cancel their own candidacy.
  */
-module.exports = async (_, { slug }, { pgdb, user: me, req }) => {
-  ensureSignedIn(req)
+module.exports = async (_, { slug }, { pgdb, user: me }) => {
   Roles.ensureUserIsInRoles(me, ['admin'])
 
-  const election = (await getElections(pgdb, me, {slug}))[0]
+  const election = await electionsLib.findBySlug(slug, null, pgdb)
 
   if (!election) {
     throw new Error(`No election for slug ${slug}`)
@@ -18,5 +17,5 @@ module.exports = async (_, { slug }, { pgdb, user: me, req }) => {
   await pgdb.public.electionCandidacies
     .deleteOne({ userId: me.id, electionId: election.id })
 
-  return (await getElections(pgdb, me, {slug}))[0]
+  return electionsLib.findBySlug(slug, null, pgdb)
 }
