@@ -6,10 +6,8 @@ const findByUser = async (user, pgdb) => {
     return []
   }
 
-  const address =
-    await pgdb.public.addresses.findOne({
-      id: user.addressId
-    })
+  const address = await pgdb.public.addresses.findOne({ id: user.addressId })
+  Object.assign(user, { address })
 
   const comments =
     await pgdb.public.comments.find({
@@ -23,36 +21,30 @@ const findByUser = async (user, pgdb) => {
 
   return candidacies.map(candidacy => ({
     ...candidacy,
-    user: Object.assign(user, { address }),
+    user,
     election: elections.find(election => election.id === candidacy.electionId),
     comment: comments.find(comment => comment.id === candidacy.commentId)
   }))
 }
 
-const findOneById = async (id, pgdb) => {
+const findById = async (id, pgdb) => {
   const candidacy =
     await pgdb.public.electionCandidacies.findOne({id})
 
   const user = await pgdb.public.users.findOne({id: candidacy.userId})
 
-  const address =
-    await pgdb.public.addresses.findOne({
-      id: user.addressId
-    })
+  const address = await pgdb.public.addresses.findOne({ id: user.addressId })
+  Object.assign(user, { address })
 
   const comment =
-    await pgdb.public.comments.findOne({
-      id: candidacy.commentId
-    })
+    await pgdb.public.comments.findOne({ id: candidacy.commentId })
 
   const election =
-    await pgdb.public.elections.findOne({
-      id: candidacy.electionId
-    })
+    await pgdb.public.elections.findOne({ id: candidacy.electionId })
 
   return {
     ...candidacy,
-    user: Object.assign(user, {address}),
+    user,
     election,
     comment
   }
@@ -60,5 +52,5 @@ const findOneById = async (id, pgdb) => {
 
 module.exports = {
   findByUser,
-  findOneById
+  findById
 }

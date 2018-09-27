@@ -2,7 +2,7 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 
 const { upsert } = require('../../../lib/db')
 const { findBySlug } = require('../../../lib/elections')
-const {findOneById} = require('../../../lib/candidacies')
+const { findById } = require('../../../lib/candidacies')
 const mailLib = require('../../../lib/mail')
 
 module.exports = async (_, { slug }, { pgdb, user: me, t }) => {
@@ -44,5 +44,5 @@ module.exports = async (_, { slug }, { pgdb, user: me, t }) => {
     })
   }
 
-  return findOneById(entity.id, pgdb)
+  return findById(entity.id, pgdb)
 }
