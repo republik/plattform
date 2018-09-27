@@ -16,5 +16,5 @@ exports.isEligible = async (userId, pgdb) => {
  * Check if profile (actually user) has submitted a candidacy.
  */
 exports.isInCandidacy = async (user, pgdb) => {
-  return !!findByUser(user, pgdb)
+  return (await findByUser(user, pgdb)).length > 0
 }
