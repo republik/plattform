@@ -1,6 +1,6 @@
 module.exports = {
   upsert: async (table, data, condition) => {
-    const where = condition || {id: data.id}
+    const where = condition || { id: data.id }
 
     try {
       if (Object.values(where).every(Boolean) && await table.findFirst(where)) {

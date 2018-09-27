@@ -1,9 +1,6 @@
-const getElections = require('../../../lib/getElections')
+const { Roles, ensureSignedIn } = require('@orbiting/backend-modules-auth')
 
-const {
-  Roles,
-  ensureSignedIn
-} = require('@orbiting/backend-modules-auth')
+const getElections = require('../../../lib/getElections')
 
 module.exports = async (_, args, { pgdb, user: me, req }) => {
   ensureSignedIn(req)

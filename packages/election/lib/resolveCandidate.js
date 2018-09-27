@@ -1,6 +1,4 @@
-const {
-  transformUser
-} = require('@orbiting/backend-modules-auth')
+const { transformUser } = require('@orbiting/backend-modules-auth')
 
 const resolveCandidate = async (pgdb, candidate) => {
   const u = await pgdb.public.users.findOne({id: candidate.userId})
