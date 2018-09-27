@@ -50,7 +50,11 @@ const findById = async (id, pgdb) => {
   }
 }
 
+const hasUserCandidacies = async (user, pgdb) =>
+  pgdb.public.electionCandidacies.count({ userId: user.id }).length > 0
+
 module.exports = {
   findByUser,
-  findById
+  findById,
+  hasUserCandidacies
 }

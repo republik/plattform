@@ -1,4 +1,4 @@
-const { findByUser } =
+const { hasUserCandidacies } =
   require('@orbiting/backend-modules-election/lib/candidacies')
 
 exports.isEligible = async (userId, pgdb) => {
@@ -15,6 +15,4 @@ exports.isEligible = async (userId, pgdb) => {
 /**
  * Check if profile (actually user) has submitted a candidacy.
  */
-exports.isInCandidacy = async (user, pgdb) => {
-  return (await findByUser(user, pgdb)).length > 0
-}
+exports.isInCandidacy = async (user, pgdb) => hasUserCandidacies
