@@ -11,7 +11,7 @@ type queries {
 
 type mutations {
   createElection(electionInput: ElectionInput!): Election!
-  submitCandidacy(slug: String!): Candidate!
+  submitCandidacy(slug: String!): Candidacy!
   cancelCandidacy(slug: String!): Election!
 }
 `
