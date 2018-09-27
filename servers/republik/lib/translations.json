@@ -1,5 +1,5 @@
 {
-  "updated": "2018-09-27T13:40:09.659Z",
+  "updated": "2018-09-27T14:30:41.980Z",
   "title": "live",
   "data": [
     {
@@ -159,11 +159,19 @@
       "value": "Sie benötigen ein Portrait, um auf der Community-Seite zu erscheinen"
     },
     {
-      "key": "profile/inCandidacy/birthdayNotOptional",
+      "key": "profile/candidacy/statement/needed",
+      "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet, weshalb wir ein Statement zwingend benötigen."
+    },
+    {
+      "key": "profile/candidacy/credential/needed",
+      "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet, weshalb wir eine Funktion zwingend benötigen."
+    },
+    {
+      "key": "profile/candidacy/birthday/needed",
       "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet, weshalb wir das Geburtsdatum zwingend benötigen."
     },
     {
-      "key": "profile/inCandidacy/notUnpublishable",
+      "key": "profile/candidacy/needed",
       "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet und kann im Moment nicht zurückgenommen werden."
     },
     {

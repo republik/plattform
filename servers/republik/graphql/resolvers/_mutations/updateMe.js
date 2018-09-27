@@ -100,18 +100,20 @@ module.exports = async (_, args, context) => {
     }
   }
 
-  const user = await pgdb.public.users.findOne({ id: me.id })
-
-  if (await isInCandidacy(user, pgdb)) {
+  if (await isInCandidacy(me._raw, pgdb)) {
     if (args.hasPublicProfile === false) {
-      throw new Error(t('profile/inCandidacy/notUnpublishable'))
+      throw new Error(t('profile/candidacy/needed'))
     }
 
     if (
       'birthday' in args &&
       (args.birthday === null || args.birthday.length < 10)
     ) {
-      throw new Error(t('profile/inCandidacy/birthdayNotOptional'))
+      throw new Error(t('profile/candidacy/birthday/needed'))
+    }
+
+    if ('statement' in args && args.statement.length < 1) {
+      throw new Error(t('profile/candidacy/statement/needed'))
     }
   }
 
