@@ -10,7 +10,6 @@ const transform = function (row) {
     { id: row.discussionId }
   )
   const isAnonymityEnforced = discussion.anonymity === 'ENFORCED'
-  const isHidden = discussion.hidden
 
   const discussionPreferences = _.find(
     this.payload.discussionPreferences,
@@ -19,14 +18,16 @@ const transform = function (row) {
   const isAnonymous = discussionPreferences && discussionPreferences.anonymous
 
   row.resolved = {
-    user: null
+    user: null,
+    discussion: {
+      hidden: discussion.hidden
+    }
   }
 
   if (
     user &&
     !isAnonymityEnforced &&
-    !isAnonymous &&
-    !isHidden
+    !isAnonymous
   ) {
     let credential = false
 
@@ -85,7 +86,8 @@ const getDefaultResource = async ({ pgdb }) => {
         {
           fields: [
             'id',
-            'anonymity'
+            'anonymity',
+            'hidden'
           ]
         }
       ),

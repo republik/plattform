@@ -24,7 +24,8 @@ module.exports = {
           must: [
             { term: { __type: type } },
             { term: { published: true } },
-            { term: { adminUnpublished: false } }
+            { term: { adminUnpublished: false } },
+            { term: { 'resolved.discussion.hidden': false } }
           ]
         }
       })
@@ -69,6 +70,13 @@ module.exports = {
                 },
                 username: {
                   type: 'keyword'
+                }
+              }
+            },
+            discussion: {
+              properties: {
+                hidden: {
+                  type: 'boolean'
                 }
               }
             }
