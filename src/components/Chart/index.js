@@ -5,7 +5,9 @@ import { css } from 'glamor'
 import { measure } from './utils'
 import Bar, { Lollipop } from './Bars'
 import TimeBar from './TimeBars'
-import { Line, Slope } from './Lines';
+import { Line, Slope } from './Lines'
+import ScatterPlot from './ScatterPlots'
+
 import colors from '../../theme/colors'
 
 import { mUp } from '../../theme/mediaQueries'
@@ -16,7 +18,8 @@ export const ReactCharts = {
   Lollipop,
   TimeBar,
   Line,
-  Slope
+  Slope,
+  ScatterPlot
 }
 
 const createRanges = ({neutral, sequential3, opposite3, discrete}) => {

@@ -613,6 +613,18 @@ ReactDOM.render(
               t
             },
             src: require('./components/Chart/Slopes.docs.md')
+          },
+          {
+            path: '/charts/scatterplots',
+            title: 'Scatter Plots',
+            imports: {
+              ...require('./components/Typography'),
+              ChartTitle: require('./components/Chart').ChartTitle,
+              ChartLead: require('./components/Chart').ChartLead,
+              CsvChart: require('./components/Chart/Csv'),
+              t
+            },
+            src: require('./components/Chart/ScatterPlots.docs.md')
           }
         ]
       },
