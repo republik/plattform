@@ -18,7 +18,10 @@ const transform = function (row) {
   const isAnonymous = discussionPreferences && discussionPreferences.anonymous
 
   row.resolved = {
-    user: null
+    user: null,
+    discussion: {
+      hidden: discussion.hidden
+    }
   }
 
   if (
@@ -83,7 +86,8 @@ const getDefaultResource = async ({ pgdb }) => {
         {
           fields: [
             'id',
-            'anonymity'
+            'anonymity',
+            'hidden'
           ]
         }
       ),
