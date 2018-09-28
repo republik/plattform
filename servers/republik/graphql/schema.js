@@ -58,6 +58,7 @@ type mutations {
     facebookId: String
     twitterHandle: String
     publicUrl: String
+    disclosures: String
   ): User!
 
   updateNotificationSettings(

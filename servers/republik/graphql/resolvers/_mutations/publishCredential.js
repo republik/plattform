@@ -1,6 +1,7 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const { MAX_CREDENTIAL_LENGTH } = require('./discussion/lib/Credential')
 const ensureStringLength = require('../../../lib/ensureStringLength')
+const { isInCandidacy } = require('../../../lib/profile')
 
 module.exports = async (_, args, { pgdb, req, user: me, t }) => {
   ensureSignedIn(req)
@@ -8,6 +9,13 @@ module.exports = async (_, args, { pgdb, req, user: me, t }) => {
   const {
     description
   } = args
+
+  if (
+    await isInCandidacy(me._raw, pgdb) &&
+    (!description || description.length < 1)
+  ) {
+    throw new Error(t('profile/candidacy/credential/needed'))
+  }
 
   ensureStringLength(description, {
     max: MAX_CREDENTIAL_LENGTH,

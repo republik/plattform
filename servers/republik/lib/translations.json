@@ -1,5 +1,5 @@
 {
-  "updated": "2018-09-05T14:36:35.513Z",
+  "updated": "2018-09-27T14:41:30.781Z",
   "title": "live",
   "data": [
     {
@@ -159,6 +159,22 @@
       "value": "Sie benötigen ein Portrait, um auf der Community-Seite zu erscheinen"
     },
     {
+      "key": "profile/candidacy/statement/needed",
+      "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet, weshalb wir ein Statement zwingend benötigen."
+    },
+    {
+      "key": "profile/candidacy/credential/needed",
+      "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet, weshalb wir eine Funktion zwingend benötigen."
+    },
+    {
+      "key": "profile/candidacy/birthday/needed",
+      "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet, weshalb wir das Geburtsdatum zwingend benötigen."
+    },
+    {
+      "key": "profile/candidacy/needed",
+      "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet und kann im Moment nicht zurückgenommen werden."
+    },
+    {
       "key": "profile/notEligible",
       "value": "Nur Verlegerinnen und Abonnenten können ein Profil veröffentlichen."
     },
@@ -189,6 +205,10 @@
     {
       "key": "profile/statement/label",
       "value": "Statement"
+    },
+    {
+      "key": "profile/disclosures/label",
+      "value": "Interessenbindungen"
     },
     {
       "key": "profile/biography/label",
@@ -501,6 +521,10 @@
     {
       "key": "api/preview/email/onboarding/subject",
       "value": "Problelesen der Republik"
+    },
+    {
+      "key": "api/election/email/election_candidacy_confirmation_gen18m/subject",
+      "value": "Vielen Dank für Ihre Kandidatur"
     }
   ]
 }
