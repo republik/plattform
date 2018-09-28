@@ -25,11 +25,6 @@ module.exports = {
             { term: { __type: type } },
             { term: { published: true } },
             { term: { adminUnpublished: false } }
-          ],
-          must_not: [
-            { terms: { discussionId: [
-              '3c625fe4-788f-44d5-ad5e-ac93bd9a6292' // Crowdfunding discussions
-            ] } }
           ]
         }
       })
