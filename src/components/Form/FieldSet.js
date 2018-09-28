@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 
 import Field from './Field'
@@ -72,35 +72,38 @@ class FieldSet extends Component {
       additionalFieldProps
     } = this.props
     return (
-      <span>
+      <Fragment>
         {fields.map(field => {
-          const {label, type, autoComplete, name, validator} = field
+          const { label, type, autoComplete, name, validator, explanation } = field
 
           return (
-            <Field key={name}
-              label={label}
-              type={type}
-              name={autoComplete || name}
-              autoComplete={autoComplete}
-              {...additionalFieldProps(field)}
-              value={values[name]}
-              error={dirty[name] && errors[name]}
-              onChange={(_, value, shouldValidate) => {
-                onChange({
-                  values: {
-                    [name]: value
-                  },
-                  errors: validator ? {
-                    [name]: validator(value)
-                  } : {},
-                  dirty: {
-                    [name]: shouldValidate
-                  }
-                })
-              }} />
+            <Fragment key={name}>
+              <Field
+                label={label}
+                type={type}
+                name={autoComplete || name}
+                autoComplete={autoComplete}
+                {...additionalFieldProps(field)}
+                value={values[name]}
+                error={dirty[name] && errors[name]}
+                onChange={(_, value, shouldValidate) => {
+                  onChange({
+                    values: {
+                      [name]: value
+                    },
+                    errors: validator ? {
+                      [name]: validator(value)
+                    } : {},
+                    dirty: {
+                      [name]: shouldValidate
+                    }
+                  })
+                }} />
+              {explanation}
+            </Fragment>
           )
         })}
-      </span>
+      </Fragment>
     )
   }
 }
@@ -112,7 +115,8 @@ FieldSet.propTypes = {
     name: PropTypes.string.isRequired,
     type: PropTypes.string,
     validator: PropTypes.func,
-    autoComplete: PropTypes.string
+    autoComplete: PropTypes.string,
+    explanation: PropTypes.node
   })).isRequired,
   onFieldChange: PropTypes.func
 }

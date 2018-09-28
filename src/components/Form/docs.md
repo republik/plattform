@@ -245,9 +245,16 @@ state: {values: {}, errors: {}, dirty: {}}
       validator: (value) => (
         value.trim().length <= 0 && 'Nachname fehlt'
       )
+    },
+    {
+      label: 'Telefonnummer',
+      name: 'phoneNumber',
+      explanation: <Label>Mit Ländervorwahl</Label>
     }
   ]} />
 ```
+
+You may add a `React.node` as `explanation` to be rendered after the field, and explain what should be entered.
 
 ### Custom Fields
 
