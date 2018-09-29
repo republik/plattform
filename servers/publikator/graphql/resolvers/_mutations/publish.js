@@ -391,6 +391,12 @@ module.exports = async (
   await after()
   await sleep(2 * 1000)
 
+  await repoCacheUpsert({
+    id: repoId,
+    meta: repoMeta,
+    publications: await getLatestPublications({ id: repoId })
+  })
+
   await redis.publishAsync(channelKey, 'refresh')
 
   // release for nice view on github
@@ -433,11 +439,6 @@ module.exports = async (
       throw new Error('Mailchimp: could not update campaign', updateResponse)
     }
   }
-
-  await repoCacheUpsert({
-    id: repoId,
-    publications: await getLatestPublications({ id: repoId })
-  })
 
   await pubsub.publish('repoUpdate', {
     repoUpdate: {

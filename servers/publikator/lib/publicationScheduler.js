@@ -8,9 +8,14 @@ const indices = require('@orbiting/backend-modules-search/lib/indices')
 const { getIndexAlias } = require('@orbiting/backend-modules-search/lib/utils')
 const { handleRedirection } = require('./Document')
 const {
+  latestPublications: getLatestPublications,
+  meta: getRepoMeta
+} = require('../graphql/resolvers/Repo')
+const {
   upsertRef,
   deleteRef
 } = require('./github')
+const { upsert: repoCacheUpsert } = require('./cache/upsert')
 
 const elastic = Elastic.client()
 
@@ -153,6 +158,12 @@ const run = async (_lock) => {
           console.error('Error: one or more promises failed:')
           console.error(e)
         })
+
+      await repoCacheUpsert({
+        id: repoId,
+        meta: await getRepoMeta({ id: repoId }),
+        publications: await getLatestPublications({ id: repoId })
+      })
 
       debug(
         'published', {

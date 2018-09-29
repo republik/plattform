@@ -1,12 +1,13 @@
 const elastic = require('@orbiting/backend-modules-base/lib/elastic').client()
-
 const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
 
-const {
-  deleteRef
-} = require('../../../lib/github')
-
 const { channelKey } = require('../../../lib/publicationScheduler')
+const { deleteRef } = require('../../../lib/github')
+const {
+  latestPublications: getLatestPublications,
+  meta: getRepoMeta
+} = require('../Repo')
+const { upsert: repoCacheUpsert } = require('../../../lib/cache/upsert')
 
 const { DISABLE_PUBLISH } = process.env
 
@@ -43,6 +44,12 @@ module.exports = async (
     require('@orbiting/backend-modules-search')
 
   await unpublish(elastic, redis, repoId)
+
+  await repoCacheUpsert({
+    id: repoId,
+    meta: await getRepoMeta({ id: repoId }),
+    publications: await getLatestPublications({ id: repoId })
+  })
 
   await redis.publishAsync(channelKey, 'refresh')
 
