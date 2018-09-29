@@ -1,5 +1,3 @@
-const visit = require('unist-util-visit')
-
 const { metaFieldResolver } = require('./resolve')
 
 const getMeta = doc => {
@@ -12,16 +10,7 @@ const getMeta = doc => {
     ? metaFieldResolver(doc.content.meta, doc._all)
     : { }
 
-  let credits = []
-  visit(doc.content, 'zone', node => {
-    if (node.identifier === 'TITLE') {
-      const paragraphs = node.children
-        .filter(child => child.type === 'paragraph')
-      if (paragraphs.length >= 2) {
-        credits = paragraphs[paragraphs.length - 1].children
-      }
-    }
-  })
+  const credits = doc.content.meta.credits
 
   const { audioSourceMp3, audioSourceAac, audioSourceOgg } = doc.content.meta
   const audioSource = audioSourceMp3 || audioSourceAac || audioSourceOgg ? {
