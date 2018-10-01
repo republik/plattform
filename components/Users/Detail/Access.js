@@ -231,6 +231,14 @@ class Grant extends Component {
           </Interaction.P>
         }
 
+        {isExpanded && grant.campaign && grant.campaign.endAt &&
+          <Interaction.P>
+            <Label>{t('account/access/Grant/campaignEndAt/label')}</Label>
+            <br />
+            {getHumanDate(grant.campaign.endAt)}
+          </Interaction.P>
+        }
+
         {isExpanded &&
           <Interaction.P>
             <Label>{t('account/access/Grant/id/label')}</Label>
@@ -312,6 +320,14 @@ const Campaigns = ({ campaigns, revokeAccess, t }) => (
             { title: campaign.title }
           )}
         </Interaction.H3>
+        <Label>
+          {t(
+            moment(campaign.endAt) < moment()
+              ? 'account/access/Campaigns/campaign/ended'
+              : 'account/access/Campaigns/campaign/ending',
+            { endAt: getHumanDate(campaign.endAt) }
+          )}
+        </Label>
         {campaign.slots && <Slots slots={campaign.slots} t={t} />}
         <div {...styles.grants}>
           {campaign.grants.map(grant => (

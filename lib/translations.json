@@ -2057,6 +2057,14 @@
       "value": "Kampagne «{title}»"
     },
     {
+      "key": "account/access/Campaigns/campaign/ended",
+      "value": "Diese Kampagne endete am {endAt}."
+    },
+    {
+      "key": "account/access/Campaigns/campaign/ending",
+      "value": "Diese Kampagne ist gültig bis {endAt}."
+    },
+    {
       "key": "account/access/Grants/title",
       "value": "Erhaltene Zugriffe"
     },
@@ -2107,6 +2115,10 @@
     {
       "key": "account/access/Grant/campaign/label",
       "value": "Kampagne"
+    },
+    {
+      "key": "account/access/Grant/campaignEndAt/label",
+      "value": "Kampagne-Ende"
     },
     {
       "key": "account/access/Grant/details/hide",
