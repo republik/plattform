@@ -649,7 +649,7 @@ const userQuery = gql`
         createdAt
         updatedAt
       }
-      accessGrants {
+      accessGrants(withPast: true) {
         id
         status
         createdAt
@@ -665,15 +665,17 @@ const userQuery = gql`
         campaign {
           id
           title
+          endAt
         }
         events {
           createdAt
           event
         }
       }
-      accessCampaigns {
+      accessCampaigns(withPast: true) {
         id
         title
+        endAt
         slots {
           total
           free
