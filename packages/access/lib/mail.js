@@ -181,7 +181,7 @@ const getGlobalMergeVars = async (
 ) => {
   const safeGrantee = transformUser(grantee)
   const recipientCampaigns =
-    !!recipient && await campaignsLib.findForGrantee(recipient, pgdb)
+    !!recipient && await campaignsLib.findForGrantee(recipient, { pgdb })
   const recipientHasMemberships =
     !!recipient && await membershipsLib.hasUserActiveMembership(recipient, pgdb)
 

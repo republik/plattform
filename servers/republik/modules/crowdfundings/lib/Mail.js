@@ -61,7 +61,7 @@ const getInterestsForUser = async ({
   })) : false
 
   const user = !!userId && await pgdb.public.users.findOne({ id: userId })
-  const accessGrants = !!user && await grants.findByRecipient(user, pgdb)
+  const accessGrants = !!user && await grants.findByRecipient(user, { pgdb })
   const hasGrantedAccess = !!user && !!accessGrants && accessGrants.length > 0
 
   debug({
