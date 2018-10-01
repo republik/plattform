@@ -4,12 +4,12 @@ extend type User {
   """
   List of memberships a User was granted
   """
-  accessGrants: [AccessGrant!]
+  accessGrants(withPast: Boolean): [AccessGrant!]
 
   """
   List of granted memberships by User
   """
-  accessCampaigns: [AccessCampaign!]
+  accessCampaigns(withPast: Boolean): [AccessCampaign!]
 }
 
 """
@@ -26,6 +26,10 @@ type AccessCampaign {
     withInvalidated: Boolean
   ): [AccessGrant!]!
   slots: AccessCampaignSlots
+  "Begin of campaign"
+  beginAt: DateTime!
+  "End of campaign"
+  endAt: DateTime!
 }
 
 """

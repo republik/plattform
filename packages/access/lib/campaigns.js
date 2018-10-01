@@ -14,6 +14,15 @@ const findAvailable = async (pgdb) => {
   return campaigns
 }
 
+const findAll = async (pgdb) => {
+  debug('findAll')
+  const campaigns = await pgdb.public.accessCampaigns.find({
+    'beginAt <=': moment()
+  })
+
+  return campaigns
+}
+
 const findByGrant = (grant, pgdb) => {
   debug('findByGrant')
   return pgdb.public.accessCampaigns.findOne({
@@ -30,11 +39,11 @@ const findOne = (id, pgdb) => {
   })
 }
 
-const findForGrantee = async (grantee, pgdb) => {
-  debug('findForGrantee')
+const findForGrantee = async (grantee, { withPast, pgdb }) => {
+  debug('findForGrantee', { withPast })
   const campaigns =
     await Promise.map(
-      await findAvailable(pgdb),
+      withPast ? await findAll(pgdb) : await findAvailable(pgdb),
       getContraintMeta.bind(null, grantee, pgdb)
     )
       .then(filterInvisibleCampaigns)

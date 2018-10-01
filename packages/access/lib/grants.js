@@ -220,14 +220,20 @@ const findByGrantee = async (
   )
 }
 
-const findByRecipient = async (recipient, pgdb) => {
+const findByRecipient = async (recipient, { withPast, pgdb }) => {
+  debug('findByRecipient', { withPast })
+  const condition = {
+    recipientUserId: recipient.id,
+    'beginAt <=': moment(),
+    invalidatedAt: null
+  }
+
+  if (!withPast) {
+    condition['endAt >'] = moment()
+  }
+
   const grants =
-    await pgdb.public.accessGrants.find({
-      recipientUserId: recipient.id,
-      'beginAt <=': moment(),
-      'endAt >': moment(),
-      invalidatedAt: null
-    })
+    await pgdb.public.accessGrants.find(condition)
 
   return grants
 }
