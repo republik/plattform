@@ -9,7 +9,8 @@
     "build": "next build",
     "heroku-postbuild": "npm run build",
     "start": "node server/server.js",
-    "prettier": "prettier --single-quote --print-width 60 --no-semi --write \"{pages,lib,server,components}/**/*.{js,json}\""
+    "prettier": "prettier --single-quote --print-width 60 --no-semi --write \"{pages,lib,server,components}/**/*.{js,json}\"",
+    "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./.next*\" | xargs wc -l"
   },
   "dependencies": {
     "@project-r/styleguide": "^5.91.0",
