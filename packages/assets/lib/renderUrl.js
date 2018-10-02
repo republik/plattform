@@ -17,6 +17,7 @@ module.exports = async (url, width, height, zoomFactor) => {
       data: null
     },
     renderType: 'png',
+    backend: 'webkit',
     outputAsJson: false,
     requestSettings: {
       ignoreImages: false,
