@@ -124,9 +124,10 @@ const revoke = async (id, user, t, pgdb) => {
     throw new Error(t('api/access/revoke/role/error'))
   }
 
+  const updateFields = { revokedAt: moment(), updatedAt: moment() }
   const result = await pgdb.public.accessGrants.update(
     { id: grant.id, revokedAt: null, invalidatedAt: null },
-    { revokedAt: moment(), updatedAt: moment() }
+    updateFields
   )
 
   await eventsLib.log(
@@ -135,15 +136,19 @@ const revoke = async (id, user, t, pgdb) => {
     pgdb
   )
 
-  debug('revoke', { grant })
+  debug('revoke', {
+    id: grant.id,
+    ...updateFields
+  })
 
   return result
 }
 
 const invalidate = async (grant, reason, t, pgdb, mail) => {
+  const updateFields = { invalidatedAt: moment(), updatedAt: moment() }
   const result = await pgdb.public.accessGrants.update(
     { id: grant.id, invalidatedAt: null },
-    { invalidatedAt: moment(), updatedAt: moment() }
+    updateFields
   )
 
   await eventsLib.log(grant, `invalidated.${reason}`, pgdb)
@@ -187,8 +192,7 @@ const invalidate = async (grant, reason, t, pgdb, mail) => {
     id: grant.id,
     reason,
     hasRecipient: !!grant.recipientUserId,
-    invalidatedAt: moment(),
-    updatedAt: moment(),
+    ...updateFields,
     result
   })
 
@@ -196,9 +200,10 @@ const invalidate = async (grant, reason, t, pgdb, mail) => {
 }
 
 const followUp = async (campaign, grant, t, pgdb, mail) => {
+  const updateFields = { followupAt: moment(), updatedAt: moment() }
   const result = await pgdb.public.accessGrants.update(
     { id: grant.id, followupAt: null },
-    { followupAt: moment(), updatedAt: moment() }
+    updateFields
   )
 
   const recipient =
@@ -221,8 +226,7 @@ const followUp = async (campaign, grant, t, pgdb, mail) => {
   debug('followUp', {
     id: grant.id,
     hasRecipient: !!grant.recipientUserId,
-    followUp: moment(),
-    updatedAt: moment(),
+    ...updateFields,
     result
   })
 
@@ -323,15 +327,15 @@ const findExpired = async (pgdb) => {
 }
 
 const setRecipient = async (grant, recipient, pgdb) => {
+  const updateFields = { recipientUserId: recipient.id, updatedAt: moment() }
   const result = await pgdb.public.accessGrants.update(
     { id: grant.id },
-    { recipientUserId: recipient.id, updatedAt: moment() }
+    updateFields
   )
 
   debug('setRecipient', {
     id: grant.id,
-    recipientUserId: recipient.id,
-    updatedAt: moment(),
+    ...updateFields,
     result
   })
 
