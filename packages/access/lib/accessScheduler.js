@@ -105,7 +105,7 @@ const matchGrants = async (pgdb, mail) => {
  * Renders expired grants invalid.
  */
 const expireGrants = async (t, pgdb, mail) => {
-  debug('expireGrants')
+  debug('expireGrants...')
   for (const grant of await grantsLib.findExpired(pgdb)) {
     const transaction = await pgdb.transactionBegin()
 
@@ -120,14 +120,14 @@ const expireGrants = async (t, pgdb, mail) => {
       throw e
     }
   }
-  debug('expireGrant done...')
+  debug('expireGrant done')
 }
 
 /**
  * Runs follow-up on invalidated grants.
  */
 const followupGrants = async (t, pgdb, mail) => {
-  debug('followupGrants')
+  debug('followupGrants...')
   for (const campaign of await campaignsLib.findAll(pgdb)) {
     for (const grant of await grantsLib.findEmptyFollowup(campaign, pgdb)) {
       const transaction = await pgdb.transactionBegin()
@@ -144,5 +144,5 @@ const followupGrants = async (t, pgdb, mail) => {
       }
     }
   }
-  debug('followupGrants done...')
+  debug('followupGrants done')
 }
