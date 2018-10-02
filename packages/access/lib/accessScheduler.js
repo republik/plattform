@@ -4,15 +4,16 @@ const debug = require('debug')('access:lib:accessScheduler')
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const redis = require('@orbiting/backend-modules-base/lib/redis')
 
+const campaignsLib = require('./campaigns')
 const grantsLib = require('./grants')
 
 // Interval in which scheduler runs
-const intervalSecs = 60
+const intervalSecs = 60 * 10
 
 /**
  * Function to initialize scheduler. Provides scheduling.
  */
-const init = async ({ mail }) => {
+const init = async ({ t, mail }) => {
   debug('init')
 
   const pgdb = await PgDb.connect()
@@ -29,7 +30,8 @@ const init = async ({ mail }) => {
         await schedulerLock()
           .lock('locks:access-scheduler', 1000 * intervalSecs)
 
-      await expireGrants(pgdb, mail)
+      await expireGrants(t, pgdb, mail)
+      await followupGrants(t, pgdb, mail)
 
       // Extend lock for a fraction of usual interval to prevent runner to
       // be executed back-to-back to previous run.
@@ -81,16 +83,66 @@ const schedulerLock = () => new Redlock([redis])
  * Matches unassignedGrants
  */
 const matchGrants = async (pgdb, mail) => {
+  debug('matchGrants...')
   for (const grant of await grantsLib.findUnassigned(pgdb)) {
-    await grantsLib.match(grant, pgdb, mail)
+    const transaction = await pgdb.transactionBegin()
+
+    try {
+      await grantsLib.match(grant, transaction, mail)
+      await transaction.transactionCommit()
+    } catch (e) {
+      await transaction.transactionRollback()
+
+      debug('rollback', { grant: grant.id })
+
+      throw e
+    }
   }
+  debug('matchGrants done')
 }
 
 /**
- * Renders expired grants invalid
+ * Renders expired grants invalid.
  */
-const expireGrants = async (pgdb, mail) => {
+const expireGrants = async (t, pgdb, mail) => {
+  debug('expireGrants...')
   for (const grant of await grantsLib.findExpired(pgdb)) {
-    await grantsLib.invalidate(grant, 'expired', pgdb, mail)
+    const transaction = await pgdb.transactionBegin()
+
+    try {
+      await grantsLib.invalidate(grant, 'expired', t, transaction, mail)
+      await transaction.transactionCommit()
+    } catch (e) {
+      await transaction.transactionRollback()
+
+      debug('rollback', { grant: grant.id })
+
+      throw e
+    }
   }
+  debug('expireGrant done')
+}
+
+/**
+ * Runs follow-up on invalidated grants.
+ */
+const followupGrants = async (t, pgdb, mail) => {
+  debug('followupGrants...')
+  for (const campaign of await campaignsLib.findAll(pgdb)) {
+    for (const grant of await grantsLib.findEmptyFollowup(campaign, pgdb)) {
+      const transaction = await pgdb.transactionBegin()
+
+      try {
+        await grantsLib.followUp(campaign, grant, t, transaction, mail)
+        await transaction.transactionCommit()
+      } catch (e) {
+        await transaction.transactionRollback()
+
+        debug('rollback', { grant: grant.id })
+
+        throw e
+      }
+    }
+  }
+  debug('followupGrants done')
 }

@@ -94,7 +94,7 @@ const runOnce = async (...args) => {
     require('@orbiting/backend-modules-search').notifyListener.run()
   }
 
-  await accessScheduler.init({ mail })
+  await accessScheduler.init({ t, mail })
   await previewScheduler.init({ mail })
 }
 

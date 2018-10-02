@@ -1,5 +1,5 @@
 {
-  "updated": "2018-09-29T15:26:39.443Z",
+  "updated": "2018-10-01T14:40:33.676Z",
   "title": "live",
   "data": [
     {
@@ -443,12 +443,8 @@
       "value": "Einladung von {granteeName}"
     },
     {
-      "key": "api/access/email/recipient/expiration_notice/subject",
-      "value": "Zugriff läuft bald ab"
-    },
-    {
       "key": "api/access/email/recipient/expired/subject",
-      "value": "Zugriff abgelaufen"
+      "value": "Ihre Reise ist beendet"
     },
     {
       "key": "api/access/email/recipient/followup/subject",

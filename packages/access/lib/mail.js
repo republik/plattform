@@ -32,39 +32,9 @@ const sendRecipientOnboarding = async (grantee, campaign, grant, t, pgdb) => {
   )
 }
 
-const sendRecipientExpirationNotice = async (
-  grantee, campaign, grant, t, pgdb
-) => {
-  debug('sendRecipientExpirationNotice')
-
-  const recipient = await pgdb.public.users.findOne({ email: grant.email })
-
-  if (recipient) {
-    return sendMail(
-      recipient.email,
-      'recipient',
-      'expiration_notice',
-      {
-        grantee,
-        recipient,
-        campaign,
-        grant,
-        t,
-        pgdb
-      }
-    )
-  }
-
-  return false
-}
-
-const sendRecipientExpired = async (grantee, campaign, grant, t, pgdb) => {
-  debug('sendRecipientExpired')
-
-  const recipient = await pgdb.public.users.findOne({ email: grant.email })
-
-  if (recipient) {
-    return sendMail(
+const sendRecipientExpired =
+  async (grantee, campaign, recipient, grant, t, pgdb) =>
+    sendMail(
       recipient.email,
       'recipient',
       'expired',
@@ -77,18 +47,10 @@ const sendRecipientExpired = async (grantee, campaign, grant, t, pgdb) => {
         pgdb
       }
     )
-  }
 
-  return false
-}
-
-const sendRecipientFollowup = async (grantee, campaign, grant, t, pgdb) => {
-  debug('sendRecipientFollowup')
-
-  const recipient = await pgdb.public.users.findOne({ email: grant.email })
-
-  if (recipient) {
-    return sendMail(
+const sendRecipientFollowup =
+  async (grantee, campaign, recipient, grant, t, pgdb) =>
+    sendMail(
       recipient.email,
       'recipient',
       'followup',
@@ -101,17 +63,10 @@ const sendRecipientFollowup = async (grantee, campaign, grant, t, pgdb) => {
         pgdb
       }
     )
-  }
-
-  return false
-}
 
 module.exports = {
   // Onboarding
   sendRecipientOnboarding,
-
-  // Expiration Notice
-  sendRecipientExpirationNotice,
 
   // Offboarding when access expired
   sendRecipientExpired,
@@ -237,6 +192,12 @@ const getGlobalMergeVars = async (
     },
     { name: 'LINK_OFFERS',
       content: `${FRONTEND_BASE_URL}/angebote?package=ABO`
+    },
+    { name: 'LINK_OFFER_ABO',
+      content: `${FRONTEND_BASE_URL}/angebote?package=ABO`
+    },
+    { name: 'LINK_OFFER_MONTHLY_ABO',
+      content: `${FRONTEND_BASE_URL}/angebote?package=MONTHLY_ABO`
     },
     { name: 'LINK_PROJECTR',
       content: 'https://project-r.construction/'

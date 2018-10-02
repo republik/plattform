@@ -30,7 +30,7 @@ const hasUserActiveMembership = async (user, pgdb) => {
 }
 
 const addMemberRole = async (grant, user, pgdb) => {
-  debug('addMemberRole')
+  debug('addMemberRole', { grant: grant.id, user: user.id })
 
   const hasMembership = await hasUserActiveMembership(user, pgdb)
 
@@ -52,11 +52,11 @@ const addMemberRole = async (grant, user, pgdb) => {
 }
 
 const removeMemberRole = async (grant, user, findFn, pgdb) => {
-  debug('removeMemberRole')
+  debug('removeMemberRole', { grant: grant.id, user: user.id })
 
   const hasMembership = await hasUserActiveMembership(user, pgdb)
 
-  const allRecipientGrants = await findFn(user, pgdb)
+  const allRecipientGrants = await findFn(user, { pgdb })
   const allOtherRecipientGrants =
     allRecipientGrants.filter(otherGrant => otherGrant.id !== grant.id)
 

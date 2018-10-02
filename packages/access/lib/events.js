@@ -6,13 +6,13 @@ const log = async (grant, event, pgdb) => {
     event
   })
 
-  debug('event logged', eventAdded)
+  debug('log', eventAdded)
 
   return eventAdded
 }
 
 const findByGrant = (grant, pgdb) => {
-  debug('findByGrant')
+  debug('findByGrant', { grant: grant.id })
   return pgdb.public.accessEvents.find(
     { accessGrantId: grant.id },
     { orderBy: { createdAt: 'desc' } }
