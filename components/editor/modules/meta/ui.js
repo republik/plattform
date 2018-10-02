@@ -195,7 +195,7 @@ const MetaData = ({value, editor, mdastSchema, contextMeta, series, additionalFi
         {!!series && <SeriesForm editor={editor} node={node} />}
         {!!Teaser && (<div>
           <Label>{t('metaData/preview')}</Label><br />
-          <Teaser {...dataAsJs} />
+          <Teaser {...dataAsJs} credits={undefined} />
         </div>)}
         <br /><br /><br />
         <MetaForm data={fbData} onInputChange={onInputChange} black getWidth={getWidth} />
