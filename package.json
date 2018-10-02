@@ -61,7 +61,7 @@
   },
   "dependencies": {
     "@orbiting/remark-preset": "^1.2.1",
-    "@project-r/styleguide": "^5.93.3",
+    "@project-r/styleguide": "^5.95.0",
     "@project-r/template-newsletter": "^1.5.0",
     "apollo-cache-inmemory": "^1.2.4",
     "apollo-client": "^2.3.4",
@@ -78,7 +78,7 @@
     "d3-time-format": "^2.1.1",
     "debug": "^2.6.9",
     "dotenv": "^4.0.0",
-    "downshift": "^1.18.0",
+    "downshift": "^2.2.2",
     "email-validator": "^1.1.1",
     "express": "^4.15.4",
     "express-basic-auth": "^1.1.1",
