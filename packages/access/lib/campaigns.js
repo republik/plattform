@@ -24,14 +24,14 @@ const findAll = async (pgdb) => {
 }
 
 const findByGrant = (grant, pgdb) => {
-  debug('findByGrant')
+  debug('findByGrant', { grant: grant.id })
   return pgdb.public.accessCampaigns.findOne({
     id: grant.accessCampaignId
   })
 }
 
 const findOne = (id, pgdb) => {
-  debug('findOne')
+  debug('findOne', { id })
   return pgdb.public.accessCampaigns.findOne({
     id,
     'beginAt <=': moment(),
@@ -40,7 +40,7 @@ const findOne = (id, pgdb) => {
 }
 
 const findForGrantee = async (grantee, { withPast, pgdb }) => {
-  debug('findForGrantee', { withPast })
+  debug('findForGrantee', { grantee: grantee.id, withPast })
   const campaigns =
     await Promise.map(
       withPast ? await findAll(pgdb) : await findAvailable(pgdb),
@@ -49,13 +49,12 @@ const findForGrantee = async (grantee, { withPast, pgdb }) => {
       .then(filterInvisibleCampaigns)
       .then(mergeConstraintPayloads)
 
-  debug('campaigns', campaigns)
-
   return campaigns
 }
 
 module.exports = {
   findAvailable,
+  findAll,
   findByGrant,
   findOne,
   findForGrantee

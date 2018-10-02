@@ -140,7 +140,7 @@ const revoke = async (id, user, t, pgdb) => {
   return result
 }
 
-const invalidate = async (grant, reason, pgdb, mail) => {
+const invalidate = async (grant, reason, t, pgdb, mail) => {
   const result = await pgdb.public.accessGrants.update(
     { id: grant.id, invalidatedAt: null },
     { invalidatedAt: moment(), updatedAt: moment() }
@@ -149,24 +149,36 @@ const invalidate = async (grant, reason, pgdb, mail) => {
   await eventsLib.log(grant, `invalidated.${reason}`, pgdb)
 
   if (grant.recipientUserId) {
-    const user =
+    const recipient =
       await pgdb.public.users.findOne({ id: grant.recipientUserId })
 
-    if (user) {
-      console.log(findByRecipient)
-
+    if (recipient) {
       const hasRoleChanged = await membershipsLib.removeMemberRole(
         grant,
-        user,
+        recipient,
         findByRecipient,
         pgdb
       )
 
       if (hasRoleChanged) {
         await mail.enforceSubscriptions({
-          userId: user.id,
+          userId: recipient.id,
           pgdb
         })
+      }
+
+      const hasMembership =
+        await membershipsLib.hasUserActiveMembership(recipient, pgdb)
+
+      if (!hasMembership) {
+        const grantee = await pgdb.public.users
+          .findOne({ id: grant.granteeUserId })
+        const campaign = await pgdb.public.accessCampaigns
+          .findOne({ id: grant.accessCampaignId })
+
+        await mailLib.sendRecipientExpired(
+          grantee, campaign, recipient, grant, t, pgdb
+        )
       }
     }
   }
@@ -183,6 +195,40 @@ const invalidate = async (grant, reason, pgdb, mail) => {
   return result > 0
 }
 
+const followUp = async (campaign, grant, t, pgdb, mail) => {
+  const result = await pgdb.public.accessGrants.update(
+    { id: grant.id, followupAt: null },
+    { followupAt: moment(), updatedAt: moment() }
+  )
+
+  const recipient =
+    await pgdb.public.users.findOne({ id: grant.recipientUserId })
+
+  if (recipient) {
+    const hasMembership =
+      await membershipsLib.hasUserActiveMembership(recipient, pgdb)
+
+    if (!hasMembership) {
+      const grantee = await pgdb.public.users
+        .findOne({ id: grant.granteeUserId })
+
+      await mailLib.sendRecipientFollowup(
+        grantee, campaign, recipient, grant, t, pgdb
+      )
+    }
+  }
+
+  debug('followUp', {
+    id: grant.id,
+    hasRecipient: !!grant.recipientUserId,
+    followUp: moment(),
+    updatedAt: moment(),
+    result
+  })
+
+  return result > 0
+}
+
 const findByGrantee = async (
   grantee,
   campaign,
@@ -190,6 +236,15 @@ const findByGrantee = async (
   withInvalidated,
   pgdb
 ) => {
+  debug(
+    'findByGrantee', {
+      grantee: grantee.id,
+      campaign: campaign.id,
+      withRevoked,
+      withInvalidated
+    }
+  )
+
   const query = {
     granteeUserId: grantee.id,
     accessCampaignId: campaign.id,
@@ -221,7 +276,7 @@ const findByGrantee = async (
 }
 
 const findByRecipient = async (recipient, { withPast, pgdb }) => {
-  debug('findByRecipient', { withPast })
+  debug('findByRecipient', { recipient: recipient.id, withPast })
   const condition = {
     recipientUserId: recipient.id,
     'beginAt <=': moment(),
@@ -238,26 +293,34 @@ const findByRecipient = async (recipient, { withPast, pgdb }) => {
   return grants
 }
 
-const findUnassigned = async (pgdb) => pgdb.public.accessGrants.find({
-  recipientUserId: null,
-  'beginAt <=': moment(),
-  'endAt >': moment(),
-  invalidatedAt: null
-})
+const findUnassigned = async (pgdb) => {
+  debug('findUnassigend')
+  return pgdb.public.accessGrants.find({
+    recipientUserId: null,
+    'beginAt <=': moment(),
+    'endAt >': moment(),
+    invalidatedAt: null
+  })
+}
 
-const findUnassignedByEmail = async (email, pgdb) =>
-  pgdb.public.accessGrants.find({
+const findUnassignedByEmail = async (email, pgdb) => {
+  debug('findUnassigend', { email })
+  return pgdb.public.accessGrants.find({
     email,
     recipientUserId: null,
     'beginAt <=': moment(),
     'endAt >': moment(),
     invalidatedAt: null
   })
+}
 
-const findExpired = async (pgdb) => pgdb.public.accessGrants.find({
-  'endAt <': moment(),
-  invalidatedAt: null
-})
+const findExpired = async (pgdb) => {
+  debug('findExpired')
+  return pgdb.public.accessGrants.find({
+    'endAt <': moment(),
+    invalidatedAt: null
+  })
+}
 
 const setRecipient = async (grant, recipient, pgdb) => {
   const result = await pgdb.public.accessGrants.update(
@@ -275,11 +338,30 @@ const setRecipient = async (grant, recipient, pgdb) => {
   return result > 0
 }
 
+const findEmptyFollowup = async (campaign, pgdb) => {
+  const invalidateBefore = moment()
+
+  Object
+    .keys(campaign.emailFollowup)
+    .forEach(
+      unit => invalidateBefore.subtract(campaign.emailFollowup[unit], unit)
+    )
+
+  debug('findEmptyFollowup', { campaign: campaign.id, invalidateBefore })
+
+  return pgdb.public.accessGrants.find({
+    accessCampaignId: campaign.id,
+    'invalidatedAt <': invalidateBefore,
+    followupAt: null
+  })
+}
+
 module.exports = {
   grant,
   match,
   revoke,
   invalidate,
+  followUp,
 
   findByGrantee,
   findByRecipient,
@@ -287,6 +369,7 @@ module.exports = {
   findUnassigned,
   findUnassignedByEmail,
   findExpired,
+  findEmptyFollowup,
 
   setRecipient
 }
