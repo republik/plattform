@@ -6,7 +6,7 @@ const { transformUser } = require('@orbiting/backend-modules-auth')
 const { FRONTEND_BASE_URL } = process.env
 
 const sendOnboarding = async ({ user, request, pgdb, t }) => {
-  debug('sendPreviewOnboarding')
+  debug('sendOnboarding')
 
   await pgdb.public.previewEvents.insert({
     previewRequestId: request.id,
@@ -16,9 +16,23 @@ const sendOnboarding = async ({ user, request, pgdb, t }) => {
   return sendMail(user.email, 'onboarding', { user, t })
 }
 
+const sendFollowup = async ({ user, request, pgdb, t }) => {
+  debug('sendFollowup')
+
+  await pgdb.public.previewEvents.insert({
+    previewRequestId: request.id,
+    event: 'email.followup'
+  })
+
+  return sendMail(user.email, 'followup', { user, t })
+}
+
 module.exports = {
   // Onboarding
-  sendOnboarding
+  sendOnboarding,
+
+  // Followup
+  sendFollowup
 }
 
 const sendMail = async (to, template, { user, t }) => {
@@ -45,7 +59,17 @@ const getTranslationVars = (user) => {
 }
 
 const getGlobalMergeVars = () => ([
+  { name: 'FRONTEND_BASE_URL',
+    content: FRONTEND_BASE_URL
+  },
+
   // Links
+  { name: 'LINK_OFFER_ABO',
+    content: `${FRONTEND_BASE_URL}/angebote?package=ABO`
+  },
+  { name: 'LINK_OFFER_MONTHLY_ABO',
+    content: `${FRONTEND_BASE_URL}/angebote?package=MONTHLY_ABO`
+  },
   { name: 'LINK_FAQ',
     content: `${FRONTEND_BASE_URL}/faq`
   },
