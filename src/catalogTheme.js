@@ -7,6 +7,7 @@ export default {
 
   fontFamily: fontFamilies.sansSerifRegular,
   fontHeading: fontFamilies.sansSerifMedium,
+  fontMono: fontFamilies.monospaceRegular,
   textColor:  'rgba(0,0,0,0.8)',
   textMedium: 'rgba(0,0,0,0.8)',
   linkColor: 'rgb(0,180,0)',
@@ -18,7 +19,7 @@ export default {
   lightColor: 'rgba(60,100,90,0.5)',
 
   background:'rgb(245,245,245)',
-  baseFontSize: 20,
+  baseFontSize: 18,
 
   bgLight: 'rgb(245,245,245)'
 };
