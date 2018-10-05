@@ -8,6 +8,7 @@ const { graphql: redirections } = require('@orbiting/backend-modules-redirection
 const { graphql: search } = require('@orbiting/backend-modules-search')
 const { graphql: notifications } = require('@orbiting/backend-modules-notifications')
 const { graphql: election } = require('@orbiting/backend-modules-election')
+const { graphql: voting } = require('@orbiting/backend-modules-voting')
 
 const { accessScheduler, graphql: access } = require('@orbiting/backend-modules-access')
 const { previewScheduler, preview: previewLib } = require('@orbiting/backend-modules-preview')
@@ -18,7 +19,9 @@ const cluster = require('cluster')
 
 const {
   LOCAL_ASSETS_SERVER,
-  SEARCH_PG_LISTENER
+  SEARCH_PG_LISTENER,
+  ACCESS_SCHEDULER_OFF,
+  PREVIEW_SCHEDULER_OFF
 } = process.env
 
 const start = async () => {
@@ -39,7 +42,8 @@ const run = async (workerId) => {
         redirections,
         notifications,
         access,
-        election
+        election,
+        voting
       ]
     )
   )
@@ -94,8 +98,17 @@ const runOnce = async (...args) => {
     require('@orbiting/backend-modules-search').notifyListener.run()
   }
 
-  await accessScheduler.init({ t, mail })
-  await previewScheduler.init({ mail })
+  if (ACCESS_SCHEDULER_OFF === 'true') {
+    console.log('ACCESS_SCHEDULER_OFF prevented scheduler from begin started')
+  } else {
+    await accessScheduler.init({ t, mail })
+  }
+
+  if (PREVIEW_SCHEDULER_OFF === 'true') {
+    console.log('PREVIEW_SCHEDULER_OFF prevented scheduler from begin started')
+  } else {
+    await previewScheduler.init({ mail })
+  }
 }
 
 const close = () => {

@@ -1,4 +1,5 @@
 module.exports = `
+
 type Voting {
   id: ID!
   slug: String!
@@ -13,21 +14,25 @@ type Voting {
   userHasSubmitted: Boolean
   userSubmitDate: DateTime
 }
+
 type VoteTurnout {
   eligible: Int!
   submitted: Int!
 }
+
 type VoteOption {
   id: ID!
   name: String!
   label: String!
   description: String
 }
+
 type VoteOptionResult {
   option: VoteOption!
   count: Int!
   winner: Boolean
 }
+
 type VoteResult {
   options: [VoteOptionResult!]!
   stats: VoteStats!
@@ -36,11 +41,13 @@ type VoteResult {
   createdAt: DateTime
   updatedAt: DateTime
 }
+
 type VoteStats {
   ages: [VoteStatsCount!]!
   countries: [VoteStatsCount!]!
   chCantons: [VoteStatsCount!]!
 }
+
 type VoteStatsCount {
   key: String!
   count: Int!

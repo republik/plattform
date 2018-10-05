@@ -1,3 +1,4 @@
+/*
 module.exports = async (_, args, context) => {
   return [
     {
@@ -16,3 +17,6 @@ module.exports = async (_, args, context) => {
     }
   ]
 }
+*/
+module.exports = async (_, args, { pgdb }) =>
+  pgdb.public.votings.find()

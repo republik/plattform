@@ -11,7 +11,8 @@ const uncommittedChangesMiddleware = require('./express/uncommittedChanges')
 const cluster = require('cluster')
 
 const {
-  LOCAL_ASSETS_SERVER
+  LOCAL_ASSETS_SERVER,
+  PUBLICATION_SCHEDULER_OFF
 } = process.env
 
 const start = async () => {
@@ -56,12 +57,17 @@ const runOnce = (...args) => {
     throw new Error('runOnce must only be called on cluster.isMaster')
   }
   server.runOnce(...args)
-  const scheduler = require('./lib/publicationScheduler')
-  scheduler.init()
-    .catch(error => {
-      console.log(error)
-      return error
-    })
+
+  if (PUBLICATION_SCHEDULER_OFF === 'true') {
+    console.log('PUBLICATION_SCHEDULER_OFF prevented scheduler from begin started')
+  } else {
+    const scheduler = require('./lib/publicationScheduler')
+    scheduler.init()
+      .catch(error => {
+        console.log(error)
+        return error
+      })
+  }
 }
 
 const close = () => {
