@@ -1,6 +1,6 @@
 ### `<BlockQuote />`
 
-A `<BlockQuote />` contains a `<BlockQuoteContent />` which itself can contain an arbitrary number of `<Editorial.P />` blocks.
+A `<BlockQuote />` can contain an arbitrary number of `<BlockQuoteParagraph />`.
 
 Optionally you can provide a `<FigureCaption />` to describe the quote source.
 

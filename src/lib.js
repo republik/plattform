@@ -23,11 +23,11 @@ export {default as Dropdown} from './components/Form/Dropdown'
 export {default as Autocomplete} from './components/Form/Autocomplete'
 export {default as TitleBlock} from './components/TitleBlock'
 export {default as Center, Breakout} from './components/Center'
-export { default as Gallery } from './components/Gallery'
+export { Gallery } from './components/Gallery'
 export { AudioPlayer } from './components/AudioPlayer'
 export { VideoPlayer } from './components/VideoPlayer'
-export { LazyLoad } from './components/LazyLoad'
-export { LazyImage } from './components/LazyLoad/Image'
+export { default as LazyLoad } from './components/LazyLoad'
+export { default as LazyImage } from './components/LazyLoad/Image'
 export {
   InfoBox,
   InfoBoxText,
@@ -35,13 +35,11 @@ export {
 } from './components/InfoBox'
 export {
   PullQuote,
-  PullQuoteBody,
   PullQuoteSource,
   PullQuoteText
 } from './components/PullQuote'
 export {
-  BlockQuote,
-  BlockQuoteContent
+  BlockQuote
 } from './components/BlockQuote'
 export {
   Figure,

@@ -1,12 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Catalog } from 'catalog'
+import { Catalog, ReactSpecimen } from 'catalog'
 import { simulations, speedy, css } from 'glamor'
 import theme from './catalogTheme'
 import './global.css'
 import './catalogTheme.css'
 import * as fontStyles from './components/Typography/styles'
 
+import 'react-app-polyfill/ie11'
 import 'core-js/fn/array/from'
 import 'core-js/fn/array/find'
 import 'core-js/es6'
@@ -19,6 +20,12 @@ simulations(true)
 // - iframe rendering (e.g. responsive preview)
 //   does not support insertRule
 speedy(false)
+
+// we want react code by default :)
+ReactSpecimen.defaultProps = {
+  ...ReactSpecimen.defaultProps,
+  showSource: true
+}
 
 require('glamor/reset')
 
