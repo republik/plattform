@@ -19,7 +19,8 @@ const cluster = require('cluster')
 const {
   LOCAL_ASSETS_SERVER,
   SEARCH_PG_LISTENER,
-  SCHEDULERS_OFF
+  ACCESS_SCHEDULER_OFF,
+  PREVIEW_SCHEDULER_OFF
 } = process.env
 
 const start = async () => {
@@ -95,10 +96,15 @@ const runOnce = async (...args) => {
     require('@orbiting/backend-modules-search').notifyListener.run()
   }
 
-  if (SCHEDULERS_OFF === 'true') {
-    console.warn('SCHEDULERS_OFF prevented schedulers from begin started')
+  if (ACCESS_SCHEDULER_OFF === 'true') {
+    console.log('ACCESS_SCHEDULER_OFF prevented scheduler from begin started')
   } else {
     await accessScheduler.init({ t, mail })
+  }
+
+  if (PREVIEW_SCHEDULER_OFF === 'true') {
+    console.log('PREVIEW_SCHEDULER_OFF prevented scheduler from begin started')
+  } else {
     await previewScheduler.init({ mail })
   }
 }

@@ -12,7 +12,7 @@ const cluster = require('cluster')
 
 const {
   LOCAL_ASSETS_SERVER,
-  SCHEDULERS_OFF
+  PUBLICATION_SCHEDULER_OFF
 } = process.env
 
 const start = async () => {
@@ -57,8 +57,9 @@ const runOnce = (...args) => {
     throw new Error('runOnce must only be called on cluster.isMaster')
   }
   server.runOnce(...args)
-  if (SCHEDULERS_OFF === 'true') {
-    console.log('SCHEDULERS_OFF prevented schedulers from begin started')
+
+  if (PUBLICATION_SCHEDULER_OFF === 'true') {
+    console.log('PUBLICATION_SCHEDULER_OFF prevented scheduler from begin started')
   } else {
     const scheduler = require('./lib/publicationScheduler')
     scheduler.init()
