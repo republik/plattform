@@ -7,7 +7,6 @@ import './global.css'
 import './catalogTheme.css'
 import * as fontStyles from './components/Typography/styles'
 
-import 'react-app-polyfill/ie11'
 import 'core-js/fn/array/from'
 import 'core-js/fn/array/find'
 import 'core-js/es6'
