@@ -15,4 +15,4 @@ exports.isEligible = async (userId, pgdb) => {
 /**
  * Check if profile (actually user) has submitted a candidacy.
  */
-exports.isInCandidacy = async (user, pgdb) => hasUserCandidacies
+exports.isInCandidacy = hasUserCandidacies
