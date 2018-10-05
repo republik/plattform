@@ -193,15 +193,15 @@ class Gallery extends Component {
       <div {...styles.wrapper}>
         <Swipeable
           onSwipedDown={this.handleSwipeDown}
-          onSwipedLeft={enableNavigation && this.handleSwipeLeft}
-          onSwipedRight={enableNavigation && this.handleSwipeRight}
+          onSwipedLeft={enableNavigation ? this.handleSwipeLeft : undefined}
+          onSwipedRight={enableNavigation ? this.handleSwipeRight : undefined}
           delta={10}
           preventDefaultTouchmoveEvent={true}
           stopPropagation={true}
         >
           <NavOverlay
-            handleClickLeft={enableNavigation && this.handleClickLeft}
-            handleClickRight={enableNavigation && this.handleClickRight}
+            handleClickLeft={enableNavigation ? this.handleClickLeft : undefined}
+            handleClickRight={enableNavigation ? this.handleClickRight : undefined}
             handleClick={this.toggleFocus}
             onClose={onClose}
           />
@@ -228,14 +228,15 @@ class Gallery extends Component {
                 }
                 {
                   preloadItems.map((item, i) => {
-                    const srcs = FigureImage.utils.getResizedSrcs(item.src, resizeStep)
+                    const { src, srcSet } = FigureImage.utils.getResizedSrcs(item.src, resizeStep)
                     return (
                       <img 
                         key={item.src} 
                         alt={item.alt} 
                         {...styles.mediaItemImage} 
-                        {...srcs} 
-                        style={{ display: currentItem.src===item.src ? 'block' : 'none' }} 
+                        src={src}
+                        srcSet={srcSet}
+                        style={{ display: currentItem.src === item.src ? 'block' : 'none' }} 
                       />
                     )
                   })

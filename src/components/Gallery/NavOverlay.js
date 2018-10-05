@@ -64,10 +64,10 @@ class NavOverlay extends React.Component {
     this.handleKeyUp = (event) => {
       switch (event.keyCode) {
         case 37:
-          handleClickLeft()
+          handleClickLeft && handleClickLeft()
           break;
         case 39:
-          handleClickRight()
+          handleClickRight && handleClickRight()
           break;
         case 27:
           onClose()
@@ -118,7 +118,7 @@ class NavOverlay extends React.Component {
 NavOverlay.propTypes = {
   handleClickLeft: PropTypes.func,
   handleClickRight: PropTypes.func,
-  onClose: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired
 }
 
 export default NavOverlay
