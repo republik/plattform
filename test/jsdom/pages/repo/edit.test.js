@@ -62,24 +62,24 @@ test('EditorPage is write-able', assert => {
                   template: 'article'
                 },
                 content: parse(`---
-  template: article
-  ---
+template: article
+---
 
-  <section><h6>TITLE</h6>
+<section><h6>TITLE</h6>
 
-  # Title 1
+# Title 1
 
-  Lead
+Lead
 
-  Von Autor
+Von Autor
 
-  <hr /></section>
+<hr /></section>
 
-  <section><h6>CENTER</h6>
+<section><h6>CENTER</h6>
 
-  Text
+Text
 
-  <hr /></section>
+<hr /></section>
                 `)
               }
             }
