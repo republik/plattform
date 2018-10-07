@@ -30,7 +30,7 @@ const styles = {
 
 const getWidth = key => key.match(/title|feed|emailSubject/i) ? '100%' : ''
 
-const MetaData = ({value, editor, mdastSchema, contextMeta, series, additionalFields = [], customFields = [], teaser: Teaser, t}) => {
+const MetaData = ({ value, editor, mdastSchema, contextMeta, series, additionalFields = [], customFields = [], teaser: Teaser, t }) => {
   const node = value.document
 
   const genericKeys = Set([
@@ -118,16 +118,16 @@ const MetaData = ({value, editor, mdastSchema, contextMeta, series, additionalFi
           })}<br /><br /></Label>}
         <MetaForm data={genericData} onInputChange={onInputChange} black getWidth={getWidth} />
         {
-            (customFieldsByRef['bool'] || []).map(customField => {
-              return (
-                <div key={customField.key}>
-                  <Checkbox checked={node.data.get(customField.key)} onChange={onInputChange(customField.key)}>
-                    {customField.label}
-                  </Checkbox>
-                </div>
-              )
-            })
-          }
+          (customFieldsByRef['bool'] || []).map(customField => {
+            return (
+              <div key={customField.key}>
+                <Checkbox checked={node.data.get(customField.key)} onChange={onInputChange(customField.key)}>
+                  {customField.label}
+                </Checkbox>
+              </div>
+            )
+          })
+        }
         <UIForm getWidth={() => '50%'}>
           {
             (customFieldsByRef['repo'] || []).map(customField => {
@@ -138,6 +138,7 @@ const MetaData = ({value, editor, mdastSchema, contextMeta, series, additionalFi
                 <RepoSelect key={customField.key}
                   label={label}
                   value={value}
+                  template={customField.key}
                   onChange={customField.key === 'format'
                     ? (_, __, item) => {
                       editor.change(change => {
@@ -154,11 +155,11 @@ const MetaData = ({value, editor, mdastSchema, contextMeta, series, additionalFi
                             ? item.value.latestCommit.document
                             : undefined
                           change.setNodeByKey(titleNode.key, {
-                            data: {format}
+                            data: { format }
                           })
                           titleNode.nodes.forEach(node => {
                             change.setNodeByKey(node.key, {
-                              data: {format}
+                              data: { format }
                             })
                           })
                         }
@@ -194,7 +195,7 @@ const MetaData = ({value, editor, mdastSchema, contextMeta, series, additionalFi
         {!!series && <SeriesForm editor={editor} node={node} />}
         {!!Teaser && (<div>
           <Label>{t('metaData/preview')}</Label><br />
-          <Teaser {...dataAsJs} />
+          <Teaser {...dataAsJs} credits={undefined} />
         </div>)}
         <br /><br /><br />
         <MetaForm data={fbData} onInputChange={onInputChange} black getWidth={getWidth} />

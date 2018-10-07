@@ -7,8 +7,8 @@ import debounce from 'lodash.debounce'
 import { GITHUB_ORG, REPO_PREFIX } from '../../../lib/settings'
 
 export const filterRepos = gql`
-query searchRepo($after: String, $search: String) {
-  repos(first: 10, after: $after, search: $search) {
+query searchRepo($after: String, $search: String, $template: String) {
+  repos: reposSearch(first: 10, after: $after, search: $search, template: $template) {
     totalCount
     pageInfo {
       endCursor
@@ -47,7 +47,10 @@ query searchRepo($after: String, $search: String) {
 
 const ConnectedAutoComplete = graphql(filterRepos, {
   skip: props => !props.filter,
-  options: ({ search }) => ({ variables: { search: search } }),
+  options: ({ search, template }) => ({
+    fetchPolicy: 'network-only',
+    variables: { search: search, template: template }
+  }),
   props: (props) => {
     if (props.data.loading) return { data: props.data, items: [] }
     const { data: { repos: { nodes = [] } = {} } } = props
@@ -63,9 +66,9 @@ const ConnectedAutoComplete = graphql(filterRepos, {
 })(props => {
   const showLoader = props.data && props.data.loading
   return (
-    <span style={{position: 'relative', display: 'block'}}>
+    <span style={{ position: 'relative', display: 'block' }}>
       <Autocomplete key='autocomplete' {...props} />
-      {!!showLoader && <span style={{position: 'absolute', top: '21px', right: '0px', zIndex: 500}}>
+      {!!showLoader && <span style={{ position: 'absolute', top: '21px', right: '0px', zIndex: 500 }}>
         <InlineSpinner size={35} />
       </span>}
     </span>
@@ -74,8 +77,8 @@ const ConnectedAutoComplete = graphql(filterRepos, {
 
 const safeValue = value =>
   typeof value === 'string'
-  ? { value, text: value }
-  : null
+    ? { value, text: value }
+    : null
 
 export default class RepoSearch extends Component {
   constructor (props) {
@@ -110,21 +113,21 @@ export default class RepoSearch extends Component {
 
   filterChangeHandler (value) {
     this.setState(
-        state => ({
-          filter: value
-        }),
-        this.setSearchValue
-      )
+      state => ({
+        filter: value
+      }),
+      this.setSearchValue
+    )
   }
 
   changeHandler (value) {
     this.setState(
-        state => ({
-          value: null,
-          filter: null
-        }),
-        () => this.props.onChange(value)
-      )
+      state => ({
+        value: null,
+        filter: null
+      }),
+      () => this.props.onChange(value)
+    )
   }
 
   render () {
@@ -136,10 +139,11 @@ export default class RepoSearch extends Component {
         filter={filter}
         value={value}
         search={search}
+        template={this.props.template}
         items={[]}
         onChange={this.changeHandler}
         onFilterChange={this.filterChangeHandler}
-        />
+      />
     )
   }
 }
