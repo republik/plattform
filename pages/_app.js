@@ -3,6 +3,7 @@ import React from 'react'
 import { ApolloProvider } from 'react-apollo'
 
 import withApolloClient from '../lib/apollo/withApolloClient'
+import Track from '../components/Track'
 
 class WebApp extends App {
   render () {
@@ -10,6 +11,7 @@ class WebApp extends App {
     return <Container>
       <ApolloProvider client={apolloClient}>
         <Component serverContext={serverContext} {...pageProps} />
+        <Track />
       </ApolloProvider>
     </Container>
   }
