@@ -1,5 +1,6 @@
 import React from 'react'
-import Router from 'next/router'
+import { compose } from 'react-apollo'
+import Router, { withRouter } from 'next/router'
 import {
   BrandMark,
   Interaction
@@ -29,8 +30,8 @@ const styles = {
   })
 }
 
-export const Nav = ({ t, url, children }) => {
-  const { repository } = url.query
+export const Nav = ({ t, router, children }) => {
+  const { repository } = router.query
   return (
     <div {...styles.nav}>
       <a
@@ -38,35 +39,35 @@ export const Nav = ({ t, url, children }) => {
         href='/'
         onClick={e => {
           if (
-          e.currentTarget.nodeName === 'A' &&
+            e.currentTarget.nodeName === 'A' &&
           (e.metaKey ||
             e.ctrlKey ||
             e.shiftKey ||
             (e.nativeEvent && e.nativeEvent.which === 2))
-        ) {
+          ) {
           // ignore click for new tab / new window behavior
             return
           }
           e.preventDefault()
-          if (url.pathname === '/') {
+          if (router.pathname === '/') {
             window.scrollTo(0, 0)
           } else {
             Router.push('/').then(() => window.scrollTo(0, 0))
           }
         }}
-    >
+      >
         <BrandMark />
       </a>
-      <Interaction.H2 style={{display: 'inline-block'}}>{t('app/name')}</Interaction.H2>
+      <Interaction.H2 style={{ display: 'inline-block' }}>{t('app/name')}</Interaction.H2>
       {!!repository &&
       <span {...styles.repoName}>
         {repository}
       </span>
-    }
+      }
       <br />
       {children}
     </div>
   )
 }
 
-export default withT(Nav)
+export default compose(withT, withRouter)(Nav)

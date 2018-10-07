@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
-import {withRouter} from 'next/router'
-
-import { compose } from 'redux'
-import { Router } from '../../lib/routes'
-import { graphql } from 'react-apollo'
+import { withRouter } from 'next/router'
+import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import { Value, resetKeyGenerator } from 'slate'
 import debounce from 'lodash.debounce'
@@ -32,6 +29,7 @@ import Loader from '../../components/Loader'
 import CharCount from '../../components/CharCount'
 import withT from '../../lib/withT'
 import withMe from '../../lib/withMe'
+import { Router } from '../../lib/routes'
 
 import { errorToString } from '../../lib/utils/errors'
 import initLocalStore from '../../lib/utils/localStorage'
@@ -369,7 +367,7 @@ export class EditorPage extends Component {
         }
       }
 
-      debug('updateActiveUsers', addToState, {activeUsers, acknowledgedUsers})
+      debug('updateActiveUsers', addToState, { activeUsers, acknowledgedUsers })
       return {
         ...addToState,
         activeUsers,
@@ -459,7 +457,7 @@ export class EditorPage extends Component {
       const commit = repo.commit
       if (!commit) {
         this.setState({
-          error: t('commit/warn/missing', {commitId})
+          error: t('commit/warn/missing', { commitId })
         })
         return
       }
@@ -528,11 +526,11 @@ export class EditorPage extends Component {
     })
   }
 
-  changeHandler ({value}) {
+  changeHandler ({ value }) {
     this.setState({ editorState: value })
   }
 
-  documentChangeHandler (_, {value: newEditorState}) {
+  documentChangeHandler (_, { value: newEditorState }) {
     const { committedRawDocString, hasUncommittedChanges } = this.state
 
     if (
@@ -601,7 +599,7 @@ export class EditorPage extends Component {
         content: this.editor.serializer.serialize(editorState)
       }
     })
-      .then(({data}) => {
+      .then(({ data }) => {
         this.store.clear()
         this.concludeChanges()
 
@@ -649,20 +647,16 @@ export class EditorPage extends Component {
       (!schema && !error)
     )
 
-    const nav = [
-      <RepoNav key='repo-nav' route='repo/edit' url={router} isNew={isNew} />
-    ]
-
     return (
-      <Frame url={router} raw nav={nav}>
+      <Frame raw>
         <Frame.Header barStyle={{
           borderBottom: activeUsers.length
             ? `3px solid ${readOnly ? colors.error : warningColor}`
             : undefined
         }}>
           <Frame.Header.Section align='left'>
-            <Frame.Nav url={router}>
-              <RepoNav route='repo/edit' url={router} isNew={isNew} />
+            <Frame.Nav>
+              <RepoNav route='repo/edit' isNew={isNew} />
             </Frame.Nav>
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>

@@ -1,6 +1,6 @@
 import React from 'react'
-import { compose } from 'redux'
-import {withRouter} from 'next/router'
+import { compose } from 'react-apollo'
+import { withRouter } from 'next/router'
 
 import withAuthorization from '../../components/Auth/withAuthorization'
 
@@ -10,15 +10,13 @@ import PublishForm from '../../components/Publication/PublishForm'
 
 import withT from '../../lib/withT'
 
-const Page = ({ router: url, data, t }) => {
-  const { repoId, commitId } = url.query
-
+const Page = ({ router: { query: { repoId, commitId } }, data, t }) => {
   return (
     <Frame>
       <Frame.Header>
         <Frame.Header.Section align='left'>
-          <Frame.Nav url={url}>
-            <RepoNav route='repo/tree' url={url} />
+          <Frame.Nav>
+            <RepoNav route='repo/tree' />
           </Frame.Nav>
         </Frame.Header.Section>
         <Frame.Header.Section align='right'>

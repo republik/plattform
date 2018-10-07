@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'next/router'
 import { css } from 'glamor'
-import { compose } from 'redux'
-import { graphql } from 'react-apollo'
+import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 
 import { path } from 'ramda'
@@ -151,8 +150,8 @@ class EditorPage extends Component {
       <Frame>
         <Frame.Header>
           <Frame.Header.Section align='left'>
-            <Frame.Nav url={router}>
-              <RepoNav route='repo/tree' url={router} />
+            <Frame.Nav>
+              <RepoNav route='repo/tree' />
             </Frame.Nav>
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
