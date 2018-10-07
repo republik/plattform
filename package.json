@@ -19,8 +19,8 @@
     "standardize": "standard --fix",
     "precommit": "npm run test:unit && lint-staged",
     "translations": "gsheets --key=1qPubCKz2YzbcFkRfF0MrgRqD0KLsgRPxoZfG5G3tHOA --title=live --pretty --out lib/translations.json",
-    "preinstall": "if [[ -z \"${TRAVIS}\" ]]; then rm -rf .next && rm -rf node_modules/glamor && rm -rf node_modules/@project-r/styleguide; fi",
-    "link:sg": "rm -rf .next && npm link @project-r/styleguide && rm -rf node_modules/glamor && ln -s @project-r/styleguide/node_modules/glamor node_modules/glamor && echo '\n⚠️  Make sure to restart the next.js server. To unlink simply run npm install.\n'"
+    "link:sg": "rm -rf .next && npm link @project-r/styleguide && rm -rf node_modules/glamor && ln -s @project-r/styleguide/node_modules/glamor node_modules/glamor && echo '\n⚠️  Make sure to restart the next.js server. To unlink run npm run unlink:sg.\n'",
+    "unlink:sg": "rm -rf .next && rm -rf node_modules/glamor && rm -rf node_modules/@project-r/styleguide"
   },
   "repository": {
     "type": "git",
