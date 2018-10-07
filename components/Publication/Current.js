@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { graphql } from 'react-apollo'
+import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
-import { compose } from 'redux'
 
 import withT from '../../lib/withT'
 import { getName } from '../../lib/utils/name'
@@ -127,7 +126,7 @@ export default compose(
             }
           }
         ]
-      }).then(ownProps.onUnpublish)
+      })
     })
   }),
   graphql(getRepoWithPublications)

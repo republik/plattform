@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { compose } from 'redux'
 import { css } from 'glamor'
-import { graphql } from 'react-apollo'
+import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import { descending, ascending } from 'd3-array'
 import debounce from 'lodash.debounce'

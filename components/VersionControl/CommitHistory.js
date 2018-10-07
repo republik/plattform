@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Link } from '../../lib/routes'
 import { colors, linkRule, Interaction } from '@project-r/styleguide'
 import { css } from 'glamor'
-import { compose } from 'redux'
+import { compose } from 'react-apollo'
 import { swissTime } from '../../lib/utils/format'
 import withT from '../../lib/withT'
 

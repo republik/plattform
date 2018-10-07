@@ -1,11 +1,10 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {graphql} from 'react-apollo'
+import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
-import {css} from 'glamor'
-import {compose} from 'redux'
+import { css } from 'glamor'
 import withT from '../../lib/withT'
-import {validate as isEmail} from 'email-validator'
+import { validate as isEmail } from 'email-validator'
 import ErrorMessage from '../ErrorMessage'
 
 import {
@@ -17,7 +16,7 @@ import {
 
 import Poller from './Poller'
 
-const {P} = Interaction
+const { P } = Interaction
 
 const styles = {
   form: css({
@@ -50,7 +49,7 @@ class SignIn extends Component {
     }
   }
   render () {
-    const {t, label} = this.props
+    const { t, label } = this.props
     const {
       polling, phrase, loading, success,
       error, dirty, email,
@@ -119,7 +118,7 @@ class SignIn extends Component {
                   loading: true
                 }))
                 this.props.signIn(email)
-                  .then(({data}) => {
+                  .then(({ data }) => {
                     this.setState(() => ({
                       polling: true,
                       loading: false,
@@ -154,9 +153,9 @@ mutation signIn($email: String!) {
 `
 
 export const withSignIn = graphql(signInMutation, {
-  props: ({mutate}) => ({
+  props: ({ mutate }) => ({
     signIn: (email) =>
-      mutate({variables: {email}})
+      mutate({ variables: { email } })
   })
 })
 

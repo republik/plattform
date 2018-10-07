@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { graphql } from 'react-apollo'
+import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import { css, merge } from 'glamor'
 import {
@@ -12,7 +12,6 @@ import {
   A,
   Spinner
 } from '@project-r/styleguide'
-import { compose } from 'redux'
 import { getInitials } from '../../lib/utils/name'
 import withT from '../../lib/withT'
 import { errorToString } from '../../lib/utils/errors'
@@ -198,13 +197,13 @@ export const withUncommitedChanges = ({ options } = {}) => (WrappedComponent) =>
   )(UncommittedChanges)
 }
 
-const Initials = ({uncommittedChanges, t}) => (
+const Initials = ({ uncommittedChanges, t }) => (
   <div {...styles.container}>
     {!!uncommittedChanges.loading && <span {...styles.emptyBox}>
       <Spinner size={20} />
     </span>}
     {!!uncommittedChanges.error && <span {...styles.emptyBox} title={errorToString(uncommittedChanges.error)}>
-      <OfflineIcon size={20} color={colors.error} style={{marginBottom: 6}} />
+      <OfflineIcon size={20} color={colors.error} style={{ marginBottom: 6 }} />
     </span>}
     {uncommittedChanges.users.length
       ? uncommittedChanges.users.map(user =>
@@ -215,23 +214,23 @@ const Initials = ({uncommittedChanges, t}) => (
       : (
         <span {...styles.emptyBox}
           title={t('uncommittedChanges/empty')} />
-        )
+      )
     }
   </div>
 )
 
-const Tags = ({uncommittedChanges}) => (
-  <div {...styles.container} style={{margin: '40px 0'}}>
+const Tags = ({ uncommittedChanges }) => (
+  <div {...styles.container} style={{ margin: '40px 0' }}>
     {uncommittedChanges.users.map(user =>
-      <div key={user.id} style={{marginRight: 4, textAlign: 'center'}}>
-        <div {...css(styles.initials)} style={{display: 'inline-block'}} title={user.email}>
+      <div key={user.id} style={{ marginRight: 4, textAlign: 'center' }}>
+        <div {...css(styles.initials)} style={{ display: 'inline-block' }} title={user.email}>
           {getInitials(user)}
         </div><br />
         <Label>
           {user.name}
         </Label>
       </div>
-      )
+    )
     }
   </div>
 )
@@ -252,8 +251,8 @@ export const ActiveInterruptionOverlay = withT(({
   onAcknowledged,
   t
 }) =>
-  <Overlay onClose={() => {}} mUpStyle={{minHeight: 0}}>
-    <OverlayBody style={{padding: 20}}>
+  <Overlay onClose={() => {}} mUpStyle={{ minHeight: 0 }}>
+    <OverlayBody style={{ padding: 20 }}>
       <Interaction.P>
         {t.pluralize('uncommittedChanges/interruption/text', {
           count: interruptingUsers.length,
@@ -273,7 +272,7 @@ export const ActiveInterruptionOverlay = withT(({
         </Button>
       </p>
       <p>
-        <A href='#' style={{display: 'block', textAlign: 'center'}} onClick={onRevert}>
+        <A href='#' style={{ display: 'block', textAlign: 'center' }} onClick={onRevert}>
           {t('uncommittedChanges/revert')}
         </A>
       </p>
