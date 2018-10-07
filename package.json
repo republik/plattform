@@ -38,7 +38,11 @@
       "git add"
     ]
   },
+  "standard": {
+    "parser": "babel-eslint"
+  },
   "devDependencies": {
+    "babel-eslint": "^10.0.1",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-env": "^1.7.0",
     "babel-tape-runner": "^3.0.0",
