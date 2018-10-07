@@ -27,7 +27,7 @@ import {
 
 import MaskedInput from 'react-maskedinput'
 
-import { getRepoHistory } from '../../pages/repo/tree'
+import { getRepoHistory, COMMIT_LIMIT } from '../../pages/repo/tree'
 import { getRepoWithPublications } from './Current'
 
 import { renderMdast } from 'mdast-react-render'
@@ -236,13 +236,13 @@ class PublishForm extends Component {
 
               {hasErrors && (
                 <span>
-                  <Interaction.P style={{color: colors.error}}>
+                  <Interaction.P style={{ color: colors.error }}>
                     {t('publish/validation/hasErrors')}
                   </Interaction.P>
-                  <ul style={{color: colors.error}}>
+                  <ul style={{ color: colors.error }}>
                     {errors.map((error, i) => (
                       <li key={i}>
-                        <Interaction.P style={{color: colors.error}}>
+                        <Interaction.P style={{ color: colors.error }}>
                           {error}
                         </Interaction.P>
                       </li>
@@ -286,7 +286,7 @@ class PublishForm extends Component {
                     nextDate.setHours(5)
                     nextDate.setMinutes(0)
                   }
-                  this.setState({scheduledAt: scheduledAtFormater(nextDate)})
+                  this.setState({ scheduledAt: scheduledAtFormater(nextDate) })
                 }
 
                 this.setState({
@@ -316,7 +316,7 @@ class PublishForm extends Component {
               <br /><br /><br />
 
               {publishing ? (
-                <div style={{textAlign: 'center'}}>
+                <div style={{ textAlign: 'center' }}>
                   <InlineSpinner />
                 </div>
               ) : (
@@ -359,7 +359,7 @@ class PublishForm extends Component {
                     if (scheduled && scheduledAtError) {
                       return
                     }
-                    this.setState(() => ({publishing: true}))
+                    this.setState(() => ({ publishing: true }))
                     this.props.publish({
                       repoId,
                       commitId: commit.id,
@@ -413,7 +413,7 @@ class PublishForm extends Component {
                         href='#'
                         onClick={e => {
                           e.preventDefault()
-                          this.setState({size: previewSize})
+                          this.setState({ size: previewSize })
                         }}
                       >
                         {label}
@@ -450,7 +450,7 @@ class PublishForm extends Component {
 export default compose(
   withT,
   graphql(publish, {
-    props: ({mutate, ownProps}) => ({
+    props: ({ mutate, ownProps }) => ({
       publish: variables => mutate({
         variables,
         refetchQueries: [
@@ -458,7 +458,7 @@ export default compose(
             query: getRepoHistory,
             variables: {
               repoId: ownProps.repoId,
-              first: 20
+              first: COMMIT_LIMIT
             }
           },
           {

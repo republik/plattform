@@ -43,7 +43,7 @@ import SettingsIcon from 'react-icons/lib/fa/cogs'
 
 import createDebug from 'debug'
 
-export const commitMutation = gql`
+const commitMutation = gql`
   mutation commit(
     $repoId: ID!
     $parentId: ID
@@ -66,13 +66,13 @@ export const commitMutation = gql`
   ${fragments.EditPageRepo}
 `
 
-export const uncommittedChangesMutation = gql`
+const uncommittedChangesMutation = gql`
   mutation uncommittedChanges($repoId: ID!, $action: Action!) {
     uncommittedChanges(repoId: $repoId, action: $action)
   }
 `
 
-export const getCommitById = gql`
+const getCommitById = gql`
     query getCommitById($repoId: ID!, $commitId: ID!) {
       repo(id: $repoId) {
         ...EditPageRepo
@@ -85,7 +85,7 @@ export const getCommitById = gql`
     ${fragments.CommitWithDocument}
   `
 
-export const getLatestCommit = gql`
+const getLatestCommit = gql`
   query getLatestCommit($repoId: ID!) {
     repo(id: $repoId) {
       id
@@ -97,7 +97,7 @@ export const getLatestCommit = gql`
   ${fragments.SimpleCommit}
 `
 
-export const getRepoHistory = gql`
+const getRepoHistory = gql`
   query repoWithHistory(
     $repoId: ID!
     $first: Int!

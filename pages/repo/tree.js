@@ -19,6 +19,7 @@ import * as fragments from '../../lib/graphql/fragments'
 import CurrentPublications from '../../components/Publication/Current'
 import UncommittedChanges from '../../components/VersionControl/UncommittedChanges'
 
+export const COMMIT_LIMIT = 20
 export const getRepoHistory = gql`
   query repoWithHistory(
     $repoId: ID!
@@ -45,7 +46,7 @@ export const getRepoHistory = gql`
   ${fragments.SimpleCommit}
 `
 
-export const treeRepoSubscription = gql`
+const treeRepoSubscription = gql`
   subscription onRepoUpdate($repoId: ID!) {
     repoUpdate(repoId: $repoId) {
       id
@@ -170,10 +171,7 @@ class EditorPage extends Component {
             <div>
               <br />
               <NarrowContainer>
-                <CurrentPublications
-                  repoId={repoId}
-                  refetchAfterUnpublish={getRepoHistory}
-                />
+                <CurrentPublications repoId={repoId} />
               </NarrowContainer>
               <Tree
                 commits={commits}
@@ -207,11 +205,10 @@ export default compose(
     options: ({ router }) => {
       return ({
         variables: {
-          after: null,
           repoId: router.query.repoId,
-          first: 20
+          first: COMMIT_LIMIT
         },
-        // notifyOnNetworkStatusChange: true,
+        notifyOnNetworkStatusChange: true,
         fetchPolicy: 'cache-and-network'
       })
     },
@@ -224,7 +221,7 @@ export default compose(
           return data.fetchMore({
             variables: {
               repoId: data.repo.id,
-              first: 20,
+              first: COMMIT_LIMIT,
               after: data.repo.commits.pageInfo.endCursor
             },
             updateQuery: (previousResult, { fetchMoreResult }) => {

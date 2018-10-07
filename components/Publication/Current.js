@@ -125,16 +125,9 @@ export default compose(
             variables: {
               repoId: ownProps.repoId
             }
-          },
-          {
-            query: ownProps.refetchAfterUnpublish,
-            variables: {
-              repoId: ownProps.repoId,
-              first: 20
-            }
           }
         ]
-      })
+      }).then(ownProps.onUnpublish)
     })
   }),
   graphql(getRepoWithPublications)
