@@ -1,6 +1,7 @@
 import React from 'react'
 import test from 'tape'
 import setupData from '../../../utils/setupData'
+import RouterProvider from '../../../utils/RouterProvider'
 import { mount } from '../../../utils/enzyme'
 
 import { t } from '../../../../lib/withT'
@@ -38,72 +39,75 @@ const EditorPageWithTestData = testData.withData(
 )
 
 test('EditorPage is write-able', assert => {
+  const router = {
+    query: {
+      repoId: 'orbiting/test',
+      commitId: '1'
+    }
+  }
   const wrapper = mount(
-    <EditorPageWithTestData
-      t={t}
-      me={me}
-      router={{
-        query: {
-          repoId: 'orbiting/test',
-          commitId: '1'
-        }
-      }}
-      data={{
-        loading: false,
-        error: undefined,
-        repo: {
-          meta: {},
-          commit: {
-            document: {
-              meta: {
-                template: 'article'
-              },
-              content: parse(`---
-template: article
----
-
-<section><h6>TITLE</h6>
-
-# Title 1
-
-Lead
-
-Von Autor
-
-<hr /></section>
-
-<section><h6>CENTER</h6>
-
-Text
-
-<hr /></section>
-              `)
-            }
-          }
-        }
-      }}
-      commitMutation={() => {
-        Promise.resolve({
-          data: {
+    <RouterProvider router={router}>
+      <EditorPageWithTestData
+        t={t}
+        me={me}
+        router={router}
+        data={{
+          loading: false,
+          error: undefined,
+          repo: {
+            meta: {},
             commit: {
-              id: '2'
+              document: {
+                meta: {
+                  template: 'article'
+                },
+                content: parse(`---
+  template: article
+  ---
+
+  <section><h6>TITLE</h6>
+
+  # Title 1
+
+  Lead
+
+  Von Autor
+
+  <hr /></section>
+
+  <section><h6>CENTER</h6>
+
+  Text
+
+  <hr /></section>
+                `)
+              }
             }
           }
-        })
-      }}
-      uncommittedChanges={{
-        loading: false,
-        error: undefined,
-        users: []
-      }}
-      hasUncommitedChanges={() => {
-        return Promise.resolve({
-          data: {
-            uncommittedChanges: true
-          }
-        })
-      }}
-    />
+        }}
+        commitMutation={() => {
+          Promise.resolve({
+            data: {
+              commit: {
+                id: '2'
+              }
+            }
+          })
+        }}
+        uncommittedChanges={{
+          loading: false,
+          error: undefined,
+          users: []
+        }}
+        hasUncommitedChanges={() => {
+          return Promise.resolve({
+            data: {
+              uncommittedChanges: true
+            }
+          })
+        }}
+      />
+    </RouterProvider>
   )
 
   const page = wrapper.find(EditorPage).instance()
