@@ -311,8 +311,9 @@ export class EditorPage extends Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    const { repo = {}, loading } = this.props.data || {}
-    const { repo: nextRepo = {}, loading: nextLoading } = nextProps.data || {}
+    const emptyRepo = {}
+    const { repo = emptyRepo, loading } = this.props.data || {}
+    const { repo: nextRepo = emptyRepo, loading: nextLoading } = nextProps.data || {}
 
     const shouldLoad =
       repo !== nextRepo ||
