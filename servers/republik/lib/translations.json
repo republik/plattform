@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-01T14:40:33.676Z",
+  "updated": "2018-10-08T13:49:37.550Z",
   "title": "live",
   "data": [
     {
@@ -448,7 +448,7 @@
     },
     {
       "key": "api/access/email/recipient/followup/subject",
-      "value": "Zugriff gefiel?"
+      "value": "Zeit für eine Entscheidung"
     },
     {
       "key": "api/access/grant/email/error",
