@@ -190,6 +190,9 @@ const getGlobalMergeVars = async (
     { name: 'LINK_ACCOUNT_SHARE',
       content: `${FRONTEND_BASE_URL}/konto#teilen`
     },
+    { name: 'LINK_OFFERS_OVERVIEW',
+      content: `${FRONTEND_BASE_URL}/angebote`
+    },
     { name: 'LINK_OFFERS',
       content: `${FRONTEND_BASE_URL}/angebote?package=ABO`
     },
@@ -199,8 +202,17 @@ const getGlobalMergeVars = async (
     { name: 'LINK_OFFER_MONTHLY_ABO',
       content: `${FRONTEND_BASE_URL}/angebote?package=MONTHLY_ABO`
     },
+    { name: 'LINK_MANIFEST',
+      content: `${FRONTEND_BASE_URL}/manifest`
+    },
+    { name: 'LINK_IMPRESSUM',
+      content: `${FRONTEND_BASE_URL}/impressum`
+    },
     { name: 'LINK_PROJECTR',
       content: 'https://project-r.construction/'
+    },
+    { name: 'LINK_PROJECTR_NEWS',
+      content: 'https://project-r.construction/news'
     }
   ]
 }
