@@ -43,10 +43,10 @@ export default ({ label, template, value, onChange }) => {
   if (value) {
     return (
       <div {...styles.value}>
-        <Label style={{color: '#000'}}>{label}</Label><br />
+        <Label style={{ color: '#000' }}>{label}</Label><br />
         <div {...styles.valueText}>
           <RepoLink value={value} invalid={info => (
-            <span style={{color: colors.error}}>{value}</span>
+            <span style={{ color: colors.error }}>{value}</span>
           )} />
         </div>
         <A href='#remove' {...styles.x} onClick={(e) => {

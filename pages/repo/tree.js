@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
+import { withRouter } from 'next/router'
 import { css } from 'glamor'
-import { compose } from 'redux'
-import { graphql } from 'react-apollo'
+import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 
 import { path } from 'ramda'
 
-import withData from '../../lib/apollo/withData'
 import withAuthorization from '../../components/Auth/withAuthorization'
 
 import Loader from '../../components/Loader'
@@ -20,6 +19,7 @@ import * as fragments from '../../lib/graphql/fragments'
 import CurrentPublications from '../../components/Publication/Current'
 import UncommittedChanges from '../../components/VersionControl/UncommittedChanges'
 
+export const COMMIT_LIMIT = 20
 export const getRepoHistory = gql`
   query repoWithHistory(
     $repoId: ID!
@@ -46,7 +46,7 @@ export const getRepoHistory = gql`
   ${fragments.SimpleCommit}
 `
 
-export const treeRepoSubscription = gql`
+const treeRepoSubscription = gql`
   subscription onRepoUpdate($repoId: ID!) {
     repoUpdate(repoId: $repoId) {
       id
@@ -91,7 +91,7 @@ class EditorPage extends Component {
       this.unsubscribe = this.props.data.subscribeToMore({
         document: treeRepoSubscription,
         variables: {
-          repoId: this.props.url.query.repoId
+          repoId: this.props.router.query.repoId
         },
         updateQuery: (prev, { subscriptionData }) => {
           if (!subscriptionData.data) {
@@ -110,16 +110,19 @@ class EditorPage extends Component {
           if (
             newLatestCommit !== currentLatestCommit
           ) {
+            const nextNodes = [
+              newLatestCommit,
+              ...prev.repo.commits.nodes
+            ].filter((value, index, self) => {
+              return self.findIndex(v => v.id === value.id) === index
+            })
             return {
               ...prev,
               repo: {
                 ...prev.repo,
                 commits: {
                   ...prev.repo.commits,
-                  nodes: [
-                    newLatestCommit,
-                    ...prev.repo.commits.nodes
-                  ]
+                  nodes: nextNodes
                 },
                 milestones
               }
@@ -137,25 +140,24 @@ class EditorPage extends Component {
   }
 
   render () {
-    const { url, commits, hasMore, fetchMore } = this.props
+    const { router, commits, hasMore, fetchMore } = this.props
     const { loading, error, repo } = this.props.data
-    const { repoId } = url.query
+    const { repoId } = router.query
 
     const localStorageCommitIds = getLocalStorageKeys()
       .filter(key => key.startsWith(repoId))
       .map(key => key.split('/').pop())
-
     return (
       <Frame>
         <Frame.Header>
           <Frame.Header.Section align='left'>
-            <Frame.Nav url={url}>
-              <RepoNav route='repo/tree' url={url} />
+            <Frame.Nav>
+              <RepoNav route='repo/tree' />
             </Frame.Nav>
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
             {!!repo &&
-              <div style={{marginRight: 10}}>
+              <div style={{ marginRight: 10 }}>
                 <UncommittedChanges repoId={repo.id} />
               </div>
             }
@@ -197,21 +199,20 @@ class EditorPage extends Component {
 }
 
 export default compose(
-  withData,
+  withRouter,
   withAuthorization(['editor']),
   graphql(getRepoHistory, {
-    options: ({ url }) => {
+    options: ({ router }) => {
       return ({
         variables: {
-          after: null,
-          repoId: url.query.repoId,
-          first: 20
+          repoId: router.query.repoId,
+          first: COMMIT_LIMIT
         },
         notifyOnNetworkStatusChange: true,
         fetchPolicy: 'cache-and-network'
       })
     },
-    props: ({data, ownProps}) => {
+    props: ({ data, ownProps }) => {
       return ({
         data,
         commits: (data.repo && data.repo.commits && data.repo.commits.nodes) || [],
@@ -220,7 +221,7 @@ export default compose(
           return data.fetchMore({
             variables: {
               repoId: data.repo.id,
-              first: 20,
+              first: COMMIT_LIMIT,
               after: data.repo.commits.pageInfo.endCursor
             },
             updateQuery: (previousResult, { fetchMoreResult }) => {
@@ -234,7 +235,7 @@ export default compose(
                     nodes: [
                       ...previousResult.repo.commits.nodes,
                       ...fetchMoreResult.repo.commits.nodes
-                    ].filter(({id}, i, all) =>
+                    ].filter(({ id }, i, all) =>
                     // deduplicate by id
                       i === all.findIndex(repo => repo.id === id)
                     )

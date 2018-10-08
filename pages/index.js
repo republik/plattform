@@ -1,21 +1,21 @@
 import React from 'react'
-import {compose} from 'redux'
+import { withRouter } from 'next/router'
+import { compose } from 'react-apollo'
 
-import withData from '../lib/apollo/withData'
 import withAuthorization from '../components/Auth/withAuthorization'
 
 import Frame from '../components/Frame'
 import RepoTable from '../components/Repo/Table'
 
-const Index = ({ url }) => {
-  const [orderField, orderDirection] = (url.query.orderBy || '')
+const Index = ({ router: { query } }) => {
+  const [orderField, orderDirection] = (query.orderBy || '')
     .split('-')
     .filter(Boolean)
   return (
     <Frame>
       <Frame.Header>
         <Frame.Header.Section align='left'>
-          <Frame.Nav url={url} />
+          <Frame.Nav />
         </Frame.Header.Section>
         <Frame.Header.Section align='right'>
           <Frame.Me />
@@ -25,14 +25,14 @@ const Index = ({ url }) => {
         <RepoTable
           orderField={orderField}
           orderDirection={orderDirection}
-          phase={url.query.phase}
-          search={url.query.q} />
+          phase={query.phase}
+          search={query.q} />
       </Frame.Body>
     </Frame>
   )
 }
 
 export default compose(
-  withData,
+  withRouter,
   withAuthorization(['editor'])
 )(Index)

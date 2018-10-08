@@ -1,4 +1,6 @@
 import React from 'react'
+import { compose } from 'react-apollo'
+import { withRouter } from 'next/router'
 import { Link } from '../../lib/routes'
 import { css } from 'glamor'
 import { colors, linkRule } from '@project-r/styleguide'
@@ -22,8 +24,8 @@ const menu = [
   }
 ]
 
-const Nav = ({url, route, isNew, t}) => {
-  const { repoId } = url.query
+const Nav = ({ router, route, isNew, t }) => {
+  const { repoId } = router.query
 
   const params = {
     repoId: repoId.split('/')
@@ -59,4 +61,4 @@ const Nav = ({url, route, isNew, t}) => {
   )
 }
 
-export default withT(Nav)
+export default compose(withT, withRouter)(Nav)

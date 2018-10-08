@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { compose } from 'redux'
 import { css } from 'glamor'
-import { graphql } from 'react-apollo'
+import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import { descending, ascending } from 'd3-array'
 import debounce from 'lodash.debounce'
@@ -181,7 +180,7 @@ const orderFields = [
   }
 ]
 
-const Phase = ({phase, onClick, disabled, t}) =>
+const Phase = ({ phase, onClick, disabled, t }) =>
   <span {...styles.phase} style={{
     backgroundColor: disabled ? 'gray' : phase.color,
     cursor: onClick ? 'pointer' : 'default'
@@ -228,7 +227,7 @@ class RepoList extends Component {
       search
     } = this.state
 
-    const getParams = ({field = orderField, phase = filterPhase, q = search, order = false}) => {
+    const getParams = ({ field = orderField, phase = filterPhase, q = search, order = false }) => {
       const params = {
         orderBy: [
           field,
@@ -257,7 +256,7 @@ class RepoList extends Component {
 
       this.setState(
         { search: value },
-        this.debouncedRouting.bind(this, getParams({q: value}))
+        this.debouncedRouting.bind(this, getParams({ q: value }))
       )
     }
 
@@ -281,7 +280,7 @@ class RepoList extends Component {
           value={search}
           error={search && search.length < SEARCH_MIN_LENGTH && t(
             'repo/search/field/minLength',
-            {count: SEARCH_MIN_LENGTH}
+            { count: SEARCH_MIN_LENGTH }
           )}
           onChange={onChangeSearch} />
 
@@ -289,7 +288,7 @@ class RepoList extends Component {
           {phases.map(phase => {
             const active = activeFilterPhase && activeFilterPhase.key === phase.key
             return (
-              <Link key={phase.key} route='index' replace params={getParams({phase: active ? null : phase.key})}>
+              <Link key={phase.key} route='index' replace params={getParams({ phase: active ? null : phase.key })}>
                 <Phase
                   t={t}
                   phase={phase}
@@ -300,7 +299,7 @@ class RepoList extends Component {
           {data.repos && (
             <Label {...styles.pageInfo}>
               {data.repos.nodes.length === data.repos.totalCount
-                ? t('repo/table/pageInfo/total', {count: data.repos.totalCount})
+                ? t('repo/table/pageInfo/total', { count: data.repos.totalCount })
                 : t('repo/table/pageInfo/loadedTotal', {
                   loaded: data.repos.nodes.length,
                   total: data.repos.totalCount
@@ -309,7 +308,7 @@ class RepoList extends Component {
               <br />
               {!data.loading && data.repos.pageInfo.hasNextPage && (
                 <a {...linkRule} href='#' onClick={() => {
-                  fetchMore({after: data.repos.pageInfo.endCursor})
+                  fetchMore({ after: data.repos.pageInfo.endCursor })
                 }}>
                   {t('repo/table/pageInfo/loadMore')}
                 </a>
@@ -320,21 +319,21 @@ class RepoList extends Component {
         <Table>
           <thead>
             <Tr>
-              <Th style={{width: '28%'}}>{t('repo/table/col/title')}</Th>
-              <Th style={{width: '20%'}}>{t('repo/table/col/credits')}</Th>
-              {orderFields.map(({field, width}) => (
+              <Th style={{ width: '28%' }}>{t('repo/table/col/title')}</Th>
+              <Th style={{ width: '20%' }}>{t('repo/table/col/credits')}</Th>
+              {orderFields.map(({ field, width }) => (
                 <ThOrder key={field}
                   route='index'
-                  params={getParams({field, order: true})}
+                  params={getParams({ field, order: true })}
                   activeDirection={orderDirection}
                   activeField={orderField}
                   field={field}
-                  style={{width}}>
+                  style={{ width }}>
                   {t(`repo/table/col/${field}`, undefined, field)}
                 </ThOrder>
               ))}
-              <Th style={{width: '10%'}}>{t('repo/table/col/phase')}</Th>
-              <Th style={{width: 70}} />
+              <Th style={{ width: '10%' }}>{t('repo/table/col/phase')}</Th>
+              <Th style={{ width: 70 }} />
             </Tr>
           </thead>
           <tbody>
@@ -353,82 +352,82 @@ class RepoList extends Component {
               ? (
                 <tr>
                   <td colSpan='8'>
-                    <Loader loading={data.loading} error={data.error} style={{height: '80vh'}} />
+                    <Loader loading={data.loading} error={data.error} style={{ height: '80vh' }} />
                   </td>
                 </tr>
               )
               : data.repos && data.repos.nodes
-              .map(repo => ({
-                phase: phaseForRepo(repo),
-                repo
-              }))
-              .filter(({phase}) => !activeFilterPhase || activeFilterPhase.key === phase.key)
-              .sort((a, b) => orderCompare(orderAccessor(a.repo), orderAccessor(b.repo)))
-              .map(({repo, phase}) => {
-                const {
-                  id,
-                  meta: {
-                    publishDate
-                  },
-                  latestCommit: {
-                    date,
-                    author: { name: authorName },
-                    message,
-                    document: { meta }
-                  }
-                } = repo
+                .map(repo => ({
+                  phase: phaseForRepo(repo),
+                  repo
+                }))
+                .filter(({ phase }) => !activeFilterPhase || activeFilterPhase.key === phase.key)
+                .sort((a, b) => orderCompare(orderAccessor(a.repo), orderAccessor(b.repo)))
+                .map(({ repo, phase }) => {
+                  const {
+                    id,
+                    meta: {
+                      publishDate
+                    },
+                    latestCommit: {
+                      date,
+                      author: { name: authorName },
+                      message,
+                      document: { meta }
+                    }
+                  } = repo
 
-                return (
-                  <Tr key={id}>
-                    <Td>
-                      <Label>{t(`repo/add/template/${meta.template}`, null, meta.template)}</Label>
-                      {meta.template && <br />}
-                      <Link route='repo/tree' params={{repoId: id.split('/')}}>
-                        <a {...linkRule} title={id}>
-                          {meta.title || id.replace([GITHUB_ORG, REPO_PREFIX || ''].join('/'), '')}
-                        </a>
-                      </Link>
-                    </Td>
-                    <Td>{meta.credits && intersperse(
-                      renderMdast(meta.credits.filter(link.matchMdast), creditSchema),
-                      () => ', '
-                    )}</Td>
-                    <TdNum>
-                      {displayDateTime(date)}<br />
-                      <Label>{authorName}: «{message}»</Label>
-                    </TdNum>
-                    <TdNum>
-                      <EditMetaDate
-                        value={publishDate}
-                        onChange={(value) => editRepoMeta(
-                          {repoId: id, publishDate: value}
-                        )} />
-                    </TdNum>
-                    <Td>
-                      <Phase t={t} phase={phase} />
-                    </Td>
-                    <Td style={{textAlign: 'right'}}>
-                      {repo.latestPublications
-                        .filter(publication => publication.document && publication.prepublication)
-                        .map(({name, document: {meta: {path, slug}}}) => (
-                          <a key={name} href={`${FRONTEND_BASE_URL}${path || '/' + slug}`}>
-                            <LockIcon color={colors.primary} />
+                  return (
+                    <Tr key={id}>
+                      <Td>
+                        <Label>{t(`repo/add/template/${meta.template}`, null, meta.template)}</Label>
+                        {meta.template && <br />}
+                        <Link route='repo/tree' params={{ repoId: id.split('/') }}>
+                          <a {...linkRule} title={id}>
+                            {meta.title || id.replace([GITHUB_ORG, REPO_PREFIX || ''].join('/'), '')}
                           </a>
-                        ))}
-                      {' '}
-                      {repo.latestPublications
-                        .filter(publication => publication.document && !publication.prepublication && publication.live)
-                        .map(({name, document: {meta: {path, slug}}}) => (
-                          <a key={name} href={`${FRONTEND_BASE_URL}${path || '/' + slug}`}>
-                            <PublicIcon color={colors.primary} />
-                          </a>
-                        ))}
-                      {' '}
-                      <a href={`https://github.com/${id}`}><GithubIcon color={colors.primary} /></a>
-                    </Td>
-                  </Tr>
-                )
-              })
+                        </Link>
+                      </Td>
+                      <Td>{meta.credits && intersperse(
+                        renderMdast(meta.credits.filter(link.matchMdast), creditSchema),
+                        () => ', '
+                      )}</Td>
+                      <TdNum>
+                        {displayDateTime(date)}<br />
+                        <Label>{authorName}: «{message}»</Label>
+                      </TdNum>
+                      <TdNum>
+                        <EditMetaDate
+                          value={publishDate}
+                          onChange={(value) => editRepoMeta(
+                            { repoId: id, publishDate: value }
+                          )} />
+                      </TdNum>
+                      <Td>
+                        <Phase t={t} phase={phase} />
+                      </Td>
+                      <Td style={{ textAlign: 'right' }}>
+                        {repo.latestPublications
+                          .filter(publication => publication.document && publication.prepublication)
+                          .map(({ name, document: { meta: { path, slug } } }) => (
+                            <a key={name} href={`${FRONTEND_BASE_URL}${path || '/' + slug}`}>
+                              <LockIcon color={colors.primary} />
+                            </a>
+                          ))}
+                        {' '}
+                        {repo.latestPublications
+                          .filter(publication => publication.document && !publication.prepublication && publication.live)
+                          .map(({ name, document: { meta: { path, slug } } }) => (
+                            <a key={name} href={`${FRONTEND_BASE_URL}${path || '/' + slug}`}>
+                              <PublicIcon color={colors.primary} />
+                            </a>
+                          ))}
+                        {' '}
+                        <a href={`https://github.com/${id}`}><GithubIcon color={colors.primary} /></a>
+                      </Td>
+                    </Tr>
+                  )
+                })
             }
           </tbody>
         </Table>
@@ -450,12 +449,12 @@ const RepoListWithQuery = compose(
           : undefined,
         orderBy: search && search.length >= SEARCH_MIN_LENGTH
           ? undefined
-          : {field: 'PUSHED_AT', direction: 'DESC'}
+          : { field: 'PUSHED_AT', direction: 'DESC' }
       }
     }),
-    props: ({data, ownProps}) => ({
+    props: ({ data, ownProps }) => ({
       data,
-      fetchMore: ({after}) => data.fetchMore({
+      fetchMore: ({ after }) => data.fetchMore({
         variables: {
           after,
           search: ownProps.search
@@ -464,7 +463,7 @@ const RepoListWithQuery = compose(
           const nodes = [
             ...previousResult.repos.nodes,
             ...fetchMoreResult.repos.nodes
-          ].filter(({id}, i, all) =>
+          ].filter(({ id }, i, all) =>
             // deduplicate by id
             i === all.findIndex(repo => repo.id === id)
           )
@@ -484,9 +483,9 @@ const RepoListWithQuery = compose(
     })
   }),
   graphql(editRepoMeta, {
-    props: ({mutate}) => ({
+    props: ({ mutate }) => ({
       editRepoMeta: (variables) =>
-        mutate({variables})
+        mutate({ variables })
     })
   })
 )(RepoList)

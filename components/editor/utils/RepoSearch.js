@@ -66,9 +66,9 @@ const ConnectedAutoComplete = graphql(filterRepos, {
 })(props => {
   const showLoader = props.data && props.data.loading
   return (
-    <span style={{position: 'relative', display: 'block'}}>
+    <span style={{ position: 'relative', display: 'block' }}>
       <Autocomplete key='autocomplete' {...props} />
-      {!!showLoader && <span style={{position: 'absolute', top: '21px', right: '0px', zIndex: 500}}>
+      {!!showLoader && <span style={{ position: 'absolute', top: '21px', right: '0px', zIndex: 500 }}>
         <InlineSpinner size={35} />
       </span>}
     </span>
@@ -77,8 +77,8 @@ const ConnectedAutoComplete = graphql(filterRepos, {
 
 const safeValue = value =>
   typeof value === 'string'
-  ? { value, text: value }
-  : null
+    ? { value, text: value }
+    : null
 
 export default class RepoSearch extends Component {
   constructor (props) {
@@ -113,21 +113,21 @@ export default class RepoSearch extends Component {
 
   filterChangeHandler (value) {
     this.setState(
-        state => ({
-          filter: value
-        }),
-        this.setSearchValue
-      )
+      state => ({
+        filter: value
+      }),
+      this.setSearchValue
+    )
   }
 
   changeHandler (value) {
     this.setState(
-        state => ({
-          value: null,
-          filter: null
-        }),
-        () => this.props.onChange(value)
-      )
+      state => ({
+        value: null,
+        filter: null
+      }),
+      () => this.props.onChange(value)
+    )
   }
 
   render () {
@@ -143,7 +143,7 @@ export default class RepoSearch extends Component {
         items={[]}
         onChange={this.changeHandler}
         onFilterChange={this.filterChangeHandler}
-        />
+      />
     )
   }
 }

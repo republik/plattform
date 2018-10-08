@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { graphql } from 'react-apollo'
+import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
-import { compose } from 'redux'
 
 import withT from '../../lib/withT'
 import { getName } from '../../lib/utils/name'
@@ -12,8 +11,6 @@ import {
 } from '@project-r/styleguide'
 import { swissTime } from '../../lib/utils/format'
 import ErrorMessage from '../ErrorMessage'
-
-import { query as treeQuery } from '../../pages/repo/tree'
 
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
@@ -93,16 +90,15 @@ class CurrentPublications extends Component {
               : <A href='#' onClick={e => {
                 e.preventDefault()
                 if (window.confirm(t('publication/current/unpublish/confirmAll'))) {
-                  this.setState({unpublishing: true})
+                  this.setState({ unpublishing: true })
                   this.props.unpublish().then(() => {
-                    this.setState({unpublishing: false})
+                    this.setState({ unpublishing: false })
                   }).catch((error) => {
                     this.setState(() => ({
                       unpublishing: false,
                       error: error
                     }))
                   })
-                  this.props.unpublish()
                 }
               }}>
                 {t('publication/current/unpublish/action')}
@@ -117,20 +113,14 @@ class CurrentPublications extends Component {
 export default compose(
   withT,
   graphql(unpublish, {
-    props: ({mutate, ownProps}) => ({
+    props: ({ mutate, ownProps }) => ({
       unpublish: () => mutate({
         variables: {
           repoId: ownProps.repoId
         },
         refetchQueries: [
           {
-            getRepoWithPublications,
-            variables: {
-              repoId: ownProps.repoId
-            }
-          },
-          {
-            query: treeQuery,
+            query: getRepoWithPublications,
             variables: {
               repoId: ownProps.repoId
             }

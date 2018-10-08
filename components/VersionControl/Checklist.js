@@ -4,9 +4,8 @@ import { css } from 'glamor'
 import { Checkbox, colors, linkRule } from '@project-r/styleguide'
 import { getName } from '../../lib/utils/name'
 import { swissTime } from '../../lib/utils/format'
-import { graphql } from 'react-apollo'
+import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
-import { compose } from 'redux'
 import { Link } from '../../lib/routes'
 import Loader from '../Loader'
 import withT from '../../lib/withT'
@@ -112,7 +111,7 @@ class Checklist extends Component {
           ))
         return (
           <div>
-            {allMilestones.map(({name, author, commit}) =>
+            {allMilestones.map(({ name, author, commit }) =>
               <p key={name}>
                 <Checkbox
                   checked={!!author}
@@ -144,7 +143,7 @@ class Checklist extends Component {
                 >
                   {t(`checklist/labels/${name}`, undefined, name)}
                   {!!author && <span {...styles.approvedBy}>
-                    {t('checklist/approvedFor', {name: getName(author)})}
+                    {t('checklist/approvedFor', { name: getName(author) })}
                   </span>}
                 </Checkbox>
                 {!!commit && <span {...styles.commit}>
@@ -186,15 +185,15 @@ Checklist.propTypes = {
 export default compose(
   withT,
   graphql(getMilestones, {
-    props: ({data, ownProps: {name}}) => ({
+    props: ({ data, ownProps: { name } }) => ({
       loading: data.loading,
       error: data.error,
       milestones: data.repo && data.repo.milestones
     })
   }),
   graphql(placeMilestone, {
-    props: ({ mutate, ownProps: {repoId, commitId} }) => ({
-      placeMilestone: ({name, message}) =>
+    props: ({ mutate, ownProps: { repoId, commitId } }) => ({
+      placeMilestone: ({ name, message }) =>
         mutate({
           variables: {
             repoId,
@@ -221,8 +220,8 @@ export default compose(
     })
   }),
   graphql(removeMilestone, {
-    props: ({ mutate, ownProps: {repoId} }) => ({
-      removeMilestone: ({name, message}) =>
+    props: ({ mutate, ownProps: { repoId } }) => ({
+      removeMilestone: ({ name, message }) =>
         mutate({
           variables: {
             repoId: repoId,

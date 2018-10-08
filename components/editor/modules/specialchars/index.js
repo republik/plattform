@@ -17,7 +17,7 @@ const DoubleGuillemetButton = ({ value, onChange }) => {
     data-disabled={disabled}
     data-visible
     onMouseDown={doubleGuillemetClickHandler(value, onChange)}
-      >
+  >
     {'«»'}
   </span>
 }
@@ -38,7 +38,7 @@ const SingleGuillemetButton = ({ value, onChange }) => {
     data-disabled={disabled}
     data-visible
     onMouseDown={singleGuillemetClickHandler(value, onChange)}
-      >
+  >
     {'‹›'}
   </span>
 }
@@ -92,7 +92,7 @@ const LongDashButton = ({ value, onChange }) => {
     data-disabled={disabled}
     data-visible
     onMouseDown={longDashClickHandler(value, onChange)}
-      >
+  >
     {'–'}
   </span>
 }
@@ -114,7 +114,7 @@ const NBSPButton = ({ value, onChange }) => {
     data-disabled={disabled}
     data-visible
     onMouseDown={nbspClickHandler(value, onChange)}
-      >
+  >
     Dauerleerzeichen (␣)
   </span>
 }
@@ -136,7 +136,7 @@ const SoftHyphenButton = ({ value, onChange }) => {
     data-disabled={disabled}
     data-visible
     onMouseDown={softHyphenClickHandler(value, onChange)}
-      >
+  >
     Weiches Trennzeichen (‧)
   </span>
 }

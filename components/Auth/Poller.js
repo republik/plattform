@@ -1,8 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import {graphql} from 'react-apollo'
-import {meQuery} from '../../lib/withMe'
-import {compose} from 'redux'
+import { graphql, compose } from 'react-apollo'
+import { meQuery } from '../../lib/withMe'
 
 class Poller extends Component {
   constructor (props) {
@@ -30,7 +29,7 @@ class Poller extends Component {
     this.tick()
   }
   componentDidUpdate () {
-    const {data: {me}, onSuccess} = this.props
+    const { data: { me }, onSuccess } = this.props
     if (me) {
       clearTimeout(this.tickTimeout)
       const elapsedMs = this.state.now - this.state.start
@@ -43,7 +42,7 @@ class Poller extends Component {
     clearTimeout(this.tickTimeout)
   }
   render () {
-    const {data: {error, me}} = this.props
+    const { data: { error, me } } = this.props
     if (me) {
       return null
     }

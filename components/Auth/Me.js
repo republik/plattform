@@ -1,5 +1,5 @@
 import React from 'react'
-import {compose} from 'redux'
+import { compose } from 'react-apollo'
 
 import withMe from '../../lib/withMe'
 import withT from '../../lib/withT'
@@ -7,7 +7,7 @@ import withT from '../../lib/withT'
 import SignIn from './SignIn'
 import SignOut from './SignOut'
 
-const Me = ({me, t, email}) => (
+const Me = ({ me, t, email }) => (
   <div>
     {me ? (
       <div>
