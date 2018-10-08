@@ -88,7 +88,17 @@ const titleDate = string => dateTimeFormat(new Date(string))
 
 const DefaultLink = ({ children }) => children
 
-export const CommentHeader = ({t, commentId, Link = DefaultLink, timeago, createdAt, updatedAt, credential, highlighted, ...displayAuthor}) => {
+export const CommentHeader = ({
+  t,
+  commentId,
+  Link = DefaultLink,
+  timeago,
+  createdAt,
+  updatedAt,
+  credential,
+  highlighted,
+  ...displayAuthor
+}) => {
   const updated = updatedAt && updatedAt !== createdAt
   const { profilePicture, name } = displayAuthor
   return (
