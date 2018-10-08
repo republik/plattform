@@ -19,7 +19,7 @@
     "react": ">=16.5",
     "react-maskedinput": ">=4.0.1",
     "prop-types": ">=15.5",
-    "react-textarea-autosize": "^5.1.0",
+    "react-textarea-autosize": ">=5.1.0",
     "downshift": "^2.2.2"
   },
   "devDependencies": {
