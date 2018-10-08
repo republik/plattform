@@ -34,7 +34,7 @@ ${<Fragment>
 
 ## Charts
 
-Most charts will use sequential colors, e.g. bars all in the frist sequential color and one highlight in the second. Opposite colors are used for diverging ranges, with an optional neutral color in the middle.
+Most charts will use sequential colors, e.g. bars all in the first sequential color and one highlight in the second. Opposite colors are used for diverging ranges, with an optional neutral color in the middle.
 
 ${colors.sequential3.map((c, i) =>
   <ColorSpecimen span={1} name={`sequential.${i}`} value={c} />)}
