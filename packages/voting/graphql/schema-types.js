@@ -3,6 +3,7 @@ module.exports = `
 type Voting {
   id: ID!
   slug: String!
+  description: String
   beginDate: DateTime!
   endDate: DateTime!
   options: [VoteOption!]!
@@ -13,6 +14,7 @@ type Voting {
   # current user (me) has submitted a ballot
   userHasSubmitted: Boolean
   userSubmitDate: DateTime
+  discussion: Discussion
 }
 
 type VoteTurnout {
@@ -52,5 +54,20 @@ type VoteStatsCount {
   key: String!
   count: Int!
   options: [VoteOptionResult!]!
+}
+
+input VoteInput {
+  name: String!
+  description: String!
+  slug: String!
+  beginDate: DateTime!
+  endDate: DateTime!
+  options: [VoteOptionInput!]!
+}
+
+input VoteOptionInput {
+  name: String!
+  label: String
+  description: String
 }
 `

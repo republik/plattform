@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-01T14:40:33.676Z",
+  "updated": "2018-10-09T16:38:41.078Z",
   "title": "live",
   "data": [
     {
@@ -193,6 +193,14 @@
     {
       "key": "api/preview/mail/tooEarly",
       "value": "Das Preview-Mail kann nur einmal pro Tag angefordert werden, bitte versuchen Sie es morgen nochmals."
+    },
+    {
+      "key": "api/preview/email/onboarding/subject",
+      "value": "Probelesen der Republik"
+    },
+    {
+      "key": "api/preview/email/followup/subject",
+      "value": "Hat Sie das überzeugt?"
     },
     {
       "key": "profile/generic/tooLong",
@@ -448,7 +456,7 @@
     },
     {
       "key": "api/access/email/recipient/followup/subject",
-      "value": "Zugriff gefiel?"
+      "value": "Zeit für eine Entscheidung"
     },
     {
       "key": "api/access/grant/email/error",
@@ -515,12 +523,16 @@
       "value": "Unbekannt"
     },
     {
-      "key": "api/preview/email/onboarding/subject",
-      "value": "Probelesen der Republik"
-    },
-    {
       "key": "api/election/email/election_candidacy_confirmation_gen18m/subject",
       "value": "Vielen Dank für Ihre Kandidatur"
+    },
+    {
+      "key": "api/election/exists",
+      "value": "Eine Wahl mit diesem Slug existiert bereits."
+    },
+    {
+      "key": "api/voting/exists",
+      "value": "Eine Abstimmung mit diesem Slug existiert bereits."
     }
   ]
 }

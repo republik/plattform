@@ -5,6 +5,15 @@ const getConditions = () => ({
   'endDate >': Date.now()
 })
 
+const slugExists = async (slug, pgdb) => {
+  return !!(await pgdb.public.elections.findFirst({
+    slug
+  }))
+}
+
+const create = async (input, pgdb) =>
+  pgdb.public.elections.insertAndGet(input)
+
 const findBySlug = async (slug, election, pgdb) => {
   debug('findBySlug', { slug, hasElection: !!election })
 
@@ -62,6 +71,8 @@ const findAvailable = async (pgdb) => {
 }
 
 module.exports = {
+  slugExists,
+  create,
   findBySlug,
   findAvailable
 }

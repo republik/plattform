@@ -1,7 +1,7 @@
 const {
   isEligible,
   numEligible
-} = require('../../lib/votings')
+} = require('../../lib/Voting')
 
 module.exports = {
   slug ({ id, slug }) {
@@ -12,20 +12,17 @@ module.exports = {
     }
   },
   async options (voting, args, { pgdb }) {
-    return pgdb.public.votingOptions.find({ votingId: voting.id })
+    return pgdb.public.votingOptions.find({
+      votingId: voting.id
+    })
   },
-  async turnout (voting, args, { pgdb }) {
-    if (voting.result && voting.result.turnout) { // cached by countVoting
-      const { turnout } = voting.result
-      return {
-        ...turnout,
-        eligible: turnout.eligible || turnout.eligitable // fix typo in old data
-      }
+  async discussion (voting, args, { pgdb }) {
+    if (!voting.discussionId) {
+      return
     }
-    return {
-      eligible: await numEligible(pgdb),
-      submitted: await pgdb.public.ballots.count({ votingId: voting.id })
-    }
+    return pgdb.public.discussions.findOne({
+      id: voting.discussionId
+    })
   },
   async userIsEligible (voting, args, { pgdb, user: me }) {
     return isEligible(me && me.id, pgdb)
@@ -49,6 +46,19 @@ module.exports = {
     if (!ballot) { return }
 
     return ballot.updatedAt
+  },
+  async turnout (voting, args, { pgdb }) {
+    if (voting.result && voting.result.turnout) { // cached by countVoting
+      const { turnout } = voting.result
+      return {
+        ...turnout,
+        eligible: turnout.eligible || turnout.eligitable // fix typo in old data
+      }
+    }
+    return {
+      eligible: await numEligible(pgdb),
+      submitted: await pgdb.public.ballots.count({ votingId: voting.id })
+    }
   }
   /* either voting.result is freezed into crowdfunding by countVoting
      or it must remain null. */
