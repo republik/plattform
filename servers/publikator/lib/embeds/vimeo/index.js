@@ -53,7 +53,7 @@ const getVimeoVideoById = async id => {
     userProfileImageUrl: response.user.pictures.sizes.find(v => v.width > 75)
       .link,
     aspectRatio: isLiveOrScheduled
-      // Live videos report an incorrect 4:3 aspect ratio in the API.
+      // Live videos report an incorrect 4:3 aspect ratio in the API before they're archived.
       ? 16.0 / 9
       : response.width / response.height,
     src: mp4 && !isLiveOrScheduled ? {
