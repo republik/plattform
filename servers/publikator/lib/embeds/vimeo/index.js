@@ -36,7 +36,8 @@ const getVimeoVideoById = async id => {
     response.files.length > 0 &&
     response.files.find(file => file.quality === 'hls').link_secure
   const thumbnail = response.pictures.sizes.find(v => v.width > 900).link
-  const isLiveOrScheduled = response.embed &&
+  const isLiveOrScheduled = response.duration === 0 &&
+    response.embed &&
     response.embed.badges &&
     response.embed.badges.live &&
     !response.embed.badges.live.archived
