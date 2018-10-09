@@ -27,13 +27,19 @@ const getVimeoVideoById = async id => {
 
   const mp4 =
     response.files &&
+    response.files.length > 0 &&
     response.files
       .filter(file => file.type === 'video/mp4')
       .sort((a, b) => descending(a.width, b.width))[0].link_secure
   const hls =
     response.files &&
+    response.files.length > 0 &&
     response.files.find(file => file.quality === 'hls').link_secure
   const thumbnail = response.pictures.sizes.find(v => v.width > 900).link
+  const isLiveOrScheduled = response.embed &&
+    response.embed.badges &&
+    response.embed.badges.live &&
+    !response.embed.badges.live.archived
 
   return {
     platform: 'vimeo',
@@ -46,13 +52,16 @@ const getVimeoVideoById = async id => {
     userScreenName: response.user.name,
     userProfileImageUrl: response.user.pictures.sizes.find(v => v.width > 75)
       .link,
-    aspectRatio: response.width / response.height,
-    src: mp4 && {
+    aspectRatio: isLiveOrScheduled
+      // Live videos report an incorrect 4:3 aspect ratio in the API.
+      ? 16.0 / 9
+      : response.width / response.height,
+    src: mp4 && !isLiveOrScheduled ? {
       mp4: mp4,
       hls: hls,
       thumbnail: thumbnail
       // TODO: subtitles
-    }
+    } : null
   }
 }
 
