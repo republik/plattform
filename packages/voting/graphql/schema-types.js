@@ -2,13 +2,14 @@ module.exports = `
 
 type Voting {
   id: ID!
+  name: String!
   slug: String!
   description: String
   beginDate: DateTime!
   endDate: DateTime!
-  options: [VoteOption!]!
-  turnout: VoteTurnout
-  result: VoteResult
+  options: [VotingOption!]!
+  turnout: VotingTurnout
+  result: VotingResult
   # current user (me) is eligible to submit a ballot
   userIsEligible: Boolean
   # current user (me) has submitted a ballot
@@ -17,55 +18,55 @@ type Voting {
   discussion: Discussion
 }
 
-type VoteTurnout {
+type VotingTurnout {
   eligible: Int!
   submitted: Int!
 }
 
-type VoteOption {
+type VotingOption {
   id: ID!
   name: String!
   label: String!
   description: String
 }
 
-type VoteOptionResult {
-  option: VoteOption!
+type VotingOptionResult {
+  option: VotingOption!
   count: Int!
   winner: Boolean
 }
 
-type VoteResult {
-  options: [VoteOptionResult!]!
-  stats: VoteStats!
+type VotingResult {
+  options: [VotingOptionResult!]!
+  stats: VotingStats!
   message: String
   video: Video
   createdAt: DateTime
   updatedAt: DateTime
 }
 
-type VoteStats {
-  ages: [VoteStatsCount!]!
-  countries: [VoteStatsCount!]!
-  chCantons: [VoteStatsCount!]!
+type VotingStats {
+  ages: [VotingStatsCount!]!
+  countries: [VotingStatsCount!]!
+  chCantons: [VotingStatsCount!]!
 }
 
-type VoteStatsCount {
+type VotingStatsCount {
   key: String!
   count: Int!
-  options: [VoteOptionResult!]!
+  options: [VotingOptionResult!]!
 }
 
-input VoteInput {
+input VotingInput {
   name: String!
   description: String!
   slug: String!
   beginDate: DateTime!
   endDate: DateTime!
-  options: [VoteOptionInput!]!
+  options: [VotingOptionInput!]!
 }
 
-input VoteOptionInput {
+input VotingOptionInput {
   name: String!
   label: String
   description: String

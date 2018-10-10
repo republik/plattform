@@ -30,10 +30,10 @@ module.exports = async (_, { electionInput }, { pgdb, user: me, t }) => {
     }, transaction)
 
     await transaction.transactionCommit()
-
-    return findBySlug(slug, null, transaction)
   } catch (e) {
     await transaction.transactionRollback()
     throw e
   }
+
+  return findBySlug(slug, null, pgdb)
 }
