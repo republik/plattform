@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-09T16:38:41.078Z",
+  "updated": "2018-10-10T12:37:56.373Z",
   "title": "live",
   "data": [
     {
@@ -533,6 +533,26 @@
     {
       "key": "api/voting/exists",
       "value": "Eine Abstimmung mit diesem Slug existiert bereits."
+    },
+    {
+      "key": "api/voting/membershipRequired",
+      "value": "Sie müssen Mitglied sein, um abzustimmen."
+    },
+    {
+      "key": "api/voting/alreadyVoted",
+      "value": "Sie können nur einmal abstimmen."
+    },
+    {
+      "key": "api/voting/tooEarly",
+      "value": "Die Abstimmung ist noch nicht eröffnet."
+    },
+    {
+      "key": "api/voting/tooLate",
+      "value": "Die Abstimmung ist bereits geschlossen."
+    },
+    {
+      "key": "api/voting/option/404",
+      "value": "Die gewählte Option konnte nicht gefunden werden."
     }
   ]
 }
