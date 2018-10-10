@@ -16,6 +16,9 @@ type Voting {
   userHasSubmitted: Boolean
   userSubmitDate: DateTime
   discussion: Discussion
+  allowEmptyBallots: Boolean!
+  allowedMemberships: [VotingMembershipRequirement!]
+  allowedRoles: [String!]
 }
 
 type VotingTurnout {
@@ -57,6 +60,11 @@ type VotingStatsCount {
   options: [VotingOptionResult!]!
 }
 
+type VotingMembershipRequirement {
+  membershipTypeId: ID!
+  createdBefore: DateTime!
+}
+
 input VotingInput {
   name: String!
   description: String!
@@ -64,11 +72,18 @@ input VotingInput {
   beginDate: DateTime!
   endDate: DateTime!
   options: [VotingOptionInput!]!
+  allowedMemberships: [VotingMembershipRequirementInput!]
+  allowedRoles: [String!]
 }
 
 input VotingOptionInput {
   name: String!
   label: String
   description: String
+}
+
+input VotingMembershipRequirementInput {
+  membershipTypeId: ID!
+  createdBefore: DateTime!
 }
 `

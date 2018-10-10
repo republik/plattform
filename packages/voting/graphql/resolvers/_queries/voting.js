@@ -1,2 +1,4 @@
+const { findBySlug } = require('../../../lib/Voting')
+
 module.exports = async (_, { slug }, { pgdb }) =>
-  pgdb.public.votings.findOne({ slug })
+  findBySlug(slug, pgdb)

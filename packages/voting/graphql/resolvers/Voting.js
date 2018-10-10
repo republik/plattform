@@ -25,7 +25,7 @@ module.exports = {
     })
   },
   async userIsEligible (voting, args, { pgdb, user: me }) {
-    return isEligible(me && me.id, pgdb)
+    return isEligible(me && me.id, voting, pgdb)
   },
   async userHasSubmitted (voting, args, { pgdb, user: me }) {
     if (!me) { return false }
@@ -56,7 +56,7 @@ module.exports = {
       }
     }
     return {
-      eligible: await numEligible(pgdb),
+      eligible: await numEligible(voting, pgdb),
       submitted: await pgdb.public.ballots.count({ votingId: voting.id })
     }
   }
