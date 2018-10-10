@@ -1,0 +1,11 @@
+version: "3.4"
+services:
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    external_links:
+      - postgres
+    ports:
+      - 5555:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@republik.ch
+      - PGADMIN_DEFAULT_PASSWORD=asdf
