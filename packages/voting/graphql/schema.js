@@ -11,6 +11,9 @@ type queries {
 
 type mutations {
   createVoting(votingInput: VotingInput!): Voting!
-  submitVotingBallot(optionId: ID!): Voting!
+  submitVotingBallot(
+    votingId: ID!
+    optionId: ID
+  ): Voting!
 }
 `

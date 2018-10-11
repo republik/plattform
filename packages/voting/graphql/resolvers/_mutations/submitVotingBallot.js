@@ -1,20 +1,13 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const { findById, isEligible } = require('../../../lib/Voting')
 
-module.exports = async (_, args, { pgdb, user: me, t, req }) => {
+module.exports = async (_, { votingId, optionId }, { pgdb, user: me, t, req }) => {
   ensureSignedIn(req, t)
-
-  const { optionId } = args
 
   const transaction = await pgdb.transactionBegin()
   try {
-    const votingOption = await transaction.public.votingOptions.findOne({ id: optionId })
-    if (!votingOption) {
-      throw new Error(t('api/voting/option/404'))
-    }
-
     const now = new Date()
-    const voting = await findById(votingOption.votingId)
+    const voting = await findById(votingId, pgdb)
     if (voting.beginDate > now) {
       throw new Error(t('api/voting/tooEarly'))
     }
@@ -32,6 +25,15 @@ module.exports = async (_, args, { pgdb, user: me, t, req }) => {
       votingId: voting.id
     })) {
       throw new Error(t('api/voting/alreadyVoted'))
+    }
+
+    if (optionId) {
+      const votingOption = await transaction.public.votingOptions.findOne({ id: optionId })
+      if (!votingOption) {
+        throw new Error(t('api/voting/option/404'))
+      }
+    } else if (!voting.allowEmptyBallots) {
+      throw new Error(t('api/voting/noEmptyBallots'))
     }
 
     await transaction.public.ballots.insert({

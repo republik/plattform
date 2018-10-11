@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-10T12:37:56.373Z",
+  "updated": "2018-10-11T09:07:54.735Z",
   "title": "live",
   "data": [
     {
@@ -553,6 +553,10 @@
     {
       "key": "api/voting/option/404",
       "value": "Die gewählte Option konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/voting/noEmptyBallots",
+      "value": "Diese Abstimmung erlaubt keine leeren Eingaben."
     }
   ]
 }
