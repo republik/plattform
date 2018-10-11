@@ -7,6 +7,9 @@ schema {
 type queries {
   votings: [Voting!]!
   voting(slug: String!): Voting
+
+  elections: [Election!]!
+  election(slug: String!): Election!
 }
 
 type mutations {
@@ -15,5 +18,9 @@ type mutations {
     votingId: ID!
     optionId: ID
   ): Voting!
+
+  createElection(electionInput: ElectionInput!): Election!
+  submitCandidacy(slug: String!): Candidacy!
+  cancelCandidacy(slug: String!): Election!
 }
 `

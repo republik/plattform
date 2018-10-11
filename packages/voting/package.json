@@ -24,6 +24,7 @@
     "dotenv": "^5.0.1"
   },
   "dependencies": {
-    "apollo-modules-node": "^0.1.4"
+    "apollo-modules-node": "^0.1.4",
+    "export-files": "^2.1.1"
   }
 }
