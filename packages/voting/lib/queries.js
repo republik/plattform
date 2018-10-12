@@ -51,18 +51,12 @@ const buildQueries = (tableName) => {
   }
 
   const findBySlug = async (slug, pgdb) => {
-    const query = findQuery(`
-      WHERE
-        e.slug = :slug
-    `)
-    console.log({query})
     const result = await pgdb.query(findQuery(`
       WHERE
         e.slug = :slug
     `), {
       slug
     })
-    console.log('findBySlug', slug, result[0])
     return result && result[0]
   }
 
