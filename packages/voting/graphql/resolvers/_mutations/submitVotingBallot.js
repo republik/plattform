@@ -1,5 +1,9 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
-const { findById, isEligible } = require('../../../lib/Voting')
+const {
+  findById,
+  isEligible,
+  userHasSubmitted
+} = require('../../../lib/Voting')
 
 module.exports = async (_, { votingId, optionId }, { pgdb, user: me, t, req }) => {
   ensureSignedIn(req, t)
@@ -19,15 +23,11 @@ module.exports = async (_, { votingId, optionId }, { pgdb, user: me, t, req }) =
     }
 
     if (!(await isEligible(me.id, voting, transaction))) {
-      throw new Error(t('api/voting/membershipRequired'))
+      throw new Error(t('api/voting/notEligible'))
     }
 
-    // ensure user has not voted yet
-    if (await transaction.public.ballots.findFirst({
-      userId: me.id,
-      votingId: voting.id
-    })) {
-      throw new Error(t('api/voting/alreadyVoted'))
+    if (await userHasSubmitted(voting.id, me.id, transaction)) {
+      throw new Error(t('api/voting/alreadySubmitted'))
     }
 
     if (optionId) {
@@ -42,7 +42,9 @@ module.exports = async (_, { votingId, optionId }, { pgdb, user: me, t, req }) =
     await transaction.public.ballots.insert({
       votingId: voting.id,
       votingOptionId: optionId,
-      userId: me.id
+      userId: me.id,
+      createdAt: now,
+      updatedAt: now
     })
 
     await transaction.transactionCommit()

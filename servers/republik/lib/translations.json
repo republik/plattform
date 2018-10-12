@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-12T09:50:45.842Z",
+  "updated": "2018-10-12T11:45:41.684Z",
   "title": "live",
   "data": [
     {
@@ -535,8 +535,32 @@
       "value": "Die Wahl konnte nicht gefunden werden."
     },
     {
+      "key": "api/election/candidacy/404",
+      "value": "Eine der gewählten Kandidaturen konnte nicht gefunden werden."
+    },
+    {
       "key": "api/election/candidacy/tooLate",
       "value": "Die Kandidatur-Phase ist bereits geschlossen."
+    },
+    {
+      "key": "api/election/tooEarly",
+      "value": "Die Wahl ist noch nicht eröffnet."
+    },
+    {
+      "key": "api/election/tooLate",
+      "value": "Die Wahl ist bereits geschlossen."
+    },
+    {
+      "key": "api/election/notEligible",
+      "value": "Sie sind leider nicht berechtigt an der Wahl teilzunehmen."
+    },
+    {
+      "key": "api/election/alreadySubmitted",
+      "value": "Sie können nur einmal wählen."
+    },
+    {
+      "key": "api/election/noEmptyBallots",
+      "value": "Diese Wahl erlaubt keine leeren Eingaben."
     },
     {
       "key": "api/voting/404",
@@ -547,11 +571,11 @@
       "value": "Eine Abstimmung mit diesem Slug existiert bereits."
     },
     {
-      "key": "api/voting/membershipRequired",
-      "value": "Sie müssen Mitglied sein, um abzustimmen."
+      "key": "api/voting/notEligible",
+      "value": "Sie sind leider nicht berechtigt an der Abstimmung teilzunehmen."
     },
     {
-      "key": "api/voting/alreadyVoted",
+      "key": "api/voting/alreadySubmitted",
       "value": "Sie können nur einmal abstimmen."
     },
     {

@@ -4,7 +4,8 @@ const {
   isEligible,
   userHasSubmitted,
   userSubmitDate,
-  turnout
+  turnout,
+  getCandidacies
 } = require('../../lib/Election')
 
 module.exports = {
@@ -16,30 +17,7 @@ module.exports = {
     if (!Roles.userIsInRoles(me, ['admin', 'supporter', 'associate'])) {
       return []
     }
-
-    const candidacies = await pgdb.public.electionCandidacies.find({ electionId: election.id })
-
-    const users = candidacies.length > 0
-      ? await pgdb.public.users.find({id: candidacies.map(candidate => candidate.userId)})
-      : []
-
-    const addresses = users.length > 0
-      ? await pgdb.public.addresses.find({id: users.map(user => user.addressId)})
-      : []
-
-    const usersWithAddresses = users.map(user => ({
-      ...user,
-      address: addresses.find(address => address.id === user.addressId)
-    }))
-
-    const comments = await pgdb.public.comments.find({ discussionId: election.discussionId })
-
-    return candidacies.map(candidacy => ({
-      ...candidacy,
-      user: usersWithAddresses.find(user => user.id === candidacy.userId),
-      election,
-      comment: comments.find(comment => comment.id === candidacy.commentId)
-    }))
+    return getCandidacies(election, pgdb)
   },
   async userIsEligible (entity, args, { pgdb, user: me }) {
     return isEligible(me && me.id, entity, pgdb)
