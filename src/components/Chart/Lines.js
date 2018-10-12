@@ -25,11 +25,10 @@ import {
   deduplicate,
   runSort,
   sortPropType,
-  sortBy
+  sortBy,
+  baseLineColor
 } from './utils'
 import ColorLegend from './ColorLegend'
-
-const baseLineColor = colors.text
 
 const styles = {
   columnTitle: css({

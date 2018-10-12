@@ -16,7 +16,8 @@ import {
   sortPropType,
   last,
   transparentAxisStroke,
-  get3EqSpaTicks
+  get3EqSpaTicks,
+  baseLineColor
 } from './utils'
 
 import {
@@ -186,7 +187,7 @@ class ScatterPlot extends Component {
     const paddingLeft = props.paddingLeft
 
     const innerWidth = props.width - paddingLeft - paddingRight
-    const height = props.height || (innerWidth + paddingTop + paddingBottom)
+    const height = props.height || (innerWidth * props.heightRatio) + paddingTop + paddingBottom
     const innerHeight = height - paddingTop - paddingBottom
 
     // setup x axis
@@ -274,7 +275,9 @@ class ScatterPlot extends Component {
           {
             yTicks.map((tick, i) => (
               <g key={tick} transform={`translate(0,${y(tick)})`}>
-                <line {...styles.axisLine} x2={width - paddingRight}/>
+                <line {...styles.axisLine} x2={width - paddingRight} style={{
+                  stroke: tick === 0 ? baseLineColor : undefined
+                }} />
                 <text {...styles.axisLabel} dy='-3px'>
                   {subsup.svg(yAxis.axisFormat(tick, last(yTicks, i)))}
                 </text>
@@ -292,7 +295,9 @@ class ScatterPlot extends Component {
               }
               return (
                 <g key={`x${tick}`} transform={`translate(${x(tick)},${paddingTop + innerHeight + X_TICK_HEIGHT})`}>
-                  <line {...styles.axisLine} y2={-(innerHeight + X_TICK_HEIGHT)} />
+                  <line {...styles.axisLine} y2={-(innerHeight + X_TICK_HEIGHT)} style={{
+                    stroke: tick === 0 ? baseLineColor : undefined
+                  }} />
                   <text {...styles.axisLabel} y={5} dy='0.6em' textAnchor={textAnchor}>
                     {subsup.svg(xAxis.axisFormat(tick, last(xTicks, i)))}
                   </text>
@@ -346,6 +351,7 @@ ScatterPlot.propTypes = {
   values: PropTypes.array.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number,
+  heightRatio: PropTypes.number,
   paddingLeft: PropTypes.number.isRequired,
   x: PropTypes.string.isRequired,
   xUnit: PropTypes.string,
@@ -387,7 +393,8 @@ ScatterPlot.defaultProps = {
   paddingLeft: 30,
   size: 'size',
   sizeRange: [4, 10],
-  label: 'label'
+  label: 'label',
+  heightRatio: 1
 }
 
 export default ScatterPlot
