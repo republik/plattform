@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
 import ColorLegend from './ColorLegend'
-import { scaleLinear, scaleLog, scaleOrdinal } from 'd3-scale'
+import { scaleLinear, scaleLog, scaleOrdinal, scaleSqrt } from 'd3-scale'
 import { extent, ascending } from 'd3-array'
 
 import {
@@ -13,7 +13,8 @@ import {
   deduplicate,
   sortPropType,
   last,
-  transparentAxisStroke
+  transparentAxisStroke,
+  get3EqSpaTicks
 } from './utils'
 
 import {
@@ -47,10 +48,11 @@ const ScatterPlot = (props) => {
     description,
     children,
     values,
-    t, tLabel
+    t, tLabel,
+    opacity
   } = props
 
-  let data = values
+  const data = values
     .filter(d => (
       d[props.x] && d[props.x].length > 0 &&
       d[props.y] && d[props.y].length > 0
@@ -58,13 +60,14 @@ const ScatterPlot = (props) => {
     .map(d => ({
       datum: d,
       x: +d[props.x],
-      y: +d[props.y]
+      y: +d[props.y],
+      size: +d[props.size] || 0
     }))
 
-  let paddingTop = 15
-  let paddingRight = 1
-  let paddingBottom = 50
-  let paddingLeft = 30
+  const paddingTop = 15
+  const paddingRight = 1
+  const paddingBottom = 50
+  const paddingLeft = props.paddingLeft
 
   const innerWidth = props.width - paddingLeft - paddingRight
   const height = props.height || (innerWidth + paddingTop + paddingBottom)
@@ -81,12 +84,9 @@ const ScatterPlot = (props) => {
   if (xNice) {
     x.nice(xNice)
   }
-  const xAxis = calculateAxis(props.numberFormat, t, x.domain(), tLabel(props.xUnit))
-  let xTicks = props.xTicks || (props.xScale === 'log' ? [
-    x.invert(x.range()[0]),
-    x.invert(x.range()[0] + (x.range()[1] - x.range()[0]) / 2),
-    x.invert(x.range()[1])
-  ] : xAxis.ticks)
+  const xAxis = calculateAxis(props.xNumberFormat || props.numberFormat, t, x.domain(), tLabel(props.xUnit))
+  const xTicks = props.xTicks || (props.xScale === 'log' ? get3EqSpaTicks(x) : xAxis.ticks)
+  // ensure highest value is last: the last value is labled with the unit
   xTicks.sort(ascending)
 
   // setup y axis
@@ -100,19 +100,16 @@ const ScatterPlot = (props) => {
   if (yNice) {
     y.nice(yNice)
   }
-  const yAxis = calculateAxis(props.numberFormat, t, y.domain(), tLabel(props.yUnit))
-  let yTicks = props.yTicks || (props.yScale === 'log' ? [
-    y.invert(y.range()[0]),
-    y.invert(y.range()[0] + (y.range()[1] - y.range()[0]) / 2),
-    y.invert(y.range()[1])
-  ] : yAxis.ticks)
-  // ensure highest value is last
-  // - the last value is labled with the unit
+  const yAxis = calculateAxis(props.yNumberFormat || props.numberFormat, t, y.domain(), tLabel(props.yUnit))
+  const yTicks = props.yTicks || (props.yScale === 'log' ? get3EqSpaTicks(y) : yAxis.ticks)
+  // ensure highest value is last: the last value is labled with the unit
   yTicks.sort(ascending)
 
   const colorAccessor = d => d.datum[props.color]
   const colorValues = data.map(colorAccessor).filter(deduplicate).filter(Boolean)
   runSort(props.colorSort, colorValues)
+
+  const size = scaleSqrt().domain(extent(data, d => d.size)).range(props.sizeRange)
 
   let colorRange = props.colorRanges[props.colorRange] || props.colorRange
   if (!colorRange) {
@@ -129,11 +126,11 @@ const ScatterPlot = (props) => {
         <g transform={`translate(0 0)`}>
           {data.map((value, i) => (
             <circle key={`dot${i}`}
-              style={{opacity: 0.9}}
+              style={{ opacity }}
               fill={color(colorAccessor(value))}
               cx={x(value.x)}
               cy={y(value.y)}
-              r={4} />
+              r={size(value.size)} />
           ))}
           {
             yTicks.map((tick, i) => (
@@ -151,9 +148,9 @@ const ScatterPlot = (props) => {
               if (last(xTicks, i)) {
                 textAnchor = 'end'
               }
-              // if (i === 0) {
-              //   textAnchor = 'start'
-              // }
+              if (i === 0 && paddingLeft < 20) {
+                textAnchor = 'start'
+              }
               return (
                 <g key={`x${tick}`} transform={`translate(${x(tick)},${paddingTop + innerHeight + X_TICK_HEIGHT})`}>
                   <line {...styles.axisLine} y2={-(innerHeight + X_TICK_HEIGHT)} />
@@ -192,18 +189,21 @@ ScatterPlot.propTypes = {
   values: PropTypes.array.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number,
-  mini: PropTypes.bool,
+  paddingLeft: PropTypes.number.isRequired,
   x: PropTypes.string.isRequired,
   xUnit: PropTypes.string,
   xNice: PropTypes.number,
   xTicks: PropTypes.arrayOf(PropTypes.number),
   xScale: PropTypes.oneOf(Object.keys(scales)),
+  xNumberFormat: PropTypes.string,
   y: PropTypes.string.isRequired,
   yUnit: PropTypes.string,
   yNice: PropTypes.number,
   yTicks: PropTypes.arrayOf(PropTypes.number),
   yScale: PropTypes.oneOf(Object.keys(scales)),
+  yNumberFormat: PropTypes.string,
   numberFormat: PropTypes.string.isRequired,
+  opacity: PropTypes.number.isRequired,
   color: PropTypes.string,
   colorLegend: PropTypes.bool,
   colorRange: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
@@ -212,6 +212,8 @@ ScatterPlot.propTypes = {
     discrete: PropTypes.array.isRequired
   }).isRequired,
   colorSort: sortPropType,
+  size: PropTypes.string.isRequired,
+  sizeRange: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
   t: PropTypes.func.isRequired,
   description: PropTypes.string
 }
@@ -221,8 +223,12 @@ ScatterPlot.defaultProps = {
   y: 'value',
   xScale: 'linear',
   yScale: 'linear',
+  opacity: 1,
   numberFormat: 's',
-  colorLegend: true
+  colorLegend: true,
+  paddingLeft: 30,
+  size: 'size',
+  sizeRange: [4, 10]
 }
 
 export default ScatterPlot

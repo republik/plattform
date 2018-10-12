@@ -170,6 +170,15 @@ export const calculateAxis = (numberFormat, t, domain, unit = '') => {
   }
 }
 
+export const get3EqSpaTicks = (scale) => {
+  const range = scale.range()
+  return [
+    scale.invert(range[0]),
+    scale.invert(range[0] + (range[1] - range[0]) / 2),
+    scale.invert(range[1])
+  ]
+}
+
 const subSupSplitter = (createTag) => {
   return input => {
     if (!input) {
