@@ -47,7 +47,9 @@ const styles = {
 class ScatterPlot extends Component {
   constructor (...args) {
     super(...args)
-    this.state = {}
+    this.state = {
+      hover: []
+    }
 
   }
   setContainerRef = ref => {
@@ -111,12 +113,12 @@ class ScatterPlot extends Component {
     this.setState(() => ({ hover }))
   }
   blur = () => {
-    this.setState(() => ({ hover: null }))
+    this.setState(() => ({ hover: [] }))
   }
   renderHover ({ width, height, xFormat, yFormat }) {
     const { hover } = this.state
 
-    if (!hover || !hover.length) {
+    if (!hover.length) {
       return null
     }
 
@@ -220,11 +222,14 @@ class ScatterPlot extends Component {
     const color = scaleOrdinal(colorRange).domain(colorValues)
 
     this.symbols = data.map((value, i) => ({
+      key: `symbol${i}`,
       value,
       cx: x(value.x),
       cy: y(value.y),
       r: size(value.size)
     }))
+
+    const hoveredKeys = this.state.hover.map(({ key }) => key)
 
     return (
       <div style={{ position: 'relative' }}>
@@ -232,9 +237,10 @@ class ScatterPlot extends Component {
           <desc>{description}</desc>
           <g transform={`translate(0 0)`}>
             {this.symbols.map((symbol, i) => (
-              <circle key={`symbol${i}`}
+              <circle key={symbol.key}
                 style={{ opacity }}
                 fill={color(colorAccessor(symbol.value))}
+                stroke={hoveredKeys.indexOf(symbol.key) !== -1 ? '#000' : undefined}
                 cx={symbol.cx}
                 cy={symbol.cy}
                 r={symbol.r} />

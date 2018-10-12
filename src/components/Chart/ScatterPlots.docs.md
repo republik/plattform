@@ -14,6 +14,7 @@ Go forth and make correlations visible, and tell everyone it proofs nothing!
       "y": "co2 pp 2014",
       "yUnit": "Tonnen CO<sub>2</sub>",
       "xUnit": "PPP-US-Dollar",
+      "yNumberFormat": ".1f",
       "yScale": "log",
       "xScale": "log"
     }}
