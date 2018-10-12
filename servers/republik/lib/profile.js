@@ -1,5 +1,5 @@
 const { hasUserCandidacies } =
-  require('@orbiting/backend-modules-voting/lib/candidacies')
+  require('@orbiting/backend-modules-voting/lib/Candidacy')
 
 exports.isEligible = async (userId, pgdb) => {
   const hasPledges = !!(await pgdb.public.pledges.findFirst({

@@ -1,9 +1,12 @@
 const {
   isEligible,
-  numEligible
+  userHasSubmitted,
+  userSubmitDate,
+  turnout
 } = require('../../lib/Voting')
 
 module.exports = {
+  // either result is freezed into db by countVoting or it must remain null.
   slug ({ id, slug }) {
     if (slug) {
       return slug
@@ -24,28 +27,14 @@ module.exports = {
       id: voting.discussionId
     })
   },
-  async userIsEligible (voting, args, { pgdb, user: me }) {
-    return isEligible(me && me.id, voting, pgdb)
+  async userIsEligible (entity, args, { pgdb, user: me }) {
+    return isEligible(me && me.id, entity, pgdb)
   },
-  async userHasSubmitted (voting, args, { pgdb, user: me }) {
-    if (!me) { return false }
-
-    return !!(await pgdb.public.ballots.findFirst({
-      userId: me.id,
-      votingId: voting.id
-    }))
+  async userHasSubmitted (entity, args, { pgdb, user: me }) {
+    return userHasSubmitted(entity.id, me && me.id, pgdb)
   },
-  async userSubmitDate (voting, args, { pgdb, user: me }) {
-    if (!me) { return false }
-
-    const ballot = await pgdb.public.ballots.findFirst({
-      userId: me.id,
-      votingId: voting.id
-    })
-
-    if (!ballot) { return }
-
-    return ballot.updatedAt
+  async userSubmitDate (entity, args, { pgdb, user: me }) {
+    return userSubmitDate(entity.id, me && me.id, pgdb)
   },
   async turnout (voting, args, { pgdb }) {
     if (voting.result && voting.result.turnout) { // cached by countVoting
@@ -55,11 +44,6 @@ module.exports = {
         eligible: turnout.eligible || turnout.eligitable // fix typo in old data
       }
     }
-    return {
-      eligible: await numEligible(voting, pgdb),
-      submitted: await pgdb.public.ballots.count({ votingId: voting.id })
-    }
+    return turnout(voting, pgdb)
   }
-  /* either voting.result is freezed into crowdfunding by countVoting
-     or it must remain null. */
 }

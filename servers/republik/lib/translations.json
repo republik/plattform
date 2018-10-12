@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-11T09:07:54.735Z",
+  "updated": "2018-10-12T09:50:45.842Z",
   "title": "live",
   "data": [
     {
@@ -529,6 +529,18 @@
     {
       "key": "api/election/exists",
       "value": "Eine Wahl mit diesem Slug existiert bereits."
+    },
+    {
+      "key": "api/election/404",
+      "value": "Die Wahl konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/election/candidacy/tooLate",
+      "value": "Die Kandidatur-Phase ist bereits geschlossen."
+    },
+    {
+      "key": "api/voting/404",
+      "value": "Die Abstimmung konnte nicht gefunden werden."
     },
     {
       "key": "api/voting/exists",

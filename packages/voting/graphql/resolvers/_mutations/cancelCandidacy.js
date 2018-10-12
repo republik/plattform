@@ -1,21 +1,23 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
+const { findBySlug } = require('../../../lib/Election')
 
-const { findBySlug } = require('../../../lib/elections')
-
-/**
- * Allows candidates with admin role to cancel their own candidacy.
- */
-module.exports = async (_, { slug }, { pgdb, user: me }) => {
+module.exports = async (_, { slug }, { pgdb, user: me, t }) => {
   Roles.ensureUserIsInRoles(me, ['admin'])
 
-  const election = await findBySlug(slug, null, pgdb)
-
+  const election = await findBySlug(slug, pgdb)
   if (!election) {
-    throw new Error(`No election for slug ${slug}`)
+    throw new Error(t('api/election/404'))
   }
 
-  await pgdb.public.electionCandidacies
-    .deleteOne({ userId: me.id, electionId: election.id })
+  const now = new Date()
+  if (election.beginDate <= now) {
+    throw new Error('api/election/candidacy/tooLate')
+  }
 
-  return findBySlug(slug, null, pgdb)
+  await pgdb.public.electionCandidacies.deleteOne({
+    userId: me.id,
+    electionId: election.id
+  })
+
+  return election
 }

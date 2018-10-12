@@ -1,7 +1,7 @@
 const moment = require('moment')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { slugExists, findBySlug, create } = require('../../../lib/elections')
+const { slugExists, findBySlug, create } = require('../../../lib/Election')
 const { Discussion: { upsert: upsertDiscussion } } = require('@orbiting/backend-modules-discussions')
 
 module.exports = async (_, { electionInput }, { pgdb, user: me, t }) => {
@@ -35,5 +35,5 @@ module.exports = async (_, { electionInput }, { pgdb, user: me, t }) => {
     throw e
   }
 
-  return findBySlug(slug, null, pgdb)
+  return findBySlug(slug, pgdb)
 }

@@ -8,6 +8,9 @@ module.exports = async (_, { votingId, optionId }, { pgdb, user: me, t, req }) =
   try {
     const now = new Date()
     const voting = await findById(votingId, pgdb)
+    if (!voting) {
+      throw new Error(t('api/voting/404'))
+    }
     if (voting.beginDate > now) {
       throw new Error(t('api/voting/tooEarly'))
     }

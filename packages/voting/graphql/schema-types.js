@@ -72,6 +72,7 @@ input VotingInput {
   beginDate: DateTime!
   endDate: DateTime!
   options: [VotingOptionInput!]!
+  allowEmptyBallots: Boolean
   allowedMemberships: [VotingMembershipRequirementInput!]
   allowedRoles: [String!]
 }
@@ -89,10 +90,6 @@ input VotingMembershipRequirementInput {
 
 
 
-extend type User {
-  candidacies: [Candidacy!]!
-}
-
 type Election {
   id: ID!
   slug: String!
@@ -100,6 +97,16 @@ type Election {
   beginDate: DateTime!
   endDate: DateTime!
   numSeats: Int!
+  # current user (me) is eligible to submit a ballot
+  userIsEligible: Boolean
+  # current user (me) has submitted a ballot
+  userHasSubmitted: Boolean
+  userSubmitDate: DateTime
+  allowEmptyBallots: Boolean!
+  allowedMemberships: [VotingMembershipRequirement!]
+  allowedRoles: [String!]
+
+  turnout: ElectionTurnout
 
   candidacies: [Candidacy!]!
   discussion: Discussion!
@@ -117,11 +124,24 @@ type Candidacy {
   city: String!
 }
 
+type ElectionTurnout {
+  eligible: Int!
+  submitted: Int!
+}
+
 input ElectionInput {
   slug: String!
   description: String!
   beginDate: DateTime!
   endDate: DateTime!
   numSeats: Int!
+  allowEmptyBallots: Boolean
+  allowedMemberships: [VotingMembershipRequirementInput!]
+  allowedRoles: [String!]
+}
+
+
+extend type User {
+  candidacies: [Candidacy!]!
 }
 `

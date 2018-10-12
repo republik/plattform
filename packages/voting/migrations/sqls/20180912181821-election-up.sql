@@ -26,15 +26,6 @@ create table if not exists "electionCandidacies" (
   unique ("userId", "electionId")
 );
 
-create table if not exists "electionBallots" (
-  "id"          uuid primary key not null default uuid_generate_v4(),
-  "userId"      uuid             not null references "users" on update cascade on delete cascade,
-  "candidacyId" uuid             not null references "electionCandidacies" on update cascade on delete cascade,
-  "createdAt"   timestamptz               default now(),
-  "updatedAt"   timestamptz               default now(),
-  unique ("userId", "candidacyId")
-);
-
 CREATE OR REPLACE FUNCTION refresh_associate_role(user_id uuid)
   RETURNS void AS $$
 DECLARE
