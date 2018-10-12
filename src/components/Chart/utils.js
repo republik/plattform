@@ -1,6 +1,6 @@
 import { formatLocale, formatSpecifier, precisionFixed } from 'd3-format'
 import { ascending, descending, max as d3Max } from 'd3-array'
-import { createElement } from 'react'
+import React, { createElement, Fragment } from 'react'
 import PropTypes from 'prop-types'
 
 export const groupBy = (array, key) => {
@@ -128,6 +128,8 @@ export const getFormat = (numberFormat, t) => {
   return swissNumbers.format(specifier)
 }
 
+export const last = (array, index) => array.length - 1 === index
+
 export const calculateAxis = (numberFormat, t, domain, unit = '') => {
   const [min, max] = domain
   const step = (max - min) / 2
@@ -194,11 +196,13 @@ const subSupSplitter = (createTag) => {
 
 export const subsup = subSupSplitter((tag, key, text) => createElement(tag, {key}, text))
 subsup.svg = subSupSplitter((tag, key, text) => {
-  return createElement('tspan', {
-    key,
-    fontSize: '75%',
-    dy: tag === 'sub' ? '0.25em' : '-0.5em'
-  }, text)
+  const dy = tag === 'sub' ? '0.25em' : '-0.5em'
+  return <Fragment key={key}>
+    <tspan dy={dy} fontSize='75%'>{text}</tspan>
+    {/* reset dy: https://stackoverflow.com/a/33711370 */}
+    {/* adds a zero width space */}
+    <tspan dy={`-${dy}`}>{'\u200b'}</tspan>
+  </Fragment>
 })
 
 export const transparentAxisStroke = 'rgba(0,0,0,0.17)'

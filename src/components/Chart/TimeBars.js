@@ -16,7 +16,8 @@ import {
   deduplicate,
   transparentAxisStroke,
   circleFill,
-  unsafeDatumFn
+  unsafeDatumFn,
+  last
 } from './utils'
 
 import ColorLegend from './ColorLegend'
@@ -30,8 +31,6 @@ const intervals = Object.keys(d3Intervals)
     },
     {}
   )
-
-const last = (array, index) => array.length - 1 === index
 
 const X_TICK_HEIGHT = 3
 const AXIS_BOTTOM_HEIGHT = 24
