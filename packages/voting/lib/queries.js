@@ -81,7 +81,16 @@ const buildQueries = (tableName) => {
   }
 
   const numSubmitted = async (id, pgdb) => {
-    return pgdb.public[table.ballotsTable].count({ [table.foreignKey]: id })
+    return pgdb.queryOneField(`
+      SELECT
+        COUNT(DISTINCT("userId"))
+      FROM
+        "${table.ballotsTable}" b
+      WHERE
+        b."${table.foreignKey}" = :entityId
+    `, {
+      entityId: id
+    })
   }
 
   const countEligibles = async (entity, userId, pgdb) => {
