@@ -3,7 +3,8 @@ const _ = require('lodash')
 const { buildQueries } = require('./queries.js')
 const queries = buildQueries('votings')
 const {
-  findBySlug
+  findBySlug,
+  insertAllowedMemberships
 } = queries
 
 const slugExists = async (slug, pgdb) => {
@@ -29,14 +30,7 @@ const create = async (input, pgdb) => {
   }
 
   if (input.allowedMemberships && input.allowedMemberships.length > 0) {
-    await Promise.all(
-      input.allowedMemberships.map(mr =>
-        pgdb.public.votingMembershipRequirements.insert({
-          votingId: voting.id,
-          ...mr
-        })
-      )
-    )
+    await insertAllowedMemberships(voting.id, input.allowedMemberships, pgdb)
   }
 
   return findBySlug(input.slug, pgdb)

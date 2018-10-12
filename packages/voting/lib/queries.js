@@ -21,6 +21,17 @@ const buildQueries = (tableName) => {
     throw new Error(`tableMapping for table name "${table}" not found`)
   }
 
+  const insertAllowedMemberships = async (id, allowedMemberships, pgdb) => {
+    return Promise.all(
+      allowedMemberships.map(mr =>
+        pgdb.public[table.allowedMembershipsTable].insert({
+          [table.foreignKey]: id,
+          ...mr
+        })
+      )
+    )
+  }
+
   const findQuery = (where = '') => `
     SELECT
       e.*,
@@ -157,6 +168,7 @@ const buildQueries = (tableName) => {
   })
 
   return {
+    insertAllowedMemberships,
     findQuery,
     find,
     findById,

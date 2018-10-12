@@ -1,5 +1,11 @@
+const _ = require('lodash')
+
 const { buildQueries } = require('./queries.js')
 const queries = buildQueries('elections')
+const {
+  findBySlug,
+  insertAllowedMemberships
+} = queries
 
 const slugExists = async (slug, pgdb) => {
   return !!(await pgdb.public.elections.findFirst({
@@ -7,8 +13,17 @@ const slugExists = async (slug, pgdb) => {
   }))
 }
 
-const create = async (input, pgdb) =>
-  pgdb.public.elections.insertAndGet(input)
+const create = async (input, pgdb) => {
+  const election = await pgdb.public.elections.insertAndGet(
+    _.omit(input, ['allowedMemberships'])
+  )
+
+  if (input.allowedMemberships && input.allowedMemberships.length > 0) {
+    await insertAllowedMemberships(election.id, input.allowedMemberships, pgdb)
+  }
+
+  return findBySlug(input.slug, pgdb)
+}
 
 const getCandidacies = async (election, pgdb) => {
   const candidacies = await pgdb.public.electionCandidacies.find({ electionId: election.id })
