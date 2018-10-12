@@ -68,7 +68,7 @@ export const measure = onMeasure => {
 
 const thousandSeparator = '\u2009'
 const swissNumbers = formatLocale({
-  decimal: '.',
+  decimal: ',',
   thousands: thousandSeparator,
   grouping: [3],
   currency: ['CHF\u00a0', '']
