@@ -9,7 +9,7 @@ type queries {
   voting(slug: String!): Voting
 
   elections: [Election!]!
-  election(slug: String!): Election!
+  election(slug: String!): Election
 }
 
 type mutations {
