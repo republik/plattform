@@ -1,5 +1,4 @@
 module.exports = `
-
 type Voting {
   id: ID!
   name: String!
@@ -65,13 +64,18 @@ type VotingMembershipRequirement {
   createdBefore: DateTime!
 }
 
+input VotingMembershipRequirementInput {
+  membershipTypeId: ID!
+  createdBefore: DateTime!
+}
+
 input VotingInput {
   name: String!
-  description: String!
+  options: [VotingOptionInput!]!
   slug: String!
+  description: String!
   beginDate: DateTime!
   endDate: DateTime!
-  options: [VotingOptionInput!]!
   allowEmptyBallots: Boolean
   allowedMemberships: [VotingMembershipRequirementInput!]
   allowedRoles: [String!]
@@ -81,11 +85,6 @@ input VotingOptionInput {
   name: String!
   label: String
   description: String
-}
-
-input VotingMembershipRequirementInput {
-  membershipTypeId: ID!
-  createdBefore: DateTime!
 }
 
 
@@ -130,11 +129,11 @@ type ElectionTurnout {
 }
 
 input ElectionInput {
+  numSeats: Int!
   slug: String!
   description: String!
   beginDate: DateTime!
   endDate: DateTime!
-  numSeats: Int!
   allowEmptyBallots: Boolean
   allowedMemberships: [VotingMembershipRequirementInput!]
   allowedRoles: [String!]
