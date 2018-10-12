@@ -190,7 +190,10 @@ class ScatterPlot extends Component {
     const innerHeight = height - paddingTop - paddingBottom
 
     // setup x axis
-    const xValues = data.map(d => d.x)
+    let xValues = data.map(d => d.x)
+    if (props.xTicks) {
+      xValues = xValues.concat(props.xTicks)
+    }
     const x = scales[props.xScale]()
       .domain(extent(xValues))
       .range([paddingLeft, paddingLeft + innerWidth])
@@ -206,7 +209,10 @@ class ScatterPlot extends Component {
     xTicks.sort(ascending)
 
     // setup y axis
-    const yValues = data.map(d => d.y)
+    let yValues = data.map(d => d.y)
+    if (props.yTicks) {
+      yValues = yValues.concat(props.yTicks)
+    }
     const y = scales[props.yScale]()
       .domain(extent(yValues))
       .range([innerHeight + paddingTop, paddingTop])
@@ -235,18 +241,15 @@ class ScatterPlot extends Component {
     }
     const color = scaleOrdinal(colorRange).domain(colorValues)
 
-    const hoveredKeys = this.state.hover.map(({ key }) => key)
     this.symbols = data.map((value, i) => {
-      const key = `symbol${i}`
       return {
-        hover: hoveredKeys.indexOf(key) !== -1 ? 1 : 0,
-        key,
+        key: `symbol${i}`,
         value,
         cx: x(value.x),
         cy: y(value.y),
         r: size(value.size)
       }
-    }).sort((a, b) => ascending(a.hover, b.hover))
+    })
 
     return (
       <div style={{ position: 'relative' }}>
@@ -257,7 +260,14 @@ class ScatterPlot extends Component {
               <circle key={symbol.key}
                 style={{ opacity }}
                 fill={color(colorAccessor(symbol.value))}
-                stroke={symbol.hover ? '#000' : undefined}
+                cx={symbol.cx}
+                cy={symbol.cy}
+                r={symbol.r} />
+            ))}
+            {this.state.hover.map((symbol, i) => (
+              <circle key={`hover${symbol.key}`}
+                fill='none'
+                stroke='#000'
                 cx={symbol.cx}
                 cy={symbol.cy}
                 r={symbol.r} />

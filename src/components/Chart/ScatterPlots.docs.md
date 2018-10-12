@@ -16,7 +16,11 @@ Go forth and make correlations visible, and tell everyone it proofs nothing!
       "xUnit": "PPP-US-Dollar",
       "yNumberFormat": ".1f",
       "yScale": "log",
-      "xScale": "log"
+      "xScale": "log",
+      "yTicks": [0.01, 0.5, 1, 10, 100],
+      "yNice": 0,
+      "xTicks": [500, 10000, 250000],
+      "xNice": 0
     }}
     values={`
 geo,income pp 2014,co2 pp 2014,region
