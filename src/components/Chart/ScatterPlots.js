@@ -55,6 +55,9 @@ class ScatterPlot extends Component {
   setContainerRef = ref => {
     this.container = ref
   }
+  setHoverRectRef = ref => {
+    this.hoverRect = ref
+  }
   measure = () => {
     const { left, top } = this.container.getBoundingClientRect()
     if (this.state.left !== left || this.state.top !== top) {
@@ -63,12 +66,18 @@ class ScatterPlot extends Component {
   }
   componentDidMount () {
     window.addEventListener('resize', this.measure)
+    this.hoverRect.addEventListener('touchstart', this.focus, { passive: false })
+    this.hoverRect.addEventListener('touchmove', this.focus)
+    this.hoverRect.addEventListener('touchend', this.blur)
     this.measure()
   }
   componentDidUpdate () {
     this.measure()
   }
   componentWillUnmount () {
+    this.hoverRect.removeEventListener('touchstart', this.focus)
+    this.hoverRect.removeEventListener('touchmove', this.focus)
+    this.hoverRect.removeEventListener('touchend', this.blur)
     window.removeEventListener('resize', this.measure)
   }
   focus = (event) => {
@@ -77,6 +86,7 @@ class ScatterPlot extends Component {
       return
     }
 
+    let hoverTouch = false
     let currentEvent = event
     if (currentEvent.nativeEvent) {
       currentEvent = event.nativeEvent
@@ -85,6 +95,7 @@ class ScatterPlot extends Component {
       currentEvent = currentEvent.sourceEvent
     }
     if (currentEvent.changedTouches) {
+      hoverTouch = true
       currentEvent = currentEvent.changedTouches[0]
     }
 
@@ -108,15 +119,18 @@ class ScatterPlot extends Component {
         hover = withDistance.filter(({ distance }) => distance === minDistance)
       }
     }
+    if (hover.length) {
+      event.preventDefault()
+    }
     hover = hover.map(({ symbol }) => symbol)
 
-    this.setState(() => ({ hover }))
+    this.setState({ hover, hoverTouch })
   }
   blur = () => {
-    this.setState(() => ({ hover: [] }))
+    this.setState({ hover: [] })
   }
   renderHover ({ width, height, xFormat, yFormat }) {
-    const { hover } = this.state
+    const { hover, hoverTouch } = this.state
 
     if (!hover.length) {
       return null
@@ -126,7 +140,7 @@ class ScatterPlot extends Component {
 
     const { cx, cy, r } = hover.sort((a, b) => ascending(a.cy, b.cy))[0]
     const top = cy > height / 3
-    const yOffset = r + 12
+    const yOffset = r + (hoverTouch ? 40 : 12)
     return (
       <ContextBox
         orientation={top ? 'top' : 'below'}
@@ -221,15 +235,18 @@ class ScatterPlot extends Component {
     }
     const color = scaleOrdinal(colorRange).domain(colorValues)
 
-    this.symbols = data.map((value, i) => ({
-      key: `symbol${i}`,
-      value,
-      cx: x(value.x),
-      cy: y(value.y),
-      r: size(value.size)
-    }))
-
     const hoveredKeys = this.state.hover.map(({ key }) => key)
+    this.symbols = data.map((value, i) => {
+      const key = `symbol${i}`
+      return {
+        hover: hoveredKeys.indexOf(key) !== -1 ? 1 : 0,
+        key,
+        value,
+        cx: x(value.x),
+        cy: y(value.y),
+        r: size(value.size)
+      }
+    }).sort((a, b) => ascending(a.hover, b.hover))
 
     return (
       <div style={{ position: 'relative' }}>
@@ -240,7 +257,7 @@ class ScatterPlot extends Component {
               <circle key={symbol.key}
                 style={{ opacity }}
                 fill={color(colorAccessor(symbol.value))}
-                stroke={hoveredKeys.indexOf(symbol.key) !== -1 ? '#000' : undefined}
+                stroke={symbol.hover ? '#000' : undefined}
                 cx={symbol.cx}
                 cy={symbol.cy}
                 r={symbol.r} />
@@ -284,12 +301,16 @@ class ScatterPlot extends Component {
             <rect fill='transparent'
               width={innerWidth}
               height={innerHeight}
-              onTouchStart={this.focus}
-              onTouchMove={this.focus}
-              onTouchEnd={this.blur}
               onMouseEnter={this.focus}
               onMouseMove={this.focus}
-              onMouseLeave={this.blur} />
+              onMouseLeave={this.blur} 
+              ref={
+                /* touch events are added via ref for { passive: false } on touchstart
+                 * react does not support setting passive, which defaults to true in newer browsers
+                 * https://github.com/facebook/react/issues/6436
+                 */
+                this.setHoverRectRef
+              } />
           </g>
         </svg>
         {this.renderHover({

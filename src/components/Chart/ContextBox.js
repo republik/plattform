@@ -8,13 +8,14 @@ import PropTypes from 'prop-types'
 
 import colors from '../../theme/colors'
 import { Label } from '../Typography'
+import { sansSerifRegular14 } from '../Typography/styles'
 
 const boxStyle = css({
   position: 'absolute',
   backgroundColor: '#fff',
   color: colors.text,
   boxShadow: '0 2px 24px 0 rgba(0,0,0,0.25)',
-  fontSize: 14,
+  ...sansSerifRegular14,
   lineHeight: '1.1em',
   padding: '12px 16px',
   pointerEvents: 'none',
