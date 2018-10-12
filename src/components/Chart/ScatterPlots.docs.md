@@ -8,10 +8,11 @@ Go forth and make correlations visible, and tell everyone it proofs nothing!
   <CsvChart t={t}
     config={{
       "type": "ScatterPlot",
+      "label": "geo",
       "color": "region",
       "x": "income pp 2014",
       "y": "co2 pp 2014",
-      "yUnit": "Tonnen CO<sub>2</sub>-Emissionen",
+      "yUnit": "Tonnen CO<sub>2</sub>",
       "xUnit": "PPP-US-Dollar",
       "yScale": "log",
       "xScale": "log"
@@ -143,7 +144,7 @@ New Zealand,34500,7.59,Oceania
 Nicaragua,4790,0.809,Americas
 Niger,900,0.111,Africa
 Nigeria,5670,0.546,Africa
-North Korea,1390,1.61,Africa
+North Korea,1390,1.61,Asia
 Norway,63300,9.27,Europe
 Oman,40300,15.4,Asia
 Pakistan,4580,0.896,Asia
@@ -174,7 +175,7 @@ Slovenia,28500,6.19,Europe
 Solomon Islands,2020,0.35,Oceania
 Somalia,621,0.045,Africa
 South Africa,12500,8.98,Africa
-South Korea,33400,11.7,Africa
+South Korea,33400,11.7,Asia
 South Sudan,1990,0.13,Africa
 Spain,31200,5.03,Europe
 Sri Lanka,10700,0.892,Asia
