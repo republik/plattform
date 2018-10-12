@@ -203,7 +203,7 @@ class ScatterPlot extends Component {
     if (xNice) {
       x.nice(xNice)
     }
-    const xAxis = calculateAxis(props.xNumberFormat || props.numberFormat, t, x.domain(), tLabel(props.xUnit))
+    const xAxis = calculateAxis(props.xNumberFormat || props.numberFormat, t, x.domain()) // xUnit is rendered separately
     const xTicks = props.xTicks || (props.xScale === 'log' ? get3EqSpaTicks(x) : xAxis.ticks)
     // ensure highest value is last: the last value is labled with the unit
     xTicks.sort(ascending)
@@ -294,7 +294,7 @@ class ScatterPlot extends Component {
                 <g key={`x${tick}`} transform={`translate(${x(tick)},${paddingTop + innerHeight + X_TICK_HEIGHT})`}>
                   <line {...styles.axisLine} y2={-(innerHeight + X_TICK_HEIGHT)} />
                   <text {...styles.axisLabel} y={5} dy='0.6em' textAnchor={textAnchor}>
-                    {subsup.svg(xAxis.axisFormat(tick))}
+                    {subsup.svg(xAxis.axisFormat(tick, last(xTicks, i)))}
                   </text>
                 </g>
               )
