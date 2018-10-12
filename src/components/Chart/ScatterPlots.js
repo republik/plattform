@@ -255,73 +255,71 @@ class ScatterPlot extends Component {
       <div style={{ position: 'relative' }}>
         <svg width={width} height={height} ref={this.setContainerRef}>
           <desc>{description}</desc>
-          <g transform={`translate(0 0)`}>
-            {this.symbols.map((symbol, i) => (
-              <circle key={symbol.key}
-                style={{ opacity }}
-                fill={color(colorAccessor(symbol.value))}
-                cx={symbol.cx}
-                cy={symbol.cy}
-                r={symbol.r} />
-            ))}
-            {this.state.hover.map((symbol, i) => (
-              <circle key={`hover${symbol.key}`}
-                fill='none'
-                stroke='#000'
-                cx={symbol.cx}
-                cy={symbol.cy}
-                r={symbol.r} />
-            ))}
-            {
-              yTicks.map((tick, i) => (
-                <g key={tick} transform={`translate(0,${y(tick)})`}>
-                  <line {...styles.axisLine} x2={width - paddingRight}/>
-                  <text {...styles.axisLabel} dy='-3px'>
-                    {subsup.svg(yAxis.axisFormat(tick, last(yTicks, i)))}
+          {this.symbols.map((symbol, i) => (
+            <circle key={symbol.key}
+              style={{ opacity }}
+              fill={color(colorAccessor(symbol.value))}
+              cx={symbol.cx}
+              cy={symbol.cy}
+              r={symbol.r} />
+          ))}
+          {this.state.hover.map((symbol, i) => (
+            <circle key={`hover${symbol.key}`}
+              fill='none'
+              stroke='#000'
+              cx={symbol.cx}
+              cy={symbol.cy}
+              r={symbol.r} />
+          ))}
+          {
+            yTicks.map((tick, i) => (
+              <g key={tick} transform={`translate(0,${y(tick)})`}>
+                <line {...styles.axisLine} x2={width - paddingRight}/>
+                <text {...styles.axisLabel} dy='-3px'>
+                  {subsup.svg(yAxis.axisFormat(tick, last(yTicks, i)))}
+                </text>
+              </g>
+            ))
+          }
+          {
+            xTicks.map((tick, i) => {
+              let textAnchor = 'middle'
+              if (last(xTicks, i)) {
+                textAnchor = 'end'
+              }
+              if (i === 0 && paddingLeft < 20) {
+                textAnchor = 'start'
+              }
+              return (
+                <g key={`x${tick}`} transform={`translate(${x(tick)},${paddingTop + innerHeight + X_TICK_HEIGHT})`}>
+                  <line {...styles.axisLine} y2={-(innerHeight + X_TICK_HEIGHT)} />
+                  <text {...styles.axisLabel} y={5} dy='0.6em' textAnchor={textAnchor}>
+                    {subsup.svg(xAxis.axisFormat(tick))}
                   </text>
                 </g>
-              ))
-            }
-            {
-              xTicks.map((tick, i) => {
-                let textAnchor = 'middle'
-                if (last(xTicks, i)) {
-                  textAnchor = 'end'
-                }
-                if (i === 0 && paddingLeft < 20) {
-                  textAnchor = 'start'
-                }
-                return (
-                  <g key={`x${tick}`} transform={`translate(${x(tick)},${paddingTop + innerHeight + X_TICK_HEIGHT})`}>
-                    <line {...styles.axisLine} y2={-(innerHeight + X_TICK_HEIGHT)} />
-                    <text {...styles.axisLabel} y={5} dy='0.6em' textAnchor={textAnchor}>
-                      {subsup.svg(xAxis.axisFormat(tick))}
-                    </text>
-                  </g>
-                )
-              })
-            }
-            <text
-              x={paddingLeft + innerWidth}
-              y={paddingTop + innerHeight + 28 + X_TICK_HEIGHT}
-              textAnchor='end'
-              {...styles.axisLabel}>
-              {props.xUnit}
-            </text>
-            <rect fill='transparent'
-              width={innerWidth}
-              height={innerHeight}
-              onMouseEnter={this.focus}
-              onMouseMove={this.focus}
-              onMouseLeave={this.blur} 
-              ref={
-                /* touch events are added via ref for { passive: false } on touchstart
-                 * react does not support setting passive, which defaults to true in newer browsers
-                 * https://github.com/facebook/react/issues/6436
-                 */
-                this.setHoverRectRef
-              } />
-          </g>
+              )
+            })
+          }
+          <text
+            x={paddingLeft + innerWidth}
+            y={paddingTop + innerHeight + 28 + X_TICK_HEIGHT}
+            textAnchor='end'
+            {...styles.axisLabel}>
+            {props.xUnit}
+          </text>
+          <rect fill='transparent'
+            width={width}
+            height={height}
+            onMouseEnter={this.focus}
+            onMouseMove={this.focus}
+            onMouseLeave={this.blur} 
+            ref={
+              /* touch events are added via ref for { passive: false } on touchstart
+               * react does not support setting passive, which defaults to true in newer browsers
+               * https://github.com/facebook/react/issues/6436
+               */
+              this.setHoverRectRef
+            } />
         </svg>
         {this.renderHover({
           width,
