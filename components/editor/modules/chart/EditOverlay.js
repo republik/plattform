@@ -30,7 +30,7 @@ export default (props) => (
         })
       })
     }}>
-    {({data, onChange}) => {
+    {({ data, onChange }) => {
       const config = data.get('config') || {}
 
       return (
@@ -38,35 +38,41 @@ export default (props) => (
           <Interaction.P>
             <Label>Size</Label><br />
             {[
-              {label: 'Normal', size: undefined},
-              {label: 'Klein', size: 'narrow'},
-              {label: 'Gross', size: 'breakout'},
-              {label: 'Links', size: 'floatTiny'}
-            ].map(({label, size}) => {
+              { label: 'Normal', size: undefined },
+              { label: 'Klein', size: 'narrow' },
+              { label: 'Gross', size: 'breakout' },
+              { label: 'Links', size: 'floatTiny' }
+            ].map(({ label, size }) => {
               const checked = config.size === size
               return (
-                <Radio key={size || label} checked={checked} onChange={() => {
-                  if (!checked) {
-                    onChange(data.set('config', {...config, size}))
-                  }
-                }} style={{marginRight: 15}}>
-                  {label || size}
-                </Radio>
+                <Fragment key={size || label}>
+                  <Radio checked={checked} onChange={() => {
+                    if (!checked) {
+                      onChange(data.set('config', { ...config, size }))
+                    }
+                  }} style={{ whiteSpace: 'nowrap', marginRight: 10 }}>
+                    {label || size}
+                  </Radio>
+                  {' '}
+                </Fragment>
               )
             })}
           </Interaction.P>
           <Interaction.P>
             <Label>Typ</Label><br />
-            {['Bar', 'TimeBar', 'Lollipop', 'Line', 'Slope'].map(type => {
+            {['Bar', 'TimeBar', 'Lollipop', 'Line', 'Slope', 'ScatterPlot'].map(type => {
               const checked = config.type === type
               return (
-                <Radio key={type} checked={checked} onChange={() => {
-                  if (!checked) {
-                    onChange(data.set('config', {...config, type}))
-                  }
-                }} style={{marginRight: 15}}>
-                  {type}
-                </Radio>
+                <Fragment key={type}>
+                  <Radio checked={checked} onChange={() => {
+                    if (!checked) {
+                      onChange(data.set('config', { ...config, type }))
+                    }
+                  }} style={{ whiteSpace: 'nowrap', marginRight: 10 }}>
+                    {type}
+                  </Radio>
+                  {' '}
+                </Fragment>
               )
             })}
           </Interaction.P>
