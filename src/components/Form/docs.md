@@ -176,14 +176,6 @@ state: {value: 'yes'}
   </Radio>
   <br />
   <Radio
-    black
-    value='black'
-    checked={state.value === 'black'}
-    onChange={(event) => setState({value: event.target.value})}>
-    Schwarz
-  </Radio>
-  <br />
-  <Radio
     value='maybe'
     disabled={true}
     onChange={(event) => setState({value: event.target.value})}>

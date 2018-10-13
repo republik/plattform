@@ -23,22 +23,21 @@ const styles = {
   })
 }
 
-const Radio = ({checked, disabled, black}) => (
+const Radio = ({checked, disabled}) => (
   <svg width='24' height='24' viewBox='0 0 24 24'>
     <circle fill='#fff' stroke='#fff' strokeWidth='6' cx='12' cy='12' r='9' />
     {checked && (
-      <circle fill={disabled ? colors.disabled : colors.primary} cx='12' cy='12' r='6' />
+      <circle fill={ disabled ? colors.disabled : '#000' } cx='12' cy='12' r='6'/>
     )}
-    <circle fill='none'
-            stroke={ checked && !disabled ? colors.primary : (black && !disabled ? '#000' : colors.divider) }
-            cx='12' cy='12' r='11.5' />
+    <circle fill='none' stroke={ disabled ? colors.divider : '#000' }
+            cx='12' cy='12' r='11.5'/>
   </svg>
 )
 
-export default ({children, style, name, value, checked, disabled, black, onChange}) => (
+export default ({children, style, name, value, checked, disabled, onChange}) => (
   <label {...styles.label} style={{color: disabled ? colors.disabled : colors.text, ...style}}>
     <span {...styles.box}>
-      <Radio checked={ checked } disabled={ disabled } black={ black }/>
+      <Radio checked={ checked } disabled={ disabled }/>
     </span>
     <input
       {...styles.input}
