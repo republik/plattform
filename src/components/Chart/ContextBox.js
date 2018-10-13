@@ -2,12 +2,12 @@
 // BSD-3-Clause
 // https://github.com/lobbywatch/website/blob/master/src/components/ContextBox.js
 
-import React from 'react'
-import {css} from 'glamor'
+import React, { Fragment } from 'react'
+import { css } from 'glamor'
 import PropTypes from 'prop-types'
 
 import colors from '../../theme/colors'
-import { Label } from '../Typography'
+import { Interaction } from '../Typography'
 import { sansSerifRegular14 } from '../Typography/styles'
 
 const boxStyle = css({
@@ -78,7 +78,10 @@ export const ContextBoxValue = ({label, children}) => {
   }
   return (
     <div {...labeledValueStyle}>
-      {!!label && <Label>{label}<br /></Label>}
+      {!!label && <Fragment>
+        <Interaction.Emphasis>{label}</Interaction.Emphasis>
+        <br />
+      </Fragment>}
       {children}
     </div>
   )
