@@ -14,14 +14,13 @@ const boxStyle = css({
   position: 'absolute',
   backgroundColor: '#fff',
   color: colors.text,
-  boxShadow: '0 2px 24px 0 rgba(0,0,0,0.25)',
+  boxShadow: '0 2px 8px rgba(0,0,0,.2)',
   ...sansSerifRegular14,
   lineHeight: '1.1em',
   padding: '12px 16px',
   pointerEvents: 'none',
   zIndex: 10,
-  minWidth: 200,
-  borderRadius: 4
+  minWidth: 200
 })
 
 const boxPosition = {
@@ -59,7 +58,7 @@ const notchPosition = {
   }
 }
 
-const labledValueStyle = css({
+const labeledValueStyle = css({
   fontSize: 14,
   lineHeight: '20px',
   borderBottom: `1px solid ${colors.divider}`,
@@ -78,7 +77,7 @@ export const ContextBoxValue = ({label, children}) => {
     return null
   }
   return (
-    <div {...labledValueStyle}>
+    <div {...labeledValueStyle}>
       {!!label && <Label>{label}<br /></Label>}
       {children}
     </div>

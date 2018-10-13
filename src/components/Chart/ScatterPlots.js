@@ -16,7 +16,7 @@ import {
   sortPropType,
   last,
   transparentAxisStroke,
-  get3EqSpaTicks,
+  get3EqualDistTicks,
   baseLineColor
 } from './utils'
 
@@ -89,12 +89,6 @@ class ScatterPlot extends Component {
 
     let hoverTouch = false
     let currentEvent = event
-    if (currentEvent.nativeEvent) {
-      currentEvent = event.nativeEvent
-    }
-    while (currentEvent.sourceEvent) {
-      currentEvent = currentEvent.sourceEvent
-    }
     if (currentEvent.changedTouches) {
       hoverTouch = true
       currentEvent = currentEvent.changedTouches[0]
@@ -140,7 +134,7 @@ class ScatterPlot extends Component {
     const { props } = this
 
     const { cx, cy, r } = hover.sort((a, b) => ascending(a.cy, b.cy))[0]
-    const top = cy > height / 3
+    const top = hoverTouch || cy > height / 3
     const yOffset = r + (hoverTouch ? 40 : 12)
     return (
       <ContextBox
@@ -205,7 +199,7 @@ class ScatterPlot extends Component {
       x.nice(xNice)
     }
     const xAxis = calculateAxis(props.xNumberFormat || props.numberFormat, t, x.domain()) // xUnit is rendered separately
-    const xTicks = props.xTicks || (props.xScale === 'log' ? get3EqSpaTicks(x) : xAxis.ticks)
+    const xTicks = props.xTicks || (props.xScale === 'log' ? get3EqualDistTicks(x) : xAxis.ticks)
     // ensure highest value is last: the last value is labled with the unit
     xTicks.sort(ascending)
 
@@ -224,7 +218,7 @@ class ScatterPlot extends Component {
       y.nice(yNice)
     }
     const yAxis = calculateAxis(props.yNumberFormat || props.numberFormat, t, y.domain(), tLabel(props.yUnit))
-    const yTicks = props.yTicks || (props.yScale === 'log' ? get3EqSpaTicks(y) : yAxis.ticks)
+    const yTicks = props.yTicks || (props.yScale === 'log' ? get3EqualDistTicks(y) : yAxis.ticks)
     // ensure highest value is last: the last value is labled with the unit
     yTicks.sort(ascending)
 

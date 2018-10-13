@@ -171,7 +171,7 @@ export const calculateAxis = (numberFormat, t, domain, unit = '') => {
   }
 }
 
-export const get3EqSpaTicks = (scale) => {
+export const get3EqualDistTicks = (scale) => {
   const range = scale.range()
   return [
     scale.invert(range[0]),
