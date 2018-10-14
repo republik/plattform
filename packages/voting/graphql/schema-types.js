@@ -1,23 +1,41 @@
 module.exports = `
-type Voting {
+interface VotingInterface {
   id: ID!
-  name: String!
   slug: String!
   description: String
   beginDate: DateTime!
   endDate: DateTime!
-  options: [VotingOption!]!
-  turnout: VotingTurnout
-  result: VotingResult
   # current user (me) is eligible to submit a ballot
   userIsEligible: Boolean
   # current user (me) has submitted a ballot
   userHasSubmitted: Boolean
   userSubmitDate: DateTime
-  discussion: Discussion
   allowEmptyBallots: Boolean!
   allowedMemberships: [VotingMembershipRequirement!]
   allowedRoles: [String!]
+}
+
+type Voting implements VotingInterface {
+  id: ID!
+  slug: String!
+  description: String
+  beginDate: DateTime!
+  endDate: DateTime!
+  options: [VotingOption!]!
+  # current user (me) is eligible to submit a ballot
+  userIsEligible: Boolean
+  # current user (me) has submitted a ballot
+  userHasSubmitted: Boolean
+  userSubmitDate: DateTime
+  allowEmptyBallots: Boolean!
+  allowedMemberships: [VotingMembershipRequirement!]
+  allowedRoles: [String!]
+
+  name: String!
+  discussion: Discussion
+
+  turnout: VotingTurnout
+  result: VotingResult
 }
 
 type VotingTurnout {
@@ -89,15 +107,12 @@ input VotingOptionInput {
 
 
 
-type Election {
+type Election implements VotingInterface {
   id: ID!
   slug: String!
   description: String
   beginDate: DateTime!
   endDate: DateTime!
-  candidacyBeginDate: DateTime!
-  candidacyEndDate: DateTime!
-  numSeats: Int!
   # current user (me) is eligible to submit a ballot
   userIsEligible: Boolean
   # current user (me) has submitted a ballot
@@ -107,10 +122,14 @@ type Election {
   allowedMemberships: [VotingMembershipRequirement!]
   allowedRoles: [String!]
 
-  turnout: ElectionTurnout
+  numSeats: Int!
+  candidacyBeginDate: DateTime!
+  candidacyEndDate: DateTime!
 
   candidacies: [Candidacy!]!
   discussion: Discussion!
+
+  turnout: ElectionTurnout
 }
 
 type Candidacy {
