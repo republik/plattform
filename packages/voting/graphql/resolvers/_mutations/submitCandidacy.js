@@ -8,15 +8,17 @@ const mailLib = require('../../../lib/mail')
 module.exports = async (_, { slug }, { pgdb, user: me, t }) => {
   Roles.ensureUserIsInRoles(me, ['admin', 'associate'])
 
-  console.log('submitCandidacy', me)
   const election = await findBySlug(slug, pgdb)
   if (!election) {
     throw new Error(t('api/election/404'))
   }
 
   const now = new Date()
-  if (election.beginDate <= now) {
+  if (election.candidacyEndDate <= now || election.beginDate <= now) {
     throw new Error('api/election/candidacy/tooLate')
+  }
+  if (election.candidacyBeginDate > now) {
+    throw new Error('api/election/candidacy/tooEarly')
   }
 
   const { entity: comment } = await upsert(

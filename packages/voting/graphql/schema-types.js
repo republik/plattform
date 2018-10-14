@@ -95,6 +95,8 @@ type Election {
   description: String
   beginDate: DateTime!
   endDate: DateTime!
+  candidacyBeginDate: DateTime!
+  candidacyEndDate: DateTime!
   numSeats: Int!
   # current user (me) is eligible to submit a ballot
   userIsEligible: Boolean
@@ -130,6 +132,8 @@ type ElectionTurnout {
 
 input ElectionInput {
   numSeats: Int!
+  candidacyBeginDate: DateTime!
+  candidacyEndDate: DateTime!
   slug: String!
   description: String!
   beginDate: DateTime!
