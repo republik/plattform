@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-12T11:45:41.684Z",
+  "updated": "2018-10-14T15:49:41.298Z",
   "title": "live",
   "data": [
     {
@@ -541,6 +541,10 @@
     {
       "key": "api/election/candidacy/tooLate",
       "value": "Die Kandidatur-Phase ist bereits geschlossen."
+    },
+    {
+      "key": "api/election/candidacy/tooEarly",
+      "value": "Die Kandidatur-Phase hat noch nicht begonnen."
     },
     {
       "key": "api/election/tooEarly",
