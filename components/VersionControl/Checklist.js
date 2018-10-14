@@ -93,7 +93,7 @@ class Checklist extends Component {
       mutating
     } = this.state
     return (
-      <Loader loading={loading && !milestones} error={error} render={() => {
+      <Loader loading={loading} error={error} render={() => {
         const allMilestones = milestones
           .filter(m => !m.immutable && m.name !== 'meta')
           .concat(
@@ -246,7 +246,7 @@ export default compose(
             })
           },
           refetchQueries: [{
-            getMilestones,
+            query: getMilestones,
             variables: {
               repoId
             }
