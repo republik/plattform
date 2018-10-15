@@ -78,14 +78,21 @@ module.exports = {
         repo: repoName,
         file_sha: repository.blob.oid
       }
-      const blobResult = await githubRest.gitdata.getBlob(blobParams)
 
-      if (!blobResult || !blobResult.data || !blobResult.data.content) {
+      let blobResult, error
+      try {
+        blobResult = await githubRest.gitdata.getBlob(blobParams)
+      } catch (e) {
+        error = e
+        blobResult = null
+      }
+
+      if (error || !blobResult || !blobResult.data || !blobResult.data.content) {
         console.error(
           'getBlob failed for ',
-          blobParams
+          { ...blobParams, commitId, error }
         )
-        throw new Error(`getBlob failed sha ${repository.blob.oid}`)
+        throw new Error(`getBlob failed for sha ${repository.blob.oid}`)
       }
 
       try {
