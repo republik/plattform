@@ -4,6 +4,7 @@ const upsert = async (repoMeta, docMeta, context) => {
   const settings = {
     title: docMeta.title,
     documentPath: docMeta.path,
+    collapsable: docMeta.collapsable,
     ...docMeta.commentsMaxLength
       ? { maxLength: docMeta.commentsMaxLength }
       : { },
@@ -35,6 +36,7 @@ const upsert = async (repoMeta, docMeta, context) => {
 
   if (
     discussion.title !== settings.title ||
+    discussion.collapsable !== settings.collapsable ||
     discussion.maxLength !== settings.maxLength ||
     discussion.minInterval !== settings.minInterval ||
     discussion.anonymity !== settings.anonymity
