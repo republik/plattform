@@ -154,7 +154,7 @@ class RowState extends PureComponent {
       composerState: 'idle', // idle | focused | submitting | error
       composerError: undefined, // or string
       shouldCollapse: false,
-      collapsed: true
+      collapsed: !!props.collapsable
     }
 
     this.openComposer = () => {
