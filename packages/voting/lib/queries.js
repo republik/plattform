@@ -32,6 +32,9 @@ const buildQueries = (tableName) => {
     )
   }
 
+  const slugExists = async (slug, pgdb) =>
+    (await pgdb.public[table.name].count({ slug })) > 0
+
   const findQuery = (where = '') => `
     SELECT
       e.*,
@@ -123,6 +126,12 @@ const buildQueries = (tableName) => {
       })
       .join('\nOR\n')
 
+    const where = [
+      allowedRoles && 'u.roles ?| :roles',
+      allowedMembershipsQuery && `(${allowedMembershipsQuery})`,
+      userId && 'u.id = :userId'
+    ].filter(Boolean).join(' AND ').trim()
+
     const query = `
       SELECT
         COUNT(DISTINCT(u.id))
@@ -131,12 +140,7 @@ const buildQueries = (tableName) => {
       LEFT JOIN
         memberships m
         ON u.id = m."userId"
-      ${allowedRoles || allowedMemberships || userId ? 'WHERE' : ''}
-      ${allowedRoles ? 'u.roles ?| :roles' : ''}
-      ${allowedRoles && allowedMemberships ? 'AND' : ''}
-      ${allowedMembershipsQuery ? '(' + allowedMembershipsQuery + ')' : ''}
-      ${(allowedRoles || allowedMemberships) && userId ? 'AND' : ''}
-      ${userId ? 'u.id = :userId' : ''}
+      ${where && where.length && 'WHERE ' + where}
     `
 
     debug('countEligibles', query, options, {entity, userId})
@@ -169,6 +173,7 @@ const buildQueries = (tableName) => {
 
   return {
     insertAllowedMemberships,
+    slugExists,
     findQuery,
     find,
     findById,

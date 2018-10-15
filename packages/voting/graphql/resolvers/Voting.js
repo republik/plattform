@@ -6,13 +6,8 @@ const {
 } = require('../../lib/Voting')
 
 module.exports = {
-  // either result is freezed into db by countVoting or it must remain null.
   slug ({ id, slug }) {
-    if (slug) {
-      return slug
-    } else {
-      return id
-    }
+    return slug || id
   },
   async options (voting, args, { pgdb }) {
     return pgdb.public.votingOptions.find({

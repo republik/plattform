@@ -7,12 +7,6 @@ const {
   insertAllowedMemberships
 } = queries
 
-const slugExists = async (slug, pgdb) => {
-  return !!(await pgdb.public.votings.findFirst({
-    slug
-  }))
-}
-
 const create = async (input, pgdb) => {
   const voting = await pgdb.public.votings.insertAndGet(
     _.omit(input, ['options', 'allowedMemberships'])
@@ -38,6 +32,5 @@ const create = async (input, pgdb) => {
 
 module.exports = {
   ...queries,
-  slugExists,
   create
 }
