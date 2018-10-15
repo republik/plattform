@@ -7,6 +7,7 @@ import UnpublishIcon from 'react-icons/lib/md/visibility-off'
 import EditIcon from 'react-icons/lib/md/edit'
 import ReplyIcon from 'react-icons/lib/md/reply'
 import colors from '../../theme/colors'
+import { mUp } from '../../theme/mediaQueries'
 import {Label, linkRule} from '../Typography'
 
 const config = {
@@ -14,7 +15,7 @@ const config = {
   left: 20
 }
 
-const actionsMinWidth = 76
+const actionsMinWidth = 86
 
 const buttonStyle = {
   outline: 'none',
@@ -105,11 +106,11 @@ export const CommentActions = ({t, score, onAnswer, onEdit, onUnpublish, onUpvot
       </IconButton>}
       </div>
       {collapsable && (
-        <div>
-          <button {...styles.collapseButton} onClick={onToggleCollapsed}>
-            <Label><span {...linkRule}>{t(`styleguide/CommentActions/${ collapsed ? 'expand' : 'collapse'}`)}</span></Label>
-          </button>
-        </div>
+        <button {...styles.collapseButton} onClick={onToggleCollapsed}>
+          <Label>
+            <span {...linkRule}>{t(`styleguide/CommentActions/${ collapsed ? 'expand' : 'collapse'}`)}</span>
+          </Label>
+        </button>
         )
       }
       <div {...styles.rightActions}>
