@@ -7,11 +7,23 @@ import UnpublishIcon from 'react-icons/lib/md/visibility-off'
 import EditIcon from 'react-icons/lib/md/edit'
 import ReplyIcon from 'react-icons/lib/md/reply'
 import colors from '../../theme/colors'
-import {Label} from '../Typography'
+import {Label, linkRule} from '../Typography'
 
 const config = {
   right: 26,
   left: 20
+}
+
+const actionsMinWidth = 76
+
+const buttonStyle = {
+  outline: 'none',
+  WebkitAppearance: 'none',
+  background: 'transparent',
+  border: 'none',
+  padding: '0',
+  display: 'block',
+  cursor: 'pointer'
 }
 
 const styles = {
@@ -22,12 +34,18 @@ const styles = {
       display: 'block'
     }
   }),
-  actions: css({
+  rightActions: css({
     display: 'flex',
     alignItems: 'center',
     fontSize: '18px',
     lineHeight: '1',
     marginLeft: 'auto',
+    minWidth: `${actionsMinWidth}px`
+  }),
+  leftActions: css({
+    display: 'flex',
+    marginRight: 'auto',
+    minWidth: `${actionsMinWidth}px`
   }),
   votes: css({
     display: 'flex',
@@ -36,13 +54,7 @@ const styles = {
     marginLeft: 10
   }),
   iconButton: css({
-    outline: 'none',
-    WebkitAppearance: 'none',
-    background: 'transparent',
-    border: 'none',
-    padding: '0',
-    display: 'block',
-    cursor: 'pointer',
+    ...buttonStyle,
     margin: '0 4px',
     '& svg': {
       margin: '0 auto'
@@ -64,37 +76,56 @@ const styles = {
     width: `${config.left}px`,
     fontSize: `${config.left}px`,
     lineHeight: `${config.left}px`
+  }),
+  collapsed: css({
+    borderTop: `1px solid ${colors.divider}`,
+    paddingTop: '6px'
+  }),
+  collapseButton: css({
+    ...buttonStyle
   })
 }
 
-export const CommentActions = ({t, score, onAnswer, onEdit, onUnpublish, onUpvote, onDownvote, replyBlockedMsg}) => (
-  <div {...styles.root}>
-    {onAnswer && <IconButton type='left' onClick={replyBlockedMsg ? null : onAnswer}
-      title={replyBlockedMsg || t('styleguide/CommentActions/answer')}>
-      <ReplyIcon fill={replyBlockedMsg ? colors.disabled : colors.text} />
-    </IconButton>}
-    {onEdit && <IconButton type='left' onClick={onEdit}
-      title={t('styleguide/CommentActions/edit')}>
-      <EditIcon />
-    </IconButton>}
-    {onUnpublish && <IconButton type='left' onClick={onUnpublish}
-      title={t('styleguide/CommentActions/unpublish')}>
-      <UnpublishIcon />
-    </IconButton>}
-
-    <div {...styles.actions}>
-      <div {...styles.votes}>
-        <IconButton onClick={onUpvote} title={t('styleguide/CommentActions/upvote')}>
-          <MdKeyboardArrowUp />
-        </IconButton>
-        <Label>{score}</Label>
-        <IconButton onClick={onDownvote} title={t('styleguide/CommentActions/downvote')}>
-          <MdKeyboardArrowDown />
-        </IconButton>
+export const CommentActions = ({t, score, onAnswer, onEdit, onUnpublish, onUpvote, onDownvote, replyBlockedMsg, highlighted, collapsed, onToggleCollapsed}) => {
+  const collapsable = collapsed !== undefined
+  return (
+    <div {...styles.root} {...(collapsable && collapsed && !highlighted ? styles.collapsed : undefined)}>
+      <div {...styles.leftActions}>
+      {onAnswer && <IconButton type='left' onClick={replyBlockedMsg ? null : onAnswer}
+        title={replyBlockedMsg || t('styleguide/CommentActions/answer')}>
+        <ReplyIcon fill={replyBlockedMsg ? colors.disabled : colors.text} />
+      </IconButton>}
+      {onEdit && <IconButton type='left' onClick={onEdit}
+        title={t('styleguide/CommentActions/edit')}>
+        <EditIcon />
+      </IconButton>}
+      {onUnpublish && <IconButton type='left' onClick={onUnpublish}
+        title={t('styleguide/CommentActions/unpublish')}>
+        <UnpublishIcon />
+      </IconButton>}
+      </div>
+      {collapsable && (
+        <div>
+          <button {...styles.collapseButton} onClick={onToggleCollapsed}>
+            <Label><span {...linkRule}>{t(`styleguide/CommentActions/${ collapsed ? 'expand' : 'collapse'}`)}</span></Label>
+          </button>
+        </div>
+        )
+      }
+      <div {...styles.rightActions}>
+        <div {...styles.votes}>
+          <IconButton onClick={onUpvote} title={t('styleguide/CommentActions/upvote')}>
+            <MdKeyboardArrowUp />
+          </IconButton>
+          <Label>{score}</Label>
+          <IconButton onClick={onDownvote} title={t('styleguide/CommentActions/downvote')}>
+            <MdKeyboardArrowDown />
+          </IconButton>
+        </div>
       </div>
     </div>
-  </div>
-)
+  )
+}
 
 // Use the 'iconSize' to adjust the visual weight of the icon. For example
 // the 'MdShareIcon' looks much larger next to 'MdKeyboardArrowUp' if both

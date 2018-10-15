@@ -17,7 +17,7 @@ const styles = {
   }),
 }
 
-const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onEditPreferences, onAnswer, edit, onUnpublish, onUpvote, onDownvote, dismissComposer, submitComment, highlighted, timeago, maxLength, replyBlockedMsg, Link, secondaryActions}) => {
+const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onEditPreferences, onAnswer, edit, onUnpublish, onUpvote, onDownvote, dismissComposer, submitComment, highlighted, timeago, maxLength, replyBlockedMsg, Link, secondaryActions, collapsed, onToggleCollapsed, onShouldCollapse}) => {
   const isEditing = edit && edit.isEditing
   const { score } = comment
 
@@ -33,6 +33,8 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
           Link={Link}
           timeago={timeago}
           t={t}
+          collapsed={collapsed}
+          onShouldCollapse={onShouldCollapse}
         />}
         {isEditing && (
           <div style={{marginBottom: 20}}>
@@ -61,6 +63,9 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
             onUpvote={onUpvote}
             onDownvote={onDownvote}
             replyBlockedMsg={replyBlockedMsg}
+            highlighted={highlighted}
+            collapsed={collapsed}
+            onToggleCollapsed={onToggleCollapsed}
           />
 
           {(displayAuthor && showComposer) &&
@@ -147,7 +152,9 @@ class RowState extends PureComponent {
 
     this.state = {
       composerState: 'idle', // idle | focused | submitting | error
-      composerError: undefined // or string
+      composerError: undefined, // or string
+      shouldCollapse: false,
+      collapsed: true
     }
 
     this.openComposer = () => {
@@ -186,7 +193,16 @@ class RowState extends PureComponent {
         }
       )
     }
+    this.toggleCollapsed = () => {
+      this.setState({collapsed: !this.state.collapsed})
+    }
+
+    this.onShouldCollapse = () => {
+      this.setState({shouldCollapse: true})
+    }
   }
+
+
 
   render () {
     const {
@@ -202,9 +218,10 @@ class RowState extends PureComponent {
       maxLength,
       replyBlockedMsg,
       Link,
-      secondaryActions
+      secondaryActions,
+      collapsable
     } = this.props
-    const {composerState, composerError} = this.state
+    const {composerState, composerError, collapsed, shouldCollapse} = this.state
     const {userVote} = comment
 
     const edit = comment.userCanEdit && {
@@ -236,6 +253,14 @@ class RowState extends PureComponent {
       error: this.state.editError
     }
 
+    const collapseAttributes = collapsable
+      ? {
+          collapsed: shouldCollapse ? collapsed : undefined,
+          onShouldCollapse: this.onShouldCollapse,
+          onToggleCollapsed: this.toggleCollapsed
+        }
+      : undefined
+
     return (
       <Row
         t={t}
@@ -261,6 +286,7 @@ class RowState extends PureComponent {
         replyBlockedMsg={replyBlockedMsg}
         Link={Link}
         secondaryActions={secondaryActions}
+        {...collapseAttributes}
       />
     )
   }

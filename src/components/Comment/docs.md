@@ -258,3 +258,27 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
   onDownvote={() => {}}
 />
 ```
+```react|noSource,span-2
+<CommentActions
+  t={t}
+
+  score={8}
+
+  onAnswer={() => {}}
+  onUpvote={undefined}
+  onDownvote={undefined}
+  collapsed={true}
+/>
+```
+```react|noSource,span-2
+<CommentActions
+  t={t}
+
+  score={8}
+
+  onAnswer={() => {}}
+  onUpvote={undefined}
+  onDownvote={undefined}
+  collapsed={false}
+/>
+```

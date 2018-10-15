@@ -37,6 +37,11 @@ const createSchema = ({
         key: 'dossier',
         ref: 'repo'
       },
+      {
+        label: 'Lange Beiträge zuklappen',
+        key: 'collapsable',
+        ref: 'bool'
+      },
       ...customMetaFields
     ],
     ...args
