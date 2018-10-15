@@ -87,7 +87,19 @@ const styles = {
   })
 }
 
-export const CommentActions = ({t, score, onAnswer, onEdit, onUnpublish, onUpvote, onDownvote, replyBlockedMsg, highlighted, collapsed, onToggleCollapsed}) => {
+export const CommentActions = ({
+  t,
+  score,
+  onAnswer,
+  onEdit,
+  onUnpublish,
+  onUpvote,
+  onDownvote,
+  replyBlockedMsg,
+  highlighted,
+  collapsed,
+  onToggleCollapsed
+}) => {
   const collapsable = collapsed !== undefined
   return (
     <div {...styles.root} {...(collapsable && collapsed && !highlighted ? styles.collapsed : undefined)}>
