@@ -11,6 +11,8 @@ const redis = require('../lib/redis')
 const elasticsearch = require('../lib/elastic')
 const { runHttpQuery } = require('apollo-server-core')
 
+const keepaliveMiddleware = require('./keepalive')
+
 checkEnv([
   'PUBLIC_WS_URL_BASE',
   'PUBLIC_WS_URL_PATH'
@@ -20,7 +22,8 @@ const {
   PUBLIC_WS_URL_PATH,
   NODE_ENV,
   ENGINE_API_KEY,
-  WS_KEEPALIVE_INTERVAL
+  WS_KEEPALIVE_INTERVAL,
+  RES_KEEPALIVE
 } = process.env
 
 // Custom Request Handler for clean way to intercept and modify response
@@ -45,11 +48,13 @@ function graphqlExpress (options) {
           gqlResponse = gqlResponse.replace(/\u2028/g, '')
         }
 
-        res.setHeader('Content-Type', 'application/json')
-        res.setHeader(
-          'Content-Length',
-          Buffer.byteLength(gqlResponse, 'utf8').toString()
-        )
+        if (!res.headersSent) {
+          res.setHeader('Content-Type', 'application/json')
+          res.setHeader(
+            'Content-Length',
+            Buffer.byteLength(gqlResponse, 'utf8').toString()
+          )
+        }
         res.write(gqlResponse)
         res.end()
       },
@@ -145,8 +150,11 @@ module.exports = (
   })
 
   server.use('/graphql',
-    bodyParser.json({limit: '128mb'}),
-    graphqlMiddleware
+    [
+      RES_KEEPALIVE ? keepaliveMiddleware : null,
+      bodyParser.json({limit: '128mb'}),
+      graphqlMiddleware
+    ].filter(Boolean)
   )
   server.use('/graphiql', graphiqlExpress({
     endpointURL: '/graphql',
