@@ -35,7 +35,7 @@ module.exports = {
       mdast = JSON.parse(redisMdast)
     } else {
       debug('document: redis MISS (%s)', redisKey)
-      const { githubApolloFetch } = await createGithubClients()
+      const { githubApolloFetch, githubRest } = await createGithubClients()
       const [login, repoName] = repoId.split('/')
 
       const {
@@ -52,7 +52,7 @@ module.exports = {
             repository(owner: $login, name: $repoName) {
               blob: object(expression: $blobExpression) {
                 ... on Blob {
-                  text
+                  oid
                 }
               }
             }
@@ -73,8 +73,30 @@ module.exports = {
         }
       }
 
+      const blobParams = {
+        owner: login,
+        repo: repoName,
+        file_sha: repository.blob.oid
+      }
+
+      let blobResult, error
       try {
-        mdast = MDAST.parse(repository.blob.text)
+        blobResult = await githubRest.gitdata.getBlob(blobParams)
+      } catch (e) {
+        error = e
+        blobResult = null
+      }
+
+      if (error || !blobResult || !blobResult.data || !blobResult.data.content) {
+        console.error(
+          'getBlob failed for ',
+          { ...blobParams, commitId, error }
+        )
+        throw new Error(`getBlob failed for sha ${repository.blob.oid}`)
+      }
+
+      try {
+        mdast = MDAST.parse(Buffer.from(blobResult.data.content, 'base64').toString('utf8'))
       } catch (e) {
         console.error(e)
       }
