@@ -1,8 +1,6 @@
 // updates/inserts recommendations to candidacies
 //
-// reads from stdin
-// format:
-//
+// reads from stdin. format:
 // [
 //  {
 //    "id": "0b557010-2000-400f-9064-a09290000000",
