@@ -1,3 +1,5 @@
+const moment = require('moment')
+
 const findByUser = async (user, pgdb) => {
   const candidacies =
     await pgdb.public.electionCandidacies.find({ userId: user.id })
@@ -51,10 +53,59 @@ const findById = async (id, pgdb) => {
 }
 
 const hasUserCandidacies = async (user, pgdb) =>
-  pgdb.public.electionCandidacies.count({ userId: user.id }).length > 0
+  (await pgdb.public.electionCandidacies.count({ userId: user.id })) > 0
+
+const getPhase = (election) => {
+  const now = moment()
+  if (moment(election.beginDate) <= now && moment(election.endDate) > now) {
+    return 'election'
+  }
+  if (moment(election.candidacyBeginDate) <= now && moment(election.candidacyEndDate) > now) {
+    return 'candidacy'
+  }
+}
+
+const userCandidacies = async (userId, pgdb) => {
+  return pgdb.query(`
+    SELECT
+      c.*,
+      json_agg(e.*) as election
+    FROM
+      "electionCandidacies" c
+    JOIN
+      elections e
+      ON c."electionId" = e.id
+    WHERE
+      c."userId" = :userId
+    GROUP BY
+      1
+  `, {
+    userId
+  })
+    .then(cs => cs.map(c => ({ ...c, election: c.election[0] })))
+    .then(cs => cs.map(c => ({
+      ...c,
+      election: {
+        ...c.election,
+        phase: getPhase(c.election)
+      }
+    })))
+}
+
+const hasUserCandidaciesInCandidacyPhase = async (user, pgdb) => {
+  const candidacies = await userCandidacies(user.id, pgdb)
+  return !!candidacies.find(c => c.election.phase === 'candidacy')
+}
+
+const hasUserCandidaciesInElectionPhase = async (user, pgdb) => {
+  const candidacies = await userCandidacies(user.id, pgdb)
+  return !!candidacies.find(c => c.election.phase === 'election')
+}
 
 module.exports = {
   findByUser,
   findById,
-  hasUserCandidacies
+  hasUserCandidacies,
+  hasUserCandidaciesInCandidacyPhase,
+  hasUserCandidaciesInElectionPhase
 }

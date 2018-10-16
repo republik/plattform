@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-16T10:28:14.311Z",
+  "updated": "2018-10-16T11:38:05.120Z",
   "title": "live",
   "data": [
     {
@@ -173,6 +173,10 @@
     {
       "key": "profile/candidacy/needed",
       "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet und kann im Moment nicht zurückgenommen werden."
+    },
+    {
+      "key": "profile/candidacy/electionPhase",
+      "value": "Sie sind zur Zeit Kandidatin in mind. einer Wahl. Deshalb können Sie Profil nicht anpassen. Bitte warten Sie bis die Wahl abgeschlossen ist."
     },
     {
       "key": "profile/notEligible",

@@ -1,5 +1,8 @@
-const { hasUserCandidacies } =
-  require('@orbiting/backend-modules-voting/lib/Candidacy')
+const {
+  hasUserCandidacies,
+  hasUserCandidaciesInCandidacyPhase,
+  hasUserCandidaciesInElectionPhase
+} = require('@orbiting/backend-modules-voting/lib/Candidacy')
 
 exports.isEligible = async (userId, pgdb) => {
   const hasPledges = !!(await pgdb.public.pledges.findFirst({
@@ -16,3 +19,5 @@ exports.isEligible = async (userId, pgdb) => {
  * Check if profile (actually user) has submitted a candidacy.
  */
 exports.isInCandidacy = hasUserCandidacies
+exports.isInCandidacyInCandidacyPhase = hasUserCandidaciesInCandidacyPhase
+exports.isInCandidacyInElectionPhase = hasUserCandidaciesInElectionPhase
