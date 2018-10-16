@@ -23,7 +23,7 @@ const getCandidacies = async (election, pgdb) => {
   const candidacies = await pgdb.public.electionCandidacies.find({ electionId: election.id })
 
   const users = candidacies.length > 0
-    ? await pgdb.public.users.find({id: candidacies.map(candidate => candidate.userId)})
+    ? await pgdb.public.users.find({id: candidacies.map(candidacy => candidacy.userId)})
     : []
 
   const addresses = users.length > 0

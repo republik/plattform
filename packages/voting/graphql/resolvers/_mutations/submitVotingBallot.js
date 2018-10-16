@@ -31,7 +31,7 @@ module.exports = async (_, { votingId, optionId }, { pgdb, user: me, t, req }) =
     }
 
     if (optionId) {
-      const votingOption = await transaction.public.votingOptions.findOne({ id: optionId })
+      const votingOption = (await transaction.public.votingOptions.count({ id: optionId })) > 0
       if (!votingOption) {
         throw new Error(t('api/voting/option/404'))
       }

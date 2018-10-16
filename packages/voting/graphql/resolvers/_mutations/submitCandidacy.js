@@ -15,10 +15,10 @@ module.exports = async (_, { slug }, { pgdb, user: me, t }) => {
 
   const now = new Date()
   if (election.candidacyEndDate <= now || election.beginDate <= now) {
-    throw new Error('api/election/candidacy/tooLate')
+    throw new Error(t('api/election/candidacy/tooLate'))
   }
   if (election.candidacyBeginDate > now) {
-    throw new Error('api/election/candidacy/tooEarly')
+    throw new Error(t('api/election/candidacy/tooEarly'))
   }
 
   const { entity: comment } = await upsert(
