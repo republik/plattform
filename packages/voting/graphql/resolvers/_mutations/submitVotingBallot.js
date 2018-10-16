@@ -31,9 +31,12 @@ module.exports = async (_, { votingId, optionId }, { pgdb, user: me, t, req }) =
     }
 
     if (optionId) {
-      const votingOption = (await transaction.public.votingOptions.count({ id: optionId })) > 0
+      const votingOption = await transaction.public.votingOptions.findOne({ id: optionId })
       if (!votingOption) {
         throw new Error(t('api/voting/option/404'))
+      }
+      if (votingOption.votingId !== votingId) {
+        throw new Error(t('api/voting/option/votingIdMissmatch'))
       }
     } else if (!voting.allowEmptyBallots) {
       throw new Error(t('api/voting/noEmptyBallots'))
