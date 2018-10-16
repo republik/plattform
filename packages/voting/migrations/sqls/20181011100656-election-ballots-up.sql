@@ -7,8 +7,8 @@ DROP TABLE IF EXISTS "electionBallots";
 CREATE TABLE "electionBallots" (
   "id"            uuid primary key not null default uuid_generate_v4(),
   "electionId"    uuid NOT NULL REFERENCES "elections" ON UPDATE CASCADE ON DELETE CASCADE,
-  "candidacyId"   uuid REFERENCES "electionCandidacies" ON UPDATE CASCADE ON DELETE CASCADE,
-  "userId"        uuid NOT NULL REFERENCES "users" ON UPDATE CASCADE ON DELETE CASCADE,
+  "candidacyId"   uuid REFERENCES "electionCandidacies" ON UPDATE CASCADE,
+  "userId"        uuid NOT NULL REFERENCES "users" ON UPDATE CASCADE,
   "createdAt"     timestamptz NOT NULL DEFAULT now(),
   "updatedAt"     timestamptz NOT NULL DEFAULT now(),
   unique("candidacyId", "userId")
