@@ -57,11 +57,14 @@ const hasUserCandidacies = async (user, pgdb) =>
 
 const getPhase = (election) => {
   const now = moment()
-  if (moment(election.beginDate) <= now && moment(election.endDate) > now) {
-    return 'election'
-  }
   if (moment(election.candidacyBeginDate) <= now && moment(election.candidacyEndDate) > now) {
     return 'candidacy'
+  }
+  if (
+    (moment(election.candidacyBeginDate) <= now || moment(election.beginDate) <= now) &&
+    moment(election.endDate) > now
+  ) {
+    return 'election'
   }
 }
 
