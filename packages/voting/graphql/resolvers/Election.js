@@ -4,7 +4,6 @@ const {
   isEligible,
   userHasSubmitted,
   userSubmitDate,
-  turnout,
   getCandidacies
 } = require('../../lib/Election')
 
@@ -32,6 +31,6 @@ module.exports = {
     if (election.result && election.result.turnout) { // after counting
       return election.result.turnout
     }
-    return turnout(election, pgdb)
+    return { entity: election }
   }
 }

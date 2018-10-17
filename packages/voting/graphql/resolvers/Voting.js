@@ -1,8 +1,7 @@
 const {
   isEligible,
   userHasSubmitted,
-  userSubmitDate,
-  turnout
+  userSubmitDate
 } = require('../../lib/Voting')
 
 module.exports = {
@@ -39,6 +38,6 @@ module.exports = {
         eligible: turnout.eligible || turnout.eligitable // fix typo in old data
       }
     }
-    return turnout(voting, pgdb)
+    return { entity: voting }
   }
 }
