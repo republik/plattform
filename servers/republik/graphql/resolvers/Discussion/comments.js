@@ -53,6 +53,7 @@ const measureTree = comment => {
       endCursor: null
     }
   }
+  comment.totalRepliesCount = numChildren
   return numChildren + 1
 }
 
@@ -292,7 +293,8 @@ module.exports = async (discussion, args, context, info) => {
   const sortKeyMap = {
     'DATE': 'createdAt',
     'VOTES': 'score',
-    'HOT': 'hotness'
+    'HOT': 'hotness',
+    'REPLIES': 'totalRepliesCount'
   }
   const sortKey = sortKeyMap[orderBy]
   const bubbleSort = sortKey !== 'createdAt' // bubbling values for sort is disabled for createdAt

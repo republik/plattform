@@ -220,6 +220,7 @@ enum DiscussionOrder {
   DATE
   VOTES
   HOT
+  REPLIES
 }
 
 type PageInfo {
