@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-11T12:41:32.900Z",
+  "updated": "2018-10-17T11:46:59.317Z",
   "title": "live",
   "data": [
     {
@@ -35,8 +35,32 @@
       "value": "+1"
     },
     {
+      "key": "styleguide/CommentActions/upvote/count/0",
+      "value": "Keine Stimmen dafür"
+    },
+    {
+      "key": "styleguide/CommentActions/upvote/count/1",
+      "value": "Eine Stimme dafür"
+    },
+    {
+      "key": "styleguide/CommentActions/upvote/count/other",
+      "value": "{count} Stimmen dafür"
+    },
+    {
       "key": "styleguide/CommentActions/downvote",
       "value": "-1"
+    },
+    {
+      "key": "styleguide/CommentActions/downvote/count/0",
+      "value": "Keine Gegenstimmen"
+    },
+    {
+      "key": "styleguide/CommentActions/downvote/count/1",
+      "value": "Eine Gegenstimme"
+    },
+    {
+      "key": "styleguide/CommentActions/downvote/count/other",
+      "value": "{count} Gegenstimmen"
     },
     {
       "key": "styleguide/CommentActions/expand",

@@ -17,9 +17,37 @@ const styles = {
   }),
 }
 
-const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, showComposer, composerError, onEditPreferences, onAnswer, edit, onUnpublish, onUpvote, onDownvote, dismissComposer, submitComment, highlighted, timeago, maxLength, replyBlockedMsg, Link, secondaryActions, collapsed, onToggleCollapsed, onShouldCollapse}) => {
+const Row = ({
+  t,
+  visualDepth,
+  head,
+  tail,
+  otherChild,
+  comment,
+  displayAuthor,
+  showComposer,
+  composerError,
+  onEditPreferences,
+  onAnswer,
+  edit,
+  onUnpublish,
+  onShare,
+  onUpvote,
+  onDownvote,
+  dismissComposer,
+  submitComment,
+  highlighted,
+  timeago,
+  maxLength,
+  replyBlockedMsg,
+  Link,
+  secondaryActions,
+  collapsed,
+  onToggleCollapsed,
+  onShouldCollapse
+}) => {
   const isEditing = edit && edit.isEditing
-  const { score } = comment
+  const { downVotes, upVotes } = comment
 
   const barCount = visualDepth - (otherChild ? 1 : 0)
 
@@ -56,10 +84,12 @@ const Row = ({t, visualDepth, head, tail, otherChild, comment, displayAuthor, sh
         <div style={{marginLeft: profilePictureSize + profilePictureMargin}}>
           <CommentActions
             t={t}
-            score={score}
+            downVotes={downVotes}
+            upVotes={upVotes}
             onAnswer={onAnswer}
             onEdit={edit && edit.start}
             onUnpublish={onUnpublish}
+            onShare={onShare}
             onUpvote={onUpvote}
             onDownvote={onDownvote}
             replyBlockedMsg={replyBlockedMsg}
@@ -98,13 +128,21 @@ Row.propTypes = {
   composerError: PropTypes.string,
   onEditPreferences: PropTypes.func.isRequired,
   onAnswer: PropTypes.func,
+  onUnpublish: PropTypes.func,
+  onShare: PropTypes.func,
   onUpvote: PropTypes.func,
   onDownvote: PropTypes.func,
   dismissComposer: PropTypes.func.isRequired,
   submitComment: PropTypes.func.isRequired,
+  highlighted: PropTypes.bool,
   timeago: PropTypes.func.isRequired,
   maxLength: PropTypes.number,
-  replyBlockedMsg: PropTypes.string
+  replyBlockedMsg: PropTypes.string,
+  Link: PropTypes.func,
+  secondaryActions: PropTypes.func,
+  collapsed: PropTypes.bool,
+  onToggleCollapsed: PropTypes.func,
+  onShouldCollapse: PropTypes.func
 }
 
 class Composer extends PureComponent {
@@ -214,6 +252,7 @@ class RowState extends PureComponent {
       otherChild,
       displayAuthor,
       onEditPreferences,
+      onShare,
       isAdmin,
       maxLength,
       replyBlockedMsg,
@@ -278,6 +317,7 @@ class RowState extends PureComponent {
         onUpvote={(!displayAuthor || userVote === 'UP') ? undefined : this.upvoteComment}
         onDownvote={(!displayAuthor || userVote === 'DOWN') ? undefined : this.downvoteComment}
         onUnpublish={(isAdmin || comment.userCanEdit) && comment.published && (() => this.props.unpublishComment(comment.id))}
+        onShare={onShare ? (() => onShare(comment.id)) : undefined}
         dismissComposer={this.dismissComposer}
         submitComment={this.submitComment}
         edit={edit}

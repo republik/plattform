@@ -6,16 +6,16 @@ import MdKeyboardArrowUp from 'react-icons/lib/md/keyboard-arrow-up'
 import UnpublishIcon from 'react-icons/lib/md/visibility-off'
 import EditIcon from 'react-icons/lib/md/edit'
 import ReplyIcon from 'react-icons/lib/md/reply'
+import ShareIcon from 'react-icons/lib/md/share'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
-import {Label, linkRule} from '../Typography'
+import { Label, linkRule } from '../Typography'
+import { ellipsize } from '../../lib/styleMixins'
 
 const config = {
   right: 26,
   left: 20
 }
-
-const actionsMinWidth = 86
 
 const buttonStyle = {
   outline: 'none',
@@ -40,19 +40,26 @@ const styles = {
     alignItems: 'center',
     fontSize: '18px',
     lineHeight: '1',
-    marginLeft: 'auto',
-    minWidth: `${actionsMinWidth}px`
+    marginLeft: 'auto'
   }),
   leftActions: css({
     display: 'flex',
     marginRight: 'auto',
-    minWidth: `${actionsMinWidth}px`
+    flexWrap: 'nowrap'
   }),
   votes: css({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginLeft: 10
+  }),
+  vote: css({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginLeft: 4,
+    [mUp]: {
+      marginLeft: 10
+    }
   }),
   iconButton: css({
     ...buttonStyle,
@@ -70,7 +77,8 @@ const styles = {
     height: `${config.right}px`,
     width: `${config.right}px`,
     fontSize: `${config.right}px`,
-    lineHeight: `${config.right}px`
+    lineHeight: `${config.right}px`,
+    margin: 0
   }),
   leftButton: css({
     height: `${config.left}px`,
@@ -83,16 +91,19 @@ const styles = {
     paddingTop: '6px'
   }),
   collapseButton: css({
+    ...ellipsize,
     ...buttonStyle
   })
 }
 
 export const CommentActions = ({
   t,
-  score,
+  downVotes,
+  upVotes,
   onAnswer,
   onEdit,
   onUnpublish,
+  onShare,
   onUpvote,
   onDownvote,
   replyBlockedMsg,
@@ -116,6 +127,10 @@ export const CommentActions = ({
         title={t('styleguide/CommentActions/unpublish')}>
         <UnpublishIcon />
       </IconButton>}
+      {onShare && <IconButton type='left' onClick={onShare}
+        title={t('styleguide/CommentActions/share')}>
+        <ShareIcon />
+      </IconButton>}
       </div>
       {collapsable && (
         <button {...styles.collapseButton} onClick={onToggleCollapsed}>
@@ -127,13 +142,18 @@ export const CommentActions = ({
       }
       <div {...styles.rightActions}>
         <div {...styles.votes}>
-          <IconButton onClick={onUpvote} title={t('styleguide/CommentActions/upvote')}>
-            <MdKeyboardArrowUp />
-          </IconButton>
-          <Label>{score}</Label>
-          <IconButton onClick={onDownvote} title={t('styleguide/CommentActions/downvote')}>
-            <MdKeyboardArrowDown />
-          </IconButton>
+          <div {...styles.vote}>
+            <Label title={t.pluralize('styleguide/CommentActions/upvote/count', {count: upVotes})}>{upVotes}</Label>
+            <IconButton onClick={onUpvote} title={t('styleguide/CommentActions/upvote')}>
+              <MdKeyboardArrowUp />
+            </IconButton>
+          </div>
+          <div {...styles.vote}>
+            <Label title={t.pluralize('styleguide/CommentActions/downvote/count', {count: downVotes})}>{downVotes}</Label>
+            <IconButton onClick={onDownvote} title={t('styleguide/CommentActions/downvote')}>
+              <MdKeyboardArrowDown />
+            </IconButton>
+          </div>
         </div>
       </div>
     </div>

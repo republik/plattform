@@ -7,7 +7,8 @@ export const mkComment = (n, children, pageInfo) => ({
     name: `${n} – Christof Moser`,
     credential: {description: 'Journalist, Autor, Diktator, Rebel und Republikaner', verified: true}
   },
-  score: 8,
+  upVotes: 8,
+  downVotes: 3,
   userVote: 'DOWN',
   content: 'Journalismus strebt nach Klarheit, er ist der Feind der uralten Angst vor dem Neuen.',
   comments: children.length === 0

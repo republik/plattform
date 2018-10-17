@@ -229,7 +229,8 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
 <CommentActions
   t={t}
 
-  score={8}
+  upVotes={8}
+  downVotes={3}
 
   onAnswer={undefined}
   onUpvote={undefined}
@@ -240,7 +241,8 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
 <CommentActions
   t={t}
 
-  score={8}
+  upVotes={8}
+  downVotes={3}
 
   onAnswer={() => {}}
   onUpvote={undefined}
@@ -251,7 +253,8 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
 <CommentActions
   t={t}
 
-  score={8}
+  upVotes={8}
+  downVotes={3}
 
   onAnswer={() => {}}
   onUpvote={() => {}}
@@ -262,11 +265,13 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
 <CommentActions
   t={t}
 
-  score={8}
+  upVotes={8}
+  downVotes={3}
 
   onAnswer={() => {}}
-  onUpvote={undefined}
-  onDownvote={undefined}
+  onShare={() => {}}
+  onUpvote={() => {}}
+  onDownvote={() => {}}
   collapsed={true}
 />
 ```
@@ -274,11 +279,13 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
 <CommentActions
   t={t}
 
-  score={8}
+  upVotes={8}
+  downVotes={3}
 
   onAnswer={() => {}}
-  onUpvote={undefined}
-  onDownvote={undefined}
+  onShare={() => {}}
+  onUpvote={() => {}}
+  onDownvote={() => {}}
   collapsed={false}
 />
 ```
