@@ -139,7 +139,7 @@ Row.propTypes = {
   maxLength: PropTypes.number,
   replyBlockedMsg: PropTypes.string,
   Link: PropTypes.func,
-  secondaryActions: PropTypes.func,
+  secondaryActions: PropTypes.object,
   collapsed: PropTypes.bool,
   onToggleCollapsed: PropTypes.func,
   onShouldCollapse: PropTypes.func
