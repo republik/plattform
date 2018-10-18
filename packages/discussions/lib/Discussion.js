@@ -1,6 +1,5 @@
 const upsert = async (id, settings = {}, pgdb) => {
   let discussion
-  console.log(settings)
 
   if (id) {
     discussion = await pgdb.public.discussions.findOne({ id })
