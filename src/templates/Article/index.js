@@ -476,6 +476,10 @@ const cover = {
         props: { size: undefined }
       },
       {
+        label: 'Gross',
+        props: {size: 'breakout'}
+      },
+      {
         label: 'Zentriert',
         props: {size: 'center'}
       },

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
-import {
+import Center, {
   breakoutStyles,
   MAX_WIDTH,
   PADDING,
@@ -35,6 +35,11 @@ const styles = {
   coverSize: css({
     marginTop: 30,
     marginBottom: 20
+  }),
+  coverBreakout: css({
+    margin: '30px auto 20px auto',
+    maxWidth: MAX_WIDTH + PADDING * 2,
+    padding: PADDING,
   }),
   coverText: css({
     position: 'absolute',
@@ -130,7 +135,8 @@ export const CoverTextTitleBlockHeadline = ({children, attributes}) =>
   <div {...attributes} {...styles.coverTextTitleBlockHeadline}>{children}</div>
 
 export const FigureCover = ({size, text, ...props}) => {
-  return <div {...styles.cover} {...(size ? styles.coverSize : {})}>
+  const sizeStyle = size ? size === 'breakout' ? styles.coverBreakout : styles.coverSize : undefined
+  return <div {...styles.cover} {...sizeStyle}>
     <Figure size={size} {...props} />
     {text && <div style={textPosStyle(text)} {...styles.coverText}>
       {text.element}
