@@ -293,7 +293,7 @@ const authorizeSession = async ({ pgdb, tokens, email: emailFromQuery, signInHoo
       }
       session = curSession
     } else if (!session) {
-      console.error('session is required to validate against')
+      console.error('session is required to validate against', req._log())
       throw new SessionTokenValidationFailed({ email: emailFromQuery })
     }
 

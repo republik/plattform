@@ -1,3 +1,5 @@
+const { upsert: upsertDiscussion } = require('@orbiting/backend-modules-discussions')
+
 const upsert = async (repoMeta, docMeta, context) => {
   const { pgdb } = context
 
@@ -16,37 +18,7 @@ const upsert = async (repoMeta, docMeta, context) => {
       : { }
   }
 
-  let discussion
-
-  if (repoMeta.discussionId) {
-    discussion = await pgdb.public.discussions.findOne({ id: repoMeta.discussionId })
-  }
-
-  if (!discussion) {
-    discussion = await pgdb.public.discussions.insertAndGet(
-      repoMeta.discussionId
-        ? {
-          id: repoMeta.discussionId,
-          ...settings
-        }
-        : settings,
-      { skipUndefined: true }
-    )
-  }
-
-  if (
-    discussion.title !== settings.title ||
-    discussion.collapsable !== settings.collapsable ||
-    discussion.maxLength !== settings.maxLength ||
-    discussion.minInterval !== settings.minInterval ||
-    discussion.anonymity !== settings.anonymity
-  ) {
-    await pgdb.public.discussions.update(
-      { id: discussion.id },
-      settings
-    )
-  }
-
+  const discussion = await upsertDiscussion(repoMeta.discussionId, settings, pgdb)
   return discussion.id
 }
 

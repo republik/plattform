@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-08T13:49:37.550Z",
+  "updated": "2018-10-16T11:38:05.120Z",
   "title": "live",
   "data": [
     {
@@ -175,6 +175,10 @@
       "value": "Ihr Profil ist im Moment mindestens einer Kandidatur zugeordnet und kann im Moment nicht zurückgenommen werden."
     },
     {
+      "key": "profile/candidacy/electionPhase",
+      "value": "Sie sind zur Zeit Kandidatin in mind. einer Wahl. Deshalb können Sie Profil nicht anpassen. Bitte warten Sie bis die Wahl abgeschlossen ist."
+    },
+    {
       "key": "profile/notEligible",
       "value": "Nur Verlegerinnen und Abonnenten können ein Profil veröffentlichen."
     },
@@ -193,6 +197,14 @@
     {
       "key": "api/preview/mail/tooEarly",
       "value": "Das Preview-Mail kann nur einmal pro Tag angefordert werden, bitte versuchen Sie es morgen nochmals."
+    },
+    {
+      "key": "api/preview/email/onboarding/subject",
+      "value": "Probelesen der Republik"
+    },
+    {
+      "key": "api/preview/email/followup/subject",
+      "value": "Hat Sie das überzeugt?"
     },
     {
       "key": "profile/generic/tooLong",
@@ -515,12 +527,84 @@
       "value": "Unbekannt"
     },
     {
-      "key": "api/preview/email/onboarding/subject",
-      "value": "Probelesen der Republik"
-    },
-    {
       "key": "api/election/email/election_candidacy_confirmation_gen18m/subject",
       "value": "Vielen Dank für Ihre Kandidatur"
+    },
+    {
+      "key": "api/election/exists",
+      "value": "Eine Wahl mit diesem Slug existiert bereits."
+    },
+    {
+      "key": "api/election/404",
+      "value": "Die Wahl konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/election/candidacy/404",
+      "value": "Eine der gewählten Kandidaturen konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/election/candidacy/tooLate",
+      "value": "Die Kandidatur-Phase ist bereits geschlossen."
+    },
+    {
+      "key": "api/election/candidacy/tooEarly",
+      "value": "Die Kandidatur-Phase hat noch nicht begonnen."
+    },
+    {
+      "key": "api/election/tooEarly",
+      "value": "Die Wahl ist noch nicht eröffnet."
+    },
+    {
+      "key": "api/election/tooLate",
+      "value": "Die Wahl ist bereits geschlossen."
+    },
+    {
+      "key": "api/election/notEligible",
+      "value": "Sie sind leider nicht berechtigt an der Wahl teilzunehmen."
+    },
+    {
+      "key": "api/election/alreadySubmitted",
+      "value": "Sie können nur einmal wählen."
+    },
+    {
+      "key": "api/election/noEmptyBallots",
+      "value": "Diese Wahl erlaubt keine leeren Eingaben."
+    },
+    {
+      "key": "api/voting/404",
+      "value": "Die Abstimmung konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/voting/exists",
+      "value": "Eine Abstimmung mit diesem Slug existiert bereits."
+    },
+    {
+      "key": "api/voting/notEligible",
+      "value": "Sie sind leider nicht berechtigt an der Abstimmung teilzunehmen."
+    },
+    {
+      "key": "api/voting/alreadySubmitted",
+      "value": "Sie können nur einmal abstimmen."
+    },
+    {
+      "key": "api/voting/tooEarly",
+      "value": "Die Abstimmung ist noch nicht eröffnet."
+    },
+    {
+      "key": "api/voting/tooLate",
+      "value": "Die Abstimmung ist bereits geschlossen."
+    },
+    {
+      "key": "api/voting/option/404",
+      "value": "Die gewählte Option konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/voting/option/votingIdMissmatch",
+      "value": "Die gewählte Option gehört nicht zur angegebenen Abstimmung."
+    },
+    {
+      "key": "api/voting/noEmptyBallots",
+      "value": "Diese Abstimmung erlaubt keine leeren Eingaben."
     }
   ]
 }

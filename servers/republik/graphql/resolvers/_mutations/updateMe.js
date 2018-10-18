@@ -5,7 +5,12 @@ const {
   getKeyId,
   containsPrivateKey
 } = require('../../../lib/pgp')
-const { isEligible, isInCandidacy } = require('../../../lib/profile')
+const {
+  isEligible,
+  isInCandidacy,
+  isInCandidacyInCandidacyPhase,
+  isInCandidacyInElectionPhase
+} = require('../../../lib/profile')
 const { Redirections: {
   upsert: upsertRedirection,
   delete: deleteRedirection
@@ -101,19 +106,26 @@ module.exports = async (_, args, context) => {
   }
 
   if (await isInCandidacy(me._raw, pgdb)) {
-    if (args.hasPublicProfile === false) {
-      throw new Error(t('profile/candidacy/needed'))
-    }
+    if (await isInCandidacyInCandidacyPhase(me._raw, pgdb)) {
+      if (args.hasPublicProfile === false) {
+        throw new Error(t('profile/candidacy/needed'))
+      }
 
-    if (
-      'birthday' in args &&
-      (args.birthday === null || args.birthday.length < 10)
-    ) {
-      throw new Error(t('profile/candidacy/birthday/needed'))
-    }
+      if (
+        'birthday' in args &&
+        (args.birthday === null || args.birthday.length < 10)
+      ) {
+        throw new Error(t('profile/candidacy/birthday/needed'))
+      }
 
-    if ('statement' in args && args.statement.length < 1) {
-      throw new Error(t('profile/candidacy/statement/needed'))
+      if ('statement' in args && args.statement.length < 1) {
+        throw new Error(t('profile/candidacy/statement/needed'))
+      }
+    }
+    if (await isInCandidacyInElectionPhase(me._raw, pgdb)) {
+      if ('hasPublicProfile' in args || 'birthday' in args || 'statement' in args) {
+        throw new Error(t('profile/candidacy/electionPhase'))
+      }
     }
   }
 

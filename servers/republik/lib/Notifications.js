@@ -94,7 +94,7 @@ const submitComment = async (comment, discussion, context) => {
       : comment.content
 
     const discussionUrl = `${FRONTEND_BASE_URL}${discussion.documentPath}`
-    const commentUrl = `${discussionUrl}?focus=${comment.id}`
+    const commentUrl = `${discussionUrl}${discussionUrl.indexOf('?') === -1 ? '?' : '&'}focus=${comment.id}`
 
     const subjectParams = {
       authorName: displayAuthor.name,
