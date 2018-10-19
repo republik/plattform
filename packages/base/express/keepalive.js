@@ -2,7 +2,7 @@
 const debug = require('debug')('base:keepalive')
 
 const {
-  RES_KEEPALIVE_MS = 15000
+  RES_KEEPALIVE_MS = 1000 * 15
 } = process.env
 
 module.exports = (req, res, next) => {
