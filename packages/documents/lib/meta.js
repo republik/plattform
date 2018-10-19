@@ -39,6 +39,9 @@ const getCredits = doc => {
  * @return {Object|null}     e.g. { mp3: true, aac: null, ogg: null }
  */
 const getAudioSource = doc => {
+  if (!doc.content && doc.meta && doc.meta.audioSource) {
+    return doc.meta.audioSource
+  }
   const { audioSourceMp3, audioSourceAac, audioSourceOgg } = doc.content.meta
   const audioSource = audioSourceMp3 || audioSourceAac || audioSourceOgg ? {
     mp3: audioSourceMp3,
