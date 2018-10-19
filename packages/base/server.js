@@ -63,7 +63,7 @@ const startEngine = () => {
   engineLauncher = new ApolloEngineLauncher({
     apiKey: ENGINE_API_KEY,
     origins: [{
-      requestTimeout: '60m',
+      requestTimeout: '7200s', // 2h don't let the eninge timeout a request
       http: {
         // The URL that the Proxy should use to connect to your GraphQL server.
         url: `http://localhost:${getWorkersPort()}/graphql`
