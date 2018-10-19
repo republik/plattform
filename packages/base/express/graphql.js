@@ -11,8 +11,6 @@ const redis = require('../lib/redis')
 const elasticsearch = require('../lib/elastic')
 const { runHttpQuery } = require('apollo-server-core')
 
-const keepaliveMiddleware = require('./keepalive')
-
 checkEnv([
   'PUBLIC_WS_URL_BASE',
   'PUBLIC_WS_URL_PATH'
@@ -151,7 +149,7 @@ module.exports = (
 
   server.use('/graphql',
     [
-      RES_KEEPALIVE ? keepaliveMiddleware : null,
+      RES_KEEPALIVE ? require('./keepalive') : null,
       bodyParser.json({limit: '128mb'}),
       graphqlMiddleware
     ].filter(Boolean)
