@@ -10,20 +10,16 @@ module.exports = (req, res, next) => {
   let isFinished = false
   let isDataSent = false
 
-  res.once('finish', () => {
+  const finish = () => {
     isFinished = true
-  })
+  }
 
-  res.once('end', () => {
-    isFinished = true
-  })
-
-  res.once('close', () => {
-    isFinished = true
-  })
+  res.once('finish', finish)
+  res.once('end', finish)
+  res.once('close', finish)
 
   res.on('data', (data) => {
-    // Look for something other than our blank space to indicate that real
+    // look for something other than our blank space to indicate that real
     // data is now being sent back to the client.
     if (data !== space) {
       isDataSent = true
@@ -32,17 +28,18 @@ module.exports = (req, res, next) => {
 
   const waitAndSend = () => {
     setTimeout(() => {
-      // If the response hasn't finished and hasn't sent any data back....
+      // if the response hasn't finished and hasn't sent any data back
       if (!isFinished && !isDataSent) {
-        // Need to write the status code/headers if they haven't been sent yet.
+        // need to write the headers if they haven't been sent yet.
         if (!res.headersSent) {
+          res.setHeader('Content-Type', 'application/json')
           res.writeHead(202)
         }
 
         res.write(space)
         debug('keepalive sent')
 
-        // Wait another RES_KEEPALIVE_MS
+        // wait another RES_KEEPALIVE_MS
         waitAndSend()
       }
     }, RES_KEEPALIVE_MS)
