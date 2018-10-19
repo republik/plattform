@@ -14,7 +14,9 @@ import {
   transparentAxisStroke,
   circleFill,
   deduplicate,
-  unsafeDatumFn
+  unsafeDatumFn,
+  subsup,
+  baseLineColor
 } from './utils'
 import ColorLegend from './ColorLegend'
 
@@ -23,7 +25,6 @@ const COLUMN_TITLE_HEIGHT = 30
 const BAR_LABEL_HEIGHT = 15
 const AXIS_BOTTOM_HEIGHT = 20
 const AXIS_BOTTOM_PADDING = 8
-const X_TICK_HEIGHT = 0
 const X_TICK_TEXT_MARGIN = 0
 
 const BAR_STYLES = {
@@ -84,14 +85,8 @@ const styles = {
     ...sansSerifRegular12,
     fill: colors.lightText
   }),
-  axisXLongLine: css({
-    stroke: transparentAxisStroke,
-    strokeOpacity: 0.6,
-    strokeWidth: '1px',
-    shapeRendering: 'crispEdges'
-  }),
   axisXLine: css({
-    stroke: colors.divider,
+    stroke: transparentAxisStroke,
     strokeWidth: '1px',
     shapeRendering: 'crispEdges'
   }),
@@ -215,8 +210,12 @@ const BarChart = (props) => {
         style,
         height: style.height,
         segments: barSegments,
-        sum: barSegments.reduce(
-          (sum, segment) => sum + segment.value,
+        max: barSegments.reduce(
+          (sum, segment) => sum + Math.max(0, segment.value),
+          0
+        ),
+        min: barSegments.reduce(
+          (sum, segment) => sum + Math.min(0, segment.value),
           0
         )
       }
@@ -225,8 +224,8 @@ const BarChart = (props) => {
     return {
       title,
       bars,
-      max: max(bars.map(bar => bar.sum)),
-      min: min(bars.map(bar => bar.sum)),
+      max: max(bars, bar => bar.max),
+      min: min(bars, bar => bar.min),
       height: gY,
       firstBarY
     }
@@ -235,8 +234,8 @@ const BarChart = (props) => {
   // setup x scale
   const xDomain = props.domain ||
     [
-      0,
-      max(groupedData.map(d => d.max))
+      Math.min(0, min(groupedData.map(d => d.min))),
+      Math.max(0, max(groupedData.map(d => d.max)))
     ]
   const x = scaleLinear()
     .domain(xDomain)
@@ -244,18 +243,28 @@ const BarChart = (props) => {
   if (!props.domain) {
     x.nice(3)
   }
+
   const xAxis = calculateAxis(props.numberFormat, t, x.domain())
 
   // stack bars
   groupedData.forEach(group => {
     group.bars.forEach(bar => {
-      let xPos = 0
+      const xZero = x(0)
+      let xPosPositiv = xZero
+      let xPosNegativ = xZero
       bar.segments.forEach((d, i) => {
         d.color = color(colorAccessor(d))
-        d.x = Math.floor(xPos)
-        const size = x(Math.max(d.value, xDomain[0]))
-        d.width = Math.ceil(size) + (size && last(bar.segments, i) ? 1 : 0)
-        xPos += size
+        const size = x(d.value) - xZero
+        d.x = size > 0
+          ? Math.floor(xPosPositiv)
+          : Math.ceil(xPosNegativ + size)
+
+        d.width = Math.ceil(Math.abs(size)) + (size && last(bar.segments, i) ? 1 : 0)
+        if (size > 0) {
+          xPosPositiv += size
+        } else {
+          xPosNegativ += size
+        }
       })
     })
   })
@@ -277,6 +286,7 @@ const BarChart = (props) => {
   const isLollipop = props.barStyle === 'lollipop'
 
   const xTicks = props.xTicks || xAxis.ticks
+  const highlightZero = xTicks[0] !== 0
 
   return (
     <div>
@@ -285,50 +295,66 @@ const BarChart = (props) => {
         {
           groupedData.map(group => {
             return (
-              <g key={group.title || 1} transform={`translate(${group.x},${group.y})`}>
+              <g key={`group${group.title || 1}`} transform={`translate(${group.x},${group.y})`}>
                 <text dy='1.5em' {...styles.groupTitle}>{group.title}</text>
                 {
                   group.bars.map(bar => (
-                    <g key={bar.y}>
-                      <text {...styles.barLabel} y={bar.labelY} dy='0.9em'>{bar.segments[0].label}</text>
+                    <g key={`bar${bar.y}`}>
+                      <text {...styles.barLabel}
+                        y={bar.labelY}
+                        dy='0.9em'
+                        x={x(0) + (highlightZero ? (bar.max <= 0 ? -2 : 2) : 0)}
+                        textAnchor={bar.max <= 0 ? 'end' : 'start'}>
+                        {subsup.svg(bar.segments[0].label)}
+                      </text>
                       {
-                        bar.segments.map((segment, i) => (
-                          <g key={i} transform={`translate(0,${bar.y})`}>
-                            <rect x={segment.x} fill={segment.color} width={segment.width} height={bar.height} />
-                            {isLollipop && confidence &&
-                              <rect
-                                rx={bar.style.popHeight / 2} ry={bar.style.popHeight / 2}
-                                x={x(segment.datum[`confidence${confidence}_lower`])}
-                                y={(bar.height / 2) - (bar.style.popHeight / 2)}
-                                width={x(segment.datum[`confidence${confidence}_upper`]) - x(segment.datum[`confidence${confidence}_lower`])}
-                                height={bar.style.popHeight}
-                                fill={segment.color}
-                                fillOpacity='0.3' />
-                            }
-                            {isLollipop && <circle
-                              cx={segment.x + segment.width}
-                              cy={bar.height / 2}
-                              r={Math.floor(bar.style.popHeight - (bar.style.stroke / 2)) / 2}
-                              fill={circleFill}
-                              stroke={segment.color}
-                              strokeWidth={bar.style.stroke} />}
-                            {showBarValues && (<text
-                              {...styles.barLabel}
-                              x={segment.x + segment.width + 4}
-                              y={bar.height / 2}
-                              dy={'.35em'}
-                            >
-                             {xAxis.format(segment.value)}
-                            </text>)}
-                          </g>
-                        ))
+                        bar.segments.map((segment, i) => {
+                          const valueTextStartAnchor = (
+                            (segment.value >= 0 && last(bar.segments, i)) ||
+                            (segment.value < 0 && i !== 0)
+                          )
+
+                          return (
+                            <g key={`seg${i}`} transform={`translate(0,${bar.y})`}>
+                              <rect x={segment.x} fill={segment.color} width={segment.width} height={bar.height} />
+                              {isLollipop && confidence &&
+                                <rect
+                                  rx={bar.style.popHeight / 2} ry={bar.style.popHeight / 2}
+                                  x={x(segment.datum[`confidence${confidence}_lower`])}
+                                  y={(bar.height / 2) - (bar.style.popHeight / 2)}
+                                  width={x(segment.datum[`confidence${confidence}_upper`]) - x(segment.datum[`confidence${confidence}_lower`])}
+                                  height={bar.style.popHeight}
+                                  fill={segment.color}
+                                  fillOpacity='0.3' />
+                              }
+                              {isLollipop && <circle
+                                cx={segment.x + segment.width}
+                                cy={bar.height / 2}
+                                r={Math.floor(bar.style.popHeight - (bar.style.stroke / 2)) / 2}
+                                fill={circleFill}
+                                stroke={segment.color}
+                                strokeWidth={bar.style.stroke} />}
+                              {showBarValues && (<text
+                                {...styles.barLabel}
+                                x={valueTextStartAnchor
+                                  ? segment.x + segment.width + 4
+                                  : segment.x + (segment.value >= 0 ? segment.width : 0) - 4}
+                                textAnchor={valueTextStartAnchor
+                                  ? 'start'
+                                  : 'end'}
+                                y={bar.height / 2}
+                                dy='.35em'
+                              >
+                               {xAxis.format(segment.value)}
+                              </text>)}
+                            </g>
+                          )
+                        })
                       }
                     </g>
                   ))
                 }
                 <g transform={`translate(0,${group.groupHeight + AXIS_BOTTOM_PADDING})`}>
-                  {X_TICK_HEIGHT > 0 && 
-                    <line {...styles.axisXLine} x2={columnWidth} />}
                   {
                     xTicks.map((tick, i) => {
                       let textAnchor = 'middle'
@@ -339,12 +365,22 @@ const BarChart = (props) => {
                       if (i === 0) {
                         textAnchor = 'start'
                       }
+                      const highlightTick = tick === 0 && highlightZero
                       return (
-                        <g key={tick} transform={`translate(${x(tick)},0)`}>
-                          <line {...styles.axisXLongLine} y1={-AXIS_BOTTOM_PADDING - group.groupHeight + group.firstBarY} y2={-AXIS_BOTTOM_PADDING} />
-                          {X_TICK_HEIGHT > 0 &&
-                            <line {...styles.axisXLine} y2={X_TICK_HEIGHT} />}
-                          <text {...styles.axisLabel} y={X_TICK_HEIGHT + X_TICK_TEXT_MARGIN} dy='0.6em' textAnchor={textAnchor}>
+                        <g key={`tick${tick}`} transform={`translate(${x(tick)},0)`}>
+                          <line {...styles.axisXLine}
+                            y1={-AXIS_BOTTOM_PADDING - group.groupHeight + group.firstBarY}
+                            y2={-AXIS_BOTTOM_PADDING}
+                            style={{
+                              stroke: highlightTick ? baseLineColor : undefined
+                            }} />
+                          <text {...styles.axisLabel}
+                            y={X_TICK_TEXT_MARGIN}
+                            dy='0.6em'
+                            textAnchor={textAnchor}
+                            style={{
+                              fill: highlightTick ? colors.text : undefined
+                            }}>
                             {xAxis.axisFormat(tick, isLast)}
                           </text>
                         </g>

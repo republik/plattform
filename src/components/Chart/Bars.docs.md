@@ -111,3 +111,74 @@ Sexuelle Belästigung,sehr stark,0.093
   <Editorial.Note>Quelle: Deutscher Viktimisierungssurvey 2012.</Editorial.Note>
 </div>
 ```
+
+
+## Negative Values
+
+```react
+<div>
+  <ChartTitle>Wie positiv ist Alkoholkonsum?</ChartTitle>
+  <ChartLead>Konstruktivität durch scharfe, negative Kritik</ChartLead>
+  <CsvChart t={t}
+    config={{
+      "type": "Bar",
+      "numberFormat": ".0%",
+      "y": "alk",
+      "showBarValues": true,
+      "domain": [-1, 0],
+      "sort": "none"
+    }}
+    values={`
+alk,value
+Bier,-0.05
+Wein<sub>en</sub>,-0.13
+Vodka,-0.4
+Absinth,-0.8
+    `.trim()} />
+</div>
+```
+
+### Hack The System
+
+```react
+<div>
+  <ChartTitle>Ein undurchsichtiger durchsichtiger Hack</ChartTitle>
+  <ChartLead>in Prozent</ChartLead>
+  <CsvChart t={t}
+    config={{
+      "type": "Bar",
+      "numberFormat": ".0%",
+      "y": "country",
+      "showBarValues": true,
+      "color": "color",
+      "colorSort": "none",
+      "colorRange": ["transparent","rgb(8,48,107)"],
+      "numberFormat": ".1%",
+      "sort": "none"
+    }}
+    values={`
+country,color,value
+Neuseeland,t,0.019
+Neuseeland,o,0.089
+Dänemark,o,-0.003
+Dänemark,o,0.061
+Grossbritannien,t,0.03
+Grossbritannien,o,0.065
+Vereinigte Staaten,t,0.01
+Vereinigte Staaten,o,0.055
+Eurozone,o,-0.03
+Eurozone,o,0.051
+Schweden,o,-0.008
+Schweden,o,0.045
+Kanada,t,0.04
+Kanada,o,0.051
+Tschechische Republik,t,0.03
+Tschechische Republik,o,0.042
+Schweiz,o,-0.009
+Schweiz,o,0.03
+    `.trim()} />
+  <Editorial.Note>Quelle: Simon Schmid. Denkt daran, probiert das nicht zu Hause aus.</Editorial.Note>
+</div>
+```
+
+

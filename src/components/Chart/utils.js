@@ -134,7 +134,13 @@ export const last = (array, index) => array.length - 1 === index
 export const calculateAxis = (numberFormat, t, domain, unit = '') => {
   const [min, max] = domain
   const step = (max - min) / 2
-  const ticks = [min, min >= 0 ? min + step : 0, max]
+  const ticks = [
+    min,
+    min < 0 && max > 0
+      ? 0
+      : min + step,
+    max
+  ]
   const format = swissNumbers.format
 
   const specifier = formatSpecifier(numberFormat)
