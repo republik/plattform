@@ -40,7 +40,7 @@ module.exports = (req, res, next) => {
         }
 
         res.write(space)
-        debug('sent keepalive')
+        debug('keepalive sent')
 
         // Wait another RES_KEEPALIVE_MS
         waitAndSend()
