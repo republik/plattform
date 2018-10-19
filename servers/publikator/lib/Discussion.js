@@ -1,4 +1,4 @@
-const { upsert: upsertDiscussion } = require('@orbiting/backend-modules-discussions')
+const { Discussion: { upsert: upsertDiscussion } } = require('@orbiting/backend-modules-discussions')
 
 const upsert = async (repoMeta, docMeta, context) => {
   const { pgdb } = context
