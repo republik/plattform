@@ -74,22 +74,26 @@ class Comment extends Component {
     this.commentBodyRef = ref => { this.commentBody = ref }
 
     this.measure = () => {
+      let measured = {}
       if (this.commentBody) {
         const rect = this.commentBody.getBoundingClientRect()
-        this.commentBodyHeight = rect.height
-        this.isMobile = window.innerWidth < mBreakPoint
+        measured = {
+          commentBodyHeight: rect.height,
+          isMobile: window.innerWidth < mBreakPoint
+        }
       }
+      return measured
     }
 
     this.maybeCollapse = () => {
       if (!this.props.onShouldCollapse) {
         return
       }
-      this.measure()
+      const { commentBodyHeight, isMobile } = this.measure()
       if (
-        this.commentBodyHeight &&
-        this.commentBodyHeight >
-          (this.isMobile ? COLLAPSED_HEIGHT.mobile : COLLAPSED_HEIGHT.desktop) +
+        commentBodyHeight &&
+        commentBodyHeight >
+          (isMobile ? COLLAPSED_HEIGHT.mobile : COLLAPSED_HEIGHT.desktop) +
             COLLAPSED_HEIGHT.threshold
       ) {
         this.props.onShouldCollapse && this.props.onShouldCollapse()
