@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-17T11:46:59.317Z",
+  "updated": "2018-10-22T14:21:38.726Z",
   "title": "live",
   "data": [
     {
@@ -64,7 +64,7 @@
     },
     {
       "key": "styleguide/CommentActions/expand",
-      "value": "Alles lesen"
+      "value": "Mehr"
     },
     {
       "key": "styleguide/CommentActions/collapse",

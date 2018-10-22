@@ -1,7 +1,9 @@
 import React from 'react'
 import {css} from 'glamor'
-import MdKeyboardArrowDown from 'react-icons/lib/md/keyboard-arrow-down'
-import MdKeyboardArrowUp from 'react-icons/lib/md/keyboard-arrow-up'
+import ExpandIcon from 'react-icons/lib/md/keyboard-arrow-down'
+import CollapseIcon from 'react-icons/lib/md/keyboard-arrow-up'
+import MdKeyboardArrowDown from 'react-icons/lib/md/arrow-drop-down'
+import MdKeyboardArrowUp from 'react-icons/lib/md/arrow-drop-up'
 // options: speaker-notes-off, block, clear, visibility-off, remove-circle
 import UnpublishIcon from 'react-icons/lib/md/visibility-off'
 import EditIcon from 'react-icons/lib/md/edit'
@@ -13,8 +15,9 @@ import { Label, linkRule } from '../Typography'
 import { ellipsize } from '../../lib/styleMixins'
 
 const config = {
-  right: 26,
-  left: 20
+  right: 36,
+  left: 20,
+  center: 30
 }
 
 const buttonStyle = {
@@ -55,11 +58,11 @@ const styles = {
   vote: css({
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginLeft: 4,
-    [mUp]: {
-      marginLeft: 10
-    }
+    alignItems: 'center'
+  }),
+  voteDivider: css({
+    color: colors.disabled,
+    padding: '0 2px'
   }),
   iconButton: css({
     ...buttonStyle,
@@ -74,11 +77,16 @@ const styles = {
     }
   }),
   rightButton: css({
+    display: 'flex',
+    justifyContent: 'center',
     height: `${config.right}px`,
-    width: `${config.right}px`,
+    width: '24px',
     fontSize: `${config.right}px`,
     lineHeight: `${config.right}px`,
-    margin: 0
+    margin: 0,
+    '& > svg': {
+      flexShrink: 0
+    }
   }),
   leftButton: css({
     height: `${config.left}px`,
@@ -86,13 +94,24 @@ const styles = {
     fontSize: `${config.left}px`,
     lineHeight: `${config.left}px`
   }),
-  collapsed: css({
+  collapsable: css({
     borderTop: `1px solid ${colors.divider}`,
     paddingTop: '6px'
   }),
-  collapseButton: css({
-    ...ellipsize,
-    ...buttonStyle
+  centerButton: css({
+    ...buttonStyle,
+    height: `${config.center}px`,
+    display: 'flex',
+    alignItems: 'center',
+    flexShrink: 0
+  }),
+  centerLabel: css({
+    color: colors.text,
+    display: 'none',
+    [mUp]: {
+      display: 'block',
+      lineHeight: `${config.center}px`
+    }
   })
 }
 
@@ -112,8 +131,10 @@ export const CommentActions = ({
   onToggleCollapsed
 }) => {
   const collapsable = collapsed !== undefined
+  const CollapsableIcon = collapsed ? ExpandIcon : CollapseIcon
+  const collapseLabel = t(`styleguide/CommentActions/${ collapsed ? 'expand' : 'collapse'}`)
   return (
-    <div {...styles.root} {...(collapsable && collapsed && !highlighted ? styles.collapsed : undefined)}>
+    <div {...styles.root} {...(collapsable && !highlighted ? styles.collapsable : undefined)}>
       <div {...styles.leftActions}>
       {onAnswer && <IconButton type='left' onClick={replyBlockedMsg ? null : onAnswer}
         title={replyBlockedMsg || t('styleguide/CommentActions/answer')}>
@@ -133,9 +154,10 @@ export const CommentActions = ({
       </IconButton>}
       </div>
       {collapsable && (
-        <button {...styles.collapseButton} onClick={onToggleCollapsed}>
+        <button {...styles.centerButton} onClick={onToggleCollapsed} title={collapseLabel}>
+          <CollapsableIcon size={config.center} />
           <Label>
-            <span {...linkRule}>{t(`styleguide/CommentActions/${ collapsed ? 'expand' : 'collapse'}`)}</span>
+            <span {...styles.centerLabel}>{collapseLabel}</span>
           </Label>
         </button>
         )
@@ -143,13 +165,14 @@ export const CommentActions = ({
       <div {...styles.rightActions}>
         <div {...styles.votes}>
           <div {...styles.vote}>
-            <Label title={t.pluralize('styleguide/CommentActions/upvote/count', {count: upVotes})}>{upVotes}</Label>
             <IconButton onClick={onUpvote} title={t('styleguide/CommentActions/upvote')}>
               <MdKeyboardArrowUp />
             </IconButton>
+            <Label title={t.pluralize('styleguide/CommentActions/upvote/count', {count: upVotes})}>{upVotes}</Label>
           </div>
+          <div {...styles.voteDivider}>/</div>
           <div {...styles.vote}>
-            <Label title={t.pluralize('styleguide/CommentActions/downvote/count', {count: downVotes})}>{downVotes}</Label>
+          <Label title={t.pluralize('styleguide/CommentActions/downvote/count', {count: downVotes})}>{downVotes}</Label>
             <IconButton onClick={onDownvote} title={t('styleguide/CommentActions/downvote')}>
               <MdKeyboardArrowDown />
             </IconButton>
