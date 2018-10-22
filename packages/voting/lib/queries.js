@@ -12,6 +12,12 @@ const tableMapping = {
     foreignKey: 'electionId',
     ballotsTable: 'electionBallots',
     allowedMembershipsTable: 'electionMembershipRequirements'
+  },
+  questionnaires: {
+    name: 'questionnaires',
+    foreignKey: 'questionnaireId',
+    ballotsTable: 'answers',
+    allowedMembershipsTable: 'questionnaireMembershipRequirements'
   }
 }
 

@@ -10,6 +10,9 @@ type queries {
 
   elections: [Election!]!
   election(slug: String!): Election
+
+  questionnaires: [Questionnaire!]!
+  questionnaire(slug: String!): Questionnaire
 }
 
 type mutations {
@@ -26,5 +29,11 @@ type mutations {
     electionId: ID!
     candidacyIds: [ID!]!
   ): Election!
+
+
+  submitAnswer(answer: AnswerInput!): Questionnaire!
+
+  submitQuestionnaire(id: ID!): Questionnaire!
+  cancelQuestionnaire(id: ID!): Questionnaire!
 }
 `
