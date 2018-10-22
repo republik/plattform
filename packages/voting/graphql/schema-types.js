@@ -198,34 +198,11 @@ type Questionnaire {
   questions: [Question!]!
 }
 
-#enum QuestionType {
-#  text
-#  multipleChoice
-#  singleChoice
-#  discreteRange
-#  continouesRange
-#  article
-#  number
-#}
-
 type Question {
   id: ID!
+  questionnaire: Questionnaire!
   order: Int!
   text: String
-
-  questionnaire: Questionnaire!
-
-  #type: QuestionType!
-
-  # no options for text and article
-  #options: [QuestionOption!]!
-  # text: null
-  # article: null
-  # number: null
-  # range: [ { label: "nie", value: -1 }, { label: "regelmässig", value: 0 }, { label: "immer", value: 1 } ]
-  # m-/s-choice: [ { label: "schlecht", id: "uuid-yadi-yadi" }, { label: "gut", id: "another-uuid-ddd" } ]
-  #options: JSON
-
   type: QuestionType!
 
   userAnswer: Answer
@@ -247,7 +224,7 @@ type QuestionTypeText implements QuestionTypeInterface {
   type: QuestionTypeEnum!
   maxLength: Int
 }
-type QuestionTypeArticle {
+type QuestionTypeArticle implements QuestionTypeInterface {
   type: QuestionTypeEnum!
 }
 
@@ -255,7 +232,7 @@ enum QuestionTypeRangeKind {
   discrete
   continous
 }
-type QuestionTypeRange {
+type QuestionTypeRange implements QuestionTypeInterface {
   type: QuestionTypeEnum!
   kind: QuestionTypeRangeKind!
   ticks: [QuestionTypeRangeTick!]!
@@ -265,7 +242,7 @@ type QuestionTypeRangeTick {
   value: Int!
 }
 
-type QuestionTypeChoice {
+type QuestionTypeChoice implements QuestionTypeInterface {
   type: QuestionTypeEnum!
 
   # 1: single select
