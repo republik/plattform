@@ -11,8 +11,7 @@ import ReplyIcon from 'react-icons/lib/md/reply'
 import ShareIcon from 'react-icons/lib/md/share'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
-import { Label, linkRule } from '../Typography'
-import { ellipsize } from '../../lib/styleMixins'
+import { Label } from '../Typography'
 
 const config = {
   right: 36,
