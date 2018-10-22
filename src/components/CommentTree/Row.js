@@ -240,7 +240,11 @@ class RowState extends PureComponent {
     }
   }
 
-
+  componentWillReceiveProps (nextProps) {
+    if (!!nextProps.highlighted) {
+      this.setState({collapsed: false})
+    }
+  }
 
   render () {
     const {
