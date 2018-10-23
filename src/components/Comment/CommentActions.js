@@ -1,22 +1,19 @@
 import React from 'react'
 import {css} from 'glamor'
-import ExpandIcon from 'react-icons/lib/md/keyboard-arrow-down'
-import CollapseIcon from 'react-icons/lib/md/keyboard-arrow-up'
-import MdKeyboardArrowDown from 'react-icons/lib/md/arrow-drop-down'
-import MdKeyboardArrowUp from 'react-icons/lib/md/arrow-drop-up'
+import MdKeyboardArrowDown from 'react-icons/lib/md/keyboard-arrow-down'
+import MdKeyboardArrowUp from 'react-icons/lib/md/keyboard-arrow-up'
 // options: speaker-notes-off, block, clear, visibility-off, remove-circle
 import UnpublishIcon from 'react-icons/lib/md/visibility-off'
 import EditIcon from 'react-icons/lib/md/edit'
 import ReplyIcon from 'react-icons/lib/md/reply'
 import ShareIcon from 'react-icons/lib/md/share'
 import colors from '../../theme/colors'
-import { mUp } from '../../theme/mediaQueries'
+import { ellipsize } from '../../lib/styleMixins'
 import { Label } from '../Typography'
 
 const config = {
-  right: 36,
-  left: 20,
-  center: 30
+  right: 26,
+  left: 20
 }
 
 const buttonStyle = {
@@ -99,18 +96,11 @@ const styles = {
   }),
   centerButton: css({
     ...buttonStyle,
-    height: `${config.center}px`,
-    display: 'flex',
-    alignItems: 'center',
-    flexShrink: 0
+    ...ellipsize,
+    flex: '1 0 20px'
   }),
   centerLabel: css({
-    color: colors.text,
-    display: 'none',
-    [mUp]: {
-      display: 'block',
-      lineHeight: `${config.center}px`
-    }
+    color: colors.primary
   })
 }
 
@@ -130,7 +120,6 @@ export const CommentActions = ({
   onToggleCollapsed
 }) => {
   const collapsable = collapsed !== undefined
-  const CollapsableIcon = collapsed ? ExpandIcon : CollapseIcon
   const collapseLabel = t(`styleguide/CommentActions/${ collapsed ? 'expand' : 'collapse'}`)
   return (
     <div {...styles.root} {...(collapsable && !highlighted ? styles.collapsable : undefined)}>
@@ -154,7 +143,6 @@ export const CommentActions = ({
       </div>
       {collapsable && (
         <button {...styles.centerButton} onClick={onToggleCollapsed} title={collapseLabel}>
-          <CollapsableIcon size={config.center} />
           <Label>
             <span {...styles.centerLabel}>{collapseLabel}</span>
           </Label>
