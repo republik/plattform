@@ -2,6 +2,7 @@ const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const {
   findById,
   getCandidacies,
+  ensureOpeningHours,
   ensureReadyToSubmit
 } = require('../../../lib/Election')
 
@@ -12,6 +13,7 @@ module.exports = async (_, { electionId, candidacyIds }, { pgdb, user: me, t, re
   try {
     const now = new Date()
     const election = await findById(electionId, pgdb)
+    await ensureOpeningHours(election, me.id, now, transaction, t)
     await ensureReadyToSubmit(election, me.id, now, transaction, t)
 
     // check legitimacy of candidacyIds
