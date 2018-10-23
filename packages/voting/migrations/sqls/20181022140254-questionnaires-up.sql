@@ -75,7 +75,6 @@ CREATE INDEX IF NOT EXISTS "questionnaire_membership_requirements_membership_typ
 
 CREATE INDEX IF NOT EXISTS "question_questionnaire_id_idx" ON "questions"("questionnaireId");
 CREATE INDEX IF NOT EXISTS "question_type_idx" ON "questions"("type");
-CREATE INDEX IF NOT EXISTS "question_type_payload_idx" ON "questions" using GIN ("typePayload" gin_trgm_ops);
 
 CREATE INDEX IF NOT EXISTS "questionnaire_submissions_questionnaire_id_idx" ON "questionnaireSubmissions"("questionnaireId");
 CREATE INDEX IF NOT EXISTS "questionnaire_submissions_user_id_idx" ON "questionnaireSubmissions"("userId");
@@ -83,5 +82,5 @@ CREATE INDEX IF NOT EXISTS "questionnaire_submissions_user_id_idx" ON "questionn
 CREATE INDEX IF NOT EXISTS "answer_questionnaire_id_idx" ON "answers"("questionnaireId");
 CREATE INDEX IF NOT EXISTS "answer_question_id_idx" ON "answers"("questionId");
 CREATE INDEX IF NOT EXISTS "answer_user_id_idx" ON "answers"("userId");
-CREATE INDEX IF NOT EXISTS "answer_payload_idx" ON "answers" using GIN ("payload" gin_trgm_ops);
+CREATE INDEX IF NOT EXISTS "answer_payload_value_idx" ON "answers"(("payload"->>'value'));
 
