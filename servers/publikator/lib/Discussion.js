@@ -6,7 +6,7 @@ const upsert = async (repoMeta, docMeta, context) => {
   const settings = {
     title: docMeta.title,
     documentPath: docMeta.path,
-    collapsable: docMeta.collapsable !== undefined ? docMeta.collapsable : false,
+    collapsable: !!docMeta.collapsable,
     ...docMeta.commentsMaxLength
       ? { maxLength: docMeta.commentsMaxLength }
       : { },
