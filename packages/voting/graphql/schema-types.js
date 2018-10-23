@@ -214,7 +214,6 @@ enum QuestionTypeEnum {
   Choice
   Range
   Article
-  Format
 }
 interface QuestionTypeInterface {
   type: QuestionTypeEnum!
@@ -245,8 +244,9 @@ type QuestionTypeRangeTick {
 type QuestionTypeChoice implements QuestionTypeInterface {
   type: QuestionTypeEnum!
 
-  # 1: single select
-  # >1: multi select
+  # 1: single-select
+  # >1: multi-select (max: n)
+  # 0: multi-select (infinite)
   cardinality: Int!
 
   options: [QuestionTypeChoiceOption!]!
@@ -267,13 +267,14 @@ input AnswerInput {
   # { value: [
   #   { id: "uuid-v4-bla-bla" },
   #   { id: "uuid-v4-bl2-bl2" },
-  # ] }
+  # ] } // choice
   payload: JSON!
 }
 
 type Answer {
   id: ID!
   payload: JSON!
+  question: Question!
 }
 
 `

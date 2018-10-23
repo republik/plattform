@@ -20,7 +20,7 @@ CREATE TABLE "questionnaireMembershipRequirements" (
 
 CREATE DOMAIN question_type AS TEXT
   CHECK(
-    VALUE IN ('Text', 'Choice', 'Range', 'Article', 'Format')
+    VALUE IN ('Text', 'Choice', 'Range', 'Article')
   );
 
 CREATE TABLE "questions" (
@@ -31,5 +31,40 @@ CREATE TABLE "questions" (
   "type"        question_type not null,
   "typePayload" jsonb,
   "createdAt"   timestamptz default now(),
-  "updatedAt"   timestamptz default now()
+  "updatedAt"   timestamptz default now(),
+  unique("questionnaireId", "order")
 );
+
+CREATE TABLE "questionnaireSubmissions" (
+  "id"            uuid primary key not null default uuid_generate_v4(),
+  "questionnaireId" uuid NOT NULL REFERENCES "questionnaires"(id) ON UPDATE cascade,
+  "userId"        uuid NOT NULL REFERENCES "users" ON UPDATE CASCADE,
+  "createdAt"     timestamptz NOT NULL DEFAULT now(),
+  "updatedAt"     timestamptz NOT NULL DEFAULT now(),
+  unique("questionnaireId", "userId")
+);
+
+CREATE TABLE "answers" (
+  "id"          uuid primary key not null default uuid_generate_v4(),
+  "questionnaireId" uuid NOT NULL REFERENCES "questionnaires"(id) ON UPDATE cascade ON DELETE cascade,
+  "questionId"  uuid NOT NULL REFERENCES "questions"(id) ON UPDATE cascade,
+  "userId"      uuid NOT NULL REFERENCES "users" ON UPDATE CASCADE,
+  "payload"     jsonb not null,
+  "createdAt"   timestamptz default now(),
+  "updatedAt"   timestamptz default now(),
+  unique("questionId", "userId")
+);
+
+CREATE FUNCTION check_answer_trg() RETURNS trigger AS $$
+BEGIN
+  IF (SELECT "questionnaireId" FROM "questions" WHERE id = NEW."questionId") != NEW."questionnaireId" THEN
+    RAISE EXCEPTION 'PSQL EXCEPTION: claimed questionnaireId != question.questionnaireId';
+  END IF;
+  RETURN NEW;
+END
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER check_answer
+BEFORE INSERT ON "answers"
+FOR EACH ROW
+EXECUTE PROCEDURE check_answer_trg();

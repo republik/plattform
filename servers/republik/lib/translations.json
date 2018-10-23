@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-16T11:38:05.120Z",
+  "updated": "2018-10-23T17:05:20.563Z",
   "title": "live",
   "data": [
     {
@@ -605,6 +605,62 @@
     {
       "key": "api/voting/noEmptyBallots",
       "value": "Diese Abstimmung erlaubt keine leeren Eingaben."
+    },
+    {
+      "key": "api/questionnaire/404",
+      "value": "Die Umfrage konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/questionnaire/question/404",
+      "value": "Die Frage konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/questionnaire/question/type/404",
+      "value": "Dieser Fragetyp ({type}) wird noch nicht unterstützt."
+    },
+    {
+      "key": "api/questionnaire/notEligible",
+      "value": "Sie sind leider nicht berechtigt an der Umfrage teilzunehmen."
+    },
+    {
+      "key": "api/questionnaire/alreadySubmitted",
+      "value": "Sie haben die Umfrage bereits abgeschlossen."
+    },
+    {
+      "key": "api/questionnaire/tooEarly",
+      "value": "Die Umfrage ist noch nicht eröffnet."
+    },
+    {
+      "key": "api/questionnaire/tooLate",
+      "value": "Die Umfrage ist bereits geschlossen."
+    },
+    {
+      "key": "api/questionnaire/answer/empty",
+      "value": "Leere Antworten sind nicht akzeptiert."
+    },
+    {
+      "key": "api/questionnaire/answer/wrongType",
+      "value": "Das Format der Antwort entspricht nicht dem der Frage."
+    },
+    {
+      "key": "api/questionnaire/answer/outOfRange",
+      "value": "Die Anwort liegt ausserhalb des gefragten Bereichs"
+    },
+    {
+      "key": "api/questionnaire/answer/Choice/tooMany",
+      "value": "Zu viele Möglichkeiten ausgewählt. Bitte beschränken Sie sich auf {max}."
+    },
+    {
+      "key": "api/questionnaire/answer/Choice/value/404",
+      "value": "Die gewählte Option konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/questionnaire/answer/Document/404",
+      "value": "Das gewählte Dokument konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/questionnaire/question/type/404",
+      "value": "Der Fragetyp existiert nicht."
     }
   ]
 }
