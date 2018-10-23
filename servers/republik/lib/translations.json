@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-23T17:05:20.563Z",
+  "updated": "2018-10-23T18:29:39.601Z",
   "title": "live",
   "data": [
     {
@@ -657,6 +657,10 @@
     {
       "key": "api/questionnaire/answer/Document/404",
       "value": "Das gewählte Dokument konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/questionnaire/answer/Document/wrongTemplate",
+      "value": "Das gewählte Dokument ist nicht vom gewünschten template ({template}) ."
     },
     {
       "key": "api/questionnaire/question/type/404",

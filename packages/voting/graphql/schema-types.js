@@ -208,12 +208,12 @@ type Question {
   userAnswer: Answer
 }
 
-union QuestionType = QuestionTypeText | QuestionTypeChoice | QuestionTypeRange | QuestionTypeArticle
+union QuestionType = QuestionTypeText | QuestionTypeChoice | QuestionTypeRange | QuestionTypeDocument
 enum QuestionTypeEnum {
   Text
   Choice
   Range
-  Article
+  Document
 }
 interface QuestionTypeInterface {
   type: QuestionTypeEnum!
@@ -223,8 +223,10 @@ type QuestionTypeText implements QuestionTypeInterface {
   type: QuestionTypeEnum!
   maxLength: Int
 }
-type QuestionTypeArticle implements QuestionTypeInterface {
+
+type QuestionTypeDocument implements QuestionTypeInterface {
   type: QuestionTypeEnum!
+  template: String
 }
 
 enum QuestionTypeRangeKind {

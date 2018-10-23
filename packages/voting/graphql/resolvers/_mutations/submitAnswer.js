@@ -66,14 +66,21 @@ module.exports = async (_, { answer: { questionId, payload } }, context) => {
           }
         }
       }
-    } else if (question.type === 'Article') {
+    } else if (question.type === 'Document') {
       if (typeof value !== 'string') {
         throw new Error(t('api/questionnaire/answer/wrongType'))
       }
       if (value.length === 0) {
         emptyAnswer = true
-      } else if (!(await getDocument(null, { path: value }, context))) {
-        throw new Error(t('api/questionnaire/answer/Document/404', { path: value }))
+      } else {
+        const doc = await getDocument(null, { path: value }, context)
+        if (!doc) {
+          throw new Error(t('api/questionnaire/answer/Document/404', { path: value }))
+        }
+        const requestedTemplate = question.typePayload.template
+        if (requestedTemplate && requestedTemplate !== doc.meta.template) {
+          throw new Error(t('api/questionnaire/answer/Document/wrongTemplate', { template: requestedTemplate }))
+        }
       }
     } else {
       throw new Error(t('api/questionnaire/question/type/404', { type: question.type }))

@@ -20,7 +20,7 @@ CREATE TABLE "questionnaireMembershipRequirements" (
 
 CREATE DOMAIN question_type AS TEXT
   CHECK(
-    VALUE IN ('Text', 'Choice', 'Range', 'Article')
+    VALUE IN ('Text', 'Choice', 'Range', 'Document')
   );
 
 CREATE TABLE "questions" (
