@@ -111,7 +111,6 @@ export default ({ rule, subModules, TYPE }) => {
 
   const newDocument = ({ title, template }, me) =>
     serializer.deserialize(parse(`---
-
 template: ${template}
 ---
 ${titleModule ? `
