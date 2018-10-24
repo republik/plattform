@@ -31,7 +31,7 @@ module.exports = {
     return userSubmitDate(entity.id, me && me.id, pgdb)
   },
   async turnout (voting, args, { pgdb }) {
-    if (voting.result && voting.result.turnout) { // cached by countVoting
+    if (voting.result && voting.result.turnout) { // after counting
       const { turnout } = voting.result
       return {
         ...turnout,

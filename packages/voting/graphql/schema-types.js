@@ -196,6 +196,13 @@ type Questionnaire {
   allowedRoles: [String!]
 
   questions: [Question!]!
+
+  turnout: QuestionnaireTurnout
+}
+
+type QuestionnaireTurnout {
+  eligible: Int!
+  submitted: Int!
 }
 
 type Question {

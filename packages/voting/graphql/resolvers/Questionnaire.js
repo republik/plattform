@@ -21,5 +21,11 @@ module.exports = {
       return getQuestionsWithAnswers(entity, me.id, pgdb)
     }
     return getQuestions(entity, pgdb)
+  },
+  async turnout (questionnaire, args, { pgdb }) {
+    if (questionnaire.result && questionnaire.result.turnout) { // after counting
+      return questionnaire.result.turnout
+    }
+    return { entity: questionnaire }
   }
 }
