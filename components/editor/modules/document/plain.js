@@ -6,7 +6,7 @@ import { swissTime } from '../../../../lib/utils/format'
 import slugify from '../../../../lib/utils/slug'
 import MarkdownSerializer from 'slate-mdast-serializer'
 
-const pubDateFormat = swissTime.format('%-d. %B %Y')
+const pubDateFormat = swissTime.format('%d.%m.%Y')
 
 export default ({ rule, subModules, TYPE }) => {
   const centerModule = subModules.find(m => m.name === 'center')
@@ -109,8 +109,9 @@ export default ({ rule, subModules, TYPE }) => {
     ]
   })
 
-  const newDocument = ({ title, template }, me) => serializer.deserialize(parse(
-    `---
+  const newDocument = ({ title, template }, me) =>
+    serializer.deserialize(parse(`---
+
 template: ${template}
 ---
 ${titleModule ? `
@@ -120,7 +121,7 @@ ${titleModule ? `
 
 Lead
 
-Von ${me ? `[${me.name}](/~${me.id})` : '[Autor](<>)'} (Text) und Kollaborator, ${pubDateFormat(new Date())}
+Von ${me ? `[${me.name}](/~${me.id})` : '[Autor](<>)'}, ${pubDateFormat(new Date())}
 
 <hr/></section>
 
@@ -130,8 +131,7 @@ Von ${me ? `[${me.name}](/~${me.id})` : '[Autor](<>)'} (Text) und Kollaborator, 
 ${titleModule ? 'Text' : title}
 
 <hr/></section>
-`
-  ))
+`))
 
   const Container = rule.component
 
