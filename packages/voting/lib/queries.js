@@ -76,14 +76,14 @@ const buildQueries = (tableName) => {
 
   const userSubmitDate = async (id, userId, pgdb) => {
     if (!userId) {
-      return false
+      return null
     }
     const ballot = await pgdb.public[table.ballotsTable].findFirst({
       userId: userId,
       [table.foreignKey]: id
     })
     if (!ballot) {
-      return
+      return null
     }
     return ballot.updatedAt
   }

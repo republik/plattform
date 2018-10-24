@@ -1,5 +1,3 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
-
 const {
   isEligible,
   userHasSubmitted,
@@ -13,9 +11,6 @@ module.exports = {
     return pgdb.public.discussions.findOne({ id: election.discussionId })
   },
   async candidacies (election, args, { user: me, pgdb }) {
-    if (!Roles.userIsInRoles(me, ['admin', 'supporter', 'associate'])) {
-      return []
-    }
     return getCandidacies(election, pgdb)
   },
   async userIsEligible (entity, args, { pgdb, user: me }) {

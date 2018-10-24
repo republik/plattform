@@ -140,8 +140,8 @@ type Candidacy {
   election: Election!
   comment: Comment!
 
-  yearOfBirth: Int!
-  city: String!
+  yearOfBirth: Int
+  city: String
 }
 
 type ElectionTurnout {
