@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
 import { mUp } from '../../theme/mediaQueries'
-import Center, {
+import {
   breakoutStyles,
   MAX_WIDTH,
   PADDING,
