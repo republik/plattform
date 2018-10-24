@@ -17,7 +17,7 @@ export default withData(props => {
   return (
     <App>
       <Body>
-        <Header />
+        <Header search={props.url.query.search} />
         <Content id="content">
           <PostfinancePayments
             params={props.url.query}

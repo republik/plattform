@@ -17,7 +17,7 @@ export default withData(props => {
   return (
     <App>
       <Body>
-        <Header />
+        <Header search={props.url.query.search} />
         <Content id="content">
           <Users
             params={props.url.query}
