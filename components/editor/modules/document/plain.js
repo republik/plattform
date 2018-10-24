@@ -8,7 +8,7 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 
 const pubDateFormat = swissTime.format('%d.%m.%Y')
 
-export default ({rule, subModules, TYPE}) => {
+export default ({ rule, subModules, TYPE }) => {
   const centerModule = subModules.find(m => m.name === 'center')
   if (!centerModule) {
     throw new Error('Missing center submodule')
@@ -105,8 +105,8 @@ export default ({rule, subModules, TYPE}) => {
     ]
   })
 
-  const newDocument = ({title, template}, me) => serializer.deserialize(parse(
-`---
+  const newDocument = ({ title, template }, me) =>
+    serializer.deserialize(parse(`---
 template: ${template}
 ---
 ${titleModule ? `
@@ -126,8 +126,7 @@ Von ${me ? `[${me.name}](/~${me.id})` : '[Autor](<>)'} (Text) und Kollaborator, 
 ${titleModule ? 'Text' : title}
 
 <hr/></section>
-`
-  ))
+`))
 
   const Container = rule.component
 
@@ -140,7 +139,7 @@ ${titleModule ? 'Text' : title}
     changes: {},
     plugins: [
       {
-        renderEditor: ({children, value}) => (
+        renderEditor: ({ children, value }) => (
           <Container meta={value.document.data}>{children}</Container>
         ),
         validateNode: (node) => {
@@ -180,7 +179,7 @@ ${titleModule ? 'Text' : title}
             last: {
               types: [centerModule.TYPE]
             },
-            normalize: (change, reason, {node, index, child}) => {
+            normalize: (change, reason, { node, index, child }) => {
               if (reason === 'child_required') {
                 change.insertNodeByKey(
                   node.key,
