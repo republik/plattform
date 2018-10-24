@@ -28,6 +28,7 @@ module.exports = async (_, { answer: { questionId, payload } }, context) => {
     }
 
     let emptyAnswer = false
+    let additionalPayload = null
     const { value } = payload
     if (question.type === 'Text') {
       if (typeof value !== 'string') {
@@ -83,10 +84,24 @@ module.exports = async (_, { answer: { questionId, payload } }, context) => {
         if (requestedTemplate && requestedTemplate !== doc.meta.template) {
           throw new Error(t('api/questionnaire/answer/Document/wrongTemplate', { template: requestedTemplate }))
         }
+        // save doc to payload
+        additionalPayload = {
+          document: {
+            title: doc.meta.title,
+            credits: doc.meta.credits
+          }
+        }
       }
     } else {
       throw new Error(t('api/questionnaire/question/type/404', { type: question.type }))
     }
+
+    const combinedPayload = additionalPayload
+      ? {
+        ...payload,
+        ...additionalPayload
+      }
+      : payload
 
     const findQuery = {
       questionId,
@@ -101,14 +116,14 @@ module.exports = async (_, { answer: { questionId, payload } }, context) => {
       if (answerExists) {
         await transaction.public.answers.updateOne(
           findQuery,
-          { payload }
+          { payload: combinedPayload }
         )
       } else {
         await transaction.public.answers.insert({
           questionId,
           userId: me.id,
           questionnaireId: questionnaire.id,
-          payload
+          payload: combinedPayload
         })
       }
     }
