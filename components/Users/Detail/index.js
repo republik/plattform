@@ -22,6 +22,7 @@ import RolesForm from './RolesForm'
 import PledgeOverview from './PledgeOverview'
 import MembershipOverview from './MembershipOverview'
 import EventLog from './EventLog'
+import Access from './Access'
 import Notepad from './Notepad'
 import SessionOverview from './SessionOverview'
 
@@ -189,6 +190,15 @@ class Detail extends Component {
                   Event Log
                 </TabLink>
                 <TabLink
+                  name="access"
+                  onClick={this.tabLinkHandler(
+                    'access'
+                  )}
+                  current={this.state.selectedTab}
+                >
+                  Access Grants
+                </TabLink>
+                <TabLink
                   name="sessions"
                   onClick={this.tabLinkHandler(
                     'sessions'
@@ -354,6 +364,16 @@ class Detail extends Component {
               >
                 <EventLog
                   items={props.data.user.eventLog}
+                />
+              </Tab>
+              <Tab
+                name="access"
+                current={this.state.selectedTab}
+              >
+                <Access
+                  grants={props.data.user.accessGrants}
+                  campaigns={props.data.user.accessCampaigns}
+                  revokeAccess={props.revokeAccess}
                 />
               </Tab>
               <Tab
@@ -567,6 +587,14 @@ const emailMutation = gql`
   }
 `
 
+const revokeAccessMutation = gql`
+  mutation revokeAccess(
+    $id: ID!
+  ) {
+    revokeAccess(id: $id)
+  }
+`
+
 const userQuery = gql`
   query user($id: String) {
     user(slug: $id) {
@@ -620,6 +648,58 @@ const userQuery = gql`
         renew
         createdAt
         updatedAt
+      }
+      accessGrants(withPast: true) {
+        id
+        status
+        createdAt
+        beginAt
+        endAt
+        revokedAt
+        invalidatedAt
+        grantee {
+          id
+          email
+          name
+        }
+        campaign {
+          id
+          title
+          endAt
+        }
+        events {
+          createdAt
+          event
+        }
+      }
+      accessCampaigns(withPast: true) {
+        id
+        title
+        endAt
+        slots {
+          total
+          free
+          used
+        }
+        grants(withRevoked: true) {
+          id
+          status
+          createdAt
+          beginAt
+          endAt
+          revokedAt
+          invalidatedAt
+          email
+          recipient {
+            id
+            email
+            name
+          }
+          events {
+            createdAt
+            event
+          }
+        }
       }
       pledges {
         id
@@ -981,6 +1061,28 @@ const WrappedUser = compose(
       ownProps: { params: { userId } }
     }) => ({
       cancelPledge: variables => {
+        if (mutate) {
+          return mutate({
+            variables,
+            refetchQueries: [
+              {
+                query: userQuery,
+                variables: {
+                  id: userId
+                }
+              }
+            ]
+          })
+        }
+      }
+    })
+  }),
+  graphql(revokeAccessMutation, {
+    props: ({
+      mutate,
+      ownProps: { params: { userId } }
+    }) => ({
+      revokeAccess: variables => {
         if (mutate) {
           return mutate({
             variables,
