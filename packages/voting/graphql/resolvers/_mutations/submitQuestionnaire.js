@@ -1,7 +1,6 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const {
   findById,
-  ensureOpeningHours,
   ensureReadyToSubmit
 } = require('../../../lib/Questionnaire')
 
@@ -14,7 +13,6 @@ module.exports = async (_, { id: questionnaireId }, context) => {
     const now = new Date()
 
     const questionnaire = await findById(questionnaireId, transaction)
-    await ensureOpeningHours(questionnaire, me.id, now, transaction, t)
     await ensureReadyToSubmit(questionnaire, me.id, now, transaction, t)
 
     await pgdb.public.questionnaireSubmissions.insert({

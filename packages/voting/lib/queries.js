@@ -180,7 +180,7 @@ const buildQueries = (tableName) => {
     submitted: await numSubmitted(entity.id, pgdb)
   })
 
-  const ensureOpeningHours = async (entity, userId, now = new Date(), pgdb, t) => {
+  const ensureReadyToSubmit = async (entity, userId, now = new Date(), pgdb, t) => {
     if (!entity) {
       throw new Error(t(`api/${table.translationsKey}/404`))
     }
@@ -189,12 +189,6 @@ const buildQueries = (tableName) => {
     }
     if (entity.endDate < now) {
       throw new Error(t(`api/${table.translationsKey}/tooLate`))
-    }
-  }
-
-  const ensureReadyToSubmit = async (entity, userId, now = new Date(), pgdb, t) => {
-    if (!entity) {
-      throw new Error(t(`api/${table.translationsKey}/404`))
     }
     if (!(await isEligible(userId, entity, pgdb))) {
       throw new Error(t(`api/${table.translationsKey}/notEligible`))
@@ -218,7 +212,6 @@ const buildQueries = (tableName) => {
     numEligible,
     isEligible,
     turnout,
-    ensureOpeningHours,
     ensureReadyToSubmit
   }
 }

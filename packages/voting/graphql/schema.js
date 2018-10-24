@@ -32,8 +32,8 @@ type mutations {
 
 
   submitAnswer(answer: AnswerInput!): Question!
-
+  # delete all answers
+  resetQuestionnaire(id: ID!): Questionnaire!
   submitQuestionnaire(id: ID!): Questionnaire!
-  cancelQuestionnaire(id: ID!): Questionnaire!
 }
 `

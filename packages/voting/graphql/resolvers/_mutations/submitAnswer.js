@@ -1,7 +1,6 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const {
   findById,
-  ensureOpeningHours,
   ensureReadyToSubmit
 } = require('../../../lib/Questionnaire')
 const { graphql: { resolvers: { queries: { document: getDocument } } } } = require('@orbiting/backend-modules-documents')
@@ -19,7 +18,6 @@ module.exports = async (_, { answer: { questionId, payload } }, context) => {
     }
 
     const questionnaire = await findById(question.questionnaireId, transaction)
-    await ensureOpeningHours(questionnaire, me.id, now, transaction, t)
     await ensureReadyToSubmit(questionnaire, me.id, now, transaction, t)
 
     let emptyAnswer = false
