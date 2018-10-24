@@ -116,7 +116,7 @@ ${titleModule ? `
 
 Lead
 
-Von ${me ? `[${me.name}](/~${me.id})` : '[Autor](<>)'} (Text) und Kollaborator, ${pubDateFormat(new Date())}
+Von ${me ? `[${me.name}](/~${me.id})` : '[Autor](<>)'}, ${pubDateFormat(new Date())}
 
 <hr/></section>
 
