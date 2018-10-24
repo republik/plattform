@@ -1,5 +1,5 @@
 {
-  "updated": "2018-08-09T10:04:28.835Z",
+  "updated": "2018-10-24T10:02:18.982Z",
   "title": "live",
   "data": [
     {
@@ -25,6 +25,10 @@
     {
       "key": "api/membership/claim/invalidToken",
       "value": "Ihr Gutscheincode ist leider ungültig."
+    },
+    {
+      "key": "api/membership/claim/ownerIsClaimer",
+      "value": "Sie können keinen eigenen Gutscheincode einlösen."
     },
     {
       "key": "api/membership/reduced/alreadyHas",

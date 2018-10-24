@@ -5,23 +5,39 @@ const moment = require('moment')
 module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
   ensureSignedIn(req)
 
-  // if this restriction gets removed, make sure to check if
-  // the membership doesn't already belong to the user, before
-  // making the the transfer and removing the voucherCode
-  if (await pgdb.public.memberships.count({userId: req.user.id})) {
-    throw new Error(t('api/membership/claim/alreadyHave'))
-  }
-
-  const { voucherCode } = args
+  let pledgerId
   const transaction = await pgdb.transactionBegin()
-  const now = new Date()
-  let giverId
+
   try {
-    const membership = await transaction.public.memberships.findOne({voucherCode})
+    // Throw an error if there is already an other active membership.
+    if (
+      await transaction.public.memberships.count({
+        userId: req.user.id,
+        active: true
+      })
+    ) {
+      throw new Error(t('api/membership/claim/alreadyHave'))
+    }
+
+    const { voucherCode } = args
+    const membership = await transaction.public.memberships.findOne({
+      voucherCode,
+      voucherable: true,
+      active: false
+    })
+
     if (!membership) {
       throw new Error(t('api/membership/claim/invalidToken'))
     }
-    giverId = membership.userId
+
+    // A user can not claim a membership he owns.
+    if (membership.userId === req.user.id) {
+      throw new Error(t('api/membership/claim/ownerIsClaimer'))
+    }
+
+    const now = new Date()
+
+    pledgerId = membership.userId
 
     const membershipType = await transaction.public.membershipTypes.findOne({
       id: membership.membershipTypeId
@@ -43,7 +59,10 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
 
     // generate interval
     const beginDate = moment(now)
-    const endDate = moment(beginDate).add(membershipType.intervalCount, membershipType.interval)
+    const endDate = moment(beginDate).add(
+      membershipType.intervalCount,
+      membershipType.interval
+    )
     await transaction.public.membershipPeriods.insert({
       membershipId: membership.id,
       beginDate,
@@ -58,9 +77,9 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
     throw e
   }
 
-  if (giverId) {
+  if (pledgerId) {
     try {
-      await enforceSubscriptions({ pgdb, userId: giverId })
+      await enforceSubscriptions({ pgdb, userId: pledgerId })
       await enforceSubscriptions({
         pgdb,
         userId: req.user.id,
