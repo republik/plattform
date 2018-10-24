@@ -115,7 +115,7 @@ module.exports = async (_, { answer: { questionId, payload } }, context) => {
 
     await transaction.transactionCommit()
 
-    return pgdb.public.answers.findOne(findQuery)
+    return question
   } catch (e) {
     await transaction.transactionRollback()
     throw e

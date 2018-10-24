@@ -31,7 +31,7 @@ type mutations {
   ): Election!
 
 
-  submitAnswer(answer: AnswerInput!): Answer
+  submitAnswer(answer: AnswerInput!): Question!
 
   submitQuestionnaire(id: ID!): Questionnaire!
   cancelQuestionnaire(id: ID!): Questionnaire!
