@@ -8,7 +8,7 @@ import MarkdownSerializer from 'slate-mdast-serializer'
 
 const pubDateFormat = swissTime.format('%-d. %B %Y')
 
-export default ({rule, subModules, TYPE}) => {
+export default ({ rule, subModules, TYPE }) => {
   const centerModule = subModules.find(m => m.name === 'center')
   if (!centerModule) {
     throw new Error('Missing center submodule')
@@ -51,6 +51,10 @@ export default ({rule, subModules, TYPE}) => {
         .set('subject', subject ? subject.text : '')
         .set('description', lead ? lead.text : '')
         .set('slug', slugify(headlineText))
+    }
+
+    if (data.get('template') === 'discussion') {
+      newData = newData.set('collapsable', true)
     }
 
     return data.equals(newData)
@@ -105,8 +109,8 @@ export default ({rule, subModules, TYPE}) => {
     ]
   })
 
-  const newDocument = ({title, template}, me) => serializer.deserialize(parse(
-`---
+  const newDocument = ({ title, template }, me) => serializer.deserialize(parse(
+    `---
 template: ${template}
 ---
 ${titleModule ? `
@@ -140,7 +144,7 @@ ${titleModule ? 'Text' : title}
     changes: {},
     plugins: [
       {
-        renderEditor: ({children, value}) => (
+        renderEditor: ({ children, value }) => (
           <Container meta={value.document.data}>{children}</Container>
         ),
         validateNode: (node) => {
@@ -180,7 +184,7 @@ ${titleModule ? 'Text' : title}
             last: {
               types: [centerModule.TYPE]
             },
-            normalize: (change, reason, {node, index, child}) => {
+            normalize: (change, reason, { node, index, child }) => {
               if (reason === 'child_required') {
                 change.insertNodeByKey(
                   node.key,
