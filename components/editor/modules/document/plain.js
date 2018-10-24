@@ -6,7 +6,7 @@ import { swissTime } from '../../../../lib/utils/format'
 import slugify from '../../../../lib/utils/slug'
 import MarkdownSerializer from 'slate-mdast-serializer'
 
-const pubDateFormat = swissTime.format('%-d. %B %Y')
+const pubDateFormat = swissTime.format('%d.%m.%Y')
 
 export default ({rule, subModules, TYPE}) => {
   const centerModule = subModules.find(m => m.name === 'center')
