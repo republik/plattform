@@ -10,14 +10,14 @@ import PostfinancePayments from '../components/PostfinancePayments/List'
 import { Router } from '../server/routes'
 
 const changeHandler = params => {
-  Router.pushRoute('postfinance-payments', params)
+  Router.replaceRoute('postfinance-payments', params, { shallow: true })
 }
 
 export default withData(props => {
   return (
     <App>
       <Body>
-        <Header />
+        <Header search={props.url.query.search} />
         <Content id="content">
           <PostfinancePayments
             params={props.url.query}

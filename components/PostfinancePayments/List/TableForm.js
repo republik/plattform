@@ -3,6 +3,8 @@ import React from 'react'
 import { colors } from '@project-r/styleguide'
 import Input from '../../Form/Input'
 
+import withDebouncedSearch from '../../Form/withDebouncedSearch'
+
 import DateRange from '../../Form/DateRange'
 import Boolean from '../../Form/Boolean'
 import UploadForm from './UploadForm'
@@ -17,7 +19,7 @@ const formSectionStyles = {
   margin: '15px 0 15px 0'
 }
 
-export default ({
+export default withDebouncedSearch(({
   search,
   onSearch,
   dateRange,
@@ -65,4 +67,4 @@ export default ({
       </button>
     </div>
   </div>
-)
+))

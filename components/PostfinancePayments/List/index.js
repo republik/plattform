@@ -133,7 +133,7 @@ class PostfinancePayments extends Component {
             <div>{this.state.feedback}</div>
           )}
           <TableForm
-            search={params.search}
+            defaultSearch={params.search}
             onSearch={changeHandler('search')}
             dateRange={DateRange.parse(params.dateRange)}
             onDateRange={changeHandler(

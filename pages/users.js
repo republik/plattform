@@ -10,14 +10,14 @@ import Users from '../components/Users/List'
 import { Router } from '../server/routes'
 
 const changeHandler = params => {
-  Router.pushRoute('users', params)
+  Router.replaceRoute('users', params, { shallow: true })
 }
 
 export default withData(props => {
   return (
     <App>
       <Body>
-        <Header />
+        <Header search={props.url.query.search} />
         <Content id="content">
           <Users
             params={props.url.query}

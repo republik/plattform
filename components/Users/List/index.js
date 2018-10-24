@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import ErrorMessage from '../../ErrorMessage'
@@ -14,6 +14,8 @@ import {
   serializeOrderBy,
   deserializeOrderBy
 } from '../../../lib/utils/queryParams'
+
+import { Loader } from '@project-r/styleguide'
 
 const USERS_LIMIT = 200
 
@@ -36,13 +38,9 @@ const createChangeHandler = (params, handler) => (
 }
 
 const Users = props => {
-  if (props.data.error) {
-    return <ErrorMessage error={props.data.error} />
-  } else if (!props.data.users) {
-    return <div>Loading</div>
-  }
   const {
-    data: { users: { items, count } },
+    data,
+    data: { users },
     params,
     loadMoreUsers,
     onChange
@@ -54,31 +52,36 @@ const Users = props => {
   )
 
   return (
-    <InfiniteScroller
-      loadMore={loadMoreUsers}
-      hasMore={count > items.length}
-      useWindow={false}
-    >
-      <div>
-        <TableForm
-          search={params.search}
-          onSearch={changeHandler('search')}
-          dateRange={params.dateRange}
-          onDateRange={changeHandler(
-            'dateRange',
-            DateRange.serialize
-          )}
-        />
-        <TableHead
-          sort={deserializeOrderBy(params.orderBy)}
-          onSort={changeHandler(
-            'orderBy',
-            serializeOrderBy
-          )}
-        />
-        <TableBody items={items} />
-      </div>
-    </InfiniteScroller>
+    <Fragment>
+      <TableForm
+        defaultSearch={params.search}
+        onSearch={changeHandler('search')}
+        dateRange={params.dateRange}
+        onDateRange={changeHandler(
+          'dateRange',
+          DateRange.serialize
+        )}
+      />
+      <TableHead
+        sort={deserializeOrderBy(params.orderBy)}
+        onSort={changeHandler(
+          'orderBy',
+          serializeOrderBy
+        )}
+      />
+      <Loader
+        error={data.error}
+        loading={data.loading}
+        render={() => <Fragment>
+          <InfiniteScroller
+            loadMore={loadMoreUsers}
+            hasMore={users.count > users.items.length}
+            useWindow={false}
+          >
+            <TableBody items={users.items} />
+          </InfiniteScroller>
+        </Fragment>} />
+    </Fragment>
   )
 }
 
@@ -126,9 +129,6 @@ export default graphql(usersQuery, {
   props: ({ data }) => ({
     data,
     loadMoreUsers: () => {
-      if (!data) {
-        throw new Error('data object undefined')
-      }
       return data.fetchMore({
         variables: {
           offset: data.users.items.length

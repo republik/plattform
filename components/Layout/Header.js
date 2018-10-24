@@ -12,6 +12,7 @@ import {
   colors
 } from '@project-r/styleguide'
 import routes from '../../server/routes'
+
 const { Link } = routes
 
 const link = css({
@@ -64,52 +65,55 @@ const navLinkStyles = {
   cursor: 'pointer'
 }
 
-export default ({ ...props }) => (
-  <Header {...props}>
-    <HeaderSection flex="0 0 70px">
-      <span style={logoStyles}>
-        <BrandMark />
-      </span>
-    </HeaderSection>
-    <HeaderSection flex="1 1 auto">
-      <Interaction.H2>Admin</Interaction.H2>
-      <nav>
-        <Link route="users">
-          <a
-            className={`${link}`}
-            style={navLinkStyles}
-          >
-            Users
-          </a>
-        </Link>
-        <Link route="payments">
-          <a
-            className={`${link}`}
-            style={navLinkStyles}
-          >
-            Payments
-          </a>
-        </Link>
-        <Link route="postfinance-payments">
-          <a
-            className={`${link}`}
-            style={navLinkStyles}
-          >
-            Postfinance Payments
-          </a>
-        </Link>
-        <Link route="merge-users">
-          <a
-            className={`${link}`}
-            style={navLinkStyles}
-          >
-            Users zusammenführen
-          </a>
-        </Link>
-      </nav>
-    </HeaderSection>
-    <HeaderSection flex="0 0 200px">
-      <Me />
-    </HeaderSection>
-  </Header>
-)
+export default ({ ...props }) => {
+  const searchParams = props.search ? { search: props.search } : {}
+  return (
+    <Header {...props}>
+      <HeaderSection flex="0 0 70px">
+        <span style={logoStyles}>
+          <BrandMark />
+        </span>
+      </HeaderSection>
+      <HeaderSection flex="1 1 auto">
+        <Interaction.H2>Admin</Interaction.H2>
+        <nav>
+          <Link route="users" params={searchParams}>
+            <a
+              className={`${link}`}
+              style={navLinkStyles}
+            >
+              Users
+            </a>
+          </Link>
+          <Link route="payments" params={searchParams}>
+            <a
+              className={`${link}`}
+              style={navLinkStyles}
+            >
+              Payments
+            </a>
+          </Link>
+          <Link route="postfinance-payments" params={searchParams}>
+            <a
+              className={`${link}`}
+              style={navLinkStyles}
+            >
+              Postfinance Payments
+            </a>
+          </Link>
+          <Link route="merge-users">
+            <a
+              className={`${link}`}
+              style={navLinkStyles}
+            >
+              Users zusammenführen
+            </a>
+          </Link>
+        </nav>
+      </HeaderSection>
+      <HeaderSection flex="0 0 200px">
+        <Me />
+      </HeaderSection>
+    </Header>
+  )
+}

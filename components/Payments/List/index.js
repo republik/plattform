@@ -62,7 +62,7 @@ const Payments = props => {
     >
       <div>
         <TableForm
-          search={params.search}
+          defaultSearch={params.search}
           companyName={params.companyName}
           onSearch={changeHandler('search')}
           onSelectCompany={changeHandler('companyName')}
