@@ -270,14 +270,15 @@ type QuestionTypeChoiceOption {
 input AnswerInput {
   questionId: ID!
   # might be a: string, number, array of choices
+  # null // delete answer
   # { value: "string" } // text
   # { value: 1.364 } // range
   # { value: "/2018/10/22/ein-realitaetsschock" } // article
   # { value: [
-  #   { id: "uuid-v4-bla-bla" },
-  #   { id: "uuid-v4-bl2-bl2" },
-  # ] } // choice
-  payload: JSON!
+  #   "uuid-v4-bla-bla",
+  #   "uuid-v4-bl2-bl2",
+  # } // choice
+  payload: JSON
 }
 
 type Answer {

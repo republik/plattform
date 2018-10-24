@@ -22,86 +22,80 @@ module.exports = async (_, { answer: { questionId, payload } }, context) => {
     await ensureOpeningHours(questionnaire, me.id, now, transaction, t)
     await ensureReadyToSubmit(questionnaire, me.id, now, transaction, t)
 
-    // validate payload
-    if (payload.value === undefined || payload.value === null) {
-      throw new Error(t('api/questionnaire/answer/empty'))
-    }
-
     let emptyAnswer = false
-    let additionalPayload = null
-    const { value } = payload
-    if (question.type === 'Text') {
-      if (typeof value !== 'string') {
-        throw new Error(t('api/questionnaire/answer/wrongType'))
+    if (!payload) {
+      emptyAnswer = true
+    } else {
+      // validate payload
+      if (payload.value === undefined || payload.value === null) {
+        throw new Error(t('api/questionnaire/answer/empty'))
       }
-      if (value.length === 0) {
-        emptyAnswer = true
-      }
-    } else if (question.type === 'Range') {
-      if (typeof value !== 'number') {
-        throw new Error(t('api/questionnaire/answer/wrongType'))
-      }
-      const values = question.typePayload.ticks.map(t => t.value)
-      if (question.typePayload.kind === 'continous') {
-        const min = Math.min(...values)
-        const max = Math.max(...values)
-        if (value < min || value > max) {
-          throw new Error(t('api/questionnaire/answer/outOfRange'))
+
+      const { value } = payload
+      if (question.type === 'Text') {
+        if (typeof value !== 'string') {
+          throw new Error(t('api/questionnaire/answer/wrongType'))
         }
-      } else { // discrete
-        if (values.find(v => v === value) === undefined) {
-          throw new Error(t('api/questionnaire/answer/outOfRange'))
+        if (value.length === 0) {
+          emptyAnswer = true
         }
-      }
-    } else if (question.type === 'Choice') {
-      if (!Array.isArray(value)) {
-        throw new Error(t('api/questionnaire/answer/wrongType'))
-      }
-      if (value.length === 0) {
-        emptyAnswer = true
-      } else {
-        if (question.typePayload.cardinality > 0 && value.length > question.typePayload.cardinality) {
-          throw new Error(t('api/questionnaire/answer/Choice/tooMany', { max: question.typePayload.cardinality }))
+      } else if (question.type === 'Range') {
+        if (typeof value !== 'number') {
+          throw new Error(t('api/questionnaire/answer/wrongType'))
         }
-        for (let v of value) {
-          if (!question.typePayload.options.find(ov => ov.value === v)) {
-            throw new Error(t('api/questionnaire/answer/Choice/value/404', { value: v }))
+        const values = question.typePayload.ticks.map(t => t.value)
+        if (question.typePayload.kind === 'continous') {
+          const min = Math.min(...values)
+          const max = Math.max(...values)
+          if (value < min || value > max) {
+            throw new Error(t('api/questionnaire/answer/outOfRange'))
+          }
+        } else { // discrete
+          if (values.find(v => v === value) === undefined) {
+            throw new Error(t('api/questionnaire/answer/outOfRange'))
           }
         }
-      }
-    } else if (question.type === 'Document') {
-      if (typeof value !== 'string') {
-        throw new Error(t('api/questionnaire/answer/wrongType'))
-      }
-      if (value.length === 0) {
-        emptyAnswer = true
-      } else {
-        const doc = await getDocument(null, { path: value }, context)
-        if (!doc) {
-          throw new Error(t('api/questionnaire/answer/Document/404', { path: value }))
+      } else if (question.type === 'Choice') {
+        if (!Array.isArray(value)) {
+          throw new Error(t('api/questionnaire/answer/wrongType'))
         }
-        const requestedTemplate = question.typePayload.template
-        if (requestedTemplate && requestedTemplate !== doc.meta.template) {
-          throw new Error(t('api/questionnaire/answer/Document/wrongTemplate', { template: requestedTemplate }))
+        if (value.length === 0) {
+          emptyAnswer = true
+        } else {
+          if (question.typePayload.cardinality > 0 && value.length > question.typePayload.cardinality) {
+            throw new Error(t('api/questionnaire/answer/Choice/tooMany', { max: question.typePayload.cardinality }))
+          }
+          for (let v of value) {
+            if (!question.typePayload.options.find(ov => ov.value === v)) {
+              throw new Error(t('api/questionnaire/answer/Choice/value/404', { value: v }))
+            }
+          }
         }
-        // save doc to payload
-        additionalPayload = {
-          document: {
+      } else if (question.type === 'Document') {
+        if (typeof value !== 'string') {
+          throw new Error(t('api/questionnaire/answer/wrongType'))
+        }
+        if (value.length === 0) {
+          emptyAnswer = true
+        } else {
+          const doc = await getDocument(null, { path: value }, context)
+          if (!doc) {
+            throw new Error(t('api/questionnaire/answer/Document/404', { path: value }))
+          }
+          const requestedTemplate = question.typePayload.template
+          if (requestedTemplate && requestedTemplate !== doc.meta.template) {
+            throw new Error(t('api/questionnaire/answer/Document/wrongTemplate', { template: requestedTemplate }))
+          }
+          // save doc to payload
+          payload.document = {
             title: doc.meta.title,
             credits: doc.meta.credits
           }
         }
+      } else {
+        throw new Error(t('api/questionnaire/question/type/404', { type: question.type }))
       }
-    } else {
-      throw new Error(t('api/questionnaire/question/type/404', { type: question.type }))
     }
-
-    const combinedPayload = additionalPayload
-      ? {
-        ...payload,
-        ...additionalPayload
-      }
-      : payload
 
     const findQuery = {
       questionId,
@@ -116,14 +110,14 @@ module.exports = async (_, { answer: { questionId, payload } }, context) => {
       if (answerExists) {
         await transaction.public.answers.updateOne(
           findQuery,
-          { payload: combinedPayload }
+          { payload }
         )
       } else {
         await transaction.public.answers.insert({
           questionId,
           userId: me.id,
           questionnaireId: questionnaire.id,
-          payload: combinedPayload
+          payload
         })
       }
     }
