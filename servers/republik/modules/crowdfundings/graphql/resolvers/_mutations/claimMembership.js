@@ -5,36 +5,38 @@ const moment = require('moment')
 module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
   ensureSignedIn(req)
 
-  // Throw an error if there is already an other active membership.
-  if (
-    await pgdb.public.memberships.count({
-      userId: req.user.id,
-      active: true
-    })
-  ) {
-    throw new Error(t('api/membership/claim/alreadyHave'))
-  }
-
-  const { voucherCode } = args
-  const membership = await pgdb.public.memberships.findOne({
-    voucherCode,
-    voucherable: true,
-    active: false
-  })
-
-  if (!membership) {
-    throw new Error(t('api/membership/claim/invalidToken'))
-  }
-
-  // A user can not claim a membership he owns.
-  if (membership.userId === req.user.id) {
-    throw new Error(t('api/membership/claim/ownerIsClaimer'))
-  }
-
-  const transaction = await pgdb.transactionBegin()
-  const now = new Date()
   let pledgerId
+  const transaction = await pgdb.transactionBegin()
+
   try {
+    // Throw an error if there is already an other active membership.
+    if (
+      await transaction.public.memberships.count({
+        userId: req.user.id,
+        active: true
+      })
+    ) {
+      throw new Error(t('api/membership/claim/alreadyHave'))
+    }
+
+    const { voucherCode } = args
+    const membership = await transaction.public.memberships.findOne({
+      voucherCode,
+      voucherable: true,
+      active: false
+    })
+
+    if (!membership) {
+      throw new Error(t('api/membership/claim/invalidToken'))
+    }
+
+    // A user can not claim a membership he owns.
+    if (membership.userId === req.user.id) {
+      throw new Error(t('api/membership/claim/ownerIsClaimer'))
+    }
+
+    const now = new Date()
+
     pledgerId = membership.userId
 
     const membershipType = await transaction.public.membershipTypes.findOne({
