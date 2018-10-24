@@ -4,6 +4,7 @@ import { colors } from '@project-r/styleguide'
 import Input from '../../Form/Input'
 import DateRange from '../../Form/DateRange'
 import StringArray from '../../Form/StringArray'
+import withDebouncedSearch from '../../Form/withDebouncedSearch'
 
 import CSVDownloader from './CsvDownloader'
 
@@ -17,7 +18,7 @@ const formSectionStyles = {
   margin: '15px 0 15px 0'
 }
 
-export default ({
+export default withDebouncedSearch(({
   search,
   onSearch,
   dateRange,
@@ -76,4 +77,4 @@ export default ({
       <CSVDownloader />
     </div>
   </div>
-)
+))

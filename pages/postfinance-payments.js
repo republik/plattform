@@ -10,7 +10,7 @@ import PostfinancePayments from '../components/PostfinancePayments/List'
 import { Router } from '../server/routes'
 
 const changeHandler = params => {
-  Router.pushRoute('postfinance-payments', params)
+  Router.replaceRoute('postfinance-payments', params, { shallow: true })
 }
 
 export default withData(props => {

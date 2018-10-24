@@ -2,6 +2,7 @@ import React from 'react'
 import { colors } from '@project-r/styleguide'
 import Input from '../../Form/Input'
 import DateRange from '../../Form/DateRange'
+import withDebouncedSearch from '../../Form/withDebouncedSearch'
 
 const searchHandler = (
   handler: (value: string) => void
@@ -13,7 +14,7 @@ const formSectionStyles = {
   margin: '15px 0 15px 0'
 }
 
-export default ({
+export default withDebouncedSearch(({
   dateRange,
   onDateRange,
   search,
@@ -40,4 +41,4 @@ export default ({
       />
     </div>
   </div>
-)
+))

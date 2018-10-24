@@ -10,7 +10,7 @@ import Payments from '../components/Payments/List'
 import { Router } from '../server/routes'
 
 const changeHandler = params => {
-  Router.pushRoute('payments', params)
+  Router.replaceRoute('payments', params, { shallow: true })
 }
 
 export default withData(props => {
