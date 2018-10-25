@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-23T18:29:39.601Z",
+  "updated": "2018-10-25T17:27:35.837Z",
   "title": "live",
   "data": [
     {
@@ -571,6 +571,14 @@
       "value": "Diese Wahl erlaubt keine leeren Eingaben."
     },
     {
+      "key": "api/election/result/needDecision",
+      "value": "Die Wahl ist unentschiden, Sie müssen die zu wählenden Kadidaten IDs angeben."
+    },
+    {
+      "key": "api/election/result/invalidCandidacyIdSupplied",
+      "value": "Mindestens eine der angebenen, zu wählenden Kandidaten IDs konnte nicht gefunden werden."
+    },
+    {
       "key": "api/voting/404",
       "value": "Die Abstimmung konnte nicht gefunden werden."
     },
@@ -605,6 +613,10 @@
     {
       "key": "api/voting/noEmptyBallots",
       "value": "Diese Abstimmung erlaubt keine leeren Eingaben."
+    },
+    {
+      "key": "api/voting/result/invalidWinnerName",
+      "value": "Der angegebene winnerName {winnerName} konnte nicht gefunden werden."
     },
     {
       "key": "api/questionnaire/404",

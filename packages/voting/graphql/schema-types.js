@@ -125,6 +125,9 @@ type Election implements VotingInterface {
   discussion: Discussion!
 
   turnout: ElectionTurnout
+
+  liveResult: Boolean!
+  result: ElectionResult
 }
 
 type Candidacy {
@@ -164,6 +167,20 @@ input ElectionBallotInput {
 
 extend type User {
   candidacies: [Candidacy!]!
+}
+
+type ElectionCandidacyResult {
+  candidacy: Candidacy
+  count: Int!
+  elected: Boolean
+}
+
+type ElectionResult {
+  candidacies: [ElectionCandidacyResult!]!
+  message: String
+  video: Video
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 

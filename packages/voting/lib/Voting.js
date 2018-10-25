@@ -1,4 +1,5 @@
 const _ = require('lodash')
+const { descending } = require('d3-array')
 
 const { buildQueries } = require('./queries.js')
 const queries = buildQueries('votings')
@@ -36,7 +37,7 @@ const getOptions = async (votingId, pgdb) => {
   })
 }
 
-const getOptionsResult = async (voting, { winnerName }, pgdb) => {
+const getOptionsResult = async (voting, { winnerName }, pgdb, t) => {
   const counts = await pgdb.query(`
     SELECT
       COUNT(*) AS count,
@@ -65,7 +66,7 @@ const getOptionsResult = async (voting, { winnerName }, pgdb) => {
         winnerOptionId = winner && winner.votingOptionId
       }
       if (!winnerOptionId && winnerName) {
-        throw new Error(`voting is undecided and a votingOption with the name '${winnerName}' could not be found!`)
+        throw new Error(t('api/voting/result/invalidWinnerName'))
       }
     } else {
       winnerOptionId = nonEmptyCounts[0].votingOptionId
@@ -73,8 +74,8 @@ const getOptionsResult = async (voting, { winnerName }, pgdb) => {
   }
 
   return getOptions(voting.id, pgdb)
-    .then(options =>
-      options.map(option => {
+    .then(options => options
+      .map(option => {
         const countResult = counts.find(c => c.votingOptionId === option.id)
         return {
           option,
@@ -82,6 +83,7 @@ const getOptionsResult = async (voting, { winnerName }, pgdb) => {
           winner: option.id === winnerOptionId
         }
       })
+      .sort((a, b) => descending(a.count, b.count))
     )
     .then(options => {
       const emptyBallotsResult = counts.find(c => c.votingOptionId === null)

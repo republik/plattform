@@ -27,6 +27,14 @@ module.exports = {
       return election.result.turnout
     }
     return { entity: election }
+  },
+  async result (entity, args, { pgdb }) {
+    if (entity.result) {
+      return entity.result
+    }
+    if (!entity.liveResult) {
+      return null
+    }
+    return { entity }
   }
-
 }
