@@ -7,6 +7,7 @@ const {
   findBySlug,
   insertAllowedMemberships
 } = queries
+const finalizeLib = require('./finalize.js')
 
 const create = async (input, pgdb) => {
   const election = await pgdb.public.elections.insertAndGet(
@@ -114,9 +115,18 @@ const getCandidaciesResult = async (election, { manuallyElectedCandidacyIds }, p
     })
 }
 
+const finalize = async (election, args, pgdb, t) => {
+  const result = {
+    candidacies: await getCandidaciesResult(election, args, pgdb, t),
+    turnout: await queries.turnout(election, pgdb)
+  }
+  return finalizeLib('elections', election, result, args, pgdb)
+}
+
 module.exports = {
   ...queries,
   create,
   getCandidacies,
-  getCandidaciesResult
+  getCandidaciesResult,
+  finalize
 }

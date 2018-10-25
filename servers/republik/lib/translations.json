@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-25T17:27:35.837Z",
+  "updated": "2018-10-25T20:31:38.289Z",
   "title": "live",
   "data": [
     {
@@ -579,6 +579,14 @@
       "value": "Mindestens eine der angebenen, zu wählenden Kandidaten IDs konnte nicht gefunden werden."
     },
     {
+      "key": "api/election/result/tooEarly",
+      "value": "Die Wahl läuft noch und kann daher nicht finalisiert werden."
+    },
+    {
+      "key": "api/election/result/alreadyFinalized",
+      "value": "Die Wahl ist bereits finalisiert."
+    },
+    {
       "key": "api/voting/404",
       "value": "Die Abstimmung konnte nicht gefunden werden."
     },
@@ -617,6 +625,14 @@
     {
       "key": "api/voting/result/invalidWinnerName",
       "value": "Der angegebene winnerName {winnerName} konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/voting/result/tooEarly",
+      "value": "Die Abstimmung läuft noch und kann daher nicht finalisiert werden."
+    },
+    {
+      "key": "api/voting/result/alreadyFinalized",
+      "value": "Die Abstimmung ist bereits finalisiert."
     },
     {
       "key": "api/questionnaire/404",

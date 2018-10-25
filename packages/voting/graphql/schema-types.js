@@ -34,7 +34,7 @@ type Voting implements VotingInterface {
   name: String!
   discussion: Discussion
 
-  turnout: VotingTurnout
+  turnout: VotingTurnout!
 
   liveResult: Boolean!
   result: VotingResult
@@ -61,10 +61,11 @@ type VotingOptionResult {
 
 type VotingResult {
   options: [VotingOptionResult!]!
+  turnout: VotingTurnout!
   message: String
   video: Video
-  createdAt: DateTime
-  updatedAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type VotingMembershipRequirement {
@@ -124,7 +125,7 @@ type Election implements VotingInterface {
   candidacies: [Candidacy!]!
   discussion: Discussion!
 
-  turnout: ElectionTurnout
+  turnout: ElectionTurnout!
 
   liveResult: Boolean!
   result: ElectionResult
@@ -177,6 +178,7 @@ type ElectionCandidacyResult {
 
 type ElectionResult {
   candidacies: [ElectionCandidacyResult!]!
+  turnout: ElectionTurnout!
   message: String
   video: Video
   createdAt: DateTime
@@ -293,6 +295,15 @@ type Answer {
   payload: JSON!
 
   question: Question!
+}
+
+
+input VideoInput {
+  hls: String!
+  mp4: String!
+  youtube: String
+  subtitles: String
+  poster: String
 }
 
 `
