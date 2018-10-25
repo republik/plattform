@@ -35,6 +35,8 @@ type Voting implements VotingInterface {
   discussion: Discussion
 
   turnout: VotingTurnout
+
+  liveResult: Boolean!
   result: VotingResult
 }
 
@@ -51,30 +53,18 @@ type VotingOption {
 }
 
 type VotingOptionResult {
-  option: VotingOption!
+  # null for emptyBallots
+  option: VotingOption
   count: Int!
   winner: Boolean
 }
 
 type VotingResult {
   options: [VotingOptionResult!]!
-  stats: VotingStats!
   message: String
   video: Video
   createdAt: DateTime
   updatedAt: DateTime
-}
-
-type VotingStats {
-  ages: [VotingStatsCount!]!
-  countries: [VotingStatsCount!]!
-  chCantons: [VotingStatsCount!]!
-}
-
-type VotingStatsCount {
-  key: String!
-  count: Int!
-  options: [VotingOptionResult!]!
 }
 
 type VotingMembershipRequirement {
