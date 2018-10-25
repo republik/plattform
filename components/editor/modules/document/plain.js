@@ -53,6 +53,10 @@ export default ({ rule, subModules, TYPE }) => {
         .set('slug', slugify(headlineText))
     }
 
+    if (data.get('template') === 'discussion') {
+      newData = newData.set('collapsable', true)
+    }
+
     return data.equals(newData)
       ? null
       : newData
