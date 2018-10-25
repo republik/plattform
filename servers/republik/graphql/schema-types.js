@@ -221,6 +221,7 @@ enum DiscussionOrder {
   DATE
   VOTES
   HOT
+  REPLIES
 }
 
 type PageInfo {
@@ -256,6 +257,7 @@ type Discussion {
   title: String
   documentPath: String
   closed: Boolean!
+  collapsable: Boolean!
   comments(
     # get children of this parent
     parentId: ID
