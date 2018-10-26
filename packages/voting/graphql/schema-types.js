@@ -242,8 +242,14 @@ type QuestionTypeDocument implements QuestionInterface {
   userAnswer: Answer
 
   template: String
-}
 
+  result: [QuestionTypeDocumentResult!]
+}
+type QuestionTypeDocumentResult {
+  # only null if the document doesn exist anymore
+  document: Document
+  count: Int!
+}
 
 enum QuestionTypeRangeKind {
   discrete
@@ -284,7 +290,6 @@ type QuestionTypeChoiceOption {
   value: ID!
   category: String
 }
-
 type QuestionTypeChoiceResult {
   option: QuestionTypeChoiceOption!
   count: Int!

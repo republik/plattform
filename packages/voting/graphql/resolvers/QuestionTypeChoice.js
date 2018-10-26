@@ -8,7 +8,7 @@ module.exports = {
     if (!question.questionnaire.liveResult) {
       return null
     }
-    const counts = await pgdb.query(`
+    const aggs = await pgdb.query(`
       SELECT
         COUNT(*) AS count,
         jsonb_array_elements(payload->'value') as value
@@ -24,11 +24,11 @@ module.exports = {
       questionId: question.id
     })
     return question.options
-      .map(o => {
-        const count = counts.find(c => c.value === o.value)
+      .map(option => {
+        const agg = aggs.find(a => a.value === option.value)
         return {
-          option: o,
-          count: (count && count.count) || 0
+          option,
+          count: (agg && agg.count) || 0
         }
       })
       .sort((a, b) => descending(a.count, b.count))
