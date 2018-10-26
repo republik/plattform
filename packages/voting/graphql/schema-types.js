@@ -244,6 +244,7 @@ type QuestionTypeDocument implements QuestionInterface {
   template: String
 }
 
+
 enum QuestionTypeRangeKind {
   discrete
   continous
@@ -274,8 +275,9 @@ type QuestionTypeChoice implements QuestionInterface {
   # >1: multi-select (max: n)
   # 0: multi-select (infinite)
   cardinality: Int!
-
   options: [QuestionTypeChoiceOption!]!
+
+  result: [QuestionTypeChoiceResult!]
 }
 type QuestionTypeChoiceOption {
   label: String!
@@ -283,6 +285,10 @@ type QuestionTypeChoiceOption {
   category: String
 }
 
+type QuestionTypeChoiceResult {
+  option: QuestionTypeChoiceOption!
+  count: Int!
+}
 
 input AnswerInput {
   questionId: ID!
