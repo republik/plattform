@@ -205,34 +205,33 @@ type QuestionnaireTurnout {
   submitted: Int!
 }
 
-type Question {
+union Question = QuestionTypeText | QuestionTypeChoice | QuestionTypeRange | QuestionTypeDocument
+
+interface QuestionInterface {
   id: ID!
   questionnaire: Questionnaire!
   order: Int!
   text: String
-  type: QuestionType!
-
   userAnswer: Answer
 }
 
-union QuestionType = QuestionTypeText | QuestionTypeChoice | QuestionTypeRange | QuestionTypeDocument
-enum QuestionTypeEnum {
-  Text
-  Choice
-  Range
-  Document
-}
-interface QuestionTypeInterface {
-  type: QuestionTypeEnum!
-}
+type QuestionTypeText implements QuestionInterface {
+  id: ID!
+  questionnaire: Questionnaire!
+  order: Int!
+  text: String
+  userAnswer: Answer
 
-type QuestionTypeText implements QuestionTypeInterface {
-  type: QuestionTypeEnum!
   maxLength: Int
 }
 
-type QuestionTypeDocument implements QuestionTypeInterface {
-  type: QuestionTypeEnum!
+type QuestionTypeDocument implements QuestionInterface {
+  id: ID!
+  questionnaire: Questionnaire!
+  order: Int!
+  text: String
+  userAnswer: Answer
+
   template: String
 }
 
@@ -240,8 +239,13 @@ enum QuestionTypeRangeKind {
   discrete
   continous
 }
-type QuestionTypeRange implements QuestionTypeInterface {
-  type: QuestionTypeEnum!
+type QuestionTypeRange implements QuestionInterface {
+  id: ID!
+  questionnaire: Questionnaire!
+  order: Int!
+  text: String
+  userAnswer: Answer
+
   kind: QuestionTypeRangeKind!
   ticks: [QuestionTypeRangeTick!]!
 }
@@ -250,8 +254,12 @@ type QuestionTypeRangeTick {
   value: Int!
 }
 
-type QuestionTypeChoice implements QuestionTypeInterface {
-  type: QuestionTypeEnum!
+type QuestionTypeChoice implements QuestionInterface {
+  id: ID!
+  questionnaire: Questionnaire!
+  order: Int!
+  text: String
+  userAnswer: Answer
 
   # 1: single-select
   # >1: multi-select (max: n)

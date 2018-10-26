@@ -12,12 +12,12 @@ const isDirectory = (...paths) => {
 
 const requireDirectory = (root, except, flatify, ignoreDirectories) => {
   return fs.existsSync(root) && fs.readdirSync(root)
-    .filter( file =>
-      !(file.indexOf('.') === 0) && //exclude hidden
+    .filter(file =>
+      !(file.indexOf('.') === 0) && // exclude hidden
       (!except || except.indexOf(file) === -1)
     )
-    .map( file => {
-      if(isDirectory(root, file)) {
+    .map(file => {
+      if (isDirectory(root, file)) {
         if (!ignoreDirectories) {
           if (flatify) {
             return { ...requireDirectory(path.join(root, file), [], flatify, true) }
@@ -29,7 +29,7 @@ const requireDirectory = (root, except, flatify, ignoreDirectories) => {
         return { [file.split('.')[0]]: require(path.join(root, file)) }
       }
     })
-    .reduce( (result, file) => {
+    .reduce((result, file) => {
       return {
         ...file,
         ...result
@@ -63,11 +63,11 @@ const _addTypes = (master, donor) => {
     return master
   }
 
-  //deduplicate scalar types
+  // deduplicate scalar types
   let masterScalarTypeDefs = []
   const parsedMasterSchemaTypes = parse(new Source(master.schemaTypes.join('\n')))
-  parsedMasterSchemaTypes.definitions.forEach( def => {
-    if(def.kind === 'ScalarTypeDefinition') {
+  parsedMasterSchemaTypes.definitions.forEach(def => {
+    if (def.kind === 'ScalarTypeDefinition') {
       masterScalarTypeDefs.push(def.name.value)
     }
   })
@@ -88,19 +88,18 @@ const _addTypes = (master, donor) => {
   }
 }
 
-
 const _mergeSchema = (module1, module2) => {
   const parsedModule1Schema = parse(new Source(module1.schema.join('\n')))
   const parsedModule2Schema = parse(new Source(module2.schema.join('\n')))
   const mergedSchema = {
     kind: 'Document',
     definitions: [
-      ...parsedModule1Schema.definitions.filter( def => def.kind === 'SchemaDefinition' ),
+      ...parsedModule1Schema.definitions.filter(def => def.kind === 'SchemaDefinition'),
       ...parsedModule1Schema.definitions
-        .filter( def => def.kind === 'ObjectTypeDefinition' )
-        .map( def => {
+        .filter(def => def.kind === 'ObjectTypeDefinition')
+        .map(def => {
           const objectTypeDefsModule2 = parsedModule2Schema.definitions
-            .find( def2 =>
+            .find(def2 =>
               def2.kind === 'ObjectTypeDefinition' &&
               def2.name.value === def.name.value
             )
@@ -131,13 +130,14 @@ const _merge = (module1, module2) => {
       queries: _.merge(module2.resolvers.queries, module1.resolvers.queries),
       mutations: _.merge(module2.resolvers.mutations, module1.resolvers.mutations),
       subscriptions: _.merge(module2.resolvers.subscriptions, module1.resolvers.subscriptions)
-    }
+    },
+    inheritResolversFromInterfaces: true
   }
 }
 
 const addTypes = (master, donors) => {
   let newMaster = master
-  for(let donor of donors) {
+  for (let donor of donors) {
     newMaster = _addTypes(newMaster, donor)
   }
   return newMaster
@@ -145,7 +145,7 @@ const addTypes = (master, donors) => {
 
 const merge = (module1, modules) => {
   let newModule = module1
-  for(let module of modules) {
+  for (let module of modules) {
     newModule = _merge(newModule, module)
   }
   return newModule
