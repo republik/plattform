@@ -264,10 +264,17 @@ type QuestionTypeRange implements QuestionInterface {
 
   kind: QuestionTypeRangeKind!
   ticks: [QuestionTypeRangeTick!]!
+
+  result: [QuestionTypeRangeResult!]
 }
 type QuestionTypeRangeTick {
   label: String!
   value: Int!
+}
+type QuestionTypeRangeResult {
+  x0: Float!
+  x1: Float!
+  count: Int!
 }
 
 type QuestionTypeChoice implements QuestionInterface {
