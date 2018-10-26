@@ -1,7 +1,8 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const {
   findById,
-  ensureReadyToSubmit
+  ensureReadyToSubmit,
+  transformQuestion
 } = require('../../../lib/Questionnaire')
 const { graphql: { resolvers: { queries: { document: getDocument } } } } = require('@orbiting/backend-modules-documents')
 
@@ -122,7 +123,7 @@ module.exports = async (_, { answer: { questionId, payload } }, context) => {
 
     await transaction.transactionCommit()
 
-    return question
+    return transformQuestion(question, questionnaire)
   } catch (e) {
     await transaction.transactionRollback()
     throw e

@@ -2,12 +2,9 @@ const { buildQueries } = require('./queries.js')
 const queries = buildQueries('questionnaires')
 
 const transformQuestion = (q, questionnaire) => ({
+  ...q.typePayload,
   ...q,
-  questionnaire,
-  type: {
-    type: q.type,
-    ...q.typePayload
-  }
+  questionnaire
 })
 
 const getQuestionsWithAnswers = async (questionnaire, userId, pgdb) => {
@@ -50,6 +47,7 @@ const getQuestions = async (questionnaire, pgdb) => {
 
 module.exports = {
   ...queries,
+  transformQuestion,
   getQuestionsWithAnswers,
   getQuestions
 }
