@@ -43,7 +43,6 @@ const getQuestions = async (questionnaire, pgdb) => {
     { orderBy: { order: 'asc' } }
   )
     .then(questions => questions.map(q => transformQuestion(q, questionnaire)))
-    .then(questions => { console.log(questions); return questions })
 }
 
 module.exports = {
