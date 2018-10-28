@@ -1,7 +1,7 @@
 const { graphql: { resolvers: { queries: { document: getDocument } } } } = require('@orbiting/backend-modules-documents')
 
 module.exports = {
-  async result (question, args, context) {
+  async result (question, { top }, context) {
     const { pgdb } = context
     if (question.result) {
       return question.result
@@ -21,13 +21,15 @@ module.exports = {
         2
       ORDER BY
         1 DESC
+      ${top ? 'LIMIT :top' : ''}
     `, {
-      questionId: question.id
+      questionId: question.id,
+      top
     })
       .then(aggs => aggs.map(async (agg) => {
         return {
           count: agg.count,
-          document: getDocument(null, { path: agg.path }, context)
+          document: await getDocument(null, { path: agg.path }, context)
         }
       }))
   }

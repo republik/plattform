@@ -243,7 +243,7 @@ type QuestionTypeDocument implements QuestionInterface {
 
   template: String
 
-  result: [QuestionTypeDocumentResult!]
+  result(top: Int): [QuestionTypeDocumentResult!]
 }
 type QuestionTypeDocumentResult {
   # only null if the document doesn exist anymore
