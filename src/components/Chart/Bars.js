@@ -191,7 +191,9 @@ const BarChart = (props) => {
 
       gY += marginBottom
       let labelY = gY
-      gY += BAR_LABEL_HEIGHT
+      if (first.label) {
+        gY += BAR_LABEL_HEIGHT
+      }
       gY += style.marginTop
       let y = gY
       if (firstBarY === undefined) {
@@ -280,13 +282,13 @@ const BarChart = (props) => {
       group.x = column * (columnWidth + COLUMN_PADDING)
     })
 
-    yPos += height + AXIS_BOTTOM_HEIGHT
+    yPos += height + (props.xAxis ? AXIS_BOTTOM_HEIGHT : 0)
   })
 
   const isLollipop = props.barStyle === 'lollipop'
 
   const xTicks = props.xTicks || xAxis.ticks
-  const highlightZero = xTicks[0] !== 0
+  const highlightZero = xTicks.indexOf(0) !== -1 && xTicks[0] !== 0
 
   return (
     <div>
@@ -354,7 +356,7 @@ const BarChart = (props) => {
                     </g>
                   ))
                 }
-                <g transform={`translate(0,${group.groupHeight + AXIS_BOTTOM_PADDING})`}>
+                {props.xAxis && <g transform={`translate(0,${group.groupHeight + AXIS_BOTTOM_PADDING})`}>
                   {
                     xTicks.map((tick, i) => {
                       let textAnchor = 'middle'
@@ -387,7 +389,7 @@ const BarChart = (props) => {
                       )
                     })
                   }
-                </g>
+                </g>}
               </g>
             )
           })
@@ -420,6 +422,7 @@ BarChart.propTypes = {
   mini: PropTypes.bool,
   domain: PropTypes.array,
   y: PropTypes.string.isRequired,
+  xAxis: PropTypes.bool.isRequired,
   xTicks: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number])),
   barStyle: PropTypes.oneOf(Object.keys(BAR_STYLES)),
   confidence: PropTypes.oneOf([95]),
@@ -452,6 +455,7 @@ BarChart.propTypes = {
 }
 
 BarChart.defaultProps = {
+  xAxis: true,
   columns: 1,
   minInnerWidth: 140,
   barStyle: 'small',
