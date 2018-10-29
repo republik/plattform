@@ -280,7 +280,8 @@ type QuestionTypeRangeResult {
   histogram(ticks: Int): [QuestionTypeRangeResultBin!]!
   mean: Float!
   median: Float!
-  deviation: Float!
+  # undefined for less than two values
+  deviation: Float
 }
 
 type QuestionTypeChoice implements QuestionInterface {
