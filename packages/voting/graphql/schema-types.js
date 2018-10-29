@@ -290,7 +290,7 @@ type QuestionTypeChoice implements QuestionInterface {
   cardinality: Int!
   options: [QuestionTypeChoiceOption!]!
 
-  result: [QuestionTypeChoiceResult!]
+  result(top: Int): [QuestionTypeChoiceResult!]
 }
 type QuestionTypeChoiceOption {
   label: String!

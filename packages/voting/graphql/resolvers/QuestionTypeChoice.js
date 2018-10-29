@@ -1,7 +1,7 @@
 const { descending } = require('d3-array')
 
 module.exports = {
-  async result (question, args, { req, user: me, pgdb, t }) {
+  async result (question, { top }, { req, user: me, pgdb, t }) {
     if (question.result) {
       return question.result
     }
@@ -20,10 +20,12 @@ module.exports = {
         2
       ORDER BY
         1 DESC
+      ${top ? 'LIMIT :top' : ''}
     `, {
-      questionId: question.id
+      questionId: question.id,
+      top
     })
-    return question.options
+    const options = question.options
       .map(option => {
         const agg = aggs.find(a => a.value === option.value)
         return {
@@ -32,5 +34,8 @@ module.exports = {
         }
       })
       .sort((a, b) => descending(a.count, b.count))
+    return top
+      ? options.slice(0, top)
+      : options
   }
 }
