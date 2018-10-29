@@ -1,43 +1,22 @@
 const { buildQueries } = require('./queries.js')
 const queries = buildQueries('questionnaires')
 
+const { result: getResult } = require('./Question')
+const finalizeLib = require('./finalize.js')
+
 const transformQuestion = (q, questionnaire) => ({
   ...q.typePayload,
   ...q,
   questionnaire
 })
 
-const getQuestionsWithUserAnswer = async (questionnaire, userId, pgdb) => {
-  return pgdb.query(`
-    SELECT
-      q.*,
-      json_agg(a.*)
-        FILTER (WHERE a.id IS NOT NULL)
-        AS "answer"
-    FROM
-      questions q
-    LEFT JOIN
-      answers a
-      ON
-        a."questionId" = q.id AND
-        a."userId" = :userId
-    WHERE
-      q."questionnaireId" = :questionnaireId
-    GROUP BY
-      q.id
-    ORDER BY
-      q.order ASC
-  `, {
-    userId,
-    questionnaireId: questionnaire.id
-  })
-    .then(questions => questions.map(q => ({
-      ...transformQuestion(q, questionnaire),
-      userAnswer: q.answer ? q.answer[0] : null
-    })))
-}
-
 const getQuestions = async (questionnaire, pgdb) => {
+  if (questionnaire.result) {
+    return questionnaire.result.questions.map(question => ({
+      ...question,
+      questionnaire
+    }))
+  }
   return pgdb.public.questions.find(
     { questionnaireId: questionnaire.id },
     { orderBy: { order: 'asc' } }
@@ -45,9 +24,29 @@ const getQuestions = async (questionnaire, pgdb) => {
     .then(questions => questions.map(q => transformQuestion(q, questionnaire)))
 }
 
+const getQuestionsWithResults = async (questionnaire, context) => {
+  const { pgdb } = context
+  return getQuestions(questionnaire, pgdb)
+    .then(questions => Promise.all(questions.map(async (question) => {
+      return {
+        ...question,
+        questionnaire: null,
+        result: await getResult(question, {}, context) || null
+      }
+    })))
+}
+
+const finalize = async (questionnaire, args, context) => {
+  const questions = await getQuestionsWithResults(questionnaire, context)
+  const result = {
+    questions
+  }
+  return finalizeLib('questionnaires', questionnaire, result, args, context.pgdb)
+}
+
 module.exports = {
   ...queries,
   transformQuestion,
-  getQuestionsWithUserAnswer,
-  getQuestions
+  getQuestions,
+  finalize
 }

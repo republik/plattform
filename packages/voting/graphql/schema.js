@@ -51,5 +51,11 @@ type mutations {
   # delete all answers
   resetQuestionnaire(id: ID!): Questionnaire!
   submitQuestionnaire(id: ID!): Questionnaire!
+  finalizeQuestionnaire(
+    slug: String!
+    dry: Boolean!
+    message: String
+    video: VideoInput
+  ): JSON!
 }
 `

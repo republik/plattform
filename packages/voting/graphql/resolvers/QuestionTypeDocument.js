@@ -1,36 +1,19 @@
-const { graphql: { resolvers: { queries: { document: getDocument } } } } = require('@orbiting/backend-modules-documents')
+const { documentResult } = require('../../lib/Question')
 
 module.exports = {
-  async result (question, { top }, context) {
-    const { pgdb } = context
-    if (question.result) {
-      return question.result
+  async result (question, args, context) {
+    if (question.result !== undefined) {
+      if (!question.result) {
+        return question.result
+      }
+      const { top } = args
+      return top
+        ? question.result.slice(0, top)
+        : question.result
     }
     if (!question.questionnaire.liveResult) {
       return null
     }
-    return pgdb.query(`
-      SELECT
-        COUNT(*) AS count,
-        payload->'value' as path
-      FROM
-        answers
-      WHERE
-        "questionId" = :questionId
-      GROUP BY
-        2
-      ORDER BY
-        1 DESC
-      ${top ? 'LIMIT :top' : ''}
-    `, {
-      questionId: question.id,
-      top
-      })
-      .then(aggs => aggs.map(async (agg) => {
-        return {
-          count: agg.count,
-          document: await getDocument(null, { path: agg.path }, context)
-        }
-      }))
+    return documentResult(question, args, context)
   }
 }
