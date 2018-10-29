@@ -325,8 +325,6 @@ input AnswerInput {
 type Answer {
   id: ID!
   payload: JSON!
-
-  question: Question!
 }
 
 
