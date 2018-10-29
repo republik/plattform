@@ -265,16 +265,22 @@ type QuestionTypeRange implements QuestionInterface {
   kind: QuestionTypeRangeKind!
   ticks: [QuestionTypeRangeTick!]!
 
-  result(ticks: Int): [QuestionTypeRangeResult!]
+  result: QuestionTypeRangeResult
 }
 type QuestionTypeRangeTick {
   label: String!
   value: Int!
 }
-type QuestionTypeRangeResult {
+type QuestionTypeRangeResultBin {
   x0: Float!
   x1: Float!
   count: Int!
+}
+type QuestionTypeRangeResult {
+  histogram(ticks: Int): [QuestionTypeRangeResultBin!]!
+  mean: Float!
+  median: Float!
+  deviation: Float!
 }
 
 type QuestionTypeChoice implements QuestionInterface {

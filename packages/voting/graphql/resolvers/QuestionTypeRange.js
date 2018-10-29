@@ -1,7 +1,7 @@
 const d3 = require('d3')
 
 module.exports = {
-  async result (question, { ticks }, context) {
+  async result (question, args, context) {
     const { pgdb } = context
     if (question.result) {
       return question.result
@@ -9,7 +9,9 @@ module.exports = {
     if (!question.questionnaire.liveResult) {
       return null
     }
-    const values = await pgdb.queryOneColumn(`
+    // queryOneColumn would be better but explodes
+    // if no rows are selected
+    const values = await pgdb.query(`
       SELECT
         payload->'value' as value
       FROM
@@ -21,19 +23,18 @@ module.exports = {
     `, {
       questionId: question.id
     })
-    const numTicks = ticks ||
-      ((question.ticks.length - 1) * 10)
-    const extent = d3.extent(
-      question.ticks.map(t => t.value)
-    )
-    const x = d3.scaleLinear()
-      .domain(extent).nice()
-    const bins = d3.histogram()
-      .domain(x.domain())
-      .thresholds(x.ticks(numTicks))(values)
-    return bins.map(bin => ({
-      ...bin,
-      count: bin.length
-    }))
+      .then(rows => rows.map(r => r.value))
+    if (!values.length) {
+      return null
+    }
+
+    return {
+      mean: d3.mean(values),
+      median: d3.median(values),
+      deviation: d3.deviation(values),
+      // for downstream resolvers
+      question,
+      values
+    }
   }
 }
