@@ -88,10 +88,7 @@ module.exports = {
   preview: (comment, { length = 500 }, context) => {
     const text = textForComment(comment, context && context.user)
     if (!text) {
-      return {
-        string: text,
-        more: false
-      }
+      return null
     }
     return mdastToHumanString(remark.parse(text), length)
   },

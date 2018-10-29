@@ -79,16 +79,17 @@ module.exports = {
     const children = (doc.content.children.length && doc.content.children) || []
     const totalCount = children.length
     const firstIndex = 0
-    const lastIndex = totalCount
-    const startOffset = after
+    const lastIndex = totalCount - 1
+    const beginOffset = after
       ? children.findIndex(v => v.data.id === after) + 1
       : firstIndex
+    // slice extracts up to but not including end
     const endOffset = before
       ? children.findIndex(v => v.data.id === before)
-      : lastIndex
+      : lastIndex + 1
 
     const isLast = last && !first
-    const childrenSubset = children.slice(startOffset, endOffset)
+    const childrenSubset = children.slice(beginOffset, endOffset)
     const nodes = isLast
       ? childrenSubset.slice(-1 * last)
       : childrenSubset.slice(0, first)
