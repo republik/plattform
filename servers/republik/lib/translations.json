@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-29T15:47:50.570Z",
+  "updated": "2018-10-29T16:53:38.317Z",
   "title": "live",
   "data": [
     {
@@ -672,7 +672,7 @@
     },
     {
       "key": "api/questionnaire/answer/outOfRange",
-      "value": "Die Anwort liegt ausserhalb des gefragten Bereichs"
+      "value": "Die Anwort liegt ausserhalb des gefragten Bereichs."
     },
     {
       "key": "api/questionnaire/answer/Choice/tooMany",

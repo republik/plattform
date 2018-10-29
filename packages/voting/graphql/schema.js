@@ -54,8 +54,6 @@ type mutations {
   finalizeQuestionnaire(
     slug: String!
     dry: Boolean!
-    message: String
-    video: VideoInput
   ): JSON!
 }
 `
