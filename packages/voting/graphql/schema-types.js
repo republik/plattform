@@ -265,7 +265,7 @@ type QuestionTypeRange implements QuestionInterface {
   kind: QuestionTypeRangeKind!
   ticks: [QuestionTypeRangeTick!]!
 
-  result: [QuestionTypeRangeResult!]
+  result(ticks: Int): [QuestionTypeRangeResult!]
 }
 type QuestionTypeRangeTick {
   label: String!
