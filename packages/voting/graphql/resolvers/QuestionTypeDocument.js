@@ -25,7 +25,7 @@ module.exports = {
     `, {
       questionId: question.id,
       top
-    })
+      })
       .then(aggs => aggs.map(async (agg) => {
         return {
           count: agg.count,
