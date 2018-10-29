@@ -7,7 +7,7 @@ const transformQuestion = (q, questionnaire) => ({
   questionnaire
 })
 
-const getQuestionsWithAnswers = async (questionnaire, userId, pgdb) => {
+const getQuestionsWithUserAnswer = async (questionnaire, userId, pgdb) => {
   return pgdb.query(`
     SELECT
       q.*,
@@ -48,6 +48,6 @@ const getQuestions = async (questionnaire, pgdb) => {
 module.exports = {
   ...queries,
   transformQuestion,
-  getQuestionsWithAnswers,
+  getQuestionsWithUserAnswer,
   getQuestions
 }

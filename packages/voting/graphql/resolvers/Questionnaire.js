@@ -2,7 +2,7 @@ const {
   isEligible,
   userHasSubmitted,
   userSubmitDate,
-  getQuestionsWithAnswers,
+  getQuestionsWithUserAnswer,
   getQuestions
 } = require('../../lib/Questionnaire')
 
@@ -18,7 +18,7 @@ module.exports = {
   },
   async questions (entity, args, { pgdb, user: me }) {
     if (me) {
-      return getQuestionsWithAnswers(entity, me.id, pgdb)
+      return getQuestionsWithUserAnswer(entity, me.id, pgdb)
     }
     return getQuestions(entity, pgdb)
   },
