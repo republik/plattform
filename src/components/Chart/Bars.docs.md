@@ -112,6 +112,37 @@ Sexuelle Belästigung,sehr stark,0.093
 </div>
 ```
 
+## Inline Values and Labels
+
+```react
+<div>
+  <ChartTitle>Velobeschluss</ChartTitle>
+  <ChartLead>Angenommen mit 73.6% Ja</ChartLead>
+  <CsvChart t={t}
+    config={{
+      "type": "Bar",
+      "numberFormat": ".1%",
+      "color": "vote",
+      "colorRange": "diverging1",
+      "inlineValue": true,
+      "inlineLabel": "vote",
+      "inlineSecondaryLabel": "count",
+      "y": "canton"
+    }}
+    values={`
+canton,vote,value,count
+,Ja,0.736,1 475 165 Stimmen
+,Nein,0.264,529 268 Stimmen
+Zürich,Ja,0.719,
+Zürich,Nein,0.281,
+Bern,Ja,0.722,
+Bern,Nein,0.278,
+Luzern,Ja,0.687,
+Luzern,Nein,0.313,
+    `.trim()} />
+  <Editorial.Note>Quelle: <Editorial.A href="https://www.bk.admin.ch/ch/d/pore/va/20180923/det620.html">Bundeskanzlei</Editorial.A></Editorial.Note>
+</div>
+```
 
 ## Negative Values
 

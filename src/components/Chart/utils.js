@@ -1,5 +1,6 @@
 import { formatLocale, formatSpecifier, precisionFixed } from 'd3-format'
 import { ascending, descending, max as d3Max } from 'd3-array'
+import { rgb } from 'd3-color'
 import React, { createElement, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import colors from '../../theme/colors'
@@ -233,3 +234,9 @@ export const deduplicate = (d, i, all) => all.indexOf(d) === i
 //   currently: filter, columnFilter.test, category, highlight
 // eslint-disable-next-line no-new-func
 export const unsafeDatumFn = code => new Function('datum', `return ${code}`)
+
+export const getTextColor = bgColor => {
+  const color = rgb(bgColor)
+  const yiq = (color.r * 299 + color.g * 587 + color.b * 114) / 1000
+  return yiq >= 128 ? 'black' : 'white'
+}

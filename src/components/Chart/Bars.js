@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
 import { scaleLinear, scaleOrdinal } from 'd3-scale'
 import { max, min } from 'd3-array'
 
-import { sansSerifRegular12, sansSerifMedium14 } from '../Typography/styles'
+import { sansSerifRegular12, sansSerifRegular16, sansSerifMedium14 } from '../Typography/styles'
+import { fontFamilies } from '../../theme/fonts'
 import colors from '../../theme/colors'
 
 import {
@@ -16,7 +17,8 @@ import {
   deduplicate,
   unsafeDatumFn,
   subsup,
-  baseLineColor
+  baseLineColor,
+  getTextColor
 } from './utils'
 import ColorLegend from './ColorLegend'
 
@@ -67,6 +69,23 @@ const BAR_STYLES = {
       height: 24,
       marginBottom: 16
     }
+  },
+  inline: {
+    withSecondary: {
+      marginTop: 0,
+      height: 50,
+      marginBottom: 16,
+      fontSize: 16,
+      secondaryFontSize: 12,
+      inlineTop: 6
+    },
+    normal: {
+      marginTop: 0,
+      height: 20,
+      marginBottom: 9,
+      fontSize: 12,
+      inlineTop: 2
+    }
   }
 }
 
@@ -80,6 +99,10 @@ const styles = {
   barLabel: css({
     ...sansSerifRegular12,
     fill: colors.text
+  }),
+  inlineLabel: css({
+    fontFamily: fontFamilies.sansSerifRegular,
+    fontWeight: 'normal'
   }),
   axisLabel: css({
     ...sansSerifRegular12,
@@ -111,7 +134,10 @@ const BarChart = (props) => {
     t,
     description,
     confidence,
-    showBarValues
+    showBarValues,
+    inlineValue,
+    inlineLabel,
+    inlineSecondaryLabel
   } = props
 
   const possibleColumns = Math.floor(width / (props.minInnerWidth + COLUMN_PADDING))
@@ -173,8 +199,12 @@ const BarChart = (props) => {
     ? unsafeDatumFn(props.highlight)
     : () => false
 
+  const inlineBarStyle = !!inlineValue || !!inlineLabel
+
   // first layout run, set y position
-  const barStyle = BAR_STYLES[props.barStyle]
+  const barStyle = inlineBarStyle
+    ? BAR_STYLES.inline
+    : BAR_STYLES[props.barStyle]
   groupedData = groupedData.map(({values: groupData, key: title}) => {
     let gY = 0
     if (title) {
@@ -187,7 +217,15 @@ const BarChart = (props) => {
     const bars = stackedBars.map(({values: segments}) => {
       const first = segments[0]
       const highlighted = highlight(first.datum)
-      const style = barStyle[highlighted ? 'highlighted' : 'normal']
+      const style = inlineBarStyle
+        ? barStyle[
+          first.datum[inlineSecondaryLabel]
+            ? 'withSecondary' : 'normal'
+        ]
+        : barStyle[
+          highlight(first.datum)
+            ? 'highlighted' : 'normal'
+        ]
 
       gY += marginBottom
       let labelY = gY
@@ -212,6 +250,7 @@ const BarChart = (props) => {
         style,
         height: style.height,
         segments: barSegments,
+        first,
         max: barSegments.reduce(
           (sum, segment) => sum + Math.max(0, segment.value),
           0
@@ -282,7 +321,7 @@ const BarChart = (props) => {
       group.x = column * (columnWidth + COLUMN_PADDING)
     })
 
-    yPos += height + (props.xAxis ? AXIS_BOTTOM_HEIGHT : 0)
+    yPos += height + (!inlineValue ? AXIS_BOTTOM_HEIGHT : 0)
   })
 
   const isLollipop = props.barStyle === 'lollipop'
@@ -307,18 +346,50 @@ const BarChart = (props) => {
                         dy='0.9em'
                         x={x(0) + (highlightZero ? (bar.max <= 0 ? -2 : 2) : 0)}
                         textAnchor={bar.max <= 0 ? 'end' : 'start'}>
-                        {subsup.svg(bar.segments[0].label)}
+                        {subsup.svg(bar.first.label)}
                       </text>
                       {
                         bar.segments.map((segment, i) => {
+                          const isLast = last(bar.segments, i)
                           const valueTextStartAnchor = (
-                            (segment.value >= 0 && last(bar.segments, i)) ||
+                            (segment.value >= 0 && isLast) ||
                             (segment.value < 0 && i !== 0)
                           )
+                          const inlineFill = getTextColor(segment.color)
 
                           return (
                             <g key={`seg${i}`} transform={`translate(0,${bar.y})`}>
                               <rect x={segment.x} fill={segment.color} width={segment.width} height={bar.height} />
+                              {(inlineValue || inlineLabel) && (
+                                <Fragment>
+                                  <text {...styles.inlineLabel}
+                                    x={segment.x + (isLast ? segment.width - 5 : 5)}
+                                    y={bar.style.inlineTop}
+                                    dy='1em'
+                                    fontSize={bar.style.fontSize}
+                                    fill={inlineFill}
+                                    textAnchor={isLast
+                                      ? 'end'
+                                      : 'start'}>
+                                    {inlineValue && xAxis.format(segment.value)}
+                                    {inlineValue && inlineLabel && ' '}
+                                    {inlineLabel && subsup.svg(segment.datum[inlineLabel])}
+                                  </text>
+                                  {inlineSecondaryLabel && (
+                                    <text {...styles.inlineLabel}
+                                      x={segment.x + (isLast ? segment.width - 5 : 5)}
+                                      y={bar.style.inlineTop + bar.style.fontSize + 5}
+                                      dy='1em'
+                                      fontSize={bar.style.secondaryFontSize}
+                                      fill={inlineFill}
+                                      textAnchor={isLast
+                                        ? 'end'
+                                        : 'start'}>
+                                      {subsup.svg(segment.datum[inlineSecondaryLabel])}
+                                    </text>
+                                  )}
+                                </Fragment>
+                              )}
                               {isLollipop && confidence &&
                                 <rect
                                   rx={bar.style.popHeight / 2} ry={bar.style.popHeight / 2}
@@ -356,7 +427,7 @@ const BarChart = (props) => {
                     </g>
                   ))
                 }
-                {props.xAxis && <g transform={`translate(0,${group.groupHeight + AXIS_BOTTOM_PADDING})`}>
+                {!inlineValue && <g transform={`translate(0,${group.groupHeight + AXIS_BOTTOM_PADDING})`}>
                   {
                     xTicks.map((tick, i) => {
                       let textAnchor = 'middle'
@@ -421,8 +492,7 @@ BarChart.propTypes = {
   width: PropTypes.number.isRequired,
   mini: PropTypes.bool,
   domain: PropTypes.array,
-  y: PropTypes.string.isRequired,
-  xAxis: PropTypes.bool.isRequired,
+  y: PropTypes.string,
   xTicks: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number])),
   barStyle: PropTypes.oneOf(Object.keys(BAR_STYLES)),
   confidence: PropTypes.oneOf([95]),
@@ -455,7 +525,6 @@ BarChart.propTypes = {
 }
 
 BarChart.defaultProps = {
-  xAxis: true,
   columns: 1,
   minInnerWidth: 140,
   barStyle: 'small',
