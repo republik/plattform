@@ -271,14 +271,15 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
 
   // If there are any series master repositories, fetch these series master
   // documents and push series episodes onto the related docs stack
-  if (seriesRepoIds.length > 0) {
+  const sanitizedSeriesRepoIds = [...new Set(seriesRepoIds.filter(Boolean))]
+  if (sanitizedSeriesRepoIds.length > 0) {
     const seriesRelatedDocs = await search(null, {
       recursive: true,
       withoutContent: true,
       scheduledAt,
-      first: seriesRepoIds.length * 2,
+      first: sanitizedSeriesRepoIds.length * 2,
       filter: {
-        repoId: seriesRepoIds,
+        repoId: sanitizedSeriesRepoIds,
         type: 'Document'
       }
     }, context)
