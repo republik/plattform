@@ -369,6 +369,7 @@ const BarChart = (props) => {
                               (segment.value < 0 && i !== 0)
                             )
                             const inlineFill = getTextColor(segment.color)
+                            const inlineEndAnchor = isLast && i !== 0
 
                             return (
                               <g key={`seg${i}`} transform={`translate(0,${bar.y})`}>
@@ -376,12 +377,12 @@ const BarChart = (props) => {
                                 {(inlineValue || inlineLabel) && (
                                   <Fragment>
                                     <text {...styles.inlineLabel}
-                                      x={segment.x + (isLast ? segment.width - 5 : 5)}
+                                      x={segment.x + (inlineEndAnchor ? segment.width - 5 : 5)}
                                       y={bar.style.inlineTop}
                                       dy='1em'
                                       fontSize={bar.style.fontSize}
                                       fill={inlineFill}
-                                      textAnchor={isLast
+                                      textAnchor={inlineEndAnchor
                                         ? 'end'
                                         : 'start'}>
                                       {subsup.svg([
@@ -392,12 +393,12 @@ const BarChart = (props) => {
                                     </text>
                                     {inlineSecondaryLabel && (
                                       <text {...styles.inlineLabel}
-                                        x={segment.x + (isLast ? segment.width - 5 : 5)}
+                                        x={segment.x + (inlineEndAnchor ? segment.width - 5 : 5)}
                                         y={bar.style.inlineTop + bar.style.fontSize + 5}
                                         dy='1em'
                                         fontSize={bar.style.secondaryFontSize}
                                         fill={inlineFill}
-                                        textAnchor={isLast
+                                        textAnchor={inlineEndAnchor
                                           ? 'end'
                                           : 'start'}>
                                         {subsup.svg(segment.datum[inlineSecondaryLabel])}
