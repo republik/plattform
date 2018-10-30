@@ -8,7 +8,7 @@ const {
   validateAnswer
 } = require('../../../lib/Question')
 
-module.exports = async (_, { answer: { questionId, payload } }, context) => {
+module.exports = async (_, { answer: { id, questionId, payload } }, context) => {
   const { pgdb, user: me, t, req } = context
   ensureSignedIn(req, t)
 
@@ -23,6 +23,26 @@ module.exports = async (_, { answer: { questionId, payload } }, context) => {
     const questionnaire = await findById(question.questionnaireId, transaction)
     await ensureReadyToSubmit(questionnaire, me.id, now, transaction, t)
 
+    // check client generated ID
+    const existingAnswer = await transaction.public.answers.findOne({ id })
+    if (existingAnswer) {
+      if (existingAnswer.userId !== me.id) {
+        throw new Error(t('api/questionnaire/answer/idExists'))
+      }
+      if (existingAnswer.questionId !== questionId) {
+        throw new Error(t('api/questionnaire/answer/noQuestionRemapping'))
+      }
+    }
+    const sameAnswer = await transaction.public.answers.findOne({
+      'id !=': id,
+      userId: me.id,
+      questionId
+    })
+    if (sameAnswer) {
+      await transaction.public.answers.deleteOne({ id: sameAnswer.id })
+    }
+
+    // validate
     let emptyAnswer = false
     if (!payload) {
       emptyAnswer = true
@@ -43,26 +63,27 @@ module.exports = async (_, { answer: { questionId, payload } }, context) => {
       )
     }
 
-    const findQuery = {
-      questionId,
-      userId: me.id
-    }
-    const answerExists = await transaction.public.answers.findOne(findQuery)
+    // write
+    const findQuery = { id }
     if (emptyAnswer) {
-      if (answerExists) {
+      if (existingAnswer) {
         await transaction.public.answers.deleteOne(findQuery)
       }
     } else {
-      if (answerExists) {
+      if (existingAnswer) {
         await transaction.public.answers.updateOne(
           findQuery,
-          { payload }
+          {
+            questionId,
+            payload
+          }
         )
       } else {
         await transaction.public.answers.insert({
+          id,
           questionId,
-          userId: me.id,
           questionnaireId: questionnaire.id,
+          userId: me.id,
           payload
         })
       }

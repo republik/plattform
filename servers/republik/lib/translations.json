@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-29T16:53:38.317Z",
+  "updated": "2018-10-30T15:01:35.966Z",
   "title": "live",
   "data": [
     {
@@ -701,6 +701,14 @@
     {
       "key": "api/questionnaire/result/alreadyFinalized",
       "value": "Die Umfrage ist bereits finalisiert."
+    },
+    {
+      "key": "api/questionnaire/answer/idExists",
+      "value": "ID Kollision. Bitte wählen Sie eine andere ID."
+    },
+    {
+      "key": "api/questionnaire/answer/noQuestionRemapping",
+      "value": "Eine Antwort muss der selben Frage zugeordnet bleiben."
     }
   ]
 }

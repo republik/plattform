@@ -308,6 +308,8 @@ type QuestionTypeChoiceResult {
 }
 
 input AnswerInput {
+  # client generated
+  id: ID!
   questionId: ID!
   # might be a: string, number, array of choices
   # null // delete answer
