@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-30T15:01:35.966Z",
+  "updated": "2018-10-30T16:05:38.600Z",
   "title": "live",
   "data": [
     {
@@ -72,7 +72,7 @@
     },
     {
       "key": "api/comment/id/duplicate",
-      "value": "Diese ID existiert bereits."
+      "value": "ID-Kollision! Ups, da ist etwas schiefgelaufen. Bitte laden Sie die Seite neu und versuchen Sie den Komentar erneut abzusenden."
     },
     {
       "key": "api/comment/notification/new/email/subject",
@@ -704,11 +704,11 @@
     },
     {
       "key": "api/questionnaire/answer/idExists",
-      "value": "ID Kollision. Bitte wählen Sie eine andere ID."
+      "value": "ID-Kollision! Ups, da ist etwas schiefgelaufen. Bitte laden Sie die Seite neu."
     },
     {
       "key": "api/questionnaire/answer/noQuestionRemapping",
-      "value": "Eine Antwort muss der selben Frage zugeordnet bleiben."
+      "value": "ID-Frage-Diskrepanz. Ups, da ist etwas schiefgelaufen. Bitte laden Sie die Seite neu."
     }
   ]
 }
