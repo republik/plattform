@@ -75,7 +75,7 @@ const BAR_STYLES = {
     withSecondary: {
       marginTop: 0,
       height: 50,
-      marginBottom: 16,
+      marginBottom: 9,
       fontSize: 16,
       secondaryFontSize: 12,
       inlineTop: 6
