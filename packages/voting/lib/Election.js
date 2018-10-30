@@ -100,7 +100,7 @@ const getCandidaciesResult = async (election, { manuallyElectedCandidacyIds }, p
           elected: electedCandidacyIds.indexOf(candidacy.id) > -1
         }
       })
-      .sort((a, b) => descending(a.count, b.count))
+      .sort((a, b) => descending(a.count, b.count) || descending(a.elected, b.elected))
     )
     .then(candidacies => {
       const emptyBallotsResult = counts.find(c => c.candidacyId === null)
