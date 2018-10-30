@@ -144,6 +144,28 @@ Luzern,Nein,0.313,
 </div>
 ```
 
+## Links
+
+```react
+<div>
+  <ChartTitle>Häufigste Namen bei der Republik</ChartTitle>
+  <CsvChart t={t}
+    config={{
+      "type": "Bar",
+      "numberFormat": "s",
+      "link": "href",
+      "showBarValues": true,
+      "y": "name"
+    }}
+    values={`
+name,value,href
+Thomas,494,https://www.republik.ch/suche?q=thomas&filters=type%253AUser&sort=relevance%253A
+Peter,464,https://www.republik.ch/suche?q=peter&filters=type%253AUser&sort=relevance%253A
+    `.trim()} />
+  <Editorial.Note>Quelle: <Editorial.A href="https://www.bk.admin.ch/ch/d/pore/va/20180923/det620.html">Bundeskanzlei</Editorial.A></Editorial.Note>
+</div>
+```
+
 ## Negative Values
 
 ```react

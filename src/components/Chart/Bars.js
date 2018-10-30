@@ -5,9 +5,10 @@ import { css } from 'glamor'
 import { scaleLinear, scaleOrdinal } from 'd3-scale'
 import { max, min } from 'd3-array'
 
-import { sansSerifRegular12, sansSerifRegular16, sansSerifMedium14 } from '../Typography/styles'
+import { sansSerifRegular12, sansSerifMedium14 } from '../Typography/styles'
 import { fontFamilies } from '../../theme/fonts'
 import colors from '../../theme/colors'
+import { underline } from '../../lib/styleMixins'
 
 import {
   calculateAxis, groupBy,
@@ -100,6 +101,12 @@ const styles = {
     ...sansSerifRegular12,
     fill: colors.text
   }),
+  barLabelLink: css({
+    ...underline,
+    ':hover': {
+      color: colors.lightText
+    }
+  }),
   inlineLabel: css({
     fontFamily: fontFamilies.sansSerifRegular,
     fontWeight: 'normal'
@@ -138,7 +145,8 @@ const BarChart = (props) => {
     inlineValue,
     inlineValueUnit,
     inlineLabel,
-    inlineSecondaryLabel
+    inlineSecondaryLabel,
+    link
   } = props
 
   const possibleColumns = Math.floor(width / (props.minInnerWidth + COLUMN_PADDING))
@@ -217,7 +225,6 @@ const BarChart = (props) => {
     let marginBottom = 0
     const bars = stackedBars.map(({values: segments}) => {
       const first = segments[0]
-      const highlighted = highlight(first.datum)
       const style = inlineBarStyle
         ? barStyle[
           first.datum[inlineSecondaryLabel]
@@ -340,95 +347,101 @@ const BarChart = (props) => {
               <g key={`group${group.title || 1}`} transform={`translate(${group.x},${group.y})`}>
                 <text dy='1.5em' {...styles.groupTitle}>{group.title}</text>
                 {
-                  group.bars.map(bar => (
-                    <g key={`bar${bar.y}`}>
-                      <text {...styles.barLabel}
-                        y={bar.labelY}
-                        dy='0.9em'
-                        x={x(0) + (highlightZero ? (bar.max <= 0 ? -2 : 2) : 0)}
-                        textAnchor={bar.max <= 0 ? 'end' : 'start'}>
-                        {subsup.svg(bar.first.label)}
-                      </text>
-                      {
-                        bar.segments.map((segment, i) => {
-                          const isLast = last(bar.segments, i)
-                          const valueTextStartAnchor = (
-                            (segment.value >= 0 && isLast) ||
-                            (segment.value < 0 && i !== 0)
-                          )
-                          const inlineFill = getTextColor(segment.color)
+                  group.bars.map(bar => {
+                    let barLabel = <text {...styles.barLabel} {...(link && styles.barLabelLink)}
+                      y={bar.labelY}
+                      dy='0.9em'
+                      x={x(0) + (highlightZero ? (bar.max <= 0 ? -2 : 2) : 0)}
+                      textAnchor={bar.max <= 0 ? 'end' : 'start'}>
+                      {subsup.svg(bar.first.label)}
+                    </text>
+                    if (link) {
+                      barLabel = <a xlinkHref={bar.first.datum[link]}>{barLabel}</a>
+                    }
+                    return (
+                      <g key={`bar${bar.y}`}>
+                        {barLabel}
+                        {
+                          bar.segments.map((segment, i) => {
+                            const isLast = last(bar.segments, i)
+                            const valueTextStartAnchor = (
+                              (segment.value >= 0 && isLast) ||
+                              (segment.value < 0 && i !== 0)
+                            )
+                            const inlineFill = getTextColor(segment.color)
 
-                          return (
-                            <g key={`seg${i}`} transform={`translate(0,${bar.y})`}>
-                              <rect x={segment.x} fill={segment.color} width={segment.width} height={bar.height} />
-                              {(inlineValue || inlineLabel) && (
-                                <Fragment>
-                                  <text {...styles.inlineLabel}
-                                    x={segment.x + (isLast ? segment.width - 5 : 5)}
-                                    y={bar.style.inlineTop}
-                                    dy='1em'
-                                    fontSize={bar.style.fontSize}
-                                    fill={inlineFill}
-                                    textAnchor={isLast
-                                      ? 'end'
-                                      : 'start'}>
-                                    {subsup.svg([
-                                      inlineValue && xAxis.format(segment.value),
-                                      inlineValueUnit && inlineValueUnit,
-                                      inlineLabel && segment.datum[inlineLabel]
-                                    ].join(' '))}
-                                  </text>
-                                  {inlineSecondaryLabel && (
+                            return (
+                              <g key={`seg${i}`} transform={`translate(0,${bar.y})`}>
+                                <rect x={segment.x} fill={segment.color} width={segment.width} height={bar.height} />
+                                {(inlineValue || inlineLabel) && (
+                                  <Fragment>
                                     <text {...styles.inlineLabel}
                                       x={segment.x + (isLast ? segment.width - 5 : 5)}
-                                      y={bar.style.inlineTop + bar.style.fontSize + 5}
+                                      y={bar.style.inlineTop}
                                       dy='1em'
-                                      fontSize={bar.style.secondaryFontSize}
+                                      fontSize={bar.style.fontSize}
                                       fill={inlineFill}
                                       textAnchor={isLast
                                         ? 'end'
                                         : 'start'}>
-                                      {subsup.svg(segment.datum[inlineSecondaryLabel])}
+                                      {subsup.svg([
+                                        inlineValue && xAxis.format(segment.value),
+                                        inlineValueUnit && inlineValueUnit,
+                                        inlineLabel && segment.datum[inlineLabel]
+                                      ].join(' '))}
                                     </text>
-                                  )}
-                                </Fragment>
-                              )}
-                              {isLollipop && confidence &&
-                                <rect
-                                  rx={bar.style.popHeight / 2} ry={bar.style.popHeight / 2}
-                                  x={x(segment.datum[`confidence${confidence}_lower`])}
-                                  y={(bar.height / 2) - (bar.style.popHeight / 2)}
-                                  width={x(segment.datum[`confidence${confidence}_upper`]) - x(segment.datum[`confidence${confidence}_lower`])}
-                                  height={bar.style.popHeight}
-                                  fill={segment.color}
-                                  fillOpacity='0.3' />
-                              }
-                              {isLollipop && <circle
-                                cx={segment.x + segment.width}
-                                cy={bar.height / 2}
-                                r={Math.floor(bar.style.popHeight - (bar.style.stroke / 2)) / 2}
-                                fill={circleFill}
-                                stroke={segment.color}
-                                strokeWidth={bar.style.stroke} />}
-                              {showBarValues && (<text
-                                {...styles.barLabel}
-                                x={valueTextStartAnchor
-                                  ? segment.x + segment.width + 4
-                                  : segment.x + (segment.value >= 0 ? segment.width : 0) - 4}
-                                textAnchor={valueTextStartAnchor
-                                  ? 'start'
-                                  : 'end'}
-                                y={bar.height / 2}
-                                dy='.35em'
-                              >
-                               {xAxis.format(segment.value)}
-                              </text>)}
-                            </g>
-                          )
-                        })
-                      }
-                    </g>
-                  ))
+                                    {inlineSecondaryLabel && (
+                                      <text {...styles.inlineLabel}
+                                        x={segment.x + (isLast ? segment.width - 5 : 5)}
+                                        y={bar.style.inlineTop + bar.style.fontSize + 5}
+                                        dy='1em'
+                                        fontSize={bar.style.secondaryFontSize}
+                                        fill={inlineFill}
+                                        textAnchor={isLast
+                                          ? 'end'
+                                          : 'start'}>
+                                        {subsup.svg(segment.datum[inlineSecondaryLabel])}
+                                      </text>
+                                    )}
+                                  </Fragment>
+                                )}
+                                {isLollipop && confidence &&
+                                  <rect
+                                    rx={bar.style.popHeight / 2} ry={bar.style.popHeight / 2}
+                                    x={x(segment.datum[`confidence${confidence}_lower`])}
+                                    y={(bar.height / 2) - (bar.style.popHeight / 2)}
+                                    width={x(segment.datum[`confidence${confidence}_upper`]) - x(segment.datum[`confidence${confidence}_lower`])}
+                                    height={bar.style.popHeight}
+                                    fill={segment.color}
+                                    fillOpacity='0.3' />
+                                }
+                                {isLollipop && <circle
+                                  cx={segment.x + segment.width}
+                                  cy={bar.height / 2}
+                                  r={Math.floor(bar.style.popHeight - (bar.style.stroke / 2)) / 2}
+                                  fill={circleFill}
+                                  stroke={segment.color}
+                                  strokeWidth={bar.style.stroke} />}
+                                {showBarValues && (<text
+                                  {...styles.barLabel}
+                                  x={valueTextStartAnchor
+                                    ? segment.x + segment.width + 4
+                                    : segment.x + (segment.value >= 0 ? segment.width : 0) - 4}
+                                  textAnchor={valueTextStartAnchor
+                                    ? 'start'
+                                    : 'end'}
+                                  y={bar.height / 2}
+                                  dy='.35em'
+                                >
+                                 {xAxis.format(segment.value)}
+                                </text>)}
+                              </g>
+                            )
+                          })
+                        }
+                      </g>
+                    )
+                  })
                 }
                 {!inlineValue && <g transform={`translate(0,${group.groupHeight + AXIS_BOTTOM_PADDING})`}>
                   {
