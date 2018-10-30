@@ -31,7 +31,7 @@ type mutations {
   ): Election!
 
 
-  submitAnswer(answer: AnswerInput!): Question!
+  submitAnswer(answer: AnswerInput!): QuestionInterface!
   # delete all answers
   resetQuestionnaire(id: ID!): Questionnaire!
   submitQuestionnaire(id: ID!): Questionnaire!

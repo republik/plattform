@@ -195,7 +195,7 @@ type Questionnaire {
   allowedMemberships: [VotingMembershipRequirement!]
   allowedRoles: [String!]
 
-  questions: [Question!]!
+  questions: [QuestionInterface!]!
 
   turnout: QuestionnaireTurnout
 }
@@ -204,8 +204,6 @@ type QuestionnaireTurnout {
   eligible: Int!
   submitted: Int!
 }
-
-union Question = QuestionTypeText | QuestionTypeChoice | QuestionTypeRange | QuestionTypeDocument
 
 interface QuestionInterface {
   id: ID!
