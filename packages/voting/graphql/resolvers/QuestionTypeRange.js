@@ -1,4 +1,4 @@
-const { rangeResult } = require('../../lib/Question')
+const { resultRange } = require('../../lib/Question')
 
 module.exports = {
   async result (question, args, context) {
@@ -8,6 +8,6 @@ module.exports = {
     if (!question.questionnaire.liveResult) {
       return null
     }
-    return rangeResult(question, args, context)
+    return resultRange(question, args, context)
   }
 }

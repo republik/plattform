@@ -1,4 +1,4 @@
-const { documentResult } = require('../../lib/Question')
+const { resultDocument } = require('../../lib/Question')
 
 module.exports = {
   async result (question, args, context) {
@@ -14,6 +14,6 @@ module.exports = {
     if (!question.questionnaire.liveResult) {
       return null
     }
-    return documentResult(question, args, context)
+    return resultDocument(question, args, context)
   }
 }

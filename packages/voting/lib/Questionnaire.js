@@ -1,7 +1,7 @@
 const { buildQueries } = require('./queries.js')
 const queries = buildQueries('questionnaires')
 
-const { result: getResult } = require('./Question')
+const { resultForArchive } = require('./Question')
 const finalizeLib = require('./finalize.js')
 
 const transformQuestion = (q, questionnaire) => ({
@@ -31,7 +31,7 @@ const getQuestionsWithResults = async (questionnaire, context) => {
       return {
         ...question,
         questionnaire: null,
-        result: await getResult(question, {}, context) || null
+        result: await resultForArchive(question, {}, context) || null
       }
     })))
 }
