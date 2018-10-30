@@ -136,6 +136,7 @@ const BarChart = (props) => {
     confidence,
     showBarValues,
     inlineValue,
+    inlineValueUnit,
     inlineLabel,
     inlineSecondaryLabel
   } = props
@@ -371,9 +372,11 @@ const BarChart = (props) => {
                                     textAnchor={isLast
                                       ? 'end'
                                       : 'start'}>
-                                    {inlineValue && xAxis.format(segment.value)}
-                                    {inlineValue && inlineLabel && ' '}
-                                    {inlineLabel && subsup.svg(segment.datum[inlineLabel])}
+                                    {subsup.svg([
+                                      inlineValue && xAxis.format(segment.value),
+                                      inlineValueUnit && inlineValueUnit,
+                                      inlineLabel && segment.datum[inlineLabel]
+                                    ].join(' '))}
                                   </text>
                                   {inlineSecondaryLabel && (
                                     <text {...styles.inlineLabel}
