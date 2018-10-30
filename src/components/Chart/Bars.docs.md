@@ -153,14 +153,17 @@ Luzern,Nein,0.313,
     config={{
       "type": "Bar",
       "numberFormat": "s",
+      "sort": "descending",
       "link": "href",
-      "showBarValues": true,
+      "inlineValue": true,
+      "inlineValueUnit": "Konten",
       "y": "name"
     }}
     values={`
 name,value,href
 Thomas,494,https://www.republik.ch/suche?q=thomas&filters=type%253AUser&sort=relevance%253A
 Peter,464,https://www.republik.ch/suche?q=peter&filters=type%253AUser&sort=relevance%253A
+Daniel,415,https://www.republik.ch/suche?q=daniel&filters=type%253AUser&sort=relevance%253A
     `.trim()} />
   <Editorial.Note>Quelle: <Editorial.A href="https://www.bk.admin.ch/ch/d/pore/va/20180923/det620.html">Bundeskanzlei</Editorial.A></Editorial.Note>
 </div>
