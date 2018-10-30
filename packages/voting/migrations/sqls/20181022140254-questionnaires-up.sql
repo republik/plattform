@@ -6,6 +6,8 @@ create table if not exists "questionnaires" (
   "endDate"      timestamptz      not null,
   "allowedRoles" jsonb,
 
+  "result"       jsonb,
+
   "createdAt"    timestamptz               default now(),
   "updatedAt"    timestamptz               default now(),
   unique ("slug")
@@ -50,6 +52,7 @@ CREATE TABLE "answers" (
   "questionId"  uuid NOT NULL REFERENCES "questions"(id) ON UPDATE cascade,
   "userId"      uuid NOT NULL REFERENCES "users" ON UPDATE CASCADE,
   "payload"     jsonb not null,
+  "submitted"   boolean not null default false,
   "createdAt"   timestamptz default now(),
   "updatedAt"   timestamptz default now(),
   unique("questionId", "userId")

@@ -29,6 +29,7 @@ const result = async (question, args, context) => {
     FROM
       answers
     WHERE
+      submitted = true AND
       "questionId" = :questionId
     ORDER BY
       1 ASC

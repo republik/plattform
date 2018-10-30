@@ -15,7 +15,15 @@ module.exports = async (_, { id: questionnaireId }, context) => {
     const questionnaire = await findById(questionnaireId, transaction)
     await ensureReadyToSubmit(questionnaire, me.id, now, transaction, t)
 
-    await pgdb.public.questionnaireSubmissions.insert({
+    await transaction.public.answers.update(
+      {
+        questionnaireId,
+        userId: me.id
+      },
+      { submitted: true }
+    )
+
+    await transaction.public.questionnaireSubmissions.insert({
       questionnaireId,
       userId: me.id
     })

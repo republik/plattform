@@ -7,6 +7,5 @@ ALTER TABLE "elections"
 ;
 
 ALTER TABLE "questionnaires"
-  DROP COLUMN "liveResults",
-  DROP COLUMN "result"
+  DROP COLUMN "liveResults"
 ;

@@ -7,6 +7,5 @@ ALTER TABLE "elections"
 ;
 
 ALTER TABLE "questionnaires"
-  ADD COLUMN "liveResult" boolean not null default false,
-  ADD COLUMN "result" jsonb
+  ADD COLUMN "liveResult" boolean not null default false
 ;

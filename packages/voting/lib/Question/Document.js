@@ -34,6 +34,7 @@ const result = async (question, { top }, context) => {
     FROM
       answers
     WHERE
+      submitted = true AND
       "questionId" = :questionId
     GROUP BY
       2
