@@ -104,7 +104,7 @@ const styles = {
   barLabelLink: css({
     ...underline,
     ':hover': {
-      color: colors.lightText
+      fill: colors.lightText
     }
   }),
   inlineLabel: css({
@@ -348,15 +348,16 @@ const BarChart = (props) => {
                 <text dy='1.5em' {...styles.groupTitle}>{group.title}</text>
                 {
                   group.bars.map(bar => {
-                    let barLabel = <text {...styles.barLabel} {...(link && styles.barLabelLink)}
+                    const href = bar.first.datum[link]
+                    let barLabel = <text {...styles.barLabel} {...(href && styles.barLabelLink)}
                       y={bar.labelY}
                       dy='0.9em'
                       x={x(0) + (highlightZero ? (bar.max <= 0 ? -2 : 2) : 0)}
                       textAnchor={bar.max <= 0 ? 'end' : 'start'}>
                       {subsup.svg(bar.first.label)}
                     </text>
-                    if (link) {
-                      barLabel = <a xlinkHref={bar.first.datum[link]}>{barLabel}</a>
+                    if (href) {
+                      barLabel = <a xlinkHref={href}>{barLabel}</a>
                     }
                     return (
                       <g key={`bar${bar.y}`}>
