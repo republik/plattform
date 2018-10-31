@@ -1,9 +1,8 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const {
   findById,
-  isEligible,
-  userHasSubmitted,
-  getCandidacies
+  getCandidacies,
+  ensureReadyToSubmit
 } = require('../../../lib/Election')
 
 module.exports = async (_, { electionId, candidacyIds }, { pgdb, user: me, t, req }) => {
@@ -13,23 +12,7 @@ module.exports = async (_, { electionId, candidacyIds }, { pgdb, user: me, t, re
   try {
     const now = new Date()
     const election = await findById(electionId, pgdb)
-    if (!election) {
-      throw new Error(t('api/election/404'))
-    }
-    if (election.beginDate > now) {
-      throw new Error(t('api/election/tooEarly'))
-    }
-    if (election.endDate < now) {
-      throw new Error(t('api/election/tooLate'))
-    }
-
-    if (!(await isEligible(me.id, election, transaction))) {
-      throw new Error(t('api/election/notEligible'))
-    }
-
-    if (await userHasSubmitted(election.id, me.id, transaction)) {
-      throw new Error(t('api/election/alreadySubmitted'))
-    }
+    await ensureReadyToSubmit(election, me.id, now, transaction, t)
 
     // check legitimacy of candidacyIds
     if (candidacyIds.length > 0) {

@@ -5,13 +5,22 @@ const tableMapping = {
     name: 'votings',
     foreignKey: 'votingId',
     ballotsTable: 'ballots',
-    allowedMembershipsTable: 'votingMembershipRequirements'
+    allowedMembershipsTable: 'votingMembershipRequirements',
+    translationsKey: 'voting'
   },
   elections: {
     name: 'elections',
     foreignKey: 'electionId',
     ballotsTable: 'electionBallots',
-    allowedMembershipsTable: 'electionMembershipRequirements'
+    allowedMembershipsTable: 'electionMembershipRequirements',
+    translationsKey: 'election'
+  },
+  questionnaires: {
+    name: 'questionnaires',
+    foreignKey: 'questionnaireId',
+    ballotsTable: 'questionnaireSubmissions',
+    allowedMembershipsTable: 'questionnaireMembershipRequirements',
+    translationsKey: 'questionnaire'
   }
 }
 
@@ -171,6 +180,25 @@ const buildQueries = (tableName) => {
     submitted: await numSubmitted(entity.id, pgdb)
   })
 
+  const ensureReadyToSubmit = async (entity, userId, now = new Date(), pgdb, t) => {
+    if (!entity) {
+      throw new Error(t(`api/${table.translationsKey}/404`))
+    }
+    if (entity.beginDate > now) {
+      throw new Error(t(`api/${table.translationsKey}/tooEarly`))
+    }
+    if (entity.endDate < now) {
+      throw new Error(t(`api/${table.translationsKey}/tooLate`))
+    }
+    if (!(await isEligible(userId, entity, pgdb))) {
+      throw new Error(t(`api/${table.translationsKey}/notEligible`))
+    }
+
+    if (await userHasSubmitted(entity.id, userId, pgdb)) {
+      throw new Error(t(`api/${table.translationsKey}/alreadySubmitted`))
+    }
+  }
+
   return {
     insertAllowedMemberships,
     slugExists,
@@ -183,7 +211,8 @@ const buildQueries = (tableName) => {
     numSubmitted,
     numEligible,
     isEligible,
-    turnout
+    turnout,
+    ensureReadyToSubmit
   }
 }
 

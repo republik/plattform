@@ -34,7 +34,9 @@ type Voting implements VotingInterface {
   name: String!
   discussion: Discussion
 
-  turnout: VotingTurnout
+  turnout: VotingTurnout!
+
+  liveResult: Boolean!
   result: VotingResult
 }
 
@@ -51,30 +53,19 @@ type VotingOption {
 }
 
 type VotingOptionResult {
-  option: VotingOption!
+  # null for emptyBallots
+  option: VotingOption
   count: Int!
   winner: Boolean
 }
 
 type VotingResult {
   options: [VotingOptionResult!]!
-  stats: VotingStats!
+  turnout: VotingTurnout!
   message: String
   video: Video
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-type VotingStats {
-  ages: [VotingStatsCount!]!
-  countries: [VotingStatsCount!]!
-  chCantons: [VotingStatsCount!]!
-}
-
-type VotingStatsCount {
-  key: String!
-  count: Int!
-  options: [VotingOptionResult!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type VotingMembershipRequirement {
@@ -105,6 +96,11 @@ input VotingOptionInput {
   description: String
 }
 
+input VotingBallotInput {
+  votingId: ID!
+  optionId: ID
+}
+
 
 
 type Election implements VotingInterface {
@@ -129,7 +125,10 @@ type Election implements VotingInterface {
   candidacies: [Candidacy!]!
   discussion: Discussion!
 
-  turnout: ElectionTurnout
+  turnout: ElectionTurnout!
+
+  liveResult: Boolean!
+  result: ElectionResult
 }
 
 type Candidacy {
@@ -162,8 +161,180 @@ input ElectionInput {
   allowedRoles: [String!]
 }
 
+input ElectionBallotInput {
+  electionId: ID!
+  candidacyIds: [ID!]!
+}
 
 extend type User {
   candidacies: [Candidacy!]!
 }
+
+type ElectionCandidacyResult {
+  candidacy: Candidacy
+  count: Int!
+  elected: Boolean
+}
+
+type ElectionResult {
+  candidacies: [ElectionCandidacyResult!]!
+  turnout: ElectionTurnout!
+  message: String
+  video: Video
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+
+
+type Questionnaire {
+  id: ID!
+
+  slug: String!
+  description: String
+  beginDate: DateTime!
+  endDate: DateTime!
+  # current user (me) is eligible to submit a ballot
+  userIsEligible: Boolean
+
+  # current user (me) has submitted a ballot
+  userHasSubmitted: Boolean
+  userSubmitDate: DateTime
+
+  allowedMemberships: [VotingMembershipRequirement!]
+  allowedRoles: [String!]
+
+  questions: [QuestionInterface!]!
+
+  turnout: QuestionnaireTurnout
+}
+
+type QuestionnaireTurnout {
+  eligible: Int!
+  submitted: Int!
+}
+
+interface QuestionInterface {
+  id: ID!
+  questionnaire: Questionnaire!
+  order: Int!
+  text: String
+  userAnswer: Answer
+}
+
+type QuestionTypeText implements QuestionInterface {
+  id: ID!
+  questionnaire: Questionnaire!
+  order: Int!
+  text: String
+  userAnswer: Answer
+
+  maxLength: Int
+}
+
+type QuestionTypeDocument implements QuestionInterface {
+  id: ID!
+  questionnaire: Questionnaire!
+  order: Int!
+  text: String
+  userAnswer: Answer
+
+  template: String
+
+  result(top: Int): [QuestionTypeDocumentResult!]
+}
+type QuestionTypeDocumentResult {
+  # only null if the document doesn exist anymore
+  document: Document
+  count: Int!
+}
+
+enum QuestionTypeRangeKind {
+  discrete
+  continous
+}
+type QuestionTypeRange implements QuestionInterface {
+  id: ID!
+  questionnaire: Questionnaire!
+  order: Int!
+  text: String
+  userAnswer: Answer
+
+  kind: QuestionTypeRangeKind!
+  ticks: [QuestionTypeRangeTick!]!
+
+  result: QuestionTypeRangeResult
+}
+type QuestionTypeRangeTick {
+  label: String!
+  value: Int!
+}
+type QuestionTypeRangeResultBin {
+  x0: Float!
+  x1: Float!
+  count: Int!
+}
+type QuestionTypeRangeResult {
+  histogram(ticks: Int): [QuestionTypeRangeResultBin!]!
+  mean: Float!
+  median: Float!
+  # undefined for less than two values
+  deviation: Float
+}
+
+type QuestionTypeChoice implements QuestionInterface {
+  id: ID!
+  questionnaire: Questionnaire!
+  order: Int!
+  text: String
+  userAnswer: Answer
+
+  # 1: single-select
+  # >1: multi-select (max: n)
+  # 0: multi-select (infinite)
+  cardinality: Int!
+  options: [QuestionTypeChoiceOption!]!
+
+  result(top: Int): [QuestionTypeChoiceResult!]
+}
+type QuestionTypeChoiceOption {
+  label: String!
+  value: ID!
+  category: String
+}
+type QuestionTypeChoiceResult {
+  option: QuestionTypeChoiceOption!
+  count: Int!
+}
+
+input AnswerInput {
+  # client generated
+  id: ID!
+  questionId: ID!
+  # might be a: string, number, array of choices
+  # null // delete answer
+  # { value: "string" } // text
+  # { value: 1.364 } // range
+  # { value: "/2018/10/22/ein-realitaetsschock" } // article
+  # { value: [
+  #   "uuid-v4-bla-bla",
+  #   "uuid-v4-bl2-bl2",
+  # } // choice
+  payload: JSON
+}
+
+type Answer {
+  id: ID!
+  payload: JSON!
+}
+
+
+input VideoInput {
+  hls: String!
+  mp4: String!
+  youtube: String
+  subtitles: String
+  poster: String
+}
+
 `

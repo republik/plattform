@@ -1,12 +1,12 @@
 const {
   numEligible,
   numSubmitted
-} = require('../../lib/Voting')
+} = require('../../lib/Questionnaire')
 
 module.exports = {
   async eligible (obj, args, { pgdb }) {
-    if (obj.eligible || obj.eligitable) { // typo in old data
-      return obj.eligible || obj.eligitable
+    if (obj.eligible) {
+      return obj.eligible
     } else if (obj.entity) {
       return numEligible(obj.entity, pgdb)
     } else {
