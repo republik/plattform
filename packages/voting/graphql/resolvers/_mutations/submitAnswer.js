@@ -75,7 +75,8 @@ module.exports = async (_, { answer: { id, questionId, payload } }, context) => 
           findQuery,
           {
             questionId,
-            payload
+            payload,
+            updatedAt: now
           }
         )
       } else {
