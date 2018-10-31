@@ -5,8 +5,8 @@ const {
 
 module.exports = {
   async eligible (obj, args, { pgdb }) {
-    if (obj.eligible) {
-      return obj.eligible
+    if (obj.eligible || obj.eligitable) { // typo in old data
+      return obj.eligible || obj.eligitable
     } else if (obj.entity) {
       return numEligible(obj.entity, pgdb)
     } else {

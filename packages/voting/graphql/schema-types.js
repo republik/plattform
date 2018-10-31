@@ -34,7 +34,9 @@ type Voting implements VotingInterface {
   name: String!
   discussion: Discussion
 
-  turnout: VotingTurnout
+  turnout: VotingTurnout!
+
+  liveResult: Boolean!
   result: VotingResult
 }
 
@@ -51,30 +53,19 @@ type VotingOption {
 }
 
 type VotingOptionResult {
-  option: VotingOption!
+  # null for emptyBallots
+  option: VotingOption
   count: Int!
   winner: Boolean
 }
 
 type VotingResult {
   options: [VotingOptionResult!]!
-  stats: VotingStats!
+  turnout: VotingTurnout!
   message: String
   video: Video
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-type VotingStats {
-  ages: [VotingStatsCount!]!
-  countries: [VotingStatsCount!]!
-  chCantons: [VotingStatsCount!]!
-}
-
-type VotingStatsCount {
-  key: String!
-  count: Int!
-  options: [VotingOptionResult!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type VotingMembershipRequirement {
@@ -134,7 +125,10 @@ type Election implements VotingInterface {
   candidacies: [Candidacy!]!
   discussion: Discussion!
 
-  turnout: ElectionTurnout
+  turnout: ElectionTurnout!
+
+  liveResult: Boolean!
+  result: ElectionResult
 }
 
 type Candidacy {
@@ -174,6 +168,21 @@ input ElectionBallotInput {
 
 extend type User {
   candidacies: [Candidacy!]!
+}
+
+type ElectionCandidacyResult {
+  candidacy: Candidacy
+  count: Int!
+  elected: Boolean
+}
+
+type ElectionResult {
+  candidacies: [ElectionCandidacyResult!]!
+  turnout: ElectionTurnout!
+  message: String
+  video: Video
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 
@@ -231,6 +240,13 @@ type QuestionTypeDocument implements QuestionInterface {
   userAnswer: Answer
 
   template: String
+
+  result(top: Int): [QuestionTypeDocumentResult!]
+}
+type QuestionTypeDocumentResult {
+  # only null if the document doesn exist anymore
+  document: Document
+  count: Int!
 }
 
 enum QuestionTypeRangeKind {
@@ -246,10 +262,24 @@ type QuestionTypeRange implements QuestionInterface {
 
   kind: QuestionTypeRangeKind!
   ticks: [QuestionTypeRangeTick!]!
+
+  result: QuestionTypeRangeResult
 }
 type QuestionTypeRangeTick {
   label: String!
   value: Int!
+}
+type QuestionTypeRangeResultBin {
+  x0: Float!
+  x1: Float!
+  count: Int!
+}
+type QuestionTypeRangeResult {
+  histogram(ticks: Int): [QuestionTypeRangeResultBin!]!
+  mean: Float!
+  median: Float!
+  # undefined for less than two values
+  deviation: Float
 }
 
 type QuestionTypeChoice implements QuestionInterface {
@@ -263,17 +293,23 @@ type QuestionTypeChoice implements QuestionInterface {
   # >1: multi-select (max: n)
   # 0: multi-select (infinite)
   cardinality: Int!
-
   options: [QuestionTypeChoiceOption!]!
+
+  result(top: Int): [QuestionTypeChoiceResult!]
 }
 type QuestionTypeChoiceOption {
   label: String!
   value: ID!
   category: String
 }
-
+type QuestionTypeChoiceResult {
+  option: QuestionTypeChoiceOption!
+  count: Int!
+}
 
 input AnswerInput {
+  # client generated
+  id: ID!
   questionId: ID!
   # might be a: string, number, array of choices
   # null // delete answer
@@ -290,6 +326,15 @@ input AnswerInput {
 type Answer {
   id: ID!
   payload: JSON!
+}
+
+
+input VideoInput {
+  hls: String!
+  mp4: String!
+  youtube: String
+  subtitles: String
+  poster: String
 }
 
 `

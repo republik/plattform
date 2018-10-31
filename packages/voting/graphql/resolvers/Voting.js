@@ -1,4 +1,5 @@
 const {
+  getOptions,
   isEligible,
   userHasSubmitted,
   userSubmitDate
@@ -9,9 +10,7 @@ module.exports = {
     return slug || id
   },
   async options (voting, args, { pgdb }) {
-    return pgdb.public.votingOptions.find({
-      votingId: voting.id
-    })
+    return getOptions(voting.id, pgdb)
   },
   async discussion (voting, args, { pgdb }) {
     if (!voting.discussionId) {
@@ -32,12 +31,17 @@ module.exports = {
   },
   async turnout (voting, args, { pgdb }) {
     if (voting.result && voting.result.turnout) { // after counting
-      const { turnout } = voting.result
-      return {
-        ...turnout,
-        eligible: turnout.eligible || turnout.eligitable // fix typo in old data
-      }
+      return voting.result.turnout
     }
     return { entity: voting }
+  },
+  async result (entity, args, { pgdb }) {
+    if (entity.result) {
+      return entity.result
+    }
+    if (!entity.liveResult) {
+      return null
+    }
+    return { entity }
   }
 }

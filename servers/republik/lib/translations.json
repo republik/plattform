@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-23T18:29:39.601Z",
+  "updated": "2018-10-30T16:05:38.600Z",
   "title": "live",
   "data": [
     {
@@ -72,7 +72,7 @@
     },
     {
       "key": "api/comment/id/duplicate",
-      "value": "Diese ID existiert bereits."
+      "value": "ID-Kollision! Ups, da ist etwas schiefgelaufen. Bitte laden Sie die Seite neu und versuchen Sie den Komentar erneut abzusenden."
     },
     {
       "key": "api/comment/notification/new/email/subject",
@@ -571,6 +571,22 @@
       "value": "Diese Wahl erlaubt keine leeren Eingaben."
     },
     {
+      "key": "api/election/result/needDecision",
+      "value": "Die Wahl ist unentschiden, Sie müssen die zu wählenden Kadidaten IDs angeben."
+    },
+    {
+      "key": "api/election/result/invalidCandidacyIdSupplied",
+      "value": "Mindestens eine der angebenen, zu wählenden Kandidaten IDs konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/election/result/tooEarly",
+      "value": "Die Wahl läuft noch und kann daher nicht finalisiert werden."
+    },
+    {
+      "key": "api/election/result/alreadyFinalized",
+      "value": "Die Wahl ist bereits finalisiert."
+    },
+    {
       "key": "api/voting/404",
       "value": "Die Abstimmung konnte nicht gefunden werden."
     },
@@ -605,6 +621,18 @@
     {
       "key": "api/voting/noEmptyBallots",
       "value": "Diese Abstimmung erlaubt keine leeren Eingaben."
+    },
+    {
+      "key": "api/voting/result/invalidWinnerName",
+      "value": "Der angegebene winnerName {winnerName} konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/voting/result/tooEarly",
+      "value": "Die Abstimmung läuft noch und kann daher nicht finalisiert werden."
+    },
+    {
+      "key": "api/voting/result/alreadyFinalized",
+      "value": "Die Abstimmung ist bereits finalisiert."
     },
     {
       "key": "api/questionnaire/404",
@@ -644,7 +672,7 @@
     },
     {
       "key": "api/questionnaire/answer/outOfRange",
-      "value": "Die Anwort liegt ausserhalb des gefragten Bereichs"
+      "value": "Die Anwort liegt ausserhalb des gefragten Bereichs."
     },
     {
       "key": "api/questionnaire/answer/Choice/tooMany",
@@ -665,6 +693,22 @@
     {
       "key": "api/questionnaire/question/type/404",
       "value": "Der Fragetyp existiert nicht."
+    },
+    {
+      "key": "api/questionnaire/result/tooEarly",
+      "value": "Die Umfrage läuft noch und kann daher nicht finalisiert werden."
+    },
+    {
+      "key": "api/questionnaire/result/alreadyFinalized",
+      "value": "Die Umfrage ist bereits finalisiert."
+    },
+    {
+      "key": "api/questionnaire/answer/idExists",
+      "value": "ID-Kollision! Ups, da ist etwas schiefgelaufen. Bitte laden Sie die Seite neu."
+    },
+    {
+      "key": "api/questionnaire/answer/noQuestionRemapping",
+      "value": "ID-Frage-Diskrepanz. Ups, da ist etwas schiefgelaufen. Bitte laden Sie die Seite neu."
     }
   ]
 }

@@ -1,8 +1,14 @@
 module.exports = {
-  // old results did only include id and name
   option (voteOptionResult) {
+    if (voteOptionResult.option) {
+      return voteOptionResult.option
+    }
+    // old results (only) have id and name on the voteOptionResult, hoist
     if (voteOptionResult.id && voteOptionResult.name) {
-      return { ...voteOptionResult }
+      return {
+        id: voteOptionResult.id,
+        name: voteOptionResult.name
+      }
     }
   }
 }

@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "apollo-modules-node": "^0.1.4",
+    "d3": "^5.7.0",
     "export-files": "^2.1.1"
   }
 }

@@ -21,6 +21,14 @@ type mutations {
     votingId: ID!
     optionId: ID
   ): Voting!
+  finalizeVoting(
+    slug: String!
+    dry: Boolean!
+    # for undecided votes: VotingOption.name
+    winner: String
+    message: String
+    video: VideoInput
+  ): VotingResult!
 
   createElection(electionInput: ElectionInput!): Election!
   submitCandidacy(slug: String!): Candidacy!
@@ -29,11 +37,23 @@ type mutations {
     electionId: ID!
     candidacyIds: [ID!]!
   ): Election!
+  finalizeElection(
+    slug: String!
+    dry: Boolean!
+    # for undecided elections: ALL candidacyIds to elect
+    candidacyIds: [ID!]
+    message: String
+    video: VideoInput
+  ): ElectionResult!
 
 
   submitAnswer(answer: AnswerInput!): QuestionInterface!
   # delete all answers
   resetQuestionnaire(id: ID!): Questionnaire!
   submitQuestionnaire(id: ID!): Questionnaire!
+  finalizeQuestionnaire(
+    slug: String!
+    dry: Boolean!
+  ): JSON!
 }
 `

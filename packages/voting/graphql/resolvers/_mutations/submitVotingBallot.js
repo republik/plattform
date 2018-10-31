@@ -10,7 +10,7 @@ module.exports = async (_, { votingId, optionId }, { pgdb, user: me, t, req }) =
   const transaction = await pgdb.transactionBegin()
   try {
     const now = new Date()
-    const voting = await findById(votingId, pgdb)
+    const voting = await findById(votingId, transaction)
     await ensureReadyToSubmit(voting, me.id, now, transaction, t)
 
     if (optionId) {
