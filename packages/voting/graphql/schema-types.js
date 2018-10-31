@@ -220,6 +220,12 @@ interface QuestionInterface {
   order: Int!
   text: String
   userAnswer: Answer
+  turnout: QuestionTurnout!
+}
+
+type QuestionTurnout {
+  submitted: Int!
+  skipped: Int!
 }
 
 type QuestionTypeText implements QuestionInterface {
@@ -228,6 +234,7 @@ type QuestionTypeText implements QuestionInterface {
   order: Int!
   text: String
   userAnswer: Answer
+  turnout: QuestionTurnout!
 
   maxLength: Int
 }
@@ -238,6 +245,7 @@ type QuestionTypeDocument implements QuestionInterface {
   order: Int!
   text: String
   userAnswer: Answer
+  turnout: QuestionTurnout!
 
   template: String
 
@@ -259,6 +267,7 @@ type QuestionTypeRange implements QuestionInterface {
   order: Int!
   text: String
   userAnswer: Answer
+  turnout: QuestionTurnout!
 
   kind: QuestionTypeRangeKind!
   ticks: [QuestionTypeRangeTick!]!
@@ -288,6 +297,7 @@ type QuestionTypeChoice implements QuestionInterface {
   order: Int!
   text: String
   userAnswer: Answer
+  turnout: QuestionTurnout!
 
   # 1: single-select
   # >1: multi-select (max: n)

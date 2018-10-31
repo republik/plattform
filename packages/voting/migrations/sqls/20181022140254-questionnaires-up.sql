@@ -95,3 +95,4 @@ CREATE INDEX IF NOT EXISTS "answer_question_id_idx" ON "answers"("questionId");
 CREATE INDEX IF NOT EXISTS "answer_user_id_idx" ON "answers"("userId");
 CREATE INDEX IF NOT EXISTS "answer_payload_value_idx" ON "answers"(("payload"->>'value'));
 
+CREATE INDEX IF NOT EXISTS "answer_submitted_idx" ON "answers"("submitted");

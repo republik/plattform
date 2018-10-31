@@ -22,3 +22,4 @@ DROP INDEX IF EXISTS "answer_questionnaire_id_idx";
 DROP INDEX IF EXISTS "answer_question_id_idx";
 DROP INDEX IF EXISTS "answer_user_id_idx";
 DROP INDEX IF EXISTS "answer_payload_idx";
+DROP INDEX IF EXISTS "answer_submitted_idx";

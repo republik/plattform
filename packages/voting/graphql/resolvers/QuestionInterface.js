@@ -13,5 +13,19 @@ module.exports = {
       questionId: question.id,
       userId: me.id
     })
+  },
+  turnout: async (question, args, { pgdb }) => {
+    const { id: questionId, questionnaireId } = question
+    const numSubmittedQuestionnaires = await pgdb.public.questionnaireSubmissions.count({
+      questionnaireId
+    })
+    const numSubmittedAnswers = await pgdb.public.answers.count({
+      submitted: true,
+      questionId
+    })
+    return {
+      submitted: numSubmittedAnswers,
+      skipped: numSubmittedQuestionnaires-numSubmittedAnswers
+    }
   }
 }
