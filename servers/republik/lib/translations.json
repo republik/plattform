@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-30T16:05:38.600Z",
+  "updated": "2018-11-01T21:24:19.978Z",
   "title": "live",
   "data": [
     {
@@ -149,6 +149,10 @@
     {
       "key": "api/statements/maxNodes",
       "value": "Sie können maximal 100 Statements auf einmal abfragen"
+    },
+    {
+      "key": "api/statements/giveUp",
+      "value": "Allen Bemühungen zum Trotz konnte kein Statement gefunden werden."
     },
     {
       "key": "profile/statement/needed",

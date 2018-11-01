@@ -2,10 +2,8 @@ const {
   transformUser
 } = require('@orbiting/backend-modules-auth')
 
-module.exports = async (_, args, {pgdb, t}) => {
-  const { sequenceNumber, orderDirection } = args
-  const isAsc = orderDirection === 'ASC'
-  return pgdb.query(`
+const getUser = (sequenceNumber, isAsc, pgdb) =>
+  pgdb.query(`
     SELECT
       u.*,
       m."sequenceNumber" as "sequenceNumber"
@@ -25,7 +23,22 @@ module.exports = async (_, args, {pgdb, t}) => {
     ORDER BY m."sequenceNumber" ${isAsc ? 'ASC' : 'DESC'}
     LIMIT 1
   `, {
-    sequenceNumber: sequenceNumber
+    sequenceNumber
   })
-    .then(result => transformUser(result[0]))
+    .then(result => result && result[0] && transformUser(result[0]))
+
+module.exports = async (_, { sequenceNumber, orderDirection }, { pgdb, t }) => {
+  const isAsc = orderDirection === 'ASC'
+  let user = await getUser(sequenceNumber, isAsc, pgdb)
+  if (user) {
+    return user
+  }
+  const newSequenceNumber = isAsc
+    ? 0
+    : Math.pow(10, 6)
+  user = await getUser(newSequenceNumber, isAsc, pgdb)
+  if (user) {
+    return user
+  }
+  throw new Error(t('api/statements/giveUp'))
 }
