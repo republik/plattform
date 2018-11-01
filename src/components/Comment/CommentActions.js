@@ -90,7 +90,7 @@ const styles = {
     fontSize: `${config.left}px`,
     lineHeight: `${config.left}px`
   }),
-  collapsable: css({
+  collapsed: css({
     borderTop: `1px solid ${colors.divider}`,
     paddingTop: '6px'
   }),
@@ -122,7 +122,7 @@ export const CommentActions = ({
   const collapsable = collapsed !== undefined
   const collapseLabel = t(`styleguide/CommentActions/${ collapsed ? 'expand' : 'collapse'}`)
   return (
-    <div {...styles.root} {...(collapsable && !highlighted ? styles.collapsable : undefined)}>
+    <div {...styles.root} {...(collapsable && collapsed && !highlighted ? styles.collapsed : undefined)}>
       <div {...styles.leftActions}>
       {onAnswer && <IconButton type='left' onClick={replyBlockedMsg ? null : onAnswer}
         title={replyBlockedMsg || t('styleguide/CommentActions/answer')}>
