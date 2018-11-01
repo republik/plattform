@@ -91,7 +91,7 @@ const styles = {
     lineHeight: `${config.left}px`
   }),
   collapsed: css({
-    borderTop: `1px solid ${colors.primary}`,
+    borderTop: `1px solid ${colors.divider}`,
     paddingTop: '6px'
   }),
   centerButton: css({
