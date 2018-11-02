@@ -79,11 +79,13 @@ module.exports = async (_, args, { pgdb, t }) => {
         u.id
       FROM
         users u
+      JOIN memberships m
+        ON m.id = (SELECT id FROM memberships WHERE "userId" = u.id ORDER BY "sequenceNumber" ASC LIMIT 1)
       LEFT JOIN
         credentials c
         ON c."userId" = u.id AND c."isListed" = true
       WHERE
-        u."isListed" = true AND u."isAdminUnlisted" = false AND
+        u."isListed" = true AND u."isAdminUnlisted" = false AND u."portraitUrl" is not null AND
         (
           u."firstName" % :search OR
           u."lastName" % :search OR
@@ -109,8 +111,10 @@ module.exports = async (_, args, { pgdb, t }) => {
           null,
           u.id
         FROM users u
+        JOIN memberships m
+          ON m.id = (SELECT id FROM memberships WHERE "userId" = u.id ORDER BY "sequenceNumber" ASC LIMIT 1)
         WHERE
-          u."isListed" = true AND u."isAdminUnlisted" = false
+          u."isListed" = true AND u."isAdminUnlisted" = false AND u."portraitUrl" is not null
         OFFSET 1
       ) s
       ORDER BY random();
