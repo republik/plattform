@@ -15,7 +15,30 @@ extend type User {
   # notes by the support team
   # required role: supporter
   adminNotes: String
+
+  # virtual package with possible prolong options
+  # always of name: 'PROLONG'
+  # per prolongable membership -> one option
+  prolongPackage: ProlongPackage
 }
+
+type ProlongPackage {
+  id: ID!
+  name: String!
+
+  # count: num memberships
+  options: [ProlongPackageOption!]!
+
+  paymentMethods: [PaymentMethod!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ProlongPackageOption {
+  membership: Membership!
+  options: [PackageOption!]!
+}
+
 
 type Crowdfunding {
   id: ID!
@@ -63,13 +86,25 @@ type PackageOption {
   createdAt: DateTime!
   updatedAt: DateTime!
 
+  # for pledgeOptions
   amount: Int
   templateId: ID
+
+  # only applicable if reward = MembershipType
+  # to calculate amount of bonus days:
+  # date_truncate('day', additionalDaysBeforeDate - now())
+  additionalDaysBeforeDate: Date
 }
 input PackageOptionInput {
   amount: Int!
   price: Int!
   templateId: ID!
+
+  # for renewal
+  membershipId: ID
+  withAdditionalDays: Boolean
+
+  autoPay: Boolean
 }
 
 type Goodie {
