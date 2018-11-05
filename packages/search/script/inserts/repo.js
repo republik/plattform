@@ -63,6 +63,7 @@ module.exports = {
         commit: repo.latestCommit,
         content: repo.latestCommit.document.content,
         createdAt: repo.createdAt,
+        isArchived: repo.isArchived,
         id: repo.id,
         meta: repo.meta,
         name: repo.id.split('/')[1],
