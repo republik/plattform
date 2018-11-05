@@ -84,13 +84,19 @@ const iterateRepos = async (context, callback) => {
     pageCounter += 1
     const repos = await getRepos(null, {
       first: 20,
+      orderBy: {
+        field: 'PUSHED_AT',
+        direction: 'DESC'
+      },
       ...(pageInfo && pageInfo.hasNextPage)
         ? { after: pageInfo.endCursor }
         : { }
     }, context)
     pageInfo = repos.pageInfo
     const allLatestPublications = await Promise.all(
-      repos.nodes.map(repo => getLatestPublications(repo))
+      repos.nodes
+        .filter(repo => !repo.isArchived)
+        .map(repo => getLatestPublications(repo))
     )
       .then(arr => arr.filter(arr2 => arr2.length > 0))
 

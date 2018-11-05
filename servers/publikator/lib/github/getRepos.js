@@ -29,6 +29,7 @@ fragment Repo on Repository {
   name
   createdAt
   updatedAt
+  isArchived
   defaultBranchRef {
     target {
       ... on Commit {

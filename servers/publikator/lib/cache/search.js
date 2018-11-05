@@ -91,7 +91,13 @@ const find = async (args) => {
     'name'
   ]
 
-  const query = { bool: { must: [] } }
+  const query = {
+    bool: {
+      must: [
+        { term: { isArchived: false } }
+      ]
+    }
+  }
 
   if (args.search) {
     query.bool.must.push({
@@ -107,11 +113,6 @@ const find = async (args) => {
     query.bool.must.push({
       term: { 'contentMeta.template': args.template }
     })
-  }
-
-  if (Object.keys(query.bool.must).length < 1) {
-    delete query.bool
-    query.match_all = {}
   }
 
   const docs = client.search({
