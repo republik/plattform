@@ -91,6 +91,7 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
       cacheUpsert,
       {
         createdAt: repo.data.created_at,
+        isArchived: false,
         meta: {},
         name: repoName,
         publications: [],
