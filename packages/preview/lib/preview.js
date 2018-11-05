@@ -122,7 +122,7 @@ const followup = async (requests, users, memberships, pgdb, t) => {
         const hasMembership =
           !!memberships.find(membership => membership.userId === user.id)
 
-        await setFollowup(request, user, pgdb)
+        await setFollowup(request, user, transaction)
 
         if (!hasMembership) {
           await mailLib.sendFollowup({ user, request, pgdb: transaction, t })
