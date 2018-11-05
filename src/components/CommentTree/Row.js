@@ -320,7 +320,11 @@ class RowState extends PureComponent {
         onAnswer={displayAuthor ? this.openComposer : undefined}
         onUpvote={(!displayAuthor || userVote === 'UP') ? undefined : this.upvoteComment}
         onDownvote={(!displayAuthor || userVote === 'DOWN') ? undefined : this.downvoteComment}
-        onUnpublish={(isAdmin || comment.userCanEdit) && comment.published && (() => this.props.unpublishComment(comment.id))}
+        onUnpublish={
+          (isAdmin || comment.userCanEdit) && comment.published
+          ? (() => this.props.unpublishComment(comment.id))
+          : undefined
+        }
         onShare={onShare ? (() => onShare(comment.id)) : undefined}
         dismissComposer={this.dismissComposer}
         submitComment={this.submitComment}

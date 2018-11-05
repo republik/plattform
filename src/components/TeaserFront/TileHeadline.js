@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import { mUp, tUp } from './mediaQueries'
+import { mUp } from './mediaQueries'
 import { serifTitle20, sansSerifMedium20, cursiveTitle20 } from '../Typography/styles'
 
 const smallSize = {
