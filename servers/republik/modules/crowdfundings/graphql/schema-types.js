@@ -86,6 +86,9 @@ type PackageOption {
   createdAt: DateTime!
   updatedAt: DateTime!
 
+  # new
+  paymentMethods: [PaymentMethod!]!
+
   # for pledgeOptions
   amount: Int
   templateId: ID
