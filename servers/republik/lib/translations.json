@@ -1,5 +1,5 @@
 {
-  "updated": "2018-11-01T21:24:19.978Z",
+  "updated": "2018-11-05T12:41:29.448Z",
   "title": "live",
   "data": [
     {
@@ -208,7 +208,7 @@
     },
     {
       "key": "api/preview/email/followup/subject",
-      "value": "Hat Sie das überzeugt?"
+      "value": "Zeit für eine Entscheidung"
     },
     {
       "key": "profile/generic/tooLong",
