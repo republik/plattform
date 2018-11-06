@@ -70,19 +70,27 @@ type PackageOption {
   # for pledgeOptions
   amount: Int
 
-  # customPackage
-  prolongMembershipId: ID
-  prolongBonusDays: Int
+  # for custom packages
+  customization: PackageOptionCustomization
 }
 input PackageOptionInput {
   amount: Int!
   price: Int!
   templateId: ID!
 
-  # for renewal
-  prolongMembershipId: ID
-  prolongBonusDays: Int
-  prolongAutoPay: Boolean
+  # via custom packages
+  customization: PackageOptionCustomizationInput
+}
+
+type PackageOptionCustomization {
+  membershipId: ID
+  bonusInterval: String
+  bonusIntervalCount: Int
+}
+input PackageOptionCustomizationInput {
+  membershipId: ID
+  bonusInterval: String
+  bonusIntervalCount: Int
 }
 
 type Goodie {

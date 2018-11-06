@@ -18,8 +18,11 @@ const getCustomOptions = (package_, packageOptions) => {
           packageOption.id,
           membership.id
         ].join('-'),
-        prolongMembershipId: membership.id,
-        prolongBonusDays: 0
+        customization: {
+          membershipId: membership.id,
+          bonusInterval: 'days',
+          bonusIntervalCount: 0
+        }
       })
     })
   })
