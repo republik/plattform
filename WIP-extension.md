@@ -33,6 +33,11 @@ h)  Has user dormant membership which can be used (tbc.)
 i)  Is user or membership is eligible for bonusInterval
     - If true, add bonusInterval to customization payload, then proceed
 
+Other:
+
+- [ ] Detach sequenceNumber from membership, attach min(sequenceNumber) to e.g.
+      user entity once a membership is bought
+
 submitPledge:
 
 ```gql
