@@ -6,7 +6,7 @@ CREATE TABLE "additionalDaysActions" (
   "minCreatedAt"             timestamptz not null,
   "maxCreatedAt"             timestamptz not null,
   "additionalDaysBeforeDate" timestamptz not null
-)
+) ;
 
 -- generic possibility:
 CREATE TABLE "actions" (
@@ -14,4 +14,7 @@ CREATE TABLE "actions" (
   "beginDate"                timestamptz not null,
   "endDate"                  timestamptz not null,
   "config"                   jsonb not null
-)
+) ;
+
+ALTER TABLE "packages"
+  ADD COLUMN "custom" boolean NOT NULL DEFAULT false;

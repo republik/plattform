@@ -1,12 +1,22 @@
+const { getCustomOptions } = require('../../lib/CustomPackages')
+
 module.exports = {
-  async options (package_, args, {pgdb}) {
+  async options (package_, args, { pgdb, user: me }) {
     const options =
       await pgdb.public.packageOptions.find({ packageId: package_.id })
 
-    return options.map(option => ({
-      ...option,
-      // Stitch package payment methods to options
-      paymentMethods: package_.paymentMethods
-    }))
+    // Get Custom Options for a package, evaluated via code.
+    if (package_.custom === true) {
+      return getCustomOptions(package_, options)
+    }
+
+    // Default, raw package options
+    return options.map(
+      option => ({
+        ...option,
+        templateId: option.id,
+        package: package_
+      })
+    )
   }
 }

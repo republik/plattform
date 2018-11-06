@@ -1,6 +1,9 @@
 module.exports = {
   async packages (crowdfunding, args, {pgdb}) {
-    return pgdb.public.packages.find({crowdfundingId: crowdfunding.id})
+    return pgdb.public.packages.find({
+      crowdfundingId: crowdfunding.id,
+      custom: false
+    })
   },
   async goals (crowdfunding, args, {pgdb}) {
     return pgdb.public.crowdfundingGoals.find({crowdfundingId: crowdfunding.id}, {

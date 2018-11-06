@@ -1,3 +1,8 @@
+Q:
+
+- [ ] Is FE aware of current crowdfunding phase?
+
+
 submitPledge:
 
 ```gql

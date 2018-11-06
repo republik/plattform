@@ -75,6 +75,29 @@ module.exports = {
     }
     return false
   },
+  async customPackages (user, args, { pgdb, user: me }) {
+    Roles.ensureUserIsMeOrInRoles(user, me, ['supporter'])
+
+    const now = new Date()
+
+    const crowdfunding = args.crowdfundingName
+      ? await pgdb.public.crowdfundings.findOne({ name: args.crowdfundingName })
+      : await pgdb.public.crowdfundings.findOne({
+        'beginDate <=': now,
+        'endDate >': now
+      })
+
+    const packages = await pgdb.public.packages.find({
+      crowdfundingId: crowdfunding.id,
+      custom: true
+    })
+
+    const memberships = await pgdb.public.memberships.find({ userId: user.id })
+    // Mutation user object here? (... meh...)
+    Object.assign(user, { memberships })
+
+    return packages.map(package_ => ({ ...package_, user }))
+  },
   async adminNotes (user, args, { pgdb, user: me }) {
     Roles.ensureUserHasRole(me, 'supporter')
     return user.adminNotes || user._raw.adminNotes

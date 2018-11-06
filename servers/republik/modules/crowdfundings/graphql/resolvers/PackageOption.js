@@ -3,8 +3,7 @@ module.exports = {
     return Promise.all([
       pgdb.public.goodies.find({rewardId: packageOption.rewardId}),
       pgdb.public.membershipTypes.find({rewardId: packageOption.rewardId})
-    ]).then((arr) => {
-      return arr[0].concat(arr[1])[0]
-    })
+    ])
+      .then((arr) => arr[0].concat(arr[1])[0])
   }
 }
