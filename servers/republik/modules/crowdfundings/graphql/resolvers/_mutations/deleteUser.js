@@ -10,6 +10,7 @@ const deleteRelatedData = async ({ id: userId }, pgdb) => {
   // https://stackoverflow.com/questions/5347050/sql-to-list-all-the-tables-that-reference-a-particular-column-in-a-table
   const keepRelations = [
     'accessGrants',
+    'electionCandidacies',
     'pledges',
     'stripeCustomers'
   ]
