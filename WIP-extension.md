@@ -1,7 +1,33 @@
 Q:
 
-- [ ] Is FE aware of current crowdfunding phase?
+- [x] Is FE aware of current crowdfunding phase? _Yes_
 
+Flow to determine whether a prolong `packageOption` is returned.
+
+Input:
+- A membership
+- A prolong packageOption, to check against
+
+a)  Does user own membership, or pledge membership (ABO_GIVE)
+    - If false, end and don't return package option
+b)  Is membership active
+    - If false, end
+c)  Is current membershipPeriod last period
+    - If false, end
+d) Can membership.type be extend
+    - If false, end
+e)  If membership.membershipType != option.membershipType
+    - If true, indicate generation of new membership in customization
+    payload, then proceed
+f)  Has membership no notice of cancellation (tbc.)
+    - If false, end
+g)  Does current, last period end within next x days (tbc.)
+    - If false, end and hence don't return packageOption
+h)  Has user dormant membership which can be used (tbc.)
+    - If true, add viable dormant membership to customization payload,
+    then proceed
+i)  Is user or membership is eligible for bonusInterval
+    - If true, add bonusInterval to customization payload, then proceed
 
 submitPledge:
 
