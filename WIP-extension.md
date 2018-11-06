@@ -1,5 +1,9 @@
 Q:
 
+- [ ] Can memberships from ABO_GIVE pledges be extended if unclaimed?
+- [ ] Can non-active membership be extended? This might reactivate cancelled
+      memberships, or stack unused membershipPeriods onto a membership.
+- [ ] How often, how many periods can a membership be extended?
 - [x] Is FE aware of current crowdfunding phase? _Yes_
 
 Flow to determine whether a prolong `packageOption` is returned.
