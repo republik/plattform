@@ -150,6 +150,10 @@ module.exports = async (_, args, context) => {
     })
     const hasGrants = grants.length > 0
 
+    const candidacies =
+      await transaction.public.electionCandidacies.find({ userId })
+    const hasCandidacies = candidacies.length > 0
+
     // returning claimed memberships not supported yet
     const claimedMemberships = memberships.filter(m => !!m.pledges.find(p => p.userId !== userId))
     if (claimedMemberships.length > 0) {
@@ -168,7 +172,7 @@ module.exports = async (_, args, context) => {
 
     // if the user had pledges we can delete everything,
     // otherwise we need to keep (firstName, lastName, address) for bookkeeping
-    if (!hasPledges && !hasGrants) {
+    if (!hasPledges && !hasGrants && !hasCandidacies) {
       // delete stripe data
       await deleteStripeCustomer({ userId, pgdb: transaction })
 
