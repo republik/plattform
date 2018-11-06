@@ -92,7 +92,18 @@ module.exports = {
       custom: true
     })
 
-    const memberships = await pgdb.public.memberships.find({ userId: user.id })
+    const pledges = await pgdb.public.pledges.find({
+      userId: user.id,
+      status: 'SUCCESSFUL'
+    })
+
+    const memberships =
+      pledges.length > 0
+        ? await pgdb.public.memberships.find({
+          pledgeId: pledges.map(pledge => pledge.id)
+        })
+        : []
+
     // Mutation user object here? (... meh...)
     Object.assign(user, { memberships })
 
