@@ -25,7 +25,7 @@ const validate = async (value, question, context, payload) => {
   return false
 }
 
-const result = async (question, { top }, context) => {
+const result = async (question, { top, min }, context) => {
   const { pgdb } = context
   const docs = await pgdb.query(`
     SELECT
@@ -38,12 +38,14 @@ const result = async (question, { top }, context) => {
       "questionId" = :questionId
     GROUP BY
       2
+    ${min ? 'HAVING COUNT(*) >= :min' : ''}
     ORDER BY
       1 DESC
     ${top ? 'LIMIT :top' : ''}
   `, {
     questionId: question.id,
-    top
+    top,
+    min
   })
     .then(aggs => aggs.map(agg => ({
       count: agg.count,

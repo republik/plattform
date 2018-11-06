@@ -19,7 +19,7 @@ const validate = (value, question, { t }) => {
   return false
 }
 
-const result = async (question, { top }, context) => {
+const result = async (question, { top, min }, context) => {
   const { pgdb } = context
   const aggs = await pgdb.query(`
     SELECT
@@ -32,12 +32,14 @@ const result = async (question, { top }, context) => {
       "questionId" = :questionId
     GROUP BY
       2
+    ${min ? 'HAVING COUNT(*) >= :min' : ''}
     ORDER BY
       1 DESC
     ${top ? 'LIMIT :top' : ''}
   `, {
     questionId: question.id,
-    top
+    top,
+    min
   })
   const options = question.options
     .map(option => {
@@ -48,9 +50,7 @@ const result = async (question, { top }, context) => {
       }
     })
     .sort((a, b) => descending(a.count, b.count))
-  return top
-    ? options.slice(0, top)
-    : options
+  return options
 }
 
 module.exports = {

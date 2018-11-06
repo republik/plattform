@@ -249,7 +249,7 @@ type QuestionTypeDocument implements QuestionInterface {
 
   template: String
 
-  result(top: Int): [QuestionTypeDocumentResult!]
+  result(top: Int, min: Int): [QuestionTypeDocumentResult!]
 }
 type QuestionTypeDocumentResult {
   # only null if the document doesn exist anymore
@@ -305,7 +305,7 @@ type QuestionTypeChoice implements QuestionInterface {
   cardinality: Int!
   options: [QuestionTypeChoiceOption!]!
 
-  result(top: Int): [QuestionTypeChoiceResult!]
+  result(top: Int, min: Int): [QuestionTypeChoiceResult!]
 }
 type QuestionTypeChoiceOption {
   label: String!
