@@ -17,11 +17,20 @@ const getQuestions = async (questionnaire, pgdb) => {
       questionnaire
     }))
   }
+  // add turnout to questionnaire for downstream resolvers
+  const turnout =
+    (questionnaire.result && questionnaire.result.turnout) ||
+    questionnaire.turnout ||
+    await queries.turnout(questionnaire, pgdb)
+  const questionnaireWithTurnout = {
+    turnout,
+    ...questionnaire
+  }
   return pgdb.public.questions.find(
     { questionnaireId: questionnaire.id },
     { orderBy: { order: 'asc' } }
   )
-    .then(questions => questions.map(q => transformQuestion(q, questionnaire)))
+    .then(questions => questions.map(q => transformQuestion(q, questionnaireWithTurnout)))
 }
 
 const getQuestionsWithResults = async (questionnaire, context) => {
@@ -37,9 +46,15 @@ const getQuestionsWithResults = async (questionnaire, context) => {
 }
 
 const finalize = async (questionnaire, args, context) => {
-  const questions = await getQuestionsWithResults(questionnaire, context)
+  const turnout = await queries.turnout(questionnaire, context.pgdb)
+  const questionnaireWithTurnout = {
+    ...questionnaire,
+    turnout
+  }
+  const questions = await getQuestionsWithResults(questionnaireWithTurnout, context)
   const result = {
-    questions
+    questions,
+    turnout
   }
   return finalizeLib('questionnaires', questionnaire, result, args, context.pgdb)
 }
