@@ -137,7 +137,7 @@ const followup = async (requests, users, memberships, pgdb, t) => {
         throw e
       }
     },
-    { concurrency: 5 }
+    { concurrency: 1 }
   )
 }
 
@@ -166,10 +166,16 @@ const findEmptyFollowup = (pgdb) => {
 
   debug('findEmptyFollowup', { expiredAtBefore })
 
-  return pgdb.public.previewRequests.find({
-    'expiredAt <': expiredAtBefore,
-    followupAt: null
-  })
+  return pgdb.public.previewRequests.find(
+    {
+      'expiredAt <': expiredAtBefore,
+      followupAt: null
+    },
+    {
+      limit: 25,
+      orderBy: { expiredAt: 'asc' }
+    }
+  )
 }
 
 const findValidByUser = (user, pgdb) => {
