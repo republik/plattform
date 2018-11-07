@@ -140,7 +140,7 @@ const notificationHandler = async function (
         elastic: esClient,
         resource: {
           table: tx.public[table],
-          where: { id: updateIds },
+          where: { id: updateIds.length > 0 ? updateIds : null },
           delete: deleteIds
         }
       })
