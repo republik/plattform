@@ -93,6 +93,14 @@ const styles = {
       display: 'flex'
     }
   }),
+  rowMobileReverse: css({
+    margin: 0,
+    display: 'flex',
+    flexDirection: 'column-reverse',
+    [mUp]: {
+      flexDirection: 'row'
+    }
+  }),
   col2: css({
     [mUp]: {
       '& .tile': {
@@ -140,13 +148,14 @@ const styles = {
 export const TeaserFrontTileRow = ({
   children,
   attributes,
-  columns
+  columns,
+  mobileReverse
 }) => {
   return (
     <div
       role="group"
       {...attributes}
-      {...styles.row}
+      {...(mobileReverse ? styles.rowMobileReverse : styles.row)}
       {...styles[`col${columns}`]}
     >
       {children}
