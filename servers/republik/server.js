@@ -105,7 +105,7 @@ const runOnce = async (...args) => {
   if (PREVIEW_SCHEDULER_OFF === 'true') {
     console.log('PREVIEW_SCHEDULER_OFF prevented scheduler from begin started')
   } else {
-    await previewScheduler.init({ mail })
+    await previewScheduler.init({ t, mail })
   }
 }
 

@@ -7,6 +7,7 @@ const Promise = require('bluebird')
 const mailLib = require('./mail')
 
 const expireAfter = moment.duration('48:00:00')
+const followupAfter = moment.duration(7, 'days')
 
 const {
   MAILCHIMP_API_KEY,
@@ -104,6 +105,45 @@ const expire = async (requests, users, pgdb, mail) => {
   )
 }
 
+const followup = async (requests, users, memberships, grants, pgdb, t) => {
+  debug('followup', {
+    requests: requests.length,
+    users: users.length,
+    memberships: memberships.length,
+    grants: grants.length
+  })
+
+  await Promise.map(
+    requests,
+    async (request) => {
+      const transaction = await pgdb.transactionBegin()
+
+      try {
+        const user = users.find(user => user.id === request.userId)
+        const hasMembership =
+          !!memberships.find(membership => membership.userId === user.id)
+        const hasGrant =
+          !!grants.find(grants => grants.recipientUserId === user.id)
+
+        await setFollowup(request, user, transaction)
+
+        if (!hasMembership && !hasGrant) {
+          await mailLib.sendFollowup({ user, request, pgdb: transaction, t })
+        }
+
+        await transaction.transactionCommit()
+      } catch (e) {
+        await transaction.transactionRollback()
+
+        debug('rollback', { request: request.id })
+
+        throw e
+      }
+    },
+    { concurrency: 1 }
+  )
+}
+
 const findUnscheduled = (pgdb) => {
   debug('findUnscheduled')
 
@@ -122,6 +162,23 @@ const findVoidable = (pgdb) => {
     'scheduledAt <': scheduledAtBefore,
     expiredAt: null
   })
+}
+
+const findEmptyFollowup = (pgdb) => {
+  const expiredAtBefore = moment().subtract(followupAfter)
+
+  debug('findEmptyFollowup', { expiredAtBefore })
+
+  return pgdb.public.previewRequests.find(
+    {
+      'expiredAt <': expiredAtBefore,
+      followupAt: null
+    },
+    {
+      limit: 25,
+      orderBy: { expiredAt: 'asc' }
+    }
+  )
 }
 
 const findValidByUser = (user, pgdb) => {
@@ -157,6 +214,19 @@ const setExpired = async (request, user, pgdb) => {
   ])
 }
 
+const setFollowup = async (request, user, pgdb) => {
+  await Promise.all([
+    pgdb.public.previewRequests.updateAndGet(
+      { userId: user.id, 'expiredAt !=': null },
+      { followupAt: moment(), updatedAt: moment() }
+    ),
+    pgdb.public.previewEvents.insertAndGet({
+      previewRequestId: request.id,
+      event: 'followup'
+    })
+  ])
+}
+
 const setInterestsMailchimp = async (users, enable) =>
   mailchimp.batch(
     users.map(user => ({
@@ -177,5 +247,7 @@ module.exports = {
   schedule,
   findVoidable,
   expire,
+  findEmptyFollowup,
+  followup,
   findValidByUser
 }

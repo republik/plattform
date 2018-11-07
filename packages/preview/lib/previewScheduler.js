@@ -12,7 +12,7 @@ const lockTtlSecs = 60 * 4
 /**
  * Function to initialize scheduler. Provides scheduling.
  */
-const init = async ({ mail }) => {
+const init = async ({ t, mail }) => {
   debug('init')
 
   const pgdb = await PgDb.connect()
@@ -55,6 +55,37 @@ const init = async ({ mail }) => {
         debug('users', users.length)
 
         await previewLib.expire(voidableRequests, users, pgdb, mail)
+      }
+
+      const followupRequests = await previewLib.findEmptyFollowup(pgdb)
+
+      debug('requests to followup', followupRequests.length)
+
+      if (followupRequests.length > 0) {
+        const users = await pgdb.public.users.find({
+          id: followupRequests.map(request => request.userId)
+        })
+        debug('users', users.length)
+
+        const memberships = await pgdb.public.memberships.find({
+          userId: followupRequests.map(request => request.userId),
+          active: true
+        })
+        debug('memberships', memberships.length)
+
+        const grants = await pgdb.public.accessGrants.find({
+          recipientUserId: followupRequests.map(request => request.userId)
+        })
+        debug('grants', grants.length)
+
+        await previewLib.followup(
+          followupRequests,
+          users,
+          memberships,
+          grants,
+          pgdb,
+          t
+        )
       }
 
       // Extend lock for a fraction of usual interval to prevent runner to
