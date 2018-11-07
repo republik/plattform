@@ -66,6 +66,29 @@ Supported props:
 ```
 
 ```react
+<TeaserFrontTileRow columns={2} mobileReverse>
+  <TeaserFrontTile image='/static/rothaus_landscape.jpg'
+    byline='Foto: Laurent Burst'
+    color='#fff' bgColor='#000'>
+    <TeaserFrontTileHeadline.Editorial>The quick brown fox</TeaserFrontTileHeadline.Editorial>
+    <TeaserFrontLead>
+      Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
+    </TeaserFrontLead>
+    <TeaserFrontCredit>
+      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+  <TeaserFrontTile color='#000' bgColor='#fff'>
+    <Editorial.Format>Umfrage</Editorial.Format>
+    <TeaserFrontTileHeadline.Interaction>Mehr Geld für ausländische Autorinnen oder einen Bundeshaus&shy;korrespondent?</TeaserFrontTileHeadline.Interaction>
+    <TeaserFrontCredit>
+      <TeaserFrontCreditLink href='#'>Constantin Seibt</TeaserFrontCreditLink> fragt nach<br />31. December 2017
+    </TeaserFrontCredit>
+  </TeaserFrontTile>
+</TeaserFrontTileRow>
+```
+
+```react
 <TeaserFrontTileRow columns={3}>
   <TeaserFrontTile
     color='#fff' bgColor='#000'>
