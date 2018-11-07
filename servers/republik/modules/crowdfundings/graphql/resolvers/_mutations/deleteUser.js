@@ -215,7 +215,7 @@ module.exports = async (_, args, context) => {
       `deleteUser *${user.firstName} ${user.lastName} - ${user.email}*`
     )
 
-    return (hasPledges || hasGrants)
+    return (hasPledges || hasGrants || hasCandidacies)
       ? transformUser(
         await pgdb.public.users.findOne({
           id: userId
