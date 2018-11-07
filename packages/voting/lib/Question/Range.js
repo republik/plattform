@@ -67,11 +67,11 @@ const resultHistogram = async (result, { ticks }, context) => {
   const extent = d3.extent(
     questionTicks.map(t => t.value)
   )
-  const x = d3.scaleLinear()
-    .domain(extent).nice()
   const bins = d3.histogram()
-    .domain(x.domain())
-    .thresholds(x.ticks(numTicks))(values)
+    .domain(extent)
+    .thresholds(
+      d3.ticks(extent[0], extent[1], numTicks).slice(0, -1)
+    )(values)
 
   return bins.map(bin => ({
     ...bin,
