@@ -105,11 +105,12 @@ const expire = async (requests, users, pgdb, mail) => {
   )
 }
 
-const followup = async (requests, users, memberships, pgdb, t) => {
+const followup = async (requests, users, memberships, grants, pgdb, t) => {
   debug('followup', {
     requests: requests.length,
     users: users.length,
-    memberships: memberships.length
+    memberships: memberships.length,
+    grants: grants.length
   })
 
   await Promise.map(
@@ -121,10 +122,12 @@ const followup = async (requests, users, memberships, pgdb, t) => {
         const user = users.find(user => user.id === request.userId)
         const hasMembership =
           !!memberships.find(membership => membership.userId === user.id)
+        const hasGrant =
+          !!grants.find(grants => grants.recipientUserId === user.id)
 
         await setFollowup(request, user, transaction)
 
-        if (!hasMembership) {
+        if (!hasMembership && !hasGrant) {
           await mailLib.sendFollowup({ user, request, pgdb: transaction, t })
         }
 

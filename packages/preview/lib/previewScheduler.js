@@ -73,7 +73,19 @@ const init = async ({ t, mail }) => {
         })
         debug('memberships', memberships.length)
 
-        await previewLib.followup(followupRequests, users, memberships, pgdb, t)
+        const grants = await pgdb.public.accessGrants.find({
+          recipientUserId: followupRequests.map(request => request.userId)
+        })
+        debug('grants', grants.length)
+
+        await previewLib.followup(
+          followupRequests,
+          users,
+          memberships,
+          grants,
+          pgdb,
+          t
+        )
       }
 
       // Extend lock for a fraction of usual interval to prevent runner to
