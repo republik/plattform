@@ -1,6 +1,6 @@
 ### `<Comment />`
 
-A `<Comment />` is a combination of `<CommentHeader />` and the comment content. The actions are not part of this component.
+A `<Comment />` is a combination of `<CommentHeader />`, an optional `<CommentContext />` and the comment content. The actions are not part of this component.
 
 ```react|noSource,span-4
 <Comment
@@ -12,7 +12,7 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
     name: 'Christof Moser',
     credential: {description: 'Journalist', verified: true}
   }}
-  content="Aber wer hat irgend ein Recht, einen Menschen zu tadeln, der die Entscheidung trifft, eine Freude zu genießen, die keine unangenehmen Folgen hat, oder einen, der Schmerz vermeidet, welcher keine daraus resultierende Freude nach sich zieht? Auch gibt es niemanden, der den Schmerz an sich liebt, sucht oder wünscht, nur, weil er Schmerz ist, es sei denn, es kommt zu zufälligen Umständen, in denen Mühen und Schmerz ihm große Freude bereiten können. "
+  content={exampleMdast}
 />
 ```
 
@@ -26,7 +26,43 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
     name: 'Christof Moser',
     credential: {description: 'Bundesrat', verified: false}
   }}
-  content="Er versuchte, sich in der Dunkelheit seinen Weg zu ertasten und erstarrte: Anscheinend gab es keinen anderen Ausweg aus diesem kleinen Hof als den Durchgang, durch den er gekommen war."
+  content={exampleMdast}
+/>
+```
+
+```react|noSource,span-4
+<Comment
+  t={t}
+  createdAt={isoString}
+  timeago={isoString => 'gerade eben'}
+  displayAuthor={{
+    profilePicture: '/static/profilePicture1.png',
+    name: 'Christof Moser',
+    credential: {description: 'Journalist', verified: true}
+  }}
+  content={exampleMdast}
+  context={{
+    title: '«Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie»',
+    description: <span>Ein Artikel von <Editorial.A href="/foo">Christof Moser</Editorial.A></span>
+  }}
+/>
+```
+
+```react|noSource,span-2
+<Comment
+  t={t}
+  createdAt={isoString}
+  timeago={isoString => 'gerade eben'}
+  displayAuthor={{
+    profilePicture: '/static/profilePicture1.png',
+    name: 'Christof Moser',
+    credential: {description: 'Bundesrat', verified: false}
+  }}
+  content={exampleMdast}
+  context={{
+    title: '«Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie»',
+    description: <span>Ein Artikel von <Editorial.A href="/foo">Christof Moser</Editorial.A></span>
+  }}
 />
 ```
 
@@ -59,7 +95,7 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
   }}
   published={false}
   userCanEdit
-  content={"Ich bin dumm."}
+  content={exampleMdast}
 />
 ```
 
@@ -76,7 +112,7 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
   published={false}
   userCanEdit
   adminUnpublished
-  content={"Du Arsch!"}
+  content={exampleMdast}
 />
 ```
 
@@ -94,6 +130,7 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
     name: 'Christof Moser',
     credential: {description: 'Bundesrat', verified: false}
   }}
+  content={exampleMdast}
 />
 ```
 
@@ -108,58 +145,7 @@ A `<Comment />` is a combination of `<CommentHeader />` and the comment content.
     name: 'Agent Seymour Rutherford Simmons',
     credential: {description: 'Member of Sector 7 Advanced Research Division', verified: true}
   }}
-/>
-```
-
-#### Newlines
-
-Intersperses `<br />`s for up to two new lines between text. Leading and tailing new lines are completely ignored.
-
-```react|span-3
-<Comment
-  t={t}
-  content={`
-    Hallo
-
-    Zeil 1
-    Zeile 2
-
-    PS`}
-  createdAt={(new Date((new Date()).setMinutes(-13))).toISOString()}
-  updatedAt={isoString}
-  timeago={isoString =>
-    'vor ' + Math.round((Date.now() - Date.parse(isoString)) / 1000 / 60) + 'm'}
-  displayAuthor={{
-    profilePicture: '/static/profilePicture1.png',
-    name: 'Christof Moser'
-  }}
-/>
-```
-
-```react|span-3
-<Comment
-  t={t}
-  content={`
-
-
-    Hallo
-
-
-
-
-
-
-    ?
-
-
-    `}
-  createdAt={(new Date((new Date()).setMinutes(-13))).toISOString()}
-  updatedAt={isoString}
-  timeago={isoString =>
-    'vor ' + Math.round((Date.now() - Date.parse(isoString)) / 1000 / 60) + 'm'}
-  displayAuthor={{
-    name: 'Agent Seymour Rutherford Simmons'
-  }}
+  content={exampleMdast}
 />
 ```
 
@@ -220,6 +206,33 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
   timeago={isoString => 'gerade eben'}
   name='Agent Seymour Rutherford Simmons'
   credential={{description: 'Member of Sector 7 Advanced Research Division', verified: true}}
+/>
+```
+
+### `<CommentContext />`
+
+```react|noSource,span-2
+<CommentContext
+  title={'Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie'}
+/>
+```
+
+```react|noSource,span-2
+<CommentContext
+  title={'Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie'}
+  description={'Ein Artikel von Christof Moser'}
+/>
+```
+
+```react|noSource,span-2
+<CommentContext
+  title={'Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie'}
+  description={
+    <span>
+      Ein Artikel von <Editorial.A href="/foo">Christof Moser</Editorial.A>
+    </span>
+  }
+  onClick={() => {}}
 />
 ```
 

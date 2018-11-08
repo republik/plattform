@@ -93,6 +93,52 @@
 />
 ```
 
+```react|noSource,plain,span-4
+<CommentComposer
+  t={t}
+  initialText='Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, '
+  displayAuthor={{
+    name: 'Christof Moser',
+    profilePicture: '/static/profilePicture1.png',
+    credential: {description: 'Journalist', verified: true}
+  }}
+  onEditPreferences={() => {}}
+  onCancel={() => {}}
+  submitComment={t => {alert(t)}}
+  maxLength={100}
+  tagsLabel='Welche Art von Beitrag wollen Sie verfassen?'
+  tags={[
+    {label: 'Lob', value: 'id1'},
+    {label: 'Kritik', value: 'id2'},
+    {label: 'Wunsch', value: 'id3'},
+    {label: 'Keine Angabe', value: 'id4'}
+  ]}
+/>
+```
+
+```react|noSource,plain,span-2
+<CommentComposer
+  t={t}
+  initialText='Als Gregor Samsa eines Morgens aus unruhigen Träumen erwachte, '
+  displayAuthor={{
+    name: 'Christof Moser',
+    profilePicture: '/static/profilePicture1.png',
+    credential: {description: 'Journalist', verified: true}
+  }}
+  onEditPreferences={() => {}}
+  onCancel={() => {}}
+  submitComment={t => {alert(t)}}
+  maxLength={100}
+  tagsLabel='Welche Art von Beitrag wollen Sie verfassen?'
+  tags={[
+    {label: 'Lob', value: 'id1'},
+    {label: 'Kritik', value: 'id2'},
+    {label: 'Wunsch', value: 'id3'},
+    {label: 'Keine Angabe', value: 'id4'}
+  ]}
+/>
+```
+
 ### `<CommentComposerHeader />`
 
 Almost like `<CommentHeader />` but with a button on the right.

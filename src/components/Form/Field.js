@@ -169,7 +169,7 @@ class Field extends Component {
 
     const {isValidating, isDirty} = this.state
 
-    const value = this.props.value || this.state.value
+    const value = (this.props.value === '' || this.props.value) ? this.props.value : this.state.value
 
     let colorStyle
     if (this.props.black) {

@@ -50,6 +50,16 @@
 </Button>
 ```
 
+##  Dimmed
+
+Just like the secondary button, except that the default state looks dimmed liked the disabled state.
+
+```react|span-3
+<Button dimmed>
+  Mitmachen
+</Button>
+```
+
 ## Big
 
 ```react|span-3

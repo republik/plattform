@@ -50,6 +50,11 @@ const primaryStyle = css({
     color: '#fff'
   }
 })
+const dimmedStyle = css({
+  backgroundColor: '#fff',
+  color: colors.disabled,
+  borderColor: colors.disabled
+})
 const blackStyle = css({
   backgroundColor: 'transparent',
   borderColor: '#000',
@@ -90,11 +95,12 @@ const bigStyle = css({
   padding: '10px 30px 10px 30px'
 })
 
-const Button = ({onClick, type, children, primary, black, white, big, block, style, disabled, simulate: sim}) => {
+const Button = ({onClick, type, children, primary, dimmed, black, white, big, block, style, disabled, simulate: sim}) => {
   const simulations = sim ? simulate(sim) : {}
   const styles = merge(
     buttonStyle,
     primary && primaryStyle,
+    dimmed && dimmedStyle,
     black && blackStyle,
     white && whiteStyle,
     block && blockStyle,

@@ -226,9 +226,12 @@ ReactDOM.render(
             title: 'Comment',
             imports: {
               t,
+              ...require('./components/Typography'),
+              exampleMdast: require('./components/Comment/exampleMdast').exampleMdast,
               isoString: (new Date()).toString(),
               Comment: require('./components/Comment/Comment'),
               CommentHeader: require('./components/Comment/CommentHeader'),
+              CommentContext: require('./components/Comment/CommentContext'),
               CommentActions: require('./components/Comment/CommentActions')
             },
             src: require('./components/Comment/docs.md')

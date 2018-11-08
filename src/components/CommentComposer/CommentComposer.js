@@ -8,6 +8,7 @@ import {serifRegular16, sansSerifRegular14, sansSerifRegular16} from '../Typogra
 import CommentComposerHeader from './CommentComposerHeader'
 import CommentComposerError from './CommentComposerError'
 import CommentComposerProgress from './CommentComposerProgress'
+import CommentComposerTags from './CommentComposerTags'
 
 const actionButtonStyle = {
   ...sansSerifRegular16,
@@ -92,7 +93,8 @@ class CommentComposer extends PureComponent {
     this.state = {
       text: props.initialText || '',
       count: 0,
-      progress: 0
+      progress: 0,
+      tagValue: undefined
     }
 
     this.onChange = ev => {
@@ -112,6 +114,8 @@ class CommentComposer extends PureComponent {
     this.getCount = () => (
       (this.textarea && this.textarea.value.length) || 0
     )
+
+    this.onTagChange = (tagValue) => this.setState({tagValue})
   }
 
   updateMaxLength () {
@@ -162,9 +166,11 @@ class CommentComposer extends PureComponent {
       submitLabel,
       cancelLabel,
       secondaryActions,
-      maxLength
+      maxLength,
+      tagsLabel,
+      tags
     } = this.props
-    const {text, count} = this.state
+    const {text, count, tagValue} = this.state
     const maxLengthExceeded = maxLength && count > maxLength
 
     return (
@@ -173,6 +179,16 @@ class CommentComposer extends PureComponent {
           {...displayAuthor}
           onClick={onEditPreferences}
         />
+
+        {tags && !!tags.length && (
+          <div {...styles.form}>
+            <CommentComposerTags
+              label={tagsLabel} 
+              tags={tags}
+              onChange={this.onTagChange}
+              value={tagValue} />
+          </div>
+        )}
 
         <div {...styles.form}>
           <Textarea
