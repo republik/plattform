@@ -18,3 +18,8 @@ CREATE TABLE "actions" (
 
 ALTER TABLE "packages"
   ADD COLUMN "custom" boolean NOT NULL DEFAULT false;
+
+ALTER TABLE "membershipPeriods"
+  ADD COLUMN "kind" character varying
+    NOT NULL
+    DEFAULT 'REGULAR'::character varying ;
