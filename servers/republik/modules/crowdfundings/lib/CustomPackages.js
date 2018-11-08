@@ -19,9 +19,27 @@ const getCustomOptions = (package_, packageOptions) => {
           membership.id
         ].join('-'),
         customization: {
-          membershipId: membership.id,
-          bonusInterval: 'days',
-          bonusIntervalCount: 0
+          membership,
+          additionalPeriods: [
+            {
+              id: 'fake',
+              membershipId: membership.id,
+              kind: 'REGULAR',
+              beginDate: new Date(),
+              endDate: new Date(),
+              createdAt: new Date(),
+              updatedAt: new Date()
+            },
+            {
+              id: 'total-fake',
+              membershipId: membership.id,
+              kind: 'BONUS',
+              beginDate: new Date(),
+              endDate: new Date(),
+              createdAt: new Date(),
+              updatedAt: new Date()
+            }
+          ]
         }
       })
     })

@@ -73,24 +73,21 @@ type PackageOption {
   # for custom packages
   customization: PackageOptionCustomization
 }
+type PackageOptionCustomization {
+  membership: Membership
+  additionalPeriods: [MembershipPeriod]!
+}
+
 input PackageOptionInput {
   amount: Int!
   price: Int!
-  templateId: ID!
+  templateId: ID! # packageOption.id
 
   # via custom packages
   customization: PackageOptionCustomizationInput
 }
-
-type PackageOptionCustomization {
-  membershipId: ID
-  bonusInterval: String
-  bonusIntervalCount: Int
-}
 input PackageOptionCustomizationInput {
   membershipId: ID
-  bonusInterval: String
-  bonusIntervalCount: Int
 }
 
 type Goodie {
@@ -132,9 +129,16 @@ type Membership {
   updatedAt: DateTime!
 }
 
+enum MembershipPeriodKind {
+  REGULAR
+  BONUS # Bonus period upon checkout
+  ADMIN # A bonus period granted via admins, supporter
+}
+
 type MembershipPeriod {
   id: ID!
   membership: Membership!
+  kind: MembershipPeriodKind!
   beginDate: DateTime!
   endDate: DateTime!
   createdAt: DateTime!

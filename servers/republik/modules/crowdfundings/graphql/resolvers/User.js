@@ -1,4 +1,6 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
+const debug = require('debug')('crowdfundings:resolver:User')
+
 const getStripeClients = require('../../lib/payments/stripe/clients')
 
 module.exports = {
@@ -76,6 +78,8 @@ module.exports = {
     return false
   },
   async customPackages (user, args, { pgdb, user: me }) {
+    debug('customPackages')
+
     Roles.ensureUserIsMeOrInRoles(user, me, ['supporter'])
 
     const now = new Date()
