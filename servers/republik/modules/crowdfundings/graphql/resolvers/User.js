@@ -108,8 +108,39 @@ module.exports = {
         })
         : []
 
-    // Mutation user object here? (... meh...)
+    const membershipTypes =
+      memberships.length > 0
+        ? await pgdb.public.membershipTypes.find({
+          id: memberships.map(membership => membership.membershipTypeId)
+        })
+        : []
+
+    memberships.forEach((membership, index, memberships) => {
+      memberships[index].membershipType =
+        membershipTypes.find(membershipType => membershipType.id === membership.membershipTypeId)
+    })
+
+    const membershipPeriods =
+      memberships.length > 0
+        ? await pgdb.public.membershipPeriods.find({
+          membershipId: memberships.map(membership => membership.id)
+        })
+        : []
+
+    memberships.forEach((membership, index, memberships) => {
+      memberships[index].membershipPeriods =
+        membershipPeriods.filter(membershipPeriod => membershipPeriod.membershipId === membership.id)
+    })
+
     Object.assign(user, { memberships })
+
+    /**
+     * user: {
+     *  ...user
+     *  memberships: [
+     *    {...membership, membershipType, membershipPeriods}
+     *  ]
+     */
 
     return packages.map(package_ => ({ ...package_, user }))
   },
