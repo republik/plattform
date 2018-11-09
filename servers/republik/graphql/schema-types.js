@@ -255,7 +255,13 @@ type CommentConnection {
 type Discussion {
   id: ID!
   title: String
-  documentPath: String
+
+  # set if this is the discussion of a document
+  document: Document
+
+  # path to use if no document is linked
+  path: String
+
   closed: Boolean!
   collapsable: Boolean!
   comments(

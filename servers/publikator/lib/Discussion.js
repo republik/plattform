@@ -1,11 +1,12 @@
 const { Discussion: { upsert: upsertDiscussion } } = require('@orbiting/backend-modules-discussions')
 
-const upsert = async (repoMeta, docMeta, context) => {
+const upsert = async (discussionId, docMeta, context) => {
   const { pgdb } = context
 
   const settings = {
     title: docMeta.title,
-    documentPath: docMeta.path,
+    path: docMeta.path,
+    repoId: docMeta.repoId,
     collapsable: !!docMeta.collapsable,
     ...docMeta.commentsMaxLength
       ? { maxLength: docMeta.commentsMaxLength }
@@ -18,8 +19,7 @@ const upsert = async (repoMeta, docMeta, context) => {
       : { }
   }
 
-  const discussion = await upsertDiscussion(repoMeta.discussionId, settings, pgdb)
-  return discussion.id
+  return upsertDiscussion(discussionId, settings, pgdb)
 }
 
 module.exports = {

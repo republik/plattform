@@ -38,19 +38,32 @@ type Meta {
   twitterDescription: String
   prepublication: Boolean
   publishDate: DateTime
-  template: String
   feed: Boolean
   kind: String
   color: String
   series: Series
   format: Document
-  # the discussion wrapping document
   dossier: Document
-  discussion: Document
-  # the id of the discussion itself
-  discussionId: ID
+
   credits: JSON
   audioSource: AudioSource
+
+  # if set to true, discussing this article is suppressed
+  suppressDiscussion: Boolean
+
+  # template of the article
+  # if (and only if) this is 'discussion' the page must show
+  # the discussion component (in the bottom)
+  template: String
+
+  # deprecated - ignore
+  # the article page should query and subscribe to
+  # the discussion with it's repoId
+  discussionId: ID
+
+  # the frame document showing the discussion for
+  # this doc
+  discussion: Document
 }
 
 input DocumentInput {

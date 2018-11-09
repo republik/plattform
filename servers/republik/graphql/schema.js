@@ -9,6 +9,10 @@ schema {
 type queries {
   discussions: [Discussion!]!
   discussion(id: ID!): Discussion
+  comments(
+    orderBy: DiscussionOrder
+    orderDirection: OrderDirection
+  ): CommentConnection!
   statements(
     first: Int!
     after: String
@@ -86,6 +90,7 @@ type mutations {
   submitComment(
     # client side generated id
     id: ID
+    # can be discussion id or repoId
     discussionId: ID!
     parentId: ID
     content: String!
