@@ -1,4 +1,5 @@
 const debug = require('debug')('crowdfundings:lib:CustomPackages')
+const moment = require('moment')
 
 // But that one into database.
 const EXTENABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
@@ -8,6 +9,7 @@ const evaluate = (package_, packageOption, membership) => {
   // Is membershipType i.O?
 
   const { membershipType, membershipPeriods } = membership
+  const now = moment()
 
   const payload = {
     ...packageOption,
@@ -17,26 +19,6 @@ const evaluate = (package_, packageOption, membership) => {
     customization: {
       membership,
       additionalPeriods: []
-      /* additionalPeriods: [
-        {
-          id: 'fake',
-          membershipId: membership.id,
-          kind: 'REGULAR',
-          beginDate: new Date(),
-          endDate: new Date(),
-          createdAt: new Date(),
-          updatedAt: new Date()
-        },
-        {
-          id: 'total-fake',
-          membershipId: membership.id,
-          kind: 'BONUS',
-          beginDate: new Date(),
-          endDate: new Date(),
-          createdAt: new Date(),
-          updatedAt: new Date()
-        }
-      ] */
     }
   }
 
@@ -51,14 +33,77 @@ const evaluate = (package_, packageOption, membership) => {
   // Indicates whether a membership is or was active. Only those can be
   // extended.
   if (membershipPeriods.length === 0) {
-    debug('membership inactive, no previous periods')
+    debug('membership has no membershipPeriods')
     return false
   }
 
-  /* Object.assign(
-    {},
-    await membershipTypeExten
-  ) */
+  // Has no membershipPeriod with beginDate in future
+  // Only memberships with current or past membershipPeriods can be extended.
+  if (
+    membershipPeriods
+      .filter(membershipPeriod => membershipPeriod.beginDate > now)
+      .length > 0
+  ) {
+    debug('membershp has membershipPeriod in future')
+    return false
+  }
+
+  /*
+  e)  MISSING DATA — If membership.membershipType != option.membershipType
+      - If true, indicate generation of new membership in customization
+      payload, then proceed
+  TODO
+   */
+
+  let endDate =
+    membershipPeriods
+      .map(p => p.endDate)
+      .reduce(
+        (accumulator, currentValue) => {
+          if (!accumulator) {
+            return currentValue
+          }
+
+          return currentValue > accumulator ? currentValue : accumulator
+        }
+      )
+
+  // If endDate is in past, pushed to now.
+  // This indicates that we're dealing with an expired membership.
+  if (endDate < now) {
+    endDate = now
+  }
+
+  // Add a regular period this packageOption would cause.
+  // It is a mere suggestion. Dates may differ upon payment.
+
+  const period = {
+    beginDate: endDate,
+    endDate: moment(endDate)
+      .add(membershipType.intervalCount, membershipType.interval)
+  }
+
+  payload.customization.additionalPeriods.push({
+    id: '123',
+    membershipId: membership.id,
+    kind: 'REGULAR',
+    createdAt: now,
+    updatedAt: now,
+    ...period
+  })
+
+  // Prepend some condition before adding that thingy.
+  payload.customization.additionalPeriods.push({
+    id: '456',
+    membershipId: membership.id,
+    kind: 'BONUS',
+    createdAt: now,
+    updatedAt: now,
+    beginDate: period.endDate,
+    endDate:
+      moment(period.endDate)
+        .add(moment.duration(moment('2019-01-16').diff(now)))
+  })
 
   /*
   a)  OK Does user own membership, or pledge membership (ABO_GIVE)
@@ -67,12 +112,11 @@ const evaluate = (package_, packageOption, membership) => {
       - If false, end
   c)  OK Is membership active, or inactive and used (altered)
       - If false, end
-
-  d)  Has no membershipPeriod with beginDate in future
+  d)  OK Has no membershipPeriod with beginDate in future
       - If false, end
-  e)  If membership.membershipType != option.membershipType
-      - If true, indicate generation of new membership in customization
-      payload, then proceed
+
+  xx
+
   f)  Has membership no notice of cancellation (optional)
       - If false, indicate revoking of cancellation, then proceed
   g)  Does current, last period end within next x days (optional)
@@ -84,11 +128,27 @@ const evaluate = (package_, packageOption, membership) => {
   return payload
 }
 
-const getCustomOptions = (package_, packageOptions) => {
+const getCustomOptions = (package_) => {
   debug('getCustomOptions', package_.name, package_.id)
   debug('user', package_.user.id)
 
+  const { packageOptions } = package_
+
   const results = []
+
+  // TODO, Check if all data is available:
+  /*
+    package {
+      user: {
+        memberhips[] {
+          membershipType
+          membershipPeriods[]
+        }
+      }
+      packageOptions[]
+    }
+
+   */
 
   // per membership...
   package_.user.memberships.forEach((membership) => {
