@@ -1,5 +1,8 @@
 Q:
 
+- [ ] Can a claimed membership (via package:ABO_GIVE) extended as a
+      membershipType:BENEFACTOR_ABO? Would argue not. If inclined to provide
+      more money, donate.
 - [x] Can memberships from ABO_GIVE pledges be extended if unclaimed? _No._
 - [x] Can non-active membership be extended? This might reactivate cancelled
       memberships, or stack unused membershipPeriods onto a membership. _No._
