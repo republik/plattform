@@ -23,3 +23,8 @@ ALTER TABLE "membershipPeriods"
   ADD COLUMN "kind" character varying
     NOT NULL
     DEFAULT 'REGULAR'::character varying ;
+
+ALTER TABLE "pledgeOptions"
+  ADD COLUMN "customization" jsonb
+  NOT NULL
+  DEFAULT {} ;
