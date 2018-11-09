@@ -77,32 +77,32 @@ const evaluate = (package_, packageOption, membership) => {
   // Add a regular period this packageOption would cause.
   // It is a mere suggestion. Dates may differ upon payment.
 
-  const period = {
+  const beginEnd = {
     beginDate: endDate,
     endDate: moment(endDate)
       .add(membershipType.intervalCount, membershipType.interval)
   }
 
   payload.customization.additionalPeriods.push({
-    id: '123',
+    // id: '123',
     membershipId: membership.id,
     kind: 'REGULAR',
-    createdAt: now,
-    updatedAt: now,
-    ...period
+    // createdAt: now,
+    // updatedAt: now,
+    ...beginEnd
   })
 
   // Prepend some condition before adding that thingy.
   payload.customization.additionalPeriods.push({
-    id: '456',
+    // id: '456',
     membershipId: membership.id,
     kind: 'BONUS',
-    createdAt: now,
-    updatedAt: now,
-    beginDate: period.endDate,
+    beginDate: beginEnd.endDate,
     endDate:
-      moment(period.endDate)
+      moment(beginEnd.endDate)
         .add(moment.duration(moment('2019-01-16').diff(now)))
+    // createdAt: now,
+    // updatedAt: now
   })
 
   /*
@@ -166,5 +166,6 @@ const getCustomOptions = (package_) => {
 }
 
 module.exports = {
+  evaluate,
   getCustomOptions
 }

@@ -1,5 +1,6 @@
 const moment = require('moment')
 const { getPledgeOptionsTree } = require('./Pledge')
+const { evaluate } = require('./CustomPackages')
 const cancelMembership = require('../graphql/resolvers/_mutations/cancelMembership')
 const debug = require('debug')('crowdfundings:memberships')
 const { enforceSubscriptions } = require('./Mail')
@@ -60,51 +61,72 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
   let cancelableMemberships = []
   let membershipPeriod
   const now = new Date()
-  pledgeOptions.forEach((plo) => {
+
+  await Promise.map(pledgeOptions, async (plo) => {
     if (plo.packageOption.reward.type === 'MembershipType') {
-      const membershipType = plo.packageOption.reward.membershipType
-      for (let c = 0; c < plo.amount; c++) {
-        const membership = {
-          userId: user.id,
-          pledgeId: pledge.id,
-          membershipTypeId: membershipType.id,
-          reducedPrice,
-          voucherable: !reducedPrice,
-          active: false,
-          renew: false,
-          createdAt: now,
-          updatedAt: now
-        }
+      const { membershipId } = plo.customization
+      const { membershipType } = plo.packageOption.reward
 
-        if (
-          c === 0 &&
-          !membershipPeriod &&
-          !userHasActiveMembership &&
-          pkg.isAutoActivateUserMembership
-        ) {
-          membershipPeriod = {
-            beginDate: now,
-            endDate: moment(now).add(membershipType.intervalCount, membershipType.interval),
-            membership
-          }
-        } else {
-          // Cancel active memberships because bought package (option) contains
-          // a better abo.
-          if (['ABO', 'BENEFACTOR_ABO'].includes(membershipType.name)) {
-            cancelableMemberships =
-              activeMemberships
-                .filter(m => (m.name === 'MONTHLY_ABO' && m.renew === true))
+      if (membershipId) {
+        debug('membershipId "%s"', membershipId)
+        const membership =
+          await pgdb.public.memberships.findOne({ id: membershipId })
+        const membershipPeriods =
+          await pgdb.public.membershipPeriods.find({ membershipId })
+
+        Object.assign(membership, { membershipType, membershipPeriods })
+
+        const { customization: { additionalPeriods } } = evaluate(pkg, plo, membership)
+
+        await pgdb.public.membershipPeriods.insert(additionalPeriods)
+
+        debug('additionalPeriods %o', additionalPeriods)
+      } else {
+        for (let c = 0; c < plo.amount; c++) {
+          const membership = {
+            userId: user.id,
+            pledgeId: pledge.id,
+            membershipTypeId: membershipType.id,
+            reducedPrice,
+            voucherable: !reducedPrice,
+            active: false,
+            renew: false,
+            createdAt: now,
+            updatedAt: now
           }
 
-          debug({ activeMemberships, cancelableMemberships })
+          if (
+            c === 0 &&
+            !membershipPeriod &&
+            !userHasActiveMembership &&
+            pkg.isAutoActivateUserMembership
+          ) {
+            membershipPeriod = {
+              beginDate: now,
+              endDate: moment(now).add(membershipType.intervalCount, membershipType.interval),
+              membership
+            }
+          } else {
+            // Cancel active memberships because bought package (option) contains
+            // a better abo.
+            if (['ABO', 'BENEFACTOR_ABO'].includes(membershipType.name)) {
+              cancelableMemberships =
+                activeMemberships
+                  .filter(m => (m.name === 'MONTHLY_ABO' && m.renew === true))
+            }
 
-          memberships.push(membership)
+            debug({ activeMemberships, cancelableMemberships })
+
+            memberships.push(membership)
+          }
         }
       }
     }
   })
   debug('generateMemberships membershipPeriod %O', membershipPeriod)
   debug('generateMemberships memberships %O', memberships)
+
+  // throw new Error('Intentional Breakpoint: Reached end of generateMembership')
 
   await pgdb.public.memberships.insert(memberships)
 
@@ -122,7 +144,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
   }
 
   if (membershipPeriod) {
-    const membership = await pgdb.public.memberships.insertAndGet({
+    const membership = await pgdb.public.memberships.insert({
       ...membershipPeriod.membership,
       active: true,
       renew: true,
