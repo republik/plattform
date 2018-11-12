@@ -195,6 +195,7 @@ const BarChart = (props) => {
     ? d => d.datum[props.color]
     : d => d.category
   let colorValues = data.map(colorAccessor)
+    .concat(props.colorLegendValues)
     .filter(Boolean)
     .filter(deduplicate)
   runSort(props.colorSort, colorValues)
@@ -487,9 +488,15 @@ const BarChart = (props) => {
       <div>
         <ColorLegend inline values={(
           []
-            .concat(props.colorLegend && colorValues.length > 0 && colorValues.map(colorValue => (
-              {color: color(colorValue), label: colorValue}
-            )))
+            .concat(
+              props.colorLegend &&
+              (
+                props.colorLegendValues ||
+                colorValues
+              ).map(colorValue => (
+                {color: color(colorValue), label: colorValue}
+              ))
+            )
             .concat(!mini && confidence && {label: (
               <span {...styles.confidenceLegend}>
                 <span {...styles.confidenceBar} />
@@ -527,6 +534,7 @@ BarChart.propTypes = {
   colorRange: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   colorSort: sortPropType,
   colorLegend: PropTypes.bool,
+  colorLegendValues: PropTypes.arrayOf(PropTypes.string),
   colorRanges: PropTypes.shape({
     diverging2: PropTypes.array.isRequired,
     sequential3: PropTypes.array.isRequired,
