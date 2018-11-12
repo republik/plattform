@@ -27,4 +27,4 @@ ALTER TABLE "membershipPeriods"
 ALTER TABLE "pledgeOptions"
   ADD COLUMN "customization" jsonb
   NOT NULL
-  DEFAULT {} ;
+  DEFAULT '{}' ;
