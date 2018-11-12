@@ -13,6 +13,8 @@ module.exports = {
     const withoutContent = fields.indexOf('content') === -1
     return search(null, {
       withoutContent,
+      withoutRelatedDocs: true,
+      withoutAggs: true,
       filter: {
         path: result.path,
         type: 'Document'
