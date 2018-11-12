@@ -16,7 +16,7 @@ module.exports = {
     return userSubmitDate(entity.id, me && me.id, pgdb)
   },
   async questions (entity, args, { pgdb, user: me }) {
-    return getQuestions(entity, pgdb)
+    return getQuestions(entity, args, pgdb)
   },
   async turnout (questionnaire, args, { pgdb }) {
     if (questionnaire.result && questionnaire.result.turnout) { // after counting

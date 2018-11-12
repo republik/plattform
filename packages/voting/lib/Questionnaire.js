@@ -10,12 +10,15 @@ const transformQuestion = (q, questionnaire) => ({
   questionnaire
 })
 
-const getQuestions = async (questionnaire, pgdb) => {
+const getQuestions = async (questionnaire, args = {}, pgdb) => {
+  const { orderFilter } = args
   if (questionnaire.result) {
-    return questionnaire.result.questions.map(question => ({
-      ...question,
-      questionnaire
-    }))
+    return questionnaire.result.questions
+      .map(question => ({
+        ...question,
+        questionnaire
+      }))
+      .filter(question => !orderFilter || orderFilter.indexOf(question.order) > -1)
   }
   // add turnout to questionnaire for downstream resolvers
   const turnout =
@@ -27,7 +30,10 @@ const getQuestions = async (questionnaire, pgdb) => {
     ...questionnaire
   }
   return pgdb.public.questions.find(
-    { questionnaireId: questionnaire.id },
+    {
+      questionnaireId: questionnaire.id,
+      ...orderFilter ? { order: orderFilter } : {}
+    },
     { orderBy: { order: 'asc' } }
   )
     .then(questions => questions.map(q => transformQuestion(q, questionnaireWithTurnout)))
@@ -35,7 +41,7 @@ const getQuestions = async (questionnaire, pgdb) => {
 
 const getQuestionsWithResults = async (questionnaire, context) => {
   const { pgdb } = context
-  return getQuestions(questionnaire, pgdb)
+  return getQuestions(questionnaire, {}, pgdb)
     .then(questions => Promise.all(questions.map(async (question) => {
       return {
         ...question,
