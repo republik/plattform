@@ -1,5 +1,6 @@
 const debug = require('debug')('crowdfundings:lib:CustomPackages')
 const moment = require('moment')
+const uuid = require('uuid/v4')
 
 // But that one into database.
 const EXTENABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
@@ -84,25 +85,25 @@ const evaluate = (package_, packageOption, membership) => {
   }
 
   payload.customization.additionalPeriods.push({
-    // id: '123',
+    id: uuid(), // TODO: Fake UUID, stitch together differently.
     membershipId: membership.id,
     kind: 'REGULAR',
-    // createdAt: now,
-    // updatedAt: now,
+    createdAt: now,
+    updatedAt: now,
     ...beginEnd
   })
 
   // Prepend some condition before adding that thingy.
   payload.customization.additionalPeriods.push({
-    // id: '456',
+    id: uuid(), // TODO: Fake UUID, stitch together differently.
     membershipId: membership.id,
     kind: 'BONUS',
     beginDate: beginEnd.endDate,
     endDate:
       moment(beginEnd.endDate)
-        .add(moment.duration(moment('2019-01-16').diff(now)))
-    // createdAt: now,
-    // updatedAt: now
+        .add(moment.duration(moment('2019-01-16').diff(now))),
+    createdAt: now,
+    updatedAt: now
   })
 
   /*

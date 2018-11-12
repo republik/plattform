@@ -5,6 +5,7 @@ const cancelMembership = require('../graphql/resolvers/_mutations/cancelMembersh
 const debug = require('debug')('crowdfundings:memberships')
 const { enforceSubscriptions } = require('./Mail')
 const Promise = require('bluebird')
+const omit = require('lodash/omit')
 
 module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
   const pledge = await pgdb.public.pledges.findOne({id: pledgeId})
@@ -78,7 +79,10 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
 
         const { customization: { additionalPeriods } } = evaluate(pkg, plo, membership)
 
-        await pgdb.public.membershipPeriods.insert(additionalPeriods)
+        await pgdb.public.membershipPeriods.insert(
+          additionalPeriods
+            .map(period => omit(period, ['id', 'createdAt', 'updatedAt']))
+        )
 
         debug('additionalPeriods %o', additionalPeriods)
       } else {
