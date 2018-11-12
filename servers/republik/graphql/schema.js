@@ -9,6 +9,7 @@ schema {
 type queries {
   discussions: [Discussion!]!
   discussion(id: ID!): Discussion
+  mostDebated(lastDays: Int): [DiscussionRank!]!
   comments(
     orderBy: DiscussionOrder
     orderDirection: OrderDirection

@@ -298,6 +298,11 @@ type Discussion {
   userCanComment: Boolean!
 }
 
+type DiscussionRank {
+  commentsCount: Int!
+  discussion: Discussion!
+}
+
 type DisplayUser {
   id: ID!
   name: String!
