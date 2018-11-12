@@ -1247,10 +1247,10 @@ before-after-hook@^1.1.0:
   resolved "https://registry.yarnpkg.com/before-after-hook/-/before-after-hook-1.1.0.tgz#83165e15a59460d13702cb8febd6a1807896db5a"
   integrity sha512-VOMDtYPwLbIncTxNoSzRyvaMxtXmLWLUqr8k5AfC1BzLk34HvBXaQX8snOwQZ4c0aX8aSERqtJSiI9/m2u5kuA==
 
-big-integer@^1.6.27:
-  version "1.6.28"
-  resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.28.tgz#8cef0fda3ccde8759c2c66efcfacc35aea658283"
-  integrity sha512-OJT3rzgtsYca/5WmmEuFJDPMwROVh5SSjoEX9wIrpfbbWJ4KqRzShs8Cj6jWHaatBYAeWngBA+kmmrcHSklT1g==
+big-integer@^1.6.31:
+  version "1.6.36"
+  resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.36.tgz#78631076265d4ae3555c04f85e7d9d2f3a071a36"
+  integrity sha512-t70bfa7HYEA1D9idDbmuv7YbsbVkQ+Hp+8KFSul4aE5e/i1bjCNIRYJZlA8Q8p0r9T8cF/RVvwUgRA//FydEyg==
 
 binary-extensions@^1.0.0:
   version "1.11.0"
@@ -3899,10 +3899,10 @@ generic-pool@2.4.2:
   resolved "https://registry.yarnpkg.com/generic-pool/-/generic-pool-2.4.2.tgz#886bc5bf0beb7db96e81bcbba078818de5a62683"
   integrity sha1-iGvFvwvrfblugby7oHiBjeWmJoM=
 
-geoip-database@^1.0.16:
-  version "1.0.17"
-  resolved "https://registry.yarnpkg.com/geoip-database/-/geoip-database-1.0.17.tgz#9783fe648bbb41e53195d9dcd5bd265441704ada"
-  integrity sha1-l4P+ZIu7QeUxldnc1b0mVEFwSto=
+geoip-database@^1.0.19:
+  version "1.0.19"
+  resolved "https://registry.yarnpkg.com/geoip-database/-/geoip-database-1.0.19.tgz#294de370c4164fc95eafa0cc7a8e62a7d018226c"
+  integrity sha1-KU3jcMQWT8ler6DMeo5ip9AYImw=
 
 get-caller-file@^1.0.1:
   version "1.0.2"
@@ -6207,13 +6207,13 @@ math-random@^1.0.1:
   resolved "https://registry.yarnpkg.com/math-random/-/math-random-1.0.1.tgz#8b3aac588b8a66e4975e3cdea67f7bb329601fac"
   integrity sha1-izqsWIuKZuSXXjzepn97sylgH6w=
 
-maxmind@^2.5.0:
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/maxmind/-/maxmind-2.6.0.tgz#c9bab4b505435ad85b2250a39b9d8984e2fa97c5"
-  integrity sha512-rTQxRVGITYXsi7KB9qPN/Li+RDMixVyZWpoUNZEqrsmqDsQMqQVkjPhzhfovYu/xFXeahF/oPErsJ9ReFE7OTA==
+maxmind@^2.11.0:
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/maxmind/-/maxmind-2.11.0.tgz#e744650406ac0a9be295becb98a15ea832c58c1d"
+  integrity sha512-ke0huy9eNbsOX+VMDCgbf48FRrm4ZXrD7/5alYll9maDReAAt/0lNUG69eGaCzKVD+MQ5aCWZ8pxjJBjM8yFrA==
   dependencies:
-    big-integer "^1.6.27"
-    tiny-lru "^1.5.1"
+    big-integer "^1.6.31"
+    tiny-lru "^1.6.1"
 
 mdast-react-render@^1.2.0:
   version "1.2.0"
@@ -9437,10 +9437,10 @@ timed-out@^4.0.0, timed-out@^4.0.1:
   resolved "https://registry.yarnpkg.com/timed-out/-/timed-out-4.0.1.tgz#f32eacac5a175bea25d7fab565ab3ed8741ef56f"
   integrity sha1-8y6srFoXW+ol1/q1Zas+2HQe9W8=
 
-tiny-lru@^1.5.1:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/tiny-lru/-/tiny-lru-1.5.2.tgz#2cef6eab55ff339aee78919262811a4d46d892d1"
-  integrity sha512-yAJ76h2GdHGT+9gthdPs+Q9HbXugvACKcAEnZeypJxuLf6cNFduMTfTnZ1JtgcnS47e8ULmO5BoxA0kUkax8Ug==
+tiny-lru@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/tiny-lru/-/tiny-lru-1.6.1.tgz#addb5c043311d1f07cd3a81d706ae739b8efebb1"
+  integrity sha512-m8oyPnHjnQlbDk8+MCw33qRMp6+BxPxoayN9C743VToeyQ5zZV6F6vkklrYVEI0z9MQ3+jmc+22tKmvPg4gmoA==
 
 tmp@0.0.x, tmp@^0.0.33:
   version "0.0.33"
