@@ -11,9 +11,19 @@ module.exports = {
     }
     const fields = getFieldList(info, true)
     const withoutContent = fields.indexOf('content') === -1
+    const relatedDocsNamespaces = [
+      'meta.series',
+      'meta.format',
+      'meta.dossier',
+      'meta.discussion'
+    ]
+    const withoutRelatedDocs = !fields.find(field => (
+      relatedDocsNamespaces
+        .find(namespace => field.startsWith(namespace))
+    ))
     return search(null, {
       withoutContent,
-      withoutRelatedDocs: true,
+      withoutRelatedDocs,
       withoutAggs: true,
       filter: {
         path: result.path,
