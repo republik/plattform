@@ -1,6 +1,6 @@
 const moment = require('moment')
 
-module.exports = async (_, { lastDays = 5 }, { pgdb }, info) =>
+module.exports = async (_, { lastDays = 5 }, { pgdb }) =>
   pgdb.query(`
     SELECT
       COUNT(*) as count,
