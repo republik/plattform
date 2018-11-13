@@ -52,23 +52,24 @@ type Meta {
   # the article page now uses myDiscussion
   # discussionId: ID
 
+  # deprecated
+  # the frame document of linkedDiscussion
+  # discussion: Document
+
   # template of the article
   # if (and only if) this is 'discussion' the page must show
   # the discussion component (in the bottom)
   template: String
 
-  # show debate-icon if this is set
+  # show debate-icon if this is set or template is 'discussion'
   # href src: linkedDiscussion.document.meta.path ||
   #           linkedDiscussion.path
   linkedDiscussion: Discussion
 
-  # the frame document of linkedDiscussion
-  discussion: Document
-
   # show general feedback if
   # myDiscussion && !myDiscussion.closed &&
   # (!linkedDiscussion || linkedDiscussion.closed)
-  myDiscussion: Discussion
+  ownDiscussion: Discussion
 }
 
 input DocumentInput {
