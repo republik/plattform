@@ -48,22 +48,27 @@ type Meta {
   credits: JSON
   audioSource: AudioSource
 
-  # if set to true, discussing this article is suppressed
-  suppressDiscussion: Boolean
+  # deprecated - ignore
+  # the article page now uses myDiscussion
+  # discussionId: ID
 
   # template of the article
   # if (and only if) this is 'discussion' the page must show
   # the discussion component (in the bottom)
   template: String
 
-  # deprecated - ignore
-  # the article page should query and subscribe to
-  # the discussion with it's repoId
-  discussionId: ID
+  # show debate-icon if this is set
+  # href src: linkedDiscussion.document.meta.path ||
+  #           linkedDiscussion.path
+  linkedDiscussion: Discussion
 
-  # the frame document showing the discussion for
-  # this doc
+  # the frame document of linkedDiscussion
   discussion: Document
+
+  # show general feedback if
+  # myDiscussion && !myDiscussion.closed &&
+  # (!linkedDiscussion || linkedDiscussion.closed)
+  myDiscussion: Discussion
 }
 
 input DocumentInput {

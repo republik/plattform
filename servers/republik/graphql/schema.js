@@ -9,11 +9,12 @@ schema {
 type queries {
   discussions: [Discussion!]!
   discussion(id: ID!): Discussion
-  mostDebated(lastDays: Int): [DiscussionRank!]!
+  activeDiscussions(lastDays: Int): [CommentAggregation!]!
   comments(
     orderBy: DiscussionOrder
     orderDirection: OrderDirection
   ): CommentConnection!
+
   statements(
     first: Int!
     after: String
@@ -87,6 +88,8 @@ type mutations {
     # min milliseconds between comments of one user
     minInterval: Int
     anonymity: Permission!
+    tags: [String!]
+    tagRequired: Boolean!
   ): ID!
   submitComment(
     # client side generated id
@@ -96,6 +99,7 @@ type mutations {
     parentId: ID
     content: String!
     discussionPreferences: DiscussionPreferencesInput
+    tags: [String!]
   ): Comment!
   editComment(
     id: ID!

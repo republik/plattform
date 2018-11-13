@@ -287,6 +287,8 @@ type Discussion {
     # if set, the tree is returned flat instead of nested up upon
     # the specified depth
     flatDepth: Int
+    # filter by tag
+    tag: String
   ): CommentConnection!
   rules: DiscussionRules!
   # only null for guests (not signedIn)
@@ -296,10 +298,16 @@ type Discussion {
   # if null the user can submit immediately
   userWaitUntil: DateTime
   userCanComment: Boolean!
+
+  tags: [String!]!
+  # on root level
+  tagRequired: Boolean!
 }
 
-type DiscussionRank {
-  commentsCount: Int!
+type CommentAggregation {
+  beginDate: Date
+  endDate: Date
+  count: Int!
   discussion: Discussion!
 }
 
@@ -352,6 +360,8 @@ type Comment {
   depth: Int!
   _depth: Int!
   hotness: Float!
+
+  tags: [String!]!
 }
 
 enum MutationType {
