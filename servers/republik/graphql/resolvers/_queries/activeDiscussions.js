@@ -18,7 +18,7 @@ module.exports = async (_, { lastDays = 5 }, { pgdb }, info) =>
   })
     .then(result => result
       .map(result => ({
-        commentsCount: result.count,
+        count: result.count,
         discussion: result
       }))
     )

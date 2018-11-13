@@ -9,7 +9,7 @@ schema {
 type queries {
   discussions: [Discussion!]!
   discussion(id: ID!): Discussion
-  activeDiscussions(lastDays: Int): [CommentAggregation!]!
+  activeDiscussions(lastDays: Int!): [CommentAggregation!]!
   comments(
     orderBy: DiscussionOrder
     orderDirection: OrderDirection
