@@ -1,3 +1,5 @@
+const { turnout } = require('../../lib/Question')
+
 module.exports = {
   __resolveType (question) {
     return `QuestionType${question.type}`
@@ -15,17 +17,10 @@ module.exports = {
     })
   },
   turnout: async (question, args, { pgdb }) => {
-    const { id: questionId, questionnaireId } = question
-    const numSubmittedQuestionnaires = await pgdb.public.questionnaireSubmissions.count({
-      questionnaireId
-    })
-    const numSubmittedAnswers = await pgdb.public.answers.count({
-      submitted: true,
-      questionId
-    })
-    return {
-      submitted: numSubmittedAnswers,
-      skipped: numSubmittedQuestionnaires-numSubmittedAnswers
+    const { result } = question
+    if (result && result.turnout) {
+      return result.turnout
     }
+    return turnout(question, pgdb)
   }
 }
