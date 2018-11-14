@@ -194,7 +194,8 @@ const BarChart = (props) => {
   const colorAccessor = props.color
     ? d => d.datum[props.color]
     : d => d.category
-  let colorValues = data.map(colorAccessor)
+  let colorValues = []
+    .concat(data.map(colorAccessor))
     .concat(props.colorLegendValues)
     .filter(Boolean)
     .filter(deduplicate)

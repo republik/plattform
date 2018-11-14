@@ -100,7 +100,11 @@ export default (props) => {
     .nice(props.yNice)
     .range([innerHeight + paddingTop, paddingTop])
   const colorAccessor = props.color ? d => d.datum[props.color] : d => d.category
-  const colorValues = data.map(colorAccessor).filter(deduplicate).filter(Boolean)
+  const colorValues = []
+    .concat(data.map(colorAccessor))
+    .concat(props.colorLegendValues)
+    .filter(deduplicate)
+    .filter(Boolean)
   runSort(props.colorSort, colorValues)
 
   let colorRange = props.colorRanges[props.colorRange] || props.colorRange
@@ -210,9 +214,14 @@ export default (props) => {
   }
 
   // transform all color values (always visible on small screens) and group titles for display
-  const colorValuesForLegend = data
-    .filter(d => labelFilter(d.datum))
-    .map(colorAccessor)
+  const colorValuesForLegend = (
+    props.colorLegendValues ||
+    (
+      data
+        .filter(d => labelFilter(d.datum))
+        .map(colorAccessor)
+    )
+  )
     .filter(deduplicate)
     .filter(Boolean)
   runSort(props.colorSort, colorValuesForLegend)

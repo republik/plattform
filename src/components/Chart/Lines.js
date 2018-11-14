@@ -476,6 +476,7 @@ LineChart.propTypes = {
     discrete: PropTypes.array.isRequired
   }).isRequired,
   colorLegend: PropTypes.bool,
+  colorLegendValues: PropTypes.arrayOf(PropTypes.string),
   category: PropTypes.string,
   confidence: PropTypes.oneOf([95]),
   numberFormat: PropTypes.string.isRequired,

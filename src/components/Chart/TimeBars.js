@@ -109,7 +109,9 @@ const TimeBarChart = (props) => {
   })
 
   const colorAccessor = d => d.datum[props.color]
-  const colorValues = data.map(colorAccessor)
+  const colorValues = []
+    .concat(data.map(colorAccessor))
+    .concat(props.colorLegendValues)
     .filter(Boolean)
     .filter(deduplicate)
 
@@ -390,7 +392,7 @@ const TimeBarChart = (props) => {
       <div>
         {!mini && <ColorLegend inline values={(
           []
-            .concat(props.colorLegend && colorValues.length > 0 && colorValues.map(colorValue => (
+            .concat(props.colorLegend && (props.colorLegendValues || colorValues).map(colorValue => (
               {color: color(colorValue), label: tLabel(colorValue)}
             )))
             .filter(Boolean)
@@ -411,6 +413,7 @@ TimeBarChart.propTypes = {
   color: PropTypes.string,
   colorRange: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   colorLegend: PropTypes.bool,
+  colorLegendValues: PropTypes.arrayOf(PropTypes.string),
   colorRanges: PropTypes.shape({
     sequential3: PropTypes.array.isRequired,
     discrete: PropTypes.array.isRequired

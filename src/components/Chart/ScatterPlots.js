@@ -223,7 +223,11 @@ class ScatterPlot extends Component {
     yTicks.sort(ascending)
 
     const colorAccessor = d => d.datum[props.color]
-    const colorValues = data.map(colorAccessor).filter(deduplicate).filter(Boolean)
+    const colorValues = []
+      .concat(data.map(colorAccessor))
+      .concat(props.colorLegendValues)
+      .filter(deduplicate)
+      .filter(Boolean)
     runSort(props.colorSort, colorValues)
 
     const size = scaleSqrt().domain(extent(data, d => d.size)).range(props.sizeRange)
@@ -328,10 +332,15 @@ class ScatterPlot extends Component {
         })}
         <ColorLegend inline values={(
           []
-            .concat(props.colorLegend && colorValues.length > 1 && colorValues.map(colorValue => ({
-              color: color(colorValue),
-              label: tLabel(colorValue)
-            })))
+            .concat(
+              props.colorLegend &&
+              (
+                props.colorLegendValues ||
+                colorValues
+              ).map(colorValue => (
+                {color: color(colorValue), label: colorValue}
+              ))
+            )
             .filter(Boolean)
         )} />
         {children}
@@ -363,6 +372,7 @@ ScatterPlot.propTypes = {
   opacity: PropTypes.number.isRequired,
   color: PropTypes.string,
   colorLegend: PropTypes.bool,
+  colorLegendValues: PropTypes.arrayOf(PropTypes.string),
   colorRange: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   colorRanges: PropTypes.shape({
     sequential3: PropTypes.array.isRequired,
