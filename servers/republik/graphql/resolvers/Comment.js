@@ -63,8 +63,12 @@ const mdastToHumanString = (node, length = 500, string = '', done = false) => {
 }
 
 module.exports = {
-  discussion: ({ discussionId }, args, { pgdb }) =>
-    pgdb.public.discussions.findOne({ id: discussionId }),
+  discussion: ({ discussionId }, args, { pgdb, discusssion }) => {
+    if (discusssion) {
+      return discusssion
+    }
+    return pgdb.public.discussions.findOne({ id: discussionId })
+  },
 
   published: ({ published, adminUnpublished }) =>
     published && !adminUnpublished,
@@ -209,5 +213,17 @@ module.exports = {
           ? commenter._raw.username
           : null
       }
+  },
+
+  comments: (comment) => {
+    if (comment.comments) {
+      return comment.comments
+    }
+    return {
+      id: 'notSupported',
+      totalCount: 0,
+      directTotalCount: 0,
+      nodes: []
+    }
   }
 }
