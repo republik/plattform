@@ -13,6 +13,8 @@ const {
   displayAuthor: getDisplayAuthor
 } = require('../Comment')
 
+const getSortKey = require('@orbiting/backend-modules-discussions/lib/sortKey')
+
 const assembleTree = (_comment, _comments) => {
   let coveredComments = []
 
@@ -138,7 +140,7 @@ const cutTreeX = (comment, maxDepth, depth = -1) => {
   return comment
 }
 
-const decorateTree = async (_comment, coveredComments, discussion, context) => {
+const resolveTree = async (_comment, coveredComments, discussion, context) => {
   const { pgdb } = context
   // preload data
   const userIds = _.uniq(
@@ -159,7 +161,7 @@ const decorateTree = async (_comment, coveredComments, discussion, context) => {
     ? await pgdb.public.credentials.find({ id: credentialIds })
     : []
 
-  const _decorateTree = (comment) => {
+  const _resolveTree = (comment) => {
     const { comments } = comment
     comment.comments = {
       ...comments,
@@ -188,12 +190,12 @@ const decorateTree = async (_comment, coveredComments, discussion, context) => {
       })
     }
     if (comments.nodes.length > 0) {
-      comments.nodes.forEach(c => _decorateTree(c))
+      comments.nodes.forEach(c => _resolveTree(c))
     }
     return comment
   }
 
-  return _decorateTree(_comment)
+  return _resolveTree(_comment)
 }
 
 // the returned array has the same order as the tree
@@ -290,13 +292,7 @@ module.exports = async (discussion, args, context, info) => {
   const topValue = orderDirection === 'ASC'
     ? Number.MIN_SAFE_INTEGER
     : Number.MAX_SAFE_INTEGER
-  const sortKeyMap = {
-    'DATE': 'createdAt',
-    'VOTES': 'score',
-    'HOT': 'hotness',
-    'REPLIES': 'totalRepliesCount'
-  }
-  const sortKey = sortKeyMap[orderBy]
+  const sortKey = getSortKey(orderBy)
   const bubbleSort = sortKey !== 'createdAt' // bubbling values for sort is disabled for createdAt
 
   const compare =
@@ -358,7 +354,7 @@ module.exports = async (discussion, args, context, info) => {
     cutTreeX(tree, maxDepth)
   }
 
-  await decorateTree(tree, coveredComments, discussion, context)
+  await resolveTree(tree, coveredComments, discussion, context)
 
   // if parentId is given, we return the totalCount of the subtree
   // otherwise it's the totalCount of the hole discussion

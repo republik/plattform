@@ -1,5 +1,5 @@
 {
-  "updated": "2018-11-05T12:41:29.448Z",
+  "updated": "2018-11-14T15:04:22.583Z",
   "title": "live",
   "data": [
     {
@@ -49,6 +49,10 @@
     {
       "key": "api/discussion/anonymity/enforced",
       "value": "In dieser Debatte sind nur anonyme Kommentare zugelassen."
+    },
+    {
+      "key": "api/discussion/args/first/tooBig",
+      "value": "Sie können maximal {max} Beiträge aufs mal abfragen."
     },
     {
       "key": "api/comment/404",

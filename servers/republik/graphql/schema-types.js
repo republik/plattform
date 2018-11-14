@@ -358,7 +358,6 @@ type Comment {
   updatedAt: DateTime!
 
   depth: Int!
-  _depth: Int!
   hotness: Float!
 
   tags: [String!]!

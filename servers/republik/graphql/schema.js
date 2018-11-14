@@ -13,6 +13,8 @@ type queries {
   comments(
     orderBy: DiscussionOrder
     orderDirection: OrderDirection
+    first: Int
+    after: String
   ): CommentConnection!
 
   statements(
