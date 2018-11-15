@@ -60,7 +60,6 @@ import {
   getDisplayWidth,
   extractImage,
   globalInlines,
-  nestedInlines,
   styles,
   getDatePath
 } from './utils'
@@ -77,7 +76,7 @@ const link = {
   }),
   component: Editorial.A,
   editorModule: 'link',
-  rules: nestedInlines
+  rules: globalInlines
 }
 
 const paragraph = {
@@ -97,7 +96,7 @@ const paragraph = {
         type: 'STRONG',
         mdastType: 'strong'
       },
-      rules: nestedInlines
+      rules: globalInlines
     },
     {
       matchMdast: matchType('emphasis'),
@@ -107,7 +106,7 @@ const paragraph = {
         type: 'EMPHASIS',
         mdastType: 'emphasis'
       },
-      rules: nestedInlines
+      rules: globalInlines
     },
     link
   ]
