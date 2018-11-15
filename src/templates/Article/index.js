@@ -79,6 +79,29 @@ const link = {
   rules: globalInlines
 }
 
+const editorialFormatting = [
+  {
+    matchMdast: matchType('strong'),
+    component: Editorial.Emphasis,
+    editorModule: 'mark',
+    editorOptions: {
+      type: 'STRONG',
+      mdastType: 'strong'
+    },
+    rules: globalInlines
+  },
+  {
+    matchMdast: matchType('emphasis'),
+    component: Editorial.Cursive,
+    editorModule: 'mark',
+    editorOptions: {
+      type: 'EMPHASIS',
+      mdastType: 'emphasis'
+    },
+    rules: globalInlines
+  }
+]
+
 const paragraph = {
   matchMdast: matchParagraph,
   component: Editorial.P,
@@ -88,27 +111,14 @@ const paragraph = {
   },
   rules: [
     ...globalInlines,
+    ...editorialFormatting,
     {
-      matchMdast: matchType('strong'),
-      component: Editorial.Emphasis,
-      editorModule: 'mark',
-      editorOptions: {
-        type: 'STRONG',
-        mdastType: 'strong'
-      },
-      rules: globalInlines
-    },
-    {
-      matchMdast: matchType('emphasis'),
-      component: Editorial.Cursive,
-      editorModule: 'mark',
-      editorOptions: {
-        type: 'EMPHASIS',
-        mdastType: 'emphasis'
-      },
-      rules: globalInlines
-    },
-    link
+      ...link,
+      rules: [
+        ...globalInlines,
+        ...editorialFormatting
+      ]
+    }
   ]
 }
 
@@ -240,8 +250,7 @@ const centerFigure = {
   ]
 }
 
-const interactionParagraphRules = [
-  ...globalInlines,
+const interactionFormatting = [
   {
     matchMdast: matchType('strong'),
     component: Interaction.Emphasis,
@@ -259,8 +268,19 @@ const interactionParagraphRules = [
       type: 'EMPHASIS', // ToDo: Change to INTERACTIONEMPHASIS (pending contextual editor UI)
       mdastType: 'emphasis'
     }
-  },
-  link
+  }
+]
+
+const interactionParagraphRules = [
+  ...globalInlines,
+  ...interactionFormatting,
+  {
+    ...link,
+    rules: [
+      ...globalInlines,
+      ...interactionFormatting
+    ]
+  }
 ]
 
 const infoBox = {
