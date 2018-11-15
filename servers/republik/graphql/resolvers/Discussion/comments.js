@@ -166,6 +166,7 @@ const resolveTree = async (_comment, coveredComments, discussion, context) => {
     comment.comments = {
       ...comments,
       nodes: comments.nodes.map(c => {
+
         const commenter = users.find(u => u.id === c.userId)
         const commenterPreferences = discussionPreferences.find(dp => dp.userId === commenter.id)
         const credential = commenterPreferences && commenterPreferences.credentialId
@@ -268,7 +269,8 @@ module.exports = async (discussion, args, context, info) => {
     .then(comments => comments
       .map(c => ({
         ...c,
-        score: c.upVotes - c.downVotes // precompute
+        score: c.upVotes - c.downVotes, // precompute
+        discussion
       }))
     )
   const discussionTotalCount = comments.length
@@ -354,7 +356,7 @@ module.exports = async (discussion, args, context, info) => {
     cutTreeX(tree, maxDepth)
   }
 
-  await resolveTree(tree, coveredComments, discussion, context)
+  //await resolveTree(tree, coveredComments, discussion, context)
 
   // if parentId is given, we return the totalCount of the subtree
   // otherwise it's the totalCount of the hole discussion

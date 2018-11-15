@@ -63,11 +63,11 @@ const mdastToHumanString = (node, length = 500, string = '', done = false) => {
 }
 
 module.exports = {
-  discussion: ({ discussionId }, args, { pgdb, discusssion }) => {
-    if (discusssion) {
-      return discusssion
+  discussion: ({ discussion, discussionId }, args, context) => {
+    if (context.discusssion) {
+      return context.discusssion
     }
-    return pgdb.public.discussions.findOne({ id: discussionId })
+    return discussion || context.loaders.Discussion.byId.load(discussionId)
   },
 
   published: ({ published, adminUnpublished }) =>
@@ -156,25 +156,17 @@ module.exports = {
     if (comment.displayAuthor) {
       return comment.displayAuthor
     }
+    console.log('load displayUser')
 
-    const commenter = _commenter ||
-      transformUser(
-        await pgdb.public.users.findOne({
-          id: comment.userId
-        })
-      )
-    const commenterPreferences = _commenterPreferences ||
-      await pgdb.public.discussionPreferences.findOne({
-        userId: commenter.id,
-        discussionId: comment.discussionId
-      })
-    const discussion = _discussion ||
-      await pgdb.public.discussions.findOne({
-        id: comment.discussionId
-      })
-    const credential = commenterPreferences && commenterPreferences.credentialId
-      ? _credential || await pgdb.public.credentials.findOne({ id: commenterPreferences.credentialId })
-      : null
+    const { loaders } = context
+    const commenter = await loaders.User.byId.load(comment.userId)
+    const commenterPreferences = await loaders.Discussion.Commenter.discussionPreferences.load({
+      userId: comment.userId,
+      discussionId: comment.discussionId
+    })
+    const credential = commenterPreferences && commenterPreferences.credential
+
+    const discussion = comment.discussion || await loaders.Discussion.byId.load(comment.discussionId)
 
     let anonymous
     if (discussion.anonymity === 'ENFORCED') {
