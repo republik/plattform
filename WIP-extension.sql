@@ -14,7 +14,8 @@ INSERT INTO
     "companyId",
     "paymentMethods",
     "isAutoActivateUserMembership",
-    "custom"
+    "custom",
+    "rules"
   )
 VALUES
   (
@@ -24,7 +25,8 @@ VALUES
     E'240ef27d-cf26-48c1-81df-54b2a10732f4',
     E'{STRIPE,POSTFINANCECARD,PAYPAL,PAYMENTSLIP}',
     FALSE,
-    TRUE
+    TRUE,
+    '["earlyAdopterBonus"]'
   )
 ;
 
@@ -45,9 +47,9 @@ VALUES
   (
     E'6b8897bf-7ab4-433c-92a1-64fafcd54417',
     E'3837d7e2-8b8e-4e9a-8106-4de5aacedbcd',
+    0,
     1,
-    1,
-    1,
+    0,
     24000,
     FALSE,
     0,
@@ -56,9 +58,9 @@ VALUES
   (
     E'6b8897bf-7ab4-433c-92a1-64fafcd54417',
     E'5d4ab411-8a26-40dd-8a4f-f59cbfc9503f',
+    0,
     1,
-    1,
-    1,
+    0,
     100000,
     FALSE,
     0,
