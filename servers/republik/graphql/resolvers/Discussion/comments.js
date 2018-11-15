@@ -1,17 +1,9 @@
 const graphqlFields = require('graphql-fields')
 const _ = require('lodash')
-const { transformUser } = require('@orbiting/backend-modules-auth')
 const {
   ascending,
   descending
 } = require('d3-array')
-
-const {
-  published: getPublished,
-  adminUnpublished: getAdminUnpublished,
-  author: getAuthor,
-  displayAuthor: getDisplayAuthor
-} = require('../Comment')
 
 const getSortKey = require('@orbiting/backend-modules-discussions/lib/sortKey')
 
@@ -140,65 +132,6 @@ const cutTreeX = (comment, maxDepth, depth = -1) => {
   return comment
 }
 
-const resolveTree = async (_comment, coveredComments, discussion, context) => {
-  const { pgdb } = context
-  // preload data
-  const userIds = _.uniq(
-    coveredComments.map(c => c.userId)
-  )
-  const users = userIds.length
-    ? await pgdb.public.users.find({ id: userIds })
-      .then(users => users.map(u => transformUser(u)))
-    : []
-  const discussionPreferences = userIds.length
-    ? await pgdb.public.discussionPreferences.find({
-      userId: userIds,
-      discussionId: discussion.id
-    })
-    : []
-  const credentialIds = discussionPreferences.map(dp => dp.credentialId)
-  const credentials = credentialIds.length
-    ? await pgdb.public.credentials.find({ id: credentialIds })
-    : []
-
-  const _resolveTree = (comment) => {
-    const { comments } = comment
-    comment.comments = {
-      ...comments,
-      nodes: comments.nodes.map(c => {
-
-        const commenter = users.find(u => u.id === c.userId)
-        const commenterPreferences = discussionPreferences.find(dp => dp.userId === commenter.id)
-        const credential = commenterPreferences && commenterPreferences.credentialId
-          ? credentials.find(c => c.id === commenterPreferences.credentialId)
-          : null
-
-        const preResolvedContext = {
-          ...context,
-          discussion,
-          commenter,
-          commenterPreferences,
-          credential
-        }
-
-        return {
-          ...c,
-          published: getPublished(c, {}, context),
-          adminUnpublished: getAdminUnpublished(c, {}, context),
-          author: getAuthor(c, {}, preResolvedContext),
-          displayAuthor: getDisplayAuthor(c, {}, preResolvedContext)
-        }
-      })
-    }
-    if (comments.nodes.length > 0) {
-      comments.nodes.forEach(c => _resolveTree(c))
-    }
-    return comment
-  }
-
-  return _resolveTree(_comment)
-}
-
 // the returned array has the same order as the tree
 // removes nested children
 const flattenTreeHorizontally = (_comment) => {
@@ -269,8 +202,7 @@ module.exports = async (discussion, args, context, info) => {
     .then(comments => comments
       .map(c => ({
         ...c,
-        score: c.upVotes - c.downVotes, // precompute
-        discussion
+        score: c.upVotes - c.downVotes // precompute
       }))
     )
   const discussionTotalCount = comments.length
@@ -355,8 +287,6 @@ module.exports = async (discussion, args, context, info) => {
   if (maxDepth != null) {
     cutTreeX(tree, maxDepth)
   }
-
-  //await resolveTree(tree, coveredComments, discussion, context)
 
   // if parentId is given, we return the totalCount of the subtree
   // otherwise it's the totalCount of the hole discussion
