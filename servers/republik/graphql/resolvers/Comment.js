@@ -108,8 +108,10 @@ module.exports = {
     return null
   },
 
-  parentIds: ({ parentIds }) => parentIds || [],
-  parent: async ({ parentIds }, args, { pgdb }, info) => {
+  parentIds: ({ parentIds }) =>
+    parentIds || [],
+
+  parent: ({ parentIds }, args, { loaders }, info) => {
     if (!parentIds) {
       return null
     }
@@ -120,9 +122,7 @@ module.exports = {
         id: parentId
       }
     }
-    return pgdb.public.comments.findOne({
-      id: parentId
-    })
+    return loaders.Comment.byId.load(parentId)
   },
 
   author: async (comment, args, { user, loaders }) => {
