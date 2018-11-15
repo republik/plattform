@@ -61,7 +61,7 @@ const examples = {
   columnSort: '`"none"`',
   columnFilter: '`[{"title": "CH", "test": "datum.country === \'CH\'"}, {"title": "Andere", "test": "datum.country !== \'CH\'"}]`',
   columns: '`3`',
-  confidence: '`95`',
+  band: '`confidence95`',
   domain: '`[2005, 2015]`',
   height: '`300`'
 }

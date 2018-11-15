@@ -120,10 +120,10 @@ const styles = {
     strokeWidth: '1px',
     shapeRendering: 'crispEdges'
   }),
-  confidenceLegend: css({
+  bandLegend: css({
     whiteSpace: 'nowrap'
   }),
-  confidenceBar: css({
+  bandBar: css({
     display: 'inline-block',
     width: 24,
     height: 8,
@@ -140,7 +140,8 @@ const BarChart = (props) => {
     children,
     t,
     description,
-    confidence,
+    band,
+    bandLegend,
     showBarValues,
     inlineValue,
     inlineValueUnit,
@@ -409,12 +410,12 @@ const BarChart = (props) => {
                                     )}
                                   </Fragment>
                                 )}
-                                {isLollipop && confidence &&
+                                {isLollipop && band &&
                                   <rect
                                     rx={bar.style.popHeight / 2} ry={bar.style.popHeight / 2}
-                                    x={x(segment.datum[`confidence${confidence}_lower`])}
+                                    x={x(+segment.datum[`${band}_lower`])}
                                     y={(bar.height / 2) - (bar.style.popHeight / 2)}
-                                    width={x(segment.datum[`confidence${confidence}_upper`]) - x(segment.datum[`confidence${confidence}_lower`])}
+                                    width={x(+segment.datum[`${band}_upper`]) - x(+segment.datum[`${band}_lower`])}
                                     height={bar.style.popHeight}
                                     fill={segment.color}
                                     fillOpacity='0.3' />
@@ -498,10 +499,10 @@ const BarChart = (props) => {
                 {color: color(colorValue), label: colorValue}
               ))
             )
-            .concat(!mini && confidence && {label: (
-              <span {...styles.confidenceLegend}>
-                <span {...styles.confidenceBar} />
-                {` ${t(`styleguide/charts/confidence${confidence}-legend`)}`}
+            .concat(!mini && band && bandLegend && {label: (
+              <span {...styles.bandLegend}>
+                <span {...styles.bandBar} />
+                {` ${bandLegend}`}
               </span>
             )})
             .filter(Boolean)
@@ -521,7 +522,8 @@ BarChart.propTypes = {
   y: PropTypes.string,
   xTicks: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.number])),
   barStyle: PropTypes.oneOf(Object.keys(BAR_STYLES)),
-  confidence: PropTypes.oneOf([95]),
+  band: PropTypes.string,
+  bandLegend: PropTypes.string,
   sort: sortPropType,
   column: PropTypes.string,
   columnSort: sortPropType,
@@ -561,8 +563,7 @@ BarChart.defaultProps = {
 export const Lollipop = props => <BarChart {...props} />
 
 Lollipop.defaultProps = {
-  barStyle: 'lollipop',
-  confidence: 95
+  barStyle: 'lollipop'
 }
 
 // Lollipop has additional default props

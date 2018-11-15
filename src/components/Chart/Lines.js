@@ -76,12 +76,12 @@ const styles = {
     ...LABEL_FONT,
     fill: colors.text
   }),
-  confidenceLegend: css({
+  bandLegend: css({
     ...sansSerifRegular12,
     color: colors.text,
     whiteSpace: 'nowrap'
   }),
-  confidenceBar: css({
+  bandBar: css({
     display: 'inline-block',
     width: 24,
     height: 11,
@@ -120,7 +120,7 @@ const LineGroup = (props) => {
     x, xTicks, xAccessor, xFormat,
     width, yCut, yCutHeight,
     yAnnotations,
-    confidence,
+    band,
     endDy
   } = props
 
@@ -131,10 +131,10 @@ const LineGroup = (props) => {
     .x(d => x(xAccessor(d)))
     .y(d => y(d.value))
 
-  const confidenceArea = areaShape()
+  const bandArea = areaShape()
     .x(d => x(xAccessor(d)))
-    .y0(d => y(d.datum[`confidence${confidence}_lower`]))
-    .y1(d => y(d.datum[`confidence${confidence}_upper`]))
+    .y0(d => y(+d.datum[`${band}_lower`]))
+    .y1(d => y(+d.datum[`${band}_upper`]))
 
   const linesWithLayout = lines.map(line => {
     return {
@@ -197,10 +197,10 @@ const LineGroup = (props) => {
                     textAnchor='end'>{startValue}</text>
                 </g>
               )}
-              {confidence && <path
+              {band && <path
                 fill={lineColor}
                 fillOpacity='0.2'
-                d={confidenceArea(line)} />}
+                d={bandArea(line)} />}
               <path
                 fill='none'
                 stroke={lineColor}
@@ -291,15 +291,15 @@ LineGroup.propTypes = {
   xFormat: PropTypes.func.isRequired,
   endDy: PropTypes.string.isRequired,
   width: PropTypes.number.isRequired,
-  confidence: PropTypes.oneOf([95])
+  band: PropTypes.string
 }
 
 const LineChart = (props) => {
   const {
     width, mini,
     children,
-    t, description,
-    confidence,
+    description,
+    band, bandLegend,
     endDy
   } = props
 
@@ -417,7 +417,7 @@ const LineChart = (props) => {
                   y={y}
                   yTicks={props.yTicks || yAxis.ticks}
                   yAxisFormat={yAxis.axisFormat}
-                  confidence={confidence}
+                  band={band}
                   yCut={yCut}
                   yCutHeight={yCutHeight}
                   yAnnotations={yAnnotations}
@@ -433,10 +433,10 @@ const LineChart = (props) => {
           <ColorLegend inline values={(
             []
               .concat(props.colorLegend && colorLegend && colorLegendValues)
-              .concat(!mini && confidence && {label: (
-                <span {...styles.confidenceLegend}>
-                  <span {...styles.confidenceBar} />
-                  {` ${t(`styleguide/charts/confidence${confidence}-legend`)}`}
+              .concat(!mini && band && bandLegend && {label: (
+                <span {...styles.bandLegend}>
+                  <span {...styles.bandBar} />
+                  {` ${bandLegend}`}
                 </span>
               )})
               .filter(Boolean)
@@ -478,7 +478,8 @@ LineChart.propTypes = {
   colorLegend: PropTypes.bool,
   colorLegendValues: PropTypes.arrayOf(PropTypes.string),
   category: PropTypes.string,
-  confidence: PropTypes.oneOf([95]),
+  band: PropTypes.string,
+  bandLegend: PropTypes.string,
   numberFormat: PropTypes.string.isRequired,
   zero: PropTypes.bool.isRequired,
   filter: PropTypes.string,

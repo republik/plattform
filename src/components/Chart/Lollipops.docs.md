@@ -8,7 +8,9 @@ Lollipop charts are just lighter bar charts. The circle at the end makes it idea
       "type": "Lollipop",
       "numberFormat": "%",
       "y": "facet_value",
-      "sort": "none"
+      "sort": "none",
+      "band": "confidence95",
+      "bandLegend": "95-Prozent-Konfidenzintervall"
     }}
     values={`
 facet,facet_value,year,value,confidence95_lower,confidence95_upper

@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-22T14:21:38.726Z",
+  "updated": "2018-11-15T23:24:37.500Z",
   "title": "live",
   "data": [
     {
@@ -64,7 +64,7 @@
     },
     {
       "key": "styleguide/CommentActions/expand",
-      "value": "Mehr"
+      "value": "Alles lesen"
     },
     {
       "key": "styleguide/CommentActions/collapse",
@@ -150,10 +150,6 @@
     {
       "key": "styleguide/video/dnt/player/vimeo",
       "value": "Vimeo"
-    },
-    {
-      "key": "styleguide/charts/confidence95-legend",
-      "value": "95-Prozent-Konfidenzintervall"
     },
     {
       "key": "styleguide/charts/y-cut",
