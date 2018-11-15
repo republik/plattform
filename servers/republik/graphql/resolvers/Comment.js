@@ -1,5 +1,4 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { transformUser } = require('@orbiting/backend-modules-auth')
 const crypto = require('crypto')
 const { portrait: getPortrait } = require('./User')
 const remark = require('../../lib/remark')
@@ -63,12 +62,8 @@ const mdastToHumanString = (node, length = 500, string = '', done = false) => {
 }
 
 module.exports = {
-  discussion: ({ discussion, discussionId }, args, context) => {
-    if (context.discusssion) {
-      return context.discusssion
-    }
-    return discussion || context.loaders.Discussion.byId.load(discussionId)
-  },
+  discussion: ({ discussion, discussionId }, args, { loaders }) =>
+    loaders.Discussion.byId.load(discussionId),
 
   published: ({ published, adminUnpublished }) =>
     published && !adminUnpublished,
@@ -130,13 +125,11 @@ module.exports = {
     })
   },
 
-  author: async ({ author, userId }, args, { pgdb, user, commenter }) => {
+  author: async (comment, args, { user, loaders }) => {
     if (!Roles.userIsInRoles(user, ['editor', 'admin'])) {
       return null
     }
-    return author || commenter || transformUser(
-      await pgdb.public.users.findOne({ id: userId })
-    )
+    return loaders.User.byId.load(comment.userId)
   },
 
   displayAuthor: async (
@@ -149,18 +142,16 @@ module.exports = {
       loaders
     } = context
 
-    if (comment.displayAuthor) {
-      return comment.displayAuthor
-    }
+    const [discussion, commenter, commenterPreferences] = await Promise.all([
+      loaders.Discussion.byId.load(comment.discussionId),
+      loaders.User.byId.load(comment.userId),
+      loaders.Discussion.Commenter.discussionPreferences.load({
+        userId: comment.userId,
+        discussionId: comment.discussionId
+      })
+    ])
 
-    const commenter = await loaders.User.byId.load(comment.userId)
-    const commenterPreferences = await loaders.Discussion.Commenter.discussionPreferences.load({
-      userId: comment.userId,
-      discussionId: comment.discussionId
-    })
     const credential = commenterPreferences && commenterPreferences.credential
-
-    const discussion = await loaders.Discussion.byId.load(comment.discussionId)
 
     let anonymous
     if (discussion.anonymity === 'ENFORCED') {
