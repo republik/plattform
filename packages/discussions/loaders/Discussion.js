@@ -2,7 +2,10 @@ const createDataLoader = require('@orbiting/backend-modules-dataloader')
 
 module.exports = (context) => ({
   byId: createDataLoader(ids =>
-    context.pgdb.public.discussions.find({ id: ids })
+    context.pgdb.public.discussions.find({
+      id: ids,
+      hidden: false
+    })
   ),
   Commenter: {
     discussionPreferences: createDataLoader(keyObjs =>
