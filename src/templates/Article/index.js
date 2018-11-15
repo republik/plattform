@@ -60,6 +60,7 @@ import {
   getDisplayWidth,
   extractImage,
   globalInlines,
+  nestedInlines,
   styles,
   getDatePath
 } from './utils'
@@ -70,13 +71,13 @@ import createDynamicComponent from './dynamicComponent'
 
 const link = {
   matchMdast: matchType('link'),
-
   props: node => ({
     title: node.title,
     href: node.url
   }),
   component: Editorial.A,
-  editorModule: 'link'
+  editorModule: 'link',
+  rules: nestedInlines
 }
 
 const paragraph = {
@@ -95,7 +96,8 @@ const paragraph = {
       editorOptions: {
         type: 'STRONG',
         mdastType: 'strong'
-      }
+      },
+      rules: nestedInlines
     },
     {
       matchMdast: matchType('emphasis'),
@@ -104,7 +106,8 @@ const paragraph = {
       editorOptions: {
         type: 'EMPHASIS',
         mdastType: 'emphasis'
-      }
+      },
+      rules: nestedInlines
     },
     link
   ]

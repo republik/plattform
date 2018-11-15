@@ -58,7 +58,7 @@ export const getDisplayWidth = ancestors => {
   return FIGURE_SIZES.center
 }
 
-export const globalInlines = [
+export const nestedInlines = [
   {
     matchMdast: matchType('sub'),
     component: Sub,
@@ -75,6 +75,10 @@ export const globalInlines = [
       type: 'sup'
     }
   },
+]
+
+export const globalInlines = [
+  ...nestedInlines,
   {
     matchMdast: matchType('break'),
     component: () => <br />,

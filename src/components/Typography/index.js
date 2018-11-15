@@ -45,6 +45,8 @@ export const Label = ({children, ...props}) => (
 
 const subSupStyles = {
   base: css({
+    display: 'inline-block',
+    textDecoration: 'none',
     fontSize: '75%',
     lineHeight: '0',
     position: 'relative',
