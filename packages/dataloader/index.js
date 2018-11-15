@@ -24,7 +24,7 @@ const defaultFind = (key, rows, keyField) => {
   if (typeof key === 'object') {
     const keyFields = Object.keys(key)
     return rows.find(
-      row => keyFields.every(keyField => row[keyField] === key[keyField])
+      row => keyFields.every(kf => row[kf] === key[kf])
     )
   }
   throw new Error('invalid key')
