@@ -15,29 +15,29 @@ const getCacheKey = (key) => {
   throw new Error('invalid key')
 }
 
-const defaultFind = (key, rows, keyField) => {
+const defaultFind = (key, rows) => {
   if (typeof key === 'string') {
     return rows.find(
-      row => row[keyField] === key
+      row => row.id === key
     )
   }
   if (typeof key === 'object') {
     const keyFields = Object.keys(key)
     return rows.find(
-      row => keyFields.every(kf => row[kf] === key[kf])
+      row => keyFields.every(keyField => row[keyField] === key[keyField])
     )
   }
   throw new Error('invalid key')
 }
 
-module.exports = (loader, options, keyField = 'id', find = defaultFind) =>
+module.exports = (loader, options, find = defaultFind) =>
   new DataLoader(
     (keys) =>
       loader(keys)
         .then(rows => Promise.all(rows)) // allow loaders to return array of promises
         .then(rows =>
           keys.map(
-            key => find(key, rows, keyField)
+            key => find(key, rows)
           )
         )
     ,
