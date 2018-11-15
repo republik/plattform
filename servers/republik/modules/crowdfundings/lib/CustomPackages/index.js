@@ -1,11 +1,14 @@
 const debug = require('debug')('crowdfundings:lib:CustomPackages')
 const moment = require('moment')
 const uuid = require('uuid/v4')
+const Promise = require('bluebird')
+
+const rules = require('./rules')
 
 // But that one into database.
 const EXTENABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
 
-const evaluate = (package_, packageOption, membership) => {
+const evaluate = async (package_, packageOption, membership) => {
   debug('evaluate')
   // Is membershipType i.O?
 
@@ -93,43 +96,17 @@ const evaluate = (package_, packageOption, membership) => {
     ...beginEnd
   })
 
-  // Prepend some condition before adding that thingy.
-  payload.customization.additionalPeriods.push({
-    id: uuid(), // TODO: Fake UUID, stitch together differently.
-    membershipId: membership.id,
-    kind: 'BONUS',
-    beginDate: beginEnd.endDate,
-    endDate:
-      moment(beginEnd.endDate)
-        .add(moment.duration(moment('2019-01-16').diff(now))),
-    createdAt: now,
-    updatedAt: now
+  // Applay package rules
+  await Promise.each(package_.rules, rule => {
+    if (rules[rule]) {
+      return rules[rule]({ package_, packageOption, membership, payload, now })
+    }
   })
-
-  /*
-  a)  OK Does user own membership, or pledge membership (ABO_GIVE)
-      - If false, end and don't return package option
-  b)  OK Can membershipType be extended
-      - If false, end
-  c)  OK Is membership active, or inactive and used (altered)
-      - If false, end
-  d)  OK Has no membershipPeriod with beginDate in future
-      - If false, end
-
-  xx
-
-  f)  Has membership no notice of cancellation (optional)
-      - If false, indicate revoking of cancellation, then proceed
-  g)  Does current, last period end within next x days (optional)
-      - If false, end and hence don't return packageOption
-  h)  Is user or membership is eligible for bonusInterval
-      - If true, add bonusInterval to customization payload, then proceed
-  */
 
   return payload
 }
 
-const getCustomOptions = (package_) => {
+const getCustomOptions = async (package_) => {
   debug('getCustomOptions', package_.name, package_.id)
   debug('user', package_.user.id)
 
@@ -152,10 +129,9 @@ const getCustomOptions = (package_) => {
    */
 
   // per membership...
-  package_.user.memberships.forEach((membership) => {
-    // per package and it's regular options...
-    packageOptions.forEach(packageOption => {
-      const result = evaluate(package_, packageOption, membership)
+  await Promise.map(package_.user.memberships, membership => {
+    return Promise.map(packageOptions, async packageOption => {
+      const result = await evaluate(package_, packageOption, membership)
 
       if (result) {
         results.push(result)
