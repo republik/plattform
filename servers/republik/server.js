@@ -9,6 +9,11 @@ const { graphql: search } = require('@orbiting/backend-modules-search')
 const { graphql: notifications } = require('@orbiting/backend-modules-notifications')
 const { graphql: voting } = require('@orbiting/backend-modules-voting')
 
+const loaderBuilders = {
+  ...require('@orbiting/backend-modules-discussions/loaders'),
+  ...require('@orbiting/backend-modules-auth/loaders')
+}
+
 const { accessScheduler, graphql: access } = require('@orbiting/backend-modules-access')
 const { previewScheduler, preview: previewLib } = require('@orbiting/backend-modules-preview')
 
@@ -69,12 +74,20 @@ const run = async (workerId) => {
       previewLib.begin({ userId, contexts, pgdb, t })
   ]
 
-  const createGraphQLContext = (defaultContext) => ({
-    ...defaultContext,
-    t,
-    signInHooks,
-    mail
-  })
+  const createGraphQLContext = (defaultContext) => {
+    const loaders = {}
+    const context = {
+      ...defaultContext,
+      t,
+      signInHooks,
+      mail,
+      loaders
+    }
+    Object.keys(loaderBuilders).forEach(key => {
+      loaders[key] = loaderBuilders[key](context)
+    })
+    return context
+  }
 
   return server.start(
     executableSchema,

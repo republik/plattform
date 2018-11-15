@@ -1,10 +1,10 @@
-module.exports = async (discussion, _, { pgdb, user }) => {
+module.exports = async (discussion, _, { pgdb, loaders, user }) => {
   if (!user) {
     return null
   }
 
   const userId = user.id
-  const dp = await pgdb.public.discussionPreferences.findOne({
+  const dp = await loaders.Discussion.Commenter.discussionPreferences.load({
     discussionId: discussion.id,
     userId
   })
@@ -21,15 +21,9 @@ module.exports = async (discussion, _, { pgdb, user }) => {
     }
   }
 
-  const credential = dp.credentialId
-    ? await pgdb.public.credentials.findOne({
-      id: dp.credentialId,
-      userId
-    })
-    : null
   return {
     anonymity: dp.anonymous, // this naming is bogous!
-    credential,
+    credential: dp.credential,
     notifications: dp.notificationOption
   }
 }

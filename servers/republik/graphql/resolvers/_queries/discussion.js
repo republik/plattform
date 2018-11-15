@@ -1,8 +1,2 @@
-const isUUID = require('is-uuid')
-
-module.exports = async (_, { id }, { pgdb }) =>
-  pgdb.public.discussions.findOne(
-    isUUID.v4(id)
-      ? { id }
-      : { repoId: id }
-  )
+module.exports = async (_, { id }, { loaders }) =>
+  loaders.Discussion.byId.load(id)

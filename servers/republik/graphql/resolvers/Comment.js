@@ -1,5 +1,4 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { transformUser } = require('@orbiting/backend-modules-auth')
 const crypto = require('crypto')
 const { portrait: getPortrait } = require('./User')
 const remark = require('../../lib/remark')
@@ -63,12 +62,8 @@ const mdastToHumanString = (node, length = 500, string = '', done = false) => {
 }
 
 module.exports = {
-  discussion: ({ discussionId }, args, { pgdb, discusssion }) => {
-    if (discusssion) {
-      return discusssion
-    }
-    return pgdb.public.discussions.findOne({ id: discussionId })
-  },
+  discussion: ({ discussion, discussionId }, args, { loaders }) =>
+    loaders.Discussion.byId.load(discussionId),
 
   published: ({ published, adminUnpublished }) =>
     published && !adminUnpublished,
@@ -113,8 +108,10 @@ module.exports = {
     return null
   },
 
-  parentIds: ({ parentIds }) => parentIds || [],
-  parent: async ({ parentIds }, args, { pgdb }, info) => {
+  parentIds: ({ parentIds }) =>
+    parentIds || [],
+
+  parent: ({ parentIds }, args, { loaders }, info) => {
     if (!parentIds) {
       return null
     }
@@ -125,18 +122,14 @@ module.exports = {
         id: parentId
       }
     }
-    return pgdb.public.comments.findOne({
-      id: parentId
-    })
+    return loaders.Comment.byId.load(parentId)
   },
 
-  author: async ({ author, userId }, args, { pgdb, user, commenter }) => {
+  author: async (comment, args, { user, loaders }) => {
     if (!Roles.userIsInRoles(user, ['editor', 'admin'])) {
       return null
     }
-    return author || commenter || transformUser(
-      await pgdb.public.users.findOne({ id: userId })
-    )
+    return loaders.User.byId.load(comment.userId)
   },
 
   displayAuthor: async (
@@ -145,36 +138,20 @@ module.exports = {
     context
   ) => {
     const {
-      pgdb,
       t,
-      discussion: _discussion,
-      commenter: _commenter,
-      commenterPreferences: _commenterPreferences,
-      credential: _credential
+      loaders
     } = context
 
-    if (comment.displayAuthor) {
-      return comment.displayAuthor
-    }
-
-    const commenter = _commenter ||
-      transformUser(
-        await pgdb.public.users.findOne({
-          id: comment.userId
-        })
-      )
-    const commenterPreferences = _commenterPreferences ||
-      await pgdb.public.discussionPreferences.findOne({
-        userId: commenter.id,
+    const [discussion, commenter, commenterPreferences] = await Promise.all([
+      loaders.Discussion.byId.load(comment.discussionId),
+      loaders.User.byId.load(comment.userId),
+      loaders.Discussion.Commenter.discussionPreferences.load({
+        userId: comment.userId,
         discussionId: comment.discussionId
       })
-    const discussion = _discussion ||
-      await pgdb.public.discussions.findOne({
-        id: comment.discussionId
-      })
-    const credential = commenterPreferences && commenterPreferences.credentialId
-      ? _credential || await pgdb.public.credentials.findOne({ id: commenterPreferences.credentialId })
-      : null
+    ])
+
+    const credential = commenterPreferences && commenterPreferences.credential
 
     let anonymous
     if (discussion.anonymity === 'ENFORCED') {
