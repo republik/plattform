@@ -77,7 +77,8 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
 
         Object.assign(membership, { membershipType, membershipPeriods })
 
-        const { customization: { additionalPeriods } } = evaluate(pkg, plo, membership)
+        const { customization: { additionalPeriods } } =
+          await evaluate(pkg, plo, membership)
 
         await pgdb.public.membershipPeriods.insert(
           additionalPeriods
