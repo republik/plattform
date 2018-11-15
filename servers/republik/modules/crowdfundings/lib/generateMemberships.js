@@ -70,6 +70,13 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
 
       if (membershipId) {
         debug('membershipId "%s"', membershipId)
+
+        // Is amount in packageOption/pledgeOption > 0?
+        if (plo.amount === 0) {
+          debug('amount is 0')
+          return
+        }
+
         const membership =
           await pgdb.public.memberships.findOne({ id: membershipId })
         const membershipPeriods =
@@ -78,7 +85,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
         Object.assign(membership, { membershipType, membershipPeriods })
 
         const { customization: { additionalPeriods } } =
-          await evaluate(pkg, plo, membership)
+          await evaluate(pkg, plo.packageOption, membership)
 
         await pgdb.public.membershipPeriods.insert(
           additionalPeriods
