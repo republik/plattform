@@ -17,7 +17,6 @@ module.exports = (context) => ({
             credential: dp.credentialId && await context.loaders.User.credential.load(dp.credentialId)
           }))
         )
-
     )
   }
 })
