@@ -145,20 +145,14 @@ module.exports = {
     context
   ) => {
     const {
-      pgdb,
       t,
-      discussion: _discussion,
-      commenter: _commenter,
-      commenterPreferences: _commenterPreferences,
-      credential: _credential
+      loaders
     } = context
 
     if (comment.displayAuthor) {
       return comment.displayAuthor
     }
-    console.log('load displayUser')
 
-    const { loaders } = context
     const commenter = await loaders.User.byId.load(comment.userId)
     const commenterPreferences = await loaders.Discussion.Commenter.discussionPreferences.load({
       userId: comment.userId,
@@ -166,7 +160,7 @@ module.exports = {
     })
     const credential = commenterPreferences && commenterPreferences.credential
 
-    const discussion = comment.discussion || await loaders.Discussion.byId.load(comment.discussionId)
+    const discussion = await loaders.Discussion.byId.load(comment.discussionId)
 
     let anonymous
     if (discussion.anonymity === 'ENFORCED') {
