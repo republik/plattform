@@ -1,4 +1,5 @@
 const editRepoMeta = require('../graphql/resolvers/_mutations/editRepoMeta')
+const { upsert: upsertDiscussion } = require('./Discussion')
 const visit = require('unist-util-visit')
 const debug = require('debug')('publikator:lib:Document')
 
@@ -55,7 +56,11 @@ const prepareMetaForPublish = async ({
     publishDate
   })
 
-  // note: discussions are not upserted here anymore but on submitComment.
+  // discussionId is not saved to repoMeta anymore, but repoId to discussion
+  // see Meta.ownDiscussion resolver
+  if (['discussion', 'article'].indexOf(docMeta.template) > -1) {
+    await upsertDiscussion(repoMeta, {...docMeta, path}, context)
+  }
 
   if (savePublishDate) {
     await editRepoMeta(null, {

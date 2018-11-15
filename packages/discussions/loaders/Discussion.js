@@ -7,6 +7,15 @@ module.exports = (context) => ({
       hidden: false
     })
   ),
+  byRepoId: createDataLoader(
+    repoIds =>
+      context.pgdb.public.discussions.find({
+        repoId: repoIds,
+        hidden: false
+      }),
+    null,
+    (key, rows) => rows.find(row => row.repoId === key)
+  ),
   Commenter: {
     discussionPreferences: createDataLoader(keyObjs =>
       context.pgdb.public.discussionPreferences.find({

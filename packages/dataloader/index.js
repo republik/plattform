@@ -30,7 +30,7 @@ const defaultFind = (key, rows) => {
   throw new Error('invalid key')
 }
 
-module.exports = (loader, options, find = defaultFind) =>
+module.exports = (loader, options = {}, find = defaultFind) =>
   new DataLoader(
     (keys) =>
       loader(keys)
