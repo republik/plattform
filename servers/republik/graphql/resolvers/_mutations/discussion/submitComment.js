@@ -6,11 +6,6 @@ const slack = require('../../../../lib/slack')
 
 const { submitComment: notify } = require('../../../../lib/Notifications')
 
-const isUUID = require('is-uuid')
-const { graphql: { resolvers: { queries: { document: getDocument } } } } = require('@orbiting/backend-modules-documents')
-// TODO: move to document package
-const { upsert: upsertDiscussionForDocument } = require('../../../../../publikator/lib/Discussion')
-
 module.exports = async (_, args, context) => {
   const {
     pgdb,
@@ -36,26 +31,9 @@ module.exports = async (_, args, context) => {
 
   const transaction = await pgdb.transactionBegin()
   try {
-    let discussion
-    if (isUUID.v4(discussionId)) {
-      discussion = await transaction.public.discussions.findOne({
-        id: discussionId
-      })
-    } else {
-      discussion = await transaction.public.discussions.findOne({
-        repoId: discussionId
-      })
-      if (!discussion) {
-        const doc = await getDocument(null, { repoId: discussionId }, {...context, pgdb: transaction})
-        if (!doc) {
-          throw new Error(t('api/document/404'))
-        }
-        if (doc.meta.suppressDiscussion) {
-          throw new Error(t('api/document/discussion/suppressed'))
-        }
-        discussion = await upsertDiscussionForDocument(null, doc.meta, {...context, pgdb: transaction})
-      }
-    }
+    const discussion = await transaction.public.discussions.findOne({
+      id: discussionId
+    })
     if (!discussion) {
       throw new Error(t('api/discussion/404'))
     }
