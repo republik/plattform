@@ -36,8 +36,8 @@ const publish = async (channel, content) => {
 }
 exports.publish = publish
 
-const getCommentLink = (comment, discussion) => discussion.documentPath
-  ? `${FRONTEND_BASE_URL}${discussion.documentPath}?focus=${comment.id}`
+const getCommentLink = (comment, discussion) => discussion.path
+  ? `${FRONTEND_BASE_URL}${discussion.path}?focus=${comment.id}`
   : comment.id
 
 const getProfileLink = (author) => author.username

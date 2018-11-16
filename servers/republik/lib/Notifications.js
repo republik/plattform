@@ -93,7 +93,7 @@ const submitComment = async (comment, discussion, context) => {
       ? `${comment.content.substring(0, 128)}...`
       : comment.content
 
-    const discussionUrl = `${FRONTEND_BASE_URL}${discussion.documentPath}`
+    const discussionUrl = `${FRONTEND_BASE_URL}${discussion.path}`
     const commentUrl = `${discussionUrl}${discussionUrl.indexOf('?') === -1 ? '?' : '&'}focus=${comment.id}`
 
     const subjectParams = {

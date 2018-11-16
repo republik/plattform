@@ -21,7 +21,7 @@ module.exports = async (_, { electionInput }, { pgdb, user: me, t }) => {
 
     const { id: discussionId } = await upsertDiscussion(null, {
       title: description,
-      documentPath: `${moment(beginDate).format('/YYYY/MM/DD')}/${slug}`
+      path: `${moment(beginDate).format('/YYYY/MM/DD')}/${slug}`
     }, transaction)
 
     await create({
