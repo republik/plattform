@@ -84,7 +84,8 @@ const _addTypes = (master, donor) => {
     ...master,
     schemaTypes: mergedSchemaTypes,
     typeDefs: [...master.schema, ...mergedSchemaTypes],
-    resolvers: _.merge(donor.typeResolvers, master.resolvers)
+    // resolvers: _.merge(donor.typeResolvers, master.resolvers)
+    resolvers: _.merge(master.resolvers, donor.typeResolvers)
   }
 }
 
