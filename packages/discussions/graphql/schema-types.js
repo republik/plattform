@@ -92,9 +92,6 @@ type Discussion {
   # path to use if no document is linked
   path: String
 
-  # remove
-  documentPath: String
-
   closed: Boolean!
   collapsable: Boolean!
   comments(
