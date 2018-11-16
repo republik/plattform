@@ -1,5 +1,7 @@
 const isUUID = require('is-uuid')
 
+// id can be uuid or repoId
+// on insert, specified id is not honoured
 const upsert = async (id, settings = {}, { pgdb, loaders }) => {
   let discussion
   if (id) {
@@ -12,12 +14,7 @@ const upsert = async (id, settings = {}, { pgdb, loaders }) => {
 
   if (!discussion) {
     discussion = await pgdb.public.discussions.insertAndGet(
-      id
-        ? {
-          id,
-          ...settings
-        }
-        : settings,
+      settings,
       { skipUndefined: true }
     )
   } else {
@@ -29,10 +26,10 @@ const upsert = async (id, settings = {}, { pgdb, loaders }) => {
       (settings.anonymity && settings.anonymity !== discussion.anonymity)
     ) {
       discussion = await pgdb.public.discussions.updateAndGetOne(
-        { id },
+        { id: discussion.id },
         settings
       )
-      await loaders.Discussion.clear(id)
+      await loaders.Discussion.clear(discussion.id)
     }
   }
 
