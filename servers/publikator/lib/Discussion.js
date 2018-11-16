@@ -1,25 +1,37 @@
 const { Discussion: { upsert: upsertDiscussion } } = require('@orbiting/backend-modules-discussions')
 
-const upsert = async (discussionId, docMeta, context) => {
-  const { pgdb } = context
+const upsert = async (docMeta, context) => {
+  const {
+    title,
+    path,
+    repoId,
+    collapsable,
+    commentsMaxLength,
+    commentsMinInterval,
+    discussionAnonymity
+  } = docMeta
+
+  if (!repoId) {
+    throw new Error(context.t('api/publish/discussion/repoId/missing'))
+  }
 
   const settings = {
-    title: docMeta.title,
-    path: docMeta.path,
-    repoId: docMeta.repoId,
-    collapsable: !!docMeta.collapsable,
-    ...docMeta.commentsMaxLength
-      ? { maxLength: docMeta.commentsMaxLength }
+    title,
+    path,
+    repoId,
+    collapsable: !!collapsable,
+    ...commentsMaxLength
+      ? { maxLength: commentsMaxLength }
       : { },
-    ...docMeta.commentsMinInterval
-      ? { minInterval: docMeta.commentsMinInterval }
+    ...commentsMinInterval
+      ? { minInterval: commentsMinInterval }
       : { },
-    ...docMeta.anonymity
-      ? { anonymity: docMeta.discussionAnonymity }
+    ...discussionAnonymity
+      ? { anonymity: discussionAnonymity }
       : { }
   }
 
-  return upsertDiscussion(discussionId, settings, pgdb)
+  return upsertDiscussion(repoId, settings, context)
 }
 
 module.exports = {

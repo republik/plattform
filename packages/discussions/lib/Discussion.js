@@ -1,8 +1,13 @@
-const upsert = async (id, settings = {}, pgdb) => {
-  let discussion
+const isUUID = require('is-uuid')
 
+const upsert = async (id, settings = {}, { pgdb, loaders }) => {
+  let discussion
   if (id) {
-    discussion = await pgdb.public.discussions.findOne({ id })
+    if (isUUID.v4(id)) {
+      discussion = await loaders.Discussion.byId.load(id)
+    } else {
+      discussion = await loaders.Discussion.byRepoId.load(id)
+    }
   }
 
   if (!discussion) {
@@ -27,6 +32,8 @@ const upsert = async (id, settings = {}, pgdb) => {
         { id },
         settings
       )
+      loaders.Discussion.byId.clear(id)
+      loaders.Discussion.byRepoId.clear(id)
     }
   }
 
