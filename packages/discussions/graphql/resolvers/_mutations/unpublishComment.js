@@ -1,5 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const slack = require('../../../../lib/slack')
+const slack = require('../../../lib/slack')
 
 module.exports = async (_, args, context) => {
   const { id } = args

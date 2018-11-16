@@ -1,5 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const getDiscussion = require('../../_queries/discussion')
+const getDiscussion = require('../_queries/discussion')
 
 module.exports = async (_, args, { pgdb, user, t }) => {
   Roles.ensureUserIsInRoles(user, ['editor', 'admin'])

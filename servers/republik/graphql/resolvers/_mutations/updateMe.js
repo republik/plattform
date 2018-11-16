@@ -17,7 +17,7 @@ const { Redirections: {
 } } = require('@orbiting/backend-modules-redirections')
 
 const { lib: { upload: { uploadPortrait } } } = require('@orbiting/backend-modules-assets')
-const ensureStringLength = require('../../../lib/ensureStringLength')
+const { ensureStringLength } = require('@orbiting/backend-modules-utils')
 
 const MAX_STATEMENT_LENGTH = 140
 const MAX_BIOGRAPHY_LENGTH = 2000

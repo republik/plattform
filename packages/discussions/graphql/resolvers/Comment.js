@@ -1,6 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const crypto = require('crypto')
-const { portrait: getPortrait } = require('./User')
+// TODO don't require from servers
+const { portrait: getPortrait } = require('../../../../servers/republik/graphql/resolvers/User')
 const remark = require('../../lib/remark')
 
 const {

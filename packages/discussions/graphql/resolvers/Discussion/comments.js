@@ -5,7 +5,7 @@ const {
   descending
 } = require('d3-array')
 
-const getSortKey = require('@orbiting/backend-modules-discussions/lib/sortKey')
+const getSortKey = require('../../../lib/sortKey')
 
 const assembleTree = (_comment, _comments) => {
   let coveredComments = []

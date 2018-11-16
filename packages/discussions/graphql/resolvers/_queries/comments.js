@@ -1,4 +1,4 @@
-const getSortKey = require('@orbiting/backend-modules-discussions/lib/sortKey')
+const getSortKey = require('../../../lib/sortKey')
 
 const MAX_LIMIT = 100
 module.exports = async (_, args, context, info) => {

@@ -32,8 +32,7 @@ const upsert = async (id, settings = {}, { pgdb, loaders }) => {
         { id },
         settings
       )
-      loaders.Discussion.byId.clear(id)
-      loaders.Discussion.byRepoId.clear(id)
+      await loaders.Discussion.clear(id)
     }
   }
 

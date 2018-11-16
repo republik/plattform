@@ -1,6 +1,6 @@
-const hotness = require('../../../../../lib/hotness')
+const hotness = require('./hotness')
 
-module.exports = async (commentId, vote, pgdb, user, t, pubsub) => {
+module.exports = async (commentId, vote, pgdb, user, t, pubsub, loaders) => {
   if (vote !== 1 && vote !== -1) {
     console.error('vote out of range', { commentId, vote })
     throw new Error(t('api/unexpected'))
@@ -55,6 +55,7 @@ module.exports = async (commentId, vote, pgdb, user, t, pubsub) => {
     }
 
     await transaction.transactionCommit()
+    loaders.Comment.byId.clear(commentId)
 
     if (newComment) {
       await pubsub.publish('comment', { comment: {

@@ -5,6 +5,7 @@ const t = require('./lib/t')
 
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: auth } = require('@orbiting/backend-modules-auth')
+// const { graphql: discussions } = require('@orbiting/backend-modules-auth')
 // const { graphql: search } = require('@orbiting/backend-modules-search')
 
 const uncommittedChangesMiddleware = require('./express/uncommittedChanges')
@@ -24,7 +25,16 @@ const start = async () => {
 // in cluster mode, this runs after runOnce otherwise before
 const run = async (workerId) => {
   const localModule = require('./graphql')
-  const executableSchema = makeExecutableSchema(merge(localModule, [documents, auth]))
+  const executableSchema = makeExecutableSchema(
+    merge(
+      localModule,
+      [
+        documents,
+        auth
+        // discussions
+      ]
+    )
+  )
 
   const createGraphQLContext = (defaultContext) => ({
     ...defaultContext,

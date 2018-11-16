@@ -1,6 +1,6 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const setDiscussionPreferences = require('./lib/setDiscussionPreferences')
-const getDiscussion = require('../../_queries/discussion')
+const setDiscussionPreferences = require('../../../lib/setDiscussionPreferences')
+const getDiscussion = require('../_queries/discussion')
 
 module.exports = async (_, args, { pgdb, user, t }) => {
   Roles.ensureUserHasRole(user, 'member')

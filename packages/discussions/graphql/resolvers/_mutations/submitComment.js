@@ -1,10 +1,10 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const hotness = require('../../../../lib/hotness')
-const setDiscussionPreferences = require('./lib/setDiscussionPreferences')
-const userWaitUntil = require('../../Discussion/userWaitUntil')
-const slack = require('../../../../lib/slack')
+const hotness = require('../../../lib/hotness')
+const setDiscussionPreferences = require('../../../lib/setDiscussionPreferences')
+const userWaitUntil = require('../Discussion/userWaitUntil')
+const slack = require('../../../lib/slack')
 
-const { submitComment: notify } = require('../../../../lib/Notifications')
+const { submitComment: notify } = require('../../../lib/Notifications')
 
 module.exports = async (_, args, context) => {
   const {

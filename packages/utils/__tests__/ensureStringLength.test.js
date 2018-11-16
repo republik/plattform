@@ -1,5 +1,5 @@
 const test = require('tape-async')
-const ensureStringLength = require('../lib/ensureStringLength')
+const ensureStringLength = require('../ensureStringLength')
 
 test('ensureStringLength', async (t) => {
   t.throws(() => ensureStringLength('test', { max: 3 }))

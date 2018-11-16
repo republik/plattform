@@ -1,5 +1,5 @@
 const { MAX_CREDENTIAL_LENGTH } = require('./Credential')
-const ensureStringLength = require('../../../../../lib/ensureStringLength')
+const { ensureStringLength } = require('@orbiting/backend-modules-utils')
 
 module.exports = async ({
   discussionPreferences,

@@ -1,6 +1,6 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 
-module.exports = async (_, args, {pgdb, user}) => {
+module.exports = async (_, args, { pgdb, user, loaders }) => {
   Roles.ensureUserHasRole(user, 'member')
 
   const {
@@ -19,6 +19,7 @@ module.exports = async (_, args, {pgdb, user}) => {
     commentId: id,
     reporter: JSON.stringify([user.id])
   })
+  loaders.Comment.byId.clear(id)
 
   return true
 }

@@ -8,6 +8,7 @@ const { graphql: redirections } = require('@orbiting/backend-modules-redirection
 const { graphql: search } = require('@orbiting/backend-modules-search')
 const { graphql: notifications } = require('@orbiting/backend-modules-notifications')
 const { graphql: voting } = require('@orbiting/backend-modules-voting')
+const { graphql: discussions } = require('@orbiting/backend-modules-discussions')
 
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-discussions/loaders'),
@@ -44,6 +45,7 @@ const run = async (workerId) => {
         documents,
         search,
         redirections,
+        discussions,
         notifications,
         access,
         voting
