@@ -1,3 +1,4 @@
+const { publish } = require('@orbiting/backend-modules-slack')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const { formatPrice } = require('@orbiting/backend-modules-formats')
 const {
@@ -5,7 +6,6 @@ const {
 } = require('../graphql/resolvers/Comment')
 
 const {
-  SLACK_API_TOKEN,
   SLACK_CHANNEL_COMMENTS,
   SLACK_CHANNEL_IT_MONITOR,
   SLACK_CHANNEL_ADMIN,
@@ -13,28 +13,6 @@ const {
   FRONTEND_BASE_URL,
   ADMIN_FRONTEND_BASE_URL
 } = process.env
-
-let SlackWebClient
-if (SLACK_API_TOKEN) {
-  SlackWebClient = new (require('@slack/client').WebClient)(SLACK_API_TOKEN)
-} else {
-  console.warn('Posting to slack disabled: missing SLACK_API_TOKEN')
-}
-
-const publish = async (channel, content) => {
-  if (SlackWebClient && channel) {
-    await SlackWebClient.chat.postMessage({
-      channel,
-      text: content
-    })
-      .catch((e) => {
-        console.error(e)
-      })
-  } else {
-    console.warn(`Slack cannot publish: missing SLACK_API_TOKEN or channel.\n\tmessage: ${content}\n`)
-  }
-}
-exports.publish = publish
 
 const getCommentLink = (comment, discussion) => discussion.path
   ? `${FRONTEND_BASE_URL}${discussion.path}?focus=${comment.id}`

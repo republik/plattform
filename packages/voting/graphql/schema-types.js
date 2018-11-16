@@ -204,7 +204,7 @@ type Questionnaire {
   allowedMemberships: [VotingMembershipRequirement!]
   allowedRoles: [String!]
 
-  questions: [QuestionInterface!]!
+  questions(orderFilter: [Int!]): [QuestionInterface!]!
 
   turnout: QuestionnaireTurnout
 }
