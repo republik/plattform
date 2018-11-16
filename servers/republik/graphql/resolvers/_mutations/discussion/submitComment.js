@@ -9,6 +9,7 @@ const { submitComment: notify } = require('../../../../lib/Notifications')
 module.exports = async (_, args, context) => {
   const {
     pgdb,
+    loaders,
     user,
     t,
     pubsub
@@ -31,15 +32,13 @@ module.exports = async (_, args, context) => {
 
   const transaction = await pgdb.transactionBegin()
   try {
-    const discussion = await transaction.public.discussions.findOne({
-      id: discussionId
-    })
+    const discussion = await loaders.Discussion.byId.load(discussionId)
     if (!discussion) {
       throw new Error(t('api/discussion/404'))
     }
 
     // check if client-side generated ID already exists
-    if (id && !!await transaction.public.comments.findFirst({ id })) {
+    if (id && !!await loaders.Comment.byId.load(id)) {
       throw new Error(t('api/comment/id/duplicate'))
     }
 
@@ -49,7 +48,7 @@ module.exports = async (_, args, context) => {
 
     // ensure user is within minInterval
     if (discussion.minInterval) {
-      const waitUntil = await userWaitUntil(discussion, null, { pgdb, user })
+      const waitUntil = await userWaitUntil(discussion, null, context)
       if (waitUntil) {
         throw new Error(t('api/comment/tooEarly', {
           waitFor: `${Math.ceil((waitUntil.getTime() - new Date().getTime()) / 1000)}s`
