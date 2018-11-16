@@ -293,11 +293,23 @@ export const cursiveTitle58 = {
   fontWeight: 'normal',
   lineHeight: '60px'
 }
+export const cursiveTitle32 = {
+  fontFamily: fontFamilies.cursiveTitle,
+  fontSize: 32,
+  fontWeight: 'normal',
+  lineHeight: '34px'
+}
 export const cursiveTitle30 = {
   fontFamily: fontFamilies.cursiveTitle,
   fontSize: 30,
   fontWeight: 'normal',
   lineHeight: '34px'
+}
+export const cursiveTitle26 = {
+  fontFamily: fontFamilies.cursiveTitle,
+  fontSize: 26,
+  fontWeight: 'normal',
+  lineHeight: '28px'
 }
 export const cursiveTitle22 = {
   fontFamily: fontFamilies.cursiveTitle,

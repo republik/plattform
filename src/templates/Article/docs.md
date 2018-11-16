@@ -860,3 +860,129 @@ Damit das Layout nun nicht nackt im Raume steht und sich klein und leer vorkommt
 
 `}</Markdown>
 ```
+
+### Article Collection
+
+```react|noSource
+<Markdown schema={schema}>{`
+
+<section><h6>CENTER</h6>
+
+Überall dieselbe alte Leier. Das Layout ist fertig, der Text lässt auf sich warten.
+
+<section><h6>ARTICLECOLLECTION</h6>
+
+## 
+
+<section><h6>TEASERGROUP</h6>
+
+<section><h6>TEASER</h6>
+
+\`\`\`
+{
+  "reverse": false,
+  "color": "#000",
+  "teaserType": "articleTile",
+  "byline": null,
+  "onlyImage": false,
+  "url": "https://github.com/republik/article-klima-ameise?autoSlug",
+  "kind": "scribble",
+  "center": false,
+  "textPosition": "topleft",
+  "formatUrl": "https://github.com/republik/format-aus-der-arena?autoSlug",
+  "titleSize": "standard",
+  "id": "eTcO7Burj",
+  "portrait": true,
+  "showImage": false,
+  "bgColor": "#fff"
+}
+\`\`\`
+
+###### Aus der Arena
+
+# Unser doppeltes Klimadilemma
+
+## 
+
+#### Weshalb es auch für die kleine Schweiz von grossem Interesse sein sollte, den Klimawandel zu bremsen.
+
+Von [Simon Schmid](/~eca9ee2c-4678-4f63-8564-651293df2b97), 14.11.2018
+
+<hr /></section>
+
+<section><h6>TEASER</h6>
+
+\`\`\`
+{
+  "reverse": false,
+  "color": "#000",
+  "teaserType": "articleTile",
+  "byline": null,
+  "onlyImage": false,
+  "url": "https://github.com/republik/article-das-land-wo-die-zitronen-bluehn?autoSlug",
+  "kind": "editorial",
+  "center": false,
+  "textPosition": "topleft",
+  "titleSize": "standard",
+  "id": "Ziygh9IGiq",
+  "portrait": true,
+  "showImage": false,
+  "bgColor": "#fff"
+}
+\`\`\`
+
+###### 
+
+# Das Land, wo bald die Zitronen blühn
+
+## 
+
+#### Die Schweiz wird zu einem mediterranen Land. Für die Landwirtschaft ein Glück: Es werden Melonen, Reis und Topweine wachsen. Aber sind die Bauern bereit?
+
+Von [Urs Bruderer](/~7b0d6a74-f57b-4498-8eb7-455936672736) (Text) und Adam Higton (Illustrationen), 07.09.2018
+
+<hr /></section>
+
+<section><h6>TEASER</h6>
+
+\`\`\`
+{
+  "reverse": false,
+  "color": "#000",
+  "teaserType": "articleTile",
+  "byline": null,
+  "onlyImage": false,
+  "url": "https://github.com/republik/article-wachstum?autoSlug",
+  "kind": "editorial",
+  "center": false,
+  "textPosition": "topleft",
+  "titleSize": "standard",
+  "id": "N-pxPtgWla",
+  "portrait": true,
+  "showImage": false,
+  "bgColor": "#fff"
+}
+\`\`\`
+
+###### 
+
+# Planet versus Portemonnaie
+
+## 
+
+#### Sie glauben, wir müssen uns entscheiden zwischen  Wirtschaftswachstum und der Rettung der Erde? Falsch. Die Zahlen sprechen eine andere Sprache.
+
+Von [Thomas Hebsgaard](https://www.zetland.dk/skribent/ae6XddK5), «Zetland» (Text), und Doris Wöhncke (Übersetzung), 09.08.2018
+
+<hr /></section>
+
+<hr /></section>
+
+<hr /></section>
+
+Damit das Layout nun nicht nackt im Raume steht und sich klein und leer vorkommt, springe ich ein: der Blindtext.
+
+<hr /></section>
+
+`}</Markdown>
+```

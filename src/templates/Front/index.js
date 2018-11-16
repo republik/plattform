@@ -504,7 +504,9 @@ const createSchema = ({
         ({ children, attributes, kind }) => {
           const Component = kind === 'editorial'
           ? DossierTileHeadline.Editorial
-          : DossierTileHeadline.Interaction
+          : kind === 'scribble'
+            ? DossierTileHeadline.Scribble
+            : DossierTileHeadline.Interaction
           return (
             <Component attributes={attributes}>
               {children}

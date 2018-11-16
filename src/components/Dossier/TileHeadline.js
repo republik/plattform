@@ -4,6 +4,8 @@ import { tUp } from '../TeaserFront/mediaQueries'
 import {
   serifTitle26,
   serifTitle32,
+  cursiveTitle26,
+  cursiveTitle32,
   sansSerifMedium26,
   sansSerifMedium32
 } from '../Typography/styles'
@@ -27,6 +29,12 @@ const styles = {
     [tUp]: {
       ...sansSerifMedium32
     }
+  }),
+  scribble: css({
+    ...cursiveTitle26,
+    [tUp]: {
+      ...cursiveTitle32
+    }
   })
 }
 
@@ -41,6 +49,14 @@ export const Editorial = ({ children }) => {
 export const Interaction = ({ children }) => {
   return (
     <h1 {...styles.base} {...styles.interaction}>
+      {children}
+    </h1>
+  )
+}
+
+export const Scribble = ({ children }) => {
+  return (
+    <h1 {...styles.base} {...styles.scribble}>
       {children}
     </h1>
   )
