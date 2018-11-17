@@ -114,6 +114,13 @@ module.exports = {
         })
         : []
 
+    const users =
+      memberships.length > 0
+        ? await pgdb.public.users.find({
+          id: memberships.map(membership => membership.userId)
+        })
+        : []
+
     const membershipTypes =
       memberships.length > 0
         ? await pgdb.public.membershipTypes.find({
@@ -122,6 +129,9 @@ module.exports = {
         : []
 
     memberships.forEach((membership, index, memberships) => {
+      const user = users.find(user => user.id === membership.userId)
+      memberships[index].claimerName =
+        [user.firstName, user.lastName].filter(Boolean).join(' ').trim()
       memberships[index].membershipType =
         membershipTypes.find(membershipType => membershipType.id === membership.membershipTypeId)
     })
