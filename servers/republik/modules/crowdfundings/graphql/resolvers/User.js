@@ -168,6 +168,11 @@ module.exports = {
         id: allPackageOptions.map(option => option.rewardId)
       })
 
+    const allMembershipTypes =
+      await pgdb.public.membershipTypes.find({
+        rewardId: allRewards.map(reward => reward.id)
+      })
+
     return Promise
       .map(packages, async package_ => {
         const packageOptions = allPackageOptions
@@ -175,7 +180,11 @@ module.exports = {
           .map(packageOption => {
             const reward =
               allRewards.find(reward => packageOption.rewardId === reward.id)
-            return { ...packageOption, reward }
+            const membershipType =
+              allMembershipTypes.find(
+                membershipType => packageOption.rewardId === membershipType.rewardId
+              )
+            return { ...packageOption, reward, membershipType }
           })
 
         Object.assign(package_, { packageOptions, user })

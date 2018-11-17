@@ -54,6 +54,4 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
     createdAt: now,
     updatedAt: now
   })
-
-  return payload
 }

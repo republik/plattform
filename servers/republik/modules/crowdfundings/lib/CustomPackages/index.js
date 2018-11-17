@@ -5,12 +5,16 @@ const Promise = require('bluebird')
 
 const rules = require('./rules')
 
-// But that one into database.
+// Put that one into database.
 const EXTENABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
+
+// Which options require you to own a membership?
+const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO']
 
 // Checks if user has at least one active and one inactive membership,
 // considering latter as "dormant"
-const hasDormantMembership = ({ user }) => {
+const hasDormantMembership = ({ package_, membership }) => {
+  const { user } = package_
   const { memberships: allMemberships } = user
 
   const eligableMemberships = allMemberships.filter(
@@ -18,21 +22,20 @@ const hasDormantMembership = ({ user }) => {
       EXTENABLE_MEMBERSHIP_TYPES.includes(m.membershipType.name)
   )
 
-  const hasActiveMembership = !!eligableMemberships.find(
-    m => m.active === true
-  )
   const hasInactiveMembership = !!eligableMemberships.find(
     m => m.active === false
   )
 
-  return hasActiveMembership && hasInactiveMembership
+  return membership.active === true &&
+    membership.userId === user.id &&
+    hasInactiveMembership
 }
 
 const evaluate = async (package_, packageOption, membership) => {
   debug('evaluate')
   // Is membershipType i.O?
 
-  if (hasDormantMembership(package_)) {
+  if (hasDormantMembership({ package_, membership })) {
     debug('user has one or more dormant memberships')
     return false
   }
@@ -57,6 +60,19 @@ const evaluate = async (package_, packageOption, membership) => {
   // Not all membershipTypes can be extended
   if (!EXTENABLE_MEMBERSHIP_TYPES.includes(membershipType.name)) {
     debug('not extenable membershipType "%s"', membershipType.name)
+    return false
+  }
+
+  // Check whether option requires user to be current claimer of membership.
+  if (
+    packageOption.membershipType &&
+    OPTIONS_REQUIRE_CLAIMER.includes(packageOption.membershipType.name) &&
+    membership.userId !== package_.user.id
+  ) {
+    debug(
+      'only owner can extend membership w/ membershipType "%s"',
+      packageOption.membershipType.name
+    )
     return false
   }
 
