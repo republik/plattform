@@ -18,8 +18,6 @@ const hasDormantMembership = ({ user }) => {
       EXTENABLE_MEMBERSHIP_TYPES.includes(m.membershipType.name)
   )
 
-  debug(eligableMemberships)
-
   const hasActiveMembership = !!eligableMemberships.find(
     m => m.active === true
   )
@@ -39,6 +37,7 @@ const evaluate = async (package_, packageOption, membership) => {
     return false
   }
 
+  const { reward } = packageOption
   const { membershipType, membershipPeriods } = membership
   const now = moment()
 
@@ -49,6 +48,7 @@ const evaluate = async (package_, packageOption, membership) => {
     id: [ packageOption.id, membership.id ].join('-'),
     customization: {
       membership,
+      optionGroup: reward.type === 'MembershipType' ? membership.id : false,
       additionalPeriods: []
     }
   }

@@ -74,6 +74,7 @@ type PackageOption {
   customization: PackageOptionCustomization
 }
 type PackageOptionCustomization {
+  optionGroup: String
   membership: Membership
   additionalPeriods: [MembershipPeriod]!
 }
