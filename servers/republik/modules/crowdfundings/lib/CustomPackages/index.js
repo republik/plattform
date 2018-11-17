@@ -8,9 +8,36 @@ const rules = require('./rules')
 // But that one into database.
 const EXTENABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
 
+// Checks if user has at least one active and one inactive membership,
+// considering latter as "dormant"
+const hasDormantMembership = ({ user }) => {
+  const { memberships: allMemberships } = user
+
+  const eligableMemberships = allMemberships.filter(
+    m => m.userId === user.id && // user owns membership
+      EXTENABLE_MEMBERSHIP_TYPES.includes(m.membershipType.name)
+  )
+
+  debug(eligableMemberships)
+
+  const hasActiveMembership = !!eligableMemberships.find(
+    m => m.active === true
+  )
+  const hasInactiveMembership = !!eligableMemberships.find(
+    m => m.active === false
+  )
+
+  return hasActiveMembership && hasInactiveMembership
+}
+
 const evaluate = async (package_, packageOption, membership) => {
   debug('evaluate')
   // Is membershipType i.O?
+
+  if (hasDormantMembership(package_)) {
+    debug('user has one or more dormant memberships')
+    return false
+  }
 
   const { membershipType, membershipPeriods } = membership
   const now = moment()
