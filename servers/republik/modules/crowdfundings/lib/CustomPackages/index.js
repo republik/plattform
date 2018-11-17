@@ -130,6 +130,13 @@ const evaluate = async (package_, packageOption, membership) => {
     }
   })
 
+  // If options is to extend membership, set defaultAmount to 1 if reward of
+  // current packageOption evaluated is same as in evaluated membership.
+  if (reward.type === 'MembershipType') {
+    payload.defaultAmount =
+      packageOption.rewardId === membershipType.rewardId ? 1 : 0
+  }
+
   return payload
 }
 
