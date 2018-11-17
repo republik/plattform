@@ -1,6 +1,8 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const debug = require('debug')('crowdfundings:resolver:User')
+const Promise = require('bluebird')
 
+const { getCustomOptions } = require('../../lib/CustomPackages')
 const getStripeClients = require('../../lib/payments/stripe/clients')
 
 module.exports = {
@@ -96,6 +98,10 @@ module.exports = {
       custom: true
     })
 
+    if (packages.length === 0) {
+      return
+    }
+
     const pledges = await pgdb.public.pledges.find({
       userId: user.id,
       status: 'SUCCESSFUL'
@@ -142,7 +148,32 @@ module.exports = {
      *  ]
      */
 
-    return packages.map(package_ => ({ ...package_, user }))
+    const allPackageOptions =
+      await pgdb.public.packageOptions.find({
+        packageId: packages.map(package_ => package_.id)
+      })
+
+    return Promise
+      .map(packages, async package_ => {
+        const packageOptions = allPackageOptions
+          .filter(packageOption => packageOption.packageId === package_.id)
+
+        Object.assign(package_, { packageOptions, user })
+
+        // Get Custom Options for a package, evaluated via code.
+        if (package_.custom === true) {
+          const options = await getCustomOptions(package_)
+
+          if (options.length === 0) {
+            return
+          }
+
+          return { ...package_, options }
+        }
+
+        return package_
+      })
+      .filter(Boolean)
   },
   async adminNotes (user, args, { pgdb, user: me }) {
     Roles.ensureUserHasRole(me, 'supporter')
