@@ -1,3 +1,5 @@
+const { transformUser } = require('@orbiting/backend-modules-auth')
+
 module.exports = {
   async type (membership, args, { pgdb }) {
     return pgdb.public.membershipTypes.findOne({
@@ -30,5 +32,11 @@ module.exports = {
     return pgdb.public.membershipPeriods.find({
       membershipId: membership.id
     }, {orderBy: ['endDate desc']})
+  },
+  async user (membership, args, { user: me, pgdb }) {
+    const user =
+      await pgdb.public.users.findOne({ id: membership.userId })
+
+    return transformUser(user)
   }
 }
