@@ -2,7 +2,11 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const debug = require('debug')('crowdfundings:resolver:User')
 const Promise = require('bluebird')
 
-const { getCustomOptions } = require('../../lib/CustomPackages')
+const {
+  resolvePackages,
+  getCustomOptions
+} = require('../../lib/CustomPackages')
+
 const getStripeClients = require('../../lib/payments/stripe/clients')
 
 module.exports = {
@@ -99,109 +103,26 @@ module.exports = {
     })
 
     if (packages.length === 0) {
-      return
+      return []
     }
 
-    const pledges = await pgdb.public.pledges.find({
-      userId: user.id,
-      status: 'SUCCESSFUL'
-    })
-
-    const memberships =
-      pledges.length > 0
-        ? await pgdb.public.memberships.find({
-          pledgeId: pledges.map(pledge => pledge.id)
-        })
-        : []
-
-    const users =
-      memberships.length > 0
-        ? await pgdb.public.users.find({
-          id: memberships.map(membership => membership.userId)
-        })
-        : []
-
-    const membershipTypes =
-      memberships.length > 0
-        ? await pgdb.public.membershipTypes.find({
-          id: memberships.map(membership => membership.membershipTypeId)
-        })
-        : []
-
-    memberships.forEach((membership, index, memberships) => {
-      const user = users.find(user => user.id === membership.userId)
-      memberships[index].claimerName =
-        [user.firstName, user.lastName].filter(Boolean).join(' ').trim()
-      memberships[index].membershipType =
-        membershipTypes.find(membershipType => membershipType.id === membership.membershipTypeId)
-    })
-
-    const membershipPeriods =
-      memberships.length > 0
-        ? await pgdb.public.membershipPeriods.find({
-          membershipId: memberships.map(membership => membership.id)
-        })
-        : []
-
-    memberships.forEach((membership, index, memberships) => {
-      memberships[index].membershipPeriods =
-        membershipPeriods.filter(membershipPeriod => membershipPeriod.membershipId === membership.id)
-    })
-
-    Object.assign(user, { memberships })
-
-    /**
-     * user: {
-     *  ...user
-     *  memberships: [
-     *    {...membership, membershipType, membershipPeriods}
-     *  ]
-     */
-
-    const allPackageOptions =
-      await pgdb.public.packageOptions.find({
-        packageId: packages.map(package_ => package_.id)
-      })
-
-    const allRewards =
-      await pgdb.public.rewards.find({
-        id: allPackageOptions.map(option => option.rewardId)
-      })
-
-    const allMembershipTypes =
-      await pgdb.public.membershipTypes.find({
-        rewardId: allRewards.map(reward => reward.id)
-      })
-
     return Promise
-      .map(packages, async package_ => {
-        const packageOptions = allPackageOptions
-          .filter(packageOption => packageOption.packageId === package_.id)
-          .map(packageOption => {
-            const reward =
-              allRewards.find(reward => packageOption.rewardId === reward.id)
-            const membershipType =
-              allMembershipTypes.find(
-                membershipType => packageOption.rewardId === membershipType.rewardId
-              )
-            return { ...packageOption, reward, membershipType }
-          })
+      .map(
+        await resolvePackages({ packages, pledger: user, pgdb }),
+        async package_ => {
+          if (package_.custom === true) {
+            const options = await getCustomOptions(package_)
 
-        Object.assign(package_, { packageOptions, user })
+            if (options.length === 0) {
+              return
+            }
 
-        // Get Custom Options for a package, evaluated via code.
-        if (package_.custom === true) {
-          const options = await getCustomOptions(package_)
-
-          if (options.length === 0) {
-            return
+            return { ...package_, options }
           }
 
-          return { ...package_, options }
+          return package_
         }
-
-        return package_
-      })
+      )
       .filter(Boolean)
   },
   async adminNotes (user, args, { pgdb, user: me }) {

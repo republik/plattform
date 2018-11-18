@@ -31,14 +31,8 @@ const hasDormantMembership = ({ package_, membership }) => {
     hasInactiveMembership
 }
 
-const evaluate = async (package_, packageOption, membership) => {
+const evaluate = async ({ package_, packageOption, membership }) => {
   debug('evaluate')
-  // Is membershipType i.O?
-
-  if (hasDormantMembership({ package_, membership })) {
-    debug('user has one or more dormant memberships')
-    return false
-  }
 
   const { reward } = packageOption
   const { membershipType, membershipPeriods } = membership
@@ -167,24 +161,14 @@ const getCustomOptions = async (package_) => {
 
   const results = []
 
-  // TODO, Check if all data is available:
-  /*
-    package {
-      user: {
-        memberhips[] {
-          membershipType
-          membershipPeriods[]
-        }
-      }
-      packageOptions[]
-    }
-
-   */
-
-  // per membership...
   await Promise.map(package_.user.memberships, membership => {
     return Promise.map(packageOptions, async packageOption => {
-      const result = await evaluate(package_, packageOption, membership)
+      if (hasDormantMembership({ package_, membership })) {
+        debug('user has one or more dormant memberships')
+        return false
+      }
+
+      const result = await evaluate({ package_, packageOption, membership })
 
       if (result) {
         results.push(result)
@@ -195,7 +179,120 @@ const getCustomOptions = async (package_) => {
   return results.filter(Boolean)
 }
 
+/*
+  packages[] {
+    user: {
+      memberhips[] {
+        membershipType
+        membershipPeriods[]
+      }
+    }
+    packageOptions[] {
+      reward
+      membershipType
+    }
+  }
+*/
+const resolvePackages = async ({ packages, pledger, pgdb }) => {
+  debug('resolvePackages', packages.length)
+
+  if (packages.length === 0) {
+    debug('no packages to resolve')
+    throw new Error('no packages to resolve')
+  }
+
+  if (!pledger || !pledger.id) {
+    debug('empty pledger object or missing pledger.id')
+    throw new Error('empty pledger object or missing pledger.id')
+  }
+
+  const pledges = await pgdb.public.pledges.find({
+    userId: pledger.id,
+    status: 'SUCCESSFUL'
+  })
+
+  const memberships =
+    await pgdb.public.memberships.find({
+      or: [
+        { userId: pledger.id },
+        pledges.length > 0 && { pledgeId: pledges.map(pledge => pledge.id) }
+      ].filter(Boolean)
+    })
+
+  const users =
+    memberships.length > 0
+      ? await pgdb.public.users.find({
+        id: memberships.map(membership => membership.userId)
+      })
+      : []
+
+  const membershipTypes =
+    memberships.length > 0
+      ? await pgdb.public.membershipTypes.find({
+        id: memberships.map(membership => membership.membershipTypeId)
+      })
+      : []
+
+  memberships.forEach((membership, index, memberships) => {
+    const user = users.find(user => user.id === membership.userId)
+    memberships[index].claimerName =
+      [user.firstName, user.lastName].filter(Boolean).join(' ').trim()
+    memberships[index].membershipType =
+      membershipTypes.find(membershipType => membershipType.id === membership.membershipTypeId)
+  })
+
+  const membershipPeriods =
+    memberships.length > 0
+      ? await pgdb.public.membershipPeriods.find({
+        membershipId: memberships.map(membership => membership.id)
+      })
+      : []
+
+  memberships.forEach((membership, index, memberships) => {
+    memberships[index].membershipPeriods =
+      membershipPeriods.filter(membershipPeriod => membershipPeriod.membershipId === membership.id)
+  })
+
+  Object.assign(pledger, { memberships })
+
+  const allPackageOptions =
+    await pgdb.public.packageOptions.find({
+      packageId: packages.map(package_ => package_.id)
+    })
+
+  const allRewards =
+    await pgdb.public.rewards.find({
+      id: allPackageOptions.map(option => option.rewardId)
+    })
+
+  const allMembershipTypes =
+    await pgdb.public.membershipTypes.find({
+      rewardId: allRewards.map(reward => reward.id)
+    })
+
+  return Promise
+    .map(packages, async package_ => {
+      const packageOptions = allPackageOptions
+        .filter(packageOption => packageOption.packageId === package_.id)
+        .map(packageOption => {
+          const reward =
+            allRewards.find(reward => packageOption.rewardId === reward.id)
+          const membershipType =
+            allMembershipTypes.find(
+              membershipType => packageOption.rewardId === membershipType.rewardId
+            )
+          return { ...packageOption, reward, membershipType }
+        })
+
+      Object.assign(package_, { packageOptions, user: pledger })
+
+      return package_
+    })
+    .filter(Boolean)
+}
+
 module.exports = {
   evaluate,
+  resolvePackages,
   getCustomOptions
 }

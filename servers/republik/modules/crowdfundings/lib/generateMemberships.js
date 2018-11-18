@@ -1,6 +1,6 @@
 const moment = require('moment')
 const { getPledgeOptionsTree } = require('./Pledge')
-const { evaluate } = require('./CustomPackages')
+const { evaluate, resolvePackages } = require('./CustomPackages')
 const cancelMembership = require('../graphql/resolvers/_mutations/cancelMembership')
 const debug = require('debug')('crowdfundings:memberships')
 const { enforceSubscriptions } = require('./Mail')
@@ -84,8 +84,18 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
 
         Object.assign(membership, { membershipType, membershipPeriods })
 
+        const resolvedPackage = (await resolvePackages({
+          packages: [pkg],
+          pledger: user,
+          pgdb
+        })).shift()
+
         const { customization: { additionalPeriods } } =
-          await evaluate(pkg, plo.packageOption, membership)
+          await evaluate({
+            package_: resolvedPackage,
+            packageOption: plo.packageOption,
+            membership
+          })
 
         await pgdb.public.membershipPeriods.insert(
           additionalPeriods
