@@ -65,20 +65,21 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
 
   await Promise.map(pledgeOptions, async (plo) => {
     if (plo.packageOption.reward.type === 'MembershipType') {
+      // Is amount in pledgeOption > 0?
+      if (plo.amount === 0) {
+        debug('peldgeOption amount is 0')
+        return
+      }
+
       const { membershipId } = plo.customization
       const { membershipType } = plo.packageOption.reward
 
       if (membershipId) {
         debug('membershipId "%s"', membershipId)
 
-        // Is amount in packageOption/pledgeOption > 0?
-        if (plo.amount === 0) {
-          debug('amount is 0')
-          return
-        }
-
         const membership =
           await pgdb.public.memberships.findOne({ id: membershipId })
+
         const membershipPeriods =
           await pgdb.public.membershipPeriods.find({ membershipId })
 
@@ -145,6 +146,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
       }
     }
   })
+
   debug('generateMemberships membershipPeriod %O', membershipPeriod)
   debug('generateMemberships memberships %O', memberships)
 
