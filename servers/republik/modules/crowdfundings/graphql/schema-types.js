@@ -89,6 +89,7 @@ input PackageOptionInput {
 }
 input PackageOptionCustomizationInput {
   membershipId: ID
+  autoPay: Boolean
 }
 
 type Goodie {
@@ -123,6 +124,7 @@ type Membership {
   sequenceNumber: Int
   active: Boolean!
   renew: Boolean!
+  autoPay: Boolean!
   periods: [MembershipPeriod]!
   overdue: Boolean!
   cancelReasons: [String!]

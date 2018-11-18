@@ -133,5 +133,8 @@ type mutations {
   # if there was a purchase, everything except what we legally must store is deleted
   # required role: admin
   deleteUser(userId: ID!): User
+
+  enableMembershipAutoPay(id: ID!): Boolean!
+  disableMembershipAutoPay(id: ID!): Boolean!
 }
 `

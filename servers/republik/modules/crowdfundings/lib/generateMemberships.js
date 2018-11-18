@@ -71,7 +71,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
         return
       }
 
-      const { membershipId } = plo.customization
+      const { membershipId, autoPay = false } = plo.customization
       const { membershipType } = plo.packageOption.reward
 
       if (membershipId) {
@@ -103,6 +103,16 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
             .map(period => omit(period, ['id', 'createdAt', 'updatedAt']))
         )
 
+        await pgdb.public.membership.update(
+          { id: membershipId },
+          {
+            autoPay,
+            active: true,
+            renew: true,
+            updatedAt: now
+          }
+        )
+
         debug('additionalPeriods %o', additionalPeriods)
       } else {
         for (let c = 0; c < plo.amount; c++) {
@@ -114,6 +124,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
             voucherable: !reducedPrice,
             active: false,
             renew: false,
+            autoPay,
             createdAt: now,
             updatedAt: now
           }
