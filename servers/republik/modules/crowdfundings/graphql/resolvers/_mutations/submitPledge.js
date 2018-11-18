@@ -2,6 +2,7 @@ const logger = console
 const postfinanceSHA = require('../../../lib/payments/postfinance/sha')
 const uuid = require('uuid/v4')
 const { minTotal, regularTotal, getPledgeOptionsTree } = require('../../../lib/Pledge')
+const { resolvePackages } = require('../../../lib/CustomPackages')
 const debug = require('debug')('crowdfundings:pledge')
 const {
   Consents: {
@@ -21,12 +22,6 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     const pledgeOptionsTemplateIds = pledgeOptions.map((plo) => plo.templateId)
     const packageOptions = await transaction.public.packageOptions.find({id: pledgeOptionsTemplateIds})
 
-    // check if all templateIds are valid
-    if (packageOptions.length < pledgeOptions.length) {
-      logger.error('one or more of the claimed templateIds are/became invalid', { req: req._log(), args })
-      throw new Error(t('api/unexpected'))
-    }
-
     // check if packageOptions are all from the same package
     // check if minAmount <= amount <= maxAmount
     // we don't check the pledgeOption price here, because the frontend always
@@ -34,6 +29,31 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     // into the pledgeOption (for record keeping)
     let packageId = packageOptions[0].packageId
     pledgeOptions.forEach((plo) => {
+      // Mutually exclusive membership options: Can only be requested once
+      // within all options.
+      if (pledgeOptions.filter(
+        o => o.customization &&
+          o.customization.membershipId === plo.customization.membershipId &&
+          o.amount > 0
+      ).length > 1) {
+        logger.error('(membership) options must be mutually exclusive!', { req: req._log(), args, plo })
+        throw new Error(t('api/unexpected'))
+      }
+
+      // Checks if combination if templateId and membershipId was posted only
+      // once.
+      if (pledgeOptions.filter(
+        o => o.templateId === plo.templateId &&
+          o.customization &&
+          o.customization.membershipId === plo.customization.membershipId
+      ).length > 1) {
+        logger.error(
+          'options must have only a single template/membership combination',
+          { req: req._log(), args, plo }
+        )
+        throw new Error(t('api/unexpected'))
+      }
+
       const pko = packageOptions.find((pko) => pko.id === plo.templateId)
       if (packageId !== pko.packageId) {
         logger.error('options must all be part of the same package!', { req: req._log(), args, plo, pko })
@@ -47,6 +67,26 @@ module.exports = async (_, args, {pgdb, req, t}) => {
 
     // check if crowdfunding is still open
     const pkg = await pgdb.public.packages.findOne({id: packageId})
+    const resolvedPackage = (await resolvePackages({
+      packages: [pkg],
+      pledger: req.user,
+      pgdb: transaction
+    })).shift()
+
+    const memberships = resolvedPackage.user.memberships
+    const membershipIds = memberships.map(m => m.id)
+
+    // Check if options contain valid membership Ids
+    if (
+      pledgeOptions
+        .filter(o => !!(o.customization && o.customization.membershipId))
+        .filter(o => !membershipIds.includes(o.customization.membershipId))
+        .length > 0
+    ) {
+      logger.error(`options must contain valid membership IDs`, { req: req._log(), args, membershipIds })
+      throw new Error(t('api/unexpected'))
+    }
+
     const crowdfunding = await pgdb.public.crowdfundings.findOne({id: pkg.crowdfundingId})
     const now = new Date()
     const gracefullEnd = new Date(crowdfunding.endDate)
