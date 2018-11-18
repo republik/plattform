@@ -33,6 +33,7 @@ module.exports = {
         {},
         packageOption,
         pledgeOption,
+        pledgeOption.customization,
         { id }
       )
     })

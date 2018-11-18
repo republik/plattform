@@ -43,11 +43,9 @@ const evaluate = async ({ package_, packageOption, membership }) => {
     templateId: packageOption.id,
     package: package_,
     id: [ packageOption.id, membership.id ].join('-'),
-    customization: {
-      membership,
-      optionGroup: reward.type === 'MembershipType' ? membership.id : false,
-      additionalPeriods: []
-    }
+    membership,
+    optionGroup: reward.type === 'MembershipType' ? membership.id : false,
+    additionalPeriods: []
   }
 
   // Can membership.membershipType be extended?
@@ -124,7 +122,7 @@ const evaluate = async ({ package_, packageOption, membership }) => {
       .add(membershipType.intervalCount, membershipType.interval)
   }
 
-  payload.customization.additionalPeriods.push({
+  payload.additionalPeriods.push({
     id: uuid(), // TODO: Fake UUID, stitch together differently.
     membershipId: membership.id,
     kind: 'REGULAR',

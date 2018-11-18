@@ -33,7 +33,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       // within all options.
       if (pledgeOptions.filter(
         o => o.customization &&
-          o.customization.membershipId === plo.customization.membershipId &&
+          o.customization.membershipId === plo.membershipId &&
           o.amount > 0
       ).length > 1) {
         logger.error('(membership) options must be mutually exclusive!', { req: req._log(), args, plo })
@@ -45,7 +45,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       if (pledgeOptions.filter(
         o => o.templateId === plo.templateId &&
           o.customization &&
-          o.customization.membershipId === plo.customization.membershipId
+          o.customization.membershipId === plo.membershipId
       ).length > 1) {
         logger.error(
           'options must have only a single template/membership combination',
@@ -227,6 +227,12 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       plo.pledgeId = newPledge.id
       const pko = packageOptions.find((pko) => pko.id === plo.templateId)
       plo.vat = pko.vat
+      plo.customization = {
+        membershipId: plo.membershipId,
+        autoPay: plo.autoPay
+      }
+      delete plo.membershipId
+      delete plo.autoPay
       return transaction.public.pledgeOptions.insertAndGet(plo)
     }))
     newPledge.packageOptions = newPledgeOptions

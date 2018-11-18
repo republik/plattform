@@ -91,7 +91,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
           pgdb
         })).shift()
 
-        const { customization: { additionalPeriods } } =
+        const { additionalPeriods } =
           await evaluate({
             package_: resolvedPackage,
             packageOption: plo.packageOption,
@@ -103,7 +103,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
             .map(period => omit(period, ['id', 'createdAt', 'updatedAt']))
         )
 
-        await pgdb.public.membership.update(
+        await pgdb.public.memberships.update(
           { id: membershipId },
           {
             autoPay,

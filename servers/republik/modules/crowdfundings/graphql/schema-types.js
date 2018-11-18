@@ -71,9 +71,6 @@ type PackageOption {
   amount: Int
 
   # for custom packages
-  customization: PackageOptionCustomization
-}
-type PackageOptionCustomization {
   optionGroup: String
   membership: Membership
   additionalPeriods: [MembershipPeriod]!
@@ -85,9 +82,6 @@ input PackageOptionInput {
   templateId: ID! # packageOption.id
 
   # via custom packages
-  customization: PackageOptionCustomizationInput
-}
-input PackageOptionCustomizationInput {
   membershipId: ID
   autoPay: Boolean
 }

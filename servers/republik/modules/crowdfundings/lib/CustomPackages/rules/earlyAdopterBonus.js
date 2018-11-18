@@ -10,13 +10,13 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
     return
   }
 
-  if (payload.customization.additionalPeriods.length !== 1) {
+  if (payload.additionalPeriods.length !== 1) {
     debug('not eligable, too many or few additional periods')
     return
   }
 
   const endDate =
-    payload.customization.additionalPeriods
+    payload.additionalPeriods
       .map(p => p.endDate)
       .reduce(
         (accumulator, currentValue) => {
@@ -45,7 +45,7 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
 
   debug('earlyAdopterBonus granted', { bonusInterval })
 
-  payload.customization.additionalPeriods.push({
+  payload.additionalPeriods.push({
     id: uuid(), // TODO: Fake UUID, stitch together differently.
     membershipId: membership.id,
     kind: 'BONUS',
