@@ -48,7 +48,9 @@ module.exports = {
           return cancellations.concat(
             cancelReasons.map(reason => ({
               reason,
-              category: 'OTHER'
+              category: {
+                type: 'OTHER'
+              }
             }))
           )
         }

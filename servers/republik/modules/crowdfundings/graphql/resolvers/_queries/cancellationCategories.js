@@ -6,13 +6,12 @@ const cancelCategories = parse(new Source(Schema))
     definition =>
       definition.kind === 'EnumTypeDefinition' &&
       definition.name &&
-      definition.name.value === 'CancelCategoryType'
+      definition.name.value === 'CancellationCategoryType'
   )
   .values.map(value => value.name.value)
 
 module.exports = (_, args, { pgdb, t }) => {
   return cancelCategories.map(type => ({
-    type,
-    label: t(`api/membership/cancel/category/${type}`)
+    type
   }))
 }

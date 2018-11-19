@@ -48,7 +48,7 @@ type queries {
   # required role: accountant
   paymentsCSV(companyName: String!, paymentIds: [ID!]): String!
 
-  cancellationCategories: [CancelCategory!]!
+  cancellationCategories: [CancellationCategory!]!
 }
 
 type mutations {
@@ -62,8 +62,7 @@ type mutations {
   cancelMembership(
     id: ID!
     immediately: Boolean
-    reason: String
-    category: CancelCategoryType!
+    details: CancellationInput!
   ): Membership!
 
   # MONTHLY_ABO: if cancelled immediately a new subscription is created

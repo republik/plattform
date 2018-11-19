@@ -11,8 +11,7 @@ module.exports = async (_, args, { pgdb, req, t }) => {
     const {
       id: membershipId,
       immediately = false,
-      reason,
-      category
+      details
     } = args
 
     const membership = await transaction.query(`
@@ -60,9 +59,8 @@ module.exports = async (_, args, { pgdb, req, t }) => {
 
     await transaction.public.membershipCancellations.insert({
       membershipId: newMembership.id,
-      immediately,
-      reason,
-      category: category.name
+      reason: details.reason,
+      category: details.type
     })
 
     if (membership.subscriptionId) {
@@ -82,7 +80,7 @@ module.exports = async (_, args, { pgdb, req, t }) => {
       user,
       membershipType.name,
       'cancelMembership',
-      reason
+      details
     )
 
     return newMembership

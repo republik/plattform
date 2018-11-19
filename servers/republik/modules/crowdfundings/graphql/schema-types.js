@@ -261,7 +261,7 @@ type PaymentSource {
   expYear: Int!
 }
 
-enum CancelCategoryType {
+enum CancellationCategoryType {
   EDITORIAL,
   NO_TIME,
   VAUNT,
@@ -272,15 +272,19 @@ enum CancelCategoryType {
   OTHER
 }
 
-type CancelCategory {
-  type: CancelCategoryType!
+type CancellationCategory {
+  type: CancellationCategoryType!
   label: String!
 }
 
-type Cancellation {
-  immediately: Boolean
+input CancellationInput {
+  type: CancellationCategoryType!
   reason: String
-  category: CancelCategoryType!
+}
+
+type Cancellation {
+  reason: String
+  category: CancellationCategory!
   createdAt: DateTime
 }
 
