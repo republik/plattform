@@ -283,7 +283,7 @@ input CancellationInput {
 type Cancellation {
   reason: String
   category: CancellationCategory!
-  createdAt: DateTime
+  createdAt: DateTime!
 }
 
 ######################################
