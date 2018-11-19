@@ -1,5 +1,5 @@
 {
-  "updated": "2018-11-19T14:31:57.240Z",
+  "updated": "2018-11-19T15:30:48.185Z",
   "title": "live",
   "data": [
     {
@@ -87,20 +87,12 @@
       "value": "Keine Zeit"
     },
     {
-      "key": "api/membership/cancel/category/VAUNT",
-      "value": "Selbstbeweihräucherung"
-    },
-    {
       "key": "api/membership/cancel/category/LOGIN",
       "value": "Login zu kompliziert"
     },
     {
       "key": "api/membership/cancel/category/PAPER",
       "value": "ohne Papier, ohne mich"
-    },
-    {
-      "key": "api/membership/cancel/category/NO_AUTO_RENEWAL",
-      "value": "Möchte keine automatische Verlängerung"
     },
     {
       "key": "api/membership/cancel/category/TOO_EXPENSIVE",

@@ -264,10 +264,8 @@ type PaymentSource {
 enum CancellationCategoryType {
   EDITORIAL,
   NO_TIME,
-  VAUNT,
   LOGIN,
   PAPER,
-  NO_AUTO_RENEWAL,
   TOO_EXPENSIVE,
   OTHER
 }
