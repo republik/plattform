@@ -43,18 +43,11 @@ module.exports = {
     return pgdb.public.membershipCancellations.find({
       membershipId: id
     })
-      .then(cancellations => {
-        if (cancelReasons && cancelReasons.length) {
-          return cancellations.concat(
-            cancelReasons.map(reason => ({
-              reason,
-              category: {
-                type: 'OTHER'
-              }
-            }))
-          )
+      .then(cancellations => cancellations.map(cancellation => ({
+        ...cancellation,
+        category: {
+          type: cancellation.category
         }
-        return cancellations
-      })
+      })))
   }
 }

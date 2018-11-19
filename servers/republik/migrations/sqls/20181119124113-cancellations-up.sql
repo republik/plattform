@@ -11,3 +11,20 @@ CREATE TABLE "membershipCancellations" (
   "createdAt"       timestamptz default now(),
   "updatedAt"       timestamptz default now()
 );
+
+INSERT INTO
+  "membershipCancellations" ("membershipId", reason, category, "createdAt")
+  (
+    SELECT
+      id as "membershipId",
+      jsonb_array_elements_text("cancelReasons") as reason,
+      'OTHER' as category,
+      '2018-01-01'
+    FROM
+      memberships
+  )
+;
+
+ALTER TABLE "memberships"
+  DROP COLUMN "cancelReasons"
+;
