@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-24T10:02:18.982Z",
+  "updated": "2018-11-19T14:31:57.240Z",
   "title": "live",
   "data": [
     {
@@ -77,6 +77,38 @@
     {
       "key": "api/membership/move/monthlyDenied",
       "value": "Monats-Abos können nicht verschoben werden."
+    },
+    {
+      "key": "api/membership/cancel/category/EDITORIAL",
+      "value": "Inhaltliche Ausrichtung"
+    },
+    {
+      "key": "api/membership/cancel/category/NO_TIME",
+      "value": "Keine Zeit"
+    },
+    {
+      "key": "api/membership/cancel/category/VAUNT",
+      "value": "Selbstbeweihräucherung"
+    },
+    {
+      "key": "api/membership/cancel/category/LOGIN",
+      "value": "Login zu kompliziert"
+    },
+    {
+      "key": "api/membership/cancel/category/PAPER",
+      "value": "ohne Papier, ohne mich"
+    },
+    {
+      "key": "api/membership/cancel/category/NO_AUTO_RENEWAL",
+      "value": "Möchte keine automatische Verlängerung"
+    },
+    {
+      "key": "api/membership/cancel/category/TOO_EXPENSIVE",
+      "value": "Zu teuer"
+    },
+    {
+      "key": "api/membership/cancel/category/OTHER",
+      "value": "Anderes"
     },
     {
       "key": "api/pledge/alreadyPaid",

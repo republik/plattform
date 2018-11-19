@@ -123,6 +123,7 @@ type Membership {
   periods: [MembershipPeriod]!
   overdue: Boolean!
   cancelReasons: [String!]
+  cancellations: [Cancellation!]!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -258,6 +259,29 @@ type PaymentSource {
   last4: String!
   expMonth: Int!
   expYear: Int!
+}
+
+enum CancelCategoryType {
+  EDITORIAL,
+  NO_TIME,
+  VAUNT,
+  LOGIN,
+  PAPER,
+  NO_AUTO_RENEWAL,
+  TOO_EXPENSIVE,
+  OTHER
+}
+
+type CancelCategory {
+  type: CancelCategoryType!
+  label: String!
+}
+
+type Cancellation {
+  immediately: Boolean
+  reason: String
+  category: CancelCategoryType!
+  createdAt: DateTime
 }
 
 ######################################

@@ -38,5 +38,21 @@ module.exports = {
       await pgdb.public.users.findOne({ id: membership.userId })
 
     return transformUser(user)
+  },
+  async cancellations ({ id, cancelReasons }, args, { user: me, pgdb }) {
+    return pgdb.public.membershipCancellations.find({
+      membershipId: id
+    })
+      .then(cancellations => {
+        if (cancelReasons && cancelReasons.length) {
+          return cancellations.concat(
+            cancelReasons.map(reason => ({
+              reason,
+              category: 'OTHER'
+            }))
+          )
+        }
+        return cancellations
+      })
   }
 }

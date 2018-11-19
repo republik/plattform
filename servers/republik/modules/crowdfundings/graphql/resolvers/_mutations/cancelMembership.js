@@ -11,7 +11,8 @@ module.exports = async (_, args, { pgdb, req, t }) => {
     const {
       id: membershipId,
       immediately = false,
-      reason
+      reason,
+      category
     } = args
 
     const membership = await transaction.query(`
@@ -47,12 +48,6 @@ module.exports = async (_, args, { pgdb, req, t }) => {
       throw new Error(t('api/membership/pleaseWait'))
     }
 
-    let cancelReasons
-    if (reason) {
-      cancelReasons = membership.cancelReasons || []
-      cancelReasons.push(reason)
-    }
-
     const newMembership = await transaction.public.memberships.updateAndGetOne({
       id: membershipId
     }, {
@@ -60,10 +55,14 @@ module.exports = async (_, args, { pgdb, req, t }) => {
       active: immediately
         ? false
         : membership.active,
-      updatedAt: new Date(),
-      ...cancelReasons
-        ? { cancelReasons }
-        : { }
+      updatedAt: new Date()
+    })
+
+    await transaction.public.membershipCancellations.insert({
+      membershipId: newMembership.id,
+      immediately,
+      reason,
+      category: category.name
     })
 
     if (membership.subscriptionId) {
