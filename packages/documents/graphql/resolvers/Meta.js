@@ -5,9 +5,15 @@ module.exports = {
     if (!discussion) {
       return null
     }
-    const repoId = typeof discussion === 'object'
-      ? discussion.meta.repoId
-      : discussion
-    return loaders.Discussion.byRepoId.load(repoId)
+    let repoId
+    if (typeof discussion === 'string') {
+      repoId = discussion.replace('https://github.com/', '')
+    } else if (discussion.meta && discussion.meta.repoId) {
+      repoId = discussion.meta.repoId
+    }
+    if (repoId) {
+      return loaders.Discussion.byRepoId.load(repoId)
+    }
+    return null
   }
 }
