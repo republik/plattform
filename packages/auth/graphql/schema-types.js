@@ -39,6 +39,8 @@ type User {
   preferredFirstFactor: SignInTokenType
   enabledSecondFactors: [SignInTokenType!]!
   eventLog: [EventLog!]!
+  # is this the user of the requesting session
+  isMe: Boolean
 }
 
 type SignInResponse {

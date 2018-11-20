@@ -81,5 +81,7 @@ module.exports = {
   preferredFirstFactor (user, args, { user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, userAccessRoles)
     return user._raw.preferredFirstFactor
-  }
+  },
+  isMe: (user, args, { user: me }) =>
+    me && user.id === me.id
 }
