@@ -43,6 +43,7 @@ module.exports = async (mail) => {
     subject: mail.subject,
     from_email: mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS,
     from_name: mail.fromName || DEFAULT_MAIL_FROM_NAME,
+    merge_language: mail.mergeLanguage || 'mailchimp',
     global_merge_vars: mail.globalMergeVars,
     auto_text: true,
     tags
