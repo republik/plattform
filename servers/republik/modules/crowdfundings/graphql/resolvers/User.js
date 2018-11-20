@@ -1,6 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const debug = require('debug')('crowdfundings:resolver:User')
 const Promise = require('bluebird')
+const CustomPledgeToken = require('../../lib/CustomPledgeToken')
 
 const {
   resolvePackages,
@@ -125,6 +126,9 @@ module.exports = {
       )
       .filter(Boolean)
   },
+  customPledgeToken: (user) =>
+    CustomPledgeToken.generateForUser(user.id) || '',
+
   async adminNotes (user, args, { pgdb, user: me }) {
     Roles.ensureUserHasRole(me, 'supporter')
     return user.adminNotes || user._raw.adminNotes
