@@ -195,7 +195,7 @@ const getCustomOptions = async (package_) => {
     }
   }
 */
-const resolvePackages = async ({ packages, pledger, pgdb }) => {
+const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
   debug('resolvePackages', packages.length)
 
   if (packages.length === 0) {
@@ -203,23 +203,28 @@ const resolvePackages = async ({ packages, pledger, pgdb }) => {
     throw new Error('no packages to resolve')
   }
 
-  if (!pledger || !pledger.id) {
+  if (!pledger.id) {
     debug('empty pledger object or missing pledger.id')
-    throw new Error('empty pledger object or missing pledger.id')
+    // throw new Error('empty pledger object or missing pledger.id')
   }
 
-  const pledges = await pgdb.public.pledges.find({
-    userId: pledger.id,
-    status: 'SUCCESSFUL'
-  })
+  const pledges =
+    pledger.id
+      ? await pgdb.public.pledges.find({
+        userId: pledger.id,
+        status: 'SUCCESSFUL'
+      })
+      : []
 
   const memberships =
-    await pgdb.public.memberships.find({
-      or: [
-        { userId: pledger.id },
-        pledges.length > 0 && { pledgeId: pledges.map(pledge => pledge.id) }
-      ].filter(Boolean)
-    })
+    pledger.id
+      ? await pgdb.public.memberships.find({
+        or: [
+          { userId: pledger.id },
+          pledges.length > 0 && { pledgeId: pledges.map(pledge => pledge.id) }
+        ].filter(Boolean)
+      })
+      : []
 
   const users =
     memberships.length > 0
