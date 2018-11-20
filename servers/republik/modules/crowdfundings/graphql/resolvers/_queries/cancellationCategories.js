@@ -1,7 +1,7 @@
 const { parse, Source } = require('graphql')
 const Schema = require('../../schema-types')
 
-const cancelCategories = parse(new Source(Schema))
+const cancellationCategories = parse(new Source(Schema))
   .definitions.find(
     definition =>
       definition.kind === 'EnumTypeDefinition' &&
@@ -11,7 +11,7 @@ const cancelCategories = parse(new Source(Schema))
   .values.map(value => value.name.value)
 
 module.exports = (_, args, { pgdb, t }) => {
-  return cancelCategories.map(type => ({
+  return cancellationCategories.map(type => ({
     type
   }))
 }
