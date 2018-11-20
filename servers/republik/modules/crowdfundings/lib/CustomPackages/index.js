@@ -12,6 +12,20 @@ const EXTENABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR']
 // Which options require you to own a membership?
 const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO']
 
+// Finds latest endDate in a series of membershipPeriods
+const getLatestEndDate =
+  periods => periods
+    .map(p => p.endDate)
+    .reduce(
+      (accumulator, currentValue) => {
+        if (!accumulator) {
+          return currentValue
+        }
+
+        return currentValue > accumulator ? currentValue : accumulator
+      }
+    )
+
 // Checks if user has at least one active and one inactive membership,
 // considering latter as "dormant"
 const hasDormantMembership = ({ package_, membership }) => {
@@ -89,25 +103,7 @@ const evaluate = async ({ package_, packageOption, membership }) => {
     return false
   }
 
-  /*
-  e)  MISSING DATA — If membership.membershipType != option.membershipType
-      - If true, indicate generation of new membership in customization
-      payload, then proceed
-  TODO
-   */
-
-  let endDate =
-    membershipPeriods
-      .map(p => p.endDate)
-      .reduce(
-        (accumulator, currentValue) => {
-          if (!accumulator) {
-            return currentValue
-          }
-
-          return currentValue > accumulator ? currentValue : accumulator
-        }
-      )
+  let endDate = getLatestEndDate(membershipPeriods)
 
   // If endDate is in past, pushed to now.
   // This indicates that we're dealing with an expired membership.
@@ -168,15 +164,28 @@ const getCustomOptions = async (package_) => {
         return false
       }
 
-      const result = await evaluate({ package_, packageOption, membership })
-
-      if (result) {
-        results.push(result)
-      }
+      results.push(await evaluate({ package_, packageOption, membership }))
     })
   })
 
-  return results.filter(Boolean)
+  return results
+    .filter(Boolean)
+    // Sort by sequenceNumber in an ascending manner
+    .sort(
+      (a, b) =>
+        a.membership.sequenceNumber < b.membership.sequenceNumber ? 1 : 0
+    )
+    // Sort by membership "endDate", ascending
+    .sort((a, b) => {
+      const aDate = getLatestEndDate(a.membership.membershipPeriods)
+      const bDate = getLatestEndDate(b.membership.membershipPeriods)
+
+      return aDate < bDate ? 1 : 0
+    })
+    // Sort by userID, own ones up top.
+    .sort((a, b) => a.membership.userId !== package_.user.id ? 1 : 0)
+
+  // return results.filter(Boolean)
 }
 
 /*
