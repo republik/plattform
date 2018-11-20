@@ -3,7 +3,7 @@ const moment = require('moment')
 const uuid = require('uuid/v4')
 const Promise = require('bluebird')
 
-const { getLatestEndDate } = require('../utils')
+const { getLatestPeriod, getLatestEndDate } = require('../utils')
 const rules = require('./rules')
 
 // Put that one into database.
@@ -79,18 +79,21 @@ const evaluate = async ({ package_, packageOption, membership }) => {
     return false
   }
 
+  const latestPeriod = getLatestPeriod(membershipPeriods)
+
   // Has no membershipPeriod with beginDate in future
   // Only memberships with current or past membershipPeriods can be extended.
-  if (
-    membershipPeriods
-      .filter(membershipPeriod => membershipPeriod.beginDate > now)
-      .length > 0
-  ) {
-    debug('membershp has membershipPeriod in future')
+  if (latestPeriod.beginDate > now) {
+    debug('membership has a membershipPeriod in future')
     return false
   }
 
-  let endDate = getLatestEndDate(membershipPeriods)
+  if (latestPeriod.beginDate > now.subtract(24, 'hours')) {
+    debug('membership period began not 24 hours ago', latestPeriod.beginDate)
+    return false
+  }
+
+  let endDate = latestPeriod.endDate
 
   // If endDate is in past, pushed to now.
   // This indicates that we're dealing with an expired membership.
