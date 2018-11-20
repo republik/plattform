@@ -195,7 +195,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
   }
 
   if (membershipPeriod) {
-    const membership = await pgdb.public.memberships.insert({
+    const membership = await pgdb.public.memberships.insertAndGet({
       ...membershipPeriod.membership,
       active: true,
       renew: true,

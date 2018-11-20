@@ -233,14 +233,18 @@ const resolvePackages = async ({ packages, pledger, pgdb }) => {
       : []
 
   const membershipPledges =
-    await pgdb.public.pledges.find({
-      id: memberships.map(membership => membership.pledgeId)
-    })
+    memberships.length > 0
+      ? await pgdb.public.pledges.find({
+        id: memberships.map(membership => membership.pledgeId)
+      })
+      : []
 
   const membershipPledgePackages =
-    await pgdb.public.packages.find({
-      id: membershipPledges.map(pledge => pledge.packageId)
-    })
+    membershipPledges.length > 0
+      ? await pgdb.public.packages.find({
+        id: membershipPledges.map(pledge => pledge.packageId)
+      })
+      : []
 
   membershipPledges.forEach((pledge, index, pledges) => {
     pledges[index].package = membershipPledgePackages.find(package_ => package_.id === pledge.packageId)
