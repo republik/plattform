@@ -3,6 +3,7 @@ const moment = require('moment')
 const uuid = require('uuid/v4')
 const Promise = require('bluebird')
 
+const { getLatestEndDate } = require('../utils')
 const rules = require('./rules')
 
 // Put that one into database.
@@ -11,20 +12,6 @@ const EXTENABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR']
 
 // Which options require you to own a membership?
 const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO']
-
-// Finds latest endDate in a series of membershipPeriods
-const getLatestEndDate =
-  periods => periods
-    .map(p => p.endDate)
-    .reduce(
-      (accumulator, currentValue) => {
-        if (!accumulator) {
-          return currentValue
-        }
-
-        return currentValue > accumulator ? currentValue : accumulator
-      }
-    )
 
 // Checks if user has at least one active and one inactive membership,
 // considering latter as "dormant"
