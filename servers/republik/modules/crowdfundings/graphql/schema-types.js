@@ -122,7 +122,6 @@ type Membership {
   autoPay: Boolean!
   periods: [MembershipPeriod]!
   overdue: Boolean!
-  cancelReasons: [String!]
   cancellations: [Cancellation!]!
   createdAt: DateTime!
   updatedAt: DateTime!
