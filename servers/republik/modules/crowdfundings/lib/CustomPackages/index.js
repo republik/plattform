@@ -7,6 +7,7 @@ const rules = require('./rules')
 
 // Put that one into database.
 const EXTENABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
+const EXTENABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR']
 
 // Which options require you to own a membership?
 const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO']
@@ -19,7 +20,8 @@ const hasDormantMembership = ({ package_, membership }) => {
 
   const eligableMemberships = allMemberships.filter(
     m => m.userId === user.id && // user owns membership
-      EXTENABLE_MEMBERSHIP_TYPES.includes(m.membershipType.name)
+      EXTENABLE_MEMBERSHIP_TYPES.includes(m.membershipType.name) &&
+      EXTENABLE_PACKAGE_NAMES.includes(m.pledge.package.name)
   )
 
   const hasInactiveMembership = !!eligableMemberships.find(
@@ -183,6 +185,9 @@ const getCustomOptions = async (package_) => {
       memberhips[] {
         membershipType
         membershipPeriods[]
+        pledge {
+          package
+        }
       }
     }
     packageOptions[] {
@@ -231,12 +236,28 @@ const resolvePackages = async ({ packages, pledger, pgdb }) => {
       })
       : []
 
+  const membershipPledges =
+    await pgdb.public.pledges.find({
+      id: memberships.map(membership => membership.pledgeId)
+    })
+
+  const membershipPledgePackages =
+    await pgdb.public.packages.find({
+      id: membershipPledges.map(pledge => pledge.packageId)
+    })
+
+  membershipPledges.forEach((pledge, index, pledges) => {
+    pledges[index].package = membershipPledgePackages.find(package_ => package_.id === pledge.packageId)
+  })
+
   memberships.forEach((membership, index, memberships) => {
     const user = users.find(user => user.id === membership.userId)
     memberships[index].claimerName =
       [user.firstName, user.lastName].filter(Boolean).join(' ').trim()
     memberships[index].membershipType =
       membershipTypes.find(membershipType => membershipType.id === membership.membershipTypeId)
+    memberships[index].pledge =
+      membershipPledges.find(membershipPledge => membershipPledge.id === membership.pledgeId)
   })
 
   const membershipPeriods =
