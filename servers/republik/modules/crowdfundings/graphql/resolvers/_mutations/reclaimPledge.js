@@ -1,5 +1,5 @@
 const logger = console
-const sendPendingPledgeConfirmations = require('../../../lib/sendPendingPledgeConfirmations')
+const { sendPledgeConfirmations } = require('../../../lib/Mail')
 
 module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
   // check user
@@ -54,7 +54,7 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
     await Promise.all(promises)
 
     // send confirmation mail
-    await sendPendingPledgeConfirmations(newUser.id, transaction, t)
+    await sendPledgeConfirmations({ userId: newUser.id, transaction, t })
 
     // commit transaction
     await transaction.transactionCommit()
