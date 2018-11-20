@@ -283,6 +283,7 @@ type Cancellation {
   reason: String
   category: CancellationCategory!
   createdAt: DateTime!
+  revokedAt: DateTime
 }
 
 ######################################
