@@ -79,10 +79,13 @@ exports.publishMonitor = async (_user, message) => {
   }
 }
 
-exports.publishMembership = async (_user, membershipTypeName, action, reason) => {
+exports.publishMembership = async (_user, membershipTypeName, action, details) => {
   const user = transformUser(_user)
   try {
-    const content = `*${user.name}* (${user.email}): ${action} (${membershipTypeName}) ${reason ? '\nReason: ' + reason : ''}
+    const detailsString = details
+      ? `Reason: ${details.reason}\nCategory: ${details.category}`
+      : ''
+    const content = `*${user.name}* (${user.email}): ${action} (${membershipTypeName}) ${detailsString}
 ${ADMIN_FRONTEND_BASE_URL}/users/${user.id}
 `
     return await publish(SLACK_CHANNEL_ADMIN, content)

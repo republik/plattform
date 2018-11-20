@@ -122,7 +122,7 @@ type Membership {
   autoPay: Boolean!
   periods: [MembershipPeriod]!
   overdue: Boolean!
-  cancelReasons: [String!]
+  cancellations: [Cancellation!]!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -258,6 +258,32 @@ type PaymentSource {
   last4: String!
   expMonth: Int!
   expYear: Int!
+}
+
+enum CancellationCategoryType {
+  EDITORIAL,
+  NO_TIME,
+  LOGIN,
+  PAPER,
+  TOO_EXPENSIVE,
+  OTHER
+}
+
+type CancellationCategory {
+  type: CancellationCategoryType!
+  label: String!
+}
+
+input CancellationInput {
+  type: CancellationCategoryType!
+  reason: String
+}
+
+type Cancellation {
+  reason: String
+  category: CancellationCategory!
+  createdAt: DateTime!
+  revokedAt: DateTime
 }
 
 ######################################
