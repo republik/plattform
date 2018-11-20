@@ -82,7 +82,7 @@ module.exports = async (userId, pgdb, t) => {
           content: pledge.status === 'WAITING_FOR_PAYMENT'
         },
         { name: 'ABO_FOR_ME',
-          content: pkg.name !== 'DONAT' && pkg.name !== 'ABO_GIVE'
+          content: pkg.name !== 'DONATE' && pkg.name !== 'ABO_GIVE'
         },
         { name: 'VOUCHER_CODES',
           content: pkg.name === 'ABO_GIVE'
