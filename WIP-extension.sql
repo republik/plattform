@@ -51,7 +51,7 @@ VALUES
     1,
     0,
     24000,
-    FALSE,
+    TRUE,
     0,
     0
   ),
