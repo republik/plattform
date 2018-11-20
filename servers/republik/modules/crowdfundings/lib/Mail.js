@@ -1,7 +1,14 @@
 const debug = require('debug')('crowdfundings:lib:Mail')
 
-const { grants } = require('@orbiting/backend-modules-access')
 const { createMail } = require('@orbiting/backend-modules-mail')
+const { grants } = require('@orbiting/backend-modules-access')
+const { transformUser } = require('@orbiting/backend-modules-auth')
+const { timeFormat } = require('@orbiting/backend-modules-formats')
+
+const { getLatestEndDate } = require('./utils')
+
+const dateFormat = timeFormat('%x')
+
 const {
   MAILCHIMP_INTEREST_PLEDGE,
   MAILCHIMP_INTEREST_MEMBER,
@@ -112,6 +119,34 @@ mail.enforceSubscriptions = async ({
 
   const sanitizedUser = user || { email, roles: [] }
   return mail.updateNewsletterSubscriptions({ user: sanitizedUser, interests, ...rest })
+}
+
+mail.sendMembershipProlongNotice = async ({
+  pledger,
+  membership,
+  additionalPeriods,
+  t
+}) => {
+  const safePledger = transformUser(pledger)
+  const safeMembershipUser = transformUser(membership.user)
+
+  await mail.sendMailTemplate({
+    to: membership.user.email,
+    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+    subject: t(
+      `api/email/membership_prolong_notice/subject`
+    ),
+    templateName: `membership_prolong_notice`,
+    mergeLanguage: 'handlebars',
+    globalMergeVars: [
+      { name: 'name',
+        content: safeMembershipUser.name },
+      { name: 'pledger_name',
+        content: safePledger.name },
+      { name: 'end_date',
+        content: dateFormat(getLatestEndDate(additionalPeriods)) }
+    ]
+  })
 }
 
 module.exports = mail

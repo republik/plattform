@@ -3,7 +3,7 @@ const { getPledgeOptionsTree } = require('./Pledge')
 const { evaluate, resolvePackages } = require('./CustomPackages')
 const cancelMembership = require('../graphql/resolvers/_mutations/cancelMembership')
 const debug = require('debug')('crowdfundings:memberships')
-const { enforceSubscriptions } = require('./Mail')
+const { enforceSubscriptions, sendMembershipProlongNotice } = require('./Mail')
 const Promise = require('bluebird')
 const omit = require('lodash/omit')
 
@@ -83,7 +83,17 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
         const membershipPeriods =
           await pgdb.public.membershipPeriods.find({ membershipId })
 
-        Object.assign(membership, { membershipType, membershipPeriods })
+        const membershipUser =
+          await pgdb.public.users.findOne({ id: membership.userId })
+
+        Object.assign(
+          membership,
+          {
+            membershipType,
+            membershipPeriods,
+            user: membershipUser
+          }
+        )
 
         const resolvedPackage = (await resolvePackages({
           packages: [pkg],
@@ -114,6 +124,12 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
         )
 
         debug('additionalPeriods %o', additionalPeriods)
+
+        if (membership.userId !== pledge.userId) {
+          await sendMembershipProlongNotice({
+            pledger: user, membership, additionalPeriods, t
+          })
+        }
       } else {
         for (let c = 0; c < plo.amount; c++) {
           const membership = {
