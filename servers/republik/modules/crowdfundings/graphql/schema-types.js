@@ -258,6 +258,8 @@ type PaymentSource {
   last4: String!
   expMonth: Int!
   expYear: Int!
+  # is source expired now
+  isExpired: Boolean!
 }
 
 ######################################
