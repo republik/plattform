@@ -5,7 +5,7 @@ CREATE DOMAIN cancel_category AS TEXT
 
 CREATE TABLE "membershipCancellations" (
   "id"              uuid primary key not null default uuid_generate_v4(),
-  "membershipId"    uuid not null references "memberships",
+  "membershipId"    uuid not null references "memberships"(id),
   "reason"          text,
   "category"        cancel_category not null,
   "createdAt"       timestamptz default now(),
