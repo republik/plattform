@@ -8,10 +8,12 @@ const {
   Consents: {
     ensureAllRequiredConsents,
     saveConsents
-  }
+  },
+  AccessToken: { getUserByAccessToken }
 } = require('@orbiting/backend-modules-auth')
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, context) => {
+  const {pgdb, req, t} = context
   const transaction = await pgdb.transactionBegin()
   try {
     const { pledge, consents } = args
@@ -115,8 +117,12 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     // check user
     let user = null
     let pfAliasId = null
+    const accessTokenUser = pledge.accessToken && await getUserByAccessToken(pledge.accessToken, context)
     if (req.user) { // user logged in
-      if (req.user.email !== pledge.user.email) {
+      if (
+        req.user.email !== pledge.user.email ||
+        (accessTokenUser && req.user.email !== accessTokenUser.email)
+      ) {
         logger.error('req.user.email and pledge.user.email dont match, signout first.', { req: req._log(), args })
         throw new Error(t('api/unexpected'))
       }
@@ -131,18 +137,30 @@ module.exports = async (_, args, {pgdb, req, t}) => {
 
       if (paymentSource) { pfAliasId = paymentSource.pspId }
     } else {
-      user = await transaction.public.users.findOne({email: pledge.user.email}) // try to load existing user by email
-      if (user && !!(await transaction.public.pledges.findFirst({userId: user.id}))) { // user has pledges
-        await transaction.transactionCommit()
-        return {emailVerify: true} // user must login before he can submitPledge
-      } else if (!user) { // create user
-        user = await transaction.public.users.insertAndGet({
-          email: pledge.user.email,
-          firstName: pledge.user.firstName,
-          lastName: pledge.user.lastName,
-          birthday: pledge.user.birthday,
-          phoneNumber: pledge.user.phoneNumber
-        }, {skipUndefined: true})
+      if (accessTokenUser) {
+        if (pledge.user.email !== accessTokenUser.email) {
+          await transaction.transactionRollback()
+          return { // user must logout before he can submitPledge
+            emailVerify: true
+          }
+        }
+        user = accessTokenUser
+      } else {
+        user = await transaction.public.users.findOne({email: pledge.user.email}) // try to load existing user by email
+        if (user && !!(await transaction.public.pledges.findFirst({userId: user.id}))) { // user has pledges
+          await transaction.transactionRollback()
+          return { // user must login before he can submitPledge
+            emailVerify: true
+          }
+        } else if (!user) { // create user
+          user = await transaction.public.users.insertAndGet({
+            email: pledge.user.email,
+            firstName: pledge.user.firstName,
+            lastName: pledge.user.lastName,
+            birthday: pledge.user.birthday,
+            phoneNumber: pledge.user.phoneNumber
+          }, {skipUndefined: true})
+        }
       }
     }
     // update user details

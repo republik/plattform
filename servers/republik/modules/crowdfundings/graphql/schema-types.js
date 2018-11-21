@@ -189,6 +189,7 @@ input PledgeInput {
   total: Int!
   user: UserInput!
   reason: String
+  accessToken: ID
 }
 
 type PledgeResponse {
