@@ -126,14 +126,16 @@ const evaluate = async ({ package_, packageOption, membership }) => {
     }
   })
 
-  // If options is to extend membership, set defaultAmount to 1 if reward of
-  // current packageOption evaluated is same as in evaluated membership.
-  if (
-    reward.type === 'MembershipType' &&
-    membership.userId === package_.user.id
-  ) {
-    payload.defaultAmount =
-      packageOption.rewardId === membershipType.rewardId ? 1 : 0
+  if (reward.type === 'MembershipType') {
+    if (membership.userId === package_.user.id) {
+      // If options is to extend membership, set defaultAmount to 1 if reward of
+      // current packageOption evaluated is same as in evaluated membership.
+      payload.defaultAmount =
+        packageOption.rewardId === membershipType.rewardId ? 1 : 0
+    } else {
+      // If user does not own membership, set userPrice to false
+      payload.userPrice = false
+    }
   }
 
   return payload
