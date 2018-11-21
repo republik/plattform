@@ -38,6 +38,7 @@ import { Breakout } from '../../components/Center'
 
 import * as Editorial from '../../components/Typography/Editorial'
 
+
 const createTeasers = ({
   t,
   Link
@@ -89,10 +90,21 @@ const createTeasers = ({
 
   const teaserFormat = {
     matchMdast: matchHeading(6),
-    component: ({ children, attributes }) =>
+    component: ({ children, attributes, href }) =>
       <Editorial.Format attributes={attributes}>
-        {children}
+        <Link href={href} passHref>
+          <a href={href} {...styles.link}>
+            {children}
+          </a>
+        </Link>
       </Editorial.Format>,
+    props (node, index, parent, { ancestors }) {
+      const teaser = ancestors.find(matchTeaser)
+      const data = teaser && teaser.data
+      return {
+        href: data ? data.formatUrl : undefined
+      }
+    },
     editorModule: 'headline',
     editorOptions: {
       type: 'FRONTFORMAT',
