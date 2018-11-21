@@ -266,7 +266,8 @@ enum CancellationCategoryType {
   LOGIN,
   PAPER,
   TOO_EXPENSIVE,
-  OTHER
+  OTHER,
+  SYSTEM
 }
 
 type CancellationCategory {
