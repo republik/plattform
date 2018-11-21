@@ -21,7 +21,8 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
   MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
   MAILCHIMP_INTEREST_NEWSLETTER_FEUILLETON,
-  MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR
+  MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
+  FRONTEND_BASE_URL
 } = process.env
 
 const mail = createMail([
@@ -343,7 +344,9 @@ ${address.country}</span>`
         },
         { name: 'check_membership_subscriptions',
           content: checkMembershipSubscriptions
-        }
+        },
+        { name: 'frontend_base_url',
+          content: FRONTEND_BASE_URL }
       ]
     })
   }))
