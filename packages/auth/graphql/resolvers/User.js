@@ -86,6 +86,9 @@ module.exports = {
   isMe: (user, args, { user: me }) =>
     me && user.id === me.id,
 
-  accessToken: (user, { scope }) =>
-    AccessToken.generateForUser(user, scope)
+  accessToken: (user, { scope }, { user: me }) => {
+    if (me && user.id === me.id) {
+      return AccessToken.generateForUser(user, scope)
+    }
+  }
 }

@@ -42,7 +42,8 @@ type User {
   # is this the user of the requesting session
   isMe: Boolean
   # get an access token
-  accessToken(scope: AccessTokenScope!): ID!
+  # exclusively accessible by the user herself
+  accessToken(scope: AccessTokenScope!): ID
 }
 
 type SignInResponse {
