@@ -2,6 +2,8 @@ const debug = require('debug')('crowdfundings:lib:CustomPackages:rule:earlyUserB
 const moment = require('moment')
 const uuid = require('uuid/v4')
 
+const { getLatestPeriod } = require('../../utils')
+
 const MEMBERSHIP_CREATED_BEFORE = '2017-04-27'
 
 module.exports = ({ package_, packageOption, membership, payload, now }) => {
@@ -15,31 +17,10 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
     return
   }
 
-  const endDate =
-    payload.additionalPeriods
-      .map(p => p.endDate)
-      .reduce(
-        (accumulator, currentValue) => {
-          if (!accumulator) {
-            return currentValue
-          }
-
-          return currentValue > accumulator ? currentValue : accumulator
-        }
-      )
-
-  const firstBeginDate =
-    membership.membershipPeriods
-      .map(p => p.endDate)
-      .reduce(
-        (accumulator, currentValue) => {
-          if (!accumulator) {
-            return currentValue
-          }
-
-          return currentValue < accumulator ? currentValue : accumulator
-        }
-      )
+  const { endDate } =
+    getLatestPeriod(payload.additionalPeriods)
+  const { endDate: firstBeginDate } =
+    getLatestPeriod(membership.membershipPeriods).endDate
 
   const bonusInterval = moment(firstBeginDate).diff(now)
 
