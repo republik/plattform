@@ -61,7 +61,7 @@ const resolve = async (token, { pgdb }) => {
     const expiresAt = moment(_expiresAt, DATE_FORMAT)
     const payload = getPayload({ userId, scope, expiresAt })
     const key = await pgdb.public.users.findOneFieldOnly({ id: userId }, 'accessKey')
-    if (getHmac(payload, key) === hmac) {
+    if (key && getHmac(payload, key) === hmac) {
       const scopeConfig = getScopeConfig(scope)
       return { userId, scope, scopeConfig, expiresAt, hmac }
     }
@@ -95,11 +95,14 @@ const getUserByAccessToken = async (token, context) => {
 const isFieldExposed = (user, field) =>
   user &&
   user._scopeConfig &&
+  user._scopeConfig.exposeFields &&
   user._scopeConfig.exposeFields.includes(field)
 
 const ensureCanPledgePackage = (user, packageName) => {
   if (
-    !(user && user._scopeConfig && user._scopeConfig.pledgePackages &&
+    !(user &&
+      user._scopeConfig &&
+      user._scopeConfig.pledgePackages &&
       user._scopeConfig.pledgePackages.includes(packageName)
     )
   ) {
