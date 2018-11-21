@@ -1,7 +1,6 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
+const { Roles, AccessToken: { isFieldExposed } } = require('@orbiting/backend-modules-auth')
 const debug = require('debug')('crowdfundings:resolver:User')
 const Promise = require('bluebird')
-const CustomPledgeToken = require('../../lib/CustomPledgeToken')
 
 const {
   resolvePackages,
@@ -9,6 +8,31 @@ const {
 } = require('../../lib/CustomPackages')
 
 const getStripeClients = require('../../lib/payments/stripe/clients')
+const { isExpired } = require('./PaymentSource')
+
+const getPaymentSources = async (user, pgdb) => {
+  const { platform } = await getStripeClients(pgdb)
+  const customer = await pgdb.public.stripeCustomers.findOne({
+    userId: user.id,
+    companyId: platform.company.id
+  })
+  if (!customer) {
+    return []
+  }
+  const stripeCustomer = await platform.stripe.customers.retrieve(customer.id)
+  if (!stripeCustomer || !stripeCustomer.sources || !stripeCustomer.sources.data) {
+    return []
+  }
+  return stripeCustomer.sources.data.map(source => ({
+    id: source.id,
+    isDefault: source.id === stripeCustomer.default_source,
+    status: source.status.toUpperCase(),
+    brand: source.card.brand,
+    last4: source.card.last4,
+    expMonth: source.card.exp_month,
+    expYear: source.card.exp_year
+  }))
+}
 
 module.exports = {
   async memberships (user, args, {pgdb, user: me}) {
@@ -31,30 +55,24 @@ module.exports = {
     return []
   },
   async paymentSources (user, args, { pgdb, user: me }) {
-    const { platform } = await getStripeClients(pgdb)
     if (Roles.userIsMeOrInRoles(user, me, ['admin'])) {
-      const customer = await pgdb.public.stripeCustomers.findOne({
-        userId: user.id,
-        companyId: platform.company.id
-      })
-      if (!customer) {
-        return []
-      }
-      const stripeCustomer = await platform.stripe.customers.retrieve(customer.id)
-      if (!stripeCustomer || !stripeCustomer.sources || !stripeCustomer.sources.data) {
-        return []
-      }
-      return stripeCustomer.sources.data.map(source => ({
-        id: source.id,
-        isDefault: source.id === stripeCustomer.default_source,
-        status: source.status.toUpperCase(),
-        brand: source.card.brand,
-        last4: source.card.last4,
-        expMonth: source.card.exp_month,
-        expYear: source.card.exp_year
-      }))
+      return getPaymentSources(user, pgdb)
     }
     return []
+  },
+  async hasChargableSource (user, args, context) {
+    const { pgdb, user: me } = context
+    if (
+      Roles.userIsMeOrInRoles(user, me, ['admin']) ||
+      isFieldExposed(user, 'hasChargableSource')
+    ) {
+      return getPaymentSources(user, pgdb)
+        .then(sources =>
+          !!sources
+            .filter(source => !isExpired(source, {}, context))
+            .length
+        )
+    }
   },
   async checkMembershipSubscriptions (user, args, { pgdb, user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, ['supporter'])
@@ -94,7 +112,9 @@ module.exports = {
   async customPackages (user, args, { pgdb, user: me }) {
     debug('customPackages')
 
-    Roles.ensureUserIsMeOrInRoles(user, me, ['supporter'])
+    if (!isFieldExposed(user, 'customPackages')) {
+      Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
+    }
 
     const now = new Date()
 
@@ -133,9 +153,6 @@ module.exports = {
       )
       .filter(Boolean)
   },
-  customPledgeToken: (user) =>
-    CustomPledgeToken.generateForUser(user.id) || '',
-
   async adminNotes (user, args, { pgdb, user: me }) {
     Roles.ensureUserHasRole(me, 'supporter')
     return user.adminNotes || user._raw.adminNotes

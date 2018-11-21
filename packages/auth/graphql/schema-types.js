@@ -41,6 +41,8 @@ type User {
   eventLog: [EventLog!]!
   # is this the user of the requesting session
   isMe: Boolean
+  # get a access token
+  accessToken(scope: AccessTokenScope!): ID!
 }
 
 type SignInResponse {
@@ -112,5 +114,9 @@ type SignInNotification {
   body: String!
   verificationUrl: String!
   expiresAt: DateTime!
+}
+
+enum AccessTokenScope {
+  customPledge
 }
 `

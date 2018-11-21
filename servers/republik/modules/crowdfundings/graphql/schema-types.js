@@ -7,12 +7,10 @@ extend type User {
   pledges: [Pledge!]!
   memberships: [Membership!]!
   paymentSources: [PaymentSource!]!
+  hasChargableSource: Boolean
 
   # Custom packages available for a specific user
   customPackages(crowdfundingName: String): [Package!]
-
-  # token to pledge/buy customPackages as this user
-  customPledgeToken: ID!
 
   # if true the user should check his/her memberships subscriptions
   # most propably she has a running monthly- and yealy-membership simultaneously

@@ -5,7 +5,7 @@ schema {
 }
 
 type queries {
-  me: User
+  me(accessToken: ID): User
 
   # check if a username is available
   # also returns true if you already own it
