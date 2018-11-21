@@ -98,11 +98,11 @@ const isFieldExposed = (user, field) =>
   user._scopeConfig.exposeFields.includes(field)
 
 const ensureCanPledgePackage = (user, packageName) => {
-  if ((
-    user &&
-    user._scopeConfig &&
-    user._scopeConfig.pledgePackages.includes(packageName)
-  ) === false) {
+  if (
+    !(user && user._scopeConfig && user._scopeConfig.pledgePackages &&
+      user._scopeConfig.pledgePackages.includes(packageName)
+    )
+  ) {
     throw new MissingPackageGrant(null, { package: packageName })
   }
 }
