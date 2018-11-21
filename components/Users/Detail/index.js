@@ -643,7 +643,15 @@ const userQuery = gql`
           createdAt
           updatedAt
         }
-        cancelReasons
+        cancellations {
+          reason
+          category {
+            label
+            type
+          }
+          createdAt
+          revokedAt
+        }
         active
         renew
         createdAt
