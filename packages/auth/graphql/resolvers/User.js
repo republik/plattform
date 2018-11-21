@@ -87,5 +87,5 @@ module.exports = {
     me && user.id === me.id,
 
   accessToken: (user, { scope }) =>
-    AccessToken.generateForUser(user.id, scope)
+    AccessToken.generateForUser(user, scope)
 }

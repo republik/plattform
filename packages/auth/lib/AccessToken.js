@@ -5,13 +5,7 @@ const transformUser = require('./transformUser')
 
 const { newAuthError } = require('./AuthError')
 const MissingScopeError = newAuthError('missing-scope', 'api/auth/accessToken/scope/404')
-
-const {
-  CUSTOM_PLEDGE_TOKEN_HMAC_KEY
-} = process.env
-if (!CUSTOM_PLEDGE_TOKEN_HMAC_KEY) {
-  console.warn('missing env CUSTOM_PLEDGE_TOKEN_HMAC_KEY, User.customPledgeToken will not work.')
-}
+const MissingKeyError = newAuthError('missing-key', 'api/auth/accessToken/key/404')
 
 const DATE_FORMAT = 'YYYY-MM-DD'
 
@@ -30,12 +24,12 @@ const getScopeConfig = (scope) => {
   return scopeConfig
 }
 
-const getHmac = (payload) => {
-  if (!CUSTOM_PLEDGE_TOKEN_HMAC_KEY) {
-    return null
+const getHmac = (payload, key) => {
+  if (!key) {
+    throw new MissingKeyError()
   }
   return crypto
-    .createHmac('sha256', CUSTOM_PLEDGE_TOKEN_HMAC_KEY)
+    .createHmac('sha256', key)
     .update(payload)
     .digest('hex')
 }
@@ -45,24 +39,27 @@ const getPayload = ({ userId, scope, expiresAt }) => {
   return `${userId}/${scope}/${expiresAtFormatted}`
 }
 
-const generateForUser = (userId, scope) => {
-  if (!CUSTOM_PLEDGE_TOKEN_HMAC_KEY) {
-    return null
+const generateForUser = (user, scope) => {
+  const key = user._raw.accessKey
+  if (!key) {
+    throw new MissingKeyError()
   }
   const scopeConfig = getScopeConfig(scope)
   const payload = getPayload({
-    userId,
+    userId: user.id,
     scope,
     expiresAt: moment().add(scopeConfig.ttlDays, 'days')
   })
-  return base64u.encode(`${payload}/${getHmac(payload)}`)
+  return base64u.encode(`${payload}/${getHmac(payload, key)}`)
 }
 
-const resolve = (token) => {
+const resolve = async (token, { pgdb }) => {
   const [userId, scope, _expiresAt, hmac] = base64u.decode(token).split('/')
   if (userId && scope && _expiresAt && hmac) {
     const expiresAt = moment(_expiresAt, DATE_FORMAT)
-    if (getHmac(getPayload({ userId, scope, expiresAt })) === hmac) {
+    const payload = getPayload({ userId, scope, expiresAt })
+    const key = await pgdb.public.users.findOneFieldOnly({ id: userId }, 'accessKey')
+    if (getHmac(payload, key) === hmac) {
       const scopeConfig = getScopeConfig(scope)
       return { userId, scope, scopeConfig, expiresAt, hmac }
     }
@@ -70,16 +67,17 @@ const resolve = (token) => {
   return null
 }
 
-const getValidResolvedToken = (token) => {
-  const resolvedToken = resolve(token)
+const getValidResolvedToken = async (token, context) => {
+  const resolvedToken = await resolve(token, context)
   if (resolvedToken && resolvedToken.expiresAt.isAfter(moment())) {
     return resolvedToken
   }
   return null
 }
 
-const getUserByAccessToken = async (token, { pgdb }) => {
-  const validToken = getValidResolvedToken(token)
+const getUserByAccessToken = async (token, context) => {
+  const { pgdb } = context
+  const validToken = await getValidResolvedToken(token, context)
   if (validToken) {
     // TODO: use loaders if discussion-refactor branch is merged
     return transformUser(

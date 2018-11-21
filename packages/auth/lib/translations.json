@@ -1,5 +1,5 @@
 {
-  "updated": "2018-11-21T15:41:32.722Z",
+  "updated": "2018-11-21T17:07:59.517Z",
   "title": "live",
   "data": [
     {
@@ -149,6 +149,10 @@
     {
       "key": "api/auth/accessToken/scope/404",
       "value": "Der gewünschte scope ({scope}) konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/auth/accessToken/key/404",
+      "value": "Der Benutzer-Schlüssel konnte nicht gefunden werden."
     }
   ]
 }
