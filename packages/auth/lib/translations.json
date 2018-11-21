@@ -1,5 +1,5 @@
 {
-  "updated": "2018-11-21T17:07:59.517Z",
+  "updated": "2018-11-21T18:18:57.032Z",
   "title": "live",
   "data": [
     {
@@ -153,6 +153,10 @@
     {
       "key": "api/auth/accessToken/key/404",
       "value": "Der Benutzer-Schlüssel konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/auth/accessToken/pledgePackages/notAllowed",
+      "value": "Der verwendete Token erlaubt es nicht das Packet {package} zu kaufen."
     }
   ]
 }

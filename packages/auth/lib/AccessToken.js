@@ -6,12 +6,14 @@ const transformUser = require('./transformUser')
 const { newAuthError } = require('./AuthError')
 const MissingScopeError = newAuthError('missing-scope', 'api/auth/accessToken/scope/404')
 const MissingKeyError = newAuthError('missing-key', 'api/auth/accessToken/key/404')
+const MissingPackageGrant = newAuthError('missing-package-grant', 'api/auth/accessToken/pledgePackages/notAllowed')
 
 const DATE_FORMAT = 'YYYY-MM-DD'
 
 const scopeConfigs = {
   'CUSTOM_PLEDGE': {
     exposeFields: ['email', 'hasAddress', 'hasChargableSource', 'customPackages'],
+    pledgePackages: ['PROLONG'],
     ttlDays: 90
   }
 }
@@ -95,8 +97,19 @@ const isFieldExposed = (user, field) =>
   user._scopeConfig &&
   user._scopeConfig.exposeFields.includes(field)
 
+const ensureCanPledgePackage = (user, packageName) => {
+  if ((
+    user &&
+    user._scopeConfig &&
+    user._scopeConfig.pledgePackages.includes(packageName)
+  ) === false) {
+    throw new MissingPackageGrant(null, { package: packageName })
+  }
+}
+
 module.exports = {
   generateForUser,
   getUserByAccessToken,
-  isFieldExposed
+  isFieldExposed,
+  ensureCanPledgePackage
 }

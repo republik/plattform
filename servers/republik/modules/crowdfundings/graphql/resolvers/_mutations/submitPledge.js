@@ -9,7 +9,10 @@ const {
     ensureAllRequiredConsents,
     saveConsents
   },
-  AccessToken: { getUserByAccessToken }
+  AccessToken: {
+    getUserByAccessToken,
+    ensureCanPledgePackage
+  }
 } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, args, context) => {
@@ -118,6 +121,9 @@ module.exports = async (_, args, context) => {
     let user = null
     let pfAliasId = null
     const accessTokenUser = pledge.accessToken && await getUserByAccessToken(pledge.accessToken, context)
+    if (accessTokenUser) {
+      ensureCanPledgePackage(accessTokenUser, pkg.name)
+    }
     if (req.user) { // user logged in
       if (
         req.user.email !== pledge.user.email ||
