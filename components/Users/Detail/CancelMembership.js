@@ -58,7 +58,7 @@ class CancelMembership extends Component {
         membershipId: this.props.membership.id,
         immediately: this.state.immediately,
         details: {
-          reason: this.state.cancellationType,
+          reason: this.state.reason,
           type: this.state.cancellationType
 
         }
