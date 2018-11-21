@@ -162,6 +162,10 @@ const getCustomOptions = async (package_) => {
 
   return results
     .filter(Boolean)
+    // Sort by price
+    .sort((a, b) => a.price > b.price ? 1 : 0)
+    // Sort by defaultAmount
+    .sort((a, b) => a.defaultAmount < b.defaultAmount ? 1 : 0)
     // Sort by sequenceNumber in an ascending manner
     .sort(
       (a, b) =>
