@@ -86,5 +86,8 @@ type mutations {
 
   # Remove a user from a given role
   removeUserFromRole(userId: ID!, role: String!): User!
+
+  # roll a users accessKey
+  rollAccessKey(userId: ID): User!
 }
 `
