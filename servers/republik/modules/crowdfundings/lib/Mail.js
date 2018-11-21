@@ -251,22 +251,24 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
           content: pledgeOptions.map(pledgeOption => {
             const { rewardType, name } = pledgeOption.packageOption.reward
 
-            const label = t([
+            const olabel = t([
               'api/email/option',
               rewardType.toLowerCase(),
               name.toLowerCase()
             ].join('/'))
 
-            const price = pledgeOption.price / 100
-            const total = (pledgeOption.amount * pledgeOption.price) / 100
+            const oprice =
+              pledgeOption.price / 100
+            const ototal =
+              (pledgeOption.amount * pledgeOption.price) / 100
 
             return {
-              amount: pledgeOption.amount,
-              label,
-              price,
-              price_formatted: formatPriceChf(price),
-              total,
-              total_formatted: formatPriceChf(total)
+              oamount: pledgeOption.amount,
+              olabel,
+              oprice,
+              oprice_formatted: formatPriceChf(oprice),
+              ototal,
+              ototal_formatted: formatPriceChf(ototal)
             }
           })
         },
