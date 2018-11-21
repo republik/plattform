@@ -16,7 +16,7 @@ if (!CUSTOM_PLEDGE_TOKEN_HMAC_KEY) {
 const DATE_FORMAT = 'YYYY-MM-DD'
 
 const scopeConfigs = {
-  customPledge: {
+  'CUSTOM_PLEDGE': {
     exposeFields: ['email', 'hasAddress', 'hasChargableSource', 'customPackages'],
     ttlDays: 90
   }

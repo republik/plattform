@@ -41,7 +41,7 @@ type User {
   eventLog: [EventLog!]!
   # is this the user of the requesting session
   isMe: Boolean
-  # get a access token
+  # get an access token
   accessToken(scope: AccessTokenScope!): ID!
 }
 
@@ -117,6 +117,6 @@ type SignInNotification {
 }
 
 enum AccessTokenScope {
-  customPledge
+  CUSTOM_PLEDGE
 }
 `
