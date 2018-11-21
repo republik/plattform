@@ -32,12 +32,10 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
     return
   }
 
-  const { endDate } =
+  const { beginDate, endDate } =
     getLatestPeriod(payload.additionalPeriods)
-  const { endDate: firstBeginDate } =
-    getLatestPeriod(membership.membershipPeriods).endDate
 
-  const bonusInterval = moment(firstBeginDate).diff(now)
+  const bonusInterval = moment(beginDate).diff(now)
 
   debug('earlyAdopterBonus granted', { bonusInterval })
 
