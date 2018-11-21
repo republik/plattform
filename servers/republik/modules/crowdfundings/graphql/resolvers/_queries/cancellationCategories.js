@@ -9,6 +9,7 @@ const cancellationCategories = parse(new Source(Schema))
       definition.name.value === 'CancellationCategoryType'
   )
   .values.map(value => value.name.value)
+  .filter(value => value !== 'SYSTEM')
 
 module.exports = (_, args, { pgdb, t }) => {
   return cancellationCategories.map(type => ({

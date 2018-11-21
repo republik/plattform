@@ -1,6 +1,6 @@
 CREATE DOMAIN cancel_category AS TEXT
   CHECK(
-    VALUE IN ('EDITORIAL', 'NO_TIME', 'LOGIN', 'PAPER', 'TOO_EXPENSIVE', 'OTHER')
+    VALUE IN ('EDITORIAL', 'NO_TIME', 'LOGIN', 'PAPER', 'TOO_EXPENSIVE', 'OTHER', 'SYSTEM')
   );
 
 CREATE TABLE "membershipCancellations" (
