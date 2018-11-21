@@ -103,11 +103,11 @@ const MembershipOverview = ({
         membership={membership}
         onSubmit={onMoveMembership}
       />
-      {membership.type.name === 'MONTHLY_ABO' && !!membership.renew && <CancelMembership
+      {!!membership.renew && <CancelMembership
         membership={membership}
         onSubmit={onCancelMembership}
       />}
-      {!membership.active && (
+      {!membership.renew && (
         <Button
           onClick={() => onReactivateMembership(membership)}
           membership={membership}
