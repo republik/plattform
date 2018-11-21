@@ -2,46 +2,40 @@ const debug = require('debug')('crowdfundings:lib:CustomPackages:rule:earlyUserB
 const moment = require('moment')
 const uuid = require('uuid/v4')
 
+const { getLatestPeriod } = require('../../utils')
+
 const MEMBERSHIP_CREATED_BEFORE = '2017-04-27'
+const PACKAGE_ELIGABLE = ['ABO', 'BENEFACTOR']
 
 module.exports = ({ package_, packageOption, membership, payload, now }) => {
   if (membership.createdAt >= moment(MEMBERSHIP_CREATED_BEFORE)) {
-    debug('membership is not eligable for early adopter bonus')
+    debug(
+      'membership.createdAt not within early adopter range (< %s)',
+      MEMBERSHIP_CREATED_BEFORE
+    )
+    return
+  }
+
+  if (!PACKAGE_ELIGABLE.includes(membership.pledge.package.name)) {
+    debug(
+      'package "%s" is not eligable for early adopter bonus',
+      membership.pledge.package.name
+    )
     return
   }
 
   if (payload.additionalPeriods.length !== 1) {
-    debug('not eligable, too many or few additional periods')
+    debug(
+      'too many or few additional periods (%d)',
+      payload.additionalPeriods.length
+    )
     return
   }
 
-  const endDate =
-    payload.additionalPeriods
-      .map(p => p.endDate)
-      .reduce(
-        (accumulator, currentValue) => {
-          if (!accumulator) {
-            return currentValue
-          }
+  const { beginDate, endDate } =
+    getLatestPeriod(payload.additionalPeriods)
 
-          return currentValue > accumulator ? currentValue : accumulator
-        }
-      )
-
-  const firstBeginDate =
-    membership.membershipPeriods
-      .map(p => p.endDate)
-      .reduce(
-        (accumulator, currentValue) => {
-          if (!accumulator) {
-            return currentValue
-          }
-
-          return currentValue < accumulator ? currentValue : accumulator
-        }
-      )
-
-  const bonusInterval = moment(firstBeginDate).diff(now)
+  const bonusInterval = moment(beginDate).diff(now)
 
   debug('earlyAdopterBonus granted', { bonusInterval })
 
