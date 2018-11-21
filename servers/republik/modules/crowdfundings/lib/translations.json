@@ -1,5 +1,5 @@
 {
-  "updated": "2018-11-19T15:30:48.185Z",
+  "updated": "2018-11-21T22:57:36.954Z",
   "title": "live",
   "data": [
     {
@@ -80,19 +80,11 @@
     },
     {
       "key": "api/membership/cancel/category/EDITORIAL",
-      "value": "Inhaltliche Ausrichtung"
+      "value": "Ein Beitrag hat mich geärgert"
     },
     {
       "key": "api/membership/cancel/category/NO_TIME",
       "value": "Keine Zeit"
-    },
-    {
-      "key": "api/membership/cancel/category/LOGIN",
-      "value": "Login zu kompliziert"
-    },
-    {
-      "key": "api/membership/cancel/category/PAPER",
-      "value": "ohne Papier, ohne mich"
     },
     {
       "key": "api/membership/cancel/category/TOO_EXPENSIVE",
@@ -100,7 +92,11 @@
     },
     {
       "key": "api/membership/cancel/category/OTHER",
-      "value": "Anderes"
+      "value": "Anderer Grund und zwar:"
+    },
+    {
+      "key": "api/membership/cancel/category/VOID",
+      "value": "Ich möchte keinen Grund angeben"
     },
     {
       "key": "api/pledge/alreadyPaid",
