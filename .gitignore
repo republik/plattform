@@ -59,8 +59,7 @@ typings/
 docker-data/
 
 # dotenv environment variables file
-.env
-.test.env
+*.env
 
 .DS_Store
 
