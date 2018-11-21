@@ -234,6 +234,10 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
 
     const templateName = `pledge_${pkg.name.toLowerCase()}`
 
+    const discount = pledge.donation < 0 ? (0 - pledge.donation) / 100 : 0
+    const donation = pledge.donation > 0 ? pledge.donation / 100 : 0
+    const total = pledge.total / 100
+
     return mail.sendMailTemplate({
       to: user.email,
       fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
@@ -243,37 +247,45 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
       globalMergeVars: [
         // Purchase itself
         { name: 'options',
-          content: pledgeOptions.map(pledgeOption => ({
-            amount: pledgeOption.amount,
-            label: t(`api/email/${pledgeOption.packageOption.reward.name}`),
-            price: pledgeOption.price / 100,
-            price_formatted:
-              formatPriceChf(pledgeOption.price / 100),
-            total: (pledgeOption.amount * pledgeOption.price) / 100,
-            total_formatted:
-              formatPriceChf((pledgeOption.amount * pledgeOption.price) / 100)
-          }))
+          content: pledgeOptions.map(pledgeOption => {
+            const { rewardType, name } = pledgeOption.packageOption.reward
+
+            const label = t([
+              'api/email/option',
+              rewardType.toLowerCase(),
+              name.toLowerCase()
+            ].join('/'))
+
+            const price = pledgeOption.price / 100
+            const total = (pledgeOption.amount * pledgeOption.price) / 100
+
+            return {
+              amount: pledgeOption.amount,
+              label,
+              price,
+              price_formatted: formatPriceChf(price),
+              total,
+              total_formatted: formatPriceChf(total)
+            }
+          })
         },
         { name: 'discount',
-          content: pledge.donation < 0 ? pledge.donation / 100 : 0
+          content: discount
         },
         { name: 'discount_formatted',
-          content:
-            formatPriceChf(pledge.donation < 0 ? pledge.donation / 100 : 0)
+          content: formatPriceChf(discount)
         },
         { name: 'donation',
-          content: pledge.donation > 0 ? pledge.donation / 100 : 0
+          content: donation
         },
         { name: 'donation_formatted',
-          content:
-            formatPriceChf(pledge.donation > 0 ? pledge.donation / 100 : 0)
+          content: formatPriceChf(donation)
         },
         { name: 'total',
-          content: pledge.total / 100
+          content: total
         },
         { name: 'total_formatted',
-          content:
-            formatPriceChf(pledge.total / 100)
+          content: formatPriceChf(total)
         },
 
         // Payment

@@ -13,7 +13,14 @@ const getStripeClients = require('../../lib/payments/stripe/clients')
 module.exports = {
   async memberships (user, args, {pgdb, user: me}) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'accountant'])) {
-      return pgdb.public.memberships.find({userId: user.id})
+      return pgdb.public.memberships.find({
+        userId: user.id
+      }, {
+        orderBy: {
+          active: 'desc',
+          sequenceNumber: 'asc'
+        }
+      })
     }
     return []
   },

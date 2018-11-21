@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-24T10:02:18.982Z",
+  "updated": "2018-11-19T15:30:48.185Z",
   "title": "live",
   "data": [
     {
@@ -77,6 +77,30 @@
     {
       "key": "api/membership/move/monthlyDenied",
       "value": "Monats-Abos können nicht verschoben werden."
+    },
+    {
+      "key": "api/membership/cancel/category/EDITORIAL",
+      "value": "Inhaltliche Ausrichtung"
+    },
+    {
+      "key": "api/membership/cancel/category/NO_TIME",
+      "value": "Keine Zeit"
+    },
+    {
+      "key": "api/membership/cancel/category/LOGIN",
+      "value": "Login zu kompliziert"
+    },
+    {
+      "key": "api/membership/cancel/category/PAPER",
+      "value": "ohne Papier, ohne mich"
+    },
+    {
+      "key": "api/membership/cancel/category/TOO_EXPENSIVE",
+      "value": "Zu teuer"
+    },
+    {
+      "key": "api/membership/cancel/category/OTHER",
+      "value": "Anderes"
     },
     {
       "key": "api/pledge/alreadyPaid",
@@ -297,6 +321,54 @@
     {
       "key": "api/payment/invoice/item/discount",
       "value": "Ermässigung"
+    },
+    {
+      "key": "api/email/membership_prolong_notice/subject",
+      "value": "Mitgliedschaft verlängert"
+    },
+    {
+      "key": "api/email/pledge_abo/subject",
+      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
+    },
+    {
+      "key": "api/email/pledge_abo_give/subject",
+      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
+    },
+    {
+      "key": "api/email/pledge_monthly_abo/subject",
+      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
+    },
+    {
+      "key": "api/email/pledge_donate/subject",
+      "value": "Ihre Spende an die Republik"
+    },
+    {
+      "key": "api/email/pledge_benefactor/subject",
+      "value": "Ihre Großzügigkeit an die Republik"
+    },
+    {
+      "key": "api/email/pledge_prolong/subject",
+      "value": "Ihre Verlängerungen"
+    },
+    {
+      "key": "api/email/option/goodie/notebook/1",
+      "value": "Notizbuch"
+    },
+    {
+      "key": "api/email/option/goodie/totebag",
+      "value": "Tasche"
+    },
+    {
+      "key": "api/email/option/membershiptype/abo",
+      "value": "Abo und Mitgliedschaft"
+    },
+    {
+      "key": "api/email/option/membershiptype/benefactor_abo",
+      "value": "Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/option/membershiptype/monthly_abo",
+      "value": "Monats-Abonnement"
     }
   ]
 }

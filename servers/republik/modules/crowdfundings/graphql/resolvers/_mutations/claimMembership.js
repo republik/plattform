@@ -1,6 +1,7 @@
 const logger = console
-const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const moment = require('moment')
+
+const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
   ensureSignedIn(req)
@@ -9,16 +10,6 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
   const transaction = await pgdb.transactionBegin()
 
   try {
-    // Throw an error if there is already an other active membership.
-    if (
-      await transaction.public.memberships.count({
-        userId: req.user.id,
-        active: true
-      })
-    ) {
-      throw new Error(t('api/membership/claim/alreadyHave'))
-    }
-
     const { voucherCode } = args
     const membership = await transaction.public.memberships.findOne({
       voucherCode,
@@ -39,35 +30,53 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
 
     pledgerId = membership.userId
 
-    const membershipType = await transaction.public.membershipTypes.findOne({
-      id: membership.membershipTypeId
-    })
+    const hasActiveMembership = (await transaction.public.memberships.count({
+      userId: req.user.id,
+      active: true
+    })) > 0
 
     // transfer membership and remove voucherCode
     await transaction.public.memberships.updateOne(
+      { id: membership.id },
       {
-        id: membership.id
-      }, {
         userId: req.user.id,
         voucherCode: null,
         voucherable: false,
-        active: true,
-        renew: true,
+        // Set added membership.active to false if other memberschip is still
+        // active.
+        active: !hasActiveMembership,
+        renew: !hasActiveMembership,
         updatedAt: now
       }
     )
 
-    // generate interval
-    const beginDate = moment(now)
-    const endDate = moment(beginDate).add(
-      membershipType.intervalCount,
-      membershipType.interval
-    )
-    await transaction.public.membershipPeriods.insert({
-      membershipId: membership.id,
-      beginDate,
-      endDate
-    })
+    if (!hasActiveMembership) {
+      const { intervalCount, interval } =
+        await transaction.public.membershipTypes.findOne({
+          id: membership.membershipTypeId
+        })
+
+      // generate interval
+      const beginDate = moment(now)
+      const endDate = moment(beginDate).add(intervalCount, interval)
+
+      await transaction.public.membershipPeriods.insert({
+        membershipId: membership.id,
+        beginDate,
+        endDate
+      })
+    } else {
+      // Set membership.renewal to false for active membership
+      await transaction.public.memberships.update(
+        { userId: req.user.id, active: true },
+        {
+          renew: false,
+          updatedAt: now
+        }
+      )
+
+      // @TODO: submit "cancel reason", a new abo is coming up.
+    }
 
     // commit transaction
     await transaction.transactionCommit()
