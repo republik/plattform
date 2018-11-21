@@ -95,9 +95,11 @@ const cloneWithRepoData = options => (node, repoData) => {
   const formatMeta = meta.format && meta.format.meta
   if (formatMeta) {
     data = data
-      .set('color', formatMeta.color)
       .set('kind', formatMeta.kind)
       .set('formatUrl', `https://github.com/${meta.format.repoId}?autoSlug`)
+    if (node.type !== 'ARTICLETILE') {
+      data = data.set('color', formatMeta.color)
+    }
   }
 
   const credits = paragraphModule.helpers.serializer.fromMdast({
@@ -178,7 +180,7 @@ export const TeaserButton = options => {
         data-disabled={disabled}
         data-visible
         onMouseDown={mouseDownHandler(disabled, value, onChange)}
-          >
+      >
         {options.rule.editorOptions.insertButtonText}
       </span>
     )
@@ -207,7 +209,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
         label='Text-Position'
         items={textPositions}
         value={node.data.get('textPosition')}
-        onChange={({value}) => onChange('textPosition', null, value)}
+        onChange={({ value }) => onChange('textPosition', null, value)}
       />
     }
     {
@@ -216,7 +218,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
         label='Inhaltsbezeichnung'
         items={kinds}
         value={node.data.get('kind')}
-        onChange={({value}) => {
+        onChange={({ value }) => {
           onChange('kind', null, value)
         }}
       />
@@ -227,7 +229,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
         label='Titelgrösse'
         items={titleSizes}
         value={node.data.get('titleSize')}
-        onChange={({value}) => {
+        onChange={({ value }) => {
           onChange('titleSize', null, value)
         }}
       />
@@ -267,7 +269,7 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
         onChange={color => {
           onChange('color', null, color)
         }}
-        />
+      />
     }
     {
       options.includes('bgColor') &&
@@ -362,10 +364,10 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
       const teaser = matchBlock(`${TYPE}_VOID`)(value.startBlock)
         ? value.startBlock
         : value.blocks.reduce(
-            (memo, node) =>
-              memo || value.document.getFurthest(node.key, matchBlock(TYPE)),
-            undefined
-          )
+          (memo, node) =>
+            memo || value.document.getFurthest(node.key, matchBlock(TYPE)),
+          undefined
+        )
 
       const handlerFactory = createOnFieldChange(change => {
         const newTeaser = change.value.document.getDescendant(teaser.key)
@@ -446,41 +448,41 @@ const MoveDownButton = props =>
   <span {...buttonStyles.mark} {...props}><ArrowDownIcon size={24} /></span>
 
 export const TeaserInlineUI = options =>
-({ remove, isSelected, nodeKey, getIndex, getParent, moveUp, moveDown, ...props }) => {
-  const uiStyles = css(styles.ui, isSelected ? styles.uiOpen : {})
+  ({ remove, isSelected, nodeKey, getIndex, getParent, moveUp, moveDown, ...props }) => {
+    const uiStyles = css(styles.ui, isSelected ? styles.uiOpen : {})
 
-  const parent = getParent(nodeKey)
-  const index = getIndex(nodeKey)
-  const isFirstChild = index === 0
-  const isLastChild = index === parent.nodes.size - 1
-  const isOnlyChild = parent.nodes.size === 1
+    const parent = getParent(nodeKey)
+    const index = getIndex(nodeKey)
+    const isFirstChild = index === 0
+    const isLastChild = index === parent.nodes.size - 1
+    const isOnlyChild = parent.nodes.size === 1
 
-  const removeHandler = event => {
-    event.preventDefault()
-    remove(nodeKey)
-  }
+    const removeHandler = event => {
+      event.preventDefault()
+      remove(nodeKey)
+    }
 
-  const moveUpHandler = event => {
-    event.preventDefault()
-    moveUp(nodeKey, getParent(nodeKey).key, getIndex(nodeKey))
-  }
+    const moveUpHandler = event => {
+      event.preventDefault()
+      moveUp(nodeKey, getParent(nodeKey).key, getIndex(nodeKey))
+    }
 
-  const moveDownHandler = event => {
-    event.preventDefault()
-    moveDown(nodeKey, getParent(nodeKey).key, getIndex(nodeKey))
-  }
+    const moveDownHandler = event => {
+      event.preventDefault()
+      moveDown(nodeKey, getParent(nodeKey).key, getIndex(nodeKey))
+    }
 
-  return (
-    <div contentEditable={false} {...styles.uiContainer}>
-      <div contentEditable={false} {...uiStyles}>
-        <div>
-          <P {...styles.uiInlineRow}>
-            {!isOnlyChild && <RemoveButton onMouseDown={removeHandler} />}
-            {!isFirstChild && <MoveUpButton onMouseDown={moveUpHandler} />}
-            {!isLastChild && <MoveDownButton onMouseDown={moveDownHandler} />}
-          </P>
+    return (
+      <div contentEditable={false} {...styles.uiContainer}>
+        <div contentEditable={false} {...uiStyles}>
+          <div>
+            <P {...styles.uiInlineRow}>
+              {!isOnlyChild && <RemoveButton onMouseDown={removeHandler} />}
+              {!isFirstChild && <MoveUpButton onMouseDown={moveUpHandler} />}
+              {!isLastChild && <MoveDownButton onMouseDown={moveDownHandler} />}
+            </P>
+          </div>
         </div>
       </div>
-    </div>
-  )
-}
+    )
+  }
