@@ -17,7 +17,9 @@ const Autocomplete = ({
   value,
   onChange,
   filter,
-  onFilterChange
+  onFilterChange,
+  icon,
+  autoComplete
 }) => {
   return (
     <Downshift
@@ -46,10 +48,12 @@ const Autocomplete = ({
               <Field
                 label={label}
                 value={isOpen ? filter : (value && value.text) || ''}
+                icon={icon}
                 renderInput={fieldProps => (
                   <input
                     {...getInputProps({
                       ...fieldProps,
+                      autoComplete,
                       placeholder: selectedItem
                           ? itemToString(selectedItem)
                           : ''
@@ -94,7 +98,13 @@ Autocomplete.propTypes = {
   filter: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   onFilterChange:
-    PropTypes.func.isRequired
+    PropTypes.func.isRequired,
+  icon: PropTypes.object,
+  autoComplete: PropTypes.string
+}
+
+Autocomplete.defaultProps = {
+  autoComplete: 'off'
 }
 
 export default Autocomplete
