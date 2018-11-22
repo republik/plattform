@@ -77,7 +77,8 @@ module.exports = async (_, args, context) => {
     await transaction.public.membershipCancellations.insert({
       membershipId: newMembership.id,
       reason: details.reason,
-      category: details.type
+      category: details.type,
+      suppressNotification: !!suppressNotification
     })
 
     if (membership.subscriptionId) {
