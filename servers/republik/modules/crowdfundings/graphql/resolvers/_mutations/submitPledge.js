@@ -16,7 +16,7 @@ const {
 } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, args, context) => {
-  const {pgdb, req, t} = context
+  const { pgdb, req, t } = context
   const transaction = await pgdb.transactionBegin()
   try {
     const { pledge, consents } = args
