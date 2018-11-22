@@ -1,5 +1,5 @@
 {
-  "updated": "2018-11-22T14:34:02.235Z",
+  "updated": "2018-11-22T15:32:17.842Z",
   "title": "live",
   "data": [
     {
@@ -367,7 +367,7 @@
       "value": "Ich möchte keinen Grund angeben."
     },
     {
-      "key": "api/membership/cancel/mail/subject",
+      "key": "api/email/membership_cancel_notice/subject",
       "value": "Bestätigung Ihrer Kündigung"
     }
   ]

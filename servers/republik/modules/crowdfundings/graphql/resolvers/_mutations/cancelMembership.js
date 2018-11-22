@@ -1,8 +1,14 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
+const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
 const cancelSubscription = require('../../../lib/payments/stripe/cancelSubscription')
 const slack = require('../../../../../lib/slack')
 
-module.exports = async (_, args, { pgdb, req, t }) => {
+module.exports = async (_, args, context) => {
+  const {
+    pgdb,
+    req,
+    t,
+    mail
+  } = context
   const transaction = pgdb.isTransactionActive()
     ? await pgdb
     : await pgdb.transactionBegin()
@@ -11,7 +17,8 @@ module.exports = async (_, args, { pgdb, req, t }) => {
     const {
       id: membershipId,
       immediately = false,
-      details
+      details,
+      suppressNotifications
     } = args
 
     const membership = await transaction.query(`
@@ -36,7 +43,9 @@ module.exports = async (_, args, { pgdb, req, t }) => {
       throw new Error(t('api/membership/cancel/notRenewing'))
     }
 
-    const user = await transaction.public.users.findOne({ id: membership.userId })
+    const user = transformUser(
+      await transaction.public.users.findOne({ id: membership.userId })
+    )
     Roles.ensureUserIsMeOrInRoles(user, req.user, ['supporter'])
 
     const membershipType = await transaction.public.membershipTypes.findOne({
@@ -56,11 +65,20 @@ module.exports = async (_, args, { pgdb, req, t }) => {
         : membership.active,
       updatedAt: new Date()
     })
+    // determine endDate
+    const endDate = await pgdb.queryOneField(`
+      SELECT MAX("endDate")
+      FROM "membershipPeriods"
+      WHERE "membershipId" = :membershipId
+    `, {
+      membershipId
+    })
 
     await transaction.public.membershipCancellations.insert({
       membershipId: newMembership.id,
       reason: details.reason,
-      category: details.type
+      category: details.type,
+      suppressNotifications: !!suppressNotifications
     })
 
     if (membership.subscriptionId) {
@@ -74,6 +92,15 @@ module.exports = async (_, args, { pgdb, req, t }) => {
 
     if (!pgdb.isTransactionActive()) {
       await transaction.transactionCommit()
+    }
+
+    if (!suppressNotifications) {
+      await mail.sendMembershipCancellation({
+        email: user.email,
+        name: user.name,
+        endDate,
+        t
+      })
     }
 
     await slack.publishMembership(

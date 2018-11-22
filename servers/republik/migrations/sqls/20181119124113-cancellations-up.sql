@@ -4,23 +4,25 @@ CREATE DOMAIN cancel_category AS TEXT
   );
 
 CREATE TABLE "membershipCancellations" (
-  "id"              uuid primary key not null default uuid_generate_v4(),
-  "membershipId"    uuid not null references "memberships"(id),
-  "reason"          text,
-  "category"        cancel_category not null,
-  "createdAt"       timestamptz default now(),
-  "updatedAt"       timestamptz default now(),
-  "revokedAt"       timestamptz
+  "id"                    uuid primary key not null default uuid_generate_v4(),
+  "membershipId"          uuid not null references "memberships"(id),
+  "reason"                text,
+  "category"              cancel_category not null,
+  "suppressNotifications" boolean not null default false,
+  "createdAt"             timestamptz default now(),
+  "updatedAt"             timestamptz default now(),
+  "revokedAt"             timestamptz
 );
 
 -- migrate exising membership.cancelReasons
 INSERT INTO
-  "membershipCancellations" ("membershipId", reason, category, "createdAt", "revokedAt")
+  "membershipCancellations" ("membershipId", reason, category, "suppressNotifications", "createdAt", "revokedAt")
   (
     SELECT
       id as "membershipId",
       jsonb_array_elements_text("cancelReasons") as reason,
       'OTHER' as category,
+      true,
       '2018-01-01',
       CASE WHEN active = true THEN '2018-01-01'::date ELSE null END
     FROM
