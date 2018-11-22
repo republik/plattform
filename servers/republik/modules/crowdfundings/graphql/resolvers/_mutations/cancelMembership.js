@@ -74,7 +74,7 @@ module.exports = async (_, args, context) => {
       SELECT MAX("endDate")
       FROM "membershipPeriods"
       WHERE "membershipId" = :membershipId`
-      , {
+    , {
       membershipId
     })
 
