@@ -43,7 +43,7 @@ const articleTileSubject = {
   props: (node, index, parent, { ancestors }) => {
     const teaser = ancestors.find(matchTeaser)
     return {
-      color: teaser && teaser.data.color ? teaser.data.color : undefined,
+      color: teaser && teaser.data.color ? teaser.data.color : '#000',
       columns:  3
     }
   }
