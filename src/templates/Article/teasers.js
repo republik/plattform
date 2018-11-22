@@ -12,7 +12,6 @@ import {
 
 import {
   matchTeaser,
-  matchTeaserGroup,
   matchTeaserType,
   extractImage,
   globalInlines,
@@ -42,11 +41,9 @@ import * as Editorial from '../../components/Typography/Editorial'
 const articleTileSubject = {
   ...subject,
   props: (node, index, parent, { ancestors }) => {
-    const teaserGroup = ancestors.find(matchTeaserGroup)
     const teaser = ancestors.find(matchTeaser)
     return {
-      color: teaser && teaser.data.color,
-      collapsedColor: teaser && teaser.data.feuilleton && '#000',
+      color: teaser && teaser.data.color ? teaser.data.color : undefined,
       columns:  3
     }
   }
@@ -67,7 +64,9 @@ const createTeasers = ({
     props (node, index, parent, { ancestors }) {
       const teaser = ancestors.find(matchTeaser)
       return {
-        kind: parent.data.kind,
+        kind: parent.data.kind === 'feuilleton'
+          ? 'editorial'
+          : parent.data.kind,
         titleSize: parent.data.titleSize,
         href: teaser
           ? teaser.data.url
@@ -103,8 +102,8 @@ const createTeasers = ({
 
   const teaserFormat = {
     matchMdast: matchHeading(6),
-    component: ({ children, attributes, href }) =>
-      <Editorial.Format attributes={attributes}>
+    component: ({ children, attributes, formatColor, href }) =>
+      <Editorial.Format attributes={attributes} color={formatColor}>
         <Link href={href} passHref>
           <a href={href} {...styles.link}>
             {children}
@@ -115,6 +114,13 @@ const createTeasers = ({
       const teaser = ancestors.find(matchTeaser)
       const data = teaser && teaser.data
       return {
+        formatColor: data
+          ? data.formatColor
+            ? data.formatColor
+            : data.kind
+              ? colors[data.kind]
+              : undefined
+          : undefined,
         href: data ? data.formatUrl : undefined
       }
     },
@@ -185,6 +191,7 @@ const createTeasers = ({
       teaserType: 'articleTile',
       showUI: false,
       formOptions: [
+        'formatColor',
         'showImage',
         'image',
         'kind'

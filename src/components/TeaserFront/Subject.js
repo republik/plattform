@@ -45,6 +45,7 @@ const Subject = ({ children, color, collapsedColor, columns }) => {
       color: labColor.l > 50 ? labColor.darker(2.0) : labColor.brighter(3.0),
     }
   })
+
   return (
     <span {...style} {...(columns === 3 ? subjectSmall : subject)}>
       {children}
@@ -57,6 +58,10 @@ Subject.propTypes = {
   color: PropTypes.string,
   collapsedColor: PropTypes.string,
   columns: PropTypes.number
+}
+
+Subject.defaultProps = {
+  color: '#000'
 }
 
 export default Subject
