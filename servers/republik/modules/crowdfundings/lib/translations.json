@@ -300,7 +300,7 @@
     },
     {
       "key": "api/email/membership_prolong_notice/subject",
-      "value": "Mitgliedschaft verlängert"
+      "value": "Ihr Republik-Abo wurde verlängert"
     },
     {
       "key": "api/email/pledge_abo/subject",
@@ -316,15 +316,15 @@
     },
     {
       "key": "api/email/pledge_donate/subject",
-      "value": "Ihre Spende an die Republik"
+      "value": "Vielen Dank für Ihre Spende"
     },
     {
       "key": "api/email/pledge_benefactor/subject",
-      "value": "Danke für Ihre Grosszügigkeit"
+      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
     },
     {
       "key": "api/email/pledge_prolong/subject",
-      "value": "Ihre Verlängerungen"
+      "value": "Danke für die Verlängerung"
     },
     {
       "key": "api/email/option/goodie/notebook/1",
