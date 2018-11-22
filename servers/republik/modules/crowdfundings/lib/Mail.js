@@ -361,4 +361,21 @@ ${address.country}</span>`
   })
 }
 
+mail.sendMembershipCancellation = async ({ email, name, endDate, t }) => {
+  return mail.sendMailTemplate({
+    to: email,
+    subject: t('api/membership/cancel/mail/subject'),
+    templateName: 'membership_cancel_notice',
+    mergeLanguage: 'handlebars',
+    globalMergeVars: [
+      { name: 'name',
+        content: name
+      },
+      { name: 'end_date',
+        content: dateFormat(endDate)
+      }
+    ]
+  })
+}
+
 module.exports = mail

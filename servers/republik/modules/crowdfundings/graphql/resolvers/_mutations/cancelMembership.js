@@ -1,17 +1,13 @@
 const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
 const cancelSubscription = require('../../../lib/payments/stripe/cancelSubscription')
 const slack = require('../../../../../lib/slack')
-const { timeFormat } = require('@orbiting/backend-modules-formats')
-const dateFormat = timeFormat('%x')
 
 module.exports = async (_, args, context) => {
   const {
     pgdb,
     req,
     t,
-    mail: {
-      sendMailTemplate
-    }
+    mail
   } = context
   const transaction = pgdb.isTransactionActive()
     ? await pgdb
@@ -73,8 +69,8 @@ module.exports = async (_, args, context) => {
     const endDate = await pgdb.queryOneField(`
       SELECT MAX("endDate")
       FROM "membershipPeriods"
-      WHERE "membershipId" = :membershipId`
-    , {
+      WHERE "membershipId" = :membershipId
+    `, {
       membershipId
     })
 
@@ -98,19 +94,11 @@ module.exports = async (_, args, context) => {
     }
 
     if (!suppressNotification) {
-      await sendMailTemplate({
-        to: user.email,
-        subject: t('api/membership/cancel/mail/subject'),
-        templateName: 'membership_cancel_notice',
-        mergeLanguage: 'handlebars',
-        globalMergeVars: [
-          { name: 'name',
-            content: user.name
-          },
-          { name: 'end_date',
-            content: dateFormat(endDate)
-          }
-        ]
+      await mail.sendMembershipCancellation({
+        email: user.email,
+        name: user.name,
+        endDate,
+        t
       })
     }
 
