@@ -48,6 +48,9 @@ module.exports = {
     }
     return []
   },
+  async membershipsDaysRemaining () {
+    return 0
+  },
   async pledges (user, args, {pgdb, user: me}) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'accountant'])) {
       return pgdb.public.pledges.find({userId: user.id}, {orderBy: ['createdAt desc']})
@@ -156,6 +159,9 @@ module.exports = {
         }
       )
       .filter(Boolean)
+  },
+  async isBonusEligable () {
+    return false
   },
   async adminNotes (user, args, { pgdb, user: me }) {
     Roles.ensureUserHasRole(me, 'supporter')
