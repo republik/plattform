@@ -7,6 +7,7 @@ extend type User {
   pledges: [Pledge!]!
   memberships: [Membership!]!
   paymentSources: [PaymentSource!]!
+  hasChargableSource: Boolean
 
   # Custom packages available for a specific user
   customPackages(crowdfundingName: String): [Package!]
@@ -188,6 +189,7 @@ input PledgeInput {
   total: Int!
   user: UserInput!
   reason: String
+  accessToken: ID
 }
 
 type PledgeResponse {
@@ -258,6 +260,8 @@ type PaymentSource {
   last4: String!
   expMonth: Int!
   expYear: Int!
+  # is source expired now
+  isExpired: Boolean!
 }
 
 enum CancellationCategoryType {

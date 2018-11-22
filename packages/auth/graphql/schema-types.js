@@ -39,6 +39,11 @@ type User {
   preferredFirstFactor: SignInTokenType
   enabledSecondFactors: [SignInTokenType!]!
   eventLog: [EventLog!]!
+  # is this the user of the requesting session
+  isUserOfCurrentSession: Boolean!
+  # get an access token
+  # exclusively accessible by the user herself
+  accessToken(scope: AccessTokenScope!): ID
 }
 
 type SignInResponse {
@@ -110,5 +115,9 @@ type SignInNotification {
   body: String!
   verificationUrl: String!
   expiresAt: DateTime!
+}
+
+enum AccessTokenScope {
+  CUSTOM_PLEDGE
 }
 `
