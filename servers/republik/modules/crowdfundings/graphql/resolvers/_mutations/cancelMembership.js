@@ -1,8 +1,18 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
+const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
 const cancelSubscription = require('../../../lib/payments/stripe/cancelSubscription')
 const slack = require('../../../../../lib/slack')
+const { timeFormat } = require('@orbiting/backend-modules-formats')
+const dateFormat = timeFormat('%x')
 
-module.exports = async (_, args, { pgdb, req, t }) => {
+module.exports = async (_, args, context) => {
+  const {
+    pgdb,
+    req,
+    t,
+    mail: {
+      sendMailTemplate
+    }
+  } = context
   const transaction = pgdb.isTransactionActive()
     ? await pgdb
     : await pgdb.transactionBegin()
@@ -11,7 +21,8 @@ module.exports = async (_, args, { pgdb, req, t }) => {
     const {
       id: membershipId,
       immediately = false,
-      details
+      details,
+      suppressNotification
     } = args
 
     const membership = await transaction.query(`
@@ -36,7 +47,9 @@ module.exports = async (_, args, { pgdb, req, t }) => {
       throw new Error(t('api/membership/cancel/notRenewing'))
     }
 
-    const user = await transaction.public.users.findOne({ id: membership.userId })
+    const user = transformUser(
+      await transaction.public.users.findOne({ id: membership.userId })
+    )
     Roles.ensureUserIsMeOrInRoles(user, req.user, ['supporter'])
 
     const membershipType = await transaction.public.membershipTypes.findOne({
@@ -56,6 +69,14 @@ module.exports = async (_, args, { pgdb, req, t }) => {
         : membership.active,
       updatedAt: new Date()
     })
+    // determine endDate
+    const endDate = await pgdb.queryOneField(`
+      SELECT MAX("endDate")
+      FROM "membershipPeriods"
+      WHERE "membershipId" = :membershipId`
+      , {
+      membershipId
+    })
 
     await transaction.public.membershipCancellations.insert({
       membershipId: newMembership.id,
@@ -74,6 +95,23 @@ module.exports = async (_, args, { pgdb, req, t }) => {
 
     if (!pgdb.isTransactionActive()) {
       await transaction.transactionCommit()
+    }
+
+    if (!suppressNotification) {
+      await sendMailTemplate({
+        to: user.email,
+        subject: t('api/membership/cancel/mail/subject'),
+        templateName: 'membership_cancel_notice',
+        mergeLanguage: 'handlebars',
+        globalMergeVars: [
+          { name: 'name',
+            content: user.name
+          },
+          { name: 'end_date',
+            content: dateFormat(endDate)
+          }
+        ]
+      })
     }
 
     await slack.publishMembership(
