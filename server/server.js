@@ -56,6 +56,10 @@ app.prepare().then(() => {
     server.use(basicAuth(opts))
   }
 
+  server.get('/', (req, res) => {
+    res.redirect('/users')
+  })
+
   server.get('*', (req, res) => {
     handle(req, res)
   })
