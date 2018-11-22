@@ -155,8 +155,7 @@ mail.sendMembershipProlongNotice = async ({
 }
 
 mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
-  const user = await pgdb.public.users.findOne({id: userId})
-
+  const user = await pgdb.public.users.findOne({ id: userId })
   const pledges = await pgdb.public.pledges.find({
     userId: user.id,
     sendConfirmMail: true
@@ -178,7 +177,6 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
 
   await Promise.all(pledges.map(async (pledge) => {
     const pkg = await pgdb.public.packages.findOne({id: pledge.packageId})
-    const memberships = await pgdb.public.memberships.find({pledgeId: pledge.id})
     const pledgePayment = await pgdb.public.pledgePayments.findFirst({pledgeId: pledge.id}, {orderBy: ['createdAt desc']})
     const payment = pledgePayment
       ? await pgdb.public.payments.findOne({id: pledgePayment.paymentId})
@@ -232,6 +230,24 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
         }
       }
     */
+
+    // Find membership IDs mentoned in pledgeOption.customization
+    const pledgedMemberships = pledgeOptions
+      .map(
+        pledgeOption =>
+          pledgeOption.customization && pledgeOption.customization.membershipId
+      )
+      .filter(Boolean)
+
+    // All affected memberships. These are memberships that spring from this
+    // pledge, or memberships that were mentioned
+    // pledgeOption.customization.membershipId.
+    const memberships = await pgdb.public.memberships.find({
+      or: [
+        { pledgeId: pledge.id },
+        pledgedMemberships.length > 0 && { id: pledgedMemberships }
+      ].filter(Boolean)
+    })
 
     const templateName = `pledge_${pkg.name.toLowerCase()}`
 
@@ -351,7 +367,12 @@ ${address.country}</span>`
           content: checkMembershipSubscriptions
         },
         { name: 'frontend_base_url',
-          content: FRONTEND_BASE_URL }
+          content: FRONTEND_BASE_URL },
+        { name: 'gifted_memberships_count',
+          content: memberships
+            .filter(membership => pledge.userId !== membership.userId)
+            .length
+        }
       ]
     })
   }))
