@@ -1,5 +1,6 @@
 import React from 'react'
-import withAuthorization from '../components/Auth/withAuthorization'
+import { compose } from 'react-apollo'
+import { enforceAuthorization } from '../components/Auth/withAuthorization'
 import withData from '../lib/withData'
 import App from '../components/App'
 import {
@@ -14,7 +15,10 @@ const changeHandler = params => {
   Router.replaceRoute('users', params, { shallow: true })
 }
 
-export default withData(withAuthorization(['supporter'])(props => {
+export default compose(
+  withData,
+  enforceAuthorization(['supporter'])
+)(props => {
   return (
     <App>
       <Body>
@@ -28,4 +32,4 @@ export default withData(withAuthorization(['supporter'])(props => {
       </Body>
     </App>
   )
-}))
+})

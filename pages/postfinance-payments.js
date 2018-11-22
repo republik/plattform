@@ -1,6 +1,8 @@
 import React from 'react'
+import { compose } from 'react-apollo'
+
 import App from '../components/App'
-import withAuthorization from '../components/Auth/withAuthorization'
+import enforceAuthorization from '../components/Auth/withAuthorization'
 import withData from '../lib/withData'
 
 import {
@@ -15,7 +17,10 @@ const changeHandler = params => {
   Router.replaceRoute('postfinance-payments', params, { shallow: true })
 }
 
-export default withData(withAuthorization(['supporter', 'accountant'])(props => {
+export default compose(
+  withData,
+  enforceAuthorization(['supporter', 'accountant'])
+)(props => {
   return (
     <App>
       <Body>
@@ -29,4 +34,4 @@ export default withData(withAuthorization(['supporter', 'accountant'])(props => 
       </Body>
     </App>
   )
-}))
+})

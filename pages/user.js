@@ -1,5 +1,6 @@
 import React from 'react'
-import withAuthorization from '../components/Auth/withData'
+import { compose } from 'react-apollo'
+import { enforceAuthorization } from '../components/Auth/withAuthorization'
 import withData from '../lib/withData'
 
 import App from '../components/App'
@@ -10,7 +11,10 @@ import {
 } from '../components/Layout'
 import User from '../components/Users/Detail'
 
-export default withData(withAuthorization(['supporter'])(props => {
+export default compose(
+  withData,
+  enforceAuthorization(['supporter'])
+)(props => {
   return (
     <App>
       <Body>
@@ -21,4 +25,4 @@ export default withData(withAuthorization(['supporter'])(props => {
       </Body>
     </App>
   )
-}))
+})

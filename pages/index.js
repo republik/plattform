@@ -3,7 +3,7 @@ import { css } from 'glamor'
 import { compose } from 'react-apollo'
 import App from '../components/App'
 import withData from '../lib/withData'
-import withAuthorization from '../components/Auth/withAuthorization'
+import { enforceAuthorization } from '../components/Auth/withAuthorization'
 import SignIn from '../components/Auth/SignIn'
 import {
   Body,
@@ -62,4 +62,4 @@ class Index extends Component {
   }
 }
 
-export default compose(withData, withAuthorization(['supporter']))(Index)
+export default compose(withData, enforceAuthorization(['supporter']))(Index)
