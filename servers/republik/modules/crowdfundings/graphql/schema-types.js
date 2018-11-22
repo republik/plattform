@@ -268,8 +268,8 @@ enum CancellationCategoryType {
   EDITORIAL,
   NO_TIME,
   TOO_EXPENSIVE,
-  OTHER,
   VOID,
+  OTHER,
   SYSTEM
 }
 
