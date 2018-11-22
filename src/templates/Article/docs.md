@@ -964,15 +964,15 @@ Von [Urs Bruderer](/~7b0d6a74-f57b-4498-8eb7-455936672736) (Text) und Adam Higto
 }
 \`\`\`
 
-###### 
+###### Fotobuch
 
-# Planet versus Portemonnaie
+# Wir Übermenschen
 
-## 
+## Matthieu Gafsou: «H+»
 
-#### Sie glauben, wir müssen uns entscheiden zwischen  Wirtschaftswachstum und der Rettung der Erde? Falsch. Die Zahlen sprechen eine andere Sprache.
+#### Die Aufnahmen des Lausanners bilden eine skurrile, geheimnisvolle und manchmal unheimliche Wirklichkeit ab.
 
-Von [Thomas Hebsgaard](https://www.zetland.dk/skribent/ae6XddK5), «Zetland» (Text), und Doris Wöhncke (Übersetzung), 09.08.2018
+Von [Barbara Villiger Heilig](/~5f45d6a3-ff52-4e67-9925-92447f43d2e1 "Barbara Villiger Heilig"), 04.09.2018
 
 <hr /></section>
 
