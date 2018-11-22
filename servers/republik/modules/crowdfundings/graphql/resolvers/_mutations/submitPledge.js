@@ -120,6 +120,7 @@ module.exports = async (_, args, context) => {
     // check user
     let user = null
     let pfAliasId = null
+    // wrong tokens are just ignored
     const accessTokenUser = pledge.accessToken && await getUserByAccessToken(pledge.accessToken, context)
     if (accessTokenUser) {
       ensureCanPledgePackage(accessTokenUser, pkg.name)
