@@ -299,9 +299,11 @@ const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
     })
 
   const allMembershipTypes =
-    await pgdb.public.membershipTypes.find({
-      rewardId: allRewards.map(reward => reward.id)
-    })
+    allRewards.length > 0
+      ? await pgdb.public.membershipTypes.find({
+        rewardId: allRewards.map(reward => reward.id)
+      })
+      : []
 
   return Promise
     .map(packages, async package_ => {
