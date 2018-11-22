@@ -92,12 +92,25 @@ const cloneWithRepoData = options => (node, repoData) => {
   let data = node.data.set('url', `https://github.com/${repoData.id}?autoSlug`)
   const meta = repoData.latestCommit.document.meta
 
+  const isArticleTile = node.type === 'ARTICLETILE'
   const formatMeta = meta.format && meta.format.meta
   if (formatMeta) {
     data = data
       .set('kind', formatMeta.kind)
       .set('formatUrl', `https://github.com/${meta.format.repoId}?autoSlug`)
-    if (node.type !== 'ARTICLETILE') {
+    if (isArticleTile) {
+      data = data.set(
+        'formatColor',
+        formatMeta.color
+          ? formatMeta.color
+          : formatMeta.kind
+            ? colors[formatMeta.kind]
+            : undefined
+      )
+      if (formatMeta.kind === 'feuilleton') {
+        data = data.set('kind', 'editorial')
+      }
+    } else {
       data = data.set('color', formatMeta.color)
     }
   }
@@ -130,7 +143,7 @@ const cloneWithRepoData = options => (node, repoData) => {
       }),
       Block.create({
         type: subjectModule.TYPE,
-        data,
+        data: isArticleTile ? data.set('columns', 3) : data,
         nodes: meta.subject
           ? [Text.create(meta.subject)]
           : []
@@ -282,6 +295,16 @@ const Form = withT(({ node, onChange, onTypeChange, options, t }) => {
       />
     }
     {
+      options.includes('formatColor') &&
+      <ColorPicker
+        label='Formatfarbe'
+        value={node.data.get('formatColor')}
+        onChange={color => {
+          onChange('formatColor', null, color)
+        }}
+      />
+    }
+    {
       options.includes('image') &&
       <ImageInput
         label='Bild'
@@ -375,6 +398,7 @@ export const TeaserForm = ({ subModuleResolver, ...options }) => {
         const dataRecipients = newTeaser.filterDescendants(
           n => moduleTypes.includes(n.type)
         )
+
         const newChange = dataRecipients.reduce(
           (t, node) => {
             if (linkModule && node.type === linkModule.TYPE) {

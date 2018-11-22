@@ -88,7 +88,21 @@ export const fromMdast = ({
     }
   )
     // enhance all immediate children with data
-    .map(node => ({...node, data: {...node.data, ...data}}))
+    .map(node => {
+      const articleTilePatches = data.teaserType === 'articleTile' && node.type === 'FRONTSUBJECT'
+        ? {
+          columns: 3,
+          color: '#000'
+        }
+        : undefined
+      return { ...node,
+        data: {
+          ...node.data,
+          ...data,
+          ...articleTilePatches
+        }
+      }
+    })
 
   const result = {
     kind: 'block',
