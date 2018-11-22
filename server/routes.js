@@ -2,7 +2,6 @@ const createRoutes = require('next-routes')
 
 const routes = createRoutes()
 routes
-  .add('index', '/', 'users')
   .add('users')
   .add('payments')
   .add('postfinance-payments')
