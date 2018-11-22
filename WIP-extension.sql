@@ -5,6 +5,23 @@
 -- from i.e. production and ran migrations.
 --
 
+-- Insert a "PROLONG" crowdfunding phase.
+INSERT INTO
+  "public"."crowdfundings" (
+    "id",
+    "name",
+    "beginDate",
+    "endDate"
+  )
+VALUES
+  (
+    E'fb546aaa-09e0-403e-8f42-c6ee2f9b437e',
+    E'PROLONG',
+    E'2018-11-22 00:00:00+00',
+    E'2020-01-15 00:00:00+00'
+  )
+;
+
 -- Inserts a "PROLONG" package.
 INSERT INTO
   "public"."packages" (
@@ -20,7 +37,7 @@ INSERT INTO
 VALUES
   (
     E'6b8897bf-7ab4-433c-92a1-64fafcd54417',
-    E'e2ea1234-ca8c-4604-aeec-80a0cecf07bf',
+    E'fb546aaa-09e0-403e-8f42-c6ee2f9b437e',
     E'PROLONG',
     E'240ef27d-cf26-48c1-81df-54b2a10732f4',
     E'{STRIPE,POSTFINANCECARD,PAYPAL,PAYMENTSLIP}',
