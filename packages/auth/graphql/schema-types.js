@@ -40,7 +40,7 @@ type User {
   enabledSecondFactors: [SignInTokenType!]!
   eventLog: [EventLog!]!
   # is this the user of the requesting session
-  isMe: Boolean
+  isUserOfCurrentSession: Boolean!
   # get an access token
   # exclusively accessible by the user herself
   accessToken(scope: AccessTokenScope!): ID

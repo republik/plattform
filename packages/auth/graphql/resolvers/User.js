@@ -83,8 +83,8 @@ module.exports = {
     Roles.ensureUserIsMeOrInRoles(user, me, userAccessRoles)
     return user._raw.preferredFirstFactor
   },
-  isMe: (user, args, { user: me }) =>
-    me && user.id === me.id,
+  isUserOfCurrentSession: (user, args, { user: me }) =>
+    !!(me && user.id === me.id),
 
   accessToken: (user, { scope }, { user: me }) => {
     if (me && user.id === me.id) {
