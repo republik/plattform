@@ -95,7 +95,8 @@ export const fromMdast = ({
           color: '#000'
         }
         : undefined
-      return { ...node,
+      return {
+        ...node,
         data: {
           ...node.data,
           ...data,
