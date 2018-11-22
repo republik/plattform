@@ -505,11 +505,13 @@ const cancelMembershipMutation = gql`
     $id: ID!
     $immediately: Boolean
     $details: CancellationInput!
+    $suppressNotifications: Boolean
   ) {
     cancelMembership(
       id: $id
       immediately: $immediately
       details: $details
+      suppressNotifications: $suppressNotifications
     ) {
       id
     }
@@ -909,14 +911,16 @@ const WrappedUser = compose(
       cancelMembership: ({
         membershipId,
         details,
-        immediately
+        immediately,
+        suppressNotifications
       }) => {
         if (mutate) {
           return mutate({
             variables: {
               id: membershipId,
               details,
-              immediately
+              immediately,
+              suppressNotifications
             },
             refetchQueries: [
               {

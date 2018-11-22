@@ -32,6 +32,7 @@ const dateTimeFormat = swissTime.format(
 const getInitialState = () => ({
   isOpen: false,
   immediately: false,
+  suppressNotifications: false,
   reason: '',
   cancellationType: ''
 })
@@ -49,18 +50,28 @@ class CancelMembership extends Component {
       this.setState(() => ({ immediately: value }))
     }
 
+    this.suppressNotificationsChangeHandler = (_, value) => {
+      this.setState(() => ({ suppressNotifications: value }))
+    }
+
     this.closeHandler = () => {
       this.setState(getInitialState)
     }
 
     this.submitHandler = () => {
+      const {
+        immediately,
+        suppressNotifications,
+        reason,
+        cancellationType
+      } = this.state
       this.props.onSubmit({
         membershipId: this.props.membership.id,
-        immediately: this.state.immediately,
+        immediately,
+        suppressNotifications,
         details: {
-          reason: this.state.reason,
-          type: this.state.cancellationType
-
+          reason,
+          type: cancellationType
         }
 
       })
@@ -114,10 +125,10 @@ class CancelMembership extends Component {
                   {dateTimeFormat(new Date(period.endDate))}
                 </span>
               ))}
-              <hr />
+              <br />
               {cancellationCategories &&
                 cancellationCategories.map(({ type, label }) => (
-                  <div key={type}>
+                  <Interaction.P key={type}>
                     <Radio
                       value={cancellationType}
                       checked={cancellationType === type}
@@ -125,10 +136,8 @@ class CancelMembership extends Component {
                   >
                       {label}
                     </Radio>
-                  </div>)
+                  </Interaction.P>)
               )}
-              <br />
-              <Checkbox checked={this.state.immediately} onChange={this.immediatelyChangeHandler}>Sofort canceln?</Checkbox>
               <Field
                 value={reason}
                 label={'Grund'}
@@ -140,6 +149,12 @@ class CancelMembership extends Component {
                   />
                 )}
               />
+              <p>
+                <Checkbox checked={this.state.immediately} onChange={this.immediatelyChangeHandler}>Sofort canceln</Checkbox>
+              </p>
+              <p>
+                <Checkbox checked={this.state.suppressNotifications} onChange={this.suppressNotificationsChangeHandler}>Benachrichtigungen unterdrücken</Checkbox>
+              </p>
               <Button
                 primary
                 disabled={!cancellationType}
