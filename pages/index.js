@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-
 import { css } from 'glamor'
-import withData from '../lib/withData'
-import withMe from '../lib/withMe'
+import { compose } from 'react-apollo'
 import App from '../components/App'
+import withData from '../lib/withData'
+import withAuthorization from '../components/Auth/withAuthorization'
 import SignIn from '../components/Auth/SignIn'
 import {
   Body,
@@ -30,13 +30,13 @@ const goToUsers = ({ me }) => {
 }
 
 class Index extends Component {
-  componentDidUpdate() {
+  componentDidUpdate () {
     goToUsers(this.props)
   }
-  componentDidMount() {
+  componentDidMount () {
     goToUsers(this.props)
   }
-  render() {
+  render () {
     return (
       <App>
         <Body>
@@ -62,4 +62,4 @@ class Index extends Component {
   }
 }
 
-export default withData(withMe(Index))
+export default compose(withData, withAuthorization(['supporter']))(Index)

@@ -1,4 +1,5 @@
 import React from 'react'
+import withAuthorization from '../components/Auth/withAuthorization'
 import withData from '../lib/withData'
 import App from '../components/App'
 import {
@@ -13,12 +14,12 @@ const changeHandler = params => {
   Router.replaceRoute('users', params, { shallow: true })
 }
 
-export default withData(props => {
+export default withData(withAuthorization(['supporter'])(props => {
   return (
     <App>
       <Body>
         <Header search={props.url.query.search} />
-        <Content id="content">
+        <Content id='content'>
           <Users
             params={props.url.query}
             onChange={changeHandler}
@@ -27,4 +28,4 @@ export default withData(props => {
       </Body>
     </App>
   )
-})
+}))
