@@ -2,6 +2,7 @@ const Roles = require('../../lib/Roles')
 const userAccessRoles = ['admin', 'supporter']
 const { findAllUserSessions } = require('../../lib/Sessions')
 const { enabledFirstFactors } = require('../../lib/Users')
+const AccessToken = require('../../lib/AccessToken')
 
 module.exports = {
   email (user, args, { pgdb, user: me }) {
@@ -81,5 +82,13 @@ module.exports = {
   preferredFirstFactor (user, args, { user: me }) {
     Roles.ensureUserIsMeOrInRoles(user, me, userAccessRoles)
     return user._raw.preferredFirstFactor
+  },
+  isUserOfCurrentSession: (user, args, { user: me }) =>
+    !!(me && user.id === me.id),
+
+  accessToken: (user, { scope }, { user: me }) => {
+    if (me && user.id === me.id) {
+      return AccessToken.generateForUser(user, scope)
+    }
   }
 }

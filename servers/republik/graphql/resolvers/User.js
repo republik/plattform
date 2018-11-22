@@ -1,4 +1,4 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
+const { Roles, AccessToken: { isFieldExposed } } = require('@orbiting/backend-modules-auth')
 const { age } = require('../../lib/age')
 const { getKeyId } = require('../../lib/pgp')
 const querystring = require('querystring')
@@ -24,11 +24,13 @@ const exposeProfileField = (key, format) => (user, args, { pgdb, user: me }) => 
 
 const exposeAccessField = (accessRoleKey, key, format) => (user, args, { pgdb, user: me }) => {
   if (
-    user._raw[accessRoleKey] === 'PUBLIC' ||
-    Roles.userIsMeOrInRoles(user, me, [
-      user._raw[accessRoleKey].toLowerCase(),
-      'admin', 'supporter'
-    ])
+    (
+      user._raw[accessRoleKey] === 'PUBLIC' ||
+      Roles.userIsMeOrInRoles(user, me, [
+        user._raw[accessRoleKey].toLowerCase(),
+        'admin', 'supporter'
+      ])
+    ) || isFieldExposed(user, key)
   ) {
     return format
       ? format(user._raw[key])
@@ -251,6 +253,15 @@ module.exports = {
       return pgdb.public.addresses.findOne({
         id: user._raw.addressId
       })
+    }
+    return null
+  },
+  hasAddress (user, args, { user: me }) {
+    if (
+      Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter']) ||
+      isFieldExposed(user, 'hasAddress')
+    ) {
+      return !!user._raw.addressId
     }
     return null
   },

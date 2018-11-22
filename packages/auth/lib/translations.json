@@ -1,5 +1,5 @@
 {
-  "updated": "2018-08-09T10:10:06.343Z",
+  "updated": "2018-11-21T18:18:57.032Z",
   "title": "live",
   "data": [
     {
@@ -145,6 +145,18 @@
     {
       "key": "api/consents/missing",
       "value": "Sie müssen folgenden Policies zustimmen um sich anmelden zu können: {consents}."
+    },
+    {
+      "key": "api/auth/accessToken/scope/404",
+      "value": "Der gewünschte scope ({scope}) konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/auth/accessToken/key/404",
+      "value": "Der Benutzer-Schlüssel konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/auth/accessToken/pledgePackages/notAllowed",
+      "value": "Der verwendete Token erlaubt es nicht das Packet {package} zu kaufen."
     }
   ]
 }
