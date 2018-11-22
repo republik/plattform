@@ -643,6 +643,7 @@ const userQuery = gql`
           createdAt
           updatedAt
         }
+        autoPay
         cancellations {
           reason
           category {
