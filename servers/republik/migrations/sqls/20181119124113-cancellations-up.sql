@@ -8,7 +8,7 @@ CREATE TABLE "membershipCancellations" (
   "membershipId"          uuid not null references "memberships"(id),
   "reason"                text,
   "category"              cancel_category not null,
-  "suppressNotification"  boolean not null default false,
+  "suppressNotifications" boolean not null default false,
   "createdAt"             timestamptz default now(),
   "updatedAt"             timestamptz default now(),
   "revokedAt"             timestamptz
@@ -16,7 +16,7 @@ CREATE TABLE "membershipCancellations" (
 
 -- migrate exising membership.cancelReasons
 INSERT INTO
-  "membershipCancellations" ("membershipId", reason, category, "suppressNotification", "createdAt", "revokedAt")
+  "membershipCancellations" ("membershipId", reason, category, "suppressNotifications", "createdAt", "revokedAt")
   (
     SELECT
       id as "membershipId",
