@@ -248,29 +248,32 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
       globalMergeVars: [
         // Purchase itself
         { name: 'options',
-          content: pledgeOptions.map(pledgeOption => {
-            const { rewardType, name } = pledgeOption.packageOption.reward
+          content: pledgeOptions
+            // Filter "pseudo" pledge options without a reward
+            .filter(pledgeOption => pledgeOption.packageOption.reward)
+            .map(pledgeOption => {
+              const { rewardType, name } = pledgeOption.packageOption.reward
 
-            const olabel = t([
-              'api/email/option',
-              rewardType.toLowerCase(),
-              name.toLowerCase()
-            ].join('/'))
+              const olabel = t([
+                'api/email/option',
+                rewardType.toLowerCase(),
+                name.toLowerCase()
+              ].join('/'))
 
-            const oprice =
-              pledgeOption.price / 100
-            const ototal =
-              (pledgeOption.amount * pledgeOption.price) / 100
+              const oprice =
+                pledgeOption.price / 100
+              const ototal =
+                (pledgeOption.amount * pledgeOption.price) / 100
 
-            return {
-              oamount: pledgeOption.amount,
-              olabel,
-              oprice,
-              oprice_formatted: formatPriceChf(oprice),
-              ototal,
-              ototal_formatted: formatPriceChf(ototal)
-            }
-          })
+              return {
+                oamount: pledgeOption.amount,
+                olabel,
+                oprice,
+                oprice_formatted: formatPriceChf(oprice),
+                ototal,
+                ototal_formatted: formatPriceChf(ototal)
+              }
+            })
         },
         { name: 'discount',
           content: discount

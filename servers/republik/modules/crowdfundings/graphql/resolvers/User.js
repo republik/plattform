@@ -118,15 +118,19 @@ module.exports = {
 
     const now = new Date()
 
-    const crowdfunding = args.crowdfundingName
-      ? await pgdb.public.crowdfundings.findOne({ name: args.crowdfundingName })
-      : await pgdb.public.crowdfundings.findOne({
+    const crowdfundings = args.crowdfundingName
+      ? await pgdb.public.crowdfundings.find({
+        name: args.crowdfundingName,
+        'beginDate <=': now,
+        'endDate >': now
+      })
+      : await pgdb.public.crowdfundings.find({
         'beginDate <=': now,
         'endDate >': now
       })
 
     const packages = await pgdb.public.packages.find({
-      crowdfundingId: crowdfunding.id,
+      crowdfundingId: crowdfundings.map(crowdfunding => crowdfunding.id),
       custom: true
     })
 
