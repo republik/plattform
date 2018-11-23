@@ -645,6 +645,7 @@ const userQuery = gql`
           createdAt
           updatedAt
         }
+        reducedPrice
         autoPay
         cancellations {
           reason
