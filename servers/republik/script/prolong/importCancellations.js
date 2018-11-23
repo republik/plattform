@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * This script imports cancellations from a csv
  * columns: date, adminUrl, reason, category
@@ -11,6 +12,7 @@ const rw = require('rw')
 const {dsvFormat} = require('d3-dsv')
 const csvParse = dsvFormat(',').parse
 const moment = require('moment')
+const Promise = require('bluebird')
 
 console.log('running importCancellations.js...')
 
@@ -40,42 +42,42 @@ PgDb.connect().then(async pgdb => {
     throw new Error('You need to provide input on stdin')
   }
 
-  let stats = {
+  const stats = {
     numMemberships: 0
   }
   const numCancellationsBefore = await pgdb.public.membershipCancellations.count()
 
   const transaction = await pgdb.transactionBegin()
-  await Promise.all(
+  await Promise.map(
     csvParse(input)
       .map(row => ({
         ...row,
         date: moment(row.date, 'DD.MM.YYYY'),
         userId: row.adminUrl.split('users/')[1]
-      }))
-      .map(async ({ userId, date, reason, category }) => {
-        const memberships = await transaction.public.memberships.find({
-          userId,
-          renew: true
-        })
-
-        const normalizedCategory = getNormalizedCategory(category)
-
-        for (let membership of memberships) {
-          await transaction.public.memberships.update(
-            { id: membership.id },
-            { renew: false }
-          )
-          await transaction.public.membershipCancellations.insert({
-            membershipId: membership.id,
-            reason: reason.length ? reason.trim() : null,
-            category: normalizedCategory,
-            suppressNotifications: true,
-            createdAt: date
-          })
-        }
-        stats.numMemberships += memberships.length
+      })),
+    async ({ userId, date, reason, category }) => {
+      const memberships = await transaction.public.memberships.find({
+        userId,
+        renew: true
       })
+
+      const normalizedCategory = getNormalizedCategory(category)
+
+      for (let membership of memberships) {
+        await transaction.public.memberships.update(
+          { id: membership.id },
+          { renew: false }
+        )
+        await transaction.public.membershipCancellations.insert({
+          membershipId: membership.id,
+          reason: reason.length ? reason.trim() : null,
+          category: normalizedCategory,
+          suppressNotifications: true,
+          createdAt: date
+        })
+      }
+      stats.numMemberships += memberships.length
+    }
   )
 
   stats.numCancellationsCreated =
