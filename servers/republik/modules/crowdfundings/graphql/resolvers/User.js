@@ -99,14 +99,14 @@ module.exports = {
     }
     return []
   },
-  async membershipsDaysRemaining (user, args, { pgdb, user: me }) {
-    debug('membershipsDaysRemaining')
+  async daysUntilProlongNecessary (user, args, { pgdb, user: me }) {
+    debug('daysUntilProlongNecessary')
 
     Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
 
     const cache = createCache({
       prefix: `User:${user.id}`,
-      key: 'membershipsDaysRemaining',
+      key: 'daysUntilProlongNecessary',
       ttl: QUERY_CACHE_TTL_SECONDS
     })
 
@@ -117,7 +117,7 @@ module.exports = {
 
       // No memberships, set cache and return 0
       if (memberships.length === 0) {
-        debug('no memberships founds, return membershipsDaysRemaining: 0')
+        debug('no memberships founds, return daysUntilProlongNecessary: 0')
 
         return 0
       }
@@ -129,7 +129,7 @@ module.exports = {
           .filter(m => !m.active)
           .length > 0
       ) {
-        debug('found dormant membership, return membershipsDaysRemaining: 0')
+        debug('found dormant membership, return daysUntilProlongNecessary: 0')
 
         return 0
       }
