@@ -15,9 +15,20 @@ const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO']
 
 const findEligableMemberships = ({ memberships, user }) =>
   memberships.filter(
-    m => m.userId === user.id && // user owns membership
-      EXTENDABLE_MEMBERSHIP_TYPES.includes(m.membershipType.name) &&
-      EXTENDABLE_PACKAGE_NAMES.includes(m.pledge.package.name)
+    // A membership belongs to user
+    m => m.userId === user.id && (
+      (
+        // A membership that
+        // b) is of membershipType in EXTENDABLE_MEMBERSHIP_TYPES
+        // c) and is of package.name in EXTENDABLE_PACKAGE_NAMES
+        m.userId === user.id &&
+        EXTENDABLE_MEMBERSHIP_TYPES.includes(m.membershipType.name) &&
+        EXTENDABLE_PACKAGE_NAMES.includes(m.pledge.package.name)
+      ) || (
+        // A membership that was bought not bought by user itself.
+        m.pledge.userId !== m.userId
+      )
+    )
   )
 
 // Checks if user has at least one active and one inactive membership,
@@ -26,13 +37,19 @@ const hasDormantMembership = ({ package_, membership }) => {
   const { user } = package_
   const { memberships } = user
 
-  const eligableMemberships = findEligableMemberships({
-    memberships, user
+  const inactiveMemberships =
+    findEligableMemberships({ memberships, user })
+      .filter(m => m.active === false)
+
+  inactiveMemberships.forEach(m => {
+    debug('hasDormantMembership.eligableMembership', {
+      id: m.id,
+      membershipType: m.membershipType.name,
+      package: m.pledge.package.name
+    })
   })
 
-  const hasInactiveMembership = !!eligableMemberships.find(
-    m => m.active === false
-  )
+  const hasInactiveMembership = !!inactiveMemberships.length > 0
 
   return membership.active === true &&
     membership.userId === user.id &&
