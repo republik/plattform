@@ -2,7 +2,7 @@ const logger = console
 const postfinanceSHA = require('../../../lib/payments/postfinance/sha')
 const uuid = require('uuid/v4')
 const { minTotal, regularTotal, getPledgeOptionsTree } = require('../../../lib/Pledge')
-const { resolvePackages } = require('../../../lib/CustomPackages')
+const { resolvePackages, getCustomOptions } = require('../../../lib/CustomPackages')
 const debug = require('debug')('crowdfundings:pledge')
 const {
   Consents: {
@@ -27,71 +27,80 @@ module.exports = async (_, args, context) => {
     const pledgeOptionsTemplateIds = pledgeOptions.map((plo) => plo.templateId)
     const packageOptions = await transaction.public.packageOptions.find({id: pledgeOptionsTemplateIds})
 
-    // check if packageOptions are all from the same package
-    // check if minAmount <= amount <= maxAmount
-    // we don't check the pledgeOption price here, because the frontend always
-    // sends whats in the templating packageOption, so we always copy the price
-    // into the pledgeOption (for record keeping)
-    let packageId = packageOptions[0].packageId
-    pledgeOptions.forEach((plo) => {
-      // Mutually exclusive membership options: Can only be requested once
-      // within all options.
-      if (pledgeOptions.filter(
-        o => o.customization &&
-          o.customization.membershipId === plo.membershipId &&
-          o.amount > 0
-      ).length > 1) {
-        logger.error('(membership) options must be mutually exclusive!', { req: req._log(), args, plo })
-        throw new Error(t('api/unexpected'))
-      }
+    const packageId = packageOptions[0].packageId
+    const pkg = await pgdb.public.packages.findOne({ id: packageId })
 
-      // Checks if combination of templateId and membershipId was posted only
-      // once.
-      if (pledgeOptions.filter(
-        o => o.templateId === plo.templateId &&
-          o.customization &&
-          o.customization.membershipId === plo.membershipId
-      ).length > 1) {
-        logger.error(
-          'options must have only a single template/membership combination',
-          { req: req._log(), args, plo }
-        )
-        throw new Error(t('api/unexpected'))
-      }
-
-      const pko = packageOptions.find((pko) => pko.id === plo.templateId)
-      if (packageId !== pko.packageId) {
-        logger.error('options must all be part of the same package!', { req: req._log(), args, plo, pko })
-        throw new Error(t('api/unexpected'))
-      }
-      if (!(pko.minAmount <= plo.amount && plo.amount <= pko.maxAmount)) {
-        logger.error(`amount in option (templateId: ${plo.templateId}) out of range`, { req: req._log(), args, pko, plo })
-        throw new Error(t('api/unexpected'))
-      }
-    })
-
-    // check if crowdfunding is still open
-    const pkg = await pgdb.public.packages.findOne({id: packageId})
     const resolvedPackage = (await resolvePackages({
       packages: [pkg],
       pledger: req.user,
       pgdb: transaction
     })).shift()
 
-    const memberships = resolvedPackage.user.memberships
-    const membershipIds = memberships.map(m => m.id)
+    debug({ resolvedPackage })
 
-    // Check if options contain valid membership Ids
-    if (
-      pledgeOptions
-        .filter(o => !!(o.customization && o.customization.membershipId))
-        .filter(o => !membershipIds.includes(o.customization.membershipId))
-        .length > 0
-    ) {
-      logger.error(`options must contain valid membership IDs`, { req: req._log(), args, membershipIds })
-      throw new Error(t('api/unexpected'))
-    }
+    const resolvedOptions = resolvedPackage.custom
+      ? await getCustomOptions(resolvedPackage)
+      : []
 
+    debug({ resolvedOptions })
+
+    // check if packageOptions are all from the same package
+    // check if minAmount <= amount <= maxAmount
+    // we don't check the pledgeOption price here, because the frontend always
+    // sends whats in the templating packageOption, so we always copy the price
+    // into the pledgeOption (for record keeping)
+    pledgeOptions.forEach((plo) => {
+      // Mutually exclusive membership options: Can only be requested once
+      // within all options.
+      if (
+        plo.membershipId &&
+        pledgeOptions.filter(
+          o => o.membershipId === plo.membershipId && o.amount > 0
+        ).length > 1
+      ) {
+        logger.error(
+          'options w/ membershipIds must be mutually exclusive!',
+          { req: req._log(), args, plo }
+        )
+        throw new Error(t('api/unexpected'))
+      }
+
+      // Check if passed options are valid custom package options.
+      if (
+        resolvedOptions.length > 0 &&
+        !resolvedOptions
+          .find(option =>
+            option.templateId === plo.templateId &&
+            option.membership.id === plo.membershipId
+          )
+      ) {
+        logger.error(
+          'options must be valid combination of templateId and membershipId',
+          { req: req._log(), args, plo }
+        )
+        throw new Error(t('api/unexpected'))
+      }
+
+      const pko = packageOptions.find((pko) => pko.id === plo.templateId)
+
+      if (packageId !== pko.packageId) {
+        logger.error(
+          'options must all be part of the same package!',
+          { req: req._log(), args, plo, pko }
+        )
+        throw new Error(t('api/unexpected'))
+      }
+
+      if (!(pko.minAmount <= plo.amount && plo.amount <= pko.maxAmount)) {
+        logger.error(
+          `amount in option (templateId: ${plo.templateId}) out of range`,
+          { req: req._log(), args, pko, plo }
+        )
+        throw new Error(t('api/unexpected'))
+      }
+    })
+
+    // check if crowdfunding is still open
     const crowdfunding = await pgdb.public.crowdfundings.findOne({id: pkg.crowdfundingId})
     const now = new Date()
     const gracefullEnd = new Date(crowdfunding.endDate)
