@@ -82,7 +82,7 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
           {
             id: m.id,
             details: {
-              type: 'SYSTEM',
+              category: 'SYSTEM',
               reason: 'Auto Cancellation (claimMembership)'
             },
             suppressNotifications: true
