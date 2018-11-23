@@ -7,8 +7,8 @@ const { getLatestPeriod, getLatestEndDate } = require('../utils')
 const rules = require('./rules')
 
 // Put that one into database.
-const EXTENABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
-const EXTENABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR']
+const EXTENDABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
+const EXTENDABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR']
 
 // Which options require you to own a membership?
 const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO']
@@ -16,8 +16,8 @@ const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO']
 const findEligableMemberships = ({ memberships, user }) =>
   memberships.filter(
     m => m.userId === user.id && // user owns membership
-      EXTENABLE_MEMBERSHIP_TYPES.includes(m.membershipType.name) &&
-      EXTENABLE_PACKAGE_NAMES.includes(m.pledge.package.name)
+      EXTENDABLE_MEMBERSHIP_TYPES.includes(m.membershipType.name) &&
+      EXTENDABLE_PACKAGE_NAMES.includes(m.pledge.package.name)
   )
 
 // Checks if user has at least one active and one inactive membership,
@@ -58,7 +58,7 @@ const evaluate = async ({ package_, packageOption, membership }) => {
 
   // Can membership.membershipType be extended?
   // Not all membershipTypes can be extended
-  if (!EXTENABLE_MEMBERSHIP_TYPES.includes(membershipType.name)) {
+  if (!EXTENDABLE_MEMBERSHIP_TYPES.includes(membershipType.name)) {
     debug('not extenable membershipType "%s"', membershipType.name)
     return false
   }
@@ -185,8 +185,6 @@ const getCustomOptions = async (package_) => {
     })
     // Sort by userID, own ones up top.
     .sort((a, b) => a.membership.userId !== package_.user.id ? 1 : 0)
-
-  // return results.filter(Boolean)
 }
 
 /*
