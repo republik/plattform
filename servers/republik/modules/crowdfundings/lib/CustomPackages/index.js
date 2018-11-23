@@ -56,7 +56,12 @@ const hasDormantMembership = ({ package_, membership }) => {
     hasInactiveMembership
 }
 
-const evaluate = async ({ package_, packageOption, membership }) => {
+const evaluate = async ({
+  package_,
+  packageOption,
+  membership,
+  lenient = false
+}) => {
   debug('evaluate')
 
   const { reward } = packageOption
@@ -105,12 +110,12 @@ const evaluate = async ({ package_, packageOption, membership }) => {
 
   // Has no membershipPeriod with beginDate in future
   // Only memberships with current or past membershipPeriods can be extended.
-  if (latestPeriod.beginDate > now) {
+  if (!lenient && latestPeriod.beginDate > now) {
     debug('membership has a membershipPeriod in future')
     return false
   }
 
-  if (latestPeriod.beginDate > now.subtract(24, 'hours')) {
+  if (!lenient && latestPeriod.beginDate > now.subtract(24, 'hours')) {
     debug('membership period began not 24 hours ago', latestPeriod.beginDate)
     return false
   }

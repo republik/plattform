@@ -90,8 +90,17 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
           await evaluate({
             package_: resolvedPackage,
             packageOption: plo.packageOption,
-            membership
+            membership,
+            lenient: true
           })
+
+        if (!additionalPeriods || additionalPeriods.length === 0) {
+          logger.error(
+            'evaluation returned no additional periods',
+            { pledge }
+          )
+          throw new Error(t('api/unexpected'))
+        }
 
         await pgdb.public.membershipPeriods.insert(
           additionalPeriods
@@ -165,8 +174,6 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
 
   debug('generateMemberships membershipPeriod %O', membershipPeriod)
   debug('generateMemberships memberships %O', memberships)
-
-  // throw new Error('Intentional Breakpoint: Reached end of generateMembership')
 
   await pgdb.public.memberships.insert(memberships)
 
