@@ -34,8 +34,7 @@ module.exports = {
     }, {orderBy: ['endDate desc']})
   },
   async user (membership, args, { user: me, pgdb }) {
-    const user =
-      await pgdb.public.users.findOne({ id: membership.userId })
+    const user = await pgdb.public.users.findOne({ id: membership.userId })
 
     return transformUser(user)
   },
