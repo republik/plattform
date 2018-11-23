@@ -78,29 +78,14 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
       if (membershipId) {
         debug('membershipId "%s"', membershipId)
 
-        const membership =
-          await pgdb.public.memberships.findOne({ id: membershipId })
-
-        const membershipPeriods =
-          await pgdb.public.membershipPeriods.find({ membershipId })
-
-        const membershipUser =
-          await pgdb.public.users.findOne({ id: membership.userId })
-
-        Object.assign(
-          membership,
-          {
-            membershipType,
-            membershipPeriods,
-            user: membershipUser
-          }
-        )
-
         const resolvedPackage = (await resolvePackages({
           packages: [pkg],
           pledger: user,
           pgdb
         })).shift()
+
+        const membership = resolvedPackage.user.memberships
+          .find(m => m.id === membershipId)
 
         const { additionalPeriods } =
           await evaluate({
