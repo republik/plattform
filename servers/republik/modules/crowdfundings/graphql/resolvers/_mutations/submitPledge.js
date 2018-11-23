@@ -74,7 +74,7 @@ module.exports = async (_, args, context) => {
 
       // Check if passed options are valid custom package options.
       if (
-        resolvedOptions.length > 0 &&
+        plo.membershipId &&
         !resolvedOptions
           .find(option =>
             option.templateId === plo.templateId &&
