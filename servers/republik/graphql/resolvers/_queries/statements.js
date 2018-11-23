@@ -20,7 +20,7 @@ module.exports = async (_, args, { pgdb, t }) => {
           {testimonialId: focus},
           {id: focus}
         ]
-        : [{slug: focus}]
+        : [{username: focus}]
     }, 'id')
   }
 
