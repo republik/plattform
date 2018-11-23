@@ -142,7 +142,6 @@ class Detail extends Component {
     } else if (props.data.loading) {
       return <div>Loading ...</div>
     }
-    console.log(props.data.user)
     return (
       <Table>
         <Row>
