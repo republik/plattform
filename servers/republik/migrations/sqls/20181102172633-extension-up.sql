@@ -1,5 +1,5 @@
 ALTER TABLE "packages"
-  -- A boolean, declaring whether a package is "custom" and is treated
+  -- A boolean, declaring whether a package is "custom" to a user and is treated
   -- differently in code.
   ADD COLUMN "custom" boolean NOT NULL DEFAULT false,
 
