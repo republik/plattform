@@ -7,6 +7,8 @@ const ENV =
 
 module.exports = {}
 
+module.exports.REPUBLIK_FRONTEND_URL = ENV.REPUBLIK_FRONTEND_URL
+
 module.exports.API_URL = ENV.API_URL
 
 module.exports.SG_COLORS = ENV.SG_COLORS

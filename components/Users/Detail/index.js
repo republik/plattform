@@ -8,8 +8,12 @@ import {
   P,
   Label,
   Button,
-  colors
+  A,
+  colors,
 } from '@project-r/styleguide'
+
+import { REPUBLIK_FRONTEND_URL } from '../../../server/constants'
+
 import ErrorMessage from '../../ErrorMessage'
 import ErrorModal from '../../Form/ErrorModal'
 import { Table, Row } from '../../Layout/Table'
@@ -26,6 +30,7 @@ import Access from './Access'
 import Notepad from './Notepad'
 import SessionOverview from './SessionOverview'
 
+const FRONTEND_URL = REPUBLIK_FRONTEND_URL || 'https://www.republik.ch'
 const GUTTER = 60
 const styles = {
   grid: css({
@@ -138,6 +143,7 @@ class Detail extends Component {
     } else if (props.data.loading) {
       return <div>Loading ...</div>
     }
+    console.log(props.data.user)
     return (
       <Table>
         <Row>
@@ -325,6 +331,17 @@ class Detail extends Component {
                 <Interaction.H2>
                   Memberships
                 </Interaction.H2>
+                <Interaction.P>
+                  <Label>Verlängern ohne Login</Label>
+                  <br />
+                  <A
+                    href={`${FRONTEND_URL}/angebote?package=PROLONG&token=${props.data.user.accessToken}`}
+                    target="_blank"
+                  >
+                    {`${FRONTEND_URL}/angebote`}
+                  </A>
+                </Interaction.P>
+                <br />
                 <div {...styles.pledges}>
                   {props.data.user.memberships.map(
                     membership => (
@@ -600,6 +617,7 @@ const revokeAccessMutation = gql`
 const userQuery = gql`
   query user($id: String) {
     user(slug: $id) {
+      accessToken(scope: CUSTOM_PLEDGE)
       id
       name
       email
