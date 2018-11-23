@@ -45,7 +45,7 @@ module.exports = async (_, args, context) => {
         throw new Error(t('api/unexpected'))
       }
 
-      // Checks if combination if templateId and membershipId was posted only
+      // Checks if combination of templateId and membershipId was posted only
       // once.
       if (pledgeOptions.filter(
         o => o.templateId === plo.templateId &&

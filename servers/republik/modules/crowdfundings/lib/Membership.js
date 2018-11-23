@@ -7,7 +7,7 @@ const setAutoPay = async ({ membershipId, userId, autoPay, pgdb }) => {
     autoPay
   })
 
-  if (rowsAffected !== 1) {
+  if (rowsAffected < 1) {
     throw new Error('Unable to set autoPay flag.')
   }
 

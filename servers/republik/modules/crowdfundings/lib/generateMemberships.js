@@ -68,7 +68,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
     if (plo.packageOption.reward.type === 'MembershipType') {
       // Is amount in pledgeOption > 0?
       if (plo.amount === 0) {
-        debug('peldgeOption amount is 0')
+        debug('pledgeOption amount is 0')
         return
       }
 

@@ -124,7 +124,7 @@ const evaluate = async ({ package_, packageOption, membership }) => {
     ...beginEnd
   })
 
-  // Applay package rules
+  // Apply package rules
   await Promise.each(package_.rules, rule => {
     if (rules[rule]) {
       return rules[rule]({ package_, packageOption, membership, payload, now })
@@ -214,7 +214,6 @@ const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
 
   if (!pledger.id) {
     debug('empty pledger object or missing pledger.id')
-    // throw new Error('empty pledger object or missing pledger.id')
   }
 
   const pledges =

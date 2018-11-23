@@ -111,7 +111,7 @@ module.exports = async (_, args, {pgdb, req, user: me, t, mail: {sendMailTemplat
       })
     } else if (['ABO', 'BENEFACTOR_ABO'].includes(membershipType.name)) {
       if (membership.renew) {
-        console.info('reactivateMembership: membership is already active')
+        console.info('reactivateMembership: membership is already renew===true')
         await transaction.transactionCommit()
         return membership
       }
