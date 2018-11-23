@@ -75,14 +75,16 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
       // Cancel active memberships.
       await Promise.map(
         await transaction.public.memberships.find({
-          id: activeMemberships.map(m => m.id)
+          'id !=': membership.id,
+          userId: req.user.id,
+          renew: true
         }),
         m => cancelMembership(
           null,
           {
             id: m.id,
             details: {
-              category: 'SYSTEM',
+              type: 'SYSTEM',
               reason: 'Auto Cancellation (claimMembership)'
             },
             suppressNotifications: true
