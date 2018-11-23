@@ -30,7 +30,6 @@ import Access from './Access'
 import Notepad from './Notepad'
 import SessionOverview from './SessionOverview'
 
-const FRONTEND_URL = REPUBLIK_FRONTEND_URL || 'https://www.republik.ch'
 const GUTTER = 60
 const styles = {
   grid: css({
@@ -335,10 +334,10 @@ class Detail extends Component {
                   <Label>Verlängern ohne Login</Label>
                   <br />
                   <A
-                    href={`${FRONTEND_URL}/angebote?package=PROLONG&token=${props.data.user.accessToken}`}
+                    href={`${REPUBLIK_FRONTEND_URL}/angebote?package=PROLONG&token=${props.data.user.accessToken}`}
                     target="_blank"
                   >
-                    {`${FRONTEND_URL}/angebote`}
+                    {`${REPUBLIK_FRONTEND_URL}/angebote`}
                   </A>
                 </Interaction.P>
                 <br />
