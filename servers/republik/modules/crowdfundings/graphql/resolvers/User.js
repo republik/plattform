@@ -12,7 +12,7 @@ const {
   getCustomOptions
 } = require('../../lib/CustomPackages')
 const createCache = require('../../lib/cache')
-const { getLatestPeriod } = require('../../lib/utils')
+const { getPeriodEndingLast } = require('../../lib/utils')
 const getStripeClients = require('../../lib/payments/stripe/clients')
 const { isExpired } = require('./PaymentSource')
 
@@ -139,7 +139,7 @@ module.exports = {
           membershipId: memberships.map(membership => membership.id)
         })
 
-      const lastEndDate = getLatestPeriod(membershipPeriods).endDate
+      const lastEndDate = getPeriodEndingLast(membershipPeriods).endDate
 
       return Math.floor(
         moment

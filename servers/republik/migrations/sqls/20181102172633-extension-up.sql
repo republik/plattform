@@ -33,8 +33,9 @@ ALTER TABLE "pledgeOptions"
     DEFAULT uuid_generate_v4(),
   ADD PRIMARY KEY ("id"),
 
-  -- Field to stored customization inputs belonging to a pledge option.
-  ADD COLUMN "customization" jsonb
-    NOT NULL
-    DEFAULT '{}'
+  ADD COLUMN "membershipId" uuid,
+  ADD FOREIGN KEY ("membershipId")
+    REFERENCES "public"."memberships"("id"),
+
+  ADD COLUMN "autoPay" boolean
 ;

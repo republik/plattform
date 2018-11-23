@@ -3,7 +3,7 @@ const moment = require('moment')
 const uuid = require('uuid/v4')
 const Promise = require('bluebird')
 
-const { getLatestPeriod, getLatestEndDate } = require('../utils')
+const { getPeriodEndingLast, getLastEndDate } = require('../utils')
 const rules = require('./rules')
 
 // Put that one into database.
@@ -56,7 +56,12 @@ const hasDormantMembership = ({ package_, membership }) => {
     hasInactiveMembership
 }
 
-const evaluate = async ({ package_, packageOption, membership }) => {
+const evaluate = async ({
+  package_,
+  packageOption,
+  membership,
+  lenient = false
+}) => {
   debug('evaluate')
 
   const { reward } = packageOption
@@ -101,34 +106,34 @@ const evaluate = async ({ package_, packageOption, membership }) => {
     return false
   }
 
-  const latestPeriod = getLatestPeriod(membershipPeriods)
+  const lastPeriod = getPeriodEndingLast(membershipPeriods)
 
   // Has no membershipPeriod with beginDate in future
   // Only memberships with current or past membershipPeriods can be extended.
-  if (latestPeriod.beginDate > now) {
+  if (!lenient && lastPeriod.beginDate > now) {
     debug('membership has a membershipPeriod in future')
     return false
   }
 
-  if (latestPeriod.beginDate > now.subtract(24, 'hours')) {
-    debug('membership period began not 24 hours ago', latestPeriod.beginDate)
+  if (!lenient && lastPeriod.beginDate > now.subtract(24, 'hours')) {
+    debug('membership period began not 24 hours ago', lastPeriod.beginDate)
     return false
   }
 
-  let endDate = latestPeriod.endDate
+  let lastEndDate = lastPeriod.endDate
 
   // If endDate is in past, pushed to now.
   // This indicates that we're dealing with an expired membership.
-  if (endDate < now) {
-    endDate = now
+  if (lastEndDate < now) {
+    lastEndDate = now
   }
 
   // Add a regular period this packageOption would cause.
   // It is a mere suggestion. Dates may differ upon payment.
 
   const beginEnd = {
-    beginDate: endDate,
-    endDate: moment(endDate)
+    beginDate: lastEndDate,
+    endDate: moment(lastEndDate)
       .add(membershipType.intervalCount, membershipType.interval)
   }
 
@@ -195,8 +200,8 @@ const getCustomOptions = async (package_) => {
     )
     // Sort by membership "endDate", ascending
     .sort((a, b) => {
-      const aDate = getLatestEndDate(a.membership.membershipPeriods)
-      const bDate = getLatestEndDate(b.membership.membershipPeriods)
+      const aDate = getLastEndDate(a.membership.membershipPeriods)
+      const bDate = getLastEndDate(b.membership.membershipPeriods)
 
       return aDate < bDate ? 1 : 0
     })
@@ -269,6 +274,7 @@ const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
 
   memberships.forEach((membership, index, memberships) => {
     const user = users.find(user => user.id === membership.userId)
+    memberships[index].user = user
     memberships[index].claimerName =
       [user.firstName, user.lastName].filter(Boolean).join(' ').trim()
 
@@ -290,6 +296,13 @@ const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
       id: allPackageOptions.map(option => option.rewardId)
     })
 
+  const allGoodies =
+    allRewards.length > 0
+      ? await pgdb.public.goodies.find({
+        rewardId: allRewards.map(reward => reward.id)
+      })
+      : []
+
   const allMembershipTypes =
     allRewards.length > 0
       ? await pgdb.public.membershipTypes.find({
@@ -297,17 +310,26 @@ const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
       })
       : []
 
+  allRewards.forEach((reward, index, allRewards) => {
+    const goodie = allGoodies
+      .find(g => g.rewardId === reward.id)
+    const membershipType = allMembershipTypes
+      .find(m => m.rewardId === reward.id)
+
+    allRewards[index] = Object.assign({}, reward, membershipType, goodie)
+  })
+
   return Promise
     .map(packages, async package_ => {
       const packageOptions = allPackageOptions
         .filter(packageOption => packageOption.packageId === package_.id)
         .map(packageOption => {
-          const reward =
-            allRewards.find(reward => packageOption.rewardId === reward.id)
-          const membershipType =
-            allMembershipTypes.find(
-              membershipType => packageOption.rewardId === membershipType.rewardId
-            )
+          const reward = allRewards
+            .find(reward => packageOption.rewardId === reward.rewardId)
+          const membershipType = allMembershipTypes.find(
+            membershipType => packageOption.rewardId === membershipType.rewardId
+          )
+
           return { ...packageOption, reward, membershipType }
         })
 

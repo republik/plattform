@@ -9,7 +9,7 @@ const { timeFormat, formatPriceChf } =
 const {
   checkMembershipSubscriptions: getCheckMembershipSubscriptions
 } = require('../graphql/resolvers/User')
-const { getLatestEndDate } = require('./utils')
+const { getLastEndDate } = require('./utils')
 
 const dateFormat = timeFormat('%x')
 
@@ -149,7 +149,7 @@ mail.sendMembershipProlongNotice = async ({
       { name: 'pledger_name',
         content: safePledger.name },
       { name: 'end_date',
-        content: dateFormat(getLatestEndDate(additionalPeriods)) }
+        content: dateFormat(getLastEndDate(additionalPeriods)) }
     ]
   })
 }
@@ -231,17 +231,13 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
       }
     */
 
-    // Find membership IDs mentoned in pledgeOption.customization
+    // Find membership IDs mentoned in pledgeOption.membershipId
     const pledgedMemberships = pledgeOptions
-      .map(
-        pledgeOption =>
-          pledgeOption.customization && pledgeOption.customization.membershipId
-      )
+      .map(pledgeOption => pledgeOption.membershipId)
       .filter(Boolean)
 
     // All affected memberships. These are memberships that spring from this
-    // pledge, or memberships that were mentioned
-    // pledgeOption.customization.membershipId.
+    // pledge, or memberships that were mentioned pledgeOption.membershipId.
     const memberships = await pgdb.public.memberships.find({
       or: [
         { pledgeId: pledge.id },

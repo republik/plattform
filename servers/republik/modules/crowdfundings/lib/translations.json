@@ -91,6 +91,10 @@
       "value": "Für eine reduzierte Mitgliedschaft wird eine Begründung benötigt."
     },
     {
+      "key": "api/pledge/empty",
+      "value": "Sie haben noch keine Kaufoption ausgewählt."
+    },
+    {
       "key": "api/pledge/cancel/tooLate",
       "value": "Dieser pledge kann höchstes {maxDays} nach dem Kauf storniert werden."
     },
@@ -324,7 +328,7 @@
     },
     {
       "key": "api/email/pledge_prolong/subject",
-      "value": "Danke für die Verlängerung"
+      "value": "Danke für Ihr grosses Herz und Ihren kühlen Kopf"
     },
     {
       "key": "api/email/option/goodie/notebook/1",

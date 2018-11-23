@@ -2,7 +2,7 @@ const debug = require('debug')('crowdfundings:lib:CustomPackages:rule:earlyUserB
 const moment = require('moment')
 const uuid = require('uuid/v4')
 
-const { getLatestPeriod } = require('../../utils')
+const { getPeriodEndingLast } = require('../../utils')
 
 const MEMBERSHIP_CREATED_BEFORE = '2017-04-27'
 const PACKAGE_ELIGABLE = ['ABO', 'BENEFACTOR']
@@ -24,27 +24,35 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
     return
   }
 
-  if (payload.additionalPeriods.length !== 1) {
+  if (payload.additionalPeriods.length === 0) {
     debug(
-      'too many or few additional periods (%d)',
+      'no additional periods found. rule does not apply.',
+      payload.additionalPeriods.length
+    )
+    return
+  }
+
+  if (membership.membershipPeriods.length >= 3) {
+    debug(
+      'too many membership periods found. rule does not apply.',
       payload.additionalPeriods.length
     )
     return
   }
 
   const { beginDate, endDate } =
-    getLatestPeriod(payload.additionalPeriods)
+    getPeriodEndingLast(payload.additionalPeriods)
 
-  const bonusInterval = moment(beginDate).diff(now)
+  const bonus = moment.duration(moment(beginDate).diff(now))
 
-  debug('earlyAdopterBonus granted', { bonusInterval })
+  debug('%d days granted. role applied.', Math.floor(bonus.asDays()))
 
   payload.additionalPeriods.push({
     id: uuid(),
     membershipId: membership.id,
     kind: 'BONUS',
     beginDate: endDate,
-    endDate: moment(endDate).add(moment.duration(bonusInterval)),
+    endDate: moment(endDate).add(bonus),
     createdAt: now,
     updatedAt: now
   })

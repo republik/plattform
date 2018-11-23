@@ -20,12 +20,23 @@ module.exports = async (_, args, context) => {
   const transaction = await pgdb.transactionBegin()
   try {
     const { pledge, consents } = args
-    const pledgeOptions = pledge.options
     debug('submitPledge %O', pledge)
 
+    const pledgeOptions = pledge.options.filter(o => o.amount > 0)
+
+    // Check if there are any options left viable to process
+    if (pledgeOptions.length === 0) {
+      logger.error(
+        'at least one option required w/ amount > 0',
+        { req: req._log(), args, options: pledge.options }
+      )
+      throw new Error(t('api/pledge/empty'))
+    }
+
     // load original of chosen packageOptions
-    const pledgeOptionsTemplateIds = pledgeOptions.map((plo) => plo.templateId)
-    const packageOptions = await transaction.public.packageOptions.find({id: pledgeOptionsTemplateIds})
+    const packageOptions = await transaction.public.packageOptions.find({
+      id: pledgeOptions.map(plo => plo.templateId)
+    })
 
     const packageId = packageOptions[0].packageId
     const pkg = await pgdb.public.packages.findOne({ id: packageId })
@@ -36,13 +47,9 @@ module.exports = async (_, args, context) => {
       pgdb: transaction
     })).shift()
 
-    debug({ resolvedPackage })
-
     const resolvedOptions = resolvedPackage.custom
       ? await getCustomOptions(resolvedPackage)
       : []
-
-    debug({ resolvedOptions })
 
     // check if packageOptions are all from the same package
     // check if minAmount <= amount <= maxAmount
@@ -67,7 +74,7 @@ module.exports = async (_, args, context) => {
 
       // Check if passed options are valid custom package options.
       if (
-        resolvedOptions.length > 0 &&
+        plo.membershipId &&
         !resolvedOptions
           .find(option =>
             option.templateId === plo.templateId &&
@@ -257,16 +264,12 @@ module.exports = async (_, args, context) => {
     newPledge = await transaction.public.pledges.insertAndGet(newPledge)
 
     // insert pledgeOptions
-    const newPledgeOptions = await Promise.all(pledge.options.map((plo) => {
+    const newPledgeOptions = await Promise.all(pledgeOptions.map(plo => {
       plo.pledgeId = newPledge.id
+
       const pko = packageOptions.find((pko) => pko.id === plo.templateId)
       plo.vat = pko.vat
-      plo.customization = {
-        membershipId: plo.membershipId,
-        autoPay: plo.autoPay
-      }
-      delete plo.membershipId
-      delete plo.autoPay
+
       return transaction.public.pledgeOptions.insertAndGet(plo)
     }))
     newPledge.packageOptions = newPledgeOptions

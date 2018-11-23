@@ -72,11 +72,10 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
         return
       }
 
-      const { membershipId, autoPay = false } = plo.customization
       const { membershipType } = plo.packageOption.reward
 
-      if (membershipId) {
-        debug('membershipId "%s"', membershipId)
+      if (plo.membershipId) {
+        debug('membershipId "%s"', plo.membershipId)
 
         const resolvedPackage = (await resolvePackages({
           packages: [pkg],
@@ -85,14 +84,23 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
         })).shift()
 
         const membership = resolvedPackage.user.memberships
-          .find(m => m.id === membershipId)
+          .find(m => m.id === plo.membershipId)
 
         const { additionalPeriods } =
           await evaluate({
             package_: resolvedPackage,
             packageOption: plo.packageOption,
-            membership
+            membership,
+            lenient: true
           })
+
+        if (!additionalPeriods || additionalPeriods.length === 0) {
+          logger.error(
+            'evaluation returned no additional periods',
+            { pledge }
+          )
+          throw new Error(t('api/unexpected'))
+        }
 
         await pgdb.public.membershipPeriods.insert(
           additionalPeriods
@@ -103,9 +111,9 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
         )
 
         await pgdb.public.memberships.update(
-          { id: membershipId },
+          { id: plo.membershipId },
           {
-            autoPay,
+            autoPay: plo.autoPay || membership.autoPay,
             active: true,
             renew: true,
             updatedAt: now
@@ -129,7 +137,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
             voucherable: !reducedPrice,
             active: false,
             renew: false,
-            autoPay,
+            autoPay: plo.autoPay || false,
             createdAt: now,
             updatedAt: now
           }
@@ -167,8 +175,6 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
   debug('generateMemberships membershipPeriod %O', membershipPeriod)
   debug('generateMemberships memberships %O', memberships)
 
-  // throw new Error('Intentional Breakpoint: Reached end of generateMembership')
-
   await pgdb.public.memberships.insert(memberships)
 
   if (cancelableMemberships.length > 0 && req) {
@@ -182,7 +188,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
       {
         id: m.id,
         details: {
-          type: 'SYSTEM',
+          category: 'SYSTEM',
           reason: 'Auto Cancellation (generateMemberships)'
         },
         suppressNotifications: true
