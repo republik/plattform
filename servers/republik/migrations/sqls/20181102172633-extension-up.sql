@@ -12,10 +12,10 @@ ALTER TABLE "memberships"
 ;
 
 ALTER TABLE "membershipPeriods"
-  -- Describes which pledge option let to the generation if this period.
-  ADD COLUMN "pledgeOptionId" uuid,
-  ADD FOREIGN KEY ("pledgeOptionId")
-    REFERENCES "public"."pledgeOptions"("id")
+  -- Describes which pledge let to the generation if this period.
+  ADD COLUMN "pledgeId" uuid,
+  ADD FOREIGN KEY ("pledgeId")
+    REFERENCES "public"."pledges"("id")
       ON DELETE CASCADE
       ON UPDATE CASCADE,
   -- To distinguish regular periods from bonus or admin periods

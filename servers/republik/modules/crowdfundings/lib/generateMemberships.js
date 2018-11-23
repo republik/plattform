@@ -113,7 +113,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
           additionalPeriods
             .map(period => omit(period, ['id', 'createdAt', 'updatedAt']))
             .map(period =>
-              Object.assign(period, { pledgeOptionId: plo.id })
+              Object.assign(period, { pledgeId: plo.pledgeId })
             )
         )
 
@@ -215,7 +215,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
     })
     await pgdb.public.membershipPeriods.insert({
       membershipId: membership.id,
-      pledgeOptionId: membershipPeriod.pledgeOptionId,
+      pledgeId: membership.pledgeId,
       beginDate: membershipPeriod.beginDate,
       endDate: membershipPeriod.endDate,
       createdAt: now,

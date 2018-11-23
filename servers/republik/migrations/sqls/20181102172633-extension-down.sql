@@ -6,7 +6,7 @@ ALTER TABLE "pledgeOptions"
 
 ALTER TABLE "membershipPeriods"
   DROP COLUMN IF EXISTS "kind",
-  DROP COLUMN IF EXISTS "pledgeOptionId"
+  DROP COLUMN IF EXISTS "pledgeId"
 ;
 
 ALTER TABLE "memberships"

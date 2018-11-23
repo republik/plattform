@@ -67,6 +67,7 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
 
       await transaction.public.membershipPeriods.insert({
         membershipId: membership.id,
+        pledgeId: membership.pledgeId,
         beginDate,
         endDate
       })
