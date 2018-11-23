@@ -13,17 +13,22 @@ const EXTENABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR']
 // Which options require you to own a membership?
 const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO']
 
-// Checks if user has at least one active and one inactive membership,
-// considering latter as "dormant"
-const hasDormantMembership = ({ package_, membership }) => {
-  const { user } = package_
-  const { memberships: allMemberships } = user
-
-  const eligableMemberships = allMemberships.filter(
+const findEligableMemberships = ({ memberships, user }) =>
+  memberships.filter(
     m => m.userId === user.id && // user owns membership
       EXTENABLE_MEMBERSHIP_TYPES.includes(m.membershipType.name) &&
       EXTENABLE_PACKAGE_NAMES.includes(m.pledge.package.name)
   )
+
+// Checks if user has at least one active and one inactive membership,
+// considering latter as "dormant"
+const hasDormantMembership = ({ package_, membership }) => {
+  const { user } = package_
+  const { memberships } = user
+
+  const eligableMemberships = findEligableMemberships({
+    memberships, user
+  })
 
   const hasInactiveMembership = !!eligableMemberships.find(
     m => m.active === false
@@ -222,7 +227,7 @@ const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
       })
       : []
 
-  const memberships =
+  let memberships =
     pledger.id
       ? await pgdb.public.memberships.find({
         or: [
@@ -232,47 +237,14 @@ const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
       })
       : []
 
+  memberships = await resolveMemberships({ memberships, pgdb })
+
   const users =
     memberships.length > 0
       ? await pgdb.public.users.find({
         id: memberships.map(membership => membership.userId)
       })
       : []
-
-  const membershipTypes =
-    memberships.length > 0
-      ? await pgdb.public.membershipTypes.find({
-        id: memberships.map(membership => membership.membershipTypeId)
-      })
-      : []
-
-  const membershipPledges =
-    memberships.length > 0
-      ? await pgdb.public.pledges.find({
-        id: memberships.map(membership => membership.pledgeId)
-      })
-      : []
-
-  const membershipPledgePackages =
-    membershipPledges.length > 0
-      ? await pgdb.public.packages.find({
-        id: membershipPledges.map(pledge => pledge.packageId)
-      })
-      : []
-
-  membershipPledges.forEach((pledge, index, pledges) => {
-    pledges[index].package = membershipPledgePackages.find(package_ => package_.id === pledge.packageId)
-  })
-
-  memberships.forEach((membership, index, memberships) => {
-    const user = users.find(user => user.id === membership.userId)
-    memberships[index].claimerName =
-      [user.firstName, user.lastName].filter(Boolean).join(' ').trim()
-    memberships[index].membershipType =
-      membershipTypes.find(membershipType => membershipType.id === membership.membershipTypeId)
-    memberships[index].pledge =
-      membershipPledges.find(membershipPledge => membershipPledge.id === membership.pledgeId)
-  })
 
   const membershipPeriods =
     memberships.length > 0
@@ -282,8 +254,14 @@ const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
       : []
 
   memberships.forEach((membership, index, memberships) => {
+    const user = users.find(user => user.id === membership.userId)
+    memberships[index].claimerName =
+      [user.firstName, user.lastName].filter(Boolean).join(' ').trim()
+
     memberships[index].membershipPeriods =
-      membershipPeriods.filter(membershipPeriod => membershipPeriod.membershipId === membership.id)
+      membershipPeriods.filter(
+        membershipPeriod => membershipPeriod.membershipId === membership.id
+      )
   })
 
   Object.assign(pledger, { memberships })
@@ -326,8 +304,52 @@ const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
     .filter(Boolean)
 }
 
+const resolveMemberships = async ({ memberships, pgdb }) => {
+  debug('resolveMemberships')
+
+  const membershipTypes =
+    memberships.length > 0
+      ? await pgdb.public.membershipTypes.find({
+        id: memberships.map(membership => membership.membershipTypeId)
+      })
+      : []
+
+  const membershipPledges =
+    memberships.length > 0
+      ? await pgdb.public.pledges.find({
+        id: memberships.map(membership => membership.pledgeId)
+      })
+      : []
+
+  const membershipPledgePackages =
+    membershipPledges.length > 0
+      ? await pgdb.public.packages.find({
+        id: membershipPledges.map(pledge => pledge.packageId)
+      })
+      : []
+
+  membershipPledges.forEach((pledge, index, pledges) => {
+    pledges[index].package = membershipPledgePackages.find(package_ => package_.id === pledge.packageId)
+  })
+
+  memberships.forEach((membership, index, memberships) => {
+    memberships[index].membershipType =
+      membershipTypes.find(
+        membershipType => membershipType.id === membership.membershipTypeId
+      )
+    memberships[index].pledge =
+      membershipPledges.find(
+        membershipPledge => membershipPledge.id === membership.pledgeId
+      )
+  })
+
+  return memberships
+}
+
 module.exports = {
+  findEligableMemberships,
   evaluate,
   resolvePackages,
+  resolveMemberships,
   getCustomOptions
 }
