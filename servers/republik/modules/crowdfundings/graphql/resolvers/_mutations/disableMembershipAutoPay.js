@@ -1,9 +1,9 @@
-const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
+const { Roles } = require('@orbiting/backend-modules-auth')
 
 const { disableAutoPay } = require('../../../lib/Membership')
 
 module.exports = async (_, args, { pgdb, req }) => {
-  ensureSignedIn(req)
+  Roles.ensureUserHasRole(req.user, 'supporter')
 
   const transaction = await pgdb.transactionBegin()
 
