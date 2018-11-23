@@ -63,7 +63,7 @@ const MembershipOverview = ({
           #{membership.sequenceNumber}
           <br />
           <Interaction.P>
-            <Label>Automatisch verlängern?</Label><br />{membership.autoPay ? 'YES' : 'NO'}
+            <Label>Automatisch abbuchen</Label><br />{membership.autoPay ? 'YES' : 'NO'}
           </Interaction.P>
           {!!membership.voucherCode && (
             <Interaction.P>
