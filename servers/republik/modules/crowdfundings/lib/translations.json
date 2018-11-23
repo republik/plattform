@@ -351,6 +351,10 @@
       "value": "Monatsabonnement"
     },
     {
+      "key": "api/email/option/other/gifted_membership",
+      "value": "Mitgliedschaft für {name} (#{sequenceNumber})"
+    },
+    {
       "key": "api/membership/cancel/category/EDITORIAL",
       "value": "Ein Beitrag hat mich geärgert."
     },
