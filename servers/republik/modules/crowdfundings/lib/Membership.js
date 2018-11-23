@@ -1,7 +1,7 @@
 const setAutoPay = async ({ membershipId, userId, autoPay, pgdb }) => {
   const rowsAffected = await pgdb.public.memberships.update({
     id: membershipId,
-    userId: userId,
+    userId,
     active: true
   }, {
     autoPay
