@@ -87,7 +87,7 @@ module.exports = {
     !!(me && user.id === me.id),
 
   accessToken: (user, { scope }, { user: me }) => {
-    if (me && user.id === me.id) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return AccessToken.generateForUser(user, scope)
     }
   }
