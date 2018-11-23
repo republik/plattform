@@ -291,6 +291,13 @@ const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
       id: allPackageOptions.map(option => option.rewardId)
     })
 
+  const allGoodies =
+    allRewards.length > 0
+      ? await pgdb.public.goodies.find({
+        rewardId: allRewards.map(reward => reward.id)
+      })
+      : []
+
   const allMembershipTypes =
     allRewards.length > 0
       ? await pgdb.public.membershipTypes.find({
@@ -298,17 +305,26 @@ const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
       })
       : []
 
+  allRewards.forEach((reward, index, allRewards) => {
+    const goodie = allGoodies
+      .find(g => g.rewardId === reward.id)
+    const membershipType = allMembershipTypes
+      .find(m => m.rewardId === reward.id)
+
+    allRewards[index] = Object.assign({}, reward, membershipType, goodie)
+  })
+
   return Promise
     .map(packages, async package_ => {
       const packageOptions = allPackageOptions
         .filter(packageOption => packageOption.packageId === package_.id)
         .map(packageOption => {
-          const reward =
-            allRewards.find(reward => packageOption.rewardId === reward.id)
-          const membershipType =
-            allMembershipTypes.find(
-              membershipType => packageOption.rewardId === membershipType.rewardId
-            )
+          const reward = allRewards
+            .find(reward => packageOption.rewardId === reward.rewardId)
+          const membershipType = allMembershipTypes.find(
+            membershipType => packageOption.rewardId === membershipType.rewardId
+          )
+
           return { ...packageOption, reward, membershipType }
         })
 
