@@ -196,6 +196,8 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
     const pledgeOptions = await pgdb.public.pledgeOptions.find({
       pledgeId: pledge.id,
       'amount >': 0
+    }, {
+      orderBy: ['amount desc']
     })
 
     const packageOptions = await pgdb.public.packageOptions.find({
@@ -213,23 +215,9 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
     const rewards = rewardGoodies.concat(rewardMembershipTypes)
 
     packageOptions.forEach((packageOption, index, packageOptions) => {
-      packageOptions[index].reward = rewards.find(r => r.rewardId === packageOption.rewardId)
+      packageOptions[index].reward = rewards
+        .find(r => r.rewardId === packageOption.rewardId)
     })
-
-    pledgeOptions.forEach((pledgeOption, index, pledgeOptions) => {
-      pledgeOptions[index].packageOption = packageOptions.find(o => o.id === pledgeOption.templateId)
-    })
-
-    /*
-      pledgeOptions[] {
-        packageOption {
-          reward {
-            rewardType (Goodie|MembershipType)
-            name
-          }
-        }
-      }
-    */
 
     // Find membership IDs mentoned in pledgeOption.membershipId
     const pledgedMemberships = pledgeOptions
@@ -244,6 +232,53 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
         pledgedMemberships.length > 0 && { id: pledgedMemberships }
       ].filter(Boolean)
     })
+
+    const membershipsUsers = await pgdb.public.users.find(
+      { id: memberships.map(m => m.userId) }
+    )
+
+    memberships.forEach((membership, index, memberships) => {
+      memberships[index].user =
+        membershipsUsers.find(u => u.id === membership.userId)
+    })
+
+    pledgeOptions.forEach((pledgeOption, index, pledgeOptions) => {
+      pledgeOptions[index].packageOption = packageOptions
+        .find(o => o.id === pledgeOption.templateId)
+
+      if (pledgeOption.membershipId) {
+        pledgeOptions[index].membership = memberships
+          .find(m => m.id === pledgeOption.membershipId)
+      }
+    })
+
+    pledgeOptions
+      // Sort by sequenceNumber in an ascending manner
+      .sort(
+        (a, b) =>
+          a.membership.sequenceNumber < b.membership.sequenceNumber ? 1 : 0
+      )
+      // Sort by userID, own ones up top.
+      .sort(
+        (a, b) => a.membership && a.membership.userId !== pledge.userId ? 1 : 0
+      )
+
+    /*
+      pledgeOptions[] {
+        packageOption {
+          reward {
+            rewardType (Goodie|MembershipType)
+            name
+          }
+        }
+        membership {
+          user
+        }
+      }
+    */
+
+    const giftedMemberships = memberships
+      .filter(membership => pledge.userId !== membership.userId)
 
     const templateName = `pledge_${pkg.name.toLowerCase()}`
 
@@ -266,11 +301,20 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
             .map(pledgeOption => {
               const { rewardType, name } = pledgeOption.packageOption.reward
 
-              const olabel = t([
-                'api/email/option',
-                rewardType.toLowerCase(),
-                name.toLowerCase()
-              ].join('/'))
+              const isGiftedMembership =
+                pledgeOption.membership &&
+                pledgeOption.membership.userId !== pledge.userId
+
+              const olabel = isGiftedMembership
+                ? t('api/email/option/other/gifted_membership', {
+                  name: transformUser(pledgeOption.membership.user).name,
+                  sequenceNumber: pledgeOption.membership.sequenceNumber
+                })
+                : t([
+                  'api/email/option',
+                  rewardType.toLowerCase(),
+                  name.toLowerCase()
+                ].join('/'))
 
               const oprice =
                 pledgeOption.price / 100
@@ -365,9 +409,7 @@ ${address.country}</span>`
         { name: 'frontend_base_url',
           content: FRONTEND_BASE_URL },
         { name: 'gifted_memberships_count',
-          content: memberships
-            .filter(membership => pledge.userId !== membership.userId)
-            .length
+          content: giftedMemberships.length
         }
       ]
     })
