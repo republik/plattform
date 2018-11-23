@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * This script imports cancellations from a csv
- * columns: date, adminUrl, reason, category
+ * This script adds a CUSTOM_PLEDGE access token to mailchimp
+ * for users who are bonus eligable
  *
  * Usage: (run from servers/republik)
  * cat local/cancellations.csv | node script/prolong/updateMailchimp.js
