@@ -116,7 +116,7 @@ const evaluate = async ({ package_, packageOption, membership }) => {
   }
 
   payload.additionalPeriods.push({
-    id: uuid(), // TODO: Fake UUID, stitch together differently.
+    id: uuid(),
     membershipId: membership.id,
     kind: 'REGULAR',
     createdAt: now,

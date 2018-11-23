@@ -192,14 +192,13 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
       { ids: cancelableMemberships.map(m => m.id) }
     )
 
-    // @TODO: Update, when new membership cancellation is in
     await Promise.map(cancelableMemberships, m => cancelMembership(
       null,
       {
         id: m.id,
         details: {
           type: 'SYSTEM',
-          reason: 'Auto cancellation due to upgrade'
+          reason: 'Auto Cancellation (generateMemberships)'
         }
       },
       { req, t, pgdb }

@@ -40,7 +40,7 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
   debug('earlyAdopterBonus granted', { bonusInterval })
 
   payload.additionalPeriods.push({
-    id: uuid(), // TODO: Fake UUID, stitch together differently.
+    id: uuid(),
     membershipId: membership.id,
     kind: 'BONUS',
     beginDate: endDate,
