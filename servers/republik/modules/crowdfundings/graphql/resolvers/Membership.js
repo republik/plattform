@@ -26,9 +26,11 @@ module.exports = {
       await pgdb.public.pledges.findOne({
         id: membership.pledgeId
       })
-    if (pledge.userId !== me.id) {
+
+    if (membership.userId !== me.id && pledge.userId !== me.id) {
       Roles.ensureUserIsInRoles(me, ['admin', 'supporter'])
     }
+
     return pledge
   },
   async periods (membership, args, { pgdb }) {
