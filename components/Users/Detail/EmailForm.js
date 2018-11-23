@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Field, Button } from '@project-r/styleguide'
-import { validate as isEmail } from 'email-validator'
+import isEmail from 'validator/lib/isEmail'
 import { errorToString } from '../../../lib/utils/errors'
 
 const getInitialState = props => ({
