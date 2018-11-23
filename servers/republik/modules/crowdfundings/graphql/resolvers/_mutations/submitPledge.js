@@ -20,12 +20,23 @@ module.exports = async (_, args, context) => {
   const transaction = await pgdb.transactionBegin()
   try {
     const { pledge, consents } = args
-    const pledgeOptions = pledge.options
     debug('submitPledge %O', pledge)
 
+    const pledgeOptions = pledge.options.filter(o => o.amount > 0)
+
+    // Check if there are any options left viable to process
+    if (pledgeOptions.length === 0) {
+      logger.error(
+        'at least one option required w/ amount > 0',
+        { req: req._log(), args, options: pledge.options }
+      )
+      throw new Error(t('api/pledge/empty'))
+    }
+
     // load original of chosen packageOptions
-    const pledgeOptionsTemplateIds = pledgeOptions.map((plo) => plo.templateId)
-    const packageOptions = await transaction.public.packageOptions.find({id: pledgeOptionsTemplateIds})
+    const packageOptions = await transaction.public.packageOptions.find({
+      id: pledgeOptions.map(plo => plo.templateId)
+    })
 
     const packageId = packageOptions[0].packageId
     const pkg = await pgdb.public.packages.findOne({ id: packageId })
