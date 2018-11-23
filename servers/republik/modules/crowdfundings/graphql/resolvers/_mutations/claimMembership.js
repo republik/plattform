@@ -1,7 +1,10 @@
 const logger = console
 const moment = require('moment')
+const Promise = require('bluebird')
 
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
+
+const cancelMembership = require('./cancelMembership')
 
 module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
   ensureSignedIn(req)
@@ -30,19 +33,21 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
 
     pledgerId = membership.userId
 
-    const hasActiveMembership = (await transaction.public.memberships.count({
+    const activeMemberships = await transaction.public.memberships.find({
       userId: req.user.id,
       active: true
-    })) > 0
+    })
 
-    // transfer membership and remove voucherCode
+    const hasActiveMembership = activeMemberships.length > 0
+
+    // transfer new membership, and remove voucherCode
     await transaction.public.memberships.updateOne(
       { id: membership.id },
       {
         userId: req.user.id,
         voucherCode: null,
         voucherable: false,
-        // Set added membership.active to false if other memberschip is still
+        // Set added membership.active to false if other membership is still
         // active.
         active: !hasActiveMembership,
         renew: !hasActiveMembership,
@@ -66,16 +71,24 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
         endDate
       })
     } else {
-      // Set membership.renewal to false for active membership
-      await transaction.public.memberships.update(
-        { userId: req.user.id, active: true },
-        {
-          renew: false,
-          updatedAt: now
-        }
+      // Cancel active memberships.
+      await Promise.map(
+        await transaction.public.memberships.find({
+          id: activeMemberships.map(m => m.id)
+        }),
+        m => cancelMembership(
+          null,
+          {
+            id: m.id,
+            details: {
+              type: 'SYSTEM',
+              reason: 'Auto Cancellation (claimMembership)'
+            },
+            suppressNotifications: true
+          },
+          { req, t, pgdb: transaction }
+        )
       )
-
-      // @TODO: submit "cancel reason", a new abo is coming up.
     }
 
     // commit transaction

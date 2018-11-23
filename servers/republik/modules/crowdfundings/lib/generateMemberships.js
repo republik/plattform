@@ -199,7 +199,8 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
         details: {
           type: 'SYSTEM',
           reason: 'Auto Cancellation (generateMemberships)'
-        }
+        },
+        suppressNotifications: true
       },
       { req, t, pgdb }
     ))
