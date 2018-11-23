@@ -1,6 +1,9 @@
 import React from 'react'
-import withData from '../lib/withData'
+import { compose } from 'react-apollo'
 import App from '../components/App'
+import { enforceAuthorization } from '../components/Auth/withAuthorization'
+import withData from '../lib/withData'
+
 import {
   Body,
   Content,
@@ -13,12 +16,15 @@ const changeHandler = params => {
   Router.replaceRoute('payments', params, { shallow: true })
 }
 
-export default withData(props => {
+export default compose(
+  withData,
+  enforceAuthorization(['supporter'])
+)(props => {
   return (
     <App>
       <Body>
         <Header search={props.url.query.search} />
-        <Content id="content">
+        <Content id='content'>
           <Payments
             params={props.url.query}
             onChange={changeHandler}
