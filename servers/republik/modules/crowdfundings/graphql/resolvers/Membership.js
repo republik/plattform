@@ -1,4 +1,4 @@
-const { transformUser } = require('@orbiting/backend-modules-auth')
+const { transformUser, Roles } = require('@orbiting/backend-modules-auth')
 
 module.exports = {
   async type (membership, args, { pgdb }) {
@@ -20,13 +20,16 @@ module.exports = {
       membership.latestPaymentFailedAt > latest.endDate
     )
   },
-  async pledge (membership, args, { pgdb }) {
-    if (membership.pledge) {
-      return membership.pledge
+  async pledge (membership, args, { pgdb, user: me }) {
+    const pledge =
+      membership.pledge ||
+      await pgdb.public.pledges.findOne({
+        id: membership.pledgeId
+      })
+    if (pledge.userId !== me.id) {
+      Roles.ensureUserIsInRoles(me, ['admin', 'supporter'])
     }
-    return pgdb.public.pledges.findOne({
-      id: membership.pledgeId
-    })
+    return pledge
   },
   async periods (membership, args, { pgdb }) {
     return pgdb.public.membershipPeriods.find({
