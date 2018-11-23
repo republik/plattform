@@ -9,7 +9,7 @@ const { timeFormat, formatPriceChf } =
 const {
   checkMembershipSubscriptions: getCheckMembershipSubscriptions
 } = require('../graphql/resolvers/User')
-const { getLatestEndDate } = require('./utils')
+const { getLastEndDate } = require('./utils')
 
 const dateFormat = timeFormat('%x')
 
@@ -149,7 +149,7 @@ mail.sendMembershipProlongNotice = async ({
       { name: 'pledger_name',
         content: safePledger.name },
       { name: 'end_date',
-        content: dateFormat(getLatestEndDate(additionalPeriods)) }
+        content: dateFormat(getLastEndDate(additionalPeriods)) }
     ]
   })
 }

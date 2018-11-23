@@ -1,5 +1,5 @@
 // Finds latest period in a series of membershipPeriods
-const getLatestPeriod =
+const getPeriodEndingLast =
   periods => periods
     .map(p => p)
     .reduce(
@@ -8,16 +8,16 @@ const getLatestPeriod =
           return currentValue
         }
 
-        return currentValue.createdAt > accumulator.createdAt
+        return currentValue.endDate > accumulator.endDate
           ? currentValue
           : accumulator
       }
     )
 
-// Finds latest endDate in a series of membershipPeriods
-const getLatestEndDate = periods => getLatestPeriod(periods).endDate
+// Finds endDate furthest away in a series of membershipPeriods
+const getLastEndDate = periods => getPeriodEndingLast(periods).endDate
 
 module.exports = {
-  getLatestEndDate,
-  getLatestPeriod
+  getPeriodEndingLast,
+  getLastEndDate
 }

@@ -3,7 +3,7 @@ const moment = require('moment')
 const uuid = require('uuid/v4')
 const Promise = require('bluebird')
 
-const { getLatestPeriod, getLatestEndDate } = require('../utils')
+const { getPeriodEndingLast, getLastEndDate } = require('../utils')
 const rules = require('./rules')
 
 // Put that one into database.
@@ -106,34 +106,34 @@ const evaluate = async ({
     return false
   }
 
-  const latestPeriod = getLatestPeriod(membershipPeriods)
+  const lastPeriod = getPeriodEndingLast(membershipPeriods)
 
   // Has no membershipPeriod with beginDate in future
   // Only memberships with current or past membershipPeriods can be extended.
-  if (!lenient && latestPeriod.beginDate > now) {
+  if (!lenient && lastPeriod.beginDate > now) {
     debug('membership has a membershipPeriod in future')
     return false
   }
 
-  if (!lenient && latestPeriod.beginDate > now.subtract(24, 'hours')) {
-    debug('membership period began not 24 hours ago', latestPeriod.beginDate)
+  if (!lenient && lastPeriod.beginDate > now.subtract(24, 'hours')) {
+    debug('membership period began not 24 hours ago', lastPeriod.beginDate)
     return false
   }
 
-  let endDate = latestPeriod.endDate
+  let lastEndDate = lastPeriod.endDate
 
   // If endDate is in past, pushed to now.
   // This indicates that we're dealing with an expired membership.
-  if (endDate < now) {
-    endDate = now
+  if (lastEndDate < now) {
+    lastEndDate = now
   }
 
   // Add a regular period this packageOption would cause.
   // It is a mere suggestion. Dates may differ upon payment.
 
   const beginEnd = {
-    beginDate: endDate,
-    endDate: moment(endDate)
+    beginDate: lastEndDate,
+    endDate: moment(lastEndDate)
       .add(membershipType.intervalCount, membershipType.interval)
   }
 
@@ -200,8 +200,8 @@ const getCustomOptions = async (package_) => {
     )
     // Sort by membership "endDate", ascending
     .sort((a, b) => {
-      const aDate = getLatestEndDate(a.membership.membershipPeriods)
-      const bDate = getLatestEndDate(b.membership.membershipPeriods)
+      const aDate = getLastEndDate(a.membership.membershipPeriods)
+      const bDate = getLastEndDate(b.membership.membershipPeriods)
 
       return aDate < bDate ? 1 : 0
     })
