@@ -112,6 +112,9 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
         await pgdb.public.membershipPeriods.insert(
           additionalPeriods
             .map(period => omit(period, ['id', 'createdAt', 'updatedAt']))
+            .map(period =>
+              Object.assign(period, { pledgeOptionId: plo.id })
+            )
         )
 
         await pgdb.public.memberships.update(
@@ -153,6 +156,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
             pkg.isAutoActivateUserMembership
           ) {
             membershipPeriod = {
+              pledgeOptionId: plo.id,
               beginDate: now,
               endDate: moment(now).add(membershipType.intervalCount, membershipType.interval),
               membership
@@ -211,6 +215,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
     })
     await pgdb.public.membershipPeriods.insert({
       membershipId: membership.id,
+      pledgeOptionId: membershipPeriod.pledgeOptionId,
       beginDate: membershipPeriod.beginDate,
       endDate: membershipPeriod.endDate,
       createdAt: now,
