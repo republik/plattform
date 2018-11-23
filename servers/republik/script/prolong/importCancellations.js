@@ -77,7 +77,8 @@ PgDb.connect().then(async pgdb => {
         })
       }
       stats.numMemberships += memberships.length
-    }
+    },
+    {concurrency: 10}
   )
 
   stats.numCancellationsCreated =
