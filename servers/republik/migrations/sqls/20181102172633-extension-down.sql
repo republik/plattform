@@ -1,5 +1,6 @@
 ALTER TABLE "pledgeOptions"
-  DROP COLUMN IF EXISTS "customization",
+  DROP COLUMN IF EXISTS "autoPay",
+  DROP COLUMN IF EXISTS "membershipId",
   DROP COLUMN IF EXISTS "id",
   ADD CONSTRAINT "pledgeOptions_pkey" PRIMARY KEY ("templateId", "pledgeId")
 ;

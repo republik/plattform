@@ -79,6 +79,7 @@ type PackageOption {
   # for custom packages
   optionGroup: String
   membership: Membership
+  autoPay: Boolean
   additionalPeriods: [MembershipPeriod]!
 }
 

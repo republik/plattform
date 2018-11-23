@@ -24,7 +24,7 @@ module.exports = {
       const id = [
         pledgeOption.pledgeId,
         pledgeOption.templateId,
-        pledgeOption.customization.membershipId
+        pledgeOption.membershipId
       ].filter(Boolean).join('-')
 
       // Shallow packageOption object copy, superimpose pledgeOption, then
@@ -33,7 +33,6 @@ module.exports = {
         {},
         packageOption,
         pledgeOption,
-        pledgeOption.customization,
         { id }
       )
     })

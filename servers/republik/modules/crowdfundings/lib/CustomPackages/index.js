@@ -269,6 +269,7 @@ const resolvePackages = async ({ packages, pledger = {}, pgdb }) => {
 
   memberships.forEach((membership, index, memberships) => {
     const user = users.find(user => user.id === membership.userId)
+    memberships[index].user = user
     memberships[index].claimerName =
       [user.firstName, user.lastName].filter(Boolean).join(' ').trim()
 

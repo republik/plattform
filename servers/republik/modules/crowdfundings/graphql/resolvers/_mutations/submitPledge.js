@@ -36,13 +36,9 @@ module.exports = async (_, args, context) => {
       pgdb: transaction
     })).shift()
 
-    debug({ resolvedPackage })
-
     const resolvedOptions = resolvedPackage.custom
       ? await getCustomOptions(resolvedPackage)
       : []
-
-    debug({ resolvedOptions })
 
     // check if packageOptions are all from the same package
     // check if minAmount <= amount <= maxAmount
@@ -257,16 +253,12 @@ module.exports = async (_, args, context) => {
     newPledge = await transaction.public.pledges.insertAndGet(newPledge)
 
     // insert pledgeOptions
-    const newPledgeOptions = await Promise.all(pledge.options.map((plo) => {
+    const newPledgeOptions = await Promise.all(pledgeOptions.map(plo => {
       plo.pledgeId = newPledge.id
+
       const pko = packageOptions.find((pko) => pko.id === plo.templateId)
       plo.vat = pko.vat
-      plo.customization = {
-        membershipId: plo.membershipId,
-        autoPay: plo.autoPay
-      }
-      delete plo.membershipId
-      delete plo.autoPay
+
       return transaction.public.pledgeOptions.insertAndGet(plo)
     }))
     newPledge.packageOptions = newPledgeOptions

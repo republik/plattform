@@ -231,17 +231,13 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
       }
     */
 
-    // Find membership IDs mentoned in pledgeOption.customization
+    // Find membership IDs mentoned in pledgeOption.membershipId
     const pledgedMemberships = pledgeOptions
-      .map(
-        pledgeOption =>
-          pledgeOption.customization && pledgeOption.customization.membershipId
-      )
+      .map(pledgeOption => pledgeOption.membershipId)
       .filter(Boolean)
 
     // All affected memberships. These are memberships that spring from this
-    // pledge, or memberships that were mentioned
-    // pledgeOption.customization.membershipId.
+    // pledge, or memberships that were mentioned pledgeOption.membershipId.
     const memberships = await pgdb.public.memberships.find({
       or: [
         { pledgeId: pledge.id },
