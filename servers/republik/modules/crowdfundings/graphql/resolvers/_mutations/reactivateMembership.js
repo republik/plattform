@@ -125,7 +125,6 @@ module.exports = async (_, args, {pgdb, req, user: me, t, mail: {sendMailTemplat
         id: membershipId
       }, {
         renew: true,
-        active: true,
         updatedAt: now
       })
     } else {
