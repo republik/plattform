@@ -4,7 +4,7 @@
  * columns: date, adminUrl, reason, category
  *
  * Usage:
- * cat local/cancellations.csv | node script/prolong.js
+ * cat local/cancellations.csv | node script/prolong/importCancellations.js
  */
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
