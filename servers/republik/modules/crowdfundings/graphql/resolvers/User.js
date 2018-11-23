@@ -1,14 +1,22 @@
 const { Roles, AccessToken: { isFieldExposed } } = require('@orbiting/backend-modules-auth')
+
 const debug = require('debug')('crowdfundings:resolver:User')
+const flattenDeep = require('lodash/flattenDeep')
+const moment = require('moment')
 const Promise = require('bluebird')
 
 const {
+  findEligableMemberships,
   resolvePackages,
+  resolveMemberships,
   getCustomOptions
 } = require('../../lib/CustomPackages')
-
+const createCache = require('../../lib/cache')
+const { getLatestPeriod } = require('../../lib/utils')
 const getStripeClients = require('../../lib/payments/stripe/clients')
 const { isExpired } = require('./PaymentSource')
+
+const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
 
 const getPaymentSources = async (user, pgdb) => {
   const { platform } = await getStripeClients(pgdb)
@@ -34,6 +42,49 @@ const getPaymentSources = async (user, pgdb) => {
   }))
 }
 
+const getCustomPackages = async ({ user, crowdfundingName, pgdb }) => {
+  const now = new Date()
+
+  const crowdfundings = crowdfundingName
+    ? await pgdb.public.crowdfundings.find({
+      name: crowdfundingName,
+      'beginDate <=': now,
+      'endDate >': now
+    })
+    : await pgdb.public.crowdfundings.find({
+      'beginDate <=': now,
+      'endDate >': now
+    })
+
+  const packages = await pgdb.public.packages.find({
+    crowdfundingId: crowdfundings.map(crowdfunding => crowdfunding.id),
+    custom: true
+  })
+
+  if (packages.length === 0) {
+    return []
+  }
+
+  return Promise
+    .map(
+      await resolvePackages({ packages, pledger: user, pgdb }),
+      async package_ => {
+        if (package_.custom === true) {
+          const options = await getCustomOptions(package_)
+
+          if (options.length === 0) {
+            return
+          }
+
+          return { ...package_, options }
+        }
+
+        return package_
+      }
+    )
+    .filter(Boolean)
+}
+
 module.exports = {
   async memberships (user, args, {pgdb, user: me}) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'accountant'])) {
@@ -48,8 +99,54 @@ module.exports = {
     }
     return []
   },
-  async membershipsDaysRemaining () {
-    return 0
+  async membershipsDaysRemaining (user, args, { pgdb, user: me }) {
+    debug('membershipsDaysRemaining')
+
+    Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
+
+    const cache = createCache({
+      prefix: `User:${user.id}`,
+      key: 'membershipsDaysRemaining',
+      ttl: QUERY_CACHE_TTL_SECONDS
+    })
+
+    return cache.cache(async function () {
+      let memberships = await pgdb.public.memberships.find({
+        userId: user.id
+      })
+
+      // No memberships, set cache and return 0
+      if (memberships.length === 0) {
+        debug('no memberships founds, return membershipsDaysRemaining: 0')
+
+        return 0
+      }
+
+      memberships = await resolveMemberships({ memberships, pgdb })
+
+      if (
+        findEligableMemberships({ memberships, user })
+          .filter(m => !m.active)
+          .length > 0
+      ) {
+        debug('found dormant membership, return membershipsDaysRemaining: 0')
+
+        return 0
+      }
+
+      const membershipPeriods =
+        await pgdb.public.membershipPeriods.find({
+          membershipId: memberships.map(membership => membership.id)
+        })
+
+      const lastEndDate = getLatestPeriod(membershipPeriods).endDate
+
+      return Math.floor(
+        moment
+          .duration(moment(lastEndDate).diff(moment()))
+          .asDays()
+      )
+    })
   },
   async pledges (user, args, {pgdb, user: me}) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'accountant'])) {
@@ -119,49 +216,29 @@ module.exports = {
       Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
     }
 
-    const now = new Date()
+    return getCustomPackages({ user, pgdb })
+  },
+  async isBonusEligable (user, args, { pgdb, user: me }) {
+    debug('isBonusEligable')
 
-    const crowdfundings = args.crowdfundingName
-      ? await pgdb.public.crowdfundings.find({
-        name: args.crowdfundingName,
-        'beginDate <=': now,
-        'endDate >': now
-      })
-      : await pgdb.public.crowdfundings.find({
-        'beginDate <=': now,
-        'endDate >': now
-      })
+    Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
 
-    const packages = await pgdb.public.packages.find({
-      crowdfundingId: crowdfundings.map(crowdfunding => crowdfunding.id),
-      custom: true
+    const cache = createCache({
+      prefix: `User:${user.id}`,
+      key: 'isBonusEligable',
+      ttl: QUERY_CACHE_TTL_SECONDS
     })
 
-    if (packages.length === 0) {
-      return []
-    }
+    return cache.cache(async function () {
+      const allPeriods = (await getCustomPackages({ user, pgdb }))
+        .map(
+          package_ => package_.options.map(
+            option => option.additionalPeriods
+          )
+        )
 
-    return Promise
-      .map(
-        await resolvePackages({ packages, pledger: user, pgdb }),
-        async package_ => {
-          if (package_.custom === true) {
-            const options = await getCustomOptions(package_)
-
-            if (options.length === 0) {
-              return
-            }
-
-            return { ...package_, options }
-          }
-
-          return package_
-        }
-      )
-      .filter(Boolean)
-  },
-  async isBonusEligable () {
-    return false
+      return !!flattenDeep(allPeriods).find(period => period.kind === 'BONUS')
+    })
   },
   async adminNotes (user, args, { pgdb, user: me }) {
     Roles.ensureUserHasRole(me, 'supporter')

@@ -1,6 +1,7 @@
 const moment = require('moment')
 const { getPledgeOptionsTree } = require('./Pledge')
 const { evaluate, resolvePackages } = require('./CustomPackages')
+const createCache = require('./cache')
 const cancelMembership = require('../graphql/resolvers/_mutations/cancelMembership')
 const debug = require('debug')('crowdfundings:memberships')
 const { enforceSubscriptions, sendMembershipProlongNotice } = require('./Mail')
@@ -227,4 +228,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
       console.error('enforceSubscriptions failed in generateMemberships', e)
     }
   }
+
+  const cache = createCache({ prefix: `User:${user.id}` })
+  cache.invalidate()
 }
