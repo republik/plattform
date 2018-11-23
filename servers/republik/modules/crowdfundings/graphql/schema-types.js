@@ -6,15 +6,15 @@ scalar JSON
 extend type User {
   pledges: [Pledge!]!
   memberships: [Membership!]!
-  "Amount of days left until all active and dormant memberships would expire"
+  # Amount of days left until all active and dormant memberships would expire
   membershipsDaysRemaining: Int!
 
   paymentSources: [PaymentSource!]!
   hasChargableSource: Boolean
 
-  "Custom-tailored packages available for User"
+  # Custom-tailored packages available for User
   customPackages(crowdfundingName: String): [Package!]
-  "Whether User is eligable to profit from additional BONUS periods"
+  # Whether User is eligable to profit from additional BONUS periods
   isBonusEligable: Boolean!
 
   # if true the user should check his/her memberships subscriptions
