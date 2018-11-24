@@ -41,9 +41,16 @@ module.exports = async (_, args, context) => {
     const packageId = packageOptions[0].packageId
     const pkg = await pgdb.public.packages.findOne({ id: packageId })
 
+    // wrong tokens are just ignored
+    const accessTokenUser = pledge.accessToken && await getUserByAccessToken(pledge.accessToken, context)
+
+    if (accessTokenUser) {
+      ensureCanPledgePackage(accessTokenUser, pkg.name)
+    }
+
     const resolvedPackage = (await resolvePackages({
       packages: [pkg],
-      pledger: req.user,
+      pledger: accessTokenUser || req.user,
       pgdb: transaction
     })).shift()
 
@@ -136,11 +143,6 @@ module.exports = async (_, args, context) => {
     // check user
     let user = null
     let pfAliasId = null
-    // wrong tokens are just ignored
-    const accessTokenUser = pledge.accessToken && await getUserByAccessToken(pledge.accessToken, context)
-    if (accessTokenUser) {
-      ensureCanPledgePackage(accessTokenUser, pkg.name)
-    }
     if (req.user) { // user logged in
       if (
         req.user.email !== pledge.user.email ||
