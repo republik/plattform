@@ -11,6 +11,10 @@
       "value": "Nicht genehmigt. Sie müssen die Rolle «{role}» besitzen um die gewünschte Aktion auszuführen."
     },
     {
+      "key": "api/temporaryUnsupported",
+      "value": "Die Funktion wird vorübergehend nicht unterstützt."
+    },
+    {
       "key": "api/crowdfunding/tooLate",
       "value": "Es tut uns sehr leid, das Crowdfunding ist bereits beendet."
     },
