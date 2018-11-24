@@ -48,7 +48,9 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
   const { beginDate, endDate } =
     getPeriodEndingLast(payload.additionalPeriods)
 
-  const bonus = moment.duration(moment(beginDate).diff(now))
+  const bonus = moment
+    .duration(moment(beginDate).diff(now))
+    .add(1, 'day')
 
   debug('%d days granted. role applied.', Math.floor(bonus.asDays()))
 
