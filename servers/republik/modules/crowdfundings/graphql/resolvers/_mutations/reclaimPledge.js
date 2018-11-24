@@ -54,7 +54,7 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
     await Promise.all(promises)
 
     // send confirmation mail
-    await sendPledgeConfirmations({ userId: newUser.id, transaction, t })
+    await sendPledgeConfirmations({ userId: newUser.id, pgdb: transaction, t })
 
     // commit transaction
     await transaction.transactionCommit()
