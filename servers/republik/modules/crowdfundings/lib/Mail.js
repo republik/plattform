@@ -259,6 +259,8 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
       // Sort by sequenceNumber in an ascending manner
       .sort(
         (a, b) =>
+          a.membership &&
+          b.membership &&
           a.membership.sequenceNumber < b.membership.sequenceNumber ? 1 : 0
       )
       // Sort by userID, own ones up top.
