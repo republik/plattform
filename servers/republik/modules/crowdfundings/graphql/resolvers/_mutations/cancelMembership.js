@@ -1,5 +1,6 @@
 const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
 const cancelSubscription = require('../../../lib/payments/stripe/cancelSubscription')
+const createCache = require('../../../lib/cache')
 const slack = require('../../../../../lib/slack')
 
 module.exports = async (_, args, context) => {
@@ -109,6 +110,9 @@ module.exports = async (_, args, context) => {
       'cancelMembership',
       details
     )
+
+    const cache = createCache({ prefix: `User:${user.id}` })
+    cache.invalidate()
 
     return newMembership
   } catch (e) {

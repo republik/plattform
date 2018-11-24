@@ -5,6 +5,7 @@ const Promise = require('bluebird')
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 
 const cancelMembership = require('./cancelMembership')
+const createCache = require('../../../lib/cache')
 
 module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
   ensureSignedIn(req)
@@ -93,6 +94,9 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
         )
       )
     }
+
+    const cache = createCache({ prefix: `User:${req.user.id}` })
+    cache.invalidate()
 
     // commit transaction
     await transaction.transactionCommit()

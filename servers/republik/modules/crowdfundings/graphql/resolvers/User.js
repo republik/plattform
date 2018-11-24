@@ -117,9 +117,9 @@ module.exports = {
 
       // No memberships, set cache and return 0
       if (memberships.length === 0) {
-        debug('no memberships founds, return daysUntilProlongNecessary: 0')
+        debug('no memberships founds, return daysUntilProlongNecessary: null')
 
-        return 0
+        return null
       }
 
       memberships = await resolveMemberships({ memberships, pgdb })
@@ -129,9 +129,15 @@ module.exports = {
           .filter(m => !m.active)
           .length > 0
       ) {
-        debug('found dormant membership, return daysUntilProlongNecessary: 0')
+        debug('found dormant membership, return daysUntilProlongNecessary: null')
 
-        return 0
+        return null
+      }
+
+      if (memberships.filter(m => m.active && m.renew).length === 0) {
+        debug('has active but cancelled membership, return daysUntilProlongNecessary: null')
+
+        return null
       }
 
       const membershipPeriods =

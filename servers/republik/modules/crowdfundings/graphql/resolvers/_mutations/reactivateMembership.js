@@ -3,6 +3,7 @@ const getSubscription = require('../../../lib/payments/stripe/getSubscription')
 const createSubscription = require('../../../lib/payments/stripe/createSubscription')
 const reactivateSubscription = require('../../../lib/payments/stripe/reactivateSubscription')
 const slack = require('../../../../../lib/slack')
+const createCache = require('../../../lib/cache')
 
 module.exports = async (_, args, {pgdb, req, user: me, t, mail: {sendMailTemplate, enforceSubscriptions}}) => {
   const transaction = await pgdb.transactionBegin()
@@ -143,6 +144,9 @@ module.exports = async (_, args, {pgdb, req, user: me, t, mail: {sendMailTemplat
         ? 'reactivateMembership'
         : 'reactivateMembership (support)'
     )
+
+    const cache = createCache({ prefix: `User:${user.id}` })
+    cache.invalidate()
 
     return newMembership
   } catch (e) {

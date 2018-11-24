@@ -15,7 +15,7 @@ extend type User {
   # Whether User is eligable to profit from additional BONUS periods
   isBonusEligable: Boolean!
   # Amount of days left until a (manual) prolong is necessary
-  daysUntilProlongNecessary: Int!
+  daysUntilProlongNecessary: Int
 
   # if true the user should check his/her memberships subscriptions
   # most propably she has a running monthly- and yealy-membership simultaneously
