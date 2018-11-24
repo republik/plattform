@@ -80,7 +80,7 @@ type PackageOption {
   optionGroup: String
   membership: Membership
   autoPay: Boolean
-  additionalPeriods: [MembershipPeriod]!
+  additionalPeriods: [MembershipPeriod!]
 }
 
 input PackageOptionInput {
