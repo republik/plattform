@@ -34,6 +34,7 @@ input ImageProperties {
 
 extend type User {
   address: Address
+  hasAddress: Boolean
   credentials: [Credential]!
   badges: [Badge]
   comments(

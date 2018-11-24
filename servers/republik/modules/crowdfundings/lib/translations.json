@@ -1,5 +1,5 @@
 {
-  "updated": "2018-10-24T10:02:18.982Z",
+  "updated": "2018-11-22T15:32:17.842Z",
   "title": "live",
   "data": [
     {
@@ -9,6 +9,10 @@
     {
       "key": "api/unauthorized",
       "value": "Nicht genehmigt. Sie müssen die Rolle «{role}» besitzen um die gewünschte Aktion auszuführen."
+    },
+    {
+      "key": "api/temporaryUnsupported",
+      "value": "Die Funktion wird vorübergehend nicht unterstützt."
     },
     {
       "key": "api/crowdfunding/tooLate",
@@ -36,11 +40,11 @@
     },
     {
       "key": "api/membership/monthly/hasActive",
-      "value": "Sie können leider kein Monatsabo kaufen, da sie bereits ein laufendes Abonnement besitzen."
+      "value": "Sie können leider kein Monatsabo kaufen, da Sie bereits ein laufendes Abonnement besitzen."
     },
     {
       "key": "api/membership/monthly/reactivate",
-      "value": "Sie können nicht noch einmal ein Monats-Abonnement kaufen. Bitte verlängern sie Ihr Abonnement stattdessen in Ihrem Konto (www.republik.ch/konto)."
+      "value": "Sie können nicht noch einmal ein Monatsabonnement kaufen. Bitte verlängern Sie Ihr Abonnement stattdessen in Ihrem Konto (www.republik.ch/konto)."
     },
     {
       "key": "api/membership/reactivate/otherActive",
@@ -56,7 +60,7 @@
     },
     {
       "key": "api/membership/cancel/unsupported",
-      "value": "Im Moment können nur Monats-Abonnements gestoppt werden."
+      "value": "Im Moment können nur Monatsabonnements gestoppt werden."
     },
     {
       "key": "api/membership/pleaseWait",
@@ -72,11 +76,11 @@
     },
     {
       "key": "api/membership/move/otherActive",
-      "value": "Der Ziel User hat bereits eine aktive Mitgliedschaft."
+      "value": "Der Ziel-User hat bereits eine aktive Mitgliedschaft."
     },
     {
       "key": "api/membership/move/monthlyDenied",
-      "value": "Monats-Abos können nicht verschoben werden."
+      "value": "Monatsabos können nicht verschoben werden."
     },
     {
       "key": "api/pledge/alreadyPaid",
@@ -89,6 +93,10 @@
     {
       "key": "api/pledge/reason",
       "value": "Für eine reduzierte Mitgliedschaft wird eine Begründung benötigt."
+    },
+    {
+      "key": "api/pledge/empty",
+      "value": "Sie haben noch keine Kaufoption ausgewählt."
     },
     {
       "key": "api/pledge/cancel/tooLate",
@@ -148,11 +156,11 @@
     },
     {
       "key": "api/paypal/contactUs",
-      "value": "Während des Zahlungsverfahrens mit PayPal ist ein Problem aufgetreten, das zu einem nicht vorhersehbaren Resultat geführt hat. Bitte nehmen Sie Kontakt mit uns auf unter kontakt@republik.ch. Sie sollten es nicht erneut versuchen da die Buchung möglicherweise bereits akzeptiert wurde."
+      "value": "Während des Zahlungsverfahrens mit PayPal ist ein Problem aufgetreten, das zu einem nicht vorhersehbaren Resultat geführt hat. Bitte nehmen Sie Kontakt mit uns auf unter kontakt@republik.ch. Sie sollten es nicht erneut versuchen, da die Buchung möglicherweise bereits akzeptiert wurde."
     },
     {
       "key": "api/paypal/delayed",
-      "value": "Ihre PayPal Zahlung ist noch nicht bei uns eingetroffen. Falls Sie innerhalb von einigen Stunden nichts von uns hören, kontaktieren Sie uns bitte unter kontakt@republik.ch. Sie sollten es nicht erneut versuchen da die Buchung höchstwahrscheinlich bereits akzeptiert wurde und noch verarbeitet wird."
+      "value": "Ihre PayPal-Zahlung ist noch nicht bei uns eingetroffen. Falls Sie innerhalb von einigen Stunden nichts von uns hören, kontaktieren Sie uns bitte unter kontakt@republik.ch. Sie sollten es nicht erneut versuchen, da die Buchung höchstwahrscheinlich bereits akzeptiert wurde und noch verarbeitet wird."
     },
     {
       "key": "api/pay/pspPayload/parseFailed",
@@ -297,6 +305,82 @@
     {
       "key": "api/payment/invoice/item/discount",
       "value": "Ermässigung"
+    },
+    {
+      "key": "api/email/membership_prolong_notice/subject",
+      "value": "Ihr Republik-Abo wurde verlängert"
+    },
+    {
+      "key": "api/email/pledge_abo/subject",
+      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
+    },
+    {
+      "key": "api/email/pledge_abo_give/subject",
+      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
+    },
+    {
+      "key": "api/email/pledge_monthly_abo/subject",
+      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
+    },
+    {
+      "key": "api/email/pledge_donate/subject",
+      "value": "Vielen Dank für Ihre Spende"
+    },
+    {
+      "key": "api/email/pledge_benefactor/subject",
+      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
+    },
+    {
+      "key": "api/email/pledge_prolong/subject",
+      "value": "Danke für Ihr grosses Herz und Ihren kühlen Kopf"
+    },
+    {
+      "key": "api/email/option/goodie/notebook/1",
+      "value": "Notizbuch"
+    },
+    {
+      "key": "api/email/option/goodie/totebag",
+      "value": "Tasche"
+    },
+    {
+      "key": "api/email/option/membershiptype/abo",
+      "value": "Abo und Mitgliedschaft"
+    },
+    {
+      "key": "api/email/option/membershiptype/benefactor_abo",
+      "value": "Gönner-Mitgliedschaft"
+    },
+    {
+      "key": "api/email/option/membershiptype/monthly_abo",
+      "value": "Monatsabonnement"
+    },
+    {
+      "key": "api/email/option/other/gifted_membership",
+      "value": "Mitgliedschaft für {name} (#{sequenceNumber})"
+    },
+    {
+      "key": "api/membership/cancel/category/EDITORIAL",
+      "value": "Ein Beitrag hat mich geärgert."
+    },
+    {
+      "key": "api/membership/cancel/category/NO_TIME",
+      "value": "Keine Zeit"
+    },
+    {
+      "key": "api/membership/cancel/category/TOO_EXPENSIVE",
+      "value": "Zu teuer"
+    },
+    {
+      "key": "api/membership/cancel/category/OTHER",
+      "value": "Anderer Grund, und zwar:"
+    },
+    {
+      "key": "api/membership/cancel/category/VOID",
+      "value": "Ich möchte keinen Grund angeben."
+    },
+    {
+      "key": "api/email/membership_cancel_notice/subject",
+      "value": "Bestätigung Ihrer Kündigung"
     }
   ]
 }

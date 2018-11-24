@@ -48,6 +48,10 @@ module.exports = async (_, args, {
       id: pledge.packageId
     })
 
+    if (pkg.name === 'PROLONG') {
+      throw new Error(t('api/temporaryUnsupported'))
+    }
+
     if (pledge.status === 'DRAFT') {
       await transaction.public.pledges.deleteOne({
         id: pledgeId

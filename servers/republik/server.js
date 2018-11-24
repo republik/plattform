@@ -12,7 +12,6 @@ const { graphql: voting } = require('@orbiting/backend-modules-voting')
 const { accessScheduler, graphql: access } = require('@orbiting/backend-modules-access')
 const { previewScheduler, preview: previewLib } = require('@orbiting/backend-modules-preview')
 
-const sendPendingPledgeConfirmations = require('./modules/crowdfundings/lib/sendPendingPledgeConfirmations')
 const mail = require('./modules/crowdfundings/lib/Mail')
 const cluster = require('cluster')
 
@@ -62,7 +61,7 @@ const run = async (workerId) => {
   // signin hooks
   const signInHooks = [
     ({ userId, pgdb }) =>
-      sendPendingPledgeConfirmations(userId, pgdb, t),
+      mail.sendPledgeConfirmations({ userId, pgdb, t }),
     ({ userId, isNew, pgdb }) =>
       accessScheduler.signInHook(userId, isNew, pgdb, mail),
     ({ userId, isNew, contexts, pgdb }) =>
