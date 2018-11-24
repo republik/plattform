@@ -154,11 +154,13 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     // commit transaction
     await transaction.transactionCommit()
 
-    try {
-      // if the user is signed in, send mail immediately
-      await sendPledgeConfirmations({ userId: pledge.userId, pgdb, t })
-    } catch (e) {
-      console.warn('error in payPledge after transactionCommit', e)
+    if (user.verified) {
+      try {
+        // if the user is signed in, send mail immediately
+        await sendPledgeConfirmations({ userId: pledge.userId, pgdb, t })
+      } catch (e) {
+        console.warn('error in payPledge after transactionCommit', e)
+      }
     }
 
     return {
