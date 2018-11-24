@@ -16,6 +16,11 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
     return
   }
 
+  if (membership.pledge.userId !== package_.user.id) {
+    debug('membership not pledged by user. rule does not apply.')
+    return
+  }
+
   if (!PACKAGE_ELIGABLE.includes(membership.pledge.package.name)) {
     debug(
       'package "%s" is not eligable for early adopter bonus',
