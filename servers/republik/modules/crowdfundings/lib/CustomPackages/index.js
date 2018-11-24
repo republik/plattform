@@ -14,22 +14,36 @@ const EXTENDABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR']
 const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO']
 
 const findEligableMemberships = ({ memberships, user }) =>
-  memberships.filter(
-    // A membership belongs to user
-    m => m.userId === user.id && (
-      (
-        // A membership that
-        // b) is of membershipType in EXTENDABLE_MEMBERSHIP_TYPES
-        // c) and is of package.name in EXTENDABLE_PACKAGE_NAMES
-        m.userId === user.id &&
-        EXTENDABLE_MEMBERSHIP_TYPES.includes(m.membershipType.name) &&
-        EXTENDABLE_PACKAGE_NAMES.includes(m.pledge.package.name)
-      ) || (
-        // A membership that was bought not bought by user itself.
-        m.pledge.userId !== m.userId
-      )
-    )
-  )
+  memberships.filter(m => {
+    const isCurrentClaimer = m.userId === user.id
+
+    const isExtendable =
+      EXTENDABLE_MEMBERSHIP_TYPES.includes(m.membershipType.name) &&
+      EXTENDABLE_PACKAGE_NAMES.includes(m.pledge.package.name)
+
+    // A membership that was not bought by user itself.
+    const isGiftedMembership = m.pledge.userId !== m.userId
+
+    // Self-claimed ABO_GIVE
+    const isSelfClaimed =
+      m.pledge.userId === m.userId &&
+      m.pledge.package.name === 'ABO_GIVE'
+
+    debug({
+      id: m.id,
+      membershipTypeName: m.membershipType.name,
+      packageName: m.pledge.package.name,
+      membershipUserId: m.userId,
+      pledgeUserId: m.pledge.userId,
+      isCurrentClaimer,
+      isExtendable,
+      isGiftedMembership,
+      isSelfClaimed
+    })
+
+    return isCurrentClaimer &&
+      (isExtendable || isGiftedMembership || isSelfClaimed)
+  })
 
 // Checks if user has at least one active and one inactive membership,
 // considering latter as "dormant"
