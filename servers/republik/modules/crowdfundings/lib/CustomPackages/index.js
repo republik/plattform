@@ -27,7 +27,8 @@ const findEligableMemberships = ({ memberships, user }) =>
     // Self-claimed ABO_GIVE
     const isSelfClaimed =
       m.pledge.userId === m.userId &&
-      m.pledge.package.name === 'ABO_GIVE'
+      m.pledge.package.name === 'ABO_GIVE' &&
+      m.active
 
     debug({
       id: m.id,
