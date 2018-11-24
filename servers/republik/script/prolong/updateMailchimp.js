@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 /**
- * This script adds a CUSTOM_PLEDGE access token to mailchimp
- * for users who are bonus eligable
+ * This script adds to mailchimp members:
+ * - a CUSTOM_PLEDGE if they need to prolong before 2019-01-16
+ * - the BONUS tag for who is eligable
+ *
  *
  * Usage: (run from servers/republik)
  * cat local/cancellations.csv | node script/prolong/updateMailchimp.js
