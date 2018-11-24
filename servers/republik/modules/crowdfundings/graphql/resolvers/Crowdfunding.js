@@ -12,7 +12,11 @@ module.exports = {
   },
   async status (crowdfunding, {forceUpdate}, {pgdb}) {
     if (!forceUpdate && crowdfunding.result && crowdfunding.result.status) {
-      return crowdfunding.result.status
+      const { status } = crowdfunding.result
+      return {
+        ...status,
+        memberships: status.memberships || 0
+      }
     }
     const money = await pgdb.public.queryOneField(`
       SELECT
@@ -32,9 +36,13 @@ module.exports = {
     `, {
       crowdfundingId: crowdfunding.id
     }) || 0
-    const people = await pgdb.public.queryOneField(`
+    const memberships = await pgdb.public.queryOneField(`
       SELECT
-        COUNT(m.id)
+        COUNT(
+          DISTINCT(
+            m.id
+          )
+        )
       FROM
         memberships m
       JOIN
@@ -51,7 +59,27 @@ module.exports = {
     `, {
       crowdfundingId: crowdfunding.id
     }) || 0
-    return {money, people}
+    const people = await pgdb.public.queryOneField(`
+      SELECT
+        COUNT(u.id)
+      FROM
+        pledges pl
+      JOIN
+        users u
+        ON pl."userId" = u.id
+      JOIN
+        packages pa
+        ON pl."packageId" = pa.id
+      JOIN
+        crowdfundings cf
+        ON pa."crowdfundingId" = cf.id
+      WHERE
+        pl.status = 'SUCCESSFUL' AND
+        cf.id = :crowdfundingId
+    `, {
+      crowdfundingId: crowdfunding.id
+    }) || 0
+    return {money, memberships, people}
   },
   hasEnded (crowdfunding) {
     const now = new Date()

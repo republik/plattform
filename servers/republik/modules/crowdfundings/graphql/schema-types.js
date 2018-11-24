@@ -47,6 +47,7 @@ type CrowdfundingGoal {
 type CrowdfundingStatus {
   money: Int!
   people: Int!
+  memberships: Int!
 }
 
 type Package {
