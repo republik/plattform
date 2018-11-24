@@ -14,8 +14,8 @@ extend type User {
   customPackages(crowdfundingName: String): [Package!]
   # Whether User is eligable to profit from additional BONUS periods
   isBonusEligable: Boolean!
-  # Amount of days left until a (manual) prolong is necessary
-  daysUntilProlongNecessary: Int
+  # Prolong before give date to unsure uninterrupted access
+  prolongBeforeDate: DateTime
 
   # if true the user should check his/her memberships subscriptions
   # most propably she has a running monthly- and yealy-membership simultaneously

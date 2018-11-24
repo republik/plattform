@@ -2,7 +2,6 @@ const { Roles, AccessToken: { isFieldExposed } } = require('@orbiting/backend-mo
 
 const debug = require('debug')('crowdfundings:resolver:User')
 const flattenDeep = require('lodash/flattenDeep')
-const moment = require('moment')
 const Promise = require('bluebird')
 
 const {
@@ -99,14 +98,14 @@ module.exports = {
     }
     return []
   },
-  async daysUntilProlongNecessary (user, args, { pgdb, user: me }) {
-    debug('daysUntilProlongNecessary')
+  async prolongBeforeDate (user, args, { pgdb, user: me }) {
+    debug('prolongBeforeDate')
 
     Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
 
     const cache = createCache({
       prefix: `User:${user.id}`,
-      key: 'daysUntilProlongNecessary',
+      key: 'prolongBeforeDate',
       ttl: QUERY_CACHE_TTL_SECONDS
     })
 
@@ -117,7 +116,7 @@ module.exports = {
 
       // No memberships, set cache and return 0
       if (memberships.length === 0) {
-        debug('no memberships founds, return daysUntilProlongNecessary: null')
+        debug('no memberships founds, return prolongBeforeDate: null')
 
         return null
       }
@@ -129,13 +128,13 @@ module.exports = {
           .filter(m => !m.active)
           .length > 0
       ) {
-        debug('found dormant membership, return daysUntilProlongNecessary: null')
+        debug('found dormant membership, return prolongBeforeDate: null')
 
         return null
       }
 
       if (memberships.filter(m => m.active && m.renew).length === 0) {
-        debug('has active but cancelled membership, return daysUntilProlongNecessary: null')
+        debug('has active but cancelled membership, return prolongBeforeDate: null')
 
         return null
       }
@@ -145,13 +144,7 @@ module.exports = {
           membershipId: memberships.map(membership => membership.id)
         })
 
-      const lastEndDate = getPeriodEndingLast(membershipPeriods).endDate
-
-      return Math.floor(
-        moment
-          .duration(moment(lastEndDate).diff(moment()))
-          .asDays()
-      )
+      return getPeriodEndingLast(membershipPeriods).endDate
     })
   },
   async pledges (user, args, {pgdb, user: me}) {
