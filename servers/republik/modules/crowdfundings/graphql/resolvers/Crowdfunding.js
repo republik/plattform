@@ -65,7 +65,11 @@ module.exports = {
       // people
       pgdb.public.queryOneField(`
         SELECT
-          COUNT(u.id)
+          COUNT(
+            DISTINCT(
+              u.id
+            )
+          )
         FROM
           pledges pl
         JOIN
