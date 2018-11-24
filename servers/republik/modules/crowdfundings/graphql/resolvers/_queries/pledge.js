@@ -8,6 +8,10 @@ module.exports = async (_, { id }, { pgdb, user: me }) => {
   }
 
   const user = await pgdb.public.users.findOne({ id: pledge.userId })
+  if (!user.verified) {
+    return pledge
+  }
+
   if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
     return pledge
   }
