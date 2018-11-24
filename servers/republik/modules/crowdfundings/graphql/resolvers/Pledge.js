@@ -1,7 +1,12 @@
 const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
 
 module.exports = {
-  async options (pledge, args, {pgdb}) {
+  async options (pledge, args, { pgdb, user: me }) {
+    const user = await pgdb.public.users.findOne({ id: pledge.userId })
+    if (!Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return []
+    }
+
     // we augment pledgeOptions with packageOptions
     const pledgeOptions =
       await pgdb.public.pledgeOptions.find({ pledgeId: pledge.id })
