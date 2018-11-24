@@ -291,6 +291,52 @@ class Detail extends Component {
                 current={this.state.selectedTab}
               >
                 <Interaction.H2>
+                  Memberships
+                </Interaction.H2>
+                <div>
+                  <A
+                    href={`${REPUBLIK_FRONTEND_URL}/angebote?package=PROLONG&token=${props.data.user.accessToken}`}
+                    target="_blank"
+                  >
+                    Verlängerns-Link ohne anmelden
+                  </A>
+                  <br />
+                  <Label>In einem neuen, privaten Fenster öffnen.</Label>
+                </div>
+                <br />
+                <div {...styles.pledges}>
+                  {props.data.user.memberships.map(
+                    membership => (
+                      <div
+                        {...styles.pledge}
+                        key={`pledge-${
+                          membership.id
+                        }`}
+                      >
+                        <MembershipOverview
+                          membership={membership}
+                          onMoveMembership={this.safe(
+                            props.moveMembership
+                          )}
+                          onReactivateMembership={this.safe(
+                            props.reactivateMembership
+                          )}
+                          onCancelMembership={this.safe(
+                            props.cancelMembership
+                          )}
+                        />
+                      </div>
+                    )
+                  )}
+                </div>
+                <Button
+                  onClick={this.safe(
+                    props.generateMembership
+                  )}
+                >
+                  Generate yearly membership
+                </Button>
+                <Interaction.H2>
                   Pledges
                 </Interaction.H2>
                 <div {...styles.pledges}>
@@ -326,52 +372,6 @@ class Detail extends Component {
                       </div>
                     ))}
                 </div>
-                <Interaction.H2>
-                  Memberships
-                </Interaction.H2>
-                <Interaction.P>
-                  <Label>Verlängern ohne Login</Label>
-                  <br />
-                  <A
-                    href={`${REPUBLIK_FRONTEND_URL}/angebote?package=PROLONG&token=${props.data.user.accessToken}`}
-                    target="_blank"
-                  >
-                    {`${REPUBLIK_FRONTEND_URL}/angebote`}
-                  </A>
-                </Interaction.P>
-                <br />
-                <div {...styles.pledges}>
-                  {props.data.user.memberships.map(
-                    membership => (
-                      <div
-                        {...styles.pledge}
-                        key={`pledge-${
-                          membership.id
-                        }`}
-                      >
-                        <MembershipOverview
-                          membership={membership}
-                          onMoveMembership={this.safe(
-                            props.moveMembership
-                          )}
-                          onReactivateMembership={this.safe(
-                            props.reactivateMembership
-                          )}
-                          onCancelMembership={this.safe(
-                            props.cancelMembership
-                          )}
-                        />
-                      </div>
-                    )
-                  )}
-                </div>
-                <Button
-                  onClick={this.safe(
-                    props.generateMembership
-                  )}
-                >
-                  Generate yearly membership
-                </Button>
               </Tab>
               <Tab
                 name="eventLog"
