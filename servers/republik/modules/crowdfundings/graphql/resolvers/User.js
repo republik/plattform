@@ -122,13 +122,16 @@ module.exports = {
       }
 
       memberships = await resolveMemberships({ memberships, pgdb })
+      const eligableMemberships = findEligableMemberships({ memberships, user })
 
-      if (
-        findEligableMemberships({ memberships, user })
-          .filter(m => !m.active)
-          .length > 0
-      ) {
+      if (eligableMemberships.filter(m => !m.active).length > 0) {
         debug('found dormant membership, return prolongBeforeDate: null')
+
+        return null
+      }
+
+      if (eligableMemberships.length < 1) {
+        debug('found no prolongable membership, return prolongBeforeDate: null')
 
         return null
       }
