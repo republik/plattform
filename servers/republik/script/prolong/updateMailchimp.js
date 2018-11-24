@@ -12,13 +12,18 @@ const Promise = require('bluebird')
 const crypto = require('crypto')
 const sleep = require('await-sleep')
 const fetch = require('isomorphic-unfetch')
+const moment = require('moment')
 const { transformUser, AccessToken } = require('@orbiting/backend-modules-auth')
-const { isBonusEligable } = require('../../modules/crowdfundings/graphql/resolvers/User')
+const {
+  isBonusEligable: getIsBonusEligable,
+  prolongBeforeDate: getProlongBeforeDate
+} = require('../../modules/crowdfundings/graphql/resolvers/User')
 
 const {
   MAILCHIMP_API_KEY,
   MAILCHIMP_URL,
-  MAILCHIMP_MAIN_LIST_ID
+  MAILCHIMP_MAIN_LIST_ID,
+  PARKING_USER_ID
 } = process.env
 
 if (!MAILCHIMP_MAIN_LIST_ID) {
@@ -26,6 +31,8 @@ if (!MAILCHIMP_MAIN_LIST_ID) {
 }
 
 const STATS_INTERVAL_SECS = 2
+const PROLONG_BEFORE_DATE = moment('2019-01-16')
+const BONUS_TAG_NAME = 'BONUS'
 
 const me = {
   roles: ['admin']
@@ -67,6 +74,8 @@ PgDb.connect().then(async pgdb => {
     JOIN
       memberships m
       ON m."userId" = u.id
+    WHERE
+      u.id != :PARKING_USER_ID
 
     UNION
 
@@ -77,37 +86,63 @@ PgDb.connect().then(async pgdb => {
     JOIN
       pledges p
       ON p."userId" = u.id
-  `)
+    WHERE
+      u.id != :PARKING_USER_ID
+  `, {
+    PARKING_USER_ID
+  })
     .then(users => users
       .map(user => transformUser(user))
     )
-  console.log(`investigating ${users.length} for isBonusEligable`)
+  console.log(`investigating ${users.length} users`)
 
-  const stats = { numBonusEligable: 0, usersEvaluated: 0, operations: 0 }
+  const stats = {
+    numBonusEligable: 0,
+    numNeedProlong: 0,
+    numBonusEligableProgress: 0,
+    numNeedProlongProgress: 0,
+    numOperations: 0
+  }
   const statsInterval = setInterval(() => {
     console.log(stats)
   }, STATS_INTERVAL_SECS * 1000)
 
-  const bonusEligableUsers = await Promise.filter(
+  const inNeedForProlongUsers = await Promise.filter(
     users,
     async (user) => {
-      const eligable = await isBonusEligable(user, {}, { pgdb, user: me })
+      const prolongBeforeDate = await getProlongBeforeDate(user, {}, { pgdb, user: me })
+      stats.numNeedProlongProgress += 1
+      if (prolongBeforeDate && moment(prolongBeforeDate).isBefore(PROLONG_BEFORE_DATE)) {
+        stats.numNeedProlong += 1
+        return true
+      }
+      return false
+    },
+    {concurrency: 10}
+  )
+  delete stats.numNeedProlongProgress
+
+  const bonusEligableUsers = await Promise.filter(
+    inNeedForProlongUsers,
+    async (user) => {
+      const eligable = await getIsBonusEligable(user, {}, { pgdb, user: me })
+      stats.numBonusEligableProgress += 1
       if (eligable) {
         stats.numBonusEligable += 1
       }
-      stats.usersEvaluated += 1
       return eligable
     },
     {concurrency: 10}
   )
+  delete stats.numBonusEligableProgress
 
   console.log('building operations...')
-  const operations = await Promise.map(
-    bonusEligableUsers,
+  let operations = await Promise.map(
+    inNeedForProlongUsers,
     async (user) => {
       const email = user.email.toLowerCase()
       const accessToken = await AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
-      stats.operations += 1
+      stats.numOperations += 1
       return {
         method: 'PUT',
         path: `/lists/${MAILCHIMP_MAIN_LIST_ID}/members/${hash(email)}`,
@@ -118,16 +153,45 @@ PgDb.connect().then(async pgdb => {
           'merge_fields': {
             'CP_ATOKEN': accessToken
           }
+          // of course tags can not be provided here 🤬
         })
       }
     },
     {concurrency: 10}
   )
+  operations = operations.concat(
+    bonusEligableUsers.map(user => {
+      const email = user.email.toLowerCase()
+      stats.numOperations += 1
+      return {
+        method: 'POST',
+        path: `/lists/${MAILCHIMP_MAIN_LIST_ID}/members/${hash(email)}/tags`,
+        body: JSON.stringify({
+          tags: [
+            {
+              name: BONUS_TAG_NAME,
+              status: 'active'
+            }
+          ]
+        })
+      }
+    })
+  )
+  // console.log(operations)
 
   console.log(stats)
   clearInterval(statsInterval)
 
   if (!dry) {
+    // create tag
+    const resultTags = await fetchAuthenticated('POST', `${MAILCHIMP_URL}/3.0/lists/${MAILCHIMP_MAIN_LIST_ID}/segments`, {
+      body: JSON.stringify({
+        'name': BONUS_TAG_NAME,
+        'static_segment': []
+      })
+    })
+    console.log('mailchimp tag creation:', resultTags)
+
     const batchesUrl = `${MAILCHIMP_URL}/3.0/batches`
 
     const result = await fetchAuthenticated('POST', batchesUrl, {
@@ -150,7 +214,7 @@ PgDb.connect().then(async pgdb => {
     } while (!statusResult || statusResult.status !== 'finished')
   }
 
-  console.log('finish')
+  console.log('finished!')
 }).then(() => {
   process.exit()
 }).catch(e => {
