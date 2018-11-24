@@ -6,12 +6,24 @@ import {
   OverlayToolbar,
   OverlayToolbarClose,
   Interaction,
+  Radio,
   Checkbox,
   Field
 } from '@project-r/styleguide'
 import TextareaAutosize from 'react-autosize-textarea'
 
+import gql from 'graphql-tag'
+import { graphql } from 'react-apollo'
+
 import { swissTime } from '../../../lib/utils/formats'
+
+const getCancellationCategories = gql`
+query cancellationCategories {
+  cancellationCategories {
+    type
+    label
+  }
+}`
 
 const dateTimeFormat = swissTime.format(
   '%e. %B %Y %H.%M Uhr'
@@ -20,11 +32,13 @@ const dateTimeFormat = swissTime.format(
 const getInitialState = () => ({
   isOpen: false,
   immediately: false,
-  reason: ''
+  suppressNotifications: false,
+  reason: '',
+  cancellationType: ''
 })
 
-export default class CancelMembership extends Component {
-  constructor(props) {
+class CancelMembership extends Component {
+  constructor (props) {
     super(props)
     this.state = getInitialState()
 
@@ -36,23 +50,39 @@ export default class CancelMembership extends Component {
       this.setState(() => ({ immediately: value }))
     }
 
+    this.suppressNotificationsChangeHandler = (_, value) => {
+      this.setState(() => ({ suppressNotifications: value }))
+    }
+
     this.closeHandler = () => {
       this.setState(getInitialState)
     }
 
     this.submitHandler = () => {
+      const {
+        immediately,
+        suppressNotifications,
+        reason,
+        cancellationType
+      } = this.state
       this.props.onSubmit({
         membershipId: this.props.membership.id,
-        reason: this.state.reason,
-        immediately: this.state.immediately
+        immediately,
+        suppressNotifications,
+        details: {
+          reason,
+          type: cancellationType
+        }
+
       })
       this.setState(getInitialState)
     }
   }
 
-  render() {
-    const { isOpen } = this.state
-    const { membership } = this.props
+  render () {
+    const { isOpen, reason, cancellationType } = this.state
+    const { membership, cancellationCategories } = this.props
+
     return (
       <div style={{ display: 'inline-block' }}>
         <Button
@@ -95,11 +125,21 @@ export default class CancelMembership extends Component {
                   {dateTimeFormat(new Date(period.endDate))}
                 </span>
               ))}
-              <hr />
               <br />
-              <Checkbox checked={this.state.immediately} onChange={this.immediatelyChangeHandler}>Sofort canceln?</Checkbox>
+              {cancellationCategories &&
+                cancellationCategories.map(({ type, label }) => (
+                  <Interaction.P key={type}>
+                    <Radio
+                      value={cancellationType}
+                      checked={cancellationType === type}
+                      onChange={() => this.setState({ cancellationType: type })}
+                  >
+                      {label}
+                    </Radio>
+                  </Interaction.P>)
+              )}
               <Field
-                value={this.state.reason}
+                value={reason}
                 label={'Grund'}
                 onChange={this.reasonChangeHandler}
                 renderInput={props => (
@@ -109,9 +149,15 @@ export default class CancelMembership extends Component {
                   />
                 )}
               />
+              <p>
+                <Checkbox checked={this.state.immediately} onChange={this.immediatelyChangeHandler}>Sofort canceln</Checkbox>
+              </p>
+              <p>
+                <Checkbox checked={this.state.suppressNotifications} onChange={this.suppressNotificationsChangeHandler}>Benachrichtigungen unterdrücken</Checkbox>
+              </p>
               <Button
                 primary
-                disabled={!this.state.reason}
+                disabled={!cancellationType}
                 onClick={this.submitHandler}
               >
                 Speichern
@@ -123,3 +169,7 @@ export default class CancelMembership extends Component {
     )
   }
 }
+
+export default graphql(getCancellationCategories, {
+  props: ({ data }) => data
+})(CancelMembership)

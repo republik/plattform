@@ -8,8 +8,12 @@ import {
   P,
   Label,
   Button,
-  colors
+  A,
+  colors,
 } from '@project-r/styleguide'
+
+import { REPUBLIK_FRONTEND_URL } from '../../../server/constants'
+
 import ErrorMessage from '../../ErrorMessage'
 import ErrorModal from '../../Form/ErrorModal'
 import { Table, Row } from '../../Layout/Table'
@@ -287,6 +291,52 @@ class Detail extends Component {
                 current={this.state.selectedTab}
               >
                 <Interaction.H2>
+                  Memberships
+                </Interaction.H2>
+                <div>
+                  <A
+                    href={`${REPUBLIK_FRONTEND_URL}/angebote?package=PROLONG&token=${props.data.user.accessToken}`}
+                    target="_blank"
+                  >
+                    Verlängerns-Link ohne anmelden
+                  </A>
+                  <br />
+                  <Label>In einem neuen, privaten Fenster öffnen.</Label>
+                </div>
+                <br />
+                <div {...styles.pledges}>
+                  {props.data.user.memberships.map(
+                    membership => (
+                      <div
+                        {...styles.pledge}
+                        key={`pledge-${
+                          membership.id
+                        }`}
+                      >
+                        <MembershipOverview
+                          membership={membership}
+                          onMoveMembership={this.safe(
+                            props.moveMembership
+                          )}
+                          onReactivateMembership={this.safe(
+                            props.reactivateMembership
+                          )}
+                          onCancelMembership={this.safe(
+                            props.cancelMembership
+                          )}
+                        />
+                      </div>
+                    )
+                  )}
+                </div>
+                <Button
+                  onClick={this.safe(
+                    props.generateMembership
+                  )}
+                >
+                  Generate yearly membership
+                </Button>
+                <Interaction.H2>
                   Pledges
                 </Interaction.H2>
                 <div {...styles.pledges}>
@@ -322,41 +372,6 @@ class Detail extends Component {
                       </div>
                     ))}
                 </div>
-                <Interaction.H2>
-                  Memberships
-                </Interaction.H2>
-                <div {...styles.pledges}>
-                  {props.data.user.memberships.map(
-                    membership => (
-                      <div
-                        {...styles.pledge}
-                        key={`pledge-${
-                          membership.id
-                        }`}
-                      >
-                        <MembershipOverview
-                          membership={membership}
-                          onMoveMembership={this.safe(
-                            props.moveMembership
-                          )}
-                          onReactivateMembership={this.safe(
-                            props.reactivateMembership
-                          )}
-                          onCancelMembership={this.safe(
-                            props.cancelMembership
-                          )}
-                        />
-                      </div>
-                    )
-                  )}
-                </div>
-                <Button
-                  onClick={this.safe(
-                    props.generateMembership
-                  )}
-                >
-                  Generate yearly membership
-                </Button>
               </Tab>
               <Tab
                 name="eventLog"
@@ -504,12 +519,14 @@ const cancelMembershipMutation = gql`
   mutation cancelMembership(
     $id: ID!
     $immediately: Boolean
-    $reason: String
+    $details: CancellationInput!
+    $suppressNotifications: Boolean
   ) {
     cancelMembership(
       id: $id
       immediately: $immediately
-      reason: $reason
+      details: $details
+      suppressNotifications: $suppressNotifications
     ) {
       id
     }
@@ -598,6 +615,7 @@ const revokeAccessMutation = gql`
 const userQuery = gql`
   query user($id: String) {
     user(slug: $id) {
+      accessToken(scope: CUSTOM_PLEDGE)
       id
       name
       email
@@ -643,7 +661,17 @@ const userQuery = gql`
           createdAt
           updatedAt
         }
-        cancelReasons
+        reducedPrice
+        autoPay
+        cancellations {
+          reason
+          category {
+            label
+            type
+          }
+          createdAt
+          revokedAt
+        }
         active
         renew
         createdAt
@@ -899,15 +927,17 @@ const WrappedUser = compose(
     }) => ({
       cancelMembership: ({
         membershipId,
-        reason,
-        immediately
+        details,
+        immediately,
+        suppressNotifications
       }) => {
         if (mutate) {
           return mutate({
             variables: {
               id: membershipId,
-              reason,
-              immediately
+              details,
+              immediately,
+              suppressNotifications
             },
             refetchQueries: [
               {

@@ -2,7 +2,6 @@ import React from 'react'
 import {
   Interaction,
   Label,
-  P,
   Button
 } from '@project-r/styleguide'
 
@@ -37,21 +36,35 @@ const MembershipOverview = ({
           {dateTimeFormat(new Date(membership.updatedAt))}
         </Label>
       </Interaction.H3>
-      {!membership.renew && (
-        <Label>
-          Reason for cancelled membership
-          <P>
-            {membership.cancelReasons &&
-              membership.cancelReasons.join('\n')}
-          </P>
-        </Label>
-      )}
       <List>
+        {membership.cancellations &&
+           membership.cancellations.map((cancellation, i) => (
+             <Item key={`cancellation-${i}`}>
+               <Label>
+                 {`Gekündigt am ${dateTimeFormat(new Date(cancellation.createdAt))} weil:`}
+               </Label>
+               <br />
+               {cancellation.category.label}
+               {cancellation.revokedAt &&
+                 <Label>{`Zurückgezogen am ${dateTimeFormat(new Date(cancellation.revokedAt))}`}</Label>}
+               <br />
+               {cancellation.reason &&
+               <span>
+                 <Label>Begründung</Label>
+                 <br />
+                 {cancellation.reason}
+               </span>
+                }
+             </Item>
+            ))}
         <Item>
           <Label>Abo-Nr.</Label>
           <br />
           #{membership.sequenceNumber}
           <br />
+          <Interaction.P>
+            <Label>Automatisch abbuchen</Label><br />{membership.autoPay ? 'YES' : 'NO'}
+          </Interaction.P>
           {!!membership.voucherCode && (
             <Interaction.P>
               <Label>Voucher Code</Label>
@@ -103,11 +116,11 @@ const MembershipOverview = ({
         membership={membership}
         onSubmit={onMoveMembership}
       />
-      {membership.type.name === 'MONTHLY_ABO' && !!membership.renew && <CancelMembership
+      {!!membership.renew && <CancelMembership
         membership={membership}
         onSubmit={onCancelMembership}
       />}
-      {!membership.active && (
+      {!membership.renew && (
         <Button
           onClick={() => onReactivateMembership(membership)}
           membership={membership}
