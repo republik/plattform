@@ -233,9 +233,12 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
       ].filter(Boolean)
     })
 
-    const membershipsUsers = await pgdb.public.users.find(
-      { id: memberships.map(m => m.userId) }
-    )
+    const membershipsUsers =
+      memberships.length > 0
+        ? await pgdb.public.users.find(
+          { id: memberships.map(m => m.userId) }
+        )
+        : []
 
     memberships.forEach((membership, index, memberships) => {
       memberships[index].user =
