@@ -1,6 +1,6 @@
 module.exports = {
-  async money ({ money, ignoreCache, crowdfunding }, args, { pgdb }) {
-    if (money != undefined && !ignoreCache) {
+  async money ({ money, ignoreFreeze, crowdfunding }, args, { pgdb }) {
+    if (money != undefined && !ignoreFreeze) {
       return money
     }
     return pgdb.public.queryOneField(`
@@ -22,8 +22,8 @@ module.exports = {
       crowdfundingId: crowdfunding.id
     }) || 0
   },
-  async memberships ({ memberships, ignoreCache, crowdfunding }, args, { pgdb }) {
-    if (memberships != null && !ignoreCache) {
+  async memberships ({ memberships, ignoreFreeze, crowdfunding }, args, { pgdb }) {
+    if (memberships != null && !ignoreFreeze) {
       return memberships
     }
     return pgdb.public.queryOneField(`
@@ -71,8 +71,8 @@ module.exports = {
       crowdfundingId: crowdfunding.id
     }) || 0
   },
-  async people ({ people, ignoreCache, crowdfunding }, args, { pgdb }) {
-    if (people != null && !ignoreCache) {
+  async people ({ people, ignoreFreeze, crowdfunding }, args, { pgdb }) {
+    if (people != null && !ignoreFreeze) {
       return people
     }
     return pgdb.public.queryOneField(`

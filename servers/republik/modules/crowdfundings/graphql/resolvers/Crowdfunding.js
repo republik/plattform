@@ -10,12 +10,12 @@ module.exports = {
       orderBy: ['people asc', 'money asc']
     })
   },
-  async status (crowdfunding, { ignoreCache }, { pgdb }) {
-    if (!ignoreCache && crowdfunding.result && crowdfunding.result.status) {
+  async status (crowdfunding, { ignoreFreeze }, { pgdb }) {
+    if (!ignoreFreeze && crowdfunding.result && crowdfunding.result.status) {
       const { status } = crowdfunding.result
       return {
         ...status,
-        ignoreCache,
+        ignoreFreeze,
         memberships: status.memberships || 0
       }
     }
