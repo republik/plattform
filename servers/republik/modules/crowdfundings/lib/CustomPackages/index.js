@@ -130,7 +130,7 @@ const evaluate = async ({
     return false
   }
 
-  if (!lenient && lastPeriod.beginDate > now.subtract(24, 'hours')) {
+  if (!lenient && lastPeriod.beginDate > now.clone().subtract(24, 'hours')) {
     debug('membership period began not 24 hours ago', lastPeriod.beginDate)
     return false
   }

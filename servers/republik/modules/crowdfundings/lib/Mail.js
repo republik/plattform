@@ -233,9 +233,12 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
       ].filter(Boolean)
     })
 
-    const membershipsUsers = await pgdb.public.users.find(
-      { id: memberships.map(m => m.userId) }
-    )
+    const membershipsUsers =
+      memberships.length > 0
+        ? await pgdb.public.users.find(
+          { id: memberships.map(m => m.userId) }
+        )
+        : []
 
     memberships.forEach((membership, index, memberships) => {
       memberships[index].user =
@@ -256,6 +259,8 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
       // Sort by sequenceNumber in an ascending manner
       .sort(
         (a, b) =>
+          a.membership &&
+          b.membership &&
           a.membership.sequenceNumber < b.membership.sequenceNumber ? 1 : 0
       )
       // Sort by userID, own ones up top.

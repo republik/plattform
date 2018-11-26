@@ -154,7 +154,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     // commit transaction
     await transaction.transactionCommit()
 
-    if (req.user) {
+    if (user.verified) {
       try {
         // if the user is signed in, send mail immediately
         await sendPledgeConfirmations({ userId: pledge.userId, pgdb, t })
