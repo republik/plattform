@@ -1,5 +1,6 @@
 import React from 'react'
 import { compose } from 'react-apollo'
+import { withRouter } from 'next/router'
 
 import App from '../components/App'
 import enforceAuthorization from '../components/Auth/withAuthorization'
@@ -18,16 +19,17 @@ const changeHandler = params => {
 }
 
 export default compose(
+  withRouter,
   withData,
   enforceAuthorization(['supporter', 'accountant'])
 )(props => {
   return (
     <App>
       <Body>
-        <Header search={props.url.query.search} />
+        <Header search={props.router.query.search} />
         <Content id='content'>
           <PostfinancePayments
-            params={props.url.query}
+            params={props.router.query}
             onChange={changeHandler}
           />
         </Content>
