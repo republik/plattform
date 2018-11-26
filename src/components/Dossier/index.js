@@ -10,4 +10,3 @@ export { default as TeaserFrontDossierMore } from './More'
 
 export { default as DossierTag} from './Tag'
 export { default as DossierSubheader} from './Subheader'
-export { default as DossierTileLead } from './TileLead'

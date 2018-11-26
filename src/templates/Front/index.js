@@ -34,8 +34,7 @@ import {
   TeaserFrontDossierLead,
   TeaserFrontDossierMore,
   DossierTag,
-  DossierTileHeadline,
-  DossierTileLead
+  DossierTileHeadline
 } from '../../components/Dossier'
 
 import {
@@ -455,9 +454,9 @@ const createSchema = ({
   const articleTileLead = {
     matchMdast: matchHeading(4),
     component: ({ children, attributes }) =>
-      <DossierTileLead attributes={attributes}>
+      <TeaserFrontLead attributes={attributes} columns={3}>
         {children}
-      </DossierTileLead>,
+      </TeaserFrontLead>,
     editorModule: 'headline',
     editorOptions: {
       type: 'ARTICLETILELEAD',

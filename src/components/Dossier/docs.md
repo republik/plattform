@@ -16,9 +16,9 @@ For article teasers in a dossier, a `<TeaserFrontTileRow columns={3} />` should 
 <TeaserFrontTileRow columns={3}>
   <TeaserFrontTile image='/static/rothaus_landscape.jpg'>
     <DossierTileHeadline.Editorial>The quick brown fox</DossierTileHeadline.Editorial>
-    <DossierTileLead>
+    <TeaserFrontLead>
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
-    </DossierTileLead>
+    </TeaserFrontLead>
     <TeaserFrontCredit>
       An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
@@ -32,9 +32,9 @@ For article teasers in a dossier, a `<TeaserFrontTileRow columns={3} />` should 
   </TeaserFrontTile>
   <TeaserFrontTile image='/static/rothaus_portrait.jpg'>
     <DossierTileHeadline.Editorial>The fox</DossierTileHeadline.Editorial>
-    <DossierTileLead>
+    <TeaserFrontLead>
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
-    </DossierTileLead>
+    </TeaserFrontLead>
     <TeaserFrontCredit>
       An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
@@ -48,9 +48,9 @@ For article teasers in a dossier, a `<TeaserFrontTileRow columns={3} />` should 
   </TeaserFrontTile>
   <TeaserFrontTile image='/static/rothaus_portrait.jpg'>
     <DossierTileHeadline.Editorial>The fox</DossierTileHeadline.Editorial>
-    <DossierTileLead>
+    <TeaserFrontLead>
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
-    </DossierTileLead>
+    </TeaserFrontLead>
     <TeaserFrontCredit>
       An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>

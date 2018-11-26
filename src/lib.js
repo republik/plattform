@@ -83,8 +83,7 @@ export {
   // Components below aren't teaser-specific.
   DossierTag,
   DossierSubheader,
-  DossierTileHeadline,
-  DossierTileLead
+  DossierTileHeadline
 } from './components/Dossier'
 export {
   Spinner,
