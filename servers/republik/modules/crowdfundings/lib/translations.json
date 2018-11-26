@@ -1,5 +1,5 @@
 {
-  "updated": "2018-11-22T15:32:17.842Z",
+  "updated": "2018-11-26T16:44:56.756Z",
   "title": "live",
   "data": [
     {
@@ -377,6 +377,10 @@
     {
       "key": "api/membership/cancel/category/VOID",
       "value": "Ich möchte keinen Grund angeben."
+    },
+    {
+      "key": "api/membership/cancel/category/SYSTEM",
+      "value": "SYSTEM"
     },
     {
       "key": "api/email/membership_cancel_notice/subject",
