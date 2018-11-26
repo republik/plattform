@@ -81,10 +81,6 @@ class PostfinancePayments extends Component {
       )
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.state = getInitialState(nextProps)
-  }
-
   render() {
     const props = this.props
     const renderErrors = () => {
