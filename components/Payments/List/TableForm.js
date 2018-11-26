@@ -9,7 +9,7 @@ import withDebouncedSearch from '../../Form/withDebouncedSearch'
 import CSVDownloader from './CsvDownloader'
 
 const searchHandler = (
-  handler: (value: string) => void
+  handler
 ) => event => {
   handler(event.target.value)
 }
@@ -33,8 +33,8 @@ export default withDebouncedSearch(({
   >
     <div style={formSectionStyles}>
       <Input
-        label="Search"
-        type="text"
+        label='Search'
+        type='text'
         value={search}
         onChange={searchHandler(onSearch)}
       />

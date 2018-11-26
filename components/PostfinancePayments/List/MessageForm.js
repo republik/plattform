@@ -23,8 +23,8 @@ export default class EmailForm extends Component {
   }
 
   submitHandler = (
-    onSubmit: (message: string) => void
-  ) => (event): void => {
+    onSubmit
+  ) => (event) => {
     event.preventDefault()
 
     onSubmit(this.state.message)

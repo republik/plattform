@@ -10,15 +10,15 @@ import { css } from 'glamor'
 import routes from '../../../server/routes'
 const { Link } = routes
 
-const displayDate = (rawDate: string): string => {
-  const date: Date = new Date(rawDate)
+const displayDate = (rawDate) => {
+  const date= new Date(rawDate)
   return `${date.getDate()}.${date.getMonth() +
     1}.${date.getFullYear()}`
 }
 
 const getDueDate = (
-  status: string,
-  dueDate?: string
+  status,
+  dueDate
 ) => {
   if (!dueDate) {
     return '-'
@@ -40,7 +40,7 @@ const getDueDate = (
   return displayDate(dueDate)
 }
 
-const rowStyles = (index: number) => ({
+const rowStyles = (index) => ({
   maxHeight: '40px',
   backgroundColor:
     index % 2 > 0 ? colors.secondaryBg : 'none'
@@ -63,7 +63,7 @@ const link = css({
 
 export default ({ items, ...props }) => (
   <Table {...props}>
-    {items.map((payment, index: number) => (
+    {items.map((payment, index) => (
       <Row
         key={`payment-${index}`}
         style={rowStyles(index)}

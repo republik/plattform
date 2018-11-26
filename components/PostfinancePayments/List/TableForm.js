@@ -10,7 +10,7 @@ import Boolean from '../../Form/Boolean'
 import UploadForm from './UploadForm'
 
 const searchHandler = (
-  handler: (value: string) => void
+  handler
 ) => event => {
   handler(event.target.value)
 }
@@ -36,8 +36,8 @@ export default withDebouncedSearch(({
   >
     <div style={formSectionStyles}>
       <Input
-        label="Search"
-        type="text"
+        label='Search'
+        type='text'
         value={search}
         onChange={searchHandler(onSearch)}
       />
