@@ -22,14 +22,14 @@ import {
 import {
   TeaserFrontCredit,
   TeaserFrontCreditLink,
+  TeaserFrontLead,
   TeaserFrontTile,
   TeaserFrontTileRow
 } from '../../components/TeaserFront'
 
 import {
   DossierSubheader,
-  DossierTileHeadline,
-  DossierTileLead
+  DossierTileHeadline
 } from '../../components/Dossier'
 
 import { subject } from '../Front'
@@ -85,10 +85,10 @@ const createTeasers = ({
 
   const articleTileLead = {
     matchMdast: matchHeading(4),
-    component: ({ children, attributes }) =>
-      <DossierTileLead attributes={attributes}>
+    component: ({ children, attributes, ...props }) =>
+      <TeaserFrontLead attributes={attributes} columns={3}>
         {children}
-      </DossierTileLead>,
+      </TeaserFrontLead>,
     editorModule: 'headline',
     editorOptions: {
       type: 'ARTICLETILELEAD',
