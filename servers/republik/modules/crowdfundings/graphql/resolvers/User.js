@@ -98,14 +98,14 @@ module.exports = {
     }
     return []
   },
-  async prolongBeforeDate (user, args, { pgdb, user: me }) {
+  async prolongBeforeDate (user, { ignoreClaimedMemberships = false }, { pgdb, user: me }) {
     debug('prolongBeforeDate')
 
     Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
 
     const cache = createCache({
       prefix: `User:${user.id}`,
-      key: 'prolongBeforeDate',
+      key: `prolongBeforeDate-${ignoreClaimedMemberships}`,
       ttl: QUERY_CACHE_TTL_SECONDS
     })
 
@@ -122,7 +122,11 @@ module.exports = {
       }
 
       memberships = await resolveMemberships({ memberships, pgdb })
-      const eligableMemberships = findEligableMemberships({ memberships, user })
+      const eligableMemberships = findEligableMemberships({
+        memberships,
+        user,
+        ignoreClaimedMemberships
+      })
 
       if (eligableMemberships.filter(m => !m.active).length > 0) {
         debug('found dormant membership, return prolongBeforeDate: null')
