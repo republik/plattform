@@ -68,7 +68,7 @@ const publish = async (args, pgdb) => {
       message,
       options
     )
-    debug('#recipients %d, message: %O, result: %O', tokens.length, message, result)
+    debug('Firebase: #recipients %d, message: %O, result: %O', tokens.length, message, result)
     const staleTokens = result.results.reduce((acc, cur, idx) => {
       if (cur.error && cur.error.code === 'messaging/registration-token-not-registered') {
         acc.push(tokens[idx])
@@ -77,7 +77,7 @@ const publish = async (args, pgdb) => {
     }, [])
     if (staleTokens.length > 0) {
       await deleteSessionForDevices(staleTokens, pgdb)
-      debug('deleted sessions for stale device tokens', staleTokens)
+      debug('deleted sessions for stale firebase device tokens', staleTokens)
     }
   } else {
     debug('no receipients found for publish: %O', args)
