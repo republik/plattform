@@ -37,7 +37,7 @@
     "@babel/preset-react": "^7.0.0",
     "@orbiting/remark-preset": "^1.2.3",
     "babel-tape-runner": "^3",
-    "catalog": "^3.5.5",
+    "catalog": "^3.6.0",
     "commitizen": "^2.9.6",
     "core-js": "^2.4.1",
     "cz-conventional-changelog": "^2.0.0",
