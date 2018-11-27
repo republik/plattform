@@ -69,27 +69,15 @@ PgDb.connect().then(async pgdb => {
     console.log("dry run: this won't change anything")
   }
 
-  // load users with membership or pledge
+  // load users with a membership
   const users = await pgdb.query(`
     SELECT
-      u.*
+      DISTINCT(u.*)
     FROM
       users u
     JOIN
       memberships m
       ON m."userId" = u.id
-    WHERE
-      u.id != :PARKING_USER_ID
-
-    UNION
-
-    SELECT
-      u.*
-    FROM
-      users u
-    JOIN
-      pledges p
-      ON p."userId" = u.id
     WHERE
       u.id != :PARKING_USER_ID
   `, {
@@ -186,7 +174,7 @@ PgDb.connect().then(async pgdb => {
   stats.numProlongUsers = prolongUsers.length
 
   const bonusEligableUsers = await Promise.filter(
-    inNeedForProlongUsers,
+    prolongUsers,
     async (user) => {
       const eligable = await getIsBonusEligable(user, {}, { pgdb, user: me })
       stats.numBonusEligableProgress += 1
