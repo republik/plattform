@@ -51,7 +51,7 @@ const styles = {
     color: colors.text,
     paddingLeft: `${WIDTH}px`,
     position: 'relative',
-    ...serifRegular16,
+    ...serifRegular17,
     [mUp]: {
       ...serifRegular19,
       paddingLeft: 0
@@ -65,6 +65,7 @@ const styles = {
       margin: '12px 0',
       [mUp]: {
         ...serifRegular17,
+        lineHeight: '28px',
         margin: '14px 0'
       }
     },

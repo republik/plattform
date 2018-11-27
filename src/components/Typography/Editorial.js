@@ -132,7 +132,7 @@ export const Format = ({ children, color, attributes, ...props }) => (
 const paragraph = css({
   color: colors.text,
   margin: '22px 0 22px 0',
-  ...styles.serifRegular16,
+  ...styles.serifRegular17,
   [mUp]: {
     ...styles.serifRegular19,
     margin: '30px 0 30px 0'
@@ -154,7 +154,7 @@ export const P = ({ children, attributes, ...props }) => (
 )
 
 const question = css({
-  ...styles.serifBold16,
+  ...styles.serifBold17,
   margin: '36px 0 -14px 0',
   [mUp]: {
     ...styles.serifBold19,

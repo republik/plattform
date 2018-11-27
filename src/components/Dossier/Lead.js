@@ -2,11 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 import { mUp } from '../TeaserFront/mediaQueries'
-import { serifRegular16, serifRegular23 } from '../Typography/styles'
+import { serifRegular17, serifRegular23 } from '../Typography/styles'
 
 const styles = {
   lead: css({
-    ...serifRegular16,
+    ...serifRegular17,
     margin: '0 0 10px 0',
     [mUp]: {
       ...serifRegular23,
