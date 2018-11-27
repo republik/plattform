@@ -12,9 +12,12 @@ type queries {
   # ensures signed in
   checkUsername(username: String): Boolean
 
-  # get user by slug—a id or username
+  # get user by
+  # - slug—a id or username
+  # - accessToken
   # only returns users with a public profile
-  user(slug: String): User
+  # (expcept for me is admin and supporter)
+  user(slug: String, accessToken: ID): User
 
   # search for users
   # required role: editor
