@@ -2,6 +2,7 @@ import React from 'react'
 import { Label, colors } from '@project-r/styleguide'
 import { css } from 'glamor'
 import routes from '../../../server/routes'
+import SortIndicator from '../../SortIndicator'
 
 const { Link } = routes
 const styles = {
