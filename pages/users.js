@@ -1,4 +1,5 @@
 import React from 'react'
+import { withRouter } from 'next/router'
 import { compose } from 'react-apollo'
 import { enforceAuthorization } from '../components/Auth/withAuthorization'
 import withData from '../lib/withData'
@@ -17,15 +18,16 @@ const changeHandler = params => {
 
 export default compose(
   withData,
+  withRouter,
   enforceAuthorization(['supporter'])
 )(props => {
   return (
     <App>
       <Body>
-        <Header search={props.url.query.search} />
+        <Header search={props.router.query.search} />
         <Content id='content'>
           <Users
-            params={props.url.query}
+            params={props.router.query}
             onChange={changeHandler}
           />
         </Content>

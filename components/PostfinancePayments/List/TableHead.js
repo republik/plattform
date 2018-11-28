@@ -22,7 +22,7 @@ const interactiveStyles = {
 }
 
 const createSortHandler = (sort, handler) => (
-  fieldName: string
+  fieldName
 ) => () => {
   if (sort.field !== fieldName) {
     return handler({
@@ -39,7 +39,7 @@ const createSortHandler = (sort, handler) => (
 }
 
 const createIndicator = sort => (
-  fieldName: string
+  fieldName
 ) => {
   if (sort.field === fieldName) {
     return (

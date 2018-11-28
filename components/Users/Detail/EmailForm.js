@@ -15,7 +15,7 @@ export default class EmailForm extends Component {
     this.state = getInitialState(props)
   }
 
-  emailChangeHandler = (event, value: string) =>
+  emailChangeHandler = (event, value) =>
     this.setState(() => ({
       isDirty: true,
       user: {
@@ -29,7 +29,7 @@ export default class EmailForm extends Component {
           `That's not a valid email address.`)
     }))
 
-  submitHandler = onSubmit => (event): void => {
+  submitHandler = onSubmit => (event) => {
     event.preventDefault()
     const { user } = this.state
     if (

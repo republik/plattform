@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import Input from './Input'
 import moment from 'moment'
 
-const standardDate = (rawDate?): string =>
+const standardDate = (rawDate) =>
   moment(rawDate).format('YYYY-MM-DD')
 
-const localDate = (rawDate?): string =>
+const localDate = (rawDate) =>
   moment(rawDate).format('YYYY-MM-DD')
 
 export const parse = str => {
@@ -18,7 +18,7 @@ export const parse = str => {
   return { field: field.toString(), from, to }
 }
 
-export const serialize = ({ field, from, to }): string =>
+export const serialize = ({ field, from, to }) =>
   `${field}_${from}:${to}`
 
 const getInitialState = ({ dateRange, ...props }) =>
@@ -65,7 +65,7 @@ export class Form extends Component {
     )
   }
 
-  dateChangeHandler = (fieldName: string) => event => {
+  dateChangeHandler = (fieldName) => event => {
     const value = event.target.value
     this.setState(
       () => ({

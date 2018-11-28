@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { withApollo } from 'react-apollo'
-import ApolloClient from 'apollo-client'
 import gql from 'graphql-tag'
 import { css } from 'glamor'
 import ErrorMessage from '../../ErrorMessage'
@@ -29,7 +28,7 @@ const query = gql`
 `
 
 class CSVDownloader extends Component {
-  constructor(props: { client: ApolloClient }) {
+  constructor(props) {
     super(props)
     this.state = {
       csv: null,
@@ -39,7 +38,7 @@ class CSVDownloader extends Component {
     }
   }
 
-  setCompany = (event: { target: { value: string } }) => {
+  setCompany = (event) => {
     const companyName = event.target.value
     this.setState(() => ({
       companyName: companyName

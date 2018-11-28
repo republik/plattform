@@ -22,8 +22,8 @@ const USERS_LIMIT = 200
 const identity = v => v
 
 const createChangeHandler = (params, handler) => (
-  fieldName: string,
-  serializer?
+  fieldName,
+  serializer
 ) => value => {
   const s = serializer || identity
   if (value && value !== '' && Object.keys(value)) {

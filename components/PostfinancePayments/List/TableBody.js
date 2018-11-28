@@ -20,13 +20,13 @@ const link = css({
   }
 })
 
-const displayDate = (rawDate: string): string => {
-  const date: Date = new Date(rawDate)
+const displayDate = (rawDate) => {
+  const date= new Date(rawDate)
   return `${date.getDate()}.${date.getMonth() +
     1}.${date.getFullYear()}`
 }
 
-const rowStyles = (index: number) => ({
+const rowStyles = (index) => ({
   maxHeight: '230px',
   padding: '10px 0',
   backgroundColor:
@@ -50,7 +50,7 @@ export default ({
         return v.hidden !== true
       })
       .map(
-        (postfinancePayment, index: number) => (
+        (postfinancePayment, index) => (
           <Row
             key={`postfinancePayment-${index}`}
             style={rowStyles(index)}
@@ -79,7 +79,7 @@ export default ({
                   message={
                     postfinancePayment.mitteilung
                   }
-                  onSubmit={(message: string) =>
+                  onSubmit={(message) =>
                     onMessage({
                       id: postfinancePayment.id,
                       message

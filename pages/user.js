@@ -1,4 +1,6 @@
 import React from 'react'
+import { withRouter } from 'next/router'
+
 import { compose } from 'react-apollo'
 import { enforceAuthorization } from '../components/Auth/withAuthorization'
 import withData from '../lib/withData'
@@ -12,6 +14,7 @@ import {
 import User from '../components/Users/Detail'
 
 export default compose(
+  withRouter,
   withData,
   enforceAuthorization(['supporter'])
 )(props => {
@@ -20,7 +23,7 @@ export default compose(
       <Body>
         <Header />
         <Content id='content'>
-          <User params={props.url.query} />
+          <User params={props.router.query} />
         </Content>
       </Body>
     </App>

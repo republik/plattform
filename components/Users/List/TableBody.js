@@ -9,7 +9,7 @@ import { css } from 'glamor'
 import routes from '../../../server/routes'
 const { Link } = routes
 
-const rowStyles = (index: number) => ({
+const rowStyles = (index) => ({
   maxHeight: '40px',
   backgroundColor:
     index % 2 > 0 ? colors.secondaryBg : 'none'
@@ -38,7 +38,7 @@ const link = css({
 
 export default ({ items, ...props }) => (
   <Table {...props}>
-    {items.map((user, index: number) => (
+    {items.map((user, index) => (
       <Row
         key={`user-${index}`}
         style={rowStyles(index)}
