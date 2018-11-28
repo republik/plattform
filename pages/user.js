@@ -3,7 +3,6 @@ import { withRouter } from 'next/router'
 
 import { compose } from 'react-apollo'
 import { enforceAuthorization } from '../components/Auth/withAuthorization'
-import withData from '../lib/withData'
 
 import App from '../components/App'
 import {
@@ -15,7 +14,6 @@ import User from '../components/Users/Detail'
 
 export default compose(
   withRouter,
-  withData,
   enforceAuthorization(['supporter'])
 )(props => {
   return (

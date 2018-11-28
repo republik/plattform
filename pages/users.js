@@ -2,7 +2,6 @@ import React from 'react'
 import { withRouter } from 'next/router'
 import { compose } from 'react-apollo'
 import { enforceAuthorization } from '../components/Auth/withAuthorization'
-import withData from '../lib/withData'
 import App from '../components/App'
 import {
   Body,
@@ -17,7 +16,6 @@ const changeHandler = params => {
 }
 
 export default compose(
-  withData,
   withRouter,
   enforceAuthorization(['supporter'])
 )(props => {

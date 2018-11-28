@@ -1,5 +1,4 @@
 import React from 'react'
-import withData from '../lib/withData'
 import App from '../components/App'
 import {
   Body,
@@ -8,7 +7,7 @@ import {
   Footer
 } from '../components/Layout'
 
-export default withData(() => {
+export default () => {
   return (
     <App>
       <Body>
@@ -20,4 +19,4 @@ export default withData(() => {
       </Body>
     </App>
   )
-})
+}
