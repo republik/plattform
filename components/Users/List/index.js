@@ -1,21 +1,17 @@
 import React, { Fragment } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
-import ErrorMessage from '../../ErrorMessage'
-
 import InfiniteScroller from 'react-infinite-scroller'
+import { Loader } from '@project-r/styleguide'
 
+import Table from './Table'
 import TableForm from './TableForm'
-import TableHead from './TableHead'
-import TableBody from './TableBody'
 import DateRange from '../../Form/DateRange'
 
 import {
   serializeOrderBy,
   deserializeOrderBy
 } from '../../../lib/utils/queryParams'
-
-import { Loader } from '@project-r/styleguide'
 
 const USERS_LIMIT = 200
 
@@ -62,25 +58,26 @@ const Users = props => {
           DateRange.serialize
         )}
       />
-      <TableHead
-        sort={deserializeOrderBy(params.orderBy)}
-        onSort={changeHandler(
-          'orderBy',
-          serializeOrderBy
-        )}
-      />
       <Loader
         error={data.error}
         loading={data.loading}
-        render={() => <Fragment>
+        render={() => (
           <InfiniteScroller
             loadMore={loadMoreUsers}
             hasMore={users.count > users.items.length}
             useWindow={false}
           >
-            <TableBody items={users.items} />
+            <Table
+              items={users.items}
+              sort={deserializeOrderBy(params.orderBy)}
+              onSort={changeHandler(
+                'orderBy',
+                serializeOrderBy
+              )}
+            />
           </InfiniteScroller>
-        </Fragment>} />
+        )}
+      />
     </Fragment>
   )
 }
