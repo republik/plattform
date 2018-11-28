@@ -42,7 +42,7 @@ const getPayload = ({ userId, scope, expiresAt }) => {
 }
 
 const generateForUser = (user, scope) => {
-  const key = user._raw.accessKey
+  const key = user.accessKey || user._raw.accessKey
   if (!key) {
     throw new MissingKeyError()
   }

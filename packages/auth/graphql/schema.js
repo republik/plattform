@@ -5,6 +5,7 @@ schema {
 }
 
 type queries {
+  # access token wins over session
   me(accessToken: ID): User
 
   # check if a username is available

@@ -15,6 +15,7 @@ const crypto = require('crypto')
 const sleep = require('await-sleep')
 const fetch = require('isomorphic-unfetch')
 const moment = require('moment')
+const uniqBy = require('lodash/uniqBy')
 const { transformUser, AccessToken } = require('@orbiting/backend-modules-auth')
 const {
   isBonusEligable: getIsBonusEligable,
@@ -34,7 +35,8 @@ if (!MAILCHIMP_MAIN_LIST_ID) {
 
 const STATS_INTERVAL_SECS = 2
 const PROLONG_BEFORE_DATE = moment('2019-01-16')
-const BONUS_TAG_NAME = 'BONUS'
+const TOKEN_FIELD = 'CP_ATOKEN2'
+const BONUS_TAG_NAME = 'BONUS2'
 
 const me = {
   roles: ['admin']
@@ -67,27 +69,15 @@ PgDb.connect().then(async pgdb => {
     console.log("dry run: this won't change anything")
   }
 
-  // load users with membership or pledge
+  // load users with a membership
   const users = await pgdb.query(`
     SELECT
-      u.*
+      DISTINCT(u.*)
     FROM
       users u
     JOIN
       memberships m
       ON m."userId" = u.id
-    WHERE
-      u.id != :PARKING_USER_ID
-
-    UNION
-
-    SELECT
-      u.*
-    FROM
-      users u
-    JOIN
-      pledges p
-      ON p."userId" = u.id
     WHERE
       u.id != :PARKING_USER_ID
   `, {
@@ -112,7 +102,11 @@ PgDb.connect().then(async pgdb => {
   const inNeedForProlongUsers = await Promise.filter(
     users,
     async (user) => {
-      const prolongBeforeDate = await getProlongBeforeDate(user, {}, { pgdb, user: me })
+      const prolongBeforeDate = await getProlongBeforeDate(
+        user,
+        { ignoreClaimedMemberships: true },
+        { pgdb, user: me }
+      )
       stats.numNeedProlongProgress += 1
       if (prolongBeforeDate && moment(prolongBeforeDate).isBefore(PROLONG_BEFORE_DATE)) {
         stats.numNeedProlong += 1
@@ -124,8 +118,63 @@ PgDb.connect().then(async pgdb => {
   )
   delete stats.numNeedProlongProgress
 
+  // users who gifted a membership, which is active,
+  // renewing and needs prolong before PROLONG_BEFORE_DATE
+  const canProlongUsers = await pgdb.query(`
+    WITH givers AS (
+      SELECT
+        u.id AS "userId",
+        m.id AS "membershipId",
+        max(mp."endDate") AS "maxEndDate"
+      FROM
+        users u
+      JOIN
+        pledges p
+        ON p."userId" = u.id
+      JOIN
+        memberships m
+        ON
+          m."pledgeId" = p.id AND
+          m."userId" != u.id AND
+          m."active" = true AND
+          m."renew" = true
+      JOIN
+        "membershipPeriods" mp
+        ON
+          m.id = mp."membershipId"
+      WHERE
+        u.id != :PARKING_USER_ID
+      GROUP BY
+        1, 2
+      ORDER BY
+       1, 3
+    )
+      SELECT
+        u.*
+      FROM
+        givers
+      JOIN
+        users u
+        ON givers."userId" = u.id
+      WHERE
+        "maxEndDate" < :PROLONG_BEFORE_DATE
+  `, {
+    PARKING_USER_ID,
+    PROLONG_BEFORE_DATE
+  })
+  stats.numCanProlongUsers = canProlongUsers.length
+
+  const prolongUsers = uniqBy(
+    [
+      ...inNeedForProlongUsers,
+      ...canProlongUsers
+    ],
+    u => u.id
+  )
+  stats.numProlongUsers = prolongUsers.length
+
   const bonusEligableUsers = await Promise.filter(
-    inNeedForProlongUsers,
+    prolongUsers,
     async (user) => {
       const eligable = await getIsBonusEligable(user, {}, { pgdb, user: me })
       stats.numBonusEligableProgress += 1
@@ -140,7 +189,7 @@ PgDb.connect().then(async pgdb => {
 
   console.log('building operations...')
   let operations = await Promise.map(
-    inNeedForProlongUsers,
+    prolongUsers,
     async (user) => {
       const email = user.email.toLowerCase()
       const accessToken = await AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
@@ -153,7 +202,7 @@ PgDb.connect().then(async pgdb => {
           email_address: email,
           status_if_new: 'subscribed',
           'merge_fields': {
-            'CP_ATOKEN': accessToken
+            [TOKEN_FIELD]: accessToken
           }
           // of course tags can not be provided here 🤬
         })
