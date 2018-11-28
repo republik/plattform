@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { compose } from 'redux'
+import { compose } from 'react-apollo'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import { css } from 'glamor'
