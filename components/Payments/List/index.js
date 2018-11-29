@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import ErrorMessage from '../../ErrorMessage'
 import InfiniteScroller from 'react-infinite-scroller'
+import { Loader } from '@project-r/styleguide'
 
 import TableForm from './TableForm'
-import TableHead from './TableHead'
-import TableBody from './TableBody'
+import Table from './Table'
 
 import DateRange from '../../Form/DateRange'
 import StringArray from '../../Form/StringArray'
@@ -43,7 +43,8 @@ const Payments = props => {
     return <div>Loading</div>
   }
   const {
-    data: { payments: { items, count } },
+    data,
+    data: { payments },
     params,
     loadMorePayments,
     onChange
@@ -55,40 +56,37 @@ const Payments = props => {
   )
 
   return (
-    <InfiniteScroller
-      loadMore={loadMorePayments}
-      hasMore={count > items.length}
-      useWindow={false}
-    >
-      <div>
-        <TableForm
-          defaultSearch={params.search}
-          companyName={params.companyName}
-          onSearch={changeHandler('search')}
-          onSelectCompany={changeHandler('companyName')}
-          dateRange={DateRange.parse(params.dateRange)}
-          onDateRange={changeHandler(
-            'dateRange',
-            DateRange.serialize
-          )}
-          stringArray={StringArray.parse(
-            params.stringArray
-          )}
-          onStringArray={changeHandler(
-            'stringArray',
-            StringArray.serialize
-          )}
-        />
-        <TableHead
-          sort={deserializeOrderBy(params.orderBy)}
-          onSort={changeHandler(
-            'orderBy',
-            serializeOrderBy
-          )}
-        />
-        <TableBody items={items} />
-      </div>
-    </InfiniteScroller>
+    <Fragment>
+      <TableForm
+        defaultSearch={params.search}
+        onSearch={changeHandler('search')}
+        dateRange={params.dateRange}
+        onDateRange={changeHandler(
+          'dateRange',
+          DateRange.serialize
+        )}
+      />
+      <Loader
+        error={data.error}
+        loading={data.loading}
+        render={() => (
+          <InfiniteScroller
+            loadMore={loadMorePayments}
+            hasMore={payments.count > payments.items.length}
+            useWindow={false}
+          >
+            <Table
+              items={payments.items}
+              sort={deserializeOrderBy(params.orderBy)}
+              onSort={changeHandler(
+                'orderBy',
+                serializeOrderBy
+              )}
+            />
+          </InfiniteScroller>
+        )}
+      />
+    </Fragment>
   )
 }
 

@@ -57,11 +57,11 @@ export default ({ sort, onSort, ...props }) => {
   )
   const indicator = createIndicator(sort || {})
   return (
-    <Sticky scrollElement="#content" {...props}>
+    <Sticky scrollElement='#content' {...props}>
       <Table>
         <Row style={rowStyles}>
           <Cell
-            flex="0 0 10%"
+            flex='0 0 10%'
             style={interactiveStyles}
             onClick={sortHandler('hrid')}
           >
@@ -71,7 +71,7 @@ export default ({ sort, onSort, ...props }) => {
           </Cell>
 
           <Cell
-            flex="0 0 10%"
+            flex='0 0 10%'
             style={interactiveStyles}
             onClick={sortHandler('total')}
           >
@@ -81,7 +81,7 @@ export default ({ sort, onSort, ...props }) => {
           </Cell>
 
           <Cell
-            flex="0 0 20%"
+            flex='0 0 20%'
             style={interactiveStyles}
             onClick={sortHandler('status')}
           >
@@ -91,7 +91,7 @@ export default ({ sort, onSort, ...props }) => {
           </Cell>
 
           <Cell
-            flex="0 0 10%"
+            flex='0 0 10%'
             style={interactiveStyles}
             onClick={sortHandler('dueDate')}
           >
@@ -101,7 +101,7 @@ export default ({ sort, onSort, ...props }) => {
           </Cell>
 
           <Cell
-            flex="0 0 20%"
+            flex='0 0 20%'
             style={interactiveStyles}
             onClick={sortHandler('method')}
           >
@@ -111,7 +111,7 @@ export default ({ sort, onSort, ...props }) => {
           </Cell>
 
           <Cell
-            flex="0 0 10%"
+            flex='0 0 10%'
             style={interactiveStyles}
             onClick={sortHandler('createdAt')}
           >
@@ -119,7 +119,7 @@ export default ({ sort, onSort, ...props }) => {
               Created{indicator('createdAt')}
             </Label>
           </Cell>
-          <Cell flex="0 0 5%">
+          <Cell flex='0 0 5%'>
             <Label>Options</Label>
           </Cell>
         </Row>
