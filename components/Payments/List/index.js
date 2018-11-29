@@ -5,36 +5,19 @@ import ErrorMessage from '../../ErrorMessage'
 import InfiniteScroller from 'react-infinite-scroller'
 import { Loader } from '@project-r/styleguide'
 
-import TableForm from './TableForm'
-import Table from './Table'
-
 import DateRange from '../../Form/DateRange'
 import StringArray from '../../Form/StringArray'
 
 import {
   serializeOrderBy,
-  deserializeOrderBy
-} from '../../../lib/utils/queryParams'
+  deserializeOrderBy,
+  createChangeHandler
+} from '../../base/tables'
+
+import TableForm from './TableForm'
+import Table from './Table'
 
 const PAYMENTS_LIMIT = 200
-
-const identity = v => v
-
-const createChangeHandler = (params, handler) => (
-  fieldName,
-  serializer
-) => value => {
-  const s = serializer || identity
-  if (value && value !== '') {
-    handler({
-      ...params,
-      ...{ [fieldName]: s(value) }
-    })
-  } else {
-    delete params[fieldName]
-    handler(params)
-  }
-}
 
 const Payments = props => {
   if (props.data.error) {
