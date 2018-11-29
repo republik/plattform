@@ -4,7 +4,6 @@ import { withRouter } from 'next/router'
 
 import App from '../components/App'
 import { enforceAuthorization } from '../components/Auth/withAuthorization'
-import withData from '../lib/withData'
 
 import {
   Body,
@@ -20,7 +19,6 @@ const changeHandler = params => {
 
 export default compose(
   withRouter,
-  withData,
   enforceAuthorization(['supporter'])
 )(props => {
   return (

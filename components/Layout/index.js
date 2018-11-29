@@ -1,4 +1,4 @@
-import { compose } from 'redux'
+import { compose } from 'react-apollo'
 import HeaderComponent from './Header'
 import {
   createTile,

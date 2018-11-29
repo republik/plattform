@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'glamor'
-import { compose } from 'redux'
+import { compose } from 'react-apollo'
 import {
   createContainer,
   createTile
