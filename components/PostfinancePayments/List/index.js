@@ -3,37 +3,21 @@ import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import InfiniteScroller from 'react-infinite-scroller'
 import { Loader } from '@project-r/styleguide'
-import {
-  serializeOrderBy,
-  deserializeOrderBy
-} from '../../../lib/utils/queryParams'
 
 import DateRange from '../../Form/DateRange'
 import Bool from '../../Form/Boolean'
 import ErrorMessage from '../../ErrorMessage'
 
+import {
+  serializeOrderBy,
+  deserializeOrderBy,
+  createChangeHandler
+} from '../../base/tables'
+
 import TableForm from './TableForm'
 import Table from './Table'
 
 const PAYMENTS_LIMIT = 200
-
-const identity = v => v
-
-const createChangeHandler = (params, handler) => (
-  fieldName,
-  serializer
-) => value => {
-  const s = serializer || identity
-  if (value && value !== '') {
-    handler({
-      ...params,
-      ...{ [fieldName]: s(value) }
-    })
-  } else {
-    delete params[fieldName]
-    handler(params)
-  }
-}
 
 const getInitialState = () => ({
   error: false,
