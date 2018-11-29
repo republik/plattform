@@ -118,6 +118,9 @@ const paymentsQuery = gql`
         hrid
         user {
           id
+          name
+          firstName
+          lastName
         }
         createdAt
         updatedAt

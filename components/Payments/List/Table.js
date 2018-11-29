@@ -112,10 +112,12 @@ export default ({ items, sort, onSort, ...props }) => {
   return (
     <table {...props} {...styles.table}>
       <colgroup>
+        <col style={{ width: '100px' }} />
         <col />
-        <col style={{ width: '20%' }} />
-        <col style={{ width: '20%' }} />
-        <col style={{ maxWidth: '90px' }} />
+        <col />
+        <col style={{ width: '150px' }} />
+        <col style={{ width: '100px' }} />
+        <col style={{ width: '180px' }} />
         <col style={{ maxWidth: '100px' }} />
       </colgroup>
       <thead>
@@ -126,6 +128,11 @@ export default ({ items, sort, onSort, ...props }) => {
             onClick={sortHandler('hrid')}
           >
             <Label>HR-Nummer {indicator('hrid')}</Label>
+          </th>
+          <th
+            {...styles.left}
+          >
+            <Label>Bezahlt von</Label>
           </th>
           <th
             {...styles.interactive}
@@ -143,24 +150,24 @@ export default ({ items, sort, onSort, ...props }) => {
           </th>
           <th
             {...styles.interactive}
+            {...styles.left}
             onClick={sortHandler('dueDate')}
           >
             <Label>Fälligkeit{indicator('dueDate')}</Label>
           </th>
           <th
             {...styles.interactive}
+            {...styles.left}
             onClick={sortHandler('method')}
           >
             <Label>Zahlungsart{indicator('method')}</Label>
           </th>
           <th
             {...styles.interactive}
+            {...styles.left}
             onClick={sortHandler('createdAt')}
           >
             <Label>Erstellt{indicator('createdAt')}</Label>
-          </th>
-          <th>
-            <Label>Options</Label>
           </th>
         </tr>
       </thead>
@@ -168,22 +175,23 @@ export default ({ items, sort, onSort, ...props }) => {
         {items.map((payment, index) => (
           <tr key={`payment-${index}`} {...styles.row}>
             <td>{payment.hrid}</td>
-            <td>{chfFormat(payment.total / 100)}</td>
-            <td>{payment.status}</td>
-            <td {...styles.center}>{
-              getDueDate(payment.status, payment.dueDate)
-            }</td>
-            <td>{payment.method}</td>
-            <td {...styles.center}>
+            <td>
               <Link
                 route='user'
                 params={{ userId: payment.user.id }}
               >
                 <a {...styles.link}>
-                  Details
+                  {payment.user.name || (`${payment.user.firstName} ${payment.user.lastName}`)}
                 </a>
               </Link>
             </td>
+            <td>{chfFormat(payment.total / 100)}</td>
+            <td>{payment.status}</td>
+            <td>{
+              getDueDate(payment.status, payment.dueDate)
+            }</td>
+            <td>{payment.method}</td>
+            <td>{displayDate(payment.createdAt)}</td>
           </tr>
         ))}
       </tbody>
