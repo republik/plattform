@@ -4,34 +4,18 @@ import gql from 'graphql-tag'
 import InfiniteScroller from 'react-infinite-scroller'
 import { Loader } from '@project-r/styleguide'
 
-import Table from './Table'
-import TableForm from './TableForm'
 import DateRange from '../../Form/DateRange'
 
 import {
   serializeOrderBy,
-  deserializeOrderBy
-} from '../../../lib/utils/queryParams'
+  deserializeOrderBy,
+  createChangeHandler
+} from '../../base/tables'
+
+import Table from './Table'
+import TableForm from './TableForm'
 
 const USERS_LIMIT = 200
-
-const identity = v => v
-
-const createChangeHandler = (params, handler) => (
-  fieldName,
-  serializer
-) => value => {
-  const s = serializer || identity
-  if (value && value !== '' && Object.keys(value)) {
-    handler({
-      ...params,
-      ...{ [fieldName]: s(value) }
-    })
-  } else {
-    delete params[fieldName]
-    handler(params)
-  }
-}
 
 const Users = props => {
   const {
