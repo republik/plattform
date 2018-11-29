@@ -1,23 +1,33 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { serifBold24, serifBold28 } from '../Typography/styles'
+import { serifBold24, serifBold28, serifBold42 } from '../Typography/styles'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { mUp } from '../../theme/mediaQueries'
 
+const baseStyle = {
+  ...serifBold24,
+  color: colors.text
+}
+
 const styles = {
-  text: css({
-    ...serifBold24,
+  default: css({
+    ...baseStyle,
     [mUp]: {
       ...serifBold28
-    },
-    color: colors.text
+    }
+  }),
+  large: css({
+    ...baseStyle,
+    [mUp]: {
+      ...serifBold42
+    }
   })
 }
 
-export const Text = ({ children, attributes }) => {
+export const Text = ({ children, attributes, size }) => {
   return (
-    <div {...attributes} {...styles.text}>
+    <div {...attributes} {...styles[size]}>
       {children}
     </div>
   )
@@ -25,7 +35,12 @@ export const Text = ({ children, attributes }) => {
 
 Text.propTypes = {
   children: PropTypes.node.isRequired,
-  attributes: PropTypes.object
+  attributes: PropTypes.object,
+  size: PropTypes.oneOf(['default', 'large'])
+}
+
+Text.defaultProps = {
+  size: 'default'
 }
 
 export default Text

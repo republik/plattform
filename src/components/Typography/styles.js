@@ -107,6 +107,13 @@ export const serifBold52 = {
   lineHeight: '56px',
   letterSpacing: -0.45
 }
+export const serifBold42 = {
+  fontFamily: fontFamilies.serifBold,
+  fontWeight: 'normal',
+  fontSize: 42,
+  lineHeight: '48px',
+  letterSpacing: -0.3
+}
 export const serifBold36 = {
   fontFamily: fontFamilies.serifBold,
   fontWeight: 'normal',
