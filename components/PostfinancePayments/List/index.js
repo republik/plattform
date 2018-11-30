@@ -1,40 +1,23 @@
-import React, { Component } from 'react'
-import { graphql } from 'react-apollo'
+import React, { Component, Fragment } from 'react'
+import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
-import { compose } from 'react-apollo'
 import InfiniteScroller from 'react-infinite-scroller'
+import { Loader } from '@project-r/styleguide'
+
 import DateRange from '../../Form/DateRange'
 import Bool from '../../Form/Boolean'
 import ErrorMessage from '../../ErrorMessage'
 
-import TableForm from './TableForm'
-import TableHead from './TableHead'
-import TableBody from './TableBody'
-
 import {
   serializeOrderBy,
-  deserializeOrderBy
-} from '../../../lib/utils/queryParams'
+  deserializeOrderBy,
+  createChangeHandler
+} from '../../Tables/utils'
+
+import TableForm from './TableForm'
+import Table from './Table'
 
 const PAYMENTS_LIMIT = 200
-
-const identity = v => v
-
-const createChangeHandler = (params, handler) => (
-  fieldName,
-  serializer
-) => value => {
-  const s = serializer || identity
-  if (value && value !== '') {
-    handler({
-      ...params,
-      ...{ [fieldName]: s(value) }
-    })
-  } else {
-    delete params[fieldName]
-    handler(params)
-  }
-}
 
 const getInitialState = () => ({
   error: false,
@@ -42,46 +25,37 @@ const getInitialState = () => ({
 })
 
 class PostfinancePayments extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = getInitialState(props)
+
+    this.handleError = e =>
+      this.setState({ error: e })
+
+    this.uploadHandler = ({ csv }) => {
+      this.props
+        .uploadCSV({ csv })
+        .then(v =>
+          this.setState({
+            feedback: v.data.importPostfinanceCSV
+          })
+        )
+        .catch(this.handleError)
+    }
+
+    this.rematchHandler = () => {
+      this.props
+        .rematchPayments()
+        .then(v =>
+          this.setState({
+            feedback: v.data.rematchPayments
+          })
+        )
+        .catch(this.handleError)
+    }
   }
 
-  uploadHandler = ({ csv }) => {
-    this.props
-      .uploadCSV({ csv })
-      .then(v =>
-        this.setState(() => ({
-          ...this.state,
-          feedback: v.data.importPostfinanceCSV
-        }))
-      )
-      .catch(e =>
-        this.setState(() => ({
-          ...this.state,
-          error: e
-        }))
-      )
-  }
-
-  rematchHandler = () => {
-    this.props
-      .rematchPayments()
-      .then(v =>
-        this.setState(() => ({
-          ...this.state,
-          feedback: v.data.rematchPayments
-        }))
-      )
-      .catch(e =>
-        this.setState(() => ({
-          ...this.state,
-          error: e
-        }))
-      )
-  }
-
-  render() {
+  render () {
     const props = this.props
     const renderErrors = () => {
       if (props.data.error || this.state.error) {
@@ -99,9 +73,10 @@ class PostfinancePayments extends Component {
     }
 
     const {
+      data,
       data: { postfinancePayments },
       params,
-      loadMorePayments,
+      loadMorePostfinancePayments,
       updatePostfinancePayment,
       hidePostfinancePayment,
       manuallyMatchPostfinancePayment,
@@ -116,46 +91,50 @@ class PostfinancePayments extends Component {
     if (!props.data.postfinancePayments) {
       return <div>Loading</div>
     }
-    const { items, count } = postfinancePayments
+
     return (
-      <InfiniteScroller
-        loadMore={loadMorePayments}
-        hasMore={count > items.length}
-        useWindow={false}
-      >
-        <div>
-          {renderErrors()}
-          {this.state.feedback && (
-            <div>{this.state.feedback}</div>
+      <Fragment>
+        <TableForm
+          defaultSearch={params.search}
+          onSearch={changeHandler('search')}
+          dateRange={DateRange.parse(params.dateRange)}
+          onDateRange={changeHandler(
+            'dateRange',
+            DateRange.serialize
           )}
-          <TableForm
-            defaultSearch={params.search}
-            onSearch={changeHandler('search')}
-            dateRange={DateRange.parse(params.dateRange)}
-            onDateRange={changeHandler(
-              'dateRange',
-              DateRange.serialize
-            )}
-            bool={Bool.parse(params.bool)}
-            onBool={changeHandler('bool', Bool.serialize)}
-            onUpload={this.uploadHandler}
-            onRematch={this.rematchHandler}
-          />
-          <TableHead
-            sort={deserializeOrderBy(params.orderBy)}
-            onSort={changeHandler(
-              'orderBy',
-              serializeOrderBy
-            )}
-          />
-          <TableBody
-            items={props.data.postfinancePayments.items}
-            onMessage={updatePostfinancePayment}
-            onHide={hidePostfinancePayment}
-            onMatch={manuallyMatchPostfinancePayment}
-          />
-        </div>
-      </InfiniteScroller>
+          bool={Bool.parse(params.bool)}
+          onBool={changeHandler('bool', Bool.serialize)}
+          onUpload={this.uploadHandler}
+          onRematch={this.rematchHandler}
+        />
+        {renderErrors()}
+        {this.state.feedback && (
+          <div>{this.state.feedback}</div>
+        )}
+        <Loader
+          error={data.error}
+          loading={data.loading}
+          render={() => (
+            <InfiniteScroller
+              loadMore={loadMorePostfinancePayments}
+              hasMore={postfinancePayments.count > postfinancePayments.items.length}
+              useWindow={false}
+            >
+              <Table
+                items={postfinancePayments.items}
+                sort={deserializeOrderBy(params.orderBy)}
+                onSort={changeHandler(
+                  'orderBy',
+                  serializeOrderBy
+                )}
+                onMessage={v => updatePostfinancePayment(v).catch(this.handleError)}
+                onHide={v => hidePostfinancePayment(v).catch(this.handleError)}
+                onMatch={v => manuallyMatchPostfinancePayment(v).catch(this.handleError)}
+              />
+            </InfiniteScroller>
+          )}
+        />
+      </Fragment>
     )
   }
 }
@@ -258,7 +237,7 @@ export default compose(
     props: ({ data }) => {
       return {
         data,
-        loadMorePayments: () => {
+        loadMorePostfinancePayments: () => {
           if (!data) {
             throw new Error('data object undefined')
           }
