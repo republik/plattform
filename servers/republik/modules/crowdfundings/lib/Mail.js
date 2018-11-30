@@ -126,7 +126,7 @@ mail.enforceSubscriptions = async ({
   return mail.updateNewsletterSubscriptions({ user: sanitizedUser, interests, ...rest })
 }
 
-mail.sendMembershipProlongNotice = async ({
+mail.sendMembershipProlongConfirmation = async ({
   pledger,
   membership,
   additionalPeriods,

@@ -4,7 +4,7 @@ const { evaluate, resolvePackages } = require('./CustomPackages')
 const createCache = require('./cache')
 const cancelMembership = require('../graphql/resolvers/_mutations/cancelMembership')
 const debug = require('debug')('crowdfundings:memberships')
-const { enforceSubscriptions, sendMembershipProlongNotice } = require('./Mail')
+const { enforceSubscriptions, sendMembershipProlongConfirmation } = require('./Mail')
 const Promise = require('bluebird')
 const omit = require('lodash/omit')
 
@@ -123,7 +123,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
         debug('additionalPeriods %o', additionalPeriods)
 
         if (membership.userId !== pledge.userId) {
-          await sendMembershipProlongNotice({
+          await sendMembershipProlongConfirmation({
             pledger: user, membership, additionalPeriods, t
           })
         }
