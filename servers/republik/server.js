@@ -11,6 +11,7 @@ const { graphql: voting } = require('@orbiting/backend-modules-voting')
 
 const { accessScheduler, graphql: access } = require('@orbiting/backend-modules-access')
 const { previewScheduler, preview: previewLib } = require('@orbiting/backend-modules-preview')
+const membershipScheduler = require('./modules/crowdfundings/lib/scheduler')
 
 const mail = require('./modules/crowdfundings/lib/Mail')
 const cluster = require('cluster')
@@ -106,6 +107,8 @@ const runOnce = async (...args) => {
   } else {
     await previewScheduler.init({ t, mail })
   }
+
+  await membershipScheduler.init({ t, mail })
 }
 
 const close = () => {

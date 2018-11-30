@@ -442,4 +442,22 @@ mail.sendMembershipCancellation = async ({ email, name, endDate, t }) => {
   })
 }
 
+mail.sendMembershipGiversProlongNotice = async ({ userId, membershipIds }, { t }) => {
+  // TODO: everything
+  return mail.sendMailTemplate({
+    to: 'patrick.recher@republik.ch',
+    subject: t('api/email/membership_cancel_notice/subject'),
+    templateName: 'membership_cancel_notice',
+    mergeLanguage: 'handlebars',
+    globalMergeVars: [
+      { name: 'name',
+        content: 'test'
+      },
+      { name: 'end_date',
+        content: 'end_date'
+      }
+    ]
+  })
+}
+
 module.exports = mail
