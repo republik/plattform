@@ -9,7 +9,7 @@ import {
   tableStyles as styles,
   createSortHandler,
   createSortIndicator
-} from '../../base/tables'
+} from '../../Tables/utils'
 
 export default ({
   items,

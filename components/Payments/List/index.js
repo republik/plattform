@@ -12,7 +12,7 @@ import {
   serializeOrderBy,
   deserializeOrderBy,
   createChangeHandler
-} from '../../base/tables'
+} from '../../Tables/utils'
 
 import TableForm from './TableForm'
 import Table from './Table'

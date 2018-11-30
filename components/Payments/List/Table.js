@@ -8,7 +8,7 @@ import {
   tableStyles as styles,
   createSortHandler,
   createSortIndicator
-} from '../../base/tables'
+} from '../../Tables/utils'
 
 const { Link } = routes
 
