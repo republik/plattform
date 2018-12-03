@@ -6,7 +6,16 @@ scalar JSON
 extend type User {
   pledges: [Pledge!]!
   memberships: [Membership!]!
+
   paymentSources: [PaymentSource!]!
+  hasChargableSource: Boolean
+
+  # Custom-tailored packages available for User
+  customPackages(crowdfundingName: String): [Package!]
+  # Whether User is eligable to profit from additional BONUS periods
+  isBonusEligable: Boolean!
+  # Prolong before give date to unsure uninterrupted access
+  prolongBeforeDate: DateTime
 
   # if true the user should check his/her memberships subscriptions
   # most propably she has a running monthly- and yealy-membership simultaneously
@@ -33,11 +42,13 @@ type Crowdfunding {
 type CrowdfundingGoal {
   money: Int!
   people: Int!
+  memberships: Int
   description: String
 }
 type CrowdfundingStatus {
   money: Int!
   people: Int!
+  memberships: Int!
 }
 
 type Package {
@@ -50,7 +61,8 @@ type Package {
 }
 
 type PackageOption {
-  id: ID!
+  id: ID! # unique ID
+  templateId: ID! # package option ID
   package: Package!
   reward: Reward
   minAmount: Int!
@@ -63,13 +75,24 @@ type PackageOption {
   createdAt: DateTime!
   updatedAt: DateTime!
 
+  # for pledgeOptions
   amount: Int
-  templateId: ID
+
+  # for custom packages
+  optionGroup: String
+  membership: Membership
+  autoPay: Boolean
+  additionalPeriods: [MembershipPeriod!]
 }
+
 input PackageOptionInput {
   amount: Int!
   price: Int!
-  templateId: ID!
+  templateId: ID! # packageOption.id
+
+  # via custom packages
+  membershipId: ID
+  autoPay: Boolean
 }
 
 type Goodie {
@@ -101,19 +124,28 @@ type Membership {
   voucherCode: String
   reducedPrice: Boolean!
   claimerName: String
+  user: User!
   sequenceNumber: Int
   active: Boolean!
   renew: Boolean!
+  autoPay: Boolean!
   periods: [MembershipPeriod]!
   overdue: Boolean!
-  cancelReasons: [String!]
+  cancellations: [Cancellation!]!
   createdAt: DateTime!
   updatedAt: DateTime!
+}
+
+enum MembershipPeriodKind {
+  REGULAR
+  BONUS # Bonus period upon checkout
+  ADMIN # A bonus period granted via admins, supporter
 }
 
 type MembershipPeriod {
   id: ID!
   membership: Membership!
+  kind: MembershipPeriodKind!
   beginDate: DateTime!
   endDate: DateTime!
   createdAt: DateTime!
@@ -165,6 +197,7 @@ input PledgeInput {
   total: Int!
   user: UserInput!
   reason: String
+  accessToken: ID
 }
 
 type PledgeResponse {
@@ -235,6 +268,34 @@ type PaymentSource {
   last4: String!
   expMonth: Int!
   expYear: Int!
+  # is source expired now
+  isExpired: Boolean!
+}
+
+enum CancellationCategoryType {
+  EDITORIAL,
+  NO_TIME,
+  TOO_EXPENSIVE,
+  VOID,
+  OTHER,
+  SYSTEM
+}
+
+type CancellationCategory {
+  type: CancellationCategoryType!
+  label: String!
+}
+
+input CancellationInput {
+  type: CancellationCategoryType!
+  reason: String
+}
+
+type Cancellation {
+  reason: String
+  category: CancellationCategory!
+  createdAt: DateTime!
+  revokedAt: DateTime
 }
 
 ######################################

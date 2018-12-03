@@ -1,4 +1,5 @@
-const {timeFormatLocale} = require('d3-time-format')
+const { formatLocale } = require('d3-format')
+const { timeFormatLocale } = require('d3-time-format')
 
 const swissTime = timeFormatLocale({
   'dateTime': '%A, der %e. %B %Y, %X',
@@ -16,8 +17,23 @@ const timeParse = swissTime.parse
 const utcTimeFormat = swissTime.utcFormat
 const utcTimeParse = swissTime.utcParse
 
-const formatPrice = (price) => {
-  return (price / 100.0).toFixed(2)
+const swissNumbers = formatLocale({
+  decimal: ',',
+  thousands: '\u2009',
+  grouping: [3],
+  currency: ['CHF\u00a0', '']
+})
+
+const chf4Format = swissNumbers.format('$.0f')
+const chf5Format = swissNumbers.format('$,.0f')
+
+const formatPrice = (price) => (price / 100.0).toFixed(2)
+
+const formatPriceChf = (value) => {
+  if (String(Math.round(value)).length > 4) {
+    return chf5Format(value)
+  }
+  return chf4Format(value)
 }
 
 module.exports = {
@@ -26,5 +42,6 @@ module.exports = {
   timeParse,
   utcTimeFormat,
   utcTimeParse,
-  formatPrice
+  formatPrice,
+  formatPriceChf
 }

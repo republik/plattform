@@ -15,7 +15,7 @@ const parsePostfinanceExport = (inputFile) => {
   const parseDate = ['Buchungsdatum', 'Valuta']
   const parseAmount = ['Gutschrift']
 
-  return csvParse(inputFile.split(/\r\n/).slice(5).join('\n'))
+  return csvParse(inputFile.split(/\r\n/).slice(3).join('\n'))
     .filter(row => row.Gutschrift) // trash rows without gutschrift (such as lastschrift and footer)
     .filter(row => !/^EINZAHLUNGSSCHEIN/g.exec(row.Avisierungstext)) // trash useless EINZAHLUNGSSCHEIN
     .filter(row => !/^GUTSCHRIFT E-PAYMENT TRANSAKTION POSTFINANCE CARD/g.exec(row.Avisierungstext)) // trash PF CARD

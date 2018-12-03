@@ -72,6 +72,7 @@ module.exports = async (memberships, pgdb, dryRun) => {
 
   await pgdb.public.membershipPeriods.insert({
     membershipId: electedMembership.id,
+    pledgeId: electedMembership.pledgeId,
     beginDate,
     endDate
   })

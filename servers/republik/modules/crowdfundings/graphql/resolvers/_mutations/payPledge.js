@@ -1,5 +1,5 @@
 const logger = console
-const sendPendingPledgeConfirmations = require('../../../lib/sendPendingPledgeConfirmations')
+const { sendPledgeConfirmations } = require('../../../lib/Mail')
 const generateMemberships = require('../../../lib/generateMemberships')
 const payPledgePaymentslip = require('../../../lib/payments/paymentslip/payPledge')
 const payPledgePaypal = require('../../../lib/payments/paypal/payPledge')
@@ -154,10 +154,10 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     // commit transaction
     await transaction.transactionCommit()
 
-    if (req.user) {
+    if (user.verified) {
       try {
         // if the user is signed in, send mail immediately
-        await sendPendingPledgeConfirmations(pledge.userId, pgdb, t)
+        await sendPledgeConfirmations({ userId: pledge.userId, pgdb, t })
       } catch (e) {
         console.warn('error in payPledge after transactionCommit', e)
       }
