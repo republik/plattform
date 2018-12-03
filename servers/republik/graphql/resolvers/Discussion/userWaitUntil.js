@@ -4,7 +4,7 @@ const { DISCUSSION_BANS } = process.env
 let BANS = []
 if (DISCUSSION_BANS) {
   try {
-    BANS = BANS.concat(JSON.parse(DISCUSSION_BANS))
+    BANS = BANS.concat(JSON.parse(DISCUSSION_BANS)).filter(Boolean)
   } catch (e) {
     console.warn('invalid DISCUSSION_BANS env, no bans will be active')
   }
