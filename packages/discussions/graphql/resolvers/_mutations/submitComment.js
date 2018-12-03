@@ -23,7 +23,8 @@ module.exports = async (_, args, context) => {
     discussionId,
     parentId,
     content,
-    discussionPreferences
+    discussionPreferences,
+    tags
   } = args
 
   if (!content || !content.trim().length) {
@@ -61,6 +62,18 @@ module.exports = async (_, args, context) => {
       throw new Error(t('api/comment/tooLong', { maxLength: discussion.maxLength }))
     }
 
+    // check tags
+    if (discussion.tagRequired && (!tags || tags.length === 0)) {
+      throw new Error(t('api/comment/tagRequired'))
+    }
+    if (tags && tags.length) {
+      const invalidTags = tags
+        .filter(tc => !discussion.tags.find(td => tc === td))
+      if (invalidTags.length) {
+        throw new Error(t('api/comment/invalidTags', { invalidTags: invalidTags.join(',') }))
+      }
+    }
+
     let parentIds
     if (parentId) {
       const parent = await transaction.public.comments.findOne({
@@ -88,7 +101,8 @@ module.exports = async (_, args, context) => {
       parentIds,
       userId,
       content,
-      hotness: hotness(0, 0, (new Date().getTime()))
+      hotness: hotness(0, 0, (new Date().getTime())),
+      tags
     }, {
       skipUndefined: true
     })

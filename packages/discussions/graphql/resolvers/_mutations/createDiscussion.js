@@ -7,14 +7,22 @@ module.exports = async (_, args, {pgdb, user, t}) => {
     title,
     maxLength,
     minInterval,
-    anonymity
+    anonymity,
+    tags,
+    tagRequired
   } = args
+
+  if (tagRequired && (!tags || tags.length === 0)) {
+    throw new Error(t('api/discussion/tagRequiredButNoTags'))
+  }
 
   const { id } = await pgdb.public.discussions.insertAndGet({
     title,
     maxLength,
     minInterval,
-    anonymity
+    anonymity,
+    tags,
+    tagRequired: !!tagRequired
   }, {
     skipUndefined: true
   })

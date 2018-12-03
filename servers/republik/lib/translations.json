@@ -1,5 +1,5 @@
 {
-  "updated": "2018-11-22T14:33:15.636Z",
+  "updated": "2018-12-03T16:02:41.488Z",
   "title": "live",
   "data": [
     {
@@ -28,7 +28,7 @@
     },
     {
       "key": "api/comment/tooEarly",
-      "value": "Sie sind zu früh. Bitte warten Sie, {waitFor} bevor Sie wieder einen Beitrag schreiben."
+      "value": "Sie sind zu früh. Sie können {timeahead} wieder einen Beitrag schreiben."
     },
     {
       "key": "api/comment/closed",
@@ -105,6 +105,18 @@
     {
       "key": "api/comment/notification/answer/app/subject",
       "value": "Neue Antwort in «{discussionName}»"
+    },
+    {
+      "key": "api/comment/tagRequired",
+      "value": "Diese Diskussion verlangt nach mind. einem Tag."
+    },
+    {
+      "key": "api/comment/invalidTags",
+      "value": "Die folgenden Tags stehen in dieser Diskussion nicht zur Verfügung: {invalidTags}"
+    },
+    {
+      "key": "api/discussion/tagRequiredButNoTags",
+      "value": "Sie müssen mind. einen Tag angeben, damit tagRequired valid ist."
     },
     {
       "key": "api/greeting",
@@ -717,6 +729,58 @@
     {
       "key": "api/questionnaire/answer/noQuestionRemapping",
       "value": "ID-Frage-Diskrepanz. Ups, da ist etwas schiefgelaufen. Bitte laden Sie die Seite neu."
+    },
+    {
+      "key": "timeAhead/justNow/other",
+      "value": "in weniger als einer Minute"
+    },
+    {
+      "key": "timeAhead/minutes/1",
+      "value": "in einer Minute"
+    },
+    {
+      "key": "timeAhead/minutes/other",
+      "value": "in {count} Minuten"
+    },
+    {
+      "key": "timeAhead/hours/1",
+      "value": "in einer Stunde"
+    },
+    {
+      "key": "timeAhead/hours/other",
+      "value": "in {count} Stunden"
+    },
+    {
+      "key": "timeAhead/days/1",
+      "value": "erst in einem Tag"
+    },
+    {
+      "key": "timeAhead/days/other",
+      "value": "in {count} Tagen"
+    },
+    {
+      "key": "timeAhead/weeks/1",
+      "value": "erst in einer Woche"
+    },
+    {
+      "key": "timeAhead/weeks/other",
+      "value": "in {count} Wochen"
+    },
+    {
+      "key": "timeAhead/months/1",
+      "value": "in einem Monat"
+    },
+    {
+      "key": "timeAhead/months/other",
+      "value": "in {count} Monaten"
+    },
+    {
+      "key": "timeAhead/years/1",
+      "value": "in einem Jahr"
+    },
+    {
+      "key": "timeAhead/years/other",
+      "value": "in {count} Jahren"
     }
   ]
 }
