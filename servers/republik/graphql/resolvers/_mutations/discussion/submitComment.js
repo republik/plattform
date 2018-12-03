@@ -48,13 +48,11 @@ module.exports = async (_, args, context) => {
     }
 
     // ensure user is within minInterval
-    if (discussion.minInterval) {
-      const waitUntil = await userWaitUntil(discussion, null, { pgdb, user })
-      if (waitUntil) {
-        throw new Error(t('api/comment/tooEarly', {
-          waitFor: `${Math.ceil((waitUntil.getTime() - new Date().getTime()) / 1000)}s`
-        }))
-      }
+    const waitUntil = await userWaitUntil(discussion, null, { pgdb, user })
+    if (waitUntil) {
+      throw new Error(t('api/comment/tooEarly', {
+        waitFor: `${Math.ceil((waitUntil.getTime() - new Date().getTime()) / 1000)}s`
+      }))
     }
 
     // ensure comment length is within limit
