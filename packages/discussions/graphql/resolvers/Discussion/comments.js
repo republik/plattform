@@ -83,9 +83,6 @@ const deepSortTree = (comment, ascDesc, sortKey, topValue, topIds, bubbleSort = 
 }
 
 const filterTree = (comment, ids, cursorEnv) => {
-  if (ids.length === 0) {
-    return comment
-  }
   const { comments, id } = comment
   if (comments.nodes.length > 0) {
     const nodes = comments.nodes.filter(n => filterTree(n, ids, cursorEnv) > 0)
@@ -192,7 +189,8 @@ module.exports = async (discussion, args, context, info) => {
     exceptIds = [],
     focusId,
     parentId,
-    flatDepth
+    flatDepth,
+    tag
   } = options
 
   // get comments
@@ -271,16 +269,39 @@ module.exports = async (discussion, args, context, info) => {
       index
     }))
 
-  if (first) {
-    const filterCommentIds = coveredComments
+  if (first || tag) {
+    let filterComments = coveredComments
       .sort(compare)
-      .slice(0, first)
+
+    if (tag) {
+      const taggedCommentIds = coveredComments
+        .filter(c => c.tags && c.tags.includes(tag))
+        .map(c => c.id)
+
+      filterComments = filterComments
+        .filter(c => {
+          if (
+            (c.tags && c.tags.includes(tag)) ||
+            _.intersection(taggedCommentIds, c.parentIds).length > 0
+          ) {
+            return true
+          }
+          return false
+        })
+    }
+    if (first) {
+      filterComments = filterComments
+        .slice(0, first)
+    }
+
+    const filterCommentIds = filterComments
       .map(c => c.id)
 
     filterTree(tree, filterCommentIds, {
       orderBy,
       orderDirection,
-      exceptIds
+      exceptIds,
+      tag
     })
   }
 

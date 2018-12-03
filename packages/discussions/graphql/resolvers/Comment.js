@@ -203,5 +203,8 @@ module.exports = {
       directTotalCount: 0,
       nodes: []
     }
-  }
+  },
+
+  tags: (comment) =>
+    comment.tags || []
 }

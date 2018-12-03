@@ -117,7 +117,7 @@ type Discussion {
     # if set, the tree is returned flat instead of nested up upon
     # the specified depth
     flatDepth: Int
-    # filter by tag
+    # filter root-level by tag (ignored for answers)
     tag: String
   ): CommentConnection!
   rules: DiscussionRules!
