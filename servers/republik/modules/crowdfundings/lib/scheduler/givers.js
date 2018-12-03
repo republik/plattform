@@ -7,9 +7,7 @@ const {
   PARKING_USER_ID
 } = process.env
 
-// const DAYS_BEFORE_END_DATE = 45
-// const MAX_DAYS_BEFORE_END_DATE = 40
-const DAYS_BEFORE_END_DATE = 46
+const DAYS_BEFORE_END_DATE = 45
 const MAX_DAYS_BEFORE_END_DATE = 40
 
 const getUsers = async ({ now }, { pgdb }) => {
