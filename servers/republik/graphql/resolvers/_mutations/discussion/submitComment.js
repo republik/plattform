@@ -3,6 +3,7 @@ const hotness = require('../../../../lib/hotness')
 const setDiscussionPreferences = require('./lib/setDiscussionPreferences')
 const userWaitUntil = require('../../Discussion/userWaitUntil')
 const slack = require('../../../../lib/slack')
+const { timeahead } = require('@orbiting/backend-modules-formats')
 
 const { submitComment: notify } = require('../../../../lib/Notifications')
 
@@ -51,7 +52,7 @@ module.exports = async (_, args, context) => {
     const waitUntil = await userWaitUntil(discussion, null, { pgdb, user })
     if (waitUntil) {
       throw new Error(t('api/comment/tooEarly', {
-        waitFor: `${Math.ceil((waitUntil.getTime() - new Date().getTime()) / 1000)}s`
+        timeahead: timeahead(t, (waitUntil.getTime() - new Date().getTime()) / 1000)
       }))
     }
 

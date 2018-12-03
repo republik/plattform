@@ -1,5 +1,6 @@
 const { formatLocale } = require('d3-format')
 const { timeFormatLocale } = require('d3-time-format')
+const timeahead = require('./timeahead')
 
 const swissTime = timeFormatLocale({
   'dateTime': '%A, der %e. %B %Y, %X',
@@ -37,6 +38,7 @@ const formatPriceChf = (value) => {
 }
 
 module.exports = {
+  timeahead,
   swissTime,
   timeFormat,
   timeParse,
