@@ -32,6 +32,7 @@ type mutations {
     minInterval: Int
     anonymity: Permission!
     tags: [String!]
+    # is a tag required (only applies to root level)
     tagRequired: Boolean!
   ): ID!
   submitComment(
