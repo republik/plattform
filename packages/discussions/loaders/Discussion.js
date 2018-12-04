@@ -3,8 +3,8 @@ const createDataLoader = require('@orbiting/backend-modules-dataloader')
 module.exports = (context) => ({
   clear: async (id) => {
     const discussion =
-      await context.loaders.Discussion.byId(id) ||
-      await context.loaders.Discussion.byRepoId(id)
+      await context.loaders.Discussion.byId.load(id) ||
+      await context.loaders.Discussion.byRepoId.load(id)
     if (discussion) {
       context.loaders.Discussion.byId.clear(discussion.id)
       context.loaders.Discussion.byRepoId.clear(discussion.repoId)
