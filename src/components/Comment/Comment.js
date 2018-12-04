@@ -125,6 +125,7 @@ class Comment extends Component {
       adminUnpublished,
       displayAuthor,
       content,
+      children,
       highlighted,
       collapsed,
       context,
@@ -156,7 +157,8 @@ class Comment extends Component {
               <CommentContext {...context} />
             </div>
           )}
-          {!!content && renderMdast(content, schema, { MissingNode })}
+          {!!content && !children && renderMdast(content, schema, { MissingNode })}
+          {children && children}
         </div>
 
         {adminUnpublished && userCanEdit && <div {...styles.body}>

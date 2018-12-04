@@ -94,7 +94,7 @@ class CommentComposer extends PureComponent {
       text: props.initialText || '',
       count: 0,
       progress: 0,
-      tagValue: undefined
+      tagValue: props.tagValue
     }
 
     this.onChange = ev => {
@@ -103,7 +103,10 @@ class CommentComposer extends PureComponent {
     }
 
     this.onSubmit = () => {
-      this.props.submitComment(this.state.text)
+      this.props.submitComment(
+        this.state.text,
+        this.state.tagValue ? [this.state.tagValue] : undefined
+      )
     }
 
     this.textarea = null
@@ -115,7 +118,10 @@ class CommentComposer extends PureComponent {
       (this.textarea && this.textarea.value.length) || 0
     )
 
-    this.onTagChange = (tagValue) => this.setState({tagValue})
+    this.onTagChange = (tagValue) => {
+      this.setState({tagValue})
+      this.props.onTagChange && this.props.onTagChange(tagValue)
+    }
   }
 
   updateMaxLength () {

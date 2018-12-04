@@ -44,7 +44,11 @@ const Row = ({
   secondaryActions,
   collapsed,
   onToggleCollapsed,
-  onShouldCollapse
+  onShouldCollapse,
+  tags,
+  onTagChange,
+  tagValue,
+  context
 }) => {
   const isEditing = edit && edit.isEditing
   const { downVotes, upVotes } = comment
@@ -63,6 +67,7 @@ const Row = ({
           t={t}
           collapsed={collapsed}
           onShouldCollapse={onShouldCollapse}
+          context={context}
         />}
         {isEditing && (
           <div style={{marginBottom: 20}}>
@@ -77,6 +82,9 @@ const Row = ({
               submitLabel={t('styleguide/comment/edit/submit')}
               maxLength={maxLength}
               secondaryActions={secondaryActions}
+              tags={tags}
+              onTagChange={onTagChange}
+              tagValue={tagValue}
             />
           </div>
         )}
@@ -188,11 +196,14 @@ class RowState extends PureComponent {
   constructor (props) {
     super(props)
 
+    const selectedTag = props.tags && props.tags.find(tag => !!tag.selected)
+
     this.state = {
       composerState: 'idle', // idle | focused | submitting | error
       composerError: undefined, // or string
       shouldCollapse: false,
-      collapsed: !!props.collapsable
+      collapsed: !!props.collapsable,
+      tagValue: selectedTag ? selectedTag.value : undefined
     }
 
     this.openComposer = () => {
@@ -238,6 +249,10 @@ class RowState extends PureComponent {
     this.onShouldCollapse = () => {
       this.setState({shouldCollapse: true})
     }
+
+    this.onTagChange = (tagValue) => {
+      this.setState({tagValue})
+    }
   }
 
   componentWillReceiveProps (nextProps) {
@@ -262,9 +277,11 @@ class RowState extends PureComponent {
       replyBlockedMsg,
       Link,
       secondaryActions,
-      collapsable
+      collapsable,
+      tags,
+      context
     } = this.props
-    const {composerState, composerError, collapsed, shouldCollapse} = this.state
+    const {composerState, composerError, collapsed, shouldCollapse, tagValue} = this.state
     const {userVote} = comment
 
     const edit = comment.userCanEdit && {
@@ -275,7 +292,8 @@ class RowState extends PureComponent {
         })
       },
       submit: content => {
-        this.props.editComment(comment, content)
+        const tags = this.state.tagValue ? [this.state.tagValue] : undefined
+        this.props.editComment(comment, content, tags)
           .then(() => {
             this.setState({
               isEditing: false
@@ -334,6 +352,10 @@ class RowState extends PureComponent {
         replyBlockedMsg={replyBlockedMsg}
         Link={Link}
         secondaryActions={secondaryActions}
+        tags={tags}
+        onTagChange={this.onTagChange}
+        tagValue={tagValue}
+        context={context}
         {...collapseAttributes}
       />
     )
