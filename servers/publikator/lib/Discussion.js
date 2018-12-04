@@ -1,6 +1,6 @@
 const { Discussion: { upsert: upsertDiscussion } } = require('@orbiting/backend-modules-discussions')
 
-const upsert = async (docMeta, context) => {
+const upsert = async (docMeta, context, legacyDiscussionId) => {
   const {
     title,
     path,
@@ -35,7 +35,7 @@ const upsert = async (docMeta, context) => {
     tagRequired: !!tagRequired
   }
 
-  return upsertDiscussion(repoId, settings, context)
+  return upsertDiscussion(repoId, settings, context, legacyDiscussionId)
 }
 
 module.exports = {
