@@ -48,14 +48,6 @@ type Meta {
   credits: JSON
   audioSource: AudioSource
 
-  # deprecated - ignore
-  # the article page now uses myDiscussion
-  # discussionId: ID
-
-  # deprecated
-  # the frame document of linkedDiscussion
-  # discussion: Document
-
   # template of the article
   # if (and only if) this is 'discussion' the page must show
   # the discussion component (in the bottom)

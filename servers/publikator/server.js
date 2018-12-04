@@ -10,6 +10,7 @@ const { graphql: auth } = require('@orbiting/backend-modules-auth')
 
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-discussions/loaders'),
+  ...require('@orbiting/backend-modules-documents/loaders'),
   ...require('@orbiting/backend-modules-auth/loaders')
 }
 
