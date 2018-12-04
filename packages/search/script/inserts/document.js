@@ -16,7 +16,8 @@ const { lib: {
 const { getElasticDoc, createPublish, findTemplates, getResourceUrls } = require('../../lib/Documents')
 
 const loaderBuilders = {
-  ...require('@orbiting/backend-modules-discussions/loaders')
+  ...require('@orbiting/backend-modules-discussions/loaders'),
+  ...require('@orbiting/backend-modules-documents/loaders')
 }
 
 const {
