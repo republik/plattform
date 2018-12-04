@@ -48,6 +48,7 @@ type mutations {
   editComment(
     id: ID!
     content: String!
+    tags: [String!]
   ): Comment!
   # can be called by the creator or an admin
   unpublishComment(id: ID!): Comment!

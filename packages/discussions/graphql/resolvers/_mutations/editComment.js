@@ -2,8 +2,12 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const slack = require('../../../lib/slack')
 
 module.exports = async (_, args, context) => {
-  const { id, content } = args
   const { pgdb, user, t, pubsub, loaders } = context
+  const {
+    id,
+    content,
+    tags
+  } = args
 
   Roles.ensureUserHasRole(user, 'member')
 
@@ -38,8 +42,11 @@ module.exports = async (_, args, context) => {
       id: comment.id
     }, {
       content,
+      tags,
       published: true,
       updatedAt: new Date()
+    }, {
+      skipUndefined: true
     })
 
     await transaction.transactionCommit()
