@@ -6,8 +6,12 @@ module.exports = (context) => ({
       await context.loaders.Discussion.byId.load(id) ||
       await context.loaders.Discussion.byRepoId.load(id)
     if (discussion) {
-      context.loaders.Discussion.byId.clear(discussion.id)
-      context.loaders.Discussion.byRepoId.clear(discussion.repoId)
+      if (discussion.id) {
+        context.loaders.Discussion.byId.clear(discussion.id)
+      }
+      if (discussion.repoId) {
+        context.loaders.Discussion.byRepoId.clear(discussion.repoId)
+      }
     }
   },
   byId: createDataLoader(ids =>
