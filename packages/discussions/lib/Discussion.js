@@ -23,7 +23,9 @@ const upsert = async (id, settings = {}, { pgdb, loaders }) => {
       (settings.collapsable !== undefined && settings.collapsable !== discussion.collapsable) ||
       (settings.maxLength && settings.maxLength !== discussion.maxLength) ||
       (settings.minInterval && settings.minInterval !== discussion.minInterval) ||
-      (settings.anonymity && settings.anonymity !== discussion.anonymity)
+      (settings.anonymity && settings.anonymity !== discussion.anonymity) ||
+      (settings.tagRequired !== undefined && settings.tagRequired !== discussion.tagRequired) ||
+      (settings.tags && settings.tags !== (discussion.tags || []).join(','))
     ) {
       discussion = await pgdb.public.discussions.updateAndGetOne(
         { id: discussion.id },

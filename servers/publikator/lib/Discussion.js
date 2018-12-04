@@ -8,7 +8,9 @@ const upsert = async (docMeta, context) => {
     collapsable,
     commentsMaxLength,
     commentsMinInterval,
-    discussionAnonymity
+    discussionAnonymity,
+    tags,
+    tagRequired
   } = docMeta
 
   if (!repoId) {
@@ -28,7 +30,9 @@ const upsert = async (docMeta, context) => {
       : { },
     ...discussionAnonymity
       ? { anonymity: discussionAnonymity }
-      : { }
+      : { },
+    tags: tags ? tags.trim().split(',') : null,
+    tagRequired: !!tagRequired
   }
 
   return upsertDiscussion(repoId, settings, context)
