@@ -42,6 +42,15 @@ const createSchema = ({
         key: 'collapsable',
         ref: 'bool'
       },
+      {
+        label: 'Tag obligatorisch für neuen root-Beitrag',
+        key: 'tagRequired',
+        ref: 'bool'
+      },
+      {
+        label: 'Tags (kommasepariert)',
+        key: 'tags'
+      },
       ...customMetaFields
     ],
     ...args
