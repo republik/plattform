@@ -173,7 +173,7 @@ class CommentComposer extends PureComponent {
       cancelLabel,
       secondaryActions,
       maxLength,
-      tagsLabel,
+      tagRequired,
       tags
     } = this.props
     const {text, count, tagValue} = this.state
@@ -189,8 +189,9 @@ class CommentComposer extends PureComponent {
         {tags && !!tags.length && (
           <div {...styles.form}>
             <CommentComposerTags
-              label={tagsLabel} 
+              t={t}
               tags={tags}
+              tagRequired={tagRequired}
               onChange={this.onTagChange}
               value={tagValue} />
           </div>
@@ -217,7 +218,9 @@ class CommentComposer extends PureComponent {
               <button {...styles.cancelButton} onClick={onCancel}>
                 {cancelLabel || t('styleguide/CommentComposer/cancel')}
               </button>
-              <button {...styles.commitButton} onClick={this.onSubmit} disabled={maxLengthExceeded}>
+              <button {...styles.commitButton}
+                onClick={this.onSubmit}
+                disabled={maxLengthExceeded || (tagRequired && !tagValue)}>
                 {submitLabel || t('styleguide/CommentComposer/answer')}
               </button>
             </div>
@@ -239,7 +242,14 @@ CommentComposer.propTypes = {
   submitLabel: PropTypes.string,
   cancelLabel: PropTypes.string,
   secondaryActions: PropTypes.object,
-  maxLength: PropTypes.number
+  maxLength: PropTypes.number,
+  tagRequired: PropTypes.bool,
+  tags: PropTypes.arrayOf(
+    PropTypes.shape({
+      label: PropTypes.string,
+      value: PropTypes.string
+    })
+  )
 }
 
 export default CommentComposer
