@@ -427,7 +427,7 @@ module.exports = async (
       })}&_id=*|DATE:ymd|**|UNIQID|*`
       html = html.replace(
         '</body>',
-        `<img src="${openBeacon}" height="1" width="1"></body>`
+        `<img alt="" src="${openBeacon}" height="1" width="1"></body>`
       )
     }
 
