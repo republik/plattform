@@ -1,7 +1,8 @@
 const debug = require('debug')('crowdfundings:lib:scheduler:givers')
 const moment = require('moment')
+const Promise = require('bluebird')
 
-const { wasSent, saveSent } = require('../mailLog')
+const { send } = require('../mailLog')
 
 const {
   PARKING_USER_ID
@@ -66,37 +67,32 @@ const getUsers = async ({ now }, { pgdb }) => {
 
 const inform = async (args, context) => {
   const _users = await getUsers(args, context)
-  const users = [
-    _users[0]
-  ]
+  // TODO remove
+  const users = _users.slice(0, 1)
 
-  for (let user of users) {
-    const userId = user.id
-    const membershipIds = user.membershipIds
-    const log = {
-      type: `membership_givers_t-${DAYS_BEFORE_END_DATE}`,
-      payload: {
-        userId,
-        membershipIds
+  await Promise.map(
+    users,
+    async (user) => {
+      const userId = user.id
+      const membershipIds = user.membershipIds
+      const log = {
+        type: `membership_givers_t-${DAYS_BEFORE_END_DATE}`,
+        payload: {
+          userId,
+          membershipIds
+        }
       }
-    }
-    if (!(await wasSent(log, context))) {
-      const results = await context.mail.sendMembershipGiversProlongNotice({
-        userId,
-        membershipIds
-      }, context)
-      if (results && results[0]) {
-        const result = results[0]
-        await saveSent({
-          ...log,
-          resultOk: result.status === 'sent' && !result.reject_reason,
-          resultPayload: result
-        }, context)
-      }
-    } else {
-      debug('not sending (was sent already): %o', log)
-    }
-  }
+      await send(
+        log,
+        () => context.mail.sendMembershipGiversProlongNotice({
+          userId,
+          membershipIds
+        }, context),
+        context
+      )
+    },
+    { concurrency: 2 }
+  )
 }
 
 module.exports = {
