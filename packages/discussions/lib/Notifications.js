@@ -1,6 +1,7 @@
 const {
   displayAuthor: getDisplayAuthor,
-  content: getContent
+  content: getContent,
+  preview: getPreview
 } = require('../graphql/resolvers/Comment')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 
@@ -89,9 +90,10 @@ const submitComment = async (comment, discussion, context) => {
     const contentMdast = getContent(comment)
     const htmlContent = renderEmail(contentMdast, commentSchema, { doctype: '' })
 
-    const shortBody = comment.content.length > 128
-      ? `${comment.content.substring(0, 128)}...`
-      : comment.content
+    const preview = getPreview(comment, { length: 128 })
+    const shortBody = preview.more
+      ? `${preview.string}...`
+      : preview.string
 
     const discussionUrl = `${FRONTEND_BASE_URL}${discussion.path}`
     const commentUrl = `${discussionUrl}${discussionUrl.indexOf('?') === -1 ? '?' : '&'}focus=${comment.id}`
