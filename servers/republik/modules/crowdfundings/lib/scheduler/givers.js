@@ -47,7 +47,8 @@ const getUsers = async ({ now }, { pgdb }) => {
     )
       SELECT
         "userId" as "id",
-        json_agg("membershipId") as "membershipIds"
+        json_agg("membershipId") as "membershipIds",
+        min("lastEndDate") as "minLastEndDate"
       FROM
         givers
       WHERE
@@ -68,13 +69,18 @@ const getUsers = async ({ now }, { pgdb }) => {
 const inform = async (args, context) => {
   const _users = await getUsers(args, context)
   // TODO remove
-  const users = _users.slice(0, 1)
+  const users = _users.slice(0, 2)
 
   await Promise.map(
     users,
     async (user) => {
       const userId = user.id
       const membershipIds = user.membershipIds
+      const minLastDateDiff = moment(user.minLastEndDate)
+        .diff(moment(), 'days')
+      // TODO DAYS_BEFORE_END_DATE of normal prolong email
+      const informClaimersDays = minLastDateDiff - 30
+
       const log = {
         type: `membership_givers_t-${DAYS_BEFORE_END_DATE}`,
         payload: {
@@ -86,7 +92,8 @@ const inform = async (args, context) => {
         log,
         () => context.mail.sendMembershipGiversProlongNotice({
           userId,
-          membershipIds
+          membershipIds,
+          informClaimersDays
         }, context),
         context
       )

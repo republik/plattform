@@ -1,5 +1,5 @@
 {
-  "updated": "2018-11-26T16:44:56.756Z",
+  "updated": "2018-12-05T21:11:59.063Z",
   "title": "live",
   "data": [
     {
@@ -385,6 +385,10 @@
     {
       "key": "api/email/membership_cancel_notice/subject",
       "value": "Bestätigung Ihrer Kündigung"
+    },
+    {
+      "key": "api/email/membership_giver_prolong_notice/subject",
+      "value": "Ihre verschenkten Abonnemente"
     }
   ]
 }

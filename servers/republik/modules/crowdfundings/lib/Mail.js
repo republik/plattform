@@ -2,7 +2,7 @@ const debug = require('debug')('crowdfundings:lib:Mail')
 
 const { createMail } = require('@orbiting/backend-modules-mail')
 const { grants } = require('@orbiting/backend-modules-access')
-const { transformUser } = require('@orbiting/backend-modules-auth')
+const { transformUser, AccessToken } = require('@orbiting/backend-modules-auth')
 const { timeFormat, formatPriceChf } =
   require('@orbiting/backend-modules-formats')
 
@@ -442,19 +442,58 @@ mail.sendMembershipCancellation = async ({ email, name, endDate, t }) => {
   })
 }
 
-mail.sendMembershipGiversProlongNotice = async ({ userId, membershipIds }, { t }) => {
-  // TODO: everything
+mail.sendMembershipGiversProlongNotice = async ({ userId, membershipIds, informClaimersDays }, { t, pgdb }) => {
+  const user = transformUser(
+    await pgdb.public.users.findOne({ id: userId })
+  )
+  const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
+
+  // TODO: refactor into dataloader
+  const memberships = await pgdb.public.memberships.find({
+    id: membershipIds
+  })
+
+  const membershipsUsers =
+    memberships.length > 0
+      ? await pgdb.public.users.find(
+        { id: memberships.map(m => m.userId) }
+      )
+      : []
+
+  memberships.forEach((membership, index, memberships) => {
+    memberships[index].user =
+      membershipsUsers.find(u => u.id === membership.userId)
+  })
+  //
+
   return mail.sendMailTemplate({
     to: 'patrick.recher@republik.ch',
-    subject: t('api/email/membership_cancel_notice/subject'),
-    templateName: 'membership_cancel_notice',
+    subject: t('api/email/membership_giver_prolong_notice/subject'),
+    templateName: 'membership_giver_prolong_notice',
     mergeLanguage: 'handlebars',
     globalMergeVars: [
       { name: 'name',
-        content: 'test'
+        content: user.name
       },
-      { name: 'end_date',
-        content: 'end_date'
+      { name: 'prolong_url',
+        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`
+      },
+      { name: 'gifted_memberships_count',
+        content: memberships.length
+      },
+      { name: 'inform_claimers_days',
+        content: informClaimersDays
+      },
+      { name: 'options',
+        content: memberships
+          .map(membership => {
+            const olabel =
+              t('api/email/option/other/gifted_membership', {
+                name: transformUser(membership.user).name,
+                sequenceNumber: membership.sequenceNumber
+              })
+            return { olabel }
+          })
       }
     ]
   })

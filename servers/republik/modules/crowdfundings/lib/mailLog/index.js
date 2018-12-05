@@ -1,5 +1,6 @@
 const debug = require('debug')('crowdfundings:lib:mailLog')
 
+// TODO: payload may contains arrays, ensure at least one was sent
 const wasSent = ({type, payload}, { pgdb }) =>
   pgdb.public.mailLog.count({
     type,
