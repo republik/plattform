@@ -1,6 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const setDiscussionPreferences = require('../../../lib/setDiscussionPreferences')
-const getDiscussion = require('../_queries/discussion')
 
 module.exports = async (_, args, { pgdb, user, t }) => {
   Roles.ensureUserHasRole(user, 'member')
@@ -29,7 +28,7 @@ module.exports = async (_, args, { pgdb, user, t }) => {
 
     await transaction.transactionCommit()
 
-    return getDiscussion(null, { id: discussion.id }, { pgdb }, null)
+    return discussion
   } catch (e) {
     await transaction.transactionRollback()
     throw e
