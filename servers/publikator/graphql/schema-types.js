@@ -211,9 +211,4 @@ enum OrderDirection {
   ASC
   DESC
 }
-
-# Credential stub for Discussion
-type Discussion {
-  dummy: Boolean
-}
 `

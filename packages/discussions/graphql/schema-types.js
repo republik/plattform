@@ -203,4 +203,16 @@ type CommentUpdate {
   mutation: MutationType!
   node: Comment!
 }
+
+extend type Meta {
+  # show debate-icon if this is set or template is 'discussion'
+  # href src: linkedDiscussion.document.meta.path ||
+  #           linkedDiscussion.path
+  linkedDiscussion: Discussion
+
+  # show general feedback if
+  # myDiscussion && !myDiscussion.closed &&
+  # (!linkedDiscussion || linkedDiscussion.closed)
+  ownDiscussion: Discussion
+}
 `

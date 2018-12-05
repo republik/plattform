@@ -5,8 +5,6 @@ const t = require('./lib/t')
 
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: auth } = require('@orbiting/backend-modules-auth')
-// const { graphql: discussions } = require('@orbiting/backend-modules-auth')
-// const { graphql: search } = require('@orbiting/backend-modules-search')
 
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-discussions/loaders'),
@@ -37,7 +35,6 @@ const run = async (workerId) => {
       [
         documents,
         auth
-        // discussions
       ]
     )
   )
