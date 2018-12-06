@@ -232,7 +232,6 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
       Ein Artikel von <Editorial.A href="/foo">Christof Moser</Editorial.A>
     </span>
   }
-  onClick={() => {}}
 />
 ```
 
