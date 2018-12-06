@@ -1,12 +1,33 @@
 const debug = require('debug')('crowdfundings:lib:mailLog')
 
-// TODO: payload may contains arrays, ensure at least one was sent
-const wasSent = ({type, payload}, { pgdb }) =>
+const wasSent = ({type, payload}, { pgdb }) => {
+  // if a payload value is an array, change the key to `${key} &&`
+  // to ensure that if a mail was sent for one array member,
+  // it doesn't get sent again
+  // This is done by the asumption that it's better to send less
+  // emails than more.
+  // https://pogi.readthedocs.io/en/latest/API/condition/
+  const payloadConditions = Object.keys(payload)
+    .map(key => {
+      const value = payload[key]
+      let condition
+      if (Array.isArray(value)) {
+        condition = { [`${key} &&`]: value }
+      } else {
+        condition = { [key]: value }
+      }
+      return condition
+    })
+    .reduce(
+      (agg, cur) => ({ ...agg, ...cur }),
+      {}
+    )
   pgdb.public.mailLog.count({
     type,
-    payload
+    payload: payloadConditions
   })
     .then(count => count > 0)
+}
 
 const saveSent = ({ type, payload, resultOk, resultPayload }, { pgdb }) => {
   pgdb.public.mailLog.insert({
