@@ -244,12 +244,7 @@ CommentComposer.propTypes = {
   secondaryActions: PropTypes.object,
   maxLength: PropTypes.number,
   tagRequired: PropTypes.bool,
-  tags: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string,
-      value: PropTypes.string
-    })
-  )
+  tags: PropTypes.arrayOf(PropTypes.string)
 }
 
 export default CommentComposer

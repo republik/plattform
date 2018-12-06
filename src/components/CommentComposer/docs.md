@@ -106,13 +106,7 @@
   onCancel={() => {}}
   submitComment={t => {alert(t)}}
   maxLength={100}
-  tagsLabel='Welche Art von Beitrag wollen Sie verfassen?'
-  tags={[
-    {label: 'Lob', value: 'id1'},
-    {label: 'Kritik', value: 'id2'},
-    {label: 'Wunsch', value: 'id3'},
-    {label: 'Keine Angabe', value: 'id4'}
-  ]}
+  tags={['Lob', 'Kritik', 'Wunsch', 'Keine Angabe']}
 />
 ```
 
@@ -129,13 +123,7 @@
   onCancel={() => {}}
   submitComment={t => {alert(t)}}
   maxLength={100}
-  tagsLabel='Welche Art von Beitrag wollen Sie verfassen?'
-  tags={[
-    {label: 'Lob', value: 'id1'},
-    {label: 'Kritik', value: 'id2'},
-    {label: 'Wunsch', value: 'id3'},
-    {label: 'Keine Angabe', value: 'id4'}
-  ]}
+  tags={['Lob', 'Kritik', 'Wunsch', 'Keine Angabe']}
 />
 ```
 

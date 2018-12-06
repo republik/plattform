@@ -46,12 +46,12 @@ const CommentComposerTags = ({ t, tagRequired, tags, value, onChange }) => (
     <div {...styles.tags}>
     {tags && !!tags.length && tags.map(
       tag => (
-        <div {...styles.tag} key={tag.value}>
+        <div {...styles.tag} key={tag}>
           <Radio
-            value={tag.value}
-            checked={value === tag.value}
+            value={tag}
+            checked={value === tag}
             onChange={(event) => onChange(event.target.value)}>
-            {tag.label}
+            {tag}
           </Radio>
         </div>
       )
@@ -63,12 +63,7 @@ const CommentComposerTags = ({ t, tagRequired, tags, value, onChange }) => (
 CommentComposerTags.propTypes = {
   t: PropTypes.func.isRequired,
   tagRequired: PropTypes.bool,
-  tags: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string,
-      value: PropTypes.string
-    })
-  ),
+  tags: PropTypes.arrayOf(PropTypes.string),
   value: PropTypes.string,
   onChange: PropTypes.func.isRequired
 }

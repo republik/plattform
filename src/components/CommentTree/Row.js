@@ -196,14 +196,12 @@ class RowState extends PureComponent {
   constructor (props) {
     super(props)
 
-    const selectedTag = props.tags && props.tags.find(tag => !!tag.selected)
-
     this.state = {
       composerState: 'idle', // idle | focused | submitting | error
       composerError: undefined, // or string
       shouldCollapse: false,
       collapsed: !!props.collapsable,
-      tagValue: selectedTag ? selectedTag.value : undefined
+      tagValue: props.selectedTag
     }
 
     this.openComposer = () => {
