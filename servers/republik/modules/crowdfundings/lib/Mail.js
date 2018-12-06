@@ -467,7 +467,7 @@ mail.sendMembershipGiversProlongNotice = async ({ userId, membershipIds, informC
   //
 
   return mail.sendMailTemplate({
-    to: 'patrick.recher@republik.ch',
+    to: user.email,
     subject: t('api/email/membership_giver_prolong_notice/subject'),
     templateName: 'membership_giver_prolong_notice',
     mergeLanguage: 'handlebars',

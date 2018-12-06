@@ -78,7 +78,7 @@ const inform = async (args, context) => {
     async ({ userId, email, membershipIds, minLastEndDate }) => {
       const minLastEndDateDiff = moment(minLastEndDate)
         .diff(moment(), 'days')
-      // TODO DAYS_BEFORE_END_DATE of normal prolong email
+      // TODO DAYS_BEFORE_END_DATE of owners prolong email
       const informClaimersDays = minLastEndDateDiff - 30
 
       const log = {
