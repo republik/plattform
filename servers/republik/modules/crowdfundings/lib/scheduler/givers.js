@@ -76,10 +76,10 @@ const inform = async (args, context) => {
     async (user) => {
       const userId = user.id
       const membershipIds = user.membershipIds
-      const minLastDateDiff = moment(user.minLastEndDate)
+      const minLastEndDateDiff = moment(user.minLastEndDate)
         .diff(moment(), 'days')
       // TODO DAYS_BEFORE_END_DATE of normal prolong email
-      const informClaimersDays = minLastDateDiff - 30
+      const informClaimersDays = minLastEndDateDiff - 30
 
       const log = {
         type: `membership_givers_t-${DAYS_BEFORE_END_DATE}`,
