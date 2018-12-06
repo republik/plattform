@@ -31,14 +31,13 @@ const styles = {
 
 
 export const CommentContext = ({
-  onClick,
   title,
   description
 }) => {
   return (
     <div {...styles.root}>
       <div {...styles.meta}>
-        <div {...styles.title} onClick={onClick} style={{cursor: onClick ? 'pointer' : undefined}}>
+        <div {...styles.title}>
           {title}
         </div>
         {description && (

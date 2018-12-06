@@ -45,8 +45,8 @@ const CommentComposerTags = ({ t, tagRequired, tags, value, onChange }) => (
     </div>
     <div {...styles.tags}>
     {tags && !!tags.length && tags.map(
-      (tag, index) => (
-        <div {...styles.tag} key={index}>
+      tag => (
+        <div {...styles.tag} key={tag.value}>
           <Radio
             value={tag.value}
             checked={value === tag.value}
