@@ -20,6 +20,7 @@ const getUsers = async ({ now }, { pgdb }) => {
     WITH givers AS (
       SELECT
         u.id AS "userId",
+        u.email AS "email",
         m.id AS "membershipId",
         max(mp."endDate") AS "lastEndDate"
       FROM
@@ -41,12 +42,13 @@ const getUsers = async ({ now }, { pgdb }) => {
       WHERE
         u.id != :PARKING_USER_ID
       GROUP BY
-        1, 2
+        1, 2, 3
       ORDER BY
-       1, 3
+       1, 4
     )
       SELECT
-        "userId" as "id",
+        "userId",
+        "email",
         json_agg("membershipId") as "membershipIds",
         min("lastEndDate") as "minLastEndDate"
       FROM
@@ -55,7 +57,7 @@ const getUsers = async ({ now }, { pgdb }) => {
         "lastEndDate" > :minEndDate AND
         "lastEndDate" < :maxEndDate
       GROUP BY
-        1
+        1, 2
   `, {
     PARKING_USER_ID,
     minEndDate,
@@ -73,20 +75,17 @@ const inform = async (args, context) => {
 
   await Promise.map(
     users,
-    async (user) => {
-      const userId = user.id
-      const membershipIds = user.membershipIds
-      const minLastEndDateDiff = moment(user.minLastEndDate)
+    async ({ userId, email, membershipIds, minLastEndDate }) => {
+      const minLastEndDateDiff = moment(minLastEndDate)
         .diff(moment(), 'days')
       // TODO DAYS_BEFORE_END_DATE of normal prolong email
       const informClaimersDays = minLastEndDateDiff - 30
 
       const log = {
         type: `membership_givers_t-${DAYS_BEFORE_END_DATE}`,
-        payload: {
-          userId,
-          membershipIds
-        }
+        email,
+        userId,
+        membershipIds
       }
       await send(
         log,
