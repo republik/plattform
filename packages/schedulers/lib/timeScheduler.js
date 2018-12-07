@@ -11,10 +11,14 @@ const init = async (
   name,
   context,
   runFunc,
-  runAtTime,
   lockTtlSecs,
-  runInitially
+  runAtTime,
+  runAtDaysOfWeek = [1, 2, 3, 4, 5, 6, 7],
+  runInitially = false
 ) => {
+  if (!name || !context || !runFunc || !lockTtlSecs || !runAtTime) {
+    throw new Error('missing input')
+  }
   const { redis } = context
   if (!redis) {
     throw new Error('missing redis')
@@ -49,7 +53,7 @@ const init = async (
       .minute(runAtMinute)
       .second(0)
       .millisecond(0)
-    if (now.isAfter(nextRunAt)) {
+    while (now.isAfter(nextRunAt) || !runAtDaysOfWeek.includes(nextRunAt.isoWeekday())) {
       nextRunAt.add(24, 'hours')
     }
     const nextRunInMs = nextRunAt.diff(now) // ms

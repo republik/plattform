@@ -24,8 +24,9 @@ const init = async (_context) => {
     'memberships',
     context,
     informGivers,
-    '04:00',
     lockTtlSecs,
+    '06:00',
+    undefined,
     DEV
   )
 
@@ -33,8 +34,9 @@ const init = async (_context) => {
     'winback',
     context,
     informCancellers,
-    '16:32',
     lockTtlSecs,
+    '16:32',
+    [1, 2, 3, 4, 5],
     DEV
   )
 }
