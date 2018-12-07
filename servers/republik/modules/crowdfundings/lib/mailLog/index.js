@@ -1,13 +1,16 @@
 const debug = require('debug')('crowdfundings:lib:mailLog')
 
 const wasSent = (payload, { pgdb }) => {
-  // if a payload value is an array, change the key to `${key} &&`
-  // to ensure that if a mail was sent for one array member,
-  // it doesn't get sent again
-  // This is done by the asumption that it's better to send less
-  // emails than more.
-  // https://pogi.readthedocs.io/en/latest/API/condition/
   const payloadConditions = Object.keys(payload)
+    // ignore these fields for matching
+    // - email might change, only userId matters
+    .filter(key => !['email', 'info'].includes(key))
+    // if a payload value is an array, change the key to `${key} &&`
+    // to ensure that if a mail was sent for one array member,
+    // it doesn't get sent again
+    // This is done by the asumption that it's better to send less
+    // emails than more.
+    // https://pogi.readthedocs.io/en/latest/API/condition/
     .map(key => {
       const value = payload[key]
       let condition
@@ -22,9 +25,7 @@ const wasSent = (payload, { pgdb }) => {
       (agg, cur) => ({ ...agg, ...cur }),
       {}
     )
-  return pgdb.public.mailLog.count(
-    payloadConditions
-  )
+  return pgdb.public.mailLog.count(payloadConditions)
     .then(count => count > 0)
 }
 

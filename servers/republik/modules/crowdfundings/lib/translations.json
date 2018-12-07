@@ -1,5 +1,5 @@
 {
-  "updated": "2018-12-05T21:11:59.063Z",
+  "updated": "2018-12-07T00:05:15.106Z",
   "title": "live",
   "data": [
     {
@@ -389,6 +389,18 @@
     {
       "key": "api/email/membership_giver_prolong_notice/subject",
       "value": "Ihre verschenkten Abonnemente"
+    },
+    {
+      "key": "api/email/membership_winBack/subject",
+      "value": "Ihre Kündigung"
+    },
+    {
+      "key": "api/email/membership_winBack/fromEmail",
+      "value": "philipp.vonessen@republik.ch"
+    },
+    {
+      "key": "api/email/membership_winBack/fromName",
+      "value": "Philipp von Essen"
     }
   ]
 }

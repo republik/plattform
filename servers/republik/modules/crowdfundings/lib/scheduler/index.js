@@ -12,6 +12,7 @@ const lockTtlSecs = 10// 60 * 4 // TODO
 const schedulerLock = () => new Redlock([redis])
 
 const { inform: informGivers } = require('./givers')
+const { inform: informCancellers } = require('./winBacks')
 
 /**
  * Function to initialize scheduler. Provides scheduling.
@@ -38,7 +39,8 @@ const init = async (_context) => {
 
       const now = moment()
 
-      await informGivers({ now }, context)
+      await informCancellers({ now }, context)
+      // await informGivers({ now }, context)
 
       // Extend lock for a fraction of usual interval to prevent runner to
       // be executed back-to-back to previous run.
@@ -47,7 +49,6 @@ const init = async (_context) => {
       debug('run completed')
     } catch (e) {
       if (e.name === 'LockError') {
-        // swallow
         debug('run failed', e.message)
       } else {
         throw e

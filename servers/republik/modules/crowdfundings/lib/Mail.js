@@ -499,4 +499,35 @@ mail.sendMembershipGiversProlongNotice = async ({ userId, membershipIds, informC
   })
 }
 
+mail.sendMembershipWinBack = async ({ userId, membershipId, cancellationCategory, cancelledAt }, { t, pgdb }) => {
+  const user = transformUser(
+    await pgdb.public.users.findOne({ id: userId })
+  )
+  const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
+
+  return mail.sendMailTemplate({
+    to: user.email,
+    fromEmail: t('api/email/membership_winBack/fromEmail'),
+    fromName: t('api/email/membership_winBack/fromName'),
+    subject: t('api/email/membership_winBack/subject'),
+    templateName: `membership_winback_${cancellationCategory}`,
+    mergeLanguage: 'handlebars',
+    globalMergeVars: [
+      { name: 'name',
+        content: user.name
+      },
+      { name: 'prolong_url',
+        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`
+      },
+      // TODO check with FE
+      { name: 'prolong_url_reduced',
+        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}&userPrice=1`
+      },
+      { name: 'cancelledAt',
+        content: dateFormat(cancelledAt)
+      }
+    ]
+  })
+}
+
 module.exports = mail

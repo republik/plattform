@@ -12,8 +12,12 @@ const DAYS_BEFORE_END_DATE = 45
 const MAX_DAYS_BEFORE_END_DATE = 40
 
 const getUsers = async ({ now }, { pgdb }) => {
-  const minEndDate = moment(now).add(MAX_DAYS_BEFORE_END_DATE, 'days').startOf('day')
-  const maxEndDate = moment(now).add(DAYS_BEFORE_END_DATE, 'days').endOf('day')
+  const minEndDate = moment(now)
+    .add(MAX_DAYS_BEFORE_END_DATE, 'days')
+    .startOf('day')
+  const maxEndDate = moment(now)
+    .add(DAYS_BEFORE_END_DATE, 'days')
+    .endOf('day')
   debug('get users for: %o', {minEndDate, maxEndDate})
 
   const users = await pgdb.query(`
@@ -73,22 +77,26 @@ const inform = async (args, context) => {
   // TODO remove
   const users = _users.slice(0, 2)
 
-  await Promise.map(
+  return Promise.map(
     users,
-    async ({ userId, email, membershipIds, minLastEndDate }) => {
+    async ({
+      userId,
+      email,
+      membershipIds,
+      minLastEndDate
+    }) => {
       const minLastEndDateDiff = moment(minLastEndDate)
         .diff(moment(), 'days')
       // TODO DAYS_BEFORE_END_DATE of owners prolong email
       const informClaimersDays = minLastEndDateDiff - 30
 
-      const log = {
-        type: `membership_givers_t-${DAYS_BEFORE_END_DATE}`,
-        email,
-        userId,
-        membershipIds
-      }
       await send(
-        log,
+        {
+          type: `membership_givers_t-${DAYS_BEFORE_END_DATE}`,
+          userId,
+          membershipIds,
+          email
+        },
         () => context.mail.sendMembershipGiversProlongNotice({
           userId,
           membershipIds,
