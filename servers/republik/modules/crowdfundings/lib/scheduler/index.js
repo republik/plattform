@@ -12,7 +12,7 @@ const lockTtlSecs = 10// 60 * 4 // TODO
 const schedulerLock = () => new Redlock([redis])
 
 const { inform: informGivers } = require('./givers')
-const { inform: informCancellers } = require('./winBacks')
+const { inform: informCancellers } = require('./winbacks')
 
 /**
  * Function to initialize scheduler. Provides scheduling.

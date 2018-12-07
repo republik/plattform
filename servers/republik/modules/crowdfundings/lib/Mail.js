@@ -507,9 +507,9 @@ mail.sendMembershipWinBack = async ({ userId, membershipId, cancellationCategory
 
   return mail.sendMailTemplate({
     to: user.email,
-    fromEmail: t('api/email/membership_winBack/fromEmail'),
-    fromName: t('api/email/membership_winBack/fromName'),
-    subject: t('api/email/membership_winBack/subject'),
+    fromEmail: t('api/email/membership_winback/fromEmail'),
+    fromName: t('api/email/membership_winback/fromName'),
+    subject: t('api/email/membership_winback/subject'),
     templateName: `membership_winback_${cancellationCategory}`,
     mergeLanguage: 'handlebars',
     globalMergeVars: [

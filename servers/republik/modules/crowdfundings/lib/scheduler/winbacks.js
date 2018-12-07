@@ -1,4 +1,4 @@
-const debug = require('debug')('crowdfundings:lib:scheduler:winBacks')
+const debug = require('debug')('crowdfundings:lib:scheduler:winbacks')
 const moment = require('moment')
 const Promise = require('bluebird')
 
@@ -77,7 +77,7 @@ const inform = async (args, context) => {
           userId,
           email,
           info: {
-            membershipId, // a user is only tried to winBack once
+            membershipId, // a user is only tried to winback once
             membershipCancellationId: cancellationId
           }
         },
