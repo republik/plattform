@@ -519,7 +519,6 @@ mail.prepareMembershipWinback = async ({ userId, membershipId, cancellationCateg
       { name: 'prolong_url',
         content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`
       },
-      // TODO check with FE
       { name: 'prolong_url_reduced',
         content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}&userPrice=1`
       },
