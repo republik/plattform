@@ -5,7 +5,10 @@ module.exports = {
     }
 
     const packageOptions =
-      await pgdb.public.packageOptions.find({ packageId: package_.id })
+      await pgdb.public.packageOptions.find(
+        { packageId: package_.id },
+        { orderBy: { order: 'asc' } }
+      )
 
     // Default, raw package options
     return packageOptions.map(
