@@ -442,7 +442,7 @@ mail.sendMembershipCancellation = async ({ email, name, endDate, t }) => {
   })
 }
 
-mail.sendMembershipGiversProlongNotice = async ({ userId, membershipIds, informClaimersDays }, { t, pgdb }) => {
+mail.prepareMembershipGiversProlongNotice = async ({ userId, membershipIds, informClaimersDays }, { t, pgdb }) => {
   const user = transformUser(
     await pgdb.public.users.findOne({ id: userId })
   )
@@ -466,7 +466,7 @@ mail.sendMembershipGiversProlongNotice = async ({ userId, membershipIds, informC
   })
   //
 
-  return mail.sendMailTemplate({
+  return ({
     to: user.email,
     subject: t('api/email/membership_giver_prolong_notice/subject'),
     templateName: 'membership_giver_prolong_notice',
@@ -499,13 +499,13 @@ mail.sendMembershipGiversProlongNotice = async ({ userId, membershipIds, informC
   })
 }
 
-mail.sendMembershipWinBack = async ({ userId, membershipId, cancellationCategory, cancelledAt }, { t, pgdb }) => {
+mail.prepareMembershipWinback = async ({ userId, membershipId, cancellationCategory, cancelledAt }, { t, pgdb }) => {
   const user = transformUser(
     await pgdb.public.users.findOne({ id: userId })
   )
   const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
 
-  return mail.sendMailTemplate({
+  return ({
     to: user.email,
     fromEmail: t('api/email/membership_winback/fromEmail'),
     fromName: t('api/email/membership_winback/fromName'),

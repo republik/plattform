@@ -71,6 +71,12 @@ const inform = async (args, context) => {
       cancelledAt,
       cancellationId
     }) => {
+      const templatePayload = await context.mail.prepareMembershipWinback({
+        userId,
+        membershipId,
+        cancellationCategory,
+        cancelledAt
+      }, context)
       await send(
         {
           type: `membership_winback`,
@@ -78,15 +84,11 @@ const inform = async (args, context) => {
           email,
           info: {
             membershipId, // a user is only tried to winback once
-            membershipCancellationId: cancellationId
+            membershipCancellationId: cancellationId,
+            templatePayload
           }
         },
-        () => context.mail.sendMembershipWinBack({
-          userId,
-          membershipId,
-          cancellationCategory,
-          cancelledAt
-        }, context),
+        () => context.mail.sendMailTemplate(templatePayload),
         context
       )
     },
