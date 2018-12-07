@@ -1,3 +1,3 @@
-republik: cd servers/republik && DEBUG=crowdfundings:lib:* PORT=5000 yarn run dev
+republik: cd servers/republik && DEBUG=crowdfundings:lib:*,scheduler:* PORT=5000 yarn run dev
 publikator: cd servers/publikator && PORT=5010 yarn run dev
 assets: cd servers/assets && PORT=5020 yarn run dev
