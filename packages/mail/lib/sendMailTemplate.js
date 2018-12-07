@@ -55,14 +55,16 @@ module.exports = async (mail) => {
 
   if (SEND_MAILS === 'false' || (DEV && SEND_MAILS !== 'true')) {
     logger.log('\n\nSEND_MAIL prevented mail from being sent\n(SEND_MAIL == false or NODE_ENV != production and SEND_MAIL != true):\n', mail)
-    return sleep(2000)
+    await sleep(2000)
+    return [{ status: 'sent-simulated' }]
   }
 
   if (SEND_MAILS_DOMAIN_FILTER) {
     const domain = mail.to.split('@')[1]
     if (domain !== SEND_MAILS_DOMAIN_FILTER) {
       logger.log(`\n\nSEND_MAILS_DOMAIN_FILTER (${SEND_MAILS_DOMAIN_FILTER}) prevented mail from being sent:\n`, mail)
-      return sleep(2000)
+      await sleep(2000)
+      return [{ status: 'sent-simulated' }]
     }
   }
 
@@ -76,7 +78,8 @@ module.exports = async (mail) => {
 
     if (!hasMatchedFilter) {
       logger.log(`\n\nSEND_MAILS_REGEX_FILTERS prevented mail from being sent:\n`, mail)
-      return sleep(2000)
+      await sleep(2000)
+      return [{ status: 'sent-simulated' }]
     }
   }
 

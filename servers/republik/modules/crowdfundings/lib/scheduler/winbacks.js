@@ -57,9 +57,7 @@ const getCancellations = async ({ now }, { pgdb }) => {
 }
 
 const inform = async (args, context) => {
-  const _cancellations = await getCancellations(args, context)
-  // TODO remove
-  const cancellations = _cancellations.slice(0, 2)
+  const cancellations = await getCancellations(args, context)
 
   return Promise.map(
     cancellations,

@@ -42,7 +42,10 @@ const send = async (log, sendFunc, context) => {
       const result = results[0]
       await saveSent({
         ...log,
-        resultOk: result.status === 'sent' && !result.reject_reason,
+        resultOk: (
+          (result.status === 'sent' || !result.status === 'sent-simulated') &&
+          !result.reject_reason
+        ),
         resultPayload: result
       }, context)
       return result

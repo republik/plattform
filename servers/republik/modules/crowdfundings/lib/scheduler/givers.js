@@ -73,9 +73,7 @@ const getUsers = async ({ now }, { pgdb }) => {
 }
 
 const inform = async (args, context) => {
-  const _users = await getUsers(args, context)
-  // TODO remove
-  const users = _users.slice(0, 2)
+  const users = await getUsers(args, context)
 
   return Promise.map(
     users,
