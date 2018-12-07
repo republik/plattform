@@ -9,7 +9,7 @@ const {
 } = process.env
 
 const DAYS_BEFORE_END_DATE = 45
-const MAX_DAYS_BEFORE_END_DATE = 40
+const MAX_DAYS_BEFORE_END_DATE = 35
 
 const getUsers = async ({ now }, { pgdb }) => {
   const minEndDate = moment(now)
