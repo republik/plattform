@@ -65,18 +65,24 @@ type PackageOption {
   templateId: ID! # package option ID
   package: Package!
   reward: Reward
+
   minAmount: Int!
   maxAmount: Int
   defaultAmount: Int!
+
   price: Int!
+  intervalStepCountPrice: Int!
   vat: Int!
   minUserPrice: Int!
   userPrice: Boolean!
+
   createdAt: DateTime!
   updatedAt: DateTime!
 
-  # for pledgeOptions
+  # returned on PledgeOptions
   amount: Int
+  interval: MembershipTypeInterval
+  intervalCount: Int
 
   # for custom packages
   optionGroup: String
@@ -89,6 +95,8 @@ input PackageOptionInput {
   amount: Int!
   price: Int!
   templateId: ID! # packageOption.id
+
+  intervalCount: Int
 
   # via custom packages
   membershipId: ID
@@ -105,6 +113,7 @@ type Goodie {
 enum MembershipTypeInterval {
   year
   month
+  week
   day
 }
 
@@ -113,6 +122,12 @@ type MembershipType {
   name: String!
   interval: MembershipTypeInterval
   intervalCount: Int!
+
+  minIntervalCount: Int!
+  maxIntervalCount: Int!
+  defaultIntervalCount: Int!
+  intervalStepCount: Int!
+
   createdAt: DateTime!
   updatedAt: DateTime!
 }
