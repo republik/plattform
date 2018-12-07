@@ -476,7 +476,7 @@ mail.sendMembershipGiversProlongNotice = async ({ userId, membershipIds, informC
         content: user.name
       },
       { name: 'prolong_url',
-        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`
+        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&membershipIds=${membershipIds.join('~')}&token=${customPledgeToken}`
       },
       { name: 'gifted_memberships_count',
         content: memberships.length
