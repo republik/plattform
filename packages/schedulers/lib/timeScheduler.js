@@ -7,7 +7,7 @@ const LOCK_RETRY_DELAY = 600
 const LOCK_RETRY_JITTER = 200
 const MIN_TTL_MS = LOCK_RETRY_COUNT * (LOCK_RETRY_DELAY + LOCK_RETRY_JITTER)
 
-const init = async (
+const init = async ({
   name,
   context,
   runFunc,
@@ -15,9 +15,9 @@ const init = async (
   runAtTime,
   runAtDaysOfWeek = [1, 2, 3, 4, 5, 6, 7],
   runInitially = false
-) => {
+}) => {
   if (!name || !context || !runFunc || !lockTtlSecs || !runAtTime) {
-    throw new Error('missing input')
+    throw new Error('missing input', { name, context, runFunc, lockTtlSecs, runAtTime })
   }
   const { redis } = context
   if (!redis) {

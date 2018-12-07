@@ -3,7 +3,7 @@ const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 const debug = require('debug')('crowdfundings:lib:scheduler')
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const redis = require('@orbiting/backend-modules-base/lib/redis')
-const { timeScheduler: scheduler } = require('@orbiting/backend-modules-schedulers')
+const { timeScheduler } = require('@orbiting/backend-modules-schedulers')
 
 const lockTtlSecs = 5 * 60 // 10min
 
@@ -20,25 +20,24 @@ const init = async (_context) => {
     redis
   }
 
-  scheduler.init(
-    'memberships',
+  timeScheduler.init({
+    name: 'memberships',
     context,
-    informGivers,
+    runFunc: informGivers,
     lockTtlSecs,
-    '06:00',
-    undefined,
-    DEV
-  )
+    runAtTime: '06:00',
+    runInitially: DEV
+  })
 
-  scheduler.init(
-    'winback',
+  timeScheduler.init({
+    name: 'winback',
     context,
-    informCancellers,
+    runFunc: informCancellers,
     lockTtlSecs,
-    '16:32',
-    [1, 2, 3, 4, 5],
-    DEV
-  )
+    runAtTime: '16:32',
+    runAtDaysOfWeek: [1, 2, 3, 4, 5],
+    runInitially: DEV
+  })
 }
 
 module.exports = {
