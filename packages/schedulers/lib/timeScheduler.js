@@ -19,6 +19,9 @@ const init = async ({
   if (!name || !context || !runFunc || !lockTtlSecs || !runAtTime) {
     throw new Error('missing input', { name, context, runFunc, lockTtlSecs, runAtTime })
   }
+  if (runAtDaysOfWeek.length < 1) {
+    throw new Error('runAtDaysOfWeek must at least have one entry')
+  }
   const { redis } = context
   if (!redis) {
     throw new Error('missing redis')
