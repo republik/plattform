@@ -1,19 +1,17 @@
 exports.minTotal = (pledgeOptions, packageOptions) => Math.max(pledgeOptions.reduce(
-  (amount, plo) => {
+  (price, plo) => {
     const pko = packageOptions.find((pko) => pko.id === plo.templateId)
-    return amount + (pko.userPrice
-      ? (pko.minUserPrice * plo.amount)
-      : (pko.price * plo.amount))
-  }
-  , 0
+    return price + (pko.userPrice
+      ? (pko.minUserPrice * (plo.intervalCount || 1) * plo.amount)
+      : (pko.price * (plo.intervalCount || 1) * plo.amount))
+  }, 0
 ), 100)
 
 exports.regularTotal = (pledgeOptions, packageOptions) => Math.max(pledgeOptions.reduce(
-  (amount, plo) => {
+  (price, plo) => {
     const pko = packageOptions.find((pko) => pko.id === plo.templateId)
-    return amount + (pko.price * plo.amount)
-  }
-  , 0
+    return price + (pko.price * (plo.intervalCount || 1) * plo.amount)
+  }, 0
 ), 100)
 
 exports.getPledgeOptionsTree = async (pledgeOptions, pgdb) => {
