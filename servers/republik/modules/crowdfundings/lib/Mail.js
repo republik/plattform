@@ -256,6 +256,13 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
     })
 
     pledgeOptions
+      // Sort by packageOption.order in an ascending manner
+      .sort(
+        (a, b) =>
+          a.packageOption &&
+          b.packageOption &&
+          a.packageOption.order > b.packageOption.order ? 1 : 0
+      )
       // Sort by sequenceNumber in an ascending manner
       .sort(
         (a, b) =>
