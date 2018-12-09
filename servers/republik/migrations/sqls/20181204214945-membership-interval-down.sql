@@ -1,6 +1,14 @@
+ALTER TABLE "memberships"
+  DROP COLUMN IF EXISTS "initialInterval",
+  DROP COLUMN IF EXISTS "initialIntervalCount"
+;
+
+ALTER TABLE "pledgeOptions"
+  DROP COLUMN IF EXISTS "intervalCount"
+;
+
 ALTER TABLE "packageOptions"
-  DROP COLUMN IF EXISTS "order",
-  DROP COLUMN IF EXISTS "intervalStepPrice"
+  DROP COLUMN IF EXISTS "order"
 ;
 
 ALTER TABLE "packages"
@@ -8,8 +16,9 @@ ALTER TABLE "packages"
 ;
 
 ALTER TABLE "membershipTypes"
-  DROP COLUMN IF EXISTS "minInterval",
-  DROP COLUMN IF EXISTS "maxInterval",
-  DROP COLUMN IF EXISTS "defaultInterval",
-  DROP COLUMN IF EXISTS "intervalStep"
+  ADD COLUMN "intervalCount" int NOT NULL DEFAULT 1,
+  DROP COLUMN IF EXISTS "minIntervalCount",
+  DROP COLUMN IF EXISTS "maxIntervalCount",
+  DROP COLUMN IF EXISTS "defaultIntervalCount",
+  DROP COLUMN IF EXISTS "intervalStepCount"
 ;

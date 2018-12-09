@@ -75,7 +75,7 @@ PgDb.connect().then(async (pgdb) => {
       rewardType: 'MembershipType',
       name: 'MONTHLY_ABO',
       interval: 'month',
-      intervalCount: 1,
+      defaultIntervalCount: 1,
       price: 2200,
       companyId: republikCompany.id
     })

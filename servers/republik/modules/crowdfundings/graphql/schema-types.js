@@ -79,9 +79,8 @@ type PackageOption {
   createdAt: DateTime!
   updatedAt: DateTime!
 
-  # returned on PledgeOptions
+  # returned on pledges.options
   amount: Int
-  interval: MembershipTypeInterval
   intervalCount: Int
 
   # for custom packages
@@ -120,9 +119,7 @@ enum MembershipTypeInterval {
 type MembershipType {
   id: ID!
   name: String!
-  interval: MembershipTypeInterval
-  intervalCount: Int!
-
+  interval: MembershipTypeInterval!
   minIntervalCount: Int!
   maxIntervalCount: Int!
   defaultIntervalCount: Int!
