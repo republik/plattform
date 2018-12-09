@@ -446,7 +446,6 @@ mail.prepareMembershipGiversProlongNotice = async ({ userId, membershipIds, info
   )
   const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
 
-  // TODO: refactor into dataloader
   const memberships = await pgdb.public.memberships.find({
     id: membershipIds
   })
@@ -462,7 +461,6 @@ mail.prepareMembershipGiversProlongNotice = async ({ userId, membershipIds, info
     memberships[index].user =
       membershipsUsers.find(u => u.id === membership.userId)
   })
-  //
 
   return ({
     to: user.email,
