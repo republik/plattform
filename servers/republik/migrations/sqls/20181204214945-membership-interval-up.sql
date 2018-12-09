@@ -35,11 +35,12 @@ ALTER TABLE "packages"
   ADD COLUMN "order" int NOT NULL DEFAULT 100
 ;
 
-UPDATE "packages" SET "order"=100 WHERE "name"='ABO' ;
-UPDATE "packages" SET "order"=200 WHERE "name"='MONTHLY_ABO' ;
-UPDATE "packages" SET "order"=300 WHERE "name"='BENEFACTOR' ;
-UPDATE "packages" SET "order"=400 WHERE "name"='ABO_GIVE' ;
-UPDATE "packages" SET "order"=600 WHERE "name"='DONATE' ;
+UPDATE "packages" SET "order"=100 WHERE "name"='PROLONG' ;
+UPDATE "packages" SET "order"=200 WHERE "name"='ABO' ;
+UPDATE "packages" SET "order"=300 WHERE "name"='MONTHLY_ABO' ;
+UPDATE "packages" SET "order"=400 WHERE "name"='BENEFACTOR' ;
+UPDATE "packages" SET "order"=500 WHERE "name"='ABO_GIVE' ;
+UPDATE "packages" SET "order"=700 WHERE "name"='DONATE' ;
 
 ALTER TABLE "pledgeOptions"
   ADD COLUMN "intervalCount" int
@@ -67,9 +68,6 @@ WHERE
 ;
 
 -- Renable triggers
-
-
-
 ALTER TABLE "memberships" ENABLE TRIGGER "trigger_revoke_membership_cancellations";
 ALTER TABLE "memberships" ENABLE TRIGGER "trigger_associate_role";
 ALTER TABLE "memberships" ENABLE TRIGGER "trigger_voucher_code";
