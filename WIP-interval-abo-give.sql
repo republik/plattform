@@ -12,7 +12,7 @@ VALUES
 -- Add package "ABO_GIVE_MONTHS"
 INSERT INTO "public"."packages"("id","crowdfundingId","name","companyId","paymentMethods","isAutoActivateUserMembership","custom","rules","order")
 VALUES
-(E'f03cabcc-fea3-4c80-b0a2-500064fe3180',E'e2ea1234-ca8c-4604-aeec-80a0cecf07bf',E'ABO_GIVE_MONTHS',E'240ef27d-cf26-48c1-81df-54b2a10732f4',E'{STRIPE,POSTFINANCECARD,PAYPAL}',TRUE,FALSE,E'[]',500);
+(E'f03cabcc-fea3-4c80-b0a2-500064fe3180',E'e2ea1234-ca8c-4604-aeec-80a0cecf07bf',E'ABO_GIVE_MONTHS',E'240ef27d-cf26-48c1-81df-54b2a10732f4',E'{STRIPE,POSTFINANCECARD,PAYPAL}',FALSE,FALSE,E'[]',500);
 
 -- Add packageOptions for package "ABO_GIVE_MONTHS"
 INSERT INTO "public"."packageOptions"("id","packageId","rewardId","minAmount","maxAmount","defaultAmount","price","userPrice","minUserPrice","vat","intervalStepCountPrice","order")
