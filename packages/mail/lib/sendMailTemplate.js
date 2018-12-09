@@ -17,7 +17,8 @@ const {
   SEND_MAILS,
   SEND_MAILS_DOMAIN_FILTER,
   SEND_MAILS_REGEX_FILTERS,
-  SEND_MAILS_CATCHALL
+  SEND_MAILS_CATCHALL,
+  FRONTEND_BASE_URL
 } = process.env
 
 // usage
@@ -38,13 +39,21 @@ module.exports = async (mail) => {
     SEND_MAILS_TAGS && SEND_MAILS_TAGS.split(',')
   ).filter(Boolean)
 
+  const mergeVars = [
+    ...mail.globalMergeVars,
+    ...FRONTEND_BASE_URL
+      ? [{ name: 'frontend_base_url',
+        content: FRONTEND_BASE_URL }]
+      : []
+  ]
+
   const message = {
     to: [{email: mail.to}],
     subject: mail.subject,
     from_email: mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS,
     from_name: mail.fromName || DEFAULT_MAIL_FROM_NAME,
     merge_language: mail.mergeLanguage || 'mailchimp',
-    global_merge_vars: mail.globalMergeVars,
+    global_merge_vars: mergeVars,
     auto_text: true,
     tags
   }
@@ -54,7 +63,7 @@ module.exports = async (mail) => {
   const DEV = NODE_ENV && NODE_ENV !== 'production'
 
   if (SEND_MAILS === 'false' || (DEV && SEND_MAILS !== 'true')) {
-    logger.log('\n\nSEND_MAIL prevented mail from being sent\n(SEND_MAIL == false or NODE_ENV != production and SEND_MAIL != true):\n', mail)
+    logger.log('\n\nSEND_MAIL prevented mail from being sent\n(SEND_MAIL == false or NODE_ENV != production and SEND_MAIL != true):\n', message)
     await sleep(2000)
     return [{ status: 'sent-simulated' }]
   }
@@ -62,7 +71,7 @@ module.exports = async (mail) => {
   if (SEND_MAILS_DOMAIN_FILTER) {
     const domain = mail.to.split('@')[1]
     if (domain !== SEND_MAILS_DOMAIN_FILTER) {
-      logger.log(`\n\nSEND_MAILS_DOMAIN_FILTER (${SEND_MAILS_DOMAIN_FILTER}) prevented mail from being sent:\n`, mail)
+      logger.log(`\n\nSEND_MAILS_DOMAIN_FILTER (${SEND_MAILS_DOMAIN_FILTER}) prevented mail from being sent:\n`, message)
       await sleep(2000)
       return [{ status: 'sent-simulated' }]
     }
@@ -77,7 +86,7 @@ module.exports = async (mail) => {
     })
 
     if (!hasMatchedFilter) {
-      logger.log(`\n\nSEND_MAILS_REGEX_FILTERS prevented mail from being sent:\n`, mail)
+      logger.log(`\n\nSEND_MAILS_REGEX_FILTERS prevented mail from being sent:\n`, message)
       await sleep(2000)
       return [{ status: 'sent-simulated' }]
     }

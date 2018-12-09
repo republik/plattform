@@ -411,8 +411,6 @@ ${address.country}</span>`
         { name: 'check_membership_subscriptions',
           content: checkMembershipSubscriptions
         },
-        { name: 'frontend_base_url',
-          content: FRONTEND_BASE_URL },
         { name: 'gifted_memberships_count',
           content: giftedMemberships.length
         }
