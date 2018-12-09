@@ -1,16 +1,28 @@
 exports.minTotal = (pledgeOptions, packageOptions) => Math.max(pledgeOptions.reduce(
   (price, plo) => {
     const pko = packageOptions.find((pko) => pko.id === plo.templateId)
-    return price + (pko.userPrice
-      ? (pko.minUserPrice * (plo.intervalCount || 1) * plo.amount)
-      : (pko.price * (plo.intervalCount || 1) * plo.amount))
+    const intervalCount =
+      plo.intervalCount ||
+      (pko.reward && pko.reward.defaultIntervalCount) ||
+      1
+
+    return price + (
+      pko.userPrice
+        ? (pko.minUserPrice * intervalCount * plo.amount)
+        : (pko.price * intervalCount * plo.amount)
+    )
   }, 0
 ), 100)
 
 exports.regularTotal = (pledgeOptions, packageOptions) => Math.max(pledgeOptions.reduce(
   (price, plo) => {
     const pko = packageOptions.find((pko) => pko.id === plo.templateId)
-    return price + (pko.price * (plo.intervalCount || 1) * plo.amount)
+    const intervalCount =
+      plo.intervalCount ||
+      (pko.reward && pko.reward.defaultIntervalCount) ||
+      1
+
+    return price + (pko.price * intervalCount * plo.amount)
   }, 0
 ), 100)
 

@@ -38,6 +38,41 @@ module.exports = async (_, args, context) => {
       id: pledgeOptions.map(plo => plo.templateId)
     })
 
+    const rewards =
+      await pgdb.public.rewards.find({
+        id: packageOptions.map(option => option.rewardId)
+      })
+
+    const goodies =
+      rewards.length > 0
+        ? await pgdb.public.goodies.find({
+          rewardId: rewards.map(reward => reward.id)
+        })
+        : []
+
+    const membershipTypes =
+      rewards.length > 0
+        ? await pgdb.public.membershipTypes.find({
+          rewardId: rewards.map(reward => reward.id)
+        })
+        : []
+
+    rewards.forEach((reward, index, rewards) => {
+      const goodie = goodies
+        .find(g => g.rewardId === reward.id)
+      const membershipType = membershipTypes
+        .find(m => m.rewardId === reward.id)
+
+      rewards[index] = Object.assign({}, reward, membershipType, goodie)
+    })
+
+    packageOptions.forEach((packageOption, index, packageOptions) => {
+      packageOptions[index].reward = rewards
+        .find(reward => packageOption.rewardId === reward.rewardId)
+    })
+
+    console.log(packageOptions)
+
     const packageId = packageOptions[0].packageId
     const pkg = await pgdb.public.packages.findOne({ id: packageId })
 
@@ -119,6 +154,42 @@ module.exports = async (_, args, context) => {
           { req: req._log(), args, pko, plo }
         )
         throw new Error(t('api/unexpected'))
+      }
+
+      if (
+        pko.reward &&
+        pko.reward.rewardType === 'MembershipType' &&
+        (
+          pko.reward.maxIntervalCount - pko.reward.minIntervalCount > 0 ||
+          plo.intervalCount
+        )
+      ) {
+        if (!plo.intervalCount) {
+          logger.error(
+            `intervalCount in option (templateId: ${plo.templateId}) is missing`,
+            { req: req._log(), args, pko, plo }
+          )
+          throw new Error(t('api/unexpected'))
+        }
+
+        if (
+          plo.intervalCount > pko.reward.maxIntervalCount ||
+          plo.intervalCount < pko.reward.minIntervalCount
+        ) {
+          logger.error(
+            `intervalCount in option (templateId: ${plo.templateId}) out of range`,
+            { req: req._log(), args, pko, plo }
+          )
+          throw new Error(t('api/unexpected'))
+        }
+
+        if (plo.intervalCount % pko.reward.intervalStepCount > 0) {
+          logger.error(
+            `intervalCount in option (templateId: ${plo.templateId}) out of step`,
+            { req: req._log(), args, pko, plo }
+          )
+          throw new Error(t('api/unexpected'))
+        }
       }
     })
 
@@ -279,6 +350,14 @@ module.exports = async (_, args, context) => {
 
       const pko = packageOptions.find((pko) => pko.id === plo.templateId)
       plo.vat = pko.vat
+
+      if (
+        pko.reward &&
+        pko.reward.rewardType === 'MembershipType' &&
+        !plo.intervalCount
+      ) {
+        plo.intervalCount = pko.reward.defaultIntervalCount
+      }
 
       return transaction.public.pledgeOptions.insertAndGet(plo)
     }))
