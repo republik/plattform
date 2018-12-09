@@ -89,7 +89,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
         const { additionalPeriods } =
           await evaluate({
             package_: resolvedPackage,
-            packageOption: plo.packageOption,
+            packageOption: { ...plo.packageOption, membershipType },
             membership,
             lenient: true
           })
@@ -138,6 +138,8 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
             active: false,
             renew: false,
             autoPay: plo.autoPay || false,
+            initialInterval: membershipType.interval,
+            initialIntervalCount: plo.intervalCount,
             createdAt: now,
             updatedAt: now
           }
@@ -151,7 +153,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
             membershipPeriod = {
               pledgeOptionId: plo.id,
               beginDate: now,
-              endDate: moment(now).add(membershipType.intervalCount, membershipType.interval),
+              endDate: moment(now).add(membershipType.defaultIntervalCount, plo.intervalCount),
               membership
             }
           } else {

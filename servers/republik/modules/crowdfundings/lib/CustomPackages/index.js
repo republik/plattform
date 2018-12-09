@@ -7,7 +7,7 @@ const { getPeriodEndingLast, getLastEndDate } = require('../utils')
 const rules = require('./rules')
 
 // Put that one into database.
-const EXTENDABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
+const EXTENDABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO', 'ABO_GIVE_MONTHS']
 const EXTENDABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR']
 
 // Which options require you to own a membership?
@@ -27,7 +27,7 @@ const findEligableMemberships = ({ memberships, user, ignoreClaimedMemberships =
     // Self-claimed ABO_GIVE
     const isSelfClaimed =
       m.pledge.userId === m.userId &&
-      m.pledge.package.name === 'ABO_GIVE' &&
+      ['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(m.pledge.package.name) &&
       m.active
 
     debug({
@@ -80,7 +80,7 @@ const evaluate = async ({
 }) => {
   debug('evaluate')
 
-  const { reward } = packageOption
+  const { reward, membershipType: packageOptionMembershipType } = packageOption
   const { membershipType, membershipPeriods } = membership
   const now = moment()
 
@@ -149,8 +149,9 @@ const evaluate = async ({
 
   const beginEnd = {
     beginDate: lastEndDate,
-    endDate: moment(lastEndDate)
-      .add(membershipType.intervalCount, membershipType.interval)
+    endDate: moment(lastEndDate).add(
+      packageOptionMembershipType.defaultIntervalCount, packageOptionMembershipType.interval
+    )
   }
 
   payload.additionalPeriods.push({
@@ -238,6 +239,9 @@ const getCustomOptions = async (package_) => {
     }
     packageOptions[] {
       reward
+        reward
+        membershipType
+        goodie
       membershipType
     }
   }

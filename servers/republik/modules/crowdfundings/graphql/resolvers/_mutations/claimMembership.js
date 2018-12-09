@@ -57,10 +57,12 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
     )
 
     if (!hasActiveMembership) {
-      const { intervalCount, interval } =
+      const { interval } =
         await transaction.public.membershipTypes.findOne({
           id: membership.membershipTypeId
         })
+
+      const intervalCount = membership.initialIntervalCount
 
       // generate interval
       const beginDate = moment(now)
