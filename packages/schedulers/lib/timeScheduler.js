@@ -102,7 +102,7 @@ const init = async ({
     debug('run initially')
     return run()
   } else {
-    return scheduleNextRun(true)
+    return scheduleNextRun()
   }
 }
 
