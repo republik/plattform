@@ -520,7 +520,7 @@ mail.prepareMembershipWinback = async ({ userId, membershipId, cancellationCateg
       { name: 'prolong_url_reduced',
         content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}&userPrice=1`
       },
-      { name: 'cancelledAt',
+      { name: 'cancelled_at',
         content: dateFormat(cancelledAt)
       }
     ]
