@@ -50,8 +50,11 @@ ALTER TABLE "memberships"
   ADD COLUMN "initialIntervalCount" int
 ;
 
--- Temporary disable all triggers, limited to this session
-SET session_replication_role = replica;
+-- Temporary disable all triggers.
+ALTER TABLE "memberships" DISABLE TRIGGER "trigger_member_role";
+ALTER TABLE "memberships" DISABLE TRIGGER "trigger_voucher_code";
+ALTER TABLE "memberships" DISABLE TRIGGER "trigger_associate_role";
+ALTER TABLE "memberships" DISABLE TRIGGER "trigger_revoke_membership_cancellations";
 
 UPDATE "memberships"
 SET
@@ -64,4 +67,10 @@ WHERE
 ;
 
 -- Renable triggers
-SET session_replication_role = DEFAULT;
+
+
+
+ALTER TABLE "memberships" ENABLE TRIGGER "trigger_revoke_membership_cancellations";
+ALTER TABLE "memberships" ENABLE TRIGGER "trigger_associate_role";
+ALTER TABLE "memberships" ENABLE TRIGGER "trigger_voucher_code";
+ALTER TABLE "memberships" ENABLE TRIGGER "trigger_member_role";
