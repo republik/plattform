@@ -322,8 +322,10 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
               const labelGiftedMembership = t(
                 'api/email/option/other/gifted_membership',
                 {
-                  name: transformUser(pledgeOption.membership.user).name,
-                  sequenceNumber: pledgeOption.membership.sequenceNumber
+                  name: pledgeOption.membership &&
+                    transformUser(pledgeOption.membership.user).name,
+                  sequenceNumber: pledgeOption.membership &&
+                    pledgeOption.membership.sequenceNumber
                 }
               )
 
