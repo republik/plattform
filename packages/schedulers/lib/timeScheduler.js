@@ -42,13 +42,13 @@ const init = async ({
   }
 
   if (lockTtlSecs * 1000 < MIN_TTL_MS) {
-    throw new Error(`lockTtlSecs must be at least ${MIN_TTL_MS / 1000}`)
+    throw new Error(`lockTtlSecs must be at least ${Math.ceil(MIN_TTL_MS / 1000})`, { lockTtlSecs })
   }
 
   const scheduleNextRun = () => {
     const [runAtHour, runAtMinute] = runAtTime.split(':')
     if (!runAtHour || !runAtMinute) {
-      throw new Error('invalid runAtTime. Format: HH:MM')
+      throw new Error('invalid runAtTime. Format: HH:MM', { runAtTime })
     }
     const now = moment()
     const nextRunAt = now.clone()
