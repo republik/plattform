@@ -23,4 +23,11 @@ VALUES
 (E'22bab656-76bd-4482-af71-f7fddc7aa7c8',E'f03cabcc-fea3-4c80-b0a2-500064fe3180',E'43f69dbd-dca9-40a0-82d4-5ed431cb7278',0,100,0,2000,FALSE,0,0,200),
 (E'226ef3f0-9738-451e-9157-0552150c1257',E'f03cabcc-fea3-4c80-b0a2-500064fe3180',E'00b84bff-9b49-4ca7-b6d7-760783b49bf3',0,100,0,2000,FALSE,0,0,300);
 
+UPDATE "redirections"
+SET
+  "target" = '/angebote?packages=ABO_GIVE,ABO_GIVE_MONTHS'
+WHERE
+  "source" = '/verschenken'
+;
+
 COMMIT TRANSACTION ;
