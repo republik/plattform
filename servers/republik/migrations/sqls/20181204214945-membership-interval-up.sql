@@ -31,6 +31,34 @@ ALTER TABLE "packageOptions"
   ADD COLUMN "order" int NOT NULL DEFAULT 100
 ;
 
+-- Assign "membershipType" package options order 100
+UPDATE "packageOptions"
+SET
+  "order" = 100
+FROM
+  "rewards"
+WHERE
+  "rewards"."id" = "packageOptions"."rewardId"
+  AND "rewards"."type" = 'MembershipType'
+;
+
+-- Assign goodies in package options order 200 (notebooks), 300 (totebags)
+UPDATE "packageOptions"
+SET
+  "order" = CASE
+    WHEN "goodies"."name" = 'NOTEBOOK' THEN 200
+    WHEN "goodies"."name" = 'TOTEBAG' THEN 300
+    ELSE 400
+  END
+FROM
+  "rewards",
+  "goodies"
+WHERE
+  "rewards"."id" = "packageOptions"."rewardId"
+  AND "rewards"."type" = 'Goodie'
+  AND "goodies"."rewardId" = "rewards"."id"
+;
+
 ALTER TABLE "packages"
   ADD COLUMN "order" int NOT NULL DEFAULT 100
 ;
