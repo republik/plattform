@@ -112,6 +112,14 @@ module.exports = async (_, args, context) => {
         )
         throw new Error(t('api/unexpected'))
       }
+
+      if (!pko.userPrice && plo.price !== pko.price) {
+        logger.error(
+          `price in option (templateId: ${plo.templateId}) is invalid`,
+          { req: req._log(), args, pko, plo }
+        )
+        throw new Error(t('api/unexpected'))
+      }
     })
 
     // check if crowdfunding is still open
