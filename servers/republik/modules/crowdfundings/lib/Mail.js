@@ -310,25 +310,33 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
                 pledgeOption.membership &&
                 pledgeOption.membership.userId !== pledge.userId
 
-              const olabel = isGiftedMembership
-                ? t('api/email/option/other/gifted_membership', {
+              const labelFragmentInterval = t.pluralize(
+                `api/email/option/interval/${pledgeOption.packageOption.reward.interval}/count`,
+                { count: pledgeOption.intervalCount })
+
+              const labelDefault = t.pluralize(
+                `api/email/option/${rewardType.toLowerCase()}/${name.toLowerCase()}`,
+                { count: pledgeOption.amount, interval: labelFragmentInterval }
+              )
+
+              const labelGiftedMembership = t(
+                'api/email/option/other/gifted_membership',
+                {
                   name: transformUser(pledgeOption.membership.user).name,
                   sequenceNumber: pledgeOption.membership.sequenceNumber
-                })
-                : t([
-                  'api/email/option',
-                  rewardType.toLowerCase(),
-                  name.toLowerCase()
-                ].join('/'))
+                }
+              )
 
               const oprice =
-                pledgeOption.price / 100
+                (pledgeOption.price * (pledgeOption.intervalCount || 1)) / 100
               const ototal =
-                (pledgeOption.amount * pledgeOption.price) / 100
+                oprice * pledgeOption.amount
 
               return {
                 oamount: pledgeOption.amount,
-                olabel,
+                olabel: !isGiftedMembership
+                  ? labelDefault
+                  : labelGiftedMembership,
                 oprice,
                 oprice_formatted: formatPriceChf(oprice),
                 ototal,
