@@ -1,0 +1,239 @@
+import React, { Component, Fragment } from 'react'
+import { Query, Mutation } from 'react-apollo'
+import gql from 'graphql-tag'
+import { MdModeEdit as EditIcon } from 'react-icons/md'
+
+import Overlay from '../../InlineOverlay'
+import {
+  OverlayBody,
+  OverlayToolbar,
+  OverlayToolbarClose,
+  Loader,
+  InlineSpinner
+} from '@project-r/styleguide'
+
+import {
+  InteractiveSection,
+  SectionMenu,
+  SectionTitle,
+  DL,
+  DT,
+  DD,
+  PlainButton
+} from '../../../Display/utils'
+
+import UserForm from './UserForm'
+
+import { GET_PROFILE } from '../ProfileHeader'
+
+export const GET_USER = gql`
+  query user($id: String) {
+    user(slug: $id) {
+      id
+      name
+      phoneNumber
+      firstName
+      lastName
+      birthday
+      address {
+        name
+        line1
+        line2
+        postalCode
+        city
+        country
+      }
+    }
+  }
+`
+
+export const UPDATE_USER = gql`
+  mutation updateUser(
+    $id: ID!
+    $birthday: Date
+    $firstName: String!
+    $lastName: String!
+    $phoneNumber: String
+    $address: AddressInput!
+  ) {
+    updateUser(
+      userId: $id
+      birthday: $birthday
+      firstName: $firstName
+      lastName: $lastName
+      phoneNumber: $phoneNumber
+      address: $address
+    ) {
+      id
+    }
+  }
+`
+
+const UpdateUser = ({ user, onSubmit, ...props }) => (
+  <Mutation
+    {...props}
+    mutation={UPDATE_USER}
+    refetchQueries={({ data: { updateUser } }) => [
+      {
+        query: GET_USER,
+        variables: {
+          id: updateUser.id
+        }
+      },
+      {
+        query: GET_PROFILE,
+        variables: {
+          id: updateUser.id
+        }
+      }
+    ]}
+    variables={{ id: user.id }}
+  >
+    {(updateUser, { loading, error }) => {
+      return (
+        <Loader
+          loading={loading}
+          error={error}
+          render={() => (
+            <UserForm
+              key={user.id}
+              user={user}
+              onSubmit={variables =>
+                onSubmit(updateUser({ variables }))
+              }
+            />
+          )}
+        />
+      )
+    }}
+  </Mutation>
+)
+
+const UserCard = ({ user }) => {
+  const postalCodeAndCity =
+    user.address &&
+    [user.address.postalCode, user.address.city]
+      .filter(Boolean)
+      .join(' ')
+  return (
+    <Fragment>
+      <DL>
+        <DT>Name</DT>
+        <DD>
+          {(user.firstName &&
+            user.lastName &&
+            `${user.firstName} ${user.lastName}`) ||
+            user.name ||
+            'Unbekannt'}
+        </DD>
+      </DL>
+      {user.birthday && (
+        <DL>
+          <DT>Geburtsdatum</DT>
+          <DD>{user.birthday}</DD>
+        </DL>
+      )}
+      <DL>
+        <DT>Adresse</DT>
+        {!user.address ? (
+          <DD>Keine Angaben</DD>
+        ) : (
+          <Fragment>
+            <DD>{user.address.name}</DD>
+            <DD>{user.address.line1}</DD>
+            {user.address.line2 && (
+              <DD>{user.address.line2}</DD>
+            )}
+            {postalCodeAndCity && (
+              <DD>{postalCodeAndCity}</DD>
+            )}
+            {user.address.country && (
+              <DD>{user.address.country}</DD>
+            )}
+          </Fragment>
+        )}
+      </DL>
+      {user.phoneNumber && (
+        <DL>
+          <DT>Telefon-Nr.</DT>
+          <DD>{user.phoneNumber}</DD>
+        </DL>
+      )}
+    </Fragment>
+  )
+}
+
+export default class User extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      isOpen: false
+    }
+
+    this.closeHandler = () =>
+      this.setState({ isOpen: false })
+    this.openHandler = () => this.setState({ isOpen: true })
+  }
+
+  render() {
+    const { userId } = this.props
+    const { isOpen } = this.state
+    return (
+      <Query query={GET_USER} variables={{ id: userId }}>
+        {({ loading, error, data }) => {
+          const isInitialLoading =
+            loading && !(data && data.user)
+          const isLoading = loading && !isInitialLoading
+
+          return (
+            <Loader
+              loading={isInitialLoading}
+              error={isInitialLoading && error}
+              render={() => {
+                const { user } = data
+                return (
+                  <InteractiveSection>
+                    <SectionTitle>Personalien</SectionTitle>
+                    <UserCard user={user} />
+                    <SectionMenu>
+                      {isLoading && (
+                        <div>
+                          <InlineSpinner size={28} />
+                        </div>
+                      )}
+                      <PlainButton
+                        className="show-on-focus"
+                        onClick={this.openHandler}
+                      >
+                        <EditIcon size={28} />
+                      </PlainButton>
+                    </SectionMenu>
+                    {isOpen && (
+                      <Overlay>
+                        <OverlayToolbar>
+                          <OverlayToolbarClose
+                            onClick={this.closeHandler}
+                          />
+                        </OverlayToolbar>
+                        <OverlayBody>
+                          <UpdateUser
+                            user={user}
+                            onSubmit={promise =>
+                              promise.then(
+                                this.closeHandler
+                              )
+                            }
+                          />
+                        </OverlayBody>
+                      </Overlay>
+                    )}
+                  </InteractiveSection>
+                )
+              }}
+            />
+          )
+        }}
+      </Query>
+    )
+  }
+}
