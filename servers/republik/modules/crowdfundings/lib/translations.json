@@ -1,5 +1,5 @@
 {
-  "updated": "2018-12-07T00:16:08.759Z",
+  "updated": "2018-12-10T12:46:49.873Z",
   "title": "live",
   "data": [
     {
@@ -388,7 +388,7 @@
     },
     {
       "key": "api/email/membership_giver_prolong_notice/subject",
-      "value": "Ihre verschenkten Abonnemente"
+      "value": "Ihre verschenkten Abonnements"
     },
     {
       "key": "api/email/membership_winback/subject",

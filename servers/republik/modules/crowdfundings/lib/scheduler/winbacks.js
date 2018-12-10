@@ -81,7 +81,8 @@ const inform = async (args, context) => {
           userId,
           email,
           info: {
-            membershipId, // a user is only tried to winback once
+            // a user is only tried to winback once thus membershipId not outside of info
+            membershipId,
             membershipCancellationId: cancellationId,
             templatePayload
           }
