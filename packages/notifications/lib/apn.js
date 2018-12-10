@@ -60,17 +60,15 @@ const publish = async (args, pgdb) => {
         ? { expiry: parseInt(new Date(now.getTime() + now.getTimezoneOffset() + ttl).getTime() / 1000) }
         : { }
     })
-    const result = await Promise.all(
+    const results = await Promise.all(
       tokens.map(token =>
         provider.send(message, token)
       )
     )
-    debug('APN: #recipients %d, message: %O, result: %O', tokens.length, message, result)
-    const staleTokens = result.failed.reduce((acc, cur) => {
-      if (cur.status === '410') {
-        cur.device && acc.push(cur.device)
-      }
-      return acc
+    debug('APN: #recipients %d, message: %O, results: %O', tokens.length, message, results)
+    const staleTokens = results.reduce((acc, cur) => {
+      const tokens = ((cur && cur.failed) || []).map(f => f.device)
+      return acc.concat(tokens)
     }, [])
     if (staleTokens.length > 0) {
       await deleteSessionForDevices(staleTokens, pgdb)
