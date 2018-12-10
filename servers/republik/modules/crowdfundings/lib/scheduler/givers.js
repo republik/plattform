@@ -99,7 +99,7 @@ const inform = async (args, context) => {
       }, context)
       await send(
         {
-          type: `membership_givers_t-${DAYS_BEFORE_END_DATE}`,
+          type: `membership_giver_t-${DAYS_BEFORE_END_DATE}`,
           userId,
           membershipIds,
           email,
