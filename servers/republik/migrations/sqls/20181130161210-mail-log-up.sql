@@ -12,3 +12,8 @@ CREATE TABLE "mailLog" (
   "createdAt"       timestamptz default now(),
   "updatedAt"       timestamptz default now()
 );
+
+CREATE INDEX IF NOT EXISTS "mail_log_type_idx" ON "mailLog" ("type");
+CREATE INDEX IF NOT EXISTS "mail_log_user_id_idx" ON "mailLog" ("userId");
+CREATE INDEX IF NOT EXISTS "mail_log_email_lower_idx" ON "mailLog"(lower("email"));
+CREATE INDEX IF NOT EXISTS "mail_log_membership_ids_idx" ON "mailLog" USING gin ("membershipIds");
