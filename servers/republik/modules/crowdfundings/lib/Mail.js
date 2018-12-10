@@ -343,6 +343,8 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
 
               return {
                 oamount: pledgeOption.amount,
+                otype: rewardType,
+                oname: name,
                 olabel: !isGiftedMembership
                   ? labelDefault
                   : labelGiftedMembership,
@@ -415,6 +417,16 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
         },
         { name: 'notebook_or_totebag',
           content: !!notebook || !!totebag
+        },
+        { name: 'goodies_count',
+          content: pledgeOptions
+            // Filter "pseudo" pledge options without a reward
+            .filter(
+              pledgeOption =>
+                pledgeOption.packageOption.reward &&
+                pledgeOption.packageOption.reward.rewardType === 'Goodie'
+            )
+            .reduce((agg, pledgeOption) => agg + pledgeOption.amount, 0)
         },
         { name: 'address',
           content: address
