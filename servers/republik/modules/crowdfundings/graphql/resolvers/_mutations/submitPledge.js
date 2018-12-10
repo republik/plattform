@@ -71,8 +71,6 @@ module.exports = async (_, args, context) => {
         .find(reward => packageOption.rewardId === reward.rewardId)
     })
 
-    console.log(packageOptions)
-
     const packageId = packageOptions[0].packageId
     const pkg = await pgdb.public.packages.findOne({ id: packageId })
 
