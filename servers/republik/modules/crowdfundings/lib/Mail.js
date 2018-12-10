@@ -454,7 +454,7 @@ ${address.country}</span>`
   })
 }
 
-mail.sendMembershipCancellation = async ({ email, name, endDate, t }) => {
+mail.sendMembershipCancellation = async ({ email, name, endDate, membershipType, t }) => {
   return mail.sendMailTemplate({
     to: email,
     subject: t('api/email/membership_cancel_notice/subject'),
@@ -466,6 +466,9 @@ mail.sendMembershipCancellation = async ({ email, name, endDate, t }) => {
       },
       { name: 'end_date',
         content: dateFormat(endDate)
+      },
+      { name: 'membership_type',
+        content: membershipType.name
       }
     ]
   })
