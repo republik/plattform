@@ -34,7 +34,7 @@ const init = async (_context) => {
     context,
     runFunc: informCancellers,
     lockTtlSecs,
-    runAtTime: '16:32',
+    runAtTime: '18:32',
     runAtDaysOfWeek: [1, 2, 3, 4, 5],
     runInitially: DEV
   })

@@ -8,11 +8,11 @@ const {
   PARKING_USER_ID
 } = process.env
 
-const DAYS_AFTER_CANCELLATION = 4
+const DAYS_AFTER_CANCELLATION = 3
 const MAX_DAYS_AFTER_CANCELLATION = 30
 
-const CANCELLATION_CATEGORIES = ['EDITORIAL', 'NO_TIME', 'TOO_EXPENSIVE']
-const MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
+const CANCELLATION_CATEGORIES = ['EDITORIAL', 'NO_TIME', 'TOO_EXPENSIVE']
+const MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
 
 const getCancellations = async ({ now }, { pgdb }) => {
   const maxCancelledAt = moment(now)
