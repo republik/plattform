@@ -5,6 +5,10 @@ const Promise = require('bluebird')
 const { send } = require('../mailLog')
 
 const {
+  DAYS_BEFORE_END_DATE: OWNERS_DAYS_BEFORE_END_DATE
+} = require('./owners')
+
+const {
   PARKING_USER_ID
 } = process.env
 
@@ -85,8 +89,8 @@ const inform = async (args, context) => {
     }) => {
       const minLastEndDateDiff = moment(minLastEndDate)
         .diff(moment(), 'days')
-      // TODO DAYS_BEFORE_END_DATE of owners prolong email
-      const informClaimersDays = minLastEndDateDiff - 30
+      const informClaimersDays =
+        minLastEndDateDiff - OWNERS_DAYS_BEFORE_END_DATE
 
       const templatePayload = await context.mail.prepareMembershipGiversProlongNotice({
         userId,

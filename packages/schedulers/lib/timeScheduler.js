@@ -42,7 +42,7 @@ const init = async ({
   }
 
   if (lockTtlSecs * 1000 < MIN_TTL_MS) {
-    throw new Error(`lockTtlSecs must be at least ${Math.ceil(MIN_TTL_MS / 1000})`, { lockTtlSecs })
+    throw new Error(`lockTtlSecs must be at least ${Math.ceil(MIN_TTL_MS / 1000)})`, { lockTtlSecs })
   }
 
   const scheduleNextRun = () => {
