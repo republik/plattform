@@ -22,7 +22,7 @@ module.exports = (shouldSend, sendFunc) =>
     const result = results && results[0]
     const wasSent = (
       result && !error && (
-        (result.status === 'sent' || !result.status === 'sent-simulated') &&
+        (result.status === 'sent' || result.status === 'sent-simulated') &&
         !result.reject_reason
       )
     )
