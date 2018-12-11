@@ -14,7 +14,6 @@ const {
   PARKING_USER_ID
 } = process.env
 
-const STATS_INTERVAL_SECS = 2
 const PROLONG_BEFORE_DATE = moment('2019-01-16')
 
 const me = {
@@ -28,53 +27,15 @@ PgDb.connect().then(async pgdb => {
     console.log("dry run: this won't change anything")
   }
 
-  // load users with membership or pledge
-  const users = await pgdb.query(`
-    SELECT u.*
-    FROM users u
-    JOIN memberships m ON m."userId" = u.id AND m.active AND m.renew
-    JOIN pledges p ON p."userId" = u.id
-    JOIN "pledgePayments" pp ON pp."pledgeId" = p.id
-    JOIN payments pay ON pp."paymentId" = pay.id AND pay."paperInvoice"
-    WHERE
-      u.id != :PARKING_USER_ID
+  const dedupAndTransform = users => users
+    .filter((u, i, a) => i === a.findIndex(d => d.id === u.id))
+    .map(u => transformUser(u))
 
-    UNION
-
-    SELECT
-      u.*
-    FROM
-      users u
-    JOIN memberships m
-      ON m."userId" = u.id AND m.active AND m.renew
-    JOIN "membershipTypes" mt
-      ON mt.id = m."membershipTypeId"
-    WHERE mt.name = 'BENEFACTOR_ABO' AND
-      u.id != :PARKING_USER_ID
-  `, {
-    PARKING_USER_ID
-  })
-    .then(users => users
-      .map(user => transformUser(user))
-    )
-  console.log(`investigating ${users.length} users`)
-
-  const stats = {
-    numNeedProlong: 0,
-    numNeedProlongProgress: 0,
-    numOperations: 0
-  }
-  const statsInterval = setInterval(() => {
-    console.log(stats)
-  }, STATS_INTERVAL_SECS * 1000)
-
-  const inNeedForProlongUsers = (await Promise.map(
+  const enrichWithProlongAndAddress = async users => Promise.map(
     users,
     async (user) => {
       const prolongBeforeDate = await getProlongBeforeDate(user, {}, { pgdb, user: me })
-      stats.numNeedProlongProgress += 1
       if (prolongBeforeDate && moment(prolongBeforeDate).isBefore(PROLONG_BEFORE_DATE)) {
-        stats.numNeedProlong += 1
         const address = await pgdb.public.addresses.findOne({
           id: user._raw.addressId
         })
@@ -87,27 +48,66 @@ PgDb.connect().then(async pgdb => {
       return false
     },
     {concurrency: 10}
-  )).filter(Boolean).filter(d => d.address)
-  delete stats.numNeedProlongProgress
+  ).then(all => all.filter(Boolean))
 
-  console.log(stats)
-  clearInterval(statsInterval)
+  const benefactors = dedupAndTransform(await pgdb.query(`
+    SELECT
+      u.*, 'benefactor' as type
+    FROM
+      users u
+    JOIN memberships m
+      ON m."userId" = u.id AND m.active AND m.renew
+    JOIN "membershipTypes" mt
+      ON mt.id = m."membershipTypeId"
+    WHERE mt.name = 'BENEFACTOR_ABO' AND
+      u.id != :PARKING_USER_ID
+  `, { PARKING_USER_ID }))
 
-  console.log('users', inNeedForProlongUsers.length)
+  const paperPeople = dedupAndTransform(await pgdb.query(`
+    SELECT u.*, 'paperPerson' as type
+    FROM users u
+    JOIN memberships m ON m."userId" = u.id AND m.active AND m.renew
+    JOIN pledges p ON p."userId" = u.id
+    JOIN "pledgePayments" pp ON pp."pledgeId" = p.id
+    JOIN payments pay ON pp."paymentId" = pay.id AND pay."paperInvoice"
+    WHERE
+      u.id != :PARKING_USER_ID
+  `, { PARKING_USER_ID })).filter(u => !benefactors.find(b => b.id === u.id))
+
+  console.log(`investigating ${paperPeople.length} paper people and ${benefactors.length} benefactors`)
+
+  const benefactorNeedProlong = await enrichWithProlongAndAddress(benefactors)
+  const paperPeopleNeedProlong = await enrichWithProlongAndAddress(paperPeople)
+
+  console.log(`need prolong before ${PROLONG_BEFORE_DATE.toISOString()}`)
+  console.log('benefactors', benefactorNeedProlong.length)
+  console.log('paper people', paperPeopleNeedProlong.length)
+
+  console.log('without address')
+  console.log('benefactors', benefactorNeedProlong.filter(d => !d.address).length)
+  console.log('paper people', paperPeopleNeedProlong.filter(d => !d.address).length)
+
+  const mapToCsv = d => ({
+    id: d.user.id,
+    user: d.user.name,
+    name: d.address.name,
+    line1: d.address.line1,
+    line2: d.address.line2,
+    postalCode: d.address.postalCode,
+    city: d.address.city,
+    country: d.address.country,
+    prolongBeforeDate: d.prolongBeforeDate,
+    admin: `https://admin.republik.ch/users/${d.user.id}`
+  })
+
   if (!dry) {
+    console.log('benefactors')
     console.log('---')
-    console.log(csvFormat(inNeedForProlongUsers.map(d => ({
-      id: d.user.id,
-      user: d.user.name,
-      name: d.address.name,
-      line1: d.address.line1,
-      line2: d.address.line2,
-      postalCode: d.address.postalCode,
-      city: d.address.city,
-      country: d.address.country,
-      prolongBeforeDate: d.prolongBeforeDate,
-      admin: `https://admin.republik.ch/users/${d.user.id}`
-    }))))
+    console.log(csvFormat(benefactorNeedProlong.filter(d => d.address).map(mapToCsv)))
+    console.log('---')
+    console.log('paper people')
+    console.log('---')
+    console.log(csvFormat(paperPeopleNeedProlong.filter(d => d.address).map(mapToCsv)))
     console.log('---')
   }
   console.log('finished!')
