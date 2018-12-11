@@ -1,6 +1,6 @@
 const debug = require('debug')('crowdfundings:lib:Mail')
 
-const { createMail } = require('@orbiting/backend-modules-mail')
+const { createMail, sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { grants } = require('@orbiting/backend-modules-access')
 const { transformUser, AccessToken } = require('@orbiting/backend-modules-auth')
 const { timeFormat, formatPriceChf } =
@@ -130,12 +130,13 @@ mail.sendMembershipProlongConfirmation = async ({
   pledger,
   membership,
   additionalPeriods,
-  t
+  t,
+  pgdb
 }) => {
   const safePledger = transformUser(pledger)
   const safeMembershipUser = transformUser(membership.user)
 
-  await mail.sendMailTemplate({
+  await sendMailTemplate({
     to: membership.user.email,
     fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
     subject: t(
@@ -151,7 +152,7 @@ mail.sendMembershipProlongConfirmation = async ({
       { name: 'end_date',
         content: dateFormat(getLastEndDate(additionalPeriods)) }
     ]
-  })
+  }, { pgdb })
 }
 
 mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
@@ -415,7 +416,7 @@ ${address.country}</span>`
           content: giftedMemberships.length
         }
       ]
-    })
+    }, { pgdb })
   }))
 
   await pgdb.public.pledges.update({id: pledges.map(pledge => pledge.id)}, {
@@ -423,7 +424,7 @@ ${address.country}</span>`
   })
 }
 
-mail.sendMembershipCancellation = async ({ email, name, endDate, t }) => {
+mail.sendMembershipCancellation = async ({ email, name, endDate, t, pgdb }) => {
   return mail.sendMailTemplate({
     to: email,
     subject: t('api/email/membership_cancel_notice/subject'),
@@ -437,7 +438,7 @@ mail.sendMembershipCancellation = async ({ email, name, endDate, t }) => {
         content: dateFormat(endDate)
       }
     ]
-  })
+  }, { pgdb })
 }
 
 mail.prepareMembershipGiversProlongNotice = async ({ userId, membershipIds, informClaimersDays }, { t, pgdb }) => {

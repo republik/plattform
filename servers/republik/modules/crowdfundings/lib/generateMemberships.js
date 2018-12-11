@@ -124,7 +124,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
 
         if (membership.userId !== pledge.userId) {
           await sendMembershipProlongConfirmation({
-            pledger: user, membership, additionalPeriods, t
+            pledger: user, membership, additionalPeriods, t, pgdb
           })
         }
       } else {

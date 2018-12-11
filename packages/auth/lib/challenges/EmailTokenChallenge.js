@@ -32,7 +32,7 @@ module.exports = {
     const expiresAt = new Date(new Date().getTime() + TTL)
     return { payload, expiresAt }
   },
-  startChallenge: async ({ email, context, token, country, phrase }) => {
+  startChallenge: async ({ email, context, token, country, phrase, pgdb }) => {
     const geoString = (country === 'Schweiz')
       ? `der Schweiz`
       : country
@@ -64,7 +64,7 @@ module.exports = {
             content: verificationUrl
           }
         ]
-      })
+      }, { pgdb })
     }
 
     return sendMail({
@@ -79,7 +79,7 @@ module.exports = {
   Then please follow this link to signin.
   ${verificationUrl}
   `
-    })
+    }, { pgdb })
   },
   validateChallenge: async ({ pgdb, user }, { payload }) => {
     const foundToken = await pgdb.public.tokens.findOne({

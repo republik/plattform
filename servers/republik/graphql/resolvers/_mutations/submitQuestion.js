@@ -1,6 +1,8 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
+const { sendMailTemplate, sendMail } = require('@orbiting/backend-modules-mail')
 
-module.exports = async (_, args, {user, req, t, mail: { sendMail, sendMailTemplate }}) => {
+module.exports = async (_, args, context) => {
+  const { user, req, t } = context
   ensureSignedIn(req)
 
   const { question } = args
@@ -16,7 +18,7 @@ module.exports = async (_, args, {user, req, t, mail: { sendMail, sendMailTempla
       fromEmail: mailAddress,
       subject: 'Neue FAQ',
       text: `${user.email}${name} hat folgende Frage gestellt:\n\n${question}`
-    }),
+    }, context),
     sendMailTemplate({
       to: user.email,
       fromEmail: mailAddress,
@@ -30,7 +32,7 @@ module.exports = async (_, args, {user, req, t, mail: { sendMail, sendMailTempla
           content: question
         }
       ]
-    })
+    }, context)
   ])
   return {success: true}
 }

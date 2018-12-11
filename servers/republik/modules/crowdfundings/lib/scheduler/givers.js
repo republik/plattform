@@ -1,8 +1,7 @@
 const debug = require('debug')('crowdfundings:lib:scheduler:givers')
 const moment = require('moment')
 const Promise = require('bluebird')
-
-const { send } = require('../mailLog')
+const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
 const {
   DAYS_BEFORE_END_DATE: OWNERS_DAYS_BEFORE_END_DATE
@@ -58,6 +57,7 @@ const getUsers = async ({ now }, { pgdb }) => {
         "userId",
         "email",
         json_agg("membershipId") as "membershipIds",
+        json_agg("lastEndDate") as "lastEndDates",
         min("lastEndDate") as "minLastEndDate"
       FROM
         givers
@@ -76,6 +76,9 @@ const getUsers = async ({ now }, { pgdb }) => {
   return users
 }
 
+const formatDate = (date) =>
+  moment(date).format('YYYYMMDD')
+
 const inform = async (args, context) => {
   const users = await getUsers(args, context)
 
@@ -85,6 +88,7 @@ const inform = async (args, context) => {
       userId,
       email,
       membershipIds,
+      lastEndDates,
       minLastEndDate
     }) => {
       const minLastEndDateDiff = moment(minLastEndDate)
@@ -97,18 +101,18 @@ const inform = async (args, context) => {
         membershipIds,
         informClaimersDays
       }, context)
-      await send(
+
+      return sendMailTemplate(
+        templatePayload,
+        context,
         {
-          type: `membership_giver_t-${DAYS_BEFORE_END_DATE}`,
-          userId,
-          membershipIds,
-          email,
-          info: {
-            templatePayload
+          onceFor: {
+            type: `membership_giver_t-${DAYS_BEFORE_END_DATE}`,
+            userId,
+            keys: lastEndDates
+              .map(date => `lastEndDate:${formatDate(date)}`)
           }
-        },
-        () => context.mail.sendMailTemplate(templatePayload),
-        context
+        }
       )
     },
     { concurrency: 2 }

@@ -1,5 +1,6 @@
-const { sendMailTemplate, enforceSubscriptions } = require('../../../Mail')
+const { enforceSubscriptions } = require('../../../Mail')
 const activateYearlyMembership = require('../../../activateYearlyMembership')
+const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
 module.exports = {
   eventTypes: ['customer.subscription.updated', 'customer.subscription.deleted'],
@@ -78,11 +79,11 @@ module.exports = {
               globalMergeVars: [
                 { name: 'NAME',
                   content: [user.firstName, user.lastName]
-                  .filter(Boolean)
-                  .join(' ')
+                    .filter(Boolean)
+                    .join(' ')
                 }
               ]
-            })
+            }, { pgdb })
           }
         }
       }

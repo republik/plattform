@@ -1,8 +1,7 @@
 const debug = require('debug')('crowdfundings:lib:scheduler:winbacks')
 const moment = require('moment')
 const Promise = require('bluebird')
-
-const { send } = require('../mailLog')
+const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
 const {
   PARKING_USER_ID
@@ -78,20 +77,21 @@ const inform = async (args, context) => {
         cancellationCategory,
         cancelledAt
       }, context)
-      await send(
+      return sendMailTemplate(
+        templatePayload,
+        context,
         {
-          type: `membership_winback`,
-          userId,
-          email,
+          onceFor: {
+            type: `membership_winback`,
+            userId
+          },
           info: {
-            // a user is only tried to winback once thus membershipId not outside of info
+            // a user is only tried to winback once
+            // thus membershipId not in onceFor
             membershipId,
-            membershipCancellationId: cancellationId,
-            templatePayload
+            membershipCancellationId: cancellationId
           }
-        },
-        () => context.mail.sendMailTemplate(templatePayload),
-        context
+        }
       )
     },
     { concurrency: 2 }
