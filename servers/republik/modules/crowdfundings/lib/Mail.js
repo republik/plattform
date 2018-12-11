@@ -180,7 +180,7 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
     const pledgePayment = await pgdb.public.pledgePayments.findFirst({pledgeId: pledge.id}, {orderBy: ['createdAt desc']})
     const payment = pledgePayment
       ? await pgdb.public.payments.findOne({id: pledgePayment.paymentId})
-      : null
+      : {}
 
     const notebook = await pgdb.public.pledgeOptions.count({
       pledgeId: pledge.id,
