@@ -175,7 +175,7 @@ const moduleFactory = ({ query, matchUrl, getQueryParams }) => options => {
       serializer: getSerializer(options)
     },
     changes: {},
-    ui: createUi({TYPE, editorOptions: rule.editorOptions}),
+    ui: createUi({ TYPE, editorOptions: rule.editorOptions }),
     plugins: [
       embedPlugin({ query, ...options }),
       embedFromUrlPlugin({
@@ -194,7 +194,7 @@ const moduleFactory = ({ query, matchUrl, getQueryParams }) => options => {
 const TWITTER_REGEX = /^https?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)$/
 
 // One capturing group at match[1] that catches the video id
-const YOUTUBE_REGEX = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/)|(?:(?:watch)?\?v(?:i)?=|&v(?:i)?=))([^#&?]*).*$/
+const YOUTUBE_REGEX = /^http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]*)(&[^\s]*)*$/
 
 // One capturing group at match[1] that catches the video id
 const VIMEO_REGEX = /^(?:http|https)?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/(?:[^/]*)\/videos\/|)(\d+)(?:|\/\?)$/
