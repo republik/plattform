@@ -20,7 +20,7 @@ const wasSent = (onceFor, { pgdb }) => {
       return condition
     })
     .reduce(
-      Object.assign,
+      (agg, cur) => Object.assign(agg, cur),
       {}
     )
   return pgdb.public.mailLog.count({
