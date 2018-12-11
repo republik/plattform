@@ -49,8 +49,6 @@ type Meta {
   audioSource: AudioSource
 
   # template of the article
-  # if (and only if) this is 'discussion' the page must show
-  # the discussion component (in the bottom)
   template: String
 }
 
