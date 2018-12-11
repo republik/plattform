@@ -22,7 +22,7 @@ module.exports = async (_, { electionInput }, context) => {
 
     const { id: discussionId } = await upsertDiscussion(null, {
       title: description,
-      path: `${moment(beginDate).format('/YYYY/MM/DD')}/${slug}`
+      path: `/election/${moment(beginDate).format('/YYYY/MM/DD')}/${slug}`
     }, {
       ...context,
       pgdb: transaction
