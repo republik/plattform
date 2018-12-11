@@ -12,7 +12,7 @@ const {
 } = process.env
 
 const DAYS_BEFORE_END_DATE = 45
-const MAX_DAYS_BEFORE_END_DATE = 35
+const MAX_DAYS_BEFORE_END_DATE = 33
 
 const getUsers = async ({ now }, { pgdb }) => {
   const minEndDate = moment(now)
@@ -57,7 +57,7 @@ const getUsers = async ({ now }, { pgdb }) => {
         "userId",
         "email",
         json_agg("membershipId") as "membershipIds",
-        json_agg("lastEndDate") as "lastEndDates",
+        json_agg(DISTINCT("lastEndDate")) as "lastEndDates",
         min("lastEndDate") as "minLastEndDate"
       FROM
         givers
