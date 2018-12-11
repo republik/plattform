@@ -45,5 +45,11 @@ module.exports = async (mail, context, log) => {
     () => mandrill.send(mail)
   )
 
-  return send(log, sendFunc, mail, context)
+  return send({
+    log,
+    sendFunc,
+    message: mail,
+    email: mail.to[0].email,
+    context
+  })
 }

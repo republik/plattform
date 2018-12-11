@@ -16,7 +16,7 @@ const sendOnboarding = async ({ user, request, pgdb, t }) => {
     event: 'email.onboarding'
   })
 
-  return sendMail(user.email, 'onboarding', { user, t, request })
+  return sendMail(user.email, 'onboarding', { user, t, request, pgdb })
 }
 
 const sendFollowup = async ({ user, request, pgdb, t }) => {

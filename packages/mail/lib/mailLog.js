@@ -43,9 +43,16 @@ const update = (match, payload, { pgdb }) =>
     { skipUndefined: true }
   )
 
-const send = async (log, sendFunc, message, context) => {
-  if (!sendFunc || !message || !context) {
-    throw new Error('missing input')
+const send = async ({
+  log,
+  sendFunc,
+  message,
+  email,
+  template,
+  context
+}) => {
+  if (!sendFunc || !message || !email || !context || !context.pgdb) {
+    throw new Error('missing input', { sendFunc, message, email, context })
   }
   const onceFor = log && log.onceFor
   if (onceFor) {
@@ -59,10 +66,9 @@ const send = async (log, sendFunc, message, context) => {
     ...((log && log.info) || {}),
     message
   }
-  const type = (onceFor && onceFor.type) || message.templateName || 'text'
+  const type = (onceFor && onceFor.type) || template || 'no-template'
   const userId = (onceFor && onceFor.userId) || info.userId || undefined
   const keys = (onceFor && onceFor.keys) || undefined
-  const email = message.to[0].email
 
   debug('sending... %o %o\n----', log, message)
   const logEntry = await insert({
