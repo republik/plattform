@@ -107,7 +107,7 @@ const inform = async (args, context) => {
         context,
         {
           onceFor: {
-            type: `membership_giver_t-${DAYS_BEFORE_END_DATE}`,
+            type: `membership_giver_prolong_notice`,
             userId,
             keys: lastEndDates
               .map(date => `lastEndDate:${formatDate(date)}`)

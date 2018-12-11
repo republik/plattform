@@ -16,7 +16,7 @@ module.exports = (shouldSend, sendFunc) =>
         }
       }
     } else {
-      await sleep(1000)
+      await sleep(250)
       results = [{ status: 'sent-simulated' }]
     }
     const result = results && results[0]

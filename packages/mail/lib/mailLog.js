@@ -20,7 +20,7 @@ const wasSent = (onceFor, { pgdb }) => {
       return condition
     })
     .reduce(
-      (agg, cur) => ({ ...agg, ...cur }),
+      Object.assign,
       {}
     )
   return pgdb.public.mailLog.count({
@@ -63,7 +63,7 @@ const send = async ({
   }
 
   const info = {
-    ...((log && log.info) || {}),
+    ...log && log.info,
     message
   }
   const type = (onceFor && onceFor.type) || template || 'no-template'
