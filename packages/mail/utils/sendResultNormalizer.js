@@ -2,29 +2,28 @@ const sleep = require('await-sleep')
 
 module.exports = (shouldSend, sendFunc) =>
   async () => {
-    let results, error
+    let results
     if (shouldSend) {
       try {
         results = await sendFunc()
       } catch (e) {
-        error = e
-        console.warn('send failed', error)
+        console.warn('send failed', e)
         return {
           result: (results && results[0]) || null,
           status: 'FAILED',
-          error
+          error: e
         }
       }
     } else {
       await sleep(250)
-      results = [{ status: 'sent-simulated' }]
+      return {
+        result: { status: 'sent-simulated' },
+        status: 'SENT'
+      }
     }
     const result = results && results[0]
     const wasSent = (
-      result && !error && (
-        (result.status === 'sent' || result.status === 'sent-simulated') &&
-        !result.reject_reason
-      )
+      result && result.status === 'sent' && !result.reject_reason
     )
     return {
       result,
