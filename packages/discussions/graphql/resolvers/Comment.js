@@ -193,16 +193,11 @@ module.exports = {
       }
   },
 
-  comments: (comment) => {
+  comments: (comment, args, { t }) => {
     if (comment.comments) {
       return comment.comments
     }
-    return {
-      id: 'notSupported',
-      totalCount: 0,
-      directTotalCount: 0,
-      nodes: []
-    }
+    throw new Error(t('api/unexpected'))
   },
 
   tags: (comment) =>
