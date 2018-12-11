@@ -18,16 +18,22 @@ const styles = {
   })
 }
 
-export const CommentTeaserFooter = ({ t, timeago, commentUrl }) => (
+export const CommentTeaserFooter = ({ t, timeago, commentUrl, id, discussion, Link }) => (
   <div {...styles.root}>
     {timeago && <div {...styles.default}>{timeago}</div>}
-    {commentUrl && (
+
       <div {...styles.default}>
-        <a href={commentUrl} {...styles.link}>
-          {t('styleguide/CommentTeaser/commentLink')}
-        </a>
+        <Link
+          commentId={id}
+          discussion={discussion}
+          passHref
+        >
+          <a {...styles.link}>
+            {t('styleguide/CommentTeaser/commentLink')}
+          </a>
+        </Link>
       </div>
-    )}
+
   </div>
 )
 

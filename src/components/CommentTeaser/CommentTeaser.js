@@ -1,75 +1,157 @@
-import React from 'react'
-import { merge } from 'glamor'
-import { renderMdast } from 'mdast-react-render'
+import React, { Fragment } from 'react'
+import { css } from 'glamor'
+import get from 'lodash/get'
 
 import colors from '../../theme/colors'
-import { serifRegular14 } from '../Typography/styles'
+import { serifRegular14, sansSerifRegular14 } from '../Typography/styles'
+import { CommentBodyParagraph } from '../CommentBody/web'
+import CommentContext from '../Comment/CommentContext'
 import CommentHeader from '../Comment/CommentHeader'
-import CommentTeaserHeader from './CommentTeaserHeader'
-import CommentTeaserFooter from './CommentTeaserFooter'
-import { MissingNode } from '../Comment/Comment'
-
-import createCommentSchema from '../../templates/Comment'
-
-const schema = createCommentSchema()
+import RawHtml from '../RawHtml/'
 
 const styles = {
-  root: {
-    marginBottom: '10px',
-    '& + &': {
-      borderTop: `1px solid ${colors.divider}`,
-      paddingTop: '20px'
-    }
-  },
-  body: {
+  root: css({
+    borderTop: `1px solid ${colors.text}`,
+    margin: '0 0 40px 0',
+    paddingTop: 10
+  }),
+  header: css({
+    marginBottom: 10,
+  }),
+  body: css({
     ...serifRegular14,
     color: colors.text,
     margin: '10px 0'
-  },
-  clamp: {
-    // TODO: Replace with a cross-browser JS solution for line-clamping.
-    overflow: 'hidden',
-    display: '-webkit-box',
-    WebkitBoxOrient: 'vertical'
-  },
-  box: {
-    border: `1px solid ${colors.divider}`,
-    padding: '20px'
-  }
+  }),
+  link: css({
+    color: 'inherit',
+    textDecoration: 'none',
+    cursor: 'pointer',
+    '& em': {
+      background: colors.primaryBg,
+      fontStyle: 'normal'
+    }
+  }),
+  timeago: css({
+    ...sansSerifRegular14,
+    color: colors.lightText
+  })
 }
+
+const DefaultLink = ({ children }) => children
 
 export const CommentTeaser = ({
   t,
   id,
-  title,
-  subtitle,
   displayAuthor,
-  content,
+  preview,
+  highlights,
+  published,
+  createdAt,
   timeago,
-  commentUrl,
+  context,
   lineClamp,
-  isBox
-}) => (
-  <div id={id} {...merge(styles.root, isBox ? styles.box : {})}>
-    {displayAuthor ? (
-      <CommentHeader {...displayAuthor} />
-    ) : (
-      <CommentTeaserHeader title={title} subtitle={subtitle} />
-    )}
-    <div
-      {...merge(
-        styles.body,
-        lineClamp ? merge(styles.clamp, { WebkitLineClamp: lineClamp }) : {}
+  Link=DefaultLink,
+  discussion,
+  tags,
+  onPreviewClick
+}) => {
+  const highlight = get(highlights, '[0].fragments[0]', '').trim()
+
+  const endsWithPunctuation =
+    highlight &&
+    (Math.abs(highlight.lastIndexOf('...') - highlight.length) < 4 ||
+      Math.abs(highlight.lastIndexOf('…') - highlight.length) < 2 ||
+      Math.abs(highlight.lastIndexOf('.') - highlight.length) < 2)
+
+  // assuming frontend currently supports only one tag.
+  const tag = tags && !!tags.length && tags[0]
+
+  return (
+    <div id={id} {...styles.root}>
+      {displayAuthor && (
+        <div {...styles.header}>
+          <CommentHeader
+            {...displayAuthor}
+            published={published}
+            createdAt={createdAt}
+            timeago={timeago}
+            Link={Link} />
+        </div>
       )}
-    >
-      {renderMdast(
-        content,
-        schema,
-        { MissingNode }
+      {context && (
+        <CommentContext
+          title={
+            <Link
+              commentId={id}
+              discussion={discussion}
+              passHref
+            >
+              <a {...styles.link} onClick={onPreviewClick}>
+                {context.title}
+              </a>
+            </Link>
+          }
+          description={context.description}
+        />
+      )}
+      {tag && (
+        <CommentContext
+          title={
+            <Link
+              commentId={id}
+              discussion={discussion}
+              passHref
+            >
+              <a {...styles.link} onClick={onPreviewClick}>
+                {tag}
+              </a>
+            </Link>
+          }
+        />
+      )}
+      <div {...styles.body}>
+        <CommentBodyParagraph>
+          <Link
+            commentId={id}
+            discussion={discussion}
+            passHref
+          >
+            <a {...styles.link} onClick={onPreviewClick}>
+            {!!preview && !highlight && (
+              <Fragment>
+                {preview.string}
+                {!!preview.more && <Fragment>&nbsp;…</Fragment>}
+              </Fragment>
+            )}
+            {!!highlight && (
+              <Fragment>
+                <RawHtml
+                  dangerouslySetInnerHTML={{
+                    __html: highlight
+                  }}
+                />
+                {!endsWithPunctuation && <Fragment>&nbsp;…</Fragment>}
+              </Fragment>
+            )}
+            </a>
+          </Link>
+        </CommentBodyParagraph>
+      </div>
+      {!displayAuthor && (
+        <div {...styles.timeago}>
+          {timeago(createdAt)}
+          {/*<CommentTeaserFooter
+            id={id}
+            discussion={discussion}
+            Link={Link}
+            timeago={timeago(createdAt)}
+            t={t}
+          />*/}
+        </div>
       )}
     </div>
-    <CommentTeaserFooter commentUrl={commentUrl} timeago={timeago} t={t} />
-  </div>
-)
+  )
+}
 
 export default CommentTeaser

@@ -7,7 +7,8 @@ import { sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
 const styles = {
   root: css({
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 10
   }),
   meta: css({
     alignSelf: 'stretch',
@@ -19,7 +20,7 @@ const styles = {
   title: css({
     ...ellipsize,
     ...sansSerifMedium16,
-    lineHeight: '19px',
+    lineHeight: '20px',
     color: colors.text
   }),
   description: css({

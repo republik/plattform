@@ -7,17 +7,18 @@ import { ellipsize } from '../../lib/styleMixins'
 const styles = {
   root: css({
     display: 'flex',
-    flexDirection: 'column'
+    flexDirection: 'column',
+    margin: '20px 0'
   }),
   title: css({
     ...sansSerifMedium16,
-    lineHeight: '20px',
+    lineHeight: '19px',
     color: colors.text,
     ...ellipsize
   }),
   subtitle: css({
     ...sansSerifRegular14,
-    color: colors.lightText,
+    //color: colors.lightText,
     lineHeight: '20px',
     ...ellipsize
   })
