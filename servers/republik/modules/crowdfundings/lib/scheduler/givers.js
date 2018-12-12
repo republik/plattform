@@ -13,6 +13,7 @@ const {
 
 const DAYS_BEFORE_END_DATE = 45
 const MAX_DAYS_BEFORE_END_DATE = 33
+const EXCLUDE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
 
 const getUsers = async ({ now }, { pgdb }) => {
   const minEndDate = moment(now)
@@ -24,7 +25,25 @@ const getUsers = async ({ now }, { pgdb }) => {
   debug('get users for: %o', {minEndDate, maxEndDate})
 
   const users = await pgdb.query(`
-    WITH givers AS (
+    WITH dormant_memberships AS (
+      SELECT
+        m.*
+      FROM
+        memberships m
+      JOIN
+        pledges p
+        ON m."pledgeId" = p.id
+      JOIN
+        packages pkg
+        ON p."packageId" = pkg.id
+      WHERE
+        m.id NOT IN (SELECT "membershipId" FROM "membershipPeriods") AND --no period
+        pkg.name != 'ABO_GIVE' AND
+        m."userId" != :PARKING_USER_ID AND
+        m."membershipTypeId" IN (
+          SELECT id FROM "membershipTypes" WHERE name = ANY('{${EXCLUDE_MEMBERSHIP_TYPES.join(',')}}')
+        )
+    ), givers AS (
       SELECT
         u.id AS "userId",
         u.email AS "email",
@@ -47,7 +66,8 @@ const getUsers = async ({ now }, { pgdb }) => {
         ON
           m.id = mp."membershipId"
       WHERE
-        u.id != :PARKING_USER_ID
+        u.id != :PARKING_USER_ID AND
+        u.id NOT IN (SELECT DISTINCT("userId") FROM dormant_memberships)
       GROUP BY
         1, 2, 3
       ORDER BY
