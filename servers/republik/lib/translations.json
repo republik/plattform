@@ -1,5 +1,5 @@
 {
-  "updated": "2018-12-03T16:02:41.488Z",
+  "updated": "2018-12-12T16:20:16.877Z",
   "title": "live",
   "data": [
     {
@@ -108,7 +108,7 @@
     },
     {
       "key": "api/comment/tagRequired",
-      "value": "Diese Diskussion verlangt nach mind. einem Tag."
+      "value": "Bitte wählen Sie eine Kategorie aus."
     },
     {
       "key": "api/comment/invalidTags",
