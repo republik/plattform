@@ -38,11 +38,8 @@ const styles = {
   })
 }
 
-const CommentComposerTags = ({ t, tagRequired, tags, value, onChange }) => (
+const CommentComposerTags = ({ tagRequired, tags, value, onChange }) => (
   <div {...styles.root}>
-    <div {...styles.title}>
-      {t(`styleguide/CommentComposerTags/${tagRequired ? 'tagRequired' : 'noTagRequired'}`)}
-    </div>
     <div {...styles.tags}>
     {tags && !!tags.length && tags.map(
       tag => (

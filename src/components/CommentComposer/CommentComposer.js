@@ -220,7 +220,7 @@ class CommentComposer extends PureComponent {
               </button>
               <button {...styles.commitButton}
                 onClick={this.onSubmit}
-                disabled={maxLengthExceeded || (tagRequired && !tagValue)}>
+                disabled={maxLengthExceeded}>
                 {submitLabel || t('styleguide/CommentComposer/answer')}
               </button>
             </div>
