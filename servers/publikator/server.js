@@ -17,8 +17,11 @@ const cluster = require('cluster')
 
 const {
   LOCAL_ASSETS_SERVER,
-  PUBLICATION_SCHEDULER_OFF
+  NODE_ENV,
+  PUBLICATION_SCHEDULER
 } = process.env
+
+const DEV = NODE_ENV && NODE_ENV !== 'production'
 
 const start = async () => {
   const httpServer = await run()
@@ -79,8 +82,10 @@ const runOnce = (...args) => {
   }
   server.runOnce(...args)
 
-  if (PUBLICATION_SCHEDULER_OFF === 'true') {
-    console.log('PUBLICATION_SCHEDULER_OFF prevented scheduler from begin started')
+  if (PUBLICATION_SCHEDULER === 'false' || (DEV && PUBLICATION_SCHEDULER !== 'true')) {
+    console.log('PUBLICATION_SCHEDULER prevented scheduler from begin started',
+      { PUBLICATION_SCHEDULER, DEV }
+    )
   } else {
     const scheduler = require('./lib/publicationScheduler')
     scheduler.init()
