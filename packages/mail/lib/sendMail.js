@@ -1,6 +1,9 @@
 const checkEnv = require('check-env')
 const MandrillInterface = require('../MandrillInterface')
-const logger = console
+
+const { send } = require('./mailLog')
+const shouldSendMessage = require('../utils/shouldSendMessage')
+const sendResultNormalizer = require('../utils/sendResultNormalizer')
 
 checkEnv([
   'DEFAULT_MAIL_FROM_ADDRESS',
@@ -10,8 +13,7 @@ checkEnv([
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
   DEFAULT_MAIL_FROM_NAME,
-  NODE_ENV,
-  SEND_MAILS
+  SEND_MAILS_TAGS
 } = process.env
 
 // usage
@@ -22,22 +24,32 @@ const {
 //  subject: 'dear friend',
 //  text: 'asdf asdf'
 // })
-module.exports = async (mail) => {
+module.exports = async (mail, context, log) => {
   // sanitize
+  const tags = [].concat(
+    SEND_MAILS_TAGS && SEND_MAILS_TAGS.split(',')
+  ).filter(Boolean)
+
   mail.to = [{email: mail.to}]
   mail.from_email = mail.fromEmail || DEFAULT_MAIL_FROM_ADDRESS
   mail.from_name = mail.fromName || DEFAULT_MAIL_FROM_NAME
+  mail.tags = tags
   delete mail.fromName
   delete mail.fromEmail
 
-  // don't send in dev, expect SEND_MAILS is true
-  // don't send mails if SEND_MAILS is false
-  const DEV = NODE_ENV && NODE_ENV !== 'production'
-  if (SEND_MAILS === 'false' || (DEV && SEND_MAILS !== 'true')) {
-    logger.log('\n\nSEND_MAIL prevented mail from being sent\n(SEND_MAIL == false or NODE_ENV != production and SEND_MAIL != true):\n', mail)
-    return true
-  }
+  const shouldSend = shouldSendMessage(mail)
 
-  const mandrill = MandrillInterface({ logger })
-  return mandrill.send(mail)
+  const mandrill = MandrillInterface({ logger: console })
+  const sendFunc = sendResultNormalizer(
+    shouldSend,
+    () => mandrill.send(mail)
+  )
+
+  return send({
+    log,
+    sendFunc,
+    message: mail,
+    email: mail.to[0].email,
+    context
+  })
 }

@@ -15,7 +15,7 @@ const sendCandidacyConfirmation = async ({ user, election, pgdb, t }) => {
     // either "election_candidacy_confirmation"
     // or "election_candidacy_confirmation_slugsomething"
     ['election_candidacy_confirmation', slug].filter(Boolean).join('_'),
-    { user, t }
+    { user, t, pgdb }
   )
 }
 
@@ -24,7 +24,7 @@ module.exports = {
   sendCandidacyConfirmation
 }
 
-const sendMail = async (to, templateName, { user, t }) => {
+const sendMail = async (to, templateName, { user, t, pgdb }) => {
   const mail = await sendMailTemplate({
     to,
     fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
@@ -34,7 +34,7 @@ const sendMail = async (to, templateName, { user, t }) => {
     ),
     templateName,
     globalMergeVars: getGlobalMergeVars()
-  })
+  }, { pgdb })
 
   return mail
 }

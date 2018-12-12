@@ -1,5 +1,5 @@
 {
-  "updated": "2018-11-26T16:44:56.756Z",
+  "updated": "2018-12-10T12:46:49.873Z",
   "title": "live",
   "data": [
     {
@@ -385,6 +385,22 @@
     {
       "key": "api/email/membership_cancel_notice/subject",
       "value": "Bestätigung Ihrer Kündigung"
+    },
+    {
+      "key": "api/email/membership_giver_prolong_notice/subject",
+      "value": "Ihre verschenkten Abonnements"
+    },
+    {
+      "key": "api/email/membership_winback/subject",
+      "value": "Ihre Kündigung"
+    },
+    {
+      "key": "api/email/membership_winback/fromEmail",
+      "value": "kontakt@republik.ch"
+    },
+    {
+      "key": "api/email/membership_winback/fromName",
+      "value": "Philipp von Essen"
     }
   ]
 }
