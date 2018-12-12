@@ -44,6 +44,14 @@ const getContentMeta = ({ meta = false } = {}) => {
 
     if (typeof meta.series === 'object') {
       meta.seriesMaster = meta.series
+      meta.seriesMaster.episodes =
+        meta.seriesMaster.episodes.map(episode => {
+          if (episode.publishDate === '') {
+            delete episode.publishDate
+          }
+
+          return episode
+        })
     }
 
     delete meta.series
