@@ -73,9 +73,11 @@ export const CommentTeaser = ({
         <div {...styles.header}>
           <CommentHeader
             {...displayAuthor}
+            commentId={id}
             published={published}
             createdAt={createdAt}
             timeago={timeago}
+            discussion={discussion}
             Link={Link} />
         </div>
       )}

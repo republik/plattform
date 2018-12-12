@@ -91,6 +91,7 @@ const DefaultLink = ({ children }) => children
 export const CommentHeader = ({
   t,
   commentId,
+  discussion,
   Link = DefaultLink,
   timeago,
   createdAt,
@@ -123,7 +124,7 @@ export const CommentHeader = ({
             </Link>
           </div>
           {timeago && <span {...styles.timeago} title={titleDate(createdAt)}>
-            <Link commentId={commentId} passHref>
+            <Link commentId={commentId} discussion={discussion} passHref>
               <a {...styles.linkUnderline}>{timeago(createdAt)}</a>
             </Link>
           </span>}
