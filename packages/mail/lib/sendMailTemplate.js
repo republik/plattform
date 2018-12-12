@@ -36,13 +36,18 @@ module.exports = async (mail, context, log) => {
     SEND_MAILS_TAGS && SEND_MAILS_TAGS.split(',')
   ).filter(Boolean)
 
-  const mergeVars = [
-    ...mail.globalMergeVars,
-    ...FRONTEND_BASE_URL
-      ? [{ name: 'frontend_base_url',
-        content: FRONTEND_BASE_URL }]
-      : []
-  ]
+  const mergeVars = []
+
+  if (mail.globalMergeVars) {
+    mergeVars.concat(mail.globalMergeVars)
+  }
+
+  if (FRONTEND_BASE_URL) {
+    mergeVars.push({
+      name: 'frontend_base_url',
+      content: FRONTEND_BASE_URL
+    })
+  }
 
   const message = {
     to: [{email: mail.to}],
