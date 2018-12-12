@@ -61,10 +61,9 @@ module.exports = async (mail, context, log) => {
 
   const shouldSend = shouldSendMessage(message)
 
-  const mandrill = MandrillInterface({ logger: console })
   const sendFunc = sendResultNormalizer(
     shouldSend,
-    () => mandrill.send(message, mail.templateName, [])
+    () => MandrillInterface({ logger: console }).send(message, mail.templateName, [])
   )
 
   return send({
