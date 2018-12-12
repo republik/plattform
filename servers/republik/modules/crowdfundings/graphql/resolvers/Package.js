@@ -1,5 +1,10 @@
 module.exports = {
-  async options (package_, args, { pgdb, user: me }) {
+  async company (package_, args, { pgdb }) {
+    return pgdb.public.companies.findOne(
+      { id: package_.companyId }
+    )
+  },
+  async options (package_, args, { pgdb }) {
     if (package_.options) {
       return package_.options
     }

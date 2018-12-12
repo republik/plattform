@@ -51,9 +51,15 @@ type CrowdfundingStatus {
   memberships: Int!
 }
 
+type Company {
+  id: ID!
+  name: String!
+}
+
 type Package {
   id: ID!
   name: String!
+  company: Company!
   group: PackageGroup!
   options: [PackageOption!]!
   paymentMethods: [PaymentMethod!]!
