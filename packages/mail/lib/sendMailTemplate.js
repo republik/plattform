@@ -36,11 +36,9 @@ module.exports = async (mail, context, log) => {
     SEND_MAILS_TAGS && SEND_MAILS_TAGS.split(',')
   ).filter(Boolean)
 
-  const mergeVars = []
-
-  if (mail.globalMergeVars) {
-    mergeVars.concat(mail.globalMergeVars)
-  }
+  const mergeVars = [
+    ...mail.globalMergeVars || []
+  ]
 
   if (FRONTEND_BASE_URL) {
     mergeVars.push({
