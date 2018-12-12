@@ -396,7 +396,7 @@
     },
     {
       "key": "api/email/membership_winback/fromEmail",
-      "value": "philipp.vonessen@republik.ch"
+      "value": "kontakt@republik.ch"
     },
     {
       "key": "api/email/membership_winback/fromName",
