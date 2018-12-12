@@ -7,9 +7,9 @@ VALUES
 ;
 
 -- Add a new MembershpType, named "ABO_GIVE_MONTHS"
-INSERT INTO "membershipTypes"("id","rewardId","rewardType","name","price","companyId","interval","minIntervalCount","maxIntervalCount","defaultIntervalCount","intervalStepCount")
+INSERT INTO "membershipTypes"("id","rewardId","rewardType","name","price","companyId","interval","minPeriods","maxPeriods","defaultPeriods")
 VALUES
-(E'21242c12-e8b1-4631-8d97-5bc480858a11',E'f6a05b57-e876-4e67-b14a-c4b7cefc6f16',E'MembershipType',E'ABO_GIVE_MONTHS',2200,E'240ef27d-cf26-48c1-81df-54b2a10732f4',E'month',1,9,3,1);
+(E'21242c12-e8b1-4631-8d97-5bc480858a11',E'f6a05b57-e876-4e67-b14a-c4b7cefc6f16',E'MembershipType',E'ABO_GIVE_MONTHS',2200,E'240ef27d-cf26-48c1-81df-54b2a10732f4',E'month',1,9,3);
 
 -- Add package "ABO_GIVE_MONTHS"
 INSERT INTO "packages"("id","crowdfundingId","name","companyId","paymentMethods","isAutoActivateUserMembership","custom","rules","order")

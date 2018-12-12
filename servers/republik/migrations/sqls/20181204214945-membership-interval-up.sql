@@ -1,30 +1,21 @@
 ALTER TABLE "membershipTypes"
-  -- "intervalCount" is replaced by "defaultIntervalCount"
+  -- "intervalCount" is replaced by "defaultPeriods"
   DROP COLUMN "intervalCount",
 
-  -- Describes what interval count is allowed
-  ADD COLUMN "minIntervalCount" int NOT NULL DEFAULT 1,
-  ADD COLUMN "maxIntervalCount" int NOT NULL DEFAULT 1,
-  ADD COLUMN "defaultIntervalCount" int NOT NULL DEFAULT 1,
-  ADD COLUMN "intervalStepCount" int NOT NULL DEFAULT 1,
+  -- Describes number periods
+  ADD COLUMN "minPeriods" int NOT NULL DEFAULT 1,
+  ADD COLUMN "maxPeriods" int NOT NULL DEFAULT 1,
+  ADD COLUMN "defaultPeriods" int NOT NULL DEFAULT 1,
 
   -- Sanity checks for interval count settings
-  ADD CONSTRAINT "membershipTypes_minIntervalCount_check"
-    CHECK ("minIntervalCount" <= "maxIntervalCount"),
-  ADD CONSTRAINT "membershipTypes_maxIntervalCount_check"
-    CHECK ("maxIntervalCount" >= "minIntervalCount"),
-  ADD CONSTRAINT "membershipTypes_defaultIntervalCount_lowerBound_check"
-    CHECK ("defaultIntervalCount" <= "maxIntervalCount"),
-  ADD CONSTRAINT "membershipTypes_defaultIntervalCount_upperBound_check"
-    CHECK ("defaultIntervalCount" >= "minIntervalCount"),
-  ADD CONSTRAINT "membershipTypes_intervalStepCount_check"
-    CHECK ("intervalStepCount" <= "maxIntervalCount"),
-  ADD CONSTRAINT "membershipTypes_intervalStepCount_moduloMaxIntervalCount_check"
-    CHECK ("maxIntervalCount" % "intervalStepCount" = 0),
-  ADD CONSTRAINT "membershipTypes_intervalStepCount_moduloMinIntervalCount_check"
-    CHECK ("minIntervalCount" % "intervalStepCount" = 0),
-  ADD CONSTRAINT "membershipTypes_intervalStepCount_moduloDefaultIntervalCount_check"
-    CHECK ("defaultIntervalCount" % "intervalStepCount" = 0)
+  ADD CONSTRAINT "membershipTypes_minPeriods_check"
+    CHECK ("minPeriods" <= "maxPeriods"),
+  ADD CONSTRAINT "membershipTypes_maxPeriods_check"
+    CHECK ("maxPeriods" >= "minPeriods"),
+  ADD CONSTRAINT "membershipTypes_defaultPeriods_lowerBound_check"
+    CHECK ("defaultPeriods" <= "maxPeriods"),
+  ADD CONSTRAINT "membershipTypes_defaultPeriods_upperBound_check"
+    CHECK ("defaultPeriods" >= "minPeriods")
 ;
 
 ALTER TABLE "packageOptions"
@@ -71,12 +62,12 @@ UPDATE "packages" SET "order"=500 WHERE "name"='ABO_GIVE' ;
 UPDATE "packages" SET "order"=700 WHERE "name"='DONATE' ;
 
 ALTER TABLE "pledgeOptions"
-  ADD COLUMN "intervalCount" int
+  ADD COLUMN "periods" int
 ;
 
 ALTER TABLE "memberships"
   ADD COLUMN "initialInterval" "intervalType",
-  ADD COLUMN "initialIntervalCount" int
+  ADD COLUMN "initialPeriods" int
 ;
 
 -- Temporary disable all triggers.
@@ -88,7 +79,7 @@ ALTER TABLE "memberships" DISABLE TRIGGER "trigger_revoke_membership_cancellatio
 UPDATE "memberships"
 SET
   "initialInterval" = "interval",
-  "initialIntervalCount" = "defaultIntervalCount"
+  "initialPeriods" = "defaultPeriods"
 FROM
   "membershipTypes"
 WHERE

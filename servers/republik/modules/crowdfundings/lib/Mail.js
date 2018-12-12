@@ -318,8 +318,8 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
                 pledgeOption.membership.userId !== pledge.userId
 
               const labelFragmentInterval = t.pluralize(
-                `api/email/option/interval/${pledgeOption.packageOption.reward.interval}/count`,
-                { count: pledgeOption.intervalCount })
+                `api/email/option/interval/${pledgeOption.packageOption.reward.interval}/periods`,
+                { count: pledgeOption.periods })
 
               const labelDefault = t.pluralize(
                 `api/email/option/${rewardType.toLowerCase()}/${name.toLowerCase()}`,
@@ -337,7 +337,7 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
               )
 
               const oprice =
-                (pledgeOption.price * (pledgeOption.intervalCount || 1)) / 100
+                (pledgeOption.price * (pledgeOption.periods || 1)) / 100
               const ototal =
                 oprice * pledgeOption.amount
 

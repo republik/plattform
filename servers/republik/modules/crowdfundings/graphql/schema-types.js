@@ -71,7 +71,6 @@ type PackageOption {
   defaultAmount: Int!
 
   price: Int!
-  intervalStepCountPrice: Int!
   vat: Int!
   minUserPrice: Int!
   userPrice: Boolean!
@@ -81,7 +80,7 @@ type PackageOption {
 
   # returned on pledges.options
   amount: Int
-  intervalCount: Int
+  periods: Int
 
   # for custom packages
   optionGroup: String
@@ -95,7 +94,7 @@ input PackageOptionInput {
   price: Int!
   templateId: ID! # packageOption.id
 
-  intervalCount: Int
+  periods: Int
 
   # via custom packages
   membershipId: ID
@@ -120,10 +119,9 @@ type MembershipType {
   id: ID!
   name: String!
   interval: MembershipTypeInterval!
-  minIntervalCount: Int!
-  maxIntervalCount: Int!
-  defaultIntervalCount: Int!
-  intervalStepCount: Int!
+  minPeriods: Int!
+  maxPeriods: Int!
+  defaultPeriods: Int!
 
   createdAt: DateTime!
   updatedAt: DateTime!

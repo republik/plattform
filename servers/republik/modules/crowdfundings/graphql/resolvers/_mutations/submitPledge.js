@@ -158,32 +158,24 @@ module.exports = async (_, args, context) => {
         pko.reward &&
         pko.reward.rewardType === 'MembershipType' &&
         (
-          pko.reward.maxIntervalCount - pko.reward.minIntervalCount > 0 ||
-          plo.intervalCount
+          pko.reward.maxPeriods - pko.reward.minPeriods > 0 ||
+          plo.periods
         )
       ) {
-        if (!plo.intervalCount) {
+        if (!plo.periods) {
           logger.error(
-            `intervalCount in option (templateId: ${plo.templateId}) is missing`,
+            `periods in option (templateId: ${plo.templateId}) is missing`,
             { req: req._log(), args, pko, plo }
           )
           throw new Error(t('api/unexpected'))
         }
 
         if (
-          plo.intervalCount > pko.reward.maxIntervalCount ||
-          plo.intervalCount < pko.reward.minIntervalCount
+          plo.periods > pko.reward.maxPeriods ||
+          plo.periods < pko.reward.minPeriods
         ) {
           logger.error(
-            `intervalCount in option (templateId: ${plo.templateId}) out of range`,
-            { req: req._log(), args, pko, plo }
-          )
-          throw new Error(t('api/unexpected'))
-        }
-
-        if (plo.intervalCount % pko.reward.intervalStepCount > 0) {
-          logger.error(
-            `intervalCount in option (templateId: ${plo.templateId}) out of step`,
+            `periods in option (templateId: ${plo.templateId}) out of range`,
             { req: req._log(), args, pko, plo }
           )
           throw new Error(t('api/unexpected'))
@@ -352,9 +344,9 @@ module.exports = async (_, args, context) => {
       if (
         pko.reward &&
         pko.reward.rewardType === 'MembershipType' &&
-        !plo.intervalCount
+        !plo.periods
       ) {
-        plo.intervalCount = pko.reward.defaultIntervalCount
+        plo.periods = pko.reward.defaultPeriods
       }
 
       return transaction.public.pledgeOptions.insertAndGet(plo)

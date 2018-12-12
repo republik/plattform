@@ -1,5 +1,5 @@
 {
-  "updated": "2018-11-26T16:44:56.756Z",
+  "updated": "2018-12-12T14:50:21.280Z",
   "title": "live",
   "data": [
     {
@@ -320,15 +320,15 @@
     },
     {
       "key": "api/email/pledge_abo_give/subject",
-      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
+      "value": "Ihre Bestellung: Jahres-Abo und Mitgliedschaft als Geschenk"
     },
     {
       "key": "api/email/pledge_abo_give_months/subject",
-      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
+      "value": "Ihre Bestellung: Monats-Abo als Geschenk"
     },
     {
       "key": "api/email/pledge_monthly_abo/subject",
-      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
+      "value": "Ihr Republik Monats-Abo: Willkommen bei der Republik"
     },
     {
       "key": "api/email/pledge_donate/subject",
@@ -395,23 +395,23 @@
       "value": "Mitgliedschaft für {name} (#{sequenceNumber})"
     },
     {
-      "key": "api/email/option/interval/year/count/1",
+      "key": "api/email/option/interval/year/periods/1",
       "value": "ein Jahr"
     },
     {
-      "key": "api/email/option/interval/year/count/other",
+      "key": "api/email/option/interval/year/periods/other",
       "value": "{count} Jahre"
     },
     {
-      "key": "api/email/option/interval/month/count/1",
+      "key": "api/email/option/interval/month/periods/1",
       "value": "einen Monat"
     },
     {
-      "key": "api/email/option/interval/month/count/other",
+      "key": "api/email/option/interval/month/periods/other",
       "value": "{count} Monate"
     },
     {
-      "key": "api/email/option/interval/week/count/1",
+      "key": "api/email/option/interval/week/periods/1",
       "value": "eine Woche"
     },
     {
@@ -419,11 +419,11 @@
       "value": "{count} Wochen"
     },
     {
-      "key": "api/email/option/interval/day/count/1",
+      "key": "api/email/option/interval/day/periods/1",
       "value": "einen Tag"
     },
     {
-      "key": "api/email/option/interval/day/count/other",
+      "key": "api/email/option/interval/day/periods/other",
       "value": "{count} Tage"
     },
     {
@@ -453,6 +453,22 @@
     {
       "key": "api/email/membership_cancel_notice/subject",
       "value": "Bestätigung Ihrer Kündigung"
+    },
+    {
+      "key": "api/email/membership_giver_prolong_notice/subject",
+      "value": "Ihre verschenkten Abonnements"
+    },
+    {
+      "key": "api/email/membership_winback/subject",
+      "value": "Ihre Kündigung"
+    },
+    {
+      "key": "api/email/membership_winback/fromEmail",
+      "value": "kontakt@republik.ch"
+    },
+    {
+      "key": "api/email/membership_winback/fromName",
+      "value": "Philipp von Essen"
     }
   ]
 }

@@ -62,7 +62,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
   const memberships = []
   let cancelableMemberships = []
   let membershipPeriod
-  const now = new Date()
+  const now = moment()
 
   await Promise.map(pledgeOptions, async (plo) => {
     if (plo.packageOption.reward.type === 'MembershipType') {
@@ -139,7 +139,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
             renew: false,
             autoPay: plo.autoPay || false,
             initialInterval: membershipType.interval,
-            initialIntervalCount: plo.intervalCount,
+            initialPeriods: plo.periods,
             createdAt: now,
             updatedAt: now
           }
@@ -153,7 +153,10 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
             membershipPeriod = {
               pledgeOptionId: plo.id,
               beginDate: now,
-              endDate: moment(now).add(membershipType.defaultIntervalCount, plo.intervalCount),
+              endDate: now.clone().add(
+                membershipType.defaultPeriods,
+                plo.periods
+              ),
               membership
             }
           } else {

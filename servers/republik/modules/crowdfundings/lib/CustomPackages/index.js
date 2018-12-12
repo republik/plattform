@@ -150,7 +150,7 @@ const evaluate = async ({
   const beginEnd = {
     beginDate: lastEndDate,
     endDate: moment(lastEndDate).add(
-      packageOptionMembershipType.defaultIntervalCount, packageOptionMembershipType.interval
+      packageOptionMembershipType.defaultPeriods, packageOptionMembershipType.interval
     )
   }
 
