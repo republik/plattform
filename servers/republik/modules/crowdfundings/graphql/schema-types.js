@@ -54,10 +54,16 @@ type CrowdfundingStatus {
 type Package {
   id: ID!
   name: String!
+  group: PackageGroup!
   options: [PackageOption!]!
   paymentMethods: [PaymentMethod!]!
   createdAt: DateTime!
   updatedAt: DateTime!
+}
+
+enum PackageGroup {
+  ME
+  GIVE
 }
 
 type PackageOption {

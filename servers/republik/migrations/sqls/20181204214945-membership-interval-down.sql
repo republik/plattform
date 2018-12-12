@@ -12,7 +12,8 @@ ALTER TABLE "packageOptions"
 ;
 
 ALTER TABLE "packages"
-  DROP COLUMN IF EXISTS "order"
+  DROP COLUMN IF EXISTS "order",
+  DROP COLUMN IF EXISTS "group"
 ;
 
 ALTER TABLE "membershipTypes"
