@@ -37,12 +37,15 @@ module.exports = async (mail, context, log) => {
   ).filter(Boolean)
 
   const mergeVars = [
-    ...mail.globalMergeVars,
-    ...FRONTEND_BASE_URL
-      ? [{ name: 'frontend_base_url',
-        content: FRONTEND_BASE_URL }]
-      : []
+    ...mail.globalMergeVars || []
   ]
+
+  if (FRONTEND_BASE_URL) {
+    mergeVars.push({
+      name: 'frontend_base_url',
+      content: FRONTEND_BASE_URL
+    })
+  }
 
   const message = {
     to: [{email: mail.to}],
@@ -58,10 +61,9 @@ module.exports = async (mail, context, log) => {
 
   const shouldSend = shouldSendMessage(message)
 
-  const mandrill = MandrillInterface({ logger: console })
   const sendFunc = sendResultNormalizer(
     shouldSend,
-    () => mandrill.send(message, mail.templateName, [])
+    () => MandrillInterface({ logger: console }).send(message, mail.templateName, [])
   )
 
   return send({

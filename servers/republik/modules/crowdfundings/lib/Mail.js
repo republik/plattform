@@ -292,7 +292,7 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
     const donation = pledge.donation > 0 ? pledge.donation / 100 : 0
     const total = pledge.total / 100
 
-    return mail.sendMailTemplate({
+    return sendMailTemplate({
       to: user.email,
       fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
       subject: t(`api/email/${templateName}/subject`),
