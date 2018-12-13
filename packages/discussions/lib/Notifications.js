@@ -14,8 +14,20 @@ const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
   DEFAULT_MAIL_FROM_NAME,
-  FRONTEND_BASE_URL
+  FRONTEND_BASE_URL,
+  GENERAL_FEEDBACK_DISCUSSION_ID
 } = process.env
+
+const getDiscussionUrl = async (discussion, context) => {
+  const document = discussion.repoId && await context.loaders.Document.byRepoId.load(discussion.repoId)
+  if (
+    discussion.id === GENERAL_FEEDBACK_DISCUSSION_ID ||
+    (document && document.meta.template === 'article')
+  ) {
+    return `${FRONTEND_BASE_URL}/mitreden?id=${discussion.id}`
+  }
+  return `${FRONTEND_BASE_URL}${discussion.path}`
+}
 
 const submitComment = async (comment, discussion, context) => {
   const {
@@ -94,7 +106,7 @@ const submitComment = async (comment, discussion, context) => {
       ? `${preview.string}...`
       : preview.string
 
-    const discussionUrl = `${FRONTEND_BASE_URL}${discussion.path}`
+    const discussionUrl = await getDiscussionUrl(discussion, context)
     const commentUrl = `${discussionUrl}${discussionUrl.indexOf('?') === -1 ? '?' : '&'}focus=${comment.id}`
 
     const subjectParams = {
