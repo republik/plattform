@@ -18,13 +18,14 @@ Props:
     ```code|lang-jsx
     shapeOf({
       id: string,
-      title: string,
-      meta: shapeOf({
-        title: string,
-        template: string,
-        ownDiscussion: shapeOf({
-          id: string,
-          closed: Boolean
+      document: shapeOf({
+        id: string,
+        meta: shapeOf({
+          template: string,
+          ownDiscussion: shapeOf({
+            id: string,
+            closed: boolean
+          })
         })
       })
     })
