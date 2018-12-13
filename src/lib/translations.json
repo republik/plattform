@@ -1,5 +1,5 @@
 {
-  "updated": "2018-12-05T13:24:56.549Z",
+  "updated": "2018-12-13T09:17:12.676Z",
   "title": "live",
   "data": [
     {
@@ -17,14 +17,6 @@
     {
       "key": "styleguide/CommentComposer/etiquette",
       "value": "Etikette"
-    },
-    {
-      "key": "styleguide/CommentComposerTags/tagRequired",
-      "value": "Bitte wählen Sie eine Kategorie aus:"
-    },
-    {
-      "key": "styleguide/CommentComposerTags/noTagRequired",
-      "value": "Bitte wählen Sie eine Kategorie aus:"
     },
     {
       "key": "styleguide/CommentActions/answer",
@@ -79,8 +71,12 @@
       "value": "Weniger"
     },
     {
-      "key": "styleguide/CommentTeaser/commentLink",
-      "value": "Zum Beitrag"
+      "key": "styleguide/CommentTeaser/comment/link",
+      "value": "Beitrag in {link}"
+    },
+    {
+      "key": "styleguide/CommentTeaser/reply/link",
+      "value": "Antwort in {link}"
     },
     {
       "key": "styleguide/CommentTreeLoadMore/label/1",

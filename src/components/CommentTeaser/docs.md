@@ -1,5 +1,47 @@
 A teaser of a comment.
 
+Props:
+- `id`: The comment id.
+- `displayAuthor`: The comment's displayAuthor object. If not present, `timeago` will be rendered in the footer.
+- `preview`: The comment's preview object with a `string` (i.e. a short snippet of the comment) and a `more` boolean.
+- `highlights`: An optional array containing highlighted strings for search results. If present, it will trump `preview`.
+- `discussion`: The comment's discussion object. Used to extract title and link properties.
+- `tags`: An optional array of tags. Currently only the first tag is used, but that might change in the future.
+- `parentIds`: The comment's array of parent ids. Used to determine whether it's a comment or a reply.
+- `createdAt`: The comment's creation timestamp.
+- `timeago`: A function that renders a human-readable version of `createdAt`.
+- `Link`: A link wrapper component.
+- `onClick`: An optional click handler.
+
+```react|noSource,span-3
+<CommentTeaser
+  preview={{
+    string: "Die Zeitungskäufe von Christoph Blocher, die Selbstideologisierung der NZZ, die Frankenstein-Monster-Strategie der Tamedia: Ehrlich gesagt wäre es uns lieber",
+    more: true
+  }}
+  timeago={isoString => 'gerade eben'}
+  discussion={{
+    title: "Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie"
+  }}
+  t={t}
+/>
+```
+
+```react|noSource,span-3
+<CommentTeaser
+  tags={["Kritik"]}
+  preview={{
+    string: "Die Zeitungskäufe von Christoph Blocher, die Selbstideologisierung der NZZ, die Frankenstein-Monster-Strategie der Tamedia: Ehrlich gesagt wäre es uns lieber",
+    more: true
+  }}
+  timeago={isoString => 'gerade eben'}
+  discussion={{
+    title: "Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie"
+  }}
+  t={t}
+/>
+```
+
 ```react|noSource,span-3
 <CommentTeaser
   displayAuthor={{
@@ -12,42 +54,9 @@ A teaser of a comment.
     more: true
   }}
   timeago={isoString => 'gerade eben'}
-  t={t}
-/>
-```
-
-```react|noSource,span-3
-<CommentTeaser
-  context={{
-    title: "«Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie»",
-    description: "von Constantin Seibt, 13.09.2017"
+  discussion={{
+    title: "Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie"
   }}
-  preview={{
-    string: "Die Zeitungskäufe von Christoph Blocher, die Selbstideologisierung der NZZ, die Frankenstein-Monster-Strategie der Tamedia: Ehrlich gesagt wäre es uns lieber",
-    more: true
-  }}
-  timeago={isoString => 'gerade eben'}
-  t={t}
-/>
-```
-
-```react|noSource,span-3
-<CommentTeaser
-  context={{
-    title: "«Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie»",
-    description: "von Constantin Seibt, 13.09.2017"
-  }}
-  displayAuthor={{
-    profilePicture: '/static/profilePicture1.png',
-    name: 'Christof Moser',
-    credential: {description: 'Journalist'}
-  }}
-  preview={{
-    string: "Die Zeitungskäufe von Christoph Blocher, die Selbstideologisierung der NZZ, die Frankenstein-Monster-Strategie der Tamedia: Ehrlich gesagt wäre es uns lieber",
-    more: true
-  }}
-  timeago={isoString => 'gerade eben'}
-  commentUrl='https://www.republik.ch/foo'
   t={t}
 />
 ```
@@ -65,7 +74,9 @@ A teaser of a comment.
     more: true
   }}
   timeago={isoString => 'gerade eben'}
-  commentUrl='https://www.republik.ch/foo'
+  discussion={{
+    title: "Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie"
+  }}
   t={t}
 />
 ```
@@ -83,8 +94,11 @@ A teaser of a comment.
       ]
     }
   ]}
+  parentIds={["somecommentid"]}
   timeago={isoString => 'gerade eben'}
-  commentUrl='https://www.republik.ch/foo'
+  discussion={{
+    title: "Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie"
+  }}
   t={t}
 />
 ```

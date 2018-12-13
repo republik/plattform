@@ -2,13 +2,13 @@ import React from 'react'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
 import { ellipsize } from '../../lib/styleMixins'
-import { sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
+import { mUp } from '../../theme/mediaQueries'
+import { sansSerifMedium14, sansSerifMedium16, sansSerifRegular14 } from '../Typography/styles'
 
 const styles = {
   root: css({
     display: 'flex',
-    alignItems: 'center',
-    marginBottom: 10
+    alignItems: 'center'
   }),
   meta: css({
     alignSelf: 'stretch',
@@ -19,9 +19,12 @@ const styles = {
   }),
   title: css({
     ...ellipsize,
-    ...sansSerifMedium16,
-    lineHeight: '20px',
-    color: colors.text
+    ...sansSerifMedium14,
+    color: colors.text,
+    [mUp]: {
+      ...sansSerifMedium16,
+      lineHeight: '20px'
+    }
   }),
   description: css({
     ...ellipsize,

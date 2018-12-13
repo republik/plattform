@@ -253,7 +253,6 @@ ReactDOM.render(
             title: 'Teaser',
             imports: {
               t,
-              exampleMdast: require('./components/CommentTeaser/exampleMdast').exampleMdast,
               ...require('./components/CommentTeaser/docs.imports')
             },
             src: require('./components/CommentTeaser/docs.md')

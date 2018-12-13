@@ -52,7 +52,7 @@ const styles = {
     }
   }),
   context: css({
-    marginBottom: 20
+    marginBottom: 10
   })
 }
 

@@ -3,6 +3,8 @@ import { css } from 'glamor'
 import get from 'lodash/get'
 
 import colors from '../../theme/colors'
+import { ellipsize, underline } from '../../lib/styleMixins'
+import { linkRule } from '../Typography/'
 import { serifRegular14, sansSerifRegular14 } from '../Typography/styles'
 import { CommentBodyParagraph } from '../CommentBody/web'
 import CommentContext from '../Comment/CommentContext'
@@ -32,9 +34,25 @@ const styles = {
       fontStyle: 'normal'
     }
   }),
-  timeago: css({
+  linkUnderline: css({
+    color: 'inherit',
+    textDecoration: 'none',
+    ':hover': {
+      ...underline
+    }
+  }),
+  footer: css({
     ...sansSerifRegular14,
-    color: colors.lightText
+    display: 'flex',
+    justifyContent: 'space-between'
+  }),
+  discussionReference: css({
+    ...ellipsize
+  }),
+  timeago: css({
+    color: colors.lightText,
+    flexShrink: 0,
+    paddingLeft: 5
   })
 }
 
@@ -46,15 +64,13 @@ export const CommentTeaser = ({
   displayAuthor,
   preview,
   highlights,
-  published,
   createdAt,
   timeago,
-  context,
-  lineClamp,
   Link=DefaultLink,
   discussion,
   tags,
-  onPreviewClick
+  parentIds,
+  onClick
 }) => {
   const highlight = get(highlights, '[0].fragments[0]', '').trim()
 
@@ -74,28 +90,11 @@ export const CommentTeaser = ({
           <CommentHeader
             {...displayAuthor}
             commentId={id}
-            published={published}
             createdAt={createdAt}
             timeago={timeago}
             discussion={discussion}
             Link={Link} />
         </div>
-      )}
-      {context && (
-        <CommentContext
-          title={
-            <Link
-              commentId={id}
-              discussion={discussion}
-              passHref
-            >
-              <a {...styles.link} onClick={onPreviewClick}>
-                {context.title}
-              </a>
-            </Link>
-          }
-          description={context.description}
-        />
       )}
       {tag && (
         <CommentContext
@@ -105,7 +104,7 @@ export const CommentTeaser = ({
               discussion={discussion}
               passHref
             >
-              <a {...styles.link} onClick={onPreviewClick}>
+              <a {...styles.link} onClick={onClick}>
                 {tag}
               </a>
             </Link>
@@ -119,7 +118,7 @@ export const CommentTeaser = ({
             discussion={discussion}
             passHref
           >
-            <a {...styles.link} onClick={onPreviewClick}>
+            <a {...styles.link} onClick={onClick}>
             {!!preview && !highlight && (
               <Fragment>
                 {preview.string}
@@ -140,18 +139,33 @@ export const CommentTeaser = ({
           </Link>
         </CommentBodyParagraph>
       </div>
-      {!displayAuthor && (
-        <div {...styles.timeago}>
-          {timeago(createdAt)}
-          {/*<CommentTeaserFooter
-            id={id}
-            discussion={discussion}
-            Link={Link}
-            timeago={timeago(createdAt)}
-            t={t}
-          />*/}
+      <div {...styles.footer}>
+        <div {...styles.discussionReference}>
+          {t.elements(`styleguide/CommentTeaser/${parentIds && parentIds.length ? 'reply' : 'comment'}/link`, {
+            link: (
+              <Link
+                key={id}
+                commentId={id}
+                discussion={discussion}
+                passHref
+              >
+                <a {...linkRule} onClick={onClick}>
+                  «{discussion.title}»
+                </a>
+              </Link>
+            )
+          })}          
         </div>
-      )}
+        {!displayAuthor && (
+          <div {...styles.timeago}>
+            <Link commentId={id} discussion={discussion} passHref>
+              <a {...styles.linkUnderline} onClick={onClick}>
+                {timeago(createdAt)}
+              </a>
+            </Link>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
