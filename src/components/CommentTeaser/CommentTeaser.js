@@ -123,7 +123,7 @@ export const CommentTeaser = ({
           }
         />
       )}
-      <div {...styles.body}>
+      <div {...styles.body} style={{ marginTop: displayAuthor || tag ? undefined : 0}}>
         <CommentBodyParagraph>
           <Link
             commentId={id}
