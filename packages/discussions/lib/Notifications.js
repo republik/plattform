@@ -19,7 +19,7 @@ const {
 } = process.env
 
 const getDiscussionUrl = async (discussion, context) => {
-  const communityUrl = `${FRONTEND_BASE_URL}/mitreden?id=${discussion.id}`
+  const communityUrl = `${FRONTEND_BASE_URL}/dialog?id=${discussion.id}`
   if (discussion.id === GENERAL_FEEDBACK_DISCUSSION_ID) {
     return `${communityUrl}&t=general`
   }
