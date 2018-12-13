@@ -67,28 +67,21 @@ ALTER TABLE "pledgeOptions"
 ;
 
 ALTER TABLE "memberships"
-  ADD COLUMN "initialInterval" "intervalType",
-  ADD COLUMN "initialPeriods" int
+  ADD COLUMN "initialInterval" "intervalType" DEFAULT 'year',
+  ADD COLUMN "initialPeriods" int DEFAULT 1
 ;
 
--- Temporary disable all triggers.
-ALTER TABLE "memberships" DISABLE TRIGGER "trigger_member_role";
-ALTER TABLE "memberships" DISABLE TRIGGER "trigger_voucher_code";
-ALTER TABLE "memberships" DISABLE TRIGGER "trigger_associate_role";
-ALTER TABLE "memberships" DISABLE TRIGGER "trigger_revoke_membership_cancellations";
-
-UPDATE "memberships"
-SET
-  "initialInterval" = "interval",
-  "initialPeriods" = "defaultPeriods"
-FROM
-  "membershipTypes"
+UPDATE "memberships" SET "initialInterval" = 'month'
+FROM "pledges", "packages"
 WHERE
-  "memberships"."membershipTypeId" = "membershipTypes"."id"
+  "memberships"."pledgeId" = "pledges"."id"
+  AND "pledges"."packageId" = "packages"."id"
+  AND "packages"."name" = 'MONTHLY_ABO'
 ;
 
--- Renable triggers
-ALTER TABLE "memberships" ENABLE TRIGGER "trigger_revoke_membership_cancellations";
-ALTER TABLE "memberships" ENABLE TRIGGER "trigger_associate_role";
-ALTER TABLE "memberships" ENABLE TRIGGER "trigger_voucher_code";
-ALTER TABLE "memberships" ENABLE TRIGGER "trigger_member_role";
+ALTER TABLE "memberships"
+  ALTER COLUMN "initialInterval" DROP DEFAULT,
+  ALTER COLUMN "initialPeriods" DROP DEFAULT,
+  ALTER COLUMN "initialInterval" SET NOT NULL,
+  ALTER COLUMN "initialPeriods" SET NOT NULL
+;
