@@ -85,7 +85,7 @@ PgDb.connect().then(async pgdb => {
          ml."keys" && :MAILLOG_KEYS
     WHERE
       u.id != :PARKING_USER_ID AND
-      ml IS NULL
+      ml.id IS NULL
   `, {
     PARKING_USER_ID,
     MAILLOG_TYPE,

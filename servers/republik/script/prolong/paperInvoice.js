@@ -25,7 +25,7 @@ const printIds = process.argv[2] === '--printIds'
 
 const log = printIds
   ? () => {}
-  : message => console.log(message)
+  : (...args) => console.log(...args)
 
 log('Start')
 
@@ -33,10 +33,6 @@ PgDb.connect().then(async pgdb => {
   if (dry) {
     log("dry run: this won't change anything")
   }
-
-  const dedupAndTransform = users => users
-    .filter((u, i, a) => i === a.findIndex(d => d.id === u.id))
-    .map(u => transformUser(u))
 
   const enrichWithProlongAndAddress = async users => Promise.map(
     users,
@@ -57,9 +53,9 @@ PgDb.connect().then(async pgdb => {
     {concurrency: 10}
   ).then(all => all.filter(Boolean))
 
-  const benefactors = dedupAndTransform(await pgdb.query(`
+  const benefactors = (await pgdb.query(`
     SELECT
-      u.*, 'benefactor' as type
+      DISTINCT(u.*), 'benefactor' as type
     FROM
       users u
     JOIN memberships m
@@ -68,10 +64,10 @@ PgDb.connect().then(async pgdb => {
       ON mt.id = m."membershipTypeId"
     WHERE mt.name = 'BENEFACTOR_ABO' AND
       u.id != :PARKING_USER_ID
-  `, { PARKING_USER_ID }))
+  `, { PARKING_USER_ID })).map(u => transformUser(u))
 
-  const paperPeople = dedupAndTransform(await pgdb.query(`
-    SELECT u.*, 'paperPerson' as type
+  const paperPeople = (await pgdb.query(`
+    SELECT DISTINCT(u.*), 'paperPerson' as type
     FROM users u
     JOIN memberships m ON m."userId" = u.id AND m.active AND m.renew
     JOIN pledges p ON p."userId" = u.id
@@ -79,7 +75,9 @@ PgDb.connect().then(async pgdb => {
     JOIN payments pay ON pp."paymentId" = pay.id AND pay."paperInvoice"
     WHERE
       u.id != :PARKING_USER_ID
-  `, { PARKING_USER_ID })).filter(u => !benefactors.find(b => b.id === u.id))
+  `, { PARKING_USER_ID }))
+    .filter(u => !benefactors.find(b => b.id === u.id))
+    .map(u => transformUser(u))
 
   log(`investigating ${paperPeople.length} paper people and ${benefactors.length} benefactors`)
 

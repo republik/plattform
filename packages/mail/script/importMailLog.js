@@ -47,7 +47,7 @@ PgDb.connect().then(async pgdb => {
   if (!input || !input.length) {
     throw new Error('You need to provide input on stdin or via MAILLOG_IMPORT_DOWNLOAD_URL')
   }
-  input = uniq(input.split('\n'))
+  input = uniq(input.split('\n').filter(Boolean))
   console.log('starting', { type, keys, dry, now })
 
   const ids = input.filter(line => isUUID.v4(line))
