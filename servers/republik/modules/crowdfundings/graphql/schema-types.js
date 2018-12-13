@@ -151,6 +151,8 @@ type Membership {
   active: Boolean!
   renew: Boolean!
   autoPay: Boolean!
+  initialInterval: MembershipTypeInterval!
+  initialPeriods: Int!
   periods: [MembershipPeriod]!
   overdue: Boolean!
   cancellations: [Cancellation!]!
