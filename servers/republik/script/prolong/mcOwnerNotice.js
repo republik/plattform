@@ -62,7 +62,7 @@ const fetchAuthenticated = (method, url, request = {}) => {
     .then(r => r.json())
 }
 
-console.log('running updateMailchimp.js...')
+console.log('running mcOwnerNotice.js...')
 PgDb.connect().then(async pgdb => {
   const dry = process.argv[2] === '--dry'
   if (dry) {

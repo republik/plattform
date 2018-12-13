@@ -20,11 +20,18 @@ const me = {
   roles: ['admin']
 }
 
-console.log('Start')
+const dry = process.argv[2] === '--dry'
+const printIds = process.argv[2] === '--printIds'
+
+const log = printIds
+  ? () => {}
+  : message => console.log(message)
+
+log('Start')
+
 PgDb.connect().then(async pgdb => {
-  const dry = process.argv[2] === '--dry'
   if (dry) {
-    console.log("dry run: this won't change anything")
+    log("dry run: this won't change anything")
   }
 
   const dedupAndTransform = users => users
@@ -74,18 +81,18 @@ PgDb.connect().then(async pgdb => {
       u.id != :PARKING_USER_ID
   `, { PARKING_USER_ID })).filter(u => !benefactors.find(b => b.id === u.id))
 
-  console.log(`investigating ${paperPeople.length} paper people and ${benefactors.length} benefactors`)
+  log(`investigating ${paperPeople.length} paper people and ${benefactors.length} benefactors`)
 
   const benefactorNeedProlong = await enrichWithProlongAndAddress(benefactors)
   const paperPeopleNeedProlong = await enrichWithProlongAndAddress(paperPeople)
 
-  console.log(`need prolong before ${PROLONG_BEFORE_DATE.toISOString()}`)
-  console.log('benefactors', benefactorNeedProlong.length)
-  console.log('paper people', paperPeopleNeedProlong.length)
+  log(`need prolong before ${PROLONG_BEFORE_DATE.toISOString()}`)
+  log('benefactors', benefactorNeedProlong.length)
+  log('paper people', paperPeopleNeedProlong.length)
 
-  console.log('without address')
-  console.log('benefactors', benefactorNeedProlong.filter(d => !d.address).length)
-  console.log('paper people', paperPeopleNeedProlong.filter(d => !d.address).length)
+  log('without address')
+  log('benefactors', benefactorNeedProlong.filter(d => !d.address).length)
+  log('paper people', paperPeopleNeedProlong.filter(d => !d.address).length)
 
   const mapToCsv = d => ({
     id: d.user.id,
@@ -100,17 +107,22 @@ PgDb.connect().then(async pgdb => {
     admin: `https://admin.republik.ch/users/${d.user.id}`
   })
 
-  if (!dry) {
-    console.log('benefactors')
-    console.log('---')
-    console.log(csvFormat(benefactorNeedProlong.filter(d => d.address).map(mapToCsv)))
-    console.log('---')
-    console.log('paper people')
-    console.log('---')
-    console.log(csvFormat(paperPeopleNeedProlong.filter(d => d.address).map(mapToCsv)))
-    console.log('---')
+  if (printIds) {
+    console.log([
+      ...benefactorNeedProlong.map(d => d.user.id),
+      ...paperPeopleNeedProlong.map(d => d.user.id)
+    ].join('\n'))
+  } else if (!dry) {
+    log('benefactors')
+    log('---')
+    log(csvFormat(benefactorNeedProlong.filter(d => d.address).map(mapToCsv)))
+    log('---')
+    log('paper people')
+    log('---')
+    log(csvFormat(paperPeopleNeedProlong.filter(d => d.address).map(mapToCsv)))
+    log('---')
   }
-  console.log('finished!')
+  log('finished!')
 }).then(() => {
   process.exit()
 }).catch(e => {
