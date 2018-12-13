@@ -104,7 +104,7 @@ const sendMail = async (
       t,
       pgdb
     )
-  })
+  }, { pgdb })
 
   await eventsLib.log(grant, `email.${party}.${template}`, pgdb)
 
