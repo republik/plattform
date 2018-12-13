@@ -156,8 +156,8 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
               pledgeOptionId: plo.id,
               beginDate: now,
               endDate: now.clone().add(
-                membershipType.defaultPeriods,
-                plo.periods
+                membership.initialPeriods,
+                membership.initialInterval
               ),
               membership
             }
