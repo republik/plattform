@@ -11,8 +11,7 @@ module.exports = async (_, { lastDays = 5 }, { pgdb }) =>
       ON c."discussionId" = d.id
     WHERE
       c."createdAt" > :minDate AND
-      d.closed = false AND
-      d.hidden = false
+      d.closed = false
     GROUP BY d.id
     ORDER BY 1 DESC
   `, {
