@@ -55,8 +55,8 @@ PgDb.connect().then(async pgdb => {
   console.log(`${ids.length} ids, ${emails.length} emails`)
 
   const users = [
-    ...await pgdb.public.users.find({ id: ids }),
-    ...await pgdb.public.users.find({ email: emails })
+    ...ids.length ? await pgdb.public.users.find({ id: ids }) : [],
+    ...emails.length ? await pgdb.public.users.find({ email: emails }) : []
   ]
   console.log(`found ${users.length} users`)
 
