@@ -41,12 +41,17 @@ const PAY_PLEDGE_MUTATION = `
 `
 
 const prepareNewPledge = async ({ templateId } = {}) => {
+  await connectIfNeeded()
+  const packageOption = await pgDatabase().public.packageOptions.findOne({
+    id: templateId || '00000000-0000-0000-0008-000000000001'
+  })
+
   const result = await submitPledge({
-    'total': 24000,
+    'total': packageOption.price,
     'options': [{
       'amount': 1,
-      'price': 24000,
-      templateId: templateId || '00000000-0000-0000-0008-000000000001'
+      'price': packageOption.price,
+      templateId: packageOption.id
     }]
   })
   return {

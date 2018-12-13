@@ -7,7 +7,7 @@ const { getPeriodEndingLast, getLastEndDate } = require('../utils')
 const rules = require('./rules')
 
 // Put that one into database.
-const EXTENDABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
+const EXTENDABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO', 'ABO_GIVE_MONTHS']
 const EXTENDABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR']
 
 // Which options require you to own a membership?
@@ -27,7 +27,7 @@ const findEligableMemberships = ({ memberships, user, ignoreClaimedMemberships =
     // Self-claimed ABO_GIVE
     const isSelfClaimed =
       m.pledge.userId === m.userId &&
-      m.pledge.package.name === 'ABO_GIVE' &&
+      ['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(m.pledge.package.name) &&
       m.active
 
     debug({
@@ -80,7 +80,7 @@ const evaluate = async ({
 }) => {
   debug('evaluate')
 
-  const { reward } = packageOption
+  const { reward, membershipType: packageOptionMembershipType } = packageOption
   const { membershipType, membershipPeriods } = membership
   const now = moment()
 
@@ -122,21 +122,13 @@ const evaluate = async ({
     return false
   }
 
-  const lastPeriod = getPeriodEndingLast(membershipPeriods)
+  let lastEndDate = getPeriodEndingLast(membershipPeriods).endDate
 
-  // Has no membershipPeriod with beginDate in future
-  // Only memberships with current or past membershipPeriods can be extended.
-  if (!lenient && lastPeriod.beginDate > now) {
-    debug('membership has a membershipPeriod in future')
+  // A membership can be renewed 364 days before it ends at the most
+  if (!lenient && moment(lastEndDate).isAfter(now.clone().add(364, 'days'))) {
+    debug('membership lasts more than 364 days', lastEndDate)
     return false
   }
-
-  if (!lenient && lastPeriod.beginDate > now.clone().subtract(24, 'hours')) {
-    debug('membership period began not 24 hours ago', lastPeriod.beginDate)
-    return false
-  }
-
-  let lastEndDate = lastPeriod.endDate
 
   // If endDate is in past, pushed to now.
   // This indicates that we're dealing with an expired membership.
@@ -149,8 +141,9 @@ const evaluate = async ({
 
   const beginEnd = {
     beginDate: lastEndDate,
-    endDate: moment(lastEndDate)
-      .add(membershipType.intervalCount, membershipType.interval)
+    endDate: moment(lastEndDate).add(
+      packageOptionMembershipType.defaultPeriods, packageOptionMembershipType.interval
+    )
   }
 
   payload.additionalPeriods.push({
@@ -170,14 +163,22 @@ const evaluate = async ({
   })
 
   if (reward.type === 'MembershipType') {
-    if (membership.userId === package_.user.id) {
-      // If options is to extend membership, set defaultAmount to 1 if reward of
-      // current packageOption evaluated is same as in evaluated membership.
-      payload.defaultAmount =
-        packageOption.rewardId === membershipType.rewardId ? 1 : 0
+    // If membership stems from ABO_GIVE_MONTHS package, default ABO option
+    if (membership.pledge.package.name === 'ABO_GIVE_MONTHS') {
+      if (packageOption.membershipType.name === 'ABO') {
+        payload.defaultAmount = 1
+      }
     } else {
-      // If user does not own membership, set userPrice to false
-      payload.userPrice = false
+      if (membership.userId === package_.user.id) {
+        // If options is to extend membership, set defaultAmount to 1 if reward
+        // of current packageOption evaluated is same as in evaluated
+        // membership.
+        payload.defaultAmount =
+          packageOption.rewardId === membershipType.rewardId ? 1 : 0
+      } else {
+        // If user does not own membership, set userPrice to false
+        payload.userPrice = false
+      }
     }
   }
 
@@ -238,6 +239,9 @@ const getCustomOptions = async (package_) => {
     }
     packageOptions[] {
       reward
+        reward
+        membershipType
+        goodie
       membershipType
     }
   }
