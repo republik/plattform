@@ -9,8 +9,11 @@ import withT from '../../../lib/withT'
 import List, { Item } from '../../List'
 import MoveMembership from './MoveMembership'
 import CancelMembership from './CancelMembership'
-
+import routes from '../../../server/routes'
 import { swissTime } from '../../../lib/utils/formats'
+
+const { Link } = routes
+
 const dateTimeFormat = swissTime.format(
   '%e. %B %Y %H.%M Uhr'
 )
@@ -45,6 +48,7 @@ const MembershipOverview = ({
                </Label>
                <br />
                {cancellation.category.label}
+               <br />
                {cancellation.revokedAt &&
                  <Label>{`Zurückgezogen am ${dateTimeFormat(new Date(cancellation.revokedAt))}`}</Label>}
                <br />
@@ -79,37 +83,60 @@ const MembershipOverview = ({
               {membership.claimerName}
             </Interaction.P>
           )}
+          {membership.user.id !== membership.pledge.user.id && (
+            <Interaction.P>
+              <Label>Geschenkt von</Label>
+              <br />
+              <Link
+                route='user'
+                params={{userId: membership.pledge.user.id}}>
+                <a>
+                    {membership.pledge.user.name}
+                </a>
+              </Link>
+            </Interaction.P>
+          )}
           <Interaction.P>
             <Label>Reduced Price</Label>
             <br />
             {membership.reducedPrice ? 'YES' : 'NO'}
           </Interaction.P>
-          <Interaction.P>
-            <Label>Periods</Label>
-            <br />
-            {membership.periods.map((period, i) => (
-              <span
-                style={{ display: 'inline-block' }}
-                key={`period-${i}`}
-              >
-                {dateTimeFormat(new Date(period.beginDate))}
-                {' - '}
-                {dateTimeFormat(new Date(period.endDate))}
-                <br />
-                <Label>
-                  Created:{' '}
-                  {dateTimeFormat(
-                    new Date(period.createdAt)
-                  )}
-                  {' – '}
-                  Updated:{' '}
-                  {dateTimeFormat(
-                    new Date(period.updatedAt)
-                  )}
-                </Label>
-              </span>
-            ))}
-          </Interaction.P>
+          {membership.periods.length === 0 &&
+            <Interaction.P>
+              <Label>Periode (bei Aktivierung)</Label>
+              <br />
+              {membership.initialPeriods}{' '}
+              {membership.initialInterval}
+            </Interaction.P>
+          }
+          {membership.periods.length > 0 &&
+            <Interaction.P>
+              <Label>Perioden</Label>
+              <br />
+              {membership.periods.map((period, i) => (
+                <span
+                  style={{ display: 'inline-block' }}
+                  key={`period-${i}`}
+                >
+                  {dateTimeFormat(new Date(period.beginDate))}
+                  {' - '}
+                  {dateTimeFormat(new Date(period.endDate))}
+                  <br />
+                  <Label>
+                    Created:{' '}
+                    {dateTimeFormat(
+                      new Date(period.createdAt)
+                    )}
+                    {' – '}
+                    Updated:{' '}
+                    {dateTimeFormat(
+                      new Date(period.updatedAt)
+                    )}
+                  </Label>
+                </span>
+              ))}
+            </Interaction.P>
+          }
         </Item>
       </List>
       <MoveMembership
