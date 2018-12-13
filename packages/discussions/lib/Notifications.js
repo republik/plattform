@@ -19,12 +19,13 @@ const {
 } = process.env
 
 const getDiscussionUrl = async (discussion, context) => {
+  const communityUrl = `${FRONTEND_BASE_URL}/mitreden?id=${discussion.id}`
+  if (discussion.id === GENERAL_FEEDBACK_DISCUSSION_ID) {
+    return `${communityUrl}&t=general`
+  }
   const document = discussion.repoId && await context.loaders.Document.byRepoId.load(discussion.repoId)
-  if (
-    discussion.id === GENERAL_FEEDBACK_DISCUSSION_ID ||
-    (document && document.meta.template === 'article')
-  ) {
-    return `${FRONTEND_BASE_URL}/mitreden?id=${discussion.id}`
+  if (document && document.meta && document.meta.template === 'article') {
+    return `${communityUrl}&t=article`
   }
   return `${FRONTEND_BASE_URL}${discussion.path}`
 }
