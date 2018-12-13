@@ -406,13 +406,10 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
             .trim()
         },
         { name: 'abo_for_me',
-          content:
-            pkg.name !== 'DONATE' &&
-            pkg.name !== 'ABO_GIVE' &&
-            pkg.name !== 'PROLONG'
+          content: ['ABO', 'BENEFACTOR'].includes(pkg.name)
         },
         { name: 'voucher_codes',
-          content: pkg.name === 'ABO_GIVE'
+          content: ['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(pkg.name)
             ? memberships.map(m => m.voucherCode).join(', ')
             : null
         },
