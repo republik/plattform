@@ -163,14 +163,22 @@ const evaluate = async ({
   })
 
   if (reward.type === 'MembershipType') {
-    if (membership.userId === package_.user.id) {
-      // If options is to extend membership, set defaultAmount to 1 if reward of
-      // current packageOption evaluated is same as in evaluated membership.
-      payload.defaultAmount =
-        packageOption.rewardId === membershipType.rewardId ? 1 : 0
+    // If membership stems from ABO_GIVE_MONTHS package, default ABO option
+    if (membership.pledge.package.name === 'ABO_GIVE_MONTHS') {
+      if (packageOption.membershipType.name === 'ABO') {
+        payload.defaultAmount = 1
+      }
     } else {
-      // If user does not own membership, set userPrice to false
-      payload.userPrice = false
+      if (membership.userId === package_.user.id) {
+        // If options is to extend membership, set defaultAmount to 1 if reward
+        // of current packageOption evaluated is same as in evaluated
+        // membership.
+        payload.defaultAmount =
+          packageOption.rewardId === membershipType.rewardId ? 1 : 0
+      } else {
+        // If user does not own membership, set userPrice to false
+        payload.userPrice = false
+      }
     }
   }
 
