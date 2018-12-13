@@ -654,7 +654,18 @@ const userQuery = gql`
         type {
           name
         }
+        user {
+          id
+        }
+        pledge {
+          user {
+            id
+            name
+          }
+        }
         sequenceNumber
+        initialInterval
+        initialPeriods
         periods {
           beginDate
           endDate
@@ -739,6 +750,18 @@ const userQuery = gql`
         donation
         memberships {
           id
+          user {
+            id
+          }
+          pledge {
+            user {
+              id
+              name
+            }
+          }
+          active
+          initialInterval
+          initialPeriods
           voucherCode
           reducedPrice
           claimerName
@@ -751,6 +774,7 @@ const userQuery = gql`
         }
         options {
           id
+          amount
           reward {
             ... on Goodie {
               name
@@ -758,6 +782,27 @@ const userQuery = gql`
             ... on MembershipType {
               name
             }
+          }
+          membership {
+            id
+            active
+            user {
+              id
+            }
+            pledge {
+              user {
+                id
+                name
+              }
+            }
+            initialInterval
+            initialPeriods
+            voucherCode
+            reducedPrice
+            claimerName
+            sequenceNumber
+            createdAt
+            updatedAt
           }
           price
         }

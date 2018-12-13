@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import {
   Interaction,
   Label,
@@ -14,6 +14,9 @@ import {
 } from '../../../lib/utils/formats'
 import List, { Item } from '../../List'
 import MovePledge from './MovePledge'
+import routes from '../../../server/routes'
+
+const { Link } = routes
 
 const link = css({
   textDecoration: 'none',
@@ -99,11 +102,6 @@ const PledgeOverview = ({
   onCancelPledge,
   onRemindPayment
 }) => {
-  const options = pledge.options.filter(
-    option =>
-      option.amount && option.minAmount !== option.maxAmount
-  )
-
   return (
     <div>
       <Interaction.H3>
@@ -137,16 +135,6 @@ const PledgeOverview = ({
         </P>
       )}
       <List>
-        {!!options.length &&
-          options.map((option, i) => (
-            <Item key={`option-${i}`}>
-              <Label>Option</Label>
-              <br />
-              {option.amount} x{' '}
-              {option.reward ? option.reward.name : ''} a{' '}
-              {chfFormat(option.price / 100)}
-            </Item>
-          ))}
         {pledge.payments.map((payment, i) => (
           <Item key={`payment-${i}`}>
             <Label>Payment</Label>
@@ -217,9 +205,27 @@ const PledgeOverview = ({
             </Label>
           </Item>
         ))}
-        {pledge.memberships.map((membership, i) => (
+        {!!pledge.options.length &&
+          <Item key='option'>
+            <Label>Optionen</Label>
+            <br />
+            {pledge.options.filter(option => option.amount > 0).map((option) => (
+              option.reward &&
+                <Fragment>
+                  {option.amount} x{' '}
+                  {option.reward ? `«${option.reward.name}»` : ''}{' '}
+                  à {chfFormat(option.price / 100)}
+                  <br />
+                </Fragment>
+            ))}
+          </Item>
+        }
+        {pledge.memberships
+          .concat(pledge.options.map(option => option.membership))
+          .filter(Boolean)
+          .map((membership, i) => (
           <Item key={`membership-${i}`}>
-            <Label>Membership</Label>
+            <Label>Abo-Nr.</Label>
             <br />
             #{membership.sequenceNumber}
             <br />
@@ -234,14 +240,30 @@ const PledgeOverview = ({
               <Interaction.P>
                 <Label>Claimer Name</Label>
                 <br />
-                {membership.claimerName}
+                <Link
+                  route='user'
+                  params={{userId: membership.user.id}}>
+                  <a>
+                    {membership.claimerName}
+                  </a>
+                </Link>
               </Interaction.P>
             )}
-            <Interaction.P>
-              <Label>Reduced Price</Label>
-              <br />
-              {membership.reducedPrice ? 'YES' : 'NO'}
-            </Interaction.P>
+            {membership.reducedPrice &&
+              <Interaction.P>
+                <Label>Reduced Price</Label>
+                <br />
+                {membership.reducedPrice ? 'YES' : 'NO'}
+              </Interaction.P>
+            }
+            {!membership.active &&
+              <Interaction.P>
+                <Label>Periode (bei Aktivierung)</Label>
+                <br />
+                {membership.initialPeriods}{' '}
+                {membership.initialInterval}
+              </Interaction.P>
+            }
           </Item>
         ))}
       </List>
