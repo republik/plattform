@@ -10,8 +10,25 @@ Props:
 - `parentIds`: The comment's array of parent ids. Used to determine whether it's a comment or a reply.
 - `createdAt`: The comment's creation timestamp.
 - `timeago`: A function that renders a human-readable version of `createdAt`.
-- `Link`: A link wrapper component.
-- `onClick`: An optional click handler.
+- `Link`: A Next.js like `<Link />` component, receiving these props:
+  - `commentId`: string
+  - `displayAuthor`: object
+  - `passHref`: Boolean, indicates this will eventually end in an `a` tag and you may overwrite `href`
+  - `discussion`:
+    ```code|lang-jsx
+    shapeOf({
+      id: string,
+      title: string,
+      meta: shapeOf({
+        title: string,
+        template: string,
+        ownDiscussion: shapeOf({
+          id: string,
+          closed: Boolean
+        })
+      })
+    })
+```
 
 ```react|noSource,span-3
 <CommentTeaser

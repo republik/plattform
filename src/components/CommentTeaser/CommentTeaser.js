@@ -104,7 +104,7 @@ export const CommentTeaser = ({
               discussion={discussion}
               passHref
             >
-              <a {...styles.link} onClick={onClick}>
+              <a {...styles.link}>
                 {tag}
               </a>
             </Link>
@@ -118,7 +118,7 @@ export const CommentTeaser = ({
             discussion={discussion}
             passHref
           >
-            <a {...styles.link} onClick={onClick}>
+            <a {...styles.link}>
             {!!preview && !highlight && (
               <Fragment>
                 {preview.string}
@@ -149,7 +149,7 @@ export const CommentTeaser = ({
                 discussion={discussion}
                 passHref
               >
-                <a {...linkRule} onClick={onClick}>
+                <a {...linkRule}>
                   «{discussion.title}»
                 </a>
               </Link>
@@ -159,7 +159,7 @@ export const CommentTeaser = ({
         {!displayAuthor && (
           <div {...styles.timeago}>
             <Link commentId={id} discussion={discussion} passHref>
-              <a {...styles.linkUnderline} onClick={onClick}>
+              <a {...styles.linkUnderline}>
                 {timeago(createdAt)}
               </a>
             </Link>
