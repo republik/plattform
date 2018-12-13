@@ -116,7 +116,25 @@ PgDb.connect().then(async pgdb => {
   // users who gifted a membership, which is active,
   // renewing and needs prolong before PROLONG_BEFORE_DATE
   const canProlongUsers = await pgdb.query(`
-    WITH givers AS (
+    WITH dormant_memberships AS (
+      SELECT
+        m.*
+      FROM
+        memberships m
+      JOIN
+        pledges p
+        ON m."pledgeId" = p.id
+      JOIN
+        packages pkg
+        ON p."packageId" = pkg.id
+      WHERE
+        m.id NOT IN (SELECT "membershipId" FROM "membershipPeriods") AND --no period
+        pkg.name != 'ABO_GIVE' AND
+        m."userId" != :PARKING_USER_ID AND
+        m."membershipTypeId" IN (
+          SELECT id FROM "membershipTypes" WHERE name = ANY('{ABO, BENEFACTOR_ABO}')
+        )
+    ), givers AS (
       SELECT
         u.id AS "userId",
         m.id AS "membershipId",
@@ -138,7 +156,8 @@ PgDb.connect().then(async pgdb => {
         ON
           m.id = mp."membershipId"
       WHERE
-        u.id != :PARKING_USER_ID
+        u.id != :PARKING_USER_ID AND
+        u.id NOT IN (SELECT DISTINCT("userId") FROM dormant_memberships)
       GROUP BY
         1, 2
       ORDER BY
