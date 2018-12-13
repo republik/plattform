@@ -2,6 +2,8 @@ import React, { Fragment } from 'react'
 import { css } from 'glamor'
 import get from 'lodash/get'
 
+import NewPage from 'react-icons/lib/md/open-in-new'
+
 import colors from '../../theme/colors'
 import { ellipsize, underline } from '../../lib/styleMixins'
 import { linkRule } from '../Typography/'
@@ -47,14 +49,22 @@ const styles = {
     justifyContent: 'space-between'
   }),
   discussionReference: css({
-    ...ellipsize
+    ...ellipsize,
+    position: 'relative'
+  }),
+  icon: css({
+    position: 'absolute',
+    right: 0,
+    marginTop: '-2px'
   }),
   timeago: css({
     color: colors.lightText,
     flexShrink: 0,
-    paddingLeft: 5
+    paddingLeft: 10
   })
 }
+
+const ICON_SIZE = 18
 
 const DefaultLink = ({ children }) => children
 
@@ -70,7 +80,8 @@ export const CommentTeaser = ({
   discussion,
   tags,
   parentIds,
-  onClick
+  onClick,
+  newPage
 }) => {
   const highlight = get(highlights, '[0].fragments[0]', '').trim()
 
@@ -140,7 +151,9 @@ export const CommentTeaser = ({
         </CommentBodyParagraph>
       </div>
       <div {...styles.footer}>
-        <div {...styles.discussionReference}>
+        <div {...styles.discussionReference} style={{
+          paddingRight: newPage ? `${ICON_SIZE + 5}px` : undefined
+        }}>
           {t.elements(`styleguide/CommentTeaser/${parentIds && parentIds.length ? 'reply' : 'comment'}/link`, {
             link: (
               <Link
@@ -151,6 +164,11 @@ export const CommentTeaser = ({
               >
                 <a {...linkRule}>
                   «{discussion.title}»
+                  {newPage && (
+                    <span {...styles.icon}>
+                      <NewPage size={ICON_SIZE} fill={colors.disabled} />
+                    </span>
+                  )}
                 </a>
               </Link>
             )
