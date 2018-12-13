@@ -9,12 +9,12 @@ VALUES
 -- Add a new MembershpType, named "ABO_GIVE_MONTHS"
 INSERT INTO "membershipTypes"("id","rewardId","rewardType","name","price","companyId","interval","minPeriods","maxPeriods","defaultPeriods")
 VALUES
-(E'21242c12-e8b1-4631-8d97-5bc480858a11',E'f6a05b57-e876-4e67-b14a-c4b7cefc6f16',E'MembershipType',E'ABO_GIVE_MONTHS',2200,E'240ef27d-cf26-48c1-81df-54b2a10732f4',E'month',1,9,3);
+(E'21242c12-e8b1-4631-8d97-5bc480858a11',E'f6a05b57-e876-4e67-b14a-c4b7cefc6f16',E'MembershipType',E'ABO_GIVE_MONTHS',2200,E'240ef27d-cf26-48c1-81df-54b2a10732f4',E'month',1,10,3);
 
 -- Add package "ABO_GIVE_MONTHS"
 INSERT INTO "packages"("id","crowdfundingId","name","group","companyId","paymentMethods","isAutoActivateUserMembership","custom","rules","order")
 VALUES
-(E'f03cabcc-fea3-4c80-b0a2-500064fe3180',E'e2ea1234-ca8c-4604-aeec-80a0cecf07bf',E'ABO_GIVE_MONTHS',E'GIVE',E'240ef27d-cf26-48c1-81df-54b2a10732f4',E'{STRIPE,PAYMENTSLIP}',FALSE,FALSE,E'[]',600);
+(E'f03cabcc-fea3-4c80-b0a2-500064fe3180',E'e2ea1234-ca8c-4604-aeec-80a0cecf07bf',E'ABO_GIVE_MONTHS',E'GIVE',E'7f6fb263-1d36-4550-91c6-4562b94141e3',E'{STRIPE,PAYMENTSLIP}',FALSE,FALSE,E'[]',600);
 
 -- Add packageOptions for package "ABO_GIVE_MONTHS"
 INSERT INTO "packageOptions"("id","packageId","rewardId","minAmount","maxAmount","defaultAmount","price","userPrice","minUserPrice","vat","order")
@@ -25,7 +25,7 @@ VALUES
 
 UPDATE "redirections"
 SET
-  "target" = '/angebote?packages=ABO_GIVE,ABO_GIVE_MONTHS'
+  "target" = '/angebote?group=GIVE'
 WHERE
   "source" = '/verschenken'
 ;
