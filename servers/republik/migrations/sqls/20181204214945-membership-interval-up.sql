@@ -57,7 +57,7 @@ ALTER TABLE "packages"
 
 UPDATE "packages" SET "order"=100 WHERE "name"='PROLONG' ;
 UPDATE "packages" SET "order"=200 WHERE "name"='ABO' ;
-UPDATE "packages" SET "order"=300, "group"="GIVE" WHERE "name"='MONTHLY_ABO' ;
+UPDATE "packages" SET "order"=300, "group"='GIVE' WHERE "name"='MONTHLY_ABO' ;
 UPDATE "packages" SET "order"=400 WHERE "name"='BENEFACTOR' ;
 UPDATE "packages" SET "order"=500 WHERE "name"='ABO_GIVE' ;
 UPDATE "packages" SET "order"=700 WHERE "name"='DONATE' ;
