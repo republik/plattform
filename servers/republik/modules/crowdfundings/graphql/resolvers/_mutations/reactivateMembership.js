@@ -4,8 +4,10 @@ const createSubscription = require('../../../lib/payments/stripe/createSubscript
 const reactivateSubscription = require('../../../lib/payments/stripe/reactivateSubscription')
 const slack = require('../../../../../lib/slack')
 const createCache = require('../../../lib/cache')
+const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
-module.exports = async (_, args, {pgdb, req, user: me, t, mail: {sendMailTemplate, enforceSubscriptions}}) => {
+module.exports = async (_, args, context) => {
+  const { pgdb, req, user: me, t, mail: { enforceSubscriptions } } = context
   const transaction = await pgdb.transactionBegin()
   const now = new Date()
   try {
@@ -95,7 +97,7 @@ module.exports = async (_, args, {pgdb, req, user: me, t, mail: {sendMailTemplat
                   .join(' ')
               }
             ]
-          })
+          }, context)
         } catch (e2) {
           console.warn(e2)
         }

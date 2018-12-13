@@ -11,6 +11,7 @@ const { graphql: voting } = require('@orbiting/backend-modules-voting')
 
 const { accessScheduler, graphql: access } = require('@orbiting/backend-modules-access')
 const { previewScheduler, preview: previewLib } = require('@orbiting/backend-modules-preview')
+const membershipScheduler = require('./modules/crowdfundings/lib/scheduler')
 
 const mail = require('./modules/crowdfundings/lib/Mail')
 const cluster = require('cluster')
@@ -18,9 +19,13 @@ const cluster = require('cluster')
 const {
   LOCAL_ASSETS_SERVER,
   SEARCH_PG_LISTENER,
-  ACCESS_SCHEDULER_OFF,
-  PREVIEW_SCHEDULER_OFF
+  NODE_ENV,
+  ACCESS_SCHEDULER,
+  PREVIEW_SCHEDULER,
+  MEMBERSHIP_SCHEDULER
 } = process.env
+
+const DEV = NODE_ENV && NODE_ENV !== 'production'
 
 const start = async () => {
   const httpServer = await run()
@@ -95,16 +100,28 @@ const runOnce = async (...args) => {
     require('@orbiting/backend-modules-search').notifyListener.run()
   }
 
-  if (ACCESS_SCHEDULER_OFF === 'true') {
-    console.log('ACCESS_SCHEDULER_OFF prevented scheduler from begin started')
+  if (ACCESS_SCHEDULER === 'false' || (DEV && ACCESS_SCHEDULER !== 'true')) {
+    console.log('ACCESS_SCHEDULER prevented scheduler from begin started',
+      { ACCESS_SCHEDULER, DEV }
+    )
   } else {
     await accessScheduler.init({ t, mail })
   }
 
-  if (PREVIEW_SCHEDULER_OFF === 'true') {
-    console.log('PREVIEW_SCHEDULER_OFF prevented scheduler from begin started')
+  if (PREVIEW_SCHEDULER === 'false' || (DEV && PREVIEW_SCHEDULER !== 'true')) {
+    console.log('PREVIEW_SCHEDULER prevented scheduler from begin started',
+      { PREVIEW_SCHEDULER, DEV }
+    )
   } else {
     await previewScheduler.init({ t, mail })
+  }
+
+  if (MEMBERSHIP_SCHEDULER === 'false' || (DEV && MEMBERSHIP_SCHEDULER !== 'true')) {
+    console.log('MEMBERSHIP_SCHEDULER prevented scheduler from begin started',
+      { MEMBERSHIP_SCHEDULER, DEV }
+    )
+  } else {
+    await membershipScheduler.init({ t, mail })
   }
 }
 

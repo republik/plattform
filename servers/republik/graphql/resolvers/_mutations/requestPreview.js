@@ -6,6 +6,7 @@ const { descending } = require('d3-array')
 const moment = require('moment')
 const querystring = require('querystring')
 const debug = require('debug')('republik:graphql:_mutations:requestPreview')
+const { sendMail } = require('@orbiting/backend-modules-mail')
 
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
@@ -16,7 +17,7 @@ const {
 const minIntervalHours = 12
 
 module.exports = async (_, args, context) => {
-  const { user: me, req, t, pgdb, mail: { sendMail } } = context
+  const { user: me, req, t, pgdb } = context
   ensureSignedIn(req)
 
   const now = moment()
@@ -65,7 +66,7 @@ module.exports = async (_, args, context) => {
     fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
     subject: t('api/preview/mail/subject'),
     html
-  })
+  }, context)
 
   await pgdb.query(`
     UPDATE

@@ -525,7 +525,7 @@ const updateUserEmail = async ({ pgdb, user, email }) => {
         content: email
       }
     ]
-  })
+  }, { pgdb })
 
   await sendMailTemplate({
     to: email,
@@ -537,7 +537,7 @@ const updateUserEmail = async ({ pgdb, user, email }) => {
         content: `${FRONTEND_BASE_URL}/konto?${querystring.stringify({ email })}`
       }
     ]
-  })
+  }, { pgdb })
 
   try {
     await moveNewsletterSubscriptions({

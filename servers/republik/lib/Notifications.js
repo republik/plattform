@@ -8,6 +8,8 @@ const commentSchema = require('@project-r/styleguide/lib/templates/Comment/email
 const { renderEmail } = require('mdast-react-render/lib/email')
 const appNotifications = require('@orbiting/backend-modules-notifications/lib/app')
 
+const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
+
 const {
   DEFAULT_MAIL_FROM_ADDRESS,
   DEFAULT_MAIL_FROM_NAME,
@@ -18,10 +20,7 @@ const submitComment = async (comment, discussion, context) => {
   const {
     pgdb,
     pubsub,
-    t,
-    mail: {
-      sendMailTemplate
-    }
+    t
   } = context
 
   const notifyUsers = await pgdb.query(`
@@ -186,7 +185,7 @@ const submitComment = async (comment, discussion, context) => {
               ]
               : []
           ]
-        })
+        }, context)
       })
     )
   }

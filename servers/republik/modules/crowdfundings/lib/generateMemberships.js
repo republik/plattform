@@ -4,9 +4,11 @@ const { evaluate, resolvePackages } = require('./CustomPackages')
 const createCache = require('./cache')
 const cancelMembership = require('../graphql/resolvers/_mutations/cancelMembership')
 const debug = require('debug')('crowdfundings:memberships')
-const { enforceSubscriptions, sendMembershipProlongNotice } = require('./Mail')
+const { enforceSubscriptions, sendMembershipProlongConfirmation } = require('./Mail')
 const Promise = require('bluebird')
 const omit = require('lodash/omit')
+
+const MONTHLY_ABO_UPGRADE_PKGS = ['ABO', 'BENEFACTOR']
 
 module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
   const pledge = await pgdb.public.pledges.findOne({id: pledgeId})
@@ -123,8 +125,8 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
         debug('additionalPeriods %o', additionalPeriods)
 
         if (membership.userId !== pledge.userId) {
-          await sendMembershipProlongNotice({
-            pledger: user, membership, additionalPeriods, t
+          await sendMembershipProlongConfirmation({
+            pledger: user, membership, additionalPeriods, t, pgdb
           })
         }
       } else {
@@ -162,7 +164,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
           } else {
             // Cancel active memberships because bought package (option) contains
             // a better abo.
-            if (['ABO', 'BENEFACTOR_ABO'].includes(membershipType.name)) {
+            if (MONTHLY_ABO_UPGRADE_PKGS.includes(pkg.name)) {
               cancelableMemberships =
                 activeMemberships
                   .filter(m => (m.name === 'MONTHLY_ABO' && m.renew === true))
