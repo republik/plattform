@@ -39,8 +39,8 @@ module.exports = async (pledgeId, pgdb, t) => {
         content: !!notebook
       },
       { name: 'VOUCHER_CODES',
-        content: pkg.name === 'ABO_GIVE' && voucherCodes.length
-          ? voucherCodes.join(' ')
+        content: ['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(pkg.name) && voucherCodes.length
+          ? voucherCodes.join(', ')
           : null
       }
     ]
