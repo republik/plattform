@@ -125,7 +125,7 @@ const evaluate = async ({
   let lastEndDate = getPeriodEndingLast(membershipPeriods).endDate
 
   // A membership can be renewed 364 days before it ends at the most
-  if (!lenient && lastEndDate > now.clone().add(364, 'days')) {
+  if (!lenient && moment(lastEndDate).isAfter(now.clone().add(364, 'days'))) {
     debug('membership lasts more than 364 days', lastEndDate)
     return false
   }
