@@ -122,21 +122,13 @@ const evaluate = async ({
     return false
   }
 
-  const lastPeriod = getPeriodEndingLast(membershipPeriods)
+  let lastEndDate = getPeriodEndingLast(membershipPeriods).endDate
 
-  // Has no membershipPeriod with beginDate in future
-  // Only memberships with current or past membershipPeriods can be extended.
-  if (!lenient && lastPeriod.beginDate > now) {
-    debug('membership has a membershipPeriod in future')
+  // A membership can be renewed 364 days before it ends at the most
+  if (!lenient && lastEndDate > now.clone().add(364, 'days')) {
+    debug('membership lasts more than 364 days', lastEndDate)
     return false
   }
-
-  if (!lenient && lastPeriod.beginDate > now.clone().subtract(24, 'hours')) {
-    debug('membership period began not 24 hours ago', lastPeriod.beginDate)
-    return false
-  }
-
-  let lastEndDate = lastPeriod.endDate
 
   // If endDate is in past, pushed to now.
   // This indicates that we're dealing with an expired membership.
