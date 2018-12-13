@@ -81,13 +81,15 @@ PgDb.connect().then(async pgdb => {
     LEFT JOIN
       "mailLog" ml
       ON ml."userId" = u.id AND
-         ml.type = '${MAILLOG_TYPE}' AND
-         ml."keys" && '{${MAILLOG_KEYS.join(',')}}'
+         ml.type = :MAILLOG_TYPE AND
+         ml."keys" && :MAILLOG_KEYS
     WHERE
-      u.id != :PARKING_USER_ID
+      u.id != :PARKING_USER_ID AND
       ml IS NULL
   `, {
-    PARKING_USER_ID
+    PARKING_USER_ID,
+    MAILLOG_TYPE,
+    MAILLOG_KEYS
   })
     .then(users => users
       .map(user => transformUser(user))
