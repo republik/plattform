@@ -50,6 +50,7 @@ const styles = {
   }),
   discussionReference: css({
     ...ellipsize,
+    color: colors.lightText,
     position: 'relative'
   }),
   icon: css({
