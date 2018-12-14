@@ -12,6 +12,7 @@ const Promise = require('bluebird')
 const crypto = require('crypto')
 const sleep = require('await-sleep')
 const fetch = require('isomorphic-unfetch')
+const moment = require('moment')
 const { transformUser, AccessToken } = require('@orbiting/backend-modules-auth')
 const {
   prolongBeforeDate: getProlongBeforeDate
@@ -87,6 +88,7 @@ PgDb.connect().then(async pgdb => {
     console.log(stats)
   }, STATS_INTERVAL_SECS * 1000)
 
+  const now = new Date()
   const prolongUsers = await Promise.filter(
     users,
     async (user) => {
@@ -96,7 +98,7 @@ PgDb.connect().then(async pgdb => {
         { pgdb, user: me }
       )
       stats.numProlongProgress += 1
-      if (prolongBeforeDate) {
+      if (prolongBeforeDate && moment(prolongBeforeDate).diff(now, 'days') < 365) {
         stats.numProlong += 1
         return true
       }
@@ -105,7 +107,7 @@ PgDb.connect().then(async pgdb => {
     { concurrency: 10 }
   )
   delete stats.numProlongProgress
-  console.log(`${users.length} users can prolong`)
+  console.log(`${prolongUsers.length} users can prolong`)
 
   console.log('building operations...')
   stats.numOperations = 0
