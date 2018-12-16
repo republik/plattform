@@ -208,5 +208,6 @@ const submitComment = async (comment, discussion, context) => {
 }
 
 module.exports = {
-  submitComment
+  submitComment,
+  getDiscussionUrl
 }
