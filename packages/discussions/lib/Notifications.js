@@ -109,6 +109,7 @@ const submitComment = async (comment, discussion, context) => {
 
     const discussionUrl = await getDiscussionUrl(discussion, context)
     const commentUrl = `${discussionUrl}${discussionUrl.indexOf('?') === -1 ? '?' : '&'}focus=${comment.id}`
+    const muteUrl = `${discussionUrl}${discussionUrl.indexOf('?') === -1 ? '?' : '&'}mute=1`
 
     const subjectParams = {
       authorName: displayAuthor.name,
@@ -181,7 +182,7 @@ const submitComment = async (comment, discussion, context) => {
               content: discussionUrl
             },
             { name: 'DISCUSSION_MUTE_URL',
-              content: `${discussionUrl}?mute=1`
+              content: muteUrl
             },
             { name: 'CONTENT',
               content: htmlContent
