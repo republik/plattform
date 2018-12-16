@@ -199,7 +199,7 @@ module.exports = {
         ON p."packageId" = pkg.id
       WHERE
         m."userId" = :userId AND
-        pkg.name != 'ABO_GIVE'
+        pkg.name NOT IN ('ABO_GIVE', 'ABO_GIVE_MONTHS')
     `, {
       userId: user.id
     })

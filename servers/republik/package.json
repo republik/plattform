@@ -37,7 +37,7 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION -w ../../packages -w express -w graphql -w lib -w modules -w .env -w package.json -w ../yarn.lock -w server.js -w index.js index.js",
-    "inspect": "NODE_ENV=development node --inspect index.js",
+    "inspect": "NODE_DEBUG_OPTION=--inspect yarn run dev",
     "start": "node index.js",
     "db:migrate:up": "node script/db-migrate-all.js up",
     "db:migrate:down": "node script/db-migrate-all.js down",

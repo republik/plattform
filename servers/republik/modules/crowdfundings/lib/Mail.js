@@ -257,6 +257,13 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
     })
 
     pledgeOptions
+      // Sort by packageOption.order in an ascending manner
+      .sort(
+        (a, b) =>
+          a.packageOption &&
+          b.packageOption &&
+          a.packageOption.order > b.packageOption.order ? 1 : 0
+      )
       // Sort by sequenceNumber in an ascending manner
       .sort(
         (a, b) =>
@@ -311,25 +318,37 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
                 pledgeOption.membership &&
                 pledgeOption.membership.userId !== pledge.userId
 
-              const olabel = isGiftedMembership
-                ? t('api/email/option/other/gifted_membership', {
-                  name: transformUser(pledgeOption.membership.user).name,
-                  sequenceNumber: pledgeOption.membership.sequenceNumber
-                })
-                : t([
-                  'api/email/option',
-                  rewardType.toLowerCase(),
-                  name.toLowerCase()
-                ].join('/'))
+              const labelFragmentInterval = t.pluralize(
+                `api/email/option/interval/${pledgeOption.packageOption.reward.interval}/periods`,
+                { count: pledgeOption.periods })
+
+              const labelDefault = t.pluralize(
+                `api/email/option/${rewardType.toLowerCase()}/${name.toLowerCase()}`,
+                { count: pledgeOption.amount, interval: labelFragmentInterval }
+              )
+
+              const labelGiftedMembership = t(
+                'api/email/option/other/gifted_membership',
+                {
+                  name: pledgeOption.membership &&
+                    transformUser(pledgeOption.membership.user).name,
+                  sequenceNumber: pledgeOption.membership &&
+                    pledgeOption.membership.sequenceNumber
+                }
+              )
 
               const oprice =
-                pledgeOption.price / 100
+                (pledgeOption.price * (pledgeOption.periods || 1)) / 100
               const ototal =
-                (pledgeOption.amount * pledgeOption.price) / 100
+                oprice * pledgeOption.amount
 
               return {
                 oamount: pledgeOption.amount,
-                olabel,
+                otype: rewardType,
+                oname: name,
+                olabel: !isGiftedMembership
+                  ? labelDefault
+                  : labelGiftedMembership,
                 oprice,
                 oprice_formatted: formatPriceChf(oprice),
                 ototal,
@@ -387,18 +406,25 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
             .trim()
         },
         { name: 'abo_for_me',
-          content:
-            pkg.name !== 'DONATE' &&
-            pkg.name !== 'ABO_GIVE' &&
-            pkg.name !== 'PROLONG'
+          content: ['ABO', 'BENEFACTOR'].includes(pkg.name)
         },
         { name: 'voucher_codes',
-          content: pkg.name === 'ABO_GIVE'
+          content: ['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(pkg.name)
             ? memberships.map(m => m.voucherCode).join(', ')
             : null
         },
         { name: 'notebook_or_totebag',
           content: !!notebook || !!totebag
+        },
+        { name: 'goodies_count',
+          content: pledgeOptions
+            // Filter "pseudo" pledge options without a reward
+            .filter(
+              pledgeOption =>
+                pledgeOption.packageOption.reward &&
+                pledgeOption.packageOption.reward.rewardType === 'Goodie'
+            )
+            .reduce((agg, pledgeOption) => agg + pledgeOption.amount, 0)
         },
         { name: 'address',
           content: address
@@ -424,8 +450,8 @@ ${address.country}</span>`
   })
 }
 
-mail.sendMembershipCancellation = async ({ email, name, endDate, t, pgdb }) => {
-  return mail.sendMailTemplate({
+mail.sendMembershipCancellation = async ({ email, name, endDate, membershipType, t, pgdb }) => {
+  return sendMailTemplate({
     to: email,
     subject: t('api/email/membership_cancel_notice/subject'),
     templateName: 'membership_cancel_notice',
@@ -436,6 +462,9 @@ mail.sendMembershipCancellation = async ({ email, name, endDate, t, pgdb }) => {
       },
       { name: 'end_date',
         content: dateFormat(endDate)
+      },
+      { name: 'membership_type',
+        content: membershipType.name
       }
     ]
   }, { pgdb })

@@ -7,41 +7,58 @@
  *
  * Usage: (run from servers/republik)
  * node ../../packages/mail/script/importMailLog.js TYPE KEYS [--dry]
- * example:
+ * examples:
  * node ../../packages/mail/script/importMailLog.js 'membership_giver_prolong_notice' '["lastEndDate:20190115"]' [--dry]
+ * ./script/prolong/paperInvoice.js --printIds | ../../packages/mail/script/importMailLog.js 'membership_owner_prolong_notice' '["endDate:20190114", "endDate:20190115"]' --dry
  */
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const fetch = require('isomorphic-unfetch')
 const uniq = require('lodash/uniq')
 const Promise = require('bluebird')
+const rw = require('rw')
+const isUUID = require('is-uuid')
 
 const {
   MAILLOG_IMPORT_DOWNLOAD_URL
 } = process.env
 
-console.log('running importMailLog.js...')
+const dry = process.argv[4] === '--dry'
+
+console.log('running importMailLog.js...', { dry })
 PgDb.connect().then(async pgdb => {
   const now = new Date()
   const type = process.argv[2]
   const keys = JSON.parse(process.argv[3])
-  const dry = process.argv[4] === '--dry'
   if (!type || !keys) {
     throw new Error('missing input', { type, keys })
   }
-  if (!MAILLOG_IMPORT_DOWNLOAD_URL) {
-    throw new Error('missing MAILLOG_IMPORT_DOWNLOAD_URL')
+
+  let input
+  if (MAILLOG_IMPORT_DOWNLOAD_URL) {
+    console.log('downloading ', MAILLOG_IMPORT_DOWNLOAD_URL)
+    input = await fetch(MAILLOG_IMPORT_DOWNLOAD_URL, { method: 'GET' })
+      .then(r => r.text())
+    console.log(`downloaded`)
+  } else {
+    console.log('reading stdin')
+    input = rw.readFileSync('/dev/stdin', 'utf8')
   }
-  console.log('starting', { type, keys, dry, MAILLOG_IMPORT_DOWNLOAD_URL, now })
+  if (!input || !input.length) {
+    throw new Error('You need to provide input on stdin or via MAILLOG_IMPORT_DOWNLOAD_URL')
+  }
+  input = uniq(input.split('\n').filter(Boolean))
+  console.log('starting', { type, keys, dry, now })
 
-  console.log('downloading MAILLOG_IMPORT_DOWNLOAD_URL...')
-  const emails = await fetch(MAILLOG_IMPORT_DOWNLOAD_URL, { method: 'GET' })
-    .then(r => r.text())
-    .then(r => uniq(r.split('\n')))
-  console.log(`downloaded ${emails.length} emails`)
+  const ids = input.filter(line => isUUID.v4(line))
+  const emails = input.filter(line => !isUUID.v4(line))
+  console.log(`${ids.length} ids, ${emails.length} emails`)
 
-  const users = await pgdb.public.users.find({ email: emails })
-  console.log(`found ${users.length} users to these emails`)
+  const users = [
+    ...ids.length ? await pgdb.public.users.find({ id: ids }) : [],
+    ...emails.length ? await pgdb.public.users.find({ email: emails }) : []
+  ]
+  console.log(`found ${users.length} users`)
 
   if (dry) {
     console.log('dry: skipping insert')

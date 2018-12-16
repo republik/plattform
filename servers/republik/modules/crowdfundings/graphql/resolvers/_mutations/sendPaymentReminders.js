@@ -24,7 +24,8 @@ module.exports = async (_, args, context) => {
         SELECT
           u.email,
           pay.total,
-          pay.hrid
+          pay.hrid,
+          c.name AS "companyName"
         FROM
           payments pay
         JOIN
@@ -33,6 +34,12 @@ module.exports = async (_, args, context) => {
         JOIN
           pledges p
           ON pp."pledgeId"=p.id
+        JOIN
+          packages pkgs
+          ON p."packageId"=pkgs.id
+        JOIN
+          companies c
+          ON pkgs."companyId"=c.id
         JOIN
           users u
           ON p."userId"=u.id
@@ -60,6 +67,9 @@ module.exports = async (_, args, context) => {
           },
           { name: 'HRID',
             content: payment.hrid
+          },
+          { name: 'COMPANY_NAME',
+            content: payment.companyName
           }
         ]
       }, context)

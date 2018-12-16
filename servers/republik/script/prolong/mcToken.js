@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 /**
- * This script adds to mailchimp members:
- * - a CP_ATOKEN2 if they need to prolong before 2019-01-16
+ * This script adds a CP_ATOKEN to mailchimp members to all that can prolong
  *
- *
- * Usage: (run from servers/republik)
- * node script/prolong/updateMailchimp.js [--dry]
+ * Usage:
+ * cd servers/republik
+ * script/prolong/mcToken.js --dry
  */
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
@@ -14,7 +13,6 @@ const crypto = require('crypto')
 const sleep = require('await-sleep')
 const fetch = require('isomorphic-unfetch')
 const moment = require('moment')
-const uniqBy = require('lodash/uniqBy')
 const { transformUser, AccessToken } = require('@orbiting/backend-modules-auth')
 const {
   prolongBeforeDate: getProlongBeforeDate
@@ -32,8 +30,7 @@ if (!MAILCHIMP_MAIN_LIST_ID) {
 }
 
 const STATS_INTERVAL_SECS = 2
-const PROLONG_BEFORE_DATE = moment('2019-01-16')
-const TOKEN_FIELD = 'CP_ATOKEN2'
+const TOKEN_FIELD = 'CP_ATOKEN'
 
 const me = {
   roles: ['admin']
@@ -59,13 +56,11 @@ const fetchAuthenticated = (method, url, request = {}) => {
     .then(r => r.json())
 }
 
-console.log('running updateMailchimp.js...')
-PgDb.connect().then(async pgdb => {
-  const dry = process.argv[2] === '--dry'
-  if (dry) {
-    console.log("dry run: this won't change anything")
-  }
+const dry = process.argv[2] === '--dry'
 
+console.log('preparing tokens...', { dry })
+
+PgDb.connect().then(async pgdb => {
   // load users with a membership
   const users = await pgdb.query(`
     SELECT
@@ -86,89 +81,36 @@ PgDb.connect().then(async pgdb => {
   console.log(`investigating ${users.length} users`)
 
   const stats = {
-    numNeedProlong: 0,
-    numNeedProlongProgress: 0,
-    numOperations: 0
+    numProlong: 0,
+    numProlongProgress: 0
   }
   const statsInterval = setInterval(() => {
     console.log(stats)
   }, STATS_INTERVAL_SECS * 1000)
 
-  const inNeedForProlongUsers = await Promise.filter(
+  const now = new Date()
+  const prolongUsers = await Promise.filter(
     users,
     async (user) => {
       const prolongBeforeDate = await getProlongBeforeDate(
         user,
-        { ignoreClaimedMemberships: true },
+        {},
         { pgdb, user: me }
       )
-      stats.numNeedProlongProgress += 1
-      if (prolongBeforeDate && moment(prolongBeforeDate).isBefore(PROLONG_BEFORE_DATE)) {
-        stats.numNeedProlong += 1
+      stats.numProlongProgress += 1
+      if (prolongBeforeDate && moment(prolongBeforeDate).diff(now, 'days') < 365) {
+        stats.numProlong += 1
         return true
       }
       return false
     },
-    {concurrency: 10}
+    { concurrency: 10 }
   )
-  delete stats.numNeedProlongProgress
-
-  // users who gifted a membership, which is active,
-  // renewing and needs prolong before PROLONG_BEFORE_DATE
-  const canProlongUsers = await pgdb.query(`
-    WITH givers AS (
-      SELECT
-        u.id AS "userId",
-        m.id AS "membershipId",
-        max(mp."endDate") AS "maxEndDate"
-      FROM
-        users u
-      JOIN
-        pledges p
-        ON p."userId" = u.id
-      JOIN
-        memberships m
-        ON
-          m."pledgeId" = p.id AND
-          m."userId" != u.id AND
-          m."active" = true AND
-          m."renew" = true
-      JOIN
-        "membershipPeriods" mp
-        ON
-          m.id = mp."membershipId"
-      WHERE
-        u.id != :PARKING_USER_ID
-      GROUP BY
-        1, 2
-      ORDER BY
-       1, 3
-    )
-      SELECT
-        u.*
-      FROM
-        givers
-      JOIN
-        users u
-        ON givers."userId" = u.id
-      WHERE
-        "maxEndDate" < :PROLONG_BEFORE_DATE
-  `, {
-    PARKING_USER_ID,
-    PROLONG_BEFORE_DATE
-  })
-  stats.numCanProlongUsers = canProlongUsers.length
-
-  const prolongUsers = uniqBy(
-    [
-      ...inNeedForProlongUsers,
-      ...canProlongUsers
-    ],
-    u => u.id
-  )
-  stats.numProlongUsers = prolongUsers.length
+  delete stats.numProlongProgress
+  console.log(`${prolongUsers.length} users can prolong`)
 
   console.log('building operations...')
+  stats.numOperations = 0
   const operations = await Promise.map(
     prolongUsers,
     async (user) => {
@@ -188,9 +130,8 @@ PgDb.connect().then(async pgdb => {
         })
       }
     },
-    {concurrency: 10}
+    { concurrency: 10 }
   )
-  // console.log(operations)
 
   console.log(stats)
   clearInterval(statsInterval)
@@ -216,9 +157,10 @@ PgDb.connect().then(async pgdb => {
       lastStatus = newStatus
       await sleep(1000)
     } while (!statusResult || statusResult.status !== 'finished')
+    console.log('finished!')
+  } else {
+    console.log('dry exit')
   }
-
-  console.log('finished!')
 }).then(() => {
   process.exit()
 }).catch(e => {
