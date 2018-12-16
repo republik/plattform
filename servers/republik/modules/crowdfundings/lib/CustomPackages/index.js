@@ -13,6 +13,7 @@ const EXTENDABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR']
 // Which options require you to own a membership?
 const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO']
 
+// for a user to prolong
 const findEligableMemberships = ({ memberships, user, ignoreClaimedMemberships = false }) =>
   memberships.filter(m => {
     const isCurrentClaimer = m.userId === user.id
@@ -49,13 +50,20 @@ const findEligableMemberships = ({ memberships, user, ignoreClaimedMemberships =
 
 // Checks if user has at least one active and one inactive membership,
 // considering latter as "dormant"
-const hasDormantMembership = ({ package_, membership }) => {
-  const { user } = package_
-  const { memberships } = user
+const hasDormantMembership = ({ user, memberships }) => {
+  const activeMembership = memberships
+    .filter(m =>
+      m.userId === user.id &&
+      m.active === true
+    )
 
   const inactiveMemberships =
     findEligableMemberships({ memberships, user })
-      .filter(m => m.active === false)
+      .filter(m =>
+        m.userId === user.id &&
+        m.active === false &&
+        (m.priods && m.periods.length === 0)
+      )
 
   inactiveMemberships.forEach(m => {
     debug('hasDormantMembership.eligableMembership', {
@@ -65,11 +73,7 @@ const hasDormantMembership = ({ package_, membership }) => {
     })
   })
 
-  const hasInactiveMembership = !!inactiveMemberships.length > 0
-
-  return membership.active === true &&
-    membership.userId === user.id &&
-    hasInactiveMembership
+  return activeMembership && !!inactiveMemberships.length > 0
 }
 
 const evaluate = async ({
@@ -195,7 +199,15 @@ const getCustomOptions = async (package_) => {
 
   await Promise.map(package_.user.memberships, membership => {
     return Promise.map(packageOptions, async packageOption => {
-      if (hasDormantMembership({ package_, membership })) {
+      const { user } = package_
+      if (
+        membership.active &&
+        membership.userId === user.id &&
+        hasDormantMembership({
+          user,
+          memberships: user.memberships
+        })
+      ) {
         debug('user has one or more dormant memberships')
         return false
       }
@@ -384,6 +396,13 @@ const resolveMemberships = async ({ memberships, pgdb }) => {
       })
       : []
 
+  const membershipPeriods =
+    memberships.length > 0
+      ? await pgdb.public.membershipPeriods.find({
+        membershipId: memberships.map(membership => membership.id)
+      })
+      : []
+
   membershipPledges.forEach((pledge, index, pledges) => {
     pledges[index].package = membershipPledgePackages.find(package_ => package_.id === pledge.packageId)
   })
@@ -397,6 +416,11 @@ const resolveMemberships = async ({ memberships, pgdb }) => {
       membershipPledges.find(
         membershipPledge => membershipPledge.id === membership.pledgeId
       )
+
+    memberships[index].periods =
+      membershipPeriods.filter(
+        period => period.membershipId === membership.id
+      )
   })
 
   return memberships
@@ -404,6 +428,7 @@ const resolveMemberships = async ({ memberships, pgdb }) => {
 
 module.exports = {
   findEligableMemberships,
+  hasDormantMembership,
   evaluate,
   resolvePackages,
   resolveMemberships,

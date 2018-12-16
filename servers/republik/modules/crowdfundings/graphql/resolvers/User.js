@@ -6,6 +6,7 @@ const Promise = require('bluebird')
 
 const {
   findEligableMemberships,
+  hasDormantMembership,
   resolvePackages,
   resolveMemberships,
   getCustomOptions
@@ -128,9 +129,8 @@ module.exports = {
         ignoreClaimedMemberships
       })
 
-      if (eligableMemberships.filter(m => !m.active).length > 0) {
+      if (hasDormantMembership({ user, memberships: eligableMemberships })) {
         debug('found dormant membership, return prolongBeforeDate: null')
-
         return null
       }
 
@@ -140,18 +140,19 @@ module.exports = {
         return null
       }
 
-      if (memberships.filter(m => m.active && m.renew).length === 0) {
-        debug('has active but cancelled membership, return prolongBeforeDate: null')
+      const allMembershipPeriods = memberships
+        .filter(m => m.active && m.renew)
+        .reduce(
+          (acc, cur) => acc.concat(cur.periods),
+          []
+        )
+        .filter(Boolean)
 
+      if (allMembershipPeriods.length === 0) {
+        debug('has active but cancelled membership, return prolongBeforeDate: null')
         return null
       }
-
-      const membershipPeriods =
-        await pgdb.public.membershipPeriods.find({
-          membershipId: memberships.map(membership => membership.id)
-        })
-
-      return getPeriodEndingLast(membershipPeriods).endDate
+      return getPeriodEndingLast(allMembershipPeriods).endDate
     })
   },
   async pledges (user, args, {pgdb, user: me}) {
