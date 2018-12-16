@@ -15,6 +15,9 @@ const DAYS_BEFORE_END_DATE = 45
 const MAX_DAYS_BEFORE_END_DATE = 33
 const EXCLUDE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
 
+const formatDate = (date) =>
+  moment(date).format('YYYYMMDD')
+
 const getUsers = async ({ now }, { pgdb }) => {
   const minEndDate = moment(now)
     .add(MAX_DAYS_BEFORE_END_DATE, 'days')
@@ -95,9 +98,6 @@ const getUsers = async ({ now }, { pgdb }) => {
   debug('found %d users', users.length)
   return users
 }
-
-const formatDate = (date) =>
-  moment(date).format('YYYYMMDD')
 
 const inform = async (args, context) => {
   const users = await getUsers(args, context)
