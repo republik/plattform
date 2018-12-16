@@ -140,7 +140,7 @@ module.exports = {
         return null
       }
 
-      const allMembershipPeriods = memberships
+      const allMembershipPeriods = eligableMemberships
         .filter(m => m.active && m.renew)
         .reduce(
           (acc, cur) => acc.concat(cur.periods),
