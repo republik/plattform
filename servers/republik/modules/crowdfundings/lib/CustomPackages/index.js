@@ -62,7 +62,7 @@ const hasDormantMembership = ({ user, memberships }) => {
       .filter(m =>
         m.userId === user.id &&
         m.active === false &&
-        (m.priods && m.periods.length === 0)
+        (m.periods && m.periods.length === 0)
       )
 
   inactiveMemberships.forEach(m => {
