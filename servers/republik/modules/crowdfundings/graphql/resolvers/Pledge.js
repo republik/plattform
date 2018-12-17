@@ -20,28 +20,35 @@ module.exports = {
         id: pledgeOptions.map(pledgeOption => pledgeOption.templateId)
       })
 
-    return pledgeOptions.map(pledgeOption => {
-      const packageOption = packageOptions.find(
-        packageOption => pledgeOption.templateId === packageOption.id
-      )
+    return pledgeOptions
+      .map(pledgeOption => {
+        const packageOption = packageOptions.find(
+          packageOption => pledgeOption.templateId === packageOption.id
+        )
 
-      // A (virtual) ID for pledgeOption, consisting pledgeId, templateID and
-      // membershipId.
-      const id = [
-        pledgeOption.pledgeId,
-        pledgeOption.templateId,
-        pledgeOption.membershipId
-      ].filter(Boolean).join('-')
+        // A (virtual) ID for pledgeOption, consisting pledgeId, templateID and
+        // membershipId.
+        const id = [
+          pledgeOption.pledgeId,
+          pledgeOption.templateId,
+          pledgeOption.membershipId
+        ].filter(Boolean).join('-')
 
-      // Shallow packageOption object copy, superimpose pledgeOption, then
-      // overwrite with (virtual) ID
-      return Object.assign(
-        {},
-        packageOption,
-        pledgeOption,
-        { id }
+        // Shallow packageOption object copy, superimpose pledgeOption, then
+        // overwrite with (virtual) ID
+        return Object.assign(
+          {},
+          packageOption,
+          pledgeOption,
+          { id }
+        )
+      })
+      .sort(
+        (a, b) =>
+          a.order &&
+          b.order &&
+          a.order > b.order ? 1 : 0
       )
-    })
   },
   async package (pledge, args, {pgdb}) {
     return pgdb.public.packages.findOne({id: pledge.packageId})

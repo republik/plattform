@@ -4,9 +4,11 @@ const { evaluate, resolvePackages } = require('./CustomPackages')
 const createCache = require('./cache')
 const cancelMembership = require('../graphql/resolvers/_mutations/cancelMembership')
 const debug = require('debug')('crowdfundings:memberships')
-const { enforceSubscriptions, sendMembershipProlongNotice } = require('./Mail')
+const { enforceSubscriptions, sendMembershipProlongConfirmation } = require('./Mail')
 const Promise = require('bluebird')
 const omit = require('lodash/omit')
+
+const MONTHLY_ABO_UPGRADE_PKGS = ['ABO', 'BENEFACTOR']
 
 module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
   const pledge = await pgdb.public.pledges.findOne({id: pledgeId})
@@ -62,7 +64,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
   const memberships = []
   let cancelableMemberships = []
   let membershipPeriod
-  const now = new Date()
+  const now = moment()
 
   await Promise.map(pledgeOptions, async (plo) => {
     if (plo.packageOption.reward.type === 'MembershipType') {
@@ -89,7 +91,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
         const { additionalPeriods } =
           await evaluate({
             package_: resolvedPackage,
-            packageOption: plo.packageOption,
+            packageOption: { ...plo.packageOption, membershipType },
             membership,
             lenient: true
           })
@@ -123,8 +125,8 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
         debug('additionalPeriods %o', additionalPeriods)
 
         if (membership.userId !== pledge.userId) {
-          await sendMembershipProlongNotice({
-            pledger: user, membership, additionalPeriods, t
+          await sendMembershipProlongConfirmation({
+            pledger: user, membership, additionalPeriods, t, pgdb
           })
         }
       } else {
@@ -138,6 +140,8 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
             active: false,
             renew: false,
             autoPay: plo.autoPay || false,
+            initialInterval: membershipType.interval,
+            initialPeriods: plo.periods,
             createdAt: now,
             updatedAt: now
           }
@@ -151,13 +155,16 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
             membershipPeriod = {
               pledgeOptionId: plo.id,
               beginDate: now,
-              endDate: moment(now).add(membershipType.intervalCount, membershipType.interval),
+              endDate: now.clone().add(
+                membership.initialPeriods,
+                membership.initialInterval
+              ),
               membership
             }
           } else {
             // Cancel active memberships because bought package (option) contains
             // a better abo.
-            if (['ABO', 'BENEFACTOR_ABO'].includes(membershipType.name)) {
+            if (MONTHLY_ABO_UPGRADE_PKGS.includes(pkg.name)) {
               cancelableMemberships =
                 activeMemberships
                   .filter(m => (m.name === 'MONTHLY_ABO' && m.renew === true))

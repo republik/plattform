@@ -1,5 +1,5 @@
 {
-  "updated": "2018-11-26T16:44:56.756Z",
+  "updated": "2018-12-16T18:03:18.537Z",
   "title": "live",
   "data": [
     {
@@ -287,6 +287,10 @@
       "value": "Verschenken \"Abo und Mitgliedschaft für ein Jahr\""
     },
     {
+      "key": "api/payment/invoice/item/package/ABO_GIVE_MONTHS",
+      "value": "Verschenken \"Monats-Abo als Geschenk\""
+    },
+    {
       "key": "api/payment/invoice/item/package/DONATE",
       "value": "Spende"
     },
@@ -316,11 +320,15 @@
     },
     {
       "key": "api/email/pledge_abo_give/subject",
-      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
+      "value": "Ihre Bestellung: Jahres-Abo und Mitgliedschaft als Geschenk"
+    },
+    {
+      "key": "api/email/pledge_abo_give_months/subject",
+      "value": "Ihre Bestellung: Monats-Abo als Geschenk"
     },
     {
       "key": "api/email/pledge_monthly_abo/subject",
-      "value": "Ihr Republik-Abo: Willkommen bei der Republik!"
+      "value": "Ihr Republik Monats-Abo: Willkommen bei der Republik"
     },
     {
       "key": "api/email/pledge_donate/subject",
@@ -339,24 +347,84 @@
       "value": "Notizbuch"
     },
     {
-      "key": "api/email/option/goodie/totebag",
+      "key": "api/email/option/goodie/notebook/other",
+      "value": "Notizbücher"
+    },
+    {
+      "key": "api/email/option/goodie/totebag/1",
       "value": "Tasche"
     },
     {
-      "key": "api/email/option/membershiptype/abo",
+      "key": "api/email/option/goodie/totebag/other",
+      "value": "Taschen"
+    },
+    {
+      "key": "api/email/option/membershiptype/abo/1",
       "value": "Abo und Mitgliedschaft"
     },
     {
-      "key": "api/email/option/membershiptype/benefactor_abo",
+      "key": "api/email/option/membershiptype/abo/other",
+      "value": "Abo und Mitgliedschaften"
+    },
+    {
+      "key": "api/email/option/membershiptype/benefactor_abo/1",
       "value": "Gönner-Mitgliedschaft"
     },
     {
-      "key": "api/email/option/membershiptype/monthly_abo",
-      "value": "Monatsabonnement"
+      "key": "api/email/option/membershiptype/benefactor_abo/other",
+      "value": "Gönner-Mitgliedschaften"
+    },
+    {
+      "key": "api/email/option/membershiptype/monthly_abo/1",
+      "value": "Monats-Abo"
+    },
+    {
+      "key": "api/email/option/membershiptype/monthly_abo/1",
+      "value": "Monats-Abos"
+    },
+    {
+      "key": "api/email/option/membershiptype/abo_give_months/1",
+      "value": "Monats-Abo als Geschenk für {interval}"
+    },
+    {
+      "key": "api/email/option/membershiptype/abo_give_months/other",
+      "value": "Monats-Abos als Geschenk für {interval}"
     },
     {
       "key": "api/email/option/other/gifted_membership",
       "value": "Mitgliedschaft für {name} (#{sequenceNumber})"
+    },
+    {
+      "key": "api/email/option/interval/year/periods/1",
+      "value": "ein Jahr"
+    },
+    {
+      "key": "api/email/option/interval/year/periods/other",
+      "value": "{count} Jahre"
+    },
+    {
+      "key": "api/email/option/interval/month/periods/1",
+      "value": "einen Monat"
+    },
+    {
+      "key": "api/email/option/interval/month/periods/other",
+      "value": "{count} Monate"
+    },
+    {
+      "key": "api/email/option/interval/week/periods/1",
+      "value": "eine Woche"
+    },
+    {
+      "key": "api/email/option/interval/week/count/other",
+      "value": "{count} Wochen"
+    },
+    {
+      "key": "api/email/option/interval/day/periods/1",
+      "value": "einen Tag"
+    },
+    {
+      "key": "api/email/option/interval/day/periods/other",
+      "value": "{count} Tage"
     },
     {
       "key": "api/membership/cancel/category/EDITORIAL",
@@ -385,6 +453,26 @@
     {
       "key": "api/email/membership_cancel_notice/subject",
       "value": "Bestätigung Ihrer Kündigung"
+    },
+    {
+      "key": "api/email/membership_giver_prolong_notice/subject",
+      "value": "Ihre verschenkten Abonnements"
+    },
+    {
+      "key": "api/email/membership_winback/subject",
+      "value": "Ihre Kündigung"
+    },
+    {
+      "key": "api/email/membership_winback/fromEmail",
+      "value": "kontakt@republik.ch"
+    },
+    {
+      "key": "api/email/membership_winback/fromName",
+      "value": "Philipp von Essen"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_notice/subject",
+      "value": "Am {endDate} erneuert sich Ihre Mitgliedschaft"
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "updated": "2018-12-03T13:46:43.734Z",
+  "updated": "2018-12-12T16:20:16.877Z",
   "title": "live",
   "data": [
     {
@@ -105,6 +105,18 @@
     {
       "key": "api/comment/notification/answer/app/subject",
       "value": "Neue Antwort in «{discussionName}»"
+    },
+    {
+      "key": "api/comment/tagRequired",
+      "value": "Bitte wählen Sie eine Kategorie aus."
+    },
+    {
+      "key": "api/comment/invalidTags",
+      "value": "Die folgenden Tags stehen in dieser Diskussion nicht zur Verfügung: {invalidTags}"
+    },
+    {
+      "key": "api/discussion/tagRequiredButNoTags",
+      "value": "Sie müssen mind. einen Tag angeben, damit tagRequired valid ist."
     },
     {
       "key": "api/greeting",

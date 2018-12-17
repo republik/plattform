@@ -51,13 +51,25 @@ type CrowdfundingStatus {
   memberships: Int!
 }
 
+type Company {
+  id: ID!
+  name: String!
+}
+
 type Package {
   id: ID!
   name: String!
+  company: Company!
+  group: PackageGroup!
   options: [PackageOption!]!
   paymentMethods: [PaymentMethod!]!
   createdAt: DateTime!
   updatedAt: DateTime!
+}
+
+enum PackageGroup {
+  ME
+  GIVE
 }
 
 type PackageOption {
@@ -65,18 +77,22 @@ type PackageOption {
   templateId: ID! # package option ID
   package: Package!
   reward: Reward
+
   minAmount: Int!
   maxAmount: Int
   defaultAmount: Int!
+
   price: Int!
   vat: Int!
   minUserPrice: Int!
   userPrice: Boolean!
+
   createdAt: DateTime!
   updatedAt: DateTime!
 
-  # for pledgeOptions
+  # returned on pledges.options
   amount: Int
+  periods: Int
 
   # for custom packages
   optionGroup: String
@@ -89,6 +105,8 @@ input PackageOptionInput {
   amount: Int!
   price: Int!
   templateId: ID! # packageOption.id
+
+  periods: Int
 
   # via custom packages
   membershipId: ID
@@ -105,14 +123,18 @@ type Goodie {
 enum MembershipTypeInterval {
   year
   month
+  week
   day
 }
 
 type MembershipType {
   id: ID!
   name: String!
-  interval: MembershipTypeInterval
-  intervalCount: Int!
+  interval: MembershipTypeInterval!
+  minPeriods: Int!
+  maxPeriods: Int!
+  defaultPeriods: Int!
+
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -129,6 +151,8 @@ type Membership {
   active: Boolean!
   renew: Boolean!
   autoPay: Boolean!
+  initialInterval: MembershipTypeInterval!
+  initialPeriods: Int!
   periods: [MembershipPeriod]!
   overdue: Boolean!
   cancellations: [Cancellation!]!

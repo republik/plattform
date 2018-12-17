@@ -7,12 +7,13 @@ const { getPeriodEndingLast, getLastEndDate } = require('../utils')
 const rules = require('./rules')
 
 // Put that one into database.
-const EXTENDABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
+const EXTENDABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO', 'ABO_GIVE_MONTHS']
 const EXTENDABLE_PACKAGE_NAMES = ['ABO', 'BENEFACTOR']
 
 // Which options require you to own a membership?
 const OPTIONS_REQUIRE_CLAIMER = ['BENEFACTOR_ABO']
 
+// for a user to prolong
 const findEligableMemberships = ({ memberships, user, ignoreClaimedMemberships = false }) =>
   memberships.filter(m => {
     const isCurrentClaimer = m.userId === user.id
@@ -27,7 +28,7 @@ const findEligableMemberships = ({ memberships, user, ignoreClaimedMemberships =
     // Self-claimed ABO_GIVE
     const isSelfClaimed =
       m.pledge.userId === m.userId &&
-      m.pledge.package.name === 'ABO_GIVE' &&
+      ['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(m.pledge.package.name) &&
       m.active
 
     debug({
@@ -49,13 +50,20 @@ const findEligableMemberships = ({ memberships, user, ignoreClaimedMemberships =
 
 // Checks if user has at least one active and one inactive membership,
 // considering latter as "dormant"
-const hasDormantMembership = ({ package_, membership }) => {
-  const { user } = package_
-  const { memberships } = user
+const hasDormantMembership = ({ user, memberships }) => {
+  const activeMembership = memberships
+    .filter(m =>
+      m.userId === user.id &&
+      m.active === true
+    )
 
   const inactiveMemberships =
     findEligableMemberships({ memberships, user })
-      .filter(m => m.active === false)
+      .filter(m =>
+        m.userId === user.id &&
+        m.active === false &&
+        (m.periods && m.periods.length === 0)
+      )
 
   inactiveMemberships.forEach(m => {
     debug('hasDormantMembership.eligableMembership', {
@@ -65,11 +73,7 @@ const hasDormantMembership = ({ package_, membership }) => {
     })
   })
 
-  const hasInactiveMembership = !!inactiveMemberships.length > 0
-
-  return membership.active === true &&
-    membership.userId === user.id &&
-    hasInactiveMembership
+  return activeMembership && !!inactiveMemberships.length > 0
 }
 
 const evaluate = async ({
@@ -80,7 +84,7 @@ const evaluate = async ({
 }) => {
   debug('evaluate')
 
-  const { reward } = packageOption
+  const { reward, membershipType: packageOptionMembershipType } = packageOption
   const { membershipType, membershipPeriods } = membership
   const now = moment()
 
@@ -122,21 +126,13 @@ const evaluate = async ({
     return false
   }
 
-  const lastPeriod = getPeriodEndingLast(membershipPeriods)
+  let lastEndDate = getPeriodEndingLast(membershipPeriods).endDate
 
-  // Has no membershipPeriod with beginDate in future
-  // Only memberships with current or past membershipPeriods can be extended.
-  if (!lenient && lastPeriod.beginDate > now) {
-    debug('membership has a membershipPeriod in future')
+  // A membership can be renewed 364 days before it ends at the most
+  if (!lenient && moment(lastEndDate).isAfter(now.clone().add(364, 'days'))) {
+    debug('membership lasts more than 364 days', lastEndDate)
     return false
   }
-
-  if (!lenient && lastPeriod.beginDate > now.clone().subtract(24, 'hours')) {
-    debug('membership period began not 24 hours ago', lastPeriod.beginDate)
-    return false
-  }
-
-  let lastEndDate = lastPeriod.endDate
 
   // If endDate is in past, pushed to now.
   // This indicates that we're dealing with an expired membership.
@@ -149,8 +145,9 @@ const evaluate = async ({
 
   const beginEnd = {
     beginDate: lastEndDate,
-    endDate: moment(lastEndDate)
-      .add(membershipType.intervalCount, membershipType.interval)
+    endDate: moment(lastEndDate).add(
+      packageOptionMembershipType.defaultPeriods, packageOptionMembershipType.interval
+    )
   }
 
   payload.additionalPeriods.push({
@@ -170,14 +167,22 @@ const evaluate = async ({
   })
 
   if (reward.type === 'MembershipType') {
-    if (membership.userId === package_.user.id) {
-      // If options is to extend membership, set defaultAmount to 1 if reward of
-      // current packageOption evaluated is same as in evaluated membership.
-      payload.defaultAmount =
-        packageOption.rewardId === membershipType.rewardId ? 1 : 0
+    // If membership stems from ABO_GIVE_MONTHS package, default ABO option
+    if (membership.pledge.package.name === 'ABO_GIVE_MONTHS') {
+      if (packageOption.membershipType.name === 'ABO') {
+        payload.defaultAmount = 1
+      }
     } else {
-      // If user does not own membership, set userPrice to false
-      payload.userPrice = false
+      if (membership.userId === package_.user.id) {
+        // If options is to extend membership, set defaultAmount to 1 if reward
+        // of current packageOption evaluated is same as in evaluated
+        // membership.
+        payload.defaultAmount =
+          packageOption.rewardId === membershipType.rewardId ? 1 : 0
+      } else {
+        // If user does not own membership, set userPrice to false
+        payload.userPrice = false
+      }
     }
   }
 
@@ -194,7 +199,15 @@ const getCustomOptions = async (package_) => {
 
   await Promise.map(package_.user.memberships, membership => {
     return Promise.map(packageOptions, async packageOption => {
-      if (hasDormantMembership({ package_, membership })) {
+      const { user } = package_
+      if (
+        membership.active &&
+        membership.userId === user.id &&
+        hasDormantMembership({
+          user,
+          memberships: user.memberships
+        })
+      ) {
         debug('user has one or more dormant memberships')
         return false
       }
@@ -238,6 +251,9 @@ const getCustomOptions = async (package_) => {
     }
     packageOptions[] {
       reward
+        reward
+        membershipType
+        goodie
       membershipType
     }
   }
@@ -380,6 +396,13 @@ const resolveMemberships = async ({ memberships, pgdb }) => {
       })
       : []
 
+  const membershipPeriods =
+    memberships.length > 0
+      ? await pgdb.public.membershipPeriods.find({
+        membershipId: memberships.map(membership => membership.id)
+      })
+      : []
+
   membershipPledges.forEach((pledge, index, pledges) => {
     pledges[index].package = membershipPledgePackages.find(package_ => package_.id === pledge.packageId)
   })
@@ -393,6 +416,11 @@ const resolveMemberships = async ({ memberships, pgdb }) => {
       membershipPledges.find(
         membershipPledge => membershipPledge.id === membership.pledgeId
       )
+
+    memberships[index].periods =
+      membershipPeriods.filter(
+        period => period.membershipId === membership.id
+      )
   })
 
   return memberships
@@ -400,6 +428,7 @@ const resolveMemberships = async ({ memberships, pgdb }) => {
 
 module.exports = {
   findEligableMemberships,
+  hasDormantMembership,
   evaluate,
   resolvePackages,
   resolveMemberships,

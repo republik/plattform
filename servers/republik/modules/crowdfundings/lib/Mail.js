@@ -1,8 +1,8 @@
 const debug = require('debug')('crowdfundings:lib:Mail')
 
-const { createMail } = require('@orbiting/backend-modules-mail')
+const { createMail, sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { grants } = require('@orbiting/backend-modules-access')
-const { transformUser } = require('@orbiting/backend-modules-auth')
+const { transformUser, AccessToken } = require('@orbiting/backend-modules-auth')
 const { timeFormat, formatPriceChf } =
   require('@orbiting/backend-modules-formats')
 
@@ -126,16 +126,17 @@ mail.enforceSubscriptions = async ({
   return mail.updateNewsletterSubscriptions({ user: sanitizedUser, interests, ...rest })
 }
 
-mail.sendMembershipProlongNotice = async ({
+mail.sendMembershipProlongConfirmation = async ({
   pledger,
   membership,
   additionalPeriods,
-  t
+  t,
+  pgdb
 }) => {
   const safePledger = transformUser(pledger)
   const safeMembershipUser = transformUser(membership.user)
 
-  await mail.sendMailTemplate({
+  await sendMailTemplate({
     to: membership.user.email,
     fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
     subject: t(
@@ -151,7 +152,7 @@ mail.sendMembershipProlongNotice = async ({
       { name: 'end_date',
         content: dateFormat(getLastEndDate(additionalPeriods)) }
     ]
-  })
+  }, { pgdb })
 }
 
 mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
@@ -180,7 +181,7 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
     const pledgePayment = await pgdb.public.pledgePayments.findFirst({pledgeId: pledge.id}, {orderBy: ['createdAt desc']})
     const payment = pledgePayment
       ? await pgdb.public.payments.findOne({id: pledgePayment.paymentId})
-      : null
+      : {}
 
     const notebook = await pgdb.public.pledgeOptions.count({
       pledgeId: pledge.id,
@@ -256,6 +257,13 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
     })
 
     pledgeOptions
+      // Sort by packageOption.order in an ascending manner
+      .sort(
+        (a, b) =>
+          a.packageOption &&
+          b.packageOption &&
+          a.packageOption.order > b.packageOption.order ? 1 : 0
+      )
       // Sort by sequenceNumber in an ascending manner
       .sort(
         (a, b) =>
@@ -291,7 +299,7 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
     const donation = pledge.donation > 0 ? pledge.donation / 100 : 0
     const total = pledge.total / 100
 
-    return mail.sendMailTemplate({
+    return sendMailTemplate({
       to: user.email,
       fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
       subject: t(`api/email/${templateName}/subject`),
@@ -310,25 +318,37 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
                 pledgeOption.membership &&
                 pledgeOption.membership.userId !== pledge.userId
 
-              const olabel = isGiftedMembership
-                ? t('api/email/option/other/gifted_membership', {
-                  name: transformUser(pledgeOption.membership.user).name,
-                  sequenceNumber: pledgeOption.membership.sequenceNumber
-                })
-                : t([
-                  'api/email/option',
-                  rewardType.toLowerCase(),
-                  name.toLowerCase()
-                ].join('/'))
+              const labelFragmentInterval = t.pluralize(
+                `api/email/option/interval/${pledgeOption.packageOption.reward.interval}/periods`,
+                { count: pledgeOption.periods })
+
+              const labelDefault = t.pluralize(
+                `api/email/option/${rewardType.toLowerCase()}/${name.toLowerCase()}`,
+                { count: pledgeOption.amount, interval: labelFragmentInterval }
+              )
+
+              const labelGiftedMembership = t(
+                'api/email/option/other/gifted_membership',
+                {
+                  name: pledgeOption.membership &&
+                    transformUser(pledgeOption.membership.user).name,
+                  sequenceNumber: pledgeOption.membership &&
+                    pledgeOption.membership.sequenceNumber
+                }
+              )
 
               const oprice =
-                pledgeOption.price / 100
+                (pledgeOption.price * (pledgeOption.periods || 1)) / 100
               const ototal =
-                (pledgeOption.amount * pledgeOption.price) / 100
+                oprice * pledgeOption.amount
 
               return {
                 oamount: pledgeOption.amount,
-                olabel,
+                otype: rewardType,
+                oname: name,
+                olabel: !isGiftedMembership
+                  ? labelDefault
+                  : labelGiftedMembership,
                 oprice,
                 oprice_formatted: formatPriceChf(oprice),
                 ototal,
@@ -386,18 +406,25 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
             .trim()
         },
         { name: 'abo_for_me',
-          content:
-            pkg.name !== 'DONATE' &&
-            pkg.name !== 'ABO_GIVE' &&
-            pkg.name !== 'PROLONG'
+          content: ['ABO', 'BENEFACTOR'].includes(pkg.name)
         },
         { name: 'voucher_codes',
-          content: pkg.name === 'ABO_GIVE'
+          content: ['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(pkg.name)
             ? memberships.map(m => m.voucherCode).join(', ')
             : null
         },
         { name: 'notebook_or_totebag',
           content: !!notebook || !!totebag
+        },
+        { name: 'goodies_count',
+          content: pledgeOptions
+            // Filter "pseudo" pledge options without a reward
+            .filter(
+              pledgeOption =>
+                pledgeOption.packageOption.reward &&
+                pledgeOption.packageOption.reward.rewardType === 'Goodie'
+            )
+            .reduce((agg, pledgeOption) => agg + pledgeOption.amount, 0)
         },
         { name: 'address',
           content: address
@@ -411,13 +438,11 @@ ${address.country}</span>`
         { name: 'check_membership_subscriptions',
           content: checkMembershipSubscriptions
         },
-        { name: 'frontend_base_url',
-          content: FRONTEND_BASE_URL },
         { name: 'gifted_memberships_count',
           content: giftedMemberships.length
         }
       ]
-    })
+    }, { pgdb })
   }))
 
   await pgdb.public.pledges.update({id: pledges.map(pledge => pledge.id)}, {
@@ -425,8 +450,8 @@ ${address.country}</span>`
   })
 }
 
-mail.sendMembershipCancellation = async ({ email, name, endDate, t }) => {
-  return mail.sendMailTemplate({
+mail.sendMembershipCancellation = async ({ email, name, endDate, membershipType, t, pgdb }) => {
+  return sendMailTemplate({
     to: email,
     subject: t('api/email/membership_cancel_notice/subject'),
     templateName: 'membership_cancel_notice',
@@ -437,6 +462,121 @@ mail.sendMembershipCancellation = async ({ email, name, endDate, t }) => {
       },
       { name: 'end_date',
         content: dateFormat(endDate)
+      },
+      { name: 'membership_type',
+        content: membershipType.name
+      }
+    ]
+  }, { pgdb })
+}
+
+mail.prepareMembershipGiversProlongNotice = async ({ userId, membershipIds, informClaimersDays }, { t, pgdb }) => {
+  const user = transformUser(
+    await pgdb.public.users.findOne({ id: userId })
+  )
+  const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
+
+  const memberships = await pgdb.public.memberships.find({
+    id: membershipIds
+  })
+
+  const membershipsUsers =
+    memberships.length > 0
+      ? await pgdb.public.users.find(
+        { id: memberships.map(m => m.userId) }
+      )
+      : []
+
+  memberships.forEach((membership, index, memberships) => {
+    memberships[index].user =
+      membershipsUsers.find(u => u.id === membership.userId)
+  })
+
+  return ({
+    to: user.email,
+    subject: t('api/email/membership_giver_prolong_notice/subject'),
+    templateName: 'membership_giver_prolong_notice',
+    mergeLanguage: 'handlebars',
+    globalMergeVars: [
+      { name: 'name',
+        content: user.name
+      },
+      { name: 'prolong_url',
+        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&membershipIds=${membershipIds.join('~')}&token=${customPledgeToken}`
+      },
+      { name: 'gifted_memberships_count',
+        content: memberships.length
+      },
+      { name: 'inform_claimers_days',
+        content: informClaimersDays
+      },
+      { name: 'options',
+        content: memberships
+          .map(membership => {
+            const olabel =
+              t('api/email/option/other/gifted_membership', {
+                name: transformUser(membership.user).name,
+                sequenceNumber: membership.sequenceNumber
+              })
+            return { olabel }
+          })
+      }
+    ]
+  })
+}
+
+mail.prepareMembershipWinback = async ({ userId, membershipId, cancellationCategory, cancelledAt }, { t, pgdb }) => {
+  const user = transformUser(
+    await pgdb.public.users.findOne({ id: userId })
+  )
+  const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
+
+  return ({
+    to: user.email,
+    fromEmail: t('api/email/membership_winback/fromEmail'),
+    fromName: t('api/email/membership_winback/fromName'),
+    subject: t('api/email/membership_winback/subject'),
+    templateName: `membership_winback_${cancellationCategory}`,
+    mergeLanguage: 'handlebars',
+    globalMergeVars: [
+      { name: 'name',
+        content: user.name
+      },
+      { name: 'prolong_url',
+        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`
+      },
+      { name: 'prolong_url_reduced',
+        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}&userPrice=1`
+      },
+      { name: 'cancelled_at',
+        content: dateFormat(cancelledAt)
+      }
+    ]
+  })
+}
+
+mail.prepareMembershipOwnerNotice = async ({ user, endDate, cancelUntilDate, templateName }, { t, pgdb }) => {
+  const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
+
+  const formattedEndDate = dateFormat(endDate)
+
+  return ({
+    to: user.email,
+    subject: t(`api/email/${templateName}/subject`, { endDate: formattedEndDate }),
+    templateName,
+    mergeLanguage: 'handlebars',
+    globalMergeVars: [
+      { name: 'name',
+        content: user.name
+      },
+      { name: 'prolong_url',
+        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`
+      },
+      { name: 'end_date',
+        content: formattedEndDate
+      },
+      { name: 'cancel_until_date',
+        content: dateFormat(cancelUntilDate)
       }
     ]
   })

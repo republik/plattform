@@ -16,7 +16,7 @@ const sendOnboarding = async ({ user, request, pgdb, t }) => {
     event: 'email.onboarding'
   })
 
-  return sendMail(user.email, 'onboarding', { user, t, request })
+  return sendMail(user.email, 'onboarding', { user, t, request, pgdb })
 }
 
 const sendFollowup = async ({ user, request, pgdb, t }) => {
@@ -27,7 +27,7 @@ const sendFollowup = async ({ user, request, pgdb, t }) => {
     event: 'email.followup'
   })
 
-  return sendMail(user.email, 'followup', { user, t, request })
+  return sendMail(user.email, 'followup', { user, t, request, pgdb })
 }
 
 module.exports = {
@@ -38,7 +38,7 @@ module.exports = {
   sendFollowup
 }
 
-const sendMail = async (to, template, { user, t, request }) => {
+const sendMail = async (to, template, { user, t, request, pgdb }) => {
   const mail = await sendMailTemplate({
     to,
     fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
@@ -48,7 +48,7 @@ const sendMail = async (to, template, { user, t, request }) => {
     ),
     templateName: `preview_${template}`,
     globalMergeVars: getGlobalMergeVars(request)
-  })
+  }, { pgdb })
 
   return mail
 }

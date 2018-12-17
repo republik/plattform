@@ -68,7 +68,7 @@ module.exports = {
         fromEmail: AUTH_MAIL_FROM_ADDRESS,
         subject: t('api/signin/mail/appNotice/subject'),
         templateName: 'signin_app_notice'
-      })
+      }, { pgdb })
     }
 
     return app.publish(

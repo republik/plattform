@@ -77,9 +77,9 @@ INSERT INTO goodies (id, "rewardId", "rewardType", name, "createdAt", "updatedAt
 -- Data for Name: membershipTypes; Type: TABLE DATA; Schema: public; Owner: patte
 --
 
-INSERT INTO "membershipTypes" (id, "rewardId", "rewardType", name, price, "createdAt", "updatedAt", "companyId", "interval", "intervalCount") VALUES ('ef0f787a-34b5-4494-80f6-18831799aaaa', '3837d7e2-8b8e-4e9a-8106-4de5aacedbcd', 'MembershipType', 'ABO', 24000, '2017-04-26 05:18:09.224+02', '2017-04-26 05:18:09.224+02', 'a39ed529-cb41-497f-826d-4d8cf5ccd483', 'year', 1);
-INSERT INTO "membershipTypes" (id, "rewardId", "rewardType", name, price, "createdAt", "updatedAt", "companyId", "interval", "intervalCount") VALUES ('8ecd1d10-1519-4382-a401-5ec10bbec181', '5d4ab411-8a26-40dd-8a4f-f59cbfc9503f', 'MembershipType', 'BENEFACTOR_ABO', 24000, '2017-04-26 05:18:09.233+02', '2017-04-26 05:18:09.233+02', 'a39ed529-cb41-497f-826d-4d8cf5ccd483', 'year', 1);
-INSERT INTO "membershipTypes" (id, "rewardId", "rewardType", name, price, "createdAt", "updatedAt", "companyId", "interval", "intervalCount") VALUES ('1a46aa20-5b0a-4f3b-828b-96392f86fd41', '003a5596-a797-4818-b0bc-a8347917561a', 'MembershipType', 'MONTHLY_ABO', 2000, '2017-12-11 22:48:59.97106+01', '2017-12-11 22:48:59.97106+01', 'ee5f7aa3-9083-4738-86c9-91fd8757b7aa', 'day', 1);
+INSERT INTO "membershipTypes" (id, "rewardId", "rewardType", name, price, "createdAt", "updatedAt", "companyId", "interval") VALUES ('ef0f787a-34b5-4494-80f6-18831799aaaa', '3837d7e2-8b8e-4e9a-8106-4de5aacedbcd', 'MembershipType', 'ABO', 24000, '2017-04-26 05:18:09.224+02', '2017-04-26 05:18:09.224+02', 'a39ed529-cb41-497f-826d-4d8cf5ccd483', 'year');
+INSERT INTO "membershipTypes" (id, "rewardId", "rewardType", name, price, "createdAt", "updatedAt", "companyId", "interval") VALUES ('8ecd1d10-1519-4382-a401-5ec10bbec181', '5d4ab411-8a26-40dd-8a4f-f59cbfc9503f', 'MembershipType', 'BENEFACTOR_ABO', 24000, '2017-04-26 05:18:09.233+02', '2017-04-26 05:18:09.233+02', 'a39ed529-cb41-497f-826d-4d8cf5ccd483', 'year');
+INSERT INTO "membershipTypes" (id, "rewardId", "rewardType", name, price, "createdAt", "updatedAt", "companyId", "interval") VALUES ('1a46aa20-5b0a-4f3b-828b-96392f86fd41', '003a5596-a797-4818-b0bc-a8347917561a', 'MembershipType', 'MONTHLY_ABO', 2000, '2017-12-11 22:48:59.97106+01', '2017-12-11 22:48:59.97106+01', 'ee5f7aa3-9083-4738-86c9-91fd8757b7aa', 'day');
 
 
 --
@@ -128,4 +128,3 @@ INSERT INTO "packageOptions" (id, "packageId", "rewardId", "minAmount", "maxAmou
 --
 -- PostgreSQL database dump complete
 --
-

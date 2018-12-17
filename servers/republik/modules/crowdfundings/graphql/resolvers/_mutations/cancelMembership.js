@@ -101,7 +101,9 @@ module.exports = async (_, args, context) => {
         email: user.email,
         name: user.name,
         endDate,
-        t
+        membershipType,
+        t,
+        pgdb
       })
     }
 

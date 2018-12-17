@@ -1,4 +1,4 @@
-const { sendMailTemplate } = require('../../../Mail')
+const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const moment = require('moment')
 const _ = {
   get: require('lodash/get')
@@ -56,11 +56,11 @@ module.exports = {
         globalMergeVars: [
           { name: 'NAME',
             content: [user.firstName, user.lastName]
-            .filter(Boolean)
-            .join(' ')
+              .filter(Boolean)
+              .join(' ')
           }
         ]
-      })
+      }, { pgdb })
     }
   }
 }

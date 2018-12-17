@@ -2,8 +2,10 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const logger = console
 const { formatPrice } = require('@orbiting/backend-modules-formats')
 const { publishMonitor } = require('../../../../../lib/slack')
+const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
-module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate}}) => {
+module.exports = async (_, args, context) => {
+  const { pgdb, req, t } = context
   Roles.ensureUserHasRole(req.user, 'supporter')
 
   const {
@@ -22,7 +24,8 @@ module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate}}) => {
         SELECT
           u.email,
           pay.total,
-          pay.hrid
+          pay.hrid,
+          c.name AS "companyName"
         FROM
           payments pay
         JOIN
@@ -32,6 +35,12 @@ module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate}}) => {
           pledges p
           ON pp."pledgeId"=p.id
         JOIN
+          packages pkgs
+          ON p."packageId"=pkgs.id
+        JOIN
+          companies c
+          ON pkgs."companyId"=c.id
+        JOIN
           users u
           ON p."userId"=u.id
         WHERE
@@ -40,9 +49,9 @@ module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate}}) => {
           pay."dueDate" < :now AND
           ARRAY[pay.id] && :paymentIds
       `, {
-        now,
-        paymentIds
-      })
+      now,
+      paymentIds
+    })
 
     for (let payment of payments) {
       await sendMailTemplate({
@@ -58,9 +67,12 @@ module.exports = async (_, args, {pgdb, req, t, mail: {sendMailTemplate}}) => {
           },
           { name: 'HRID',
             content: payment.hrid
+          },
+          { name: 'COMPANY_NAME',
+            content: payment.companyName
           }
         ]
-      })
+      }, context)
     }
 
     await transaction.query(`
