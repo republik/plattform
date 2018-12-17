@@ -2,18 +2,22 @@ module.exports = `
 
 type DocumentListItem {
   createdAt: Date!
-  document: Document!
+  documentList: DocumentList!
   description: String
 }
 
 interface DocumentList {
   id: ID!
   name: String
-  documents: [DocumentListItem!]!
+  documents: DocumentConnection!
 }
 
 type UserDocumentLists {
   readingList: DocumentList!
+}
+
+extend type Document {
+  userListItems: [DocumentListItem!]!
 }
 
 extend type User {

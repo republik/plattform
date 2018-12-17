@@ -5,7 +5,7 @@ schema {
 }
 
 type queries {
-
+  
 }
 
 type mutations {
@@ -15,4 +15,5 @@ type mutations {
   removeDocumentFromList(documentId: ID!, listId: ID!): DocumentList!
 
 }
+
 `
