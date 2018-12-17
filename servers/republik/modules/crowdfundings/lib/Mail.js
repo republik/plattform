@@ -555,4 +555,31 @@ mail.prepareMembershipWinback = async ({ userId, membershipId, cancellationCateg
   })
 }
 
+mail.prepareMembershipOwnerNotice = async ({ user, endDate, cancelUntilDate, templateName }, { t, pgdb }) => {
+  const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
+
+  const formattedEndDate = dateFormat(endDate)
+
+  return ({
+    to: user.email,
+    subject: t(`api/email/${templateName}/subject`, { endDate: formattedEndDate }),
+    templateName,
+    mergeLanguage: 'handlebars',
+    globalMergeVars: [
+      { name: 'name',
+        content: user.name
+      },
+      { name: 'prolong_url',
+        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`
+      },
+      { name: 'end_date',
+        content: formattedEndDate
+      },
+      { name: 'cancel_until_date',
+        content: dateFormat(cancelUntilDate)
+      }
+    ]
+  })
+}
+
 module.exports = mail

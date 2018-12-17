@@ -38,19 +38,18 @@ type Meta {
   twitterDescription: String
   prepublication: Boolean
   publishDate: DateTime
-  template: String
   feed: Boolean
   kind: String
   color: String
   series: Series
   format: Document
-  # the discussion wrapping document
   dossier: Document
-  discussion: Document
-  # the id of the discussion itself
-  discussionId: ID
+
   credits: JSON
   audioSource: AudioSource
+
+  # template of the article
+  template: String
 }
 
 input DocumentInput {

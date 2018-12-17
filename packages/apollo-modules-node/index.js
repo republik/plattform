@@ -2,7 +2,8 @@ const fs = require('fs')
 const path = require('path')
 const _ = {
   pickBy: require('lodash.pickby'),
-  merge: require('lodash.merge')
+  merge: require('lodash.merge'),
+  clone: require('lodash.clone')
 }
 const { parse, print, Source } = require('graphql')
 
@@ -84,7 +85,7 @@ const _addTypes = (master, donor) => {
     ...master,
     schemaTypes: mergedSchemaTypes,
     typeDefs: [...master.schema, ...mergedSchemaTypes],
-    resolvers: _.merge(donor.typeResolvers, master.resolvers)
+    resolvers: _.merge(_.clone(donor.typeResolvers), master.resolvers)
   }
 }
 

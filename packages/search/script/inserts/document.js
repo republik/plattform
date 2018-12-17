@@ -15,10 +15,32 @@ const { lib: {
 
 const { getElasticDoc, createPublish, findTemplates, getResourceUrls } = require('../../lib/Documents')
 
+const loaderBuilders = {
+  ...require('@orbiting/backend-modules-discussions/loaders'),
+  ...require('@orbiting/backend-modules-documents/loaders')
+}
+
 const {
   AWS_ACCESS_KEY_ID,
   AWS_SECRET_ACCESS_KEY
 } = process.env
+
+const getContext = (payload) => {
+  let loaders = {}
+  const context = {
+    ...payload,
+    loaders,
+    user: {
+      name: 'publikator-pullelasticsearch',
+      email: 'ruggedly@republik.ch',
+      roles: [ 'editor' ]
+    }
+  }
+  Object.keys(loaderBuilders).forEach(key => {
+    loaders[key] = loaderBuilders[key](context)
+  })
+  return context
+}
 
 const upsertResolvedMeta = (
   { indexName, entities, type, elastic }
@@ -122,15 +144,7 @@ module.exports = {
     )
 
     const now = new Date()
-    const context = {
-      redis,
-      pgdb,
-      user: {
-        name: 'publikator-pullelasticsearch',
-        email: 'ruggedly@republik.ch',
-        roles: [ 'editor' ]
-      }
-    }
+    const context = getContext({ pgdb, redis })
 
     await iterateRepos(context, async (repo, repoMeta, publications) => {
       if (repoMeta && repoMeta.mailchimpCampaignId) {

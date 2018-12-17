@@ -5,7 +5,12 @@ const t = require('./lib/t')
 
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: auth } = require('@orbiting/backend-modules-auth')
-// const { graphql: search } = require('@orbiting/backend-modules-search')
+
+const loaderBuilders = {
+  ...require('@orbiting/backend-modules-discussions/loaders'),
+  ...require('@orbiting/backend-modules-documents/loaders'),
+  ...require('@orbiting/backend-modules-auth/loaders')
+}
 
 const uncommittedChangesMiddleware = require('./express/uncommittedChanges')
 const cluster = require('cluster')
@@ -27,12 +32,28 @@ const start = async () => {
 // in cluster mode, this runs after runOnce otherwise before
 const run = async (workerId) => {
   const localModule = require('./graphql')
-  const executableSchema = makeExecutableSchema(merge(localModule, [documents, auth]))
+  const executableSchema = makeExecutableSchema(
+    merge(
+      localModule,
+      [
+        documents,
+        auth
+      ]
+    )
+  )
 
-  const createGraphQLContext = (defaultContext) => ({
-    ...defaultContext,
-    t
-  })
+  const createGraphQLContext = (defaultContext) => {
+    const loaders = {}
+    const context = {
+      ...defaultContext,
+      t,
+      loaders
+    }
+    Object.keys(loaderBuilders).forEach(key => {
+      loaders[key] = loaderBuilders[key](context)
+    })
+    return context
+  }
 
   const middlewares = [
     uncommittedChangesMiddleware

@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-20T17:12:28.096Z",
+  "updated": "2018-11-16T14:13:12.135Z",
   "title": "live",
   "data": [
     {
@@ -49,6 +49,10 @@
     {
       "key": "api/publish/document/slug/docExists",
       "value": "Der Slug ({path}) muss geändert werden da dieser bereits von einem Artikel verwendet wird."
+    },
+    {
+      "key": "api/publish/discussion/repoId/missing",
+      "value": "Ups, da ist etwas schiefgelaufen. Die repoId des artikels wird benötigt um eine Diskussion anzulegen."
     },
     {
       "key": "api/twitter/morephotos/other",

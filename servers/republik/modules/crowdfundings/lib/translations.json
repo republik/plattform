@@ -1,5 +1,5 @@
 {
-  "updated": "2018-12-12T14:50:21.280Z",
+  "updated": "2018-12-16T18:03:18.537Z",
   "title": "live",
   "data": [
     {
@@ -469,6 +469,10 @@
     {
       "key": "api/email/membership_winback/fromName",
       "value": "Philipp von Essen"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_notice/subject",
+      "value": "Am {endDate} erneuert sich Ihre Mitgliedschaft"
     }
   ]
 }

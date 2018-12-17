@@ -7,8 +7,6 @@ schema {
 }
 
 type queries {
-  discussions: [Discussion!]!
-  discussion(id: ID!): Discussion
   statements(
     first: Int!
     after: String
@@ -61,11 +59,6 @@ type mutations {
     disclosures: String
   ): User!
 
-  updateNotificationSettings(
-    defaultDiscussionNotificationOption: DiscussionNotificationOption
-    discussionNotificationChannels: [DiscussionNotificationChannel!]
-  ): User!
-
   publishCredential(
     description: String
   ): Credential
@@ -74,39 +67,6 @@ type mutations {
     userId: ID!
     description: String!
   ): Credential
-
-  createDiscussion(
-    title: String
-    # max length of a comments content
-    maxLength: Int
-    # min milliseconds between comments of one user
-    minInterval: Int
-    anonymity: Permission!
-  ): ID!
-  submitComment(
-    # client side generated id
-    id: ID
-    discussionId: ID!
-    parentId: ID
-    content: String!
-    discussionPreferences: DiscussionPreferencesInput
-  ): Comment!
-  editComment(
-    id: ID!
-    content: String!
-  ): Comment!
-  # can be called by the creator or an admin
-  unpublishComment(id: ID!): Comment!
-  upvoteComment(id: ID!): Comment!
-  downvoteComment(id: ID!): Comment!
-  reportComment(id: ID!): Boolean!
-
-  setDiscussionPreferences(
-    id: ID!
-    discussionPreferences: DiscussionPreferencesInput!
-  ): Discussion!
-
-  updateDiscussion(id: ID!, closed: Boolean): Discussion!
 
   # if userId is null, the logged in user's subscription is changed
   # required role to change other users: supporter
@@ -127,9 +87,6 @@ type mutations {
 }
 
 type subscriptions {
-  # all in one subscription:
-  # create, update, unpublish, vote
-  comment(discussionId: ID!): CommentUpdate!
   greeting: Greeting!
   webNotification: WebNotification!
 }

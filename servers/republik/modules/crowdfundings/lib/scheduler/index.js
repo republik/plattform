@@ -9,6 +9,7 @@ const lockTtlSecs = 5 * 60 // 10min
 
 const { inform: informGivers } = require('./givers')
 const { inform: informCancellers } = require('./winbacks')
+const { inform: informOwners } = require('./owners')
 
 const init = async (_context) => {
   debug('init')
@@ -21,11 +22,20 @@ const init = async (_context) => {
   }
 
   timeScheduler.init({
-    name: 'memberships',
+    name: 'memberships-givers',
     context,
     runFunc: informGivers,
     lockTtlSecs,
     runAtTime: '06:00',
+    runInitially: DEV
+  })
+
+  timeScheduler.init({
+    name: 'memberships-owners',
+    context,
+    runFunc: informOwners,
+    lockTtlSecs,
+    runAtTime: '06:30',
     runInitially: DEV
   })
 
