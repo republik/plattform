@@ -16,8 +16,6 @@ const upsert = async (id, settings = {}, { pgdb, loaders }, legacyDiscussionId) 
     }
   }
 
-  const closed = settings.closed || null
-
   if (!discussion) {
     discussion = await pgdb.public.discussions.insertAndGet(
       settings,
@@ -30,7 +28,11 @@ const upsert = async (id, settings = {}, { pgdb, loaders }, legacyDiscussionId) 
       (settings.maxLength && settings.maxLength !== discussion.maxLength) ||
       (settings.minInterval && settings.minInterval !== discussion.minInterval) ||
       (settings.anonymity && settings.anonymity !== discussion.anonymity) ||
-      (closed !== null && settings.closed !== discussion.closed) ||
+      (
+        settings.closed !== undefined &&
+        settings.closed !== null &&
+        settings.closed !== discussion.closed
+      ) ||
       (settings.tagRequired !== undefined && settings.tagRequired !== discussion.tagRequired) ||
       (settings.tags && settings.tags !== (discussion.tags || []).join(',')) ||
       (!discussion.repoId && id && !idIsUUID && legacyDiscussionId) // to save repoId to existing discussions
