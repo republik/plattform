@@ -38,6 +38,11 @@ const createSchema = ({
         ref: 'repo'
       },
       {
+      label: 'Diskussion geschlossen',
+        key: 'discussionClosed',
+        ref: 'bool'
+      },
+      {
         label: 'Lange Beiträge zuklappen',
         key: 'collapsable',
         ref: 'bool'
