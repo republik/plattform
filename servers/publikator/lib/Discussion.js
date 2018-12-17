@@ -9,6 +9,7 @@ const upsert = async (docMeta, context, legacyDiscussionId) => {
     commentsMaxLength,
     commentsMinInterval,
     discussionAnonymity,
+    discussionClosed = null,
     tags,
     tagRequired
   } = docMeta
@@ -30,6 +31,9 @@ const upsert = async (docMeta, context, legacyDiscussionId) => {
       : { },
     ...discussionAnonymity
       ? { anonymity: discussionAnonymity }
+      : { },
+    ...discussionClosed !== null
+      ? { closed: discussionClosed }
       : { },
     tags: tags ? tags.trim().split(',') : null,
     tagRequired: !!tagRequired
