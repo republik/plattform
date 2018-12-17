@@ -25,6 +25,10 @@ const styles = {
   center: css({
     maxWidth: 640,
     margin: '0 auto'
+  }),
+  bool: css({
+    clear: 'left',
+    margin: '10px 0'
   })
 }
 
@@ -120,7 +124,7 @@ const MetaData = ({ value, editor, mdastSchema, contextMeta, series, additionalF
         {
           (customFieldsByRef['bool'] || []).map(customField => {
             return (
-              <div key={customField.key}>
+              <div key={customField.key} {...styles.bool}>
                 <Checkbox checked={node.data.get(customField.key)} onChange={onInputChange(customField.key)}>
                   {customField.label}
                 </Checkbox>
