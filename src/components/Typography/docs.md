@@ -383,6 +383,12 @@ UI elements and structured information uses the sans serif cuts. Without margins
 <div>
   <Interaction.P>40 µg/m<Sup>3</Sup></Interaction.P>
   <Editorial.P>CO<Sub>2eq</Sub></Editorial.P>
+  <Editorial.P>
+    One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see <Editorial.Emphasis>40 µg/m<Sup>3</Sup> and CO<Sub>2eq</Sub></Editorial.Emphasis> and <Editorial.A href='#'>40 µg/m<Sup>3</Sup> and CO<Sub>2eq</Sub></Editorial.A>.
+  </Editorial.P>
+  <Editorial.P>
+    <Sub>One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin. He lay on his armour-like back, and if he lifted his head a little he could see his brown belly.</Sub>
+  </Editorial.P>
 </div>
 ```
 
