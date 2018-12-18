@@ -1,4 +1,4 @@
-Utility function for wrapping a string in quotation marks and avoiding double quoting. Ignores already quoted strings (of the same quotation marks pattern) and replaces nested quotation marks. No support for third level quotation marks.
+Utility function for wrapping a string in quotation marks and avoiding double quoting. Ignores already quoted strings of the same quotation marks pattern and replaces nested quotation marks. No support for third level nested quotation marks or transformations between different quotation mark patterns.
 
 ```code|lang-js
 import {inQuotes} from '@project-r/styleguide'
