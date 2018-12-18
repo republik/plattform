@@ -5,11 +5,11 @@ const upsert = async (docMeta, context, legacyDiscussionId) => {
     title,
     path,
     repoId,
-    collapsable,
     commentsMaxLength,
     commentsMinInterval,
     discussionAnonymity,
     discussionClosed = null,
+    collapsable = null,
     tags,
     tagRequired
   } = docMeta
@@ -22,7 +22,6 @@ const upsert = async (docMeta, context, legacyDiscussionId) => {
     title,
     path,
     repoId,
-    collapsable: !!collapsable,
     ...commentsMaxLength
       ? { maxLength: commentsMaxLength }
       : { },
@@ -33,7 +32,10 @@ const upsert = async (docMeta, context, legacyDiscussionId) => {
       ? { anonymity: discussionAnonymity }
       : { },
     ...discussionClosed !== null
-      ? { closed: discussionClosed }
+      ? { closed: !!discussionClosed }
+      : { },
+    ...collapsable !== null
+      ? { collapsable: !!collapsable }
       : { },
     tags: tags ? tags.trim().split(',') : null,
     tagRequired: !!tagRequired
