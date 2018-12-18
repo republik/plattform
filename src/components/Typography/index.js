@@ -48,7 +48,7 @@ const subSupStyles = {
     display: 'inline-block',
     textDecoration: 'none',
     fontSize: '75%',
-    lineHeight: '0',
+    lineHeight: 'initial',
     position: 'relative',
     verticalAlign: 'baseline'
   }),
