@@ -669,6 +669,15 @@ ReactDOM.render(
             path: '/z-index',
             title: 'z-index',
             src: require('./theme/zIndex.docs.md')
+          },
+          {
+            path: '/dev/inQuotes',
+            title: 'inQuotes',
+            src: require('./lib/inQuotes.docs.md'),
+            imports: {
+              ...require('./components/Typography'),
+              ...require('./lib/inQuotes')
+            }
           }
         ]
       }

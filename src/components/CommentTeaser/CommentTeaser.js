@@ -6,6 +6,7 @@ import NewPage from 'react-icons/lib/md/open-in-new'
 
 import colors from '../../theme/colors'
 import { ellipsize, underline } from '../../lib/styleMixins'
+import { inQuotes } from '../../lib/inQuotes'
 import { linkRule } from '../Typography/'
 import { serifRegular14, sansSerifRegular14 } from '../Typography/styles'
 import { CommentBodyParagraph } from '../CommentBody/web'
@@ -164,7 +165,7 @@ export const CommentTeaser = ({
                 passHref
               >
                 <a {...linkRule}>
-                  «{discussion.title}»
+                  {inQuotes(discussion.title)}
                   {newPage && (
                     <span {...styles.icon}>
                       <NewPage size={ICON_SIZE} fill={colors.disabled} />
