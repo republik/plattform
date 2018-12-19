@@ -23,7 +23,6 @@ const getSlots = async (
     WHERE
       "accessGrants"."accessCampaignId" = '${campaign.id}'
       AND "accessGrants"."granteeUserId" = '${grantee.id}'
-      AND "accessGrants"."endAt" >= NOW()
       AND "accessGrants"."revokedAt" IS NOT NULL
       AND "accessGrants"."invalidatedAt" IS NULL
   `)

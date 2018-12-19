@@ -23,7 +23,7 @@ const isGrantable = async (args, context) => {
       "accessGrants"."accessCampaignId" = '${campaign.id}'
       AND "accessGrants"."granteeUserId" = '${grantee.id}'
       AND "accessGrants"."email" = '${email}'
-      AND "accessGrants"."endAt" >= NOW()
+      AND "accessGrants"."revokedAt" IS NULL
       AND "accessGrants"."invalidatedAt" IS NULL
   `)
 
