@@ -33,7 +33,7 @@ const getContext = (payload) => {
     loaders,
     user: {
       name: 'Publikator-bot',
-      email: 'ruggedly@republik.ch',
+      email: 'ruggedly@project-r.construction',
       roles: ['editor', 'member']
     }
   }
