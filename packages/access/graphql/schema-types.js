@@ -43,17 +43,18 @@ type AccessGrant {
   grantee: User
   "Name or email address of entity who granted membership"
   granteeName: String!
-  """
-  Original recipient email address of grant.
-  Is eventually matched to a User (see recipient).
-  """
+  "Original recipient email address of grant."
   email: String!
+  "Voucher code claim this grant"
+  voucherCode: String
   "Entity who received granted membership (Admin only)"
   recipient: User
+  "Sharing period must begin before"
+  beginBefore: DateTime!
   "Beginning of sharing period"
-  beginAt: DateTime!
+  beginAt: DateTime
   "Ending of sharing period"
-  endAt: DateTime!
+  endAt: DateTime
   """
   Date when grant was revoked
   """
