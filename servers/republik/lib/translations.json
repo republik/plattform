@@ -1,5 +1,5 @@
 {
-  "updated": "2018-12-19T13:07:15.745Z",
+  "updated": "2018-12-19T14:28:54.342Z",
   "title": "live",
   "data": [
     {
@@ -497,6 +497,10 @@
     {
       "key": "api/access/grant/campaign/error",
       "value": "Kampagne «{campaignId}» nicht gefunden."
+    },
+    {
+      "key": "api/access/grant/message/error/tooLong",
+      "value": "Die persönliche Nachricht ist zu lange. Sie können lediglich bis zu {maxLength} Zeichen verwenden."
     },
     {
       "key": "api/access/revoke/role/error",

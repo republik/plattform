@@ -69,6 +69,13 @@ const grant = async (grantee, campaignId, email, message, t, pgdb, mail) => {
     throw new Error(result.errors.shift())
   }
 
+  if (message && message.length > 255) {
+    throw new Error(t(
+      'api/access/grant/message/error/tooLong',
+      { maxLength: 255 }
+    ))
+  }
+
   const beginBefore = moment()
 
   Object.keys(campaign.validInterval).forEach(key => {
