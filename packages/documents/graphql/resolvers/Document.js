@@ -52,7 +52,7 @@ module.exports = {
     }
     return meta
   },
-  children (doc, { first, last, before, after, urlPrefix, searchString, webp }, context, info) {
+  children (doc, { first, last, before, after, only, urlPrefix, searchString, webp }, context, info) {
     if (!doc || !doc.content || !doc.content.children) {
       return {
         pageInfo: {
@@ -89,7 +89,9 @@ module.exports = {
       : lastIndex + 1
 
     const isLast = last && !first
-    const childrenSubset = children.slice(beginOffset, endOffset)
+    const childrenSubset = only
+      ? children.filter(child => child.data.id === only)
+      : children.slice(beginOffset, endOffset)
     const nodes = isLast
       ? childrenSubset.slice(-1 * last)
       : childrenSubset.slice(0, first)
