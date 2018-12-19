@@ -3,6 +3,7 @@ const debug = require('debug')('access:lib:mail')
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { timeFormat } = require('@orbiting/backend-modules-formats')
 const { transformUser } = require('@orbiting/backend-modules-auth')
+const base64u = require('@orbiting/backend-modules-base64u')
 
 const campaignsLib = require('./campaigns')
 const membershipsLib = require('./memberships')
@@ -12,15 +13,15 @@ const dateFormat = timeFormat('%x')
 
 const { FRONTEND_BASE_URL } = process.env
 
-const sendRecipientOnboarding = async (grantee, campaign, grant, t, pgdb) => {
-  debug('sendRecipientOnboarding')
+const sendRecipientInvitation = async (grantee, campaign, grant, t, pgdb) => {
+  debug('sendRecipientInvitation')
 
   const recipient = await pgdb.public.users.findOne({ email: grant.email })
 
   return sendMail(
     grant.email,
     'recipient',
-    'onboarding',
+    'invitation',
     {
       grantee,
       recipient,
@@ -31,6 +32,22 @@ const sendRecipientOnboarding = async (grantee, campaign, grant, t, pgdb) => {
     }
   )
 }
+
+const sendRecipientOnboarding =
+  async (grantee, campaign, recipient, grant, t, pgdb) =>
+    sendMail(
+      recipient.email,
+      'recipient',
+      'onboarding-2',
+      {
+        grantee,
+        recipient,
+        campaign,
+        grant,
+        t,
+        pgdb
+      }
+    )
 
 const sendRecipientExpired =
   async (grantee, campaign, recipient, grant, t, pgdb) =>
@@ -65,6 +82,9 @@ const sendRecipientFollowup =
     )
 
 module.exports = {
+  // Invitation
+  sendRecipientInvitation,
+
   // Onboarding
   sendRecipientOnboarding,
 
@@ -140,19 +160,32 @@ const getGlobalMergeVars = async (
   const recipientHasMemberships =
     !!recipient && await membershipsLib.hasUserActiveMembership(recipient, pgdb)
 
+  const email = recipient ? recipient.email : grant.email
+
   return [
-    // Grant
+    // Grant,
+    { name: 'GRANT_CREATED',
+      content: dateFormat(grant.createdAt)
+    },
+    { name: 'GRANT_BEGIN_BEFORE',
+      content: dateFormat(grant.beginBefore)
+    },
     { name: 'GRANT_BEGIN',
-      content: dateFormat(grant.beginAt)
+      content: grant.beginAt && dateFormat(grant.beginAt)
     },
     { name: 'GRANT_END',
-      content: dateFormat(grant.endAt)
+      content: grant.endAt && dateFormat(grant.endAt)
+    },
+    { name: 'GRANT_VOUCHER_CODE',
+      content: grant.voucherCode
     },
 
     // Grantee
     { name: 'GRANTEE_NAME',
-      content: safeGrantee.name ||
-        t('api/noname')
+      content: safeGrantee.name || t('api/noname')
+    },
+    { name: 'GRANTEE_MESSAGE',
+      content: !!grant.message && grant.message.trim().replace(/\n/g, '<br />')
     },
 
     // Recipient
@@ -186,6 +219,12 @@ const getGlobalMergeVars = async (
     // Links
     { name: 'LINK_SIGNIN',
       content: `${FRONTEND_BASE_URL}/anmelden`
+    },
+    { name: 'LINK_CLAIM',
+      content: `${FRONTEND_BASE_URL}/abholen?context=access`
+    },
+    { name: 'LINK_CLAIM_PREFILLED',
+      content: `${FRONTEND_BASE_URL}/abholen?code=${grant.voucherCode}&email=${base64u.encode(email)}&context=access`
     },
     { name: 'LINK_ACCOUNT_SHARE',
       content: `${FRONTEND_BASE_URL}/konto#teilen`
