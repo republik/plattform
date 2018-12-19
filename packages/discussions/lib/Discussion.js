@@ -24,10 +24,19 @@ const upsert = async (id, settings = {}, { pgdb, loaders }, legacyDiscussionId) 
   } else {
     if (
       (settings.title && settings.title !== discussion.title) ||
-      (settings.collapsable !== undefined && settings.collapsable !== discussion.collapsable) ||
       (settings.maxLength && settings.maxLength !== discussion.maxLength) ||
       (settings.minInterval && settings.minInterval !== discussion.minInterval) ||
       (settings.anonymity && settings.anonymity !== discussion.anonymity) ||
+      (
+        settings.closed !== undefined &&
+        settings.closed !== null &&
+        settings.closed !== discussion.closed
+      ) ||
+      (
+        settings.collapsable !== undefined &&
+        settings.collapsable !== null &&
+        settings.collapsable !== discussion.collapsable
+      ) ||
       (settings.tagRequired !== undefined && settings.tagRequired !== discussion.tagRequired) ||
       (settings.tags && settings.tags !== (discussion.tags || []).join(',')) ||
       (!discussion.repoId && id && !idIsUUID && legacyDiscussionId) // to save repoId to existing discussions
