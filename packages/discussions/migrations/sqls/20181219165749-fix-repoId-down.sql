@@ -1,3 +1,3 @@
 ALTER TABLE "discussions"
-  DROP UNIQUE ("repoId")
+  DROP CONSTRAINT "discussions_repoId_key"
 ;

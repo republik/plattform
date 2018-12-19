@@ -1,3 +1,3 @@
 ALTER TABLE "discussions"
-  ADD UNIQUE ("repoId")
+  ADD CONSTRAINT "discussions_repoId_key" UNIQUE ("repoId")
 ;
