@@ -1,5 +1,5 @@
 {
-  "updated": "2018-12-12T16:20:16.877Z",
+  "updated": "2018-12-19T12:29:54.586Z",
   "title": "live",
   "data": [
     {
@@ -545,6 +545,10 @@
     {
       "key": "api/access/resolvers/AccessGrant/tallDarkStranger",
       "value": "Unbekannt"
+    },
+    {
+      "key": "api/access/claim/notfound",
+      "value": "Ihr Gutscheincode ist leider ungültig. Da hat sich vielleicht ein Vertipper eingeschlichen, oder der Gutscheincode ist bereits abgelaufen."
     },
     {
       "key": "api/election/email/election_candidacy_confirmation_gen18m/subject",
