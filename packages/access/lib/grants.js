@@ -112,7 +112,8 @@ const claim = async (voucherCode, user, t, pgdb, mail) => {
   if (hasRoleChanged) {
     await mail.enforceSubscriptions({
       userId: user.id,
-      pgdb
+      pgdb,
+      subscribeToEditorialNewsletters: true
     })
   }
 
