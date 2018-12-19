@@ -1,5 +1,5 @@
 {
-  "updated": "2018-12-19T12:29:54.586Z",
+  "updated": "2018-12-19T13:07:15.745Z",
   "title": "live",
   "data": [
     {
@@ -471,8 +471,16 @@
       "value": "und"
     },
     {
+      "key": "api/access/email/recipient/invitation/subject",
+      "value": "Einladung von {granteeName}"
+    },
+    {
       "key": "api/access/email/recipient/onboarding/subject",
       "value": "Einladung von {granteeName}"
+    },
+    {
+      "key": "api/access/email/recipient/onboarding-2/subject",
+      "value": "Auf zu neuen Ufern"
     },
     {
       "key": "api/access/email/recipient/expired/subject",
