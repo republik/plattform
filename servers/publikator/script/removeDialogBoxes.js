@@ -5,7 +5,9 @@
  * from existing published articles.
  *
  * Usage: (run from servers/publikator)
- * node script/removeDialogBoxes.js [--dry]
+ * node script/removeDialogBoxes.js [-n [num]] [--dry]
+ * -n: stop after n fixes
+ * -- dry: don't commit/publish
  */
 require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
@@ -15,6 +17,7 @@ const { pubsub } = require('@orbiting/backend-modules-base/lib/RedisPubSub')
 const t = require('../lib/t')
 const Promise = require('bluebird')
 const visit = require('unist-util-visit')
+const yargs = require('yargs')
 
 const search = require('@orbiting/backend-modules-search/graphql/resolvers/_queries/search')
 const commit = require('../graphql/resolvers/_mutations/commit')
@@ -47,6 +50,12 @@ const {
   GITHUB_LOGIN,
   FRONTEND_BASE_URL
 } = process.env
+
+const argv = yargs
+  .usage('Usage: $0 [-n [num]] [--dry]')
+  .help()
+  .version()
+  .argv
 
 const iterateESDocs = async (context, callback) => {
   let pageInfo
@@ -104,9 +113,13 @@ const removeDialogBox = (mdast) => {
 
 console.log('running...')
 PgDb.connect().then(async pgdb => {
-  const dry = process.argv[2] === '--dry'
+  const { dry } = argv
   if (dry) {
     console.log("dry run: this won't change anything")
+  }
+  const stopAfterNumFixes = argv.n > 0 && argv.n
+  if (stopAfterNumFixes) {
+    console.log(`stop after num fixes: ${stopAfterNumFixes}`)
   }
 
   const context = getContext({
@@ -118,10 +131,18 @@ PgDb.connect().then(async pgdb => {
   })
 
   let numFixed = 0
+  let finishNotice = false
   await iterateESDocs(context, async ({doc}) => {
+    if (stopAfterNumFixes && numFixed >= stopAfterNumFixes) {
+      if (!finishNotice) {
+        console.log(`finish here because stopAfterNumFixes: ${stopAfterNumFixes}`)
+        finishNotice = true
+      }
+      return
+    }
     let removedTitle = removeDialogBox(doc.content)
     if (removedTitle) {
-      console.log(`fixing: ${removedTitle}...`)
+      console.log(`\nfixing: ${removedTitle}...`)
       console.log(`${FRONTEND_BASE_URL}${doc.meta.path}`)
 
       const parsedDocId = Buffer.from(doc.id, 'base64').toString('utf-8')
@@ -132,13 +153,14 @@ PgDb.connect().then(async pgdb => {
         versionName
       ] = parsedDocId.split('/')
 
+      // for copied repos
+      const repoId = `${GITHUB_LOGIN}/${repoName}`
+      console.log(`https://github.com/${repoId}`)
+
       if (versionName.indexOf('prepublication') > -1) {
         console.log('encountered prepublication: skipping', parsedDocId)
         return
       }
-      // for copied repos
-      const repoId = `${GITHUB_LOGIN}/${repoName}`
-      console.log(`https://github.com/${repoId}`)
 
       // get commit from github instead of ES and do the work again
       const rawDoc = await getRawDoc(
