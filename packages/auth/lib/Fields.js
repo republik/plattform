@@ -13,8 +13,9 @@ const hasGrants = async ({ user, email, pgdb }) => {
   const unassignedGrants = await pgdb.public.accessGrants.find({
     email,
     recipientUserId: null,
-    'beginAt <=': moment(),
-    'endAt >': moment(),
+    'beginBefore >=': moment(),
+    beginAt: null,
+    endAt: null,
     invalidatedAt: null
   })
 
