@@ -42,15 +42,15 @@ const PROLONG_PACAKGEOPTION_BENEFACTOR = {
 
 const dueDate = moment().add(30, 'days')
 
-const createPledgeAndPayments = async ({ transaction, option }, a) =>
-  Promise.map(a, async d => {
+const createPledgeAndPayments = async ({ transaction, option }, rows) =>
+  Promise.map(rows, async row => {
     if (dry) {
-      return { ...d, pledge: {}, pledgeOption: {}, payment: {}, pledgePayments: {} }
+      return { ...row, pledge: {}, pledgeOption: {}, payment: {}, pledgePayments: {} }
     }
 
     const pledge = await transaction.public.pledges.insertAndGet({
       packageId: PROLONG_PACKAGE,
-      userId: d.user.id,
+      userId: row.user.id,
       status: 'WAITING_FOR_PAYMENT',
       total: option.price,
       donation: 0,
@@ -62,7 +62,7 @@ const createPledgeAndPayments = async ({ transaction, option }, a) =>
       pledgeId: pledge.id,
       amount: 1,
       price: option.price,
-      membershipId: d.membershipId
+      membershipId: row.membershipId
     })
 
     const payment = await transaction.public.payments.insertAndGet({
@@ -80,10 +80,10 @@ const createPledgeAndPayments = async ({ transaction, option }, a) =>
       paymentType: 'PLEDGE'
     })
 
-    const cache = createCache({ prefix: `User:${d.user.id}` })
+    const cache = createCache({ prefix: `User:${row.user.id}` })
     await cache.invalidate()
 
-    return { ...d, pledge, pledgeOption, payment, pledgePayments }
+    return { ...row, pledge, pledgeOption, payment, pledgePayments }
   })
 
 const mapToCsv = d => ({
