@@ -132,9 +132,7 @@ module.exports = {
           ON "pledges"."id" = "pledgeOptions"."pledgeId"
           AND "pledgeOptions"."membershipId" = :activeMembershipId
 
-        WHERE
-          "pledges"."userId" IN ('fafc29ea-fe94-4c69-ad43-73f40a28e93c')
-          AND "pledges"."status" = 'WAITING_FOR_PAYMENT'
+        WHERE "pledges"."status" = 'WAITING_FOR_PAYMENT'
         ;
       `, { activeMembershipId: memberships.find(m => m.active).id || 0 })
 
