@@ -162,7 +162,9 @@ PgDb.connect().then(async pgdb => {
     JOIN "pledgePayments" pp ON pp."pledgeId" = p.id
     JOIN payments pay ON pp."paymentId" = pay.id AND pay."paperInvoice"
     WHERE
-      u.id != :PARKING_USER_ID
+       u.id != :PARKING_USER_ID
+     ORDER BY
+       u."lastName"
   `, { PARKING_USER_ID }))
     .filter(u => !benefactors.find(b => b.id === u.id))
 
