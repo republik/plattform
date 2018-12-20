@@ -7,12 +7,13 @@ type DocumentListItem {
 
 interface DocumentList {
   id: ID!
-  name: String
-  documents: DocumentConnection!
-}
-
-type UserDocumentLists {
-  readingList: DocumentList!
+  name: String!
+  documents(
+    first: Int
+    last: Int
+    before: String
+    after: String
+  ): DocumentConnection!
 }
 
 extend type Document {
@@ -20,7 +21,8 @@ extend type Document {
 }
 
 extend type User {
-  documentLists: UserDocumentLists!
+  documentLists: [DocumentList!]!
+  documentList(name: String!): DocumentList
 }
 
 `

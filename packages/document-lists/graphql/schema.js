@@ -5,7 +5,7 @@ schema {
 }
 
 type queries {
-  
+  documentLists: [DocumentList!]!
 }
 
 type mutations {

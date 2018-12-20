@@ -1,3 +1,3 @@
-DROP TABLE "documentListItem";
+DROP TABLE "documentListItems";
 
 DROP TABLE "documentLists";
