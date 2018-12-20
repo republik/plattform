@@ -114,6 +114,12 @@ module.exports = {
       nodes
     }
   },
+  links (doc) {
+    if (!doc._all) {
+      throw new Error('Links not supported in this context.')
+    }
+    return [].concat(doc._all.map(doc => ({entity: doc})))
+  },
   linkedDocuments (doc, args, context, info) {
     const hasDossierRepoId =
       doc.meta.template === 'dossier' &&
