@@ -155,6 +155,7 @@ const getGlobalMergeVars = async (
   grantee, recipient, campaign, grant, t, pgdb
 ) => {
   const safeGrantee = transformUser(grantee)
+  const safeRecipient = !!recipient && transformUser(recipient)
   const recipientCampaigns =
     !!recipient && await campaignsLib.findForGrantee(recipient, { pgdb })
   const recipientHasMemberships =
@@ -191,6 +192,9 @@ const getGlobalMergeVars = async (
     // Recipient
     { name: 'RECIPIENT_EMAIL',
       content: grant.email
+    },
+    { name: 'RECIPIENT_NAME',
+      content: safeRecipient.name || t('api/noname')
     },
     { name: 'RECIPIENT_HAS_MEMBERSHIPS',
       content: !!recipient && recipientHasMemberships
