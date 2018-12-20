@@ -145,7 +145,9 @@ PgDb.connect().then(async pgdb => {
     JOIN "membershipTypes" mt
       ON mt.id = m."membershipTypeId"
     WHERE mt.name = 'BENEFACTOR_ABO' AND
-      u.id != :PARKING_USER_ID
+       u.id != :PARKING_USER_ID
+     ORDER BY
+       u."lastName"
   `, { PARKING_USER_ID }))
 
   const paperPeople = (await pgdb.query(`
