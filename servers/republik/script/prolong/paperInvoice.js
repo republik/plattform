@@ -200,7 +200,7 @@ PgDb.connect().then(async pgdb => {
       ...benefactorNeedProlong.filter(d => d.address).map(d => d.user.id),
       ...paperPeopleNeedProlong.filter(d => d.address).map(d => d.user.id)
     ].join('\n'))
-  } else if (!dry) {
+  } else {
     log('benefactors')
     log('---')
     log(csvFormat(benefactorNeedProlong.filter(d => d.address).map(mapToCsv)))
