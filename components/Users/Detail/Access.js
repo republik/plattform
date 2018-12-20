@@ -177,7 +177,23 @@ class Grant extends Component {
           {grant.status}
         </Interaction.P>
 
+        {isExpanded && grant.voucherCode &&
+          <Interaction.P>
+            <Label>{t('account/access/Grant/voucherCode/label')}</Label>
+            <br />
+            {grant.voucherCode}
+          </Interaction.P>
+        }
+
         {isExpanded &&
+          <Interaction.P>
+            <Label>{t('account/access/Grant/beginBefore/label')}</Label>
+            <br />
+            {getHumanDate(grant.beginBefore)}
+          </Interaction.P>
+        }
+
+        {isExpanded && grant.beginAt &&
           <Interaction.P>
             <Label>{t('account/access/Grant/beginAt/label')}</Label>
             <br />
@@ -185,11 +201,13 @@ class Grant extends Component {
           </Interaction.P>
         }
 
-        <Interaction.P>
-          <Label>{t('account/access/Grant/endAt/label')}</Label>
-          <br />
-          {getHumanDate(grant.endAt)}<br />
-        </Interaction.P>
+        {grant.endAt &&
+          <Interaction.P>
+            <Label>{t('account/access/Grant/endAt/label')}</Label>
+            <br />
+            {getHumanDate(grant.endAt)}<br />
+          </Interaction.P>
+        }
 
         {isExpanded && new Date(grant.endAt) > new Date() &&
           <Interaction.P>

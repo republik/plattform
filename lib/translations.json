@@ -4944,6 +4944,14 @@
       "value": "Status"
     },
     {
+      "key": "account/access/Grant/voucherCode/label",
+      "value": "Gutscheincode"
+    },
+    {
+      "key": "account/access/Grant/beginBefore/label",
+      "value": "einlösbar bis"
+    },
+    {
       "key": "account/access/Grant/beginAt/label",
       "value": "Beginn"
     },
