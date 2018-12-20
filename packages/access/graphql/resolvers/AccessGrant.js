@@ -45,6 +45,10 @@ module.exports = {
       return t('api/access/resolvers/AccessGrant/status/revoked')
     }
 
+    if (!grant.recipientUserId) {
+      return t('api/access/resolvers/AccessGrant/status/unclaimed')
+    }
+
     return t('api/access/resolvers/AccessGrant/status/valid')
   },
   events: (grant, args, { pgdb }) => eventsLib.findByGrant(grant, pgdb)
