@@ -246,7 +246,7 @@ const getGlobalMergeVars = async (
       content: `${FRONTEND_BASE_URL}/angebote?package=MONTHLY_ABO`
     },
     { name: 'LINK_DISCUSSIONS',
-      content: `${FRONTEND_BASE_URL}/mitreden`
+      content: `${FRONTEND_BASE_URL}/dialog`
     },
     { name: 'LINK_MANIFEST',
       content: `${FRONTEND_BASE_URL}/manifest`
