@@ -17,6 +17,9 @@ const styles = {
   link: css({
     color: 'inherit',
     textDecoration: 'none'
+  }),
+  bar : css({
+    marginTop: 10
   })
 }
 
@@ -49,6 +52,7 @@ export const TeaserFeed = ({
   description,
   credits,
   publishDate,
+  bar,
   Link = DefaultLink
 }) => {
   const formatMeta = (format && format.meta) || {}
@@ -92,6 +96,11 @@ export const TeaserFeed = ({
           !!publishDate && dateFormat(new Date(publishDate))
         )}
       </Credit>
+      {bar && (
+        <div {...styles.bar}>
+          {bar}
+        </div>
+      )}
     </Container>
   )
 }

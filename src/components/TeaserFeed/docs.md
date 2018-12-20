@@ -8,6 +8,7 @@ Supported props:
   This will be wrapped around links. You should attach an `onClick` handler within, if you wish to do client side routing and or prefetching. The component recieves following props:
   - `href` String, target url or path
   - `passHref` Boolean, indicates this will eventually end in an a tag and you may overwrite href
+- `bar`: an optional React element.
 
 ```react
 <TeaserFeed
@@ -17,7 +18,12 @@ Supported props:
     {type: 'text', value: 'An article by '},
     {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
     {type: 'text', value: ', 31.12.2017'},
-  ]} />
+  ]}
+  bar={<span>
+    <BookmarkIcon size={22} style={{ margin: '0 5px 0 -4px'}} />
+    <AudioIcon size={22} />
+  </span>}
+/>
 ```
 
 ```react

@@ -408,6 +408,8 @@ ReactDOM.render(
               css,
               ...require('./components/Typography'),
               ...require('./components/TeaserFeed'),
+              AudioIcon: require('react-icons/lib/md/volume-up'),
+              BookmarkIcon: require('react-icons/lib/md/bookmark-outline'),
               Center: require('./components/Center')
             },
             src: require('./components/TeaserFeed/docs.md')
