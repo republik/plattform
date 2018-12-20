@@ -23,6 +23,7 @@ const me = {
 
 const dry = process.argv[2] === '--dry'
 const printIds = process.argv[2] === '--printIds'
+const noBenefactors = process.argv[2] === '--no-benefactors' || process.argv[3] === '--no-benefactors'
 
 const log = printIds
   ? () => {}
@@ -105,6 +106,9 @@ PgDb.connect().then(async pgdb => {
   if (dry) {
     log("dry run: this won't change anything")
   }
+  if (noBenefactors) {
+    log('no-benefactors: skipping benefactors')
+  }
 
   const enrichWithProlongAndAddress = async data => Promise.map(
     data,
@@ -138,23 +142,25 @@ PgDb.connect().then(async pgdb => {
     { concurrency: 10 }
   ).then(all => all.filter(Boolean))
 
-  const benefactors = (await pgdb.query(`
-    SELECT
-      DISTINCT(u.*),
-      m.id "membershipId",
-      m."sequenceNumber" "membershipSequenceNumber",
-      'benefactor' as type
-    FROM
-      users u
-    JOIN memberships m
-      ON m."userId" = u.id AND m.active AND m.renew
-    JOIN "membershipTypes" mt
-      ON mt.id = m."membershipTypeId"
-    WHERE mt.name = 'BENEFACTOR_ABO' AND
-       u.id != :PARKING_USER_ID
-     ORDER BY
-       u."lastName"
-  `, { PARKING_USER_ID }))
+  const benefactors = noBenefactors
+    ? []
+    : (await pgdb.query(`
+      SELECT
+        DISTINCT(u.*),
+        m.id "membershipId",
+        m."sequenceNumber" "membershipSequenceNumber",
+        'benefactor' as type
+      FROM
+        users u
+      JOIN memberships m
+        ON m."userId" = u.id AND m.active AND m.renew
+      JOIN "membershipTypes" mt
+        ON mt.id = m."membershipTypeId"
+      WHERE mt.name = 'BENEFACTOR_ABO' AND
+         u.id != :PARKING_USER_ID
+       ORDER BY
+         u."lastName"
+    `, { PARKING_USER_ID }))
 
   const paperPeople = (await pgdb.query(`
     SELECT
@@ -164,11 +170,13 @@ PgDb.connect().then(async pgdb => {
       'paperPerson' as type
     FROM users u
     JOIN memberships m ON m."userId" = u.id AND m.active AND m.renew
-    JOIN pledges p ON p."userId" = u.id AND p.total >= 24000
+    JOIN "membershipTypes" mt ON mt.id = m."membershipTypeId"
+    JOIN pledges p ON m."pledgeId" = p.id AND p.total >= 24000
     JOIN "pledgePayments" pp ON pp."pledgeId" = p.id
     JOIN payments pay ON pp."paymentId" = pay.id AND pay."paperInvoice"
     WHERE
-       u.id != :PARKING_USER_ID
+       u.id != :PARKING_USER_ID AND
+       mt.name != 'BENEFACTOR_ABO'
      ORDER BY
        u."lastName"
   `, { PARKING_USER_ID }))
