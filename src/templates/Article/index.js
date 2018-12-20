@@ -118,18 +118,13 @@ const withPositioningAttributes = (Component) => {
 const getPositionId = (ancestors, parent, index) => {
   const rootNode = ancestors[ancestors.length - 1]
   const indexOfParent = rootNode && rootNode.children.length && rootNode.children.indexOf(parent)
-  //console.log(rootNode, indexOfParent)
   return indexOfParent + '-' + index
 }
 
 
 const paragraph = {
   matchMdast: matchParagraph,
-  //component: Editorial.P,
   component: withPositioningAttributes(Editorial.P),
-  /*component: ({ isRootChild, node, children, attributes }) => (
-    <Editorial.P attributes={{...attributes, ...getPositionAttributes(isRootChild)}} >{children}</Editorial.P>
-  ),*/
   editorModule: 'paragraph',
   editorOptions: {
     formatButtonText: 'Paragraph'
@@ -202,9 +197,6 @@ const figureCaption = {
 const figure = {
   matchMdast: matchFigure,
   component: Figure,
-  /*component: ({ isRootChild, size, node, children, attributes }) => (
-    <Figure size={size} attributes={{...attributes, ...getPositionAttributes(attributes, isRootChild)}} >{children}</Figure>
-  ),*/
   props: (node, index, parent) => {
     return {
       size: node.data.size,
@@ -848,11 +840,6 @@ const createSchema = ({
               {
                 matchMdast: matchHeading(2),
                 component: withPositioningAttributes(Editorial.Subhead),
-                /*component: ({ isRootChild, node, children, attributes }) => (
-                  <Editorial.Subhead attributes={{...attributes, ...getPositionAttributes(isRootChild)}}>
-                    {children}
-                  </Editorial.Subhead>
-                ),*/
                 editorModule: 'headline',
                 editorOptions: {
                   type: 'H2',
