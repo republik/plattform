@@ -129,6 +129,9 @@ PgDb.connect().then(async pgdb => {
           id: user._raw.addressId,
           country: ['Schweiz', 'schweiz', 'Liechtenstein']
         })
+        if (!address) {
+          return false
+        }
         return {
           user,
           address,
@@ -203,14 +206,10 @@ PgDb.connect().then(async pgdb => {
   log('benefactors', benefactorNeedProlong.length)
   log('paper people', paperPeopleNeedProlong.length)
 
-  log('without address')
-  log('benefactors', benefactorNeedProlong.filter(d => !d.address).length)
-  log('paper people', paperPeopleNeedProlong.filter(d => !d.address).length)
-
   if (printIds) {
     console.log([
-      ...benefactorNeedProlong.filter(d => d.address).map(d => d.user.id),
-      ...paperPeopleNeedProlong.filter(d => d.address).map(d => d.user.id)
+      ...benefactorNeedProlong.map(d => d.user.id),
+      ...paperPeopleNeedProlong.map(d => d.user.id)
     ].join('\n'))
   } else {
     log('benefactors')
