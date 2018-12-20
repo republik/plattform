@@ -1,5 +1,5 @@
 {
-  "updated": "2018-12-19T14:28:54.342Z",
+  "updated": "2018-12-19T22:51:58.774Z",
   "title": "live",
   "data": [
     {
@@ -480,7 +480,7 @@
     },
     {
       "key": "api/access/email/recipient/onboarding-2/subject",
-      "value": "Auf zu neuen Ufern"
+      "value": "Ihr Republik-Testzugang: Willkommen!"
     },
     {
       "key": "api/access/email/recipient/expired/subject",
@@ -549,6 +549,10 @@
     {
       "key": "api/access/resolvers/AccessGrant/status/revoked",
       "value": "gültig, aber zurückgezogen"
+    },
+    {
+      "key": "api/access/resolvers/AccessGrant/status/unclaimed",
+      "value": "gültig, uneingelöst"
     },
     {
       "key": "api/access/resolvers/AccessGrant/status/valid",
