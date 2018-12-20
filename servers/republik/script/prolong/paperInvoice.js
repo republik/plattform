@@ -40,6 +40,8 @@ const PROLONG_PACAKGEOPTION_BENEFACTOR = {
   price: 100000
 }
 
+const dueDate = moment().add(30, 'days')
+
 const createPledgeAndPayments = async ({ transaction, option }, a) =>
   Promise.map(a, async d => {
     if (dry) {
@@ -69,7 +71,7 @@ const createPledgeAndPayments = async ({ transaction, option }, a) =>
       paperInvoice: true,
       total: option.price,
       status: 'WAITING',
-      dueDate: moment().add(30, 'days')
+      dueDate
     })
 
     const pledgePayments = transaction.public.pledgePayments.insertAndGet({
