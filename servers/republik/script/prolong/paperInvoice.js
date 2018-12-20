@@ -118,7 +118,8 @@ PgDb.connect().then(async pgdb => {
         moment(prolongBeforeDate).isBefore(PROLONG_BEFORE_DATE)
       ) {
         const address = await pgdb.public.addresses.findOne({
-          id: user._raw.addressId
+          id: user._raw.addressId,
+          country: ['Schweiz', 'schweiz', 'Liechtenstein']
         })
         return {
           user,
@@ -146,7 +147,9 @@ PgDb.connect().then(async pgdb => {
     JOIN "membershipTypes" mt
       ON mt.id = m."membershipTypeId"
     WHERE mt.name = 'BENEFACTOR_ABO' AND
-      u.id != :PARKING_USER_ID
+       u.id != :PARKING_USER_ID
+     ORDER BY
+       u."lastName"
   `, { PARKING_USER_ID }))
 
   const paperPeople = (await pgdb.query(`
@@ -161,7 +164,9 @@ PgDb.connect().then(async pgdb => {
     JOIN "pledgePayments" pp ON pp."pledgeId" = p.id
     JOIN payments pay ON pp."paymentId" = pay.id AND pay."paperInvoice"
     WHERE
-      u.id != :PARKING_USER_ID
+       u.id != :PARKING_USER_ID
+     ORDER BY
+       u."lastName"
   `, { PARKING_USER_ID }))
     .filter(u => !benefactors.find(b => b.id === u.id))
 
