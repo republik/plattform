@@ -80,7 +80,13 @@ module.exports = async (_, args, {pgdb, req, t}) => {
         })
       }
 
-      if (pledge.total > 100000) {
+      const hasPledgeMemberships = await pgdb.public.memberships.count({
+        pledgeId: pledge.id
+      })
+
+      // Only generate memberships (or periods) of pledge has not generated
+      // memberships already.
+      if (hasPledgeMemberships < 1) {
         await generateMemberships(pledge.id, transaction, t, req)
       }
 
