@@ -116,7 +116,8 @@ PgDb.connect().then(async pgdb => {
         moment(prolongBeforeDate).isBefore(PROLONG_BEFORE_DATE)
       ) {
         const address = await pgdb.public.addresses.findOne({
-          id: user._raw.addressId
+          id: user._raw.addressId,
+          'country !=': ['Schweiz', 'schweiz', 'Liechtenstein']
         })
         return {
           user,
