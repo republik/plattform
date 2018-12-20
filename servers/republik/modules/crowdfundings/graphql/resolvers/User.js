@@ -123,6 +123,25 @@ module.exports = {
       }
 
       memberships = await resolveMemberships({ memberships, pgdb })
+
+      // Checks if there is a pending pledge on a users active membership.
+      const hasPendingPledges = await pgdb.public.query(`
+        SELECT "pledges".* FROM "pledges"
+
+        JOIN "pledgeOptions"
+          ON "pledges"."id" = "pledgeOptions"."pledgeId"
+          AND "pledgeOptions"."membershipId" = :activeMembershipId
+
+        WHERE "pledges"."status" = 'WAITING_FOR_PAYMENT'
+        ;
+      `, { activeMembershipId: memberships.find(m => m.active).id || 0 })
+
+      if (hasPendingPledges.length > 0) {
+        debug('pending pledge on active membership found, return prolongBeforeDate: null')
+
+        return null
+      }
+
       const eligableMemberships = findEligableMemberships({
         memberships,
         user,
