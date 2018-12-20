@@ -290,36 +290,43 @@ const findByGrantee = async (
   }
 
   if (withRevoked) {
-    query.revokedAt = undefined
+    delete query.revokedAt
   }
 
   if (withInvalidated) {
-    query.invalidatedAt = undefined
+    delete query.invalidatedAt
   }
 
   return pgdb.public.accessGrants.find(
     query,
-    {
-      orderBy: { createdAt: 'asc' },
-      skipUndefined: true
-    }
+    { orderBy: { createdAt: 'desc' } }
   )
 }
 
 const findByRecipient = async (recipient, { withPast, pgdb }) => {
   debug('findByRecipient', { recipient: recipient.id, withPast })
-  const condition = {
-    recipientUserId: recipient.id,
+
+  const query = {
+    or: [
+      { recipientUserId: recipient.id },
+      { recipientUserId: null, email: recipient.email }
+    ],
     'beginAt <=': moment(),
+    'endAt >': moment(),
     invalidatedAt: null
   }
 
-  if (!withPast) {
-    condition['endAt >'] = moment()
+  if (withPast) {
+    delete query['beginAt <=']
+    delete query['endAt >']
+    delete query.invalidatedAt
   }
 
   const grants =
-    await pgdb.public.accessGrants.find(condition)
+    await pgdb.public.accessGrants.find(
+      query,
+      { orderBy: { createdAt: 'desc' } }
+    )
 
   return grants
 }
