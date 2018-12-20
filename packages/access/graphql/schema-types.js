@@ -63,10 +63,12 @@ type AccessGrant {
   Date when grant was rendered invalid
   """
   invalidatedAt: DateTime
-  status: String!
+  "Status (Admin only)"
+  status: String
+  "Events (Admin only)"
+  events: [AccessEvent]
   createdAt: DateTime!
   updatedAt: DateTime!
-  events: [AccessEvent]
 }
 
 """
