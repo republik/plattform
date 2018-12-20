@@ -52,7 +52,7 @@ const createPledgeAndPayments = async ({ transaction, option }, a) =>
       status: 'WAITING_FOR_PAYMENT',
       total: option.price,
       donation: 0,
-      sendConfirmMail: false // tbc.
+      sendConfirmMail: false
     })
 
     const pledgeOption = await transaction.public.pledgeOptions.insertAndGet({
