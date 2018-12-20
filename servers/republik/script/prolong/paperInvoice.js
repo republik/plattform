@@ -97,7 +97,7 @@ const mapToCsv = d => ({
   country: d.address.country,
   membershipSequenceNumber: d.membershipSequenceNumber,
   hrid: d.hrid,
-  prolongBeforeDate: d.prolongBeforeDate,
+  prolongBeforeDate: moment(d.prolongBeforeDate).format('DD.MM.YYYY'),
   admin: `https://admin.republik.ch/users/${d.user.id}`
 })
 
@@ -110,6 +110,10 @@ PgDb.connect().then(async pgdb => {
     data,
     async (d) => {
       const user = transformUser(d)
+
+      const cache = createCache({ prefix: `User:${user.id}` })
+      await cache.invalidate()
+
       const prolongBeforeDate = await getProlongBeforeDate(
         user, {}, { pgdb, user: me }
       )
@@ -160,7 +164,7 @@ PgDb.connect().then(async pgdb => {
       'paperPerson' as type
     FROM users u
     JOIN memberships m ON m."userId" = u.id AND m.active AND m.renew
-    JOIN pledges p ON p."userId" = u.id
+    JOIN pledges p ON p."userId" = u.id AND p.total >= 24000
     JOIN "pledgePayments" pp ON pp."pledgeId" = p.id
     JOIN payments pay ON pp."paymentId" = pay.id AND pay."paperInvoice"
     WHERE
