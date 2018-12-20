@@ -117,7 +117,7 @@ PgDb.connect().then(async pgdb => {
       ) {
         const address = await pgdb.public.addresses.findOne({
           id: user._raw.addressId,
-          'country !=': ['Schweiz', 'schweiz', 'Liechtenstein']
+          country: ['Schweiz', 'schweiz', 'Liechtenstein']
         })
         return {
           user,
