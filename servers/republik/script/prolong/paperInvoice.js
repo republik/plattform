@@ -97,7 +97,7 @@ const mapToCsv = d => ({
   city: d.address.city,
   country: d.address.country,
   membershipSequenceNumber: d.membershipSequenceNumber,
-  hrid: d.hrid,
+  hrid: d.payment.hrid,
   prolongBeforeDate: moment(d.prolongBeforeDate).format('DD.MM.YYYY'),
   admin: `https://admin.republik.ch/users/${d.user.id}`
 })
