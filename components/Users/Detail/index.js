@@ -692,11 +692,13 @@ const userQuery = gql`
         id
         status
         createdAt
+        beginBefore
+        voucherCode
         beginAt
         endAt
         revokedAt
         invalidatedAt
-        grantee {
+        granter {
           id
           email
           name
@@ -720,10 +722,12 @@ const userQuery = gql`
           free
           used
         }
-        grants(withRevoked: true) {
+        grants(withRevoked: true, withInvalidated: true) {
           id
           status
           createdAt
+          beginBefore
+          voucherCode
           beginAt
           endAt
           revokedAt
