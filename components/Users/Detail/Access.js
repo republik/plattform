@@ -135,15 +135,15 @@ class Grant extends Component {
         {mutationError &&
           <ErrorMessage error={mutationError} />
         }
-        {grant.grantee &&
+        {grant.granter &&
           <Interaction.P>
-            <Label>{t('account/access/Grant/grantee/label')}</Label>
+            <Label>{t('account/access/Grant/granter/label')}</Label>
             <br />
             <Link
               route='user'
-              params={{userId: grant.grantee.id}}>
+              params={{userId: grant.granter.id}}>
               <a>
-                {`${grant.grantee.name} (${grant.grantee.email})`}
+                {`${grant.granter.name} (${grant.granter.email})`}
               </a>
             </Link>
           </Interaction.P>

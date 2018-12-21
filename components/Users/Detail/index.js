@@ -698,7 +698,7 @@ const userQuery = gql`
         endAt
         revokedAt
         invalidatedAt
-        grantee {
+        granter {
           id
           email
           name

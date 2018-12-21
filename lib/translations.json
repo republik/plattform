@@ -876,7 +876,7 @@
     },
     {
       "key": "Account/Access/Grants/grant",
-      "value": "... durch {grantee} bis zum {endAt}"
+      "value": "... durch {granter} bis zum {endAt}"
     },
     {
       "key": "Account/Access/Grants/link/pledges",
@@ -4928,7 +4928,7 @@
       "value": "keine Zugriff erhalten"
     },
     {
-      "key": "account/access/Grant/grantee/label",
+      "key": "account/access/Grant/granter/label",
       "value": "Spender"
     },
     {
