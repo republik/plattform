@@ -1,5 +1,7 @@
 const debug = require('debug')('access:lib:mail')
 
+const escape = require('escape-html')
+
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { timeFormat } = require('@orbiting/backend-modules-formats')
 const { transformUser } = require('@orbiting/backend-modules-auth')
@@ -186,7 +188,7 @@ const getGlobalMergeVars = async (
       content: safeGrantee.name || t('api/noname')
     },
     { name: 'GRANTEE_MESSAGE',
-      content: !!grant.message && grant.message.trim().replace(/\n/g, '<br />')
+      content: !!grant.message && escape(grant.message).replace(/\n/g, '<br />')
     },
 
     // Recipient

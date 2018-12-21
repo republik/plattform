@@ -1,7 +1,6 @@
 const debug = require('debug')('access:lib:grants')
 const moment = require('moment')
 const validator = require('validator')
-const { escape } = require('html-escaper')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
 
@@ -69,8 +68,6 @@ const grant = async (grantee, campaignId, email, message, t, pgdb, mail) => {
   if (result.errors.length > 0) {
     throw new Error(result.errors.shift())
   }
-
-  message = escape(message)
 
   if (message && message.length > 255) {
     throw new Error(t(
