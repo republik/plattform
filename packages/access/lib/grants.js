@@ -81,8 +81,8 @@ const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
   // '30 days 12 hours'::interval in Postgres database is retrieved as
   // PostgresInterval object { days: 30, hours: 12 } in here. Iterating through
   // each object key and adding count.
-  Object.keys(campaign.validInterval).forEach(unit => {
-    beginBefore.add(campaign.validInterval[unit], unit)
+  Object.keys(campaign.grantClaimableInterval).forEach(unit => {
+    beginBefore.add(campaign.grantClaimableInterval[unit], unit)
   })
 
   const grant = await pgdb.public.accessGrants.insertAndGet({
@@ -376,8 +376,8 @@ const beginGrant = async (grant, recipient, pgdb) => {
   const beginAt = now.clone()
   const endAt = now.clone()
 
-  Object.keys(campaign.periodInterval).forEach(key => {
-    endAt.add(campaign.periodInterval[key], key)
+  Object.keys(campaign.grantPeriodInterval).forEach(key => {
+    endAt.add(campaign.grantPeriodInterval[key], key)
   })
 
   const updateFields = {

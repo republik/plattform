@@ -219,7 +219,7 @@ const getGlobalMergeVars = async (
       content: dateFormat(campaign.endAt)
     },
     { name: 'CAMPAIGN_PERIOD',
-      content: getHumanInterval(campaign.periodInterval, t)
+      content: getHumanInterval(campaign.grantPeriodInterval, t)
     },
 
     // Links

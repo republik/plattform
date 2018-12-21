@@ -1,7 +1,7 @@
 UPDATE "accessGrants"
 SET
   "beginAt" = "accessGrants"."createdAt",
-  "endAt" = "accessGrants"."createdAt" + "accessCampaigns"."periodInterval"
+  "endAt" = "accessGrants"."createdAt" + "accessCampaigns"."grantPeriodInterval"
 FROM "accessCampaigns"
 WHERE "accessGrants"."accessCampaignId" = "accessCampaigns"."id" ;
 
@@ -34,8 +34,15 @@ BEGIN
 END;
 $$ LANGUAGE PLPGSQL VOLATILE;
 
+ALTER TABLE "accessGrants"
+  RENAME COLUMN "granterUserId" TO "granteeUserId" ;
+
 ALTER TABLE "accessCampaigns"
-  DROP COLUMN IF EXISTS "validInterval",
+  DROP COLUMN IF EXISTS "grantClaimableInterval",
   ADD COLUMN "emailExpirationNotice"
     interval NOT NULL DEFAULT '7 days'::interval
+;
+
+ALTER TABLE "accessCampaigns"
+  RENAME COLUMN "grantPeriodInterval" TO "periodInterval"
 ;

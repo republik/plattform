@@ -31,7 +31,10 @@ ALTER TABLE "accessGrants"
   ALTER COLUMN "endAt" DROP NOT NULL,
   ADD COLUMN "beginBefore" timestamp with time zone,
   ADD COLUMN "voucherCode" text UNIQUE,
-  ADD COLUMN "message" text,
+  ADD COLUMN "message" text
+;
+
+ALTER TABLE "accessGrants"
   RENAME COLUMN "granteeUserId" TO "granterUserId"
 ;
 
@@ -46,14 +49,18 @@ ALTER TABLE "accessGrants"
 ;
 
 ALTER TABLE "accessCampaigns"
-  ADD COLUMN "validInterval" interval NOT NULL DEFAULT '30 days'::interval,
+  ADD COLUMN "grantClaimableInterval" interval NOT NULL DEFAULT '30 days'::interval,
   DROP COLUMN IF EXISTS "emailExpirationNotice"
 ;
 
--- Set beginBefore date on each grant according validInterval
+ALTER TABLE "accessCampaigns"
+  RENAME COLUMN "periodInterval" TO "grantPeriodInterval"
+;
+
+-- Set beginBefore date on each grant according grantPeriodInterval
 UPDATE "accessGrants"
 SET
-  "beginBefore" = "accessGrants"."createdAt" + "accessCampaigns"."validInterval"
+  "beginBefore" = "accessGrants"."createdAt" + "accessCampaigns"."grantPeriodInterval"
 FROM "accessCampaigns"
 WHERE "accessGrants"."accessCampaignId" = "accessCampaigns"."id" ;
 
