@@ -1,5 +1,5 @@
 {
-  "updated": "2018-12-21T08:23:07.470Z",
+  "updated": "2018-12-21T09:42:30.759Z",
   "title": "live",
   "data": [
     {
@@ -472,11 +472,11 @@
     },
     {
       "key": "api/access/email/recipient/invitation/subject",
-      "value": "Einladung von {granteeName}"
+      "value": "Einladung von {granterName}"
     },
     {
       "key": "api/access/email/recipient/onboarding/subject",
-      "value": "Einladung von {granteeName}"
+      "value": "Einladung von {granterName}"
     },
     {
       "key": "api/access/email/recipient/onboarding-2/subject",
@@ -523,7 +523,7 @@
       "value": "«{email}» erhielt bereits einen Zugriff."
     },
     {
-      "key": "api/access/constraint/recipientNotGrantee/error",
+      "key": "api/access/constraint/recipientNotGranter/error",
       "value": "Sie können sich selbst keinen Zugriff teilen."
     },
     {
@@ -539,7 +539,7 @@
       "value": "Sie können «{email}» keinen Zugriff teilen, da die E-Mail-Adresse auf einer schwarzen Liste aufgeführt ist."
     },
     {
-      "key": "api/access/constraint/granteeBlacklist/error",
+      "key": "api/access/constraint/granterBlacklist/error",
       "value": "Sie können derzeit keinen Zugriff teilen, da Ihr Konto auf einer schwarzen Liste aufgeführt ist."
     },
     {

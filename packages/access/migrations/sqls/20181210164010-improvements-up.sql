@@ -31,7 +31,8 @@ ALTER TABLE "accessGrants"
   ALTER COLUMN "endAt" DROP NOT NULL,
   ADD COLUMN "beginBefore" timestamp with time zone,
   ADD COLUMN "voucherCode" text UNIQUE,
-  ADD COLUMN "message" text
+  ADD COLUMN "message" text,
+  RENAME COLUMN "granteeUserId" TO "granterUserId"
 ;
 
 -- Set voucherCode to unclaimed but still valid grants.

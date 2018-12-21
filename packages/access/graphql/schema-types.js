@@ -40,9 +40,9 @@ type AccessGrant {
   "Campaign this membership grant belongs to"
   campaign: AccessCampaign!
   "Entity who granted membership (Admin only)"
-  grantee: User
+  granter: User
   "Name or email address of entity who granted membership"
-  granteeName: String!
+  granterName: String!
   "Original recipient email address of grant."
   email: String!
   "Voucher code claim this grant"

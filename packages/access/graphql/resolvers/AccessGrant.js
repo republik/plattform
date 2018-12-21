@@ -7,21 +7,21 @@ const PRIVILEDGED_ROLES = ['admin', 'supporter']
 
 module.exports = {
   campaign: (grant, args, { pgdb }) => campaignsLib.findByGrant(grant, pgdb),
-  grantee: async (grant, args, { user: me, pgdb }) => {
-    const grantee =
-      await pgdb.public.users.findOne({ id: grant.granteeUserId })
+  granter: async (grant, args, { user: me, pgdb }) => {
+    const granter =
+      await pgdb.public.users.findOne({ id: grant.granterUserId })
 
-    if (!Roles.userIsMeOrInRoles(grantee, me, ['admin', 'supporter'])) {
+    if (!Roles.userIsMeOrInRoles(granter, me, ['admin', 'supporter'])) {
       return null
     }
 
-    return transformUser(grantee)
+    return transformUser(granter)
   },
-  granteeName: async (grant, args, { user: me, t, pgdb }) => {
-    const grantee =
-      await pgdb.public.users.findOne({ id: grant.granteeUserId })
+  granterName: async (grant, args, { user: me, t, pgdb }) => {
+    const granter =
+      await pgdb.public.users.findOne({ id: grant.granterUserId })
 
-    const safeUser = transformUser(grantee)
+    const safeUser = transformUser(granter)
 
     return safeUser.name ||
       t('api/access/resolvers/AccessGrant/tallDarkStranger')

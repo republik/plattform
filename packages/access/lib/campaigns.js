@@ -41,12 +41,12 @@ const findOne = (id, pgdb) => {
   })
 }
 
-const findForGrantee = async (grantee, { withPast, pgdb }) => {
-  debug('findForGrantee', { grantee: grantee.id, withPast })
+const findForGranter = async (granter, { withPast, pgdb }) => {
+  debug('findForGranter', { granter: granter.id, withPast })
   const campaigns =
     await Promise.map(
       withPast ? await findAll(pgdb) : await findAvailable(pgdb),
-      getContraintMeta.bind(null, grantee, pgdb)
+      getContraintMeta.bind(null, granter, pgdb)
     )
       .then(filterInvisibleCampaigns)
       .then(mergeConstraintPayloads)
@@ -59,21 +59,21 @@ module.exports = {
   findAll,
   findByGrant,
   findOne,
-  findForGrantee
+  findForGranter
 }
 
 /**
  * Not exposed functions
  */
 
-const getContraintMeta = async (grantee, pgdb, campaign) => {
+const getContraintMeta = async (granter, pgdb, campaign) => {
   const constraintMeta = []
 
   for (const constraint of campaign.constraints) {
     const name = Object.keys(constraint).shift() // Name of constraint
     const settings = constraint[name] // Settings of constraint
     const meta = await constraints[name].getMeta(
-      { settings, grantee, campaign },
+      { settings, granter, campaign },
       { pgdb }
     )
 

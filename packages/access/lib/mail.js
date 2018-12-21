@@ -15,7 +15,7 @@ const dateFormat = timeFormat('%x')
 
 const { FRONTEND_BASE_URL } = process.env
 
-const sendRecipientInvitation = async (grantee, campaign, grant, t, pgdb) => {
+const sendRecipientInvitation = async (granter, campaign, grant, t, pgdb) => {
   debug('sendRecipientInvitation')
 
   const recipient = await pgdb.public.users.findOne({ email: grant.email })
@@ -25,7 +25,7 @@ const sendRecipientInvitation = async (grantee, campaign, grant, t, pgdb) => {
     'recipient',
     'invitation',
     {
-      grantee,
+      granter,
       recipient,
       campaign,
       grant,
@@ -36,13 +36,13 @@ const sendRecipientInvitation = async (grantee, campaign, grant, t, pgdb) => {
 }
 
 const sendRecipientOnboarding =
-  async (grantee, campaign, recipient, grant, t, pgdb) =>
+  async (granter, campaign, recipient, grant, t, pgdb) =>
     sendMail(
       recipient.email,
       'recipient',
       'onboarding-2',
       {
-        grantee,
+        granter,
         recipient,
         campaign,
         grant,
@@ -52,13 +52,13 @@ const sendRecipientOnboarding =
     )
 
 const sendRecipientExpired =
-  async (grantee, campaign, recipient, grant, t, pgdb) =>
+  async (granter, campaign, recipient, grant, t, pgdb) =>
     sendMail(
       recipient.email,
       'recipient',
       'expired',
       {
-        grantee,
+        granter,
         recipient,
         campaign,
         grant,
@@ -68,13 +68,13 @@ const sendRecipientExpired =
     )
 
 const sendRecipientFollowup =
-  async (grantee, campaign, recipient, grant, t, pgdb) =>
+  async (granter, campaign, recipient, grant, t, pgdb) =>
     sendMail(
       recipient.email,
       'recipient',
       'followup',
       {
-        grantee,
+        granter,
         recipient,
         campaign,
         grant,
@@ -102,7 +102,7 @@ const sendMail = async (
   party,
   template,
   {
-    grantee,
+    granter,
     recipient,
     campaign,
     grant,
@@ -115,11 +115,11 @@ const sendMail = async (
     fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
     subject: t(
       `api/access/email/${party}/${template}/subject`,
-      getTranslationVars(grantee)
+      getTranslationVars(granter)
     ),
     templateName: `access_${party}_${template}`,
     globalMergeVars: await getGlobalMergeVars(
-      grantee,
+      granter,
       recipient,
       campaign,
       grant,
@@ -145,21 +145,21 @@ const getHumanInterval = (interval, t) =>
     .join(` ${t('api/access/period/join')} `)
     .trim()
 
-const getTranslationVars = (grantee) => {
-  const safeGrantee = transformUser(grantee)
+const getTranslationVars = (granter) => {
+  const safeGranter = transformUser(granter)
 
   return {
-    granteeName: safeGrantee.name || safeGrantee.email
+    granterName: safeGranter.name || safeGranter.email
   }
 }
 
 const getGlobalMergeVars = async (
-  grantee, recipient, campaign, grant, t, pgdb
+  granter, recipient, campaign, grant, t, pgdb
 ) => {
-  const safeGrantee = transformUser(grantee)
+  const safeGranter = transformUser(granter)
   const safeRecipient = !!recipient && transformUser(recipient)
   const recipientCampaigns =
-    !!recipient && await campaignsLib.findForGrantee(recipient, { pgdb })
+    !!recipient && await campaignsLib.findForGranter(recipient, { pgdb })
   const recipientHasMemberships =
     !!recipient && await membershipsLib.hasUserActiveMembership(recipient, pgdb)
 
@@ -183,11 +183,11 @@ const getGlobalMergeVars = async (
       content: grant.voucherCode
     },
 
-    // Grantee
-    { name: 'GRANTEE_NAME',
-      content: safeGrantee.name || t('api/noname')
+    // Granter
+    { name: 'GRANTER_NAME',
+      content: safeGranter.name || t('api/noname')
     },
-    { name: 'GRANTEE_MESSAGE',
+    { name: 'GRANTER_MESSAGE',
       content: !!grant.message && escape(grant.message).replace(/\n/g, '<br />')
     },
 
