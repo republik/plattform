@@ -226,6 +226,9 @@ const getGlobalMergeVars = async (
     { name: 'LINK_SIGNIN',
       content: `${FRONTEND_BASE_URL}/anmelden`
     },
+    { name: 'LINK_CLAIM_CONTEXTLESS',
+      content: `${FRONTEND_BASE_URL}/abholen`
+    },
     { name: 'LINK_CLAIM',
       content: `${FRONTEND_BASE_URL}/abholen?context=access`
     },
