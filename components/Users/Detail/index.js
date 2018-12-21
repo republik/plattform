@@ -727,6 +727,7 @@ const userQuery = gql`
           status
           createdAt
           beginBefore
+          voucherCode
           beginAt
           endAt
           revokedAt
