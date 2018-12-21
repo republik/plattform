@@ -78,8 +78,11 @@ const grant = async (grantee, campaignId, email, message, t, pgdb, mail) => {
 
   const beginBefore = moment()
 
-  Object.keys(campaign.validInterval).forEach(key => {
-    beginBefore.add(campaign.validInterval[key], key)
+  // '30 days 12 hours'::interval in Postgres database is retrieved as
+  // PostgresInterval object { days: 30, hours: 12 } in here. Iterating through
+  // each object key and adding count.
+  Object.keys(campaign.validInterval).forEach(unit => {
+    beginBefore.add(campaign.validInterval[unit], unit)
   })
 
   const grant = await pgdb.public.accessGrants.insertAndGet({
