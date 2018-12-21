@@ -23,7 +23,7 @@ const sendRecipientInvitation = async (granter, campaign, grant, t, pgdb) => {
   return sendMail(
     grant.email,
     'recipient',
-    'invitation',
+    'invitation-2',
     {
       granter,
       recipient,
@@ -56,7 +56,7 @@ const sendRecipientExpired =
     sendMail(
       recipient.email,
       'recipient',
-      'expired',
+      'expired-2',
       {
         granter,
         recipient,
@@ -72,7 +72,7 @@ const sendRecipientFollowup =
     sendMail(
       recipient.email,
       'recipient',
-      'followup',
+      'followup-2',
       {
         granter,
         recipient,
