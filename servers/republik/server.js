@@ -75,8 +75,6 @@ const run = async (workerId) => {
   const signInHooks = [
     ({ userId, pgdb }) =>
       mail.sendPledgeConfirmations({ userId, pgdb, t }),
-    ({ userId, isNew, pgdb }) =>
-      accessScheduler.signInHook(userId, isNew, pgdb, mail),
     ({ userId, isNew, contexts, pgdb }) =>
       previewLib.begin({ userId, contexts, pgdb, t })
   ]

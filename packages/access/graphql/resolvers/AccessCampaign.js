@@ -4,13 +4,13 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 
 module.exports = {
   grants: async (campaign, { withRevoked, withInvalidated }, { pgdb, user }) => {
-    const grantee = campaign._user
+    const granter = campaign._user
       ? campaign._user
       : user // Use "me" user ID
 
     if (Roles.userIsInRoles(user, ['admin', 'supporter'])) {
-      return grantsLib.findByGrantee(
-        grantee,
+      return grantsLib.findByGranter(
+        granter,
         campaign,
         withRevoked,
         withInvalidated,
@@ -18,6 +18,6 @@ module.exports = {
       )
     }
 
-    return grantsLib.findByGrantee(grantee, campaign, false, false, pgdb)
+    return grantsLib.findByGranter(granter, campaign, false, false, pgdb)
   }
 }

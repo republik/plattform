@@ -35,7 +35,7 @@ module.exports = {
       withPast = false
     }
 
-    const campaigns = await campaignsLib.findForGrantee(
+    const campaigns = await campaignsLib.findForGranter(
       user,
       { withPast, pgdb }
     )

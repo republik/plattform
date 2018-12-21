@@ -10,7 +10,7 @@ const debug = require('debug')('access:lib:constraints:limitSlots')
  */
 
 const getSlots = async (
-  { settings, grantee, campaign },
+  { settings, granter, campaign },
   { pgdb }
 ) => {
   const slots = settings.slots
@@ -22,8 +22,7 @@ const getSlots = async (
 
     WHERE
       "accessGrants"."accessCampaignId" = '${campaign.id}'
-      AND "accessGrants"."granteeUserId" = '${grantee.id}'
-      AND "accessGrants"."endAt" >= NOW()
+      AND "accessGrants"."granterUserId" = '${granter.id}'
       AND "accessGrants"."revokedAt" IS NULL
       AND "accessGrants"."invalidatedAt" IS NULL
   `)
@@ -36,14 +35,14 @@ const getSlots = async (
 }
 
 const isGrantable = async (args, context) => {
-  const { settings, grantee, campaign } = args
+  const { settings, granter, campaign } = args
 
   const slots = await getSlots(args, context)
 
   debug(
     'isGrantable',
     {
-      grantee: grantee.id,
+      granter: granter.id,
       settings,
       campaign,
       slots
