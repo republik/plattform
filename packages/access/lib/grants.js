@@ -111,7 +111,7 @@ const claim = async (voucherCode, user, t, pgdb, mail) => {
   )
 
   if (!grantByVoucherCode) {
-    throw new Error(t('api/access/claim/notfound'))
+    throw new Error(t('api/access/claim/404'))
   }
 
   const grant = await beginGrant(grantByVoucherCode, user, pgdb)

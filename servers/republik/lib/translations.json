@@ -1,5 +1,5 @@
 {
-  "updated": "2018-12-19T22:51:58.774Z",
+  "updated": "2018-12-21T08:23:07.470Z",
   "title": "live",
   "data": [
     {
@@ -563,7 +563,7 @@
       "value": "Unbekannt"
     },
     {
-      "key": "api/access/claim/notfound",
+      "key": "api/access/claim/404",
       "value": "Ihr Gutscheincode ist leider ungültig. Da hat sich vielleicht ein Vertipper eingeschlichen, oder der Gutscheincode ist bereits abgelaufen."
     },
     {
