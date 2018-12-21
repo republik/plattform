@@ -6,9 +6,10 @@ const constraints = require('./constraints')
 
 const findAvailable = async (pgdb) => {
   debug('findAvailable')
+  const now = moment()
   const campaigns = await pgdb.public.accessCampaigns.find({
-    'beginAt <=': moment(),
-    'endAt >': moment()
+    'beginAt <=': now,
+    'endAt >': now
   })
 
   return campaigns
@@ -32,10 +33,11 @@ const findByGrant = (grant, pgdb) => {
 
 const findOne = (id, pgdb) => {
   debug('findOne', { id })
+  const now = moment()
   return pgdb.public.accessCampaigns.findOne({
     id,
-    'beginAt <=': moment(),
-    'endAt >': moment()
+    'beginAt <=': now,
+    'endAt >': now
   })
 }
 

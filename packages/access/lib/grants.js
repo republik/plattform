@@ -149,7 +149,8 @@ const revoke = async (id, user, t, pgdb) => {
     throw new Error(t('api/access/revoke/role/error'))
   }
 
-  const updateFields = { revokedAt: moment(), updatedAt: moment() }
+  const now = moment()
+  const updateFields = { revokedAt: now, updatedAt: now }
   const result = await pgdb.public.accessGrants.update(
     { id: grant.id, revokedAt: null, invalidatedAt: null },
     updateFields
@@ -170,10 +171,11 @@ const revoke = async (id, user, t, pgdb) => {
 }
 
 const invalidate = async (grant, reason, t, pgdb, mail) => {
+  const now = moment()
   const updateFields = {
     voucherCode: null,
-    invalidatedAt: moment(),
-    updatedAt: moment()
+    invalidatedAt: now,
+    updatedAt: now
   }
 
   const result = await pgdb.public.accessGrants.update(
@@ -230,7 +232,8 @@ const invalidate = async (grant, reason, t, pgdb, mail) => {
 }
 
 const followUp = async (campaign, grant, t, pgdb, mail) => {
-  const updateFields = { followupAt: moment(), updatedAt: moment() }
+  const now = moment()
+  const updateFields = { followupAt: now, updatedAt: now }
   const result = await pgdb.public.accessGrants.update(
     { id: grant.id, followupAt: null },
     updateFields
@@ -303,13 +306,14 @@ const findByGrantee = async (
 const findByRecipient = async (recipient, { withPast, pgdb }) => {
   debug('findByRecipient', { recipient: recipient.id, withPast })
 
+  const now = moment()
   const query = {
     or: [
       { recipientUserId: recipient.id },
       { recipientUserId: null, email: recipient.email }
     ],
-    'beginAt <=': moment(),
-    'endAt >': moment(),
+    'beginAt <=': now,
+    'endAt >': now,
     invalidatedAt: null
   }
 
@@ -353,10 +357,11 @@ const findUnassignedByEmail = async (email, pgdb) => {
 
 const findInvalid = async (pgdb) => {
   debug('findInvalid')
+  const now = moment()
   return pgdb.public.accessGrants.find({
     or: [
-      { 'beginBefore <': moment() },
-      { 'endAt <': moment() }
+      { 'beginBefore <': now },
+      { 'endAt <': now }
     ],
     invalidatedAt: null
   })
@@ -364,8 +369,9 @@ const findInvalid = async (pgdb) => {
 
 const beginGrant = async (grant, recipient, pgdb) => {
   const campaign = await campaignsLib.findOne(grant.accessCampaignId, pgdb)
-  const beginAt = moment()
-  const endAt = beginAt.clone()
+  const now = moment()
+  const beginAt = now.clone()
+  const endAt = now.clone()
 
   Object.keys(campaign.periodInterval).forEach(key => {
     endAt.add(campaign.periodInterval[key], key)
@@ -375,7 +381,7 @@ const beginGrant = async (grant, recipient, pgdb) => {
     recipientUserId: recipient.id,
     beginAt,
     endAt,
-    updatedAt: moment()
+    updatedAt: now
   }
   const result = await pgdb.public.accessGrants.updateAndGetOne(
     { id: grant.id },
