@@ -3,23 +3,25 @@ const eventsLib = require('../../lib/events')
 
 const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
 
+const PRIVILEDGED_ROLES = ['admin', 'supporter']
+
 module.exports = {
   campaign: (grant, args, { pgdb }) => campaignsLib.findByGrant(grant, pgdb),
-  grantee: async (grant, args, { user: me, pgdb }) => {
-    const grantee =
-      await pgdb.public.users.findOne({ id: grant.granteeUserId })
+  granter: async (grant, args, { user: me, pgdb }) => {
+    const granter =
+      await pgdb.public.users.findOne({ id: grant.granterUserId })
 
-    if (!Roles.userIsMeOrInRoles(grantee, me, ['admin', 'supporter'])) {
+    if (!Roles.userIsMeOrInRoles(granter, me, ['admin', 'supporter'])) {
       return null
     }
 
-    return transformUser(grantee)
+    return transformUser(granter)
   },
-  granteeName: async (grant, args, { user: me, t, pgdb }) => {
-    const grantee =
-      await pgdb.public.users.findOne({ id: grant.granteeUserId })
+  granterName: async (grant, args, { user: me, t, pgdb }) => {
+    const granter =
+      await pgdb.public.users.findOne({ id: grant.granterUserId })
 
-    const safeUser = transformUser(grantee)
+    const safeUser = transformUser(granter)
 
     return safeUser.name ||
       t('api/access/resolvers/AccessGrant/tallDarkStranger')
@@ -36,7 +38,11 @@ module.exports = {
 
     return transformUser(recipient)
   },
-  status: (grant, args, { t }) => {
+  status: (grant, args, { user: me, t }) => {
+    if (!Roles.userIsInRoles(me, PRIVILEDGED_ROLES)) {
+      return null
+    }
+
     if (grant.invalidatedAt) {
       return t('api/access/resolvers/AccessGrant/status/invalidated')
     }
@@ -45,7 +51,17 @@ module.exports = {
       return t('api/access/resolvers/AccessGrant/status/revoked')
     }
 
+    if (!grant.recipientUserId) {
+      return t('api/access/resolvers/AccessGrant/status/unclaimed')
+    }
+
     return t('api/access/resolvers/AccessGrant/status/valid')
   },
-  events: (grant, args, { pgdb }) => eventsLib.findByGrant(grant, pgdb)
+  events: (grant, args, { user: me, pgdb }) => {
+    if (!Roles.userIsInRoles(me, PRIVILEDGED_ROLES)) {
+      return null
+    }
+
+    return eventsLib.findByGrant(grant, pgdb)
+  }
 }

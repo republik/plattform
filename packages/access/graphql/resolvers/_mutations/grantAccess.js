@@ -1,15 +1,17 @@
 const debug = require('debug')('access:mutation:grantAccess')
 
-const grantsLib = require('../../../lib/grants')
+const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 
-module.exports = async (_, { campaignId, email }, { user, pgdb, t, mail }) => {
+const { grant } = require('../../../lib/grants')
+
+module.exports = async (_, { campaignId, email, message }, { req, user, pgdb, t, mail }) => {
   debug('begin', { campaignId, email, user: user.id })
+  ensureSignedIn(req)
 
   const transaction = await pgdb.transactionBegin()
 
   try {
-    const result =
-      await grantsLib.grant(user, campaignId, email, t, transaction, mail)
+    const result = await grant(user, campaignId, email, message, t, transaction, mail)
     await transaction.transactionCommit()
 
     debug('commit', { campaignId, email, user: user.id })
