@@ -12,6 +12,8 @@ const { getMeta } = require('../../lib/meta')
 
 const getDocuments = require('./_queries/documents')
 
+const { addRelatedDocs } = require('@orbiting/backend-modules-search/lib/Documents')
+
 const { lib: { webp: {
   addSuffix: addWebpSuffix
 } } } = require('@orbiting/backend-modules-assets')
@@ -114,11 +116,17 @@ module.exports = {
       nodes
     }
   },
-  links (doc) {
+  async links (doc, args, context) {
     if (!doc._all) {
       throw new Error('Links not supported in this context.')
     }
-    return [].concat(doc._all.map(doc => ({entity: doc})))
+    // if requested we have to resolve the related docs
+    const nodes = doc._all.map(doc => ({ entity: doc, type: 'Document' }))
+    await addRelatedDocs({
+      connection: { nodes },
+      context
+    })
+    return nodes
   },
   linkedDocuments (doc, args, context, info) {
     const hasDossierRepoId =
