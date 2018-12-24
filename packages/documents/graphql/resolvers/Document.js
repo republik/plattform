@@ -121,7 +121,13 @@ module.exports = {
       throw new Error('Links not supported in this context.')
     }
     // if requested we have to resolve the related docs
-    const nodes = doc._all.map(doc => ({ entity: doc, type: 'Document' }))
+    const nodes = doc._all.map(d => ({
+      entity: {
+        ...d,
+        _all: doc._all
+      },
+      type: 'Document'
+    }))
     await addRelatedDocs({
       connection: { nodes },
       context
