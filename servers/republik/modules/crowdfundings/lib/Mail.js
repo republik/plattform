@@ -440,6 +440,26 @@ ${address.country}</span>`
         },
         { name: 'gifted_memberships_count',
           content: giftedMemberships.length
+        },
+
+        // Links
+        { name: 'link_signin',
+          content: `${FRONTEND_BASE_URL}/anmelden`
+        },
+        { name: 'link_dialog',
+          content: `${FRONTEND_BASE_URL}/dialog`
+        },
+        { name: 'link_profile',
+          content: `${FRONTEND_BASE_URL}/~me`
+        },
+        { name: 'link_account',
+          content: `${FRONTEND_BASE_URL}/konto`
+        },
+        { name: 'link_account_account',
+          content: `${FRONTEND_BASE_URL}/konto#account`
+        },
+        { name: 'link_claim',
+          content: `${FRONTEND_BASE_URL}/abholen`
         }
       ]
     }, { pgdb })
