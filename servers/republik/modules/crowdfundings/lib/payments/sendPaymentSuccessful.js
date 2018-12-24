@@ -26,22 +26,26 @@ module.exports = async (pledgeId, pgdb, t) => {
     fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
     subject: t('api/payment/received/mail/subject'),
     templateName: 'cf_successful_payment',
+    mergeLanguage: 'handlebars',
     globalMergeVars: [
-      { name: 'NAME',
+      { name: 'name',
         content: [user.firstName, user.lastName]
           .filter(Boolean)
           .join(' ')
       },
-      { name: 'ASK_PERSONAL_INFO',
+      { name: 'ask_personal_info',
         content: (!user.addressId || !user.birthday)
       },
-      { name: 'NOTEBOOK',
+      { name: 'notebook',
         content: !!notebook
       },
-      { name: 'VOUCHER_CODES',
+      { name: 'voucher_codes',
         content: ['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(pkg.name) && voucherCodes.length
           ? voucherCodes.join(', ')
           : null
+      },
+      { name: 'package_name',
+        content: pkg.name
       }
     ]
   }, { pgdb })
