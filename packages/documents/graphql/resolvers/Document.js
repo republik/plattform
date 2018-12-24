@@ -32,7 +32,7 @@ module.exports = {
     // - alt check info.path for documents / document being the root
     //   https://gist.github.com/tpreusse/f79833a023706520da53647f9c61c7f6
     if (doc._all) {
-      contentUrlResolver(doc, doc._all, doc._usernames, undefined, urlPrefix, searchString)
+      contentUrlResolver(doc, doc._all, doc._usernames, undefined, urlPrefix, searchString, context.user || null)
 
       if (shouldDeliverWebP(webp, context.req)) {
         processRepoImageUrlsInContent(doc.content, addWebpSuffix)
@@ -68,7 +68,7 @@ module.exports = {
       }
     }
     if (doc._all) {
-      contentUrlResolver(doc, doc._all, doc._usernames, undefined, urlPrefix, searchString)
+      contentUrlResolver(doc, doc._all, doc._usernames, undefined, urlPrefix, searchString, context.user || null)
 
       if (shouldDeliverWebP(webp, context.req)) {
         processRepoImageUrlsInContent(doc.content, addWebpSuffix)
