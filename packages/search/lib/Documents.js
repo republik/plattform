@@ -209,6 +209,7 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
   const userIds = []
   const repoIds = []
   const seriesRepoIds = []
+
   docs.forEach(doc => {
     // from content
     visit(doc.content, 'zone', node => {
@@ -269,9 +270,18 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
     )
     : []
 
+  // honour existing doc._all
+  // in case doc.links is requested, addRelatedDocs is used recursively
+  const existingRepoIds = (docs[0]._all || [])
+    .map(doc => doc.meta.repoId)
+
   // If there are any series master repositories, fetch these series master
   // documents and push series episodes onto the related docs stack
-  const sanitizedSeriesRepoIds = [...new Set(seriesRepoIds.filter(Boolean))]
+  const sanitizedSeriesRepoIds = [...new Set(
+    seriesRepoIds
+      .filter(Boolean)
+      .filter(repoId => !existingRepoIds.includes(repoId))
+  )]
   if (sanitizedSeriesRepoIds.length > 0) {
     const seriesRelatedDocs = await search(null, {
       recursive: true,
@@ -294,7 +304,11 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
     })
   }
 
-  const sanitizedRepoIds = [...new Set(repoIds.filter(Boolean))]
+  const sanitizedRepoIds = [...new Set(
+    repoIds
+      .filter(Boolean)
+      .filter(repoId => !existingRepoIds.includes(repoId))
+  )]
 
   let relatedDocs = []
 
@@ -325,6 +339,9 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
     // for link resolving in lib/resolve
     // - including the usernames
     doc._all = [
+      ...doc._all
+        ? doc._all
+        : [],
       ...relatedDocs,
       ...docs
     ]

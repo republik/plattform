@@ -1,6 +1,7 @@
 const checkEnv = require('check-env')
 const { parse } = require('url')
 const visit = require('unist-util-visit')
+const { Roles: { userIsInRoles } } = require('@orbiting/backend-modules-auth')
 
 checkEnv([
   'FRONTEND_BASE_URL'
@@ -9,7 +10,9 @@ checkEnv([
 const {
   GITHUB_LOGIN,
   GITHUB_ORGS = GITHUB_LOGIN,
-  FRONTEND_BASE_URL
+  FRONTEND_BASE_URL,
+  DOCUMENTS_RESTRICT_TO_ROLES,
+  DOCUMENTS_LINKS_RESTRICTED
 } = process.env
 
 const PUBLIC_HOSTNAME = parse(FRONTEND_BASE_URL).hostname
@@ -78,7 +81,7 @@ const extractUserUrl = url => {
   )
 }
 
-const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPrefix = '', searchString = '') => url => {
+const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPrefix = '', searchString = '') => (url, stripDocLinks) => {
   const userInfo = extractUserPath(url)
   if (userInfo) {
     const user = usernames
@@ -98,6 +101,9 @@ const createUrlReplacer = (allDocuments = [], usernames = [], errors = [], urlPr
   const repoId = getRepoId(url, 'autoSlug')
   if (!repoId) {
     return url
+  }
+  if (stripDocLinks) {
+    return ''
   }
   const linkedDoc = allDocuments
     .find(d => d.meta.repoId === repoId)
@@ -126,7 +132,7 @@ const createResolver = (allDocuments, errors = []) => url => {
   return null
 }
 
-const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors, urlPrefix, searchString) => {
+const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors, urlPrefix, searchString, user) => {
   const urlReplacer = createUrlReplacer(
     allDocuments,
     usernames,
@@ -134,14 +140,39 @@ const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors, urlP
     urlPrefix,
     searchString
   )
+  const docResolver = createResolver(allDocuments, errors)
+
+  const stripDocLinks =
+    DOCUMENTS_RESTRICT_TO_ROLES &&
+    DOCUMENTS_LINKS_RESTRICTED &&
+    DOCUMENTS_LINKS_RESTRICTED.split(',').includes(doc.meta.path) &&
+    user !== undefined &&
+    !userIsInRoles(user, DOCUMENTS_RESTRICT_TO_ROLES.split(','))
 
   visit(doc.content, 'link', node => {
-    node.url = urlReplacer(node.url)
+    node.url = urlReplacer(node.url, stripDocLinks)
   })
   visit(doc.content, 'zone', node => {
     if (node.data) {
-      node.data.url = urlReplacer(node.data.url)
-      node.data.formatUrl = urlReplacer(node.data.formatUrl)
+      const linkedDoc = docResolver(node.data.url)
+      if (linkedDoc) {
+        // this is used for the overview page
+        // - assigns a publishDate to an teaser
+        // - highlights all teasers of a format or series
+        node.data.urlMeta = {
+          publishDate: linkedDoc.meta.publishDate,
+          format: linkedDoc.meta.template === 'format'
+            ? linkedDoc.meta.repoId
+            : getRepoId(linkedDoc.meta.format),
+          series: linkedDoc.meta.series ? (
+            typeof linkedDoc.meta.series === 'string'
+              ? getRepoId(linkedDoc.meta.series)
+              : linkedDoc.meta.repoId
+          ) : undefined
+        }
+      }
+      node.data.url = urlReplacer(node.data.url, stripDocLinks)
+      node.data.formatUrl = urlReplacer(node.data.formatUrl, stripDocLinks)
     }
   })
 }

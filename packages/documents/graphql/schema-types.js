@@ -67,6 +67,7 @@ type Document {
     last: Int
     before: ID
     after: ID
+    only: ID
   ): DocumentNodeConnection!
   linkedDocuments(
     first: Int
