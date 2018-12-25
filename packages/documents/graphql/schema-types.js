@@ -69,7 +69,6 @@ type Document {
     after: ID
     only: ID
   ): DocumentNodeConnection!
-  links: [DocumentLink!]!
   linkedDocuments(
     first: Int
     last: Int
@@ -77,12 +76,6 @@ type Document {
     after: ID
   ): DocumentConnection!
 }
-
-type DocumentLink {
-  entity: DocumentLinkEntity!
-}
-
-union DocumentLinkEntity = Document
 
 type DocumentNode {
   id: ID!

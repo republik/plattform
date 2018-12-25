@@ -140,6 +140,7 @@ const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors, urlP
     urlPrefix,
     searchString
   )
+  const docResolver = createResolver(allDocuments, errors)
 
   const stripDocLinks =
     DOCUMENTS_RESTRICT_TO_ROLES &&
@@ -153,6 +154,23 @@ const contentUrlResolver = (doc, allDocuments = [], usernames = [], errors, urlP
   })
   visit(doc.content, 'zone', node => {
     if (node.data) {
+      const linkedDoc = docResolver(node.data.url)
+      if (linkedDoc) {
+        // this is used for the overview page
+        // - assigns a publishDate to an teaser
+        // - highlights all teasers of a format or series
+        node.data.urlMeta = {
+          publishDate: linkedDoc.meta.publishDate,
+          format: linkedDoc.meta.template === 'format'
+            ? linkedDoc.meta.repoId
+            : getRepoId(linkedDoc.meta.format),
+          series: linkedDoc.meta.series ? (
+            typeof linkedDoc.meta.series === 'string'
+              ? getRepoId(linkedDoc.meta.series)
+              : linkedDoc.meta.repoId
+          ) : undefined
+        }
+      }
       node.data.url = urlReplacer(node.data.url, stripDocLinks)
       node.data.formatUrl = urlReplacer(node.data.formatUrl, stripDocLinks)
     }
