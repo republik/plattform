@@ -136,10 +136,10 @@
     "PF_SHA_OUT_SECRET": {
       "required": true
     },
-    "PHANTOM_COOKIE": {
+    "RENDER_COOKIE": {
       "required": true
     },
-    "PHANTOMJSCLOUD_API_KEY": {
+    "PUPPETEER_WS_ENDPOINT": {
       "required": true
     },
     "PREVIEW_MAIL_REPO_ID": "",

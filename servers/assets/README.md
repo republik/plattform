@@ -26,8 +26,8 @@ ASSETS_SERVER_BASE_URL=http://localhost:3021
 # must be in sync with republik-backend and publikator-backend
 ASSETS_HMAC_KEY=aiy3sheYoobahb4eth1ohs4aoPaezeeg
 
-# phantomjscloud.com to render social media share images
-PHANTOMJSCLOUD_API_KEY=
+# endpoint for puppeteer to render overview-teasers, social media share images, etc
+PUPPETEER_WS_ENDPOINT=
 # list urls allowed on the /render endpoint, the beginning must match
 RENDER_URL_WHITELIST=https://www.republik.ch/
 

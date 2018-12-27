@@ -1,6 +1,7 @@
 const renderUrl = require('../lib/renderUrl')
 const { returnImage } = require('../lib')
 const debug = require('debug')('assets:render')
+const streamifier = require('streamifier')
 
 const {
   RENDER_URL_WHITELIST
@@ -13,7 +14,11 @@ const whitelistedUrls = RENDER_URL_WHITELIST && RENDER_URL_WHITELIST.split(',')
 
 module.exports = (server) => {
   server.get('/render', async function (req, res) {
-    const { url, width, height, zoomFactor } = req.query
+    const { url, width: _width, height: _height, zoomFactor: _zoomFactor } = req.query
+
+    const width = (_width && parseInt(_width)) || 1200
+    const height = (_height && parseInt(_height)) || 628
+    const zoomFactor = (_zoomFactor && parseFloat(_zoomFactor)) || 1
 
     const allowed =
       whitelistedUrls &&
@@ -25,16 +30,15 @@ module.exports = (server) => {
     }
     debug('GET %s', url)
 
-    const result = await renderUrl(url, width || 1200, height || 628, zoomFactor)
-    if (!result.ok) {
+    const result = await renderUrl(url, width, height, zoomFactor)
+    if (!result) {
       console.error('render failed', result.url, result.status)
       return res.status(result.status).end()
     }
 
     return returnImage({
       response: res,
-      stream: result.body,
-      headers: result.headers,
+      stream: streamifier.createReadStream(result),
       options: {
         ...req.query,
         cacheTags: ['render']
