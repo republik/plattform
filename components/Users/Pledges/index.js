@@ -199,9 +199,9 @@ const PledgeDetails = ({ pledge, ...props }) => {
   )
 }
 
-const PaymentDetails = ({ payment, ...props }) => {
+const PaymentDetails = ({ payment, ...props}) => {
   return (
-    <div>
+    <div {...props}>
       <SectionSubhead>
         {payment.method === 'STRIPE' && (
           <a
