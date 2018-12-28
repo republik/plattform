@@ -20,9 +20,17 @@ Check [assets-backend](https://github.com/orbiting/assets-backend) for a deploya
 
   ENVs: `ASSETS_HMAC_KEY`
 
-- `/render?url=:url&width=:width&height=:height`
+- `/render?url=:url&[viewport=[:width]x[:height]]&[zoomFactor=:sf]`
 
-  renders :url with a viewport of :width x :hight to a png. webp conversion not supported.
+  - renders :url
+  - optional :viewport
+    - succeeds deprecated: `width=:width&height=:height`
+    - default 1200x200
+    - this api always screenshots the full page (with scrolling), cropping to viewport is not supported.
+  - optional :zoomFactor
+    - requires viewport or w/h
+    - default 1
+  - format: png webp conversion not yet supported.
 
   ENVs: `PUPPETEER_WS_ENDPOINT`, `RENDER_URL_WHITELIST`: comma separated, accept: :url.indexOf(whiteUrl) === 0, `FRONTEND_BASIC_AUTH_USER`, `FRONTEND_BASIC_AUTH_PASS`
 

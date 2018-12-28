@@ -1,5 +1,6 @@
 const renderUrl = require('../lib/renderUrl')
 const { returnImage } = require('../lib')
+const getWidthHeight = require('../lib/getWidthHeight')
 const debug = require('debug')('assets:render')
 const streamifier = require('streamifier')
 
@@ -14,11 +15,25 @@ const whitelistedUrls = RENDER_URL_WHITELIST && RENDER_URL_WHITELIST.split(',')
 
 module.exports = (server) => {
   server.get('/render', async function (req, res) {
-    const { url, width: _width, height: _height, zoomFactor: _zoomFactor } = req.query
+    const {
+      url,
+      viewport,
+      zoomFactor,
+      width: _width,
+      height: _height
+    } = req.query
 
-    const width = (_width && parseInt(_width)) || 1200
-    const height = (_height && parseInt(_height)) || 628
-    const zoomFactor = (_zoomFactor && parseFloat(_zoomFactor)) || 1
+    let width, height
+    if (viewport) {
+      try {
+        ({ width, height } = getWidthHeight(viewport))
+      } catch (e) {
+        res.status(400).end(e.message)
+      }
+    } else if (_width || _height) {
+      width = _width
+      height = _height
+    }
 
     const allowed =
       whitelistedUrls &&
@@ -30,7 +45,13 @@ module.exports = (server) => {
     }
     debug('GET %s', url)
 
-    const result = await renderUrl(url, width, height, zoomFactor)
+    let result
+    try {
+      result = await renderUrl(url, width, height, zoomFactor)
+    } catch (e) {
+      res.status(500).end(e.message)
+    }
+
     if (!result) {
       console.error('render failed', result.url, result.status)
       return res.status(result.status).end()

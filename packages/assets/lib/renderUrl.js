@@ -8,28 +8,26 @@ const {
 } = process.env
 
 // returns buffer
-module.exports = async (url, width, height, zoomFactor) => {
+module.exports = async (
+  url,
+  width,
+  height,
+  zoomFactor
+) => {
   const browser = await puppeteer.connect({
     browserWSEndpoint: PUPPETEER_WS_ENDPOINT
   })
 
   const page = await browser.newPage()
 
-  let promises = []
-
-  promises.push(
+  const promises = [
+    page.setViewport({
+      width: parseInt(Math.abs(width) || 1200),
+      height: parseInt(Math.abs(height) || 200),
+      deviceScaleFactor: parseFloat(Math.abs(zoomFactor) || 1)
+    }),
     page.setExtraHTTPHeaders({ 'DNT': '1' })
-  )
-
-  if (width !== undefined && height !== undefined) {
-    promises.push(
-      page.setViewport({
-        width,
-        height,
-        deviceScaleFactor: zoomFactor
-      })
-    )
-  }
+  ]
 
   if (RENDER_COOKIE) {
     const [name, value] = RENDER_COOKIE.split('=')
