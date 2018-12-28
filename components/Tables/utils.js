@@ -53,7 +53,7 @@ export const tableStyles = {
   }),
   emphasisedRow: css({
     '& td': {
-      borderBottom: `1px solid ${colors.divider}`
+      borderBottom: `1px solid ${colors.text}`
     }
   }),
   left: css({

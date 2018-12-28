@@ -24,6 +24,7 @@ import MovePledge from './MovePledge'
 import ResolvePledgeToPayment from './ResolvePledgeToPayment'
 import CancelPledge from './CancelPledge'
 import UpdatePayment from './UpdatePayment'
+import SendPaymentReminder from './SendPaymentReminder'
 
 const GET_PLEDGES = gql`
   query pledges($id: String) {
@@ -124,45 +125,48 @@ const PledgeDetails = ({ pledge, ...props }) => {
             <DT>Pledge Aktionen</DT>
             <DD>
               <div {...displayStyles.hFlexBox}>
-              <MovePledge
-                pledge={pledge}
-                refetchQueries={({
-                  data: { movePledge }
-                }) => [
-                  {
-                    query: GET_PLEDGES,
-                    variables: { id: movePledge.id }
-                  }
-                ]}
-              />
-              <ResolvePledgeToPayment
-                pledge={pledge}
-                refetchQueries={({
-                  data: { resolvePledgeToPayment }
-                }) => [
-                  {
-                    query: GET_PLEDGES,
-                    variables: {
-                      id: resolvePledgeToPayment.id
+                <MovePledge
+                  pledge={pledge}
+                  refetchQueries={({
+                    data: { movePledge }
+                  }) => [
+                    {
+                      query: GET_PLEDGES,
+                      variables: { id: movePledge.id }
                     }
-                  }
-                ]}
-              />
-              <CancelPledge
-                pledge={pledge}
-                refetchQueries={({
-                  data: { cancelPledge }
-                }) => [
-                  {
-                    query: GET_PLEDGES,
-                    variables: {
-                      id: cancelPledge.id
-                    }
-                  }
-                ]}
-              />
+                  ]}
+                />
+                {pledge.status === 'PAID_INVESTIGATE' &&
+                  <ResolvePledgeToPayment
+                    pledge={pledge}
+                    refetchQueries={({
+                      data: { resolvePledgeToPayment }
+                    }) => [
+                      {
+                        query: GET_PLEDGES,
+                        variables: {
+                          id: resolvePledgeToPayment.id
+                        }
+                      }
+                    ]}
+                  />
+                }
+                {pledge.status !== 'CANCELLED' &&
+                  <CancelPledge
+                    pledge={pledge}
+                    refetchQueries={({
+                      data: { cancelPledge }
+                    }) => [
+                      {
+                        query: GET_PLEDGES,
+                        variables: {
+                          id: cancelPledge.id
+                        }
+                      }
+                    ]}
+                  />
+                }
               </div>
-
             </DD>
           </DL>
 
@@ -178,18 +182,35 @@ const PledgeDetails = ({ pledge, ...props }) => {
                 {['WAITING_FOR_REFUND', 'WAITING'].includes(payment.status) &&
                 <DL>
                 <DT>Payment Aktionen</DT>
-                 <DD><UpdatePayment
-                  key={`update-${payment.id}`}
-                  payment={payment}
-                  refetchQueries={() => [
-                    {
-                      query: GET_PLEDGES,
-                      variables: {
-                        id: pledge.id
-                      }
+                 <DD>
+                   <UpdatePayment
+                      key={`update-${payment.id}`}
+                      payment={payment}
+                      refetchQueries={() => [
+                        {
+                          query: GET_PLEDGES,
+                          variables: {
+                            id: pledge.id
+                          }
+                        }
+                      ]}
+                    />
+                   {payment.status === 'WAITING' &&
+                    <SendPaymentReminder
+                      key={`send-reminder-${payment.id}`}
+                      payment={payment}
+                      refetchQueries={() => [
+                        {
+                          query: GET_PLEDGES,
+                          variables: {
+                            id: pledge.id
+                          }
+                        }
+                      ]}
+                    />
                     }
-                  ]}
-                /></DD></DL>}
+                  </DD>
+                </DL>}
               </Fragment>
             ))}
           </Fragment>
@@ -252,7 +273,7 @@ const PaymentDetails = ({ payment, ...props}) => {
           payment.remindersSentAt.length > 0 && (
             <div>
               <DL>
-                <DT>Sent reminders</DT>
+                <DT>Verschickte Reminders</DT>
                 {payment.remindersSentAt.map(date => (
                   <DD
                     key={`reminder-${date}`}

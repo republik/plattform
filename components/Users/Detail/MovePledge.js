@@ -71,19 +71,15 @@ export default class MovePledge extends Component {
               <br />
               <Interaction.H3>
                 {pledge.package.name.split('_').join(' ')} –{' '}
-                {dateTimeFormat(new Date(pledge.createdAt))}{' '}
+                {dateTimeFormat(pledge.createdAt)}{' '}
                 – {pledge.status}
                 <br />
                 <Label>
                   Created:{' '}
-                  {dateTimeFormat(
-                    new Date(pledge.createdAt)
-                  )}
+                  {dateTimeFormat(pledge.createdAt)}
                   {' – '}
                   Updated:{' '}
-                  {dateTimeFormat(
-                    new Date(pledge.updatedAt)
-                  )}
+                  {dateTimeFormat(pledge.updatedAt)}
                 </Label>
               </Interaction.H3>
               <SearchUser

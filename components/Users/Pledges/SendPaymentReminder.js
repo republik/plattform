@@ -16,15 +16,15 @@ import {
   TextButton
 } from '../../Display/utils'
 
-const CANCEL_PLEDGE = gql`
-  mutation cancelPledge($pledgeId: ID!) {
-    cancelPledge(pledgeId: $pledgeId) {
-      id
-    }
+const SEND_PAYMENT_REMINDERS = gql`
+  mutation sendPaymentReminders(
+    $paymentIds: [ID!]!
+  ) {
+    sendPaymentReminders(paymentIds: $paymentIds)
   }
 `
 
-export default class CancelPledge extends Component {
+export default class SendPaymentReminders extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -37,7 +37,9 @@ export default class CancelPledge extends Component {
 
     this.submitHandler = mutation => () => {
       return mutation({
-        pledgeId: this.props.pledge.id
+        variables: {
+          paymentIds: [this.props.payment.id]
+        }
       }).then(() =>
         this.setState(() => ({ isOpen: false }))
       )
@@ -54,15 +56,15 @@ export default class CancelPledge extends Component {
             this.setState({ isOpen: true })
           }}
         >
-          Cancel
+          Zahlungserinnerung
         </TextButton>
 
         {isOpen && (
           <Mutation
-            mutation={CANCEL_PLEDGE}
+            mutation={SEND_PAYMENT_REMINDERS}
             refetchQueries={refetchQueries}
           >
-            {(cancelPledge, { loading, error }) => {
+            {(sendPaymentReminders, { loading, error }) => {
               return (
                 <Overlay onClose={this.closeHandler}>
                   <OverlayToolbar>
@@ -77,13 +79,13 @@ export default class CancelPledge extends Component {
                       render={() => (
                         <Fragment>
                           <Interaction.H2>
-                            Bist du dir sicher?
+                            Zahlungserinnerung auslösen?
                           </Interaction.H2>
                           <br />
                           <Button
                             primary
                             onClick={this.submitHandler(
-                              cancelPledge
+                              sendPaymentReminders
                             )}
                           >
                             Ja

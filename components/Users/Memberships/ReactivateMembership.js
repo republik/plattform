@@ -16,15 +16,17 @@ import {
   TextButton
 } from '../../Display/utils'
 
-const CANCEL_PLEDGE = gql`
-  mutation cancelPledge($pledgeId: ID!) {
-    cancelPledge(pledgeId: $pledgeId) {
+
+
+const REACTIVATE_MEMBERSHIP = gql`
+  mutation reactivateMembership($membershipId: ID!) {
+    reactivateMembership(id: $membershipId) {
       id
     }
   }
 `
 
-export default class CancelPledge extends Component {
+export default class ReactivateMembership extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -37,7 +39,9 @@ export default class CancelPledge extends Component {
 
     this.submitHandler = mutation => () => {
       return mutation({
-        pledgeId: this.props.pledge.id
+        variables: {
+          membershipId: this.props.membership.id
+        }
       }).then(() =>
         this.setState(() => ({ isOpen: false }))
       )
@@ -54,15 +58,15 @@ export default class CancelPledge extends Component {
             this.setState({ isOpen: true })
           }}
         >
-          Cancel
+          (Re)aktivieren
         </TextButton>
 
         {isOpen && (
           <Mutation
-            mutation={CANCEL_PLEDGE}
+            mutation={REACTIVATE_MEMBERSHIP}
             refetchQueries={refetchQueries}
           >
-            {(cancelPledge, { loading, error }) => {
+            {(reactivateMembership, { loading, error }) => {
               return (
                 <Overlay onClose={this.closeHandler}>
                   <OverlayToolbar>
@@ -83,7 +87,7 @@ export default class CancelPledge extends Component {
                           <Button
                             primary
                             onClick={this.submitHandler(
-                              cancelPledge
+                              reactivateMembership
                             )}
                           >
                             Ja
