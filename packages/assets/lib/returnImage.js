@@ -27,7 +27,7 @@ const pipeHeaders = [
   'Content-Disposition'
 ]
 
-const supportedFormats = ['jpeg', 'png']
+const supportedFormats = ['jpeg', 'png', 'webp']
 
 const toBuffer = async (stream) => {
   return toArray(stream)
@@ -44,7 +44,18 @@ module.exports = async ({
   headers,
   options = {}
 }) => {
-  const { resize, bw, webp, format, cacheTags = [] } = options
+  const {
+    resize,
+    bw,
+    webp,
+    format: _format,
+    cacheTags = []
+  } = options
+
+  const format =
+    (supportedFormats.indexOf(_format) !== -1 && _format) ||
+    (webp && 'webp')
+
   let width, height
   if (resize) {
     try {
@@ -92,12 +103,16 @@ module.exports = async ({
         .join(' ')
     )
 
-    const forceFormat = supportedFormats.indexOf(format) !== -1
-
     let pipeline
     if (
-      (mime && mime.indexOf('image') === 0 && (mime !== 'image/gif' || forceFormat)) &&
-      (width || height || bw || webp || isJPEG || forceFormat)
+      (
+        width || height || bw || format || isJPEG
+      ) && (
+        // only touch images
+        mime && mime.indexOf('image') === 0 &&
+        // don't touch gifs exept explixit format is given and not webp
+        (mime !== 'image/gif' || (format && format !== 'webp'))
+      )
     ) {
       pipeline = sharp()
 
@@ -107,17 +122,12 @@ module.exports = async ({
       if (bw) {
         pipeline.greyscale()
       }
-      if (forceFormat) {
+      if (format) {
         res.set('Content-Type', `image/${format}`)
         pipeline.toFormat(format, {
           // avoid interlaced pngs
           // - not supported in pdfkit
           progressive: format === 'jpeg',
-          quality: 80
-        })
-      } else if (webp) {
-        res.set('Content-Type', 'image/webp')
-        pipeline.toFormat('webp', {
           quality: 80
         })
       } else if (isJPEG) {
