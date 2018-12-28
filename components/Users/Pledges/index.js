@@ -124,49 +124,47 @@ const PledgeDetails = ({ pledge, ...props }) => {
           <DL>
             <DT>Pledge Aktionen</DT>
             <DD>
-              <div {...displayStyles.hFlexBox}>
-                <MovePledge
+              <MovePledge
+                pledge={pledge}
+                refetchQueries={({
+                  data: { movePledge }
+                }) => [
+                  {
+                    query: GET_PLEDGES,
+                    variables: { id: movePledge.id }
+                  }
+                ]}
+              />
+              {pledge.status === 'PAID_INVESTIGATE' &&
+                <ResolvePledgeToPayment
                   pledge={pledge}
                   refetchQueries={({
-                    data: { movePledge }
+                    data: { resolvePledgeToPayment }
                   }) => [
                     {
                       query: GET_PLEDGES,
-                      variables: { id: movePledge.id }
+                      variables: {
+                        id: resolvePledgeToPayment.id
+                      }
                     }
                   ]}
                 />
-                {pledge.status === 'PAID_INVESTIGATE' &&
-                  <ResolvePledgeToPayment
-                    pledge={pledge}
-                    refetchQueries={({
-                      data: { resolvePledgeToPayment }
-                    }) => [
-                      {
-                        query: GET_PLEDGES,
-                        variables: {
-                          id: resolvePledgeToPayment.id
-                        }
+              }
+              {pledge.status !== 'CANCELLED' &&
+                <CancelPledge
+                  pledge={pledge}
+                  refetchQueries={({
+                    data: { cancelPledge }
+                  }) => [
+                    {
+                      query: GET_PLEDGES,
+                      variables: {
+                        id: cancelPledge.id
                       }
-                    ]}
-                  />
-                }
-                {pledge.status !== 'CANCELLED' &&
-                  <CancelPledge
-                    pledge={pledge}
-                    refetchQueries={({
-                      data: { cancelPledge }
-                    }) => [
-                      {
-                        query: GET_PLEDGES,
-                        variables: {
-                          id: cancelPledge.id
-                        }
-                      }
-                    ]}
-                  />
-                }
-              </div>
+                    }
+                  ]}
+                />
+              }
             </DD>
           </DL>
 

@@ -6,7 +6,10 @@ routes
   .add('payments')
   .add('postfinance-payments')
   .add('merge-users')
-  .add('user', '/users/:userId', 'user')
+  .add('user/event-log')
+  .add('user/access-grants')
+  .add('user/sessions')
+  .add('user')
 
 module.exports = routes
 module.exports.Router = routes.Router

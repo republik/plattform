@@ -19,7 +19,6 @@ const styles = {
     position: 'sticky',
     top: -20,
     zIndex: 10,
-    height: '60px',
     borderBottom: `1px solid ${colors.disabled}`
   }),
   byline: css({
@@ -27,7 +26,7 @@ const styles = {
   }),
   portrait: css({
     float: 'left',
-    height: '60px',
+    height: '50px',
     marginRight: '10px'
   }),
   navLink: css({
@@ -62,36 +61,47 @@ const Subnav = ({ userId, section }) => (
         userId
       }}
     >
-      <a {...styles.navLink} data-active={!section}>
+      <a {...styles.navLink} data-active={section === 'index'}>
         Übersicht
       </a>
     </Link>
     <Link
-      route="user-details"
+      route="user/event-log"
       params={{
         userId,
-        section: 'memberships'
       }}
     >
       <a
         {...styles.navLink}
-        data-active={section === 'memberships'}
+        data-active={section === 'event-log'}
       >
-        Pledges und Memberships
+        Event Log
       </a>
     </Link>
     <Link
-      route="user-details"
+      route="user/sessions"
       params={{
         userId,
-        section: 'eventlog'
       }}
     >
       <a
         {...styles.navLink}
-        data-active={section === 'eventlog'}
+        data-active={section === 'sessions'}
       >
-        Eventlog
+        Sessions
+      </a>
+    </Link>
+    <Link
+      route="user/access-grants"
+      params={{
+        userId,
+      }}
+    >
+      <a
+        {...styles.navLink}
+        data-active={section === 'access-grants'}
+      >
+        Access Grants
       </a>
     </Link>
   </div>
@@ -137,21 +147,24 @@ export default ({ userId, section }) => {
                 .slice(1)
               return (
                 <Section {...styles.header}>
-                  <img
-                    src={user.portrait}
-                    {...styles.portrait}
-                  />
-                  <Interaction.H3>
-                    {user.firstName} {user.lastName}
-                  </Interaction.H3>
-                  <div {...styles.byline}>{byline}</div>
-                  {/*
+                  <div>
+                    <img
+                      src={user.portrait}
+                      {...styles.portrait}
+                    />
+                    <Interaction.H3>
+                      {user.firstName} {user.lastName}
+                    </Interaction.H3>
+                    <div {...styles.byline}>
+                      {byline}
+                    </div>
+                  </div>
+                  <div  style={{clear: 'both', margin: '10px 0'}}>
                     <Subnav
                     userId={userId}
                     section={section}
                     />
-
-                  */}
+                    </div>
                 </Section>
               )
             }}

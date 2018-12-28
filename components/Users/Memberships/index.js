@@ -127,7 +127,7 @@ const MembershipDetails = ({ membership, ...props }) => {
             ))}
           </DL>
           </div>
-          {membership.cancellations &&
+          {membership.cancellations && membership.cancellations.length &&
              <DL>
               <hr />
               <DT>Kündigungen</DT>
@@ -158,7 +158,6 @@ const MembershipDetails = ({ membership, ...props }) => {
           <DL>
             <DT>Aktionen</DT>
             <DD>
-              <div {...displayStyles.hFlexBox}>
                 <MoveMembership
                   membership={membership}
                   refetchQueries={({
@@ -196,7 +195,6 @@ const MembershipDetails = ({ membership, ...props }) => {
                     ]}
                   />
                 }
-              </div>
             </DD>
           </DL>
       </td>

@@ -1,9 +1,10 @@
 import { Component, Fragment } from 'react'
-import { compose } from 'react-apollo'
+import { Query, Mutation } from 'react-apollo'
+import gql from 'graphql-tag'
 import { css } from 'glamor'
 import moment from 'moment'
 
-import withT from '../../../lib/withT'
+import withT from '../../lib/withT'
 
 import {
   colors,
@@ -12,12 +13,81 @@ import {
   InlineSpinner,
   Label,
   HR,
-  A
+  A,
+  Loader
 } from '@project-r/styleguide'
 
-import ErrorMessage from '../../ErrorMessage'
-import List, { Item } from '../../List'
-import routes from '../../../server/routes'
+import ErrorMessage from '../ErrorMessage'
+import List, { Item } from '../List'
+import routes from '../../server/routes'
+
+const GET_ACCESS_GRANTS = gql`
+query user($id: String) {
+  user(slug: $id) {
+    id
+    accessGrants(withPast: true) {
+      id
+      status
+      createdAt
+      beginAt
+      endAt
+      revokedAt
+      invalidatedAt
+      grantee {
+        id
+        email
+        name
+      }
+      campaign {
+        id
+        title
+        endAt
+      }
+      events {
+        createdAt
+        event
+      }
+    }
+    accessCampaigns(withPast: true) {
+      id
+      title
+      endAt
+      slots {
+        total
+        free
+        used
+      }
+      grants(withRevoked: true) {
+        id
+        status
+        createdAt
+        beginAt
+        endAt
+        revokedAt
+        invalidatedAt
+        email
+        recipient {
+          id
+          email
+          name
+        }
+        events {
+          createdAt
+          event
+        }
+      }
+    }
+  }
+}
+`
+
+const REVOKE_ACCESS = gql`
+  mutation revokeAccess(
+    $id: ID!
+  ) {
+    revokeAccess(id: $id)
+  }
+`
 
 const { Link } = routes
 
@@ -291,7 +361,7 @@ const Grants = ({ grants, revokeAccess, t }) => (
       {t('account/access/Grants/title')}
     </Interaction.H2>
     <div {...styles.grants}>
-      {grants.length > 0
+      {grants && grants.length > 0
         ? grants.map(grant => (
           <Grant
             key={`grants-${grant.id}`}
@@ -312,7 +382,7 @@ const Campaigns = ({ campaigns, revokeAccess, t }) => (
     <Interaction.H2 {...styles.heading}>
       {t('account/access/Campaigns/title')}
     </Interaction.H2>
-    {campaigns.length > 0 && campaigns.map(campaign => (
+    {campaigns && campaigns.length > 0 && campaigns.map(campaign => (
       <Fragment key={`camp-${campaign.id}`}>
         <Interaction.H3>
           {t(
@@ -340,7 +410,7 @@ const Campaigns = ({ campaigns, revokeAccess, t }) => (
         </div>
       </Fragment>
     ))}
-    {campaigns.length === 0 &&
+    {campaigns && campaigns.length === 0 &&
       <Interaction.P>
         {t('account/access/Campaigns/noCampaigns')}
       </Interaction.P>
@@ -348,13 +418,31 @@ const Campaigns = ({ campaigns, revokeAccess, t }) => (
   </Fragment>
 )
 
-const Access = ({ grants, campaigns, revokeAccess, t }) => {
+const Access = withT(({ grants, campaigns, revokeAccess, t }) => {
   return (
     <Fragment>
       <Grants grants={grants} revokeAccess={revokeAccess} t={t} />
       <Campaigns campaigns={campaigns} revokeAccess={revokeAccess} t={t} />
     </Fragment>
   )
-}
+})
 
-export default compose(withT)(Access)
+export default ({ userId }) => {
+  return (
+    <Query query={GET_ACCESS_GRANTS} variables={{id: userId}}>{({loading, error, data}) => {
+      return (
+        <Mutation mutation={REVOKE_ACCESS}>{
+          (revokeAccess, {loading: mutationLoading, error: mutationError}) => (
+            <Loader
+              loading={loading || mutationLoading}
+              error={error || mutationError}
+              render={() =>
+                <Access grants={data.accessGrants} campaigns={data.accessCampaigns} revokeAccess={revokeAccess} />
+              }
+            />
+          )
+        }</Mutation>
+      )
+    }}</Query>
+  )
+}

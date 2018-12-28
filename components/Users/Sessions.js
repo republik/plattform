@@ -9,7 +9,7 @@ import {
   Interaction,
   colors
 } from '@project-r/styleguide'
-import List, { Item } from '../../List'
+import List, { Item } from '../List'
 
 const sessionQuery = gql`
   query user($id: String) {
@@ -123,7 +123,7 @@ const WrappedSessionOverview = compose(
     })
   }),
   graphql(clearSessionsMutation, {
-    props: ({ mutate, ownProps: { user } }) => ({
+    props: ({ mutate, ownProps: { userId } }) => ({
       clearSessions: variables => {
         if (mutate) {
           return mutate({
@@ -132,7 +132,7 @@ const WrappedSessionOverview = compose(
               {
                 query: sessionQuery,
                 variables: {
-                  id: user.id
+                  id: userId
                 }
               }
             ]
@@ -142,10 +142,10 @@ const WrappedSessionOverview = compose(
     })
   }),
   graphql(sessionQuery, {
-    options: ({ user }) => {
+    options: ({ userId }) => {
       return {
         variables: {
-          id: user.id
+          id: userId
         }
       }
     }

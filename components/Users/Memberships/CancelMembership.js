@@ -83,16 +83,6 @@ export default class CancelPledge extends Component {
         cancellationType
       } = this.state
 
-      console.log(
-        {membershipId: this.props.membership.id,
-        immediately,
-        suppressNotifications,
-        details: {
-          reason,
-          type: cancellationType
-        }}
-      )
-
       return mutation({
         variables: {
           membershipId: this.props.membership.id,

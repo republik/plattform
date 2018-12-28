@@ -1,4 +1,5 @@
 import { Query } from 'react-apollo'
+import gql from 'graphql-tag'
 import { Label, Loader } from '@project-r/styleguide'
 
 import {
@@ -8,8 +9,27 @@ import {
 } from '../Display/utils'
 
 import { tableStyles } from '../Tables/utils'
-import { GET_EVENT_LOG } from './EventLog'
 
+
+export const GET_EVENT_LOG = gql`
+  query eventlog($id: String) {
+    user(slug: $id) {
+      id
+      eventLog {
+        type
+        createdAt
+        archivedSession {
+          email
+          userAgent
+          isCurrent
+        }
+        activeSession {
+          isCurrent
+        }
+      }
+    }
+  }
+`
 
 const EventLogTable = ({ entries, ...props }) => (
   <table {...props} {...tableStyles.table}>
@@ -59,7 +79,7 @@ export default ({ userId }) => {
                     Letzte Login-Aktivitäten
                   </SectionTitle>
                   <EventLogTable
-                    entries={entries.slice(0, 5)}
+                    entries={entries}
                   />
                 </Section>
               )
