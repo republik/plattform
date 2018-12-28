@@ -6,9 +6,9 @@ import {
   displayDateTime,
   Section,
   SectionTitle
-} from '../../Display/utils'
+} from '../Display/utils'
 
-import { tableStyles } from '../../Tables/utils'
+import { tableStyles } from '../Tables/utils'
 
 export const GET_EVENT_LOG = gql`
   query eventlog($id: String) {

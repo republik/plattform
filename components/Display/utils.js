@@ -28,7 +28,7 @@ export const displayStyles = {
     margin: '0 0 15px 0'
   }),
   sectionSubhead: css({
-    ...fontStyles.sansSerifMedium16,
+    ...fontStyles.sansSerifMedium19,
     margin: '6px 0 8px 0'
   }),
   sectionMenu: css({
@@ -56,7 +56,7 @@ export const displayStyles = {
   definition: css({
     ...fontStyles.sansSerifRegular18
   }),
-  plainButton: css({
+  textButton: css({
     cursor: 'pointer',
     display: 'inline-block',
     outline: 'none',
@@ -64,8 +64,10 @@ export const displayStyles = {
     border: 'none',
     padding: '0',
     transition: 'color 0.1s',
+    fontSize: 'inherit',
+    color: colors.primary,
     '&:not([disabled]):focus, &:hover': {
-      color: colors.primary
+      color: colors.secondary
     },
     '&[disabled]': {
       color: colors.disabled
@@ -112,8 +114,8 @@ export const SectionMenu = props => (
   <div {...props} {...displayStyles.sectionMenu} />
 )
 
-export const PlainButton = props => (
-  <button {...props} {...displayStyles.plainButton} />
+export const TextButton = props => (
+  <button {...props} {...displayStyles.textButton} />
 )
 
 export const DL = props => (

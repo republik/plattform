@@ -19,8 +19,8 @@ import {
   DL,
   DT,
   DD,
-  PlainButton
-} from '../../../Display/utils'
+  TextButton
+} from '../../Display/utils'
 
 import UserForm from './UserForm'
 
@@ -201,12 +201,12 @@ export default class User extends Component {
                           <InlineSpinner size={28} />
                         </div>
                       )}
-                      <PlainButton
+                      <TextButton
                         className="show-on-focus"
                         onClick={this.openHandler}
                       >
                         <EditIcon size={28} />
-                      </PlainButton>
+                      </TextButton>
                     </SectionMenu>
                     {isOpen && (
                       <Overlay>

@@ -11,8 +11,8 @@ import {
 import {
   InteractiveSection,
   SectionTitle,
-  PlainButton
-} from '../../Display/utils'
+  TextButton
+} from '../Display/utils'
 
 const ROLES = ['editor', 'supporter', 'accountant', 'admin']
 
@@ -109,9 +109,9 @@ class UpdateRole extends Component {
                   {loading ? (
                     <InlineSpinner size={22} />
                   ) : initialValue !== value ? (
-                    <PlainButton type="submit">
+                    <TextButton type="submit">
                       <SaveIcon size={22} />
-                    </PlainButton>
+                    </TextButton>
                   ) : (
                     undefined
                   )}

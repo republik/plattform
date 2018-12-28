@@ -14,7 +14,7 @@ import {
 import {
   Section,
   SectionTitle,
-  PlainButton
+  TextButton
 } from '../Display/utils'
 
 export const UPDATE_NEWSLETTER_SUBSCRIPTION = gql`
@@ -116,9 +116,9 @@ class UpdateSubscription extends Component {
                   {loading ? (
                     <InlineSpinner size={22} />
                   ) : subscribed !== value ? (
-                    <PlainButton type="submit">
+                    <TextButton type="submit">
                       <SaveIcon size={22} />
-                    </PlainButton>
+                    </TextButton>
                   ) : (
                     undefined
                   )}

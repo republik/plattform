@@ -20,7 +20,7 @@ export const tableStyles = {
   }),
   row: css({
     height: '35px',
-    '&:nth-child(even)': {
+    '&:nth-child(odd)': {
       backgroundColor: colors.secondaryBg
     }
   }),

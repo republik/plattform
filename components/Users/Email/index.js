@@ -18,7 +18,7 @@ import {
   DL,
   DT,
   DD,
-  PlainButton
+  TextButton
 } from '../../Display/utils'
 
 import EmailForm from './EmailForm'
@@ -126,12 +126,12 @@ export default class Email extends Component {
                           <InlineSpinner size={28} />
                         </div>
                       )}
-                      <PlainButton
+                      <TextButton
                         className="show-on-focus"
                         onClick={this.openHandler}
                       >
                         <EditIcon size={28} />
-                      </PlainButton>
+                      </TextButton>
                     </SectionMenu>
                     {isOpen && (
                       <Overlay>
