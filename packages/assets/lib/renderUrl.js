@@ -12,7 +12,8 @@ module.exports = async (
   url,
   width,
   height,
-  zoomFactor
+  zoomFactor,
+  fullPage = true
 ) => {
   const browser = await puppeteer.connect({
     browserWSEndpoint: PUPPETEER_WS_ENDPOINT
@@ -48,7 +49,7 @@ module.exports = async (
   }
 
   const screenshot = await page.screenshot({
-    fullPage: true
+    fullPage: !(['false', '0'].includes(fullPage))
   })
 
   browser.close()

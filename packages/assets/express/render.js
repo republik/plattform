@@ -19,6 +19,7 @@ module.exports = (server) => {
       url,
       viewport,
       zoomFactor,
+      fullPage,
       width: _width,
       height: _height
     } = req.query
@@ -47,7 +48,7 @@ module.exports = (server) => {
 
     let result
     try {
-      result = await renderUrl(url, width, height, zoomFactor)
+      result = await renderUrl(url, width, height, zoomFactor, fullPage)
     } catch (e) {
       res.status(500).end(e.message)
     }

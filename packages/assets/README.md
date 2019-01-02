@@ -20,13 +20,15 @@ Check [assets-backend](https://github.com/orbiting/assets-backend) for a deploya
 
   ENVs: `ASSETS_HMAC_KEY`
 
-- `/render?url=:url&[viewport=[:width]x[:height]]&[zoomFactor=:sf]`
+- `/render?url=:url&[viewport=[:width]x[:height]]&[zoomFactor=:sf]&[fullPage=:fp]`
 
   - renders :url
   - optional :viewport
     - succeeds deprecated: `width=:width&height=:height`
-    - default 1200xAUTO
-    - this api always screenshots the full page (with scrolling), cropping to viewport is not supported.
+    - default 1200x1
+  - optional :fullPage
+    - default true
+    - this api screenshots the full page per default (with scrolling), set `fullPage` to `'false'` or `'0'` to crop to viewport
   - optional :zoomFactor
     - requires viewport or w/h
     - default 1
