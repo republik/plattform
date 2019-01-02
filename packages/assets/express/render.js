@@ -46,16 +46,21 @@ module.exports = (server) => {
     }
     debug('GET %s', url)
 
-    let result
+    let result, error
     try {
       result = await renderUrl(url, width, height, zoomFactor, fullPage)
     } catch (e) {
-      res.status(500).end(e.message)
+      error = e
     }
 
-    if (!result) {
-      console.error('render failed', result.url, result.status)
-      return res.status(result.status).end()
+    if (error || !result) {
+      console.error(
+        `render failed: ${error && error.message}`,
+        { error, url, width, height, zoomFactor, fullPage, result }
+      )
+      return res.status(500).end(
+        (error && error.message) || 'server error'
+      )
     }
 
     return returnImage({
