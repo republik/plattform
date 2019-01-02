@@ -67,3 +67,6 @@ If not specified otherwise all endpoints honour the following query params:
 
 - `bw=true`
   greyscale an image
+
+- `format=[jpeg|png|webp]`
+  transform format if necessary
