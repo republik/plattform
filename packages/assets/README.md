@@ -25,7 +25,7 @@ Check [assets-backend](https://github.com/orbiting/assets-backend) for a deploya
   - renders :url
   - optional :viewport
     - succeeds deprecated: `width=:width&height=:height`
-    - default 1200x200
+    - default 1200x1
     - this api always screenshots the full page (with scrolling), cropping to viewport is not supported.
   - optional :zoomFactor
     - requires viewport or w/h
