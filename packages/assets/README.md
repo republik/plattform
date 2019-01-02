@@ -30,7 +30,6 @@ Check [assets-backend](https://github.com/orbiting/assets-backend) for a deploya
   - optional :zoomFactor
     - requires viewport or w/h
     - default 1
-  - format: png webp conversion not yet supported.
 
   ENVs: `PUPPETEER_WS_ENDPOINT`, `RENDER_URL_WHITELIST`: comma separated, accept: :url.indexOf(whiteUrl) === 0, `FRONTEND_BASIC_AUTH_USER`, `FRONTEND_BASIC_AUTH_PASS`
 
