@@ -146,7 +146,7 @@ module.exports = async (_, args, context) => {
     })
 
     const grants = await transaction.public.accessGrants.find({
-      or: [{granteeUserId: userId}, {recipientUserId: userId}]
+      or: [{granterUserId: userId}, {recipientUserId: userId}]
     })
     const hasGrants = grants.length > 0
 
