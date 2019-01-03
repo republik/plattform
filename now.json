@@ -1,0 +1,6 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "servers/assets/server.js", "use": "@now/node-server" }
+  ]
+}
