@@ -139,7 +139,12 @@ module.exports = async (
     ]
   })
 
-  await addRelatedDocs({ connection, scheduledAt, context })
+  await addRelatedDocs({
+    connection,
+    scheduledAt,
+    ignorePrepublished: !prepublication,
+    context
+  })
 
   const { _all, _usernames } = connection.nodes[0].entity
 

@@ -52,61 +52,19 @@ const init = async ({ t, mail }) => {
   }
 
   // An initial run
-  await matchGrants(pgdb, mail)
   await run()
 }
 
-const signInHook = async (userId, isNew, pgdb, mail) => {
-  debug('signInHook', { userId })
-
-  const user = await pgdb.public.users.findOne({ id: userId })
-  const grants =
-    await grantsLib.findUnassignedByEmail(user.email, pgdb)
-
-  if (grants.length === 0) {
-    return null
-  }
-
-  for (const grant of grants) {
-    await grantsLib.match(grant, pgdb, mail)
-  }
-}
-
-module.exports = {
-  init,
-  signInHook
-}
+module.exports = { init }
 
 const schedulerLock = () => new Redlock([redis])
-
-/**
- * Matches unassignedGrants
- */
-const matchGrants = async (pgdb, mail) => {
-  debug('matchGrants...')
-  for (const grant of await grantsLib.findUnassigned(pgdb)) {
-    const transaction = await pgdb.transactionBegin()
-
-    try {
-      await grantsLib.match(grant, transaction, mail)
-      await transaction.transactionCommit()
-    } catch (e) {
-      await transaction.transactionRollback()
-
-      debug('rollback', { grant: grant.id })
-
-      throw e
-    }
-  }
-  debug('matchGrants done')
-}
 
 /**
  * Renders expired grants invalid.
  */
 const expireGrants = async (t, pgdb, mail) => {
   debug('expireGrants...')
-  for (const grant of await grantsLib.findExpired(pgdb)) {
+  for (const grant of await grantsLib.findInvalid(pgdb)) {
     const transaction = await pgdb.transactionBegin()
 
     try {
