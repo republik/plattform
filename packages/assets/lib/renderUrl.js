@@ -23,8 +23,8 @@ module.exports = async (
 
   const promises = [
     page.setViewport({
-      width: parseInt(Math.abs(width), 10) || 1200,
-      height: parseInt(Math.abs(height), 10) || 1,
+      width: Math.ceil(Math.abs(width)) || 1200,
+      height: Math.ceil(Math.abs(height)) || 1,
       deviceScaleFactor: Math.abs(zoomFactor) || 1
     }),
     page.setExtraHTTPHeaders({ 'DNT': '1' })

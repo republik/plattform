@@ -8,8 +8,8 @@ module.exports = (resize) => {
     }
   }
   const [_width, _height] = resize.split('x')
-  const width = _width ? parseInt(Math.abs(_width), 10) : null
-  const height = _height ? parseInt(Math.abs(_height), 10) : null
+  const width = _width ? Math.ceil(Math.abs(_width)) : null
+  const height = _height ? Math.ceil(Math.abs(_height)) : null
   if (width && (typeof (width) !== 'number' || isNaN(width))) {
     throw new Error('invalid with')
   }
