@@ -5,7 +5,7 @@ type DocumentListItem {
   documentList: DocumentList!
 }
 
-interface DocumentList {
+type DocumentList {
   id: ID!
   name: String!
   documents(
