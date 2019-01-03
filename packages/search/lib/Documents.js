@@ -325,6 +325,9 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
     // for link resolving in lib/resolve
     // - including the usernames
     doc._all = [
+      ...doc._all
+        ? doc._all
+        : [],
       ...relatedDocs,
       ...docs
     ]

@@ -3,7 +3,7 @@ const logger = console
 const payPledgePF = require('../lib/payments/postfinance/payPledge')
 const payPledgePaypal = require('../lib/payments/paypal/payPledge')
 const generateMemberships = require('../lib/generateMemberships')
-const sendPendingPledgeConfirmations = require('../lib/sendPendingPledgeConfirmations')
+const { sendPledgeConfirmations } = require('../lib/Mail')
 const debug = require('debug')('crowdfundings:webhooks:all')
 
 const getWebhookHandler = require('../lib/payments/stripe/webhookHandler')
@@ -136,7 +136,7 @@ module.exports = async (server, pgdb, t) => {
 
     if (userId) {
       // send mail immediately
-      await sendPendingPledgeConfirmations(userId, pgdb, t)
+      await sendPledgeConfirmations({ userId, pgdb, t })
     }
   })
 
@@ -214,7 +214,7 @@ module.exports = async (server, pgdb, t) => {
 
         if (userId) {
           // send mail immediately
-          await sendPendingPledgeConfirmations(userId, pgdb, t)
+          await sendPledgeConfirmations({ userId, pgdb, t })
         }
       }
     })

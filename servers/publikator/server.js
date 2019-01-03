@@ -5,15 +5,23 @@ const t = require('./lib/t')
 
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: auth } = require('@orbiting/backend-modules-auth')
-// const { graphql: search } = require('@orbiting/backend-modules-search')
+
+const loaderBuilders = {
+  ...require('@orbiting/backend-modules-discussions/loaders'),
+  ...require('@orbiting/backend-modules-documents/loaders'),
+  ...require('@orbiting/backend-modules-auth/loaders')
+}
 
 const uncommittedChangesMiddleware = require('./express/uncommittedChanges')
 const cluster = require('cluster')
 
 const {
   LOCAL_ASSETS_SERVER,
-  PUBLICATION_SCHEDULER_OFF
+  NODE_ENV,
+  PUBLICATION_SCHEDULER
 } = process.env
+
+const DEV = NODE_ENV && NODE_ENV !== 'production'
 
 const start = async () => {
   const httpServer = await run()
@@ -24,12 +32,28 @@ const start = async () => {
 // in cluster mode, this runs after runOnce otherwise before
 const run = async (workerId) => {
   const localModule = require('./graphql')
-  const executableSchema = makeExecutableSchema(merge(localModule, [documents, auth]))
+  const executableSchema = makeExecutableSchema(
+    merge(
+      localModule,
+      [
+        documents,
+        auth
+      ]
+    )
+  )
 
-  const createGraphQLContext = (defaultContext) => ({
-    ...defaultContext,
-    t
-  })
+  const createGraphQLContext = (defaultContext) => {
+    const loaders = {}
+    const context = {
+      ...defaultContext,
+      t,
+      loaders
+    }
+    Object.keys(loaderBuilders).forEach(key => {
+      loaders[key] = loaderBuilders[key](context)
+    })
+    return context
+  }
 
   const middlewares = [
     uncommittedChangesMiddleware
@@ -58,8 +82,10 @@ const runOnce = (...args) => {
   }
   server.runOnce(...args)
 
-  if (PUBLICATION_SCHEDULER_OFF === 'true') {
-    console.log('PUBLICATION_SCHEDULER_OFF prevented scheduler from begin started')
+  if (PUBLICATION_SCHEDULER === 'false' || (DEV && PUBLICATION_SCHEDULER !== 'true')) {
+    console.log('PUBLICATION_SCHEDULER prevented scheduler from begin started',
+      { PUBLICATION_SCHEDULER, DEV }
+    )
   } else {
     const scheduler = require('./lib/publicationScheduler')
     scheduler.init()

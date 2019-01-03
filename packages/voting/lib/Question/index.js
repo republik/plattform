@@ -31,21 +31,45 @@ const validateAnswer = async (value, question, context, payload) => {
   }
 }
 
+const turnout = async (question, pgdb) => {
+  const { numSubmitted: getNumSubmittedQuestionnaires } = require('../Questionnaire')
+  const { id: questionId, questionnaireId } = question
+  const numSubmittedQuestionnaires =
+    (question.questionnaire.turnout && question.questionnaire.turnout.submitted) ||
+    await getNumSubmittedQuestionnaires(questionnaireId, pgdb)
+  const numSubmittedAnswers = await pgdb.public.answers.count({
+    submitted: true,
+    questionId
+  })
+  return {
+    submitted: numSubmittedAnswers,
+    skipped: numSubmittedQuestionnaires - numSubmittedAnswers
+  }
+}
+
 const resultForArchive = async (question, args, context) => {
+  let payload
   switch (question.type) {
     case 'Range':
-      return resultRange(question, args, context)
+      payload = await resultRange(question, args, context)
       // histogram not included in result, as we don't want to freeze it
+      break
     case 'Document':
-      return resultDocument(question, args, context)
+      payload = await resultDocument(question, args, context)
+      break
     case 'Choice':
-      return resultChoice(question, args, context)
+      payload = await resultChoice(question, args, context)
+      break
   }
-  return null
+  return {
+    payload,
+    turnout: await turnout(question, context.pgdb)
+  }
 }
 
 module.exports = {
   validateAnswer,
+  turnout,
   resultForArchive,
   validateChoice,
   resultChoice,

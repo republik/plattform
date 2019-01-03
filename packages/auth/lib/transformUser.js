@@ -4,7 +4,7 @@ const getName = user =>
     .join(' ')
     .trim()
 
-module.exports = user => {
+module.exports = (user, additionalFields = {}) => {
   const name = getName(user)
   return {
     // default public fields
@@ -19,6 +19,7 @@ module.exports = user => {
     email: user.email,
     // use resolver functions to access _raw
     // and expose more fields according to custom logic
-    _raw: user
+    _raw: user,
+    ...additionalFields
   }
 }

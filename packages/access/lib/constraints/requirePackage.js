@@ -1,7 +1,7 @@
 const debug = require('debug')('access:lib:constraints:requirePackage')
 
 /**
- * Constraint checks if grantee has an active package which resulted in a
+ * Constraint checks if granter has an active package which resulted in a
  * membership. If not contraint will fail. Contraint will hinder display of
  * campaign.
  *
@@ -11,7 +11,7 @@ const debug = require('debug')('access:lib:constraints:requirePackage')
  * @example: {"requirePackage": {"packages": ["ABO", "BENEFACTOR"]}}
  */
 
-const hasValidMembership = async ({ grantee, settings }, { pgdb }) => {
+const hasValidMembership = async ({ granter, settings }, { pgdb }) => {
   const packages = settings.packages.map(pkg => `'${pkg}'`).join(', ')
 
   const activeMemberships = await pgdb.query(`
@@ -28,7 +28,7 @@ const hasValidMembership = async ({ grantee, settings }, { pgdb }) => {
       ON pledges."packageId" = packages.id
 
     WHERE
-      memberships."userId" = '${grantee.id}'
+      memberships."userId" = '${granter.id}'
       AND packages.name IN (${packages})
       AND "beginDate" <= NOW()
       AND "endDate" > NOW()
@@ -38,15 +38,15 @@ const hasValidMembership = async ({ grantee, settings }, { pgdb }) => {
 }
 
 const isGrantable = async (args, context) => {
-  const { grantee, settings } = args
+  const { granter, settings } = args
   const { pgdb } = context
 
-  const isGrantable = await hasValidMembership({ grantee, settings }, { pgdb })
+  const isGrantable = await hasValidMembership({ granter, settings }, { pgdb })
 
   debug(
     'isGrantable',
     {
-      grantee: grantee.id,
+      granter: granter.id,
       settings,
       isGrantable
     }

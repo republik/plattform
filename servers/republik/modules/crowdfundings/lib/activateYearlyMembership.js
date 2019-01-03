@@ -40,7 +40,7 @@ module.exports = async (memberships, pgdb, dryRun) => {
 
   const inactiveMemberships = unusedMemberships.filter(m => {
     const pledge = pledges.find(p => p.id === m.pledgeId)
-    return packagesIndex[pledge.packageId].name !== 'ABO_GIVE' || !m.voucherCode
+    return !['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(packagesIndex[pledge.packageId].name) || !m.voucherCode
   })
   if (!inactiveMemberships.length) {
     return
@@ -72,6 +72,7 @@ module.exports = async (memberships, pgdb, dryRun) => {
 
   await pgdb.public.membershipPeriods.insert({
     membershipId: electedMembership.id,
+    pledgeId: electedMembership.pledgeId,
     beginDate,
     endDate
   })

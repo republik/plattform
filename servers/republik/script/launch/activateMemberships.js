@@ -77,6 +77,7 @@ PgDb.connect().then(async pgdb => {
 
       await transaction.public.membershipPeriods.insert({
         membershipId: electedMembership.id,
+        pledgeId: electedMembership.pledgeId,
         beginDate,
         endDate
       })

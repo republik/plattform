@@ -8,7 +8,6 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "@project-r/styleguide": "^5.81.7",
-    "@slack/client": "^4.2.2",
     "apollo-modules-node": "^0.1.4",
     "d3-array": "^1.2.1",
     "d3-dsv": "^1.0.8",
@@ -25,7 +24,7 @@
     "is-uuid": "^1.0.2",
     "isomorphic-unfetch": "^2.0.0",
     "lodash": "^4.17.5",
-    "moment": "^2.22.0",
+    "moment": "^2.22.2",
     "openpgp": "^3.0.11",
     "remark-breaks": "^1.0.0",
     "remark-parse": "^5.0.0",
@@ -38,7 +37,7 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION -w ../../packages -w express -w graphql -w lib -w modules -w .env -w package.json -w ../yarn.lock -w server.js -w index.js index.js",
-    "inspect": "NODE_ENV=development node --inspect index.js",
+    "inspect": "NODE_DEBUG_OPTION=--inspect yarn run dev",
     "start": "node index.js",
     "db:migrate:up": "node script/db-migrate-all.js up",
     "db:migrate:down": "node script/db-migrate-all.js down",

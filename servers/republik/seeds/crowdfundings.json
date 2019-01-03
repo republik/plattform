@@ -49,8 +49,7 @@
       "companyId": "c0000000-0000-0000-0001-000000000001",
       "name": "ABO",
       "price": 36500,
-      "interval": "year",
-      "intervalCount": 1
+      "interval": "year"
     }, {
       "id": "00000000-0000-0000-0006-000000000002",
       "rewardId": "00000000-0000-0000-0004-000000000003",
@@ -58,8 +57,7 @@
       "companyId": "c0000000-0000-0000-0001-000000000002",
       "name": "MONTHLY_ABO",
       "price": 3500,
-      "interval": "month",
-      "intervalCount": 1
+      "interval": "month"
     }
   ],
   "packages": [{

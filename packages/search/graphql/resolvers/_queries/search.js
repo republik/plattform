@@ -161,7 +161,7 @@ const createHighlight = (indicesList) => {
 
 const defaultExcludes = [ 'contentString', 'resolved' ]
 const createQuery = (
-  searchTerm, filter, sort, indicesList, user, scheduledAt, withoutContent
+  searchTerm, filter, sort, indicesList, user, scheduledAt, withoutContent, withoutAggs
 ) => ({
   query: {
     bool: {
@@ -172,7 +172,7 @@ const createQuery = (
   },
   sort: createSort(sort),
   highlight: createHighlight(indicesList),
-  aggs: extractAggs(documentSchema),
+  ...withoutAggs ? {} : { aggs: extractAggs(documentSchema) },
   _source: {
     'excludes': [
       ...defaultExcludes,
@@ -344,7 +344,9 @@ const search = async (__, args, context, info) => {
     recursive = false,
     scheduledAt,
     trackingId = uuid(),
-    withoutContent: _withoutContent
+    withoutContent: _withoutContent,
+    withoutRelatedDocs = false,
+    withoutAggs = false
   } = args
 
   // detect if Document.content is requested
@@ -394,7 +396,7 @@ const search = async (__, args, context, info) => {
     index: indicesList.map(({ name }) => getIndexAlias(name, 'read')),
     from,
     size: first,
-    body: createQuery(search, filter, sort, indicesList, user, scheduledAt, withoutContent)
+    body: createQuery(search, filter, sort, indicesList, user, scheduledAt, withoutContent, withoutAggs)
   }
   debug('ES query', JSON.stringify(query))
 
@@ -435,7 +437,7 @@ const search = async (__, args, context, info) => {
     trackingId
   }
 
-  if (!recursive && (!filter.type || filter.type === 'Document')) {
+  if (!recursive && !withoutRelatedDocs && (!filter.type || filter.type === 'Document')) {
     await addRelatedDocs({
       connection: response,
       context

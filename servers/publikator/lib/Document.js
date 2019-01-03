@@ -56,19 +56,17 @@ const prepareMetaForPublish = async ({
     publishDate
   })
 
-  let discussionId
-  if (docMeta.template === 'discussion') {
-    discussionId = await upsertDiscussion(repoMeta, {...docMeta, path}, context)
+  // discussionId is not saved to repoMeta anymore, but repoId to discussion
+  // see Meta.ownDiscussion resolver
+  if (['discussion', 'article'].indexOf(docMeta.template) > -1) {
+    await upsertDiscussion({ ...docMeta, path, repoId }, context, repoMeta.discussionId)
   }
 
-  if (savePublishDate || (discussionId && discussionId !== repoMeta.discussionId)) {
+  if (savePublishDate) {
     await editRepoMeta(null, {
       repoId,
       ...savePublishDate
         ? { publishDate }
-        : { },
-      ...discussionId
-        ? { discussionId }
         : { }
     }, context)
   }
@@ -131,7 +129,6 @@ const prepareMetaForPublish = async ({
     publishDate,
     prepublication,
     scheduledAt,
-    discussionId,
     credits,
     audioSource,
     authors,

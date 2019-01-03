@@ -3,9 +3,11 @@ const getSubscription = require('../../../lib/payments/stripe/getSubscription')
 const createSubscription = require('../../../lib/payments/stripe/createSubscription')
 const reactivateSubscription = require('../../../lib/payments/stripe/reactivateSubscription')
 const slack = require('../../../../../lib/slack')
-const moment = require('moment')
+const createCache = require('../../../lib/cache')
+const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
-module.exports = async (_, args, {pgdb, req, user: me, t, mail: {sendMailTemplate, enforceSubscriptions}}) => {
+module.exports = async (_, args, context) => {
+  const { pgdb, req, user: me, t, mail: { enforceSubscriptions } } = context
   const transaction = await pgdb.transactionBegin()
   const now = new Date()
   try {
@@ -91,11 +93,11 @@ module.exports = async (_, args, {pgdb, req, user: me, t, mail: {sendMailTemplat
             globalMergeVars: [
               { name: 'NAME',
                 content: [user.firstName, user.lastName]
-                .filter(Boolean)
-                .join(' ')
+                  .filter(Boolean)
+                  .join(' ')
               }
             ]
-          })
+          }, context)
         } catch (e2) {
           console.warn(e2)
         }
@@ -110,25 +112,23 @@ module.exports = async (_, args, {pgdb, req, user: me, t, mail: {sendMailTemplat
         subscriptionId: newSubscription.id,
         updatedAt: now
       })
-    } else if (membershipType.name === 'ABO' || membershipType.name === 'BENEFACTOR_ABO') {
-      if (membership.active) {
-        console.info('reactivateMembership: membership is already active')
+    } else if (['ABO', 'BENEFACTOR_ABO'].includes(membershipType.name)) {
+      if (membership.renew) {
+        console.info('reactivateMembership: membership is already renew===true')
         await transaction.transactionCommit()
         return membership
       }
+
+      if (!membership.active) {
+        console.error(`reactivateMembership: unable to reactivate membership`)
+        throw new Error(t('api/unexpected'))
+      }
+
       newMembership = await transaction.public.memberships.updateAndGetOne({
         id: membershipId
       }, {
         renew: true,
-        active: true,
         updatedAt: now
-      })
-      const beginDate = moment(now)
-      const endDate = moment(beginDate).add(membershipType.intervalCount, membershipType.interval)
-      await transaction.public.membershipPeriods.insert({
-        membershipId: newMembership.id,
-        beginDate,
-        endDate
       })
     } else {
       console.error(`reactivateMembership: membershipType "${membershipType.name}" not supported`)
@@ -146,6 +146,9 @@ module.exports = async (_, args, {pgdb, req, user: me, t, mail: {sendMailTemplat
         ? 'reactivateMembership'
         : 'reactivateMembership (support)'
     )
+
+    const cache = createCache({ prefix: `User:${user.id}` })
+    cache.invalidate()
 
     return newMembership
   } catch (e) {

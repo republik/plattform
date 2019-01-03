@@ -2,51 +2,188 @@ const logger = console
 const postfinanceSHA = require('../../../lib/payments/postfinance/sha')
 const uuid = require('uuid/v4')
 const { minTotal, regularTotal, getPledgeOptionsTree } = require('../../../lib/Pledge')
+const { resolvePackages, getCustomOptions } = require('../../../lib/CustomPackages')
 const debug = require('debug')('crowdfundings:pledge')
 const {
   Consents: {
     ensureAllRequiredConsents,
     saveConsents
+  },
+  AccessToken: {
+    getUserByAccessToken,
+    ensureCanPledgePackage
   }
 } = require('@orbiting/backend-modules-auth')
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, context) => {
+  const { pgdb, req, t } = context
   const transaction = await pgdb.transactionBegin()
   try {
     const { pledge, consents } = args
-    const pledgeOptions = pledge.options
     debug('submitPledge %O', pledge)
 
-    // load original of chosen packageOptions
-    const pledgeOptionsTemplateIds = pledgeOptions.map((plo) => plo.templateId)
-    const packageOptions = await transaction.public.packageOptions.find({id: pledgeOptionsTemplateIds})
+    const pledgeOptions = pledge.options.filter(o => o.amount > 0)
 
-    // check if all templateIds are valid
-    if (packageOptions.length < pledgeOptions.length) {
-      logger.error('one or more of the claimed templateIds are/became invalid', { req: req._log(), args })
-      throw new Error(t('api/unexpected'))
+    // Check if there are any options left viable to process
+    if (pledgeOptions.length === 0) {
+      logger.error(
+        'at least one option required w/ amount > 0',
+        { req: req._log(), args, options: pledge.options }
+      )
+      throw new Error(t('api/pledge/empty'))
     }
+
+    // load original of chosen packageOptions
+    const packageOptions = await transaction.public.packageOptions.find({
+      id: pledgeOptions.map(plo => plo.templateId)
+    })
+
+    const rewards =
+      await pgdb.public.rewards.find({
+        id: packageOptions.map(option => option.rewardId)
+      })
+
+    const goodies =
+      rewards.length > 0
+        ? await pgdb.public.goodies.find({
+          rewardId: rewards.map(reward => reward.id)
+        })
+        : []
+
+    const membershipTypes =
+      rewards.length > 0
+        ? await pgdb.public.membershipTypes.find({
+          rewardId: rewards.map(reward => reward.id)
+        })
+        : []
+
+    rewards.forEach((reward, index, rewards) => {
+      const goodie = goodies
+        .find(g => g.rewardId === reward.id)
+      const membershipType = membershipTypes
+        .find(m => m.rewardId === reward.id)
+
+      rewards[index] = Object.assign({}, reward, membershipType, goodie)
+    })
+
+    packageOptions.forEach((packageOption, index, packageOptions) => {
+      packageOptions[index].reward = rewards
+        .find(reward => packageOption.rewardId === reward.rewardId)
+    })
+
+    const packageId = packageOptions[0].packageId
+    const pkg = await pgdb.public.packages.findOne({ id: packageId })
+
+    // wrong tokens are just ignored
+    const accessTokenUser = pledge.accessToken && await getUserByAccessToken(pledge.accessToken, context)
+
+    if (accessTokenUser) {
+      ensureCanPledgePackage(accessTokenUser, pkg.name)
+    }
+
+    const resolvedPackage = (await resolvePackages({
+      packages: [pkg],
+      pledger: accessTokenUser || req.user,
+      pgdb: transaction
+    })).shift()
+
+    const resolvedOptions = resolvedPackage.custom
+      ? await getCustomOptions(resolvedPackage)
+      : []
 
     // check if packageOptions are all from the same package
     // check if minAmount <= amount <= maxAmount
     // we don't check the pledgeOption price here, because the frontend always
     // sends whats in the templating packageOption, so we always copy the price
     // into the pledgeOption (for record keeping)
-    let packageId = packageOptions[0].packageId
     pledgeOptions.forEach((plo) => {
-      const pko = packageOptions.find((pko) => pko.id === plo.templateId)
-      if (packageId !== pko.packageId) {
-        logger.error('options must all be part of the same package!', { req: req._log(), args, plo, pko })
+      // Mutually exclusive membership options: Can only be requested once
+      // within all options.
+      if (
+        plo.membershipId &&
+        pledgeOptions.filter(
+          o => o.membershipId === plo.membershipId && o.amount > 0
+        ).length > 1
+      ) {
+        logger.error(
+          'options w/ membershipIds must be mutually exclusive!',
+          { req: req._log(), args, plo }
+        )
         throw new Error(t('api/unexpected'))
       }
-      if (!(pko.minAmount <= plo.amount && plo.amount <= pko.maxAmount)) {
-        logger.error(`amount in option (templateId: ${plo.templateId}) out of range`, { req: req._log(), args, pko, plo })
+
+      // Check if passed options are valid custom package options.
+      if (
+        plo.membershipId &&
+        !resolvedOptions
+          .find(option =>
+            option.templateId === plo.templateId &&
+            option.membership.id === plo.membershipId
+          )
+      ) {
+        logger.error(
+          'options must be valid combination of templateId and membershipId',
+          { req: req._log(), args, plo }
+        )
         throw new Error(t('api/unexpected'))
+      }
+
+      const pko = packageOptions.find((pko) => pko.id === plo.templateId)
+
+      if (packageId !== pko.packageId) {
+        logger.error(
+          'options must all be part of the same package!',
+          { req: req._log(), args, plo, pko }
+        )
+        throw new Error(t('api/unexpected'))
+      }
+
+      if (!(pko.minAmount <= plo.amount && plo.amount <= pko.maxAmount)) {
+        logger.error(
+          `amount in option (templateId: ${plo.templateId}) out of range`,
+          { req: req._log(), args, pko, plo }
+        )
+        throw new Error(t('api/unexpected'))
+      }
+
+      if (!pko.userPrice && plo.price !== pko.price) {
+        logger.error(
+          `price in option (templateId: ${plo.templateId}) is invalid`,
+          { req: req._log(), args, pko, plo }
+        )
+        throw new Error(t('api/unexpected'))
+      }
+
+      if (
+        pko.reward &&
+        pko.reward.rewardType === 'MembershipType' &&
+        (
+          pko.reward.maxPeriods - pko.reward.minPeriods > 0 ||
+          plo.periods
+        )
+      ) {
+        if (!plo.periods) {
+          logger.error(
+            `periods in option (templateId: ${plo.templateId}) is missing`,
+            { req: req._log(), args, pko, plo }
+          )
+          throw new Error(t('api/unexpected'))
+        }
+
+        if (
+          plo.periods > pko.reward.maxPeriods ||
+          plo.periods < pko.reward.minPeriods
+        ) {
+          logger.error(
+            `periods in option (templateId: ${plo.templateId}) out of range`,
+            { req: req._log(), args, pko, plo }
+          )
+          throw new Error(t('api/unexpected'))
+        }
       }
     })
 
     // check if crowdfunding is still open
-    const pkg = await pgdb.public.packages.findOne({id: packageId})
     const crowdfunding = await pgdb.public.crowdfundings.findOne({id: pkg.crowdfundingId})
     const now = new Date()
     const gracefullEnd = new Date(crowdfunding.endDate)
@@ -76,7 +213,10 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     let user = null
     let pfAliasId = null
     if (req.user) { // user logged in
-      if (req.user.email !== pledge.user.email) {
+      if (
+        req.user.email !== pledge.user.email ||
+        (accessTokenUser && req.user.email !== accessTokenUser.email)
+      ) {
         logger.error('req.user.email and pledge.user.email dont match, signout first.', { req: req._log(), args })
         throw new Error(t('api/unexpected'))
       }
@@ -91,18 +231,30 @@ module.exports = async (_, args, {pgdb, req, t}) => {
 
       if (paymentSource) { pfAliasId = paymentSource.pspId }
     } else {
-      user = await transaction.public.users.findOne({email: pledge.user.email}) // try to load existing user by email
-      if (user && !!(await transaction.public.pledges.findFirst({userId: user.id}))) { // user has pledges
-        await transaction.transactionCommit()
-        return {emailVerify: true} // user must login before he can submitPledge
-      } else if (!user) { // create user
-        user = await transaction.public.users.insertAndGet({
-          email: pledge.user.email,
-          firstName: pledge.user.firstName,
-          lastName: pledge.user.lastName,
-          birthday: pledge.user.birthday,
-          phoneNumber: pledge.user.phoneNumber
-        }, {skipUndefined: true})
+      if (accessTokenUser) {
+        if (pledge.user.email !== accessTokenUser.email) {
+          await transaction.transactionRollback()
+          return { // user must logout before he can submitPledge
+            emailVerify: true
+          }
+        }
+        user = accessTokenUser
+      } else {
+        user = await transaction.public.users.findOne({email: pledge.user.email}) // try to load existing user by email
+        if (user && !!(await transaction.public.pledges.findFirst({userId: user.id}))) { // user has pledges
+          await transaction.transactionRollback()
+          return { // user must login before he can submitPledge
+            emailVerify: true
+          }
+        } else if (!user) { // create user
+          user = await transaction.public.users.insertAndGet({
+            email: pledge.user.email,
+            firstName: pledge.user.firstName,
+            lastName: pledge.user.lastName,
+            birthday: pledge.user.birthday,
+            phoneNumber: pledge.user.phoneNumber
+          }, {skipUndefined: true})
+        }
       }
     }
     // update user details
@@ -183,10 +335,20 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     newPledge = await transaction.public.pledges.insertAndGet(newPledge)
 
     // insert pledgeOptions
-    const newPledgeOptions = await Promise.all(pledge.options.map((plo) => {
+    const newPledgeOptions = await Promise.all(pledgeOptions.map(plo => {
       plo.pledgeId = newPledge.id
+
       const pko = packageOptions.find((pko) => pko.id === plo.templateId)
       plo.vat = pko.vat
+
+      if (
+        pko.reward &&
+        pko.reward.rewardType === 'MembershipType' &&
+        !plo.periods
+      ) {
+        plo.periods = pko.reward.defaultPeriods
+      }
+
       return transaction.public.pledgeOptions.insertAndGet(plo)
     }))
     newPledge.packageOptions = newPledgeOptions
