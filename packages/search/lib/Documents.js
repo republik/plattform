@@ -200,7 +200,12 @@ const getElasticDoc = (
   }
 }
 
-const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
+const addRelatedDocs = async ({
+  connection,
+  scheduledAt,
+  ignorePrepublished,
+  context
+}) => {
   const search = require('../graphql/resolvers/_queries/search')
   const { pgdb } = context
 
@@ -285,6 +290,7 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
       recursive: true,
       withoutContent: true,
       scheduledAt,
+      ignorePrepublished,
       first: sanitizedSeriesRepoIds.length * 2,
       filter: {
         repoId: sanitizedSeriesRepoIds,
@@ -311,6 +317,7 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
       recursive: true,
       withoutContent: true,
       scheduledAt,
+      ignorePrepublished,
       first: sanitizedRepoIds.length * 2,
       filter: {
         repoId: sanitizedRepoIds,
