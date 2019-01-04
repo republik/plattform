@@ -253,7 +253,8 @@ module.exports = {
           fields: {
             count: {
               type: 'token_count',
-              analyzer: 'standard'
+              analyzer: 'standard',
+              store: true
             },
             keyword: {
               type: 'keyword',

@@ -172,6 +172,7 @@ const createQuery = (
   },
   sort: createSort(sort),
   highlight: createHighlight(indicesList),
+  stored_fields: ['contentString.count'],
   ...withoutAggs ? {} : { aggs: extractAggs(documentSchema) },
   _source: {
     'excludes': [
@@ -188,6 +189,8 @@ const mapHit = (hit) => {
   const entity = type === 'User'
     ? transformUser(hit._source)
     : hit._source
+
+  Object.assign(entity, { _storedFields: hit.fields })
 
   const highlights = []
   Object.keys(hit.highlight || {}).forEach(path => {
