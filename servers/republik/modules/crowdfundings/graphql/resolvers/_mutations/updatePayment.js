@@ -1,7 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const logger = console
 const generateMemberships = require('../../../lib/generateMemberships')
-const sendPaymentSuccessful = require('../../../lib/payments/sendPaymentSuccessful')
+const { sendPaymentSuccessful } = require('../../../lib/Mail')
 
 module.exports = async (_, args, {pgdb, req, t}) => {
   Roles.ensureUserHasRole(req.user, 'supporter')
@@ -90,7 +90,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
         await generateMemberships(pledge.id, transaction, t, req)
       }
 
-      await sendPaymentSuccessful(pledge.id, transaction, t)
+      await sendPaymentSuccessful({ pledgeId: pledge.id, pgdb: transaction, t })
     }
 
     await transaction.transactionCommit()
