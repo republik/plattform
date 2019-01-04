@@ -6,12 +6,12 @@ import { range, min, max } from 'd3-array'
 import { scaleOrdinal, scalePoint, scaleTime } from 'd3-scale'
 import { line as lineShape, area as areaShape } from 'd3-shape'
 import { timeYear } from 'd3-time'
-import { timeFormat } from 'd3-time-format'
 
 import {
   sansSerifRegular12, sansSerifMedium14, sansSerifMedium22
 } from '../Typography/styles'
 import colors from '../../theme/colors'
+import { timeFormat } from '../../lib/timeFormat'
 
 import layout, {
   LABEL_FONT, VALUE_FONT,

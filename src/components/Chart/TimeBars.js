@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import { css } from 'glamor'
-import { timeParse, timeFormat } from 'd3-time-format'
 
 import { max, min, ascending } from 'd3-array'
 import { scaleLinear, scaleOrdinal, scaleBand } from 'd3-scale'
@@ -9,6 +8,7 @@ import * as d3Intervals from 'd3-time'
 
 import { sansSerifRegular12, sansSerifMedium12 } from '../Typography/styles'
 import colors from '../../theme/colors'
+import { timeFormat, timeParse } from '../../lib/timeFormat'
 
 import {
   calculateAxis,

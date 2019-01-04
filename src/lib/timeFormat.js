@@ -1,4 +1,7 @@
 import { timeFormatLocale } from 'd3-time-format'
 import timeDefinition from 'd3-time-format/locale/de-CH'
 
-export const timeFormat = timeFormatLocale(timeDefinition).format
+const locale = timeFormatLocale(timeDefinition)
+
+export const timeFormat = locale.format
+export const timeParse = locale.parse
