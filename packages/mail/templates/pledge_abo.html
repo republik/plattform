@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!--[if gte mso 15]>
+    <xml>
+      <o:officedocumentsettings>
+        <o:allowpng />
+        <o:pixelsperinch>96</o:pixelsperinch>
+      </o:officedocumentsettings>
+    </xml>
+    <![endif]-->
+  </head>
+  <body style="margin: 0; padding: 0; background-color: #fff;">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tbody>
+        <tr>
+          <td align="center" valign="top">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width:640px;color:#444;font-size:18px;font-family:Times, 'Times New Roman', serif;">
+              <tbody>
+                <tr>
+                  <td style="padding:20px;">
+                    <p>{{name}}, willkommen an Bord!</p>
+                    <p>Schön, sind Sie dabei. Wir freuen uns, Sie begrüssen zu dürfen. Hier finden Sie die wichtigsten Informationen:</p>
+                    {{#if `payment_method != "PAYMENTSLIP"`}}
+                      <p>Ihre Zahlung ist erfolgreich bei uns eingegangen, herzlichen Dank!</p>
+                    {{/if}}
+                    {{#if `payment_method == "PAYMENTSLIP"`}}
+                      <p>Sie haben Banküberweisung als Weg der Zahlung gewählt.</p>
+                      <p>Bitte überweisen Sie {{total_formatted}} an:</p>
+                      </p>
+                      <p>PC 61-11760-6<br>
+                        IBAN: CH50 0900 0000 6101 1760 6<br>
+                        BIC: POFICHBEXXX
+                      </p>
+                      <p>
+                        lautend auf:
+                      </p>
+                      <p>
+                        Project R Genossenschaft<br>
+                        Sihlhallenstrasse 1<br>
+                        8004 Zürich
+                      </p>
+                      <p>bis spätestens {{due_date}}.</p>
+                      <p><b>Und hier das Wichtigste. Vergessen Sie nicht, folgende Botschaft in das Feld «Betreff» des Einzahlungsscheins zu schreiben: {{HRID}}</b>
+                        <br>
+                        (Sonst funktioniert die Zuordnung nicht.)
+                      </p>
+                    {{/if}}
+                    {{#if waiting_for_payment}}
+                      <p><b>Da der Gesamtbetrag Ihrer Bestellung die magische Grenze von CHF 1000.– übersteigt, kann Ihre Mitgliedschaft und Ihr Zugang erst nach Zahlungseingang aktiviert werden. Sie erhalten eine Bestätigung, sobald die Transaktion erfolgreich bei uns angekommen ist.</b></p>
+                    {{else}}
+                      <p>Sie können ab sofort unser <a href="{{link_signin}}">Magazin lesen</a>, an <a href="{{link_dialog}}">sämtlichen Debatten teilnehmen</a>, eine <a href="{{link_profile}}">öffentliche Profilseite aufschalten</a> und Beiträge mit Ihren Freunden oder Feinden teilen.</p>
+                      <p>Ausserdem freuen wir uns, Sie ab sofort als unsere neueste Verlegerin, unseren neuesten Verleger begrüssen zu können. Sie haben damit das Recht auf die interessantesten Neuigkeiten aus Redaktion und Verlag: zu Vorhaben, Hintergründen, Entscheidungen und Fehlern. Sie können Kritik üben und gelegentlich Vorschläge machen. Und sich mit Ihren über 20’000 Kolleginnen und Kollegen in der Verlagsetage austauschen.</p>
+                      <p>Falls Sie Fragen zur Inbetriebnahme des Magazins haben: Hier finden Sie die <a href="{{frontend_base_url}}/2018/01/13/gebrauchsanleitung">Gebrauchsanleitung</a>, die die wichtigsten davon klärt.</p>
+                      {{#if goodies_count}}
+                        {{#if `goodies_count == 1`}}
+                          <p>Sie haben sich zu Ihrem Abo auch noch ein Republik-Objekt gegönnt. Sie werden es innerhalb der nächsten 7 Werktage per Post zugestellt bekommen.</p>
+                        {{elseif `goodies_count > 1`}}
+                          <p>Sie haben sich zu Ihrem Abo auch noch mehrere Republik-Objekte gegönnt. Sie werden diese innerhalb der nächsten 7 Werktage per Post zugestellt bekommen.</p>
+                        {{/if}}
+                        <ul>
+                          {{#options}}
+                            {{#if `this.otype == "Goodie"`}}
+                            <li>
+                              {{this.oamount}} {{this.olabel}}
+                            </li>
+                            {{/if}}
+                          {{/options}}
+                        </ul>
+                        <p><strong>Stellen Sie dafür bitte sicher, dass Sie Ihre Adresse unter <a href="{{link_account_account}}">{{link_account}}</a> korrekt eingetragen haben.</strong></p>
+                      {{/if}}
+                    {{/if}}
+                    <p>Vielen Dank!</p>
+                    <p>Ihre Crew von Project R und Republik</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:20px;">
+                    <p>
+                      <img height="79" src="https://gallery.mailchimp.com/650c1ec9003c7d8567eef4c5e/images/feb6bdde-83da-4211-bcf8-b09d3d3d012a.png" style="border: 0px  ; width: 180px !important; height: 79px !important; margin: 0px;" width="180" alt="feb6bdde-83da-4211-bcf8-b09d3d3d012a.png">
+                      <br>
+                      Republik AG<br>
+                      Sihlhallenstrasse 1<br>
+                      8004 Zürich<br>
+                      Schweiz<br><a href="mailto:kontakt@republik.ch">kontakt@republik.ch</a>
+                    </p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
