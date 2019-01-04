@@ -73,7 +73,8 @@
   },
   "files": [
     "lib",
-    "src"
+    "src",
+    "chart.js"
   ],
   "main": "./lib/lib.js",
   "author": "Thomas Preusse <t@preus.se> (https://t.preus.se/)",
@@ -84,7 +85,7 @@
   },
   "scripts": {
     "commit": "git-cz",
-    "prepublishOnly": "npm run prebuild && npm run build:lib",
+    "prepublishOnly": "npm run prebuild && npm run build:lib && cp ./lib/chart.js ./chart.js",
     "prebuild": "rimraf lib",
     "build:lib": "babel src --out-dir lib",
     "build": "npm run build:lib && react-scripts build",
