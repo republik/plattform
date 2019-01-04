@@ -30,7 +30,7 @@ module.exports = {
     // - alt check info.path for documents / document being the root
     //   https://gist.github.com/tpreusse/f79833a023706520da53647f9c61c7f6
     if (doc._all) {
-      contentUrlResolver(doc, doc._all, doc._usernames, undefined, urlPrefix, searchString)
+      contentUrlResolver(doc, doc._all, doc._usernames, undefined, urlPrefix, searchString, context.user || null)
 
       if (shouldDeliverWebP(webp, context.req)) {
         processRepoImageUrlsInContent(doc.content, addWebpSuffix)
@@ -52,7 +52,7 @@ module.exports = {
     }
     return meta
   },
-  children (doc, { first, last, before, after, urlPrefix, searchString, webp }, context, info) {
+  children (doc, { first, last, before, after, only, urlPrefix, searchString, webp }, context, info) {
     if (!doc || !doc.content || !doc.content.children) {
       return {
         pageInfo: {
@@ -66,7 +66,7 @@ module.exports = {
       }
     }
     if (doc._all) {
-      contentUrlResolver(doc, doc._all, doc._usernames, undefined, urlPrefix, searchString)
+      contentUrlResolver(doc, doc._all, doc._usernames, undefined, urlPrefix, searchString, context.user || null)
 
       if (shouldDeliverWebP(webp, context.req)) {
         processRepoImageUrlsInContent(doc.content, addWebpSuffix)
@@ -89,7 +89,9 @@ module.exports = {
       : lastIndex + 1
 
     const isLast = last && !first
-    const childrenSubset = children.slice(beginOffset, endOffset)
+    const childrenSubset = only
+      ? children.filter(child => child.data.id === only)
+      : children.slice(beginOffset, endOffset)
     const nodes = isLast
       ? childrenSubset.slice(-1 * last)
       : childrenSubset.slice(0, first)
