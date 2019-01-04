@@ -48,6 +48,8 @@ type Meta {
   credits: JSON
   audioSource: AudioSource
 
+  estimatedReadingMinutes: Int
+
   # template of the article
   template: String
 }
