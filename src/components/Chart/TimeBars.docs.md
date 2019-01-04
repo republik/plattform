@@ -4,7 +4,7 @@ Vertical bars are a nice line chart alternative for change over time of one (sta
 <div>
   <ChartTitle>Entwicklung der Treibhausgas-Emissionen in Deutschland</ChartTitle>
   <ChartLead>in Millionen Tonnen CO<Sub>2eq</Sub> pro Jahr</ChartLead>
-  <CsvChart t={t}
+  <CsvChart
     config={{
       "type": "TimeBar",
       "color": "gas",
@@ -226,7 +226,7 @@ By default a four digit year column is expected. Use `x`, `timeParse` and `timeF
 ```react
 <div>
   <ChartTitle>Devisenanlagen der SNB</ChartTitle>
-  <CsvChart t={t}
+  <CsvChart
     config={{
       "type": "TimeBar",
       "color": "bilanzposition",
@@ -469,7 +469,7 @@ Note: You should specify the `xInterval` prop when you have gaps in your data. A
 <div>
   <ChartTitle>Ordentliches Finanzierungsergebnis des Bundes</ChartTitle>
   <ChartLead>in Milliarden CHF</ChartLead>
-  <CsvChart t={t}
+  <CsvChart
     config={{
       "type": "TimeBar",
       "color": "type",
@@ -518,7 +518,7 @@ year,value,type
 ### Diverging Stacks
 
 ```react
-<CsvChart t={t}
+<CsvChart
   config={{
     "type": "TimeBar",
     "color": "typ",

@@ -76,17 +76,17 @@ const swissNumbers = formatLocale({
   currency: ['CHF\u00a0', '']
 })
 
-const formatPow = (t, baseValue) => {
+const formatPow = (tLabel, baseValue) => {
   const decimalFormat = swissNumbers.format('.0f')
   let [n] = decimalFormat(baseValue).split('.')
   let scale = value => value
   let suffix = ''
   if (n.length > 9) {
     scale = value => value / Math.pow(10, 9)
-    suffix = ' Mrd.'
+    suffix = tLabel(' Mrd.')
   } else if (n.length > 6) {
     scale = value => value / Math.pow(10, 6)
-    suffix = ' Mio.'
+    suffix = tLabel(' Mio.')
   }
   return {
     scale,
@@ -94,7 +94,7 @@ const formatPow = (t, baseValue) => {
   }
 }
 
-const sFormat = (t, precision = 4, pow, type = 'r') => {
+const sFormat = (tLabel, precision = 4, pow, type = 'r') => {
   const numberFormat4 = swissNumbers.format('d')
   const numberFormat5 = swissNumbers.format(',d')
   const numberFormat = value => {
@@ -113,7 +113,7 @@ const sFormat = (t, precision = 4, pow, type = 'r') => {
     return numberFormatWithSuffix4(value)
   }
   return value => {
-    let fPow = pow || formatPow(t, value)
+    let fPow = pow || formatPow(tLabel, value)
     if (fPow.suffix) {
       return numberFormatWithSuffix(fPow.scale(value)) + fPow.suffix
     }
@@ -121,18 +121,18 @@ const sFormat = (t, precision = 4, pow, type = 'r') => {
   }
 }
 
-export const getFormat = (numberFormat, t) => {
+export const getFormat = (numberFormat, tLabel) => {
   const specifier = formatSpecifier(numberFormat)
 
   if (specifier.type === 's') {
-    return sFormat(t, specifier.precision)
+    return sFormat(tLabel, specifier.precision)
   }
   return swissNumbers.format(specifier)
 }
 
 export const last = (array, index) => array.length - 1 === index
 
-export const calculateAxis = (numberFormat, t, domain, unit = '') => {
+export const calculateAxis = (numberFormat, tLabel, domain, unit = '') => {
   const [min, max] = domain
   const step = (max - min) / 2
   const ticks = [
@@ -145,7 +145,7 @@ export const calculateAxis = (numberFormat, t, domain, unit = '') => {
   const format = swissNumbers.format
 
   const specifier = formatSpecifier(numberFormat)
-  let formatter = getFormat(numberFormat, t)
+  let formatter = getFormat(numberFormat, tLabel)
   let regularFormat
   let lastFormat
   if (specifier.type === '%') {
@@ -158,13 +158,13 @@ export const calculateAxis = (numberFormat, t, domain, unit = '') => {
     regularFormat = (value) => regularFormatInner(value * 100)
   } else if (specifier.type === 's') {
     const magnitude = d3Max([max - (min > 0 ? min : 0), min].map(Math.abs))
-    let pow = formatPow(t, Math.max(0, min) + magnitude / 2)
+    let pow = formatPow(tLabel, Math.max(0, min) + magnitude / 2)
     let scaledStep = pow.scale(step)
     let scaledMax = pow.scale(max)
     specifier.precision = precisionFixed((scaledStep - Math.floor(scaledStep)) || (scaledMax - Math.floor(scaledMax)))
 
-    lastFormat = sFormat(t, specifier.precision, pow, 'f')
-    regularFormat = sFormat(t, specifier.precision, {scale: pow.scale, suffix: ''}, 'f')
+    lastFormat = sFormat(tLabel, specifier.precision, pow, 'f')
+    regularFormat = sFormat(tLabel, specifier.precision, {scale: pow.scale, suffix: ''}, 'f')
   } else {
     specifier.precision = precisionFixed((step - Math.floor(step)) || (max - Math.floor(max)))
     lastFormat = regularFormat = format(specifier.toString())

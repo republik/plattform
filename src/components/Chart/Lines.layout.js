@@ -113,12 +113,12 @@ export default (props) => {
   }
   const color = scaleOrdinal(colorRange).domain(colorValues)
 
-  const {unit, t} = props
+  const { unit, tLabel } = props
   let yCut
   if (!props.zero) {
-    yCut = t('styleguide/charts/y-cut')
+    yCut = tLabel('Achse gekürzt')
   }
-  const yAxis = calculateAxis(props.numberFormat, t, y.domain(), unit)
+  const yAxis = calculateAxis(props.numberFormat, tLabel, y.domain(), unit)
   const {format: yFormat} = yAxis
 
   const startValue = !mini && props.startValue

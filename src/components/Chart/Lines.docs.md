@@ -1,7 +1,7 @@
 ```react
 <div>
   <ChartTitle>Entwicklung der Lebenserwartung bei Geburt</ChartTitle>
-  <CsvChart t={t}
+  <CsvChart
     config={{
       "type": "Line",
       "unit": "Jahre",
@@ -100,7 +100,7 @@ year,gender,at_age,value
 ```react
 <div>
   <ChartTitle>BitCoin-Preis</ChartTitle>
-  <CsvChart t={t}
+  <CsvChart
     config={{
       "unit": "US-Dollar",
       "x": "date",
@@ -487,7 +487,7 @@ Use a `band` column base name with `_lower` and `_upper` data to display bands, 
 ```react
 <div>
   <ChartTitle>Entwicklung der Arbeitszufriedenheit nach Einkommensgruppen</ChartTitle>
-  <CsvChart t={t}
+  <CsvChart
     config={{
       "numberFormat": ".2f",
       "color": "category",

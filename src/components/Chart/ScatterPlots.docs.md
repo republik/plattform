@@ -5,7 +5,7 @@ Go forth and make correlations visible, and tell everyone it proofs nothing!
 <div>
   <ChartTitle>Einkommen und CO<Sub>2</Sub>-Emissionen pro Kopf im Jahr 2014</ChartTitle>
   <ChartLead>Mit mehr Einkommen sind bisher meist auch mehr Emissionen verbunden.</ChartLead>
-  <CsvChart t={t}
+  <CsvChart
     config={{
       "type": "ScatterPlot",
       "label": "geo",

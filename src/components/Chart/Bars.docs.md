@@ -2,7 +2,7 @@
 <div>
   <ChartTitle>Abgabenquote im internationalen Vergleich</ChartTitle>
   <ChartLead>in Prozent des BIP 2015</ChartLead>
-  <CsvChart t={t}
+  <CsvChart
     config={{
       "type": "Bar",
       "numberFormat": ".0%",
@@ -30,7 +30,7 @@ Irland,0.236
 <div>
   <ChartTitle>Themenstruktur der verschiedenen Formen der Weiterbildung 2014</ChartTitle>
   <ChartLead>in Prozent</ChartLead>
-  <CsvChart t={t}
+  <CsvChart
     config={{
       "type": "Bar",
       "color": "type",
@@ -72,7 +72,7 @@ nicht oder nur einstellig klassifizierbar,Betriebliche Weiterbildung,0.04
 ```react
 <div>
   <ChartTitle>Kriminalitätsfurcht 2012</ChartTitle>
-  <CsvChart t={t}
+  <CsvChart
     config={{
       "type": "Bar",
       "numberFormat": "%",
@@ -116,7 +116,7 @@ Use `colorLegendValues` to only label specific colors:
 
 ```react
 <div>
-  <CsvChart t={t}
+  <CsvChart
     config={{
       "type": "Bar",
       "numberFormat": "%",
@@ -154,7 +154,7 @@ mehr,0.1
 <div>
   <ChartTitle>Velobeschluss</ChartTitle>
   <ChartLead>Angenommen mit 73.6% Ja</ChartLead>
-  <CsvChart t={t}
+  <CsvChart
     config={{
       "type": "Bar",
       "numberFormat": ".1%",
@@ -185,7 +185,7 @@ Luzern,Nein,0.313,
 ```react
 <div>
   <ChartTitle>Häufigste Namen bei der Republik</ChartTitle>
-  <CsvChart t={t}
+  <CsvChart
     config={{
       "type": "Bar",
       "numberFormat": "s",
@@ -211,7 +211,7 @@ Daniel,415,https://www.republik.ch/~daniel
 <div>
   <ChartTitle>Wie positiv ist Alkoholkonsum?</ChartTitle>
   <ChartLead>Konstruktivität durch scharfe, negative Kritik</ChartLead>
-  <CsvChart t={t}
+  <CsvChart
     config={{
       "type": "Bar",
       "numberFormat": ".0%",
@@ -236,7 +236,7 @@ Absinth,-0.8
 <div>
   <ChartTitle>Ein undurchsichtiger durchsichtiger Hack</ChartTitle>
   <ChartLead>in Prozent</ChartLead>
-  <CsvChart t={t}
+  <CsvChart
     config={{
       "type": "Bar",
       "numberFormat": ".0%",

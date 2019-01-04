@@ -159,7 +159,7 @@ class ScatterPlot extends Component {
       description,
       children,
       values,
-      t, tLabel,
+      tLabel,
       opacity
     } = props
 
@@ -198,7 +198,7 @@ class ScatterPlot extends Component {
     if (xNice) {
       x.nice(xNice)
     }
-    const xAxis = calculateAxis(props.xNumberFormat || props.numberFormat, t, x.domain()) // xUnit is rendered separately
+    const xAxis = calculateAxis(props.xNumberFormat || props.numberFormat, tLabel, x.domain()) // xUnit is rendered separately
     const xTicks = props.xTicks || (props.xScale === 'log' ? get3EqualDistTicks(x) : xAxis.ticks)
     // ensure highest value is last: the last value is labled with the unit
     xTicks.sort(ascending)
@@ -217,7 +217,7 @@ class ScatterPlot extends Component {
     if (yNice) {
       y.nice(yNice)
     }
-    const yAxis = calculateAxis(props.yNumberFormat || props.numberFormat, t, y.domain(), tLabel(props.yUnit))
+    const yAxis = calculateAxis(props.yNumberFormat || props.numberFormat, tLabel, y.domain(), tLabel(props.yUnit))
     const yTicks = props.yTicks || (props.yScale === 'log' ? get3EqualDistTicks(y) : yAxis.ticks)
     // ensure highest value is last: the last value is labled with the unit
     yTicks.sort(ascending)
@@ -382,7 +382,7 @@ ScatterPlot.propTypes = {
   size: PropTypes.string.isRequired,
   sizeRange: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
   label: PropTypes.string.isRequired,
-  t: PropTypes.func.isRequired,
+  tLabel: PropTypes.func.isRequired,
   description: PropTypes.string
 }
 

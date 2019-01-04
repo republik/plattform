@@ -498,7 +498,7 @@ LineChart.propTypes = {
     x: PropTypes.string,
     dy: PropTypes.string
   })),
-  t: PropTypes.func.isRequired,
+  tLabel: PropTypes.func.isRequired,
   description: PropTypes.string
 }
 

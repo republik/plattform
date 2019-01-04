@@ -83,7 +83,6 @@ const TimeBarChart = (props) => {
     width,
     mini,
     children,
-    t,
     tLabel,
     description,
     yAnnotations,
@@ -171,7 +170,7 @@ const TimeBarChart = (props) => {
     })
   })
 
-  const yAxis = calculateAxis(props.numberFormat, t, y.domain(), tLabel(props.unit))
+  const yAxis = calculateAxis(props.numberFormat, tLabel, y.domain(), tLabel(props.unit))
   const yTicks = props.yTicks || yAxis.ticks
   // ensure highest value is last
   // - the last value is labled with the unit
@@ -440,7 +439,6 @@ TimeBarChart.propTypes = {
   unit: PropTypes.string,
   numberFormat: PropTypes.string.isRequired,
   filter: PropTypes.string,
-  t: PropTypes.func.isRequired,
   tLabel: PropTypes.func.isRequired,
   description: PropTypes.string
 }

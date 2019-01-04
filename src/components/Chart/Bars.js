@@ -138,7 +138,7 @@ const BarChart = (props) => {
     width,
     mini,
     children,
-    t,
+    tLabel,
     description,
     band,
     bandLegend,
@@ -296,7 +296,7 @@ const BarChart = (props) => {
     x.nice(3)
   }
 
-  const xAxis = calculateAxis(props.numberFormat, t, x.domain())
+  const xAxis = calculateAxis(props.numberFormat, tLabel, x.domain())
 
   // stack bars
   groupedData.forEach(group => {
@@ -548,7 +548,7 @@ BarChart.propTypes = {
   filter: PropTypes.string,
   minInnerWidth: PropTypes.number.isRequired,
   columns: PropTypes.number.isRequired,
-  t: PropTypes.func.isRequired,
+  tLabel: PropTypes.func.isRequired,
   description: PropTypes.string,
   showBarValues: PropTypes.bool
 }

@@ -69,8 +69,6 @@ export const ChartLead = ({children, ...props}) => (
   <p {...props} {...styles.p}>{children}</p>
 )
 
-const tLabel = identity => identity
-
 class Chart extends Component {
   constructor(props) {
     super(props)
@@ -85,7 +83,7 @@ class Chart extends Component {
     })
   }
   render() {
-    const {width: fixedWidth, config, t} = this.props
+    const {width: fixedWidth, config, tLabel} = this.props
 
     const width = fixedWidth || this.state.width
     const ReactChart = ReactCharts[config.type]
@@ -96,7 +94,6 @@ class Chart extends Component {
       }}>
         {!!width && (
           <ReactChart {...config}
-            t={t}
             tLabel={tLabel}
             colorRanges={colorRanges}
             width={width}
@@ -116,7 +113,11 @@ Chart.propTypes = {
     maxWidth: PropTypes.number
   }).isRequired,
   width: PropTypes.number,
-  t: PropTypes.func.isRequired
+  tLabel: PropTypes.func.isRequired
+}
+
+Chart.defaultProps = {
+  tLabel: identity => identity
 }
 
 export default Chart

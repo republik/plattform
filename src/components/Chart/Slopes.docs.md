@@ -2,7 +2,7 @@
 <div>
   <ChartTitle>Lebenserwartung bei Geburt</ChartTitle>
   <ChartLead>Ein Vergleich zwischen 1990 und 2015.</ChartLead>
-  <CsvChart t={t}
+  <CsvChart
     config={{
       "type": "Slope",
       "unit": "Jahre",
@@ -28,7 +28,7 @@ year,gender,at_age,value
 ```
 
 ```react
-<CsvChart t={t}
+<CsvChart
     config={{
       "color": "country",
       "colorSort": "none",
