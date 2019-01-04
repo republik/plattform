@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import * as glamor from 'glamor'
 import * as styleguide from '../../lib.js'
+import * as styleguideChart from '../../chart.js'
 
 import { requireFrom } from './require'
 import Loader from '../Loader'
@@ -23,7 +24,8 @@ export const createRequire = (whitelist = DEFAULT_WHITELIST) => {
     react: React,
     'prop-types': PropTypes,
     glamor,
-    '@project-r/styleguide': styleguide
+    '@project-r/styleguide': styleguide,
+    '@project-r/styleguide/chart': styleguideChart
   })
 }
 
