@@ -74,7 +74,8 @@
   "files": [
     "lib",
     "src",
-    "/chart.js"
+    "/chart.js",
+    "chart.js"
   ],
   "main": "./lib/lib.js",
   "author": "Thomas Preusse <t@preus.se> (https://t.preus.se/)",
