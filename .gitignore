@@ -9,7 +9,6 @@
 # production
 /build
 /lib
-/chart.js
 
 # misc
 .DS_Store

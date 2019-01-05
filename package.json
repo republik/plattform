@@ -74,7 +74,6 @@
   "files": [
     "lib",
     "src",
-    "/chart.js",
     "chart.js"
   ],
   "main": "./lib/lib.js",
@@ -86,7 +85,7 @@
   },
   "scripts": {
     "commit": "git-cz",
-    "prepublishOnly": "npm run prebuild && npm run build:lib && cp ./lib/chart.js ./chart.js",
+    "prepublishOnly": "npm run prebuild && npm run build:lib",
     "prebuild": "rimraf lib",
     "build:lib": "babel src --out-dir lib",
     "build": "npm run build:lib && react-scripts build",
