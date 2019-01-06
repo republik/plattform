@@ -211,6 +211,12 @@ export default (props) => {
         paddingRight = endValueSize + endLabelSize + whiteSpacePadding
       }
     }
+    if (props.paddingRight !== undefined) {
+      paddingRight = props.paddingRight + whiteSpacePadding
+    }
+    if (props.paddingLeft !== undefined) {
+      paddingLeft = props.paddingLeft + whiteSpacePadding
+    }
   }
 
   // transform all color values (always visible on small screens) and group titles for display

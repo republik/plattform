@@ -489,6 +489,8 @@ LineChart.propTypes = {
   minInnerWidth: PropTypes.number.isRequired,
   columns: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
+  paddingRight: PropTypes.number,
+  paddingLeft: PropTypes.number,
   unit: PropTypes.string,
   yNice: PropTypes.number,
   yTicks: PropTypes.arrayOf(PropTypes.number),
