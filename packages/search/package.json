@@ -20,11 +20,11 @@
     "link": "yarn link"
   },
   "dependencies": {
+    "@orbiting/graphql-list-fields": "^2.0.2",
     "apollo-modules-node": "^0.1.4",
     "check-env": "^1.3.0",
     "elasticsearch": "^15.0.0",
     "export-files": "^2.1.1",
-    "graphql-list-fields": "https://github.com/orbiting/graphql-list-fields#named-inline-fragments",
     "lodash": "^4.17.10",
     "yargs": "^11.0.0"
   }
