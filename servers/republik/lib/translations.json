@@ -1,5 +1,5 @@
 {
-  "updated": "2018-12-25T13:21:32.083Z",
+  "updated": "2019-01-04T15:34:44.956Z",
   "title": "live",
   "data": [
     {
@@ -809,6 +809,14 @@
     {
       "key": "timeAhead/years/other",
       "value": "in {count} Jahren"
+    },
+    {
+      "key": "api/document-lists/list/404",
+      "value": "Die Liste konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/document-lists/document/404",
+      "value": "Das Dokument konnte nicht gefunden werden."
     }
   ]
 }

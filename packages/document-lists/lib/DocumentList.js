@@ -1,52 +1,38 @@
-const find = (pgdb, query = {}) =>
+const find = (query = {}, { pgdb }) =>
   pgdb.public.documentLists.find(query)
 
-const findOne = (pgdb, query = {}) =>
-  pgdb.public.documentLists.findOne(query)
-
-const findForUserQuery = (name) => `
-  SELECT
-    *
-  FROM
-    "documentLists"
-  WHERE
-    id IN (
-      SELECT
-        DISTINCT("documentListId") AS id
-      FROM
-        "documentListItems"
-      WHERE
-        "userId" = :userId
-        ${name ? 'AND name = :name' : ''}
-    )
-`
-
-const findForUser = (userId, pgdb) =>
-  pgdb.query(
-    findForUserQuery(),
-    {
-      userId
-    }
-  )
+const findForUser = (userId, context) =>
+  find({}, context)
     .then(dls => dls
       .map(dl => Object.assign(dl, { userId }))
     )
 
-const byNameForUser = (name, userId, pgdb) =>
-  pgdb.query(
-    findForUserQuery(name),
-    {
-      name,
-      userId
-    }
-  )
-    .then(dls => dls
-      .map(dl => Object.assign(dl, { userId }))
-      .pop()
-    )
+const byNameForUser = (name, userId, { loaders }) =>
+  loaders.DocumentList.byKeyObj.load({
+    name
+  })
+    .then(dl => Object.assign(dl, { userId }))
 
-const insert = (userId, documentListId, repoId, pgdb) =>
-  pgdb.public.documentListItems.insert({
+const byId = (id, { loaders }) =>
+  loaders.DocumentList.byKeyObj.load({ id })
+
+const findItems = (args, { pgdb }) =>
+  pgdb.public.documentListItems.find(args)
+
+const upsert = async (userId, documentListId, repoId, pgdb) => {
+  const query = {
+    userId,
+    documentListId,
+    repoId
+  }
+  const count = await pgdb.public.documentListItems.count(query)
+  if (count === 0) {
+    return pgdb.public.documentListItems.insert(query)
+  }
+}
+
+const del = (userId, documentListId, repoId, pgdb) =>
+  pgdb.public.documentListItems.delete({
     userId,
     documentListId,
     repoId
@@ -54,8 +40,10 @@ const insert = (userId, documentListId, repoId, pgdb) =>
 
 module.exports = {
   find,
-  findOne,
   findForUser,
   byNameForUser,
-  insert
+  byId,
+  findItems,
+  upsert,
+  del
 }

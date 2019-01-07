@@ -9,11 +9,14 @@ type queries {
 }
 
 type mutations {
+  addDocumentToList(
+    repoId: ID!,
+    listName: ID!
+  ): DocumentList!
 
-  addDocumentToList(documentId: ID!, listId: ID!): DocumentList!
-
-  removeDocumentFromList(documentId: ID!, listId: ID!): DocumentList!
-
+  removeDocumentFromList(
+    repoId: ID!,
+    listName: ID!
+  ): DocumentList!
 }
-
 `

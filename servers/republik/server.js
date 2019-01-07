@@ -14,7 +14,8 @@ const { graphql: documentLists } = require('@orbiting/backend-modules-document-l
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-discussions/loaders'),
   ...require('@orbiting/backend-modules-documents/loaders'),
-  ...require('@orbiting/backend-modules-auth/loaders')
+  ...require('@orbiting/backend-modules-auth/loaders'),
+  ...require('@orbiting/backend-modules-document-lists/loaders')
 }
 
 const { accessScheduler, graphql: access } = require('@orbiting/backend-modules-access')

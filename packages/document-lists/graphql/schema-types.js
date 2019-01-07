@@ -8,7 +8,7 @@ type DocumentListItem {
 type DocumentList {
   id: ID!
   name: String!
-  documents(
+  userDocuments(
     first: Int
     last: Int
     before: String
@@ -24,5 +24,4 @@ extend type User {
   documentLists: [DocumentList!]!
   documentList(name: String!): DocumentList
 }
-
 `
