@@ -1,14 +1,32 @@
 const { createApolloFetch } = require('apollo-fetch')
+const Bottleneck = require('bottleneck')
+const debug = require('debug')('github:clients')
+
 const GitHubApi = require('@octokit/rest')
+
 const appAuth = require('./appAuth')
 
 const {
+  GITHUB_GRAPHQL_RATELIMIT,
   GITHUB_LOG_RATELIMIT
 } = process.env
+
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
 let installationToken
 let nextRateLimitCheck
+
+const limiter = new Bottleneck({
+  maxConcurrent: 1,
+  minTime: 200
+})
+
+if (GITHUB_GRAPHQL_RATELIMIT) {
+  setInterval(
+    () => { debug('bottleneck %o', { counts: limiter.counts() }) },
+    1000 * 10
+  ).unref()
+}
 
 module.exports = async () => {
   const nearFuture = new Date()
@@ -35,6 +53,12 @@ module.exports = async () => {
       }
       next()
     })
+
+  if (GITHUB_GRAPHQL_RATELIMIT) {
+    githubApolloFetch.use(async ({ options }, next) => {
+      limiter.schedule(() => next())
+    })
+  }
 
   const githubRest = new GitHubApi({
     headers: {
