@@ -11,7 +11,10 @@ const byNameForUser = (name, userId, { loaders }) =>
   loaders.DocumentList.byKeyObj.load({
     name
   })
-    .then(dl => Object.assign(dl, { userId }))
+    .then(dl => dl
+      ? Object.assign(dl, { userId })
+      : null
+    )
 
 const byId = (id, { loaders }) =>
   loaders.DocumentList.byKeyObj.load({ id })
