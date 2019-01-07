@@ -96,3 +96,5 @@ module.exports = async (mail, context, log) => {
     context
   })
 }
+
+module.exports.getTemplate = getTemplate
