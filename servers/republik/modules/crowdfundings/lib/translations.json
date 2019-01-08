@@ -1,5 +1,5 @@
 {
-  "updated": "2018-12-16T18:03:18.537Z",
+  "updated": "2019-01-08T15:22:02.997Z",
   "title": "live",
   "data": [
     {
@@ -473,6 +473,14 @@
     {
       "key": "api/email/membership_owner_prolong_notice/subject",
       "value": "Am {endDate} erneuert sich Ihre Mitgliedschaft"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_notice_7/subject",
+      "value": "Möchten Sie Ihre Abo verlängern oder die Republik verlassen? Entscheiden Sie sich bis {endDate}"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_notice_2/subject",
+      "value": "Möchten Sie Ihre Abo verlängern oder die Republik verlassen? Entscheiden Sie sich bis {endDate} "
     }
   ]
 }
