@@ -1326,6 +1326,11 @@ boom@5.x.x:
   dependencies:
     hoek "4.x.x"
 
+bottleneck@^2.15.0:
+  version "2.15.0"
+  resolved "https://registry.yarnpkg.com/bottleneck/-/bottleneck-2.15.0.tgz#538ec3a32f0e94a06e934bcb2080eb2c4c901c5a"
+  integrity sha512-6acQdvF7HfkbyDQAalnnsY5HGrrDrJ0QYie1/iL/IOch5oxhNVPRjqkIvOeCx4i6QyFi+ubxED/QRB1QWmWCJA==
+
 bowser@^1.7.3:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/bowser/-/bowser-1.9.3.tgz#6643ae4d783f31683f6d23156976b74183862162"
