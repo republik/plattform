@@ -112,14 +112,13 @@ const getBuckets = async ({ now }, { pgdb }) => {
         const dropped = buckets.some(bucket => {
           // Don't add user to bucket if user.membershipTypes does not contain
           // any of memberships listed in bucket.onlyMembershipTypes.
-          if (bucket.onlyMembershipTypes) {
-            const hasNecessaryMembershipType = user.membershipTypes
-              .map(type => bucket.onlyMembershipTypes.includes(type))
-              .reduce((acc, cur) => !cur ? acc : cur, false)
-
-            if (!hasNecessaryMembershipType) {
-              return false
-            }
+          if (
+            bucket.onlyMembershipTypes &&
+            !user.membershipTypes.find(
+              type => bucket.onlyMembershipTypes.includes(type)
+            )
+          ) {
+            return false
           }
 
           // Add user to bucket if prolongBeforeDate is between

@@ -581,7 +581,7 @@ mail.prepareMembershipOwnerNotice = async ({ user, endDate, cancelUntilDate, tem
 
   const formattedEndDate = dateFormat(endDate)
   const timeLeft = moment(endDate).diff(moment())
-  const daysLeft = Math.ceil(moment.duration(timeLeft).as('days'))
+  const daysLeft = Math.max(1, Math.ceil(moment.duration(timeLeft).as('days')))
 
   return ({
     to: user.email,
@@ -599,7 +599,7 @@ mail.prepareMembershipOwnerNotice = async ({ user, endDate, cancelUntilDate, tem
         content: formattedEndDate
       },
       { name: 'days_left',
-        content: daysLeft >= 1 ? daysLeft : 1
+        content: daysLeft
       },
       { name: 'cancel_until_date',
         content: dateFormat(cancelUntilDate)
