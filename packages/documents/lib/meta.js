@@ -70,7 +70,7 @@ const getWordsPerMinute = () => WORDS_PER_MIN
  * @return {Number}      Minutes to read content
  */
 const getEstimatedReadingMinutes = doc => {
-  const count = doc._storedFields['contentString.count'] || false
+  const count = (doc._storedFields && doc._storedFields['contentString.count']) || false
 
   if (!count || count[0] < getWordsPerMinute()) {
     return 0
