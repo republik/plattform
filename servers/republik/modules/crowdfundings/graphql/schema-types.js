@@ -376,6 +376,8 @@ type PostfinancePayment {
   id: ID!
   buchungsdatum: Date!
   valuta: Date!
+  konto: String!
+  iban: String!
   avisierungstext: String!
   gutschrift: Int!
   mitteilung: String
