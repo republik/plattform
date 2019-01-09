@@ -36,15 +36,17 @@ const createBuckets = (now) => [
     templateName: 'membership_owner_prolong_notice',
     minEndDate: getMinEndDate(now, 22),
     maxEndDate: getMaxEndDate(now, DAYS_BEFORE_END_DATE),
+    onlyMembershipTypes: ['ABO'],
     users: []
-  }
-  /*
+  },
   {
     templateName: 'membership_owner_prolong_notice_7',
     minEndDate: getMinEndDate(now, 5),
     maxEndDate: getMaxEndDate(now, 7),
+    onlyMembershipTypes: ['ABO'],
     users: []
-  },
+  }
+  /*
   {
     templateName: 'membership_owner_prolong_notice_2',
     minEndDate: getMinEndDate(now, 1),
@@ -58,22 +60,27 @@ const getBuckets = async ({ now }, { pgdb }) => {
   // load users with a membership
   const users = await pgdb.query(`
     SELECT
-      DISTINCT(u.*)
+      u.*,
+      json_agg(DISTINCT mt.name) AS "membershipTypes"
     FROM
-      users u
+      memberships m
+    INNER JOIN
+      users u ON m."userId" = u.id
+    INNER JOIN
+      "membershipTypes" mt ON m."membershipTypeId" = mt.id
     WHERE
-      u.id != :PARKING_USER_ID AND
-      u.id IN (
-        SELECT
-          DISTINCT(m."userId")
-        FROM
-          memberships m
-      )
+      m."userId" != :PARKING_USER_ID
+      AND m.active = true
+      AND m.renew = true
+    GROUP BY 1
   `, {
     PARKING_USER_ID
   })
     .then(users => users
-      .map(user => transformUser(user))
+      .map(user => ({
+        ...transformUser(user),
+        membershipTypes: user.membershipTypes
+      }))
     )
   debug(`investigating ${users.length} users for prolongBeforeDate`)
 
@@ -87,6 +94,8 @@ const getBuckets = async ({ now }, { pgdb }) => {
 
   const buckets = createBuckets(now)
 
+  debug('buckets %O', buckets)
+
   await Promise.each(
     users,
     async (user) => {
@@ -97,10 +106,23 @@ const getBuckets = async ({ now }, { pgdb }) => {
       )
         .then(date => date && moment(date))
 
-      stats.numNeedProlongProgress += 1
+      stats.numNeedProlongProgress++
 
       if (prolongBeforeDate) {
         const dropped = buckets.some(bucket => {
+          // Don't add user to bucket if user.membershipTypes does not contain
+          // any of memberships listed in bucket.onlyMembershipTypes.
+          if (
+            bucket.onlyMembershipTypes &&
+            !user.membershipTypes.find(
+              type => bucket.onlyMembershipTypes.includes(type)
+            )
+          ) {
+            return false
+          }
+
+          // Add user to bucket if prolongBeforeDate is between
+          // bucket.minEndDate and bucket.maxEndDate
           if (
             prolongBeforeDate.isAfter(bucket.minEndDate) &&
             prolongBeforeDate.isBefore(bucket.maxEndDate)
@@ -114,7 +136,7 @@ const getBuckets = async ({ now }, { pgdb }) => {
           return false
         })
         if (dropped) {
-          stats.numNeedProlong += 1
+          stats.numNeedProlong++
         }
       }
     },
