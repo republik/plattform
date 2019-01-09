@@ -13,6 +13,8 @@ module.exports = (context) => ({
         context.loaders.Discussion.byRepoId.clear(discussion.repoId)
       }
     }
+    context.loaders.Discussion.byId.clear(id)
+    context.loaders.Discussion.byRepoId.clear(id)
   },
   byId: createDataLoader(ids =>
     context.pgdb.public.discussions.find({
