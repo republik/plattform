@@ -17,6 +17,11 @@ module.exports = async (
     : '"createdAt" ASC'
 
   const filterActive = (dateRangeFilter || stringArrayFilter || booleanFilter)
+  const andFiltersStmt = andFilters([
+    dateRangeFilterWhere(dateRangeFilter),
+    stringArrayFilterWhere(stringArrayFilter),
+    booleanFilterWhere(booleanFilter)
+  ])
   const items = await pgdb.query(`
     SELECT
       pfp.id AS id,
@@ -40,11 +45,7 @@ module.exports = async (
     LEFT OUTER JOIN "bankAccounts" ba
       ON ba.id = pfp."bankAccountId"
     ${filterActive ? 'WHERE' : ''}
-      ${andFilters([
-    dateRangeFilterWhere(dateRangeFilter),
-    stringArrayFilterWhere(stringArrayFilter),
-    booleanFilterWhere(booleanFilter)
-  ])}
+      ${andFiltersStmt}
     ORDER BY
       ${search ? 'word_sim' : orderByTerm}
     OFFSET :offset
