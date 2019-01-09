@@ -4,10 +4,6 @@ const DocumentList = require('../../lib/DocumentList')
 module.exports = {
   documentLists (user, args, context) {
     const { user: me } = context
-    console.log('asdfasdf>',
-      Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter']),
-      Roles.userIsInRoles(user, ['member'])
-    )
     if (
       !Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter']) ||
       !Roles.userIsInRoles(user, ['member'])
