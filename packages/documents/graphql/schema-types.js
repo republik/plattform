@@ -50,6 +50,9 @@ type Meta {
 
   # template of the article
   template: String
+
+  indicateGallery: Boolean
+  indicateVideo: Boolean
 }
 
 input DocumentInput {
