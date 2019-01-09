@@ -1,6 +1,7 @@
 module.exports = `
 
 type DocumentListItem {
+  id: ID!
   createdAt: Date!
   documentList: DocumentList!
 }

@@ -19,6 +19,13 @@ const byNameForUser = (name, userId, { loaders }) =>
 const byId = (id, { loaders }) =>
   loaders.DocumentList.byKeyObj.load({ id })
 
+const byIdForUser = (id, userId, context) =>
+  byId(id, context)
+    .then(dl => dl
+      ? Object.assign(dl, { userId })
+      : null
+    )
+
 const findItems = (args, { pgdb }) =>
   pgdb.public.documentListItems.find(args)
 
@@ -46,6 +53,7 @@ module.exports = {
   findForUser,
   byNameForUser,
   byId,
+  byIdForUser,
   findItems,
   upsert,
   del
