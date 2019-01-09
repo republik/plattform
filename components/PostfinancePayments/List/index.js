@@ -164,6 +164,7 @@ const postfinancePaymentsQuery = gql`
         valuta
         avisierungstext
         gutschrift
+        konto
         mitteilung
         matched
         createdAt
