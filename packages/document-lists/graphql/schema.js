@@ -12,11 +12,11 @@ type mutations {
   addDocumentToList(
     documentId: ID!,
     listName: ID!
-  ): DocumentList!
+  ): Document!
 
   removeDocumentFromList(
     documentId: ID!,
     listName: ID!
-  ): DocumentList!
+  ): Document
 }
 `

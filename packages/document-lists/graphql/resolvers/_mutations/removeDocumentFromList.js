@@ -2,7 +2,7 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const DocumentList = require('../../../lib/DocumentList')
 
 module.exports = async (_, { documentId, listName }, context) => {
-  const { pgdb, user: me, t } = context
+  const { pgdb, user: me, t, loaders } = context
   Roles.ensureUserHasRole(me, 'member')
 
   const transaction = await pgdb.transactionBegin()
@@ -26,7 +26,7 @@ module.exports = async (_, { documentId, listName }, context) => {
 
     await transaction.transactionCommit()
 
-    return list
+    return loaders.Document.byRepoId.load(repoId)
   } catch (e) {
     await transaction.transactionRollback()
     throw e

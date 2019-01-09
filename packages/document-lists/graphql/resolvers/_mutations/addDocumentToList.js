@@ -31,7 +31,7 @@ module.exports = async (_, { documentId, listName }, context) => {
 
     await transaction.transactionCommit()
 
-    return list
+    return doc
   } catch (e) {
     await transaction.transactionRollback()
     throw e
