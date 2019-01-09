@@ -4,18 +4,14 @@ schema {
   mutation: mutations
 }
 
-type queries {
-  documentLists: [DocumentList!]!
-}
-
 type mutations {
   addDocumentToList(
-    documentId: ID!,
+    documentId: ID!
     listName: ID!
   ): Document!
 
   removeDocumentFromList(
-    documentId: ID!,
+    documentId: ID!
     listName: ID!
   ): Document
 }

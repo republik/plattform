@@ -9,13 +9,13 @@ const { graphql: search } = require('@orbiting/backend-modules-search')
 const { graphql: notifications } = require('@orbiting/backend-modules-notifications')
 const { graphql: voting } = require('@orbiting/backend-modules-voting')
 const { graphql: discussions } = require('@orbiting/backend-modules-discussions')
-const { graphql: documentLists } = require('@orbiting/backend-modules-document-lists')
+const { graphql: userLists } = require('@orbiting/backend-modules-user-lists')
 
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-discussions/loaders'),
   ...require('@orbiting/backend-modules-documents/loaders'),
   ...require('@orbiting/backend-modules-auth/loaders'),
-  ...require('@orbiting/backend-modules-document-lists/loaders')
+  ...require('@orbiting/backend-modules-user-lists/loaders')
 }
 
 const { accessScheduler, graphql: access } = require('@orbiting/backend-modules-access')
@@ -56,7 +56,7 @@ const run = async (workerId) => {
         notifications,
         access,
         voting,
-        documentLists
+        userLists
       ]
     )
   )

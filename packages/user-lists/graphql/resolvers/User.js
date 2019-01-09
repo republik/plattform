@@ -1,8 +1,8 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const DocumentList = require('../../lib/DocumentList')
+const UserList = require('../../lib/UserList')
 
 module.exports = {
-  documentLists (user, args, context) {
+  lists (user, args, context) {
     const { user: me } = context
     if (
       !Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter']) ||
@@ -10,9 +10,9 @@ module.exports = {
     ) {
       return []
     }
-    return DocumentList.findForUser(user.id, context)
+    return UserList.findForUser(user.id, context)
   },
-  documentList (user, { name }, context) {
+  list (user, { name }, context) {
     const { user: me } = context
     if (
       !Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter']) ||
@@ -20,6 +20,6 @@ module.exports = {
     ) {
       return
     }
-    return DocumentList.byNameForUser(name, user.id, context)
+    return UserList.byNameForUser(name, user.id, context)
   }
 }
