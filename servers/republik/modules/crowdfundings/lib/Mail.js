@@ -1,4 +1,5 @@
 const debug = require('debug')('crowdfundings:lib:Mail')
+const moment = require('moment')
 
 const { createMail, sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { grants } = require('@orbiting/backend-modules-access')
@@ -579,6 +580,8 @@ mail.prepareMembershipOwnerNotice = async ({ user, endDate, cancelUntilDate, tem
   const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
 
   const formattedEndDate = dateFormat(endDate)
+  const timeLeft = moment(endDate).diff(moment())
+  const daysLeft = Math.max(1, Math.ceil(moment.duration(timeLeft).as('days')))
 
   return ({
     to: user.email,
@@ -594,6 +597,9 @@ mail.prepareMembershipOwnerNotice = async ({ user, endDate, cancelUntilDate, tem
       },
       { name: 'end_date',
         content: formattedEndDate
+      },
+      { name: 'days_left',
+        content: daysLeft
       },
       { name: 'cancel_until_date',
         content: dateFormat(cancelUntilDate)
