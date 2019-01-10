@@ -17,7 +17,7 @@ const migrationDirs = [
   '../../packages/access/migrations',
   '../../packages/preview/migrations',
   '../../packages/voting/migrations',
-  '../../packages/document-lists/migrations'
+  '../../packages/collections/migrations'
 ]
 
 dbMigrateAll(migrationDirs)
