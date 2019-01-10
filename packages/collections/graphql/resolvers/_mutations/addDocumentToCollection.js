@@ -1,15 +1,15 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const UserList = require('../../../lib/UserList')
+const Collection = require('../../../lib/Collection')
 
-module.exports = async (_, { documentId, listName, data }, context) => {
+module.exports = async (_, { documentId, collectionName, data }, context) => {
   const { pgdb, user: me, t, loaders } = context
   Roles.ensureUserHasRole(me, 'member')
 
   const transaction = await pgdb.transactionBegin()
   try {
-    const list = await UserList.byNameForUser(listName, me.id, context)
-    if (!list) {
-      throw new Error(t(`api/document-lists/list/404`))
+    const collection = await Collection.byNameForUser(collectionName, me.id, context)
+    if (!collection) {
+      throw new Error(t(`api/collections/collection/404`))
     }
 
     const repoId = Buffer.from(documentId, 'base64')
@@ -19,20 +19,20 @@ module.exports = async (_, { documentId, listName, data }, context) => {
       .join('/')
     const doc = await loaders.Document.byRepoId.load(repoId)
     if (!doc) {
-      throw new Error(t(`api/document-lists/document/404`))
+      throw new Error(t(`api/collections/document/404`))
     }
 
-    await UserList.upsertDocumentItem(
+    const item = await Collection.upsertDocumentItem(
       me.id,
-      list.id,
+      collection.id,
       repoId,
       data,
-      pgdb
+      context
     )
 
     await transaction.transactionCommit()
 
-    return doc
+    return item
   } catch (e) {
     await transaction.transactionRollback()
     throw e

@@ -1,4 +1,4 @@
-CREATE TABLE "userLists" (
+CREATE TABLE "collections" (
   "id"              uuid primary key not null default uuid_generate_v4(),
   "name"            text not null unique,
   "hidden"          boolean not null default false,
@@ -6,14 +6,14 @@ CREATE TABLE "userLists" (
   "updatedAt"       timestamptz default now()
 );
 
-CREATE TABLE "userListDocumentItems" (
+CREATE TABLE "collectionDocumentItems" (
   "id"              uuid primary key not null default uuid_generate_v4(),
-  "userListId"  uuid not null references "userLists" on update cascade,
+  "collectionId"    uuid not null references "collections" on update cascade,
   "userId"          uuid not null references "users" on update cascade on delete set null,
   "repoId"          text not null,
   "data"            jsonb,
   "createdAt"       timestamptz default now(),
-  unique("userListId", "userId", "repoId")
+  unique("collectionId", "userId", "repoId")
 );
 
-INSERT INTO "userLists" ("name") VALUES ('bookmarks');
+INSERT INTO "collections" ("name") VALUES ('bookmarks');

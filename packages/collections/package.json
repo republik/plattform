@@ -1,5 +1,5 @@
 {
-  "name": "@orbiting/backend-modules-user-lists",
+  "name": "@orbiting/backend-modules-collections",
   "version": "0.0.1",
   "description": "collect documents into lists",
   "main": "index.js",
