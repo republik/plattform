@@ -597,6 +597,11 @@ const createSchema = ({
       ref: 'bool'
     },
     {
+      label: 'Icon: Chart',
+      key: 'indicateChart',
+      ref: 'bool'
+    },
+    {
       label: 'Keine Leseposition (z.B. für Videoartikel)',
       key: 'disableTextProgress',
       ref: 'bool'
