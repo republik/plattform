@@ -1,5 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const DocumentList = require('../../../lib/DocumentList')
+const UserList = require('../../../lib/UserList')
 
 module.exports = async (_, { documentId, listName }, context) => {
   const { pgdb, user: me, t, loaders } = context
@@ -7,7 +7,7 @@ module.exports = async (_, { documentId, listName }, context) => {
 
   const transaction = await pgdb.transactionBegin()
   try {
-    const list = await DocumentList.byNameForUser(listName, me.id, context)
+    const list = await UserList.byNameForUser(listName, me.id, context)
     if (!list) {
       throw new Error(t(`api/document-lists/list/404`))
     }
@@ -17,12 +17,7 @@ module.exports = async (_, { documentId, listName }, context) => {
       .split('/')
       .slice(0, 2)
       .join('/')
-    const doc = await loaders.Document.byRepoId.load(repoId)
-    if (!doc) {
-      throw new Error(t(`api/document-lists/document/404`))
-    }
-
-    await DocumentList.upsert(
+    await UserList.deleteDocumentItem(
       me.id,
       list.id,
       repoId,
@@ -31,7 +26,7 @@ module.exports = async (_, { documentId, listName }, context) => {
 
     await transaction.transactionCommit()
 
-    return doc
+    return loaders.Document.byRepoId.load(repoId)
   } catch (e) {
     await transaction.transactionRollback()
     throw e

@@ -1,5 +1,5 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const DocumentList = require('../../lib/DocumentList')
+const UserList = require('../../lib/UserList')
 
 module.exports = {
   async userListItems ({ meta: { repoId } }, args, context) {
@@ -7,7 +7,7 @@ module.exports = {
     if (!Roles.userIsInRoles(me, ['member']) || !repoId) {
       return []
     }
-    return DocumentList.findItems({
+    return UserList.findDocumentItems({
       repoId,
       userId: me.id
     }, context)
