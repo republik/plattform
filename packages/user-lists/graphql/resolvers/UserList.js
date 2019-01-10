@@ -1,17 +1,17 @@
 const emptyDocumentConnection = require('@orbiting/backend-modules-documents/lib/emptyDocumentConnection')
 const getDocuments = require('@orbiting/backend-modules-documents/graphql/resolvers/_queries/documents')
-const DocumentList = require('../../lib/DocumentList')
+const UserList = require('../../lib/UserList')
 
 module.exports = {
-  id ({ id: documentListId, userId }) {
-    return `${documentListId}${userId ? '_' + userId : ''}`
+  id ({ id: userListId, userId }) {
+    return `${userListId}${userId ? '_' + userId : ''}`
   },
-  async userDocuments ({ id: documentListId, userId }, args, context) {
+  async documents ({ id: userListId, userId }, args, context) {
     if (!userId) {
       return emptyDocumentConnection
     }
-    const repoIds = await DocumentList.findItems({
-      documentListId,
+    const repoIds = await UserList.findDocumentItems({
+      userListId,
       userId
     }, context)
       .then(items => items
