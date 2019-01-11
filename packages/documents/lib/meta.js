@@ -2,6 +2,9 @@ const visit = require('unist-util-visit')
 
 const { metaFieldResolver } = require('./resolve')
 
+// mean German, see http://iovs.arvojournals.org/article.aspx?articleid=2166061
+const WORDS_PER_MIN = 180
+
 /**
  * Obtain credits from either {doc.content.children} or {doc.meta}.
  *
@@ -39,7 +42,7 @@ const getCredits = doc => {
  * @return {Object|null}     e.g. { mp3: true, aac: null, ogg: null }
  */
 const getAudioSource = doc => {
-  if (!doc.content && doc.meta && doc.meta.audioSource) {
+  if (!doc.content && doc.meta && doc.meta.audioSource) {
     return doc.meta.audioSource
   }
   const { audioSourceMp3, audioSourceAac, audioSourceOgg } = doc.content.meta
@@ -50,6 +53,30 @@ const getAudioSource = doc => {
   } : null
 
   return audioSource
+}
+
+/**
+ * Getter of WORDS_PER_MINUTE
+ *
+ * @return {Number} Returns word count one might be able to read
+ */
+const getWordsPerMinute = () => WORDS_PER_MIN
+
+/**
+ * Returns an estimated amount of minutes, describing how much time a proficient
+ * reader needs to invest to read this article.
+ *
+ * @param  {Object}      doc An MDAST tree
+ * @return {Number}      Minutes to read content
+ */
+const getEstimatedReadingMinutes = doc => {
+  const count = (doc._storedFields && doc._storedFields['contentString.count']) || false
+
+  if (!count || count[0] < getWordsPerMinute()) {
+    return 0
+  }
+
+  return Math.round(count[0] / getWordsPerMinute())
 }
 
 /**
@@ -77,6 +104,7 @@ const getMeta = doc => {
     ...doc.content.meta,
     credits: getCredits(doc),
     audioSource: getAudioSource(doc),
+    estimatedReadingMinutes: getEstimatedReadingMinutes(doc),
     ...resolvedFields
   }
 
@@ -84,5 +112,6 @@ const getMeta = doc => {
 }
 
 module.exports = {
-  getMeta
+  getMeta,
+  getWordsPerMinute
 }
