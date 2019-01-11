@@ -29,7 +29,7 @@ const findDocumentItems = (args, { pgdb }) =>
   )
 
 const getDocumentItem = (args, { pgdb }) =>
-  pgdb.query(`
+  pgdb.queryOne(`
     SELECT i.*
     FROM "collectionDocumentItems" i
     WHERE
