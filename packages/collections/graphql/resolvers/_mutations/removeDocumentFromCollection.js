@@ -26,7 +26,6 @@ module.exports = async (_, { documentId, collectionName }, context) => {
 
     await transaction.transactionCommit()
 
-    console.log({ item })
     return item
   } catch (e) {
     await transaction.transactionRollback()
