@@ -32,7 +32,7 @@ const getMaxEndDate = (now, daysBeforeEndDate) =>
     .endOf('day')
 
 const createBuckets = (now) => [
-  {
+  /* {
     templateName: 'membership_owner_prolong_notice',
     minEndDate: getMinEndDate(now, 22),
     maxEndDate: getMaxEndDate(now, DAYS_BEFORE_END_DATE),
@@ -45,15 +45,13 @@ const createBuckets = (now) => [
     maxEndDate: getMaxEndDate(now, 7),
     onlyMembershipTypes: ['ABO'],
     users: []
-  }
-  /*
+  }, */
   {
-    templateName: 'membership_owner_prolong_notice_2',
-    minEndDate: getMinEndDate(now, 1),
-    maxEndDate: getMaxEndDate(now, 2),
+    templateName: 'membership_owner_prolong_notice_0',
+    minEndDate: getMinEndDate(now, -2),
+    maxEndDate: getMaxEndDate(now, 0),
     users: []
   }
-  */
 ]
 
 const getBuckets = async ({ now }, { pgdb }) => {
@@ -61,6 +59,8 @@ const getBuckets = async ({ now }, { pgdb }) => {
   const users = await pgdb.query(`
     SELECT
       u.*,
+      json_agg(DISTINCT m.id) AS "membershipIds",
+      json_agg(DISTINCT m."sequenceNumber") AS "membershipSequenceNumbers",
       json_agg(DISTINCT mt.name) AS "membershipTypes"
     FROM
       memberships m
@@ -79,6 +79,8 @@ const getBuckets = async ({ now }, { pgdb }) => {
     .then(users => users
       .map(user => ({
         ...transformUser(user),
+        membershipIds: user.membershipIds,
+        membershipSequenceNumbers: user.membershipSequenceNumbers,
         membershipTypes: user.membershipTypes
       }))
     )
@@ -165,10 +167,11 @@ const inform = async (args, context) => {
         const templatePayload = await context.mail.prepareMembershipOwnerNotice({
           user,
           endDate: prolongBeforeDate,
-          cancelUntilDate: moment(prolongBeforeDate)
-            .subtract(2, 'days'),
+          cancelUntilDate: moment(prolongBeforeDate).subtract(2, 'days'),
+          graceEndDate: moment(prolongBeforeDate).add(14, 'days'),
           templateName: bucket.templateName
         }, context)
+        console.log(templatePayload)
         return sendMailTemplate(
           templatePayload,
           context,
