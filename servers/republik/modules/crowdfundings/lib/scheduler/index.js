@@ -14,6 +14,7 @@ const { inform: informGivers } = require('./givers')
 const { inform: informCancellers } = require('./winbacks')
 const { inform: informOwners } = require('./owners')
 const { deactivate } = require('./deactivate')
+const { changeover } = require('./changeover')
 
 const init = async (_context) => {
   debug('init')
@@ -61,6 +62,17 @@ const init = async (_context) => {
     runFunc: deactivate,
     lockTtlSecs: runIntervalSecsDeactivate,
     runIntervalSecs: runIntervalSecsDeactivate,
+    runInitially: true
+  })
+
+  const runIntervalSecsChangeover = 60 * 15
+
+  intervalScheduler.init({
+    name: 'memberships-changeover-deactivate',
+    context,
+    runFunc: changeover,
+    lockTtlSecs: runIntervalSecsChangeover,
+    runIntervalSecs: runIntervalSecsChangeover,
     runInitially: true
   })
 }
