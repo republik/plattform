@@ -30,7 +30,7 @@ const deactivate = async (args, { pgdb, mail: { enforceSubscriptions } }) => {
         AND mt.name != 'MONTHLY_ABO' -- Exclude subscription via Stripe
       WHERE
         m.active = true
-      GROUP BY 1, 2
+      GROUP BY 1
     ) AS md
     WHERE
       -- Cancelled memberships
@@ -38,7 +38,6 @@ const deactivate = async (args, { pgdb, mail: { enforceSubscriptions } }) => {
       OR
       -- Uncancelled memberships (flagged to renew, but were not)
       ( md.renew = true AND "endDate" < :uncancelledEndDate )
-    LIMIT 1000
   `, { cancelledEndDate, uncancelledEndDate })
 
   debug({
@@ -47,10 +46,11 @@ const deactivate = async (args, { pgdb, mail: { enforceSubscriptions } }) => {
     memberships: memberships.length
   })
 
-  await Promise.map(
+  await Promise.each(
     memberships,
     async membership => {
       const transaction = await pgdb.transactionBegin()
+      debug({ membership: membership.id })
 
       try {
         await transaction.public.memberships.update(
@@ -69,8 +69,7 @@ const deactivate = async (args, { pgdb, mail: { enforceSubscriptions } }) => {
         console.log('transaction rollback', { membership, error: e })
         throw e
       }
-    },
-    { concurrency: 10 }
+    }
   )
 }
 
