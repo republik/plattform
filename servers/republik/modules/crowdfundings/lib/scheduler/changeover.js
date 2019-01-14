@@ -33,8 +33,8 @@ const changeover = async (
   const endDate = moment()
 
   const users = await pgdb.public.query(`
-    WITH users AS (${activeMembershipsQuery})
-    SELECT DISTINCT("userId") AS id FROM users
+    WITH memberships AS (${activeMembershipsQuery})
+    SELECT DISTINCT("userId") AS id FROM memberships
     WHERE
       -- Potential ending memberships to change over to dormant membership
       "endDate" < :endDate

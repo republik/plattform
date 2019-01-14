@@ -23,14 +23,14 @@ const deactivate = async (
     moment().startOf('day').subtract(UNCANCELLED_GRACE_PERIOD_DAYS, 'days')
 
   const memberships = await pgdb.public.query(`
-    WITH md AS (${activeMembershipsQuery})
-    SELECT * FROM md
+    WITH memberships AS (${activeMembershipsQuery})
+    SELECT * FROM memberships
     WHERE
       -- Cancelled memberships
-      ( md.renew = false AND "endDate" < :cancelledEndDate )
+      ( renew = false AND "endDate" < :cancelledEndDate )
       OR
       -- Uncancelled memberships (flagged to renew, but were not)
-      ( md.renew = true AND "endDate" < :uncancelledEndDate )
+      ( renew = true AND "endDate" < :uncancelledEndDate )
   `, { cancelledEndDate, uncancelledEndDate })
 
   debug({
