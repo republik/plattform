@@ -130,10 +130,7 @@ const changeover = async (
           updatedAt: now
         })
 
-        await enforceSubscriptions({ userId: user.id, pgdb })
-
-        const cache = createCache({ prefix: `User:${user.id}` })
-        cache.invalidate()
+        createCache({ prefix: `User:${user.id}` }).invalidate()
 
         await transaction.transactionCommit()
       } catch (e) {
@@ -144,6 +141,8 @@ const changeover = async (
         )
         throw e
       }
+
+      await enforceSubscriptions({ userId: user.id, pgdb })
     }
   )
 

@@ -71,10 +71,7 @@ const deactivate = async (
           { active: false, renew: false, updatedAt: moment() }
         )
 
-        await enforceSubscriptions({ userId: membership.userId, pgdb })
-
-        const cache = createCache({ prefix: `User:${membership.userId}` })
-        cache.invalidate()
+        createCache({ prefix: `User:${membership.userId}` }).invalidate()
 
         await transaction.transactionCommit()
       } catch (e) {
@@ -82,6 +79,8 @@ const deactivate = async (
         console.log('transaction rollback', { membership, error: e })
         throw e
       }
+
+      await enforceSubscriptions({ userId: membership.userId, pgdb })
     }
   )
 }
