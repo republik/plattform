@@ -18,26 +18,42 @@ const dateTimeFormat = swissTime.format(
   '%e. %B %Y %H.%M Uhr'
 )
 
+const getState = (membership) => {
+  if (!membership.active) {
+    return 'deaktiviert'
+  }
+
+  if (!membership.renew) {
+    return 'aktiv, läuft aus'
+  }
+
+  const latestPeriod = membership.periods.reduce((acc, curr) => {
+    return acc && new Date(acc.endDate) > new Date(curr.endDate) ? acc : curr
+  })
+
+  const overdue = latestPeriod && new Date(latestPeriod.endDate) < new Date()
+  if (overdue) {
+    return 'aktiv, Erneuerung überfällig'
+  }
+
+  return 'aktiv'
+
+}
+
 const MembershipOverview = ({
   membership,
   onMoveMembership,
   onReactivateMembership,
   onCancelMembership
 }) => {
+
   return (
     <div>
       <Interaction.H3>
         {membership.type.name.split('_').join(' ')} –{' '}
-        {dateTimeFormat(new Date(membership.createdAt))} –{' '}
-        {(!!membership.renew && 'ACTIVE') || 'INACTIVE'}
+        {dateTimeFormat(new Date(membership.createdAt))}
         <br />
-        <Label>
-          Created:{' '}
-          {dateTimeFormat(new Date(membership.createdAt))}
-          {' – '}
-          Updated:{' '}
-          {dateTimeFormat(new Date(membership.updatedAt))}
-        </Label>
+        {getState(membership)}
       </Interaction.H3>
       <List>
         {membership.cancellations &&
