@@ -576,16 +576,27 @@ mail.prepareMembershipWinback = async ({ userId, membershipId, cancellationCateg
   })
 }
 
-mail.prepareMembershipOwnerNotice = async ({ user, endDate, cancelUntilDate, templateName }, { t, pgdb }) => {
+mail.prepareMembershipOwnerNotice = async ({ user, endDate, graceEndDate, cancelUntilDate, templateName }, { t }) => {
   const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
 
   const formattedEndDate = dateFormat(endDate)
+  const formattedGraceEndDate = dateFormat(graceEndDate)
+
   const timeLeft = moment(endDate).diff(moment())
   const daysLeft = Math.max(1, Math.ceil(moment.duration(timeLeft).as('days')))
 
+  const membershipId = user.membershipId || false
+  const sequenceNumber = user.membershipSequenceNumber || false
+
   return ({
     to: user.email,
-    subject: t(`api/email/${templateName}/subject`, { endDate: formattedEndDate }),
+    subject: t.first([
+      `api/email/${templateName}/sequenceNumber/${!!sequenceNumber}/subject`,
+      `api/email/${templateName}/subject`
+    ], {
+      endDate: formattedEndDate,
+      sequenceNumber
+    }),
     templateName,
     mergeLanguage: 'handlebars',
     globalMergeVars: [
@@ -595,14 +606,25 @@ mail.prepareMembershipOwnerNotice = async ({ user, endDate, cancelUntilDate, tem
       { name: 'prolong_url',
         content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`
       },
+      { name: 'cancel_url',
+        content: membershipId
+          ? `${FRONTEND_BASE_URL}/abgang?membershipId=${membershipId}`
+          : `${FRONTEND_BASE_URL}/konto#abos`
+      },
       { name: 'end_date',
         content: formattedEndDate
+      },
+      { name: 'grace_end_date',
+        content: formattedGraceEndDate
       },
       { name: 'days_left',
         content: daysLeft
       },
       { name: 'cancel_until_date',
         content: dateFormat(cancelUntilDate)
+      },
+      { name: 'sequence_number',
+        content: sequenceNumber
       }
     ]
   })
