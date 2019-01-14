@@ -12,7 +12,7 @@ const init = async ({
   runFunc,
   lockTtlSecs,
   runIntervalSecs,
-  runInitially = false,
+  runInitially = true,
   runDry = false
 }) => {
   if (!name || !context || !runFunc || !lockTtlSecs || !runIntervalSecs) {
