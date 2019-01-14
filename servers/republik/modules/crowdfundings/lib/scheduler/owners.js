@@ -48,7 +48,7 @@ const createBuckets = (now) => [
   },
   {
     templateName: 'membership_owner_prolong_notice_0',
-    minEndDate: getMinEndDate(now, -2),
+    minEndDate: getMinEndDate(now, -5),
     maxEndDate: getMaxEndDate(now, 0),
     onlyMembershipTypes: ['ABO'],
     users: []
@@ -56,7 +56,13 @@ const createBuckets = (now) => [
 ]
 
 const getBuckets = async ({ now }, { pgdb }) => {
-  // load users with a membership
+  /**
+   * Load users with a membership.
+   *
+   * WARNING: The following query will only hold up if user has only one active
+   * membership.
+   *
+   */
   const users = await pgdb.query(`
     SELECT
       u.*,
