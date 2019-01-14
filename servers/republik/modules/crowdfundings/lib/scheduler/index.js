@@ -57,7 +57,10 @@ const init = async (_context) => {
   intervalScheduler.init({
     name: 'changeover-deactivate',
     context,
-    runFunc: [changeover, deactivate],
+    runFunc: async (args, context) => {
+      await changeover(args, context)
+      await deactivate(args, context)
+    },
     lockTtlSecs,
     runIntervalSecs: 60 * 10
   })
