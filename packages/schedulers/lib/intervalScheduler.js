@@ -64,8 +64,9 @@ const init = async ({
       const extendLockInterval = setInterval(
         async () =>
           lock.extend(1000 * lockTtlSecs)
-            .then(() => { debug('extending lock') }),
-        1000 * lockTtlSecs * 0.95
+            .then(() => { debug('extending lock') })
+            .catch(e => { console.warn('extending lock failed', e) }),
+        1000 * lockTtlSecs * 0.9
       )
 
       debug('run started')
