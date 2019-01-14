@@ -68,7 +68,7 @@ const deactivate = async (
       try {
         await transaction.public.memberships.update(
           { id: membership.id },
-          { active: false, renew: false, updatedAt: moment() }
+          { active: false, updatedAt: moment() }
         )
 
         createCache({ prefix: `User:${membership.userId}` }).invalidate()
