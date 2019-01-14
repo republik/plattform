@@ -58,9 +58,8 @@ const init = async (_context) => {
     name: 'changeover-deactivate',
     context,
     runFunc: [changeover, deactivate],
-    lockTtlSecs: 60 * 10,
-    runIntervalSecs: 60 * 10,
-    runInitially: true
+    lockTtlSecs,
+    runIntervalSecs: 60 * 10
   })
 }
 
