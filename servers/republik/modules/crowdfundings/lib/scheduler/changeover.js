@@ -120,8 +120,7 @@ const changeover = async (
           { id: electedDormantMembership.id },
           {
             active: true,
-            renew: true,
-            sequenceNumber: activeMembership.sequenceNumber,
+            renew: activeMembership.renew,
             updatedAt: now
           }
         )
