@@ -9,7 +9,10 @@ const {
 
 const createCache = require('../cache')
 
-const changeover = async (args, { pgdb, mail: { enforceSubscriptions } }) => {
+const changeover = async (
+  { runDry },
+  { pgdb, mail: { enforceSubscriptions } }
+) => {
   const endDate = moment()
 
   const users = await pgdb.public.query(`
@@ -80,11 +83,19 @@ const changeover = async (args, { pgdb, mail: { enforceSubscriptions } }) => {
             : acc
       )
 
-      const transaction = await pgdb.transactionBegin()
       debug({
         activeMembership: activeMembership.id,
-        electedDormantMembership: electedDormantMembership.id
+        electedDormantMembership: electedDormantMembership.id,
+        runDry
       })
+
+      stats.changeover++
+
+      if (runDry) {
+        return
+      }
+
+      const transaction = await pgdb.transactionBegin()
 
       try {
         const now = moment()
@@ -133,12 +144,10 @@ const changeover = async (args, { pgdb, mail: { enforceSubscriptions } }) => {
         )
         throw e
       }
-
-      stats.changeover++
     }
   )
 
-  debug({ stats })
+  debug({ stats, runDry })
 }
 
 module.exports = {
