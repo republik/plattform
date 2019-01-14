@@ -194,9 +194,9 @@ type MembershipStats {
   # number of distinct users with an active memberships
   count: Int!
   monthlys: [MonthlyMembershipStat!]!
-  prolong(
-    beginDate: Date!
-    endDate: Date!
+  periods(
+    minEndDate: Date!
+    maxEndDate: Date!
     # filter by membershipTypes
     # default: [ABO]
     membershipTypes: [String!]
@@ -218,7 +218,7 @@ type ProlongMembershipStats {
   # combination: beginDate-endDate-membershipTypes
   id: ID!
   totalMemberships: Int!
-  # between min-max cancels and prolongs
+  # any day that an action occurred that affected a period that ended within the specified end dates
   days: [ProlongMembershipStatsDay!]!
 }
 
