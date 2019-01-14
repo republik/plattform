@@ -85,16 +85,21 @@ const init = async ({
 
       debug('run started')
 
-      const now = moment()
-      if (Array.isArray(runFunc)) {
-        await Promise.each(runFunc, f => f({ now, runDry }, context))
-      } else if (typeof runFunc === 'function') {
-        await runFunc({ now, runDry }, context)
-      }
+      try {
+        const now = moment()
 
-      // remove interval to extend lock in case runFunc takes longer than
-      // initial lock ttl.
-      clearInterval(extendLockInterval)
+        if (Array.isArray(runFunc)) {
+          await Promise.each(runFunc, f => f({ now, runDry }, context))
+        } else if (typeof runFunc === 'function') {
+          await runFunc({ now, runDry }, context)
+        }
+      } catch (e) {
+        console.error('scheduled run failed', e)
+      } finally {
+        // remove interval to extend lock in case runFunc takes longer than
+        // initial lock ttl.
+        clearInterval(extendLockInterval)
+      }
 
       // wait until other processes exceeded waiting time
       // then give up lock
