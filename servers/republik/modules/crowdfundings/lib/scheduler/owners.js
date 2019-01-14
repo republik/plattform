@@ -61,8 +61,8 @@ const getBuckets = async ({ now }, { pgdb }) => {
     SELECT
       u.*,
       m.id AS "membershipId",
-      m."sequenceNumber" AS "membershipSequenceNumbers",
-      mt.name AS "membershipTypes"
+      m."sequenceNumber" AS "membershipSequenceNumber",
+      mt.name AS "membershipType"
     FROM
       memberships m
     INNER JOIN
@@ -116,7 +116,7 @@ const getBuckets = async ({ now }, { pgdb }) => {
           // any of memberships listed in bucket.onlyMembershipTypes.
           if (
             bucket.onlyMembershipTypes &&
-            bucket.onlyMembershipTypes.includes(user.membershipType)
+            !bucket.onlyMembershipTypes.includes(user.membershipType)
           ) {
             return false
           }
