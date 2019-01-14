@@ -14,7 +14,7 @@ const CANCELLED_GRACE_PERIOD_DAYS = 0
 const UNCANCELLED_GRACE_PERIOD_DAYS = 14
 
 const deactivate = async (
-  { runDry },
+  { dryRun },
   { pgdb, mail: { enforceSubscriptions } }
 ) => {
   const cancelledEndDate =
@@ -37,14 +37,14 @@ const deactivate = async (
     cancelledEndDate: cancelledEndDate.toDate(),
     uncancelledEndDate: uncancelledEndDate.toDate(),
     memberships: memberships.length,
-    runDry
+    dryRun
   })
 
   await Promise.each(
     memberships,
     async membership => {
       debug({ membership: membership.id })
-      if (runDry) {
+      if (dryRun) {
         return
       }
 

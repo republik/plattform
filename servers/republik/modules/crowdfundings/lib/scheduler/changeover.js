@@ -27,7 +27,7 @@ GROUP BY m.id
 `
 
 const changeover = async (
-  { runDry },
+  { dryRun },
   { pgdb, mail: { enforceSubscriptions } }
 ) => {
   const endDate = moment()
@@ -105,12 +105,12 @@ const changeover = async (
           id: electedDormantMembership.id,
           type: electedDormantMembership.membershipType.name
         },
-        runDry
+        dryRun
       })
 
       stats.changeover++
 
-      if (runDry) {
+      if (dryRun) {
         return
       }
 
@@ -164,7 +164,7 @@ const changeover = async (
     }
   )
 
-  debug({ stats, runDry })
+  debug({ stats, dryRun })
 }
 
 module.exports = {
