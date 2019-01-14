@@ -1,4 +1,5 @@
 const Redlock = require('redlock')
+const Promise = require('bluebird')
 
 const LOCK_RETRY_COUNT = 3
 const LOCK_RETRY_DELAY = 600
@@ -11,11 +12,18 @@ const init = async ({
   runFunc,
   lockTtlSecs,
   runIntervalSecs,
-  runInitially = false
+  runInitially = false,
+  runDry = false
 }) => {
   if (!name || !context || !runFunc || !lockTtlSecs || !runIntervalSecs) {
-    throw new Error('missing input', { name, context, runFunc, lockTtlSecs, runIntervalSecs })
+    console.error(`missing input, scheduler ${name}`, { name, context, runFunc, lockTtlSecs, runIntervalSecs })
+    throw new Error(`missing input, scheduler ${name}`)
   }
+  if (!Array.isArray(runFunc) && typeof runFunc !== 'function') {
+    console.error(`runFunc not executable, scheduler ${name}`, { name, runFunc })
+    throw new Error(`runFunc not executable, scheduler ${name}`)
+  }
+
   const { redis } = context
   if (!redis) {
     throw new Error('missing redis')
@@ -49,18 +57,32 @@ const init = async ({
       const lock = await redlock()
         .lock(`locks:${name}-scheduler`, 1000 * lockTtlSecs)
 
+      const extendLockInterval = setInterval(
+        async () =>
+          lock.extend(1000 * lockTtlSecs)
+            .then(() => { debug('extending lock') }),
+        1000 * lockTtlSecs * 0.95
+      )
+
       debug('run started')
 
-      await runFunc({}, context)
+      if (Array.isArray(runFunc)) {
+        await Promise.each(runFunc, f => f({ runDry }, context))
+      } else if (typeof runFunc === 'function') {
+        await runFunc({ runDry }, context)
+      }
+
+      // remove interval to extend lock in case runFunc takes longer than
+      // initial lock ttl.
+      clearInterval(extendLockInterval)
 
       // wait until other processes exceeded waiting time
       // then give up lock
       setTimeout(
-        () => {
+        async () =>
           lock.unlock()
-            .then(lock => { debug('unlocked') })
-            .catch(e => { console.warn('unlocking failed', e) })
-        },
+            .then(() => { debug('unlocked') })
+            .catch(e => { console.warn('unlocking failed', e) }),
         1.5 * MIN_TTL_MS
       )
 
