@@ -16,7 +16,7 @@ const init = async ({
   runAtTime,
   runAtDaysOfWeek = [1, 2, 3, 4, 5, 6, 7],
   runInitially = false,
-  runDry = false
+  dryRun = false
 }) => {
   if (!name || !context || !runFunc || !lockTtlSecs || !runAtTime) {
     console.error(`missing input, scheduler ${name}`, { name, context, runFunc, lockTtlSecs, runAtTime })
@@ -89,9 +89,9 @@ const init = async ({
         const now = moment()
 
         if (Array.isArray(runFunc)) {
-          await Promise.each(runFunc, f => f({ now, runDry }, context))
+          await Promise.each(runFunc, f => f({ now, dryRun }, context))
         } else if (typeof runFunc === 'function') {
-          await runFunc({ now, runDry }, context)
+          await runFunc({ now, dryRun }, context)
         }
       } catch (e) {
         console.error('scheduled run failed', e)

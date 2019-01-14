@@ -13,7 +13,7 @@ const init = async ({
   lockTtlSecs,
   runIntervalSecs,
   runInitially = true,
-  runDry = false
+  dryRun = false
 }) => {
   if (!name || !context || !runFunc || !lockTtlSecs || !runIntervalSecs) {
     console.error(`missing input, scheduler ${name}`, { name, context, runFunc, lockTtlSecs, runIntervalSecs })
@@ -73,9 +73,9 @@ const init = async ({
 
       try {
         if (Array.isArray(runFunc)) {
-          await Promise.each(runFunc, f => f({ runDry }, context))
+          await Promise.each(runFunc, f => f({ dryRun }, context))
         } else if (typeof runFunc === 'function') {
-          await runFunc({ runDry }, context)
+          await runFunc({ dryRun }, context)
         }
       } catch (e) {
         console.error('scheduled run failed', e)
