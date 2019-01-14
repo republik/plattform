@@ -82,10 +82,11 @@ const init = async ({
         .lock(`locks:${name}-scheduler`, 1000 * lockTtlSecs)
 
       const extendLockInterval = setInterval(
-        async () =>
+        () =>
           lock.extend(1000 * lockTtlSecs)
-            .then(() => { debug('extending lock') }),
-        1000 * lockTtlSecs * 0.95
+            .then(() => { debug('extending lock') })
+            .catch(e => { console.warn('extending lock failed', e) }),
+        1000 * lockTtlSecs * 0.9
       )
 
       debug('run started')
@@ -108,12 +109,10 @@ const init = async ({
 
       // wait until other processes exceeded waiting time
       // then give up lock
-      setTimeout(
-        async () =>
-          lock.unlock()
-            .then(() => { debug('unlocked') })
-            .catch(e => { console.warn('unlocking failed', e) }),
-        1.5 * MIN_TTL_MS
+      await Promise.delay(MIN_TTL_MS * 1.5).then(
+        () => lock.unlock()
+          .then(() => { debug('unlocked') })
+          .catch(e => { console.warn('unlocking failed', e) })
       )
 
       debug('run completed')
