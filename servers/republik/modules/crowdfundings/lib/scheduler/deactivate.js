@@ -5,12 +5,12 @@ const Promise = require('bluebird')
 const createCache = require('../cache')
 const { activeMembershipsQuery } = require('./changeover')
 
-// Amount of days before a cancelled membership is deactivated after membership
-// periods end
+// Amount of days before a cancelled membership (renew=false) is deactivated
+// after last membership periods end
 const CANCELLED_GRACE_PERIOD_DAYS = 0
 
-// Amount of days before an uncancelled uncancelled membership is deactivated
-// after membership periods end
+// Amount of days before an uncancelled membership (renew=true) is deactivated
+// after last membership periods end
 const UNCANCELLED_GRACE_PERIOD_DAYS = 14
 
 const deactivate = async (

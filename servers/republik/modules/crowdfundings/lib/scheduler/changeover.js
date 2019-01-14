@@ -81,12 +81,12 @@ const changeover = async (
         user: { id: user.id }
       })
 
-      // End here if there is not dormant membership to be found
+      // End here if there is no dormant membership to be found
       if (dormantMemberships.length < 1) {
         return
       }
 
-      // Elect a dormant membership to activate. Rule is to elect dorman
+      // Elect a dormant membership to activate. Rule is to elect dormant
       // membership with lowest sequenceNumber
       const electedDormantMembership = dormantMemberships.reduce(
         (acc, curr) =>
