@@ -1,6 +1,7 @@
 const debug = require('debug')('crowdfundings:lib:scheduler:changeover')
 const moment = require('moment')
 const Promise = require('bluebird')
+const { ascending } = require('d3-array')
 
 const {
   resolveMemberships,
@@ -87,17 +88,23 @@ const changeover = async (
       }
 
       // Elect a dormant membership to activate. Rule is to elect dormant
-      // membership with lowest sequenceNumber
-      const electedDormantMembership = dormantMemberships.reduce(
-        (acc, curr) =>
-          !acc || curr.sequenceNumber < acc.sequenceNumber
-            ? curr
-            : acc
-      )
+      // membership with lowest sequenceNumber.
+      // Sorts sequenceNumber ascending, uses first row. Will overwrite, if a
+      // membershipType BENEFACTOR_ABO comes by.
+      const electedDormantMembership = dormantMemberships
+        .sort((a, b) => ascending(a.sequenceNumber, b.sequenceNumber))
+        .reduce((acc, curr) =>
+          (!acc && curr) ||
+          (acc.membershipType.name !== 'BENEFACTOR_ABO' && curr.membershipType.name === 'BENEFACTOR_ABO' && curr) ||
+          acc
+        )
 
       debug({
         activeMembership: activeMembership.id,
-        electedDormantMembership: electedDormantMembership.id,
+        electedDormantMembership: {
+          id: electedDormantMembership.id,
+          type: electedDormantMembership.membershipType.name
+        },
         runDry
       })
 
