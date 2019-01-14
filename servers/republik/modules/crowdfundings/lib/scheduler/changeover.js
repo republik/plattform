@@ -8,6 +8,7 @@ const {
 } = require('../CustomPackages')
 
 const createCache = require('../cache')
+const { getLastEndDate } = require('../utils')
 
 const EXCLUDE_MEMBERSHIP_TYPES = ['MONTHLY_ABO']
 
@@ -66,6 +67,14 @@ const changeover = async (
       }
 
       const activeMembership = userMemberships.find(m => m.active)
+      if (moment(getLastEndDate(activeMembership.periods)) > endDate) {
+        console.error(
+          'changeover failed: active memberships ends later',
+          { user, endDate }
+        )
+        return
+      }
+
       const dormantMemberships = findDormantMemberships({
         memberships: userMemberships,
         user: { id: user.id }
