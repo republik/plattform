@@ -3,6 +3,7 @@ const moment = require('moment')
 const Promise = require('bluebird')
 
 const createCache = require('../cache')
+const { activeMembershipsQuery } = require('./changeover')
 
 // Amount of days before a cancelled membership is deactivated after membership
 // periods end
@@ -22,19 +23,8 @@ const deactivate = async (
     moment().startOf('day').subtract(UNCANCELLED_GRACE_PERIOD_DAYS, 'days')
 
   const memberships = await pgdb.public.query(`
-    SELECT * FROM (
-      -- Active memberships and their MAX(membershipPeriods.endDate)
-      SELECT m.*, MAX(mp."endDate") AS "endDate"
-      FROM memberships m
-      INNER JOIN "membershipPeriods" mp
-        ON m.id = mp."membershipId"
-      INNER JOIN "membershipTypes" mt
-        ON m."membershipTypeId" = mt.id
-        AND mt.name != 'MONTHLY_ABO' -- Exclude subscription via Stripe
-      WHERE
-        m.active = true
-      GROUP BY 1
-    ) AS md
+    WITH md AS (${activeMembershipsQuery})
+    SELECT * FROM md
     WHERE
       -- Cancelled memberships
       ( md.renew = false AND "endDate" < :cancelledEndDate )

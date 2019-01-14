@@ -6,11 +6,24 @@ const {
   resolveMemberships,
   findDormantMemberships
 } = require('../CustomPackages')
-
 const createCache = require('../cache')
 const { getLastEndDate } = require('../utils')
 
 const EXCLUDE_MEMBERSHIP_TYPES = ['MONTHLY_ABO']
+
+const activeMembershipsQuery = `
+-- Active memberships and their MAX(membershipPeriods.endDate)
+SELECT m.*, MAX(mp."endDate") AS "endDate"
+FROM memberships m
+INNER JOIN "membershipPeriods" mp
+  ON m.id = mp."membershipId"
+INNER JOIN "membershipTypes" mt
+  ON m."membershipTypeId" = mt.id
+  AND mt.name NOT IN (${EXCLUDE_MEMBERSHIP_TYPES.map(t => `'${t}'`).join(', ')})
+WHERE
+  m.active = true
+GROUP BY m.id
+`
 
 const changeover = async (
   { runDry },
@@ -19,24 +32,12 @@ const changeover = async (
   const endDate = moment()
 
   const users = await pgdb.public.query(`
-    WITH users AS (
-      -- Active memberships and their MAX(membershipPeriods.endDate)
-      SELECT m.*, MAX(mp."endDate") AS "endDate"
-      FROM memberships m
-      INNER JOIN "membershipPeriods" mp
-        ON m.id = mp."membershipId"
-      INNER JOIN "membershipTypes" mt
-        ON m."membershipTypeId" = mt.id
-        AND mt.name NOT IN (:EXCLUDE_MEMBERSHIP_TYPES)
-      WHERE
-        m.active = true
-      GROUP BY m.id
-    )
+    WITH users AS (${activeMembershipsQuery})
     SELECT DISTINCT("userId") AS id FROM users
     WHERE
       -- Potential ending memberships to change over to dormant membership
       "endDate" < :endDate
-  `, { EXCLUDE_MEMBERSHIP_TYPES, endDate })
+  `, { endDate })
 
   debug({
     now: endDate.toDate(),
@@ -160,5 +161,6 @@ const changeover = async (
 }
 
 module.exports = {
-  changeover
+  changeover,
+  activeMembershipsQuery
 }
