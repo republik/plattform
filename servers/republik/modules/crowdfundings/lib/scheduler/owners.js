@@ -50,6 +50,7 @@ const createBuckets = (now) => [
     templateName: 'membership_owner_prolong_notice_0',
     minEndDate: getMinEndDate(now, -2),
     maxEndDate: getMaxEndDate(now, 0),
+    onlyMembershipTypes: ['ABO'],
     users: []
   }
 ]
@@ -59,9 +60,9 @@ const getBuckets = async ({ now }, { pgdb }) => {
   const users = await pgdb.query(`
     SELECT
       u.*,
-      json_agg(DISTINCT m.id) AS "membershipIds",
-      json_agg(DISTINCT m."sequenceNumber") AS "membershipSequenceNumbers",
-      json_agg(DISTINCT mt.name) AS "membershipTypes"
+      m.id AS "membershipId",
+      m."sequenceNumber" AS "membershipSequenceNumbers",
+      mt.name AS "membershipTypes"
     FROM
       memberships m
     INNER JOIN
@@ -72,16 +73,15 @@ const getBuckets = async ({ now }, { pgdb }) => {
       m."userId" != :PARKING_USER_ID
       AND m.active = true
       AND m.renew = true
-    GROUP BY 1
   `, {
     PARKING_USER_ID
   })
     .then(users => users
       .map(user => ({
         ...transformUser(user),
-        membershipIds: user.membershipIds,
-        membershipSequenceNumbers: user.membershipSequenceNumbers,
-        membershipTypes: user.membershipTypes
+        membershipId: user.membershipId,
+        membershipSequenceNumber: user.membershipSequenceNumber,
+        membershipType: user.membershipType
       }))
     )
   debug(`investigating ${users.length} users for prolongBeforeDate`)
@@ -112,13 +112,11 @@ const getBuckets = async ({ now }, { pgdb }) => {
 
       if (prolongBeforeDate) {
         const dropped = buckets.some(bucket => {
-          // Don't add user to bucket if user.membershipTypes does not contain
+          // Don't add user to bucket if user.membershipType does not equal
           // any of memberships listed in bucket.onlyMembershipTypes.
           if (
             bucket.onlyMembershipTypes &&
-            !user.membershipTypes.find(
-              type => bucket.onlyMembershipTypes.includes(type)
-            )
+            bucket.onlyMembershipTypes.includes(user.membershipType)
           ) {
             return false
           }
