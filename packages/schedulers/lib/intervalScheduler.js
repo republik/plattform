@@ -23,6 +23,10 @@ const init = async ({
     console.error(`runFunc not executable, scheduler ${name}`, { name, runFunc })
     throw new Error(`runFunc not executable, scheduler ${name}`)
   }
+  if (runIntervalSecs < lockTtlSecs) {
+    console.error(`lockTtlSecs bigger than runIntervalSecs`, { runIntervalSecs, lockTtlSecs })
+    throw new Error(`lockTtlSecs bigger than runIntervalSecs, scheduler ${name}`)
+  }
 
   const { redis } = context
   if (!redis) {
