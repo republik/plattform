@@ -45,23 +45,30 @@ const createBuckets = (now) => [
     maxEndDate: getMaxEndDate(now, 7),
     onlyMembershipTypes: ['ABO'],
     users: []
-  }
-  /*
+  },
   {
-    templateName: 'membership_owner_prolong_notice_2',
-    minEndDate: getMinEndDate(now, 1),
-    maxEndDate: getMaxEndDate(now, 2),
+    templateName: 'membership_owner_prolong_notice_0',
+    minEndDate: getMinEndDate(now, -5),
+    maxEndDate: getMaxEndDate(now, 0),
+    onlyMembershipTypes: ['ABO'],
     users: []
   }
-  */
 ]
 
 const getBuckets = async ({ now }, { pgdb }) => {
-  // load users with a membership
+  /**
+   * Load users with a membership.
+   *
+   * WARNING: The following query will only hold up if user has only one active
+   * membership.
+   *
+   */
   const users = await pgdb.query(`
     SELECT
       u.*,
-      json_agg(DISTINCT mt.name) AS "membershipTypes"
+      m.id AS "membershipId",
+      m."sequenceNumber" AS "membershipSequenceNumber",
+      mt.name AS "membershipType"
     FROM
       memberships m
     INNER JOIN
@@ -72,14 +79,15 @@ const getBuckets = async ({ now }, { pgdb }) => {
       m."userId" != :PARKING_USER_ID
       AND m.active = true
       AND m.renew = true
-    GROUP BY 1
   `, {
     PARKING_USER_ID
   })
     .then(users => users
       .map(user => ({
         ...transformUser(user),
-        membershipTypes: user.membershipTypes
+        membershipId: user.membershipId,
+        membershipSequenceNumber: user.membershipSequenceNumber,
+        membershipType: user.membershipType
       }))
     )
   debug(`investigating ${users.length} users for prolongBeforeDate`)
@@ -110,13 +118,11 @@ const getBuckets = async ({ now }, { pgdb }) => {
 
       if (prolongBeforeDate) {
         const dropped = buckets.some(bucket => {
-          // Don't add user to bucket if user.membershipTypes does not contain
+          // Don't add user to bucket if user.membershipType does not equal
           // any of memberships listed in bucket.onlyMembershipTypes.
           if (
             bucket.onlyMembershipTypes &&
-            !user.membershipTypes.find(
-              type => bucket.onlyMembershipTypes.includes(type)
-            )
+            !bucket.onlyMembershipTypes.includes(user.membershipType)
           ) {
             return false
           }
@@ -165,8 +171,8 @@ const inform = async (args, context) => {
         const templatePayload = await context.mail.prepareMembershipOwnerNotice({
           user,
           endDate: prolongBeforeDate,
-          cancelUntilDate: moment(prolongBeforeDate)
-            .subtract(2, 'days'),
+          cancelUntilDate: moment(prolongBeforeDate).subtract(2, 'days'),
+          graceEndDate: moment(prolongBeforeDate).add(14, 'days'),
           templateName: bucket.templateName
         }, context)
         return sendMailTemplate(

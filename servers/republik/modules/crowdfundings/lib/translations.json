@@ -1,5 +1,5 @@
 {
-  "updated": "2019-01-08T15:22:02.997Z",
+  "updated": "2019-01-14T13:55:46.693Z",
   "title": "live",
   "data": [
     {
@@ -476,11 +476,15 @@
     },
     {
       "key": "api/email/membership_owner_prolong_notice_7/subject",
-      "value": "Möchten Sie Ihre Abo verlängern oder die Republik verlassen? Entscheiden Sie sich bis {endDate}"
+      "value": "Möchten Sie Ihr Abo verlängern oder die Republik verlassen? Entscheiden Sie sich bis {endDate}"
     },
     {
-      "key": "api/email/membership_owner_prolong_notice_2/subject",
-      "value": "Möchten Sie Ihre Abo verlängern oder die Republik verlassen? Entscheiden Sie sich bis {endDate} "
+      "key": "api/email/membership_owner_prolong_notice_0/sequenceNumber/true/subject",
+      "value": "Ihre Abonnementsrechnung (#{sequenceNumber})"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_notice_0/subject",
+      "value": "Ihre Abonnementsrechnung"
     }
   ]
 }
