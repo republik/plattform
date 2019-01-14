@@ -28,6 +28,10 @@ const init = async ({
     throw new Error(`lockTtlSecs bigger than runIntervalSecs, scheduler ${name}`)
   }
 
+  if (dryRun) {
+    console.warn(`WARNING: dryRun flag enabled, scheduler "${name}"`)
+  }
+
   const { redis } = context
   if (!redis) {
     throw new Error('missing redis')
