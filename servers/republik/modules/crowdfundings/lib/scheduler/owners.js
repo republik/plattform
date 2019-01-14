@@ -171,7 +171,6 @@ const inform = async (args, context) => {
           graceEndDate: moment(prolongBeforeDate).add(14, 'days'),
           templateName: bucket.templateName
         }, context)
-        console.log(templatePayload)
         return sendMailTemplate(
           templatePayload,
           context,
