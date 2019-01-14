@@ -54,25 +54,12 @@ const init = async (_context) => {
     runInitially: DEV
   })
 
-  const runIntervalSecsDeactivate = 60 * 60
-
   intervalScheduler.init({
-    name: 'memberships-deactivate',
+    name: 'changeover-deactivate',
     context,
-    runFunc: deactivate,
-    lockTtlSecs: runIntervalSecsDeactivate,
-    runIntervalSecs: runIntervalSecsDeactivate,
-    runInitially: true
-  })
-
-  const runIntervalSecsChangeover = 60 * 15
-
-  intervalScheduler.init({
-    name: 'memberships-changeover-deactivate',
-    context,
-    runFunc: changeover,
-    lockTtlSecs: runIntervalSecsChangeover,
-    runIntervalSecs: runIntervalSecsChangeover,
+    runFunc: [changeover, deactivate],
+    lockTtlSecs: 60 * 10,
+    runIntervalSecs: 60 * 10,
     runInitially: true
   })
 }
