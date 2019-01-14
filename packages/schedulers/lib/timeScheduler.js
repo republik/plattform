@@ -22,14 +22,9 @@ const init = async ({
     console.error(`missing input, scheduler ${name}`, { name, context, runFunc, lockTtlSecs, runAtTime })
     throw new Error(`missing input, scheduler ${name}`)
   }
-  if (!Array.isArray(runFunc) && typeof runFunc !== 'function') {
-    console.error(`runFunc not executable, scheduler ${name}`, { name, runFunc })
-    throw new Error(`runFunc not executable, scheduler ${name}`)
-  }
   if (runAtDaysOfWeek.length < 1) {
     throw new Error('runAtDaysOfWeek must at least have one entry')
   }
-
   if (dryRun) {
     console.warn(`WARNING: dryRun flag enabled, scheduler "${name}"`)
   }
@@ -93,12 +88,7 @@ const init = async ({
 
       try {
         const now = moment()
-
-        if (Array.isArray(runFunc)) {
-          await Promise.each(runFunc, f => f({ now, dryRun }, context))
-        } else if (typeof runFunc === 'function') {
-          await runFunc({ now, dryRun }, context)
-        }
+        await runFunc({ now, dryRun }, context)
       } catch (e) {
         console.error('scheduled run failed', e)
       } finally {

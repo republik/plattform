@@ -19,15 +19,10 @@ const init = async ({
     console.error(`missing input, scheduler ${name}`, { name, context, runFunc, lockTtlSecs, runIntervalSecs })
     throw new Error(`missing input, scheduler ${name}`)
   }
-  if (!Array.isArray(runFunc) && typeof runFunc !== 'function') {
-    console.error(`runFunc not executable, scheduler ${name}`, { name, runFunc })
-    throw new Error(`runFunc not executable, scheduler ${name}`)
-  }
   if (runIntervalSecs < lockTtlSecs) {
     console.error(`lockTtlSecs bigger than runIntervalSecs`, { runIntervalSecs, lockTtlSecs })
     throw new Error(`lockTtlSecs bigger than runIntervalSecs, scheduler ${name}`)
   }
-
   if (dryRun) {
     console.warn(`WARNING: dryRun flag enabled, scheduler "${name}"`)
   }
@@ -76,11 +71,7 @@ const init = async ({
       debug('run started')
 
       try {
-        if (Array.isArray(runFunc)) {
-          await Promise.each(runFunc, f => f({ dryRun }, context))
-        } else if (typeof runFunc === 'function') {
-          await runFunc({ dryRun }, context)
-        }
+        await runFunc({ dryRun }, context)
       } catch (e) {
         console.error('scheduled run failed', e)
       } finally {
