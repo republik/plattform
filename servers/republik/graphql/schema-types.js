@@ -194,6 +194,13 @@ type MembershipStats {
   # number of distinct users with an active memberships
   count: Int!
   monthlys: [MonthlyMembershipStat!]!
+  prolong(
+    beginDate: Date!
+    endDate: Date!
+    # filter by membershipTypes
+    # default: [ABO]
+    membershipTypes: [String!]
+  ): ProlongMembershipStats!
 }
 type MemberStats {
   count: Int!
@@ -205,5 +212,21 @@ type MonthlyMembershipStat {
   renewableCount: Int!
   renewedCount: Int!
   renewedRatio: Float!
+}
+
+type ProlongMembershipStats {
+  # combination: beginDate-endDate-membershipTypes
+  id: ID!
+  totalMemberships: Int!
+  # between min-max cancels and prolongs
+  days: [ProlongMembershipStatsDay!]!
+}
+
+type ProlongMembershipStatsDay {
+  # combination: date-membershipTypes
+  id: ID!
+  day: Date!
+  cancelCount: Int!
+  prolongCount: Int!
 }
 `
