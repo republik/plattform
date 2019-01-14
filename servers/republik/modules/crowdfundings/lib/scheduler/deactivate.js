@@ -40,11 +40,6 @@ const deactivate = async (
     runDry
   })
 
-  if (runDry) {
-    debug('dry run')
-    return
-  }
-
   await Promise.each(
     memberships,
     async membership => {
