@@ -93,7 +93,7 @@ module.exports = async (_, args, { pgdb, user: me }) => {
         ...day,
         day: dayDate,
         renewedRatio: day.renewableCount > 0
-          ? 100 / day.renewableCount * day.renewedCount
+          ? 1 / day.renewableCount * day.renewedCount
           : 0
       }
     }
