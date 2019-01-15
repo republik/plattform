@@ -21,7 +21,6 @@ const {
   MAILCHIMP_INTEREST_GRANTED_ACCESS,
   MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
   MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
-  MAILCHIMP_INTEREST_NEWSLETTER_FEUILLETON,
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
   FRONTEND_BASE_URL
 } = process.env
@@ -30,11 +29,6 @@ const mail = createMail([
   {
     name: 'DAILY',
     interestId: MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
-    roles: ['member']
-  },
-  {
-    name: 'FEUILLETON',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_FEUILLETON,
     roles: ['member']
   },
   {
@@ -99,7 +93,6 @@ const getInterestsForUser = async ({
     // Autosubscribe all newsletters when new user just paid the membersh.
     interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = true
     interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] = true
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_FEUILLETON] = true
     interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] = true
   }
 
