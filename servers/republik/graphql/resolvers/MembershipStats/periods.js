@@ -4,6 +4,9 @@ const { ascending } = require('d3-array')
 const debug = require('debug')('stats:periods')
 const { UNCANCELLED_GRACE_PERIOD_DAYS } = require('../../../modules/crowdfundings/lib/scheduler/deactivate.js')
 
+const createCache = require('../../../modules/crowdfundings/lib/cache')
+const QUERY_CACHE_TTL_SECONDS = 60 * 5 // 5 min
+
 const {
   PARKING_USER_ID
 } = process.env
@@ -128,14 +131,23 @@ const createDays = (membershipTypes) => {
 
 module.exports = async (_, args, context) => {
   const {
-    pgdb
-  } = context
-  const {
     membershipTypes = ['ABO']
   } = args
   const minEndDate = moment(args.minEndDate).startOf('day')
   const maxEndDate = moment(args.maxEndDate).endOf('day')
   const maxCancellationDate = maxEndDate.add(UNCANCELLED_GRACE_PERIOD_DAYS, 'days')
+  const queryId = `${minEndDate.toISOString(true)}-${maxEndDate.toISOString(true)}_${membershipTypes.join('-')}`
+
+  return createCache({
+    prefix: `MembershipStats`,
+    key: queryId,
+    ttl: QUERY_CACHE_TTL_SECONDS
+  })
+    .cache(() => getPeriods({minEndDate, maxEndDate, maxCancellationDate, membershipTypes, queryId, context}))
+}
+
+const getPeriods = async ({ minEndDate, maxEndDate, maxCancellationDate, membershipTypes, queryId, context }) => {
+  const { pgdb } = context
 
   const allMemberships = await getMembershipsEndingInRange(minEndDate, maxEndDate, maxCancellationDate, membershipTypes, pgdb)
 
@@ -206,7 +218,7 @@ module.exports = async (_, args, context) => {
   })
 
   return {
-    id: `${minEndDate.toISOString(true)}-${maxEndDate.toISOString(true)}_${membershipTypes.join('-')}`,
+    id: queryId,
     totalMemberships: membershipsInNeedForProlong.length,
     days: days.toSortedArray()
   }
