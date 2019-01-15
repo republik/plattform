@@ -71,5 +71,6 @@ const deactivate = async (
 }
 
 module.exports = {
-  deactivate
+  deactivate,
+  UNCANCELLED_GRACE_PERIOD_DAYS
 }

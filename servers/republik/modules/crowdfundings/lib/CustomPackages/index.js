@@ -5,6 +5,7 @@ const Promise = require('bluebird')
 
 const { getPeriodEndingLast, getLastEndDate } = require('../utils')
 const rules = require('./rules')
+const { UNCANCELLED_GRACE_PERIOD_DAYS } = require('../scheduler/deactivate')
 
 // Put that one into database.
 const EXTENDABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO', 'ABO_GIVE_MONTHS']
@@ -136,15 +137,27 @@ const evaluate = async ({
     return false
   }
 
-  // If endDate is in past, pushed to now.
-  // This indicates that we're dealing with an expired membership.
-  if (lastEndDate < now) {
+  const lastEndDateWithGracePeriod =
+    moment(lastEndDate).add(UNCANCELLED_GRACE_PERIOD_DAYS, 'days')
+
+  /**
+   * Usually, we want to extend an existing series of periods. We therefor
+   * suggest a new period which start where the last one ends.
+   *
+   * In some cases this is not desired, and requires to set `lastEndDate`
+   * to `now` if...
+   * a) ... membership is active and `lastEndDate` plus a grace period is over
+   * b) ... membership is inactive and `lastEndDate` is over
+   *
+   */
+  if (
+    (membership.active && lastEndDateWithGracePeriod < now) ||
+    (!membership.active && lastEndDate < now)
+  ) {
     lastEndDate = now
   }
 
   // Add a regular period this packageOption would cause.
-  // It is a mere suggestion. Dates may differ upon payment.
-
   const beginEnd = {
     beginDate: lastEndDate,
     endDate: moment(lastEndDate).add(
