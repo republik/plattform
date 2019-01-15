@@ -29,7 +29,12 @@ const getMembershipsEndingInRange = (minEndDate, maxEndDate, maxCancellationDate
         ON p."packageId" = pkg.id
       WHERE
         m.id NOT IN (SELECT "membershipId" FROM "membershipPeriods") AND --no period
-        pkg.name != 'ABO_GIVE' AND
+        (
+          -- claimed
+          (m."userId" != p."userId") OR
+          -- unclaimed GIVE is not "dormant"
+          (m."userId" = p."userId" AND pkg.name != 'ABO_GIVE')
+        ) AND
         m."userId" != :PARKING_USER_ID AND
         m."membershipTypeId" IN (
           SELECT id FROM "membershipTypes" WHERE name = ANY('{${DORMANT_MEMBERSHIP_TYPES.join(',')}}')
