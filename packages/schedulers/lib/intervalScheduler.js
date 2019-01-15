@@ -1,8 +1,6 @@
 const Redlock = require('redlock')
 const Promise = require('bluebird')
 
-const moment = require('moment')
-
 const LOCK_RETRY_COUNT = 3
 const LOCK_RETRY_DELAY = 600
 const LOCK_RETRY_JITTER = 200
@@ -13,17 +11,17 @@ const init = async ({
   context,
   runFunc,
   lockTtlSecs,
-  runAtTime,
-  runAtDaysOfWeek = [1, 2, 3, 4, 5, 6, 7],
-  runInitially = false,
+  runIntervalSecs,
+  runInitially = true,
   dryRun = false
 }) => {
-  if (!name || !context || !runFunc || !lockTtlSecs || !runAtTime) {
-    console.error(`missing input, scheduler ${name}`, { name, context, runFunc, lockTtlSecs, runAtTime })
+  if (!name || !context || !runFunc || !lockTtlSecs || !runIntervalSecs) {
+    console.error(`missing input, scheduler ${name}`, { name, context, runFunc, lockTtlSecs, runIntervalSecs })
     throw new Error(`missing input, scheduler ${name}`)
   }
-  if (runAtDaysOfWeek.length < 1) {
-    throw new Error('runAtDaysOfWeek must at least have one entry')
+  if (runIntervalSecs < lockTtlSecs) {
+    console.error(`lockTtlSecs bigger than runIntervalSecs`, { runIntervalSecs, lockTtlSecs })
+    throw new Error(`lockTtlSecs bigger than runIntervalSecs, scheduler ${name}`)
   }
   if (dryRun) {
     console.warn(`WARNING: dryRun flag enabled, scheduler "${name}"`)
@@ -35,6 +33,11 @@ const init = async ({
   }
   const debug = require('debug')(`scheduler:${name}`)
   debug('init')
+
+  const scheduleNextRun = () => {
+    // Set timeout slightly off to usual interval
+    setTimeout(run, 1000 * (runIntervalSecs + 1)).unref()
+  }
 
   const redlock = () => {
     return new Redlock(
@@ -50,25 +53,6 @@ const init = async ({
 
   if (lockTtlSecs * 1000 < MIN_TTL_MS) {
     throw new Error(`lockTtlSecs must be at least ${Math.ceil(MIN_TTL_MS / 1000)})`, { lockTtlSecs })
-  }
-
-  const scheduleNextRun = () => {
-    const [runAtHour, runAtMinute] = runAtTime.split(':')
-    if (!runAtHour || !runAtMinute) {
-      throw new Error('invalid runAtTime. Format: HH:MM', { runAtTime })
-    }
-    const now = moment()
-    const nextRunAt = now.clone()
-      .hour(runAtHour)
-      .minute(runAtMinute)
-      .second(0)
-      .millisecond(0)
-    while (now.isAfter(nextRunAt) || !runAtDaysOfWeek.includes(nextRunAt.isoWeekday())) {
-      nextRunAt.add(24, 'hours')
-    }
-    const nextRunInMs = nextRunAt.diff(now) // ms
-    setTimeout(run, nextRunInMs).unref()
-    debug(`next run scheduled ${nextRunAt.fromNow()} at: ${nextRunAt}`)
   }
 
   const run = async () => {
@@ -87,8 +71,7 @@ const init = async ({
       debug('run started')
 
       try {
-        const now = moment()
-        await runFunc({ now, dryRun }, context)
+        await runFunc({ dryRun }, context)
       } catch (e) {
         console.error('scheduled run failed', e)
       } finally {

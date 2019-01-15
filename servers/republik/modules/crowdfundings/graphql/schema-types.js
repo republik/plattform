@@ -164,6 +164,7 @@ enum MembershipPeriodKind {
   REGULAR
   BONUS # Bonus period upon checkout
   ADMIN # A bonus period granted via admins, supporter
+  CHANGEOVER # Period upon changeover from one membership to other
 }
 
 type MembershipPeriod {

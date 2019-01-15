@@ -48,6 +48,14 @@ const findEligableMemberships = ({ memberships, user, ignoreClaimedMemberships =
       (!ignoreClaimedMemberships || (ignoreClaimedMemberships && !isClaimedMembership))
   })
 
+const findDormantMemberships = ({ memberships, user }) =>
+  findEligableMemberships({ memberships, user })
+    .filter(m =>
+      m.userId === user.id &&
+      m.active === false &&
+      (m.periods && m.periods.length === 0)
+    )
+
 // Checks if user has at least one active and one inactive membership,
 // considering latter as "dormant"
 const hasDormantMembership = ({ user, memberships }) => {
@@ -57,23 +65,17 @@ const hasDormantMembership = ({ user, memberships }) => {
       m.active === true
     )
 
-  const inactiveMemberships =
-    findEligableMemberships({ memberships, user })
-      .filter(m =>
-        m.userId === user.id &&
-        m.active === false &&
-        (m.periods && m.periods.length === 0)
-      )
+  const dormantMemberships = findDormantMemberships({ memberships, user })
 
-  inactiveMemberships.forEach(m => {
-    debug('hasDormantMembership.eligableMembership', {
+  dormantMemberships.forEach(m => {
+    debug('hasDormantMembership.dormantMemberships.membership', {
       id: m.id,
       membershipType: m.membershipType.name,
       package: m.pledge.package.name
     })
   })
 
-  return activeMembership && !!inactiveMemberships.length > 0
+  return activeMembership && !!dormantMemberships.length > 0
 }
 
 const evaluate = async ({
@@ -428,6 +430,7 @@ const resolveMemberships = async ({ memberships, pgdb }) => {
 
 module.exports = {
   findEligableMemberships,
+  findDormantMemberships,
   hasDormantMembership,
   evaluate,
   resolvePackages,

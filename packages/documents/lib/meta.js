@@ -5,6 +5,25 @@ const { metaFieldResolver } = require('./resolve')
 // mean German, see http://iovs.arvojournals.org/article.aspx?articleid=2166061
 const WORDS_PER_MIN = 180
 
+const { SUPPRESS_READING_MINUTES } = process.env
+
+let suppressReadingMinutes
+
+try {
+  suppressReadingMinutes =
+    SUPPRESS_READING_MINUTES &&
+      JSON.parse(SUPPRESS_READING_MINUTES)
+
+  if (suppressReadingMinutes) {
+    console.warn(
+      'WARNING: Suppressing Document.meta.estimatedReadingMinutes with %O',
+      suppressReadingMinutes
+    )
+  }
+} catch (e) {
+  console.error('SUPPRESS_READING_MINUTES config parse error', e)
+}
+
 /**
  * Obtain credits from either {doc.content.children} or {doc.meta}.
  *
@@ -79,6 +98,30 @@ const getEstimatedReadingMinutes = doc => {
   return Math.round(count[0] / getWordsPerMinute())
 }
 
+const isReadingMinutesSuppressed = (resolvedFields) =>
+  suppressReadingMinutes && (
+    // Series
+    (
+      resolvedFields.series &&
+      resolvedFields.series.title &&
+      suppressReadingMinutes.series &&
+      suppressReadingMinutes.series.includes(
+        resolvedFields.series.title
+      )
+    ) ||
+
+    // Formats
+    (
+      resolvedFields.format &&
+      resolvedFields.format.meta &&
+      resolvedFields.format.meta.repoId &&
+      suppressReadingMinutes.formats &&
+      suppressReadingMinutes.formats.includes(
+        resolvedFields.format.meta.repoId
+      )
+    )
+  )
+
 /**
  * Prepares meta information and resolves linked documents in meta which are
  * not available in original {doc.content.meta} fields.
@@ -98,13 +141,17 @@ const getMeta = doc => {
     ? metaFieldResolver(doc.content.meta, doc._all)
     : {}
 
+  const estimatedReadingMinutes = !isReadingMinutesSuppressed(resolvedFields)
+    ? getEstimatedReadingMinutes(doc)
+    : null
+
   // Populate {doc._meta}. Is used to recognize provided {doc} for which meta
   // information was retrieved already.
   doc._meta = {
     ...doc.content.meta,
     credits: getCredits(doc),
     audioSource: getAudioSource(doc),
-    estimatedReadingMinutes: getEstimatedReadingMinutes(doc),
+    estimatedReadingMinutes,
     ...resolvedFields
   }
 
