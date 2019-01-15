@@ -141,13 +141,14 @@ const evaluate = async ({
     moment(lastEndDate).add(UNCANCELLED_GRACE_PERIOD_DAYS, 'days')
 
   /**
-   * In the following conditions, we'd like to push lastEndDate to now before
-   * generating periods. (It otherwise "glues" period to period without a gap.)
+   * Usually, we want to extend an existing series of periods. We therefor
+   * suggest a new period which start where the last one ends.
    *
-   * a) If membership is active, push lastEndDate to now if lastEndDate plus
-   *    a grace period is over.
-   * b) ... or if membership is inactive, push lastEndate to now if lastEndDate
-   *    is over.
+   * In some cases this is not desired, and requires to set `lastEndDate`
+   * to `now` if...
+   * a) ... membership is active and `lastEndDate` plus a grace period is over
+   * b) ... membership is inactive and `lastEndDate` is over
+   *
    */
   if (
     (membership.active && lastEndDateWithGracePeriod < now) ||
