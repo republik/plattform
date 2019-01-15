@@ -199,7 +199,7 @@ type MembershipStats {
     # filter by membershipTypes
     # default: [ABO]
     membershipTypes: [String!]
-  ): ProlongMembershipStats!
+  ): MembershipPeriodStats!
 }
 type MemberStats {
   count: Int!
@@ -213,15 +213,15 @@ type MonthlyMembershipStat {
   renewedRatio: Float!
 }
 
-type ProlongMembershipStats {
+type MembershipPeriodStats {
   # combination: minEndDate-maxEndDate-membershipTypes
   id: ID!
   totalMemberships: Int!
   # any day that an action occurred that affected a period that ended within the specified end dates
-  days: [ProlongMembershipStatsDay!]!
+  days: [MembershipPeriodStatsDay!]!
 }
 
-type ProlongMembershipStatsDay {
+type MembershipPeriodStatsDay {
   # combination: dayDate-membershipTypes
   id: ID!
   day: Date!

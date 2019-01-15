@@ -11,7 +11,7 @@ const {
   PARKING_USER_ID
 } = process.env
 
-const EXCLUDE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
+const DORMANT_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
 
 // returns memberships with all its periods where one period ends in given range
 const getMembershipsEndingInRange = (minEndDate, maxEndDate, maxCancellationDate, membershipTypes, pgdb) =>
@@ -32,7 +32,7 @@ const getMembershipsEndingInRange = (minEndDate, maxEndDate, maxCancellationDate
         pkg.name != 'ABO_GIVE' AND
         m."userId" != :PARKING_USER_ID AND
         m."membershipTypeId" IN (
-          SELECT id FROM "membershipTypes" WHERE name = ANY('{${EXCLUDE_MEMBERSHIP_TYPES.join(',')}}')
+          SELECT id FROM "membershipTypes" WHERE name = ANY('{${DORMANT_MEMBERSHIP_TYPES.join(',')}}')
         )
     ), m_ids_in_selection AS (
       SELECT
@@ -96,9 +96,15 @@ const getLastMembershipPeriodIndexEndingInRange = (periods, minEndDate, maxEndDa
     -1
     )
 
-const createDays = (membershipTypes) => {
+const createDays = (membershipTypes, includeCounterNames) => {
   const days = {}
-  const counterNames = {}
+  const counterNames = includeCounterNames
+    ? includeCounterNames.reduce(
+      (agg, cur) => {
+        agg[cur] = 0
+        return agg
+      }, {})
+    : {}
   return {
     increment: (date, counterName) => {
       // see packages/scalars/graphql/resolvers/Date.js
@@ -173,11 +179,19 @@ const getPeriods = async ({ minEndDate, maxEndDate, maxCancellationDate, members
       membershipCancellations: uniqBy(m.membershipCancellations, mc => mc.id)
     }))
 
-  const days = createDays(membershipTypes)
+  const days = createDays(membershipTypes, ['prolongCount', 'cancelCount'])
 
   const membershipsProlonged = membershipsInNeedForProlong
     .filter(m => {
-      return m.lastMembershipPeriodIndexEndingInRange < m.membershipPeriods.length - 1
+      const lastPeriod = m.membershipPeriods[m.lastMembershipPeriodIndexEndingInRange]
+      const prolongPeriod = m.membershipPeriods[m.lastMembershipPeriodIndexEndingInRange + 1]
+      return prolongPeriod &&
+        !!moment(prolongPeriod.beginDate).isBetween(
+        moment(lastPeriod.endDate).subtract(24, 'hours'),
+        moment(lastPeriod.endDate).add(24, 'hours'),
+        'hour',
+        '[]'
+      )
     })
     .map(m => {
       const prolongPeriod = m.membershipPeriods[m.lastMembershipPeriodIndexEndingInRange + 1]
@@ -209,9 +223,9 @@ const getPeriods = async ({ minEndDate, maxEndDate, maxCancellationDate, members
     })
 
   debug({
-    minEndDate: minEndDate.toISOString(),
-    maxEndDate: maxEndDate.toISOString(),
-    maxCancellationDate: maxCancellationDate.toISOString(),
+    minEndDate: minEndDate.toISOString(true),
+    maxEndDate: maxEndDate.toISOString(true),
+    maxCancellationDate: maxCancellationDate.toISOString(true),
     total: membershipsInNeedForProlong.length,
     membershipsProlonged: membershipsProlonged.length,
     membershipsCancelled: membershipsCancelled.length
