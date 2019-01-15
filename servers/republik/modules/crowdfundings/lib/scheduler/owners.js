@@ -6,6 +6,7 @@ const {
 } = require('../../graphql/resolvers/User')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
+const { UNCANCELLED_GRACE_PERIOD_DAYS } = require('./deactivate')
 
 const {
   PARKING_USER_ID
@@ -172,7 +173,7 @@ const inform = async (args, context) => {
           user,
           endDate: prolongBeforeDate,
           cancelUntilDate: moment(prolongBeforeDate).subtract(2, 'days'),
-          graceEndDate: moment(prolongBeforeDate).add(14, 'days'),
+          graceEndDate: moment(prolongBeforeDate).add(UNCANCELLED_GRACE_PERIOD_DAYS, 'days'),
           templateName: bucket.templateName
         }, context)
         return sendMailTemplate(
