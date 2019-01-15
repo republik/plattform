@@ -215,7 +215,7 @@ type MonthlyMembershipStat {
 }
 
 type ProlongMembershipStats {
-  # combination: beginDate-endDate-membershipTypes
+  # combination: minEndDate-maxEndDate-membershipTypes
   id: ID!
   totalMemberships: Int!
   # any day that an action occurred that affected a period that ended within the specified end dates
@@ -223,7 +223,7 @@ type ProlongMembershipStats {
 }
 
 type ProlongMembershipStatsDay {
-  # combination: date-membershipTypes
+  # combination: dayDate-membershipTypes
   id: ID!
   day: Date!
   cancelCount: Int!
