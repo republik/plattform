@@ -144,7 +144,7 @@ module.exports = {
         return null
       }
 
-      if (activeMembership.membershipType.name === 'ABO_GIVE_MONTHS') {
+      if (activeMembership && activeMembership.membershipType.name === 'ABO_GIVE_MONTHS') {
         debug('active membership type "ABO_GIVE_MONTHS", return prolongBeforeDate: null')
 
         return null
