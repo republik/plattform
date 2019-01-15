@@ -3,15 +3,11 @@ const moment = require('moment')
 const Promise = require('bluebird')
 
 const createCache = require('../cache')
+const {
+  CANCELLED_GRACE_PERIOD_DAYS,
+  UNCANCELLED_GRACE_PERIOD_DAYS
+} = require('../Membership')
 const { activeMembershipsQuery } = require('./changeover')
-
-// Amount of days before a cancelled membership (renew=false) is deactivated
-// after last membership periods end
-const CANCELLED_GRACE_PERIOD_DAYS = 0
-
-// Amount of days before an uncancelled membership (renew=true) is deactivated
-// after last membership periods end
-const UNCANCELLED_GRACE_PERIOD_DAYS = 14
 
 const deactivate = async (
   { dryRun },
@@ -71,6 +67,5 @@ const deactivate = async (
 }
 
 module.exports = {
-  deactivate,
-  UNCANCELLED_GRACE_PERIOD_DAYS
+  deactivate
 }

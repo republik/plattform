@@ -4,8 +4,8 @@ const uuid = require('uuid/v4')
 const Promise = require('bluebird')
 
 const { getPeriodEndingLast, getLastEndDate } = require('../utils')
+const { UNCANCELLED_GRACE_PERIOD_DAYS } = require('../Membership')
 const rules = require('./rules')
-const { UNCANCELLED_GRACE_PERIOD_DAYS } = require('../scheduler/deactivate')
 
 // Put that one into database.
 const EXTENDABLE_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO', 'ABO_GIVE_MONTHS']
