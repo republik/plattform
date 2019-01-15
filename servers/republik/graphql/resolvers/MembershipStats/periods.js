@@ -149,7 +149,7 @@ module.exports = async (_, args, context) => {
   } = args
   const minEndDate = moment(args.minEndDate).startOf('day')
   const maxEndDate = moment(args.maxEndDate).endOf('day')
-  const maxCancellationDate = maxEndDate.add(UNCANCELLED_GRACE_PERIOD_DAYS, 'days')
+  const maxCancellationDate = moment(maxEndDate).add(UNCANCELLED_GRACE_PERIOD_DAYS, 'days')
   const queryId = `${minEndDate.toISOString(true)}-${maxEndDate.toISOString(true)}_${membershipTypes.join('-')}`
 
   return createCache({
