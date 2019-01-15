@@ -55,7 +55,8 @@ const getMembershipsEndingInRange = (minEndDate, maxEndDate, maxCancellationDate
         json_agg(mp.* ORDER BY mp."endDate" ASC) AS "membershipPeriods",
         json_agg(p.* ORDER BY p."createdAt" ASC) FILTER (WHERE p.id IS NOT NULL) AS "periodPledges",
         --- distinct not possible in this json_agg: in an aggregate with DISTINCT, ORDER BY expressions must appear in argument list
-        json_agg(mc.* ORDER BY mc."createdAt" ASC) FILTER (WHERE mc.id IS NOT NULL) AS "membershipCancellations"
+        json_agg(mc.* ORDER BY mc."createdAt" ASC) FILTER (WHERE mc.id IS NOT NULL) AS "membershipCancellations",
+        json_agg(sm.*) FILTER (WHERE sm.id IS NOT NULL) AS "succeedingMemberships"
       FROM
         memberships m
       JOIN
@@ -69,6 +70,8 @@ const getMembershipsEndingInRange = (minEndDate, maxEndDate, maxCancellationDate
             mc.category != 'SYSTEM' AND
             mc."createdAt" <= :maxCancellationDate AND
             (mc."revokedAt" IS NULL OR mc."revokedAt" > :maxCancellationDate)
+      LEFT JOIN
+        "memberships" sm ON m."succeedingMembershipId" = sm.id
       WHERE
         m.id IN (SELECT "id" FROM m_ids_in_selection)
       GROUP BY
@@ -185,21 +188,29 @@ const getPeriods = async ({ minEndDate, maxEndDate, maxCancellationDate, members
     .filter(m => {
       const lastPeriod = m.membershipPeriods[m.lastMembershipPeriodIndexEndingInRange]
       const prolongPeriod = m.membershipPeriods[m.lastMembershipPeriodIndexEndingInRange + 1]
-      return prolongPeriod &&
+      if (prolongPeriod &&
         !!moment(prolongPeriod.beginDate).isBetween(
-        moment(lastPeriod.endDate).subtract(24, 'hours'),
-        moment(lastPeriod.endDate).add(24, 'hours'),
-        'hour',
-        '[]'
-      )
-    })
-    .map(m => {
-      const prolongPeriod = m.membershipPeriods[m.lastMembershipPeriodIndexEndingInRange + 1]
-      days.increment(
-        prolongPeriod.pledge.createdAt,
-        'prolongCount'
-      )
-      return m
+          moment(lastPeriod.endDate).subtract(24, 'hours'),
+          moment(lastPeriod.endDate).add(24, 'hours'),
+          'hour',
+          '[]'
+        )
+      ) {
+        days.increment(
+          prolongPeriod.pledge.createdAt,
+          'prolongCount'
+        )
+        return true
+      }
+
+      if (m.succeedingMemberships && !!m.succeedingMemberships.length) {
+        const succeedingMembership = m.succeedingMemberships[0]
+        days.increment(
+          succeedingMembership.createdAt,
+          'prolongCount'
+        )
+        return true
+      }
     })
 
   const membershipsCancelled = membershipsInNeedForProlong
