@@ -115,7 +115,7 @@ const createDays = (membershipTypes, includeCounterNames) => {
       if (!days[id]) {
         days[id] = {
           id,
-          day: dayDate
+          date: dayDate
         }
       }
       const day = days[id]
@@ -131,7 +131,7 @@ const createDays = (membershipTypes, includeCounterNames) => {
         ...counterNames,
         ...days[dayDate]
       }))
-      .sort((a, b) => ascending(a.day, b.day))
+      .sort((a, b) => ascending(a.date, b.date))
   }
 }
 

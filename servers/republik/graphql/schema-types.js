@@ -224,7 +224,7 @@ type MembershipPeriodStats {
 type MembershipPeriodStatsDay {
   # combination: dayDate-membershipTypes
   id: ID!
-  day: Date!
+  date: Date!
   cancelCount: Int!
   prolongCount: Int!
 }
