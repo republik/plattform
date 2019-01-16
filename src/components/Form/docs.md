@@ -4,29 +4,31 @@
 <Field label='Label' />
 ```
 
-
-```react|span-3
-<Field
-    label='E-Mail-Adresse'
-    error='Geben sie eine gültige E-Mail-Adresse an' />
-```
-
 ```react|span-3
 <Field label='Label' simulate='focus' />
 ```
 
 ```react|span-3
+<Field label='Label' value={'string'} />
+```
+
+```react|span-3
+<Field label='Label' value={0} />
+```
+
+```react|span-3
+<Field
+  label='E-Mail-Adresse'
+  error='Geben sie eine gültige E-Mail-Adresse an' />
+```
+
+```react|span-3
 <Field
   label='Label'
-  icon={
-    <SearchIcon
-      size={30}
-      onClick={() => {
-        console.log('search')
-      }}
-    />
-  } />
+  icon={<SearchIcon size={30} />} />
 ```
+
+Normally `value` should be a string. Even if you pass in numbers, you'll recieve strings on change by default.
 
 Please note: `simulate` is for testing and documentation purposes only. It will not work in production environments.
 

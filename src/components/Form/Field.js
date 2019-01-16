@@ -165,7 +165,9 @@ class Field extends Component {
 
     const {isValidating, isDirty} = this.state
 
-    const value = this.props.value !== undefined ? this.props.value : this.state.value
+    const value = this.props.value !== undefined
+      ? this.props.value
+      : this.state.value
 
     let colorStyle
     if (this.props.black) {
@@ -178,7 +180,8 @@ class Field extends Component {
     const hasIncrease = !!onInc
     const hasDecrease = !!onDec
     const hasError = !!error
-    const labelStyle = (isFocused || value || hasError)
+    const valueIsPresent = value !== undefined && value.length !== 0
+    const labelStyle = (isFocused || valueIsPresent || hasError)
       ? merge(
           labelTextStyle, labelTextTopStyle,
           isFocused && labelTextFocusedStyle,
