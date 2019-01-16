@@ -101,6 +101,18 @@ const evaluate = async ({
     additionalPeriods: []
   }
 
+  // Is user membership next to another active user membership?
+  // If there is an active membership, user should only be able to extend
+  // the active membership
+  if (
+    !membership.active &&
+    membership.user.id === package_.user.id &&
+    package_.user.memberships.find(m => m.active)
+  ) {
+    debug('membership next to an active membership')
+    return false
+  }
+
   // Can membership.membershipType be extended?
   // Not all membershipTypes can be extended
   if (!EXTENDABLE_MEMBERSHIP_TYPES.includes(membershipType.name)) {
