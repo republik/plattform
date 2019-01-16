@@ -119,15 +119,25 @@ const changeover = async (
       try {
         const now = moment()
 
-        await transaction.public.memberships.update(
+        const sunsetMembership = await transaction.public.memberships.updateAndGetOne(
+          { id: activeMembership.id },
           {
-            id: activeMembership.id,
-            succeedingMembershipId: electedDormantMembership.id
-          },
-          { active: false, renew: false, updatedAt: now }
+            succeedingMembershipId: electedDormantMembership.id,
+            active: false,
+            renew: false,
+            updatedAt: now
+          }
         )
 
-        await transaction.public.memberships.updateOne(
+        if (!sunsetMembership) {
+          console.error(
+            'changeover failed: unable to sunset membership',
+            { membership: { id: activeMembership.id } }
+          )
+          throw new Error('Unable to unset membership')
+        }
+
+        const activatedMembership = await transaction.public.memberships.updateAndGetOne(
           { id: electedDormantMembership.id },
           {
             active: true,
@@ -136,13 +146,21 @@ const changeover = async (
           }
         )
 
+        if (!activatedMembership) {
+          console.error(
+            'changeover failed: unable to activate elected membership',
+            { membership: { id: activatedMembership.id } }
+          )
+          throw new Error('Unable to activate elected membership')
+        }
+
         const beginDate = now
         const endDate = beginDate.clone().add(
           electedDormantMembership.initialPeriods,
           electedDormantMembership.initialInterval
         )
 
-        await transaction.public.membershipPeriods.insert({
+        const insertedPeriods = await transaction.public.membershipPeriods.insert({
           membershipId: electedDormantMembership.id,
           beginDate,
           endDate,
@@ -150,6 +168,14 @@ const changeover = async (
           createdAt: now,
           updatedAt: now
         })
+
+        if (!insertedPeriods) {
+          console.error(
+            'changeover failed: unable to insert periods for elected membership',
+            { membership: { id: activatedMembership.id } }
+          )
+          throw new Error('Unable to insert periods for elected membership')
+        }
 
         createCache({ prefix: `User:${user.id}` }).invalidate()
 
