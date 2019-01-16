@@ -11,14 +11,6 @@
     error='Geben sie eine gültige E-Mail-Adresse an' />
 ```
 
-Override the inner focus state by explicitly passing `isFocused`.
-
-Pass css pseudo states as `simulate` property to test or display behavior. Please note that the pseudo state simulator is a developer documentation helper and not meant to be used in production.
-
-```react|span-3
-<Field label='Label' isFocused={true} />
-```
-
 ```react|span-3
 <Field label='Label' simulate='focus' />
 ```
@@ -35,6 +27,8 @@ Pass css pseudo states as `simulate` property to test or display behavior. Pleas
     />
   } />
 ```
+
+Please note: `simulate` is for testing and documentation purposes only. It will not work in production environments.
 
 ### Increase and Decrease
 

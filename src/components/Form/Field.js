@@ -153,7 +153,6 @@ class Field extends Component {
       renderInput,
       onInc,
       onDec,
-      isFocused: isFocusedFromProps,
       icon
     } = this.props
 
@@ -162,9 +161,6 @@ class Field extends Component {
     if (sim) {
       isFocused = sim.indexOf('focus') !== -1
       simulationClassName = simulate(sim).toString()
-    }
-    if (isFocusedFromProps !== undefined) {
-      isFocused = isFocusedFromProps
     }
 
     const {isValidating, isDirty} = this.state
