@@ -52,6 +52,14 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
     .duration(moment(beginDate).diff(now))
     .add(1, 'day')
 
+  if (bonus.asDays() < 1) {
+    debug(
+      'bonus not positive (%d). rule does not apply.',
+      Math.floor(bonus.asDays())
+    )
+    return
+  }
+
   debug('%d days granted. role applied.', Math.floor(bonus.asDays()))
 
   payload.additionalPeriods.push({

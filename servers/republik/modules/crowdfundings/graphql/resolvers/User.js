@@ -3,6 +3,7 @@ const { Roles, AccessToken: { isFieldExposed } } = require('@orbiting/backend-mo
 const debug = require('debug')('crowdfundings:resolver:User')
 const flattenDeep = require('lodash/flattenDeep')
 const Promise = require('bluebird')
+const moment = require('moment')
 
 const {
   findEligableMemberships,
@@ -12,7 +13,7 @@ const {
   getCustomOptions
 } = require('../../lib/CustomPackages')
 const createCache = require('../../lib/cache')
-const { getPeriodEndingLast } = require('../../lib/utils')
+const { getLastEndDate } = require('../../lib/utils')
 const getStripeClients = require('../../lib/payments/stripe/clients')
 const { isExpired } = require('./PaymentSource')
 
@@ -126,25 +127,10 @@ module.exports = {
 
       // Checks if there is a pending pledge on a users active membership.
       const activeMembership = memberships.find(m => m.active)
-      const hasPendingPledges =
-        !!activeMembership && await pgdb.public.query(`
-          SELECT "pledges".* FROM "pledges"
-
-          JOIN "pledgeOptions"
-            ON "pledges"."id" = "pledgeOptions"."pledgeId"
-            AND "pledgeOptions"."membershipId" = :activeMembershipId
-
-          WHERE "pledges"."status" = 'WAITING_FOR_PAYMENT'
-          ;
-        `, { activeMembershipId: activeMembership.id })
-
-      if (hasPendingPledges.length > 0) {
-        debug('pending pledge on active membership found, return prolongBeforeDate: null')
-
-        return null
-      }
-
-      if (activeMembership && activeMembership.membershipType.name === 'ABO_GIVE_MONTHS') {
+      if (
+        activeMembership &&
+        activeMembership.membershipType.name === 'ABO_GIVE_MONTHS'
+      ) {
         debug('active membership type "ABO_GIVE_MONTHS", return prolongBeforeDate: null')
 
         return null
@@ -179,7 +165,29 @@ module.exports = {
         debug('has active but cancelled membership, return prolongBeforeDate: null')
         return null
       }
-      return getPeriodEndingLast(allMembershipPeriods).endDate
+
+      const hasPendingPledges =
+        !!activeMembership && await pgdb.public.query(`
+          SELECT "pledges".* FROM "pledges"
+
+          JOIN "pledgeOptions"
+            ON "pledges"."id" = "pledgeOptions"."pledgeId"
+            AND "pledgeOptions"."membershipId" = :activeMembershipId
+
+          WHERE "pledges"."status" = 'WAITING_FOR_PAYMENT'
+          ;
+        `, { activeMembershipId: activeMembership.id })
+
+      const now = moment()
+      const lastEndDate = moment(getLastEndDate(allMembershipPeriods))
+
+      // Check if there are pending pledges, and last end date is not in future.
+      if (hasPendingPledges.length > 0 && lastEndDate > now) {
+        debug('pending pledge and not overdue, return prolongBeforeDate: null')
+        return null
+      }
+
+      return lastEndDate
     })
   },
   async pledges (user, args, {pgdb, user: me}) {
