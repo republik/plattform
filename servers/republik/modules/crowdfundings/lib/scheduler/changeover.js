@@ -119,12 +119,14 @@ const changeover = async (
       try {
         const now = moment()
 
-        await transaction.public.memberships.update(
+        await transaction.public.memberships.updateOne(
+          { id: activeMembership.id },
           {
-            id: activeMembership.id,
-            succeedingMembershipId: electedDormantMembership.id
-          },
-          { active: false, renew: false, updatedAt: now }
+            succeedingMembershipId: electedDormantMembership.id,
+            active: false,
+            renew: false,
+            updatedAt: now
+          }
         )
 
         await transaction.public.memberships.updateOne(
