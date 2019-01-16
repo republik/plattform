@@ -81,6 +81,8 @@ type Document {
     before: ID
     after: ID
   ): DocumentConnection!
+
+  playableMedia: [PlayableMedia!]!
 }
 
 type DocumentNode {
@@ -122,5 +124,11 @@ type DocumentPageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
+}
+
+interface PlayableMedia {
+  id: ID!
+  platform: String!
+  durationMs: Int
 }
 `

@@ -139,11 +139,9 @@ enum EmbedType {
   DocumentCloudEmbed
 }
 
-interface Embed {
-  id: ID!
-}
+union Embed = TwitterEmbed | YoutubeEmbed | VimeoEmbed | DocumentCloudEmbed
 
-type TwitterEmbed implements Embed {
+type TwitterEmbed {
   id: ID!
   text: String!
   html: String!
@@ -158,7 +156,7 @@ type TwitterEmbed implements Embed {
   playable: Boolean!
 }
 
-type YoutubeEmbed implements Embed {
+type YoutubeEmbed implements PlayableMedia {
   id: ID!
   platform: String!
   createdAt: DateTime!
@@ -169,6 +167,7 @@ type YoutubeEmbed implements Embed {
   title: String!
   userProfileImageUrl: String
   aspectRatio: Float
+  durationMs: Int
 }
 
 type VimeoSrc {
@@ -177,7 +176,7 @@ type VimeoSrc {
   thumbnail: String
 }
 
-type VimeoEmbed implements Embed {
+type VimeoEmbed implements PlayableMedia {
   id: ID!
   platform: String!
   createdAt: DateTime!
@@ -189,9 +188,10 @@ type VimeoEmbed implements Embed {
   userProfileImageUrl: String
   aspectRatio: Float,
   src: VimeoSrc
+  durationMs: Int
 }
 
-type DocumentCloudEmbed implements Embed {
+type DocumentCloudEmbed {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!

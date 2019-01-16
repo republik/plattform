@@ -62,7 +62,8 @@ const getVimeoVideoById = async id => {
       hls: hls,
       thumbnail: thumbnail
       // TODO: subtitles
-    } : null
+    } : null,
+    durationMs: response.duration * 1000
   }
 }
 
