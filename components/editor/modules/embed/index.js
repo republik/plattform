@@ -27,6 +27,7 @@ query getVideoEmbed($id: ID!, $embedType: EmbedType!) {
       userName
       userProfileImageUrl
       aspectRatio
+      durationMs
     }
     ... on VimeoEmbed {
       platform
@@ -45,6 +46,7 @@ query getVideoEmbed($id: ID!, $embedType: EmbedType!) {
         hls
         thumbnail
       }
+      durationMs
     }
   }
 }
