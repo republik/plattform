@@ -1,6 +1,13 @@
 module.exports = `
 
-type CollectionItem {
+interface CollectionItemInterface {
+  id: ID!
+  createdAt: DateTime!
+  collection: Collection!
+  document: Document
+}
+
+type CollectionItem implements CollectionItemInterface {
   id: ID!
   createdAt: DateTime!
   collection: Collection!
@@ -35,10 +42,21 @@ type Collection {
 extend type Document {
   userCollectionItems: [CollectionItem!]!
   userCollectionItem(collectionName: String!): CollectionItem
+  userProgress: DocumentProgress
 }
 
 extend type User {
   collections: [Collection!]!
   collection(name: String!): Collection
+}
+
+type DocumentProgress implements CollectionItemInterface {
+  id: ID!
+  percentage: Int!
+  nodeId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  collection: Collection!
+  document: Document
 }
 `

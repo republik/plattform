@@ -1,3 +1,5 @@
+const PROGRESS_COLLECTION_NAME = 'progress'
+
 const findForUser = (userId, { pgdb }) =>
   pgdb.public.collections.find({
     hidden: false
@@ -65,7 +67,8 @@ const upsertDocumentItem = async (userId, collectionId, repoId, data, { pgdb }) 
       },
       {
         ...query,
-        data
+        data,
+        updatedAt: new Date()
       },
       { skipUndefined: true }
     )
@@ -79,12 +82,27 @@ const deleteDocumentItem = (userId, collectionId, repoId, { pgdb }) =>
     repoId
   })
 
+const getDocumentProgressItem = (args, context) =>
+  getDocumentItem(
+    {
+      ...args,
+      collectionName: PROGRESS_COLLECTION_NAME
+    },
+    context
+  )
+    .then(item => item && ({
+      ...item,
+      ...item.data
+    }))
+
 module.exports = {
+  PROGRESS_COLLECTION_NAME,
   findForUser,
   byNameForUser,
   byIdForUser,
   findDocumentItems,
   getDocumentItem,
   upsertDocumentItem,
-  deleteDocumentItem
+  deleteDocumentItem,
+  getDocumentProgressItem
 }
