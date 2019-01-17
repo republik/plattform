@@ -60,6 +60,7 @@ type DocumentProgress implements CollectionItemInterface {
   document: Document
 }
 
+
 extend interface PlayableMedia {
   userPositionMs: Int
 }

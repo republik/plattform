@@ -18,7 +18,7 @@ type mutations {
   upsertDocumentProgress(
     documentId: ID!
     percentage: Int!
-    nodeId: ID!
+    nodeId: String!
   ): DocumentProgress!
 
   removeDocumentProgress(
