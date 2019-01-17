@@ -60,20 +60,31 @@ type DocumentProgress implements CollectionItemInterface {
   document: Document
 }
 
+type MediaProgress implements CollectionItemInterface {
+  id: ID!
+  # progress in milliseconds
+  ms: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  collection: Collection!
+  # never resolved on MediaProgress
+  document: Document
+}
+
 
 extend interface PlayableMedia {
-  userPositionMs: Int
+  userProgress: MediaProgress
 }
 
 extend type YoutubeEmbed {
-  userPositionMs: Int
+  userProgress: MediaProgress
 }
 
 extend type VimeoEmbed {
-  userPositionMs: Int
+  userProgress: MediaProgress
 }
 
 extend type AudioSource {
-  userPositionMs: Int
+  userProgress: MediaProgress
 }
 `

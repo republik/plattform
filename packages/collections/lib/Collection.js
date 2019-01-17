@@ -44,16 +44,10 @@ const getDocumentItem = (args, { pgdb }) =>
       )
   `, args)
 
-const upsertDocumentItem = async (userId, collectionId, repoId, data, { pgdb }) => {
-  const query = {
-    userId,
-    collectionId,
-    repoId
-  }
-  const existingItem =
-    await pgdb.public.collectionDocumentItems.findOne(query)
+const upsertItem = async (tableName, query, data, { pgdb }) => {
+  const existingItem = await pgdb.public[tableName].findOne(query)
   if (!existingItem) {
-    return pgdb.public.collectionDocumentItems.insertAndGet(
+    return pgdb.public[tableName].insertAndGet(
       {
         ...query,
         data
@@ -61,7 +55,7 @@ const upsertDocumentItem = async (userId, collectionId, repoId, data, { pgdb }) 
       { skipUndefined: true }
     )
   } else {
-    return pgdb.public.collectionDocumentItems.updateAndGetOne(
+    return pgdb.public[tableName].updateAndGetOne(
       {
         id: existingItem.id
       },
@@ -73,6 +67,15 @@ const upsertDocumentItem = async (userId, collectionId, repoId, data, { pgdb }) 
       { skipUndefined: true }
     )
   }
+}
+
+const upsertDocumentItem = async (userId, collectionId, repoId, data, context) => {
+  const query = {
+    userId,
+    collectionId,
+    repoId
+  }
+  return upsertItem('collectionDocumentItems', query, data, context)
 }
 
 const deleteDocumentItem = (userId, collectionId, repoId, { pgdb }) =>
@@ -95,14 +98,66 @@ const getDocumentProgressItem = (args, context) =>
       ...item.data
     }))
 
+const upsertMediaItem = async (userId, collectionId, mediaId, data, context) => {
+  const query = {
+    userId,
+    collectionId,
+    mediaId
+  }
+  return upsertItem('collectionMediaItems', query, data, context)
+    .then(item => item && ({
+      ...item,
+      ...item.data
+    }))
+}
+
+const deleteMediaItem = (userId, collectionId, mediaId, { pgdb }) =>
+  pgdb.public.collectionMediaItems.deleteAndGetOne({
+    userId,
+    collectionId,
+    mediaId
+  })
+    .then(item => item && ({
+      ...item,
+      ...item.data
+    }))
+
+const getMediaProgressItem = (args, { pgdb }) =>
+  pgdb.queryOne(`
+    SELECT i.*
+    FROM "collectionMediaItems" i
+    WHERE
+      i."mediaId" = :mediaId AND
+      i."userId" = :userId AND
+      i."collectionId" = (
+        SELECT id
+        FROM collections
+        WHERE name = :collectionName
+      )
+  `, {
+    ...args,
+    collectionName: PROGRESS_COLLECTION_NAME
+
+  })
+    .then(item => item && ({
+      ...item,
+      ...item.data
+    }))
+
 module.exports = {
   PROGRESS_COLLECTION_NAME,
   findForUser,
   byNameForUser,
   byIdForUser,
+
   findDocumentItems,
   getDocumentItem,
+
   upsertDocumentItem,
   deleteDocumentItem,
-  getDocumentProgressItem
+  getDocumentProgressItem,
+
+  upsertMediaItem,
+  deleteMediaItem,
+  getMediaProgressItem
 }

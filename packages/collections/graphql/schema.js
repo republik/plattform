@@ -24,5 +24,15 @@ type mutations {
   removeDocumentProgress(
     documentId: ID!
   ): DocumentProgress!
+
+
+  upsertMediaProgress(
+    id: ID!
+    ms: Int!
+  ): MediaProgress!
+
+  removeMediaProgress(
+    id: ID!
+  ): MediaProgress!
 }
 `
