@@ -6,7 +6,7 @@ const {
 } = require('../../graphql/resolvers/User')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
-const { UNCANCELLED_GRACE_PERIOD_DAYS } = require('./deactivate')
+const { UNCANCELLED_GRACE_PERIOD_DAYS } = require('../Membership')
 
 const {
   PARKING_USER_ID
