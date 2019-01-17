@@ -22,7 +22,7 @@ module.exports = async (_, args, { user, t }) => {
     const tweetData = await getTweetById(id, t)
 
     return {
-      embedType,
+      __typename: embedType,
       ...tweetData
     }
   }
@@ -30,7 +30,7 @@ module.exports = async (_, args, { user, t }) => {
     const youtubeData = await getYoutubeVideoById(id)
 
     return {
-      embedType,
+      __typename: embedType,
       ...youtubeData
     }
   }
@@ -39,7 +39,7 @@ module.exports = async (_, args, { user, t }) => {
     const vimeoData = await getVimeoVideoById(id)
 
     return {
-      embedType,
+      __typename: embedType,
       id,
       ...vimeoData
     }
@@ -49,7 +49,7 @@ module.exports = async (_, args, { user, t }) => {
     const documentCloudData = await getDocumentCloudDocById(id)
 
     return {
-      embedType,
+      __typename: embedType,
       id,
       ...documentCloudData
     }

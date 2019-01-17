@@ -59,4 +59,16 @@ type DocumentProgress implements CollectionItemInterface {
   collection: Collection!
   document: Document
 }
+
+extend interface PlayableMedia {
+  userPositionMs: Int
+}
+
+extend type YoutubeEmbed {
+  userPositionMs: Int
+}
+
+extend type VimeoEmbed {
+  userPositionMs: Int
+}
 `

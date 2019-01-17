@@ -6,7 +6,8 @@ const {
   processMembersOnlyZonesInContent,
   processRepoImageUrlsInContent,
   processRepoImageUrlsInMeta,
-  processImageUrlsInContent
+  processImageUrlsInContent,
+  processEmbedsInContent
 } = require('../../lib/process')
 const { getMeta } = require('../../lib/meta')
 
@@ -145,5 +146,15 @@ module.exports = {
     }
 
     return getDocuments(doc, args, context, info)
+  },
+  playableMedia (doc, args, context, info) {
+    const playableMediaTypes = ['VimeoEmbed', 'YoutubeEmbed']
+    const embeds = []
+    processEmbedsInContent(doc.content, embed => {
+      if (playableMediaTypes.includes(embed.__typename)) {
+        embeds.push(embed)
+      }
+    })
+    return embeds
   }
 }

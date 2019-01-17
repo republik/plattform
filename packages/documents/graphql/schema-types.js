@@ -82,7 +82,7 @@ type Document {
     after: ID
   ): DocumentConnection!
 
-  playableMedia: [PlayableMedia!]!
+  playableMedia: [Embed!]!
 }
 
 type DocumentNode {
@@ -128,7 +128,77 @@ type DocumentPageInfo {
 
 interface PlayableMedia {
   id: ID!
+  durationMs: Int!
+}
+
+enum EmbedType {
+  YoutubeEmbed
+  VimeoEmbed
+  TwitterEmbed
+  DocumentCloudEmbed
+}
+
+union Embed = TwitterEmbed | YoutubeEmbed | VimeoEmbed | DocumentCloudEmbed
+
+type TwitterEmbed {
+  id: ID!
+  text: String!
+  html: String!
+  createdAt: DateTime!
+  retrievedAt: DateTime!
+  userId: String!
+  userName: String!
+  userScreenName: String!
+  userProfileImageUrl: String!,
+  image: String
+  more: String
+  playable: Boolean!
+}
+
+type YoutubeEmbed implements PlayableMedia {
+  id: ID!
   platform: String!
-  durationMs: Int
+  createdAt: DateTime!
+  retrievedAt: DateTime!
+  userUrl: String!
+  userName: String!
+  thumbnail: String!
+  title: String!
+  userProfileImageUrl: String
+  aspectRatio: Float
+  durationMs: Int!
+}
+
+type VimeoSrc {
+  mp4: String,
+  hls: String,
+  thumbnail: String
+}
+
+type VimeoEmbed implements PlayableMedia {
+  id: ID!
+  platform: String!
+  createdAt: DateTime!
+  retrievedAt: DateTime!
+  userUrl: String!
+  userName: String!
+  thumbnail: String!
+  title: String!
+  userProfileImageUrl: String
+  aspectRatio: Float,
+  src: VimeoSrc
+  durationMs: Int!
+}
+
+type DocumentCloudEmbed {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  retrievedAt: DateTime!
+  contributorUrl: String
+  contributorName: String
+  thumbnail: String!
+  title: String!
+  url: String!
 }
 `
