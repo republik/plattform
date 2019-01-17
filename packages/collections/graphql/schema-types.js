@@ -72,4 +72,8 @@ extend type YoutubeEmbed {
 extend type VimeoEmbed {
   userPositionMs: Int
 }
+
+extend type AudioSource {
+  userPositionMs: Int
+}
 `

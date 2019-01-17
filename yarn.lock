@@ -259,6 +259,13 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
+"@rocka/mp3-duration@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@rocka/mp3-duration/-/mp3-duration-2.0.0.tgz#66249fa5a888078c798008eb150b23102f30c230"
+  integrity sha512-3lK1sfq/g3XqanMvY2SEjzY4cMxzjfxl9RXBSD4rebhpxLSLVGxeRGKkHLPS2cvNz7hQhZLQyudV8E++ko76qg==
+  dependencies:
+    "@types/node" ">=8.0.0"
+
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.0.tgz#ecdf48d532c58ea477acfcab80348424f8d0662f"
@@ -473,6 +480,11 @@
   version "10.0.6"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.0.6.tgz#c0bce8e539bf34c1b850c13ff46bead2fecc2e58"
   integrity sha512-2whhQUfDHRBiZ3L54Ulyl1X+fZWbWabxPYRDAsibgOAtE6adwusD15Xv0Bw/D7cPah35Z/wKTdW3iAKsevw1uw==
+
+"@types/node@>=8.0.0":
+  version "10.12.18"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.18.tgz#1d3ca764718915584fcd9f6344621b7672665c67"
+  integrity sha512-fh+pAqt4xRzPfqA6eh3Z2y6fyZavRIumvjhaCL753+TVkGKGhpPeyrJG2JftD0T9q4GF00KjefsQ+PQNDdWQaQ==
 
 "@types/node@^8.0.53", "@types/node@^8.9.4":
   version "8.10.20"

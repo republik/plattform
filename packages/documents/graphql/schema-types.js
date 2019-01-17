@@ -16,10 +16,12 @@ type Episode {
   document: Document
 }
 
-type AudioSource {
+type AudioSource implements PlayableMedia {
+  id: ID!
   mp3: String
   aac: String
   ogg: String
+  durationMs: Int!
 }
 
 type Meta {

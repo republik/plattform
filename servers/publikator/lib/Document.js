@@ -2,6 +2,8 @@ const editRepoMeta = require('../graphql/resolvers/_mutations/editRepoMeta')
 const { upsert: upsertDiscussion } = require('./Discussion')
 const visit = require('unist-util-visit')
 const debug = require('debug')('publikator:lib:Document')
+const mp3Duration = require('@rocka/mp3-duration')
+const fetch = require('isomorphic-unfetch')
 
 const { timeFormat } = require('@orbiting/backend-modules-formats')
 const {
@@ -83,10 +85,19 @@ const prepareMetaForPublish = async ({
   })
 
   const { audioSourceMp3, audioSourceAac, audioSourceOgg } = doc.content.meta
+  let durationMs = 0
+  if (audioSourceMp3) {
+    durationMs = await fetch(audioSourceMp3)
+      .then(res => res.buffer())
+      .then(res => mp3Duration(res))
+      .then(res => res * 1000)
+  }
   const audioSource = audioSourceMp3 || audioSourceAac || audioSourceOgg ? {
+    id: Buffer.from(`${repoId}/audio`).toString('base64'),
     mp3: audioSourceMp3,
     aac: audioSourceAac,
-    ogg: audioSourceOgg
+    ogg: audioSourceOgg,
+    durationMs
   } : null
 
   // hasAudio: either audioSource or audio-only-video in content
