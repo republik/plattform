@@ -84,7 +84,7 @@ type Document {
     after: ID
   ): DocumentConnection!
 
-  playableMedia: [Embed!]!
+  embeds(types: [EmbedType!]): [Embed!]!
 }
 
 type DocumentNode {

@@ -147,11 +147,10 @@ module.exports = {
 
     return getDocuments(doc, args, context, info)
   },
-  playableMedia (doc, args, context, info) {
-    const playableMediaTypes = ['VimeoEmbed', 'YoutubeEmbed']
+  embeds (doc, { types = [] }, context, info) {
     const embeds = []
     processEmbedsInContent(doc.content, embed => {
-      if (playableMediaTypes.includes(embed.__typename)) {
+      if (!types.length || types.includes(embed.__typename)) {
         embeds.push(embed)
       }
     })
