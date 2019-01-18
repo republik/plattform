@@ -39,11 +39,11 @@ const findDocumentItems = (args, { pgdb }) =>
       .map(spreadItemData)
     )
 
-const getDocumentItem = async ({ collectionName, ...rest }, { loaders }) => {
+const getItem = async (entityName, { collectionName, ...rest }, { loaders }) => {
   const collection = await loaders.Collection.byKeyObj.load({
     name: collectionName
   })
-  return loaders.CollectionDocumentItem.byKeyObj.load({
+  return collection && loaders[entityName].byKeyObj.load({
     ...rest,
     collectionId: collection.id
   })
@@ -77,14 +77,20 @@ const upsertItem = async (tableName, query, data, { pgdb }) => {
   }
 }
 
-const upsertDocumentItem = async (userId, collectionId, repoId, data, context) => {
-  const query = {
-    userId,
-    collectionId,
-    repoId
-  }
-  return upsertItem('collectionDocumentItems', query, data, context)
-}
+const getDocumentItem = async (args, context) =>
+  getItem('CollectionDocumentItem', args, context)
+
+const upsertDocumentItem = async (userId, collectionId, repoId, data, context) =>
+  upsertItem(
+    'collectionDocumentItems',
+    {
+      userId,
+      collectionId,
+      repoId
+    },
+    data,
+    context
+  )
 
 const deleteDocumentItem = (userId, collectionId, repoId, { pgdb }) =>
   pgdb.public.collectionDocumentItems.deleteAndGetOne({
@@ -92,6 +98,30 @@ const deleteDocumentItem = (userId, collectionId, repoId, { pgdb }) =>
     collectionId,
     repoId
   })
+    .then(spreadItemData)
+
+const getMediaItem = async (args, context) =>
+  getItem('CollectionMediaItem', args, context)
+
+const upsertMediaItem = async (userId, collectionId, mediaId, data, context) =>
+  upsertItem(
+    'collectionMediaItems',
+    {
+      userId,
+      collectionId,
+      mediaId
+    },
+    data,
+    context
+  )
+
+const deleteMediaItem = (userId, collectionId, mediaId, { pgdb }) =>
+  pgdb.public.collectionMediaItems.deleteAndGetOne({
+    userId,
+    collectionId,
+    mediaId
+  })
+    .then(spreadItemData)
 
 const getDocumentProgressItem = (args, context) =>
   getDocumentItem(
@@ -102,41 +132,14 @@ const getDocumentProgressItem = (args, context) =>
     context
   )
 
-const upsertMediaItem = async (userId, collectionId, mediaId, data, context) => {
-  const query = {
-    userId,
-    collectionId,
-    mediaId
-  }
-  return upsertItem('collectionMediaItems', query, data, context)
-}
-
-const deleteMediaItem = (userId, collectionId, mediaId, { pgdb }) =>
-  pgdb.public.collectionMediaItems.deleteAndGetOne({
-    userId,
-    collectionId,
-    mediaId
-  })
-    .then(spreadItemData)
-
-const getMediaProgressItem = (args, { pgdb }) =>
-  pgdb.queryOne(`
-    SELECT i.*
-    FROM "collectionMediaItems" i
-    WHERE
-      i."mediaId" = :mediaId AND
-      i."userId" = :userId AND
-      i."collectionId" = (
-        SELECT id
-        FROM collections
-        WHERE name = :collectionName
-      )
-  `, {
-    ...args,
-    collectionName: PROGRESS_COLLECTION_NAME
-
-  })
-    .then(spreadItemData)
+const getMediaProgressItem = (args, context) =>
+  getMediaItem(
+    {
+      ...args,
+      collectionName: PROGRESS_COLLECTION_NAME
+    },
+    context
+  )
 
 module.exports = {
   PROGRESS_COLLECTION_NAME,
@@ -145,13 +148,15 @@ module.exports = {
   byIdForUser,
 
   findDocumentItems,
-  getDocumentItem,
 
+  getDocumentItem,
   upsertDocumentItem,
   deleteDocumentItem,
-  getDocumentProgressItem,
 
+  getMediaItem,
   upsertMediaItem,
   deleteMediaItem,
+
+  getDocumentProgressItem,
   getMediaProgressItem
 }
