@@ -14,3 +14,11 @@ CREATE TABLE "collectionMediaItems" (
   "updatedAt"       timestamptz default now(),
   unique("collectionId", "userId", "mediaId")
 );
+
+CREATE INDEX IF NOT EXISTS "collection_document_items_collection_id_idx" ON "collectionDocumentItems"("collectionId");
+CREATE INDEX IF NOT EXISTS "collection_document_items_repo_id_idx" ON "collectionDocumentItems"("repoId");
+CREATE INDEX IF NOT EXISTS "collection_document_items_user_id_idx" ON "collectionDocumentItems"("userId");
+
+CREATE INDEX IF NOT EXISTS "collection_media_items_collection_id_idx" ON "collectionMediaItems"("collectionId");
+CREATE INDEX IF NOT EXISTS "collection_media_items_media_id_idx" ON "collectionMediaItems"("mediaId");
+CREATE INDEX IF NOT EXISTS "collection_media_items_user_id_idx" ON "collectionMediaItems"("userId");
