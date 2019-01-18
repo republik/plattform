@@ -27,12 +27,12 @@ type mutations {
 
 
   upsertMediaProgress(
-    id: ID!
+    mediaId: ID!
     ms: Int!
   ): MediaProgress!
 
   removeMediaProgress(
-    id: ID!
+    mediaId: ID!
   ): MediaProgress
 }
 `

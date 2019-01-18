@@ -62,6 +62,7 @@ type DocumentProgress implements CollectionItemInterface {
 
 type MediaProgress implements CollectionItemInterface {
   id: ID!
+  mediaId: ID!
   # progress in milliseconds
   ms: Int!
   createdAt: DateTime!

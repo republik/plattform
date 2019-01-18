@@ -17,7 +17,7 @@ type Episode {
 }
 
 type AudioSource implements PlayableMedia {
-  id: ID!
+  mediaId: ID!
   mp3: String
   aac: String
   ogg: String
@@ -129,7 +129,7 @@ type DocumentPageInfo {
 }
 
 interface PlayableMedia {
-  id: ID!
+  mediaId: ID!
   durationMs: Int!
 }
 
@@ -168,6 +168,7 @@ type YoutubeEmbed implements PlayableMedia {
   title: String!
   userProfileImageUrl: String
   aspectRatio: Float
+  mediaId: ID!
   durationMs: Int!
 }
 
@@ -189,6 +190,7 @@ type VimeoEmbed implements PlayableMedia {
   userProfileImageUrl: String
   aspectRatio: Float,
   src: VimeoSrc
+  mediaId: ID!
   durationMs: Int!
 }
 

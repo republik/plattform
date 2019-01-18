@@ -93,7 +93,7 @@ const prepareMetaForPublish = async ({
       .then(res => res * 1000)
   }
   const audioSource = audioSourceMp3 || audioSourceAac || audioSourceOgg ? {
-    id: Buffer.from(`${repoId}/audio`).toString('base64'),
+    mediaId: Buffer.from(`${repoId}/audio`).toString('base64'),
     mp3: audioSourceMp3,
     aac: audioSourceAac,
     ogg: audioSourceOgg,

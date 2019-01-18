@@ -1,7 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const Collection = require('../../../lib/Collection')
 
-module.exports = async (_, { id: mediaId, ms }, context) => {
+module.exports = async (_, { mediaId, ms }, context) => {
   const { pgdb, user: me, t } = context
   Roles.ensureUserHasRole(me, 'member')
 

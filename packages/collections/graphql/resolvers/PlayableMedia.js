@@ -2,7 +2,7 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const Collection = require('../../lib/Collection')
 
 module.exports = {
-  userProgress ({ id: mediaId }, args, context) {
+  userProgress ({ mediaId }, args, context) {
     const { user: me } = context
     if (!Roles.userIsInRoles(me, ['member']) || !mediaId) {
       return
