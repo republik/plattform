@@ -1,34 +1,43 @@
 const PROGRESS_COLLECTION_NAME = 'progress'
 
+const assignUserId = (collection, userId) =>
+  collection && ({
+    ...collection,
+    userId
+  })
+
+const spreadItemData = item =>
+  item && ({
+    ...item,
+    ...item.data
+  })
+
 const findForUser = (userId, { pgdb }) =>
   pgdb.public.collections.find({
     hidden: false
   })
-    .then(dls => dls
-      .map(dl => Object.assign(dl, { userId }))
+    .then(cs => cs
+      .map(c => assignUserId(c, userId))
     )
 
 const byNameForUser = (name, userId, { loaders }) =>
   loaders.Collection.byKeyObj.load({
     name
   })
-    .then(dl => dl
-      ? Object.assign(dl, { userId })
-      : null
-    )
+    .then(c => assignUserId(c, userId))
 
 const byIdForUser = (id, userId, { loaders }) =>
   loaders.Collection.byKeyObj.load({ id })
-    .then(dl => dl
-      ? Object.assign(dl, { userId })
-      : null
-    )
+    .then(c => assignUserId(c, userId))
 
 const findDocumentItems = (args, { pgdb }) =>
   pgdb.public.collectionDocumentItems.find(
     args,
     { orderBy: ['createdAt desc'] }
   )
+    .then(items => items
+      .map(spreadItemData)
+    )
 
 const getDocumentItem = (args, { pgdb }) =>
   pgdb.queryOne(`
@@ -43,6 +52,7 @@ const getDocumentItem = (args, { pgdb }) =>
         WHERE name = :collectionName
       )
   `, args)
+    .then(spreadItemData)
 
 const upsertItem = async (tableName, query, data, { pgdb }) => {
   const existingItem = await pgdb.public[tableName].findOne(query)
@@ -54,6 +64,7 @@ const upsertItem = async (tableName, query, data, { pgdb }) => {
       },
       { skipUndefined: true }
     )
+      .then(spreadItemData)
   } else {
     return pgdb.public[tableName].updateAndGetOne(
       {
@@ -66,6 +77,7 @@ const upsertItem = async (tableName, query, data, { pgdb }) => {
       },
       { skipUndefined: true }
     )
+      .then(spreadItemData)
   }
 }
 
@@ -93,10 +105,6 @@ const getDocumentProgressItem = (args, context) =>
     },
     context
   )
-    .then(item => item && ({
-      ...item,
-      ...item.data
-    }))
 
 const upsertMediaItem = async (userId, collectionId, mediaId, data, context) => {
   const query = {
@@ -105,10 +113,6 @@ const upsertMediaItem = async (userId, collectionId, mediaId, data, context) => 
     mediaId
   }
   return upsertItem('collectionMediaItems', query, data, context)
-    .then(item => item && ({
-      ...item,
-      ...item.data
-    }))
 }
 
 const deleteMediaItem = (userId, collectionId, mediaId, { pgdb }) =>
@@ -117,10 +121,7 @@ const deleteMediaItem = (userId, collectionId, mediaId, { pgdb }) =>
     collectionId,
     mediaId
   })
-    .then(item => item && ({
-      ...item,
-      ...item.data
-    }))
+    .then(spreadItemData)
 
 const getMediaProgressItem = (args, { pgdb }) =>
   pgdb.queryOne(`
@@ -139,10 +140,7 @@ const getMediaProgressItem = (args, { pgdb }) =>
     collectionName: PROGRESS_COLLECTION_NAME
 
   })
-    .then(item => item && ({
-      ...item,
-      ...item.data
-    }))
+    .then(spreadItemData)
 
 module.exports = {
   PROGRESS_COLLECTION_NAME,

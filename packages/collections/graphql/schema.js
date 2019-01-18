@@ -23,7 +23,7 @@ type mutations {
 
   removeDocumentProgress(
     documentId: ID!
-  ): DocumentProgress!
+  ): DocumentProgress
 
 
   upsertMediaProgress(
@@ -33,6 +33,6 @@ type mutations {
 
   removeMediaProgress(
     id: ID!
-  ): MediaProgress!
+  ): MediaProgress
 }
 `
