@@ -39,20 +39,16 @@ const findDocumentItems = (args, { pgdb }) =>
       .map(spreadItemData)
     )
 
-const getDocumentItem = (args, { pgdb }) =>
-  pgdb.queryOne(`
-    SELECT i.*
-    FROM "collectionDocumentItems" i
-    WHERE
-      i."repoId" = :repoId AND
-      i."userId" = :userId AND
-      i."collectionId" = (
-        SELECT id
-        FROM collections
-        WHERE name = :collectionName
-      )
-  `, args)
+const getDocumentItem = async ({ collectionName, ...rest }, { loaders }) => {
+  const collection = await loaders.Collection.byKeyObj.load({
+    name: collectionName
+  })
+  return loaders.CollectionDocumentItem.byKeyObj.load({
+    ...rest,
+    collectionId: collection.id
+  })
     .then(spreadItemData)
+}
 
 const upsertItem = async (tableName, query, data, { pgdb }) => {
   const existingItem = await pgdb.public[tableName].findOne(query)
