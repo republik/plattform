@@ -27,6 +27,7 @@ export default ({
       <colgroup>
         <col style={{ width: '120px' }} />
         <col style={{ width: '100px' }} />
+        <col style={{ width: '100px' }} />
         <col style={{ width: '40%' }} />
         <col style={{ width: '100px' }} />
         <col style={{ width: '100px' }} />
@@ -48,6 +49,13 @@ export default ({
             onClick={sortHandler('valuta')}
           >
             <Label>Valuta {indicator('valuta')}</Label>
+          </th>
+          <th
+            {...styles.interactive}
+            {...styles.left}
+            onClick={sortHandler('konto')}
+          >
+            <Label>Konto{indicator('konto')}</Label>
           </th>
           <th
             {...styles.interactive}
@@ -91,6 +99,7 @@ export default ({
             <tr key={`postfinancePayment-${index}`} {...styles.row}>
               <td>{postfinancePayment.buchungsdatum}</td>
               <td>{postfinancePayment.valuta}</td>
+              <td>{postfinancePayment.konto}</td>
               <td>{postfinancePayment.avisierungstext}</td>
               <td>{chfFormat(
                 postfinancePayment.gutschrift /

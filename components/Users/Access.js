@@ -29,11 +29,13 @@ query user($id: String) {
       id
       status
       createdAt
+      beginBefore
+      voucherCode
       beginAt
       endAt
       revokedAt
       invalidatedAt
-      grantee {
+      granter {
         id
         email
         name
@@ -57,10 +59,12 @@ query user($id: String) {
         free
         used
       }
-      grants(withRevoked: true) {
+      grants(withRevoked: true, withInvalidated: true) {
         id
         status
         createdAt
+        beginBefore
+        voucherCode
         beginAt
         endAt
         revokedAt
@@ -205,15 +209,15 @@ class Grant extends Component {
         {mutationError &&
           <ErrorMessage error={mutationError} />
         }
-        {grant.grantee &&
+        {grant.granter &&
           <Interaction.P>
-            <Label>{t('account/access/Grant/grantee/label')}</Label>
+            <Label>{t('account/access/Grant/granter/label')}</Label>
             <br />
             <Link
               route='user'
-              params={{userId: grant.grantee.id}}>
+              params={{userId: grant.granter.id}}>
               <a>
-                {`${grant.grantee.name} (${grant.grantee.email})`}
+                {`${grant.granter.name} (${grant.granter.email})`}
               </a>
             </Link>
           </Interaction.P>
@@ -247,7 +251,23 @@ class Grant extends Component {
           {grant.status}
         </Interaction.P>
 
+        {isExpanded && grant.voucherCode &&
+          <Interaction.P>
+            <Label>{t('account/access/Grant/voucherCode/label')}</Label>
+            <br />
+            {grant.voucherCode}
+          </Interaction.P>
+        }
+
         {isExpanded &&
+          <Interaction.P>
+            <Label>{t('account/access/Grant/beginBefore/label')}</Label>
+            <br />
+            {getHumanDate(grant.beginBefore)}
+          </Interaction.P>
+        }
+
+        {isExpanded && grant.beginAt &&
           <Interaction.P>
             <Label>{t('account/access/Grant/beginAt/label')}</Label>
             <br />
@@ -255,11 +275,13 @@ class Grant extends Component {
           </Interaction.P>
         }
 
-        <Interaction.P>
-          <Label>{t('account/access/Grant/endAt/label')}</Label>
-          <br />
-          {getHumanDate(grant.endAt)}<br />
-        </Interaction.P>
+        {grant.endAt &&
+          <Interaction.P>
+            <Label>{t('account/access/Grant/endAt/label')}</Label>
+            <br />
+            {getHumanDate(grant.endAt)}<br />
+          </Interaction.P>
+        }
 
         {isExpanded && new Date(grant.endAt) > new Date() &&
           <Interaction.P>
@@ -437,7 +459,7 @@ export default ({ userId }) => {
               loading={loading || mutationLoading}
               error={error || mutationError}
               render={() =>
-                <Access grants={data.accessGrants} campaigns={data.accessCampaigns} revokeAccess={revokeAccess} />
+                <Access grants={data.user.accessGrants} campaigns={data.user.accessCampaigns} revokeAccess={revokeAccess} />
               }
             />
           )

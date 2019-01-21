@@ -30,7 +30,18 @@ const GET_MEMBERSHIPS = gql`
         type {
           name
         }
+        user {
+          id
+        }
+        pledge {
+          user {
+            id
+            name
+          }
+        }
         sequenceNumber
+        initialInterval
+        initialPeriods
         claimerName
         periods {
           beginDate
