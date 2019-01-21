@@ -839,18 +839,12 @@ const createSchema = ({
             rules: [
               {
                 matchMdast: matchHeading(2),
-                component: withPositioningAttributes(Editorial.Subhead),
+                component: Editorial.Subhead,
                 editorModule: 'headline',
                 editorOptions: {
                   type: 'H2',
                   depth: 2,
                   formatButtonText: 'Zwischentitel'
-                },
-                props: (node, index, parent, { ancestors }) => {
-                  return {
-                    isRootChild: parent.identifier === 'CENTER',
-                    positionId: getPositionId(ancestors, parent, index)
-                  }
                 },
                 rules: globalInlines
               },
