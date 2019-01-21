@@ -20,6 +20,7 @@ type mutations {
 
 
   enableProgressTracking: User!
+  # disabling tracking also deletes all items
   disableProgressTracking: User!
   clearProgress: Collection!
 
