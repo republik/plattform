@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
-import { Label, Loader } from '@project-r/styleguide'
+import { Label, Loader, A } from '@project-r/styleguide'
 
 import {
   displayDate,
@@ -15,10 +15,12 @@ import {
   DD
 } from '../../Display/utils'
 import { tableStyles } from '../../Tables/utils'
+import routes from '../../../server/routes'
 
 import MoveMembership from './MoveMembership'
 import CancelMembership from './CancelMembership'
 import ReactivateMembership from './ReactivateMembership'
+const { Link } = routes
 
 
 const GET_MEMBERSHIPS = gql`
@@ -68,33 +70,50 @@ const GET_MEMBERSHIPS = gql`
   }
 `
 
+const getState = (membership) => {
+  if (!membership.active) {
+    if (!!membership.periods.length) {
+      return 'deaktiviert'
+    }
+
+    if (membership.voucherCode) {
+      return 'uneingelöst'
+    }
+
+    return 'inaktiv'
+  }
+
+  if (!membership.renew) {
+    return 'aktiv, läuft aus'
+  }
+
+  const latestPeriod = membership.periods.reduce((acc, curr) => {
+    return acc && new Date(acc.endDate) > new Date(curr.endDate) ? acc : curr
+  })
+
+  const overdue = latestPeriod && new Date(latestPeriod.endDate) < new Date()
+  if (overdue) {
+    return 'aktiv, Erneuerung überfällig'
+  }
+
+  return 'aktiv'
+}
+
 const MembershipCard = ({ membership, ...props }) => {
-  const currentPeriod =
-    membership.periods &&
-    membership.periods.length &&
-    membership.periods[0]
   return (
     <tr {...tableStyles.row} {...props}>
       <td {...tableStyles.paddedCell}>
         {membership.type.name.split('_').join(' ')} #
         {membership.sequenceNumber}{' '}
-        {membership.active ? 'AKTIV' : 'INAKTIV'}
         <br />
         <Label>
           Erstellt am{' '}
           {displayDateTime(membership.createdAt)}
         </Label>
       </td>
-      {currentPeriod && (
-        <td {...tableStyles.paddedCell}>
-          {displayDate(
-            new Date(currentPeriod.beginDate)
-          ).concat(
-            ' - ',
-            displayDate(new Date(currentPeriod.endDate))
-          )}
-        </td>
-      )}
+      <td {...tableStyles.paddedCell}>
+        {getState(membership)}
+      </td>
     </tr>
   )
 }
@@ -113,32 +132,52 @@ const MembershipDetails = ({ membership, ...props }) => {
                 <DD>{membership.voucherCode}</DD>
               </Fragment>
             )}
-          </DL>
-          <DL>
-            <DT>Reduced Price</DT>
-            <DD>{membership.reducedPrice ? 'YES' : 'NO'}</DD>
-            {!!membership.claimerName && (
+            {membership.user.id !== membership.pledge.user.id && (
               <Fragment>
-                <DT>Claimer Name</DT>
-                <DD>{membership.claimerName}</DD>
+                <DT>Gekauft durch</DT>
+                <DD>
+                  <Link
+                    route='user'
+                    params={{userId: membership.pledge.user.id}}
+                    passHref>
+                      <A>{membership.pledge.user.name}</A>
+                  </Link>
+                </DD>
               </Fragment>
             )}
           </DL>
           <DL>
-            <DT>Laufzeiten</DT>
-            {membership.periods.map((period, i) => (
-              <DD key={`period-${i}`}>
-              {displayDate(
-                new Date(period.beginDate)
-              ).concat(
-                ' - ',
-                displayDate(new Date(period.endDate))
-              )}
-              </DD>
-            ))}
+            <DT>Reduced Price</DT>
+            <DD>{membership.reducedPrice ? 'YES' : 'NO'}</DD>
+          </DL>
+          <DL>
+            {!membership.active && (
+              <Fragment>
+                <DT>Standard-Laufzeit</DT>
+                <DD>
+                  {membership.initialPeriods}{' '}
+                  {membership.initialInterval}
+                </DD>
+              </Fragment>
+            )}
+            {!!membership.periods.length && (
+              <Fragment>
+                <DT>Laufzeiten</DT>
+                {membership.periods.map((period, i) => (
+                  <DD key={`period-${i}`}>
+                  {displayDate(
+                    new Date(period.beginDate)
+                  ).concat(
+                    ' - ',
+                    displayDate(new Date(period.endDate))
+                  )}
+                  </DD>
+                ))}
+              </Fragment>
+            )}
           </DL>
           </div>
-          {membership.cancellations && membership.cancellations.length &&
+          {!!membership.cancellations && !!membership.cancellations.length &&
              <DL>
               <hr />
               <DT>Kündigungen</DT>

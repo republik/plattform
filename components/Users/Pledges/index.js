@@ -3,7 +3,7 @@ import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 import { merge } from 'glamor'
 
-import { Loader, Label } from '@project-r/styleguide'
+import { Loader, Label, A } from '@project-r/styleguide'
 
 import { chfFormat } from '../../../lib/utils/formats'
 
@@ -19,14 +19,42 @@ import {
   DD
 } from '../../Display/utils'
 import { tableStyles } from '../../Tables/utils'
+import routes from '../../../server/routes'
 
 import MovePledge from './MovePledge'
 import ResolvePledgeToPayment from './ResolvePledgeToPayment'
 import CancelPledge from './CancelPledge'
 import UpdatePayment from './UpdatePayment'
 import SendPaymentReminder from './SendPaymentReminder'
+const { Link } = routes
+
 
 const GET_PLEDGES = gql`
+  fragment MembershipDetails on Membership {
+    id
+    user {
+      id
+    }
+    pledge {
+      user {
+        id
+        name
+      }
+    }
+    type {
+      name
+    }
+    active
+    initialInterval
+    initialPeriods
+    voucherCode
+    reducedPrice
+    claimerName
+    sequenceNumber
+    createdAt
+    updatedAt
+  }
+
   query pledges($id: String) {
     user(slug: $id) {
       id
@@ -37,8 +65,7 @@ const GET_PLEDGES = gql`
         reason
         donation
         memberships {
-          id
-          sequenceNumber
+          ...MembershipDetails
         }
         payments {
           id
@@ -46,6 +73,7 @@ const GET_PLEDGES = gql`
           status
           method
           hrid
+          pspId
           paperInvoice
           dueDate
           remindersSentAt
@@ -54,6 +82,22 @@ const GET_PLEDGES = gql`
         }
         package {
           name
+        }
+        options {
+          id
+          amount
+          reward {
+            ... on Goodie {
+              name
+            }
+            ... on MembershipType {
+              name
+            }
+          }
+          membership {
+            ...MembershipDetails
+          }
+          price
         }
         createdAt
       }
@@ -86,7 +130,7 @@ const PledgeCard = ({ pledge, ...props }) => {
             <br />
             <Label>
               {payment.method === 'STRIPE' && (
-                <a
+                <A
                   {...tableStyles.link}
                   href={`https://dashboard.stripe.com/payments/${
                     payment.pspId
@@ -94,7 +138,7 @@ const PledgeCard = ({ pledge, ...props }) => {
                   target="_blank"
                 >
                   STRIPE
-                </a>
+                </A>
               )}
               {payment.method !== 'STRIPE' &&
                 payment.method}
@@ -108,6 +152,10 @@ const PledgeCard = ({ pledge, ...props }) => {
 }
 
 const PledgeDetails = ({ pledge, ...props }) => {
+  const memberships = pledge.memberships
+    .concat(pledge.options.map(option => option.membership))
+    .filter(Boolean)
+
   return (
     <tr {...tableStyles.emphasisedRow} {...props}>
       <td {...tableStyles.paddedCell} colSpan={2}>
@@ -120,6 +168,18 @@ const PledgeDetails = ({ pledge, ...props }) => {
                 <DD>{pledge.reason}</DD>
               </Fragment>
             )}
+            <DT>Options</DT>
+            <DD>
+              {pledge.options.filter(option => option.amount > 0).map((option) => (
+                option.reward &&
+                  <Fragment>
+                    {option.amount} x{' '}
+                    {option.reward ? `«${option.reward.name}»` : ''}{' '}
+                    à {chfFormat(option.price / 100)}
+                    <br />
+                  </Fragment>
+              ))}
+            </DD>
           </DL>
           <DL>
             <DT>Pledge Aktionen</DT>
@@ -213,6 +273,16 @@ const PledgeDetails = ({ pledge, ...props }) => {
             ))}
           </Fragment>
         )}
+
+        {!!memberships.length && memberships.map((membership, i) => (
+          <Fragment>
+            <hr />
+            <MembershipDetails
+              key={`details-${membership.id}`}
+              membership={membership}
+              user={pledge.user} />
+          </Fragment>
+        ))}
       </td>
     </tr>
   )
@@ -223,14 +293,14 @@ const PaymentDetails = ({ payment, ...props}) => {
     <div {...props}>
       <SectionSubhead>
         {payment.method === 'STRIPE' && (
-          <a
+          <A
             href={`https://dashboard.stripe.com/payments/${
               payment.pspId
             }`}
             target="_blank"
           >
             STRIPE
-          </a>
+          </A>
         )}
         {payment.method !== 'STRIPE' && payment.method}
         {' - '} {payment.status}
@@ -287,6 +357,36 @@ const PaymentDetails = ({ payment, ...props}) => {
             </div>
           )}
       </div>
+    </div>
+  )
+}
+
+const MembershipDetails = ({ membership, ...props }) => {
+  return (
+    <div {...props}>
+      <SectionSubhead>
+        {membership.type.name.split('_').join(' ')} #
+        {membership.sequenceNumber}{' '}
+      </SectionSubhead>
+      {!!membership.voucherCode && (
+        <DL>
+          <DT>Voucher Code</DT>
+          <DD>{membership.voucherCode}</DD>
+        </DL>
+      )}
+      {!!membership.claimerName && (
+        <DL>
+          <DT>eingelöst von</DT>
+          <DD>
+            <Link
+              route='user'
+              params={{userId: membership.user.id}}
+              passHref>
+                <A>{membership.claimerName}</A>
+            </Link>
+          </DD>
+        </DL>
+      )}
     </div>
   )
 }
