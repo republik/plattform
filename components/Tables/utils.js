@@ -35,6 +35,27 @@ export const tableStyles = {
       zIndex: 10
     }
   }),
+  selectableRow: css({
+    '& td': {
+      transition: 'border-color 0.2s',
+      borderTop: `1px solid ${colors.secondary}00`,
+      borderBottom: `1px solid ${colors.secondary}00`
+    },
+    '&[data-active="true"] td': {
+      transition: 'none',
+      borderColor: colors.secondary
+    },
+    '&:hover, &[data-active="true"]': {
+      color: colors.primary
+    },
+    transition: 'color 0.2s',
+    cursor: 'pointer'
+  }),
+  emphasisedRow: css({
+    '& td': {
+      borderBottom: `1px solid ${colors.divider}`
+    }
+  }),
   left: css({
     textAlign: 'left'
   }),
@@ -43,6 +64,9 @@ export const tableStyles = {
   }),
   center: css({
     textAlign: 'center'
+  }),
+  paddedCell: css({
+    padding: '15px 2px'
   })
 }
 
@@ -62,12 +86,6 @@ export const createChangeHandler = (params, handler) => (
     delete params[fieldName]
     handler(params)
   }
-}
-
-export const displayDate = rawDate => {
-  const date = new Date(rawDate)
-  return `${date.getDate()}.${date.getMonth() +
-    1}.${date.getFullYear()}`
 }
 
 export const createSortHandler = (
@@ -95,9 +113,7 @@ export const createSortIndicator = sort => fieldName => {
   }
 }
 
-export const deserializeOrderBy = (
-  str
-) => {
+export const deserializeOrderBy = str => {
   if (!str) {
     return
   }
@@ -108,7 +124,5 @@ export const deserializeOrderBy = (
   }
 }
 
-export const serializeOrderBy = ({
-  field,
-  direction
-}) => `${field}-${direction}`
+export const serializeOrderBy = ({ field, direction }) =>
+  `${field}-${direction}`
