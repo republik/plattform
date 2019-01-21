@@ -12,10 +12,18 @@ const POLICIES = [
 ]
 */
 
+const getAllConsentRecords = ({ userId, pgdb }) =>
+  pgdb.public.consents.find(
+    {
+      userId
+    }, {
+      orderBy: ['createdAt asc']
+    }
+  )
+
+// only returns GRANTed consents
 const consentsOfUser = async ({ userId, pgdb }) => {
-  const consents = await pgdb.public.consents.find({
-    userId
-  }, {orderBy: ['createdAt asc']})
+  const consents = await getAllConsentRecords({ userId, pgdb })
 
   let grantedPolicies = {}
   for (let consent of consents) {
@@ -28,6 +36,18 @@ const consentsOfUser = async ({ userId, pgdb }) => {
 
   return Object.keys(grantedPolicies)
 }
+
+// returns the latest record of all policies
+const lastRecordForPolicyByUser = async ({ userId, policy, pgdb }) =>
+  pgdb.public.consents.find(
+    {
+      userId,
+      policy
+    }, {
+      orderBy: ['createdAt desc']
+    }
+  )
+    .then(records => records && records[0])
 
 const requiredConsents = async ({ userId, pgdb }) => {
   const {
@@ -94,6 +114,7 @@ const revokeConsent = async ({ userId, consent, req, pgdb }) => {
 }
 
 module.exports = {
+  lastRecordForPolicyByUser,
   requiredConsents,
   missingConsents,
   ensureAllRequiredConsents,

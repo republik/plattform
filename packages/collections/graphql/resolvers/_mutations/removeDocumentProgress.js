@@ -1,12 +1,12 @@
 const removeDocumentFromCollection = require('./removeDocumentFromCollection')
-const Collection = require('../../../lib/Collection')
+const Progress = require('../../../lib/Progress')
 
 module.exports = async (_, { documentId }, context) =>
   removeDocumentFromCollection(
     null,
     {
       documentId,
-      collectionName: Collection.PROGRESS_COLLECTION_NAME
+      collectionName: Progress.COLLECTION_NAME
     },
     context
   )

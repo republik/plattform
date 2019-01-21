@@ -1,12 +1,12 @@
 const addDocumentToCollection = require('./addDocumentToCollection')
-const Collection = require('../../../lib/Collection')
+const Progress = require('../../../lib/Progress')
 
 module.exports = async (_, { documentId, percentage, nodeId }, context) =>
   addDocumentToCollection(
     null,
     {
       documentId,
-      collectionName: Collection.PROGRESS_COLLECTION_NAME,
+      collectionName: Progress.COLLECTION_NAME,
       data: {
         percentage,
         nodeId

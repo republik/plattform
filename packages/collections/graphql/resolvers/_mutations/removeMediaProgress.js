@@ -1,5 +1,6 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const Collection = require('../../../lib/Collection')
+const Progress = require('../../../lib/Progress')
 
 module.exports = async (_, { mediaId, ms }, context) => {
   const { pgdb, user: me, t } = context
@@ -8,7 +9,7 @@ module.exports = async (_, { mediaId, ms }, context) => {
   const transaction = await pgdb.transactionBegin()
   try {
     const collection = await Collection.byNameForUser(
-      Collection.PROGRESS_COLLECTION_NAME,
+      Progress.COLLECTION_NAME,
       me.id,
       context
     )

@@ -14,6 +14,8 @@ type mutations {
     collectionName: String!
   ): CollectionItem
 
+  enableProgressTracking: User!
+  disableProgressTracking: User!
 
   upsertDocumentProgress(
     documentId: ID!

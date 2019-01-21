@@ -1,4 +1,6 @@
-const PROGRESS_COLLECTION_NAME = 'progress'
+const {
+  COLLECTION_NAME: PROGRESS_COLLECTION_NAME
+} = require('./Progress')
 
 const assignUserId = (collection, userId) =>
   collection && ({
@@ -142,7 +144,6 @@ const getMediaProgressItem = (args, context) =>
   )
 
 module.exports = {
-  PROGRESS_COLLECTION_NAME,
   findForUser,
   byNameForUser,
   byIdForUser,
