@@ -17,6 +17,10 @@ module.exports = async (_, { mediaId, ms }, context) => {
       throw new Error(t(`api/collections/collection/404`))
     }
 
+    if (!await Progress.status(me.id, context)) {
+      throw new Error(t('api/collections/progress/notEnabled'))
+    }
+
     const item = await Collection.upsertMediaItem(
       me.id,
       collection.id,

@@ -1,8 +1,12 @@
 const addDocumentToCollection = require('./addDocumentToCollection')
 const Progress = require('../../../lib/Progress')
 
-module.exports = async (_, { documentId, percentage, nodeId }, context) =>
-  addDocumentToCollection(
+module.exports = async (_, { documentId, percentage, nodeId }, context) => {
+  const { user: me, t } = context
+  if (!await Progress.status(me.id, context)) {
+    throw new Error(t('api/collections/progress/notEnabled'))
+  }
+  return addDocumentToCollection(
     null,
     {
       documentId,
@@ -14,3 +18,4 @@ module.exports = async (_, { documentId, percentage, nodeId }, context) =>
     },
     context
   )
+}

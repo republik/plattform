@@ -1,10 +1,10 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
+const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const Collection = require('../../../lib/Collection')
 const Progress = require('../../../lib/Progress')
 
 module.exports = async (_, { mediaId, ms }, context) => {
-  const { pgdb, user: me, t } = context
-  Roles.ensureUserHasRole(me, 'member')
+  const { pgdb, user: me, t, req } = context
+  ensureSignedIn(req)
 
   const transaction = await pgdb.transactionBegin()
   try {
