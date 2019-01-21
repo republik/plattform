@@ -88,6 +88,16 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
         const membership = resolvedPackage.user.memberships
           .find(m => m.id === plo.membershipId)
 
+        // Refrain from generate periods if membership already has periods which
+        // stem from passed pledge.
+        if (membership.periods.find(p => p.pledgeId === pledge.id)) {
+          debug('periods already generated', {
+            membershipId: membership.id,
+            pledgeId: pledge.id
+          })
+          return
+        }
+
         const { additionalPeriods } =
           await evaluate({
             package_: resolvedPackage,
