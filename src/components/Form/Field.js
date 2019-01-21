@@ -180,7 +180,7 @@ class Field extends Component {
     const hasIncrease = !!onInc
     const hasDecrease = !!onDec
     const hasError = !!error
-    const valueIsPresent = value !== undefined && value.length !== 0
+    const valueIsPresent = value !== undefined && value !== null && String(value).length !== 0
     const labelStyle = (isFocused || valueIsPresent || hasError)
       ? merge(
           labelTextStyle, labelTextTopStyle,

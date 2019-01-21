@@ -9,7 +9,7 @@
 ```
 
 ```react|span-3
-<Field label='Label' value={'string'} />
+<Field label='Label' value='string' />
 ```
 
 ```react|span-3
@@ -28,7 +28,7 @@
   icon={<SearchIcon size={30} />} />
 ```
 
-Normally `value` should be a string. Even if you pass in numbers, you'll recieve strings on change by default.
+Normally `value` should be a string. Even if you pass in numbers, you'll receive strings on change by default.
 
 Please note: `simulate` is for testing and documentation purposes only. It will not work in production environments.
 
