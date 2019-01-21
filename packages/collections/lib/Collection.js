@@ -143,6 +143,18 @@ const getMediaProgressItem = (args, context) =>
     context
   )
 
+const clearItems = (userId, collectionId, { pgdb }) =>
+  Promise.all([
+    pgdb.public.collectionDocumentItems.delete({
+      userId,
+      collectionId
+    }),
+    pgdb.public.collectionMediaItems.delete({
+      userId,
+      collectionId
+    })
+  ])
+
 module.exports = {
   findForUser,
   byNameForUser,
@@ -159,5 +171,7 @@ module.exports = {
   deleteMediaItem,
 
   getDocumentProgressItem,
-  getMediaProgressItem
+  getMediaProgressItem,
+
+  clearItems
 }

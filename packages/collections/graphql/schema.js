@@ -14,8 +14,15 @@ type mutations {
     collectionName: String!
   ): CollectionItem
 
+  clearCollection(
+    collectionName: String!
+  ): Collection!
+
+
   enableProgressTracking: User!
   disableProgressTracking: User!
+  clearProgress: Collection!
+
 
   upsertDocumentProgress(
     documentId: ID!
@@ -36,5 +43,6 @@ type mutations {
   removeMediaProgress(
     mediaId: ID!
   ): MediaProgress
+
 }
 `
