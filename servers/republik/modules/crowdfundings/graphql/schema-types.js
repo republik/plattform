@@ -156,6 +156,8 @@ type Membership {
   initialPeriods: Int!
   periods: [MembershipPeriod]!
   prolongBeforeDate: DateTime
+  endDate: DateTime
+  graceEndDate: DateTime
   overdue: Boolean!
   cancellations: [Cancellation!]!
   createdAt: DateTime!

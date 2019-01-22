@@ -1,6 +1,10 @@
 const { transformUser, Roles } = require('@orbiting/backend-modules-auth')
+const moment = require('moment')
 
+const { getLastEndDate } = require('../../lib/utils')
+const { UNCANCELLED_GRACE_PERIOD_DAYS } = require('../../lib/Membership')
 const createCache = require('../../lib/cache')
+
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
 
 const createMembershipCache = (membership, prop) => {
@@ -35,6 +39,43 @@ module.exports = {
   async prolongBeforeDate (membership, args, { pgdb, user: me }) {
     return createMembershipCache(membership, 'prolongBeforeDate')
       .cache(async () => new Date())
+  },
+  async endDate (membership, args, { pgdb, user: me }) {
+    if (!membership.active) {
+      return null
+    }
+
+    return createMembershipCache(membership, 'endDate')
+      .cache(async () => {
+        const periods = await pgdb.public.membershipPeriods.find({
+          membershipId: membership.id
+        })
+
+        if (periods.length < 1) {
+          return null
+        }
+
+        return moment(getLastEndDate(periods))
+      })
+  },
+  async graceEndDate (membership, args, { pgdb, user: me }) {
+    if (!membership.active) {
+      return null
+    }
+
+    return createMembershipCache(membership, 'graceEndDate')
+      .cache(async () => {
+        const periods = await pgdb.public.membershipPeriods.find({
+          membershipId: membership.id
+        })
+
+        if (periods.length < 1) {
+          return null
+        }
+
+        return moment(getLastEndDate(periods))
+          .add(UNCANCELLED_GRACE_PERIOD_DAYS, 'days')
+      })
   },
   async pledge (membership, args, { pgdb, user: me }) {
     const pledge =
