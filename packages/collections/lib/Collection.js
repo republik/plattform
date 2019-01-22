@@ -1,6 +1,16 @@
 const {
-  COLLECTION_NAME: PROGRESS_COLLECTION_NAME
+  COLLECTION_NAME: PROGRESS_COLLECTION_NAME,
+  POLICY_NAME: PROGRESS_POLICY_NAME
 } = require('./Progress')
+
+const {
+  Consents: { registerRevokeHook }
+} = require('@orbiting/backend-modules-auth')
+
+registerRevokeHook(({ userId, consent }, context) =>
+  consent === PROGRESS_POLICY_NAME &&
+    clearItems(userId, PROGRESS_COLLECTION_NAME, context)
+)
 
 const assignUserId = (collection, userId) =>
   collection && ({
@@ -143,17 +153,21 @@ const getMediaProgressItem = (args, context) =>
     context
   )
 
-const clearItems = (userId, collectionId, { pgdb }) =>
-  Promise.all([
+const clearItems = async (userId, collectionName, { pgdb, loaders }) => {
+  const collection = await loaders.Collection.byKeyObj.load({
+    name: collectionName
+  })
+  return collection && Promise.all([
     pgdb.public.collectionDocumentItems.delete({
       userId,
-      collectionId
+      collectionId: collection.id
     }),
     pgdb.public.collectionMediaItems.delete({
       userId,
-      collectionId
+      collectionId: collection.id
     })
   ])
+}
 
 module.exports = {
   findForUser,

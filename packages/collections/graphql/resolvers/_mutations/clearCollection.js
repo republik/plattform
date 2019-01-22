@@ -14,7 +14,7 @@ module.exports = async (_, { collectionName }, context) => {
 
     await Collection.clearItems(
       me.id,
-      collection.id,
+      collection.name,
       context
     )
 
