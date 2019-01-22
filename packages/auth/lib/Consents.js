@@ -8,9 +8,19 @@ const POLICIES = [
   'STATUTE',
   'NEWSLETTER_PROJECTR',
   'NEWSLETTER_DAILY',
-  'NEWSLETTER_WEEKLY'
+  'NEWSLETTER_WEEKLY',
+  'NEWSLETTER_FEUILLETON',
+  'PROGRESS'
 ]
 */
+
+const REVOKABLE_POLICIES = [
+  'PROGRESS',
+  'NEWSLETTER_PROJECTR',
+  'NEWSLETTER_DAILY',
+  'NEWSLETTER_WEEKLY',
+  'NEWSLETTER_FEUILLETON'
+]
 
 const getAllConsentRecords = ({ userId, pgdb }) =>
   pgdb.public.consents.find(
@@ -38,7 +48,7 @@ const consentsOfUser = async ({ userId, pgdb }) => {
 }
 
 // returns the latest record of all policies
-const lastRecordForPolicyByUser = async ({ userId, policy, pgdb }) =>
+const lastRecordForPolicyForUser = async ({ userId, policy, pgdb }) =>
   pgdb.public.consents.find(
     {
       userId,
@@ -48,6 +58,10 @@ const lastRecordForPolicyByUser = async ({ userId, policy, pgdb }) =>
     }
   )
     .then(records => records && records[0])
+
+const statusForPolicyForUser = async (args) =>
+  lastRecordForPolicyForUser(args)
+    .then(record => record && record.record === 'GRANT')
 
 const requiredConsents = async ({ userId, pgdb }) => {
   const {
@@ -104,7 +118,10 @@ const saveConsents = async ({ userId, consents = [], req, pgdb }) => {
   )
 }
 
-const revokeConsent = async ({ userId, consent, req, pgdb }) => {
+const revokeConsent = async ({ userId, consent, req, pgdb, t }) => {
+  if (!REVOKABLE_POLICIES.includes(consent)) {
+    throw new Error(t('api/consents/notRevokable', { consent }))
+  }
   await pgdb.public.consents.insert({
     userId,
     policy: consent,
@@ -114,7 +131,8 @@ const revokeConsent = async ({ userId, consent, req, pgdb }) => {
 }
 
 module.exports = {
-  lastRecordForPolicyByUser,
+  lastRecordForPolicyForUser,
+  statusForPolicyForUser,
   requiredConsents,
   missingConsents,
   ensureAllRequiredConsents,

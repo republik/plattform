@@ -1,5 +1,5 @@
 {
-  "updated": "2018-11-21T18:18:57.032Z",
+  "updated": "2019-01-22T16:11:14.428Z",
   "title": "live",
   "data": [
     {
@@ -145,6 +145,10 @@
     {
       "key": "api/consents/missing",
       "value": "Sie müssen folgenden Policies zustimmen um sich anmelden zu können: {consents}."
+    },
+    {
+      "key": "api/consents/notRevokable",
+      "value": "Die Zustimmung ({consent}) kann nicht zurückgezogen werden."
     },
     {
       "key": "api/auth/accessToken/scope/404",

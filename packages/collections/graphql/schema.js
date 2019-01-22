@@ -19,11 +19,6 @@ type mutations {
   ): Collection!
 
 
-  enableProgressTracking: User!
-  # disabling tracking also deletes all items
-  disableProgressTracking: User!
-  clearProgress: Collection!
-
 
   upsertDocumentProgress(
     documentId: ID!
@@ -45,5 +40,6 @@ type mutations {
     mediaId: ID!
   ): MediaProgress
 
+  clearProgress: Collection!
 }
 `

@@ -48,7 +48,6 @@ extend type Document {
 extend type User {
   collections: [Collection!]!
   collection(name: String!): Collection
-  trackProgress: Boolean
 }
 
 type DocumentProgress implements CollectionItemInterface {

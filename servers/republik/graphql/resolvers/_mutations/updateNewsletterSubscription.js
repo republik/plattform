@@ -73,14 +73,16 @@ module.exports = async (_, args, context) => {
       userId: user.id,
       consents: [ consentName ],
       req,
-      pgdb
+      pgdb,
+      t
     })
   } else {
     await revokeConsent({
       userId: user.id,
       consent: consentName,
       req,
-      pgdb
+      pgdb,
+      t
     })
   }
 

@@ -139,7 +139,7 @@ module.exports = ({ transform }) =>
         console.log(`https://github.com/${repoId}`)
 
         if (versionName.indexOf('prepublication') > -1) {
-          console.log('encountered prepublication: skipping', parsedDocId)
+          console.log('encountered prepublication: skipping', parsedDocId)
           return
         }
 

@@ -1,5 +1,5 @@
 {
-  "updated": "2019-01-21T16:43:44.999Z",
+  "updated": "2019-01-22T16:26:34.890Z",
   "title": "live",
   "data": [
     {
@@ -821,6 +821,14 @@
     {
       "key": "api/collections/progress/notEnabled",
       "value": "Sie müssen zuerst zustimmen, dass Ihre Position gespeichert wird."
+    },
+    {
+      "key": "api/consents/missing",
+      "value": "Sie müssen folgenden Policies zustimmen um sich anmelden zu können: {consents}."
+    },
+    {
+      "key": "api/consents/notRevokable",
+      "value": "Die Zustimmung ({consent}) kann nicht zurückgezogen werden."
     }
   ]
 }
