@@ -19,6 +19,14 @@ const { isExpired } = require('./PaymentSource')
 
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
 
+const createMembershipCache = (user, prop) => {
+  return createCache({
+    prefix: `User:${user.id}`,
+    key: `${prop}`,
+    ttl: QUERY_CACHE_TTL_SECONDS
+  })
+}
+
 const getPaymentSources = async (user, pgdb) => {
   const { platform } = await getStripeClients(pgdb)
   const customer = await pgdb.public.stripeCustomers.findOne({
@@ -87,7 +95,7 @@ const getCustomPackages = async ({ user, crowdfundingName, pgdb }) => {
 }
 
 module.exports = {
-  async memberships (user, args, {pgdb, user: me}) {
+  async memberships (user, args, { pgdb, user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'accountant'])) {
       return pgdb.public.memberships.find({
         userId: user.id
@@ -99,6 +107,15 @@ module.exports = {
       })
     }
     return []
+  },
+  async activeMembership (user, args, { pgdb, user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'accountant'])) {
+      return createMembershipCache(user, 'activeMembership')
+        .cache(async () => pgdb.public.memberships.findOne({
+          userId: user.id, active: true
+        }))
+    }
+    return null
   },
   async prolongBeforeDate (user, { ignoreClaimedMemberships = false }, { pgdb, user: me }) {
     debug('prolongBeforeDate')
@@ -125,7 +142,6 @@ module.exports = {
 
       memberships = await resolveMemberships({ memberships, pgdb })
 
-      // Checks if there is a pending pledge on a users active membership.
       const activeMembership = memberships.find(m => m.active)
       if (
         activeMembership &&

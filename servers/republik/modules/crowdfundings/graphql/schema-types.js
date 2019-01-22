@@ -6,6 +6,7 @@ scalar JSON
 extend type User {
   pledges: [Pledge!]!
   memberships: [Membership!]!
+  activeMembership: Membership
 
   paymentSources: [PaymentSource!]!
   hasChargableSource: Boolean
@@ -154,6 +155,7 @@ type Membership {
   initialInterval: MembershipTypeInterval!
   initialPeriods: Int!
   periods: [MembershipPeriod]!
+  prolongBeforeDate: DateTime
   overdue: Boolean!
   cancellations: [Cancellation!]!
   createdAt: DateTime!

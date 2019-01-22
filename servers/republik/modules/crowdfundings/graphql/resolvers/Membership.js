@@ -1,10 +1,22 @@
 const { transformUser, Roles } = require('@orbiting/backend-modules-auth')
 
+const createCache = require('../../lib/cache')
+const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
+
+const createMembershipCache = (membership, prop) => {
+  return createCache({
+    prefix: `User:${membership.userId}`,
+    key: `membership:${membership.id}:${prop}`,
+    ttl: QUERY_CACHE_TTL_SECONDS
+  })
+}
+
 module.exports = {
   async type (membership, args, { pgdb }) {
-    return pgdb.public.membershipTypes.findOne({
-      id: membership.membershipTypeId
-    })
+    return createMembershipCache(membership, 'type')
+      .cache(async () => pgdb.public.membershipTypes.findOne({
+        id: membership.membershipTypeId
+      }))
   },
   async overdue (membership, args, { pgdb }) {
     if (!membership.active || !membership.latestPaymentFailedAt) {
@@ -19,6 +31,10 @@ module.exports = {
       membership.latestPaymentFailedAt &&
       membership.latestPaymentFailedAt > latest.endDate
     )
+  },
+  async prolongBeforeDate (membership, args, { pgdb, user: me }) {
+    return createMembershipCache(membership, 'prolongBeforeDate')
+      .cache(async () => new Date())
   },
   async pledge (membership, args, { pgdb, user: me }) {
     const pledge =
