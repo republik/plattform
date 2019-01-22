@@ -13,7 +13,7 @@
 const transformPublications = require('./lib/transformPublications')
 const visit = require('unist-util-visit')
 
-const removeDialogBox = (mdast) => {
+const removeDialogBox = ({ content: mdast }) => {
   let removedTitle
   visit(mdast, 'zone', (node, i, parent) => {
     let title
@@ -34,6 +34,8 @@ const removeDialogBox = (mdast) => {
     }
   })
   return removedTitle
+    ? `entfernt: ${removedTitle}`
+    : null
 }
 
 transformPublications({

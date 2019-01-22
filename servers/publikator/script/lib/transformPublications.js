@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
  * This lib exports a function which expects a transform func as input.
- * transform is executed with each published docs, and is expected to
- * - do nothing of modify the mdast
- * - return truethy if the modification should be saved
+ * transform is executed with each published doc, and is expected to
+ * - do nothing or modify the doc
+ * - return truthy if the modification should be saved (the return value is used as commit message)
  *
  * For each doc transform returns true, the changes are saved to git and
  * the article get's republished.
@@ -85,7 +85,7 @@ const iterateESDocs = async (context, callback) => {
         .filter(node => node.type === 'Document')
         .map(node => node.entity),
       (entity) =>
-        callback({ doc: entity }),
+        callback({ doc: entity }), // eslint-disable-line standard/no-callback-literal
       { concurrency: 1 }
     )
   } while (pageInfo && pageInfo.hasNextPage)
@@ -121,14 +121,14 @@ module.exports = ({ transform }) =>
         }
         return
       }
-      let docTransformed = transform(doc.content)
+      let docTransformed = await transform(doc, context)
       if (docTransformed) {
         console.log(`\nfixing: ${docTransformed}...`)
         console.log(`${FRONTEND_BASE_URL}${doc.meta.path}`)
 
         const parsedDocId = Buffer.from(doc.id, 'base64').toString('utf-8')
         const [
-          repoOrg,
+          repoOrg, // eslint-disable-line no-unused-vars
           repoName,
           commitId,
           versionName
@@ -153,7 +153,7 @@ module.exports = ({ transform }) =>
           context
         )
 
-        docTransformed = transform(rawDoc.content)
+        docTransformed = await transform(rawDoc, context)
         if (!docTransformed) {
           console.log('es <> git out of sync!', repoId)
           return
@@ -166,7 +166,7 @@ module.exports = ({ transform }) =>
           const newCommit = await commit(null, {
             repoId,
             parentId: commitId,
-            message: `entfernt: ${docTransformed}`,
+            message: docTransformed,
             document: {
               content: rawDoc.content
             }
