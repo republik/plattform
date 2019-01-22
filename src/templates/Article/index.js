@@ -110,8 +110,15 @@ const getPositionAttributes = (isRootChild, index) => {
 }
 
 const withPositioningAttributes = (Component) => {
-  return ({ isRootChild, node, positionId, children, attributes }) => (
-    <Component attributes={{...attributes, ...(isRootChild ? getPositionAttributes(isRootChild, positionId) : undefined )}} >{children}</Component>
+  return ({ isRootChild, node, positionId, children, attributes, ...props }) => (
+    <Component
+      {...props}
+      attributes={{
+        ...attributes,
+        ...(isRootChild ? getPositionAttributes(isRootChild, positionId) : undefined )
+      }}>
+      {children}
+    </Component>
   )
 }
 
@@ -130,7 +137,6 @@ const paragraph = {
     formatButtonText: 'Paragraph'
   },
   props: (node, index, parent, { ancestors }) => {
-    
     return {
       isRootChild: parent.identifier === 'CENTER',
       positionId: getPositionId(ancestors, parent, index)
@@ -196,11 +202,12 @@ const figureCaption = {
 
 const figure = {
   matchMdast: matchFigure,
-  component: Figure,
-  props: (node, index, parent) => {
+  component: withPositioningAttributes(Figure),
+  props: (node, index, parent, { ancestors }) => {
     return {
       size: node.data.size,
-      isRootChild: parent.identifier === 'CENTER' || parent.type === 'root'
+      isRootChild: parent.identifier === 'CENTER' || parent.type === 'root',
+      positionId: getPositionId(ancestors, parent, index)
     }
   },
   editorModule: 'figure',
@@ -315,8 +322,8 @@ const interactionParagraphRules = [
 
 const infoBox = {
   matchMdast: matchInfoBox,
-  component: InfoBox,
-  props: node => ({
+  component: withPositioningAttributes(InfoBox),
+  props: (node, index, parent, { ancestors }) => ({
     size: node.data.size,
     figureSize: node.children.find(
       matchFigure
@@ -324,7 +331,9 @@ const infoBox = {
       ? node.data.figureSize ||
         INFOBOX_DEFAULT_IMAGE_SIZE
       : undefined,
-    figureFloat: node.data.figureFloat
+    figureFloat: node.data.figureFloat,
+    isRootChild: parent.identifier === 'CENTER',
+    positionId: getPositionId(ancestors, parent, index)
   }),
   editorModule: 'infobox',
   editorOptions: {
@@ -415,12 +424,14 @@ const blockQuote = {
 
 const pullQuote = {
   matchMdast: matchQuote,
-  component: PullQuote,
-  props: node => ({
+  component: withPositioningAttributes(PullQuote),
+  props: (node, index, parent, { ancestors }) => ({
     size: node.data.size,
     hasFigure: !!node.children.find(
       matchFigure
-    )
+    ),
+    isRootChild: parent.identifier === 'CENTER',
+    positionId: getPositionId(ancestors, parent, index)
   }),
   editorModule: 'quote',
   editorOptions: {
@@ -839,22 +850,32 @@ const createSchema = ({
             rules: [
               {
                 matchMdast: matchHeading(2),
-                component: Editorial.Subhead,
+                component: withPositioningAttributes(Editorial.Subhead),
                 editorModule: 'headline',
                 editorOptions: {
                   type: 'H2',
                   depth: 2,
                   formatButtonText: 'Zwischentitel'
                 },
+                props: (node, index, parent, { ancestors }) => {
+                  return {
+                    isRootChild: parent.identifier === 'CENTER',
+                    positionId: getPositionId(ancestors, parent, index)
+                  }
+                },
                 rules: globalInlines
               },
               {
                 matchMdast: matchZone('FIGUREGROUP'),
-                component: FigureGroup,
-                props: node => ({
-                  size: 'breakout',
-                  columns: node.data.columns
-                }),
+                component: withPositioningAttributes(FigureGroup),
+                props: (node, index, parent, { ancestors }) => {
+                  return {
+                    size: 'breakout',
+                    columns: node.data.columns,
+                    isRootChild: parent.identifier === 'CENTER',
+                    positionId: getPositionId(ancestors, parent, index)
+                  }
+                },
                 rules: [figure, centerFigureCaption],
                 editorModule: 'figuregroup',
                 editorOptions: {
@@ -866,13 +887,15 @@ const createSchema = ({
               },
               {
                 matchMdast: matchType('list'),
-                component: List,
-                props: node => ({
+                component: withPositioningAttributes(List),
+                props: (node, index, parent, { ancestors }) => ({
                   data: {
                     ordered: node.ordered,
                     start: node.start,
                     compact: !node.loose
-                  }
+                  },
+                  isRootChild: parent.identifier === 'CENTER',
+                  positionId: getPositionId(ancestors, parent, index)
                 }),
                 editorModule: 'list',
                 rules: [
