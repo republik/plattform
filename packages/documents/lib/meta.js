@@ -81,6 +81,23 @@ const getAudioSource = doc => {
   return audioSource
 }
 
+const getTotalMediaDurationMinutes = doc => {
+  let total = 0
+  if (doc.meta && doc.meta.audioSource && doc.meta.audioSource.durationMs) {
+    total += doc.meta.audioSource.durationMs
+  }
+  const ids = {}
+  visit(doc.content, 'zone', (node, i, parent) => {
+    if (node.identifier === 'EMBEDVIDEO' && node.data.durationMs && !ids[node.data.id]) {
+      total += node.data.durationMs
+      ids[node.data.id] = true
+    }
+  })
+  return total
+    ? total / 1000 / 60
+    : total
+}
+
 /**
  * Getter of WORDS_PER_MINUTE
  *
@@ -96,13 +113,14 @@ const getWordsPerMinute = () => WORDS_PER_MIN
  * @return {Number}      Minutes to read content
  */
 const getEstimatedReadingMinutes = doc => {
-  const count = (doc._storedFields && doc._storedFields['contentString.count']) || false
+  let totalMinutes = getTotalMediaDurationMinutes(doc)
 
-  if (!count || count[0] < getWordsPerMinute()) {
-    return 0
+  const count = (doc._storedFields && doc._storedFields['contentString.count']) || false
+  if (count && count[0] > getWordsPerMinute()) {
+    totalMinutes += count[0] / getWordsPerMinute()
   }
 
-  return Math.round(count[0] / getWordsPerMinute())
+  return Math.round(totalMinutes)
 }
 
 const isReadingMinutesSuppressed = (resolvedFields) =>
