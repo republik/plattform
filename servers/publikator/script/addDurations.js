@@ -19,7 +19,7 @@ const platformToEmbedType = {
   youtube: 'YoutubeEmbed'
 }
 
-const removeDialogBox = async (doc, context) => {
+const transform = async (doc, context) => {
   const mdast = doc.content
   const promises = []
   visit(mdast, 'zone', (node, i, parent) => {
@@ -60,5 +60,5 @@ const removeDialogBox = async (doc, context) => {
 }
 
 transformPublications({
-  transform: removeDialogBox
+  transform
 })
