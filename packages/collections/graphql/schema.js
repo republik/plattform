@@ -22,7 +22,7 @@ type mutations {
 
   upsertDocumentProgress(
     documentId: ID!
-    percentage: Int!
+    percentage: Float!
     nodeId: String!
   ): DocumentProgress!
 

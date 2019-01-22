@@ -52,7 +52,7 @@ extend type User {
 
 type DocumentProgress implements CollectionItemInterface {
   id: ID!
-  percentage: Int!
+  percentage: Float!
   nodeId: String!
   createdAt: DateTime!
   updatedAt: DateTime!
