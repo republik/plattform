@@ -2,24 +2,24 @@ import React from 'react'
 import { withRouter } from 'next/router'
 import { compose } from 'react-apollo'
 
-import { enforceAuthorization } from '../../components/Auth/withAuthorization'
-import App from '../../components/App'
-import { Body, Content, Header } from '../../components/Layout'
+import { enforceAuthorization } from '../components/Auth/withAuthorization'
+import App from '../components/App'
+import { Body, Content, Header } from '../components/Layout'
 
 import { css } from 'glamor'
 
-import User from '../../components/Users/Particulars'
-import Email from '../../components/Users/Email'
-import NewsletterSubscriptions from '../../components/Users/NewsletterSubscriptions'
-import Roles from '../../components/Users/Roles'
-import ProfileHeader from '../../components/Users/ProfileHeader'
-import Memberships from '../../components/Users/Memberships'
-import Pledges from '../../components/Users/Pledges'
-import LatestActivity from '../../components/Users/LatestActivity'
+import User from '../components/Users/Particulars'
+import Email from '../components/Users/Email'
+import NewsletterSubscriptions from '../components/Users/NewsletterSubscriptions'
+import Roles from '../components/Users/Roles'
+import ProfileHeader from '../components/Users/ProfileHeader'
+import Memberships from '../components/Users/Memberships'
+import Pledges from '../components/Users/Pledges'
+import LatestActivity from '../components/Users/LatestActivity'
 
-import EventLog from '../../components/Users/EventLog'
-import Access from '../../components/Users/Access'
-import Sessions from '../../components/Users/Sessions'
+import EventLog from '../components/Users/EventLog'
+import Access from '../components/Users/Access'
+import Sessions from '../components/Users/Sessions'
 
 const styles = {
   row: css({

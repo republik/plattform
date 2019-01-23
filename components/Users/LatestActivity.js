@@ -40,7 +40,7 @@ const EventLogTable = ({ entries, ...props }) => (
 
 export default ({ userId }) => {
   return (
-    <Query query={GET_EVENT_LOG} variables={{ id: userId }}>
+    <Query query={GET_EVENT_LOG} ssr={false} variables={{ id: userId }}>
       {({ loading, error, data }) => {
         const isInitialLoading =
           loading &&
