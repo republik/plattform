@@ -215,10 +215,11 @@ class Grant extends Component {
             <br />
             <Link
               route='user'
-              params={{userId: grant.granter.id}}>
-              <a>
+              params={{userId: grant.granter.id}}
+              passHref>
+              <A>
                 {`${grant.granter.name} (${grant.granter.email})`}
-              </a>
+              </A>
             </Link>
           </Interaction.P>
         }
@@ -229,10 +230,11 @@ class Grant extends Component {
             <br />
             <Link
               route='user'
-              params={{userId: grant.recipient.id}}>
-              <a>
+              params={{userId: grant.recipient.id}}
+              passHref>
+              <A>
                 {`${grant.recipient.name} (${grant.recipient.email})`}
-              </a>
+              </A>
             </Link>
           </Interaction.P>
         }
