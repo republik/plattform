@@ -85,7 +85,8 @@ class AdminNotes extends Component {
     this.setState({ message: e.target.value })
   }
 
-  submitHandler = () => {
+  submitHandler = (e) => {
+    e.preventDefault()
     if (!this.state.message.trim().length) {
       return
     }
