@@ -56,7 +56,7 @@ export const GET_PROFILE = gql`
 const Subnav = ({ userId, section }) => (
   <div>
     <Link
-      route="user"
+      route='user'
       params={{
         userId
       }}
@@ -66,9 +66,10 @@ const Subnav = ({ userId, section }) => (
       </a>
     </Link>
     <Link
-      route="user/event-log"
+      route='user'
       params={{
         userId,
+        section: 'event-log'
       }}
     >
       <a
@@ -79,9 +80,10 @@ const Subnav = ({ userId, section }) => (
       </a>
     </Link>
     <Link
-      route="user/sessions"
+      route='user'
       params={{
         userId,
+        section: 'sessions'
       }}
     >
       <a
@@ -92,9 +94,10 @@ const Subnav = ({ userId, section }) => (
       </a>
     </Link>
     <Link
-      route="user/access-grants"
+      route='user'
       params={{
         userId,
+        section: 'access-grants'
       }}
     >
       <a

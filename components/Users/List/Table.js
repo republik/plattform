@@ -1,6 +1,6 @@
 import React from 'react'
 import { Label } from '@project-r/styleguide'
-import routes from '../../../server/routes'
+import { Link } from '../../../server/routes'
 
 import { displayDate } from '../../Display/utils'
 
@@ -9,8 +9,6 @@ import {
   createSortHandler,
   createSortIndicator
 } from '../../Tables/utils'
-
-const { Link } = routes
 
 export default ({ items, sort, onSort, ...props }) => {
   const sortHandler = createSortHandler(sort || {}, onSort)
@@ -68,7 +66,7 @@ export default ({ items, sort, onSort, ...props }) => {
             <td {...styles.center}>
               <Link
                 route='user'
-                params={{ userId: user.id }}
+                params={{ userId: user.username || user.id }}
               >
                 <a {...styles.link}>
                   Details

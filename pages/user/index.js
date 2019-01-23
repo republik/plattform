@@ -17,6 +17,10 @@ import Memberships from '../../components/Users/Memberships'
 import Pledges from '../../components/Users/Pledges'
 import LatestActivity from '../../components/Users/LatestActivity'
 
+import EventLog from '../../components/Users/EventLog'
+import Access from '../../components/Users/Access'
+import Sessions from '../../components/Users/Sessions'
+
 const styles = {
   row: css({
     display: 'flex',
@@ -31,11 +35,43 @@ const styles = {
   })
 }
 
+const SectionSwitch = ({ userId, section }) => {
+  if (section === 'access-grants') {
+    return <Access userId={userId} />
+  }
+  if (section === 'event-log') {
+    return <EventLog userId={userId} />
+  }
+  if (section === 'sessions') {
+    return <Sessions userId={userId} />
+  }
+
+  return <div {...styles.row}>
+    <div>
+      <User userId={userId} />
+      <Email userId={userId} />
+    </div>
+    <div>
+      <NewsletterSubscriptions userId={userId} />
+      <Roles userId={userId} />
+    </div>
+    <div {...styles.fifty}>
+      <LatestActivity userId={userId} />
+    </div>
+    <div {...styles.fifty}>
+      <Memberships userId={userId} />
+    </div>
+    <div {...styles.fifty}>
+      <Pledges userId={userId} />
+    </div>
+  </div>
+}
+
 export default compose(
   withRouter,
   enforceAuthorization(['supporter'])
 )(props => {
-  const { userId } = props.router.query
+  const { userId, section = 'index' } = props.router.query
   return (
     <App>
       <Body>
@@ -43,27 +79,9 @@ export default compose(
         <Content id="content">
           <ProfileHeader
             userId={userId}
-            section={'index'}
+            section={section}
           />
-          <div {...styles.row}>
-            <div>
-              <User userId={userId} />
-              <Email userId={userId} />
-            </div>
-            <div>
-              <NewsletterSubscriptions userId={userId} />
-              <Roles userId={userId} />
-            </div>
-            <div {...styles.fifty}>
-              <LatestActivity userId={userId} />
-            </div>
-            <div {...styles.fifty}>
-              <Memberships userId={userId} />
-            </div>
-            <div {...styles.fifty}>
-              <Pledges userId={userId} />
-            </div>
-          </div>
+          <SectionSwitch userId={userId} section={section} />
         </Content>
       </Body>
     </App>

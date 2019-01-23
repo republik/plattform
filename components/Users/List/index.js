@@ -84,6 +84,7 @@ const usersQuery = gql`
       count
       items {
         id
+        username
         name
         email
         firstName
