@@ -685,8 +685,6 @@ const createSchema = ({
     t,
     Link
   })
-  
-  console.log('createSchema')
 
   return {
     repoPrefix,
