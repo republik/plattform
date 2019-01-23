@@ -2,7 +2,7 @@ const moment = require('moment')
 const uniqBy = require('lodash/uniqBy')
 const { ascending } = require('d3-array')
 const debug = require('debug')('stats:periods')
-const { UNCANCELLED_GRACE_PERIOD_DAYS } = require('../../../modules/crowdfundings/lib/scheduler/deactivate.js')
+const { UNCANCELLED_GRACE_PERIOD_DAYS } = require('../../../modules/crowdfundings/lib/Membership')
 
 const createCache = require('../../../modules/crowdfundings/lib/cache')
 const QUERY_CACHE_TTL_SECONDS = 60 * 5 // 5 min
