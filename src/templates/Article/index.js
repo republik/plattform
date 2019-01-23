@@ -102,49 +102,29 @@ const editorialFormatting = [
   }
 ]
 
-const withProgressAttributes = (Component) => {
-  return ({ isRootChild, node, positionId, children, attributes, ...props }) => {
-    const progressAttributes = isRootChild ? {
-      'data-pos': positionId
-    } : undefined
-
-    return (
-      <Component
-        {...props}
-        attributes={{
-          ...attributes,
-          ...progressAttributes
-        }}>
-        {children}
-      </Component>
-    )
-  }
-}
-
 const getProgressId = (ancestors, parent, index) => {
   const rootNode = ancestors[ancestors.length - 1]
   const indexOfParent = rootNode && rootNode.children.length && rootNode.children.indexOf(parent)
   return indexOfParent + '-' + index
 }
 
-const getProgressProps = (ancestors, parent, index) => {
-  return {
-    isRootChild: parent.identifier === 'CENTER',
-    positionId: getProgressId(ancestors, parent, index)
-  }
+const getProgressProps = (node, index, parent, { ancestors }) => {
+  return parent.identifier === 'CENTER' ? {
+    attributes: {
+      'data-pos': getProgressId(ancestors, parent, index)
+    }
+  } : {}
 }
 
 
 const paragraph = {
   matchMdast: matchParagraph,
-  component: withProgressAttributes(Editorial.P),
+  component: Editorial.P,
   editorModule: 'paragraph',
   editorOptions: {
     formatButtonText: 'Paragraph'
   },
-  props: (node, index, parent, { ancestors }) => {
-    return getProgressProps(ancestors, parent, index)
-  },
+  props: getProgressProps,
   rules: [
     ...globalInlines,
     ...editorialFormatting,
@@ -205,11 +185,11 @@ const figureCaption = {
 
 const figure = {
   matchMdast: matchFigure,
-  component: withProgressAttributes(Figure),
+  component: Figure,
   props: (node, index, parent, { ancestors }) => {
     return {
       size: node.data.size,
-      ...getProgressProps(ancestors, parent, index)
+      ...getProgressProps(node, index, parent, { ancestors })
     }
   },
   editorModule: 'figure',
@@ -324,7 +304,7 @@ const interactionParagraphRules = [
 
 const infoBox = {
   matchMdast: matchInfoBox,
-  component: withProgressAttributes(InfoBox),
+  component: InfoBox,
   props: (node, index, parent, { ancestors }) => ({
     size: node.data.size,
     figureSize: node.children.find(
@@ -334,7 +314,7 @@ const infoBox = {
         INFOBOX_DEFAULT_IMAGE_SIZE
       : undefined,
     figureFloat: node.data.figureFloat,
-    ...getProgressProps(ancestors, parent, index)
+    ...getProgressProps(node, index, parent, { ancestors })
   }),
   editorModule: 'infobox',
   editorOptions: {
@@ -425,13 +405,13 @@ const blockQuote = {
 
 const pullQuote = {
   matchMdast: matchQuote,
-  component: withProgressAttributes(PullQuote),
+  component: PullQuote,
   props: (node, index, parent, { ancestors }) => ({
     size: node.data.size,
     hasFigure: !!node.children.find(
       matchFigure
     ),
-    ...getProgressProps(ancestors, parent, index)
+    ...getProgressProps(node, index, parent, { ancestors })
   }),
   editorModule: 'quote',
   editorOptions: {
@@ -848,26 +828,24 @@ const createSchema = ({
             rules: [
               {
                 matchMdast: matchHeading(2),
-                component: withProgressAttributes(Editorial.Subhead),
+                component: Editorial.Subhead,
                 editorModule: 'headline',
                 editorOptions: {
                   type: 'H2',
                   depth: 2,
                   formatButtonText: 'Zwischentitel'
                 },
-                props: (node, index, parent, { ancestors }) => {
-                  return getProgressProps(ancestors, parent, index)
-                },
+                props: getProgressProps,
                 rules: globalInlines
               },
               {
                 matchMdast: matchZone('FIGUREGROUP'),
-                component: withProgressAttributes(FigureGroup),
+                component: FigureGroup,
                 props: (node, index, parent, { ancestors }) => {
                   return {
                     size: 'breakout',
                     columns: node.data.columns,
-                    ...getProgressProps(ancestors, parent, index)
+                    ...getProgressProps(node, index, parent, { ancestors })
                   }
                 },
                 rules: [figure, centerFigureCaption],
@@ -881,14 +859,14 @@ const createSchema = ({
               },
               {
                 matchMdast: matchType('list'),
-                component: withProgressAttributes(List),
+                component: List,
                 props: (node, index, parent, { ancestors }) => ({
                   data: {
                     ordered: node.ordered,
                     start: node.start,
                     compact: !node.loose
                   },
-                  ...getProgressProps(ancestors, parent, index)
+                  ...getProgressProps(node, index, parent, { ancestors })
                 }),
                 editorModule: 'list',
                 rules: [
