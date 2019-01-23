@@ -1,8 +1,10 @@
 const { transformUser, Roles } = require('@orbiting/backend-modules-auth')
 const moment = require('moment')
+const _ = require('lodash')
 
 const { getLastEndDate } = require('../../lib/utils')
 const { UNCANCELLED_GRACE_PERIOD_DAYS } = require('../../lib/Membership')
+const { getCustomPackages } = require('../../lib/User')
 const createCache = require('../../lib/cache')
 
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
@@ -36,9 +38,25 @@ module.exports = {
       membership.latestPaymentFailedAt > latest.endDate
     )
   },
-  async prolongBeforeDate (membership, args, { pgdb, user: me }) {
-    return createMembershipCache(membership, 'prolongBeforeDate')
-      .cache(async () => new Date())
+  async needsProlong (membership, args, { pgdb, user: me }) {
+    // Prolong not needed if a) membership is inactive, b) membership is not set
+    // to be renewed or c) membership is set to "auto pay".
+    if (!membership.active || !membership.renew || membership.autoPay) {
+      return false
+    }
+
+    return createMembershipCache(membership, 'needsProlong')
+      .cache(async () => {
+        const user = await pgdb.public.users.findOne({ id: membership.userId })
+        const customPackages = await getCustomPackages({ user, pgdb })
+
+        const pickedMembershipIds =
+          customPackages.map(p => p.options.map(o => o.membership.id))
+        const prolongableMembershipIds =
+          _(pickedMembershipIds).flattenDeep().uniq().value()
+
+        return prolongableMembershipIds.includes(membership.id)
+      })
   },
   async endDate (membership, args, { pgdb, user: me }) {
     if (!membership.active) {

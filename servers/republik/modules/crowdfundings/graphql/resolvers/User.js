@@ -2,16 +2,16 @@ const { Roles, AccessToken: { isFieldExposed } } = require('@orbiting/backend-mo
 
 const debug = require('debug')('crowdfundings:resolver:User')
 const flattenDeep = require('lodash/flattenDeep')
-const Promise = require('bluebird')
 const moment = require('moment')
 
 const {
   findEligableMemberships,
   hasDormantMembership,
-  resolvePackages,
-  resolveMemberships,
-  getCustomOptions
+  resolveMemberships
 } = require('../../lib/CustomPackages')
+const {
+  getCustomPackages
+} = require('../../lib/User')
 const createCache = require('../../lib/cache')
 const { getLastEndDate } = require('../../lib/utils')
 const getStripeClients = require('../../lib/payments/stripe/clients')
@@ -49,49 +49,6 @@ const getPaymentSources = async (user, pgdb) => {
     expMonth: source.card.exp_month,
     expYear: source.card.exp_year
   }))
-}
-
-const getCustomPackages = async ({ user, crowdfundingName, pgdb }) => {
-  const now = new Date()
-
-  const crowdfundings = crowdfundingName
-    ? await pgdb.public.crowdfundings.find({
-      name: crowdfundingName,
-      'beginDate <=': now,
-      'endDate >': now
-    })
-    : await pgdb.public.crowdfundings.find({
-      'beginDate <=': now,
-      'endDate >': now
-    })
-
-  const packages = await pgdb.public.packages.find({
-    crowdfundingId: crowdfundings.map(crowdfunding => crowdfunding.id),
-    custom: true
-  })
-
-  if (packages.length === 0) {
-    return []
-  }
-
-  return Promise
-    .map(
-      await resolvePackages({ packages, pledger: user, pgdb }),
-      async package_ => {
-        if (package_.custom === true) {
-          const options = await getCustomOptions(package_)
-
-          if (options.length === 0) {
-            return
-          }
-
-          return { ...package_, options }
-        }
-
-        return package_
-      }
-    )
-    .filter(Boolean)
 }
 
 module.exports = {
