@@ -15,6 +15,7 @@ import Roles from '../components/Users/Roles'
 import ProfileHeader from '../components/Users/ProfileHeader'
 import Memberships from '../components/Users/Memberships'
 import Pledges from '../components/Users/Pledges'
+import AdminNotes from '../components/Users/AdminNotes'
 import LatestActivity from '../components/Users/LatestActivity'
 
 import EventLog from '../components/Users/EventLog'
@@ -57,6 +58,7 @@ const SectionSwitch = ({ userId, section }) => {
     </div>
     <div {...styles.fifty}>
       <LatestActivity userId={userId} />
+      <AdminNotes userId={userId} />
     </div>
     <div {...styles.fifty}>
       <Memberships userId={userId} />

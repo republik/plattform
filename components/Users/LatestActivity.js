@@ -59,7 +59,7 @@ export default ({ userId }) => {
                     Letzte Login-Aktivitäten
                   </SectionTitle>
                   <EventLogTable
-                    entries={entries.slice(0, 5)}
+                    entries={entries.slice(0, 2)}
                   />
                 </Section>
               )
