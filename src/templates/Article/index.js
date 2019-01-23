@@ -102,16 +102,22 @@ const editorialFormatting = [
   }
 ]
 
-const getProgressId = (ancestors, parent, index) => {
-  const rootNode = ancestors[ancestors.length - 1]
-  const indexOfParent = rootNode && rootNode.children.length && rootNode.children.indexOf(parent)
-  return indexOfParent + '-' + index
+const getProgressId = (node, index, parent, { ancestors }) => {
+  if (parent.identifier === 'CENTER') {
+    const rootNode = ancestors[ancestors.length - 1]
+    const indexOfParent = rootNode && rootNode.children.length && rootNode.children.indexOf(parent)
+    return indexOfParent + '-' + index
+  }
+  if (node.identifier === 'FIGURE' && ancestors.length === 1) {
+    return index
+  }
 }
 
 const getProgressProps = (node, index, parent, { ancestors }) => {
-  return parent.identifier === 'CENTER' ? {
+  const progressId = getProgressId(node, index, parent, { ancestors })
+  return progressId ? {
     attributes: {
-      'data-pos': getProgressId(ancestors, parent, index)
+      'data-pos': progressId
     }
   } : {}
 }
