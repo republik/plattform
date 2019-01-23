@@ -16,7 +16,11 @@ const {
   MAILCHIMP_INTEREST_NEWSLETTER_PREVIEW
 } = process.env
 
-const mailchimp = new Mailchimp(MAILCHIMP_API_KEY)
+if (!MAILCHIMP_API_KEY) {
+  console.warn('missing env MAILCHIMP_API_KEY, the preview scheduler will not work')
+}
+
+const mailchimp = MAILCHIMP_API_KEY && new Mailchimp(MAILCHIMP_API_KEY)
 
 const md5 = (email) =>
   crypto
@@ -227,8 +231,11 @@ const setFollowup = async (request, user, pgdb) => {
   ])
 }
 
-const setInterestsMailchimp = async (users, enable) =>
-  mailchimp.batch(
+const setInterestsMailchimp = async (users, enable) => {
+  if (!mailchimp) {
+    throw new Error('MAILCHIMP_API_KEY missing')
+  }
+  return mailchimp.batch(
     users.map(user => ({
       method: 'PATCH',
       path: `/lists/${MAILCHIMP_MAIN_LIST_ID}/members/${md5(user.email)}`,
@@ -240,6 +247,7 @@ const setInterestsMailchimp = async (users, enable) =>
       }
     }))
   )
+}
 
 module.exports = {
   begin,
