@@ -102,13 +102,6 @@ const editorialFormatting = [
   }
 ]
 
-const getProgressAttributes = (isRootChild, index) => {
-  return {
-    className: isRootChild ? 'pos' : undefined,
-    id: `pos-${index}`
-  }
-}
-
 const withProgressAttributes = (Component) => {
   return ({ isRootChild, node, positionId, children, attributes, ...props }) => {
     const progressAttributes = isRootChild ? {
