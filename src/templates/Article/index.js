@@ -102,45 +102,56 @@ const editorialFormatting = [
   }
 ]
 
-const getPositionAttributes = (isRootChild, index) => {
+const getProgressAttributes = (isRootChild, index) => {
   return {
     className: isRootChild ? 'pos' : undefined,
     id: `pos-${index}`
   }
 }
 
-const withPositioningAttributes = (Component) => {
-  return ({ isRootChild, node, positionId, children, attributes, ...props }) => (
-    <Component
-      {...props}
-      attributes={{
-        ...attributes,
-        ...(isRootChild ? getPositionAttributes(isRootChild, positionId) : undefined )
-      }}>
-      {children}
-    </Component>
-  )
+const withProgressAttributes = (Component) => {
+  return ({ isRootChild, node, positionId, children, attributes, ...props }) => {
+    const progressAttributes = isRootChild ? {
+      className: isRootChild ? 'pos' : undefined,
+      id: `pos-${positionId}`
+    } : undefined
+
+    return (
+      <Component
+        {...props}
+        attributes={{
+          ...attributes,
+          ...progressAttributes
+        }}>
+        {children}
+      </Component>
+    )
+  }
 }
 
-const getPositionId = (ancestors, parent, index) => {
+const getProgressId = (ancestors, parent, index) => {
   const rootNode = ancestors[ancestors.length - 1]
   const indexOfParent = rootNode && rootNode.children.length && rootNode.children.indexOf(parent)
   return indexOfParent + '-' + index
 }
 
+const getProgressProps = (ancestors, parent, index) => {
+  return {
+    isRootChild: parent.identifier === 'CENTER',
+    positionId: getProgressId(ancestors, parent, index)
+  }
+}
+
 
 const paragraph = {
   matchMdast: matchParagraph,
-  component: withPositioningAttributes(Editorial.P),
+  component: withProgressAttributes(Editorial.P),
   editorModule: 'paragraph',
   editorOptions: {
     formatButtonText: 'Paragraph'
   },
   props: (node, index, parent, { ancestors }) => {
-    return {
-      isRootChild: parent.identifier === 'CENTER',
-      positionId: getPositionId(ancestors, parent, index)
-    }
+    return getProgressProps(ancestors, parent, index)
   },
   rules: [
     ...globalInlines,
@@ -202,12 +213,11 @@ const figureCaption = {
 
 const figure = {
   matchMdast: matchFigure,
-  component: withPositioningAttributes(Figure),
+  component: withProgressAttributes(Figure),
   props: (node, index, parent, { ancestors }) => {
     return {
       size: node.data.size,
-      isRootChild: parent.identifier === 'CENTER' || parent.type === 'root',
-      positionId: getPositionId(ancestors, parent, index)
+      ...getProgressProps(ancestors, parent, index)
     }
   },
   editorModule: 'figure',
@@ -322,7 +332,7 @@ const interactionParagraphRules = [
 
 const infoBox = {
   matchMdast: matchInfoBox,
-  component: withPositioningAttributes(InfoBox),
+  component: withProgressAttributes(InfoBox),
   props: (node, index, parent, { ancestors }) => ({
     size: node.data.size,
     figureSize: node.children.find(
@@ -332,8 +342,7 @@ const infoBox = {
         INFOBOX_DEFAULT_IMAGE_SIZE
       : undefined,
     figureFloat: node.data.figureFloat,
-    isRootChild: parent.identifier === 'CENTER',
-    positionId: getPositionId(ancestors, parent, index)
+    ...getProgressProps(ancestors, parent, index)
   }),
   editorModule: 'infobox',
   editorOptions: {
@@ -424,14 +433,13 @@ const blockQuote = {
 
 const pullQuote = {
   matchMdast: matchQuote,
-  component: withPositioningAttributes(PullQuote),
+  component: withProgressAttributes(PullQuote),
   props: (node, index, parent, { ancestors }) => ({
     size: node.data.size,
     hasFigure: !!node.children.find(
       matchFigure
     ),
-    isRootChild: parent.identifier === 'CENTER',
-    positionId: getPositionId(ancestors, parent, index)
+    ...getProgressProps(ancestors, parent, index)
   }),
   editorModule: 'quote',
   editorOptions: {
@@ -850,7 +858,7 @@ const createSchema = ({
             rules: [
               {
                 matchMdast: matchHeading(2),
-                component: withPositioningAttributes(Editorial.Subhead),
+                component: withProgressAttributes(Editorial.Subhead),
                 editorModule: 'headline',
                 editorOptions: {
                   type: 'H2',
@@ -858,22 +866,18 @@ const createSchema = ({
                   formatButtonText: 'Zwischentitel'
                 },
                 props: (node, index, parent, { ancestors }) => {
-                  return {
-                    isRootChild: parent.identifier === 'CENTER',
-                    positionId: getPositionId(ancestors, parent, index)
-                  }
+                  return getProgressProps(ancestors, parent, index)
                 },
                 rules: globalInlines
               },
               {
                 matchMdast: matchZone('FIGUREGROUP'),
-                component: withPositioningAttributes(FigureGroup),
+                component: withProgressAttributes(FigureGroup),
                 props: (node, index, parent, { ancestors }) => {
                   return {
                     size: 'breakout',
                     columns: node.data.columns,
-                    isRootChild: parent.identifier === 'CENTER',
-                    positionId: getPositionId(ancestors, parent, index)
+                    ...getProgressProps(ancestors, parent, index)
                   }
                 },
                 rules: [figure, centerFigureCaption],
@@ -887,15 +891,14 @@ const createSchema = ({
               },
               {
                 matchMdast: matchType('list'),
-                component: withPositioningAttributes(List),
+                component: withProgressAttributes(List),
                 props: (node, index, parent, { ancestors }) => ({
                   data: {
                     ordered: node.ordered,
                     start: node.start,
                     compact: !node.loose
                   },
-                  isRootChild: parent.identifier === 'CENTER',
-                  positionId: getPositionId(ancestors, parent, index)
+                  ...getProgressProps(ancestors, parent, index)
                 }),
                 editorModule: 'list',
                 rules: [
