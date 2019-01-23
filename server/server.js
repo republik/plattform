@@ -1,7 +1,6 @@
 const express = require('express')
 const next = require('next')
 const routes = require('./routes')
-const dotenv = require('dotenv')
 const basicAuth = require('express-basic-auth')
 const helmet = require('helmet')
 
@@ -9,7 +8,7 @@ const DEV = process.env.NODE_ENV
   ? process.env.NODE_ENV !== 'production'
   : true
 if (DEV || process.env.DOTENV) {
-  dotenv.config()
+  require('dotenv').config()
 }
 
 const app = next({ dev: DEV })
