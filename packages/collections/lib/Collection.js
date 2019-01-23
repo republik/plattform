@@ -74,13 +74,29 @@ const upsertItem = async (tableName, query, data, { pgdb }) => {
     )
       .then(spreadItemData)
   } else {
+    let newData = { ...data }
+    let accessor
+    if (data.percentage !== null) {
+      accessor = 'percentage'
+    } else if (data.ms !== null) {
+      accessor = 'ms'
+    }
+    if (accessor) {
+      const existingMax = existingItem.data.max || existingItem
+      if (existingMax.data[accessor] > newData[accessor]) {
+        newData = {
+          ...newData,
+          max: existingMax
+        }
+      }
+    }
     return pgdb.public[tableName].updateAndGetOne(
       {
         id: existingItem.id
       },
       {
         ...query,
-        data,
+        data: newData,
         updatedAt: new Date()
       },
       { skipUndefined: true }
@@ -169,6 +185,8 @@ const clearItems = async (userId, collectionName, { pgdb, loaders }) => {
   ])
 }
 
+const getItemMax = item => spreadItemData(item.data && item.data.max ? item.data.max : item)
+
 module.exports = {
   findForUser,
   byNameForUser,
@@ -187,5 +205,7 @@ module.exports = {
   getDocumentProgressItem,
   getMediaProgressItem,
 
-  clearItems
+  clearItems,
+
+  getItemMax
 }

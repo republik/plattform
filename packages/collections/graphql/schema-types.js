@@ -58,6 +58,8 @@ type DocumentProgress implements CollectionItemInterface {
   updatedAt: DateTime!
   collection: Collection!
   document: Document
+  # get entity with max percentage for same doc
+  max: DocumentProgress
 }
 
 type MediaProgress implements CollectionItemInterface {
@@ -70,6 +72,8 @@ type MediaProgress implements CollectionItemInterface {
   collection: Collection!
   # never resolved on MediaProgress
   document: Document
+  # get entity with max ms for same mediaId
+  max: MediaProgress
 }
 
 
