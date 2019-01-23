@@ -5,7 +5,7 @@
     "node": "10.4.1"
   },
   "scripts": {
-    "dev": "NODE_ENV=development node server/server.js",
+    "dev": "cross-env NODE_ENV=development nodemon --watch server --watch .env --watch server/routes.js --watch server/constants.js server/server.js",
     "build": "next build",
     "heroku-postbuild": "npm run build",
     "start": "node server/server.js",
@@ -52,12 +52,14 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",
+    "cross-env": "^5.2.0",
     "enzyme": "^3.7.0",
     "eslint": "^5.9.0",
     "eslint-plugin-react": "^7.11.1",
     "faucet": "0.0.1",
     "glob": "^7.1.3",
     "gsheets": "^2.0.0",
+    "nodemon": "^1.18.9",
     "react-test-renderer": "^16.6.3",
     "tape": "^4.9.1"
   }

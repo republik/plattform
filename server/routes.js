@@ -1,6 +1,6 @@
 const createRoutes = require('next-routes')
-
 const routes = createRoutes()
+
 routes
   .add('users')
   .add('payments')
@@ -12,4 +12,3 @@ routes
   .add('user')
 
 module.exports = routes
-module.exports.Router = routes.Router
