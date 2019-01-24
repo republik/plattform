@@ -25,6 +25,7 @@ type queries {
   events: [Event!]!
   updates: [Update!]!
   employees: [Employee!]!
+  reports: [Report!]!
   membershipStats: MembershipStats!
   memberStats: MemberStats!
 }
