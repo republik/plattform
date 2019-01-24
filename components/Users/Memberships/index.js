@@ -15,18 +15,21 @@ import {
   DD
 } from '../../Display/utils'
 import { tableStyles } from '../../Tables/utils'
-import routes from '../../../server/routes'
+import { Link } from '../../../server/routes'
+
+import { REPUBLIK_FRONTEND_URL } from '../../../server/constants'
 
 import MoveMembership from './MoveMembership'
 import CancelMembership from './CancelMembership'
 import ReactivateMembership from './ReactivateMembership'
-const { Link } = routes
 
+import { intersperse } from '../../../lib/helpers'
 
 const GET_MEMBERSHIPS = gql`
   query memberships($id: String) {
     user(slug: $id) {
       id
+      accessToken(scope: CUSTOM_PLEDGE)
       memberships {
         id
         type {
@@ -208,43 +211,43 @@ const MembershipDetails = ({ membership, ...props }) => {
           <DL>
             <DT>Aktionen</DT>
             <DD>
-                <MoveMembership
-                  membership={membership}
-                  refetchQueries={({
-                    data: { moveMembership }
-                  }) => [
-                    {
-                      query: GET_MEMBERSHIPS,
-                      variables: { id: moveMembership.id }
-                    }
-                  ]}
-                />
-                {!!membership.renew &&
-                  <CancelMembership
+                {intersperse([
+                  <MoveMembership
                     membership={membership}
                     refetchQueries={({
-                      data: { cancelMembership }
+                      data: { moveMembership }
                     }) => [
                       {
                         query: GET_MEMBERSHIPS,
-                        variables: { id: cancelMembership.id }
+                        variables: { id: moveMembership.id }
                       }
                     ]}
-                  />
-                }
-                {!membership.renew && membership.active &&
-                  <ReactivateMembership
-                    membership={membership}
-                    refetchQueries={({
-                      data: { reactivateMembership }
-                    }) => [
-                      {
-                        query: GET_MEMBERSHIPS,
-                        variables: { id: reactivateMembership.id }
-                      }
-                    ]}
-                  />
-                }
+                  />,
+                  !!membership.renew &&
+                    <CancelMembership
+                      membership={membership}
+                      refetchQueries={({
+                        data: { cancelMembership }
+                      }) => [
+                        {
+                          query: GET_MEMBERSHIPS,
+                          variables: { id: cancelMembership.id }
+                        }
+                      ]}
+                    />,
+                  !membership.renew && membership.active &&
+                    <ReactivateMembership
+                      membership={membership}
+                      refetchQueries={({
+                        data: { reactivateMembership }
+                      }) => [
+                        {
+                          query: GET_MEMBERSHIPS,
+                          variables: { id: reactivateMembership.id }
+                        }
+                      ]}
+                    />
+                ].filter(Boolean), () => ', ')}
             </DD>
           </DL>
       </td>
@@ -268,11 +271,21 @@ export default ({ userId }) => {
             error={isInitialLoading && error}
             render={() => {
               const {
-                user: { memberships }
+                user: { memberships, accessToken }
               } = data
               return (
                 <Section>
                   <SectionTitle>Memberships</SectionTitle>
+                  <div style={{ marginBottom: 20 }}>
+                    <A
+                      href={`${REPUBLIK_FRONTEND_URL}/angebote?package=PROLONG&token=${accessToken}`}
+                      target="_blank"
+                    >
+                      Verlängerns-Link ohne anmelden
+                    </A>
+                    <br />
+                    <Label>In einem neuen, privaten Fenster öffnen.</Label>
+                  </div>
                   <table {...tableStyles.table}>
                     <colgroup>
                       <col style={{ width: '50%' }} />

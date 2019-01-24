@@ -103,13 +103,13 @@ export default class CancelPledge extends Component {
     const { isOpen, reason, cancellationType } = this.state
     const { refetchQueries, membership } = this.props
     return (
-      <div>
+      <Fragment>
         <TextButton
           onClick={() => {
             this.setState({ isOpen: true })
           }}
         >
-          Cancel
+          künden
         </TextButton>
 
         {isOpen && (
@@ -212,7 +212,7 @@ export default class CancelPledge extends Component {
             }}
           </Mutation>
         )}
-      </div>
+      </Fragment>
     )
   }
 }

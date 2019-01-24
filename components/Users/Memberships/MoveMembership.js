@@ -64,13 +64,13 @@ export default class MoveMembership extends Component {
     const { isOpen, user } = this.state
     const { membership, refetchQueries } = this.props
     return (
-      <div>
+      <Fragment>
         <TextButton
           onClick={() => {
             this.setState({ isOpen: true })
           }}
         >
-          Verschieben
+          verschieben
         </TextButton>
 
         {isOpen && (
@@ -137,7 +137,7 @@ export default class MoveMembership extends Component {
             }}
           </Mutation>
         )}
-      </div>
+      </Fragment>
     )
   }
 }

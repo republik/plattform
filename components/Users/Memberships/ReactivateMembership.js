@@ -52,13 +52,13 @@ export default class ReactivateMembership extends Component {
     const { isOpen } = this.state
     const { refetchQueries } = this.props
     return (
-      <div>
+      <Fragment>
         <TextButton
           onClick={() => {
             this.setState({ isOpen: true })
           }}
         >
-          (Re)aktivieren
+          (re)aktivieren
         </TextButton>
 
         {isOpen && (
@@ -101,7 +101,7 @@ export default class ReactivateMembership extends Component {
             }}
           </Mutation>
         )}
-      </div>
+      </Fragment>
     )
   }
 }
