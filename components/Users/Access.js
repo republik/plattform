@@ -21,6 +21,12 @@ import ErrorMessage from '../ErrorMessage'
 import List, { Item } from '../List'
 import routes from '../../server/routes'
 
+import {
+  displayDateTime,
+  Section,
+  SectionTitle
+} from '../Display/utils'
+
 const GET_ACCESS_GRANTS = gql`
 query user($id: String) {
   user(slug: $id) {
@@ -95,7 +101,6 @@ const REVOKE_ACCESS = gql`
 
 const { Link } = routes
 
-const getHumanDate = rawDate => moment(rawDate).format('DD.MM.YYYY HH:mm')
 const getDays = (begin, end) => moment(end).diff(begin, 'days')
 
 const GUTTER = 30
@@ -136,7 +141,7 @@ class Events extends Component {
       <Fragment>
         <List>
           {isExpanded && events.map((event, i) => (
-            <Item key={i}>{getHumanDate(event.createdAt)} {event.event}</Item>
+            <Item key={i}>{displayDateTime(event.createdAt)} {event.event}</Item>
           ))}
         </List>
         {isExpanded
@@ -265,7 +270,7 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/beginBefore/label')}</Label>
             <br />
-            {getHumanDate(grant.beginBefore)}
+            {displayDateTime(grant.beginBefore)}
           </Interaction.P>
         }
 
@@ -273,7 +278,7 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/beginAt/label')}</Label>
             <br />
-            {getHumanDate(grant.beginAt)}
+            {displayDateTime(grant.beginAt)}
           </Interaction.P>
         }
 
@@ -281,7 +286,7 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/endAt/label')}</Label>
             <br />
-            {getHumanDate(grant.endAt)}<br />
+            {displayDateTime(grant.endAt)}<br />
           </Interaction.P>
         }
 
@@ -297,7 +302,7 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/createdAt/label')}</Label>
             <br />
-            {getHumanDate(grant.createdAt)}
+            {displayDateTime(grant.createdAt)}
           </Interaction.P>
         }
 
@@ -305,7 +310,7 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/revokedAt/label')}</Label>
             <br />
-            {getHumanDate(grant.revokedAt)}
+            {displayDateTime(grant.revokedAt)}
           </Interaction.P>
         }
 
@@ -313,7 +318,7 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/invalidatedAt/label')}</Label>
             <br />
-            {getHumanDate(grant.invalidatedAt)}
+            {displayDateTime(grant.invalidatedAt)}
           </Interaction.P>
         }
 
@@ -329,7 +334,7 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/campaignEndAt/label')}</Label>
             <br />
-            {getHumanDate(grant.campaign.endAt)}
+            {displayDateTime(grant.campaign.endAt)}
           </Interaction.P>
         }
 
@@ -381,9 +386,9 @@ const Slots = ({ slots, t }) => {
 
 const Grants = ({ grants, revokeAccess, t }) => (
   <Fragment>
-    <Interaction.H2 {...styles.heading}>
+    <SectionTitle>
       {t('account/access/Grants/title')}
-    </Interaction.H2>
+    </SectionTitle>
     <div {...styles.grants}>
       {grants && grants.length > 0
         ? grants.map(grant => (
@@ -403,9 +408,9 @@ const Grants = ({ grants, revokeAccess, t }) => (
 
 const Campaigns = ({ campaigns, revokeAccess, t }) => (
   <Fragment>
-    <Interaction.H2 {...styles.heading}>
+    <SectionTitle>
       {t('account/access/Campaigns/title')}
-    </Interaction.H2>
+    </SectionTitle>
     {campaigns && campaigns.length > 0 && campaigns.map(campaign => (
       <Fragment key={`camp-${campaign.id}`}>
         <Interaction.H3>
@@ -419,7 +424,7 @@ const Campaigns = ({ campaigns, revokeAccess, t }) => (
             moment(campaign.endAt) < moment()
               ? 'account/access/Campaigns/campaign/ended'
               : 'account/access/Campaigns/campaign/ending',
-            { endAt: getHumanDate(campaign.endAt) }
+            { endAt: displayDateTime(campaign.endAt) }
           )}
         </Label>
         {campaign.slots && <Slots slots={campaign.slots} t={t} />}
@@ -444,10 +449,10 @@ const Campaigns = ({ campaigns, revokeAccess, t }) => (
 
 const Access = withT(({ grants, campaigns, revokeAccess, t }) => {
   return (
-    <Fragment>
+    <Section>
       <Grants grants={grants} revokeAccess={revokeAccess} t={t} />
       <Campaigns campaigns={campaigns} revokeAccess={revokeAccess} t={t} />
-    </Fragment>
+    </Section>
   )
 })
 

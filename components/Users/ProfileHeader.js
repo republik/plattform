@@ -35,7 +35,8 @@ const styles = {
     textDecoration: 'none',
     '&[data-active="true"]': {
       textDecoration: 'underline'
-    }
+    },
+    marginRight: 5
   })
 }
 
@@ -63,20 +64,6 @@ const Subnav = ({ userId, section }) => (
     >
       <a {...styles.navLink} data-active={section === 'index'}>
         Übersicht
-      </a>
-    </Link>
-    <Link
-      route='user'
-      params={{
-        userId,
-        section: 'event-log'
-      }}
-    >
-      <a
-        {...styles.navLink}
-        data-active={section === 'event-log'}
-      >
-        Event Log
       </a>
     </Link>
     <Link

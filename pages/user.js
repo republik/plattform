@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { withRouter } from 'next/router'
 import { compose } from 'react-apollo'
 
@@ -40,11 +40,11 @@ const SectionSwitch = ({ userId, section }) => {
   if (section === 'access-grants') {
     return <Access userId={userId} />
   }
-  if (section === 'event-log') {
-    return <EventLog userId={userId} />
-  }
   if (section === 'sessions') {
-    return <Sessions userId={userId} />
+    return <Fragment>
+      <Sessions userId={userId} />
+      <EventLog userId={userId} />
+    </Fragment>
   }
 
   return <div {...styles.row}>
