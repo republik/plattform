@@ -1,0 +1,25 @@
+{
+  "name": "@orbiting/backend-modules-crowdsourcing",
+  "version": "0.0.1",
+  "description": "collects inputs and sends them via email",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Isabelle Schwab <isabelle.schwab@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "scripts": {
+    "link": "yarn link"
+  },
+  "dependencies": {
+    "export-files": "^2.1.1"
+  }
+}
