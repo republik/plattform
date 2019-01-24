@@ -58,8 +58,8 @@ app.prepare().then(() => {
   server.get('/', (req, res) => {
     res.redirect('/users')
   })
-  server.get('/users/:userId', (req, res) => {
-    res.redirect(`/~${req.params.userId}`)
+  server.get('/~:userId', (req, res) => {
+    res.redirect(`/users/${req.params.userId}`)
   })
   server.get('*', (req, res) => {
     handle(req, res)

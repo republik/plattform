@@ -66,7 +66,7 @@ export default ({ items, sort, onSort, ...props }) => {
             <td {...styles.center}>
               <Link
                 route='user'
-                params={{ userId: user.username || user.id }}
+                params={{ userId: user.id }}
               >
                 <a {...styles.link}>
                   Details
