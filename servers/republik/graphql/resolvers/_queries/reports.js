@@ -3,7 +3,6 @@ module.exports = async (_, args, {pgdb}) => {
   if (!data) {
     return []
   }
-  const publishedData = data.filter(d => d.published)
 
-  return publishedData
+  return data.filter(d => d.published)
 }
