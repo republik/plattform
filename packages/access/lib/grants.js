@@ -363,7 +363,7 @@ const findInvalid = async (pgdb) => {
   const now = moment()
   return pgdb.public.accessGrants.find({
     or: [
-      { 'beginBefore <': now },
+      { and: [{ 'endAt': null }, { 'beginBefore <': now }] },
       { 'endAt <': now }
     ],
     invalidatedAt: null
