@@ -170,8 +170,8 @@ const inform = async (args, context) => {
         prolongBeforeDate
       }) => {
         const { id: userId, membershipGracePeriodInterval } = user
-        const graceEndDate = moment(prolongBeforeDate)
 
+        const graceEndDate = moment(prolongBeforeDate)
         Object.keys(membershipGracePeriodInterval).forEach(key => {
           graceEndDate.add(membershipGracePeriodInterval[key], key)
         })
