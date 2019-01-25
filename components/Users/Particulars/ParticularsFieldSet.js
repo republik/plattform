@@ -1,7 +1,7 @@
 import React from 'react'
 import withT from '../../../lib/withT'
 import { swissTime } from '../../../lib/utils/formats'
-import FieldSet from '../../Form/FieldSet'
+import { FieldSet } from '@project-r/styleguide'
 
 const birthdayFormat = '%d.%m.%Y'
 const birthdayParse = swissTime.parse(birthdayFormat)

@@ -1,11 +1,11 @@
 import React from 'react'
 import { Label } from '@project-r/styleguide'
 import MessageForm from './MessageForm'
-
 import { chfFormat } from '../../../lib/utils/formats'
+import { displayDate } from '../../Display/utils'
 
 import {
-  displayDate,
+
   tableStyles as styles,
   createSortHandler,
   createSortIndicator

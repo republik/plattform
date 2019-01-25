@@ -4,15 +4,13 @@ import AddressFieldSet from './AddressFieldSet'
 import ParticularsFieldSet from './ParticularsFieldSet'
 
 const hasErrors = state =>
-  Object.keys(state.errors).some(
-    fieldName =>
-      !state.errors ? false : !!state.errors[fieldName]
+  Object.keys(state.errors).some(fieldName =>
+    !state.errors ? false : !!state.errors[fieldName]
   )
 
 const isDirty = state =>
-  Object.keys(state.dirty).some(
-    fieldName =>
-      !state.dirty ? false : !!state.dirty[fieldName]
+  Object.keys(state.dirty).some(fieldName =>
+    !state.dirty ? false : !!state.dirty[fieldName]
   )
 
 const cleanAddress = ({
@@ -81,43 +79,38 @@ export default class UserForm extends Component {
   constructor(props) {
     super(props)
     this.state = getInitialState(props)
-  }
 
-  userChangeHandler = userFieldState => {
-    this.setState(() => ({
-      ...this.state,
-      ...{
-        user: mergeStates(this.state.user, userFieldState)
-      }
-    }))
-  }
-
-  addressChangeHandler = addressFieldState => {
-    this.setState(() => ({
-      ...this.state,
-      ...{
-        address: mergeStates(
-          this.state.address,
-          addressFieldState
-        )
-      }
-    }))
-  }
-
-  submitHandler = event => {
-    event.preventDefault()
-    if (this.props.onSubmit) {
-      this.props.onSubmit({
-        ...cleanUser(this.state.user.values),
+    this.userChangeHandler = userFieldState => {
+      this.setState(() => ({
+        ...this.state,
         ...{
-          address: cleanAddress(this.state.address.values)
+          user: mergeStates(this.state.user, userFieldState)
         }
-      })
+      }))
     }
-  }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState(() => getInitialState(nextProps))
+    this.addressChangeHandler = addressFieldState => {
+      this.setState(() => ({
+        ...this.state,
+        ...{
+          address: mergeStates(
+            this.state.address,
+            addressFieldState
+          )
+        }
+      }))
+    }
+    this.submitHandler = event => {
+      event.preventDefault()
+      if (this.props.onSubmit) {
+        this.props.onSubmit({
+          ...cleanUser(this.state.user.values),
+          ...{
+            address: cleanAddress(this.state.address.values)
+          }
+        })
+      }
+    }
   }
 
   render() {

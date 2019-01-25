@@ -1,9 +1,10 @@
 import { Component, Fragment } from 'react'
-import { compose } from 'react-apollo'
+import { Query, Mutation } from 'react-apollo'
+import gql from 'graphql-tag'
 import { css } from 'glamor'
 import moment from 'moment'
 
-import withT from '../../../lib/withT'
+import withT from '../../lib/withT'
 
 import {
   colors,
@@ -12,16 +13,94 @@ import {
   InlineSpinner,
   Label,
   HR,
-  A
+  A,
+  Loader
 } from '@project-r/styleguide'
 
-import ErrorMessage from '../../ErrorMessage'
-import List, { Item } from '../../List'
-import routes from '../../../server/routes'
+import ErrorMessage from '../ErrorMessage'
+import List, { Item } from '../List'
+import routes from '../../server/routes'
+
+import {
+  displayDateTime,
+  Section,
+  SectionTitle
+} from '../Display/utils'
+
+const GET_ACCESS_GRANTS = gql`
+query user($id: String) {
+  user(slug: $id) {
+    id
+    accessGrants(withPast: true) {
+      id
+      status
+      createdAt
+      beginBefore
+      voucherCode
+      beginAt
+      endAt
+      revokedAt
+      invalidatedAt
+      granter {
+        id
+        email
+        name
+      }
+      campaign {
+        id
+        title
+        endAt
+      }
+      events {
+        createdAt
+        event
+      }
+    }
+    accessCampaigns(withPast: true) {
+      id
+      title
+      endAt
+      slots {
+        total
+        free
+        used
+      }
+      grants(withRevoked: true, withInvalidated: true) {
+        id
+        status
+        createdAt
+        beginBefore
+        voucherCode
+        beginAt
+        endAt
+        revokedAt
+        invalidatedAt
+        email
+        recipient {
+          id
+          email
+          name
+        }
+        events {
+          createdAt
+          event
+        }
+      }
+    }
+  }
+}
+`
+
+const REVOKE_ACCESS = gql`
+  mutation revokeAccess(
+    $id: ID!
+  ) {
+    revokeAccess(id: $id)
+  }
+`
 
 const { Link } = routes
 
-const getHumanDate = rawDate => moment(rawDate).format('DD.MM.YYYY HH:mm')
 const getDays = (begin, end) => moment(end).diff(begin, 'days')
 
 const GUTTER = 30
@@ -62,7 +141,7 @@ class Events extends Component {
       <Fragment>
         <List>
           {isExpanded && events.map((event, i) => (
-            <Item key={i}>{getHumanDate(event.createdAt)} {event.event}</Item>
+            <Item key={i}>{displayDateTime(event.createdAt)} {event.event}</Item>
           ))}
         </List>
         {isExpanded
@@ -141,10 +220,11 @@ class Grant extends Component {
             <br />
             <Link
               route='user'
-              params={{userId: grant.granter.id}}>
-              <a>
+              params={{userId: grant.granter.id}}
+              passHref>
+              <A>
                 {`${grant.granter.name} (${grant.granter.email})`}
-              </a>
+              </A>
             </Link>
           </Interaction.P>
         }
@@ -155,10 +235,11 @@ class Grant extends Component {
             <br />
             <Link
               route='user'
-              params={{userId: grant.recipient.id}}>
-              <a>
+              params={{userId: grant.recipient.id}}
+              passHref>
+              <A>
                 {`${grant.recipient.name} (${grant.recipient.email})`}
-              </a>
+              </A>
             </Link>
           </Interaction.P>
         }
@@ -189,7 +270,7 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/beginBefore/label')}</Label>
             <br />
-            {getHumanDate(grant.beginBefore)}
+            {displayDateTime(grant.beginBefore)}
           </Interaction.P>
         }
 
@@ -197,7 +278,7 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/beginAt/label')}</Label>
             <br />
-            {getHumanDate(grant.beginAt)}
+            {displayDateTime(grant.beginAt)}
           </Interaction.P>
         }
 
@@ -205,7 +286,7 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/endAt/label')}</Label>
             <br />
-            {getHumanDate(grant.endAt)}<br />
+            {displayDateTime(grant.endAt)}<br />
           </Interaction.P>
         }
 
@@ -221,7 +302,7 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/createdAt/label')}</Label>
             <br />
-            {getHumanDate(grant.createdAt)}
+            {displayDateTime(grant.createdAt)}
           </Interaction.P>
         }
 
@@ -229,7 +310,7 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/revokedAt/label')}</Label>
             <br />
-            {getHumanDate(grant.revokedAt)}
+            {displayDateTime(grant.revokedAt)}
           </Interaction.P>
         }
 
@@ -237,7 +318,7 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/invalidatedAt/label')}</Label>
             <br />
-            {getHumanDate(grant.invalidatedAt)}
+            {displayDateTime(grant.invalidatedAt)}
           </Interaction.P>
         }
 
@@ -253,7 +334,7 @@ class Grant extends Component {
           <Interaction.P>
             <Label>{t('account/access/Grant/campaignEndAt/label')}</Label>
             <br />
-            {getHumanDate(grant.campaign.endAt)}
+            {displayDateTime(grant.campaign.endAt)}
           </Interaction.P>
         }
 
@@ -305,11 +386,11 @@ const Slots = ({ slots, t }) => {
 
 const Grants = ({ grants, revokeAccess, t }) => (
   <Fragment>
-    <Interaction.H2 {...styles.heading}>
+    <SectionTitle>
       {t('account/access/Grants/title')}
-    </Interaction.H2>
+    </SectionTitle>
     <div {...styles.grants}>
-      {grants.length > 0
+      {grants && grants.length > 0
         ? grants.map(grant => (
           <Grant
             key={`grants-${grant.id}`}
@@ -327,10 +408,10 @@ const Grants = ({ grants, revokeAccess, t }) => (
 
 const Campaigns = ({ campaigns, revokeAccess, t }) => (
   <Fragment>
-    <Interaction.H2 {...styles.heading}>
+    <SectionTitle>
       {t('account/access/Campaigns/title')}
-    </Interaction.H2>
-    {campaigns.length > 0 && campaigns.map(campaign => (
+    </SectionTitle>
+    {campaigns && campaigns.length > 0 && campaigns.map(campaign => (
       <Fragment key={`camp-${campaign.id}`}>
         <Interaction.H3>
           {t(
@@ -343,7 +424,7 @@ const Campaigns = ({ campaigns, revokeAccess, t }) => (
             moment(campaign.endAt) < moment()
               ? 'account/access/Campaigns/campaign/ended'
               : 'account/access/Campaigns/campaign/ending',
-            { endAt: getHumanDate(campaign.endAt) }
+            { endAt: displayDateTime(campaign.endAt) }
           )}
         </Label>
         {campaign.slots && <Slots slots={campaign.slots} t={t} />}
@@ -358,7 +439,7 @@ const Campaigns = ({ campaigns, revokeAccess, t }) => (
         </div>
       </Fragment>
     ))}
-    {campaigns.length === 0 &&
+    {campaigns && campaigns.length === 0 &&
       <Interaction.P>
         {t('account/access/Campaigns/noCampaigns')}
       </Interaction.P>
@@ -366,13 +447,31 @@ const Campaigns = ({ campaigns, revokeAccess, t }) => (
   </Fragment>
 )
 
-const Access = ({ grants, campaigns, revokeAccess, t }) => {
+const Access = withT(({ grants, campaigns, revokeAccess, t }) => {
   return (
-    <Fragment>
+    <Section>
       <Grants grants={grants} revokeAccess={revokeAccess} t={t} />
       <Campaigns campaigns={campaigns} revokeAccess={revokeAccess} t={t} />
-    </Fragment>
+    </Section>
+  )
+})
+
+export default ({ userId }) => {
+  return (
+    <Query query={GET_ACCESS_GRANTS} variables={{id: userId}}>{({loading, error, data}) => {
+      return (
+        <Mutation mutation={REVOKE_ACCESS}>{
+          (revokeAccess, {loading: mutationLoading, error: mutationError}) => (
+            <Loader
+              loading={loading || mutationLoading}
+              error={error || mutationError}
+              render={() =>
+                <Access grants={data.user.accessGrants} campaigns={data.user.accessCampaigns} revokeAccess={revokeAccess} />
+              }
+            />
+          )
+        }</Mutation>
+      )
+    }}</Query>
   )
 }
-
-export default compose(withT)(Access)

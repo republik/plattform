@@ -84,12 +84,21 @@ const usersQuery = gql`
       count
       items {
         id
+        username
         name
         email
         firstName
         lastName
         createdAt
         updatedAt
+        activeMembership {
+          needsProlong
+          endDate
+          graceEndDate
+          type {
+            name
+          }
+        }
       }
     }
   }

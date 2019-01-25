@@ -20,7 +20,7 @@ export const tableStyles = {
   }),
   row: css({
     height: '35px',
-    '&:nth-child(even)': {
+    '&:nth-child(odd)': {
       backgroundColor: colors.secondaryBg
     }
   }),
@@ -53,7 +53,7 @@ export const tableStyles = {
   }),
   emphasisedRow: css({
     '& td': {
-      borderBottom: `1px solid ${colors.divider}`
+      borderBottom: `1px solid ${colors.text}`
     }
   }),
   left: css({

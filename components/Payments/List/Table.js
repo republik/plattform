@@ -3,8 +3,9 @@ import { Label, colors } from '@project-r/styleguide'
 import { chfFormat } from '../../../lib/utils/formats'
 import routes from '../../../server/routes'
 
+import { displayDate } from '../../Display/utils'
+
 import {
-  displayDate,
   tableStyles as styles,
   createSortHandler,
   createSortIndicator

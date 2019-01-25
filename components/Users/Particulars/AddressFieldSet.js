@@ -1,6 +1,6 @@
 import React from 'react'
 import withT from '../../../lib/withT'
-import FieldSet from '../../Form/FieldSet'
+import { FieldSet } from '@project-r/styleguide'
 
 export const COUNTRIES = [
   'Schweiz',
@@ -13,15 +13,13 @@ export const fields = t => [
     label: t('me/addressForm/name/label'),
     name: 'name',
     validator: value =>
-      !value &&
-      t('me/addressForm/name/error/empty')
+      !value && t('me/addressForm/name/error/empty')
   },
   {
     label: t('me/addressForm/line1/label'),
     name: 'line1',
     validator: value =>
-      !value &&
-      t('me/addressForm/line1/error/empty')
+      !value && t('me/addressForm/line1/error/empty')
   },
   {
     label: t('me/addressForm/line2/label'),
@@ -31,32 +29,23 @@ export const fields = t => [
     label: t('me/addressForm/postalCode/label'),
     name: 'postalCode',
     validator: value =>
-      !value &&
-      t('me/addressForm/postalCode/error/empty')
+      !value && t('me/addressForm/postalCode/error/empty')
   },
   {
     label: t('me/addressForm/city/label'),
     name: 'city',
     validator: value =>
-      !value &&
-      t('me/addressForm/city/error/empty')
+      !value && t('me/addressForm/city/error/empty')
   },
   {
     label: t('me/addressForm/country/label'),
     name: 'country',
     validator: value =>
-      !value &&
-      t('me/addressForm/country/error/empty')
+      !value && t('me/addressForm/country/error/empty')
   }
 ]
 
-const Form = ({
-  t,
-  values,
-  errors,
-  dirty,
-  onChange
-}) => (
+const Form = ({ t, values, errors, dirty, onChange }) => (
   <FieldSet
     values={values}
     errors={errors}

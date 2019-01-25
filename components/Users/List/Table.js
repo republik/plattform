@@ -1,15 +1,14 @@
 import React from 'react'
 import { Label } from '@project-r/styleguide'
-import routes from '../../../server/routes'
+import { Link } from '../../../server/routes'
+
+import { displayDate } from '../../Display/utils'
 
 import {
-  displayDate,
   tableStyles as styles,
   createSortHandler,
   createSortIndicator
 } from '../../Tables/utils'
-
-const { Link } = routes
 
 export default ({ items, sort, onSort, ...props }) => {
   const sortHandler = createSortHandler(sort || {}, onSort)
@@ -46,6 +45,9 @@ export default ({ items, sort, onSort, ...props }) => {
           >
             <Label>Last name{indicator('lastName')}</Label>
           </th>
+          <th>
+            <Label>Active Membership</Label>
+          </th>
           <th
             {...styles.interactive}
             onClick={sortHandler('createdAt')}
@@ -63,6 +65,7 @@ export default ({ items, sort, onSort, ...props }) => {
             <td>{user.email}</td>
             <td>{user.firstName}</td>
             <td>{user.lastName}</td>
+            <td {...styles.center}>{user.activeMembership && user.activeMembership.type.name}</td>
             <td {...styles.center}>{displayDate(user.createdAt)}</td>
             <td {...styles.center}>
               <Link
