@@ -3,7 +3,6 @@ const moment = require('moment')
 const _ = require('lodash')
 
 const { getLastEndDate } = require('../../lib/utils')
-const { UNCANCELLED_GRACE_PERIOD_DAYS } = require('../../lib/Membership')
 const { getCustomPackages } = require('../../lib/User')
 const createCache = require('../../lib/cache')
 
@@ -91,8 +90,12 @@ module.exports = {
           return null
         }
 
-        return moment(getLastEndDate(periods))
-          .add(UNCANCELLED_GRACE_PERIOD_DAYS, 'days')
+        const graceEndDate = moment(getLastEndDate(periods))
+        Object.keys(membership.gracePeriodInterval).forEach(key => {
+          graceEndDate.add(membership.gracePeriodInterval[key], key)
+        })
+
+        return graceEndDate
       })
   },
   async pledge (membership, args, { pgdb, user: me }) {

@@ -3,20 +3,13 @@ const moment = require('moment')
 const Promise = require('bluebird')
 
 const createCache = require('../cache')
-const {
-  CANCELLED_GRACE_PERIOD_DAYS,
-  UNCANCELLED_GRACE_PERIOD_DAYS
-} = require('../Membership')
 const { activeMembershipsQuery } = require('./changeover')
 
 const deactivate = async (
   { dryRun },
   { pgdb, mail: { enforceSubscriptions } }
 ) => {
-  const cancelledEndDate =
-    moment().startOf('day').subtract(CANCELLED_GRACE_PERIOD_DAYS, 'days')
-  const uncancelledEndDate =
-    moment().startOf('day').subtract(UNCANCELLED_GRACE_PERIOD_DAYS, 'days')
+  const cancelledEndDate = moment().startOf('day')
 
   const memberships = await pgdb.public.query(`
     WITH memberships AS (${activeMembershipsQuery})
@@ -26,12 +19,11 @@ const deactivate = async (
       ( renew = false AND "endDate" < :cancelledEndDate )
       OR
       -- Uncancelled memberships (flagged to renew, but were not)
-      ( renew = true AND "endDate" < :uncancelledEndDate )
-  `, { cancelledEndDate, uncancelledEndDate })
+      ( renew = true AND "endDate" + "gracePeriodInterval" < :cancelledEndDate )
+  `, { cancelledEndDate })
 
   debug({
     cancelledEndDate: cancelledEndDate.toDate(),
-    uncancelledEndDate: uncancelledEndDate.toDate(),
     memberships: memberships.length,
     dryRun
   })

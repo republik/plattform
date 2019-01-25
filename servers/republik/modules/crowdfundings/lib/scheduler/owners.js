@@ -6,7 +6,6 @@ const {
 } = require('../../graphql/resolvers/User')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
-const { UNCANCELLED_GRACE_PERIOD_DAYS } = require('../Membership')
 
 const {
   PARKING_USER_ID
@@ -69,6 +68,7 @@ const getBuckets = async ({ now }, { pgdb }) => {
       u.*,
       m.id AS "membershipId",
       m."sequenceNumber" AS "membershipSequenceNumber",
+      m."gracePeriodInterval" AS "membershipGracePeriodInterval",
       mt.name AS "membershipType"
     FROM
       memberships m
@@ -88,6 +88,7 @@ const getBuckets = async ({ now }, { pgdb }) => {
         ...transformUser(user),
         membershipId: user.membershipId,
         membershipSequenceNumber: user.membershipSequenceNumber,
+        membershipGracePeriodInterval: user.membershipGracePeriodInterval,
         membershipType: user.membershipType
       }))
     )
@@ -168,12 +169,18 @@ const inform = async (args, context) => {
         user,
         prolongBeforeDate
       }) => {
-        const { id: userId } = user
+        const { id: userId, membershipGracePeriodInterval } = user
+        const graceEndDate = moment(prolongBeforeDate)
+
+        Object.keys(membershipGracePeriodInterval).forEach(key => {
+          graceEndDate.add(membershipGracePeriodInterval[key], key)
+        })
+
         const templatePayload = await context.mail.prepareMembershipOwnerNotice({
           user,
           endDate: prolongBeforeDate,
           cancelUntilDate: moment(prolongBeforeDate).subtract(2, 'days'),
-          graceEndDate: moment(prolongBeforeDate).add(UNCANCELLED_GRACE_PERIOD_DAYS, 'days'),
+          graceEndDate,
           templateName: bucket.templateName
         }, context)
         return sendMailTemplate(
