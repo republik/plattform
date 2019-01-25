@@ -85,7 +85,7 @@ class SessionOverview extends Component {
                 <TextButton
                   onClick={() => {
                     this.props.clearSession({
-                      userId: this.props.user.id,
+                      userId: this.props.data.user.id,
                       sessionId: session.id
                     })
                   }}
@@ -99,7 +99,7 @@ class SessionOverview extends Component {
             disabled={sessions.length === 0}
             onClick={() => {
               this.props.clearSessions({
-                userId: this.props.user.id
+                userId: this.props.data.user.id
               })
             }}
           >
@@ -113,7 +113,7 @@ class SessionOverview extends Component {
 
 const WrappedSessionOverview = compose(
   graphql(clearSessionMutation, {
-    props: ({ mutate, ownProps: { user } }) => ({
+    props: ({ mutate, ownProps: { userId } }) => ({
       clearSession: variables => {
         if (mutate) {
           return mutate({
@@ -122,7 +122,7 @@ const WrappedSessionOverview = compose(
               {
                 query: sessionQuery,
                 variables: {
-                  id: user.id
+                  id: userId
                 }
               }
             ]
