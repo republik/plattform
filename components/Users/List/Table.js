@@ -45,6 +45,9 @@ export default ({ items, sort, onSort, ...props }) => {
           >
             <Label>Last name{indicator('lastName')}</Label>
           </th>
+          <th>
+            <Label>Active Membership</Label>
+          </th>
           <th
             {...styles.interactive}
             onClick={sortHandler('createdAt')}
@@ -62,6 +65,7 @@ export default ({ items, sort, onSort, ...props }) => {
             <td>{user.email}</td>
             <td>{user.firstName}</td>
             <td>{user.lastName}</td>
+            <td {...styles.center}>{user.activeMembership && user.activeMembership.type.name}</td>
             <td {...styles.center}>{displayDate(user.createdAt)}</td>
             <td {...styles.center}>
               <Link

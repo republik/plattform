@@ -91,6 +91,14 @@ const usersQuery = gql`
         lastName
         createdAt
         updatedAt
+        activeMembership {
+          needsProlong
+          endDate
+          graceEndDate
+          type {
+            name
+          }
+        }
       }
     }
   }
