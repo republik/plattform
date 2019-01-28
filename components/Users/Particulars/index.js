@@ -3,8 +3,8 @@ import { Query, Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import { MdModeEdit as EditIcon } from 'react-icons/md'
 
-import Overlay from '../../InlineOverlay'
 import {
+  Overlay,
   OverlayBody,
   OverlayToolbar,
   OverlayToolbarClose,
@@ -209,7 +209,7 @@ export default class User extends Component {
                       </TextButton>
                     </SectionMenu>
                     {isOpen && (
-                      <Overlay>
+                      <Overlay onClose={this.closeHandler}>
                         <OverlayToolbar>
                           <OverlayToolbarClose
                             onClick={this.closeHandler}

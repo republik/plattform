@@ -4,6 +4,7 @@ import gql from 'graphql-tag'
 import { MdModeEdit as EditIcon } from 'react-icons/md'
 
 import {
+  Overlay,
   OverlayBody,
   OverlayToolbar,
   OverlayToolbarClose,
@@ -11,7 +12,6 @@ import {
   InlineSpinner
 } from '@project-r/styleguide'
 
-import Overlay from '../../InlineOverlay'
 import {
   InteractiveSection,
   SectionMenu,
@@ -134,7 +134,7 @@ export default class Email extends Component {
                       </TextButton>
                     </SectionMenu>
                     {isOpen && (
-                      <Overlay>
+                      <Overlay onClose={this.closeHandler}>
                         <OverlayToolbar>
                           <OverlayToolbarClose
                             onClick={this.closeHandler}
