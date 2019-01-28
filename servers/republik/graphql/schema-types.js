@@ -172,7 +172,7 @@ type Update {
   socialMediaImage: String
 }
 
-type Report {
+type MediaResponse {
   medium: String
   publishDate: String
   title: String
