@@ -54,29 +54,25 @@ export default ({ items, sort, onSort, ...props }) => {
           >
             <Label>Created{indicator('createdAt')}</Label>
           </th>
-          <th>
-            <Label>Options</Label>
-          </th>
         </tr>
       </thead>
       <tbody>
         {items.map((user, index) => (
           <tr key={`user-${index}`} {...styles.row}>
-            <td>{user.email}</td>
-            <td>{user.firstName}</td>
-            <td>{user.lastName}</td>
-            <td {...styles.center}>{user.activeMembership && user.activeMembership.type.name}</td>
-            <td {...styles.center}>{displayDate(user.createdAt)}</td>
-            <td {...styles.center}>
+            <td>
               <Link
                 route='user'
                 params={{ userId: user.id }}
               >
                 <a {...styles.link}>
-                  Details
+                  {user.email}
                 </a>
               </Link>
             </td>
+            <td>{user.firstName}</td>
+            <td>{user.lastName}</td>
+            <td {...styles.center}>{user.activeMembership && user.activeMembership.type.name}</td>
+            <td {...styles.center}>{displayDate(user.createdAt)}</td>
           </tr>
         ))}
       </tbody>
