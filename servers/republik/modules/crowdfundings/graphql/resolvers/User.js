@@ -17,15 +17,16 @@ const { getLastEndDate } = require('../../lib/utils')
 const getStripeClients = require('../../lib/payments/stripe/clients')
 const { isExpired } = require('./PaymentSource')
 
+const { DISABLE_RESOLVER_USER_CACHE } = process.env
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
 
-const createMembershipCache = (user, prop) => {
-  return createCache({
+const createMembershipCache = (user, prop) =>
+  createCache({
     prefix: `User:${user.id}`,
     key: `${prop}`,
-    ttl: QUERY_CACHE_TTL_SECONDS
+    ttl: QUERY_CACHE_TTL_SECONDS,
+    disabled: DISABLE_RESOLVER_USER_CACHE
   })
-}
 
 const getPaymentSources = async (user, pgdb) => {
   const { platform } = await getStripeClients(pgdb)

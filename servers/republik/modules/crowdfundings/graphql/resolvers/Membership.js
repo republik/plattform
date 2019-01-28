@@ -1,21 +1,23 @@
-const { transformUser, Roles } = require('@orbiting/backend-modules-auth')
 const moment = require('moment')
 const _ = require('lodash')
 
+const { transformUser, Roles } = require('@orbiting/backend-modules-auth')
+const { applyPgInterval: { add: addInterval } } = require('@orbiting/backend-modules-utils')
+
 const { getLastEndDate } = require('../../lib/utils')
-const { UNCANCELLED_GRACE_PERIOD_DAYS } = require('../../lib/Membership')
 const { getCustomPackages } = require('../../lib/User')
 const createCache = require('../../lib/cache')
 
+const { DISABLE_RESOLVER_USER_CACHE } = process.env
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
 
-const createMembershipCache = (membership, prop) => {
-  return createCache({
+const createMembershipCache = (membership, prop) =>
+  createCache({
     prefix: `User:${membership.userId}`,
     key: `membership:${membership.id}:${prop}`,
-    ttl: QUERY_CACHE_TTL_SECONDS
+    ttl: QUERY_CACHE_TTL_SECONDS,
+    disabled: DISABLE_RESOLVER_USER_CACHE
   })
-}
 
 module.exports = {
   async type (membership, args, { pgdb }) {
@@ -91,8 +93,10 @@ module.exports = {
           return null
         }
 
-        return moment(getLastEndDate(periods))
-          .add(UNCANCELLED_GRACE_PERIOD_DAYS, 'days')
+        return addInterval(
+          getLastEndDate(periods),
+          membership.graceInterval
+        )
       })
   },
   async pledge (membership, args, { pgdb, user: me }) {
