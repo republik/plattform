@@ -45,8 +45,10 @@ export default class MovePledge extends Component {
 
     this.submitHandler = mutation => () => {
       return mutation({
-        pledgeId: this.props.pledge.id,
-        userId: this.state.user.id
+        variables: {
+          pledgeId: this.props.pledge.id,
+          userId: this.state.user.id
+        }
       }).then(() =>
         this.setState(() => ({ user: null, isOpen: false }))
       )

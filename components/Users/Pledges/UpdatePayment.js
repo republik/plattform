@@ -29,6 +29,7 @@ const UPDATE_PAYMENT = gql`
       reason: $reason
     ) {
       id
+      status
     }
   }
 `
@@ -54,14 +55,18 @@ export default class UpdatePayment extends Component {
       let promise
       if (payment.status === 'WAITING_FOR_REFUND') {
         promise = mutation({
-          paymentId: payment.id,
-          status: 'REFUNDED'
+          variables: {
+            paymentId: payment.id,
+            status: 'REFUNDED'
+          }
         })
       } else if (payment.status === 'WAITING') {
         promise = mutation({
-          paymentId: payment.id,
-          status: 'PAID',
-          reason: this.state.reason
+          variables: {
+            paymentId: payment.id,
+            status: 'PAID',
+            reason: this.state.reason
+          }
         })
       }
 

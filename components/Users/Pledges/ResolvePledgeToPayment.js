@@ -27,6 +27,7 @@ const RESOLVE_PLEDGE_TO_PAYMENT = gql`
       reason: $reason
     ) {
       id
+      status
     }
   }
 `
@@ -49,8 +50,10 @@ export default class ResolvePledgeToPayment extends Component {
 
     this.submitHandler = mutation => () => {
       return mutation({
-        pledgeId: this.props.pledge.id,
-        reason: this.state.reason
+        variables: {
+          pledgeId: this.props.pledge.id,
+          reason: this.state.reason
+        }
       }).then(() =>
         this.setState(() => ({ reason: '', isOpen: false }))
       )

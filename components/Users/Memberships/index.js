@@ -26,8 +26,8 @@ import ReactivateMembership from './ReactivateMembership'
 import { intersperse } from '../../../lib/helpers'
 
 const GET_MEMBERSHIPS = gql`
-  query memberships($id: String) {
-    user(slug: $id) {
+  query memberships($userId: String!) {
+    user(slug: $userId) {
       id
       accessToken(scope: CUSTOM_PLEDGE)
       memberships {
@@ -121,7 +121,7 @@ const MembershipCard = ({ membership, ...props }) => {
   )
 }
 
-const MembershipDetails = ({ membership, ...props }) => {
+const MembershipDetails = ({ userId, membership, ...props }) => {
   return (
     <tr {...props}>
       <td {...tableStyles.paddedCell} colSpan={2}>
@@ -219,7 +219,7 @@ const MembershipDetails = ({ membership, ...props }) => {
                     }) => [
                       {
                         query: GET_MEMBERSHIPS,
-                        variables: { id: moveMembership.id }
+                        variables: { userId }
                       }
                     ]}
                   />,
@@ -231,7 +231,7 @@ const MembershipDetails = ({ membership, ...props }) => {
                       }) => [
                         {
                           query: GET_MEMBERSHIPS,
-                          variables: { id: cancelMembership.id }
+                          variables: { userId }
                         }
                       ]}
                     />,
@@ -243,7 +243,7 @@ const MembershipDetails = ({ membership, ...props }) => {
                       }) => [
                         {
                           query: GET_MEMBERSHIPS,
-                          variables: { id: reactivateMembership.id }
+                          variables: { userId }
                         }
                       ]}
                     />
@@ -259,7 +259,7 @@ export default ({ userId }) => {
   return (
     <Query
       query={GET_MEMBERSHIPS}
-      variables={{ id: userId }}
+      variables={{ userId }}
     >
       {({ loading, error, data }) => {
         const isInitialLoading =
@@ -300,6 +300,7 @@ export default ({ userId }) => {
                           />
                           <MembershipDetails
                             key={`details-${m.id}`}
+                            userId={userId}
                             membership={m}
                           />
                         </Fragment>

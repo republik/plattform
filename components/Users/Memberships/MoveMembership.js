@@ -52,8 +52,10 @@ export default class MoveMembership extends Component {
 
     this.submitHandler = mutation => () => {
       return mutation({
-        membershipId: this.props.membership.id,
-        userId: this.state.user.id
+        variables: {
+          membershipId: this.props.membership.id,
+          userId: this.state.user.id
+        }
       }).then(() =>
         this.setState(() => ({ user: null, isOpen: false }))
       )

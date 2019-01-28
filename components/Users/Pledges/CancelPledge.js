@@ -20,6 +20,7 @@ const CANCEL_PLEDGE = gql`
   mutation cancelPledge($pledgeId: ID!) {
     cancelPledge(pledgeId: $pledgeId) {
       id
+      status
     }
   }
 `
@@ -37,7 +38,9 @@ export default class CancelPledge extends Component {
 
     this.submitHandler = mutation => () => {
       return mutation({
-        pledgeId: this.props.pledge.id
+        variables: {
+          pledgeId: this.props.pledge.id
+        }
       }).then(() =>
         this.setState(() => ({ isOpen: false }))
       )

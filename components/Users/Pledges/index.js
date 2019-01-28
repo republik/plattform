@@ -55,8 +55,8 @@ const GET_PLEDGES = gql`
     updatedAt
   }
 
-  query pledges($id: String) {
-    user(slug: $id) {
+  query pledges($userId: String!) {
+    user(slug: $userId) {
       id
       pledges {
         id
@@ -151,7 +151,7 @@ const PledgeCard = ({ pledge, ...props }) => {
   )
 }
 
-const PledgeDetails = ({ pledge, ...props }) => {
+const PledgeDetails = ({ userId, pledge, ...props }) => {
   const memberships = pledge.memberships
     .concat(pledge.options.map(option => option.membership))
     .filter(Boolean)
@@ -191,7 +191,7 @@ const PledgeDetails = ({ pledge, ...props }) => {
                 }) => [
                   {
                     query: GET_PLEDGES,
-                    variables: { id: movePledge.id }
+                    variables: { userId }
                   }
                 ]}
               />
@@ -203,9 +203,7 @@ const PledgeDetails = ({ pledge, ...props }) => {
                   }) => [
                     {
                       query: GET_PLEDGES,
-                      variables: {
-                        id: resolvePledgeToPayment.id
-                      }
+                      variables: { userId }
                     }
                   ]}
                 />
@@ -218,9 +216,7 @@ const PledgeDetails = ({ pledge, ...props }) => {
                   }) => [
                     {
                       query: GET_PLEDGES,
-                      variables: {
-                        id: cancelPledge.id
-                      }
+                      variables: { userId }
                     }
                   ]}
                 />
@@ -247,9 +243,7 @@ const PledgeDetails = ({ pledge, ...props }) => {
                       refetchQueries={() => [
                         {
                           query: GET_PLEDGES,
-                          variables: {
-                            id: pledge.id
-                          }
+                          variables: { userId }
                         }
                       ]}
                     />
@@ -260,9 +254,7 @@ const PledgeDetails = ({ pledge, ...props }) => {
                       refetchQueries={() => [
                         {
                           query: GET_PLEDGES,
-                          variables: {
-                            id: pledge.id
-                          }
+                          variables: { userId }
                         }
                       ]}
                     />
@@ -403,7 +395,7 @@ export default class Pledges extends Component {
     const { userId } = this.props
     const { selectedPledgeId } = this.state
     return (
-      <Query query={GET_PLEDGES} variables={{ id: userId }}>
+      <Query query={GET_PLEDGES} variables={{ userId }}>
         {({ loading, error, data }) => {
           const isInitialLoading =
             loading &&
@@ -446,6 +438,7 @@ export default class Pledges extends Component {
                               {isActive && (
                                 <PledgeDetails
                                   key={`details-${p.id}`}
+                                  userId={userId}
                                   pledge={p}
                                 />
                               )}
