@@ -5,15 +5,19 @@ const { publishMonitor } = require('../../../../../lib/slack')
 const cancelPledge = require('./cancelPledge')
 const deleteStripeCustomer = require('../../../lib/payments/stripe/deleteCustomer')
 
-const deleteRelatedData = async ({ id: userId }, pgdb) => {
+const deleteRelatedData = async ({ id: userId }, hasPledges, unpublishComments, pgdb) => {
   // get all related tables
   // https://stackoverflow.com/questions/5347050/sql-to-list-all-the-tables-that-reference-a-particular-column-in-a-table
   const keepRelations = [
     'accessGrants',
     'electionCandidacies',
     'pledges',
-    'stripeCustomers'
+    'stripeCustomers',
+    'comments' // get nullified, see below
   ]
+  if (hasPledges) {
+    keepRelations.push('memberships')
+  }
   const relations = await pgdb.query(`
     select
       R.TABLE_SCHEMA as schema,
@@ -75,6 +79,19 @@ const deleteRelatedData = async ({ id: userId }, pgdb) => {
       userIdPattern: `%${userId}%`,
       userId
     }),
+    // nullify comments
+    pgdb.public.comments.update(
+      { userId },
+      {
+        userId: null,
+        ...unpublishComments
+          ? {
+            published: false,
+            content: null
+          }
+          : {}
+      }
+    ),
     ...relations.map(rel =>
       pgdb[rel.schema][rel.table].delete({
         [rel.column]: userId
@@ -107,7 +124,8 @@ const getNulledColumnsForUsers = async (pgdb) => {
 
 module.exports = async (_, args, context) => {
   const {
-    userId
+    userId,
+    unpublishComments = false
   } = args
   const {
     pgdb,
@@ -166,7 +184,7 @@ module.exports = async (_, args, context) => {
       console.warn(`deleteUser: could not delete ${user.email} from mailchimp.`)
     }
 
-    await deleteRelatedData(user, transaction)
+    await deleteRelatedData(user, hasPledges, unpublishComments, transaction)
 
     // if the user doesn't have pledges, nor grants, nor candidacies we can delete everything,
     // otherwise we need to keep (firstName, lastName, address) for bookkeeping
