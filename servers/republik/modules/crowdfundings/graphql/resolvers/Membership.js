@@ -1,6 +1,8 @@
-const { transformUser, Roles } = require('@orbiting/backend-modules-auth')
 const moment = require('moment')
 const _ = require('lodash')
+
+const { transformUser, Roles } = require('@orbiting/backend-modules-auth')
+const { applyPgInterval: { add: addInterval } } = require('@orbiting/backend-modules-utils')
 
 const { getLastEndDate } = require('../../lib/utils')
 const { getCustomPackages } = require('../../lib/User')
@@ -90,12 +92,10 @@ module.exports = {
           return null
         }
 
-        const graceEndDate = moment(getLastEndDate(periods))
-        Object.keys(membership.graceInterval).forEach(key => {
-          graceEndDate.add(membership.graceInterval[key], key)
-        })
-
-        return graceEndDate
+        return addInterval(
+          getLastEndDate(periods),
+          membership.graceInterval
+        )
       })
   },
   async pledge (membership, args, { pgdb, user: me }) {

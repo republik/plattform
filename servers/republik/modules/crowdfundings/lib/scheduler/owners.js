@@ -1,11 +1,14 @@
 const debug = require('debug')('crowdfundings:lib:scheduler:owners')
 const moment = require('moment')
 const Promise = require('bluebird')
+
+const { transformUser } = require('@orbiting/backend-modules-auth')
+const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
+const { applyPgInterval: { add: addInterval } } = require('@orbiting/backend-modules-utils')
+
 const {
   prolongBeforeDate: getProlongBeforeDate
 } = require('../../graphql/resolvers/User')
-const { transformUser } = require('@orbiting/backend-modules-auth')
-const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
 
 const {
   PARKING_USER_ID
@@ -171,16 +174,14 @@ const inform = async (args, context) => {
       }) => {
         const { id: userId, membershipGraceInterval } = user
 
-        const graceEndDate = moment(prolongBeforeDate)
-        Object.keys(membershipGraceInterval).forEach(key => {
-          graceEndDate.add(membershipGraceInterval[key], key)
-        })
-
         const templatePayload = await context.mail.prepareMembershipOwnerNotice({
           user,
           endDate: prolongBeforeDate,
           cancelUntilDate: moment(prolongBeforeDate).subtract(2, 'days'),
-          graceEndDate,
+          graceEndDate: addInterval(
+            prolongBeforeDate,
+            membershipGraceInterval
+          ),
           templateName: bucket.templateName
         }, context)
         return sendMailTemplate(
