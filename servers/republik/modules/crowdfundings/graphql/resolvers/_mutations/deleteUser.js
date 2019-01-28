@@ -170,7 +170,7 @@ module.exports = async (_, args, context) => {
 
     await deleteRelatedData(user, transaction)
 
-    // if the user had pledges we can delete everything,
+    // if the user doesn't have pledges, nor grants, nor candidacies we can delete everything,
     // otherwise we need to keep (firstName, lastName, address) for bookkeeping
     if (!hasPledges && !hasGrants && !hasCandidacies) {
       // delete stripe data
