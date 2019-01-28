@@ -366,7 +366,7 @@ const beginGrant = async (grant, recipient, pgdb) => {
   const campaign = await campaignsLib.findOne(grant.accessCampaignId, pgdb)
   const now = moment()
   const beginAt = now.clone()
-  const endAt = addInterval(now.clone(), campaign.grantPeriodInterval)
+  const endAt = addInterval(beginAt, campaign.grantPeriodInterval)
 
   const updateFields = {
     recipientUserId: recipient.id,
