@@ -3,6 +3,8 @@ const moment = require('moment')
 const uuid = require('uuid/v4')
 const Promise = require('bluebird')
 
+const { applyPgInterval: { add: addInterval } } = require('@orbiting/backend-modules-utils')
+
 const { getPeriodEndingLast, getLastEndDate } = require('../utils')
 const rules = require('./rules')
 
@@ -148,10 +150,10 @@ const evaluate = async ({
     return false
   }
 
-  const lastEndDateWithGracePeriod = moment(lastEndDate)
-  Object.keys(membership.graceInterval).forEach(key => {
-    lastEndDateWithGracePeriod.add(membership.graceInterval[key], key)
-  })
+  const lastEndDateWithGracePeriod = addInterval(
+    lastEndDate,
+    membership.graceInterval
+  )
 
   /**
    * Usually, we want to extend an existing series of periods. We therefor
