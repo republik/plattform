@@ -144,21 +144,19 @@ module.exports = async (_, args, context) => {
     `, {
       userId
     })
+    // returning claimed memberships not supported yet
+    const claimedMemberships = memberships.filter(m => !!m.pledges.find(p => p.userId !== userId))
+    if (claimedMemberships.length > 0) {
+      throw new Error(t('api/users/delete/claimedMembershipsNotSupported'))
+    }
 
     const grants = await transaction.public.accessGrants.find({
       or: [{granterUserId: userId}, {recipientUserId: userId}]
     })
     const hasGrants = grants.length > 0
 
-    const candidacies =
-      await transaction.public.electionCandidacies.find({ userId })
+    const candidacies = await transaction.public.electionCandidacies.find({ userId })
     const hasCandidacies = candidacies.length > 0
-
-    // returning claimed memberships not supported yet
-    const claimedMemberships = memberships.filter(m => !!m.pledges.find(p => p.userId !== userId))
-    if (claimedMemberships.length > 0) {
-      throw new Error(t('api/users/delete/claimedMembershipsNotSupported'))
-    }
 
     // delete from mailchimp
     const mailchimpResult = await deleteFromMailchimp({
