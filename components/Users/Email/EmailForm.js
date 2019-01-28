@@ -40,10 +40,9 @@ export default class EmailForm extends Component {
   render() {
     const { onSubmit } = this.props
 
-    const user = this.state.isDirty
-      ? this.state.user
-      : this.props.user
-    const { email } = user
+    const email = this.state.isDirty
+      ? this.state.email
+      : this.props.user.email
 
     return (
       <form onSubmit={this.submitHandler(onSubmit)}>

@@ -38,6 +38,7 @@ const UPDATE_EMAIL = gql`
   mutation updateEmail($id: ID!, $email: String!) {
     updateEmail(userId: $id, email: $email) {
       id
+      email
     }
   }
 `
@@ -46,20 +47,6 @@ const UpdateEmail = ({ user, onSubmit, ...props }) => (
   <Mutation
     {...props}
     mutation={UPDATE_EMAIL}
-    refetchQueries={({ data: { updateUser } }) => [
-      {
-        query: GET_EMAIL,
-        variables: {
-          id: updateUser.id
-        }
-      },
-      {
-        query: GET_PROFILE,
-        variables: {
-          id: updateUser.id
-        }
-      }
-    ]}
     variables={{ id: user.id }}
   >
     {(updateUser, { loading, error }) => {
