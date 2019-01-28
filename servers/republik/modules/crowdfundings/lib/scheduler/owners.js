@@ -6,6 +6,7 @@ const {
 } = require('../../graphql/resolvers/User')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
+const { UNCANCELLED_GRACE_PERIOD_DAYS } = require('../Membership')
 
 const {
   PARKING_USER_ID
@@ -36,44 +37,59 @@ const createBuckets = (now) => [
     templateName: 'membership_owner_prolong_notice',
     minEndDate: getMinEndDate(now, 22),
     maxEndDate: getMaxEndDate(now, DAYS_BEFORE_END_DATE),
+    onlyMembershipTypes: ['ABO'],
     users: []
-  }
-  /*
+  },
   {
     templateName: 'membership_owner_prolong_notice_7',
     minEndDate: getMinEndDate(now, 5),
     maxEndDate: getMaxEndDate(now, 7),
+    onlyMembershipTypes: ['ABO'],
     users: []
   },
   {
-    templateName: 'membership_owner_prolong_notice_2',
-    minEndDate: getMinEndDate(now, 1),
-    maxEndDate: getMaxEndDate(now, 2),
+    templateName: 'membership_owner_prolong_notice_0',
+    minEndDate: getMinEndDate(now, -3),
+    maxEndDate: getMaxEndDate(now, 0),
+    onlyMembershipTypes: ['ABO'],
     users: []
   }
-  */
 ]
 
 const getBuckets = async ({ now }, { pgdb }) => {
-  // load users with a membership
+  /**
+   * Load users with a membership.
+   *
+   * WARNING: The following query will only hold up if user has only one active
+   * membership.
+   *
+   */
   const users = await pgdb.query(`
     SELECT
-      DISTINCT(u.*)
+      u.*,
+      m.id AS "membershipId",
+      m."sequenceNumber" AS "membershipSequenceNumber",
+      mt.name AS "membershipType"
     FROM
-      users u
+      memberships m
+    INNER JOIN
+      users u ON m."userId" = u.id
+    INNER JOIN
+      "membershipTypes" mt ON m."membershipTypeId" = mt.id
     WHERE
-      u.id != :PARKING_USER_ID AND
-      u.id IN (
-        SELECT
-          DISTINCT(m."userId")
-        FROM
-          memberships m
-      )
+      m."userId" != :PARKING_USER_ID
+      AND m.active = true
+      AND m.renew = true
   `, {
     PARKING_USER_ID
   })
     .then(users => users
-      .map(user => transformUser(user))
+      .map(user => ({
+        ...transformUser(user),
+        membershipId: user.membershipId,
+        membershipSequenceNumber: user.membershipSequenceNumber,
+        membershipType: user.membershipType
+      }))
     )
   debug(`investigating ${users.length} users for prolongBeforeDate`)
 
@@ -87,6 +103,8 @@ const getBuckets = async ({ now }, { pgdb }) => {
 
   const buckets = createBuckets(now)
 
+  debug('buckets %O', buckets)
+
   await Promise.each(
     users,
     async (user) => {
@@ -97,10 +115,21 @@ const getBuckets = async ({ now }, { pgdb }) => {
       )
         .then(date => date && moment(date))
 
-      stats.numNeedProlongProgress += 1
+      stats.numNeedProlongProgress++
 
       if (prolongBeforeDate) {
         const dropped = buckets.some(bucket => {
+          // Don't add user to bucket if user.membershipType does not equal
+          // any of memberships listed in bucket.onlyMembershipTypes.
+          if (
+            bucket.onlyMembershipTypes &&
+            !bucket.onlyMembershipTypes.includes(user.membershipType)
+          ) {
+            return false
+          }
+
+          // Add user to bucket if prolongBeforeDate is between
+          // bucket.minEndDate and bucket.maxEndDate
           if (
             prolongBeforeDate.isAfter(bucket.minEndDate) &&
             prolongBeforeDate.isBefore(bucket.maxEndDate)
@@ -114,7 +143,7 @@ const getBuckets = async ({ now }, { pgdb }) => {
           return false
         })
         if (dropped) {
-          stats.numNeedProlong += 1
+          stats.numNeedProlong++
         }
       }
     },
@@ -143,8 +172,8 @@ const inform = async (args, context) => {
         const templatePayload = await context.mail.prepareMembershipOwnerNotice({
           user,
           endDate: prolongBeforeDate,
-          cancelUntilDate: moment(prolongBeforeDate)
-            .subtract(2, 'days'),
+          cancelUntilDate: moment(prolongBeforeDate).subtract(2, 'days'),
+          graceEndDate: moment(prolongBeforeDate).add(UNCANCELLED_GRACE_PERIOD_DAYS, 'days'),
           templateName: bucket.templateName
         }, context)
         return sendMailTemplate(

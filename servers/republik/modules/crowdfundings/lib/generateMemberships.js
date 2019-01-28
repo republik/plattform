@@ -62,9 +62,11 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
   const userHasActiveMembership = activeMemberships.length > 0
 
   const memberships = []
+  const now = moment()
+
   let cancelableMemberships = []
   let membershipPeriod
-  const now = moment()
+  let subscribeToEditorialNewsletters = false
 
   await Promise.map(pledgeOptions, async (plo) => {
     if (plo.packageOption.reward.type === 'MembershipType') {
@@ -87,6 +89,16 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
 
         const membership = resolvedPackage.user.memberships
           .find(m => m.id === plo.membershipId)
+
+        // Refrain from generate periods if membership already has periods which
+        // stem from passed pledge.
+        if (membership.periods.find(p => p.pledgeId === pledge.id)) {
+          debug('periods already generated', {
+            membershipId: membership.id,
+            pledgeId: pledge.id
+          })
+          return
+        }
 
         const { additionalPeriods } =
           await evaluate({
@@ -220,16 +232,18 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
       updatedAt: now
     })
 
-    try {
-      await enforceSubscriptions({
-        pgdb,
-        userId: user.id,
-        isNew: !user.verified,
-        subscribeToEditorialNewsletters: true
-      })
-    } catch (e) {
-      console.error('enforceSubscriptions failed in generateMemberships', e)
-    }
+    subscribeToEditorialNewsletters = true
+  }
+
+  try {
+    await enforceSubscriptions({
+      pgdb,
+      userId: user.id,
+      isNew: !user.verified,
+      subscribeToEditorialNewsletters
+    })
+  } catch (e) {
+    console.error('enforceSubscriptions failed in generateMemberships', e)
   }
 
   const cache = createCache({ prefix: `User:${user.id}` })

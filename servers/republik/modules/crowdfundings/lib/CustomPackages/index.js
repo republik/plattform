@@ -4,6 +4,7 @@ const uuid = require('uuid/v4')
 const Promise = require('bluebird')
 
 const { getPeriodEndingLast, getLastEndDate } = require('../utils')
+const { UNCANCELLED_GRACE_PERIOD_DAYS } = require('../Membership')
 const rules = require('./rules')
 
 // Put that one into database.
@@ -48,6 +49,14 @@ const findEligableMemberships = ({ memberships, user, ignoreClaimedMemberships =
       (!ignoreClaimedMemberships || (ignoreClaimedMemberships && !isClaimedMembership))
   })
 
+const findDormantMemberships = ({ memberships, user }) =>
+  findEligableMemberships({ memberships, user })
+    .filter(m =>
+      m.userId === user.id &&
+      m.active === false &&
+      (m.periods && m.periods.length === 0)
+    )
+
 // Checks if user has at least one active and one inactive membership,
 // considering latter as "dormant"
 const hasDormantMembership = ({ user, memberships }) => {
@@ -57,23 +66,17 @@ const hasDormantMembership = ({ user, memberships }) => {
       m.active === true
     )
 
-  const inactiveMemberships =
-    findEligableMemberships({ memberships, user })
-      .filter(m =>
-        m.userId === user.id &&
-        m.active === false &&
-        (m.periods && m.periods.length === 0)
-      )
+  const dormantMemberships = findDormantMemberships({ memberships, user })
 
-  inactiveMemberships.forEach(m => {
-    debug('hasDormantMembership.eligableMembership', {
+  dormantMemberships.forEach(m => {
+    debug('hasDormantMembership.dormantMemberships.membership', {
       id: m.id,
       membershipType: m.membershipType.name,
       package: m.pledge.package.name
     })
   })
 
-  return activeMembership && !!inactiveMemberships.length > 0
+  return activeMembership && !!dormantMemberships.length > 0
 }
 
 const evaluate = async ({
@@ -96,6 +99,18 @@ const evaluate = async ({
     membership,
     optionGroup: reward.type === 'MembershipType' ? membership.id : false,
     additionalPeriods: []
+  }
+
+  // Is user membership next to another active user membership?
+  // If there is an active membership, user should only be able to extend
+  // the active membership
+  if (
+    !membership.active &&
+    membership.user.id === package_.user.id &&
+    package_.user.memberships.find(m => m.active)
+  ) {
+    debug('membership next to an active membership')
+    return false
   }
 
   // Can membership.membershipType be extended?
@@ -134,15 +149,27 @@ const evaluate = async ({
     return false
   }
 
-  // If endDate is in past, pushed to now.
-  // This indicates that we're dealing with an expired membership.
-  if (lastEndDate < now) {
+  const lastEndDateWithGracePeriod =
+    moment(lastEndDate).add(UNCANCELLED_GRACE_PERIOD_DAYS, 'days')
+
+  /**
+   * Usually, we want to extend an existing series of periods. We therefor
+   * suggest a new period which start where the last one ends.
+   *
+   * In some cases this is not desired, and requires to set `lastEndDate`
+   * to `now` if...
+   * a) ... membership is active and `lastEndDate` plus a grace period is over
+   * b) ... membership is inactive and `lastEndDate` is over
+   *
+   */
+  if (
+    (membership.active && lastEndDateWithGracePeriod < now) ||
+    (!membership.active && lastEndDate < now)
+  ) {
     lastEndDate = now
   }
 
   // Add a regular period this packageOption would cause.
-  // It is a mere suggestion. Dates may differ upon payment.
-
   const beginEnd = {
     beginDate: lastEndDate,
     endDate: moment(lastEndDate).add(
@@ -428,6 +455,7 @@ const resolveMemberships = async ({ memberships, pgdb }) => {
 
 module.exports = {
   findEligableMemberships,
+  findDormantMemberships,
   hasDormantMembership,
   evaluate,
   resolvePackages,

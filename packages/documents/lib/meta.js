@@ -2,6 +2,28 @@ const visit = require('unist-util-visit')
 
 const { metaFieldResolver } = require('./resolve')
 
+// mean German, see http://iovs.arvojournals.org/article.aspx?articleid=2166061
+const WORDS_PER_MIN = 180
+
+const { SUPPRESS_READING_MINUTES } = process.env
+
+let suppressReadingMinutes
+
+try {
+  suppressReadingMinutes =
+    SUPPRESS_READING_MINUTES &&
+      JSON.parse(SUPPRESS_READING_MINUTES)
+
+  if (suppressReadingMinutes) {
+    console.warn(
+      'WARNING: Suppressing Document.meta.estimatedReadingMinutes with %O',
+      suppressReadingMinutes
+    )
+  }
+} catch (e) {
+  console.error('SUPPRESS_READING_MINUTES config parse error', e)
+}
+
 /**
  * Obtain credits from either {doc.content.children} or {doc.meta}.
  *
@@ -39,7 +61,7 @@ const getCredits = doc => {
  * @return {Object|null}     e.g. { mp3: true, aac: null, ogg: null }
  */
 const getAudioSource = doc => {
-  if (!doc.content && doc.meta && doc.meta.audioSource) {
+  if (!doc.content && doc.meta && doc.meta.audioSource) {
     return doc.meta.audioSource
   }
   const { audioSourceMp3, audioSourceAac, audioSourceOgg } = doc.content.meta
@@ -51,6 +73,54 @@ const getAudioSource = doc => {
 
   return audioSource
 }
+
+/**
+ * Getter of WORDS_PER_MINUTE
+ *
+ * @return {Number} Returns word count one might be able to read
+ */
+const getWordsPerMinute = () => WORDS_PER_MIN
+
+/**
+ * Returns an estimated amount of minutes, describing how much time a proficient
+ * reader needs to invest to read this article.
+ *
+ * @param  {Object}      doc An MDAST tree
+ * @return {Number}      Minutes to read content
+ */
+const getEstimatedReadingMinutes = doc => {
+  const count = (doc._storedFields && doc._storedFields['contentString.count']) || false
+
+  if (!count || count[0] < getWordsPerMinute()) {
+    return 0
+  }
+
+  return Math.round(count[0] / getWordsPerMinute())
+}
+
+const isReadingMinutesSuppressed = (resolvedFields) =>
+  suppressReadingMinutes && (
+    // Series
+    (
+      resolvedFields.series &&
+      resolvedFields.series.title &&
+      suppressReadingMinutes.series &&
+      suppressReadingMinutes.series.includes(
+        resolvedFields.series.title
+      )
+    ) ||
+
+    // Formats
+    (
+      resolvedFields.format &&
+      resolvedFields.format.meta &&
+      resolvedFields.format.meta.repoId &&
+      suppressReadingMinutes.formats &&
+      suppressReadingMinutes.formats.includes(
+        resolvedFields.format.meta.repoId
+      )
+    )
+  )
 
 /**
  * Prepares meta information and resolves linked documents in meta which are
@@ -71,12 +141,17 @@ const getMeta = doc => {
     ? metaFieldResolver(doc.content.meta, doc._all)
     : {}
 
+  const estimatedReadingMinutes = !isReadingMinutesSuppressed(resolvedFields)
+    ? getEstimatedReadingMinutes(doc)
+    : null
+
   // Populate {doc._meta}. Is used to recognize provided {doc} for which meta
   // information was retrieved already.
   doc._meta = {
     ...doc.content.meta,
     credits: getCredits(doc),
     audioSource: getAudioSource(doc),
+    estimatedReadingMinutes,
     ...resolvedFields
   }
 
@@ -84,5 +159,6 @@ const getMeta = doc => {
 }
 
 module.exports = {
-  getMeta
+  getMeta,
+  getWordsPerMinute
 }

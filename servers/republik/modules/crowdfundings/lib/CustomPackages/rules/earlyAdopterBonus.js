@@ -50,7 +50,16 @@ module.exports = ({ package_, packageOption, membership, payload, now }) => {
 
   const bonus = moment
     .duration(moment(beginDate).diff(now))
-    .add(1, 'day')
+
+  if (bonus.asDays() < 1) {
+    debug(
+      'bonus not positive (%d). rule does not apply.',
+      Math.floor(bonus.asDays())
+    )
+    return
+  }
+
+  bonus.add(1, 'day')
 
   debug('%d days granted. role applied.', Math.floor(bonus.asDays()))
 

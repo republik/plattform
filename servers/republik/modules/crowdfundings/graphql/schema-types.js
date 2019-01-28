@@ -6,6 +6,7 @@ scalar JSON
 extend type User {
   pledges: [Pledge!]!
   memberships: [Membership!]!
+  activeMembership: Membership
 
   paymentSources: [PaymentSource!]!
   hasChargableSource: Boolean
@@ -154,6 +155,9 @@ type Membership {
   initialInterval: MembershipTypeInterval!
   initialPeriods: Int!
   periods: [MembershipPeriod]!
+  needsProlong: Boolean!
+  endDate: DateTime
+  graceEndDate: DateTime
   overdue: Boolean!
   cancellations: [Cancellation!]!
   createdAt: DateTime!
@@ -164,6 +168,7 @@ enum MembershipPeriodKind {
   REGULAR
   BONUS # Bonus period upon checkout
   ADMIN # A bonus period granted via admins, supporter
+  CHANGEOVER # Period upon changeover from one membership to other
 }
 
 type MembershipPeriod {
@@ -376,6 +381,8 @@ type PostfinancePayment {
   id: ID!
   buchungsdatum: Date!
   valuta: Date!
+  konto: String!
+  iban: String!
   avisierungstext: String!
   gutschrift: Int!
   mitteilung: String

@@ -1,10 +1,11 @@
 const createDataLoader = require('@orbiting/backend-modules-dataloader')
+const isUUID = require('is-uuid')
 
 module.exports = (context) => ({
   clear: async (id) => {
-    const discussion =
-      await context.loaders.Discussion.byId.load(id) ||
-      await context.loaders.Discussion.byRepoId.load(id)
+    const discussion = id && isUUID.v4(id)
+      ? await context.loaders.Discussion.byId.load(id)
+      : await context.loaders.Discussion.byRepoId.load(id)
     if (discussion) {
       if (discussion.id) {
         context.loaders.Discussion.byId.clear(discussion.id)
@@ -13,6 +14,8 @@ module.exports = (context) => ({
         context.loaders.Discussion.byRepoId.clear(discussion.repoId)
       }
     }
+    context.loaders.Discussion.byId.clear(id)
+    context.loaders.Discussion.byRepoId.clear(id)
   },
   byId: createDataLoader(ids =>
     context.pgdb.public.discussions.find({
