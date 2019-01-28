@@ -484,6 +484,26 @@ mail.sendMembershipCancellation = async ({ email, name, endDate, membershipType,
   }, { pgdb })
 }
 
+mail.sendMembershipDeactivationNotice = async ({ membership, pgdb, t }) => {
+  const user = await pgdb.public.users.findOne({ id: membership.userId })
+  const sequenceNumber = membership.sequenceNumber
+
+  return sendMailTemplate({
+    to: user.email,
+    subject: t.first([
+      `api/email/membership_deactivation_notice/sequenceNumber/${!!sequenceNumber}/subject`,
+      `api/email/membership_deactivation_notice/subject`
+    ], { sequenceNumber }),
+    templateName: 'membership_deactivation_notice',
+    mergeLanguage: 'handlebars',
+    globalMergeVars: [
+      { name: 'sequence_number',
+        content: sequenceNumber
+      }
+    ]
+  }, { pgdb })
+}
+
 mail.prepareMembershipGiversProlongNotice = async ({ userId, membershipIds, informClaimersDays }, { t, pgdb }) => {
   const user = transformUser(
     await pgdb.public.users.findOne({ id: userId })
