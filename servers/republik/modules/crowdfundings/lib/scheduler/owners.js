@@ -68,7 +68,7 @@ const getBuckets = async ({ now }, { pgdb }) => {
       u.*,
       m.id AS "membershipId",
       m."sequenceNumber" AS "membershipSequenceNumber",
-      m."gracePeriodInterval" AS "membershipGracePeriodInterval",
+      m."graceInterval" AS "membershipGraceInterval",
       mt.name AS "membershipType"
     FROM
       memberships m
@@ -88,7 +88,7 @@ const getBuckets = async ({ now }, { pgdb }) => {
         ...transformUser(user),
         membershipId: user.membershipId,
         membershipSequenceNumber: user.membershipSequenceNumber,
-        membershipGracePeriodInterval: user.membershipGracePeriodInterval,
+        membershipGraceInterval: user.membershipGraceInterval,
         membershipType: user.membershipType
       }))
     )
@@ -169,11 +169,11 @@ const inform = async (args, context) => {
         user,
         prolongBeforeDate
       }) => {
-        const { id: userId, membershipGracePeriodInterval } = user
+        const { id: userId, membershipGraceInterval } = user
 
         const graceEndDate = moment(prolongBeforeDate)
-        Object.keys(membershipGracePeriodInterval).forEach(key => {
-          graceEndDate.add(membershipGracePeriodInterval[key], key)
+        Object.keys(membershipGraceInterval).forEach(key => {
+          graceEndDate.add(membershipGraceInterval[key], key)
         })
 
         const templatePayload = await context.mail.prepareMembershipOwnerNotice({

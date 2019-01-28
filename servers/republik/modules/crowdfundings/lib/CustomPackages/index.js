@@ -149,8 +149,8 @@ const evaluate = async ({
   }
 
   const lastEndDateWithGracePeriod = moment(lastEndDate)
-  Object.keys(membership.gracePeriodInterval).forEach(key => {
-    lastEndDateWithGracePeriod.add(membership.gracePeriodInterval[key], key)
+  Object.keys(membership.graceInterval).forEach(key => {
+    lastEndDateWithGracePeriod.add(membership.graceInterval[key], key)
   })
 
   /**

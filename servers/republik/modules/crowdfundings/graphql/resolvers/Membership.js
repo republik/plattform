@@ -91,8 +91,8 @@ module.exports = {
         }
 
         const graceEndDate = moment(getLastEndDate(periods))
-        Object.keys(membership.gracePeriodInterval).forEach(key => {
-          graceEndDate.add(membership.gracePeriodInterval[key], key)
+        Object.keys(membership.graceInterval).forEach(key => {
+          graceEndDate.add(membership.graceInterval[key], key)
         })
 
         return graceEndDate
