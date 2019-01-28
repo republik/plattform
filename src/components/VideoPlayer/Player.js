@@ -9,8 +9,11 @@ import { InlineSpinner } from '../Spinner'
 import { setupFullscreen } from './fullscreen'
 import Fullscreen from './Icons/Fullscreen'
 import Play from './Icons/Play'
+import Rewind from './Icons/Rewind'
 import Volume from './Icons/Volume'
 import Subtitles from './Icons/Subtitles'
+import { sansSerifRegular18 } from '../Typography/styles'
+import { getFormattedTime } from '../AudioPlayer/Player'
 
 const ZINDEX_VIDEOPLAYER_ICONS = 6
 const ZINDEX_VIDEOPLAYER_SCRUB = 3
@@ -91,12 +94,27 @@ const styles = {
     height: PROGRESS_HEIGHT,
     transition: 'bottom 200ms'
   }),
-  icons: css({
+  iconsLeft: css({
+    position: 'absolute',
+    zIndex: ZINDEX_VIDEOPLAYER_ICONS,
+    left: 10,
+    bottom: 10,
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    height: 24,
+  }),
+  iconsRight: css({
     position: 'absolute',
     zIndex: ZINDEX_VIDEOPLAYER_ICONS,
     right: 10,
     bottom: 10,
     cursor: 'pointer'
+  }),
+  time: css({
+    color: '#fff',
+    padding: 6,
+    ...sansSerifRegular18,
   }),
   scrub: css({
     zIndex: ZINDEX_VIDEOPLAYER_SCRUB,
@@ -121,6 +139,7 @@ class VideoPlayer extends Component {
     super(props)
 
     this.state = {
+      initialized: false,
       playing: false,
       progress: 0,
       muted: globalState.muted,
@@ -175,8 +194,16 @@ class VideoPlayer extends Component {
         loading: true
       }))
     }
+    this.setTime = (time = 0) => {
+      if (this.video.currentTime !== time) {
+        this.video.currentTime = time
+        this.updateProgress()
+      }
+    }
     this.onCanPlay = () => {
+      !this.state.initialized && this.setTime(this.props.startSeconds)
       this.setState(() => ({
+        initialized: true,
         loading: false
       }))
     }
@@ -363,6 +390,7 @@ class VideoPlayer extends Component {
     } : {}
 
     const fullWindow = this.props.fullWindow || !fullscreen
+    const enableRewind = this.video && this.video.currentTime > 0.1
 
     return (
       <div {...(
@@ -414,7 +442,15 @@ class VideoPlayer extends Component {
           >
             <Play />
           </div>
-          <div {...styles.icons}>
+          <div {...styles.iconsLeft}>
+            <div onClick={e => { e.stopPropagation(); enableRewind && this.setTime(0)}}>
+              <Rewind disabled={!enableRewind} />
+            </div>
+            <div {...styles.time}>
+              {`${getFormattedTime(this.video ? this.video.currentTime : '0:00')} / ${getFormattedTime(this.video ? this.video.duration : '–:––')}`}
+            </div>
+          </div>
+          <div {...styles.iconsRight}>
             {loading && <InlineSpinner size={25} />}{' '}
             {!!src.subtitles && (
               <span
@@ -512,7 +548,8 @@ CrossOrigin subtitles do not work in older browsers.'`
   attributes: PropTypes.object,
   // mandate full window instead of fullscreen API
   fullWindow: PropTypes.bool,
-  onFull: PropTypes.func
+  onFull: PropTypes.func,
+  startSeconds: PropTypes.number,
 }
 
 VideoPlayer.defaultProps = {

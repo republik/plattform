@@ -10,6 +10,8 @@ import { InlineSpinner } from '../Spinner'
 import { link, sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
 import Play from 'react-icons/lib/md/play-arrow'
 import Pause from 'react-icons/lib/md/pause'
+import Rewind from 'react-icons/lib/md/skip-previous'
+
 import Close from 'react-icons/lib/md/close'
 import Download from 'react-icons/lib/md/file-download'
 
@@ -28,6 +30,7 @@ const ICON_SPACING = 8
 
 const SIZE = {
   play: 30,
+  rewind: 26,
   close: 30,
   download: 22
 }
@@ -73,18 +76,20 @@ const styles = {
     cursor: 'pointer',
     height: `${CONTROLS_HEIGHT}px`
   }),
-  play: css({
-    ...buttonStyle,
+  buttons: css({
     position: 'absolute',
     top: '50%',
     left: 0,
     marginTop: -15,
     textAlign: 'center'
   }),
+  button: css({
+    ...buttonStyle,
+  }),
   download: css({
     position: 'absolute',
     top: '50%',
-    left: SIZE.play + ICON_SPACING,
+    left: SIZE.rewind + SIZE.play + ICON_SPACING,
     marginTop: -10,
     textAlign: 'center'
   }),
@@ -172,7 +177,7 @@ let globalState = {
   instances: []
 }
 
-const getFormattedTime = secs => {
+export const getFormattedTime = secs => {
   let totalSeconds = secs
   let hours = Math.floor(totalSeconds / 3600)
   totalSeconds %= 3600
@@ -197,7 +202,8 @@ class AudioPlayer extends Component {
       progress: 0,
       loading: false,
       buffered: null,
-      sourceError: false
+      sourceError: false,
+      initialized: false,
     }
 
     this.updateProgress = () => {
@@ -251,8 +257,16 @@ class AudioPlayer extends Component {
         loading: true
       }))
     }
+    this.setTime = (time = 0) => {
+      if (this.audio.currentTime !== time) {
+        this.audio.currentTime = time
+        this.updateProgress()
+      }
+    }
     this.onCanPlay = () => {
+      !this.state.initialized && this.setTime(this.props.startSeconds)
       this.setState(() => ({
+        initialized: true,
         playEnabled: true,
         loading: false,
         sourceError: false
@@ -410,7 +424,7 @@ class AudioPlayer extends Component {
     const { playEnabled, playing, progress, loading, buffered, sourceError } = this.state
     const isVideo = src.mp4 || src.hls
     const leftIconsWidth =
-      SIZE.play +
+      SIZE.rewind + SIZE.play +
       (download ? SIZE.download + ICON_SPACING : 0)
     const rightIconsWidth = closeHandler ? SIZE.close : 0
     const uiTextStyle = {
@@ -461,15 +475,23 @@ class AudioPlayer extends Component {
         <div {...styles.controls} style={
           {top: Math.ceil((height - CONTROLS_HEIGHT) / 2), left: controlsPadding, right: controlsPadding}
         }>
-          <button
-            {...styles.play}
-            onClick={playEnabled ? this.toggle : null}
-            title={t(`styleguide/AudioPlayer/${playing ? 'pause' : 'play'}`)}
-            aria-live='assertive'
-          >
-            {!playing && <Play size={SIZE.play} fill={playEnabled ? '#000' : colors.disabled} />}
-            {playing && <Pause size={SIZE.play} fill="#000" />}
-          </button>
+          <div {...styles.buttons}>
+            <button
+              {...styles.button}
+              onClick={playEnabled ? () => this.setTime(0) : null}
+            >
+              <Rewind size={SIZE.rewind} fill={(playEnabled && progress > 0) ? '#000' : colors.disabled}/>
+            </button>
+            <button
+              {...styles.button}
+              onClick={playEnabled ? this.toggle : null}
+              title={t(`styleguide/AudioPlayer/${playing ? 'pause' : 'play'}`)}
+              aria-live='assertive'
+            >
+              {!playing && <Play size={SIZE.play} fill={playEnabled ? '#000' : colors.disabled} />}
+              {playing && <Pause size={SIZE.play} fill="#000" />}
+            </button>
+          </div>
           {download && (
             <div {...styles.download}>
               {playEnabled && (
@@ -553,7 +575,8 @@ AudioPlayer.propTypes = {
   download: PropTypes.bool,
   scrubberPosition: PropTypes.oneOf(['top', 'bottom']),
   timePosition: PropTypes.oneOf(['left', 'right']),
-  controlsPadding: PropTypes.number
+  controlsPadding: PropTypes.number,
+  time: PropTypes.number,
 }
 
 AudioPlayer.defaultProps = {
@@ -564,7 +587,8 @@ AudioPlayer.defaultProps = {
   download: false,
   scrubberPosition: 'top',
   timePosition: 'right',
-  controlsPadding: 0
+  controlsPadding: 0,
+  startSeconds: 0,
 }
 
 export default AudioPlayer
