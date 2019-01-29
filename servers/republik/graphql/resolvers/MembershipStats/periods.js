@@ -72,8 +72,8 @@ const getMembershipsEndingInRange = (minEndDate, maxEndDate, membershipTypes, pg
           ON
             m.id = mc."membershipId" AND
             mc.category != 'SYSTEM' AND
-            mc."createdAt" <= :maxEndDate::timestamptz + m."gracePeriodInterval" AND
-            (mc."revokedAt" IS NULL OR mc."revokedAt" > :maxEndDate::timestamptz + m."gracePeriodInterval")
+            mc."createdAt" <= :maxEndDate::timestamptz + m."graceInterval" AND
+            (mc."revokedAt" IS NULL OR mc."revokedAt" > :maxEndDate::timestamptz + m."graceInterval")
       LEFT JOIN
         "memberships" sm ON m."succeedingMembershipId" = sm.id
       WHERE

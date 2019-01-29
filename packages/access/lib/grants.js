@@ -3,6 +3,7 @@ const moment = require('moment')
 const validator = require('validator')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
+const { applyPgInterval: { add: addInterval } } = require('@orbiting/backend-modules-utils')
 
 const campaignsLib = require('./campaigns')
 const constraints = require('./constraints')
@@ -76,21 +77,12 @@ const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
     ))
   }
 
-  const beginBefore = moment()
-
-  // '30 days 12 hours'::interval in Postgres database is retrieved as
-  // PostgresInterval object { days: 30, hours: 12 } in here. Iterating through
-  // each object key and adding count.
-  Object.keys(campaign.grantClaimableInterval).forEach(unit => {
-    beginBefore.add(campaign.grantClaimableInterval[unit], unit)
-  })
-
   const grant = await pgdb.public.accessGrants.insertAndGet({
     granterUserId: granter.id,
     email,
     message,
     accessCampaignId: campaign.id,
-    beginBefore
+    beginBefore: addInterval(moment(), campaign.grantClaimableInterval)
   })
 
   eventsLib.log(grant, 'invite', pgdb)
@@ -374,11 +366,7 @@ const beginGrant = async (grant, recipient, pgdb) => {
   const campaign = await campaignsLib.findOne(grant.accessCampaignId, pgdb)
   const now = moment()
   const beginAt = now.clone()
-  const endAt = now.clone()
-
-  Object.keys(campaign.grantPeriodInterval).forEach(key => {
-    endAt.add(campaign.grantPeriodInterval[key], key)
-  })
+  const endAt = addInterval(beginAt, campaign.grantPeriodInterval)
 
   const updateFields = {
     recipientUserId: recipient.id,

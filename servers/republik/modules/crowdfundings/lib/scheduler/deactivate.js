@@ -19,7 +19,7 @@ const deactivate = async (
       ( renew = false AND "endDate" < :cancelledEndDate )
       OR
       -- Uncancelled memberships (flagged to renew, but were not)
-      ( renew = true AND "endDate" + "gracePeriodInterval" < :cancelledEndDate )
+      ( renew = true AND "endDate" + "graceInterval" < :cancelledEndDate )
   `, { cancelledEndDate })
 
   debug({
