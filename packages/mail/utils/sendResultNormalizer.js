@@ -21,10 +21,17 @@ module.exports = (shouldSend, sendFunc) =>
         status: 'SENT'
       }
     }
+
+    if (results && typeof results === 'object' && results.status === 'error') {
+      return {
+        status: 'FAILED',
+        error: results
+      }
+    }
+
     const result = results && results[0]
-    const wasSent = (
-      result && result.status === 'sent' && !result.reject_reason
-    )
+    const wasSent = result && result.status === 'sent' && !result.reject_reason
+
     return {
       result,
       status: wasSent
