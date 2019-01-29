@@ -92,9 +92,6 @@ const usersQuery = gql`
         createdAt
         updatedAt
         activeMembership {
-          needsProlong
-          endDate
-          graceEndDate
           type {
             name
           }
