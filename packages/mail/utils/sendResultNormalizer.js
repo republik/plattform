@@ -30,7 +30,7 @@ module.exports = (shouldSend, sendFunc) =>
     }
 
     const result = results && results[0]
-    const wasSent = result && result.status === 'sent' && !result.reject_reason
+    const wasSent = !!result && result.status === 'sent' && !result.reject_reason
 
     return {
       result,
