@@ -484,19 +484,31 @@ mail.sendMembershipCancellation = async ({ email, name, endDate, membershipType,
   }, { pgdb })
 }
 
-mail.sendMembershipDeactivationNotice = async ({ membership, pgdb, t }) => {
+mail.sendMembershipDeactivated = async ({ membership, pgdb, t }) => {
   const user = await pgdb.public.users.findOne({ id: membership.userId })
+  const type = await pgdb.public.membershipTypes.findOne({ id: membership.membershipTypeId })
+
+  const cancelState = membership.renew ? 'uncancelled' : 'cancelled'
+  const templateName = `membership_deactivated_${type.name.toLowerCase()}_${cancelState}`
+  const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
   const sequenceNumber = membership.sequenceNumber
 
   return sendMailTemplate({
     to: user.email,
     subject: t.first([
-      `api/email/membership_deactivation_notice/sequenceNumber/${!!sequenceNumber}/subject`,
-      `api/email/membership_deactivation_notice/subject`
+      `api/email/${templateName}/sequenceNumber/${!!sequenceNumber}/subject`,
+      `api/email/${templateName}/subject`,
+      `api/email/membership_deactivated/subject`
     ], { sequenceNumber }),
-    templateName: 'membership_deactivation_notice',
+    templateName,
     mergeLanguage: 'handlebars',
     globalMergeVars: [
+      { name: 'prolong_url',
+        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`
+      },
+      { name: 'account_abo_url',
+        content: `${FRONTEND_BASE_URL}/konto#abos`
+      },
       { name: 'sequence_number',
         content: sequenceNumber
       }

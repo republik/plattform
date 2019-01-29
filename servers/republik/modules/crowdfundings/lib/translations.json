@@ -1,5 +1,5 @@
 {
-  "updated": "2019-01-14T13:55:46.693Z",
+  "updated": "2019-01-29T20:29:45.550Z",
   "title": "live",
   "data": [
     {
@@ -485,6 +485,18 @@
     {
       "key": "api/email/membership_owner_prolong_notice_0/subject",
       "value": "Ihre Abonnementsrechnung"
+    },
+    {
+      "key": "api/email/membership_deactivated_abo_uncancelled/sequenceNumber/true/subject",
+      "value": "Ihr Abonnement Nr. {sequenceNumber} wurde deaktiviert"
+    },
+    {
+      "key": "api/email/membership_deactivated_benefactor_abo_uncancelled/sequenceNumber/true/subject",
+      "value": "Ihr Abonnement Nr. {sequenceNumber} wurde deaktiviert"
+    },
+    {
+      "key": "api/email/membership_deactivated/subject",
+      "value": "Ihr Abonnement wurde deaktiviert"
     }
   ]
 }
