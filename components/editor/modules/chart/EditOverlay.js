@@ -60,7 +60,7 @@ export default (props) => (
           </Interaction.P>
           <Interaction.P>
             <Label>Typ</Label><br />
-            {['Bar', 'TimeBar', 'Lollipop', 'Line', 'Slope', 'ScatterPlot'].map(type => {
+            {['Bar', 'TimeBar', 'Lollipop', 'Line', 'Slope', 'ScatterPlot', 'SwissMap'].map(type => {
               const checked = config.type === type
               return (
                 <Fragment key={type}>
