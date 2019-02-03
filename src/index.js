@@ -629,6 +629,18 @@ ReactDOM.render(
               t
             },
             src: require('./components/Chart/ScatterPlots.docs.md')
+          },
+          {
+            path: '/charts/maps',
+            title: 'Maps',
+            imports: {
+              ...require('./components/Typography'),
+              ChartTitle: require('./components/Chart').ChartTitle,
+              ChartLead: require('./components/Chart').ChartLead,
+              CsvChart: require('./components/Chart/Csv'),
+              t
+            },
+            src: require('./components/Chart/Maps.docs.md')
           }
         ]
       },

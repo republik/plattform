@@ -7,6 +7,7 @@ import Bar, { Lollipop } from './Bars'
 import TimeBar from './TimeBars'
 import { Line, Slope } from './Lines'
 import ScatterPlot from './ScatterPlots'
+import { SwissMap } from './Maps';
 
 import colors from '../../theme/colors'
 
@@ -19,10 +20,11 @@ export const ReactCharts = {
   TimeBar,
   Line,
   Slope,
-  ScatterPlot
+  ScatterPlot,
+  SwissMap
 }
 
-const createRanges = ({neutral, sequential3, opposite3, discrete}) => {
+const createRanges = ({neutral, sequential, sequential3, opposite3, discrete}) => {
   const oppositeReversed = [].concat(opposite3).reverse()
   return {
     diverging1: [sequential3[1], opposite3[1]],
@@ -30,6 +32,7 @@ const createRanges = ({neutral, sequential3, opposite3, discrete}) => {
     diverging2: [...sequential3.slice(0, 2), ...oppositeReversed.slice(0, 2)],
     diverging3: [...sequential3, ...oppositeReversed],
     sequential3,
+    sequential: sequential,
     discrete
   }
 }
