@@ -1,3 +1,24 @@
+## SwissMap
+
+`features.url` is expected to point to an topojson file with WGS84 coordinates (EPSG:4326). A rotated mercator projection is used to look like CH1903 while also allowing to plot regular coordinates and use `projection.fitSize` for responsive design.
+
+Convert a CH1903 shape file:
+
+```
+ogr2ogr -t_srs EPSG:4326 -s_srs EPSG:21781 -where "KT != '0'" ./wgs84.shp ./ch1903.shp
+
+topojson \
+    -o ./topo.json \
+    --no-pre-quantization \
+    --post-quantization=1e5 \
+    --simplify=1e-9 \
+    --id-property ID \
+    -p name=NAME \
+    -- ./wgs84.shp
+```
+
+### Municipalities Example
+
 ```react
 <div>
   <ChartTitle>Zersiedelungsindex 2010</ChartTitle>
