@@ -103,20 +103,27 @@ export default (props, geoJson) => {
   }
 
   const projection = props.getProjection()
+  const geoPathGenerator = geoPath().projection(projection)
 
-  const height = props.height
+
   const paddingTop = mini ? 15 : PADDING_TOP
   const paddingBottom = mini ? 0 : PADDING_BOTTOM
-  const innerHeight = mini ? (height - paddingTop - paddingBottom) : height
-
-  const geoPathGenerator = geoPath().projection(projection)
   let mapWidth
+  let innerHeight
+
+  if (props.height) {
+    const height = props.height
+    innerHeight = mini ? (height - paddingTop - paddingBottom) : height
+    mapWidth = innerHeight * props.widthRatio
+  } else {
+    mapWidth = width
+    innerHeight = mapWidth * props.heightRatio
+  }
   if (geoJson) {
     projection.fitSize([width, innerHeight], geoJson)
     const bounds = geoPathGenerator.bounds(geoJson)
     mapWidth = bounds[1][0] - bounds[0][0]
-  } else {
-    mapWidth = innerHeight * props.widthRatio
+    innerHeight = bounds[1][1] - bounds[0][1]
   }
 
   const columnPadding = mini ? 12 : COLUMN_PADDING

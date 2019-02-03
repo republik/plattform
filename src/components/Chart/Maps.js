@@ -202,11 +202,11 @@ class GenericMap extends Component {
     } = this.state.layout
 
     let legendStyle
-    if (paddingRight >= 110 || mini) {
+    if (mapSpace * 0.2 >= 110 || mini) {
       legendStyle = {
         position: 'absolute',
-        top: mini ? 12 : 80,
-        left: paddingLeft + mapSpace
+        top: mini ? 12 : paddingTop,
+        left: paddingLeft + mapSpace * 0.8 + 10
       }
     } else {
       legendStyle = {paddingLeft: paddingLeft}
@@ -345,11 +345,14 @@ GenericMap.propTypes = {
   children: PropTypes.node,
   values: PropTypes.array.isRequired,
   width: PropTypes.number.isRequired,
+  // full width map, dynamic height
+  heightRatio: PropTypes.number.isRequired,
+  // static height
+  height: PropTypes.number,
   // inner map width ratio to size canvas until geo data is loaded
-  widthRatio: PropTypes.number.isRequired,
+  widthRatio: PropTypes.number,
   leftAlign: PropTypes.bool,
   mini: PropTypes.bool,
-  height: PropTypes.number.isRequired,
   column: PropTypes.string,
   columnSort: PropTypes.oneOf(['none', 'descending']),
   columnFilter: PropTypes.arrayOf(PropTypes.shape({
@@ -392,9 +395,8 @@ GenericMap.propTypes = {
 GenericMap.defaultProps = {
   numberFormat: 's',
   columns: 1,
-  height: 290,
-  widthRatio: 1,
   unit: '',
+  heightRatio: 1,
   colorLegend: true,
   points: false,
   choropleth: false,
@@ -409,5 +411,5 @@ export const SwissMap = props => <GenericMap {...props} />
 SwissMap.defaultProps = {
   getProjection: () => geoMercator().rotate([-7.439583333333333, -46.95240555555556]),
   choropleth: true,
-  widthRatio: 1.57
+  heightRatio: 0.63
 }
