@@ -16,6 +16,7 @@ module.exports = (server) => {
     const { url, width, height, zoomFactor } = req.query
 
     const allowed =
+      url &&
       whitelistedUrls &&
       !!whitelistedUrls.find(whiteUrl => url.indexOf(whiteUrl) === 0)
 
