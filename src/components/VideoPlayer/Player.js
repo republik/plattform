@@ -156,6 +156,9 @@ class VideoPlayer extends Component {
       this.setState(() => {
         const progress = video.currentTime / video.duration
         this.props.onProgress && this.props.onProgress(progress)
+        this.context.saveMediaProgress && this.context.saveMediaProgress(
+          this.props.mediaId, video.currentTime
+        )
         return {
           progress
         }
@@ -201,7 +204,19 @@ class VideoPlayer extends Component {
       }
     }
     this.onCanPlay = () => {
-      !this.state.initialized && this.setTime(this.props.startSeconds)
+
+      if (!this.state.initialized) {
+        let startSeconds = this.props.startSeconds
+        if (this.props.mediaId && this.context.getMediaProgress) {
+          const startMs = this.context.getMediaProgress(this.props.mediaId)
+          if (startMs) {
+            // TODO: remove conversion once backend supports seconds/float.
+            startSeconds = startMs / 1000
+          }
+        }
+        this.setTime(startSeconds)
+      }
+
       this.setState(() => ({
         initialized: true,
         loading: false
@@ -550,6 +565,11 @@ CrossOrigin subtitles do not work in older browsers.'`
   fullWindow: PropTypes.bool,
   onFull: PropTypes.func,
   startSeconds: PropTypes.number,
+}
+
+VideoPlayer.contextTypes = {
+  getMediaProgress: PropTypes.func,
+  saveMediaProgress: PropTypes.func
 }
 
 VideoPlayer.defaultProps = {
