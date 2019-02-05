@@ -1,10 +1,30 @@
+const moment = require('moment')
+const _ = require('lodash')
+
 const { transformUser, Roles } = require('@orbiting/backend-modules-auth')
+const { applyPgInterval: { add: addInterval } } = require('@orbiting/backend-modules-utils')
+
+const { getLastEndDate } = require('../../lib/utils')
+const { getCustomPackages } = require('../../lib/User')
+const createCache = require('../../lib/cache')
+
+const { DISABLE_RESOLVER_USER_CACHE } = process.env
+const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
+
+const createMembershipCache = (membership, prop) =>
+  createCache({
+    prefix: `User:${membership.userId}`,
+    key: `membership:${membership.id}:${prop}`,
+    ttl: QUERY_CACHE_TTL_SECONDS,
+    disabled: DISABLE_RESOLVER_USER_CACHE
+  })
 
 module.exports = {
   async type (membership, args, { pgdb }) {
-    return pgdb.public.membershipTypes.findOne({
-      id: membership.membershipTypeId
-    })
+    return createMembershipCache(membership, 'type')
+      .cache(async () => pgdb.public.membershipTypes.findOne({
+        id: membership.membershipTypeId
+      }))
   },
   async overdue (membership, args, { pgdb }) {
     if (!membership.active || !membership.latestPaymentFailedAt) {
@@ -19,6 +39,65 @@ module.exports = {
       membership.latestPaymentFailedAt &&
       membership.latestPaymentFailedAt > latest.endDate
     )
+  },
+  async needsProlong (membership, args, { pgdb, user: me }) {
+    // Prolong not needed if a) membership is inactive, b) membership is not set
+    // to be renewed or c) membership is set to "auto pay".
+    if (!membership.active || !membership.renew || membership.autoPay) {
+      return false
+    }
+
+    return createMembershipCache(membership, 'needsProlong')
+      .cache(async () => {
+        const user = await pgdb.public.users.findOne({ id: membership.userId })
+        const customPackages = await getCustomPackages({ user, pgdb })
+
+        const pickedMembershipIds =
+          customPackages.map(p => p.options.map(o => o.membership.id))
+        const prolongableMembershipIds =
+          _(pickedMembershipIds).flattenDeep().uniq().value()
+
+        return prolongableMembershipIds.includes(membership.id)
+      })
+  },
+  async endDate (membership, args, { pgdb, user: me }) {
+    if (!membership.active) {
+      return null
+    }
+
+    return createMembershipCache(membership, 'endDate')
+      .cache(async () => {
+        const periods = await pgdb.public.membershipPeriods.find({
+          membershipId: membership.id
+        })
+
+        if (periods.length < 1) {
+          return null
+        }
+
+        return moment(getLastEndDate(periods))
+      })
+  },
+  async graceEndDate (membership, args, { pgdb, user: me }) {
+    if (!membership.active) {
+      return null
+    }
+
+    return createMembershipCache(membership, 'graceEndDate')
+      .cache(async () => {
+        const periods = await pgdb.public.membershipPeriods.find({
+          membershipId: membership.id
+        })
+
+        if (periods.length < 1) {
+          return null
+        }
+
+        return addInterval(
+          getLastEndDate(periods),
+          membership.graceInterval
+        )
+      })
   },
   async pledge (membership, args, { pgdb, user: me }) {
     const pledge =

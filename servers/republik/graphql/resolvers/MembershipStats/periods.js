@@ -2,7 +2,6 @@ const moment = require('moment')
 const uniqBy = require('lodash/uniqBy')
 const { ascending } = require('d3-array')
 const debug = require('debug')('stats:periods')
-const { UNCANCELLED_GRACE_PERIOD_DAYS } = require('../../../modules/crowdfundings/lib/scheduler/deactivate.js')
 
 const createCache = require('../../../modules/crowdfundings/lib/cache')
 const QUERY_CACHE_TTL_SECONDS = 60 * 5 // 5 min
@@ -14,7 +13,7 @@ const {
 const DORMANT_MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
 
 // returns memberships with all its periods where one period ends in given range
-const getMembershipsEndingInRange = (minEndDate, maxEndDate, maxCancellationDate, membershipTypes, pgdb) =>
+const getMembershipsEndingInRange = (minEndDate, maxEndDate, membershipTypes, pgdb) =>
   pgdb.query(`
     WITH dormant_membership_user_ids AS (
       SELECT
@@ -73,8 +72,8 @@ const getMembershipsEndingInRange = (minEndDate, maxEndDate, maxCancellationDate
           ON
             m.id = mc."membershipId" AND
             mc.category != 'SYSTEM' AND
-            mc."createdAt" <= :maxCancellationDate AND
-            (mc."revokedAt" IS NULL OR mc."revokedAt" > :maxCancellationDate)
+            mc."createdAt" <= :maxEndDate::timestamptz + m."graceInterval" AND
+            (mc."revokedAt" IS NULL OR mc."revokedAt" > :maxEndDate::timestamptz + m."graceInterval")
       LEFT JOIN
         "memberships" sm ON m."succeedingMembershipId" = sm.id
       WHERE
@@ -85,7 +84,6 @@ const getMembershipsEndingInRange = (minEndDate, maxEndDate, maxCancellationDate
     PARKING_USER_ID,
     minEndDate,
     maxEndDate,
-    maxCancellationDate,
     membershipTypes
   })
 
@@ -149,7 +147,6 @@ module.exports = async (_, args, context) => {
   } = args
   const minEndDate = moment(args.minEndDate).startOf('day')
   const maxEndDate = moment(args.maxEndDate).endOf('day')
-  const maxCancellationDate = moment(maxEndDate).add(UNCANCELLED_GRACE_PERIOD_DAYS, 'days')
   const queryId = `${minEndDate.toISOString(true)}-${maxEndDate.toISOString(true)}_${membershipTypes.join('-')}`
 
   return createCache({
@@ -157,13 +154,13 @@ module.exports = async (_, args, context) => {
     key: queryId,
     ttl: QUERY_CACHE_TTL_SECONDS
   })
-    .cache(() => getPeriods({minEndDate, maxEndDate, maxCancellationDate, membershipTypes, queryId, context}))
+    .cache(() => getPeriods({minEndDate, maxEndDate, membershipTypes, queryId, context}))
 }
 
-const getPeriods = async ({ minEndDate, maxEndDate, maxCancellationDate, membershipTypes, queryId, context }) => {
+const getPeriods = async ({ minEndDate, maxEndDate, membershipTypes, queryId, context }) => {
   const { pgdb } = context
 
-  const allMemberships = await getMembershipsEndingInRange(minEndDate, maxEndDate, maxCancellationDate, membershipTypes, pgdb)
+  const allMemberships = await getMembershipsEndingInRange(minEndDate, maxEndDate, membershipTypes, pgdb)
 
   const membershipsInNeedForProlong = allMemberships
     .map(m => ({
@@ -241,7 +238,6 @@ const getPeriods = async ({ minEndDate, maxEndDate, maxCancellationDate, members
   debug({
     minEndDate: minEndDate.toISOString(true),
     maxEndDate: maxEndDate.toISOString(true),
-    maxCancellationDate: maxCancellationDate.toISOString(true),
     total: membershipsInNeedForProlong.length,
     membershipsProlonged: membershipsProlonged.length,
     membershipsCancelled: membershipsCancelled.length

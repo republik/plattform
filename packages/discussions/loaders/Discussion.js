@@ -46,5 +46,26 @@ module.exports = (context) => ({
           }))
         )
     )
-  }
+  },
+  byIdCommentsCount: createDataLoader(
+    ids =>
+      context.pgdb.query(`
+        SELECT
+          "discussionId",
+          COUNT(*) AS count
+        FROM
+          comments
+        WHERE
+          ARRAY["discussionId"] && :ids
+        GROUP BY
+          "discussionId"
+      `, {
+        ids
+      }),
+    null,
+    (key, rows) => {
+      const row = rows.find(row => row.discussionId === key)
+      return (row && row.count) || 0
+    }
+  )
 })
