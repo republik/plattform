@@ -48,6 +48,7 @@ module.exports = (server) => {
       response: res,
       stream: result.body,
       headers: result.headers,
+      path,
       options: {
         ...req.query,
         webp: !!webp,
