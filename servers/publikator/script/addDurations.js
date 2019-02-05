@@ -54,7 +54,7 @@ const transform = async (doc, context) => {
     // simple republish will augment audioSource with duration
     (doc.meta && doc.meta.audioSource && !doc.meta.audioSource.durationMs)
   ) {
-    return 'hinzugefügt: abspieldauer video/audio'
+    return 'hinzugefügt: Spieldauer video/audio'
   }
   return false
 }
