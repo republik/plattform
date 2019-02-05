@@ -39,8 +39,15 @@ const transform = async (doc, context) => {
           } catch (e) {
             console.log('error getEmbed', e, { newEmbed, node })
           }
-          if (newEmbed && newEmbed.durationMs && !node.data.durationMs) {
+          if (
+            newEmbed &&
+            (
+              (newEmbed.durationMs && !node.data.durationMs) ||
+              (newEmbed.mediaId && !node.data.mediaId)
+            )
+          ) {
             node.data.durationMs = newEmbed.durationMs
+            node.data.mediaId = newEmbed.mediaId
             resolve(true)
           }
         }
@@ -54,7 +61,7 @@ const transform = async (doc, context) => {
     // simple republish will augment audioSource with duration
     (doc.meta && doc.meta.audioSource && !doc.meta.audioSource.durationMs)
   ) {
-    return 'hinzugefügt: Spieldauer video/audio'
+    return 'hinzugefügt: Spieldauer und mediaId für video/audio'
   }
   return false
 }

@@ -155,9 +155,5 @@ module.exports = {
       }
     })
     return embeds
-      .map(e => ({
-        ...e,
-        mediaId: `${e.__typename}-${e.id}`
-      }))
   }
 }
