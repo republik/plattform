@@ -44,6 +44,7 @@ const getVimeoVideoById = async id => {
 
   return {
     platform: 'vimeo',
+    id,
     createdAt: new Date(response.created_time),
     retrievedAt: new Date(),
     thumbnail: thumbnail,

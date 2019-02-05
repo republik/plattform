@@ -40,7 +40,6 @@ module.exports = async (_, args, { user, t }) => {
 
     return {
       __typename: embedType,
-      id,
       ...vimeoData
     }
   }
@@ -50,7 +49,6 @@ module.exports = async (_, args, { user, t }) => {
 
     return {
       __typename: embedType,
-      id,
       ...documentCloudData
     }
   }
