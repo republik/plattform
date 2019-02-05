@@ -1,10 +1,35 @@
 const test = require('tape-async')
-const { add, subtract } = require('../applyPgInterval')
+const { mutate, add, subtract } = require('../applyPgInterval')
 
 const moment = require('moment')
 const postgresInterval = require('postgres-interval')
 
+test('applyPgInterval.mutate', async (t) => {
+  t.plan(11)
+
+  const a = mutate('2018-01-01', postgresInterval('1 mon 15 days'), 'add')
+  t.ok(a instanceof moment, 'returns moment object')
+  t.equal(a.unix(), moment('2018-02-16').unix(), 'add month and 15 days')
+
+  const b = mutate('2018-01-01', postgresInterval('1 mon 15 days'), 'subtract')
+  t.ok(b instanceof moment, 'returns moment object')
+  t.equal(b.unix(), moment('2017-11-16').unix(), 'subtract month')
+
+  t.throws(() => mutate('2018-01-01'), /mutation missing/, 'mutation missing')
+  t.throws(() => mutate('2018-01-01', null, 'foobar'), /not supported/, 'mutation not supported')
+
+  t.throws(() => mutate('2018-01-01', null, 'add'), /interval missing/, 'interval missing')
+  t.throws(() => mutate('2018-01-01', 'not-an-interval', 'add'), /not an object/, 'interval not an object')
+  t.throws(() => mutate('2018-01-01', {}, 'add'), /has no keys/, 'interval object has no keys')
+  t.throws(() => mutate('2018-01-01', { foo: 'bar' }, 'add'), /contains invalid keys/, 'interval contains invalid keys')
+  t.throws(() => mutate('2018-01-01', { months: 10, foo: 'bar' }, 'add'), /contains invalid keys/, 'interval contains invalid keys')
+
+  t.end()
+})
+
 test('applyPgInterval.add', async (t) => {
+  t.plan(19)
+
   const a = add('2018-01-01', postgresInterval('1 mon'))
   t.ok(a instanceof moment, 'returns moment object')
   t.equal(a.unix(), moment('2018-02-01').unix(), 'add month')
@@ -25,13 +50,26 @@ test('applyPgInterval.add', async (t) => {
   t.ok(e instanceof moment, 'returns moment object')
   t.equal(e.unix(), moment('2018-02-01').unix(), 'accepts moment()')
 
-  t.throws(() => add('2018-01-01', 'not-an-interval'), /unrecognized.*PostgresInterval/, 'interval unrecognized')
-  t.throws(() => add('2018-01-01'), /missing.*PostgresInterval/, 'interval missing')
+  const f = add(moment('2018-01-01'), { months: 1 })
+  t.ok(f instanceof moment, 'returns moment object')
+  t.equal(f.unix(), moment('2018-02-01').unix(), 'accepts object interval { months }')
+
+  const g = add(moment('2018-01-01'), { months: 1, hours: 12, minutes: 30 })
+  t.ok(g instanceof moment, 'returns moment object')
+  t.equal(g.unix(), moment('2018-02-01 12:30:00').unix(), 'accepts object interval { months, hours, minutes }')
+
+  t.throws(() => add('2018-01-01'), /interval missing/, 'interval missing')
+  t.throws(() => add('2018-01-01', 'not-an-interval'), /not an object/, 'interval not an object')
+  t.throws(() => add('2018-01-01', {}), /has no keys/, 'interval object has no keys')
+  t.throws(() => add('2018-01-01', { foo: 'bar' }), /contains invalid keys/, 'interval contains invalid keys')
+  t.throws(() => add('2018-01-01', { months: 10, foo: 'bar' }), /contains invalid keys/, 'interval contains invalid keys')
 
   t.end()
 })
 
-test.only('applyPgInterval.subtract', async (t) => {
+test('applyPgInterval.subtract', async (t) => {
+  t.plan(19)
+
   const a = subtract('2018-01-01', postgresInterval('1 mon'))
   t.ok(a instanceof moment, 'returns moment object')
   t.equal(a.unix(), moment('2017-12-01').unix(), 'substract month')
@@ -52,8 +90,19 @@ test.only('applyPgInterval.subtract', async (t) => {
   t.ok(e instanceof moment, 'returns moment object')
   t.equal(e.unix(), moment('2017-12-01').unix(), 'accepts moment()')
 
-  t.throws(() => subtract('2018-01-01', 'not-an-interval'), /unrecognized.*PostgresInterval/, 'interval unrecognized')
-  t.throws(() => subtract('2018-01-01'), /missing.*PostgresInterval/, 'interval missing')
+  const f = subtract(moment('2018-01-01'), { months: 1 })
+  t.ok(f instanceof moment, 'returns moment object')
+  t.equal(f.unix(), moment('2017-12-01').unix(), 'accepts object interval { months }')
+
+  const g = subtract(moment('2018-01-01'), { months: 1, hours: 12, minutes: 30 })
+  t.ok(g instanceof moment, 'returns moment object')
+  t.equal(g.unix(), moment('2017-11-30 11:30:00').unix(), 'accepts object interval { months, hours, minutes }')
+
+  t.throws(() => subtract('2018-01-01'), /interval missing/, 'interval missing')
+  t.throws(() => subtract('2018-01-01', 'not-an-interval'), /not an object/, 'interval not an object')
+  t.throws(() => subtract('2018-01-01', {}), /has no keys/, 'interval object has no keys')
+  t.throws(() => subtract('2018-01-01', { foo: 'bar' }), /contains invalid keys/, 'interval contains invalid keys')
+  t.throws(() => subtract('2018-01-01', { months: 10, foo: 'bar' }), /contains invalid keys/, 'interval contains invalid keys')
 
   t.end()
 })
