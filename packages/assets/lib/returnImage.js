@@ -102,7 +102,7 @@ module.exports = async ({
 
     let pipeline
     if (
-      (mime && mime.indexOf('image') === 0 && (mime !== 'image/gif' || forceFormat)) &&
+      (mime && mime.indexOf('image') === 0 && ((mime !== 'image/gif' && mime !== 'image/svg+xml') || forceFormat)) &&
       (width || height || bw || webp || isJPEG || forceFormat)
     ) {
       pipeline = sharp()
