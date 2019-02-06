@@ -10,17 +10,19 @@ import createDossierSchema from '@project-r/styleguide/lib/templates/Dossier'
 
 import { t } from '../../lib/withT'
 
+import dynamicComponentRequire from '../editor/modules/dynamiccomponent/require'
+
 const schemas = {
   // first is default schema for the editor
   // - for Project R this should be the newsletter
   newsletter: newsletterSchema,
   editorialNewsletter: editorialNewsletterSchema(),
   neutrum: neutrumSchema,
-  article: createArticleSchema({t}),
-  front: createFrontSchema({t}),
-  format: createFormatSchema({t}),
-  discussion: createDiscussionSchema({t}),
-  dossier: createDossierSchema({t})
+  article: createArticleSchema({ t, dynamicComponentRequire }),
+  front: createFrontSchema({ t }),
+  format: createFormatSchema({ t, dynamicComponentRequire }),
+  discussion: createDiscussionSchema({ t, dynamicComponentRequire }),
+  dossier: createDossierSchema({ t, dynamicComponentRequire })
 }
 
 export const getSchema = template => {

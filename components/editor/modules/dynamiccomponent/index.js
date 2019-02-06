@@ -10,7 +10,9 @@ import EditOverlay from './EditOverlay'
 
 import { SG_DYNAMIC_COMPONENT_BASE_URLS } from '../../../../lib/settings'
 
-export default ({rule, subModules, TYPE}) => {
+import dynamicComponentRequire from './require'
+
+export default ({ rule, subModules, TYPE }) => {
   const {
     identifier = 'DYNAMIC_COMPONENT'
   } = rule.editorOptions || {}
@@ -87,6 +89,7 @@ export default ({rule, subModules, TYPE}) => {
           const component = <DynamicComponent
             showException
             key={JSON.stringify(data)}
+            require={dynamicComponentRequire}
             {...data} />
           const preview = cloneElement(component, {
             raw: true
