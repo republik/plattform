@@ -17,6 +17,71 @@ topojson \
     -- ./wgs84.shp
 ```
 
+The `id` on a feature is used to match with data. And our maps assume a displayable name properties.
+
+#### Swiss Base Data
+
+[«Swiss Maps» by Interactive Things](https://github.com/interactivethings/swiss-maps) is a great way to get base data as topojson.
+
+For example you can generate our cantons file with following command:
+
+```
+make topo/ch-cantons.json PROPERTIES="name --id-property=abbr" REPROJECT=true
+```
+
+### Cantons Example
+
+```react
+<div>
+  <ChartTitle>Fonds zur Beschaffung des Kampfflugzeugs Gripen</ChartTitle>
+  <CsvChart
+    config={{
+      "type": "SwissMap",
+      "legendTitle": "Jastimmen",
+      "unit": "Jastimmen",
+      "choropleth": true,
+      "numberFormat": ".0%",
+      "thresholds": [0.3,0.4,0.5,0.6,0.7],
+      "colorRange": ["rgb(103,0,13)", "rgb(187,21,26)", "rgb(239,69,51)", "rgb(75,151,201)", "rgb(24,100,170)", "rgb(8,48,107)"],
+      "features": {
+        "url": "https://cdn.republik.space/s3/republik-assets/assets/geo/ch-cantons.json",
+        "object": "cantons"
+      }
+    }}
+    values={`
+feature,value
+ZH,0.487
+BE,0.491
+LU,0.543
+UR,0.624
+SZ,0.615
+OW,0.638
+NW,0.682
+GL,0.599
+ZG,0.6
+FR,0.406
+SO,0.503
+BS,0.323
+BL,0.425
+SH,0.494
+AR,0.511
+AI,0.608
+SG,0.5
+GR,0.507
+AG,0.519
+TG,0.556
+TI,0.453
+VD,0.349
+VS,0.381
+NE,0.309
+GE,0.322
+JU,0.257
+    `.trim()} />
+  <Editorial.Note>Quelle: <Editorial.A href="https://www.bk.admin.ch/ch/d/pore/va/20140518/can584.html">Bundeskanzlei</Editorial.A></Editorial.Note>
+</div>
+```
+
+
 ### Municipalities Example
 
 ```react
