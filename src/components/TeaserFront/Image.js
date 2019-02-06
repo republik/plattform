@@ -71,7 +71,6 @@ const ImageBlock = ({
   feuilleton
 }) => {
   const background = bgColor || ''
-  console.log("image", image)
   const isRasterized = !image.match(/.svg/)
   return (
     <div {...attributes} {...(feuilleton ? styles.containerFeuilleton : styles.container)} onClick={onClick} style={{
