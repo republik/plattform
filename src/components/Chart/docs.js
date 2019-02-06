@@ -42,7 +42,9 @@ const IGNORE_KEYS = [
   // for react usage only
   't', 'children', 'values', 'width', 'colorRanges',
   // should not really be used
-  'mini', 'description', 'filter'
+  'mini', 'description', 'filter',
+  // functions
+  'getProjection'
 ]
 
 const propByName = groupBy(props, d => d.key)
@@ -100,6 +102,8 @@ if (process.env.NODE_ENV === 'production') {
   })
 }
 
+
+
 const chartPages = charts.map(key => {
   const { base, wrap, defaultProps } = ReactCharts[key]
 
@@ -111,11 +115,18 @@ const chartPages = charts.map(key => {
   }
 
 
+  const keys = Object.keys(defaultProps)
+    .filter(key => IGNORE_KEYS.indexOf(key) === -1)
+
+  if (!keys.length) {
+    return null
+  }
+
   return markdown`### ${key}
 
   ${label}
 
-  ${<TableSpecimen rows={Object.keys(defaultProps).map(key => ({
+  ${<TableSpecimen rows={keys.map(key => ({
     Name: key,
     Value: `\`${JSON.stringify(defaultProps[key])}\``
   }))} />}

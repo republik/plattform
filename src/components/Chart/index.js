@@ -7,7 +7,7 @@ import Bar, { Lollipop } from './Bars'
 import TimeBar from './TimeBars'
 import { Line, Slope } from './Lines'
 import ScatterPlot from './ScatterPlots'
-import { SwissMap } from './Maps';
+import { GenericMap, SwissMap } from './Maps';
 
 import colors from '../../theme/colors'
 
@@ -21,6 +21,7 @@ export const ReactCharts = {
   Line,
   Slope,
   ScatterPlot,
+  GenericMap,
   SwissMap
 }
 

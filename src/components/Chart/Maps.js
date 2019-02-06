@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { scaleOrdinal } from 'd3-scale'
 import { symbol, symbolSquare, symbolCircle } from 'd3-shape'
-import { geoMercator } from 'd3-geo'
+import { geoMercator, geoEqualEarth } from 'd3-geo'
 import ColorLegend from './ColorLegend'
 import layout, { MARKER_HEIGHT, MARKER_RADIUS } from './Maps.layout'
 import fetch from 'isomorphic-unfetch'
@@ -90,7 +90,7 @@ const fetchFeature = memoize(feature =>
     .then(data => topojsonFeature(data, data.objects[feature.object]))
 )
 
-class GenericMap extends Component {
+export class GenericMap extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -174,7 +174,7 @@ class GenericMap extends Component {
       tLabel,
       description,
       choropleth,
-      ignoreMissing
+      ignoreMissingFeature
     } = props
     const {
       loading, error, features
@@ -251,7 +251,7 @@ class GenericMap extends Component {
                           }
                           let fill
                           if (d.empty) {
-                            fill = ignoreMissing ? colors.disabled : 'red'
+                            fill = ignoreMissingFeature ? colors.disabled : 'red'
                           } else {
                             fill = colorScale(colorAccessor(d))
                           }
@@ -379,14 +379,14 @@ GenericMap.propTypes = {
     color: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired
   })),
-  legendTitle: PropTypes.string.isRequired,
+  legendTitle: PropTypes.string,
   unit: PropTypes.string,
   numberFormat: PropTypes.string.isRequired,
   filter: PropTypes.string,
   points: PropTypes.bool.isRequired,
   choropleth: PropTypes.bool.isRequired,
   feature: PropTypes.string,
-  ignoreMissing: PropTypes.bool.isRequired,
+  ignoreMissingFeature: PropTypes.bool.isRequired,
   tLabel: PropTypes.func.isRequired,
   description: PropTypes.string,
   ordinalAccessor: PropTypes.string
@@ -400,16 +400,18 @@ GenericMap.defaultProps = {
   colorLegend: true,
   points: false,
   choropleth: false,
-  ignoreMissing: false,
+  ignoreMissingFeature: false,
   feature: 'feature',
   shape: 'circle',
-  sizes: [10]
+  sizes: [10],
+  getProjection: () => geoEqualEarth()
 }
 
 export const SwissMap = props => <GenericMap {...props} />
 
 SwissMap.defaultProps = {
   getProjection: () => geoMercator().rotate([-7.439583333333333, -46.95240555555556]),
-  choropleth: true,
   heightRatio: 0.63
 }
+
+SwissMap.base = 'GenericMap'

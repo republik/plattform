@@ -26,7 +26,7 @@ export default (props, geoJson) => {
     t,
     tLabel,
     choropleth,
-    ignoreMissing
+    ignoreMissingFeature
   } = props
 
   let data = values
@@ -175,7 +175,7 @@ export default (props, geoJson) => {
     groupedData = groupBy(data, d => d.datum[props.column])
   }
   // allow empty data for geotiff
-  if (groupedData.length === 0 && geotiff) {
+  if (groupedData.length === 0) {
     groupedData = [{key: '', values: []}]
   }
 
@@ -207,7 +207,7 @@ export default (props, geoJson) => {
         const groupData = [].concat(values)
         groupData.forEach(d => {
           d.feature = featuresWithPaths.find(f => f.id === d.featureId)
-          if (!ignoreMissing && !d.feature) {
+          if (!ignoreMissingFeature && !d.feature) {
             throw new Error(`No feature for data ${d.featureId} ${groupTitle ? ` (${groupTitle})` : ''} ${d.value}`)
           }
         })
@@ -215,7 +215,7 @@ export default (props, geoJson) => {
         featuresWithPaths.forEach((feature) => {
           const d = groupData.find(datum => datum.featureId === feature.id)
           if (!d) {
-            if (!ignoreMissing) {
+            if (!ignoreMissingFeature) {
               throw new Error(`No data for feature ${feature.id} ${groupTitle ? ` (${groupTitle})` : ''}`)
             }
             groupData.push({

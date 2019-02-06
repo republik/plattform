@@ -1,3 +1,28 @@
+## GenericMap
+
+The Equal Earth projection, by Bojan Šavrič et al., 2018.
+
+```react
+<div>
+  <CsvChart
+    config={{
+      "type": "GenericMap",
+      "colorLegend": false,
+      "heightRatio": 0.5,
+      "points": true,
+      "features": {
+        "url": "https://cdn.republik.space/s3/republik-assets/assets/geo/world-atlas-110m.json",
+        "object": "land"
+      }
+    }}
+    values={`
+lat,lon
+47.366667,8.55
+`.trim()} />
+  <Editorial.Note>Quelle: <Editorial.A href="https://github.com/topojson/world-atlas">World Atlas TopoJSON</Editorial.A></Editorial.Note>
+</div>
+```
+
 ## SwissMap
 
 `features.url` is expected to point to an topojson file with WGS84 coordinates (EPSG:4326). A rotated mercator projection is used to look like CH1903 while also allowing to plot regular coordinates and use `projection.fitSize` for responsive design.
