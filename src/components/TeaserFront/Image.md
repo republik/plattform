@@ -30,7 +30,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 
 ```react
 <TeaserFrontImage
-  image='/static/skilifte-front.svg?size=360x275' color='#fff' bgColor='#fff'>
+  image='/static/skilifte-front.svg?size=360x275' color='#fff' bgColor='#000'>
   <TeaserFrontImageHeadline.Editorial small>The sand is near</TeaserFrontImageHeadline.Editorial>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
