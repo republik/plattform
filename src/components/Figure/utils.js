@@ -25,6 +25,16 @@ export const getResizedSrcs = (src, displayWidth, setMaxWidth = true) => {
   }
 
   const maxWidth = size.width
+
+  // The optional .webp is because the backend accidentally adds this currently (2019-02-06T10:24:00.000Z)
+  if (src.match(/\.svg(\.webp)?($|\?|#)/)) {
+    return {
+      src,
+      size,
+      maxWidth: setMaxWidth ? maxWidth : undefined
+    }
+  }
+
   const defaultWidth = Math.min(
     Math.max(
       displayWidth,
