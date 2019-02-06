@@ -10,7 +10,7 @@ const {
 const DAYS_AFTER_CANCELLATION = 3
 const MAX_DAYS_AFTER_CANCELLATION = 30
 
-const CANCELLATION_CATEGORIES = ['EDITORIAL', 'NO_TIME', 'TOO_EXPENSIVE']
+const CANCELLATION_CATEGORIES = ['NO_TIME', 'TOO_EXPENSIVE']
 const MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
 
 const getCancellations = async ({ now }, { pgdb }) => {
