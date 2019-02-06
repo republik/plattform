@@ -83,7 +83,7 @@ module.exports = async ({
     const isJPEG = mime === 'image/jpeg'
 
     // svg is not detected by fileTypeStream
-    if (!mime && path && new RegExp(/\.svg$/).test(path)) {
+    if (!mime && path && new RegExp(/\.svg(.webp)*?$/).test(path)) {
       mime = 'image/svg+xml'
     }
 
