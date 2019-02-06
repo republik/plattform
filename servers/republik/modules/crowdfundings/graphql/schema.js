@@ -63,7 +63,8 @@ type mutations {
     id: ID!
     immediately: Boolean
     details: CancellationInput!
-    suppressNotifications: Boolean
+    suppressConfirmation: Boolean
+    suppressWinback: Boolean
   ): Membership!
 
   # MONTHLY_ABO: if cancelled immediately a new subscription is created

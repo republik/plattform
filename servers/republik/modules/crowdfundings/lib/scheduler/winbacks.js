@@ -41,7 +41,7 @@ const getCancellations = async ({ now }, { pgdb }) => {
     WHERE
       u.id != :PARKING_USER_ID AND
       mc.category = ANY('{${CANCELLATION_CATEGORIES.join(',')}}') AND
-      mc."suppressNotifications" = false AND
+      mc."suppressWinback" = false AND
       mc."revokedAt" IS NULL AND
       m."membershipTypeId" IN (
         SELECT id FROM "membershipTypes" WHERE name = ANY('{${MEMBERSHIP_TYPES.join(',')}}')
