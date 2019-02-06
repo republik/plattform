@@ -83,3 +83,15 @@ test('getResizedSrcs: add semi retina if src is too small for full retina', asse
 
   assert.end()
 })
+
+test('getResizedSrcs: do not resize svg', assert => {
+  const props = getResizedSrcs('image.svg?size=2x1', 2000)
+  assert.equal(props.src, 'image.svg?size=2x1')
+  assert.deepEqual(props.size, {
+    width: 2,
+    height: 1
+  })
+  assert.equal(props.srcSet, undefined)
+
+  assert.end()
+})

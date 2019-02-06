@@ -97,7 +97,7 @@
     "build": "npm run build:lib && react-scripts build",
     "start": "react-scripts start",
     "dev": "babel -w src --out-dir lib & PORT=3003 react-scripts start",
-    "test": "babel-tape-runner src/**/*.test.js | faucet",
+    "test": "babel-tape-runner src/**/*.test.js | faucet && babel-tape-runner src/**/**/*.test.js | faucet",
     "cloc": "find . -name '*.js' -not -path \"./node_modules*\" -not -path \"./lib*\" | xargs wc -l",
     "eject": "react-scripts eject",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
