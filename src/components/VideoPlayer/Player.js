@@ -139,13 +139,13 @@ class VideoPlayer extends Component {
     super(props)
 
     this.state = {
-      initialized: false,
       playing: false,
       progress: 0,
       muted: globalState.muted,
       subtitles: props.subtitles || globalState.subtitles,
       loading: false,
-      isFull: false
+      isFull: false,
+      contextStartSeconds: undefined
     }
 
     this.updateProgress = () => {
@@ -204,25 +204,13 @@ class VideoPlayer extends Component {
       }
     }
     this.onCanPlay = () => {
-
-      if (!this.state.initialized) {
-        let startSeconds = this.props.startSeconds
-        if (this.props.mediaId && this.context.getMediaProgress) {
-          const startMs = this.context.getMediaProgress(this.props.mediaId)
-          if (startMs) {
-            // TODO: remove conversion once backend supports seconds/float.
-            startSeconds = startMs / 1000
-          }
-        }
-        this.setTime(startSeconds)
-      }
-
+      this.initStartTime()
       this.setState(() => ({
-        initialized: true,
         loading: false
       }))
     }
     this.onLoadedMetaData = () => {
+      this.initStartTime()
       this.setTextTracksMode()
       this.setState(() => ({
         loading: false
@@ -318,6 +306,7 @@ class VideoPlayer extends Component {
     const { video } = this
     video && video.pause()
   }
+
   setTextTracksMode() {
     const { subtitles } = this.state
     const { src } = this.props
@@ -329,6 +318,25 @@ class VideoPlayer extends Component {
       this.video.textTracks[0].mode = subtitles ? 'showing' : 'hidden'
       this._textTrackMode = subtitles
     }
+  }
+  initStartTime() {
+    if (this.state.contextStartSeconds !== undefined || !this.video || this.video.readyState !== 4) {
+      return
+    }
+    let startSeconds
+    if (this.props.mediaId && this.context.getMediaProgress) {
+      const startMs = this.context.getMediaProgress(this.props.mediaId)
+      if (startMs) {
+        // TODO: remove conversion once backend supports seconds/float.
+        startSeconds = startMs / 1000
+        this.setState(() => ({
+          contextStartSeconds: startSeconds
+        }))
+      }
+    } else if (this.props.startSeconds) {
+       startSeconds = this.props.startSeconds
+    }
+    startSeconds && this.setTime(startSeconds)
   }
   setMuted(muted) {
     const next = {
@@ -365,6 +373,7 @@ class VideoPlayer extends Component {
     this.video.addEventListener('loadedmetadata', this.onLoadedMetaData)
     this.video.addEventListener('volumechange', this.onVolumeChange)
 
+    this.initStartTime()
     this.setTextTracksMode()
 
     if (this.video && !this.video.paused) {
@@ -372,6 +381,7 @@ class VideoPlayer extends Component {
     }
   }
   componentDidUpdate() {
+    this.initStartTime()
     this.setTextTracksMode()
   }
   componentWillUnmount() {
