@@ -29,6 +29,19 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
 ```
 
 ```react
+<TeaserFrontImage
+  image='/static/skilifte-front.svg?size=360x275' color='#fff' bgColor='#fff'>
+  <TeaserFrontImageHeadline.Editorial small>The sand is near</TeaserFrontImageHeadline.Editorial>
+  <TeaserFrontLead>
+    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
+  </TeaserFrontLead>
+  <TeaserFrontCredit>
+    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+  </TeaserFrontCredit>
+</TeaserFrontImage>
+```
+
+```react
 <TeaserFrontImage image='/static/desert.jpg' byline='Foto: Thomas Vuillemin'
   textPosition='topright'
   color='#fff' bgColor='#000'>

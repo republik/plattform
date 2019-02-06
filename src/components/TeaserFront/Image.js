@@ -71,13 +71,15 @@ const ImageBlock = ({
   feuilleton
 }) => {
   const background = bgColor || ''
+  console.log("image", image)
+  const isRasterized = !image.match(/.svg/)
   return (
     <div {...attributes} {...(feuilleton ? styles.containerFeuilleton : styles.container)} onClick={onClick} style={{
       background,
       cursor: onClick ? 'pointer' : 'default'
     }}>
       <div style={{position: 'relative', fontSize: 0}}>
-        <FigureImage aboveTheFold={aboveTheFold} {...FigureImage.utils.getResizedSrcs(image, 1500, false)} alt={alt} />
+        <FigureImage aboveTheFold={aboveTheFold} {...(isRasterized ? FigureImage.utils.getResizedSrcs(image, 1500, false) : {src: image})} alt={alt} />
         {byline && <FigureByline position={onlyImage ? 'leftInsideOnlyImage' : 'leftInside'} style={{color}}>
           {byline}
         </FigureByline>}
