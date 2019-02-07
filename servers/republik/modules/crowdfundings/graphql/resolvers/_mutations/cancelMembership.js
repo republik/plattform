@@ -21,7 +21,8 @@ module.exports = async (_, args, context) => {
       immediately = false,
       details,
       suppressConfirmation,
-      suppressWinback
+      suppressWinback,
+      cancelledViaSupport
     } = args
 
     const membership = await transaction.query(`
@@ -82,7 +83,8 @@ module.exports = async (_, args, context) => {
       reason: details.reason,
       category: details.type,
       suppressConfirmation: !!suppressConfirmation,
-      suppressWinback: !!suppressWinback
+      suppressWinback: !!suppressWinback,
+      cancelledViaSupport: !!cancelledViaSupport
     })
 
     if (membership.subscriptionId) {
