@@ -1,5 +1,5 @@
 {
-  "updated": "2019-02-07T14:13:35.408Z",
+  "updated": "2019-02-07T16:39:44.569Z",
   "title": "live",
   "data": [
     {
@@ -456,35 +456,35 @@
     },
     {
       "key": "api/membership/cancel/category/EDITORAL_NARCISSISTIC",
-      "value": "Nur: selbstverliebter, arroganter Schreibstil"
+      "value": "Selbstverliebter Stil"
     },
     {
       "key": "api/membership/cancel/category/LOGIN_TECH",
-      "value": "Login und andere technische Schwierigkeiten"
+      "value": "Loginprobleme"
     },
     {
       "key": "api/membership/cancel/category/PAPER",
-      "value": "Lese nicht gerne online"
+      "value": "Lieber Papier"
     },
     {
       "key": "api/membership/cancel/category/EXPECTIONS",
-      "value": "Enttäuscht ohne genauen Grund"
+      "value": "Andere Erwartungen"
     },
     {
       "key": "api/membership/cancel/category/RARELY_READ",
-      "value": "Zu wenig gelesen (dafür zu teuer)"
+      "value": "Selten gelesen"
     },
     {
       "key": "api/membership/cancel/category/TOO_MUCH_TO_READ",
-      "value": "Komme mit lesen nicht nach, habe zu viel anderes zu lesen"
+      "value": "Zu viel Lesestoff"
     },
     {
       "key": "api/membership/cancel/category/CROWFUNDING_ONLY",
-      "value": "Wollte nur start unterstüzen, wollte kein Abo"
+      "value": "Nur Crowdfunding"
     },
     {
       "key": "api/membership/cancel/category/SEVERAL_REASONS",
-      "value": "Mehrere der vorhandenen Kategorien"
+      "value": "Mehrere (der obigen) Gründe"
     },
     {
       "key": "api/email/membership_cancel_notice/subject",
