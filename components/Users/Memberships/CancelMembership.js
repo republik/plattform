@@ -23,7 +23,7 @@ import {
 
 const GET_CANCELLATION_CATEGORIES = gql`
 query cancellationCategories {
-  cancellationCategories {
+  cancellationCategories(showMore: true) {
     type
     label
   }
@@ -35,13 +35,16 @@ mutation cancelMembership(
   $membershipId: ID!
   $immediately: Boolean
   $details: CancellationInput!
-  $suppressNotifications: Boolean
+  $suppressConfirmation: Boolean
+  $suppressWinback: Boolean
 ) {
   cancelMembership(
     id: $membershipId
     immediately: $immediately
     details: $details
-    suppressNotifications: $suppressNotifications
+    suppressConfirmation: $suppressConfirmation
+    suppressWinback: $suppressWinback
+    cancelledViaSupport: true
   ) {
     id
   }
@@ -54,7 +57,8 @@ export default class CancelPledge extends Component {
     this.state = {
       isOpen: false,
       immediately: false,
-      suppressNotifications: false,
+      suppressConfirmation: false,
+      suppressWinback: false,
       reason: '',
       cancellationType: ''
     }
@@ -67,8 +71,12 @@ export default class CancelPledge extends Component {
       this.setState(() => ({ immediately: value }))
     }
 
-    this.suppressNotificationsChangeHandler = (_, value) => {
-      this.setState(() => ({ suppressNotifications: value }))
+    this.suppressConfirmationChangeHandler = (_, value) => {
+      this.setState(() => ({ suppressConfirmation: value }))
+    }
+
+    this.suppressWinbackChangeHandler = (_, value) => {
+      this.setState(() => ({ suppressWinback: value }))
     }
 
     this.closeHandler = () => {
@@ -78,7 +86,8 @@ export default class CancelPledge extends Component {
     this.submitHandler = mutation => () => {
       const {
         immediately,
-        suppressNotifications,
+        suppressConfirmation,
+        suppressWinback,
         reason,
         cancellationType
       } = this.state
@@ -87,7 +96,8 @@ export default class CancelPledge extends Component {
         variables: {
           membershipId: this.props.membership.id,
           immediately,
-          suppressNotifications,
+          suppressConfirmation,
+          suppressWinback,
           details: {
             reason,
             type: cancellationType
@@ -169,7 +179,7 @@ export default class CancelPledge extends Component {
                                 )}
                                 <Field
                                   value={reason}
-                                  label={'Grund'}
+                                  label={'Erläuterungen'}
                                   onChange={this.reasonChangeHandler}
                                   renderInput={props => (
                                     <TextareaAutosize
@@ -188,10 +198,18 @@ export default class CancelPledge extends Component {
                                 </p>
                                 <p>
                                   <Checkbox
-                                    checked={this.state.suppressNotifications}
-                                    onChange={this.suppressNotificationsChangeHandler}
+                                    checked={this.state.suppressConfirmation}
+                                    onChange={this.suppressConfirmationChangeHandler}
                                   >
                                     Benachrichtigungen unterdrücken
+                                  </Checkbox>
+                                </p>
+                                <p>
+                                  <Checkbox
+                                    checked={this.state.suppressWinback}
+                                    onChange={this.suppressWinbackChangeHandler}
+                                  >
+                                    Winback unterdrücken
                                   </Checkbox>
                                 </p>
                                 <Button
