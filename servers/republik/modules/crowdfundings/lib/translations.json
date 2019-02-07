@@ -1,5 +1,5 @@
 {
-  "updated": "2019-02-07T10:59:13.818Z",
+  "updated": "2019-02-07T14:13:35.408Z",
   "title": "live",
   "data": [
     {
@@ -453,6 +453,38 @@
     {
       "key": "api/membership/cancel/category/SYSTEM",
       "value": "SYSTEM"
+    },
+    {
+      "key": "api/membership/cancel/category/EDITORAL_NARCISSISTIC",
+      "value": "Nur: selbstverliebter, arroganter Schreibstil"
+    },
+    {
+      "key": "api/membership/cancel/category/LOGIN_TECH",
+      "value": "Login und andere technische Schwierigkeiten"
+    },
+    {
+      "key": "api/membership/cancel/category/PAPER",
+      "value": "Lese nicht gerne online"
+    },
+    {
+      "key": "api/membership/cancel/category/EXPECTIONS",
+      "value": "Enttäuscht ohne genauen Grund"
+    },
+    {
+      "key": "api/membership/cancel/category/RARELY_READ",
+      "value": "Zu wenig gelesen (dafür zu teuer)"
+    },
+    {
+      "key": "api/membership/cancel/category/TOO_MUCH_TO_READ",
+      "value": "Komme mit lesen nicht nach, habe zu viel anderes zu lesen"
+    },
+    {
+      "key": "api/membership/cancel/category/CROWFUNDING_ONLY",
+      "value": "Wollte nur start unterstüzen, wollte kein Abo"
+    },
+    {
+      "key": "api/membership/cancel/category/SEVERAL_REASONS",
+      "value": "Mehrere der vorhandenen Kategorien"
     },
     {
       "key": "api/email/membership_cancel_notice/subject",
