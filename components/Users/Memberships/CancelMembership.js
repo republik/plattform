@@ -44,7 +44,6 @@ mutation cancelMembership(
     details: $details
     suppressConfirmation: $suppressConfirmation
     suppressWinback: $suppressWinback
-    cancelledViaSupport: true
   ) {
     id
   }
