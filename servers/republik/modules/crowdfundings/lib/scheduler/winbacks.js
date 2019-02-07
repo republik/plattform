@@ -10,7 +10,7 @@ const {
 const DAYS_AFTER_CANCELLATION = 3
 const MAX_DAYS_AFTER_CANCELLATION = 30
 
-const CANCELLATION_CATEGORIES = ['EDITORIAL', 'NO_TIME', 'TOO_EXPENSIVE']
+const CANCELLATION_CATEGORIES = ['NO_TIME', 'TOO_EXPENSIVE', 'NO_MONEY', 'PAPER']
 const MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
 
 const getCancellations = async ({ now }, { pgdb }) => {
@@ -41,7 +41,7 @@ const getCancellations = async ({ now }, { pgdb }) => {
     WHERE
       u.id != :PARKING_USER_ID AND
       mc.category = ANY('{${CANCELLATION_CATEGORIES.join(',')}}') AND
-      mc."suppressNotifications" = false AND
+      mc."suppressWinback" = false AND
       mc."revokedAt" IS NULL AND
       m."membershipTypeId" IN (
         SELECT id FROM "membershipTypes" WHERE name = ANY('{${MEMBERSHIP_TYPES.join(',')}}')
