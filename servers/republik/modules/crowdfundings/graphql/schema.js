@@ -48,7 +48,7 @@ type queries {
   # required role: accountant
   paymentsCSV(companyName: String!, paymentIds: [ID!]): String!
 
-  cancellationCategories: [CancellationCategory!]!
+  cancellationCategories(showMore: Boolean): [CancellationCategory!]!
 }
 
 type mutations {
