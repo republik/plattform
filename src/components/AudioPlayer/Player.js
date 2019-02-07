@@ -214,6 +214,9 @@ class AudioPlayer extends Component {
       this.setState(() => {
         const progress = audio.currentTime / audio.duration
         this.props.onProgress && this.props.onProgress(progress)
+        this.props.mediaId && this.context.saveMediaProgress && this.context.saveMediaProgress(
+          this.props.mediaId, audio.currentTime
+        )
         return {
           progress,
           buffered: audio.buffered
@@ -264,7 +267,7 @@ class AudioPlayer extends Component {
       }
     }
     this.onCanPlay = () => {
-      !this.state.initialized && this.setTime(this.props.startSeconds)
+      this.initStartTime()
       this.setState(() => ({
         initialized: true,
         playEnabled: true,
@@ -273,6 +276,7 @@ class AudioPlayer extends Component {
       }))
     }
     this.onLoadedMetaData = () => {
+      this.initStartTime()
       this.setState(() => ({
         playEnabled: true,  // iOS won't fire canPlay, so rely on meta data.
         loading: false,
@@ -361,6 +365,24 @@ class AudioPlayer extends Component {
       audio.load()
     }
   }
+  initStartTime() {
+    if (this.state.contextStartSeconds !== undefined || !this.audio || this.audio.readyState !== 4) {
+      return
+    }
+    let startSeconds
+    if (this.props.startSeconds) {
+       startSeconds = this.props.startSeconds
+    }
+    else if (this.props.mediaId && this.context.getMediaProgress) {
+      startSeconds = this.context.getMediaProgress(this.props.mediaId)
+      if (startSeconds) {
+        this.setState(() => ({
+          contextStartSeconds: startSeconds
+        }))
+      }
+    }
+    !!startSeconds && this.setTime(startSeconds)
+  }
   setFormattedTimes() {
     if (!this.audio || !this.audio.duration) {
       return
@@ -379,6 +401,7 @@ class AudioPlayer extends Component {
     this.audio.addEventListener('canplaythrough', this.onCanPlay)
     this.audio.addEventListener('loadedmetadata', this.onLoadedMetaData)
 
+    this.initStartTime()
     this.setFormattedTimes()
 
     if (this.audio && !this.audio.paused) {
@@ -388,6 +411,7 @@ class AudioPlayer extends Component {
     autoPlay && this.container && this.container.focus()
   }
   componentDidUpdate() {
+    this.initStartTime()
     this.setFormattedTimes()
   }
   componentWillUnmount() {
@@ -559,12 +583,17 @@ class AudioPlayer extends Component {
 }
 
 AudioPlayer.propTypes = {
+  mediaId: PropTypes.string,
   src: PropTypes.shape({
     mp3: PropTypes.string,
     aac: PropTypes.string,
     ogg: PropTypes.string,
     hls: PropTypes.string,
-    mp4: PropTypes.string
+    mp4: PropTypes.string,
+  }),
+  userProgress: PropTypes.shape({
+    id: PropTypes.string,
+    secs: PropTypes.number
   }),
   autoPlay: PropTypes.bool,
   size: PropTypes.oneOf(Object.keys(breakoutStyles)),
@@ -575,8 +604,7 @@ AudioPlayer.propTypes = {
   download: PropTypes.bool,
   scrubberPosition: PropTypes.oneOf(['top', 'bottom']),
   timePosition: PropTypes.oneOf(['left', 'right']),
-  controlsPadding: PropTypes.number,
-  time: PropTypes.number,
+  controlsPadding: PropTypes.number
 }
 
 AudioPlayer.defaultProps = {
@@ -589,6 +617,11 @@ AudioPlayer.defaultProps = {
   timePosition: 'right',
   controlsPadding: 0,
   startSeconds: 0,
+}
+
+AudioPlayer.contextTypes = {
+  getMediaProgress: PropTypes.func,
+  saveMediaProgress: PropTypes.func
 }
 
 export default AudioPlayer
