@@ -87,6 +87,9 @@ export {
   DossierTileHeadline
 } from './components/Dossier'
 export {
+  ProgressCircle
+} from './components/Progress'
+export {
   Spinner,
   InlineSpinner
 } from './components/Spinner'

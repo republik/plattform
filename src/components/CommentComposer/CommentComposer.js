@@ -7,8 +7,8 @@ import {serifRegular16, sansSerifRegular14, sansSerifRegular16} from '../Typogra
 
 import CommentComposerHeader from './CommentComposerHeader'
 import CommentComposerError from './CommentComposerError'
-import CommentComposerProgress from './CommentComposerProgress'
 import CommentComposerTags from './CommentComposerTags'
+import ProgressCircle from '../Progress/Circle'
 
 const actionButtonStyle = {
   ...sansSerifRegular16,
@@ -152,7 +152,7 @@ class CommentComposer extends PureComponent {
         {remaining < 21 && <span {...styles.remaining} style={{color: progressColor}}>
           {remaining}
         </span>}
-        <CommentComposerProgress
+        <ProgressCircle
           stroke={progressColor}
           radius={9}
           strokeWidth={2}

@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { css } from 'glamor'
+import colors from '../../theme/colors'
 
 const styles = {
   circle: css({
@@ -10,19 +12,17 @@ const styles = {
 }
 
 
-class CommentComposerProgress extends Component {
+class Circle extends Component {
   constructor(props) {
     super(props)
     
     const { radius, strokeWidth } = this.props
-    
     this.normalizedRadius = radius - strokeWidth / 2
     this.circumference = this.normalizedRadius * 2 * Math.PI
   }
   
   render() {
-    const { radius, stroke, strokeWidth, progress } = this.props
-
+    const { progress, radius, stroke, strokeWidth } = this.props
     const strokeDashoffset = this.circumference - progress / 100 * this.circumference
   
     return (
@@ -42,8 +42,22 @@ class CommentComposerProgress extends Component {
           cy={radius}
          />
       </svg>
-    );
+    )
   }
 }
 
-export default CommentComposerProgress
+Circle.propTypes = {
+  progress: PropTypes.number,
+  radius: PropTypes.number,
+  stroke: PropTypes.string,
+  strokeWidth: PropTypes.number
+}
+
+Circle.defaultProps = {
+  progress: 100,
+  radius: 9,
+  stroke: colors.text,
+  strokeWidth: 2
+}
+
+export default Circle

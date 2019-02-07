@@ -215,7 +215,16 @@ ReactDOM.render(
               ...require('./components/Figure'),
             },
             src: require('./components/Gallery/docs.md')
-          }
+          },
+          {
+            path: '/components/progress',
+            title: 'Progress',
+            imports: {
+              ...require('./components/Progress'),
+              colors: require('./theme/colors')
+            },
+            src: require('./components/Progress/docs.md')
+          },
         ]
       },
       {
