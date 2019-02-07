@@ -1,6 +1,11 @@
 module.exports = `
 schema {
+  query: queries
   mutation: mutations
+}
+
+type queries {
+  mediaProgress(mediaId: ID!): MediaProgress
 }
 
 type mutations {
