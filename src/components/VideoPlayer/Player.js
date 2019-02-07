@@ -325,10 +325,8 @@ class VideoPlayer extends Component {
     }
     let startSeconds
     if (this.props.mediaId && this.context.getMediaProgress) {
-      const startMs = this.context.getMediaProgress(this.props.mediaId)
-      if (startMs) {
-        // TODO: remove conversion once backend supports seconds/float.
-        startSeconds = startMs / 1000
+      startSeconds = this.context.getMediaProgress(this.props.mediaId)
+      if (startSeconds) {
         this.setState(() => ({
           contextStartSeconds: startSeconds
         }))
