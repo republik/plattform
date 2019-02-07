@@ -86,7 +86,8 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
               type: 'SYSTEM',
               reason: 'Auto Cancellation (claimMembership)'
             },
-            suppressNotifications: true
+            suppressConfirmation: true,
+            suppressWinback: true
           },
           { req, t, pgdb: transaction }
         )
