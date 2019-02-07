@@ -200,7 +200,7 @@ export default class CancelPledge extends Component {
                                     checked={this.state.suppressConfirmation}
                                     onChange={this.suppressConfirmationChangeHandler}
                                   >
-                                    Benachrichtigungen unterdrücken
+                                    Kündigungsbestätigung unterdrücken
                                   </Checkbox>
                                 </p>
                                 <p>
