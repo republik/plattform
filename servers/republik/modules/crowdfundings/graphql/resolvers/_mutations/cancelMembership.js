@@ -105,6 +105,7 @@ module.exports = async (_, args, context) => {
         name: user.name,
         endDate,
         membershipType,
+        reasonGiven: details.reason && details.reason.length > 1,
         t,
         pgdb
       })

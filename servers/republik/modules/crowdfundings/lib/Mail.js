@@ -464,7 +464,7 @@ ${address.country}</span>`
   })
 }
 
-mail.sendMembershipCancellation = async ({ email, name, endDate, membershipType, t, pgdb }) => {
+mail.sendMembershipCancellation = async ({ email, name, endDate, membershipType, reasonGiven, t, pgdb }) => {
   return sendMailTemplate({
     to: email,
     subject: t('api/email/membership_cancel_notice/subject'),
@@ -479,6 +479,9 @@ mail.sendMembershipCancellation = async ({ email, name, endDate, membershipType,
       },
       { name: 'membership_type',
         content: membershipType.name
+      },
+      { name: 'reason_given',
+        content: !!reasonGiven
       }
     ]
   }, { pgdb })
