@@ -2,7 +2,7 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const Collection = require('../../../lib/Collection')
 const Progress = require('../../../lib/Progress')
 
-module.exports = async (_, { mediaId, ms }, context) => {
+module.exports = async (_, { mediaId, secs }, context) => {
   const { pgdb, user: me, t } = context
   Roles.ensureUserHasRole(me, 'member')
 
@@ -25,7 +25,7 @@ module.exports = async (_, { mediaId, ms }, context) => {
       me.id,
       collection.id,
       mediaId,
-      { ms },
+      { secs },
       context
     )
 

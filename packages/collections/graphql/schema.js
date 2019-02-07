@@ -38,7 +38,7 @@ type mutations {
 
   upsertMediaProgress(
     mediaId: ID!
-    ms: Int!
+    secs: Float!
   ): MediaProgress!
 
   removeMediaProgress(

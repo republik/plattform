@@ -66,13 +66,13 @@ type MediaProgress implements CollectionItemInterface {
   id: ID!
   mediaId: ID!
   # progress in milliseconds
-  ms: Int!
+  secs: Float!
   createdAt: DateTime!
   updatedAt: DateTime!
   collection: Collection!
   # never resolved on MediaProgress
   document: Document
-  # get entity with max ms for same mediaId
+  # get entity with max secs for same mediaId
   max: MediaProgress
 }
 
