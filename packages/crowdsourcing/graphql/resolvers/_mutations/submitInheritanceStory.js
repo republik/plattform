@@ -15,6 +15,11 @@ module.exports = (_, args, context) => {
     content
   } = args
 
+  if (!CS_INHERITANCE_TO || !CS_INHERITANCE_SUBJECT) {
+    console.error('CS_INHERITANCE_TO or CS_INHERITANCE_SUBJECT undefined, cannot send mail!')
+    throw new Error(t('api/unexpected'))
+  }
+
   ensureStringLength(content, { max: 2000 })
   if (!validator.isEmail(email)) {
     throw new Error(t('api/email/invalid'))
