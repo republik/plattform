@@ -25,10 +25,9 @@ module.exports = (_, args, context) => {
     throw new Error(t('api/email/invalid'))
   }
 
-  const emailText = `Neue Meldung eingegangen
-Von:
-\temail: ${email}
-${tel ? '\ttel: ' + tel : ''}
+  const emailText = `Von:
+\tE-Mail: ${email}
+${tel ? '\tTel: ' + tel : ''}
 
 ${args.content}
 `
