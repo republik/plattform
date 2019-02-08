@@ -42,7 +42,8 @@ module.exports = async ({
   response: res,
   stream,
   headers,
-  options = {}
+  options = {},
+  path
 }) => {
   const { resize, bw, webp, format, cacheTags = [] } = options
   let width, height
@@ -81,6 +82,11 @@ module.exports = async ({
     }
     const isJPEG = mime === 'image/jpeg'
 
+    // svg is not detected by fileTypeStream
+    if (!mime && path && new RegExp(/\.svg(\.webp)?$/).test(path)) {
+      mime = 'image/svg+xml'
+    }
+
     // requests to github always return Content-Type: text/plain, let's fix that
     if (mime) {
       res.set('Content-Type', mime)
@@ -96,7 +102,7 @@ module.exports = async ({
 
     let pipeline
     if (
-      (mime && mime.indexOf('image') === 0 && (mime !== 'image/gif' || forceFormat)) &&
+      (mime && mime.indexOf('image') === 0 && ((mime !== 'image/gif' && mime !== 'image/svg+xml') || forceFormat)) &&
       (width || height || bw || webp || isJPEG || forceFormat)
     ) {
       pipeline = sharp()
