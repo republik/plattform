@@ -3,6 +3,7 @@ module.exports = `
 schema {
   mutation: mutations
 }
+
 type mutations {
   submitInheritanceStory(
     email: String!

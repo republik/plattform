@@ -1,5 +1,6 @@
 const { sendMail } = require('@orbiting/backend-modules-mail') // holt nur was in {} verlangt wurde
 const { ensureStringLength } = require('@orbiting/backend-modules-utils')
+const validator = require('validator')
 
 const {
   CS_INHERITANCE_TO,
@@ -7,7 +8,7 @@ const {
 } = process.env
 
 module.exports = (_, args, context) => {
-  // const { t } = context
+  const { t } = context
   const {
     email,
     tel,
@@ -15,7 +16,9 @@ module.exports = (_, args, context) => {
   } = args
 
   ensureStringLength(content, { max: 2000 })
-  // throw new Error(t('api/email/invalid'))
+  if (!validator.isEmail(email)) {
+    throw new Error(t('api/email/invalid'))
+  }
 
   const emailText = `Neue Meldung eingegangen
 Von:
@@ -25,11 +28,9 @@ ${tel ? '\ttel: ' + tel : ''}
 ${args.content}
 `
 
-  sendMail({
+  return sendMail({
     to: CS_INHERITANCE_TO,
     subject: CS_INHERITANCE_SUBJECT,
     text: emailText
   }, context)
-
-  return true
 }
