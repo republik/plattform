@@ -6,8 +6,8 @@ schema {
 type mutations {
   submitInheritanceStory(
     email: String!
+    tel: String
     content: String!
-    category: InheritanceStoryCategory!
   ):Boolean
 }
 `

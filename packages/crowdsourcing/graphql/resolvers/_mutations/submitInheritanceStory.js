@@ -8,17 +8,28 @@ const {
 
 module.exports = (_, args, context) => {
   // const { t } = context
+  const {
+    email,
+    tel,
+    content
+  } = args
 
-  ensureStringLength(args.content, { max: 500 })
+  ensureStringLength(content, { max: 2000 })
   // throw new Error(t('api/email/invalid'))
+
+  const emailText = `Neue Meldung eingegangen
+Von:
+\temail: ${email}
+${tel ? '\ttel: ' + tel : ''}
+
+${args.content}
+`
 
   sendMail({
     to: CS_INHERITANCE_TO,
     subject: CS_INHERITANCE_SUBJECT,
-    text: `Neue Meldung eingegangen
-Von: ${args.email}
-Kategorie: ${args.category}
-${args.content}`
+    text: emailText
   }, context)
+
   return true
 }
