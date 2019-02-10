@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
-import { Label, Loader, A } from '@project-r/styleguide'
+import { Label, Loader, A, Checkbox } from '@project-r/styleguide'
 
 import {
   displayDate,
@@ -54,6 +54,9 @@ const GET_MEMBERSHIPS = gql`
         }
         cancellations {
           reason
+          suppressConfirmation
+          suppressWinback
+          cancelledViaSupport
           category {
             label
             type
@@ -200,6 +203,33 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                     <DL>
                       <DT>Grund</DT>
                       <DD>{cancellation.category.label}</DD>
+                    </DL>
+                    <DL>
+                      <DT>keine Bestätigung</DT>
+                      <DD>
+                        <Checkbox
+                         checked={cancellation.suppressConfirmation}
+                         disabled={true}
+                        />
+                      </DD>
+                    </DL>
+                    <DL>
+                      <DT>kein Winback</DT>
+                      <DD>
+                        <Checkbox
+                         checked={cancellation.suppressWinback}
+                         disabled={true}
+                        />
+                      </DD>
+                    </DL>
+                    <DL>
+                      <DT>via Support</DT>
+                      <DD>
+                        <Checkbox
+                         checked={cancellation.cancelledViaSupport}
+                         disabled={true}
+                        />
+                      </DD>
                     </DL>
                  </div>
                  {cancellation.reason &&
