@@ -33,6 +33,7 @@ type User {
   roles: [String!]!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime
   sessions: [Session!]
   # in order of preference
   enabledFirstFactors: [SignInTokenType!]!
