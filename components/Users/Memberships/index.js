@@ -2,7 +2,7 @@ import { Fragment } from 'react'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
-import { Label, Loader, A } from '@project-r/styleguide'
+import { Label, Loader, A, Checkbox } from '@project-r/styleguide'
 
 import {
   displayDate,
@@ -53,13 +53,19 @@ const GET_MEMBERSHIPS = gql`
           endDate
         }
         cancellations {
+          id
           reason
+          suppressConfirmation
+          suppressWinback
+          cancelledViaSupport
           category {
             label
             type
           }
           createdAt
           revokedAt
+          winbackSentAt
+          winbackCanBeSent
         }
         voucherCode
         claimerName
@@ -190,26 +196,85 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                     <DL>
                       <DT>Gekündigt am</DT>
                       <DD>{displayDateTime(cancellation.createdAt)}</DD>
-                      {cancellation.revokedAt &&
-                        <Fragment>
-                          <DT>Zurückgezogen am</DT>
-                          <DD>{displayDateTime(cancellation.revokedAt)}</DD>
-                        </Fragment>
-                      }
                     </DL>
                     <DL>
                       <DT>Grund</DT>
                       <DD>{cancellation.category.label}</DD>
                     </DL>
+                    <DL>
+                      <DT>keine Bestätigung</DT>
+                      <DD>
+                        <Checkbox
+                         checked={cancellation.suppressConfirmation}
+                         disabled={true}
+                        />
+                      </DD>
+                    </DL>
+                    <DL>
+                      <DT>kein Winback</DT>
+                      <DD>
+                        <Checkbox
+                         checked={cancellation.suppressWinback}
+                         disabled={true}
+                        />
+                      </DD>
+                    </DL>
+                    <DL>
+                      <DT>via Support</DT>
+                      <DD>
+                        <Checkbox
+                         checked={cancellation.cancelledViaSupport}
+                         disabled={true}
+                        />
+                      </DD>
+                    </DL>
                  </div>
-                 {cancellation.reason &&
-                   <DD>{cancellation.reason}</DD>
-                 }
+                 <div {...displayStyles.hFlexBox}>
+                   <DL>
+                     {cancellation.reason &&
+                       <Fragment>
+                         <DT>Erläuterungen</DT>
+                         <DD>{cancellation.reason}</DD>
+                       </Fragment>
+                     }
+                   </DL>
+                 </div>
+                 <div {...displayStyles.hFlexBox}>
+                   {cancellation.winbackSentAt &&
+                     <DL>
+                       <DT>Winback verschickt am</DT>
+                       <DD>{displayDateTime(cancellation.winbackSentAt)}</DD>
+                     </DL>
+                   }
+                   {cancellation.revokedAt &&
+                     <DL>
+                       <DT>Zurückgezogen am</DT>
+                       <DD>{displayDateTime(cancellation.revokedAt)}</DD>
+                     </DL>
+                   }
+                 </div>
+                 <div {...displayStyles.hFlexBox}>
+                   <DL>
+                     <DT>Kündigungs Aktionen</DT>
+                     <DD>
+                       <CancelMembership
+                         membership={membership}
+                         cancellation={cancellation}
+                         refetchQueries={() => [
+                           {
+                             query: GET_MEMBERSHIPS,
+                             variables: { userId }
+                           }
+                         ]}
+                       />
+                     </DD>
+                   </DL>
+                 </div>
                </Fragment>
               ))}
              </DL>}
           <DL>
-            <DT>Aktionen</DT>
+            <DT>Membership Aktionen</DT>
             <DD>
                 {intersperse([
                   <MoveMembership
@@ -226,9 +291,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                   !!membership.renew &&
                     <CancelMembership
                       membership={membership}
-                      refetchQueries={({
-                        data: { cancelMembership }
-                      }) => [
+                      refetchQueries={() => [
                         {
                           query: GET_MEMBERSHIPS,
                           variables: { userId }
