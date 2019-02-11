@@ -340,6 +340,8 @@ type Cancellation {
   cancelledViaSupport: Boolean!
   createdAt: DateTime!
   revokedAt: DateTime
+  winbackSentAt: DateTime
+  winbackCanBeSent: Boolean!
 }
 
 ######################################
