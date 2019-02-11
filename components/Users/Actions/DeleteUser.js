@@ -109,7 +109,7 @@ export default class DeleteUser extends Component {
                               })
                             }
                           >
-                            Dialogbeiträge löschen
+                            Dialoginhalte löschen
                           </Checkbox>
                           <br />
                           <br />
