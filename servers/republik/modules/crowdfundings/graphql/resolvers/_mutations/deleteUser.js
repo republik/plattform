@@ -2,7 +2,6 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const { transformUser } = require('@orbiting/backend-modules-auth')
 
 const { publishMonitor } = require('../../../../../lib/slack')
-const cancelPledge = require('./cancelPledge')
 const deleteStripeCustomer = require('../../../lib/payments/stripe/deleteCustomer')
 
 const deleteRelatedData = async ({ id: userId }, hasPledges, unpublishComments, pgdb) => {
@@ -196,14 +195,6 @@ module.exports = async (_, args, context) => {
         id: userId
       })
     } else {
-      // cancel pledges
-      await Promise.all(
-        pledges.map(p => cancelPledge(null, {
-          pledgeId: p.id,
-          transaction,
-          skipEnforceSubscriptions: true
-        }, context))
-      )
       // null profile where possible
       // change email to uid_deleted@republik.ch
       const nulledColumns = await getNulledColumnsForUsers(transaction)
