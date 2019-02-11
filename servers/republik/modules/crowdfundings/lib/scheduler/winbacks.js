@@ -13,14 +13,30 @@ const MAX_DAYS_AFTER_CANCELLATION = 30
 const CANCELLATION_CATEGORIES = ['NO_TIME', 'TOO_EXPENSIVE', 'NO_MONEY', 'PAPER']
 const MEMBERSHIP_TYPES = ['ABO', 'BENEFACTOR_ABO']
 
-const getCancellations = async ({ now }, { pgdb }) => {
+const TYPE = 'membership_winback'
+
+const getCancelledAtMinMax = (now = moment()) => {
   const maxCancelledAt = moment(now)
     .subtract(DAYS_AFTER_CANCELLATION, 'days')
     .endOf('day')
   const minCancelledAt = moment(now)
     .subtract(MAX_DAYS_AFTER_CANCELLATION, 'days')
     .startOf('day')
-  debug('get users for: %o', {maxCancelledAt, minCancelledAt})
+  return { maxCancelledAt, minCancelledAt }
+}
+
+const winbackCanBeSentForCancellationDate = (createdAt) => {
+  const { minCancelledAt } = getCancelledAtMinMax()
+  return moment(createdAt)
+    .isAfter(
+      moment(minCancelledAt).add(1, 'days')
+    )
+}
+
+const getCancellations = async ({ now }, { pgdb }) => {
+  const { maxCancelledAt, minCancelledAt } = getCancelledAtMinMax(now)
+
+  debug('get users for: %o', { maxCancelledAt, minCancelledAt })
 
   const cancellations = await pgdb.query(`
     SELECT
@@ -82,7 +98,7 @@ const inform = async (args, context) => {
         context,
         {
           onceFor: {
-            type: `membership_winback`,
+            type: TYPE,
             userId
           },
           info: {
@@ -99,5 +115,7 @@ const inform = async (args, context) => {
 }
 
 module.exports = {
+  TYPE,
+  winbackCanBeSentForCancellationDate,
   inform
 }

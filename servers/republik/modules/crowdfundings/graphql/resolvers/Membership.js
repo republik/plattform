@@ -123,14 +123,18 @@ module.exports = {
     return transformUser(user)
   },
   async cancellations ({ id, cancelReasons }, args, { user: me, pgdb }) {
-    return pgdb.public.membershipCancellations.find({
-      membershipId: id
-    })
-      .then(cancellations => cancellations.map(cancellation => ({
-        ...cancellation,
-        category: {
-          type: cancellation.category
-        }
-      })))
+    return pgdb.public.membershipCancellations.find(
+      { membershipId: id },
+      { orderBy: { createdAt: 'ASC' } }
+    )
+      .then(cancellations => cancellations
+        .map(cancellation => ({
+          ...cancellation,
+          category: {
+            type: cancellation.category
+          }
+        })
+        )
+      )
   }
 }

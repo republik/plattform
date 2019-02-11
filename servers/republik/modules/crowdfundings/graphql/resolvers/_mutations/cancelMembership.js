@@ -19,9 +19,7 @@ module.exports = async (_, args, context) => {
     const {
       id: membershipId,
       immediately = false,
-      details,
-      suppressConfirmation,
-      suppressWinback
+      details
     } = args
 
     const membership = await transaction.query(`
@@ -81,8 +79,8 @@ module.exports = async (_, args, context) => {
       membershipId: newMembership.id,
       reason: details.reason,
       category: details.type,
-      suppressConfirmation: !!suppressConfirmation,
-      suppressWinback: !!suppressWinback,
+      suppressConfirmation: !!details.suppressConfirmation,
+      suppressWinback: !!details.suppressWinback,
       cancelledViaSupport: user.id !== req.user.id
     })
 
@@ -99,7 +97,7 @@ module.exports = async (_, args, context) => {
       await transaction.transactionCommit()
     }
 
-    if (!suppressConfirmation) {
+    if (!details.suppressConfirmation) {
       await mail.sendMembershipCancellation({
         email: user.email,
         name: user.name,
