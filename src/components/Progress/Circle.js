@@ -22,7 +22,7 @@ class Circle extends Component {
   }
   
   render() {
-    const { progress, radius, stroke, strokeWidth } = this.props
+    const { progress, radius, stroke, strokeWidth, strokePlaceholder } = this.props
     const strokeDashoffset = this.circumference - progress / 100 * this.circumference
   
     return (
@@ -30,6 +30,18 @@ class Circle extends Component {
         height={ radius * 2 }
         width={ radius * 2 }
        >
+        {strokePlaceholder && (
+          <circle
+            {...styles.circle}
+            stroke={strokePlaceholder}
+            fill="transparent"
+            strokeWidth={strokeWidth}
+            style={{strokeDashoffset}}
+            r={this.normalizedRadius}
+            cx={radius}
+            cy={radius}
+          />
+        )}
         <circle
           {...styles.circle}
           stroke={stroke}

@@ -5,6 +5,7 @@ Props:
 - `radius`: number; the radius of the circle.
 - `stroke`: string; the stroke color.
 - `strokeWidth`: number; the stroke width in pixels.
+- `strokePlaceholder`: string; the stroke color of the placeholder.
 
 ```react|span-2
 <ProgressCircle
@@ -72,5 +73,32 @@ Props:
   progress={-100}
   radius={18}
   strokeWidth={4}
+/>
+```
+
+```react|span-2
+<ProgressCircle
+  progress={33}
+  radius={18}
+  strokeWidth={4}
+  strokePlaceholder={colors.divider}
+/>
+```
+
+```react|span-2
+<ProgressCircle
+  progress={66}
+  radius={18}
+  strokeWidth={4}
+  strokePlaceholder={colors.divider}
+/>
+```
+
+```react|span-2
+<ProgressCircle
+  progress={100}
+  radius={18}
+  strokeWidth={4}
+  strokePlaceholder={colors.divider}
 />
 ```
