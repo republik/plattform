@@ -67,10 +67,10 @@ export default class CancelPledge extends Component {
     this.state = {
       isOpen: false,
       immediately: false,
-      suppressConfirmation: (cancellation && cancellation.suppressConfirmation) || false,
-      suppressWinback: (cancellation && cancellation.suppressWinback) || false,
+      suppressConfirmation: cancellation && cancellation.suppressConfirmation,
+      suppressWinback: cancellation && cancellation.suppressWinback,
       reason: (cancellation && cancellation.reason) || '',
-      cancellationType: (cancellation && cancellation.category.type)  || ''
+      cancellationType: (cancellation && cancellation.category.type) || ''
     }
 
     this.reasonChangeHandler = (_, value) => {
@@ -102,42 +102,32 @@ export default class CancelPledge extends Component {
         cancellationType
       } = this.state
 
-      if (this.props.cancellation) {
-        return mutation({
-          variables: {
-            cancellationId: this.props.cancellation.id,
-            details: {
-              reason,
-              type: cancellationType,
-              suppressConfirmation,
-              suppressWinback,
-            }
-          }
-        }).then(() =>
-          this.setState(() => ({ isOpen: false }))
-        )
-      } else {
-        return mutation({
-          variables: {
+      return mutation({
+        variables: {
+          ...(this.props.cancellation && {
+            cancellationId: this.props.cancellation.id
+          }),
+          ...(!this.props.cancellation && {
             membershipId: this.props.membership.id,
-            immediately,
-            details: {
-              reason,
-              type: cancellationType,
-              suppressConfirmation,
-              suppressWinback,
-            }
+            immediately
+          }),
+          details: {
+            reason,
+            type: cancellationType,
+            suppressConfirmation,
+            suppressWinback,
           }
-        }).then(() =>
-          this.setState(() => ({ isOpen: false }))
-        )
-      }
+        }
+      }).then(() =>
+        this.setState(() => ({ isOpen: false }))
+      )
     }
   }
 
   render() {
     const { isOpen, reason, cancellationType } = this.state
     const { refetchQueries, membership, cancellation } = this.props
+    const isEditing = !!cancellation
     return (
       <Fragment>
         <TextButton
@@ -145,12 +135,12 @@ export default class CancelPledge extends Component {
             this.setState({ isOpen: true })
           }}
         >
-          { cancellation ? 'editieren' : 'künden' }
+          { isEditing ? 'editieren' : 'künden' }
         </TextButton>
 
         {isOpen && (
           <Mutation
-            mutation={cancellation ? UPDATE_CANCELLATION : CANCEL_MEMBERSHIP}
+            mutation={isEditing ? UPDATE_CANCELLATION : CANCEL_MEMBERSHIP}
             refetchQueries={refetchQueries}
           >
             {(cancelPledge, { loading, error }) => {
@@ -171,7 +161,7 @@ export default class CancelPledge extends Component {
                           render={() => (
                             <Fragment>
                               <Interaction.H2>
-                                {cancellation ? 'Kündigung editieren' : 'Membership canceln'}
+                                {isEditing ? 'Kündigung editieren' : 'Membership canceln'}
                               </Interaction.H2>
                               <br />
                               <Interaction.P>
@@ -215,7 +205,7 @@ export default class CancelPledge extends Component {
                                   )}
                                 />
                                 <p>
-                                  {!cancellation &&
+                                  {!isEditing &&
                                     <Checkbox
                                       checked={this.state.immediately}
                                       onChange={this.immediatelyChangeHandler}
@@ -225,7 +215,7 @@ export default class CancelPledge extends Component {
                                   }
                                 </p>
                                 <p>
-                                  {!cancellation &&
+                                  {!isEditing &&
                                     <Checkbox
                                       checked={this.state.suppressConfirmation}
                                       onChange={this.suppressConfirmationChangeHandler}
