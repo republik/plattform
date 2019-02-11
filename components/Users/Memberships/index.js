@@ -65,6 +65,7 @@ const GET_MEMBERSHIPS = gql`
           createdAt
           revokedAt
           winbackSentAt
+          winbackCanBeSent
         }
         voucherCode
         claimerName

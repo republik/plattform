@@ -205,29 +205,28 @@ export default class CancelPledge extends Component {
                                   )}
                                 />
                                 <p>
-                                  {!isEditing &&
-                                    <Checkbox
-                                      checked={this.state.immediately}
-                                      onChange={this.immediatelyChangeHandler}
-                                    >
-                                      Sofort canceln
-                                    </Checkbox>
-                                  }
+                                  <Checkbox
+                                    checked={this.state.immediately}
+                                    onChange={this.immediatelyChangeHandler}
+                                    disabled={isEditing}
+                                  >
+                                    Sofort canceln
+                                  </Checkbox>
                                 </p>
                                 <p>
-                                  {!isEditing &&
-                                    <Checkbox
-                                      checked={this.state.suppressConfirmation}
-                                      onChange={this.suppressConfirmationChangeHandler}
-                                    >
-                                      Kündigungsbestätigung unterdrücken
-                                    </Checkbox>
-                                  }
+                                  <Checkbox
+                                    checked={this.state.suppressConfirmation}
+                                    onChange={this.suppressConfirmationChangeHandler}
+                                    disabled={isEditing}
+                                  >
+                                    Kündigungsbestätigung unterdrücken
+                                  </Checkbox>
                                 </p>
                                 <p>
                                   <Checkbox
                                     checked={this.state.suppressWinback}
                                     onChange={this.suppressWinbackChangeHandler}
+                                    disabled={cancellation.winbackSentAt || !cancellation.winbackCanBeSent}
                                   >
                                     Winback unterdrücken
                                   </Checkbox>
