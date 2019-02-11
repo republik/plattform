@@ -1,6 +1,5 @@
 const moment = require('moment')
 const _ = require('lodash')
-const { ascending } = require('d3-array')
 
 const { transformUser, Roles } = require('@orbiting/backend-modules-auth')
 const { applyPgInterval: { add: addInterval } } = require('@orbiting/backend-modules-utils')
@@ -124,9 +123,10 @@ module.exports = {
     return transformUser(user)
   },
   async cancellations ({ id, cancelReasons }, args, { user: me, pgdb }) {
-    return pgdb.public.membershipCancellations.find({
-      membershipId: id
-    })
+    return pgdb.public.membershipCancellations.find(
+      { membershipId: id },
+      { orderBy: { createdAt: 'ASC' } }
+    )
       .then(cancellations => cancellations
         .map(cancellation => ({
           ...cancellation,
@@ -135,7 +135,6 @@ module.exports = {
           }
         })
         )
-        .sort((a, b) => ascending(a.createdAt, b.createdAt))
       )
   }
 }
