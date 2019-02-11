@@ -327,9 +327,12 @@ type CancellationCategory {
 input CancellationInput {
   type: CancellationCategoryType!
   reason: String
+  suppressConfirmation: Boolean
+  suppressWinback: Boolean
 }
 
 type Cancellation {
+  id: ID!
   reason: String
   category: CancellationCategory!
   suppressConfirmation: Boolean!
