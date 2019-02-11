@@ -21,6 +21,7 @@ import LatestActivity from '../components/Users/LatestActivity'
 import EventLog from '../components/Users/EventLog'
 import Access from '../components/Users/Access'
 import Sessions from '../components/Users/Sessions'
+import Actions from '../components/Users/Actions';
 
 const styles = {
   row: css({
@@ -55,6 +56,7 @@ const SectionSwitch = ({ userId, section }) => {
     <div>
       <NewsletterSubscriptions userId={userId} />
       <Roles userId={userId} />
+      <Actions userId={userId} />
     </div>
     <div {...styles.fifty}>
       <LatestActivity userId={userId} />
