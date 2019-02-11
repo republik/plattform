@@ -226,7 +226,7 @@ export default class CancelPledge extends Component {
                                   <Checkbox
                                     checked={this.state.suppressWinback}
                                     onChange={this.suppressWinbackChangeHandler}
-                                    disabled={cancellation.winbackSentAt || !cancellation.winbackCanBeSent}
+                                    disabled={cancellation && (cancellation.winbackSentAt || !cancellation.winbackCanBeSent)}
                                   >
                                     Winback unterdrücken
                                   </Checkbox>
