@@ -53,6 +53,7 @@ const GET_MEMBERSHIPS = gql`
           endDate
         }
         cancellations {
+          id
           reason
           suppressConfirmation
           suppressWinback
@@ -235,6 +236,18 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                  {cancellation.reason &&
                    <DD>{cancellation.reason}</DD>
                  }
+                 <DD>
+                   <CancelMembership
+                     membership={membership}
+                     cancellation={cancellation}
+                     refetchQueries={() => [
+                       {
+                         query: GET_MEMBERSHIPS,
+                         variables: { userId }
+                       }
+                     ]}
+                   />
+                 </DD>
                </Fragment>
               ))}
              </DL>}
@@ -256,9 +269,7 @@ const MembershipDetails = ({ userId, membership, ...props }) => {
                   !!membership.renew &&
                     <CancelMembership
                       membership={membership}
-                      refetchQueries={({
-                        data: { cancelMembership }
-                      }) => [
+                      refetchQueries={() => [
                         {
                           query: GET_MEMBERSHIPS,
                           variables: { userId }

@@ -35,15 +35,25 @@ mutation cancelMembership(
   $membershipId: ID!
   $immediately: Boolean
   $details: CancellationInput!
-  $suppressConfirmation: Boolean
-  $suppressWinback: Boolean
 ) {
   cancelMembership(
     id: $membershipId
     immediately: $immediately
     details: $details
-    suppressConfirmation: $suppressConfirmation
-    suppressWinback: $suppressWinback
+  ) {
+    id
+  }
+}
+`
+
+const UPDATE_CANCELLATION = gql`
+mutation updateMembershipCancellation(
+  $cancellationId: ID!
+  $details: CancellationInput!
+) {
+  updateMembershipCancellation(
+    id: $cancellationId
+    details: $details
   ) {
     id
   }
@@ -53,13 +63,14 @@ mutation cancelMembership(
 export default class CancelPledge extends Component {
   constructor(props) {
     super(props)
+    const { cancellation } = props
     this.state = {
       isOpen: false,
       immediately: false,
-      suppressConfirmation: false,
-      suppressWinback: false,
-      reason: '',
-      cancellationType: ''
+      suppressConfirmation: (cancellation && cancellation.suppressConfirmation) || false,
+      suppressWinback: (cancellation && cancellation.suppressWinback) || false,
+      reason: (cancellation && cancellation.reason) || '',
+      cancellationType: (cancellation && cancellation.category.type)  || ''
     }
 
     this.reasonChangeHandler = (_, value) => {
@@ -91,26 +102,42 @@ export default class CancelPledge extends Component {
         cancellationType
       } = this.state
 
-      return mutation({
-        variables: {
-          membershipId: this.props.membership.id,
-          immediately,
-          suppressConfirmation,
-          suppressWinback,
-          details: {
-            reason,
-            type: cancellationType
+      if (this.props.cancellation) {
+        return mutation({
+          variables: {
+            cancellationId: this.props.cancellation.id,
+            details: {
+              reason,
+              type: cancellationType,
+              suppressConfirmation,
+              suppressWinback,
+            }
           }
-        }
-      }).then(() =>
-        this.setState(() => ({ isOpen: false }))
-      )
+        }).then(() =>
+          this.setState(() => ({ isOpen: false }))
+        )
+      } else {
+        return mutation({
+          variables: {
+            membershipId: this.props.membership.id,
+            immediately,
+            details: {
+              reason,
+              type: cancellationType,
+              suppressConfirmation,
+              suppressWinback,
+            }
+          }
+        }).then(() =>
+          this.setState(() => ({ isOpen: false }))
+        )
+      }
     }
   }
 
   render() {
     const { isOpen, reason, cancellationType } = this.state
-    const { refetchQueries, membership } = this.props
+    const { refetchQueries, membership, cancellation } = this.props
     return (
       <Fragment>
         <TextButton
@@ -118,12 +145,12 @@ export default class CancelPledge extends Component {
             this.setState({ isOpen: true })
           }}
         >
-          künden
+          { cancellation ? 'editieren' : 'künden' }
         </TextButton>
 
         {isOpen && (
           <Mutation
-            mutation={CANCEL_MEMBERSHIP}
+            mutation={cancellation ? UPDATE_CANCELLATION : CANCEL_MEMBERSHIP}
             refetchQueries={refetchQueries}
           >
             {(cancelPledge, { loading, error }) => {
@@ -144,7 +171,7 @@ export default class CancelPledge extends Component {
                           render={() => (
                             <Fragment>
                               <Interaction.H2>
-                                Membership canceln
+                                {cancellation ? 'Kündigung editieren' : 'Membership canceln'}
                               </Interaction.H2>
                               <br />
                               <Interaction.P>
@@ -188,20 +215,24 @@ export default class CancelPledge extends Component {
                                   )}
                                 />
                                 <p>
-                                  <Checkbox
-                                    checked={this.state.immediately}
-                                    onChange={this.immediatelyChangeHandler}
-                                  >
-                                    Sofort canceln
-                                  </Checkbox>
+                                  {!cancellation &&
+                                    <Checkbox
+                                      checked={this.state.immediately}
+                                      onChange={this.immediatelyChangeHandler}
+                                    >
+                                      Sofort canceln
+                                    </Checkbox>
+                                  }
                                 </p>
                                 <p>
-                                  <Checkbox
-                                    checked={this.state.suppressConfirmation}
-                                    onChange={this.suppressConfirmationChangeHandler}
-                                  >
-                                    Kündigungsbestätigung unterdrücken
-                                  </Checkbox>
+                                  {!cancellation &&
+                                    <Checkbox
+                                      checked={this.state.suppressConfirmation}
+                                      onChange={this.suppressConfirmationChangeHandler}
+                                    >
+                                      Kündigungsbestätigung unterdrücken
+                                    </Checkbox>
+                                  }
                                 </p>
                                 <p>
                                   <Checkbox
