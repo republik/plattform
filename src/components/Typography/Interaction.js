@@ -57,6 +57,16 @@ const interactionP = css({
   margin: 0
 })
 
+const interactionPMargin = css({
+  color: colors.text,
+  ...styles.sansSerifRegular16,
+  margin: '10px 0',
+  [mUp]: {
+    ...styles.sansSerifRegular21,
+    margin: '20px 0'
+  },
+})
+
 
 export const Headline = ({children, ...props}) => (
   <h1 {...props} {...interactionHeadline}>{children}</h1>
@@ -74,8 +84,8 @@ export const H3 = ({children, ...props}) => (
   <h3 {...props} {...interactionH3}>{children}</h3>
 )
 
-export const P = ({children, ...props}) => (
-  <p {...props} {...interactionP}>{children}</p>
+export const P = ({children, margin, ...props}) => (
+  <p {...props} {...(margin ? interactionPMargin : interactionP)}>{children}</p>
 )
 
 const emphasis = css({
