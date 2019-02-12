@@ -208,13 +208,12 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
 
 const shouldAutoLogin = ({ email }) => {
   if (AUTO_LOGIN_REGEX) {
-    let testMatch = false
     try {
-      testMatch = new RegExp(AUTO_LOGIN_REGEX).test(email)
+      return new RegExp(AUTO_LOGIN_REGEX).test(email)
     } catch (e) {
-      testMatch = false
+      console.warn(e)
+      return false
     }
-    return testMatch
   }
   return false
 }
