@@ -173,7 +173,7 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
     })
     if (shouldAutoLogin({ email })) {
       setTimeout(async () => {
-        console.warn(`🔓💥 auto login for ${email}!!! AUTO_LOGIN_REGEX`)
+        console.warn(`🔓💥 Auto Login for ${email} due to AUTO_LOGIN_REGEX`)
         await authorizeSession({
           pgdb,
           tokens: [token],
