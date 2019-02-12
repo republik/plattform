@@ -502,18 +502,19 @@ class AudioPlayer extends Component {
           <div {...styles.buttons}>
             <button
               {...styles.button}
-              onClick={playEnabled ? () => this.setTime(0) : null}
-            >
-              <Rewind size={SIZE.rewind} fill={(playEnabled && progress > 0) ? '#000' : colors.disabled}/>
-            </button>
-            <button
-              {...styles.button}
               onClick={playEnabled ? this.toggle : null}
               title={t(`styleguide/AudioPlayer/${playing ? 'pause' : 'play'}`)}
               aria-live='assertive'
             >
               {!playing && <Play size={SIZE.play} fill={playEnabled ? '#000' : colors.disabled} />}
               {playing && <Pause size={SIZE.play} fill="#000" />}
+            </button>
+            <button
+              {...styles.button}
+              onClick={playEnabled ? () => this.setTime(0) : null}
+              title={t('styleguide/AudioPlayer/rewind')}
+            >
+              <Rewind size={SIZE.rewind} fill={(playEnabled && progress > 0) ? '#000' : colors.disabled}/>
             </button>
           </div>
           {download && (

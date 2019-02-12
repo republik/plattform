@@ -1,5 +1,5 @@
 {
-  "updated": "2019-01-04T22:33:09.377Z",
+  "updated": "2019-02-12T15:53:03.346Z",
   "title": "live",
   "data": [
     {
@@ -122,6 +122,10 @@
     {
       "key": "styleguide/AudioPlayer/pause",
       "value": "Anhalten"
+    },
+    {
+      "key": "styleguide/AudioPlayer/rewind",
+      "value": "Von Anfang an"
     },
     {
       "key": "styleguide/AudioPlayer/download",
