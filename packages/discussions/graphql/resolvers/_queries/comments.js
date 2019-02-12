@@ -57,7 +57,7 @@ module.exports = async (_, args, context, info) => {
     : null
 
   return {
-    id: `comments${offset || ''}`,
+    id: `${discussionId || 'comments'}{offset || ''}`,
     totalCount: numComments,
     directTotalCount: numComments,
     pageInfo: {
