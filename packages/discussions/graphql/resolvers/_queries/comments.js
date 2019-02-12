@@ -19,23 +19,33 @@ module.exports = async (_, args, context, info) => {
     orderBy = 'publishedAt',
     orderDirection = 'DESC',
     first: limit = 40,
-    offset = 0
+    offset = 0,
+    discussionId
   } = options
 
   if (limit > MAX_LIMIT) {
     throw new Error(t('api/discussion/args/first/tooBig', { max: MAX_LIMIT }))
   }
 
-  const sortKey = getSortKey(orderBy)
+  let sortKey = getSortKey(orderBy)
+  if (sortKey === 'score') {
+    sortKey = '"upVotes" - "downVotes"'
+  }
 
-  const numComments = await pgdb.public.comments.count()
+  const numComments = await pgdb.public.comments.count(
+    { discussionId },
+    { skipUndefined: true }
+  )
 
   const comments = await pgdb.public.comments.find(
-    { },
+    {
+      discussionId
+    },
     {
       limit,
       offset,
-      orderBy: { [sortKey]: orderDirection }
+      orderBy: { [sortKey]: orderDirection },
+      skipUndefined: true
     }
   )
 
