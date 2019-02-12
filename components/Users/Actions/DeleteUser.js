@@ -4,12 +4,13 @@ import gql from 'graphql-tag'
 
 import {
   Button,
+  Checkbox,
+  Interaction,
+  Loader,
   Overlay,
   OverlayBody,
   OverlayToolbar,
   OverlayToolbarClose,
-  Interaction,
-  Loader
 } from '@project-r/styleguide'
 
 import {
@@ -17,8 +18,6 @@ import {
   SectionSubhead,
   TextButton
 } from '../../Display/utils'
-import { Label } from '@project-r/styleguide/lib/components/Typography';
-import Checkbox from '@project-r/styleguide/lib/components/Form/Checkbox';
 
 
 const DELETE_USER = gql`

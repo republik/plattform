@@ -8,20 +8,14 @@ import {
 } from '@project-r/styleguide'
 
 import {
-  displayDate,
-  displayStyles,
-  displayDateTime,
   Section,
-  SectionTitle,
-  DL,
-  DT,
-  DD
+  SectionTitle
 } from '../../Display/utils'
 import DeleteUser from './DeleteUser';
 
 const GET_ACTIONS = gql`
-  query actions($id: String) {
-    user(slug: $id) {
+  query actions($slug: String) {
+    user(slug: $slug) {
       id
       deletedAt
     }
@@ -35,7 +29,7 @@ export default class Actions extends Component {
 
   render() {
     return (
-      <Query query={GET_ACTIONS} variables={{ id: this.props.userId }}>
+      <Query query={GET_ACTIONS} variables={{ slug: this.props.userId }}>
         {({ loading, error, data }) => {
           const isInitialLoading =
             loading && !(data && data.user)
@@ -50,7 +44,7 @@ export default class Actions extends Component {
                 return (
                   <Section>
                     <SectionTitle>Aktionen</SectionTitle>
-                    {!!isLoading && (
+                    {isLoading && (
                       <div>
                         <InlineSpinner size={28} />
                       </div>
@@ -59,15 +53,7 @@ export default class Actions extends Component {
                       <DeleteUser
                         userId={user.id}
                         deletedAt={user.deletedAt}
-                        refetchQueries={({
-                          data: { deleteUser }
-                        }) => [
-                          {
-                            query: GET_ACTIONS,
-                            variables: { id: user.id }
-                          }
-                        ]}
-                        />
+                      />
                     )}
                   </Section>
                 )
