@@ -62,9 +62,9 @@ AUTH_MAIL_SUBJECT=sign in link
 # what to prefix the sign-in link with
 PUBLIC_URL=http://localhost:3020
 
-# if truthy, @test.project-r.construction mail addresses get automatically
-# signedin and no mail is sent (used for automated testing)
-AUTO_LOGIN=1
+# NEVER DO THIS IN PROD
+# signs in matching emails automatically
+#AUTO_LOGIN_REGEX=^([a-zA-Z0-9._%+-]+)@test\.project-r\.construction$
 ```
 
 ## static-texts
