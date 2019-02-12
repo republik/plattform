@@ -32,7 +32,6 @@ env:
     - PUBLIC_WS_URL_PATH=/graphql
     - SEND_MAILS=false
     - FORCE_TEST_END=true
-    - AUTO_LOGIN=true
     - SESSION_SECRET=testtest
     - DEFAULT_MAIL_FROM_NAME='travis'
     - DEFAULT_MAIL_FROM_ADDRESS='travis@test.project-r.construction'
