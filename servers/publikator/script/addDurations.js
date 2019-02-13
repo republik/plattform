@@ -19,7 +19,7 @@ const platformToEmbedType = {
   youtube: 'YoutubeEmbed'
 }
 
-const transform = async (doc, context) => {
+const transform = async (doc, context, isRawDoc) => {
   const mdast = doc.content
   const promises = []
   visit(mdast, 'zone', (node, i, parent) => {
@@ -59,7 +59,9 @@ const transform = async (doc, context) => {
   if (
     results.find(r => !!r) ||
     // simple republish will augment audioSource with duration
-    (doc.meta && doc.meta.audioSource && !doc.meta.audioSource.durationMs)
+    // if raw then there is no duration (only in published ES doc) but the
+    // decision was made in the run with ES doc
+    (isRawDoc || (doc.meta && doc.meta.audioSource && !doc.meta.audioSource.durationMs))
   ) {
     return 'hinzugefügt: Spieldauer und mediaId für video/audio'
   }

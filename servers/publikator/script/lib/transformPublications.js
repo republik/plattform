@@ -122,7 +122,7 @@ module.exports = ({ transform }) =>
         }
         return
       }
-      let docTransformed = await transform(doc, context)
+      let docTransformed = await transform(doc, context, false)
       if (docTransformed) {
         console.log(`\nfixing: ${docTransformed}...`)
         console.log(`${FRONTEND_BASE_URL}${doc.meta.path}`)
@@ -154,7 +154,7 @@ module.exports = ({ transform }) =>
           context
         )
 
-        docTransformed = await transform(rawDoc, context)
+        docTransformed = await transform(rawDoc, context, true)
         if (!docTransformed) {
           console.log('es <> git out of sync!', repoId)
           return
