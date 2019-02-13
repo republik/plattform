@@ -51,6 +51,8 @@ type Meta {
   audioSource: AudioSource
 
   estimatedReadingMinutes: Int
+  totalMediaMinutes: Int
+  estimatedConsumptionMinutes: Int
 
   # template of the article
   template: String

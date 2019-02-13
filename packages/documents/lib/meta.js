@@ -93,9 +93,7 @@ const getTotalMediaDurationMinutes = doc => {
       ids[node.data.id] = true
     }
   })
-  return total
-    ? total / 1000 / 60
-    : total
+  return total && Math.round(total / 1000 / 60)
 }
 
 /**
@@ -113,14 +111,13 @@ const getWordsPerMinute = () => WORDS_PER_MIN
  * @return {Number}      Minutes to read content
  */
 const getEstimatedReadingMinutes = doc => {
-  let totalMinutes = getTotalMediaDurationMinutes(doc)
-
   const count = (doc._storedFields && doc._storedFields['contentString.count']) || false
   if (count && count[0] > getWordsPerMinute()) {
-    totalMinutes += count[0] / getWordsPerMinute()
+    return Math.round(
+      count[0] / getWordsPerMinute()
+    )
   }
-
-  return Math.round(totalMinutes)
+  return null
 }
 
 const isReadingMinutesSuppressed = (resolvedFields) =>
@@ -147,6 +144,11 @@ const isReadingMinutesSuppressed = (resolvedFields) =>
     )
   )
 
+const getEstimatedConsumptionMinutes = (doc, estimatedReadingMinutes) =>
+  doc.meta && doc.meta.audioSource && doc.meta.audioSource.durationMs
+    ? Math.round(doc.meta.audioSource.durationMs / 1000 / 60)
+    : estimatedReadingMinutes
+
 /**
  * Prepares meta information and resolves linked documents in meta which are
  * not available in original {doc.content.meta} fields.
@@ -170,13 +172,21 @@ const getMeta = doc => {
     ? getEstimatedReadingMinutes(doc)
     : null
 
+  const times = estimatedReadingMinutes !== null
+    ? {
+      estimatedReadingMinutes,
+      totalMediaMinutes: getTotalMediaDurationMinutes(doc),
+      estimatedConsumptionMinutes: getEstimatedConsumptionMinutes(doc, estimatedReadingMinutes)
+    }
+    : {}
+
   // Populate {doc._meta}. Is used to recognize provided {doc} for which meta
   // information was retrieved already.
   doc._meta = {
     ...doc.content.meta,
     credits: getCredits(doc),
     audioSource: getAudioSource(doc),
-    estimatedReadingMinutes,
+    ...times,
     ...resolvedFields
   }
 
