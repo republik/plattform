@@ -22,7 +22,7 @@ module.exports = async (_, args, context) => {
     if (!comment) {
       throw new Error(t('api/comment/404'))
     }
-    if (comment.userId !== user.id) {
+    if (!comment.userId || comment.userId !== user.id) {
       throw new Error(t('api/comment/notYours'))
     }
 
