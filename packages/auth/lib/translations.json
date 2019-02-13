@@ -1,5 +1,5 @@
 {
-  "updated": "2019-01-22T16:11:14.428Z",
+  "updated": "2019-02-13T22:17:15.911Z",
   "title": "live",
   "data": [
     {
@@ -148,7 +148,7 @@
     },
     {
       "key": "api/consents/notRevokable",
-      "value": "Die Zustimmung ({consent}) kann nicht zurückgezogen werden."
+      "value": "Die Einwilligung ({consent}) kann nicht zurückgezogen werden."
     },
     {
       "key": "api/auth/accessToken/scope/404",
