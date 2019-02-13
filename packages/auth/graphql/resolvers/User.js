@@ -39,6 +39,10 @@ module.exports = {
   updatedAt (user) {
     return user._raw.updatedAt
   },
+  deletedAt (user, args, { user: me }) {
+    Roles.ensureUserIsMeOrInRoles(user, me, userAccessRoles)
+    return user._raw.deletedAt
+  },
   enabledSecondFactors (user, args, { user: me }) {
     if (
       Roles.userIsMeOrInRoles(user, me, ['supporter'])
