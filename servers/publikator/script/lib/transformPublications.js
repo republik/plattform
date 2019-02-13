@@ -75,7 +75,8 @@ const iterateESDocs = async (context, callback) => {
       sort: {
         key: 'publishedAt',
         direction: 'DESC'
-      }
+      },
+      ignorePrepublished: true
     }, context)
 
     pageInfo = docsConnection.pageInfo

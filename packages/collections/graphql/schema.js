@@ -24,9 +24,9 @@ type mutations {
   ): Collection!
 
 
-
   upsertDocumentProgress(
     documentId: ID!
+    # between 0 and 1
     percentage: Float!
     nodeId: String!
   ): DocumentProgress!

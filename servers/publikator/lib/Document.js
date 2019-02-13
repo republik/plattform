@@ -91,6 +91,10 @@ const prepareMetaForPublish = async ({
       .then(res => res.buffer())
       .then(res => mp3Duration(res))
       .then(res => res * 1000)
+      .catch(e => {
+        console.error(`Could not download/measure audioSourceMp3 (${audioSourceMp3})`)
+        return 0
+      })
   }
   const audioSource = audioSourceMp3 || audioSourceAac || audioSourceOgg ? {
     mediaId: Buffer.from(`${repoId}/audio`).toString('base64'),

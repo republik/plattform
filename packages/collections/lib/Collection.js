@@ -51,7 +51,11 @@ const findDocumentItems = (args, { pgdb }) =>
       .map(spreadItemData)
     )
 
-const getItem = async (entityName, { collectionName, ...rest }, { loaders }) => {
+const getItem = async (entityName, { collectionName, ...rest }, { loaders, t }) => {
+  if (!loaders[entityName]) {
+    console.error(`missing loader ${entityName}`)
+    throw new Error(t('api/unexpected'))
+  }
   const collection = await loaders.Collection.byKeyObj.load({
     name: collectionName
   })
@@ -62,7 +66,11 @@ const getItem = async (entityName, { collectionName, ...rest }, { loaders }) => 
     .then(spreadItemData)
 }
 
-const upsertItem = async (tableName, query, data, { pgdb }) => {
+const upsertItem = async (tableName, query, data, { pgdb, t }) => {
+  if (!pgdb.public[tableName]) {
+    console.error(`missing table ${tableName}`)
+    throw new Error(t('api/unexpected'))
+  }
   const existingItem = await pgdb.public[tableName].findOne(query)
   if (!existingItem) {
     return pgdb.public[tableName].insertAndGet(
@@ -78,6 +86,8 @@ const upsertItem = async (tableName, query, data, { pgdb }) => {
     let accessor
     if (data.percentage !== null) {
       accessor = 'percentage'
+      newData.percentage = Math.max(newData.percentage, 0)
+      newData.percentage = Math.min(newData.percentage, 1)
     } else if (data.secs !== null) {
       accessor = 'secs'
     }

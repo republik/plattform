@@ -11,7 +11,6 @@ const POLICIES = [
   'NEWSLETTER_PROJECTR',
   'NEWSLETTER_DAILY',
   'NEWSLETTER_WEEKLY',
-  'NEWSLETTER_FEUILLETON',
   'PROGRESS'
 ]
 */
@@ -47,7 +46,7 @@ const consentsOfUser = async ({ userId, pgdb }) => {
 
 // returns the latest record of all policies
 const lastRecordForPolicyForUser = async ({ userId, policy, pgdb }) =>
-  pgdb.public.consents.find(
+  pgdb.public.consents.findFirst(
     {
       userId,
       policy
@@ -55,7 +54,6 @@ const lastRecordForPolicyForUser = async ({ userId, policy, pgdb }) =>
       orderBy: ['createdAt desc']
     }
   )
-    .then(records => records && records[0])
 
 const statusForPolicyForUser = async (args) =>
   lastRecordForPolicyForUser(args)

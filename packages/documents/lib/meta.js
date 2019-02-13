@@ -88,7 +88,7 @@ const getTotalMediaDurationMinutes = doc => {
   }
   const ids = {}
   visit(doc.content, 'zone', (node, i, parent) => {
-    if (node.identifier === 'EMBEDVIDEO' && node.data.durationMs && !ids[node.data.id]) {
+    if (node.identifier === 'EMBEDVIDEO' && node.data && node.data.durationMs && !ids[node.data.id]) {
       total += node.data.durationMs
       ids[node.data.id] = true
     }

@@ -8,6 +8,6 @@ module.exports = {
         ...max,
         id: `max-${max.id}`
       }
-      : max
+      : null
   }
 }
