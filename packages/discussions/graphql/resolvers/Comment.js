@@ -12,7 +12,7 @@ if (!DISPLAY_AUTHOR_SECRET) {
 }
 
 const textForComment = ({ userId, content, published, adminUnpublished }, user) =>
-  (!published || adminUnpublished) && (!user || userId !== user.id)
+  (!published || adminUnpublished) && (!user || !userId || userId !== user.id)
     ? null
     : content
 
@@ -70,7 +70,7 @@ module.exports = {
     published && !adminUnpublished,
 
   adminUnpublished: ({ userId, adminUnpublished }, args, { user }) =>
-    Roles.userIsInRoles(user, ['editor', 'admin']) || (user && userId === user.id)
+    Roles.userIsInRoles(user, ['editor', 'admin']) || (user && userId && userId === user.id)
       ? adminUnpublished
       : null,
 
@@ -127,7 +127,7 @@ module.exports = {
   },
 
   author: async (comment, args, { user, loaders }) => {
-    if (!Roles.userIsInRoles(user, ['editor', 'admin'])) {
+    if (!comment.userId || !Roles.userIsInRoles(user, ['editor', 'admin'])) {
       return null
     }
     return loaders.User.byId.load(comment.userId)
@@ -142,6 +142,23 @@ module.exports = {
       t,
       loaders
     } = context
+
+    const id = crypto
+      .createHmac('sha256', DISPLAY_AUTHOR_SECRET)
+      .update(`${comment.discussionId}${comment.userId ? comment.userId : ''}`)
+      .digest('hex')
+
+    const anonymousComment = {
+      id,
+      name: t('api/comment/anonymous/displayName'),
+      profilePicture: null,
+      anonymity: true,
+      username: null
+    }
+
+    if (!comment.userId) {
+      return anonymousComment
+    }
 
     const [discussion, commenter, commenterPreferences] = await Promise.all([
       loaders.Discussion.byId.load(comment.discussionId),
@@ -167,19 +184,10 @@ module.exports = {
 
     const profilePicture = getPortrait(commenter, (args && args.portrait), context)
 
-    const id = crypto
-      .createHmac('sha256', DISPLAY_AUTHOR_SECRET)
-      .update(`${discussion.id}${commenter.id}`)
-      .digest('hex')
-
     return anonymous
       ? {
-        id,
-        name: t('api/comment/anonymous/displayName'),
-        profilePicture: null,
-        credential,
-        anonymity: true,
-        username: null
+        ...anonymousComment,
+        credential
       }
       : {
         id,

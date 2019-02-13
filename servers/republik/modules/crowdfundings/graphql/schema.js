@@ -139,7 +139,7 @@ type mutations {
   # if the user never bought something from us, he/she is deleted completely
   # if there was a purchase, everything except what we legally must store is deleted
   # required role: admin
-  deleteUser(userId: ID!): User
+  deleteUser(userId: ID!, unpublishComments: Boolean): User
 
   enableMembershipAutoPay(id: ID!): Boolean!
   disableMembershipAutoPay(id: ID!): Boolean!
