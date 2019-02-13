@@ -63,9 +63,12 @@ type mutations {
     id: ID!
     immediately: Boolean
     details: CancellationInput!
-    suppressConfirmation: Boolean
-    suppressWinback: Boolean
   ): Membership!
+
+  updateMembershipCancellation(
+    id: ID!
+    details: CancellationInput!
+  ): Cancellation!
 
   # MONTHLY_ABO: if cancelled immediately a new subscription is created
   # if canceled !immediately and subscription is still running, it is
