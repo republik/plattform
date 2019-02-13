@@ -8,6 +8,10 @@ if (!YOUTUBE_APP_KEY) {
 }
 
 const getYoutubeVideoById = async id => {
+  if (!YOUTUBE_APP_KEY) {
+    throw new Error('missing YOUTUBE_APP_KEY')
+  }
+
   // Note that player.embedWidth/embedHeight is only returned if the request
   // specifies a maxWidth parameter.
   // https://developers.google.com/youtube/v3/docs/videos
