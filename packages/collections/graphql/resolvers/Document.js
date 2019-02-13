@@ -22,5 +22,15 @@ module.exports = {
       userId: me.id,
       collectionName
     }, context)
+  },
+  userProgress ({ meta: { repoId } }, args, context) {
+    const { user: me } = context
+    if (!Roles.userIsInRoles(me, ['member']) || !repoId) {
+      return
+    }
+    return Collection.getDocumentProgressItem({
+      repoId,
+      userId: me.id
+    }, context)
   }
 }

@@ -1,6 +1,8 @@
 const { newAuthError } = require('./AuthError')
 const MissingConsentsError = newAuthError('missing-consents', 'api/consents/missing')
 
+const revokeHooks = []
+
 /*
 const POLICIES = [
   'PRIVACY',
@@ -8,14 +10,27 @@ const POLICIES = [
   'STATUTE',
   'NEWSLETTER_PROJECTR',
   'NEWSLETTER_DAILY',
-  'NEWSLETTER_WEEKLY'
+  'NEWSLETTER_WEEKLY',
+  'PROGRESS'
 ]
 */
 
+const REVOKABLE_POLICIES = [
+  'PROGRESS'
+]
+
+const getAllConsentRecords = ({ userId, pgdb }) =>
+  pgdb.public.consents.find(
+    {
+      userId
+    }, {
+      orderBy: ['createdAt asc']
+    }
+  )
+
+// only returns GRANTed consents
 const consentsOfUser = async ({ userId, pgdb }) => {
-  const consents = await pgdb.public.consents.find({
-    userId
-  }, {orderBy: ['createdAt asc']})
+  const consents = await getAllConsentRecords({ userId, pgdb })
 
   let grantedPolicies = {}
   for (let consent of consents) {
@@ -28,6 +43,21 @@ const consentsOfUser = async ({ userId, pgdb }) => {
 
   return Object.keys(grantedPolicies)
 }
+
+// returns the latest record of all policies
+const lastRecordForPolicyForUser = async ({ userId, policy, pgdb }) =>
+  pgdb.public.consents.findFirst(
+    {
+      userId,
+      policy
+    }, {
+      orderBy: ['createdAt desc']
+    }
+  )
+
+const statusForPolicyForUser = async (args) =>
+  lastRecordForPolicyForUser(args)
+    .then(record => record && record.record === 'GRANT')
 
 const requiredConsents = async ({ userId, pgdb }) => {
   const {
@@ -84,19 +114,30 @@ const saveConsents = async ({ userId, consents = [], req, pgdb }) => {
   )
 }
 
-const revokeConsent = async ({ userId, consent, req, pgdb }) => {
+const revokeConsent = async ({ userId, consent }, context) => {
+  const { req, pgdb } = context
   await pgdb.public.consents.insert({
     userId,
     policy: consent,
     ip: req.ip,
     record: 'REVOKE'
   })
+  for (let hook of revokeHooks) {
+    await hook({ userId, consent }, context)
+  }
 }
 
+const registerRevokeHook = (hook) =>
+  revokeHooks.push(hook)
+
 module.exports = {
+  REVOKABLE_POLICIES,
+  lastRecordForPolicyForUser,
+  statusForPolicyForUser,
   requiredConsents,
   missingConsents,
   ensureAllRequiredConsents,
   saveConsents,
-  revokeConsent
+  revokeConsent,
+  registerRevokeHook
 }

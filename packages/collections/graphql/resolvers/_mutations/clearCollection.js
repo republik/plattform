@@ -1,7 +1,7 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const Collection = require('../../../lib/Collection')
 
-module.exports = async (_, { documentId, collectionName }, context) => {
+module.exports = async (_, { collectionName }, context) => {
   const { pgdb, user: me, t, req } = context
   ensureSignedIn(req)
 
@@ -12,21 +12,15 @@ module.exports = async (_, { documentId, collectionName }, context) => {
       throw new Error(t(`api/collections/collection/404`))
     }
 
-    const repoId = Buffer.from(documentId, 'base64')
-      .toString('utf-8')
-      .split('/')
-      .slice(0, 2)
-      .join('/')
-    const item = await Collection.deleteDocumentItem(
+    await Collection.clearItems(
       me.id,
-      collection.id,
-      repoId,
+      collection.name,
       context
     )
 
     await transaction.transactionCommit()
 
-    return item
+    return collection
   } catch (e) {
     await transaction.transactionRollback()
     throw e
