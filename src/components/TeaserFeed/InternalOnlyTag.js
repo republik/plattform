@@ -9,7 +9,7 @@ const styles = {
     ...sansSerifRegular12,
     color: colors.disabled,
     position: 'absolute',
-    top: 3,
+    top: '-20px',
     right: 0,
     [mUp]: {
       ...sansSerifRegular13
