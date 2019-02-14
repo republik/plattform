@@ -171,4 +171,6 @@ class Comment extends Component {
   }
 }
 
+Comment.renderComment = (comment) => renderMdast(comment, schema, { MissingNode })
+
 export default Comment
