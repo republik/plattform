@@ -32,15 +32,19 @@ module.exports = async (_, args, context, info) => {
     sortKey = '"upVotes" - "downVotes"'
   }
 
+  const query = {
+    discussionId,
+    published: true,
+    adminUnpublished: false
+  }
+
   const numComments = await pgdb.public.comments.count(
-    { discussionId },
+    query,
     { skipUndefined: true }
   )
 
   const comments = await pgdb.public.comments.find(
-    {
-      discussionId
-    },
+    query,
     {
       limit,
       offset,
