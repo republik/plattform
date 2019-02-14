@@ -16,11 +16,12 @@ module.exports = async (_, args, context, info) => {
     }
     : args
   const {
-    orderBy = 'publishedAt',
+    orderBy = 'DATE',
     orderDirection = 'DESC',
     first: limit = 40,
     offset = 0,
-    discussionId
+    discussionId,
+    focusId
   } = options
 
   if (limit > MAX_LIMIT) {
@@ -28,30 +29,43 @@ module.exports = async (_, args, context, info) => {
   }
 
   let sortKey = getSortKey(orderBy)
+  // there is no score in the db
   if (sortKey === 'score') {
     sortKey = '"upVotes" - "downVotes"'
   }
 
-  const query = {
-    discussionId,
-    published: true,
-    adminUnpublished: false
-  }
-
   const numComments = await pgdb.public.comments.count(
-    query,
+    {
+      discussionId,
+      published: true,
+      adminUnpublished: false
+    },
     { skipUndefined: true }
   )
 
-  const comments = await pgdb.public.comments.find(
-    query,
-    {
-      limit,
-      offset,
-      orderBy: { [sortKey]: orderDirection },
-      skipUndefined: true
-    }
-  )
+  const comments = await pgdb.query(`
+    SELECT
+      *,
+      CASE
+        WHEN id = :focusId THEN 1
+        ELSE 0
+      END AS "focus"
+    FROM
+      comments
+    WHERE
+      ${discussionId ? '"discussionId" = :discussionId AND' : ''}
+      "published" = true AND
+      "adminUnpublished" = false
+    ORDER BY
+      "focus" DESC, "${sortKey}" ${orderDirection === 'DESC' ? 'DESC' : 'ASC'}
+    LIMIT :limit
+    OFFSET :offset
+  `, {
+    discussionId,
+    focusId: focusId || null,
+    limit,
+    offset
+  })
 
   const endCursor = (offset + limit) < numComments
     ? Buffer.from(JSON.stringify({
