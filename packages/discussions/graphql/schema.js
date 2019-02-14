@@ -15,6 +15,9 @@ type queries {
     orderDirection: OrderDirection
     first: Int
     after: String
+    discussionId: ID
+    focusId: ID
+    lastId: ID
   ): CommentConnection!
 }
 
