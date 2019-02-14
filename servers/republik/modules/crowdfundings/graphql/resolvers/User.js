@@ -69,9 +69,10 @@ module.exports = {
   async activeMembership (user, args, { pgdb, user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'accountant'])) {
       return createMembershipCache(user, 'activeMembership')
-        .cache(async () => pgdb.public.memberships.findOne({
-          userId: user.id, active: true
-        }))
+        .cache(async () => pgdb.public.memberships.findFirst(
+          { userId: user.id, active: true },
+          { orderBy: { createdAt: 'ASC' } }
+        ))
     }
     return null
   },
