@@ -17,6 +17,7 @@ type queries {
     after: String
     discussionId: ID
     focusId: ID
+    lastId: ID
   ): CommentConnection!
 }
 

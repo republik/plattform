@@ -21,7 +21,8 @@ module.exports = async (_, args, context, info) => {
     first: limit = 40,
     offset = 0,
     discussionId,
-    focusId
+    focusId,
+    lastId
   } = options
 
   if (limit > MAX_LIMIT) {
@@ -49,7 +50,11 @@ module.exports = async (_, args, context, info) => {
       CASE
         WHEN id = :focusId THEN 1
         ELSE 0
-      END AS "focus"
+      END AS "focus",
+      CASE
+        WHEN id = :lastId THEN 1
+        ELSE 0
+      END AS "last"
     FROM
       comments
     WHERE
@@ -58,12 +63,14 @@ module.exports = async (_, args, context, info) => {
       "adminUnpublished" = false
     ORDER BY
       "focus" DESC,
+      "last" ASC,
       "${sortKey}" ${orderDirection === 'DESC' ? 'DESC' : 'ASC'}
     LIMIT :limit
     OFFSET :offset
   `, {
     discussionId,
     focusId: focusId || null,
+    lastId: lastId || null,
     limit,
     offset
   })
