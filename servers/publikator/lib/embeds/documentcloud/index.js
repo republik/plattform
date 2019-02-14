@@ -32,7 +32,7 @@ const getDocumentCloudDocById = async (id, t) => {
     .replace('{page}', '1').replace('{size}', 'normal')
 
   return {
-    id: id,
+    id,
     title: doc.title,
     thumbnail: thumbnail,
     createdAt: new Date(doc.created_at),

@@ -56,15 +56,22 @@ const getCredits = doc => {
 
 /**
  * Builds and an audioSource object from {doc.content.meta} for use in meta.
+ * Publish uses servers/publikator/lib/Document.prepareMetaForPublish instead
  *
  * @param  {Object}      doc An MDAST tree
  * @return {Object|null}     e.g. { mp3: true, aac: null, ogg: null }
  */
 const getAudioSource = doc => {
-  if (!doc.content && doc.meta && doc.meta.audioSource) {
+  // after publish
+  if (doc.meta && doc.meta.audioSource) {
     return doc.meta.audioSource
   }
-  const { audioSourceMp3, audioSourceAac, audioSourceOgg } = doc.content.meta
+  // before published - render in publikator (preview)
+  const {
+    audioSourceMp3,
+    audioSourceAac,
+    audioSourceOgg
+  } = doc.content.meta
   const audioSource = audioSourceMp3 || audioSourceAac || audioSourceOgg ? {
     mp3: audioSourceMp3,
     aac: audioSourceAac,
@@ -72,6 +79,21 @@ const getAudioSource = doc => {
   } : null
 
   return audioSource
+}
+
+const getTotalMediaDurationMinutes = doc => {
+  let total = 0
+  if (doc.meta && doc.meta.audioSource && doc.meta.audioSource.durationMs) {
+    total += doc.meta.audioSource.durationMs
+  }
+  const ids = {}
+  visit(doc.content, 'zone', (node, i, parent) => {
+    if (node.identifier === 'EMBEDVIDEO' && node.data && node.data.durationMs && !ids[node.data.id]) {
+      total += node.data.durationMs
+      ids[node.data.id] = true
+    }
+  })
+  return total && Math.round(total / 1000 / 60)
 }
 
 /**
@@ -90,12 +112,12 @@ const getWordsPerMinute = () => WORDS_PER_MIN
  */
 const getEstimatedReadingMinutes = doc => {
   const count = (doc._storedFields && doc._storedFields['contentString.count']) || false
-
-  if (!count || count[0] < getWordsPerMinute()) {
-    return 0
+  if (count && count[0] > getWordsPerMinute()) {
+    return Math.round(
+      count[0] / getWordsPerMinute()
+    )
   }
-
-  return Math.round(count[0] / getWordsPerMinute())
+  return null
 }
 
 const isReadingMinutesSuppressed = (resolvedFields) =>
@@ -122,6 +144,11 @@ const isReadingMinutesSuppressed = (resolvedFields) =>
     )
   )
 
+const getEstimatedConsumptionMinutes = (doc, estimatedReadingMinutes) =>
+  doc.meta && doc.meta.audioSource && doc.meta.audioSource.durationMs
+    ? Math.round(doc.meta.audioSource.durationMs / 1000 / 60)
+    : estimatedReadingMinutes
+
 /**
  * Prepares meta information and resolves linked documents in meta which are
  * not available in original {doc.content.meta} fields.
@@ -141,9 +168,18 @@ const getMeta = doc => {
     ? metaFieldResolver(doc.content.meta, doc._all)
     : {}
 
-  const estimatedReadingMinutes = !isReadingMinutesSuppressed(resolvedFields)
+  const readingMinutesSuppressed = isReadingMinutesSuppressed(resolvedFields)
+  const estimatedReadingMinutes = !readingMinutesSuppressed
     ? getEstimatedReadingMinutes(doc)
     : null
+
+  const times = !readingMinutesSuppressed
+    ? {
+      estimatedReadingMinutes,
+      totalMediaMinutes: getTotalMediaDurationMinutes(doc),
+      estimatedConsumptionMinutes: getEstimatedConsumptionMinutes(doc, estimatedReadingMinutes)
+    }
+    : {}
 
   // Populate {doc._meta}. Is used to recognize provided {doc} for which meta
   // information was retrieved already.
@@ -151,7 +187,7 @@ const getMeta = doc => {
     ...doc.content.meta,
     credits: getCredits(doc),
     audioSource: getAudioSource(doc),
-    estimatedReadingMinutes,
+    ...times,
     ...resolvedFields
   }
 

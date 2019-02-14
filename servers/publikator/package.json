@@ -8,6 +8,7 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "@orbiting/remark-preset": "^1.2.3",
+    "@rocka/mp3-duration": "^2.0.0",
     "apollo-fetch": "^0.7.0",
     "apollo-modules-node": "^0.1.4",
     "autolinker": "^1.6.2",

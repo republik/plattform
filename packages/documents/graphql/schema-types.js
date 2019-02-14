@@ -16,10 +16,12 @@ type Episode {
   document: Document
 }
 
-type AudioSource {
+type AudioSource implements PlayableMedia {
+  mediaId: ID!
   mp3: String
   aac: String
   ogg: String
+  durationMs: Int!
 }
 
 type Meta {
@@ -49,6 +51,8 @@ type Meta {
   audioSource: AudioSource
 
   estimatedReadingMinutes: Int
+  totalMediaMinutes: Int
+  estimatedConsumptionMinutes: Int
 
   # template of the article
   template: String
@@ -81,6 +85,8 @@ type Document {
     before: ID
     after: ID
   ): DocumentConnection!
+
+  embeds(types: [EmbedType!]): [Embed!]!
 }
 
 type DocumentNode {
@@ -122,5 +128,83 @@ type DocumentPageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
+}
+
+interface PlayableMedia {
+  mediaId: ID!
+  durationMs: Int!
+}
+
+enum EmbedType {
+  YoutubeEmbed
+  VimeoEmbed
+  TwitterEmbed
+  DocumentCloudEmbed
+}
+
+union Embed = TwitterEmbed | YoutubeEmbed | VimeoEmbed | DocumentCloudEmbed
+
+type TwitterEmbed {
+  id: ID!
+  text: String!
+  html: String!
+  createdAt: DateTime!
+  retrievedAt: DateTime!
+  userId: String!
+  userName: String!
+  userScreenName: String!
+  userProfileImageUrl: String!,
+  image: String
+  more: String
+  playable: Boolean!
+}
+
+type YoutubeEmbed implements PlayableMedia {
+  id: ID!
+  platform: String!
+  createdAt: DateTime!
+  retrievedAt: DateTime!
+  userUrl: String!
+  userName: String!
+  thumbnail: String!
+  title: String!
+  userProfileImageUrl: String
+  aspectRatio: Float
+  mediaId: ID!
+  durationMs: Int!
+}
+
+type VimeoSrc {
+  mp4: String,
+  hls: String,
+  thumbnail: String
+}
+
+type VimeoEmbed implements PlayableMedia {
+  id: ID!
+  platform: String!
+  createdAt: DateTime!
+  retrievedAt: DateTime!
+  userUrl: String!
+  userName: String!
+  thumbnail: String!
+  title: String!
+  userProfileImageUrl: String
+  aspectRatio: Float,
+  src: VimeoSrc
+  mediaId: ID!
+  durationMs: Int!
+}
+
+type DocumentCloudEmbed {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  retrievedAt: DateTime!
+  contributorUrl: String
+  contributorName: String
+  thumbnail: String!
+  title: String!
+  url: String!
 }
 `

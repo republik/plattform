@@ -188,7 +188,7 @@ const getElasticDoc = (
     commitId,
     versionName,
     milestoneCommitId,
-    meta,
+    meta, // doc.meta === doc.content.meta
     resolved: !_.isEmpty(resolved) ? resolved : undefined,
     content: doc.content,
     contentString: mdastToString(
