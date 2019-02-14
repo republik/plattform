@@ -28,12 +28,6 @@ module.exports = async (_, args, context, info) => {
     throw new Error(t('api/discussion/args/first/tooBig', { max: MAX_LIMIT }))
   }
 
-  let sortKey = getSortKey(orderBy)
-  // there is no score in the db
-  if (sortKey === 'score') {
-    sortKey = '"upVotes" - "downVotes"'
-  }
-
   const numComments = await pgdb.public.comments.count(
     {
       discussionId,
@@ -42,6 +36,12 @@ module.exports = async (_, args, context, info) => {
     },
     { skipUndefined: true }
   )
+
+  let sortKey = getSortKey(orderBy)
+  // there is no score in the db
+  if (sortKey === 'score') {
+    sortKey = 'upVotes" - "downVotes'
+  }
 
   const comments = await pgdb.query(`
     SELECT
@@ -57,7 +57,8 @@ module.exports = async (_, args, context, info) => {
       "published" = true AND
       "adminUnpublished" = false
     ORDER BY
-      "focus" DESC, "${sortKey}" ${orderDirection === 'DESC' ? 'DESC' : 'ASC'}
+      "focus" DESC,
+      "${sortKey}" ${orderDirection === 'DESC' ? 'DESC' : 'ASC'}
     LIMIT :limit
     OFFSET :offset
   `, {
