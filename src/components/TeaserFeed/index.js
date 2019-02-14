@@ -1,6 +1,7 @@
 import React from 'react'
 import Container from './Container'
 import * as Headlines from './Headline'
+import InternalOnlyTag from './InternalOnlyTag'
 import Lead from './Lead'
 import Credit from './Credit'
 import { css } from 'glamor'
@@ -52,7 +53,9 @@ export const TeaserFeed = ({
   description,
   credits,
   publishDate,
+  prepublication,
   bar,
+  t,
   Link = DefaultLink
 }) => {
   const formatMeta = (format && format.meta) || {}
@@ -101,6 +104,7 @@ export const TeaserFeed = ({
           {bar}
         </div>
       )}
+      {prepublication && <InternalOnlyTag t={t} />}
     </Container>
   )
 }

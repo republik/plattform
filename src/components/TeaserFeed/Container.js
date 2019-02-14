@@ -9,6 +9,7 @@ const styles = {
   main: css({
     borderTop: `1px solid ${colors.text}`,
     paddingTop: '8px',
+    position: 'relative',
     margin: '0 0 30px 0',
     [mUp]: {
       margin: '0 0 40px 0',
