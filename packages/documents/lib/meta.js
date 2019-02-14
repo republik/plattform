@@ -168,11 +168,12 @@ const getMeta = doc => {
     ? metaFieldResolver(doc.content.meta, doc._all)
     : {}
 
-  const estimatedReadingMinutes = !isReadingMinutesSuppressed(resolvedFields)
+  const readingMinutesSuppressed = isReadingMinutesSuppressed(resolvedFields)
+  const estimatedReadingMinutes = !readingMinutesSuppressed
     ? getEstimatedReadingMinutes(doc)
     : null
 
-  const times = estimatedReadingMinutes !== null
+  const times = !readingMinutesSuppressed
     ? {
       estimatedReadingMinutes,
       totalMediaMinutes: getTotalMediaDurationMinutes(doc),
