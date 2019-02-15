@@ -10,6 +10,8 @@ import withT from '../../lib/withT'
 import { swissTime } from '../../lib/utils/format'
 import { transformData } from './transformData'
 
+import GithubIcon from 'react-icons/lib/fa/github'
+
 const timeFormat = swissTime.format('%d. %B %Y, %H:%M Uhr')
 
 const CONTAINER_MAX_WIDTH = 800
@@ -61,6 +63,12 @@ const styles = {
     fontSize: '13px',
     marginBottom: '5px',
     position: 'relative'
+  }),
+  listItemWrapper: css({
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between'
   }),
   svg: css({
     position: 'absolute',
@@ -262,7 +270,7 @@ class Tree extends Component {
         {commits &&
           <ul {...styles.list}>
             {commits.map(commit => {
-              const colors = this.getColor(commit.author.email)
+              const treeColors = this.getColor(commit.author.email)
               const hasLocalVersion = localStorageCommitIds
                 .indexOf(commit.id) !== -1
               const hightlight = hasLocalVersion || commit.milestones.length
@@ -271,79 +279,99 @@ class Tree extends Component {
                 ref={commit.setListItemRef}
                 style={{
                   backgroundColor: hightlight
-                    ? colors.highlightColor
+                    ? treeColors.highlightColor
                     : undefined,
                   paddingLeft
                 }}
                 {...styles.listItem}
               >
-                <div style={{
-                  padding: 5,
-                  backgroundColor: !hightlight
-                    ? colors.backgroundColor
-                    : undefined
-                }}>
-                  <Interaction.P>
-                    <Link
-                      route='repo/edit'
-                      params={{
-                        repoId: repoId.split('/'),
-                        commitId: commit.id
-                      }}
-                    >
-                      <a {...styles.link}>
-                        {commit.message}
-                      </a>
-                    </Link>
-                  </Interaction.P>
-                  <Label>
-                    {commit.author.name}
-                    <br />
-                    {timeFormat(new Date(commit.date))}
-                  </Label>
-                  <br />
-                  <br />
-                  {hasLocalVersion && <span {...styles.milestone}>
-                    <LocalIcon
-                      color='#000'
-                      size={MILESTONEICON_SIZE}
-                      style={styles.checkIcon} />
-                    <span {...styles.milestoneLabel}>
-                      {t('tree/commit/localVersion')}
-                    </span>
-                  </span>}
-                  {commit.milestones.map((milestone, i) =>
-                    <span {...styles.milestone} key={i}>
-                      {milestone.immutable
-                        ? <TagIcon
-                          color='#000'
-                          size={MILESTONEICON_SIZE}
-                          style={styles.checkIcon} />
-                        : <CheckIcon
-                          color='#000'
-                          size={MILESTONEICON_SIZE}
-                          style={styles.checkIcon} />}
-                      <span {...styles.milestoneLabel}>
-                        {t(`checklist/labels/${milestone.name}`, undefined, milestone.name)}{' '}
-                      </span>
-                      {milestone.author.name}
-                    </span>
-                  )}
-                  <Interaction.P>
-                    <Label>
+                <div
+                  style={{
+                    padding: 5,
+                    backgroundColor: !hightlight
+                      ? treeColors.backgroundColor
+                      : undefined
+                  }}
+                  {...styles.listItemWrapper}
+                >
+                  <div>
+                    <Interaction.P>
                       <Link
-                        route='repo/publish'
+                        route='repo/edit'
                         params={{
                           repoId: repoId.split('/'),
                           commitId: commit.id
                         }}
                       >
                         <a {...styles.link}>
-                          {t('tree/commit/publish')}
+                          {commit.message}
                         </a>
                       </Link>
+                    </Interaction.P>
+                    <Label>
+                      {commit.author.name}
+                      <br />
+                      {timeFormat(new Date(commit.date))}
                     </Label>
-                  </Interaction.P>
+                    <br />
+                    <br />
+                    {hasLocalVersion && <span {...styles.milestone}>
+                      <LocalIcon
+                        color='#000'
+                        size={MILESTONEICON_SIZE}
+                        style={styles.checkIcon} />
+                      <span {...styles.milestoneLabel}>
+                        {t('tree/commit/localVersion')}
+                      </span>
+                    </span>}
+                    {commit.milestones.map((milestone, i) =>
+                      <span {...styles.milestone} key={i}>
+                        {milestone.immutable
+                          ? <TagIcon
+                            color='#000'
+                            size={MILESTONEICON_SIZE}
+                            style={styles.checkIcon} />
+                          : <CheckIcon
+                            color='#000'
+                            size={MILESTONEICON_SIZE}
+                            style={styles.checkIcon} />}
+                        <span {...styles.milestoneLabel}>
+                          {t(`checklist/labels/${milestone.name}`, undefined, milestone.name)}{' '}
+                        </span>
+                        {milestone.author.name}
+                      </span>
+                    )}
+                    <Interaction.P>
+                      <Label>
+                        <Link
+                          route='repo/publish'
+                          params={{
+                            repoId: repoId.split('/'),
+                            commitId: commit.id
+                          }}
+                        >
+                          <a {...styles.link}>
+                            {t('tree/commit/publish')}
+                          </a>
+                        </Link>
+                      </Label>
+                    </Interaction.P>
+                  </div>
+                  <div style={{ marginRight: 10 }} >
+                    <Interaction.P>
+                      <Label style={{ fontSize: 20 }}>
+                        {/* short_path=75b25ca opens the rich-diff for files named article.md.
+                            still not sure how it's constructed though */}
+                        <a
+                          href={`https://github.com/${repoId}/commit/${commit.id}?short_path=75b25ca`}
+                          target='_blank'
+                          {...styles.link}
+                        >
+                          <GithubIcon />
+                        </a>
+                      </Label>
+                    </Interaction.P>
+                  </div>
                 </div>
               </li>
             })}
