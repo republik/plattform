@@ -4,7 +4,11 @@ const { evaluate, resolvePackages } = require('./CustomPackages')
 const createCache = require('./cache')
 const cancelMembership = require('../graphql/resolvers/_mutations/cancelMembership')
 const debug = require('debug')('crowdfundings:memberships')
-const { enforceSubscriptions, sendMembershipProlongConfirmation } = require('./Mail')
+const {
+  enforceSubscriptions,
+  sendMembershipProlongConfirmation,
+  sendMembershipCancellation
+} = require('./Mail')
 const Promise = require('bluebird')
 const omit = require('lodash/omit')
 
@@ -208,12 +212,12 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
         id: m.id,
         details: {
           type: 'SYSTEM',
-          reason: 'Auto Cancellation (generateMemberships)'
-        },
-        suppressConfirmation: true,
-        suppressWinback: true
+          reason: 'Auto Cancellation (generateMemberships)',
+          suppressConfirmation: true,
+          suppressWinback: true
+        }
       },
-      { req, t, pgdb }
+      { req, t, pgdb, mail: { sendMembershipCancellation } }
     ))
   }
 
