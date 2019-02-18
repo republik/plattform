@@ -1,5 +1,5 @@
 {
-  "updated": "2019-02-12T15:53:03.346Z",
+  "updated": "2019-02-18T08:52:22.422Z",
   "title": "live",
   "data": [
     {
@@ -158,6 +158,10 @@
     {
       "key": "styleguide/video/dnt/player/vimeo",
       "value": "Vimeo"
+    },
+    {
+      "key": "styleguide/TeaserFeed/InternalOnlyTag",
+      "value": "Nur intern publiziert"
     },
     {
       "key": "styleguide/charts/error",

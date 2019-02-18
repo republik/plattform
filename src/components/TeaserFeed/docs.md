@@ -9,6 +9,7 @@ Supported props:
   - `href` String, target url or path
   - `passHref` Boolean, indicates this will eventually end in an a tag and you may overwrite href
 - `bar`: an optional React element.
+- `prepublication`: Whether the teaser is for a prepublished article.
 
 ```react
 <TeaserFeed
@@ -34,7 +35,10 @@ Supported props:
     {type: 'text', value: 'An article by '},
     {type: 'link', url: 'https://republik.ch/~moser', children: [{type: 'text', value: 'Christof Moser'}]},
     {type: 'text', value: ', 31.12.2017'},
-  ]} />
+  ]}
+  t={t}
+  prepublication={true}
+/>
 ```
 
 ```react
