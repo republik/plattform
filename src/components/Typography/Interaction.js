@@ -84,8 +84,8 @@ export const H3 = ({children, ...props}) => (
   <h3 {...props} {...interactionH3}>{children}</h3>
 )
 
-export const P = ({children, margin, ...props}) => (
-  <p {...props} {...(margin ? interactionPMargin : interactionP)}>{children}</p>
+export const P = ({children, withMargin, ...props}) => (
+  <p {...props} {...(withMargin ? interactionPMargin : interactionP)}>{children}</p>
 )
 
 const emphasis = css({
