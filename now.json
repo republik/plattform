@@ -3,7 +3,7 @@
   "builds": [
     {
       "src": "servers/assets/server.js",
-      "use": "@now/node-server",
+      "use": "@now/node-server@canary",
       "config": {
         "maxLambdaSize": "40mb"
       }
