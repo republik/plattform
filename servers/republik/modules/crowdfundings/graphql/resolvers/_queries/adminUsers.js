@@ -21,8 +21,6 @@ module.exports = async (
   const filterActive = (dateRangeFilter || stringArrayFilter || booleanFilter)
   let items = !(search || filterActive)
     ? await pgdb.public.users.findAll({
-      limit,
-      offset,
       orderBy: orderBy
         ? `"${orderBy.field}" ${orderBy.direction}`
         : '"createdAt" ASC'
@@ -95,8 +93,6 @@ module.exports = async (
     ? `u."${orderBy.field}" ${orderBy.direction}`
     : 'u."createdAt" ASC'
 }
-        OFFSET :offset
-        LIMIT :limit
       )
         SELECT * FROM raw
         WHERE
@@ -108,12 +104,10 @@ module.exports = async (
       toDate: dateRangeFilter ? dateRangeFilter.to : null,
       stringArray: stringArrayFilter ? stringArrayFilter.values : null,
       booleanValue: booleanFilter ? booleanFilter.value : null,
-      limit,
-      offset,
       WORD_SIMILARITY_THRESHOLD,
       WORD_DISTANCE_THRESHOLD
     })
-  items = items.map(transformUser)
-  const count = await pgdb.public.users.count()
+  const count = items.length
+  items = items.slice(offset, offset + limit).map(transformUser)
   return { items, count }
 }
