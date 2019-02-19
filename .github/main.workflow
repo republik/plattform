@@ -32,9 +32,13 @@ action "npm pack" {
   args = "pack"
 }
 
-action "GitHub Action for AWS" {
+action "upload to S3" {
   uses = "actions/aws/cli@efb074ae4510f2d12c7801e4461b65bf5e8317e6"
   needs = ["npm pack"]
   secrets = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY"]
-  args = "s3 cp project-r-styleguide-0.0.0-development.tgz s3://republik-assets-dev/npm/project-r-styleguide-`echo $GITHUB_REF | cut -d/ -f3`.tgz --acl public-read"
+  args = "s3 cp $PKG_NAME-0.0.0-development.tgz s3://$S3_PATH/$PKG_NAME-`echo $GITHUB_REF | cut -d/ -f3`.tgz --acl public-read"
+  env = {
+    PKG_NAME = "project-r-styleguide"
+    S3_PATH = "republik-assets-dev/npm"
+  }
 }
