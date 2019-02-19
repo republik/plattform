@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer')
+const puppeteer = require('puppeteer-core')
 
 const {
   PUPPETEER_WS_ENDPOINT,
