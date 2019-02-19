@@ -6,6 +6,7 @@ scalar JSON
 extend type User {
   pledges: [Pledge!]!
   memberships: [Membership!]!
+  activeMembership: Membership
 
   paymentSources: [PaymentSource!]!
   hasChargableSource: Boolean
@@ -154,6 +155,9 @@ type Membership {
   initialInterval: MembershipTypeInterval!
   initialPeriods: Int!
   periods: [MembershipPeriod]!
+  needsProlong: Boolean!
+  endDate: DateTime
+  graceEndDate: DateTime
   overdue: Boolean!
   cancellations: [Cancellation!]!
   createdAt: DateTime!
@@ -164,6 +168,7 @@ enum MembershipPeriodKind {
   REGULAR
   BONUS # Bonus period upon checkout
   ADMIN # A bonus period granted via admins, supporter
+  CHANGEOVER # Period upon changeover from one membership to other
 }
 
 type MembershipPeriod {
@@ -297,11 +302,20 @@ type PaymentSource {
 }
 
 enum CancellationCategoryType {
-  EDITORIAL,
-  NO_TIME,
-  TOO_EXPENSIVE,
-  VOID,
-  OTHER,
+  TOO_EXPENSIVE
+  NO_MONEY
+  NO_TIME
+  EDITORIAL
+  OTHER
+  VOID
+  EDITORAL_NARCISSISTIC
+  LOGIN_TECH
+  PAPER
+  EXPECTIONS
+  RARELY_READ
+  TOO_MUCH_TO_READ
+  CROWFUNDING_ONLY
+  SEVERAL_REASONS
   SYSTEM
 }
 
@@ -313,13 +327,21 @@ type CancellationCategory {
 input CancellationInput {
   type: CancellationCategoryType!
   reason: String
+  suppressConfirmation: Boolean
+  suppressWinback: Boolean
 }
 
 type Cancellation {
+  id: ID!
   reason: String
   category: CancellationCategory!
+  suppressConfirmation: Boolean!
+  suppressWinback: Boolean!
+  cancelledViaSupport: Boolean!
   createdAt: DateTime!
   revokedAt: DateTime
+  winbackSentAt: DateTime
+  winbackCanBeSent: Boolean!
 }
 
 ######################################
@@ -376,6 +398,8 @@ type PostfinancePayment {
   id: ID!
   buchungsdatum: Date!
   valuta: Date!
+  konto: String!
+  iban: String!
   avisierungstext: String!
   gutschrift: Int!
   mitteilung: String

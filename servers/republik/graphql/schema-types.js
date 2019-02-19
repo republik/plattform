@@ -133,7 +133,6 @@ enum Badge {
 enum NewsletterName {
   DAILY
   WEEKLY
-  FEUILLETON
   PROJECTR
 }
 
@@ -173,6 +172,13 @@ type Update {
   socialMediaImage: String
 }
 
+type MediaResponse {
+  medium: String
+  publishDate: String
+  title: String
+  url: String
+}
+
 type Employee {
   group: String
   subgroup: String
@@ -194,6 +200,13 @@ type MembershipStats {
   # number of distinct users with an active memberships
   count: Int!
   monthlys: [MonthlyMembershipStat!]!
+  periods(
+    minEndDate: Date!
+    maxEndDate: Date!
+    # filter by membershipTypes
+    # default: [ABO]
+    membershipTypes: [String!]
+  ): MembershipPeriodStats!
 }
 type MemberStats {
   count: Int!
@@ -205,5 +218,21 @@ type MonthlyMembershipStat {
   renewableCount: Int!
   renewedCount: Int!
   renewedRatio: Float!
+}
+
+type MembershipPeriodStats {
+  # combination: minEndDate-maxEndDate-membershipTypes
+  id: ID!
+  totalMemberships: Int!
+  # any day that an action occurred that affected a period that ended within the specified end dates
+  days: [MembershipPeriodStatsDay!]!
+}
+
+type MembershipPeriodStatsDay {
+  # combination: dayDate-membershipTypes
+  id: ID!
+  date: Date!
+  cancelCount: Int!
+  prolongCount: Int!
 }
 `

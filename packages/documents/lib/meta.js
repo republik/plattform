@@ -2,6 +2,28 @@ const visit = require('unist-util-visit')
 
 const { metaFieldResolver } = require('./resolve')
 
+// mean German, see http://iovs.arvojournals.org/article.aspx?articleid=2166061
+const WORDS_PER_MIN = 180
+
+const { SUPPRESS_READING_MINUTES } = process.env
+
+let suppressReadingMinutes
+
+try {
+  suppressReadingMinutes =
+    SUPPRESS_READING_MINUTES &&
+      JSON.parse(SUPPRESS_READING_MINUTES)
+
+  if (suppressReadingMinutes) {
+    console.warn(
+      'WARNING: Suppressing Document.meta.estimatedReadingMinutes with %O',
+      suppressReadingMinutes
+    )
+  }
+} catch (e) {
+  console.error('SUPPRESS_READING_MINUTES config parse error', e)
+}
+
 /**
  * Obtain credits from either {doc.content.children} or {doc.meta}.
  *
@@ -34,15 +56,22 @@ const getCredits = doc => {
 
 /**
  * Builds and an audioSource object from {doc.content.meta} for use in meta.
+ * Publish uses servers/publikator/lib/Document.prepareMetaForPublish instead
  *
  * @param  {Object}      doc An MDAST tree
  * @return {Object|null}     e.g. { mp3: true, aac: null, ogg: null }
  */
 const getAudioSource = doc => {
-  if (!doc.content && doc.meta && doc.meta.audioSource) {
+  // after publish
+  if (doc.meta && doc.meta.audioSource) {
     return doc.meta.audioSource
   }
-  const { audioSourceMp3, audioSourceAac, audioSourceOgg } = doc.content.meta
+  // before published - render in publikator (preview)
+  const {
+    audioSourceMp3,
+    audioSourceAac,
+    audioSourceOgg
+  } = doc.content.meta
   const audioSource = audioSourceMp3 || audioSourceAac || audioSourceOgg ? {
     mp3: audioSourceMp3,
     aac: audioSourceAac,
@@ -51,6 +80,74 @@ const getAudioSource = doc => {
 
   return audioSource
 }
+
+const getTotalMediaDurationMinutes = doc => {
+  let total = 0
+  if (doc.meta && doc.meta.audioSource && doc.meta.audioSource.durationMs) {
+    total += doc.meta.audioSource.durationMs
+  }
+  const ids = {}
+  visit(doc.content, 'zone', (node, i, parent) => {
+    if (node.identifier === 'EMBEDVIDEO' && node.data && node.data.durationMs && !ids[node.data.id]) {
+      total += node.data.durationMs
+      ids[node.data.id] = true
+    }
+  })
+  return total && Math.round(total / 1000 / 60)
+}
+
+/**
+ * Getter of WORDS_PER_MINUTE
+ *
+ * @return {Number} Returns word count one might be able to read
+ */
+const getWordsPerMinute = () => WORDS_PER_MIN
+
+/**
+ * Returns an estimated amount of minutes, describing how much time a proficient
+ * reader needs to invest to read this article.
+ *
+ * @param  {Object}      doc An MDAST tree
+ * @return {Number}      Minutes to read content
+ */
+const getEstimatedReadingMinutes = doc => {
+  const count = (doc._storedFields && doc._storedFields['contentString.count']) || false
+  if (count && count[0] > getWordsPerMinute()) {
+    return Math.round(
+      count[0] / getWordsPerMinute()
+    )
+  }
+  return null
+}
+
+const isReadingMinutesSuppressed = (resolvedFields) =>
+  suppressReadingMinutes && (
+    // Series
+    (
+      resolvedFields.series &&
+      resolvedFields.series.title &&
+      suppressReadingMinutes.series &&
+      suppressReadingMinutes.series.includes(
+        resolvedFields.series.title
+      )
+    ) ||
+
+    // Formats
+    (
+      resolvedFields.format &&
+      resolvedFields.format.meta &&
+      resolvedFields.format.meta.repoId &&
+      suppressReadingMinutes.formats &&
+      suppressReadingMinutes.formats.includes(
+        resolvedFields.format.meta.repoId
+      )
+    )
+  )
+
+const getEstimatedConsumptionMinutes = (doc, estimatedReadingMinutes) =>
+  doc.meta && doc.meta.audioSource && doc.meta.audioSource.durationMs
+    ? Math.round(doc.meta.audioSource.durationMs / 1000 / 60)
+    : estimatedReadingMinutes
 
 /**
  * Prepares meta information and resolves linked documents in meta which are
@@ -71,12 +168,26 @@ const getMeta = doc => {
     ? metaFieldResolver(doc.content.meta, doc._all)
     : {}
 
+  const readingMinutesSuppressed = isReadingMinutesSuppressed(resolvedFields)
+  const estimatedReadingMinutes = !readingMinutesSuppressed
+    ? getEstimatedReadingMinutes(doc)
+    : null
+
+  const times = !readingMinutesSuppressed
+    ? {
+      estimatedReadingMinutes,
+      totalMediaMinutes: getTotalMediaDurationMinutes(doc),
+      estimatedConsumptionMinutes: getEstimatedConsumptionMinutes(doc, estimatedReadingMinutes)
+    }
+    : {}
+
   // Populate {doc._meta}. Is used to recognize provided {doc} for which meta
   // information was retrieved already.
   doc._meta = {
     ...doc.content.meta,
     credits: getCredits(doc),
     audioSource: getAudioSource(doc),
+    ...times,
     ...resolvedFields
   }
 
@@ -84,5 +195,6 @@ const getMeta = doc => {
 }
 
 module.exports = {
-  getMeta
+  getMeta,
+  getWordsPerMinute
 }

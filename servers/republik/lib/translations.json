@@ -1,5 +1,5 @@
 {
-  "updated": "2018-12-25T13:21:32.083Z",
+  "updated": "2019-02-13T21:16:30.223Z",
   "title": "live",
   "data": [
     {
@@ -809,6 +809,26 @@
     {
       "key": "timeAhead/years/other",
       "value": "in {count} Jahren"
+    },
+    {
+      "key": "api/collections/collection/404",
+      "value": "Die Liste konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/collections/document/404",
+      "value": "Das Dokument konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/collections/progress/notEnabled",
+      "value": "Sie müssen zuerst zustimmen, dass Ihre Position gespeichert wird."
+    },
+    {
+      "key": "api/consents/missing",
+      "value": "Sie müssen folgenden Policies zustimmen um sich anmelden zu können: {consents}."
+    },
+    {
+      "key": "api/consents/notRevokable",
+      "value": "Die Einwilligung ({consent}) kann nicht zurückgezogen werden."
     }
   ]
 }

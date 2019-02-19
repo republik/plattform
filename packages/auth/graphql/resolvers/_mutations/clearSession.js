@@ -13,8 +13,8 @@ module.exports = async (_, args, { pgdb, user: me, req }) => {
   } = args
 
   const user = await resolveUser({ userId: foreignUserId || me.id, pgdb })
+  const session = pgdb.public.sessions.findOne({ sid: req.sessionID })
 
-  const session = pgdb.public.sessions.findOne({ sid: req.sessionID, email: user.email })
   if (session.id === sessionId) {
     // current session, normal logout
     await destroySession(req)

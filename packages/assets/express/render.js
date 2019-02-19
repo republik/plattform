@@ -37,6 +37,7 @@ module.exports = (server) => {
     }
 
     const allowed =
+      url &&
       whitelistedUrls &&
       !!whitelistedUrls.find(whiteUrl => url.indexOf(whiteUrl) === 0)
 

@@ -48,7 +48,7 @@ type queries {
   # required role: accountant
   paymentsCSV(companyName: String!, paymentIds: [ID!]): String!
 
-  cancellationCategories: [CancellationCategory!]!
+  cancellationCategories(showMore: Boolean): [CancellationCategory!]!
 }
 
 type mutations {
@@ -63,8 +63,12 @@ type mutations {
     id: ID!
     immediately: Boolean
     details: CancellationInput!
-    suppressNotifications: Boolean
   ): Membership!
+
+  updateMembershipCancellation(
+    id: ID!
+    details: CancellationInput!
+  ): Cancellation!
 
   # MONTHLY_ABO: if cancelled immediately a new subscription is created
   # if canceled !immediately and subscription is still running, it is
@@ -135,7 +139,7 @@ type mutations {
   # if the user never bought something from us, he/she is deleted completely
   # if there was a purchase, everything except what we legally must store is deleted
   # required role: admin
-  deleteUser(userId: ID!): User
+  deleteUser(userId: ID!, unpublishComments: Boolean): User
 
   enableMembershipAutoPay(id: ID!): Boolean!
   disableMembershipAutoPay(id: ID!): Boolean!

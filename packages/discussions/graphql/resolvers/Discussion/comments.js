@@ -172,8 +172,20 @@ const meassureDepth = (fields, depth = 0) => {
 }
 
 module.exports = async (discussion, args, context, info) => {
-  const { pgdb } = context
-  const maxDepth = args.flatDepth || meassureDepth(graphqlFields(info))
+  const { pgdb, loaders } = context
+  const requestedGraphqlFields = graphqlFields(info)
+  const maxDepth = args.flatDepth || meassureDepth(requestedGraphqlFields)
+
+  const totalCountOnly = Object.keys(requestedGraphqlFields)
+    .filter(key => !['id', 'totalCount'].includes(key))
+    .length === 0
+
+  if (totalCountOnly) {
+    return {
+      id: discussion.id,
+      totalCount: loaders.Discussion.byIdCommentsCount.load(discussion.id)
+    }
+  }
 
   const { after } = args
   const options = after

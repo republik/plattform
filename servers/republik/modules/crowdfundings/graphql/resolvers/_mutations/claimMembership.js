@@ -7,7 +7,7 @@ const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const cancelMembership = require('./cancelMembership')
 const createCache = require('../../../lib/cache')
 
-module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
+module.exports = async (_, args, {pgdb, req, t, mail, mail: {enforceSubscriptions}}) => {
   ensureSignedIn(req)
 
   let pledgerId
@@ -84,11 +84,12 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
             id: m.id,
             details: {
               type: 'SYSTEM',
-              reason: 'Auto Cancellation (claimMembership)'
-            },
-            suppressNotifications: true
+              reason: 'Auto Cancellation (claimMembership)',
+              suppressConfirmation: true,
+              suppressWinback: true
+            }
           },
-          { req, t, pgdb: transaction }
+          { req, t, pgdb: transaction, mail }
         )
       )
     }

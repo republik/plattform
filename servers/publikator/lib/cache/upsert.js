@@ -102,7 +102,7 @@ const getRepoTags = tags => {
 }
 
 const alterRepoTag = (tag, doc) => {
-  if (!tag || !tag.name || !tag.action) {
+  if (!tag || !tag.name || !tag.action || !doc._source) {
     return
   }
 

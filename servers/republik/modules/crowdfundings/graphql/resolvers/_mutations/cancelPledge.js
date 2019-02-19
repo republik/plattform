@@ -18,6 +18,7 @@ module.exports = async (_, args, {
   pgdb,
   req,
   t,
+  mail,
   mail: { enforceSubscriptions }
 }) => {
   if (!PARKING_PLEDGE_ID || !PARKING_USER_ID) {
@@ -119,7 +120,7 @@ module.exports = async (_, args, {
             id: memberships[0].id,
             immediately: true
           },
-          { pgdb: transaction, req, t }
+          { pgdb: transaction, req, t, mail }
         )
       }
     }
