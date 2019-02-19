@@ -30,7 +30,7 @@
     "debug": "^3.1.0",
     "export-files": "^2.1.1",
     "file-type-stream": "^1.0.0",
-    "puppeteer": "^1.11.0",
+    "puppeteer-core": "^1.12.2",
     "sharp": "^0.20.1",
     "stream-to-array": "^2.3.0",
     "streamifier": "^0.1.1"
