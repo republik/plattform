@@ -1,6 +1,6 @@
 workflow "Publish branches to S3" {
   on = "push"
-  resolves = ["GitHub Action for AWS"]
+  resolves = ["upload to S3"]
 }
 
 action "exclude master" {
