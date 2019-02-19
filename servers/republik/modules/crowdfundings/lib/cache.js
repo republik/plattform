@@ -8,10 +8,11 @@ const getRedisKey = ({ prefix, key }) =>
   `${namespace}:${prefix}:${key}`
 
 const createGet = ({ options, redis }) => async function () {
-  const payload = await redis.getAsync(getRedisKey(options))
+  const key = getRedisKey(options)
+  const payload = await redis.getAsync(key)
   debug('crowdfundings:cache:get')(
-    `${payload ? 'HIT' : 'MISS'} %O`,
-    options.key
+    `${payload ? 'HIT' : 'MISS'} %s`,
+    key
   )
 
   return payload
@@ -29,20 +30,25 @@ const createSet = ({ options, redis }) => async function (payload) {
   }
 
   if (payloadString) {
-    debug('crowdfundings:cache:set')('PUT %O', options.key)
+    const key = getRedisKey(options)
+    debug('crowdfundings:cache:set')('PUT %s', key)
     return redis.setAsync(
-      getRedisKey(options),
+      key,
       payloadString,
       'EX', options.ttl || 60
     )
   }
 }
 
-const createCache = () => async function (payloadFunction) {
+const createCache = ({ options }) => async function (payloadFunction) {
   debug('crowdfundings:cache')('cache')
 
   if (typeof payloadFunction !== 'function') {
     throw Error('cache expects function to evaluate payload')
+  }
+
+  if (options.disabled) {
+    return payloadFunction()
   }
 
   let data = await this.get()
@@ -69,9 +75,15 @@ const createInvalidate = ({ options, redis }) => async function () {
     .catch(() => {})// fails if no keys are matched
 }
 
-module.exports = (options) => ({
-  get: createGet({ options, redis }),
-  set: createSet({ options, redis }),
-  cache: createCache({ options, redis }),
-  invalidate: createInvalidate({ options, redis })
-})
+module.exports = (options) => {
+  if (options.disabled) {
+    console.warn(`WARNING: Cache DISABLED for "${namespace}:${options.prefix}"`)
+  }
+
+  return {
+    get: createGet({ options, redis }),
+    set: createSet({ options, redis }),
+    cache: createCache({ options, redis }),
+    invalidate: createInvalidate({ options, redis })
+  }
+}

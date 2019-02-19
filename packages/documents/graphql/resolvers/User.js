@@ -1,5 +1,6 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const documents = require('./_queries/documents')
+const emptyDocumentConnection = require('../../lib/emptyDocumentConnection')
 
 module.exports = {
   documents (user, args, context, info) {
@@ -10,13 +11,6 @@ module.exports = {
         userId: user.id
       }, context, info)
     }
-    return {
-      pageInfo: {
-        hasNextPage: false,
-        hasPreviousPage: false
-      },
-      totalCount: 0,
-      nodes: []
-    }
+    return emptyDocumentConnection
   }
 }

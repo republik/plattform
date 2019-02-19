@@ -3,6 +3,7 @@ const userAccessRoles = ['admin', 'supporter']
 const { findAllUserSessions } = require('../../lib/Sessions')
 const { enabledFirstFactors } = require('../../lib/Users')
 const AccessToken = require('../../lib/AccessToken')
+const Consents = require('../../lib/Consents')
 
 module.exports = {
   email (user, args, { pgdb, user: me }) {
@@ -37,6 +38,10 @@ module.exports = {
   },
   updatedAt (user) {
     return user._raw.updatedAt
+  },
+  deletedAt (user, args, { user: me }) {
+    Roles.ensureUserIsMeOrInRoles(user, me, userAccessRoles)
+    return user._raw.deletedAt
   },
   enabledSecondFactors (user, args, { user: me }) {
     if (
@@ -89,6 +94,15 @@ module.exports = {
   accessToken: (user, { scope }, { user: me }) => {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       return AccessToken.generateForUser(user, scope)
+    }
+  },
+  hasConsentedTo: (user, { name }, { pgdb, user: me }) => {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return Consents.statusForPolicyForUser({
+        userId: user.id,
+        policy: name,
+        pgdb
+      })
     }
   }
 }

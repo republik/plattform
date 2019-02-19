@@ -42,7 +42,8 @@ module.exports = async ({
   response: res,
   stream,
   headers,
-  options = {}
+  options = {},
+  path
 }) => {
   const {
     resize,
@@ -91,6 +92,11 @@ module.exports = async ({
       debug('detecting mime failed: ', e2)
     }
     const isJPEG = mime === 'image/jpeg'
+
+    // svg is not detected by fileTypeStream
+    if (!mime && path && new RegExp(/\.svg(\.webp)?$/).test(path)) {
+      mime = 'image/svg+xml'
+    }
 
     // requests to github always return Content-Type: text/plain, let's fix that
     if (mime) {

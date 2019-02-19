@@ -33,6 +33,7 @@ type User {
   roles: [String!]!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime
   sessions: [Session!]
   # in order of preference
   enabledFirstFactors: [SignInTokenType!]!
@@ -44,6 +45,10 @@ type User {
   # get an access token
   # exclusively accessible by the user herself
   accessToken(scope: AccessTokenScope!): ID
+  # null: undecided
+  # true: consented
+  # false: consent revoked
+  hasConsentedTo(name: String!): Boolean
 }
 
 type SignInResponse {

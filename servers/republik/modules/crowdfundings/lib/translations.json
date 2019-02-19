@@ -1,5 +1,5 @@
 {
-  "updated": "2018-12-16T18:03:18.537Z",
+  "updated": "2019-02-07T16:39:44.569Z",
   "title": "live",
   "data": [
     {
@@ -428,7 +428,7 @@
     },
     {
       "key": "api/membership/cancel/category/EDITORIAL",
-      "value": "Ein Beitrag hat mich geärgert."
+      "value": "Inhalte, und zwar:"
     },
     {
       "key": "api/membership/cancel/category/NO_TIME",
@@ -440,15 +440,51 @@
     },
     {
       "key": "api/membership/cancel/category/OTHER",
-      "value": "Anderer Grund, und zwar:"
+      "value": "Anderes, und zwar:"
     },
     {
       "key": "api/membership/cancel/category/VOID",
       "value": "Ich möchte keinen Grund angeben."
     },
     {
+      "key": "api/membership/cancel/category/NO_MONEY",
+      "value": "Habe knappes Budget"
+    },
+    {
       "key": "api/membership/cancel/category/SYSTEM",
       "value": "SYSTEM"
+    },
+    {
+      "key": "api/membership/cancel/category/EDITORAL_NARCISSISTIC",
+      "value": "Selbstverliebter Stil"
+    },
+    {
+      "key": "api/membership/cancel/category/LOGIN_TECH",
+      "value": "Loginprobleme"
+    },
+    {
+      "key": "api/membership/cancel/category/PAPER",
+      "value": "Lieber Papier"
+    },
+    {
+      "key": "api/membership/cancel/category/EXPECTIONS",
+      "value": "Andere Erwartungen"
+    },
+    {
+      "key": "api/membership/cancel/category/RARELY_READ",
+      "value": "Selten gelesen"
+    },
+    {
+      "key": "api/membership/cancel/category/TOO_MUCH_TO_READ",
+      "value": "Zu viel Lesestoff"
+    },
+    {
+      "key": "api/membership/cancel/category/CROWFUNDING_ONLY",
+      "value": "Nur Crowdfunding"
+    },
+    {
+      "key": "api/membership/cancel/category/SEVERAL_REASONS",
+      "value": "Mehrere (der obigen) Gründe"
     },
     {
       "key": "api/email/membership_cancel_notice/subject",
@@ -473,6 +509,30 @@
     {
       "key": "api/email/membership_owner_prolong_notice/subject",
       "value": "Am {endDate} erneuert sich Ihre Mitgliedschaft"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_notice_7/subject",
+      "value": "Möchten Sie Ihr Abo verlängern oder die Republik verlassen? Entscheiden Sie sich bis {endDate}"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_notice_0/sequenceNumber/true/subject",
+      "value": "Ihre Abonnementsrechnung (#{sequenceNumber})"
+    },
+    {
+      "key": "api/email/membership_owner_prolong_notice_0/subject",
+      "value": "Ihre Abonnementsrechnung"
+    },
+    {
+      "key": "api/email/membership_deactivated_abo_uncancelled/sequenceNumber/true/subject",
+      "value": "Ihr Abonnement Nr. {sequenceNumber} wurde deaktiviert"
+    },
+    {
+      "key": "api/email/membership_deactivated_benefactor_abo_uncancelled/sequenceNumber/true/subject",
+      "value": "Ihr Abonnement Nr. {sequenceNumber} wurde deaktiviert"
+    },
+    {
+      "key": "api/email/membership_deactivated/subject",
+      "value": "Ihr Abonnement wurde deaktiviert"
     }
   ]
 }

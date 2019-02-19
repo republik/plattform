@@ -40,7 +40,7 @@ const SecondFactorHasToBeDisabledError = newAuthError('second-factor-has-to-be-d
 const SessionTokenValidationFailed = newAuthError('token-validation-failed', 'api/token/invalid')
 
 const {
-  AUTO_LOGIN,
+  AUTO_LOGIN_REGEX,
   FRONTEND_BASE_URL
 } = process.env
 
@@ -173,11 +173,13 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
     })
     if (shouldAutoLogin({ email })) {
       setTimeout(async () => {
-        console.log('AUTO_LOGIN!')
+        console.warn(`🔓💥 Auto Login for ${email} due to AUTO_LOGIN_REGEX`)
         await authorizeSession({
           pgdb,
           tokens: [token],
-          email
+          email,
+          req,
+          me: user
         })
       }, 2000)
     } else {
@@ -205,14 +207,12 @@ const signIn = async (_email, context, pgdb, req, consents, _tokenType) => {
 }
 
 const shouldAutoLogin = ({ email }) => {
-  if (AUTO_LOGIN) {
-    // email addresses @test.project-r.construction will be auto logged in
-    // - email addresses containing «not» will neither be logged in nor send an sign request
-    const testMatch = email.match(/^([a-zA-Z0-9._%+-]+)@test\.project-r\.construction$/)
-    if (testMatch) {
-      if (testMatch[1].indexOf('not') === -1) {
-        return true
-      }
+  if (AUTO_LOGIN_REGEX) {
+    try {
+      return new RegExp(AUTO_LOGIN_REGEX).test(email)
+    } catch (e) {
+      console.warn(e)
+      return false
     }
   }
   return false

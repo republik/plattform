@@ -90,5 +90,8 @@ type mutations {
 
   # roll a users accessKey
   rollAccessKey(userId: ID): User!
+
+  submitConsent(name: String!): User!
+  revokeConsent(name: String!): User!
 }
 `

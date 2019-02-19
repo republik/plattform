@@ -36,8 +36,7 @@ const findOne = (id, pgdb) => {
   const now = moment()
   return pgdb.public.accessCampaigns.findOne({
     id,
-    'beginAt <=': now,
-    'endAt >': now
+    'beginAt <=': now
   })
 }
 
