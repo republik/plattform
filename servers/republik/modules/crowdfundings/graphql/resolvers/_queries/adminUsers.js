@@ -18,8 +18,20 @@ module.exports = async (
 ) => {
   Roles.ensureUserHasRole(user, 'supporter')
 
-  const filterActive = (dateRangeFilter || stringArrayFilter || booleanFilter)
-  let items = !(search || filterActive)
+  const queryFilters = !!(dateRangeFilter || stringArrayFilter || booleanFilter) &&
+    andFilters([
+      dateRangeFilterWhere(dateRangeFilter, 'u'),
+      stringArrayFilterWhere(stringArrayFilter, 'u'),
+      booleanFilterWhere(booleanFilter, 'u')
+    ])
+
+  const queryOrderBy = search
+    ? 'word_sim, dist DESC'
+    : orderBy
+      ? `u."${orderBy.field}" ${orderBy.direction}`
+      : 'u."createdAt" ASC'
+
+  let items = !(search || queryFilters)
     ? await pgdb.public.users.findAll({
       orderBy: orderBy
         ? `"${orderBy.field}" ${orderBy.direction}`
@@ -56,7 +68,7 @@ module.exports = async (
               string_agg(DISTINCT 'access:' || agg."voucherCode", ' '::text),
               string_agg(DISTINCT 'access:' || agr."voucherCode", ' '::text)
             ) <-> :search AS dist
-          ` : ''}
+          ` : ', 0::float AS word_sim, 1::float AS dist'}
         FROM
           users u
         LEFT JOIN
@@ -80,19 +92,10 @@ module.exports = async (
         LEFT JOIN
           "accessGrants" agr
           ON agr."recipientUserId" = u.id
-        ${filterActive ? 'WHERE' : ''}
-          ${andFilters([
-    dateRangeFilterWhere(dateRangeFilter, 'u'),
-    stringArrayFilterWhere(stringArrayFilter, 'u'),
-    booleanFilterWhere(booleanFilter, 'u')
-  ])}
+        ${queryFilters ? `WHERE ${queryFilters}` : ''}
         GROUP BY
           u.id
-        ORDER BY
-          ${search ? 'word_sim, dist desc' : orderBy
-    ? `u."${orderBy.field}" ${orderBy.direction}`
-    : 'u."createdAt" ASC'
-}
+        ${queryOrderBy ? `ORDER BY ${queryOrderBy}` : ''}
       )
         SELECT * FROM raw
         WHERE
