@@ -8,5 +8,6 @@
         "maxLambdaSize": "40mb"
       }
     }
-  ]
+  ],
+  "routes": [{ "src": "/.*", "dest": "/servers/assets/server.js" }]
 }
