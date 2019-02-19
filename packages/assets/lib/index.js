@@ -6,6 +6,7 @@ const returnImage = require('./returnImage')
 const urlPrefixing = require('./urlPrefixing')
 const webp = require('./webp')
 const Repo = require('./Repo')
+const renderUrl = require('./renderUrl')
 
 module.exports = {
   upload,
@@ -16,5 +17,6 @@ module.exports = {
   webp,
   Repo,
   urlPrefixing,
+  renderUrl,
   ...urlPrefixing
 }
