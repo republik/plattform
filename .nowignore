@@ -69,5 +69,24 @@ servers/republik/local/
 servers/publikator/seeds/seeds.json
 
 # now
+.docker-config
+.github
 servers/republik
 servers/publikator
+packages/apollo-modules-node
+packages/access
+packages/base
+packages/collections
+packages/discussions
+packages/documents
+packages/election
+packages/env
+packages/mail
+packages/notifications
+packages/preview
+packages/schedulers
+packages/search
+packages/slack
+packages/sms
+packages/voting
+
