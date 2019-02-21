@@ -1,4 +1,5 @@
 const debug = require('debug')('crowdfundings:lib:Mail')
+const moment = require('moment')
 
 const { createMail, sendMailTemplate } = require('@orbiting/backend-modules-mail')
 const { grants } = require('@orbiting/backend-modules-access')
@@ -17,7 +18,6 @@ const {
   MAILCHIMP_INTEREST_GRANTED_ACCESS,
   MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
   MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY,
-  MAILCHIMP_INTEREST_NEWSLETTER_FEUILLETON,
   MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR,
   FRONTEND_BASE_URL
 } = process.env
@@ -26,11 +26,6 @@ const mail = createMail([
   {
     name: 'DAILY',
     interestId: MAILCHIMP_INTEREST_NEWSLETTER_DAILY,
-    roles: ['member']
-  },
-  {
-    name: 'FEUILLETON',
-    interestId: MAILCHIMP_INTEREST_NEWSLETTER_FEUILLETON,
     roles: ['member']
   },
   {
@@ -95,7 +90,6 @@ const getInterestsForUser = async ({
     // Autosubscribe all newsletters when new user just paid the membersh.
     interests[MAILCHIMP_INTEREST_NEWSLETTER_DAILY] = true
     interests[MAILCHIMP_INTEREST_NEWSLETTER_WEEKLY] = true
-    interests[MAILCHIMP_INTEREST_NEWSLETTER_FEUILLETON] = true
     interests[MAILCHIMP_INTEREST_NEWSLETTER_PROJECTR] = true
   }
 
@@ -204,7 +198,7 @@ mail.sendPaymentSuccessful = async ({ pledgeId, pgdb, t }) => {
   }, { pgdb })
 }
 
-mail.sendMembershipCancellation = async ({ email, name, endDate, membershipType, t, pgdb }) => {
+mail.sendMembershipCancellation = async ({ email, name, endDate, membershipType, reasonGiven, t, pgdb }) => {
   return sendMailTemplate({
     to: email,
     subject: t('api/email/membership_cancel_notice/subject'),
@@ -219,6 +213,41 @@ mail.sendMembershipCancellation = async ({ email, name, endDate, membershipType,
       },
       { name: 'membership_type',
         content: membershipType.name
+      },
+      { name: 'reason_given',
+        content: !!reasonGiven
+      }
+    ]
+  }, { pgdb })
+}
+
+mail.sendMembershipDeactivated = async ({ membership, pgdb, t }) => {
+  const user = await pgdb.public.users.findOne({ id: membership.userId })
+  const type = await pgdb.public.membershipTypes.findOne({ id: membership.membershipTypeId })
+
+  const cancelState = membership.renew ? 'uncancelled' : 'cancelled'
+  const templateName = `membership_deactivated_${type.name.toLowerCase()}_${cancelState}`
+  const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
+  const sequenceNumber = membership.sequenceNumber
+
+  return sendMailTemplate({
+    to: user.email,
+    subject: t.first([
+      `api/email/${templateName}/sequenceNumber/${!!sequenceNumber}/subject`,
+      `api/email/${templateName}/subject`,
+      `api/email/membership_deactivated/subject`
+    ], { sequenceNumber }),
+    templateName,
+    mergeLanguage: 'handlebars',
+    globalMergeVars: [
+      { name: 'prolong_url',
+        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`
+      },
+      { name: 'account_abo_url',
+        content: `${FRONTEND_BASE_URL}/konto#abos`
+      },
+      { name: 'sequence_number',
+        content: sequenceNumber
       }
     ]
   }, { pgdb })
@@ -309,14 +338,27 @@ mail.prepareMembershipWinback = async ({ userId, membershipId, cancellationCateg
   })
 }
 
-mail.prepareMembershipOwnerNotice = async ({ user, endDate, cancelUntilDate, templateName }, { t, pgdb }) => {
+mail.prepareMembershipOwnerNotice = async ({ user, endDate, graceEndDate, cancelUntilDate, templateName }, { t }) => {
   const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
 
   const formattedEndDate = dateFormat(endDate)
+  const formattedGraceEndDate = dateFormat(graceEndDate)
+
+  const timeLeft = moment(endDate).diff(moment())
+  const daysLeft = Math.max(1, Math.ceil(moment.duration(timeLeft).as('days')))
+
+  const membershipId = user.membershipId || false
+  const sequenceNumber = user.membershipSequenceNumber || false
 
   return ({
     to: user.email,
-    subject: t(`api/email/${templateName}/subject`, { endDate: formattedEndDate }),
+    subject: t.first([
+      `api/email/${templateName}/sequenceNumber/${!!sequenceNumber}/subject`,
+      `api/email/${templateName}/subject`
+    ], {
+      endDate: formattedEndDate,
+      sequenceNumber
+    }),
     templateName,
     mergeLanguage: 'handlebars',
     globalMergeVars: [
@@ -326,11 +368,25 @@ mail.prepareMembershipOwnerNotice = async ({ user, endDate, cancelUntilDate, tem
       { name: 'prolong_url',
         content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`
       },
+      { name: 'cancel_url',
+        content: membershipId
+          ? `${FRONTEND_BASE_URL}/abgang?membershipId=${membershipId}`
+          : `${FRONTEND_BASE_URL}/konto#abos`
+      },
       { name: 'end_date',
         content: formattedEndDate
       },
+      { name: 'grace_end_date',
+        content: formattedGraceEndDate
+      },
+      { name: 'days_left',
+        content: daysLeft
+      },
       { name: 'cancel_until_date',
         content: dateFormat(cancelUntilDate)
+      },
+      { name: 'sequence_number',
+        content: sequenceNumber
       }
     ]
   })

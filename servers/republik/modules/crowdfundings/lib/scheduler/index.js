@@ -3,13 +3,18 @@ const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 const debug = require('debug')('crowdfundings:lib:scheduler')
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const redis = require('@orbiting/backend-modules-base/lib/redis')
-const { timeScheduler } = require('@orbiting/backend-modules-schedulers')
+const {
+  intervalScheduler,
+  timeScheduler
+} = require('@orbiting/backend-modules-schedulers')
 
 const lockTtlSecs = 5 * 60 // 10min
 
 const { inform: informGivers } = require('./givers')
 const { inform: informCancellers } = require('./winbacks')
 const { inform: informOwners } = require('./owners')
+const { deactivate } = require('./deactivate')
+const { changeover } = require('./changeover')
 
 const init = async (_context) => {
   debug('init')
@@ -47,6 +52,17 @@ const init = async (_context) => {
     runAtTime: '18:32',
     runAtDaysOfWeek: [1, 2, 3, 4, 5],
     runInitially: DEV
+  })
+
+  intervalScheduler.init({
+    name: 'changeover-deactivate',
+    context,
+    runFunc: async (args, context) => {
+      await changeover(args, context)
+      await deactivate(args, context)
+    },
+    lockTtlSecs,
+    runIntervalSecs: 60 * 10
   })
 }
 

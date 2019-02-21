@@ -16,28 +16,64 @@ module.exports = async (_, args, context, info) => {
     }
     : args
   const {
-    orderBy = 'publishedAt',
+    orderBy = 'DATE',
     orderDirection = 'DESC',
     first: limit = 40,
-    offset = 0
+    offset = 0,
+    discussionId,
+    focusId,
+    lastId
   } = options
 
   if (limit > MAX_LIMIT) {
     throw new Error(t('api/discussion/args/first/tooBig', { max: MAX_LIMIT }))
   }
 
-  const sortKey = getSortKey(orderBy)
-
-  const numComments = await pgdb.public.comments.count()
-
-  const comments = await pgdb.public.comments.find(
-    { },
+  const numComments = await pgdb.public.comments.count(
     {
-      limit,
-      offset,
-      orderBy: { [sortKey]: orderDirection }
-    }
+      discussionId,
+      published: true,
+      adminUnpublished: false
+    },
+    { skipUndefined: true }
   )
+
+  let sortKey = getSortKey(orderBy)
+  // there is no score in the db
+  if (sortKey === 'score') {
+    sortKey = 'upVotes" - "downVotes'
+  }
+
+  const comments = await pgdb.query(`
+    SELECT
+      *,
+      CASE
+        WHEN id = :focusId THEN 1
+        ELSE 0
+      END AS "focus",
+      CASE
+        WHEN id = :lastId THEN 1
+        ELSE 0
+      END AS "last"
+    FROM
+      comments
+    WHERE
+      ${discussionId ? '"discussionId" = :discussionId AND' : ''}
+      "published" = true AND
+      "adminUnpublished" = false
+    ORDER BY
+      "focus" DESC,
+      "last" ASC,
+      "${sortKey}" ${orderDirection === 'DESC' ? 'DESC' : 'ASC'}
+    LIMIT :limit
+    OFFSET :offset
+  `, {
+    discussionId,
+    focusId: focusId || null,
+    lastId: lastId || null,
+    limit,
+    offset
+  })
 
   const endCursor = (offset + limit) < numComments
     ? Buffer.from(JSON.stringify({
@@ -47,7 +83,7 @@ module.exports = async (_, args, context, info) => {
     : null
 
   return {
-    id: `comments${offset || ''}`,
+    id: `${discussionId || 'comments'}{offset || ''}`,
     totalCount: numComments,
     directTotalCount: numComments,
     pageInfo: {

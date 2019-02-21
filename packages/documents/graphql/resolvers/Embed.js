@@ -1,5 +1,5 @@
 module.exports = {
   __resolveType (obj) {
-    return obj.embedType
+    return obj.__typename
   }
 }

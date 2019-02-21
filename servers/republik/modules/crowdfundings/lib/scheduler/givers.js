@@ -28,9 +28,9 @@ const getUsers = async ({ now }, { pgdb }) => {
   debug('get users for: %o', {minEndDate, maxEndDate})
 
   const users = await pgdb.query(`
-    WITH dormant_memberships AS (
+    WITH dormant_membership_user_ids AS (
       SELECT
-        m.*
+        DISTINCT(m."userId") as "userId"
       FROM
         memberships m
       JOIN
@@ -70,7 +70,7 @@ const getUsers = async ({ now }, { pgdb }) => {
           m.id = mp."membershipId"
       WHERE
         u.id != :PARKING_USER_ID AND
-        u.id NOT IN (SELECT DISTINCT("userId") FROM dormant_memberships)
+        u.id NOT IN (SELECT "userId" FROM dormant_membership_user_ids)
       GROUP BY
         1, 2, 3
       ORDER BY

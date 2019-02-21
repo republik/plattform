@@ -2,21 +2,31 @@ const { Roles, AccessToken: { isFieldExposed } } = require('@orbiting/backend-mo
 
 const debug = require('debug')('crowdfundings:resolver:User')
 const flattenDeep = require('lodash/flattenDeep')
-const Promise = require('bluebird')
+const moment = require('moment')
 
 const {
   findEligableMemberships,
   hasDormantMembership,
-  resolvePackages,
-  resolveMemberships,
-  getCustomOptions
+  resolveMemberships
 } = require('../../lib/CustomPackages')
+const {
+  getCustomPackages
+} = require('../../lib/User')
 const createCache = require('../../lib/cache')
-const { getPeriodEndingLast } = require('../../lib/utils')
+const { getLastEndDate } = require('../../lib/utils')
 const getStripeClients = require('../../lib/payments/stripe/clients')
 const { isExpired } = require('./PaymentSource')
 
+const { DISABLE_RESOLVER_USER_CACHE } = process.env
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
+
+const createMembershipCache = (user, prop) =>
+  createCache({
+    prefix: `User:${user.id}`,
+    key: `${prop}`,
+    ttl: QUERY_CACHE_TTL_SECONDS,
+    disabled: DISABLE_RESOLVER_USER_CACHE
+  })
 
 const getPaymentSources = async (user, pgdb) => {
   const { platform } = await getStripeClients(pgdb)
@@ -42,51 +52,8 @@ const getPaymentSources = async (user, pgdb) => {
   }))
 }
 
-const getCustomPackages = async ({ user, crowdfundingName, pgdb }) => {
-  const now = new Date()
-
-  const crowdfundings = crowdfundingName
-    ? await pgdb.public.crowdfundings.find({
-      name: crowdfundingName,
-      'beginDate <=': now,
-      'endDate >': now
-    })
-    : await pgdb.public.crowdfundings.find({
-      'beginDate <=': now,
-      'endDate >': now
-    })
-
-  const packages = await pgdb.public.packages.find({
-    crowdfundingId: crowdfundings.map(crowdfunding => crowdfunding.id),
-    custom: true
-  })
-
-  if (packages.length === 0) {
-    return []
-  }
-
-  return Promise
-    .map(
-      await resolvePackages({ packages, pledger: user, pgdb }),
-      async package_ => {
-        if (package_.custom === true) {
-          const options = await getCustomOptions(package_)
-
-          if (options.length === 0) {
-            return
-          }
-
-          return { ...package_, options }
-        }
-
-        return package_
-      }
-    )
-    .filter(Boolean)
-}
-
 module.exports = {
-  async memberships (user, args, {pgdb, user: me}) {
+  async memberships (user, args, { pgdb, user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'accountant'])) {
       return pgdb.public.memberships.find({
         userId: user.id
@@ -98,6 +65,16 @@ module.exports = {
       })
     }
     return []
+  },
+  async activeMembership (user, args, { pgdb, user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'accountant'])) {
+      return createMembershipCache(user, 'activeMembership')
+        .cache(async () => pgdb.public.memberships.findFirst(
+          { userId: user.id, active: true },
+          { orderBy: { createdAt: 'ASC' } }
+        ))
+    }
+    return null
   },
   async prolongBeforeDate (user, { ignoreClaimedMemberships = false }, { pgdb, user: me }) {
     debug('prolongBeforeDate')
@@ -124,22 +101,12 @@ module.exports = {
 
       memberships = await resolveMemberships({ memberships, pgdb })
 
-      // Checks if there is a pending pledge on a users active membership.
       const activeMembership = memberships.find(m => m.active)
-      const hasPendingPledges =
-        !!activeMembership && await pgdb.public.query(`
-          SELECT "pledges".* FROM "pledges"
-
-          JOIN "pledgeOptions"
-            ON "pledges"."id" = "pledgeOptions"."pledgeId"
-            AND "pledgeOptions"."membershipId" = :activeMembershipId
-
-          WHERE "pledges"."status" = 'WAITING_FOR_PAYMENT'
-          ;
-        `, { activeMembershipId: activeMembership.id })
-
-      if (hasPendingPledges.length > 0) {
-        debug('pending pledge on active membership found, return prolongBeforeDate: null')
+      if (
+        activeMembership &&
+        activeMembership.membershipType.name === 'ABO_GIVE_MONTHS'
+      ) {
+        debug('active membership type "ABO_GIVE_MONTHS", return prolongBeforeDate: null')
 
         return null
       }
@@ -173,7 +140,29 @@ module.exports = {
         debug('has active but cancelled membership, return prolongBeforeDate: null')
         return null
       }
-      return getPeriodEndingLast(allMembershipPeriods).endDate
+
+      const hasPendingPledges =
+        !!activeMembership && await pgdb.public.query(`
+          SELECT "pledges".* FROM "pledges"
+
+          JOIN "pledgeOptions"
+            ON "pledges"."id" = "pledgeOptions"."pledgeId"
+            AND "pledgeOptions"."membershipId" = :activeMembershipId
+
+          WHERE "pledges"."status" = 'WAITING_FOR_PAYMENT'
+          ;
+        `, { activeMembershipId: activeMembership.id })
+
+      const now = moment()
+      const lastEndDate = moment(getLastEndDate(allMembershipPeriods))
+
+      // Check if there are pending pledges, and last end date is not in future.
+      if (hasPendingPledges.length > 0 && lastEndDate > now) {
+        debug('pending pledge and not overdue, return prolongBeforeDate: null')
+        return null
+      }
+
+      return lastEndDate
     })
   },
   async pledges (user, args, {pgdb, user: me}) {

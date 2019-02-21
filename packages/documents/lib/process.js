@@ -48,6 +48,17 @@ const processImageUrlsInContent = (mdast, fn) => {
   })
 }
 
+const processEmbedsInContent = (mdast, fn) => {
+  visit(mdast, 'zone', node => {
+    if (node.data && node.identifier.indexOf('EMBED') > -1) {
+      const result = fn(node.data)
+      if (result !== undefined) {
+        node.data = result
+      }
+    }
+  })
+}
+
 const processMembersOnlyZonesInContent = (mdast, user) => {
   if (!DOCUMENTS_RESTRICT_TO_ROLES) {
     return
@@ -67,5 +78,6 @@ module.exports = {
   processMembersOnlyZonesInContent,
   processRepoImageUrlsInContent,
   processRepoImageUrlsInMeta,
-  processImageUrlsInContent
+  processImageUrlsInContent,
+  processEmbedsInContent
 }
