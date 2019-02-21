@@ -1,4 +1,5 @@
 const puppeteer = require('puppeteer-core')
+const chromium = require('chrome-aws-lambda')
 
 const {
   PUPPETEER_WS_ENDPOINT,
@@ -15,9 +16,24 @@ module.exports = async (
   zoomFactor,
   fullPage = true
 ) => {
-  const browser = await puppeteer.connect({
-    browserWSEndpoint: PUPPETEER_WS_ENDPOINT
-  })
+  let browser
+  if (chromium.headless) {
+    console.log('rendering with local headless chrome')
+    browser = await puppeteer.launch({
+      args: chromium.args,
+      executablePath: await chromium.executablePath,
+      headless: chromium.headless
+    })
+  } else {
+    if (!PUPPETEER_WS_ENDPOINT) {
+      console.warn('missing env PUPPETEER_WS_ENDPOINT, cannot render')
+      return
+    }
+    console.log('rendering with external chrome')
+    browser = await puppeteer.connect({
+      browserWSEndpoint: PUPPETEER_WS_ENDPOINT
+    })
+  }
 
   const page = await browser.newPage()
 

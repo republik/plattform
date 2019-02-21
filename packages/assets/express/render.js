@@ -1,6 +1,8 @@
-const renderUrl = require('../lib/renderUrl')
-const { returnImage } = require('../lib')
-const getWidthHeight = require('../lib/getWidthHeight')
+const {
+  renderUrl,
+  returnImage,
+  getWidthHeight
+} = require('../lib')
 const debug = require('debug')('assets:render')
 const streamifier = require('streamifier')
 
