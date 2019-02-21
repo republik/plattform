@@ -1,5 +1,3 @@
-const _ = require('lodash')
-
 const {
   NODE_ENV,
   SEND_MAILS,
@@ -16,14 +14,14 @@ module.exports = (message) => {
   // don't send in dev, expect SEND_MAILS is true
   // don't send mails if SEND_MAILS is false
   if (SEND_MAILS === 'false' || (DEV && SEND_MAILS !== 'true')) {
-    console.log('\n\nSEND_MAILS prevented mail from being sent\n(SEND_MAIL == false or NODE_ENV != production and SEND_MAIL != true):\n', _.omit(message, 'html'))
+    console.log('\n\nSEND_MAILS prevented mail from being sent\n(SEND_MAIL == false or NODE_ENV != production and SEND_MAIL != true):\n', { ...message, html: !!message.html })
     return false
   }
 
   if (SEND_MAILS_DOMAIN_FILTER) {
     const domain = toEmail.split('@')[1]
     if (domain !== SEND_MAILS_DOMAIN_FILTER) {
-      console.log(`\n\nSEND_MAILS_DOMAIN_FILTER (${SEND_MAILS_DOMAIN_FILTER}) prevented mail from being sent:\n`, _.omit(message, 'html'))
+      console.log(`\n\nSEND_MAILS_DOMAIN_FILTER (${SEND_MAILS_DOMAIN_FILTER}) prevented mail from being sent:\n`, { ...message, html: !!message.html })
       return false
     }
   }
@@ -37,7 +35,7 @@ module.exports = (message) => {
     })
 
     if (!hasMatchedFilter) {
-      console.log(`\n\nSEND_MAILS_REGEX_FILTERS prevented mail from being sent:\n`, _.omit(message, 'html'))
+      console.log(`\n\nSEND_MAILS_REGEX_FILTERS prevented mail from being sent:\n`, { ...message, html: !!message.html })
       return false
     }
   }

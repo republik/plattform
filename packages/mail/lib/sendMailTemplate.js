@@ -1,4 +1,3 @@
-const _ = require('lodash')
 const checkEnv = require('check-env')
 const debug = require('debug')('mail:lib:sendMailTemplate')
 const fs = require('fs')
@@ -74,7 +73,7 @@ module.exports = async (mail, context, log) => {
     tags
   }
 
-  debug(_.omit(message, 'html'))
+  debug({ ...message, html: !!message.html })
 
   const shouldSend = shouldSendMessage(message)
 
