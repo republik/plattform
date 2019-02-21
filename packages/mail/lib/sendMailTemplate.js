@@ -89,7 +89,7 @@ module.exports = async (mail, context, log) => {
   return send({
     log,
     sendFunc,
-    message,
+    message: { ...message, html: !!message.html },
     email: message.to[0].email,
     template: mail.templateName,
     context
