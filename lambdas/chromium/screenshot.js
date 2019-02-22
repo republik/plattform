@@ -102,14 +102,14 @@ module.exports = async (req, res) => {
 
     await Promise.all(promises)
 
-    await page.goto(url)
-
     if (basicAuthUser) {
       await page.authenticate({
         username: basicAuthUser,
         password: basicAuthPass
       })
     }
+
+    await page.goto(url)
 
     const screenshot = await page.screenshot({
       fullPage: Boolean(parseInt(fullPage)).valueOf(),
