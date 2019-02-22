@@ -1,4 +1,4 @@
-const getFieldNames = require('graphql-list-fields')
+const getFieldNames = require('@orbiting/graphql-list-fields')
 
 const { Roles: { ensureUserHasRole } } =
   require('@orbiting/backend-modules-auth')
