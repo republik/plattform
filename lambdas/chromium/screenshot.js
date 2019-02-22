@@ -58,9 +58,9 @@ module.exports = async (req, res) => {
     }
   } = parse(req.url, true)
 
-  const format =
-    (_format && FORMATS.indexOf(_format) !== -1 && _format) ||
-    'png'
+  const format = (_format && FORMATS.indexOf(_format) !== -1)
+    ? _format
+    : 'png'
 
   debug({ url, width, height, zoomFactor, fullPage, format, quality, cookie, basicAuthUser, basicAuthPass })
 

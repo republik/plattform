@@ -54,8 +54,9 @@ module.exports = async ({
   } = options
 
   const format =
-    (_format && supportedFormats.indexOf(_format) !== -1 && _format) ||
-    webp
+    (_format && supportedFormats.indexOf(_format) !== -1)
+      ? _format
+      : webp ? 'webp' : null
 
   let width, height
   if (resize) {
