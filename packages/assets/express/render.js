@@ -31,7 +31,7 @@ module.exports = (server) => {
       height
     }
 
-    debug('GET %s', params)
+    debug('GET %o', params)
 
     let result, error
     try {
