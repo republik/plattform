@@ -25,14 +25,14 @@ now -e URL_WHITELIST=@url_whitelist
     - default 1200x1
   - optional &fullPage
     - default true
-    - this api screenshots the full page per default (with scrolling), set `fullPage` to `'false'` or `'0'` to crop to viewport
+    - this api screenshots the full page per default (with scrolling), set `fullPage` to `false` or `0` to crop to viewport
   - optional &zoomFactor
     - requires viewport or w/h
     - default 1
   - optional &cookie
     - example: 'id=208h2n'
-  - optionsl &basicAuthUser &basicAuthPass
-    - send basic auth on opening urls
+  - optional &basicAuthUser &basicAuthPass
+    - send basic auth when requesting ?url
 
 
 ## Credits

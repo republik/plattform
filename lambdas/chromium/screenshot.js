@@ -56,7 +56,7 @@ module.exports = async (req, res) => {
       basicAuthPass
     }
   } = parse(req.url, true)
-  debug({ url, width, height, zoomFactor, fullPage })
+  debug({ url, width, height, zoomFactor, fullPage, type, quality })
 
   if (!url) {
     res.statusCode = 422
@@ -68,7 +68,7 @@ module.exports = async (req, res) => {
     (whitelistedUrls && !!whitelistedUrls.find(whiteUrl => url.indexOf(whiteUrl) === 0))
 
   if (!allowed) {
-    console.warn('unauthorized render url requested: ' + url)
+    console.warn('forbidden render url requested: ' + url)
     res.statusCode = 403
     return res.end()
   }
