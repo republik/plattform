@@ -36,6 +36,7 @@ build/Release
 node_modules/
 jspm_packages/
 /packages/*/node_modules
+*/node_modules
 
 # Typescript v1 declaration files
 typings/
@@ -55,38 +56,21 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
-# Mapped Docker Volumes
+# docker
 docker-data/
+.docker-config/
 
 # dotenv environment variables file
 *.env
+.env*
 
 .DS_Store
 
-servers/republik/seeds/seeds.json
-servers/republik/seeds/comments.json
-servers/republik/local/
-servers/publikator/seeds/seeds.json
-
-# now
-.docker-config
+# only lambdas
 .github
-servers/republik
-servers/publikator
-packages/apollo-modules-node
-packages/access
-packages/base
-packages/collections
-packages/discussions
-packages/documents
-packages/election
-packages/env
-packages/mail
-packages/notifications
-packages/preview
-packages/schedulers
-packages/search
-packages/slack
-packages/sms
-packages/voting
-
+.travis*
+docker*
+Procfile*
+servers/
+packages/
+*.sql

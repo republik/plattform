@@ -1,10 +1,9 @@
 const {
-  renderUrl,
   returnImage,
   getWidthHeight
 } = require('../lib')
+const screenshot = require('../lib/screenshot')
 const debug = require('debug')('assets:render')
-const streamifier = require('streamifier')
 
 const {
   RENDER_URL_WHITELIST
@@ -38,10 +37,14 @@ module.exports = (server) => {
       height = _height
     }
 
+    if (!url) {
+      res.status(422)
+      return res.end('missing url param')
+    }
+
     const allowed =
-      url &&
-      whitelistedUrls &&
-      !!whitelistedUrls.find(whiteUrl => url.indexOf(whiteUrl) === 0)
+      (RENDER_URL_WHITELIST && RENDER_URL_WHITELIST === 'all') ||
+      (whitelistedUrls && !!whitelistedUrls.find(whiteUrl => url.indexOf(whiteUrl) === 0))
 
     if (!allowed) {
       console.warn('unauthorized render url requested: ' + url)
@@ -51,7 +54,7 @@ module.exports = (server) => {
 
     let result, error
     try {
-      result = await renderUrl(url, width, height, zoomFactor, fullPage)
+      result = await screenshot({ url, width, height, zoomFactor, fullPage })
     } catch (e) {
       error = e
     }
@@ -68,7 +71,7 @@ module.exports = (server) => {
 
     return returnImage({
       response: res,
-      stream: streamifier.createReadStream(result),
+      stream: result,
       options: {
         ...req.query,
         cacheTags: ['render']

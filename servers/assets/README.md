@@ -1,7 +1,7 @@
 Assets Backend
 ---------------
 
-This is a lightweight, fast nodejs-express server for asset proxying and image manipulation (resizing, greyscaling, webp format transformation). It streams assets from other urls, from s3 buckets, out of github repos and can render webpages to PNGs.
+This is a lightweight, fast nodejs-express server for asset proxying and image manipulation (resizing, greyscaling, webp format transformation). It streams assets from other urls, from s3 buckets, out of github repos and can render via external serves.
 
 Check the [README](https://github.com/orbiting/backends/tree/master/packages/assets/README.md) of [backend-modules-assets](https://github.com/orbiting/backends/tree/master/packages/assets) which contains all the relevant code.
 
@@ -15,21 +15,15 @@ TODO: system diagram
 ### Quick start
 You need to have node (8.3.0+) installed and postgres running somewhere.
 
-Boostrap your .env file (see [.env.example](.env.example)).
+Boostrap your .env file (copy [.env.example](.env.example)).
 Also see [backend-modules-assets README](https://github.com/orbiting/backends/tree/master/packages/assets/README.md)
-```
-PORT=3021
-PUBLIC_URL=http://localhost:3021
 
+The following ENVs have a dependency to other servers:
+```
 # must be in sync with PUBLIC_URL
 ASSETS_SERVER_BASE_URL=http://localhost:3021
 # must be in sync with republik-backend and publikator-backend
 ASSETS_HMAC_KEY=aiy3sheYoobahb4eth1ohs4aoPaezeeg
-
-# endpoint for puppeteer to render overview-teasers, social media share images, etc
-PUPPETEER_WS_ENDPOINT=
-# list urls allowed on the /render endpoint, the beginning must match
-RENDER_URL_WHITELIST=https://www.republik.ch/
 
 # GITHUB auth server images from github repos
 # Follow the "Auth - Github" section of republik-backend to get these

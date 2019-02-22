@@ -1,8 +1,13 @@
 # @orbiting/backend-modules-assets
 
-This module contains libs to un-/prefix relative asset urls, upload to S3 and most importantly express middlewares for asset proxying and image manipulation (resizing, greyscaling, webp format transformation). It streams assets from other urls, from s3 buckets, out of github repos and can render webpages to PNGs.
+This module contains libs to un-/prefix relative asset urls, upload to S3 and most importantly express middlewares for asset proxying and image manipulation (resizing, greyscaling, webp format transformation). It streams assets from other urls, from s3 buckets, out of github repos and can render webpages via external services.
+
+For rendering it calls [lambdas/chromium](lambdas/chromium) via `CHROMIUM_LAMBDA_URL` or falls back to phatomJSCloud (`PHANTOMJSCLOUD_API_KEY`).
 
 Check [assets-backend](https://github.com/orbiting/assets-backend) for a deployable, standalone, express wrapper.
+
+## ENVs
+See [servers/assets/.env.example](servers/assets/.env.example) for the required envs.
 
 ## URLs
 
@@ -26,7 +31,7 @@ Check [assets-backend](https://github.com/orbiting/assets-backend) for a deploya
   - optional :viewport
     - succeeds deprecated: `width=:width&height=:height`
     - default 1200x1
-  - optional :fullPage
+  - optional :fullPage (chromium only)
     - default true
     - this api screenshots the full page per default (with scrolling), set `fullPage` to `'false'` or `'0'` to crop to viewport
   - optional :zoomFactor

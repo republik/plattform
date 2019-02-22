@@ -2,12 +2,21 @@
   "version": 2,
   "builds": [
     {
-      "src": "servers/assets/server.js",
-      "use": "@now/node-server@canary",
+      "src": "lambdas/chromium/screenshot.js",
+      "use": "@now/node",
       "config": {
-        "maxLambdaSize": "60mb"
+        "maxLambdaSize": "50mb"
       }
     }
   ],
-  "routes": [{ "src": "/.*", "dest": "/servers/assets/server.js" }]
+  "routes": [
+    {
+      "src": "/screenshot",
+      "dest": "/lambdas/chromium/screenshot.js"
+    }
+  ],
+  "env": {
+    "URL_WHITELIST": "@url_whitelist",
+    "DEBUG": "screenshot"
+  }
 }
