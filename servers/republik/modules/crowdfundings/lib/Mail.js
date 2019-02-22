@@ -9,6 +9,8 @@ const { timeFormat, formatPriceChf } =
 
 const { getLastEndDate } = require('./utils')
 
+const { count: memberStatsCount } = require('../../../lib/memberStats')
+
 const dateFormat = timeFormat('%x')
 
 const {
@@ -637,7 +639,7 @@ mail.getPledgeMergeVars = async (
 
     {
       name: 'republik_memberships_count',
-      content: '23\'000'
+      content: await memberStatsCount({ pgdb })
     },
 
     // Links
