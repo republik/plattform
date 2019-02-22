@@ -11,6 +11,7 @@ const {
 const DEFAULT_WIDTH = 1200
 const DEFAULT_HEIGHT = 1
 const DEFAULT_SCALE_FACTOR = 1
+const FORMATS = ['png', 'jpeg']
 
 if (!URL_WHITELIST) {
   console.warn('missing env URL_WHITELIST, the /render endpoint will not work')
@@ -49,13 +50,18 @@ module.exports = async (req, res) => {
       height,
       zoomFactor,
       fullPage = '1',
-      format = 'png',
+      format: _format,
       quality,
       cookie,
       basicAuthUser,
       basicAuthPass
     }
   } = parse(req.url, true)
+
+  const format =
+    (_format && FORMATS.indexOf(_format) !== -1 && _format) ||
+    'png'
+
   debug({ url, width, height, zoomFactor, fullPage, format, quality, cookie, basicAuthUser, basicAuthPass })
 
   if (!url) {
