@@ -24,8 +24,8 @@ now -e URL_WHITELIST=@url_whitelist
   - optional &width &height
     - default `1200x1`
   - optional &fullPage
-    - default `true`
-    - this api screenshots the full page per default (with scrolling), set `fullPage` to `false` or `0` to crop to viewport
+    - default `1`
+    - this api screenshots the full page per default (with scrolling), set `fullPage` to `0` to crop to viewport
   - optional &zoomFactor
     - default 1
   - optional &cookie

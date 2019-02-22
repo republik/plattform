@@ -48,15 +48,15 @@ module.exports = async (req, res) => {
       width,
       height,
       zoomFactor,
-      fullPage = true,
-      type = 'png',
+      fullPage = '1',
+      format = 'png',
       quality,
       cookie,
       basicAuthUser,
       basicAuthPass
     }
   } = parse(req.url, true)
-  debug({ url, width, height, zoomFactor, fullPage, type, quality, cookie, basicAuthUser, basicAuthPass })
+  debug({ url, width, height, zoomFactor, fullPage, format, quality, cookie, basicAuthUser, basicAuthPass })
 
   if (!url) {
     res.statusCode = 422
@@ -106,8 +106,8 @@ module.exports = async (req, res) => {
     }
 
     const screenshot = await page.screenshot({
-      fullPage: !(['false', '0'].includes(fullPage)),
-      type,
+      fullPage: Boolean(parseInt(fullPage)).valueOf(),
+      type: format,
       ...quality !== undefined
         ? { quality: getPosInt(quality) }
         : {}
@@ -116,7 +116,7 @@ module.exports = async (req, res) => {
     browser.close()
 
     res.statusCode = 200
-    res.setHeader('Content-Type', `image/${type}`)
+    res.setHeader('Content-Type', `image/${format}`)
     return res.end(screenshot)
   } catch (error) {
     res.statusCode = 500
