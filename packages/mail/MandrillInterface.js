@@ -29,8 +29,8 @@ const MandrillInterface = ({ logger }) => {
     async send (message, templateName, templateContent) {
       const url = this.buildApiUrl(
         templateName
-        ? '/messages/send-template.json'
-        : '/messages/send.json')
+          ? '/messages/send-template.json'
+          : '/messages/send.json')
       try {
         const body = { message }
         if (templateName) {

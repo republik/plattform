@@ -2,7 +2,7 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const logger = console
 const {minTotal, regularTotal} = require('../../../lib/Pledge')
 const generateMemberships = require('../../../lib/generateMemberships')
-const sendPaymentSuccessful = require('../../../lib/payments/sendPaymentSuccessful')
+const { sendPaymentSuccessful } = require('../../../lib/Mail')
 const { publishMonitor } = require('../../../../../lib/slack')
 
 module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
@@ -95,7 +95,7 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
       await generateMemberships(pledge.id, transaction, t, req)
     }
 
-    await sendPaymentSuccessful(pledge.id, transaction, t)
+    await sendPaymentSuccessful({ pledgeId: pledge.id, pgdb: transaction, t })
 
     await transaction.transactionCommit()
 
