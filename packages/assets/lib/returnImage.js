@@ -54,7 +54,7 @@ module.exports = async ({
   } = options
 
   const format =
-    (_format && supportedFormats.indexOf(_format) !== -1) ||
+    (_format && supportedFormats.indexOf(_format) !== -1 && _format) ||
     webp
 
   let width, height
