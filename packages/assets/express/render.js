@@ -2,25 +2,13 @@ const {
   returnImage,
   getWidthHeight
 } = require('../lib')
-const screenshot = require('../lib/screenshot')
+const screenshot = require('../lib/screenshot/chromium')
 const debug = require('debug')('assets:render')
-
-const {
-  RENDER_URL_WHITELIST
-} = process.env
-
-if (!RENDER_URL_WHITELIST) {
-  console.warn('missing env RENDER_URL_WHITELIST, the /render endpoint will not work')
-}
-const whitelistedUrls = RENDER_URL_WHITELIST && RENDER_URL_WHITELIST.split(',')
 
 module.exports = (server) => {
   server.get('/render', async function (req, res) {
     const {
-      url,
       viewport,
-      zoomFactor,
-      fullPage,
       width: _width,
       height: _height
     } = req.query
@@ -37,24 +25,17 @@ module.exports = (server) => {
       height = _height
     }
 
-    if (!url) {
-      res.status(422)
-      return res.end('missing url param')
+    const params = {
+      ...req.query,
+      width,
+      height
     }
 
-    const allowed =
-      (RENDER_URL_WHITELIST && RENDER_URL_WHITELIST === 'all') ||
-      (whitelistedUrls && !!whitelistedUrls.find(whiteUrl => url.indexOf(whiteUrl) === 0))
-
-    if (!allowed) {
-      console.warn('unauthorized render url requested: ' + url)
-      return res.status(403).end()
-    }
-    debug('GET %s', url)
+    debug('GET %s', params)
 
     let result, error
     try {
-      result = await screenshot({ url, width, height, zoomFactor, fullPage })
+      result = await screenshot(params)
     } catch (e) {
       error = e
     }
@@ -62,7 +43,7 @@ module.exports = (server) => {
     if (error || !result) {
       console.error(
         `render failed: ${error && error.message}`,
-        { error, url, width, height, zoomFactor, fullPage, result }
+        { error, result, params }
       )
       return res.status(500).end(
         (error && error.message) || 'server error'

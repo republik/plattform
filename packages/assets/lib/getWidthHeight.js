@@ -11,7 +11,7 @@ module.exports = (resize) => {
   const width = _width ? Math.ceil(Math.abs(_width)) : null
   const height = _height ? Math.ceil(Math.abs(_height)) : null
   if (width && (typeof (width) !== 'number' || isNaN(width))) {
-    throw new Error('invalid with')
+    throw new Error('invalid width')
   }
   if (height && (typeof (height) !== 'number' || isNaN(height))) {
     throw new Error('invalid height')

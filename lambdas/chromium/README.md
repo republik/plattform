@@ -19,20 +19,24 @@ now -e URL_WHITELIST=@url_whitelist
 
 ## Endpoints
 - screenshot.js
-  - example query: `/?url=:url&[width=[:w]x[:h]]&[zoomFactor=:sf]&[fullPage=:fp]&[cookie=:c]&[basicAuthUser=:u]&[basicAuthPass=:p]`
+  - example query: `/?url=:url[&width=:w][&heigth=:h][&zoomFactor=:sf][&fullPage=:fp][&format=:f][&quality=:q][&cookie=:c][&basicAuthUser=:u][&basicAuthPass=:p]`
   - renders ?url
   - optional &width &height
-    - default 1200x1
+    - default `1200x1`
   - optional &fullPage
-    - default true
+    - default `true`
     - this api screenshots the full page per default (with scrolling), set `fullPage` to `false` or `0` to crop to viewport
   - optional &zoomFactor
-    - requires viewport or w/h
     - default 1
   - optional &cookie
-    - example: 'id=208h2n'
+    - example: 'id=something'
   - optional &basicAuthUser &basicAuthPass
     - send basic auth when requesting ?url
+  - optional &format
+    - default `png`
+    - supports `png`, `jpeg`
+  - optional &quality
+    - only for `jpeg`
 
 
 ## Credits

@@ -7,10 +7,14 @@ const {
   BASIC_AUTH_PASS
 } = process.env
 
-const canRender = () =>
-  !!CHROMIUM_LAMBDA_URL
+if (!CHROMIUM_LAMBDA_URL) {
+  console.warn('missing CHROMIUM_LAMBDA_URL, the /render endpoint will not work')
+}
 
 const render = (params) => {
+  if (!CHROMIUM_LAMBDA_URL) {
+    throw new Error("missing CHROMIUM_LAMBDA_URL, can't render")
+  }
   const url = new URL(CHROMIUM_LAMBDA_URL)
   for (let key of Object.keys(params)) {
     url.searchParams.set(key, params[key])
@@ -26,7 +30,4 @@ const render = (params) => {
     .then(result => result.body)
 }
 
-module.exports = {
-  canRender,
-  render
-}
+module.exports = render

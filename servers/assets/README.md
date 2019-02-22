@@ -8,8 +8,6 @@ Check the [README](https://github.com/orbiting/backends/tree/master/packages/ass
 ## Republik
 This backend exposes the express middleware of [backend-modules-assets](https://github.com/orbiting/backends/tree/master/packages/assets). This was previously handled by [republik-backend](https://github.com/orbiting/republik-backend) and [publikator-backend](https://github.com/orbiting/publikator-backend) themselfs but was extracted to this standalone server to be able to deploy and scale the network heavy image fetching and cpu intensive image resizing independently from the other backends. UnLike the other backends this server does not support auth and depends on express directly.
 
-TODO: system diagram
-
 ## Usage
 
 ### Quick start
@@ -48,12 +46,6 @@ Run it.
 ```
 yarn run dev
 ```
-
-## Production
-
-What about the peculiar start script in `package.json`?
-
-Node (V8) uses a lazy and greedy garbage collector, with its default limit of about 1.5 GB. The options provided in start, try to keep the node process within 1GB of RAM. See https://blog.heroku.com/node-habits-2016#7-avoid-garbage
 
 ## Licensing
 The source code and it's documentation is licensed under [GNU AGPLv3](LICENSE)+.

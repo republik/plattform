@@ -56,7 +56,7 @@ module.exports = async (req, res) => {
       basicAuthPass
     }
   } = parse(req.url, true)
-  debug({ url, width, height, zoomFactor, fullPage, type, quality })
+  debug({ url, width, height, zoomFactor, fullPage, type, quality, cookie, basicAuthUser, basicAuthPass })
 
   if (!url) {
     res.statusCode = 422

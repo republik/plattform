@@ -29,6 +29,6 @@ services:
       - KEYCDN_API_KEY
       - KEYCDN_ZONE_ID
       - KEYCDN_ZONE_URL
-      - PUPPETEER_WS_ENDPOINT
+      - CHROMIUM_LAMBDA_URL
     ports:
         - 8080:3020
