@@ -62,10 +62,10 @@ module.exports = async (req, res) => {
     ? _format
     : 'png'
 
-  debug({ url, width, height, zoomFactor, fullPage, format, quality, cookie, basicAuthUser, basicAuthPass })
+  debug({ url, width, height, zoomFactor, fullPage, format, quality, cookie, basicAuthUser })
 
   if (!url) {
-    res.statusCode = 422
+    res.statusCode = 400
     return res.end('missing url param')
   }
 
@@ -79,8 +79,9 @@ module.exports = async (req, res) => {
     return res.end()
   }
 
+  let browser
   try {
-    const browser = await getBrowser()
+    browser = await getBrowser()
 
     const page = await browser.newPage()
 
@@ -119,13 +120,14 @@ module.exports = async (req, res) => {
         : {}
     })
 
-    browser.close()
-
     res.statusCode = 200
     res.setHeader('Content-Type', `image/${format}`)
-    return res.end(screenshot)
+    res.end(screenshot)
   } catch (error) {
     res.statusCode = 500
-    return res.end(error.message || error)
+    res.end(error.message || error)
+  } finally {
+    await browser.close()
+      .catch(error => console.warn(error))
   }
 }
