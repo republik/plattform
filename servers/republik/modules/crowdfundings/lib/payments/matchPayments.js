@@ -1,5 +1,5 @@
 const generateMemberships = require('../generateMemberships')
-const sendPaymentSuccessful = require('./sendPaymentSuccessful')
+const { sendPaymentSuccessful } = require('../Mail')
 const slack = require('../../../../lib/slack')
 
 module.exports = async (transaction, t) => {
@@ -78,7 +78,7 @@ module.exports = async (transaction, t) => {
       }
 
       if (newStatus === 'SUCCESSFUL') {
-        await sendPaymentSuccessful(pledge.id, transaction, t)
+        await sendPaymentSuccessful({ pledgeId: pledge.id, pgdb: transaction, t })
         numPaymentsSuccessful += 1
       }
     }
