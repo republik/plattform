@@ -13,10 +13,16 @@
     {
       "src": "/screenshot",
       "dest": "/lambdas/chromium/screenshot.js"
+    },
+    {
+      "src": "/",
+      "status": 301,
+      "headers": {
+        "Location": "/screenshot?url=https://github.com/orbiting/backends/master/puppeteer/lambdas/chromium"
+      }
     }
   ],
   "env": {
-    "URL_WHITELIST": "@url_whitelist",
-    "DEBUG": "screenshot"
+    "URL_WHITELIST": "@url_whitelist"
   }
 }
