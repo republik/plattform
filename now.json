@@ -16,7 +16,7 @@
     },
     {
       "src": "/",
-      "status": 301,
+      "status": 302,
       "headers": {
         "Location": "/screenshot?url=https://github.com/orbiting/backends/master/puppeteer/lambdas/chromium"
       }
