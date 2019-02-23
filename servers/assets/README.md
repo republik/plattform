@@ -1,7 +1,7 @@
 Assets Backend
 ---------------
 
-This is a lightweight, fast nodejs-express server for asset proxying and image manipulation (resizing, greyscaling, webp format transformation). It streams assets from other urls, from s3 buckets, out of github repos and can render via external serves.
+This is a lightweight, fast nodejs-express server for asset proxying and image manipulation (resizing, greyscaling, webp format transformation). It streams assets from other urls, from s3 buckets, out of github repos and can render via external servers.
 
 Check the [README](https://github.com/orbiting/backends/tree/master/packages/assets/README.md) of [backend-modules-assets](https://github.com/orbiting/backends/tree/master/packages/assets) which contains all the relevant code.
 
