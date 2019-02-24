@@ -21,8 +21,5 @@
         "Location": "/screenshot?url=https://github.com/orbiting/backends/master/puppeteer/lambdas/chromium"
       }
     }
-  ],
-  "env": {
-    "URL_WHITELIST": "@url_whitelist"
-  }
+  ]
 }

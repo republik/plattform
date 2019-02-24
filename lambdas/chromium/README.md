@@ -12,8 +12,8 @@ API to puppeteer - chromium.
 see [.env.example]
 
 ```
-now secret url_whitelist https://www.republik.ch,https://republik.ch
-now -e URL_WHITELIST=@url_whitelist
+now -e URL_WHITELIST=https://republik.ch,https://www.republik.ch,https://republik.love,https://www.republik.love,https://github.com
+
 ```
 
 
