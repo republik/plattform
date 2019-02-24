@@ -133,10 +133,7 @@
     "PF_SHA_OUT_SECRET": {
       "required": true
     },
-    "PHANTOM_COOKIE": {
-      "required": true
-    },
-    "PHANTOMJSCLOUD_API_KEY": {
+    "CHROMIUM_LAMBDA_URL": {
       "required": true
     },
     "PREVIEW_MAIL_REPO_ID": "",
@@ -156,9 +153,6 @@
       "required": true
     },
     "REDIS_URL": {
-      "required": true
-    },
-    "RENDER_URL_WHITELIST": {
       "required": true
     },
     "REQ_TIMEOUT": {

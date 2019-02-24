@@ -181,6 +181,11 @@
     node-fetch "^2.1.1"
     url-template "^2.0.8"
 
+"@orbiting/graphql-list-fields@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@orbiting/graphql-list-fields/-/graphql-list-fields-2.0.2.tgz#12686554c3cbca96f38f29166c031e89aa3a0fd2"
+  integrity sha512-OKGJlG/QHohYYC0TAeEBx+y8PT9f/BPCRYlG16m+mMJx/F0QB3vVspOcs5v14sjrMrbCwtd3hhMUAyo75cQ+Ug==
+
 "@orbiting/remark-preset@^1.2.3":
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/@orbiting/remark-preset/-/remark-preset-1.2.3.tgz#e0d778a5d04b8fff300a7dcf13d4eabc81a7c331"
@@ -4252,10 +4257,6 @@ graphql-fields@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/graphql-fields/-/graphql-fields-1.0.2.tgz#099ee1d4445b42d0f47e06d622acebb33abc6cce"
   integrity sha1-CZ7h1ERbQtD0fgbWIqzrszq8bM4=
-
-"graphql-list-fields@https://github.com/orbiting/graphql-list-fields#named-inline-fragments":
-  version "2.0.1"
-  resolved "https://github.com/orbiting/graphql-list-fields#e96ee15199283acb43ced006e777c985c910ed4c"
 
 graphql-redis-subscriptions@^1.4.0:
   version "1.5.0"
