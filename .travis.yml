@@ -35,7 +35,6 @@ env:
     - SESSION_SECRET=testtest
     - DEFAULT_MAIL_FROM_NAME='travis'
     - DEFAULT_MAIL_FROM_ADDRESS='travis@test.project-r.construction'
-    - AUTH_MAIL_FROM_ADDRESS='travis@test.project-r.construction'
     - FRONTEND_BASE_URL=http://localhost:6000
     - LOCAL_ASSETS_SERVER=true
     - ASSETS_SERVER_BASE_URL=http://localhost:6000

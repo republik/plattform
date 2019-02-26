@@ -11,7 +11,7 @@ const AppTokenRequiresMeError = newAuthError('app-token-requires-me', 'api/signI
 
 const {
   FRONTEND_BASE_URL,
-  AUTH_MAIL_FROM_ADDRESS
+  DEFAULT_MAIL_FROM_ADDRESS
 } = process.env
 
 const {
@@ -65,7 +65,7 @@ module.exports = {
     if (!hasAppTokens) {
       sendMailTemplate({
         to: email,
-        fromEmail: AUTH_MAIL_FROM_ADDRESS,
+        fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
         subject: t('api/signin/mail/appNotice/subject'),
         templateName: 'signin_app_notice'
       }, { pgdb })

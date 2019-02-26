@@ -40,23 +40,8 @@ As soon as 2FA is enabled, updatePhoneNumber and updateEmail calls will fail unt
 
 ## ENV
 ```
-# where to send auth mails from
-AUTH_MAIL_FROM_ADDRESS="kontakt@republik.ch"
-
 # where to redirect after a successful/failed signin
 FRONTEND_BASE_URL=http://localhost:3010
-
-
-# optional
-
-# name of the mandrill template to use for signin emails
-# see seeds/email_templates/
-# If undefined a simple text email will be sent
-# see lib/signin.js
-AUTH_MAIL_TEMPLATE_NAME=republik_signin
-
-# overwrite api/signin/mail/subject
-AUTH_MAIL_SUBJECT=sign in link
 
 # the url where src/auth.js will be reachable
 # what to prefix the sign-in link with
