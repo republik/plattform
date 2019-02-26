@@ -13,7 +13,6 @@ Props:
 - `forceMuted`: Boolean, mutes the player and hides the mute interfaces.
 - `cinemagraph`: Boolean, whether the video is a cinemagraph. Forces `loop`, `muted`, `autoPlay` and `playsInline`.
 - `attributes`: Object, arbitrary attributes mapped to the video tag like playsinline, specific ones win
-- `startSeconds`: number; Playback position of track (in seconds), defaults to 0
 
 
 ```react
@@ -38,20 +37,6 @@ Props:
     subtitles: '/static/main.vtt'
   }}
   showPlay={false}
-/>
-```
-
-#### startSeconds
-
-```react
-<VideoPlayer
-  startSeconds={30}
-  src={{
-    hls: 'https://player.vimeo.com/external/213080233.m3u8?s=40bdb9917fa47b39119a9fe34b9d0fb13a10a92e',
-    mp4: 'https://player.vimeo.com/external/213080233.hd.mp4?s=ab84df0ac9134c86bb68bd9ea7ac6b9df0c35774&profile_id=175',
-    thumbnail: `/static/video.jpg`,
-    subtitles: '/static/main.vtt'
-  }}
 />
 ```
 

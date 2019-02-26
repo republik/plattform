@@ -198,19 +198,18 @@ class VideoPlayer extends Component {
       }))
     }
     this.setTime = (time = 0) => {
-      if (this.video.currentTime !== time) {
+      if (this.video && this.video.currentTime !== time) {
         this.video.currentTime = time
         this.updateProgress()
       }
     }
     this.onCanPlay = () => {
-      this.initStartTime()
       this.setState(() => ({
         loading: false
       }))
     }
     this.onLoadedMetaData = () => {
-      this.initStartTime()
+      this.state.startSeconds && this.setTime(this.state.startSeconds)
       this.setTextTracksMode()
       this.setState(() => ({
         loading: false
@@ -319,22 +318,25 @@ class VideoPlayer extends Component {
       this._textTrackMode = subtitles
     }
   }
-  initStartTime() {
-    if (this.state.contextStartSeconds !== undefined || !this.video || this.video.readyState !== 4) {
-      return
-    }
-    let startSeconds
-    if (this.props.mediaId && this.context.getMediaProgress) {
-      startSeconds = this.context.getMediaProgress(this.props.mediaId)
-      if (startSeconds) {
-        this.setState(() => ({
-          contextStartSeconds: startSeconds
-        }))
+  getStartTime() {
+    return new Promise((resolve, reject) => {
+      if (this.props.mediaId && this.context.getMediaProgress) {
+        this.context.getMediaProgress(this.props.mediaId)
+          .then((startSeconds) => {
+            if (startSeconds) {
+              this.setState(() => ({ startSeconds }))
+              !!startSeconds && this.setTime(startSeconds)
+            }
+            resolve()
+          }
+        ).catch(() => {
+          resolve()
+        })
+      } else {
+        resolve()
       }
-    } else if (this.props.startSeconds) {
-       startSeconds = this.props.startSeconds
-    }
-    startSeconds && this.setTime(startSeconds)
+
+    })
   }
   setMuted(muted) {
     const next = {
@@ -371,15 +373,15 @@ class VideoPlayer extends Component {
     this.video.addEventListener('loadedmetadata', this.onLoadedMetaData)
     this.video.addEventListener('volumechange', this.onVolumeChange)
 
-    this.initStartTime()
     this.setTextTracksMode()
 
-    if (this.video && !this.video.paused) {
-      this.onPlay()
-    }
+    this.getStartTime().then(() => {
+      if (this.video && !this.video.paused) {
+        this.onPlay()
+      }
+    })
   }
   componentDidUpdate() {
-    this.initStartTime()
     this.setTextTracksMode()
   }
   componentWillUnmount() {
@@ -571,8 +573,7 @@ CrossOrigin subtitles do not work in older browsers.'`
   attributes: PropTypes.object,
   // mandate full window instead of fullscreen API
   fullWindow: PropTypes.bool,
-  onFull: PropTypes.func,
-  startSeconds: PropTypes.number,
+  onFull: PropTypes.func
 }
 
 VideoPlayer.contextTypes = {

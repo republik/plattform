@@ -16,7 +16,6 @@ Props:
 - `timePosition`: `right` (default) or `left`.
 - `height`: number; The player height in pixels.
 - `controlsPadding`: number; The horizontal padding between controls and container, defaults to 0.
-- `startSeconds`: number; Playback position of track (in seconds), defaults to 0.
 
 ```react
 <AudioPlayer
@@ -33,16 +32,6 @@ Props:
     mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/republik_diktator_fichter.mp3'
   }}
   timePosition='left'
-  t={t}
-/>
-```
-
-```react
-<AudioPlayer
-  src={{
-    mp3: 'https://cdn.republik.space/s3/republik-assets/assets/audio-artikel/Republik_Der-Klima-Code__Bastani_Hess.mp3'
-  }}
-  startSeconds={300}
   t={t}
 />
 ```
