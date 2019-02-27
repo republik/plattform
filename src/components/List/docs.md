@@ -68,7 +68,19 @@ Props:
 ```react
 <Center>
   <Editorial.P>One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin.</Editorial.P>
-  <Editorial.OL start={39}>
+  <Editorial.OL start={43}>
+    <Editorial.LI>
+      <p>He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.</p>
+    </Editorial.LI>
+    <Editorial.LI>
+      <p>The bedding was hardly able to cover it and seemed ready to slide off any moment. His many legs, pitifully thin compared with the size of the rest of him, waved about helplessly as he looked.</p>
+    </Editorial.LI>
+    <Editorial.LI>
+      <p>One morning, when Gregor Samsa woke from troubled dreams, he found himself transformed in his bed into a horrible vermin.</p>
+    </Editorial.LI>
+  </Editorial.OL>
+  <Editorial.P>If he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.</Editorial.P>
+  <Editorial.OL start={999}>
     <Editorial.LI>
       <p>He lay on his armour-like back, and if he lifted his head a little he could see his brown belly, slightly domed and divided by arches into stiff sections.</p>
     </Editorial.LI>

@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {
   serifRegular14,
-  serifRegular16,
   serifRegular17,
   serifRegular19
 } from '../Typography/styles'
@@ -14,22 +13,20 @@ const WIDTH = 22
 const MARGIN = 8
 
 const styles = {
-  list: css({
+  unorderedList: css({
     marginLeft: 0,
     paddingLeft: 0,
     listStyle: 'none'
   }),
+  orderedList: css({
+    paddingLeft: '1.7em',
+    '& > li': {
+      paddingLeft: `${MARGIN}px`,
+    }
+  }),
   unorderedBefore: css({
     '& > li:before': {
       content: '–',
-      position: 'absolute',
-      left: 0
-    }
-  }),
-  orderedBefore: css({
-    '& > li:before': {
-      content: 'counter(start) ". "',
-      counterIncrement: 'start',
       position: 'absolute',
       left: 0
     }
@@ -54,14 +51,17 @@ const styles = {
         lineHeight: '28px',
         margin: '14px 0'
       }
-    },
-    'ol > &': {
-      paddingLeft: `${WIDTH + MARGIN}px`
     }
   })
 }
 
-styles.listCompact = merge(styles.list, {
+styles.unorderedListCompact = merge(styles.unorderedList, {
+  '& li, & li p': {
+    margin: 0
+  }
+})
+
+styles.orderedListCompact = merge(styles.orderedList, {
   '& li, & li p': {
     margin: 0
   }
@@ -72,7 +72,7 @@ export const UnorderedList = ({ children, attributes, compact }) => {
     <ul
       {...attributes}
       {...css(
-        compact ? styles.listCompact : styles.list,
+        compact ? styles.unorderedListCompact : styles.unorderedList,
         styles.unorderedBefore
       )}
     >
@@ -92,11 +92,7 @@ export const OrderedList = ({ children, attributes, start, compact }) => {
     <ol
       start={start}
       {...attributes}
-      {...css(
-        compact ? styles.listCompact : styles.list,
-        styles.orderedBefore,
-        { counterReset: `start ${start - 1}` }
-      )}
+      {...(compact ? styles.orderedListCompact : styles.orderedList)}
     >
       {children}
     </ol>
