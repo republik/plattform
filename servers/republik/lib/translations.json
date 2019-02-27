@@ -1,5 +1,5 @@
 {
-  "updated": "2019-02-13T21:16:30.223Z",
+  "updated": "2019-02-27T12:37:23.284Z",
   "title": "live",
   "data": [
     {
@@ -471,20 +471,8 @@
       "value": "und"
     },
     {
-      "key": "api/access/email/recipient/invitation-2/subject",
+      "key": "api/access/email/recipient/invitation/subject",
       "value": "Einladung von {granterName}"
-    },
-    {
-      "key": "api/access/email/recipient/onboarding-2/subject",
-      "value": "Ihr Republik-Testzugang: Willkommen!"
-    },
-    {
-      "key": "api/access/email/recipient/expired-2/subject",
-      "value": "Ihre Reise ist beendet"
-    },
-    {
-      "key": "api/access/email/recipient/followup-2/subject",
-      "value": "Zeit für eine Entscheidung"
     },
     {
       "key": "api/access/email/recipient/onboarding/subject",
