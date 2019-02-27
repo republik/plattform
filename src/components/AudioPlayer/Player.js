@@ -364,25 +364,18 @@ class AudioPlayer extends Component {
       audio.load()
     }
   }
-  getStartTime() {
-    return new Promise((resolve, reject) => {
-      if (this.props.mediaId && this.context.getMediaProgress) {
-        this.context.getMediaProgress(this.props.mediaId)
-          .then((startSeconds) => {
-            if (startSeconds) {
-              this.setState(() => ({ startSeconds }))
-              !!startSeconds && this.setTime(startSeconds)
-            }
-            resolve()
-          }
-        ).catch(() => {
-          resolve()
-        })
-      } else {
-        resolve()
-      }
-
-    })
+  initStartTime() {
+    if (this.props.mediaId && this.context.getMediaProgress) {
+      return this.context.getMediaProgress(this.props.mediaId).then((startSeconds) => {
+        if (startSeconds) {
+          this.setState(() => ({ startSeconds }))
+          !!startSeconds && this.setTime(startSeconds)
+        }
+      }).catch(() => {
+        return undefined // ignore errors
+      })
+    }
+    return Promise.resolve()
   }
   setFormattedTimes() {
     if (!this.audio || !this.audio.duration) {
@@ -402,7 +395,7 @@ class AudioPlayer extends Component {
     this.audio.addEventListener('canplaythrough', this.onCanPlay)
     this.audio.addEventListener('loadedmetadata', this.onLoadedMetaData)
 
-    this.getStartTime().then(() => {
+    this.initStartTime().then(() => {
       this.setFormattedTimes()
       if (this.audio && !this.audio.paused) {
         this.onPlay()

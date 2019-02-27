@@ -318,25 +318,18 @@ class VideoPlayer extends Component {
       this._textTrackMode = subtitles
     }
   }
-  getStartTime() {
-    return new Promise((resolve, reject) => {
-      if (this.props.mediaId && this.context.getMediaProgress) {
-        this.context.getMediaProgress(this.props.mediaId)
-          .then((startSeconds) => {
-            if (startSeconds) {
-              this.setState(() => ({ startSeconds }))
-              !!startSeconds && this.setTime(startSeconds)
-            }
-            resolve()
-          }
-        ).catch(() => {
-          resolve()
-        })
-      } else {
-        resolve()
-      }
-
-    })
+  initStartTime() {
+    if (this.props.mediaId && this.context.getMediaProgress) {
+      return this.context.getMediaProgress(this.props.mediaId).then((startSeconds) => {
+        if (startSeconds) {
+          this.setState(() => ({ startSeconds }))
+          !!startSeconds && this.setTime(startSeconds)
+        }
+      }).catch(() => {
+        return undefined // ignore errors
+      })
+    }
+    return Promise.resolve()
   }
   setMuted(muted) {
     const next = {
@@ -375,7 +368,7 @@ class VideoPlayer extends Component {
 
     this.setTextTracksMode()
 
-    this.getStartTime().then(() => {
+    this.initStartTime().then(() => {
       if (this.video && !this.video.paused) {
         this.onPlay()
       }
