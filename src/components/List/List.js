@@ -17,21 +17,13 @@ const styles = {
   list: css({
     marginLeft: 0,
     paddingLeft: 0,
-    listStyle: 'none',
-    'li &': {
-      [mUp]: {
-        marginLeft: `${WIDTH}px`
-      }
-    }
+    listStyle: 'none'
   }),
   unorderedBefore: css({
     '& > li:before': {
       content: '–',
       position: 'absolute',
-      left: 0,
-      [mUp]: {
-        left: `-${WIDTH}px`
-      }
+      left: 0
     }
   }),
   orderedBefore: css({
@@ -39,12 +31,7 @@ const styles = {
       content: 'counter(start) ". "',
       counterIncrement: 'start',
       position: 'absolute',
-      left: 0,
-      [mUp]: {
-        left: `-${WIDTH + MARGIN}px`,
-        width: `${WIDTH}px`,
-        textAlign: 'right'
-      }
+      left: 0
     }
   }),
   li: css({
@@ -53,8 +40,7 @@ const styles = {
     position: 'relative',
     ...serifRegular17,
     [mUp]: {
-      ...serifRegular19,
-      paddingLeft: 0
+      ...serifRegular19
     },
     '& p:last-child': {
       marginBottom: 0
@@ -70,10 +56,7 @@ const styles = {
       }
     },
     'ol > &': {
-      paddingLeft: `${WIDTH + MARGIN}px`,
-      [mUp]: {
-        paddingLeft: 0
-      }
+      paddingLeft: `${WIDTH + MARGIN}px`
     }
   })
 }
