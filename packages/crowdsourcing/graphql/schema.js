@@ -10,8 +10,8 @@ type mutations {
     tel: String
     content: String!
     count: Integer
-    inheritanceFrom: InheritanceFrom
-    inheritanceType: InheritanceCategory
+    inheritanceFrom: String
+    inheritanceType: String
     value: String 
     inheritanceBattle: boolean
     heritage: String
