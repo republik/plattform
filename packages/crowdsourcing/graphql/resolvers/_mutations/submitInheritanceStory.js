@@ -12,7 +12,14 @@ module.exports = (_, args, context) => {
   const {
     email,
     tel,
-    content
+    content,
+    count,
+    inheritanceFrom,
+    inheritanceType,
+    value,
+    inheritanceBattle,
+    heritage,
+    testament
   } = args
 
   if (!CS_INHERITANCE_TO || !CS_INHERITANCE_SUBJECT) {
@@ -29,7 +36,23 @@ module.exports = (_, args, context) => {
 \tE-Mail: ${email}
 ${tel ? '\tTel: ' + tel : ''}
 
-${args.content}
+${value ? 'Wert meines inheritanceTypes: ' + value + ' sFr.' : ''}
+
+${inheritanceType ? 'Das habe ich geerbt / werde ich inheritanceTypen: ' + inheritanceType : ''}
+
+${inheritanceFrom ? 'Von wem? ' + inheritanceFrom : ''}
+
+${count ? 'Ich teile mein inheritanceType (voraussichtlich) mit ' + count + ' Personen' : ''}
+
+${inheritanceBattle ? 'Es gab einen Erbstreit in meiner Familie: ' + inheritanceBattle : ''}
+
+${heritage ? 'Das werde ich mal verinheritanceTypen: ' + heritage : ''}
+
+${testament ? 'Ich habe mein Testament bereits geschrieben: ' + testament : ''}
+
+${'Erbgeschichte: ' + args.content}
+
+
 `
 
   return sendMail({

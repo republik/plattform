@@ -9,6 +9,13 @@ type mutations {
     email: String!
     tel: String
     content: String!
+    count: Integer
+    inheritanceFrom: InheritanceFrom
+    inheritanceType: InheritanceCategory
+    value: String 
+    inheritanceBattle: boolean
+    heritage: String
+    testament: boolean 
   ):Boolean
 }
 `
