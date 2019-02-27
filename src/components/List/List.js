@@ -16,19 +16,17 @@ const styles = {
   unorderedList: css({
     marginLeft: 0,
     paddingLeft: 0,
-    listStyle: 'none'
+    listStyle: 'none',
+    '& > li:before': {
+      content: '–',
+      position: 'absolute',
+      left: 0
+    }
   }),
   orderedList: css({
     paddingLeft: '1.7em',
     '& > li': {
       paddingLeft: `${MARGIN}px`,
-    }
-  }),
-  unorderedBefore: css({
-    '& > li:before': {
-      content: '–',
-      position: 'absolute',
-      left: 0
     }
   }),
   li: css({
@@ -71,10 +69,7 @@ export const UnorderedList = ({ children, attributes, compact }) => {
   return (
     <ul
       {...attributes}
-      {...css(
-        compact ? styles.unorderedListCompact : styles.unorderedList,
-        styles.unorderedBefore
-      )}
+      {...(compact ? styles.unorderedListCompact : styles.unorderedList)}
     >
       {children}
     </ul>
