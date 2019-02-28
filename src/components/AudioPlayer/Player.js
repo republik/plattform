@@ -268,6 +268,9 @@ class AudioPlayer extends Component {
     }
     this.onCanPlay = () => {
       this.state.startSeconds && !this.state.initialized && this.setTime(this.state.startSeconds)
+      if (this.props.autoPlay) {
+        this.play()
+      }
       this.setState(() => ({
         initialized: true,
         playEnabled: true,
@@ -470,7 +473,6 @@ class AudioPlayer extends Component {
           {...styles.audio}
           {...attributes}
           ref={this.ref}
-          autoPlay={autoPlay}
           onLoadedMetadata={this.onLoadedMetaData}
           crossOrigin="anonymous"
         >
@@ -482,7 +484,6 @@ class AudioPlayer extends Component {
           {...styles.audio}
           {...attributes}
           ref={this.ref}
-          autoPlay={autoPlay}
           onLoadedMetadata={this.onLoadedMetaData}
           crossOrigin="anonymous"
           playsInline
