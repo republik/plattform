@@ -267,6 +267,7 @@ class AudioPlayer extends Component {
       }
     }
     this.onCanPlay = () => {
+      this.state.startSeconds && !this.state.initialized && this.setTime(this.state.startSeconds)
       this.setState(() => ({
         initialized: true,
         playEnabled: true,
@@ -275,8 +276,9 @@ class AudioPlayer extends Component {
       }))
     }
     this.onLoadedMetaData = () => {
-      this.state.startSeconds && this.setTime(this.state.startSeconds)
+      this.state.startSeconds && !this.state.initialized && this.setTime(this.state.startSeconds)
       this.setState(() => ({
+        initialized: true,
         playEnabled: true,  // iOS won't fire canPlay, so rely on meta data.
         loading: false,
         sourceError: false
