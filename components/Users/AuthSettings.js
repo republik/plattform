@@ -17,6 +17,13 @@ import withT from '../../lib/withT'
 
 import { SUPPORTED_TOKEN_TYPES } from '../constants'
 
+export const firstFactorFragment = gql`
+  fragment FirstFactors on User {
+    enabledFirstFactors
+    preferredFirstFactor
+  }
+`
+
 export const UPDATE_PREFERRED_FRIST_FACTOR = gql`
   mutation updatePreferredFirstFactor(
     $userId: ID!
@@ -27,20 +34,20 @@ export const UPDATE_PREFERRED_FRIST_FACTOR = gql`
       tokenType: $tokenType
     ) {
       id
-      enabledFirstFactors
-      preferredFirstFactor
+      ...FirstFactors
     }
   }
+  ${firstFactorFragment}
 `
 
 export const GET_AUTH_SETTINGS = gql`
   query getAuthSettings($userId: String) {
     user(slug: $userId) {
       id
-      enabledFirstFactors
-      preferredFirstFactor
+      ...FirstFactors
     }
   }
+  ${firstFactorFragment}
 `
 
 class UpdatePreferredFirstFactor extends Component {
@@ -66,11 +73,6 @@ class UpdatePreferredFirstFactor extends Component {
       <Mutation
         mutation={UPDATE_PREFERRED_FRIST_FACTOR}
         variables={{ userId, tokenType: this.state.value }}
-        refetchQueries={[{
-          query: GET_AUTH_SETTINGS,
-          variables: { userId }
-        }]}
-        awaitRefetchQueries={true}
       >
         {(mutation, { loading }) => {
           return (
@@ -94,7 +96,7 @@ class UpdatePreferredFirstFactor extends Component {
                         disabled={disabled || loading}
                         onChange={() => {
                           this.setState(
-                            () => ({ value: tokenType }),
+                            { value: tokenType },
                             mutation
                           )
                         }}
