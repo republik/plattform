@@ -13,7 +13,7 @@ const WORD_DISTANCE_THRESHOLD = 0.5
 
 module.exports = async (
   _,
-  { limit, offset, orderBy, search, dateRangeFilter, stringArrayFilter, booleanFilter },
+  { limit, offset = 0, orderBy, search, dateRangeFilter, stringArrayFilter, booleanFilter },
   { pgdb, user }
 ) => {
   Roles.ensureUserHasRole(user, 'supporter')
