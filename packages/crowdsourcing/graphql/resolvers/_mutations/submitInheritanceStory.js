@@ -50,7 +50,7 @@ ${heritage ? 'Das werde ich mal vererben: ' + heritage : ''}
 
 ${testament ? 'Ich habe mein Testament bereits geschrieben: ' + testament : ''}
 
-${content ? 'Erbgeschichte: ' + args.content : ''}
+${content ? 'Erbgeschichte: ' + content : ''}
 
 `
 
