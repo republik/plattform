@@ -118,7 +118,7 @@ const AuthSettings = ({ t, userId }) => (
   <Query query={GET_AUTH_SETTINGS} variables={{ userId }}>
     {({ data, loading, error }) => (
       <Loader
-        loading={loading && !data && !data.user}
+        loading={loading}
         error={error}
         render={() => {
           const { user } = data
