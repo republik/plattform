@@ -41,12 +41,15 @@ const requireDirectory = (root, except, flatify, ignoreDirectories) => {
 // loads a module from a directory
 const loadModule = (root) => {
   const schema = [require(path.join(root, 'schema'))]
-  const schemaTypes = [require(path.join(root, 'schema-types'))]
+  let schemaTypes
+  try {
+    schemaTypes = [require(path.join(root, 'schema-types'))]
+  } catch { }
   const typeResolvers = requireDirectory(path.join(root, 'resolvers/'), ['_queries', '_mutations', '_subscriptions'])
   return {
     schema,
     schemaTypes,
-    typeDefs: [...schema, ...schemaTypes],
+    typeDefs: [...schema, ...schemaTypes || []],
     typeResolvers,
     resolvers: _.pickBy({
       queries: requireDirectory(path.join(root, 'resolvers/', '_queries/'), [], true),
@@ -72,15 +75,20 @@ const _addTypes = (master, donor) => {
       masterScalarTypeDefs.push(def.name.value)
     }
   })
-  const parsedDonorSchemaTypes = parse(new Source(donor.schemaTypes.join('\n')))
-  const deduplicatedDonorSchemaTypes = print({
-    ...parsedDonorSchemaTypes,
-    definitions: parsedDonorSchemaTypes.definitions.filter(
-      def => !def.name || masterScalarTypeDefs.indexOf(def.name.value) === -1
-    )
-  })
 
-  const mergedSchemaTypes = [...master.schemaTypes, deduplicatedDonorSchemaTypes]
+  let mergedSchemaTypes = [...master.schemaTypes]
+  if (donor.schemaTypes) {
+    const parsedDonorSchemaTypes = parse(new Source(donor.schemaTypes.join('\n')))
+
+    const deduplicatedDonorSchemaTypes = print({
+      ...parsedDonorSchemaTypes,
+      definitions: parsedDonorSchemaTypes.definitions.filter(
+        def => !def.name || masterScalarTypeDefs.indexOf(def.name.value) === -1
+      )
+    })
+    mergedSchemaTypes.push(deduplicatedDonorSchemaTypes)
+  }
+
   return {
     ...master,
     schemaTypes: mergedSchemaTypes,
