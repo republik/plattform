@@ -17,6 +17,6 @@ module.exports = async (_, { userId: foreignUserId, tokenType }, { pgdb, req, us
     throw new UserNotFoundError({ foreignUserId })
   }
 
-  return setPreferredFirstFactor(me, tokenType, pgdb)
+  return setPreferredFirstFactor(user, tokenType, pgdb)
     .then(transformUser)
 }
