@@ -7,7 +7,7 @@ const adminRoles = ['admin', 'supporter']
 module.exports = {
   collections (user, args, context) {
     const { user: me } = context
-    if(
+    if (
       (Roles.userIsMe(user, me) && Roles.userIsInRoles(user, accessRoles)) ||
       Roles.userIsInRoles(me, adminRoles)
     ) {
@@ -17,12 +17,11 @@ module.exports = {
   },
   collection (user, { name }, context) {
     const { user: me } = context
-    if(
+    if (
       (Roles.userIsMe(user, me) && Roles.userIsInRoles(user, accessRoles)) ||
       Roles.userIsInRoles(me, adminRoles)
     ) {
       return Collection.byNameForUser(name, user.id, context)
     }
-    return
   }
 }

@@ -8,6 +8,10 @@ if (!VIMEO_APP_ACCESS_TOKEN) {
 }
 
 const getVimeoVideoById = async id => {
+  if (!VIMEO_APP_ACCESS_TOKEN) {
+    throw new Error('missing VIMEO_APP_ACCESS_TOKEN')
+  }
+
   const response = await fetch(`https://api.vimeo.com/videos/${id}`, {
     method: 'GET',
     headers: {
@@ -44,6 +48,7 @@ const getVimeoVideoById = async id => {
 
   return {
     platform: 'vimeo',
+    id,
     createdAt: new Date(response.created_time),
     retrievedAt: new Date(),
     thumbnail: thumbnail,
@@ -62,7 +67,8 @@ const getVimeoVideoById = async id => {
       hls: hls,
       thumbnail: thumbnail
       // TODO: subtitles
-    } : null
+    } : null,
+    durationMs: response.duration * 1000
   }
 }
 

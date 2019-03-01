@@ -172,6 +172,13 @@ type Update {
   socialMediaImage: String
 }
 
+type MediaResponse {
+  medium: String
+  publishDate: String
+  title: String
+  url: String
+}
+
 type Employee {
   group: String
   subgroup: String

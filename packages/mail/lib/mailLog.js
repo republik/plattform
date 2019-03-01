@@ -64,6 +64,7 @@ const send = async ({
 
   const info = {
     ...log && log.info,
+    template,
     message
   }
   const type = (onceFor && onceFor.type) || template || 'no-template'

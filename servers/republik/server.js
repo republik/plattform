@@ -28,6 +28,7 @@ const cluster = require('cluster')
 
 const {
   LOCAL_ASSETS_SERVER,
+  MAIL_EXPRESS_RENDER,
   SEARCH_PG_LISTENER,
   NODE_ENV,
   ACCESS_SCHEDULER,
@@ -68,6 +69,10 @@ const run = async (workerId) => {
     require('./modules/crowdfundings/express/paymentWebhooks'),
     require('./express/gsheets')
   ]
+
+  if (MAIL_EXPRESS_RENDER) {
+    middlewares.push(require('@orbiting/backend-modules-mail/express/render'))
+  }
 
   if (LOCAL_ASSETS_SERVER) {
     const { express } = require('@orbiting/backend-modules-assets')

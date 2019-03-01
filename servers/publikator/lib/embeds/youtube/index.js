@@ -1,4 +1,5 @@
 const fetch = require('isomorphic-unfetch')
+const moment = require('moment')
 
 const { YOUTUBE_APP_KEY } = process.env
 
@@ -7,11 +8,15 @@ if (!YOUTUBE_APP_KEY) {
 }
 
 const getYoutubeVideoById = async id => {
+  if (!YOUTUBE_APP_KEY) {
+    throw new Error('missing YOUTUBE_APP_KEY')
+  }
+
   // Note that player.embedWidth/embedHeight is only returned if the request
   // specifies a maxWidth parameter.
   // https://developers.google.com/youtube/v3/docs/videos
   const response = await fetch(
-    `https://www.googleapis.com/youtube/v3/videos?id=${id}&key=${YOUTUBE_APP_KEY}&part=snippet,player&maxWidth=1000`,
+    `https://www.googleapis.com/youtube/v3/videos?id=${id}&key=${YOUTUBE_APP_KEY}&part=snippet,player,contentDetails&maxWidth=1000`,
     {
       method: 'GET'
     }
@@ -55,7 +60,10 @@ const getYoutubeVideoById = async id => {
       ? channelResponse.items[0].snippet.thumbnails.default.url
       : '',
     aspectRatio:
-      response.items[0].player.embedWidth / response.items[0].player.embedHeight
+      response.items[0].player.embedWidth / response.items[0].player.embedHeight,
+    durationMs: moment
+      .duration(response.items[0].contentDetails.duration)
+      .as('milliseconds')
   }
 }
 

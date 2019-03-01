@@ -1,18 +1,27 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { publishMonitor } = require('../../../../../lib/slack')
-
 const { transformUser } = require('@orbiting/backend-modules-auth')
-const cancelPledge = require('./cancelPledge')
+
+const { publishMonitor } = require('../../../../../lib/slack')
 const deleteStripeCustomer = require('../../../lib/payments/stripe/deleteCustomer')
 
-const deleteRelatedData = async (userId, pgdb) => {
+const deleteRelatedData = async ({ id: userId }, hasPledges, unpublishComments, pgdb) => {
   // get all related tables
   // https://stackoverflow.com/questions/5347050/sql-to-list-all-the-tables-that-reference-a-particular-column-in-a-table
-  const keepRelations = [ 'pledges', 'stripeCustomers' ]
+  const keepRelations = [
+    'accessGrants',
+    'electionCandidacies',
+    'pledges',
+    'stripeCustomers',
+    'comments' // get nullified, see below
+  ]
+  if (hasPledges) {
+    keepRelations.push('memberships')
+  }
   const relations = await pgdb.query(`
     select
       R.TABLE_SCHEMA as schema,
-      R.TABLE_NAME as table
+      R.TABLE_NAME as table,
+      R.column_name AS column
     from INFORMATION_SCHEMA.CONSTRAINT_COLUMN_USAGE u
     inner join INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS FK
       on U.CONSTRAINT_CATALOG = FK.UNIQUE_CONSTRAINT_CATALOG
@@ -30,11 +39,13 @@ const deleteRelatedData = async (userId, pgdb) => {
     )
   relations.unshift({ // needs to be first
     schema: 'public',
-    table: 'discussionPreferences'
+    table: 'discussionPreferences',
+    column: 'userId'
   })
   relations.push({ // needs to be last
     schema: 'public',
-    table: 'eventLog'
+    table: 'eventLog',
+    column: 'userId'
   })
   return Promise.all([
     pgdb.query(`
@@ -67,9 +78,22 @@ const deleteRelatedData = async (userId, pgdb) => {
       userIdPattern: `%${userId}%`,
       userId
     }),
+    // nullify comments
+    pgdb.public.comments.update(
+      { userId },
+      {
+        userId: null,
+        ...unpublishComments
+          ? {
+            published: false,
+            content: null
+          }
+          : {}
+      }
+    ),
     ...relations.map(rel =>
       pgdb[rel.schema][rel.table].delete({
-        userId // assume the foreign column is always called userId
+        [rel.column]: userId
       })
     )
   ])
@@ -99,7 +123,8 @@ const getNulledColumnsForUsers = async (pgdb) => {
 
 module.exports = async (_, args, context) => {
   const {
-    userId
+    userId,
+    unpublishComments = false
   } = args
   const {
     pgdb,
@@ -136,12 +161,19 @@ module.exports = async (_, args, context) => {
     `, {
       userId
     })
-
     // returning claimed memberships not supported yet
     const claimedMemberships = memberships.filter(m => !!m.pledges.find(p => p.userId !== userId))
     if (claimedMemberships.length > 0) {
       throw new Error(t('api/users/delete/claimedMembershipsNotSupported'))
     }
+
+    const grants = await transaction.public.accessGrants.find({
+      or: [{granterUserId: userId}, {recipientUserId: userId}]
+    })
+    const hasGrants = grants.length > 0
+
+    const candidacies = await transaction.public.electionCandidacies.find({ userId })
+    const hasCandidacies = candidacies.length > 0
 
     // delete from mailchimp
     const mailchimpResult = await deleteFromMailchimp({
@@ -151,11 +183,11 @@ module.exports = async (_, args, context) => {
       console.warn(`deleteUser: could not delete ${user.email} from mailchimp.`)
     }
 
-    await deleteRelatedData(userId, transaction)
+    await deleteRelatedData(user, hasPledges, unpublishComments, transaction)
 
-    // if the user had pledges we can delete everything,
+    // if the user doesn't have pledges, nor grants, nor candidacies we can delete everything,
     // otherwise we need to keep (firstName, lastName, address) for bookkeeping
-    if (!hasPledges) {
+    if (!hasPledges && !hasGrants && !hasCandidacies) {
       // delete stripe data
       await deleteStripeCustomer({ userId, pgdb: transaction })
 
@@ -163,14 +195,6 @@ module.exports = async (_, args, context) => {
         id: userId
       })
     } else {
-      // cancel pledges
-      await Promise.all(
-        pledges.map(p => cancelPledge(null, {
-          pledgeId: p.id,
-          transaction,
-          skipEnforceSubscriptions: true
-        }, context))
-      )
       // null profile where possible
       // change email to uid_deleted@republik.ch
       const nulledColumns = await getNulledColumnsForUsers(transaction)
@@ -198,7 +222,7 @@ module.exports = async (_, args, context) => {
       `deleteUser *${user.firstName} ${user.lastName} - ${user.email}*`
     )
 
-    return hasPledges
+    return (hasPledges || hasGrants || hasCandidacies)
       ? transformUser(
         await pgdb.public.users.findOne({
           id: userId

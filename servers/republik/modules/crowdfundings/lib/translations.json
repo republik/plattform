@@ -1,5 +1,5 @@
 {
-  "updated": "2019-02-07T16:39:44.569Z",
+  "updated": "2019-02-22T09:22:00.256Z",
   "title": "live",
   "data": [
     {
@@ -341,6 +341,30 @@
     {
       "key": "api/email/pledge_prolong/subject",
       "value": "Danke für Ihr grosses Herz und Ihren kühlen Kopf"
+    },
+    {
+      "key": "api/email/payment_successful_abo/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/payment_successful_abo_give/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/payment_successful_abo_give_months/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/payment_successful_benefactor/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/payment_successful_donate/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
+    },
+    {
+      "key": "api/email/payment_successful_prolong/subject",
+      "value": "Vielen Dank! Wir haben Ihre Zahlung erhalten."
     },
     {
       "key": "api/email/option/goodie/notebook/1",

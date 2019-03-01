@@ -14,7 +14,7 @@ module.exports = async (_, args, context) => {
     if (!comment) {
       throw new Error(t('api/comment/404'))
     }
-    if (comment.userId !== user.id && !Roles.userIsInRoles(user, ['editor', 'admin'])) {
+    if (!comment.userId || (comment.userId !== user.id && !Roles.userIsInRoles(user, ['editor', 'admin']))) {
       throw new Error(t('api/comment/notYours'))
     }
 

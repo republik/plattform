@@ -11,12 +11,6 @@
     "ASSETS_SERVER_BASE_URL": {
       "required": true
     },
-    "AUTH_MAIL_FROM_ADDRESS": {
-      "required": true
-    },
-    "AUTH_MAIL_TEMPLATE_NAME": {
-      "required": true
-    },
     "AWS_ACCESS_KEY_ID": "",
     "AWS_REGION": "",
     "AWS_S3_BUCKET": "",
@@ -133,10 +127,7 @@
     "PF_SHA_OUT_SECRET": {
       "required": true
     },
-    "PHANTOM_COOKIE": {
-      "required": true
-    },
-    "PHANTOMJSCLOUD_API_KEY": {
+    "CHROMIUM_LAMBDA_URL": {
       "required": true
     },
     "PREVIEW_MAIL_REPO_ID": "",
@@ -156,9 +147,6 @@
       "required": true
     },
     "REDIS_URL": {
-      "required": true
-    },
-    "RENDER_URL_WHITELIST": {
       "required": true
     },
     "REQ_TIMEOUT": {

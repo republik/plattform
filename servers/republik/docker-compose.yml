@@ -20,7 +20,6 @@ services:
       - MANDRILL_API_KEY
       - DEFAULT_MAIL_FROM_NAME
       - DEFAULT_MAIL_FROM_ADDRESS
-      - AUTH_MAIL_FROM_ADDRESS
       - DISPLAY_AUTHOR_SECRET
       - EXO_KEY
       - EXO_SECRET
@@ -29,7 +28,7 @@ services:
       - KEYCDN_API_KEY
       - KEYCDN_ZONE_ID
       - KEYCDN_ZONE_URL
-      - PHANTOMJSCLOUD_API_KEY
+      - PUPPETEER_WS_ENDPOINT
     ports:
         - 8080:3020
 

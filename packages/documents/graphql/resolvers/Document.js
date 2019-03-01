@@ -6,7 +6,8 @@ const {
   processMembersOnlyZonesInContent,
   processRepoImageUrlsInContent,
   processRepoImageUrlsInMeta,
-  processImageUrlsInContent
+  processImageUrlsInContent,
+  processEmbedsInContent
 } = require('../../lib/process')
 const { getMeta } = require('../../lib/meta')
 
@@ -145,5 +146,14 @@ module.exports = {
     }
 
     return getDocuments(doc, args, context, info)
+  },
+  embeds (doc, { types = [] }, context, info) {
+    const embeds = []
+    processEmbedsInContent(doc.content, embed => {
+      if (!types.length || types.includes(embed.__typename)) {
+        embeds.push(embed)
+      }
+    })
+    return embeds
   }
 }
