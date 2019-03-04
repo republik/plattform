@@ -8,8 +8,6 @@ const { transformUser } = require('@orbiting/backend-modules-auth')
 
 // Lower threshold requires word(s) to be more similar
 const WORD_SIMILARITY_THRESHOLD = 0.6
-// Higher threshold requires word(s) to be closer
-const WORD_DISTANCE_THRESHOLD = 0.5
 
 module.exports = async (
   _,
@@ -26,7 +24,7 @@ module.exports = async (
     ])
 
   const queryOrderBy = search
-    ? 'word_sim, dist DESC'
+    ? 'word_sim'
     : orderBy
       ? `u."${orderBy.field}" ${orderBy.direction}`
       : 'u."createdAt" ASC'
@@ -54,21 +52,8 @@ module.exports = async (
               string_agg(DISTINCT 'pspid:' || pay."pspId", ' '::text),
               string_agg(DISTINCT 'access:' || agg."voucherCode", ' '::text),
               string_agg(DISTINCT 'access:' || agr."voucherCode", ' '::text)
-            ) <->> :search AS word_sim,
-            concat_ws(' ',
-              u."firstName"::text,
-              u."lastName"::text,
-              u.email::text,
-              u.username::text,
-              string_agg(DISTINCT concat_ws(' ', a.name, a.line1, a.line2, 'plz:' || a."postalCode", a.city, a.country), ' '::text),
-              string_agg(DISTINCT 'nr:' || m."sequenceNumber"::text, ' '::text),
-              string_agg(DISTINCT 'voucher:' || m."voucherCode"::text, ' '::text),
-              string_agg(DISTINCT 'hrid:' || pay.hrid, ' '::text),
-              string_agg(DISTINCT 'pspid:' || pay."pspId", ' '::text),
-              string_agg(DISTINCT 'access:' || agg."voucherCode", ' '::text),
-              string_agg(DISTINCT 'access:' || agr."voucherCode", ' '::text)
-            ) <-> :search AS dist
-          ` : ', 0::float AS word_sim, 1::float AS dist'}
+            ) <->> :search AS word_sim
+          ` : ', 0::float AS word_sim'}
         FROM
           users u
         LEFT JOIN
@@ -100,15 +85,13 @@ module.exports = async (
         SELECT * FROM raw
         WHERE
           word_sim < :WORD_SIMILARITY_THRESHOLD
-          AND dist > :WORD_DISTANCE_THRESHOLD
      `, {
       search: search ? search.trim() : null,
       fromDate: dateRangeFilter ? dateRangeFilter.from : null,
       toDate: dateRangeFilter ? dateRangeFilter.to : null,
       stringArray: stringArrayFilter ? stringArrayFilter.values : null,
       booleanValue: booleanFilter ? booleanFilter.value : null,
-      WORD_SIMILARITY_THRESHOLD,
-      WORD_DISTANCE_THRESHOLD
+      WORD_SIMILARITY_THRESHOLD
     })
   const count = items.length
   items = items.slice(offset, offset + limit).map(transformUser)
