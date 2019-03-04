@@ -81,7 +81,7 @@ export const displayDate = rawDate => {
 }
 
 const dateTimeFormat = swissTime.format(
-  '%d.%m.%Y, %H:%m Uhr'
+  '%d.%m.%Y, %H:%M Uhr'
 )
 export const displayDateTime = rawDate => {
   return dateTimeFormat(new Date(rawDate))
