@@ -78,7 +78,6 @@ const GET_PLEDGES = gql`
           dueDate
           remindersSentAt
           createdAt
-          updatedAt
         }
         package {
           name
@@ -297,6 +296,7 @@ const PaymentDetails = ({ payment, ...props}) => {
         {payment.method !== 'STRIPE' && payment.method}
         {' - '} {payment.status}
       </SectionSubhead>
+      <Label>Erstellt am {displayDateTime(new Date(payment.createdAt))}</Label>
       <div {...displayStyles.hFlexBox}>
         <div>
           <DL>
