@@ -17,7 +17,8 @@ import {
   transparentAxisStroke,
   circleFill,
   unsafeDatumFn,
-  last
+  last,
+  baseLineColor
 } from './utils'
 
 import ColorLegend from './ColorLegend'
@@ -38,7 +39,7 @@ const AXIS_BOTTOM_HEIGHT = 24
 const styles = {
   axisLabel: css({
     ...sansSerifRegular12,
-    fill: colors.lightText
+    fill: colors.text
   }),
   axisYLine: css({
     stroke: transparentAxisStroke,
@@ -46,7 +47,7 @@ const styles = {
     shapeRendering: 'crispEdges'
   }),
   axisXLine: css({
-    stroke: colors.divider,
+    stroke: baseLineColor,
     strokeWidth: '1px',
     shapeRendering: 'crispEdges'
   }),
@@ -287,25 +288,6 @@ const TimeBarChart = (props) => {
       <svg width={width} height={innerHeight + paddingTop + AXIS_BOTTOM_HEIGHT}>
         <desc>{description}</desc>
         <g transform={`translate(0,${paddingTop})`}>
-          <g transform={`translate(0,${innerHeight + 1})`}>
-            {
-              baseLines.map((line, i) => {
-                return <line key={i} x1={line.x1} x2={line.x2} {...styles.axisXLine} strokeDasharray={line.gap ? '2 2' : 'none'} />
-              })
-            }
-            {
-              xTicks.map(tick => {
-                return (
-                  <g key={tick} transform={`translate(${x(tick) + Math.round(barWidth / 2)},0)`}>
-                    <line {...styles.axisXLine} y2={X_TICK_HEIGHT} />
-                    <text {...styles.axisLabel} y={X_TICK_HEIGHT + 5} dy='0.6em' textAnchor='middle'>
-                      {xFormat(xParser(tick))}
-                    </text>
-                  </g>
-                )
-              })
-            }
-          </g>
           {
             xAnnotations.filter(annotation => annotation.ghost).map((annotation, i) => (
               <rect key={`ghost-${i}`}
@@ -335,10 +317,45 @@ const TimeBarChart = (props) => {
               )
             })
           }
+          <g transform={`translate(0,${innerHeight})`}>
+            {
+              baseLines.map((line, i) => {
+                return <line
+                  key={i}
+                  x1={line.x1}
+                  x2={line.x2}
+                  {...styles.axisXLine}
+                  strokeDasharray={line.gap ? '2 2' : 'none'}
+                  style={{
+                    stroke: baseTick !== 0
+                      ? colors.divider : undefined
+                  }} />
+              })
+            }
+            {
+              xTicks.map(tick => {
+                return (
+                  <g key={tick} transform={`translate(${x(tick) + Math.round(barWidth / 2)},0)`}>
+                    <line {...styles.axisXLine} y2={X_TICK_HEIGHT} />
+                    <text {...styles.axisLabel} y={X_TICK_HEIGHT + 5} dy='0.6em' textAnchor='middle'>
+                      {xFormat(xParser(tick))}
+                    </text>
+                  </g>
+                )
+              })
+            }
+          </g>
           {
             yTicks.map((tick, i) => (
               <g key={tick} transform={`translate(0,${y(tick)})`}>
-                {tick !== baseTick && <line {...styles.axisYLine} x2={width}/>}
+                {tick !== baseTick && <line
+                  {...styles.axisYLine}
+                  style={{
+                    stroke: tick === 0
+                      ? baseLineColor : undefined
+                  }}
+                  x2={width} />
+                }
                 <text {...styles.axisLabel} dy='-3px'>
                   {yAxis.axisFormat(tick, last(yTicks, i))}
                 </text>
