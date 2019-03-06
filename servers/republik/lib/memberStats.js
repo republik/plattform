@@ -1,7 +1,7 @@
-const { PARKING_USER_ID } = process.env
+const count = async ({ pgdb }) => {
+  const { PARKING_USER_ID } = process.env
 
-const count = async ({ pgdb }) =>
-  pgdb.queryOneField(`
+  return pgdb.queryOneField(`
     SELECT
       count(*)
     FROM
@@ -12,7 +12,6 @@ const count = async ({ pgdb }) =>
   `, {
     excludeUserId: PARKING_USER_ID
   })
-
-module.exports = {
-  count
 }
+
+module.exports = { count }

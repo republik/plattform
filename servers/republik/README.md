@@ -132,5 +132,23 @@ Run tests.
 yarn run test
 ```
 
+# Jest examples
+
+```
+yarn test
+´´´
+
+Or run with watcher which reruns test on file changes:
+
+```
+yarn test:dev
+```
+
+Or have human readable coverage generated into `<rootDir>/coverage`
+
+```
+yarn test:cover
+```
+
 ## Licensing
 The source code and it's documentation is licensed under [GNU AGPLv3](LICENSE)+.
