@@ -131,7 +131,7 @@ export const CommentHeader = ({
         </div>
         {(credential || updated) && <div
           {...styles.description}
-          title={(credential.verified && t('styleguide/comment/header/verifiedCredential', undefined, '')) || undefined}>
+          title={(credential && credential.verified && t('styleguide/comment/header/verifiedCredential', undefined, '')) || undefined}>
           {credential && <Fragment>
             <div {...styles.descriptionText} style={{color: credential.verified ? colors.text : colors.lightText}}>
               {credential.description}
