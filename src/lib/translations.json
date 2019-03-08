@@ -1,5 +1,5 @@
 {
-  "updated": "2019-02-18T08:52:22.422Z",
+  "updated": "2019-03-08T13:49:49.307Z",
   "title": "live",
   "data": [
     {
@@ -94,6 +94,10 @@
     {
       "key": "styleguide/comment/header/updated",
       "value": "editiert"
+    },
+    {
+      "key": "styleguide/comment/header/verifiedCredential",
+      "value": "Verifizierte Rolle"
     },
     {
       "key": "styleguide/comment/edit/submit",

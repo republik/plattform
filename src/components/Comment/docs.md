@@ -156,6 +156,7 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
 
 ```react|noSource,span-2
 <CommentHeader
+  t={t}
   createdAt={isoString}
   timeago={isoString => 'gerade eben'}
   name='Anonym'
@@ -164,6 +165,7 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
 
 ```react|noSource,span-2
 <CommentHeader
+  t={t}
   createdAt={isoString}
   timeago={isoString => 'gerade eben'}
   name='Anonym'
@@ -173,6 +175,7 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
 
 ```react|noSource,span-2
 <CommentHeader
+  t={t}
   createdAt={isoString}
   timeago={isoString => 'gerade eben'}
   profilePicture='/static/profilePicture1.png'
@@ -182,6 +185,7 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
 
 ```react|noSource,span-2
 <CommentHeader
+  t={t}
   createdAt={isoString}
   timeago={isoString => 'gerade eben'}
   profilePicture='/static/profilePicture1.png'
@@ -192,6 +196,7 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
 
 ```react|noSource,span-2
 <CommentHeader
+  t={t}
   createdAt={isoString}
   timeago={isoString => 'gerade eben'}
   profilePicture='/static/profilePicture1.png'
@@ -202,6 +207,7 @@ The profile picture in the `<CommentHeader />` has a white border so that we can
 
 ```react|noSource,span-2
 <CommentHeader
+  t={t}
   createdAt={isoString}
   timeago={isoString => 'gerade eben'}
   name='Agent Seymour Rutherford Simmons'
