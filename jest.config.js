@@ -80,7 +80,7 @@ module.exports = {
   // moduleNameMapper: {},
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
-  modulePathIgnorePatterns: ['docker-data'],
+  // modulePathIgnorePatterns: [],
 
   // Activates notifications for test results
   // notify: true,
@@ -142,7 +142,7 @@ module.exports = {
   testMatch: [
     '**/__jest__/**/*.[jt]s?(x)',
     '**/?(*.)+(spec|jest).[tj]s?(x)'
-  ]
+  ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
   // testPathIgnorePatterns: [
@@ -179,7 +179,7 @@ module.exports = {
   // verbose: null,
 
   // An array of regexp patterns that are matched against all source file paths before re-running tests in watch mode
-  // watchPathIgnorePatterns: [],
+  watchPathIgnorePatterns: ['<rootDir>/docker-data']
 
   // Whether to use watchman for file crawling
   // watchman: true,
