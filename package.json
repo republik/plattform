@@ -41,6 +41,7 @@
     "cz-conventional-changelog": "^2.1.0",
     "foreman": "^3.0.0",
     "husky": "^1.1.3",
+    "jest": "^24.3.1",
     "lint-staged": "^7.1.2",
     "standard": "^11.0.1",
     "validate-commit-msg": "^2.11.1"
@@ -57,7 +58,10 @@
     "pull:redis": "node servers/publikator/script/pullRedis.js",
     "pull:elasticsearch": "GITHUB_GRAPHQL_RATELIMIT=true node packages/search/script/pullElasticsearch.js",
     "db:migrate:up": "cd servers/republik && node script/db-migrate-all.js up",
-    "sendNotification": "cd servers/republik && node ../../packages/notifications/script/sendNotification.js"
+    "sendNotification": "cd servers/republik && node ../../packages/notifications/script/sendNotification.js",
+    "test": "jest",
+    "test:dev": "jest --watch --notify --verbose",
+    "test:cover": "jest --collectCoverage"
   },
   "standard": {
     "env": [
