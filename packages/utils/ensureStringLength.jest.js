@@ -1,4 +1,4 @@
-const ensureStringLength = require('../ensureStringLength')
+const ensureStringLength = require('./ensureStringLength')
 
 describe('ensureStringLength', () => {
   const testString = 'test';
