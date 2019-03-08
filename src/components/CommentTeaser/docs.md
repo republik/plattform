@@ -107,7 +107,7 @@ Props:
   displayAuthor={{
     profilePicture: '/static/profilePicture1.png',
     name: 'Christof Moser',
-    credential: {description: 'Journalist'}
+    credential: {description: 'Journalist', verified: true}
   }}
   highlights={[
     {fragments: [

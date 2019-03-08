@@ -101,6 +101,7 @@ export const CommentTeaser = ({
       {displayAuthor && (
         <div {...styles.header}>
           <CommentHeader
+            t={t}
             {...displayAuthor}
             commentId={id}
             createdAt={createdAt}
