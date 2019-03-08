@@ -56,16 +56,12 @@
     "test:prepare": "rm -rf node_modules/.bin && ln -s ../../../node_modules/.bin node_modules/ && dropdb --if-exists republik-test && createdb republik-test && NODE_ENV=development OVERWRITE_ENV=.test.env yarn run db:reset:seed",
     "test:travis": "yarn run test:prepare && istanbul cover tape \"__tests__/**/*.test.js\" --report lcovonly",
     "test:watch": "yarn run test:prepare && NODE_ENV=development OVERWRITE_ENV=.test.env nodemon --exec 'tape \"__tests__/**/*.test.js\"' | tap-diff",
-    "test:run": "NODE_ENV=development OVERWRITE_ENV=.test.env istanbul cover tape \"__tests__/**/*.test.js\" | tap-diff",
-    "test": "jest",
-    "test:dev": "jest --watch --notify --verbose",
-    "test:cover": "jest --collectCoverage"
+    "test:run": "NODE_ENV=development OVERWRITE_ENV=.test.env istanbul cover tape \"__tests__/**/*.test.js\" | tap-diff"
   },
   "devDependencies": {
     "apollo-fetch": "^0.7.0",
     "child-process-promise": "^2.2.1",
     "istanbul": "^1.1.0-alpha.1",
-    "jest": "^24.1.0",
     "nodemon": "^1.17.5",
     "snoowrap": "^1.15.2",
     "tap-diff": "^0.1.1",
