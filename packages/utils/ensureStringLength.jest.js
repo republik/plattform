@@ -37,7 +37,7 @@ describe('ensureStringLength', () => {
     expect(() => ensureStringLength(testString, { min: 1.6, max: 3.9 })).toThrow()
   })
 
-  test('no value is not an error and does not trigger implicit min = 1', () => {
+  test('no value is not an error and does not trigger default min = 1', () => {
     expect(() => ensureStringLength(null).not.toThrow())
     expect(() => ensureStringLength().not.toThrow())
     expect(() => ensureStringLength('test').not.toThrow())
@@ -45,12 +45,12 @@ describe('ensureStringLength', () => {
     expect(() => ensureStringLength(['test']).not.toThrow())
   })
 
-  test('empty strings will throw an implicit min = 1 rule if no options', () => {
+  test('empty strings will throw an default min = 1 rule if no options', () => {
     expect(() => ensureStringLength('').toThrow())
     expect(() => ensureStringLength('', {}).toThrow())
   })
 
-  test('empty strings will throw an implicit min = 1 rule if not specified', () => {
+  test('empty strings will throw an default min = 1 rule if not specified', () => {
     expect(() => ensureStringLength('', { max: 1 }).toThrow())
   })
 
