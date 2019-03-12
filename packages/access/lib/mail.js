@@ -11,6 +11,8 @@ const campaignsLib = require('./campaigns')
 const membershipsLib = require('./memberships')
 const eventsLib = require('./events')
 
+const { count: memberStatsCount } = require('../../../servers/republik/lib/memberStats')
+
 const dateFormat = timeFormat('%x')
 
 const { FRONTEND_BASE_URL } = process.env
@@ -220,6 +222,12 @@ const getGlobalMergeVars = async (
     },
     { name: 'CAMPAIGN_PERIOD',
       content: getHumanInterval(campaign.grantPeriodInterval, t)
+    },
+
+    // Republik
+    {
+      name: 'REPUBLIK_MEMBERSHIPS_COUNT',
+      content: await memberStatsCount({ pgdb })
     },
 
     // Links
