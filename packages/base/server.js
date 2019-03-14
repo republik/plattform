@@ -117,10 +117,12 @@ const start = async (
   middlewares,
   t,
   createGraphqlContext,
-  workerId
+  workerId,
+  externalConfig
 ) => {
   // connect to db
-  pgdb = await PgDb.connect()
+  pgdb = (externalConfig && externalConfig.pgdb) ||
+    await PgDb.connect()
 
   server = express()
   httpServer = createServer(server)
@@ -197,7 +199,8 @@ const start = async (
   }
 
   return new Promise((resolve) => {
-    const port = getWorkersPort()
+    const port = (externalConfig && externalConfig.port) ||
+      getWorkersPort()
     let listener
     const callback = () => {
       if (workerId) {

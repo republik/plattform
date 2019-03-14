@@ -38,14 +38,14 @@ const {
 
 const DEV = NODE_ENV && NODE_ENV !== 'production'
 
-const start = async () => {
-  const httpServer = await run()
+const start = async (externalConfig) => {
+  const httpServer = await run(null, externalConfig)
   await runOnce({ clusterMode: false })
   return httpServer
 }
 
 // in cluster mode, this runs after runOnce otherwise before
-const run = async (workerId) => {
+const run = async (workerId, externalConfig = {}) => {
   const localModule = require('./graphql')
   const executableSchema = makeExecutableSchema(
     merge(
@@ -109,7 +109,8 @@ const run = async (workerId) => {
     middlewares,
     t,
     createGraphQLContext,
-    workerId
+    workerId,
+    externalConfig
   )
 }
 

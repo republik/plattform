@@ -1,28 +1,33 @@
-const DB = require('@orbiting/backend-modules-base/lib/db')
+const Instance = require('@orbiting/backend-modules-test/instance')
+const {
+  setGlobals,
+  getGlobal
+} = require('@orbiting/backend-modules-test/globals')
+
+const testName = 'discussions'
 
 describe('discussions', () => {
-
   beforeAll( async () => {
-    const name = 'test_discussions'
-    let pgdb
-    try {
-      pgdb = await DB.createMigrateConnect(name)
-    } catch(e) {
-      await pgdb && pgdb.close()
-      await DB.drop(name)
-    }
-    global.pgdb = pgdb
-    global.dbName = name
+    const instance = await Instance({
+      serverName: 'republik',
+      testName
+    })
+    setGlobals(testName, { instance })
   }, 60000)
 
   afterAll( async () => {
-    global.pgdb && await global.pgdb.close()
-    global.dbName && await DB.drop(global.dbName)
-  }, 60000)
+    await getGlobal(testName, 'instance').closeAndCleanup()
+  }, 30000)
 
   test('test', async () => {
-    expect(await global.pgdb.public.users.count()).toEqual(0)
+    const instance = getGlobal(testName, 'instance')
+    /*
+    await new Promise( resolve => {
+      setTimeout( ()=> resolve(), 40000)
+    })
+    */
+    expect(await instance.pgdb.public.users.count()).toEqual(0)
 
-  })
+  }, 60000)
 
 })
