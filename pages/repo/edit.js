@@ -651,8 +651,10 @@ export class EditorPage extends Component {
     )
 
     const sidebarPrependChildren = [
-      ...warnings.filter(Boolean).map(m => <Warning message={m} />),
-      !showLoading && repo && <BranchingNotice repoId={repo.id} currentCommitId={commitId} />
+      ...warnings.filter(Boolean).map((m, i) => <Warning key={`warning-${i}`} message={m} />),
+      !showLoading && repo && (
+        <BranchingNotice key='branching-notice' repoId={repo.id} currentCommitId={commitId} />
+      )
     ].filter(Boolean)
 
     return (
