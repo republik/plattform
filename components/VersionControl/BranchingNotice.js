@@ -50,7 +50,7 @@ export default ({ asIcon, repoId, currentCommitId }) => (
     {({ data = {}, loading = true }) => {
       const lastestCommit = data.repoUpdate && data.repoUpdate.commits.nodes[0]
 
-      if (loading || lastestCommit.id === currentCommitId) {
+      if (loading || (lastestCommit && lastestCommit.id === currentCommitId) || !repoId) {
         return null
       }
 
