@@ -34,7 +34,12 @@ export const repoSubscription = gql`
   subscription onRepoUpdate($repoId: ID!) {
     repoUpdate(repoId: $repoId) {
       id
-      commits {
+      commits(first: 3) {
+        pageInfo {
+          endCursor
+          hasNextPage
+        }
+        totalCount
         nodes {
           ...SimpleCommit
         }
@@ -74,24 +79,8 @@ class EditSidebar extends Component {
           if (!subscriptionData.data) {
             return prev
           }
-          const { commits } = subscriptionData.data.repoUpdate
-          if (commits && commits.nodes.length) {
-            return {
-              ...prev,
-              repo: {
-                ...prev.repo,
-                commits: {
-                  ...prev.repo.commits,
-                  nodes: [
-                    ...commits.nodes,
-                    ...prev.repo.commits.nodes
-                  ]
-                }
-              }
-            }
-          } else {
-            return prev
-          }
+
+          return { repo: Object.assign({}, prev.repo, subscriptionData.data.repoUpdate) }
         }
       })
     }
