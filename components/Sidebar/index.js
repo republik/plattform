@@ -54,15 +54,6 @@ const styles = {
     '&.active': {
       textDecoration: 'underline'
     }
-  }),
-  warnings: css({
-    padding: 10,
-    backgroundColor: colors.error,
-    color: '#fff',
-    marginBottom: 10
-  }),
-  warning: css({
-    marginBottom: 5
   })
 }
 
