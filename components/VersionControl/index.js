@@ -34,7 +34,7 @@ export const repoSubscription = gql`
   subscription onRepoUpdate($repoId: ID!) {
     repoUpdate(repoId: $repoId) {
       id
-      commits {
+      commits(first: 1) {
         nodes {
           ...SimpleCommit
         }
@@ -85,7 +85,10 @@ class EditSidebar extends Component {
                   nodes: [
                     ...commits.nodes,
                     ...prev.repo.commits.nodes
-                  ]
+                  ].filter(({ id }, i, all) =>
+                  // deduplicate by id
+                    i === all.findIndex(repo => repo.id === id)
+                  )
                 }
               }
             }

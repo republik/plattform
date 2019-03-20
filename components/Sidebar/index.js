@@ -54,15 +54,6 @@ const styles = {
     '&.active': {
       textDecoration: 'underline'
     }
-  }),
-  warnings: css({
-    padding: 10,
-    backgroundColor: colors.error,
-    color: '#fff',
-    marginBottom: 10
-  }),
-  warning: css({
-    marginBottom: 5
   })
 }
 
@@ -117,7 +108,7 @@ export default class Sidebar extends Component {
   }
 
   render () {
-    const { children, isOpen, warnings, isDisabled } = this.props
+    const { prependChildren, children, isOpen, isDisabled } = this.props
     const { selectedTabId } = this.state
 
     const cleanChildren = React.Children.toArray(children)
@@ -146,17 +137,11 @@ export default class Sidebar extends Component {
 
     return (
       <div {...styles.container} className={(isOpen && 'open') || ''}>
+        {prependChildren}
         {
           isDisabled &&
           <div {...styles.overlay} onMouseDown={e => e.preventDefault()} />
         }
-        {warnings.length > 0 && <div {...styles.warnings}>
-          {warnings.map((message, i) => (
-            <div key={i} {...styles.warning}>
-              {message}
-            </div>
-          ))}
-        </div>}
         <div {...styles.tabButtonContainer}>
           {tabButtons}
         </div>
