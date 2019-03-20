@@ -15,6 +15,7 @@ import Editor from '../../components/editor'
 import EditorUI from '../../components/editor/UI'
 
 import VersionControl from '../../components/VersionControl'
+import BranchingNotice from '../../components/VersionControl/BranchingNotice'
 import CommitButton from '../../components/VersionControl/CommitButton'
 import {
   UncommittedChanges,
@@ -24,6 +25,7 @@ import {
   joinUsers
 } from '../../components/VersionControl/UncommittedChanges'
 import Sidebar from '../../components/Sidebar'
+import Warning from '../../components/Sidebar/Warning'
 
 import Loader from '../../components/Loader'
 import CharCount from '../../components/CharCount'
@@ -648,6 +650,11 @@ export class EditorPage extends Component {
       (!schema && !error)
     )
 
+    const sidebarPrependChildren = [
+      ...warnings.filter(Boolean).map(m => <Warning message={m} />),
+      !showLoading && repo && <BranchingNotice repoId={repo.id} currentCommitId={commitId} />
+    ].filter(Boolean)
+
     return (
       <Frame raw>
         <Frame.Header barStyle={{
@@ -689,6 +696,11 @@ export class EditorPage extends Component {
             />
           </Frame.Header.Section>
           <Frame.Header.Section align='right'>
+            {!showLoading && !!repo &&
+              <BranchingNotice asIcon repoId={repo.id} currentCommitId={commitId} />
+            }
+          </Frame.Header.Section>
+          <Frame.Header.Section align='right'>
             {!!repo &&
               <UncommittedChanges uncommittedChanges={uncommittedChanges} t={t} />
             }
@@ -720,12 +732,12 @@ export class EditorPage extends Component {
               />
             </div>
           )} />
-          <Sidebar warnings={warnings}
+          <Sidebar
+            prependChildren={sidebarPrependChildren}
             isDisabled={Boolean(showLoading || error)}
             selectedTabId={(readOnly && 'workflow') || undefined}
             isOpen={showSidebar}
           >
-
             {
               !readOnly &&
               <Sidebar.Tab tabId='edit' label='Editieren'>
