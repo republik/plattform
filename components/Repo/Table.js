@@ -441,7 +441,7 @@ const RepoListWithQuery = compose(
   graphql(filterAndOrderRepos, {
     options: ({ search }) => ({
       fetchPolicy: 'cache-and-network',
-      skip: !process.browser,
+      ssr: false,
       notifyOnNetworkStatusChange: true,
       variables: {
         search: search && search.length >= SEARCH_MIN_LENGTH
