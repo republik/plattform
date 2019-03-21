@@ -16,6 +16,8 @@ import Rewind from 'react-icons/lib/md/skip-previous'
 import Close from 'react-icons/lib/md/close'
 import Download from 'react-icons/lib/md/file-download'
 
+import globalState from './globalState'
+
 const ZINDEX_AUDIOPLAYER_ICONS = 6
 const ZINDEX_AUDIOPLAYER_SCRUB = 3
 const ZINDEX_AUDIOPLAYER_PROGRESS = 2
@@ -173,11 +175,6 @@ const styles = {
   })
 }
 
-let globalState = {
-  playingRef: undefined,
-  instances: []
-}
-
 export const getFormattedTime = secs => {
   let totalSeconds = secs
   let hours = Math.floor(totalSeconds / 3600)
@@ -266,13 +263,17 @@ class AudioPlayer extends Component {
         this.updateProgress()
       }
     }
+
+    this.isSeekable = new Promise(resolve => {
+      this.onSeekable = resolve
+    })
     this.onCanPlay = () => {
-      this.onSeekable()
       this.setState(() => ({
         playEnabled: true,
         loading: false,
         sourceError: false
       }))
+      this.onSeekable()
     }
     this.onSourceError = () => {
       this.setState(() => ({
@@ -380,6 +381,7 @@ class AudioPlayer extends Component {
     if (!this.audio) {
       return
     }
+
     this.audio.addEventListener('play', this.onPlay)
     this.audio.addEventListener('pause', this.onPause)
     this.audio.addEventListener('loadstart', this.onLoadStart)
@@ -390,9 +392,7 @@ class AudioPlayer extends Component {
 
     Promise.all([
       this.getStartTime(),
-      new Promise(resolve => {
-        this.onSeekable = resolve
-      })
+      this.isSeekable
     ]).then(([startTime]) => {
       if (startTime !== undefined) {
         this.setTime(startTime)

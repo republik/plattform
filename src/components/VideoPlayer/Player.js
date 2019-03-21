@@ -15,6 +15,9 @@ import Subtitles from './Icons/Subtitles'
 import { sansSerifRegular18 } from '../Typography/styles'
 import { getFormattedTime } from '../AudioPlayer/Player'
 
+import warn from '../../lib/warn'
+import globalState from '../AudioPlayer/globalState'
+
 const ZINDEX_VIDEOPLAYER_ICONS = 6
 const ZINDEX_VIDEOPLAYER_SCRUB = 3
 const PROGRESS_HEIGHT = 4
@@ -127,13 +130,6 @@ const styles = {
   })
 }
 
-let globalState = {
-  playingRef: undefined,
-  muted: false,
-  subtitles: false,
-  instances: []
-}
-
 class VideoPlayer extends Component {
   constructor(props) {
     super(props)
@@ -144,8 +140,7 @@ class VideoPlayer extends Component {
       muted: globalState.muted,
       subtitles: props.subtitles || globalState.subtitles,
       loading: false,
-      isFull: false,
-      contextStartSeconds: undefined
+      isFull: false
     }
 
     this.updateProgress = () => {
@@ -174,10 +169,12 @@ class VideoPlayer extends Component {
       this.video = ref
     }
     this.onPlay = () => {
-      if (globalState.playingRef && globalState.playingRef !== this.video) {
-        globalState.playingRef.pause()
+      if (!this.props.cinemagraph) {
+        if (globalState.playingRef && globalState.playingRef !== this.video) {
+          globalState.playingRef.pause()
+        }
+        globalState.playingRef = this.video
       }
-      globalState.playingRef = this.video
       this.setState(() => ({
         playing: true,
         loading: false
@@ -203,17 +200,21 @@ class VideoPlayer extends Component {
         this.updateProgress()
       }
     }
+    this.isSeekable = new Promise(resolve => {
+      this.onSeekable = resolve
+    })
     this.onCanPlay = () => {
       this.setState(() => ({
         loading: false
       }))
+      this.onSeekable()
     }
     this.onLoadedMetaData = () => {
-      this.state.startSeconds && this.setTime(this.state.startSeconds)
       this.setTextTracksMode()
       this.setState(() => ({
         loading: false
       }))
+      this.onSeekable()
     }
     this.onVolumeChange = () => {
       if (
@@ -299,7 +300,12 @@ class VideoPlayer extends Component {
   }
   play() {
     const { video } = this
-    video && video.play()
+    const playPromise = video && video.play()
+    if (playPromise) {
+      playPromise.catch(e => {
+        warn('[VideoPlayer]', e.message)
+      })
+    }
   }
   pause() {
     const { video } = this
@@ -318,14 +324,9 @@ class VideoPlayer extends Component {
       this._textTrackMode = subtitles
     }
   }
-  initStartTime() {
+  getStartTime() {
     if (this.props.mediaId && this.context.getMediaProgress) {
-      return this.context.getMediaProgress(this.props.mediaId).then((startSeconds) => {
-        if (startSeconds) {
-          this.setState(() => ({ startSeconds }))
-          !!startSeconds && this.setTime(startSeconds)
-        }
-      }).catch(() => {
+      return this.context.getMediaProgress(this.props.mediaId).catch(() => {
         return undefined // ignore errors
       })
     }
@@ -368,11 +369,17 @@ class VideoPlayer extends Component {
 
     this.setTextTracksMode()
 
-    this.initStartTime().then(() => {
-      if (this.video && !this.video.paused) {
-        this.onPlay()
+    Promise.all([
+      this.getStartTime(),
+      this.isSeekable
+    ]).then(([startTime]) => {
+      if (startTime !== undefined) {
+        this.setTime(startTime)
       }
     })
+    if (this.video && !this.video.paused) {
+      this.onPlay()
+    }
   }
   componentDidUpdate() {
     this.setTextTracksMode()
