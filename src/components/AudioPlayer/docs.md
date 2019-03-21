@@ -7,7 +7,7 @@ Props:
 -- `ogg`: The ogg source URL of the audio.
 -- `hls`: The hls source URL (when using a video).
 -- `mp4`: The mp4 source URL (when using a video).
-- `autoPlay`: Boolean, mapped to the audio tag.
+- `autoPlay`: Boolean, trigger play once after the source and context start time is ready
 - `size`: optional, `narrow` or `tiny`.
 - `attributes`: Object, arbitrary attributes mapped to the audio tag.
 - `closeHandler`: Function; If provided, a close icon is displayed that calls the handler on click.
@@ -16,6 +16,11 @@ Props:
 - `timePosition`: `right` (default) or `left`.
 - `height`: number; The player height in pixels.
 - `controlsPadding`: number; The horizontal padding between controls and container, defaults to 0.
+- `mediaId`: an ID for media progress synching via context
+
+Context:
+- `getMediaProgress(mediaId)`: a function that is expected to return a `Promise` of a `Number`. If present with an `mediaId` prop the player will retrieve the start time on `componentDidMount` from it and wait on it before potentially auto playing.
+- `saveMediaProgress(mediaId, currentTime)`: will be constantly called during playback if present with an `mediaId` prop.
 
 ```react
 <AudioPlayer

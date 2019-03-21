@@ -5,6 +5,7 @@ import { mUp } from '../../theme/mediaQueries'
 import { css, merge } from 'glamor'
 import { ellipsize } from '../../lib/styleMixins'
 import { timeFormat } from '../../lib/timeFormat'
+import warn from '../../lib/warn'
 import { breakoutStyles } from '../Center'
 import { InlineSpinner } from '../Spinner'
 import { link, sansSerifRegular12, sansSerifRegular15 } from '../Typography/styles'
@@ -202,8 +203,7 @@ class AudioPlayer extends Component {
       progress: 0,
       loading: false,
       buffered: null,
-      sourceError: false,
-      initialized: false,
+      sourceError: false
     }
 
     this.updateProgress = () => {
@@ -267,22 +267,9 @@ class AudioPlayer extends Component {
       }
     }
     this.onCanPlay = () => {
-      this.state.startSeconds && !this.state.initialized && this.setTime(this.state.startSeconds)
-      if (this.props.autoPlay) {
-        this.play()
-      }
+      this.onSeekable()
       this.setState(() => ({
-        initialized: true,
         playEnabled: true,
-        loading: false,
-        sourceError: false
-      }))
-    }
-    this.onLoadedMetaData = () => {
-      this.state.startSeconds && !this.state.initialized && this.setTime(this.state.startSeconds)
-      this.setState(() => ({
-        initialized: true,
-        playEnabled: true,  // iOS won't fire canPlay, so rely on meta data.
         loading: false,
         sourceError: false
       }))
@@ -354,7 +341,12 @@ class AudioPlayer extends Component {
   }
   play() {
     const { audio } = this
-    audio && audio.play()
+    const playPromise = audio && audio.play()
+    if (playPromise) {
+      playPromise.catch(e => {
+        warn('[AudioPlayer]', e.message)
+      })
+    }
   }
   pause() {
     const { audio } = this
@@ -369,14 +361,9 @@ class AudioPlayer extends Component {
       audio.load()
     }
   }
-  initStartTime() {
+  getStartTime() {
     if (this.props.mediaId && this.context.getMediaProgress) {
-      return this.context.getMediaProgress(this.props.mediaId).then((startSeconds) => {
-        if (startSeconds) {
-          this.setState(() => ({ startSeconds }))
-          !!startSeconds && this.setTime(startSeconds)
-        }
-      }).catch(() => {
+      return this.context.getMediaProgress(this.props.mediaId).catch(() => {
         return undefined // ignore errors
       })
     }
@@ -398,16 +385,28 @@ class AudioPlayer extends Component {
     this.audio.addEventListener('loadstart', this.onLoadStart)
     this.audio.addEventListener('canplay', this.onCanPlay)
     this.audio.addEventListener('canplaythrough', this.onCanPlay)
-    this.audio.addEventListener('loadedmetadata', this.onLoadedMetaData)
+    // iOS won't fire canPlay, so rely on meta data.
+    this.audio.addEventListener('loadedmetadata', this.onCanPlay)
 
-    this.initStartTime().then(() => {
-      this.setFormattedTimes()
-      if (this.audio && !this.audio.paused) {
-        this.onPlay()
+    Promise.all([
+      this.getStartTime(),
+      new Promise(resolve => {
+        this.onSeekable = resolve
+      })
+    ]).then(([startTime]) => {
+      if (startTime !== undefined) {
+        this.setTime(startTime)
+      }
+      if (this.props.autoPlay) {
+        this.container && this.container.focus()
+
+        this.play()
       }
     })
-    const { autoPlay } = this.props
-    autoPlay && this.container && this.container.focus()
+
+    if (this.audio.readyState >= 1) {
+      this.onSeekable()
+    }
   }
   componentDidUpdate() {
     this.setFormattedTimes()
@@ -426,14 +425,13 @@ class AudioPlayer extends Component {
     this.audio.removeEventListener('progress', this.onProgress)
     this.audio.removeEventListener('canplay', this.onCanPlay)
     this.audio.removeEventListener('canplaythrough', this.onCanPlay)
-    this.audio.removeEventListener('loadedmetadata', this.onLoadedMetaData)
+    this.audio.removeEventListener('loadedmetadata', this.onCanPlay)
   }
   render() {
     const {
       src,
       size,
       attributes = {},
-      autoPlay,
       style,
       t,
       height,
@@ -441,7 +439,8 @@ class AudioPlayer extends Component {
       download,
       scrubberPosition,
       timePosition,
-      controlsPadding
+      controlsPadding,
+      autoPlay
     } = this.props
     const { playEnabled, playing, progress, loading, buffered, sourceError } = this.state
     const isVideo = src.mp4 || src.hls
@@ -470,10 +469,11 @@ class AudioPlayer extends Component {
         role='region'
         aria-label={t('styleguide/AudioPlayer/aria')}>
         {!isVideo && <audio
+          preload={autoPlay ? 'auto' : undefined}
           {...styles.audio}
           {...attributes}
           ref={this.ref}
-          onLoadedMetadata={this.onLoadedMetaData}
+          onLoadedMetadata={this.onCanPlay}
           crossOrigin="anonymous"
         >
           {src.mp3 && <source src={src.mp3} type="audio/mpeg" onError={this.onSourceError} />}
@@ -481,10 +481,11 @@ class AudioPlayer extends Component {
           {src.ogg && <source src={src.ogg} type="audio/ogg" onError={this.onSourceError} />}
         </audio>}
         {isVideo && <video
+          preload={autoPlay ? 'auto' : undefined}
           {...styles.audio}
           {...attributes}
           ref={this.ref}
-          onLoadedMetadata={this.onLoadedMetaData}
+          onLoadedMetadata={this.onCanPlay}
           crossOrigin="anonymous"
           playsInline
           webkit-playsinline=""
