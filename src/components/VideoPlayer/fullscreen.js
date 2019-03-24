@@ -89,6 +89,9 @@ export const setupFullscreen = ({ onChange, video }) => {
       const subject = elem || document.documentElement
       subject[api.requestFullscreen]()
     },
+    exit() {
+      document[api.exitFullscreen]()
+    },
     element() {
       return document[api.fullscreenElement]
     },

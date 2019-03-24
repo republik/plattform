@@ -278,6 +278,30 @@ class VideoPlayer extends Component {
         event.stopPropagation()
         this.toggle()
       }
+      if (
+        event.key === 'f'
+      ) {
+        this.toggleFullscreen(event)
+      }
+    }
+    this.toggleFullscreen = (e) => {
+      e.preventDefault()
+      e.stopPropagation()
+      const { fullscreen, isFull } = this.state
+      const fullWindow = this.props.fullWindow || !fullscreen
+      if (fullWindow) {
+        const { onFull } = this.props
+        const shouldBeFull = !isFull
+        this.setState({ isFull: shouldBeFull })
+        onFull && onFull(shouldBeFull, false)
+      } else {
+        if (isFull) {
+          fullscreen.exit()
+        } else {
+          fullscreen.request(this.video)
+        }
+      }
+      this.captureFocus()
     }
     this.captureFocus = () => {
       this.video.focus()
@@ -506,19 +530,7 @@ class VideoPlayer extends Component {
             <span
               role="button"
               title="Vollbild"
-              onClick={e => {
-                e.preventDefault()
-                e.stopPropagation()
-                if (fullWindow) {
-                  const { onFull } = this.props
-                  const shouldBeFull = !isFull
-                  this.setState({ isFull: shouldBeFull })
-                  onFull && onFull(shouldBeFull, false)
-                } else {
-                  fullscreen.request(this.video)
-                }
-                this.captureFocus()
-              }}
+              onClick={this.toggleFullscreen}
             >
               <Fullscreen off={!isFull} />
             </span>
