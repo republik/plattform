@@ -208,16 +208,14 @@ class AudioPlayer extends Component {
       if (!audio) {
         return
       }
-      this.setState(() => {
-        const progress = audio.currentTime / audio.duration
-        this.props.onProgress && this.props.onProgress(progress)
-        this.props.mediaId && this.context.saveMediaProgress && this.context.saveMediaProgress(
-          this.props.mediaId, audio.currentTime
-        )
-        return {
-          progress,
-          buffered: audio.buffered
-        }
+      const progress = audio.currentTime / audio.duration
+      this.props.onProgress && this.props.onProgress(progress)
+      this.context.saveMediaProgress && this.context.saveMediaProgress(
+        this.props, audio
+      )
+      this.setState({
+        progress,
+        buffered: audio.buffered
       })
       this.formattedCurrentTime = getFormattedTime(audio.currentTime)
     }
@@ -363,8 +361,8 @@ class AudioPlayer extends Component {
     }
   }
   getStartTime() {
-    if (this.props.mediaId && this.context.getMediaProgress) {
-      return this.context.getMediaProgress(this.props.mediaId).catch(() => {
+    if (this.context.getMediaProgress) {
+      return this.context.getMediaProgress(this.props).catch(() => {
         return undefined // ignore errors
       })
     }
@@ -581,7 +579,6 @@ class AudioPlayer extends Component {
 }
 
 AudioPlayer.propTypes = {
-  mediaId: PropTypes.string,
   src: PropTypes.shape({
     mp3: PropTypes.string,
     aac: PropTypes.string,

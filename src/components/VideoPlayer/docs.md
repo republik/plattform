@@ -13,11 +13,10 @@ Props:
 - `forceMuted`: Boolean, mutes the player and hides the mute interfaces.
 - `cinemagraph`: Boolean, whether the video is a cinemagraph. Forces `loop`, `muted`, `autoPlay` and `playsInline`.
 - `attributes`: Object, arbitrary attributes mapped to the video tag like playsinline, specific ones win
-- `mediaId`: an ID for media progress synching via context
 
 Context:
-- `getMediaProgress(mediaId)`: a function that is expected to return a `Promise` of a `Number`. If present with an `mediaId` prop the player will retrieve the start time on `componentDidMount` from it.
-- `saveMediaProgress(mediaId, currentTime)`: will be constantly called during playback if present with an `mediaId` prop.
+- `getMediaProgress(props)`: a function that is expected to return a `Promise` of a `Number`. If present it will be called with the component props to retrieve the start time on `componentDidMount` from it.
+- `saveMediaProgress(props, HTMLMediaElement)`: will be constantly called during playback if present.
 
 ```react
 <VideoPlayer

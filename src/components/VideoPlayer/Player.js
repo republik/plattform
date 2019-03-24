@@ -148,16 +148,12 @@ class VideoPlayer extends Component {
       if (!video) {
         return
       }
-      this.setState(() => {
-        const progress = video.currentTime / video.duration
-        this.props.onProgress && this.props.onProgress(progress)
-        this.context.saveMediaProgress && this.context.saveMediaProgress(
-          this.props.mediaId, video.currentTime
-        )
-        return {
-          progress
-        }
-      })
+      const progress = video.currentTime / video.duration
+      this.props.onProgress && this.props.onProgress(progress)
+      this.context.saveMediaProgress && this.context.saveMediaProgress(
+        this.props, video
+      )
+      this.setState({ progress })
     }
     this.syncProgress = () => {
       this.readTimeout = setTimeout(() => {
@@ -325,8 +321,8 @@ class VideoPlayer extends Component {
     }
   }
   getStartTime() {
-    if (this.props.mediaId && this.context.getMediaProgress) {
-      return this.context.getMediaProgress(this.props.mediaId).catch(() => {
+    if (this.context.getMediaProgress) {
+      return this.context.getMediaProgress(this.props).catch(() => {
         return undefined // ignore errors
       })
     }

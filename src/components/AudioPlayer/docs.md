@@ -16,11 +16,10 @@ Props:
 - `timePosition`: `right` (default) or `left`.
 - `height`: number; The player height in pixels.
 - `controlsPadding`: number; The horizontal padding between controls and container, defaults to 0.
-- `mediaId`: an ID for media progress synching via context
 
 Context:
-- `getMediaProgress(mediaId)`: a function that is expected to return a `Promise` of a `Number`. If present with an `mediaId` prop the player will retrieve the start time on `componentDidMount` from it and wait on it before potentially auto playing.
-- `saveMediaProgress(mediaId, currentTime)`: will be constantly called during playback if present with an `mediaId` prop.
+- `getMediaProgress(props)`: a function that is expected to return a `Promise` of a `Number`. If present it will be called with the component props to retrieve the start time on `componentDidMount` from it.
+- `saveMediaProgress(props, HTMLMediaElement)`: will be constantly called during playback if present.
 
 ```react
 <AudioPlayer
