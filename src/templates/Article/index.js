@@ -122,6 +122,15 @@ const getProgressProps = (node, index, parent, { ancestors }) => {
   } : {}
 }
 
+const addProgressProps = rule => ({
+  ...rule,
+  props: rule.props
+    ? (...args) => ({
+      ...rule.props(...args),
+      ...getProgressProps(...args)
+    })
+    : getProgressProps
+})
 
 const paragraph = {
   matchMdast: matchParagraph,
@@ -192,12 +201,9 @@ const figureCaption = {
 const figure = {
   matchMdast: matchFigure,
   component: Figure,
-  props: (node, index, parent, { ancestors }) => {
-    return {
-      size: node.data.size,
-      ...getProgressProps(node, index, parent, { ancestors })
-    }
-  },
+  props: node => ({
+    size: node.data.size
+  }),
   editorModule: 'figure',
   editorOptions: {
     pixelNote:
@@ -319,8 +325,7 @@ const infoBox = {
       ? node.data.figureSize ||
         INFOBOX_DEFAULT_IMAGE_SIZE
       : undefined,
-    figureFloat: node.data.figureFloat,
-    ...getProgressProps(node, index, parent, { ancestors })
+    figureFloat: node.data.figureFloat
   }),
   editorModule: 'infobox',
   editorOptions: {
@@ -416,8 +421,7 @@ const pullQuote = {
     size: node.data.size,
     hasFigure: !!node.children.find(
       matchFigure
-    ),
-    ...getProgressProps(node, index, parent, { ancestors })
+    )
   }),
   editorModule: 'quote',
   editorOptions: {
@@ -841,17 +845,15 @@ const createSchema = ({
                   depth: 2,
                   formatButtonText: 'Zwischentitel'
                 },
-                props: getProgressProps,
                 rules: globalInlines
               },
               {
                 matchMdast: matchZone('FIGUREGROUP'),
                 component: FigureGroup,
-                props: (node, index, parent, { ancestors }) => {
+                props: node => {
                   return {
                     size: 'breakout',
-                    columns: node.data.columns,
-                    ...getProgressProps(node, index, parent, { ancestors })
+                    columns: node.data.columns
                   }
                 },
                 rules: [figure, centerFigureCaption],
@@ -866,13 +868,12 @@ const createSchema = ({
               {
                 matchMdast: matchType('list'),
                 component: List,
-                props: (node, index, parent, { ancestors }) => ({
+                props: node => ({
                   data: {
                     ordered: node.ordered,
                     start: node.start,
                     compact: !node.loose
-                  },
-                  ...getProgressProps(node, index, parent, { ancestors })
+                  }
                 }),
                 editorModule: 'list',
                 rules: [
@@ -1121,13 +1122,13 @@ const createSchema = ({
                 dynamicComponentRequire,
                 insertButtonText: 'Dynamic Component'
               })
-            ]
+            ].map(addProgressProps)
           },
-          centerFigure,
-          createDynamicComponent({
+          addProgressProps(centerFigure),
+          addProgressProps(createDynamicComponent({
             t,
             dynamicComponentRequire
-          }),
+          })),
           {
             matchMdast: () => false,
             editorModule: 'specialchars'
