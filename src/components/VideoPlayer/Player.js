@@ -279,7 +279,10 @@ class VideoPlayer extends Component {
         this.toggle()
       }
       if (
-        event.key === 'f'
+        (event.key === 'f' || event.key === 'F') &&
+        !event.ctrlKey &&
+        !event.altKey &&
+        !event.metaKey
       ) {
         this.toggleFullscreen(event)
       }
