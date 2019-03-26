@@ -149,7 +149,7 @@ class VideoPlayer extends Component {
         return
       }
       const progress = video.currentTime / video.duration
-      this.props.onProgress && this.props.onProgress(progress)
+      this.props.onProgress && this.props.onProgress(progress, video)
       this.context.saveMediaProgress && this.context.saveMediaProgress(
         this.props, video
       )

@@ -209,7 +209,7 @@ class AudioPlayer extends Component {
         return
       }
       const progress = audio.currentTime / audio.duration
-      this.props.onProgress && this.props.onProgress(progress)
+      this.props.onProgress && this.props.onProgress(progress, audio)
       this.context.saveMediaProgress && this.context.saveMediaProgress(
         this.props, audio
       )
