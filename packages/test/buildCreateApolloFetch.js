@@ -1,8 +1,8 @@
 const { createApolloFetch } = require('apollo-fetch')
 
-module.exports = port => (localCookies = false) => {
+module.exports = port => () => {
   const GRAPHQL_URI = `http://localhost:${port}/graphql`
-  let cookie = localCookies ? null : global.cookie
+  let cookie
   return createApolloFetch({ uri: GRAPHQL_URI })
     .useAfter(({ response }, next) => {
       let setCookie

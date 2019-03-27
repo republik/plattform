@@ -11,7 +11,7 @@ module.exports = async ({ serverName, testName }) => {
 
   let pgdb
   let port = Math.floor(Math.random() * 40000) + 20000
-  console.log({port})
+  console.log({testName, port})
 
   try {
     pgdb = await DB.createMigrateConnect(testName)
@@ -38,6 +38,6 @@ module.exports = async ({ serverName, testName }) => {
     server,
     pgdb,
     closeAndCleanup,
-    createApolloFetch: buildCreateApolloFetch(port)
+    apolloFetch: buildCreateApolloFetch(port)()
   }
 }

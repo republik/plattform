@@ -84,7 +84,7 @@ describe(testName, () => {
 
   test('discussion: top level comments ASC (no pagination)', async () => {
     await testDiscussion(
-      global.instance.createApolloFetch(),
+      global.instance.apolloFetch,
       level1Query,
       {
         discussionId: 'd0000000-0000-0000-0000-000000000001',
@@ -98,7 +98,7 @@ describe(testName, () => {
 
   test('discussion: top level comments DESC (no pagination)', async () => {
     await testDiscussion(
-      global.instance.createApolloFetch(),
+      global.instance.apolloFetch,
       level1Query,
       {
         discussionId: 'd0000000-0000-0000-0000-000000000001',
@@ -112,7 +112,7 @@ describe(testName, () => {
 
   test('discussion: top level comments DESC paginated', async () => {
     await testDiscussion(
-      global.instance.createApolloFetch(),
+      global.instance.apolloFetch,
       level1Query,
       {
         discussionId: 'd0000000-0000-0000-0000-000000000001',
