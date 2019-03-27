@@ -98,7 +98,7 @@ const getState = (membership) => {
 
   const latestPeriod = membership.periods.reduce((acc, curr) => {
     return acc && new Date(acc.endDate) > new Date(curr.endDate) ? acc : curr
-  })
+  }, undefined) // explicit initial undefined needed for empty arrays
 
   const overdue = latestPeriod && new Date(latestPeriod.endDate) < new Date()
   if (overdue) {
