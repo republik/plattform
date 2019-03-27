@@ -23,7 +23,9 @@ const connect = (url) =>
   PgDb.connect(url)
 
 const createMigrateConnect = async (name) => {
-  await drop(name)
+  try {
+    await drop(name)
+  } catch (e) {}
   await create(name)
   const url = getDatabaseUrl(name)
 
