@@ -9,11 +9,11 @@ require('@orbiting/backend-modules-env').config()
 const dbMigrateAll = require('@orbiting/backend-modules-base/lib/db-migrate-all')
 
 const migrationDirs = [
+  './servers/republik/migrations/crowdfunding',
+  './servers/republik/migrations',
   './packages/redirections/migrations',
   './packages/auth/migrations',
   './packages/discussions/migrations',
-  './servers/republik/migrations/crowdfunding',
-  './servers/republik/migrations',
   './packages/notifications/migrations',
   './packages/access/migrations',
   './packages/preview/migrations',
