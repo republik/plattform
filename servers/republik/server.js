@@ -45,7 +45,7 @@ const start = async (externalConfig) => {
 }
 
 // in cluster mode, this runs after runOnce otherwise before
-const run = async (workerId, externalConfig = {}) => {
+const run = async (workerId, externalConfig = {}) => {
   const localModule = require('./graphql')
   const executableSchema = makeExecutableSchema(
     merge(
@@ -157,7 +157,8 @@ module.exports = {
   start,
   run,
   runOnce,
-  close
+  close,
+  t
 }
 
 process.on('SIGTERM', () => {

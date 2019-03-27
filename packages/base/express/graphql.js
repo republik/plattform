@@ -87,7 +87,7 @@ module.exports = (
   const createContext = ({user, ...additional} = {}) => externalCreateGraphQLContext({
     ...additional,
     pgdb,
-    user,
+    user: (global && global.testUser) || user,
     pubsub,
     redis,
     elastic: elasticsearch.client()

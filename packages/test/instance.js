@@ -38,6 +38,7 @@ module.exports = async ({ serverName, testName }) => {
     server,
     pgdb,
     closeAndCleanup,
-    apolloFetch: buildCreateApolloFetch(port)()
+    apolloFetch: buildCreateApolloFetch(port)(),
+    t: Server.t
   }
 }

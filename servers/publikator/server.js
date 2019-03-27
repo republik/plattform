@@ -106,7 +106,8 @@ module.exports = {
   start,
   run,
   runOnce,
-  close
+  close,
+  t
 }
 
 process.on('SIGTERM', () => {
