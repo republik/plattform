@@ -1,5 +1,6 @@
 const path = require('path')
 const DB = require('./db')
+const buildCreateApolloFetch = require('./buildCreateApolloFetch')
 
 module.exports = async ({ serverName, testName }) => {
   const relativeServerPath = `../../servers/${serverName}/`
@@ -14,7 +15,7 @@ module.exports = async ({ serverName, testName }) => {
 
   try {
     pgdb = await DB.createMigrateConnect(testName)
-  } catch(e) {
+  } catch (e) {
     await pgdb && pgdb.close()
     await DB.drop(testName)
   }
@@ -36,7 +37,7 @@ module.exports = async ({ serverName, testName }) => {
   return {
     server,
     pgdb,
-    closeAndCleanup
+    closeAndCleanup,
+    createApolloFetch: buildCreateApolloFetch(port)
   }
-
 }
