@@ -56,13 +56,13 @@ describe('discussions', () => {
 
     expect(discussion.comments.totalCount).toBe(commentsTopLevel.length)
 
-    const slicedComments = comments
-      .slice(0, variables.first)
+    const slicedComments = comments.slice(0, variables.first)
     expect(
       getIdsString(discussion.comments.nodes)
     ).toBe(
       getIdsString(slicedComments)
     )
+
     if (comments.length > slicedComments.length) { // paginated
       expect(discussion.comments.pageInfo.hasNextPage).toBe(true)
       expect(discussion.comments.pageInfo.endCursor).toBeTruthy()
