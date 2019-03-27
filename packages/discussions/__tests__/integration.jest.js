@@ -12,7 +12,7 @@ const getIdsString = arr => arr
   .map(c => c.id)
   .join('')
 
-describe('discussions', () => {
+describe(testName, () => {
   beforeAll(async () => {
     const instance = await Instance({
       serverName: 'republik',
