@@ -152,6 +152,7 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
   const user = await pgdb.public.users.findOne({ id: userId })
   const pledges = await pgdb.public.pledges.find({
     userId: user.id,
+    'status !=': 'CANCELLED',
     sendConfirmMail: true
   })
 
