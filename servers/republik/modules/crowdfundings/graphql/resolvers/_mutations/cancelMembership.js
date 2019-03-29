@@ -120,7 +120,7 @@ module.exports = async (_, args, context) => {
       t
     )
 
-    const cache = createCache({ prefix: `User:${user.id}` })
+    const cache = createCache({ prefix: `User:${user.id}` }, context)
     cache.invalidate()
 
     return newMembership

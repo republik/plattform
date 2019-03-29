@@ -7,7 +7,7 @@
  * node script/activateYearlyMemberships.js
  */
 require('@orbiting/backend-modules-env').config()
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const { enforceSubscriptions } = require('../modules/crowdfundings/lib/Mail')
 const activateYearlyMembership = require('../modules/crowdfundings/lib/activateYearlyMembership')
 

@@ -1,13 +1,15 @@
 const debug = require('debug')('preview:lib:previewSchedulder')
 const Redlock = require('redlock')
 
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
-const redis = require('@orbiting/backend-modules-base/lib/redis')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
+const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 
 const previewLib = require('./preview')
 
 const intervalSecs = 60 * 5
 const lockTtlSecs = 60 * 4
+
+const schedulerLock = (redis) => new Redlock([redis])
 
 /**
  * Function to initialize scheduler. Provides scheduling.
@@ -16,6 +18,7 @@ const init = async ({ t, mail }) => {
   debug('init')
 
   const pgdb = await PgDb.connect()
+  const redis = Redis.connect()
 
   /**
    * Default runner, runs every {intervalSecs}.
@@ -26,7 +29,7 @@ const init = async ({ t, mail }) => {
 
     try {
       const lock =
-        await schedulerLock()
+        await schedulerLock(redis)
           .lock('locks:preview-scheduler', 1000 * lockTtlSecs)
 
       const unscheduledRequests = await previewLib.findUnscheduled(pgdb)
@@ -112,5 +115,3 @@ const init = async ({ t, mail }) => {
 module.exports = {
   init
 }
-
-const schedulerLock = () => new Redlock([redis])

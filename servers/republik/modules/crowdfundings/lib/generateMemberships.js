@@ -10,13 +10,13 @@ const omit = require('lodash/omit')
 
 const MONTHLY_ABO_UPGRADE_PKGS = ['ABO', 'BENEFACTOR']
 
-module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
+module.exports = async (pledgeId, pgdb, t, req, redis) => {
   const pledge = await pgdb.public.pledges.findOne({id: pledgeId})
   const user = await pgdb.public.users.findOne({id: pledge.userId})
 
   // check if pledge really has no memberships yet
   if (await pgdb.public.memberships.count({pledgeId: pledge.id})) {
-    logger.error('tried to generate memberships for a pledge which already has memberships', { pledge })
+    console.error('tried to generate memberships for a pledge which already has memberships', { pledge })
     throw new Error(t('api/unexpected'))
   }
 
@@ -109,7 +109,7 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
           })
 
         if (!additionalPeriods || additionalPeriods.length === 0) {
-          logger.error(
+          console.error(
             'evaluation returned no additional periods',
             { pledge }
           )
@@ -247,6 +247,6 @@ module.exports = async (pledgeId, pgdb, t, req, logger = console) => {
     console.error('enforceSubscriptions failed in generateMemberships', e)
   }
 
-  const cache = createCache({ prefix: `User:${user.id}` })
+  const cache = createCache({ prefix: `User:${user.id}` }, { redis })
   cache.invalidate()
 }

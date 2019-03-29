@@ -2,7 +2,7 @@ require('@orbiting/backend-modules-env').config()
 const Server = require('../server')
 const sleep = require('await-sleep')
 const { lib: { redis } } = require('@orbiting/backend-modules-base')
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
 const { createApolloFetch } = require('apollo-fetch')
 

@@ -3,7 +3,7 @@ const generateMemberships = require('../../../lib/generateMemberships')
 const payPledgePaymentslip = require('../../../lib/payments/paymentslip/payPledge')
 const { publishMonitor } = require('../../../../../lib/slack')
 
-module.exports = async (_, { userId }, { pgdb, req, t, user: me, mail: { enforceSubscriptions } }) => {
+module.exports = async (_, { userId }, { pgdb, req, t, user: me, mail: { enforceSubscriptions }, redis }) => {
   Roles.ensureUserHasRole(me, 'supporter')
 
   const transaction = await pgdb.transactionBegin()
@@ -56,7 +56,7 @@ module.exports = async (_, { userId }, { pgdb, req, t, user: me, mail: { enforce
       t
     })
 
-    await generateMemberships(pledge.id, transaction, t, req)
+    await generateMemberships(pledge.id, transaction, t, req, redis)
 
     const newMembership = await transaction.public.memberships.findOne({
       pledgeId: pledge.id

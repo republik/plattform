@@ -4,7 +4,7 @@
 // node packages/voting/scripts/syncCandidacies.js
 
 require('@orbiting/backend-modules-env').config()
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
 PgDb.connect().then(async pgdb => {
   const candidacies = await pgdb.query(`

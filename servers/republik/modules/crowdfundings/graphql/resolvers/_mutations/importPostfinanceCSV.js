@@ -101,7 +101,7 @@ const insertPayments = async (paymentsInput, tableName, pgdb) => {
   return numPaymentsBefore
 }
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, {pgdb, req, t, redis}) => {
   Roles.ensureUserHasRole(req.user, 'accountant')
   const { csv } = args
 
@@ -124,7 +124,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       numMatchedPayments,
       numUpdatedPledges,
       numPaymentsSuccessful
-    } = await matchPayments(transaction, t)
+    } = await matchPayments(transaction, t, redis)
 
     await transaction.transactionCommit()
 

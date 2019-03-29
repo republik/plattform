@@ -11,17 +11,18 @@ const createCache = require('../../lib/cache')
 const { DISABLE_RESOLVER_USER_CACHE } = process.env
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
 
-const createMembershipCache = (membership, prop) =>
+const createMembershipCache = (membership, prop, context) =>
   createCache({
     prefix: `User:${membership.userId}`,
     key: `membership:${membership.id}:${prop}`,
     ttl: QUERY_CACHE_TTL_SECONDS,
     disabled: DISABLE_RESOLVER_USER_CACHE
-  })
+  }, context)
 
 module.exports = {
-  async type (membership, args, { pgdb }) {
-    return createMembershipCache(membership, 'type')
+  async type (membership, args, context) {
+    const { pgdb } = context
+    return createMembershipCache(membership, 'type', context)
       .cache(async () => pgdb.public.membershipTypes.findOne({
         id: membership.membershipTypeId
       }))
@@ -40,14 +41,15 @@ module.exports = {
       membership.latestPaymentFailedAt > latest.endDate
     )
   },
-  async needsProlong (membership, args, { pgdb, user: me }) {
+  async needsProlong (membership, args, context) {
+    const { pgdb } = context
     // Prolong not needed if a) membership is inactive, b) membership is not set
     // to be renewed or c) membership is set to "auto pay".
     if (!membership.active || !membership.renew || membership.autoPay) {
       return false
     }
 
-    return createMembershipCache(membership, 'needsProlong')
+    return createMembershipCache(membership, 'needsProlong', context)
       .cache(async () => {
         const user = await pgdb.public.users.findOne({ id: membership.userId })
         const customPackages = await getCustomPackages({ user, pgdb })
@@ -60,12 +62,13 @@ module.exports = {
         return prolongableMembershipIds.includes(membership.id)
       })
   },
-  async endDate (membership, args, { pgdb, user: me }) {
+  async endDate (membership, args, context) {
+    const { pgdb } = context
     if (!membership.active) {
       return null
     }
 
-    return createMembershipCache(membership, 'endDate')
+    return createMembershipCache(membership, 'endDate', context)
       .cache(async () => {
         const periods = await pgdb.public.membershipPeriods.find({
           membershipId: membership.id
@@ -78,12 +81,13 @@ module.exports = {
         return moment(getLastEndDate(periods))
       })
   },
-  async graceEndDate (membership, args, { pgdb, user: me }) {
+  async graceEndDate (membership, args, context) {
+    const { pgdb } = context
     if (!membership.active) {
       return null
     }
 
-    return createMembershipCache(membership, 'graceEndDate')
+    return createMembershipCache(membership, 'graceEndDate', context)
       .cache(async () => {
         const periods = await pgdb.public.membershipPeriods.find({
           membershipId: membership.id

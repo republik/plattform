@@ -26,7 +26,7 @@ describe(testName, () => {
   }, 30000)
 
   beforeEach(async () => {
-    const { pgdb } = global.instance
+    const { pgdb } = global.instance.context
     await Promise.all([
       pgdb.public.discussions.truncate({ cascade: true }),
       pgdb.public.users.truncate({ cascade: true })
@@ -38,7 +38,7 @@ describe(testName, () => {
   })
 
   test('setup', async () => {
-    const { instance: { pgdb } } = global
+    const { pgdb } = global.instance.context
     expect(await pgdb.public.users.count()).toEqual(10)
     expect(await pgdb.public.discussions.count()).toEqual(1)
     expect(await pgdb.public.comments.count()).toEqual(6)

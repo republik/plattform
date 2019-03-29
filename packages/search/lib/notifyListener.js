@@ -3,8 +3,8 @@ require('@orbiting/backend-modules-env').config()
 const debug = require('debug')('search:lib:notifyListener')
 const { Client } = require('pg')
 
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
-const elasticsearch = require('@orbiting/backend-modules-base/lib/elastic')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
+const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 
 const mappings = require('./indices')
 const inserts = require('../script/inserts')
@@ -12,7 +12,7 @@ const { getIndexAlias } = require('./utils')
 
 const BULK_SIZE = 100000
 
-const esClient = elasticsearch.client()
+const esClient = Elasticsearch.connect()
 const pgClient = new Client({
   connectionString: process.env.DATABASE_URL
 })

@@ -1,8 +1,8 @@
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
 const debug = require('debug')('crowdfundings:lib:scheduler')
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
-const redis = require('@orbiting/backend-modules-base/lib/redis')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
+const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 const {
   intervalScheduler,
   timeScheduler
@@ -20,6 +20,7 @@ const init = async (_context) => {
   debug('init')
 
   const pgdb = await PgDb.connect()
+  const redis = Redis.connect()
   const context = {
     ..._context,
     pgdb,

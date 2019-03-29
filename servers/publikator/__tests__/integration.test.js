@@ -35,7 +35,7 @@ const fetch = require('isomorphic-unfetch')
 const omit = require('lodash/omit')
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { lib: { redis } } = require('@orbiting/backend-modules-base')
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const moment = require('moment')
 const { timeFormat } = require('@orbiting/backend-modules-formats')
 

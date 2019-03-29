@@ -1,4 +1,4 @@
-const redis = require('@orbiting/backend-modules-base/lib/redis')
+const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 const getRepos = require('../../../../servers/publikator/graphql/resolvers/_queries/repos')
 const {
   latestPublications: getLatestPublications,
@@ -46,7 +46,7 @@ module.exports = {
     )
 
     const context = {
-      redis,
+      redis: Redis.connect(),
       pgdb,
       user: {
         name: 'publikator-pullelasticsearch',

@@ -5,7 +5,7 @@
  * node script/launch/createStripeCustomers.js [--test]
  */
 require('@orbiting/backend-modules-env').config()
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const createCustomer = require('../../modules/crowdfundings/lib/payments/stripe/createCustomer')
 const addSource = require('../../modules/crowdfundings/lib/payments/stripe/addSource')
 const removeCustomer = require('./removeStripeCustomer')
@@ -26,9 +26,9 @@ PgDb.connect().then(async pgdb => {
     WHERE
       p.method = 'STRIPE'
       ${testMode
-        ? ''// "AND u.email ilike '%@republik.ch'"
-        : ''
-      }
+    ? ''// "AND u.email ilike '%@republik.ch'"
+    : ''
+}
     GROUP BY 1
   `)
 

@@ -1,5 +1,5 @@
 require('@orbiting/backend-modules-env').config()
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const getClients = require('../modules/crowdfundings/lib/payments/stripe/clients')
 const moment = require('moment')
 

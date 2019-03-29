@@ -14,9 +14,9 @@
  * -- dry: don't commit/publish
  */
 require('@orbiting/backend-modules-env').config()
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
-const Elastic = require('@orbiting/backend-modules-base/lib/elastic')
-const redis = require('@orbiting/backend-modules-base/lib/redis')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
+const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
+const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 const { pubsub } = require('@orbiting/backend-modules-base/lib/RedisPubSub')
 const t = require('../../lib/t')
 const Promise = require('bluebird')
@@ -106,8 +106,8 @@ module.exports = ({ transform }) =>
 
     const context = getContext({
       pgdb,
-      elastic: Elastic.client(),
-      redis,
+      elastic: Elasticsearch.connect(),
+      redis: Redis.connect(),
       pubsub,
       t
     })

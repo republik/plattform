@@ -1,14 +1,16 @@
 const Redlock = require('redlock')
 const debug = require('debug')('access:lib:accessScheduler')
 
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
-const redis = require('@orbiting/backend-modules-base/lib/redis')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
+const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 
 const campaignsLib = require('./campaigns')
 const grantsLib = require('./grants')
 
 // Interval in which scheduler runs
 const intervalSecs = 60 * 10
+
+const schedulerLock = (redis) => new Redlock([redis])
 
 /**
  * Function to initialize scheduler. Provides scheduling.
@@ -17,6 +19,7 @@ const init = async ({ t, mail }) => {
   debug('init')
 
   const pgdb = await PgDb.connect()
+  const redis = Redis.connect()
 
   /**
    * Default runner, runs every {intervalSecs}.
@@ -27,7 +30,7 @@ const init = async ({ t, mail }) => {
 
     try {
       const lock =
-        await schedulerLock()
+        await schedulerLock(redis)
           .lock('locks:access-scheduler', 1000 * intervalSecs)
 
       await expireGrants(t, pgdb, mail)
@@ -56,8 +59,6 @@ const init = async ({ t, mail }) => {
 }
 
 module.exports = { init }
-
-const schedulerLock = () => new Redlock([redis])
 
 /**
  * Renders expired grants invalid.

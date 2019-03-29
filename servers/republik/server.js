@@ -1,5 +1,5 @@
 const { makeExecutableSchema } = require('graphql-tools')
-const { server } = require('@orbiting/backend-modules-base')
+const { server: Server } = require('@orbiting/backend-modules-base')
 const { merge } = require('apollo-modules-node')
 const t = require('./lib/t')
 
@@ -38,14 +38,14 @@ const {
 
 const DEV = NODE_ENV && NODE_ENV !== 'production'
 
-const start = async (externalConfig) => {
-  const httpServer = await run(null, externalConfig)
+const start = async () => {
+  const server = await run()
   await runOnce({ clusterMode: false })
-  return httpServer
+  return server
 }
 
 // in cluster mode, this runs after runOnce otherwise before
-const run = async (workerId, externalConfig = {}) => {
+const run = async (workerId, config) => {
   const localModule = require('./graphql')
   const executableSchema = makeExecutableSchema(
     merge(
@@ -104,14 +104,27 @@ const run = async (workerId, externalConfig = {}) => {
     return context
   }
 
-  return server.start(
+  const server = await Server.start(
     executableSchema,
     middlewares,
     t,
     createGraphQLContext,
     workerId,
-    externalConfig
+    config
   )
+
+  const close = () => {
+    return server.close()
+  }
+
+  process.on('SIGTERM', () => {
+    close()
+  })
+
+  return {
+    ...server,
+    close
+  }
 }
 
 // in cluster mode, this runs before run otherwise after
@@ -119,7 +132,7 @@ const runOnce = async (...args) => {
   if (cluster.isWorker) {
     throw new Error('runOnce must only be called on cluster.isMaster')
   }
-  server.runOnce(...args)
+  Server.runOnce(...args)
   require('./lib/slackGreeter').connect()
   if (SEARCH_PG_LISTENER) {
     require('@orbiting/backend-modules-search').notifyListener.run()
@@ -150,17 +163,8 @@ const runOnce = async (...args) => {
   }
 }
 
-const close = () => {
-  server.close()
-}
 module.exports = {
   start,
   run,
-  runOnce,
-  close,
-  t
+  runOnce
 }
-
-process.on('SIGTERM', () => {
-  close()
-})

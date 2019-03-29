@@ -1,4 +1,3 @@
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const exec = require('util').promisify(require('child_process').exec)
 
 const execAndLog = (command) =>
@@ -19,10 +18,7 @@ const getDatabaseUrl = (name) =>
 const migrateUp = (url) =>
   execAndLog(`DATABASE_URL=${url} yarn run db:migrate:up`)
 
-const connect = (url) =>
-  PgDb.connect(url)
-
-const createMigrateConnect = async (name) => {
+const createMigrateGetUrl = async (name) => {
   try {
     await drop(name)
   } catch (e) {}
@@ -31,10 +27,10 @@ const createMigrateConnect = async (name) => {
 
   await migrateUp(url)
 
-  return connect(url)
+  return url
 }
 
 module.exports = {
-  createMigrateConnect,
+  createMigrateGetUrl,
   drop
 }

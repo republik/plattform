@@ -6,7 +6,7 @@
  * cat local/fixMemberRole.txt | node script/fixMemberRole.js [restartCount]
  */
 require('@orbiting/backend-modules-env').config()
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 // const fs = require('fs')
 const rw = require('rw')
 const { enforceSubscriptions } = require('../modules/crowdfundings/lib/Mail.js')

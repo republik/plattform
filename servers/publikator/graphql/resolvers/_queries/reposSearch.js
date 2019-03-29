@@ -107,7 +107,7 @@ module.exports = async (__, args, context) => {
     search,
     template,
     orderBy
-  })
+  }, context)
 
   const hasNextPage = first > 0 && result.hits.total > from + first
   const hasPreviousPage = from > 0

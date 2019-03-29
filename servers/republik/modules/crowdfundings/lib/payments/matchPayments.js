@@ -2,7 +2,7 @@ const generateMemberships = require('../generateMemberships')
 const { sendPaymentSuccessful } = require('../Mail')
 const slack = require('../../../../lib/slack')
 
-module.exports = async (transaction, t) => {
+module.exports = async (transaction, t, redis) => {
   // load
   const unmatchedPayments = await transaction.public.postfinancePayments.find({
     matched: false
@@ -62,7 +62,7 @@ module.exports = async (transaction, t) => {
 
       if (pledge.status !== newStatus) {
         if (newStatus === 'SUCCESSFUL') {
-          await generateMemberships(pledge.id, transaction, t)
+          await generateMemberships(pledge.id, transaction, t, null, redis)
         }
         await transaction.public.pledges.update({id: pledge.id}, {
           status: newStatus

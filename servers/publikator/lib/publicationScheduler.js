@@ -1,9 +1,9 @@
 const CronJob = require('cron').CronJob
 const Redlock = require('redlock')
 const debug = require('debug')('publikator:lib:publicationScheduler')
-const redis = require('@orbiting/backend-modules-base/lib/redis')
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
-const Elastic = require('@orbiting/backend-modules-base/lib/elastic')
+const Redis = require('@orbiting/backend-modules-base/lib/Redis')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
+const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 const indices = require('@orbiting/backend-modules-search/lib/indices')
 const { getIndexAlias } = require('@orbiting/backend-modules-search/lib/utils')
 const { handleRedirection } = require('./Document')
@@ -17,7 +17,8 @@ const {
 } = require('./github')
 const { upsert: repoCacheUpsert } = require('./cache/upsert')
 
-const elastic = Elastic.client()
+const elastic = Elasticsearch.connect()
+const redis = Redis.connect()
 
 const lockKey = 'locks:scheduling'
 const ttl = 2000

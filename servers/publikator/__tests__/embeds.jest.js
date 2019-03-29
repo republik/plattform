@@ -14,7 +14,7 @@ afterAll(async () => {
 
 describe('embeds unauthorized', () => {
   test('fetch youtube data with unathorized user', async () => {
-    const { apolloFetch, t } = global.instance
+    const { apolloFetch, context: { t } } = global.instance
     const result = await apolloFetch({
       query: `
         {
@@ -32,7 +32,7 @@ describe('embeds unauthorized', () => {
   })
 
   test('fetch vimeo data with unathorized user', async () => {
-    const { apolloFetch, t } = global.instance
+    const { apolloFetch, context: { t } } = global.instance
     const result = await apolloFetch({
       query: `
         {
@@ -50,7 +50,7 @@ describe('embeds unauthorized', () => {
   })
 
   test('fetch twitter data with unathorized user', async () => {
-    const { apolloFetch, t } = global.instance
+    const { apolloFetch, context: { t } } = global.instance
     const result = await apolloFetch({
       query: `
         {
@@ -69,7 +69,7 @@ describe('embeds unauthorized', () => {
   })
 
   test('fetch documentcloud data with unathorized user', async () => {
-    const { apolloFetch, t } = global.instance
+    const { apolloFetch, context: { t } } = global.instance
     const result = await apolloFetch({
       query: `
         {

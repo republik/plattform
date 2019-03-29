@@ -6,7 +6,7 @@
  * node script/launch/fixActivateMemberships.js
  */
 require('@orbiting/backend-modules-env').config()
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const { ascending } = require('d3-array')
 
 console.log('running fixActivateMemberships.js...')

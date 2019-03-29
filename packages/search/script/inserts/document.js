@@ -1,4 +1,3 @@
-const redis = require('@orbiting/backend-modules-base/lib/redis')
 const _ = require('lodash')
 
 // TODO require from servers is not the idea in packages
@@ -132,7 +131,7 @@ const iterateRepos = async (context, callback) => {
 
 module.exports = {
   before: () => {},
-  insert: async ({indexName, type: indexType, elastic, pgdb}) => {
+  insert: async ({indexName, type: indexType, elastic, pgdb, redis}) => {
     if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY) {
       console.warn('missing AWS_ACCESS_KEY_ID and/or AWS_SECRET_ACCESS_KEY skipping image uploads!')
     }
