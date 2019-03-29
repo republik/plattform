@@ -455,5 +455,15 @@ module.exports = {
           console.log(errors)
         }
       })
+  },
+  archiveRepo: async (repoId) => {
+    const [login, repoName] = repoId.split('/')
+    const { githubRest } = await createGithubClients()
+    return githubRest.repos.edit({
+      owner: login,
+      repo: repoName,
+      name: repoName,
+      archived: true
+    })
   }
 }
