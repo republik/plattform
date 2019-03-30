@@ -1,8 +1,8 @@
 require('@orbiting/backend-modules-env').config()
 const Server = require('../server')
 const sleep = require('await-sleep')
-const { lib: { redis } } = require('@orbiting/backend-modules-base')
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
+const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 
 const { createApolloFetch } = require('apollo-fetch')
 
@@ -10,6 +10,7 @@ const { createApolloFetch } = require('apollo-fetch')
 var server = null
 var _cookie = null
 var pgdb = null
+var redis = null
 
 const createLocalApolloFetch = (separateCookies = false) => {
   const GRAPHQL_URI = `http://localhost:${process.env.PORT}/graphql`
@@ -38,6 +39,7 @@ const createLocalApolloFetch = (separateCookies = false) => {
 
 const connectIfNeeded = async function () {
   if (server) return server
+  redis = Redis.connect()
   await redis.flushdbAsync()
   await sleep(1000)
   server = await Server.start()

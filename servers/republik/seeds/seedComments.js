@@ -27,7 +27,7 @@ Promise.resolve().then( async () => {
 */
 
 const _comments = require('./comments.json')
-const { lib: { pgdb: PgDb } } = require('@orbiting/backend-modules-base')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const getHotnes = require('../lib/hotness')
 const fakeUUID = require('../lib/fakeUUID')
 

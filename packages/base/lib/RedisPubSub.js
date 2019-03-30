@@ -20,12 +20,8 @@ const filtered = (asyncIterator, filter) => withFilter(
   filter
 )
 
-// TODO migrate consumers to connect
-const pubsub = connect()
-
 module.exports = {
   connect,
   disconnect,
-  filtered,
-  pubsub
+  filtered
 }

@@ -7,7 +7,7 @@
 //
 require('@orbiting/backend-modules-env').config()
 process.on('unhandledRejection', up => { throw up })
-const { lib: { pgdb: PgDb } } = require('@orbiting/backend-modules-base')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
 console.log('running add_launch_data.js...')
 PgDb.connect().then(async (pgdb) => {

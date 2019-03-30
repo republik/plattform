@@ -17,7 +17,7 @@ require('@orbiting/backend-modules-env').config()
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 const Redis = require('@orbiting/backend-modules-base/lib/Redis')
-const { pubsub } = require('@orbiting/backend-modules-base/lib/RedisPubSub')
+const RedisPubSub = require('@orbiting/backend-modules-base/lib/RedisPubSub')
 const t = require('../../lib/t')
 const Promise = require('bluebird')
 const yargs = require('yargs')
@@ -108,7 +108,7 @@ module.exports = ({ transform }) =>
       pgdb,
       elastic: Elasticsearch.connect(),
       redis: Redis.connect(),
-      pubsub,
+      pubsub: RedisPubSub.connect(),
       t
     })
 

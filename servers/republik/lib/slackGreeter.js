@@ -1,13 +1,7 @@
 const debug = require('debug')('republik:slack')
 const emojione = require('emojione_minimal')
-const {
-  lib: {
-    redis,
-    RedisPubSub: {
-      pubsub
-    }
-  }
-} = require('@orbiting/backend-modules-base')
+const Redis = require('@orbiting/backend-modules-base/lib/Redis')
+const RedisPubSub = require('@orbiting/backend-modules-base/lib/RedisPubSub')
 
 const {
   RTMClient
@@ -26,6 +20,10 @@ module.exports.connect = async () => {
   if (!SLACK_API_TOKEN) {
     return
   }
+
+  const redis = Redis.connect()
+  const pubsub = RedisPubSub.connect()
+
   const rtm = new RTMClient(SLACK_API_TOKEN)
 
   rtm.on('message', async (message) => {
