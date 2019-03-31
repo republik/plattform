@@ -6,19 +6,15 @@ const discussion1 = require('./seeds/discussion1')
 const commentsTopLevel = require('./seeds/commentsTopLevel')
 const { level1: level1Query } = require('./queries')
 
-const testName = 'discussions'
-
 const getIdsString = arr => arr
   .map(c => c.id)
   .join('')
 
-describe(testName, () => {
+describe('discussions', () => {
   beforeAll(async () => {
-    const instance = await Instance({
-      serverName: 'republik',
-      testName
+    await Instance.init({
+      serverName: 'republik'
     })
-    global.instance = instance
   }, 60000)
 
   afterAll(async () => {

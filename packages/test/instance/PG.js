@@ -18,19 +18,27 @@ const getDatabaseUrl = (name) =>
 const migrateUp = (url) =>
   execAndLog(`DATABASE_URL=${url} yarn run db:migrate:up`)
 
-const createMigrateGetUrl = async (name) => {
+const createAndMigrate = async (name) => {
   try {
+    try {
+      await drop(name)
+    } catch (e) {}
+    await create(name)
+    const url = getDatabaseUrl(name)
+
+    await migrateUp(url)
+
+    return {
+      url,
+      drop: () => drop(name)
+    }
+  } catch (e) {
+    console.error(e)
     await drop(name)
-  } catch (e) {}
-  await create(name)
-  const url = getDatabaseUrl(name)
-
-  await migrateUp(url)
-
-  return url
+    return null
+  }
 }
 
 module.exports = {
-  createMigrateGetUrl,
-  drop
+  createAndMigrate
 }
