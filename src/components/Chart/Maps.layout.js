@@ -26,7 +26,8 @@ export default (props, geoJson) => {
     t,
     tLabel,
     choropleth,
-    ignoreMissingFeature
+    ignoreMissingFeature,
+    missingDataLegend
   } = props
 
   let data = values
@@ -149,6 +150,10 @@ export default (props, geoJson) => {
       label: color.label,
       color: colorScale(color.value)
     }))
+    .concat(missingDataLegend ? {
+      label: missingDataLegend,
+      color: props.missingDataColor
+    } : [])
 
   const geotiffs = {}
   const geotiff = props.geotiff
@@ -223,7 +228,7 @@ export default (props, geoJson) => {
         featuresWithPaths.forEach((feature) => {
           const d = groupData.find(datum => datum.featureId === feature.id)
           if (!d) {
-            if (!ignoreMissingFeature) {
+            if (missingDataLegend === undefined) {
               throw new Error(`No data for feature ${feature.id} ${groupTitle ? ` (${groupTitle})` : ''}`)
             }
             groupData.push({

@@ -128,7 +128,8 @@ export class GenericMap extends Component {
     const props = this.props
     const {
       width,
-      tLabel
+      tLabel,
+      missingDataLegend
     } = props
 
     const {
@@ -158,7 +159,7 @@ export class GenericMap extends Component {
               {groupTitle && title === groupTitle && <Fragment>
                 {tLabel(groupTitle)}<br />
               </Fragment>}
-              {`${numberFormat(d.value)} ${props.unit}`}
+              {d.empty ? missingDataLegend : `${numberFormat(d.value)} ${props.unit}`}
             </ContextBoxValue>
           </ContextBox>
         )
@@ -174,7 +175,8 @@ export class GenericMap extends Component {
       tLabel,
       description,
       choropleth,
-      ignoreMissingFeature
+      colorLegendSize,
+      missingDataColor
     } = props
     const {
       loading, error, geoJson
@@ -202,11 +204,11 @@ export class GenericMap extends Component {
     } = this.state.layout
 
     let legendStyle
-    if (mapSpace * 0.2 >= 110 || mini) {
+    if (mapSpace * colorLegendSize >= 110 || mini) {
       legendStyle = {
         position: 'absolute',
         top: mini ? 12 : paddingTop,
-        left: paddingLeft + mapSpace * 0.8 + 10
+        left: paddingLeft + mapSpace * (1 - colorLegendSize) + 10
       }
     } else {
       legendStyle = {paddingLeft: paddingLeft}
@@ -251,7 +253,7 @@ export class GenericMap extends Component {
                           }
                           let fill
                           if (d.empty) {
-                            fill = ignoreMissingFeature ? colors.disabled : 'red'
+                            fill = missingDataColor
                           } else {
                             fill = colorScale(colorAccessor(d))
                           }
@@ -370,6 +372,7 @@ GenericMap.propTypes = {
   thresholds: PropTypes.arrayOf(PropTypes.number),
   extent: PropTypes.arrayOf(PropTypes.number),
   colorLegend: PropTypes.bool.isRequired,
+  colorLegendSize: PropTypes.number.isRequired,
   colorRange: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   colorRanges: PropTypes.shape({
     sequential3: PropTypes.array.isRequired,
@@ -392,6 +395,8 @@ GenericMap.propTypes = {
   points: PropTypes.bool.isRequired,
   choropleth: PropTypes.bool.isRequired,
   feature: PropTypes.string,
+  missingDataLegend: PropTypes.string,
+  missingDataColor: PropTypes.string.isRequired,
   ignoreMissingFeature: PropTypes.bool.isRequired,
   tLabel: PropTypes.func.isRequired,
   description: PropTypes.string,
@@ -404,8 +409,10 @@ GenericMap.defaultProps = {
   unit: '',
   heightRatio: 1,
   colorLegend: true,
+  colorLegendSize: 0.2,
   points: false,
   choropleth: false,
+  missingDataColor: colors.disabled,
   ignoreMissingFeature: false,
   feature: 'feature',
   shape: 'circle',

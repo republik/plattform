@@ -645,6 +645,7 @@ ReactDOM.render(
             title: 'Maps',
             imports: {
               ...require('./components/Typography'),
+              data: {...require('./components/Chart/Maps.docs.data')},
               ChartTitle: require('./components/Chart').ChartTitle,
               ChartLead: require('./components/Chart').ChartLead,
               CsvChart: require('./components/Chart/Csv'),
