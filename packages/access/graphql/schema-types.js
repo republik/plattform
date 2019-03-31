@@ -25,7 +25,7 @@ type AccessCampaign {
     "Include grants with were invalidated (admin only)"
     withInvalidated: Boolean
   ): [AccessGrant!]!
-  slots: AccessCampaignSlots
+  slots: AccessCampaignSlots!
   "Begin of campaign"
   beginAt: DateTime!
   "End of campaign"
