@@ -98,7 +98,7 @@ export default (props, geoJson) => {
       ]
       return {
         value: safeExtent[0],
-        label: `${numberFormat(safeExtent[0])} - ${numberFormat(safeExtent[1])}`
+        label: `${numberFormat(safeExtent[0])} ${tLabel('bis')} ${numberFormat(safeExtent[1])}`
       }
     })
   }

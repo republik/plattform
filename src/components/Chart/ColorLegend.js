@@ -19,7 +19,8 @@ const styles = {
   }),
   label: css({
     ...sansSerifRegular12,
-    color: colors.text
+    color: colors.text,
+    fontFeatureSettings: '"tnum" 1, "kern" 1'
   }),
   labelWithColor: css({
     paddingLeft: 12,
