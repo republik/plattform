@@ -29,10 +29,16 @@ Want a special projection? Use `ProjectedMap` to render an pre-projected topojso
 
 ### Projecting WGS84 Data
 
-For example with `geoConicConformalEurope` for a composite map with overseas [nuts regions](https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts).
+For example with [`geoConicConformalEurope`](https://github.com/rveciana/d3-composite-projections) for a composite map with overseas [nuts regions](https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts).
+
+_Examples below assume `topojson` v2._
+
+#### `geoConicConformalEurope`
+
+Europe with composition. Double dose of Malta.
 
 ```
-npm i -g d3-composite-projections
+npm i -g d3-composite-projections ndjson-cli
 
 # project a wgs84 geojson with geoConicConformalEurope 
 npx -p d3-geo-projection geoproject --require d3=d3-composite-projections 'd3.geoConicConformalEurope()' < nuts.json > nuts-projected.json
@@ -43,13 +49,13 @@ npx -p d3-geo-projection geoproject 'p = d3.geoConicConformal().rotate([-10, -53
 # npx -p d3-geo-projection geo2svg -w 960 -h 960 < nuts-projected.json > nuts-projected.svg
 
 # map to get clean id and name prop
-npx -p ndjson-cli ndjson-split 'd.features' \
+ndjson-split 'd.features' \
   < nuts-projected.json \
   > nuts-projected.ndjson
-npx -p ndjson-cli ndjson-map 'd.id = d.properties.NUTS_ID, d.properties = {name: d.properties.NUTS_NAME}, d' \
+ndjson-map 'd.id = d.properties.NUTS_ID, d.properties = {name: d.properties.NUTS_NAME}, d' \
   < nuts-projected.ndjson \
   > nuts-projected-clean.ndjson
-npx -p ndjson-cli ndjson-reduce 'p.features.push(d), p' '{type: "FeatureCollection", features: []}' \
+ndjson-reduce 'p.features.push(d), p' '{type: "FeatureCollection", features: []}' \
   < nuts-projected-clean.ndjson \
   > nuts-projected-clean.json
 
@@ -58,10 +64,6 @@ npx -p topojson geo2topo -q 1e5 nuts=nuts-projected-clean.json cb=nuts-compositi
 
 # npx -p topojson toposimplify -p 0.05 < nuts-topo.json > nuts-topo-simple.json
 ```
-
-_Example assumes `topojson` v2._
-
-### Examples
 
 ```react
 <div>
@@ -85,23 +87,76 @@ x,y
 </div>
 ```
 
+#### `geoConicConformal`
+
+Europe without composition.
+
+```
+npm i -g ndjson-cli d3-dsv
+
+npx -p d3-geo-projection geoproject 'd3.geoConicConformal().rotate([-10, -53]).parallels([0, 60])' < nuts.json > nuts-projected.json
+
+# map to get clean id and name prop, filter out some regions
+ndjson-split 'd.features' \
+  < nuts-projected.json \
+  > nuts-projected.ndjson
+ndjson-filter '!["NO", "TR", "IS"].includes(d.properties.CNTR_CODE)' \
+  < nuts-projected.ndjson \
+  | ndjson-map 'd.id = d.properties.NUTS_ID, d.properties = {name: d.properties.NUTS_NAME}, d' \
+  | ndjson-filter '!["FRA1", "FRA2", "FRA3", "FRA4", "FRA5", "ES70", "PT20", "PT30"].includes(d.id)' \
+  > nuts-projected-filered.ndjson
+
+# join names table and map name property
+ndjson-join 'd.id' <(cat nuts-projected-filered.ndjson) <(csv2json -n names.csv) \
+  | ndjson-map 'd[0].properties.name = d[1].name, d[0]' \
+  > nuts-projected-clean.ndjson
+
+ndjson-reduce 'p.features.push(d), p' '{type: "FeatureCollection", features: []}' \
+  < nuts-projected-clean.ndjson \
+  > nuts-projected-clean.json
+
+# generate topojson
+npx -p topojson geo2topo -q 1e5 nuts=nuts-projected-clean.json > nuts-topo.json
+
+npx -p topojson toposimplify -p 0.02 < nuts-topo.json > nuts2013-20m-l2-custom-gdp.json
+```
+
 ```react
 <div>
-  <ChartTitle>GDP per Capita, PPS, 2016</ChartTitle>
+  <ChartTitle>Zentraleuropäischer Wohlstandsgürtel</ChartTitle>
+  <ChartLead>2016 BIP pro Kopf nach Regionen</ChartLead>
   <CsvChart
     config={{
       "type": "ProjectedMap",
-      "heightRatio": 0.77,
+      "heightRatio": 0.879,
       "choropleth": true,
-      "missingDataLegend": "Keine Daten",
+      "colorRange": [
+        "#ffffe5",
+        "#f7fcb9",
+        "#addd8e",
+        "#78c679",
+        "#41ab5d",
+        "#006837",
+        "#004529"
+      ],
+      "thresholds": [
+        10000,
+        15000,
+        20000,
+        25000,
+        30000,
+        40000
+      ],
+      "legendTitle": "BIP pro Kopf in Euro",
+      "unit": "Euro",
       "colorLegendSize": 0.3,
       "features": {
-        "url": "/static/geo/nuts2013-20m-l2-merged-ch-mainland-simple.json",
+        "url": "/static/geo/nuts2013-20m-l2-custom-gdp.json",
         "object": "nuts"
       }
     }}
     values={data.nuts13mCHdGDP} />
-  <Editorial.Note>Geobasis: <Editorial.A href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts">NUTS 2013 20M L2</Editorial.A>, ohne entlegene Gebiete, fusionierte Schweiz</Editorial.Note>
+  <Editorial.Note>Quelle: Eurostat. Das BIP pro Kopf ist nach Kaufkraft bereinigt. Geobasis: <Editorial.A href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts">NUTS 2013 20M L2</Editorial.A>, ohne entlegene Gebiete, fusionierte Schweiz</Editorial.Note>
 </div>
 ```
 
