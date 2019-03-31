@@ -35,7 +35,7 @@ const { getIndexAlias, getDateIndex } = require('../../../lib/utils')
 const reduceFilters = filterReducer(documentSchema)
 const createElasticFilter = elasticFilterBuilder(documentSchema)
 
-const getFieldList = require('graphql-list-fields')
+const getFieldList = require('@orbiting/graphql-list-fields')
 
 const createCache = require('../../../lib/cache')
 

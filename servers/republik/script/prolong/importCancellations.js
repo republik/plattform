@@ -72,7 +72,8 @@ PgDb.connect().then(async pgdb => {
           membershipId: membership.id,
           reason: reason.length ? reason.trim() : null,
           category: normalizedCategory,
-          suppressNotifications: true,
+          suppressConfirmation: true,
+          suppressWinback: true,
           createdAt: date
         })
       }

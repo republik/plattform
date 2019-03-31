@@ -181,6 +181,11 @@
     node-fetch "^2.1.1"
     url-template "^2.0.8"
 
+"@orbiting/graphql-list-fields@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@orbiting/graphql-list-fields/-/graphql-list-fields-2.0.2.tgz#12686554c3cbca96f38f29166c031e89aa3a0fd2"
+  integrity sha512-OKGJlG/QHohYYC0TAeEBx+y8PT9f/BPCRYlG16m+mMJx/F0QB3vVspOcs5v14sjrMrbCwtd3hhMUAyo75cQ+Ug==
+
 "@orbiting/remark-preset@^1.2.3":
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/@orbiting/remark-preset/-/remark-preset-1.2.3.tgz#e0d778a5d04b8fff300a7dcf13d4eabc81a7c331"
@@ -258,6 +263,13 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
+
+"@rocka/mp3-duration@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@rocka/mp3-duration/-/mp3-duration-2.0.0.tgz#66249fa5a888078c798008eb150b23102f30c230"
+  integrity sha512-3lK1sfq/g3XqanMvY2SEjzY4cMxzjfxl9RXBSD4rebhpxLSLVGxeRGKkHLPS2cvNz7hQhZLQyudV8E++ko76qg==
+  dependencies:
+    "@types/node" ">=8.0.0"
 
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
@@ -473,6 +485,11 @@
   version "10.0.6"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.0.6.tgz#c0bce8e539bf34c1b850c13ff46bead2fecc2e58"
   integrity sha512-2whhQUfDHRBiZ3L54Ulyl1X+fZWbWabxPYRDAsibgOAtE6adwusD15Xv0Bw/D7cPah35Z/wKTdW3iAKsevw1uw==
+
+"@types/node@>=8.0.0":
+  version "10.12.18"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.18.tgz#1d3ca764718915584fcd9f6344621b7672665c67"
+  integrity sha512-fh+pAqt4xRzPfqA6eh3Z2y6fyZavRIumvjhaCL753+TVkGKGhpPeyrJG2JftD0T9q4GF00KjefsQ+PQNDdWQaQ==
 
 "@types/node@^8.0.53", "@types/node@^8.9.4":
   version "8.10.20"
@@ -4241,10 +4258,6 @@ graphql-fields@^1.0.2:
   resolved "https://registry.yarnpkg.com/graphql-fields/-/graphql-fields-1.0.2.tgz#099ee1d4445b42d0f47e06d622acebb33abc6cce"
   integrity sha1-CZ7h1ERbQtD0fgbWIqzrszq8bM4=
 
-"graphql-list-fields@https://github.com/orbiting/graphql-list-fields#named-inline-fragments":
-  version "2.0.1"
-  resolved "https://github.com/orbiting/graphql-list-fields#e96ee15199283acb43ced006e777c985c910ed4c"
-
 graphql-redis-subscriptions@^1.4.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/graphql-redis-subscriptions/-/graphql-redis-subscriptions-1.5.0.tgz#53c9be28ee69f61ffbfe808f8f82f7e718254acf"
@@ -6527,6 +6540,11 @@ moment@^2.22.2:
   version "2.22.2"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
   integrity sha1-PCV/mDn8DpP/UxSWMiOeuQeD/2Y=
+
+moment@^2.24.0:
+  version "2.24.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
+  integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
 
 "mongodb-uri@>= 0.9.7":
   version "0.9.7"
@@ -10026,6 +10044,11 @@ validate-npm-package-license@^3.0.1:
   dependencies:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
+
+validator@^10.11.0:
+  version "10.11.0"
+  resolved "https://registry.yarnpkg.com/validator/-/validator-10.11.0.tgz#003108ea6e9a9874d31ccc9e5006856ccd76b228"
+  integrity sha512-X/p3UZerAIsbBfN/IwahhYaBbY68EN/UQBWHtsbXGT5bfrH/p4NQzUCG1kF/rtKaNpnJ7jAu6NGTdSNtyNIXMw==
 
 validator@^10.2.0:
   version "10.2.0"

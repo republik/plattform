@@ -1,5 +1,5 @@
 {
-  "updated": "2019-01-10T21:05:44.919Z",
+  "updated": "2019-02-27T12:37:23.284Z",
   "title": "live",
   "data": [
     {
@@ -471,20 +471,8 @@
       "value": "und"
     },
     {
-      "key": "api/access/email/recipient/invitation-2/subject",
+      "key": "api/access/email/recipient/invitation/subject",
       "value": "Einladung von {granterName}"
-    },
-    {
-      "key": "api/access/email/recipient/onboarding-2/subject",
-      "value": "Ihr Republik-Testzugang: Willkommen!"
-    },
-    {
-      "key": "api/access/email/recipient/expired-2/subject",
-      "value": "Ihre Reise ist beendet"
-    },
-    {
-      "key": "api/access/email/recipient/followup-2/subject",
-      "value": "Zeit für eine Entscheidung"
     },
     {
       "key": "api/access/email/recipient/onboarding/subject",
@@ -817,6 +805,18 @@
     {
       "key": "api/collections/document/404",
       "value": "Das Dokument konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/collections/progress/notEnabled",
+      "value": "Sie müssen zuerst zustimmen, dass Ihre Position gespeichert wird."
+    },
+    {
+      "key": "api/consents/missing",
+      "value": "Sie müssen folgenden Policies zustimmen um sich anmelden zu können: {consents}."
+    },
+    {
+      "key": "api/consents/notRevokable",
+      "value": "Die Einwilligung ({consent}) kann nicht zurückgezogen werden."
     }
   ]
 }

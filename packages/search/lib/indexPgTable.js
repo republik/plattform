@@ -21,7 +21,7 @@ const STATS_INTERVAL_SECS = 5
  * @return {Promise}
  */
 const index = async ({ indexName, type, elastic, resource }) => {
-  const stats = { [type]: { added: 0 } }
+  const stats = { [type]: { added: 0, deleted: 0 } }
   const statsInterval = setInterval(() => {
     debug(indexName, stats)
   }, STATS_INTERVAL_SECS * 1000)
@@ -35,7 +35,8 @@ const index = async ({ indexName, type, elastic, resource }) => {
       {
         orderBy: { id: 'asc' },
         limit: resource.bulkSize || BULK_SIZE,
-        offset
+        offset,
+        skipUndefined: true
       }
     )
 
@@ -52,6 +53,8 @@ const index = async ({ indexName, type, elastic, resource }) => {
     })
 
     stats[type].added += rows.length
+    stats[type].deleted += resource.delete.length || 0
+
     offset += BULK_SIZE
   } while (rows.length >= BULK_SIZE)
 

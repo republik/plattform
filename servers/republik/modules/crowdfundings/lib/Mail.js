@@ -7,10 +7,9 @@ const { transformUser, AccessToken } = require('@orbiting/backend-modules-auth')
 const { timeFormat, formatPriceChf } =
   require('@orbiting/backend-modules-formats')
 
-const {
-  checkMembershipSubscriptions: getCheckMembershipSubscriptions
-} = require('../graphql/resolvers/User')
 const { getLastEndDate } = require('./utils')
+
+const { count: memberStatsCount } = require('../../../lib/memberStats')
 
 const dateFormat = timeFormat('%x')
 
@@ -158,140 +157,12 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
 
   if (!pledges.length) { return }
 
-  const checkMembershipSubscriptions = await getCheckMembershipSubscriptions(user, null, { pgdb, user })
-
-  const address = await pgdb.public.addresses.findOne({id: user.addressId})
-
-  // get packageOptions which include the NOTEBOOK
-  const goodieNotebook = await pgdb.public.goodies.findOne({name: 'NOTEBOOK'})
-  const rewardNotebook = await pgdb.public.rewards.findOne({id: goodieNotebook.rewardId})
-  const pkgOptionsNotebook = await pgdb.public.packageOptions.find({rewardId: rewardNotebook.id})
-  const goodieTotebag = await pgdb.public.goodies.findOne({name: 'TOTEBAG'})
-  const rewardTotebag = await pgdb.public.rewards.findOne({id: goodieTotebag.rewardId})
-  const pkgOptionsTotebag = await pgdb.public.packageOptions.find({rewardId: rewardTotebag.id})
-
   await Promise.all(pledges.map(async (pledge) => {
-    const pkg = await pgdb.public.packages.findOne({id: pledge.packageId})
-    const pledgePayment = await pgdb.public.pledgePayments.findFirst({pledgeId: pledge.id}, {orderBy: ['createdAt desc']})
-    const payment = pledgePayment
-      ? await pgdb.public.payments.findOne({id: pledgePayment.paymentId})
-      : {}
-
-    const notebook = await pgdb.public.pledgeOptions.count({
-      pledgeId: pledge.id,
-      templateId: pkgOptionsNotebook.map(p => p.id),
-      'amount >': 0
-    })
-    const totebag = await pgdb.public.pledgeOptions.count({
-      pledgeId: pledge.id,
-      templateId: pkgOptionsTotebag.map(p => p.id),
-      'amount >': 0
+    const package_ = await pgdb.public.packages.findOne({
+      id: pledge.packageId
     })
 
-    const pledgeOptions = await pgdb.public.pledgeOptions.find({
-      pledgeId: pledge.id,
-      'amount >': 0
-    }, {
-      orderBy: ['amount desc']
-    })
-
-    const packageOptions = await pgdb.public.packageOptions.find({
-      id: pledgeOptions.map(o => o.templateId)
-    })
-
-    const rewardGoodies = await pgdb.public.goodies.find({
-      rewardId: packageOptions.map(o => o.rewardId)
-    })
-
-    const rewardMembershipTypes = await pgdb.public.membershipTypes.find({
-      rewardId: packageOptions.map(o => o.rewardId)
-    })
-
-    const rewards = rewardGoodies.concat(rewardMembershipTypes)
-
-    packageOptions.forEach((packageOption, index, packageOptions) => {
-      packageOptions[index].reward = rewards
-        .find(r => r.rewardId === packageOption.rewardId)
-    })
-
-    // Find membership IDs mentoned in pledgeOption.membershipId
-    const pledgedMemberships = pledgeOptions
-      .map(pledgeOption => pledgeOption.membershipId)
-      .filter(Boolean)
-
-    // All affected memberships. These are memberships that spring from this
-    // pledge, or memberships that were mentioned pledgeOption.membershipId.
-    const memberships = await pgdb.public.memberships.find({
-      or: [
-        { pledgeId: pledge.id },
-        pledgedMemberships.length > 0 && { id: pledgedMemberships }
-      ].filter(Boolean)
-    })
-
-    const membershipsUsers =
-      memberships.length > 0
-        ? await pgdb.public.users.find(
-          { id: memberships.map(m => m.userId) }
-        )
-        : []
-
-    memberships.forEach((membership, index, memberships) => {
-      memberships[index].user =
-        membershipsUsers.find(u => u.id === membership.userId)
-    })
-
-    pledgeOptions.forEach((pledgeOption, index, pledgeOptions) => {
-      pledgeOptions[index].packageOption = packageOptions
-        .find(o => o.id === pledgeOption.templateId)
-
-      if (pledgeOption.membershipId) {
-        pledgeOptions[index].membership = memberships
-          .find(m => m.id === pledgeOption.membershipId)
-      }
-    })
-
-    pledgeOptions
-      // Sort by packageOption.order in an ascending manner
-      .sort(
-        (a, b) =>
-          a.packageOption &&
-          b.packageOption &&
-          a.packageOption.order > b.packageOption.order ? 1 : 0
-      )
-      // Sort by sequenceNumber in an ascending manner
-      .sort(
-        (a, b) =>
-          a.membership &&
-          b.membership &&
-          a.membership.sequenceNumber < b.membership.sequenceNumber ? 1 : 0
-      )
-      // Sort by userID, own ones up top.
-      .sort(
-        (a, b) => a.membership && a.membership.userId !== pledge.userId ? 1 : 0
-      )
-
-    /*
-      pledgeOptions[] {
-        packageOption {
-          reward {
-            rewardType (Goodie|MembershipType)
-            name
-          }
-        }
-        membership {
-          user
-        }
-      }
-    */
-
-    const giftedMemberships = memberships
-      .filter(membership => pledge.userId !== membership.userId)
-
-    const templateName = `pledge_${pkg.name.toLowerCase()}`
-
-    const discount = pledge.donation < 0 ? (0 - pledge.donation) / 100 : 0
-    const donation = pledge.donation > 0 ? pledge.donation / 100 : 0
-    const total = pledge.total / 100
+    const templateName = `pledge_${package_.name.toLowerCase()}`
 
     return sendMailTemplate({
       to: user.email,
@@ -299,163 +170,9 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
       subject: t(`api/email/${templateName}/subject`),
       templateName,
       mergeLanguage: 'handlebars',
-      globalMergeVars: [
-        // Purchase itself
-        { name: 'options',
-          content: pledgeOptions
-            // Filter "pseudo" pledge options without a reward
-            .filter(pledgeOption => pledgeOption.packageOption.reward)
-            .map(pledgeOption => {
-              const { rewardType, name } = pledgeOption.packageOption.reward
-
-              const isGiftedMembership =
-                pledgeOption.membership &&
-                pledgeOption.membership.userId !== pledge.userId
-
-              const labelFragmentInterval = t.pluralize(
-                `api/email/option/interval/${pledgeOption.packageOption.reward.interval}/periods`,
-                { count: pledgeOption.periods })
-
-              const labelDefault = t.pluralize(
-                `api/email/option/${rewardType.toLowerCase()}/${name.toLowerCase()}`,
-                { count: pledgeOption.amount, interval: labelFragmentInterval }
-              )
-
-              const labelGiftedMembership = t(
-                'api/email/option/other/gifted_membership',
-                {
-                  name: pledgeOption.membership &&
-                    transformUser(pledgeOption.membership.user).name,
-                  sequenceNumber: pledgeOption.membership &&
-                    pledgeOption.membership.sequenceNumber
-                }
-              )
-
-              const oprice =
-                (pledgeOption.price * (pledgeOption.periods || 1)) / 100
-              const ototal =
-                oprice * pledgeOption.amount
-
-              return {
-                oamount: pledgeOption.amount,
-                otype: rewardType,
-                oname: name,
-                olabel: !isGiftedMembership
-                  ? labelDefault
-                  : labelGiftedMembership,
-                oprice,
-                oprice_formatted: formatPriceChf(oprice),
-                ototal,
-                ototal_formatted: formatPriceChf(ototal)
-              }
-            })
-        },
-        { name: 'discount',
-          content: discount
-        },
-        { name: 'discount_formatted',
-          content: formatPriceChf(discount)
-        },
-        { name: 'donation',
-          content: donation
-        },
-        { name: 'donation_formatted',
-          content: formatPriceChf(donation)
-        },
-        { name: 'total',
-          content: total
-        },
-        { name: 'total_formatted',
-          content: formatPriceChf(total)
-        },
-
-        // Payment
-        { name: 'payment_method',
-          content: payment.method },
-        ...payment
-          ? [
-            { name: 'HRID',
-              content: payment.hrid
-            },
-            { name: 'due_date',
-              content: dateFormat(payment.dueDate)
-            },
-            { name: 'paymentslip',
-              content: payment.method === 'PAYMENTSLIP'
-            },
-            { name: 'not_paymentslip',
-              content: payment.method !== 'PAYMENTSLIP'
-            }
-          ]
-          : [],
-        { name: 'waiting_for_payment',
-          content: pledge.status === 'WAITING_FOR_PAYMENT'
-        },
-
-        // Helpers
-        { name: 'name',
-          content: [user.firstName, user.lastName]
-            .filter(Boolean)
-            .join(' ')
-            .trim()
-        },
-        { name: 'abo_for_me',
-          content: ['ABO', 'BENEFACTOR'].includes(pkg.name)
-        },
-        { name: 'voucher_codes',
-          content: ['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(pkg.name)
-            ? memberships.map(m => m.voucherCode).join(', ')
-            : null
-        },
-        { name: 'notebook_or_totebag',
-          content: !!notebook || !!totebag
-        },
-        { name: 'goodies_count',
-          content: pledgeOptions
-            // Filter "pseudo" pledge options without a reward
-            .filter(
-              pledgeOption =>
-                pledgeOption.packageOption.reward &&
-                pledgeOption.packageOption.reward.rewardType === 'Goodie'
-            )
-            .reduce((agg, pledgeOption) => agg + pledgeOption.amount, 0)
-        },
-        { name: 'address',
-          content: address
-            ? `<span>${address.name}<br/>
-${address.line1}<br/>
-${address.line2 ? address.line2 + '<br/>' : ''}
-${address.postalCode} ${address.city}<br/>
-${address.country}</span>`
-            : null
-        },
-        { name: 'check_membership_subscriptions',
-          content: checkMembershipSubscriptions
-        },
-        { name: 'gifted_memberships_count',
-          content: giftedMemberships.length
-        },
-
-        // Links
-        { name: 'link_signin',
-          content: `${FRONTEND_BASE_URL}/anmelden`
-        },
-        { name: 'link_dialog',
-          content: `${FRONTEND_BASE_URL}/dialog`
-        },
-        { name: 'link_profile',
-          content: `${FRONTEND_BASE_URL}/~me`
-        },
-        { name: 'link_account',
-          content: `${FRONTEND_BASE_URL}/konto`
-        },
-        { name: 'link_account_account',
-          content: `${FRONTEND_BASE_URL}/konto#account`
-        },
-        { name: 'link_claim',
-          content: `${FRONTEND_BASE_URL}/abholen`
-        }
-      ]
+      globalMergeVars: await mail.getPledgeMergeVars(
+        { pledge, user, package_ }, { pgdb, t }
+      )
     }, { pgdb })
   }))
 
@@ -464,7 +181,26 @@ ${address.country}</span>`
   })
 }
 
-mail.sendMembershipCancellation = async ({ email, name, endDate, membershipType, t, pgdb }) => {
+mail.sendPaymentSuccessful = async ({ pledgeId, pgdb, t }) => {
+  const pledge = await pgdb.public.pledges.findOne({ id: pledgeId })
+  const user = await pgdb.public.users.findOne({ id: pledge.userId })
+  const package_ = await pgdb.public.packages.findOne({ id: pledge.packageId })
+
+  const templateName = `payment_successful_${package_.name.toLowerCase()}`
+
+  return sendMailTemplate({
+    to: user.email,
+    fromEmail: process.env.DEFAULT_MAIL_FROM_ADDRESS,
+    subject: t(`api/email/${templateName}/subject`),
+    templateName,
+    mergeLanguage: 'handlebars',
+    globalMergeVars: await mail.getPledgeMergeVars(
+      { pledge, user, package_ }, { pgdb, t }
+    )
+  }, { pgdb })
+}
+
+mail.sendMembershipCancellation = async ({ email, name, endDate, membershipType, reasonGiven, t, pgdb }) => {
   return sendMailTemplate({
     to: email,
     subject: t('api/email/membership_cancel_notice/subject'),
@@ -479,6 +215,41 @@ mail.sendMembershipCancellation = async ({ email, name, endDate, membershipType,
       },
       { name: 'membership_type',
         content: membershipType.name
+      },
+      { name: 'reason_given',
+        content: !!reasonGiven
+      }
+    ]
+  }, { pgdb })
+}
+
+mail.sendMembershipDeactivated = async ({ membership, pgdb, t }) => {
+  const user = await pgdb.public.users.findOne({ id: membership.userId })
+  const type = await pgdb.public.membershipTypes.findOne({ id: membership.membershipTypeId })
+
+  const cancelState = membership.renew ? 'uncancelled' : 'cancelled'
+  const templateName = `membership_deactivated_${type.name.toLowerCase()}_${cancelState}`
+  const customPledgeToken = AccessToken.generateForUser(user, 'CUSTOM_PLEDGE')
+  const sequenceNumber = membership.sequenceNumber
+
+  return sendMailTemplate({
+    to: user.email,
+    subject: t.first([
+      `api/email/${templateName}/sequenceNumber/${!!sequenceNumber}/subject`,
+      `api/email/${templateName}/subject`,
+      `api/email/membership_deactivated/subject`
+    ], { sequenceNumber }),
+    templateName,
+    mergeLanguage: 'handlebars',
+    globalMergeVars: [
+      { name: 'prolong_url',
+        content: `${FRONTEND_BASE_URL}/angebote?package=PROLONG&token=${customPledgeToken}`
+      },
+      { name: 'account_abo_url',
+        content: `${FRONTEND_BASE_URL}/konto#abos`
+      },
+      { name: 'sequence_number',
+        content: sequenceNumber
       }
     ]
   }, { pgdb })
@@ -621,6 +392,276 @@ mail.prepareMembershipOwnerNotice = async ({ user, endDate, graceEndDate, cancel
       }
     ]
   })
+}
+
+/**
+ * Attempts to fetch a pledge and related data, and generates a series of merge
+ * variables.
+ */
+mail.getPledgeMergeVars = async (
+  { pledge, user = false, package_ = false },
+  { pgdb, t }
+) => {
+  if (!user) {
+    user = await pgdb.public.users.findOne({ id: pledge.userId })
+  }
+
+  if (!package_) {
+    package_ = await pgdb.public.packages.findOne({ id: pledge.packageId })
+  }
+
+  const pledgePayment = await pgdb.public.pledgePayments.findFirst(
+    { pledgeId: pledge.id },
+    { orderBy: ['createdAt desc'] }
+  )
+  const payment = pledgePayment
+    ? await pgdb.public.payments.findOne({id: pledgePayment.paymentId})
+    : {}
+
+  const pledgeOptions = await pgdb.public.pledgeOptions.find({
+    pledgeId: pledge.id,
+    'amount >': 0
+  }, {
+    orderBy: ['amount desc']
+  })
+
+  const packageOptions = await pgdb.public.packageOptions.find({
+    id: pledgeOptions.map(o => o.templateId)
+  })
+
+  const rewardGoodies = await pgdb.public.goodies.find({
+    rewardId: packageOptions.map(o => o.rewardId)
+  })
+
+  const rewardMembershipTypes = await pgdb.public.membershipTypes.find({
+    rewardId: packageOptions.map(o => o.rewardId)
+  })
+
+  const rewards = rewardGoodies.concat(rewardMembershipTypes)
+
+  packageOptions.forEach((packageOption, index, packageOptions) => {
+    packageOptions[index].reward = rewards
+      .find(r => r.rewardId === packageOption.rewardId)
+  })
+
+  // Find membership IDs mentoned in pledgeOption.membershipId
+  const pledgedMemberships = pledgeOptions
+    .map(pledgeOption => pledgeOption.membershipId)
+    .filter(Boolean)
+
+  // All affected memberships. These are memberships that spring from this
+  // pledge, or memberships that were mentioned pledgeOption.membershipId.
+  const memberships = await pgdb.public.memberships.find({
+    or: [
+      { pledgeId: pledge.id },
+      pledgedMemberships.length > 0 && { id: pledgedMemberships }
+    ].filter(Boolean)
+  })
+
+  const membershipsUsers =
+    memberships.length > 0
+      ? await pgdb.public.users.find(
+        { id: memberships.map(m => m.userId) }
+      )
+      : []
+
+  memberships.forEach((membership, index, memberships) => {
+    memberships[index].user =
+      membershipsUsers.find(u => u.id === membership.userId)
+  })
+
+  pledgeOptions.forEach((pledgeOption, index, pledgeOptions) => {
+    pledgeOptions[index].packageOption = packageOptions
+      .find(o => o.id === pledgeOption.templateId)
+
+    if (pledgeOption.membershipId) {
+      pledgeOptions[index].membership = memberships
+        .find(m => m.id === pledgeOption.membershipId)
+    }
+  })
+
+  pledgeOptions
+    // Sort by packageOption.order in an ascending manner
+    .sort(
+      (a, b) =>
+        a.packageOption &&
+        b.packageOption &&
+        a.packageOption.order > b.packageOption.order ? 1 : 0
+    )
+    // Sort by sequenceNumber in an ascending manner
+    .sort(
+      (a, b) =>
+        a.membership &&
+        b.membership &&
+        a.membership.sequenceNumber < b.membership.sequenceNumber ? 1 : 0
+    )
+    // Sort by userID, own ones up top.
+    .sort(
+      (a, b) => a.membership && a.membership.userId !== pledge.userId ? 1 : 0
+    )
+
+  const giftedMemberships = memberships
+    .filter(membership => pledge.userId !== membership.userId)
+
+  const address = await pgdb.public.addresses.findOne({id: user.addressId})
+
+  const discount = pledge.donation < 0 ? (0 - pledge.donation) / 100 : 0
+  const donation = pledge.donation > 0 ? pledge.donation / 100 : 0
+  const total = pledge.total / 100
+
+  return [
+    // Purchase itself
+    { name: 'options',
+      content: pledgeOptions
+        // Filter "pseudo" pledge options without a reward
+        .filter(pledgeOption => pledgeOption.packageOption.reward)
+        .map(pledgeOption => {
+          const { rewardType, name } = pledgeOption.packageOption.reward
+
+          const isGiftedMembership =
+            pledgeOption.membership &&
+            pledgeOption.membership.userId !== pledge.userId
+
+          const labelFragmentInterval = t.pluralize(
+            `api/email/option/interval/${pledgeOption.packageOption.reward.interval}/periods`,
+            { count: pledgeOption.periods })
+
+          const labelDefault = t.pluralize(
+            `api/email/option/${rewardType.toLowerCase()}/${name.toLowerCase()}`,
+            { count: pledgeOption.amount, interval: labelFragmentInterval }
+          )
+
+          const labelGiftedMembership = t(
+            'api/email/option/other/gifted_membership',
+            {
+              name: pledgeOption.membership &&
+                transformUser(pledgeOption.membership.user).name,
+              sequenceNumber: pledgeOption.membership &&
+                pledgeOption.membership.sequenceNumber
+            }
+          )
+
+          const oprice =
+            (pledgeOption.price * (pledgeOption.periods || 1)) / 100
+          const ototal =
+            oprice * pledgeOption.amount
+
+          return {
+            oamount: pledgeOption.amount,
+            otype: rewardType,
+            oname: name,
+            olabel: !isGiftedMembership
+              ? labelDefault
+              : labelGiftedMembership,
+            oprice,
+            oprice_formatted: formatPriceChf(oprice),
+            ototal,
+            ototal_formatted: formatPriceChf(ototal)
+          }
+        })
+    },
+    { name: 'discount',
+      content: discount
+    },
+    { name: 'discount_formatted',
+      content: formatPriceChf(discount)
+    },
+    { name: 'donation',
+      content: donation
+    },
+    { name: 'donation_formatted',
+      content: formatPriceChf(donation)
+    },
+    { name: 'total',
+      content: total
+    },
+    { name: 'total_formatted',
+      content: formatPriceChf(total)
+    },
+
+    // Payment
+    { name: 'payment_method',
+      content: payment.method },
+    ...payment
+      ? [
+        { name: 'HRID',
+          content: payment.hrid
+        },
+        { name: 'due_date',
+          content: dateFormat(payment.dueDate)
+        },
+        { name: 'paymentslip',
+          content: payment.method === 'PAYMENTSLIP'
+        },
+        { name: 'not_paymentslip',
+          content: payment.method !== 'PAYMENTSLIP'
+        }
+      ]
+      : [],
+    { name: 'waiting_for_payment',
+      content: pledge.status === 'WAITING_FOR_PAYMENT'
+    },
+
+    // Helpers
+    { name: 'name',
+      content: [user.firstName, user.lastName]
+        .filter(Boolean)
+        .join(' ')
+        .trim()
+    },
+    { name: 'voucher_codes',
+      content: ['ABO_GIVE', 'ABO_GIVE_MONTHS'].includes(package_.name)
+        ? memberships.map(m => m.voucherCode).join(', ')
+        : null
+    },
+    { name: 'goodies_count',
+      content: pledgeOptions
+        // Filter "pseudo" pledge options without a reward
+        .filter(
+          pledgeOption =>
+            pledgeOption.packageOption.reward &&
+            pledgeOption.packageOption.reward.rewardType === 'Goodie'
+        )
+        .reduce((agg, pledgeOption) => agg + pledgeOption.amount, 0)
+    },
+    { name: 'address',
+      content: address
+        ? `<span>${address.name}<br/>
+  ${address.line1}<br/>
+  ${address.line2 ? address.line2 + '<br/>' : ''}
+  ${address.postalCode} ${address.city}<br/>
+  ${address.country}</span>`
+        : null
+    },
+    { name: 'gifted_memberships_count',
+      content: giftedMemberships.length
+    },
+
+    {
+      name: 'republik_memberships_count',
+      content: await memberStatsCount({ pgdb })
+    },
+
+    // Links
+    { name: 'link_signin',
+      content: `${FRONTEND_BASE_URL}/anmelden`
+    },
+    { name: 'link_dialog',
+      content: `${FRONTEND_BASE_URL}/dialog`
+    },
+    { name: 'link_profile',
+      content: `${FRONTEND_BASE_URL}/~me`
+    },
+    { name: 'link_account',
+      content: `${FRONTEND_BASE_URL}/konto`
+    },
+    { name: 'link_account_account',
+      content: `${FRONTEND_BASE_URL}/konto#account`
+    },
+    { name: 'link_claim',
+      content: `${FRONTEND_BASE_URL}/abholen`
+    }
+  ]
 }
 
 module.exports = mail

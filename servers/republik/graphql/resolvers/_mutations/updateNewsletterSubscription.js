@@ -76,12 +76,13 @@ module.exports = async (_, args, context) => {
       pgdb
     })
   } else {
-    await revokeConsent({
-      userId: user.id,
-      consent: consentName,
-      req,
-      pgdb
-    })
+    await revokeConsent(
+      {
+        userId: user.id,
+        consent: consentName
+      },
+      context
+    )
   }
 
   try {

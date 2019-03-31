@@ -21,6 +21,10 @@ if (!TWITTER_APP_KEY) { console.warn('missing TWITTER_APP_KEY. Twitter Embeds wo
 if (!TWITTER_APP_SECRET) { console.warn('missing TWITTER_APP_SECRET. Twitter Embeds won\'t work.') }
 
 module.exports = async () => {
+  if (!TWITTER_APP_KEY || !TWITTER_APP_SECRET) {
+    throw new Error('missing TWITTER_APP_KEY or TWITTER_APP_SECRET')
+  }
+
   const credentials = Buffer
     .from(`${TWITTER_APP_KEY}:${TWITTER_APP_SECRET}`)
     .toString('base64')
@@ -38,10 +42,10 @@ module.exports = async () => {
       body: 'grant_type=client_credentials'
     }
   )
-  .then(res => res.json())
-  .catch(error => {
-    console.error('Error getting bearer token:', error)
-    return error
-  })
+    .then(res => res.json())
+    .catch(error => {
+      console.error('Error getting bearer token:', error)
+      return error
+    })
   return response.access_token
 }

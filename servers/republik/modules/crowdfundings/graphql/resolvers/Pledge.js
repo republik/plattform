@@ -74,7 +74,10 @@ module.exports = {
 
     const pledgePayments = await pgdb.public.pledgePayments.find({pledgeId: pledge.id})
     return pledgePayments.length
-      ? pgdb.public.payments.find({id: pledgePayments.map((pp) => { return pp.paymentId })})
+      ? pgdb.public.payments.find(
+        { id: pledgePayments.map(pp => pp.paymentId) },
+        { orderBy: { createdAt: 'desc' } }
+      )
       : []
   },
   async memberships (pledge, args, { pgdb, user: me }) {

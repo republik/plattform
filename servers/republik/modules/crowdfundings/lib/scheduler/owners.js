@@ -1,12 +1,14 @@
 const debug = require('debug')('crowdfundings:lib:scheduler:owners')
 const moment = require('moment')
 const Promise = require('bluebird')
+
+const { transformUser } = require('@orbiting/backend-modules-auth')
+const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
+const { applyPgInterval: { add: addInterval } } = require('@orbiting/backend-modules-utils')
+
 const {
   prolongBeforeDate: getProlongBeforeDate
 } = require('../../graphql/resolvers/User')
-const { transformUser } = require('@orbiting/backend-modules-auth')
-const { sendMailTemplate } = require('@orbiting/backend-modules-mail')
-const { UNCANCELLED_GRACE_PERIOD_DAYS } = require('../Membership')
 
 const {
   PARKING_USER_ID
@@ -69,6 +71,7 @@ const getBuckets = async ({ now }, { pgdb }) => {
       u.*,
       m.id AS "membershipId",
       m."sequenceNumber" AS "membershipSequenceNumber",
+      m."graceInterval" AS "membershipGraceInterval",
       mt.name AS "membershipType"
     FROM
       memberships m
@@ -88,6 +91,7 @@ const getBuckets = async ({ now }, { pgdb }) => {
         ...transformUser(user),
         membershipId: user.membershipId,
         membershipSequenceNumber: user.membershipSequenceNumber,
+        membershipGraceInterval: user.membershipGraceInterval,
         membershipType: user.membershipType
       }))
     )
@@ -168,12 +172,16 @@ const inform = async (args, context) => {
         user,
         prolongBeforeDate
       }) => {
-        const { id: userId } = user
+        const { id: userId, membershipGraceInterval } = user
+
         const templatePayload = await context.mail.prepareMembershipOwnerNotice({
           user,
           endDate: prolongBeforeDate,
           cancelUntilDate: moment(prolongBeforeDate).subtract(2, 'days'),
-          graceEndDate: moment(prolongBeforeDate).add(UNCANCELLED_GRACE_PERIOD_DAYS, 'days'),
+          graceEndDate: addInterval(
+            prolongBeforeDate,
+            membershipGraceInterval
+          ),
           templateName: bucket.templateName
         }, context)
         return sendMailTemplate(

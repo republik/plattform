@@ -10,6 +10,7 @@ const { graphql: notifications } = require('@orbiting/backend-modules-notificati
 const { graphql: voting } = require('@orbiting/backend-modules-voting')
 const { graphql: discussions } = require('@orbiting/backend-modules-discussions')
 const { graphql: collections } = require('@orbiting/backend-modules-collections')
+const { graphql: crowdsourcing } = require('@orbiting/backend-modules-crowdsourcing')
 
 const loaderBuilders = {
   ...require('@orbiting/backend-modules-discussions/loaders'),
@@ -27,6 +28,7 @@ const cluster = require('cluster')
 
 const {
   LOCAL_ASSETS_SERVER,
+  MAIL_EXPRESS_RENDER,
   SEARCH_PG_LISTENER,
   NODE_ENV,
   ACCESS_SCHEDULER,
@@ -56,7 +58,8 @@ const run = async (workerId) => {
         notifications,
         access,
         voting,
-        collections
+        collections,
+        crowdsourcing
       ]
     )
   )
@@ -66,6 +69,10 @@ const run = async (workerId) => {
     require('./modules/crowdfundings/express/paymentWebhooks'),
     require('./express/gsheets')
   ]
+
+  if (MAIL_EXPRESS_RENDER) {
+    middlewares.push(require('@orbiting/backend-modules-mail/express/render'))
+  }
 
   if (LOCAL_ASSETS_SERVER) {
     const { express } = require('@orbiting/backend-modules-assets')
