@@ -1,6 +1,7 @@
 const debug = require('debug')('access:lib:grants')
 const moment = require('moment')
 const validator = require('validator')
+const Promise = require('bluebird')
 
 const { Roles } = require('@orbiting/backend-modules-auth')
 const { applyPgInterval: { add: addInterval } } = require('@orbiting/backend-modules-utils')
@@ -10,6 +11,8 @@ const constraints = require('./constraints')
 const eventsLib = require('./events')
 const mailLib = require('./mail')
 const membershipsLib = require('./memberships')
+
+const VOUCHER_CODE_LENGTH = 5
 
 const evaluateConstraints = async (granter, campaign, email, t, pgdb) => {
   const errors = []
@@ -45,6 +48,24 @@ const evaluateConstraints = async (granter, campaign, email, t, pgdb) => {
   debug({ errors })
 
   return { errors }
+}
+
+const generate = async (granter, campaignId, grants = [], pgdb) => {
+  const campaign = await campaignsLib.findOne(campaignId, pgdb)
+
+  if (campaign === undefined) {
+    throw new Error('Campaign not found.')
+  }
+
+  await Promise.map(grants, async fields => {
+    fields.granterUserId = granter.id
+    fields.accessCampaignId = campaign.id
+    fields.beginBefore = addInterval(moment(), campaign.grantClaimableInterval)
+
+    const grant = await pgdb.public.accessGrants.insertAndGet(fields)
+
+    await eventsLib.log(grant, 'generate', pgdb)
+  }, { concurrency: 10 })
 }
 
 const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
@@ -85,7 +106,7 @@ const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
     beginBefore: addInterval(moment(), campaign.grantClaimableInterval)
   })
 
-  eventsLib.log(grant, 'invite', pgdb)
+  await eventsLib.log(grant, 'invite', pgdb)
 
   debug('invite, row inserted', { grant })
 
@@ -407,6 +428,9 @@ const findEmptyFollowup = async (campaign, pgdb) => {
 }
 
 module.exports = {
+  VOUCHER_CODE_LENGTH,
+
+  generate,
   grant,
   claim,
   revoke,
