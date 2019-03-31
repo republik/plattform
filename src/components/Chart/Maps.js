@@ -2,13 +2,13 @@ import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { scaleOrdinal } from 'd3-scale'
 import { symbol, symbolSquare, symbolCircle } from 'd3-shape'
-import { geoMercator, geoEqualEarth } from 'd3-geo'
+import { geoIdentity, geoMercator, geoEqualEarth } from 'd3-geo'
 import ColorLegend from './ColorLegend'
 import layout, { MARKER_HEIGHT, MARKER_RADIUS } from './Maps.layout'
 import fetch from 'isomorphic-unfetch'
 import { css } from 'glamor'
 import memoize from 'lodash/memoize'
-import { feature as topojsonFeature } from 'topojson'
+import { feature as topojsonFeature, mesh as topojsonMesh } from 'topojson'
 
 import Loader from '../Loader'
 
@@ -39,7 +39,7 @@ const symbolShapes = {
 }
 const shapes = Object.keys(symbolShapes).concat('marker')
 
-const Points = ({data, colorScale, colorAccessor, projection, shape, sizes, domain}) => {
+const Points = ({data, colorScale, colorAccessor, project, shape, sizes, domain}) => {
   const marker = shape === 'marker'
   let symbolPath
   if (!marker) {
@@ -53,7 +53,7 @@ const Points = ({data, colorScale, colorAccessor, projection, shape, sizes, doma
     <g>
       {data.map((d, i) => {
         const color = colorScale(colorAccessor(d))
-        let pos = projection([d.datum.lon, d.datum.lat])
+        let pos = project([d.datum.lon || d.datum.x, d.datum.lat || d.datum.y])
         if (marker) {
           pos = pos.map(Math.round)
         }
@@ -75,7 +75,7 @@ Points.propTypes = {
   data: PropTypes.array,
   colorScale: PropTypes.func.isRequired,
   colorAccessor: PropTypes.func.isRequired,
-  projection: PropTypes.func.isRequired,
+  project: PropTypes.func.isRequired,
   shape: PropTypes.oneOf(shapes).isRequired,
   domain: PropTypes.array,
   sizes: PropTypes.arrayOf(PropTypes.number)
@@ -84,10 +84,6 @@ Points.propTypes = {
 
 const fetchJson = memoize(url =>
   fetch(url).then(response => response.json())
-)
-const fetchFeature = memoize(feature =>
-  fetchJson(feature.url)
-    .then(data => topojsonFeature(data, data.objects[feature.object]))
 )
 
 export class GenericMap extends Component {
@@ -101,11 +97,16 @@ export class GenericMap extends Component {
   componentDidMount() {
     const { features } = this.props
     if (features) {
-      fetchFeature(features)
+      fetchJson(features.url)
         .then(data => {
+          const geoJsonFeatures = topojsonFeature(data, data.objects[features.object])
           this.setState({
             loading: false,
-            features: data
+            geoJson: {
+              features: geoJsonFeatures,
+              compositionBorders: features.compositionBorders &&
+                topojsonMesh(data, data.objects[features.compositionBorders])
+            }
           })
         })
         .catch(error => {
@@ -114,14 +115,13 @@ export class GenericMap extends Component {
     }
   }
   componentDidUpdate (prevProps, prevState) {
-    if (prevProps !== this.props || prevState.features !== this.state.features) {
+    if (prevProps !== this.props || prevState.geoJson !== this.state.geoJson) {
       this.setState({
-        layout: layout(this.props, this.state.features)
+        layout: layout(this.props, this.state.geoJson)
       })
     }
   }
   componentWillUnmount () {
-    fetchFeature.cache.clear()
     fetchJson.cache.clear()
   }
   renderTooltips() {
@@ -177,13 +177,12 @@ export class GenericMap extends Component {
       ignoreMissingFeature
     } = props
     const {
-      loading, error, features
+      loading, error, geoJson
     } = state
 
     const {
       paddingTop,
       paddingLeft,
-      paddingRight,
       mapSpace,
       mapWidth,
       columnHeight,
@@ -191,13 +190,14 @@ export class GenericMap extends Component {
       gx,
       gy,
       data,
-      projection,
+      projectPoint,
       colorScale,
       colorAccessor,
       domain,
       groupedData,
       geotiffs,
       featuresWithPaths,
+      compositionBorderPath,
       colorLegendValues
     } = this.state.layout
 
@@ -214,7 +214,7 @@ export class GenericMap extends Component {
 
     const { hoverFeature } = this.state
     const hasTooltips = !!hoverFeature && choropleth
-    const hasGeoJson = !!features
+    const hasGeoJson = !!geoJson
 
     return (
       <div style={{position: 'relative'}}>
@@ -284,13 +284,19 @@ export class GenericMap extends Component {
                           <image {...geotiff} />
                         )
                       }
+                      {compositionBorderPath &&
+                        <path
+                          fill='none'
+                          stroke='black'
+                          strokeWidth={1}
+                          d={compositionBorderPath} />}
                       {props.points && (
                         <Points
                           data={data}
                           colorScale={colorScale}
                           colorAccessor={colorAccessor}
                           domain={domain}
-                          projection={projection}
+                          project={projectPoint}
                           shape={props.shape}
                           sizes={props.sizes} />
                       )}
@@ -406,6 +412,14 @@ GenericMap.defaultProps = {
   sizes: [10],
   getProjection: () => geoEqualEarth()
 }
+
+export const ProjectedMap = props => <GenericMap {...props} />
+
+ProjectedMap.defaultProps = {
+  getProjection: () => geoIdentity()
+}
+
+ProjectedMap.base = 'GenericMap'
 
 export const SwissMap = props => <GenericMap {...props} />
 

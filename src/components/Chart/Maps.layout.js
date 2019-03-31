@@ -104,7 +104,13 @@ export default (props, geoJson) => {
 
   const projection = props.getProjection()
   const geoPathGenerator = geoPath().projection(projection)
-
+  const projectPoint = typeof projection === 'function'
+    ? projection
+    : coordinates => geoPathGenerator({type: 'Point', coordinates})
+      .split('m')[0]
+      .slice(1)
+      .split(',')
+      .map(d => +d)
 
   const paddingTop = mini ? 15 : PADDING_TOP
   const paddingBottom = mini ? 0 : PADDING_BOTTOM
@@ -120,8 +126,8 @@ export default (props, geoJson) => {
     innerHeight = mapWidth * props.heightRatio
   }
   if (geoJson) {
-    projection.fitSize([width, innerHeight], geoJson)
-    const bounds = geoPathGenerator.bounds(geoJson)
+    projection.fitSize([width, innerHeight], geoJson.features)
+    const bounds = geoPathGenerator.bounds(geoJson.features)
     mapWidth = bounds[1][0] - bounds[0][0]
     innerHeight = bounds[1][1] - bounds[0][1]
   }
@@ -147,8 +153,8 @@ export default (props, geoJson) => {
   const geotiffs = {}
   const geotiff = props.geotiff
   const mapGeotiff = d => {
-    let tl = projection(d.bbox[0])
-    let br = projection(d.bbox[1])
+    let tl = projectPoint(d.bbox[0])
+    let br = projectPoint(d.bbox[1])
     return {
       xlinkHref: d.url,
       x: tl[0],
@@ -192,8 +198,9 @@ export default (props, geoJson) => {
   const paddingRight = width - mapSpace - paddingLeft
 
   let featuresWithPaths = []
+  let compositionBorderPath
   if (geoJson) {
-    featuresWithPaths = geoJson.features.map(feature => {
+    featuresWithPaths = geoJson.features.features.map(feature => {
       return {
         id: String(feature.id),
         path: geoPathGenerator(feature),
@@ -201,6 +208,7 @@ export default (props, geoJson) => {
         properties: feature.properties
       }
     })
+    compositionBorderPath = geoJson.compositionBorders && geoPathGenerator(geoJson.compositionBorders)
 
     if (choropleth) {
       groupedData = groupedData.map(({ values, key: groupTitle }) => {
@@ -243,7 +251,7 @@ export default (props, geoJson) => {
     rows,
     gx,
     gy,
-    projection,
+    projectPoint,
     colorScale,
     colorAccessor,
     domain,
@@ -251,6 +259,7 @@ export default (props, geoJson) => {
     groupedData,
     geotiffs,
     featuresWithPaths,
+    compositionBorderPath,
     colorLegendValues,
     numberFormat
   }

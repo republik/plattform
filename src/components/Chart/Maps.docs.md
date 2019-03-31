@@ -23,6 +23,66 @@ lat,lon
 </div>
 ```
 
+## ProjectedMap
+
+Want a special projection? Use `ProjectedMap` to render an pre-projected topojson file. `d3.geoIdentity` is used to fit the map into the viewport.
+
+### Projecting WGS84 Data
+
+For example with `geoConicConformalEurope` for a composite map with overseas [nuts regions](https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts).
+
+```
+npm i -g d3-composite-projections
+
+# project a wgs84 geojson with geoConicConformalEurope 
+npx -p d3-geo-projection geoproject --require d3=d3-composite-projections 'd3.geoConicConformalEurope()' < nuts.json > nuts-projected.json
+# project a wgs84 geojson of the composition border with a different projection 
+npx -p d3-geo-projection geoproject 'p = d3.geoConicConformal().rotate([-10, -53]).parallels([0, 60]).scale(750), _ = p.translate(), k = p.scale(), x = +_[0], y = +_[1], p.translate([x - 0.08 * k, y]).clipExtent([[x - 0.51 * k, y - 0.33 * k],[x + 0.5 * k, y + 0.33 * k]]), p' < nuts-composition-borders.json > nuts-composition-borders-projected.json
+
+# plot as svg to test?
+# npx -p d3-geo-projection geo2svg -w 960 -h 960 < nuts-projected.json > nuts-projected.svg
+
+# map to get clean id and name prop
+npx -p ndjson-cli ndjson-split 'd.features' \
+  < nuts-projected.json \
+  > nuts-projected.ndjson
+npx -p ndjson-cli ndjson-map 'd.id = d.properties.NUTS_ID, d.properties = {name: d.properties.NUTS_NAME}, d' \
+  < nuts-projected.ndjson \
+  > nuts-projected-clean.ndjson
+npx -p ndjson-cli ndjson-reduce 'p.features.push(d), p' '{type: "FeatureCollection", features: []}' \
+  < nuts-projected-clean.ndjson \
+  > nuts-projected-clean.json
+
+# generate topojson
+npx -p topojson geo2topo nuts=nuts-projected-clean.json cb=nuts-composition-borders-projected.json > nuts-topo.json
+```
+
+_Example assumes `topojson` v2._
+
+### Example
+
+```react
+<div>
+  <CsvChart
+    config={{
+      "type": "ProjectedMap",
+      "heightRatio": 0.77,
+      "points": true,
+      "colorLegend": false,
+      "features": {
+        "url": "/static/geo/nuts2013-60m-l2-merged-ch.json",
+        "object": "nuts",
+        "compositionBorders": "cb"
+      }
+    }}
+    values={`
+x,y
+408,327
+    `.trim()} />
+  <Editorial.Note>Quelle: <Editorial.A href="https://ec.europa.eu/eurostat/web/gisco/geodata/reference-data/administrative-units-statistical-units/nuts">NUTS 2013 60M L2</Editorial.A></Editorial.Note>
+</div>
+```
+
 ## SwissMap
 
 `features.url` is expected to point to an topojson file with WGS84 coordinates (EPSG:4326). A rotated mercator projection is used to look like CH1903 while also allowing to plot regular coordinates and use `projection.fitSize` for responsive design.
@@ -41,6 +101,9 @@ topojson \
     -p name=NAME \
     -- ./wgs84.shp
 ```
+
+_Example assumes `topojson` v1._
+
 
 The `id` on a feature is used to match with data. And our maps assume a displayable name properties.
 
