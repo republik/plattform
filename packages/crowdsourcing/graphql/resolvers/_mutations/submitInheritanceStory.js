@@ -54,9 +54,15 @@ ${content ? 'Erbgeschichte: ' + content : ''}
 
 `
 
-  return sendMail({
-    to: CS_INHERITANCE_TO,
-    subject: CS_INHERITANCE_SUBJECT,
-    text: emailText
-  }, context)
+  return sendMail(
+    {
+      to: CS_INHERITANCE_TO,
+      subject: CS_INHERITANCE_SUBJECT,
+      text: emailText
+    },
+    context,
+    {
+      logMessage: false
+    }
+  )
 }

@@ -45,6 +45,10 @@ const update = (match, payload, { pgdb }) =>
 
 const send = async ({
   log,
+  log: {
+    logMessage = true,
+    onceFor = false
+  } = {},
   sendFunc,
   message,
   email,
@@ -54,7 +58,7 @@ const send = async ({
   if (!sendFunc || !message || !email || !context || !context.pgdb) {
     throw new Error('missing input', { sendFunc, message, email, context })
   }
-  const onceFor = log && log.onceFor
+
   if (onceFor) {
     if (await wasSent(onceFor, context)) {
       debug('not sending (was sent already): %o', log)
@@ -62,24 +66,32 @@ const send = async ({
     }
   }
 
-  const info = {
-    ...log && log.info,
-    template,
-    message
+  const info = {}
+
+  if (log) {
+    Object.assign(info, log.info)
   }
-  const type = (onceFor && onceFor.type) || template || 'no-template'
-  const userId = (onceFor && onceFor.userId) || info.userId || undefined
-  const keys = (onceFor && onceFor.keys) || undefined
+
+  if (template) {
+    info.template = template
+  }
+
+  if (logMessage) {
+    info.message = message
+  }
 
   debug('sending... %o %o\n----', log, message)
-  const logEntry = await insert({
-    type,
-    userId,
-    email,
-    keys,
-    info,
-    status: 'SENDING'
-  }, context)
+  const logEntry = await insert(
+    {
+      type: (onceFor && onceFor.type) || template || 'no-template',
+      userId: (onceFor && onceFor.userId) || info.userId || undefined,
+      keys: (onceFor && onceFor.keys) || undefined,
+      status: 'SENDING',
+      email,
+      info
+    },
+    context
+  )
 
   const { result, status, error } = await sendFunc()
 
