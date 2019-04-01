@@ -34,7 +34,7 @@ const argv = yargs
     }
 
     if (argv.amount < 1) {
-      return `Check --amount. Should be higher than 1.`
+      return `Check --amount. Should be at least 1.`
     }
 
     return true
@@ -49,7 +49,7 @@ PgDb.connect().then(async pgdb => {
   try {
     const granter = await pgdb.public.users.findOne({ id: argv.granter })
 
-    if (granter === undefined) {
+    if (!granter) {
       throw new Error('User not found.')
     }
 
@@ -60,7 +60,7 @@ PgDb.connect().then(async pgdb => {
       iteration++
 
       const grant = {
-        voucherCode: await pgdb.queryOneField('SELECT make_hrid(\'"accessGrants"\'::regclass, \'voucherCode\'::text, 5::bigint)')
+        voucherCode: await pgdb.queryOneField(`SELECT make_hrid(\'"accessGrants"\'::regclass, \'voucherCode\'::text, ${grantsLib.VOUCHER_CODE_LENGTH}::bigint)`)
       }
 
       if (argv.prefix) {
@@ -68,7 +68,7 @@ PgDb.connect().then(async pgdb => {
       }
 
       if (
-        await pgdb.public.accessGrants.count({ voucherCode: grant.voucherCode }) < 1 &&
+        await pgdb.public.accessGrants.count({ voucherCode: grant.voucherCode }) === 0 &&
         !grants.find(({ voucherCode }) => voucherCode === grant.voucherCode)
       ) {
         grants.push(grant)

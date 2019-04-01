@@ -53,7 +53,7 @@ const evaluateConstraints = async (granter, campaign, email, t, pgdb) => {
 const generate = async (granter, campaignId, grants = [], pgdb) => {
   const campaign = await campaignsLib.findOne(campaignId, pgdb)
 
-  if (campaign === undefined) {
+  if (!campaign) {
     throw new Error('Campaign not found.')
   }
 
