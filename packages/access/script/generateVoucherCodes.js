@@ -60,7 +60,7 @@ PgDb.connect().then(async pgdb => {
       iteration++
 
       const grant = {
-        voucherCode: await pgdb.queryOneField(`SELECT make_hrid(\'"accessGrants"\'::regclass, \'voucherCode\'::text, ${grantsLib.VOUCHER_CODE_LENGTH}::bigint)`)
+        voucherCode: await pgdb.queryOneField(`SELECT make_hrid('"accessGrants"'::regclass, 'voucherCode'::text, ${grantsLib.VOUCHER_CODE_LENGTH}::bigint)`)
       }
 
       if (argv.prefix) {
@@ -79,12 +79,12 @@ PgDb.connect().then(async pgdb => {
       throw new Error(`Unable to generate ${argv.amount} unqiue voucher codes. Change parameters.`)
     }
 
-    console.log(`generating ${grants.length} grant(s)...`)
+    console.log(`inserting ${grants.length} grant(s)...`)
 
-    await grantsLib.generate(granter, argv.campaign, grants, transaction)
+    await grantsLib.insert(granter, argv.campaign, grants, transaction)
     await transaction.transactionCommit()
 
-    console.log(`${grants.length} grant(s) generated.`)
+    console.log(`${grants.length} grant(s) inserted.`)
   } catch (e) {
     await transaction.transactionRollback()
     console.error(e)

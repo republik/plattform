@@ -50,7 +50,7 @@ const evaluateConstraints = async (granter, campaign, email, t, pgdb) => {
   return { errors }
 }
 
-const generate = async (granter, campaignId, grants = [], pgdb) => {
+const insert = async (granter, campaignId, grants = [], pgdb) => {
   const campaign = await campaignsLib.findOne(campaignId, pgdb)
 
   if (!campaign) {
@@ -58,13 +58,14 @@ const generate = async (granter, campaignId, grants = [], pgdb) => {
   }
 
   await Promise.map(grants, async fields => {
-    fields.granterUserId = granter.id
-    fields.accessCampaignId = campaign.id
-    fields.beginBefore = addInterval(moment(), campaign.grantClaimableInterval)
+    const grant = await pgdb.public.accessGrants.insertAndGet({
+      ...fields,
+      granterUserId: granter.id,
+      accessCampaignId: campaign.id,
+      beginBefore: addInterval(moment(), campaign.grantClaimableInterval)
+    })
 
-    const grant = await pgdb.public.accessGrants.insertAndGet(fields)
-
-    await eventsLib.log(grant, 'generate', pgdb)
+    await eventsLib.log(grant, 'insert', pgdb)
   }, { concurrency: 10 })
 }
 
@@ -430,7 +431,7 @@ const findEmptyFollowup = async (campaign, pgdb) => {
 module.exports = {
   VOUCHER_CODE_LENGTH,
 
-  generate,
+  insert,
   grant,
   claim,
   revoke,
