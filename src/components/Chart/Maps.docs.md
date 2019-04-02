@@ -131,13 +131,13 @@ npx -p topojson toposimplify -p 0.02 < nuts-topo.json > nuts2013-20m-l2-custom-g
       "heightRatio": 0.879,
       "choropleth": true,
       "colorRange": [
-        "#ffffe5",
-        "#f7fcb9",
-        "#addd8e",
-        "#78c679",
+        "#c7e9c0",
+        "#a1d99b",
+        "#74c476",
         "#41ab5d",
-        "#006837",
-        "#004529"
+        "#238b45",
+        "#006d2c",
+        "#00441b"
       ],
       "thresholds": [
         10000,
