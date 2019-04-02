@@ -44,7 +44,7 @@ type AccessGrant {
   "Name or email address of entity who granted membership"
   granterName: String!
   "Original recipient email address of grant."
-  email: String!
+  email: String
   "Voucher code claim this grant"
   voucherCode: String
   "Entity who received granted membership (Admin only)"
