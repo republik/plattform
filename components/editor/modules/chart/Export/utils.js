@@ -78,12 +78,12 @@ const fitTransform = ({
   let height = innerHeight
   let scale = 1
   if (width > outerWidth) {
-    scale = width / outerWidth
+    scale = outerWidth / width
     width *= scale
     height *= scale
   }
   if (height > outerHeight) {
-    scale = innerHeight / outerHeight
+    scale = outerHeight / height
     width *= scale
     height *= scale
   }
@@ -101,7 +101,7 @@ export const createSvgBackgrounder = ({
   width: bgWidth = 665,
   height: bgHeight = 347,
   padding = 20
-} = {}) => ({svg, width, height, extent}) => {
+} = {}) => ({ svg, width, height, extent }) => {
   const bg = document.createElementNS(svgNS, 'rect')
   bg.setAttribute('x', extent[0])
   bg.setAttribute('y', extent[1])
@@ -157,6 +157,12 @@ export const getAbstractSvg = chartElement => {
     ...svg.querySelectorAll('[stroke-width]')
   ].forEach(node => {
     node.setAttribute('stroke-width', +node.getAttribute('stroke-width') * 2)
+  })
+
+  ;[
+    ...svg.querySelectorAll('a')
+  ].forEach(node => {
+    node.removeAttribute('xlink:href')
   })
 
   document.body.appendChild(svg)
