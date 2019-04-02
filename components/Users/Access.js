@@ -258,7 +258,7 @@ class Grant extends Component {
           {grant.status}
         </Interaction.P>
 
-        {isExpanded && grant.voucherCode &&
+        {(isExpanded || !grant.email) && grant.voucherCode &&
           <Interaction.P>
             <Label>{t('account/access/Grant/voucherCode/label')}</Label>
             <br />
