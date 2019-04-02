@@ -9,6 +9,7 @@
 
 require('@orbiting/backend-modules-env').config()
 const yargs = require('yargs')
+const debug = require('debug')('access:script:generateVoucherCodes')
 
 const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 
@@ -29,7 +30,7 @@ const argv = yargs
       return `Check --prefix. "${argv.prefix}" too long to generate voucher codes.`
     }
 
-    if (argv.prefix.match(/[^123456789ABCDEFGHKLMRSTUWXYZ]+/)) {
+    if (argv.prefix && argv.prefix.match(/[^123456789ABCDEFGHKLMRSTUWXYZ]+/)) {
       return `Check --prefix. "${argv.prefix}" contains invalid chars.`
     }
 
@@ -47,7 +48,7 @@ PgDb.connect().then(async pgdb => {
   const transaction = await pgdb.transactionBegin()
 
   try {
-    const granter = await pgdb.public.users.findOne({ id: argv.granter })
+    const granter = await transaction.public.users.findOne({ id: argv.granter })
 
     if (!granter) {
       throw new Error('User not found.')
@@ -60,20 +61,35 @@ PgDb.connect().then(async pgdb => {
       iteration++
 
       const grant = {
-        voucherCode: await pgdb.queryOneField(`SELECT make_hrid('"accessGrants"'::regclass, 'voucherCode'::text, ${grantsLib.VOUCHER_CODE_LENGTH}::bigint)`)
+        voucherCode: await transaction.queryOneField(`SELECT make_hrid('"accessGrants"'::regclass, 'voucherCode'::text, ${grantsLib.VOUCHER_CODE_LENGTH}::bigint)`)
       }
 
       if (argv.prefix) {
         grant.voucherCode = argv.prefix + grant.voucherCode.slice(argv.prefix.length, grantsLib.VOUCHER_CODE_LENGTH)
       }
 
+      // Push onto grants array if certain conditions are met:
+      //   a) voucherCode is not in grants array already
+      //   b) voucherCode is not to be found in accessGrants table
       if (
-        await pgdb.public.accessGrants.count({ voucherCode: grant.voucherCode }) === 0 &&
-        !grants.find(({ voucherCode }) => voucherCode === grant.voucherCode)
+        // Check if voucherCode is in list already
+        !grants.find(({ voucherCode }) => voucherCode === grant.voucherCode) &&
+        // Check if voucherCode is already in accessGrants table
+        (
+          // Skip this check if argv.prefix is falsy as we can assume that make_hrid check for that
+          // already.
+          !argv.prefix ||
+          (
+            argv.prefix && // Lookup in database if argv.prefix is set
+            await transaction.public.accessGrants.count({ voucherCode: grant.voucherCode }) === 0
+          )
+        )
       ) {
         grants.push(grant)
       }
     }
+
+    debug({ grants })
 
     if (grants.length < argv.amount) {
       throw new Error(`Unable to generate ${argv.amount} unqiue voucher codes. Change parameters.`)
