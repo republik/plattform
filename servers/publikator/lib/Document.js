@@ -156,7 +156,7 @@ const prepareMetaForPublish = async ({
 }
 
 // if the requirements for context change you need to
-// adapt lib/publicationScheduler
+// adapt lib/PublicationScheduler
 const handleRedirection = async (
   repoId,
   newDocMeta,

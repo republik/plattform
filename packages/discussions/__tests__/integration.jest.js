@@ -18,7 +18,7 @@ describe('discussions', () => {
   }, 60000)
 
   afterAll(async () => {
-    global.instance.closeAndCleanup()
+    await global.instance.closeAndCleanup()
   }, 30000)
 
   beforeEach(async () => {

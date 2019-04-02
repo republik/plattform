@@ -10,6 +10,7 @@ const grantsLib = require('./grants')
 // Interval in which scheduler runs
 const intervalSecs = 60 * 10
 
+const LOCK_KEY = 'locks:access-scheduler'
 const schedulerLock = (redis) => new Redlock([redis])
 
 /**
@@ -21,6 +22,8 @@ const init = async ({ t, mail }) => {
   const pgdb = await PgDb.connect()
   const redis = Redis.connect()
 
+  let timeout
+
   /**
    * Default runner, runs every {intervalSecs}.
    * @return {Promise} [description]
@@ -29,9 +32,7 @@ const init = async ({ t, mail }) => {
     debug('run started')
 
     try {
-      const lock =
-        await schedulerLock(redis)
-          .lock('locks:access-scheduler', 1000 * intervalSecs)
+      const lock = await schedulerLock(redis).lock(LOCK_KEY, 1000 * intervalSecs)
 
       await expireGrants(t, pgdb, mail)
       await followupGrants(t, pgdb, mail)
@@ -50,12 +51,26 @@ const init = async ({ t, mail }) => {
       }
     } finally {
       // Set timeout slightly off to usual interval
-      setTimeout(run, 1000 * (intervalSecs + 1)).unref()
+      if (timeout) {
+        clearTimeout(timeout)
+      }
+      timeout = setTimeout(run, 1000 * (intervalSecs + 1)).unref()
     }
   }
 
   // An initial run
   await run()
+
+  const close = async () => {
+    clearTimeout(timeout)
+    await schedulerLock(redis).lock(LOCK_KEY, 1000 * intervalSecs * 2)
+    await PgDb.disconnect(pgdb)
+    await Redis.disconnect(redis)
+  }
+
+  return {
+    close
+  }
 }
 
 module.exports = { init }

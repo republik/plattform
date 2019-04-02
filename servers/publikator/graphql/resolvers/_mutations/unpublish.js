@@ -1,6 +1,6 @@
 const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
 
-const { channelKey } = require('../../../lib/publicationScheduler')
+const { channelKey } = require('../../../lib/PublicationScheduler')
 const { deleteRef } = require('../../../lib/github')
 const {
   latestPublications: getLatestPublications,

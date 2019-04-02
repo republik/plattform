@@ -93,4 +93,12 @@ exports.configure = ({
 
     return next()
   })
+
+  const close = () => {
+    return store.close()
+  }
+
+  return {
+    close
+  }
 }

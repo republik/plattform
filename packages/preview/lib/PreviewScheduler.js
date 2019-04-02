@@ -9,6 +9,7 @@ const previewLib = require('./preview')
 const intervalSecs = 60 * 5
 const lockTtlSecs = 60 * 4
 
+const LOCK_KEY = 'locks:preview-scheduler'
 const schedulerLock = (redis) => new Redlock([redis])
 
 /**
@@ -20,6 +21,8 @@ const init = async ({ t, mail }) => {
   const pgdb = await PgDb.connect()
   const redis = Redis.connect()
 
+  let timeout
+
   /**
    * Default runner, runs every {intervalSecs}.
    * @return {Promise} [description]
@@ -28,9 +31,7 @@ const init = async ({ t, mail }) => {
     debug('run started')
 
     try {
-      const lock =
-        await schedulerLock(redis)
-          .lock('locks:preview-scheduler', 1000 * lockTtlSecs)
+      const lock = await schedulerLock(redis).lock(LOCK_KEY, 1000 * lockTtlSecs)
 
       const unscheduledRequests = await previewLib.findUnscheduled(pgdb)
 
@@ -105,11 +106,25 @@ const init = async ({ t, mail }) => {
       }
     } finally {
       // Set timeout slightly off to usual interval
-      setTimeout(run, 1000 * (intervalSecs + 1)).unref()
+      if (timeout) {
+        clearTimeout(timeout)
+      }
+      timeout = setTimeout(run, 1000 * (intervalSecs + 1)).unref()
     }
   }
 
   await run()
+
+  const close = async () => {
+    clearTimeout(timeout)
+    await schedulerLock(redis).lock(LOCK_KEY, 1000 * lockTtlSecs * 2)
+    await PgDb.disconnect(pgdb)
+    await Redis.disconnect(redis)
+  }
+
+  return {
+    close
+  }
 }
 
 module.exports = {

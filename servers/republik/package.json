@@ -39,11 +39,9 @@
     "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION -w ../../packages -w express -w graphql -w lib -w modules -w .env -w package.json -w ../yarn.lock -w server.js -w index.js index.js",
     "inspect": "NODE_DEBUG_OPTION=--inspect yarn run dev",
     "start": "node index.js",
-
     "translations": "yarn run translations:local && yarn run translations:crowdfunding",
     "translations:crowdfunding": "gsheets --key=1PckJT0ft4snNWmtlJHHXN93-Rk8eyalHsDCjfA1wc5g --title=live --pretty --out modules/crowdfundings/lib/translations.json",
     "translations:local": "gsheets --key=1NE1igcbxtTrVd5P72Ubqmgv4yKYh0LRGa0EuYSEQKxE --title=live --pretty --out lib/translations.json",
-
     "db:migrate:up": "node script/db-migrate-all.js up",
     "db:migrate:down": "node script/db-migrate-all.js down",
     "db:seed:redirections": "cat ../../packages/redirections/seeds/seeds.example.json | node ../../packages/redirections/seeds/seed.js",
@@ -51,7 +49,6 @@
     "db:seed:crowdfundings": "node seeds/seedCrowdfundings.js",
     "db:reset:seed": "yarn run db:reset && yarn run db:seed:users && yarn run db:seed:crowdfundings",
     "db:reset": "node script/db-migrate-all.js reset && node script/db-migrate-all.js up",
-
     "test:prepare": "rm -rf node_modules/.bin && ln -s ../../../node_modules/.bin node_modules/ && dropdb --if-exists republik-test && createdb republik-test && NODE_ENV=development OVERWRITE_ENV=.test.env yarn run db:reset:seed",
     "test:travis": "yarn run test:prepare && istanbul cover tape \"__tests__/**/*.test.js\" --report lcovonly",
     "test:watch": "yarn run test:prepare && NODE_ENV=development OVERWRITE_ENV=.test.env nodemon --exec 'tape \"__tests__/**/*.test.js\"' | tap-diff",

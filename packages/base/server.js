@@ -34,7 +34,7 @@ const {
 } = process.env
 
 // middlewares
-const { express: { auth } } = require('@orbiting/backend-modules-auth')
+const { express: { auth: Auth } } = require('@orbiting/backend-modules-auth')
 const requestLog = require('./express/requestLog')
 
 const CLUSTER_LISTEN_MESSAGE = 'http-server-listening'
@@ -183,7 +183,7 @@ const start = async (
   const elasticsearch = Elasticsearch.connect()
 
   // Once DB is available, setup sessions and routes for authentication
-  auth.configure({
+  const auth = Auth.configure({
     server,
     secret: SESSION_SECRET,
     domain: COOKIE_DOMAIN || undefined,
@@ -215,15 +215,18 @@ const start = async (
   let closed = false
   const close = async () => {
     if (closed) {
-      console.warn('only close server once')
+      console.log('server already closed')
       return
     }
     closed = true
+
     subscriptionServer.close()
     httpServer.close()
     try {
       engineLauncher.stop()
     } catch (e) {}
+
+    await auth.close()
 
     // disconnect dbs
     await PgDb.disconnect(pgdb)
@@ -231,8 +234,10 @@ const start = async (
     await RedisPubSub.disconnect(pubsub)
     await Elasticsearch.disconnect(elasticsearch)
 
+    // some external libraries leak handles (e.g. slack)
+    // make sure process ends eventually anyway
     setTimeout(() => {
-      console.info('forced server shutdown in 15s max')
+      console.warn('forced server shutdown 15s after close()')
       process.exit(0)
     }, 15000).unref()
   }

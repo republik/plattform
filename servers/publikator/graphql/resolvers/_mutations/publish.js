@@ -10,7 +10,7 @@ const {
   upsertRef,
   deleteRef
 } = require('../../../lib/github')
-const { channelKey } = require('../../../lib/publicationScheduler')
+const { channelKey } = require('../../../lib/PublicationScheduler')
 const {
   createCampaign,
   updateCampaignContent,

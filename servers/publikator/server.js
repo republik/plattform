@@ -12,6 +12,8 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-auth/loaders')
 }
 
+const PublicationScheduler = require('./lib/PublicationScheduler')
+
 const uncommittedChangesMiddleware = require('./express/uncommittedChanges')
 const cluster = require('cluster')
 
@@ -25,8 +27,17 @@ const DEV = NODE_ENV && NODE_ENV !== 'production'
 
 const start = async () => {
   const server = await run()
-  await runOnce({ clusterMode: false })
-  return server
+  const _runOnce = await runOnce({ clusterMode: false })
+
+  const close = async () => {
+    await server.close()
+    await _runOnce.close()
+  }
+
+  return {
+    ...server,
+    close
+  }
 }
 
 // in cluster mode, this runs after runOnce otherwise before
@@ -76,13 +87,11 @@ const run = async (workerId, config) => {
   )
 
   const close = () => {
-    require('./lib/publicationScheduler').quit()
+    console.log('publikator run close')
     return server.close()
   }
 
-  process.on('SIGTERM', () => {
-    close()
-  })
+  process.once('SIGTERM', close)
 
   return {
     ...server,
@@ -91,23 +100,35 @@ const run = async (workerId, config) => {
 }
 
 // in cluster mode, this runs before run otherwise after
-const runOnce = (...args) => {
+const runOnce = async (...args) => {
   if (cluster.isWorker) {
     throw new Error('runOnce must only be called on cluster.isMaster')
   }
+
   Server.runOnce(...args)
 
+  let publicationScheduler
   if (PUBLICATION_SCHEDULER === 'false' || (DEV && PUBLICATION_SCHEDULER !== 'true')) {
     console.log('PUBLICATION_SCHEDULER prevented scheduler from begin started',
       { PUBLICATION_SCHEDULER, DEV }
     )
   } else {
-    const scheduler = require('./lib/publicationScheduler')
-    scheduler.init()
+    publicationScheduler = await PublicationScheduler.init()
       .catch(error => {
         console.log(error)
-        return error
+        throw new Error(error)
       })
+  }
+
+  const close = async () => {
+    console.log('publikator runOnce close')
+    publicationScheduler && await publicationScheduler.close()
+  }
+
+  process.once('SIGTERM', close)
+
+  return {
+    close
   }
 }
 

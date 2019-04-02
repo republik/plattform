@@ -1,7 +1,7 @@
 require('@orbiting/backend-modules-env').config()
 
 const debug = require('debug')('search:lib:notifyListener')
-const { Client } = require('pg')
+const { Client: PGClient } = require('pg')
 
 const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
@@ -11,11 +11,6 @@ const inserts = require('../script/inserts')
 const { getIndexAlias } = require('./utils')
 
 const BULK_SIZE = 100000
-
-const esClient = Elasticsearch.connect()
-const pgClient = new Client({
-  connectionString: process.env.DATABASE_URL
-})
 
 const cascadeUpdateConfig = {
   credentials: [
@@ -47,7 +42,7 @@ const cascadeUpdateConfig = {
 }
 
 const updateCascade = async function (
-  pogiClient,
+  { pogiClient, esClient },
   { table, rows }
 ) {
   if (cascadeUpdateConfig[table]) {
@@ -73,7 +68,7 @@ const updateCascade = async function (
           )
 
         return notificationHandler(
-          pogiClient,
+          { pogiClient, esClient },
           {
             rows: updateRows,
             payload: JSON.stringify({ table: config.table })
@@ -85,10 +80,16 @@ const updateCascade = async function (
 }
 
 const notificationHandler = async function (
-  pogiClient,
+  {
+    pogiClient: _pogiClient,
+    esClient: _esClient
+  } = {},
   { rows = false, payload: originalPayload }
 ) {
   const notificationHandleId = ++stats.notifications
+
+  const pogiClient = _pogiClient || await PgDb.connect()
+  const esClient = _esClient || await Elasticsearch.connect()
 
   const tx = await pogiClient.transactionBegin()
 
@@ -132,6 +133,7 @@ const notificationHandler = async function (
         .map(row => row.id)
 
       debug(table, { updateIds, deleteIds })
+      console.log(table, { updateIds, deleteIds })
 
       await insert({
         indexName: getIndexAlias(name, 'write'),
@@ -146,7 +148,7 @@ const notificationHandler = async function (
       })
     }
 
-    await updateCascade(pogiClient, { table, rows })
+    await updateCascade({ pogiClient, esClient }, { table, rows })
 
     // No delete if rows are provided from outside
     await tx.public.notifyTableChangeQueue
@@ -158,27 +160,41 @@ const notificationHandler = async function (
   } catch (err) {
     console.error(err)
     await tx.transactionRollback()
+  } finally {
+    await Promise.all([
+      PgDb.disconnect(pogiClient),
+      Elasticsearch.disconnect(esClient)
+    ])
   }
 }
 
 const stats = { notifications: 0 }
 
-const run = async function () {
-  // Connect to pgogi
-  const pogiClient = await PgDb.connect()
-  // Connect
+const start = async function () {
+  const pgClient = new PGClient({
+    connectionString: process.env.DATABASE_URL
+  })
   await pgClient.connect()
-  // Setup Listener
   await pgClient.on(
     'notification',
-    notificationHandler.bind(this, pogiClient)
+    notificationHandler.bind(this, {})
   )
   // Listen to a specific channel
   await pgClient.query('LISTEN change')
 
   debug('listening')
+
+  const close = async () => {
+    // notificationHandler might still be running, connections
+    // might still be open after calling close
+    await pgClient.end()
+  }
+
+  return {
+    close
+  }
 }
 
 module.exports = {
-  run
+  start
 }
