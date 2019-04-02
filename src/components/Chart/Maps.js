@@ -81,33 +81,48 @@ Points.propTypes = {
   sizes: PropTypes.arrayOf(PropTypes.number)
 }
 
-
+// for synchronous access in constructor
+const fetchJsonCacheData = new Map()
+// memoize loading promise to avoid parallel double fetching
 const fetchJson = memoize(url =>
-  fetch(url).then(response => response.json())
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      fetchJsonCacheData.set(url, data)
+      return data
+    })
 )
+
+const getStateFromFeaturesData = (features, data) => {
+  const geoJsonFeatures = topojsonFeature(data, data.objects[features.object])
+
+  return {
+    loading: false,
+    geoJson: {
+      features: geoJsonFeatures,
+      compositionBorders: features.compositionBorders &&
+        topojsonMesh(data, data.objects[features.compositionBorders])
+    }
+  }
+}
 
 export class GenericMap extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      loading: true
-    }
-    this.state.layout = layout(props)
+    this.state = props.features && fetchJsonCacheData.has(props.features.url)
+      ? getStateFromFeaturesData(
+        props.features,
+        fetchJsonCacheData.get(props.features.url)
+      )
+      : { loading: !!props.features }
+    this.state.layout = layout(props, this.state.geoJson)
   }
   componentDidMount() {
     const { features } = this.props
     if (features) {
       fetchJson(features.url)
         .then(data => {
-          const geoJsonFeatures = topojsonFeature(data, data.objects[features.object])
-          this.setState({
-            loading: false,
-            geoJson: {
-              features: geoJsonFeatures,
-              compositionBorders: features.compositionBorders &&
-                topojsonMesh(data, data.objects[features.compositionBorders])
-            }
-          })
+          this.setState(getStateFromFeaturesData(features, data))
         })
         .catch(error => {
           this.setState({ loading: false, error })
@@ -122,6 +137,7 @@ export class GenericMap extends Component {
     }
   }
   componentWillUnmount () {
+    fetchJsonCacheData.clear()
     fetchJson.cache.clear()
   }
   renderTooltips() {
