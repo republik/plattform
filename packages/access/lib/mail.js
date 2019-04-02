@@ -189,6 +189,9 @@ const getGlobalMergeVars = async (
     { name: 'GRANTER_NAME',
       content: safeGranter.name || t('api/noname')
     },
+    { name: 'GRANTER_EMAIL',
+      content: safeGranter.email
+    },
     { name: 'GRANTER_MESSAGE',
       content: !!grant.message && escape(grant.message).replace(/\n/g, '<br />')
     },
