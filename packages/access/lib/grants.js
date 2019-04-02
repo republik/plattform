@@ -57,16 +57,20 @@ const insert = async (granter, campaignId, grants = [], pgdb) => {
     throw new Error('Campaign not found.')
   }
 
-  await Promise.map(grants, async fields => {
-    const grant = await pgdb.public.accessGrants.insertAndGet({
-      ...fields,
-      granterUserId: granter.id,
-      accessCampaignId: campaign.id,
-      beginBefore: addInterval(moment(), campaign.grantClaimableInterval)
-    })
+  const grantRecords = grants.map(grant => ({
+    ...grant,
+    granterUserId: granter.id,
+    accessCampaignId: campaign.id,
+    beginBefore: addInterval(moment(), campaign.grantClaimableInterval)
+  }))
 
-    await eventsLib.log(grant, 'insert', pgdb)
-  }, { concurrency: 10 })
+  const results = await pgdb.public.accessGrants.insertAndGet(grantRecords)
+
+  await Promise.map(
+    results,
+    grant => eventsLib.log(grant, 'insert', pgdb),
+    { concurrency: 10 }
+  )
 }
 
 const grant = async (granter, campaignId, email, message, t, pgdb, mail) => {
