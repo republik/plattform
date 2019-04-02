@@ -147,6 +147,7 @@ npx -p topojson toposimplify -p 0.02 < nuts-topo.json > nuts2013-20m-l2-custom-g
         30000,
         40000
       ],
+      "colorLegendMinWidth": 115,
       "legendTitle": "BIP pro Kopf in Euro",
       "unit": "Euro",
       "colorLegendSize": 0.3,

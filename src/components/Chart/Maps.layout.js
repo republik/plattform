@@ -199,7 +199,7 @@ export default (props, geoJson) => {
   const rows = Math.ceil(groups.length / columns)
 
   const paddingLeft = leftAlign ? 0 : padding
-  const mapSpace = (mapWidth + columnPadding) * columns
+  const mapSpace = (mapWidth + (columns > 1 ? columnPadding : 0)) * columns
   const paddingRight = width - mapSpace - paddingLeft
 
   let featuresWithPaths = []

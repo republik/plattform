@@ -220,11 +220,15 @@ export class GenericMap extends Component {
     } = this.state.layout
 
     let legendStyle
-    if (mapSpace * colorLegendSize >= 110 || mini) {
+    if (
+      ((mapSpace * colorLegendSize) - paddingLeft >= props.colorLegendMinWidth) ||
+      mini
+    ) {
       legendStyle = {
         position: 'absolute',
         top: mini ? 12 : paddingTop,
-        left: paddingLeft + mapSpace * (1 - colorLegendSize) + 10
+        left: paddingLeft + (mapSpace * (1 - colorLegendSize)),
+        right: 0
       }
     } else {
       legendStyle = {paddingLeft: paddingLeft}
@@ -389,6 +393,7 @@ GenericMap.propTypes = {
   extent: PropTypes.arrayOf(PropTypes.number),
   colorLegend: PropTypes.bool.isRequired,
   colorLegendSize: PropTypes.number.isRequired,
+  colorLegendMinWidth: PropTypes.number.isRequired,
   colorRange: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   colorRanges: PropTypes.shape({
     sequential3: PropTypes.array.isRequired,
@@ -425,7 +430,8 @@ GenericMap.defaultProps = {
   unit: '',
   heightRatio: 1,
   colorLegend: true,
-  colorLegendSize: 0.2,
+  colorLegendSize: 0.16,
+  colorLegendMinWidth: 80,
   points: false,
   choropleth: false,
   missingDataColor: colors.disabled,
