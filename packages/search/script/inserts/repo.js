@@ -1,8 +1,7 @@
 const redis = require('@orbiting/backend-modules-base/lib/redis')
 const getRepos = require('../../../../servers/publikator/graphql/resolvers/_queries/repos')
 const {
-  latestPublications: getLatestPublications,
-  meta: getRepoMeta
+  latestPublications: getLatestPublications
 } = require('../../../../servers/publikator/graphql/resolvers/Repo')
 const { upsert: repoCacheUpsert } = require('../../../../servers/publikator/lib/cache/upsert')
 
@@ -29,7 +28,6 @@ const iterateRepos = async (context, callback) => {
     for (let repo of repos.nodes) {
       await callback(
         repo,
-        await getRepoMeta(repo),
         await getLatestPublications(repo)
       )
     }
@@ -55,7 +53,7 @@ module.exports = {
       }
     }
 
-    await iterateRepos(context, async (repo, repoMeta, publications) => {
+    await iterateRepos(context, async (repo, publications) => {
       stats[indexType].total++
       stats[indexType].added++
 

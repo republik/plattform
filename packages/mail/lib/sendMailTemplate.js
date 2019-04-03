@@ -46,9 +46,11 @@ const getTemplate = (name) => {
 // })
 module.exports = async (mail, context, log) => {
   // sanitize
-  const tags = [].concat(
-    SEND_MAILS_TAGS && SEND_MAILS_TAGS.split(',')
-  ).filter(Boolean)
+  const tags =
+    []
+      .concat(SEND_MAILS_TAGS && SEND_MAILS_TAGS.split(','))
+      .concat(mail.templateName && mail.templateName)
+      .filter(Boolean)
 
   const mergeVars = [
     ...mail.globalMergeVars || []
