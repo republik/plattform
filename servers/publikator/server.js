@@ -87,7 +87,6 @@ const run = async (workerId, config) => {
   )
 
   const close = () => {
-    console.log('publikator run close')
     return server.close()
   }
 
@@ -121,7 +120,6 @@ const runOnce = async (...args) => {
   }
 
   const close = async () => {
-    console.log('publikator runOnce close')
     publicationScheduler && await publicationScheduler.close()
   }
 

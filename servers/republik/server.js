@@ -126,7 +126,6 @@ const run = async (workerId, config) => {
   )
 
   const close = () => {
-    console.log('republik run close')
     return server.close()
   }
 
@@ -181,7 +180,6 @@ const runOnce = async (...args) => {
   }
 
   const close = async () => {
-    console.log('republik runOnce close')
     slackGreeter && await slackGreeter.close()
     searchNotifyListener && await searchNotifyListener.close()
     accessScheduler && await accessScheduler.close()
