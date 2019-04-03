@@ -10,7 +10,7 @@ const {
   upsertRef,
   deleteRef
 } = require('../../../lib/github')
-const { channelKey } = require('../../../lib/publicationScheduler')
+const { channelKey } = require('../../../lib/PublicationScheduler')
 const {
   createCampaign,
   updateCampaignContent,
@@ -45,7 +45,6 @@ const { lib: {
 const uniq = require('lodash/uniq')
 const { upsert: repoCacheUpsert } = require('../../../lib/cache/upsert')
 
-const elastic = require('@orbiting/backend-modules-base/lib/elastic').client()
 const { purgeUrls } = require('@orbiting/backend-modules-keyCDN')
 
 const {
@@ -67,7 +66,7 @@ module.exports = async (
   },
   context
 ) => {
-  const { user, t, redis, pubsub } = context
+  const { user, t, redis, pubsub, elastic } = context
   ensureUserHasRole(user, 'editor')
 
   if (DISABLE_PUBLISH) {
@@ -400,7 +399,7 @@ module.exports = async (
     id: repoId,
     meta: repoMeta,
     publications: await getLatestPublications({ id: repoId })
-  })
+  }, context)
 
   await redis.publishAsync(channelKey, 'refresh')
 

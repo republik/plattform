@@ -1,14 +1,17 @@
 const Redlock = require('redlock')
 const debug = require('debug')('access:lib:accessScheduler')
 
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
-const redis = require('@orbiting/backend-modules-base/lib/redis')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
+const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 
 const campaignsLib = require('./campaigns')
 const grantsLib = require('./grants')
 
 // Interval in which scheduler runs
 const intervalSecs = 60 * 10
+
+const LOCK_KEY = 'locks:access-scheduler'
+const schedulerLock = (redis) => new Redlock([redis])
 
 /**
  * Function to initialize scheduler. Provides scheduling.
@@ -17,6 +20,9 @@ const init = async ({ t, mail }) => {
   debug('init')
 
   const pgdb = await PgDb.connect()
+  const redis = Redis.connect()
+
+  let timeout
 
   /**
    * Default runner, runs every {intervalSecs}.
@@ -26,9 +32,7 @@ const init = async ({ t, mail }) => {
     debug('run started')
 
     try {
-      const lock =
-        await schedulerLock()
-          .lock('locks:access-scheduler', 1000 * intervalSecs)
+      const lock = await schedulerLock(redis).lock(LOCK_KEY, 1000 * intervalSecs)
 
       await expireGrants(t, pgdb, mail)
       await followupGrants(t, pgdb, mail)
@@ -47,17 +51,31 @@ const init = async ({ t, mail }) => {
       }
     } finally {
       // Set timeout slightly off to usual interval
-      setTimeout(run, 1000 * (intervalSecs + 1)).unref()
+      if (timeout) {
+        clearTimeout(timeout)
+      }
+      timeout = setTimeout(run, 1000 * (intervalSecs + 1)).unref()
     }
   }
 
   // An initial run
   await run()
+
+  const close = async () => {
+    await schedulerLock(redis).lock(LOCK_KEY, 1000 * intervalSecs * 2)
+    clearTimeout(timeout)
+    await Promise.all([
+      PgDb.disconnect(pgdb),
+      Redis.disconnect(redis)
+    ])
+  }
+
+  return {
+    close
+  }
 }
 
 module.exports = { init }
-
-const schedulerLock = () => new Redlock([redis])
 
 /**
  * Renders expired grants invalid.

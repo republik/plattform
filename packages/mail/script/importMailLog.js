@@ -12,7 +12,7 @@
  * ./script/prolong/paperInvoice.js --printIds | ../../packages/mail/script/importMailLog.js 'membership_owner_prolong_notice' '["endDate:20190114", "endDate:20190115"]' --dry
  */
 require('@orbiting/backend-modules-env').config()
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const fetch = require('isomorphic-unfetch')
 const uniq = require('lodash/uniq')
 const Promise = require('bluebird')

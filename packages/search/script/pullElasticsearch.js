@@ -3,8 +3,9 @@ const debug = require('debug')('search:scripts:pullElasticsearch')
 
 const yargs = require('yargs')
 
-const elasticsearch = require('@orbiting/backend-modules-base/lib/elastic')
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
+const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 
 const inserts = require('./inserts')
 const mappings = require('../lib/indices')
@@ -12,7 +13,8 @@ const { getIndexAlias, getDateTimeIndex } = require('../lib/utils')
 
 const timeout = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-const elastic = elasticsearch.client()
+const elastic = Elasticsearch.connect()
+const redis = Redis.connect()
 
 const argv = yargs
   .option('indices', {
@@ -93,7 +95,8 @@ PgDb.connect().then(async pgdb => {
           indexName: index,
           type,
           elastic,
-          pgdb
+          pgdb,
+          redis
         })
       }
 
@@ -102,7 +105,8 @@ PgDb.connect().then(async pgdb => {
         indexName: index,
         type,
         elastic,
-        pgdb
+        pgdb,
+        redis
       })
     }
 
@@ -123,7 +127,8 @@ PgDb.connect().then(async pgdb => {
         indexName: index,
         type,
         elastic,
-        pgdb
+        pgdb,
+        redis
       })
 
       debug('waiting grace period', { writeAlias, index })

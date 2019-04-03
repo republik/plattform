@@ -1,16 +1,24 @@
+const path = require('path')
+
 const DEV = process.env.NODE_ENV
   ? process.env.NODE_ENV !== 'production'
   : true
 
-const config = (path) => {
+const config = (envPath) => {
   if (DEV) {
     const dotenv = require('dotenv')
-    if (path) {
-      dotenv.config({path})
+    if (envPath) {
+      dotenv.config({ path: envPath })
     }
-    dotenv.config({path: process.env.OVERWRITE_ENV})
+    dotenv.config({ path: process.env.OVERWRITE_ENV })
     dotenv.config()
-    dotenv.config({path: '../../.env'})
+    if (envPath) {
+      dotenv.config({ path:
+        path.join(path.dirname(envPath), '../../.env')
+      })
+    } else {
+      dotenv.config({ path: '../../.env' })
+    }
   }
 }
 

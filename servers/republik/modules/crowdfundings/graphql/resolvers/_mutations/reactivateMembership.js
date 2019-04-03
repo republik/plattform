@@ -147,7 +147,7 @@ module.exports = async (_, args, context) => {
         : 'reactivateMembership (support)'
     )
 
-    const cache = createCache({ prefix: `User:${user.id}` })
+    const cache = createCache({ prefix: `User:${user.id}` }, context)
     cache.invalidate()
 
     return newMembership

@@ -1,10 +1,10 @@
 require('@orbiting/backend-modules-env').config()
 
 const debug = require('debug')('search:lib:notifyListener')
-const { Client } = require('pg')
+const { Client: PGClient } = require('pg')
 
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
-const elasticsearch = require('@orbiting/backend-modules-base/lib/elastic')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
+const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 
 const mappings = require('./indices')
 const inserts = require('../script/inserts')
@@ -12,10 +12,7 @@ const { getIndexAlias } = require('./utils')
 
 const BULK_SIZE = 100000
 
-const esClient = elasticsearch.client()
-const pgClient = new Client({
-  connectionString: process.env.DATABASE_URL
-})
+const stats = { notifications: 0 }
 
 const cascadeUpdateConfig = {
   credentials: [
@@ -47,8 +44,8 @@ const cascadeUpdateConfig = {
 }
 
 const updateCascade = async function (
-  pogiClient,
-  { table, rows }
+  { table, rows },
+  { pogiClient, esClient }
 ) {
   if (cascadeUpdateConfig[table]) {
     debug('found cascade configuration')
@@ -73,21 +70,21 @@ const updateCascade = async function (
           )
 
         return notificationHandler(
-          pogiClient,
           {
             rows: updateRows,
             payload: JSON.stringify({ table: config.table })
-          }
+          },
+          { pogiClient, esClient }
         )
       })
     )
   }
 }
 
-const notificationHandler = async function (
-  pogiClient,
-  { rows = false, payload: originalPayload }
-) {
+const notificationHandler = async (
+  { rows = false, payload: originalPayload },
+  { pogiClient, esClient }
+) => {
   const notificationHandleId = ++stats.notifications
 
   const tx = await pogiClient.transactionBegin()
@@ -146,7 +143,7 @@ const notificationHandler = async function (
       })
     }
 
-    await updateCascade(pogiClient, { table, rows })
+    await updateCascade({ table, rows }, { pogiClient, esClient })
 
     // No delete if rows are provided from outside
     await tx.public.notifyTableChangeQueue
@@ -161,24 +158,70 @@ const notificationHandler = async function (
   }
 }
 
-const stats = { notifications: 0 }
+const run = async (workQueue, context) => {
+  while (workQueue.length) {
+    const input = workQueue.pop()
+    await notificationHandler(input, context)
+  }
+}
 
-const run = async function () {
-  // Connect to pgogi
+let singleton
+const start = async function () {
+  if (singleton) {
+    // this is just a precautionary measure, the limitation could be lifted
+    // without the need to change other code here
+    throw new Error('NotifyListener must not be initiated twice!')
+  }
+  singleton = 'init'
+
   const pogiClient = await PgDb.connect()
-  // Connect
+  const esClient = await Elasticsearch.connect()
+  const pgClient = new PGClient({
+    connectionString: process.env.DATABASE_URL
+  })
   await pgClient.connect()
-  // Setup Listener
+
+  let closing = false
+  let runPromise
+  const workQueue = []
+
   await pgClient.on(
     'notification',
-    notificationHandler.bind(this, pogiClient)
-  )
-  // Listen to a specific channel
-  await pgClient.query('LISTEN change')
+    async (input) => {
+      if (closing) {
+        return
+      }
 
+      workQueue.push(input)
+
+      if (!runPromise) {
+        runPromise = run(workQueue, { pogiClient, esClient })
+          .then(() => { runPromise = null })
+      }
+    }
+  )
+  await pgClient.query('LISTEN change')
   debug('listening')
+
+  const close = async () => {
+    closing = true
+    workQueue.length = 0 // empty queue
+    runPromise && await runPromise
+
+    await Promise.all([
+      pgClient.end(),
+      PgDb.disconnect(pogiClient),
+      Elasticsearch.disconnect(esClient)
+    ])
+
+    singleton = null
+  }
+
+  return {
+    close
+  }
 }
 
 module.exports = {
-  run
+  start
 }

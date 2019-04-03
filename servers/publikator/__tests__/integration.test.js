@@ -34,8 +34,8 @@ const diff = require('deep-diff').diff
 const fetch = require('isomorphic-unfetch')
 const omit = require('lodash/omit')
 const { Roles } = require('@orbiting/backend-modules-auth')
-const { lib: { redis } } = require('@orbiting/backend-modules-base')
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
+const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 const moment = require('moment')
 const { timeFormat } = require('@orbiting/backend-modules-formats')
 
@@ -59,6 +59,7 @@ const getNewRepoId = () =>
 
 // shared
 let pgdb
+let redis
 let githubRest
 const testUser = {
   firstName: 'Alice',
@@ -71,6 +72,7 @@ let initialCommitId
 let lastCommitId
 
 test('setup', async (t) => {
+  redis = Redis.connect()
   await redis.flushdbAsync()
   await sleep(1000)
   await Server.start()

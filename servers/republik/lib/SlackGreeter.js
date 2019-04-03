@@ -1,13 +1,7 @@
 const debug = require('debug')('republik:slack')
 const emojione = require('emojione_minimal')
-const {
-  lib: {
-    redis,
-    RedisPubSub: {
-      pubsub
-    }
-  }
-} = require('@orbiting/backend-modules-base')
+const Redis = require('@orbiting/backend-modules-base/lib/Redis')
+const RedisPubSub = require('@orbiting/backend-modules-base/lib/RedisPubSub')
 
 const {
   RTMClient
@@ -22,10 +16,16 @@ if (!SLACK_API_TOKEN) {
   console.warn('Listening to messages from slack disabled: missing SLACK_API_TOKEN')
 }
 
-module.exports.connect = async () => {
+// attention, once you call start, there is no way to properly stop
+// the slack client again, as rtm.close is not exposed in the api
+module.exports.start = async () => {
   if (!SLACK_API_TOKEN) {
     return
   }
+
+  let redis = Redis.connect()
+  let pubsub = RedisPubSub.connect()
+
   const rtm = new RTMClient(SLACK_API_TOKEN)
 
   rtm.on('message', async (message) => {
@@ -47,7 +47,7 @@ module.exports.connect = async () => {
       let existingGreeting
       try {
         existingGreeting = JSON.parse(
-          await redis.getAsync('greeting')
+          redis && await redis.getAsync('greeting')
         )
       } catch (e) {}
       if (
@@ -58,8 +58,8 @@ module.exports.connect = async () => {
           existingGreeting.text !== greeting.text)
         )
       ) {
-        await redis.setAsync('greeting', JSON.stringify(greeting))
-        await pubsub.publish('greeting', { greeting })
+        redis && await redis.setAsync('greeting', JSON.stringify(greeting))
+        pubsub && await pubsub.publish('greeting', { greeting })
       }
     }
   })
@@ -82,4 +82,19 @@ module.exports.connect = async () => {
     })
 
   debug(`RTM connected`)
+
+  const close = async () => {
+    // sadly rtm.close is not exposed, no way to porperly exit slack
+    const _redis = redis
+    redis = null
+    _redis && await Redis.disconnect(_redis)
+
+    const _pubsub = pubsub
+    pubsub = null
+    _pubsub && await RedisPubSub.disconnect(_pubsub)
+  }
+
+  return {
+    close
+  }
 }

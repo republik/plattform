@@ -153,7 +153,7 @@ module.exports = async (_, args, context) => {
     prefix: `MembershipStats`,
     key: queryId,
     ttl: QUERY_CACHE_TTL_SECONDS
-  })
+  }, context)
     .cache(() => getPeriods({minEndDate, maxEndDate, membershipTypes, queryId, context}))
 }
 

@@ -6,27 +6,23 @@ const discussion1 = require('./seeds/discussion1')
 const commentsTopLevel = require('./seeds/commentsTopLevel')
 const { level1: level1Query } = require('./queries')
 
-const testName = 'discussions'
-
 const getIdsString = arr => arr
   .map(c => c.id)
   .join('')
 
-describe(testName, () => {
+describe('discussions', () => {
   beforeAll(async () => {
-    const instance = await Instance({
-      serverName: 'republik',
-      testName
+    await Instance.init({
+      serverName: 'republik'
     })
-    global.instance = instance
   }, 60000)
 
   afterAll(async () => {
-    global.instance.closeAndCleanup()
+    await global.instance.closeAndCleanup()
   }, 30000)
 
   beforeEach(async () => {
-    const { pgdb } = global.instance
+    const { pgdb } = global.instance.context
     await Promise.all([
       pgdb.public.discussions.truncate({ cascade: true }),
       pgdb.public.users.truncate({ cascade: true })
@@ -38,7 +34,7 @@ describe(testName, () => {
   })
 
   test('setup', async () => {
-    const { instance: { pgdb } } = global
+    const { pgdb } = global.instance.context
     expect(await pgdb.public.users.count()).toEqual(10)
     expect(await pgdb.public.discussions.count()).toEqual(1)
     expect(await pgdb.public.comments.count()).toEqual(6)

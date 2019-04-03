@@ -119,6 +119,11 @@ const bulk = async ({
     })
   })
 
+  if (payload.body.length === 0) {
+    console.log('indexPgTable skip due do empty body', { indexName, type })
+    return
+  }
+
   const resp = await elastic.bulk(payload)
 
   if (resp.errors) throw Error('Unable to submit all rows.')

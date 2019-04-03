@@ -72,7 +72,7 @@ module.exports = async (_, args, context) => {
   await repoCacheUpsert({
     id: repoId,
     meta
-  })
+  }, context)
 
   // pubsub not available if called by pullRedis
   if (pubsub) {

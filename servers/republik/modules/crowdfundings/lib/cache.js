@@ -1,7 +1,5 @@
 const debug = require('debug')
 
-const redis = require('@orbiting/backend-modules-base/lib/redis')
-
 const namespace = 'crowdfundings:cache'
 
 const getRedisKey = ({ prefix, key }) =>
@@ -75,7 +73,7 @@ const createInvalidate = ({ options, redis }) => async function () {
     .catch(() => {})// fails if no keys are matched
 }
 
-module.exports = (options) => {
+module.exports = (options, { redis }) => {
   if (options.disabled) {
     console.warn(`WARNING: Cache DISABLED for "${namespace}:${options.prefix}"`)
   }

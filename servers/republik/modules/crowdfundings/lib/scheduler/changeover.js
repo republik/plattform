@@ -28,7 +28,7 @@ GROUP BY m.id
 
 const changeover = async (
   { dryRun },
-  { pgdb, mail: { enforceSubscriptions } }
+  { pgdb, mail: { enforceSubscriptions }, redis }
 ) => {
   const endDate = moment()
 
@@ -177,7 +177,7 @@ const changeover = async (
           throw new Error('Unable to insert periods for elected membership')
         }
 
-        createCache({ prefix: `User:${user.id}` }).invalidate()
+        createCache({ prefix: `User:${user.id}` }, { redis }).invalidate()
 
         await transaction.transactionCommit()
       } catch (e) {

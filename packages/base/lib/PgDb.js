@@ -3,8 +3,8 @@ const {timeParse} = require('d3-time-format')
 
 const parser = timeParse('%Y-%m-%d %H %Z')
 
-const connect = (url) =>
-  PgDb.connect({ connectionString: url || process.env.DATABASE_URL })
+const connect = () =>
+  PgDb.connect({ connectionString: process.env.DATABASE_URL })
     .then(async (pgdb) => {
       // custom date parser
       // parse db dates as 12:00 Zulu
@@ -18,6 +18,10 @@ const connect = (url) =>
       return pgdb
     })
 
+const disconnect = pgdb =>
+  pgdb.close()
+
 module.exports = {
-  connect
+  connect,
+  disconnect
 }

@@ -1,5 +1,5 @@
 module.exports = {
-  accessScheduler: require('./lib/accessScheduler'),
+  AccessScheduler: require('./lib/AccessScheduler'),
   grants: require('./lib/grants'),
   graphql: require('./graphql')
 }

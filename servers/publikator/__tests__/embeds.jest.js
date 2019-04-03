@@ -1,20 +1,18 @@
 const { Instance } = require('@orbiting/backend-modules-test')
 
 beforeAll(async () => {
-  const instance = await Instance({
-    serverName: 'publikator',
-    testName: 'embeds'
+  await Instance.init({
+    serverName: 'publikator'
   })
-  global.instance = instance
 }, 60000)
 
 afterAll(async () => {
-  global.instance.closeAndCleanup()
+  await global.instance.closeAndCleanup()
 }, 30000)
 
 describe('embeds unauthorized', () => {
   test('fetch youtube data with unathorized user', async () => {
-    const { apolloFetch, t } = global.instance
+    const { apolloFetch, context: { t } } = global.instance
     const result = await apolloFetch({
       query: `
         {
@@ -32,7 +30,7 @@ describe('embeds unauthorized', () => {
   })
 
   test('fetch vimeo data with unathorized user', async () => {
-    const { apolloFetch, t } = global.instance
+    const { apolloFetch, context: { t } } = global.instance
     const result = await apolloFetch({
       query: `
         {
@@ -50,7 +48,7 @@ describe('embeds unauthorized', () => {
   })
 
   test('fetch twitter data with unathorized user', async () => {
-    const { apolloFetch, t } = global.instance
+    const { apolloFetch, context: { t } } = global.instance
     const result = await apolloFetch({
       query: `
         {
@@ -69,7 +67,7 @@ describe('embeds unauthorized', () => {
   })
 
   test('fetch documentcloud data with unathorized user', async () => {
-    const { apolloFetch, t } = global.instance
+    const { apolloFetch, context: { t } } = global.instance
     const result = await apolloFetch({
       query: `
         {

@@ -9,7 +9,7 @@
  * script/prolong/printEmails.js 2019-01-16
  */
 require('@orbiting/backend-modules-env').config()
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Promise = require('bluebird')
 const moment = require('moment')
 const { transformUser } = require('@orbiting/backend-modules-auth')

@@ -1,4 +1,3 @@
-const PgDb = require('./lib/pgdb')
 const express = require('express')
 const cors = require('cors')
 const { createServer } = require('http')
@@ -7,6 +6,13 @@ const compression = require('compression')
 const timeout = require('connect-timeout')
 const cluster = require('cluster')
 const helmet = require('helmet')
+
+const PgDb = require('./lib/PgDb')
+const Redis = require('./lib/Redis')
+const RedisPubSub = require('./lib/RedisPubSub')
+const Elasticsearch = require('./lib/Elasticsearch')
+
+const graphql = require('./express/graphql')
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
@@ -28,15 +34,11 @@ const {
 } = process.env
 
 // middlewares
-const { express: { auth } } = require('@orbiting/backend-modules-auth')
+const { express: { auth: Auth } } = require('@orbiting/backend-modules-auth')
 const requestLog = require('./express/requestLog')
 
 const CLUSTER_LISTEN_MESSAGE = 'http-server-listening'
 
-let pgdb
-let server
-let httpServer
-let subscriptionServer
 let engineLauncher
 
 // if engine is part of the game, it will listen on PORT
@@ -116,16 +118,11 @@ const start = async (
   executableSchema,
   middlewares,
   t,
-  createGraphqlContext,
-  workerId,
-  externalConfig
+  _createGraphqlContext = identity => identity,
+  workerId
 ) => {
-  // connect to db
-  pgdb = (externalConfig && externalConfig.pgdb) ||
-    await PgDb.connect()
-
-  server = express()
-  httpServer = createServer(server)
+  const server = express()
+  const httpServer = createServer(server)
 
   server.use(helmet({
     hsts: {
@@ -179,29 +176,81 @@ const start = async (
     server.use('*', cors(corsOptions))
   }
 
+  // connect to dbs
+  const pgdb = await PgDb.connect()
+  const redis = Redis.connect()
+  const pubsub = RedisPubSub.connect()
+  const elasticsearch = Elasticsearch.connect()
+
   // Once DB is available, setup sessions and routes for authentication
-  auth.configure({
-    server: server,
+  const auth = Auth.configure({
+    server,
     secret: SESSION_SECRET,
     domain: COOKIE_DOMAIN || undefined,
     cookieName: COOKIE_NAME,
     dev: DEV,
-    pgdb: pgdb
+    pgdb
   })
 
-  if (executableSchema) {
-    const graphql = require('./express/graphql')
-    subscriptionServer = graphql(server, pgdb, httpServer, executableSchema, createGraphqlContext)
-  }
+  const createGraphqlContext = (context) => _createGraphqlContext({
+    ...context,
+    pgdb,
+    redis,
+    pubsub,
+    elastic: elasticsearch
+  })
+
+  const subscriptionServer = graphql(
+    server,
+    httpServer,
+    pgdb,
+    executableSchema,
+    createGraphqlContext
+  )
 
   for (let middleware of middlewares) {
-    await middleware(server, pgdb, t)
+    await middleware(server, pgdb, t, redis)
+  }
+
+  let closed = false
+  const close = async () => {
+    if (closed) {
+      console.log('server already closed')
+      return
+    }
+    closed = true
+
+    subscriptionServer.close()
+    httpServer.close()
+    try {
+      engineLauncher.stop()
+    } catch (e) {}
+
+    await auth.close()
+
+    // disconnect dbs
+    await Promise.all([
+      PgDb.disconnect(pgdb),
+      Redis.disconnect(redis),
+      RedisPubSub.disconnect(pubsub),
+      Elasticsearch.disconnect(elasticsearch)
+    ])
+
+    // some external libraries leak handles (e.g. slack)
+    // make sure process ends eventually anyway
+    setTimeout(() => {
+      console.warn('forced server shutdown 25s after close()')
+      process.exit(0)
+    }, 25000).unref()
+  }
+
+  const result = {
+    close,
+    createGraphqlContext
   }
 
   return new Promise((resolve) => {
-    const port = (externalConfig && externalConfig.port) ||
-      getWorkersPort()
-    let listener
+    const port = getWorkersPort()
     const callback = () => {
       if (workerId) {
         console.info(`server (${workerId}) is running on http://${HOST}:${port}`)
@@ -212,37 +261,14 @@ const start = async (
       if (process.send) {
         process.send(CLUSTER_LISTEN_MESSAGE)
       }
-      resolve(listener)
+      resolve(result)
     }
 
-    listener = httpServer.listen(port, HOST, callback)
+    httpServer.listen(port, HOST, callback)
   })
-}
-
-const close = () => {
-  const { pubsub } = require('./lib/RedisPubSub')
-  pubsub.getSubscriber().quit()
-  pubsub.getPublisher().quit()
-  subscriptionServer && subscriptionServer.close()
-  httpServer && httpServer.close()
-  try {
-    engineLauncher && engineLauncher.stop()
-  } catch (e) {}
-  pgdb && pgdb.close()
-  require('./lib/redis').quit()
-  pgdb = null
-  server = null
-  httpServer = null
-  subscriptionServer = null
-  // TODO server leaks timers, force teardown for now
-  console.info('forced server shutdown in 15s max')
-  setTimeout(() => {
-    process.exit(0)
-  }, 15000)
 }
 
 module.exports = {
   runOnce,
-  start,
-  close
+  start
 }

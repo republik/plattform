@@ -5,7 +5,7 @@ const generateMemberships = require('../../../lib/generateMemberships')
 const { sendPaymentSuccessful } = require('../../../lib/Mail')
 const { publishMonitor } = require('../../../../../lib/slack')
 
-module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
+module.exports = async (_, args, { pgdb, req, t, mail: { enforceSubscriptions }, redis }) => {
   Roles.ensureUserHasRole(req.user, 'supporter')
   const { pledgeId, reason } = args
   const now = new Date()
@@ -92,7 +92,7 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
     // Only generate memberships (or periods) of pledge has not generated
     // memberships already.
     if (hasPledgeMemberships < 1) {
-      await generateMemberships(pledge.id, transaction, t, req)
+      await generateMemberships(pledge.id, transaction, t, req, redis)
     }
 
     await sendPaymentSuccessful({ pledgeId: pledge.id, pgdb: transaction, t })

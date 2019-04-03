@@ -7,7 +7,7 @@
  * script/prolong/mcToken.js --dry
  */
 require('@orbiting/backend-modules-env').config()
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Promise = require('bluebird')
 const crypto = require('crypto')
 const sleep = require('await-sleep')

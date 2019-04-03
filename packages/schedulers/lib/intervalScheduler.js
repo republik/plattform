@@ -27,6 +27,8 @@ const init = async ({
     console.warn(`WARNING: dryRun flag enabled, scheduler "${name}"`)
   }
 
+  const lockKey = `locks:${name}-scheduler`
+
   const { redis } = context
   if (!redis) {
     throw new Error('missing redis')
@@ -34,9 +36,13 @@ const init = async ({
   const debug = require('debug')(`scheduler:${name}`)
   debug('init')
 
+  let timeout
   const scheduleNextRun = () => {
     // Set timeout slightly off to usual interval
-    setTimeout(run, 1000 * (runIntervalSecs + 1)).unref()
+    if (timeout) {
+      clearTimeout(timeout)
+    }
+    timeout = setTimeout(run, 1000 * (runIntervalSecs + 1)).unref()
   }
 
   const redlock = () => {
@@ -57,8 +63,7 @@ const init = async ({
 
   const run = async () => {
     try {
-      const lock = await redlock()
-        .lock(`locks:${name}-scheduler`, 1000 * lockTtlSecs)
+      const lock = await redlock().lock(lockKey, 1000 * lockTtlSecs)
 
       const extendLockInterval = setInterval(
         () =>
@@ -104,11 +109,20 @@ const init = async ({
     }
   }
 
+  const close = async () => {
+    await redlock().lock(lockKey, 1000 * lockTtlSecs * 2)
+    clearTimeout(timeout)
+  }
+
   if (runInitially) {
     debug('run initially')
-    return run()
+    await run()
   } else {
-    return scheduleNextRun()
+    await scheduleNextRun()
+  }
+
+  return {
+    close
   }
 }
 
