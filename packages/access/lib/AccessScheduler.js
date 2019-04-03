@@ -62,10 +62,12 @@ const init = async ({ t, mail }) => {
   await run()
 
   const close = async () => {
-    clearTimeout(timeout)
     await schedulerLock(redis).lock(LOCK_KEY, 1000 * intervalSecs * 2)
-    await PgDb.disconnect(pgdb)
-    await Redis.disconnect(redis)
+    clearTimeout(timeout)
+    await Promise.all([
+      PgDb.disconnect(pgdb),
+      Redis.disconnect(redis)
+    ])
   }
 
   return {

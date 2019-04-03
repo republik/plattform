@@ -229,17 +229,19 @@ const start = async (
     await auth.close()
 
     // disconnect dbs
-    await PgDb.disconnect(pgdb)
-    await Redis.disconnect(redis)
-    await RedisPubSub.disconnect(pubsub)
-    await Elasticsearch.disconnect(elasticsearch)
+    await Promise.all([
+      PgDb.disconnect(pgdb),
+      Redis.disconnect(redis),
+      RedisPubSub.disconnect(pubsub),
+      Elasticsearch.disconnect(elasticsearch)
+    ])
 
     // some external libraries leak handles (e.g. slack)
     // make sure process ends eventually anyway
     setTimeout(() => {
-      console.warn('forced server shutdown 15s after close()')
+      console.warn('forced server shutdown 25s after close()')
       process.exit(0)
-    }, 15000).unref()
+    }, 25000).unref()
   }
 
   const result = {

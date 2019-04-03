@@ -232,10 +232,13 @@ const init = async () => {
     await redlock(redis).lock(lockKey, ttl * 10)
 
     await subClient.unsubscribeAsync()
-    await subClient.quit()
-    await Redis.disconnect(redis)
-    await Elasticsearch.disconnect(elastic)
-    await PgDb.disconnect(pgdb)
+
+    await Promise.all([
+      subClient.quit(),
+      Redis.disconnect(redis),
+      Elasticsearch.disconnect(elastic),
+      PgDb.disconnect(pgdb)
+    ])
 
     singleton = null
   }

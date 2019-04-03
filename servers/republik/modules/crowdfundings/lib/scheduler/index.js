@@ -60,7 +60,7 @@ const init = async (_context) => {
       runAtTime: '18:32',
       runAtDaysOfWeek: [1, 2, 3, 4, 5],
       runInitially: DEV
-  })
+    })
   )
 
   schedulers.push(
@@ -78,10 +78,12 @@ const init = async (_context) => {
 
   const close = async () => {
     await Promise.all(
-      schedulers.map( scheduler => scheduler.close() )
+      schedulers.map(scheduler => scheduler.close())
     )
-    await PgDb.disconnect(pgdb)
-    await Redis.disconnect(redis)
+    await Promise.all([
+      PgDb.disconnect(pgdb),
+      Redis.disconnect(redis)
+    ])
   }
 
   return {
