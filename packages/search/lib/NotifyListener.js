@@ -182,7 +182,7 @@ const start = async function () {
   await pgClient.connect()
 
   let closing = false
-  let handlerPromise
+  let runPromise
   const workQueue = []
 
   await pgClient.on(
@@ -194,9 +194,9 @@ const start = async function () {
 
       workQueue.push(input)
 
-      if (!handlerPromise) {
-        handlerPromise = run(workQueue, { pogiClient, esClient })
-          .then(() => { handlerPromise = null })
+      if (!runPromise) {
+        runPromise = run(workQueue, { pogiClient, esClient })
+          .then(() => { runPromise = null })
       }
     }
   )
@@ -206,7 +206,7 @@ const start = async function () {
   const close = async () => {
     closing = true
     workQueue.length = 0 // empty queue
-    handlerPromise && await handlerPromise
+    runPromise && await runPromise
 
     await Promise.all([
       pgClient.end(),
