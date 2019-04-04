@@ -42,8 +42,6 @@
     "translations": "yarn run translations:local && yarn run translations:crowdfunding",
     "translations:crowdfunding": "gsheets --key=1PckJT0ft4snNWmtlJHHXN93-Rk8eyalHsDCjfA1wc5g --title=live --pretty --out modules/crowdfundings/lib/translations.json",
     "translations:local": "gsheets --key=1NE1igcbxtTrVd5P72Ubqmgv4yKYh0LRGa0EuYSEQKxE --title=live --pretty --out lib/translations.json",
-    "db:migrate:up": "node script/db-migrate-all.js up",
-    "db:migrate:down": "node script/db-migrate-all.js down",
     "db:seed:redirections": "cat ../../packages/redirections/seeds/seeds.example.json | node ../../packages/redirections/seeds/seed.js",
     "db:seed:users": "cat ../../packages/auth/seeds/seeds.example.json | node ../../packages/auth/seeds/seed.js --truncate",
     "db:seed:crowdfundings": "node seeds/seedCrowdfundings.js",

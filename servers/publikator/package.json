@@ -54,8 +54,6 @@
 
     "translations": "gsheets --key=1_1g3sW8u1aD9xGRfS479s0Pjwx0LxYRUEhETGkKlwLE --title=live --pretty --out lib/translations.json",
 
-    "db:migrate:up": "node script/db-migrate-all.js up",
-    "db:migrate:down": "node script/db-migrate-all.js down",
     "db:seed": "cat seeds/seeds.json | node ../../packages/auth/seeds/seed.js --truncate",
     "db:reset:noseeds": "node script/db-migrate-all.js reset && node script/db-migrate-all.js up",
     "db:reset": "yarn run db:reset:noseeds && yarn run db:seed",
