@@ -58,8 +58,10 @@
     "pull:elasticsearch": "GITHUB_GRAPHQL_RATELIMIT=true node packages/search/script/pullElasticsearch.js",
     "db:migrate:up": "node db-migrate-all.js up",
     "sendNotification": "cd servers/republik && node ../../packages/notifications/script/sendNotification.js",
-    "test": "jest",
-    "test:dev": "jest --watch --notify --verbose",
+    "test": "jest --verbose",
+    "test:unit": "jest --verbose --testPathIgnorePatterns \"\\.(int)|(integration)\\.jest\"",
+    "test:integration": "jest --verbose --testPathIgnorePatterns \"\\.(u)|(unit)\\.jest\"",
+    "test:dev": "yarn run test:unit --watch --notify",
     "test:cover": "jest --collectCoverage"
   },
   "standard": {
