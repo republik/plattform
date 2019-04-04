@@ -1,9 +1,7 @@
 const { Instance } = require('@orbiting/backend-modules-test')
 
 beforeAll(async () => {
-  await Instance.init({
-    serverName: 'publikator'
-  })
+  await Instance.init({ serverName: 'publikator' })
 }, 60000)
 
 afterAll(async () => {

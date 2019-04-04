@@ -1,5 +1,3 @@
-const { apolloFetch, pgDatabase, createApolloFetch } = require('./helpers')
-
 const LOGIN_USER_MUTATION = `
   mutation signIn($email: String!, $context: String, $tokenType: SignInTokenType) {
     signIn(email: $email, context: $context, consents: ["PRIVACY"], tokenType: $tokenType) {
@@ -30,8 +28,8 @@ const LOGOUT_USER_MUTATION = `
   }
 `
 
-const authorizeSession = async ({ email, tokens, apolloFetch: localApolloFetch = apolloFetch }) => {
-  return localApolloFetch({
+const authorizeSession = async ({ email, tokens, apolloFetch = global.instance.apolloFetch }) => {
+  return apolloFetch({
     query: AUTHORIZE_SESSION_MUTATION,
     variables: {
       email,
@@ -40,8 +38,8 @@ const authorizeSession = async ({ email, tokens, apolloFetch: localApolloFetch =
   })
 }
 
-const preferredFirstFactor = async ({ tokenType, apolloFetch: localApolloFetch = apolloFetch }) => {
-  return localApolloFetch({
+const preferredFirstFactor = async ({ tokenType, apolloFetch = global.instance.apolloFetch }) => {
+  return apolloFetch({
     query: PREFERED_FIRST_FACTOR_MUTATION,
     variables: {
       tokenType
@@ -50,37 +48,34 @@ const preferredFirstFactor = async ({ tokenType, apolloFetch: localApolloFetch =
 }
 
 const signIn = async ({
+  apolloFetch,
   user,
   context,
   skipAuthorization = false,
   simulate2FAAuth = false,
-  skipTruncate = false,
   tokenType = null,
   newCookieStore = false
 }) => {
+  const { pgdb } = global.instance.context
+
   const { email } = user
   if (!email) {
     return null
   }
 
-  const _apolloFetch = newCookieStore
-    ? createApolloFetch(true)
-    : apolloFetch
-
-  if (!skipTruncate) {
-    // this also deletes devices
-    await pgDatabase().public.sessions.truncate({ cascade: true })
-  }
+  apolloFetch = apolloFetch || newCookieStore
+    ? global.instance.createApolloFetch()
+    : global.instance.apolloFetch
 
   try {
-    await pgDatabase().public.users.insert(user)
+    await pgdb.public.users.insert(user)
   } catch (e) {
     const { id, ...userData } = user
-    await pgDatabase().public.users.updateOne({ id }, userData)
+    await pgdb.public.users.updateOne({ id }, userData)
   }
 
   // start login process
-  const signInResult = await _apolloFetch({
+  const signInResult = await apolloFetch({
     query: LOGIN_USER_MUTATION,
     variables: {
       email,
@@ -89,16 +84,15 @@ const signIn = async ({
     }
   })
 
-  const tokens = await pgDatabase().public
-    .tokens.find({ email: email }, { limit: 1 })
+  const tokens = await pgdb.public.tokens.find({ email: email }, { limit: 1 })
 
   const { payload, sessionId, type: tokenTypeResult } = tokens.shift() || {}
 
   if (simulate2FAAuth) {
-    const session = await pgDatabase().public.sessions.findOne({
+    const session = await pgdb.public.sessions.findOne({
       id: sessionId
     })
-    await pgDatabase().public.sessions.updateOne({
+    await pgdb.public.sessions.updateOne({
       id: sessionId
     }, {
       'sess': {
@@ -116,19 +110,18 @@ const signIn = async ({
   }
 
   // resolve userId
-  const users = await pgDatabase().public
-    .users.find({ email }, { limit: 1 })
-
+  const dbUser = await pgdb.public.users.findOne({ email })
   return {
-    userId: users.length > 0 && users[0].id,
+    userId: dbUser && dbUser.id,
+    dbUser,
     payload,
     email,
     signInResult,
-    apolloFetch: _apolloFetch
+    apolloFetch
   }
 }
 
-const unauthorizedSession = async ({ user, type, payload }) => {
+const unauthorizedSession = async ({ user, type, payload, apolloFetch = global.instance.apolloFetch }) => {
   const result = await apolloFetch({
     query: `
       query unauthorizedSession($email: String!, $type: SignInTokenType!, $payload: String!) {
@@ -152,7 +145,7 @@ const unauthorizedSession = async ({ user, type, payload }) => {
   return (result && result.data && result.data.unauthorizedSession) || {}
 }
 
-const denySession = async ({ user, type, payload }) => {
+const denySession = async ({ user, type, payload, apolloFetch = global.instance.apolloFetch }) => {
   const result = await apolloFetch({
     query: `
       mutation denySession($email: String!, $type: SignInTokenType!, $payload: String!) {
@@ -168,7 +161,7 @@ const denySession = async ({ user, type, payload }) => {
   return result && result.data && result.data.denySession
 }
 
-const updateTwoFactorAuthentication = async ({ enabled, type }) => {
+const updateTwoFactorAuthentication = async ({ enabled, type, apolloFetch = global.instance.apolloFetch }) => {
   const result = await apolloFetch({
     query: `
       mutation updateTwoFactorAuthentication($enabled: Boolean!, $type: SignInTokenType!) {
@@ -183,7 +176,7 @@ const updateTwoFactorAuthentication = async ({ enabled, type }) => {
   return result && result.data && result.data.updateTwoFactorAuthentication
 }
 
-const sendPhoneNumberVerificationCode = async () => {
+const sendPhoneNumberVerificationCode = async ({ apolloFetch = global.instance.apolloFetch } = {}) => {
   const result = await apolloFetch({
     query: `
       mutation sendPhoneNumberVerificationCode {
@@ -194,7 +187,7 @@ const sendPhoneNumberVerificationCode = async () => {
   return result && result.data && result.data.sendPhoneNumberVerificationCode
 }
 
-const verifyPhoneNumber = async ({ verificationCode }) => {
+const verifyPhoneNumber = async ({ verificationCode, apolloFetch = global.instance.apolloFetch }) => {
   const result = await apolloFetch({
     query: `
       mutation verifyPhoneNumber($verificationCode: String!) {
@@ -208,18 +201,17 @@ const verifyPhoneNumber = async ({ verificationCode }) => {
   return result && result.data && result.data.verifyPhoneNumber
 }
 
-const signOut = async (options) => {
-  const { skipTruncation = false } = options || {}
+const signOut = async ({ apolloFetch = global.instance.apolloFetch } = {}) => {
   await apolloFetch({
     query: LOGOUT_USER_MUTATION
   })
-  if (!skipTruncation) {
-    await pgDatabase().public.sessions.truncate({ cascade: true })
-  }
-  return true
+  const result = await me({ apolloFetch })
+  expect(result).toBeTruthy()
+  expect(result.data).toBeTruthy()
+  expect(result.data.me).toBeFalsy()
 }
 
-const initTOTPSharedSecret = async () => {
+const initTOTPSharedSecret = async ({ apolloFetch = global.instance.apolloFetch } = {}) => {
   const result = await apolloFetch({
     query: `
       mutation initTOTPSharedSecret {
@@ -232,7 +224,7 @@ const initTOTPSharedSecret = async () => {
   return (result && result.data && result.data.initTOTPSharedSecret) || {}
 }
 
-const validateTOTPSharedSecret = async ({ totp }) => {
+const validateTOTPSharedSecret = async ({ totp, apolloFetch = global.instance.apolloFetch }) => {
   const result = await apolloFetch({
     query: `
       mutation validateTOTPSharedSecret($totp: String!) {
@@ -246,7 +238,7 @@ const validateTOTPSharedSecret = async ({ totp }) => {
   return result && result.data && result.data.validateTOTPSharedSecret
 }
 
-const updateEmail = async ({ email }) => {
+const updateEmail = async ({ email, apolloFetch = global.instance.apolloFetch }) => {
   const result = await apolloFetch({
     query: `
       mutation updateEmail($email: String!) {
@@ -262,7 +254,7 @@ const updateEmail = async ({ email }) => {
   return (result && result.data && result.data.updateEmail) || {}
 }
 
-const startChallenge = async ({ sessionId, type }) => {
+const startChallenge = async ({ sessionId, type, apolloFetch = global.instance.apolloFetch }) => {
   const result = await apolloFetch({
     query: `
       mutation startChallenge($sessionId: ID!, $type: SignInTokenType!) {
@@ -277,8 +269,8 @@ const startChallenge = async ({ sessionId, type }) => {
   return (result && result.data && result.data.updateEmail) || {}
 }
 
-const me = async ({apolloFetch: localApolloFetch = apolloFetch} = {}) => {
-  return localApolloFetch({
+const me = async ({ apolloFetch = global.instance.apolloFetch } = {}) => {
+  return apolloFetch({
     query: `
       query me {
         me {

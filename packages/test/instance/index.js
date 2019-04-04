@@ -67,6 +67,7 @@ const init = async ({ serverName }) => {
     server,
     closeAndCleanup,
     apolloFetch: buildCreateApolloFetch(port)(),
+    createApolloFetch: buildCreateApolloFetch(port),
     context: server.createGraphqlContext({})
   }
 }
