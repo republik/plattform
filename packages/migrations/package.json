@@ -1,11 +1,7 @@
 {
-  "name": "@orbiting/backend-modules-redirections",
-  "version": "1.0.1",
-  "description": "store redirections and query them from graphql",
-  "main": "index.js",
-  "scripts": {
-    "link": "yarn link"
-  },
+  "name": "@orbiting/backend-modules-db-migrations",
+  "version": "0.0.1",
+  "description": "all postgresql migration for orbiting",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/orbiting/backends.git"
@@ -19,10 +15,16 @@
     "url": "https://github.com/orbiting/backends/issues"
   },
   "homepage": "https://github.com/orbiting/backends#readme",
+  "scripts": {
+    "link": "yarn link",
+    "db:migrate:create": "script/create.js"
+  },
   "devDependencies": {
-    "dotenv": "^5.0.1"
+    "moment": "^2.24.0",
+    "yargs": "^13.2.2"
   },
   "dependencies": {
-    "apollo-modules-node": "^0.1.4"
+    "db-migrate": "^0.11.5",
+    "db-migrate-pg": "^0.5.0"
   }
 }
