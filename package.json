@@ -61,8 +61,7 @@
     "db:migrate:down": "db-migrate down --migrations-dir packages/db-migrations/migrations --verbose",
     "sendNotification": "cd servers/republik && node ../../packages/notifications/script/sendNotification.js",
     "test": "jest --verbose",
-    "test:unit": "jest --verbose --testPathIgnorePatterns \"\\.(int)|(integration)\\.jest\"",
-    "test:integration": "jest --verbose --testPathIgnorePatterns \"\\.(u)|(unit)|(int)|(integration)\\.jest\"",
+    "test:integration": "jest --verbose --testPathIgnorePatterns \"\\.(u)|(unit)\\.jest\"",
     "test:dev": "yarn run test:unit --watch --notify",
     "test:cover": "jest --collectCoverage"
   },
