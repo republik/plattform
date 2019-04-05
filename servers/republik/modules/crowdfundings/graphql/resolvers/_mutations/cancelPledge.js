@@ -1,9 +1,12 @@
 const logger = console
+const Promise = require('bluebird')
 const { Roles } = require('@orbiting/backend-modules-auth')
 const cancelMembership = require('./cancelMembership')
 
 const moment = require('moment')
 const { publishMonitor } = require('../../../../../lib/slack')
+
+const { evaluatePledge, updateMembershipPeriods } = require('../../../lib/Pledge/cancel')
 
 const {
   PARKING_PLEDGE_ID,
@@ -48,10 +51,6 @@ module.exports = async (_, args, {
     const pkg = await transaction.public.packages.findOne({
       id: pledge.packageId
     })
-
-    if (pkg.name === 'PROLONG') {
-      throw new Error(t('api/temporaryUnsupported'))
-    }
 
     if (pledge.status === 'DRAFT') {
       await transaction.public.pledges.deleteOne({
@@ -109,28 +108,41 @@ module.exports = async (_, args, {
       }
     }
 
-    if (pkg.name === 'MONTHLY_ABO') {
-      const memberships = await transaction.public.memberships.find({
-        pledgeId
-      })
-      if (memberships.length) { // 0 for draft pledges
-        await cancelMembership(
-          null,
-          {
-            id: memberships[0].id,
-            immediately: true
-          },
-          { pgdb: transaction, req, t, mail }
-        )
+    const cancelImmediately = pkg.name === 'MONTHLY_ABO'
+
+    const evaluatePledges = await evaluatePledge({ pledgeId }, { pgdb: transaction, now })
+
+    await Promise.map(
+      evaluatePledges,
+      async ({ _raw: { id }, periods: evaluatedPeriods }) => {
+        await updateMembershipPeriods({ evaluatedPeriods }, { pgdb: transaction })
+
+        // determine endDate
+        const inPast = !!(await transaction.queryOneField(`
+          SELECT MAX("endDate") <= :now
+          FROM "membershipPeriods"
+          WHERE "membershipId" = :membershipId
+        `, { membershipId: id, now }))
+
+        // Check if memebership should be cancelled when latest end date is now in past
+        if (inPast) {
+          await cancelMembership(
+            null,
+            {
+              id,
+              immediately: cancelImmediately,
+              details: {
+                type: 'SYSTEM',
+                reason: 'Auto Cancellation (cancelPledge)',
+                suppressConfirmation: true,
+                suppressWinback: true
+              }
+            },
+            { pgdb: transaction, req, t, mail }
+          )
+        }
       }
-    }
-    await transaction.public.memberships.update({
-      pledgeId: pledgeId
-    }, {
-      pledgeId: PARKING_PLEDGE_ID,
-      userId: PARKING_USER_ID,
-      updatedAt: now
-    })
+    )
 
     if (!externalTransaction) {
       await transaction.transactionCommit()
