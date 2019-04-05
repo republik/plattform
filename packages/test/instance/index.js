@@ -50,6 +50,7 @@ const init = async ({ serverName }) => {
   process.env.PORT = port
   process.env.DATABASE_URL = db.url
   process.env.REDIS_URL = redisUrl
+  process.env.SEND_MAILS_LOG = false
 
   // flush redis
   const redis = Redis.connect()
