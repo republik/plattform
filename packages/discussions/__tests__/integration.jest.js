@@ -19,7 +19,7 @@ describe('discussions', () => {
 
   afterAll(async () => {
     await global.instance.closeAndCleanup()
-  }, 30000)
+  }, 60000)
 
   beforeEach(async () => {
     const { pgdb } = global.instance.context

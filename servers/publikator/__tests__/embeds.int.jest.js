@@ -6,7 +6,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await global.instance.closeAndCleanup()
-}, 30000)
+}, 60000)
 
 describe('embeds unauthorized', () => {
   test('fetch youtube data with unathorized user', async () => {
