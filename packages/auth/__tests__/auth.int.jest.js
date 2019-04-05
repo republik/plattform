@@ -25,7 +25,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await global.instance.closeAndCleanup()
-}, 35000)
+}, 60000)
 
 beforeEach(async () => {
   const { pgdb } = global.instance.context
@@ -416,7 +416,7 @@ test('authorize a session 2fa (multiple challenges): email, sms', async () => {
 
   const { payload: smsCode } = smsTokens.shift()
 
-  console.log(smsCode)
+  // console.log(smsCode)
 
   const { data } = await authorizeSession({
     email,
@@ -526,4 +526,104 @@ test('authorize older sign in attempt', async () => {
   expect(gone).toBeFalsy()
 
   await signOut()
+})
+
+describe('addUserToRole', () => {
+  const ADD_USER_TO_ROLE = `
+    mutation addUserToRole($userId: ID!, $role: String!) {
+      user: addUserToRole(userId: $userId, role: $role) {
+        id
+        roles
+      }
+    }
+  `
+
+  const addUserToRole = ({ userId, role }) => {
+    return global.instance.apolloFetch({
+      query: ADD_USER_TO_ROLE,
+      variables: {
+        userId, role
+      }
+    })
+  }
+
+  test('Users.Admin adds role to Users.Supporter', async () => {
+    await pgDatabase().public.users.insert(Users.Supporter)
+    await signIn({ user: Users.Admin })
+
+    const result = await addUserToRole({
+      userId: Users.Supporter.id,
+      role: 'editor'
+    })
+    const user = await pgDatabase().public.users.findOne({ id: Users.Supporter.id })
+    expect(user.roles).toEqual(['supporter', 'editor'])
+    expect(result.data.user.roles).toEqual(['supporter', 'editor'])
+
+    await signOut()
+  })
+
+  test('Users.Supporter adds role to Users.Member', async () => {
+    await pgDatabase().public.users.insert(Users.Member)
+    await signIn({ user: Users.Supporter })
+
+    const result = await addUserToRole({
+      userId: Users.Member.id,
+      role: 'editor'
+    })
+    const user = await pgDatabase().public.users.findOne({ id: Users.Member.id })
+    expect(user.roles).toEqual(['member'])
+    expect(result.errors).toBeTruthy()
+
+    await signOut()
+  })
+})
+
+describe('removeUserFromRole', () => {
+  const REMOVE_USER_FROM_ROLE = `
+    mutation removeUserFromRole($userId: ID!, $role: String!) {
+      user: removeUserFromRole(userId: $userId, role: $role) {
+        id
+        roles
+      }
+    }
+  `
+
+  const removeUserFromRole = ({ userId, role }) => {
+    return global.instance.apolloFetch({
+      query: REMOVE_USER_FROM_ROLE,
+      variables: {
+        userId, role
+      }
+    })
+  }
+
+  test('Users.Admin removes role from Users.Supporter', async () => {
+    await pgDatabase().public.users.insert(Users.Supporter)
+    await signIn({ user: Users.Admin })
+
+    const result = await removeUserFromRole({
+      userId: Users.Supporter.id,
+      role: 'supporter'
+    })
+    const user = await pgDatabase().public.users.findOne({ id: Users.Supporter.id })
+    expect(user.roles).toEqual([])
+    expect(result.data.user.roles).toEqual([])
+
+    await signOut()
+  })
+
+  test('removeUserFromRole: Users.Supporter removes role from Users.Member', async () => {
+    await pgDatabase().public.users.insert(Users.Member)
+    await signIn({ user: Users.Supporter })
+
+    const result = await removeUserFromRole({
+      userId: Users.Member.id,
+      role: 'member'
+    })
+    const user = await pgDatabase().public.users.findOne({ id: Users.Member.id })
+    expect(user.roles).toEqual(['member'])
+    expect(result.errors).toBeTruthy()
+
+    await signOut()
+  })
 })
