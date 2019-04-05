@@ -59,6 +59,7 @@
     "db:migrate:create": "packages/migrations/script/create.js",
     "db:migrate:up": "db-migrate up --migrations-dir packages/migrations/migrations",
     "db:migrate:down": "db-migrate down --migrations-dir packages/db-migrations/migrations --verbose",
+    "db:seed": "servers/republik/seeds/script/seed.js",
     "sendNotification": "cd servers/republik && node ../../packages/notifications/script/sendNotification.js",
     "test": "jest --verbose",
     "test:unit": "jest --verbose --testPathIgnorePatterns \"\\.(int)|(integration)\\.jest\"",

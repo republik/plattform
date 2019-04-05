@@ -1,7 +1,6 @@
 const { Instance } = require('@orbiting/backend-modules-test')
 
 const OTP = require('otp')
-
 const {
   signIn,
   signOut,

@@ -76,6 +76,16 @@ const init = async ({ serverName }) => {
   }
 }
 
+const bootstrapEnv = () => {
+  if (!process.env.DEFAULT_MAIL_FROM_ADDRESS) {
+    process.env.DEFAULT_MAIL_FROM_ADDRESS = 'test@test.republik.ch'
+  }
+  if (!process.env.DEFAULT_MAIL_FROM_NAME) {
+    process.env.DEFAULT_MAIL_FROM_NAME = 'Test'
+  }
+}
+
 module.exports = {
-  init
+  init,
+  bootstrapEnv
 }
