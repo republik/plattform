@@ -1,8 +1,5 @@
-const test = require('tape-async')
-const { apolloFetch, connectIfNeeded } = require('../helpers.js')
-
-test('crowdfundings test data exists', async (t) => {
-  await connectIfNeeded()
+module.exports = async () => {
+  const apolloFetch = global.instance.createApolloFetch()
   const result = await apolloFetch({
     query: `
       {
@@ -35,7 +32,7 @@ test('crowdfundings test data exists', async (t) => {
       }
     `
   })
-  t.deepEqual(result.data, {
+  expect(result.data).toBe({
     'crowdfunding': {
       'id': 'f0000000-0000-0000-0002-000000000001',
       'name': 'TEST',
@@ -141,6 +138,5 @@ test('crowdfundings test data exists', async (t) => {
         }
       ]
     }
-  }, 'test data exists and looks good')
-  t.end()
-})
+  })
+}

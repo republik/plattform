@@ -9,15 +9,17 @@ const {
   resetCustomers
 } = require('./stripeHelpers')
 const seedCrowdfundings = require('../../seeds/seedCrowdfundings')
+const testSeed = require('./testSeed')
 
 beforeAll(async () => {
   await Instance.init({ serverName: 'republik' })
   await seedCrowdfundings(global.instance.context.pgdb, true)
+  await testSeed()
 }, 60000)
 
 afterAll(async () => {
   await global.instance.closeAndCleanup()
-}, 35000)
+}, 60000)
 
 beforeEach(async () => {
   const { pgdb } = global.instance.context
