@@ -27,6 +27,9 @@ const init = async ({ serverName }) => {
 
   // load env of server
   require('@orbiting/backend-modules-env').config(
+    path.join(__dirname, relativeServerPath, '.test.env')
+  )
+  require('@orbiting/backend-modules-env').config(
     path.join(__dirname, relativeServerPath, '.env')
   )
 

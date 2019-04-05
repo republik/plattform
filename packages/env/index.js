@@ -14,7 +14,7 @@ const config = (envPath) => {
     dotenv.config()
     if (envPath) {
       dotenv.config({ path:
-        path.join(path.dirname(envPath), '../../.env')
+        path.join(path.dirname(envPath), '../..', path.basename(envPath))
       })
     } else {
       dotenv.config({ path: '../../.env' })
