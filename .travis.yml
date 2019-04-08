@@ -40,4 +40,4 @@ before_script:
   # see https://docs.travis-ci.com/user/database-setup/#ElasticSearch
   - sleep 10
 script:
-  - cd $TEST_DIR && yarn run test:cover
+  - yarn run test:cover
