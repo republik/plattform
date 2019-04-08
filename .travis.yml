@@ -11,19 +11,6 @@ services:
   - elasticsearch
   - postgresql
   - redis-server
-branches:
-  only:
-  - master
-  - app
-  - app-authenticator
-matrix:
-  include:
-    - env:
-      - TEST_DIR=servers/republik
-      - DATABASE_URL=postgres://postgres@localhost:5432/republik-test
-    - env:
-      - TEST_DIR=servers/publikator
-      - DATABASE_URL=postgres://postgres@localhost:5432/publikator-test
 env:
   global:
     - NODE_ENV=development
@@ -53,4 +40,4 @@ before_script:
   # see https://docs.travis-ci.com/user/database-setup/#ElasticSearch
   - sleep 10
 script:
-  - cd $TEST_DIR && yarn run test:travis
+  - cd $TEST_DIR && yarn run test:cover
