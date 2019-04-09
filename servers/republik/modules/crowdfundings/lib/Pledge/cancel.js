@@ -2,6 +2,34 @@
 const Promise = require('bluebird')
 const moment = require('moment')
 
+const evaluatePledge = async function ({ pledgeId }, { pgdb, now = moment() }) {
+  // Find affected memberships via
+  // a) membership.pledgeId
+  // b) membershipPeriod.membershipId, linked on membershipPeriod.pledgeId
+  const pledgePeriods = await pgdb.public.membershipPeriods.find({ pledgeId })
+  const periodMembershipIds = [...new Set(pledgePeriods.map(p => p.membershipId).filter(Boolean))]
+
+  const query = { or: [{ pledgeId }] }
+  if (periodMembershipIds.length > 0) {
+    query.or.push({ id: periodMembershipIds })
+  }
+
+  const pledgeMemberships = await pgdb.public.memberships.find(query)
+
+  // Process each membership and its periods.
+  return Promise.map(pledgeMemberships, async function (membership) {
+    const periods = await pgdb.public.membershipPeriods.find(
+      { membershipId: membership.id },
+      { orderBy: { beginDate: 'ASC' } }
+    )
+
+    return {
+      _raw: membership,
+      periods: await evaluatePeriods({ pledgeId, membership, periods }, { now })
+    }
+  })
+}
+
 /**
  * Returns an Array of objects, containing period and "helper" flags.
  *
@@ -83,34 +111,6 @@ const evaluatePeriods = ({ pledgeId, membership, periods }, { now = moment() } =
     })
 }
 
-const evaluatePledge = async function ({ pledgeId }, { pgdb, now = moment() }) {
-  // Find affected memberships via
-  // a) membership.pledgeId
-  // b) membershipPeriod.membershipId, linked on membershipPeriod.pledgeId
-  const pledgePeriods = await pgdb.public.membershipPeriods.find({ pledgeId })
-  const periodMembershipIds = [...new Set(pledgePeriods.map(p => p.membershipId).filter(Boolean))]
-
-  const query = { or: [{ pledgeId }] }
-  if (periodMembershipIds.length > 0) {
-    query.or.push({ id: periodMembershipIds })
-  }
-
-  const pledgeMemberships = await pgdb.public.memberships.find(query)
-
-  // Process each membership and its periods.
-  return Promise.map(pledgeMemberships, async function (membership) {
-    const periods = await pgdb.public.membershipPeriods.find(
-      { membershipId: membership.id },
-      { orderBy: { beginDate: 'ASC' } }
-    )
-
-    return {
-      _raw: membership,
-      periods: await evaluatePeriods({ pledgeId, membership, periods }, { now })
-    }
-  })
-}
-
 const updateMembershipPeriods = async function ({ evaluatedPeriods }, { pgdb }) {
   const now = moment()
 
@@ -137,7 +137,7 @@ const updateMembershipPeriods = async function ({ evaluatedPeriods }, { pgdb }) 
 }
 
 module.exports = {
-  evaluatePeriods,
   evaluatePledge,
+  evaluatePeriods,
   updateMembershipPeriods
 }
