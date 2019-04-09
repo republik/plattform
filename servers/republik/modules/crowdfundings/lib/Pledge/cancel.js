@@ -19,8 +19,7 @@ const evaluatePledge = async function ({ pledgeId }, { pgdb, now = moment() }) {
   // Process each membership and its periods.
   return Promise.map(pledgeMemberships, async function (membership) {
     const periods = await pgdb.public.membershipPeriods.find(
-      { membershipId: membership.id },
-      { orderBy: { beginDate: 'ASC' } }
+      { membershipId: membership.id }
     )
 
     return {
@@ -63,6 +62,18 @@ const evaluatePeriods = ({ pledgeId, membership, periods }, { now = moment() } =
 
   return periods
     .filter(period => period.membershipId === membership.id)
+    .sort((a, b) => {
+      // Sort by beginDate ascending
+      if (a.beginDate < b.beginDate) {
+        return -1
+      }
+
+      if (a.beginDate > b.beginDate) {
+        return 1
+      }
+
+      return 0
+    })
     .map(period => {
       // Is period caused by pledge
       const isCausedByPledge =
