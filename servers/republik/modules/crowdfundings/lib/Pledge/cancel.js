@@ -57,7 +57,7 @@ const evaluatePeriods = ({ pledgeId, membership, periods }, { now = moment() } =
     throw new Error('periods is missing')
   }
 
-  // Will contain a end date. Will be used to glue a subsequent period.
+  // Will contain an end date. Will be used to glue a subsequent period.
   let glueEndDate = false
 
   return periods
