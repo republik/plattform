@@ -88,7 +88,7 @@ const evaluatePledge = async function ({ pledgeId }, { pgdb, now = moment() }) {
   // a) membership.pledgeId
   // b) membershipPeriod.membershipId, linked on membershipPeriod.pledgeId
   const pledgePeriods = await pgdb.public.membershipPeriods.find({ pledgeId })
-  const periodMembershipIds = pledgePeriods.map(p => p.membershipId).filter(Boolean)
+  const periodMembershipIds = [...new Set(pledgePeriods.map(p => p.membershipId).filter(Boolean))]
 
   const query = { or: [{ pledgeId }] }
   if (periodMembershipIds.length > 0) {
