@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`cancel evaluatePeriods() throws Errors if argument is missing 1`] = `"pledgeId is missing"`;
+
+exports[`cancel evaluatePeriods() throws Errors if argument is missing 2`] = `"membership is missing"`;
+
+exports[`cancel evaluatePeriods() throws Errors if argument is missing 3`] = `"periods is missing"`;
+
+exports[`cancel properties signature 1`] = `
+Object {
+  "evaluatePeriods": [Function],
+  "evaluatePledge": [Function],
+  "updateMembershipPeriods": [Function],
+}
+`;

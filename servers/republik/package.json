@@ -56,8 +56,7 @@
     "test:prepare": "rm -rf node_modules/.bin && ln -s ../../../node_modules/.bin node_modules/ && dropdb --if-exists republik-test && createdb republik-test && NODE_ENV=development OVERWRITE_ENV=.test.env yarn run db:reset:seed",
     "test:travis": "yarn run test:prepare && istanbul cover tape \"__tests__/**/*.test.js\" --report lcovonly",
     "test:watch": "yarn run test:prepare && NODE_ENV=development OVERWRITE_ENV=.test.env nodemon --exec 'tape \"__tests__/**/*.test.js\"' | tap-diff",
-    "test:run": "NODE_ENV=development OVERWRITE_ENV=.test.env istanbul cover tape \"__tests__/**/*.test.js\" | tap-diff",
-    "test": "yarn run test:prepare && yarn run test:run"
+    "test:run": "NODE_ENV=development OVERWRITE_ENV=.test.env istanbul cover tape \"__tests__/**/*.test.js\" | tap-diff"
   },
   "devDependencies": {
     "apollo-fetch": "^0.7.0",
