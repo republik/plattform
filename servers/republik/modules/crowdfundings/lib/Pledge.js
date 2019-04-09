@@ -53,3 +53,5 @@ exports.getPledgeOptionsTree = async (pledgeOptions, pgdb) => {
 
   return newPledgeOptions
 }
+
+exports.cancel = require('./Pledge/cancel')
