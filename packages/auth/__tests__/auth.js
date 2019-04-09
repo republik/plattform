@@ -364,6 +364,15 @@ const TwoFactorMember = {
   verified: true
 }
 
+const Editor = {
+  id: 'a0000000-0000-4000-8001-000000000010',
+  email: 'alice.smith@test.project-r.construction',
+  roles: [ 'editor' ],
+  firstName: 'Alice',
+  lastName: 'Smith',
+  name: 'Alice Smith'
+}
+
 const Anonymous = {
   firstName: null,
   lastName: null,
@@ -391,6 +400,7 @@ module.exports = {
     Anonymous,
     Member,
     TwoFactorMember,
-    Admin
+    Admin,
+    Editor
   }
 }

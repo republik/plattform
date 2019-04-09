@@ -1,7 +1,7 @@
 const path = require('path')
 const PG = require('./PG')
 const Redis = require('@orbiting/backend-modules-base/lib/Redis')
-const buildCreateApolloFetch = require('./buildCreateApolloFetch')
+const buildClients = require('./buildClients')
 const { getId } = require('./pool')
 
 const debug = require('debug')('instance')
@@ -70,8 +70,9 @@ const init = async ({ serverName }) => {
   global.instance = {
     server,
     closeAndCleanup,
-    apolloFetch: buildCreateApolloFetch(port)(),
-    createApolloFetch: buildCreateApolloFetch(port),
+    apolloFetch: buildClients(port).createApolloFetch(),
+    createApolloFetch: buildClients(port).createApolloFetch,
+    clients: buildClients(port),
     context: server.createGraphqlContext({})
   }
 }
