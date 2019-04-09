@@ -88,7 +88,6 @@ const evaluatePeriods = ({ pledgeId, membership, periods }, { now = moment() } =
           // "Delete period"
           // Period in future. Not used. Hence: Delete it. (Or flag deleted)
           isObsolete = true
-          glueEndDate = now
         } else if (period.endDate > now) {
           // "Update aka shorten period"
           // Period began. Shorten it.
@@ -111,6 +110,8 @@ const evaluatePeriods = ({ pledgeId, membership, periods }, { now = moment() } =
         }
 
         glueEndDate = endDate
+      } else {
+        glueEndDate = period.endDate
       }
 
       return {
