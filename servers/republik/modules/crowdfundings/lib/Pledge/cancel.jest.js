@@ -85,7 +85,7 @@ describe('cancel', () => {
         }])
     })
 
-    test('Pledge A caused initial, past period: flag period obsolete and leave subsequent untampered', () => {
+    test('Pledge A caused initial, past period: leave periods untampered', () => {
       const now = moment()
       const pledgeId = 'pledge-A'
       const membership = {
@@ -121,6 +121,114 @@ describe('cancel', () => {
             isCausedByPledge: false,
             isObsolete: false,
             updateAttributes: {}
+          }
+        ])
+    })
+
+    test('Pledge A caused initial, current period: update current and subsequent periods', () => {
+      const now = moment()
+      const pledgeId = 'pledge-A'
+      const membership = {
+        id: 'membership-a',
+        pledgeId: 'pledge-A'
+      }
+      const periods = [
+        {
+          id: 'period-1',
+          membershipId: 'membership-a',
+          beginDate: moment().subtract(20, 'days'),
+          endDate: moment().add(10, 'days')
+        },
+        {
+          id: 'period-2',
+          membershipId: 'membership-a',
+          beginDate: moment().add(10, 'days'),
+          endDate: moment().add(20, 'days'),
+          pledgeId: 'pledge-B'
+        }
+      ]
+
+      expect(UUT.evaluatePeriods({ pledgeId, membership, periods }, { now }))
+        .toMatchObject([
+          {
+            _raw: periods[0],
+            isCausedByPledge: true,
+            isObsolete: false,
+            updateAttributes: {
+              endDate: now
+            }
+          },
+          {
+            _raw: periods[1],
+            isCausedByPledge: false,
+            isObsolete: false,
+            updateAttributes: {
+              beginDate: now,
+              endDate: now.clone().add(getInterval(periods[1].beginDate, periods[1].endDate))
+            }
+          }
+        ])
+    })
+
+    test('Pledge A caused initial, current period: update current and subsequent two periods', () => {
+      const now = moment()
+      const pledgeId = 'pledge-A'
+      const membership = {
+        id: 'membership-a',
+        pledgeId: 'pledge-A'
+      }
+      const periods = [
+        {
+          id: 'period-1',
+          membershipId: 'membership-a',
+          beginDate: moment().subtract(20, 'days'),
+          endDate: moment().add(10, 'days')
+        },
+        {
+          id: 'period-2',
+          membershipId: 'membership-a',
+          beginDate: moment().add(10, 'days'),
+          endDate: moment().add(20, 'days'),
+          pledgeId: 'pledge-B'
+        },
+        {
+          id: 'period-3',
+          membershipId: 'membership-a',
+          beginDate: moment().add(20, 'days'),
+          endDate: moment().add(40, 'days'),
+          pledgeId: 'pledge-C'
+        }
+      ]
+
+      expect(UUT.evaluatePeriods({ pledgeId, membership, periods }, { now }))
+        .toMatchObject([
+          {
+            _raw: periods[0],
+            isCausedByPledge: true,
+            isObsolete: false,
+            updateAttributes: {
+              endDate: now
+            }
+          },
+          {
+            _raw: periods[1],
+            isCausedByPledge: false,
+            isObsolete: false,
+            updateAttributes: {
+              beginDate: now,
+              endDate: now.clone().add(getInterval(periods[1].beginDate, periods[1].endDate))
+            }
+          },
+          {
+            _raw: periods[2],
+            isCausedByPledge: false,
+            isObsolete: false,
+            updateAttributes: {
+              beginDate: now.clone().add(getInterval(periods[1].beginDate, periods[1].endDate)),
+              endDate: now.clone()
+                .add(getInterval(periods[1].beginDate, periods[1].endDate))
+                .add(getInterval(periods[2].beginDate, periods[2].endDate))
+            }
           }
         ])
     })
@@ -354,7 +462,7 @@ describe('cancel', () => {
             isObsolete: false,
             updateAttributes: {
               beginDate: now,
-              endDate: now.add(getInterval(periods[2].beginDate, periods[2].endDate))
+              endDate: now.clone().add(getInterval(periods[2].beginDate, periods[2].endDate))
             }
           }
         ])
@@ -410,8 +518,8 @@ describe('cancel', () => {
             isCausedByPledge: false,
             isObsolete: false,
             updateAttributes: {
-              beginDate: now,
-              endDate: now.add(getInterval(periods[2].beginDate, periods[2].endDate))
+              beginDate: moment(periods[0].endDate),
+              endDate: moment(periods[0].endDate).add(getInterval(periods[2].beginDate, periods[2].endDate))
             }
           }
         ])
@@ -480,8 +588,8 @@ describe('cancel', () => {
             isCausedByPledge: false,
             isObsolete: false,
             updateAttributes: {
-              beginDate: now,
-              endDate: now.add(getInterval(periods[3].beginDate, periods[3].endDate))
+              beginDate: moment(periods[0].endDate),
+              endDate: moment(periods[0].endDate).add(getInterval(periods[3].beginDate, periods[3].endDate))
             }
           }
         ])
