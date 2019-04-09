@@ -1,6 +1,6 @@
-// const debug = require('debug')('crowdfundings:lib:Pledge:cancel')
 const Promise = require('bluebird')
 const moment = require('moment')
+const { ascending } = require('d3-array')
 
 const evaluatePledge = async function ({ pledgeId }, { pgdb, now = moment() }) {
   // Find affected memberships via
@@ -62,18 +62,7 @@ const evaluatePeriods = ({ pledgeId, membership, periods }, { now = moment() } =
 
   return periods
     .filter(period => period.membershipId === membership.id)
-    .sort((a, b) => {
-      // Sort by beginDate ascending
-      if (a.beginDate < b.beginDate) {
-        return -1
-      }
-
-      if (a.beginDate > b.beginDate) {
-        return 1
-      }
-
-      return 0
-    })
+    .sort((a, b) => ascending(a.beginDate, b.beginDate))
     .map(period => {
       // Is period caused by pledge
       const isCausedByPledge =
