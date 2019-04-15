@@ -88,6 +88,11 @@ type mutations {
     publishDate: DateTime
     briefingUrl: String
   ): Repo!
+
+  archive(
+    repoIds: [ID!]!
+    unpublish: Boolean
+  ): RepoConnection!
 }
 
 type subscriptions {

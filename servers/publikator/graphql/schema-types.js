@@ -17,6 +17,8 @@ type Repo {
   unpublished: Boolean!
 
   meta: RepoMeta!
+
+  isArchived: Boolean!
 }
 
 type RepoConnection {

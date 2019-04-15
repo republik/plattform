@@ -67,7 +67,8 @@ module.exports = {
         name: repo.id.split('/')[1],
         publications,
         tags: repo.tags,
-        updatedAt: repo.updatedAt
+        updatedAt: repo.updatedAt,
+        refresh: false
       })
     })
 

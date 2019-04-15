@@ -1,5 +1,5 @@
 {
-  "updated": "2018-11-16T14:13:12.135Z",
+  "updated": "2019-04-15T15:25:34.384Z",
   "title": "live",
   "data": [
     {
@@ -65,6 +65,10 @@
     {
       "key": "api/publish/disabled",
       "value": "Artikel können im Moment weder veröffentlicht noch zurückgezogen werden. Bitte versuche es in ein paar Minuten noch einmal, ansonsten kontaktiere bitte die IT."
+    },
+    {
+      "key": "api/archive/error/published",
+      "value": "«{repoId}» ist veröffentlicht und kann nicht archiviert werden. Heben Sie erst alle Veröffentlichungen auf."
     }
   ]
 }
