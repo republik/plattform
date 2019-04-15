@@ -141,7 +141,6 @@ module.exports = {
   },
   isArchived: async (repo, args, context) => {
     if (repo.isArchived !== undefined) {
-      console.log('isArchived via repo.isArchived')
       return repo.isArchived
     }
 
