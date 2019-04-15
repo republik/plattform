@@ -12,7 +12,7 @@ module.exports = async (
   { repoIds, unpublish = false },
   context
 ) => {
-  const { user, pubsub } = context
+  const { user, pubsub, t } = context
   ensureUserHasRole(user, 'editor')
 
   await Promise.each(repoIds, async repoId => {
@@ -20,7 +20,8 @@ module.exports = async (
 
     if (publications.length > 0) {
       if (!unpublish) {
-        throw new Error('Unable to archive published repository. Unpublish first.')
+        // Unable to archive published repository. Unpublish first.
+        throw new Error(t('api/archive/error/published', { repoId }))
       }
 
       await unpublishMutation(_, { repoId }, context)
@@ -41,7 +42,7 @@ module.exports = async (
   })
 
   return {
-    nodes: repoIds,
+    nodes: repoIds.map(id => ({ id })),
     totalCount: repoIds.length,
     pageInfo: {
       hasNextPage: false,
