@@ -1,5 +1,5 @@
 {
-  "updated": "2019-04-15T11:24:22.824Z",
+  "updated": "2019-04-15T15:07:33.657Z",
   "title": "live",
   "data": [
     {
@@ -204,11 +204,15 @@
     },
     {
       "key": "repo/archive/confirm",
-      "value": "\"{repoId}\" tatsächlich archivieren?"
+      "value": "Artikel tatsächlich archivieren?"
     },
     {
       "key": "repo/archive/button",
       "value": "Artikel archivieren"
+    },
+    {
+      "key": "repo/archived/notice",
+      "value": "Artikel wurde archiviert und kann nicht bearbeitet oder veröffentlicht werden."
     },
     {
       "key": "baseCommit/title",
