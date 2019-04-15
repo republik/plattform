@@ -131,11 +131,11 @@ const upsert = async ({
   id,
   meta,
   name,
-  publication,
   publications,
   tag,
   tags,
-  updatedAt
+  updatedAt,
+  refresh = true
 }) => {
   let doc = {}
 
@@ -172,6 +172,7 @@ const upsert = async ({
 
   await client.update({
     ...getPath(id),
+    refresh,
     version: doc._version,
     body: {
       doc_as_upsert: true,
