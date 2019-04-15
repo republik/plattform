@@ -4,6 +4,7 @@ import gql from 'graphql-tag'
 import Router, { withRouter } from 'next/router'
 
 import withT from '../../lib/withT'
+import { errorToString } from '../../lib/utils/errors'
 
 import { A } from '@project-r/styleguide'
 
@@ -29,11 +30,7 @@ const RepoArchive = ({ repoId, t }) => {
                 Router.pushRoute('index')
               })
               .catch((error) => {
-                if (error.graphQLErrors) {
-                  window.alert(error.graphQLErrors.map(({ message }) => message).join('\n'))
-                } else {
-                  window.alert(error)
-                }
+                window.alert(errorToString(error))
               })
           }
         }}>
