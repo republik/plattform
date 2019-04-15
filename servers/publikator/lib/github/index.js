@@ -77,6 +77,7 @@ module.exports = {
             name: $repoName
           ) {
             name
+            isArchived
           }
         }
       `,
