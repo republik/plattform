@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { withRouter } from 'next/router'
 import { css } from 'glamor'
 import { graphql, compose } from 'react-apollo'
@@ -12,6 +12,8 @@ import Loader from '../../components/Loader'
 import Tree from '../../components/Tree'
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
+import RepoArchive from '../../components/Repo/Archive'
+import RepoArchivedBanner from '../../components/Repo/ArchivedBanner'
 import { NarrowContainer, A, InlineSpinner, Interaction } from '@project-r/styleguide'
 import { getKeys as getLocalStorageKeys } from '../../lib/utils/localStorage'
 import * as fragments from '../../lib/graphql/fragments'
@@ -28,6 +30,7 @@ export const getRepoHistory = gql`
   ) {
     repo(id: $repoId) {
       id
+      isArchived
       commits(first: $first, after: $after) {
         pageInfo {
           hasNextPage
@@ -50,6 +53,7 @@ const treeRepoSubscription = gql`
   subscription onRepoUpdate($repoId: ID!) {
     repoUpdate(repoId: $repoId) {
       id
+      isArchived
       commits (first: 1){
         nodes {
           ...SimpleCommit
@@ -65,6 +69,9 @@ const treeRepoSubscription = gql`
 `
 
 const styles = {
+  publishContainer: css({
+    marginTop: '24px'
+  }),
   loadMoreButton: css({
     cursor: 'pointer'
   }),
@@ -168,11 +175,16 @@ class EditorPage extends Component {
         </Frame.Header>
         <Frame.Body raw>
           <Loader loading={loading && !repo} error={error} render={() => (
-            <div>
-              <br />
-              <NarrowContainer>
-                <CurrentPublications repoId={repoId} />
-              </NarrowContainer>
+            <Fragment>
+              { repo.isArchived
+                ? <RepoArchivedBanner />
+                : (
+                  <NarrowContainer {...styles.publishContainer}>
+                    <CurrentPublications repoId={repoId} />
+                    <RepoArchive repoId={repoId} />
+                  </NarrowContainer>
+                )
+              }
               <Tree
                 commits={commits}
                 localStorageCommitIds={localStorageCommitIds}
@@ -190,7 +202,7 @@ class EditorPage extends Component {
                   }
                 </Interaction.P>
               }
-            </div>
+            </Fragment>
           )} />
         </Frame.Body>
       </Frame>

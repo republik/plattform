@@ -1,5 +1,5 @@
 {
-  "updated": "2018-07-17T10:13:16.747Z",
+  "updated": "2019-04-15T15:07:33.657Z",
   "title": "live",
   "data": [
     {
@@ -201,6 +201,18 @@
     {
       "key": "repo/table/col/productionDeadline",
       "value": "Produktions-Deadline"
+    },
+    {
+      "key": "repo/archive/confirm",
+      "value": "Artikel tatsächlich archivieren?"
+    },
+    {
+      "key": "repo/archive/button",
+      "value": "Artikel archivieren"
+    },
+    {
+      "key": "repo/archived/notice",
+      "value": "Artikel wurde archiviert und kann nicht bearbeitet oder veröffentlicht werden."
     },
     {
       "key": "baseCommit/title",

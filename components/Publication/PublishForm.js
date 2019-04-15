@@ -11,6 +11,7 @@ import { intersperse } from '../../lib/utils/helpers'
 import withT from '../../lib/withT'
 import { Link, Router } from '../../lib/routes'
 import { swissTime } from '../../lib/utils/format'
+
 import {
   Loader,
   InlineSpinner,
@@ -32,6 +33,7 @@ import { getRepoWithPublications } from './Current'
 import { renderMdast } from 'mdast-react-render'
 
 import { getSchema } from '../../components/Templates'
+import RepoArchivedBanner from '../../components/Repo/ArchivedBanner'
 
 export const publish = gql`
 mutation publish(
@@ -63,6 +65,7 @@ export const getRepoWithCommit = gql`
   query repoWithCommit($repoId: ID!, $commitId: ID!) {
     repo(id: $repoId) {
       id
+      isArchived
       meta {
         publishDate
       }
@@ -163,7 +166,11 @@ class PublishForm extends Component {
     return (
       <div>
         <Loader loading={loading} error={error} render={() => {
-          const { commit, commit: { document: { meta } } } = repo
+          const { isArchived, commit, commit: { document: { meta } } } = repo
+
+          if (isArchived) {
+            return <RepoArchivedBanner />
+          }
 
           const schema = getSchema(meta.template)
 

@@ -10,6 +10,7 @@ import withAuthorization from '../../components/Auth/withAuthorization'
 import Frame from '../../components/Frame'
 import { HEADER_HEIGHT } from '../../components/Frame/constants'
 import RepoNav from '../../components/Repo/Nav'
+import RepoArchivedBanner from '../../components/Repo/ArchivedBanner'
 
 import Editor from '../../components/editor'
 import EditorUI from '../../components/editor/UI'
@@ -654,7 +655,8 @@ export class EditorPage extends Component {
       ...warnings.filter(Boolean).map((m, i) => <Warning key={`warning-${i}`} message={m} />),
       !showLoading && repo && (
         <BranchingNotice key='branching-notice' repoId={repo.id} currentCommitId={commitId} />
-      )
+      ),
+      !showLoading && repo && repo.isArchived && <RepoArchivedBanner />
     ].filter(Boolean)
 
     return (
