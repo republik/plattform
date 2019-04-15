@@ -1,5 +1,5 @@
 {
-  "updated": "2019-04-15T11:20:46.372Z",
+  "updated": "2019-04-15T15:25:34.384Z",
   "title": "live",
   "data": [
     {
@@ -68,7 +68,7 @@
     },
     {
       "key": "api/archive/error/published",
-      "value": "\"{repoId}\" ist veröffentlicht und kann nicht archiviert werden. Heben Sie erst alle Veröffentlichungen auf."
+      "value": "«{repoId}» ist veröffentlicht und kann nicht archiviert werden. Heben Sie erst alle Veröffentlichungen auf."
     }
   ]
 }
