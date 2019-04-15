@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { withRouter } from 'next/router'
 import { css } from 'glamor'
 import { graphql, compose } from 'react-apollo'
@@ -12,6 +12,7 @@ import Loader from '../../components/Loader'
 import Tree from '../../components/Tree'
 import Frame from '../../components/Frame'
 import RepoNav from '../../components/Repo/Nav'
+import RepoArchive from '../../components/Repo/Archive'
 import { NarrowContainer, A, InlineSpinner, Interaction } from '@project-r/styleguide'
 import { getKeys as getLocalStorageKeys } from '../../lib/utils/localStorage'
 import * as fragments from '../../lib/graphql/fragments'
@@ -168,10 +169,10 @@ class EditorPage extends Component {
         </Frame.Header>
         <Frame.Body raw>
           <Loader loading={loading && !repo} error={error} render={() => (
-            <div>
-              <br />
-              <NarrowContainer>
+            <Fragment>
+              <NarrowContainer style={{ paddingTop: '1em' }}>
                 <CurrentPublications repoId={repoId} />
+                <RepoArchive repoId={repoId} />
               </NarrowContainer>
               <Tree
                 commits={commits}
@@ -190,7 +191,7 @@ class EditorPage extends Component {
                   }
                 </Interaction.P>
               }
-            </div>
+            </Fragment>
           )} />
         </Frame.Body>
       </Frame>
