@@ -1,1 +1,1 @@
-jest.setTimeout(1000 * 15) // 15s default timeout
+jest.setTimeout(1000 * 30) // 30s default timeout

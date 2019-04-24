@@ -129,9 +129,7 @@ test('sign in with tokenType APP', async () => {
 
   // in separate session
   const resultBrowser = await signIn({ user: Users.Unverified, skipAuthorization: true, tokenType: 'APP', newCookieStore: true })
-  expect(
-    resultBrowser.signInResult.data && resultBrowser.signInResult.data.signIn.phrase
-  ).toBeTruthy()
+  expect(resultBrowser.signInResult.data.signIn.phrase).toBeTruthy()
   expect(resultBrowser.signInResult.errors).toBeFalsy()
 
   sessions = await pgDatabase().public.sessions.find({'sess @>': { 'email': Users.Unverified.email }})

@@ -105,7 +105,8 @@ const signIn = async ({
   } else if (!skipAuthorization) {
     await authorizeSession({
       email,
-      tokens: [{ type: tokenTypeResult, payload }]
+      tokens: [{ type: tokenTypeResult, payload }],
+      apolloFetch
     })
   }
 

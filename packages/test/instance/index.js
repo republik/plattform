@@ -85,7 +85,7 @@ const init = async ({ serverName, publicationScheduler }) => {
     server,
     closeAndCleanup,
     apolloFetch: buildClients(port).createApolloFetch(),
-    createApolloFetch: buildClients(port).createApolloFetch,
+    createApolloFetch: () => buildClients(port).createApolloFetch(),
     clients: buildClients(port),
     context: server.createGraphqlContext({})
   }
