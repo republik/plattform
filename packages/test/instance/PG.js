@@ -3,7 +3,7 @@ const exec = require('util').promisify(require('child_process').exec)
 const execAndLog = (command) =>
   exec(command)
     .catch(e =>
-      console.error(`${command}\n${e.stderr}`)
+      console.log(`${command}\n${e.stderr}`)
     )
 
 const create = (name) =>

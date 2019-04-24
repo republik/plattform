@@ -67,6 +67,8 @@ const init = async () => {
   const redis = await Redis.connect()
   const pgdb = await PgDb.connect()
 
+  const context = { elastic, redis, pgdb }
+
   // subscribe to messages
   const subClient = await redis.duplicate()
   subClient.on('message', async (channel, message) => {
@@ -150,7 +152,7 @@ const init = async () => {
           id: repoId,
           meta: await getRepoMeta({ id: repoId }),
           publications: await getLatestPublications({ id: repoId })
-        })
+        }, context)
 
         debug(
           'published', {

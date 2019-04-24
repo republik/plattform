@@ -61,11 +61,11 @@
     "db:migrate:down": "db-migrate down --migrations-dir packages/db-migrations/migrations --verbose",
     "db:seed": "servers/republik/seeds/script/seed.js",
     "sendNotification": "cd servers/republik && node ../../packages/notifications/script/sendNotification.js",
-    "test": "jest --verbose",
-    "test:unit": "jest --verbose --testPathIgnorePatterns \"\\.(int)|(integration)\\.jest\"",
-    "test:integration": "jest --verbose --testPathIgnorePatterns \"\\.(u)|(unit)\\.jest\"",
+    "test": "jest --verbose --detectOpenHandles --forceExit",
+    "test:unit": "jest --verbose --detectOpenHandles --forceExit --testPathIgnorePatterns \"\\.(int)|(integration)\\.jest\"",
+    "test:integration": "jest --verbose --detectOpenHandles --forceExit --testPathIgnorePatterns \"\\.(u)|(unit)\\.jest\"",
     "test:dev": "yarn run test:unit --watch --notify",
-    "test:cover": "jest --collectCoverage"
+    "test:cover": "jest --collectCoverage --detectOpenHandles --forceExit"
   },
   "standard": {
     "env": [

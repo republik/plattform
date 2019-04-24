@@ -1,6 +1,6 @@
 const _ = require('lodash')
 
-const ES_INDEX_PREFIX = 'republik' // TODO: Put into config
+const ES_INDEX_PREFIX = process.env.ES_INDEX_PREFIX || 'republik'
 
 /**
  * @example "2018-05-24-17-05-23"

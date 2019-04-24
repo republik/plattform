@@ -4,8 +4,6 @@ const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 const buildClients = require('./buildClients')
 const { getId } = require('./pool')
 
-const debug = require('debug')('instance')
-
 // this utility launches a server for testing
 // the port, PG and redis instances are uniquely available to the instance.
 // there can be multiple instance processes running simultaniously
@@ -13,7 +11,7 @@ const debug = require('debug')('instance')
 //
 // REDIS_URL: if set is has to be a base url, allowing to append '/db'
 //
-const init = async ({ serverName }) => {
+const init = async ({ serverName, publicationScheduler }) => {
   // checks
   if (global.instance) {
     throw new Error('only one instance per process')
@@ -45,17 +43,31 @@ const init = async ({ serverName }) => {
 
   const redisUrl = `${process.env.REDIS_URL || 'redis://127.0.0.1:6379'}/${instanceId}`
 
-  debug({instanceId, redisUrl, port, databaseUrl: db.url})
+  const esPrefix = `test${instanceId}`
+
+  console.log({instanceId, redisUrl, port, databaseUrl: db.url, esPrefix})
 
   process.env.PORT = port
   process.env.DATABASE_URL = db.url
   process.env.REDIS_URL = redisUrl
+  process.env.ES_INDEX_PREFIX = esPrefix
   process.env.SEND_MAILS_LOG = false
+  if (publicationScheduler) {
+    process.env.PUBLICATION_SCHEDULER = true
+  }
 
   // flush redis
   const redis = Redis.connect()
   await redis.flushdbAsync()
   Redis.disconnect(redis)
+
+  // create ES indices
+  const pullElasticsearch = require('@orbiting/backend-modules-search/lib/pullElasticsearch')
+  const dropElasticsearch = require('@orbiting/backend-modules-search/lib/dropElasticsearch')
+  await dropElasticsearch(esPrefix)
+  await pullElasticsearch({
+    inserts: false
+  })
 
   // require server's server.js and start
   const Server = require(`${relativeServerPath}server`)
@@ -64,6 +76,8 @@ const init = async ({ serverName }) => {
   const closeAndCleanup = async () => {
     await server.close()
     await db.drop()
+    // drop ES indices
+    await dropElasticsearch(esPrefix)
     global.instance = null
   }
 
@@ -75,6 +89,8 @@ const init = async ({ serverName }) => {
     clients: buildClients(port),
     context: server.createGraphqlContext({})
   }
+
+  console.log('init completed')
 }
 
 const bootstrapEnv = () => {
@@ -87,6 +103,12 @@ const bootstrapEnv = () => {
 }
 
 module.exports = {
-  init,
+  init: async (args) => {
+    try {
+      await init(args)
+    } catch (e) {
+      console.error(e)
+    }
+  },
   bootstrapEnv
 }

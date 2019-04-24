@@ -3,10 +3,10 @@
 		"type": "root",
 		"meta": {
 			"template": "article",
-			"slug": "postschiff-enterprise",
+			"slug": "postschiff-enterprise-newslug",
 			"feed": true,
 			"gallery": true,
-			"title": "Postschiff Enterprise",
+			"title": "Postschiff Enterprise 4",
 			"subject": "",
 			"description": "Die Post hat den Quellcode für ihr umstrittenes E-Voting veröffentlicht. Schafft das Transparenz? Nicht wirklich. Wir haben Fragen an die Post. Sie auch?"
 		},
@@ -130,7 +130,7 @@
 							{
 								"type": "link",
 								"title": "Das heikle Geschäft mit der Demokratie",
-								"url": "https://github.com/republik/article-hack-me-if-you-can?autoSlug",
+								"url": "https://www.republik.ch/2019/01/31/das-heikle-geschaeft-mit-der-demokratie",
 								"children": [
 									{
 										"type": "text",

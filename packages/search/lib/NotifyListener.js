@@ -7,7 +7,7 @@ const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')
 
 const mappings = require('./indices')
-const inserts = require('../script/inserts')
+const inserts = require('./inserts')
 const { getIndexAlias } = require('./utils')
 
 const BULK_SIZE = 100000

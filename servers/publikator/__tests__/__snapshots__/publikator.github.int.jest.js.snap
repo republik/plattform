@@ -122,7 +122,7 @@ Object {
                 ],
                 "title": "Das heikle Geschäft mit der Demokratie",
                 "type": "link",
-                "url": "https://github.com/republik/article-hack-me-if-you-can?autoSlug",
+                "url": "https://www.republik.ch/2019/01/31/das-heikle-geschaeft-mit-der-demokratie",
               },
               Object {
                 "type": "text",
@@ -210,7 +210,7 @@ Object {
       "slug": "postschiff-enterprise",
       "subject": "",
       "template": "article",
-      "title": "Postschiff Enterprise",
+      "title": "Postschiff Enterprise 3",
     },
     "type": "root",
   },
@@ -221,7 +221,7 @@ Object {
     "format": null,
     "kind": null,
     "template": "article",
-    "title": "Postschiff Enterprise",
+    "title": "Postschiff Enterprise 3",
   },
 }
 `;
@@ -232,7 +232,7 @@ template: article
 slug: postschiff-enterprise
 feed: true
 gallery: true
-title: Postschiff Enterprise
+title: Postschiff Enterprise 3
 subject: ''
 description: >-
   Die Post hat den Quellcode für ihr umstrittenes E-Voting veröffentlicht.
@@ -254,7 +254,7 @@ Von [Adrienne Fichter](/~6ae2733e-1562-47b3-881c-88e9d3d28da9 \\"Adrienne Fichte
 
 <section><h6>CENTER</h6>
 
-Zunächst sah es nach einem passablen Start aus: klare Kommunikation, für jeden einsehbarer Quellcode, öffentliche Sicherheits­checks. Vergangene Woche [veröffentlichte die Post den Quellcode ihrer E-Voting-Plattform](https://republik.ch/testing), die sie [zusammen mit der Firma Scytl](https://github.com/republik/article-hack-me-if-you-can?autoSlug \\"Das heikle Geschäft mit der Demokratie\\") entwickelt hat. Am 25. Februar startet der «[öffentliche Hackertest](https://republik.ch/testing2)», bei dem für gefundene Fehler eine Prämie ausgesetzt ist. Ein Blick auf das Projekt bereitet jedoch wenig Freude. Noch vor Fragen zu den Verschlüsselungs­prozessen und Verifizierungs­algorithmen kommen Zweifel auf am Willen zur Transparenz.
+Zunächst sah es nach einem passablen Start aus: klare Kommunikation, für jeden einsehbarer Quellcode, öffentliche Sicherheits­checks. Vergangene Woche [veröffentlichte die Post den Quellcode ihrer E-Voting-Plattform](https://republik.ch/testing), die sie [zusammen mit der Firma Scytl](https://www.republik.ch/2019/01/31/das-heikle-geschaeft-mit-der-demokratie \\"Das heikle Geschäft mit der Demokratie\\") entwickelt hat. Am 25. Februar startet der «[öffentliche Hackertest](https://republik.ch/testing2)», bei dem für gefundene Fehler eine Prämie ausgesetzt ist. Ein Blick auf das Projekt bereitet jedoch wenig Freude. Noch vor Fragen zu den Verschlüsselungs­prozessen und Verifizierungs­algorithmen kommen Zweifel auf am Willen zur Transparenz.
 
 Beim Thema Digitalisierung denkt kaum jemand an die Welt der _enterprise software._ Sie existiert in den IT-Abteilungen und Rechen­zentren von Bundes­ämtern und Gross­betrieben und ist bevölkert von gut bezahlten Software­architekten und -ingenieuren. Hier werden nicht die kultigsten Apps für die Generation Z programmiert, sondern es wird Infrastruktur erschaffen: Applikationen mit hohen Anforderungen an Korrektheit, Sicherheit und Wartbarkeit – Software, die manchmal über Jahrzehnte funktionieren muss.
 
@@ -400,7 +400,7 @@ Object {
                 ],
                 "title": "Das heikle Geschäft mit der Demokratie",
                 "type": "link",
-                "url": "https://github.com/republik/article-hack-me-if-you-can?autoSlug",
+                "url": "https://www.republik.ch/2019/01/31/das-heikle-geschaeft-mit-der-demokratie",
               },
               Object {
                 "type": "text",
@@ -437,7 +437,7 @@ Object {
       "slug": "postschiff-enterprise",
       "subject": "",
       "template": "article",
-      "title": "Postschiff Enterprise",
+      "title": "Postschiff Enterprise 1",
     },
     "type": "root",
   },
@@ -448,7 +448,7 @@ Object {
     "format": null,
     "kind": null,
     "template": "article",
-    "title": "Postschiff Enterprise",
+    "title": "Postschiff Enterprise 1",
   },
 }
 `;
@@ -459,7 +459,7 @@ template: article
 slug: postschiff-enterprise
 feed: true
 gallery: true
-title: Postschiff Enterprise
+title: Postschiff Enterprise 1
 subject: ''
 description: >-
   Die Post hat den Quellcode für ihr umstrittenes E-Voting veröffentlicht.
@@ -481,7 +481,7 @@ Von [Adrienne Fichter](/~6ae2733e-1562-47b3-881c-88e9d3d28da9 \\"Adrienne Fichte
 
 <section><h6>CENTER</h6>
 
-Zunächst sah es nach einem passablen Start aus: klare Kommunikation, für jeden einsehbarer Quellcode, öffentliche Sicherheits­checks. Vergangene Woche [veröffentlichte die Post den Quellcode ihrer E-Voting-Plattform](https://republik.ch/testing), die sie [zusammen mit der Firma Scytl](https://github.com/republik/article-hack-me-if-you-can?autoSlug \\"Das heikle Geschäft mit der Demokratie\\") entwickelt hat. Am 25. Februar startet der «[öffentliche Hackertest](https://republik.ch/testing2)», bei dem für gefundene Fehler eine Prämie ausgesetzt ist. Ein Blick auf das Projekt bereitet jedoch wenig Freude. Noch vor Fragen zu den Verschlüsselungs­prozessen und Verifizierungs­algorithmen kommen Zweifel auf am Willen zur Transparenz.
+Zunächst sah es nach einem passablen Start aus: klare Kommunikation, für jeden einsehbarer Quellcode, öffentliche Sicherheits­checks. Vergangene Woche [veröffentlichte die Post den Quellcode ihrer E-Voting-Plattform](https://republik.ch/testing), die sie [zusammen mit der Firma Scytl](https://www.republik.ch/2019/01/31/das-heikle-geschaeft-mit-der-demokratie \\"Das heikle Geschäft mit der Demokratie\\") entwickelt hat. Am 25. Februar startet der «[öffentliche Hackertest](https://republik.ch/testing2)», bei dem für gefundene Fehler eine Prämie ausgesetzt ist. Ein Blick auf das Projekt bereitet jedoch wenig Freude. Noch vor Fragen zu den Verschlüsselungs­prozessen und Verifizierungs­algorithmen kommen Zweifel auf am Willen zur Transparenz.
 
 <hr /></section>
 "
@@ -609,7 +609,7 @@ Object {
                 ],
                 "title": "Das heikle Geschäft mit der Demokratie",
                 "type": "link",
-                "url": "https://github.com/republik/article-hack-me-if-you-can?autoSlug",
+                "url": "https://www.republik.ch/2019/01/31/das-heikle-geschaeft-mit-der-demokratie",
               },
               Object {
                 "type": "text",
@@ -668,7 +668,7 @@ Object {
       "slug": "postschiff-enterprise",
       "subject": "",
       "template": "article",
-      "title": "Postschiff Enterprise",
+      "title": "Postschiff Enterprise 2",
     },
     "type": "root",
   },
@@ -679,7 +679,7 @@ Object {
     "format": null,
     "kind": null,
     "template": "article",
-    "title": "Postschiff Enterprise",
+    "title": "Postschiff Enterprise 2",
   },
 }
 `;
@@ -690,7 +690,7 @@ template: article
 slug: postschiff-enterprise
 feed: true
 gallery: true
-title: Postschiff Enterprise
+title: Postschiff Enterprise 2
 subject: ''
 description: >-
   Die Post hat den Quellcode für ihr umstrittenes E-Voting veröffentlicht.
@@ -712,7 +712,7 @@ Von [Adrienne Fichter](/~6ae2733e-1562-47b3-881c-88e9d3d28da9 \\"Adrienne Fichte
 
 <section><h6>CENTER</h6>
 
-Zunächst sah es nach einem passablen Start aus: klare Kommunikation, für jeden einsehbarer Quellcode, öffentliche Sicherheits­checks. Vergangene Woche [veröffentlichte die Post den Quellcode ihrer E-Voting-Plattform](https://republik.ch/testing), die sie [zusammen mit der Firma Scytl](https://github.com/republik/article-hack-me-if-you-can?autoSlug \\"Das heikle Geschäft mit der Demokratie\\") entwickelt hat. Am 25. Februar startet der «[öffentliche Hackertest](https://republik.ch/testing2)», bei dem für gefundene Fehler eine Prämie ausgesetzt ist. Ein Blick auf das Projekt bereitet jedoch wenig Freude. Noch vor Fragen zu den Verschlüsselungs­prozessen und Verifizierungs­algorithmen kommen Zweifel auf am Willen zur Transparenz.
+Zunächst sah es nach einem passablen Start aus: klare Kommunikation, für jeden einsehbarer Quellcode, öffentliche Sicherheits­checks. Vergangene Woche [veröffentlichte die Post den Quellcode ihrer E-Voting-Plattform](https://republik.ch/testing), die sie [zusammen mit der Firma Scytl](https://www.republik.ch/2019/01/31/das-heikle-geschaeft-mit-der-demokratie \\"Das heikle Geschäft mit der Demokratie\\") entwickelt hat. Am 25. Februar startet der «[öffentliche Hackertest](https://republik.ch/testing2)», bei dem für gefundene Fehler eine Prämie ausgesetzt ist. Ein Blick auf das Projekt bereitet jedoch wenig Freude. Noch vor Fragen zu den Verschlüsselungs­prozessen und Verifizierungs­algorithmen kommen Zweifel auf am Willen zur Transparenz.
 
 Beim Thema Digitalisierung denkt kaum jemand an die Welt der _enterprise software._ Sie existiert in den IT-Abteilungen und Rechen­zentren von Bundes­ämtern und Gross­betrieben und ist bevölkert von gut bezahlten Software­architekten und -ingenieuren. Hier werden nicht die kultigsten Apps für die Generation Z programmiert, sondern es wird Infrastruktur erschaffen: Applikationen mit hohen Anforderungen an Korrektheit, Sicherheit und Wartbarkeit – Software, die manchmal über Jahrzehnte funktionieren muss.
 

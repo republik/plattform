@@ -7,7 +7,7 @@ const KEY = 'tests.instanceId'
 // this will overflow at 2^63
 const getId = async () => {
   const redis = Redis.connect()
-  const id = ((await redis.incrAsync(KEY)) % maxConcurrency) + 1
+  const id = ((await redis.incrAsync(KEY)) % (maxConcurrency * 2)) + 1
   Redis.disconnect(redis)
   return id
 }

@@ -1,4 +1,5 @@
 module.exports = {
+  unresolvedRepoId: require('./unresolvedRepoId.doc.mdast.json'),
   postschiff: [
     {
       preCommit: require('./postschiff/1/preCommit.doc.mdast.json')

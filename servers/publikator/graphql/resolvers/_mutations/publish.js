@@ -311,10 +311,7 @@ module.exports = async (
       name: versionName,
       message
     },
-    {
-      user,
-      pubsub
-    }
+    context
   )
 
   // move ref
