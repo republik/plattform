@@ -1,5 +1,5 @@
 {
-  "updated": "2019-04-15T15:07:33.657Z",
+  "updated": "2019-04-25T16:04:19.301Z",
   "title": "live",
   "data": [
     {
@@ -8,31 +8,91 @@
     },
     {
       "key": "signIn/button",
-      "value": "anmelden"
+      "value": "Anmelden"
     },
     {
       "key": "signIn/email/label",
       "value": "E-Mail-Adresse"
     },
     {
+      "key": "signIn/faq",
+      "value": "Fragen"
+    },
+    {
+      "key": "signIn/privacy",
+      "value": "Datenschutz"
+    },
+    {
+      "key": "signIn/hint",
+      "value": "Erste-Hilfe-Abteilung: kontakt@republik.ch."
+    },
+    {
       "key": "signIn/success",
-      "value": "Erfolgreich eingeloggt als {nameOrEmail} ({seconds}s)"
+      "value": "Erfolgreich als {nameOrEmail} angemeldet."
     },
     {
-      "key": "signIn/polling",
-      "value": "Jetzt müssen Sie noch Ihre Mailadresse bestätigen. Wir haben Ihnen ein kurzes Mail an die Adresse {email} geschickt. Dieses enthält fett gedruckt die drei seltsamen Wörter: <b>«{phrase}»</b>.<br /><br /> Gehen Sie zu Ihrem Postfach, öffnen Sie das Mail, kontrollieren Sie, ob dort die drei gleichen seltsamen Wörter stehen. Sind es dieselben, klicken Sie den Link darunter. <br /><br />(Die Sache mit den drei Wörtern ist leider nötig. Es ist eine Sicherheitsmassnahme, damit niemand mit Ihrer Mailadresse Unfug treiben kann.)"
+      "key": "signIn/polling/APP/title",
+      "value": "Zugriff via Republik-App bestätigen"
     },
     {
-      "key": "signIn/cancel",
-      "value": "abbrechen"
+      "key": "signIn/polling/APP/text",
+      "value": "Wir haben Ihnen auf Ihre Republik-App <b>eine Benachrichtigung</b> geschickt. Bitte prüfen Sie Ihr Smartphone oder Tablet."
+    },
+    {
+      "key": "signIn/polling/EMAIL_TOKEN/title",
+      "value": "Zugriff via E-Mail bestätigen"
+    },
+    {
+      "key": "signIn/polling/EMAIL_TOKEN/text",
+      "value": "Wir haben Ihnen <b>eine E-Mail</b> geschickt, mit der Sie diesen Zugriff freischalten können."
+    },
+    {
+      "key": "signIn/polling/switch/APP",
+      "value": "Zugriff via Republik-App bestätigen?"
+    },
+    {
+      "key": "signIn/polling/switch/EMAIL_TOKEN",
+      "value": "Zugriff via E-Mail bestätigen?"
+    },
+    {
+      "key": "signIn/polling/phrase",
+      "value": "Seltsame Wörter (eine Sicherheitsmassnahme)"
+    },
+    {
+      "key": "signIn/polling/phrase/EMAIL_TOKEN/hint",
+      "value": "Wie funktioniert diese Sicherheitsmassnahme? Vergleichen Sie diese Wörter. Stehen sie ebenfalls auf der Betätigungsseite, können Sie sicher sein, dass Sie dieser Anfrage den Zugriff freischalten."
+    },
+    {
+      "key": "signIn/polling/phrase/APP/hint",
+      "value": "Wie funktioniert diese Sicherheitsmassnahme? Vergleichen Sie diese Wörter. Stehen sie ebenfalls auf der Bestätigungsmaske in der Republik-App, können Sie sicher sein, dass Sie dieser Anfrage den Zugriff freischalten."
+    },
+    {
+      "key": "signIn/polling/phrase/hint/show",
+      "value": "Wie funktioniert diese Sicherheitsmassnahme?"
+    },
+    {
+      "key": "signIn/polling/email",
+      "value": "E-Mail-Adresse"
+    },
+    {
+      "key": "signIn/polling/cancel",
+      "value": "Vertippt? E-Mail-Adresse erneut eingeben."
     },
     {
       "key": "signIn/email/error/empty",
-      "value": "E-Mail fehlt"
+      "value": "E-Mail-Adresse fehlt"
     },
     {
       "key": "signIn/email/error/invalid",
-      "value": "E-Mail ungültig"
+      "value": "E-Mail-Adresse ungültig"
+    },
+    {
+      "key": "cookies/disabled/error",
+      "value": "Cookies nicht erlaubt"
+    },
+    {
+      "key": "cookies/disabled/error/explanation",
+      "value": "Es scheint, als könnten wir Ihnen keinen Keks (Cookie) unterjubeln. Bitte erlauben Sie uns in Ihrem Browser ein Cookie zu hinterlegen. Nur damit gestatten Sie uns, Sie wiederzuerkennen und entsprechenden Zugriff auf Artikel und Diskussionen zu ermöglichen.<br />\n<ul>\n<li><a href=\"https://wiki.selfhtml.org/wiki/Sicherheit/Cookies_erlauben\" target=\"_blank\">Cookies für republik.ch erlauben?</a></li>\n<li><a href=\"/datenschutz\" target=\"_blank\">Mehr über Datenschutz bei der Republik AG erfahren?</a></li>\n</ul>\nWir helfen Ihnen per E-Mail unter <a href=\"mailto:kontakt@republik.ch\">kontakt@republik.ch</a> gerne weiter."
     },
     {
       "key": "signOut/label",
@@ -41,6 +101,10 @@
     {
       "key": "signOut/error",
       "value": "Unbekannter Fehler"
+    },
+    {
+      "key": "me/signedOut",
+      "value": "Sie sind nicht angemeldet"
     },
     {
       "key": "me/signedinAs",
@@ -412,15 +476,31 @@
     },
     {
       "key": "metaData/field/audioSourceMp3",
-      "value": ".mp3 URL (empfohlen)"
+      "value": ".mp3 URL (zwingend)"
     },
     {
       "key": "metaData/field/audioSourceAac",
-      "value": ".aac URL"
+      "value": ".aac URL (optional)"
     },
     {
-      "key": "metaData/field/audioSourceOgg",
-      "value": ".ogg URL"
+      "key": "metaData/audio/cover/anchor",
+      "value": "Audio auf Cover"
+    },
+    {
+      "key": "metaData/audio/cover/anchor/null",
+      "value": "aus"
+    },
+    {
+      "key": "metaData/audio/cover/anchor/middle",
+      "value": "Mitte"
+    },
+    {
+      "key": "metaData/audio/cover/color",
+      "value": "Farbe"
+    },
+    {
+      "key": "metaData/audio/cover/backgroundColor",
+      "value": "Hintergrund"
     },
     {
       "key": "metaData/series/label",
@@ -461,6 +541,22 @@
     {
       "key": "metaData/series/coverText/anchor",
       "value": "Text auf Cover"
+    },
+    {
+      "key": "metaData/series/coverText/anchor/null",
+      "value": "aus"
+    },
+    {
+      "key": "metaData/series/coverText/anchor/top",
+      "value": "Oben"
+    },
+    {
+      "key": "metaData/series/coverText/anchor/middle",
+      "value": "Mitte"
+    },
+    {
+      "key": "metaData/series/coverText/anchor/bottom",
+      "value": "Unten"
     },
     {
       "key": "metaData/series/coverText/offset",
