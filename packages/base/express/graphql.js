@@ -83,7 +83,9 @@ module.exports = (
 ) => {
   const createContext = ({user, ...context} = {}) => createGraphqlContext({
     ...context,
-    user: (global && global.testUser) || user
+    user: (global && global.testUser !== undefined)
+      ? global.testUser
+      : user
   })
 
   const subscriptionServer = SubscriptionServer.create(

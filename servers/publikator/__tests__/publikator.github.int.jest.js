@@ -331,6 +331,10 @@ describe('publish', () => {
     await initRepo()
   }, 1000 * 60)
 
+  beforeEach(async () => {
+    global.instance.apolloFetch = global.instance.createApolloFetch()
+  })
+
   afterAll(async () => {
     global.testUser = null
     const { pgdb } = global.instance.context
@@ -635,7 +639,7 @@ describe('publish', () => {
     await publish('v4', commits[0], {
       prepublication: false,
       updateMailchimp: false,
-      scheduledAt: moment().add(25, 'seconds')
+      scheduledAt: moment().add(30, 'seconds')
     })
     await checkState({
       publications: [
@@ -658,7 +662,7 @@ describe('publish', () => {
     await publish('v5', commits[1], {
       prepublication: false,
       updateMailchimp: false,
-      scheduledAt: moment().add(15, 'seconds')
+      scheduledAt: moment().add(20, 'seconds')
     })
     await checkState({
       publications: [
@@ -791,7 +795,7 @@ describe('publish', () => {
     await publish('v9', commits[2], {
       prepublication: false,
       updateMailchimp: false,
-      scheduledAt: moment().add(20, 'seconds')
+      scheduledAt: moment().add(30, 'seconds')
     })
     await checkState({
       publications: [
@@ -850,7 +854,7 @@ describe('publish', () => {
     await publish('v11', commits[1], {
       prepublication: false,
       updateMailchimp: false,
-      scheduledAt: moment().add(20, 'seconds')
+      scheduledAt: moment().add(25, 'seconds')
     })
     await checkState({
       publications: [
