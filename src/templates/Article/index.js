@@ -476,7 +476,7 @@ const mdastToString = node => node
   )
   : ''
 
-const cover = {
+const createCover = ({ onAudioCoverClick }) => ({
   matchMdast: (node, index) => (
     matchFigure(node) &&
     index === 0
@@ -512,7 +512,11 @@ const cover = {
     }
     return {
       size: node.data.size,
-      text
+      text,
+      audio: meta.audioCover && {
+        ...meta.audioCover,
+        onClick: onAudioCoverClick
+      }
     }
   },
   editorModule: 'figure',
@@ -567,7 +571,7 @@ const cover = {
     },
     figureCaption
   ]
-}
+})
 
 const logbook = {
   matchMdast: matchZone('LOGBOOK'),
@@ -668,12 +672,15 @@ const createSchema = ({
   t = () => '',
   dynamicComponentRequire,
   previewTeaser,
-  getVideoPlayerProps = props => props
+  getVideoPlayerProps = props => props,
+  onAudioCoverClick
 } = {}) => {
   const teasers = createTeasers({
     t,
     Link
   })
+
+  const cover = createCover({onAudioCoverClick})
 
   return {
     repoPrefix,
@@ -748,7 +755,9 @@ const createSchema = ({
                   const element = <Headline attributes={attributes}>{children}</Headline>
 
                   if (coverText) {
-                    return <CoverTextTitleBlockHeadline>{element}</CoverTextTitleBlockHeadline>
+                    return <CoverTextTitleBlockHeadline>
+                      {element}
+                    </CoverTextTitleBlockHeadline>
                   }
 
                   return element

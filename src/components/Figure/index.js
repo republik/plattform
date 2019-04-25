@@ -1,6 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { css, merge } from 'glamor'
+
+import AudioIcon from 'react-icons/lib/md/volume-up'
+
 import { mUp } from '../../theme/mediaQueries'
 import {
   breakoutStyles,
@@ -8,6 +11,10 @@ import {
   PADDING,
   BREAKOUT_SIZES
 } from '../Center'
+
+import {
+  plainButtonRule
+} from '../Button'
 
 export { default as FigureImage } from './Image'
 export { default as FigureCaption } from './Caption'
@@ -55,6 +62,27 @@ const styles = {
     display: 'block',
     [mUp]: {
       display: 'none'
+    }
+  }),
+  coverAudio: css(plainButtonRule, {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    borderRadius: '50%',
+    marginLeft: -35,
+    marginTop: -35,
+    width: 70,
+    height: 70,
+    padding: 20,
+    [mUp]: {
+      marginLeft: -50,
+      marginTop: -50,
+      width: 100,
+      height: 100,
+      padding: 30
+    },
+    ':hover': {
+      animationIterationCount: 'infinite'
     }
   }),
   col2: css({
@@ -134,13 +162,33 @@ const textPosStyle = ({anchor, offset}) => {
 export const CoverTextTitleBlockHeadline = ({children, attributes}) =>
   <div {...attributes} {...styles.coverTextTitleBlockHeadline}>{children}</div>
 
-export const FigureCover = ({size, text, ...props}) => {
+const AudioButton = ({ color, backgroundColor, onClick }) => {
+  const pulse = css.keyframes({
+    '0%': {boxShadow: `0 0 0 0 ${backgroundColor}`},
+    '70%': {boxShadow: `0 0 0 10px transparent`},
+    '100%': {boxShadow: `0 0 0 0 transparent`},
+  })
+
+  return (
+    <button {...styles.coverAudio} onClick={onClick} style={{
+      color,
+      backgroundColor
+    }} {...css({
+      animation: `${pulse} 2s 3`
+    })}>
+      <AudioIcon size='100%' />
+    </button>
+  )
+}
+
+export const FigureCover = ({size, text, audio, ...props}) => {
   const sizeStyle = size ? size === 'breakout' ? styles.coverBreakout : styles.coverSize : undefined
   return <div {...styles.cover} {...sizeStyle}>
     <Figure size={size} {...props} />
     {text && <div style={textPosStyle(text)} {...styles.coverText}>
       {text.element}
     </div>}
+    {audio && <AudioButton {...audio} />}
   </div>
 }
 

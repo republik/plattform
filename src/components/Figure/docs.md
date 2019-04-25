@@ -256,3 +256,38 @@ Supports `breakout` sizes:
   </FigureGroup>
 </Center>
 ```
+
+### `<FigureCover />`
+
+#### `text`
+
+```react|responsive
+<Fragment>
+  <FigureCover text={{
+    anchor: 'bottom',
+    offset: '10%',
+    element: <Editorial.Headline style={{color: '#fff'}}>
+      Desktop on Top
+    </Editorial.Headline>
+  }}>
+    <FigureImage src='/static/desert.jpg' alt='' />
+  </FigureCover>
+  <CoverTextTitleBlockHeadline>
+    <Editorial.Headline>Mobile Below</Editorial.Headline>
+  </CoverTextTitleBlockHeadline>
+</Fragment>
+```
+
+#### `audio`
+
+```react|responsive
+<Fragment>
+  <FigureCover audio={{
+    color: '#fff',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    onClick: () => alert('Play!')
+  }}>
+    <FigureImage src='/static/desert.jpg' alt='' />
+  </FigureCover>
+</Fragment>
+```

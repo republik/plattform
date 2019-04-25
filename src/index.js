@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import ReactDOM from 'react-dom'
 import { Catalog, ReactSpecimen } from 'catalog'
 import { simulations, speedy, css, merge } from 'glamor'
@@ -365,7 +365,8 @@ ReactDOM.render(
               css,
               ...require('./components/Typography'),
               ...require('./components/Figure'),
-              Center: require('./components/Center')
+              Center: require('./components/Center'),
+              Fragment
             },
             src: require('./components/Figure/docs.md')
           },
