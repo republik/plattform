@@ -824,6 +824,7 @@ describe('publish', () => {
     expect(result.errors).toBeFalsy()
     expect(result.data).toBeTruthy()
     await publishHistory['v9'].waitUntilPublished()
+    await sleep(1000 * 15) // wait for ES
     await checkState({
       publications: [ ],
       document: 0,
