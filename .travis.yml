@@ -29,7 +29,8 @@ env:
     - PARKING_PLEDGE_ID=00000000-1234-0000-0000-000000000001
     - PARKING_USER_ID=00000000-4321-0000-0000-000000000001
     - DISPLAY_AUTHOR_SECRET=testtest
-    - AUTO_LOGIN_REGEX=^([a-zA-Z0-9._%+-]+)@test\.project-r\.construction$
+    - AUTO_LOGIN_REGEX='^([a-zA-Z0-9._%+-]+)@test\.project-r\.construction$'
+    - DOCUMENTS_RESTRICT_TO_ROLES=member
 before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.7.0
   - export PATH=$HOME/.yarn/bin:$PATH
