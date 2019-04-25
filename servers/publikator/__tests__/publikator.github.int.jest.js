@@ -471,16 +471,24 @@ describe('publish', () => {
 
     if (expectations.document) {
       if (expectations.document.editors !== undefined) {
-        const result = await getDocuments({ user: Users.Editor })
-        const docs = result.data.documents.nodes
-        if (expectations.document.editors) {
-          expect(docs.length).toBe(1)
-          const expectedDoc = publishHistory[expectations.document.editors].commit.doc
-          const path = getPathForMeta(expectedDoc.content.meta)
-          checkDocument(docs[0], expectedDoc, path)
-        } else {
-          expect(docs.length).toBe(0)
-        }
+        const expectedDoc = publishHistory[expectations.document.editors].commit.doc
+        const path = getPathForMeta(expectedDoc.content.meta)
+        const result = await getDocument({
+          user: Users.Editor,
+          path
+        })
+        const doc = result.data.document
+        checkDocument(doc, expectedDoc, path)
+      }
+      if (expectations.document.anonymous) {
+        const expectedDoc = publishHistory[expectations.document.anonymous].commit.doc
+        const path = getPathForMeta(expectedDoc.content.meta)
+        const result = await getDocument({
+          user: null,
+          path
+        })
+        const doc = result.data.document
+        checkDocument(doc, expectedDoc, path)
       }
       if (expectations.document.members !== undefined) {
         const result = await getDocuments({ user: Users.Member })
@@ -494,18 +502,8 @@ describe('publish', () => {
           expect(docs.length).toBe(0)
         }
       }
-      if (expectations.document.anonymous) {
-        const expectedDoc = publishHistory[expectations.document.anonymous].commit.doc
-        const path = getPathForMeta(expectedDoc.content.meta)
-        const result = await getDocument({
-          user: null,
-          path
-        })
-        const doc = result.data.document
-        checkDocument(doc, expectedDoc, path)
-      }
     } else {
-      const result = await getDocuments({ user: Users.Editor })
+      const result = await getDocuments({ user: Users.Member })
       const docs = result.data.documents.nodes
       expect(docs.length).toBe(0)
     }
@@ -552,6 +550,7 @@ describe('publish', () => {
       ],
       document: {
         editors: 'v1',
+        members: 'v1',
         anonymous: 'v1'
       },
       refs: {
@@ -606,6 +605,7 @@ describe('publish', () => {
       ],
       document: {
         editors: 'v2-prepublication',
+        members: 'v1',
         anonymous: 'v1'
       },
       refs: {
@@ -626,6 +626,7 @@ describe('publish', () => {
       ],
       document: {
         editors: 'v3',
+        members: 'v3',
         anonymous: 'v3'
       },
       refs: {
@@ -648,6 +649,7 @@ describe('publish', () => {
       ],
       document: {
         editors: 'v3',
+        members: 'v3',
         anonymous: 'v3'
       },
       refs: {
@@ -671,6 +673,7 @@ describe('publish', () => {
       ],
       document: {
         editors: 'v3',
+        members: 'v3',
         anonymous: 'v3'
       },
       refs: {
@@ -690,6 +693,7 @@ describe('publish', () => {
       ],
       document: {
         editors: 'v5',
+        members: 'v5',
         anonymous: 'v5'
       },
       refs: {
@@ -710,6 +714,7 @@ describe('publish', () => {
       ],
       document: {
         editors: 'v6',
+        members: 'v6',
         anonymous: 'v6'
       },
       refs: {
@@ -735,6 +740,7 @@ describe('publish', () => {
       ],
       document: {
         editors: 'v6',
+        members: 'v6',
         anonymous: 'v6'
       },
       refs: {
@@ -761,6 +767,7 @@ describe('publish', () => {
       ],
       document: {
         editors: 'v8-prepublication',
+        members: 'v6',
         anonymous: 'v6'
       },
       refs: {
@@ -779,6 +786,7 @@ describe('publish', () => {
       ],
       document: {
         editors: 'v7',
+        members: 'v7',
         anonymous: 'v7'
       },
       refs: {
@@ -804,6 +812,7 @@ describe('publish', () => {
       ],
       document: {
         editors: 'v7',
+        members: 'v7',
         anonymous: 'v7'
       },
       refs: {
