@@ -53,7 +53,7 @@ const index = async ({ indexName, type, elastic, resource }) => {
     })
 
     stats[type].added += rows.length
-    stats[type].deleted += resource.delete.length || 0
+    stats[type].deleted += (resource.delete || []).length
 
     offset += BULK_SIZE
   } while (rows.length >= BULK_SIZE)
