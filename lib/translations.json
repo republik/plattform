@@ -1,5 +1,5 @@
 {
-  "updated": "2019-04-25T16:04:19.301Z",
+  "updated": "2019-04-25T16:57:47.488Z",
   "title": "live",
   "data": [
     {
@@ -733,10 +733,6 @@
     {
       "key": "publish/meta/path/label",
       "value": "URL"
-    },
-    {
-      "key": "publish/meta/path/value",
-      "value": "republik.ch{path}"
     },
     {
       "key": "publish/trigger",
