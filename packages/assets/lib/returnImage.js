@@ -117,8 +117,10 @@ module.exports = async ({
       ) && (
         // only touch images
         mime && mime.indexOf('image') === 0 &&
-        // don't touch gifs exept explixit format is given and not webp
-        (mime !== 'image/gif' || (format && format !== 'webp'))
+        // don't touch gifs exept format is set and not webp
+        (mime !== 'image/gif' || (format && format !== 'webp')) &&
+        // don't touch xmls exept format is set and not webp
+        (mime !== 'image/svg+xml' || (format && format !== 'webp'))
       )
     ) {
       pipeline = sharp()
