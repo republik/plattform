@@ -261,7 +261,7 @@ module.exports = async (_, args, context) => {
   }
 
   // latest commit -> default branch
-  githubRest.repos.edit({
+  await githubRest.repos.edit({
     owner: login,
     repo: repoName,
     name: repoName,
