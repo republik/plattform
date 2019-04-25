@@ -3,8 +3,16 @@ import {css, merge, simulate} from 'glamor'
 import colors from '../../theme/colors'
 import {fontFamilies} from '../../theme/fonts'
 
-const buttonStyle = css({
+export const plainButtonRule = css({
+  border: 'none',
+  background: 'transparent',
+  cursor: 'pointer',
   outline: 'none',
+  appearance: 'none',
+  padding: 0
+})
+
+const buttonStyle = css(plainButtonRule, {
   verticalAlign: 'bottom',
   padding: '10px 20px 10px 20px',
   minWidth: 160,
@@ -18,7 +26,6 @@ const buttonStyle = css({
   border: `1px solid ${colors.secondary}`,
   borderRadius: 0,
   color: colors.secondary,
-  cursor: 'pointer',
   ':hover': {
     backgroundColor: colors.primary,
     borderColor: colors.primary,

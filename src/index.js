@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Catalog, ReactSpecimen } from 'catalog'
-import { simulations, speedy, css } from 'glamor'
+import { simulations, speedy, css, merge } from 'glamor'
 import theme from './catalogTheme'
 import './global.css'
 import './catalogTheme.css'
@@ -115,7 +115,11 @@ ReactDOM.render(
             path: '/components/button',
             title: 'Button',
             imports: {
-              Button: require('./components/Button')
+              css,
+              merge,
+              Button: require('./components/Button'),
+              AudioIcon: require('react-icons/lib/md/volume-up'),
+              plainButtonRule: require('./components/Button').plainButtonRule
             },
             src: require('./components/Button/docs.md')
           },

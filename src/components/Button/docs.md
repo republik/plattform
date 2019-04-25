@@ -124,3 +124,25 @@ To fit, e.g. in a header, it's permissible to set an explicit height.
   Weiss
 </Button>
 ```
+
+## Plain Button
+
+```react|span-3
+<button
+  {...plainButtonRule}
+  onClick={() => alert('A11Y ftw')}
+  title="Artikel anhören">
+  <AudioIcon />
+</button>
+```
+
+```react|span-3
+<button
+  {...merge(plainButtonRule,
+    { backgroundColor: '#000', borderRadius: '50%', width: 50, height: 50 }
+  )}>
+  <AudioIcon fill='#fff' />
+</button>
+```
+
+Use [glamors `css` or `merge`](https://github.com/threepointone/glamor/blob/master/docs/howto.md#combined-selectors) to ensure your `border`, `background`, `padding` and other styles take precedence over the plain rule.
