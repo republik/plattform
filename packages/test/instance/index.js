@@ -74,6 +74,8 @@ const init = async ({ serverName, publicationScheduler }) => {
   const server = await Server.start()
 
   const closeAndCleanup = async () => {
+    const { pgdb } = global.instance.context
+    expect(await PG.hasOpenTransactions(pgdb)).toBeFalsy()
     await server.close()
     await db.drop()
     // drop ES indices
