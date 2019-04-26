@@ -1,6 +1,6 @@
 const { Instance } = require('@orbiting/backend-modules-test')
-
 const seedCrowdfundings = require('../../seeds/seedCrowdfundings')
+const moment = require('moment')
 
 const {
   signIn,
@@ -470,13 +470,13 @@ describe('cancelPledge', () => {
       pledgeId
     })
     expect(result.errors).toBeFalsy()
-    expect(result.data).toEqual({
-      cancelPledge: { status: 'CANCELLED', memberships: [] }
-    })
-
-    const parkedMembership = await pgDatabase().public.memberships.findOne({ id: membership.id })
-    expect(parkedMembership.pledgeId).toBe(process.env.PARKING_PLEDGE_ID)
-    expect(parkedMembership.userId).toBe(process.env.PARKING_USER_ID)
+    expect(result.data).toBeTruthy()
+    expect(result.data.cancelPledge.memberships.length).toBe(1)
+    expect(result.data.cancelPledge.memberships[0].periods.length).toBe(1)
+    const afterEndDate = moment().add(10, 'minutes')
+    expect(
+      moment(result.data.cancelPledge.memberships[0].periods[0].endDate).isBefore(afterEndDate)
+    ).toBeTruthy()
 
     const pledgePayment = await pgDatabase().public.pledgePayments.findOne({ pledgeId })
     expect(pledgePayment).toBeTruthy()
@@ -484,9 +484,6 @@ describe('cancelPledge', () => {
     const payment = await pgDatabase().public.payments.findOne({ id: pledgePayment.paymentId })
     expect(payment).toBeTruthy()
     expect(payment.status).toBe('CANCELLED')
-
-    const membershipAfterCancel = await pgDatabase().public.memberships.findOne({ pledgeId })
-    expect(membershipAfterCancel).toBeFalsy()
 
     await signOut()
   })

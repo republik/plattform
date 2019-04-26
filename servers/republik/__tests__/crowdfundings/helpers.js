@@ -127,6 +127,10 @@ const CANCEL_PLEDGE_MUTATION = `
       status
       memberships {
         active
+        periods {
+          beginDate
+          endDate
+        }
       }
     }
   }
