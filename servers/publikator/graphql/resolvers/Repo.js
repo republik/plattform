@@ -3,6 +3,7 @@ const yaml = require('../../lib/yaml')
 const { descending } = require('d3-array')
 const zipArray = require('../../lib/zipArray')
 const {
+  getRepo,
   getCommits,
   getCommit,
   getHeads,
@@ -137,5 +138,13 @@ module.exports = {
       return {}
     }
     return yaml.parse(message)
+  },
+  isArchived: async (repo, args, context) => {
+    if (repo.isArchived !== undefined) {
+      return repo.isArchived
+    }
+
+    const { isArchived } = await getRepo(repo.id)
+    return isArchived
   }
 }

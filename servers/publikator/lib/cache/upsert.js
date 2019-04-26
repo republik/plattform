@@ -128,11 +128,11 @@ const upsert = async ({
   id,
   meta,
   name,
-  publication,
   publications,
   tag,
   tags,
-  updatedAt
+  updatedAt,
+  refresh = true
 }, {
     elastic
   }) => {
@@ -171,6 +171,7 @@ const upsert = async ({
 
   await elastic.update({
     ...getPath(id),
+    refresh,
     version: doc._version,
     body: {
       doc_as_upsert: true,

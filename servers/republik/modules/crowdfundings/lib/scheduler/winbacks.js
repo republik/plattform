@@ -81,7 +81,6 @@ const inform = async (args, context) => {
     cancellations,
     async ({
       userId,
-      email,
       membershipId,
       cancellationCategory,
       cancelledAt,
@@ -89,7 +88,6 @@ const inform = async (args, context) => {
     }) => {
       const templatePayload = await context.mail.prepareMembershipWinback({
         userId,
-        membershipId,
         cancellationCategory,
         cancelledAt
       }, context)

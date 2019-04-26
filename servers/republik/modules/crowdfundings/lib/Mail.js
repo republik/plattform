@@ -152,6 +152,7 @@ mail.sendPledgeConfirmations = async ({ userId, pgdb, t }) => {
   const user = await pgdb.public.users.findOne({ id: userId })
   const pledges = await pgdb.public.pledges.find({
     userId: user.id,
+    'status !=': 'CANCELLED',
     sendConfirmMail: true
   })
 
@@ -310,7 +311,7 @@ mail.prepareMembershipGiversProlongNotice = async ({ userId, membershipIds, info
   })
 }
 
-mail.prepareMembershipWinback = async ({ userId, membershipId, cancellationCategory, cancelledAt }, { t, pgdb }) => {
+mail.prepareMembershipWinback = async ({ userId, cancellationCategory, cancelledAt }, { t, pgdb }) => {
   const user = transformUser(
     await pgdb.public.users.findOne({ id: userId })
   )
@@ -320,7 +321,10 @@ mail.prepareMembershipWinback = async ({ userId, membershipId, cancellationCateg
     to: user.email,
     fromEmail: t('api/email/membership_winback/fromEmail'),
     fromName: t('api/email/membership_winback/fromName'),
-    subject: t('api/email/membership_winback/subject'),
+    subject: t.first([
+      `api/email/membership_winback_${cancellationCategory}/subject`,
+      `api/email/membership_winback/subject`
+    ]),
     templateName: `membership_winback_${cancellationCategory}`,
     mergeLanguage: 'handlebars',
     globalMergeVars: [

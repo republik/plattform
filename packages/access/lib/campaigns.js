@@ -89,7 +89,13 @@ const filterInvisibleCampaigns = campaigns =>
 
 const mergeConstraintPayloads = campaigns =>
   campaigns.map(campaign => {
-    const payload = {}
+    const payload = {
+      slots: {
+        total: 0,
+        used: 0,
+        free: 0
+      }
+    }
 
     campaign.constraintMeta.forEach(meta => {
       Object.assign(payload, meta.payload)
