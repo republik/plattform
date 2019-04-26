@@ -42,3 +42,5 @@ before_script:
   - sleep 10
 script:
   - yarn run test:cover
+after_success:
+  - yarn run test:reportCover
