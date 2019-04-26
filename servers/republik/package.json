@@ -42,13 +42,7 @@
     "translations:local": "gsheets --key=1NE1igcbxtTrVd5P72Ubqmgv4yKYh0LRGa0EuYSEQKxE --title=live --pretty --out lib/translations.json",
     "db:seed:redirections": "cat ../../packages/redirections/seeds/seeds.example.json | node ../../packages/redirections/seeds/seed.js",
     "db:seed:users": "cat ../../packages/auth/seeds/seeds.example.json | node ../../packages/auth/seeds/seed.js --truncate",
-    "db:seed:crowdfundings": "node seeds/seedCrowdfundings.js",
-    "db:reset:seed": "yarn run db:reset && yarn run db:seed:users && yarn run db:seed:crowdfundings",
-    "db:reset": "node script/db-migrate-all.js reset && node script/db-migrate-all.js up",
-    "test:prepare": "rm -rf node_modules/.bin && ln -s ../../../node_modules/.bin node_modules/ && dropdb --if-exists republik-test && createdb republik-test && NODE_ENV=development OVERWRITE_ENV=.test.env yarn run db:reset:seed",
-    "test:travis": "yarn run test:prepare && istanbul cover tape \"__tests__/**/*.test.js\" --report lcovonly",
-    "test:watch": "yarn run test:prepare && NODE_ENV=development OVERWRITE_ENV=.test.env nodemon --exec 'tape \"__tests__/**/*.test.js\"' | tap-diff",
-    "test:run": "NODE_ENV=development OVERWRITE_ENV=.test.env istanbul cover tape \"__tests__/**/*.test.js\" | tap-diff"
+    "db:seed:crowdfundings": "seeds/script/seed.js"
   },
   "devDependencies": {
     "apollo-fetch": "^0.7.0",
