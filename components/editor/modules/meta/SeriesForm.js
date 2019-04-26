@@ -9,14 +9,11 @@ import withT from '../../../../lib/withT'
 import RepoSelect from './RepoSelect'
 import UIForm from '../../UIForm'
 
-const coverTextAnchors = [
-  { value: null, text: 'Aus' },
-  { value: 'top', text: 'Top' },
-  { value: 'middle', text: 'Middle' },
-  { value: 'bottom', text: 'Bottom' }
-]
-
 export default withT(({ t, editor, node, onInputChange }) => {
+  const coverTextAnchors = [null, 'top', 'middle', 'bottom'].map(value => ({
+    value, text: t(`metaData/series/coverText/anchor/${value}`)
+  }))
+
   const value = node.data.get('series')
   const onChange = key => newValue => {
     editor.change(change => {
@@ -53,7 +50,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
           onSeriesChange({
             title: '',
             episodes: [
-              {title: '', publishDate: '', document: null}
+              { title: '', publishDate: '', document: null }
             ]
           })
         }}
@@ -92,7 +89,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
         label={t('metaData/series/coverText/anchor')}
         items={coverTextAnchors}
         value={coverText ? coverText.anchor : null}
-        onChange={({value}) => onChange('coverText')(value && {
+        onChange={({ value }) => onChange('coverText')(value && {
           anchor: value,
           offset: value === 'middle'
             ? ''
@@ -135,7 +132,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
       onSeriesChange(url || '')
     }} />}
     {isMaster && (
-      <div style={{backgroundColor: '#fff', padding: '5px 10px 10px', marginTop: 5}}>
+      <div style={{ backgroundColor: '#fff', padding: '5px 10px 10px', marginTop: 5 }}>
         <Field
           label={t('metaData/series/title/label')}
           value={value.title}
@@ -146,7 +143,7 @@ export default withT(({ t, editor, node, onInputChange }) => {
             })
           }} />
         {episodes.map((episode, i) => {
-          const {document: episodeDoc, ...values} = episode
+          const { document: episodeDoc, ...values } = episode
           const keys = Set([
             'label', 'title',
             'image', 'publishDate'

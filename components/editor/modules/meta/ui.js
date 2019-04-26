@@ -14,6 +14,7 @@ import FBPreview from './FBPreview'
 import TwitterPreview from './TwitterPreview'
 import RepoSelect from './RepoSelect'
 import SeriesForm from './SeriesForm'
+import AudioForm from './AudioForm'
 import UIForm from '../../UIForm'
 
 const styles = {
@@ -70,16 +71,6 @@ const MetaData = ({ value, editor, mdastSchema, contextMeta, series, additionalF
   const twitterDefaultValues = Map(twitterKeys.map(key => [key, '']))
   const twitterData = twitterDefaultValues.merge(
     node.data.filter((_, key) => twitterKeys.has(key))
-  )
-
-  const audioKeys = Set([
-    'audioSourceMp3',
-    'audioSourceAac',
-    'audioSourceOgg'
-  ])
-  const audioDefaultValues = Map(audioKeys.map(key => [key, '']))
-  const audioData = audioDefaultValues.merge(
-    node.data.filter((_, key) => audioKeys.has(key))
   )
 
   const onInputChange = key => (_, inputValue) => {
@@ -210,8 +201,9 @@ const MetaData = ({ value, editor, mdastSchema, contextMeta, series, additionalF
         <Label>{t('metaData/preview')}</Label><br />
         <TwitterPreview data={node.data} />
         <br /><br /><br />
-        <Label>{t('metaData/audio')}</Label><br />
-        <MetaForm data={audioData} onInputChange={onInputChange} black getWidth={getWidth} />
+        <AudioForm editor={editor} node={node} onInputChange={onInputChange} />
+        <br /><br /><br />
+        <br /><br /><br />
       </div>
     </div>
   )

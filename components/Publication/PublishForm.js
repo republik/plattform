@@ -6,7 +6,7 @@ import { css } from 'glamor'
 import ErrorMessage from '../ErrorMessage'
 import IFrame from '../IFrame'
 
-import { GITHUB_ORG } from '../../lib/settings'
+import { GITHUB_ORG, FRONTEND_BASE_URL } from '../../lib/settings'
 import { intersperse } from '../../lib/utils/helpers'
 import withT from '../../lib/withT'
 import { Link, Router } from '../../lib/routes'
@@ -228,14 +228,13 @@ class PublishForm extends Component {
                 {t('publish/meta/path/label')}
               </Label>
               <Interaction.P>
-                {t('publish/meta/path/value', {
-                  path: schema.getPath
-                    ? schema.getPath({
-                      ...meta,
-                      publishDate: designatedPublishDate
-                    })
-                    : `/${meta.slug}`
-                })}
+                {FRONTEND_BASE_URL.replace(/https?:\/\/(www\.)?/, '')}
+                {schema.getPath
+                  ? schema.getPath({
+                    ...meta,
+                    publishDate: designatedPublishDate
+                  })
+                  : `/${meta.slug}`}
               </Interaction.P>
 
               <br /><br />
