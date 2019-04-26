@@ -8,8 +8,6 @@ This repo is devided between `servers` and `packages`.
 - **servers:** this directory contains runnable servers
 - **packages:** contains code shared between the servers
 
-TODO: system diagram
-
 ## Usage
 
 ### ENVs
@@ -146,11 +144,6 @@ At least the android emulator doesn't use the hosts dns resolver
 ```
 yarn run run-android
 ```
-
-
-## Caveats
-
-Due to the this [bug](https://github.com/yarnpkg/yarn/issues/4964) running bin scripts from the server subfolders doesn't work. Currently the following workaround is in place: `test:prepare` of republik and publikator first does: `rm -rf node_modules/.bin && ln -s ../../../node_modules/.bin node_modules/`.
 
 ## Licensing
 The source code and it's documentation is licensed under [GNU AGPLv3](LICENSE)+.
