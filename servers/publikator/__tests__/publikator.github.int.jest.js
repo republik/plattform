@@ -731,7 +731,7 @@ describe('publish', () => {
     await publish('v7', commits[0], {
       prepublication: false,
       updateMailchimp: false,
-      scheduledAt: moment().add(25, 'seconds')
+      scheduledAt: moment().add(35, 'seconds')
     })
     await checkState({
       publications: [
