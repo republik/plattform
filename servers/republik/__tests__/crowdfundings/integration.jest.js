@@ -473,7 +473,7 @@ describe('cancelPledge', () => {
     expect(result.data).toBeTruthy()
     expect(result.data.cancelPledge.memberships.length).toBe(1)
     expect(result.data.cancelPledge.memberships[0].periods.length).toBe(1)
-    const afterEndDate = moment().add(10, 'minutes')
+    const afterEndDate = moment().add(30, 'seconds')
     expect(
       moment(result.data.cancelPledge.memberships[0].periods[0].endDate).isBefore(afterEndDate)
     ).toBeTruthy()
