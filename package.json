@@ -38,6 +38,7 @@
   "dependencies": {},
   "devDependencies": {
     "commitizen": "^2.10.1",
+    "coveralls": "^3.0.3",
     "cz-conventional-changelog": "^2.1.0",
     "foreman": "^3.0.0",
     "husky": "^1.1.3",
@@ -66,7 +67,7 @@
     "test:unit": "jest --verbose --detectOpenHandles --forceExit --testPathIgnorePatterns \"\\.(int)|(integration)\\.jest\"",
     "test:integration": "jest --verbose --detectOpenHandles --forceExit --testPathIgnorePatterns \"\\.(u)|(unit)\\.jest\"",
     "test:dev": "yarn run test:unit --watch --notify",
-    "test:cover": "jest --collectCoverage --detectOpenHandles --forceExit"
+    "test:cover": "jest --collectCoverage --detectOpenHandles --forceExit && cat ./tests/coverage/lcov.info | coveralls"
   },
   "standard": {
     "env": [
