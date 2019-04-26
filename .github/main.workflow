@@ -10,6 +10,6 @@ action "yarn install" {
 
 action "yarn test" {
   uses = "borales/actions-yarn@master"
-  args = "test"
+  args = "test:unit"
   needs = ["yarn install"]
 }
