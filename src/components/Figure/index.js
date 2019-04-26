@@ -69,17 +69,22 @@ const styles = {
     top: '50%',
     left: '50%',
     borderRadius: '50%',
-    marginLeft: -35,
-    marginTop: -35,
-    width: 70,
-    height: 70,
-    padding: 20,
+    marginLeft: -45,
+    marginTop: -45,
+    width: 90,
+    height: 90,
+    '& svg': {
+      position: 'absolute',
+      top: '25%',
+      left: '25%',
+      width: '50%',
+      height: '50%'
+    },
     [mUp]: {
-      marginLeft: -50,
-      marginTop: -50,
-      width: 100,
-      height: 100,
-      padding: 30
+      marginLeft: -75,
+      marginTop: -75,
+      width: 150,
+      height: 150,
     },
     ':hover': {
       animationIterationCount: 'infinite'
@@ -176,7 +181,7 @@ const AudioButton = ({ color, backgroundColor, onClick }) => {
     }} {...css({
       animation: `${pulse} 2s 3`
     })}>
-      <AudioIcon size='100%' />
+      <AudioIcon />
     </button>
   )
 }
