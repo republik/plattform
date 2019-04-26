@@ -86,7 +86,7 @@ describe('addPaymentSource', () => {
     const result = await addPaymentSource({ sourceId: source.id, pspPayload: '' })
     expect(result.errors[0].message).toBe(i18n('api/signIn'))
     await signOut()
-  }, 15000)
+  })
 
   test('adding a 3d secure card', async () => {
     const { userId } = await signIn({ user: Users.Member })
@@ -94,7 +94,7 @@ describe('addPaymentSource', () => {
     const result = await addPaymentSource({ sourceId: source.id, pspPayload: { type: 'three_d_secure' } })
     expect(result.errors[0].message).toBe(i18n('api/payment/subscription/threeDsecure/notSupported'))
     await signOut()
-  }, 15000)
+  })
 
   test('adding an expired card', async () => {
     const { userId } = await signIn({ user: Users.Member })
@@ -102,7 +102,7 @@ describe('addPaymentSource', () => {
     const result = await addPaymentSource({ sourceId: source.id, pspPayload: {} })
     expect(result.errors[0].message).toBe('Your card has expired.')
     await signOut()
-  }, 15000)
+  })
 
   test('adding two cards', async () => {
     const { userId } = await signIn({ user: Users.Member })
@@ -143,7 +143,7 @@ describe('addPaymentSource', () => {
     expect(paymentSources.length).toBe(0)
 
     await signOut()
-  }, 15000)
+  })
 })
 
 describe('payPledge', () => {
