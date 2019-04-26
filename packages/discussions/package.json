@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "@project-r/styleguide": "^5.81.7",
-    "dataloader": "^1.4.0",
-    "export-files": "^2.1.1"
+    "dataloader": "^1.4.0"
   }
 }

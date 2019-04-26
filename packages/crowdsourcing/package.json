@@ -20,7 +20,6 @@
     "link": "yarn link"
   },
   "dependencies": {
-    "export-files": "^2.1.1",
     "validator": "^10.11.0"
   }
 }

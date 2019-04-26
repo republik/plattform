@@ -1,1 +1,5 @@
-module.exports = require('export-files')(__dirname)
+module.exports = {
+  apn: require('./apn'),
+  app: require('./app'),
+  firebase: require('./firebase')
+}

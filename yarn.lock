@@ -3901,13 +3901,6 @@ expect@^24.3.1:
     jest-message-util "^24.3.0"
     jest-regex-util "^24.3.0"
 
-export-files@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/export-files/-/export-files-2.1.1.tgz#bbf64574053a09e4eb98e5f43501d572b2c3ce7f"
-  integrity sha1-u/ZFdAU6CeTrmOX0NQHVcrLDzn8=
-  dependencies:
-    lazy-cache "^1.0.3"
-
 express-basic-auth@^1.1.5:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/express-basic-auth/-/express-basic-auth-1.1.5.tgz#3a28f6300b5f1ffd8e025193489b520a264941ea"

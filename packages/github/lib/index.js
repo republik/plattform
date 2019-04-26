@@ -1,1 +1,5 @@
-module.exports = require('export-files')(__dirname)
+module.exports = {
+  appAuth: require('./appAuth'),
+  clients: require('./clients'),
+  utils: require('./utils')
+}

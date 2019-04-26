@@ -27,7 +27,6 @@
   "dependencies": {
     "await-sleep": "^0.0.1",
     "check-env": "^1.3.0",
-    "export-files": "^2.1.1",
     "libphonenumber-js": "^1.2.12",
     "twilio": "^3.17.0"
   },
