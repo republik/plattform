@@ -20,7 +20,7 @@
     "link": "yarn link"
   },
   "devDependencies": {
-    "isomorphic-unfetch": "^2.0.0"
+    "isomorphic-unfetch": "^3.0.0"
   },
   "dependencies": {
     "@project-r/styleguide": "^5.81.7",

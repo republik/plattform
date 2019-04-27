@@ -9,7 +9,7 @@
   "dependencies": {
     "cors": "^2.8.4",
     "express": "^4.16.3",
-    "isomorphic-unfetch": "^2.0.0",
+    "isomorphic-unfetch": "^3.0.0",
     "regiment": "^0.0.5"
   },
   "scripts": {

@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "graphql": "^0.13.2",
-    "isomorphic-unfetch": "^2.0.0"
+    "isomorphic-unfetch": "^3.0.0"
   },
   "dependencies": {
     "apollo-engine": "^1.1.0",
