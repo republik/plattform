@@ -26,7 +26,7 @@ const MembershipScheduler = require('./modules/crowdfundings/lib/scheduler')
 const mail = require('./modules/crowdfundings/lib/Mail')
 const cluster = require('cluster')
 
-const SlackGreeter = require('./lib/SlackGreeter')
+const SlackGreeter = require('@orbiting/backend-modules-slack/lib/SlackGreeter')
 const { NotifyListener: SearchNotifyListener } = require('@orbiting/backend-modules-search')
 
 const {
