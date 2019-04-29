@@ -81,7 +81,7 @@ module.exports = async (_, args, context) => {
     if (parentId) {
       throw new Error(t('api/commit/parentId/notAllowed', { repoId }))
     }
-    repo = await githubRest.repos.createForOrg({
+    repo = await githubRest.repos.createInOrg({
       org: login,
       name: repoName,
       private: true,
@@ -242,7 +242,7 @@ module.exports = async (_, args, context) => {
   let branch
   if (headParent) { // fast-forward
     branch = headParent.name
-    await githubRest.gitdata.updateReference({
+    await githubRest.gitdata.updateRef({
       owner: login,
       repo: repoName,
       ref: 'heads/' + headParent.name,
@@ -252,7 +252,7 @@ module.exports = async (_, args, context) => {
   } else {
     branch = `${superb.random()}-${superheroes.random().toLowerCase()}`
       .replace(/\s/g, '-')
-    await githubRest.gitdata.createReference({
+    await githubRest.gitdata.createRef({
       owner: login,
       repo: repoName,
       ref: `refs/heads/${branch}`,
@@ -261,7 +261,7 @@ module.exports = async (_, args, context) => {
   }
 
   // latest commit -> default branch
-  await githubRest.repos.edit({
+  await githubRest.repos.update({
     owner: login,
     repo: repoName,
     name: repoName,

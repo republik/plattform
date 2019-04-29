@@ -112,13 +112,8 @@ module.exports = async () => {
   })
 
   const githubRest = new GitHubApi({
-    headers: {
-      'Accept': 'application/vnd.github.machine-man-preview+json, application/vnd.github.mercy-preview+json'
-    }
-  })
-  githubRest.authenticate({
-    type: 'app',
-    token: installationToken.token
+    previews: [ 'machine-man-preview', 'mercy-preview' ],
+    auth: installationToken.token
   })
 
   if (GITHUB_LOG_RATELIMIT) {

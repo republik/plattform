@@ -420,19 +420,15 @@ module.exports = {
     const [login, repoName] = repoId.split('/')
     const { githubRest } = await createGithubClients()
 
-    return githubRest.gitdata.updateReference({
+    return githubRest.gitdata.updateRef({
       owner: login,
       repo: repoName,
       ref,
       sha
     })
       .catch(e => {
-        let error
-        try {
-          error = JSON.parse(e.message)
-        } catch (e) {}
-        if (error && error.message === 'Reference does not exist') {
-          return githubRest.gitdata.createReference({
+        if (e.message === 'Reference does not exist') {
+          return githubRest.gitdata.createRef({
             owner: login,
             repo: repoName,
             ref: `refs/${ref}`,
@@ -446,7 +442,7 @@ module.exports = {
   deleteRef: async (repoId, ref, silent) => {
     const [login, repoName] = repoId.split('/')
     const { githubRest } = await createGithubClients()
-    return githubRest.gitdata.deleteReference({
+    return githubRest.gitdata.deleteRef({
       owner: login,
       repo: repoName,
       ref
@@ -460,7 +456,7 @@ module.exports = {
   archiveRepo: async (repoId) => {
     const [login, repoName] = repoId.split('/')
     const { githubRest } = await createGithubClients()
-    return githubRest.repos.edit({
+    return githubRest.repos.update({
       owner: login,
       repo: repoName,
       name: repoName,

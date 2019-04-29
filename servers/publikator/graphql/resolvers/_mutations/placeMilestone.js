@@ -31,7 +31,7 @@ module.exports = async (
   })
     .then(result => result.data)
 
-  await githubRest.gitdata.createReference({
+  await githubRest.gitdata.createRef({
     owner: login,
     repo: repoName,
     ref: `refs/tags/${name}`,
