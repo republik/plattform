@@ -250,7 +250,7 @@ module.exports = async (_, args, context) => {
       force: !parentId
     })
   } else {
-    branch = `${superb()}-${superheroes.random().toLowerCase()}`
+    branch = `${superb.random()}-${superheroes.random().toLowerCase()}`
       .replace(/\s/g, '-')
     await githubRest.gitdata.createReference({
       owner: login,
