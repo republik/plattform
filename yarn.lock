@@ -1617,11 +1617,6 @@ before-after-hook@^1.1.0:
   resolved "https://registry.yarnpkg.com/before-after-hook/-/before-after-hook-1.4.0.tgz#2b6bf23dca4f32e628fd2747c10a37c74a4b484d"
   integrity sha512-l5r9ir56nda3qu14nAXIlyq1MmUSs0meCIaFAh8HwkFwP1F8eToOuS3ah2VAHHcY04jaYD7FpJC5JTXHYRbkzg==
 
-big-integer@^1.6.31:
-  version "1.6.43"
-  resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.43.tgz#8ac15bf13e93e509500859061233e19d8d0d99d1"
-  integrity sha512-9dULc9jsKmXl0Aeunug8wbF+58n+hQoFjqClN7WeZwGLh0XJUWyJJ9Ee+Ep+Ql/J9fRsTVaeThp8MhiCCrY0Jg==
-
 binary-extensions@^1.0.0:
   version "1.13.1"
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-1.13.1.tgz#598afe54755b2868a5330d2aff9d4ebb53209b65"
@@ -6827,13 +6822,12 @@ math-random@^1.0.1:
   resolved "https://registry.yarnpkg.com/math-random/-/math-random-1.0.4.tgz#5dd6943c938548267016d4e34f057583080c514c"
   integrity sha512-rUxjysqif/BZQH2yhd5Aaq7vXMSx9NdEsQcyA07uEzIvxgI7zIr33gGsh+RU0/XjmQpCW7RsVof1vlkvQVCK5A==
 
-maxmind@^2.11.0:
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/maxmind/-/maxmind-2.12.0.tgz#b7d16b0ee2fff50061ead36b258577cb7d85fec5"
-  integrity sha512-gnLdeLg0GFYlrtPt2122RYrRUy8OWxrhYEDCORaUkr6AvKXnLfnNpsFmWUOBYkvZK17XX4NeuMwnjIQM9EcxTw==
+maxmind@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/maxmind/-/maxmind-3.0.2.tgz#02309b7d8ed9a8329deeec090334ee5a59f1c188"
+  integrity sha512-kAY0gbT8kHg+0gYY2DNCYoKwQImv9SRfyP0KUkqeOPvji19O+7EUwb4fNJfHFbpwtFF3+gy3CVEVz7WRNkLRfw==
   dependencies:
-    big-integer "^1.6.31"
-    tiny-lru "^6.0.0"
+    tiny-lru "6.0.0"
 
 mdast-react-render@^1.2.0:
   version "1.2.0"
@@ -10139,10 +10133,10 @@ timed-out@^4.0.0:
   resolved "https://registry.yarnpkg.com/timed-out/-/timed-out-4.0.1.tgz#f32eacac5a175bea25d7fab565ab3ed8741ef56f"
   integrity sha1-8y6srFoXW+ol1/q1Zas+2HQe9W8=
 
-tiny-lru@^6.0.0:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/tiny-lru/-/tiny-lru-6.0.1.tgz#558bd6b7232b8b9dfa482147539676fdd75a3a07"
-  integrity sha512-k/vdHz+bFALjmik0URLWBYNuO0hCABTL5dullbZBXvFDdlL8RrKaeLR6YuHfX+6ZXOLkHw+HpNLCUA7DtLMQmg==
+tiny-lru@6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/tiny-lru/-/tiny-lru-6.0.0.tgz#a1a75748be936ad23ed2f29805ff0d2bfd29da7f"
+  integrity sha512-JRPaetOlh3enzRuR94sQGf0i78ICXoW2hjBLCiglspFlu0dHH5HlpJfzHs6OwaxYaf6y6NGgwPTWndU7dN0d6Q==
 
 tmp@0.0.x, tmp@^0.0.33:
   version "0.0.33"

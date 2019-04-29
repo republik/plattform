@@ -21,7 +21,7 @@ const initiateSession = async ({ req, pgdb, email, consents }) => {
   const ipAddress = req.headers['x-forwarded-for'] || req.connection.remoteAddress
   const userAgent = req.headers['user-agent']
   const phrase = `${kraut.adjectives.random()} ${kraut.verbs.random()} ${kraut.nouns.random()}`
-  const { country, city } = geoForIP(ipAddress)
+  const { country, city } = await geoForIP(ipAddress)
   req.session.email = email
   req.session.ip = ipAddress
   req.session.ua = userAgent

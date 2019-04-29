@@ -1,8 +1,12 @@
 const geoipDatabase = require('geoip-database')
 const maxmind = require('maxmind')
-const cityLookup = maxmind.openSync(geoipDatabase.city)
+let cityLookup
 
-module.exports = (ip) => {
+module.exports = async (ip) => {
+  if (!cityLookup) {
+    cityLookup = await maxmind.open(geoipDatabase.city)
+  }
+
   const geo = cityLookup.get(ip)
   let country
   // eslint-disable-next-line no-empty
