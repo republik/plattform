@@ -166,10 +166,10 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/publicProfile/usernameNeeded'))
   }
   if (pgpPublicKey) {
-    if (containsPrivateKey(pgpPublicKey)) {
+    if (await containsPrivateKey(pgpPublicKey)) {
       throw new Error(t('api/pgpPublicKey/private'))
     }
-    if (!getKeyId(pgpPublicKey)) {
+    if (!await getKeyId(pgpPublicKey)) {
       throw new Error(t('api/pgpPublicKey/invalid'))
     }
   }
