@@ -69,7 +69,7 @@ module.exports = {
         tags: repo.tags,
         updatedAt: repo.updatedAt,
         refresh: false
-      })
+      }, { elastic })
     })
 
     clearInterval(statsInterval)
