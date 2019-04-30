@@ -72,7 +72,6 @@ LOCAL_IP=192.168.1.88
 ```
 CORS_WHITELIST_URL=http://republik.test
 COOKIE_DOMAIN=.republik.test
-PUBLIC_WS_URL_BASE=ws://api.republik.test
 ```
 - in `republik-frontend/.env`
 ```

@@ -15,8 +15,6 @@ env:
   global:
     - NODE_ENV=development
     - PORT=5020
-    - PUBLIC_WS_URL_BASE=ws://localhost:5020
-    - PUBLIC_WS_URL_PATH=/graphql
     - SEND_MAILS=false
     - FORCE_TEST_END=true
     - SESSION_SECRET=testtest

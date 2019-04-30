@@ -1,4 +1,3 @@
-const { makeExecutableSchema } = require('graphql-tools')
 const { server: Server } = require('@orbiting/backend-modules-base')
 const { merge } = require('apollo-modules-node')
 const t = require('./lib/t')
@@ -59,21 +58,19 @@ const start = async () => {
 // in cluster mode, this runs after runOnce otherwise before
 const run = async (workerId, config) => {
   const localModule = require('./graphql')
-  const executableSchema = makeExecutableSchema(
-    merge(
-      localModule,
-      [
-        documents,
-        search,
-        redirections,
-        discussions,
-        notifications,
-        access,
-        voting,
-        collections,
-        crowdsourcing
-      ]
-    )
+  const graphqlSchema = merge(
+    localModule,
+    [
+      documents,
+      search,
+      redirections,
+      discussions,
+      notifications,
+      access,
+      voting,
+      collections,
+      crowdsourcing
+    ]
   )
 
   // middlewares
@@ -117,7 +114,7 @@ const run = async (workerId, config) => {
   }
 
   const server = await Server.start(
-    executableSchema,
+    graphqlSchema,
     middlewares,
     t,
     createGraphQLContext,
@@ -142,8 +139,6 @@ const runOnce = async (...args) => {
   if (cluster.isWorker) {
     throw new Error('runOnce must only be called on cluster.isMaster')
   }
-
-  Server.runOnce(...args)
 
   const slackGreeter = await SlackGreeter.start()
 

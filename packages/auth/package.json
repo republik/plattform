@@ -21,9 +21,7 @@
   },
   "homepage": "https://github.com/orbiting/backends#readme",
   "devDependencies": {
-    "dotenv": "^7.0.0",
-    "gsheets": "^2.0.0",
-    "isomorphic-unfetch": "^3.0.0"
+    "gsheets": "^2.0.0"
   },
   "dependencies": {
     "apollo-modules-node": "^0.1.4",
@@ -46,10 +44,5 @@
     "useragent": "^2.3.0",
     "uuid": "^3.2.1",
     "validator": "^10.2.0"
-  },
-  "peerDependencies": {
-    "d3-array": "^1.2.1",
-    "dotenv": "^5.0.1",
-    "isomorphic-unfetch": "^2.0.0"
   }
 }

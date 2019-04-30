@@ -1,4 +1,3 @@
-const { makeExecutableSchema } = require('graphql-tools')
 const { server: Server } = require('@orbiting/backend-modules-base')
 const { merge } = require('apollo-modules-node')
 const t = require('./lib/t')
@@ -43,14 +42,12 @@ const start = async () => {
 // in cluster mode, this runs after runOnce otherwise before
 const run = async (workerId, config) => {
   const localModule = require('./graphql')
-  const executableSchema = makeExecutableSchema(
-    merge(
-      localModule,
-      [
-        documents,
-        auth
-      ]
-    )
+  const graphqlSchema = merge(
+    localModule,
+    [
+      documents,
+      auth
+    ]
   )
 
   const createGraphQLContext = (defaultContext) => {
@@ -78,7 +75,7 @@ const run = async (workerId, config) => {
   }
 
   const server = await Server.start(
-    executableSchema,
+    graphqlSchema,
     middlewares,
     t,
     createGraphQLContext,
@@ -103,8 +100,6 @@ const runOnce = async (...args) => {
   if (cluster.isWorker) {
     throw new Error('runOnce must only be called on cluster.isMaster')
   }
-
-  Server.runOnce(...args)
 
   let publicationScheduler
   if (PUBLICATION_SCHEDULER === 'false' || (DEV && PUBLICATION_SCHEDULER !== 'true')) {
