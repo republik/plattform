@@ -471,7 +471,7 @@ const getRefs = async (repoId) => {
   const [owner, repo] = repoId.split('/')
   return Promise.all([
     ...allRefs.map(ref =>
-      githubRest.gitdata.getReference({
+      githubRest.gitdata.getRef({
         owner,
         repo,
         ref: `tags/${ref}`
