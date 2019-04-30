@@ -5,7 +5,7 @@
   "license": "AGPL-3.0",
   "version": "1.0.0",
   "engines": {
-    "node": "10.x"
+    "node": "12.x"
   },
   "private": true,
   "main": "index.js",
