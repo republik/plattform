@@ -32,7 +32,7 @@ module.exports = async (
     await repoCacheUpsert({
       id: repoId,
       isArchived: true
-    })
+    }, context)
 
     await pubsub.publish('repoUpdate', {
       repoUpdate: {
