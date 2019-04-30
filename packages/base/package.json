@@ -20,7 +20,6 @@
     "link": "yarn link"
   },
   "dependencies": {
-    "apollo-engine": "^1.1.0",
     "apollo-modules-node": "^0.1.4",
     "apollo-server": "^2.4.8",
     "apollo-server-core": "^2.4.8",
