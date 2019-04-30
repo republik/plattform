@@ -24,6 +24,6 @@
   },
   "dependencies": {
     "apn": "^2.2.0",
-    "firebase-admin": "^5.12.1"
+    "firebase-admin": "^7.3.0"
   }
 }
