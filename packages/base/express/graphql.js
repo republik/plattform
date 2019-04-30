@@ -102,6 +102,7 @@ module.exports = (
 
   apolloServer.applyMiddleware({
     app: server,
+    cors: false,
     bodyParserConfig: {
       limit: '128mb'
     }
