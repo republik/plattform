@@ -12,12 +12,5 @@
   "bugs": {
     "url": "https://github.com/orbiting/backends/issues"
   },
-  "homepage": "https://github.com/orbiting/backends#readme",
-  "devDependencies": {
-    "abab": "^2.0.0",
-    "tape": "^4.9.0"
-  },
-  "scripts": {
-    "test": "NODE_ENV=development tape \"**/*.test.js\""
-  }
+  "homepage": "https://github.com/orbiting/backends#readme"
 }

@@ -51,7 +51,6 @@
   "devDependencies": {
     "gsheets": "^2.0.0",
     "nodemon": "^1.17.5",
-    "tape-async": "^2.3.0",
     "ws": "^6.2.1"
   }
 }

@@ -17,11 +17,7 @@
   },
   "homepage": "https://github.com/orbiting/backends#readme",
   "scripts": {
-    "link": "yarn link",
-    "test": "NODE_ENV=development tape \"**/*.test.js\""
-  },
-  "devDependencies": {
-    "tape-async": "^2.3.0"
+    "link": "yarn link"
   },
   "dependencies": {
     "await-sleep": "^0.0.1",
