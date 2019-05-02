@@ -912,11 +912,6 @@ abab@^1.0.4:
   resolved "https://registry.yarnpkg.com/abab/-/abab-1.0.4.tgz#5faad9c2c07f60dd76770f71cf025b62a63cfd4e"
   integrity sha1-X6rZwsB/YN12dw9xzwJbYqY8/U4=
 
-abab@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/abab/-/abab-2.0.0.tgz#aba0ab4c5eee2d4c79d3487d85450fb2376ebb0f"
-  integrity sha512-sY5AXXVZv4Y1VACTtR11UJCPHHudgY5i26Qj5TypE6DKlIApbwb5uqhXcJ5UUGbvZNRh7EeIoW+LrJumBsKp7w==
-
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -10848,7 +10843,7 @@ tape-async@^2.3.0:
     is-promise "^2.1.0"
     tape "^4.5.0"
 
-tape@^4.5.0, tape@^4.9.0:
+tape@^4.5.0:
   version "4.9.0"
   resolved "https://registry.yarnpkg.com/tape/-/tape-4.9.0.tgz#855c08360395133709d34d3fbf9ef341eb73ca6a"
   integrity sha512-j0jO9BiScfqtPBb9QmPLL0qvxXMz98xjkMb7x8lKipFlJZwNJkqkWPou+NU4V6T9RnVh1kuSthLE8gLrN8bBfw==
