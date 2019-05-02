@@ -20,7 +20,7 @@
     "link": "yarn link"
   },
   "dependencies": {
-    "aws-sdk": "^2.445.0",
+    "aws-sdk": "^2.448.0",
     "bluebird": "^3.5.1",
     "check-env": "^1.3.0",
     "debug": "^4.1.1",

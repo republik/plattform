@@ -22,7 +22,7 @@
     "isomorphic-unfetch": "^3.0.0",
     "lodash": "^4.17.11",
     "moment": "^2.22.2",
-    "openpgp": "^4.4.10",
+    "openpgp": "^4.5.0",
     "remark-breaks": "^1.0.0",
     "remark-parse": "^6.0.3",
     "sharp": "^0.22.1",
@@ -46,7 +46,7 @@
   "devDependencies": {
     "apollo-fetch": "^0.7.0",
     "istanbul": "^1.1.0-alpha.1",
-    "nodemon": "^1.17.5",
+    "nodemon": "^1.19.0",
     "snoowrap": "^1.15.2",
     "tap-diff": "^0.1.1",
     "zero-fill": "^2.2.3"
