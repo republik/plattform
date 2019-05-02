@@ -17,12 +17,10 @@
   },
   "homepage": "https://github.com/orbiting/backends#readme",
   "scripts": {
-    "link": "yarn link",
-    "test": "NODE_ENV=development tape \"**/*.test.js\""
+    "link": "yarn link"
   },
   "devDependencies": {
-    "isomorphic-unfetch": "^2.0.0",
-    "tape-async": "^2.3.0"
+    "isomorphic-unfetch": "^2.0.0"
   },
   "dependencies": {
     "await-sleep": "^0.0.1",
