@@ -3,6 +3,15 @@ const { mutate, add, subtract } = require('./applyPgInterval')
 const moment = require('moment')
 const postgresInterval = require('postgres-interval')
 
+test('timezone is set to Europe/Amsterdam', () => {
+  // this test file is written to expect the timezone to be Europe/Amsterdam as the developers machine is configured like that
+  expect(
+    moment('2018-01-01 01:00:00').toISOString()
+  ).toBe(
+    new Date('2018-01-01').toISOString()
+  )
+})
+
 test('applyPgInterval.mutate', async () => {
   expect.assertions(11)
 

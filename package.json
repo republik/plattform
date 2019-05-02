@@ -63,11 +63,11 @@
     "db:migrate:down": "db-migrate down --migrations-dir packages/db-migrations/migrations --verbose",
     "db:seed": "servers/republik/seeds/script/seed.js",
     "sendNotification": "cd servers/republik && node ../../packages/notifications/script/sendNotification.js",
-    "test": "jest --verbose --detectOpenHandles --forceExit",
-    "test:unit": "jest --verbose --detectOpenHandles --forceExit --testPathIgnorePatterns \"\\.(int)|(integration)\\.jest\"",
-    "test:integration": "jest --verbose --detectOpenHandles --forceExit --testPathIgnorePatterns \"\\.(u)|(unit)\\.jest\"",
+    "test": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit",
+    "test:unit": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit --testPathIgnorePatterns \"\\.(int)|(integration)\\.jest\"",
+    "test:integration": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit --testPathIgnorePatterns \"\\.(u)|(unit)\\.jest\"",
     "test:dev": "yarn run test:unit --watch --notify",
-    "test:cover": "jest --collectCoverage --detectOpenHandles --forceExit",
+    "test:cover": "TZ=Europe/Amsterdam jest --collectCoverage --detectOpenHandles --forceExit",
     "test:reportCover": "cat ./tests/coverage/lcov.info | coveralls"
   },
   "standard": {
