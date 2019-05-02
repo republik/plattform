@@ -50,7 +50,6 @@
     "nodemon": "^1.17.5",
     "snoowrap": "^1.15.2",
     "tap-diff": "^0.1.1",
-    "tape-async": "^2.3.0",
     "zero-fill": "^2.2.3"
   }
 }
