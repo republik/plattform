@@ -13,7 +13,6 @@
     "d3-dsv": "^1.0.8",
     "d3-time": "^1.0.8",
     "debug": "^4.1.1",
-    "dynamic-dedupe": "^0.3.0",
     "emojione_minimal": "^2.1.2",
     "graphql": "^14.2.1",
     "graphql-fields": "^2.0.3",
