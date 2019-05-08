@@ -51,7 +51,7 @@ module.exports = (
             process.env.SESSION_SECRET
           )
           const session = sid && await pgdb.public.sessions.findOne({ sid })
-          if (session) {
+          if (session && session.sess && session.sess.passport && session.sess.passport.user) {
             const user = await pgdb.public.users.findOne({ id: session.sess.passport.user })
             return createContext({
               user: transformUser(user)
