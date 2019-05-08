@@ -21,7 +21,7 @@ module.exports = (
 ) => {
   const executableSchema = makeExecutableSchema(graphqlSchema)
 
-  const createContext = ({user, ...context} = {}) => createGraphqlContext({
+  const createContext = ({ user, ...context } = {}) => createGraphqlContext({
     ...context,
     user: (global && global.testUser !== undefined)
       ? global.testUser
@@ -52,7 +52,7 @@ module.exports = (
           )
           const session = sid && await pgdb.public.sessions.findOne({ sid })
           if (session) {
-            const user = await pgdb.public.users.findOne({id: session.sess.passport.user})
+            const user = await pgdb.public.users.findOne({ id: session.sess.passport.user })
             return createContext({
               user: transformUser(user)
             })
@@ -69,7 +69,7 @@ module.exports = (
     formatError: (error) => {
       console.log(
         `graphql error in ${this.operationName} (${JSON.stringify(this.variables)}):`,
-        util.inspect(error, { depth: null })
+        util.inspect(error, { depth: null, colors: true, breakLength: 300 })
       )
       delete error.extensions.exception
       return error
