@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Fragment, Component } from 'react'
 import PropTypes from 'prop-types'
 import { css } from 'glamor'
 
@@ -17,7 +17,8 @@ import {
   last,
   transparentAxisStroke,
   get3EqualDistTicks,
-  baseLineColor
+  baseLineColor,
+  getFormat
 } from './utils'
 
 import {
@@ -25,6 +26,7 @@ import {
 } from '../Typography/styles'
 
 import colors from '../../theme/colors'
+import { intersperse } from '../../lib/helpers'
 
 const X_TICK_HEIGHT = 6
 
@@ -140,6 +142,7 @@ class ScatterPlot extends Component {
     }
 
     const { props } = this
+    const sizeFormat = getFormat(props.sizeNumberFormat || props.numberFormat, props.tLabel)
 
     const { cx, cy, r } = hover.sort((a, b) => ascending(a.cy, b.cy))[0]
     const top = hoverTouch || cy > height / 3
@@ -153,8 +156,11 @@ class ScatterPlot extends Component {
         {hover.map(({ value }, i) => (
           <ContextBoxValue key={`${value.datum[props.label]}${i}`}
             label={value.datum[props.label]}>
-            {yFormat(value.y)} {subsup(props.yUnit)}<br />
-            {xFormat(value.x)} {subsup(props.xUnit)}
+            {intersperse([
+              <Fragment key='y'>{yFormat(value.y)} {subsup(props.yUnit)}</Fragment>,
+              <Fragment key='x'>{xFormat(value.x)} {subsup(props.xUnit)}</Fragment>,
+              props.sizeShowValue && <Fragment key='size'>{sizeFormat(value.size)} {subsup(props.sizeUnit)}</Fragment>
+            ].filter(Boolean),  (item, index) => <br key={index} />)}
           </ContextBoxValue>
         ))}
       </ContextBox>
@@ -432,6 +438,9 @@ ScatterPlot.propTypes = {
   colorSort: sortPropType,
   size: PropTypes.string.isRequired,
   sizeRange: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+  sizeUnit: PropTypes.string,
+  sizeNumberFormat: PropTypes.string,
+  sizeShowValue: PropTypes.bool.isRequired,
   label: PropTypes.string.isRequired,
   inlineLabel: PropTypes.string,
   inlineLabelPosition: PropTypes.string,
@@ -452,7 +461,8 @@ ScatterPlot.defaultProps = {
   size: 'size',
   sizeRange: [4, 10],
   label: 'label',
-  heightRatio: 1
+  heightRatio: 1,
+  sizeShowValue: false
 }
 
 export default ScatterPlot

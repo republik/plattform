@@ -253,6 +253,9 @@ Use `inlineLabel`, `inlineSecondaryLabel` and `inlineLabelPosition`. Valid posit
         3,
         40
       ],
+      "sizeUnit": "Stimmen",
+      "sizeNumberFormat": ".2s",
+      "sizeShowValue": true,
       "opacity": 0.5
     }}
     values={`
