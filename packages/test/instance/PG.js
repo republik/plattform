@@ -39,14 +39,21 @@ const createAndMigrate = async (name) => {
   }
 }
 
-const hasOpenTransactions = async (pgdb) => {
-  const locksEnd = await pgdb.query('SELECT count(*) FROM pg_stat_activity WHERE state = :state', {
-    'state': 'idle in transaction'
-  })
+const hasOpenTransactions = async (pgdb, dbName) => {
+  const queryParams = {
+    state: 'idle in transaction',
+    dbName
+  }
+  const locksEnd = await pgdb.query(
+    'SELECT count(*) FROM pg_stat_activity WHERE state = :state AND datname = :dbName',
+    queryParams
+  )
+  console.log({ locksEnd })
   if (locksEnd && locksEnd[0] && locksEnd[0].count > 0) {
-    const locks = await pgdb.query('SELECT * FROM pg_stat_activity WHERE state = :state', {
-      'state': 'idle in transaction'
-    })
+    const locks = await pgdb.query(
+      'SELECT * FROM pg_stat_activity WHERE state = :state AND datname = :dbName',
+      queryParams
+    )
     console.warn('PG locks:', JSON.stringify(locks, null, 2))
     return true
   }

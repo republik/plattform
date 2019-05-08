@@ -36,7 +36,8 @@ const init = async ({ serverName, publicationScheduler }) => {
   const port = 5000 + instanceId
 
   // create PG DB
-  const db = await PG.createAndMigrate(`test${instanceId}`)
+  const dbName = `test${instanceId}`
+  const db = await PG.createAndMigrate(dbName)
   if (!db) {
     throw new Error('PG db creating failed')
   }
@@ -45,7 +46,7 @@ const init = async ({ serverName, publicationScheduler }) => {
 
   const esPrefix = `test${instanceId}`
 
-  console.log({instanceId, redisUrl, port, databaseUrl: db.url, esPrefix})
+  console.log({ instanceId, redisUrl, port, databaseUrl: db.url, esPrefix })
 
   process.env.PORT = port
   process.env.DATABASE_URL = db.url
@@ -75,7 +76,7 @@ const init = async ({ serverName, publicationScheduler }) => {
 
   const closeAndCleanup = async () => {
     const { pgdb } = global.instance.context
-    expect(await PG.hasOpenTransactions(pgdb)).toBeFalsy()
+    expect(await PG.hasOpenTransactions(pgdb, dbName)).toBeFalsy()
     await server.close()
     await db.drop()
     // drop ES indices
