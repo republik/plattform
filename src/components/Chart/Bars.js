@@ -548,6 +548,10 @@ BarChart.propTypes = {
   filter: PropTypes.string,
   minInnerWidth: PropTypes.number.isRequired,
   columns: PropTypes.number.isRequired,
+  inlineValue: PropTypes.bool,
+  inlineValueUnit: PropTypes.string,
+  inlineLabel: PropTypes.string,
+  inlineSecondaryLabel: PropTypes.string,
   tLabel: PropTypes.func.isRequired,
   description: PropTypes.string,
   showBarValues: PropTypes.bool
