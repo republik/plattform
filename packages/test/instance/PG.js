@@ -48,7 +48,6 @@ const hasOpenTransactions = async (pgdb, dbName) => {
     'SELECT count(*) FROM pg_stat_activity WHERE state = :state AND datname = :dbName',
     queryParams
   )
-  console.log({ locksEnd })
   if (locksEnd && locksEnd[0] && locksEnd[0].count > 0) {
     const locks = await pgdb.query(
       'SELECT * FROM pg_stat_activity WHERE state = :state AND datname = :dbName',
