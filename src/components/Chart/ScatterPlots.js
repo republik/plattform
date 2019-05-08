@@ -21,7 +21,7 @@ import {
 } from './utils'
 
 import {
-  sansSerifRegular12
+  sansSerifRegular12, sansSerifMedium12
 } from '../Typography/styles'
 
 import colors from '../../theme/colors'
@@ -42,6 +42,14 @@ const styles = {
     stroke: transparentAxisStroke,
     strokeWidth: '1px',
     shapeRendering: 'crispEdges'
+  }),
+  inlineLabel: css({
+    ...sansSerifMedium12,
+    fill: '#000'
+  }),
+  inlineSecondaryLabel: css({
+    ...sansSerifRegular12,
+    fill: '#000'
   })
 }
 
@@ -160,6 +168,9 @@ class ScatterPlot extends Component {
       children,
       values,
       tLabel,
+      inlineLabelPosition,
+      inlineLabel,
+      inlineSecondaryLabel,
       opacity
     } = props
 
@@ -262,6 +273,46 @@ class ScatterPlot extends Component {
               cy={symbol.cy}
               r={symbol.r} />
           ))}
+          {(inlineLabel || inlineSecondaryLabel) && this.symbols
+            .filter(({ value: { datum } }) => datum[inlineLabel] || datum[inlineSecondaryLabel])
+            .map((symbol, i) => {
+              const { datum } = symbol.value
+              const primary = datum[inlineLabel]
+              const secondary = datum[inlineSecondaryLabel]
+              const pos = datum[inlineLabelPosition] || 'center'
+              let textAnchor = 'middle'
+              let yOffset = 0
+              let xOffset = 0
+              if (pos === 'left') {
+                textAnchor = 'end'
+                xOffset = -(symbol.r + 5)
+              }
+              if (pos === 'right') {
+                textAnchor = 'start'
+                xOffset = symbol.r + 5
+              }
+              if (pos === 'top' || pos === 'bottom') {
+                yOffset = symbol.r + 5 + (primary && secondary ? 15 : 7)
+                if (pos === 'top') {
+                  yOffset = -yOffset
+                }
+              }
+
+              return (
+                <g
+                  key={`inlineLabel${symbol.key}`}
+                  textAnchor={textAnchor}
+                  transform={`translate(${symbol.cx + xOffset},${symbol.cy + yOffset})`}>
+                  {primary && <text {...styles.inlineLabel} dy={secondary ? '-0.3em' : '0.4em'}>
+                    {subsup.svg(primary)}
+                  </text>}
+                  {secondary && <text {...styles.inlineSecondaryLabel} dy={primary ? '0.9em' : '0.4em'}>
+                    {subsup.svg(secondary)}
+                  </text>}
+                </g>
+              )
+            })
+          }
           {this.state.hover.map((symbol, i) => (
             <circle key={`hover${symbol.key}`}
               fill='none'
@@ -382,6 +433,9 @@ ScatterPlot.propTypes = {
   size: PropTypes.string.isRequired,
   sizeRange: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
   label: PropTypes.string.isRequired,
+  inlineLabel: PropTypes.string,
+  inlineLabelPosition: PropTypes.string,
+  inlineSecondaryLabel: PropTypes.string,
   tLabel: PropTypes.func.isRequired,
   description: PropTypes.string
 }

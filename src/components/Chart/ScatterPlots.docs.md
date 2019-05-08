@@ -223,3 +223,60 @@ Zimbabwe,1910,0.78,Africa
   </Editorial.Note>
 </div>
 ```
+
+## Inline Labels
+
+Use `inlineLabel`, `inlineSecondaryLabel` and `inlineLabelPosition`. Valid positions are: `top`, `right`, `bottom`, `left` or the default `center`. Make sure to prevent overlap on mobile—always test with 290px width.
+
+```react
+<div>
+  <ChartTitle>Parteienlandschaft Schweiz und Deutschland</ChartTitle>
+  <ChartLead>Wie stehen die Parteien zur EU?</ChartLead>
+  <CsvChart
+    width={290}
+    config={{
+      "type": "ScatterPlot",
+      "color": "family",
+      "colorRange": ["#4B8A3E", "#D6862B", "#BF3939", "#3872B5", "#4B8A3E", "#49A5E7", "#A65E42", "#F0554D"],
+      "numberFormat": ".1f",
+      "x": "lrgen",
+      "y": "position",
+      "yTicks": [0,4,8],
+      "xTicks": [0,5,10],
+      "yUnit": "EU Position",
+      "xUnit": "ideological stance",
+      "inlineLabel": "abbr",
+      "inlineSecondaryLabel": "country",
+      "inlineLabelPosition": "label_pos",
+      "size": "vote_abs",
+      "sizeRange": [
+        3,
+        40
+      ],
+      "opacity": 0.5
+    }}
+    values={`
+year,country,abbr,name,label,family,position,lrgen,vote_abs,label_pos
+2017,,CDU,Christian Democratic Union,Germany: Christian Democratic Union,Christian democracy,6.0625,5.5625,12466152
+2017,,SPD,Social Democratic Party of Germany,Germany: Social Democratic Party of Germany,Social democracy,6.5625,3.875,9535676
+2017,,FDP,Free Democratic Party,Germany: Free Democratic Party,Liberal,4.5625,6.5625,4977158
+2017,,,Alliance 90 / Greens,Germany: Alliance 90 / Greens,Green/Ecologist,6.7333331,2.9375,4139879,left
+2017,,,The Left / PDS,Germany: The Left / PDS,Communist/Socialist,4.1875,1.4375,4279426
+2017,,CSU,Christian Social Union,Germany: Christian Social Union,Christian democracy,4.5625,7.375,2883961,right
+2017,,AfD,Alternative for Germany,Germany: Alternative for Germany,Right-wing,1.8125,9.1875,5860952
+2017,,SVP,Swiss People's Party,Switzerland: Swiss People's Party,Agrarian,1,8.25,648768,bottom
+2017,Schweiz,SP,Social Democratic Party of Switzerland,Switzerland: Social Democratic Party of Switzerland,Social democracy,6.1111112,2.125,457264,left
+2017,Schweiz,FDP,Radical Democratic Party,Switzerland: Radical Democratic Party,Liberal,3.7777777,6.875,368840,right
+2017,,CVP,Catholic Conservative / Christian Democratic Peoples Party,Switzerland: Catholic Conservative / Christian Democratic Peoples Party,Christian democracy,3.6666667,5.5,300446,bottom
+2017,Schweiz,Grüne,Greens,Switzerland: Greens,Green/Ecologist,5.5555553,1.875,205916,right
+2017,,,Green Liberal Party,Switzerland: Green Liberal Party,Green/Ecologist,5,5.25,131415,bottom
+2017,,,Protestant Peoples Party,Switzerland: Protestant Peoples Party,Christian democracy,3.6666667,5.25,48853,left
+2017,,,Federal Democratic Union of Switzerland,Switzerland: Federal Democratic Union of Switzerland,Conservative,1.625,8.5,31022,left
+2017,,,Conservative Democratic Party of Switzerland,Switzerland: Conservative Democratic Party of Switzerland,Conservative,3.625,6.25,132392,bottom
+      `.trim()} />
+  <Editorial.Note style={{marginTop: 10}}>
+    Quelle: <Editorial.A href='https://www.chesdata.eu/our-surveys/'>Chapel Hill Expert Survey 2017 und 2014</Editorial.A>, <Editorial.A href='http://www.parlgov.org/'>ParlGov database</Editorial.A>
+  </Editorial.Note>
+</div>
+```
+
