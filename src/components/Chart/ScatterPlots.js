@@ -156,11 +156,27 @@ class ScatterPlot extends Component {
         {hover.map(({ value }, i) => (
           <ContextBoxValue key={`${value.datum[props.label]}${i}`}
             label={value.datum[props.label]}>
-            {intersperse([
-              <Fragment key='y'>{yFormat(value.y)} {subsup(props.yUnit)}</Fragment>,
-              <Fragment key='x'>{xFormat(value.x)} {subsup(props.xUnit)}</Fragment>,
-              props.sizeShowValue && <Fragment key='size'>{sizeFormat(value.size)} {subsup(props.sizeUnit)}</Fragment>
-            ].filter(Boolean),  (item, index) => <br key={index} />)}
+            {intersperse([]
+              .concat(
+                value.datum[props.detail] && value.datum[props.detail]
+                  .split('\n')
+                  .map((d, i) => <Fragment key={`d${i}`}>
+                    {subsup(d)}
+                  </Fragment>)
+              )
+              .concat([
+                props.yShowValue && <Fragment key='y'>
+                  {yFormat(value.y)} {subsup(props.yUnit)}
+                </Fragment>,
+                props.xShowValue && <Fragment key='x'>
+                  {xFormat(value.x)} {subsup(props.xUnit)}
+                </Fragment>,
+                props.sizeShowValue && <Fragment key='size'>
+                  {sizeFormat(value.size)} {subsup(props.sizeUnit)}
+                </Fragment>
+              ])
+              .filter(Boolean), (item, index) => <br key={`br${index}`} />
+            )}
           </ContextBoxValue>
         ))}
       </ContextBox>
@@ -419,12 +435,14 @@ ScatterPlot.propTypes = {
   xTicks: PropTypes.arrayOf(PropTypes.number),
   xScale: PropTypes.oneOf(Object.keys(scales)),
   xNumberFormat: PropTypes.string,
+  xShowValue: PropTypes.bool.isRequired,
   y: PropTypes.string.isRequired,
   yUnit: PropTypes.string,
   yNice: PropTypes.number,
   yTicks: PropTypes.arrayOf(PropTypes.number),
   yScale: PropTypes.oneOf(Object.keys(scales)),
   yNumberFormat: PropTypes.string,
+  yShowValue: PropTypes.bool.isRequired,
   numberFormat: PropTypes.string.isRequired,
   opacity: PropTypes.number.isRequired,
   color: PropTypes.string,
@@ -445,6 +463,7 @@ ScatterPlot.propTypes = {
   inlineLabel: PropTypes.string,
   inlineLabelPosition: PropTypes.string,
   inlineSecondaryLabel: PropTypes.string,
+  detail: PropTypes.string,
   tLabel: PropTypes.func.isRequired,
   description: PropTypes.string
 }
@@ -453,7 +472,9 @@ ScatterPlot.defaultProps = {
   x: 'value',
   y: 'value',
   xScale: 'linear',
+  xShowValue: true,
   yScale: 'linear',
+  yShowValue: true,
   opacity: 1,
   numberFormat: 's',
   colorLegend: true,

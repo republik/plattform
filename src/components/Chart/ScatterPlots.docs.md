@@ -245,9 +245,10 @@ Use `inlineLabel`, `inlineSecondaryLabel` and `inlineLabelPosition`. Valid posit
       "xTicks": [0,5,10],
       "yUnit": "EU Position",
       "xUnit": "ideological stance",
-      "inlineLabel": "abbr",
-      "inlineSecondaryLabel": "country",
-      "inlineLabelPosition": "label_pos",
+      "detail": "detail",
+      "inlineLabel": "inline",
+      "inlineSecondaryLabel": "inline_country",
+      "inlineLabelPosition": "inline_pos",
       "size": "vote_abs",
       "sizeRange": [
         3,
@@ -259,23 +260,37 @@ Use `inlineLabel`, `inlineSecondaryLabel` and `inlineLabelPosition`. Valid posit
       "opacity": 0.5
     }}
     values={`
-year,country,abbr,name,label,family,position,lrgen,vote_abs,label_pos
-2017,,CDU,Christian Democratic Union,Germany: Christian Democratic Union,Christian democracy,6.0625,5.5625,12466152
-2017,,SPD,Social Democratic Party of Germany,Germany: Social Democratic Party of Germany,Social democracy,6.5625,3.875,9535676
-2017,,FDP,Free Democratic Party,Germany: Free Democratic Party,Liberal,4.5625,6.5625,4977158
-2017,,,Alliance 90 / Greens,Germany: Alliance 90 / Greens,Green/Ecologist,6.7333331,2.9375,4139879,left
-2017,,,The Left / PDS,Germany: The Left / PDS,Communist/Socialist,4.1875,1.4375,4279426
-2017,,CSU,Christian Social Union,Germany: Christian Social Union,Christian democracy,4.5625,7.375,2883961,right
-2017,,AfD,Alternative for Germany,Germany: Alternative for Germany,Right-wing,1.8125,9.1875,5860952
-2017,,SVP,Swiss People's Party,Switzerland: Swiss People's Party,Agrarian,1,8.25,648768,bottom
-2017,Schweiz,SP,Social Democratic Party of Switzerland,Switzerland: Social Democratic Party of Switzerland,Social democracy,6.1111112,2.125,457264,left
-2017,Schweiz,FDP,Radical Democratic Party,Switzerland: Radical Democratic Party,Liberal,3.7777777,6.875,368840,right
-2017,,CVP,Catholic Conservative / Christian Democratic Peoples Party,Switzerland: Catholic Conservative / Christian Democratic Peoples Party,Christian democracy,3.6666667,5.5,300446,bottom
-2017,Schweiz,Grüne,Greens,Switzerland: Greens,Green/Ecologist,5.5555553,1.875,205916,right
-2017,,,Green Liberal Party,Switzerland: Green Liberal Party,Green/Ecologist,5,5.25,131415,bottom
-2017,,,Protestant Peoples Party,Switzerland: Protestant Peoples Party,Christian democracy,3.6666667,5.25,48853,left
-2017,,,Federal Democratic Union of Switzerland,Switzerland: Federal Democratic Union of Switzerland,Conservative,1.625,8.5,31022,left
-2017,,,Conservative Democratic Party of Switzerland,Switzerland: Conservative Democratic Party of Switzerland,Conservative,3.625,6.25,132392,bottom
+year,country,label,detail,family,position,lrgen,vote_abs,inline_pos,inline,inline_country
+2017,Germany,Christlich Demokratische Union,"Germany
+26.8% der Stimmen in 2017",Christian democracy,6.0625,5.5625,12447656,,CDU,
+2017,Germany,Sozialdemokratische Partei Deutschlands,"Germany
+20.5% der Stimmen in 2017",Social democracy,6.5625,3.875,9539381,,SPD,
+2017,Germany,Freie Demokratische Partei,"Germany
+10.7% der Stimmen in 2017",Liberal,4.5625,6.5625,4999449,,FDP,
+2017,Germany,Bündnis 90 / Die Grünen,"Germany
+8.9% der Stimmen in 2017",Green/Ecologist,6.7333331,2.9375,4158400,left,,
+2017,Germany,Die Linke / PDS,"Germany
+9.2% der Stimmen in 2017",Communist/Socialist,4.1875,1.4375,4297270,,,
+2017,Germany,Christlich Soziale Union,"Germany
+6.2% der Stimmen in 2017",Christian democracy,4.5625,7.375,2869688,right,CSU,
+2017,Germany,Alternative für Deutschland,"Germany
+12.6% der Stimmen in 2017",Right-wing,1.8125,9.1875,5878115,,AfD,
+2017,Switzerland,Schweizerische Volkspartei,"Switzerland
+29.4% der Stimmen in 2015",Agrarian,1,8.25,740967,bottom,SVP,
+2017,Switzerland,Sozialdemokratische Partei der Schweiz,"Switzerland
+18.8% der Stimmen in 2015",Social democracy,6.1111112,2.125,475075,left,SP,Schweiz
+2017,Switzerland,Freisinnig-Demokratische Partei der Schweiz,"Switzerland
+16.4% der Stimmen in 2015",Liberal,3.7777777,6.875,413444,right,FDP,Schweiz
+2017,Switzerland,Christlichdemokratische Volkspartei,"Switzerland
+11.7% der Stimmen in 2015",Christian democracy,3.6666667,5.5,293653,bottom,CVP,
+2017,Switzerland,Grüne,"Switzerland
+7.1% der Stimmen in 2015",Green/Ecologist,5.5555553,1.875,177944,right,Grüne,Schweiz
+2017,Switzerland,Grünliberale Partei der Schweiz,"Switzerland
+4.6% der Stimmen in 2015",Green/Ecologist,5,5.25,116641,bottom,,
+2017,Switzerland,Evangelische Volkspartei der Schweiz,"Switzerland
+2.1% der Stimmen in 2015",Christian democracy,3.6666667,5.25,53042,left,,
+2017,Switzerland,Bürgerlich–Demokratische Partei,"Switzerland
+4.1% der Stimmen in 2015",Conservative,3.625,6.25,103476,bottom,,
       `.trim()} />
   <Editorial.Note style={{marginTop: 10}}>
     Quelle: <Editorial.A href='https://www.chesdata.eu/our-surveys/'>Chapel Hill Expert Survey 2017 und 2014</Editorial.A>, <Editorial.A href='http://www.parlgov.org/'>ParlGov database</Editorial.A>
