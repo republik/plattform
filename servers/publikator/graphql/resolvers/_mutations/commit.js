@@ -156,7 +156,7 @@ module.exports = async (_, args, context) => {
       .then(result => result.data)
       .catch(e => {
         const util = require('util')
-        console.log('createBlob failed!', util.inspect(e, {depth: null}))
+        console.log('createBlob failed!', util.inspect(e, { depth: null }))
         markdownBlob = null
       })
 
@@ -252,6 +252,7 @@ module.exports = async (_, args, context) => {
   } else {
     branch = `${superb.random()}-${superheroes.random().toLowerCase()}`
       .replace(/\s/g, '-')
+      .replace(/\./g, '-')
     await githubRest.gitdata.createRef({
       owner: login,
       repo: repoName,
