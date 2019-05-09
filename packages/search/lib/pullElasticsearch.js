@@ -1,4 +1,3 @@
-// const debug = require('debug')('search:scripts:pullElasticsearch')
 const debug = console.log
 
 const Elasticsearch = require('@orbiting/backend-modules-base/lib/Elasticsearch')

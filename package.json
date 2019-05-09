@@ -64,8 +64,8 @@
     "db:seed": "servers/republik/seeds/script/seed.js",
     "sendNotification": "cd servers/republik && node ../../packages/notifications/script/sendNotification.js",
     "test": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit",
-    "test:unit": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit --testPathIgnorePatterns \"\\.(int)|(integration)\\.jest\"",
-    "test:integration": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit --testPathIgnorePatterns \"\\.(u)|(unit)\\.jest\"",
+    "test:unit": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit --testPathPattern \"\\.(u)|(unit)\\.jest\"",
+    "test:integration": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit --testPathPattern \"\\.(int)|(integration)\\.jest\"",
     "test:dev": "yarn run test:unit --watch --notify",
     "test:cover": "TZ=Europe/Amsterdam jest --collectCoverage --detectOpenHandles --forceExit",
     "test:reportCover": "cat ./tests/coverage/lcov.info | coveralls"
