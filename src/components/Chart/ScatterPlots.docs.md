@@ -237,14 +237,14 @@ Use `inlineLabel`, `inlineSecondaryLabel` and `inlineLabelPosition`. Valid posit
     config={{
       "type": "ScatterPlot",
       "color": "family",
-      "colorRange": ["#4B8A3E", "#D6862B", "#BF3939", "#3872B5", "#4B8A3E", "#49A5E7", "#A65E42", "#F0554D"],
+      "colorRange": ["#4B8A3E", "#D6862B", "#84B547", "#BF3939", "#3872B5", "#49A5E7", "#A65E42", "#F0554D"],
       "numberFormat": ".1f",
       "x": "lrgen",
       "y": "position",
       "yTicks": [0,4,8],
       "xTicks": [0,5,10],
       "yUnit": "EU Position",
-      "xUnit": "ideological stance",
+      "xUnit": "Ideologie",
       "detail": "detail",
       "inlineLabel": "inline",
       "inlineSecondaryLabel": "inline_country",
@@ -262,32 +262,32 @@ Use `inlineLabel`, `inlineSecondaryLabel` and `inlineLabelPosition`. Valid posit
     values={`
 year,label,detail,family,position,lrgen,vote_abs,inline_pos,inline,inline_country
 2017,Christlich Demokratische Union,"Deutschland
-12,45 Mio. Stimmen im 2017",Christian democracy,6.0625,5.5625,12447656,,CDU,
-2017,Sozialdemokratische Partei Deutschlands,"9,54 Mio. Stimmen im 2017",Social democracy,6.5625,3.875,9539381,,SPD,
+12,45 Mio. Stimmen im 2017",christdemokratisch,6.0625,5.5625,12447656,,CDU,
+2017,Sozialdemokratische Partei Deutschlands,"9,54 Mio. Stimmen im 2017",sozialdemokratisch,6.5625,3.875,9539381,,SPD,
 2017,Freie Demokratische Partei,"Deutschland
-5,00 Mio. Stimmen im 2017",Liberal,4.5625,6.5625,4999449,,FDP,
+5,00 Mio. Stimmen im 2017",liberal,4.5625,6.5625,4999449,,FDP,
 2017,Bündnis 90 / Die Grünen,"Deutschland
-4,16 Mio. Stimmen im 2017",Green/Ecologist,6.7333331,2.9375,4158400,left,,
+4,16 Mio. Stimmen im 2017",grün/ökologisch,6.7333331,2.9375,4158400,left,,
 2017,Die Linke / PDS,"Deutschland
-4,30 Mio. Stimmen im 2017",Communist/Socialist,4.1875,1.4375,4297270,,,
+4,30 Mio. Stimmen im 2017",kommunistisch/sozialistisch,4.1875,1.4375,4297270,,,
 2017,Christlich Soziale Union,"Deutschland
-2,87 Mio. Stimmen im 2017",Christian democracy,4.5625,7.375,2869688,right,CSU,
-2017,Alternative für Deutschland,"5,88 Mio. Stimmen im 2017",Right-wing,1.8125,9.1875,5878115,,AfD,
-2017,Schweizerische Volkspartei,"0,74 Mio. Stimmen im 2015",Agrarian,1,8.25,740967,bottom,SVP,
+2,87 Mio. Stimmen im 2017",christdemokratisch,4.5625,7.375,2869688,right,CSU,
+2017,Alternative für Deutschland,"5,88 Mio. Stimmen im 2017",rechts,1.8125,9.1875,5878115,,AfD,
+2017,Schweizerische Volkspartei,"0,74 Mio. Stimmen im 2015",agrarisch,1,8.25,740967,bottom,SVP,
 2017,Sozialdemokratische Partei,"Schweiz
-0,48 Mio. Stimmen im 2015",Social democracy,6.1111112,2.125,475075,left,SP,Schweiz
+0,48 Mio. Stimmen im 2015",sozialdemokratisch,6.1111112,2.125,475075,left,SP,Schweiz
 2017,Freisinnig-Demokratische Partei,"Schweiz
-0,41 Mio. Stimmen im 2015",Liberal,3.7777777,6.875,413444,right,FDP,Schweiz
+0,41 Mio. Stimmen im 2015",liberal,3.7777777,6.875,413444,right,FDP,Schweiz
 2017,Christlichdemokratische Volkspartei,"Schweiz
-0,29 Mio. Stimmen im 2015",Christian democracy,3.6666667,5.5,293653,bottom,CVP,
+0,29 Mio. Stimmen im 2015",christdemokratisch,3.6666667,5.5,293653,bottom,CVP,
 2017,Grüne,"Schweiz
-0,18 Mio. Stimmen im 2015",Green/Ecologist,5.5555553,1.875,177944,right,Grüne,Schweiz
+0,18 Mio. Stimmen im 2015",grün/ökologisch,5.5555553,1.875,177944,right,Grüne,Schweiz
 2017,Grünliberale Partei,"Schweiz
-0,12 Mio. Stimmen im 2015",Green/Ecologist,5,5.25,116641,bottom,,
+0,12 Mio. Stimmen im 2015",grün/ökologisch,5,5.25,116641,bottom,,
 2017,Evangelische Volkspartei,"Schweiz
-0,05 Mio. Stimmen im 2015",Christian democracy,3.6666667,5.25,53042,left,,
+0,05 Mio. Stimmen im 2015",christdemokratisch,3.6666667,5.25,53042,left,,
 2017,Bürgerlich–Demokratische Partei,"Schweiz
-0,10 Mio. Stimmen im 2015",Conservative,3.625,6.25,103476,bottom,,
+0,10 Mio. Stimmen im 2015",konservativ,3.625,6.25,103476,bottom,,
       `.trim()} />
   <Editorial.Note style={{marginTop: 10}}>
     Quelle: <Editorial.A href='https://www.chesdata.eu/our-surveys/'>Chapel Hill Expert Survey 2017 und 2014</Editorial.A>, <Editorial.A href='http://www.parlgov.org/'>ParlGov database</Editorial.A>
