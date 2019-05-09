@@ -20,6 +20,7 @@
     "link": "yarn link"
   },
   "dependencies": {
-    "@slack/client": "^4.2.2"
+    "@slack/rtm-api": "^5.0.1",
+    "@slack/web-api": "^5.0.1"
   }
 }

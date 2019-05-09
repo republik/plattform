@@ -17,6 +17,7 @@
     "link": "yarn link"
   },
   "devDependencies": {
+    "subscriptions-transport-ws": "^0.9.16",
     "why-is-node-running": "^2.0.3"
   },
   "dependencies": {}

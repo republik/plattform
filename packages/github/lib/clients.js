@@ -112,20 +112,15 @@ module.exports = async () => {
   })
 
   const githubRest = new GitHubApi({
-    headers: {
-      'Accept': 'application/vnd.github.machine-man-preview+json, application/vnd.github.mercy-preview+json'
-    }
-  })
-  githubRest.authenticate({
-    type: 'app',
-    token: installationToken.token
+    previews: [ 'machine-man-preview', 'mercy-preview' ],
+    auth: installationToken.token
   })
 
   if (GITHUB_LOG_RATELIMIT) {
     const now = new Date().getTime()
     if (!nextRateLimitCheck || nextRateLimitCheck <= now) {
       nextRateLimitCheck = now + 15 * 60 * 1000
-      githubRest.misc.getRateLimit({})
+      githubRest.rateLimit.get()
         .then(response => {
           if (!response.data) {
             console.error('could not get rateLimit!', response)
@@ -144,7 +139,7 @@ module.exports = async () => {
             }
             if (DEV) {
               const util = require('util')
-              console.log(util.inspect(message, null, {depth: null}))
+              console.log(util.inspect(message, null, { depth: null }))
             } else {
               console.log(JSON.stringify(message))
             }

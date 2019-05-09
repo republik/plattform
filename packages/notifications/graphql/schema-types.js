@@ -8,7 +8,7 @@ enum OSType {
 input DeviceInformationInput {
   appVersion: String!,
   os: OSType!,
-  osVersion: String!,
+  osVersion: StringOrNumber!
   model: String!
   userAgent: String
 }

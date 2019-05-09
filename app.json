@@ -137,12 +137,6 @@
     "PUBLIC_URL": {
       "required": true
     },
-    "PUBLIC_WS_URL_BASE": {
-      "required": true
-    },
-    "PUBLIC_WS_URL_PATH": {
-      "required": true
-    },
     "QUESTIONS_MAIL_FROM_ADDRESS": {
       "required": true
     },

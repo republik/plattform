@@ -20,6 +20,6 @@
     "link": "yarn link"
   },
   "dependencies": {
-    "isomorphic-unfetch": "^2.0.0"
+    "isomorphic-unfetch": "^3.0.0"
   }
 }

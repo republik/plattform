@@ -4,7 +4,6 @@ const { createServer } = require('http')
 const checkEnv = require('check-env')
 const compression = require('compression')
 const timeout = require('connect-timeout')
-const cluster = require('cluster')
 const helmet = require('helmet')
 
 const PgDb = require('./lib/PgDb')
@@ -28,7 +27,6 @@ const {
   SESSION_SECRET,
   COOKIE_DOMAIN,
   COOKIE_NAME,
-  ENGINE_API_KEY,
   IGNORE_SSL_HOSTNAME,
   REQ_TIMEOUT
 } = process.env
@@ -37,85 +35,9 @@ const {
 const { express: { auth: Auth } } = require('@orbiting/backend-modules-auth')
 const requestLog = require('./express/requestLog')
 
-const CLUSTER_LISTEN_MESSAGE = 'http-server-listening'
-
-let engineLauncher
-
-// if engine is part of the game, it will listen on PORT
-// (clustered) workers thus must listen on another port (PORT-1).
-const getWorkersPort = () => {
-  if (ENGINE_API_KEY) {
-    return PORT - 1
-  }
-  return PORT
-}
-
-const startEngine = () => {
-  if (!ENGINE_API_KEY) {
-    return
-  }
-  if (engineLauncher) {
-    throw new Error('apollo engine must only be started once!!')
-  }
-  const { ApolloEngineLauncher } = require('apollo-engine')
-  // init apollo engine
-  // https://www.apollographql.com/docs/engine/setup-standalone.html#apollo-engine-launcher
-  // https://github.com/apollographql/apollo-engine-js#middleware-configuration
-  // https://www.apollographql.com/docs/engine/proto-doc.html
-  engineLauncher = new ApolloEngineLauncher({
-    apiKey: ENGINE_API_KEY,
-    origins: [{
-      requestTimeout: '7200s', // 2h don't let the eninge timeout a request
-      http: {
-        // The URL that the Proxy should use to connect to your GraphQL server.
-        url: `http://localhost:${getWorkersPort()}/graphql`
-      }
-    }],
-    // Tell the Proxy on what port to listen, and which paths should
-    // be treated as GraphQL instead of transparently proxied as raw HTTP.
-    frontends: [{
-      port: parseInt(PORT),
-      endpoints: ['/graphql']
-    }],
-    logging: {
-      level: 'INFO'
-    }
-  })
-
-  // Start the Proxy; crash on errors.
-  return engineLauncher.start({
-    startupTimeout: 20 * 1000 // give the worker(s) 20s to start up
-  })
-    .then(() => {
-      console.log(`apollo-engine is running on http://localhost:${PORT}`)
-    })
-    .catch(err => {
-      throw err
-    })
-}
-
-// this function runs before start in cluster mode, otherwise after
-// args.cluster: if undefined/true, this method waits for a worker to emmit CLUSTER_LISTEN_MESSAGE
-// before starting engine, otherwise engine is started immediately
-const runOnce = async (args) => {
-  const clusterMode = args === undefined || args.clusterMode
-  if (clusterMode) {
-    let engineStarted = false
-    cluster.on('message', (worker, message, handle) => {
-      if (!engineStarted && message === CLUSTER_LISTEN_MESSAGE) {
-        engineStarted = true
-        startEngine()
-      }
-    })
-  } else {
-    return startEngine()
-  }
-}
-
 // init httpServer and express and start listening
-// if you need apollo-engine make sure to call runOnce after start
 const start = async (
-  executableSchema,
+  graphqlSchema,
   middlewares,
   t,
   _createGraphqlContext = identity => identity,
@@ -200,11 +122,11 @@ const start = async (
     elastic: elasticsearch
   })
 
-  const subscriptionServer = graphql(
+  graphql(
     server,
     httpServer,
     pgdb,
-    executableSchema,
+    graphqlSchema,
     createGraphqlContext
   )
 
@@ -220,11 +142,7 @@ const start = async (
     }
     closed = true
 
-    subscriptionServer.close()
     httpServer.close()
-    try {
-      engineLauncher.stop()
-    } catch (e) {}
 
     await auth.close()
 
@@ -243,25 +161,19 @@ const start = async (
   }
 
   return new Promise((resolve) => {
-    const port = getWorkersPort()
     const callback = () => {
       if (workerId) {
-        console.info(`server (${workerId}) is running on http://${HOST}:${port}`)
+        console.info(`server (${workerId}) is running on http://${HOST}:${PORT}`)
       } else {
-        console.info(`server is running on http://${HOST}:${port}`)
-      }
-      // notify cluster master
-      if (process.send) {
-        process.send(CLUSTER_LISTEN_MESSAGE)
+        console.info(`server is running on http://${HOST}:${PORT}`)
       }
       resolve(result)
     }
 
-    httpServer.listen(port, HOST, callback)
+    httpServer.listen(PORT, HOST, callback)
   })
 }
 
 module.exports = {
-  runOnce,
   start
 }

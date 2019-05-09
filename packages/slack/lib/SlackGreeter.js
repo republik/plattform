@@ -3,9 +3,7 @@ const emojione = require('emojione_minimal')
 const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 const RedisPubSub = require('@orbiting/backend-modules-base/lib/RedisPubSub')
 
-const {
-  RTMClient
-} = require('@slack/client')
+const { RTMClient } = require('@slack/rtm-api')
 
 const {
   SLACK_API_TOKEN,

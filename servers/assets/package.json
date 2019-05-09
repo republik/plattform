@@ -2,14 +2,14 @@
   "name": "assets-backend",
   "version": "0.0.1",
   "engines": {
-    "node": "10.x"
+    "node": "12.x"
   },
   "private": true,
   "license": "AGPL-3.0",
   "dependencies": {
     "cors": "^2.8.4",
     "express": "^4.16.3",
-    "isomorphic-unfetch": "^2.0.0",
+    "isomorphic-unfetch": "^3.0.0",
     "regiment": "^0.0.5"
   },
   "scripts": {
@@ -18,6 +18,6 @@
     "start": "node index.js"
   },
   "devDependencies": {
-    "nodemon": "^1.17.5"
+    "nodemon": "^1.19.0"
   }
 }

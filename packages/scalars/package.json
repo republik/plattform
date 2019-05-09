@@ -19,14 +19,9 @@
   "scripts": {
     "link": "yarn link"
   },
-  "devDependencies": {
-    "graphql": "^0.13.2"
-  },
   "dependencies": {
-    "graphql-type-json": "^0.2.0",
-    "apollo-modules-node": "^0.1.4"
-  },
-  "peerDependencies": {
-    "graphql": "^0.13.2"
+    "apollo-modules-node": "^0.1.4",
+    "graphql": "^14.2.1",
+    "graphql-type-json": "^0.3.0"
   }
 }

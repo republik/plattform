@@ -13,8 +13,6 @@ if (RES_KEEPALIVE_TIMEOUT_MS < 2 * RES_KEEPALIVE_MS) {
   throw new Error(`keepalive: RES_KEEPALIVE_TIMEOUT_MS (${RES_KEEPALIVE_TIMEOUT_MS}) too small (min. 2xRES_KEEPALIVE_MS)`)
 }
 
-const space = ' '
-
 module.exports = (req, res, next) => {
   let isFinished = false
   let isDataSent = false
@@ -29,11 +27,7 @@ module.exports = (req, res, next) => {
   res.once('close', finish)
 
   res.on('data', (data) => {
-    // look for something other than our blank space to indicate that real
-    // data is now being sent back to the client.
-    if (data !== space) {
-      isDataSent = true
-    }
+    isDataSent = true
   })
 
   const waitAndSend = () => {
@@ -43,13 +37,7 @@ module.exports = (req, res, next) => {
         !isFinished && !isDataSent &&
         now < startTime + RES_KEEPALIVE_TIMEOUT_MS
       ) {
-        // need to write the headers if they haven't been sent yet.
-        if (!res.headersSent) {
-          res.setHeader('Content-Type', 'application/json')
-          res.writeHead(202)
-        }
-
-        res.write(space)
+        res.writeProcessing()
         debug('keepalive sent')
 
         // wait another RES_KEEPALIVE_MS

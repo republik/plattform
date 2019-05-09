@@ -17,7 +17,7 @@ const deleteRepos = async () => {
   let hadMore = false
   let page = 0
   do {
-    const response = await githubRest.repos.getForOrg({
+    const response = await githubRest.repos.listForOrg({
       org: ORG,
       sort: 'created',
       direction: 'desc',
@@ -57,7 +57,7 @@ const getArticleMdFromGithub = async (repoId) => {
 
   const [owner, repo] = repoId.split('/')
 
-  return githubRest.repos.getContent({
+  return githubRest.repos.getContents({
     owner,
     repo,
     path: 'article.md'
