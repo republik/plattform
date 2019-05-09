@@ -20,13 +20,13 @@ const { isExpired } = require('./PaymentSource')
 const { DISABLE_RESOLVER_USER_CACHE } = process.env
 const QUERY_CACHE_TTL_SECONDS = 60 * 60 * 24 // 1 day
 
-const createMembershipCache = (user, prop) =>
+const createMembershipCache = (user, prop, context) =>
   createCache({
     prefix: `User:${user.id}`,
     key: `${prop}`,
     ttl: QUERY_CACHE_TTL_SECONDS,
     disabled: DISABLE_RESOLVER_USER_CACHE
-  })
+  }, context)
 
 const getPaymentSources = async (user, pgdb) => {
   const { platform } = await getStripeClients(pgdb)
@@ -66,9 +66,10 @@ module.exports = {
     }
     return []
   },
-  async activeMembership (user, args, { pgdb, user: me }) {
+  async activeMembership (user, args, context) {
+    const { pgdb, user: me } = context
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'accountant'])) {
-      return createMembershipCache(user, 'activeMembership')
+      return createMembershipCache(user, 'activeMembership', context)
         .cache(async () => pgdb.public.memberships.findFirst(
           { userId: user.id, active: true },
           { orderBy: { createdAt: 'ASC' } }
@@ -76,7 +77,8 @@ module.exports = {
     }
     return null
   },
-  async prolongBeforeDate (user, { ignoreClaimedMemberships = false }, { pgdb, user: me }) {
+  async prolongBeforeDate (user, { ignoreClaimedMemberships = false }, context) {
+    const { pgdb, user: me } = context
     debug('prolongBeforeDate')
 
     Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
@@ -85,7 +87,7 @@ module.exports = {
       prefix: `User:${user.id}`,
       key: `prolongBeforeDate-${ignoreClaimedMemberships}`,
       ttl: QUERY_CACHE_TTL_SECONDS
-    })
+    }, context)
 
     return cache.cache(async function () {
       let memberships = await pgdb.public.memberships.find({
@@ -235,7 +237,8 @@ module.exports = {
 
     return getCustomPackages({ user, pgdb })
   },
-  async isBonusEligable (user, args, { pgdb, user: me }) {
+  async isBonusEligable (user, args, context) {
+    const { pgdb, user: me } = context
     debug('isBonusEligable')
 
     Roles.ensureUserIsMeOrInRoles(user, me, ['admin', 'supporter'])
@@ -244,7 +247,7 @@ module.exports = {
       prefix: `User:${user.id}`,
       key: 'isBonusEligable',
       ttl: QUERY_CACHE_TTL_SECONDS
-    })
+    }, context)
 
     return cache.cache(async function () {
       const allPeriods = (await getCustomPackages({ user, pgdb }))

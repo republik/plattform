@@ -1,1 +1,3 @@
-module.exports = require('export-files')(__dirname)
+module.exports = {
+  sendTextMessage: require('./sendTextMessage')
+}

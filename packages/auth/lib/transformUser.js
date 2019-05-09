@@ -5,6 +5,9 @@ const getName = user =>
     .trim()
 
 module.exports = (user, additionalFields = {}) => {
+  if (!user) {
+    return null
+  }
   const name = getName(user)
   return {
     // default public fields

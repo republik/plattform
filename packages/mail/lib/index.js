@@ -1,4 +1,14 @@
-const handlers = require('export-files')(__dirname)
+const handlers = {
+  deleteEmail: require('./deleteEmail'),
+  getNewsletterSettings: require('./getNewsletterSettings'),
+  mailLog: require('./mailLog'),
+  moveNewsletterSubscriptions: require('./moveNewsletterSubscriptions'),
+  sendMail: require('./sendMail'),
+  sendMailTemplate: require('./sendMailTemplate'),
+  unsubscribeEmail: require('./unsubscribeEmail'),
+  updateNewsletterSubscription: require('./updateNewsletterSubscription'),
+  updateNewsletterSubscriptions: require('./updateNewsletterSubscriptions')
+}
 const { withConfiguration } = require('../NewsletterSubscription')
 const errors = require('../errors')
 

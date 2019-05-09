@@ -430,6 +430,7 @@ const unpublish = async (elastic, redis, repoId) => {
   const result = await elastic.deleteByQuery({
     index: indexRef.index,
     conflicts: 'proceed',
+    refresh: true,
     body: {
       query: {
         term: {

@@ -1,1 +1,5 @@
-module.exports = require('export-files')(__dirname)
+module.exports = {
+  Collection: require('./Collection'),
+  CollectionDocumentItem: require('./CollectionDocumentItem'),
+  CollectionMediaItem: require('./CollectionMediaItem')
+}

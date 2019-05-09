@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
 require('@orbiting/backend-modules-env').config()
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
+const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 const Promise = require('bluebird')
 const { csvFormat } = require('d3-dsv')
 const moment = require('moment')
@@ -81,7 +82,7 @@ const createPledgeAndPayments = async ({ transaction, option }, rows) =>
       paymentType: 'PLEDGE'
     })
 
-    const cache = createCache({ prefix: `User:${row.user.id}` })
+    const cache = createCache({ prefix: `User:${row.user.id}` }, { redis: Redis.connect() })
     await cache.invalidate()
 
     return { ...row, pledge, pledgeOption, payment, pledgePayments }

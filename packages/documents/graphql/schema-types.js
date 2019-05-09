@@ -41,6 +41,7 @@ type Meta {
   prepublication: Boolean
   publishDate: DateTime
   feed: Boolean
+  gallery: Boolean
   kind: String
   color: String
   series: Series

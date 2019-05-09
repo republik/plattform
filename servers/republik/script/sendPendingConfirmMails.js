@@ -3,7 +3,7 @@ const Promise = require('bluebird')
 const debug = require('debug')('republik:script:sendPendingConfirmMails')
 
 require('@orbiting/backend-modules-env').config()
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
 const { sendPledgeConfirmations } = require('../modules/crowdfundings/lib/Mail')
 const t = require('../lib/t')

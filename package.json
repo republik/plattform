@@ -38,6 +38,7 @@
   "dependencies": {},
   "devDependencies": {
     "commitizen": "^2.10.1",
+    "coveralls": "^3.0.3",
     "cz-conventional-changelog": "^2.1.0",
     "foreman": "^3.0.0",
     "husky": "^1.1.3",
@@ -56,13 +57,18 @@
     "commitmsg": "validate-commit-msg",
     "roleUser": "node packages/auth/script/roleUser",
     "roleUsers": "node packages/auth/script/roleUsers",
-    "pull:redis": "node servers/publikator/script/pullRedis.js",
     "pull:elasticsearch": "GITHUB_GRAPHQL_RATELIMIT=true node packages/search/script/pullElasticsearch.js",
-    "db:migrate:up": "cd servers/republik && node script/db-migrate-all.js up",
+    "db:migrate:create": "packages/migrations/script/create.js",
+    "db:migrate:up": "db-migrate up --migrations-dir packages/migrations/migrations",
+    "db:migrate:down": "db-migrate down --migrations-dir packages/db-migrations/migrations --verbose",
+    "db:seed": "servers/republik/seeds/script/seed.js",
     "sendNotification": "cd servers/republik && node ../../packages/notifications/script/sendNotification.js",
-    "test": "jest",
-    "test:dev": "jest --watch --notify --verbose",
-    "test:cover": "jest --collectCoverage"
+    "test": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit",
+    "test:unit": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit --testPathPattern \"\\.(u)|(unit)\\.jest\"",
+    "test:integration": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit --testPathPattern \"\\.(int)|(integration)\\.jest\"",
+    "test:dev": "yarn run test:unit --watch --notify",
+    "test:cover": "TZ=Europe/Amsterdam jest --collectCoverage --detectOpenHandles --forceExit",
+    "test:reportCover": "cat ./tests/coverage/lcov.info | coveralls"
   },
   "standard": {
     "env": [

@@ -1,0 +1,30 @@
+{
+  "name": "@orbiting/backend-modules-db-migrations",
+  "version": "0.0.1",
+  "description": "all postgresql migration for orbiting",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
+  "license": "AGPL-3.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "scripts": {
+    "link": "yarn link",
+    "db:migrate:create": "script/create.js"
+  },
+  "devDependencies": {
+    "moment": "^2.24.0",
+    "yargs": "^13.2.2"
+  },
+  "dependencies": {
+    "db-migrate": "^0.11.5",
+    "db-migrate-pg": "^0.5.0"
+  }
+}

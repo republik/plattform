@@ -1,1 +1,5 @@
-module.exports = require('export-files')(__dirname)
+module.exports = {
+  applyPgInterval: require('./applyPgInterval'),
+  ensureStringLength: require('./ensureStringLength'),
+  paginate: require('./paginate')
+}

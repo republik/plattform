@@ -6,7 +6,7 @@
  */
 require('@orbiting/backend-modules-env').config()
 
-const { lib: { pgdb: PgDb } } = require('@orbiting/backend-modules-base')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const Badges = require('../lib/Badges')
 
 PgDb.connect()

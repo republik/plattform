@@ -20,7 +20,6 @@
     "link": "yarn link"
   },
   "dependencies": {
-    "@slack/client": "^4.2.2",
-    "export-files": "^2.1.1"
+    "@slack/client": "^4.2.2"
   }
 }

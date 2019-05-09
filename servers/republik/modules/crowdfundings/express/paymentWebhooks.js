@@ -12,7 +12,7 @@ const {
   STRIPE_TEST_MODE
 } = process.env
 
-module.exports = async (server, pgdb, t) => {
+module.exports = async (server, pgdb, t, redis) => {
   const handleWebhook = await getWebhookHandler({ pgdb, t })
 
   const handleStripeWebhook = async (req, res, connected) => {
@@ -115,7 +115,7 @@ module.exports = async (server, pgdb, t) => {
         if (pledge.status !== pledgeStatus) {
           // generate Memberships
           if (pledgeStatus === 'SUCCESSFUL') {
-            await generateMemberships(pledge.id, transaction, t, null, logger)
+            await generateMemberships(pledge.id, transaction, t, null, redis)
           }
 
           // update pledge status
@@ -193,7 +193,7 @@ module.exports = async (server, pgdb, t) => {
             if (pledge.status !== pledgeStatus) {
               // generate Memberships
               if (pledgeStatus === 'SUCCESSFUL') {
-                await generateMemberships(pledge.id, transaction, t, logger)
+                await generateMemberships(pledge.id, transaction, t, null, redis)
               }
 
               // update pledge status

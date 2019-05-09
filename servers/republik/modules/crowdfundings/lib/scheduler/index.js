@@ -1,8 +1,8 @@
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
 const debug = require('debug')('crowdfundings:lib:scheduler')
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
-const redis = require('@orbiting/backend-modules-base/lib/redis')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
+const Redis = require('@orbiting/backend-modules-base/lib/Redis')
 const {
   intervalScheduler,
   timeScheduler
@@ -20,50 +20,75 @@ const init = async (_context) => {
   debug('init')
 
   const pgdb = await PgDb.connect()
+  const redis = Redis.connect()
   const context = {
     ..._context,
     pgdb,
     redis
   }
 
-  timeScheduler.init({
-    name: 'memberships-givers',
-    context,
-    runFunc: informGivers,
-    lockTtlSecs,
-    runAtTime: '06:00',
-    runInitially: DEV
-  })
+  const schedulers = []
 
-  timeScheduler.init({
-    name: 'memberships-owners',
-    context,
-    runFunc: informOwners,
-    lockTtlSecs,
-    runAtTime: '06:30',
-    runInitially: DEV
-  })
+  schedulers.push(
+    timeScheduler.init({
+      name: 'memberships-givers',
+      context,
+      runFunc: informGivers,
+      lockTtlSecs,
+      runAtTime: '06:00',
+      runInitially: DEV
+    })
+  )
 
-  timeScheduler.init({
-    name: 'winback',
-    context,
-    runFunc: informCancellers,
-    lockTtlSecs,
-    runAtTime: '18:32',
-    runAtDaysOfWeek: [1, 2, 3, 4, 5],
-    runInitially: DEV
-  })
+  schedulers.push(
+    timeScheduler.init({
+      name: 'memberships-owners',
+      context,
+      runFunc: informOwners,
+      lockTtlSecs,
+      runAtTime: '06:30',
+      runInitially: DEV
+    })
+  )
 
-  intervalScheduler.init({
-    name: 'changeover-deactivate',
-    context,
-    runFunc: async (args, context) => {
-      await changeover(args, context)
-      await deactivate(args, context)
-    },
-    lockTtlSecs,
-    runIntervalSecs: 60 * 10
-  })
+  schedulers.push(
+    timeScheduler.init({
+      name: 'winback',
+      context,
+      runFunc: informCancellers,
+      lockTtlSecs,
+      runAtTime: '18:32',
+      runAtDaysOfWeek: [1, 2, 3, 4, 5],
+      runInitially: DEV
+    })
+  )
+
+  schedulers.push(
+    intervalScheduler.init({
+      name: 'changeover-deactivate',
+      context,
+      runFunc: async (args, context) => {
+        await changeover(args, context)
+        await deactivate(args, context)
+      },
+      lockTtlSecs,
+      runIntervalSecs: 60 * 10
+    })
+  )
+
+  const close = async () => {
+    await Promise.all(
+      schedulers.map(scheduler => scheduler.close())
+    )
+    await Promise.all([
+      PgDb.disconnect(pgdb),
+      Redis.disconnect(redis)
+    ])
+  }
+
+  return {
+    close
+  }
 }
 
 module.exports = {

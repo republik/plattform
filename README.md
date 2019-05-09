@@ -1,4 +1,4 @@
-# @orbiting/backends
+# @orbiting/backends [![Build Status](https://travis-ci.org/orbiting/backends.svg?branch=master)](https://travis-ci.org/orbiting/backends) [![Coverage Status](https://coveralls.io/repos/github/orbiting/backends/badge.svg?branch=master)](https://coveralls.io/github/orbiting/backends?branch=master)
 
 This repo contains all the backend code in use at Republik. For easier development the previously separate repos [republik-backend](https://github.com/orbiting/republik-backend), [publikator-backend](https://github.com/orbiting/publikator-backend), [assets-backend](https://github.com/orbiting/assets-backend) and [backend-modules](https://github.com/orbiting/backend-modules) where merged into this monorepo.
 
@@ -7,8 +7,6 @@ This repo contains all the backend code in use at Republik. For easier developme
 This repo is devided between `servers` and `packages`.
 - **servers:** this directory contains runnable servers
 - **packages:** contains code shared between the servers
-
-TODO: system diagram
 
 ## Usage
 
@@ -146,11 +144,6 @@ At least the android emulator doesn't use the hosts dns resolver
 ```
 yarn run run-android
 ```
-
-
-## Caveats
-
-Due to the this [bug](https://github.com/yarnpkg/yarn/issues/4964) running bin scripts from the server subfolders doesn't work. Currently the following workaround is in place: `test:prepare` of republik and publikator first does: `rm -rf node_modules/.bin && ln -s ../../../node_modules/.bin node_modules/`.
 
 ## Licensing
 The source code and it's documentation is licensed under [GNU AGPLv3](LICENSE)+.

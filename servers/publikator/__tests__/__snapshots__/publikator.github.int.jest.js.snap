@@ -1,0 +1,721 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`workflow autobranching 1`] = `
+Object {
+  "__typename": "Document",
+  "content": Object {
+    "children": Array [
+      Object {
+        "children": Array [
+          Object {
+            "children": Array [
+              Object {
+                "type": "text",
+                "value": "Postschiff Enterprise",
+              },
+            ],
+            "depth": 1,
+            "type": "heading",
+          },
+          Object {
+            "children": Array [],
+            "depth": 2,
+            "type": "heading",
+          },
+          Object {
+            "children": Array [
+              Object {
+                "type": "text",
+                "value": "Unsere Softwareentwickler wollten das E-Voting-System der Post starten. Doch der Quellcode ist offenbar nicht zu diesem Zweck veröffentlicht worden.",
+              },
+            ],
+            "type": "paragraph",
+          },
+          Object {
+            "children": Array [
+              Object {
+                "type": "text",
+                "value": "Von ",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "Adrienne Fichter",
+                  },
+                ],
+                "title": "Adrienne Fichter",
+                "type": "link",
+                "url": "/~6ae2733e-1562-47b3-881c-88e9d3d28da9",
+              },
+              Object {
+                "type": "text",
+                "value": ", ",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "Andreas Moor",
+                  },
+                ],
+                "title": "Andreas Moor",
+                "type": "link",
+                "url": "/~65b64225-3843-4e41-a7a6-716ae81a5d57",
+              },
+              Object {
+                "type": "text",
+                "value": " und ",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "Patrick Recher",
+                  },
+                ],
+                "title": "Patrick Recher",
+                "type": "link",
+                "url": "/~b3054752-eefe-4cb4-9da0-b57a9c07d334",
+              },
+              Object {
+                "type": "text",
+                "value": ", 15.02.2019, Update 06.03.2019",
+              },
+            ],
+            "type": "paragraph",
+          },
+        ],
+        "data": Object {},
+        "identifier": "TITLE",
+        "type": "zone",
+      },
+      Object {
+        "children": Array [
+          Object {
+            "children": Array [
+              Object {
+                "type": "text",
+                "value": "Zunächst sah es nach einem passablen Start aus: klare Kommunikation, für jeden einsehbarer Quellcode, öffentliche Sicherheits­checks. Vergangene Woche ",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "veröffentlichte die Post den Quellcode ihrer E-Voting-Plattform",
+                  },
+                ],
+                "title": null,
+                "type": "link",
+                "url": "https://republik.ch/testing",
+              },
+              Object {
+                "type": "text",
+                "value": ", die sie ",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "zusammen mit der Firma Scytl",
+                  },
+                ],
+                "title": "Das heikle Geschäft mit der Demokratie",
+                "type": "link",
+                "url": "https://www.republik.ch/2019/01/31/das-heikle-geschaeft-mit-der-demokratie",
+              },
+              Object {
+                "type": "text",
+                "value": " entwickelt hat. Am 25. Februar startet der «",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "öffentliche Hackertest",
+                  },
+                ],
+                "title": null,
+                "type": "link",
+                "url": "https://republik.ch/testing2",
+              },
+              Object {
+                "type": "text",
+                "value": "», bei dem für gefundene Fehler eine Prämie ausgesetzt ist. Ein Blick auf das Projekt bereitet jedoch wenig Freude. Noch vor Fragen zu den Verschlüsselungs­prozessen und Verifizierungs­algorithmen kommen Zweifel auf am Willen zur Transparenz.",
+              },
+            ],
+            "type": "paragraph",
+          },
+          Object {
+            "children": Array [
+              Object {
+                "type": "text",
+                "value": "Beim Thema Digitalisierung denkt kaum jemand an die Welt der ",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "enterprise software.",
+                  },
+                ],
+                "type": "emphasis",
+              },
+              Object {
+                "type": "text",
+                "value": " Sie existiert in den IT-Abteilungen und Rechen­zentren von Bundes­ämtern und Gross­betrieben und ist bevölkert von gut bezahlten Software­architekten und -ingenieuren. Hier werden nicht die kultigsten Apps für die Generation Z programmiert, sondern es wird Infrastruktur erschaffen: Applikationen mit hohen Anforderungen an Korrektheit, Sicherheit und Wartbarkeit – Software, die manchmal über Jahrzehnte funktionieren muss.",
+              },
+            ],
+            "type": "paragraph",
+          },
+          Object {
+            "children": Array [
+              Object {
+                "children": Array [
+                  Object {
+                    "alt": null,
+                    "title": null,
+                    "type": "image",
+                    "url": "http://localhost:5020/github/orbiting-test/article-postschiff/images/e9eb4d2b97c5e3ee8100ad42767cd29bace3593e.png?size=50x25#originalURL=images%2Fe9eb4d2b97c5e3ee8100ad42767cd29bace3593e.png%3Fsize%3D50x25",
+                  },
+                ],
+                "type": "paragraph",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "Bis jetzt haben wir es zwar geschafft, den Code in Maschinensprache zu übersetzen, aber von einem laufenden System, auf dem wir eine Wahl durchführen können, sind wir noch weit entfernt.",
+                  },
+                ],
+                "type": "paragraph",
+              },
+            ],
+            "data": Object {
+              "excludeFromGallery": false,
+            },
+            "identifier": "FIGURE",
+            "type": "zone",
+          },
+        ],
+        "data": Object {},
+        "identifier": "CENTER",
+        "type": "zone",
+      },
+    ],
+    "meta": Object {
+      "description": "Die Post hat den Quellcode für ihr umstrittenes E-Voting veröffentlicht. Schafft das Transparenz? Nicht wirklich. Wir haben Fragen an die Post. Sie auch?",
+      "feed": true,
+      "gallery": true,
+      "slug": "postschiff-enterprise",
+      "subject": "",
+      "template": "article",
+      "title": "Postschiff Enterprise 3",
+    },
+    "type": "root",
+  },
+  "id": Any<String>,
+  "meta": Object {
+    "__typename": "Meta",
+    "color": null,
+    "format": null,
+    "kind": null,
+    "template": "article",
+    "title": "Postschiff Enterprise 3",
+  },
+}
+`;
+
+exports[`workflow autobranching 2`] = `
+"---
+template: article
+slug: postschiff-enterprise
+feed: true
+gallery: true
+title: Postschiff Enterprise 3
+subject: ''
+description: >-
+  Die Post hat den Quellcode für ihr umstrittenes E-Voting veröffentlicht.
+  Schafft das Transparenz? Nicht wirklich. Wir haben Fragen an die Post. Sie
+  auch?
+---
+
+<section><h6>TITLE</h6>
+
+# Postschiff Enterprise
+
+## 
+
+Unsere Softwareentwickler wollten das E-Voting-System der Post starten. Doch der Quellcode ist offenbar nicht zu diesem Zweck veröffentlicht worden.
+
+Von [Adrienne Fichter](/~6ae2733e-1562-47b3-881c-88e9d3d28da9 \\"Adrienne Fichter\\"), [Andreas Moor](/~65b64225-3843-4e41-a7a6-716ae81a5d57 \\"Andreas Moor\\") und [Patrick Recher](/~b3054752-eefe-4cb4-9da0-b57a9c07d334 \\"Patrick Recher\\"), 15.02.2019, Update 06.03.2019
+
+<hr /></section>
+
+<section><h6>CENTER</h6>
+
+Zunächst sah es nach einem passablen Start aus: klare Kommunikation, für jeden einsehbarer Quellcode, öffentliche Sicherheits­checks. Vergangene Woche [veröffentlichte die Post den Quellcode ihrer E-Voting-Plattform](https://republik.ch/testing), die sie [zusammen mit der Firma Scytl](https://www.republik.ch/2019/01/31/das-heikle-geschaeft-mit-der-demokratie \\"Das heikle Geschäft mit der Demokratie\\") entwickelt hat. Am 25. Februar startet der «[öffentliche Hackertest](https://republik.ch/testing2)», bei dem für gefundene Fehler eine Prämie ausgesetzt ist. Ein Blick auf das Projekt bereitet jedoch wenig Freude. Noch vor Fragen zu den Verschlüsselungs­prozessen und Verifizierungs­algorithmen kommen Zweifel auf am Willen zur Transparenz.
+
+Beim Thema Digitalisierung denkt kaum jemand an die Welt der _enterprise software._ Sie existiert in den IT-Abteilungen und Rechen­zentren von Bundes­ämtern und Gross­betrieben und ist bevölkert von gut bezahlten Software­architekten und -ingenieuren. Hier werden nicht die kultigsten Apps für die Generation Z programmiert, sondern es wird Infrastruktur erschaffen: Applikationen mit hohen Anforderungen an Korrektheit, Sicherheit und Wartbarkeit – Software, die manchmal über Jahrzehnte funktionieren muss.
+
+<section><h6>FIGURE</h6>
+
+\`\`\`
+{
+  \\"excludeFromGallery\\": false
+}
+\`\`\`
+
+![](images/e9eb4d2b97c5e3ee8100ad42767cd29bace3593e.png?size=50x25)
+
+Bis jetzt haben wir es zwar geschafft, den Code in Maschinensprache zu übersetzen, aber von einem laufenden System, auf dem wir eine Wahl durchführen können, sind wir noch weit entfernt.
+
+<hr /></section>
+
+
+
+<hr /></section>
+"
+`;
+
+exports[`workflow create 1`] = `
+Object {
+  "__typename": "Document",
+  "content": Object {
+    "children": Array [
+      Object {
+        "children": Array [
+          Object {
+            "children": Array [
+              Object {
+                "type": "text",
+                "value": "Postschiff Enterprise",
+              },
+            ],
+            "depth": 1,
+            "type": "heading",
+          },
+          Object {
+            "children": Array [],
+            "depth": 2,
+            "type": "heading",
+          },
+          Object {
+            "children": Array [
+              Object {
+                "type": "text",
+                "value": "Unsere Softwareentwickler wollten das E-Voting-System der Post starten. Doch der Quellcode ist offenbar nicht zu diesem Zweck veröffentlicht worden.",
+              },
+            ],
+            "type": "paragraph",
+          },
+          Object {
+            "children": Array [
+              Object {
+                "type": "text",
+                "value": "Von ",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "Adrienne Fichter",
+                  },
+                ],
+                "title": "Adrienne Fichter",
+                "type": "link",
+                "url": "/~6ae2733e-1562-47b3-881c-88e9d3d28da9",
+              },
+              Object {
+                "type": "text",
+                "value": ", ",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "Andreas Moor",
+                  },
+                ],
+                "title": "Andreas Moor",
+                "type": "link",
+                "url": "/~65b64225-3843-4e41-a7a6-716ae81a5d57",
+              },
+              Object {
+                "type": "text",
+                "value": " und ",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "Patrick Recher",
+                  },
+                ],
+                "title": "Patrick Recher",
+                "type": "link",
+                "url": "/~b3054752-eefe-4cb4-9da0-b57a9c07d334",
+              },
+              Object {
+                "type": "text",
+                "value": ", 15.02.2019, Update 06.03.2019",
+              },
+            ],
+            "type": "paragraph",
+          },
+        ],
+        "data": Object {},
+        "identifier": "TITLE",
+        "type": "zone",
+      },
+      Object {
+        "children": Array [
+          Object {
+            "children": Array [
+              Object {
+                "type": "text",
+                "value": "Zunächst sah es nach einem passablen Start aus: klare Kommunikation, für jeden einsehbarer Quellcode, öffentliche Sicherheits­checks. Vergangene Woche ",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "veröffentlichte die Post den Quellcode ihrer E-Voting-Plattform",
+                  },
+                ],
+                "title": null,
+                "type": "link",
+                "url": "https://republik.ch/testing",
+              },
+              Object {
+                "type": "text",
+                "value": ", die sie ",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "zusammen mit der Firma Scytl",
+                  },
+                ],
+                "title": "Das heikle Geschäft mit der Demokratie",
+                "type": "link",
+                "url": "https://www.republik.ch/2019/01/31/das-heikle-geschaeft-mit-der-demokratie",
+              },
+              Object {
+                "type": "text",
+                "value": " entwickelt hat. Am 25. Februar startet der «",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "öffentliche Hackertest",
+                  },
+                ],
+                "title": null,
+                "type": "link",
+                "url": "https://republik.ch/testing2",
+              },
+              Object {
+                "type": "text",
+                "value": "», bei dem für gefundene Fehler eine Prämie ausgesetzt ist. Ein Blick auf das Projekt bereitet jedoch wenig Freude. Noch vor Fragen zu den Verschlüsselungs­prozessen und Verifizierungs­algorithmen kommen Zweifel auf am Willen zur Transparenz.",
+              },
+            ],
+            "type": "paragraph",
+          },
+        ],
+        "data": Object {},
+        "identifier": "CENTER",
+        "type": "zone",
+      },
+    ],
+    "meta": Object {
+      "description": "Die Post hat den Quellcode für ihr umstrittenes E-Voting veröffentlicht. Schafft das Transparenz? Nicht wirklich. Wir haben Fragen an die Post. Sie auch?",
+      "feed": true,
+      "gallery": true,
+      "slug": "postschiff-enterprise",
+      "subject": "",
+      "template": "article",
+      "title": "Postschiff Enterprise 1",
+    },
+    "type": "root",
+  },
+  "id": Any<String>,
+  "meta": Object {
+    "__typename": "Meta",
+    "color": null,
+    "format": null,
+    "kind": null,
+    "template": "article",
+    "title": "Postschiff Enterprise 1",
+  },
+}
+`;
+
+exports[`workflow create 2`] = `
+"---
+template: article
+slug: postschiff-enterprise
+feed: true
+gallery: true
+title: Postschiff Enterprise 1
+subject: ''
+description: >-
+  Die Post hat den Quellcode für ihr umstrittenes E-Voting veröffentlicht.
+  Schafft das Transparenz? Nicht wirklich. Wir haben Fragen an die Post. Sie
+  auch?
+---
+
+<section><h6>TITLE</h6>
+
+# Postschiff Enterprise
+
+## 
+
+Unsere Softwareentwickler wollten das E-Voting-System der Post starten. Doch der Quellcode ist offenbar nicht zu diesem Zweck veröffentlicht worden.
+
+Von [Adrienne Fichter](/~6ae2733e-1562-47b3-881c-88e9d3d28da9 \\"Adrienne Fichter\\"), [Andreas Moor](/~65b64225-3843-4e41-a7a6-716ae81a5d57 \\"Andreas Moor\\") und [Patrick Recher](/~b3054752-eefe-4cb4-9da0-b57a9c07d334 \\"Patrick Recher\\"), 15.02.2019, Update 06.03.2019
+
+<hr /></section>
+
+<section><h6>CENTER</h6>
+
+Zunächst sah es nach einem passablen Start aus: klare Kommunikation, für jeden einsehbarer Quellcode, öffentliche Sicherheits­checks. Vergangene Woche [veröffentlichte die Post den Quellcode ihrer E-Voting-Plattform](https://republik.ch/testing), die sie [zusammen mit der Firma Scytl](https://www.republik.ch/2019/01/31/das-heikle-geschaeft-mit-der-demokratie \\"Das heikle Geschäft mit der Demokratie\\") entwickelt hat. Am 25. Februar startet der «[öffentliche Hackertest](https://republik.ch/testing2)», bei dem für gefundene Fehler eine Prämie ausgesetzt ist. Ein Blick auf das Projekt bereitet jedoch wenig Freude. Noch vor Fragen zu den Verschlüsselungs­prozessen und Verifizierungs­algorithmen kommen Zweifel auf am Willen zur Transparenz.
+
+<hr /></section>
+"
+`;
+
+exports[`workflow edit 1`] = `
+Object {
+  "__typename": "Document",
+  "content": Object {
+    "children": Array [
+      Object {
+        "children": Array [
+          Object {
+            "children": Array [
+              Object {
+                "type": "text",
+                "value": "Postschiff Enterprise",
+              },
+            ],
+            "depth": 1,
+            "type": "heading",
+          },
+          Object {
+            "children": Array [],
+            "depth": 2,
+            "type": "heading",
+          },
+          Object {
+            "children": Array [
+              Object {
+                "type": "text",
+                "value": "Unsere Softwareentwickler wollten das E-Voting-System der Post starten. Doch der Quellcode ist offenbar nicht zu diesem Zweck veröffentlicht worden.",
+              },
+            ],
+            "type": "paragraph",
+          },
+          Object {
+            "children": Array [
+              Object {
+                "type": "text",
+                "value": "Von ",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "Adrienne Fichter",
+                  },
+                ],
+                "title": "Adrienne Fichter",
+                "type": "link",
+                "url": "/~6ae2733e-1562-47b3-881c-88e9d3d28da9",
+              },
+              Object {
+                "type": "text",
+                "value": ", ",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "Andreas Moor",
+                  },
+                ],
+                "title": "Andreas Moor",
+                "type": "link",
+                "url": "/~65b64225-3843-4e41-a7a6-716ae81a5d57",
+              },
+              Object {
+                "type": "text",
+                "value": " und ",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "Patrick Recher",
+                  },
+                ],
+                "title": "Patrick Recher",
+                "type": "link",
+                "url": "/~b3054752-eefe-4cb4-9da0-b57a9c07d334",
+              },
+              Object {
+                "type": "text",
+                "value": ", 15.02.2019, Update 06.03.2019",
+              },
+            ],
+            "type": "paragraph",
+          },
+        ],
+        "data": Object {},
+        "identifier": "TITLE",
+        "type": "zone",
+      },
+      Object {
+        "children": Array [
+          Object {
+            "children": Array [
+              Object {
+                "type": "text",
+                "value": "Zunächst sah es nach einem passablen Start aus: klare Kommunikation, für jeden einsehbarer Quellcode, öffentliche Sicherheits­checks. Vergangene Woche ",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "veröffentlichte die Post den Quellcode ihrer E-Voting-Plattform",
+                  },
+                ],
+                "title": null,
+                "type": "link",
+                "url": "https://republik.ch/testing",
+              },
+              Object {
+                "type": "text",
+                "value": ", die sie ",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "zusammen mit der Firma Scytl",
+                  },
+                ],
+                "title": "Das heikle Geschäft mit der Demokratie",
+                "type": "link",
+                "url": "https://www.republik.ch/2019/01/31/das-heikle-geschaeft-mit-der-demokratie",
+              },
+              Object {
+                "type": "text",
+                "value": " entwickelt hat. Am 25. Februar startet der «",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "öffentliche Hackertest",
+                  },
+                ],
+                "title": null,
+                "type": "link",
+                "url": "https://republik.ch/testing2",
+              },
+              Object {
+                "type": "text",
+                "value": "», bei dem für gefundene Fehler eine Prämie ausgesetzt ist. Ein Blick auf das Projekt bereitet jedoch wenig Freude. Noch vor Fragen zu den Verschlüsselungs­prozessen und Verifizierungs­algorithmen kommen Zweifel auf am Willen zur Transparenz.",
+              },
+            ],
+            "type": "paragraph",
+          },
+          Object {
+            "children": Array [
+              Object {
+                "type": "text",
+                "value": "Beim Thema Digitalisierung denkt kaum jemand an die Welt der ",
+              },
+              Object {
+                "children": Array [
+                  Object {
+                    "type": "text",
+                    "value": "enterprise software.",
+                  },
+                ],
+                "type": "emphasis",
+              },
+              Object {
+                "type": "text",
+                "value": " Sie existiert in den IT-Abteilungen und Rechen­zentren von Bundes­ämtern und Gross­betrieben und ist bevölkert von gut bezahlten Software­architekten und -ingenieuren. Hier werden nicht die kultigsten Apps für die Generation Z programmiert, sondern es wird Infrastruktur erschaffen: Applikationen mit hohen Anforderungen an Korrektheit, Sicherheit und Wartbarkeit – Software, die manchmal über Jahrzehnte funktionieren muss.",
+              },
+            ],
+            "type": "paragraph",
+          },
+        ],
+        "data": Object {},
+        "identifier": "CENTER",
+        "type": "zone",
+      },
+    ],
+    "meta": Object {
+      "description": "Die Post hat den Quellcode für ihr umstrittenes E-Voting veröffentlicht. Schafft das Transparenz? Nicht wirklich. Wir haben Fragen an die Post. Sie auch?",
+      "feed": true,
+      "gallery": true,
+      "slug": "postschiff-enterprise",
+      "subject": "",
+      "template": "article",
+      "title": "Postschiff Enterprise 2",
+    },
+    "type": "root",
+  },
+  "id": Any<String>,
+  "meta": Object {
+    "__typename": "Meta",
+    "color": null,
+    "format": null,
+    "kind": null,
+    "template": "article",
+    "title": "Postschiff Enterprise 2",
+  },
+}
+`;
+
+exports[`workflow edit 2`] = `
+"---
+template: article
+slug: postschiff-enterprise
+feed: true
+gallery: true
+title: Postschiff Enterprise 2
+subject: ''
+description: >-
+  Die Post hat den Quellcode für ihr umstrittenes E-Voting veröffentlicht.
+  Schafft das Transparenz? Nicht wirklich. Wir haben Fragen an die Post. Sie
+  auch?
+---
+
+<section><h6>TITLE</h6>
+
+# Postschiff Enterprise
+
+## 
+
+Unsere Softwareentwickler wollten das E-Voting-System der Post starten. Doch der Quellcode ist offenbar nicht zu diesem Zweck veröffentlicht worden.
+
+Von [Adrienne Fichter](/~6ae2733e-1562-47b3-881c-88e9d3d28da9 \\"Adrienne Fichter\\"), [Andreas Moor](/~65b64225-3843-4e41-a7a6-716ae81a5d57 \\"Andreas Moor\\") und [Patrick Recher](/~b3054752-eefe-4cb4-9da0-b57a9c07d334 \\"Patrick Recher\\"), 15.02.2019, Update 06.03.2019
+
+<hr /></section>
+
+<section><h6>CENTER</h6>
+
+Zunächst sah es nach einem passablen Start aus: klare Kommunikation, für jeden einsehbarer Quellcode, öffentliche Sicherheits­checks. Vergangene Woche [veröffentlichte die Post den Quellcode ihrer E-Voting-Plattform](https://republik.ch/testing), die sie [zusammen mit der Firma Scytl](https://www.republik.ch/2019/01/31/das-heikle-geschaeft-mit-der-demokratie \\"Das heikle Geschäft mit der Demokratie\\") entwickelt hat. Am 25. Februar startet der «[öffentliche Hackertest](https://republik.ch/testing2)», bei dem für gefundene Fehler eine Prämie ausgesetzt ist. Ein Blick auf das Projekt bereitet jedoch wenig Freude. Noch vor Fragen zu den Verschlüsselungs­prozessen und Verifizierungs­algorithmen kommen Zweifel auf am Willen zur Transparenz.
+
+Beim Thema Digitalisierung denkt kaum jemand an die Welt der _enterprise software._ Sie existiert in den IT-Abteilungen und Rechen­zentren von Bundes­ämtern und Gross­betrieben und ist bevölkert von gut bezahlten Software­architekten und -ingenieuren. Hier werden nicht die kultigsten Apps für die Generation Z programmiert, sondern es wird Infrastruktur erschaffen: Applikationen mit hohen Anforderungen an Korrektheit, Sicherheit und Wartbarkeit – Software, die manchmal über Jahrzehnte funktionieren muss.
+
+<hr /></section>
+"
+`;

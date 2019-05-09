@@ -7,7 +7,7 @@ const payPledgePostfinance = require('../../../lib/payments/postfinance/payPledg
 const payPledgeStripe = require('../../../lib/payments/stripe/payPledge')
 const slack = require('../../../../../lib/slack')
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, {pgdb, req, t, redis}) => {
   const transaction = await pgdb.transactionBegin()
   try {
     const { pledgePayment } = args
@@ -125,7 +125,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     if (pledge.status !== pledgeStatus) {
       // generate Memberships
       if (pledgeStatus === 'SUCCESSFUL') {
-        await generateMemberships(pledge.id, transaction, t, req, logger)
+        await generateMemberships(pledge.id, transaction, t, req, redis)
       }
 
       // update pledge status

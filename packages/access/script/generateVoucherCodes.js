@@ -11,7 +11,7 @@ require('@orbiting/backend-modules-env').config()
 const yargs = require('yargs')
 const debug = require('debug')('access:script:generateVoucherCodes')
 
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
 const grantsLib = require('../lib/grants')
 

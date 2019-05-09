@@ -1,1 +1,4 @@
-module.exports = require('export-files')(__dirname)
+module.exports = {
+  auth: require('./auth'),
+  basicAuth: require('./basicAuth')
+}

@@ -1,6 +1,6 @@
 workflow "Unit Testing on push" {
   on = "push"
-  resolves = ["yarn test"]
+  resolves = ["yarn test:unit"]
 }
 
 action "yarn install" {
@@ -8,8 +8,8 @@ action "yarn install" {
   args = "install"
 }
 
-action "yarn test" {
+action "yarn test:unit" {
   uses = "borales/actions-yarn@master"
-  args = "test"
+  args = "test:unit"
   needs = ["yarn install"]
 }

@@ -1,8 +1,7 @@
-const { lib: { RedisPubSub: { pubsub } } } = require('@orbiting/backend-modules-base')
 const { Roles } = require('@orbiting/backend-modules-auth')
 
 module.exports = {
-  subscribe: (_, args, { user }) => {
+  subscribe: (_, args, { user, pubsub }) => {
     Roles.ensureUserHasRole(user, 'member')
     return pubsub.asyncIterator('greeting')
   }

@@ -5,7 +5,7 @@
  * cat local/mailchimpSubscribedEmails.txt | node script/fixMailchimp.js [restartCount]
  */
 require('@orbiting/backend-modules-env').config()
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const rw = require('rw')
 const fetch = require('isomorphic-unfetch')
 const { getInterestsForUser } = require('../modules/crowdfundings/lib/Mail.js')

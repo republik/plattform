@@ -1,7 +1,6 @@
-const elastic = require('@orbiting/backend-modules-base/lib/elastic').client()
 const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
 
-const { channelKey } = require('../../../lib/publicationScheduler')
+const { channelKey } = require('../../../lib/PublicationScheduler')
 const { deleteRef } = require('../../../lib/github')
 const {
   latestPublications: getLatestPublications,
@@ -14,8 +13,9 @@ const { DISABLE_PUBLISH } = process.env
 module.exports = async (
   _,
   { repoId },
-  { user, t, redis, pubsub }
+  context
 ) => {
+  const { user, t, redis, pubsub, elastic } = context
   ensureUserHasRole(user, 'editor')
 
   if (DISABLE_PUBLISH) {
@@ -49,7 +49,7 @@ module.exports = async (
     id: repoId,
     meta: await getRepoMeta({ id: repoId }),
     publications: await getLatestPublications({ id: repoId })
-  })
+  }, context)
 
   await redis.publishAsync(channelKey, 'refresh')
 

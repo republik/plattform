@@ -6,7 +6,7 @@
  * node script/deleteMailchimp.js
  */
 require('@orbiting/backend-modules-env').config()
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const rw = require('rw')
 const fetch = require('isomorphic-unfetch')
 const crypto = require('crypto')

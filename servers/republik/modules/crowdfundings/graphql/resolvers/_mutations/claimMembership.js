@@ -7,7 +7,8 @@ const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const cancelMembership = require('./cancelMembership')
 const createCache = require('../../../lib/cache')
 
-module.exports = async (_, args, {pgdb, req, t, mail, mail: {enforceSubscriptions}}) => {
+module.exports = async (_, args, context) => {
+  const { pgdb, req, t, mail, mail: { enforceSubscriptions } } = context
   ensureSignedIn(req)
 
   let pledgerId
@@ -94,7 +95,7 @@ module.exports = async (_, args, {pgdb, req, t, mail, mail: {enforceSubscription
       )
     }
 
-    const cache = createCache({ prefix: `User:${req.user.id}` })
+    const cache = createCache({ prefix: `User:${req.user.id}` }, context)
     cache.invalidate()
 
     // commit transaction

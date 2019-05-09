@@ -1,0 +1,219 @@
+{
+	"content": {
+		"type": "root",
+		"meta": {
+			"template": "article",
+			"slug": "postschiff-enterprise",
+			"feed": true,
+			"gallery": true,
+			"title": "Postschiff Enterprise 3",
+			"subject": "",
+			"description": "Die Post hat den Quellcode für ihr umstrittenes E-Voting veröffentlicht. Schafft das Transparenz? Nicht wirklich. Wir haben Fragen an die Post. Sie auch?"
+		},
+		"children": [
+			{
+				"type": "zone",
+				"identifier": "TITLE",
+				"data": {},
+				"children": [
+					{
+						"type": "heading",
+						"depth": 1,
+						"children": [
+							{
+								"type": "text",
+								"value": "Postschiff Enterprise"
+							}
+						]
+					},
+					{
+						"type": "heading",
+						"depth": 2,
+						"children": [
+							{
+								"type": "text",
+								"value": ""
+							}
+						]
+					},
+					{
+						"type": "paragraph",
+						"children": [
+							{
+								"type": "text",
+								"value": "Unsere Softwareentwickler wollten das E-Voting-System der Post starten. Doch der Quellcode ist offenbar nicht zu diesem Zweck veröffentlicht worden."
+							}
+						]
+					},
+					{
+						"type": "paragraph",
+						"children": [
+							{
+								"type": "text",
+								"value": "Von "
+							},
+							{
+								"type": "link",
+								"title": "Adrienne Fichter",
+								"url": "/~6ae2733e-1562-47b3-881c-88e9d3d28da9",
+								"children": [
+									{
+										"type": "text",
+										"value": "Adrienne Fichter"
+									}
+								]
+							},
+							{
+								"type": "text",
+								"value": ", "
+							},
+							{
+								"type": "link",
+								"title": "Andreas Moor",
+								"url": "/~65b64225-3843-4e41-a7a6-716ae81a5d57",
+								"children": [
+									{
+										"type": "text",
+										"value": "Andreas Moor"
+									}
+								]
+							},
+							{
+								"type": "text",
+								"value": " und "
+							},
+							{
+								"type": "link",
+								"title": "Patrick Recher",
+								"url": "/~b3054752-eefe-4cb4-9da0-b57a9c07d334",
+								"children": [
+									{
+										"type": "text",
+										"value": "Patrick Recher"
+									}
+								]
+							},
+							{
+								"type": "text",
+								"value": ", 15.02.2019, Update 06.03.2019"
+							}
+						]
+					}
+				]
+			},
+			{
+				"type": "zone",
+				"identifier": "CENTER",
+				"children": [
+					{
+						"type": "paragraph",
+						"children": [
+							{
+								"type": "text",
+								"value": "Zunächst sah es nach einem passablen Start aus: klare Kommunikation, für jeden einsehbarer Quellcode, öffentliche Sicherheits­checks. Vergangene Woche "
+							},
+							{
+								"type": "link",
+								"title": null,
+								"url": "https://republik.ch/testing",
+								"children": [
+									{
+										"type": "text",
+										"value": "veröffentlichte die Post den Quellcode ihrer E-Voting-Plattform"
+									}
+								]
+							},
+							{
+								"type": "text",
+								"value": ", die sie "
+							},
+							{
+								"type": "link",
+								"title": "Das heikle Geschäft mit der Demokratie",
+								"url": "https://www.republik.ch/2019/01/31/das-heikle-geschaeft-mit-der-demokratie",
+								"children": [
+									{
+										"type": "text",
+										"value": "zusammen mit der Firma Scytl"
+									}
+								]
+							},
+							{
+								"type": "text",
+								"value": " entwickelt hat. Am 25. Februar startet der «"
+							},
+							{
+								"type": "link",
+								"title": null,
+								"url": "https://republik.ch/testing2",
+								"children": [
+									{
+										"type": "text",
+										"value": "öffentliche Hackertest"
+									}
+								]
+							},
+							{
+								"type": "text",
+								"value": "», bei dem für gefundene Fehler eine Prämie ausgesetzt ist. Ein Blick auf das Projekt bereitet jedoch wenig Freude. Noch vor Fragen zu den Verschlüsselungs­prozessen und Verifizierungs­algorithmen kommen Zweifel auf am Willen zur Transparenz."
+							}
+						]
+					},
+					{
+						"type": "paragraph",
+						"children": [
+							{
+								"type": "text",
+								"value": "Beim Thema Digitalisierung denkt kaum jemand an die Welt der "
+							},
+							{
+								"type": "emphasis",
+								"children": [
+									{
+										"type": "text",
+										"value": "enterprise software."
+									}
+								]
+							},
+							{
+								"type": "text",
+								"value": " Sie existiert in den IT-Abteilungen und Rechen­zentren von Bundes­ämtern und Gross­betrieben und ist bevölkert von gut bezahlten Software­architekten und -ingenieuren. Hier werden nicht die kultigsten Apps für die Generation Z programmiert, sondern es wird Infrastruktur erschaffen: Applikationen mit hohen Anforderungen an Korrektheit, Sicherheit und Wartbarkeit – Software, die manchmal über Jahrzehnte funktionieren muss."
+							}
+						]
+					},
+					{
+						"type": "zone",
+						"identifier": "FIGURE",
+						"data": {
+							"excludeFromGallery": false
+						},
+						"children": [
+							{
+								"type": "image",
+								"url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAZCAIAAAD8NuoTAAAACXBIWXMAAAsSAAALEgHS3X78AAAHzElEQVRIx41XS28U2Rntdrf7WVVdXc+u7q7uqu56P/ppQyYkzGIImnEGY5AQDyEzKBDDuD1JFlEWWUSgZJthmFGkJITMZoSYibKMMptkk9+BWBnjQXJkMBgkpJy6ZRvGdI/yLcol+9y65zvn+757nXj58uXa2kPEOgm8PHr0KH7/Zv0bBH6zRmL94Tqez54929j474MHD4DdgZHYe39IIsKvR/jNzc2traerqxPxMWyNkMATu4NSAj/m5y788AeHjxx5ZzgcBkHQ7XY7JMIeXru+71uWZds2/iRJ0p07X/zu2s1+93tHjx55663v45dA7izp7rwAjCVYWK3WVj4a/f1v/xh03z569J3Dh98OwzDGk9jBu64LPJ7tdvvQoUOrq6sJ5B3aP2o0WobRbrVapVKpWCymU+lUZipdTVRVpVzmEolEMplMp9N4+eTmx6Ol39AFxbZN07REUQQ+k8mkkqlkLcHU6apcTZBIpVJ4Hjs2d+uPd0qFlm0bWKAoCsMw2Ww2nUynxKnpeqqm1DPZTLwFnvjgvXv3EmtrD2Y6c4HfDcNIJ8/zGo0Gx/M8x4Z2gefoXC6PBVNTU9gbyz777JOfj65XxPZg2Itz1XUd3yqXyoxXVMOaYzoxfnp6GvgTJ4//9daXFd4bzvQ7YQdqQUu5InMMxxo0F5RCv0PRFJBx2pVK5f79+xGtQTjnOoHnuXDEcZwg8DmOZ1k67OQzmWRiN+Jln35642fL1yVe62GXIAQezKq1Kl2kKSdf9ZW21n5drYWFY6AlcQ7wvh/EeJhFFxhaL7Iu7VpuoVAAEpngKcvyLq3gXc+D5ZHrUMs0DUEQSiUqDHLjaX14TRZaMzP9WF1kH1lDMUUnV/Oqhm7uo3X71l3QAh5FhYLDErWhshRLaYVdWvlxtML3HNuHicgGzFBh9XpdFPkgoIvFsWpdk3h9OOxBLQQqptFsSKJcsiglkM22icp8RevEsdt/viuVHZgefx+CaZqmSEpZZ1mPRlYo6DG0hsREqIU8sAbb9Hp9dEAQCLKcHmsi1EKtBMREwzAgm+u4iluROnzbbKGo96klcy7wkAp1AgeDEJUSNGyVD8u6o1VkZa/kx6iFFu31eujVel1tNmtBkJlQW9dEXhsMIgehFjZDlzTVJu2jP2Vzv4nzsYkxHmqBmaZrmqrzTpm2i47h5PPjTZzzXHzdA6EDBw6QnTCihDBkKCpN2urNktf7gy4GBEZdvw/Zgnq1ztqM4sumYaYyqTh2TUTJu6BlWzZ0nZmZQSZGyyxrbNljsGmpXEokd9LYTwuywr6DBw9CsMGgjy1nZ2e63Zqi5LPZ5H5aQlRbmLIAIxM8bcce9AbGsFXxRdWs87wQD5SFE/N7JsJxEMIWg8EgcqbTc/qOEsoNV5VkKZfN7TfRjYaDj+qbnZ3F4larXatVwpCl6UklDxN7+DSkAieY0lAbvMtWfAljLJvJji15l2wDtVrtlt7QRUPgfNawDcy88bXlErWwBqlAZwjbajU9LxPrNJ4W6SyYiEwsy7QMq2Dnqq5ite1v1RahBbWAR21BJ6jrODbmQtksMU4xdMJCsTC+E0ntBj0SruuoKkpe7XQKE2iRThxGcwu0oAEUQsmzAa14stmy9tOCidGU76FzkQPIoXk1VZNcoeRSru3i+Jo4t1DyaBP8wB6SJNN0wffz39GJ0ZQn5y4aHuOxmC8WrZziyG9M+bgT7XjKI23g20Y05YvNfMmhcVhNVgsmkuFIBrfbbDajwyecePhALXQiVqC24vOfZdg8pjw5E9+Y8l/KnEdM92N1Xc8VOSma8h7t2t54WvGZCBNR7PDeIaGqVc/LTj4T9biEoRaKntw+oFm22eRkMhv3lzw6MaotEPPj0Wi37VKbhloRrQln4qtxCsEgla63OI4JgokmSrvjFOrCdNjCcYJj5kUhRXoq8WYn9iO8jzRQWDARhw/UKrmTTRy8ZiICqWiajnvXd5qo4+iNOwvboEsoirGdgjCW1k7JA+8Dj+no+Z7IiVQzOqon0wrew6UmJHMLCptRWBxXmqzWdXJUYzy6MR6mC4JkWXlhglpknPZwbsZdhczVqoqSZ10m9MJJapG5RW4QyEbXNcMwy2U6CLITTRT0/rAXz0Y4iG14XjTN7BhaC7tTftD3vej7IGeYRr1SLzRzGBAOLjbjaK3Ndt93DbvjOegQZIPsYaIk8b7PMkxhenrnhMNNN76d/mLltxWuOez4HqlFaAwfRRFqlRWFmp7OpdMRPj58Tp48/vlfvpIENxz6jucAD2mxBHdrTi+LDm+bNkVRGPHxbRZXt4gW7vKWdligSg1ZxL0HTRH/mRwF0d03PhP21Lp58+Oln/x6OlHQFVzJ+CJF5XK5PTyO9T18rNaP33/3T3/4IjUlybrASzxN0bgvxJhkJOsrN+Jf4gYa3eU3NjZ+9cvrP126MlpZWV5eXlpaunTp0oULFz6IInqeP3/+9OnTZ86cOXfu3Pz8/Ndf//Pz23cXFy+tfLQyGo2uXrly+fLlD3Yiwi8uLp4hcfbs2YXjCzdu/P7f//rPxcUPV1ZGy8ujq1evYouLFy/uLoiW4Msx/tSpU+CAf9ES+Kdse/vp483NxySekNj6djzdje3t7RcvXjx/vv3kyePXl0zCIwj++dYW4P8XHmBQ+h/ZmW9qtpfxtwAAAABJRU5ErkJggg=="
+							},
+							{
+								"type": "paragraph",
+								"children": [
+									{
+										"type": "text",
+										"value": "Bis jetzt haben wir es zwar geschafft, den Code in Maschinensprache zu übersetzen, aber von einem laufenden System, auf dem wir eine Wahl durchführen können, sind wir noch weit entfernt."
+									}
+								]
+							}
+						]
+					},
+					{
+						"type": "paragraph",
+						"children": [
+							{
+								"type": "text",
+								"value": ""
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+}

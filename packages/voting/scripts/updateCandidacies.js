@@ -19,7 +19,7 @@
 
 const rw = require('rw')
 require('@orbiting/backend-modules-env').config()
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
 const candidacies = JSON.parse(rw.readFileSync('/dev/stdin', 'utf8'))
 

@@ -47,7 +47,8 @@ const extractImage = async (url, images) => {
   return url
 }
 
-module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
+module.exports = async (_, args, context) => {
+  const { user, t, pubsub } = context
   ensureUserHasRole(user, 'editor')
   const { githubRest } = await createGithubClients()
 
@@ -225,7 +226,7 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
 
   Object.assign(cacheUpsert, { commit })
 
-  await repoCacheUpsert(cacheUpsert)
+  await repoCacheUpsert(cacheUpsert, context)
 
   // load heads
   const heads = await getHeads(repoId)
@@ -260,7 +261,7 @@ module.exports = async (_, args, { pgdb, req, user, t, pubsub }) => {
   }
 
   // latest commit -> default branch
-  githubRest.repos.edit({
+  await githubRest.repos.edit({
     owner: login,
     repo: repoName,
     name: repoName,

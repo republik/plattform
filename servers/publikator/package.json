@@ -20,12 +20,9 @@
     "d3-array": "^1.2.1",
     "d3-time-format": "^2.1.1",
     "data-uri-to-buffer": "^2.0.0",
-    "db-migrate": "^0.11.1",
-    "db-migrate-pg": "^0.4.0",
     "debug": "^3.1.0",
     "deep-diff": "^1.0.1",
     "dynamic-dedupe": "^0.3.0",
-    "export-files": "^2.1.1",
     "file-type": "^8.0.0",
     "github": "^14.0.0",
     "graphql": "^0.13.2",
@@ -51,21 +48,11 @@
     "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION -w ../../packages -w graphql -w lib -w express -w .env -w package.json -w ../yarn.lock -w server.js -w index.js index.js",
     "inspect": "NODE_DEBUG_OPTION=--inspect yarn run dev",
     "start": "node index.js",
-    "pull:redis": "node script/pullRedis.js",
-    "db:migrate:up": "node script/db-migrate-all.js up",
-    "db:migrate:down": "node script/db-migrate-all.js down",
-    "db:seed": "cat seeds/seeds.json | node ../../packages/auth/seeds/seed.js --truncate",
-    "db:reset:noseeds": "node script/db-migrate-all.js reset && node script/db-migrate-all.js up",
-    "db:reset": "yarn run db:reset:noseeds && yarn run db:seed",
-    "translations": "gsheets --key=1_1g3sW8u1aD9xGRfS479s0Pjwx0LxYRUEhETGkKlwLE --title=live --pretty --out lib/translations.json",
-    "test:prepare": "rm -rf node_modules/.bin && ln -s ../../../node_modules/.bin node_modules/ && dropdb --if-exists publikator-test && createdb publikator-test && NODE_ENV=development OVERWRITE_ENV=.test.env yarn run db:reset:noseeds && NODE_ENV=development OVERWRITE_ENV=.test.env node ../../packages/search/script/pullElasticsearch.js --no-inserts",
-    "test:travis": "yarn run test:prepare && istanbul cover tape \"?(__tests__|lib|graphql)/**/*.test.js\" --report lcovonly",
-    "test": "yarn run test:prepare && NODE_ENV=development OVERWRITE_ENV=.test.env istanbul cover tape \"?(__tests__|lib|graphql)/**/*.test.js\""
+    "translations": "gsheets --key=1_1g3sW8u1aD9xGRfS479s0Pjwx0LxYRUEhETGkKlwLE --title=live --pretty --out lib/translations.json"
   },
   "devDependencies": {
     "gsheets": "^2.0.0",
     "nodemon": "^1.17.5",
-    "tape-async": "^2.3.0",
     "ws": "^5.2.0"
   }
 }

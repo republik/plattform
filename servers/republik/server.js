@@ -1,5 +1,5 @@
 const { makeExecutableSchema } = require('graphql-tools')
-const { server } = require('@orbiting/backend-modules-base')
+const { server: Server } = require('@orbiting/backend-modules-base')
 const { merge } = require('apollo-modules-node')
 const t = require('./lib/t')
 
@@ -19,12 +19,15 @@ const loaderBuilders = {
   ...require('@orbiting/backend-modules-collections/loaders')
 }
 
-const { accessScheduler, graphql: access } = require('@orbiting/backend-modules-access')
-const { previewScheduler, preview: previewLib } = require('@orbiting/backend-modules-preview')
-const membershipScheduler = require('./modules/crowdfundings/lib/scheduler')
+const { AccessScheduler, graphql: access } = require('@orbiting/backend-modules-access')
+const { PreviewScheduler, preview: previewLib } = require('@orbiting/backend-modules-preview')
+const MembershipScheduler = require('./modules/crowdfundings/lib/scheduler')
 
 const mail = require('./modules/crowdfundings/lib/Mail')
 const cluster = require('cluster')
+
+const SlackGreeter = require('./lib/SlackGreeter')
+const { NotifyListener: SearchNotifyListener } = require('@orbiting/backend-modules-search')
 
 const {
   LOCAL_ASSETS_SERVER,
@@ -39,13 +42,22 @@ const {
 const DEV = NODE_ENV && NODE_ENV !== 'production'
 
 const start = async () => {
-  const httpServer = await run()
-  await runOnce({ clusterMode: false })
-  return httpServer
+  const server = await run()
+  const _runOnce = await runOnce({ clusterMode: false })
+
+  const close = async () => {
+    await server.close()
+    await _runOnce.close()
+  }
+
+  return {
+    ...server,
+    close
+  }
 }
 
 // in cluster mode, this runs after runOnce otherwise before
-const run = async (workerId) => {
+const run = async (workerId, config) => {
   const localModule = require('./graphql')
   const executableSchema = makeExecutableSchema(
     merge(
@@ -104,13 +116,25 @@ const run = async (workerId) => {
     return context
   }
 
-  return server.start(
+  const server = await Server.start(
     executableSchema,
     middlewares,
     t,
     createGraphQLContext,
-    workerId
+    workerId,
+    config
   )
+
+  const close = () => {
+    return server.close()
+  }
+
+  process.once('SIGTERM', close)
+
+  return {
+    ...server,
+    close
+  }
 }
 
 // in cluster mode, this runs before run otherwise after
@@ -118,47 +142,60 @@ const runOnce = async (...args) => {
   if (cluster.isWorker) {
     throw new Error('runOnce must only be called on cluster.isMaster')
   }
-  server.runOnce(...args)
-  require('./lib/slackGreeter').connect()
+
+  Server.runOnce(...args)
+
+  const slackGreeter = await SlackGreeter.start()
+
+  let searchNotifyListener
   if (SEARCH_PG_LISTENER) {
-    require('@orbiting/backend-modules-search').notifyListener.run()
+    searchNotifyListener = await SearchNotifyListener.start()
   }
 
+  let accessScheduler
   if (ACCESS_SCHEDULER === 'false' || (DEV && ACCESS_SCHEDULER !== 'true')) {
     console.log('ACCESS_SCHEDULER prevented scheduler from begin started',
       { ACCESS_SCHEDULER, DEV }
     )
   } else {
-    await accessScheduler.init({ t, mail })
+    accessScheduler = await AccessScheduler.init({ t, mail })
   }
 
+  let previewScheduler
   if (PREVIEW_SCHEDULER === 'false' || (DEV && PREVIEW_SCHEDULER !== 'true')) {
     console.log('PREVIEW_SCHEDULER prevented scheduler from begin started',
       { PREVIEW_SCHEDULER, DEV }
     )
   } else {
-    await previewScheduler.init({ t, mail })
+    previewScheduler = await PreviewScheduler.init({ t, mail })
   }
 
+  let membershipScheduler
   if (MEMBERSHIP_SCHEDULER === 'false' || (DEV && MEMBERSHIP_SCHEDULER !== 'true')) {
     console.log('MEMBERSHIP_SCHEDULER prevented scheduler from begin started',
       { MEMBERSHIP_SCHEDULER, DEV }
     )
   } else {
-    await membershipScheduler.init({ t, mail })
+    membershipScheduler = await MembershipScheduler.init({ t, mail })
+  }
+
+  const close = async () => {
+    slackGreeter && await slackGreeter.close()
+    searchNotifyListener && await searchNotifyListener.close()
+    accessScheduler && await accessScheduler.close()
+    previewScheduler && await previewScheduler.close()
+    membershipScheduler && await membershipScheduler.close()
+  }
+
+  process.once('SIGTERM', close)
+
+  return {
+    close
   }
 }
 
-const close = () => {
-  server.close()
-}
 module.exports = {
   start,
   run,
-  runOnce,
-  close
+  runOnce
 }
-
-process.on('SIGTERM', () => {
-  close()
-})

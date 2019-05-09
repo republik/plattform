@@ -7,7 +7,7 @@ const { activeMembershipsQuery } = require('./changeover')
 
 const deactivate = async (
   { dryRun },
-  { pgdb, mail: { sendMembershipDeactivated, enforceSubscriptions }, t }
+  { pgdb, mail: { sendMembershipDeactivated, enforceSubscriptions }, t, redis }
 ) => {
   const cancelledEndDate = moment().startOf('day')
 
@@ -44,7 +44,7 @@ const deactivate = async (
           { active: false, updatedAt: moment() }
         )
 
-        createCache({ prefix: `User:${membership.userId}` }).invalidate()
+        createCache({ prefix: `User:${membership.userId}` }, { redis }).invalidate()
 
         await transaction.transactionCommit()
       } catch (e) {

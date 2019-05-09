@@ -2,13 +2,10 @@ const bodyParser = require('body-parser')
 const { graphiqlExpress } = require('apollo-server-express')
 const { SubscriptionServer } = require('subscriptions-transport-ws')
 const { execute, subscribe } = require('graphql')
-const { pubsub } = require('../lib/RedisPubSub')
 const cookie = require('cookie')
 const cookieParser = require('cookie-parser')
 const checkEnv = require('check-env')
 const { transformUser } = require('@orbiting/backend-modules-auth')
-const redis = require('../lib/redis')
-const elasticsearch = require('../lib/elastic')
 const { runHttpQuery } = require('apollo-server-core')
 
 checkEnv([
@@ -79,18 +76,16 @@ function graphqlExpress (options) {
 
 module.exports = (
   server,
-  pgdb,
   httpServer,
+  pgdb,
   executableSchema,
-  externalCreateGraphQLContext = a => a
+  createGraphqlContext = identity => identity
 ) => {
-  const createContext = ({user, ...additional} = {}) => externalCreateGraphQLContext({
-    ...additional,
-    pgdb,
-    user,
-    pubsub,
-    redis,
-    elastic: elasticsearch.client()
+  const createContext = ({user, ...context} = {}) => createGraphqlContext({
+    ...context,
+    user: (global && global.testUser !== undefined)
+      ? global.testUser
+      : user
   })
 
   const subscriptionServer = SubscriptionServer.create(

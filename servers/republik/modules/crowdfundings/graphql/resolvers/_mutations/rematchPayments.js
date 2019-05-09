@@ -1,7 +1,7 @@
 const { Roles } = require('@orbiting/backend-modules-auth')
 const matchPayments = require('../../../lib/payments/matchPayments')
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, {pgdb, req, t, redis}) => {
   Roles.ensureUserHasRole(req.user, 'supporter')
 
   const transaction = await pgdb.transactionBegin()
@@ -10,7 +10,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       numMatchedPayments,
       numUpdatedPledges,
       numPaymentsSuccessful
-    } = await matchPayments(transaction, t)
+    } = await matchPayments(transaction, t, redis)
 
     await transaction.transactionCommit()
     const result = `

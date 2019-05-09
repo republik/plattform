@@ -1,0 +1,166 @@
+{
+	"content": {
+		"type": "root",
+		"meta": {
+			"template": "article",
+			"slug": "postschiff-enterprise",
+			"feed": true,
+			"gallery": true,
+			"title": "Postschiff Enterprise 1",
+			"subject": "",
+			"description": "Die Post hat den Quellcode für ihr umstrittenes E-Voting veröffentlicht. Schafft das Transparenz? Nicht wirklich. Wir haben Fragen an die Post. Sie auch?"
+		},
+		"children": [
+			{
+				"type": "zone",
+				"identifier": "TITLE",
+				"data": {},
+				"children": [
+					{
+						"type": "heading",
+						"depth": 1,
+						"children": [
+							{
+								"type": "text",
+								"value": "Postschiff Enterprise"
+							}
+						]
+					},
+					{
+						"type": "heading",
+						"depth": 2,
+						"children": [
+							{
+								"type": "text",
+								"value": ""
+							}
+						]
+					},
+					{
+						"type": "paragraph",
+						"children": [
+							{
+								"type": "text",
+								"value": "Unsere Softwareentwickler wollten das E-Voting-System der Post starten. Doch der Quellcode ist offenbar nicht zu diesem Zweck veröffentlicht worden."
+							}
+						]
+					},
+					{
+						"type": "paragraph",
+						"children": [
+							{
+								"type": "text",
+								"value": "Von "
+							},
+							{
+								"type": "link",
+								"title": "Adrienne Fichter",
+								"url": "/~6ae2733e-1562-47b3-881c-88e9d3d28da9",
+								"children": [
+									{
+										"type": "text",
+										"value": "Adrienne Fichter"
+									}
+								]
+							},
+							{
+								"type": "text",
+								"value": ", "
+							},
+							{
+								"type": "link",
+								"title": "Andreas Moor",
+								"url": "/~65b64225-3843-4e41-a7a6-716ae81a5d57",
+								"children": [
+									{
+										"type": "text",
+										"value": "Andreas Moor"
+									}
+								]
+							},
+							{
+								"type": "text",
+								"value": " und "
+							},
+							{
+								"type": "link",
+								"title": "Patrick Recher",
+								"url": "/~b3054752-eefe-4cb4-9da0-b57a9c07d334",
+								"children": [
+									{
+										"type": "text",
+										"value": "Patrick Recher"
+									}
+								]
+							},
+							{
+								"type": "text",
+								"value": ", 15.02.2019, Update 06.03.2019"
+							}
+						]
+					}
+				]
+			},
+			{
+				"type": "zone",
+				"identifier": "CENTER",
+				"children": [
+					{
+						"type": "paragraph",
+						"children": [
+							{
+								"type": "text",
+								"value": "Zunächst sah es nach einem passablen Start aus: klare Kommunikation, für jeden einsehbarer Quellcode, öffentliche Sicherheits­checks. Vergangene Woche "
+							},
+							{
+								"type": "link",
+								"title": null,
+								"url": "https://republik.ch/testing",
+								"children": [
+									{
+										"type": "text",
+										"value": "veröffentlichte die Post den Quellcode ihrer E-Voting-Plattform"
+									}
+								]
+							},
+							{
+								"type": "text",
+								"value": ", die sie "
+							},
+							{
+								"type": "link",
+								"title": "Das heikle Geschäft mit der Demokratie",
+								"url": "https://www.republik.ch/2019/01/31/das-heikle-geschaeft-mit-der-demokratie",
+								"children": [
+									{
+										"type": "text",
+										"value": "zusammen mit der Firma Scytl"
+									}
+								]
+							},
+							{
+								"type": "text",
+								"value": " entwickelt hat. Am 25. Februar startet der «"
+							},
+							{
+								"type": "link",
+								"title": null,
+								"url": "https://republik.ch/testing2",
+								"children": [
+									{
+										"type": "text",
+										"value": "öffentliche Hackertest"
+									}
+								]
+							},
+							{
+								"type": "text",
+								"value": "», bei dem für gefundene Fehler eine Prämie ausgesetzt ist. Ein Blick auf das Projekt bereitet jedoch wenig Freude. Noch vor Fragen zu den Verschlüsselungs­prozessen und Verifizierungs­algorithmen kommen Zweifel auf am Willen zur Transparenz."
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+}

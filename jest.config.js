@@ -24,19 +24,19 @@ module.exports = {
   // collectCoverageFrom: null,
 
   // The directory where Jest should output its coverage files
-  coverageDirectory: 'coverage',
+  coverageDirectory: 'tests/coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
-  // coveragePathIgnorePatterns: [
-  //   "/node_modules/"
-  // ],
+  coveragePathIgnorePatterns: [
+    '/node_modules/'
+  ],
 
   // A list of reporter names that Jest uses when writing coverage reports
   coverageReporters: [
-    'html'
+    'html',
+    'lcov'
   //   "json",
   //   "text",
-  //   "lcov",
   //   "clover"
   ],
 
@@ -57,6 +57,8 @@ module.exports = {
 
   // A path to a module which exports an async function that is triggered once after all test suites
   // globalTeardown: null,
+
+  maxConcurrency: 7,
 
   // A set of global variables that need to be available in all test environments
   // globals: {},
@@ -124,7 +126,9 @@ module.exports = {
   // setupFiles: [],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  // setupFilesAfterEnv: [],
+  setupFilesAfterEnv: [
+    '<rootDir>/packages/test/jest/setupTestFrameworkScriptFile.js'
+  ],
 
   // A list of paths to snapshot serializer modules Jest should use for snapshot testing
   // snapshotSerializers: [],

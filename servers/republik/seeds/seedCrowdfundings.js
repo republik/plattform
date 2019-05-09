@@ -1,22 +1,23 @@
-require('@orbiting/backend-modules-env').config()
-
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
 const seed = require('./crowdfundings.json')
 
-const gracefulUpsert = (table) => async (data) => {
+const gracefulUpsert = (table, logger) => async (data) => {
   try {
     if (data.id) {
-      console.log(`delete: ${data.id}`)
+      logger(`delete: ${data.id}`)
       await table.delete({ id: data.id })
     }
-    console.log(`insert: ${JSON.stringify(data)}`)
+    logger(`insert: ${JSON.stringify(data)}`)
     await table.insert(data)
   } catch (e) {
     console.error(e.detail)
   }
 }
 
-PgDb.connect().then(async (pgdb) => {
+const run = async (pgdb, silent = false) => {
+  const logger = silent
+    ? () => {}
+    : console.log
+
   try {
     await pgdb.public.packageOptions.truncate({ cascade: true })
     await pgdb.public.packages.truncate({ cascade: true })
@@ -30,65 +31,62 @@ PgDb.connect().then(async (pgdb) => {
     console.error(e)
   }
 
-  console.log('> seed companies')
+  logger('> seed companies')
   for (const company of seed.companies) {
-    await gracefulUpsert(pgdb.public.companies)({
+    await gracefulUpsert(pgdb.public.companies, logger)({
       ...company,
       createdAt: new Date()
     })
   }
-  console.log('> seed crowdfundings')
+  logger('> seed crowdfundings')
   for (const crowdfunding of seed.crowdfundings) {
-    await gracefulUpsert(pgdb.public.crowdfundings)({
+    await gracefulUpsert(pgdb.public.crowdfundings, logger)({
       ...crowdfunding,
       createdAt: new Date()
     })
   }
-  console.log('> seed crowdfundingGoals')
+  logger('> seed crowdfundingGoals')
   for (const crowdfundingGoal of seed.crowdfundingGoals) {
-    await gracefulUpsert(pgdb.public.crowdfundingGoals)({
+    await gracefulUpsert(pgdb.public.crowdfundingGoals, logger)({
       ...crowdfundingGoal,
       createdAt: new Date()
     })
   }
-  console.log('> seed rewards')
+  logger('> seed rewards')
   for (const reward of seed.rewards) {
-    await gracefulUpsert(pgdb.public.rewards)({
+    await gracefulUpsert(pgdb.public.rewards, logger)({
       ...reward,
       createdAt: new Date()
     })
   }
-  console.log('> seed goodies')
+  logger('> seed goodies')
   for (const goodie of seed.goodies) {
-    await gracefulUpsert(pgdb.public.goodies)({
+    await gracefulUpsert(pgdb.public.goodies, logger)({
       ...goodie,
       createdAt: new Date()
     })
   }
-  console.log('> seed membershipTypes')
+  logger('> seed membershipTypes')
   for (const membershipType of seed.membershipTypes) {
-    await gracefulUpsert(pgdb.public.membershipTypes)({
+    await gracefulUpsert(pgdb.public.membershipTypes, logger)({
       ...membershipType,
       createdAt: new Date()
     })
   }
-  console.log('> seed packages')
+  logger('> seed packages')
   for (const _package of seed.packages) {
-    await gracefulUpsert(pgdb.public.packages)({
+    await gracefulUpsert(pgdb.public.packages, logger)({
       ..._package,
       createdAt: new Date()
     })
   }
-  console.log('> seed packageOptions')
+  logger('> seed packageOptions')
   for (const packageOption of seed.packageOptions) {
-    await gracefulUpsert(pgdb.public.packageOptions)({
+    await gracefulUpsert(pgdb.public.packageOptions, logger)({
       ...packageOption,
       createdAt: new Date()
     })
   }
-}).then(() => {
-  process.exit()
-}).catch(e => {
-  console.error(e)
-  process.exit(1)
-})
+}
+
+module.exports = run
