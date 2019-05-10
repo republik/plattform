@@ -3759,22 +3759,22 @@ file-entry-cache@^2.0.0:
     flat-cache "^1.2.1"
     object-assign "^4.0.1"
 
-file-type-stream@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/file-type-stream/-/file-type-stream-1.0.0.tgz#dd0a1edd1f5fe973623ed6fe16be19c8931b44c3"
-  integrity sha1-3Qoe3R9f6XNiPtb+Fr4ZyJMbRMM=
+file-type-stream2@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/file-type-stream2/-/file-type-stream2-1.0.2.tgz#16cfa523594a6d9d32f149e7005afed5ed0e1ac3"
+  integrity sha512-BRWzwn4Ci2pM4NI6gncQVwfOCTS83bM2AtyVCEauLyLPPy8JlNrtEUsH4xCiI7OzsM2pOBJTFosJooaX1Hvf7w==
   dependencies:
-    file-type "^3.8.0"
+    file-type "9.0.0"
+
+file-type@9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/file-type/-/file-type-9.0.0.tgz#a68d5ad07f486414dfb2c8866f73161946714a18"
+  integrity sha512-Qe/5NJrgIOlwijpq3B7BEpzPFcgzggOTagZmkXQY4LA6bsXKTUstK7Wp12lEJ/mLKTpvIZxmIuRcLYWT6ov9lw==
 
 file-type@^10.11.0:
   version "10.11.0"
   resolved "https://registry.yarnpkg.com/file-type/-/file-type-10.11.0.tgz#2961d09e4675b9fb9a3ee6b69e9cd23f43fd1890"
   integrity sha512-uzk64HRpUZyTGZtVuvrjP0FYxzQrBf4rojot6J65YMEbwBLB0CWm0CLojVpwpmFmxcE/lkvYICgfcGozbBq6rw==
-
-file-type@^3.8.0:
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/file-type/-/file-type-3.9.0.tgz#257a078384d1db8087bc449d107d52a52672b9e9"
-  integrity sha1-JXoHg4TR24CHvESdEH1SpSZyuek=
 
 fileset@^2.0.2, fileset@^2.0.3:
   version "2.0.3"

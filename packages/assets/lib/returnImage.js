@@ -1,6 +1,6 @@
 const sharp = require('sharp')
 const getWidthHeight = require('./getWidthHeight')
-const fileTypeStream = require('file-type-stream').default
+const { fileTypeStream } = require('file-type-stream2')
 const { PassThrough } = require('stream')
 const toArray = require('stream-to-array')
 const debug = require('debug')('assets:returnImage')
