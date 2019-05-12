@@ -65,7 +65,8 @@ const examples = {
   columns: '`3`',
   band: '`confidence95`',
   domain: '`[2005, 2015]`',
-  height: '`300`'
+  height: '`300`',
+  sizeRangeMax: '`20`'
 }
 const comments = {
   color: 'column name',
@@ -81,7 +82,8 @@ const comments = {
   category: 'js expression, data row available as `datum`',
   columns: 'number of columns, normally 1 up to 4',
   domain: 'same format as your data',
-  height: 'higher than 320 is usually bad on mobile'
+  height: 'higher than 320 is usually bad on mobile',
+  sizeRangeMax: 'max radius plotted'
 }
 const manualType = {
   colorRange: 'array, string',

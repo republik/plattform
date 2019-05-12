@@ -4,7 +4,7 @@ import { css } from 'glamor'
 
 import ColorLegend from './ColorLegend'
 import { scaleLinear, scaleLog, scaleOrdinal, scaleSqrt } from 'd3-scale'
-import { extent, ascending, min } from 'd3-array'
+import { extent, ascending, min, max } from 'd3-array'
 
 import ContextBox, { ContextBoxValue } from './ContextBox'
 
@@ -201,12 +201,17 @@ class ScatterPlot extends Component {
         d[props.x] && d[props.x].length > 0 &&
         d[props.y] && d[props.y].length > 0
       ))
-      .map(d => ({
-        datum: d,
-        x: +d[props.x],
-        y: +d[props.y],
-        size: +d[props.size] || 0
-      }))
+      .map(d => {
+        const size = d[props.size]
+        return {
+          datum: d,
+          x: +d[props.x],
+          y: +d[props.y],
+          size: size === undefined
+            ? 1
+            : +d[props.size] || 0
+        }
+      })
 
     const paddingTop = 15
     const paddingRight = 1
@@ -263,7 +268,13 @@ class ScatterPlot extends Component {
       .filter(Boolean)
     runSort(props.colorSort, colorValues)
 
-    const size = scaleSqrt().domain(extent(data, d => d.size)).range(props.sizeRange)
+    const sizeRangeMax = props.sizeRange
+      ? props.sizeRange[1] // backwards compatible
+      : props.sizeRangeMax
+
+    const size = scaleSqrt()
+      .domain([0, max(data, d => d.size)])
+      .range([0, sizeRangeMax])
 
     let colorRange = props.colorRanges[props.colorRange] || props.colorRange
     if (!colorRange) {
@@ -455,7 +466,7 @@ ScatterPlot.propTypes = {
   }).isRequired,
   colorSort: sortPropType,
   size: PropTypes.string.isRequired,
-  sizeRange: PropTypes.arrayOf(PropTypes.number.isRequired).isRequired,
+  sizeRangeMax: PropTypes.number.isRequired,
   sizeUnit: PropTypes.string,
   sizeNumberFormat: PropTypes.string,
   sizeShowValue: PropTypes.bool.isRequired,
@@ -480,7 +491,7 @@ ScatterPlot.defaultProps = {
   colorLegend: true,
   paddingLeft: 30,
   size: 'size',
-  sizeRange: [4, 10],
+  sizeRangeMax: 4,
   label: 'label',
   heightRatio: 1,
   sizeShowValue: false
