@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Editorial } from '../Typography'
 import { lab } from 'd3-color'
 import { css } from 'glamor'
 import colors from '../../theme/colors'
