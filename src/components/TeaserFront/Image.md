@@ -23,7 +23,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
@@ -36,7 +36,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
@@ -51,7 +51,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
@@ -66,7 +66,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
@@ -81,7 +81,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
@@ -97,7 +97,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
@@ -112,7 +112,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
@@ -128,7 +128,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
@@ -144,7 +144,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
@@ -160,7 +160,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
@@ -176,7 +176,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
@@ -192,7 +192,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
@@ -209,7 +209,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
@@ -224,7 +224,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```
@@ -242,7 +242,7 @@ A `<TeaserFrontImageHeadline />` should be used. The default font size can be ch
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#' color='#adf'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontImage>
 ```

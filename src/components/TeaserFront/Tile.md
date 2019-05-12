@@ -25,7 +25,7 @@ Supported props:
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
     </TeaserFrontLead>
     <TeaserFrontCredit>
-      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+      An article by <TeaserFrontCreditLink color='#fff' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
   <TeaserFrontTile image='/static/rothaus_landscape.jpg'
@@ -36,7 +36,7 @@ Supported props:
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
     </TeaserFrontLead>
     <TeaserFrontCredit>
-      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+      An article by <TeaserFrontCreditLink color='#000' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>
@@ -52,14 +52,14 @@ Supported props:
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
     </TeaserFrontLead>
     <TeaserFrontCredit>
-      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+      An article by <TeaserFrontCreditLink color='#fff' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
   <TeaserFrontTile color='#000' bgColor='#fff'>
     <Editorial.Format>Umfrage</Editorial.Format>
     <TeaserFrontTileHeadline.Interaction>Mehr Geld für ausländische Autorinnen oder einen Bundeshaus&shy;korrespondent?</TeaserFrontTileHeadline.Interaction>
     <TeaserFrontCredit>
-      <TeaserFrontCreditLink href='#'>Constantin Seibt</TeaserFrontCreditLink> fragt nach<br />31. December 2017
+      <TeaserFrontCreditLink color='#000' href='#'>Constantin Seibt</TeaserFrontCreditLink> fragt nach<br />31. December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>
@@ -75,14 +75,14 @@ Supported props:
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
     </TeaserFrontLead>
     <TeaserFrontCredit>
-      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+      An article by <TeaserFrontCreditLink color='#fff' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
   <TeaserFrontTile color='#000' bgColor='#fff'>
     <Editorial.Format>Umfrage</Editorial.Format>
     <TeaserFrontTileHeadline.Interaction>Mehr Geld für ausländische Autorinnen oder einen Bundeshaus&shy;korrespondent?</TeaserFrontTileHeadline.Interaction>
     <TeaserFrontCredit>
-      <TeaserFrontCreditLink href='#'>Constantin Seibt</TeaserFrontCreditLink> fragt nach<br />31. December 2017
+      <TeaserFrontCreditLink color='#000' href='#'>Constantin Seibt</TeaserFrontCreditLink> fragt nach<br />31. December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>
@@ -95,14 +95,14 @@ Supported props:
     <Editorial.Format>Staatentheorie</Editorial.Format>
     <TeaserFrontTileHeadline.Scribble>Ist der Ameisenstaat eine Republik?</TeaserFrontTileHeadline.Scribble>
     <TeaserFrontCredit>
-      <TeaserFrontCreditLink href='#'>Daniel Binswanger</TeaserFrontCreditLink>, 30.&nbsp;August&nbsp;2018
+      <TeaserFrontCreditLink color='#fff' href='#'>Daniel Binswanger</TeaserFrontCreditLink>, 30.&nbsp;August&nbsp;2018
     </TeaserFrontCredit>
   </TeaserFrontTile>
   <TeaserFrontTile color='#000' bgColor='#fff'>
     <Editorial.Format>Die aktuelle Verkehrslage</Editorial.Format>
     <TeaserFrontTileHeadline.Scribble>An der Brücke entspringt eine Ameisenstrasse</TeaserFrontTileHeadline.Scribble>
     <TeaserFrontCredit>
-      <TeaserFrontCreditLink href='#'>Constantin Seibt</TeaserFrontCreditLink>, 31.&nbsp;August&nbsp;2018
+      <TeaserFrontCreditLink color='#000' href='#'>Constantin Seibt</TeaserFrontCreditLink>, 31.&nbsp;August&nbsp;2018
     </TeaserFrontCredit>
   </TeaserFrontTile>
   <TeaserFrontTile
@@ -110,7 +110,7 @@ Supported props:
     <Editorial.Format>Im Gleichmarsch</Editorial.Format>
     <TeaserFrontTileHeadline.Scribble>Links, zwo, drei, vier!</TeaserFrontTileHeadline.Scribble>
     <TeaserFrontCredit>
-      <TeaserFrontCreditLink href='#'>Constantin Seibt</TeaserFrontCreditLink>, 1.&nbsp;September&nbsp;2018
+      <TeaserFrontCreditLink color='#fff' href='#'>Constantin Seibt</TeaserFrontCreditLink>, 1.&nbsp;September&nbsp;2018
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>
@@ -124,7 +124,7 @@ Supported props:
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
     </TeaserFrontLead>
     <TeaserFrontCredit>
-      An article by <TeaserFrontCreditLink href='#' color='#fba'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+      An article by <TeaserFrontCreditLink color='#fff' href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>
@@ -138,7 +138,7 @@ Supported props:
       Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
     </TeaserFrontLead>
     <TeaserFrontCredit>
-      An article by <TeaserFrontCreditLink href='#' color='#fba'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+      An article by <TeaserFrontCreditLink color='#fff' href='#' color='#fff'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>
@@ -150,7 +150,7 @@ Supported props:
     <Editorial.Format>Umfrage</Editorial.Format>
     <TeaserFrontTileHeadline.Interaction>Mehr Geld für ausländische Autorinnen oder einen Bundeshaus&shy;korrespondent?</TeaserFrontTileHeadline.Interaction>
     <TeaserFrontCredit>
-      <TeaserFrontCreditLink href='#'>Constantin Seibt</TeaserFrontCreditLink> fragt nach<br />31. December 2017
+      <TeaserFrontCreditLink color='#000' href='#'>Constantin Seibt</TeaserFrontCreditLink> fragt nach<br />31. December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>
@@ -163,7 +163,7 @@ Supported props:
   <TeaserFrontTile align='top' image='/static/rothaus_landscape.jpg' byline='Foto: Laurent Burst' color='#000' bgColor='#fff'>
     <TeaserFrontTileHeadline.Editorial>Short headline</TeaserFrontTileHeadline.Editorial>
     <TeaserFrontCredit>
-      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+      An article by <TeaserFrontCreditLink color='#000' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
   <TeaserFrontTile
@@ -173,7 +173,7 @@ Supported props:
     color='#000' bgColor='#fff'>
     <TeaserFrontTileHeadline.Editorial>An article which deserves top-alignment</TeaserFrontTileHeadline.Editorial>
     <TeaserFrontCredit>
-      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+      An article by <TeaserFrontCreditLink color='#000' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>
@@ -186,7 +186,7 @@ Supported props:
     color='#000' bgColor='#fff'>
     <TeaserFrontTileHeadline.Editorial>Short headline</TeaserFrontTileHeadline.Editorial>
     <TeaserFrontCredit>
-      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+      An article by <TeaserFrontCreditLink color='#000' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
   <TeaserFrontTile
@@ -194,7 +194,7 @@ Supported props:
     byline='Foto: Laurent Burst' color='#000' bgColor='#fff'>
     <TeaserFrontTileHeadline.Editorial>Short headline</TeaserFrontTileHeadline.Editorial>
     <TeaserFrontCredit>
-      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+      An article by <TeaserFrontCreditLink color='#000' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>
@@ -211,7 +211,7 @@ Supported props:
     color='#fff' bgColor='#000'>
     <TeaserFrontTileHeadline.Editorial>Headline</TeaserFrontTileHeadline.Editorial>
     <TeaserFrontCredit>
-      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+      An article by <TeaserFrontCreditLink color='#fff' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>
@@ -226,7 +226,7 @@ Supported props:
     color='#000' bgColor='#fff'>
     <TeaserFrontTileHeadline.Editorial>Headline</TeaserFrontTileHeadline.Editorial>
     <TeaserFrontCredit>
-      An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+      An article by <TeaserFrontCreditLink color='#000' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
     </TeaserFrontCredit>
   </TeaserFrontTile>
 </TeaserFrontTileRow>

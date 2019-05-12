@@ -35,14 +35,16 @@ const Subject = ({ children, color, collapsedColor, columns }) => {
 
   const style = css({
     color: labCompactColor.l > 50
-      ? labCompactColor.darker(0.6)
-      : labCompactColor.brighter(3.0),
+      ? labCompactColor.darker(2)
+      : labCompactColor.brighter(3),
     '&::after': {
       content: !!children.length ? " " : undefined
     },
     paddingRight: !!children.length ? '.2em' : 0,
     [tUp]: {
-      color: labColor.l > 50 ? labColor.darker(2.0) : labColor.brighter(3.0),
+      color: labColor.l > 50
+        ? labColor.darker(2)
+        : labColor.brighter(3),
     }
   })
   return (

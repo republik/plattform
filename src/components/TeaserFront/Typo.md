@@ -10,37 +10,37 @@ A `<TeaserFrontTypoHeadline />` should be used. The default font size can be cha
 - `small`: Whether the font size should be decreased to small. Currently only supported for `<TeaserFrontTypoHeadline.Interaction />`
 
 ```react
-<TeaserFrontTypo bgColor='#fff'>
+<TeaserFrontTypo color='#000' bgColor='#fff'>
   <TeaserFrontTypoHeadline.Editorial>The quick brown fox</TeaserFrontTypoHeadline.Editorial>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink color='#000' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontTypo>
 ```
 
 ```react
-<TeaserFrontTypo bgColor='#fff'>
+<TeaserFrontTypo color='#000' bgColor='#fff'>
   <TeaserFrontTypoHeadline.Editorial medium>The quick fox</TeaserFrontTypoHeadline.Editorial>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink color='#000' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontTypo>
 ```
 
 ```react
-<TeaserFrontTypo bgColor='#fff'>
+<TeaserFrontTypo color='#000' bgColor='#fff'>
   <TeaserFrontTypoHeadline.Editorial large>The Fox</TeaserFrontTypoHeadline.Editorial>
   <TeaserFrontLead>
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink color='#000' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontTypo>
 ```
@@ -52,7 +52,7 @@ A `<TeaserFrontTypoHeadline />` should be used. The default font size can be cha
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink color='#fff' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontTypo>
 ```
@@ -64,7 +64,7 @@ A `<TeaserFrontTypoHeadline />` should be used. The default font size can be cha
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink color='#fff' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontTypo>
 ```
@@ -76,7 +76,7 @@ A `<TeaserFrontTypoHeadline />` should be used. The default font size can be cha
     Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.
   </TeaserFrontLead>
   <TeaserFrontCredit>
-    An article by <TeaserFrontCreditLink href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
+    An article by <TeaserFrontCreditLink color='#fff' href='#'>Christof Moser</TeaserFrontCreditLink>, 31 December 2017
   </TeaserFrontCredit>
 </TeaserFrontTypo>
 ```
@@ -86,7 +86,7 @@ A `<TeaserFrontTypoHeadline />` should be used. The default font size can be cha
   <Editorial.Format>Umfrage</Editorial.Format>
   <TeaserFrontTypoHeadline.Interaction small>Mehr Geld für ausländische Autorinnen oder einen Bundeshaus&shy;korrespondent?</TeaserFrontTypoHeadline.Interaction>
   <TeaserFrontCredit>
-    <TeaserFrontCreditLink href='#'>Constantin Seibt</TeaserFrontCreditLink> fragt nach<br />31. December 2017
+    <TeaserFrontCreditLink color='#000' href='#'>Constantin Seibt</TeaserFrontCreditLink> fragt nach<br />31. December 2017
   </TeaserFrontCredit>
 </TeaserFrontTypo>
 ```
