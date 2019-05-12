@@ -213,10 +213,7 @@ class ScatterPlot extends Component {
         }
       })
 
-    const paddingTop = 15
-    const paddingRight = 1
-    const paddingBottom = 50
-    const paddingLeft = props.paddingLeft
+    const { paddingTop, paddingRight, paddingBottom, paddingLeft } = props
 
     const innerWidth = props.width - paddingLeft - paddingRight
     const height = props.height || (innerWidth * props.heightRatio) + paddingTop + paddingBottom
@@ -226,6 +223,9 @@ class ScatterPlot extends Component {
     let xValues = data.map(d => d.x)
     if (props.xTicks) {
       xValues = xValues.concat(props.xTicks)
+    }
+    if (props.xLines) {
+      xValues = xValues.concat(props.xLines.map(line => line.tick))
     }
     const x = scales[props.xScale]()
       .domain(extent(xValues))
@@ -237,14 +237,19 @@ class ScatterPlot extends Component {
       x.nice(xNice)
     }
     const xAxis = calculateAxis(props.xNumberFormat || props.numberFormat, tLabel, x.domain()) // xUnit is rendered separately
-    const xTicks = props.xTicks || (props.xScale === 'log' ? get3EqualDistTicks(x) : xAxis.ticks)
+    const xLines = props.xLines || (
+      props.xTicks || (props.xScale === 'log' ? get3EqualDistTicks(x) : xAxis.ticks)
+    ).map(tick => ({ tick }))
     // ensure highest value is last: the last value is labled with the unit
-    xTicks.sort(ascending)
+    xLines.sort((a, b) => ascending(a.tick, b.tick))
 
     // setup y axis
     let yValues = data.map(d => d.y)
     if (props.yTicks) {
       yValues = yValues.concat(props.yTicks)
+    }
+    if (props.yLines) {
+      yValues = yValues.concat(props.yLines.map(line => line.tick))
     }
     const y = scales[props.yScale]()
       .domain(extent(yValues))
@@ -256,9 +261,12 @@ class ScatterPlot extends Component {
       y.nice(yNice)
     }
     const yAxis = calculateAxis(props.yNumberFormat || props.numberFormat, tLabel, y.domain(), tLabel(props.yUnit))
-    const yTicks = props.yTicks || (props.yScale === 'log' ? get3EqualDistTicks(y) : yAxis.ticks)
+    const yLines = props.yLines || (
+      props.yTicks || (props.yScale === 'log' ? get3EqualDistTicks(y) : yAxis.ticks)
+    ).map(tick => ({ tick }))
     // ensure highest value is last: the last value is labled with the unit
-    yTicks.sort(ascending)
+    yLines.sort((a, b) => ascending(a.tick, b.tick))
+    const maxYLine = yLines[yLines.length - 1]
 
     const colorAccessor = d => d.datum[props.color]
     const colorValues = []
@@ -293,6 +301,8 @@ class ScatterPlot extends Component {
         r: size(value.size)
       }
     })
+
+    const yLinesPaddingLeft = paddingLeft < 2 ? paddingLeft : 0
 
     return (
       <div style={{ position: 'relative' }}>
@@ -355,33 +365,41 @@ class ScatterPlot extends Component {
               r={symbol.r} />
           ))}
           {
-            yTicks.map((tick, i) => (
-              <g key={tick} transform={`translate(0,${y(tick)})`}>
-                <line {...styles.axisLine} x2={width - paddingRight} style={{
-                  stroke: tick === 0 ? baseLineColor : undefined
+            yLines.map(({ tick, label, base }, i) => (
+              <g key={tick} transform={`translate(${yLinesPaddingLeft},${y(tick)})`}>
+                <line {...styles.axisLine} x2={width - paddingRight - yLinesPaddingLeft} style={{
+                  stroke: base || (base === undefined && tick === 0)
+                    ? baseLineColor
+                    : undefined
                 }} />
                 <text {...styles.axisLabel} dy='-3px'>
-                  {subsup.svg(yAxis.axisFormat(tick, last(yTicks, i)))}
+                  {subsup.svg(label || yAxis.axisFormat(tick, last(yLines, i)))}
                 </text>
               </g>
             ))
           }
           {
-            xTicks.map((tick, i) => {
-              let textAnchor = 'middle'
-              if (last(xTicks, i)) {
-                textAnchor = 'end'
-              }
-              if (i === 0 && paddingLeft < 20) {
-                textAnchor = 'start'
+            xLines.map(({ tick, label, textAnchor, base }, i) => {
+              if (!textAnchor) {
+                textAnchor = 'middle'
+                if (last(xLines, i)) {
+                  textAnchor = 'end'
+                }
+                if (i === 0 && paddingLeft < 20) {
+                  textAnchor = 'start'
+                }
               }
               return (
                 <g key={`x${tick}`} transform={`translate(${x(tick)},${paddingTop + innerHeight + X_TICK_HEIGHT})`}>
-                  <line {...styles.axisLine} y2={-(innerHeight + X_TICK_HEIGHT)} style={{
-                    stroke: tick === 0 ? baseLineColor : undefined
-                  }} />
+                  <line {...styles.axisLine}
+                    y2={-((maxYLine ? y(y.domain()[0]) - y(maxYLine.tick) : innerHeight) + X_TICK_HEIGHT)}
+                    style={{
+                      stroke: base || (base === undefined && tick === 0)
+                        ? baseLineColor
+                        : undefined
+                    }} />
                   <text {...styles.axisLabel} y={5} dy='0.6em' textAnchor={textAnchor}>
-                    {subsup.svg(xAxis.axisFormat(tick, last(xTicks, i)))}
+                    {subsup.svg(label || xAxis.axisFormat(tick, last(xLines, i)))}
                   </text>
                 </g>
               )
@@ -444,6 +462,12 @@ ScatterPlot.propTypes = {
   xUnit: PropTypes.string,
   xNice: PropTypes.number,
   xTicks: PropTypes.arrayOf(PropTypes.number),
+  xLines: PropTypes.arrayOf(PropTypes.shape({
+    tick: PropTypes.number.isRequired,
+    label: PropTypes.string,
+    base: PropTypes.bool,
+    textAnchor: PropTypes.string
+  }).isRequired),
   xScale: PropTypes.oneOf(Object.keys(scales)),
   xNumberFormat: PropTypes.string,
   xShowValue: PropTypes.bool.isRequired,
@@ -451,6 +475,11 @@ ScatterPlot.propTypes = {
   yUnit: PropTypes.string,
   yNice: PropTypes.number,
   yTicks: PropTypes.arrayOf(PropTypes.number),
+  yLines: PropTypes.arrayOf(PropTypes.shape({
+    tick: PropTypes.number.isRequired,
+    label: PropTypes.string,
+    base: PropTypes.bool
+  }).isRequired),
   yScale: PropTypes.oneOf(Object.keys(scales)),
   yNumberFormat: PropTypes.string,
   yShowValue: PropTypes.bool.isRequired,
@@ -489,6 +518,9 @@ ScatterPlot.defaultProps = {
   opacity: 1,
   numberFormat: 's',
   colorLegend: true,
+  paddingTop: 15,
+  paddingRight: 1,
+  paddingBottom: 50,
   paddingLeft: 30,
   size: 'size',
   sizeRangeMax: 4,

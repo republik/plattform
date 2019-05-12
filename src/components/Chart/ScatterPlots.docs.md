@@ -238,12 +238,25 @@ Use `inlineLabel`, `inlineSecondaryLabel` and `inlineLabelPosition`. Valid posit
       "type": "ScatterPlot",
       "color": "family",
       "colorRange": ["#4B8A3E", "#D6862B", "#84B547", "#BF3939", "#3872B5", "#49A5E7", "#A65E42", "#F0554D"],
+      "colorLegendValues": ["kommunistisch/sozialistisch", "sozialdemokratisch", "christdemokratisch", "grün/ökologisch", "agrarisch", "liberal", "konservativ", "rechts"],
       "numberFormat": ".1f",
+      "paddingLeft": 15,
+      "paddingTop": 18,
+      "paddingRight": 8,
       "x": "lrgen",
       "y": "position",
-      "yTicks": [0,4,8],
-      "xTicks": [0,5,10],
-      "yUnit": "EU Position",
+      "yNice": 0,
+      "yLines": [
+        { "tick": 1, "label": "stark anti-EU" },
+        { "tick": 4, "label": "neutral" },
+        { "tick": 7, "label": "stark pro-EU" }
+      ],
+      "xLines": [
+        { "tick": 0, "label": "extrem links", "base": false },
+        { "tick": 5, "label": "Mitte" },
+        { "tick": 10, "label": "extrem rechts" }
+      ],
+      "yUnit": "EU-Position",
       "xUnit": "Ideologie",
       "detail": "detail",
       "inlineLabel": "inline",
@@ -270,7 +283,7 @@ year,label,detail,family,position,lrgen,vote_abs,inline_pos,inline,inline_countr
 2017,Christlich Soziale Union,"Deutschland
 2,87 Mio. Stimmen im 2017",christdemokratisch,4.5625,7.375,2869688,right,CSU,
 2017,Alternative für Deutschland,"5,88 Mio. Stimmen im 2017",rechts,1.8125,9.1875,5878115,,AfD,
-2017,Schweizerische Volkspartei,"0,74 Mio. Stimmen im 2015",agrarisch,1,8.25,740967,bottom,SVP,
+2017,Schweizerische Volkspartei,"0,74 Mio. Stimmen im 2015",agrarisch,1,8.25,740967,top,SVP,
 2017,Sozialdemokratische Partei,"Schweiz
 0,48 Mio. Stimmen im 2015",sozialdemokratisch,6.1111112,2.125,475075,left,SP,Schweiz
 2017,Freisinnig-Demokratische Partei,"Schweiz
