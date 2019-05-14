@@ -35,6 +35,7 @@ module.exports = (
       : createContext({ user: req.user, req }),
     debug: true,
     introspection: true,
+    playground: false, // see ./graphiql.js
     subscriptions: {
       onConnect: async (connectionParams, websocket) => {
         try {
@@ -87,12 +88,6 @@ module.exports = (
         )
       }
       return response
-    },
-    playground: {
-      endpoint: '/graphql',
-      settings: {
-        'request.credentials': 'include'
-      }
     }
   })
 
@@ -108,6 +103,4 @@ module.exports = (
     }
   })
   apolloServer.installSubscriptionHandlers(httpServer)
-
-  server.get('/graphiql', (req, res) => res.redirect('/graphql'))
 }
