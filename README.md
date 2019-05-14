@@ -11,7 +11,7 @@ This repo is devided between `servers` and `packages`.
 - **packages:** contains code shared between the servers
 
 
-## Development
+## How to run / Development
 
 ### 1. Clone
 ```
@@ -22,9 +22,19 @@ git clone git@github.com:orbiting/backends.git && cd backends
 
 You must have Node.js (10+), yarn, docker and docker-compose installed (alternatively to docker you can install the external services natively).
 
+- [Node.js with nvm](ihttps://github.com/nvm-sh/nvm#install--update-script)
+- [yarn](https://yarnpkg.com/en/docs/install)
+- [docker](https://docs.docker.com/install/)
+- [docker-compose](https://docs.docker.com/compose/install/)
+
+
 #### Docker
 The included [docker-compose.yml](docker-compose.yml) starts all external-services. Currently that's: postgresql, redis, elasticsearch (and kibana).
-Just run `docker-compose up [-d]` to start up everything. The data is persisted in `./docker-data/`.
+The data is persisted in `./docker-data/`.
+
+```
+docker-compose up [-d]
+```
 
 ##### Postgresql in docker
 We recommend you install the postgresql client tools on your machine to interact with the database. The tests scripts also depend on the clients being installed.
@@ -39,7 +49,7 @@ export PGHOST=127.0.0.1
 export PGUSER=postgres
 ```
 
-#### Natively
+#### alternativ: install natively
 <details><summary>show more</summary>
 <p>
 As an alternative to docker(-compose) you can install the external-services natively:
@@ -88,16 +98,15 @@ yarn run dev
 ```
 
 This kicks on [foreman](https://github.com/strongloop/node-foreman) which then launches all the servers locally.
+All servers greets you with `Cannot GET /` on the root route. The API servers have a graphical API explorer available at `/graphiql`:
 
-### 6. Profit
+- [Republik API on port 5000](http://localhost:5000/graphiql)
+- [Publikator API on port 5010](http://localhost:5010/graphiql)
+- [Assets server on port 5020](http://localhost:5020/)
 
-The backends should be running on your machine now. Try out the APIs in the graphql-playground:
-- [republik](http://localhost:5000/graphiql)
-- [publikator](http://localhost:5010/graphiql)
+### Next steps
 
-#### Next steps
-
-##### more about ENVs
+#### more about ENVs
 
 In development environment variables are loaded from `./.env`, `../../.env` (in this order, relative to node's cwd). This is done with the help of [backend-modules-env](packages/env) and enables you to define a `.env` file at the root of this repo for common variables and also store server specific envs at `servers/*/.env`. `./.env` takes precedence over `../../.env` because existing env variables are never overwritten.
 No ENV variabeles are loaded from any file in production, you yourself are responsible to set all required ENVs in the production environment.
