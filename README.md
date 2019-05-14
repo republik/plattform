@@ -39,7 +39,8 @@ export PGHOST=127.0.0.1
 export PGUSER=postgres
 ```
 
-<details><summary>Natively</summary>
+#### Natively
+<details><summary>show more</summary>
 <p>
 As an alternative to docker(-compose) you can install the external-services natively:
 
