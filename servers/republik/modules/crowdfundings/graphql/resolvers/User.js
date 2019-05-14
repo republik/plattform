@@ -30,6 +30,9 @@ const createMembershipCache = (user, prop, context) =>
 
 const getPaymentSources = async (user, pgdb) => {
   const { platform } = await getStripeClients(pgdb)
+  if (!platform) {
+    return []
+  }
   const customer = await pgdb.public.stripeCustomers.findOne({
     userId: user.id,
     companyId: platform.company.id
@@ -167,9 +170,9 @@ module.exports = {
       return lastEndDate
     })
   },
-  async pledges (user, args, {pgdb, user: me}) {
+  async pledges (user, args, { pgdb, user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter', 'accountant'])) {
-      return pgdb.public.pledges.find({userId: user.id}, {orderBy: ['createdAt desc']})
+      return pgdb.public.pledges.find({ userId: user.id }, { orderBy: ['createdAt desc'] })
     }
     return []
   },
