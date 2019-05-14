@@ -12,6 +12,7 @@ const RedisPubSub = require('./lib/RedisPubSub')
 const Elasticsearch = require('./lib/Elasticsearch')
 
 const graphql = require('./express/graphql')
+const graphiql = require('./express/graphiql')
 
 const DEV = process.env.NODE_ENV && process.env.NODE_ENV !== 'production'
 
@@ -129,6 +130,8 @@ const start = async (
     graphqlSchema,
     createGraphqlContext
   )
+
+  graphiql(server)
 
   for (let middleware of middlewares) {
     await middleware(server, pgdb, t, redis)
