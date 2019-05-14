@@ -39,7 +39,8 @@ export PGHOST=127.0.0.1
 export PGUSER=postgres
 ```
 
-#### Natively
+<details><summary>Natively</summary>
+<p>
 As an alternative to docker(-compose) you can install the external-services natively:
 
 On macOS with [homebrew](https://brew.sh/):
@@ -52,6 +53,8 @@ brew services start postgresql
 brew services start redis
 brew services start elasticsearch
 ```
+</p>
+</details>
 
 ### 2. ENVs
 
