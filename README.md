@@ -22,7 +22,7 @@ git clone git@github.com:orbiting/backends.git && cd backends
 
 You must have Node.js (10+), yarn, docker and docker-compose installed (alternatively to docker you can install the external services natively).
 
-- [Node.js with nvm](ihttps://github.com/nvm-sh/nvm#install--update-script)
+- [Node.js with nvm](https://github.com/nvm-sh/nvm#install--update-script)
 - [yarn](https://yarnpkg.com/en/docs/install)
 - [docker](https://docs.docker.com/install/)
 - [docker-compose](https://docs.docker.com/compose/install/)
