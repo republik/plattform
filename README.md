@@ -2,40 +2,41 @@
 
 This repo contains all the backend code in use at Republik. For easier development the previously separate repos [republik-backend](https://github.com/orbiting/republik-backend), [publikator-backend](https://github.com/orbiting/publikator-backend), [assets-backend](https://github.com/orbiting/assets-backend) and [backend-modules](https://github.com/orbiting/backend-modules) where merged into this monorepo.
 
+For a guide on how to start the the frontends see: [docs/how-to-run](https://github.com/orbiting/docs/blob/master/guides/how-to-run.md)
+
 ## Components
 
 This repo is devided between `servers` and `packages`.
 - **servers:** this directory contains runnable servers
 - **packages:** contains code shared between the servers
 
-## Usage
 
-### ENVs
+## How to run / Development
 
-In development environment variables are loaded from `./.env`, `../../.env` (in this order, relative to node's cwd). This is done with the help of [backend-modules-env](packages/env) and enables you to define a `.env` file at the root of this repo for common variables and also store server specific envs at `servers/*/.env`. `./.env` takes precedence over `../../.env` because existing env variables are never overwritten.
-No ENV variabeles are loaded from any file in production, you yourself are responsible to set all required ENVs in the production environment.
+### 1. Clone
+```
+git clone git@github.com:orbiting/backends.git && cd backends
+```
 
-Checkout [.env.example](.env.example), [servers/republik/.env.example](servers/republik/.env.example), [servers/publikator/.env.example](servers/publikator/.env.example), [servers/assets/.env.example](servers/assets/.env.example) for which ENVs are required and their descriptions. Check the packages' README for further config options.
+### 2. Prerequisites
 
-At the moment many ENV variables are required for the servers to just run. We are in the process of improving this and deactivate affected functions if ENVs are missing, to provide a smother way of trying out our code.
+You must have Node.js (10+), yarn, docker and docker-compose installed (alternatively to docker you can install the external services natively).
 
-
-### Quick start
-
-- You must have node (8.3.0+) and docker installed.
-- Copy the `.env.example` files to `.env` (in root and server/\*/) and adapt them to your needs.
-- Install dependencies with `yarn install`
-- Run services (postgresql, redis, elasticsearch): `docker-compose up`
-- Run node servers: `yarn run dev`
-
-The last command kicks on [foreman](https://github.com/strongloop/node-foreman) which then launches all the servers locally.
+- [Node.js with nvm](https://github.com/nvm-sh/nvm#install--update-script)
+- [yarn](https://yarnpkg.com/en/docs/install)
+- [docker](https://docs.docker.com/install/)
+- [docker-compose](https://docs.docker.com/compose/install/)
 
 
-### Docker
-The included [docker-compose.yml](docker-compose.yml) starts all services we depend upon. Currently thats postgresql, redis, elasticsearch (and kibana).
-Just run `docker-compose up [-d]` to start up everything. The data are persisted in `./docker-data/`
+#### Docker
+The included [docker-compose.yml](docker-compose.yml) starts all external-services. Currently that's: postgresql, redis, elasticsearch (and kibana).
+The data is persisted in `./docker-data/`.
 
-#### Postgresql in docker
+```
+docker-compose up [-d]
+```
+
+##### Postgresql in docker
 We recommend you install the postgresql client tools on your machine to interact with the database. The tests scripts also depend on the clients being installed.
 ```
 # linux
@@ -48,11 +49,86 @@ export PGHOST=127.0.0.1
 export PGUSER=postgres
 ```
 
+#### alternativ: install natively
+<details><summary>show more</summary>
+<p>
+As an alternative to docker(-compose) you can install the external-services natively:
+
+On macOS with [homebrew](https://brew.sh/):
+```
+brew install postgresql redis nvm elasticsearch
+nvm install 12
+nvm alias default 12
+npm install -g yarn@1.16
+brew services start postgresql
+brew services start redis
+brew services start elasticsearch
+```
+</p>
+</details>
+
+### 2. ENVs
+
+Copy the `.env.example` files to `.env` (in root and server/\*/). The default values should be enough to get started.
+```
+cp .env.example .env
+cp servers/republik/.env.example servers/republik/.env
+cp servers/publikator/.env.example servers/publikator/.env
+cp servers/assets/.env.example servers/assets/.env
+```
+
+### 3. Install
+
+```
+yarn install
+```
+
+### 4. Initialize
+
+```
+createdb republik
+yarn run db:migrate:up
+yarn run db:seed
+```
+
+### 5. Run
+
+```
+yarn run dev
+```
+
+This kicks on [foreman](https://github.com/strongloop/node-foreman) which then launches all the servers locally.
+All servers greets you with `Cannot GET /` on the root route. The API servers have a graphical API explorer available at `/graphiql`:
+
+- [Republik API on port 5000](http://localhost:5000/graphiql)
+- [Publikator API on port 5010](http://localhost:5010/graphiql)
+- [Assets server on port 5020](http://localhost:5020/)
+
+### Next steps
+
+#### more about ENVs
+
+In development environment variables are loaded from `./.env`, `../../.env` (in this order, relative to node's cwd). This is done with the help of [backend-modules-env](packages/env) and enables you to define a `.env` file at the root of this repo for common variables and also store server specific envs at `servers/*/.env`. `./.env` takes precedence over `../../.env` because existing env variables are never overwritten.
+No ENV variabeles are loaded from any file in production, you yourself are responsible to set all required ENVs in the production environment.
+
+Checkout [.env.example](.env.example), [servers/republik/.env.example](servers/republik/.env.example), [servers/publikator/.env.example](servers/publikator/.env.example), [servers/assets/.env.example](servers/assets/.env.example) for which ENVs are required and their descriptions. Check the packages' README for further config options.
+
+
+You will quickly run into errors and limitations if you run with the example envs. You probably want to do the following three rather soon:
+
+1. [Setup GitHub](servers/publikator#github)
+    - `GITHUB_*` in the root `.env`
+2. MailChimp and Mandrill
+    - `MAILCHIMP_URL`, `MAILCHIMP_API_KEY`, `MANDRILL_API_KEY` in the root `.env`
+    - `MAILCHIMP_*` in `servers/republik/.env` (less important)
+3. S3 Bucket
+    - `AWS_*` in the root `.env`
+
 
 ### Special setup: develop on two hosts
 The following setup enables to start the servers (backends and republik-frontend) on one machine (A) and access it from another (B). This can come handy if you want to develop the backend on A and the app on B (where B can be a physical device).
 
-Please not that due to how "Docker for Mac" works (docker is run in a hidden VM), it's not possible to bind containers to the host's network-interface, therefor this setup only works on linux.
+Please not that due to how "Docker for Mac" works (docker is run in a hidden VM), it's not possible to bind containers to the host's network-interface, therefore this setup only works on linux.
 
 #### Machine A (servers)
 1. Get the IP of your machine in the local network, use it in the next step as `LOCAL_IP`
