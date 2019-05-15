@@ -143,7 +143,7 @@ const runOnce = async (...args) => {
   const slackGreeter = await SlackGreeter.start()
 
   let searchNotifyListener
-  if (SEARCH_PG_LISTENER) {
+  if (SEARCH_PG_LISTENER && SEARCH_PG_LISTENER !== 'false') {
     searchNotifyListener = await SearchNotifyListener.start()
   }
 

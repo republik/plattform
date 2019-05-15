@@ -55,3 +55,33 @@ module.exports.level1 = `
     }
   }
 `
+
+module.exports.upvoteComment = `
+  mutation upvoteComment(
+    $commentId: ID!
+  ) {
+    upvoteComment(id: $commentId) {
+      upVotes downVotes userVote
+    }
+  }
+`
+
+module.exports.downvoteComment = `
+  mutation downvoteComment(
+    $commentId: ID!
+  ) {
+    downvoteComment(id: $commentId) {
+      upVotes downVotes userVote
+    }
+  }
+`
+
+module.exports.unvoteComment = `
+  mutation unvoteComment(
+    $commentId: ID!
+  ) {
+    unvoteComment(id: $commentId) {
+      upVotes downVotes userVote
+    }
+  }
+`
