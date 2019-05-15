@@ -93,16 +93,13 @@ class CommentComposer extends PureComponent {
 
     this.state = {
       text: props.initialText || '',
-      count: 0,
-      progress: 0,
       tagValue: props.tagValue
     }
 
-    this.root = React.createRef();
+    this.root = React.createRef()
 
     this.onChange = ev => {
       this.setState({text: ev.target.value})
-      this.updateMaxLength()
     }
 
     this.onSubmit = () => {
@@ -112,14 +109,12 @@ class CommentComposer extends PureComponent {
       )
     }
 
+    // MUST be a function because <Textarea> doesn't support
+    // React.createRef()-style refs.
     this.textarea = null
     this.textareaRef = (ref) => {
       this.textarea = ref
     }
-
-    this.getCount = () => (
-      (this.textarea && this.textarea.value.length) || 0
-    )
 
     this.onTagChange = (tagValue) => {
       this.setState({tagValue})
@@ -127,47 +122,15 @@ class CommentComposer extends PureComponent {
     }
   }
 
-  updateMaxLength () {
-    if (this.props.maxLength) {
-      this.setState({
-        count: this.getCount(),
-        progress: this.getCount() / this.props.maxLength * 100
-      })
-    }
-  }
-
   componentDidMount () {
     if (this.textarea) {
       this.textarea.focus()
-      this.updateMaxLength()
     }
 
     // Scroll the viewport such that the composer is aligned to the top.
     scrollIntoView(this.root.current, {
       align: {top: 0, topOffset: 60}
     })
-  }
-
-  renderProgress () {
-    const {maxLength} = this.props
-    if (!maxLength) return null
-
-    const {count, progress} = this.state
-    const remaining = maxLength - count
-    const progressColor = progress > 100 ? colors.error : colors.text
-    return (
-      <div {...styles.maxLength}>
-        {remaining < 21 && <span {...styles.remaining} style={{color: progressColor}}>
-          {remaining}
-        </span>}
-        <ProgressCircle
-          stroke={progressColor}
-          radius={9}
-          strokeWidth={2}
-          progress={Math.min(progress, 100)}
-        />
-      </div>
-    )
   }
 
   render () {
@@ -184,8 +147,8 @@ class CommentComposer extends PureComponent {
       tagRequired,
       tags
     } = this.props
-    const {text, count, tagValue} = this.state
-    const maxLengthExceeded = maxLength && count > maxLength
+    const {text, tagValue} = this.state
+    const maxLengthExceeded = maxLength && text.length > maxLength
 
     return (
       <div ref={this.root}>
@@ -215,7 +178,12 @@ class CommentComposer extends PureComponent {
             rows='1'
             onChange={this.onChange}
           />
-          {this.renderProgress()}
+          {maxLength && (
+            <MaxLengthIndicator
+              maxLength={maxLength}
+              length={text.length}
+            />
+          )}
           <div {...styles.actions}>
             {secondaryActions && (
               <div {...styles.secondaryActions}>
@@ -256,3 +224,23 @@ CommentComposer.propTypes = {
 }
 
 export default CommentComposer
+
+const MaxLengthIndicator = ({maxLength, length}) => {
+  const progress = length / maxLength * 100
+  const remaining = maxLength - length
+  const progressColor = progress > 100 ? colors.error : colors.text
+
+  return (
+    <div {...styles.maxLength}>
+      {remaining < 21 && <span {...styles.remaining} style={{color: progressColor}}>
+        {remaining}
+      </span>}
+      <ProgressCircle
+        stroke={progressColor}
+        radius={9}
+        strokeWidth={2}
+        progress={Math.min(progress, 100)}
+      />
+    </div>
+  )
+}
