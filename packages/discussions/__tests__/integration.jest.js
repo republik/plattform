@@ -48,10 +48,8 @@ describe('discussions', () => {
   })
 
   test('vote', async () => {
-    global.testUser = {
-      email: 'alice.smith@test.project-r.construction',
-      roles: [ 'member' ]
-    }
+    const [user0, user1] = createUsers(2, ['member'])
+    global.testUser = user0
 
     const commentId = commentsTopLevel[0].id
 
@@ -105,6 +103,41 @@ describe('discussions', () => {
     })).toEqual(
       { data: { unvoteComment: {
         upVotes: 0,
+        downVotes: 0,
+        userVote: null
+      } } }
+    )
+
+    expect(await global.instance.apolloFetch({
+      query: upvoteComment,
+      variables: { commentId }
+    })).toEqual(
+      { data: { upvoteComment: {
+        upVotes: 1,
+        downVotes: 0,
+        userVote: 'UP'
+      } } }
+    )
+
+    global.testUser = user1
+
+    expect(await global.instance.apolloFetch({
+      query: upvoteComment,
+      variables: { commentId }
+    })).toEqual(
+      { data: { upvoteComment: {
+        upVotes: 2,
+        downVotes: 0,
+        userVote: 'UP'
+      } } }
+    )
+
+    expect(await global.instance.apolloFetch({
+      query: unvoteComment,
+      variables: { commentId }
+    })).toEqual(
+      { data: { unvoteComment: {
+        upVotes: 1,
         downVotes: 0,
         userVote: null
       } } }
