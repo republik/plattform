@@ -53,7 +53,7 @@ describe('discussions', () => {
       roles: [ 'member' ]
     }
 
-    const commentId = 'c0000000-0000-0000-0000-000000000001'
+    const commentId = commentsTopLevel[0].id
 
     expect(await global.instance.apolloFetch({
       query: upvoteComment,
