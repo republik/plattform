@@ -2,6 +2,7 @@ import React, {PureComponent} from 'react'
 import PropTypes from 'prop-types'
 import {css} from 'glamor'
 import Textarea from 'react-textarea-autosize';
+import scrollIntoView from 'scroll-into-view'
 import colors from '../../theme/colors'
 import {serifRegular16, sansSerifRegular14, sansSerifRegular16} from '../Typography/styles'
 
@@ -97,6 +98,8 @@ class CommentComposer extends PureComponent {
       tagValue: props.tagValue
     }
 
+    this.root = React.createRef();
+
     this.onChange = ev => {
       this.setState({text: ev.target.value})
       this.updateMaxLength()
@@ -138,6 +141,11 @@ class CommentComposer extends PureComponent {
       this.textarea.focus()
       this.updateMaxLength()
     }
+
+    // Scroll the viewport such that the composer is aligned to the top.
+    scrollIntoView(this.root.current, {
+      align: {top: 0, topOffset: 60}
+    })
   }
 
   renderProgress () {
@@ -180,7 +188,7 @@ class CommentComposer extends PureComponent {
     const maxLengthExceeded = maxLength && count > maxLength
 
     return (
-      <div>
+      <div ref={this.root}>
         <CommentComposerHeader
           {...displayAuthor}
           onClick={onEditPreferences}
