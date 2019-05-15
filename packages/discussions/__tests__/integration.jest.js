@@ -4,7 +4,12 @@ const {
 } = require('@orbiting/backend-modules-test')
 const discussion1 = require('./seeds/discussion1')
 const commentsTopLevel = require('./seeds/commentsTopLevel')
-const { level1: level1Query } = require('./queries')
+const {
+  level1: level1Query,
+  upvoteComment,
+  downvoteComment,
+  unvoteComment
+} = require('./queries')
 
 const getIdsString = arr => arr
   .map(c => c.id)
@@ -13,7 +18,8 @@ const getIdsString = arr => arr
 describe('discussions', () => {
   beforeAll(async () => {
     await Instance.init({
-      serverName: 'republik'
+      serverName: 'republik',
+      searchNotifyListener: false
     })
   }, 60000)
 
@@ -31,6 +37,7 @@ describe('discussions', () => {
     await pgdb.public.users.insert(users)
     await pgdb.public.discussions.insert(discussion1)
     await pgdb.public.comments.insert(commentsTopLevel)
+    global.testUser = null
   })
 
   test('setup', async () => {
@@ -38,6 +45,70 @@ describe('discussions', () => {
     expect(await pgdb.public.users.count()).toEqual(10)
     expect(await pgdb.public.discussions.count()).toEqual(1)
     expect(await pgdb.public.comments.count()).toEqual(6)
+  })
+
+  test('vote', async () => {
+    global.testUser = {
+      email: 'alice.smith@test.project-r.construction',
+      roles: [ 'member' ]
+    }
+
+    const commentId = 'c0000000-0000-0000-0000-000000000001'
+
+    expect(await global.instance.apolloFetch({
+      query: upvoteComment,
+      variables: { commentId }
+    })).toEqual(
+      { data: { upvoteComment: {
+        upVotes: 1,
+        downVotes: 0,
+        userVote: 'UP'
+      } } }
+    )
+
+    expect(await global.instance.apolloFetch({
+      query: downvoteComment,
+      variables: { commentId }
+    })).toEqual(
+      { data: { downvoteComment: {
+        upVotes: 0,
+        downVotes: 1,
+        userVote: 'DOWN'
+      } } }
+    )
+
+    expect(await global.instance.apolloFetch({
+      query: unvoteComment,
+      variables: { commentId }
+    })).toEqual(
+      { data: { unvoteComment: {
+        upVotes: 0,
+        downVotes: 0,
+        userVote: null
+      } } }
+    )
+
+    expect(await global.instance.apolloFetch({
+      query: upvoteComment,
+      variables: { commentId }
+    })).toEqual(
+      { data: { upvoteComment: {
+        upVotes: 1,
+        downVotes: 0,
+        userVote: 'UP'
+      } } }
+    )
+
+    expect(await global.instance.apolloFetch({
+      query: unvoteComment,
+      variables: { commentId }
+    })).toEqual(
+      { data: { unvoteComment: {
+        upVotes: 0,
+        downVotes: 0,
+        userVote: null
+      } } }
+    )
   })
 
   const testDiscussion = async (apolloFetch, query, variables, comments) => {

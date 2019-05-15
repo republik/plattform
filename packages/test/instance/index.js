@@ -11,7 +11,7 @@ const { getId } = require('./pool')
 //
 // REDIS_URL: if set is has to be a base url, allowing to append '/db'
 //
-const init = async ({ serverName, publicationScheduler }) => {
+const init = async ({ serverName, publicationScheduler, searchNotifyListener = null }) => {
   // checks
   if (global.instance) {
     throw new Error('only one instance per process')
@@ -55,6 +55,9 @@ const init = async ({ serverName, publicationScheduler }) => {
   process.env.SEND_MAILS_LOG = false
   if (publicationScheduler) {
     process.env.PUBLICATION_SCHEDULER = true
+  }
+  if (searchNotifyListener !== null && !searchNotifyListener) {
+    process.env.SEARCH_PG_LISTENER = false
   }
 
   // flush redis

@@ -57,6 +57,7 @@ type mutations {
   unpublishComment(id: ID!): Comment!
   upvoteComment(id: ID!): Comment!
   downvoteComment(id: ID!): Comment!
+  unvoteComment(id: ID!): Comment!
   reportComment(id: ID!): Boolean!
 
   setDiscussionPreferences(

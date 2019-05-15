@@ -1,7 +1,7 @@
 const hotness = require('./hotness')
 
 module.exports = async (commentId, vote, pgdb, user, t, pubsub, loaders) => {
-  if (vote !== 1 && vote !== -1) {
+  if (![-1, 0, 1].includes(vote)) {
     console.error('vote out of range', { commentId, vote })
     throw new Error(t('api/unexpected'))
   }
@@ -22,28 +22,39 @@ module.exports = async (commentId, vote, pgdb, user, t, pubsub, loaders) => {
 
     const existingUserVote = comment.votes.find(vote => vote.userId === user.id)
     let newComment
-    if (!existingUserVote) {
+
+    if (vote === 0 && existingUserVote) {
       newComment = await transaction.public.comments.updateAndGetOne({
         id: commentId
       }, {
-        upVotes: (vote === 1 ? comment.upVotes + 1 : comment.upVotes),
-        downVotes: (vote === 1 ? comment.downVotes : comment.downVotes + 1),
-        votes: comment.votes.concat([{
-          userId: user.id,
-          vote
-        }])
+        upVotes: (existingUserVote.vote === 1 ? comment.upVotes - 1 : comment.upVotes),
+        downVotes: (existingUserVote.vote === 1 ? comment.downVotes : comment.downVotes - 1),
+        votes: comment.votes.filter(vote => vote.userId !== user.id)
       })
-    } else if (existingUserVote.vote !== vote) {
-      newComment = await transaction.public.comments.updateAndGetOne({
-        id: commentId
-      }, {
-        upVotes: comment.upVotes + vote,
-        downVotes: comment.downVotes - vote,
-        votes: comment.votes.filter(vote => vote.userId !== user.id).concat([{
-          userId: user.id,
-          vote
-        }])
-      })
+    } else if (vote !== 0) {
+      if (!existingUserVote) {
+        newComment = await transaction.public.comments.updateAndGetOne({
+          id: commentId
+        }, {
+          upVotes: (vote === 1 ? comment.upVotes + 1 : comment.upVotes),
+          downVotes: (vote === 1 ? comment.downVotes : comment.downVotes + 1),
+          votes: comment.votes.concat([{
+            userId: user.id,
+            vote
+          }])
+        })
+      } else if (existingUserVote.vote !== vote) {
+        newComment = await transaction.public.comments.updateAndGetOne({
+          id: commentId
+        }, {
+          upVotes: comment.upVotes + vote,
+          downVotes: comment.downVotes - vote,
+          votes: comment.votes.filter(vote => vote.userId !== user.id).concat([{
+            userId: user.id,
+            vote
+          }])
+        })
+      }
     }
 
     if (newComment) {
@@ -61,7 +72,7 @@ module.exports = async (commentId, vote, pgdb, user, t, pubsub, loaders) => {
       await pubsub.publish('comment', { comment: {
         mutation: 'UPDATED',
         node: newComment
-      }})
+      } })
     }
 
     return newComment || comment
