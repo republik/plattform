@@ -1,4 +1,5 @@
 const aws = require('aws-sdk')
+const fetch = require('isomorphic-unfetch')
 
 const {
   AWS_REGION,
@@ -37,7 +38,8 @@ const upload = async ({
     Body: stream,
     Key: path,
     Bucket: bucket,
-    ACL: 'public-read'
+    ACL: 'public-read',
+    ...mimeType ? { ContentType: mimeType } : {}
   }).promise()
 }
 
@@ -57,16 +59,34 @@ const getHead = async ({
   try {
     result = await s3.headObject({
       Key: path,
-      Bucket: bucket,
+      Bucket: bucket
     }).promise()
-  } catch(e) {
+  } catch (e) {
     return false
   }
 
   return result
 }
 
+const get = ({
+  region = AWS_REGION,
+  bucket,
+  path
+}) => {
+  return fetch(`https://s3.${region}.amazonaws.com/${bucket}/${path}`, {
+    method: 'GET'
+  })
+    .catch(error => {
+      return {
+        status: 404,
+        ok: false,
+        error
+      }
+    })
+}
+
 module.exports = {
   upload,
-  getHead
+  getHead,
+  get
 }
