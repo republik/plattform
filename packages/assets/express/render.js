@@ -16,7 +16,12 @@ const getCacheKey = (params) => {
     .sort(ascending)
     .map(key => `${key}:${params[key]}`)
     .join('::')
-  return crypto
+  const sha = crypto.createHash('sha256')
+    .update(paramsString)
+    .digest('hex')
+  const s3KeyEncode = string => encodeURIComponent(string).replace(/%/g, 'C')
+  const url = (params.url || '').replace('https://', '')
+  return `${s3KeyEncode(url).slice(0, 500)}-${sha}`
     .createHash('sha256')
     .update(paramsString)
     .digest('hex')
@@ -28,7 +33,7 @@ module.exports = (server) => {
       viewport,
       width: _width,
       height: _height,
-      contentHash
+      permanentCacheKey
     } = req.query
 
     let width, height
@@ -62,6 +67,11 @@ module.exports = (server) => {
         ['Content-Type', 'Content-Length'].forEach(key => {
           res.set(key, cacheResult.headers.get(key))
         })
+        res.set('Cache-Tag', ['render', 'permanentCache']
+          .concat((res.get('Content-Type') || '').split('/'))
+          .filter(Boolean)
+          .join(' ')
+        )
         cacheResult.body.pipe(res)
         return
       }
