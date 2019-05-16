@@ -22,9 +22,6 @@ const getCacheKey = (params) => {
   const s3KeyEncode = string => encodeURIComponent(string).replace(/%/g, 'C')
   const url = (params.url || '').replace('https://', '')
   return `${s3KeyEncode(url).slice(0, 500)}-${sha}`
-    .createHash('sha256')
-    .update(paramsString)
-    .digest('hex')
 }
 
 module.exports = (server) => {
@@ -55,7 +52,7 @@ module.exports = (server) => {
     }
 
     let cachePath
-    if (!!contentHash && AWS_S3_BUCKET) {
+    if (!!permanentCacheKey && AWS_S3_BUCKET) {
       cachePath = `${cacheS3Path}${getCacheKey(params)}`
 
       const cacheResult = await s3.get({
