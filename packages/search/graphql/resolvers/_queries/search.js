@@ -455,43 +455,41 @@ const search = async (__, args, context, info) => {
   }
 
   if (!recursive && SEARCH_TRACK) {
-    try {
-      const took = cacheHIT ? 0 : result.took
-      const total = result.hits.total
-      const hits = result.hits.hits
-        .map(hit => _.omit(hit, '_source'))
-      const aggs = result.aggregations
+    const took = cacheHIT ? 0 : result.took
+    const total = result.hits.total
+    const hits = result.hits.hits
+      .map(hit => _.omit(hit, '_source'))
+    const aggs = result.aggregations
 
-      const filters = options.filters
-        ? options.filters.map(filter => {
-          if (typeof filter.value !== 'string') {
-            filter.value = JSON.stringify(filter.value)
-          }
-
-          return filter
-        })
-        : []
-
-      await elastic.index({
-        index: getDateIndex('searches'),
-        type: 'Search',
-        body: {
-          date: new Date(),
-          trackingId,
-          roles: user && user.roles,
-          took,
-          cache: cacheHIT,
-          options: Object.assign({}, options, { filters }),
-          query,
-          total,
-          hits,
-          aggs
+    const filters = options.filters
+      ? options.filters.map(filter => {
+        if (typeof filter.value !== 'string') {
+          filter.value = JSON.stringify(filter.value)
         }
+
+        return filter
       })
-    } catch (err) {
-      // Log but do not fail
+      : []
+
+    // not await tracking
+    elastic.index({
+      index: getDateIndex('searches'),
+      type: 'Search',
+      body: {
+        date: new Date(),
+        trackingId,
+        roles: user && user.roles,
+        took,
+        cache: cacheHIT,
+        options: Object.assign({}, options, { filters }),
+        query,
+        total,
+        hits,
+        aggs
+      }
+    }).catch(err => {
       console.error('search, tracking', err)
-    }
+    })
   }
 
   return response
