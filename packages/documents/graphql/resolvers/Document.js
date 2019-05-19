@@ -1,3 +1,4 @@
+const crypto = require('crypto')
 const {
   contentUrlResolver,
   metaUrlResolver
@@ -29,6 +30,20 @@ const shouldDeliverWebP = (argument = 'auto', req) => {
   return !!argument
 }
 
+const addTeaserContentHash = (nodes) => {
+  nodes.forEach(node => {
+    if (
+      (node.identifier === 'TEASERGROUP' || node.identifier === 'TEASER') &&
+      node.data &&
+      !node.data.contentHash // already hashed
+    ) {
+      node.data.contentHash = crypto.createHash('sha256')
+        .update(JSON.stringify(node))
+        .digest('hex')
+    }
+  })
+}
+
 module.exports = {
   content (doc, { urlPrefix, searchString, webp }, context, info) {
     // we only do auto slugging when in a published documents context
@@ -36,6 +51,9 @@ module.exports = {
     // - alt check info.path for documents / document being the root
     //   https://gist.github.com/tpreusse/f79833a023706520da53647f9c61c7f6
     if (doc._all) {
+      // add content hash before mutating children by resolving
+      addTeaserContentHash(doc.content.children || [])
+
       contentUrlResolver(doc, doc._all, doc._usernames, undefined, urlPrefix, searchString, context.user || null)
 
       if (shouldDeliverWebP(webp, context.req)) {
@@ -71,14 +89,6 @@ module.exports = {
         nodes: []
       }
     }
-    if (doc._all) {
-      if (shouldDeliverWebP(webp, context.req)) {
-        processRepoImageUrlsInContent(doc.content, addWebpSuffix)
-        processImageUrlsInContent(doc.content, addWebpSuffix)
-      }
-
-      processMembersOnlyZonesInContent(doc.content, context.user)
-    }
 
     const children = (doc.content.children.length && doc.content.children) || []
     const totalCount = children.length
@@ -108,13 +118,30 @@ module.exports = {
       children.some((v, i) => v.data.id === startCursor && i > firstIndex)
 
     if (doc._all) {
-      const idsFromNodes = nodes.map(
-        node => extractIdsFromNode(node, doc.meta.repoId)
-      )
+      // add content hash before mutating children by resolving
+      addTeaserContentHash(nodes)
+
+      const shouldAddWebpSuffix = shouldDeliverWebP(webp, context.req)
+
+      const idsFromNodes = nodes.map(node => {
+        if (shouldAddWebpSuffix) {
+          processRepoImageUrlsInContent(node, addWebpSuffix)
+          processImageUrlsInContent(node, addWebpSuffix)
+        }
+        processMembersOnlyZonesInContent(node, context.user)
+
+        return extractIdsFromNode(node, doc.meta.repoId)
+      })
       const { docs, usernames } = await loadLinkedMetaData({
         context,
-        userIds: idsFromNodes.reduce((userIds, idsFromNode) => userIds.concat(idsFromNode.users), []),
-        repoIds: idsFromNodes.reduce((repoIds, idsFromNode) => repoIds.concat(idsFromNode.repos), [])
+        userIds: idsFromNodes.reduce(
+          (userIds, idsFromNode) => userIds.concat(idsFromNode.users),
+          []
+        ),
+        repoIds: idsFromNodes.reduce(
+          (repoIds, idsFromNode) => repoIds.concat(idsFromNode.repos),
+          []
+        )
       })
       doc._all = doc._all.concat(docs)
       doc._usernames = doc._usernames.concat(usernames)
