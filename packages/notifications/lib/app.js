@@ -23,8 +23,8 @@ const publish = async (userIds, args, { pgdb }) => {
 
   debug('sending notifications (apn: %d, firebase: %d)...', iosTokens.length, androidTokens.length)
   return Promise.all([
-    publishApn({ tokens: iosTokens, ...args }),
-    publishFirebase({ tokens: androidTokens, ...args })
+    publishApn({ tokens: iosTokens, ...args }, pgdb),
+    publishFirebase({ tokens: androidTokens, ...args }, pgdb)
   ])
 }
 

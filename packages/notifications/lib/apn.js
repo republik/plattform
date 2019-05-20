@@ -1,5 +1,7 @@
 // https://developer.apple.com/library/archive/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/CommunicatingwithAPNs.html
 
+const { deleteSessionForDevices } = require('./utils')
+
 const apn = require('apn')
 const debug = require('debug')('notifications:publish:apn')
 
@@ -30,7 +32,7 @@ if (!APN_KEY || !APN_KEY_ID || !APN_TEAM_ID || !APN_BUNDLE_ID) {
   provider = new apn.Provider(options)
 }
 
-const publish = async (args) => {
+const publish = async (args, pgdb) => {
   if (SEND_NOTIFICATIONS === 'false' || (DEV && SEND_NOTIFICATIONS !== 'true')) {
     console.log('\n\nSEND_NOTIFICATIONS prevented notification from being sent\n(SEND_NOTIFICATIONS == false or NODE_ENV != production and SEND_NOTIFICATIONS != true)\n', args)
     return
@@ -58,12 +60,20 @@ const publish = async (args) => {
         ? { expiry: parseInt(new Date(now.getTime() + now.getTimezoneOffset() + ttl).getTime() / 1000) }
         : { }
     })
-    debug('sending %d notifications...', tokens.length)
-    return Promise.all(
+    const results = await Promise.all(
       tokens.map(token =>
         provider.send(message, token)
       )
     )
+    debug('APN: #recipients %d, message: %O, results: %O', tokens.length, message, results)
+    const staleTokens = results.reduce((acc, cur) => {
+      const tokens = ((cur && cur.failed) || []).map(f => f.device)
+      return acc.concat(tokens)
+    }, [])
+    if (staleTokens.length > 0) {
+      await deleteSessionForDevices(staleTokens, pgdb)
+      debug('deleted sessions for stale APN device tokens', staleTokens)
+    }
   } else {
     debug('no receipients found for publish: %O', args)
   }
