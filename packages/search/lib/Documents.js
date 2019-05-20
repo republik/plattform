@@ -228,7 +228,10 @@ const extractIdsFromNode = (haystack, contextRepoId) => {
       repos.push(repoId)
     }
   })
-  return { repos, users }
+  return {
+    repos: repos.filter(Boolean),
+    users: users.filter(Boolean)
+  }
 }
 
 const getDocsForConnection = (connection) => connection.nodes
