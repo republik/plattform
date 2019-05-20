@@ -6,6 +6,7 @@ import Text from './Text'
 import colors from '../../theme/colors'
 
 import { FigureImage, FigureByline } from '../Figure'
+import { breakoutUp } from '../Center'
 import LazyLoad from '../LazyLoad'
 
 const IMAGE_SIZE = {
@@ -61,7 +62,7 @@ const styles = {
     [mUp]: {
       fontSize: 0 // Removes the small flexbox space.
     },
-    [tUp]: {
+    [breakoutUp]: {
       margin: '0 auto 60px auto'
     }
   }),
@@ -77,7 +78,7 @@ const styles = {
     [mUp]: {
       ...sizeMedium
     },
-    [tUp]: {
+    [breakoutUp]: {
       ...sizeLarge
     }
   }),
@@ -88,9 +89,12 @@ const styles = {
   }),
   row: css({
     margin: 0,
-    display: 'block',
+    boxSizing: 'border-box',
+    display: 'flex',
+    flexDirection: 'column',
     [mUp]: {
-      display: 'flex'
+      flexDirection: 'row',
+      justifyContent: 'center',
     }
   }),
   rowMobileReverse: css({
@@ -110,7 +114,7 @@ const styles = {
         ...sizeSmall
       }
     },
-    [tUp]: {
+    [breakoutUp]: {
       '& img': {
         ...sizeMedium
       }
@@ -121,23 +125,31 @@ const styles = {
       borderTop: `1px solid ${colors.divider}`
     },
     [mUp]: {
-      display: 'flex',
-      flexFlow: 'row wrap',
+      flexWrap: 'wrap',
       '& .tile': {
-        width: '33.3%',
-        borderTop: 'none',
+        width: '50%',
         borderLeft: `1px solid ${colors.divider}`,
+        borderTop: 'none',
         margin: '0 0 50px 0',
         padding: '20px 0'
+      },
+      '& .tile:nth-child(2n+1)': {
+        borderLeft: 'none'
+      },
+      '& img': {
+        ...sizeSmall
+      }
+    },
+    [breakoutUp]: {
+      '& .tile': {
+        width: '33%',
+      },
+      '& .tile:nth-child(2n+1)': {
+        borderLeft: `1px solid ${colors.divider}`,
       },
       '& .tile:nth-child(3n+1)': {
         borderLeft: 'none'
       },
-      '& img': {
-        ...sizeTiny
-      }
-    },
-    [tUp]: {
       '& img': {
         ...sizeSmall
       }

@@ -28,7 +28,7 @@ const floatStyle = {
   width: '100%'
 }
 
-const breakoutUp = `@media only screen and (min-width: ${
+export const breakoutUp = `@media only screen and (min-width: ${
   MAX_WIDTH +
   BREAKOUT * 2 +
   PADDING * 2 + 
