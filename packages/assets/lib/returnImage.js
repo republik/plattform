@@ -43,7 +43,8 @@ module.exports = async ({
   stream,
   headers,
   options = {},
-  path
+  path,
+  returnResult
 }) => {
   const {
     resize,
@@ -147,18 +148,25 @@ module.exports = async ({
       }
     }
 
-    if (!pipeline && headers && headers.get('Content-Length')) { // shortcut
+    if (!pipeline && !returnResult && headers && headers.get('Content-Length')) { // shortcut
       res.set('Content-Length', headers.get('Content-Length'))
       passThrough.pipe(res)
     } else {
       // convert stream to buffer, because our cdn doesn't cache if content-length is missing
-      res.end(
-        pipeline
-          ? await toBuffer(passThrough.pipe(pipeline))
-          : await toBuffer(passThrough)
-      )
+      const result = pipeline
+        ? await toBuffer(passThrough.pipe(pipeline))
+        : await toBuffer(passThrough)
+      res.end(result)
+
       stream.destroy()
       passThrough.destroy()
+
+      if (returnResult) {
+        return {
+          body: result,
+          mime
+        }
+      }
     }
   } catch (e) {
     console.error(e)

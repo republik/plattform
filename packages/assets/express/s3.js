@@ -1,5 +1,4 @@
-const fetch = require('isomorphic-unfetch')
-const { returnImage } = require('../lib')
+const { returnImage, s3 } = require('../lib')
 const {
   AWS_BUCKET_WHITELIST
 } = process.env
@@ -35,15 +34,13 @@ module.exports = (server) => {
     const [_, sanitizedPath, webp] = new RegExp(/(.*?)(\.webp)?$/, 'g').exec(path)
 
     const region = buckets[bucket]
-    const result = await fetch(`https://s3.${region}.amazonaws.com/${bucket}/${sanitizedPath}`, {
-      method: 'GET'
+    const result = await s3.get({
+      region,
+      bucket,
+      path: sanitizedPath
     })
-      .catch(error => {
-        console.error('s3 fetch failed', { error })
-        return res.status(404).end()
-      })
     if (!result.ok) {
-      console.error('s3 fetch failed', result.url, result.status)
+      console.error('s3 fetch failed', result)
       return res.status(result.status).end()
     }
 
