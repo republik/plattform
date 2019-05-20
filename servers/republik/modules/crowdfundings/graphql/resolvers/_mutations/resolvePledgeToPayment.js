@@ -2,10 +2,10 @@ const { Roles } = require('@orbiting/backend-modules-auth')
 const logger = console
 const {minTotal, regularTotal} = require('../../../lib/Pledge')
 const generateMemberships = require('../../../lib/generateMemberships')
-const sendPaymentSuccessful = require('../../../lib/payments/sendPaymentSuccessful')
+const { sendPaymentSuccessful } = require('../../../lib/Mail')
 const { publishMonitor } = require('../../../../../lib/slack')
 
-module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
+module.exports = async (_, args, { pgdb, req, t, mail: { enforceSubscriptions }, redis }) => {
   Roles.ensureUserHasRole(req.user, 'supporter')
   const { pledgeId, reason } = args
   const now = new Date()
@@ -85,11 +85,17 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
         : prefixedReason
     })
 
-    if (pledge.total > 100000 && newTotal <= 100000) {
-      await generateMemberships(pledge.id, transaction, t, req)
+    const hasPledgeMemberships = await pgdb.public.memberships.count({
+      pledgeId: pledge.id
+    })
+
+    // Only generate memberships (or periods) of pledge has not generated
+    // memberships already.
+    if (hasPledgeMemberships < 1) {
+      await generateMemberships(pledge.id, transaction, t, req, redis)
     }
 
-    await sendPaymentSuccessful(pledge.id, transaction, t)
+    await sendPaymentSuccessful({ pledgeId: pledge.id, pgdb: transaction, t })
 
     await transaction.transactionCommit()
 

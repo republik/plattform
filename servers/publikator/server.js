@@ -1,35 +1,67 @@
-const { makeExecutableSchema } = require('graphql-tools')
-const { server } = require('@orbiting/backend-modules-base')
+const { server: Server } = require('@orbiting/backend-modules-base')
 const { merge } = require('apollo-modules-node')
 const t = require('./lib/t')
 
 const { graphql: documents } = require('@orbiting/backend-modules-documents')
 const { graphql: auth } = require('@orbiting/backend-modules-auth')
-// const { graphql: search } = require('@orbiting/backend-modules-search')
+
+const loaderBuilders = {
+  ...require('@orbiting/backend-modules-discussions/loaders'),
+  ...require('@orbiting/backend-modules-documents/loaders'),
+  ...require('@orbiting/backend-modules-auth/loaders')
+}
+
+const PublicationScheduler = require('./lib/PublicationScheduler')
 
 const uncommittedChangesMiddleware = require('./express/uncommittedChanges')
 const cluster = require('cluster')
 
 const {
   LOCAL_ASSETS_SERVER,
-  PUBLICATION_SCHEDULER_OFF
+  NODE_ENV,
+  PUBLICATION_SCHEDULER
 } = process.env
 
+const DEV = NODE_ENV && NODE_ENV !== 'production'
+
 const start = async () => {
-  const httpServer = await run()
-  await runOnce({ clusterMode: false })
-  return httpServer
+  const server = await run()
+  const _runOnce = await runOnce({ clusterMode: false })
+
+  const close = async () => {
+    await server.close()
+    await _runOnce.close()
+  }
+
+  return {
+    ...server,
+    close
+  }
 }
 
 // in cluster mode, this runs after runOnce otherwise before
-const run = async (workerId) => {
+const run = async (workerId, config) => {
   const localModule = require('./graphql')
-  const executableSchema = makeExecutableSchema(merge(localModule, [documents, auth]))
+  const graphqlSchema = merge(
+    localModule,
+    [
+      documents,
+      auth
+    ]
+  )
 
-  const createGraphQLContext = (defaultContext) => ({
-    ...defaultContext,
-    t
-  })
+  const createGraphQLContext = (defaultContext) => {
+    const loaders = {}
+    const context = {
+      ...defaultContext,
+      t,
+      loaders
+    }
+    Object.keys(loaderBuilders).forEach(key => {
+      loaders[key] = loaderBuilders[key](context)
+    })
+    return context
+  }
 
   const middlewares = [
     uncommittedChangesMiddleware
@@ -42,46 +74,59 @@ const run = async (workerId) => {
     }
   }
 
-  return server.start(
-    executableSchema,
+  const server = await Server.start(
+    graphqlSchema,
     middlewares,
     t,
     createGraphQLContext,
-    workerId
+    workerId,
+    config
   )
+
+  const close = () => {
+    return server.close()
+  }
+
+  process.once('SIGTERM', close)
+
+  return {
+    ...server,
+    close
+  }
 }
 
 // in cluster mode, this runs before run otherwise after
-const runOnce = (...args) => {
+const runOnce = async (...args) => {
   if (cluster.isWorker) {
     throw new Error('runOnce must only be called on cluster.isMaster')
   }
-  server.runOnce(...args)
 
-  if (PUBLICATION_SCHEDULER_OFF === 'true') {
-    console.log('PUBLICATION_SCHEDULER_OFF prevented scheduler from begin started')
+  let publicationScheduler
+  if (PUBLICATION_SCHEDULER === 'false' || (DEV && PUBLICATION_SCHEDULER !== 'true')) {
+    console.log('PUBLICATION_SCHEDULER prevented scheduler from begin started',
+      { PUBLICATION_SCHEDULER, DEV }
+    )
   } else {
-    const scheduler = require('./lib/publicationScheduler')
-    scheduler.init()
+    publicationScheduler = await PublicationScheduler.init()
       .catch(error => {
         console.log(error)
-        return error
+        throw new Error(error)
       })
   }
-}
 
-const close = () => {
-  server.close()
-  require('./lib/publicationScheduler').quit()
+  const close = async () => {
+    publicationScheduler && await publicationScheduler.close()
+  }
+
+  process.once('SIGTERM', close)
+
+  return {
+    close
+  }
 }
 
 module.exports = {
   start,
   run,
-  runOnce,
-  close
+  runOnce
 }
-
-process.on('SIGTERM', () => {
-  close()
-})

@@ -1,10 +1,18 @@
 const { RedisPubSub } = require('graphql-redis-subscriptions')
-const { withFilter } = require('graphql-subscriptions')
-const { REDIS_URL } = process.env
+const { withFilter } = require('apollo-server')
 
-const pubsub = new RedisPubSub({
-  connection: REDIS_URL
-})
+const connect = () => {
+  const url = process.env.REDIS_URL
+
+  return new RedisPubSub({
+    connection: url
+  })
+}
+
+const disconnect = pubsub => {
+  pubsub.getSubscriber().quit()
+  return pubsub.getPublisher().quit()
+}
 
 // https://github.com/davidyaha/graphql-redis-subscriptions/issues/67
 const filtered = (asyncIterator, filter) => withFilter(
@@ -12,4 +20,8 @@ const filtered = (asyncIterator, filter) => withFilter(
   filter
 )
 
-module.exports = {pubsub, filtered}
+module.exports = {
+  connect,
+  disconnect,
+  filtered
+}

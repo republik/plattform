@@ -2,6 +2,8 @@ const editRepoMeta = require('../graphql/resolvers/_mutations/editRepoMeta')
 const { upsert: upsertDiscussion } = require('./Discussion')
 const visit = require('unist-util-visit')
 const debug = require('debug')('publikator:lib:Document')
+const mp3Duration = require('@rocka/mp3-duration')
+const fetch = require('isomorphic-unfetch')
 
 const { timeFormat } = require('@orbiting/backend-modules-formats')
 const {
@@ -56,19 +58,17 @@ const prepareMetaForPublish = async ({
     publishDate
   })
 
-  let discussionId
-  if (docMeta.template === 'discussion') {
-    discussionId = await upsertDiscussion(repoMeta, {...docMeta, path}, context)
+  // discussionId is not saved to repoMeta anymore, but repoId to discussion
+  // see Meta.ownDiscussion resolver
+  if (['discussion', 'article'].indexOf(docMeta.template) > -1) {
+    await upsertDiscussion({ ...docMeta, path, repoId }, context, repoMeta.discussionId)
   }
 
-  if (savePublishDate || (discussionId && discussionId !== repoMeta.discussionId)) {
+  if (savePublishDate) {
     await editRepoMeta(null, {
       repoId,
       ...savePublishDate
         ? { publishDate }
-        : { },
-      ...discussionId
-        ? { discussionId }
         : { }
     }, context)
   }
@@ -85,10 +85,23 @@ const prepareMetaForPublish = async ({
   })
 
   const { audioSourceMp3, audioSourceAac, audioSourceOgg } = doc.content.meta
+  let durationMs = 0
+  if (audioSourceMp3) {
+    durationMs = await fetch(audioSourceMp3)
+      .then(res => res.buffer())
+      .then(res => mp3Duration(res))
+      .then(res => res * 1000)
+      .catch(e => {
+        console.error(`Could not download/measure audioSourceMp3 (${audioSourceMp3})`)
+        return 0
+      })
+  }
   const audioSource = audioSourceMp3 || audioSourceAac || audioSourceOgg ? {
+    mediaId: Buffer.from(`${repoId}/audio`).toString('base64'),
     mp3: audioSourceMp3,
     aac: audioSourceAac,
-    ogg: audioSourceOgg
+    ogg: audioSourceOgg,
+    durationMs
   } : null
 
   // hasAudio: either audioSource or audio-only-video in content
@@ -131,7 +144,6 @@ const prepareMetaForPublish = async ({
     publishDate,
     prepublication,
     scheduledAt,
-    discussionId,
     credits,
     audioSource,
     authors,
@@ -144,7 +156,7 @@ const prepareMetaForPublish = async ({
 }
 
 // if the requirements for context change you need to
-// adapt lib/publicationScheduler
+// adapt lib/PublicationScheduler
 const handleRedirection = async (
   repoId,
   newDocMeta,

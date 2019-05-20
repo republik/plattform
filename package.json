@@ -5,7 +5,7 @@
   "license": "AGPL-3.0",
   "version": "1.0.0",
   "engines": {
-    "node": "10.x"
+    "node": "12.x"
   },
   "private": true,
   "main": "index.js",
@@ -37,12 +37,15 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "commitizen": "^2.10.1",
+    "commitizen": "^3.1.1",
+    "coveralls": "^3.0.3",
     "cz-conventional-changelog": "^2.1.0",
     "foreman": "^3.0.0",
-    "husky": "^1.1.3",
-    "lint-staged": "^7.1.2",
-    "standard": "^11.0.1",
+    "husky": "^2.2.0",
+    "jest": "^24.3.1",
+    "jest-environment-node": "^24.7.1",
+    "lint-staged": "^8.1.5",
+    "standard": "^12.0.1",
     "validate-commit-msg": "^2.11.1"
   },
   "scripts": {
@@ -54,9 +57,22 @@
     "commitmsg": "validate-commit-msg",
     "roleUser": "node packages/auth/script/roleUser",
     "roleUsers": "node packages/auth/script/roleUsers",
-    "pull:redis": "node servers/publikator/script/pullRedis.js",
-    "pull:elasticsearch": "node packages/search/script/pullElasticsearch.js",
-    "db:migrate:up": "cd servers/republik && node script/db-migrate-all.js up",
-    "sendNotification": "cd servers/republik && node ../../packages/notifications/script/sendNotification.js"
+    "pull:elasticsearch": "GITHUB_GRAPHQL_RATELIMIT=true node packages/search/script/pullElasticsearch.js",
+    "db:migrate:create": "packages/migrations/script/create.js",
+    "db:migrate:up": "db-migrate up --migrations-dir packages/migrations/migrations",
+    "db:migrate:down": "db-migrate down --migrations-dir packages/db-migrations/migrations --verbose",
+    "db:seed": "servers/republik/seeds/script/seed.js",
+    "sendNotification": "cd servers/republik && node ../../packages/notifications/script/sendNotification.js",
+    "test": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit",
+    "test:unit": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit --testPathPattern \"\\.(u)|(unit)\\.jest\"",
+    "test:integration": "TZ=Europe/Amsterdam jest --verbose --detectOpenHandles --forceExit --testPathPattern \"\\.(int)|(integration)\\.jest\"",
+    "test:dev": "yarn run test:unit --watch --notify",
+    "test:cover": "TZ=Europe/Amsterdam jest --collectCoverage --detectOpenHandles --forceExit",
+    "test:reportCover": "cat ./tests/coverage/lcov.info | coveralls"
+  },
+  "standard": {
+    "env": [
+      "jest"
+    ]
   }
 }

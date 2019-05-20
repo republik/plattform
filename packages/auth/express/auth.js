@@ -36,7 +36,8 @@ exports.configure = ({
   }
   // Sessions store for express-session (defaults to connect-pg-simple using DATABASE_URL)
   const store = new PgSession({
-    tableName: 'sessions'
+    tableName: 'sessions',
+    conString: process.env.DATABASE_URL
   })
   const Users = pgdb.public.users
 
@@ -70,7 +71,7 @@ exports.configure = ({
 
   passport.deserializeUser(async function (id, next) {
     const user = transformUser(
-      await Users.findOne({id})
+      await Users.findOne({ id })
     )
 
     if (!user) {
@@ -93,4 +94,12 @@ exports.configure = ({
 
     return next()
   })
+
+  const close = () => {
+    return store.close()
+  }
+
+  return {
+    close
+  }
 }

@@ -4,7 +4,7 @@ const matchPayments = require('../../../lib/payments/matchPayments')
 const {dsvFormat} = require('d3-dsv')
 const csvParse = dsvFormat(';').parse
 
-const parsePostfinanceExport = (inputFile) => {
+const parsePostfinanceExport = async (inputFile, pgdb) => {
   // sanitize input
   // trash first 5 lines as they contain another table with (Buchungsart, Konto, etc)
   // keys to lower case
@@ -15,11 +15,36 @@ const parsePostfinanceExport = (inputFile) => {
   const parseDate = ['Buchungsdatum', 'Valuta']
   const parseAmount = ['Gutschrift']
 
-  return csvParse(inputFile.split(/\r\n/).slice(5).join('\n'))
+  const delimitedFile = inputFile.split(/\r\n/)
+
+  const iban = delimitedFile.slice(0, 5).reduce((acc, row) => {
+    const parsedRow = row.match(/^Konto:;([A-Z0-9]{5,34})/)
+
+    if (!parsedRow) {
+      return acc
+    }
+
+    return parsedRow[1]
+  }, false)
+
+  console.log(iban)
+
+  if (!iban) {
+    throw new Error('Unable to find IBAN in provided file.')
+  }
+
+  const bankAccount = await pgdb.public.bankAccounts.findOne({ iban })
+  if (!bankAccount) {
+    throw new Error(
+      `Unable to determine bank account for IBAN "${iban}" in provided file.`
+    )
+  }
+
+  return csvParse(delimitedFile.slice(3).join('\n'))
     .filter(row => row.Gutschrift) // trash rows without gutschrift (such as lastschrift and footer)
     .filter(row => !/^EINZAHLUNGSSCHEIN/g.exec(row.Avisierungstext)) // trash useless EINZAHLUNGSSCHEIN
     .filter(row => !/^GUTSCHRIFT E-PAYMENT TRANSAKTION POSTFINANCE CARD/g.exec(row.Avisierungstext)) // trash PF CARD
-    .filter(row => !/^GUTSCHRIFT VON FREMDBANK (.*?) AUFTRAGGEBER: STRIPE/g.exec(row.Avisierungstext)) // trash stripe payments
+    .filter(row => !/^GUTSCHRIFT VON FREMDBANK AUFTRAGGEBER: STRIPE/ig.exec(row.Avisierungstext)) // trash stripe payments
     .map(row => {
       let newRow = {}
       Object.keys(row).forEach(key => {
@@ -43,6 +68,7 @@ const parsePostfinanceExport = (inputFile) => {
           }
         }
       })
+      newRow.bankAccountId = bankAccount.id
       return newRow
     })
 }
@@ -75,13 +101,13 @@ const insertPayments = async (paymentsInput, tableName, pgdb) => {
   return numPaymentsBefore
 }
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, {pgdb, req, t, redis}) => {
   Roles.ensureUserHasRole(req.user, 'accountant')
   const { csv } = args
 
   const input = Buffer.from(csv, 'base64').toString()
 
-  const paymentsInput = parsePostfinanceExport(input)
+  const paymentsInput = await parsePostfinanceExport(input, pgdb)
   if (paymentsInput.length === 0) {
     return 'input empty. done nothing.'
   }
@@ -98,7 +124,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       numMatchedPayments,
       numUpdatedPledges,
       numPaymentsSuccessful
-    } = await matchPayments(transaction, t)
+    } = await matchPayments(transaction, t, redis)
 
     await transaction.transactionCommit()
 

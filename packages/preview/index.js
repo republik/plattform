@@ -1,4 +1,4 @@
 module.exports = {
-  previewScheduler: require('./lib/previewScheduler'),
+  PreviewScheduler: require('./lib/PreviewScheduler'),
   preview: require('./lib/preview')
 }

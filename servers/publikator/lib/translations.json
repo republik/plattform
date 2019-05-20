@@ -1,5 +1,5 @@
 {
-  "updated": "2018-06-20T17:12:28.096Z",
+  "updated": "2019-04-15T15:25:34.384Z",
   "title": "live",
   "data": [
     {
@@ -51,6 +51,10 @@
       "value": "Der Slug ({path}) muss geändert werden da dieser bereits von einem Artikel verwendet wird."
     },
     {
+      "key": "api/publish/discussion/repoId/missing",
+      "value": "Ups, da ist etwas schiefgelaufen. Die repoId des artikels wird benötigt um eine Diskussion anzulegen."
+    },
+    {
       "key": "api/twitter/morephotos/other",
       "value": "{count} weitere Fotos"
     },
@@ -61,6 +65,10 @@
     {
       "key": "api/publish/disabled",
       "value": "Artikel können im Moment weder veröffentlicht noch zurückgezogen werden. Bitte versuche es in ein paar Minuten noch einmal, ansonsten kontaktiere bitte die IT."
+    },
+    {
+      "key": "api/archive/error/published",
+      "value": "«{repoId}» ist veröffentlicht und kann nicht archiviert werden. Heben Sie erst alle Veröffentlichungen auf."
     }
   ]
 }

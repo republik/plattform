@@ -3,7 +3,7 @@ const logger = console
 const payPledgePF = require('../lib/payments/postfinance/payPledge')
 const payPledgePaypal = require('../lib/payments/paypal/payPledge')
 const generateMemberships = require('../lib/generateMemberships')
-const sendPendingPledgeConfirmations = require('../lib/sendPendingPledgeConfirmations')
+const { sendPledgeConfirmations } = require('../lib/Mail')
 const debug = require('debug')('crowdfundings:webhooks:all')
 
 const getWebhookHandler = require('../lib/payments/stripe/webhookHandler')
@@ -12,7 +12,7 @@ const {
   STRIPE_TEST_MODE
 } = process.env
 
-module.exports = async (server, pgdb, t) => {
+module.exports = async (server, pgdb, t, redis) => {
   const handleWebhook = await getWebhookHandler({ pgdb, t })
 
   const handleStripeWebhook = async (req, res, connected) => {
@@ -115,7 +115,7 @@ module.exports = async (server, pgdb, t) => {
         if (pledge.status !== pledgeStatus) {
           // generate Memberships
           if (pledgeStatus === 'SUCCESSFUL') {
-            await generateMemberships(pledge.id, transaction, t, null, logger)
+            await generateMemberships(pledge.id, transaction, t, null, redis)
           }
 
           // update pledge status
@@ -136,7 +136,7 @@ module.exports = async (server, pgdb, t) => {
 
     if (userId) {
       // send mail immediately
-      await sendPendingPledgeConfirmations(userId, pgdb, t)
+      await sendPledgeConfirmations({ userId, pgdb, t })
     }
   })
 
@@ -193,7 +193,7 @@ module.exports = async (server, pgdb, t) => {
             if (pledge.status !== pledgeStatus) {
               // generate Memberships
               if (pledgeStatus === 'SUCCESSFUL') {
-                await generateMemberships(pledge.id, transaction, t, logger)
+                await generateMemberships(pledge.id, transaction, t, null, redis)
               }
 
               // update pledge status
@@ -214,7 +214,7 @@ module.exports = async (server, pgdb, t) => {
 
         if (userId) {
           // send mail immediately
-          await sendPendingPledgeConfirmations(userId, pgdb, t)
+          await sendPledgeConfirmations({ userId, pgdb, t })
         }
       }
     })

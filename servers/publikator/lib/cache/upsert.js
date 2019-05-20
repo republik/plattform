@@ -1,8 +1,5 @@
 const debug = require('debug')('publikator:cache:upsert')
-const elasticsearch = require('@orbiting/backend-modules-base/lib/elastic')
 const utils = require('@orbiting/backend-modules-search/lib/utils')
-
-const client = elasticsearch.client()
 
 /**
  * Builds ElasticSearch routing object, to find documents in an {index} of a
@@ -44,6 +41,14 @@ const getContentMeta = ({ meta = false } = {}) => {
 
     if (typeof meta.series === 'object') {
       meta.seriesMaster = meta.series
+      meta.seriesMaster.episodes =
+        meta.seriesMaster.episodes.map(episode => {
+          if (episode.publishDate === '') {
+            delete episode.publishDate
+          }
+
+          return episode
+        })
     }
 
     delete meta.series
@@ -94,7 +99,7 @@ const getRepoTags = tags => {
 }
 
 const alterRepoTag = (tag, doc) => {
-  if (!tag || !tag.name || !tag.action) {
+  if (!tag || !tag.name || !tag.action || !doc._source) {
     return
   }
 
@@ -123,21 +128,23 @@ const upsert = async ({
   id,
   meta,
   name,
-  publication,
   publications,
   tag,
   tags,
-  updatedAt
-}) => {
+  updatedAt,
+  refresh = true
+}, {
+    elastic
+  }) => {
   let doc = {}
 
   // Only check and fetch an existing document if {tag} is required to be
   // altered.
   if (tag) {
-    const hasDoc = await client.exists(getPath(id))
+    const hasDoc = await elastic.exists(getPath(id))
 
     if (hasDoc) {
-      doc = await client.get(getPath(id))
+      doc = await elastic.get(getPath(id))
     }
   }
 
@@ -162,8 +169,9 @@ const upsert = async ({
 
   debug('upsert', id)
 
-  await client.update({
+  await elastic.update({
     ...getPath(id),
+    refresh,
     version: doc._version,
     body: {
       doc_as_upsert: true,

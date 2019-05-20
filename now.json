@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "lambdas/chromium/screenshot.js",
+      "use": "@now/node",
+      "config": {
+        "maxLambdaSize": "50mb"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/screenshot",
+      "dest": "/lambdas/chromium/screenshot.js"
+    },
+    {
+      "src": "/",
+      "status": 302,
+      "headers": {
+        "Location": "/screenshot?url=https://github.com/orbiting/backends/tree/master/lambdas/chromium"
+      }
+    }
+  ]
+}

@@ -5,7 +5,8 @@ schema {
 }
 
 type queries {
-  me: User
+  # session wins over access token
+  me(accessToken: ID): User
 
   # check if a username is available
   # also returns true if you already own it
@@ -86,5 +87,11 @@ type mutations {
 
   # Remove a user from a given role
   removeUserFromRole(userId: ID!, role: String!): User!
+
+  # roll a users accessKey
+  rollAccessKey(userId: ID): User!
+
+  submitConsent(name: String!): User!
+  revokeConsent(name: String!): User!
 }
 `

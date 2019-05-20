@@ -103,6 +103,7 @@ module.exports = {
             await Promise.all(memberships.map(membership => {
               return transaction.public.membershipPeriods.insert({
                 membershipId: membership.id,
+                pledgeId: pledge.id,
                 beginDate,
                 endDate,
                 webhookEventId: event.id

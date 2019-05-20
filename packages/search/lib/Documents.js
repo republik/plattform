@@ -1,5 +1,17 @@
-const debug = require('debug')('search:lib:Documents')
 const _ = require('lodash')
+const debug = require('debug')('search:lib:Documents')
+const isUUID = require('is-uuid')
+const visit = require('unist-util-visit')
+
+const {
+  resolve: {
+    extractUserUrl,
+    getRepoId
+  },
+  meta: {
+    getWordsPerMinute
+  }
+} = require('@orbiting/backend-modules-documents/lib')
 
 const {
   termEntry,
@@ -22,8 +34,7 @@ const {
 
 const createCache = require('./cache')
 
-// mean German, see http://iovs.arvojournals.org/article.aspx?articleid=2166061
-const WORDS_PER_MIN = 180
+const { getIndexAlias } = require('./utils')
 
 const SHORT_DURATION_MINS = 5
 const MIDDLE_DURATION_MINS = 15
@@ -32,6 +43,11 @@ const LONG_DURATION_MINS = 30
 const { GITHUB_LOGIN, GITHUB_ORGS } = process.env
 
 const indexType = 'Document'
+
+const indexRef = {
+  index: getIndexAlias(indexType.toLowerCase(), 'write'),
+  type: indexType
+}
 
 const getDocumentId = ({repoId, commitId, versionName}) =>
   Buffer.from(`${repoId}/${commitId}/${versionName}`).toString('base64')
@@ -141,15 +157,15 @@ const schema = {
       },
       ranges: [
         { key: 'short',
-          to: WORDS_PER_MIN * SHORT_DURATION_MINS },
+          to: getWordsPerMinute() * SHORT_DURATION_MINS },
         { key: 'medium',
-          from: WORDS_PER_MIN * SHORT_DURATION_MINS,
-          to: WORDS_PER_MIN * MIDDLE_DURATION_MINS },
+          from: getWordsPerMinute() * SHORT_DURATION_MINS,
+          to: getWordsPerMinute() * MIDDLE_DURATION_MINS },
         { key: 'long',
-          from: WORDS_PER_MIN * MIDDLE_DURATION_MINS,
-          to: WORDS_PER_MIN * LONG_DURATION_MINS },
+          from: getWordsPerMinute() * MIDDLE_DURATION_MINS,
+          to: getWordsPerMinute() * LONG_DURATION_MINS },
         { key: 'epic',
-          from: WORDS_PER_MIN * LONG_DURATION_MINS }
+          from: getWordsPerMinute() * LONG_DURATION_MINS }
       ]
     }
   }
@@ -172,7 +188,7 @@ const getElasticDoc = (
     commitId,
     versionName,
     milestoneCommitId,
-    meta,
+    meta, // doc.meta === doc.content.meta
     resolved: !_.isEmpty(resolved) ? resolved : undefined,
     content: doc.content,
     contentString: mdastToString(
@@ -184,15 +200,12 @@ const getElasticDoc = (
   }
 }
 
-const {
-  extractUserUrl,
-  getRepoId
-} = require('@orbiting/backend-modules-documents/lib/resolve')
-
-const visit = require('unist-util-visit')
-const isUUID = require('is-uuid')
-
-const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
+const addRelatedDocs = async ({
+  connection,
+  scheduledAt,
+  ignorePrepublished,
+  context
+}) => {
   const search = require('../graphql/resolvers/_queries/search')
   const { pgdb } = context
 
@@ -277,6 +290,7 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
       recursive: true,
       withoutContent: true,
       scheduledAt,
+      ignorePrepublished,
       first: sanitizedSeriesRepoIds.length * 2,
       filter: {
         repoId: sanitizedSeriesRepoIds,
@@ -303,6 +317,7 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
       recursive: true,
       withoutContent: true,
       scheduledAt,
+      ignorePrepublished,
       first: sanitizedRepoIds.length * 2,
       filter: {
         repoId: sanitizedRepoIds,
@@ -325,17 +340,14 @@ const addRelatedDocs = async ({ connection, scheduledAt, context }) => {
     // for link resolving in lib/resolve
     // - including the usernames
     doc._all = [
+      ...doc._all
+        ? doc._all
+        : [],
       ...relatedDocs,
       ...docs
     ]
     doc._usernames = usernames
   })
-}
-
-const { getIndexAlias } = require('./utils')
-const indexRef = {
-  index: getIndexAlias(indexType.toLowerCase(), 'write'),
-  type: indexType
 }
 
 const switchState = async function (elastic, state, repoId, docId) {
@@ -418,6 +430,7 @@ const unpublish = async (elastic, redis, repoId) => {
   const result = await elastic.deleteByQuery({
     index: indexRef.index,
     conflicts: 'proceed',
+    refresh: true,
     body: {
       query: {
         term: {

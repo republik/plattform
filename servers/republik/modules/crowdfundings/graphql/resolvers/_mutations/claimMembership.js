@@ -1,24 +1,20 @@
 const logger = console
-const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 const moment = require('moment')
+const Promise = require('bluebird')
 
-module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) => {
+const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
+
+const cancelMembership = require('./cancelMembership')
+const createCache = require('../../../lib/cache')
+
+module.exports = async (_, args, context) => {
+  const { pgdb, req, t, mail, mail: { enforceSubscriptions } } = context
   ensureSignedIn(req)
 
   let pledgerId
   const transaction = await pgdb.transactionBegin()
 
   try {
-    // Throw an error if there is already an other active membership.
-    if (
-      await transaction.public.memberships.count({
-        userId: req.user.id,
-        active: true
-      })
-    ) {
-      throw new Error(t('api/membership/claim/alreadyHave'))
-    }
-
     const { voucherCode } = args
     const membership = await transaction.public.memberships.findOne({
       voucherCode,
@@ -39,35 +35,68 @@ module.exports = async (_, args, {pgdb, req, t, mail: {enforceSubscriptions}}) =
 
     pledgerId = membership.userId
 
-    const membershipType = await transaction.public.membershipTypes.findOne({
-      id: membership.membershipTypeId
+    const activeMemberships = await transaction.public.memberships.find({
+      userId: req.user.id,
+      active: true
     })
 
-    // transfer membership and remove voucherCode
+    const hasActiveMembership = activeMemberships.length > 0
+
+    // transfer new membership, and remove voucherCode
     await transaction.public.memberships.updateOne(
+      { id: membership.id },
       {
-        id: membership.id
-      }, {
         userId: req.user.id,
         voucherCode: null,
         voucherable: false,
-        active: true,
-        renew: true,
+        // Set added membership.active to false if other membership is still
+        // active.
+        active: !hasActiveMembership,
+        renew: !hasActiveMembership,
         updatedAt: now
       }
     )
 
-    // generate interval
-    const beginDate = moment(now)
-    const endDate = moment(beginDate).add(
-      membershipType.intervalCount,
-      membershipType.interval
-    )
-    await transaction.public.membershipPeriods.insert({
-      membershipId: membership.id,
-      beginDate,
-      endDate
-    })
+    if (!hasActiveMembership) {
+      // generate interval
+      const beginDate = moment(now)
+      const endDate = beginDate.clone().add(
+        membership.initialPeriods,
+        membership.initialInterval
+      )
+
+      await transaction.public.membershipPeriods.insert({
+        membershipId: membership.id,
+        pledgeId: membership.pledgeId,
+        beginDate,
+        endDate
+      })
+    } else {
+      // Cancel active memberships.
+      await Promise.map(
+        await transaction.public.memberships.find({
+          'id !=': membership.id,
+          userId: req.user.id,
+          renew: true
+        }),
+        m => cancelMembership(
+          null,
+          {
+            id: m.id,
+            details: {
+              type: 'SYSTEM',
+              reason: 'Auto Cancellation (claimMembership)',
+              suppressConfirmation: true,
+              suppressWinback: true
+            }
+          },
+          { req, t, pgdb: transaction, mail }
+        )
+      )
+    }
+
+    const cache = createCache({ prefix: `User:${req.user.id}` }, context)
+    cache.invalidate()
 
     // commit transaction
     await transaction.transactionCommit()

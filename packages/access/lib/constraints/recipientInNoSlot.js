@@ -11,7 +11,7 @@ const debug = require('debug')('access:lib:constraints:recipientInNoSlot')
  */
 
 const isGrantable = async (args, context) => {
-  const { email, grantee, campaign } = args
+  const { email, granter, campaign } = args
   const { pgdb } = context
 
   const usedSlots = await pgdb.query(`
@@ -21,14 +21,14 @@ const isGrantable = async (args, context) => {
 
     WHERE
       "accessGrants"."accessCampaignId" = '${campaign.id}'
-      AND "accessGrants"."granteeUserId" = '${grantee.id}'
+      AND "accessGrants"."granterUserId" = '${granter.id}'
       AND "accessGrants"."email" = '${email}'
-      AND "accessGrants"."endAt" >= NOW()
+      AND "accessGrants"."revokedAt" IS NULL
       AND "accessGrants"."invalidatedAt" IS NULL
   `)
 
   debug({
-    grantee: grantee.id,
+    granter: granter.id,
     email,
     usedSlots
   })

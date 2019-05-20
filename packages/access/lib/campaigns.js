@@ -6,9 +6,10 @@ const constraints = require('./constraints')
 
 const findAvailable = async (pgdb) => {
   debug('findAvailable')
+  const now = moment()
   const campaigns = await pgdb.public.accessCampaigns.find({
-    'beginAt <=': moment(),
-    'endAt >': moment()
+    'beginAt <=': now,
+    'endAt >': now
   })
 
   return campaigns
@@ -32,19 +33,19 @@ const findByGrant = (grant, pgdb) => {
 
 const findOne = (id, pgdb) => {
   debug('findOne', { id })
+  const now = moment()
   return pgdb.public.accessCampaigns.findOne({
     id,
-    'beginAt <=': moment(),
-    'endAt >': moment()
+    'beginAt <=': now
   })
 }
 
-const findForGrantee = async (grantee, { withPast, pgdb }) => {
-  debug('findForGrantee', { grantee: grantee.id, withPast })
+const findForGranter = async (granter, { withPast, pgdb }) => {
+  debug('findForGranter', { granter: granter.id, withPast })
   const campaigns =
     await Promise.map(
       withPast ? await findAll(pgdb) : await findAvailable(pgdb),
-      getContraintMeta.bind(null, grantee, pgdb)
+      getContraintMeta.bind(null, granter, pgdb)
     )
       .then(filterInvisibleCampaigns)
       .then(mergeConstraintPayloads)
@@ -57,21 +58,21 @@ module.exports = {
   findAll,
   findByGrant,
   findOne,
-  findForGrantee
+  findForGranter
 }
 
 /**
  * Not exposed functions
  */
 
-const getContraintMeta = async (grantee, pgdb, campaign) => {
+const getContraintMeta = async (granter, pgdb, campaign) => {
   const constraintMeta = []
 
   for (const constraint of campaign.constraints) {
     const name = Object.keys(constraint).shift() // Name of constraint
     const settings = constraint[name] // Settings of constraint
     const meta = await constraints[name].getMeta(
-      { settings, grantee, campaign },
+      { settings, granter, campaign },
       { pgdb }
     )
 
@@ -88,7 +89,13 @@ const filterInvisibleCampaigns = campaigns =>
 
 const mergeConstraintPayloads = campaigns =>
   campaigns.map(campaign => {
-    const payload = {}
+    const payload = {
+      slots: {
+        total: 0,
+        used: 0,
+        free: 0
+      }
+    }
 
     campaign.constraintMeta.forEach(meta => {
       Object.assign(payload, meta.payload)

@@ -17,6 +17,8 @@ type Repo {
   unpublished: Boolean!
 
   meta: RepoMeta!
+
+  isArchived: Boolean!
 }
 
 type RepoConnection {
@@ -130,77 +132,6 @@ type UncommittedChangeUpdate {
 enum Action {
   create
   delete
-}
-
-enum EmbedType {
-  YoutubeEmbed
-  VimeoEmbed
-  TwitterEmbed
-  DocumentCloudEmbed
-}
-
-interface Embed {
-  id: ID!
-}
-
-type TwitterEmbed implements Embed {
-  id: ID!
-  text: String!
-  html: String!
-  createdAt: DateTime!
-  retrievedAt: DateTime!
-  userId: String!
-  userName: String!
-  userScreenName: String!
-  userProfileImageUrl: String!,
-  image: String
-  more: String
-  playable: Boolean!
-}
-
-type YoutubeEmbed implements Embed {
-  id: ID!
-  platform: String!
-  createdAt: DateTime!
-  retrievedAt: DateTime!
-  userUrl: String!
-  userName: String!
-  thumbnail: String!
-  title: String!
-  userProfileImageUrl: String
-  aspectRatio: Float
-}
-
-type VimeoSrc {
-  mp4: String,
-  hls: String,
-  thumbnail: String
-}
-
-type VimeoEmbed implements Embed {
-  id: ID!
-  platform: String!
-  createdAt: DateTime!
-  retrievedAt: DateTime!
-  userUrl: String!
-  userName: String!
-  thumbnail: String!
-  title: String!
-  userProfileImageUrl: String
-  aspectRatio: Float,
-  src: VimeoSrc
-}
-
-type DocumentCloudEmbed implements Embed {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  retrievedAt: DateTime!
-  contributorUrl: String
-  contributorName: String
-  thumbnail: String!
-  title: String!
-  url: String!
 }
 
 extend type Document {

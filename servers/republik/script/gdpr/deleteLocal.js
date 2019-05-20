@@ -5,7 +5,7 @@
  * node script/deleteLocal.js
  */
 require('@orbiting/backend-modules-env').config()
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 
 console.log('running deleteLocal.js...')
 PgDb.connect().then(async pgdb => {

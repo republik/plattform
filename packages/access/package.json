@@ -20,8 +20,8 @@
     "link": "yarn link"
   },
   "dependencies": {
-    "debug": "^3.1.0",
-    "export-files": "^2.1.1",
+    "debug": "^4.1.1",
+    "escape-html": "^1.0.3",
     "moment": "^2.22.2",
     "redlock": "^3.1.2"
   }

@@ -12,14 +12,14 @@ const { Roles } = require('@orbiting/backend-modules-auth')
  */
 
 const isGrantable = async (args, context) => {
-  const { grantee, settings } = args
+  const { granter, settings } = args
 
-  const valid = Roles.userIsInRoles(grantee, settings.roles)
+  const valid = Roles.userIsInRoles(granter, settings.roles)
 
   debug(
     'isGrantable',
     {
-      grantee: grantee.id,
+      granter: granter.id,
       settings,
       valid
     }

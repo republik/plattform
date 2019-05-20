@@ -9,8 +9,9 @@ const { upsert: repoCacheUpsert } = require('../../../lib/cache/upsert')
 module.exports = async (
   _,
   { repoId, commitId, name: _name, message },
-  { user, pubsub }
+  context
 ) => {
+  const { user, pubsub } = context
   ensureUserHasRole(user, 'editor')
   const { githubRest } = await createGithubClients()
 
@@ -30,7 +31,7 @@ module.exports = async (
   })
     .then(result => result.data)
 
-  await githubRest.gitdata.createReference({
+  await githubRest.gitdata.createRef({
     owner: login,
     repo: repoName,
     ref: `refs/tags/${name}`,
@@ -43,7 +44,7 @@ module.exports = async (
       action: 'add',
       name
     }
-  })
+  }, context)
 
   await pubsub.publish('repoUpdate', {
     repoUpdate: {

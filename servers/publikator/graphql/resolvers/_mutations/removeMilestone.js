@@ -6,15 +6,16 @@ const { upsert: repoCacheUpsert } = require('../../../lib/cache/upsert')
 module.exports = async (
   _,
   { repoId, name },
-  { user, pubsub }
+  context
 ) => {
+  const { user, pubsub } = context
   ensureUserHasRole(user, 'editor')
   const { githubRest } = await createGithubClients()
 
   debug({ repoId, name })
 
   const [login, repoName] = repoId.split('/')
-  const result = await githubRest.gitdata.deleteReference({
+  await githubRest.gitdata.deleteRef({
     owner: login,
     repo: repoName,
     ref: `tags/${name}`
@@ -32,7 +33,7 @@ module.exports = async (
       action: 'remove',
       name
     }
-  })
+  }, context)
 
-  return result
+  return true
 }

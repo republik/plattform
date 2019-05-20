@@ -19,20 +19,14 @@
   "scripts": {
     "link": "yarn link"
   },
-  "devDependencies": {
-    "isomorphic-unfetch": "^2.0.0"
-  },
   "dependencies": {
+    "aws-sdk": "^2.448.0",
     "bluebird": "^3.5.1",
-    "aws-sdk": "^2.246.1",
     "check-env": "^1.3.0",
-    "debug": "^3.1.0",
-    "export-files": "^2.1.1",
-    "file-type-stream": "^1.0.0",
-    "sharp": "^0.20.1",
+    "debug": "^4.1.1",
+    "file-type-stream2": "^1.0.2",
+    "isomorphic-unfetch": "^3.0.0",
+    "sharp": "^0.22.1",
     "stream-to-array": "^2.3.0"
-  },
-  "peerDependencies": {
-    "isomorphic-unfetch": "^2.0.0"
   }
 }

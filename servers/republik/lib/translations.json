@@ -1,5 +1,5 @@
 {
-  "updated": "2018-11-05T12:41:29.448Z",
+  "updated": "2019-02-27T12:37:23.284Z",
   "title": "live",
   "data": [
     {
@@ -28,7 +28,7 @@
     },
     {
       "key": "api/comment/tooEarly",
-      "value": "Sie sind zu früh. Bitte warten Sie, {waitFor} bevor Sie wieder einen Beitrag schreiben."
+      "value": "Sie sind zu früh. Sie können {timeahead} wieder einen Beitrag schreiben."
     },
     {
       "key": "api/comment/closed",
@@ -49,6 +49,10 @@
     {
       "key": "api/discussion/anonymity/enforced",
       "value": "In dieser Debatte sind nur anonyme Kommentare zugelassen."
+    },
+    {
+      "key": "api/discussion/args/first/tooBig",
+      "value": "Sie können maximal {max} Beiträge aufs mal abfragen."
     },
     {
       "key": "api/comment/404",
@@ -101,6 +105,18 @@
     {
       "key": "api/comment/notification/answer/app/subject",
       "value": "Neue Antwort in «{discussionName}»"
+    },
+    {
+      "key": "api/comment/tagRequired",
+      "value": "Bitte wählen Sie eine Kategorie aus."
+    },
+    {
+      "key": "api/comment/invalidTags",
+      "value": "Die folgenden Tags stehen in dieser Diskussion nicht zur Verfügung: {invalidTags}"
+    },
+    {
+      "key": "api/discussion/tagRequiredButNoTags",
+      "value": "Sie müssen mind. einen Tag angeben, damit tagRequired valid ist."
     },
     {
       "key": "api/greeting",
@@ -455,8 +471,12 @@
       "value": "und"
     },
     {
+      "key": "api/access/email/recipient/invitation/subject",
+      "value": "Einladung von {granterName}"
+    },
+    {
       "key": "api/access/email/recipient/onboarding/subject",
-      "value": "Einladung von {granteeName}"
+      "value": "Ihr Republik-Testzugang: Willkommen!"
     },
     {
       "key": "api/access/email/recipient/expired/subject",
@@ -473,6 +493,10 @@
     {
       "key": "api/access/grant/campaign/error",
       "value": "Kampagne «{campaignId}» nicht gefunden."
+    },
+    {
+      "key": "api/access/grant/message/error/tooLong",
+      "value": "Die persönliche Nachricht ist zu lange. Sie können lediglich bis zu {maxLength} Zeichen verwenden."
     },
     {
       "key": "api/access/revoke/role/error",
@@ -495,7 +519,7 @@
       "value": "«{email}» erhielt bereits einen Zugriff."
     },
     {
-      "key": "api/access/constraint/recipientNotGrantee/error",
+      "key": "api/access/constraint/recipientNotGranter/error",
       "value": "Sie können sich selbst keinen Zugriff teilen."
     },
     {
@@ -511,7 +535,7 @@
       "value": "Sie können «{email}» keinen Zugriff teilen, da die E-Mail-Adresse auf einer schwarzen Liste aufgeführt ist."
     },
     {
-      "key": "api/access/constraint/granteeBlacklist/error",
+      "key": "api/access/constraint/granterBlacklist/error",
       "value": "Sie können derzeit keinen Zugriff teilen, da Ihr Konto auf einer schwarzen Liste aufgeführt ist."
     },
     {
@@ -523,12 +547,20 @@
       "value": "gültig, aber zurückgezogen"
     },
     {
+      "key": "api/access/resolvers/AccessGrant/status/unclaimed",
+      "value": "gültig, uneingelöst"
+    },
+    {
       "key": "api/access/resolvers/AccessGrant/status/valid",
       "value": "gültig"
     },
     {
       "key": "api/access/resolvers/AccessGrant/tallDarkStranger",
       "value": "Unbekannt"
+    },
+    {
+      "key": "api/access/claim/404",
+      "value": "Ihr Gutscheincode ist leider ungültig. Da hat sich vielleicht ein Vertipper eingeschlichen, oder der Gutscheincode ist bereits abgelaufen."
     },
     {
       "key": "api/election/email/election_candidacy_confirmation_gen18m/subject",
@@ -713,6 +745,78 @@
     {
       "key": "api/questionnaire/answer/noQuestionRemapping",
       "value": "ID-Frage-Diskrepanz. Ups, da ist etwas schiefgelaufen. Bitte laden Sie die Seite neu."
+    },
+    {
+      "key": "timeAhead/justNow/other",
+      "value": "in weniger als einer Minute"
+    },
+    {
+      "key": "timeAhead/minutes/1",
+      "value": "in einer Minute"
+    },
+    {
+      "key": "timeAhead/minutes/other",
+      "value": "in {count} Minuten"
+    },
+    {
+      "key": "timeAhead/hours/1",
+      "value": "in einer Stunde"
+    },
+    {
+      "key": "timeAhead/hours/other",
+      "value": "in {count} Stunden"
+    },
+    {
+      "key": "timeAhead/days/1",
+      "value": "erst in einem Tag"
+    },
+    {
+      "key": "timeAhead/days/other",
+      "value": "in {count} Tagen"
+    },
+    {
+      "key": "timeAhead/weeks/1",
+      "value": "erst in einer Woche"
+    },
+    {
+      "key": "timeAhead/weeks/other",
+      "value": "in {count} Wochen"
+    },
+    {
+      "key": "timeAhead/months/1",
+      "value": "in einem Monat"
+    },
+    {
+      "key": "timeAhead/months/other",
+      "value": "in {count} Monaten"
+    },
+    {
+      "key": "timeAhead/years/1",
+      "value": "in einem Jahr"
+    },
+    {
+      "key": "timeAhead/years/other",
+      "value": "in {count} Jahren"
+    },
+    {
+      "key": "api/collections/collection/404",
+      "value": "Die Liste konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/collections/document/404",
+      "value": "Das Dokument konnte nicht gefunden werden."
+    },
+    {
+      "key": "api/collections/progress/notEnabled",
+      "value": "Sie müssen zuerst zustimmen, dass Ihre Position gespeichert wird."
+    },
+    {
+      "key": "api/consents/missing",
+      "value": "Sie müssen folgenden Policies zustimmen um sich anmelden zu können: {consents}."
+    },
+    {
+      "key": "api/consents/notRevokable",
+      "value": "Die Einwilligung ({consent}) kann nicht zurückgezogen werden."
     }
   ]
 }

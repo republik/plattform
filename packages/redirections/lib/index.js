@@ -1,1 +1,3 @@
-module.exports = require('export-files')(__dirname)
+module.exports = {
+  Redirections: require('./Redirections')
+}

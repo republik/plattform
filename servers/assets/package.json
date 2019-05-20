@@ -2,22 +2,22 @@
   "name": "assets-backend",
   "version": "0.0.1",
   "engines": {
-    "node": "10.x"
+    "node": "12.x"
   },
   "private": true,
   "license": "AGPL-3.0",
   "dependencies": {
     "cors": "^2.8.4",
     "express": "^4.16.3",
-    "isomorphic-unfetch": "^2.0.0",
+    "isomorphic-unfetch": "^3.0.0",
     "regiment": "^0.0.5"
   },
   "scripts": {
-    "dev": "NODE_ENV=development nodemon -w ../../packages -w .env -w package.jsoan -w ../yarn.lock -w server.js -w index.js index.js",
-    "inspect": "NODE_ENV=development DEBUG=assets:* nodemon -w ../../packages -w .env -w package.jsoan -w ../yarn.lock -w server.js -w index.js --inspect index.js",
+    "dev": "NODE_ENV=development nodemon $NODE_DEBUG_OPTION -w ../../packages -w .env -w package.jsoan -w ../yarn.lock -w server.js -w index.js index.js",
+    "inspect": "NODE_DEBUG_OPTION=--inspect yarn run dev",
     "start": "node index.js"
   },
   "devDependencies": {
-    "nodemon": "^1.17.5"
+    "nodemon": "^1.19.0"
   }
 }

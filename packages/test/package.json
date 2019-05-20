@@ -1,0 +1,24 @@
+{
+  "name": "@orbiting/backend-modules-test",
+  "version": "0.0.1",
+  "description": "helpers for testing",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orbiting/backends.git"
+  },
+  "author": "Patrick Recher <patrick.recher@republik.ch>",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/orbiting/backends/issues"
+  },
+  "homepage": "https://github.com/orbiting/backends#readme",
+  "scripts": {
+    "link": "yarn link"
+  },
+  "devDependencies": {
+    "subscriptions-transport-ws": "^0.9.16",
+    "why-is-node-running": "^2.0.3"
+  },
+  "dependencies": {}
+}

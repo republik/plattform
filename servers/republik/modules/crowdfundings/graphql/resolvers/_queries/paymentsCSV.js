@@ -1,13 +1,16 @@
-const {dsvFormat} = require('d3-dsv')
-const csvFormat = dsvFormat(';').format
+const { dsvFormat } = require('d3-dsv')
+
 const { timeFormat, formatPrice } = require('@orbiting/backend-modules-formats')
 const { Roles } = require('@orbiting/backend-modules-auth')
 
+const csvFormat = dsvFormat(';').format
 const dateTimeFormat = timeFormat('%x %H:%M') // %x - the locale’s date
 
 const aggregatePackageOptions = (options) => {
-  const amount = options.reduce((sum, d) => sum + d.amount, 0)
-  const price = options.reduce((sum, d) => sum + d.price, 0)
+  const amount = options.reduce((acc, { amount, periods }) => {
+    return periods ? acc + (amount * periods) : acc + amount
+  }, 0)
+  const price = options.reduce((acc, { price }) => acc + price, 0)
   return { amount, price }
 }
 
@@ -71,14 +74,15 @@ module.exports = async (_, args, {pgdb, user}) => {
     }
   })
   const pkgOptions = (await pgdb.public.packageOptions.findAll()).map(pkgOption =>
-      Object.assign({}, pkgOption, {
-        reward: rewards.find(r => r.id === pkgOption.rewardId)
-      })
+    Object.assign({}, pkgOption, {
+      reward: rewards.find(r => r.id === pkgOption.rewardId)
+    })
   )
   const donationPackageOptions = pkgOptions.filter(pkgo => !pkgo.reward)
 
   const aboPackageOptions = filterPackageOptionsByRewardName(pkgOptions, 'ABO')
   const benefactorPackageOptions = filterPackageOptionsByRewardName(pkgOptions, 'BENEFACTOR_ABO')
+  const aboGiveMonthsPackageOptions = filterPackageOptionsByRewardName(pkgOptions, 'ABO_GIVE_MONTHS')
   const notebookPackageOptions = filterPackageOptionsByRewardName(pkgOptions, 'NOTEBOOK')
   const totebagPackageOptions = filterPackageOptionsByRewardName(pkgOptions, 'TOTEBAG')
 
@@ -135,6 +139,7 @@ module.exports = async (_, args, {pgdb, user}) => {
     const regularAbos = result.donation >= 0 ? abos : []
     const reducedAbos = result.donation < 0 ? abos : []
     const benefactorAbos = filterPledgeOptions(pledgeOptions, benefactorPackageOptions)
+    const aboGiveMonthsAbos = filterPledgeOptions(pledgeOptions, aboGiveMonthsPackageOptions)
     const notebooks = filterPledgeOptions(pledgeOptions, notebookPackageOptions)
     const totebags = filterPledgeOptions(pledgeOptions, totebagPackageOptions)
 
@@ -142,6 +147,7 @@ module.exports = async (_, args, {pgdb, user}) => {
     // this is going to fuck up the "wert" column for old entries
     const aboDefaultPrice = aboPackageOptions[0].price
     const benefactorDefaultPrice = benefactorPackageOptions[0].price
+    const aboGiveMonthsDefaultPrice = aboGiveMonthsPackageOptions[0].price
     const notebookDefaultPrice = notebookPackageOptions[0].price
     const totebagDefaultPrice = totebagPackageOptions[0].price
 
@@ -170,6 +176,7 @@ module.exports = async (_, args, {pgdb, user}) => {
       ...(convertPackage('ABO', regularAbos, aboDefaultPrice)),
       ...(convertPackage('ABO_REDUCED', reducedAbos, aboDefaultPrice)),
       ...(convertPackage('ABO_BENEFACTOR', benefactorAbos, benefactorDefaultPrice)),
+      ...(convertPackage('ABO_GIVE_MONTHS', aboGiveMonthsAbos, aboGiveMonthsDefaultPrice)),
       ...(convertPackage('NOTEBOOK', notebooks, notebookDefaultPrice)),
       ...(convertPackage('TOTEBAG', totebags, totebagDefaultPrice)),
       'DONATION #': numDonations,

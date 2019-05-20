@@ -1,8 +1,8 @@
 const openpgp = require('openpgp')
 
-exports.getKeyId = string => {
-  const key = openpgp.key.readArmored(String(string))
-  if (key.err || !key.keys.length) {
+exports.getKeyId = async (string) => {
+  const key = await openpgp.key.readArmored(String(string))
+  if (!key || key.err || !key.keys.length) {
     return null
   }
 
@@ -14,9 +14,9 @@ exports.getKeyId = string => {
   return chunks.join(' ')
 }
 
-exports.containsPrivateKey = string => {
-  const key = openpgp.key.readArmored(String(string))
-  if (key.err || !key.keys.length) {
+exports.containsPrivateKey = async (string) => {
+  const key = await openpgp.key.readArmored(String(string))
+  if (!key || key.err || !key.keys.length) {
     return null
   }
   for (let k of key.keys) {

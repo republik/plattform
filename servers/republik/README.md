@@ -1,4 +1,4 @@
-Republik Backend [![Build Status](https://travis-ci.org/orbiting/republik-backend.svg?branch=master)](https://travis-ci.org/orbiting/republik-backend) [![Coverage Status](https://coveralls.io/repos/github/orbiting/republik-backend/badge.svg?branch=master)](https://coveralls.io/github/orbiting/republik-backend?branch=master)
+Republik Backend
 -----------------
 
 This is the successor to [crowdfunding-backend](https://github.com/orbiting/republik-backend) and still under heavy development.
@@ -130,6 +130,24 @@ STRIPE_SECRET_KEY_COMPANY_TWO=
 Run tests.
 ```
 yarn run test
+```
+
+# Jest examples
+
+```
+yarn test
+´´´
+
+Or run with watcher which reruns test on file changes:
+
+```
+yarn test:dev
+```
+
+Or have human readable coverage generated into `<rootDir>/coverage`
+
+```
+yarn test:cover
 ```
 
 ## Licensing

@@ -21,7 +21,7 @@ const STATS_INTERVAL_SECS = 5
  * @return {Promise}
  */
 const index = async ({ indexName, type, elastic, resource }) => {
-  const stats = { [type]: { added: 0 } }
+  const stats = { [type]: { added: 0, deleted: 0 } }
   const statsInterval = setInterval(() => {
     debug(indexName, stats)
   }, STATS_INTERVAL_SECS * 1000)
@@ -35,7 +35,8 @@ const index = async ({ indexName, type, elastic, resource }) => {
       {
         orderBy: { id: 'asc' },
         limit: resource.bulkSize || BULK_SIZE,
-        offset
+        offset,
+        skipUndefined: true
       }
     )
 
@@ -52,6 +53,8 @@ const index = async ({ indexName, type, elastic, resource }) => {
     })
 
     stats[type].added += rows.length
+    stats[type].deleted += (resource.delete || []).length
+
     offset += BULK_SIZE
   } while (rows.length >= BULK_SIZE)
 
@@ -115,6 +118,11 @@ const bulk = async ({
       }
     })
   })
+
+  if (payload.body.length === 0) {
+    console.log('indexPgTable skip due do empty body', { indexName, type })
+    return
+  }
 
   const resp = await elastic.bulk(payload)
 

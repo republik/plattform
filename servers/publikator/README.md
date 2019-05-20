@@ -1,4 +1,4 @@
-Publikator Backend [![Build Status](https://travis-ci.org/orbiting/publikator-backend.svg?branch=master)](https://travis-ci.org/orbiting/publikator-backend) [![Coverage Status](https://coveralls.io/repos/github/orbiting/publikator-backend/badge.svg?branch=master)](https://coveralls.io/github/orbiting/publikator-backend?branch=master)
+Publikator Backend
 ------------------
 
 Publikator is a cms prototype: edit files on github with [slate](https://github.com/ianstormtaylor/slate).

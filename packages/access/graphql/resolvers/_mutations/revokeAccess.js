@@ -1,14 +1,17 @@
 const debug = require('debug')('access:mutation:revokeAccess')
 
-const grantsLib = require('../../../lib/grants')
+const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
 
-module.exports = async (_, { id }, { user, pgdb, t, mail }) => {
+const { revoke } = require('../../../lib/grants')
+
+module.exports = async (_, { id }, { req, user, pgdb, t, mail }) => {
   debug('begin', { id, user: user.id })
+  ensureSignedIn(req)
 
   const transaction = await pgdb.transactionBegin()
 
   try {
-    const result = await grantsLib.revoke(id, user, t, transaction, mail)
+    const result = await revoke(id, user, t, transaction, mail)
     await transaction.transactionCommit()
 
     debug('commit', { id, user: user.id })

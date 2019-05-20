@@ -7,7 +7,7 @@
  * node script/launch/activeMemberships.js
  */
 require('@orbiting/backend-modules-env').config()
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const moment = require('moment')
 const { ascending } = require('d3-array')
 
@@ -77,6 +77,7 @@ PgDb.connect().then(async pgdb => {
 
       await transaction.public.membershipPeriods.insert({
         membershipId: electedMembership.id,
+        pledgeId: electedMembership.pledgeId,
         beginDate,
         endDate
       })

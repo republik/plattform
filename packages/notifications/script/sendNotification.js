@@ -6,7 +6,7 @@
  * node script/sendNotification.js ALL MESSAGE
  */
 require('@orbiting/backend-modules-env').config()
-const PgDb = require('@orbiting/backend-modules-base/lib/pgdb')
+const PgDb = require('@orbiting/backend-modules-base/lib/PgDb')
 const { publish } = require('../lib/app')
 
 const email = process.argv[2]

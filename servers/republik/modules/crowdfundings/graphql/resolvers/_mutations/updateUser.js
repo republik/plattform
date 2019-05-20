@@ -1,4 +1,4 @@
-const { Roles } = require('@orbiting/backend-modules-auth')
+const { Roles, transformUser } = require('@orbiting/backend-modules-auth')
 const logger = console
 
 module.exports = async (_, args, {pgdb, req, t}) => {
@@ -30,7 +30,9 @@ module.exports = async (_, args, {pgdb, req, t}) => {
       }
     }
     await transaction.transactionCommit()
-    return pgdb.public.users.findOne({id: user.id})
+    return transformUser(
+      await pgdb.public.users.findOne({id: user.id})
+    )
   } catch (e) {
     await transaction.transactionRollback()
     logger.error('error in transaction', { req: req._log(), args, error: e })

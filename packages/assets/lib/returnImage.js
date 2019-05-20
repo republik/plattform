@@ -1,6 +1,6 @@
 const sharp = require('sharp')
 const getWidthHeight = require('./getWidthHeight')
-const fileTypeStream = require('file-type-stream').default
+const { fileTypeStream } = require('file-type-stream2')
 const { PassThrough } = require('stream')
 const toArray = require('stream-to-array')
 const debug = require('debug')('assets:returnImage')
@@ -27,7 +27,7 @@ const pipeHeaders = [
   'Content-Disposition'
 ]
 
-const supportedFormats = ['jpeg', 'png']
+const supportedFormats = ['jpeg', 'png', 'webp']
 
 const toBuffer = async (stream) => {
   return toArray(stream)
@@ -42,9 +42,22 @@ module.exports = async ({
   response: res,
   stream,
   headers,
-  options = {}
+  options = {},
+  path
 }) => {
-  const { resize, bw, webp, format, cacheTags = [] } = options
+  const {
+    resize,
+    bw,
+    webp,
+    format: _format,
+    cacheTags = []
+  } = options
+
+  const format =
+    (_format && supportedFormats.indexOf(_format) !== -1)
+      ? _format
+      : webp ? 'webp' : null
+
   let width, height
   if (resize) {
     try {
@@ -81,6 +94,11 @@ module.exports = async ({
     }
     const isJPEG = mime === 'image/jpeg'
 
+    // svg is not detected by fileTypeStream
+    if ((!mime || mime === 'application/octet-stream') && path && new RegExp(/\.svg(\.webp)?$/).test(path)) {
+      mime = 'image/svg+xml'
+    }
+
     // requests to github always return Content-Type: text/plain, let's fix that
     if (mime) {
       res.set('Content-Type', mime)
@@ -92,12 +110,18 @@ module.exports = async ({
         .join(' ')
     )
 
-    const forceFormat = supportedFormats.indexOf(format) !== -1
-
     let pipeline
     if (
-      (mime && mime.indexOf('image') === 0 && (mime !== 'image/gif' || forceFormat)) &&
-      (width || height || bw || webp || isJPEG || forceFormat)
+      (
+        width || height || bw || format || isJPEG
+      ) && (
+        // only touch images
+        mime && mime.indexOf('image') === 0 &&
+        // don't touch gifs exept format is set and not webp
+        (mime !== 'image/gif' || (format && format !== 'webp')) &&
+        // don't touch xmls exept format is set and not webp
+        (mime !== 'image/svg+xml' || (format && format !== 'webp'))
+      )
     ) {
       pipeline = sharp()
 
@@ -107,17 +131,12 @@ module.exports = async ({
       if (bw) {
         pipeline.greyscale()
       }
-      if (forceFormat) {
+      if (format) {
         res.set('Content-Type', `image/${format}`)
         pipeline.toFormat(format, {
           // avoid interlaced pngs
           // - not supported in pdfkit
           progressive: format === 'jpeg',
-          quality: 80
-        })
-      } else if (webp) {
-        res.set('Content-Type', 'image/webp')
-        pipeline.toFormat('webp', {
           quality: 80
         })
       } else if (isJPEG) {

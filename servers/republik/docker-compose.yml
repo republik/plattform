@@ -11,16 +11,13 @@ services:
       - DATABASE_URL=postgres://postgres@postgres:5432/republik
       - REDIS_URL=redis:6379
       - PUBLIC_URL=http://localhost:8080
-      - PUBLIC_WS_URL_BASE=ws://localhost:8080
       - FRONTEND_BASE_URL
-      - PUBLIC_WS_URL_PATH
       - SESSION_SECRET
       - CORS_WHITELIST_URL
       - SEND_MAILS
       - MANDRILL_API_KEY
       - DEFAULT_MAIL_FROM_NAME
       - DEFAULT_MAIL_FROM_ADDRESS
-      - AUTH_MAIL_FROM_ADDRESS
       - DISPLAY_AUTHOR_SECRET
       - EXO_KEY
       - EXO_SECRET
@@ -29,7 +26,7 @@ services:
       - KEYCDN_API_KEY
       - KEYCDN_ZONE_ID
       - KEYCDN_ZONE_URL
-      - PHANTOMJSCLOUD_API_KEY
+      - PUPPETEER_WS_ENDPOINT
     ports:
         - 8080:3020
 

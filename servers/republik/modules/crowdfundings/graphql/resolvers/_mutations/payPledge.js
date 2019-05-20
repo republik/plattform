@@ -1,5 +1,5 @@
 const logger = console
-const sendPendingPledgeConfirmations = require('../../../lib/sendPendingPledgeConfirmations')
+const { sendPledgeConfirmations } = require('../../../lib/Mail')
 const generateMemberships = require('../../../lib/generateMemberships')
 const payPledgePaymentslip = require('../../../lib/payments/paymentslip/payPledge')
 const payPledgePaypal = require('../../../lib/payments/paypal/payPledge')
@@ -7,7 +7,7 @@ const payPledgePostfinance = require('../../../lib/payments/postfinance/payPledg
 const payPledgeStripe = require('../../../lib/payments/stripe/payPledge')
 const slack = require('../../../../../lib/slack')
 
-module.exports = async (_, args, {pgdb, req, t}) => {
+module.exports = async (_, args, {pgdb, req, t, redis}) => {
   const transaction = await pgdb.transactionBegin()
   try {
     const { pledgePayment } = args
@@ -125,7 +125,7 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     if (pledge.status !== pledgeStatus) {
       // generate Memberships
       if (pledgeStatus === 'SUCCESSFUL') {
-        await generateMemberships(pledge.id, transaction, t, req, logger)
+        await generateMemberships(pledge.id, transaction, t, req, redis)
       }
 
       // update pledge status
@@ -154,10 +154,10 @@ module.exports = async (_, args, {pgdb, req, t}) => {
     // commit transaction
     await transaction.transactionCommit()
 
-    if (req.user) {
+    if (user.verified) {
       try {
         // if the user is signed in, send mail immediately
-        await sendPendingPledgeConfirmations(pledge.userId, pgdb, t)
+        await sendPledgeConfirmations({ userId: pledge.userId, pgdb, t })
       } catch (e) {
         console.warn('error in payPledge after transactionCommit', e)
       }

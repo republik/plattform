@@ -38,6 +38,7 @@ module.exports = (server) => {
       response: res,
       stream: result.body,
       headers: result.headers,
+      path: url,
       options: {
         ...req.query,
         webp: !!req.params.webp,

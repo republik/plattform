@@ -21,6 +21,5 @@ const resolveRepoId = field => async (meta, args, context) => {
 
 module.exports = {
   format: resolveRepoId('format'),
-  discussion: resolveRepoId('discussion'),
   dossier: resolveRepoId('dossier')
 }

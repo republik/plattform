@@ -25,14 +25,14 @@ const authenticate = url =>
 module.exports = {
   authenticate,
 
-  createRepoUrlPrefixer: (repoId, public, originalPaths = []) => {
+  createRepoUrlPrefixer: (repoId, _public, originalPaths = []) => {
     if (!repoId) {
       throw new Error('createRepoUrlPrefixer needs a repoId')
     }
     return path => {
       if (path && path.indexOf('images/') > -1) {
         let url
-        if (public) {
+        if (_public) {
           url = new URL(getS3UrlForGithubPath(repoId, path))
         } else {
           url = new URL(`${ASSETS_SERVER_BASE_URL}/github/${repoId}/${path}`)
@@ -47,7 +47,7 @@ module.exports = {
     }
   },
 
-  createUrlPrefixer: public => url => {
+  createUrlPrefixer: _public => url => {
     return `${ASSETS_SERVER_BASE_URL}/proxy?` + querystring.stringify({
       [originalKey]: url,
       mac: authenticate(url)

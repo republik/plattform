@@ -33,12 +33,22 @@ type User {
   roles: [String!]!
   createdAt: DateTime!
   updatedAt: DateTime!
+  deletedAt: DateTime
   sessions: [Session!]
   # in order of preference
   enabledFirstFactors: [SignInTokenType!]!
   preferredFirstFactor: SignInTokenType
   enabledSecondFactors: [SignInTokenType!]!
   eventLog: [EventLog!]!
+  # is this the user of the requesting session
+  isUserOfCurrentSession: Boolean!
+  # get an access token
+  # exclusively accessible by the user herself
+  accessToken(scope: AccessTokenScope!): ID
+  # null: undecided
+  # true: consented
+  # false: consent revoked
+  hasConsentedTo(name: String!): Boolean
 }
 
 type SignInResponse {
@@ -110,5 +120,9 @@ type SignInNotification {
   body: String!
   verificationUrl: String!
   expiresAt: DateTime!
+}
+
+enum AccessTokenScope {
+  CUSTOM_PLEDGE
 }
 `

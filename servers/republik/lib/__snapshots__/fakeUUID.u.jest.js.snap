@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fakeUUID() faulty argument throws TypeError 1`] = `"The \\"data\\" argument must be one of type string, Buffer, TypedArray, or DataView. Received type number"`;
+
+exports[`fakeUUID() faulty argument throws TypeError 2`] = `"The \\"data\\" argument must be one of type string, Buffer, TypedArray, or DataView. Received type object"`;
+
+exports[`fakeUUID() seed "Lorem ipsum" 1`] = `"94912be8-b3fb-47d4-161e-a50e5948c629"`;
+
+exports[`fakeUUID() seed "a" 1`] = `"86f7e437-faa5-a7fc-e15d-1ddcb9eaeaea"`;

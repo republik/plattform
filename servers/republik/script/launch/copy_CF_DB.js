@@ -8,7 +8,7 @@
 
 process.on('unhandledRejection', up => { throw up })
 
-const exec = require('child-process-promise').exec
+const exec = require('util').promisify(require('child_process').exec)
 
 const username = process.argv[2]
 

@@ -17,7 +17,7 @@ const { Redirections: {
 } } = require('@orbiting/backend-modules-redirections')
 
 const { lib: { upload: { uploadPortrait } } } = require('@orbiting/backend-modules-assets')
-const ensureStringLength = require('../../../lib/ensureStringLength')
+const { ensureStringLength } = require('@orbiting/backend-modules-utils')
 
 const MAX_STATEMENT_LENGTH = 140
 const MAX_BIOGRAPHY_LENGTH = 2000
@@ -166,10 +166,10 @@ module.exports = async (_, args, context) => {
     throw new Error(t('api/publicProfile/usernameNeeded'))
   }
   if (pgpPublicKey) {
-    if (containsPrivateKey(pgpPublicKey)) {
+    if (await containsPrivateKey(pgpPublicKey)) {
       throw new Error(t('api/pgpPublicKey/private'))
     }
-    if (!getKeyId(pgpPublicKey)) {
+    if (!await getKeyId(pgpPublicKey)) {
       throw new Error(t('api/pgpPublicKey/invalid'))
     }
   }

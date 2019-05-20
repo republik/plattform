@@ -1,5 +1,5 @@
-const { lib: { RedisPubSub: { pubsub, filtered } } } = require('@orbiting/backend-modules-base')
 const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth')
+const { filtered } = require('@orbiting/backend-modules-base/lib/RedisPubSub')
 
 // filtering with asyncIterator -> filtered by redis
 // filtering with payload, variables -> filtered by node
@@ -7,7 +7,7 @@ const { Roles: { ensureUserHasRole } } = require('@orbiting/backend-modules-auth
 // test filtering with asyncIterator
 // why is variables undefined?
 module.exports = {
-  subscribe: (_, args, { user }) => {
+  subscribe: (_, args, { user, pubsub }) => {
     ensureUserHasRole(user, 'editor')
     return filtered(
       pubsub.asyncIterator('uncommittedChanges'),

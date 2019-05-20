@@ -1,6 +1,6 @@
 const { ensureSignedIn } = require('@orbiting/backend-modules-auth')
-const { MAX_CREDENTIAL_LENGTH } = require('./discussion/lib/Credential')
-const ensureStringLength = require('../../../lib/ensureStringLength')
+const { MAX_CREDENTIAL_LENGTH } = require('@orbiting/backend-modules-discussions/lib/Credential')
+const { ensureStringLength } = require('@orbiting/backend-modules-utils')
 const { isInCandidacy } = require('../../../lib/profile')
 
 module.exports = async (_, args, { pgdb, req, user: me, t }) => {
