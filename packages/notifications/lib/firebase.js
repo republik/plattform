@@ -4,6 +4,8 @@
 const firebase = require('firebase-admin')
 const debug = require('debug')('notifications:publish:firebase')
 
+const { deleteSessionForDevices } = require('./utils')
+
 const {
   SEND_NOTIFICATIONS,
   FIREBASE_PROJECT_ID,
@@ -32,7 +34,7 @@ if (!FIREBASE_PROJECT_ID || !FIREBASE_CLIENT_EMAIL || !FIREBASE_PRIVATE_KEY || !
   initialized = true
 }
 
-const publish = async (args) => {
+const publish = async (args, pgdb) => {
   if (SEND_NOTIFICATIONS === 'false' || (DEV && SEND_NOTIFICATIONS !== 'true')) {
     console.log('\n\nSEND_NOTIFICATIONS prevented notification from being sent\n(SEND_NOTIFICATIONS == false or NODE_ENV != production and SEND_NOTIFICATIONS != true)\n', args)
     return
@@ -66,7 +68,17 @@ const publish = async (args) => {
       message,
       options
     )
-    debug('#recipients %d, message: %O, result: %O', tokens.length, message, result)
+    debug('Firebase: #recipients %d, message: %O, result: %O', tokens.length, message, result)
+    const staleTokens = result.results.reduce((acc, cur, idx) => {
+      if (cur.error && cur.error.code === 'messaging/registration-token-not-registered') {
+        acc.push(tokens[idx])
+      }
+      return acc
+    }, [])
+    if (staleTokens.length > 0) {
+      await deleteSessionForDevices(staleTokens, pgdb)
+      debug('deleted sessions for stale firebase device tokens', staleTokens)
+    }
   } else {
     debug('no receipients found for publish: %O', args)
   }
