@@ -65,7 +65,7 @@
   },
   "dependencies": {
     "@orbiting/remark-preset": "^1.2.3",
-    "@project-r/styleguide": "^6.31.0",
+    "@project-r/styleguide": "^6.34.0",
     "@project-r/template-newsletter": "^1.5.0",
     "apollo-cache-inmemory": "^1.2.10",
     "apollo-client": "^2.4.2",
@@ -113,6 +113,7 @@
     "remark-frontmatter": "^1.3.0",
     "remark-parse": "^5.0.0",
     "remark-stringify": "^5.0.0",
+    "scroll-into-view": "^1.9.7",
     "shortid": "^2.2.13",
     "slate": "^0.31.8",
     "slate-mdast-serializer": "^2.0.0",
