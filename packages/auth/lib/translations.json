@@ -1,5 +1,5 @@
 {
-  "updated": "2019-02-13T22:17:15.911Z",
+  "updated": "2019-05-20T15:51:33.878Z",
   "title": "live",
   "data": [
     {
@@ -32,7 +32,7 @@
     },
     {
       "key": "api/signin/mail/subject",
-      "value": "Zugriff bestätigen"
+      "value": "Zugriff bestätigen: {phrase}"
     },
     {
       "key": "api/signin/mail/appNotice/subject",

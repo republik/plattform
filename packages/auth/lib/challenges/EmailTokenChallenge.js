@@ -40,7 +40,7 @@ module.exports = {
     return sendMailTemplate({
       to: email,
       fromEmail: DEFAULT_MAIL_FROM_ADDRESS,
-      subject: t('api/signin/mail/subject'),
+      subject: t('api/signin/mail/subject', { phrase }),
       templateName: 'signin',
       globalMergeVars: [
         { name: 'LOCATION',
