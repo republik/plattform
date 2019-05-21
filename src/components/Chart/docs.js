@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import PropTypes from 'prop-types'
-import { TableSpecimen, markdown } from 'catalog'
+import { TableSpecimen, markdown } from '@catalog/core'
 import { ReactCharts } from './'
 import { descending, ascending } from 'd3-array'
 

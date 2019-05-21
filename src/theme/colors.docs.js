@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { markdown, ColorSpecimen, CodeSpecimen } from 'catalog'
+import { markdown, ColorSpecimen, CodeSpecimen } from '@catalog/core'
 import colors from './colors'
 
 export default () =>  markdown`
