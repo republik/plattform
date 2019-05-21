@@ -40,7 +40,8 @@ module.exports = (server) => {
       path: sanitizedPath
     })
     if (!result.ok) {
-      console.error('s3 fetch failed', result)
+      const { status, statusText, url } = result
+      console.error('s3 fetch failed', { status, statusText, url })
       return res.status(result.status).end()
     }
 
