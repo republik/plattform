@@ -161,7 +161,7 @@ const createHighlight = (indicesList) => {
 
 const defaultExcludes = [ 'contentString', 'resolved' ]
 const createQuery = (
-  searchTerm, filter, sort, indicesList, user, scheduledAt, withoutContent, withoutAggs, ignorePrepublished
+  searchTerm, filter, sort, indicesList, user, scheduledAt, withoutChildren, withoutAggs, ignorePrepublished
 ) => ({
   query: {
     bool: {
@@ -177,7 +177,7 @@ const createQuery = (
   _source: {
     'excludes': [
       ...defaultExcludes,
-      ...withoutContent
+      ...withoutChildren
         ? [ 'content.children' ]
         : [ ]
     ]
@@ -325,7 +325,7 @@ const getFirst = (first, filter, user, recursive) => {
 const getIndicesList = (filter) => {
   const limitType = getFilterValue(filter, 'type')
   const typeFilter = limitType
-    ? ({type}) => type === limitType
+    ? ({ type }) => type === limitType
     : Boolean
   const searchableFilter = ({ searchable = true }) => searchable
 
@@ -334,7 +334,10 @@ const getIndicesList = (filter) => {
 
 const hasFieldRequested = (fieldName, GraphQLResolveInfo) => {
   const fields = getFieldList(GraphQLResolveInfo, true)
-  return !!fields.find(field => field.indexOf(`.${fieldName}`) > -1)
+  return !!fields.find(field => (
+    field === fieldName ||
+    field.split('.').find(f => f === fieldName)
+  ))
 }
 
 const search = async (__, args, context, info) => {
@@ -354,12 +357,14 @@ const search = async (__, args, context, info) => {
   } = args
 
   // detect if Document.content is requested
-  let withoutContent
-  if (info) {
-    withoutContent = _withoutContent !== undefined ||
-      !hasFieldRequested('Document.content', info)
-  } else {
-    withoutContent = _withoutContent || false
+  let withoutContent = _withoutContent || false
+  let withoutChildren = withoutContent
+  if (info && _withoutContent === undefined) {
+    withoutContent = !hasFieldRequested('content', info)
+    withoutChildren = (
+      withoutContent &&
+      !hasFieldRequested('children', info)
+    )
   }
 
   const options = after
@@ -400,7 +405,7 @@ const search = async (__, args, context, info) => {
     index: indicesList.map(({ name }) => getIndexAlias(name, 'read')),
     from,
     size: first,
-    body: createQuery(search, filter, sort, indicesList, user, scheduledAt, withoutContent, withoutAggs, ignorePrepublished)
+    body: createQuery(search, filter, sort, indicesList, user, scheduledAt, withoutChildren, withoutAggs, ignorePrepublished)
   }
   debug('ES query', JSON.stringify(query))
 
@@ -444,48 +449,47 @@ const search = async (__, args, context, info) => {
   if (!recursive && !withoutRelatedDocs && (!filter.type || filter.type === 'Document')) {
     await addRelatedDocs({
       connection: response,
-      context
+      context,
+      withoutContent
     })
   }
 
   if (!recursive && SEARCH_TRACK) {
-    try {
-      const took = cacheHIT ? 0 : result.took
-      const total = result.hits.total
-      const hits = result.hits.hits
-        .map(hit => _.omit(hit, '_source'))
-      const aggs = result.aggregations
+    const took = cacheHIT ? 0 : result.took
+    const total = result.hits.total
+    const hits = result.hits.hits
+      .map(hit => _.omit(hit, '_source'))
+    const aggs = result.aggregations
 
-      const filters = options.filters
-        ? options.filters.map(filter => {
-          if (typeof filter.value !== 'string') {
-            filter.value = JSON.stringify(filter.value)
-          }
-
-          return filter
-        })
-        : []
-
-      await elastic.index({
-        index: getDateIndex('searches'),
-        type: 'Search',
-        body: {
-          date: new Date(),
-          trackingId,
-          roles: user && user.roles,
-          took,
-          cache: cacheHIT,
-          options: Object.assign({}, options, { filters }),
-          query,
-          total,
-          hits,
-          aggs
+    const filters = options.filters
+      ? options.filters.map(filter => {
+        if (typeof filter.value !== 'string') {
+          filter.value = JSON.stringify(filter.value)
         }
+
+        return filter
       })
-    } catch (err) {
-      // Log but do not fail
+      : []
+
+    // not await tracking
+    elastic.index({
+      index: getDateIndex('searches'),
+      type: 'Search',
+      body: {
+        date: new Date(),
+        trackingId,
+        roles: user && user.roles,
+        took,
+        cache: cacheHIT,
+        options: Object.assign({}, options, { filters }),
+        query,
+        total,
+        hits,
+        aggs
+      }
+    }).catch(err => {
       console.error('search, tracking', err)
-    }
+    })
   }
 
   return response

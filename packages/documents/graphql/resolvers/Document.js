@@ -1,3 +1,4 @@
+const crypto = require('crypto')
 const {
   contentUrlResolver,
   metaUrlResolver
@@ -17,11 +18,30 @@ const { lib: { webp: {
   addSuffix: addWebpSuffix
 } } } = require('@orbiting/backend-modules-assets')
 
+const {
+  extractIdsFromNode,
+  loadLinkedMetaData
+} = require('@orbiting/backend-modules-search/lib/Documents')
+
 const shouldDeliverWebP = (argument = 'auto', req) => {
   if (argument === 'auto') {
     return req && req.get('Accept').indexOf('image/webp') > -1
   }
   return !!argument
+}
+
+const addTeaserContentHash = (nodes) => {
+  nodes.forEach(node => {
+    if (
+      (node.identifier === 'TEASERGROUP' || node.identifier === 'TEASER') &&
+      node.data &&
+      !node.data.contentHash // already hashed
+    ) {
+      node.data.contentHash = crypto.createHash('sha256')
+        .update(JSON.stringify(node))
+        .digest('hex')
+    }
+  })
 }
 
 module.exports = {
@@ -31,6 +51,9 @@ module.exports = {
     // - alt check info.path for documents / document being the root
     //   https://gist.github.com/tpreusse/f79833a023706520da53647f9c61c7f6
     if (doc._all) {
+      // add content hash before mutating children by resolving
+      addTeaserContentHash(doc.content.children || [])
+
       contentUrlResolver(doc, doc._all, doc._usernames, undefined, urlPrefix, searchString, context.user || null)
 
       if (shouldDeliverWebP(webp, context.req)) {
@@ -53,7 +76,7 @@ module.exports = {
     }
     return meta
   },
-  children (doc, { first, last, before, after, only, urlPrefix, searchString, webp }, context, info) {
+  async children (doc, { first, last, before, after, only, urlPrefix, searchString, webp }, context, info) {
     if (!doc || !doc.content || !doc.content.children) {
       return {
         pageInfo: {
@@ -65,16 +88,6 @@ module.exports = {
         totalCount: 0,
         nodes: []
       }
-    }
-    if (doc._all) {
-      contentUrlResolver(doc, doc._all, doc._usernames, undefined, urlPrefix, searchString, context.user || null)
-
-      if (shouldDeliverWebP(webp, context.req)) {
-        processRepoImageUrlsInContent(doc.content, addWebpSuffix)
-        processImageUrlsInContent(doc.content, addWebpSuffix)
-      }
-
-      processMembersOnlyZonesInContent(doc.content, context.user)
     }
 
     const children = (doc.content.children.length && doc.content.children) || []
@@ -103,6 +116,38 @@ module.exports = {
       children.some((v, i) => v.data.id === endCursor && i < lastIndex)
     const hasPreviousPage = !!startCursor &&
       children.some((v, i) => v.data.id === startCursor && i > firstIndex)
+
+    if (doc._all) {
+      // add content hash before mutating children by resolving
+      addTeaserContentHash(nodes)
+
+      const shouldAddWebpSuffix = shouldDeliverWebP(webp, context.req)
+
+      const idsFromNodes = nodes.map(node => {
+        if (shouldAddWebpSuffix) {
+          processRepoImageUrlsInContent(node, addWebpSuffix)
+          processImageUrlsInContent(node, addWebpSuffix)
+        }
+        processMembersOnlyZonesInContent(node, context.user)
+
+        return extractIdsFromNode(node, doc.meta.repoId)
+      })
+      const { docs, usernames } = await loadLinkedMetaData({
+        context,
+        userIds: idsFromNodes.reduce(
+          (userIds, idsFromNode) => userIds.concat(idsFromNode.users),
+          []
+        ),
+        repoIds: idsFromNodes.reduce(
+          (repoIds, idsFromNode) => repoIds.concat(idsFromNode.repos),
+          []
+        )
+      })
+      doc._all = doc._all.concat(docs)
+      doc._usernames = doc._usernames.concat(usernames)
+
+      contentUrlResolver(doc, doc._all, doc._usernames, undefined, urlPrefix, searchString, context.user || null)
+    }
 
     return {
       pageInfo: {

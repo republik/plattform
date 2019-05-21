@@ -49,7 +49,7 @@ const indexRef = {
   type: indexType
 }
 
-const getDocumentId = ({repoId, commitId, versionName}) =>
+const getDocumentId = ({ repoId, commitId, versionName }) =>
   Buffer.from(`${repoId}/${commitId}/${versionName}`).toString('base64')
 
 const documentIdParser = value => {
@@ -178,7 +178,7 @@ const getElasticDoc = (
   { doc, commitId, versionName, milestoneCommitId, resolved }
 ) => {
   const meta = doc.content.meta
-  const id = getDocumentId({repoId: meta.repoId, commitId, versionName})
+  const id = getDocumentId({ repoId: meta.repoId, commitId, versionName })
   return {
     __type: indexType,
     __sort: {
@@ -200,77 +200,54 @@ const getElasticDoc = (
   }
 }
 
-const addRelatedDocs = async ({
-  connection,
-  scheduledAt,
-  ignorePrepublished,
-  context
-}) => {
-  const search = require('../graphql/resolvers/_queries/search')
-  const { pgdb } = context
-
-  const getDocsForConnection = (connection) =>
-    [
-      ...connection.nodes
-        .filter(node => node.type === 'Document')
-        .map(node => node.entity)
-    ]
-
-  const docs = getDocsForConnection(connection)
-
-  // extract users and related repoIds (from content and meta)
-  const userIds = []
-  const repoIds = []
-  const seriesRepoIds = []
-  docs.forEach(doc => {
-    // from content
-    visit(doc.content, 'zone', node => {
-      if (node.data) {
-        repoIds.push(getRepoId(node.data.url))
-        repoIds.push(getRepoId(node.data.formatUrl))
-      }
-    })
-    visit(doc.content, 'link', node => {
-      const info = extractUserUrl(node.url)
-      if (info) {
-        node.url = info.path
-        if (isUUID.v4(info.id)) {
-          userIds.push(info.id)
-        } else {
-          debug(
-            'addRelatedDocs found nonUUID %s in repo %s',
-            info.id,
-            doc.repoId
-          )
-        }
-      }
-      const repoId = getRepoId(node.url, 'autoSlug')
-      if (repoId) {
-        repoIds.push(repoId)
-      }
-    })
-    // from meta
-    const meta = doc.content.meta
-    // TODO get keys from packages/documents/lib/resolve.js
-    repoIds.push(getRepoId(meta.dossier))
-    repoIds.push(getRepoId(meta.format))
-    repoIds.push(getRepoId(meta.discussion))
-    if (meta.series) {
-      // If a string, probably a series master (tbc.)
-      if (typeof meta.series === 'string') {
-        seriesRepoIds.push(getRepoId(meta.series))
-        repoIds.push(getRepoId(meta.series))
-      } else {
-        meta.series.episodes && meta.series.episodes.forEach(episode => {
-          repoIds.push(getRepoId(episode.document))
-        })
-      }
+const extractIdsFromNode = (haystack, contextRepoId) => {
+  const repos = []
+  const users = []
+  visit(haystack, 'zone', node => {
+    if (node.data) {
+      repos.push(getRepoId(node.data.url))
+      repos.push(getRepoId(node.data.formatUrl))
     }
   })
+  visit(haystack, 'link', node => {
+    const info = extractUserUrl(node.url)
+    if (info) {
+      node.url = info.path
+      if (isUUID.v4(info.id)) {
+        users.push(info.id)
+      } else {
+        debug(
+          'addRelatedDocs found nonUUID %s in repo %s',
+          info.id,
+          contextRepoId
+        )
+      }
+    }
+    const repoId = getRepoId(node.url, 'autoSlug')
+    if (repoId) {
+      repos.push(repoId)
+    }
+  })
+  return {
+    repos: repos.filter(Boolean),
+    users: users.filter(Boolean)
+  }
+}
 
-  // load users
-  const usernames = userIds.length
-    ? await pgdb.public.users.find(
+const getDocsForConnection = (connection) => connection.nodes
+  .filter(node => node.type === 'Document')
+  .map(node => node.entity)
+
+const loadLinkedMetaData = async ({
+  repoIds = [],
+  userIds = [],
+  context,
+  scheduledAt,
+  ignorePrepublished
+}) => {
+  const usernames = !userIds.length
+    ? []
+    : await context.pgdb.public.users.find(
       {
         id: userIds,
         hasPublicProfile: true,
@@ -280,24 +257,83 @@ const addRelatedDocs = async ({
         fields: ['id', 'username']
       }
     )
-    : []
 
-  // If there are any series master repositories, fetch these series master
-  // documents and push series episodes onto the related docs stack
-  const sanitizedSeriesRepoIds = [...new Set(seriesRepoIds.filter(Boolean))]
-  if (sanitizedSeriesRepoIds.length > 0) {
-    const seriesRelatedDocs = await search(null, {
+  const search = require('../graphql/resolvers/_queries/search')
+  const sanitizedRepoIds = [...new Set(repoIds.filter(Boolean))]
+  const docs = !sanitizedRepoIds.length
+    ? []
+    : await search(null, {
       recursive: true,
       withoutContent: true,
       scheduledAt,
       ignorePrepublished,
-      first: sanitizedSeriesRepoIds.length * 2,
+      first: sanitizedRepoIds.length * 2,
       filter: {
-        repoId: sanitizedSeriesRepoIds,
+        repoId: sanitizedRepoIds,
         type: 'Document'
       }
-    }, context)
-      .then(getDocsForConnection)
+    }, context).then(getDocsForConnection)
+
+  return {
+    usernames,
+    docs
+  }
+}
+
+const addRelatedDocs = async ({
+  connection,
+  scheduledAt,
+  ignorePrepublished,
+  context,
+  withoutContent
+}) => {
+  const docs = getDocsForConnection(connection)
+
+  // extract users and related repoIds (from content and meta)
+  let userIds = []
+  let repoIds = []
+  const seriesRepoIds = []
+  docs.forEach(doc => {
+    // from content
+    if (!withoutContent) {
+      const extractedIds = extractIdsFromNode(doc.content, doc.repoId)
+      userIds = userIds.concat(extractedIds.users)
+      repoIds = repoIds.concat(extractedIds.repos)
+    }
+    // from meta
+    const meta = doc.content.meta
+    // TODO get keys from packages/documents/lib/resolve.js
+    repoIds.push(getRepoId(meta.dossier))
+    repoIds.push(getRepoId(meta.format))
+    repoIds.push(getRepoId(meta.discussion))
+    if (meta.series) {
+      // If a string, probably a series master (tbc.)
+      if (typeof meta.series === 'string') {
+        const seriesRepoId = getRepoId(meta.series)
+        if (seriesRepoId) {
+          seriesRepoIds.push(seriesRepoId)
+        }
+      } else {
+        meta.series.episodes && meta.series.episodes.forEach(episode => {
+          repoIds.push(getRepoId(episode.document))
+        })
+      }
+    }
+  })
+
+  let relatedDocs = []
+
+  // If there are any series master repositories, fetch these series master
+  // documents and push series episodes onto the related docs stack
+  if (seriesRepoIds.length) {
+    const { docs: seriesRelatedDocs } = await loadLinkedMetaData({
+      context,
+      repoIds: seriesRepoIds,
+      scheduledAt,
+      ignorePrepublished
+    })
+
+    relatedDocs = relatedDocs.concat(seriesRelatedDocs)
 
     seriesRelatedDocs.forEach(doc => {
       const meta = doc.content.meta
@@ -308,24 +344,18 @@ const addRelatedDocs = async ({
     })
   }
 
-  const sanitizedRepoIds = [...new Set(repoIds.filter(Boolean))]
+  const {
+    docs: variousRelatedDocs,
+    usernames
+  } = await loadLinkedMetaData({
+    context,
+    repoIds,
+    userIds,
+    scheduledAt,
+    ignorePrepublished
+  })
 
-  let relatedDocs = []
-
-  if (sanitizedRepoIds.length > 0) {
-    relatedDocs = await search(null, {
-      recursive: true,
-      withoutContent: true,
-      scheduledAt,
-      ignorePrepublished,
-      first: sanitizedRepoIds.length * 2,
-      filter: {
-        repoId: sanitizedRepoIds,
-        type: 'Document'
-      }
-    }, context)
-      .then(getDocsForConnection)
-  }
+  relatedDocs = relatedDocs.concat(variousRelatedDocs)
 
   debug({
     numDocs: docs.length,
@@ -725,6 +755,8 @@ const findTemplates = async function (elastic, template, repoId) {
 module.exports = {
   schema,
   getElasticDoc,
+  extractIdsFromNode,
+  loadLinkedMetaData,
   addRelatedDocs,
   unpublish,
   publish,

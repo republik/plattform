@@ -3,6 +3,11 @@ const addSuffix = (url) => {
   if (!query) {
     return base
   }
+  // prevent double suffix
+  // - e.g. when resolving twice (content & children)
+  if (base.endsWith('.webp')) {
+    return url
+  }
   return `${base}.webp?${query}`
 }
 
