@@ -21,9 +21,9 @@
   },
   "dependencies": {
     "apollo-modules-node": "^0.1.4",
-    "apollo-server": "^2.4.8",
-    "apollo-server-core": "^2.4.8",
-    "apollo-server-express": "^2.4.8",
+    "apollo-server": "^2.5.0",
+    "apollo-server-core": "^2.5.0",
+    "apollo-server-express": "^2.5.0",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.3",
     "check-env": "^1.3.0",
