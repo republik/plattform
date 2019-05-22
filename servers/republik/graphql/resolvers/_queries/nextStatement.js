@@ -17,9 +17,11 @@ const getUser = (sequenceNumber, isAsc, pgdb) =>
         LIMIT 1
       )
     WHERE
-      m."sequenceNumber" ${isAsc ? '>' : '<'} :sequenceNumber AND
-      u."isListed" = true AND u."isAdminUnlisted" = false AND
-      u."portraitUrl" is not null
+      m."sequenceNumber" ${isAsc ? '>' : '<'} :sequenceNumber
+      AND u."isListed" = true
+      AND u."isAdminUnlisted" = false
+      AND u."portraitUrl" is not null
+      AND u.roles @> '["member"]'
     ORDER BY m."sequenceNumber" ${isAsc ? 'ASC' : 'DESC'}
     LIMIT 1
   `, {
