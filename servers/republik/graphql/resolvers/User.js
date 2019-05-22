@@ -22,7 +22,7 @@ const exposeProfileField = (key, format) => (user, args, { pgdb, user: me }) => 
   return null
 }
 
-const exposeAccessField = (accessRoleKey, key, format) => (user, args, { pgdb, user: me }) => {
+const exposeAccessField = (accessRoleKey, key, format, defaultKey) => (user, args, { pgdb, user: me, t }) => {
   if (
     (
       user._raw[accessRoleKey] === 'PUBLIC' ||
@@ -33,10 +33,12 @@ const exposeAccessField = (accessRoleKey, key, format) => (user, args, { pgdb, u
     ) || isFieldExposed(user, key)
   ) {
     return format
-      ? format(user._raw[key])
-      : user._raw[key]
+      ? format(user._raw[key] || user[key], t)
+      : user._raw[key] || user[key]
   }
-  return null
+  return defaultKey
+    ? t(defaultKey)
+    : null
 }
 
 // statement & portrait and related content
@@ -46,6 +48,9 @@ const canAccessBasics = (user, me) => (
 )
 
 module.exports = {
+  name: exposeAccessField('nameAccessRole', 'name', null, 'api/comment/anonymous/displayName'),
+  firstName: exposeAccessField('nameAccessRole', 'firstName', null, 'api/comment/anonymous/displayName'),
+  lastName: exposeAccessField('nameAccessRole', 'lastName', null, 'api/comment/anonymous/displayName'),
   isListed: (user) => user._raw.isListed,
   isAdminUnlisted (user, args, { user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
@@ -70,7 +75,7 @@ module.exports = {
       if (user._raw.sequenceNumber) {
         return user._raw.sequenceNumber
       }
-      const firstMembership = await pgdb.public.memberships.findFirst({userId: user.id}, {orderBy: ['sequenceNumber asc']})
+      const firstMembership = await pgdb.public.memberships.findFirst({ userId: user.id }, { orderBy: ['sequenceNumber asc'] })
       if (firstMembership) {
         return firstMembership.sequenceNumber
       }
@@ -245,7 +250,7 @@ module.exports = {
       return allListed
     }
   },
-  async address (user, args, {pgdb, user: me}) {
+  async address (user, args, { pgdb, user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
       if (!user._raw.addressId) {
         return null
