@@ -236,4 +236,23 @@ type MembershipPeriodStatsDay {
   cancelCount: Int!
   prolongCount: Int!
 }
+
+type StatementUserConnection {
+  totalCount: Int!
+  pageInfo: PageInfo
+  nodes: [StatementUser!]!
+}
+type StatementUser {
+  id: ID!
+  name: String!
+  username: String
+  portrait(
+    properties: ImageProperties
+  ): String
+  statement: String
+  credentials: [Credential!]!
+  updatedAt: DateTime!
+  sequenceNumber: Int
+  hasPublicProfile: Boolean!
+}
 `
