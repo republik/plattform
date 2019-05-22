@@ -35,7 +35,7 @@ input ImageProperties {
 extend type User {
   address: Address
   hasAddress: Boolean
-  credentials: [Credential]!
+  credentials: [Credential!]!
   badges: [Badge]
   isEligibleForProfile: Boolean
 
