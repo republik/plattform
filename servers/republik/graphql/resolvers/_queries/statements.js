@@ -5,7 +5,7 @@ const {
 } = require('@orbiting/backend-modules-auth')
 
 module.exports = async (_, args, { pgdb, t }) => {
-  const {first, after, search, focus} = args
+  const { first, after, search, focus } = args
   const seed = args.seed || Math.random() * 2 - 1
 
   if (first > 100) {
@@ -17,10 +17,10 @@ module.exports = async (_, args, { pgdb, t }) => {
     firstId = await pgdb.public.users.findOneFieldOnly({
       or: isUUID.v4(focus)
         ? [
-          {testimonialId: focus},
-          {id: focus}
+          { testimonialId: focus },
+          { id: focus }
         ]
-        : [{username: focus}]
+        : [{ username: focus }]
     }, 'id')
   }
 
@@ -48,7 +48,7 @@ module.exports = async (_, args, { pgdb, t }) => {
         ON m.id = (SELECT id FROM memberships WHERE "userId" = u.id ORDER BY "sequenceNumber" ASC LIMIT 1)
       WHERE
         ARRAY[u.id] && :ids;
-    `, {ids: nodeIds})
+    `, { ids: nodeIds })
 
     // obey order!
     // - this ensures firstId comes first
@@ -85,8 +85,11 @@ module.exports = async (_, args, { pgdb, t }) => {
         credentials c
         ON c."userId" = u.id AND c."isListed" = true
       WHERE
-        u."isListed" = true AND u."isAdminUnlisted" = false AND u."portraitUrl" is not null AND
-        (
+        u."isListed" = true
+        AND u."isAdminUnlisted" = false
+        AND u."portraitUrl" is not null
+        AND u.roles @> '["member"]'
+        AND (
           u."firstName" % :search OR
           u."lastName" % :search OR
           u."firstName" ILIKE :searchLike OR
@@ -114,7 +117,10 @@ module.exports = async (_, args, { pgdb, t }) => {
         JOIN memberships m
           ON m.id = (SELECT id FROM memberships WHERE "userId" = u.id ORDER BY "sequenceNumber" ASC LIMIT 1)
         WHERE
-          u."isListed" = true AND u."isAdminUnlisted" = false AND u."portraitUrl" is not null
+          u."isListed" = true
+          AND u."isAdminUnlisted" = false
+          AND u."portraitUrl" is not null
+          AND u.roles @> '["member"]'
         OFFSET 1
       ) s
       ORDER BY random();
