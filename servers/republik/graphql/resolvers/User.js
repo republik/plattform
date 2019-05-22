@@ -249,6 +249,7 @@ module.exports = {
       const allListed = all.filter(c => c.isListed)
       return allListed
     }
+    return []
   },
   async address (user, args, { pgdb, user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
