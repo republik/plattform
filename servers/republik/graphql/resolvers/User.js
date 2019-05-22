@@ -22,7 +22,7 @@ const exposeProfileField = (key, format) => (user, args, { pgdb, user: me }) => 
   return null
 }
 
-const exposeAccessField = (accessRoleKey, key, format, defaultKey) => (user, args, { pgdb, user: me, t }) => {
+const exposeAccessField = (accessRoleKey, key, format) => (user, args, { pgdb, user: me }) => {
   if (
     (
       user._raw[accessRoleKey] === 'PUBLIC' ||
@@ -33,12 +33,10 @@ const exposeAccessField = (accessRoleKey, key, format, defaultKey) => (user, arg
     ) || isFieldExposed(user, key)
   ) {
     return format
-      ? format(user._raw[key] || user[key], t)
+      ? format(user._raw[key] || user[key])
       : user._raw[key] || user[key]
   }
-  return defaultKey
-    ? t(defaultKey)
-    : null
+  return null
 }
 
 // statement & portrait and related content
@@ -47,10 +45,35 @@ const canAccessBasics = (user, me) => (
   (user._raw.isListed && !user._raw.isAdminUnlisted)
 )
 
+const initials = (name) => name
+  .split(' ')
+  .map(p => p[0])
+  .filter(Boolean)
+  .map(p => `${p}.`)
+  .join(' ')
+
 module.exports = {
-  name: exposeAccessField('nameAccessRole', 'name', null, 'api/comment/anonymous/displayName'),
-  firstName: exposeAccessField('nameAccessRole', 'firstName', null, 'api/comment/anonymous/displayName'),
-  lastName: exposeAccessField('nameAccessRole', 'lastName', null, 'api/comment/anonymous/displayName'),
+  name (user, args, context) {
+    const name = exposeAccessField('nameAccessRole', 'name')(user, args, context)
+    if (!name) {
+      return initials(user.name)
+    }
+    return name
+  },
+  firstName (user, args, context) {
+    const firstName = exposeAccessField('nameAccessRole', 'firstName')(user, args, context)
+    if (!firstName) {
+      return user._raw.firstName[0]
+    }
+    return firstName
+  },
+  lastName (user, args, context) {
+    const lastName = exposeAccessField('nameAccessRole', 'lastName')(user, args, context)
+    if (!lastName) {
+      return user._raw.lastName[0]
+    }
+    return lastName
+  },
   isListed: (user) => user._raw.isListed,
   isAdminUnlisted (user, args, { user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {

@@ -1,17 +1,22 @@
 const Roles = require('../../lib/Roles')
-const userAccessRoles = ['admin', 'supporter']
 const { findAllUserSessions } = require('../../lib/Sessions')
 const { enabledFirstFactors } = require('../../lib/Users')
 const AccessToken = require('../../lib/AccessToken')
 const Consents = require('../../lib/Consents')
 
+const userAccessRoles = ['admin', 'supporter']
+const userBasicsAccessRoles = [...userAccessRoles, 'editor']
+
+const expose = (roles, accessor) => (user, args, { user: me }) => {
+  if (Roles.userIsMeOrInRoles(user, me, roles)) {
+    return user[accessor]
+  }
+}
 module.exports = {
-  email (user, args, { pgdb, user: me }) {
-    if (Roles.userIsMeOrInRoles(user, me, [...userAccessRoles, 'editor'])) {
-      return user.email
-    }
-    return null
-  },
+  email: expose(userBasicsAccessRoles, 'email'),
+  name: expose(userBasicsAccessRoles, 'name'),
+  firstName: expose(userBasicsAccessRoles, 'firstName'),
+  lastName: expose(userBasicsAccessRoles, 'lastName'),
   async sessions (user, args, { pgdb, user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, userAccessRoles)) {
       return findAllUserSessions({ pgdb, userId: user.id })
@@ -92,12 +97,12 @@ module.exports = {
     !!(me && user.id === me.id),
 
   accessToken: (user, { scope }, { user: me }) => {
-    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+    if (Roles.userIsMeOrInRoles(user, me, userAccessRoles)) {
       return AccessToken.generateForUser(user, scope)
     }
   },
   hasConsentedTo: (user, { name }, { pgdb, user: me }) => {
-    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+    if (Roles.userIsMeOrInRoles(user, me, userAccessRoles)) {
       return Consents.statusForPolicyForUser({
         userId: user.id,
         policy: name,
