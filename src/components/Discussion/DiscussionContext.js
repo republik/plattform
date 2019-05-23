@@ -17,7 +17,7 @@ export const DiscussionContext = React.createContext({
   discussion: {
     id: '00000000-0000-0000-0000-000000000000',
 
-    title: "Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie",
+    title: 'Der Crowdfunding-Code gegen die Frankenstein-Monster-Strategie',
 
     /**
      * This controls whether long comments can be collapsed.
@@ -29,7 +29,7 @@ export const DiscussionContext = React.createContext({
      * logged in.
      */
     displayAuthor: {
-      name: "Anonym",
+      name: 'Anonym',
       profilePicture: '/static/profilePicture1.png'
     },
 
@@ -43,7 +43,7 @@ export const DiscussionContext = React.createContext({
   /**
    * The ID of the comment that should be highlighted. It is optional.
    */
-  highlightedCommentId: "3.1",
+  highlightedCommentId: '3.1',
 
   /**
    * All the actions the user can do. These functions correspond mostly
@@ -59,10 +59,10 @@ export const DiscussionContext = React.createContext({
     submitComment: (parent, text, tags) => Promise.resolve(),
 
     editComment: (comment, content, tags) => Promise.resolve(),
-    upvoteComment: (commentId) => Promise.resolve(),
-    downvoteComment: (commentId) => Promise.resolve(),
-    unpublishComment: (commentId) => Promise.resolve(),
-    shareComment: (commentId) => Promise.resolve(),
+    upvoteComment: commentId => Promise.resolve(),
+    downvoteComment: commentId => Promise.resolve(),
+    unpublishComment: commentId => Promise.resolve(),
+    shareComment: commentId => Promise.resolve(),
 
     /**
      * Fetch more comments at the end of the given CommentConnection.
@@ -80,7 +80,7 @@ export const DiscussionContext = React.createContext({
      * Format the given date relative to the current time. The date
      * can be in the future or past.
      */
-    formatTimeRelative: date => "2h"
+    formatTimeRelative: date => '2h'
   },
 
   /**
