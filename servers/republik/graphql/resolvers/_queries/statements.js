@@ -13,14 +13,10 @@ module.exports = async (_, args, { pgdb, t }) => {
   }
 
   let firstId
-  if (focus) {
+  if (focus && isUUID.v4(focus)) {
     firstId = await pgdb.public.users.findOneFieldOnly({
-      or: isUUID.v4(focus)
-        ? [
-          { testimonialId: focus },
-          { id: focus }
-        ]
-        : [{ username: focus }]
+      testimonialId: focus,
+      isListed: true
     }, 'id')
   }
 
