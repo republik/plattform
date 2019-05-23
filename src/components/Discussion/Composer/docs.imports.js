@@ -16,9 +16,9 @@ const t = createFormatter(require('../../../lib/translations.json').data)
 const someText = "Das Tückische beim Crowdfunding ist, dass der Ansturm"
 
 export const CommentComposerPlayground = () => {
-  const [{ counter, mode, initialText, tagRequired }, dispatch] = React.useReducer((state, action) => {
+  const [{ counter, mode, initialText, tagRequired, maxLength }, dispatch] = React.useReducer((state, action) => {
     if ('start' in action) {
-      return { ...state, counter: state.counter + 1, mode: 'composer', initialText: action.start.initialText, tagRequired: action.start.tagRequired }
+      return { ...state, counter: state.counter + 1, mode: 'composer', initialText: action.start.initialText, tagRequired: action.start.tagRequired, maxLength: action.start.maxLength }
     } else if ('cancel' in action) {
       return { ...state, mode: 'initial' }
     } else if ('submit' in action) {
@@ -52,7 +52,7 @@ export const CommentComposerPlayground = () => {
           onSubmit={(text, tags) => new Promise((resolve, reject) => {
             dispatch({ submit: { resolve, reject } });
           })}
-          maxLength={60}
+          maxLength={maxLength}
           tags={['Lob', 'Kritik', 'Wunsch', 'Keine Angabe']}
           secondaryActions={(
             <Fragment>
@@ -71,10 +71,10 @@ export const CommentComposerPlayground = () => {
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <div style={{ margin: 4 }}>
-              <Button primary onClick={() => { dispatch({ start: { initialText: undefined, tagValue: undefined, tagRequired: false } }) }}>Blank</Button>
+              <Button primary onClick={() => { dispatch({ start: { initialText: undefined, tagValue: undefined, tagRequired: false, maxLength: undefined } }) }}>Blank</Button>
             </div>
             <div style={{ margin: 4 }}>
-              <Button primary onClick={() => { dispatch({ start: { initialText: someText, tagValue: 'Wunsch', tagRequired: true } }) }}>Prefilled</Button>
+              <Button primary onClick={() => { dispatch({ start: { initialText: someText, tagValue: 'Wunsch', tagRequired: true, maxLength: 60 } }) }}>Prefilled</Button>
             </div>
           </div>
         </div>

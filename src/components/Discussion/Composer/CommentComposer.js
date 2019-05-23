@@ -4,18 +4,19 @@ import { css } from 'glamor'
 import Textarea from 'react-textarea-autosize';
 import scrollIntoView from 'scroll-into-view'
 import colors from '../../../theme/colors'
-import { serifRegular16, sansSerifRegular14 } from '../../Typography/styles'
+import { serifRegular16, sansSerifRegular12 } from '../../Typography/styles'
 
-import ProgressCircle from '../../Progress/Circle'
 import { Header, Tags, Actions, Error } from '../Internal/Composer'
 
 const styles = {
   root: css({}),
   background: css({
+    position: 'relative',
     background: colors.secondaryBg
   }),
   textArea: css({
-    padding: '6px 12px 0',
+    display: 'block',
+    padding: '20px 8px',
     width: '100%',
     minWidth: '100%',
     maxWidth: '100%',
@@ -33,16 +34,15 @@ const styles = {
       color: colors.lightText
     }
   }),
-  maxLength: css({
-    alignItems: 'center',
-    display: 'flex',
-    justifyContent: 'flex-end',
-    padding: '8px 12px'
+  textAreaLimit: css({
+    paddingBottom: '28px'
   }),
-  remaining: css({
-    ...sansSerifRegular14,
+  maxLengthIndicator: css({
+    ...sansSerifRegular12,
     lineHeight: 1,
-    padding: '0 5px'
+    position: 'absolute',
+    bottom: 6,
+    left: 8,
   })
 }
 
@@ -109,7 +109,7 @@ export class CommentComposer extends PureComponent {
       tags
     } = this.props
     const { text, tagValue, error } = this.state
-    const maxLengthExceeded = maxLength && text.length > maxLength
+    const canSubmit = text && (!tagRequired || tagValue) && (!maxLength || text.length <= maxLength)
 
     return (
       <div ref={this.root} {...styles.root}>
@@ -135,6 +135,7 @@ export class CommentComposer extends PureComponent {
           <Textarea
             inputRef={this.textareaRef}
             {...styles.textArea}
+            {...(maxLength ? styles.textAreaLimit : {})}
             {...(text === '' ? styles.textAreaEmpty : {})}
             placeholder={t('styleguide/CommentComposer/placeholder')}
             value={text}
@@ -142,19 +143,14 @@ export class CommentComposer extends PureComponent {
             onChange={this.onChange}
           />
 
-          {maxLength && (
-            <MaxLengthIndicator
-              maxLength={maxLength}
-              length={text.length}
-            />
-          )}
+          {maxLength && <MaxLengthIndicator maxLength={maxLength} length={text.length} />}
         </div>
 
         <Actions
           t={t}
           onClose={onClose}
           onCloseLabel={cancelLabel}
-          onSubmit={(!text || (tagRequired && !tagValue) || maxLengthExceeded) ? undefined : this.onSubmit}
+          onSubmit={canSubmit ? this.onSubmit : undefined}
           onSubmitLabel={submitLabel}
           secondaryActions={secondaryActions}
         />
@@ -180,21 +176,12 @@ CommentComposer.propTypes = {
 }
 
 const MaxLengthIndicator = ({ maxLength, length }) => {
-  const progress = length / maxLength * 100
   const remaining = maxLength - length
-  const progressColor = progress > 100 ? colors.error : colors.text
+  const color = remaining < 0 ? colors.error : remaining < 21 ? colors.text : colors.lightText
 
   return (
-    <div {...styles.maxLength}>
-      {remaining < 21 && <span {...styles.remaining} style={{ color: progressColor }}>
-        {remaining}
-      </span>}
-      <ProgressCircle
-        stroke={progressColor}
-        radius={9}
-        strokeWidth={2}
-        progress={Math.min(progress, 100)}
-      />
+    <div {...styles.maxLengthIndicator} style={{ color }}>
+      {remaining}
     </div>
   )
 }
