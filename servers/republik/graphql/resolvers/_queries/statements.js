@@ -76,7 +76,13 @@ module.exports = async (_, args, { pgdb, t }) => {
       FROM
         users u
       JOIN memberships m
-        ON m.id = (SELECT id FROM memberships WHERE "userId" = u.id ORDER BY "sequenceNumber" ASC LIMIT 1)
+        ON m.id = (
+          SELECT id
+          FROM memberships
+          WHERE "userId" = u.id
+          ORDER BY "sequenceNumber" ASC
+          LIMIT 1
+        )
       LEFT JOIN
         credentials c
         ON c."userId" = u.id AND c."isListed" = true
