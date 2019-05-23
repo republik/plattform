@@ -53,7 +53,14 @@ export class CommentComposer extends PureComponent {
     this.state = {
       text: props.initialText || '',
       tagValue: props.tagValue,
-      error: undefined
+
+      /*
+       * We keep track of the submission process, to prevent the user from
+       * submitting the comment multiple times.
+       *
+       * This also enables us to show a loading indicator.
+       */
+      submit: { loading: false, error: undefined }
     }
 
     this.root = React.createRef()
@@ -63,12 +70,13 @@ export class CommentComposer extends PureComponent {
     }
 
     this.onSubmit = () => {
-      const { text, tagValue } = this.state
+      const { text, tagValue, submit: { error } } = this.state
 
-      this.setState({ error: undefined })
-      this.props.onSubmit({ text, tags: tagValue ? [tagValue] : undefined }).catch(error => {
-        this.setState({ error })
-      })
+      this.setState({ submit: { loading: true, error } })
+      this.props.onSubmit({ text, tags: tagValue ? [tagValue] : undefined }).then(
+        () => { this.setState({ submit: { loading: false, error: undefined } }) },
+        error => { this.setState({ submit: { loading: false, error } }) }
+      )
     }
 
     // MUST be a function because <Textarea> doesn't support
@@ -108,8 +116,8 @@ export class CommentComposer extends PureComponent {
       tagRequired,
       tags
     } = this.props
-    const { text, tagValue, error } = this.state
-    const canSubmit = text && (!tagRequired || tagValue) && (!maxLength || text.length <= maxLength)
+    const { text, tagValue, submit: { loading, error } } = this.state
+    const canSubmit = !loading && text && (!tagRequired || tagValue) && (!maxLength || text.length <= maxLength)
 
     return (
       <div ref={this.root} {...styles.root}>
