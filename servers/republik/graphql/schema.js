@@ -40,6 +40,7 @@ type queries {
 type mutations {
   updateMe(
     username: String
+    nameAccessRole: AccessRole
     firstName: String
     lastName: String
     hasPublicProfile: Boolean

@@ -74,6 +74,12 @@ module.exports = {
     }
     return lastName
   },
+  nameAccessRole (user, args, { user: me }) {
+    if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
+      return user._raw.nameAccessRole
+    }
+    return null
+  },
   isListed: (user) => user._raw.isListed,
   isAdminUnlisted (user, args, { user: me }) {
     if (Roles.userIsMeOrInRoles(user, me, ['admin', 'supporter'])) {
