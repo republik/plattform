@@ -10,6 +10,8 @@ const {
 const createCache = require('../cache')
 const { getLastEndDate } = require('../utils')
 
+const { PARKING_USER_ID } = process.env
+
 const EXCLUDE_MEMBERSHIP_TYPES = ['MONTHLY_ABO']
 
 const activeMembershipsQuery = `
@@ -38,7 +40,8 @@ const changeover = async (
     WHERE
       -- Potential ending memberships to change over to dormant membership
       "endDate" < :endDate
-  `, { endDate })
+      AND "userId" != :PARKING_USER_ID
+  `, { endDate, PARKING_USER_ID })
 
   debug({
     now: endDate.toDate(),
