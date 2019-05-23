@@ -26,7 +26,7 @@ Components on this page are not exported from the styleguide. This documentation
     displayAuthor: {
       profilePicture: '/static/profilePicture1.png',
       name: 'Christoph Moser',
-      credential: { description: 'Journalist', verified: true }
+      credential: { description: 'Journalist' }
     }
   }}
 />
@@ -82,7 +82,6 @@ Components on this page are not exported from the styleguide. This documentation
 />
 ```
 
-
 #### Body
 
 The **Body** component (shown on the left) includes the optional **Context** component (shown right) above the comment text. Context is a bold title line and optional description line. The context lines do not wrap, they are cut of with an ellipsis.
@@ -130,28 +129,39 @@ The buttons / icons below the comment. The reply button is disabled if the discu
 />
 ```
 
-
 # Composer
 
 #### Header
 
-Almost like the `<Comment>` header.
+Looks very similar to the `<Comment>` header, except that the whole element is one big button. Furthermore, if the user doesn't have a crendential yet, we nudge them to set it by using a friendly message in place of the credential description.
 
-```react|noSource,span-3
+```react|noSource,span-2
 <Composer.Header
+  t={t}
   displayAuthor={{
-    name: 'Anonym',
-    profilePicture: '/static/profilePicture1.png'
+    name: 'Anonym'
   }}
 />
 ```
 
-```react|noSource,span-3
+```react|noSource,span-2
 <Composer.Header
+  t={t}
   displayAuthor={{
     name: 'Ueli Maurer',
     profilePicture: '/static/profilePicture1.png',
     credential: {description: 'Bundesrat', verified: false}
+  }}
+/>
+```
+
+```react|noSource,span-2
+<Composer.Header
+  t={t}
+  displayAuthor={{
+    name: 'Queen Daenerys Stormborn of the House Targaryen',
+    profilePicture: '/static/profilePicture1.png',
+    credential: { description: 'The rightful Queen of the Seven Kingdoms', verified: true }
   }}
 />
 ```

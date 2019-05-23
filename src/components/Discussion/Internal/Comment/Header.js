@@ -34,7 +34,7 @@ const styles = {
     width: `40px`,
     flex: `0 0 40px`,
     height: `40px`,
-    marginRight: '10px'
+    marginRight: '8px'
   }),
   center: css({
     alignSelf: 'stretch',
@@ -53,12 +53,6 @@ const styles = {
     flexShrink: 1,
     ...ellipsize
   }),
-  timeago: css({
-    color: colors.lightText,
-    flexShrink: 0,
-    flexGrow: 0,
-    whiteSpace: 'pre'
-  }),
   meta: css({
     ...sansSerifRegular14,
     lineHeight: '20px',
@@ -73,8 +67,11 @@ const styles = {
     flexShrink: 1,
     minWidth: 0
   }),
+  credentialVerified: css({
+    color: colors.text
+  }),
   descriptionText: css({
-    ...ellipsize,
+    ...ellipsize
   }),
   verifiedCheck: css({
     color: colors.primary,
@@ -93,6 +90,12 @@ const styles = {
     ':hover': {
       ...underline
     }
+  }),
+  timeago: css({
+    color: colors.lightText,
+    flexShrink: 0,
+    flexGrow: 0,
+    whiteSpace: 'pre'
   }),
   replies: css({
     display: 'inline-block',

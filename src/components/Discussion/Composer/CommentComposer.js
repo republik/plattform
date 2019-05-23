@@ -116,6 +116,7 @@ export class CommentComposer extends PureComponent {
         <div {...styles.background}>
           <div style={{ borderBottom: '1px solid white' }}>
             <Header
+              t={t}
               displayAuthor={displayAuthor}
               onClick={onEditPreferences}
             />

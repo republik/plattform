@@ -10,8 +10,8 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     background: colors.secondaryBg,
-    padding: '12px',
-    height: '64px',
+    padding: '8px',
+    height: '56px',
     cursor: 'pointer',
     '&:hover': {
       color: colors.text
@@ -21,7 +21,7 @@ const styles = {
     display: 'block',
     width: '40px',
     height: '40px',
-    marginRight: 10
+    marginRight: '8px'
   }),
   meta: css({
     flex: 1,
