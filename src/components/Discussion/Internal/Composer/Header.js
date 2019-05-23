@@ -1,16 +1,14 @@
 import React from 'react'
-import {css} from 'glamor'
-import MdEdit from 'react-icons/lib/md/edit'
+import { css } from 'glamor'
 import MdCheck from 'react-icons/lib/md/check'
-import colors from '../../theme/colors'
-import {sansSerifMedium16, sansSerifRegular14} from '../Typography/styles'
-import {ellipsize} from '../../lib/styleMixins'
+import colors from '../../../../theme/colors'
+import { sansSerifMedium16, sansSerifRegular14 } from '../../../Typography/styles'
+import { ellipsize } from '../../../../lib/styleMixins'
 
 const styles = {
   root: css({
     display: 'flex',
     alignItems: 'center',
-    background: colors.secondaryBg,
     padding: '12px'
   }),
   profilePicture: css({
@@ -66,7 +64,7 @@ const styles = {
   })
 }
 
-const CommentComposerHeader = ({profilePicture, name, credential, onClick}) => (
+export const Header = ({ displayAuthor: { profilePicture, name, credential } }) => (
   <div {...styles.root}>
     {profilePicture && <img
       {...styles.profilePicture}
@@ -82,10 +80,5 @@ const CommentComposerHeader = ({profilePicture, name, credential, onClick}) => (
         {credential.verified && <MdCheck {...styles.verifiedCheck} />}
       </div>}
     </div>
-    <button {...styles.actionButton} onClick={onClick}>
-      <MdEdit />
-    </button>
   </div>
 )
-
-export default CommentComposerHeader

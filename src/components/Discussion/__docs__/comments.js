@@ -1,3 +1,5 @@
+import { exampleMdast } from './exampleMdast'
+
 const profilePicture = '/static/profilePicture1.png'
 
 export const mkComment = (n, children, pageInfo) => ({
@@ -10,7 +12,10 @@ export const mkComment = (n, children, pageInfo) => ({
   upVotes: 8,
   downVotes: 3,
   userVote: 'DOWN',
-  content: 'Journalismus strebt nach Klarheit, er ist der Feind der uralten Angst vor dem Neuen.',
+  content: exampleMdast,
+  published: true,
+  createdAt: "2019-01-01",
+  updatedAt: "2019-01-01",
   comments: children.length === 0
     ? (pageInfo ? {totalCount: 27, pageInfo, nodes: []} : undefined)
     : {totalCount: 27, pageInfo, nodes: children}

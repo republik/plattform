@@ -46,6 +46,17 @@ ReactDOM.render(
       { name: 'Desktop small', width: 800, height: 600 },
       { name: 'Mobile', width: 320, height: 480 }
     ]}
+    specimens={{
+      "remove-react-source": () => {
+        // eslint-disable-next-line
+        React.useEffect(() => {
+          for (const el of document.querySelectorAll("[class$=-source-className")) {
+            el.remove()
+          }
+        }, [])
+        return null;
+      }
+    }}
     pages={[
       {
         path: '/',
@@ -232,49 +243,36 @@ ReactDOM.render(
         ]
       },
       {
-        title: 'Comments',
+        title: 'Discussion',
         pages: [
           {
-            path: '/components/comment',
-            title: 'Comment',
-            imports: {
-              t,
-              ...require('./components/Typography'),
-              exampleMdast: require('./components/Comment/exampleMdast').exampleMdast,
-              isoString: (new Date()).toString(),
-              Comment: require('./components/Comment/Comment'),
-              CommentHeader: require('./components/Comment/CommentHeader'),
-              CommentContext: require('./components/Comment/CommentContext'),
-              CommentActions: require('./components/Comment/CommentActions')
-            },
-            src: require('./components/Comment/docs.md')
+            path: '/components/discussion',
+            title: 'Introduction',
+            src: require('./components/Discussion/docs.md')
           },
           {
-            path: '/components/commentcomposer',
-            title: 'Composer',
-            imports: {
-              t,
-              CommentComposer: require('./components/CommentComposer/CommentComposer'),
-              CommentComposerHeader: require('./components/CommentComposer/CommentComposerHeader'),
-              CommentComposerPlaceholder: require('./components/CommentComposer/CommentComposerPlaceholder'),
-              CommentComposerError: require('./components/CommentComposer/CommentComposerError')
-            },
-            src: require('./components/CommentComposer/docs.md')
-          },
-          {
-            path: '/components/commentteaser',
-            title: 'Teaser',
-            imports: {
-              t,
-              ...require('./components/CommentTeaser/docs.imports')
-            },
+            path: '/components/discussion/comment-teaser',
+            title: 'Comment Teaser',
+            imports: { t, ...require('./components/CommentTeaser/docs.imports') },
             src: require('./components/CommentTeaser/docs.md')
           },
           {
-            path: '/components/commenttree',
+            path: '/components/discussion/composer',
+            title: 'Composer',
+            imports: { t, ...require('./components/Discussion/Composer/docs.imports') },
+            src: require('./components/Discussion/Composer/docs.md')
+          },
+          {
+            path: '/components/discussion/tree',
             title: 'Tree',
-            imports: { t, ...require('./components/CommentTree/docs.imports') },
-            src: require('./components/CommentTree/docs.md')
+            imports: { t, ...require('./components/Discussion/Tree/docs.imports') },
+            src: require('./components/Discussion/Tree/docs.md')
+          },
+          {
+            path: '/components/discussion/internal',
+            title: 'Internal',
+            imports: { t, ...require('./components/Discussion/Internal/docs.imports') },
+            src: require('./components/Discussion/Internal/docs.md')
           }
         ]
       },
@@ -517,8 +515,7 @@ ReactDOM.render(
               webSchema: require('./templates/Comment/web').default(),
               emailSchema: require('./templates/Comment/email').default(),
               ...require('./templates/docs'),
-              renderMdast: require('mdast-react-render').renderMdast,
-              CommentBody: require('./components/Comment/Comment').CommentBody
+              renderMdast: require('mdast-react-render').renderMdast
             },
             src: require('./templates/Comment/docs.md')
           },

@@ -1,16 +1,21 @@
 import React from 'react'
-import {css} from 'glamor'
-import colors from '../../theme/colors'
-import {serifRegular16} from '../Typography/styles'
+import { css } from 'glamor'
+import colors from '../../../theme/colors'
+import { serifRegular16 } from '../../Typography/styles'
 
 const styles = {
   root: css({
+    ...serifRegular16,
+    color: colors.lightText,
     display: 'flex',
     alignItems: 'center',
     background: colors.secondaryBg,
     padding: '12px',
     height: '64px',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    '&:hover': {
+      color: colors.text
+    }
   }),
   profilePicture: css({
     display: 'block',
@@ -19,8 +24,6 @@ const styles = {
     marginRight: 10
   }),
   meta: css({
-    ...serifRegular16,
-    color: colors.lightText,
     flex: 1,
     alignSelf: 'stretch',
     display: 'flex',
@@ -30,17 +33,13 @@ const styles = {
   })
 }
 
-const CommentComposerPlaceholder = ({t, profilePicture, onClick}) => (
+export const CommentComposerPlaceholder = ({ t, displayAuthor, onClick }) => (
   <div {...styles.root} onClick={onClick}>
-    {profilePicture && <img
-      {...styles.profilePicture}
-      src={profilePicture}
-      alt=''
-    />}
+    {displayAuthor.profilePicture && (
+      <img {...styles.profilePicture} src={displayAuthor.profilePicture} alt='' />
+    )}
     <div {...styles.meta}>
       {t('styleguide/CommentComposer/placeholder')}
     </div>
   </div>
 )
-
-export default CommentComposerPlaceholder

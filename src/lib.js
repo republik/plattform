@@ -94,11 +94,6 @@ export {
   InlineSpinner
 } from './components/Spinner'
 export {
-  Comment,
-  CommentHeader,
-  CommentActions
-} from './components/Comment'
-export {
   CommentBodyBlockQuote,
   CommentBodyBlockQuoteParagraph,
   CommentBodyCode,
@@ -108,20 +103,8 @@ export {
   CommentBodyParagraph
 } from './components/CommentBody/web'
 export {
-  CommentComposer,
-  CommentComposerHeader,
-  CommentComposerPlaceholder,
-  CommentComposerError
-} from './components/CommentComposer'
-export {
   CommentTeaser
 } from './components/CommentTeaser'
-export {
-  CommentTreeNode,
-  CommentTreeRow,
-  CommentTreeLoadMore,
-  CommentTreeCollapse
-} from './components/CommentTree'
 export {
   Overlay,
   OverlayToolbar,
@@ -144,3 +127,5 @@ export {
   Sub, Sup,
   HR
 } from './components/Typography'
+
+export * from './components/Discussion'

@@ -1,0 +1,206 @@
+```remove-react-source
+
+```
+
+Components on this page are not exported from the styleguide. This documentation page exists so we have an overview how the Discussion components are structured internally. It also gives developers a nicer way to visually inspect the individual components if they need to change them.
+
+# Comment
+
+#### Header
+
+```react|noSource,span-2
+<Comment.Header
+  t={t}
+  comment={{
+    ...comments.comment1,
+    displayAuthor: { name: 'Anonym' }
+  }}
+/>
+```
+
+```react|noSource,span-2
+<Comment.Header
+  t={t}
+  comment={{
+    ...comments.comment1,
+    displayAuthor: {
+      profilePicture: '/static/profilePicture1.png',
+      name: 'Christoph Moser',
+      credential: { description: 'Journalist', verified: true }
+    }
+  }}
+/>
+```
+
+```react|noSource,span-2
+<Comment.Header
+  t={t}
+  comment={{
+    ...comments.comment1,
+    createdAt: "2000-01-01",
+    updatedAt: new Date().toISOString(),
+    displayAuthor: {
+      name: 'Queen Daenerys Stormborn of the House Targaryen',
+      credential: { description: 'The rightful Queen of the Seven Kingdoms', verified: true }
+    }
+  }}
+/>
+```
+
+```react|noSource,span-3
+<Comment.Header
+  t={t}
+  comment={{
+    ...comments.comment1,
+    displayAuthor: {
+      profilePicture: '/static/profilePicture1.png',
+      name: 'Christoph Moser',
+      credential: { description: 'Journalist', verified: true }
+    },
+    comments: {
+      ...comments.comment1.comments,
+      totalCount: 1
+    }
+  }}
+  onToggle={() => {}}
+/>
+```
+
+```react|noSource,span-3
+<Comment.Header
+  t={t}
+  comment={{
+    ...comments.comment1,
+    createdAt: "2000-01-01",
+    updatedAt: new Date().toISOString(),
+    displayAuthor: {
+      name: 'Queen Daenerys Stormborn of the House Targaryen',
+      credential: { description: 'The rightful Queen of the Seven Kingdoms', verified: true }
+    }
+  }}
+  onToggle={() => {}}
+/>
+```
+
+
+#### Body
+
+The **Body** component (shown on the left) includes the optional **Context** component (shown right) above the comment text. Context is a bold title line and optional description line. The context lines do not wrap, they are cut of with an ellipsis.
+
+```react|noSource,span-4
+<Comment.Body t={t} comment={comments.comment1} context={commentContext} />
+```
+
+```react|noSource,span-2
+<Comment.Context {...commentContext} />
+```
+
+The body component automatically collapses the text if it's too long. Whether comment bodies are allowed to be collapsed or not is a setting on the Discussion object, which this component gets through the DiscussionContext.
+
+```react|noSource
+<Comment.Body t={t} comment={comments.comment5} context={commentContext} />
+```
+
+Comments can be unpublished. These comments are still visible, but the content is replaced with a placeholder.
+
+```react|noSource
+<Comment.Body t={t} comment={comments.comment2} />
+```
+
+If the comment is unpublished by the user themselves, they will still see the content, can edit it and publish again. If the comment was unpublished by an admin the user will see a different note.
+
+```react|noSource,span-3
+<Comment.Body t={t} comment={comments.comment3} />
+```
+
+```react|noSource,span-3
+<Comment.Body t={t} comment={comments.comment4} />
+```
+
+#### Actions
+
+The buttons / icons below the comment. The reply button is disabled if the discussion doesn't allow the user to reply at the current time (this information is stored in the DiscussionContext).
+
+```react|noSource,span-2
+<Comment.Actions
+  t={t}
+  comment={comments.comment3}
+  onReply={() => {}}
+  onEdit={() => {}}
+/>
+```
+
+
+# Composer
+
+#### Header
+
+Almost like the `<Comment>` header.
+
+```react|noSource,span-3
+<Composer.Header
+  displayAuthor={{
+    name: 'Anonym',
+    profilePicture: '/static/profilePicture1.png'
+  }}
+/>
+```
+
+```react|noSource,span-3
+<Composer.Header
+  displayAuthor={{
+    name: 'Ueli Maurer',
+    profilePicture: '/static/profilePicture1.png',
+    credential: {description: 'Bundesrat', verified: false}
+  }}
+/>
+```
+
+#### Tags
+
+The tags are an optional elment, shown between the **Header** and the **Textarea** where users enter the text.
+
+```react|noSource,span-4
+<Composer.Tags tags={['Lob', 'Kritik', 'Wunsch', 'Keine Angabe']} onChange={() => {}} />
+```
+
+```react|noSource,span-2
+<Composer.Tags tags={['Lob', 'Kritik', 'Wunsch', 'Keine Angabe']} onChange={() => {}} />
+```
+
+#### Actions
+
+The two primary actions on the right (_onClose_, _onSubmit_) are always present. The seconday actions on the left are optional. Use just icons for the secondary actions, and wrap each icon in `<SecondaryAction>`.
+
+`<SecondaryAction>` renders as a button by default, but you can adjust that with the `as` prop. It also sets up CSS for font, color, and hover style to match the primary actions.
+
+```react|noSource,span-2
+<Composer.Actions
+  t={t}
+  onClose={() => {}}
+  onCloseLabel="onClose"
+  onSubmit={() => {}}
+  onSubmitLabel="onSubmit"
+  secondaryActions={(
+    <>
+      <Composer.SecondaryAction><MdMood height={26} width={26} /></Composer.SecondaryAction>
+      <Composer.SecondaryAction><MdMarkdown height={26} width={26} /></Composer.SecondaryAction>
+    </>
+  )}
+/>
+```
+
+```code|span-4
+<SecondaryAction as="a" href="#">…</SecondaryAction>
+<SecondaryAction as={Link} to={{ … }}>…</SecondaryAction>
+```
+
+#### Error
+
+The error message that is shown at the bottom of the `<CommentComposer>` if creating the comment has failed.
+
+```react|noSource
+<Composer.Error>
+  Sie sind zu früh. Bitte warten Sie, 161.446s bevor Sie wieder kommentieren.
+</Composer.Error>
+```

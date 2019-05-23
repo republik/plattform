@@ -8,11 +8,11 @@
     },
     {
       "key": "styleguide/CommentComposer/answer",
-      "value": "antworten"
+      "value": "Antworten"
     },
     {
       "key": "styleguide/CommentComposer/cancel",
-      "value": "abbrechen"
+      "value": "Abbrechen"
     },
     {
       "key": "styleguide/CommentComposer/etiquette",
@@ -28,7 +28,7 @@
     },
     {
       "key": "styleguide/CommentActions/edit",
-      "value": "bearbeiten"
+      "value": "Bearbeiten"
     },
     {
       "key": "styleguide/CommentActions/upvote",
@@ -100,8 +100,16 @@
       "value": "Verifizierte Rolle"
     },
     {
+      "key": "styleguide/comment/header/replies/1",
+      "value": "ein Kommentar"
+    },
+    {
+      "key": "styleguide/comment/header/replies/other",
+      "value": "{count} Kommentare"
+    },
+    {
       "key": "styleguide/comment/edit/submit",
-      "value": "bearbeiten"
+      "value": "Bearbeiten"
     },
     {
       "key": "styleguide/comment/unpublished",

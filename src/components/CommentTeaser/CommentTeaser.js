@@ -10,8 +10,7 @@ import { inQuotes } from '../../lib/inQuotes'
 import { linkRule } from '../Typography/'
 import { serifRegular14, sansSerifRegular14 } from '../Typography/styles'
 import { CommentBodyParagraph } from '../CommentBody/web'
-import CommentContext from '../Comment/CommentContext'
-import CommentHeader from '../Comment/CommentHeader'
+import { Context, Header } from '../Discussion/Internal/Comment'
 import RawHtml from '../RawHtml/'
 
 const styles = {
@@ -78,7 +77,7 @@ export const CommentTeaser = ({
   highlights,
   createdAt,
   timeago,
-  Link=DefaultLink,
+  Link = DefaultLink,
   discussion,
   tags,
   parentIds,
@@ -100,18 +99,19 @@ export const CommentTeaser = ({
     <div id={id} {...styles.root}>
       {displayAuthor && (
         <div {...styles.header}>
-          <CommentHeader
+          <Header
             t={t}
-            {...displayAuthor}
-            commentId={id}
-            createdAt={createdAt}
-            timeago={timeago}
-            discussion={discussion}
-            Link={Link} />
+            comment={{
+              id,
+              displayAuthor,
+              createdAt,
+            }}
+            Link={Link}
+          />
         </div>
       )}
       {tag && (
-        <CommentContext
+        <Context
           title={
             <Link
               commentId={id}
@@ -125,7 +125,7 @@ export const CommentTeaser = ({
           }
         />
       )}
-      <div {...styles.body} style={{ marginTop: displayAuthor || tag ? undefined : 0}}>
+      <div {...styles.body} style={{ marginTop: displayAuthor || tag ? undefined : 0 }}>
         <CommentBodyParagraph>
           <Link
             commentId={id}
@@ -133,22 +133,22 @@ export const CommentTeaser = ({
             passHref
           >
             <a {...styles.link}>
-            {!!preview && !highlight && (
-              <Fragment>
-                {preview.string}
-                {!!preview.more && <Fragment>&nbsp;…</Fragment>}
-              </Fragment>
-            )}
-            {!!highlight && (
-              <Fragment>
-                <RawHtml
-                  dangerouslySetInnerHTML={{
-                    __html: highlight
-                  }}
-                />
-                {!endsWithPunctuation && <Fragment>&nbsp;…</Fragment>}
-              </Fragment>
-            )}
+              {!!preview && !highlight && (
+                <Fragment>
+                  {preview.string}
+                  {!!preview.more && <Fragment>&nbsp;…</Fragment>}
+                </Fragment>
+              )}
+              {!!highlight && (
+                <Fragment>
+                  <RawHtml
+                    dangerouslySetInnerHTML={{
+                      __html: highlight
+                    }}
+                  />
+                  {!endsWithPunctuation && <Fragment>&nbsp;…</Fragment>}
+                </Fragment>
+              )}
             </a>
           </Link>
         </CommentBodyParagraph>
@@ -175,7 +175,7 @@ export const CommentTeaser = ({
                 </a>
               </Link>
             )
-          })}          
+          })}
         </div>
         {!displayAuthor && (
           <div {...styles.timeago}>
