@@ -101,12 +101,23 @@ If the comment is below a certain depth, we hide the profile picture and instead
 
 The **Body** component (shown on the left) includes the optional **Context** component (shown right) above the comment text. Context is a bold title line and optional description line. The context lines do not wrap, they are cut of with an ellipsis.
 
+```hint
+As far as I can see in the code, the **Context** is only used to display the comment tag.
+```
+
 ```react|noSource,span-4
 <Comment.Body t={t} comment={comments.comment1} context={commentContext} />
 ```
 
 ```react|noSource,span-2
-<Comment.Context {...commentContext} />
+<>
+  <div style={{ marginBottom: 20, background: 'white' }}>
+    <Comment.Context {...commentContext} />
+  </div>
+  <div style={{ marginBottom: 20, background: 'white' }}>
+    <Comment.Context title='Wunsch' />
+  </div>
+</>
 ```
 
 The body component automatically collapses the text if it's too long. Whether comment bodies are allowed to be collapsed or not is a setting on the Discussion object, which this component gets through the DiscussionContext.

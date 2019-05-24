@@ -190,7 +190,7 @@ const CommentNode = ({ t, comment }) => {
               <>
                 <Comment.Header t={t} comment={comment} isExpanded={isExpanded} onToggle={toggleReplies} />
                 <div style={{ marginTop: 12 }}>
-                  <Comment.Body t={t} comment={comment} />
+                  <Comment.Body t={t} comment={comment} context={tags[0] ? { title: tags[0] } : undefined} />
                 </div>
               </>
             ),
