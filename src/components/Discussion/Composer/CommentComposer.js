@@ -4,6 +4,7 @@ import { css } from 'glamor'
 import Textarea from 'react-textarea-autosize'
 import scrollIntoView from 'scroll-into-view'
 import colors from '../../../theme/colors'
+import { mBreakPoint } from '../../../theme/mediaQueries'
 import { serifRegular16, sansSerifRegular12 } from '../../Typography/styles'
 
 import { Header, Tags, Actions, Error } from '../Internal/Composer'
@@ -72,10 +73,17 @@ export const CommentComposer = props => {
 
   /*
    * Focus the textarea upon mount.
+   *
+   * Furthermore, if we detect a small screen, scroll the whole elment to the top of
+   * the viewport.
    */
   React.useEffect(() => {
     if (textarea) {
       textarea.focus()
+
+      if (window.innerWidth < mBreakPoint) {
+        scrollIntoView(root.current, { align: { top: 0, topOffset: 60 } })
+      }
     }
   }, [textarea])
 
