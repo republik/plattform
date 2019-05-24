@@ -16,7 +16,7 @@ const styles = {
     border: 'none',
     cursor: 'pointer',
     whiteSpace: 'nowrap',
-    lineHeight: '32px',
+    lineHeight: '40px',
     padding: 0,
     '&:hover': {
       color: colors.secondary

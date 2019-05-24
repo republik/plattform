@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { css } from 'glamor'
 import { DiscussionContext } from '../DiscussionContext'
 import { CommentComposer } from '../Composer/CommentComposer'
@@ -30,29 +30,45 @@ const styles = {
       margin: `10px 0 ${isExpanded ? 24 : 16}px`,
       paddingLeft: nestLimitExceeded ? 0 : config.indentSize
     }),
-  verticalToggle: css({
-    ...buttonStyle,
-    position: 'absolute',
-    top: 0,
-    left: -((config.indentSize - config.verticalLineWidth) / 2),
-    bottom: 0,
-    width: config.indentSize,
-
-    '&::before': {
-      display: 'block',
-      content: '""',
+  verticalToggle: ({ drawLineEnd }) =>
+    css({
+      ...buttonStyle,
       position: 'absolute',
       top: 0,
-      bottom: 0,
-      left: (config.indentSize - config.verticalLineWidth) / 2,
-      width: config.verticalLineWidth,
-      background: colors.divider
-    },
+      left: -((config.indentSize - config.verticalLineWidth) / 2),
+      bottom: drawLineEnd ? 20 : 0,
+      width: config.indentSize,
 
-    '&:hover::before': {
-      background: colors.primary
-    }
-  })
+      '&::before': {
+        display: 'block',
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: (config.indentSize - config.verticalLineWidth) / 2,
+        width: config.verticalLineWidth,
+        background: colors.divider
+      },
+      '&:hover::before': {
+        background: colors.primary
+      },
+      ...(drawLineEnd && {
+        '&::after': {
+          display: 'block',
+          content: '""',
+          position: 'absolute',
+          width: `${config.verticalLineWidth + 2 * 2}px`,
+          height: `${config.verticalLineWidth + 2 * 2}px`,
+          bottom: -2 - (config.verticalLineWidth / 2),
+          borderRadius: '100%',
+          left: (config.indentSize - config.verticalLineWidth) / 2 - 2,
+          background: colors.divider
+        },
+        '&:hover::after': {
+          background: colors.primary
+        }
+      })
+    })
 }
 
 export const CommentList = ({ t, parentId = null, comments }) => {
@@ -78,7 +94,7 @@ export const CommentList = ({ t, parentId = null, comments }) => {
   })()
 
   return (
-    <Fragment>
+    <>
       {nodes.map(comment => (
         <CommentNode key={comment.id} t={t} comment={comment} />
       ))}
@@ -93,7 +109,7 @@ export const CommentList = ({ t, parentId = null, comments }) => {
           }}
         />
       )}
-    </Fragment>
+    </>
   )
 }
 
@@ -110,7 +126,7 @@ const CommentNode = ({ t, comment }) => {
   const isHighlighted = id === highlightedCommentId
   const nestLimitExceeded = parentIds.length > config.nestLimit
 
-  /**
+  /*
    * The local state that the CommentNode component manages.
    *
    * {
@@ -144,45 +160,55 @@ const CommentNode = ({ t, comment }) => {
     { mode: 'view', bodyVisibility: 'indeterminate', isExpanded: true, showReplyComposer: false }
   )
 
+  /*
+   * Functions which dispatch specific actions. For your convenience.
+   */
+  const closeEditor = React.useCallback(() => {
+    dispatch({ closeEditor: {} })
+  }, [dispatch])
   const toggleReplies = React.useCallback(() => {
     dispatch({ toggleReplies: {} })
   }, [dispatch])
+  const closeReplyComposer = React.useCallback(() => {
+    dispatch({ closeReplyComposer: {} })
+  }, [dispatch])
+
+  /*
+   * This is an experiment to draw end points at the vertica toggle lines.
+   */
+  const drawLineEnd = true
 
   const rootStyle = styles.root({ isExpanded, nestLimitExceeded })
 
   if (isExpanded) {
     return (
       <div data-comment-id={id} {...rootStyle}>
-        {!nestLimitExceeded && <button {...styles.verticalToggle} onClick={toggleReplies} />}
+        {!nestLimitExceeded && <button {...styles.verticalToggle({ drawLineEnd })} onClick={toggleReplies} />}
         <div {...(mode === 'view' && isHighlighted ? styles.highlightContainer : {})}>
           {{
             view: () => (
-              <Fragment>
+              <>
                 <Comment.Header t={t} comment={comment} isExpanded={isExpanded} onToggle={toggleReplies} />
                 <div style={{ marginTop: 12 }}>
                   <Comment.Body t={t} comment={comment} />
                 </div>
-              </Fragment>
+              </>
             ),
             edit: () => (
               <CommentComposer
                 t={t}
                 initialText={text}
                 displayAuthor={displayAuthor}
-                onClose={() => dispatch({ closeEditor: {} })}
-                onSubmit={({ text, tags }) => {
-                  return new Promise((resolve, reject) => {
-                    actions.editComment(comment, text, tags).then(
-                      () => {
-                        resolve()
-                        dispatch({ closeEditor: {} })
-                      },
-                      e => {
-                        reject('' + e)
-                      }
-                    )
+                onClose={closeEditor}
+                onSubmit={({ text, tags }) =>
+                  actions.editComment(comment, text, tags).then(result => {
+                    if (result.ok) {
+                      closeEditor()
+                    }
+
+                    return result
                   })
-                }}
+                }
                 onSubmitLabel={t('styleguide/comment/edit/submit')}
               />
             )
@@ -205,13 +231,11 @@ const CommentNode = ({ t, comment }) => {
             <CommentComposer
               t={t}
               displayAuthor={displayAuthor}
-              onClose={() => {
-                dispatch({ closeReplyComposer: {} })
-              }}
+              onClose={closeReplyComposer}
               onSubmit={({ text, tags }) =>
                 actions.submitComment(comment, text, tags).then(result => {
                   if (result.ok) {
-                    dispatch({ closeReplyComposer: {} })
+                    closeReplyComposer()
                   }
 
                   return result
@@ -233,7 +257,7 @@ const CommentNode = ({ t, comment }) => {
   } else {
     return (
       <div data-comment-id={id} {...rootStyle}>
-        <button {...styles.verticalToggle} onClick={toggleReplies} />
+        <button {...styles.verticalToggle({ drawLineEnd })} onClick={toggleReplies} />
         <Comment.Header t={t} comment={comment} isExpanded={isExpanded} onToggle={toggleReplies} />
       </div>
     )
