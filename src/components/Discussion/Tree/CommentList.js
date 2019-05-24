@@ -118,9 +118,7 @@ export const CommentList = ({ t, parentId = null, comments }) => {
  * the editor for the comment itself, and composer for replies.
  */
 const CommentNode = ({ t, comment }) => {
-  const { discussion, highlightedCommentId, actions } = React.useContext(DiscussionContext)
-  const { displayAuthor } = discussion
-
+  const { highlightedCommentId, actions } = React.useContext(DiscussionContext)
   const { id, parentIds, tags, text, comments } = comment
 
   const isHighlighted = id === highlightedCommentId

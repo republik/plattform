@@ -75,7 +75,7 @@ const styles = {
 }
 
 export const Actions = ({ t, comment, onReply, onEdit }) => {
-  const { id, published, userCanEdit, downVotes, upVotes, userVote } = comment
+  const { published, userCanEdit, downVotes, upVotes, userVote } = comment
   const { isAdmin, discussion, actions, clock } = React.useContext(DiscussionContext)
   const { displayAuthor, userWaitUntil } = discussion
 

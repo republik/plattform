@@ -28,7 +28,7 @@ const buttonStyle = {
 const action = css({
   ...buttonStyle,
   ...sansSerifRegular14,
-  color: colors.lightText,
+  color: colors.divider,
   flexShrink: 0,
   height: '40px',
   cursor: 'pointer',
@@ -39,7 +39,8 @@ const action = css({
     display: 'inline-block',
     margin: '10px',
     verticalAlign: 'middle'
-  }
+  },
+  marginRight: -10
 })
 
 const styles = {
@@ -154,10 +155,8 @@ const styles = {
 const dateTimeFormat = timeFormat('%d. %B %Y %H:%M')
 const titleDate = string => dateTimeFormat(new Date(string))
 
-const DefaultLink = ({ children }) => children
-
 export const Header = ({ t, comment, isExpanded, onToggle }) => {
-  const { discussion, clock, links } = React.useContext(DiscussionContext)
+  const { clock, links } = React.useContext(DiscussionContext)
 
   const { displayAuthor, updatedAt, createdAt, comments, parentIds } = comment
   const { profilePicture, name, credential } = displayAuthor
