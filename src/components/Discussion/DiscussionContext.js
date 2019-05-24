@@ -70,12 +70,12 @@ export const DiscussionContext = React.createContext({
     submitComment: (parent, text, tags) => Promise.resolve({ ok: true }),
 
     editComment: (comment, content, tags) => Promise.resolve({ ok: true }),
-    upvoteComment: commentId => Promise.resolve({ ok: true }),
-    downvoteComment: commentId => Promise.resolve({ ok: true }),
-    unpublishComment: commentId => Promise.resolve({ ok: true }),
+    upvoteComment: comment => Promise.resolve({ ok: true }),
+    downvoteComment: comment => Promise.resolve({ ok: true }),
+    unpublishComment: comment => Promise.resolve({ ok: true }),
 
     /**
-     * Fetch more comments at the end of the given CommentConnection.
+     * Fetch more comments.
      */
     fetchMoreComments: (parentId, after) => Promise.resolve({ ok: true }),
 
