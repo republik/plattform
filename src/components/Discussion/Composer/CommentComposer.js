@@ -73,18 +73,17 @@ export class CommentComposer extends PureComponent {
       const { text, tagValue, submit } = this.state
 
       this.setState({ submit: { ...submit, loading: true } })
-      this.props.onSubmit({ text, tags: tagValue ? [tagValue] : undefined }).then(
-        () => {
+      this.props.onSubmit({ text, tags: tagValue ? [tagValue] : undefined }).then(({ ok, error }) => {
+        if (ok) {
           /*
            * Set 'loading' true, to keep the onSubmit button disabled. Otherwise it
            * might become active again before our controller closes us.
            */
           this.setState({ submit: { loading: true, error: undefined } })
-        },
-        error => {
+        } else if (error) {
           this.setState({ submit: { loading: false, error } })
         }
-      )
+      })
     }
 
     // MUST be a function because <Textarea> doesn't support

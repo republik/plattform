@@ -49,6 +49,10 @@ export const DiscussionContext = React.createContext({
    * All the actions the user can do. These functions correspond mostly
    * to GraphQL mutations, though some are implemented purely in the
    * client-side JavaScript code.
+   *
+   * To allow them to be asynchronous, they all return a promise. Upon success
+   * the promise resolves with `{ ok: true }`. Otherwise the promise resolves
+   * with `{ error: string }`. The promise must not reject.
    */
   actions: {
     /**
@@ -56,18 +60,18 @@ export const DiscussionContext = React.createContext({
      * in which case a new top-level comment will be created. Otherwise it'll
      * be a reply to the given comment.
      */
-    submitComment: (parent, text, tags) => Promise.resolve(),
+    submitComment: (parent, text, tags) => Promise.resolve({ ok: true }),
 
-    editComment: (comment, content, tags) => Promise.resolve(),
-    upvoteComment: commentId => Promise.resolve(),
-    downvoteComment: commentId => Promise.resolve(),
-    unpublishComment: commentId => Promise.resolve(),
-    shareComment: commentId => Promise.resolve(),
+    editComment: (comment, content, tags) => Promise.resolve({ ok: true }),
+    upvoteComment: commentId => Promise.resolve({ ok: true }),
+    downvoteComment: commentId => Promise.resolve({ ok: true }),
+    unpublishComment: commentId => Promise.resolve({ ok: true }),
+    shareComment: commentId => Promise.resolve({ ok: true }),
 
     /**
      * Fetch more comments at the end of the given CommentConnection.
      */
-    fetchMoreComments: (parentId, after) => Promise.resolve()
+    fetchMoreComments: (parentId, after) => Promise.resolve({ ok: true })
   },
 
   /**

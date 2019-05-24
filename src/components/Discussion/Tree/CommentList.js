@@ -208,19 +208,15 @@ const CommentNode = ({ t, comment }) => {
               onClose={() => {
                 dispatch({ closeReplyComposer: {} })
               }}
-              onSubmit={({ text, tags }) => {
-                return new Promise((resolve, reject) => {
-                  actions.submitComment(comment, text, tags).then(
-                    () => {
-                      resolve()
-                      dispatch({ closeReplyComposer: {} })
-                    },
-                    e => {
-                      reject('' + e)
-                    }
-                  )
+              onSubmit={({ text, tags }) =>
+                actions.submitComment(comment, text, tags).then(result => {
+                  if (result.ok) {
+                    dispatch({ closeReplyComposer: {} })
+                  }
+
+                  return result
                 })
-              }}
+              }
             />
           </div>
         )}

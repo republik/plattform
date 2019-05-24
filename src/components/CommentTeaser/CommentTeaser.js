@@ -105,6 +105,7 @@ export const CommentTeaser = ({
               id,
               displayAuthor,
               createdAt,
+              parentIds: []
             }}
             Link={Link}
           />
