@@ -25,41 +25,43 @@ const buttonStyle = {
   cursor: 'pointer'
 }
 
-const action = css({
-  ...buttonStyle,
-  ...sansSerifRegular14,
-  color: colors.divider,
-  flexShrink: 0,
-  height: '40px',
-  cursor: 'pointer',
-  '&:hover': {
-    color: colors.text
-  },
-  '& svg': {
-    display: 'inline-block',
-    margin: '10px',
-    verticalAlign: 'middle'
-  },
-  marginRight: -10
-})
+const action = ({ isExpanded }) =>
+  css({
+    ...buttonStyle,
+    ...sansSerifRegular14,
+    color: isExpanded ? colors.divider : colors.lightText,
+    flexShrink: 0,
+    height: '40px',
+    cursor: 'pointer',
+    '&:hover': {
+      color: colors.text
+    },
+    '& svg': {
+      display: 'inline-block',
+      margin: '10px',
+      verticalAlign: 'middle'
+    },
+    marginRight: -10
+  })
 
 const styles = {
-  root: css({
-    display: 'flex',
-    alignItems: 'center',
+  root: ({ isExpanded }) =>
+    css({
+      display: 'flex',
+      alignItems: 'center',
 
-    /*
-     * On larger screens, hide the action button and reveal only on hover.
-     */
-    [mUp]: {
-      [`& [data-${action}]`]: {
-        display: 'none'
-      },
-      [`&:hover [data-${action}]`]: {
-        display: 'block'
+      /*
+       * On larger screens, hide the action button and reveal only on hover.
+       */
+      [mUp]: isExpanded && {
+        [`& [data-${action({ isExpanded })}]`]: {
+          display: 'none'
+        },
+        [`&:hover [data-${action({ isExpanded })}]`]: {
+          display: 'block'
+        }
       }
-    }
-  }),
+    }),
   profilePicture: css({
     display: 'block',
     width: `40px`,
@@ -163,7 +165,7 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
   const isUpdated = updatedAt && updatedAt !== createdAt
 
   return (
-    <div {...styles.root}>
+    <div {...styles.root({ isExpanded })}>
       {(() => {
         const n = parentIds.length - config.nestLimit
         if (n < 0) {
@@ -217,7 +219,7 @@ export const Header = ({ t, comment, isExpanded, onToggle }) => {
         </div>
       </div>
       {onToggle && (
-        <button {...styles.action} onClick={onToggle}>
+        <button {...styles.action({ isExpanded })} onClick={onToggle}>
           {!isExpanded && comments && comments.totalCount > 0 && (
             <div {...styles.replies}>
               {t.pluralize('styleguide/comment/header/replies', { count: comments.totalCount })}
