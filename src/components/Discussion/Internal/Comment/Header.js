@@ -10,6 +10,7 @@ import { timeFormat } from '../../../../lib/timeFormat'
 
 import { DEFAULT_PROFILE_PICTURE } from '../../../Logo/BrandMark'
 import { DiscussionContext } from '../../DiscussionContext'
+import * as config from '../../config'
 
 export const profilePictureSize = 40
 export const profilePictureMargin = 10
@@ -65,6 +66,16 @@ const styles = {
     height: `40px`,
     marginRight: '8px'
   }),
+  indentIndicators: css({
+    flexShrink: 0,
+    marginRight: `${8 - 4}px`,
+    display: 'flex'
+  }),
+  indentIndicator: css({
+    width: `${4 + config.verticalLineWidth}px`,
+    height: '40px',
+    borderLeft: `${config.verticalLineWidth}px solid ${colors.divider}`
+  }),
   center: css({
     alignSelf: 'stretch',
     display: 'flex',
@@ -80,6 +91,7 @@ const styles = {
     minWidth: 0,
     flexGrow: 0,
     flexShrink: 1,
+    textDecoration: 'none',
     ...ellipsize
   }),
   meta: css({
@@ -147,17 +159,34 @@ const DefaultLink = ({ children }) => children
 export const Header = ({ t, comment, isExpanded, onToggle }) => {
   const { discussion, clock, links } = React.useContext(DiscussionContext)
 
-  const { displayAuthor, updatedAt, createdAt, comments } = comment
+  const { displayAuthor, updatedAt, createdAt, comments, parentIds } = comment
   const { profilePicture, name, credential } = displayAuthor
   const isUpdated = updatedAt && updatedAt !== createdAt
 
   return (
     <div {...styles.root}>
-      <links.Profile displayAuthor={displayAuthor} passHref>
-        <a {...styles.link}>
-          <img {...styles.profilePicture} src={profilePicture || DEFAULT_PROFILE_PICTURE} alt="" />
-        </a>
-      </links.Profile>
+      {(() => {
+        const n = parentIds.length - config.nestLimit
+        if (n < 0) {
+          return (
+            <links.Profile displayAuthor={displayAuthor} passHref>
+              <a {...styles.link}>
+                <img {...styles.profilePicture} src={profilePicture || DEFAULT_PROFILE_PICTURE} alt="" />
+              </a>
+            </links.Profile>
+          )
+        } else if (n === 0) {
+          return null
+        } else {
+          return (
+            <div {...styles.indentIndicators}>
+              {Array.from({ length: n }).map((_, i) => (
+                <div key={i} {...styles.indentIndicator} />
+              ))}
+            </div>
+          )
+        }
+      })()}
       <div {...styles.center}>
         <links.Profile displayAuthor={displayAuthor} passHref>
           <a {...styles.name}>{name}</a>

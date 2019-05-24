@@ -24,11 +24,12 @@ const styles = {
     margin: '0 -7px 12px -7px',
     background: colors.primaryBg
   }),
-  root: css({
-    position: 'relative',
-    margin: '10px 0 30px',
-    paddingLeft: config.indentSize
-  }),
+  root: ({ isExpanded, nestLimitExceeded }) =>
+    css({
+      position: 'relative',
+      margin: `10px 0 ${isExpanded ? 24 : 16}px`,
+      paddingLeft: nestLimitExceeded ? 0 : config.indentSize
+    }),
   verticalToggle: css({
     ...buttonStyle,
     position: 'absolute',
@@ -45,7 +46,7 @@ const styles = {
       bottom: 0,
       left: (config.indentSize - config.verticalLineWidth) / 2,
       width: config.verticalLineWidth,
-      background: '#dadddc'
+      background: colors.divider
     },
 
     '&:hover::before': {
@@ -104,6 +105,11 @@ const CommentNode = ({ t, comment }) => {
   const { discussion, highlightedCommentId, actions } = React.useContext(DiscussionContext)
   const { displayAuthor } = discussion
 
+  const { id, parentIds, text, comments } = comment
+
+  const isHighlighted = id === highlightedCommentId
+  const nestLimitExceeded = parentIds.length > config.nestLimit
+
   /**
    * The local state that the CommentNode component manages.
    *
@@ -138,16 +144,16 @@ const CommentNode = ({ t, comment }) => {
     { mode: 'view', bodyVisibility: 'indeterminate', isExpanded: true, showReplyComposer: false }
   )
 
-  const isHighlighted = comment.id === highlightedCommentId
-
   const toggleReplies = React.useCallback(() => {
     dispatch({ toggleReplies: {} })
   }, [dispatch])
 
+  const rootStyle = styles.root({ isExpanded, nestLimitExceeded })
+
   if (isExpanded) {
     return (
-      <div data-comment-id={comment.id} {...styles.root} style={{ marginBottom: 24 }}>
-        <button {...styles.verticalToggle} onClick={toggleReplies} />
+      <div data-comment-id={id} {...rootStyle}>
+        {!nestLimitExceeded && <button {...styles.verticalToggle} onClick={toggleReplies} />}
         <div {...(mode === 'view' && isHighlighted ? styles.highlightContainer : {})}>
           {{
             view: () => (
@@ -161,7 +167,7 @@ const CommentNode = ({ t, comment }) => {
             edit: () => (
               <CommentComposer
                 t={t}
-                initialText={comment.text}
+                initialText={text}
                 displayAuthor={displayAuthor}
                 onClose={() => dispatch({ closeEditor: {} })}
                 onSubmit={({ text, tags }) => {
@@ -220,8 +226,8 @@ const CommentNode = ({ t, comment }) => {
         )}
 
         {(() => {
-          if (comment.comments && comment.comments.totalCount > 0) {
-            return <CommentList t={t} parentId={comment.id} comments={comment.comments} />
+          if (comments && comments.totalCount > 0) {
+            return <CommentList t={t} parentId={id} comments={comments} />
           } else {
             return null
           }
@@ -230,7 +236,7 @@ const CommentNode = ({ t, comment }) => {
     )
   } else {
     return (
-      <div data-comment-id={comment.id} {...styles.root} style={{ marginBottom: 16 }}>
+      <div data-comment-id={id} {...rootStyle}>
         <button {...styles.verticalToggle} onClick={toggleReplies} />
         <Comment.Header t={t} comment={comment} isExpanded={isExpanded} onToggle={toggleReplies} />
       </div>

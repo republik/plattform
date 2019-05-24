@@ -10,6 +10,12 @@ export const indentSize = 16
 export const verticalLineWidth = 2
 
 /**
+ * Limit how deep we nest comments using the standard layout/visual style.
+ * Comments nested deeper than that are displayed differently.
+ */
+export const nestLimit = 4
+
+/**
  * If the comment body is taller than this, it will be collapsed. Subject to
  * the 'collapsable' option taht can be set per-Discussion.
  */

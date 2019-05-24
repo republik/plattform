@@ -88,7 +88,7 @@ export const DiscussionContext = React.createContext({
    * can use these components.
    */
   links: {
-    Profile: ({ displayAuthor, ...props }) => <React.Fragment {...props} />,
-    Comment: ({ comment, ...props }) => <React.Fragment {...props} />
+    Profile: ({ displayAuthor, passHref, ...props }) => <React.Fragment {...props} />,
+    Comment: ({ comment, passHref, ...props }) => <React.Fragment {...props} />
   }
 })

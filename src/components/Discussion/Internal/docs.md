@@ -82,6 +82,21 @@ Components on this page are not exported from the styleguide. This documentation
 />
 ```
 
+If the comment is below a certain depth, we hide the profile picture and instead show the indent with vertical lines.
+
+```react|noSource,span-2
+<Comment.Header
+  t={t}
+  comment={{
+    ...comments.comment6,
+    displayAuthor: {
+      name: 'Queen Daenerys Stormborn of the House Targaryen',
+      credential: { description: 'The rightful Queen of the Seven Kingdoms', verified: true }
+    }
+  }}
+/>
+```
+
 #### Body
 
 The **Body** component (shown on the left) includes the optional **Context** component (shown right) above the comment text. Context is a bold title line and optional description line. The context lines do not wrap, they are cut of with an ellipsis.

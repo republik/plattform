@@ -46,6 +46,12 @@ export const comments = {
   comment5: {
     ...allComments.comment1,
     content: exampleLongMdast
+  },
+
+  // Deeply nested comment
+  comment6: {
+    ...allComments.comment1,
+    parentIds: Array.from({ length: 8 }, (_, i) => `6.${i}`)
   }
 }
 
