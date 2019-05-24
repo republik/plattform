@@ -114,7 +114,7 @@ export class CommentComposer extends PureComponent {
       t,
       displayAuthor,
       onClose,
-      onEditPreferences,
+      onOpenDiscussionPreferences,
       submitLabel,
       cancelLabel,
       secondaryActions,
@@ -133,7 +133,7 @@ export class CommentComposer extends PureComponent {
       <div ref={this.root} {...styles.root}>
         <div {...styles.background}>
           <div style={{ borderBottom: '1px solid white' }}>
-            <Header t={t} displayAuthor={displayAuthor} onClick={onEditPreferences} />
+            <Header t={t} displayAuthor={displayAuthor} onClick={onOpenDiscussionPreferences} />
           </div>
 
           {tags && (
@@ -174,7 +174,7 @@ export class CommentComposer extends PureComponent {
 CommentComposer.propTypes = {
   t: PropTypes.func.isRequired,
   displayAuthor: PropTypes.object.isRequired,
-  onEditPreferences: PropTypes.func.isRequired,
+  onOpenDiscussionPreferences: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   onCloseLabel: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,

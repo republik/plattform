@@ -59,7 +59,7 @@ const styles = {
           position: 'absolute',
           width: `${config.verticalLineWidth + 2 * 2}px`,
           height: `${config.verticalLineWidth + 2 * 2}px`,
-          bottom: -2 - (config.verticalLineWidth / 2),
+          bottom: -2 - config.verticalLineWidth / 2,
           borderRadius: '100%',
           left: (config.indentSize - config.verticalLineWidth) / 2 - 2,
           background: colors.divider
@@ -174,7 +174,7 @@ const CommentNode = ({ t, comment }) => {
   }, [dispatch])
 
   /*
-   * This is an experiment to draw end points at the vertica toggle lines.
+   * This is an experiment to draw end points at the vertical toggle lines.
    */
   const drawLineEnd = true
 
@@ -199,6 +199,7 @@ const CommentNode = ({ t, comment }) => {
                 t={t}
                 initialText={text}
                 displayAuthor={displayAuthor}
+                onOpenDiscussionPreferences={actions.openDiscussionPreferences}
                 onClose={closeEditor}
                 onSubmit={({ text, tags }) =>
                   actions.editComment(comment, text, tags).then(result => {
@@ -231,6 +232,7 @@ const CommentNode = ({ t, comment }) => {
             <CommentComposer
               t={t}
               displayAuthor={displayAuthor}
+              onOpenDiscussionPreferences={actions.openDiscussionPreferences}
               onClose={closeReplyComposer}
               onSubmit={({ text, tags }) =>
                 actions.submitComment(comment, text, tags).then(result => {
